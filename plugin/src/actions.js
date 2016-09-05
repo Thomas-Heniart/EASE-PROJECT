@@ -1,10 +1,10 @@
 var actions = {
 waitfor:function(msg, callback, sendResponse){
-	function waitfor(msg, callback, sendResponse){
+	function waitfor(msg, callback){
 		var obj = $(msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep].search);
 		if (obj.length == 0){
 			setTimeout(function(){
-				waitfor(msg, callback, sendResponse);
+				waitfor(msg, callback);
 			}, msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep].time);
 		}
 		else {
@@ -12,7 +12,7 @@ waitfor:function(msg, callback, sendResponse){
 			callback(msg, sendResponse);
 		}
 	}
-	waitfor(msg, callback, sendResponse);
+	waitfor(msg, callback);
 },
 setattr:function(msg, callback, sendResponse){
 	var actionStep = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep];
@@ -46,7 +46,6 @@ fill:function(msg, callback, sendResponse){
 		input.click();
 		if (actionStep.what == "login") {
 			input.val(msg.detail[0].user.login);
-			msg.detail[msg.bigStep].website.lastLogin = getNewLogin(msg, msg.bigStep);
 		} else if (actionStep.what == "password") {
 			input.val(msg.detail[0].user.password);
 		}
@@ -88,8 +87,7 @@ clickona:function(msg, callback, sendResponse){
 		}
 	} else {
 		button.prop("disabled", false);
-		button.click(function(){alert("ALERTE GENERALE");});
-        button.trigger('click');
+		button.get(0).click();
 		msg.actionStep++;
 		callback(msg, sendResponse);
 	}
@@ -158,11 +156,11 @@ goto:function(msg, callback, sendResponse){
 function doThings(msg, sendResponse) {
 	var todo =  msg.detail[msg.bigStep].website[msg.todo].todo;
 	if (msg.actionStep >= todo.length){
-        console.log("completed");
 		msg.type = "completed";
+		msg.detail[msg.bigStep].website.lastLogin = getNewLogin(msg, msg.bigStep);
 		sendResponse(msg);
 		return ;
 	}
-    console.log(todo[msg.actionStep].action);
+    console.log(todo[msg.actionStep]);
 	actions[todo[msg.actionStep].action](msg, doThings, sendResponse);
 }

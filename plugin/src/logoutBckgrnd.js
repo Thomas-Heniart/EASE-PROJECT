@@ -30,9 +30,8 @@ function logOutFrom(website, sendResponse){
                                 extension.tabs.injectScript(tab, "actions.js", function() {
                                     extension.tabs.injectScript(tab, "logout.js", function(){
                                     extension.tabs.sendMessage(tab, "logout", msg, function(response){
-                                        
+                                        console.log(response);
                                         if(response){
-                                            console.log(response.type);
                                             if(response.type == "completed"){
                                                 msg.actionStep = response.actionStep;
                                                 if (msg.actionStep < msg.detail[0].website.logout.todo.length){

@@ -1,5 +1,7 @@
 
 function rememberWebsite(website){
+    if (website.lastLogin == "")
+        return;
     extension.storage.get("visitedWebsites", function(visitedWebsites) {
         visitedWebsites = visitedWebsites["visitedWebsites"];
         for (var i in visitedWebsites){
@@ -30,6 +32,7 @@ extension.runtime.onMessage("NewConnection", function (msg, sendResponse) {
         extension.tabs.create(currentWindow, msg.detail[0].website.home, true, function(tab){
             extension.tabs.onUpdated(tab, function (newTab) {
                 tab = newTab;
+                console.log("updated");
                 extension.tabs.injectScript(tab, "checkForReload.js", function() {
                 
                 });
@@ -43,19 +46,16 @@ extension.runtime.onMessage("NewConnection", function (msg, sendResponse) {
                           extension.storage.get("visitedWebsites", function(visitedWebsites) {
                             msg.visitedWebsites = visitedWebsites["visitedWebsites"];
                             extension.tabs.sendMessage(tab, "goooo", msg, function(response){
-                                
+                                console.log(response);
                               if (response){
-                                  console.log(response.type);
                                 if (response.type == "completed") {
                                     msg.todo = response.todo;
                                     msg.bigStep = response.bigStep;
                                     msg.actionStep = response.actionStep;
                                     msg.detail[msg.bigStep].website.lastLogin = response.detail[msg.bigStep].website.lastLogin;
-                                    console.log("action step number : " + msg.actionStep + " / length of todo : "+  msg.detail[msg.bigStep].website[msg.todo].todo.length);
                                     if (msg.actionStep < msg.detail[msg.bigStep].website[msg.todo].todo.length){
-                                         console.log("wait");
+                                         //do nothing
                                     } else {
-                                        console.log(msg.todo)
                                         if (msg.todo == "logout"){
                                             if (typeof msg.detail[msg.bigStep].logWith === "undefined") {
                                                 msg.todo = "connect";
@@ -64,8 +64,7 @@ extension.runtime.onMessage("NewConnection", function (msg, sendResponse) {
                                             }
                                             msg.actionStep = 0;
                                         } else {
-                                            if (msg.todo == "connect")
-                                                rememberWebsite(msg.detail[msg.bigStep].website);
+                                            rememberWebsite(msg.detail[msg.bigStep].website);
                                             msg.todo = "checkAlreadyLogged";
                                             msg.actionStep = 0;
                                             msg.bigStep++;
@@ -81,7 +80,7 @@ extension.runtime.onMessage("NewConnection", function (msg, sendResponse) {
                                         }
                                     }
                                 }
-                            } else {console.log("no response");}
+                            }
                               });
                             });
                         });

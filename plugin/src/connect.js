@@ -32,13 +32,13 @@ extension.runtime.onMessage("goooo", function(msg, sendResponse) {
 	if (msg.todo == "checkAlreadyLogged"){
 		if (isConnected(msg) == true) {
 			if (alreadyVisited(msg) == true){
-				msg.todo = "alreadyConnected";
+				msg.todo = "connect";
 				msg.actionStep = msg.detail[msg.bigStep].website[msg.todo].todo.length;
 				msg.type = "completed";
 				sendResponse(msg);
-				return ;
 			} else {
 				msg.todo = "logout";
+				doThings(msg, sendResponse);
 			}
 		} else {
 			if (typeof msg.detail[msg.bigStep].logWith === "undefined") {
@@ -46,7 +46,9 @@ extension.runtime.onMessage("goooo", function(msg, sendResponse) {
 			} else {
 				msg.todo = msg.detail[msg.bigStep].logWith;
 			}
+			doThings(msg, sendResponse);
 		}
 	}
-	doThings(msg, sendResponse);
+	else
+		doThings(msg, sendResponse);
 });
