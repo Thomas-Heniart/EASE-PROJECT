@@ -21,6 +21,11 @@ public class SiteManager {
 		}
 		return null;
 	}
+	
+	public void clear(){
+		sites.clear();
+	}
+	
 	public List<Site> getSitesList(){
 		return sites;
 	}
