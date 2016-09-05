@@ -1,20 +1,19 @@
 {
 	"name":"UnifyIeseg",
 	"lastLogin":"",
+	"home":"http://unify.ieseg.fr/",
 	"connect":{
-		"url":"http://unify.ieseg.fr/",
+		
 		"todo":[
-			{"action":"wait", "time":1000},
+			{"action":"waitfor", "search":"input#username-inputEl"},
 			{"action":"fill", "what":"login", "search":"input#username-inputEl"},
-			{"action":"fill", "what":"password", "search":"input#password-inputEl"},
-			{"action":"search", "search":"#container-1010 a[role='button']"},
+			{"action":"fill", "what":"password", "search":"input#password-inputEl", "grave":true},
 			{"action":"click", "search":"#container-1010 .x-panel-body .x-toolbar a[role='button'].x-button.x-unselectable"}
 			]
 	},
 	"logout":{
-		"url":"http://unify.ieseg.fr/",
 		"todo":[
-			{"action":"aclick", "search":"a[href='/signout'].buttonSign"}
+			{"action":"goto", "search":"http://unify.ieseg.fr/signout"}
 			]
 	},
 	"checkAlreadyLoged":[
