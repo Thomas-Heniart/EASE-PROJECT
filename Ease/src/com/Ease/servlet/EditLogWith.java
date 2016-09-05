@@ -87,6 +87,7 @@ public class EditLogWith extends HttpServlet {
 				} else {
 					logWith = (LogWith)app;
 					logWith.setAccountId(user.getProfiles().get(lwProfileIndex).getApps().get(lwAccountIndex).getId());
+					logWith.setName(name);
 					logWith.updateInDB(session.getServletContext(), user.getUserKey());
 					retMsg = "success";
 				}

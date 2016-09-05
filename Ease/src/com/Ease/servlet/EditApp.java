@@ -77,6 +77,7 @@ public class EditApp extends HttpServlet {
 				retMsg = "error: Bad website's index.";
 			} else {
 				App app = user.getProfiles().get(profileIndex).getApps().get(appIndex);
+				System.out.println(app.getType());
 				if (app.getType().equals("Account") == false){
 					if (login == null || login.equals("") || wPassword == null || wPassword.equals("")) {
 						retMsg = "error: Bad login or password.";
