@@ -1,0 +1,33 @@
+{   
+    "website":"test",
+    
+    "elements":{
+            
+        "userField":{
+                "id":"si id, pas besoin d'autre identifier"
+        },
+        
+        "button":{
+                "tagName":"si pas d'id, forcement un tag name",
+                "innerText/name/className/type/placeholder/etc.":"nimporte quels autres champs du HTML. Attention, remplacer class par className. innerText = texte à l'intérieur"
+            }
+
+        },
+    
+    "connectionSteps":[
+        {
+            "action":"do",
+            "elements":[
+                {
+                    "name":"userField",
+                    "action":"fill",
+                    "value":"user"
+                },
+                {
+                    "name":"button",
+                    "action":"click"
+                }
+            ]
+        }
+    ]
+}

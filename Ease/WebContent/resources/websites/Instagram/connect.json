@@ -1,0 +1,28 @@
+{
+    "name":"Instagram",
+    "lastLogin":"",
+    "home":"https://www.instagram.com/",
+    "connect":{
+        "todo":[
+          	{"action":"click", "search":"a._fcn8k"},
+            {"action":"click", "search":"a._niffh"},
+            {"action":"fill", "what":"login", "search":"input[name='username']", "grave":true},
+            {"action":"fill", "what":"password", "search":"input[name='password']"},
+            {"action":"click", "search":"button._aj7mu._taytv._ki5uo._o0442"}
+        ]
+    },
+    "logout":{
+        "todo":[
+            {"action":"aclick", "search":"a._soakw._vbtk2.coreSpriteDesktopNavProfile"},
+            {"action":"click", "search":"button._fcwm8.coreSpriteEllipsis._soakw"},
+            {"action":"click", "search":"button._4y3e3"},
+            {"action":"waitload"}
+            ]
+    },
+    "checkAlreadyLoged":[
+        {"search":"a._soakw._vbtk2.coreSpriteDesktopNavProfile"}
+    ],
+    "checkChangeLogin":[
+        {"action":"click", "search":"#loginbutton"}
+    ]
+}

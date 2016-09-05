@@ -1,0 +1,25 @@
+{
+	"name":"ProjetVoltaire",
+	"lastLogin":"",
+	"home":"https://www.projet-voltaire.fr/",
+	"connect":{
+		"url":"https://www.projet-voltaire.fr/",
+		"todo":[
+			{"action":"fill", "what":"login", "search":"form.connexionBox input#emailc"},
+			{"action":"fill", "what":"password", "search":"form.connexionBox input#passwordc"},
+			{"action":"click", "search":"button.buttonSign"}
+			]
+	},
+	"logout":{
+		"url":"https://www.projet-voltaire.fr/",
+		"todo":[
+			{"action":"aclick", "search":"a[href='/signout'].buttonSign"}
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":"a.buttonSign[href='/signout']"}
+	],
+	"checkChangeLogin":[
+		{"action":"click", "search":"#loginbutton"}
+	]
+}

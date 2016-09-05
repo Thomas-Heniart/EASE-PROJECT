@@ -1,0 +1,94 @@
+{
+    "website":"Bunkr",
+    
+    "urls":{
+        "login":"https://bunkrapp.com/signin/",
+        "facebookLogin":"https://bunkrapp.com/oauth/facebook/login/"
+    },
+    
+    "elements":{
+        
+        "userField":{
+            "id":"bkr-signin-mail"
+        },
+        "passField":{
+            "id":"bkr-signin-password"
+        },
+        "buttonLogIn":{
+            "id":"bkr-btn-submit-signin"
+        }
+        
+    },
+    
+    "connectionSteps":[
+        {
+            "action":"goTo",
+            "url":"login"
+        },
+        
+        {
+                "action":"catchFail",
+                "if":"missingElement",
+                "elementName":"passField",
+                "actionsIfFail":[{"action":"end"}],
+                "send":"alreadyConnected"
+        },
+        
+        {
+            "action":"do",
+            "elements":[
+                {
+                    "name":"userField",
+                    "action":"fill",
+                    "value":"user"
+                },
+                {
+                    "name":"passField",
+                    "action":"fill",
+                    "value":"pass"
+                },
+                {
+                    "name":"buttonLogIn",
+                    "action":"click"
+                }
+            ]
+        },
+        
+        {
+            "action":"nextPage",
+            "lastPage":true
+        },
+        
+        {
+            "action":"catchFail",
+            "if":"existingElement",
+            "elementName":"passField",
+            "actionsIfFail":[{"action":"end"}],
+            "send":"wrongPassword"
+        }
+    ],
+    
+    "facebookConnectionSteps":[
+        {
+            "action":"goTo",
+            "url":"login"
+        },
+        
+        {
+                "action":"catchFail",
+                "if":"missingElement",
+                "elementName":"passField",
+                "actionsIfFail":[{"action":"end"}],
+                "send":"alreadyConnected"
+        },
+        
+        {
+            "action":"goTo",
+            "url":"facebookLogin"
+        },
+        
+        {
+            "action":"facebookConnection"
+        }
+    ]
+}

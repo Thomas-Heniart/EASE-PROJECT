@@ -1,0 +1,78 @@
+#menu {
+	float: right;
+	width: 150px;	
+	top: 0px;
+	position: absolute;
+	right: 0px;
+	margin: 0px;
+	height: 0px;
+	color: black;
+	font-family: 'Raleway', Arial, sans-serif;
+	.menu__label {
+		transition: all .3s linear;	
+		height: 43px;
+		font-size: 16px;
+		color: black;
+		span {
+			line-height: 2;
+		}
+	}	
+	.menu__inner {
+		height: 155px;
+		width: 100%;
+		font-size: 12px;
+		padding: 0px;
+		border-bottom-left-radius: 10px;
+		background-color: white;
+		transform: translate3d(100%, 0, 0);
+		opacity: 0;
+		border-bottom: 1px solid #dbdbdb;
+		border-left: 1px solid #dbdbdb;
+		transition: all .3s linear;	
+		li {
+			border-top: 2px solid #dbdbdb;
+			font-size: 16px;
+			a {
+				opacity: 1;
+				color: $themeColor;
+				padding-left: 10%;
+				-webkit-transform: translate3d(0, 0, 0);
+				transform: translate3d(0, 0, 0);
+				&:hover {
+					color: $themeColor;
+				}
+				span {
+					line-height: 2;
+				}
+			}
+			.ScoreMenuTab {
+			    width: 80%;
+			    margin-left: auto;
+   				margin-right: auto;
+   				margin-top: 15px;
+   				font-size: 12px;
+				.ScoreHolder {
+					text-align: center;
+					.box {
+						border-radius: 2px;
+						width: 17px;
+						height: 17px;
+						display: inline-block;
+					}
+				}
+				.ScoreDescription {
+					text-align: center;
+				}
+			}
+		}
+	}	
+}
+
+#menu.menu--open .menu__inner {
+	height: 155px;
+	width: 100%;
+	background-color: white;
+	opacity: 1;
+	transition: all .3s linear;
+	transform: translate3d(0,0,0);
+}

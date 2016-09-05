@@ -1,0 +1,1817 @@
+.ProfilesView.show .MenuButtonSet {
+  display: block; }
+
+.ProfileBox {
+  width: 90%;
+  border: 1px hidden white;
+  border-radius: 5px;
+  background-color: white;
+  overflow: hidden;
+  display: inline-block;
+  height: auto; }
+  .ProfileBox .ProfileName {
+    text-align: left;
+    background-color: #FFD00C;
+    padding: 2px;
+    padding-left: 5px;
+    border-radius: 5px 5px 0px 0px; }
+    .ProfileBox .ProfileName p {
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 1px;
+      display: inline-block;
+      font-family: "Raleway", "Source Sans Pro", sans-serif;
+      color: white;
+      font-family: 'Source Sans Pro', sans-serif;
+      font-size: 15px;
+      margin-bottom: 0px;
+      line-height: 25px;
+      vertical-align: middle;
+      height: 100%; }
+    .ProfileBox .ProfileName .ProfileSettingsButton {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      float: right;
+      font-size: 20px;
+      vertical-align: middle;
+      color: white;
+      margin-top: 3px;
+      cursor: pointer; }
+  .ProfileBox .ProfileContent {
+    position: relative; }
+    .ProfileBox .ProfileContent .content {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow-y: auto; }
+      .ProfileBox .ProfileContent .content .ProfileControlPanel {
+        display: none;
+        width: 100%;
+        font-family: "Raleway", "Source Sans Pro", sans-serif; }
+        .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab {
+          padding: 2px 5%; }
+          .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab .sectionHeader {
+            cursor: pointer;
+            text-align: left;
+            outline: none;
+            padding: 6px 0px;
+            border-bottom: 1px solid #373b60; }
+            .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab .sectionHeader .title {
+              width: 60%;
+              font-weight: 600;
+              color: #373b60; }
+            .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab .sectionHeader p {
+              margin-bottom: 2px; }
+            .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab .sectionHeader p, .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab .sectionHeader div {
+              display: inline-block;
+              vertical-align: middle; }
+          .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab #ColorSection .directInfo {
+            width: 20px;
+            height: 20px;
+            border-radius: 20px;
+            background-color: #373b60; }
+          .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab .sectionContent {
+            margin-top: 3px; }
+            .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab .sectionContent #modifyColorForm .colorChooser {
+              width: 80%;
+              margin: 0px auto; }
+              .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab .sectionContent #modifyColorForm .colorChooser .color {
+                cursor: pointer;
+                display: inline-block;
+                background-color: black;
+                width: 20px;
+                height: 20px;
+                border-radius: 20px; }
+                .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab .sectionContent #modifyColorForm .colorChooser .color.selected {
+                  border: 2px solid #373b60; }
+            .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab .sectionContent input {
+              outline: none;
+              margin-top: 3%;
+              border-radius: 2px;
+              border: 1px hidden;
+              padding-left: 3px;
+              width: 80%;
+              background-color: #efefef; }
+            .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab .sectionContent .buttonSet {
+              text-align: center;
+              margin-top: 3%;
+              margin-bottom: 3%; }
+              .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab .sectionContent .buttonSet button {
+                margin: 0px;
+                padding: 2px;
+                float: none;
+                min-width: 0px;
+                max-width: 100%;
+                width: 40%;
+                display: inline-block;
+                color: white;
+                border-radius: 3px; }
+              .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab .sectionContent .buttonSet #validate {
+                background-color: #373b60; }
+                .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab .sectionContent .buttonSet #validate:hover {
+                  background-color: #33375a; }
+              .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab .sectionContent .buttonSet #cancel {
+                background-color: #888888; }
+                .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab .sectionContent .buttonSet #cancel:hover {
+                  background-color: #838383; }
+        .ProfileBox .ProfileContent .content .ProfileControlPanel ul {
+          padding-left: 0px; }
+          .ProfileBox .ProfileContent .content .ProfileControlPanel ul li {
+            list-style-type: none;
+            cursor: pointer;
+            line-height: 50px;
+            font-size: 20px;
+            border-bottom: 1px solid #AAAAAA; }
+            .ProfileBox .ProfileContent .content .ProfileControlPanel ul li i {
+              float: left;
+              font-size: 40px;
+              margin-top: 5px;
+              margin-left: 10px; }
+            .ProfileBox .ProfileContent .content .ProfileControlPanel ul li p {
+              margin-bottom: 0px;
+              font-family: "Raleway", "Source Sans Pro", sans-serif; }
+            .ProfileBox .ProfileContent .content .ProfileControlPanel ul li:hover {
+              background-color: white;
+              color: black; }
+      .ProfileBox .ProfileContent .content .SitesContainer {
+        position: relative;
+        height: 100%;
+        width: 100%; }
+        .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox {
+          overflow: hidden;
+          border-radius: 5px;
+          width: 33.33333%;
+          border: 1px hidden #EFECEA;
+          float: left;
+          height: 16.66667%;
+          padding-top: 5px;
+          position: relative; }
+          .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .siteName {
+            font-size: 10px;
+            line-height: 9px; }
+            .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .siteName p {
+              margin: 0px; }
+          .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage {
+            position: relative;
+            width: 65%;
+            cursor: pointer;
+            opacity: 0.8;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 2px; }
+            .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage:hover {
+              opacity: 1; }
+            .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .deleteAppButton {
+              visibility: hidden;
+              display: none; }
+            .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .modifyAppButton {
+              visibility: hidden;
+              display: none; }
+            .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage img {
+              border: 1px solid #efefef;
+              border-radius: 5px;
+              width: 100%;
+              height: 100%; }
+          .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage.waitingLinkImage {
+            opacity: 0.5; }
+
+.ProfilesView.show {
+  -webkit-animation: slideLeft 0.8s 1;
+  animation: slideLeft 0.8s 1;
+  display: block; }
+
+.ProfilesView {
+  display: none;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  min-height: 100%; }
+  .ProfilesView .ProfilesHandler.editMode {
+    width: 50%;
+    margin-left: 0px;
+    margin-right: 0px; }
+  .ProfilesView .ProfilesHandler {
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 25px; }
+    .ProfilesView .ProfilesHandler .owl-carousel {
+      width: 100%; }
+      .ProfilesView .ProfilesHandler .owl-carousel .owl-wrapper {
+        padding-bottom: 15px; }
+        .ProfilesView .ProfilesHandler .owl-carousel .owl-wrapper .owl-item .item {
+          text-align: center; }
+
+.windowAddApp {
+  width: 200px;
+  position: absolute;
+  margin-top: 10px;
+  display: none; }
+  .windowAddApp .md-overlay {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0; }
+  .windowAddApp .arrow-top {
+    margin-left: 10px;
+    z-index: 2000;
+    position: relative; }
+    .windowAddApp .arrow-top i {
+      font-size: 28px;
+      line-height: 10px;
+      color: #d9d9d9; }
+  .windowAddApp .content {
+    z-index: 2000;
+    position: absolute;
+    border-radius: 3px;
+    background-color: #d9d9d9; }
+    .windowAddApp .content .blockHeader {
+      font-size: 12px;
+      text-align: center;
+      padding-left: 2%;
+      padding-right: 2%;
+      margin-top: 5px; }
+    .windowAddApp .content .classicInput {
+      padding-left: 20%;
+      padding-right: 20%;
+      margin-top: 5px;
+      margin-bottom: 5px; }
+      .windowAddApp .content .classicInput input {
+        margin-top: 3px;
+        width: 100%;
+        height: 20px;
+        font-size: 11px; }
+      .windowAddApp .content .classicInput .button {
+        min-width: 0px;
+        max-width: 500px;
+        padding: 0px;
+        margin: 0px;
+        width: 22px;
+        height: 22px;
+        color: #42b7cb;
+        font-size: 22px;
+        position: absolute;
+        right: 0;
+        margin-right: 7px;
+        bottom: 0%;
+        margin-bottom: 5px; }
+        .windowAddApp .content .classicInput .button:hover {
+          transition: color 0.3s;
+          cursor: pointer;
+          color: #373b60; }
+  .windowAddApp .md-overlay.overlay-display {
+    opacity: 0.3;
+    visibility: visible; }
+
+.windowAddApp.displayAbs {
+  display: block; }
+
+.ProfilesHandler #dragAndDropHelper {
+  display: none; }
+.ProfilesHandler .item .addProfileView {
+  display: none; }
+
+.ProfilesHandler.editMode {
+  padding-top: 40px; }
+  .ProfilesHandler.editMode #dragAndDropHelper {
+    display: block; }
+  .ProfilesHandler.editMode .item .addProfileView {
+    display: block; }
+  .ProfilesHandler.editMode .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage {
+    opacity: 1; }
+    .ProfilesHandler.editMode .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .deleteAppButton {
+      position: absolute;
+      z-index: 1;
+      width: 35%;
+      height: 35%;
+      border-radius: 100%;
+      background-color: white;
+      top: 5%;
+      left: 0;
+      visibility: hidden;
+      transform: translateX(-50%) translateY(-50%); }
+      .ProfilesHandler.editMode .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .deleteAppButton:hover {
+        cursor: pointer; }
+      .ProfilesHandler.editMode .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .deleteAppButton i {
+        color: black;
+        font-size: 100%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%); }
+    .ProfilesHandler.editMode .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .modifyAppButton {
+      position: absolute;
+      z-index: 1;
+      width: 35%;
+      height: 35%;
+      border-radius: 100%;
+      background-color: white;
+      top: 5%;
+      left: 100%;
+      visibility: hidden;
+      transform: translateX(-50%) translateY(-50%); }
+      .ProfilesHandler.editMode .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .modifyAppButton:hover {
+        cursor: pointer; }
+      .ProfilesHandler.editMode .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .modifyAppButton i {
+        color: black;
+        font-size: 100%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%); }
+    .ProfilesHandler.editMode .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage:hover .deleteAppButton {
+      visibility: visible;
+      display: block; }
+    .ProfilesHandler.editMode .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage:hover .modifyAppButton {
+      visibility: visible;
+      display: block; }
+
+#dragAndDropHelper {
+  top: 4%;
+  width: 8%;
+  z-index: 1; }
+
+.MenuButtonSet.show {
+  display: block; }
+
+.MenuButtonSet {
+  display: none;
+  position: fixed;
+  top: 50%;
+  right: 2%;
+  transform: translateY(-50%); }
+  .MenuButtonSet #enterEditMode {
+    max-width: 100px;
+    min-width: 0px;
+    width: 50px;
+    height: 50px;
+    background-color: #ec555b;
+    border-radius: 10px;
+    padding: 7px;
+    margin: 0px;
+    transition: background-color 0.3s; }
+    .MenuButtonSet #enterEditMode:hover {
+      cursor: pointer; }
+    .MenuButtonSet #enterEditMode img {
+      width: 100%;
+      height: 100%; }
+  .MenuButtonSet #enterEditMode.on {
+    background-color: #42b72a; }
+
+#menu {
+  float: right;
+  width: 150px;
+  top: 0px;
+  position: absolute;
+  right: 0px;
+  margin: 0px;
+  height: 0px;
+  color: black;
+  font-family: 'Raleway', Arial, sans-serif; }
+  #menu .menu__label {
+    transition: all .3s linear;
+    height: 43px;
+    font-size: 16px;
+    color: black; }
+    #menu .menu__label span {
+      line-height: 2; }
+  #menu .menu__inner {
+    height: 155px;
+    width: 100%;
+    font-size: 12px;
+    padding: 0px;
+    border-bottom-left-radius: 10px;
+    background-color: white;
+    transform: translate3d(100%, 0, 0);
+    opacity: 0;
+    border-bottom: 1px solid #dbdbdb;
+    border-left: 1px solid #dbdbdb;
+    transition: all .3s linear; }
+    #menu .menu__inner li {
+      border-top: 2px solid #dbdbdb;
+      font-size: 16px; }
+      #menu .menu__inner li a {
+        opacity: 1;
+        color: #373b60;
+        padding-left: 10%;
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0); }
+        #menu .menu__inner li a:hover {
+          color: #373b60; }
+        #menu .menu__inner li a span {
+          line-height: 2; }
+      #menu .menu__inner li .ScoreMenuTab {
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 15px;
+        font-size: 12px; }
+        #menu .menu__inner li .ScoreMenuTab .ScoreHolder {
+          text-align: center; }
+          #menu .menu__inner li .ScoreMenuTab .ScoreHolder .box {
+            border-radius: 2px;
+            width: 17px;
+            height: 17px;
+            display: inline-block; }
+        #menu .menu__inner li .ScoreMenuTab .ScoreDescription {
+          text-align: center; }
+
+#menu.menu--open .menu__inner {
+  height: 155px;
+  width: 100%;
+  background-color: white;
+  opacity: 1;
+  transition: all .3s linear;
+  transform: translate3d(0, 0, 0); }
+
+span.input label {
+  margin-bottom: 0px; }
+
+.md-overlay {
+  background-color: rgba(56, 55, 98, 0.8) !important; }
+
+.popup .alertDiv.show {
+  display: block;
+  width: 50%;
+  margin: 3px auto;
+  color: red;
+  padding: 0px; }
+  .popup .alertDiv.show p {
+    font-size: 13px;
+    margin: 0px;
+    padding: 0px; }
+
+.popup .md-content {
+  background-color: #373b60 !important;
+  padding: 5px; }
+  .popup .md-content .form {
+    border-radius: 0px !important;
+    width: 100%; }
+    .popup .md-content .form form button {
+      margin-top: 35px; }
+    .popup .md-content .form form .colorChoose {
+      margin-top: 20px; }
+      .popup .md-content .form form .colorChoose .cs-select .cs-placeholder {
+        width: 100%;
+        font-size: 19px; }
+
+#PopupDeleteApp {
+  min-width: 200px;
+  max-width: 100%;
+  width: 400px; }
+  #PopupDeleteApp .md-content {
+    border-radius: 15px;
+    padding-top: 20px;
+    font-family: "Raleway", "Source Sans Pro", sans-serif; }
+    #PopupDeleteApp .md-content p {
+      text-align: center; }
+    #PopupDeleteApp .md-content .title {
+      font-size: 17px; }
+    #PopupDeleteApp .md-content .desc {
+      font-size: 11px; }
+    #PopupDeleteApp .md-content .buttonSet {
+      text-align: center;
+      padding-bottom: 20px; }
+      #PopupDeleteApp .md-content .buttonSet button {
+        display: inline-block;
+        width: 49%;
+        padding: 7px; }
+      #PopupDeleteApp .md-content .buttonSet #accept {
+        background-color: #ec555b;
+        border-color: #ec555b; }
+        #PopupDeleteApp .md-content .buttonSet #accept:hover {
+          background-color: #ee6368; }
+      #PopupDeleteApp .md-content .buttonSet #close {
+        background-color: white;
+        color: black;
+        border-color: white; }
+        #PopupDeleteApp .md-content .buttonSet #close:hover {
+          background-color: #f7f7f7; }
+
+#PopupAddApp {
+  min-width: 200px;
+  max-width: 100%;
+  width: 400px; }
+  #PopupAddApp .md-content {
+    border-radius: 15px;
+    padding-top: 20px;
+    font-family: "Raleway", "Source Sans Pro", sans-serif; }
+    #PopupAddApp .md-content .popupHeader {
+      overflow: hidden;
+      padding: 0px;
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      margin-bottom: 5px; }
+      #PopupAddApp .md-content .popupHeader .logoApp {
+        width: 20%;
+        float: left;
+        height: auto;
+        top: 10%;
+        left: 3%;
+        border-radius: 3px; }
+      #PopupAddApp .md-content .popupHeader .textContent {
+        width: 80%;
+        float: left; }
+        #PopupAddApp .md-content .popupHeader .textContent p {
+          padding: 0px;
+          padding-left: 2px;
+          text-align: center; }
+        #PopupAddApp .md-content .popupHeader .textContent .title {
+          font-size: 17px; }
+        #PopupAddApp .md-content .popupHeader .textContent .desc {
+          font-size: 11px; }
+    #PopupAddApp .md-content #name {
+      display: block;
+      font-size: 1.15em;
+      font-weight: 300;
+      height: 29px;
+      width: 80%;
+      margin: 5px auto;
+      color: black;
+      padding-left: 3px;
+      border-radius: 5px;
+      border: 1px hidden; }
+    #PopupAddApp .md-content .loginWithChooser.hidden {
+      display: none; }
+    #PopupAddApp .md-content .loginWithChooser {
+      padding: 0px;
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      text-align: center;
+      display: block; }
+      #PopupAddApp .md-content .loginWithChooser p {
+        margin: 0px;
+        padding: 0px; }
+      #PopupAddApp .md-content .loginWithChooser .loginWithButton.hidden {
+        display: none; }
+      #PopupAddApp .md-content .loginWithChooser .loginWithButton {
+        padding: 5px;
+        display: inline-block;
+        max-width: 32%;
+        width: 31%;
+        margin-bottom: 5px;
+        border-radius: 5px; }
+        #PopupAddApp .md-content .loginWithChooser .loginWithButton p {
+          padding: 0px; }
+        #PopupAddApp .md-content .loginWithChooser .loginWithButton:hover {
+          cursor: pointer; }
+    #PopupAddApp .md-content .loginAppChooser {
+      max-height: 500px;
+      padding: 0px;
+      margin: 0px;
+      width: 70%;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative; }
+      #PopupAddApp .md-content .loginAppChooser .buttonBack {
+        font-size: 25px;
+        position: absolute;
+        right: 0;
+        top: 0;
+        color: white; }
+        #PopupAddApp .md-content .loginAppChooser .buttonBack:hover {
+          color: #e6e6e6;
+          cursor: pointer; }
+      #PopupAddApp .md-content .loginAppChooser p {
+        text-align: center; }
+      #PopupAddApp .md-content .loginAppChooser .AccountApp.selected {
+        border: 1px solid white; }
+      #PopupAddApp .md-content .loginAppChooser .ChooserContent {
+        max-height: 100px;
+        overflow: auto; }
+        #PopupAddApp .md-content .loginAppChooser .ChooserContent .AccountApp {
+          max-height: 30px;
+          height: 30px;
+          cursor: pointer;
+          padding: 2px;
+          margin-bottom: 4px; }
+          #PopupAddApp .md-content .loginAppChooser .ChooserContent .AccountApp p, #PopupAddApp .md-content .loginAppChooser .ChooserContent .AccountApp .imageHandler {
+            display: inline-block; }
+          #PopupAddApp .md-content .loginAppChooser .ChooserContent .AccountApp p {
+            text-align: left;
+            margin: 0px;
+            margin-left: 5px;
+            padding: 0px; }
+          #PopupAddApp .md-content .loginAppChooser .ChooserContent .AccountApp .imageHandler {
+            height: 100%; }
+            #PopupAddApp .md-content .loginAppChooser .ChooserContent .AccountApp .imageHandler img {
+              height: 100%; }
+    #PopupAddApp .md-content #AddAppForm {
+      width: 80%;
+      margin: 5px auto;
+      padding: 0px; }
+      #PopupAddApp .md-content #AddAppForm input {
+        height: 29px;
+        width: 100%;
+        margin-top: 5px;
+        color: black;
+        padding-left: 3px;
+        border-radius: 5px;
+        border: 1px hidden; }
+    #PopupAddApp .md-content .buttonSet {
+      text-align: center;
+      padding-bottom: 20px; }
+      #PopupAddApp .md-content .buttonSet button {
+        display: inline-block;
+        width: 49%;
+        padding: 7px; }
+      #PopupAddApp .md-content .buttonSet #accept {
+        background-color: #ec555b;
+        border-color: #ec555b; }
+        #PopupAddApp .md-content .buttonSet #accept:hover {
+          background-color: #ee6368; }
+      #PopupAddApp .md-content .buttonSet #close {
+        background-color: white;
+        color: black;
+        border-color: white; }
+        #PopupAddApp .md-content .buttonSet #close:hover {
+          background-color: #f7f7f7; }
+
+#PopupDeleteProfile {
+  min-width: 200px;
+  max-width: 100%;
+  width: 400px; }
+  #PopupDeleteProfile .md-content {
+    border-radius: 15px;
+    padding-top: 20px;
+    font-family: "Raleway", "Source Sans Pro", sans-serif;
+    text-align: center; }
+    #PopupDeleteProfile .md-content p {
+      text-align: center; }
+    #PopupDeleteProfile .md-content .title {
+      font-size: 17px; }
+    #PopupDeleteProfile .md-content .desc {
+      font-size: 11px; }
+    #PopupDeleteProfile .md-content input {
+      width: 80%;
+      border-radius: 5px;
+      border: 1px hidden;
+      height: 29px;
+      color: #373b60;
+      padding-left: 3px;
+      background-color: #efefef;
+      border: none;
+      text-align: center; }
+    #PopupDeleteProfile .md-content .buttonSet {
+      text-align: center;
+      padding-bottom: 20px; }
+      #PopupDeleteProfile .md-content .buttonSet button {
+        display: inline-block;
+        width: 49%;
+        padding: 7px; }
+      #PopupDeleteProfile .md-content .buttonSet #accept {
+        background-color: #ec555b;
+        border-color: #ec555b; }
+        #PopupDeleteProfile .md-content .buttonSet #accept:hover {
+          background-color: #ee6368; }
+      #PopupDeleteProfile .md-content .buttonSet #close {
+        background-color: white;
+        color: black;
+        border-color: white; }
+        #PopupDeleteProfile .md-content .buttonSet #close:hover {
+          background-color: #f7f7f7; }
+
+#PopupModifyApp {
+  min-width: 200px;
+  max-width: 100%;
+  width: 400px; }
+  #PopupModifyApp .md-content {
+    border-radius: 15px;
+    padding-top: 20px;
+    font-family: "Raleway", "Source Sans Pro", sans-serif; }
+    #PopupModifyApp .md-content .popupHeader {
+      overflow: hidden;
+      padding: 0px;
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      margin-bottom: 5px; }
+      #PopupModifyApp .md-content .popupHeader .logoApp {
+        width: 20%;
+        float: left;
+        height: auto;
+        top: 10%;
+        left: 3%;
+        border-radius: 3px; }
+      #PopupModifyApp .md-content .popupHeader .textContent {
+        width: 80%;
+        float: left; }
+        #PopupModifyApp .md-content .popupHeader .textContent p {
+          padding: 0px;
+          padding-left: 2px;
+          text-align: center; }
+        #PopupModifyApp .md-content .popupHeader .textContent .title {
+          font-size: 17px; }
+        #PopupModifyApp .md-content .popupHeader .textContent .desc {
+          font-size: 11px; }
+    #PopupModifyApp .md-content .loginWithChooser.hidden {
+      display: none; }
+    #PopupModifyApp .md-content #name {
+      display: block;
+      font-size: 1.15em;
+      font-weight: 300;
+      height: 29px;
+      width: 80%;
+      margin: 5px auto;
+      color: black;
+      padding-left: 3px;
+      border-radius: 5px;
+      border: 1px hidden; }
+    #PopupModifyApp .md-content .loginWithChooser {
+      padding: 0px;
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      text-align: center;
+      display: block; }
+      #PopupModifyApp .md-content .loginWithChooser p {
+        margin: 0px;
+        padding: 0px; }
+      #PopupModifyApp .md-content .loginWithChooser .loginWithButton.hidden {
+        display: none; }
+      #PopupModifyApp .md-content .loginWithChooser .loginWithButton {
+        padding: 5px;
+        display: inline-block;
+        max-width: 32%;
+        width: 31%;
+        margin-bottom: 5px;
+        border-radius: 5px; }
+        #PopupModifyApp .md-content .loginWithChooser .loginWithButton p {
+          padding: 0px; }
+        #PopupModifyApp .md-content .loginWithChooser .loginWithButton:hover {
+          cursor: pointer; }
+    #PopupModifyApp .md-content .loginAppChooser {
+      max-height: 500px;
+      padding: 0px;
+      margin: 0px;
+      width: 70%;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative; }
+      #PopupModifyApp .md-content .loginAppChooser .buttonBack {
+        font-size: 25px;
+        position: absolute;
+        right: 0;
+        top: 0;
+        color: white; }
+        #PopupModifyApp .md-content .loginAppChooser .buttonBack:hover {
+          color: #e6e6e6;
+          cursor: pointer; }
+      #PopupModifyApp .md-content .loginAppChooser p {
+        text-align: center; }
+      #PopupModifyApp .md-content .loginAppChooser .AccountApp.selected {
+        border: 1px solid white; }
+      #PopupModifyApp .md-content .loginAppChooser .ChooserContent {
+        max-height: 100px;
+        overflow: auto; }
+        #PopupModifyApp .md-content .loginAppChooser .ChooserContent .AccountApp {
+          max-height: 30px;
+          height: 30px;
+          cursor: pointer;
+          padding: 2px;
+          margin-bottom: 4px; }
+          #PopupModifyApp .md-content .loginAppChooser .ChooserContent .AccountApp p, #PopupModifyApp .md-content .loginAppChooser .ChooserContent .AccountApp .imageHandler {
+            display: inline-block; }
+          #PopupModifyApp .md-content .loginAppChooser .ChooserContent .AccountApp p {
+            text-align: left;
+            margin: 0px;
+            margin-left: 5px;
+            padding: 0px; }
+          #PopupModifyApp .md-content .loginAppChooser .ChooserContent .AccountApp .imageHandler {
+            height: 100%; }
+            #PopupModifyApp .md-content .loginAppChooser .ChooserContent .AccountApp .imageHandler img {
+              height: 100%; }
+    #PopupModifyApp .md-content #modifyAppForm {
+      width: 80%;
+      margin: 5px auto;
+      padding: 0px; }
+      #PopupModifyApp .md-content #modifyAppForm input {
+        height: 29px;
+        border-radius: 5px;
+        border: 1px hidden;
+        width: 100%;
+        margin-top: 5px;
+        color: black;
+        padding-left: 3px; }
+    #PopupModifyApp .md-content .buttonSet {
+      text-align: center;
+      padding-bottom: 20px; }
+      #PopupModifyApp .md-content .buttonSet button {
+        display: inline-block;
+        width: 49%;
+        padding: 7px; }
+      #PopupModifyApp .md-content .buttonSet #accept {
+        background-color: #ec555b;
+        border-color: #ec555b; }
+        #PopupModifyApp .md-content .buttonSet #accept:hover {
+          background-color: #ee6368; }
+      #PopupModifyApp .md-content .buttonSet #close {
+        background-color: white;
+        color: black;
+        border-color: white; }
+        #PopupModifyApp .md-content .buttonSet #close:hover {
+          background-color: #f7f7f7; }
+
+.md-show ~ .md-overlay {
+  opacity: 0.3 !important; }
+
+#alertPopup {
+  width: 250px;
+  position: fixed;
+  border-radius: 5px;
+  padding: 5px;
+  right: 2%;
+  top: 60px;
+  z-index: 10000;
+  background-color: #848484;
+  text-align: center;
+  visibility: hidden;
+  color: white;
+  box-shadow: 0px 1px 1px 1px #777777;
+  font-family: "Raleway", "Source Sans Pro", sans-serif;
+  font-size: 16px; }
+  #alertPopup .popup-content p {
+    margin: 0px; }
+  #alertPopup .popup-content p, #alertPopup .popup-content i {
+    display: inline-block; }
+
+#alertPopup.show {
+  visibility: visible;
+  -webkit-animation: alertPopupShowAnimation 3s linear 1;
+  animation: alertPopupShowAnimation 3s linear 1; }
+
+@-webkit-keyframes alertPopupShowAnimation {
+  0% {
+    opacity: 0;
+    transform: translateX(100%); }
+  10% {
+    opacity: 1;
+    transform: translateX(0); }
+  90% {
+    transform: translateY(0);
+    opacity: 1; }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+    visibility: hidden; } }
+#tutorialView {
+  text-align: center;
+  width: 60%;
+  position: fixed;
+  left: 60%; }
+  #tutorialView .arrow {
+    transform: translateY(-50%);
+    position: absolute;
+    top: 50%;
+    right: 0;
+    font-size: 50px;
+    color: #434343; }
+    #tutorialView .arrow i {
+      display: inline-block; }
+  #tutorialView .title {
+    font-size: 50px;
+    transform: translateY(-100%); }
+  #tutorialView .info {
+    font-size: 25px;
+    transform: translateY(-100%); }
+
+#downloadExtension {
+  text-align: center;
+  width: 80%; }
+  #downloadExtension .title {
+    font-size: 50px;
+    transform: translateY(-100%); }
+  #downloadExtension .info {
+    font-size: 25px;
+    transform: translateY(-100%); }
+  #downloadExtension #install-button {
+    background-color: #373b60;
+    color: white;
+    border-radius: 5px;
+    border: none;
+    padding: 5px 30px;
+    transition: all 0.3s;
+    border: 1px solid #373b60;
+    outline: none;
+    font-size: 20px; }
+    #downloadExtension #install-button:hover {
+      border: 1px solid #373b60;
+      color: #373b60;
+      background-color: transparent;
+      transition: all 0.3s; }
+
+.SettingsView.show {
+  display: block;
+  -webkit-animation: slideLeft 0.8s 1;
+  animation: slideLeft 0.8s 1; }
+
+.SettingsView {
+  width: 100%;
+  float: left;
+  display: none;
+  min-height: 100%;
+  overflow: auto;
+  height: 100%; }
+  .SettingsView .alertDiv {
+    color: red; }
+  .SettingsView .settingsWindow {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    position: relative;
+    width: 40%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #efefef;
+    padding: 3%;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    border-radius: 5px; }
+    .SettingsView .settingsWindow .quit {
+      font-size: 20px;
+      cursor: pointer;
+      color: red;
+      position: absolute;
+      right: 2%;
+      top: 2%; }
+    .SettingsView .settingsWindow .title {
+      color: #373b60;
+      font-family: "Raleway", "Source Sans Pro", sans-serif;
+      font-weight: 600;
+      font-size: 18px;
+      text-align: center;
+      margin-bottom: 30px; }
+      .SettingsView .settingsWindow .title p, .SettingsView .settingsWindow .title i {
+        display: inline-block; }
+    .SettingsView .settingsWindow #settingsTab {
+      color: #373b60; }
+      .SettingsView .settingsWindow #settingsTab .sectionHeader.ui-state-active .iconEdit {
+        display: none; }
+      .SettingsView .settingsWindow #settingsTab .sectionHeader {
+        outline: none;
+        cursor: pointer;
+        border-top: 1px solid #373b60;
+        font-weight: 600;
+        padding-left: 2%;
+        padding-right: 2%;
+        padding-top: 1%;
+        padding-bottom: 1%; }
+        .SettingsView .settingsWindow #settingsTab .sectionHeader p {
+          display: inline-block;
+          width: 45%;
+          margin-bottom: 0px; }
+        .SettingsView .settingsWindow #settingsTab .sectionHeader .directInfo {
+          color: #888888;
+          font-weight: 200; }
+        .SettingsView .settingsWindow #settingsTab .sectionHeader .iconEdit {
+          display: inline-block;
+          float: right;
+          font-weight: 300;
+          font-size: 11px; }
+          .SettingsView .settingsWindow #settingsTab .sectionHeader .iconEdit i {
+            margin-right: 2px; }
+      .SettingsView .settingsWindow #settingsTab .sectionContent {
+        padding-left: 2%;
+        padding-right: 2%;
+        overflow: hidden; }
+      .SettingsView .settingsWindow #settingsTab #contentName #modifyNameForm, .SettingsView .settingsWindow #settingsTab #contentName #modifyPasswordForm, .SettingsView .settingsWindow #settingsTab #contentName #modifyPhoneForm, .SettingsView .settingsWindow #settingsTab #contentName #modifyLanguageForm, .SettingsView .settingsWindow #settingsTab #contentName #modifyEmailForm, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyNameForm, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyPasswordForm, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyPhoneForm, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyLanguageForm, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyEmailForm, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyNameForm, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyPasswordForm, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyPhoneForm, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyLanguageForm, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyEmailForm, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyNameForm, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyPasswordForm, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyPhoneForm, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyLanguageForm, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyEmailForm, .SettingsView .settingsWindow #settingsTab #contentContact #modifyNameForm, .SettingsView .settingsWindow #settingsTab #contentContact #modifyPasswordForm, .SettingsView .settingsWindow #settingsTab #contentContact #modifyPhoneForm, .SettingsView .settingsWindow #settingsTab #contentContact #modifyLanguageForm, .SettingsView .settingsWindow #settingsTab #contentContact #modifyEmailForm {
+        width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center; }
+        .SettingsView .settingsWindow #settingsTab #contentName #modifyNameForm input, .SettingsView .settingsWindow #settingsTab #contentName #modifyPasswordForm input, .SettingsView .settingsWindow #settingsTab #contentName #modifyPhoneForm input, .SettingsView .settingsWindow #settingsTab #contentName #modifyLanguageForm input, .SettingsView .settingsWindow #settingsTab #contentName #modifyEmailForm input, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyNameForm input, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyPasswordForm input, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyPhoneForm input, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyLanguageForm input, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyEmailForm input, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyNameForm input, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyPasswordForm input, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyPhoneForm input, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyLanguageForm input, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyEmailForm input, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyNameForm input, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyPasswordForm input, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyPhoneForm input, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyLanguageForm input, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyEmailForm input, .SettingsView .settingsWindow #settingsTab #contentContact #modifyNameForm input, .SettingsView .settingsWindow #settingsTab #contentContact #modifyPasswordForm input, .SettingsView .settingsWindow #settingsTab #contentContact #modifyPhoneForm input, .SettingsView .settingsWindow #settingsTab #contentContact #modifyLanguageForm input, .SettingsView .settingsWindow #settingsTab #contentContact #modifyEmailForm input {
+          outline: none;
+          margin-top: 3%;
+          border-radius: 2px;
+          border: 1px hidden;
+          padding-left: 3px;
+          width: 85%; }
+        .SettingsView .settingsWindow #settingsTab #contentName #modifyNameForm .buttonSet, .SettingsView .settingsWindow #settingsTab #contentName #modifyPasswordForm .buttonSet, .SettingsView .settingsWindow #settingsTab #contentName #modifyPhoneForm .buttonSet, .SettingsView .settingsWindow #settingsTab #contentName #modifyLanguageForm .buttonSet, .SettingsView .settingsWindow #settingsTab #contentName #modifyEmailForm .buttonSet, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyNameForm .buttonSet, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyPasswordForm .buttonSet, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyPhoneForm .buttonSet, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyLanguageForm .buttonSet, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyEmailForm .buttonSet, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyNameForm .buttonSet, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyPasswordForm .buttonSet, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyPhoneForm .buttonSet, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyLanguageForm .buttonSet, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyEmailForm .buttonSet, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyNameForm .buttonSet, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyPasswordForm .buttonSet, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyPhoneForm .buttonSet, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyLanguageForm .buttonSet, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyEmailForm .buttonSet, .SettingsView .settingsWindow #settingsTab #contentContact #modifyNameForm .buttonSet, .SettingsView .settingsWindow #settingsTab #contentContact #modifyPasswordForm .buttonSet, .SettingsView .settingsWindow #settingsTab #contentContact #modifyPhoneForm .buttonSet, .SettingsView .settingsWindow #settingsTab #contentContact #modifyLanguageForm .buttonSet, .SettingsView .settingsWindow #settingsTab #contentContact #modifyEmailForm .buttonSet {
+          text-align: center;
+          margin-top: 3%;
+          margin-bottom: 3%; }
+          .SettingsView .settingsWindow #settingsTab #contentName #modifyNameForm .buttonSet button, .SettingsView .settingsWindow #settingsTab #contentName #modifyPasswordForm .buttonSet button, .SettingsView .settingsWindow #settingsTab #contentName #modifyPhoneForm .buttonSet button, .SettingsView .settingsWindow #settingsTab #contentName #modifyLanguageForm .buttonSet button, .SettingsView .settingsWindow #settingsTab #contentName #modifyEmailForm .buttonSet button, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyNameForm .buttonSet button, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyPasswordForm .buttonSet button, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyPhoneForm .buttonSet button, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyLanguageForm .buttonSet button, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyEmailForm .buttonSet button, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyNameForm .buttonSet button, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyPasswordForm .buttonSet button, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyPhoneForm .buttonSet button, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyLanguageForm .buttonSet button, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyEmailForm .buttonSet button, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyNameForm .buttonSet button, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyPasswordForm .buttonSet button, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyPhoneForm .buttonSet button, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyLanguageForm .buttonSet button, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyEmailForm .buttonSet button, .SettingsView .settingsWindow #settingsTab #contentContact #modifyNameForm .buttonSet button, .SettingsView .settingsWindow #settingsTab #contentContact #modifyPasswordForm .buttonSet button, .SettingsView .settingsWindow #settingsTab #contentContact #modifyPhoneForm .buttonSet button, .SettingsView .settingsWindow #settingsTab #contentContact #modifyLanguageForm .buttonSet button, .SettingsView .settingsWindow #settingsTab #contentContact #modifyEmailForm .buttonSet button {
+            margin: 0px;
+            padding: 2px;
+            float: none;
+            min-width: 0px;
+            max-width: 100%;
+            width: 40%;
+            display: inline-block;
+            color: white;
+            border-radius: 3px; }
+          .SettingsView .settingsWindow #settingsTab #contentName #modifyNameForm .buttonSet #validate, .SettingsView .settingsWindow #settingsTab #contentName #modifyPasswordForm .buttonSet #validate, .SettingsView .settingsWindow #settingsTab #contentName #modifyPhoneForm .buttonSet #validate, .SettingsView .settingsWindow #settingsTab #contentName #modifyLanguageForm .buttonSet #validate, .SettingsView .settingsWindow #settingsTab #contentName #modifyEmailForm .buttonSet #validate, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyNameForm .buttonSet #validate, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyPasswordForm .buttonSet #validate, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyPhoneForm .buttonSet #validate, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyLanguageForm .buttonSet #validate, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyEmailForm .buttonSet #validate, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyNameForm .buttonSet #validate, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyPasswordForm .buttonSet #validate, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyPhoneForm .buttonSet #validate, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyLanguageForm .buttonSet #validate, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyEmailForm .buttonSet #validate, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyNameForm .buttonSet #validate, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyPasswordForm .buttonSet #validate, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyPhoneForm .buttonSet #validate, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyLanguageForm .buttonSet #validate, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyEmailForm .buttonSet #validate, .SettingsView .settingsWindow #settingsTab #contentContact #modifyNameForm .buttonSet #validate, .SettingsView .settingsWindow #settingsTab #contentContact #modifyPasswordForm .buttonSet #validate, .SettingsView .settingsWindow #settingsTab #contentContact #modifyPhoneForm .buttonSet #validate, .SettingsView .settingsWindow #settingsTab #contentContact #modifyLanguageForm .buttonSet #validate, .SettingsView .settingsWindow #settingsTab #contentContact #modifyEmailForm .buttonSet #validate {
+            background-color: #373b60; }
+            .SettingsView .settingsWindow #settingsTab #contentName #modifyNameForm .buttonSet #validate:hover, .SettingsView .settingsWindow #settingsTab #contentName #modifyPasswordForm .buttonSet #validate:hover, .SettingsView .settingsWindow #settingsTab #contentName #modifyPhoneForm .buttonSet #validate:hover, .SettingsView .settingsWindow #settingsTab #contentName #modifyLanguageForm .buttonSet #validate:hover, .SettingsView .settingsWindow #settingsTab #contentName #modifyEmailForm .buttonSet #validate:hover, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyNameForm .buttonSet #validate:hover, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyPasswordForm .buttonSet #validate:hover, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyPhoneForm .buttonSet #validate:hover, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyLanguageForm .buttonSet #validate:hover, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyEmailForm .buttonSet #validate:hover, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyNameForm .buttonSet #validate:hover, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyPasswordForm .buttonSet #validate:hover, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyPhoneForm .buttonSet #validate:hover, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyLanguageForm .buttonSet #validate:hover, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyEmailForm .buttonSet #validate:hover, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyNameForm .buttonSet #validate:hover, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyPasswordForm .buttonSet #validate:hover, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyPhoneForm .buttonSet #validate:hover, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyLanguageForm .buttonSet #validate:hover, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyEmailForm .buttonSet #validate:hover, .SettingsView .settingsWindow #settingsTab #contentContact #modifyNameForm .buttonSet #validate:hover, .SettingsView .settingsWindow #settingsTab #contentContact #modifyPasswordForm .buttonSet #validate:hover, .SettingsView .settingsWindow #settingsTab #contentContact #modifyPhoneForm .buttonSet #validate:hover, .SettingsView .settingsWindow #settingsTab #contentContact #modifyLanguageForm .buttonSet #validate:hover, .SettingsView .settingsWindow #settingsTab #contentContact #modifyEmailForm .buttonSet #validate:hover {
+              background-color: #33375a; }
+          .SettingsView .settingsWindow #settingsTab #contentName #modifyNameForm .buttonSet #cancel, .SettingsView .settingsWindow #settingsTab #contentName #modifyPasswordForm .buttonSet #cancel, .SettingsView .settingsWindow #settingsTab #contentName #modifyPhoneForm .buttonSet #cancel, .SettingsView .settingsWindow #settingsTab #contentName #modifyLanguageForm .buttonSet #cancel, .SettingsView .settingsWindow #settingsTab #contentName #modifyEmailForm .buttonSet #cancel, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyNameForm .buttonSet #cancel, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyPasswordForm .buttonSet #cancel, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyPhoneForm .buttonSet #cancel, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyLanguageForm .buttonSet #cancel, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyEmailForm .buttonSet #cancel, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyNameForm .buttonSet #cancel, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyPasswordForm .buttonSet #cancel, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyPhoneForm .buttonSet #cancel, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyLanguageForm .buttonSet #cancel, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyEmailForm .buttonSet #cancel, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyNameForm .buttonSet #cancel, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyPasswordForm .buttonSet #cancel, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyPhoneForm .buttonSet #cancel, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyLanguageForm .buttonSet #cancel, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyEmailForm .buttonSet #cancel, .SettingsView .settingsWindow #settingsTab #contentContact #modifyNameForm .buttonSet #cancel, .SettingsView .settingsWindow #settingsTab #contentContact #modifyPasswordForm .buttonSet #cancel, .SettingsView .settingsWindow #settingsTab #contentContact #modifyPhoneForm .buttonSet #cancel, .SettingsView .settingsWindow #settingsTab #contentContact #modifyLanguageForm .buttonSet #cancel, .SettingsView .settingsWindow #settingsTab #contentContact #modifyEmailForm .buttonSet #cancel {
+            background-color: #888888; }
+            .SettingsView .settingsWindow #settingsTab #contentName #modifyNameForm .buttonSet #cancel:hover, .SettingsView .settingsWindow #settingsTab #contentName #modifyPasswordForm .buttonSet #cancel:hover, .SettingsView .settingsWindow #settingsTab #contentName #modifyPhoneForm .buttonSet #cancel:hover, .SettingsView .settingsWindow #settingsTab #contentName #modifyLanguageForm .buttonSet #cancel:hover, .SettingsView .settingsWindow #settingsTab #contentName #modifyEmailForm .buttonSet #cancel:hover, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyNameForm .buttonSet #cancel:hover, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyPasswordForm .buttonSet #cancel:hover, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyPhoneForm .buttonSet #cancel:hover, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyLanguageForm .buttonSet #cancel:hover, .SettingsView .settingsWindow #settingsTab #contentPassword #modifyEmailForm .buttonSet #cancel:hover, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyNameForm .buttonSet #cancel:hover, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyPasswordForm .buttonSet #cancel:hover, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyPhoneForm .buttonSet #cancel:hover, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyLanguageForm .buttonSet #cancel:hover, .SettingsView .settingsWindow #settingsTab #contentPhone #modifyEmailForm .buttonSet #cancel:hover, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyNameForm .buttonSet #cancel:hover, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyPasswordForm .buttonSet #cancel:hover, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyPhoneForm .buttonSet #cancel:hover, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyLanguageForm .buttonSet #cancel:hover, .SettingsView .settingsWindow #settingsTab #contentLanguage #modifyEmailForm .buttonSet #cancel:hover, .SettingsView .settingsWindow #settingsTab #contentContact #modifyNameForm .buttonSet #cancel:hover, .SettingsView .settingsWindow #settingsTab #contentContact #modifyPasswordForm .buttonSet #cancel:hover, .SettingsView .settingsWindow #settingsTab #contentContact #modifyPhoneForm .buttonSet #cancel:hover, .SettingsView .settingsWindow #settingsTab #contentContact #modifyLanguageForm .buttonSet #cancel:hover, .SettingsView .settingsWindow #settingsTab #contentContact #modifyEmailForm .buttonSet #cancel:hover {
+              background-color: #838383; }
+
+@media screen and (max-width: 771px) {
+  .SettingsView .settingsWindow {
+    width: 90%; } }
+.catalogView {
+  width: 100%;
+  font-family: "Raleway", "Source Sans Pro", sans-serif; }
+  .catalogView .helpIntegrateApps {
+    padding: 10px;
+    padding-top: 20px;
+    text-align: center;
+    width: 60%;
+    margin: 0px auto;
+    border-top: 1px solid #373b60; }
+    .catalogView .helpIntegrateApps .DivHeader {
+      font-size: 12px; }
+    .catalogView .helpIntegrateApps #integrateAppForm i {
+      font-size: 25px;
+      vertical-align: middle;
+      color: #373b60; }
+    .catalogView .helpIntegrateApps #integrateAppForm .inputs {
+      display: inline-block;
+      width: 50%;
+      height: 22px;
+      position: relative;
+      font-size: 12px; }
+      .catalogView .helpIntegrateApps #integrateAppForm .inputs input.hidden {
+        display: none; }
+      .catalogView .helpIntegrateApps #integrateAppForm .inputs input {
+        height: 100%;
+        vertical-align: middle;
+        width: 100%;
+        padding-left: 3px;
+        border-radius: 3px;
+        border: none;
+        background-color: #ececec; }
+      .catalogView .helpIntegrateApps #integrateAppForm .inputs p.hidden {
+        display: none; }
+      .catalogView .helpIntegrateApps #integrateAppForm .inputs p {
+        height: 22px;
+        border-radius: 3px;
+        background-color: #ececec; }
+    .catalogView .helpIntegrateApps #integrateAppForm .buttonSet {
+      display: inline-block; }
+      .catalogView .helpIntegrateApps #integrateAppForm .buttonSet i {
+        display: inline-block;
+        color: #32c75a;
+        padding: 1px 6px; }
+      .catalogView .helpIntegrateApps #integrateAppForm .buttonSet i.hidden {
+        display: none; }
+      .catalogView .helpIntegrateApps #integrateAppForm .buttonSet button.hidden {
+        display: none; }
+      .catalogView .helpIntegrateApps #integrateAppForm .buttonSet button {
+        outline: none;
+        border: none;
+        background-color: white; }
+        .catalogView .helpIntegrateApps #integrateAppForm .buttonSet button i {
+          padding: 0px;
+          color: black; }
+        .catalogView .helpIntegrateApps #integrateAppForm .buttonSet button:hover i {
+          padding: 0px;
+          color: #373b60; }
+  .catalogView .catalogHeader {
+    padding: 5px;
+    width: 60%;
+    text-align: center;
+    color: #373b60;
+    margin: 0px auto;
+    margin-top: 2%;
+    border-bottom: 1px solid #373b60;
+    padding-bottom: 2%; }
+    .catalogView .catalogHeader p {
+      font-weight: 600;
+      color: #373b60;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 15px;
+      width: 70%;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 0px;
+      line-height: 30px;
+      border-radius: 10px; }
+  .catalogView .scaleContainer {
+    width: 60%;
+    position: relative;
+    margin: 30px auto; }
+    .catalogView .scaleContainer .catalogContainer {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden; }
+      .catalogView .scaleContainer .catalogContainer .catalogApp {
+        width: 25%;
+        height: 25%;
+        float: left;
+        padding: 5px; }
+        .catalogView .scaleContainer .catalogContainer .catalogApp .catalogAppLogo {
+          width: 65%;
+          height: 65%;
+          margin-left: auto;
+          margin-right: auto;
+          padding-top: 3px; }
+          .catalogView .scaleContainer .catalogContainer .catalogApp .catalogAppLogo:hover {
+            cursor: pointer; }
+            .catalogView .scaleContainer .catalogContainer .catalogApp .catalogAppLogo:hover img {
+              box-shadow: 0px 0px 4px 0px #cccccc; }
+          .catalogView .scaleContainer .catalogContainer .catalogApp .catalogAppLogo img {
+            width: 100%;
+            border-radius: 5px;
+            height: 100%;
+            border: 1px solid #cccccc; }
+        .catalogView .scaleContainer .catalogContainer .catalogApp .catalogAppName {
+          text-align: center;
+          padding-top: 3px;
+          font-size: 12px; }
+
+.ProfilesHandler.editMode .item .AddProfileView {
+  display: block; }
+  .ProfilesHandler.editMode .item .AddProfileView:hover {
+    cursor: pointer;
+    background-color: #fafafa; }
+
+.ProfilesHandler .item .AddProfileView {
+  display: none;
+  background-color: white;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 50%;
+  border-radius: 5px; }
+  .ProfilesHandler .item .AddProfileView:hover {
+    cursor: pointer;
+    background-color: #fafafa; }
+  .ProfilesHandler .item .AddProfileView .MobilePreviewHeader {
+    height: 20px;
+    background-color: #35a7ff;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px; }
+  .ProfilesHandler .item .AddProfileView .scalerContainer {
+    position: relative; }
+    .ProfilesHandler .item .AddProfileView .scalerContainer .addHelper {
+      font-size: 50px;
+      color: #efefef; }
+    .ProfilesHandler .item .AddProfileView .scalerContainer p {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      text-align: center;
+      padding-left: 20%;
+      padding-right: 20%;
+      padding-top: 40%;
+      font-size: 10px; }
+
+.MobilePreview {
+  width: 100%;
+  border-radius: 5px;
+  background-color: white;
+  position: relative;
+  font-family: "Raleway", "Source Sans Pro", sans-serif; }
+  .MobilePreview .MobilePreviewHeader {
+    background-color: #FFD00C;
+    padding: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px; }
+    .MobilePreview .MobilePreviewHeader p {
+      margin-bottom: 0px;
+      line-height: 12px;
+      color: white;
+      font-size: 12px;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600; }
+  .MobilePreview .scalerContainer {
+    position: relative; }
+    .MobilePreview .scalerContainer .AppTab {
+      width: 100%;
+      position: absolute;
+      top: 0;
+      height: 100%;
+      overflow-y: auto; }
+      .MobilePreview .scalerContainer .AppTab .addHelper {
+        font-size: 80px;
+        color: #efefef; }
+      .MobilePreview .scalerContainer .AppTab .logoItem {
+        width: 33.33333%;
+        height: 16.66667%;
+        padding: 5%;
+        float: left;
+        position: relative; }
+        .MobilePreview .scalerContainer .AppTab .logoItem .imageBox {
+          position: relative;
+          width: 100%;
+          height: 100%; }
+          .MobilePreview .scalerContainer .AppTab .logoItem .imageBox .deleteAppButton {
+            position: absolute;
+            z-index: 1;
+            width: 35%;
+            height: 35%;
+            border-radius: 100%;
+            background-color: white;
+            top: 0;
+            left: 0;
+            visibility: hidden;
+            transform: translateX(-50%) translateY(-50%); }
+            .MobilePreview .scalerContainer .AppTab .logoItem .imageBox .deleteAppButton:hover {
+              cursor: pointer; }
+            .MobilePreview .scalerContainer .AppTab .logoItem .imageBox .deleteAppButton i {
+              color: black;
+              font-size: 100%;
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translateX(-50%) translateY(-50%); }
+          .MobilePreview .scalerContainer .AppTab .logoItem .imageBox .modifyAppButton {
+            position: absolute;
+            z-index: 1;
+            width: 35%;
+            height: 35%;
+            border-radius: 100%;
+            background-color: white;
+            top: 100%;
+            left: 100%;
+            visibility: hidden;
+            transform: translateX(-50%) translateY(-50%); }
+            .MobilePreview .scalerContainer .AppTab .logoItem .imageBox .modifyAppButton:hover {
+              cursor: pointer; }
+            .MobilePreview .scalerContainer .AppTab .logoItem .imageBox .modifyAppButton i {
+              color: black;
+              font-size: 100%;
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translateX(-50%) translateY(-50%); }
+          .MobilePreview .scalerContainer .AppTab .logoItem .imageBox:hover .deleteAppButton {
+            visibility: visible; }
+          .MobilePreview .scalerContainer .AppTab .logoItem .imageBox:hover .modifyAppButton {
+            visibility: visible; }
+          .MobilePreview .scalerContainer .AppTab .logoItem .imageBox img {
+            border-radius: 3px;
+            width: 100%;
+            height: 100%;
+            border: 1px solid #efefef; }
+          .MobilePreview .scalerContainer .AppTab .logoItem .imageBox i {
+            font-size: 70px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            color: #32cd32;
+            -webkit-transform: translateX(-50%) translateY(-50%);
+            -moz-transform: translateX(-50%) translateY(-50%);
+            -ms-transform: translateX(-50%) translateY(-50%);
+            transform: translateX(-50%) translateY(-50%);
+            transform-origin: top left; }
+          .MobilePreview .scalerContainer .AppTab .logoItem .imageBox i.fa-spinner {
+            -webkit-animation: rotate 3s linear infinite;
+            animation: rotate 3s linear infinite; }
+
+@-webkit-keyframes rotate {
+  from {
+    -webkit-transform: rotate(0deg) translate(-50%, -50%); }
+  to {
+    -webkit-transform: rotate(360deg) translate(-50%, -50%); } }
+@-webkit-keyframes easyScaling {
+  0% {
+    transform: scaleX(0.8) scaleY(0.8); }
+  50% {
+    transform: scaleX(0.5) scaleY(0.5); }
+  100% {
+    transform: scaleX(0.8) scaleY(0.8); } }
+@-webkit-keyframes deletingApp {
+  0% {
+    transform: scaleX(1) scaleY(1); }
+  100% {
+    transform: scaleX(0.2) scaleY(0.2); } }
+@-webkit-keyframes scaleOut {
+  0% {
+    transform: scaleX(1) scaleY(1); }
+  80% {
+    transform: scaleX(1.2) scaleY(1.2); }
+  100% {
+    transform: scaleX(1) scaleY(1); } }
+.scaleOutAnimation {
+  -webkit-animation: scaleOut .5s linear 1;
+  animation: scaleOut .5s linear 1; }
+
+@-webkit-keyframes slideLeft {
+  0% {
+    transform: translateX(100%);
+    opacity: 0; }
+  100% {
+    transform: translateX(0%);
+    opacity: 1; } }
+.deletingApp {
+  -webkit-animation: deletingApp 0.5s linear infinite;
+  animation: deletingApp 0.5s linear infinite; }
+
+.easyScaling {
+  -webkit-animation: easyScaling .5s linear infinite;
+  animation: easyScaling .5s linear infinite; }
+
+.dragHelperLogo {
+  width: 50px;
+  height: 50px; }
+  .dragHelperLogo img {
+    border-radius: 5px;
+    width: 100%; }
+
+.ProfilesEditView.show {
+  display: block;
+  -webkit-animation: slideLeft 0.8s 1;
+  animation: slideLeft 0.8s 1; }
+
+.ProfilesEditView {
+  display: none;
+  width: 100%;
+  min-height: 100%;
+  position: relative; }
+  .ProfilesEditView .ProfilesEditTab {
+    width: 50%;
+    float: left;
+    padding: 3%;
+    padding-top: 4%;
+    position: absolute; }
+
+.CatalogViewTab.show {
+  transition: all 0.3s ease;
+  visibility: visible;
+  left: 50%;
+  opacity: 1; }
+
+.CatalogViewTab {
+  min-height: 100%;
+  opacity: 0;
+  top: 0;
+  transition: all 0.3s ease;
+  width: 50%;
+  float: left;
+  left: 100%;
+  visibility: hidden;
+  position: absolute;
+  background-color: white; }
+  .CatalogViewTab #quit {
+    position: absolute;
+    top: 1%;
+    right: 1%;
+    background-color: #ec555b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    width: 25px;
+    height: 25px;
+    padding: 0px;
+    outline: none; }
+
+.centeredItem {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%); }
+
+.borderedView {
+  border: 1px solid red !important; }
+
+.footer {
+  height: 20px;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  text-align: center;
+  transition: .3s linear;
+  background-color: transparent; }
+  .footer:hover {
+    height: 60px; }
+    .footer:hover #buttonShow i {
+      color: transparent; }
+  .footer #buttonShow {
+    background-color: transparent;
+    width: 100%;
+    height: 20px; }
+    .footer #buttonShow i {
+      font-size: 15px;
+      line-height: 10px;
+      color: #373b60; }
+  .footer .mediaTab {
+    background-color: #373b60;
+    padding: 5px 0px; }
+    .footer .mediaTab .link {
+      display: inline-block;
+      background-color: #373b60;
+      width: 30px;
+      height: 30px;
+      border-radius: 30px;
+      position: relative; }
+      .footer .mediaTab .link:hover {
+        background-color: white;
+        transition: .3s linear; }
+        .footer .mediaTab .link:hover a {
+          color: #373b60; }
+      .footer .mediaTab .link a {
+        width: 100%;
+        height: 100%;
+        color: white;
+        font-size: 22px; }
+        .footer .mediaTab .link a i {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translateX(-50%) translateY(-50%); }
+
+.header #logoutButton {
+  float: right;
+  margin-right: 160px;
+  background-color: #373b60;
+  color: white;
+  border-radius: 3px;
+  text-decoration: none;
+  transition: all 0.3s;
+  width: 100px;
+  height: 70%;
+  text-align: center;
+  margin-top: 6px;
+  padding: 4px; }
+  .header #logoutButton:hover {
+    cursor: pointer;
+    transition: all 0.3s;
+    background-color: transparent;
+    color: #373b60;
+    border: 1px solid #373b60; }
+
+#invitationBody {
+  background-color: #373b60; }
+  #invitationBody .logo {
+    width: 20%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px; }
+    #invitationBody .logo img {
+      width: 100%; }
+  #invitationBody p {
+    margin-bottom: 3px; }
+  #invitationBody #registrationBlock {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px hidden;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 30px;
+    width: 20%;
+    min-width: 285px;
+    background-color: white; }
+    #invitationBody #registrationBlock .alertDiv {
+      width: 90%;
+      text-align: center;
+      margin: 0px auto; }
+    #invitationBody #registrationBlock .title {
+      width: 90%;
+      margin: 10px auto;
+      font-size: 20px;
+      text-align: center; }
+    #invitationBody #registrationBlock .registrationTips {
+      width: 90%;
+      margin: 0px auto;
+      margin-top: 10px;
+      text-align: center; }
+      #invitationBody #registrationBlock .registrationTips span {
+        font-weight: 600; }
+    #invitationBody #registrationBlock #registrationForm {
+      width: 90%;
+      margin: 0px auto; }
+      #invitationBody #registrationBlock #registrationForm .doubleInput {
+        width: 100; }
+        #invitationBody #registrationBlock #registrationForm .doubleInput .input {
+          width: 48%; }
+          #invitationBody #registrationBlock #registrationForm .doubleInput .input:nth-child(1) {
+            float: left; }
+          #invitationBody #registrationBlock #registrationForm .doubleInput .input:nth-child(2) {
+            float: right; }
+      #invitationBody #registrationBlock #registrationForm .input {
+        margin: 0px;
+        margin-bottom: 10px;
+        width: 100%;
+        max-width: 100%; }
+        #invitationBody #registrationBlock #registrationForm .input input {
+          color: #373b60;
+          background-color: #efefef;
+          border-radius: 5px;
+          border: 1px hidden;
+          width: 100%;
+          padding: 2px;
+          line-height: 1.5; }
+    #invitationBody #registrationBlock .custom-button {
+      width: 50%;
+      margin-left: auto;
+      margin-right: auto; }
+      #invitationBody #registrationBlock .custom-button button {
+        width: 100%;
+        border: 1px solid #373b60;
+        margin-top: 25px;
+        padding-bottom: 5px;
+        padding-top: 7px;
+        border-radius: 7px;
+        font-size: 14px;
+        background-color: #373b60;
+        transition: all .4s;
+        color: white;
+        outline: none;
+        position: relative;
+        display: inline-block;
+        vertical-align: middle; }
+        #invitationBody #registrationBlock .custom-button button:hover {
+          border: 1px solid #373b60;
+          background-color: rgba(255, 255, 255, 0.7);
+          color: #373b60;
+          transition: all .4s; }
+
+body {
+  overflow-x: hidden; }
+  body ::-webkit-scrollbar {
+    width: 7px;
+    position: absolute; }
+  body ::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    -webkit-border-radius: 10px;
+    border-radius: 10px; }
+  body ::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: rgba(175, 176, 191, 0.8);
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5); }
+  body ::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(175, 176, 191, 0.4); }
+
+#chatButton {
+  width: 50px;
+  height: 50px;
+  position: fixed;
+  right: 2%;
+  bottom: 5%;
+  cursor: pointer;
+  background-color: #373b60;
+  border: 1px hidden #efefef;
+  border-radius: 5px;
+  text-align: center; }
+  #chatButton i {
+    line-height: 50px;
+    font-size: 35px;
+    color: white; }
+  #chatButton a {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0; }
+
+.mainBody {
+  padding-top: 0px;
+  background-color: #efefef;
+  overflow: hidden; }
+  .mainBody:before {
+    content: '';
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    opacity: 0.1;
+    position: absolute;
+    background-image: url(../resources/backgrounds/logo-background.png);
+    background-size: 250px; }
+  .mainBody #loginBody {
+    width: 100%;
+    position: absolute;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 50px;
+    background-size: 100% 100%;
+    height: 100%;
+    background-image: url(../resources/backgrounds/sunset.jpg);
+    background-position: 50% 50%; }
+    .mainBody #loginBody .logo {
+      width: 20%;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 50px; }
+      .mainBody #loginBody .logo img {
+        width: 100%; }
+  .mainBody #loggedBody {
+    height: 100%;
+    padding-top: 43px;
+    position: fixed;
+    width: 100%; }
+    .mainBody #loggedBody .col-left {
+      overflow-y: auto;
+      overflow-x: hidden;
+      height: 100%;
+      -webkit-animation: slideLeft 0.8s 1;
+      animation: slideLeft 0.8s 1;
+      display: none; }
+    .mainBody #loggedBody .col-left.show {
+      display: block; }
+
+@-webkit-keyframes scaleIt {
+  0% {
+    transform: perspective(1000px) translateZ(0px) rotateX(0deg); }
+  30% {
+    transform: perspective(1000px) translateZ(-300px) rotateX(0deg); }
+  50% {
+    transform: perspective(1000px) translateZ(-300px) rotateX(180deg); }
+  70% {
+    transform: perspective(1000px) translateZ(-300px) rotateX(360deg); }
+  100% {
+    transform: perspective(1000px) scaleX(1) translateZ(0px) rotateX(360deg); } }
+.FormsContainer {
+  text-align: center; }
+  .FormsContainer .savedUser .alertDiv p {
+    font-size: 14px; }
+  .FormsContainer .savedUser p {
+    font-size: 20px; }
+  .FormsContainer .form {
+    min-height: 254px;
+    vertical-align: middle;
+    display: inline-block;
+    text-align: center;
+    width: 20%;
+    min-width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 2%;
+    padding-right: 2%;
+    border-radius: 7px;
+    padding-bottom: 25px;
+    padding-top: 20px;
+    background-color: rgba(239, 239, 239, 0.7); }
+    .FormsContainer .form span.input {
+      max-width: 100%;
+      width: 100%;
+      margin-left: 0px;
+      margin-right: 0px;
+      margin-top: 21px;
+      margin-bottom: 10px;
+      font-size: 15px; }
+      .FormsContainer .form span.input label span {
+        padding-top: 8px;
+        padding-bottom: 8px; }
+      .FormsContainer .form span.input input {
+        color: #373b60;
+        padding-top: 5px;
+        padding-bottom: 4px;
+        border-radius: 5px;
+        background-color: white;
+        text-align: center; }
+      .FormsContainer .form span.input input:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0px 1000px white inset; }
+      .FormsContainer .form span.input input:-webkit-autofill:focus {
+        -webkit-box-shadow: 0 0 0px 1000px white inset; }
+    .FormsContainer .form button {
+      width: 70%;
+      margin-top: 25px;
+      padding-bottom: 5px;
+      padding-top: 7px;
+      border-radius: 7px;
+      font-size: 14px;
+      background-color: #373b60;
+      border: 1px hidden #373b60;
+      transition: all .4s;
+      color: white;
+      outline: none;
+      position: relative;
+      display: inline-block;
+      vertical-align: middle; }
+      .FormsContainer .form button:hover {
+        border: 1px solid #373b60;
+        background-color: rgba(255, 255, 255, 0.7);
+        color: #373b60;
+        transition: all .4s; }
+    .FormsContainer .form form {
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+      width: 100%; }
+
+@media screen and (max-width: 771px) {
+  #loginBody .logo {
+    width: 100%;
+    margin-top: 0px; }
+  #loginBody .form {
+    width: 98%;
+    margin-top: 20%;
+    margin-left: auto;
+    margin-right: auto; }
+
+  .header .searchInput {
+    display: none; }
+
+  #loggedBody .col-left .ProfilesView {
+    width: 100%; }
+    #loggedBody .col-left .ProfilesView .item .ProfileBox {
+      width: 90%; } }
+.loginButton {
+  margin-left: auto;
+  margin-right: auto; }
+
+.header {
+  background-color: white;
+  height: 43px;
+  position: fixed;
+  width: 100%;
+  z-index: 2;
+  top: 0px;
+  -moz-box-shadow: 0px -2px 8px 0px #373b60;
+  -webkit-box-shadow: 0px -2px 8px 0px #373b60;
+  -o-box-shadow: 0px -2px 8px 0px #373b60;
+  box-shadow: 0px -2px 8px 0px #373b60; }
+  .header #breakButton {
+    font-size: 12px;
+    float: right;
+    margin-right: 160px;
+    height: 39px;
+    color: white;
+    background-color: transparent;
+    margin-top: 2px;
+    margin-bottom: 0px; }
+    .header #breakButton:hover {
+      color: black; }
+    .header #breakButton span {
+      text-transform: none;
+      vertical-align: initial; }
+
+.logoImg {
+  height: 100%;
+  width: auto;
+  margin: 0px;
+  float: left; }
+
+.alertDiv {
+  display: none;
+  color: red;
+  font-size: 14px; }
+
+.userInfo {
+  height: 100%;
+  float: right; }
+
+.userInfo p {
+  display: inline-block; }
+
+.logoutButton img {
+  height: 100%;
+  color: red; }
+
+#loginBody form .alertDiv.show {
+  display: block;
+  color: red; }
+
+.la-animate {
+  z-index: 10000; }
+
+.cookiesInfo {
+  text-align: center;
+  padding: 5px;
+  background-color: #B4E8C0; }
+  .cookiesInfo p, .cookiesInfo button {
+    display: inline-block; }
+  .cookiesInfo p {
+    margin: 0px; }
+  .cookiesInfo button {
+    border: none;
+    background-color: transparent; }
+
+html {
+  height: 100%; }
+  html #errorPage {
+    position: absolute;
+    top: 0;
+    background-color: #373b60;
+    background-image: url("../resources/backgrounds/space.jpg");
+    background-size: 100% 100%;
+    min-width: 100%;
+    min-height: 100%; }
+    html #errorPage .logo {
+      width: 20%;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 50px; }
+      html #errorPage .logo img {
+        width: 100%; }
+    html #errorPage .holder {
+      color: white;
+      text-align: center; }
+      html #errorPage .holder h2 {
+        font-size: 50px; }
+      html #errorPage .holder a {
+        font-size: 30px;
+        text-decoration: none;
+        color: white; }
+
+/*# sourceMappingURL=default_style.css.map */

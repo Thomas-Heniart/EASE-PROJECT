@@ -1,0 +1,95 @@
+{
+    "website":"IESEG network",
+    
+    "urls":{
+        "login":"https://ieseg-network.hivebrite.com/networks/ieseg-network/login",
+        "loginFacebook":"https://hivebrite.com/auth/facebook?network_id=42",
+        "loginLinkedin":"https://hivebrite.com/auth/linkedin?network_id=42"
+    },
+    
+    "elements":{
+        
+        "userField":{
+            "id":"user_email"
+        },
+        "passField":{
+            "id":"user_password"
+        },
+        "buttonLogIn":{
+            "tagName":"input",
+            "type":"submit",
+            "name":"commit",
+            "className":"button btn button button--blue one-whole"
+        },
+        "userFbField":{
+            "id":"email"
+        },
+        "passFbField":{
+            "id":"pass"
+        },
+        "logInButtonFB":{
+            "id":"loginbutton"
+        },
+        "userLiField":{
+            "id":"session_key-oauthAuthorizeForm"
+        },
+        "passLiField":{
+            "id":"session_password-oauthAuthorizeForm"        
+        },
+        "logInButtonLi":{
+            "tagName":"input",
+            "type":"submit",
+            "name":"authorize",
+            "className":"allow btn-primary"
+        }
+        
+    },
+    
+     "connectionSteps":[
+        {
+            "action":"goTo",
+            "url":"login"
+        },
+        
+        {
+                "action":"catchFail",
+                "if":"missingElement",
+                "elementName":"passField",
+                "actionsIfFail":[],
+                "send":"alreadyConnected"
+        },
+        
+        {
+            "action":"do",
+            "elements":[
+                {
+                    "name":"userField",
+                    "action":"fill",
+                    "value":"user"
+                },
+                {
+                    "name":"passField",
+                    "action":"fill",
+                    "value":"pass"
+                },
+                {
+                    "name":"buttonLogIn",
+                    "action":"click"
+                }
+            ]
+        },
+        
+        {
+            "action":"nextPage",
+            "lastPage":true
+        },
+        
+        {
+            "action":"catchFail",
+            "if":"existingElement",
+            "elementName":"passField",
+            "actionsIfFail":[],
+            "send":"wrongPassword"
+        }
+    ]
+}

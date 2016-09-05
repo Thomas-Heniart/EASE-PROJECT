@@ -1,0 +1,75 @@
+{
+    "website":"cafet ieseg",
+    
+    "urls":{
+        "login":"http://cafet.ieseg.fr/index.php"
+    },
+    
+    "elements":{
+        
+        "userField":{
+            "id":"login"
+        },
+        "passField":{
+            "tagName":"input",
+            "name":"pass",
+            "type":"password",
+            "className":"text"
+        },
+        "buttonLogIn":{
+            "tagName":"input",
+            "type":"submit",
+            "name":"BouttonValider",
+            "className":"button_session"
+        }
+        
+    },
+    
+    "connectionSteps":[
+        {
+            "action":"goTo",
+            "url":"login"
+        },
+        
+        {
+                "action":"catchFail",
+                "if":"missingElement",
+                "elementName":"passField",
+                "actionsIfFail":[],
+                "send":"alreadyConnected"
+        },
+        
+        {
+            "action":"do",
+            "elements":[
+                {
+                    "name":"userField",
+                    "action":"fill",
+                    "value":"user"
+                },
+                {
+                    "name":"passField",
+                    "action":"fill",
+                    "value":"pass"
+                },
+                {
+                    "name":"buttonLogIn",
+                    "action":"click"
+                }
+            ]
+        },
+        
+        {
+            "action":"nextPage",
+            "lastPage":true
+        },
+        
+        {
+            "action":"catchFail",
+            "if":"existingElement",
+            "elementName":"passField",
+            "actionsIfFail":[],
+            "send":"wrongPassword"
+        }
+    ]
+}

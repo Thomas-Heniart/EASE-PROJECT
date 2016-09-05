@@ -1,0 +1,23 @@
+{
+    "name":"Vente privée",
+    "lastLogin":"",
+    "home":"https://secure.fr.vente-privee.com/authentication/portal/",
+    "connect":{
+        "todo":[
+            {"action":"fill", "what":"login", "search":"#txtEmail"},
+            {"action":"fill", "what":"password", "search":"#txtPassword"},
+            {"action":"click", "search":"#btSubmit"}
+            ]
+    },
+    "logout":{
+        "todo":[
+            {"action":"goto", "url":"http://fr.vente-privee.com/vp4/Login/Logout.ashx"}
+            ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"#sponsorbox"}
+    ],
+    "checkChangeLogin":[
+        {"action":"click", "search":"#loginbutton"}
+    ]
+}

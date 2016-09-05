@@ -1,0 +1,27 @@
+{
+    "name":"Voyages SNCF",
+    "lastLogin":"",
+    "home":"http://www.voyages-sncf.com/",
+    "connect":{
+        "url":"http://www.voyages-sncf.com/",
+        "todo":[
+        	{"action":"click", "search":"#ccl-label"},
+            {"action":"fill", "what":"login", "search":"input#ccl-email"},
+            {"action":"fill", "what":"password", "search":"input#ccl-password"},
+            {"action":"click", "search":"input#edit-connect"},
+            {"action":"click", "search":".vsc__header-menu"}
+            ]
+    },
+    "logout":{
+        "url":"http://www.voyages-sncf.com/",
+        "todo":[
+            {"action":"aclick", "search":"a.vsc__menu-ccl__step__logout"}
+            ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a.vsc__menu-ccl__step__logout"}
+    ],
+    "checkChangeLogin":[
+        {"action":"click", "search":"#loginbutton"}
+    ]
+}

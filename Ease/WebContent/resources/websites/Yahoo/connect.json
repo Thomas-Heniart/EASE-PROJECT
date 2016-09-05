@@ -1,0 +1,86 @@
+{
+    "website":"yahoo mail",
+    
+    "urls":{
+        "login":"https://login.yahoo.com/config/mail"
+    },
+    
+    "elements":{
+        
+        "userField":{
+            "id":"login-username"
+        },
+        "buttonNext":{
+            "id":"login-signin"
+        },
+        "passField":{
+            "id":"login-passwd"
+        },
+        "buttonLogIn":{
+            "id":"login-signin"
+        }
+        
+    },
+    
+    "connectionSteps":[
+        {
+            "action":"goTo",
+            "url":"login"
+        },
+        
+        {
+            "action":"catchFail",
+            "if":"missingElement",
+            "elementName":"userField",
+            "actionsIfFail":[{"action":"end"}],
+            "send":"alreadyConnected"
+        },
+        
+        {
+            "action":"do",
+            "elements":[
+                {
+                    "name":"userField",
+                    "action":"fill",
+                    "value":"user"
+                },
+                {
+                    "name":"buttonNext",
+                    "action":"click"
+                }
+            ]
+        },
+        
+        {
+            "action":"nextPage"
+        },
+
+        {
+            "action":"do",
+            "elements":[
+                {
+                    "name":"passField",
+                    "action":"fill",
+                    "value":"pass"
+                },
+                {
+                    "name":"buttonNext",
+                    "action":"click"
+                }
+            ]
+        },
+        
+        {
+            "action":"nextPage",
+            "lastPage":true
+        },
+        
+        {
+            "action":"catchFail",
+            "if":"existingElement",
+            "elementName":"passField",
+            "actionsIfFail":[{"action":"end"}],
+            "send":"wrongPassword"
+        }
+    ]
+}

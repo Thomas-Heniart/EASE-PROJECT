@@ -1,0 +1,149 @@
+.ProfileBox {
+  width: 90%;
+  border: 1px hidden #EFECEA;
+  border-radius: 5px;
+  background-color: #EFECEA;
+  -webkit-box-shadow: 0px 5px 10px 0px #656565;
+  -moz-box-shadow: 0px 5px 10px 0px #656565;
+  box-shadow: 0px 5px 10px 0px #656565;
+  overflow: hidden;
+  min-height: 700px;
+  display: inline-block; }
+  .ProfileBox .ProfileName {
+    text-align: left;
+    min-height: 50px;
+    background-color: #FFD00C;
+    padding: 5px;
+    padding-left: 20px;
+    border-radius: 5px 5px 0px 0px; }
+    .ProfileBox .ProfileName p {
+      font-family: "'Source Sans Pro', sans-serif";
+      color: white;
+      font-size: 25px;
+      margin-bottom: 0px;
+      line-height: 50px;
+      vertical-align: middle;
+      height: 100%; }
+  .ProfileBox .SitesContainer .siteLinkBox {
+    border-radius: 5px;
+    width: 33.33333%;
+    border: 1px hidden #EFECEA;
+    float: left;
+    padding: 5%; }
+    .ProfileBox .SitesContainer .siteLinkBox .linkImage {
+      border: 1px hidden #EFECEA;
+      border-radius: 9px;
+      width: 100%;
+      cursor: pointer;
+      opacity: 0.8; }
+      .ProfileBox .SitesContainer .siteLinkBox .linkImage:hover {
+        opacity: 1; }
+      .ProfileBox .SitesContainer .siteLinkBox .linkImage img {
+        border: 1px hidden #EFECEA;
+        border-radius: 9px;
+        width: 100%; }
+
+.ProfilesView {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 50px; }
+  .ProfilesView .owl-stage {
+    padding-bottom: 15px; }
+    .ProfilesView .owl-stage .owl-item .item {
+      text-align: center; }
+
+.MenuButtonSet {
+  float: right;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 35%;
+  right: 0%; }
+  .MenuButtonSet .button.button--sacnite {
+    right: 0px;
+    padding: 1em 2em; }
+    .MenuButtonSet .button.button--sacnite:hover {
+      background-color: transparent; }
+    .MenuButtonSet .button.button--sacnite .icon {
+      font-size: 32px;
+      left: -9px; }
+
+#menu {
+  float: right;
+  width: 235px;
+  top: 0px;
+  position: absolute;
+  right: 0px;
+  margin: 0px;
+  height: 0px; }
+  #menu .menu__label {
+    background-color: #383762;
+    height: 60px; }
+  #menu .menu__inner {
+    background-color: #383762; }
+
+#menu.menu--open .menu__inner {
+  height: 100px;
+  width: 100%; }
+
+body {
+  background-color: #E8ECF1; }
+
+.mainBody {
+  padding-top: 0px;
+  background-color: #E8ECF1;
+  overflow: hidden; }
+
+.loginForm {
+  width: 40%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center; }
+
+.loginButton {
+  margin-left: auto;
+  margin-right: auto; }
+
+.loginBody {
+  margin-top: 50px; }
+
+.header {
+  background-color: white;
+  height: 60px;
+  -moz-box-shadow: 0px 10px 20px 0px #656565;
+  -webkit-box-shadow: 0px 10px 20px 0px #656565;
+  -o-box-shadow: 0px 0px 20px 0px #656565;
+  box-shadow: 0px 10px 20px 0px #656565; }
+
+.logoImg {
+  height: 100%;
+  width: auto;
+  margin: 0px;
+  float: left; }
+
+.userInfo {
+  height: 100%;
+  float: right; }
+
+.userInfo p {
+  display: inline-block; }
+
+.logoutButton img {
+  height: 100%; }
+
+.searchInput {
+  position: relative;
+  display: inline-block;
+  margin-top: 15px;
+  width: 40%;
+  margin-left: 50px; }
+
+.searchInput input {
+  width: 100%;
+  border-radius: 5px;
+  font-family: verdana;
+  font-size: 25px;
+  height: 35px; }
+
+/*# sourceMappingURL=default_style.css.map */

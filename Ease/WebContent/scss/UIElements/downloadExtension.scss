@@ -1,0 +1,31 @@
+@import 'variables';
+
+#downloadExtension {
+	text-align: center;
+	width: 80%;
+	.title {
+		font-size: 50px;
+		transform: translateY(-100%);
+	}
+	.info {
+		font-size: 25px;
+		transform: translateY(-100%);
+	}
+	#install-button {
+		background-color: $themeColor;
+		color:white;
+		border-radius: 5px;
+		border: none;
+		padding: 5px 30px;
+		transition: all 0.3s; 
+		border: 1px solid $themeColor;
+		outline: none;
+		font-size: 20px;
+		&:hover {
+			border: 1px solid $themeColor;
+			color: $themeColor;
+			background-color: rgba(0,0,0,0);
+			transition: all 0.3s; 
+		}
+	}
+}

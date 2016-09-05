@@ -1,0 +1,31 @@
+{
+    "name":"Spotify",
+    "lastLogin":"",
+    "url":"https://play.spotify.com/",
+    "connect":{
+        "url":"https://play.spotify.com/",
+        "todo":[
+        	{"action":"waitfor", "search":"#has-account"},
+        	{"action":"search", "search":"#has-account"},
+        	{"action":"click", "search":"#has-account"},
+            {"action":"fill", "what":"login", "search":"#login-usr", "grave":true},
+            {"action":"fill", "what":"password", "search":"#login-pass"}
+        ]
+    },
+    
+    "logout":{
+        "url":"https://login.skype.com/logout"
+    },
+    "checkAlreadyLoged":[
+        {"search":"#main-nav"}
+    ],
+    "checkChangeLogin":[
+        {"action":"click", "search":"#loginbutton"}
+    ],
+    "specialConnect":[
+    	{"name":"facebook","url":"https://play.spotify.com/","todo":[
+        														{"action":"click", "search":"#has-account"},
+            													{"action":"click", "search":"#fb-login-btn"}
+            												]}
+     ]
+}

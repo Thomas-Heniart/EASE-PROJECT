@@ -1,0 +1,106 @@
+@import 'variables';
+
+#invitationBody {
+	background-color: $themeColor;
+	.logo {
+		width: 20%;
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 50px;
+		img {
+			width: 100%;
+		}
+	}
+	p {
+		margin-bottom: 3px;
+	}
+	#registrationBlock {
+		padding: 5px;
+		border-radius: 5px;
+		border: 1px hidden;
+		margin-left: auto;
+		margin-right: auto;
+		margin-bottom: 30px;
+		width: 20%;
+		min-width: 285px;
+		background-color: white;
+		.alertDiv {
+			width: 90%;
+			text-align: center;
+			margin:0px auto;
+		}
+		.title {
+			width: 90%;
+			margin: 10px auto;
+			font-size: 20px;
+			text-align: center;
+		}
+		.registrationTips {
+			width: 90%;
+			margin: 0px auto;
+			margin-top: 10px;
+			text-align: center;
+			span {
+				font-weight: 600;
+			}
+		}
+		#registrationForm {
+			width: 90%;
+			margin: 0px auto;
+			.doubleInput {
+				width: 100;
+				.input {
+					width: 48%;
+					&:nth-child(1) {
+						float: left;
+					}
+					&:nth-child(2){
+						float: right;
+					}
+				}
+			}
+			.input {
+				margin: 0px;
+				margin-bottom: 10px;
+				width: 100%;
+				max-width: 100%;
+				input {
+					color: $themeColor;
+					background-color: $themeGreyColor;
+					border-radius: 5px;
+					border: 1px hidden;
+					width: 100%;
+					padding: 2px;
+					line-height: 1.5;
+				}
+			}
+		}
+		.custom-button {
+			width: 50%;
+			margin-left: auto;
+			margin-right: auto;
+			button {
+				width: 100%;
+				border: 1px solid $themeColor;
+				margin-top: 25px;
+				padding-bottom: 5px;
+				padding-top: 7px;
+				border-radius: 7px;
+				font-size: 14px;
+				background-color: $themeColor;
+				transition: all .4s;
+				color: white;
+				outline: none;
+				position: relative;
+				display: inline-block;
+				vertical-align: middle;
+				&:hover {
+					border: 1px solid $themeColor;
+					background-color: rgba(white, 0.7);
+					color: $themeColor;
+					transition: all .4s;
+				}
+			}
+		}
+	}
+}

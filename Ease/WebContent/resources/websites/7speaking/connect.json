@@ -1,0 +1,25 @@
+{
+	"name":"7speaking",
+	"lastLogin":"",
+	"home":"https://www.7speaking.com/newsite/controlnew/newlogin.cfm",
+	"connect":{
+		"url":"https://www.7speaking.com/newsite/controlnew/newlogin.cfm",
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#username"},
+			{"action":"fill", "what":"password", "search":"#password"},
+			{"action":"click", "search":"input[name=btn]"}
+			]
+	},
+	"logout":{
+		"url":"https://www.7speaking.com/newsite/controlnew/newlogin.cfm",
+		"todo":[
+			{"action":"click", "search":"td[onclick=javascript:document.location='/newsite/controlnew/newdelog.cfm';]"}
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":"#dswsdqsdqsdqsdqsd"}
+	],
+	"checkChangeLogin":[
+		{"action":"click", "search":"#loginbutton"}
+	]
+}

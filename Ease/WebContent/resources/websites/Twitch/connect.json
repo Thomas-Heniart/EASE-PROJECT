@@ -1,0 +1,65 @@
+{
+    "website":"twitch",
+    
+    "urls":{
+        "login":"https://www.twitch.tv/login"
+    },
+    
+    "elements":{
+
+        
+        "userField":{
+            "id":"username"
+        },
+        "passField":{
+            "tagName":"input",
+            "type":"password",
+            "name":"password"
+        },
+        "logInButton":{
+            "tagName":"button",
+            "className":"primary button js-login-button",
+            "type":"submit"
+        }
+    },
+        
+    "connectionSteps":[
+        {
+            "action":"goTo",
+            "url":"login"
+        },
+        
+        {
+            "action":"do",
+            "elements":[
+                {
+                    "name":"userField",
+                    "action":"fill",
+                    "value":"user"
+                },
+                {
+                    "name":"passField",
+                    "action":"fill",
+                    "value":"pass"
+                },
+                {
+                    "name":"logInButton",
+                    "action":"click"
+                }
+            ]
+        },
+        
+        {
+            "action":"nextPage",
+            "lastPage":true
+        },
+        
+        {
+            "action":"catchFail",
+            "if":"existingElement",
+            "elementName":"passField",
+            "actionsIfFail":[{"action":"end"}],
+            "send":"wrongPassword"
+        }
+    ]
+}

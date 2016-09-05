@@ -1,0 +1,25 @@
+{
+    "name":"Ieseg Job Teaser",
+    "lastLogin":"",
+    "home":"https://ieseg.jobteaser.com/",
+    "connect":{
+        "url":"https://ieseg.jobteaser.com/",
+        "todo":[
+            {"action":"fill", "what":"login", "search":"input[name='txtUserName']"},
+            {"action":"fill", "what":"password", "search":"input[name='txtPassword']"},
+            {"action":"click", "search":"input[name='SubmitButton']"}
+            ]
+    },
+    "logout":{
+        "url":"https://ieseg.jobteaser.com/",
+        "todo":[
+            {"action":"click", "search":"div#login div ul.dropdown-menu li:nth-child(4) a"}
+            ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"div#login"}
+    ],
+    "checkChangeLogin":[
+        {"action":"click", "search":"#loginbutton"}
+    ]
+}

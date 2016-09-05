@@ -1,0 +1,32 @@
+.MenuButtonSet.show {
+	display: block;
+}
+
+.MenuButtonSet {
+	display: none;
+    position: fixed;
+    top: 50%;
+    right: 2%;
+    transform: translateY(-50%);
+	#enterEditMode {
+		max-width: 100px;
+		min-width: 0px;
+		width: 50px;
+		height: 50px;
+		background-color: #ec555b;
+		border-radius: 10px;
+		padding: 7px;
+		margin: 0px;
+		transition: background-color 0.3s;
+		&:hover {
+			cursor: pointer;
+		}
+		img {
+			width: 100%;
+			height: 100%;
+		}
+	}
+	#enterEditMode.on {
+		background-color: #42b72a;		
+	}
+}

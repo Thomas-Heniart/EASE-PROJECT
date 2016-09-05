@@ -1,0 +1,73 @@
+{
+    "website":"dropbox",
+    
+    "urls":{
+        "login":"https://www.dropbox.com/fr/login"
+    },
+    
+    "elements":{
+        
+        "userField":{
+            "tagName":"input",
+            "name":"login_email"
+        },
+        "passField":{
+            "tagName":"input",
+            "name":"login_password"
+        },
+        "buttonLogIn":{
+            "tagName":"button",
+            "type":"submit",
+            "className":"login-button button-primary"
+        }
+        
+    },
+    
+    "connectionSteps":[
+        {
+            "action":"goTo",
+            "url":"login"
+        },
+        
+        {
+                "action":"catchFail",
+                "if":"missingElement",
+                "elementName":"passField",
+                "actionsIfFail":[{"action":"end"}],
+                "send":"alreadyConnected"
+        },
+        
+        {
+            "action":"do",
+            "elements":[
+                {
+                    "name":"userField",
+                    "action":"fill",
+                    "value":"user"
+                },
+                {
+                    "name":"passField",
+                    "action":"fill",
+                    "value":"pass"
+                },
+                {
+                    "name":"buttonLogIn",
+                    "action":"click"
+                }
+            ]
+        },
+        
+        {
+            "action":"nextPage",
+            "lastPage":true
+        },
+        
+        {
+            "action":"catchFail",
+            "if":"existingElement",
+            "elementName":"passField",
+            "actionsIfFail":[{"action":"end"}],
+            "send":"wrongPassword"
+        }
+    ]
+}

@@ -1,0 +1,27 @@
+{
+    "name":"Captain train",
+    "lastLogin":"",
+    "home":"https://www.captaintrain.com",
+    "connect":{
+        "url":"https://www.captaintrain.com",
+        "todo":[
+            {"action":"click", "search":".header__signin-button"},
+            {"action":"fill", "what":"login", "search":"#signin-form input[name='email']"},
+            {"action":"fill", "what":"password", "search":"#signin-form input[name='password']"},
+            {"action":"waitfor", "time":100, "search":".signin__button"},
+            {"action":"click", "search":".signin__button"}
+            ]
+    },
+    "logout":{
+        "todo":[
+            {"action":"click", "search":"#user-menu", "grave":true},
+            {"action":"click", "search":"#user-menu .user-menu__list li:nth-child(4) a i", "grave":true}
+            ]
+    },
+    "checkAlreadyLogged":[
+        {"search":".header__account-item  #user-menu"}
+    ],
+    "checkChangeLogin":[
+        {"action":"click", "search":"#loginbutton"}
+    ]
+}

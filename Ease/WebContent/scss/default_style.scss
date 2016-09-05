@@ -1,0 +1,369 @@
+@import 'variables';
+@import 'Profiles';
+@import 'MenuButtonSet';
+@import 'DropDownUserMenu';
+@import 'UIElements/textInputLogin';
+@import 'UIElements/PopupWindow';
+@import 'UIElements/SimpleAlertPopup';
+@import 'UIElements/Tutorial';
+@import 'UIElements/downloadExtension';
+@import 'settingsView';
+@import 'catalogView';
+@import 'Footer';
+@import 'Header';
+@import 'InvitationPage';
+
+body {
+  overflow-x: hidden;
+  ::-webkit-scrollbar {
+   width: 7px;
+   position: absolute;
+ }
+ ::-webkit-scrollbar-track {
+   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+   -webkit-border-radius: 10px;
+   border-radius: 10px;
+ }
+ ::-webkit-scrollbar-thumb {
+   -webkit-border-radius: 10px;
+   border-radius: 10px;
+   background: rgba(#afb0bf,0.8); 
+   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+ }
+ ::-webkit-scrollbar-thumb:window-inactive {
+  background: rgba(#afb0bf,0.4); 
+}
+}
+
+#chatButton {
+	width: 50px;
+	height: 50px;
+	position: fixed;
+	right: 2%;
+	bottom: 5%;
+	cursor: pointer;
+	background-color: $themeColor;
+	border: 1px hidden $themeGreyColor;
+	border-radius: 5px;
+	text-align: center;
+	i {
+		line-height: 50px;
+		font-size: 35px;
+		color: white;
+	}
+	a {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		left: 0;
+	}
+}
+
+.mainBody {
+	padding-top: 0px;
+ background-color: $themeGreyColor;
+ overflow: hidden;
+ &:before {
+  content: '';
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  opacity: 0.1;
+  position:absolute;
+  background-image:url(../resources/backgrounds/logo-background.png);
+  background-size: 250px	;
+}
+#loginBody {
+ width: 100%;
+ //    	background-color: $themeColor;
+ position: absolute;
+ overflow-y: auto;
+ overflow-x: hidden;    	
+ padding-bottom: 50px;
+ background-size: 100% 100%;
+ height: 100%;
+ background-image:url(../resources/backgrounds/sunset.jpg);
+ background-position: 50% 50%;
+ .logo {
+  width: 20%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 50px;
+  img {
+   width: 100%;
+ }
+}
+}
+#loggedBody {
+ height: 100%;
+ padding-top: 43px;
+ position: fixed;
+ width: 100%;
+ .col-left {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+  -webkit-animation: slideLeft 0.8s 1;
+  animation: slideLeft 0.8s 1;
+  display: none;
+}
+.col-left.show {
+  display: block;
+}
+}
+}
+
+@-webkit-keyframes scaleIt {
+  0% {
+   transform: perspective(1000px) translateZ(0px) rotateX(0deg);
+ }
+ 30% {
+   transform: perspective(1000px)translateZ(-300px) rotateX(0deg);  
+ }
+ 50% {
+   transform: perspective(1000px)translateZ(-300px) rotateX(180deg);  
+ }
+ 70% {
+   transform: perspective(1000px)translateZ(-300px) rotateX(360deg);
+ }
+ 100% {
+   transform: perspective(1000px) scaleX(1) translateZ(0px) rotateX(360deg);
+ }
+}
+.FormsContainer {
+  text-align: center;
+  .savedUser {
+    .alertDiv {
+      p {
+        font-size: 14px;
+      }
+    }
+    p {
+      font-size: 20px;
+    }
+  }
+  .form {
+    min-height: 254px;
+    vertical-align: middle;
+    display: inline-block;
+    text-align: center;
+    width: 20%;
+    min-width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 2%;
+    padding-right: 2%;
+    border-radius: 7px;
+    padding-bottom: 25px;
+    padding-top: 20px;
+    background-color: rgba(239,239,239, 0.7);
+    span.input {
+      max-width: 100%;
+      width: 100%;
+      margin-left: 0px;
+      margin-right: 0px;
+      margin-top: 21px;
+      margin-bottom: 10px;
+      font-size: 15px;
+      label span {
+        padding-top: 8px;
+        padding-bottom: 8px;
+      }
+      input {
+        color: $themeColor;
+        padding-top: 5px;
+        padding-bottom: 4px;
+        border-radius: 5px;
+        background-color: white;
+        text-align: center;
+      }
+      input:-webkit-autofill {
+       -webkit-box-shadow: 0 0 0px 1000px white inset;
+     }
+     input:-webkit-autofill:focus {
+       -webkit-box-shadow: 0 0 0px 1000px white inset;
+     }
+   }
+   button {
+    width: 70%;
+    margin-top: 25px;
+    padding-bottom: 5px;
+    padding-top: 7px;
+    border-radius: 7px;
+    font-size: 14px;
+    background-color: $themeColor;
+    border: 1px hidden $themeColor;
+    transition: all .4s;
+    color: white;
+    outline: none;
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    &:hover {
+      border: 1px solid $themeColor;
+      background-color: rgba(white, 0.7);
+      color: $themeColor;
+      transition: all .4s;
+    }
+  }
+  form {
+   margin-left: auto;
+   margin-right: auto;
+   text-align:center;
+   width: 100%;
+ }
+}
+}
+@media screen and (max-width: 771px) {
+  #loginBody {
+    .logo {
+     width: 100%;
+     margin-top: 0px;
+   } 	
+   .form {
+     width: 98%;
+     margin-top: 20%;
+     margin-left: auto;
+     margin-right: auto;
+   }
+ }
+ .header {
+   .searchInput {
+    display: none;
+  }
+}
+#loggedBody {
+ .col-left {
+  .ProfilesView {
+   width: 100%;
+   .item {
+    .ProfileBox {
+     width: 90%;
+   }	
+ }	
+}
+}
+}
+}
+
+.loginButton {
+	margin-left: auto;
+  margin-right: auto;
+}
+
+.header{
+	background-color: white;
+	height: 43px;
+	position: fixed;
+	width: 100%;
+	z-index: 2;
+	top: 0px;
+	-moz-box-shadow: 0px -2px 8px 0px $themeColor;
+	-webkit-box-shadow: 0px -2px 8px 0px $themeColor;
+	-o-box-shadow: 0px -2px 8px 0px $themeColor;
+	box-shadow: 0px -2px 8px 0px $themeColor;
+	#breakButton {
+		&:hover {
+			color: black;
+		}
+		span {
+			text-transform: none;
+			vertical-align: initial;
+		}
+		font-size: 12px;
+		float: right;
+   margin-right: 160px;
+   height: 39px;
+   color: white;
+   background-color: rgba(0, 0, 0, 0);
+   margin-top: 2px;
+   margin-bottom: 0px;
+ }
+}
+
+.logoImg{
+	height: 100%;
+	width: auto;
+	margin: 0px;
+	float: left;
+}
+
+.alertDiv {
+	display: none;
+  color: red;
+  font-size: 14px;
+}
+
+.userInfo {
+	height: 100%;
+	float: right;
+}
+.userInfo p {
+	display: inline-block;
+}
+
+.logoutButton img {
+	height: 100%;
+	color: red;
+}
+
+#loginBody form{
+  .alertDiv.show {
+    display: block;
+    color: red;
+  }
+}
+
+.la-animate {
+	z-index: 10000;
+}
+
+.cookiesInfo {
+  text-align: center;
+  padding: 5px;
+  background-color: #B4E8C0;
+  p, button {
+    display: inline-block;
+  }
+  p {
+    margin: 0px;
+  }
+  button {
+    border: none;
+    background-color: rgba(0,0,0,0);
+  }
+}
+
+html {
+  height: 100%;
+#errorPage {
+  position: absolute;
+  top: 0;
+  background-color: $themeColor;
+  background-image: url('../resources/backgrounds/space.jpg');
+  background-size: 100% 100%;
+  min-width: 100%;
+  min-height: 100%;
+  .logo {
+   width: 20%;
+   margin-left: auto;
+   margin-right: auto;
+   margin-top: 50px;
+   img {
+    width: 100%;
+  }
+}
+.holder {
+  color: white;
+  text-align: center;
+  h2 {
+    font-size: 50px;
+  }
+  a {
+    font-size: 30px;
+    text-decoration: none;
+    color: white;
+  }
+}
+}
+}

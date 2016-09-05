@@ -1,0 +1,27 @@
+{
+	"name":"LeBonCoin",
+	"lastLogin":"",
+	"home":"https://www.leboncoin.fr/",
+	"connect":{
+		"url":"https://www.leboncoin.fr/",
+		"todo":[
+			{"action":"click", "search":".header_aside button"},
+			{"action":"waitfor", "time":100, "search":"form input[type='email']"},
+			{"action":"fill", "what":"login", "search":"form input[type='email']"},
+			{"action":"fill", "what":"password", "search":"form input[type='password']"},
+			{"action":"click", "search":"input[type='submit']"}
+			]
+	},
+	"logout":{
+		"url":"https://www.leboncoin.fr/",
+		"todo":[
+			{"action":"aclick", "search":".myAccount_nav a:nth-child(6)"}
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":".myAccount_nav a:nth-child(6)"}
+	],
+	"checkChangeLogin":[
+		{"action":"click", "search":"#loginbutton"}
+	]
+}

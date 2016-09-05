@@ -1,0 +1,101 @@
+{
+    "website":"prezi",
+    
+    "urls":{
+        "login":"https://prezi.com/login/"
+    },
+    
+    "elements":{
+        
+        "userField":{
+            "id":"id_username"
+        },
+        "passField":{
+            "id":"id_password"
+        },
+        "buttonLogIn":{
+            "id":"btn_login"
+        },
+        "facebookButton":{
+            "id":"facebook-login"
+        }
+        
+    },
+    
+    "connectionSteps":[
+        {
+            "action":"goTo",
+            "url":"login"
+        },
+        
+        {
+                "action":"catchFail",
+                "if":"missingElement",
+                "elementName":"passField",
+                "actionsIfFail":[{"action":"end"}],
+                "send":"alreadyConnected"
+        },
+        
+        {
+            "action":"do",
+            "elements":[
+                {
+                    "name":"userField",
+                    "action":"fill",
+                    "value":"user"
+                },
+                {
+                    "name":"passField",
+                    "action":"fill",
+                    "value":"pass"
+                },
+                {
+                    "name":"buttonLogIn",
+                    "action":"click"
+                }
+            ]
+        },
+        
+        {
+            "action":"nextPage",
+            "lastPage":true
+        },
+        
+        {
+            "action":"catchFail",
+            "if":"existingElement",
+            "elementName":"passField",
+            "actionsIfFail":[{"action":"end"}],
+            "send":"wrongPassword"
+        }
+    ],
+    
+    "facebookConnectionSteps":[
+        {
+            "action":"goTo",
+            "url":"login"
+        },
+        
+        {
+                "action":"catchFail",
+                "if":"missingElement",
+                "elementName":"passField",
+                "actionsIfFail":[{"action":"end"}],
+                "send":"alreadyConnected"
+        },
+            
+        {
+            "action":"do",
+            "elements":[
+                {
+                    "name":"facebookButton",
+                    "action":"click"
+                }
+            ]
+        },
+        
+        {
+            "action":"facebookConnection"
+        }
+    ]
+}

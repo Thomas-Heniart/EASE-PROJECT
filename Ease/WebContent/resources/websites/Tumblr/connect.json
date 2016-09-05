@@ -1,0 +1,23 @@
+{
+	"name":"tumblr",
+	"lastLogin":"",
+	"connect":{
+		"url":"https://www.tumblr.com/login",
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#signup_determine_email"},
+            {"action":"click", "search":"#signup_forms_submit"},
+			{"action":"fill", "what":"password", "search":"#signup_password"},
+			{"action":"search","search":"#signup_forms_submit"},
+			{"action":"click", "search":"#signup_forms_submit"}
+			]
+	},
+	"logout":{
+		"url":"",
+		"todo":[
+			]
+	},
+	"checkAlreadyLoged":[
+	],
+	"checkChangeLogin":[
+	]
+}

@@ -1,0 +1,25 @@
+{
+	"name":"deliveroo",
+	"lastLogin":"",
+	"home":"https://deliveroo.fr/?show_login=true",
+	"connect":{
+		"url":"https://deliveroo.fr/?show_login=true",
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#email"},
+			{"action":"fill", "what":"password", "search":"#password"},
+			{"action":"click", "search":".page-header-login--login"}
+			]
+	},
+	"logout":{
+		"url":"https://deliveroo.fr/",
+		"todo":[
+			{"action":"click", "search":".page-header--logout button"}
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":".page-header--invite-link"}
+	],
+	"checkChangeLogin":[
+		{"action":"click", "search":"#loginbutton"}
+	]
+}

@@ -1,0 +1,25 @@
+@import 'variables';
+
+.header {
+	#logoutButton {
+		float: right;
+		margin-right: 160px;
+		background-color: $themeColor;
+		color: white;
+		border-radius: 3px;
+		text-decoration: none;
+		transition: all 0.3s;
+		width: 100px;
+		height: 70%;
+		text-align: center;
+		margin-top: 6px;
+		padding: 4px;
+		&:hover {
+			cursor: pointer;
+			transition: all 0.3s;
+			background-color: rgba(0,0,0,0);
+			color: $themeColor;
+			border: 1px solid $themeColor;
+		}
+	}
+}

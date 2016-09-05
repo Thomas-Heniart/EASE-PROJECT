@@ -1,0 +1,72 @@
+{
+    "website":"google drive",
+    
+    "urls":{
+        "login":"https://accounts.google.com/ServiceLogin?sacu=1&continue=http%3A%2F%2Fdrive.google.com%2F%3Futm_source%3Dfr%26utm_medium%3Dbutton%26utm_campaign%3Dweb%26utm_content%3Dgotodrive%26usp%3Dgtd%26ltmpl%3Ddrive&service=wise#identifier"
+    },
+    
+    "elements":{
+        
+        "userField":{
+            "id":"Email"
+        },
+        "passField":{
+            "id":"Passwd"
+        },
+        "buttonFirstPage":{
+            "id":"next"
+        },
+        "buttonLogIn":{
+                "id":"signIn"
+        }
+        
+    },
+    
+    "connectionSteps":[
+        {
+            "action":"goTo",
+            "url":"login"
+        },
+        
+        {
+                "action":"catchFail",
+                "if":"missingElement",
+                "elementName":"passField",
+                "actionsIfFail":[],
+                "send":"alreadyConnected"
+        },
+        
+        {
+            "action":"do",
+            "elements":[
+                {
+                    "name":"userField",
+                    "action":"fill",
+                    "value":"user"
+                },
+                {
+                    "name":"passField",
+                    "action":"fill",
+                    "value":"pass"
+                },
+                {
+                    "name":"buttonLogIn",
+                    "action":"click"
+                }
+            ]
+        },
+        
+        {
+            "action":"nextPage",
+            "lastPage":true
+        },
+        
+        {
+            "action":"catchFail",
+            "if":"existingElement",
+            "elementName":"passField",
+            "actionsIfFail":[],
+            "send":"wrongPassword"
+        }
+    ]
+}

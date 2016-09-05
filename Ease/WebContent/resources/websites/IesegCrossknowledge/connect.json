@@ -1,0 +1,26 @@
+{
+    "name":"Crossknowledge",
+    "lastLogin":"",
+    "home":"http://ieseg.lms.crossknowledge.com/",
+    "connect":{
+        "url":"http://ieseg.lms.crossknowledge.com/interfaces/login.php",
+        "todo":[
+        	{"action":"goto", "url":"http://ieseg.lms.crossknowledge.com/interfaces/login.php"},
+            {"action":"fill", "what":"login", "search":"input#fldUserName"},
+            {"action":"fill", "what":"password", "search":"input#fldPassword"},
+            {"action":"click", "search":"input[name='submitButtonName']"}
+            ]
+    },
+    "logout":{
+        "url":"http://ieseg.lms.crossknowledge.com",
+        "todo":[
+            {"action":"aclick", "search":"li.logoutBox a"}
+            ]
+    },
+    "checkAlreadyLogged":[
+        {"search":".learnerBox .learnerName"}
+    ],
+    "checkChangeLogin":[
+        {"action":"click", "search":"#loginbutton"}
+    ]
+}

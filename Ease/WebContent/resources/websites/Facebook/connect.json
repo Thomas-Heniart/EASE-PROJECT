@@ -1,0 +1,26 @@
+{
+	"name":"facebook",
+	"lastLogin":"",
+	"home":"http://www.facebook.com",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#email", "grave":true},
+			{"action":"fill", "what":"password", "search":"#pass", "grave":true},
+			{"action":"click", "search":"#loginbutton", "grave":true}
+			]
+	},
+	"logout":{
+		"todo":[
+			{"action":"click", "search":"#pageLoginAnchor div"},
+			{"action":"waitfor", "time":1000, "search":"#show_me_how_logout_1"},
+			{"action":"submit", "search":"#show_me_how_logout_1"},
+			{"action":"waitload"}
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":"body.home"}
+	],
+	"checkChangeLogin":[
+		{"action":"click", "search":"#loginbutton"}
+	]
+}

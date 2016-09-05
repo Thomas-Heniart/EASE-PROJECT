@@ -1,0 +1,26 @@
+{
+	"name":"BlaBlaCar",
+	"lastLogin":"",
+	"home":"https://www.blablacar.fr/identification",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"form#login-form input[name='_username']"},
+			{"action":"fill", "what":"password", "search":"form#login-form input[name='_password']"},
+			{"action":"submit", "search":"form#login-form"}
+			]
+	},
+	"Facebook":{
+		"todo":[{"action":"goto", "url":"https://www.blablacar.fr/connect/facebook"}]
+	},
+	"logout":{
+		"todo":[
+			{"action":"goto", "search":"https://www.blablacar.fr/deconnexion"}
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":"a[href='/deconnexion']"}
+	],
+	"checkChangeLogin":[
+		{"action":"click", "search":"#loginbutton"}
+	]
+}

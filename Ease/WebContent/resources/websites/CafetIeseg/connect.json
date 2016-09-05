@@ -1,0 +1,26 @@
+{
+    "name":"Cafet Ieseg",
+    "lastLogin":"",
+    "home":"http://cafet.ieseg.fr/",
+    "connect":{
+        "url":"http://cafet.ieseg.fr/",
+        "todo":[
+            {"action":"fill", "what":"login", "search":"input[name='login']"},
+            {"action":"fill", "what":"password", "search":"input[name='pass']"},
+            {"action":"submit", "search":"form"}
+            ]
+    },
+    "logout":{
+        "url":"http://cafet.ieseg.fr/",
+        "todo":[
+            {"action":"click", "search":"#user-menu .user-menu__list li:nth-child(4)"}
+
+            ]
+    },
+    "checkAlreadyLogged":[
+        {"search":".header__account-item  #user-menu"}
+    ],
+    "checkChangeLogin":[
+        {"action":"click", "search":"#loginbutton"}
+    ]
+}

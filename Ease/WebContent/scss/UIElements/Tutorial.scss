@@ -1,0 +1,27 @@
+@import 'variables';
+
+#tutorialView {
+	text-align: center;
+	width: 60%;
+	position: fixed;
+	left: 60%;
+	.arrow {
+		transform: translateY(-50%);
+		position: absolute;
+		top: 50%;
+		right: 0;
+		font-size: 50px;
+		color: #434343;
+		i {
+			display: inline-block;
+		}
+	}
+	.title {
+		font-size: 50px;
+		transform: translateY(-100%);
+	}
+	.info {
+		font-size: 25px;
+		transform: translateY(-100%);
+	}
+}

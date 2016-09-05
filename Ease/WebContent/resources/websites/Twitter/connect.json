@@ -1,0 +1,26 @@
+{
+	"name":"twitter",
+	"lastLogin":"",
+	"home":"https://twitter.com/login",
+	"connect":{
+		"url":"https://twitter.com/login",
+		"todo":[
+			{"action":"fill", "what":"login", "search":"input[name='session[username_or_email]']"},
+			{"action":"fill", "what":"password", "search":"input[name='session[password]']"},
+			{"action":"submit", "search":"form[action='https://twitter.com/sessions']"}
+			]
+	},
+	"logout":{
+		"url":"https://twitter.com/",
+		"todo":[
+			{"action":"click", "search":"#signout-button"},
+			{"action":"waitload"}
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":"#user-dropdown-toggle"}
+	],
+	"checkChangeLogin":[
+		{"action":"click", "search":"#loginbutton"}
+	]
+}

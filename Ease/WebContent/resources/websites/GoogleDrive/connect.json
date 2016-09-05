@@ -1,0 +1,28 @@
+{
+	"name":"googledrive",
+	"lastLogin":"",
+	"home":"https://googledrive.com",
+	"connect":{
+		"todo":[
+			{"action":"aclick", "search":"#account-chooser-link"},
+			{"action":"aclick", "search":"#account-chooser-add-account"},
+			{"action":"fill", "what":"login", "search":"#Email", "grave":true},
+			{"action":"click", "search":"#next", "grave":true},
+			{"action":"waitfor", "time":100, "search":"#Passwd"},
+			{"action":"fill", "what":"password", "search":"#Passwd"},
+			{"action":"submit", "search":"#gaia_loginform", "grave":true}
+			]
+	},
+	"logout":{
+		"url":"https://googledrive.com",
+		"todo":[
+			{"action":"goto", "url":"https://accounts.google.com/Logout?hl=fr&continue=https://drive.google.com/drive/"}
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":"a[title='Drive']"}
+	],
+	"checkChangeLogin":[
+		
+	]
+}

@@ -1,0 +1,34 @@
+{
+	"name":"youtube",
+	"lastLogin":"",
+	"home":"https://youtube.com",
+	"connect":{
+		"url":"https://youtube.com",
+		"todo":[
+			{"action":"click", "search":"button[href*='https://accounts.google.com/ServiceLogin?']", "grave":true},
+			{"action":"waitload"},
+			{"action":"aclick", "search":"#account-chooser-link"},
+			{"action":"aclick", "search":"#account-chooser-add-account"},
+			{"action":"fill", "what":"login", "search":"#Email", "grave":true},
+			{"action":"click", "search":"#next", "grave":true},
+			{"action":"waitfor", "search":"#Passwd"},
+			{"action":"fill", "what":"password", "search":"#Passwd", "grave":true},
+			{"action":"submit", "search":"#gaia_loginform", "grave":true}
+			
+			]
+	},
+	"logout":{
+		"url":"https://youtube.com",
+		"todo":[
+			{"action":"click", "search":"#yt-masthead-account-picker", "grave":true},
+			{"action":"waitfor", "search":"a[href='/logout']"},
+			{"action":"aclick", "search":"a[href='/logout']", "grave":true}			
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":"#yt-masthead-account-picker"}
+	],
+	"checkChangeLogin":[
+		
+	]
+}
