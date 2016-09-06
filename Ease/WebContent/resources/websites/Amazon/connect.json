@@ -4,7 +4,7 @@
 	"home":"https://www.amazon.fr/",
 	"connect":{
 		"todo":[
-			{"action":"aclick", "search":".nav-action-button[data-nav-role='signin']"},
+			{"action":"aclick", "search":"a[data-nav-ref='nav_ya_signin']"},
 			{"action":"fill", "what":"login", "search":"#ap_email"},
 			{"action":"fill", "what":"password", "search":"#ap_password"},
 			{"action":"click", "search":"#signInSubmit"}

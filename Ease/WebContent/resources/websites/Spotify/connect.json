@@ -1,31 +1,29 @@
 {
     "name":"Spotify",
     "lastLogin":"",
-    "url":"https://play.spotify.com/",
+    "home":"https://play.spotify.com/",
     "connect":{
-        "url":"https://play.spotify.com/",
         "todo":[
         	{"action":"waitfor", "search":"#has-account"},
-        	{"action":"search", "search":"#has-account"},
-        	{"action":"click", "search":"#has-account"},
+        	{"action":"clickona", "search":"#has-account"},
             {"action":"fill", "what":"login", "search":"#login-usr", "grave":true},
             {"action":"fill", "what":"password", "search":"#login-pass"}
         ]
     },
     
     "logout":{
-        "url":"https://login.skype.com/logout"
+        "todo":[{"action":"goto","url":"https://play.spotify.com/logout"}]
     },
-    "checkAlreadyLoged":[
-        {"search":"#main-nav"}
+    "checkAlreadyLogged":[
+        {"search":"#nav-profile"}
     ],
     "checkChangeLogin":[
         {"action":"click", "search":"#loginbutton"}
     ],
-    "specialConnect":[
-    	{"name":"facebook","url":"https://play.spotify.com/","todo":[
-        														{"action":"click", "search":"#has-account"},
-            													{"action":"click", "search":"#fb-login-btn"}
-            												]}
-     ]
+    "Facebook":{
+    	"todo":[
+        	{"action":"click", "search":"#has-account"},
+            {"action":"click", "search":"#fb-login-btn"}
+        ]
+     }
 }
