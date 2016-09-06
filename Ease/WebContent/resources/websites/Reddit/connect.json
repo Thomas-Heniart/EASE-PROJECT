@@ -1,0 +1,22 @@
+{
+	"name":"reddit",
+	"lastLogin":"",
+	"home":"https://reddit.com/login",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#user_login", "grave":true},
+			{"action":"fill", "what":"password", "search":"#passwd_login", "grave":true},
+			{"action":"click", "search":"button[tabindex='3'].c-btn.c-btn-primary.c-pull-right", "grave":true}
+			]
+	},
+	"logout":{
+		"todo":[
+			{"action":"submit", "search":"form.logout", "grave":true},
+			{"action":"waitload"},
+			{"action":"goto", "url":"https://reddit.com/login"}			
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":"form.logout"}
+	]
+}
