@@ -3,7 +3,7 @@
 	"lastLogin":"",
 	"home":"https://fr.coursera.org/?authMode=login",
 	"connect":{"todo":[
-			{"action":"waitfor", "search":"button[data-courselenium='login-form-submit-button']"}
+			{"action":"waitfor", "search":"button[data-courselenium='login-form-submit-button']"},
 			{"action":"fill", "what":"login", "search":".c-user-modal-control-group input[type='email']", "grave":true},
 			{"action":"fill", "what":"password", "search":".c-user-modal-control-group input[type='password']", "grave":true},
 			{"action":"click", "search":"button[data-courselenium='login-form-submit-button']", "grave":true}
@@ -11,12 +11,11 @@
 	},
 	"logout":{
 		"todo":[
-			{"action":"waitfor", "search":"ul.bt3-dropdown-menu.c-authenticated-dropdown-menu:last-child a form"},
-			{"action":"search", "search":"ul.bt3-dropdown-menu.c-authenticated-dropdown-menu:last-child a form", "grave":true},
+			{"action":"waitfor", "search":"ul.bt3-dropdown-menu.c-authenticated-dropdown-menu:last-child a form", "grave":true},
 			{"action":"submit", "search":"ul.bt3-dropdown-menu.c-authenticated-dropdown-menu:last-child a form", "grave":true}
 			]
 	},
 	"checkAlreadyLogged":[
-		{"search":"form.c-ph-right-nav-button"}
+		{"search":"div.rc-ProfileImage"}
 	]
 }
