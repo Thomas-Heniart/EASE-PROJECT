@@ -1,89 +1,22 @@
 {
-    "website":"coursera",
-    
-    "urls":{
-        "login":"https://fr.coursera.org"
-    },
-    
-    "elements":{
-        "connectionButton":{
-            "tagName":"a",
-            "href":"https://fr.coursera.org/?authMode=login"
-        },
-        "userField":{
-            "tagName":"input",
-            "name":"email"
-        },
-        "passField":{
-            "tagName":"input",
-            "name":"password"
-        },
-        "buttonLogIn":{
-            "tagName":"button",
-            "innerHTML":"Connexion"
-        }
-        
-    },
-    
-    "connectionSteps":[
-        {
-            "action":"goTo",
-            "url":"login"
-        },
-        
-        {
-            "action":"do",
-            "elements":[
-                {
-                    "name":"connectionButton",
-                    "action":"click"
-                }
-            ]
-        },
-        
-        {
-            "action":"nextPage"
-        },
-        
-        {
-                "action":"catchFail",
-                "if":"missingElement",
-                "elementName":"passField",
-                "actionsIfFail":[{"action":"end"}],
-                "send":"alreadyConnected"
-        },
-        
-        {
-            "action":"do",
-            "elements":[
-                {
-                    "name":"userField",
-                    "action":"fill",
-                    "value":"user"
-                },
-                {
-                    "name":"passField",
-                    "action":"fill",
-                    "value":"pass"
-                },
-                {
-                    "name":"buttonLogIn",
-                    "action":"click"
-                }
-            ]
-        },
-        
-        {
-            "action":"nextPage",
-            "lastPage":true
-        },
-        
-        {
-            "action":"catchFail",
-            "if":"existingElement",
-            "elementName":"passField",
-            "actionsIfFail":[{"action":"end"}],
-            "send":"wrongPassword"
-        }
-    ]
+	"name":"coursera",
+	"lastLogin":"",
+	"home":"https://fr.coursera.org/?authMode=login",
+	"connect":{"todo":[
+			{"action":"waitfor", "search":"button[data-courselenium='login-form-submit-button']"}
+			{"action":"fill", "what":"login", "search":".c-user-modal-control-group input[type='email']", "grave":true},
+			{"action":"fill", "what":"password", "search":".c-user-modal-control-group input[type='password']", "grave":true},
+			{"action":"click", "search":"button[data-courselenium='login-form-submit-button']", "grave":true}
+			]
+	},
+	"logout":{
+		"todo":[
+			{"action":"waitfor", "search":"ul.bt3-dropdown-menu.c-authenticated-dropdown-menu:last-child a form"},
+			{"action":"search", "search":"ul.bt3-dropdown-menu.c-authenticated-dropdown-menu:last-child a form", "grave":true},
+			{"action":"submit", "search":"ul.bt3-dropdown-menu.c-authenticated-dropdown-menu:last-child a form", "grave":true}
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":"form.c-ph-right-nav-button"}
+	]
 }
