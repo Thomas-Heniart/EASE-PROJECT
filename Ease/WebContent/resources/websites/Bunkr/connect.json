@@ -1,94 +1,31 @@
 {
-    "website":"Bunkr",
-    
-    "urls":{
-        "login":"https://bunkrapp.com/signin/",
-        "facebookLogin":"https://bunkrapp.com/oauth/facebook/login/"
-    },
-    
-    "elements":{
-        
-        "userField":{
-            "id":"bkr-signin-mail"
-        },
-        "passField":{
-            "id":"bkr-signin-password"
-        },
-        "buttonLogIn":{
-            "id":"bkr-btn-submit-signin"
-        }
-        
-    },
-    
-    "connectionSteps":[
-        {
-            "action":"goTo",
-            "url":"login"
-        },
-        
-        {
-                "action":"catchFail",
-                "if":"missingElement",
-                "elementName":"passField",
-                "actionsIfFail":[{"action":"end"}],
-                "send":"alreadyConnected"
-        },
-        
-        {
-            "action":"do",
-            "elements":[
-                {
-                    "name":"userField",
-                    "action":"fill",
-                    "value":"user"
-                },
-                {
-                    "name":"passField",
-                    "action":"fill",
-                    "value":"pass"
-                },
-                {
-                    "name":"buttonLogIn",
-                    "action":"click"
-                }
-            ]
-        },
-        
-        {
-            "action":"nextPage",
-            "lastPage":true
-        },
-        
-        {
-            "action":"catchFail",
-            "if":"existingElement",
-            "elementName":"passField",
-            "actionsIfFail":[{"action":"end"}],
-            "send":"wrongPassword"
-        }
-    ],
-    
-    "facebookConnectionSteps":[
-        {
-            "action":"goTo",
-            "url":"login"
-        },
-        
-        {
-                "action":"catchFail",
-                "if":"missingElement",
-                "elementName":"passField",
-                "actionsIfFail":[{"action":"end"}],
-                "send":"alreadyConnected"
-        },
-        
-        {
-            "action":"goTo",
-            "url":"facebookLogin"
-        },
-        
-        {
-            "action":"facebookConnection"
-        }
-    ]
+	"name":"Bunkr",
+	"lastLogin":"",
+	"home":"https://bunkrapp.com/",
+	"connect":{
+		"todo":[
+			{"action":"goto", "url":"https://bunkrapp.com/signup/"},
+			{"action":"fill", "what":"login", "search":"#bkr-signup-mail", "grave":true},
+			{"action":"fill", "what":"password", "search":"#bkr-signup-password"},
+			{"action":"click", "search":"#bkr-btn-submit-signup", "grave":true}
+			]
+	},
+	"Facebook":{
+		"todo":[
+		{"action":"goto", "url":"https://bunkrapp.com/oauth/facebook/login/"}
+		]
+	},
+	"GMail":{
+		"todo":[
+		{"action":"goto", "url":"https://bunkrapp.com/oauth/google/login/"}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"goto", "url":"http://bunkrapp.com/logout/"}
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":"ul.dsg-navbar-right.nav navbar-nav.navbar-right"}
+	]
 }

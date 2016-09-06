@@ -3,17 +3,16 @@
 	"lastLogin":"",
 	"home":"http://www.ieseg-online.com/",
 	"connect":{
-		"url":"http://www.ieseg-online.com/",
 		"todo":[
+			{"action":"waitfor", "search":"input[name='username']"},
 			{"action":"fill", "what":"login", "search":"input[name='username']"},
 			{"action":"fill", "what":"password", "search":"input[name='password']"},
 			{"action":"submit", "search":".form-signin"}
 			]
 	},
 	"logout":{
-		"url":"http://www.ieseg-online.com/",
 		"todo":[
-			{"action":"aclick", "search":"a[href*='http://www.ieseg-online.com/login/logout.php']"}
+			{"action":"goto", "url":"http://www.ieseg-online.com/login/logout.php"}
 			
 			]
 	},

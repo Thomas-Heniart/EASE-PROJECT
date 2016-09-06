@@ -1,40 +1,45 @@
 {
-   "background": {
-      "page": "background.html",
-      "persistent": false
-   },
-   "browser_action": {
-      "default_icon": "images/logo_296.png",
-      "default_popup": "popup.html"
-   },
-   "commands": {
-      "logout-ease": {
-         "description": "Logout from ease and all connected websites.",
-         "suggested_key": {
-            "default": "Ctrl+L",
-            "mac": "Ctrl+L"
-         }
-      },
+"manifest_version": 2,
+    
+"name" :"Ease",
+"version" :"1.1.21",
+"description" :"Ease extension, log you in and out",
+    
+"icons": {
+    "128": "images/logo_128.png"
+},
+    
+"browser_action": {
+    "default_popup" : "popup.html",
+    "default_icon": "images/logo_296.png"
+},
+      
+"content_scripts": [
+    {
+      "matches": ["https://ease.space/*", "https://www.ease.space/*", "http://ease.space/*", "http://www.ease.space/*","http://localhost:8080/HelloWorld/*", "https://localhost:8443/HelloWorld/*"],
+      "js": ["jquery-3.1.0.js", "extension.js", "easeListener.js"]
+    }
+  ],
+"background":{
+    "page" : "background.html",
+    "persistent": false
+},
+"permissions": ["tabs","\u003Call_urls\u003E","http://*/*", "https://*/*","webNavigation","storage"],
+    
+"commands": {
       "open-ease": {
-         "description": "Open Ease in a new tab.",
-         "suggested_key": {
-            "default": "Ctrl+Space",
-            "mac": "Ctrl+Space"
-         }
+        "suggested_key": {
+          "default": "Ctrl+Space",
+          "mac": "Ctrl+Space"
+        },
+        "description": "Open Ease in a new tab."
+      },
+      "logout-ease": {
+        "suggested_key": {
+          "default": "Ctrl+L",
+          "mac": "Ctrl+L"
+        },
+        "description": "Logout from ease and all connected websites."
       }
-   },
-   "content_scripts": [ {
-      "js": [ "jquery-3.1.0.js", "extension.js", "easeListener.js" ],
-      "matches": [ "https://ease.space/*", "https://www.ease.space/*", "http://ease.space/*", "http://www.ease.space/*", "http://localhost:8080/HelloWorld/*", "https://localhost:8443/HelloWorld/*" ]
-   } ],
-   "description": "Ease extension, log you in and out",
-   "icons": {
-      "128": "images/logo_128.png"
-   },
-   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApeJ68GaHJMghYAW3m2VS98RbEH/kAfsHg3yoTPk92RlxAyf7838CsyQAhLlU+RMutAhuScpf0nxcQn8NQQ3Sa5kAE1NdktqAchBb7JNTXit3UX1oH4VF9dJcQcfa5K+N+XIRe5q8cpyvqiEkq9FhZ/0AZrhwl7nj1t/PjmNa5ng6wPsSFvYzV1cP+emLsD32P9tyR5pJ7O6b1UDuWDiS09+ajL0DziNFUgFxydHinUGuKciMqsjldb2K9BXatVXbpfx4Of2VMDoDd5uvGNsv9Bdq3BRr4t+jsWpNUwf864rxYJ12mbAO1bk9IH2xzkaU0Xk9cE8kowXcxxvhq7wuswIDAQAB",
-   "manifest_version": 2,
-   "name": "Ease",
-   "permissions": [ "tabs", "\u003Call_urls>", "http://*/*", "https://*/*", "webNavigation", "storage" ],
-   "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "1.1.20"
+}
 }
