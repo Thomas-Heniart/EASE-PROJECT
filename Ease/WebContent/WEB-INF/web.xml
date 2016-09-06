@@ -182,6 +182,15 @@
     <servlet-name>EditLogWith</servlet-name>
     <url-pattern>/editLogWith</url-pattern>
   </servlet-mapping>
+  
+   <servlet>
+    <servlet-name>UpdateWebsites</servlet-name>
+    <servlet-class>com.Ease.servlet.UpdateWebsites</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UpdateWebsites</servlet-name>
+    <url-pattern>/updateWebsites</url-pattern>
+  </servlet-mapping>
 <!-- 
   <servlet-mapping>
     <servlet-name>LetsEncryptWWW</servlet-name>
@@ -206,6 +215,7 @@
     <url-pattern>/createInvitation</url-pattern>
   </servlet-mapping> 
  -->
+ 
 <security-constraint>
 <web-resource-collection>
 <web-resource-name>Protected Context</web-resource-name>
@@ -215,7 +225,7 @@
 <transport-guarantee>CONFIDENTIAL</transport-guarantee>
 </user-data-constraint>
 </security-constraint>
- 
+
 	<session-config>
     	<session-timeout>120</session-timeout> <!-- in minutes -->
  	</session-config>

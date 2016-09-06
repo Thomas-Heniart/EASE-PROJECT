@@ -1,18 +1,30 @@
 var actions = {
 waitfor:function(msg, callback, sendResponse){
-	function waitfor(msg, callback){
-		var obj = $(msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep].search);
-		if (obj.length == 0){
-			setTimeout(function(){
-				waitfor(msg, callback);
-			}, msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep].time);
-		}
-		else {
-			msg.actionStep++;
-			callback(msg, sendResponse);
-		}
+    
+    var div = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep].search;
+    var time = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep].time;
+    if(!time){time = 100;}
+    
+	function waitfor(callback){
+    if(typeof div === 'string'){div = [div];}
+        var absent = true;
+        for(var i in div){
+            var obj = $(div[i]);
+            if(obj.length>0){
+                absent = false;
+                break;
+            }
+        }
+        if(absent){ 
+            setTimeout(function(){
+                waitfor(callback);
+            }, time);
+        } else {
+            msg.actionStep++;
+            callback(msg, sendResponse);
+        }
 	}
-	waitfor(msg, callback);
+	waitfor(callback);
 },
 setattr:function(msg, callback, sendResponse){
 	var actionStep = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep];
@@ -86,6 +98,7 @@ clickona:function(msg, callback, sendResponse){
 			callback(msg, sendResponse);
 		}
 	} else {
+        console.log("button found");
 		button.prop("disabled", false);
 		button.get(0).click();
 		msg.actionStep++;
@@ -157,10 +170,10 @@ function doThings(msg, sendResponse) {
 	var todo =  msg.detail[msg.bigStep].website[msg.todo].todo;
 	if (msg.actionStep >= todo.length){
 		msg.type = "completed";
-		msg.detail[msg.bigStep].website.lastLogin = getNewLogin(msg, msg.bigStep);
+		if(msg.todo != "logout") msg.detail[msg.bigStep].website.lastLogin = getNewLogin(msg, msg.bigStep);
 		sendResponse(msg);
 		return ;
 	}
-    console.log(todo[msg.actionStep]);
+    console.log(todo[msg.actionStep].action);
 	actions[todo[msg.actionStep].action](msg, doThings, sendResponse);
 }
