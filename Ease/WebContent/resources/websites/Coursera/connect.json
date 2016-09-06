@@ -17,5 +17,11 @@
 	},
 	"checkAlreadyLogged":[
 		{"search":"div.rc-ProfileImage"}
-	]
+	],
+	"Facebook":{
+		"todo":[
+			{"action":"waitfor", "search":"button.c-user-modal-facebook-button"},
+			{"action":"click", "search":"button.c-user-modal-facebook-button"}
+			]
+	}
 }
