@@ -182,7 +182,7 @@
     <servlet-name>EditLogWith</servlet-name>
     <url-pattern>/editLogWith</url-pattern>
   </servlet-mapping>
-  
+<!-- 
    <servlet>
     <servlet-name>UpdateWebsites</servlet-name>
     <servlet-class>com.Ease.servlet.UpdateWebsites</servlet-class>
@@ -191,7 +191,7 @@
     <servlet-name>UpdateWebsites</servlet-name>
     <url-pattern>/updateWebsites</url-pattern>
   </servlet-mapping>
-<!-- 
+ 
   <servlet-mapping>
     <servlet-name>LetsEncryptWWW</servlet-name>
     <url-pattern>/.well-known/acme-challenge/qot0z1SUt7tR8jyndaWcmnHR7183Q3vQOL2AOK47yDka</url-pattern>
@@ -205,7 +205,7 @@
     <servlet-name>AskInfo</servlet-name>
     <url-pattern>/askInfo</url-pattern>
   </servlet-mapping>
-  <!-- 
+
     <servlet>
    	<servlet-name>createInvitation</servlet-name>
     <servlet-class>com.Ease.servlet.createInvitation</servlet-class>
@@ -214,8 +214,26 @@
     <servlet-name>createInvitation</servlet-name>
     <url-pattern>/createInvitation</url-pattern>
   </servlet-mapping> 
- -->
- 
+
+
+   <servlet>
+   	<servlet-name>requestedWebsites</servlet-name>
+    <servlet-class>com.Ease.servlet.RequestedWebsitesServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>requestedWebsites</servlet-name>
+    <url-pattern>/requestedWebsites</url-pattern>
+  </servlet-mapping> 
+  
+    <servlet>
+   	<servlet-name>eraseRequestedWebsite</servlet-name>
+    <servlet-class>com.Ease.servlet.EraseRequestedWebsiteServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>eraseRequestedWebsite</servlet-name>
+    <url-pattern>/eraseRequestedWebsite</url-pattern>
+  </servlet-mapping> 
+
 <security-constraint>
 <web-resource-collection>
 <web-resource-name>Protected Context</web-resource-name>

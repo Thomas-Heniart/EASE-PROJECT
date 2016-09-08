@@ -337,6 +337,15 @@
 .MenuButtonSet.show {
   display: block; }
 
+.MenuButtonSet.topLeft {
+  top: 20%;
+  left: 5%; }
+
+.MenuButtonSet.middleTopLeft {
+  width: fit-content;
+  top: 40%;
+  left: 5%; }
+
 .MenuButtonSet {
   display: none;
   position: fixed;
@@ -359,6 +368,40 @@
       width: 100%;
       height: 100%; }
   .MenuButtonSet #enterEditMode.on {
+    background-color: #42b72a; }
+  .MenuButtonSet #enterAddUsersMode {
+    max-width: 100px;
+    min-width: 0px;
+    width: 100px;
+    height: 100px;
+    background-color: #555ceb;
+    border-radius: 10px;
+    padding: 7px;
+    margin: 0px;
+    transition: background-color 0.3s; }
+    .MenuButtonSet #enterAddUsersMode:hover {
+      cursor: pointer; }
+    .MenuButtonSet #enterAddUsersMode img {
+      width: 100%;
+      height: 100%; }
+  .MenuButtonSet #enterAddUsersMode.on {
+    background-color: #42b72a; }
+  .MenuButtonSet #enterRequestedWebsitesMode {
+    max-width: 100px;
+    min-width: 0px;
+    width: 100px;
+    height: 100px;
+    background-color: #42b72a;
+    border-radius: 10px;
+    padding: 7px;
+    margin: 0px;
+    transition: background-color 0.3s; }
+    .MenuButtonSet #enterRequestedWebsitesMode:hover {
+      cursor: pointer; }
+    .MenuButtonSet #enterRequestedWebsitesMode img {
+      width: 100%;
+      height: 100%; }
+  .MenuButtonSet #enterAddUsersMode.on {
     background-color: #42b72a; }
 
 #menu {
@@ -1535,6 +1578,218 @@ span.input label {
           background-color: rgba(255, 255, 255, 0.7);
           color: #373b60;
           transition: all .4s; }
+
+.AdminMenu.show .MenuButtonSet {
+  display: block; }
+
+.AdminMenu.show {
+  -webkit-animation: slideLeft 0.8s 1;
+  animation: slideLeft 0.8s 1;
+  display: block; }
+
+.AdminMenu {
+  display: none;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  min-height: 100%; }
+
+.RightSideViewTab.show {
+  transition: all 0.3s ease;
+  visibility: visible;
+  left: 20%;
+  opacity: 1; }
+
+.RightSideViewTab {
+  min-height: 100%;
+  opacity: 0;
+  top: 0;
+  transition: all 0.3s ease;
+  width: 80%;
+  float: left;
+  left: 100%;
+  visibility: hidden;
+  position: absolute;
+  background-color: white; }
+  .RightSideViewTab #quit {
+    position: absolute;
+    top: 1%;
+    right: 1%;
+    background-color: #ec555b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    width: 25px;
+    height: 25px;
+    padding: 0px;
+    outline: none; }
+
+.addUsersView {
+  width: 100%;
+  font-family: "Raleway", "Source Sans Pro", sans-serif; }
+  .addUsersView .addUsersProgress.hidden {
+    display: none; }
+  .addUsersView .addUsersProgress {
+    padding: 10px;
+    padding-top: 20px;
+    text-align: center;
+    width: 90%;
+    margin: 0px auto; }
+    .addUsersView .addUsersProgress .DivHeader {
+      font-size: 12px; }
+    .addUsersView .addUsersProgress #progressStatus i {
+      font-size: 25px;
+      vertical-align: center;
+      color: #373b60; }
+    .addUsersView .addUsersProgress #progressStatus .progress {
+      width: 80%;
+      height: 100%;
+      margin-left: 10%;
+      vertical-align: middle;
+      font-size: 12px;
+      line-height: 100%; }
+      .addUsersView .addUsersProgress #progressStatus .progress p {
+        background-color: #ececec; }
+    .addUsersView .addUsersProgress #progressStatus .buttonSet {
+      display: inline-block; }
+      .addUsersView .addUsersProgress #progressStatus .buttonSet i {
+        display: inline-block;
+        color: #32c75a;
+        padding: 1px 6px; }
+      .addUsersView .addUsersProgress #progressStatus .buttonSet i.hidden {
+        display: none; }
+      .addUsersView .addUsersProgress #progressStatus .buttonSet button.hidden {
+        display: none; }
+      .addUsersView .addUsersProgress #progressStatus .buttonSet button {
+        outline: none;
+        border: none;
+        background-color: white; }
+        .addUsersView .addUsersProgress #progressStatus .buttonSet button i {
+          padding: 0px;
+          color: black; }
+        .addUsersView .addUsersProgress #progressStatus .buttonSet button:hover i {
+          padding: 0px;
+          color: #373b60; }
+  .addUsersView .addUsers.hidden {
+    display: none; }
+  .addUsersView .addUsers {
+    padding: 10px;
+    padding-top: 20px;
+    text-align: center;
+    width: 90%;
+    margin: 0px auto; }
+    .addUsersView .addUsers .DivHeader {
+      font-size: 12px; }
+    .addUsersView .addUsers #addUsersForm i {
+      font-size: 25px;
+      vertical-align: middle;
+      color: #373b60; }
+    .addUsersView .addUsers #addUsersForm .inputs {
+      width: 100%;
+      position: relative;
+      font-size: 12px; }
+      .addUsersView .addUsers #addUsersForm .inputs textarea.hidden {
+        display: none; }
+      .addUsersView .addUsers #addUsersForm .inputs textarea {
+        vertical-align: middle;
+        padding-left: 3px;
+        border-radius: 3px;
+        border: none;
+        background-color: #ececec; }
+      .addUsersView .addUsers #addUsersForm .inputs p.hidden {
+        display: none; }
+      .addUsersView .addUsers #addUsersForm .inputs p {
+        border-radius: 3px;
+        background-color: #ececec; }
+    .addUsersView .addUsers #addUsersForm .buttonSet {
+      display: inline-block; }
+      .addUsersView .addUsers #addUsersForm .buttonSet i {
+        display: inline-block;
+        color: #32c75a;
+        padding: 1px 6px; }
+      .addUsersView .addUsers #addUsersForm .buttonSet i.hidden {
+        display: none; }
+      .addUsersView .addUsers #addUsersForm .buttonSet button.hidden {
+        display: none; }
+      .addUsersView .addUsers #addUsersForm .buttonSet button {
+        outline: none;
+        border: none;
+        background-color: white; }
+        .addUsersView .addUsers #addUsersForm .buttonSet button i {
+          padding: 0px;
+          color: black; }
+        .addUsersView .addUsers #addUsersForm .buttonSet button:hover i {
+          padding: 0px;
+          color: #373b60; }
+  .addUsersView .addUsersHeader {
+    padding: 5px;
+    width: 60%;
+    text-align: center;
+    color: #373b60;
+    margin: 0px auto;
+    margin-top: 2%;
+    border-bottom: 1px solid #373b60;
+    padding-bottom: 2%; }
+    .addUsersView .addUsersHeader p {
+      font-weight: 600;
+      color: #373b60;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 15px;
+      width: 70%;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 0px;
+      line-height: 30px;
+      border-radius: 10px; }
+
+.requestedWebsitesView {
+  width: 100%;
+  font-family: "Raleway", "Source Sans Pro", sans-serif;
+  line-height: 100%; }
+  .requestedWebsitesView .requestedWebsite {
+    padding: 10px;
+    padding-top: 10px;
+    text-align: left;
+    width: 70%;
+    margin: 0px auto; }
+    .requestedWebsitesView .requestedWebsite p {
+      display: inline;
+      background-color: #ececec; }
+    .requestedWebsitesView .requestedWebsite .quit {
+      display: inline;
+      left: 10%;
+      background-color: #ec555b;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      width: 15px;
+      height: 15px;
+      padding: 0px;
+      margin-right: 30px;
+      outline: none; }
+  .requestedWebsitesView .requestedWebsitesHeader {
+    padding: 5px;
+    width: 60%;
+    text-align: center;
+    color: #373b60;
+    margin: 0px auto;
+    margin-top: 2%;
+    border-bottom: 1px solid #373b60;
+    padding-bottom: 2%; }
+    .requestedWebsitesView .requestedWebsitesHeader p {
+      font-weight: 600;
+      color: #373b60;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 15px;
+      width: 70%;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 0px;
+      line-height: 30px;
+      border-radius: 10px; }
 
 body {
   overflow-x: hidden; }

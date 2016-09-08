@@ -11,7 +11,7 @@ document.addEventListener("Logout", function(event){
 }, false);
 
 document.addEventListener("NewConnection", function(event){
-
+    console.log(event.detail);
     extension.runtime.sendMessage("NewConnection", {"detail":event.detail}, function(response) {});
 
 }, false);

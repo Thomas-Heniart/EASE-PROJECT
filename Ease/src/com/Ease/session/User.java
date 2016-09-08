@@ -209,4 +209,24 @@ public class User {
 			}
 		}
 	}
+	
+	public Boolean isAdmin(ServletContext context){
+		DataBase db = (DataBase)context.getAttribute("DataBase");
+
+		try {
+			if (db.connect() != 0){
+				return false;
+			} else {		
+				ResultSet rs;
+				if ((rs = db.get("select * from admins where email = '" + email + "';")) == null || !rs.next()) {
+					return false;
+				} else {
+					return true;
+				}
+			}
+
+		} catch (SQLException e) {
+			return false;
+		}
+	}
 }

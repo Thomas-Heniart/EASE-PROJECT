@@ -2,6 +2,17 @@
 	display: block;
 }
 
+.MenuButtonSet.topLeft {
+    top: 20%;
+    left: 5%
+}
+
+.MenuButtonSet.middleTopLeft {
+    width: fit-content;
+    top: 40%;
+    left: 5%
+}
+
 .MenuButtonSet {
 	display: none;
     position: fixed;
@@ -27,6 +38,50 @@
 		}
 	}
 	#enterEditMode.on {
+		background-color: #42b72a;		
+	}
+    
+    #enterAddUsersMode {
+		max-width: 100px;
+		min-width: 0px;
+		width: 100px;
+		height: 100px;
+		background-color: #555ceb;
+		border-radius: 10px;
+		padding: 7px;
+		margin: 0px;
+		transition: background-color 0.3s;
+		&:hover {
+			cursor: pointer;
+		}
+		img {
+			width: 100%;
+			height: 100%;
+		}
+	}
+	#enterAddUsersMode.on {
+		background-color: #42b72a;		
+	}
+    
+    #enterRequestedWebsitesMode {
+		max-width: 100px;
+		min-width: 0px;
+		width: 100px;
+		height: 100px;
+		background-color: #42b72a;
+		border-radius: 10px;
+		padding: 7px;
+		margin: 0px;
+		transition: background-color 0.3s;
+		&:hover {
+			cursor: pointer;
+		}
+		img {
+			width: 100%;
+			height: 100%;
+		}
+	}
+	#enterAddUsersMode.on {
 		background-color: #42b72a;		
 	}
 }

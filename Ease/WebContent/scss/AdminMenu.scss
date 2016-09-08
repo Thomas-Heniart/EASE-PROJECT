@@ -1,0 +1,271 @@
+@import 'variables';
+@import 'mixins';
+
+.AdminMenu.show .MenuButtonSet {
+	display: block;
+}
+    
+.AdminMenu.show	{
+	-webkit-animation: slideLeft 0.8s 1;
+	animation: slideLeft 0.8s 1;
+	display: block;
+}
+
+.AdminMenu {
+	display: none;
+	width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    min-height: 100%;
+    .RightSideViewTab{
+    	
+    }
+}
+
+
+.RightSideViewTab.show {
+		transition: all 0.3s ease;
+		visibility: visible;
+		left: 20%;
+		opacity: 1;
+	}
+
+.RightSideViewTab {
+		min-height: 100%;
+		opacity: 0;
+		top: 0;
+		transition: all 0.3s ease;
+		width: 80%;
+		float:left;
+		left: 100%;
+		visibility: hidden;
+		position: absolute;
+		background-color: white;
+		#quit {
+			position: absolute;
+			top: 1%;
+			right: 1%;
+			background-color: $themeRedColor;
+			color: white;
+			border: none;
+	    	border-radius: 5px;
+	   	 	width: 25px;
+   			height: 25px;	
+   			padding: 0px;
+   			outline:none;
+		}
+	}
+
+.addUsersView {
+	width: 100%;
+	font-family: $defaultFont;
+    .addUsersProgress.hidden {
+        display: none;
+    }
+    .addUsersProgress {
+		padding:10px;
+		padding-top: 20px;
+		text-align: center;
+		width: 90%;
+		margin: 0px auto;
+		.DivHeader {
+			font-size: 12px;
+		}
+		#progressStatus{
+			i {
+				font-size: 25px;
+				vertical-align: center;
+				color: $themeColor;
+			}
+			.progress {
+				width: 80%;
+                height: 100%;
+                margin-left: 10%;
+                vertical-align: middle;
+				font-size: 12px;
+                line-height: 100%;
+				p { 
+					background-color: #ececec;
+				}
+			}
+			.buttonSet {
+				display: inline-block;
+				i {
+					display: inline-block;
+					color: #32c75a;
+					padding: 1px 6px;
+				}
+				i.hidden {
+					display: none;
+				}
+				button.hidden {
+					display: none;
+				}
+				button {
+					outline: none;
+					border: none;
+					background-color:white;
+					i {
+						padding: 0px;
+						color: black;
+					}
+					&:hover {
+						i {
+							padding: 0px;
+							color: $themeColor;
+						}
+					}
+				}
+			}
+		}
+    }
+    .addUsers.hidden {
+        display: none;
+    }
+	.addUsers {
+		padding:10px;
+		padding-top: 20px;
+		text-align: center;
+		width: 90%;
+		margin: 0px auto;
+		.DivHeader {
+			font-size: 12px;
+		}
+		#addUsersForm{
+			i {
+				font-size: 25px;
+				vertical-align: middle;
+				color: $themeColor;
+			}
+			.inputs {
+				width: 100%;
+				position: relative;
+				font-size: 12px;
+				textarea.hidden {
+					display: none;
+				}
+				textarea {
+					vertical-align: middle;
+					padding-left: 3px;
+					border-radius: 3px;
+				    border: none;
+    				background-color: #ececec;
+				}
+				p.hidden {
+					display: none;
+				}
+				p {
+					border-radius: 3px;
+					background-color: #ececec;
+				}
+			}
+			.buttonSet {
+				display: inline-block;
+				i {
+					display: inline-block;
+					color: #32c75a;
+					padding: 1px 6px;
+				}
+				i.hidden {
+					display: none;
+				}
+				button.hidden {
+					display: none;
+				}
+				button {
+					outline: none;
+					border: none;
+					background-color:white;
+					i {
+						padding: 0px;
+						color: black;
+					}
+					&:hover {
+						i {
+							padding: 0px;
+							color: $themeColor;
+						}
+					}
+				}
+			}
+		}
+	}
+	.addUsersHeader {
+		padding: 5px;
+		width: 60%;
+		text-align: center;
+		color: $themeColor;
+		margin: 0px auto;
+		margin-top: 2%;
+		border-bottom: 1px solid $themeColor;
+		padding-bottom: 2%;
+		p {
+			font-weight: 600;
+			color: $themeColor;
+			text-transform: uppercase;
+			letter-spacing: 1px;
+			font-size: 15px;
+			width: 70%;
+		    margin-left: auto;
+    		margin-right: auto;
+    		margin-bottom: 0px;
+    		line-height: 30px;
+    		border-radius: 10px;
+		}
+	}
+}
+
+
+.requestedWebsitesView {
+	width: 100%;
+	font-family: $defaultFont;
+    line-height: 100%;
+    .requestedWebsite {
+		padding:10px;
+		padding-top: 10px;
+		text-align: left;
+		width: 70%;
+		margin: 0px auto;
+        p {
+            display: inline;
+            background-color: #ececec;
+        }
+        .quit {
+			display: inline;
+			left: 10%;
+			background-color: $themeRedColor;
+			color: white;
+			border: none;
+	    	border-radius: 5px;
+	   	 	width: 15px;
+   			height: 15px;	
+   			padding: 0px;
+            margin-right: 30px;
+   			outline:none;
+		}
+    }
+	.requestedWebsitesHeader {
+		padding: 5px;
+		width: 60%;
+		text-align: center;
+		color: $themeColor;
+		margin: 0px auto;
+		margin-top: 2%;
+		border-bottom: 1px solid $themeColor;
+		padding-bottom: 2%;
+		p {
+			font-weight: 600;
+			color: $themeColor;
+			text-transform: uppercase;
+			letter-spacing: 1px;
+			font-size: 15px;
+			width: 70%;
+		    margin-left: auto;
+    		margin-right: auto;
+    		margin-bottom: 0px;
+    		line-height: 30px;
+    		border-radius: 10px;
+		}
+	}
+}

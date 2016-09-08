@@ -36,12 +36,12 @@
 <div id="newuser">
 			<input  id="email" name="email" type="email" placeholder="email"/>
 </div>
-       <button id="go">GO !</button> 
+       <button id="go">This button is broken. Don't even try bro.</button> 
 </BODY>
 <script type="text/javascript">
 
-$(document).ready( function() {
-/*	$('#go').click(function(){
+/*$(document).ready( function() {
+	$('#go').click(function(){
 			var fname = $('#fname').val();
 			var lname = $('#lname').val();
 			var email = $('#email').val();
@@ -64,7 +64,7 @@ $(document).ready( function() {
 	});*/
 	
 	
-	$('#go').click(function(){
+	/*$('#go').click(function(){
 		$.post(
 		'createInvitation',
 		{
@@ -76,7 +76,7 @@ $(document).ready( function() {
 		'text'
 		);
 	});
-});
+});*/
 /*$(document).ready( function() {
 	$('#go').click(function(){
 		var contactsLengt = 0;
