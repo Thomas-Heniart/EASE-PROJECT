@@ -6,12 +6,19 @@
         "todo":[
         	{"action":"waitfor", "search":["a._niffh","a._fcn8k"]},
           	{"action":"clickona", "search":"a._fcn8k"},
-          	{"action":"clickona", "search":"a._fcn8k"},
             {"action":"clickona", "search":"a._niffh"},
             {"action":"fill", "what":"login", "search":"input[name='username']", "grave":true},
             {"action":"fill", "what":"password", "search":"input[name='password']"},
             {"action":"click", "search":"button._aj7mu._taytv._ki5uo._o0442"}
         ]
+    },
+    "Facebook":{
+    	"todo":[
+    		{"action":"waitfor", "search":["a._niffh","a._fcn8k"]},
+          	{"action":"clickona", "search":"a._fcn8k"},
+            {"action":"clickona", "search":"a._niffh"},
+            {"action":"click", "search":"button._aj7mu._fy2va._kenyh._o0442"}
+    	]
     },
     "logout":{
         "todo":[
