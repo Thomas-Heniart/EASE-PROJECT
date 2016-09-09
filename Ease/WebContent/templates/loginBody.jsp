@@ -41,9 +41,7 @@
 %>
 <div class="FormsContainer">
 <% if (iden == 3){ %>
-	<div class="form" style="visibility:hidden;">
-	</div>
-	<div class="form">
+	<div class="form" id="knownUser">
 		<div class="savedUser">
 		<p>Hello again, <%= new String(Base64.getDecoder().decode(fname), StandardCharsets.UTF_8) %> !</p>
 		<span class="input input--minoru">
@@ -55,10 +53,12 @@
 				<p>Incorrect password !</p>
 			</div> 
 	    <button id="savedUserButton">Login</button>
+	    <a id="changeAccount">Connect with an other account</a>
 	    </div>
+	   
 	</div>
 <%}%>
-<div class="form" <% if (iden == 3){ %> style="transform: scale(0.8);" <% }%>>
+<div class="form" id="unknownUser" <% if (iden == 3){ %> style="visibility:hidden;" <% }%>>
 <form action="connection" method="POST" id="loginForm" role="form">
 				<span class="input input--minoru">
 					<input class="input__field input__field--minoru" id="email" name="email" type="email" id="input-8" placeholder="Email"/>
@@ -76,34 +76,33 @@
 			</div> 
 
 
-    <button class="" id="helloButton">Login</button>
+    <button id="helloButton">Login</button>
+    <% if (iden == 3){ %><a id="back">Back</a><%}%>
 </form>
+</div>
 
+</div>
 
-</div>
-</div>
-</div>
 <script type="text/javascript">
 $(document).ready( function() {
 	var nbForms = $('.FormsContainer > *').length;
 
 	if (nbForms > 1){
-		$('.FormsContainer .form').click(function(){
-			var idx = $(this).index();
-
-			if (idx == 2){
-				$(this).css('transform', '');
-				$('.FormsContainer div:nth-child(2)').css('transform', 'scale(0.8)');
-				$('.FormsContainer').append($('.FormsContainer div:nth-child(1)'));
-				$('.FormsContainer div:nth-child(1)').append($('.savedUser'));
-			}
-			else if (idx == 0){
-				$(this).css('transform', '');
-				$('.FormsContainer div:nth-child(2)').css('transform', 'scale(0.8)');
-				$('.FormsContainer').append($(this));
-				$('.FormsContainer').append($('.FormsContainer div:nth-child(1)'));
-				$('.FormsContainer div:nth-child(2)').append($('.savedUser'));
-			}
+		$('#changeAccount').click(function(){
+			$('#loginForm span input').val("");
+			$('#password').val("");
+			$('#unknownUser').css('visibility', 'visible');
+			$('#knownUser').css('visibility', 'hidden');;
+			//$('#useless').remove();
+			
+		});
+	}
+	if (nbForms > 1){
+		$('#back').click(function(){
+			$('#knownUser').css('visibility', 'visible');
+			$('#unknownUser').css('visibility', 'hidden');;
+			//$('#useless').remove();
+			
 		});
 	}
 });	

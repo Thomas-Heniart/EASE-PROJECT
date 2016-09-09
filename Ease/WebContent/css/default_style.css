@@ -1892,6 +1892,7 @@ body {
   .FormsContainer .savedUser p {
     font-size: 20px; }
   .FormsContainer .form {
+    position: absolute;
     min-height: 254px;
     vertical-align: middle;
     display: inline-block;
@@ -1900,6 +1901,8 @@ body {
     min-width: 200px;
     margin-left: auto;
     margin-right: auto;
+    left: 0;
+    right: 0;
     padding-left: 2%;
     padding-right: 2%;
     border-radius: 7px;
@@ -1937,7 +1940,6 @@ body {
       font-size: 14px;
       background-color: #373b60;
       border: 1px hidden #373b60;
-      transition: all .4s;
       color: white;
       outline: none;
       position: relative;
@@ -1946,8 +1948,18 @@ body {
       .FormsContainer .form button:hover {
         border: 1px solid #373b60;
         background-color: rgba(255, 255, 255, 0.7);
-        color: #373b60;
-        transition: all .4s; }
+        color: #373b60; }
+    .FormsContainer .form a {
+      font-size: 12px;
+      display: block;
+      vertical-align: middle;
+      position: relative;
+      margin-top: 25px;
+      padding-bottom: 5px;
+      padding-top: 5px; }
+      .FormsContainer .form a:hover {
+        cursor: pointer;
+        color: darkblue; }
     .FormsContainer .form form {
       margin-left: auto;
       margin-right: auto;

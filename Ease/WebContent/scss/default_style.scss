@@ -144,6 +144,7 @@ body {
     }
   }
   .form {
+    position: absolute;
     min-height: 254px;
     vertical-align: middle;
     display: inline-block;
@@ -151,7 +152,9 @@ body {
     width: 20%;
     min-width: 200px;
     margin-left: auto;
-    margin-right: auto;
+    margin-right: auto;      
+      left: 0;
+      right: 0;
     padding-left: 2%;
     padding-right: 2%;
     border-radius: 7px;
@@ -194,7 +197,6 @@ body {
     font-size: 14px;
     background-color: $themeColor;
     border: 1px hidden $themeColor;
-    transition: all .4s;
     color: white;
     outline: none;
     position: relative;
@@ -204,9 +206,22 @@ body {
       border: 1px solid $themeColor;
       background-color: rgba(white, 0.7);
       color: $themeColor;
-      transition: all .4s;
     }
-  }
+  }    
+      a {
+          font-size: 12px;
+          display: block;
+          vertical-align: middle;
+          position: relative;
+          margin-top: 25px;
+          padding-bottom: 5px;
+          padding-top: 5px;
+          &:hover {
+              cursor: pointer;
+              color: darkblue;
+          }
+      }
+      
   form {
    margin-left: auto;
    margin-right: auto;

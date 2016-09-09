@@ -1,12 +1,15 @@
+var listenersUpdates = [];
+var listenersMessages = [];
+
 var extension = {
 	storage:{
 		get:function(key, callback){
-			chrome.storage.sync.get(key, callback);
+			chrome.storage.local.get(key, callback);
 		},
 		set:function(key, value, callback){
 			var obj = {};
 			obj[key] = value;
-			chrome.storage.sync.set(obj, callback);
+			chrome.storage.local.set(obj, callback);
 		}
 	},
     currentWindow:function(callback){
@@ -29,6 +32,7 @@ var extension = {
 			chrome.runtime.onMessage.addListener(function(event, sender, sendResponse){
 				if(event.name == name){
 					fct(event.message, sendResponse);
+                    return true;
 				}
 			});
 		}
@@ -44,27 +48,29 @@ var extension = {
    			chrome.tabs.remove(tab.id, callback);
 		},
 		onUpdated:function(tab, fct){
-			chrome.tabs.onUpdated.addListener(function bit26(tabId, params, newTab){
+			listenersUpdates[tab.id] = function (tabId, params, newTab){
 				if(tab.id==tabId){
 				    fct(newTab);
 				}
-			});
+			}
+			chrome.tabs.onUpdated.addListener(listenersUpdates[tab.id]);
 		},
-        onUpdatedRemoveListener:function(){
-            chrome.tabs.onUpdated.removeListener(bit26);
+        onUpdatedRemoveListener:function(tab){
+            chrome.tabs.onUpdated.removeListener(listenersUpdates[tab.id]);
         },
 		sendMessage:function(tab, name, msg, callback){
 			chrome.tabs.sendMessage(tab.id, {"name":name, "message":msg}, callback);
 		},
         onMessage:function(tab, name, fct){
-            chrome.runtime.onMessage.addListener(function bit27(event, sender, sendResponse){
+        	listenersMessages[tab.id] = function (event, sender, sendResponse){
 				if(event.name == name && sender.tab.id == tab.id){
 					fct(event.message, sendResponse);
 				}
-			});
+			}
+            chrome.runtime.onMessage.addListener(listenersMessages[tab.id]);
         },
-        onMessageRemoveListener:function(){
-            chrome.runtime.onMessage.removeListener(bit27);  
+        onMessageRemoveListener:function(tab){
+            chrome.runtime.onMessage.removeListener(listenersMessages[tab.id]);  
         },
 		injectScript:function(tab, fileName, callback){
 			chrome.tabs.executeScript(tab.id, {"file":fileName}, callback);

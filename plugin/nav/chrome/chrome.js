@@ -4,12 +4,12 @@ var listenersMessages = [];
 var extension = {
 	storage:{
 		get:function(key, callback){
-			chrome.storage.sync.get(key, callback);
+			chrome.storage.local.get(key, callback);
 		},
 		set:function(key, value, callback){
 			var obj = {};
 			obj[key] = value;
-			chrome.storage.sync.set(obj, callback);
+			chrome.storage.local.set(obj, callback);
 		}
 	},
     currentWindow:function(callback){
