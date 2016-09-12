@@ -28,8 +28,8 @@ public class UploadWebsiteServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	// location to store file uploaded
-	// private static final String UPLOAD_DIRECTORY = "/var/lib"
-	private static final String UPLOAD_DIRECTORY = "/Users/thomas/EASE-PROJECT/WebContent/resources/websites/";
+	// private static final String UPLOAD_DIRECTORY = "/var/lib/tomcat7/webapps/ROOT/resources/websites"
+	private static final String UPLOAD_DIRECTORY = "/Users/thomas/EASE-PROJECT/Ease/WebContent/resources/websites";
 
 	// upload settings
 	private static final int MEMORY_THRESHOLD = 1024 * 1024 * 3; // 3MB
@@ -109,8 +109,10 @@ public class UploadWebsiteServlet extends HttpServlet {
 					}
 					// processes only fields that are not form fields
 					if (!item.isFormField()) {
+						System.out.println(uploadPath);
 						String fileName = new File(item.getName()).getName();
 						String filePath = uploadPath + File.separator + fileName;
+						System.out.println(filePath);
 						File storeFile = new File(filePath);
 						// saves the file on disk
 						Stats.saveAction(session.getServletContext(), user, Stats.Action.UploadWebsite,

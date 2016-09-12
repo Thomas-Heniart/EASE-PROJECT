@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 
 <div class="MenuButtonSet bottomLeft">
-	<button id="enterAddWebsiteMode" state="off" class="button">
+	<button id="enterAddSiteMode" state="off" class="button">
 		<img src="resources/icons/add_website_icon.png" />
 	</button>
 </div>
@@ -18,21 +18,34 @@
 		</div>
 
 		<div class="addSite">
-			
-			<form id="addUsersForm">
-				<div class="inputs">
-					<textarea id="integrateUsers" cols="120" rows="20" name="name"
-						placeholder="Add users here !"></textarea>
-					<p class="hidden">Sending to database ...</p>
-				</div>
-				<div class="buttonSet">
-					<button id="integrate">
-						<div style="display: inline-block">Add these users</div>
-						<i class="fa fa-arrow-circle-right"></i>
-					</button>
-					<i class="fa fa-check-circle hidden"></i>
-				</div>
-			</div>
+			<form method="post" id="addSiteForm" action="uploadWebsite"
+				enctype="multipart/form-data">
+				<input type="text" name="siteName" class="form-control" />
+				<input type="file" class="form-control" name="uploadFile" />
+				<input type="submit" class="btn btn-default btn-primary" value="Upload" />
+			</form>
+
 		</div>
 	</div>
 </div>
+<script>
+function enterAddSiteMode() {
+	$('#AddSiteTab').addClass('show');
+}
+
+function leaveAddSiteMode() {
+	$('#AddSiteTab').removeClass('show');
+}
+
+$(document).ready(function() {
+	$('#enterAddSiteMode').click(function() {
+		enterAddSiteMode();
+	});
+});
+
+$(document).ready(function() {
+	$('#AddSiteTab #quit').click(function() {
+		leaveAddSiteMode();
+	});
+});
+</script>

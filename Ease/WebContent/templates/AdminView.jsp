@@ -20,4 +20,5 @@ com.Ease.session.User user = (com.Ease.session.User)(session.getAttribute("User"
 <div class="AdminMenu show">
 	<%@ include file="AddUsers.jsp"%>
 	<%@ include file="RequestedSitesView.jsp"%>
+	<%@ include file="UploadWebsite.jsp" %>
 </div>
