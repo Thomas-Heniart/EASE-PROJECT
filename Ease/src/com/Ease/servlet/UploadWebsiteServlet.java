@@ -28,8 +28,8 @@ public class UploadWebsiteServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	// location to store file uploaded
-	// private static final String UPLOAD_DIRECTORY = "/var/lib/tomcat7/webapps/ROOT/resources/websites"
-	private static final String UPLOAD_DIRECTORY = "/Users/thomas/EASE-PROJECT/Ease/WebContent/resources/websites";
+	private static final String UPLOAD_DIRECTORY = "/var/lib/tomcat7/webapps/ROOT/resources/websites";
+	//private static final String UPLOAD_DIRECTORY = "/Users/thomas/EASE-PROJECT/Ease/WebContent/resources/websites";
 
 	// upload settings
 	private static final int MEMORY_THRESHOLD = 1024 * 1024 * 3; // 3MB

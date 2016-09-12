@@ -20,7 +20,7 @@
 		<div class="addSite">
 			<form method="post" id="addSiteForm" action="uploadWebsite"
 				enctype="multipart/form-data">
-				<input type="text" name="siteName" class="form-control" />
+				<input type="text" name="siteName" class="form-control" placeholder="Website folder" />
 				<input type="file" class="form-control" name="uploadFile" />
 				<input type="submit" class="btn btn-default btn-primary" value="Upload" />
 			</form>
