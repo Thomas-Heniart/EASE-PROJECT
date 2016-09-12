@@ -6,10 +6,10 @@
 		<div class="popupHeader">
 			<img class="logoApp" src="" />
 			<div class="textContent">
-				<p>Tapez vos identifiants pour la dernière fois ;)</p>
+				<p>Type your password for the last time ;)</p>
 			</div>
 		</div>
-		<input  id="name" name="name" type="text" placeholder="Nom" maxlength="14"/>
+		<input  id="name" name="name" type="text" placeholder="Name" maxlength="14"/>
 		<div class="loginWithChooser">
 			<div class="linedSeparator">
 				<p>Log in with</p>
@@ -27,12 +27,12 @@
 			</div>
 		</div>
 		<div id="AddAppForm">
-			<input  id="login" name="login" type="text" placeholder="Identifiant"/>
-			<input  id="password" name="password" type="password" placeholder="Mot de passe"/>
+			<input  id="login" name="login" type="text" placeholder="Login"/>
+			<input  id="password" name="password" type="password" placeholder="Password"/>
     	</div>
 		<div class="buttonSet">
-   			<button id="accept" class="btn btn-default btn-primary btn-group btn-lg">Ajouter</button>
-   			<button id="close" class="btn btn-default btn-primary btn-group btn-lg">Annuler</button>
+   			<button id="accept" class="btn btn-default btn-primary btn-group btn-lg">Add</button>
+   			<button id="close" class="btn btn-default btn-primary btn-group btn-lg">Cancel</button>
     	</div>
 </div>
 </div>

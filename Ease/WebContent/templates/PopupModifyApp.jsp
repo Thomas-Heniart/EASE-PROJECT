@@ -6,10 +6,10 @@
 		<div class="popupHeader">
 			<img class="logoApp" src="resources/images/Deezer.jpeg" />
 			<div class="textContent">
-				<p class="title">Modifiez les informations relatives à <span>Deezer</span></p>
+				<p class="title">Modify informations related to <span>Deezer</span></p>
 			</div>
 		</div>
-		<input  id="name" name="name" type="text" placeholder="Nom" maxlength="14"/>
+		<input  id="name" name="name" type="text" placeholder="Name" maxlength="14"/>
 		<div class="loginWithChooser">
 			<p>Log in with</p>
 			<div class="loginWithButton hidden" webid="7" style="background-color:#3B5998;"><p>Facebook</p></div>
@@ -25,13 +25,13 @@
 			</div>
 		</div>
 		<div id="modifyAppForm">
-			<input  name="login" type="text" placeholder="Indentifiant" style="display:none;"/>
-			<input  id="login" name="login" type="text" placeholder="Indentifiant" />
-			<input  id="password" name="password" type="password" placeholder="Mot de passe"/>
+			<input  name="login" type="text" placeholder="Login" style="display:none;"/>
+			<input  id="login" name="login" type="text" placeholder="Login" />
+			<input  id="password" name="password" type="password" placeholder="Password"/>
     	</div>
 		<div class="buttonSet">
-   			<button id="accept" class="btn btn-default btn-primary btn-group btn-lg">Ajouter</button>
-   			<button id="close" class="btn btn-default btn-primary btn-group btn-lg">Annuler</button>
+   			<button id="accept" class="btn btn-default btn-primary btn-group btn-lg">Update</button>
+   			<button id="close" class="btn btn-default btn-primary btn-group btn-lg">Cancel</button>
     	</div>
 </div>
 </div>

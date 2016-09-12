@@ -188,15 +188,25 @@
 						function(event) {
 							if ($(".CatalogViewTab").hasClass("show")) {
 								if (!$(event.target).parents().hasClass(
-										"ProfileContent")) {
+										"ProfilesHandler editMode")) {
+									console.log("test");
 									if (!($(event.target).is(
 											"#enterEditMode img")
 											|| $(event.target).is(
 													"#enterEditMode")
 											|| $(event.target).is(
-													$(".CatalogViewTab")) || $(
-											".CatalogViewTab").has(
-											$(event.target)).length))
+													$(".CatalogViewTab"))
+											|| $(".CatalogViewTab").has(
+													$(event.target)).length
+											|| $(event.target).is(
+													"#PopupAddApp")
+											|| $("#PopupAddApp").has(
+													$(event.target)).length
+
+											|| $(event.target).is(
+													"#addProfileHelper") || $(
+											"#addProfileHelper").has(
+											$(event.target).length)))
 										leaveEditMode();
 								}
 							}

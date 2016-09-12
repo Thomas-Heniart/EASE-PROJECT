@@ -282,7 +282,7 @@ function closeAllSettingsTabs(){
 				</div>
 				<div class="sectionContent" id="contentDeleteProfil">
 					<div   id="deleteProfileForm">
-						<p>En supprimant votre profil vous perdrez toutes les informations correspondantes et comptes associés</p>
+						<p>By deleting your profile you will lose all related information and associated accounts</p>
 						<div class="buttonSet">
 							<button class="button" id="validate">Validate</button>
 							<button class="button" id="cancel">Cancel</button>
