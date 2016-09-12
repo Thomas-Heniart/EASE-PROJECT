@@ -22,9 +22,6 @@
     "checkAlreadyLogged":[
         {"search":"div#wrapper,#user-dropdown"}
     ],
-    "checkChangeLogin":[
-        {"action":"click", "search":"#loginbutton"}
-    ],
     "Facebook":{
     	"todo":[
     		{"action":"goto", "url":"https://hivebrite.com/auth/facebook?network_id=42"}

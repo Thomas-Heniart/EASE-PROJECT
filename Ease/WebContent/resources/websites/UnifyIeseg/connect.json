@@ -1,25 +1,22 @@
 {
 	"name":"UnifyIeseg",
 	"lastLogin":"",
-	"home":"http://unify.ieseg.fr/",
+	"home":"https://unify.ieseg.fr/",
 	"connect":{
 		
 		"todo":[
-			{"action":"waitfor", "search":"input#username-inputEl"},
-			{"action":"fill", "what":"login", "search":"input#username-inputEl"},
-			{"action":"fill", "what":"password", "search":"input#password-inputEl", "grave":true},
-			{"action":"click", "search":"#container-1010 .x-panel-body .x-toolbar a[role='button'].x-button.x-unselectable"}
+			{"action":"fill", "what":"login", "search":"#txtUserName", "grave":true},
+			{"action":"fill", "what":"password", "search":"#txtPassword", "grave":true},
+			{"action":"click", "search":"#SubmitButton"}
 			]
 	},
 	"logout":{
 		"todo":[
-			{"action":"goto", "search":"http://unify.ieseg.fr/signout"}
+			{"action":"click", "search":"a:nth-child(3) span.x-btn-wrap.x-btn-arrow.x-btn-arrow-right"},
+			{"action":"click", "search":"div.icon-decline"}
 			]
 	},
-	"checkAlreadyLoged":[
-		{"search":"a.buttonSign[href='/signout']"}
-	],
-	"checkChangeLogin":[
-		{"action":"click", "search":"#loginbutton"}
+	"checkAlreadyLogged":[
+		{"search":"a:nth-child(3) span.x-btn-wrap.x-btn-arrow.x-btn-arrow-right"}
 	]
 }
