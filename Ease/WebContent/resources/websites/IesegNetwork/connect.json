@@ -1,7 +1,7 @@
 {
     "name":"Ieseg Network",
     "lastLogin":"",
-    "home":"https://ieseg-network.hivebrite.com/",
+    "home":"https://ieseg-network.hivebrite.com",
     "connect":{
         "url":"https://ieseg-network.hivebrite.com/",
         "todo":[
@@ -24,5 +24,15 @@
     ],
     "checkChangeLogin":[
         {"action":"click", "search":"#loginbutton"}
-    ]
+    ],
+    "Facebook":{
+    	"todo":[
+    		{"action":"goto", "url":"https://hivebrite.com/auth/facebook?network_id=42"}
+    	]	
+    },
+    "Linkedin": {
+    	"todo": [
+    		{"action":"goto", "url":"https://hivebrite.com/auth/linkedin?network_id=42"}
+    	]
+    }
 }
