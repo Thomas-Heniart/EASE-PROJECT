@@ -12,8 +12,8 @@
 	},
 	"logout":{
 		"todo":[
-			{"action":"goto", "url":"http://www.ieseg-online.com/login/logout.php"}
-			
+			{"action":"goto", "url":"http://www.ieseg-online.com/login/logout.php"},
+			{"action":"submit", "search":"form[action='http://www.ieseg-online.com/login/logout.php']"}			
 			]
 	},
 	"checkAlreadyLogged":[

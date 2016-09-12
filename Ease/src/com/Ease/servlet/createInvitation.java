@@ -99,16 +99,21 @@ public class createInvitation extends HttpServlet {
 					InternetAddress.parse(email));
 			message.setSubject(MimeUtility.encodeText("Créez votre compte ease", "utf-8", null));
 			String link = "https://ease.space/registerInv?email=" + email + "&code=" + invitationCode;
-			message.setContent("<h2>Bienvenue sur version beta EASE.space !</h2>"
-					+ "<p style='margin: 0px;'>Ease est une plateforme te permettra d'accéder à tous tes comptes sur le web en clic.</p>"
-					+ "<p style='margin: 0px;'>Tu vas devoir créer ton mot de passe Ease et ça sera le seul mot de passe à retenir de ta vie ! Il va permettre de crypter (et du coup sécuriser) l’ensemble de ta plateforme.</p>"
-					+ "<p style='margin: 0px;'>Tu es la seule personne à le posséder et il n’est pas ré-initialisable, s’il est perdu, tu n’auras plus accès à Ease. </p>"
-					+ "<p style='margin: 0px;'>Pour activer ton compte, clique ici -> <a href='"+link+"'>https://ease.space</a></p>"
-					+ "<p>Pour l’instant Ease fonctionne uniquement sur Chrome. Si tu ne l'as pas sur ton ordinateur, je t’invite à le télécharger <a href='https://www.google.fr/intl/fr/chrome/browser/desktop/index.html' target='_blank'>ici</a>.</p>"
+			message.setContent("<p>Hello !</p>"
+					+ "<p></p>"
+					+ "<p>Bienvenue sur la version beta Ease.space !</p>"
+					+ "<p>Ease est une plateforme qui va te permettre de retrouver l'ensemble des sites sur lesquels tu as un compte utilisateur, afin de t'y connecter en 1 clic !</p>"
+					+ "<p></p>"
+					+ "<p>Tu vas bientôt créer ton mot de passe Ease et ça sera le seul mot de passe à retenir de ta vie ! Il va permettre de crypter (et du coup sécuriser) l’ensemble de ta plateforme.</p>"
+					+ "<p>Tu es la seule personne à le posséder et il n’est pas ré-initialisable, s’il est perdu, tu n’auras plus accès à Ease.</p>"
+					+ "<p style='margin: 0px;'>Pour activer ton compte, clique ici : <a href='"+link+"'>https://ease.space</a></p>"
+					+ "<p>Ease fonctionne sur Chrome, si tu ne l'as pas, télécharge le <a href='https://www.google.fr/intl/fr/chrome/browser/desktop/index.html' target='_blank'>ici</a>. (Safari et Firefox coming soon!!)</p>"
+					+ "<p></p>"
 					+ "<p>À bientôt !</p>"
+					+ "<p></p>"
 					+ "<p>La team Ease</p>"
-					, "text/html;charset=utf-8");
-
+					, "text/html;charset=utf-8");		
+			
 			Transport.send(message);
 			retMsg = "succes";
 			System.out.println("Done");
