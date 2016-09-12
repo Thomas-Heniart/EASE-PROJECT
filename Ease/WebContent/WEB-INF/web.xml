@@ -159,7 +159,7 @@
     <url-pattern>/getEmailLink</url-pattern>
   </servlet-mapping>
   <servlet>
-  	<servlet-name>LetsEncrypt</servlet-name>
+    <servlet-name>LetsEncrypt</servlet-name>
     <servlet-class>com.Ease.servlet.LetsEncrypt</servlet-class>
   </servlet>
   <servlet-mapping>
@@ -182,21 +182,6 @@
     <servlet-name>EditLogWith</servlet-name>
     <url-pattern>/editLogWith</url-pattern>
   </servlet-mapping>
-<!-- 
-   <servlet>
-    <servlet-name>UpdateWebsites</servlet-name>
-    <servlet-class>com.Ease.servlet.UpdateWebsites</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>UpdateWebsites</servlet-name>
-    <url-pattern>/updateWebsites</url-pattern>
-  </servlet-mapping>
- 
-  <servlet-mapping>
-    <servlet-name>LetsEncryptWWW</servlet-name>
-    <url-pattern>/.well-known/acme-challenge/qot0z1SUt7tR8jyndaWcmnHR7183Q3vQOL2AOK47yDka</url-pattern>
-  </servlet-mapping>
- -->
   <servlet>
     <servlet-name>AskInfo</servlet-name>
     <servlet-class>com.Ease.servlet.AskInfo</servlet-class>
@@ -205,35 +190,39 @@
     <servlet-name>AskInfo</servlet-name>
     <url-pattern>/askInfo</url-pattern>
   </servlet-mapping>
-
-    <servlet>
-   	<servlet-name>createInvitation</servlet-name>
+  <servlet>
+    <servlet-name>createInvitation</servlet-name>
     <servlet-class>com.Ease.servlet.createInvitation</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>createInvitation</servlet-name>
     <url-pattern>/createInvitation</url-pattern>
-  </servlet-mapping> 
-
-
-   <servlet>
-   	<servlet-name>requestedWebsites</servlet-name>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>requestedWebsites</servlet-name>
     <servlet-class>com.Ease.servlet.RequestedWebsitesServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>requestedWebsites</servlet-name>
     <url-pattern>/requestedWebsites</url-pattern>
-  </servlet-mapping> 
-  
-    <servlet>
-   	<servlet-name>eraseRequestedWebsite</servlet-name>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>eraseRequestedWebsite</servlet-name>
     <servlet-class>com.Ease.servlet.EraseRequestedWebsiteServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>eraseRequestedWebsite</servlet-name>
     <url-pattern>/eraseRequestedWebsite</url-pattern>
-  </servlet-mapping> 
-
+  </servlet-mapping>
+  <servlet>
+  	<servlet-name>UploadWebsite</servlet-name>
+  	<servlet-class>com.Ease.servlet.UploadWebsiteServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>UploadWebsite</servlet-name>
+  	<url-pattern>/uploadWebsite</url-pattern>
+  </servlet-mapping>
+  
 <security-constraint>
 <web-resource-collection>
 <web-resource-name>Protected Context</web-resource-name>
@@ -243,10 +232,10 @@
 <transport-guarantee>CONFIDENTIAL</transport-guarantee>
 </user-data-constraint>
 </security-constraint>
-
-	<session-config>
-    	<session-timeout>120</session-timeout> <!-- in minutes -->
- 	</session-config>
+  
+  <session-config>
+    <session-timeout>120</session-timeout>
+  </session-config>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
     <welcome-file>index.htm</welcome-file>
@@ -254,9 +243,9 @@
     <welcome-file>default.html</welcome-file>
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
-    </welcome-file-list>
-    <error-page>
-        <error-code>404</error-code>
-        <location>/404page.jsp</location>
-</error-page>
+  </welcome-file-list>
+  <error-page>
+    <error-code>404</error-code>
+    <location>/404page.jsp</location>
+  </error-page>
 </web-app>

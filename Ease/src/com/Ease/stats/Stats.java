@@ -25,6 +25,7 @@ public class Stats {
 		DeleteApp,
 		UseApp,
 		AskForNewApp,
+		UploadWebsite
 	}
 	public static void saveAction(ServletContext context, User user, Stats.Action action, String msg){
 		DataBase db = (DataBase)context.getAttribute("DataBase");
