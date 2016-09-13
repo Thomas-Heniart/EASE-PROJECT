@@ -28,8 +28,9 @@ public class UploadWebsiteServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	// location to store file uploaded
-	private static final String UPLOAD_DIRECTORY = "/var/lib/tomcat7/webapps/ROOT/resources/websites";
-	//private static final String UPLOAD_DIRECTORY = "/Users/thomas/EASE-PROJECT/Ease/WebContent/resources/websites";
+	// private static final String UPLOAD_DIRECTORY =
+	// "/var/lib/tomcat7/webapps/ROOT/resources/websites";
+	private static final String UPLOAD_DIRECTORY = "/Users/thomas/EASE-PROJECT/Ease/WebContent/resources/websites";
 
 	// upload settings
 	private static final int MEMORY_THRESHOLD = 1024 * 1024 * 3; // 3MB
@@ -111,9 +112,15 @@ public class UploadWebsiteServlet extends HttpServlet {
 					if (!item.isFormField()) {
 						System.out.println(uploadPath);
 						String fileName = new File(item.getName()).getName();
-						String filePath = uploadPath + File.separator + fileName;
+						if (fileName.endsWith(".json"))
+							return;
+						String filePath = uploadPath + File.separator + "connect.json";
 						System.out.println(filePath);
 						File storeFile = new File(filePath);
+						if (storeFile.exists()) {
+							storeFile.renameTo(new File(uploadPath + File.separator + "connect_old.json"));
+
+						}
 						// saves the file on disk
 						Stats.saveAction(session.getServletContext(), user, Stats.Action.UploadWebsite,
 								"Uploaded " + filePath);

@@ -202,11 +202,16 @@
 													"#PopupAddApp")
 											|| $("#PopupAddApp").has(
 													$(event.target)).length
-
 											|| $(event.target).is(
-													"#addProfileHelper") || $(
-											"#addProfileHelper").has(
-											$(event.target).length)))
+													"#PopupModifyApp")
+											|| $("#PopupModifyApp").has(
+													$(event.target)).length
+											|| $(event.target).is(
+													".AddProfileView") || $(
+											".AddProfileView").has(
+											$(event.target)).length
+
+									))
 										leaveEditMode();
 								}
 							}

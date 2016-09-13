@@ -10,8 +10,8 @@
 			<p>Incorrect password !</p>
 		</div>
 		<div class="buttonSet">
-    		<button id="accept" class="btn btn-default btn-primary btn-group btn-lg">Je supprime</button>
-    		<button id="close" class="btn btn-default btn-primary btn-group btn-lg">Annuler</button>
+    		<button id="accept" class="btn btn-default btn-primary btn-group btn-lg">Remove</button>
+    		<button id="close" class="btn btn-default btn-primary btn-group btn-lg">Cancel</button>
     	</div>
 </div>
 </div>

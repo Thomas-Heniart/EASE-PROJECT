@@ -1,0 +1,25 @@
+{
+    "name":"Netflix",
+    "lastLogin":"",
+    "home":"https://www.netflix.com/Login",
+    "connect":{
+        "todo":[
+        	{"action":"fill", "what":"login", "search":".login-form input[name='email']", "grave":true},
+            {"action":"fill", "what":"password", "search":"input[name='password']"},
+            {"action":"click", "search":".login-form button[type='submit']"}
+        ]
+    },
+    "Facebook":{
+    	"todo":[
+    		{"action":"click", "search":".login-form .fb-login-form-btn"}
+    	]
+    },
+    "logout":{
+        "todo":[
+            {"action":"goto", "url":"https://www.instagram.com/accounts/logout/"}
+            ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a._soakw._vbtk2.coreSpriteDesktopNavProfile"}
+    ]
+}
