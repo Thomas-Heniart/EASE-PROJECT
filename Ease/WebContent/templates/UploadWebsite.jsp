@@ -34,7 +34,7 @@
 			<form method="post" id="addSiteForm" action="addWebsiteInDB">
 				<input type="text" name="siteUrl" class="form-control" placeholder="Website url"/>
 				<input type="text" name="siteName" class="form-control" placeholder="Website name" />
-				<input type="text" name="siteFolder" class="form-control" placeholder="Website folder" />
+				<input type="text" name="siteFolder" class="form-control" placeholder="Website folder. DO : 'Facebook' , DONT : 'resources/wesites/Facebook/'" />
 				<div class="form-control" style="margin-left:25%; margin-top:1%; width:50%; text-align:center; position:relative;">
 					<input style="width: 20px; height: 20px; padding:0; margin:0; vertical-align:bottom; position:relative;" type="checkbox" name="haveLoginButton"/>Have loginWith button
 				</div>
