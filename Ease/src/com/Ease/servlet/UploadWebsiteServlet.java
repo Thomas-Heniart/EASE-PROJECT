@@ -28,9 +28,9 @@ public class UploadWebsiteServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	// location to store file uploaded
+	private static final String UPLOAD_DIRECTORY = "/var/lib/tomcat7/webapps/ROOT/resources/websites";
 	// private static final String UPLOAD_DIRECTORY =
-	// "/var/lib/tomcat7/webapps/ROOT/resources/websites";
-	private static final String UPLOAD_DIRECTORY = "/Users/thomas/EASE-PROJECT/Ease/WebContent/resources/websites";
+	// "/Users/thomas/EASE-PROJECT/Ease/WebContent/resources/websites";
 
 	// upload settings
 	private static final int MEMORY_THRESHOLD = 1024 * 1024 * 3; // 3MB
@@ -110,24 +110,33 @@ public class UploadWebsiteServlet extends HttpServlet {
 					}
 					// processes only fields that are not form fields
 					if (!item.isFormField()) {
-						System.out.println(uploadPath);
+						// System.out.println(uploadPath);
 						String fileName = new File(item.getName()).getName();
+						String filePath;
+						File storeFile;
 						if (fileName.endsWith(".json")) {
 
-							String filePath = uploadPath + File.separator + "connect.json";
-							System.out.println(filePath);
-							File storeFile = new File(filePath);
-							if (storeFile.exists()) {
+							filePath = uploadPath + File.separator + "connect.json";
+							// System.out.println(filePath);
+							storeFile = new File(filePath);
+							if (storeFile.exists())
 								storeFile.renameTo(new File(uploadPath + File.separator + "connect_old.json"));
 
-							}
 							// saves the file on disk
 							Stats.saveAction(session.getServletContext(), user, Stats.Action.UploadWebsite,
 									"Uploaded " + filePath);
 							item.write(storeFile);
 						}
 						if (fileName.endsWith(".png")) {
-							
+							filePath = uploadPath + File.separator + "logo.png";
+							storeFile = new File(filePath);
+							if (storeFile.exists())
+								storeFile.renameTo(new File(uploadPath + File.separator + "logo_old.png"));
+
+							Stats.saveAction(session.getServletContext(), user, Stats.Action.UploadWebsite,
+									"Uploaded " + filePath);
+							item.write(storeFile);
+
 						}
 						request.setAttribute("message", "Upload has been done successfully!");
 					}

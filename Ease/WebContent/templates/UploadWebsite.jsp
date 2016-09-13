@@ -21,7 +21,10 @@
 			<form method="post" id="addSiteForm" action="uploadWebsite"
 				enctype="multipart/form-data">
 				<input type="text" name="siteName" class="form-control" placeholder="Website folder" />
-				<input type="file" class="form-control" name="uploadFile" />
+				<h4 style="margin-left: 25%; font-size: 1em">Json file</h4>
+				<input id="jsonFile" type="file" class="form-control" accept=".json" name="uploadFile" />
+				<h4 style="margin-left: 25%; font-size: 1em">Png file</h4>
+				<input id="pngFile" type="file" class="form-control" accept=".png" name="uploadFile" />
 				<input type="submit" class="btn btn-default btn-primary" value="Upload" />
 			</form>
 
