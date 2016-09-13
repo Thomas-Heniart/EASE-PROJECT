@@ -230,8 +230,7 @@
   	<servlet-name>AddWebsite</servlet-name>
   	<url-pattern>/addWebsiteInDB</url-pattern>
   </servlet-mapping>
-
-<!--
+<!-- 
 <security-constraint>
 <web-resource-collection>
 <web-resource-name>Protected Context</web-resource-name>
@@ -243,9 +242,10 @@
 </security-constraint>
 -->
 
-  <session-config>
-    <session-timeout>120</session-timeout>
-  </session-config>
+	<session-config>
+    	<session-timeout>120</session-timeout> <!-- in minutes -->
+ 	</session-config>
+
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
     <welcome-file>index.htm</welcome-file>

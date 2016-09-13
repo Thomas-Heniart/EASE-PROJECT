@@ -112,19 +112,23 @@ public class UploadWebsiteServlet extends HttpServlet {
 					if (!item.isFormField()) {
 						System.out.println(uploadPath);
 						String fileName = new File(item.getName()).getName();
-						if (fileName.endsWith(".json"))
-							return;
-						String filePath = uploadPath + File.separator + "connect.json";
-						System.out.println(filePath);
-						File storeFile = new File(filePath);
-						if (storeFile.exists()) {
-							storeFile.renameTo(new File(uploadPath + File.separator + "connect_old.json"));
+						if (fileName.endsWith(".json")) {
 
+							String filePath = uploadPath + File.separator + "connect.json";
+							System.out.println(filePath);
+							File storeFile = new File(filePath);
+							if (storeFile.exists()) {
+								storeFile.renameTo(new File(uploadPath + File.separator + "connect_old.json"));
+
+							}
+							// saves the file on disk
+							Stats.saveAction(session.getServletContext(), user, Stats.Action.UploadWebsite,
+									"Uploaded " + filePath);
+							item.write(storeFile);
 						}
-						// saves the file on disk
-						Stats.saveAction(session.getServletContext(), user, Stats.Action.UploadWebsite,
-								"Uploaded " + filePath);
-						item.write(storeFile);
+						if (fileName.endsWith(".png")) {
+							
+						}
 						request.setAttribute("message", "Upload has been done successfully!");
 					}
 				}
