@@ -17,6 +17,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import com.Ease.context.DataBase;
 import com.Ease.session.User;
 import com.Ease.stats.Stats;
 
@@ -61,7 +62,14 @@ public class UploadWebsiteServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		User user = null;
+
+		User user = (User) session.getAttribute("User");
+
+		if (!user.isAdmin(session.getServletContext())) {
+			response.getWriter().print("error: You aint admin bro");
+			return;
+		}
+
 		if (!ServletFileUpload.isMultipartContent(request)) {
 			// if not, we stop here
 			PrintWriter writer = response.getWriter();
@@ -92,7 +100,6 @@ public class UploadWebsiteServlet extends HttpServlet {
 		// creates the directory if it does not exist
 
 		try {
-			user = (User) (session.getAttribute("User"));
 			// parses the request's content to extract file data
 			List<FileItem> formItems = upload.parseRequest(request);
 
