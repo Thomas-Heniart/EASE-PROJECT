@@ -429,3 +429,15 @@
 	width: 8%;
 	z-index: 1;
 }
+
+.siteLinkBox.gu-mirror {
+	width: 100px;
+	height: 100px;
+	.deleteAppButton, .modifyAppButton, .siteName {
+		display: none;
+	}
+	img {
+		width: 100%;
+		height: 100%;
+	}
+}

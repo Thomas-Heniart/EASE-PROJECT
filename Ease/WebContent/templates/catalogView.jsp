@@ -10,7 +10,7 @@
 	</div>
 	<div class="scaleContainer">
 		<img class="Scaler" src="https://placehold.it/4x4" style="width: 100%; height: auto; visibility: hidden;"/>
-		<div class="catalogContainer">
+		<div id="catalog" class="catalogContainer">
 
 			<c:forEach items='${siteList}' var="item">
 				<div class="catalogApp" idx="${item.getId()}" connect="${item.getFolder()}connect.json" data-login="${item.getLoginWith()}" name="${item.getName()}">

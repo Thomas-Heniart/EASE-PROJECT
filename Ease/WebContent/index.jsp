@@ -20,7 +20,7 @@
 
 
 		
-
+    <link rel="stylesheet" href="css/dragula.css">
     <link rel="stylesheet" href="css/lib/vicons-font/vicons-font.css">
     <link rel="stylesheet" href="css/lib/vicons-font/buttons.css">
 	<link rel="stylesheet" href="css/lib/textInputs/set1.css">
@@ -31,6 +31,7 @@
 	<link rel="manifest" href="manifest.json">
 	
 	<script src="js/classie.js"></script>
+	<script src="js/dragula.js"></script>
    	<script src="js/owl.carousel.js"></script>
     <script src="js/basic-utils.js" ></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"> </script>
@@ -202,7 +203,9 @@ $(document).ready(function(){
 	    itemsMobile : [479,1],
 	    singleItem : false,
 	    itemsScaleUp : false,
-	    pagination: false
+	    pagination: false,
+	    touchDrag: false,
+	    mouseDrag: false
 	 });
 	 $('.owl-carousel').on('mousewheel', '.owl-stage', function (e) {
 		    if (e.deltaY>0) {

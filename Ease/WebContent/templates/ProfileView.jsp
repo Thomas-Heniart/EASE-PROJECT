@@ -391,7 +391,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="SitesContainer">
+							<div id="profile-<%=it - 1%>" class="SitesContainer">
 								<c:forEach items='${item.getApps()}' var="account">
 									<c:if test="${account.getType() eq 'Account'}">
 										<div class="siteLinkBox" onclick="sendEvent(this)"
@@ -437,7 +437,14 @@
 </c:forEach>
 </div>
 </div>
-
+<script type="text/javascript">
+	$(document).ready(function(){
+		dragula([document.getElementById('profile-0'), document.getElementById('profile-1'), document.getElementById('profile-2'), document.getElementById('profile-3')],
+		 {
+		 	revertOnSpill: true
+		});
+	});
+</script>
 <%@ include file="catalogView.jsp"%>
 
 </div>

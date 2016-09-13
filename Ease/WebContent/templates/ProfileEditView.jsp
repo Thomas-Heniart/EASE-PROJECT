@@ -96,6 +96,8 @@
 			singleItem : false,
 			itemsScaleUp : false,
 			pagination : false,
+		    touchDrag: false,
+		    mouseDrag: false
 		});
 	}
 
@@ -142,7 +144,9 @@
 			itemsMobile : [ 479, 1 ],
 			singleItem : false,
 			itemsScaleUp : false,
-			pagination : false
+			pagination : false,
+		    touchDrag: false,
+		    mouseDrag: false
 		});
 	}
 
@@ -169,7 +173,10 @@
 			itemsMobile : [ 479, 1 ],
 			singleItem : false,
 			itemsScaleUp : false,
-			pagination : false
+			pagination : false,
+		    touchDrag: false,
+		    mouseDrag: false
+
 		});
 		$('.scaleOutAnimation').removeClass('scaleOutAnimation');
 	}
