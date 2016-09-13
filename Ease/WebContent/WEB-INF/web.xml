@@ -222,7 +222,16 @@
   	<servlet-name>UploadWebsite</servlet-name>
   	<url-pattern>/uploadWebsite</url-pattern>
   </servlet-mapping>
-  
+   <servlet>
+  	<servlet-name>AddWebsite</servlet-name>
+  	<servlet-class>com.Ease.servlet.AddWebsite</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>AddWebsite</servlet-name>
+  	<url-pattern>/addWebsiteInDB</url-pattern>
+  </servlet-mapping>
+
+<!--
 <security-constraint>
 <web-resource-collection>
 <web-resource-name>Protected Context</web-resource-name>
@@ -232,7 +241,8 @@
 <transport-guarantee>CONFIDENTIAL</transport-guarantee>
 </user-data-constraint>
 </security-constraint>
-  
+-->
+
   <session-config>
     <session-timeout>120</session-timeout>
   </session-config>

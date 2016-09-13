@@ -1,71 +1,23 @@
 {
-    "website":"gihub",
-    
-    "urls":{
-        "login":"https://github.com/login"
-    },
-    
-    "elements":{
-        
-        "userField":{
-            "id":"login_field"
-        },
-        "passField":{
-            "id":"password"
-        },
-        "buttonLogIn":{
-            "tagName":"input",
-            "type":"submit",
-            "name":"commit"
-        }
-        
-    },
-    
-    "connectionSteps":[
-        {
-            "action":"goTo",
-            "url":"login"
-        },
-        
-        {
-                "action":"catchFail",
-                "if":"missingElement",
-                "elementName":"passField",
-                "actionsIfFail":[{"action":"end"}],
-                "send":"alreadyConnected"
-        },
-        
-        {
-            "action":"do",
-            "elements":[
-                {
-                    "name":"userField",
-                    "action":"fill",
-                    "value":"user"
-                },
-                {
-                    "name":"passField",
-                    "action":"fill",
-                    "value":"pass"
-                },
-                {
-                    "name":"buttonLogIn",
-                    "action":"click"
-                }
-            ]
-        },
-        
-        {
-            "action":"nextPage",
-            "lastPage":true
-        },
-        
-        {
-            "action":"catchFail",
-            "if":"existingElement",
-            "elementName":"passField",
-            "actionsIfFail":[{"action":"end"}],
-            "send":"wrongPassword"
-        }
-    ]
+	"name":"Github",
+	"lastLogin":"",
+	"home":"https://github.com/login",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#login_field", "grave":true},
+			{"action":"fill", "what":"password", "search":"#password"},
+			{"action":"click", "search":"input[type='submit']", "grave":true}
+			]
+	},
+	"logout":{
+		"todo":[
+			{"action":"goto", "url":"https://github.com/logout"},
+			{"action":"click", "search":"input[type='submit']"},
+			{"action":"waitload"},
+			{"action":"goto", "url":"https://github.com/login"}
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":"img.avatar"}
+	]
 }

@@ -12,17 +12,34 @@
 		<i class="fa fa-times"></i>
 	</button>
 
-	<div class="addSiteView">
-		<div class="addSiteHeader">
+	<div>
+		<div>
 			<p>Add a website to Ease</p>
 		</div>
 
-		<div class="addSite">
+		<div>
 			<form method="post" id="addSiteForm" action="uploadWebsite"
 				enctype="multipart/form-data">
 				<input type="text" name="siteName" class="form-control" placeholder="Website folder" />
 				<input type="file" class="form-control" name="uploadFile" />
 				<input type="submit" class="btn btn-default btn-primary" value="Upload" />
+			</form>
+
+		</div>
+
+		<div style="margin-top:5%">
+			<form method="post" id="addSiteForm" action="addWebsiteInDB">
+				<input type="text" name="siteUrl" class="form-control" placeholder="Website url"/>
+				<input type="text" name="siteName" class="form-control" placeholder="Website name" />
+				<input type="text" name="siteFolder" class="form-control" placeholder="Website folder" />
+				<div class="form-control" style="margin-left:25%; margin-top:1%; width:50%; text-align:center; position:relative;">
+					<input style="width: 20px; height: 20px; padding:0; margin:0; vertical-align:bottom; position:relative;" type="checkbox" name="haveLoginButton"/>Have loginWith button
+				</div>
+				<div class="form-control" style="margin-left:25%; margin-top:1%; width:50%; position:relative;">Have login button : 
+					<input style="width: 20px; height: 20px; padding:0; margin:0; vertical-align:bottom; position:relative;" type="checkbox" name="haveLoginWith" value="7"/>Facebook 
+					<input style="width: 20px; height: 20px; padding:0; margin:0; vertical-align:bottom; position:relative;" type="checkbox" name="haveLoginWith" value="28"/>Linkedin
+				</div>
+				<input type="submit" class="btn btn-default btn-primary" value="Send to database" />
 			</form>
 
 		</div>

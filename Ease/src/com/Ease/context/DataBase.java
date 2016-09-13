@@ -50,6 +50,7 @@ public class DataBase {
 	public int set(String request) {
 		try {
 			con.createStatement().executeUpdate(request);
+			System.out.println(request);
 			return 0;
 		} catch (SQLException e) {
 			System.out.println("Impossible to set DB");
