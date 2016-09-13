@@ -335,8 +335,8 @@
   z-index: 1; }
 
 .siteLinkBox.gu-mirror {
-  width: 100px;
-  height: 100px; }
+  width: 50px !important;
+  height: 50px !important; }
   .siteLinkBox.gu-mirror .deleteAppButton, .siteLinkBox.gu-mirror .modifyAppButton, .siteLinkBox.gu-mirror .siteName {
     display: none; }
   .siteLinkBox.gu-mirror img {

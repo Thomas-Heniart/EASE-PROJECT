@@ -439,9 +439,20 @@
 </div>
 <script type="text/javascript">
 	$(document).ready(function(){
-		dragula([document.getElementById('profile-0'), document.getElementById('profile-1'), document.getElementById('profile-2'), document.getElementById('profile-3')],
-		 {
-		 	revertOnSpill: true
+		var drake = dragula({
+			isContainer: function(el){
+				return  el.classList.contains('SitesContainer');
+			},
+			revertOnSpill: true
+		}).on('drop', function(){
+		});
+		var drakeProfiles = dragula({
+			isContainer: function(el){
+				return el.classList.contains('owl-wrapper');
+			},
+  			moves: function (el, container, handle) {
+    			return handle.classList.contains('ProfileName');
+  			}
 		});
 	});
 </script>
@@ -618,7 +629,9 @@
 			itemsMobile : [ 479, 1 ],
 			singleItem : false,
 			itemsScaleUp : false,
-			pagination : false
+			pagination : false,
+		    touchDrag: false,
+		    mouseDrag: false
 		});
 	}
 	$(document).ready(function() {
@@ -680,7 +693,9 @@
 									itemsMobile : [ 479, 1 ],
 									singleItem : false,
 									itemsScaleUp : false,
-									pagination : false
+									pagination : false,
+								    touchDrag: false,
+								    mouseDrag: false
 								});
 								showAddAppPopup($(container), $(ui.helper));
 
@@ -743,6 +758,8 @@
 					singleItem : false,
 					itemsScaleUp : false,
 					pagination : false,
+				    touchDrag: false,
+				    mouseDrag: false,
 					baseClass : "opened"
 				});
 			}, 400)
