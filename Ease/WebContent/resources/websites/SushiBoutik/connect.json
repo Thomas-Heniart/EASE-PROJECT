@@ -1,70 +1,23 @@
 {
-    "website":"sushiboutik",
-    
-    "urls":{
-        "login":"http://www.sushiboutik.com/box-connexion_favoris.html",
-        "home":"http://www.sushiboutik.com/"
-    },
-    
-    "elements":{
-        
-        "userField":{
-            "id":"log"
-        },
-        "passField":{
-            "id":"pwd"
-        },
-        "logInButton":{
-            "tagName":"input",
-            "type":"submit",
-            "name":"valider",
-            "onClick":"getXhrFormByScript(this.form,'/xhr/connexion_identification_favoris.html');"
-        }
-        
-    },
-    
-     "connectionSteps":[
-        {
-            "action":"goTo",
-            "url":"login"
-        },
-        
-        {
-            "action":"do",
-            "elements":[
-                {
-                    "name":"userField",
-                    "action":"fill",
-                    "value":"user"
-                },
-                {
-                    "name":"passField",
-                    "action":"fill",
-                    "value":"pass"
-                },
-                {
-                    "name":"logInButton",
-                    "action":"click"
-                }
-            ]
-        },
-        
-        {
-            "action":"nextPage",
-            "lastPage":true
-        },
-        
-        {
-            "action":"catchFail",
-            "if":"existingElement",
-            "elementName":"passField",
-            "actionsIfFail":[
-                {
-                    "action":"goTo",
-                    "url":"home"
-                }
-            ],
-            "send":"wrongPassword"
-        }
-    ]
+	"name":"sushiboutik",
+	"lastLogin":"",
+	"home":"http://www.sushiboutik.com/",
+	"connect":{
+		"todo":[
+			{"action":"goto", "url":"http://www.sushiboutik.com/box-connexion_favoris.html"},
+      		{"action":"fill", "what":"login", "search":"#log"},
+			{"action":"fill", "what":"password", "search":"#pwd"},
+			{"action":"click", "search":"input[name='valider']"}
+			]
+	},
+	"logout":{
+		"todo":[
+		{"action":"goto", "url":"http://www.sushiboutik.com/deconnexion.html"}
+			]
+	},
+	"checkAlreadyLogged":[
+	{"search":"a[href='/espace-client.html']"}
+	],
+	"checkChangeLogin":[
+	]
 }

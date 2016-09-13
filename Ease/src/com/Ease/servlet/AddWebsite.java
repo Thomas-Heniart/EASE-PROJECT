@@ -77,7 +77,7 @@ public class AddWebsite extends HttpServlet {
 			return;
 		}
 
-		String dbRequest = "INSERT INTO websites VALUES (NULL, '" + url + "', '" + name + "', '" + UPLOAD_DIRECTORY + folder + "', ";
+		String dbRequest = "INSERT INTO websites VALUES (NULL, '" + url + "', '" + name + "', '" + UPLOAD_DIRECTORY + folder + "/', ";
 		if(haveLoginButton != null){
 			dbRequest += "1, ";
 		} else {
@@ -86,7 +86,7 @@ public class AddWebsite extends HttpServlet {
 
 		String haveLogWith = "";
 
-		if(haveLoginWith.length==0){
+		if(haveLoginWith == null || haveLoginWith.length==0){
 			haveLogWith = "NULL";
 		}
 		else {
