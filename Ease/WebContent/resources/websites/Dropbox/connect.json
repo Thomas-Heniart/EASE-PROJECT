@@ -1,73 +1,21 @@
 {
-    "website":"dropbox",
-    
-    "urls":{
-        "login":"https://www.dropbox.com/fr/login"
+    "name":"Dropbox",
+    "lastLogin":"",
+    "home":"https://www.dropbox.com/login",
+    "connect":{
+    	"todo":[
+    		{"action":"fill", "what":"login", "search":"input[name='login_email']"},
+    		{"action":"fill", "what":"password", "search":"input[name='login_password']"},
+    		{"action":"click", "search":"button.login-button"}
+    	]
     },
+    "checkAlreadyLogged": [
+    	{"search":"#header-account-menu"}
+    ],
+    "logout": {
+    	"todo":[
+    		{"action":"goto", "url":"https://www.dropbox.com/logout"}
+    	]
+    }
     
-    "elements":{
-        
-        "userField":{
-            "tagName":"input",
-            "name":"login_email"
-        },
-        "passField":{
-            "tagName":"input",
-            "name":"login_password"
-        },
-        "buttonLogIn":{
-            "tagName":"button",
-            "type":"submit",
-            "className":"login-button button-primary"
-        }
-        
-    },
-    
-    "connectionSteps":[
-        {
-            "action":"goTo",
-            "url":"login"
-        },
-        
-        {
-                "action":"catchFail",
-                "if":"missingElement",
-                "elementName":"passField",
-                "actionsIfFail":[{"action":"end"}],
-                "send":"alreadyConnected"
-        },
-        
-        {
-            "action":"do",
-            "elements":[
-                {
-                    "name":"userField",
-                    "action":"fill",
-                    "value":"user"
-                },
-                {
-                    "name":"passField",
-                    "action":"fill",
-                    "value":"pass"
-                },
-                {
-                    "name":"buttonLogIn",
-                    "action":"click"
-                }
-            ]
-        },
-        
-        {
-            "action":"nextPage",
-            "lastPage":true
-        },
-        
-        {
-            "action":"catchFail",
-            "if":"existingElement",
-            "elementName":"passField",
-            "actionsIfFail":[{"action":"end"}],
-            "send":"wrongPassword"
-        }
-    ]
 }
