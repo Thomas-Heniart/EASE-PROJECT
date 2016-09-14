@@ -54,6 +54,7 @@ public class DeleteProfile extends HttpServlet {
 		String retMsg;
 		HttpSession session = request.getSession();
 		User user = null;
+		Profile profile = null;
 		
 		try {
 			int index = Integer.parseInt(request.getParameter("index"));
@@ -61,6 +62,7 @@ public class DeleteProfile extends HttpServlet {
 			
 			
 			DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
+			
 			
 			user = (User)(session.getAttribute("User"));
 			if (user == null) {
@@ -70,14 +72,13 @@ public class DeleteProfile extends HttpServlet {
 				return ;
 			} else if (db.connect() != 0){
 				retMsg = "error: Impossible to connect data base.";
-			} else if (index < 0 || index >= user.getProfiles().size()){
-				retMsg = "error: Bad index.";
+			} else if ((profile = user.getProfile(index)) == null){
+				retMsg = "error: Bad id.";
 			} else if (mdp == null || !Hashing.SHA(mdp, user.getSaltEase()).equals(user.getPassword())) {
 				retMsg = "error: Bad password";
 			} else {
-				Profile profile = user.getProfiles().get(index);
 				profile.deleteFromDB(session.getServletContext());
-				user.getProfiles().remove(index);
+				user.getProfiles().remove(profile.getIndex());
 				user.updateIndex(session.getServletContext());
 				retMsg = "success";
 			}

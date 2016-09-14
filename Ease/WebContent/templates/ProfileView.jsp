@@ -446,7 +446,19 @@
 				return  el.classList.contains('SitesContainer');
 			},
 			revertOnSpill: true
-		}).on('drop', function(){
+		}).on('drop', function(el, target, source, sibling){
+			$.post(
+				"moveApp",
+				{
+					appId: $(el).attr('id'),
+					profileId: $(el).closest('.item').attr('id') ,
+					index: $(el).index()
+				},
+				function (data){
+
+				},
+				'text'
+			);
 		});	
 		var drakeProfiles = dragula({
 			isContainer: function(el){
@@ -456,6 +468,18 @@
     			return handle.classList.contains('ProfileName');
   			},
   			direction: 'horizontal'
+		}).on('drop', function(el, target, source, sibling){
+			$.post(
+				"moveProfile",
+				{
+					profileId: $(el).find('.item').attr('id'),
+					index: $(el).index()
+				},
+				function (data){
+
+				},
+				'text'
+			);
 		});
 	});
 </script>
