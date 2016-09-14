@@ -10,14 +10,27 @@ public class App {
 	protected String	id;
 	protected Site		site;
 	protected int		index; 
+	protected int		profileIndex;
+	
+	protected int appId;
+	protected int profileId;
 	
 	//Setter
 	
 	public void setIndex(int ind) {
 		index = ind;
 	}
+	public void setAppId(int id) {
+		appId = id;
+	}
 	
 	//Getter
+	public int getAppId(){
+		return appId;
+	}
+	public int getProfileId() {
+		return profileId;
+	}
 	
 	public String getType() {
 		return type;
@@ -34,6 +47,9 @@ public class App {
 	
 	public String getName() {
 		return name;
+	}
+	public int getProfileIndex() {
+		return profileIndex;
 	}
 	
 	public void setName(String str) {

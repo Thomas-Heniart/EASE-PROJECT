@@ -69,6 +69,14 @@ drift.load('syhukkp32g5k')
 <!-- End of Async Drift Code -->
 </head>
 <script type="text/javascript">
+function sendConnectionStatus(isConnected) {
+	var content = new Object();
+	content.detail = isConnected;
+	var event = new CustomEvent("isConnected", content);
+	console.log(event);
+	document.dispatchEvent(event);
+}
+
 function getUserNavigator(){
 	var ua = navigator.userAgent;
 

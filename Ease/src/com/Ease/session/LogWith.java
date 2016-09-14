@@ -22,7 +22,7 @@ public class LogWith extends App {
 	protected String account_id;
 	
 	// Create logWith;
-	public LogWith(String name, String acc_id, Site site, Profile profile, String userKey, ServletContext context) throws SessionException {
+	public LogWith(String name, String acc_id, Site site, Profile profile, User user, ServletContext context) throws SessionException {
 		type = "LogWith";
 		DataBase db = (DataBase)context.getAttribute("DataBase");
 		
@@ -34,6 +34,9 @@ public class LogWith extends App {
 			this.site = site;
 			this.index = profile.getApps().size();
 			this.name = name;
+			this.profileId = profile.getProfileId();
+			this.profileIndex = profile.getIndex();
+			appId = user.getNextAppId();
 			ResultSet rs = db.get("SELECT MAX(logWith_id) FROM logWith;");
 			if (rs == null)
 				throw new SessionException("Impossible to insert new logWith in data base. (no rs)");
@@ -49,7 +52,7 @@ public class LogWith extends App {
 	}
 	
 	// Load logWith;
-	public LogWith(ResultSet rs, Profile profile, String keyUser, ServletContext context) throws SessionException {
+	public LogWith(ResultSet rs, Profile profile, User user, ServletContext context) throws SessionException {
 		try {
 			type = "LogWith";
 			id = rs.getString(LogWithData.ID.ordinal());
@@ -57,9 +60,12 @@ public class LogWith extends App {
 			site = ((SiteManager)context.getAttribute("Sites")).get(rs.getString(LogWithData.SITE_ID.ordinal()));
 			account_id = rs.getString(LogWithData.ACCOUNT_ID.ordinal());
 			String tmp = rs.getString(LogWithData.POSITION.ordinal());
+			appId = user.getNextAppId();
+			this.profileId = profile.getProfileId();
+			this.profileIndex = profile.getIndex();
 			if (tmp.equals(null)) {
 				index = profile.getApps().size();
-				updateInDB(context, keyUser);
+				updateInDB(context);
 			} else {
 				index = Integer.parseInt(tmp);
 			}
@@ -116,15 +122,9 @@ public class LogWith extends App {
 	
 	// UTILS
 	
-	public void updateInDB(ServletContext context, String keyUser) throws SessionException {
-		DataBase db = (DataBase)context.getAttribute("DataBase");
-		
-		if (db.set("UPDATE logWith SET account_id='" + account_id + "', website_id='" + site.getId() + "', position='" + index + "', name = '" + name + "' WHERE `logWith_id`='"+ id + "';")
-				!= 0)
-			throw new SessionException("Impossible to update logWith in data base.");
-	}
 	
-	public void updateInDB(ServletContext context) throws SessionException {
+	
+	public void updateInDB(ServletContext context, String keyUser) throws SessionException {
 		DataBase db = (DataBase)context.getAttribute("DataBase");
 		
 		if (db.set("UPDATE logWith SET account_id='" + account_id + "', website_id='" + site.getId() + "', position='" + index + "', name = '" + name + "' WHERE `logWith_id`='"+ id + "';")

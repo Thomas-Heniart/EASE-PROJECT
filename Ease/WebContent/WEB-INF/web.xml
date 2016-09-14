@@ -230,7 +230,7 @@
   	<servlet-name>AddWebsite</servlet-name>
   	<url-pattern>/addWebsiteInDB</url-pattern>
   </servlet-mapping>
-<!-- 
+<!--
 <security-constraint>
 <web-resource-collection>
 <web-resource-name>Protected Context</web-resource-name>

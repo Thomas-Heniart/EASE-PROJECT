@@ -12,7 +12,6 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeUtility;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,11 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.Ease.context.DataBase;
-import com.Ease.data.Hashing;
 import com.Ease.data.Regex;
-import com.Ease.session.SessionException;
-import com.Ease.session.User;
-import com.Ease.session.User.UserData;
 
 public class getEmailLink extends HttpServlet {
     
@@ -88,12 +83,12 @@ public class getEmailLink extends HttpServlet {
 				message.setFrom(new InternetAddress("sergii@ease-app.co", "Ease Team"));
 				message.setRecipients(Message.RecipientType.TO,
 						InternetAddress.parse(email));
-				message.setSubject(MimeUtility.encodeText("Créez votre compte ease", "utf-8", null));
+				message.setSubject("Créez votre compte ease");
 				String link = "https://ease.space/registerInv?email=" + email + "&code=" + invitationCode;
 				message.setContent("<h2>Bienvenue sur version beta EASE.space !</h2>"
 						+ "<div style='color:black;'><p style='margin: 0px;'>Tu vas devoir créer ton mot de passe Ease, ça sera le seul mot de passe à retenir de ta vie ! Il va permettre de crypter (et du coup sécuriser) l’ensemble de ta plateforme.</p>"
 						+ "<p style='margin: 0px;'>Tu es la seule personne à le posséder et il n’est pas ré-initialisable, s’il est perdu, tu n’auras plus accès à Ease. </p>"
-						+ "<p style='margin: 0px;'>Pour créer votre compte, cela se passe sur <a href='"+link+"'>https://ease.space</a></p>"
+						+ "<p style='margin: 0px;'>Pour créer votre compte, cela se passe par => <a href='"+link+"'>ici</a></p>"
 						+ "<p>Pour l’instant Ease fonctionne uniquement sur Chrome, je t’invite à le télécharger <a href='https://www.google.fr/intl/fr/chrome/browser/desktop/index.html' target='_blank'>ici</a> si tu ne l’as pas encore sur ton ordinateur!</p>"
 						+ "<p>À bientôt !</p>"	
 						+ "<p>La team Ease</p></div>"

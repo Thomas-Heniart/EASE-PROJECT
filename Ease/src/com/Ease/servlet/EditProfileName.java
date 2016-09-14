@@ -68,7 +68,7 @@ public class EditProfileName extends HttpServlet {
 			} else if (name == null || name == ""){
 				retMsg = "error: Bad profile's name.";
 			} else {
-				Profile profile = user.getProfiles().get(index);
+				Profile profile = user.getProfile(index);
 				profile.setName(name);
 				profile.updateInDB(session.getServletContext());
 				retMsg = "success";
@@ -78,7 +78,7 @@ public class EditProfileName extends HttpServlet {
 		} catch (NumberFormatException e) {
 			retMsg = "error: Bad profile's index.";
 		}
-		Stats.saveAction(session.getServletContext(), user, Stats.Action.EditProfile, retMsg);
+		//Stats.saveAction(session.getServletContext(), user, Stats.Action.EditProfile, retMsg);
 		response.getWriter().print(retMsg);
 	}
 

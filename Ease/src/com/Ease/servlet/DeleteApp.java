@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.Ease.context.DataBase;
+import com.Ease.session.App;
 //import com.Ease.data.Hashing;
 import com.Ease.session.SessionException;
 import com.Ease.session.User;
@@ -50,8 +51,7 @@ public class DeleteApp extends HttpServlet {
 		String appName = "";
 		
 		try {
-			int profileIndex = Integer.parseInt(request.getParameter("profileIndex"));
-			int appIndex = Integer.parseInt(request.getParameter("appIndex"));
+			int appId = Integer.parseInt(request.getParameter("appId"));
 			//String password = request.getParameter("password");
 
 			DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
@@ -64,20 +64,21 @@ public class DeleteApp extends HttpServlet {
 				return ;
 			} else if (db.connect() != 0){
 				retMsg = "error: Impossible to connect data base.";
-			} else if (profileIndex < 0 || profileIndex >= user.getProfiles().size()) {
-				retMsg = "error: Bad profile's index.";
-			} else if (appIndex < 0 || appIndex >= user.getProfiles().get(profileIndex).getApps().size()) {
-				retMsg = "error: Bad website's index.";
+			} else if (user.getApp(appId) == null) {
+				retMsg = "error: Bad appId.";
 			} /*else if (password == null || !Hashing.SHA(password, user.getSaltEase()).equals(user.getPassword())) {
 				response.getWriter().print("error: Bad password");
 			}*/ else {
-				appName = user.getProfiles().get(profileIndex).getApps().get(appIndex).getSite().getName();
-				user.getProfiles().get(profileIndex).getApps().get(appIndex).deleteFromDB(session.getServletContext());
-				user.getProfiles().get(profileIndex).getApps().remove(appIndex);
+				App app = user.getApp(appId);
+				appName = app.getSite().getName();
+				app.deleteFromDB(session.getServletContext());
+				user.getProfile(app.getProfileId()).getApps().remove(app);
+				user.getApps().remove(app);
 				retMsg = "success";
 			}
 		} catch (SessionException e) {
-			retMsg = "error :" + e.getMsg();				
+			e.printStackTrace();
+			retMsg = "error :" + e.getMsg();
 			
 		} catch (NumberFormatException e) {
 			retMsg = "error: Bad index";

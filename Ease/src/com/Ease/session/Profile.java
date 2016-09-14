@@ -2,6 +2,7 @@ package com.Ease.session;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,6 +27,8 @@ public class Profile {
 	int				index;
 	List<App>		apps;
 	
+	int				profileId;
+	
 	//Use this to create a new profile and set it in database
 	public Profile(String name, String color, String desc, User user, ServletContext context) throws SessionException{
 		DataBase db = (DataBase)context.getAttribute("DataBase");
@@ -38,6 +41,7 @@ public class Profile {
 			this.description = desc;
 			this.index = user.getProfiles().size();
 			apps = new LinkedList<App>();
+			profileId = user.getNextProfileId();
 			ResultSet rs = db.get("SELECT MAX(profile_id) FROM profiles;");
 			if (rs == null)
 				throw new SessionException("Impossible to insert new user in data base.");
@@ -53,7 +57,7 @@ public class Profile {
 	}
 
 	//Use this to load profile with a ResultSet from database
-	public Profile(ResultSet rs, User user, String userKey, ServletContext context) throws SessionException{
+	public Profile(ResultSet rs, User user, ServletContext context) throws SessionException{
 		try {
 			id = rs.getString(ProfileData.ID.ordinal());
 			name = rs.getString(ProfileData.NAME.ordinal());
@@ -61,7 +65,8 @@ public class Profile {
 			description = rs.getString(ProfileData.DESCRIPTION.ordinal());
 			String tmp = rs.getString(ProfileData.POSITION.ordinal());
 			apps = new LinkedList<App>();
-			loadApps(context, userKey);
+			profileId = user.getNextProfileId();
+			loadApps(context, user);
 			if (tmp == null){
 				index = user.getProfiles().size();
 				updateInDB(context);
@@ -98,6 +103,10 @@ public class Profile {
 	public int getIndex() {
 		return index;
 	}
+	public int getProfileId(){
+		return profileId;
+	}
+	
 	
 	// SETTER
 	
@@ -123,13 +132,15 @@ public class Profile {
 			throw new SessionException("Impossible to update profile in data base.");
 	}
 	
-	public void loadApps(ServletContext context, String userKey) throws SessionException {
+	public void loadApps(ServletContext context, User user) throws SessionException {
 		DataBase db = (DataBase)context.getAttribute("DataBase");
 		ResultSet rs = db.get("SELECT * FROM accounts WHERE profile_id='" + id + "';");
 		try {
 			while (rs.next()) {
-				Account account = new Account(rs, this, userKey, context);
+				Account account = new Account(rs, this, user, context);
 				apps.add(account);
+				user.getApps().add(account);
+				
 			}
 		} catch (SQLException e) {
 			throw new SessionException("Impossible to load all accounts.");
@@ -137,12 +148,19 @@ public class Profile {
 		rs = db.get("SELECT * FROM logWith WHERE profile_id='" + id + "';");
 		try {
 			while (rs.next()) {
-				LogWith logWith = new LogWith(rs, this, userKey, context);
+				LogWith logWith = new LogWith(rs, this, user, context);
 				apps.add(logWith);
+				user.getApps().add(logWith);
 			}
 		} catch (SQLException e) {
 			throw new SessionException("Impossible to load all logWith.");
 		}
+		apps.sort(new Comparator<App>() {
+			@Override
+			public int compare(App a, App b){
+				return a.getIndex() - b.getIndex();
+			}
+		});
 	}
 	
 	public void addApp(App app){

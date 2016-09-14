@@ -51,8 +51,7 @@ public class AddLogWith extends HttpServlet {
 		try {
 			int profileId = Integer.parseInt(request.getParameter("profileId"));
 			String siteId = request.getParameter("siteId");
-			int lwProfileIndex = Integer.parseInt(request.getParameter("lwProfileIndex"));
-			int lwAccountIndex = Integer.parseInt(request.getParameter("lwAppIndex"));
+			int appId = Integer.parseInt(request.getParameter("appId"));
 			String	name	=	request.getParameter("name");
 			
 			DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
@@ -70,26 +69,25 @@ public class AddLogWith extends HttpServlet {
 				retMsg = "error: Bad profiles's id.";
 			} else if (name == null || name.length() > 14) {
 				retMsg = "error: Incorrect name";
-			} else if (lwProfileIndex < 0 || lwProfileIndex >= user.getProfiles().size()) {
-				retMsg = "error: Bad lwProfileIndex.";
-			} else if (lwAccountIndex < 0 || lwAccountIndex >= user.getProfiles().get(lwProfileIndex).getApps().size()){
-				retMsg = "error: Bad lwAccountIndex.";
-			} else if (user.getProfiles().get(lwProfileIndex).getApps().get(lwAccountIndex).getType().equals("Account") == false){
+			} else if (user.getApp(appId) == null) {
+				retMsg = "error: Bad appId.";
+			} else if (user.getApp(appId).getType().equals("Account") == false){
 				retMsg = "error: This account is not an account.";
 			} else {
-				Profile profile = user.getProfiles().get(profileId);
+				Profile profile = user.getProfile(profileId);
 				
 				if ((site = ((SiteManager)session.getServletContext().getAttribute("Sites")).get(siteId)) == null) {
 					retMsg = "error: This site dosen't exist.";
 				} else {
 					
-					LogWith logWith = new LogWith(name, user.getProfiles().get(lwProfileIndex).getApps().get(lwAccountIndex).getId(), site, profile, user.getUserKey(), session.getServletContext());
+					LogWith logWith = new LogWith(name, user.getApp(appId).getId(), site, profile, user, session.getServletContext());
 					profile.addApp(logWith);
+					user.getApps().add(logWith);
 					if (user.getTuto().equals("0")) {
 						user.tutoComplete();
 						user.updateInDB(session.getServletContext());
 					}
-					retMsg = "success";
+					retMsg = "success: " + logWith.getAppId();
 				}
 			}
 		} catch (SessionException e) {

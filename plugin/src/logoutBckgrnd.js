@@ -1,6 +1,5 @@
 extension.runtime.onMessage("Logout", function (msg, sendResponse) {
     extension.storage.get("visitedWebsites", function(visitedWebsites) {
-        visitedWebsites = visitedWebsites["visitedWebsites"];
         for(var i in visitedWebsites){logOutFrom(visitedWebsites[i], sendResponse);}
             extension.storage.set("visitedWebsites", []);
                                             
