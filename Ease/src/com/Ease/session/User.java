@@ -213,6 +213,7 @@ public class User {
 					return a.getIndex() - b.getIndex();
 				}
 			});
+			updateIndex(context);
 		} catch (SQLException e) {
 			throw new SessionException("Impossible to load all profiles.");
 		}

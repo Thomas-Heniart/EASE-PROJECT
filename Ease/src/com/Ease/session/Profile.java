@@ -161,6 +161,7 @@ public class Profile {
 				return a.getIndex() - b.getIndex();
 			}
 		});
+		updateIndex(context);
 	}
 	
 	public void addApp(App app){

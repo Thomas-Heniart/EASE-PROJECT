@@ -122,7 +122,13 @@ public class LogWith extends App {
 	
 	// UTILS
 	
-	
+	public void updateInDB(ServletContext context) throws SessionException {
+		DataBase db = (DataBase)context.getAttribute("DataBase");
+		
+		if (db.set("UPDATE logWith SET account_id='" + account_id + "', website_id='" + site.getId() + "', position='" + index + "', name = '" + name + "' WHERE `logWith_id`='"+ id + "';")
+				!= 0)
+			throw new SessionException("Impossible to update logWith in data base.");
+	}
 	
 	public void updateInDB(ServletContext context, String keyUser) throws SessionException {
 		DataBase db = (DataBase)context.getAttribute("DataBase");
@@ -132,10 +138,10 @@ public class LogWith extends App {
 			throw new SessionException("Impossible to update logWith in data base.");
 	}
 	
-	public void updateProfileIdnDB(ServletContext context, String id) throws SessionException {
+	public void updateProfileIdnDB(ServletContext context, String idd, int prId) throws SessionException {
 		DataBase db = (DataBase)context.getAttribute("DataBase");
-		
-		if (db.set("UPDATE logWith SET profile_id='" + id + "' WHERE `logWith_id`='"+ id + "';")
+		profileId = prId;
+		if (db.set("UPDATE logWith SET profile_id='" + idd + "' WHERE `logWith_id`='"+ id + "';")
 				!= 0)
 			throw new SessionException("Impossible to update logWith in data base.");
 	}

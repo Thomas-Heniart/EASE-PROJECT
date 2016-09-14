@@ -122,10 +122,10 @@ public class Account extends App{
 			throw new SessionException("Impossible to update account in data base.");
 	}
 	
-	public void updateProfileIdnDB(ServletContext context, String id) throws SessionException {
+	public void updateProfileIdnDB(ServletContext context, String idd, int prId) throws SessionException {
 		DataBase db = (DataBase)context.getAttribute("DataBase");
-		
-		if (db.set("UPDATE accounts SET profile_id='" + id + "' WHERE `account_id`='"+ id + "';")
+		profileId = prId;
+		if (db.set("UPDATE accounts SET profile_id='" + idd + "' WHERE `account_id`='"+ id + "';")
 				!= 0)
 			throw new SessionException("Impossible to update account in data base.");
 	}
