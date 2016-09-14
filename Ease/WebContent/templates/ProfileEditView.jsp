@@ -245,7 +245,6 @@
 		event.preventDefault();
 		event.stopPropagation();
 		var popup = $('#PopupDeleteApp');
-		var profile = $(elem).closest('.owl-item');
 		var app = $(elem).closest('.siteLinkBox');
 		var image = $(app).find('.linkImage');
 
@@ -259,8 +258,7 @@
 			popup.removeClass('md-show');
 			image.addClass('easyScaling');
 			$.post('deleteApp', {
-				profileIndex : $(profile).index(),
-				appIndex : $(app).index()
+				appId: $(app).attr('id')
 			}, function(data) {
 				if (data[0] == 's') {
 					image.removeClass('easyScaling');

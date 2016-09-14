@@ -85,7 +85,7 @@
 						'.ProfileControlPanel #modifyNameForm .buttonSet #validate')
 				.click(
 						function() {
-							var index = $(this).closest('.owl-item').index();
+							var index = $(this).closest('.item').attr('id');
 							var name = $(this).closest('#modifyNameForm').find(
 									'#profileName').val();
 							var button = $(this);
@@ -150,7 +150,7 @@
 						'.ProfileControlPanel #modifyColorForm .buttonSet #validate')
 				.click(
 						function() {
-							var index = $(this).closest('.owl-item').index();
+							var index = $(this).closest('.item').attr('id');
 							var color = $(this).closest('#modifyColorForm')
 									.find('#color').val();
 							var button = $(this);
@@ -218,7 +218,7 @@
 					var popup;
 
 					parent = $(this).closest(".ProfileBox");
-					idx = $(this).closest(".owl-item").index();
+					idx = $(this).closest(".item").attr('id');
 					popup = $('#PopupDeleteProfile');
 
 					popup.find("#index").val(idx);
@@ -289,7 +289,7 @@
 			src="resources/other/Arrow.png" style="display: none;" />
 		<div class="owl-carousel">
 			<c:forEach items='${profiles}' var="item">
-				<div class="item" idx=<%=it%>>
+				<div class="item" id='${item.getProfileId()}' idx=<%=it%>>
 					<div class="ProfileBox"
 						style="border-bottom: 5px solid ${item.getColor()};"
 						color="${item.getColor()}">
@@ -397,12 +397,14 @@
 										<div class="siteLinkBox" onclick="sendEvent(this)"
 											login="${account.getLogin() }"
 											webId="${account.getSite().getId()}"
-											name="${account.getName()}">
+											name="${account.getName()}"
+											id="${account.getAppId()}">
 									</c:if>
 									<c:if test="${account.getType() eq 'LogWith'}">
 										<div class="siteLinkBox" onclick="sendEvent(this)"
 											webId="${account.getSite().getId()}"
-											name="${account.getName()}">
+											name="${account.getName()}"
+											id="${account.getAppId()}">
 									</c:if>
 									<div class="linkImage">
 										<div class="deleteAppButton"
@@ -445,14 +447,15 @@
 			},
 			revertOnSpill: true
 		}).on('drop', function(){
-		});
+		});	
 		var drakeProfiles = dragula({
 			isContainer: function(el){
 				return el.classList.contains('owl-wrapper');
 			},
   			moves: function (el, container, handle) {
     			return handle.classList.contains('ProfileName');
-  			}
+  			},
+  			direction: 'horizontal'
 		});
 	});
 </script>
@@ -601,6 +604,7 @@
 			name : 'Default',
 			color : '#35a7ff'
 		}, function(data) {
+			$(profile).attr('id', data.substring(9, data.length));
 		}, 'text');
 		makeViewDroppable($(container));
 		setupProfileSettings($(profile));
@@ -661,6 +665,9 @@
 									name : 'Default',
 									color : '#35a7ff'
 								}, function(data) {
+									if (data[0] == 's'){
+										$(profile).attr('id', data.substring(9, data.length));
+									}
 								}, 'text');
 								makeViewDroppable($(container));
 								setupProfileSettings($(profile));
