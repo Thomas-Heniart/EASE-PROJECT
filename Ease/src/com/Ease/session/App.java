@@ -2,6 +2,7 @@ package com.Ease.session;
 
 import javax.servlet.ServletContext;
 
+import com.Ease.context.DataBase;
 import com.Ease.context.Site;
 
 public class App {
@@ -63,5 +64,8 @@ public class App {
 	}
 	public void updateInDB(ServletContext context, String keyUser) throws SessionException {
 		throw new SessionException("This is an app, this is not supposed to append! 3");
+	}
+	public void updateProfileIdnDB(ServletContext context, String id) throws SessionException {
+		throw new SessionException("This is an app, this is not supposed to append! 4");
 	}
 }

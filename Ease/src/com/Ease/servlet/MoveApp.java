@@ -75,9 +75,13 @@ public class MoveApp extends HttpServlet {
 			} else {
 				Profile profileBegin = user.getProfile(app.getProfileId());
 				profileBegin.getApps().remove(app.getIndex());
+				if (index > app.getIndex())
+					index--;
 				profile.getApps().add(index, app);
 				profileBegin.updateIndex(session.getServletContext());
 				profile.updateIndex(session.getServletContext());
+				if (profile.getProfileId() != profileBegin.getProfileId())
+					app.updateProfileIdnDB(session.getServletContext(), profile.getId());
 				retMsg = "success";
 			}
 		} catch (SessionException e) {

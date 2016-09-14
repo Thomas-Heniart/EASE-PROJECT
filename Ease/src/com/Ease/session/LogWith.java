@@ -132,6 +132,14 @@ public class LogWith extends App {
 			throw new SessionException("Impossible to update logWith in data base.");
 	}
 	
+	public void updateProfileIdnDB(ServletContext context, String id) throws SessionException {
+		DataBase db = (DataBase)context.getAttribute("DataBase");
+		
+		if (db.set("UPDATE logWith SET profile_id='" + id + "' WHERE `logWith_id`='"+ id + "';")
+				!= 0)
+			throw new SessionException("Impossible to update logWith in data base.");
+	}
+	
 	public void deleteFromDB(ServletContext context) throws SessionException {
 		DataBase db = (DataBase)context.getAttribute("DataBase");
 		if (db.set("DELETE FROM logWith WHERE logWith_id=" + id + ";") != 0)
