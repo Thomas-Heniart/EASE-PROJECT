@@ -20,7 +20,7 @@ import com.Ease.stats.Stats;
 /**
  * Servlet implementation class MoveApp
  */
-@WebServlet("/MoveApp")
+@WebServlet("/moveApp")
 public class MoveApp extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
