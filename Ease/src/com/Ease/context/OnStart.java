@@ -46,7 +46,7 @@ public class OnStart implements ServletContextListener {
 
 		List<TagAndSiteMap> tagAndSiteMapping = new LinkedList<TagAndSiteMap>();
 		try {
-			ResultSet rs = db.get("SELECT * FROM TagAndSitemap;");
+			ResultSet rs = db.get("SELECT * FROM TagAndSiteMap;");
 			while (rs.next()) {
 				tagAndSiteMapping.add(new TagAndSiteMap(rs, context));
 			}
