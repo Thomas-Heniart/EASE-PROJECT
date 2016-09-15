@@ -1,4 +1,4 @@
-
+console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOo");
 function rememberWebsite(website){
     if (website.lastLogin == "")
         return;
@@ -14,7 +14,7 @@ function rememberWebsite(website){
                 }
             }
         }
-        if (typeof visitedWebsites === "undefined")
+        if (typeof visitedWebsites === "undefined" || visitedWebsites == null || visitedWebsites == undefined)
             visitedWebsites = [];
         visitedWebsites.push(website);
         extension.storage.set("visitedWebsites", visitedWebsites);
@@ -23,7 +23,7 @@ function rememberWebsite(website){
   
 }
 
-extension.runtime.onMessage("NewConnection", function (msg, sendResponse) {
+extension.runtime.bckgrndOnMessage("NewConnection", function (msg, sendResponse) {
     msg.todo = "checkAlreadyLogged";
     msg.bigStep = 0;
     msg.actionStep = 0;

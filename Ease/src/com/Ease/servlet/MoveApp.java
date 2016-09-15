@@ -74,19 +74,21 @@ public class MoveApp extends HttpServlet {
 				retMsg = "error: Bad index";
 			} else {
 				Profile profileBegin = user.getProfile(app.getProfileId());
-				System.out.println(app.getIndex());
 				profileBegin.getApps().remove(app.getIndex());
 				//if (index > app.getIndex())
 				//	index--;
 				profile.getApps().add(index, app);
+				db.set("START TRANSACTION;");
 				profileBegin.updateIndex(session.getServletContext());
 				profile.updateIndex(session.getServletContext());
 				if (profile.getProfileId() != profileBegin.getProfileId())
 					app.updateProfileIdnDB(session.getServletContext(), profile.getId(), profile.getProfileId());
 				retMsg = "success";
+				db.set("COMMIT;");
 			}
 		} catch (SessionException e) {
 			retMsg = "error :" + e.getMsg();
+			db.set("ROLLBACK;");
 		} catch (NumberFormatException e) {
 			retMsg = "error: Bad number.";
 		}

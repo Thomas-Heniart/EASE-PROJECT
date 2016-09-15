@@ -98,9 +98,9 @@ clickona:function(msg, callback, sendResponse){
 			callback(msg, sendResponse);
 		}
 	} else {
-        console.log("button found");
 		button.prop("disabled", false);
 		button.get(0).click();
+        button.click();
 		msg.actionStep++;
 		callback(msg, sendResponse);
 	}

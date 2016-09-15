@@ -2,7 +2,7 @@
 "manifest_version": 2,
     
 "name" :"Ease",
-"version" :"0.0.1",
+"version" :"0.0.2",
 "description" :"Ease extension, log you in and out",
     
 "icons": {

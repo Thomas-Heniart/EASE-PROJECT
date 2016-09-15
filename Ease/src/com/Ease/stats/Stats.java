@@ -8,6 +8,7 @@ import javax.servlet.ServletContext;
 
 import com.Ease.context.DataBase;
 import com.Ease.session.User;
+import com.Ease.context.Site;
 
 public class Stats {
 	public enum Action

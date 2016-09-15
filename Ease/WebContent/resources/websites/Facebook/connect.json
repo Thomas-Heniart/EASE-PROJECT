@@ -11,8 +11,9 @@
 	},
 	"logout":{
 		"todo":[
+			{"action":"setattr", "search":"#pageLoginAnchor", "attr":"href", "content":"/#"},
 			{"action":"click", "search":"#pageLoginAnchor div"},
-			{"action":"waitfor", "time":1000, "search":"#show_me_how_logout_1"},
+			{"action":"waitfor", "time":100, "search":"#show_me_how_logout_1"},
 			{"action":"submit", "search":"#show_me_how_logout_1"},
 			{"action":"waitload"}
 			]

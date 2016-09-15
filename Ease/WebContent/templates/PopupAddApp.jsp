@@ -63,8 +63,7 @@ $(document).ready(function(){
 
 		var apps = $(".siteLinkBox[webid='" + webid + "']");
 		for (var i = 0; i < apps.length; i++) {
-			AppHelper.attr('pId', $(apps[i]).closest('.owl-item').index());
-			AppHelper.attr('aId', $(apps[i]).index());			
+			AppHelper.attr('aId', $(apps[i]).attr("id"));			
 			AppHelper.find('p').text($(apps[i]).attr('login'));
 			AppHelper.find('img').attr('src',$(apps[i]).find('img').attr('src'));
 			AppHelperCloned = $(AppHelper).clone();

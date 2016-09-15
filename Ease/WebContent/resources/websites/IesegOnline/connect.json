@@ -4,10 +4,11 @@
 	"home":"http://www.ieseg-online.com/",
 	"connect":{
 		"todo":[
-			{"action":"waitfor", "search":"input[name='username']"},
-			{"action":"fill", "what":"login", "search":"input[name='username']"},
-			{"action":"fill", "what":"password", "search":"input[name='password']"},
-			{"action":"submit", "search":".form-signin"}
+			{"action":"goto", "url":"https://www.ieseg-online.com/login/index.php"},
+			{"action":"waitfor", "search":"#username"},
+			{"action":"fill", "what":"login", "search":"#username"},
+			{"action":"fill", "what":"password", "search":"#password", "grave":true},
+			{"action":"click", "search":"#loginbtn"}
 			]
 	},
 	"logout":{

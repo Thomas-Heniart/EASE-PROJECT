@@ -73,7 +73,6 @@ function sendConnectionStatus(isConnected) {
 	var content = new Object();
 	content.detail = isConnected;
 	var event = new CustomEvent("isConnected", content);
-	console.log(event);
 	document.dispatchEvent(event);
 }
 

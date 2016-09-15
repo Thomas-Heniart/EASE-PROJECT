@@ -103,23 +103,6 @@
 
 	function enterEditMode() {
 
-		$.post('updateWebsites', {}, function(data) {
-			$(item).find('.tmp').remove();
-			if (data[0] == 's') {
-				$(item).find('.linkImage').addClass('scaleOutAnimation');
-				$(item).attr('onclick', "sendEvent(this)");
-				$(item).attr('webId', $(helper).attr('idx'));
-				$(item).attr('name', name);
-				$(item).find('.siteName p').text(name);
-			} else {
-				if (data[0] != 'e') {
-					document.location.reload(true);
-				} else {
-					showAlertPopup(null, true);
-					$(item).remove();
-				}
-			}
-		}, 'text');
 
 		$('#dragAndDropHelper').css('display', 'block');
 		$('#tutorialView').css('display', 'none');
@@ -196,7 +179,6 @@
 							if ($(".CatalogViewTab").hasClass("show")) {
 								if (!$(event.target).parents().hasClass(
 										"ProfilesHandler editMode")) {
-									console.log("test");
 									if (!($(event.target).is(
 											"#enterEditMode img")
 											|| $(event.target).is(

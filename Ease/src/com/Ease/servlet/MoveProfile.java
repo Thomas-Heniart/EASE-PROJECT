@@ -19,7 +19,7 @@ import com.Ease.stats.Stats;
 /**
  * Servlet implementation class MoveProfile
  */
-@WebServlet("/MoveProfile")
+@WebServlet("/moveProfile")
 public class MoveProfile extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -43,7 +43,7 @@ public class MoveProfile extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		System.out.println("move profile");
 		HttpSession session = request.getSession();
 		String retMsg;
 		User user = null;

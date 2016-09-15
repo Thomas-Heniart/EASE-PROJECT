@@ -5,10 +5,13 @@ var listenersMessages = [];
 var extension = {
 	storage:{
 		get:function(key, callback){
-			localStorage.getItem("key", "value");
+			var json;
+			try {json = JSON.parse(localStorage.getItem(key));}
+			catch(e){json="";}
+			callback(json);
 		},
-		set:function(key, value, callback){
-			localStorage.setItem("key", "value");
+		set:function(key, value){
+			localStorage.setItem(key, JSON.stringify(value));
 		}
 	},
     currentWindow:function(callback){
@@ -24,20 +27,30 @@ var extension = {
 	},
 	runtime:{
 		sendMessage:function(name, msg, callback){
-            var completeMessage = {"content":msg, "sender":safari.self.tab}
-			safari.application.dispatchMessage(name, completeMessage);
+			safari.self.tab.dispatchMessage(name, msg);
 			safari.self.addEventListener("message", function waitResponse(event){
                 if(event.name==name+" response"){
-                    tab.removeEventListener(waitResponse);
+                    safari.self.removeEventListener(waitResponse);
                     callback(event.message);
                 }
-            });
+            }, false);
 		},
 		onMessage:function(name, fct){
 			safari.self.addEventListener("message", function(event){
 				if(event.name==name){
                     function sendResponse(response){
-                        safari.self.dispatchMessage(event.name+" response", response);
+                        safari.self.tab.dispatchMessage(event.name+" response", response);
+                    }
+                    console.log("send response");
+					fct(event.message, sendResponse);
+				}
+			}, false);
+		},
+		bckgrndOnMessage:function(name, fct){
+			safari.application.addEventListener("message", function(event){
+				if(event.name==name){
+                    function sendResponse(response){
+                        event.target.page.dispatchMessage(event.name+" response", response);
                     }
 					fct(event.message, sendResponse);
 				}
@@ -50,13 +63,11 @@ var extension = {
 			callback(tab);
 		},
 		create:function(window, url, active, callback){
-			for (var t in window.tabs){
-				if (window.tabs[t] == tab){
-					tab.id = tab_id_increment;
-					tab_id_increment++;
-				}
-			}
+			tab = window.openTab();
+			tab.id = tab_id_increment;
+			tab_id_increment++;
 			tab.url = url;
+			console.log(tab);
 			callback(tab);
 		},
 		close:function(tabId, callback){
@@ -73,27 +84,28 @@ var extension = {
             tab.removeEventListener("navigate", listenersUpdates[tab.id], false);
         },
 		sendMessage:function(tab, name, msg, callback){
-			tab.dispatchMessage(name, msg);
-            tab.addEventListener("message", function waitResponse(event){
+			tab.page.dispatchMessage(name, msg);
+			console.log("message : " + name + " has been dispatched");
+            safari.application.addEventListener("message", function waitResponse(event){
                 if(event.name==name+" response"){
-                    tab.removeEventListener(waitResponse);
+                    safari.application.removeEventListener(waitResponse);
                     callback(event.message);
                 }
-            });
+            }, false);
 		},
         onMessage:function(tab, name, fct){
         	listenersMessages[tab.id] = function (event){
-				if(event.name==name && event.message.sender == tab){
+				if(event.name==name && event.target.id == tab.id){
                     function sendResponse(response){
                         safari.self.dispatchMessage(event.name+" response", response);
                     }
-					fct(event.message.content, sendResponse);
+					fct(event.message, sendResponse);
 				}
 			}
-			safari.self.addEventListener("message", listenersMessages[tab.id], false);
+			safari.application.addEventListener("message", listenersMessages[tab.id], false);
 		},
         onMessageRemoveListener:function(tab){
-            safari.self.removeEventListener("message", listenersMessages[tab.id], false);  
+            safari.application.removeEventListener("message", listenersMessages[tab.id], false);  
         },
 		injectScript:function(tab, fileName, callback){
 			callback();
