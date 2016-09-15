@@ -11,22 +11,23 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.Ease.context.DataBase;
+import com.Ease.session.App;
 import com.Ease.session.Profile;
 import com.Ease.session.SessionException;
 import com.Ease.session.User;
 import com.Ease.stats.Stats;
 
 /**
- * Servlet implementation class EditProfileName
+ * Servlet implementation class MoveApp
  */
-@WebServlet("/EditProfileName")
-public class EditProfileName extends HttpServlet {
+@WebServlet("/moveApp")
+public class MoveApp extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public EditProfileName() {
+    public MoveApp() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -43,15 +44,18 @@ public class EditProfileName extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		String name = request.getParameter("name");
 		HttpSession session = request.getSession();
 		String retMsg;
 		User user = null;
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		
 		try {
+			int appId = Integer.parseInt(request.getParameter("appId"));
+			App app = null;
+			
+			int profileId = Integer.parseInt(request.getParameter("profileId"));
 			int index = Integer.parseInt(request.getParameter("index"));
+			Profile profile = null;
 			
 			user = (User)(session.getAttribute("User"));	
 			
@@ -62,24 +66,31 @@ public class EditProfileName extends HttpServlet {
 				return ;
 			} else if (db.connect() != 0){
 				retMsg = "error: Impossible to connect data base.";
-			} else if (index < 0 || index >= user.getProfiles().size()
-					|| user == null){
-				retMsg = "error: Bad profile's index.";
-			} else if (name == null || name == ""){
-				retMsg = "error: Bad profile's name.";
+			} else if ((app = user.getApp(appId)) == null){
+				retMsg = "error: Bad appId";
+			} else if ((profile = user.getProfile(profileId)) == null){
+				retMsg = "error: Bad profileId";
+			} else if (index < 0 || index > profile.getApps().size()){
+				retMsg = "error: Bad index";
 			} else {
-				Profile profile = user.getProfile(index);
-				profile.setName(name);
-				profile.updateInDB(session.getServletContext());
+				Profile profileBegin = user.getProfile(app.getProfileId());
+				System.out.println(app.getIndex());
+				profileBegin.getApps().remove(app.getIndex());
+				//if (index > app.getIndex())
+				//	index--;
+				profile.getApps().add(index, app);
+				profileBegin.updateIndex(session.getServletContext());
+				profile.updateIndex(session.getServletContext());
+				if (profile.getProfileId() != profileBegin.getProfileId())
+					app.updateProfileIdnDB(session.getServletContext(), profile.getId(), profile.getProfileId());
 				retMsg = "success";
 			}
 		} catch (SessionException e) {
 			retMsg = "error :" + e.getMsg();
 		} catch (NumberFormatException e) {
-			retMsg = "error: Bad profile's index.";
+			retMsg = "error: Bad number.";
 		}
-		//Stats.saveAction(session.getServletContext(), user, Stats.Action.EditProfile, retMsg);
-		response.getWriter().print(retMsg);
+		response.getWriter().print(retMsg);	
 	}
 
 }

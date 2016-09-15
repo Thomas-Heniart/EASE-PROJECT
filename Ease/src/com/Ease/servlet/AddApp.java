@@ -82,19 +82,20 @@ public class AddApp extends HttpServlet {
 			} else if (profileId < 0 || profileId >= user.getProfiles().size()){
 				retMsg = "error: Bad profiles's id.";
 			} else {
-				Profile profile = user.getProfiles().get(profileId);
+				Profile profile = user.getProfile(profileId);
 				
 				if ((site = ((SiteManager)session.getServletContext().getAttribute("Sites")).get(siteId)) == null) {
 					retMsg = "error: This site dosen't exist.";
 				} else {
 					
-					Account account = new Account(name, login, password, site, profile, user.getUserKey(), session.getServletContext());
+					Account account = new Account(name, login, password, site, profile, user, session.getServletContext());
 					profile.addApp(account);
+					user.getApps().add(account);
 					if (user.getTuto().equals("0")) {
 						user.tutoComplete();
 						user.updateInDB(session.getServletContext());
 					}
-					retMsg = "success";
+					retMsg = "success: " + account.getAppId();
 				}
 			}
 		} catch (SessionException e) {

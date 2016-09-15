@@ -1,4 +1,31 @@
 {
+    "name":"Twitch",
+    "lastLogin":"",
+    "home":"https://www.twitch.tv/login",
+    "connect":{
+        "todo":[
+        	{"action":"fill", "what":"login", "search":"#username", "grave":true},
+            {"action":"fill", "what":"password", "search":"input[name='password']"},
+            {"action":"click", "search":"button.primary.button.js-login-button"}
+        ]
+    },
+    "Facebook":{
+    	"todo":[
+    		{"action":"clickona", "search":"a[href='/oauth_connect?from=facebook_login&service=facebook']"}
+    	]
+    },
+    "logout":{
+        "todo":[
+            {"action":"goto", "url":"https://www.airbnb.com/logout"},
+            {"action":"goto", "url":"https://www.airbnb.com/Login"}
+            ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a[href='/logout']"}
+    ]
+}
+
+{
     "website":"twitch",
     
     "urls":{

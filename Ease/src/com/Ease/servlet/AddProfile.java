@@ -70,7 +70,7 @@ public class AddProfile extends HttpServlet {
 			try {
 				Profile profile = new Profile(name, color, "", user, session.getServletContext());
 				user.addProfile(profile);
-				retMsg = "success";
+				retMsg = "success: " + profile.getProfileId();
 			} catch (SessionException e) {
 				retMsg = "error: " + e.getMsg(); ;
 			}

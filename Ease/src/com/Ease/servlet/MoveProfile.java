@@ -17,16 +17,16 @@ import com.Ease.session.User;
 import com.Ease.stats.Stats;
 
 /**
- * Servlet implementation class EditProfileName
+ * Servlet implementation class MoveProfile
  */
-@WebServlet("/EditProfileName")
-public class EditProfileName extends HttpServlet {
+@WebServlet("/MoveProfile")
+public class MoveProfile extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public EditProfileName() {
+    public MoveProfile() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -44,13 +44,14 @@ public class EditProfileName extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String name = request.getParameter("name");
 		HttpSession session = request.getSession();
 		String retMsg;
 		User user = null;
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
+		Profile profile = null;
 		
 		try {
+			int profileId = Integer.parseInt(request.getParameter("profileId"));
 			int index = Integer.parseInt(request.getParameter("index"));
 			
 			user = (User)(session.getAttribute("User"));	
@@ -62,24 +63,19 @@ public class EditProfileName extends HttpServlet {
 				return ;
 			} else if (db.connect() != 0){
 				retMsg = "error: Impossible to connect data base.";
-			} else if (index < 0 || index >= user.getProfiles().size()
-					|| user == null){
-				retMsg = "error: Bad profile's index.";
-			} else if (name == null || name == ""){
-				retMsg = "error: Bad profile's name.";
+			} else if (index < 0 || index >= user.getProfiles().size()){
+				retMsg = "error: Bad index.";
+			} else if ((profile = user.getProfile(profileId)) == null){
+				retMsg = "error: Bad profileId";
 			} else {
-				Profile profile = user.getProfile(index);
-				profile.setName(name);
-				profile.updateInDB(session.getServletContext());
+				user.moveProfileAt(session.getServletContext(), profile.getIndex(), index);
 				retMsg = "success";
 			}
 		} catch (SessionException e) {
 			retMsg = "error :" + e.getMsg();
 		} catch (NumberFormatException e) {
-			retMsg = "error: Bad profile's index.";
+			retMsg = "error: number.";
 		}
-		//Stats.saveAction(session.getServletContext(), user, Stats.Action.EditProfile, retMsg);
-		response.getWriter().print(retMsg);
+		response.getWriter().print(retMsg);	
 	}
-
 }

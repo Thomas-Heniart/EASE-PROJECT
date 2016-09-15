@@ -25,11 +25,11 @@ public class Account extends App{
 	String	password;
 	
 	//Use this to create a new account and set it in database
-	public Account(String name, String login, String password, Site site, Profile profile, String userKey, ServletContext context) throws SessionException {
+	public Account(String name, String login, String password, Site site, Profile profile, User user, ServletContext context) throws SessionException {
 		type = "Account";
 		DataBase db = (DataBase)context.getAttribute("DataBase");
 		String cryptedPassword;
-		if ((cryptedPassword = AES.encrypt(password, userKey)) == null){
+		if ((cryptedPassword = AES.encrypt(password, user.getUserKey())) == null){
 			throw new SessionException("Can't encrypt password.");
 		}
 		if (db.set("INSERT INTO accounts VALUES (NULL, " + profile.getId() + ", " + site.getId() + ", '" + login + "', '" + cryptedPassword  + "', '" + profile.getApps().size() + "', '" + name + "');")
@@ -41,6 +41,9 @@ public class Account extends App{
 			this.site = site;
 			this.index = profile.getApps().size();
 			this.name = name;
+			this.profileIndex = profile.getIndex();
+			this.profileId = profile.getProfileId();
+			appId = user.getNextAppId();
 			ResultSet rs = db.get("SELECT MAX(account_id) FROM accounts;");
 			if (rs == null)
 				throw new SessionException("Impossible to insert new account in data base. (no rs)");
@@ -56,19 +59,22 @@ public class Account extends App{
 	}
 	
 	//Use this to load account with a ResultSet from database
-	public Account(ResultSet rs, Profile profile, String keyUser, ServletContext context) throws SessionException {
+	public Account(ResultSet rs, Profile profile, User user, ServletContext context) throws SessionException {
 		try {
 			type = "Account";
 			id = rs.getString(AccountData.ID.ordinal());
 			login = rs.getString(AccountData.LOGIN.ordinal());
 			name = rs.getString(AccountData.NAME.ordinal());
-			if ((password = AES.decrypt(rs.getString(AccountData.PASSWORD.ordinal()), keyUser)) == null)
+			if ((password = AES.decrypt(rs.getString(AccountData.PASSWORD.ordinal()), user.getUserKey())) == null)
 				throw new SessionException("Can't decrypt website password.");
 			site = ((SiteManager)context.getAttribute("Sites")).get(rs.getString(AccountData.SITE_ID.ordinal()));
 			String tmp = rs.getString(AccountData.POSITION.ordinal());
+			appId = user.getNextAppId();
+			this.profileId = profile.getProfileId();
+			this.profileIndex = profile.getIndex();
 			if (tmp == null) {
 				index = profile.getApps().size();
-				updateInDB(context, keyUser);
+				updateInDB(context, user.getUserKey());
 			} else {
 				index = Integer.parseInt(tmp);	
 			}
@@ -112,6 +118,14 @@ public class Account extends App{
 	public void updateInDB(ServletContext context) throws SessionException {
 		DataBase db = (DataBase)context.getAttribute("DataBase");
 		if (db.set("UPDATE accounts SET login='" + login + "', website_id='" + site.getId() + "', position='" + index + "', name = '" + name + "' WHERE `account_id`='"+ id + "';")
+				!= 0)
+			throw new SessionException("Impossible to update account in data base.");
+	}
+	
+	public void updateProfileIdnDB(ServletContext context, String idd, int prId) throws SessionException {
+		DataBase db = (DataBase)context.getAttribute("DataBase");
+		profileId = prId;
+		if (db.set("UPDATE accounts SET profile_id='" + idd + "' WHERE `account_id`='"+ id + "';")
 				!= 0)
 			throw new SessionException("Impossible to update account in data base.");
 	}

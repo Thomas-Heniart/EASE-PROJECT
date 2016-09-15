@@ -62,8 +62,7 @@ $(document).ready(function(){
 
 		var apps = $(".siteLinkBox[webid='" + webid + "']");
 		for (var i = 0; i < apps.length; i++) {
-			AppHelper.attr('pId', $(apps[i]).closest('.owl-item').index());
-			AppHelper.attr('aId', $(apps[i]).index());			
+			AppHelper.attr('aId', $(apps[i]).attr('id'));			
 			AppHelper.find('p').text($(apps[i]).attr('login'));
 			AppHelper.find('img').attr('src',$(apps[i]).find('img').attr('src'));
 			AppHelperCloned = $(AppHelper).clone();
@@ -75,6 +74,7 @@ $(document).ready(function(){
 
 		}
 	});
+
 });
 
  $(document).ready(function(){
@@ -134,26 +134,25 @@ function showModifyAppPopup(elem, event){
 			var name = popup.find('#name').val();
 			var login = '';
 			var password = '';
-			var pId = '';
 			var aId = '';
 
 			var AppToLoginWith = $(popup).find('.AccountApp.selected');
 			if (AppToLoginWith.length){
-				pId = AppToLoginWith.attr('pId');
 				aId = AppToLoginWith.attr('aId');
 				$.post(
 					'editLogWith',
 					{
 						name: name,
-						profileIndex: $(profile).index(),
-						appIndex: $(app).index(),
-						lwProfileIndex: pId,
-						lwAppIndex: aId
+						appId: $(app).attr('id'),
+						lwId: aId
 					},
 					function(data){
 						$(app).find('.tmp').remove();
 						if (data[0] == 's'){
 							image.addClass('scaleOutAnimation');
+							setTimeout(function() {
+								$(image).find('.linkImage').removeClass('scaleOutAnimation');
+							}, 1000);
 							app.attr('onclick', "sendEvent(this)");
 							app.attr('login', '');
 							app.attr('name', name);
@@ -175,8 +174,7 @@ function showModifyAppPopup(elem, event){
 					'editApp',
 					{
 						name: name,
-						profileIndex: $(profile).index(),
-						appIndex: $(app).index(),
+						appId: $(app).attr('id'),
 						login: login,
 						wPassword: password
 					},
@@ -184,6 +182,9 @@ function showModifyAppPopup(elem, event){
 						$(app).find('.tmp').remove();
 						if (data[0] == 's'){
 							image.addClass('scaleOutAnimation');
+							setTimeout(function() {
+								$(image).find('.linkImage').removeClass('scaleOutAnimation');
+							}, 1000);
 							app.attr('onclick', "sendEvent(this)");
 							app.attr('login', login);
 							app.attr('name', name);

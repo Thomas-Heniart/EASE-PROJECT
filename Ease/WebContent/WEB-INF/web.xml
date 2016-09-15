@@ -3,7 +3,7 @@
   <display-name>HelloWorld</display-name>
   <listener>
     <listener-class>
-             com.Ease.context.OnStart 
+             com.Ease.context.OnStart
         </listener-class>
   </listener>
   <servlet>
@@ -246,9 +246,22 @@
   	<servlet-name>CatalogSearch</servlet-name>
   	<url-pattern>/searchInCatalog</url-pattern>
   </servlet-mapping>
-  <session-config>
-    <session-timeout>120</session-timeout>
-  </session-config>
+<!--
+<security-constraint>
+<web-resource-collection>
+<web-resource-name>Protected Context</web-resource-name>
+<url-pattern>/*</url-pattern>
+</web-resource-collection>
+<user-data-constraint>
+<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+</user-data-constraint>
+</security-constraint>
+-->
+
+	<session-config>
+    	<session-timeout>120</session-timeout> <!-- in minutes -->
+ 	</session-config>
+
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
     <welcome-file>index.htm</welcome-file>

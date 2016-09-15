@@ -50,10 +50,8 @@ public class EditLogWith extends HttpServlet {
 		LogWith logWith = null;
 
 		try {
-			int profileIndex = Integer.parseInt(request.getParameter("profileIndex"));
-			int appIndex = Integer.parseInt(request.getParameter("appIndex"));
-			int lwProfileIndex = Integer.parseInt(request.getParameter("lwProfileIndex"));
-			int lwAccountIndex = Integer.parseInt(request.getParameter("lwProfileIndex"));
+			int appId = Integer.parseInt(request.getParameter("appId"));
+			int lwId = Integer.parseInt(request.getParameter("lwId"));
 			DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 			String name = request.getParameter("name");
 			user = (User)(session.getAttribute("User"));
@@ -64,29 +62,29 @@ public class EditLogWith extends HttpServlet {
 				return ;
 			} else if (db.connect() != 0) {
 				retMsg = "error: Impossible to connect data base.";
-			} else if (profileIndex < 0 || profileIndex >= user.getProfiles().size()) {
-				retMsg = "error: Bad profile's index.";
-			} else if (appIndex < 0 || appIndex >= user.getProfiles().get(profileIndex).getApps().size()) {
-				retMsg = "error: Bad website's index.";
+			} else if (user.getApp(appId) == null) {
+				retMsg = "error: Bad appId.";
 			} else if (name == null || name.length() > 14) {
 				retMsg = "error: Incorrect name";
-			}  else if (lwProfileIndex < 0 || lwProfileIndex >= user.getProfiles().size()) {
-				retMsg = "error: Bad lwProfileIndex.";
-			} else if (lwAccountIndex < 0 || lwAccountIndex >= user.getProfiles().get(lwProfileIndex).getApps().size()){
-				retMsg = "error: Bad lwAccountIndex.";
-			} else if (user.getProfiles().get(lwProfileIndex).getApps().get(lwAccountIndex).getType().equals("Account") == false){
+			} else if (user.getApp(lwId) == null) {
+				retMsg = "error: Bad lwId.";
+			} else if (user.getProfiles().get(user.getApp(lwId).getProfileIndex()).getApps().get(user.getApp(lwId).getIndex()).getType().equals("Account") == false){
 				retMsg = "error: This account is not an account.";
 			} else {
-				App app = user.getProfiles().get(profileIndex).getApps().get(appIndex);
+				App app = user.getProfiles().get(user.getApp(appId).getProfileIndex()).getApps().get(user.getApp(appId).getIndex());
 				if (app.getType().equals("LogWith") == false){
 					Site site = app.getSite();
 					app.deleteFromDB(session.getServletContext());
-					user.getProfiles().get(profileIndex).getApps().remove(appIndex);
-					user.getProfiles().get(profileIndex).addApp(new LogWith(name, user.getProfiles().get(lwProfileIndex).getApps().get(lwAccountIndex).getId(), site, user.getProfiles().get(profileIndex), user.getUserKey(), session.getServletContext()));
+					user.getProfiles().get(user.getApp(appId).getProfileIndex()).getApps().remove(user.getApp(appId));
+					LogWith tmp = new LogWith(name, user.getApp(lwId).getId(), site, user.getProfiles().get(user.getApp(appId).getProfileIndex()), user, session.getServletContext());
+					user.getProfiles().get(user.getApp(appId).getProfileIndex()).addApp(tmp);
+					user.getApps().add(tmp);
+					tmp.setAppId(appId);
+					user.getApps().remove(user.getApp(appId));
 					retMsg = "succes";
 				} else {
 					logWith = (LogWith)app;
-					logWith.setAccountId(user.getProfiles().get(lwProfileIndex).getApps().get(lwAccountIndex).getId());
+					logWith.setAccountId(user.getProfiles().get(user.getApp(lwId).getProfileIndex()).getApps().get(user.getApp(lwId).getIndex()).getId());
 					logWith.setName(name);
 					logWith.updateInDB(session.getServletContext(), user.getUserKey());
 					retMsg = "success";

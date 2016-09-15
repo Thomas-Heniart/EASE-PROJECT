@@ -96,6 +96,8 @@
 			singleItem : false,
 			itemsScaleUp : false,
 			pagination : false,
+		    touchDrag: false,
+		    mouseDrag: false
 		});
 	}
 
@@ -142,7 +144,9 @@
 			itemsMobile : [ 479, 1 ],
 			singleItem : false,
 			itemsScaleUp : false,
-			pagination : false
+			pagination : false,
+		    touchDrag: false,
+		    mouseDrag: false
 		});
 	}
 
@@ -169,7 +173,10 @@
 			itemsMobile : [ 479, 1 ],
 			singleItem : false,
 			itemsScaleUp : false,
-			pagination : false
+			pagination : false,
+		    touchDrag: false,
+		    mouseDrag: false
+
 		});
 		$('.scaleOutAnimation').removeClass('scaleOutAnimation');
 	}
@@ -238,7 +245,6 @@
 		event.preventDefault();
 		event.stopPropagation();
 		var popup = $('#PopupDeleteApp');
-		var profile = $(elem).closest('.owl-item');
 		var app = $(elem).closest('.siteLinkBox');
 		var image = $(app).find('.linkImage');
 
@@ -252,8 +258,7 @@
 			popup.removeClass('md-show');
 			image.addClass('easyScaling');
 			$.post('deleteApp', {
-				profileIndex : $(profile).index(),
-				appIndex : $(app).index()
+				appId: $(app).attr('id')
 			}, function(data) {
 				if (data[0] == 's') {
 					image.removeClass('easyScaling');

@@ -17,6 +17,10 @@
 
 <script>
 $(document).ready(function(){
+	setTimeout(function(){sendConnectionStatus(true);},500);
+});
+
+$(document).ready(function(){
 	$('.md-overlay').click(function(){
 		$('.md-show').removeClass('md-show');
 	});

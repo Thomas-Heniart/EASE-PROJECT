@@ -3,7 +3,6 @@ function rememberWebsite(website){
     if (website.lastLogin == "")
         return;
     extension.storage.get("visitedWebsites", function(visitedWebsites) {
-        visitedWebsites = visitedWebsites["visitedWebsites"];
         for (var i in visitedWebsites){
             if (visitedWebsites[i].name == website.name){
                 if (visitedWebsites[i].lastLogin == website.lastLogin){
@@ -44,7 +43,7 @@ extension.runtime.onMessage("NewConnection", function (msg, sendResponse) {
                         extension.tabs.injectScript(tab, "actions.js", function() {
                         extension.tabs.injectScript(tab, "connect.js", function() {
                           extension.storage.get("visitedWebsites", function(visitedWebsites) {
-                            msg.visitedWebsites = visitedWebsites["visitedWebsites"];
+                            msg.visitedWebsites = visitedWebsites;
                             extension.tabs.sendMessage(tab, "goooo", msg, function(response){
                                 console.log(response);
                               if (response){

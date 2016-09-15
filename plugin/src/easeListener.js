@@ -1,8 +1,17 @@
 
 var isHere = $('#ease_extension').get();
 if (!isHere[0]) {
-	$('body').prepend('<div id="ease_extension" style="dislay:none;">');
+    $('body').prepend('<div id="ease_extension" style="dislay:none;">');
 }
+
+document.addEventListener("isConnected", function(event){
+    console.log('Is someone connected : '+event.detail);
+    if(event.detail==true){
+        extension.storage.set("isConnected","true", function(){});
+    } else {
+        extension.storage.set("isConnected","false", function(){});
+    }
+}, false);
 
 document.addEventListener("Logout", function(event){
 
@@ -15,3 +24,4 @@ document.addEventListener("NewConnection", function(event){
     extension.runtime.sendMessage("NewConnection", {"detail":event.detail}, function(response) {});
 
 }, false);
+

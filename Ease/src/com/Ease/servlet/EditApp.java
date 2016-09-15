@@ -52,8 +52,7 @@ public class EditApp extends HttpServlet {
 		Account account = null;
 		
 		try {
-			int profileIndex = Integer.parseInt(request.getParameter("profileIndex"));
-			int appIndex = Integer.parseInt(request.getParameter("appIndex"));
+			int appId = Integer.parseInt(request.getParameter("appId"));
 			String login = request.getParameter("login");
 			String wPassword = request.getParameter("wPassword");
 			String name = request.getParameter("name");
@@ -71,21 +70,22 @@ public class EditApp extends HttpServlet {
 				retMsg = "error: Incorrect name";
 			}else if (db.connect() != 0) {
 				retMsg = "error: Impossible to connect data base.";
-			} else if (profileIndex < 0 || profileIndex >= user.getProfiles().size()) {
-				retMsg = "error: Bad profile's index.";
-			} else if (appIndex < 0 || appIndex >= user.getProfiles().get(profileIndex).getApps().size()) {
-				retMsg = "error: Bad website's index.";
+			} else if (user.getApp(appId) == null) {
+				retMsg = "error: Bad appId.";
 			} else {
-				App app = user.getProfiles().get(profileIndex).getApps().get(appIndex);
-				System.out.println(app.getType());
+				App app = user.getApp(appId);
 				if (app.getType().equals("Account") == false){
 					if (login == null || login.equals("") || wPassword == null || wPassword.equals("")) {
 						retMsg = "error: Bad login or password.";
 					} else {
 						Site site = app.getSite();
 						app.deleteFromDB(session.getServletContext());
-						user.getProfiles().get(profileIndex).getApps().remove(appIndex);
-						user.getProfiles().get(profileIndex).addApp(new Account(name, login, wPassword, site, user.getProfiles().get(profileIndex), user.getUserKey(), session.getServletContext()));
+						user.getProfiles().get(app.getProfileIndex()).getApps().remove(app);
+						Account tmp = new Account(name, login, wPassword, site, user.getProfiles().get(app.getProfileIndex()), user, session.getServletContext());
+						user.getProfiles().get(app.getProfileIndex()).addApp(tmp);
+						user.getApps().add(tmp);
+						tmp.setAppId(appId);
+						user.getApps().remove(user.getApp(appId));
 						retMsg = "succes";
 					}
 				} else {

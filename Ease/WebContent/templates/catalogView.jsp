@@ -6,8 +6,16 @@
 <%@ page import="com.Ease.context.Tag"%>
 <%@ page import="java.util.List"%>
 
+
 <script src="js/catalog.js"></script>
 
+<div class="catalogView">
+	<div class="catalogHeader">
+		<p>Integrate your accounts</p>
+	</div>
+	<div class="scaleContainer">
+		<img class="Scaler" src="https://placehold.it/4x4" style="width: 100%; height: auto; visibility: hidden;"/>
+		<div id="catalog" class="catalogContainer">
 <div class="CatalogViewTab">
 	<div class="catalogView">
 		<div class="catalogSearchbar">
@@ -27,7 +35,7 @@
 			<div class="scaleContainer">
 				<img class="Scaler" src="https://placehold.it/4x4"
 					style="width: 100%; height: auto; visibility: hidden;" />
-				<div class="catalogContainer">
+				<div id="catalog" class="catalogContainer">
 					<%@ include file="catalogApps.jsp"%>
 				</div>
 			</div>

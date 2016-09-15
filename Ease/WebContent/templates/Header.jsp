@@ -11,6 +11,8 @@ $(document).ready(function(){
 		document.dispatchEvent(event);
 	});
 });
+
+
 </script>
 <div class="header">
 	<a href="index.jsp"><img class="logoImg" src="resources/images/logo.png" ></a>
@@ -20,6 +22,7 @@ $(document).ready(function(){
 		<%@ include file="DropDownUserMenu.jsp"%>
 	<a href="logout" id="logoutButton"><i class="fa fa-fw fa-sign-out"></i><span>Logout</span></a>	
 <%}%>
+
 
 </div>
 

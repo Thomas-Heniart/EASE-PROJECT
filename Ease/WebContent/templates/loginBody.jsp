@@ -84,6 +84,10 @@
 </div>
 
 <script type="text/javascript">
+$(document).ready(function(){
+	setTimeout(function(){sendConnectionStatus(false);},500);
+});
+
 $(document).ready( function() {
 	var nbForms = $('.FormsContainer > *').length;
 

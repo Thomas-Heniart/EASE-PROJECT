@@ -119,31 +119,33 @@ $(document).ready(function(){
 			var name = $(popup).find('#name').val();
 			var login = '';
 			var password = '';
-			var pId = '';
 			var aId = '';
 
 			var AppToLoginWith = $(popup).find('.AccountApp.selected');
 
 			if (AppToLoginWith.length){
-				pId = AppToLoginWith.attr('pId');
 				aId = AppToLoginWith.attr('aId');
 				$.post(
 					'addLogWith',
 					{
 						name: name,
-						profileId: $(container).closest('.owl-item').index(),
+						profileId: $(container).closest('.item').attr('id'),
 						siteId: $(helper).attr('idx'),
-						lwProfileIndex: pId,
-						lwAppIndex: aId
+						appId: aId
 					},
 					function(data){	
 						$(item).find('.tmp').remove();
 						if (data[0] == 's'){
 							$(item).find('.linkImage').addClass('scaleOutAnimation');
+							setTimeout(function() {
+								$(item).find('.linkImage').removeClass('scaleOutAnimation');
+							}, 1000);
 							$(item).attr('onclick', "sendEvent(this)");
 							$(item).attr('webId', $(helper).attr('idx'));
 							$(item).attr('name', name);
 							$(item).find('.siteName p').text(name);
+							$(item).attr('id', data.substring(9, data.length))
+
 						} else {
 							if (data[0] != 'e'){
 								document.location.reload(true);
@@ -164,18 +166,22 @@ $(document).ready(function(){
 						name: name,
 						login: login,
 						password: password,
-						profileId: $(container).closest('.owl-item').index(),
+						profileId: $(container).closest('.item').attr('id'),
 						siteId: $(helper).attr('idx'),
 					},
 					function(data){
 						$(item).find('.tmp').remove();
 						if (data[0] == 's'){
 							$(item).find('.linkImage').addClass('scaleOutAnimation');
+							setTimeout(function() {
+								$(item).find('.linkImage').removeClass('scaleOutAnimation');
+							}, 1000);
 							$(item).attr('onclick', "sendEvent(this)");
 							$(item).attr('login', login);
 							$(item).attr('webId', $(helper).attr('idx'));
 							$(item).attr('name', name);
 							$(item).find('.siteName p').text(name);
+							$(item).attr('id', data.substring(9, data.length))
 						} else {
 							if (data[0] != 'e'){
 								document.location.reload(true);

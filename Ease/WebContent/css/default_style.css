@@ -334,6 +334,15 @@
   width: 8%;
   z-index: 1; }
 
+.siteLinkBox.gu-mirror {
+  width: 50px !important;
+  height: 50px !important; }
+  .siteLinkBox.gu-mirror .deleteAppButton, .siteLinkBox.gu-mirror .modifyAppButton, .siteLinkBox.gu-mirror .siteName {
+    display: none; }
+  .siteLinkBox.gu-mirror img {
+    width: 100%;
+    height: 100%; }
+
 .MenuButtonSet.show {
   display: block; }
 
@@ -344,6 +353,11 @@
 .MenuButtonSet.middleTopLeft {
   width: fit-content;
   top: 40%;
+  left: 5%; }
+
+.MenuButtonSet.bottomLeft {
+  width: fit-content;
+  top: 60%;
   left: 5%; }
 
 .MenuButtonSet {
@@ -403,6 +417,24 @@
       height: 100%; }
   .MenuButtonSet #enterAddUsersMode.on {
     background-color: #42b72a; }
+  .MenuButtonSet #enterAddSiteMode {
+    max-width: 100px;
+    min-width: 0px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    margin: 0px;
+    padding: 0px; }
+    .MenuButtonSet #enterAddSiteMode:hover {
+      cursor: pointer; }
+    .MenuButtonSet #enterAddSiteMode img {
+      width: 100%;
+      height: 100%; }
+
+#addSiteForm input {
+  margin-top: 10px;
+  width: 50%;
+  margin-left: 25%; }
 
 #menu {
   float: right;
@@ -1066,6 +1098,18 @@ span.input label {
 .catalogView {
   width: 100%;
   font-family: "Raleway", "Source Sans Pro", sans-serif; }
+  .catalogView .tag {
+    color: white; }
+  .catalogView .catalogSearchbar {
+    margin: 20px 0;
+    text-align: center; }
+    .catalogView .catalogSearchbar input {
+      display: inline;
+      width: 80%; }
+    .catalogView .catalogSearchbar .selectedTagsContainer {
+      display: inline-block; }
+      .catalogView .catalogSearchbar .selectedTagsContainer .tag {
+        margin-left: 10px; }
   .catalogView .helpIntegrateApps {
     padding: 10px;
     padding-top: 20px;
@@ -1142,6 +1186,15 @@ span.input label {
       margin-bottom: 0px;
       line-height: 30px;
       border-radius: 10px; }
+  .catalogView .scaleContainerView {
+    background-color: white;
+    width: 100%;
+    margin-top: 20px; }
+    .catalogView .scaleContainerView .tagContainer {
+      border-bottom: 2px solid grey; }
+      .catalogView .scaleContainerView .tagContainer .tag {
+        font-size: 0.8em;
+        margin: 10px 0 10px 20px; }
   .catalogView .scaleContainer {
     width: 60%;
     position: relative;
@@ -1390,6 +1443,7 @@ span.input label {
 .CatalogViewTab.show {
   transition: all 0.3s ease;
   visibility: visible;
+  background-color: rgba(0, 0, 0, 0.3);
   left: 50%;
   opacity: 1; }
 
@@ -1953,10 +2007,9 @@ body {
       font-size: 12px;
       display: block;
       vertical-align: middle;
-      position: relative;
-      margin-top: 25px;
-      padding-bottom: 5px;
-      padding-top: 5px; }
+      position: absolute;
+      bottom: 10px;
+      right: 10px; }
       .FormsContainer .form a:hover {
         cursor: pointer;
         color: darkblue; }

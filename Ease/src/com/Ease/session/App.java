@@ -2,6 +2,7 @@ package com.Ease.session;
 
 import javax.servlet.ServletContext;
 
+import com.Ease.context.DataBase;
 import com.Ease.context.Site;
 
 public class App {
@@ -10,14 +11,27 @@ public class App {
 	protected String	id;
 	protected Site		site;
 	protected int		index; 
+	protected int		profileIndex;
+	
+	protected int appId;
+	protected int profileId;
 	
 	//Setter
 	
 	public void setIndex(int ind) {
 		index = ind;
 	}
+	public void setAppId(int id) {
+		appId = id;
+	}
 	
 	//Getter
+	public int getAppId(){
+		return appId;
+	}
+	public int getProfileId() {
+		return profileId;
+	}
 	
 	public String getType() {
 		return type;
@@ -35,6 +49,9 @@ public class App {
 	public String getName() {
 		return name;
 	}
+	public int getProfileIndex() {
+		return profileIndex;
+	}
 	
 	public void setName(String str) {
 		name = str;
@@ -47,5 +64,8 @@ public class App {
 	}
 	public void updateInDB(ServletContext context, String keyUser) throws SessionException {
 		throw new SessionException("This is an app, this is not supposed to append! 3");
+	}
+	public void updateProfileIdnDB(ServletContext context, String id, int prId) throws SessionException {
+		throw new SessionException("This is an app, this is not supposed to append! 4");
 	}
 }

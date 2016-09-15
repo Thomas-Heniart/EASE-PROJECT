@@ -69,7 +69,7 @@ public class EditProfileColor extends HttpServlet {
 			} else if (color == null || Regex.isColor(color) == false){
 				retMsg = "error: Bad profile's color.";
 			} else {
-				Profile profile = user.getProfiles().get(index);
+				Profile profile = user.getProfile(index);
 				profile.setColor(color);
 				profile.updateInDB(session.getServletContext());
 				retMsg = "success";
@@ -79,7 +79,7 @@ public class EditProfileColor extends HttpServlet {
 		} catch (NumberFormatException e) {
 			retMsg = "error: Bad profile's index.";
 		}
-		Stats.saveAction(session.getServletContext(), user, Stats.Action.EditProfile, retMsg);
+		//Stats.saveAction(session.getServletContext(), user, Stats.Action.EditProfile, retMsg);
 		response.getWriter().print(retMsg);
 	}
 

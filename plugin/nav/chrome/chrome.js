@@ -4,7 +4,9 @@ var listenersMessages = [];
 var extension = {
 	storage:{
 		get:function(key, callback){
-			chrome.storage.local.get(key, callback);
+			chrome.storage.local.get(key, function(res){
+                callback(res[key]);
+            });
 		},
 		set:function(key, value, callback){
 			var obj = {};
@@ -23,7 +25,24 @@ var extension = {
 	},
 	onWindowRemoved:function(fct){
 		chrome.windows.onRemoved.addListener(fct);
-	}, 
+	},
+    onNewWindow:function(fct){
+            chrome.windows.onCreated.addListener(function(window){
+               chrome.tabs.onCreated.addListener(function newWindow(tab){
+                if(tab.windowId == window.id){
+                chrome.tabs.onCreated.removeListener(newWindow);
+                chrome.tabs.onUpdated.addListener(function newtab(tabId, params, newTab){
+                    if(tabId == tab.id){
+                        chrome.tabs.onUpdated.removeListener(newtab);
+                        if(params.url=="chrome://newtab/"){
+                            fct(newTab);
+                        }
+                    }                    
+                });
+            }
+               }); 
+            });
+        },
 	runtime:{
 		sendMessage:function(name, msg, callback){
 			chrome.runtime.sendMessage({"name":name, "message":msg}, callback);
@@ -55,6 +74,18 @@ var extension = {
 			}
 			chrome.tabs.onUpdated.addListener(listenersUpdates[tab.id]);
 		},
+        onNewTab:function(fct){
+            chrome.tabs.onCreated.addListener(function(tab){
+                chrome.tabs.onUpdated.addListener(function newtab(tabId, params, newTab){
+                    if(tabId == tab.id){
+                        chrome.tabs.onUpdated.removeListener(newtab);
+                        if(params.url=="chrome://newtab/"){
+                            fct(newTab);
+                        }
+                    }                    
+                });
+            });
+        },
         onUpdatedRemoveListener:function(tab){
             chrome.tabs.onUpdated.removeListener(listenersUpdates[tab.id]);
         },

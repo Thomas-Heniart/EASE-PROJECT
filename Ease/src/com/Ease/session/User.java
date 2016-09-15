@@ -2,6 +2,7 @@ package com.Ease.session;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,6 +38,10 @@ public class User {
 	String			keyUser;
 	String			tuto;
 	List<Profile>	profiles;
+
+	int				maxProfileId;
+	int				maxAppId;
+	List<App>		apps;
 	
 	//Use this to create a new user and set it in database
 	public User(String fName, String lName, String email, String tel, String pass, ServletContext context) throws SessionException {
@@ -65,6 +70,9 @@ public class User {
 			this.password = pass;
 			this.tuto = "0";
 			profiles = new LinkedList<Profile>();
+			maxProfileId = 0;
+			maxAppId = 0;
+			apps = new LinkedList<App>();
 			ResultSet rs = db.get("SELECT MAX(user_id) FROM users;");
 			if (rs == null)
 				throw new SessionException("Impossible to insert new user in data base.");
@@ -94,7 +102,10 @@ public class User {
 			if ((keyUser = AES.decryptUserKey(rs.getString(UserData.KEYUSER.ordinal()), pass, saltPerso)) == null)
 				throw new SessionException("Can't decrypt key.");
 			profiles = new LinkedList<Profile>();
-			loadProfiles(context, keyUser);
+			maxProfileId = 0;
+			maxAppId = 0;
+			apps = new LinkedList<App>();
+			loadProfiles(context);
 		} catch (SQLException e) {
 			throw new SessionException("Impossible to get all User info.");
 		}
@@ -135,6 +146,35 @@ public class User {
 	public String getTuto() {
 		return tuto;
 	}
+	public int getNextProfileId(){
+		maxProfileId++;
+		return maxProfileId - 1;
+	}
+	public int getNextAppId() {
+		maxAppId++;
+		return maxAppId;
+	}
+	public List<App> getApps(){
+		return apps;
+	}
+	public App getApp(int id){
+		int i = 0;
+		while (i < apps.size()){
+			if (id == apps.get(i).getAppId())
+				return apps.get(i);
+			i++;
+		}
+		return null;
+	}
+	public Profile getProfile(int id){
+		int i = 0;
+		while (i < profiles.size()){
+			if (id == profiles.get(i).getProfileId())
+				return profiles.get(i);
+			i++;
+		}
+		return null;
+	}
 	
 	// SETTER
 	
@@ -159,14 +199,21 @@ public class User {
 
 	// UTILS
 	
-	public void loadProfiles(ServletContext context, String userKey) throws SessionException {
+	public void loadProfiles(ServletContext context) throws SessionException {
 		DataBase db = (DataBase)context.getAttribute("DataBase");
 		ResultSet rs = db.get("SELECT * FROM profiles WHERE user_id='" + id + "';");
 		try {
 			while (rs.next()) {
-				Profile profile = new Profile(rs, this, userKey, context);
+				Profile profile = new Profile(rs, this, context);
 				profiles.add(profile);
 			}
+			profiles.sort(new Comparator<Profile>() {
+				@Override
+				public int compare(Profile a, Profile b){
+					return a.getIndex() - b.getIndex();
+				}
+			});
+			updateIndex(context);
 		} catch (SQLException e) {
 			throw new SessionException("Impossible to load all profiles.");
 		}
@@ -208,6 +255,14 @@ public class User {
 				profiles.get(i).updateInDB(context);
 			}
 		}
+	}
+
+	public void moveProfileAt(ServletContext context, int profileIndex, int index) throws SessionException {
+		
+		Profile profile = profiles.get(profileIndex);
+		profiles.remove(profileIndex);
+		profiles.add(index, profile);
+		updateIndex(context);
 	}
 	
 	public Boolean isAdmin(ServletContext context){
