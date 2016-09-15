@@ -2,6 +2,23 @@
 .catalogView {
 	width: 100%;
 	font-family: $defaultFont;
+	.tag {
+		color: white;
+	}
+	.catalogSearchbar {
+		margin: 20px 0;
+		text-align: center;
+		input {
+			display: inline;
+			width: 80%;
+		}
+		.selectedTagsContainer {
+			display: inline-block;
+			.tag {
+				margin-left: 10px;
+			}
+		}
+	}
 	.helpIntegrateApps {
 		padding:10px;
 		padding-top: 20px;
@@ -99,6 +116,18 @@
     		border-radius: 10px;
 		}
 	}
+	.scaleContainerView {
+			background-color: white;
+			width: 100%;
+			margin-top: 20px;
+			.tagContainer {
+				border-bottom: 2px solid grey;
+				.tag {
+					font-size: 0.8em;
+					margin: 10px 0 10px 20px;
+				}
+			}
+	}
 	.scaleContainer {
 		width: 60%;
 		position: relative;
@@ -133,7 +162,7 @@
 						height: 100%;
 						border: 1px solid #cccccc;
 					}
-				}	
+				}
 				.catalogAppName {
 					text-align: center;
 					padding-top: 3px;
@@ -153,7 +182,7 @@
 				background-color: darken(white, 2%);
 			}
 		}
-	}	
+	}
 }
 
 .ProfilesHandler{
@@ -215,7 +244,7 @@
 			color: white;
 		    text-transform: uppercase;
 		    letter-spacing: 1px;
-		    font-weight: 600;					
+		    font-weight: 600;
 		}
 	}
 	.scalerContainer {
@@ -281,7 +310,7 @@
     						top: 50%;
     						left: 50%;
     						transform: translateX(-50%) translateY(-50%);
-    					}		
+    					}
 					}
 					&:hover {
 						.deleteAppButton {
@@ -305,12 +334,12 @@
 			    		position: absolute;
     					top: 50%;
     					left: 50%;
-    					color: #32cd32; 
+    					color: #32cd32;
     					-webkit-transform: translateX(-50%) translateY(-50%);
 			    		-moz-transform: translateX(-50%) translateY(-50%);
     					-ms-transform: translateX(-50%) translateY(-50%);
-    					transform: translateX(-50%) translateY(-50%);	
-    					transform-origin: top left;			    			
+    					transform: translateX(-50%) translateY(-50%);
+    					transform-origin: top left;
 					}
 					i.fa-spinner {
 						-webkit-animation: rotate 3s linear infinite;
@@ -336,11 +365,11 @@
 		transform: scaleX(0.8) scaleY(0.8);
 	}
 	50% {
-		transform: scaleX(0.5) scaleY(0.5);	
+		transform: scaleX(0.5) scaleY(0.5);
 	}
 	100% {
 		transform: scaleX(0.8) scaleY(0.8);
-	
+
 	}
 }
 
@@ -361,7 +390,7 @@
 		transform: scaleX(1.2) scaleY(1.2);
 	}
 	100% {
-		transform: scaleX(1) scaleY(1);	
+		transform: scaleX(1) scaleY(1);
 	}
 }
 
@@ -403,7 +432,7 @@
 .ProfilesEditView.show {
 	display: block;
 	-webkit-animation: slideLeft 0.8s 1;
-	animation: slideLeft 0.8s 1;	
+	animation: slideLeft 0.8s 1;
 }
 
 .ProfilesEditView {
@@ -417,11 +446,12 @@
 		padding: 3%;
 		padding-top: 4%;
 		position: absolute;
-	}	
+	}
 }
 	.CatalogViewTab.show {
 		transition: all 0.3s ease;
 		visibility: visible;
+		background-color: rgba(0, 0, 0, 0.3);
 		left: 50%;
 		opacity: 1;
 	}
@@ -445,7 +475,7 @@
 			border: none;
 	    	border-radius: 5px;
 	   	 	width: 25px;
-   			height: 25px;	
+   			height: 25px;
    			padding: 0px;
    			outline:none;
 		}
@@ -464,6 +494,6 @@
 
  @media screen and (max-width: 771px) {
 	.ProfilesEditView {
-		
+
 	}
  }

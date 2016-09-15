@@ -2,69 +2,85 @@ package com.Ease.context;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
+
+import javax.servlet.ServletContext;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 public class Site {
 	enum SiteData {
-		NOTHING,
-		ID,
-		URL,
-		NAME,
-		FOLDER,
-		HAVELOGINBUTTON,
-		HAVELOGINWITH
+		NOTHING, ID, URL, NAME, FOLDER, HAVELOGINBUTTON, HAVELOGINWITH
 	}
-	
+
 	protected String id;
 	protected String name;
 	protected String url;
 	protected String folder;
 	protected boolean haveLoginButton;
 	protected String[] haveLoginWith;
-	
+	protected List<Tag> tags;
+
 	public Site(ResultSet rs) {
 		try {
-		id = rs.getString(SiteData.ID.ordinal());
-		name = rs.getString(SiteData.NAME.ordinal());
-		url = rs.getString(SiteData.URL.ordinal());
-		folder = rs.getString(SiteData.FOLDER.ordinal());
-		haveLoginButton = (rs.getString(SiteData.HAVELOGINBUTTON.ordinal()).equals("1")) ? true : false;
-		String tmp = rs.getString(SiteData.HAVELOGINWITH.ordinal());
-		haveLoginWith = (tmp != null) ? tmp.split(",") : "".split(",");
+			tags = new LinkedList<Tag>();
+			id = rs.getString(SiteData.ID.ordinal());
+			name = rs.getString(SiteData.NAME.ordinal());
+			url = rs.getString(SiteData.URL.ordinal());
+			folder = rs.getString(SiteData.FOLDER.ordinal());
+			haveLoginButton = (rs.getString(SiteData.HAVELOGINBUTTON.ordinal()).equals("1")) ? true : false;
+			String tmp = rs.getString(SiteData.HAVELOGINWITH.ordinal());
+			haveLoginWith = (tmp != null) ? tmp.split(",") : "".split(",");
 		} catch (SQLException e) {
-			
+
 		}
 	}
-	
+
+	public void setTags(ServletContext context) throws SQLException {
+		DataBase db = (DataBase) context.getAttribute("DataBase");
+		ResultSet rs = db.get("SELECT tag_id FROM tagandsitemap WHERE website_id=" + id.toString() + ";");
+		List<Tag> allTags = (List<Tag>) context.getAttribute("Tags");
+		while (rs.next()) {
+			tags.add(allTags.get(Integer.parseInt(rs.getString(1)) - 1));
+		}
+	}
+
+	public List<Tag> getTags() {
+		return tags;
+	}
+
 	public String getId() {
 		return id;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public String getUrl() {
 		return url;
 	}
-	
+
 	public String getFolder() {
 		return folder;
 	}
-	
+
 	public boolean haveLoginButton() {
 		return haveLoginButton;
 	}
-	
-	public boolean haveLoginWith(Site site){
-		for (int i = 0; i < haveLoginWith.length; ++i){
+
+	public boolean haveLoginWith(Site site) {
+		for (int i = 0; i < haveLoginWith.length; ++i) {
 			if (haveLoginWith[i].equals(site.getId()))
 				return true;
 		}
 		return false;
 	}
-	
-	public String getLoginWith(){
+
+	public String getLoginWith() {
 		String ret = "";
 		for (int i = 0; i < haveLoginWith.length; ++i) {
 			ret += haveLoginWith[i];
@@ -72,5 +88,21 @@ public class Site {
 				ret += ",";
 		}
 		return ret;
+	}
+
+	public JSONArray getJson() {
+		JSONArray res = new JSONArray();
+		res.add(id);
+		res.add(folder);
+		res.add(this.getLoginWith());
+		res.add(name);
+		return res;
+	}
+
+	public boolean hasTags(List<Tag> tags) {
+		for (int i = 0; i < tags.size(); i++)
+			if (this.tags.contains(tags.get(i)))
+				return true;
+		return false;
 	}
 }

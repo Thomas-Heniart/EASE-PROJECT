@@ -7,9 +7,12 @@
 <%@ page import="com.Ease.context.Site"%>
 <%@ page import="com.Ease.context.SiteManager"%>
 <%@ page import="com.Ease.context.Color"%>
+<%@ page import="com.Ease.context.Tag"%>
+<%@ page import="com.Ease.context.TagAndSiteMap"%>
 <%@ page import="com.Ease.session.Account"%>
 <%@ page import="com.Ease.session.LogWith"%>
 <%@ page import="java.util.List"%>
+<%@ page import="java.util.LinkedList"%>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
@@ -18,10 +21,18 @@
 	List<com.Ease.session.Profile> profiles = user.getProfiles();
 	List<Site> sites = ((SiteManager) (session.getServletContext().getAttribute("Sites"))).getSitesList();
 	List<Color> colors = (List<Color>) (session.getServletContext().getAttribute("Colors"));
+	List<Tag> tags = (List<Tag>) (session.getServletContext().getAttribute("Tags"));
+	List<TagAndSiteMap> tagAndSiteMapping = (List<TagAndSiteMap>) (session.getServletContext().getAttribute("TagAndSiteMapping"));
+	SiteManager siteManager = (SiteManager) (session.getServletContext().getAttribute("Sites"));
 	pageContext.setAttribute("member", user);
 	pageContext.setAttribute("profiles", profiles);
 	pageContext.setAttribute("siteList", sites);
 	pageContext.setAttribute("colors", colors);
+	session.getServletContext().setAttribute("tags", tags);
+	pageContext.setAttribute("siteManager", siteManager);
+	session.getServletContext().setAttribute("siteManager", siteManager);
+	pageContext.setAttribute("selectedTags", new LinkedList<Tag>());
+	pageContext.setAttribute("tagAndSiteMapping", tagAndSiteMapping);
 	int it = 0;
 
 	Cookie fname = new Cookie("fname",
