@@ -51,11 +51,19 @@ public class UpdateSelectedTagsServlet extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession();
-		String tagId = request.getParameter("tagId");
+		String ids = request.getParameter("tagIds");
+		String tagIds = ids.substring(1, ids.length()-1);
 		SiteManager siteManager = (SiteManager) session.getServletContext().getAttribute("siteManager");
-		List<Tag> tags = (List<Tag>) session.getServletContext().getAttribute("tags");
-		siteManager.addTag(tags.get(Integer.parseInt(tagId) - 1));
-		String res = siteManager.getJson().toString();
+		String res;
+		if(tagIds.isEmpty()) {
+			res = siteManager.getSitesListJson().toString();
+		}
+		else {
+			String[] tagIdsArray = tagIds.split(",");
+			res = siteManager.getSitesWithTags(tagIdsArray).toString();
+		}
+		
+		
 		response.getWriter().print(res);
 	}
 

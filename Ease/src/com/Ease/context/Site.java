@@ -2,6 +2,7 @@ package com.Ease.context;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
@@ -104,5 +105,22 @@ public class Site {
 			if (this.tags.contains(tags.get(i)))
 				return true;
 		return false;
+	}
+
+	public boolean hasAllTags(List<Tag> tags) {
+		
+		Iterator<Tag> it = tags.iterator();
+		while (it.hasNext()) {
+			Tag tmpTag = it.next();
+			Iterator<Tag> it2 = this.tags.iterator();
+			while(it2.hasNext()) {
+				if (tmpTag.getId() != it2.next().getId())
+					return false;
+			}
+			if (!this.tags.contains(it.next()))
+				return false;
+		}
+		return true;
+
 	}
 }

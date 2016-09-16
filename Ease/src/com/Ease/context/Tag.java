@@ -2,6 +2,8 @@ package com.Ease.context;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.servlet.ServletContext;
 
@@ -15,6 +17,7 @@ public class Tag {
 	protected String name;
 	protected String color_id;
 	protected String color;
+	protected List<Site> sites;
 	protected int id;
 
 	public Tag(ResultSet rs, ServletContext context) {
@@ -23,7 +26,7 @@ public class Tag {
 			name = rs.getString(TagData.NAME.ordinal());
 			color_id = rs.getString(TagData.COLOR_ID.ordinal());
 			setColor(context);
-			System.out.println(color);
+			sites = new LinkedList<Site>();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -57,10 +60,35 @@ public class Tag {
 		DataBase db = (DataBase) context.getAttribute("DataBase");
 		ResultSet rs = db.get("SELECT colors.color FROM colors, tags WHERE id=" + color_id + ";");
 		rs.next();
-		this.color = rs.getString(1); /* 1 because there is only one column in response */
+		this.color = rs.getString(
+				1); /* 1 because there is only one column in response */
 	}
 
 	public String getColor() {
 		return color;
+	}
+
+	public void setSites(ServletContext context) throws SQLException {
+		SiteManager siteManager = (SiteManager) context.getAttribute("Sites");
+		DataBase db = (DataBase) context.getAttribute("DataBase");
+		ResultSet rs = db.get("SELECT website_id FROM TagAndSiteMap WHERE tag_id=" + id + ";");
+		while (rs.next()) {
+			Site tmpSite = siteManager.getSiteById(new Integer(rs.getString(1)));
+			addSite(tmpSite);
+		}
+	}
+
+	public void addSite(Site site) {
+		System.out.println(site.getName());
+		if (!sites.contains(site))
+			sites.add(site);
+	}
+
+	public boolean containsSite(Site site) {
+		return sites.contains(site);
+	}
+
+	public List<Site> getSites() {
+		return sites;
 	}
 }

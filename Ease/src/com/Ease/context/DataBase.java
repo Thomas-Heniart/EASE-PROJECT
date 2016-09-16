@@ -39,7 +39,6 @@ public class DataBase {
 	public ResultSet get(String request) {
 		try {
 			ResultSet rs = con.createStatement().executeQuery(request);
-			System.out.println(request);
 			return rs;
 		} catch (SQLException e) {
 			System.out.println("Impossible to get DB");

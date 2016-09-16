@@ -35,55 +35,85 @@ public class SiteManager {
 	}
 
 	public List<Site> getSitesList() {
-		tags.clear();
 		return sites;
 	}
 
-	public void addTag(Tag tag) {
-		if (tags.contains(tag))
-			tags.remove(tag);
-		else
-			tags.add(tag);
-
+	public Site getSiteById(int siteId) {
+		Iterator<Site> iterator = sites.iterator();
+		while (iterator.hasNext()) {
+			Site tmpSite = iterator.next();
+			if (siteId == Integer.parseInt(tmpSite.getId()))
+				return tmpSite;
+		}
+		return null;
 	}
 
-	public void setTags(ServletContext context) throws SQLException {
+	public Tag getTagById(int tagId) {
+		Iterator<Tag> iterator = tags.iterator();
+		while (iterator.hasNext()) {
+			Tag tmpTag = iterator.next();
+			if (tagId == tmpTag.getId())
+				return tmpTag;
+		}
+		return null;
+	}
+
+	public void addNewTag(Tag tag) {
+		tags.add(tag);
+	}
+
+	public void setTagsForSites(ServletContext context) throws SQLException {
 		for (int i = 0; i < sites.size(); i++)
 			sites.get(i).setTags(context);
 	}
-	
+
+	public void setSitesForTags(ServletContext context) throws SQLException {
+		Iterator<Tag> iterator = tags.iterator();
+		while (iterator.hasNext())
+			iterator.next().setSites(context);
+	}
+
 	public JSONArray searchSitesWith(String search) {
 		JSONArray res = new JSONArray();
 		Iterator<Site> iterator = sites.iterator();
-		while(iterator.hasNext()) {
+		while (iterator.hasNext()) {
 			Site tmpSite = iterator.next();
-			if(tmpSite.getName().startsWith(search))
+			if (tmpSite.getName().startsWith(search))
 				res.add(tmpSite.getJson());
 		}
 		return res;
 	}
 
-	public JSONArray getJson() {
-		JSONArray jsonArray = new JSONArray();
-		if (tags.isEmpty()) {
-			Iterator<Site> siteIterator = sites.iterator();
-			while (siteIterator.hasNext()) {
-				jsonArray.add(siteIterator.next().getJson());
-			}
-			return jsonArray;
-		}
+	public JSONArray getSitesListJson() {
+		JSONArray res = new JSONArray();
 		Iterator<Site> iterator = sites.iterator();
-		while (iterator.hasNext()) {
-			Site site = iterator.next();
-			List<Tag> siteTags = site.getTags();
-			Iterator<Tag> tagIterator = siteTags.iterator();
-			while (tagIterator.hasNext()) {
-				if (siteTags.contains(tagIterator.next())) {
-					jsonArray.add(site.getJson());
-					break;
-				}
-			}
+		while (iterator.hasNext())
+			res.add(iterator.next().getJson());
+		return res;
+	}
+
+	public JSONArray getSitesWithTags(String[] selectedIds) {
+		List<Tag> selectedTags = new LinkedList<Tag>();
+		JSONArray res = new JSONArray();
+
+		// Convert string to int
+		for (int i = 0; i < selectedIds.length; i++) {
+			selectedTags.add(getTagById(Integer.parseInt(selectedIds[i])));
 		}
-		return jsonArray;
+
+		Iterator<Site> siteIterator = sites.iterator();
+		while (siteIterator.hasNext()) {
+			Site tmpSite = siteIterator.next();
+			if (tmpSite.hasAllTags(selectedTags))
+				res.add(tmpSite.getJson());
+		}
+		siteIterator = sites.iterator();
+		while (siteIterator.hasNext()) {
+			Site tmpSite = siteIterator.next();
+			if (!res.contains(tmpSite.getJson()))
+				if (tmpSite.hasTags(selectedTags))
+					res.add(tmpSite.getJson());
+		}
+		return res;
 	}
 }

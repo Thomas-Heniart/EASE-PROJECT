@@ -13,14 +13,19 @@ function refreshCatalogContent(data) {
 		}
 	}
 
-	function updateCatalogWhenClickOnTag(tagDiv) {
-		var id = tagDiv.attr("tagId");
+	function updateCatalogWhenClickOnTag(tags) {
+		var ids = [];
+		tags.each(function(index, tag) {
+			ids.push(parseInt($(tag).attr("tagid")));
+		});
+		var json = JSON.stringify(ids);
 		$.post(
 			'updateSelectedTags',
 			{
-				tagId : id
+				tagIds : json
 			},
 			function(data) {
+				console.log(data);
 				refreshCatalogContent(data);
 			},
 			'text');
@@ -38,42 +43,6 @@ function refreshCatalogContent(data) {
 			'text'
 		);
 	}
-
-function setTagsPosition(tagsGrp) {
-	var grpSize = tagsGrp.length;
-	var marginSize = 0;
-	if (grpSize == 1) {
-		marginSize = parseFloat(tagsGrp.slice(0,1).css("width"));
-	}
-	else {
-		marginSize = parseFloat(tagsGrp.slice(0,1).css("width")) + parseFloat(tagsGrp.slice(1,2).css("width"));
-	}
-	$("div[tagid='" + tagId + "'].btn-group").css("margin-right", - (marginSize + 10));
-	tagsGrp.css("margin-left", 0);
-	tagsGrp.first().css("margin-left", -(parseFloat(tagsGrp.slice(1,2).css("margin-right"))));
-}
-
-function moveButtonToSearchBar(tagButton) {
-	tagId = tagButton.attr("tagid");
-	if (tagButton.hasClass("tag-active")) {
-		$(".catalogSearchbar").prepend("<div tagid='"+ tagId +"' class='btn-group btn-group-xs tags-group'></div>");
-		$("div[tagid='" + tagId + "'].btn-group").append(tagButton);
-		$("div[tagid='" + tagId + "'].btn-group").append("<button tagid='" + tagId + "' class='btn btn-default delete-tag'>x</button>");
-		$("button[tagid='" + tagId + "'].delete-tag").click(function() {
-			$("button[tagid='" + tagId + "'].tag").removeClass("tag-active");
-			updateCatalogWhenClickOnTag(tagButton);
-			var parent = tagButton.parent();
-			$(".tagContainer").append(tagButton);
-			parent.remove();
-		});
-		setTagsPosition($("div.tags-group"));
-	}
-	else {
-		var parent = tagButton.parent();
-		$(".tagContainer").append(tagButton);
-		parent.remove();
-	}
-}
 
 function newButtonGroup(tagId) {
 	$(".selectedTagsContainer").append("<div tagid='"+ tagId +"' class='btn-group btn-group-xs tags-group'></div>");
@@ -117,7 +86,7 @@ function updateCatalogFront(tagButton) {
 		btnGroup.remove();
 	}
 	updateTagsInSearchBar();
-	updateCatalogWhenClickOnTag($(event.target));
+	updateCatalogWhenClickOnTag($(".selectedTagsContainer .tag"));
 }
 
 $(document).ready(function() {

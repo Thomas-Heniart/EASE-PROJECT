@@ -2,6 +2,7 @@ package com.Ease.context;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -67,12 +68,29 @@ public class OnStart implements ServletContextListener {
 			System.out.println("Fail to load websites.");
 			return;
 		}
+		context.setAttribute("Sites", sites);
 		try {
-			sites.setTags(context);
+			ResultSet rs = db.get("SELECT * FROM tags;");
+			while (rs.next()) {
+				sites.addNewTag(new Tag(rs, context));
+			}
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
-		context.setAttribute("Sites", sites);
+
+		// Set tags for websites
+		try {
+			sites.setTagsForSites(context);
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		// Set websites for tags
+		try {
+			sites.setSitesForTags(context);
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		
 
 		// Récupération des couleurs de profil
 
