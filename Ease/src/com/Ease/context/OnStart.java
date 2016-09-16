@@ -32,18 +32,6 @@ public class OnStart implements ServletContextListener {
 			return;
 		}
 
-		// Récupération des tags
-		List<TagAndSiteMap> tagAndSiteMapping = new LinkedList<TagAndSiteMap>();
-		try {
-			ResultSet rs = db.get("SELECT * FROM TagAndSiteMap;");
-			while (rs.next()) {
-				tagAndSiteMapping.add(new TagAndSiteMap(rs, context));
-			}
-		} catch (SQLException e) {
-			System.out.println("Fail to load tag and site map" + e.getMessage());
-		}
-		context.setAttribute("TagAndSiteMappging", tagAndSiteMapping);
-
 		// Récupération des sites et des options de connection
 
 		SiteManager siteManager = new SiteManager();
@@ -57,6 +45,7 @@ public class OnStart implements ServletContextListener {
 			return;
 		}
 		context.setAttribute("siteManager", siteManager);
+		
 		try {
 			ResultSet rs = db.get("SELECT * FROM tags;");
 			while (rs.next()) {

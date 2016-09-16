@@ -1,4 +1,4 @@
-extension.tabs.onNewTab(function(tab){
+/*extension.tabs.onNewTab(function(tab){
     extension.storage.get("isConnected", function(res){
         if(res=="true"){
             console.log("User is connected. open ease in tab");
@@ -9,7 +9,7 @@ extension.tabs.onNewTab(function(tab){
             }, 100);  
         }
     });    
-});
+});*/
 
 /*extension.onNewWindow(function(tab){
     extension.tabs.update(tab, "https://ease.space", function(){
