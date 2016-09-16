@@ -16,6 +16,12 @@
 			display: inline-block;
 			.tag {
 				margin-left: 10px;
+				&:hover {
+					color: white;
+				}
+			}
+			.btn {
+				border: none;
 			}
 		}
 	}

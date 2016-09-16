@@ -104,15 +104,18 @@ public class SiteManager {
 		Iterator<Site> siteIterator = sites.iterator();
 		while (siteIterator.hasNext()) {
 			Site tmpSite = siteIterator.next();
-			if (tmpSite.hasAllTags(selectedTags))
+			if (tmpSite.hasAllTags(selectedTags)) {
 				res.add(tmpSite.getJson());
+			}
 		}
 		siteIterator = sites.iterator();
 		while (siteIterator.hasNext()) {
 			Site tmpSite = siteIterator.next();
 			if (!res.contains(tmpSite.getJson()))
-				if (tmpSite.hasTags(selectedTags))
+				if (tmpSite.hasTags(selectedTags)) {
+					System.out.println(tmpSite.getName() + " has at least one of selected tags" );
 					res.add(tmpSite.getJson());
+				}
 		}
 		return res;
 	}

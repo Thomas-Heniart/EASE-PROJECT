@@ -25,7 +25,6 @@ function refreshCatalogContent(data) {
 				tagIds : json
 			},
 			function(data) {
-				console.log(data);
 				refreshCatalogContent(data);
 			},
 			'text');
@@ -51,6 +50,12 @@ function newButtonGroup(tagId) {
 
 function newCrossButton(tagId) {
 	return ("<a href='#' tagid='" + tagId + "' class='btn btn-default delete-tag'>x</button>");
+}
+
+function setNewCrossCss(tagId) {
+	var tag = $("a[tagid='" + tagId + "'].tag")
+	$("a[tagid='" + tagId + "'].delete-tag").css("background-color", tag.css("background-color"));
+	$("a[tagid='" + tagId + "'].delete-tag").css("color", tag.css("color"));
 }
 
 function addActionOnCrossButton(tagId) {
@@ -79,6 +84,7 @@ function updateCatalogFront(tagButton) {
 		var btnGroup = newButtonGroup(tagId);
 		btnGroup.append(tagButton);
 		btnGroup.append(newCrossButton(tagId));
+		setNewCrossCss(tagId);
 		addActionOnCrossButton(tagId);
 	} else {
 		var btnGroup = tagButton.parent();
