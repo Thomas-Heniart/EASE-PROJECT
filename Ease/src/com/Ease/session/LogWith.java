@@ -57,7 +57,7 @@ public class LogWith extends App {
 			type = "LogWith";
 			id = rs.getString(LogWithData.ID.ordinal());
 			name = rs.getString(LogWithData.NAME.ordinal());
-			site = ((SiteManager)context.getAttribute("Sites")).get(rs.getString(LogWithData.SITE_ID.ordinal()));
+			site = ((SiteManager)context.getAttribute("siteManager")).get(rs.getString(LogWithData.SITE_ID.ordinal()));
 			account_id = rs.getString(LogWithData.ACCOUNT_ID.ordinal());
 			String tmp = rs.getString(LogWithData.POSITION.ordinal());
 			appId = user.getNextAppId();

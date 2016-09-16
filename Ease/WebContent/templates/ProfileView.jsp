@@ -19,7 +19,7 @@
 <%
 	com.Ease.session.User user = (com.Ease.session.User) (session.getAttribute("User"));
 	List<com.Ease.session.Profile> profiles = user.getProfiles();
-	List<Site> sites = ((SiteManager) (session.getServletContext().getAttribute("Sites"))).getSitesList();
+	List<Site> sites = ((SiteManager) (session.getServletContext().getAttribute("siteManager"))).getSitesList();
 	List<Color> colors = (List<Color>) (session.getServletContext().getAttribute("Colors"));
 	List<Tag> tags = (List<Tag>) (session.getServletContext().getAttribute("Tags"));
 	List<TagAndSiteMap> tagAndSiteMapping = (List<TagAndSiteMap>) (session.getServletContext().getAttribute("TagAndSiteMapping"));

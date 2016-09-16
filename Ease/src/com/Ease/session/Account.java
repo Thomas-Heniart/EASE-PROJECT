@@ -67,7 +67,7 @@ public class Account extends App{
 			name = rs.getString(AccountData.NAME.ordinal());
 			if ((password = AES.decrypt(rs.getString(AccountData.PASSWORD.ordinal()), user.getUserKey())) == null)
 				throw new SessionException("Can't decrypt website password.");
-			site = ((SiteManager)context.getAttribute("Sites")).get(rs.getString(AccountData.SITE_ID.ordinal()));
+			site = ((SiteManager)context.getAttribute("siteManager")).get(rs.getString(AccountData.SITE_ID.ordinal()));
 			String tmp = rs.getString(AccountData.POSITION.ordinal());
 			appId = user.getNextAppId();
 			this.profileId = profile.getProfileId();
