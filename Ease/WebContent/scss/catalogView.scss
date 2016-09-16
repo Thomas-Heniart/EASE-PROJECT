@@ -4,6 +4,9 @@
 	font-family: $defaultFont;
 	.tag {
 		color: white;
+		&:hover {
+			color: white;
+		}
 	}
 	.catalogSearchbar {
 		margin: 20px 0;

@@ -37,7 +37,7 @@ public class SiteManager {
 	public List<Site> getSitesList() {
 		return sites;
 	}
-	
+
 	public List<Tag> getTagsList() {
 		return tags;
 	}
@@ -96,31 +96,46 @@ public class SiteManager {
 		return res;
 	}
 
-	public JSONArray getSitesWithTags(String[] selectedIds) {
+	public JSONArray getSitesListJsonWithSearchAndTags(String search, String[] selectedIds) {
+		// If everything is empty then returns all websites
+		if (selectedIds.length == 0 && (search.isEmpty() || search == null )) {
+			return getSitesListJson();
+		}
 		List<Tag> selectedTags = new LinkedList<Tag>();
 		JSONArray res = new JSONArray();
-
+		List<Site> sitesToShow = new LinkedList<Site>();
 		// Convert string to int
 		for (int i = 0; i < selectedIds.length; i++) {
 			selectedTags.add(getTagById(Integer.parseInt(selectedIds[i])));
 		}
 
+		// get sites with all tags
 		Iterator<Site> siteIterator = sites.iterator();
 		while (siteIterator.hasNext()) {
 			Site tmpSite = siteIterator.next();
 			if (tmpSite.hasAllTags(selectedTags)) {
-				res.add(tmpSite.getJson());
+				sitesToShow.add(tmpSite);
 			}
 		}
+
+		// get sites with some tags
 		siteIterator = sites.iterator();
 		while (siteIterator.hasNext()) {
 			Site tmpSite = siteIterator.next();
-			if (!res.contains(tmpSite.getJson()))
+			if (!sitesToShow.contains(tmpSite))
 				if (tmpSite.hasTags(selectedTags)) {
-					System.out.println(tmpSite.getName() + " has at least one of selected tags" );
-					res.add(tmpSite.getJson());
+					sitesToShow.add(tmpSite);
 				}
 		}
+		if (sitesToShow.isEmpty())
+			return searchSitesWith(search);
+		siteIterator = sitesToShow.iterator();
+		while (siteIterator.hasNext()) {
+			Site tmpSite = siteIterator.next();
+			if (tmpSite.getName().toUpperCase().startsWith(search.toUpperCase()) || search.isEmpty())
+				res.add(tmpSite.getJson());
+		}
 		return res;
+
 	}
 }
