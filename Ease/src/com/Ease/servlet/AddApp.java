@@ -83,8 +83,7 @@ public class AddApp extends HttpServlet {
 				retMsg = "error: Bad profiles's id.";
 			} else {
 				Profile profile = user.getProfile(profileId);
-				
-				if ((site = ((SiteManager)session.getServletContext().getAttribute("Sites")).get(siteId)) == null) {
+				if ((site = ((SiteManager)session.getServletContext().getAttribute("siteManager")).get(siteId)) == null) {
 					retMsg = "error: This site dosen't exist.";
 				} else {
 					
