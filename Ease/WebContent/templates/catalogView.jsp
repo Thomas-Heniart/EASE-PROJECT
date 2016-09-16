@@ -35,18 +35,29 @@
 		</div>
 		<div class="helpIntegrateApps">
 			<div class="DivHeader">
-				<p>We build this catalog thanks to users suggestions</p>
+				<h4><i class="fa fa-magic" aria-hidden="true"></i>Can't find a website ?</h4>
+				<p>Suggest us any website ! we will integrate it within 36 hours.</p>
 			</div>
 			<div id="integrateAppForm">
-				<div class="inputs">
-					<input id="integrateApp" name="name" type="text"
-						placeholder="Tell us websites you love !" />
-					<p class="hidden">Done! We check asap :)</p>
+				<div class="inputs input-group">
+   					<input id="integrateApp" name="name" type="text" class="form-control" placeholder="Enter website url" />
+   					<span class="input-group-btn">
+        				<button id="integrate" class="btn btn-default" type="button">Go!</button>
+   					</span>
 				</div>
+				<div class="confirmation">
+					<p>Your suggestion has been sent</p>
+					<i class="fa fa-check-circle"></i>
+				</div>
+				<!-- <div class="inputs">
+					<input id="integrateApp" class="form-control" name="name" type="text"
+						placeholder="Enter website url" />
+					<p class="hidden">Your suggestion has been sent</p>
+				</div> -->
 				<div class="buttonSet">
-					<button id="integrate">
-						<i class="fa fa-arrow-circle-right"></i>
-					</button>
+					<!--  <button id="integrate">
+						<i class="fa fa-arrow-circle-right  aria-hidden="true""></i>
+					</button> -->
 					<i class="fa fa-check-circle hidden"></i>
 				</div>
 			</div>
