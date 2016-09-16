@@ -43,9 +43,9 @@ public class Site {
 	public void setTags(ServletContext context) throws SQLException {
 		DataBase db = (DataBase) context.getAttribute("DataBase");
 		ResultSet rs = db.get("SELECT tag_id FROM TagAndSiteMap WHERE website_id=" + id.toString() + ";");
-		List<Tag> allTags = ((SiteManager) context.getAttribute("siteManager")).getTagsList();
+		SiteManager siteManager = ((SiteManager) context.getAttribute("siteManager"));
 		while (rs.next()) {
-			tags.add(allTags.get(Integer.parseInt(rs.getString(1)) - 1));
+			tags.add(siteManager.getTagById(Integer.parseInt(rs.getString(1))));
 		}
 	}
 
