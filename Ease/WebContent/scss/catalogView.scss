@@ -129,6 +129,7 @@
 			background-color: white;
 			width: 100%;
 			margin-top: 20px;
+			margin-bottom: 20px;
 			.tagContainer {
 				border-bottom: 2px solid grey;
 				.tag {
@@ -138,7 +139,7 @@
 			}
 	}
 	.scaleContainer {
-		width: 60%;
+		width: 90%;
 		position: relative;
 		margin: 30px auto;
 		.catalogContainer {
@@ -149,8 +150,8 @@
 			overflow-y: auto;
 			overflow-x: hidden;
 			.catalogApp {
-				width: 25%;
-				height: 25%;
+				width: (100% / 6);
+				height: (100% / 3);
 				float: left;
 				padding: 5px;
 				.catalogAppLogo {

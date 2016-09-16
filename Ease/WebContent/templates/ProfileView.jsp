@@ -314,7 +314,7 @@
 							</div>
 						</div>
 						<div class="ProfileContent">
-							<img class="Scaler" src="https://placehold.it/3x6"
+							<img class="Scaler" src="resources/other/placeholder-36.png"
 								style="width: 100%; height: auto; visibility: hidden;" />
 							<div class=content>
 								<div class="ProfileControlPanel" index=<%=it%>>

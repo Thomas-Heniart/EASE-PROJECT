@@ -26,7 +26,7 @@
 				</c:forEach>
 			</div>
 			<div class="scaleContainer">
-				<img class="Scaler" src="https://placehold.it/4x4"
+				<img class="Scaler" src="resources/other/placeholder-63.png"
 					style="width: 100%; height: auto; visibility: hidden;" />
 				<div id="catalog" class="catalogContainer">
 					<%@ include file="catalogApps.jsp"%>
