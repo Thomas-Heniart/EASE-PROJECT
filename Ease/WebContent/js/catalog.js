@@ -10,6 +10,25 @@ function refreshCatalogContent(data) {
 						else
 							$("div[idx='" + fields[0] + "']").append("<div class='catalogAppName'><p>" + fields[3] + "</p></div>");
 			});
+			$('.catalogApp').draggable(
+				{
+					cursor : 'none',
+					cursorAt : {
+					left : 25,
+					top : 25
+				},
+				helper : function(e, ui) {
+					var ret;
+					ret = $('<div class="dragHelperLogo" style="position: fixed;"/>');
+					ret.attr("idx", $(this).attr("idx"));
+					ret.attr("name", $(this).find('p').text());
+					ret.attr("connect", $(this).attr("connect"));
+					ret.attr("data-login", $(this).attr("data-login"));
+					ret.append($('<img />'));
+					ret.find('img').attr("src", $(this).find('img').attr("src"));
+					return ret; //Replaced $(ui) with $(this)
+					}
+				});
 		}
 	}
 

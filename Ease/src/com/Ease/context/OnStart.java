@@ -33,18 +33,6 @@ public class OnStart implements ServletContextListener {
 		}
 
 		// Récupération des tags
-		List<Tag> tags = new LinkedList<Tag>();
-		try {
-			ResultSet rs = db.get("SELECT * FROM tags;");
-			while (rs.next()) {
-				tags.add(new Tag(rs, context));
-			}
-		} catch (SQLException e) {
-			System.out.println("Fail to load tags");
-			return;
-		}
-		context.setAttribute("Tags", tags);
-
 		List<TagAndSiteMap> tagAndSiteMapping = new LinkedList<TagAndSiteMap>();
 		try {
 			ResultSet rs = db.get("SELECT * FROM TagAndSiteMap;");
@@ -58,21 +46,21 @@ public class OnStart implements ServletContextListener {
 
 		// Récupération des sites et des options de connection
 
-		SiteManager sites = new SiteManager();
+		SiteManager siteManager = new SiteManager();
 		try {
 			ResultSet rs = db.get("SELECT * FROM websites;");
 			while (rs.next()) {
-				sites.add(new Site(rs));
+				siteManager.add(new Site(rs));
 			}
 		} catch (SQLException e) {
 			System.out.println("Fail to load websites.");
 			return;
 		}
-		context.setAttribute("Sites", sites);
+		context.setAttribute("siteManager", siteManager);
 		try {
 			ResultSet rs = db.get("SELECT * FROM tags;");
 			while (rs.next()) {
-				sites.addNewTag(new Tag(rs, context));
+				siteManager.addNewTag(new Tag(rs, context));
 			}
 		} catch (SQLException e1) {
 			e1.printStackTrace();
@@ -80,13 +68,13 @@ public class OnStart implements ServletContextListener {
 
 		// Set tags for websites
 		try {
-			sites.setTagsForSites(context);
+			siteManager.setTagsForSites(context);
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
 		// Set websites for tags
 		try {
-			sites.setSitesForTags(context);
+			siteManager.setSitesForTags(context);
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}

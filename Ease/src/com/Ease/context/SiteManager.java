@@ -37,6 +37,10 @@ public class SiteManager {
 	public List<Site> getSitesList() {
 		return sites;
 	}
+	
+	public List<Tag> getTagsList() {
+		return tags;
+	}
 
 	public Site getSiteById(int siteId) {
 		Iterator<Site> iterator = sites.iterator();
@@ -78,7 +82,7 @@ public class SiteManager {
 		Iterator<Site> iterator = sites.iterator();
 		while (iterator.hasNext()) {
 			Site tmpSite = iterator.next();
-			if (tmpSite.getName().startsWith(search))
+			if (tmpSite.getName().toUpperCase().startsWith(search.toUpperCase()))
 				res.add(tmpSite.getJson());
 		}
 		return res;

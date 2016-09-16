@@ -23,14 +23,13 @@
 	List<Color> colors = (List<Color>) (session.getServletContext().getAttribute("Colors"));
 	List<Tag> tags = (List<Tag>) (session.getServletContext().getAttribute("Tags"));
 	List<TagAndSiteMap> tagAndSiteMapping = (List<TagAndSiteMap>) (session.getServletContext().getAttribute("TagAndSiteMapping"));
-	SiteManager siteManager = (SiteManager) (session.getServletContext().getAttribute("Sites"));
+	SiteManager siteManager = (SiteManager) (session.getServletContext().getAttribute("siteManager"));
 	pageContext.setAttribute("member", user);
 	pageContext.setAttribute("profiles", profiles);
 	pageContext.setAttribute("siteList", sites);
 	pageContext.setAttribute("colors", colors);
 	session.getServletContext().setAttribute("tags", tags);
 	pageContext.setAttribute("siteManager", siteManager);
-	session.getServletContext().setAttribute("siteManager", siteManager);
 	pageContext.setAttribute("selectedTags", new LinkedList<Tag>());
 	pageContext.setAttribute("tagAndSiteMapping", tagAndSiteMapping);
 	int it = 0;

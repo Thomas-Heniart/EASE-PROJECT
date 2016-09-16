@@ -19,7 +19,7 @@
 
 		<div class="scaleContainerView">
 			<div class=tagContainer>
-				<c:forEach items='${tags}' var="item">
+				<c:forEach items='${siteManager.getTags()}' var="item">
 					<a href="#" tagId="${item.getId()}" class="tag btn btn-default"
 						style="background-color: ${item.getColor()}; border-color: ${item.getColor()}">
 						${item.getName()}</a>

@@ -69,7 +69,7 @@ public class Tag {
 	}
 
 	public void setSites(ServletContext context) throws SQLException {
-		SiteManager siteManager = (SiteManager) context.getAttribute("Sites");
+		SiteManager siteManager = (SiteManager) context.getAttribute("siteManager");
 		DataBase db = (DataBase) context.getAttribute("DataBase");
 		ResultSet rs = db.get("SELECT website_id FROM TagAndSiteMap WHERE tag_id=" + id + ";");
 		while (rs.next()) {
