@@ -30,10 +30,14 @@ public class SiteManager {
 		return null;
 	}
 
-	public void clear() {
+	public void clearSites() {
 		sites.clear();
 	}
-
+	
+	public void clearTags() {
+		tags.clear();
+	}
+	
 	public List<Site> getSitesList() {
 		return sites;
 	}
