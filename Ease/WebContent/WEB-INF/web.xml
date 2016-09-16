@@ -230,22 +230,7 @@
     <servlet-name>AddWebsite</servlet-name>
     <url-pattern>/addWebsiteInDB</url-pattern>
   </servlet-mapping>
-  <servlet>
-    <servlet-name>UpdateSelectedTags</servlet-name>
-    <servlet-class>com.Ease.servlet.UpdateSelectedTagsServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>UpdateSelectedTags</servlet-name>
-    <url-pattern>/updateSelectedTags</url-pattern>
-  </servlet-mapping>
-  <servlet>
-  	<servlet-name>CatalogSearch</servlet-name>
-  	<servlet-class>com.Ease.servlet.CatalogSearchServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-  	<servlet-name>CatalogSearch</servlet-name>
-  	<url-pattern>/searchInCatalog</url-pattern>
-  </servlet-mapping>
+  
 <!--
 <security-constraint>
 <web-resource-collection>

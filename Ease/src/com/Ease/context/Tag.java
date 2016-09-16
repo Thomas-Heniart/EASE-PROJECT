@@ -60,8 +60,7 @@ public class Tag {
 		DataBase db = (DataBase) context.getAttribute("DataBase");
 		ResultSet rs = db.get("SELECT colors.color FROM colors, tags WHERE id=" + color_id + ";");
 		rs.next();
-		this.color = rs.getString(
-				1); /* 1 because there is only one column in response */
+		this.color = rs.getString(1); /* 1 because there is only one column in response */
 	}
 
 	public String getColor() {

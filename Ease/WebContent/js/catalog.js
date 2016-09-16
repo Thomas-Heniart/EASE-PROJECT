@@ -32,28 +32,17 @@ function refreshCatalogContent(data) {
 		}
 	}
 
-	function updateCatalogWhenClickOnTag(tags) {
+	function updateCatalogWith(searchVal, tags) {
 		var ids = [];
 		tags.each(function(index, tag) {
 			ids.push(parseInt($(tag).attr("tagid")));
 		});
 		var json = JSON.stringify(ids);
 		$.post(
-			'updateSelectedTags',
-			{
-				tagIds : json
-			},
-			function(data) {
-				refreshCatalogContent(data);
-			},
-			'text');
-	}
-
-	function updateCatalogWith(search) {
-		$.post(
 			'searchInCatalog',
 			{
-				search : search
+				tagIds : json,
+				search : searchVal
 			},
 			function(data) {
 				refreshCatalogContent(data);
@@ -111,7 +100,7 @@ function updateCatalogFront(tagButton) {
 		btnGroup.remove();
 	}
 	updateTagsInSearchBar();
-	updateCatalogWhenClickOnTag($(".selectedTagsContainer .tag"));
+	updateCatalogWith($(".catalogSearchbar input").val() , $(".selectedTagsContainer .tag"));
 }
 
 $(document).ready(function() {
@@ -121,6 +110,7 @@ $(document).ready(function() {
 		updateCatalogFront($(event.target));
 	});
 	$("input[name='catalogSearch']").keyup(function(event) {
-		updateCatalogWith($(event.target).val());
+		event.stopPropagation();
+		updateCatalogWith($(event.target).val(), $(".selectedTagsContainer .tag"));
 	});
 });
