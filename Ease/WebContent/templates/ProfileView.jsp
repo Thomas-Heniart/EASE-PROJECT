@@ -330,7 +330,7 @@
 										</div>
 										<div class="sectionContent" id="contentName">
 											<div id="modifyNameForm">
-												<input id="profileName" name="profileName" type="text"
+												<input id="profileName" name="profileName" type="text"  maxlength="20"
 													placeholder="Profile name..." />
 												<div class="buttonSet">
 													<button class="button" id="validate">Validate</button>
@@ -828,8 +828,6 @@
 						parent.find(".ProfileControlPanel").css("display",
 								"none");
 						parent.find(".SitesContainer").css("display", "block");
-						$(elem).find("i").removeClass("fa-caret-down");
-						$(elem).find("i").addClass("fa-bars");
 
 					} else {
 
@@ -837,8 +835,6 @@
 						parent.find(".ProfileControlPanel").css("display",
 								"inline-block");
 						parent.find(".SitesContainer").css("display", "none");
-						$(elem).find("i").removeClass("fa-bars");
-						$(elem).find("i").addClass("fa-caret-down");
 					}
 				});
 	}

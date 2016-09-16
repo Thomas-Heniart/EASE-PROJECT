@@ -6,20 +6,6 @@
 <button class="menu__label"><i class="fa fa-fw fa-user"></i><span><%= ((User)(session.getAttribute("User"))).getFirstName() %></span></button>
 	<ul class="menu__inner">
 	<li><a href="#" id="ModifyUserButton"><i class="fa fa-fw fa-cogs"></i><span>Parameters</span></a></li>
-	<li>
-		<div class="ScoreMenuTab">
-			<div class="ScoreHolder">
-				<div class="box" style="background-color:#ec555b;"></div>
-				<div class="box" style="background-color:#ec555b;"></div>
-				<div class="box" style="background-color:#ec555b;"></div>
-				<div class="box" style="background-color:#ec555b;"></div>
-				<div class="box" style="background-color:#373b60;"></div>
-			</div>
-			<div class="ScoreDescription">
-			<p>Expert | 12 649</p>
-			</div>
-		</div>
-	</li>
 	</ul>
 </nav>
 <script>
