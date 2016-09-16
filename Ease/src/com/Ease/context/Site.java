@@ -44,6 +44,7 @@ public class Site {
 		DataBase db = (DataBase) context.getAttribute("DataBase");
 		ResultSet rs = db.get("SELECT tag_id FROM TagAndSiteMap WHERE website_id=" + id.toString() + ";");
 		SiteManager siteManager = ((SiteManager) context.getAttribute("siteManager"));
+		tags = new LinkedList<Tag>();
 		while (rs.next()) {
 			tags.add(siteManager.getTagById(Integer.parseInt(rs.getString(1))));
 		}
