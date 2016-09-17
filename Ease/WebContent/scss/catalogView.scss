@@ -11,9 +11,16 @@
 	.catalogSearchbar {
 		margin: 20px 0;
 		text-align: center;
-		input {
+		input.form-control {
 			display: inline;
 			width: 80%;
+			padding-left: 20px;
+		}
+		.fa-search {
+			display: inline-block;
+			position: relative;
+			left: 25px;
+			font-weight: bold;
 		}
 		.selectedTagsContainer {
 			display: inline-block;
@@ -47,10 +54,6 @@
 			}
 			.inputs {
 				height: 100%;
-				/*display: inline-block;
-				width: 50%;
-				height: 22px;
-				position: relative;*/
 				font-size: 12px;
 				input.hidden {
 					display: none;
@@ -60,15 +63,6 @@
 					border-color: $themeColor;
 					color: white;
 				}
-				/*input {
-					height: 100%;
-					vertical-align: middle;
-					width: 100%;
-					padding-left: 3px;
-					border-radius: 3px;
-				    border: none;
-    				background-color: #ececec;
-				}*/
 				p.hidden {
 					display: none;
 				}
@@ -146,6 +140,7 @@
 			background-color: white;
 			width: 100%;
 			margin-top: 20px;
+			padding-bottom: 20px;
 			.tagContainer {
 				border-bottom: 2px solid grey;
 				.tag {
@@ -478,7 +473,7 @@
 	.CatalogViewTab.show {
 		transition: all 0.3s ease;
 		visibility: visible;
-		background-color: rgba(0, 0, 0, 0.3);
+		background-color: #EDEDED;
 		left: 50%;
 		opacity: 1;
 	}

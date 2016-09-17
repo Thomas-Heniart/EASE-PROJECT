@@ -12,6 +12,7 @@
 <div class="CatalogViewTab">
 	<div class="catalogView">
 		<div class="catalogSearchbar">
+			<i class="fa fa-search" aria-hidden="true"></i>
 			<div class="selectedTagsContainer"></div>
 			<input type="text" name="catalogSearch" class="form-control"
 				placeholder="Search your favorite websites" />
