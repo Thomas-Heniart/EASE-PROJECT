@@ -27,10 +27,11 @@
 								$('#PopupAddApp #password').focus();
 							}
 						});
-
-						$(
-								'.helpIntegrateApps #integrateAppForm #integrate')
-								.click(
+						$('.helpIntegrateApps #integrateAppForm #integrateApp').keyup(function(e){
+						    if(e.keyCode == 13)
+						    	$('.helpIntegrateApps #integrateAppForm #integrate').trigger("click");
+						});
+						$('.helpIntegrateApps #integrateAppForm #integrate').click(
 										function() {
 											var form = $(this).closest('#integrateAppForm');
 											$.post(

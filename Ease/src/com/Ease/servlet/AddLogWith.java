@@ -57,6 +57,7 @@ public class AddLogWith extends HttpServlet {
 			DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 			
 			user = (User)(session.getAttribute("User"));
+			Profile profile = null;
 			
 			if (user == null) {
 				Stats.saveAction(session.getServletContext(), user, Stats.Action.AddApp, "");
@@ -65,8 +66,8 @@ public class AddLogWith extends HttpServlet {
 				return ;
 			} else if (db.connect() != 0){
 				retMsg = "error: Impossible to connect data base.";
-			} else if (profileId < 0 || profileId >= user.getProfiles().size()){
-				retMsg = "error: Bad profiles's id.";
+			} else if ((profile = user.getProfile(profileId)) == null){
+				retMsg = "error: Bad profileId.";
 			} else if (name == null || name.length() > 14) {
 				retMsg = "error: Incorrect name";
 			} else if (user.getApp(appId) == null) {
@@ -74,9 +75,8 @@ public class AddLogWith extends HttpServlet {
 			} else if (user.getApp(appId).getType().equals("Account") == false){
 				retMsg = "error: This account is not an account.";
 			} else {
-				Profile profile = user.getProfile(profileId);
 				
-				if ((site = ((SiteManager)session.getServletContext().getAttribute("Sites")).get(siteId)) == null) {
+				if ((site = ((SiteManager)session.getServletContext().getAttribute("siteManager")).get(siteId)) == null) {
 					retMsg = "error: This site dosen't exist.";
 				} else {
 					
