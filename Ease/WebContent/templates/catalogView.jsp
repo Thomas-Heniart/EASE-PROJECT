@@ -50,15 +50,6 @@
 					<p>Your suggestion has been sent</p>
 					<i class="fa fa-check-circle"></i>
 				</div>
-				<!-- <div class="inputs">
-					<input id="integrateApp" class="form-control" name="name" type="text"
-						placeholder="Enter website url" />
-					<p class="hidden">Your suggestion has been sent</p>
-				</div> -->
-				<div class="buttonSet">
-					<!--  <button id="integrate">
-						<i class="fa fa-arrow-circle-right  aria-hidden="true""></i>
-					</button> -->
 					<i class="fa fa-check-circle hidden"></i>
 				</div>
 			</div>
