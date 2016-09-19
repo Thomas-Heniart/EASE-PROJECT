@@ -417,13 +417,21 @@
 											id="${account.getAppId()}">
 									</c:if>
 									<div class="linkImage">
-										<div class="deleteAppButton"
-											onclick="showConfirmDeleteAppPopup(this, event)">
-											<i class="fa fa-times"></i>
-										</div>
-										<div class="modifyAppButton"
-											onclick="showModifyAppPopup(this, event)">
-											<i class="fa fa-cog" aria-hidden="true"></i>
+											<div class="showAppActionsButton">
+												<i class="fa fa-cog"></i>
+											<div class="appActionsPopup">
+												<div class="caretHelper"><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+												<div class="buttonsContainer">
+												<div class="modifyAppButton menu-item"
+													onclick="showModifyAppPopup(this, event)">
+													<p>Modify</p>
+												</div>
+												<div class="deleteAppButton menu-item"
+													onclick="showConfirmDeleteAppPopup(this, event)">
+													<p>Delete</p>
+												</div>
+												</div>
+											</div>
 										</div>
 										<img
 											src="<c:out value='${account.getSite().getFolder()}logo.png'/>" />
@@ -503,14 +511,22 @@
 <div id="boxHelper" style="display: none">
 	<div class="siteLinkBox">
 		<div class="linkImage">
-			<div class="deleteAppButton"
-				onclick="showConfirmDeleteAppPopup(this, event)">
-				<i class="fa fa-times"></i>
-			</div>
-			<div class="modifyAppButton"
-				onclick="showModifyAppPopup(this, event)">
+			<div class="showAppActionsButton">
 				<i class="fa fa-cog"></i>
+				<div class="appActionsPopup">
+				<div class="caretHelper"><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+				<div class="buttonsContainer">
+					<div class="modifyAppButton menu-item"
+						onclick="showModifyAppPopup(this, event)">
+						<p>Modify</p>
+					</div>
+					<div class="deleteAppButton menu-item"
+						onclick="showConfirmDeleteAppPopup(this, event)">
+						<p>Delete</p>
+					</div>
+				</div>
 			</div>
+		</div>
 			<img src="">
 		</div>
 		<div class="siteName">
