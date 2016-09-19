@@ -28,6 +28,8 @@ function alreadyVisited(msg){
 	return false;
 }
 
+if (window.top === window) {
+
 extension.runtime.onMessage("goooo", function(msg, sendResponse) {
 	if (msg.todo == "checkAlreadyLogged"){
 		if (isConnected(msg) == true) {
@@ -52,3 +54,5 @@ extension.runtime.onMessage("goooo", function(msg, sendResponse) {
 	else
 		doThings(msg, sendResponse);
 });
+
+}
