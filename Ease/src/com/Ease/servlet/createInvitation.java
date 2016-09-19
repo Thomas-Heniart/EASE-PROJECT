@@ -97,7 +97,7 @@ public class createInvitation extends HttpServlet {
 			message.setFrom(new InternetAddress("sergii@ease-app.co", "Ease Team"));
 			message.setRecipients(Message.RecipientType.TO,
 					InternetAddress.parse(email));
-			message.setSubject(MimeUtility.encodeText("Créez votre compte ease", "utf-8", null));
+			message.setSubject(MimeUtility.encodeText("Active ton compte Ease !", "utf-8", null));
 			String link = "https://ease.space/registerInv?email=" + email + "&code=" + invitationCode;
 			message.setContent("<p>Hello !</p>"
 					+ "<p></p>"

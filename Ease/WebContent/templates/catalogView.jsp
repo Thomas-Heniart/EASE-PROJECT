@@ -38,7 +38,7 @@
 		<div class="helpIntegrateApps">
 			<div class="DivHeader">
 				<h4><i class="fa fa-magic" aria-hidden="true"></i>Can't find a website ?</h4>
-				<p>Suggest us any website ! we will integrate it within 36 hours.</p>
+				<p>Suggest us any website ! We will integrate it asap.</p>
 			</div>
 			<div id="integrateAppForm">
 				<div class="inputs input-group">
