@@ -109,6 +109,10 @@ function updateCatalogFront(tagButton) {
 }
 
 $(document).ready(function() {
+	$("#catalog-quit").click(function(event) {
+		event.stopPropagation();
+		$(".CatalogViewTab").removeClass("show");
+	})
 	$(".tag").click(function(event) {
 		event.stopPropagation();
 		$(event.target).toggleClass("tag-active");

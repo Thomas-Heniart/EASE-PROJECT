@@ -11,6 +11,7 @@
 
 <div class="CatalogViewTab">
 	<div class="catalogView">
+		<i id="catalog-quit" class="fa fa-times" aria-hidden="true"></i>
 		<div class="catalogSearchbar">
 			<i class="fa fa-search" aria-hidden="true"></i>
 			<div class="selectedTagsContainer"></div>
