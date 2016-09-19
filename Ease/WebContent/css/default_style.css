@@ -163,10 +163,7 @@
             margin-bottom: 2px; }
             .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage:hover {
               opacity: 1; }
-            .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .deleteAppButton {
-              visibility: hidden;
-              display: none; }
-            .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .modifyAppButton {
+            .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton {
               visibility: hidden;
               display: none; }
             .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage img {
@@ -280,54 +277,72 @@
     display: block; }
   .ProfilesHandler.editMode .item .addProfileView {
     display: block; }
-  .ProfilesHandler.editMode .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage {
-    opacity: 1; }
-    .ProfilesHandler.editMode .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .deleteAppButton {
-      position: absolute;
-      z-index: 1;
-      width: 35%;
-      height: 35%;
-      border-radius: 100%;
-      background-color: white;
-      top: 5%;
+
+.ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage {
+  opacity: 1; }
+  .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton {
+    position: absolute;
+    z-index: 1;
+    width: 35%;
+    height: 35%;
+    top: 83%;
+    left: 83%;
+    visibility: hidden; }
+    .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton:hover {
+      cursor: pointer; }
+      .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton:hover .appActionsPopup {
+        display: block;
+        visibility: visible; }
+    .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton i {
       left: 0;
-      visibility: hidden;
-      transform: translateX(-50%) translateY(-50%); }
-      .ProfilesHandler.editMode .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .deleteAppButton:hover {
-        cursor: pointer; }
-      .ProfilesHandler.editMode .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .deleteAppButton i {
-        color: black;
-        font-size: 100%;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translateX(-50%) translateY(-50%); }
-    .ProfilesHandler.editMode .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .modifyAppButton {
+      color: black;
+      font-size: 100%;
       position: absolute;
-      z-index: 1;
-      width: 35%;
-      height: 35%;
-      border-radius: 100%;
-      background-color: white;
-      top: 5%;
-      left: 100%;
+      color: #373b60; }
+    .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton .appActionsPopup {
+      display: none;
       visibility: hidden;
-      transform: translateX(-50%) translateY(-50%); }
-      .ProfilesHandler.editMode .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .modifyAppButton:hover {
-        cursor: pointer; }
-      .ProfilesHandler.editMode .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .modifyAppButton i {
-        color: black;
-        font-size: 100%;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translateX(-50%) translateY(-50%); }
-    .ProfilesHandler.editMode .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage:hover .deleteAppButton {
-      visibility: visible;
-      display: block; }
-    .ProfilesHandler.editMode .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage:hover .modifyAppButton {
-      visibility: visible;
-      display: block; }
+      position: fixed;
+      margin-top: 15px;
+      margin-left: -15px; }
+      .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton .appActionsPopup i {
+        color: #373b60;
+        position: relative; }
+      .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton .appActionsPopup .buttonsContainer {
+        background-color: #373b60;
+        border: 1px solid #373b60;
+        border-radius: 5px;
+        color: white;
+        min-width: 100px;
+        text-align: center; }
+        .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton .appActionsPopup .buttonsContainer .menu-item {
+          transition: all 0.3s;
+          padding: 2px; }
+          .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton .appActionsPopup .buttonsContainer .menu-item p {
+            margin: 0px; }
+          .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton .appActionsPopup .buttonsContainer .menu-item:hover {
+            transition: all 0.3s;
+            background-color: white;
+            color: #373b60; }
+        .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton .appActionsPopup .buttonsContainer .menu-item:first-child {
+          border-top-left-radius: 5px;
+          border-top-right-radius: 5px; }
+        .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton .appActionsPopup .buttonsContainer .menu-item:last-child {
+          border-top: 1px solid white;
+          border-bottom-right-radius: 5px;
+          border-bottom-left-radius: 5px; }
+  .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage:hover .showAppActionsButton {
+    visibility: visible;
+    display: block; }
+
+.caretHelper {
+  font-size: 27px;
+  position: relative;
+  overflow: hidden; }
+  .caretHelper i {
+    line-height: 40%;
+    float: left;
+    margin-left: 15%; }
 
 #dragAndDropHelper {
   top: 4%;
@@ -343,22 +358,39 @@
     width: 100%;
     height: 100%; }
 
+.ProfilesView .owl-carousel .owl-wrapper, .ProfilesView .owl-carousel .owl-item {
+  -webkit-backface-visibility: inherit;
+  -moz-backface-visibility: inherit;
+  -ms-backface-visibility: inherit;
+  transform: none; }
+
 .MenuButtonSet.show {
   display: block; }
 
 .MenuButtonSet.topLeft {
+  width: fit-content;
   top: 20%;
-  left: 5%; }
+  left: 2%; }
+
+.MenuButtonSet.topRight {
+  width: fit-content;
+  top: 20%;
+  left: 11%; }
 
 .MenuButtonSet.middleTopLeft {
   width: fit-content;
   top: 40%;
-  left: 5%; }
+  left: 2%; }
 
 .MenuButtonSet.bottomLeft {
   width: fit-content;
   top: 60%;
-  left: 5%; }
+  left: 2%; }
+
+.MenuButtonSet.superBottomLeft {
+  width: fit-content;
+  top: 80%;
+  left: 2%; }
 
 .MenuButtonSet {
   display: none;
@@ -417,6 +449,21 @@
       height: 100%; }
   .MenuButtonSet #enterAddUsersMode.on {
     background-color: #42b72a; }
+  .MenuButtonSet #enterTagsManagerMode {
+    max-width: 100px;
+    min-width: 0px;
+    width: 100px;
+    height: 100px;
+    background-color: #ffaabb;
+    border-radius: 10px;
+    padding: 7px;
+    margin: 0px;
+    transition: background-color 0.3s; }
+    .MenuButtonSet #enterTagsManagerMode:hover {
+      cursor: pointer; }
+    .MenuButtonSet #enterTagsManagerMode img {
+      width: 100%;
+      height: 100%; }
   .MenuButtonSet #enterAddSiteMode {
     max-width: 100px;
     min-width: 0px;
@@ -433,6 +480,12 @@
 
 #addSiteForm input {
   margin-top: 10px;
+  width: 50%;
+  margin-left: 25%; }
+
+#addTagForm input {
+  position: relative;
+  margin-top: 1%;
   width: 50%;
   margin-left: 25%; }
 
@@ -454,7 +507,7 @@
     #menu .menu__label span {
       line-height: 2; }
   #menu .menu__inner {
-    height: 155px;
+    height: 45px;
     width: 100%;
     font-size: 12px;
     padding: 0px;
@@ -495,7 +548,7 @@
           text-align: center; }
 
 #menu.menu--open .menu__inner {
-  height: 155px;
+  height: 45px;
   width: 100%;
   background-color: white;
   opacity: 1;
@@ -1100,51 +1153,63 @@ span.input label {
   font-family: "Raleway", "Source Sans Pro", sans-serif; }
   .catalogView .tag {
     color: white; }
+    .catalogView .tag:hover {
+      color: white; }
   .catalogView .catalogSearchbar {
     margin: 20px 0;
     text-align: center; }
-    .catalogView .catalogSearchbar input {
+    .catalogView .catalogSearchbar input.form-control {
       display: inline;
-      width: 80%; }
+      width: 80%;
+      padding-left: 20px; }
+    .catalogView .catalogSearchbar .fa-search {
+      display: inline-block;
+      position: relative;
+      left: 25px;
+      font-weight: bold; }
     .catalogView .catalogSearchbar .selectedTagsContainer {
       display: inline-block; }
       .catalogView .catalogSearchbar .selectedTagsContainer .tag {
         margin-left: 10px; }
+        .catalogView .catalogSearchbar .selectedTagsContainer .tag:hover {
+          color: white; }
+      .catalogView .catalogSearchbar .selectedTagsContainer .btn {
+        border: none; }
   .catalogView .helpIntegrateApps {
     padding: 10px;
-    padding-top: 20px;
     text-align: center;
     width: 60%;
-    margin: 0px auto;
-    border-top: 1px solid #373b60; }
+    margin: 0px auto; }
     .catalogView .helpIntegrateApps .DivHeader {
       font-size: 12px; }
+      .catalogView .helpIntegrateApps .DivHeader i {
+        margin-right: 3%; }
     .catalogView .helpIntegrateApps #integrateAppForm i {
       font-size: 25px;
       vertical-align: middle;
       color: #373b60; }
     .catalogView .helpIntegrateApps #integrateAppForm .inputs {
-      display: inline-block;
-      width: 50%;
-      height: 22px;
-      position: relative;
+      height: 100%;
       font-size: 12px; }
       .catalogView .helpIntegrateApps #integrateAppForm .inputs input.hidden {
         display: none; }
-      .catalogView .helpIntegrateApps #integrateAppForm .inputs input {
-        height: 100%;
-        vertical-align: middle;
-        width: 100%;
-        padding-left: 3px;
-        border-radius: 3px;
-        border: none;
-        background-color: #ececec; }
+      .catalogView .helpIntegrateApps #integrateAppForm .inputs span button {
+        background-color: #373b60;
+        border-color: #373b60;
+        color: white; }
       .catalogView .helpIntegrateApps #integrateAppForm .inputs p.hidden {
         display: none; }
       .catalogView .helpIntegrateApps #integrateAppForm .inputs p {
         height: 22px;
         border-radius: 3px;
         background-color: #ececec; }
+    .catalogView .helpIntegrateApps #integrateAppForm .confirmation {
+      display: none; }
+      .catalogView .helpIntegrateApps #integrateAppForm .confirmation p {
+        display: inline-block; }
+      .catalogView .helpIntegrateApps #integrateAppForm .confirmation i {
+        color: #32c75a;
+        padding: 1px 6px; }
     .catalogView .helpIntegrateApps #integrateAppForm .buttonSet {
       display: inline-block; }
       .catalogView .helpIntegrateApps #integrateAppForm .buttonSet i {
@@ -1189,16 +1254,18 @@ span.input label {
   .catalogView .scaleContainerView {
     background-color: white;
     width: 100%;
-    margin-top: 20px; }
+    margin-top: 20px;
+    padding-bottom: 20px; }
     .catalogView .scaleContainerView .tagContainer {
       border-bottom: 2px solid grey; }
       .catalogView .scaleContainerView .tagContainer .tag {
         font-size: 0.8em;
         margin: 10px 0 10px 20px; }
   .catalogView .scaleContainer {
-    width: 60%;
+    width: 90%;
     position: relative;
-    margin: 30px auto; }
+    margin: 30px auto;
+    margin-bottom: 0; }
     .catalogView .scaleContainer .catalogContainer {
       position: absolute;
       top: 0;
@@ -1207,8 +1274,8 @@ span.input label {
       overflow-y: auto;
       overflow-x: hidden; }
       .catalogView .scaleContainer .catalogContainer .catalogApp {
-        width: 25%;
-        height: 25%;
+        width: 16.66667%;
+        height: 33.33333%;
         float: left;
         padding: 5px; }
         .catalogView .scaleContainer .catalogContainer .catalogApp .catalogAppLogo {
@@ -1443,7 +1510,7 @@ span.input label {
 .CatalogViewTab.show {
   transition: all 0.3s ease;
   visibility: visible;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: #EDEDED;
   left: 50%;
   opacity: 1; }
 

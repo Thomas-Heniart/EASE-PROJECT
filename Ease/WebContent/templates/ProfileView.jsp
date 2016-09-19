@@ -417,13 +417,21 @@
 											id="${account.getAppId()}">
 									</c:if>
 									<div class="linkImage">
-										<div class="deleteAppButton"
-											onclick="showConfirmDeleteAppPopup(this, event)">
-											<i class="fa fa-times"></i>
-										</div>
-										<div class="modifyAppButton"
-											onclick="showModifyAppPopup(this, event)">
-											<i class="fa fa-cog" aria-hidden="true"></i>
+											<div class="showAppActionsButton">
+												<i class="fa fa-cog"></i>
+											<div class="appActionsPopup">
+												<div class="caretHelper"><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+												<div class="buttonsContainer">
+												<div class="modifyAppButton menu-item"
+													onclick="showModifyAppPopup(this, event)">
+													<p>Modify</p>
+												</div>
+												<div class="deleteAppButton menu-item"
+													onclick="showConfirmDeleteAppPopup(this, event)">
+													<p>Delete</p>
+												</div>
+												</div>
+											</div>
 										</div>
 										<img
 											src="<c:out value='${account.getSite().getFolder()}logo.png'/>" />
@@ -490,6 +498,10 @@
 				},
 				'text'
 			);
+		}).on('drag', function(el, source){
+			document.body.style.cursor = "move";
+		}).on('dragend', function(el){
+			document.body.style.cursor = "default";
 		});
 	});
 </script>
@@ -499,14 +511,22 @@
 <div id="boxHelper" style="display: none">
 	<div class="siteLinkBox">
 		<div class="linkImage">
-			<div class="deleteAppButton"
-				onclick="showConfirmDeleteAppPopup(this, event)">
-				<i class="fa fa-times"></i>
-			</div>
-			<div class="modifyAppButton"
-				onclick="showModifyAppPopup(this, event)">
+			<div class="showAppActionsButton">
 				<i class="fa fa-cog"></i>
+				<div class="appActionsPopup">
+				<div class="caretHelper"><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+				<div class="buttonsContainer">
+					<div class="modifyAppButton menu-item"
+						onclick="showModifyAppPopup(this, event)">
+						<p>Modify</p>
+					</div>
+					<div class="deleteAppButton menu-item"
+						onclick="showConfirmDeleteAppPopup(this, event)">
+						<p>Delete</p>
+					</div>
+				</div>
 			</div>
+		</div>
 			<img src="">
 		</div>
 		<div class="siteName">
@@ -534,7 +554,7 @@
 		<div class="ProfileBox" style="border-bottom: 5px solid #35a7ff;"
 			color="#35a7ff">
 			<div class="ProfileName" style="background-color: #35a7ff;">
-				<p>@Default</p>
+				<p>@Profile name</p>
 				<div class="ProfileSettingsButton">
 					<i class="fa fa-fw fa-ellipsis-v"></i>
 				</div>
@@ -549,7 +569,7 @@
 							<div class="sectionHeader" id="NameSection">
 								<p class="title">Profile name</p>
 								<div class="directInfo">
-									<p>Default</p>
+									<p>Profile name</p>
 								</div>
 							</div>
 							<div class="sectionContent" id="contentName">
@@ -635,7 +655,7 @@
 		var owl = $(".owl-carousel").data('owlCarousel');
 
 		$.post('addProfile', {
-			name : 'Default',
+			name : 'Profile name',
 			color : '#35a7ff'
 		}, function(data) {
 			$(profile).attr('id', data.substring(9, data.length));
@@ -696,7 +716,7 @@
 										.data('owlCarousel');
 
 								$.post('addProfile', {
-									name : 'Default',
+									name : 'Profile name',
 									color : '#35a7ff'
 								}, function(data) {
 									if (data[0] == 's'){
