@@ -524,7 +524,7 @@
 				<img class="Scaler" src="https://placehold.it/3x6"
 					style="width: 100%; height: auto; visibility: hidden;" /> <i
 					class="fa fa-plus-circle centeredItem addHelper" aria-hidden="true"></i>
-				<!-- 				    <p>Create a new profile with drag and drop here</p>  -->
+					<p>Drop an app (or click) to create new profile</p>
 			</div>
 		</div>
 	</div>
