@@ -132,8 +132,6 @@ public class SiteManager {
 					sitesToShow.add(tmpSite);
 				}
 		}
-		if (sitesToShow.isEmpty())
-			return searchSitesWith(search);
 		siteIterator = sitesToShow.iterator();
 		while (siteIterator.hasNext()) {
 			Site tmpSite = siteIterator.next();
@@ -141,6 +139,5 @@ public class SiteManager {
 				res.add(tmpSite.getJson());
 		}
 		return res;
-
 	}
 }
