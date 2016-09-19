@@ -381,4 +381,11 @@ html {
   }
 }
 }
+
+  .ease-button {
+    &:hover {
+			cursor: pointer;
+			transition: all 0.3s;
+		}
+  }
 }

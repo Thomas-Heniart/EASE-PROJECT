@@ -62,7 +62,7 @@ function newCrossButton(tagId) {
 
 function setNewCrossCss(tagId) {
 	var tag = $("a[tagid='" + tagId + "'].tag")
-	$("a[tagid='" + tagId + "'].delete-tag").css("background-color", tag.css("background-color"));
+	$("a[tagid='" + tagId + "'].delete-tag").css("background-color", lighterColor(tag.css("background-color"), 0.3));
 	$("a[tagid='" + tagId + "'].delete-tag").css("color", tag.css("color"));
 }
 

@@ -21,7 +21,7 @@
 		<div class="scaleContainerView">
 			<div class=tagContainer>
 				<c:forEach items='${siteManager.getTagsList()}' var="item">
-					<a href="#" tagId="${item.getId()}" class="tag btn btn-default"
+					<a href="#" tagId="${item.getId()}" class="tag btn btn-default ease-button"
 						style="background-color: ${item.getColor()}; border-color: ${item.getColor()}">
 						${item.getName()}</a>
 				</c:forEach>

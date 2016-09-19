@@ -44,11 +44,6 @@
 													$(form).find('.confirmation').show().delay(1000).fadeOut(function() {
 														$(form).find('.inputs').show();
 													});
-													
-													//$(form).find('.inputs p').addClass('hidden');
-													//$(form).find('.inputs input').removeClass('hidden');
-													//$(form).find('.buttonSet .hidden').removeClass('hidden');
-													//$(form).find('.buttonSet .fa-check-circle').addClass('hidden');
 												},
 												'text');
 										});
