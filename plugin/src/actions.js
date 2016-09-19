@@ -1,20 +1,24 @@
 var actions = {
 erasecookies:function(msg, callback, sendResponse){
     
-    function deleteAllCookies() {
-    var cookies = document.cookie.split(";");
-    for (var i = 0; i < cookies.length; i++) {
-    	var cookie = cookies[i];
-    	var eqPos = cookie.indexOf("=");
-    	var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+    var name = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep].search;
+    
+    function deleteCookie(cookieName){
         var domain = document.domain;
         var path = "/";
-    	document.cookie = name + "=; expires=" + +new Date + "; domain=" + domain + "; path=" + path;
-    }
-    
+    	document.cookie = cookieName + "=; expires=" + +new Date + "; domain=" + domain + "; path=" + path;
     }
 
-    deleteAllCookies();
+    if(name) {deleteCookie(name)}
+    else {
+        var cookies = document.cookie.split(";");
+        for (var i = 0; i < cookies.length; i++) {
+             var cookie = cookies[i];
+             var eqPos = cookie.indexOf("=");
+             var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+            deleteCookie(name)
+        }
+    }
     msg.actionStep++;
     callback(msg, sendResponse);
     

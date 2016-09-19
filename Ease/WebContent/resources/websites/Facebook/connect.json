@@ -11,7 +11,7 @@
 	},
 	"logout":{
 		"todo":[
-			{"action":"erasecookies"},
+			{"action":"erasecookies", "name":"c_user"},
 			{"action":"goto", "url":"http://www.facebook.com"}
 			]
 	},
