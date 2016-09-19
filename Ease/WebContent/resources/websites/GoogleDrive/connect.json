@@ -4,8 +4,7 @@
 	"home":"https://googledrive.com",
 	"connect":{
 		"todo":[
-			{"action":"aclick", "search":"#account-chooser-link"},
-			{"action":"aclick", "search":"#account-chooser-add-account"},
+			{"action":"goto", "url":"https://accounts.google.com/ServiceLogin"},
 			{"action":"fill", "what":"login", "search":"#Email", "grave":true},
 			{"action":"click", "search":"#next", "grave":true},
 			{"action":"waitfor", "search":"#Passwd"},
