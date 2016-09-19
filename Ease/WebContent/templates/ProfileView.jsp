@@ -490,6 +490,10 @@
 				},
 				'text'
 			);
+		}).on('drag', function(el, source){
+			document.body.style.cursor = "move";
+		}).on('dragend', function(el){
+			document.body.style.cursor = "default";
 		});
 	});
 </script>
@@ -534,7 +538,7 @@
 		<div class="ProfileBox" style="border-bottom: 5px solid #35a7ff;"
 			color="#35a7ff">
 			<div class="ProfileName" style="background-color: #35a7ff;">
-				<p>@Default</p>
+				<p>@Profile name</p>
 				<div class="ProfileSettingsButton">
 					<i class="fa fa-fw fa-ellipsis-v"></i>
 				</div>
@@ -549,7 +553,7 @@
 							<div class="sectionHeader" id="NameSection">
 								<p class="title">Profile name</p>
 								<div class="directInfo">
-									<p>Default</p>
+									<p>Profile name</p>
 								</div>
 							</div>
 							<div class="sectionContent" id="contentName">
@@ -635,7 +639,7 @@
 		var owl = $(".owl-carousel").data('owlCarousel');
 
 		$.post('addProfile', {
-			name : 'Default',
+			name : 'Profile name',
 			color : '#35a7ff'
 		}, function(data) {
 			$(profile).attr('id', data.substring(9, data.length));
@@ -696,7 +700,7 @@
 										.data('owlCarousel');
 
 								$.post('addProfile', {
-									name : 'Default',
+									name : 'Profile name',
 									color : '#35a7ff'
 								}, function(data) {
 									if (data[0] == 's'){
