@@ -38,11 +38,12 @@ var extension = {
 		onMessage:function(name, fct){
 			safari.self.addEventListener("message", function(event){
 				if(event.name==name){
+					console.log("message recieved");
                     function sendResponse(response){
-                        safari.self.tab.dispatchMessage(event.name+" response", response);
+                        safari.self.tab.dispatchMessage(event.name+" response from tab "+event.message.tab, response);
+                        console.log("response sent");
                     }
-                    console.log("send response");
-					fct(event.message, sendResponse);
+					fct(event.message.msg, sendResponse);
 				}
 			}, false);
 		},
@@ -84,10 +85,12 @@ var extension = {
             tab.removeEventListener("navigate", listenersUpdates[tab.id], false);
         },
 		sendMessage:function(tab, name, msg, callback){
-			tab.page.dispatchMessage(name, msg);
+			var fullMessage = {"msg":msg, "tab":tab.id};
+			tab.page.dispatchMessage(name, fullMessage);
 			console.log("message : " + name + " has been dispatched");
             safari.application.addEventListener("message", function waitResponse(event){
-                if(event.name==name+" response"){
+                if(event.name==name+" response from tab "+tab.id){
+                	console.log("response from tab "+tab.id);
                     safari.application.removeEventListener(waitResponse);
                     callback(event.message);
                 }
