@@ -102,6 +102,8 @@ public class Site {
 	}
 
 	public boolean hasTags(List<Tag> tags) {
+		if (tags.isEmpty())
+			return false;
 		for (int i = 0; i < tags.size(); i++)
 			if (this.tags.contains(tags.get(i)))
 				return true;
