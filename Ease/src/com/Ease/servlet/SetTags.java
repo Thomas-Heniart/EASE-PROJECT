@@ -2,17 +2,15 @@ package com.Ease.servlet;
 
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Properties;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,7 +18,7 @@ import javax.servlet.http.HttpSession;
 import com.Ease.context.DataBase;
 import com.Ease.context.Site;
 import com.Ease.context.SiteManager;
-import com.Ease.data.Regex;
+import com.Ease.context.Tag;
 import com.Ease.session.Account;
 import com.Ease.session.Profile;
 import com.Ease.session.SessionException;
@@ -30,23 +28,22 @@ import com.Ease.stats.Stats;
 /**
  * Servlet implementation class AddApp
  */
+@WebServlet("/setTags")
+public class SetTags extends HttpServlet {
 
-public class AddWebsite extends HttpServlet {
-
-
-	/**
+       
+    /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final String UPLOAD_DIRECTORY = "resources/websites/";
 	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public AddWebsite() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+     * @see HttpServlet#HttpServlet()
+     */
+    public SetTags() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -60,11 +57,10 @@ public class AddWebsite extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String			url = request.getParameter("siteUrl");
-		String			name = request.getParameter("siteName");
-		String			folder = request.getParameter("siteFolder");
-		String 			haveLoginButton = request.getParameter("haveLoginButton");
-		String[]		haveLoginWith = request.getParameterValues("haveLoginWith");
+		
+		String			websiteId = request.getParameter("websiteId");
+		String			tagsId = request.getParameter("tagsId");
+		
 		String			retMsg;
 
 		HttpSession session = request.getSession();
@@ -76,55 +72,48 @@ public class AddWebsite extends HttpServlet {
 			response.getWriter().print("error: You aint admin bro");
 			return;
 		}
-
-		String dbRequest = "INSERT INTO websites VALUES (NULL, '" + url + "', '" + name + "', '" + UPLOAD_DIRECTORY + folder + "/', ";
-		if(haveLoginButton != null){
-			dbRequest += "1, ";
-		} else {
-			dbRequest += "0, ";
-		}
-
-		String haveLogWith = "";
-
-		if(haveLoginWith == null || haveLoginWith.length==0){
-			haveLogWith = "NULL";
-		}
-		else {
-			haveLogWith = "'";
-			for(String i : haveLoginWith){
-				haveLogWith += i + ","; 
-			}
-			haveLogWith = haveLogWith.substring(0, haveLogWith.length()-1);
-			haveLogWith += "'";
-		}
-
-		dbRequest = dbRequest + haveLogWith + ", NULL);";
-
+		
+		tagsId = tagsId.replaceAll("\"", "");
+		tagsId = tagsId.substring(1, tagsId.length()-1);
+		String[] tags = tagsId.split(",");
+		int tagId;
+		String dbRequest;
+		
+		db.set("START TRANSACTION;");
+		
+		dbRequest = "DELETE FROM TagAndSiteMap WHERE website_id="+ Integer.parseInt(websiteId) + ";";
 		if(db.set(dbRequest)!=0){
 			retMsg = "error: fail to connect to db";
+			db.set("ROLLBACK;");
 			response.getWriter().print(retMsg);
 			return;
 		}
 		
-		SiteManager sites = ((SiteManager)session.getServletContext().getAttribute("Sites"));
+		for(String tag : tags){
+			tagId = Integer.parseInt(tag);
+			dbRequest = "INSERT INTO TagAndSiteMap VALUES (" + tagId + "," + Integer.parseInt(websiteId) + ");";
+			if(db.set(dbRequest)!=0){
+				retMsg = "error: fail to connect to db";
+				db.set("ROLLBACK;");
+				response.getWriter().print(retMsg);
+				return;
+			}
+		}
+		
+		db.set("COMMIT;");
+	
+		
+		SiteManager siteManager = ((SiteManager)session.getServletContext().getAttribute("siteManager"));
 		
 		try {
-		    	ResultSet rs = db.get("SELECT * FROM websites;");
-		    	sites.clearSites();
-		    	while (rs.next()) {
-		    		sites.add(new Site(rs));
-		    	}
+			siteManager.setTagsForSites(session.getServletContext());
 		} catch (SQLException e) {
-				retMsg = "error: fail to load websites";
-				response.getWriter().print(retMsg);
-		    	return ;
+			System.out.println("Fail to load tags");
+			return;
 		}
 		
 		retMsg = "success";
 		
 		response.getWriter().print(retMsg);
-		
-		RequestDispatcher rd = request.getRequestDispatcher("admin.jsp");
-		rd.forward(request, response);
 	}
 }

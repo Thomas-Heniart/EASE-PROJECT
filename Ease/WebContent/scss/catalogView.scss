@@ -11,9 +11,16 @@
 	.catalogSearchbar {
 		margin: 20px 0;
 		text-align: center;
-		input {
+		input.form-control {
 			display: inline;
 			width: 80%;
+			padding-left: 20px;
+		}
+		.fa-search {
+			display: inline-block;
+			position: relative;
+			left: 25px;
+			font-weight: bold;
 		}
 		.selectedTagsContainer {
 			display: inline-block;
@@ -30,13 +37,14 @@
 	}
 	.helpIntegrateApps {
 		padding:10px;
-		padding-top: 20px;
 		text-align: center;
 		width: 60%;
 		margin: 0px auto;
-		border-top: 1px solid $themeColor;
 		.DivHeader {
 			font-size: 12px;
+			i {
+				margin-right: 3%;
+			}
 		}
 		#integrateAppForm{
 			i {
@@ -45,22 +53,15 @@
 				color: $themeColor;
 			}
 			.inputs {
-				display: inline-block;
-				width: 50%;
-				height: 22px;
-				position: relative;
+				height: 100%;
 				font-size: 12px;
 				input.hidden {
 					display: none;
 				}
-				input {
-					height: 100%;
-					vertical-align: middle;
-					width: 100%;
-					padding-left: 3px;
-					border-radius: 3px;
-				    border: none;
-    				background-color: #ececec;
+				span button {
+					background-color: $themeColor;
+					border-color: $themeColor;
+					color: white;
 				}
 				p.hidden {
 					display: none;
@@ -69,6 +70,16 @@
 					height: 22px;
 					border-radius: 3px;
 					background-color: #ececec;
+				}
+			}
+			.confirmation {
+				display: none;
+				p {
+					display: inline-block;
+				}
+				i {
+					color: #32c75a;
+					padding: 1px 6px;
 				}
 			}
 			.buttonSet {
@@ -129,7 +140,7 @@
 			background-color: white;
 			width: 100%;
 			margin-top: 20px;
-			margin-bottom: 20px;
+			padding-bottom: 20px;
 			.tagContainer {
 				border-bottom: 2px solid grey;
 				.tag {
@@ -142,6 +153,7 @@
 		width: 90%;
 		position: relative;
 		margin: 30px auto;
+		margin-bottom: 0;
 		.catalogContainer {
 			position: absolute;
 			top: 0;
@@ -461,7 +473,7 @@
 	.CatalogViewTab.show {
 		transition: all 0.3s ease;
 		visibility: visible;
-		background-color: rgba(0, 0, 0, 0.3);
+		background-color: #EDEDED;
 		left: 50%;
 		opacity: 1;
 	}

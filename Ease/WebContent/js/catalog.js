@@ -77,12 +77,17 @@ function addActionOnCrossButton(tagId) {
 
 function updateTagsInSearchBar() {
 	var fullWidth = 0.;
-
+	var searchIconWidth = parseInt($(".catalogSearchbar i.fa-search").css("width"));
+	$(".catalogSearchbar i.fa-search").css("left", "1.5%");
 	$(".tags-group").each(function(index, grp) {
 		fullWidth += parseInt($(grp).css("width"));
 	});
+	fullWidth += searchIconWidth + 7;
 	$(".selectedTagsContainer").css("margin-right", -(fullWidth));
-	$(".catalogSearchbar input").css("padding-left", fullWidth);
+	if (fullWidth < 25)
+		$(".catalogSearchbar input").css("padding-left", 25);
+	else
+		$(".catalogSearchbar input").css("padding-left", fullWidth);
 	return;
 }
 

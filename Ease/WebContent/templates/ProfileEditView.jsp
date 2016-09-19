@@ -29,55 +29,28 @@
 						});
 
 						$(
-								'.helpIntegrateApps #integrateAppForm .buttonSet #integrate')
+								'.helpIntegrateApps #integrateAppForm #integrate')
 								.click(
 										function() {
-											var form = $(this).closest(
-													'#integrateAppForm');
-											$(form).find('.inputs p')
-													.removeClass('hidden');
-											$(form).find('.inputs input')
-													.addClass('hidden');
-											$(form).find('.buttonSet .hidden')
-													.removeClass('hidden');
-											$(form).find(
-													'.buttonSet #integrate')
-													.addClass('hidden');
-											$
-													.post(
-															'askForNewApp',
-															{
-																ask : $(form)
-																		.find(
-																				'#integrateApp')
-																		.val(),
-															},
-															function(data) {
-																$(form)
-																		.find(
-																				'.inputs input')
-																		.val('');
-																$(form)
-																		.find(
-																				'.inputs p')
-																		.addClass(
-																				'hidden');
-																$(form)
-																		.find(
-																				'.inputs input')
-																		.removeClass(
-																				'hidden');
-																$(form)
-																		.find(
-																				'.buttonSet .hidden')
-																		.removeClass(
-																				'hidden');
-																$(form)
-																		.find(
-																				'.buttonSet .fa-check-circle')
-																		.addClass(
-																				'hidden');
-															}, 'text');
+											var form = $(this).closest('#integrateAppForm');
+											$.post(
+												'askForNewApp',
+												{
+													ask : $(form).find('#integrateApp').val()
+												},
+												function(data) {
+													$(form).find('.inputs input').val('');
+													$(form).find('.inputs').hide();
+													$(form).find('.confirmation').show().delay(1000).fadeOut(function() {
+														$(form).find('.inputs').show();
+													});
+													
+													//$(form).find('.inputs p').addClass('hidden');
+													//$(form).find('.inputs input').removeClass('hidden');
+													//$(form).find('.buttonSet .hidden').removeClass('hidden');
+													//$(form).find('.buttonSet .fa-check-circle').addClass('hidden');
+												},
+												'text');
 										});
 					});
 
