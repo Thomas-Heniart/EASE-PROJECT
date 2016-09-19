@@ -50,7 +50,7 @@ public class EditProfileColor extends HttpServlet {
 		String retMsg;
 		User user = null;
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
-		
+		Profile profile = null;
 		try {
 			int index = Integer.parseInt(request.getParameter("index"));
 			
@@ -63,13 +63,11 @@ public class EditProfileColor extends HttpServlet {
 				return ;
 			} else if (db.connect() != 0){
 				retMsg = "error: Impossible to connect data base.";
-			} else if (index < 0 || index >= user.getProfiles().size()
-					|| user == null){
-				retMsg = "error: Bad profile's index.";
+			} else if ((profile = user.getProfile(index)) == null){
+				retMsg = "error: Bad id.";
 			} else if (color == null || Regex.isColor(color) == false){
 				retMsg = "error: Bad profile's color.";
 			} else {
-				Profile profile = user.getProfile(index);
 				profile.setColor(color);
 				profile.updateInDB(session.getServletContext());
 				retMsg = "success";

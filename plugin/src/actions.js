@@ -1,4 +1,28 @@
 var actions = {
+erasecookies:function(msg, callback, sendResponse){
+    
+    var name = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep].search;
+    
+    function deleteCookie(cookieName){
+        var domain = document.domain;
+        var path = "/";
+    	document.cookie = cookieName + "=; expires=" + +new Date + "; domain=" + domain + "; path=" + path;
+    }
+
+    if(name) {deleteCookie(name)}
+    else {
+        var cookies = document.cookie.split(";");
+        for (var i = 0; i < cookies.length; i++) {
+             var cookie = cookies[i];
+             var eqPos = cookie.indexOf("=");
+             var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+            deleteCookie(name)
+        }
+    }
+    msg.actionStep++;
+    callback(msg, sendResponse);
+    
+},
 waitfor:function(msg, callback, sendResponse){
     
     var div = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep].search;

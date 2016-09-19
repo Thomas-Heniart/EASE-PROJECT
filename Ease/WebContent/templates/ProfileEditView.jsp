@@ -27,10 +27,11 @@
 								$('#PopupAddApp #password').focus();
 							}
 						});
-
-						$(
-								'.helpIntegrateApps #integrateAppForm #integrate')
-								.click(
+						$('.helpIntegrateApps #integrateAppForm #integrateApp').keyup(function(e){
+						    if(e.keyCode == 13)
+						    	$('.helpIntegrateApps #integrateAppForm #integrate').trigger("click");
+						});
+						$('.helpIntegrateApps #integrateAppForm #integrate').click(
 										function() {
 											var form = $(this).closest('#integrateAppForm');
 											$.post(
@@ -44,11 +45,6 @@
 													$(form).find('.confirmation').show().delay(1000).fadeOut(function() {
 														$(form).find('.inputs').show();
 													});
-													
-													//$(form).find('.inputs p').addClass('hidden');
-													//$(form).find('.inputs input').removeClass('hidden');
-													//$(form).find('.buttonSet .hidden').removeClass('hidden');
-													//$(form).find('.buttonSet .fa-check-circle').addClass('hidden');
 												},
 												'text');
 										});

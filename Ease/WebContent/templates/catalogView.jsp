@@ -11,6 +11,7 @@
 
 <div class="CatalogViewTab">
 	<div class="catalogView">
+		<i id="catalog-quit" class="fa fa-times" aria-hidden="true"></i>
 		<div class="catalogSearchbar">
 			<i class="fa fa-search" aria-hidden="true"></i>
 			<div class="selectedTagsContainer"></div>
@@ -21,7 +22,7 @@
 		<div class="scaleContainerView">
 			<div class=tagContainer>
 				<c:forEach items='${siteManager.getTagsList()}' var="item">
-					<a href="#" tagId="${item.getId()}" class="tag btn btn-default"
+					<a href="#" tagId="${item.getId()}" class="tag btn btn-default ease-button"
 						style="background-color: ${item.getColor()}; border-color: ${item.getColor()}">
 						${item.getName()}</a>
 				</c:forEach>
@@ -50,15 +51,6 @@
 					<p>Your suggestion has been sent</p>
 					<i class="fa fa-check-circle"></i>
 				</div>
-				<!-- <div class="inputs">
-					<input id="integrateApp" class="form-control" name="name" type="text"
-						placeholder="Enter website url" />
-					<p class="hidden">Your suggestion has been sent</p>
-				</div> -->
-				<div class="buttonSet">
-					<!--  <button id="integrate">
-						<i class="fa fa-arrow-circle-right  aria-hidden="true""></i>
-					</button> -->
 					<i class="fa fa-check-circle hidden"></i>
 				</div>
 			</div>

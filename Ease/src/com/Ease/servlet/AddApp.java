@@ -65,6 +65,7 @@ public class AddApp extends HttpServlet {
 			DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 			
 			user = (User)(session.getAttribute("User"));
+			Profile profile = null;
 			
 			if (user == null) {
 				Stats.saveAction(session.getServletContext(), user, Stats.Action.AddApp, "");
@@ -79,10 +80,9 @@ public class AddApp extends HttpServlet {
 				retMsg = "error: Incorrect name";
 			} else if (password == null || password.equals("")) {
 				retMsg = "error: Bad password.";
-			} else if (profileId < 0 || profileId >= user.getProfiles().size()){
-				retMsg = "error: Bad profiles's id.";
+			} else if ((profile = user.getProfile(profileId)) == null){
+				retMsg = "error: Bad profileId.";
 			} else {
-				Profile profile = user.getProfile(profileId);
 				if ((site = ((SiteManager)session.getServletContext().getAttribute("siteManager")).get(siteId)) == null) {
 					retMsg = "error: This site dosen't exist.";
 				} else {

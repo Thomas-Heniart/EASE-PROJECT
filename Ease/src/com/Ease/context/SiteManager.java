@@ -102,9 +102,10 @@ public class SiteManager {
 
 	public JSONArray getSitesListJsonWithSearchAndTags(String search, String[] selectedIds) {
 		// If everything is empty then returns all websites
-		if (selectedIds.length == 0 && (search.isEmpty() || search == null )) {
+		if (selectedIds.length == 0 && (search.isEmpty() || search == null ))
 			return getSitesListJson();
-		}
+		if (selectedIds.length == 0)
+			return searchSitesWith(search);
 		List<Tag> selectedTags = new LinkedList<Tag>();
 		JSONArray res = new JSONArray();
 		List<Site> sitesToShow = new LinkedList<Site>();

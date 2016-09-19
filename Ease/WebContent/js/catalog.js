@@ -62,7 +62,7 @@ function newCrossButton(tagId) {
 
 function setNewCrossCss(tagId) {
 	var tag = $("a[tagid='" + tagId + "'].tag")
-	$("a[tagid='" + tagId + "'].delete-tag").css("background-color", tag.css("background-color"));
+	$("a[tagid='" + tagId + "'].delete-tag").css("background-color", lighterColor(tag.css("background-color"), 0.3));
 	$("a[tagid='" + tagId + "'].delete-tag").css("color", tag.css("color"));
 }
 
@@ -109,10 +109,18 @@ function updateCatalogFront(tagButton) {
 }
 
 $(document).ready(function() {
+	$("#catalog-quit").click(function(event) {
+		event.stopPropagation();
+		$(".CatalogViewTab").removeClass("show");
+	})
 	$(".tag").click(function(event) {
 		event.stopPropagation();
+		var nbOfTags = $(".tag-active").length;
+		if(nbOfTags < 3){
 		$(event.target).toggleClass("tag-active");
+		nbOfTags++;
 		updateCatalogFront($(event.target));
+		}
 	});
 	$("input[name='catalogSearch']").keyup(function(event) {
 		event.stopPropagation();

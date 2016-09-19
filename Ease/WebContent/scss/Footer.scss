@@ -1,30 +1,31 @@
 @import 'variables';
 
+#buttonShow {
+	height: 12px;
+	background-color: rgba(0,0,0,0);
+	width: 100%;
+	line-height: 12px;
+	text-align: center;
+	vertical-align: middle;
+	position: fixed;
+	bottom: 1%;
+	i {
+		display: inline-block;
+		width: 2%;
+		height: 8px;
+		border-radius: 200px;
+		background-color: $themeColor;
+	}
+}
+
 .footer {
-	height: 20px;
+	height: 40px;
 	width: 100%;
 	bottom: 0;
 	left: 0;
 	position: fixed;
 	text-align: center;
-	transition: .3s linear;
 	background-color: rgba(0,0,0,0);
-	&:hover {
-		height: 60px;
-		#buttonShow i {
-			color: rgba(0,0,0,0);
-		}
-	}
-	#buttonShow {
-		background-color: rgba(0,0,0,0);
-		width: 100%;
-		height: 20px;
-		i {
-			font-size: 15px;
-    		line-height: 10px;
-    		color: $themeColor;
-		}
-	}
 	.mediaTab {
 	background-color: $themeColor;
 	padding: 5px 0px;
@@ -40,8 +41,8 @@
 				transition: .3s linear;
 				a {
 					color: $themeColor;
-				}			
-			}				
+				}
+			}
 			a {
 				width: 100%;
 				height: 100%;
@@ -51,7 +52,7 @@
 					position: absolute;
 					top: 50%;
 					left: 50%;
-					transform: translateX(-50%) translateY(-50%);	
+					transform: translateX(-50%) translateY(-50%);
 				}
 			}
 		}

@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-<div class="footer">
-	<div id="buttonShow" style="background-color: rgba(0,0,0,0);">
-		<i class="fa fa-circle"></i>		
-	</div>
+<div id="buttonShow" style="background-color: rgba(0,0,0,0);">
+		<i></i>
+</div>
+<div class="footer" style="display: none">
 	<div class="mediaTab">
 		<div class="link">
 		<a href="https://www.facebook.com/EasePlatform/"  target="_blank"><i class="fa fa-facebook"></i></a>
