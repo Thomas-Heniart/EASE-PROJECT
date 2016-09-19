@@ -115,8 +115,12 @@ $(document).ready(function() {
 	})
 	$(".tag").click(function(event) {
 		event.stopPropagation();
+		var nbOfTags = $(".tag-active").length;
+		if(nbOfTags < 3){
 		$(event.target).toggleClass("tag-active");
+		nbOfTags++;
 		updateCatalogFront($(event.target));
+		}
 	});
 	$("input[name='catalogSearch']").keyup(function(event) {
 		event.stopPropagation();
