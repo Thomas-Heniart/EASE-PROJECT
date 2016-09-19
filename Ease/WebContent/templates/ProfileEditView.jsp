@@ -160,6 +160,10 @@
 													"#PopupAddApp")
 											|| $("#PopupAddApp").has(
 													$(event.target)).length
+													|| $(event.target).is(
+													"#PopupDeleteApp")
+											|| $("#PopupDeleteApp").has(
+													$(event.target)).length
 											|| $(event.target).is(
 													"#PopupModifyApp")
 											|| $("#PopupModifyApp").has(
@@ -169,7 +173,7 @@
 											".AddProfileView").has(
 											$(event.target)).length
 
-									))
+									)) 
 										leaveEditMode();
 								}
 							}
@@ -215,6 +219,7 @@
 					image.removeClass('easyScaling');
 					image.addClass('deletingApp');
 					setTimeout(function() {
+						console.log(app);
 						app.remove();
 					}, 500);
 				} else {
