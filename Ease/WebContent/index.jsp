@@ -36,6 +36,7 @@
    	<script src="js/owl.carousel.js"></script>
     <script src="js/basic-utils.js" ></script>
     <script src="js/jquery.mousewheel.min.js"></script>
+    <script src="js/footer.js"></script>
     
 		<link rel="stylesheet" type="text/css" href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
 		<link rel="stylesheet" type="text/css" href="css/lib/dropDownMenu/dropdown.css" />
