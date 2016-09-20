@@ -1,5 +1,5 @@
 {
-    "name":"Airbnb",
+    "name":"AirBnb",
     "lastLogin":"",
     "home":"https://www.airbnb.com/Login",
     "connect":{
@@ -11,7 +11,7 @@
     },
     "Facebook":{
     	"todo":[
-    		{"action":"clickona", "search":"a[href='/oauth_connect?from=facebook_login&service=facebook']"}
+    		{"action":"goto", "url":"http://www.airbnb.com/oauth_connect?from=facebook_login&service=facebook"}
     	]
     },
     "logout":{
