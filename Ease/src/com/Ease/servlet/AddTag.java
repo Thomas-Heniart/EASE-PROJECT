@@ -19,7 +19,6 @@ import com.Ease.context.DataBase;
 import com.Ease.context.Site;
 import com.Ease.context.SiteManager;
 import com.Ease.context.Tag;
-import com.Ease.session.Account;
 import com.Ease.session.Profile;
 import com.Ease.session.SessionException;
 import com.Ease.session.User;
@@ -65,6 +64,7 @@ public class AddTag extends HttpServlet {
 		String			retMsg;
 
 		HttpSession session = request.getSession();
+		
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 
 		User user = (User)session.getAttribute("User");

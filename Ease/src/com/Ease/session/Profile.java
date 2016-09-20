@@ -134,26 +134,16 @@ public class Profile {
 	
 	public void loadApps(ServletContext context, User user) throws SessionException {
 		DataBase db = (DataBase)context.getAttribute("DataBase");
-		ResultSet rs = db.get("SELECT * FROM accounts WHERE profile_id='" + id + "';");
+		ResultSet rs = db.get("SELECT * FROM apps WHERE profile_id='" + id + "';");
 		try {
 			while (rs.next()) {
-				Account account = new Account(rs, this, user, context);
-				apps.add(account);
-				user.getApps().add(account);
+				App app = new App(rs, this, user, context);
+				apps.add(app);
+				user.getApps().add(app);
 				
 			}
 		} catch (SQLException e) {
 			throw new SessionException("Impossible to load all accounts.");
-		}
-		rs = db.get("SELECT * FROM logWith WHERE profile_id='" + id + "';");
-		try {
-			while (rs.next()) {
-				LogWith logWith = new LogWith(rs, this, user, context);
-				apps.add(logWith);
-				user.getApps().add(logWith);
-			}
-		} catch (SQLException e) {
-			throw new SessionException("Impossible to load all logWith.");
 		}
 		apps.sort(new Comparator<App>() {
 			@Override

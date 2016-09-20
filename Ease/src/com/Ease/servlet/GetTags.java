@@ -2,11 +2,7 @@ package com.Ease.servlet;
 
 
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,15 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import com.Ease.context.DataBase;
-import com.Ease.context.Site;
 import com.Ease.context.SiteManager;
 import com.Ease.context.Tag;
-import com.Ease.session.Account;
-import com.Ease.session.Profile;
-import com.Ease.session.SessionException;
-import com.Ease.session.User;
-import com.Ease.stats.Stats;
 
 /**
  * Servlet implementation class AddApp

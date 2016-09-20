@@ -49,12 +49,12 @@ public class DeleteApp extends HttpServlet {
 		HttpSession session = request.getSession();
 		User user = null;
 		String appName = "";
+		boolean transaction = false;
+		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		
 		try {
 			int appId = Integer.parseInt(request.getParameter("appId"));
 			//String password = request.getParameter("password");
-
-			DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 
 			user = (User)(session.getAttribute("User"));
 			if (user == null) {
@@ -69,20 +69,25 @@ public class DeleteApp extends HttpServlet {
 			} /*else if (password == null || !Hashing.SHA(password, user.getSaltEase()).equals(user.getPassword())) {
 				response.getWriter().print("error: Bad password");
 			}*/ else {
+				transaction = db.start();
 				App app = user.getApp(appId);
 				appName = app.getSite().getName();
 				app.deleteFromDB(session.getServletContext());
 				user.getProfile(app.getProfileId()).getApps().remove(app);
 				user.getApps().remove(app);
 				retMsg = "success";
+				db.commit(transaction);
 			}
 		} catch (SessionException e) {
+			db.cancel(transaction);
 			e.printStackTrace();
 			retMsg = "error :" + e.getMsg();
 			
 		} catch (NumberFormatException e) {
+			db.cancel(transaction);;
 			retMsg = "error: Bad index";
 		}
+		
 		Stats.saveAction(session.getServletContext(), user, Stats.Action.DeleteApp, retMsg + " : " + appName);
 		response.getWriter().print(retMsg);
 	}

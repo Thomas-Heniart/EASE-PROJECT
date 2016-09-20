@@ -57,6 +57,7 @@ public class EditProfile extends HttpServlet {
 		HttpSession session = request.getSession();
 		String retMsg;
 		User user = null;
+		boolean transaction = false;
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		
 		try {
@@ -79,15 +80,19 @@ public class EditProfile extends HttpServlet {
 			} else if (color == null || Regex.isColor(color) == false){
 				retMsg = "error: Bad profile's color.";
 			} else {
+				transaction = db.start();
 				Profile profile = user.getProfiles().get(index);
 				profile.setColor(color);
 				profile.setName(name);
 				profile.updateInDB(session.getServletContext());
 				retMsg = "success";
+				db.commit(transaction);
 			}
 		} catch (SessionException e) {
+			db.cancel(transaction);
 			retMsg = "error :" + e.getMsg();
 		} catch (NumberFormatException e) {
+			db.cancel(transaction);
 			retMsg = "error: Bad profile's index.";
 		}
 		Stats.saveAction(session.getServletContext(), user, Stats.Action.EditProfile, retMsg);

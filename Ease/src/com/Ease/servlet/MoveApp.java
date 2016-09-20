@@ -47,6 +47,7 @@ public class MoveApp extends HttpServlet {
 		HttpSession session = request.getSession();
 		String retMsg;
 		User user = null;
+		boolean transaction = false;
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		
 		try {
@@ -73,24 +74,26 @@ public class MoveApp extends HttpServlet {
 			} else if (index < 0 || index > profile.getApps().size()){
 				retMsg = "error: Bad index";
 			} else {
+				
 				Profile profileBegin = user.getProfile(app.getProfileId());
 				profileBegin.getApps().remove(app.getIndex());
 				//if (index > app.getIndex())
 				//	index--;
 				profile.getApps().add(index, app);
-				db.set("START TRANSACTION;");
+				transaction = db.start();
 				profileBegin.updateIndex(session.getServletContext());
 				profile.updateIndex(session.getServletContext());
 				if (profile.getProfileId() != profileBegin.getProfileId())
-					app.updateProfileIdnDB(session.getServletContext(), profile.getId(), profile.getProfileId());
+					app.updateProfileInDB(session.getServletContext(), profile.getId(), profile.getProfileId());
 				retMsg = "success";
-				db.set("COMMIT;");
+				db.commit(transaction);
 			}
 		} catch (SessionException e) {
 			retMsg = "error :" + e.getMsg();
-			db.set("ROLLBACK;");
+			db.cancel(transaction);;
 		} catch (NumberFormatException e) {
 			retMsg = "error: Bad number.";
+			db.cancel(transaction);
 		}
 		response.getWriter().print(retMsg);	
 	}

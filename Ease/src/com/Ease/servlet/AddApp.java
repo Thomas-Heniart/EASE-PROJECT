@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 import com.Ease.context.DataBase;
 import com.Ease.context.Site;
 import com.Ease.context.SiteManager;
-import com.Ease.session.Account;
+import com.Ease.session.App;
 import com.Ease.session.Profile;
 import com.Ease.session.SessionException;
 import com.Ease.session.User;
@@ -55,18 +55,18 @@ public class AddApp extends HttpServlet {
 		HttpSession session = request.getSession();
 		User user = null;
 		Site site = null;
+		boolean transaction = false;
+		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		try {
+						
 			int profileId = Integer.parseInt(request.getParameter("profileId"));
 			String siteId = request.getParameter("siteId");
 			String login = request.getParameter("login");
 			String password = request.getParameter("password");
 			String name = request.getParameter("name");
 			
-			DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
-			
 			user = (User)(session.getAttribute("User"));
 			Profile profile = null;
-			
 			if (user == null) {
 				Stats.saveAction(session.getServletContext(), user, Stats.Action.AddApp, "");
 				RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
@@ -86,25 +86,27 @@ public class AddApp extends HttpServlet {
 				if ((site = ((SiteManager)session.getServletContext().getAttribute("siteManager")).get(siteId)) == null) {
 					retMsg = "error: This site dosen't exist.";
 				} else {
-					
-					Account account = new Account(name, login, password, site, profile, user, session.getServletContext());
-					profile.addApp(account);
-					user.getApps().add(account);
+					transaction = db.start();
+					App app = new App(name, login, password, site, profile, user, session.getServletContext());
+					profile.addApp(app);
+					user.getApps().add(app);
 					if (user.getTuto().equals("0")) {
 						user.tutoComplete();
 						user.updateInDB(session.getServletContext());
 					}
-					retMsg = "success: " + account.getAppId();
+					retMsg = "success: " + app.getAppId();
+					db.commit(transaction);
 				}
 			}
 		} catch (SessionException e) {
+			db.cancel(transaction);
 			retMsg = "error: " + e.getMsg();
-		} catch (NumberFormatException e) {
-			retMsg = "error: Bad profile's index.";
 		} catch (IndexOutOfBoundsException e){
+			db.cancel(transaction);
 			retMsg = "error: Bad app index.";
 		}
 		Stats.saveAction(session.getServletContext(), user, Stats.Action.AddApp, retMsg + " : " + ((site != null) ? site.getName() : ""));
+		System.out.println(retMsg);
 		response.getWriter().print(retMsg);
 	}
 }

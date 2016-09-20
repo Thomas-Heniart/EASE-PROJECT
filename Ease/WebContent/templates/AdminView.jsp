@@ -7,8 +7,9 @@ pageEncoding="UTF-8"%>
 <%@ page import="com.Ease.context.Site" %>
 <%@ page import="com.Ease.context.SiteManager" %>
 <%@ page import="com.Ease.context.Color" %>
-<%@ page import="com.Ease.session.Account" %>
-<%@ page import="com.Ease.session.LogWith" %>
+<%@ page import="com.Ease.session.App"%>
+<%@ page import="com.Ease.session.ClassicAccount"%>
+<%@ page import="com.Ease.session.LogWithAccount"%>
 <%@ page import="java.util.List" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>

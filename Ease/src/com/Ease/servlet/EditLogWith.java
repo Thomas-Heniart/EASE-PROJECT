@@ -13,6 +13,7 @@ import com.Ease.context.DataBase;
 import com.Ease.context.Site;
 import com.Ease.session.App;
 import com.Ease.session.LogWith;
+import com.Ease.session.LogWithAccount;
 import com.Ease.session.SessionException;
 import com.Ease.session.User;
 import com.Ease.stats.Stats;
@@ -47,12 +48,13 @@ public class EditLogWith extends HttpServlet {
 		String retMsg;
 		HttpSession session = request.getSession();
 		User user = null;
-		LogWith logWith = null;
-
+		App app = null;
+		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
+		boolean transaction = false;
 		try {
 			int appId = Integer.parseInt(request.getParameter("appId"));
 			int lwId = Integer.parseInt(request.getParameter("lwId"));
-			DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
+			
 			String name = request.getParameter("name");
 			user = (User)(session.getAttribute("User"));
 			if (user == null) {
@@ -71,33 +73,40 @@ public class EditLogWith extends HttpServlet {
 			} else if (user.getProfiles().get(user.getApp(lwId).getProfileIndex()).getApps().get(user.getApp(lwId).getIndex()).getType().equals("Account") == false){
 				retMsg = "error: This account is not an account.";
 			} else {
-				App app = user.getProfiles().get(user.getApp(appId).getProfileIndex()).getApps().get(user.getApp(appId).getIndex());
-				if (app.getType().equals("LogWith") == false){
+				transaction = db.start();
+				app = user.getProfiles().get(user.getApp(appId).getProfileIndex()).getApps().get(user.getApp(appId).getIndex());
+				if (app.getType().equals("LogWithAccount") == false){
 					Site site = app.getSite();
 					app.deleteFromDB(session.getServletContext());
 					user.getProfiles().get(user.getApp(appId).getProfileIndex()).getApps().remove(user.getApp(appId));
-					LogWith tmp = new LogWith(name, user.getApp(lwId).getId(), site, user.getProfiles().get(user.getApp(appId).getProfileIndex()), user, session.getServletContext());
+					App tmp = new App(name, user.getApp(lwId).getId(), site, user.getProfiles().get(user.getApp(appId).getProfileIndex()), user, session.getServletContext());
 					user.getProfiles().get(user.getApp(appId).getProfileIndex()).addApp(tmp);
+					user.getApps().remove(user.getApp(appId));
 					user.getApps().add(tmp);
 					tmp.setAppId(appId);
-					user.getApps().remove(user.getApp(appId));
 					retMsg = "succes";
 				} else {
-					logWith = (LogWith)app;
-					logWith.setAccountId(user.getProfiles().get(user.getApp(lwId).getProfileIndex()).getApps().get(user.getApp(lwId).getIndex()).getId());
-					logWith.setName(name);
-					logWith.updateInDB(session.getServletContext(), user.getUserKey());
+					LogWithAccount logWith = (LogWithAccount)app.getAccount();
+					logWith.setLogWithAppId(user.getApp(lwId).getId());
+					app.setName(name);
+					logWith.updateInDB(session.getServletContext());
+					app.setAccount(logWith);
+					app.updateInDB(session.getServletContext());
 					retMsg = "success";
 				}
+				db.commit(transaction);
 			}
 		} catch (SessionException e) {
+			db.cancel(transaction);
 			retMsg = "error :" + e.getMsg();				
 		} catch (NumberFormatException e) {
+			db.cancel(transaction);
 			retMsg = "error: Bad index";
 		} catch (IndexOutOfBoundsException e){
+			db.cancel(transaction);
 			retMsg = "error: Bad app index.";
 		}
-		Stats.saveAction(session.getServletContext(), user, Stats.Action.EditApp, retMsg + " : " + ((logWith == null) ? "null" : logWith.getSite().getName()));
+		Stats.saveAction(session.getServletContext(), user, Stats.Action.EditApp, retMsg + " : " + ((app == null) ? "null" : app.getSite().getName()));
 		response.getWriter().print(retMsg);
 	}
 

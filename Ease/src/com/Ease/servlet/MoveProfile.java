@@ -48,6 +48,7 @@ public class MoveProfile extends HttpServlet {
 		String retMsg;
 		User user = null;
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
+		boolean transaction = false;
 		Profile profile = null;
 		
 		try {
@@ -68,12 +69,16 @@ public class MoveProfile extends HttpServlet {
 			} else if ((profile = user.getProfile(profileId)) == null){
 				retMsg = "error: Bad profileId";
 			} else {
+				transaction = db.start();
 				user.moveProfileAt(session.getServletContext(), profile.getIndex(), index);
 				retMsg = "success";
+				db.commit(transaction);
 			}
 		} catch (SessionException e) {
+			db.cancel(transaction);
 			retMsg = "error :" + e.getMsg();
 		} catch (NumberFormatException e) {
+			db.cancel(transaction);
 			retMsg = "error: number.";
 		}
 		response.getWriter().print(retMsg);	
