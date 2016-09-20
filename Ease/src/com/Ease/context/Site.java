@@ -115,7 +115,7 @@ public class Site {
 			return false;
 		else {
 			if (selectedTags.size() > tags.size()) {
-				return selectedTags.containsAll(tags);
+				return false;
 			} else {
 				return tags.containsAll(selectedTags);
 			}

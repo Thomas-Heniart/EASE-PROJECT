@@ -167,10 +167,59 @@
 			height: 100%;
 			overflow-y: auto;
 			overflow-x: hidden;
+			.search-result, .relatedApps {
+				display: none;
+			}
+			h3 {
+				text-align: center;
+				font-size: 18px;
+				margin-top: 0px;
+				margin-bottom: 5px;
+				position: relative;
+				z-index: 1;
+
+				&:before {
+					border-top: 1px solid black;
+					content: "";
+					margin: 0 auto;
+					position: absolute;
+					top: 50%; left: 0; right: 0; bottom: 0;
+      		width: 95%;
+      		z-index: -1;
+				}
+
+				span {
+					background: white;
+					padding: 0 10px;
+				}
+			}
+			h4 {
+				text-align: center;
+				font-size: 14px;
+				margin-top: 0px;
+				margin-bottom: 5px;
+				position: relative;
+				z-index: 1;
+
+				&:before {
+					border-top: 1px solid black;
+					content: "";
+					margin: 0 auto;
+					position: absolute;
+					top: 50%; left: 0; right: 0; bottom: 0;
+      		width: 95%;
+      		z-index: -1;
+				}
+
+				span {
+					background: white;
+					padding: 0 10px;
+				}
+			}
 			.catalogApp {
 				width: (100% / 6);
 				height: (100% / 3);
-				float: left;
+				display: inline-block;
 				padding: 5px;
 				.catalogAppLogo {
 					width: 65%;

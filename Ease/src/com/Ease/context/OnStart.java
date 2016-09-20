@@ -36,7 +36,7 @@ public class OnStart implements ServletContextListener {
 
 		SiteManager siteManager = new SiteManager();
 		try {
-			ResultSet rs = db.get("SELECT * FROM websites;");
+			ResultSet rs = db.get("SELECT * FROM websites ORDER BY website_name;");
 			while (rs.next()) {
 				siteManager.add(new Site(rs));
 			}

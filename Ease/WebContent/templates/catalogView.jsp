@@ -31,6 +31,10 @@
 				<img class="Scaler" src="resources/other/placeholder-63.png"
 					style="width: 100%; height: auto; visibility: hidden;" />
 				<div id="catalog" class="catalogContainer">
+					<h3 class="search-result"><span>Search result</span></h3>
+					<div class="search-result"></div>
+					<h4 class="relatedApps"><span>Related apps</span></h4>
+					<div class="relatedApps"></div>
 					<%@ include file="catalogApps.jsp"%>
 				</div>
 			</div>
