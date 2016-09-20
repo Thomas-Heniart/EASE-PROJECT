@@ -101,14 +101,14 @@ public class App {
 			appId = user.getNextAppId();
 			this.profileId = profile.getProfileId();
 			this.profileIndex = profile.getIndex();
+			String accountId = rs.getString(AppData.ACCOUNT_ID.ordinal());
+			account = Account.getAccount(accountId, user, context);
 			if (tmp == null) {
 				index = profile.getApps().size();
 				updateInDB(context);
 			} else {
 				index = Integer.parseInt(tmp);	
 			}
-			String accountId = rs.getString(AppData.ACCOUNT_ID.ordinal());
-			account = Account.getAccount(accountId, user, context);
 		} catch (SQLException e) {
 			throw new SessionException("Impossible to get all account info.");
 		} catch (NumberFormatException e) {
@@ -180,10 +180,10 @@ public class App {
 			throw new SessionException("Impossible to update app in data base.");
 	}
 	
-	public void updateProfileInDB(ServletContext context, String id, int profileId) throws SessionException{
+	public void updateProfileInDB(ServletContext context, String idd, int profileId) throws SessionException{
 		DataBase db = (DataBase)context.getAttribute("DataBase");
 		this.profileId = profileId;
-		if (db.set("UPDATE logWith SET profile_id='" + id + "' WHERE `app_id`='"+ id + "';")
+		if (db.set("UPDATE apps SET profile_id='" + idd + "' WHERE `app_id`='"+ id + "';")
 				!= 0)
 			throw new SessionException("Impossible to update app in data base.");
 	}

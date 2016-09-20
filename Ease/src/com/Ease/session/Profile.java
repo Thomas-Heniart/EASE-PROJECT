@@ -18,7 +18,15 @@ public class Profile {
 		NAME,
 		COLOR,
 		DESCRIPTION,
-		POSITION
+		POSITION,
+		CUSTOM
+	}
+	public enum ProfilePerm {
+		RENAME,
+		COLOR,
+		MOVE,
+		DELETE,
+		ADDAPP
 	}
 	String			id;
 	String 			name;
@@ -26,13 +34,14 @@ public class Profile {
 	String			description;
 	int				index;
 	List<App>		apps;
+	String			custom;
 	
 	int				profileId;
 	
 	//Use this to create a new profile and set it in database
-	public Profile(String name, String color, String desc, User user, ServletContext context) throws SessionException{
+	public Profile(String name, String color, String desc, User user, String custom, ServletContext context) throws SessionException{
 		DataBase db = (DataBase)context.getAttribute("DataBase");
-		if (db.set("INSERT INTO profiles VALUES (NULL, '" + user.getId() + "', '" + name + "', '" + color + "', '" + desc + "', " + user.getProfiles().size() + ");")
+		if (db.set("INSERT INTO profiles VALUES (NULL, '" + user.getId() + "', '" + name + "', '" + color + "', '" + desc + "', " + user.getProfiles().size() + ", " + ((custom != null) ? custom : "NULL") + ");")
 			!= 0) {
 			throw new SessionException("Impossible to insert new profile in data base.");
 		} else {
@@ -42,6 +51,7 @@ public class Profile {
 			this.index = user.getProfiles().size();
 			apps = new LinkedList<App>();
 			profileId = user.getNextProfileId();
+			custom = null;
 			ResultSet rs = db.get("SELECT MAX(profile_id) FROM profiles;");
 			if (rs == null)
 				throw new SessionException("Impossible to insert new user in data base.");
@@ -64,6 +74,7 @@ public class Profile {
 			color = rs.getString(ProfileData.COLOR.ordinal());
 			description = rs.getString(ProfileData.DESCRIPTION.ordinal());
 			String tmp = rs.getString(ProfileData.POSITION.ordinal());
+			custom = rs.getString(ProfileData.CUSTOM.ordinal());
 			apps = new LinkedList<App>();
 			profileId = user.getNextProfileId();
 			loadApps(context, user);
@@ -105,6 +116,13 @@ public class Profile {
 	}
 	public int getProfileId(){
 		return profileId;
+	}
+	public boolean isCustom(String cust){
+		if (this.custom == null)
+			return false;
+		if (cust.equals(this.custom))
+			return true;
+		return false;
 	}
 	
 	
@@ -174,5 +192,29 @@ public class Profile {
 				apps.get(i).updateInDB(context);
 			}
 		}
+	}
+	
+	public boolean havePerm(ProfilePerm perm, ServletContext context) throws SessionException {
+		if (custom == null || custom.equals("null"))
+			return true;
+		DataBase db = (DataBase)context.getAttribute("DataBase");
+		
+		try{
+			ResultSet rs;
+			if ((rs = db.get("select perm from customProfiles where id=" + custom + ";")) == null) {					
+				throw new SessionException("Can't get perm. 1");
+			}
+			rs.next();
+			int champ = Integer.parseInt(rs.getString(1));
+			if ((champ >> perm.ordinal()) % 2 == 1){
+				return true;
+			}
+		} catch (SQLException e) {
+			throw new SessionException("Can't get perm. 2");
+		} catch (NumberFormatException e) {
+			throw new SessionException("Can't get perm. 3");
+		}
+		
+		return false;
 	}
 }
