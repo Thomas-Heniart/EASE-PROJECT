@@ -16,11 +16,10 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import com.Ease.context.DataBase;
-import com.Ease.session.Account;
 import com.Ease.session.App;
-import com.Ease.session.LogWith;
+import com.Ease.session.ClassicAccount;
+import com.Ease.session.LogWithAccount;
 import com.Ease.session.User;
-import com.Ease.stats.Stats;
 
 
 /**
@@ -54,11 +53,11 @@ public class AskInfo extends HttpServlet {
 		String retMsg;
 		HttpSession session = request.getSession();
 		User user = null;
+		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		
 		try {
 			int profileIndex = Integer.parseInt(request.getParameter("profileIndex"));
 			int appIndex = Integer.parseInt(request.getParameter("appIndex"));
-			DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 
 			user = (User)(session.getAttribute("User"));
 			if (user == null) {
@@ -75,22 +74,22 @@ public class AskInfo extends HttpServlet {
 				JSONArray ja = new JSONArray();
 				while (again){
 					JSONObject obj = new JSONObject();
-					if (app.getType().equals("Account")) {
+					if (app.getType().equals("ClassicAccount")) {
 						JSONObject appUser = new JSONObject();
-						appUser.put("login", ((Account)app).getLogin());
-						appUser.put("password", ((Account)app).getPassword());
+						appUser.put("login", ((ClassicAccount)app.getAccount()).getLogin());
+						appUser.put("password", ((ClassicAccount)app.getAccount()).getPassword());
 						obj.put("user", appUser);
-					} else if (app.getType().equals("LogWith")) {
-						obj.put("logWith", ((LogWith)app).getAccount(user).getSite().getName());
+					} else if (app.getType().equals("LogWithAccount")) {
+						obj.put("logWith", ((LogWithAccount)app.getAccount()).getLogWithApp(user).getSite().getName());
 					}
 					JSONParser parser = new JSONParser();
 					JSONObject a = (JSONObject) parser.parse(new FileReader(session.getServletContext().getRealPath(app.getSite().getFolder() + "connect.json")));
 					obj.put("website", a);
 					ja.add(0, obj);
-					if (app.getType().equals("Account")) {
+					if (app.getType().equals("ClassicAccount")) {
 						again = false;
 					} else {
-						app = ((LogWith)app).getAccount(user);
+						app =  ((LogWithAccount)app.getAccount()).getLogWithApp(user);
 					}
 				}
 				retMsg = "succes: " + ja.toString();

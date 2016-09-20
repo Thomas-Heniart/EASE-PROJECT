@@ -1,4 +1,3 @@
-console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOo");
 function rememberWebsite(website){
     if (website.lastLogin == "")
         return;
@@ -30,12 +29,13 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, sendResponse)
     extension.currentWindow(function(currentWindow) {
         extension.tabs.create(currentWindow, msg.detail[0].website.home, true, function(tab){
             extension.tabs.onUpdated(tab, function (newTab) {
+            extension.tabs.injectScript(tab, "extension.js", function() {
                 tab = newTab;
                 console.log("updated");
                 extension.tabs.injectScript(tab, "checkForReload.js", function() {
                 
                 });
-            });
+            });});
             extension.tabs.onMessage(tab, "reloaded", function (event, sendResponse1) {
                 console.log("reloaded");
                 extension.tabs.injectScript(tab, "jquery-3.1.0.js", function() {

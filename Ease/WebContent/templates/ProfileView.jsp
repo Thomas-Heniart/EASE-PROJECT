@@ -9,8 +9,9 @@
 <%@ page import="com.Ease.context.Color"%>
 <%@ page import="com.Ease.context.Tag"%>
 <%@ page import="com.Ease.context.TagAndSiteMap"%>
-<%@ page import="com.Ease.session.Account"%>
-<%@ page import="com.Ease.session.LogWith"%>
+<%@ page import="com.Ease.session.App"%>
+<%@ page import="com.Ease.session.ClassicAccount"%>
+<%@ page import="com.Ease.session.LogWithAccount"%>
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.LinkedList"%>
 
@@ -402,19 +403,19 @@
 								</div>
 							</div>
 							<div id="profile-<%=it - 1%>" class="SitesContainer">
-								<c:forEach items='${item.getApps()}' var="account">
-									<c:if test="${account.getType() eq 'Account'}">
+								<c:forEach items='${item.getApps()}' var="app">
+									<c:if test="${app.getType() eq 'ClassicAccount'}">
 										<div class="siteLinkBox" onclick="sendEvent(this)"
-											login="${account.getLogin() }"
-											webId="${account.getSite().getId()}"
-											name="${account.getName()}"
-											id="${account.getAppId()}">
+											login="${app.getLogin()}"
+											webId="${app.getSite().getId()}"
+											name="${app.getName()}"
+											id="${app.getAppId()}">
 									</c:if>
-									<c:if test="${account.getType() eq 'LogWith'}">
+									<c:if test="${app.getType() eq 'LogWithAccount'}">
 										<div class="siteLinkBox" onclick="sendEvent(this)"
-											webId="${account.getSite().getId()}"
-											name="${account.getName()}"
-											id="${account.getAppId()}">
+											webId="${app.getSite().getId()}"
+											name="${app.getName()}"
+											id="${app.getAppId()}">
 									</c:if>
 									<div class="linkImage">
 											<div class="showAppActionsButton">
@@ -434,17 +435,17 @@
 												</div>
 											</div>
 										</div>
-										<img class="logo"
-											src="<c:out value='${account.getSite().getFolder()}logo.png'/>" />
+										<img
+											src="<c:out value='${app.getSite().getFolder()}logo.png'/>" />
 									</div>
 									<div class="siteName">
 										<c:choose>
-											<c:when test="${account.getName().length() > 14}">
-												<p>${account.getName().substring(0,14)}...
+											<c:when test="${app.getName().length() > 14}">
+												<p>${app.getName().substring(0,14)}...
 												<p>
 											</c:when>
 											<c:otherwise>
-												<p>${account.getName()}</p>
+												<p>${app.getName()}</p>
 											</c:otherwise>
 										</c:choose>
 									</div>

@@ -98,7 +98,7 @@ public class AddWebsite extends HttpServlet {
 			haveLogWith += "'";
 		}
 
-		dbRequest = dbRequest + haveLogWith + ", NULL);";
+		dbRequest = dbRequest + haveLogWith + ");";
 
 		if(db.set(dbRequest)!=0){
 			retMsg = "error: fail to connect to db";
@@ -106,10 +106,10 @@ public class AddWebsite extends HttpServlet {
 			return;
 		}
 		
-		SiteManager sites = ((SiteManager)session.getServletContext().getAttribute("Sites"));
+		SiteManager sites = ((SiteManager)session.getServletContext().getAttribute("siteManager"));
 		
 		try {
-		    	ResultSet rs = db.get("SELECT * FROM websites;");
+		    	ResultSet rs = db.get("SELECT * FROM websites ORDER BY website_name;");
 		    	sites.clearSites();
 		    	while (rs.next()) {
 		    		sites.add(new Site(rs));

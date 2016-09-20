@@ -55,14 +55,13 @@ public class DeleteProfile extends HttpServlet {
 		HttpSession session = request.getSession();
 		User user = null;
 		Profile profile = null;
+		boolean transaction = false;
+		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		
 		try {
+			
 			int index = Integer.parseInt(request.getParameter("index"));
 			String mdp = request.getParameter("password");
-			
-			
-			DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
-			
 			
 			user = (User)(session.getAttribute("User"));
 			if (user == null) {
@@ -77,14 +76,18 @@ public class DeleteProfile extends HttpServlet {
 			} else if (mdp == null || !Hashing.SHA(mdp, user.getSaltEase()).equals(user.getPassword())) {
 				retMsg = "error: Bad password";
 			} else {
+				transaction = db.start();
 				profile.deleteFromDB(session.getServletContext());
 				user.getProfiles().remove(profile.getIndex());
 				user.updateIndex(session.getServletContext());
 				retMsg = "success";
+				db.commit(transaction);
 			}
 		} catch (SessionException e) {
+			db.cancel(transaction);
 			retMsg = "error :" + e.getMsg();
 		} catch (NumberFormatException e) {
+			db.cancel(transaction);
 			retMsg = "error: Bad index";
 		}
 		Stats.saveAction(session.getServletContext(), user, Stats.Action.DeleteProfile, retMsg);

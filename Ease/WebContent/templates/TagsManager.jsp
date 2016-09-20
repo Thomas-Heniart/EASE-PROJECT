@@ -102,7 +102,7 @@ $(document).ready(function(){
 					$('#setTags').prop('disabled', false);
 				}, 1000);
 			} else {
-				$('#setTags').val("Error");
+				$('#setTags').val(data);
 				$('#setTags').prop('disabled', true);
 				setTimeout(function(){
 					$('#setTags').val("Validate");

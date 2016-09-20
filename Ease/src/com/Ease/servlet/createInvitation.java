@@ -97,7 +97,7 @@ public class createInvitation extends HttpServlet {
 			message.setFrom(new InternetAddress("sergii@ease-app.co", "Ease Team"));
 			message.setRecipients(Message.RecipientType.TO,
 					InternetAddress.parse(email));
-			message.setSubject(MimeUtility.encodeText("Créez votre compte ease", "utf-8", null));
+			message.setSubject(MimeUtility.encodeText("Active ton compte Ease !", "utf-8", null));
 			String link = "https://ease.space/registerInv?email=" + email + "&code=" + invitationCode;
 			message.setContent("<p>Hello !</p>"
 					+ "<p></p>"
@@ -106,7 +106,7 @@ public class createInvitation extends HttpServlet {
 					+ "<p></p>"
 					+ "<p>Tu vas bientôt créer ton mot de passe Ease et ça sera le seul mot de passe à retenir de ta vie ! Il va permettre de crypter (et du coup sécuriser) l’ensemble de ta plateforme.</p>"
 					+ "<p>Tu es la seule personne à le posséder et il n’est pas ré-initialisable, s’il est perdu, tu n’auras plus accès à Ease.</p>"
-					+ "<p style='margin: 0px;'>Pour activer ton compte, clique ici : <a href='"+link+"'>https://ease.space</a></p>"
+					+ "<p style='margin: 0px;'>Pour activer ton compte, clique ici : <a href='"+link+"'>https://ease.space/...</a></p>"
 					+ "<p>Ease fonctionne sur Chrome, si tu ne l'as pas, télécharge le <a href='https://www.google.fr/intl/fr/chrome/browser/desktop/index.html' target='_blank'>ici</a>. (Safari et Firefox coming soon!!)</p>"
 					+ "<p></p>"
 					+ "<p>À bientôt !</p>"

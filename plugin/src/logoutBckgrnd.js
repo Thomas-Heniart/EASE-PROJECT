@@ -20,9 +20,10 @@ function logOutFrom(website, sendResponse){
                 }
                 extension.tabs.create(currentWindow, msg.detail[0].website.home, false, function(tab){
                     extension.tabs.onUpdated(tab, function (newTab) {
+                        extension.tabs.injectScript(tab, "extension.js", function() {
                         tab = newTab;
                         extension.tabs.injectScript(tab, "checkForReload.js", function() {});
-                    });
+                    });});
                     extension.tabs.onMessage(tab, "reloaded", function (event, sendResponse1) {
                         extension.tabs.injectScript(tab, "jquery-3.1.0.js", function() {
                             extension.tabs.injectScript(tab, "extension.js", function() {

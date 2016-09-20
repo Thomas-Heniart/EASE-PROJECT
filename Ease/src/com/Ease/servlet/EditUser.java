@@ -61,6 +61,7 @@ public class EditUser extends HttpServlet {
 		String oldPassword = request.getParameter("oldPassword");
 		
 		HttpSession session = request.getSession();
+		boolean transaction = false;
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		User user = (User)(session.getAttribute("User"));
 		String hashedPassword;
@@ -94,17 +95,21 @@ public class EditUser extends HttpServlet {
 				} else if (rs.next()) {
 					retMsg = "error: Email already used.";
 				} else {
+					transaction = db.start();
 					user.setFirstName(fname);
 					user.setLastName(lname);
 					user.setEmail(email);
 					user.setPassword(hashedPassword);
 					user.updateInDB(session.getServletContext(), password);
 					retMsg = "success";
+					db.commit(transaction);
 				}
 			}
 		} catch (SessionException e) {
+			db.cancel(transaction);
 			retMsg = "error: " + e.getMsg();
 		} catch (SQLException e) {
+			db.cancel(transaction);
 			retMsg = "error: Can't access data base.";
 		}
 		Stats.saveAction(session.getServletContext(), user, Stats.Action.EditUser, retMsg);

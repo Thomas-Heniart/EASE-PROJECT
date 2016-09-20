@@ -49,6 +49,7 @@ public class DeleteUser extends HttpServlet {
 		HttpSession session = request.getSession();
 		ServletContext context = session.getServletContext();
 		User user = (User)(session.getAttribute("User"));
+		boolean transaction = false;
 		DataBase db = (DataBase)context.getAttribute("DataBase");
 		
 		String retMsg;
@@ -63,10 +64,13 @@ public class DeleteUser extends HttpServlet {
 			} else if (password == null || !user.getPassword().equals(Hashing.SHA(password, user.getSaltEase()))){
 				retMsg = "error: Bad password.";
 			} else {
+				transaction = db.start();
 				user.deleteFromDB(context);
 				retMsg = "success";
+				db.commit(transaction);
 			}
 		} catch (SessionException e) {
+			db.cancel(transaction);
 			retMsg = "error: " + e.getMsg();
 		}
 		Stats.saveAction(context, user, Stats.Action.DeleteUser, retMsg);

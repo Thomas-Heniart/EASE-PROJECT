@@ -38,7 +38,7 @@ public class User {
 	String			keyUser;
 	String			tuto;
 	List<Profile>	profiles;
-
+	
 	int				maxProfileId;
 	int				maxAppId;
 	List<App>		apps;
@@ -106,11 +106,12 @@ public class User {
 			maxAppId = 0;
 			apps = new LinkedList<App>();
 			loadProfiles(context);
+			checkForGroup(context);
 		} catch (SQLException e) {
 			throw new SessionException("Impossible to get all User info.");
 		}
 	}
-	
+
 	// GETTER
 	
 	public String getId() {
@@ -282,6 +283,64 @@ public class User {
 
 		} catch (SQLException e) {
 			return false;
+		}
+	}
+
+	public void checkForGroup(ServletContext context) throws SessionException {
+		DataBase db = (DataBase)context.getAttribute("DataBase");
+
+		try {
+			if (db.connect() != 0){
+				return ;
+			} else {		
+				ResultSet rs;
+				if ((rs = db.get("select group_id from GroupAndUserMap, users where users.user_id=" + id + ";")) == null) {					
+					throw new SessionException("Can't get groups. 1");
+				}
+				while (rs.next()){
+					String group_id = rs.getString(1);
+					loadGroup(context, group_id);
+				}
+			}
+
+		} catch (SQLException e) {
+			throw new SessionException("Can't get groups. 0");
+		}
+	}
+	
+	public boolean haveThisCustomProfile(String cust){
+		for (int i = 0; i < profiles.size(); ++i){
+			if (profiles.get(i).isCustom(cust) == true)
+				return true;
+		}
+		return false;
+	}
+	
+	public void loadGroup(ServletContext context, String group_id) throws SessionException {
+		DataBase db = (DataBase)context.getAttribute("DataBase");
+	
+		try{
+			ResultSet rs;
+			if ((rs = db.get("select * from groups where id=" + group_id + ";")) == null) {					
+				throw new SessionException("Can't get groups. 1");
+			}
+			rs.next();
+			String parent = rs.getString(3);
+			if (parent != null && !parent.equals("null")){
+				loadGroup(context, parent);
+			}
+			if ((rs = db.get("select * from customProfiles where group_id=" + group_id + ";")) == null) {					
+				throw new SessionException("Can't get groups. 2");
+			}
+			if (rs.next()){
+				String customProfileId = rs.getString(1);
+				if (haveThisCustomProfile(customProfileId) == false){
+					Profile profile = new Profile(rs.getString(2), rs.getString(3), "", this, customProfileId, context);
+					profiles.add(profile);
+				}
+			}
+		} catch (SQLException e) {
+			throw new SessionException("Can't get groups. 3");
 		}
 	}
 }

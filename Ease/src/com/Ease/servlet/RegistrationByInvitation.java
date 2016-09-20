@@ -87,7 +87,7 @@ public class RegistrationByInvitation extends HttpServlet {
 					retMsg = "error: Email already used.";
 				} else {
 					user = new User(fname, lname, email, "0606060606", password, session.getServletContext());
-					Profile profile = new Profile("Perso", "#ff974f", "", user, session.getServletContext());
+					Profile profile = new Profile("Perso", "#ff974f", "", user, null, session.getServletContext());
 					user.addProfile(profile);
 					db.set("delete from invitations where email = '" + email + "' and linkCode = '" + invitationCode + "';");
 					retMsg = "success";

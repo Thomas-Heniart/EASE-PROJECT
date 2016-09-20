@@ -33,11 +33,11 @@ public class SiteManager {
 	public void clearSites() {
 		sites.clear();
 	}
-	
+
 	public void clearTags() {
 		tags.clear();
 	}
-	
+
 	public List<Site> getSitesList() {
 		return sites;
 	}
@@ -92,6 +92,18 @@ public class SiteManager {
 		return res;
 	}
 
+	public Tag getTagForSearch(String search, List<Tag> selectedTags) {
+		List<Tag> allTags = tags;
+		allTags.removeAll(selectedTags);
+		Iterator<Tag> it = allTags.iterator();
+		while (it.hasNext()) {
+			Tag tmpTag = it.next();
+			if (tmpTag.getName().toLowerCase().equals(search.toLowerCase()))
+				return tmpTag;
+		}
+		return null;
+	}
+
 	public JSONArray getSitesListJson() {
 		JSONArray res = new JSONArray();
 		Iterator<Site> iterator = sites.iterator();
@@ -102,16 +114,47 @@ public class SiteManager {
 
 	public JSONArray getSitesListJsonWithSearchAndTags(String search, String[] selectedIds) {
 		// If everything is empty then returns all websites
-		if (selectedIds.length == 0 && (search.isEmpty() || search == null ))
+		if (selectedIds.length == 0 && (search.isEmpty() || search == null))
 			return getSitesListJson();
-		if (selectedIds.length == 0)
-			return searchSitesWith(search);
+
 		List<Tag> selectedTags = new LinkedList<Tag>();
 		JSONArray res = new JSONArray();
 		List<Site> sitesToShow = new LinkedList<Site>();
+
 		// Convert string to int
 		for (int i = 0; i < selectedIds.length; i++) {
 			selectedTags.add(getTagById(Integer.parseInt(selectedIds[i])));
+		}
+
+		if (selectedTags.size() == 0) {
+			Tag searchTag = getTagForSearch(search, selectedTags);
+			if (searchTag != null) {
+				System.out.println("Test");
+				List<Site> tagSites = searchTag.getSites();
+				Iterator<Site> it = tagSites.iterator();
+				while (it.hasNext()) {
+					Site tmpSite = it.next();
+					if (!sitesToShow.contains(tmpSite)) {
+						sitesToShow.add(tmpSite);
+						JSONArray jsonArray = tmpSite.getJson();
+						jsonArray.add("hasSomeTags");
+						res.add(jsonArray);
+					}
+				}
+			}
+			Iterator<Site> it = sites.iterator();
+			while (it.hasNext()) {
+				Site tmpSite = it.next();
+				if (tmpSite.getName().toLowerCase().startsWith(search.toLowerCase()))
+					if (!sitesToShow.contains(tmpSite)) {
+						sitesToShow.add(tmpSite);
+						JSONArray jsonArray = tmpSite.getJson();
+						jsonArray.add("hasSomeTags");
+						res.add(jsonArray);
+					}
+
+			}
+			return res;
 		}
 
 		// get sites with all tags
@@ -119,7 +162,12 @@ public class SiteManager {
 		while (siteIterator.hasNext()) {
 			Site tmpSite = siteIterator.next();
 			if (tmpSite.hasAllTags(selectedTags)) {
-				sitesToShow.add(tmpSite);
+				if (tmpSite.getName().toLowerCase().startsWith(search.toLowerCase()) || search.isEmpty()) {
+					sitesToShow.add(tmpSite);
+					JSONArray tmpJson = tmpSite.getJson();
+					tmpJson.add("hasAllTags");
+					res.add(tmpJson);
+				}
 			}
 		}
 
@@ -129,18 +177,24 @@ public class SiteManager {
 			Site tmpSite = siteIterator.next();
 			if (!sitesToShow.contains(tmpSite))
 				if (tmpSite.hasTags(selectedTags)) {
-					sitesToShow.add(tmpSite);
+					if (tmpSite.getName().toLowerCase().startsWith(search.toLowerCase()) || search.isEmpty()) {
+						sitesToShow.add(tmpSite);
+						JSONArray jsonArray = tmpSite.getJson();
+						jsonArray.add("hasSomeTags");
+						res.add(jsonArray);
+					}
 				}
 		}
-		if (sitesToShow.isEmpty())
-			return searchSitesWith(search);
-		siteIterator = sitesToShow.iterator();
-		while (siteIterator.hasNext()) {
-			Site tmpSite = siteIterator.next();
-			if (tmpSite.getName().toUpperCase().startsWith(search.toUpperCase()) || search.isEmpty())
-				res.add(tmpSite.getJson());
-		}
-		return res;
 
+		/*
+		 * Tag searchTag = getTagForSearch(search, selectedTags); if (searchTag
+		 * != null) { List<Site> tagSites = searchTag.getSites(); Iterator<Site>
+		 * it = tagSites.iterator(); while (it.hasNext()) { Site tmpSite =
+		 * it.next(); if (!sitesToShow.contains(tmpSite)) {
+		 * sitesToShow.add(tmpSite); JSONArray jsonArray = tmpSite.getJson();
+		 * jsonArray.add("hasSomeTags"); res.add(jsonArray); } } }
+		 */
+
+		return res;
 	}
 }

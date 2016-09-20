@@ -12,8 +12,8 @@ import javax.servlet.http.HttpSession;
 
 import com.Ease.context.DataBase;
 import com.Ease.context.Site;
-import com.Ease.session.Account;
 import com.Ease.session.App;
+import com.Ease.session.ClassicAccount;
 import com.Ease.session.SessionException;
 import com.Ease.session.User;
 import com.Ease.stats.Stats;
@@ -49,14 +49,16 @@ public class EditApp extends HttpServlet {
 		String retMsg;
 		HttpSession session = request.getSession();
 		User user = null;
-		Account account = null;
+		App app = null;
+		boolean transaction = false;
+		
+		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		
 		try {
 			int appId = Integer.parseInt(request.getParameter("appId"));
 			String login = request.getParameter("login");
 			String wPassword = request.getParameter("wPassword");
 			String name = request.getParameter("name");
-			DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 			
 			user = (User)(session.getAttribute("User"));
 			if (user == null) {
@@ -73,40 +75,47 @@ public class EditApp extends HttpServlet {
 			} else if (user.getApp(appId) == null) {
 				retMsg = "error: Bad appId.";
 			} else {
-				App app = user.getApp(appId);
-				if (app.getType().equals("Account") == false){
+				transaction = db.start();
+				app = user.getApp(appId);
+				if (app.getType().equals("ClassicAccount") == false){
 					if (login == null || login.equals("") || wPassword == null || wPassword.equals("")) {
 						retMsg = "error: Bad login or password.";
 					} else {
 						Site site = app.getSite();
 						app.deleteFromDB(session.getServletContext());
 						user.getProfiles().get(app.getProfileIndex()).getApps().remove(app);
-						Account tmp = new Account(name, login, wPassword, site, user.getProfiles().get(app.getProfileIndex()), user, session.getServletContext());
+						App tmp = new App(name, login, wPassword, site, user.getProfiles().get(app.getProfileIndex()), user, session.getServletContext());
 						user.getProfiles().get(app.getProfileIndex()).addApp(tmp);
+						user.getApps().remove(user.getApp(appId));
 						user.getApps().add(tmp);
 						tmp.setAppId(appId);
-						user.getApps().remove(user.getApp(appId));
 						retMsg = "succes";
 					}
 				} else {
-					account = (Account)app;
+					ClassicAccount account = (ClassicAccount)app.getAccount();
 					if (login != null && !login.equals(""))
 						account.setLogin(login);
 					if (wPassword != null && !wPassword.equals(""))
 						account.setPassword(wPassword);
-					account.setName(name);
 					account.updateInDB(session.getServletContext(), user.getUserKey());
+					app.setName(name);
+					app.setAccount(account);
+					app.updateInDB(session.getServletContext());
 					retMsg = "success";
 				}
+				db.commit(transaction);
 			}
 		} catch (SessionException e) {
+			db.cancel(transaction);
 			retMsg = "error :" + e.getMsg();				
 		} catch (NumberFormatException e) {
+			db.cancel(transaction);
 			retMsg = "error: Bad index";
 		} catch (IndexOutOfBoundsException e){
+			db.cancel(transaction);
 			retMsg = "error: Bad app index.";
 		}
-		Stats.saveAction(session.getServletContext(), user, Stats.Action.EditApp, retMsg + " : " + ((account == null) ? "null" : account.getSite().getName()));
+		Stats.saveAction(session.getServletContext(), user, Stats.Action.EditApp, retMsg + " : " + ((app == null) ? "null" : app.getSite().getName()));
 		response.getWriter().print(retMsg);
 	}
 }

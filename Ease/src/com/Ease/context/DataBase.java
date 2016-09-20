@@ -58,4 +58,37 @@ public class DataBase {
 			return 1;
 		}
 	}
+	
+	public boolean start(){
+		try {
+			con.createStatement().executeUpdate("START TRANSACTION");
+			return true;
+		} catch (SQLException e) {
+			System.out.println("Impossible to set DB");
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public void commit(boolean transaction){
+		if(transaction){
+		try {
+			con.createStatement().executeUpdate("COMMIT");
+		} catch (SQLException e) {
+			System.out.println("Impossible to set DB");
+			e.printStackTrace();
+		}
+		}
+	}
+	
+	public void cancel(boolean transaction){
+		if(transaction){
+		try {
+			con.createStatement().executeUpdate("ROLLBACK");
+		} catch (SQLException e) {
+			System.out.println("Impossible to set DB");
+			e.printStackTrace();
+		}
+		}
+	}
 }

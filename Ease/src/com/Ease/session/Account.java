@@ -10,129 +10,48 @@ import com.Ease.context.Site;
 import com.Ease.context.SiteManager;
 import com.Ease.data.AES;
 
-public class Account extends App{
-	enum AccountData {
-		NOTHING,
-		ID,
-		PROFILE_ID,
-		SITE_ID,
-		LOGIN,
-		PASSWORD,
-		POSITION,
-		NAME
-	}
-	String	login;
-	String	password;
+abstract class Account {
 	
-	//Use this to create a new account and set it in database
-	public Account(String name, String login, String password, Site site, Profile profile, User user, ServletContext context) throws SessionException {
-		type = "Account";
-		DataBase db = (DataBase)context.getAttribute("DataBase");
-		String cryptedPassword;
-		if ((cryptedPassword = AES.encrypt(password, user.getUserKey())) == null){
-			throw new SessionException("Can't encrypt password.");
-		}
-		if (db.set("INSERT INTO accounts VALUES (NULL, " + profile.getId() + ", " + site.getId() + ", '" + login + "', '" + cryptedPassword  + "', '" + profile.getApps().size() + "', '" + name + "');")
-				!= 0) {
-			throw new SessionException("Impossible to insert new account in data base.");
-		} else {
-			this.login = login;
-			this.password = password;
-			this.site = site;
-			this.index = profile.getApps().size();
-			this.name = name;
-			this.profileIndex = profile.getIndex();
-			this.profileId = profile.getProfileId();
-			appId = user.getNextAppId();
-			ResultSet rs = db.get("SELECT MAX(account_id) FROM accounts;");
-			if (rs == null)
-				throw new SessionException("Impossible to insert new account in data base. (no rs)");
-			else {
-				try {
-					rs.next();
-					this.id = rs.getString(1);
-				} catch (SQLException e) {
-					throw new SessionException("Impossible to insert new account in data base. (no str1)");
-				}
-			}
-		}
-	}
-	
-	//Use this to load account with a ResultSet from database
-	public Account(ResultSet rs, Profile profile, User user, ServletContext context) throws SessionException {
-		try {
-			type = "Account";
-			id = rs.getString(AccountData.ID.ordinal());
-			login = rs.getString(AccountData.LOGIN.ordinal());
-			name = rs.getString(AccountData.NAME.ordinal());
-			if ((password = AES.decrypt(rs.getString(AccountData.PASSWORD.ordinal()), user.getUserKey())) == null)
-				throw new SessionException("Can't decrypt website password.");
-			site = ((SiteManager)context.getAttribute("siteManager")).get(rs.getString(AccountData.SITE_ID.ordinal()));
-			String tmp = rs.getString(AccountData.POSITION.ordinal());
-			appId = user.getNextAppId();
-			this.profileId = profile.getProfileId();
-			this.profileIndex = profile.getIndex();
-			if (tmp == null) {
-				index = profile.getApps().size();
-				updateInDB(context, user.getUserKey());
-			} else {
-				index = Integer.parseInt(tmp);	
-			}
-		} catch (SQLException e) {
-			throw new SessionException("Impossible to get all account info.");
-		} catch (NumberFormatException e) {
-			throw new SessionException("Impossible to get account index.");
-		}
-	}
+	protected String id;
+	protected String type;
 	
 	// GETTER
 	
-	public String getLogin() {
-		return login;
+	public String getType() {
+		return type;
 	}
-	public String getPassword() {
-		return password;
-	}	
+	public String getId() {
+		return id;
+	}
+	
+	public static Account getAccount(String accountId, User user, ServletContext context) throws SessionException{
+		DataBase db = (DataBase)context.getAttribute("DataBase");
+		
+		ResultSet rs = db.get("SELECT * FROM accounts WHERE account_id = "+ accountId + ";");
+		try {
+			if(rs.next()){
+				ResultSet classicRs = db.get("SELECT * FROM classicAccounts WHERE account_id = "+ accountId + ";");
+				if(classicRs.next()){
+					return new ClassicAccount(classicRs, user, context);
+				} else {
+					ResultSet logwithRs = db.get("SELECT * FROM logWithAccounts WHERE account_id = "+ accountId + ";");
+					if(logwithRs.next()){
+						return new LogWithAccount(logwithRs, user, context);
+					}
+				}
+			}
+			throw new SessionException("Can't find account");
+		} catch (SQLException e) {
+			throw new SessionException("Can't find account");
+		}
+	}
 	// SETTER
 	
-	public void setLogin(String login) {
-		this.login = login;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	
-	// UTILS
-	
-	public void updateInDB(ServletContext context, String keyUser) throws SessionException {
-		DataBase db = (DataBase)context.getAttribute("DataBase");
-		String cryptedPassword = "";
-		if ((cryptedPassword = AES.encrypt(password, keyUser)) == null) {
-			throw new SessionException("Can't encrypt password.");
-		}
-		if (db.set("UPDATE accounts SET login='" + login + "', `password`='"+ cryptedPassword + "', website_id='" + site.getId() + "', position='" + index + "', name = '" + name + "' WHERE `account_id`='"+ id + "';")
-				!= 0)
-			throw new SessionException("Impossible to update account in data base.");
-	}
-	
-	public void updateInDB(ServletContext context) throws SessionException {
-		DataBase db = (DataBase)context.getAttribute("DataBase");
-		if (db.set("UPDATE accounts SET login='" + login + "', website_id='" + site.getId() + "', position='" + index + "', name = '" + name + "' WHERE `account_id`='"+ id + "';")
-				!= 0)
-			throw new SessionException("Impossible to update account in data base.");
-	}
-	
-	public void updateProfileIdnDB(ServletContext context, String idd, int prId) throws SessionException {
-		DataBase db = (DataBase)context.getAttribute("DataBase");
-		profileId = prId;
-		if (db.set("UPDATE accounts SET profile_id='" + idd + "' WHERE `account_id`='"+ id + "';")
-				!= 0)
-			throw new SessionException("Impossible to update account in data base.");
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 	public void deleteFromDB(ServletContext context) throws SessionException {
-		DataBase db = (DataBase)context.getAttribute("DataBase");
-		if (db.set("DELETE FROM accounts WHERE account_id=" + id + ";") != 0)
-			throw new SessionException("Impossible to delete account in data base.");
+		throw new SessionException("This is an account, this is not supposed to happen!");
 	}
 }
