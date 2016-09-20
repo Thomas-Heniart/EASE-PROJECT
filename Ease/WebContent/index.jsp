@@ -30,7 +30,7 @@
 	<link rel="stylesheet" href="css/lib/ColorSelect/cs-select.css">
 	<link rel="stylesheet" href="css/lib/ColorSelect/cs-skin-boxes.css">
 	<link rel="manifest" href="manifest.json">
-	
+
 	<script src="js/classie.js"></script>
 	<script src="js/dragula.js"></script>
    	<script src="js/owl.carousel.js"></script>
@@ -44,30 +44,6 @@
     	<script src="js/modalEffects.js"></script>
     	<script src="js/selectFx.js"></script>
 		<link rel="stylesheet" type="text/css" href="component.css" />
-    <!-- Start of Async Drift Code -->
-<!-- <script>
-!function() {
-  var t;
-  if (t = window.driftt = window.drift = window.driftt || [], !t.init) return t.invoked ? void (window.console && console.error && console.error("Drift snippet included twice.")) : (t.invoked = !0, 
-  t.methods = [ "identify", "track", "reset", "debug", "show", "ping", "page", "hide", "off", "on" ], 
-  t.factory = function(e) {
-    return function() {
-      var n;
-      return n = Array.prototype.slice.call(arguments), n.unshift(e), t.push(n), t;
-    };
-  }, t.methods.forEach(function(e) {
-    t[e] = t.factory(e);
-  }), t.load = function(t) {
-    var e, n, o, r;
-    e = 3e5, r = Math.ceil(new Date() / e) * e, o = document.createElement("script"), 
-    o.type = "text/javascript", o.async = !0, o.crossorigin = "anonymous", o.src = "https://js.driftt.com/include/" + r + "/" + t + ".js", 
-    n = document.getElementsByTagName("script")[0], n.parentNode.insertBefore(o, n);
-  });
-}();
-drift.SNIPPET_VERSION = '0.2.0'
-drift.load('syhukkp32g5k')
-</script> -->
-<!-- End of Async Drift Code -->
 </head>
 <script type="text/javascript">
 function sendConnectionStatus(isConnected) {

@@ -418,9 +418,10 @@
 									</c:if>
 									<div class="linkImage">
 											<div class="showAppActionsButton">
-												<i class="fa fa-cog"></i>
+												<i class="fa fa-cog centered"></i>
+												<img src="resources/other/hexagone.png" />
 											<div class="appActionsPopup">
-												<div class="caretHelper"><i class="fa fa-caret-up" aria-hidden="true"></i></div>
+<!--												<div class="caretHelper"><i class="fa fa-caret-up" aria-hidden="true"></i></div>-->
 												<div class="buttonsContainer">
 												<div class="modifyAppButton menu-item"
 													onclick="showModifyAppPopup(this, event)">
@@ -433,7 +434,7 @@
 												</div>
 											</div>
 										</div>
-										<img
+										<img class="logo"
 											src="<c:out value='${account.getSite().getFolder()}logo.png'/>" />
 									</div>
 									<div class="siteName">
@@ -477,6 +478,20 @@
 				},
 				'text'
 			);
+		}).on('drag', function(el, source){
+			$('.owl-carousel .siteLinkBox').each(function(){
+				var rand = Math.random();
+
+				rand = '-' + rand + 's';
+				$(this).css('animation-delay', rand);
+				$(this).addClass('shake-ease');
+				$(this).addClass('shake-constant');
+				$(el).removeClass('shake-ease');
+				$(el).removeClass('shake-constant');
+			});
+		}).on('dragend', function(el){
+			$('.owl-carousel .siteLinkBox').removeClass('shake-ease');			
+			$('.owl-carousel .siteLinkBox').removeClass('shake-constant');
 		});	
 		var drakeProfiles = dragula({
 			isContainer: function(el){
@@ -511,29 +526,31 @@
 <div id="boxHelper" style="display: none">
 	<div class="siteLinkBox">
 		<div class="linkImage">
-			<div class="showAppActionsButton">
-				<i class="fa fa-cog"></i>
-				<div class="appActionsPopup">
-				<div class="caretHelper"><i class="fa fa-caret-up" aria-hidden="true"></i></div>
-				<div class="buttonsContainer">
-					<div class="modifyAppButton menu-item"
-						onclick="showModifyAppPopup(this, event)">
-						<p>Modify</p>
-					</div>
-					<div class="deleteAppButton menu-item"
-						onclick="showConfirmDeleteAppPopup(this, event)">
-						<p>Delete</p>
-					</div>
-				</div>
-			</div>
-		</div>
-			<img src="">
+											<div class="showAppActionsButton">
+												<i class="fa fa-cog centered"></i>
+												<img src="resources/other/hexagone.png" />
+											<div class="appActionsPopup">
+<!--												<div class="caretHelper"><i class="fa fa-caret-up" aria-hidden="true"></i></div>-->
+												<div class="buttonsContainer">
+												<div class="modifyAppButton menu-item"
+													onclick="showModifyAppPopup(this, event)">
+													<p>Modify</p>
+												</div>
+												<div class="deleteAppButton menu-item"
+													onclick="showConfirmDeleteAppPopup(this, event)">
+													<p>Delete</p>
+												</div>
+												</div>
+											</div>
+										</div>
+			<img class="logo" src="">
 		</div>
 		<div class="siteName">
 			<p></p>
 		</div>
 	</div>
 </div>
+
 <div id="addProfileHelper" style="display: none;">
 	<div class="item">
 		<div class="AddProfileView">
@@ -541,7 +558,7 @@
 				<p></p>
 			</div>
 			<div class="scalerContainer">
-				<img class="Scaler" src="https://placehold.it/3x6"
+				<img class="Scaler" src="resources/other/placeholder-36.png"
 					style="width: 100%; height: auto; visibility: hidden;" /> <i
 					class="fa fa-plus-circle centeredItem addHelper" aria-hidden="true"></i>
 					<p>Drop an app (or click) to create new profile</p>
@@ -560,7 +577,7 @@
 				</div>
 			</div>
 			<div class="ProfileContent">
-				<img class="Scaler" src="https://placehold.it/3x6"
+				<img class="Scaler" src="resources/other/placeholder-36.png"
 					style="width: 100%; height: auto; visibility: hidden;">
 				<div class="content">
 					<div class="ProfileControlPanel" index="0">
@@ -891,7 +908,25 @@
 	});
 </script>
 
-
+<script type="text/javascript">
+function setupAppSettingButtonPopup(elem){
+ $(elem).on('mouseover', function() {
+  	var subPopup = $(this).find('.appActionsPopup');
+  	var profileParent = (this).closest('.content');
+  	var str = '-';
+  	var scrollDist = $('.col-left').scrollTop() + $(profileParent).scrollTop() + $(this).height();
+  	str += scrollDist + 'px';
+  	subPopup.css({
+  		'margin-top':str
+  	});
+});	
+}
+  $(document).ready(function() {
+ 	$('.SitesContainer .showAppActionsButton').each(function(){
+ 		setupAppSettingButtonPopup($(this));
+ 	});
+  });
+</script>
 
 
 

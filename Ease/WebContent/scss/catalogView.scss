@@ -135,25 +135,25 @@
 			letter-spacing: 1px;
 			font-size: 15px;
 			width: 70%;
-		    margin-left: auto;
-    		margin-right: auto;
-    		margin-bottom: 0px;
-    		line-height: 30px;
-    		border-radius: 10px;
+			margin-left: auto;
+			margin-right: auto;
+			margin-bottom: 0px;
+			line-height: 30px;
+			border-radius: 10px;
 		}
 	}
 	.scaleContainerView {
-			background-color: white;
-			width: 100%;
-			margin-top: 20px;
-			padding-bottom: 20px;
-			.tagContainer {
-				border-bottom: 2px solid grey;
-				.tag {
-					font-size: 0.8em;
-					margin: 10px 0 10px 20px;
-				}
+		background-color: white;
+		width: 100%;
+		margin-top: 20px;
+		padding-bottom: 20px;
+		.tagContainer {
+			border-bottom: 2px solid grey;
+			.tag {
+				font-size: 0.8em;
+				margin: 10px 0 10px 20px;
 			}
+		}
 	}
 	.scaleContainer {
 		width: 90%;
@@ -214,42 +214,42 @@
 }
 
 .ProfilesHandler{
-.item {
-	.AddProfileView {
-		display: none;
-		background-color: white;
-		width: 50%;
-		margin-left: auto;
-		margin-right: auto;
-		margin-top: 50%;
-		border-radius: 5px;
-		&:hover {
-			cursor: pointer;
-			background-color: darken(white, 2%);
-		}
-		.MobilePreviewHeader {
-			height: 20px;
-			background-color: #35a7ff;
-			border-top-left-radius: 5px;
-		    border-top-right-radius: 5px;
-		}
-		.scalerContainer {
-			position: relative;
-			.addHelper {
-				font-size: 50px;
-				color: $themeGreyColor;
+	.item {
+		.AddProfileView {
+			display: none;
+			background-color: white;
+			width: 50%;
+			margin-left: auto;
+			margin-right: auto;
+			margin-top: 50%;
+			border-radius: 5px;
+			&:hover {
+				cursor: pointer;
+				background-color: darken(white, 2%);
 			}
-			p {
-				position: absolute;
-   			 	top: 0;
-    			width: 100%;
-    			text-align: center;
-    			padding-top: 130%;
-    			font-size: 10px;
+			.MobilePreviewHeader {
+				height: 20px;
+				background-color: #35a7ff;
+				border-top-left-radius: 5px;
+				border-top-right-radius: 5px;
+			}
+			.scalerContainer {
+				position: relative;
+				.addHelper {
+					font-size: 50px;
+					color: $themeGreyColor;
+				}
+				p {
+					position: absolute;
+					top: 0;
+					width: 100%;
+					text-align: center;
+					padding-top: 130%;
+					font-size: 10px;
+				}
 			}
 		}
 	}
-}
 }
 .MobilePreview {
 	width: 100%;
@@ -261,16 +261,16 @@
 		background-color: #FFD00C;
 		padding: 5px;
 		border-top-left-radius: 5px;
-	    border-top-right-radius: 5px;
+		border-top-right-radius: 5px;
 		p {
 			margin-bottom: 0px;
 			line-height: 12px;
 			color: white;
 			font-size: 12px;
 			color: white;
-		    text-transform: uppercase;
-		    letter-spacing: 1px;
-		    font-weight: 600;
+			text-transform: uppercase;
+			letter-spacing: 1px;
+			font-weight: 600;
 		}
 	}
 	.scalerContainer {
@@ -294,49 +294,49 @@
 				.imageBox {
 					.deleteAppButton {
 						position: absolute;
-					    z-index: 1;
-    					width: 35%;
-					    height: 35%;
-					    border-radius: 100%;
-    					background-color: white;
-    					top: 0;
-    					left: 0;
-    					visibility: hidden;
-    					transform: translateX(-50%) translateY(-50%);
-    					&:hover {
-    						cursor: pointer;
-    					}
-    					i {
-    						color: black;
-    						font-size: 100%;
-    						position: absolute;
-    						top: 50%;
-    						left: 50%;
-    						transform: translateX(-50%) translateY(-50%);
-    					}
+						z-index: 1;
+						width: 35%;
+						height: 35%;
+						border-radius: 100%;
+						background-color: white;
+						top: 0;
+						left: 0;
+						visibility: hidden;
+						transform: translateX(-50%) translateY(-50%);
+						&:hover {
+							cursor: pointer;
+						}
+						i {
+							color: black;
+							font-size: 100%;
+							position: absolute;
+							top: 50%;
+							left: 50%;
+							transform: translateX(-50%) translateY(-50%);
+						}
 					}
 					.modifyAppButton {
 						position: absolute;
-					    z-index: 1;
-    					width: 35%;
-					    height: 35%;
-					    border-radius: 100%;
-    					background-color: white;
-    					top: 100%;
-    					left: 100%;
-    					visibility: hidden;
-    					transform: translateX(-50%) translateY(-50%);
-    					&:hover {
-    						cursor: pointer;
-    					}
-    					i {
-    						color: black;
-    						font-size: 100%;
-    						position: absolute;
-    						top: 50%;
-    						left: 50%;
-    						transform: translateX(-50%) translateY(-50%);
-    					}
+						z-index: 1;
+						width: 35%;
+						height: 35%;
+						border-radius: 100%;
+						background-color: white;
+						top: 100%;
+						left: 100%;
+						visibility: hidden;
+						transform: translateX(-50%) translateY(-50%);
+						&:hover {
+							cursor: pointer;
+						}
+						i {
+							color: black;
+							font-size: 100%;
+							position: absolute;
+							top: 50%;
+							left: 50%;
+							transform: translateX(-50%) translateY(-50%);
+						}
 					}
 					&:hover {
 						.deleteAppButton {
@@ -357,15 +357,15 @@
 					}
 					i {
 						font-size: 70px;
-			    		position: absolute;
-    					top: 50%;
-    					left: 50%;
-    					color: #32cd32;
-    					-webkit-transform: translateX(-50%) translateY(-50%);
-			    		-moz-transform: translateX(-50%) translateY(-50%);
-    					-ms-transform: translateX(-50%) translateY(-50%);
-    					transform: translateX(-50%) translateY(-50%);
-    					transform-origin: top left;
+						position: absolute;
+						top: 50%;
+						left: 50%;
+						color: #32cd32;
+						-webkit-transform: translateX(-50%) translateY(-50%);
+						-moz-transform: translateX(-50%) translateY(-50%);
+						-ms-transform: translateX(-50%) translateY(-50%);
+						transform: translateX(-50%) translateY(-50%);
+						transform-origin: top left;
 					}
 					i.fa-spinner {
 						-webkit-animation: rotate 3s linear infinite;
@@ -378,12 +378,12 @@
 }
 
 @-webkit-keyframes rotate {
-    from{
-        -webkit-transform: rotate(0deg) translate(-50%, -50%);
-    }
-    to{
-        -webkit-transform: rotate(360deg) translate(-50%, -50%);
-    }
+	from{
+		-webkit-transform: rotate(0deg) translate(-50%, -50%);
+	}
+	to{
+		-webkit-transform: rotate(360deg) translate(-50%, -50%);
+	}
 }
 
 @-webkit-keyframes easyScaling {
@@ -424,6 +424,28 @@
 	-webkit-animation: scaleOut .5s linear 1;
 	animation: scaleOut .5s linear 1;
 }
+
+.shakeAnimation {
+	animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both infinite;
+}
+@keyframes shake {
+	10%, 90% {
+		transform: translate3d(-1px, 1px, 0);
+	}
+
+	20%, 80% {
+		transform: translate3d(1px, -1px, 0);
+	}
+
+	30%, 50%, 70% {
+		transform: translate3d(-2px, 2px, 0);
+	}
+
+	40%, 60% {
+		transform: translate3d(2px, -2px, 0);
+	}
+}
+
 
 @-webkit-keyframes slideLeft {
 	0% {
@@ -474,38 +496,38 @@
 		position: absolute;
 	}
 }
-	.CatalogViewTab.show {
-		transition: all 0.3s ease;
-		visibility: visible;
-		background-color: #EDEDED;
-		left: 50%;
-		opacity: 1;
-	}
-	.CatalogViewTab {
-		min-height: 100%;
-		opacity: 0;
-		top: 0;
-		transition: all 0.3s ease;
-		width: 50%;
-		float:left;
-		left: 100%;
-		visibility: hidden;
+.CatalogViewTab.show {
+	transition: all 0.3s ease;
+	visibility: visible;
+	background-color: #EDEDED;
+	left: 50%;
+	opacity: 1;
+}
+.CatalogViewTab {
+	min-height: 100%;
+	opacity: 0;
+	top: 0;
+	transition: all 0.3s ease;
+	width: 50%;
+	float:left;
+	left: 100%;
+	visibility: hidden;
+	position: absolute;
+	background-color: white;
+	#quit {
 		position: absolute;
-		background-color: white;
-		#quit {
-			position: absolute;
-			top: 1%;
-			right: 1%;
-			background-color: $themeRedColor;
-			color: white;
-			border: none;
-	    	border-radius: 5px;
-	   	 	width: 25px;
-   			height: 25px;
-   			padding: 0px;
-   			outline:none;
-		}
+		top: 1%;
+		right: 1%;
+		background-color: $themeRedColor;
+		color: white;
+		border: none;
+		border-radius: 5px;
+		width: 25px;
+		height: 25px;
+		padding: 0px;
+		outline:none;
 	}
+}
 
 .centeredItem {
 	position: absolute;
@@ -518,8 +540,8 @@
 	border: 1px solid red !important;
 }
 
- @media screen and (max-width: 771px) {
+@media screen and (max-width: 771px) {
 	.ProfilesEditView {
 
 	}
- }
+}
