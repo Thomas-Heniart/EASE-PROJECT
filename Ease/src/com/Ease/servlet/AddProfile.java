@@ -70,7 +70,7 @@ public class AddProfile extends HttpServlet {
 		} else {
 			try {
 				transaction = db.start();
-				Profile profile = new Profile(name, color, "", user, session.getServletContext());
+				Profile profile = new Profile(name, color, "", user, null, session.getServletContext());
 				user.addProfile(profile);
 				retMsg = "success: " + profile.getProfileId();
 				db.commit(transaction);
