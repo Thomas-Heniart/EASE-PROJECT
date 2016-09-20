@@ -2,15 +2,12 @@ package com.Ease.context;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 
 import javax.servlet.ServletContext;
 
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 public class Site {
 	enum SiteData {
