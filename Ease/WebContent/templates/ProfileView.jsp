@@ -435,7 +435,7 @@
 												</div>
 											</div>
 										</div>
-										<img
+										<img class="logo"
 											src="<c:out value='${app.getSite().getFolder()}logo.png'/>" />
 									</div>
 									<div class="siteName">
