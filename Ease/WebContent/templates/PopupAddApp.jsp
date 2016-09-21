@@ -9,10 +9,7 @@
 				<p>Type your password for the last time ;)</p>
 			</div>
 		</div>
-		<div class="lineInput">
-			<p class="inputTitle">App name :</p>
-			<input  id="name" name="name" type="text" placeholder="Name" maxlength="14"/>
-		</div>
+		<input  id="name" name="name" type="text" placeholder="Name" maxlength="14"/>
 		<div class="loginWithChooser">
 			<div class="linedSeparator">
 				<div class="backgroundLine"></div>
@@ -31,6 +28,15 @@
 				<i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i>
 			</div>
 			<div class="ChooserContent">
+			</div>
+		</div>
+		<div class="loginSsoChooser" id="ssoChooser" style="display:none;">
+			<p>Select existing account </p>
+			<div class="ChooserContent">
+			</div>
+			<div class="linedSeparator or">
+				<div class="backgroundLine"></div>
+				<p>or</p>
 			</div>
 		</div>
 		<div id="AddAppForm">
@@ -97,6 +103,9 @@ $(document).ready(function(){
 		popup.find('.or').css('display', 'block');
 		popup.find('.loginAppChooser .ChooserContent').empty();
 		popup.find('.loginAppChooser').css('display', 'none');
+		
+		popup.find('.loginSsoChooser .ChooserContent').empty();
+		popup.find('.loginSsoChooser').css('display', 'none');
 
 		item.attr('name', $(helper).attr("name"));
 		item.find('img.logo').attr('src', $(helper).find('img').attr("src"));
@@ -122,6 +131,32 @@ $(document).ready(function(){
 				loginChooser.find(".loginWithButton[webid='" + abc[i] + "']").removeClass('hidden');
 			}
 		}
+		
+		var SsoChooserContent = $('.loginSsoChooser .ChooserContent');
+		var SsoHelper = $("<div class='AccountApp'><div class='imageHandler'><img src='' /></div><p></p></div>");
+		
+		var ssoChooser = $('#PopupAddApp .loginSsoChooser');
+		var ssoId = $(helper).attr('data-sso');
+		
+		if(ssoId != "" && ssoId != null){
+			ssoChooser.css('display', 'block');
+			var apps = $(".siteLinkBox[ssoId='" + ssoId + "']");
+			var logins = [];
+			for (var i = 0; i < apps.length; i++) {
+				if(!logins.includes($(apps[i]).attr('login'))){
+					SsoHelper.find('p').text($(apps[i]).attr('login'));
+					SsoHelper.attr('aId', $(apps[i]).attr("id"));			
+					SsoHelper.find('img').attr('src','resources/sso/'+ssoId+".png");
+					SsoHelperCloned = $(SsoHelper).clone();
+					SsoHelperCloned.click(function(){
+						$(this).closest('.ChooserContent').find('.AccountApp.selected').removeClass('selected');
+						$(this).addClass('selected');
+					});
+					SsoChooserContent.append(SsoHelperCloned);
+					logins.push($(apps[i]).attr('login'));
+				}
+			}
+		}
 		popup.find('#accept').unbind('click');
 		popup.find('#accept').click(function(){
 			$(container).append(item);
@@ -132,7 +167,8 @@ $(document).ready(function(){
 			var password = '';
 			var aId = '';
 
-			var AppToLoginWith = $(popup).find('.AccountApp.selected');
+			var AppToLoginWith = $(popup).find('.loginAppChooser .ChooserContent .AccountApp.selected');
+			var SsoToLoginWith = $('.loginSsoChooser .ChooserContent .AccountApp.selected');
 
 			if (AppToLoginWith.length){
 				aId = AppToLoginWith.attr('aId');
@@ -156,6 +192,7 @@ $(document).ready(function(){
 							$(item).attr('name', name);
 							$(item).find('.siteName p').text(name);
 							$(item).attr('id', data.substring(9, data.length));
+							$(item).attr('ssoid', $(helper).attr('data-sso'));
 							setupAppSettingButtonPopup($(item).find('.showAppActionsButton'));
 
 						} else {
@@ -169,7 +206,48 @@ $(document).ready(function(){
 					},
 					'text'
 				);
-			}else {
+				
+				
+			} else if (SsoToLoginWith.length){
+
+				login = SsoToLoginWith.find('p').text();
+				aId = SsoToLoginWith.attr('aId');
+				$.post(
+					'addAppWithSso',
+					{
+						name: name,
+						profileId: $(container).closest('.item').attr('id'),
+						siteId: $(helper).attr('idx'),
+						appId: aId
+					},
+					function(data){	
+						$(item).find('.tmp').remove();
+						if (data[0] == 's'){
+							$(item).find('.linkImage').addClass('scaleOutAnimation');
+							setTimeout(function() {
+								$(item).find('.linkImage').removeClass('scaleOutAnimation');
+							}, 1000);
+							$(item).attr('onclick', "sendEvent(this)");
+							$(item).attr('webId', $(helper).attr('idx'));
+							$(item).attr('login', login);
+							$(item).attr('name', name);
+							$(item).find('.siteName p').text(name);
+							$(item).attr('id', data.substring(9, data.length));
+							$(item).attr('ssoid', $(helper).attr('data-sso'));
+							setupAppSettingButtonPopup($(item).find('.showAppActionsButton'));
+						} else {
+							if (data[0] != 'e'){
+								document.location.reload(true);
+							} else {
+								showAlertPopup(null, true);
+								$(item).remove();
+							}													
+						}
+					},
+					'text'
+				);
+			
+			} else {
 				login = $(popup).find('#login').val();
 				password = $(popup).find('#password').val();
 				$.post(
@@ -193,7 +271,8 @@ $(document).ready(function(){
 							$(item).attr('webId', $(helper).attr('idx'));
 							$(item).attr('name', name);
 							$(item).find('.siteName p').text(name);
-							$(item).attr('id', data.substring(9, data.length))
+							$(item).attr('id', data.substring(9, data.length));
+							$(item).attr('ssoid', $(helper).attr('data-sso'));
 							setupAppSettingButtonPopup($(item).find('.showAppActionsButton'));
 						} else {
 							if (data[0] != 'e'){

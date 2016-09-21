@@ -1,6 +1,7 @@
 {
 	"name":"googledrive",
 	"lastLogin":"",
+	"sso":"Google",
 	"home":"https://googledrive.com",
 	"connect":{
 		"todo":[
