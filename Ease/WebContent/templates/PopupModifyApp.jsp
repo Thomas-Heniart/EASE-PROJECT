@@ -9,12 +9,26 @@
 				<p class="title">Modify informations related to <span>Deezer</span></p>
 			</div>
 		</div>
-		<input  id="name" name="name" type="text" placeholder="Name" maxlength="14"/>
+		<div class="lineInput">
+			<p class="inputTitle">App name :</p>
+			<div class="disabledInput">
+			<input  id="name" name="name" type="text" placeholder="Name" maxlength="14"/>
+				<div class="activateInput">
+				<i class="fa fa-cog"></i>
+				</div>
+			</div>
+		</div>
 		<div class="loginWithChooser">
-			<p>Log in with</p>
-			<div class="loginWithButton hidden" webid="7" style="background-color:#3B5998;"><p>Facebook</p></div>
-			<div class="loginWithButton hidden" webid="28" style="background-color:#007BB6;"><p>Linkedin</p></div>
-			<p class="or">or</p>
+			<div class="linedSeparator">
+				<div class="backgroundLine"></div>
+				<p>Log in with</p>
+			</div>
+			<div class="loginWithButton facebook hidden" webid="7"><p>Facebook</p></div>
+			<div class="loginWithButton linkedin hidden" webid="28"><p>Linkedin</p></div>
+			<div class="linedSeparator or">
+				<div class="backgroundLine"></div>
+				<p>or</p>
+			</div>
 		</div>
 		<div class="loginAppChooser" style="display:none;">
 			<p>Select your account </p>
@@ -27,7 +41,12 @@
 		<div id="modifyAppForm">
 			<input  name="login" type="text" placeholder="Login" style="display:none;"/>
 			<input  id="login" name="login" type="text" placeholder="Login" />
-			<input  id="password" name="password" type="password" placeholder="Password"/>
+			<div class="disabledInput">
+				<input  id="password" name="password" type="password" placeholder="Password"/>
+				<div class="activateInput">
+				<i class="fa fa-cog"></i>
+				</div>
+			</div>
     	</div>
 		<div class="buttonSet">
    			<button id="accept" class="btn btn-default btn-primary btn-group btn-lg">Update</button>
@@ -37,14 +56,28 @@
 </div>
  
  <script>	
+ function resetDisabledInput(elem){
+ 	$(elem).find('input').prop('disabled', true);
+ 	$(elem).find('.activateInput').css('display', 'block');
+ }
+
  $(document).ready(function(){
  	$('#PopupModifyApp .buttonBack').click(function(){
  		var parent = $(this).closest('.md-content');
 
+ 		parent.find('.loginWithButton').removeClass('locked');
  		parent.find('.loginAppChooser .ChooserContent').empty();
  		parent.find('.loginAppChooser').css('display', 'none');
  		parent.find('#modifyAppForm').css('display', 'block');
  		parent.find('.or').css('display', 'block');
+ 	});
+ 	$('.disabledInput .activateInput').click(function(){
+ 		var inpt = $(this).closest('.disabledInput').find('input');
+ 		if (inpt.prop('disabled') == true){
+ 			inpt.prop('disabled', false);
+ 		}
+ 		$(this).css('display', 'none');
+ 		$(inpt).focus();
  	});
 });
 $(document).ready(function(){
@@ -56,6 +89,9 @@ $(document).ready(function(){
 		AppChooser.empty();
 		var AppHelperCloned;
 
+		parent.find('.loginWithButton').removeClass('locked');
+		$(this).addClass('locked');
+
 		parent.find('.loginAppChooser').css('display', 'block');
 		parent.find('#modifyAppForm').css('display', 'none');
 		parent.find('.or').css('display', 'none');
@@ -64,7 +100,7 @@ $(document).ready(function(){
 		for (var i = 0; i < apps.length; i++) {
 			AppHelper.attr('aId', $(apps[i]).attr('id'));			
 			AppHelper.find('p').text($(apps[i]).attr('login'));
-			AppHelper.find('img').attr('src',$(apps[i]).find('img').attr('src'));
+			AppHelper.find('img').attr('src',$(apps[i]).find('img.logo').attr('src'));
 			AppHelperCloned = $(AppHelper).clone();
 			AppHelperCloned.click(function(){
 				$(parent).find('.AccountApp.selected').removeClass('selected');
@@ -98,12 +134,16 @@ function showModifyAppPopup(elem, event){
 	 var app = $(elem).closest('.siteLinkBox');
  	 var image = $(app).find('.linkImage');
 
+ 	 popup.find('.disabledInput').each(function(){
+ 	 	resetDisabledInput($(this));
+ 	 });
+ 	 	popup.find('.loginWithButton').removeClass('locked');
 		popup.find('#modifyAppForm').css('display', 'block');
 		popup.find('.or').css('display', 'block');
 		popup.find('.loginAppChooser .ChooserContent').empty();
 		popup.find('.loginAppChooser').css('display', 'none');
 
-	popup.find('.logoApp').attr('src', $(app).find('img').attr('src'));
+	popup.find('.logoApp').attr('src', $(app).find('img.logo').attr('src'));
 	popup.find('span').text($(app).attr('name'));
 	popup.find("#login").val($(app).attr('login'));
 	popup.find("#password").val($(app).attr('hash'));

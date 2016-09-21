@@ -9,14 +9,21 @@
 				<p>Type your password for the last time ;)</p>
 			</div>
 		</div>
-		<input  id="name" name="name" type="text" placeholder="Name" maxlength="14"/>
+		<div class="lineInput">
+			<p class="inputTitle">App name :</p>
+			<input  id="name" name="name" type="text" placeholder="Name" maxlength="14"/>
+		</div>
 		<div class="loginWithChooser">
 			<div class="linedSeparator">
+				<div class="backgroundLine"></div>
 				<p>Log in with</p>
 			</div>
-			<div class="loginWithButton hidden" webid="7" style="background-color:#3B5998;"><p>Facebook</p></div>
-			<div class="loginWithButton hidden" webid="28" style="background-color:#007BB6;"><p>Linkedin</p></div>
-			<p class="or">or</p>
+			<div class="loginWithButton facebook hidden" webid="7"><p>Facebook</p></div>
+			<div class="loginWithButton linkedin hidden" webid="28"><p>Linkedin</p></div>
+			<div class="linedSeparator or">
+				<div class="backgroundLine"></div>
+				<p>or</p>
+			</div>
 		</div>
 		<div class="loginAppChooser" style="display:none;">
 			<p>Select your account </p>
@@ -42,6 +49,7 @@
  	$('#PopupAddApp .buttonBack').click(function(){
  		var parent = $(this).closest('.md-content');
 
+ 		parent.find('.loginWithButton').removeClass('locked');
  		parent.find('.loginAppChooser .ChooserContent').empty();
  		parent.find('.loginAppChooser').css('display', 'none');
  		parent.find('#AddAppForm').css('display', 'block');
@@ -57,6 +65,9 @@ $(document).ready(function(){
 		AppChooser.empty();
 		var AppHelperCloned;
 
+		parent.find('.loginWithButton').removeClass('locked');
+		$(this).addClass('locked');
+
 		parent.find('.loginAppChooser').css('display', 'block');
 		parent.find('#AddAppForm').css('display', 'none');
 		parent.find('.or').css('display', 'none');
@@ -65,7 +76,7 @@ $(document).ready(function(){
 		for (var i = 0; i < apps.length; i++) {
 			AppHelper.attr('aId', $(apps[i]).attr("id"));			
 			AppHelper.find('p').text($(apps[i]).attr('login'));
-			AppHelper.find('img').attr('src',$(apps[i]).find('img').attr('src'));
+			AppHelper.find('img').attr('src',$(apps[i]).find('img.logo').attr('src'));
 			AppHelperCloned = $(AppHelper).clone();
 			AppHelperCloned.click(function(){
 				$(parent).find('.AccountApp.selected').removeClass('selected');
@@ -81,13 +92,14 @@ $(document).ready(function(){
 		var popup = $('#PopupAddApp');
 		var item = $($('#boxHelper').html());
 
+ 	 	popup.find('.loginWithButton').removeClass('locked');
 		popup.find('#AddAppForm').css('display', 'block');
 		popup.find('.or').css('display', 'block');
 		popup.find('.loginAppChooser .ChooserContent').empty();
 		popup.find('.loginAppChooser').css('display', 'none');
 
 		item.attr('name', $(helper).attr("name"));
-		item.find('img').attr('src', $(helper).find('img').attr("src"));
+		item.find('img.logo').attr('src', $(helper).find('img').attr("src"));
 		item.find('.siteName p').text($(helper).attr("name"));
 		popup.find('.logoApp').attr('src', $(helper).find('img').attr("src"));
 		popup.find('span').text($(helper).attr("name"));
@@ -143,7 +155,8 @@ $(document).ready(function(){
 							$(item).attr('webId', $(helper).attr('idx'));
 							$(item).attr('name', name);
 							$(item).find('.siteName p').text(name);
-							$(item).attr('id', data.substring(9, data.length))
+							$(item).attr('id', data.substring(9, data.length));
+							setupAppSettingButtonPopup($(item).find('.showAppActionsButton'));
 
 						} else {
 							if (data[0] != 'e'){
@@ -181,6 +194,7 @@ $(document).ready(function(){
 							$(item).attr('name', name);
 							$(item).find('.siteName p').text(name);
 							$(item).attr('id', data.substring(9, data.length))
+							setupAppSettingButtonPopup($(item).find('.showAppActionsButton'));
 						} else {
 							if (data[0] != 'e'){
 								document.location.reload(true);
