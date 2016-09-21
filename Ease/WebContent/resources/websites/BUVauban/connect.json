@@ -1,73 +1,22 @@
-
 {
-    "website":"la catho lille",
-    
-    "urls":{
-        "login":"https://sso.univ-catholille.fr/cas/login"
+    "name":"BUVauban",
+    "lastlogin":"",
+    "home":"http://lol.univ-catholille.fr/",
+    "connect": {
+    	"todo": [
+    		{"action":"goto", "url":"https://sso.univ-catholille.fr/cas/login?service=http%3A%2F%2Flol.univ-catholille.fr%2Ffr%2Fcas%3Fdestination%3Duser"},
+    		{"action":"fill", "what":"login","search":"#username", "grave":"true"},
+    		{"action":"fill", "what":"password","search":"#password"},
+    		{"action":"click", "search":"#fm1 input[type='submit']"}
+    	]
     },
-    
-    "elements":{
-        
-        "userField":{
-            "id":"username"
-        },
-        "passField":{
-            "id":"password"
-        },
-        "buttonLogIn":{
-            "tagName":"input",
-            "className":"btn-submit",
-            "name":"submit",
-            "type":"submit"
-        }
-        
-    },
-    
-    "connectionSteps":[
-        {
-            "action":"goTo",
-            "url":"login"
-        },
-        
-        {
-                "action":"catchFail",
-                "if":"missingElement",
-                "elementName":"passField",
-                "actionsIfFail":[{"action":"end"}],
-                "send":"alreadyConnected"
-        },
-        
-        {
-            "action":"do",
-            "elements":[
-                {
-                    "name":"userField",
-                    "action":"fill",
-                    "value":"user"
-                },
-                {
-                    "name":"passField",
-                    "action":"fill",
-                    "value":"pass"
-                },
-                {
-                    "name":"buttonLogIn",
-                    "action":"click"
-                }
-            ]
-        },
-        
-        {
-            "action":"nextPage",
-            "lastPage":true
-        },
-        
-        {
-            "action":"catchFail",
-            "if":"existingElement",
-            "elementName":"passField",
-            "actionsIfFail":[{"action":"end"}],
-            "send":"wrongPassword"
-        }
-    ]
+    "checkAlreadyLogged": [
+    	{"search":"a[href='https://sso.univ-catholille.fr/cas/logout']"}
+    ],
+    "logout": {
+    	"todo": [
+    		{"action":"goto", "url":"https://sso.univ-catholille.fr/cas/logout"},
+    		{"action":"goto", "url":"http://lol.univ-catholille.fr/"}
+    	]
+    }
 }

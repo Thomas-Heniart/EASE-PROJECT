@@ -25,7 +25,7 @@ function sortSites(sites) {
 
 function displaySite(fields, index, appendSelector) {
 	console.log(fields);
-	appendSelector.append("<div class='catalogApp' idx='"+ fields[0] +"' connect='"+ fields[1] +"connect.json' data-login='" + fields[2] + "' name='" + fields[3] + "' ></div>");
+	appendSelector.append("<div class='catalogApp' idx='"+ fields[0] +"' connect='"+ fields[1] +"connect.json' data-login='" + fields[2] + "' name='" + fields[3] + "' data-sso='" + fields[4] + "'></div>");
 	$("div[idx='" + fields[0] + "']").append("<div class='catalogAppLogo'><img src='" + fields[1] + "logo.png' /></div>");
 	if (fields[3].length > 14)
 		$("div[idx='" + fields[0] + "']").append("<div class='catalogAppName'><p>" + fields[3].substring(0, 14) + "...</p></div>");
@@ -94,6 +94,7 @@ function refreshCatalogContent(data) {
 					ret.attr("name", $(this).find('p').text());
 					ret.attr("connect", $(this).attr("connect"));
 					ret.attr("data-login", $(this).attr("data-login"));
+					ret.attr("data-sso", $(this).attr("data-sso"));
 					ret.append($('<img />'));
 					ret.find('img').attr("src", $(this).find('img').attr("src"));
 					return ret; //Replaced $(ui) with $(this)

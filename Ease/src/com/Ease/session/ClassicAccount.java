@@ -59,7 +59,7 @@ public class ClassicAccount extends Account{
 			id = rs.getString(ClassicAccountData.ACCOUNT_ID.ordinal());
 			login = rs.getString(ClassicAccountData.LOGIN.ordinal());
 			if ((password = AES.decrypt(rs.getString(ClassicAccountData.PASSWORD.ordinal()), user.getUserKey())) == null)
-				throw new SessionException("Can't decrypt website password.");
+				throw new SessionException("Can't decrypt website password. " + id);
 		} catch (SQLException e) {
 			throw new SessionException("Impossible to get all classic account info.");
 		}

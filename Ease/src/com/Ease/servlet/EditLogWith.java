@@ -12,7 +12,6 @@ import javax.servlet.http.HttpSession;
 import com.Ease.context.DataBase;
 import com.Ease.context.Site;
 import com.Ease.session.App;
-import com.Ease.session.LogWith;
 import com.Ease.session.LogWithAccount;
 import com.Ease.session.SessionException;
 import com.Ease.session.User;

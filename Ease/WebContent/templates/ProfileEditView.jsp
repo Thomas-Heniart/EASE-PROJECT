@@ -258,6 +258,8 @@
 														.attr("connect"));
 												ret.attr("data-login", $(this)
 														.attr("data-login"));
+												ret.attr("data-sso", $(this)
+														.attr("data-sso"));
 												ret.append($('<img />'));
 												ret.find('img').attr(
 														"src",

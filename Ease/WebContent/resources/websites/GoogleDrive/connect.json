@@ -1,10 +1,11 @@
 {
 	"name":"googledrive",
 	"lastLogin":"",
+	"sso":"Google",
 	"home":"https://googledrive.com",
 	"connect":{
 		"todo":[
-			{"action":"goto", "url":"https://accounts.google.com/ServiceLogin"},
+			{"action":"clickona", "search":"#account-chooser-add-account"},
 			{"action":"fill", "what":"login", "search":"#Email", "grave":true},
 			{"action":"click", "search":"#next", "grave":true},
 			{"action":"waitfor", "search":"#Passwd"},
