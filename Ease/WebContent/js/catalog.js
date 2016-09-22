@@ -142,6 +142,7 @@ function addActionOnCrossButton(tagId) {
 		event.stopPropagation();
 		var tagButton = $(event.target).parent().find("a.tag");
 		$(tagButton).removeClass("tag-active");
+		$(tagButton).addClass("hvr-grow");
 		updateCatalogFront($(tagButton));
 	})
 }
@@ -168,6 +169,7 @@ function updateCatalogFront(tagButton) {
 		var btnGroup = newButtonGroup(tagId);
 		btnGroup.append(tagButton);
 		btnGroup.append(newCrossButton(tagId));
+		btnGroup.addClass('scaleinAnimation');
 		setNewCrossCss(tagId);
 		addActionOnCrossButton(tagId);
 	} else {
@@ -189,6 +191,7 @@ $(document).ready(function() {
 		var nbOfTags = $(".tag-active").length;
 		if(nbOfTags < 3){
 		$(event.target).toggleClass("tag-active");
+		$(event.target).toggleClass("hvr-grow");
 		nbOfTags++;
 		updateCatalogFront($(event.target));
 		}

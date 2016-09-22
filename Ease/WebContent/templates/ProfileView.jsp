@@ -284,13 +284,13 @@
 								});
 			}
 		}
-		$(document).ready(function() {
+/*		$(document).ready(function() {
 			if (!($('#tutorialView').length)) {
 				setTimeout(function() {
 					checkForExtension();
 				}, 1000);
 			}
-		});
+		});*/
 		function closeAllSettingsTabs() {
 			$('.ProfileSettingsButton.settings-show').click();
 		}
@@ -420,8 +420,7 @@
 									</c:if>
 									<div class="linkImage">
 											<div class="showAppActionsButton">
-												<i class="fa fa-cog centered"></i>
-												<img src="resources/other/hexagone.png" />
+												<i class="fa fa-cog"></i>
 											<div class="appActionsPopup">
 <!--												<div class="caretHelper"><i class="fa fa-caret-up" aria-hidden="true"></i></div>-->
 												<div class="buttonsContainer">
@@ -529,8 +528,7 @@
 	<div class="siteLinkBox">
 		<div class="linkImage">
 											<div class="showAppActionsButton">
-												<i class="fa fa-cog centered"></i>
-												<img src="resources/other/hexagone.png" />
+												<i class="fa fa-cog"></i>
 											<div class="appActionsPopup">
 <!--												<div class="caretHelper"><i class="fa fa-caret-up" aria-hidden="true"></i></div>-->
 												<div class="buttonsContainer">

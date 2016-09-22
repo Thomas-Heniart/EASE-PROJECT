@@ -43,6 +43,13 @@
 			color: white;
 			margin-top: 3px;
 			cursor: pointer;
+			i {
+				transition: transform 0.3s;
+				&:hover {
+					transition: transform 0.3s;
+					transform: rotateZ(-90deg);
+				}
+			}
 		}
 	}
 	.ProfileContent {
@@ -197,7 +204,6 @@
 						}
 						.showAppActionsButton{
 							visibility: hidden;
-							display: none;
 						}
 						position: relative;
 						width: 65%;
@@ -370,6 +376,7 @@
 			top: 78%;
 			left: 81%;
 			visibility: hidden;
+			opacity: 0;
 			&:hover {
 				cursor: pointer;
 			}
@@ -381,16 +388,21 @@
 				border: none;
 			}
 			i.fa-cog {
-				color: black;
+				background-color: white;
+			    padding: 3px;
+    			border-radius: 100%;
+    			line-height: 90%;
+				color: $themeColor;
 				font-size: 1vw;
-				position: absolute;
-				color: white;
+				position: relative;
 			}
 		}
 		&:hover {
 			.showAppActionsButton {
+				transition: all .1s;
+				transition-delay: .4s;
 				visibility: visible;
-				display: block;
+				opacity: 1;
 			}
 		}
 	}

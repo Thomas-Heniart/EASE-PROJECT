@@ -119,11 +119,11 @@ function darkerColor(color, ratio) {
 }
 
 $(document).ready(function() {
-  $(".ease-button").hover(function(event) {
+/*  $(".ease-button").hover(function(event) {
     var darkColor = darkerColor($(event.target).css("background-color"), 0.3);
     $(event.target).css("background-color", darkColor);
   }, function(event) {
     var lightColor = lighterColor($(event.target).css("background-color"), 0.3);
     $(event.target).css("background-color", lightColor);
-  });
+  });*/
 });

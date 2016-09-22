@@ -32,6 +32,7 @@
 	<link rel="stylesheet" href="css/lib/niftyPopupWindow/component.css">
 	<link rel="stylesheet" href="css/lib/ColorSelect/cs-select.css">
 	<link rel="stylesheet" href="css/lib/ColorSelect/cs-skin-boxes.css">
+	<link rel="stylesheet" href="css/hover.css">
 	<link rel="manifest" href="manifest.json">
 
 	<script src="js/classie.js"></script>
