@@ -152,6 +152,7 @@
 			height: 50px;
 			white-space: nowrap;
 			overflow: hidden;
+			background-color: $themeDarkGreyColor;
 			.tag {
 				font-size: 0.8em;
 				margin: 10px 0 10px 20px;
@@ -177,6 +178,11 @@
 				cursor: pointer;
 				position: absolute;
 				margin-top: 15px;
+
+				&:hover {
+					color: $themeColor;
+					background-color: white;
+				}
 			}
 				i.fa-angle-right {
 					right: 1%;
@@ -579,7 +585,7 @@
 .CatalogViewTab.show {
 	transition: all 0.3s ease;
 	visibility: visible;
-	background-color: #EDEDED;
+	background-color: $themeDarkGreyColor;
 	left: 50%;
 	opacity: 1;
 }

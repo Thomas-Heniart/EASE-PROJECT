@@ -167,22 +167,26 @@ $(document).ready(function() {
 		updateCatalogWith($(event.target).val(), $(".selectedTagsContainer .tag"));
 	});
 
-	$('.tagContainer i.fa-angle-right').click(function() {
-		var leftPos = $('.tagContainer .tags').scrollLeft();
-		console.log(leftPos);
- 		$(".tagContainer .tags").animate({scrollLeft: leftPos + 200}, 400);
-	});
+	$('.tagContainer i.fa-angle-right').hover(function() {
+    	amount = '+=10';
+    	scroll();
+		}, function() {
+    	amount = '';
+		});
 
-	$('.tagContainer i.fa-angle-left').click(function() {
-		var leftPos = $('.tagContainer .tags').scrollLeft();
-		console.log(leftPos);
- 		$(".tagContainer .tags").animate({scrollLeft: leftPos - 200}, 400);
-	});
+	$('.tagContainer i.fa-angle-left').hover(function() {
+    	amount = '-=10';
+    	scroll();
+		}, function() {
+    	amount = '';
+		});
 });
 
-function clickOnRightArrow() {
-	$('.tagContainer i.fa-angle-right').click(function() {
-		var leftPos = $('.tagContainer .tags').scrollLeft();
- 		$(".tagContainer .tags").animate({scrollLeft: leftPos + 200}, 800);
+var amount = '';
+
+function scroll() {
+	$('.tagContainer .tags').animate({scrollLeft: amount}, 200, 'linear', function() {
+		if (amount != '')
+			scroll();
 	});
 }
