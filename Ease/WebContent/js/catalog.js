@@ -108,6 +108,11 @@ function updateCatalogFront(tagButton) {
 	}
 	updateTagsInSearchBar();
 	updateCatalogWith($(".catalogSearchbar input").val() , $(".selectedTagsContainer .tag"));
+	var appsShow = $('.catalogApp').filter(function() {
+		return this.style.display != "none";
+	});
+	if (appsShow.length == 0) {}
+
 }
 
 function removeLastSelectedTag() {
@@ -161,4 +166,23 @@ $(document).ready(function() {
 			addTagIfExists($(event.target));
 		updateCatalogWith($(event.target).val(), $(".selectedTagsContainer .tag"));
 	});
+
+	$('.tagContainer i.fa-angle-right').click(function() {
+		var leftPos = $('.tagContainer .tags').scrollLeft();
+		console.log(leftPos);
+ 		$(".tagContainer .tags").animate({scrollLeft: leftPos + 200}, 400);
+	});
+
+	$('.tagContainer i.fa-angle-left').click(function() {
+		var leftPos = $('.tagContainer .tags').scrollLeft();
+		console.log(leftPos);
+ 		$(".tagContainer .tags").animate({scrollLeft: leftPos - 200}, 400);
+	});
 });
+
+function clickOnRightArrow() {
+	$('.tagContainer i.fa-angle-right').click(function() {
+		var leftPos = $('.tagContainer .tags').scrollLeft();
+ 		$(".tagContainer .tags").animate({scrollLeft: leftPos + 200}, 800);
+	});
+}

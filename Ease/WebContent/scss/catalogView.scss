@@ -149,12 +149,43 @@
 		padding-bottom: 20px;
 		.tagContainer {
 			border-bottom: 2px solid grey;
+			height: 50px;
+			white-space: nowrap;
+			overflow: hidden;
 			.tag {
 				font-size: 0.8em;
 				margin: 10px 0 10px 20px;
 			}
+			.tags {
+				margin-left: 5%;
+				width: 90%;
+				margin-right: 5%;
+				overflow-x: scroll;
+				overflow-y: hidden;
+				display: inline-block;
+			}
+			i {
+				font-size: 20px;
+				width: 20px;
+				height: 20px;
+				padding: 0;
+				text-align: center;
+				vertical-align: middle;
+				color: white;
+				background-color: $themeColor;
+				border-radius: 50%;
+				cursor: pointer;
+				position: absolute;
+				margin-top: 15px;
+			}
+				i.fa-angle-right {
+					right: 1%;
+				}
+				i.fa-angle-left {
+					margin-left: 1%;
+				}
+			}
 		}
-	}
 	.scaleContainer {
 		width: 90%;
 		position: relative;
