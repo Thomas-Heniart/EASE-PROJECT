@@ -117,8 +117,12 @@ function removeLastSelectedTag() {
 }
 
 function addTagIfExists(input) {
-	var tag = $('.tagContainer').find('.tag[name="' + input.val().toLowerCase().slice(0, -1) + '"]');
-	console.log(tag);
+	var name;
+	if (input.val().slice(-1) == " ")
+		name = input.val().toLowerCase().slice(0, -1);
+	else
+		name = input.val().toLowerCase();
+	var tag = $('.tagContainer').find('.tag[name="' + name + '"]');
 	if (tag.length == 0)
 		return;
 	tag.addClass('tag-active');
@@ -153,9 +157,8 @@ $(document).ready(function() {
 			event.preventDefault();
 			event.stopPropagation();
 		}
-		if (event.keyCode == 32) {
+		if (event.keyCode == 32 || event.keyCode == 13)
 			addTagIfExists($(event.target));
-		}
 		updateCatalogWith($(event.target).val(), $(".selectedTagsContainer .tag"));
 	});
 });
