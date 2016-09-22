@@ -108,6 +108,22 @@ function updateCatalogFront(tagButton) {
 	updateCatalogWith($(".catalogSearchbar input").val() , $(".selectedTagsContainer .tag"));
 }
 
+function removeLastSelectedTag() {
+	var lastTag = $(".selectedTagsContainer .tag").last();
+	lastTag.removeClass('tag-active');
+	updateCatalogFront(lastTag);
+}
+
+function addTagIfExists(input) {
+	var tag = $('.tagContainer').find('.tag[name="' + input.val().toLowerCase().slice(0, -1) + '"]');
+	console.log(tag);
+	if (tag.length == 0)
+		return;
+	tag.addClass('tag-active');
+	updateCatalogFront(tag);
+	input.val("");
+}
+
 $(document).ready(function() {
 	$("#catalog-quit").click(function(event) {
 		event.stopPropagation();
@@ -122,7 +138,21 @@ $(document).ready(function() {
 			updateCatalogFront($(event.target));
 		}
 	});
+	$("input[name='catalogSearch']").keydown(function(event) {
+		if (event.keyCode == 8) {
+			if ($(event.target).val() == "")
+				removeLastSelectedTag();
+			updateCatalogWith($(event.target).val(), $(".selectedTagsContainer .tag"));
+		}
+	});
 	$("input[name='catalogSearch']").keyup(function(event) {
+		if (event.keyCode == 8) {
+			event.preventDefault();
+			event.stopPropagation();
+		}
+		if (event.keyCode == 32) {
+			addTagIfExists($(event.target));
+		}
 		updateCatalogWith($(event.target).val(), $(".selectedTagsContainer .tag"));
 	});
 });
