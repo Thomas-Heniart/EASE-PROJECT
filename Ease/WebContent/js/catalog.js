@@ -137,7 +137,6 @@ $(document).ready(function() {
 		if(nbOfTags < 3){
 		$(event.target).toggleClass("tag-active");
 		$(event.target).toggleClass("hvr-grow");
-			$(event.target).toggleClass("tag-active");
 			nbOfTags++;
 			updateCatalogFront($(event.target));
 		}
