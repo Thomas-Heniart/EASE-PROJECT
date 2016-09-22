@@ -1,6 +1,7 @@
 {
 	"name":"youtube",
 	"lastLogin":"",
+	"sso":"Google",
 	"home":"https://youtube.com",
 	"connect":{
 		"url":"https://youtube.com",

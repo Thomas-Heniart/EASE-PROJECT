@@ -41,6 +41,33 @@ public class SiteManager {
 	public List<Site> getSitesList() {
 		return sites;
 	}
+	
+	public List<Site> getSso(String ssoId){
+		List<Site> res = new LinkedList<Site>();
+		Iterator<Site> iterator = sites.iterator();
+		while (iterator.hasNext()) {
+			Site tmpSite = iterator.next();
+			if (ssoId == tmpSite.getSso())
+				res.add(tmpSite);
+		}
+		return res;
+	}
+	
+	public List<Site> getSso(Site site){
+		List<Site> res = new LinkedList<Site>();
+		String ssoId = site.getSso();
+		if(ssoId==null){
+			res.add(site);
+			return res;
+		}
+		Iterator<Site> iterator = sites.iterator();
+		while (iterator.hasNext()) {
+			Site tmpSite = iterator.next();
+			if (ssoId == tmpSite.getSso())
+				res.add(tmpSite);
+		}
+		return res;
+	}
 
 	public List<Tag> getTagsList() {
 		return tags;

@@ -45,7 +45,8 @@
       top: 0;
       width: 100%;
       height: 100%;
-      overflow-y: auto; }
+      overflow-y: auto;
+      overflow-x: hidden; }
       .ProfileBox .ProfileContent .content .ProfileControlPanel {
         display: none;
         width: 100%;
@@ -140,14 +141,14 @@
         height: 100%;
         width: 100%; }
         .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox {
-          overflow: hidden;
           border-radius: 5px;
           width: 33.33333%;
           border: 1px hidden #EFECEA;
           float: left;
           height: 16.66667%;
           padding-top: 5px;
-          position: relative; }
+          position: relative;
+          overflow: hidden; }
           .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .siteName {
             font-size: 10px;
             line-height: 9px; }
@@ -273,67 +274,66 @@
 
 .ProfilesHandler.editMode {
   padding-top: 40px; }
+  .ProfilesHandler.editMode .linkImage {
+    opacity: 1; }
   .ProfilesHandler.editMode #dragAndDropHelper {
     display: block; }
   .ProfilesHandler.editMode .item .addProfileView {
     display: block; }
 
-.ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage {
-  opacity: 1; }
-  .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton {
+.ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton {
+  position: absolute;
+  z-index: 1;
+  width: 35%;
+  top: 78%;
+  left: 81%;
+  visibility: hidden; }
+  .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton:hover {
+    cursor: pointer; }
+  .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton:hover > .appActionsPopup {
+    display: block;
+    visibility: visible; }
+  .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton img {
+    border: none; }
+  .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton i.fa-cog {
+    color: black;
+    font-size: 1vw;
     position: absolute;
-    z-index: 1;
-    width: 35%;
-    height: 35%;
-    top: 83%;
-    left: 83%;
-    visibility: hidden; }
-    .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton:hover {
-      cursor: pointer; }
-      .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton:hover .appActionsPopup {
-        display: block;
-        visibility: visible; }
-    .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton i {
-      left: 0;
-      color: black;
-      font-size: 100%;
-      position: absolute;
-      color: #373b60; }
-    .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton .appActionsPopup {
-      display: none;
-      visibility: hidden;
-      position: fixed;
-      margin-top: 15px;
-      margin-left: -15px; }
-      .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton .appActionsPopup i {
-        color: #373b60;
-        position: relative; }
-      .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton .appActionsPopup .buttonsContainer {
-        background-color: #373b60;
-        border: 1px solid #373b60;
-        border-radius: 5px;
-        color: white;
-        min-width: 100px;
-        text-align: center; }
-        .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton .appActionsPopup .buttonsContainer .menu-item {
-          transition: all 0.3s;
-          padding: 2px; }
-          .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton .appActionsPopup .buttonsContainer .menu-item p {
-            margin: 0px; }
-          .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton .appActionsPopup .buttonsContainer .menu-item:hover {
-            transition: all 0.3s;
-            background-color: white;
-            color: #373b60; }
-        .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton .appActionsPopup .buttonsContainer .menu-item:first-child {
-          border-top-left-radius: 5px;
-          border-top-right-radius: 5px; }
-        .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton .appActionsPopup .buttonsContainer .menu-item:last-child {
-          border-top: 1px solid white;
-          border-bottom-right-radius: 5px;
-          border-bottom-left-radius: 5px; }
-  .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage:hover .showAppActionsButton {
-    visibility: visible;
-    display: block; }
+    color: white; }
+.ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage:hover .showAppActionsButton {
+  visibility: visible;
+  display: block; }
+
+.appActionsPopup {
+  display: none;
+  visibility: hidden;
+  position: fixed; }
+  .appActionsPopup i {
+    color: #373b60;
+    position: relative; }
+  .appActionsPopup .buttonsContainer {
+    background-color: #373b60;
+    border: 1px solid #373b60;
+    border-radius: 5px;
+    color: white;
+    min-width: 100px;
+    text-align: center; }
+    .appActionsPopup .buttonsContainer .menu-item {
+      transition: all 0.3s;
+      padding: 2px; }
+      .appActionsPopup .buttonsContainer .menu-item p {
+        margin: 0px; }
+      .appActionsPopup .buttonsContainer .menu-item:hover {
+        transition: all 0.3s;
+        background-color: white;
+        color: #373b60; }
+    .appActionsPopup .buttonsContainer .menu-item:first-child {
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px; }
+    .appActionsPopup .buttonsContainer .menu-item:last-child {
+      border-top: 1px solid white;
+      border-bottom-right-radius: 5px;
+      border-bottom-left-radius: 5px; }
 
 .caretHelper {
   font-size: 27px;
@@ -349,6 +349,12 @@
   width: 8%;
   z-index: 1; }
 
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%); }
+
 .siteLinkBox.gu-mirror {
   width: 50px !important;
   height: 50px !important; }
@@ -362,7 +368,23 @@
   -webkit-backface-visibility: inherit;
   -moz-backface-visibility: inherit;
   -ms-backface-visibility: inherit;
-  transform: none; }
+  transform: none;
+  -webkit-transform: none;
+  -moz-transform: none;
+  -ms-transform: none; }
+
+.clearfix:before,
+.clearfix:after {
+  content: ".";
+  display: block;
+  height: 0;
+  overflow: hidden; }
+
+.clearfix:after {
+  clear: both; }
+
+.clearfix {
+  zoom: 1; }
 
 .MenuButtonSet.show {
   display: block; }
@@ -731,6 +753,38 @@ span.input label {
             height: 100%; }
             #PopupAddApp .md-content .loginAppChooser .ChooserContent .AccountApp .imageHandler img {
               height: 100%; }
+    #PopupAddApp .md-content .loginSsoChooser {
+      max-height: 200px;
+      padding: 0px;
+      margin: 0px;
+      width: 70%;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative; }
+      #PopupAddApp .md-content .loginSsoChooser p {
+        text-align: center; }
+      #PopupAddApp .md-content .loginSsoChooser .AccountApp.selected {
+        border: 1px solid white; }
+      #PopupAddApp .md-content .loginSsoChooser .ChooserContent {
+        max-height: 70px;
+        overflow: auto; }
+        #PopupAddApp .md-content .loginSsoChooser .ChooserContent .AccountApp {
+          max-height: 30px;
+          height: 30px;
+          cursor: pointer;
+          padding: 2px;
+          margin-bottom: 4px; }
+          #PopupAddApp .md-content .loginSsoChooser .ChooserContent .AccountApp p, #PopupAddApp .md-content .loginSsoChooser .ChooserContent .AccountApp .imageHandler {
+            display: inline-block; }
+          #PopupAddApp .md-content .loginSsoChooser .ChooserContent .AccountApp p {
+            text-align: left;
+            margin: 0px;
+            margin-left: 5px;
+            padding: 0px; }
+          #PopupAddApp .md-content .loginSsoChooser .ChooserContent .AccountApp .imageHandler {
+            height: 100%; }
+            #PopupAddApp .md-content .loginSsoChooser .ChooserContent .AccountApp .imageHandler img {
+              height: 100%; }
     #PopupAddApp .md-content #AddAppForm {
       width: 80%;
       margin: 5px auto;
@@ -917,6 +971,38 @@ span.input label {
           #PopupModifyApp .md-content .loginAppChooser .ChooserContent .AccountApp .imageHandler {
             height: 100%; }
             #PopupModifyApp .md-content .loginAppChooser .ChooserContent .AccountApp .imageHandler img {
+              height: 100%; }
+    #PopupModifyApp .md-content .loginSsoChooser {
+      max-height: 200px;
+      padding: 0px;
+      margin: 0px;
+      width: 70%;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative; }
+      #PopupModifyApp .md-content .loginSsoChooser p {
+        text-align: center; }
+      #PopupModifyApp .md-content .loginSsoChooser .AccountApp.selected {
+        border: 1px solid white; }
+      #PopupModifyApp .md-content .loginSsoChooser .ChooserContent {
+        max-height: 70px;
+        overflow: auto; }
+        #PopupModifyApp .md-content .loginSsoChooser .ChooserContent .AccountApp {
+          max-height: 30px;
+          height: 30px;
+          cursor: pointer;
+          padding: 2px;
+          margin-bottom: 4px; }
+          #PopupModifyApp .md-content .loginSsoChooser .ChooserContent .AccountApp p, #PopupModifyApp .md-content .loginSsoChooser .ChooserContent .AccountApp .imageHandler {
+            display: inline-block; }
+          #PopupModifyApp .md-content .loginSsoChooser .ChooserContent .AccountApp p {
+            text-align: left;
+            margin: 0px;
+            margin-left: 5px;
+            padding: 0px; }
+          #PopupModifyApp .md-content .loginSsoChooser .ChooserContent .AccountApp .imageHandler {
+            height: 100%; }
+            #PopupModifyApp .md-content .loginSsoChooser .ChooserContent .AccountApp .imageHandler img {
               height: 100%; }
     #PopupModifyApp .md-content #modifyAppForm {
       width: 80%;
@@ -1515,6 +1601,18 @@ span.input label {
   -webkit-animation: scaleOut .5s linear 1;
   animation: scaleOut .5s linear 1; }
 
+.shakeAnimation {
+  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both infinite; }
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 1px, 0); }
+  20%, 80% {
+    transform: translate3d(1px, -1px, 0); }
+  30%, 50%, 70% {
+    transform: translate3d(-2px, 2px, 0); }
+  40%, 60% {
+    transform: translate3d(2px, -2px, 0); } }
 @-webkit-keyframes slideLeft {
   0% {
     transform: translateX(100%);
@@ -1961,6 +2059,942 @@ span.input label {
       margin-bottom: 0px;
       line-height: 30px;
       border-radius: 10px; }
+
+/* * * * * * * * * * * * * * * * * * * * *\  
+  CSShake :: Package
+  v1.5.0
+  CSS classes to move your DOM
+  (c) 2015 @elrumordelaluz
+  http://elrumordelaluz.github.io/csshake/
+  Licensed under MIT
+\* * * * * * * * * * * * * * * * * * * * */
+.shake, .shake-little, .shake-slow, .shake-hard, .shake-horizontal, .shake-vertical, .shake-rotate, .shake-opacity, .shake-crazy, .shake-chunk, .shake-ease {
+  display: inline-block;
+  transform-origin: center center; }
+
+.shake-freeze,
+.shake-constant.shake-constant--hover:hover,
+.shake-trigger:hover .shake-constant.shake-constant--hover {
+  animation-play-state: paused; }
+
+.shake-freeze:hover,
+.shake-trigger:hover .shake-freeze, .shake:hover, .shake-trigger:hover .shake, .shake-little:hover, .shake-trigger:hover .shake-little, .shake-slow:hover, .shake-trigger:hover .shake-slow, .shake-hard:hover, .shake-trigger:hover .shake-hard, .shake-horizontal:hover, .shake-trigger:hover .shake-horizontal, .shake-vertical:hover, .shake-trigger:hover .shake-vertical, .shake-rotate:hover, .shake-trigger:hover .shake-rotate, .shake-opacity:hover, .shake-trigger:hover .shake-opacity, .shake-crazy:hover, .shake-trigger:hover .shake-crazy, .shake-chunk:hover, .shake-trigger:hover .shake-chunk, .shake-ease:hover, .shake-trigger:hover .shake-ease {
+  animation-play-state: running; }
+
+@keyframes shake {
+  2% {
+    transform: translate(-0.5px, 0.5px) rotate(1.5deg); }
+  4% {
+    transform: translate(-0.5px, 1.5px) rotate(0.5deg); }
+  6% {
+    transform: translate(2.5px, -1.5px) rotate(0.5deg); }
+  8% {
+    transform: translate(2.5px, -0.5px) rotate(1.5deg); }
+  10% {
+    transform: translate(0.5px, 0.5px) rotate(1.5deg); }
+  12% {
+    transform: translate(1.5px, -1.5px) rotate(-0.5deg); }
+  14% {
+    transform: translate(-1.5px, 0.5px) rotate(1.5deg); }
+  16% {
+    transform: translate(1.5px, -1.5px) rotate(0.5deg); }
+  18% {
+    transform: translate(2.5px, 0.5px) rotate(1.5deg); }
+  20% {
+    transform: translate(-1.5px, -1.5px) rotate(0.5deg); }
+  22% {
+    transform: translate(1.5px, 2.5px) rotate(0.5deg); }
+  24% {
+    transform: translate(-0.5px, 2.5px) rotate(-0.5deg); }
+  26% {
+    transform: translate(-0.5px, 1.5px) rotate(-0.5deg); }
+  28% {
+    transform: translate(0.5px, -1.5px) rotate(-0.5deg); }
+  30% {
+    transform: translate(2.5px, 1.5px) rotate(0.5deg); }
+  32% {
+    transform: translate(0.5px, -1.5px) rotate(1.5deg); }
+  34% {
+    transform: translate(-1.5px, 0.5px) rotate(-0.5deg); }
+  36% {
+    transform: translate(-0.5px, 0.5px) rotate(0.5deg); }
+  38% {
+    transform: translate(0.5px, -1.5px) rotate(1.5deg); }
+  40% {
+    transform: translate(2.5px, 1.5px) rotate(1.5deg); }
+  42% {
+    transform: translate(0.5px, 0.5px) rotate(0.5deg); }
+  44% {
+    transform: translate(1.5px, -0.5px) rotate(1.5deg); }
+  46% {
+    transform: translate(1.5px, 1.5px) rotate(0.5deg); }
+  48% {
+    transform: translate(1.5px, 1.5px) rotate(0.5deg); }
+  50% {
+    transform: translate(-0.5px, 2.5px) rotate(1.5deg); }
+  52% {
+    transform: translate(-1.5px, 2.5px) rotate(-0.5deg); }
+  54% {
+    transform: translate(0.5px, 1.5px) rotate(1.5deg); }
+  56% {
+    transform: translate(1.5px, 1.5px) rotate(-0.5deg); }
+  58% {
+    transform: translate(1.5px, 0.5px) rotate(1.5deg); }
+  60% {
+    transform: translate(-1.5px, 2.5px) rotate(-0.5deg); }
+  62% {
+    transform: translate(-0.5px, 1.5px) rotate(-0.5deg); }
+  64% {
+    transform: translate(0.5px, 2.5px) rotate(0.5deg); }
+  66% {
+    transform: translate(-1.5px, 2.5px) rotate(1.5deg); }
+  68% {
+    transform: translate(2.5px, 1.5px) rotate(1.5deg); }
+  70% {
+    transform: translate(-0.5px, -1.5px) rotate(-0.5deg); }
+  72% {
+    transform: translate(-0.5px, 2.5px) rotate(0.5deg); }
+  74% {
+    transform: translate(-1.5px, -1.5px) rotate(0.5deg); }
+  76% {
+    transform: translate(-1.5px, 0.5px) rotate(1.5deg); }
+  78% {
+    transform: translate(2.5px, 0.5px) rotate(0.5deg); }
+  80% {
+    transform: translate(-1.5px, -0.5px) rotate(-0.5deg); }
+  82% {
+    transform: translate(-1.5px, 0.5px) rotate(-0.5deg); }
+  84% {
+    transform: translate(-1.5px, 2.5px) rotate(-0.5deg); }
+  86% {
+    transform: translate(1.5px, 0.5px) rotate(-0.5deg); }
+  88% {
+    transform: translate(2.5px, -1.5px) rotate(1.5deg); }
+  90% {
+    transform: translate(2.5px, -1.5px) rotate(-0.5deg); }
+  92% {
+    transform: translate(1.5px, 2.5px) rotate(0.5deg); }
+  94% {
+    transform: translate(1.5px, 1.5px) rotate(1.5deg); }
+  96% {
+    transform: translate(-0.5px, 1.5px) rotate(-0.5deg); }
+  98% {
+    transform: translate(2.5px, -1.5px) rotate(0.5deg); }
+  0%, 100% {
+    transform: translate(0, 0) rotate(0); } }
+.shake:hover, .shake-trigger:hover .shake, .shake.shake-freeze, .shake.shake-constant {
+  animation-name: shake;
+  animation-duration: 100ms;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite; }
+
+@keyframes shake-little {
+  2% {
+    transform: translate(1px, 1px) rotate(0.5deg); }
+  4% {
+    transform: translate(1px, 0px) rotate(0.5deg); }
+  6% {
+    transform: translate(1px, 0px) rotate(0.5deg); }
+  8% {
+    transform: translate(1px, 0px) rotate(0.5deg); }
+  10% {
+    transform: translate(0px, 0px) rotate(0.5deg); }
+  12% {
+    transform: translate(0px, 0px) rotate(0.5deg); }
+  14% {
+    transform: translate(1px, 1px) rotate(0.5deg); }
+  16% {
+    transform: translate(1px, 0px) rotate(0.5deg); }
+  18% {
+    transform: translate(0px, 0px) rotate(0.5deg); }
+  20% {
+    transform: translate(1px, 0px) rotate(0.5deg); }
+  22% {
+    transform: translate(1px, 1px) rotate(0.5deg); }
+  24% {
+    transform: translate(1px, 1px) rotate(0.5deg); }
+  26% {
+    transform: translate(0px, 0px) rotate(0.5deg); }
+  28% {
+    transform: translate(1px, 0px) rotate(0.5deg); }
+  30% {
+    transform: translate(1px, 1px) rotate(0.5deg); }
+  32% {
+    transform: translate(0px, 1px) rotate(0.5deg); }
+  34% {
+    transform: translate(0px, 0px) rotate(0.5deg); }
+  36% {
+    transform: translate(1px, 0px) rotate(0.5deg); }
+  38% {
+    transform: translate(1px, 0px) rotate(0.5deg); }
+  40% {
+    transform: translate(1px, 0px) rotate(0.5deg); }
+  42% {
+    transform: translate(1px, 0px) rotate(0.5deg); }
+  44% {
+    transform: translate(0px, 1px) rotate(0.5deg); }
+  46% {
+    transform: translate(0px, 0px) rotate(0.5deg); }
+  48% {
+    transform: translate(0px, 1px) rotate(0.5deg); }
+  50% {
+    transform: translate(0px, 0px) rotate(0.5deg); }
+  52% {
+    transform: translate(1px, 0px) rotate(0.5deg); }
+  54% {
+    transform: translate(0px, 0px) rotate(0.5deg); }
+  56% {
+    transform: translate(1px, 1px) rotate(0.5deg); }
+  58% {
+    transform: translate(1px, 0px) rotate(0.5deg); }
+  60% {
+    transform: translate(1px, 1px) rotate(0.5deg); }
+  62% {
+    transform: translate(1px, 0px) rotate(0.5deg); }
+  64% {
+    transform: translate(0px, 0px) rotate(0.5deg); }
+  66% {
+    transform: translate(1px, 0px) rotate(0.5deg); }
+  68% {
+    transform: translate(1px, 0px) rotate(0.5deg); }
+  70% {
+    transform: translate(1px, 0px) rotate(0.5deg); }
+  72% {
+    transform: translate(0px, 0px) rotate(0.5deg); }
+  74% {
+    transform: translate(0px, 0px) rotate(0.5deg); }
+  76% {
+    transform: translate(1px, 1px) rotate(0.5deg); }
+  78% {
+    transform: translate(1px, 1px) rotate(0.5deg); }
+  80% {
+    transform: translate(1px, 1px) rotate(0.5deg); }
+  82% {
+    transform: translate(0px, 0px) rotate(0.5deg); }
+  84% {
+    transform: translate(0px, 1px) rotate(0.5deg); }
+  86% {
+    transform: translate(1px, 1px) rotate(0.5deg); }
+  88% {
+    transform: translate(1px, 1px) rotate(0.5deg); }
+  90% {
+    transform: translate(1px, 0px) rotate(0.5deg); }
+  92% {
+    transform: translate(0px, 1px) rotate(0.5deg); }
+  94% {
+    transform: translate(1px, 1px) rotate(0.5deg); }
+  96% {
+    transform: translate(0px, 0px) rotate(0.5deg); }
+  98% {
+    transform: translate(1px, 1px) rotate(0.5deg); }
+  0%, 100% {
+    transform: translate(0, 0) rotate(0); } }
+.shake-little:hover, .shake-trigger:hover .shake-little, .shake-little.shake-freeze, .shake-little.shake-constant {
+  animation-name: shake-little;
+  animation-duration: 100ms;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite; }
+
+@keyframes shake-slow {
+  2% {
+    transform: translate(9px, 3px) rotate(0.5deg); }
+  4% {
+    transform: translate(3px, -2px) rotate(3.5deg); }
+  6% {
+    transform: translate(-4px, -7px) rotate(-1.5deg); }
+  8% {
+    transform: translate(8px, -2px) rotate(-0.5deg); }
+  10% {
+    transform: translate(-8px, 5px) rotate(1.5deg); }
+  12% {
+    transform: translate(7px, 1px) rotate(1.5deg); }
+  14% {
+    transform: translate(5px, 7px) rotate(1.5deg); }
+  16% {
+    transform: translate(8px, -4px) rotate(1.5deg); }
+  18% {
+    transform: translate(-5px, -4px) rotate(3.5deg); }
+  20% {
+    transform: translate(9px, 10px) rotate(-2.5deg); }
+  22% {
+    transform: translate(-4px, 4px) rotate(3.5deg); }
+  24% {
+    transform: translate(3px, -1px) rotate(-2.5deg); }
+  26% {
+    transform: translate(9px, -3px) rotate(1.5deg); }
+  28% {
+    transform: translate(-1px, -5px) rotate(-0.5deg); }
+  30% {
+    transform: translate(2px, 8px) rotate(2.5deg); }
+  32% {
+    transform: translate(8px, 3px) rotate(2.5deg); }
+  34% {
+    transform: translate(-4px, -5px) rotate(3.5deg); }
+  36% {
+    transform: translate(-1px, -9px) rotate(1.5deg); }
+  38% {
+    transform: translate(-8px, -4px) rotate(-1.5deg); }
+  40% {
+    transform: translate(-6px, 0px) rotate(0.5deg); }
+  42% {
+    transform: translate(-4px, -7px) rotate(1.5deg); }
+  44% {
+    transform: translate(1px, -3px) rotate(-0.5deg); }
+  46% {
+    transform: translate(4px, 4px) rotate(-2.5deg); }
+  48% {
+    transform: translate(-6px, 4px) rotate(3.5deg); }
+  50% {
+    transform: translate(-7px, 10px) rotate(3.5deg); }
+  52% {
+    transform: translate(3px, -8px) rotate(2.5deg); }
+  54% {
+    transform: translate(-8px, 6px) rotate(-0.5deg); }
+  56% {
+    transform: translate(-9px, 4px) rotate(0.5deg); }
+  58% {
+    transform: translate(-7px, 7px) rotate(0.5deg); }
+  60% {
+    transform: translate(2px, 7px) rotate(1.5deg); }
+  62% {
+    transform: translate(-3px, -8px) rotate(-0.5deg); }
+  64% {
+    transform: translate(7px, 0px) rotate(-2.5deg); }
+  66% {
+    transform: translate(2px, 10px) rotate(-0.5deg); }
+  68% {
+    transform: translate(-1px, 6px) rotate(-0.5deg); }
+  70% {
+    transform: translate(7px, 2px) rotate(-2.5deg); }
+  72% {
+    transform: translate(-5px, 3px) rotate(-2.5deg); }
+  74% {
+    transform: translate(-8px, -7px) rotate(-0.5deg); }
+  76% {
+    transform: translate(-4px, 0px) rotate(1.5deg); }
+  78% {
+    transform: translate(-9px, 2px) rotate(3.5deg); }
+  80% {
+    transform: translate(-1px, 9px) rotate(0.5deg); }
+  82% {
+    transform: translate(-9px, -9px) rotate(-0.5deg); }
+  84% {
+    transform: translate(2px, 4px) rotate(-0.5deg); }
+  86% {
+    transform: translate(5px, -1px) rotate(1.5deg); }
+  88% {
+    transform: translate(10px, 6px) rotate(-2.5deg); }
+  90% {
+    transform: translate(-4px, 3px) rotate(-2.5deg); }
+  92% {
+    transform: translate(-8px, -1px) rotate(-2.5deg); }
+  94% {
+    transform: translate(-2px, -5px) rotate(-2.5deg); }
+  96% {
+    transform: translate(-2px, 4px) rotate(1.5deg); }
+  98% {
+    transform: translate(3px, -4px) rotate(1.5deg); }
+  0%, 100% {
+    transform: translate(0, 0) rotate(0); } }
+.shake-slow:hover, .shake-trigger:hover .shake-slow, .shake-slow.shake-freeze, .shake-slow.shake-constant {
+  animation-name: shake-slow;
+  animation-duration: 5s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite; }
+
+@keyframes shake-hard {
+  2% {
+    transform: translate(-9px, 4px) rotate(2.5deg); }
+  4% {
+    transform: translate(5px, -6px) rotate(-2.5deg); }
+  6% {
+    transform: translate(-5px, -1px) rotate(2.5deg); }
+  8% {
+    transform: translate(9px, 5px) rotate(-0.5deg); }
+  10% {
+    transform: translate(7px, 6px) rotate(1.5deg); }
+  12% {
+    transform: translate(-1px, 10px) rotate(1.5deg); }
+  14% {
+    transform: translate(3px, -7px) rotate(3.5deg); }
+  16% {
+    transform: translate(6px, -3px) rotate(3.5deg); }
+  18% {
+    transform: translate(5px, -9px) rotate(-2.5deg); }
+  20% {
+    transform: translate(-3px, 8px) rotate(-2.5deg); }
+  22% {
+    transform: translate(6px, 2px) rotate(-0.5deg); }
+  24% {
+    transform: translate(-2px, 9px) rotate(1.5deg); }
+  26% {
+    transform: translate(9px, 6px) rotate(2.5deg); }
+  28% {
+    transform: translate(-4px, 4px) rotate(0.5deg); }
+  30% {
+    transform: translate(2px, 7px) rotate(2.5deg); }
+  32% {
+    transform: translate(-1px, -7px) rotate(3.5deg); }
+  34% {
+    transform: translate(0px, 7px) rotate(-2.5deg); }
+  36% {
+    transform: translate(0px, 10px) rotate(1.5deg); }
+  38% {
+    transform: translate(1px, 8px) rotate(-1.5deg); }
+  40% {
+    transform: translate(0px, -5px) rotate(2.5deg); }
+  42% {
+    transform: translate(6px, -7px) rotate(0.5deg); }
+  44% {
+    transform: translate(-9px, -7px) rotate(3.5deg); }
+  46% {
+    transform: translate(4px, 3px) rotate(-0.5deg); }
+  48% {
+    transform: translate(-7px, 8px) rotate(2.5deg); }
+  50% {
+    transform: translate(9px, 6px) rotate(3.5deg); }
+  52% {
+    transform: translate(-8px, -2px) rotate(2.5deg); }
+  54% {
+    transform: translate(0px, 0px) rotate(3.5deg); }
+  56% {
+    transform: translate(6px, -3px) rotate(-2.5deg); }
+  58% {
+    transform: translate(-9px, 1px) rotate(0.5deg); }
+  60% {
+    transform: translate(4px, 8px) rotate(-1.5deg); }
+  62% {
+    transform: translate(-1px, 7px) rotate(0.5deg); }
+  64% {
+    transform: translate(2px, -7px) rotate(-0.5deg); }
+  66% {
+    transform: translate(6px, -4px) rotate(-0.5deg); }
+  68% {
+    transform: translate(3px, 10px) rotate(-1.5deg); }
+  70% {
+    transform: translate(10px, -2px) rotate(0.5deg); }
+  72% {
+    transform: translate(1px, 6px) rotate(3.5deg); }
+  74% {
+    transform: translate(1px, 2px) rotate(0.5deg); }
+  76% {
+    transform: translate(9px, -2px) rotate(-1.5deg); }
+  78% {
+    transform: translate(2px, 0px) rotate(1.5deg); }
+  80% {
+    transform: translate(5px, 0px) rotate(3.5deg); }
+  82% {
+    transform: translate(2px, 5px) rotate(3.5deg); }
+  84% {
+    transform: translate(-5px, -3px) rotate(0.5deg); }
+  86% {
+    transform: translate(-2px, 8px) rotate(-2.5deg); }
+  88% {
+    transform: translate(-1px, 9px) rotate(1.5deg); }
+  90% {
+    transform: translate(-1px, -7px) rotate(-2.5deg); }
+  92% {
+    transform: translate(7px, 10px) rotate(1.5deg); }
+  94% {
+    transform: translate(-7px, -4px) rotate(-2.5deg); }
+  96% {
+    transform: translate(4px, 10px) rotate(-0.5deg); }
+  98% {
+    transform: translate(-6px, 9px) rotate(2.5deg); }
+  0%, 100% {
+    transform: translate(0, 0) rotate(0); } }
+.shake-hard:hover, .shake-trigger:hover .shake-hard, .shake-hard.shake-freeze, .shake-hard.shake-constant {
+  animation-name: shake-hard;
+  animation-duration: 100ms;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite; }
+
+@keyframes shake-horizontal {
+  2% {
+    transform: translate(-9px, 0) rotate(0); }
+  4% {
+    transform: translate(-1px, 0) rotate(0); }
+  6% {
+    transform: translate(3px, 0) rotate(0); }
+  8% {
+    transform: translate(0px, 0) rotate(0); }
+  10% {
+    transform: translate(0px, 0) rotate(0); }
+  12% {
+    transform: translate(-1px, 0) rotate(0); }
+  14% {
+    transform: translate(6px, 0) rotate(0); }
+  16% {
+    transform: translate(9px, 0) rotate(0); }
+  18% {
+    transform: translate(-2px, 0) rotate(0); }
+  20% {
+    transform: translate(-9px, 0) rotate(0); }
+  22% {
+    transform: translate(-2px, 0) rotate(0); }
+  24% {
+    transform: translate(-5px, 0) rotate(0); }
+  26% {
+    transform: translate(1px, 0) rotate(0); }
+  28% {
+    transform: translate(-9px, 0) rotate(0); }
+  30% {
+    transform: translate(5px, 0) rotate(0); }
+  32% {
+    transform: translate(8px, 0) rotate(0); }
+  34% {
+    transform: translate(2px, 0) rotate(0); }
+  36% {
+    transform: translate(-3px, 0) rotate(0); }
+  38% {
+    transform: translate(-5px, 0) rotate(0); }
+  40% {
+    transform: translate(6px, 0) rotate(0); }
+  42% {
+    transform: translate(-8px, 0) rotate(0); }
+  44% {
+    transform: translate(4px, 0) rotate(0); }
+  46% {
+    transform: translate(-2px, 0) rotate(0); }
+  48% {
+    transform: translate(1px, 0) rotate(0); }
+  50% {
+    transform: translate(9px, 0) rotate(0); }
+  52% {
+    transform: translate(9px, 0) rotate(0); }
+  54% {
+    transform: translate(-3px, 0) rotate(0); }
+  56% {
+    transform: translate(-2px, 0) rotate(0); }
+  58% {
+    transform: translate(5px, 0) rotate(0); }
+  60% {
+    transform: translate(-8px, 0) rotate(0); }
+  62% {
+    transform: translate(-4px, 0) rotate(0); }
+  64% {
+    transform: translate(10px, 0) rotate(0); }
+  66% {
+    transform: translate(0px, 0) rotate(0); }
+  68% {
+    transform: translate(7px, 0) rotate(0); }
+  70% {
+    transform: translate(-6px, 0) rotate(0); }
+  72% {
+    transform: translate(0px, 0) rotate(0); }
+  74% {
+    transform: translate(-5px, 0) rotate(0); }
+  76% {
+    transform: translate(2px, 0) rotate(0); }
+  78% {
+    transform: translate(-1px, 0) rotate(0); }
+  80% {
+    transform: translate(-1px, 0) rotate(0); }
+  82% {
+    transform: translate(-4px, 0) rotate(0); }
+  84% {
+    transform: translate(-3px, 0) rotate(0); }
+  86% {
+    transform: translate(-7px, 0) rotate(0); }
+  88% {
+    transform: translate(-9px, 0) rotate(0); }
+  90% {
+    transform: translate(-7px, 0) rotate(0); }
+  92% {
+    transform: translate(-8px, 0) rotate(0); }
+  94% {
+    transform: translate(5px, 0) rotate(0); }
+  96% {
+    transform: translate(-1px, 0) rotate(0); }
+  98% {
+    transform: translate(-3px, 0) rotate(0); }
+  0%, 100% {
+    transform: translate(0, 0) rotate(0); } }
+.shake-horizontal:hover, .shake-trigger:hover .shake-horizontal, .shake-horizontal.shake-freeze, .shake-horizontal.shake-constant {
+  animation-name: shake-horizontal;
+  animation-duration: 100ms;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite; }
+
+@keyframes shake-vertical {
+  2% {
+    transform: translate(0, 1px) rotate(0); }
+  4% {
+    transform: translate(0, 1px) rotate(0); }
+  6% {
+    transform: translate(0, 4px) rotate(0); }
+  8% {
+    transform: translate(0, -8px) rotate(0); }
+  10% {
+    transform: translate(0, 4px) rotate(0); }
+  12% {
+    transform: translate(0, -3px) rotate(0); }
+  14% {
+    transform: translate(0, 6px) rotate(0); }
+  16% {
+    transform: translate(0, 10px) rotate(0); }
+  18% {
+    transform: translate(0, -8px) rotate(0); }
+  20% {
+    transform: translate(0, -9px) rotate(0); }
+  22% {
+    transform: translate(0, 5px) rotate(0); }
+  24% {
+    transform: translate(0, 3px) rotate(0); }
+  26% {
+    transform: translate(0, 0px) rotate(0); }
+  28% {
+    transform: translate(0, -7px) rotate(0); }
+  30% {
+    transform: translate(0, -9px) rotate(0); }
+  32% {
+    transform: translate(0, -8px) rotate(0); }
+  34% {
+    transform: translate(0, 2px) rotate(0); }
+  36% {
+    transform: translate(0, -7px) rotate(0); }
+  38% {
+    transform: translate(0, 7px) rotate(0); }
+  40% {
+    transform: translate(0, -4px) rotate(0); }
+  42% {
+    transform: translate(0, 10px) rotate(0); }
+  44% {
+    transform: translate(0, 5px) rotate(0); }
+  46% {
+    transform: translate(0, 1px) rotate(0); }
+  48% {
+    transform: translate(0, -6px) rotate(0); }
+  50% {
+    transform: translate(0, 3px) rotate(0); }
+  52% {
+    transform: translate(0, 4px) rotate(0); }
+  54% {
+    transform: translate(0, 9px) rotate(0); }
+  56% {
+    transform: translate(0, -3px) rotate(0); }
+  58% {
+    transform: translate(0, -6px) rotate(0); }
+  60% {
+    transform: translate(0, 0px) rotate(0); }
+  62% {
+    transform: translate(0, 6px) rotate(0); }
+  64% {
+    transform: translate(0, -7px) rotate(0); }
+  66% {
+    transform: translate(0, -5px) rotate(0); }
+  68% {
+    transform: translate(0, 2px) rotate(0); }
+  70% {
+    transform: translate(0, 9px) rotate(0); }
+  72% {
+    transform: translate(0, 8px) rotate(0); }
+  74% {
+    transform: translate(0, -2px) rotate(0); }
+  76% {
+    transform: translate(0, 1px) rotate(0); }
+  78% {
+    transform: translate(0, -3px) rotate(0); }
+  80% {
+    transform: translate(0, -5px) rotate(0); }
+  82% {
+    transform: translate(0, -6px) rotate(0); }
+  84% {
+    transform: translate(0, 8px) rotate(0); }
+  86% {
+    transform: translate(0, -2px) rotate(0); }
+  88% {
+    transform: translate(0, 8px) rotate(0); }
+  90% {
+    transform: translate(0, -4px) rotate(0); }
+  92% {
+    transform: translate(0, 7px) rotate(0); }
+  94% {
+    transform: translate(0, 8px) rotate(0); }
+  96% {
+    transform: translate(0, 1px) rotate(0); }
+  98% {
+    transform: translate(0, 0px) rotate(0); }
+  0%, 100% {
+    transform: translate(0, 0) rotate(0); } }
+.shake-vertical:hover, .shake-trigger:hover .shake-vertical, .shake-vertical.shake-freeze, .shake-vertical.shake-constant {
+  animation-name: shake-vertical;
+  animation-duration: 100ms;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite; }
+
+@keyframes shake-rotate {
+  2% {
+    transform: translate(0, 0) rotate(-1.5deg); }
+  4% {
+    transform: translate(0, 0) rotate(-5.5deg); }
+  6% {
+    transform: translate(0, 0) rotate(5.5deg); }
+  8% {
+    transform: translate(0, 0) rotate(6.5deg); }
+  10% {
+    transform: translate(0, 0) rotate(5.5deg); }
+  12% {
+    transform: translate(0, 0) rotate(-6.5deg); }
+  14% {
+    transform: translate(0, 0) rotate(-6.5deg); }
+  16% {
+    transform: translate(0, 0) rotate(-6.5deg); }
+  18% {
+    transform: translate(0, 0) rotate(5.5deg); }
+  20% {
+    transform: translate(0, 0) rotate(-0.5deg); }
+  22% {
+    transform: translate(0, 0) rotate(1.5deg); }
+  24% {
+    transform: translate(0, 0) rotate(7.5deg); }
+  26% {
+    transform: translate(0, 0) rotate(4.5deg); }
+  28% {
+    transform: translate(0, 0) rotate(-3.5deg); }
+  30% {
+    transform: translate(0, 0) rotate(-4.5deg); }
+  32% {
+    transform: translate(0, 0) rotate(-5.5deg); }
+  34% {
+    transform: translate(0, 0) rotate(2.5deg); }
+  36% {
+    transform: translate(0, 0) rotate(-5.5deg); }
+  38% {
+    transform: translate(0, 0) rotate(4.5deg); }
+  40% {
+    transform: translate(0, 0) rotate(2.5deg); }
+  42% {
+    transform: translate(0, 0) rotate(-5.5deg); }
+  44% {
+    transform: translate(0, 0) rotate(7.5deg); }
+  46% {
+    transform: translate(0, 0) rotate(-0.5deg); }
+  48% {
+    transform: translate(0, 0) rotate(1.5deg); }
+  50% {
+    transform: translate(0, 0) rotate(-0.5deg); }
+  52% {
+    transform: translate(0, 0) rotate(1.5deg); }
+  54% {
+    transform: translate(0, 0) rotate(7.5deg); }
+  56% {
+    transform: translate(0, 0) rotate(0.5deg); }
+  58% {
+    transform: translate(0, 0) rotate(-4.5deg); }
+  60% {
+    transform: translate(0, 0) rotate(1.5deg); }
+  62% {
+    transform: translate(0, 0) rotate(-6.5deg); }
+  64% {
+    transform: translate(0, 0) rotate(-3.5deg); }
+  66% {
+    transform: translate(0, 0) rotate(2.5deg); }
+  68% {
+    transform: translate(0, 0) rotate(6.5deg); }
+  70% {
+    transform: translate(0, 0) rotate(-1.5deg); }
+  72% {
+    transform: translate(0, 0) rotate(0.5deg); }
+  74% {
+    transform: translate(0, 0) rotate(7.5deg); }
+  76% {
+    transform: translate(0, 0) rotate(-1.5deg); }
+  78% {
+    transform: translate(0, 0) rotate(-6.5deg); }
+  80% {
+    transform: translate(0, 0) rotate(5.5deg); }
+  82% {
+    transform: translate(0, 0) rotate(1.5deg); }
+  84% {
+    transform: translate(0, 0) rotate(-1.5deg); }
+  86% {
+    transform: translate(0, 0) rotate(7.5deg); }
+  88% {
+    transform: translate(0, 0) rotate(0.5deg); }
+  90% {
+    transform: translate(0, 0) rotate(-0.5deg); }
+  92% {
+    transform: translate(0, 0) rotate(7.5deg); }
+  94% {
+    transform: translate(0, 0) rotate(-6.5deg); }
+  96% {
+    transform: translate(0, 0) rotate(0.5deg); }
+  98% {
+    transform: translate(0, 0) rotate(3.5deg); }
+  0%, 100% {
+    transform: translate(0, 0) rotate(0); } }
+.shake-rotate:hover, .shake-trigger:hover .shake-rotate, .shake-rotate.shake-freeze, .shake-rotate.shake-constant {
+  animation-name: shake-rotate;
+  animation-duration: 100ms;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite; }
+
+@keyframes shake-opacity {
+  10% {
+    transform: translate(5px, 0px) rotate(2.5deg);
+    opacity: 0.51; }
+  20% {
+    transform: translate(-1px, -2px) rotate(1.5deg);
+    opacity: 0.18; }
+  30% {
+    transform: translate(3px, -4px) rotate(-1.5deg);
+    opacity: 0.82; }
+  40% {
+    transform: translate(-4px, -3px) rotate(2.5deg);
+    opacity: 0.49; }
+  50% {
+    transform: translate(1px, 1px) rotate(0.5deg);
+    opacity: 0.58; }
+  60% {
+    transform: translate(-4px, 4px) rotate(-1.5deg);
+    opacity: 0.13; }
+  70% {
+    transform: translate(1px, 2px) rotate(0.5deg);
+    opacity: 0.19; }
+  80% {
+    transform: translate(5px, 0px) rotate(-1.5deg);
+    opacity: 0.31; }
+  90% {
+    transform: translate(1px, -1px) rotate(-1.5deg);
+    opacity: 0.8; }
+  0%, 100% {
+    transform: translate(0, 0) rotate(0); } }
+.shake-opacity:hover, .shake-trigger:hover .shake-opacity, .shake-opacity.shake-freeze, .shake-opacity.shake-constant {
+  animation-name: shake-opacity;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite; }
+
+@keyframes shake-crazy {
+  10% {
+    transform: translate(17px, 1px) rotate(-6deg);
+    opacity: 0.8; }
+  20% {
+    transform: translate(3px, 15px) rotate(7deg);
+    opacity: 0.46; }
+  30% {
+    transform: translate(11px, 9px) rotate(2deg);
+    opacity: 0.92; }
+  40% {
+    transform: translate(-15px, 12px) rotate(0deg);
+    opacity: 0.28; }
+  50% {
+    transform: translate(10px, 1px) rotate(-6deg);
+    opacity: 0.6; }
+  60% {
+    transform: translate(-11px, 8px) rotate(-3deg);
+    opacity: 0.46; }
+  70% {
+    transform: translate(-18px, -8px) rotate(1deg);
+    opacity: 0.8; }
+  80% {
+    transform: translate(-8px, -1px) rotate(-2deg);
+    opacity: 0.61; }
+  90% {
+    transform: translate(5px, 8px) rotate(10deg);
+    opacity: 0.42; }
+  0%, 100% {
+    transform: translate(0, 0) rotate(0); } }
+.shake-crazy:hover, .shake-trigger:hover .shake-crazy, .shake-crazy.shake-freeze, .shake-crazy.shake-constant {
+  animation-name: shake-crazy;
+  animation-duration: 100ms;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite; }
+
+@keyframes shake-chunk {
+  2% {
+    transform: translate(0px, -6px) rotate(-9deg); }
+  4% {
+    transform: translate(-1px, 4px) rotate(1deg); }
+  6% {
+    transform: translate(1px, 14px) rotate(1deg); }
+  8% {
+    transform: translate(-2px, -5px) rotate(10deg); }
+  10% {
+    transform: translate(-1px, -10px) rotate(-7deg); }
+  12% {
+    transform: translate(-10px, -10px) rotate(-13deg); }
+  14% {
+    transform: translate(0px, 3px) rotate(3deg); }
+  16% {
+    transform: translate(-7px, -4px) rotate(0deg); }
+  18% {
+    transform: translate(8px, 12px) rotate(1deg); }
+  20% {
+    transform: translate(9px, -11px) rotate(-3deg); }
+  22% {
+    transform: translate(4px, -13px) rotate(0deg); }
+  24% {
+    transform: translate(-8px, 1px) rotate(-6deg); }
+  26% {
+    transform: translate(-10px, 12px) rotate(-2deg); }
+  28% {
+    transform: translate(-12px, -10px) rotate(-1deg); }
+  30% {
+    transform: translate(6px, 9px) rotate(-8deg); }
+  32% {
+    transform: translate(8px, 11px) rotate(-12deg); }
+  34% {
+    transform: translate(-10px, 6px) rotate(6deg); }
+  36% {
+    transform: translate(-10px, -12px) rotate(7deg); }
+  38% {
+    transform: translate(3px, -10px) rotate(3deg); }
+  0%, 40%, 100% {
+    transform: translate(0, 0) rotate(0); } }
+.shake-chunk:hover, .shake-trigger:hover .shake-chunk, .shake-chunk.shake-freeze, .shake-chunk.shake-constant {
+  animation-name: shake-chunk;
+  animation-duration: 4s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite; }
+
+@keyframes shake-ease {
+  5% {
+    transform: translate(0px, 0.5px) rotate(1.5deg); }
+  10% {
+    transform: translate(1px, 0.5px) rotate(0.5deg); }
+  15% {
+    transform: translate(1px, 0.5px) rotate(0.5deg); }
+  20% {
+    transform: translate(1px, 0.5px) rotate(1.5deg); }
+  25% {
+    transform: translate(0px, 0.5px) rotate(1.5deg); }
+  30% {
+    transform: translate(0px, 0.5px) rotate(-0.5deg); }
+  35% {
+    transform: translate(0px, 0.5px) rotate(1.5deg); }
+  40% {
+    transform: translate(1px, 0.5px) rotate(0.5deg); }
+  45% {
+    transform: translate(0px, 0.5px) rotate(1.5deg); }
+  50% {
+    transform: translate(0px, 0.5px) rotate(-0.5deg); }
+  55% {
+    transform: translate(0px, 0.5px) rotate(1.5deg); }
+  60% {
+    transform: translate(0px, 0.5px) rotate(1.5deg); }
+  65% {
+    transform: translate(0px, 0.5px) rotate(0.5deg); }
+  70% {
+    transform: translate(1px, 0.5px) rotate(-0.5deg); }
+  75% {
+    transform: translate(0px, 0.5px) rotate(-0.5deg); }
+  80% {
+    transform: translate(1px, 0.5px) rotate(0.5deg); }
+  85% {
+    transform: translate(1px, 0.5px) rotate(-0.5deg); }
+  90% {
+    transform: translate(0px, 0.5px) rotate(-0.5deg); }
+  95% {
+    transform: translate(1px, 0.5px) rotate(1.5deg); }
+  0%, 100% {
+    transform: translate(0, 0) rotate(0); } }
+.shake-ease:hover, .shake-trigger:hover .shake-ease, .shake-ease.shake-freeze, .shake-ease.shake-constant {
+  animation-name: shake-ease;
+  animation-duration: 1700ms;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite; }
 
 body {
   overflow-x: hidden; }

@@ -21,13 +21,6 @@ function sortSites(sites) {
 	return result;
 }
 
-function jsonIncludes(array, id) {
-	var ids = array.map(function(e) {
-		return e[0];
-	});
-	return ids.includes(id);
-}
-
 function refreshCatalogContent(data) {
 		if (data[0] == '[') {
 			var json = JSON.parse(data);

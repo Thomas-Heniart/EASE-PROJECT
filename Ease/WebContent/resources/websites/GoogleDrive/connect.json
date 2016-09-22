@@ -1,7 +1,8 @@
 {
 	"name":"googledrive",
 	"lastLogin":"",
-	"home":"https://drive.google.com",
+	"sso":"Google",
+	"home":"https://googledrive.com",
 	"connect":{
 		"todo":[
 			{"action":"clickona", "search":"#account-chooser-add-account"},

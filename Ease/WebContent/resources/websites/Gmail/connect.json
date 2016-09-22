@@ -1,6 +1,7 @@
 {
 	"name":"gmail",
 	"lastLogin":"",
+	"sso":"Google",
 	"home":"https://gmail.com",
 	"connect":{
 		"url":"https://gmail.com",

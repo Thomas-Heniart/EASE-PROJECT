@@ -409,7 +409,8 @@
 											login="${app.getLogin()}"
 											webId="${app.getSite().getId()}"
 											name="${app.getName()}"
-											id="${app.getAppId()}">
+											id="${app.getAppId()}"
+											ssoId="${app.getSite().getSso()}">
 									</c:if>
 									<c:if test="${app.getType() eq 'LogWithAccount'}">
 										<div class="siteLinkBox" onclick="sendEvent(this)"
@@ -436,7 +437,7 @@
 											</div>
 										</div>
 										<img
-											src="<c:out value='${app.getSite().getFolder()}logo.png'/>" />
+											class="logo" src="<c:out value='${app.getSite().getFolder()}logo.png'/>" />
 									</div>
 									<div class="siteName">
 										<c:choose>
