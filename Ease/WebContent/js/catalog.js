@@ -1,21 +1,19 @@
-function getOnlyAndSites(sites) {
-	return sites.filter(function(e) {
-		return e[4] == 'hasAllTags';
+function getAndSites(json) {
+	var andJson = json.filter(function(e, i) {
+		return e[1] == "and";
 	});
-}
-
-function getOnlyOrSites(sites) {
-	return sites.filter(function(e) {
-		return e[4] == 'hasSomeTags';
+	console.log(andJson);
+	return $('.catalogApp').filter(function(i , e) {
+		andJson.includes($(e).attr("idx").toString());
 	});
 }
 
 function sortSites(sites) {
 	var names = sites.map(function(e, i) {
-		return { index: i, value: e };
+		return { index: i, value: $(e).attr("name").toLowerCase() };
 	});
 	names.sort(function(a, b) {
-		return +(a.value[3].toLowerCase() > b.value[3].toLowerCase()) || +(a.value[3].toLowerCase() === b.value[3].toLowerCase()) - 1;
+		return +(a > b) || +(a === b) - 1;
 	});
 	var result = names.map(function(e) {
 		return sites[e.index];
@@ -23,82 +21,21 @@ function sortSites(sites) {
 	return result;
 }
 
-function displaySite(fields, index, appendSelector) {
-	console.log(fields);
-	appendSelector.append("<div class='catalogApp' idx='"+ fields[0] +"' connect='"+ fields[1] +"connect.json' data-login='" + fields[2] + "' name='" + fields[3] + "' ></div>");
-	$("div[idx='" + fields[0] + "']").append("<div class='catalogAppLogo'><img src='" + fields[1] + "logo.png' /></div>");
-	if (fields[3].length > 14)
-		$("div[idx='" + fields[0] + "']").append("<div class='catalogAppName'><p>" + fields[3].substring(0, 14) + "...</p></div>");
-	else
-		$("div[idx='" + fields[0] + "']").append("<div class='catalogAppName'><p>" + fields[3] + "</p></div>");
-}
-
-function displayAndSites(sites) {
-	if (sites.length > 0) {
-		$('.catalogContainer .search-result').show();
-		sites.forEach(function(fields, index) {
-			displaySite(fields, index, $('.catalogContainer div.search-result'));
-		});
-	} else {
-		$('.catalogContainer .search-result').hide();
-	}
-}
-
-function displayOrSites(sites) {
-	if (sites.length > 0) {
-		$('.catalogContainer .relatedApps').show();
-		sites.forEach(function(fields, index) {
-			displaySite(fields, index, $('.catalogContainer div.relatedApps'));
-		});
-	} else {
-		$('.catalogContainer .relatedApps').hide();
-	}
+function jsonIncludes(array, id) {
+	var ids = array.map(function(e) {
+		return e[0];
+	});
+	return ids.includes(id);
 }
 
 function refreshCatalogContent(data) {
 		if (data[0] == '[') {
 			var json = JSON.parse(data);
-			var andSites = sortSites(getOnlyAndSites(json));
-			var orSites = sortSites(getOnlyOrSites(json));
-			$('.catalogApp').remove();
-			if (andSites.length > 0 || orSites.length > 0) {
-			displayAndSites(andSites);
-			displayOrSites(orSites);
-		} else {
-			$('.catalogContainer .search-result').hide();
-			$('.catalogContainer .relatedApps').hide();
-			json.forEach(function(fields, index) {
-				displaySite(fields, index, $('.catalogContainer'));
+			$('.catalogApp').hide();
+			var appsToShow = $('.catalogApp').filter(function(index, element) {
+				return json.includes($(element).attr("idx"));
 			});
-		}
-
-			/*json.forEach(function(fields, index) {
-				$('.catalogContainer').append("<div class='catalogApp' idx='"+ fields[0] +"' connect='"+ fields[1] +"connect.json' data-login='" + fields[2] + "' name='" + fields[3] + "' ></div>");
-				$("div[idx='" + fields[0] + "']").append("<div class='catalogAppLogo'><img src='" + fields[1] + "logo.png' /></div>");
-						if (fields[3].length > 14)
-							$("div[idx='" + fields[0] + "']").append("<div class='catalogAppName'><p>" + fields[3].substring(0, 14) + "...</p></div>");
-						else
-							$("div[idx='" + fields[0] + "']").append("<div class='catalogAppName'><p>" + fields[3] + "</p></div>");
-			});*/
-			$('.catalogApp').draggable(
-				{
-					cursor : 'none',
-					cursorAt : {
-					left : 25,
-					top : 25
-				},
-				helper : function(e, ui) {
-					var ret;
-					ret = $('<div class="dragHelperLogo" style="position: fixed;"/>');
-					ret.attr("idx", $(this).attr("idx"));
-					ret.attr("name", $(this).find('p').text());
-					ret.attr("connect", $(this).attr("connect"));
-					ret.attr("data-login", $(this).attr("data-login"));
-					ret.append($('<img />'));
-					ret.find('img').attr("src", $(this).find('img').attr("src"));
-					return ret; //Replaced $(ui) with $(this)
-					}
-				});
+			appsToShow.show();
 		}
 	}
 
@@ -182,18 +119,17 @@ $(document).ready(function() {
 	$("#catalog-quit").click(function(event) {
 		event.stopPropagation();
 		leaveEditMode();
-	})
+	});
 	$(".tag").click(function(event) {
 		event.stopPropagation();
 		var nbOfTags = $(".tag-active").length;
 		if(nbOfTags < 3){
-		$(event.target).toggleClass("tag-active");
-		nbOfTags++;
-		updateCatalogFront($(event.target));
+			$(event.target).toggleClass("tag-active");
+			nbOfTags++;
+			updateCatalogFront($(event.target));
 		}
 	});
 	$("input[name='catalogSearch']").keyup(function(event) {
-		event.stopPropagation();
 		updateCatalogWith($(event.target).val(), $(".selectedTagsContainer .tag"));
 	});
 });

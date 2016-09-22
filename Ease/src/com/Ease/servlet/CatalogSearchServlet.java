@@ -1,8 +1,6 @@
 package com.Ease.servlet;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.Ease.context.SiteManager;
-import com.Ease.context.Tag;
 
 /**
  * Servlet implementation class CatalogSearchServlet
