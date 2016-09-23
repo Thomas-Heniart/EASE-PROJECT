@@ -25,10 +25,14 @@ function refreshCatalogContent(data) {
 		if (data[0] == '[') {
 			var json = JSON.parse(data);
 			$('.catalogApp').hide();
-			var appsToShow = $('.catalogApp').filter(function(index, element) {
-				return json.includes($(element).attr("idx"));
-			});
-			appsToShow.show();
+			if (json.length > 0) {
+				$('.catalogContainer .no-result-search').hide();
+				var appsToShow = $('.catalogApp').filter(function(index, element) {
+					return json.includes($(element).attr("idx"));
+				});
+				appsToShow.show();
+			} else
+				$('.catalogContainer .no-result-search').show();
 		}
 	}
 
@@ -181,8 +185,5 @@ $(document).ready(function() {
 var amount = '';
 
 function scroll() {
-	$('.tagContainer .tags').animate({scrollLeft: amount}, 200, 'linear'/*, function() {
-		if (amount != '')
-			scroll();
-	}*/);
+	$('.tagContainer .tags').animate({scrollLeft: amount}, 200, 'linear');
 }

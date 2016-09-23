@@ -261,6 +261,23 @@
 					padding: 0 10px;
 				}
 			}
+			.no-result-search {
+				display: none;
+				h2 {
+					text-align: center;
+				}
+				p {
+					text-align: center;
+					font-size: 1.4em;
+				}
+				img {
+					width: 190px;
+					transform: rotate(90deg);
+					position: relative;
+					margin-left: 200px;
+					margin-top: 60px;
+				}
+			}
 			.catalogApp {
 				width: (100% / 6);
 				height: (100% / 3);

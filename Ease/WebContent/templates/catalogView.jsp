@@ -40,6 +40,11 @@
 					<h4 class="relatedApps"><span>Related apps</span></h4>
 					<div class="relatedApps"></div>
 					<%@ include file="catalogApps.jsp"%>
+					<div class="no-result-search">
+						<h2>No results yet...☔</h2>
+						<p>Fine ! Take a look there</p>
+						<img alt="arrow" src="resources/images/curved_arrow.png" />
+					</div>
 				</div>
 			</div>
 		</div>
