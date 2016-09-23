@@ -167,26 +167,22 @@ $(document).ready(function() {
 		updateCatalogWith($(event.target).val(), $(".selectedTagsContainer .tag"));
 	});
 
-	$('.tagContainer i.fa-angle-right').hover(function() {
-    	amount = '+=10';
+	$('.tagContainer i.fa-angle-right').click(function() {
+			amount = '+=' + $('.tagContainer .tags').css('width');
     	scroll();
-		}, function() {
-    	amount = '';
 		});
 
-	$('.tagContainer i.fa-angle-left').hover(function() {
-    	amount = '-=10';
+	$('.tagContainer i.fa-angle-left').click(function() {
+    	amount = '-=' + $('.tagContainer .tags').css('width');
     	scroll();
-		}, function() {
-    	amount = '';
 		});
 });
 
 var amount = '';
 
 function scroll() {
-	$('.tagContainer .tags').animate({scrollLeft: amount}, 200, 'linear', function() {
+	$('.tagContainer .tags').animate({scrollLeft: amount}, 200, 'linear'/*, function() {
 		if (amount != '')
 			scroll();
-	});
+	}*/);
 }
