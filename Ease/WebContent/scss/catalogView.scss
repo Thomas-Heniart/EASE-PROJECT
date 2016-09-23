@@ -38,6 +38,7 @@
 			}
 			.btn {
 				border: none;
+				z-index: 0;
 			}
 		}
 	}
@@ -163,6 +164,7 @@
 			.tag {
 				font-size: 0.8em;
 				margin: 10px 0 10px 20px;
+				border: none;
 			}
 			.tags {
 				margin-left: 5%;

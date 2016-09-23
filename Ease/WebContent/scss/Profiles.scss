@@ -407,6 +407,17 @@
 		}
 	}
 }
+
+.ProfilesHandler.editMode {
+	.ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox {
+		.linkImage{
+			.showAppActionsButton {
+					transition-delay: 0s;
+				}
+		}
+	}
+}
+
 .appActionsPopup {
 	display: none;
 	visibility: hidden;
