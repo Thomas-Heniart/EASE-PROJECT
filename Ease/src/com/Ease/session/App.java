@@ -17,7 +17,16 @@ public class App {
 		WEBSITE_ID,
 		PROFILE_ID,
 		POSITION,
-		NAME
+		NAME,
+		CUSTOM
+	}
+	public enum AppPerm {
+		RENAME,
+		MODIFY,
+		MOVE,
+		CHANGEPROFILE,
+		SHOWINFO,
+		DELETE
 	}
 	protected String	name;
 	protected String	id;
@@ -25,6 +34,7 @@ public class App {
 	protected Site		site;
 	protected int		index; 
 	protected int		profileIndex;
+	protected String	custom;
 	
 	protected int appId;
 	protected int profileId;
@@ -35,7 +45,7 @@ public class App {
 		
 		Account account = new ClassicAccount(login, password, user, context);
 		
-		if (db.set("INSERT INTO apps VALUES (NULL, "+ account.getId() +", "+ site.getId() + ", " + profile.getId() + ", '" + profile.getApps().size() + "', '" + name + "');")
+		if (db.set("INSERT INTO apps VALUES (NULL, "+ account.getId() +", "+ site.getId() + ", " + profile.getId() + ", '" + profile.getApps().size() + "', '" + name + "', NULL);")
 				!= 0) {
 			throw new SessionException("Impossible to insert new app in data base.");
 		}
@@ -54,34 +64,7 @@ public class App {
 			this.profileIndex = profile.getIndex();
 			this.profileId = profile.getProfileId();
 			appId = user.getNextAppId();
-		} catch (SQLException e) {
-			throw new SessionException("Impossible to insert new account in data base. (no str1)");
-		}
-		
-	}
-	
-	public App(String name, Account account, Site site, Profile profile, User user, ServletContext context) throws SessionException {
-		DataBase db = (DataBase)context.getAttribute("DataBase");
-		
-		if (db.set("INSERT INTO apps VALUES (NULL, "+ account.getId() +", "+ site.getId() + ", " + profile.getId() + ", '" + profile.getApps().size() + "', '" + name + "');")
-				!= 0) {
-			throw new SessionException("Impossible to insert new app in data base.");
-		}
-		
-		ResultSet rs = db.get("SELECT LAST_INSERT_ID();");
-		if (rs == null){
-			throw new SessionException("Impossible to insert new app in data base. (no rs)");
-		}
-		try {
-			rs.next();
-			this.id = rs.getString(1);
-			this.account = account;
-			this.site = site;
-			this.index = profile.getApps().size();
-			this.name = name;
-			this.profileIndex = profile.getIndex();
-			this.profileId = profile.getProfileId();
-			appId = user.getNextAppId();
+			this.custom = null;
 		} catch (SQLException e) {
 			throw new SessionException("Impossible to insert new account in data base. (no str1)");
 		}
@@ -94,7 +77,7 @@ public class App {
 		
 		Account account = new LogWithAccount(app_id, context);
 		
-		if (db.set("INSERT INTO apps VALUES (NULL, "+ account.getId() +", "+ site.getId() + ", " + profile.getId() + ", '" + profile.getApps().size() + "', '" + name + "');")
+		if (db.set("INSERT INTO apps VALUES (NULL, "+ account.getId() +", "+ site.getId() + ", " + profile.getId() + ", '" + profile.getApps().size() + "', '" + name + "', NULL);")
 				!= 0) {
 			throw new SessionException("Impossible to insert new app in data base.");
 		}
@@ -113,11 +96,73 @@ public class App {
 			this.profileIndex = profile.getIndex();
 			this.profileId = profile.getProfileId();
 			appId = user.getNextAppId();
+			this.custom = null;
 		} catch (SQLException e) {
 			throw new SessionException("Impossible to insert new account in data base. (no str1)");
 		}
 		
 	}
+	
+	//Use this to create a new app as sso account and set it in database
+		public App(String name, Account account, Site site, Profile profile, User user, ServletContext context) throws SessionException {
+			DataBase db = (DataBase)context.getAttribute("DataBase");
+			
+			if (db.set("INSERT INTO apps VALUES (NULL, "+ account.getId() +", "+ site.getId() + ", " + profile.getId() + ", '" + profile.getApps().size() + "', '" + name + "', NULL);")
+					!= 0) {
+				throw new SessionException("Impossible to insert new app in data base.");
+			}
+			
+			ResultSet rs = db.get("SELECT LAST_INSERT_ID();");
+			if (rs == null){
+				throw new SessionException("Impossible to insert new app in data base. (no rs)");
+			}
+			try {
+				rs.next();
+				this.id = rs.getString(1);
+				this.account = account;
+				this.site = site;
+				this.index = profile.getApps().size();
+				this.name = name;
+				this.profileIndex = profile.getIndex();
+				this.profileId = profile.getProfileId();
+				appId = user.getNextAppId();
+				this.custom = null;
+			} catch (SQLException e) {
+				throw new SessionException("Impossible to insert new account in data base. (no str1)");
+			}
+			
+		}
+	
+	//Use this to create a new app without account and set it in database
+		public App(String name, Site site, Profile profile, String custom, User user, ServletContext context) throws SessionException {
+			DataBase db = (DataBase)context.getAttribute("DataBase");
+			
+			
+			if (db.set("INSERT INTO apps VALUES (NULL, NULL, "+ site.getId() + ", " + profile.getId() + ", '" + profile.getApps().size() + "', '" + name + "', " + custom + ");")
+					!= 0) {
+				throw new SessionException("Impossible to insert new app in data base.");
+			}
+			
+			ResultSet rs = db.get("SELECT LAST_INSERT_ID();");
+			if (rs == null){
+				throw new SessionException("Impossible to insert new app in data base. (no rs)");
+			}
+			try {
+				rs.next();
+				this.id = rs.getString(1);
+				this.account = null;
+				this.site = site;
+				this.index = profile.getApps().size();
+				this.name = name;
+				this.profileIndex = profile.getIndex();
+				this.profileId = profile.getProfileId();
+				appId = user.getNextAppId();
+				this.custom = custom;
+			} catch (SQLException e) {
+				throw new SessionException("Impossible to insert new app in data base. (no str1)");
+			}
+			
+		}
 	
 	//Use this to load app with a ResultSet from database
 	public App(ResultSet rs, Profile profile, User user, ServletContext context) throws SessionException {
@@ -130,6 +175,7 @@ public class App {
 			this.profileId = profile.getProfileId();
 			this.profileIndex = profile.getIndex();
 			String accountId = rs.getString(AppData.ACCOUNT_ID.ordinal());
+			this.custom = rs.getString(AppData.CUSTOM.ordinal());;
 			account = Account.getAccount(accountId, user, context);
 			if (tmp == null) {
 				index = profile.getApps().size();
@@ -164,7 +210,7 @@ public class App {
 	}
 	
 	public String getLogin(){
-		if(account.getType().equals("ClassicAccount")){
+		if(account.getType().equals("LogWithAccount")){
 			return ((ClassicAccount) account).getLogin();
 		} 
 		return null;
@@ -178,8 +224,16 @@ public class App {
 	}
 	
 	public String getType() {
+		if (account == null)
+			return ("NoAccount");
 		return account.getType();
 	}
+	public boolean isEmpty() {
+		if (account == null)
+			return true;
+		return false;
+	}
+	
 	public String getId() {
 		return id;
 	}
@@ -201,6 +255,14 @@ public class App {
 		name = str;
 	}
 	
+	public boolean isCustom(String cust){
+		if (this.custom == null)
+			return false;
+		if (cust.equals(this.custom))
+			return true;
+		return false;
+	}
+	
 	public void updateInDB(ServletContext context) throws SessionException {
 		DataBase db = (DataBase)context.getAttribute("DataBase");
 		if (db.set("UPDATE apps SET account_id=" + account.getId() + ", website_id="+ site.getId() +", position="+ index +", name='"+ name +"' WHERE app_id=" + id + ";")
@@ -220,12 +282,38 @@ public class App {
 		DataBase db = (DataBase)context.getAttribute("DataBase");
 		if (db.set("DELETE FROM apps WHERE app_id=" + id + ";") != 0)
 			throw new SessionException("Impossible to delete app in data base.");
-		ResultSet rs = db.get("SELECT * FROM apps where account_id="+ account.getId() +";");
-		try {
-			if(!rs.next()) account.deleteFromDB(context);
-		} catch (SQLException e) {
-			throw new SessionException("Impossible to delete app in data base.");
+		if (account != null) {
+			ResultSet rs = db.get("SELECT * FROM apps where account_id="+ account.getId() +";");
+			try {
+				if(!rs.next()) account.deleteFromDB(context);
+			} catch (SQLException e) {
+				throw new SessionException("Impossible to delete app in data base.");
+			}
 		}
 		
+	}
+	
+	public boolean havePerm(AppPerm perm, ServletContext context) throws SessionException {
+		if (custom == null || custom.equals("null"))
+			return true;
+		DataBase db = (DataBase)context.getAttribute("DataBase");
+		
+		try{
+			ResultSet rs;
+			if ((rs = db.get("select perm from customApps where id=" + custom + ";")) == null) {					
+				throw new SessionException("Can't get perm. 1");
+			}
+			rs.next();
+			int champ = Integer.parseInt(rs.getString(1));
+			if ((champ >> perm.ordinal()) % 2 == 1){
+				return true;
+			}
+		} catch (SQLException e) {
+			throw new SessionException("Can't get perm. 2");
+		} catch (NumberFormatException e) {
+			throw new SessionException("Can't get perm. 3");
+		}
+		
+		return false;
 	}
 }

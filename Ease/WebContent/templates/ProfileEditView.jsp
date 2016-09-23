@@ -104,8 +104,6 @@
 	}
 
 	function leaveEditMode() {
-		console.log("quit");
-		console.trace();
 		$('#dragAndDropHelper').css('display', 'none');
 		if ($('#tutorialView').length) {
 			window.location.replace("index.jsp");
@@ -140,19 +138,21 @@
 	$(document).ready(function() {
 		$('.CatalogViewTab #quit').click(function() {
 			leaveEditMode();
-			//		$('.CatalogViewTab').removeClass('show');
-			//    	window.location.replace("index.jsp");
 		});
 	});
-
+	
 	$(document).ready(
 			function() {
+				$(document).unbind('click');
 				$(document).click(
 						function(event) {
 							if ($(".CatalogViewTab").hasClass("show")) {
+								console.log($(event.target));
 								if (!$(event.target).parents().hasClass(
 										"ProfilesHandler editMode")) {
 									if (!($(event.target).is(
+											".md-overlay")
+											|| $(event.target).is(
 											"#enterEditMode img")
 											|| $(event.target).is(
 													"#enterEditMode")
@@ -177,8 +177,8 @@
 											".AddProfileView").has(
 												$(event.target)).length
 											|| $(event.target).is(
-													"#PopupDeleteProfile")
-											|| $("#PopupDeleteProfile").has(
+													"#PopupModifyProfile")
+											|| $("#PopupModifyProfile").has(
 												$(event.target)).length
 
 									)) 

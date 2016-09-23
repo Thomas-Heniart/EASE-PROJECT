@@ -72,28 +72,32 @@ public class EditLogWith extends HttpServlet {
 			} else if (user.getProfiles().get(user.getApp(lwId).getProfileIndex()).getApps().get(user.getApp(lwId).getIndex()).getType().equals("Account") == false){
 				retMsg = "error: This account is not an account.";
 			} else {
-				transaction = db.start();
 				app = user.getProfiles().get(user.getApp(appId).getProfileIndex()).getApps().get(user.getApp(appId).getIndex());
-				if (app.getType().equals("LogWithAccount") == false){
-					Site site = app.getSite();
-					app.deleteFromDB(session.getServletContext());
-					user.getProfiles().get(user.getApp(appId).getProfileIndex()).getApps().remove(user.getApp(appId));
-					App tmp = new App(name, user.getApp(lwId).getId(), site, user.getProfiles().get(user.getApp(appId).getProfileIndex()), user, session.getServletContext());
-					user.getProfiles().get(user.getApp(appId).getProfileIndex()).addApp(tmp);
-					user.getApps().remove(user.getApp(appId));
-					user.getApps().add(tmp);
-					tmp.setAppId(appId);
-					retMsg = "succes";
+				if (app.havePerm(App.AppPerm.MODIFY, session.getServletContext())){
+					transaction = db.start();
+					if (app.getType().equals("LogWithAccount") == false){
+						Site site = app.getSite();
+						app.deleteFromDB(session.getServletContext());
+						user.getProfiles().get(user.getApp(appId).getProfileIndex()).getApps().remove(user.getApp(appId));
+						App tmp = new App(name, user.getApp(lwId).getId(), site, user.getProfiles().get(user.getApp(appId).getProfileIndex()), user, session.getServletContext());
+						user.getProfiles().get(user.getApp(appId).getProfileIndex()).addApp(tmp);
+						user.getApps().remove(user.getApp(appId));
+						user.getApps().add(tmp);
+						tmp.setAppId(appId);
+						retMsg = "succes";
+					} else {
+						LogWithAccount logWith = (LogWithAccount)app.getAccount();
+						logWith.setLogWithAppId(user.getApp(lwId).getId());
+						app.setName(name);
+						logWith.updateInDB(session.getServletContext());
+						app.setAccount(logWith);
+						app.updateInDB(session.getServletContext());
+						retMsg = "success";
+					}
+					db.commit(transaction);
 				} else {
-					LogWithAccount logWith = (LogWithAccount)app.getAccount();
-					logWith.setLogWithAppId(user.getApp(lwId).getId());
-					app.setName(name);
-					logWith.updateInDB(session.getServletContext());
-					app.setAccount(logWith);
-					app.updateInDB(session.getServletContext());
-					retMsg = "success";
+					retMsg = "error: You have not the permission";
 				}
-				db.commit(transaction);
 			}
 		} catch (SessionException e) {
 			db.cancel(transaction);
