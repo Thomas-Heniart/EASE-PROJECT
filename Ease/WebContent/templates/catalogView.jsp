@@ -41,7 +41,7 @@
 					<div class="relatedApps"></div>
 					<%@ include file="catalogApps.jsp"%>
 					<div class="no-result-search">
-						<h2>No results yet...☔</h2>
+						<h2>No results yet...<img alt="no-result" src="resources/images/umbrella.png"/></h2>
 						<p>Fine ! Take a look there</p>
 						<img alt="arrow" src="resources/images/curved_arrow.png" />
 					</div>

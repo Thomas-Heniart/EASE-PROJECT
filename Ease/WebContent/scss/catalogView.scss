@@ -264,11 +264,15 @@
 			.no-result-search {
 				display: none;
 				text-align: center;
+				h2 img {
+					width: 25px;
+					vertical-align: initial;
+				}
 				p {
 					font-size: 1.4em;
 				}
 				img {
-					position: relative;
+					width: 9%;
 				}
 			}
 			.catalogApp {
