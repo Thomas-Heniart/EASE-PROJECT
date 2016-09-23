@@ -8,7 +8,6 @@ import javax.servlet.ServletContext;
 import com.Ease.context.DataBase;
 import com.Ease.context.Site;
 import com.Ease.context.SiteManager;
-import com.Ease.session.Profile.ProfilePerm;
 
 public class App {
 	enum AppData {
@@ -103,6 +102,36 @@ public class App {
 		}
 		
 	}
+	
+	//Use this to create a new app as sso account and set it in database
+		public App(String name, Account account, Site site, Profile profile, User user, ServletContext context) throws SessionException {
+			DataBase db = (DataBase)context.getAttribute("DataBase");
+			
+			if (db.set("INSERT INTO apps VALUES (NULL, "+ account.getId() +", "+ site.getId() + ", " + profile.getId() + ", '" + profile.getApps().size() + "', '" + name + "', NULL);")
+					!= 0) {
+				throw new SessionException("Impossible to insert new app in data base.");
+			}
+			
+			ResultSet rs = db.get("SELECT LAST_INSERT_ID();");
+			if (rs == null){
+				throw new SessionException("Impossible to insert new app in data base. (no rs)");
+			}
+			try {
+				rs.next();
+				this.id = rs.getString(1);
+				this.account = account;
+				this.site = site;
+				this.index = profile.getApps().size();
+				this.name = name;
+				this.profileIndex = profile.getIndex();
+				this.profileId = profile.getProfileId();
+				appId = user.getNextAppId();
+				this.custom = null;
+			} catch (SQLException e) {
+				throw new SessionException("Impossible to insert new account in data base. (no str1)");
+			}
+			
+		}
 	
 	//Use this to create a new app without account and set it in database
 		public App(String name, Site site, Profile profile, String custom, User user, ServletContext context) throws SessionException {
