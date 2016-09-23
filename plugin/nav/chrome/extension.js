@@ -2,6 +2,15 @@ var listenersUpdates = [];
 var listenersMessages = [];
 
 var extension = {
+    notifications:{
+        print:function(message, folder, time){
+             chrome.notifications.create({"type":"basic", "iconUrl":"https://ease.space/resources/websites/"+ folder +"/logo.png","title":message,"message":message}, function(notifId){
+                 setTimeout(function(){
+                     chrome.notifications.clear(notifId);
+                 }, time);
+             });
+        } 
+    },
 	storage:{
 		get:function(key, callback){
 			chrome.storage.local.get(key, function(res){
@@ -71,6 +80,12 @@ var extension = {
 		create:function(window, url, active, callback){
 			chrome.tabs.create({"windowId":window.id, "url":url, "active":active}, callback);
 		},
+        highlight:function(window, tab, callback){
+            chrome.tabs.highlight({"windowId":window.id, "tabs":tab.index}, callback);
+        },
+        focus:function(window, tab, callback){
+            chrome.tabs.highlight({"windowId":window.id, "tabs":tab.index}, callback);
+        },
 		close:function(tab, callback){
    			chrome.tabs.remove(tab.id, callback);
 		},
@@ -113,6 +128,35 @@ var extension = {
         },
 		injectScript:function(tab, fileName, callback){
 			chrome.tabs.executeScript(tab.id, {"file":fileName}, callback);
-		}
-	}
+		},
+        injectCSS: function(tab, fileName, callback){
+            chrome.tabs.insertCSS(tab.id, {"file":fileName}, callback);
+        },
+        inject:function(tab, files, callback){
+        
+            function injectonefile(i){
+                if(files[i].substring(files[i].length-3, files[i].length)==".js"){
+                    chrome.tabs.executeScript(tab.id, {"file":files[i]}, function(){
+                        i++;
+                        if(i>=files.length){
+                            callback();
+                        } else {
+                            injectonefile(i);
+                        }
+                    });
+                } else if(files[i].substring(files[i].length-3, files[i].length)=="css") {
+                    chrome.tabs.insertCSS(tab.id, {"file":files[i]}, function(){
+                        i++;
+                        if(i>=files.length){
+                            callback();
+                        } else {
+                            injectonefile(i);
+                        }
+                    });
+                }
+            }
+            injectonefile(0);
+               
+        }
+    }
 }

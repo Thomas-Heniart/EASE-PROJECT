@@ -100,6 +100,7 @@
 		    touchDrag: false,
 		    mouseDrag: false
 		});
+		$('.MenuButtonSet').addClass('editMode');
 	}
 
 	function leaveEditMode() {
@@ -131,6 +132,7 @@
 
 		});
 		$('.scaleOutAnimation').removeClass('scaleOutAnimation');
+		$('.MenuButtonSet').removeClass('editMode');
 	}
 
 	$(document).ready(function() {

@@ -2,6 +2,7 @@
 	"name":"Facebook",
 	"lastLogin":"",
 	"home":"http://www.facebook.com",
+	"folder":"Facebook",
 	"connect":{
 		"todo":[
 			{"action":"fill", "what":"login", "search":"#email", "grave":true},

@@ -28,6 +28,7 @@ waitfor:function(msg, callback, sendResponse){
     var div = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep].search;
     var time = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep].time;
     if(!time){time = 100;}
+    var iteration = 0;
     
 	function waitfor(callback){
     if(typeof div === 'string'){div = [div];}
@@ -39,8 +40,13 @@ waitfor:function(msg, callback, sendResponse){
                 break;
             }
         }
-        if(absent){ 
+        if (iteration > 100){
+            msg.type = "error: connection too long";
+            sendResponse(msg);
+            errorOverlay(msg);
+        } else if(absent){ 
             setTimeout(function(){
+                iteration ++;
                 waitfor(callback);
             }, time);
         } else {
@@ -48,6 +54,7 @@ waitfor:function(msg, callback, sendResponse){
             callback(msg, sendResponse);
         }
 	}
+    
 	waitfor(callback);
 },
 setattr:function(msg, callback, sendResponse){
@@ -55,8 +62,9 @@ setattr:function(msg, callback, sendResponse){
 	var input = $(actionStep.search);
 	if (input.length == 0){
 		if (actionStep.grave == true){
-			msg.type = "error: input not found";
+			msg.type = "error: element not found";
 			sendResponse(msg);
+            errorOverlay(msg);
 		} else {
 			msg.actionStep++;
 			callback(msg, sendResponse);
@@ -72,8 +80,9 @@ fill:function(msg, callback, sendResponse){
 	var input = $(actionStep.search);
 	if (input.length == 0){
 		if (actionStep.grave == true){
-			msg.type = "error: input not found";
+			msg.type = "error: "+ actionStep.what +" input not found";
 			sendResponse(msg);
+            errorOverlay(msg);
 		} else {
 			msg.actionStep++;
 			callback(msg, sendResponse);
@@ -97,6 +106,7 @@ click:function(msg, callback, sendResponse){
 		if (actionStep.grave == true){
 			msg.type = "error: button not found";
 			sendResponse(msg);
+            errorOverlay(msg);
 		}
 		else {
 			msg.actionStep++;
@@ -116,6 +126,7 @@ clickona:function(msg, callback, sendResponse){
 		if (actionStep.grave == true){
 			msg.type = "error: button not found";
 			sendResponse(msg);
+            errorOverlay(msg);
 		}
 		else {
 			msg.actionStep++;
@@ -136,6 +147,7 @@ aclick:function(msg, callback, sendResponse){
 		if (actionStep.grave == true){
 			msg.type = "error: link not found";
 			sendResponse(msg);
+            errorOverlay(msg);
 		}
 		else{
 			msg.actionStep++;
@@ -153,8 +165,9 @@ submit:function(msg, callback, sendResponse){
 	var form = $(actionStep.search);
 	if (form.length == 0){
 		if (actionStep.grave == true){
-			msg.type = "error: form not found";
+			msg.type = "error: connection form not found";
 			sendResponse(msg);
+            errorOverlay(msg);
 		}
 		else {
 			msg.actionStep++;
