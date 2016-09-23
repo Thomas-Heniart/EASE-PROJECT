@@ -21,11 +21,15 @@
 
 		<div class="scaleContainerView">
 			<div class=tagContainer>
-				<c:forEach items='${siteManager.getTagsList()}' var="item">
-					<a href="#" tagId="${item.getId()}" class="tag btn btn-default ease-button"
-						style="background-color: ${item.getColor()}; border-color: ${item.getColor()}">
-						${item.getName()}</a>
-				</c:forEach>
+				<i class="fa fa-angle-left" aria-hidden="true"></i>
+				<span class="tags">
+					<c:forEach items='${siteManager.getTagsList()}' var="item">
+						<a href="#" tagId="${item.getId()}" class="tag btn btn-default ease-button hvr-grow" name="${item.getName()}"
+							style="background-color: ${item.getColor()}; border-color: ${item.getColor()}">
+							${item.getName()}</a>
+					</c:forEach>
+				</span>
+				<i class="fa fa-angle-right" aria-hidden="true"></i>
 			</div>
 			<div class="scaleContainer">
 				<img class="Scaler" src="resources/other/placeholder-63.png"
@@ -36,6 +40,11 @@
 					<h4 class="relatedApps"><span>Related apps</span></h4>
 					<div class="relatedApps"></div>
 					<%@ include file="catalogApps.jsp"%>
+					<div class="no-result-search">
+						<h2>No results yet...<img alt="no-result" src="resources/images/umbrella.png"/></h2>
+						<p>Fine ! Take a look there</p>
+						<img alt="arrow" src="resources/images/curved_arrow.png" />
+					</div>
 				</div>
 			</div>
 		</div>

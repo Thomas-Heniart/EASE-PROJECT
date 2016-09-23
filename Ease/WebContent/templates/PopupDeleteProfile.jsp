@@ -44,7 +44,7 @@ $(document).ready( function() {
                   	window.location.replace("index.jsp");		        	  		
         	  	}
 	      	  	else {
-	      	  	if (data[0] != 'e'){
+	      	  	if (msg[0] != 'e'){
 					document.location.reload(true);
 				} else {
 					$(parent).find('.alertDiv').addClass('show');

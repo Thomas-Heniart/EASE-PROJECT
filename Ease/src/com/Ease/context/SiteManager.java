@@ -41,6 +41,33 @@ public class SiteManager {
 	public List<Site> getSitesList() {
 		return sites;
 	}
+	
+	public List<Site> getSso(String ssoId){
+		List<Site> res = new LinkedList<Site>();
+		Iterator<Site> iterator = sites.iterator();
+		while (iterator.hasNext()) {
+			Site tmpSite = iterator.next();
+			if (ssoId == tmpSite.getSso())
+				res.add(tmpSite);
+		}
+		return res;
+	}
+	
+	public List<Site> getSso(Site site){
+		List<Site> res = new LinkedList<Site>();
+		String ssoId = site.getSso();
+		if(ssoId==null){
+			res.add(site);
+			return res;
+		}
+		Iterator<Site> iterator = sites.iterator();
+		while (iterator.hasNext()) {
+			Site tmpSite = iterator.next();
+			if (ssoId == tmpSite.getSso())
+				res.add(tmpSite);
+		}
+		return res;
+	}
 
 	public List<Tag> getTagsList() {
 		return tags;
@@ -81,17 +108,6 @@ public class SiteManager {
 			iterator.next().setSites(context);
 	}
 
-	public JSONArray searchSitesWith(String search) {
-		JSONArray res = new JSONArray();
-		Iterator<Site> iterator = sites.iterator();
-		while (iterator.hasNext()) {
-			Site tmpSite = iterator.next();
-			if (tmpSite.getName().toUpperCase().startsWith(search.toUpperCase()))
-				res.add(tmpSite.getJson());
-		}
-		return res;
-	}
-
 	public Tag getTagForSearch(String search, List<Tag> selectedTags) {
 		List<Tag> allTags = tags;
 		allTags.removeAll(selectedTags);
@@ -104,14 +120,22 @@ public class SiteManager {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	public JSONArray getSitesListJson() {
 		JSONArray res = new JSONArray();
 		Iterator<Site> iterator = sites.iterator();
-		while (iterator.hasNext())
-			res.add(iterator.next().getJson());
+		while (iterator.hasNext()) {
+			Site tmpSite = iterator.next();
+			/*JSONArray tmpJson = new JSONArray();
+			tmpJson.add(tmpSite.getId());
+			tmpJson.add("");*/
+			res.add(tmpSite.getId());
+		}
+			
 		return res;
 	}
 
+	@SuppressWarnings("unchecked")
 	public JSONArray getSitesListJsonWithSearchAndTags(String search, String[] selectedIds) {
 		// If everything is empty then returns all websites
 		if (selectedIds.length == 0 && (search.isEmpty() || search == null))
@@ -129,16 +153,15 @@ public class SiteManager {
 		if (selectedTags.size() == 0) {
 			Tag searchTag = getTagForSearch(search, selectedTags);
 			if (searchTag != null) {
-				System.out.println("Test");
 				List<Site> tagSites = searchTag.getSites();
 				Iterator<Site> it = tagSites.iterator();
 				while (it.hasNext()) {
 					Site tmpSite = it.next();
 					if (!sitesToShow.contains(tmpSite)) {
 						sitesToShow.add(tmpSite);
-						JSONArray jsonArray = tmpSite.getJson();
-						jsonArray.add("hasSomeTags");
-						res.add(jsonArray);
+						/*JSONArray jsonArray = tmpSite.getJson();
+						jsonArray.add("hasSomeTags");*/
+						res.add(tmpSite.getId());
 					}
 				}
 			}
@@ -148,9 +171,9 @@ public class SiteManager {
 				if (tmpSite.getName().toLowerCase().startsWith(search.toLowerCase()))
 					if (!sitesToShow.contains(tmpSite)) {
 						sitesToShow.add(tmpSite);
-						JSONArray jsonArray = tmpSite.getJson();
-						jsonArray.add("hasSomeTags");
-						res.add(jsonArray);
+						/*JSONArray jsonArray = tmpSite.getJson();
+						jsonArray.add("hasSomeTags");*/
+						res.add(tmpSite.getId());
 					}
 
 			}
@@ -164,27 +187,26 @@ public class SiteManager {
 			if (tmpSite.hasAllTags(selectedTags)) {
 				if (tmpSite.getName().toLowerCase().startsWith(search.toLowerCase()) || search.isEmpty()) {
 					sitesToShow.add(tmpSite);
-					JSONArray tmpJson = tmpSite.getJson();
-					tmpJson.add("hasAllTags");
-					res.add(tmpJson);
+					res.add(tmpSite.getId());
 				}
 			}
 		}
 
 		// get sites with some tags
-		siteIterator = sites.iterator();
+		/*siteIterator = sites.iterator();
 		while (siteIterator.hasNext()) {
 			Site tmpSite = siteIterator.next();
 			if (!sitesToShow.contains(tmpSite))
 				if (tmpSite.hasTags(selectedTags)) {
 					if (tmpSite.getName().toLowerCase().startsWith(search.toLowerCase()) || search.isEmpty()) {
 						sitesToShow.add(tmpSite);
-						JSONArray jsonArray = tmpSite.getJson();
-						jsonArray.add("hasSomeTags");
+						JSONArray jsonArray = new JSONArray();
+						jsonArray.add(tmpSite.getId());
+						jsonArray.add("or");
 						res.add(jsonArray);
 					}
 				}
-		}
+		}*/
 
 		/*
 		 * Tag searchTag = getTagForSearch(search, selectedTags); if (searchTag

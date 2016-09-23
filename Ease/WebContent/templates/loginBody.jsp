@@ -28,13 +28,29 @@
 		}
 		else if ((cookie.getName()).compareTo("lname") == 0){
 			lname = cookie.getValue();
-			if (lname.length() > 0)
+			if (lname.length() > 0){
 				iden++;
+			}
 		}
 		else if ((cookie.getName()).compareTo("fname") == 0){
 			fname = cookie.getValue();
 			if (fname.length() > 0)
 				iden++;
+		}
+	}
+	if (iden == 3){
+		try {
+		new String(Base64.getDecoder().decode(lname), StandardCharsets.UTF_8);
+		new String(Base64.getDecoder().decode(fname), StandardCharsets.UTF_8);
+		} catch (IllegalArgumentException e){
+			for (int i = 0;i < cookies.length ; i++) {
+				 cookies[i].setMaxAge(-1);
+	             cookies[i].setValue(null);
+                 response.addCookie(cookies[i]);
+			}
+			fname = "";
+			lname = "";
+			response.sendRedirect("/index.jsp");
 		}
 	}
 }
