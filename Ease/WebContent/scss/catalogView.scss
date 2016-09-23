@@ -155,10 +155,10 @@
 			background-color: $themeDarkGreyColor;
 
 			::-webkit-scrollbar {
-		   height: 3px;
-			 background-color: white;
-		   position: absolute;
-		 	}
+				height: 3px;
+				background-color: white;
+				position: absolute;
+			}
 
 			.tag {
 				font-size: 0.8em;
@@ -190,16 +190,16 @@
 					color: $themeColor;
 				}
 			}
-				i.fa-angle-right {
-					right: 1%;
-					padding-left: 2px;
-				}
-				i.fa-angle-left {
-					margin-left: 1%;
-					padding-right: 2px;
-				}
+			i.fa-angle-right {
+				right: 1%;
+				padding-left: 2px;
+			}
+			i.fa-angle-left {
+				margin-left: 1%;
+				padding-right: 2px;
 			}
 		}
+	}
 	.scaleContainer {
 		width: 90%;
 		position: relative;
@@ -229,8 +229,8 @@
 					margin: 0 auto;
 					position: absolute;
 					top: 50%; left: 0; right: 0; bottom: 0;
-      		width: 95%;
-      		z-index: -1;
+					width: 95%;
+					z-index: -1;
 				}
 
 				span {
@@ -252,8 +252,8 @@
 					margin: 0 auto;
 					position: absolute;
 					top: 50%; left: 0; right: 0; bottom: 0;
-      		width: 95%;
-      		z-index: -1;
+					width: 95%;
+					z-index: -1;
 				}
 
 				span {
@@ -606,7 +606,6 @@
 	}
 }
 .CatalogViewTab.show {
-	transition: all 0.3s ease;
 	visibility: visible;
 	background-color: $themeDarkGreyColor;
 	left: 50%;
@@ -616,7 +615,7 @@
 	min-height: 100%;
 	opacity: 0;
 	top: 0;
-	transition: all 0.3s ease;
+	transition: visibility 0s ease .3s;
 	width: 50%;
 	float:left;
 	left: 100%;
@@ -625,8 +624,8 @@
 	background-color: white;
 	#quit {
 		position: absolute;
-		top: 1%;
-		right: 1%;
+		top: 0;
+		right: 2%; 
 		background-color: $themeRedColor;
 		color: white;
 		border: none;

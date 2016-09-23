@@ -134,6 +134,7 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   height: 100%;
+  transform: translateX(0);
   -webkit-animation: slideLeft 0.8s 1;
   animation: slideLeft 0.8s 1;
   display: none;
