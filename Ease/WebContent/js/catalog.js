@@ -174,15 +174,24 @@ $(document).ready(function() {
 	$('.tagContainer i.fa-angle-right').click(function() {
 			amount = '+=' + $('.tagContainer .tags').css('width');
     	scroll();
+			$('.tagContainer i.fa-angle-left').show();
+			if ($('.tagContainer .tags').scrollLeft() == parseInt($('.tagContainer .tags').outerWidth()))
+				$('.tagContainer i.fa-angle-right').hide();
+			else
+				$('.tagContainer i.fa-angle-right').show();
 		});
 
 	$('.tagContainer i.fa-angle-left').click(function() {
-    	amount = '-=' + $('.tagContainer .tags').css('width');
+			amount = '-=' + $('.tagContainer .tags').css('width');
+			$('.tagContainer i.fa-angle-right').css("display", "inline-block");
+			console.log("zzn");
     	scroll();
+			if ($('.tagContainer .tags').scrollLeft() -  parseInt($('.tagContainer .tags').css('width')) <= 0)
+				$('.tagContainer i.fa-angle-left').css("display", "none");
 		});
 });
 
-var amount = '';
+var amount = "";
 
 function scroll() {
 	$('.tagContainer .tags').animate({scrollLeft: amount}, 200, 'linear');

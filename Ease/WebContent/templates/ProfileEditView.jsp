@@ -141,16 +141,14 @@
 	
 	$(document).ready(
 			function() {
-				$(document).unbind('click');
 				$(document).click(
 						function(event) {
+							if ($(event.target).is($(".md-overlay")) || $(".md-overlay").has($(event.target).length))
+								return;
 							if ($(".CatalogViewTab").hasClass("show")) {
-								console.log($(event.target));
 								if (!$(event.target).parents().hasClass(
 										"ProfilesHandler editMode")) {
 									if (!($(event.target).is(
-											".md-overlay")
-											|| $(event.target).is(
 											"#enterEditMode img")
 											|| $(event.target).is(
 													"#enterEditMode")
