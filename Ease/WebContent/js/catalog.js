@@ -107,7 +107,7 @@ function updateCatalogFront(tagButton) {
 		addActionOnCrossButton(tagId);
 	} else {
 		var btnGroup = tagButton.parent();
-		$(".tagContainer").append(tagButton);
+		$(".tagContainer .tags").append(tagButton);
 		btnGroup.remove();
 	}
 	updateTagsInSearchBar();
