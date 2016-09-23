@@ -19,9 +19,9 @@
   @include do-shake('shake-ease', 2px, 1px, 3, 1700ms, .05, $opacity: false); 
 }
 
-@mixin scalein-anim($scaleRate: 0.9){
-  animation: fontScaling .3s ease-in 0s;
-  @-webkit-keyframes fontScaling {
+@mixin scalein-anim($animName: 'default', $scaleRate: 0.9){
+  animation: #{$animName} .3s ease-in 0s;
+  @-webkit-keyframes #{$animName} {
     50% {
       -webkit-transform: scale($scaleRate);
       transform: scale($scaleRate);
@@ -30,7 +30,7 @@
 }
 
 .scaleinAnimation {
-   @include scalein-anim(0.9);
+   @include scalein-anim('scale-09', 0.9);
 }
 
 body {
