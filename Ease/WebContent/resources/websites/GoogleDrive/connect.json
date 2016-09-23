@@ -8,7 +8,7 @@
 			{"action":"clickona", "search":"#account-chooser-add-account"},
 			{"action":"fill", "what":"login", "search":"#Email", "grave":true},
 			{"action":"click", "search":"#next", "grave":true},
-			{"action":"waitfor", "search":"#Passwd"},
+			{"action":"waitfor", "time":10, "search":"#Passwd"},
 			{"action":"fill", "what":"password", "search":"#Passwd"},
 			{"action":"submit", "search":"#gaia_loginform", "grave":true}
 			]

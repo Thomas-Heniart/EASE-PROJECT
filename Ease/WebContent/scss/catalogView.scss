@@ -192,14 +192,15 @@
 					color: $themeColor;
 				}
 			}
-			i.fa-angle-right {
-				right: 1%;
-				padding-left: 2px;
-			}
-			i.fa-angle-left {
-				margin-left: 1%;
-				padding-right: 2px;
-			}
+				i.fa-angle-right {
+					right: 1%;
+					padding-left: 2px;
+				}
+				i.fa-angle-left {
+					margin-left: 1%;
+					padding-right: 2px;
+					display: none;
+				}
 		}
 	}
 	.scaleContainer {
@@ -627,7 +628,7 @@
 	#quit {
 		position: absolute;
 		top: 0;
-		right: 2%; 
+		right: 2%;
 		background-color: $themeRedColor;
 		color: white;
 		border: none;

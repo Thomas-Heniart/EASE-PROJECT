@@ -24,7 +24,7 @@
     "page" : "background.html",
     "persistent": false
 },
-"permissions": ["tabs","\u003Call_urls\u003E","http://*/*", "https://*/*","webNavigation","storage"],
+"permissions": ["tabs","notifications","\u003Call_urls\u003E","http://*/*", "https://*/*","webNavigation","storage"],
     
 "commands": {
       "open-ease": {
