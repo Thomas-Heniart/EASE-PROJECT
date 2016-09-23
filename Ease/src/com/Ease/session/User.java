@@ -6,9 +6,12 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.mail.Session;
 import javax.servlet.ServletContext;
 
 import com.Ease.context.DataBase;
+import com.Ease.context.Site;
+import com.Ease.context.SiteManager;
 import com.Ease.data.AES;
 import com.Ease.data.Hashing;
 
@@ -38,6 +41,7 @@ public class User {
 	String			keyUser;
 	String			tuto;
 	List<Profile>	profiles;
+	List<String>	group_ids;
 	
 	int				maxProfileId;
 	int				maxAppId;
@@ -73,6 +77,7 @@ public class User {
 			maxProfileId = 0;
 			maxAppId = 0;
 			apps = new LinkedList<App>();
+			group_ids = new LinkedList<String>();
 			ResultSet rs = db.get("SELECT MAX(user_id) FROM users;");
 			if (rs == null)
 				throw new SessionException("Impossible to insert new user in data base.");
@@ -105,6 +110,7 @@ public class User {
 			maxProfileId = 0;
 			maxAppId = 0;
 			apps = new LinkedList<App>();
+			group_ids = new LinkedList<String>();
 			loadProfiles(context);
 			checkForGroup(context);
 		} catch (SQLException e) {
@@ -175,6 +181,10 @@ public class User {
 			i++;
 		}
 		return null;
+	}
+	
+	public List<String> getGroupIds() {
+		return group_ids;
 	}
 	
 	// SETTER
@@ -300,6 +310,7 @@ public class User {
 				while (rs.next()){
 					String group_id = rs.getString(1);
 					loadGroup(context, group_id);
+					group_ids.add(group_id);
 				}
 			}
 
@@ -308,16 +319,24 @@ public class User {
 		}
 	}
 	
-	public boolean haveThisCustomProfile(String cust){
+	public Profile haveThisCustomProfile(String cust){
 		for (int i = 0; i < profiles.size(); ++i){
 			if (profiles.get(i).isCustom(cust) == true)
-				return true;
+				return profiles.get(i);
 		}
-		return false;
+		return null;
+	}
+	public App haveThisCustomApp(String cust){
+		for (int i = 0; i < apps.size(); ++i){
+			if (apps.get(i).isCustom(cust) == true)
+				return apps.get(i);
+		}
+		return null;
 	}
 	
-	public void loadGroup(ServletContext context, String group_id) throws SessionException {
+	public Profile loadGroup(ServletContext context, String group_id) throws SessionException {
 		DataBase db = (DataBase)context.getAttribute("DataBase");
+		
 	
 		try{
 			ResultSet rs;
@@ -326,19 +345,35 @@ public class User {
 			}
 			rs.next();
 			String parent = rs.getString(3);
+			Profile profile = null;
 			if (parent != null && !parent.equals("null")){
-				loadGroup(context, parent);
+				profile = loadGroup(context, parent);
 			}
 			if ((rs = db.get("select * from customProfiles where group_id=" + group_id + ";")) == null) {					
 				throw new SessionException("Can't get groups. 2");
 			}
 			if (rs.next()){
 				String customProfileId = rs.getString(1);
-				if (haveThisCustomProfile(customProfileId) == false){
-					Profile profile = new Profile(rs.getString(2), rs.getString(3), "", this, customProfileId, context);
+				if ((profile = haveThisCustomProfile(customProfileId)) == null){
+					profile = new Profile(rs.getString(2), rs.getString(3), "", this, customProfileId, context);
 					profiles.add(profile);
 				}
 			}
+			if ((rs = db.get("select * from AppAndGroupMap where group_id=" + group_id + ";")) == null) {					
+				throw new SessionException("Can't get groups. 3");
+			}
+			while (rs.next()){
+				String customAppId = rs.getString(2);
+				App app = null;
+				if ((app = haveThisCustomApp(customAppId)) == null){
+					ResultSet rs2 = db.get("select * from customApps where id=" + customAppId +";");
+					rs2.next();
+					app = new App(rs2.getString(4), ((SiteManager)context.getAttribute("siteManager")).get(rs2.getString(2)), profile, customAppId, this, context);
+					apps.add(app);
+					profile.addApp(app);
+				}
+			}
+			return profile;
 		} catch (SQLException e) {
 			throw new SessionException("Can't get groups. 3");
 		}
