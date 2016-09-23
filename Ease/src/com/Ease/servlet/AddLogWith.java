@@ -13,7 +13,6 @@ import com.Ease.context.DataBase;
 import com.Ease.context.Site;
 import com.Ease.context.SiteManager;
 import com.Ease.session.App;
-import com.Ease.session.LogWith;
 import com.Ease.session.Profile;
 import com.Ease.session.SessionException;
 import com.Ease.session.User;
@@ -80,16 +79,20 @@ public class AddLogWith extends HttpServlet {
 				if ((site = ((SiteManager)session.getServletContext().getAttribute("siteManager")).get(siteId)) == null) {
 					retMsg = "error: This site dosen't exist.";
 				} else {
-					transaction = db.start();
-					App logWith = new App(name, user.getApp(appId).getId(), site, profile, user, session.getServletContext());
-					profile.addApp(logWith);
-					user.getApps().add(logWith);
-					if (user.getTuto().equals("0")) {
-						user.tutoComplete();
-						user.updateInDB(session.getServletContext());
+					if (profile.havePerm(Profile.ProfilePerm.ADDAPP, session.getServletContext())){
+						transaction = db.start();
+						App logWith = new App(name, user.getApp(appId).getId(), site, profile, user, session.getServletContext());
+						profile.addApp(logWith);
+						user.getApps().add(logWith);
+						if (user.getTuto().equals("0")) {
+							user.tutoComplete();
+							user.updateInDB(session.getServletContext());
+						}
+						retMsg = "success: " + logWith.getAppId();
+						db.commit(transaction);
+					} else {
+						retMsg = "error: You have not the permission";
 					}
-					retMsg = "success: " + logWith.getAppId();
-					db.commit(transaction);
 				}
 			}
 		} catch (SessionException e) {
