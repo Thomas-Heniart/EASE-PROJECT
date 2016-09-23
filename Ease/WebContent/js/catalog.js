@@ -25,10 +25,14 @@ function refreshCatalogContent(data) {
 		if (data[0] == '[') {
 			var json = JSON.parse(data);
 			$('.catalogApp').hide();
-			var appsToShow = $('.catalogApp').filter(function(index, element) {
-				return json.includes($(element).attr("idx"));
-			});
-			appsToShow.show();
+			if (json.length > 0) {
+				$('.catalogContainer .no-result-search').hide();
+				var appsToShow = $('.catalogApp').filter(function(index, element) {
+					return json.includes($(element).attr("idx"));
+				});
+				appsToShow.show();
+			} else
+				$('.catalogContainer .no-result-search').show();
 		}
 	}
 
@@ -108,6 +112,11 @@ function updateCatalogFront(tagButton) {
 	}
 	updateTagsInSearchBar();
 	updateCatalogWith($(".catalogSearchbar input").val() , $(".selectedTagsContainer .tag"));
+	var appsShow = $('.catalogApp').filter(function() {
+		return this.style.display != "none";
+	});
+	if (appsShow.length == 0) {}
+
 }
 
 function removeLastSelectedTag() {
@@ -161,4 +170,20 @@ $(document).ready(function() {
 			addTagIfExists($(event.target));
 		updateCatalogWith($(event.target).val(), $(".selectedTagsContainer .tag"));
 	});
+
+	$('.tagContainer i.fa-angle-right').click(function() {
+			amount = '+=' + $('.tagContainer .tags').css('width');
+    	scroll();
+		});
+
+	$('.tagContainer i.fa-angle-left').click(function() {
+    	amount = '-=' + $('.tagContainer .tags').css('width');
+    	scroll();
+		});
 });
+
+var amount = '';
+
+function scroll() {
+	$('.tagContainer .tags').animate({scrollLeft: amount}, 200, 'linear');
+}

@@ -103,6 +103,8 @@
 	}
 
 	function leaveEditMode() {
+		console.log("quit");
+		console.trace();
 		$('#dragAndDropHelper').css('display', 'none');
 		if ($('#tutorialView').length) {
 			window.location.replace("index.jsp");
@@ -160,7 +162,7 @@
 													"#PopupAddApp")
 											|| $("#PopupAddApp").has(
 													$(event.target)).length
-													|| $(event.target).is(
+											|| $(event.target).is(
 													"#PopupDeleteApp")
 											|| $("#PopupDeleteApp").has(
 													$(event.target)).length
@@ -171,7 +173,11 @@
 											|| $(event.target).is(
 													".AddProfileView") || $(
 											".AddProfileView").has(
-											$(event.target)).length
+												$(event.target)).length
+											|| $(event.target).is(
+													"#PopupDeleteProfile")
+											|| $("#PopupDeleteProfile").has(
+												$(event.target)).length
 
 									)) 
 										leaveEditMode();

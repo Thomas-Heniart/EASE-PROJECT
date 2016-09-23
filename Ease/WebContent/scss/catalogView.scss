@@ -149,12 +149,57 @@
 		padding-bottom: 20px;
 		.tagContainer {
 			border-bottom: 2px solid grey;
+			height: 50px;
+			white-space: nowrap;
+			overflow: hidden;
+			background-color: $themeDarkGreyColor;
+
+			::-webkit-scrollbar {
+		   height: 3px;
+			 background-color: white;
+		   position: absolute;
+		 	}
+
 			.tag {
 				font-size: 0.8em;
 				margin: 10px 0 10px 20px;
 			}
+			.tags {
+				margin-left: 5%;
+				width: 90%;
+				margin-right: 5%;
+				overflow-x: scroll;
+				overflow-y: hidden;
+				display: inline-block;
+			}
+			i {
+				font-size: 20px;
+				width: 20px;
+				height: 20px;
+				padding: 0;
+				text-align: center;
+				vertical-align: middle;
+				color: white;
+				cursor: pointer;
+				position: absolute;
+				margin-top: 15px;
+				transition: all 0.3s;
+
+				&:hover {
+					transition: all 0.3s;
+					color: $themeColor;
+				}
+			}
+				i.fa-angle-right {
+					right: 1%;
+					padding-left: 2px;
+				}
+				i.fa-angle-left {
+					margin-left: 1%;
+					padding-right: 2px;
+				}
+			}
 		}
-	}
 	.scaleContainer {
 		width: 90%;
 		position: relative;
@@ -214,6 +259,23 @@
 				span {
 					background: white;
 					padding: 0 10px;
+				}
+			}
+			.no-result-search {
+				display: none;
+				h2 {
+					text-align: center;
+				}
+				p {
+					text-align: center;
+					font-size: 1.4em;
+				}
+				img {
+					width: 190px;
+					transform: rotate(90deg);
+					position: relative;
+					margin-left: 200px;
+					margin-top: 60px;
 				}
 			}
 			.catalogApp {
@@ -549,7 +611,7 @@
 .CatalogViewTab.show {
 	transition: all 0.3s ease;
 	visibility: visible;
-	background-color: #EDEDED;
+	background-color: $themeDarkGreyColor;
 	left: 50%;
 	opacity: 1;
 }
