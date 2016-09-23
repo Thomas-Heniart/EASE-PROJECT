@@ -11,12 +11,7 @@
 		</div>
 		<div class="lineInput">
 			<p class="inputTitle">App name :</p>
-			<div class="disabledInput">
 			<input  id="name" name="name" type="text" placeholder="Name" maxlength="14"/>
-				<div class="activateInput">
-				<i class="fa fa-cog"></i>
-				</div>
-			</div>
 		</div>
 		<div class="loginWithChooser">
 			<div class="linedSeparator">

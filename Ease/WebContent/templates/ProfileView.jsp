@@ -54,13 +54,16 @@
 	function sendEvent(obj) {
 		if (!($(obj).hasClass('waitingLinkImage'))) {
 			var appIdx = $(obj).closest('.siteLinkBox').index();
+			var logoImage = $(obj).find('.linkImage');
 			var profileIndex = $(obj).closest('.owl-item').index();
 			var json = new Object();
 			var event;
 
 			$(obj).addClass('waitingLinkImage');
+			logoImage.addClass('scaleinAnimation');
 			setTimeout(function() {
 				$(obj).removeClass("waitingLinkImage");
+				logoImage.removeClass('scaleinAnimation');				
 			}, 1000);
 			$.post("askInfo", {
 				profileIndex : profileIndex,
