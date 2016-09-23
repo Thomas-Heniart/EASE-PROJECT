@@ -263,19 +263,12 @@
 			}
 			.no-result-search {
 				display: none;
-				h2 {
-					text-align: center;
-				}
+				text-align: center;
 				p {
-					text-align: center;
 					font-size: 1.4em;
 				}
 				img {
-					width: 190px;
-					transform: rotate(90deg);
 					position: relative;
-					margin-left: 200px;
-					margin-top: 60px;
 				}
 			}
 			.catalogApp {
