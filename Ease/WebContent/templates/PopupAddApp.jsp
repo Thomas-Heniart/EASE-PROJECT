@@ -142,9 +142,9 @@ $(document).ready(function(){
 		var ssoId = $(helper).attr('data-sso');
 		
 		if(ssoId != "" && ssoId != null){
-			ssoChooser.css('display', 'block');
 			var apps = $(".siteLinkBox[ssoId='" + ssoId + "']");
 			var logins = [];
+			if(apps.length != 0) ssoChooser.css('display', 'block');
 			for (var i = 0; i < apps.length; i++) {
 				if(!logins.includes($(apps[i]).attr('login'))){
 					SsoHelper.find('p').text($(apps[i]).attr('login'));

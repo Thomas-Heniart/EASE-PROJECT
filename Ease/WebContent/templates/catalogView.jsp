@@ -25,7 +25,7 @@
 				<span class="tags">
 					<c:forEach items='${siteManager.getTagsList()}' var="item">
 						<a href="#" tagId="${item.getId()}" class="tag btn btn-default ease-button hvr-grow" name="${item.getName()}"
-							style="background-color: ${item.getColor()}; border-color: ${item.getColor()}">
+							style="background-color: ${item.getColor()};">
 							${item.getName()}</a>
 					</c:forEach>
 				</span>

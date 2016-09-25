@@ -223,6 +223,50 @@
 				}
 			}
 		}
+		.loginSsoChooser {
+			padding: 0px;
+			width: 80%;
+			margin-left: auto;
+			margin-right: auto;
+			position: relative;
+			text-align: center;
+			display: block;
+			p {
+				margin: 0px;
+				padding: 0px;
+				text-align: center;
+			}
+			.AccountApp.selected {
+				border: 1px solid white;
+			}
+			.ChooserContent {
+				max-height: 70px;
+				overflow: auto;
+				text-align: left;
+				.AccountApp {
+					max-height: 30px;
+					height: 30px;
+					cursor: pointer;
+					padding: 2px;
+					margin-bottom: 4px;
+					p, .imageHandler {
+						display: inline-block;
+					}
+					p {
+						text-align: left;
+						margin : 0px;
+						margin-left: 5px;
+						padding: 0px;
+					}
+					.imageHandler {
+						height: 100%;
+						img {
+							height: 100%;
+						}
+					}
+				}
+			}
+		}
 		#AddAppForm {
 			width: 80%;
 			margin: 5px auto;
@@ -455,6 +499,58 @@
 				}
 			}
 		}
+		.loginSsoChooser {
+			max-height: 100px;
+			padding: 0px;
+			margin: 0px;
+			width: 70%;
+			margin-left: auto;
+			margin-right: auto;
+			position: relative;
+			.buttonBack {
+				font-size: 25px;
+				position: absolute;
+				right: 0;
+				top: 0;
+				color: white;
+				&:hover {
+					color: darken(white, 10%);
+					cursor: pointer;
+				}
+			}
+			p {
+				text-align: center;
+			}
+			.AccountApp.selected {
+				border: 1px solid white;
+			}
+			.ChooserContent {
+				max-height: 70px;
+				overflow: auto;
+				.AccountApp {
+					max-height: 30px;
+					height: 30px;
+					cursor: pointer;
+					padding: 2px;
+					margin-bottom: 4px;
+					p, .imageHandler {
+						display: inline-block;
+					}
+					p {
+						text-align: left;
+						margin : 0px;
+						margin-left: 5px;
+						padding: 0px;
+					}
+					.imageHandler {
+						height: 100%;
+						img {
+							height: 100%;
+						}
+					}
+				}
+			}
+		}
 		#modifyAppForm {
 			width: 80%;
 			margin: 5px auto;
@@ -522,6 +618,16 @@
 
 #PopupAddApp, #PopupModifyApp {
 	.md-content .loginWithChooser {
+		.linedSeparator {
+			p {
+				padding: 5px 5px;
+			}
+		}
+	}
+}
+
+#PopupAddApp, #PopupModifyApp {
+	.md-content .loginSsoChooser {
 		.linedSeparator {
 			p {
 				padding: 5px 5px;
