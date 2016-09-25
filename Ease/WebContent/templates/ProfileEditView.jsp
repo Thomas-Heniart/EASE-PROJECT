@@ -145,62 +145,16 @@
 			function() {
 				$(document).click(
 						function(event) {
-							if ($(event.target).is($(".md-overlay")) || $(".md-overlay").has($(event.target).length))
-								return;
 							if ($(".CatalogViewTab").hasClass("show")) {
-								if (!$(event.target).parents().hasClass(
-										"ProfilesHandler editMode")) {
-									if (!($(event.target).is(
-											"#enterEditMode img")
-											|| $(event.target).is(
-													"#enterEditMode")
-											|| $(event.target).is(
-													$(".CatalogViewTab"))
-											|| $(".CatalogViewTab").has(
-													$(event.target)).length
-											|| $(event.target).is(
-													"#PopupAddApp")
-											|| $("#PopupAddApp").has(
-													$(event.target)).length
-											|| $(event.target).is(
-													"#PopupDeleteApp")
-											|| $("#PopupDeleteApp").has(
-													$(event.target)).length
-											|| $(event.target).is(
-													"#PopupModifyApp")
-											|| $("#PopupModifyApp").has(
-													$(event.target)).length
-											|| $(event.target).is(
-													".AddProfileView") || $(
-											".AddProfileView").has(
-												$(event.target)).length
-											|| $(event.target).is(
-													"#PopupModifyProfile")
-											|| $("#PopupModifyProfile").has(
-												$(event.target)).length
-
-									)) 
-										leaveEditMode();
-								}
+								if ( $(event.target).is($(".ProfilesView.show")) && $(".md-modal").hasClass('md-show'))
+									return;
+								if ($(event.target).is($(".md-overlay")))
+									return;
+								if ($(event.target).is($(".col-left.show")) || $(event.target).is($(".ProfilesView.show")) || $(event.target).is($(".ProfilesHandler.editMode")) || $(event.target).is($(".owl-item")))
+									leaveEditMode();
 							}
 						});
 			});
-
-	/*$(document).ready(function() {
-		$(document).click(function(event) {
-			if ($(".CatalogViewTab").hasClass("show")) {
-				if (!$(event.target).is('.CatalogViewTab show'))
-					//leaveEditMode();
-			}
-			if ($('.CatalogViewTab ').hasClass("show")) {
-				leaveEditMode();
-				if ($('.ProfilContent').contains($(this))) {
-					console.log("Obvious bug");
-					leaveEditMode();
-				}
-			}
-		});
-	});*/
 
 	function showConfirmDeleteAppPopup(elem, event) {
 		event.preventDefault();

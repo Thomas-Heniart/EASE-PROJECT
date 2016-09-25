@@ -184,7 +184,6 @@ $(document).ready(function() {
 	$('.tagContainer i.fa-angle-left').click(function() {
 			amount = '-=' + $('.tagContainer .tags').css('width');
 			$('.tagContainer i.fa-angle-right').css("display", "inline-block");
-			console.log("zzn");
     	scroll();
 			if ($('.tagContainer .tags').scrollLeft() -  parseInt($('.tagContainer .tags').css('width')) <= 0)
 				$('.tagContainer i.fa-angle-left').css("display", "none");
