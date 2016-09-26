@@ -40,7 +40,6 @@ abstract class Account {
 					}
 				}
 			}
-			System.out.println(accountId);
 			throw new SessionException("Can't find account");
 		} catch (SQLException e) {
 			throw new SessionException("Can't find account");
