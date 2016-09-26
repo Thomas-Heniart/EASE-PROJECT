@@ -9,19 +9,18 @@
     		{"action":"submit", "search":"#login-by-email-form", "grave":"true"}
     	]
     },
-    "checkAlreadyLogged": [
-    	{"search":"div#intercom-container"}
-    ],
-    "logout": {
-    	"todo": [
-    		{"action":"clickona", "search":"#bs-navbar-collapse ul li.dropdown a.dropdown-toggle"},
-    		{"action":"click", "search":"#bs-navbar-collapse ul li.dropdown a[data-placement='bottom']"}
-    	]
-    }
-    
     "Facebook": {
     	"todo": [
     		{"action":"click", "search":"button.facebook-btn.login-btn"}
     	]
-    }
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"aclick", "search":"#bs-navbar-collapse ul li.dropdown a[onclick='App.logout();']"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"section#main"}
+    ]
+    
 }

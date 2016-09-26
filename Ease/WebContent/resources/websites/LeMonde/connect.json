@@ -1,0 +1,21 @@
+{
+    "name":"LeMonde",
+    "lastlogin":"",
+    "home":"https://secure.lemonde.fr/sfuser/connexion",
+    "connect": {
+    	"todo": [
+    		{"action":"fill", "what":"login","search":"#connection_mail", "grave":"true"},
+    		{"action":"fill", "what":"password","search":"#connection_password", "grave":"true"},
+    		{"action":"click", "search":"#connection_save", "grave":"true"}
+    	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"goto", "url":"http://www.lemonde.fr/sfuser/deconnexion"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"a[href='http://www.lemonde.fr/sfuser/deconnexion']"}
+    ]
+    
+}
