@@ -117,7 +117,7 @@ $(document).ready(function(){
 		popup.find('span').text($(helper).attr("name"));
 		$(popup).find('#login').val('');
 		$(popup).find('#password').val('');
-		$(popup).find('#name').val($(helper).attr("name"));
+		$(popup).find('#name').val($(helper).attr("name").substring(0, 14));
 		popup.find('#close').unbind('click');
 		popup.find('#close').click(function(){
 			popup.removeClass('md-show');
@@ -190,9 +190,10 @@ $(document).ready(function(){
 							setTimeout(function() {
 								$(item).find('.linkImage').removeClass('scaleOutAnimation');
 							}, 1000);
-							$(item).attr('onclick', "sendEvent(this)");
+							$(item).find('.linkImage').attr('onclick', "sendEvent(this)");
 							$(item).attr('webId', $(helper).attr('idx'));
 							$(item).attr('name', name);
+							$(item).attr('logwith', aId);
 							$(item).find('.siteName p').text(name);
 							$(item).attr('id', data.substring(9, data.length));
 							$(item).attr('ssoid', $(helper).attr('data-sso'));
@@ -230,7 +231,7 @@ $(document).ready(function(){
 							setTimeout(function() {
 								$(item).find('.linkImage').removeClass('scaleOutAnimation');
 							}, 1000);
-							$(item).attr('onclick', "sendEvent(this)");
+							$(item).find('.linkImage').attr('onclick', "sendEvent(this)");
 							$(item).attr('webId', $(helper).attr('idx'));
 							$(item).attr('login', login);
 							$(item).attr('name', name);
@@ -269,10 +270,11 @@ $(document).ready(function(){
 							setTimeout(function() {
 								$(item).find('.linkImage').removeClass('scaleOutAnimation');
 							}, 1000);
-							$(item).attr('onclick', "sendEvent(this)");
+							$(item).find('.linkImage').attr('onclick', "sendEvent(this)");
 							$(item).attr('login', login);
 							$(item).attr('webId', $(helper).attr('idx'));
 							$(item).attr('name', name);
+							$(item).attr('logwith', 'false');
 							$(item).find('.siteName p').text(name);
 							$(item).attr('id', data.substring(9, data.length));
 							$(item).attr('ssoid', $(helper).attr('data-sso'));

@@ -46,6 +46,7 @@
 						<img alt="arrow" src="resources/images/curved_arrow.png" />
 					</div>
 				</div>
+				<div class="shadowHelper"> </div>
 			</div>
 		</div>
 		<div class="helpIntegrateApps">
