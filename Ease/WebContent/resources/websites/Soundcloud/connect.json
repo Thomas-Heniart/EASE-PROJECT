@@ -1,0 +1,23 @@
+{
+    "name":"Soundcloud",
+    "lastlogin":"",
+    "home":"https://www.soundcloud.com/signin",
+    "connect": {
+    	"todo": [
+    		{"action":"fill", "what":"login","search":".signinForm input[name='username']", "grave":"true"},
+    		{"action":"click", "search":"button.signinForm__cta.signinForm__checkIdentifierCTA"},
+    		{"action":"waitfor", "search":".signinForm__signin_with_password[style='']"},
+    		{"action":"fill", "what":"password","search":".signinForm__signin_with_password input[type='password']", "grave":"true"},
+    		{"action":"click", "search":"button.sc-button-cta", "grave":"true"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"goto", "url":"http://www.soundcloud.com/logout"},
+    		{"action":"goto", "url":"http://www.soundcloud.com/signin"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"a[href='/logout']"}
+    ]
+}
