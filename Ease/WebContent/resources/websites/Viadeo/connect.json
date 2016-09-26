@@ -6,7 +6,7 @@
     	"todo": [
     		{"action":"clickona", "search":"a.header-signin-link"},
     		{"action":"waitload"},
-    		{"action":"fill", "what":"login","search":"#secureSignin input[name='email'], input[name='login']", "grave":"true"},
+    		{"action":"fill", "what":"login","search":"#secureSignin input[name='email']", "grave":"true"},
     		{"action":"fill", "what":"password","search":"#secureSignin input[name='password']", "grave":"true"},
     		{"action":"click", "search":"#secureSignin button[type='submit']", "grave":"true"}
        	]
