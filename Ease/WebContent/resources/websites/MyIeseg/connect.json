@@ -6,7 +6,9 @@
     	"todo": [
     		{"action":"fill", "what":"login","search":"#username", "grave":"true"},
     		{"action":"fill", "what":"password","search":"#password", "grave":"true"},
-    		{"action":"click", "search":"form.login input[type='submit']", "grave":"true"}
+    		{"action":"click", "search":"form.login input[type='submit']", "grave":"true"},
+    		{"action":"waitload"},
+    		{"action":"goto", "url":"http://myieseg.com"}
     	]
     },
     "checkAlreadyLogged": [

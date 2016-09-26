@@ -1,7 +1,7 @@
 {
     "name":"Spotify",
     "lastLogin":"",
-    "home":"https://play.spotify.com/",
+    "home":"https://play.spotify.com",
     "connect":{
         "todo":[
         	{"action":"waitfor", "search":"#has-account"},
@@ -17,14 +17,9 @@
     "checkAlreadyLogged":[
         {"search":"#nav-profile"}
     ],
-    "checkChangeLogin":[
-        {"action":"click", "search":"#loginbutton"}
-    ],
     "Facebook":{
     	"todo":[
-        	{"action":"clickona", "search":"#has-account"},
-        	{"action":"waitfor", "search":"#fb-login-btn"},
-            {"action":"click", "search":"#fb-login-btn"}
+    		{"action":"click", "search":"#fb-signup-btn"}
         ]
      }
 }

@@ -1,0 +1,31 @@
+{
+    "name":"Asos",
+    "lastlogin":"",
+    "home":"http://www.asos.com/",
+    "connect": {
+    	"todo": [
+    		{"action":"waitload"},
+    		{"action":"goto", "url":"https://www.asos.com/pgecustlogin.aspx"},
+    		{"action":"fill", "what":"login","search":"input[name='Username']", "grave":"true"},
+    		{"action":"fill", "what":"password","search":"input[name='Password']", "grave":"true"},
+    		{"action":"click", "search":"#signin", "grave":"true"}
+    	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"goto", "url":"https://www.asos.com/pgecustlogout.aspx"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"a.sign-out"}
+    ],
+    "Facebook": {
+    	"todo": [
+    		{"action":"waitload"},
+    		{"action":"goto", "url":"https://www.asos.com/pgecustlogin.aspx"},
+    		{"action":"waitload"},
+    		{"action":"waitfor", "search":"#loginFacebook"},
+    		{"action":"clickona", "search":"#loginFacebook"}
+    	]
+    }
+}
