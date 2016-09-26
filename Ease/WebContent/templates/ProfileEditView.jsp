@@ -54,20 +54,8 @@
 		var owl = $(".owl-carousel").data('owlCarousel');
 
 		$(".ProfilesHandler").addClass('editMode');
-		owl.reinit({
-			items : 3,
-			itemsCustom : false,
-			itemsDesktop : [ 1199, 3 ],
-			itemsDesktopSmall : [ 980, 3 ],
-			itemsTablet : [ 768, 3 ],
-			itemsTabletSmall : false,
-			itemsMobile : [ 479, 1 ],
-			singleItem : false,
-			itemsScaleUp : false,
-			pagination : false,
-		    touchDrag: false,
-		    mouseDrag: false
-		});
+		owl.destroy();
+		setupOwlCarousel();
 	}
 
 	function enterEditMode() {
@@ -85,21 +73,7 @@
 		if (nbProfiles < 3) {
 			$('.owl-carousel').append($(addProfileHelper));
 		}
-
-		$('.owl-carousel').owlCarousel({
-			items : 3,
-			itemsCustom : false,
-			itemsDesktop : [ 1199, 3 ],
-			itemsDesktopSmall : [ 980, 3 ],
-			itemsTablet : [ 768, 3 ],
-			itemsTabletSmall : false,
-			itemsMobile : [ 479, 1 ],
-			singleItem : false,
-			itemsScaleUp : false,
-			pagination : false,
-		    touchDrag: false,
-		    mouseDrag: false
-		});
+		setupOwlCarousel();
 		$('.MenuButtonSet').addClass('editMode');
 	}
 
@@ -116,21 +90,7 @@
 		var addProfileHelper = $('.AddProfileView').closest('.item');
 
 		$('#addProfileHelper').append($(addProfileHelper));
-		$('.owl-carousel').owlCarousel({
-			items : 3,
-			itemsCustom : false,
-			itemsDesktop : [ 1199, 3 ],
-			itemsDesktopSmall : [ 980, 3 ],
-			itemsTablet : [ 768, 3 ],
-			itemsTabletSmall : false,
-			itemsMobile : [ 479, 1 ],
-			singleItem : false,
-			itemsScaleUp : false,
-			pagination : false,
-		    touchDrag: false,
-		    mouseDrag: false
-
-		});
+		setupOwlCarousel();
 		$('.scaleOutAnimation').removeClass('scaleOutAnimation');
 		$('.MenuButtonSet').removeClass('editMode');
 	}
