@@ -19,10 +19,10 @@
 		<a href="https://www.instagram.com/ease_app/"  target="_blank"><i class="fa fa-instagram"></i></a>
 		</div>
 		<div class="link">
-		<a href="https://medium.com/@Ease./"  target="_blank"><i class="fa fa-medium" aria-hidden="true"></i></a>
+		<a href="http://www.ease-app.co"  target="_blank"><i class="fa fa-globe" aria-hidden="true"></i></a>
 		</div>
 		<div class="link">
-		<a href="http://www.ease-app.co"  target="_blank"><i class="fa fa-globe" aria-hidden="true"></i></a>
+		<a href="http://www.ease-app.co/secure"  target="_blank"><i class="fa fa-lock" aria-hidden="true"></i></a>
 		</div>
 	</div>
 </div>

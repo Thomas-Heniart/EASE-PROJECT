@@ -18,11 +18,11 @@ $(document).ready(function(){
 	<a href="index.jsp"><img class="logoImg" src="resources/images/logo.png" ></a>
 
 
+
 <% if (session.getAttribute("User") != null){ %>
 		<%@ include file="DropDownUserMenu.jsp"%>
 	<a href="logout" id="logoutButton"><i class="fa fa-fw fa-sign-out"></i><span>Logout</span></a>	
 <%}%>
-
 
 </div>
 

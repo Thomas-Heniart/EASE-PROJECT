@@ -231,7 +231,7 @@
     <url-pattern>/addWebsiteInDB</url-pattern>
   </servlet-mapping>
   
-<!--
+<!-- 
 <security-constraint>
 <web-resource-collection>
 <web-resource-name>Protected Context</web-resource-name>
@@ -241,10 +241,9 @@
 <transport-guarantee>CONFIDENTIAL</transport-guarantee>
 </user-data-constraint>
 </security-constraint>
--->
-
+  -->
 	<session-config>
-    	<session-timeout>120</session-timeout> <!-- in minutes -->
+    	<session-timeout>240</session-timeout> <!-- in minutes -->
  	</session-config>
 
   <welcome-file-list>
