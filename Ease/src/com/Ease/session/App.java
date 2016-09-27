@@ -210,7 +210,7 @@ public class App {
 	}
 	
 	public String getLogin(){
-		if(account.getType().equals("LogWithAccount")){
+		if(account.getType().equals("ClassicAccount")){
 			return ((ClassicAccount) account).getLogin();
 		} 
 		return null;
