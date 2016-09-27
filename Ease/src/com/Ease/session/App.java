@@ -265,9 +265,16 @@ public class App {
 	
 	public void updateInDB(ServletContext context) throws SessionException {
 		DataBase db = (DataBase)context.getAttribute("DataBase");
-		if (db.set("UPDATE apps SET account_id=" + account.getId() + ", website_id="+ site.getId() +", position="+ index +", name='"+ name +"' WHERE app_id=" + id + ";")
-				!= 0)
-			throw new SessionException("Impossible to update app in data base.");
+		if (account == null) {
+			if (db.set("UPDATE apps SET account_id=NULL, website_id="+ site.getId() +", position="+ index +", name='"+ name +"' WHERE app_id=" + id + ";")
+					!= 0)
+				throw new SessionException("Impossible to update app in data base.");
+		} else {
+			if (db.set("UPDATE apps SET account_id=" + account.getId() + ", website_id="+ site.getId() +", position="+ index +", name='"+ name +"' WHERE app_id=" + id + ";")
+					!= 0)
+				throw new SessionException("Impossible to update app in data base.");
+		}
+		
 	}
 	
 	public void updateProfileInDB(ServletContext context, String idd, int profileId) throws SessionException{
