@@ -1,0 +1,21 @@
+{
+    "name":"AuchanDirect",
+    "lastlogin":"",
+    "home":"https://www.auchandirect.fr",
+    "connect": {
+    	"todo": [
+    		{"action":"goto", "url":"https://www.auchandirect.fr/connexion"},
+    		{"action":"fill", "what":"login","search":"#email", "grave":"true"},
+    		{"action":"pressAnyKey", "search":"#password"},
+    		{"action":"fill", "what":"password","search":"#password", "grave":"true"},
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"goto", "url":"https://www.auchandirect.fr/deconnexion"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"a[href='/deconnexion']"}
+    ]
+}
