@@ -53,6 +53,14 @@
     }
 }
 
+.closeEaseOverlay {
+    color:#E91E63;
+    position: absolute;
+    z-index: 10005;
+    top: 2px;
+    right: 5px;
+    font-size: 22px;
+}
 
 .spinnerElementEase
 {

@@ -11,6 +11,8 @@ if (window.top === window) {
     
 }
 
+
+
 function startOverlay(){
     
     var overlay = document.getElementById("ease_overlay_mamene");
@@ -21,21 +23,26 @@ function startOverlay(){
     spinner.id = "div-loading-ease-mamene";
     spinner.className = "spinnerElementEase";
     spinner.style = "background-color: #6C7FA0";
+    overlay.appendChild(spinner);
     
-    var spaceship = document.createElement('div');
-    spaceship.id = "loading-background-ease-mamene";
-    spaceship.className = "spinnerElementEase";
+    var close = document.createElement('a');
+    close.href = "javascript:void(0)";
+    close.className = "closeEaseOverlay";
+    close.setAttribute('onClick',"document.getElementById('ease_overlay_mamene').style='display: none';");
+    close.innerHTML = '&times;';
+    spinner.appendChild(close);
     
     var text = document.createElement('div');
     text.id = "loading-text-ease-mamene";
     text.className = "spinnerElementEase";
     text.innerHTML = "Loading";
-    
-    spinner.appendChild(spaceship);
     spinner.appendChild(text);
-    
-    overlay.appendChild(spinner);
-    
+     
+    var spaceship = document.createElement('div');
+    spaceship.id = "loading-background-ease-mamene";
+    spaceship.className = "spinnerElementEase";
+    spinner.appendChild(spaceship);
+            
     /*var spinner = document.createElement('div');
     spinner.id = "ease_spinner_mamene";
     spinner.className = "spinnerEase";
@@ -46,37 +53,39 @@ function startOverlay(){
 function checkConnectionOverlay(msg){
     spinner = document.getElementById("div-loading-ease-mamene");
     text = document.getElementById("loading-text-ease-mamene");
-    spinner.style = "background-color: #F26430";
+    spinner.style = "background-color: #D4C60F";
     text.innerHTML = "Analysing";
     
 }
 
 function loginOverlay(msg){ //quand todo = login
-    spinner = document.getElementById("div-loading-ease-mamene");
-    text = document.getElementById("loading-text-ease-mamene");
-    spinner.style = "background-color: #266A2E";
-    text.innerHTML = "Logging in";
+    setTimeout(function(){
+        spinner = document.getElementById("div-loading-ease-mamene");
+        text = document.getElementById("loading-text-ease-mamene");
+        spinner.style = "background-color: #266A2E";
+        text.innerHTML = "Logging in";
+    }, 200);
 }
 
 function logoutOverlay(msg){ //quand todo = logout
-    spinner = document.getElementById("div-loading-ease-mamene");
-    text = document.getElementById("loading-text-ease-mamene");
-    spinner.style = "background-color: #ec555b";
-    spinner.setAttribute('data-back-color', '#ec555b');
-    text.innerHTML = "Logging out";
-    
+    setTimeout(function(){
+        spinner = document.getElementById("div-loading-ease-mamene");
+        text = document.getElementById("loading-text-ease-mamene");
+        spinner.style = "background-color: #ec555b";
+        text.innerHTML = "Logging out";
+    }, 200);
 }
 
 function endOverlay(msg){
-    setTimeout(function(){overlay.style = "display: none"}, 500);
+    setTimeout(function(){overlay.style = "display: none"}, 300);
 }
 
 function errorOverlay(msg){ //quand grave ou fin waitfor
     spinner = document.getElementById("div-loading-ease-mamene");
     text = document.getElementById("loading-text-ease-mamene");
-    spinner.style = "background-color: #ec555b";
+    spinner.style = "background-color: #000000";
     text.innerHTML = "Error";
-    setTimeout(function(){overlay.style = "display: none"},600);
+    setTimeout(function(){overlay.style = "display: none"},300);
 }
 
 chrome.runtime.onMessage.addListener(function(event, sender, sendResponse){
