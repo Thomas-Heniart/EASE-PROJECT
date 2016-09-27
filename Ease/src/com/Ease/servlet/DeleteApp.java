@@ -69,14 +69,18 @@ public class DeleteApp extends HttpServlet {
 			} /*else if (password == null || !Hashing.SHA(password, user.getSaltEase()).equals(user.getPassword())) {
 				response.getWriter().print("error: Bad password");
 			}*/ else {
-				transaction = db.start();
 				App app = user.getApp(appId);
-				appName = app.getSite().getName();
-				app.deleteFromDB(session.getServletContext());
-				user.getProfile(app.getProfileId()).getApps().remove(app);
-				user.getApps().remove(app);
-				retMsg = "success";
-				db.commit(transaction);
+				if (app.havePerm(App.AppPerm.DELETE, session.getServletContext())){
+					transaction = db.start();	
+					appName = app.getSite().getName();
+					app.deleteFromDB(session.getServletContext());
+					user.getProfile(app.getProfileId()).getApps().remove(app);
+					user.getApps().remove(app);
+					retMsg = "success";
+					db.commit(transaction);
+				} else {
+					retMsg = "error: You have not the permission";
+				}
 			}
 		} catch (SessionException e) {
 			db.cancel(transaction);

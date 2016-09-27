@@ -69,10 +69,14 @@ public class MoveProfile extends HttpServlet {
 			} else if ((profile = user.getProfile(profileId)) == null){
 				retMsg = "error: Bad profileId";
 			} else {
-				transaction = db.start();
-				user.moveProfileAt(session.getServletContext(), profile.getIndex(), index);
-				retMsg = "success";
-				db.commit(transaction);
+				if (profile.havePerm(Profile.ProfilePerm.MOVE, session.getServletContext())){
+					transaction = db.start();
+					user.moveProfileAt(session.getServletContext(), profile.getIndex(), index);
+					retMsg = "success";
+					db.commit(transaction);
+				} else {
+					retMsg = "error: You have not the permission";
+				}
 			}
 		} catch (SessionException e) {
 			db.cancel(transaction);

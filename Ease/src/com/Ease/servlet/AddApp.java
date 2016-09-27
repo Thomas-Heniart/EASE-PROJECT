@@ -86,16 +86,21 @@ public class AddApp extends HttpServlet {
 				if ((site = ((SiteManager)session.getServletContext().getAttribute("siteManager")).get(siteId)) == null) {
 					retMsg = "error: This site dosen't exist.";
 				} else {
-					transaction = db.start();
-					App app = new App(name, login, password, site, profile, user, session.getServletContext());
-					profile.addApp(app);
-					user.getApps().add(app);
-					if (user.getTuto().equals("0")) {
-						user.tutoComplete();
-						user.updateInDB(session.getServletContext());
+					if (profile.havePerm(Profile.ProfilePerm.ADDAPP, session.getServletContext()) == true){
+						transaction = db.start();
+						App app = new App(name, login, password, site, profile, user, session.getServletContext());
+						profile.addApp(app);
+						user.getApps().add(app);
+						if (user.getTuto().equals("0")) {
+							user.tutoComplete();
+							user.updateInDB(session.getServletContext());
+						}
+						retMsg = "success: " + app.getAppId();
+						db.commit(transaction);
+					} else {
+						retMsg = "error: You have not the permission";
 					}
-					retMsg = "success: " + app.getAppId();
-					db.commit(transaction);
+					
 				}
 			}
 		} catch (SessionException e) {
