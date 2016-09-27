@@ -118,6 +118,8 @@ $(document).ready(function(){
 		$(popup).find('#login').val('');
 		$(popup).find('#password').val('');
 		$(popup).find('#name').val($(helper).attr("name").substring(0, 14));
+		if ($(helper).attr("name") == "Slack")
+			$("#AddAppForm").prepend("<input id='team' name='team' type='text' placeholder='Team domain' />");
 		popup.find('#close').unbind('click');
 		popup.find('#close').click(function(){
 			popup.removeClass('md-show');
