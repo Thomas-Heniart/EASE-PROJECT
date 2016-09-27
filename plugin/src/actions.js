@@ -1,8 +1,35 @@
 var actions = {
+fillThenSubmit:function(msg, callback, sendResponse) {
+  var actionStep = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep];
+	var loginInput = $(actionStep.login);
+  var passwordInput = $(actionStep.password);
+	if (loginInput.length == 0){
+		if (actionStep.grave == true){
+			msg.type = "error: "+ actionStep.what +" input not found";
+			sendResponse(msg);
+            errorOverlay(msg);
+		} else {
+			msg.actionStep++;
+			callback(msg, sendResponse);
+		}
+	} else {
+    loginInput.click();
+		loginInput.val(msg.detail[0].user.login);
+    loginInput.blur();
+    passwordInput.click();
+		passwordInput.val(msg.detail[0].user.password);
+		passwordInput.blur();
+    $("body").append("<script type='text/javascript'>$('"+actionStep.login+"').change(); $('"+ actionStep.password +"').change();</script>");
+    $(actionStep.submit).click();
+
+    msg.actionStep++;
+    callback(msg, sendResponse);
+	}
+},
 erasecookies:function(msg, callback, sendResponse){
-    
+
     var name = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep].search;
-    
+
     function deleteCookie(cookieName){
         var domain = document.domain;
         var path = "/";
@@ -21,15 +48,15 @@ erasecookies:function(msg, callback, sendResponse){
     }
     msg.actionStep++;
     callback(msg, sendResponse);
-    
+
 },
 waitfor:function(msg, callback, sendResponse){
-    
+
     var div = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep].search;
     var time = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep].time;
     if(!time){time = 100;}
     var iteration = 0;
-    
+
 	function waitfor(callback){
     if(typeof div === 'string'){div = [div];}
         var absent = true;
@@ -44,7 +71,7 @@ waitfor:function(msg, callback, sendResponse){
             msg.type = "error: connection too long";
             sendResponse(msg);
             errorOverlay(msg);
-        } else if(absent){ 
+        } else if(absent){
             setTimeout(function(){
                 iteration ++;
                 waitfor(callback);
@@ -54,7 +81,7 @@ waitfor:function(msg, callback, sendResponse){
             callback(msg, sendResponse);
         }
 	}
-    
+
 	waitfor(callback);
 },
 setattr:function(msg, callback, sendResponse){
@@ -89,11 +116,13 @@ fill:function(msg, callback, sendResponse){
 		}
 	} else {
 		input.click();
+    input.focus();
 		if (actionStep.what == "login") {
 			input.val(msg.detail[0].user.login);
 		} else if (actionStep.what == "password") {
 			input.val(msg.detail[0].user.password);
 		}
+    input.change();
 		input.blur();
 		msg.actionStep++;
 		callback(msg, sendResponse);
@@ -114,7 +143,7 @@ click:function(msg, callback, sendResponse){
 		}
 	} else {
 		button.prop("disabled", false);
-		button.click();
+		window.setTimeout(function() {button.click();}, 250);
 		msg.actionStep++;
 		callback(msg, sendResponse);
 	}

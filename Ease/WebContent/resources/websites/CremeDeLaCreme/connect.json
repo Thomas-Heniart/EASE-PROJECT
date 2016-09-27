@@ -1,0 +1,18 @@
+{
+    "name":"CremeDeLaCreme",
+    "lastlogin":"",
+    "home":"https://www.cremedelacreme.io/login",
+    "connect": {
+    	"todo": [
+    		{"action":"fillThenSubmit", "login":"#mail", "password":"#password", "submit":"input[ng-click='login(user)']"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"click", "search":"li[ng-click='logout()']"},
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"li[ng-click='logout()']"}
+    ]
+}
