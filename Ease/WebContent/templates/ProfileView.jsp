@@ -60,10 +60,10 @@ response.addCookie(email);
 			var event;
 
 			$(obj).addClass('waitingLinkImage');
-			logoImage.addClass('scaleinAnimation');
+			$(obj).addClass('scaleinAnimation');
 			setTimeout(function() {
 				$(obj).removeClass("waitingLinkImage");
-				logoImage.removeClass('scaleinAnimation');				
+				$(obj).removeClass('scaleinAnimation');				
 			}, 1000);
 			$.post("askInfo", {
 				profileIndex : profileIndex,
@@ -407,47 +407,77 @@ response.addCookie(email);
 </div>
 <div id="profile-<%=it - 1%>" class="SitesContainer">
 	<c:forEach items='${item.getApps()}' var="app">
-<c:if test="${app.getType() eq 'ClassicAccount'}">
-	<div class="siteLinkBox"
-	login="${app.getLogin()}"
-	webId="${app.getSite().getId()}"
-	name="${app.getName()}"
-	id="${app.getAppId()}"
-	ssoId="${app.getSite().getSso()}"
-	logwith="false">
-</c:if>
-<c:if test="${app.getType() eq 'LogWithAccount'}">
-<div class="siteLinkBox"
-	webId="${app.getSite().getId()}"
-	name="${app.getName()}"
-	id="${app.getAppId()}"
-	logwith="${app.getAccount().getLogWithApp(member).getAppId()}">
-</c:if>
-<div class="linkImage" onclick="sendEvent(this)">
-	<div class="showAppActionsButton">
-		<i class="fa fa-cog"></i>
-		<div class="appActionsPopup">
-			<!--												<div class="caretHelper"><i class="fa fa-caret-up" aria-hidden="true"></i></div>-->
-			<div class="buttonsContainer">
-				<div class="modifyAppButton menu-item"
-				onclick="showModifyAppPopup(this, event)">
-				<p>Modify</p>
+
+	<c:choose>
+		<c:when test="${app.getType() eq 'NoAccount'}">
+			<div class="siteLinkBox"
+			webId="${app.getSite().getId()}"
+			name="${app.getName()}"
+			id="${app.getAppId()}">
+				<div class="linkImage" onclick="sendEvent(this)">
+					<div class="emptyAppIndicator">
+						<i class="fa fa-user-secret" aria-hidden="true"></i>
+					</div>
+					<div class="showAppActionsButton">
+						<i class="fa fa-cog"></i>
+						<div class="appActionsPopup">
+							<div class="buttonsContainer">
+								<div class="modifyAppButton menu-item"
+									onclick="showModifyAppPopup(this, event)">
+								<p>Modify</p>
+								</div>
+								<div class="deleteAppButton menu-item"
+									onclick="showConfirmDeleteAppPopup(this, event)">
+								<p>Delete</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<img class="logo" src="<c:out value='${app.getSite().getFolder()}logo.png'/>" />
+				</div>
+		</c:when>
+		<c:otherwise>
+			<c:if test="${app.getType() eq 'ClassicAccount'}">
+				<div class="siteLinkBox"
+					 login="${app.getLogin()}"
+					webId="${app.getSite().getId()}"
+					name="${app.getName()}"
+					id="${app.getAppId()}"
+					ssoId="${app.getSite().getSso()}"
+					logwith="false">
+			</c:if>
+			<c:if test="${app.getType() eq 'LogWithAccount'}">
+				<div class="siteLinkBox"
+				webId="${app.getSite().getId()}"
+				name="${app.getName()}"
+				id="${app.getAppId()}"
+				logwith="${app.getAccount().getLogWithApp(member).getAppId()}">
+			</c:if>
+			<div class="linkImage" onclick="sendEvent(this)">
+				<div class="showAppActionsButton">
+					<i class="fa fa-cog"></i>
+					<div class="appActionsPopup">
+						<div class="buttonsContainer">
+							<div class="modifyAppButton menu-item"
+								onclick="showModifyAppPopup(this, event)">
+							<p>Modify</p>
+							</div>
+						<div class="deleteAppButton menu-item"
+							onclick="showConfirmDeleteAppPopup(this, event)">
+						<p>Delete</p>
+						</div>
+					</div>
+				</div>
 			</div>
-			<div class="deleteAppButton menu-item"
-			onclick="showConfirmDeleteAppPopup(this, event)">
-			<p>Delete</p>
+			<img class="logo" src="<c:out value='${app.getSite().getFolder()}logo.png'/>" />
 		</div>
-	</div>
-</div>
-</div>
-<img
-class="logo" src="<c:out value='${app.getSite().getFolder()}logo.png'/>" />
-</div>
+	</c:otherwise>
+</c:choose>
 <div class="siteName">
 	<c:choose>
 	<c:when test="${app.getName().length() > 14}">
 	<p>${app.getName().substring(0,14)}...
-		<p>
+		</p>
 		</c:when>
 		<c:otherwise>
 		<p>${app.getName()}</p>
