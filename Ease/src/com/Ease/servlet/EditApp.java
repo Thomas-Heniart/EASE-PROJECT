@@ -150,8 +150,8 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 			} else if (db.connect() != 0) {
 				retMsg = "error: Impossible to connect data base.";
 			} else {
-				int lwId = Integer.parseInt(request.getParameter("lwId"));
-				if (lwId == 0) {
+				String logWithId = request.getParameter("lwId");
+				if (logWithId == null) {
 					if ((login == null || login.equals("")) && (wPassword == null || wPassword.equals(""))) {
 						retMsg = "error: Bad login or password.";
 					} else if (name == null || name.length() > 14) {
@@ -200,6 +200,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 						}
 					}
 				} else {
+					int lwId = Integer.parseInt(logWithId);
 					if (user.getApp(appId) == null) {
 						retMsg = "error: Bad appId.";
 					} else if (name == null || name.length() > 14) {
