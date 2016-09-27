@@ -70,29 +70,33 @@ public class AskInfo extends HttpServlet {
 				retMsg = "error: Bad website's index.";
 			} else {
 				App app = user.getProfiles().get(profileIndex).getApps().get(appIndex);
-				boolean again = true;
-				JSONArray ja = new JSONArray();
-				while (again){
-					JSONObject obj = new JSONObject();
-					if (app.getType().equals("ClassicAccount")) {
-						JSONObject appUser = new JSONObject();
-						appUser.put("login", ((ClassicAccount)app.getAccount()).getLogin());
-						appUser.put("password", ((ClassicAccount)app.getAccount()).getPassword());
-						obj.put("user", appUser);
-					} else if (app.getType().equals("LogWithAccount")) {
-						obj.put("logWith", ((LogWithAccount)app.getAccount()).getLogWithApp(user).getSite().getName());
+				if (app.isEmpty() == true)
+					retMsg = "error: This is an empty app";
+				else {
+					boolean again = true;
+					JSONArray ja = new JSONArray();
+					while (again){
+						JSONObject obj = new JSONObject();
+						if (app.getType().equals("ClassicAccount")) {
+							JSONObject appUser = new JSONObject();
+							appUser.put("login", ((ClassicAccount)app.getAccount()).getLogin());
+							appUser.put("password", ((ClassicAccount)app.getAccount()).getPassword());
+							obj.put("user", appUser);
+						} else if (app.getType().equals("LogWithAccount")) {
+							obj.put("logWith", ((LogWithAccount)app.getAccount()).getLogWithApp(user).getSite().getName());
+						}
+						JSONParser parser = new JSONParser();
+						JSONObject a = (JSONObject) parser.parse(new FileReader(session.getServletContext().getRealPath(app.getSite().getFolder() + "connect.json")));
+						obj.put("website", a);
+						ja.add(0, obj);
+						if (app.getType().equals("ClassicAccount")) {
+							again = false;
+						} else {
+							app =  ((LogWithAccount)app.getAccount()).getLogWithApp(user);
+						}
 					}
-					JSONParser parser = new JSONParser();
-					JSONObject a = (JSONObject) parser.parse(new FileReader(session.getServletContext().getRealPath(app.getSite().getFolder() + "connect.json")));
-					obj.put("website", a);
-					ja.add(0, obj);
-					if (app.getType().equals("ClassicAccount")) {
-						again = false;
-					} else {
-						app =  ((LogWithAccount)app.getAccount()).getLogWithApp(user);
-					}
+					retMsg = "succes: " + ja.toString();
 				}
-				retMsg = "succes: " + ja.toString();
 			}
 		} catch (NumberFormatException e) {
 			retMsg = "error: Bad index";

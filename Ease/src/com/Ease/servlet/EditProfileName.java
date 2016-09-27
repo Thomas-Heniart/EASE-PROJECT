@@ -67,9 +67,13 @@ public class EditProfileName extends HttpServlet {
 			} else if (name == null || name == ""){
 				retMsg = "error: Bad profile's name.";
 			} else {
-				profile.setName(name);
-				profile.updateInDB(session.getServletContext());
-				retMsg = "success";
+				if (profile.havePerm(Profile.ProfilePerm.RENAME, session.getServletContext())){
+					profile.setName(name);
+					profile.updateInDB(session.getServletContext());
+					retMsg = "success";
+				} else {
+					retMsg = "error: You have not the permission.";
+				}
 			}
 		} catch (SessionException e) {
 			retMsg = "error :" + e.getMsg();

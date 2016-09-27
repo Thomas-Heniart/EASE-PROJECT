@@ -40,7 +40,7 @@ abstract class Account {
 					}
 				}
 			}
-			throw new SessionException("Can't find account");
+			return null;
 		} catch (SQLException e) {
 			throw new SessionException("Can't find account");
 		}

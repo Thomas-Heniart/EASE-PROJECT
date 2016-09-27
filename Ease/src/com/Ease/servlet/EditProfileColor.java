@@ -68,9 +68,13 @@ public class EditProfileColor extends HttpServlet {
 			} else if (color == null || Regex.isColor(color) == false){
 				retMsg = "error: Bad profile's color.";
 			} else {
-				profile.setColor(color);
-				profile.updateInDB(session.getServletContext());
-				retMsg = "success";
+				if (profile.havePerm(Profile.ProfilePerm.COLOR, session.getServletContext())){
+					profile.setColor(color);
+					profile.updateInDB(session.getServletContext());
+					retMsg = "success";
+				} else {
+					retMsg = "error: You have not the permission.";
+				}
 			}
 		} catch (SessionException e) {
 			retMsg = "error :" + e.getMsg();

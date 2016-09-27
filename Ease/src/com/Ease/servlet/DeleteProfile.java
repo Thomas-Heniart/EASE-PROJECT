@@ -76,12 +76,16 @@ public class DeleteProfile extends HttpServlet {
 			} else if (mdp == null || !Hashing.SHA(mdp, user.getSaltEase()).equals(user.getPassword())) {
 				retMsg = "error: Bad password";
 			} else {
-				transaction = db.start();
-				profile.deleteFromDB(session.getServletContext());
-				user.getProfiles().remove(profile.getIndex());
-				user.updateIndex(session.getServletContext());
-				retMsg = "success";
-				db.commit(transaction);
+				if (profile.havePerm(Profile.ProfilePerm.DELETE, session.getServletContext())){
+					transaction = db.start();
+					profile.deleteFromDB(session.getServletContext());
+					user.getProfiles().remove(profile.getIndex());
+					user.updateIndex(session.getServletContext());
+					retMsg = "success";
+					db.commit(transaction);
+				} else {
+					retMsg = "error: You have not the permission";
+				}
 			}
 		} catch (SessionException e) {
 			db.cancel(transaction);

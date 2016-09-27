@@ -6,11 +6,9 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.mail.Session;
 import javax.servlet.ServletContext;
 
 import com.Ease.context.DataBase;
-import com.Ease.context.Site;
 import com.Ease.context.SiteManager;
 import com.Ease.data.AES;
 import com.Ease.data.Hashing;
@@ -304,7 +302,7 @@ public class User {
 				return ;
 			} else {		
 				ResultSet rs;
-				if ((rs = db.get("select group_id from GroupAndUserMap, users where users.user_id=" + id + ";")) == null) {					
+				if ((rs = db.get("select group_id from GroupAndUserMap where user_id=" + id + ";")) == null) {					
 					throw new SessionException("Can't get groups. 1");
 				}
 				while (rs.next()){

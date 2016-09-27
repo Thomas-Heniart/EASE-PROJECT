@@ -74,19 +74,23 @@ public class MoveApp extends HttpServlet {
 			} else if (index < 0 || index > profile.getApps().size()){
 				retMsg = "error: Bad index";
 			} else {
-				
 				Profile profileBegin = user.getProfile(app.getProfileId());
-				profileBegin.getApps().remove(app.getIndex());
-				//if (index > app.getIndex())
-				//	index--;
-				profile.getApps().add(index, app);
-				transaction = db.start();
-				profileBegin.updateIndex(session.getServletContext());
-				profile.updateIndex(session.getServletContext());
-				if (profile.getProfileId() != profileBegin.getProfileId())
-					app.updateProfileInDB(session.getServletContext(), profile.getId(), profile.getProfileId());
-				retMsg = "success";
-				db.commit(transaction);
+				
+				if (app.havePerm(App.AppPerm.MOVE, session.getServletContext()) && (profile.getProfileId() == profileBegin.getProfileId()) || app.havePerm(App.AppPerm.CHANGEPROFILE, session.getServletContext())){
+					profileBegin.getApps().remove(app.getIndex());
+					//if (index > app.getIndex())
+					//	index--;
+					profile.getApps().add(index, app);
+					transaction = db.start();
+					profileBegin.updateIndex(session.getServletContext());
+					profile.updateIndex(session.getServletContext());
+					if (profile.getProfileId() != profileBegin.getProfileId())
+						app.updateProfileInDB(session.getServletContext(), profile.getId(), profile.getProfileId());
+					retMsg = "success";
+					db.commit(transaction);
+				} else {
+					retMsg = "error: You have not the permission";
+				}
 			}
 		} catch (SessionException e) {
 			retMsg = "error :" + e.getMsg();

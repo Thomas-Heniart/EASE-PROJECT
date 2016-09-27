@@ -383,6 +383,23 @@
 }
 .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox {
 	.linkImage {
+		.emptyAppIndicator {
+			position: absolute;
+			z-index: 1;
+			width: 35%;
+			bottom: 78%;
+			left: 81%;
+			opacity: 1;
+			i {
+				background-color: $themeColor;
+				padding: 3px;
+				border-radius: 100%;
+				line-height: 90%;
+				color: white;
+				font-size: 1vw;
+				position: relative;				
+			}
+		}
 		.showAppActionsButton {
 			position: absolute;
 			z-index: 1;
@@ -426,8 +443,8 @@
 	.ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox {
 		.linkImage{
 			.showAppActionsButton {
-					transition-delay: 0s;
-				}
+				transition-delay: 0s;
+			}
 		}
 	}
 }

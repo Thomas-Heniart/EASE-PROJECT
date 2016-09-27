@@ -75,35 +75,39 @@ public class EditApp extends HttpServlet {
 			} else if (user.getApp(appId) == null) {
 				retMsg = "error: Bad appId.";
 			} else {
-				transaction = db.start();
 				app = user.getApp(appId);
-				if (app.getType().equals("ClassicAccount") == false){
-					if (login == null || login.equals("") || wPassword == null || wPassword.equals("")) {
-						retMsg = "error: Bad login or password.";
+				if (app.havePerm(App.AppPerm.MODIFY, session.getServletContext())){
+					transaction = db.start();
+					if (app.getType().equals("ClassicAccount") == false){
+						if (login == null || login.equals("") || wPassword == null || wPassword.equals("")) {
+							retMsg = "error: Bad login or password.";
+						} else {
+							Site site = app.getSite();
+							app.deleteFromDB(session.getServletContext());
+							user.getProfiles().get(app.getProfileIndex()).getApps().remove(app);
+							App tmp = new App(name, login, wPassword, site, user.getProfiles().get(app.getProfileIndex()), user, session.getServletContext());
+							user.getProfiles().get(app.getProfileIndex()).addApp(tmp);
+							user.getApps().remove(user.getApp(appId));
+							user.getApps().add(tmp);
+							tmp.setAppId(appId);
+							retMsg = "succes";
+						}
 					} else {
-						Site site = app.getSite();
-						app.deleteFromDB(session.getServletContext());
-						user.getProfiles().get(app.getProfileIndex()).getApps().remove(app);
-						App tmp = new App(name, login, wPassword, site, user.getProfiles().get(app.getProfileIndex()), user, session.getServletContext());
-						user.getProfiles().get(app.getProfileIndex()).addApp(tmp);
-						user.getApps().remove(user.getApp(appId));
-						user.getApps().add(tmp);
-						tmp.setAppId(appId);
-						retMsg = "succes";
+						ClassicAccount account = (ClassicAccount)app.getAccount();
+						if (login != null && !login.equals(""))
+							account.setLogin(login);
+						if (wPassword != null && !wPassword.equals(""))
+							account.setPassword(wPassword);
+						account.updateInDB(session.getServletContext(), user.getUserKey());
+						app.setName(name);
+						app.setAccount(account);
+						app.updateInDB(session.getServletContext());
+						retMsg = "success";
 					}
+					db.commit(transaction);
 				} else {
-					ClassicAccount account = (ClassicAccount)app.getAccount();
-					if (login != null && !login.equals(""))
-						account.setLogin(login);
-					if (wPassword != null && !wPassword.equals(""))
-						account.setPassword(wPassword);
-					account.updateInDB(session.getServletContext(), user.getUserKey());
-					app.setName(name);
-					app.setAccount(account);
-					app.updateInDB(session.getServletContext());
-					retMsg = "success";
+					retMsg = "error: You have not the permission";
 				}
-				db.commit(transaction);
 			}
 		} catch (SessionException e) {
 			db.cancel(transaction);
