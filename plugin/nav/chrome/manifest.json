@@ -18,8 +18,13 @@
     {
       "matches": ["https://ease.space/*", "https://www.ease.space/*", "http://ease.space/*", "http://www.ease.space/*","http://localhost:8080/HelloWorld/*", "https://localhost:8443/HelloWorld/*", "http://localhost:8080/BackofficeUniv/*"],
       "js": ["jquery-3.1.0.js", "extension.js", "easeListener.js"]
+    },
+    {
+        "matches": ["<all_urls>"],
+        "js": ["connectionListener.js"]
     }
   ],
+    
 "background":{
     "page" : "background.html",
     "persistent": false
