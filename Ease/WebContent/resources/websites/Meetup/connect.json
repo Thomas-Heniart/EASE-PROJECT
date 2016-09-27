@@ -1,0 +1,26 @@
+{
+    "name":"AuchanDirect",
+    "lastlogin":"",
+    "home":"https://secure.meetup.com/login/",
+    "connect": {
+    	"todo": [
+    		{"action":"fill", "what":"login", "search":"#email"},
+    		{"action":"fill", "what":"password", "search":"#password"},
+    		{"action":"click", "search":"input[name='submitButton']"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"goto", "url":"https://www.meetup.com/logout/"},
+    		{"action":"goto", "url":"https://secure.meetup.com/login/"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"a[title='Profil']"}
+    ],
+    "Facebook": {
+    	"todo": [
+    		{"action":"clickona", "search":"#button-facebook"}
+    	]
+    }
+}
