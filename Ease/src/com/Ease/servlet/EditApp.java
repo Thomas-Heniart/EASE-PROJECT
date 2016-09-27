@@ -207,7 +207,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 						retMsg = "error: Incorrect name";
 					} else if (user.getApp(lwId) == null) {
 						retMsg = "error: Bad lwId.";
-					} else if (user.getProfiles().get(user.getApp(lwId).getProfileIndex()).getApps().get(user.getApp(lwId).getIndex()).getType().equals("Account") == false){
+					} else if (user.getApp(lwId).getType().equals("ClassicAccount") == false){
 						retMsg = "error: This account is not an account.";
 					} else {
 						app = user.getProfiles().get(user.getApp(appId).getProfileIndex()).getApps().get(user.getApp(appId).getIndex());
