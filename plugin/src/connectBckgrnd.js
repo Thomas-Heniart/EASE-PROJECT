@@ -1,27 +1,3 @@
-function rememberWebsite(website){
-    if (website.lastLogin == "")
-        return;
-    extension.storage.get("visitedWebsites", function(visitedWebsites) {
-        for (var i in visitedWebsites){
-            if (visitedWebsites[i].name == website.name){
-                if (visitedWebsites[i].lastLogin == website.lastLogin){
-                    return ;
-                }
-                else {
-                    visitedWebsites.splice(i, 1);
-                    break;
-                }
-            }
-        }
-        if (typeof visitedWebsites === "undefined" || visitedWebsites == null || visitedWebsites == undefined)
-            visitedWebsites = [];
-        visitedWebsites.push(website);
-        extension.storage.set("visitedWebsites", visitedWebsites);
-        
-    });
-  
-}
-
 function endConnection(currentWindow, tab, msg, sendResponse){
     console.log(msg.result);
     extension.tabs.sendMessage(tab, "rmOverlay", msg, function(response){});
@@ -47,7 +23,10 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, sendResponse)
                 console.log("reloaded");
                     extension.tabs.inject(tab, ["extension.js","jquery-3.1.0.js","actions.js", "connect.js"], function(){
                           extension.storage.get("visitedWebsites", function(visitedWebsites) {
+                            extension.storage.get("allConnections", function(allConnections) {
                             msg.visitedWebsites = visitedWebsites;
+                            msg.allConnections = allConnections;
+                                console.log(allConnections);
                             extension.tabs.sendMessage(tab, "goooo", msg, function(response){
                                 console.log(response);
                               if (response){
@@ -112,6 +91,7 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, sendResponse)
                                 }
                               }
                               });
+                            });
                             });
                         });
                     });

@@ -5,9 +5,9 @@
     "connect": {
     	"todo": [
     		{"action":"goto", "url":"https://www.auchandirect.fr/connexion"},
-    		{"action":"fill", "what":"login","search":"#email", "grave":"true"},
-    		{"action":"pressAnyKey", "search":"#password"},
-    		{"action":"fill", "what":"password","search":"#password", "grave":"true"},
+    		{"action":"fill", "what":"login", "search":"#email"},
+    		{"action":"fill", "what":"password", "search":"password"},
+    		{"action":"submit", "search":".LooprLoginForm form"}
        	]
     },
     "logout": {
