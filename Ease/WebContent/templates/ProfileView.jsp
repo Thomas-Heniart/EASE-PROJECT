@@ -25,6 +25,7 @@ List<Color> colors = (List<Color>) (session.getServletContext().getAttribute("Co
 List<Tag> tags = (List<Tag>) (session.getServletContext().getAttribute("Tags"));
 List<TagAndSiteMap> tagAndSiteMapping = (List<TagAndSiteMap>) (session.getServletContext().getAttribute("TagAndSiteMapping"));
 SiteManager siteManager = (SiteManager) (session.getServletContext().getAttribute("siteManager"));
+pageContext.setAttribute("session", session);
 pageContext.setAttribute("member", user);
 pageContext.setAttribute("profiles", profiles);
 pageContext.setAttribute("siteList", sites);
@@ -416,7 +417,8 @@ response.addCookie(email);
 			id="${app.getAppId()}">
 				<div class="linkImage" onclick="sendEvent(this)">
 					<div class="emptyAppIndicator">
-						<i class="fa fa-user-secret" aria-hidden="true"></i>
+						<img src="resources/other/raise-your-hand-to-ask.svg" />
+<!--						<i class="fa fa-user-secret" aria-hidden="true"></i>-->
 					</div>
 					<div class="showAppActionsButton">
 						<i class="fa fa-cog"></i>
@@ -424,12 +426,14 @@ response.addCookie(email);
 							<div class="buttonsContainer">
 								<div class="modifyAppButton menu-item"
 									onclick="showModifyAppPopup(this, event)">
-								<p>Modify</p>
+									<p>Modify</p>
 								</div>
+								<c:if test="${app.havePerm(App.AppPerm.DELETE, session.getServletContext())}">
 								<div class="deleteAppButton menu-item"
 									onclick="showConfirmDeleteAppPopup(this, event)">
-								<p>Delete</p>
+									<p>Delete</p>
 								</div>
+								</c:if>
 							</div>
 						</div>
 					</div>
