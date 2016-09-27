@@ -11,24 +11,8 @@ scriptEl.innerHTML = "HTMLFormElement.prototype._nativeSubmit = HTMLFormElement.
 scriptEl.async = false;
 document.head.appendChild(scriptEl);
 
-var scriptFB = document.createElement("script");
-scriptFB.innerHTML = "FB._nativeGetLoginStatus = FB.getLoginStatus;"
-    + "FB.getLoginStatus = function getLoginStatusFB(){"
-    + "var fbEvent = document.createEvent('HTMLEvents');"
-    + "fbEvent.initEvent('fbConnect', true, true);"
-    + "if(this.dispatchEvent(fbEvent)){"
-    + "    this._nativeGetLoginStatus.apply(this, arguments);"
-    + " }"
-    + "};";
-scriptFB.async = false;
-document.body.appendChild(scriptEl);
-
 var allForms = [];
 listenToForms();
-
-document.body.addEventListener('fbConnect', function(){
-    console.log("FACEBOOK CONNECT DUDE !");
-});
 
 document.body.addEventListener('DOMSubtreeModified', function (res) {
     if(!equalArrays(document.forms, allForms)){

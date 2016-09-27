@@ -9,7 +9,7 @@ function getNewLogin(msg, i){
 	if (msg.detail[i].user){
 		return (msg.detail[i].user.login);
 	} else if (msg.detail[i].logWith){
-		return getNewLogin(msg, i-1) + "-" + msg.detail[i].website.name;
+		return {"user":getNewLogin(msg, i-1), "logWith":getHost(msg.detail[i].website.loginUrl)};
 	}
 }
 
@@ -19,12 +19,22 @@ function alreadyVisited(msg){
 		if (msg.visitedWebsites[i].name == msg.detail[msg.bigStep].website.name || (msg.visitedWebsites[i].sso && msg.detail[msg.bigStep].website.sso && msg.visitedWebsites[i].sso == msg.detail[msg.bigStep].website.sso)) {
 			if (getNewLogin(msg, msg.bigStep) == msg.visitedWebsites[i].lastLogin){
 				return true;
-			}
-			else {
-				return false;
-			}
+			} else {
+                break;
+            }
 		}
 	}
+    
+    for(var loginHost in (msg.allConnections)){
+        if(loginHost == getHost(msg.detail[msg.bigStep].website.loginUrl)){
+            if(msg.allConnections[loginHost] == getNewLogin(msg, msg.bigStep)){
+                return true;
+            } else {
+                break;
+            }
+        }
+    }
+    
 	return false;
 }
 

@@ -243,3 +243,12 @@ function doThings(msg, sendResponse) {
     console.log(todo[msg.actionStep].action);
 	actions[todo[msg.actionStep].action](msg, doThings, sendResponse);
 }
+
+function getHost(url){
+    var getLocation = function(href) {
+        var l = document.createElement("a");
+        l.href = href;
+        return l;
+    };
+    return getLocation(url).hostname;
+}
