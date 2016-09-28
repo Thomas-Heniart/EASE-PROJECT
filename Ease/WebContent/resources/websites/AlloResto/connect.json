@@ -1,0 +1,27 @@
+{
+    "name":"AlloResto",
+    "lastlogin":"",
+    "home":"https://www.alloresto.fr/connexion",
+    "connect": {
+    	"todo": [
+    		{"action":"fill", "what":"login", "search":"#uname"},
+    		{"action":"fill", "what":"password", "search":"#pass26"},
+    		{"action":"click", "search":"input[type='submit']"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"goto", "url":"https://www.alloresto.fr/authsystem/logout"},
+    		{"action":"waitfor", "search":"#js_lien_connexion"},
+    		{"action":"goto", "url":"https://www.alloresto.fr/connexion"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"span#client"}
+    ],
+    "Facebook": {
+    	"todo": [
+    		{"action":"click", "search":".facebookLogin"}
+    	]
+    }
+}

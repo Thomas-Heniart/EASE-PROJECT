@@ -1,3 +1,29 @@
+function rememberWebsite(website){
+    if (website.lastLogin == "")
+        return;
+    extension.storage.get("visitedWebsites", function(visitedWebsites) {
+        for (var i in visitedWebsites){
+            if (visitedWebsites[i].name == website.name){
+                if (visitedWebsites[i].lastLogin == website.lastLogin){
+                    return ;
+                }
+                else {
+                    visitedWebsites.splice(i, 1);
+                    break;
+                }
+            }
+        }
+        if (typeof visitedWebsites === "undefined" || visitedWebsites == null || visitedWebsites == undefined)
+            visitedWebsites = [];
+        visitedWebsites.push(website);
+        extension.storage.set("visitedWebsites", visitedWebsites);
+        
+    });
+    
+    rememberConnection(website.lastLogin, getHost(website.loginUrl));
+  
+}
+
 function endConnection(currentWindow, tab, msg, sendResponse){
     console.log(msg.result);
     extension.tabs.sendMessage(tab, "rmOverlay", msg, function(response){});

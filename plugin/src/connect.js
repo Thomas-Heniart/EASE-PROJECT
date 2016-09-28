@@ -15,17 +15,7 @@ function getNewLogin(msg, i){
 
 function alreadyVisited(msg){
 	
-	for (var i in (msg.visitedWebsites)){
-		if (msg.visitedWebsites[i].name == msg.detail[msg.bigStep].website.name || (msg.visitedWebsites[i].sso && msg.detail[msg.bigStep].website.sso && msg.visitedWebsites[i].sso == msg.detail[msg.bigStep].website.sso)) {
-			if (getNewLogin(msg, msg.bigStep) == msg.visitedWebsites[i].lastLogin){
-				return true;
-			} else {
-                break;
-            }
-		}
-	}
-    
-    for(var loginHost in (msg.allConnections)){
+	for(var loginHost in (msg.allConnections)){
         if(loginHost == getHost(msg.detail[msg.bigStep].website.loginUrl)){
             if(msg.allConnections[loginHost] == getNewLogin(msg, msg.bigStep)){
                 return true;
