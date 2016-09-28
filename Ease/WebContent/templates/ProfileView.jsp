@@ -411,16 +411,16 @@ response.addCookie(email);
 
 	<c:choose>
 		<c:when test="${app.getType() eq 'NoAccount'}">
-			<div class="siteLinkBox"
-			webId="${app.getSite().getId()}"
-			name="${app.getName()}"
-			id="${app.getAppId()}">
+			<div class="siteLinkBox emptyApp"
+				 login=""
+				webId="${app.getSite().getId()}"
+				name="${app.getName()}"
+				id="${app.getAppId()}">
 				<div class="linkImage" onclick="sendEvent(this)">
-					<div class="emptyAppIndicator">
+					<div class="emptyAppIndicator" onclick="showModifyAppPopup(this, event)">
 						<img src="resources/other/raise-your-hand-to-ask.svg" />
-<!--						<i class="fa fa-user-secret" aria-hidden="true"></i>-->
 					</div>
-					<div class="showAppActionsButton">
+					<div class="showAppActionsButton" >
 						<i class="fa fa-cog"></i>
 						<div class="appActionsPopup">
 							<div class="buttonsContainer">
@@ -428,7 +428,7 @@ response.addCookie(email);
 									onclick="showModifyAppPopup(this, event)">
 									<p>Modify</p>
 								</div>
-								<c:if test="${app.havePerm(App.AppPerm.DELETE, session.getServletContext())}">
+								<c:if test="${app.havePerm('DELETE', session.getServletContext())}">
 								<div class="deleteAppButton menu-item"
 									onclick="showConfirmDeleteAppPopup(this, event)">
 									<p>Delete</p>
@@ -466,10 +466,12 @@ response.addCookie(email);
 								onclick="showModifyAppPopup(this, event)">
 							<p>Modify</p>
 							</div>
-						<div class="deleteAppButton menu-item"
-							onclick="showConfirmDeleteAppPopup(this, event)">
-						<p>Delete</p>
-						</div>
+							<c:if test="${app.havePerm('DELETE', session.getServletContext())}">
+								<div class="deleteAppButton menu-item"
+									onclick="showConfirmDeleteAppPopup(this, event)">
+									<p>Delete</p>
+								</div>
+							</c:if>
 					</div>
 				</div>
 			</div>
@@ -504,7 +506,10 @@ response.addCookie(email);
 			isContainer: function(el){
 				return  el.classList.contains('SitesContainer');
 			},
-			revertOnSpill: true
+			revertOnSpill: true,
+			moves: function(el, container){
+				return !($(el).hasClass('noMove'));
+			}
 		}).on('drop', function(el, target, source, sibling){
 			$.post(
 				"moveApp",
