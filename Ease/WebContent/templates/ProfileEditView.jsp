@@ -60,9 +60,7 @@
 
 	function enterEditMode() {
 
-
 		$('#dragAndDropHelper').css('display', 'block');
-		$('#tutorialView').css('display', 'none');
 		$(".ProfilesHandler").addClass('editMode');
 		$('.CatalogViewTab').addClass('show');
 		var addProfileHelper = $('#addProfileHelper').find('.item');
@@ -75,13 +73,13 @@
 		}
 		setupOwlCarousel();
 		$('.MenuButtonSet').addClass('editMode');
+		if (('#tutorialView').length)
+			enterEditModeTutorial();
 	}
 
 	function leaveEditMode() {
+
 		$('#dragAndDropHelper').css('display', 'none');
-		if ($('#tutorialView').length) {
-			window.location.replace("index.jsp");
-		}
 		$(".ProfilesHandler").removeClass('editMode');
 		$('.CatalogViewTab').removeClass('show');
 
@@ -93,6 +91,8 @@
 		setupOwlCarousel();
 		$('.scaleOutAnimation').removeClass('scaleOutAnimation');
 		$('.MenuButtonSet').removeClass('editMode');
+		if (('#tutorialView').length)
+			leaveEditModeTutorial();
 	}
 
 	$(document).ready(function() {

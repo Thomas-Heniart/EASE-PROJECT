@@ -430,3 +430,7 @@ html {
   top: 0;
   @include box-shadow(inset 0px 5px 10px 0px white, inset 0px -5px 10px 0px white);
 }
+
+.no-pointer-events {
+  pointer-events: none;
+}

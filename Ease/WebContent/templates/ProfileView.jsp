@@ -251,26 +251,16 @@ response.addCookie(email);
 	<%@ include file="MenuButtonSet.jsp"%>
 
 	<c:if test="${member.getTuto() == '0'}">
-	<%@ include file="Tutorial.jsp"%>
-</c:if>
+		<%@ include file="Tutorial.jsp"%>
+	</c:if>
 
 <script type="text/javascript">
 	function checkForExtension() {
 		var ext = $('#ease_extension');
 
 		if (!($('#ease_extension').length)) {
-			$(".MenuButtonSet").remove();
-			var div = $('<div id="downloadExtension" class="centeredItem"></div>');
-			div.append($('<p class="title">Pour utiliser Ease …</p>'));
-			div
-			.append($('<p class="info">Il ne te reste plus qu’à télécharger notre add-on !</p>'));
-			div
-			.append($('<button id="install-button">Install it !</button>'));
-			$('.ProfilesView .owl-carousel').css('display', 'none');
-			$('.ProfilesView').append(div);
-			$('.ProfilesView')
-			.find('#install-button')
-			.click(
+			$('#downloadExtension').css('display', 'block');
+			$('#downloadExtension').find('#install-button').click(
 				function() {
 					if (getUserNavigator() == "Chrome") {
 						chrome.webstore
@@ -300,12 +290,10 @@ response.addCookie(email);
 	}
 </script>
 <div class="ProfilesHandler">
-	<img class="centeredItem" id="dragAndDropHelper"
-	src="resources/other/Arrow.png" style="display: none;" />
 	<div class="owl-carousel">
 		<c:forEach items='${profiles}' var="item">
 		<div class="item" id='${item.getProfileId()}' idx=<%=it%>>
-			<div class="ProfileBox"
+			<div class="ProfileBox" custom="${item.isCustom()}"
 			style="border-bottom: 5px solid ${item.getColor()};"
 			color="${item.getColor()}">
 			<div class="ProfileName"

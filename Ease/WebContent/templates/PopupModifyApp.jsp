@@ -267,5 +267,7 @@ pageEncoding="UTF-8"%>
 		setTimeout(function(){
 			$(popup).find('#login').focus();
 		}, 100);
+		if (('#tutorialView').length)
+			modifyAppTutorial();
 	};
 </script>

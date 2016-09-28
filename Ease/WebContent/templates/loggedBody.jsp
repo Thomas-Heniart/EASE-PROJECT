@@ -4,6 +4,11 @@
     <div class="col-left show" style="width: 100%; float:left">
 		<%@ include file="ProfileView.jsp"%>
 		<%@ include file="ProfileEditView.jsp" %>
+		<div id="downloadExtension" class="centeredItem" style="display:none;">
+			<p class="title">You are almost done ...<i class="fa fa-heart" aria-hidden="true"></i></p>
+			<p class="info">Now, you need our addon for Ease to automagically work on this computer. (thank god it takes just 1 second  to download)</p>
+			<button id="install-button">Get Ease Addon</button>
+		</div>
 	</div>
 	<%@ include file="SettingsView.jsp" %>
 	<%@ include file="PopupModifyProfile.jsp" %>
