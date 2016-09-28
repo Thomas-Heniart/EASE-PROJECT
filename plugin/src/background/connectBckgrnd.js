@@ -1,5 +1,30 @@
+function rememberWebsite(website){
+    if (website.lastLogin == "")
+        return;
+    extension.storage.get("visitedWebsites", function(visitedWebsites) {
+        for (var i in visitedWebsites){
+            if (visitedWebsites[i].name == website.name){
+                if (visitedWebsites[i].lastLogin == website.lastLogin){
+                    return ;
+                }
+                else {
+                    visitedWebsites.splice(i, 1);
+                    break;
+                }
+            }
+        }
+        if (typeof visitedWebsites === "undefined" || visitedWebsites == null || visitedWebsites == undefined)
+            visitedWebsites = [];
+        visitedWebsites.push(website);
+        extension.storage.set("visitedWebsites", visitedWebsites);
+        
+    });
+    if(!website.loginUrl) website.loginUrl = website.home;
+    rememberConnection(website.lastLogin, getHost(website.loginUrl));
+  
+}
+
 function endConnection(currentWindow, tab, msg, sendResponse){
-    console.log(msg.result);
     extension.tabs.sendMessage(tab, "rmOverlay", msg, function(response){});
     /*if(msg.result == "Success"){
         extension.notifications.print("Connection to "+ msg.detail[msg.detail.length-1].website.name +" : DONE ;)", msg.detail[msg.detail.length-1].website.folder, 2000);
@@ -16,19 +41,17 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, sendResponse)
         extension.tabs.create(currentWindow, msg.detail[0].website.home, msg.highlight, function(tab){
             extension.tabs.onUpdated(tab, function (newTab) {
                 tab = newTab;
-                console.log("updated");
-                extension.tabs.inject(tab, ["overlay.css", "checkForReload.js"], function(){});
+                extension.tabs.inject(tab, ["tools/extensionLight.js","overlay/overlay.css", "overlay/injectOverlay.js"], function(){});
             });
             extension.tabs.onMessage(tab, "reloaded", function (event, sendResponse1) {
-                console.log("reloaded");
-                    extension.tabs.inject(tab, ["extension.js","jquery-3.1.0.js","actions.js", "connect.js"], function(){
+                console.log("-- Page reloaded --");
+                    extension.tabs.inject(tab, ["tools/extension.js","jquery-3.1.0.js","contentScripts/actions.js", "contentScripts/connect.js"], function(){
                           extension.storage.get("visitedWebsites", function(visitedWebsites) {
                             extension.storage.get("allConnections", function(allConnections) {
                             msg.visitedWebsites = visitedWebsites;
                             msg.allConnections = allConnections;
-                                console.log(allConnections);
                             extension.tabs.sendMessage(tab, "goooo", msg, function(response){
-                                console.log(response);
+                                console.log("-- Status : "+response.type+" --");
                               if (response){
                                 if (response.type == "completed") {
                                     msg.todo = response.todo;
@@ -78,7 +101,6 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, sendResponse)
                                                 endConnection(currentWindow, tab, msg, sendResponse);
                                                 extension.tabs.onUpdatedRemoveListener(tab);
                                                 extension.tabs.onMessageRemoveListener(tab);
-                                                endConnection(currentWindow, tab, msg, sendResponse);
                                             }
                                         }
                                     }

@@ -262,6 +262,11 @@ public class App {
 			return true;
 		return false;
 	}
+	public boolean isCustom(){
+		if (this.custom == null)
+			return false;
+		return true;
+	}
 	
 	public void updateInDB(ServletContext context) throws SessionException {
 		DataBase db = (DataBase)context.getAttribute("DataBase");

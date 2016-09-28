@@ -240,7 +240,7 @@ function doThings(msg, sendResponse) {
 		sendResponse(msg);
 		return ;
 	}
-    console.log(todo[msg.actionStep].action);
+    console.log("-- Ease action : "+todo[msg.actionStep].action+" --");
 	actions[todo[msg.actionStep].action](msg, doThings, sendResponse);
 }
 

@@ -1,27 +1,41 @@
 @import 'variables';
 
 #tutorialView {
-	text-align: center;
-	width: 60%;
+	.step4 {
+		top: 0px;
+		left: 50%;
+		transform: translateX(-50%);
+	}
+}
+
+.bublePopup {
+	width: inherit;
+	overflow: hidden;
+	max-width: 300px;
 	position: fixed;
-	left: 60%;
-	.arrow {
-		transform: translateY(-50%);
-		position: absolute;
-		top: 50%;
-		right: 0;
-		font-size: 50px;
-		color: #434343;
-		i {
-			display: inline-block;
+	min-width: 200px;
+	z-index: 500;
+	.popupContent {
+		display: inline-block;
+		float: left;
+		width: 95%;
+		background-color: $themeColor;
+		color: white;
+		padding: 3px;
+		border-radius: 5px;
+		border: 1px hidden;
+		text-align: center;
+		p {
+			margin: 0px;
 		}
 	}
-	.title {
-		font-size: 50px;
-		transform: translateY(-100%);
-	}
-	.info {
-		font-size: 25px;
-		transform: translateY(-100%);
+	.caretHelper {
+		display: inline-block;
+		float: left;
+		color: $themeColor;
+		i {
+			line-height: 100%;
+			margin-left: 0px;
+		}
 	}
 }

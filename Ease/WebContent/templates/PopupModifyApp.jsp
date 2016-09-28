@@ -60,7 +60,10 @@ pageEncoding="UTF-8"%>
 		$(elem).find('input').prop('disabled', true);
 		$(elem).find('.activateInput').css('display', 'block');
 	}
-
+	function enableDisabledInput(elem) {
+		$(elem).find('input').prop('disabled', false);
+		$(elem).find('.activateInput').css('display', 'none');
+	}
 	$(document).ready(function(){
 		$('#PopupModifyApp .buttonBack').click(function(){
 			var parent = $(this).closest('.md-content');
@@ -134,9 +137,16 @@ pageEncoding="UTF-8"%>
 		var app = $(elem).closest('.siteLinkBox');
 		var image = $(app).find('.linkImage');
 
-		popup.find('.disabledInput').each(function(){
-			resetDisabledInput($(this));
-		});
+		if ($(app).hasClass('emptyApp')){
+			popup.find('.disabledInput').each(function(){
+				enableDisabledInput($(this));
+			});
+		}
+		else {
+			popup.find('.disabledInput').each(function(){
+				resetDisabledInput($(this));
+			});			
+		}
 		popup.find('.loginWithButton').removeClass('locked');
 		popup.find('#modifyAppForm').css('display', 'block');
 		popup.find('.or').css('display', 'block');
@@ -188,7 +198,7 @@ pageEncoding="UTF-8"%>
 			if (AppToLoginWith.length){
 				aId = AppToLoginWith.attr('aId');
 				$.post(
-					'editLogWith',
+					'editApp',
 					{
 						name: name,
 						appId: $(app).attr('id'),
@@ -199,13 +209,14 @@ pageEncoding="UTF-8"%>
 						if (data[0] == 's'){
 							image.addClass('scaleOutAnimation');
 							setTimeout(function() {
-								$(image).find('.linkImage').removeClass('scaleOutAnimation');
+								image.removeClass('scaleOutAnimation');
 							}, 1000);
-							app.attr('onclick', "sendEvent(this)");
 							app.attr('login', '');
 							app.attr('name', name);
-							app.attr('logwith', aid);
+							app.attr('logwith', aId);
 							app.find('.siteName p').text(name);
+							app.find('.emptyAppIndicator').remove();
+							app.removeClass('emptyApp');
 						}else {
 							if (data[0] != 'e'){
 								document.location.reload(true);
@@ -232,13 +243,14 @@ pageEncoding="UTF-8"%>
 						if (data[0] == 's'){
 							image.addClass('scaleOutAnimation');
 							setTimeout(function() {
-								$(image).find('.linkImage').removeClass('scaleOutAnimation');
+								image.removeClass('scaleOutAnimation');
 							}, 1000);
-							app.attr('onclick', "sendEvent(this)");
 							app.attr('login', login);
 							app.attr('name', name);
 							app.attr('logwith', 'false');
 							app.find('.siteName p').text(name);
+							app.find('.emptyAppIndicator').remove();
+							app.removeClass('emptyApp');
 						}else {
 							if (data[0] != 'e'){
 								document.location.reload(true);
@@ -255,5 +267,7 @@ pageEncoding="UTF-8"%>
 		setTimeout(function(){
 			$(popup).find('#login').focus();
 		}, 100);
+		if (('#tutorialView').length)
+			modifyAppTutorial();
 	};
 </script>

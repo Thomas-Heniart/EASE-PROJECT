@@ -251,26 +251,16 @@ response.addCookie(email);
 	<%@ include file="MenuButtonSet.jsp"%>
 
 	<c:if test="${member.getTuto() == '0'}">
-	<%@ include file="Tutorial.jsp"%>
-</c:if>
+		<%@ include file="Tutorial.jsp"%>
+	</c:if>
 
 <script type="text/javascript">
 	function checkForExtension() {
 		var ext = $('#ease_extension');
 
 		if (!($('#ease_extension').length)) {
-			$(".MenuButtonSet").remove();
-			var div = $('<div id="downloadExtension" class="centeredItem"></div>');
-			div.append($('<p class="title">Pour utiliser Ease …</p>'));
-			div
-			.append($('<p class="info">Il ne te reste plus qu’à télécharger notre add-on !</p>'));
-			div
-			.append($('<button id="install-button">Install it !</button>'));
-			$('.ProfilesView .owl-carousel').css('display', 'none');
-			$('.ProfilesView').append(div);
-			$('.ProfilesView')
-			.find('#install-button')
-			.click(
+			$('#downloadExtension').css('display', 'block');
+			$('#downloadExtension').find('#install-button').click(
 				function() {
 					if (getUserNavigator() == "Chrome") {
 						chrome.webstore
@@ -300,12 +290,10 @@ response.addCookie(email);
 	}
 </script>
 <div class="ProfilesHandler">
-	<img class="centeredItem" id="dragAndDropHelper"
-	src="resources/other/Arrow.png" style="display: none;" />
 	<div class="owl-carousel">
 		<c:forEach items='${profiles}' var="item">
 		<div class="item" id='${item.getProfileId()}' idx=<%=it%>>
-			<div class="ProfileBox"
+			<div class="ProfileBox" custom="${item.isCustom()}"
 			style="border-bottom: 5px solid ${item.getColor()};"
 			color="${item.getColor()}">
 			<div class="ProfileName"
@@ -411,16 +399,16 @@ response.addCookie(email);
 
 	<c:choose>
 		<c:when test="${app.getType() eq 'NoAccount'}">
-			<div class="siteLinkBox"
-			webId="${app.getSite().getId()}"
-			name="${app.getName()}"
-			id="${app.getAppId()}">
+			<div class="siteLinkBox emptyApp"
+				 login=""
+				webId="${app.getSite().getId()}"
+				name="${app.getName()}"
+				id="${app.getAppId()}">
 				<div class="linkImage" onclick="sendEvent(this)">
-					<div class="emptyAppIndicator">
+					<div class="emptyAppIndicator" onclick="showModifyAppPopup(this, event)">
 						<img src="resources/other/raise-your-hand-to-ask.svg" />
-<!--						<i class="fa fa-user-secret" aria-hidden="true"></i>-->
 					</div>
-					<div class="showAppActionsButton">
+					<div class="showAppActionsButton" >
 						<i class="fa fa-cog"></i>
 						<div class="appActionsPopup">
 							<div class="buttonsContainer">
@@ -428,7 +416,7 @@ response.addCookie(email);
 									onclick="showModifyAppPopup(this, event)">
 									<p>Modify</p>
 								</div>
-								<c:if test="${app.havePerm(App.AppPerm.DELETE, session.getServletContext())}">
+								<c:if test="${app.havePerm('DELETE', session.getServletContext())}">
 								<div class="deleteAppButton menu-item"
 									onclick="showConfirmDeleteAppPopup(this, event)">
 									<p>Delete</p>
@@ -466,10 +454,12 @@ response.addCookie(email);
 								onclick="showModifyAppPopup(this, event)">
 							<p>Modify</p>
 							</div>
-						<div class="deleteAppButton menu-item"
-							onclick="showConfirmDeleteAppPopup(this, event)">
-						<p>Delete</p>
-						</div>
+							<c:if test="${app.havePerm('DELETE', session.getServletContext())}">
+								<div class="deleteAppButton menu-item"
+									onclick="showConfirmDeleteAppPopup(this, event)">
+									<p>Delete</p>
+								</div>
+							</c:if>
 					</div>
 				</div>
 			</div>
@@ -504,7 +494,10 @@ response.addCookie(email);
 			isContainer: function(el){
 				return  el.classList.contains('SitesContainer');
 			},
-			revertOnSpill: true
+			revertOnSpill: true,
+			moves: function(el, container){
+				return !($(el).hasClass('noMove'));
+			}
 		}).on('drop', function(el, target, source, sibling){
 			$.post(
 				"moveApp",
