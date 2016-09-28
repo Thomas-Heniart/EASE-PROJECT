@@ -381,23 +381,31 @@
 		display: block;
 	}
 }
+.ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox.emptyApp {
+	.linkImage {
+		.showAppActionsButton {
+			display: none;
+		}
+	}
+}
 .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox {
 	.linkImage {
 		.emptyAppIndicator {
 			position: absolute;
 			z-index: 1;
 			width: 35%;
-			bottom: 78%;
+			bottom: 73%;
 			left: 81%;
 			opacity: 1;
-			i {
+			img {
 				background-color: $themeColor;
 				padding: 3px;
 				border-radius: 100%;
 				line-height: 90%;
 				color: white;
 				font-size: 1vw;
-				position: relative;				
+				position: relative;
+				border: none;
 			}
 		}
 		.showAppActionsButton {
@@ -515,6 +523,9 @@
 			border-bottom-right-radius: 5px;
 			border-bottom-left-radius: 5px;
 		}
+		.menu-item:only-child {
+			border:none;
+		}
 	}
 }
 
@@ -546,7 +557,7 @@
 	border-radius: 5px;
 	border: 1px transparent;
 	opacity: 1;
-	.deleteAppButton, .modifyAppButton, .showAppActionsButton, .siteName {
+	.deleteAppButton, .modifyAppButton, .showAppActionsButton, .siteName, .emptyAppIndicator {
 		display: none;
 	}
 	img {
