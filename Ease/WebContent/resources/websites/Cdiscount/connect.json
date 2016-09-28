@@ -1,0 +1,20 @@
+{
+    "name":"Cdiscount",
+    "lastlogin":"",
+    "home":"https://clients.cdiscount.com/Account/Login.html?",
+    "connect": {
+    	"todo": [
+    		{"action":"fill", "what":"login", "search":"#LoginViewData_CustomerLoginFormData_Email"},
+    		{"action":"fill", "what":"password", "search":"#LoginViewData_CustomerLoginFormData_Password"},
+    		{"action":"click", "search":"#loginForm input[type='submit']"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"clickona", "search":"#cphLeftArea_LeftArea_hlLogOff"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"#cphLeftArea_LeftArea_hlLogOff"}
+    ]
+}

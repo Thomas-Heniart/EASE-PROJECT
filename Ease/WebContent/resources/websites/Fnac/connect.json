@@ -1,0 +1,22 @@
+{
+    "name":"Fnac",
+    "lastlogin":"",
+    "home":"https://www.fnac.com",
+    "connect": {
+    	"todo": [
+    		{"action":"clickona", "search":"a.account"},
+    		{"action":"waitfor", "search":"#Email"},
+    		{"action":"fill", "what":"login", "search":"#Email"},
+    		{"action":"fill", "what":"password", "search":"#Password"},
+    		{"action":"click", "search":".js-ShutterConnect-form input[type='submit']"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"goto", "url":"https://secure.fnac.com/Account/Profil/HomeLogOff.aspx"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"a[data-connected='true']"}
+    ]
+}

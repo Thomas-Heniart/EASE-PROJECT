@@ -20,9 +20,10 @@
 	},
 	"logout":{
 		"todo":[
-			{"action":"click", "search":"#yt-masthead-account-picker", "grave":true},
+			{"action":"clickona", "search":"#yt-masthead-account-picker", "grave":true},
 			{"action":"waitfor", "search":"a[href='/logout']"},
-			{"action":"aclick", "search":"a[href='/logout']", "grave":true}			
+			{"action":"clickona", "search":"a[href='/logout']", "grave":true},
+			{"action":"waitfor", "time":10, "search":"button[href*='https://accounts.google.com/ServiceLogin?']"}			
 			]
 	},
 	"checkAlreadyLogged":[
