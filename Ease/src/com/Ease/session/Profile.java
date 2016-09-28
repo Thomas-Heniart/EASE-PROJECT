@@ -124,6 +124,11 @@ public class Profile {
 			return true;
 		return false;
 	}
+	public boolean isCustom(){
+		if (this.custom == null)
+			return false;
+		return true;
+	}
 	
 	
 	// SETTER
