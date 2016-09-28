@@ -5,7 +5,7 @@ if (window.top === window) {
         overlay.id = "ease_overlay_mamene";
         var popup = document.createElement('div');
         document.body.appendChild(overlay);
-        chrome.runtime.sendMessage({"name":'reloaded', "message":{}}, function(){});
+        extensionLight.runtime.sendMessage('reloaded',{}, function(){});
         startOverlay();
     }
     
@@ -25,12 +25,16 @@ function startOverlay(){
     spinner.style = "background-color: #6C7FA0";
     overlay.appendChild(spinner);
     
+    var closeContainer = document.createElement('div');
+    closeContainer.className = "closeEaseOverlayContainer";
+    spinner.appendChild(closeContainer);
+    
     var close = document.createElement('a');
     close.href = "javascript:void(0)";
     close.className = "closeEaseOverlay";
     close.setAttribute('onClick',"document.getElementById('ease_overlay_mamene').style='display: none';");
     close.innerHTML = '&times;';
-    spinner.appendChild(close);
+    closeContainer.appendChild(close);
     
     var text = document.createElement('div');
     text.id = "loading-text-ease-mamene";
@@ -88,8 +92,6 @@ function errorOverlay(msg){ //quand grave ou fin waitfor
     setTimeout(function(){overlay.style = "display: none"},300);
 }
 
-chrome.runtime.onMessage.addListener(function(event, sender, sendResponse){
-    if(event.name == "rmOverlay"){
-        endOverlay({});
-    }
+extensionLight.runtime.onMessage( "rmOverlay", function(message, sendResponse){
+    endOverlay({});
 });

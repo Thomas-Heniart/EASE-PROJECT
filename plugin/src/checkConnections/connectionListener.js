@@ -42,7 +42,6 @@ function equalArrays (array1, array2) {
 
 function listenToForms (){
     allForms = [];
-    console.log("forms loaded");
     for (var i = 0; i < document.forms.length; i++) {
         allForms.push(document.forms[i]);
         listenToSubmit(document.forms[i]);
@@ -90,9 +89,7 @@ function checkFields(fields){
             hasPassword = true;
         }
         if(hasEmail && hasPassword){
-            chrome.runtime.sendMessage({'name':'newConnectionToRandomWebsite', 'message':{'website':window.location.host, 'username':email}}, function(){
-                console.log("Connection for email " + email + " on website " + window.location.host + " sent to Ease");
-            });
+            extensionLight.runtime.sendMessage('newConnectionToRandomWebsite', {'website':window.location.host, 'username':email}, function(){});
         break;
         }
     }
