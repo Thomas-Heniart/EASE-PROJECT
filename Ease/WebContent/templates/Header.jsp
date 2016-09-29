@@ -21,6 +21,7 @@ $(document).ready(function(){
 
 <% if (session.getAttribute("User") != null){ %>
 		<%@ include file="DropDownUserMenu.jsp"%>
+		<%@ include file="SearchBar.jsp"%>
 	<a href="logout" id="logoutButton"><i class="fa fa-fw fa-sign-out"></i><span>Logout</span></a>	
 <%}%>
 
