@@ -63,7 +63,7 @@ var extension = {
 				}
 			});
         }
-	},
+    },
 	tabs:{
 		update:function(tab, url, callback){
 			chrome.tabs.update(tab.id, {"url":url}, callback);

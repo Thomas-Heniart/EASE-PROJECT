@@ -1,7 +1,8 @@
 extension.runtime.bckgrndOnMessage("Logout", function (msg, sendResponse) {
-    extension.storage.get("visitedWebsites", function(visitedWebsites) {
+    extension.storage.get("visitedWebsites", function(visitedWebsites) {        
+        
         for(var i in visitedWebsites){logOutFrom(visitedWebsites[i], sendResponse);}
-            extension.storage.set("visitedWebsites", []);
+        extension.storage.set("visitedWebsites", []);
                                             
     });
 });
@@ -35,12 +36,13 @@ function logOutFrom(website, sendResponse){
                                                     //do nothing
                                                 } else {
                                                     console.log("-- Log out done --");
+                                                    
                                                     extension.tabs.onUpdatedRemoveListener(tab);
                                                     extension.tabs.onMessageRemoveListener(tab);
                                                     setTimeout(function() {
                                                         extension.tabs.close(tab, function() {});
                                                     }, 1000);
-                                                    sendResponse("Good");
+                                                    sendResponse("Logout from " + msg.detail[0].website);
                                                 }
                                             } else {
                                                 console.log("-- Log out fail --");
