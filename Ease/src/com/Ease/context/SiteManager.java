@@ -140,7 +140,7 @@ public class SiteManager {
 	@SuppressWarnings("unchecked")
 	public JSONArray getSitesListJsonWithSearchAndTags(String search, String[] selectedIds) {
 		// If everything is empty then returns all websites
-		if (selectedIds.length == 0 && (search.isEmpty() || search == null || search.equals("")))
+		if (selectedIds.length == 0 && (search.isEmpty() || search == null))
 			return getSitesListJson();
 
 		List<Tag> selectedTags = new LinkedList<Tag>();
