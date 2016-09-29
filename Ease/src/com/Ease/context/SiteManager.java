@@ -23,6 +23,8 @@ public class SiteManager {
 	}
 
 	public Site get(String id) {
+		if (id == null)
+			return null;
 		for (int i = 0; i < sites.size(); ++i) {
 			if (((Site) sites.get(i)).getId().equals(id))
 				return sites.get(i);

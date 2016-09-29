@@ -51,6 +51,7 @@ public class createInvitation extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Sending invitation ...");
 		String			email = request.getParameter("email");
+		String			group = request.getParameter("groupId");
 
 		String			retMsg;
 		String			alphabet = "azertyuiopqsdfghjklwxcvbnm1234567890AZERTYUIOPQSDFGHJKLMWXCVBN";
@@ -63,7 +64,7 @@ public class createInvitation extends HttpServlet {
 		HttpSession session = request.getSession();
 		
 		User user = (User)session.getAttribute("User");
-		if(!user.isAdmin(session.getServletContext())){
+		if(user == null || !user.isAdmin(session.getServletContext())){
 			response.getWriter().print("error: You aint admin bro");
 		}
 		
@@ -75,12 +76,23 @@ public class createInvitation extends HttpServlet {
 			for (int i = 0;i < 126 ; ++i) {
 				invitationCode += alphabet.charAt(r.nextInt(alphabet.length()));			
 			}
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://ease.space:3306/test", "admin", "P6au23q7");
-			con.createStatement().executeUpdate("insert into invitations values ('" + email + "', '" + invitationCode + "');");
+			DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
+			if (group == null){
+				db.set("insert into invitations values ('" + email + "', '" + invitationCode + "', NULL);");
+				retMsg = "succes";
+			} else {
+				int groupId = Integer.parseInt(group);
+				rs = db.get("select * from groups where id=" + groupId + ";");
+				if (rs.next()){
+					db.set("insert into invitations values ('" + email + "', '" + invitationCode + "', " + groupId + ");");
+					retMsg = "succes";
+				} else {
+					retMsg = "error: This group dosen't exist.";
+				}
+			}
 
-			con.close();
 			
+			/*
 			props.put("mail.smtp.host", "smtp.gmail.com");
 			props.put("mail.smtp.socketFactory.port", "465");
 			props.put("mail.smtp.socketFactory.class",
@@ -114,17 +126,19 @@ public class createInvitation extends HttpServlet {
 					+ "<p>La team Ease</p>"
 					, "text/html;charset=utf-8");		
 			
-			Transport.send(message);
-			retMsg = "succes";
+			Transport.send(message);*/
+			
 			System.out.println("Done");
 			}
 		} catch (SQLException e) {
 			retMsg = "error:" + e.getMessage();
 			e.printStackTrace();
-		}catch (MessagingException e) {
+		} /*catch (MessagingException e) {
 			retMsg = "error: error when sending mail.";
-		} catch (ClassNotFoundException e) {
+		}*/ catch (ClassNotFoundException e) {
 			retMsg = "error: error when load class.";
+		} catch (NumberFormatException e) {
+			retMsg = "error: Bad GroupId";
 		}
 		System.out.println(retMsg);
 		response.getWriter().print(retMsg);

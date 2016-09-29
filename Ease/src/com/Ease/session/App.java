@@ -163,6 +163,36 @@ public class App {
 			}
 			
 		}
+		
+	//Use this to create a new app link and set it in database
+		public App(String name, String link, Profile profile, String custom, User user, ServletContext context) throws SessionException {
+			DataBase db = (DataBase)context.getAttribute("DataBase");
+			
+			
+			if (db.set("INSERT INTO apps VALUES (NULL, NULL, NULL, " + profile.getId() + ", '" + profile.getApps().size() + "', '" + name + "', " + custom + ");")
+					!= 0) {
+				throw new SessionException("Impossible to insert new app in data base.");
+			}
+			
+			ResultSet rs = db.get("SELECT LAST_INSERT_ID();");
+			if (rs == null){
+				throw new SessionException("Impossible to insert new app in data base. (no rs)");
+			}
+			try {
+				rs.next();
+				this.id = rs.getString(1);
+				this.account = new LinkAccount(link, user, context);
+				this.site = null;
+				this.index = profile.getApps().size();
+				this.name = name;
+				this.profileIndex = profile.getIndex();
+				this.profileId = profile.getProfileId();
+				appId = user.getNextAppId();
+				this.custom = custom;
+			} catch (SQLException e) {
+				throw new SessionException("Impossible to insert new app in data base. (no str1)");
+			}			
+		}
 	
 	//Use this to load app with a ResultSet from database
 	public App(ResultSet rs, Profile profile, User user, ServletContext context) throws SessionException {

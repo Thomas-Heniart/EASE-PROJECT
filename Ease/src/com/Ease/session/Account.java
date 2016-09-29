@@ -37,6 +37,11 @@ abstract class Account {
 					ResultSet logwithRs = db.get("SELECT * FROM logWithAccounts WHERE account_id = "+ accountId + ";");
 					if(logwithRs.next()){
 						return new LogWithAccount(logwithRs, user, context);
+					} else {
+						ResultSet linkRs = db.get("SELECT * FROM linkAccounts WHERE account_id = "+ accountId + ";");
+						if(linkRs.next()){
+							return new LinkAccount(linkRs, user, context);
+						}
 					}
 				}
 			}
@@ -45,6 +50,7 @@ abstract class Account {
 			throw new SessionException("Can't find account");
 		}
 	}
+	
 	// SETTER
 	
 	public void setType(String type) {

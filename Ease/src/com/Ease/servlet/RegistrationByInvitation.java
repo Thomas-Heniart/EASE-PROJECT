@@ -76,21 +76,26 @@ public class RegistrationByInvitation extends HttpServlet {
 			retMsg = "error: Your password don't respect safety rules. For safety reasons, your password needs to be at least 8 characters long, including upper-case and lower-case letters, plus at least one numerical digit.";
 		} else if (confirmPassword == null || password.equals(confirmPassword) == false) {
 			retMsg = "error: Passwords does not match.";
-		}  else {
+		} else {
 			try {
+				String group;
 				if ((rs = db.get("select * from invitations where email ='" + email + "' and linkCode = '" + invitationCode + "';")) == null || !(rs.next())){
 					retMsg = "error: Seems that you are not on the list.";
-				}
-				else if ((rs = db.get("select * from users where email = '" + email + "' limit 0, 1;")) == null) {
-					retMsg = "error: Can't get data from data base.";
-				} else if (rs.next()) {
-					retMsg = "error: Email already used.";
 				} else {
-					user = new User(fname, lname, email, "0606060606", password, session.getServletContext());
-					Profile profile = new Profile("Perso", "#ff974f", "", user, null, session.getServletContext());
-					user.addProfile(profile);
-					db.set("delete from invitations where email = '" + email + "' and linkCode = '" + invitationCode + "';");
-					retMsg = "success";
+					group = rs.getString(3);
+					if ((rs = db.get("select * from users where email = '" + email + "' limit 0, 1;")) == null) {
+						retMsg = "error: Can't get data from data base.";
+					} else if (rs.next()) {
+						retMsg = "error: Email already used.";
+					} else {
+						user = new User(fname, lname, email, "0606060606", password, session.getServletContext());
+						Profile profile = new Profile("Perso", "#ff974f", "", user, null, session.getServletContext());
+						user.addProfile(profile);
+						if (group != null && group.equals("null") == false)
+							db.set("insert into GroupAndUserMap values (NULL, " + group + ", " + user.getId() + ");");
+						db.set("delete from invitations where email = '" + email + "' and linkCode = '" + invitationCode + "';");
+						retMsg = "success";
+					}
 				}
 			} catch (SessionException e) {
 				retMsg = "error: " + e.getMsg();
