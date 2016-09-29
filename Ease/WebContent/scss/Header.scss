@@ -24,3 +24,52 @@
 		}
 	}
 }
+
+#searchBar {
+	width: 40%;
+	height: 30px;
+	font-size: 14px;
+	background-color: $themeGreyColor;
+	border-radius: 5px;
+	input {
+		width: 100%;
+		position: relative;
+		height: 100%;
+		border: none;
+		background: transparent;
+		font-size: 17px;
+		padding-right: 45px;
+		padding-left: 3px;
+		outline: none;
+	}
+	#searchBarButton {
+		transition: all .5s;
+		position: absolute;
+		right: 0;
+		top: 0;
+		height: 100%;
+		width: 40px;
+		text-align: center;
+		border-top-right-radius: 5px;
+		border-bottom-right-radius: 5px;
+		color: $themeColor;
+		img {
+			position: relative;
+			height: 80%;
+			top: 10%;
+		}		
+		i {
+			font-size: 25px;
+			vertical-align: middle;
+			line-height: 30px;
+		}
+		&:hover {
+			cursor: pointer;
+		}
+	}
+	#searchBarButton.active {
+		transition: all .5s;
+		background-color: $themeColor;
+		color: white;		
+	}
+}
