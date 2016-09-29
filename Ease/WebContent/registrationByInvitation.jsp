@@ -52,7 +52,7 @@ pageEncoding="UTF-8"%>
 		<img src="resources/images/Ease_Logo.png"/>
 	</div>
 	<div id="helpInformations" email="<%= emailAddress %>" code="<%= invitationCode%>" style="display: none;"></div>
-	<div id="registrationBlock">
+	<div class="registrationBlock">
 		<div class="title">
 			<p>Set up your account !</p>
 		</div>
