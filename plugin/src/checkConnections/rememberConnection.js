@@ -1,17 +1,17 @@
-extension.runtime.onMessage('newConnectionToRandomWebsite', function(msg, sendResponse){
+extension.runtime.bckgrndOnMessage('newConnectionToRandomWebsite', function(msg, sendResponse){
     rememberConnection(msg.username, msg.website, false);
 });
 
-var lastNavigatedWebsite = null;
+var lastNavigatedWebsite = "";
 
 extension.tabs.onNavigation(function(url){
-    if(matchFacebookConnectUrl(url) && !matchFacebookConnectUrl(lastNavigatedWebsite) && getHost(url)==lastNavigatedWebsite){
+    if(matchFacebookConnectUrl(url) && !matchFacebookConnectUrl(lastNavigatedWebsite)){
         rememberLogWithConnection(lastNavigatedWebsite, "www.facebook.com");
-    } else if(matchLinkedinConnectUrl(url) && !matchLinkedinConnectUrl(lastNavigatedWebsite) && getHost(url)==lastNavigatedWebsite){
+    } else if(matchLinkedinConnectUrl(url) && !matchLinkedinConnectUrl(lastNavigatedWebsite)){
         rememberLogWithConnection(lastNavigatedWebsite, "www.linkedin.com");
     }
     lastNavigatedWebsite = getHost(url);
-    //console.log("-- Last navigated website : "+lastNavigatedWebsite+" --");
+    console.log("-- Last navigated website : "+lastNavigatedWebsite+" --");
 });
 
 function rememberConnection(username, website){
@@ -35,7 +35,7 @@ function rememberLogWithConnection(website, logWithWebsite){
 }
 
 function matchFacebookConnectUrl(url){
-    if(url.indexOf("facebook")!==-1 && url.substr(12,8) != "facebook") {
+    if(url.indexOf("facebook")!==-1 && url.substr(12,8) != "facebook" && url.substr(4,8) != "facebook") {
         return "true";
     }
     return false;

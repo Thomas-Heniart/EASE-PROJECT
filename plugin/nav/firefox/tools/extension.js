@@ -71,6 +71,12 @@ var extension = {
 		create:function(window, url, active, callback){
 			chrome.tabs.create({"windowId":window.id, "url":url, "active":active}, callback);
 		},
+        highlight:function(window, tab, callback){
+            chrome.tabs.highlight({"windowId":window.id, "tabs":tab.index}, callback);
+        },
+        focus:function(window, tab, callback){
+            chrome.tabs.highlight({"windowId":window.id, "tabs":tab.index}, callback);
+        },
 		close:function(tab, callback){
    			chrome.tabs.remove(tab.id, callback);
 		},
@@ -87,7 +93,7 @@ var extension = {
                 chrome.tabs.onUpdated.addListener(function newtab(tabId, params, newTab){
                     if(tabId == tab.id){
                         chrome.tabs.onUpdated.removeListener(newtab);
-                        if(params.url=="about:newtab"){
+                        if(params.url=="chrome://newtab/"){
                             fct(newTab);
                         }
                     }                    
@@ -96,6 +102,38 @@ var extension = {
         },
         onUpdatedRemoveListener:function(tab){
             chrome.tabs.onUpdated.removeListener(listenersUpdates[tab.id]);
+        },
+        onNavigation:function(fct){
+            chrome.windows.onFocusChanged.addListener(function (windowId){
+                if(windowId != -1) chrome.windows.get(windowId, {"populate":true}, function(window){
+                    for(var i in window.tabs){
+                        if(window.tabs[i].active && window.tabs[i].url){
+                           fct(window.tabs[i].url);
+                        }
+                    }
+                });
+            });
+
+            chrome.tabs.onActivated.addListener(function (infos){
+                chrome.tabs.get(infos.tabId, function(activatedTab){
+                    if(activatedTab.url){
+                       fct(activatedTab.url);
+                    } else {
+                        chrome.tabs.onUpdated.addListener(function tabIsReady(tabId, params, tab){
+                            if(tabId == infos.tabId){
+                                chrome.tabs.onUpdated.removeListener(tabIsReady);
+                                fct(tab.url);
+                            }
+                        });
+                    }
+                });       
+            });
+
+            chrome.tabs.onUpdated.addListener(function (tabId, params, tab){
+                if(tab.active) {
+                    fct(tab.url);
+                }                  
+            });
         },
 		sendMessage:function(tab, name, msg, callback){
 			chrome.tabs.sendMessage(tab.id, {"name":name, "message":msg}, callback);
@@ -112,7 +150,39 @@ var extension = {
             chrome.runtime.onMessage.removeListener(listenersMessages[tab.id]);  
         },
 		injectScript:function(tab, fileName, callback){
+            fileName = chrome.extension.getURL(fileName);
 			chrome.tabs.executeScript(tab.id, {"file":fileName}, callback);
-		}
-	}
+		},
+        injectCSS: function(tab, fileName, callback){
+            fileName = chrome.extension.getURL(fileName);
+            chrome.tabs.insertCSS(tab.id, {"file":fileName}, callback);
+        },
+        inject:function(tab, files, callback){
+        
+            function injectonefile(i){
+                files[i] = chrome.extension.getURL(files[i]);
+                if(files[i].substring(files[i].length-3, files[i].length)==".js"){
+                    chrome.tabs.executeScript(tab.id, {"file":files[i]}, function(){
+                        i++;
+                        if(i>=files.length){
+                            callback();
+                        } else {
+                            injectonefile(i);
+                        }
+                    });
+                } else if(files[i].substring(files[i].length-3, files[i].length)=="css") {
+                    chrome.tabs.insertCSS(tab.id, {"file":files[i]}, function(){
+                        i++;
+                        if(i>=files.length){
+                            callback();
+                        } else {
+                            injectonefile(i);
+                        }
+                    });
+                }
+            }
+            injectonefile(0);
+               
+        }
+    }
 }
