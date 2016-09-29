@@ -2,7 +2,7 @@
 "manifest_version": 2,
     
 "name" :"Ease",
-"version" :"1.1.28",
+"version" :"1.1.31",
 "description" :"Ease extension, log you in and out",
     
 "icons": {
@@ -17,19 +17,19 @@
 "content_scripts": [
     {
       "matches": ["https://ease.space/*", "https://www.ease.space/*", "http://ease.space/*", "http://www.ease.space/*","http://localhost:8080/HelloWorld/*", "https://localhost:8443/HelloWorld/*", "http://localhost:8080/BackofficeUniv/*"],
-      "js": ["jquery-3.1.0.js", "extension.js", "easeListener.js"]
+      "js": ["jquery-3.1.0.js", "tools/extension.js", "easeListener.js"]
     },
     {
         "matches": ["<all_urls>"],
-        "js": ["connectionListener.js"]
+        "js": ["tools/extensionLight.js","checkConnections/connectionListener.js"]
     }
   ],
     
 "background":{
-    "page" : "background.html",
+    "page" : "background/background.html",
     "persistent": false
 },
-"permissions": ["tabs","notifications","\u003Call_urls\u003E","http://*/*", "https://*/*","webNavigation","storage"],
+"permissions": ["tabs","\u003Call_urls\u003E","http://*/*", "https://*/*","webNavigation","storage"],
     
 "commands": {
       "open-ease": {

@@ -299,5 +299,7 @@ $(document).ready(function(){
 				popup.find('#login').focus();
 		}, 100);
 		popup.addClass('md-show');
+		if (('#tutorialView').length)
+			addAppTutorial();
  	}
  </script>

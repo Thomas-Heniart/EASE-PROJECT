@@ -1,0 +1,23 @@
+{
+    "name":"Zara",
+    "lastlogin":"",
+    "home":"https://www.zara.com",
+    "connect": {
+    	"todo": [
+    		{"action":"waitfor", "search":"._accountLink._login a"},
+    		{"action":"clickona", "search":"._accountLink._login a"},
+    		{"action":"waitload"},
+    		{"action":"fill", "what":"login", "search":"#email"},
+    		{"action":"fill", "what":"password", "search":"#password"},
+    		{"action":"click", "search":"#login-button"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"clickona", "search":"._accountLink._logout"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"._accountLink._logout"}
+    ]
+}

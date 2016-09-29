@@ -170,7 +170,7 @@ public class SiteManager {
 			Iterator<Site> it = sites.iterator();
 			while (it.hasNext()) {
 				Site tmpSite = it.next();
-				if (tmpSite.getName().toLowerCase().startsWith(search.toLowerCase()))
+				if (tmpSite.getName().toLowerCase().contains(search.toLowerCase()))
 					if (!sitesToShow.contains(tmpSite)) {
 						sitesToShow.add(tmpSite);
 						/*JSONArray jsonArray = tmpSite.getJson();
@@ -187,38 +187,12 @@ public class SiteManager {
 		while (siteIterator.hasNext()) {
 			Site tmpSite = siteIterator.next();
 			if (tmpSite.hasAllTags(selectedTags)) {
-				if (tmpSite.getName().toLowerCase().startsWith(search.toLowerCase()) || search.isEmpty()) {
+				if (tmpSite.getName().toLowerCase().matches("*"+ search.toLowerCase() +"*") || search.isEmpty()) {
 					sitesToShow.add(tmpSite);
 					res.add(tmpSite.getId());
 				}
 			}
 		}
-
-		// get sites with some tags
-		/*siteIterator = sites.iterator();
-		while (siteIterator.hasNext()) {
-			Site tmpSite = siteIterator.next();
-			if (!sitesToShow.contains(tmpSite))
-				if (tmpSite.hasTags(selectedTags)) {
-					if (tmpSite.getName().toLowerCase().startsWith(search.toLowerCase()) || search.isEmpty()) {
-						sitesToShow.add(tmpSite);
-						JSONArray jsonArray = new JSONArray();
-						jsonArray.add(tmpSite.getId());
-						jsonArray.add("or");
-						res.add(jsonArray);
-					}
-				}
-		}*/
-
-		/*
-		 * Tag searchTag = getTagForSearch(search, selectedTags); if (searchTag
-		 * != null) { List<Site> tagSites = searchTag.getSites(); Iterator<Site>
-		 * it = tagSites.iterator(); while (it.hasNext()) { Site tmpSite =
-		 * it.next(); if (!sitesToShow.contains(tmpSite)) {
-		 * sitesToShow.add(tmpSite); JSONArray jsonArray = tmpSite.getJson();
-		 * jsonArray.add("hasSomeTags"); res.add(jsonArray); } } }
-		 */
-
 		return res;
 	}
 }

@@ -2,10 +2,11 @@
 	"name":"googledrive",
 	"lastLogin":"",
 	"sso":"Google",
-	"home":"https://googledrive.com",
+	"home":"https://drive.google.com",
 	"connect":{
 		"todo":[
 			{"action":"clickona", "search":"#account-chooser-add-account"},
+			{"action":"waitfor", "search":"#Email"},
 			{"action":"fill", "what":"login", "search":"#Email", "grave":true},
 			{"action":"click", "search":"#next", "grave":true},
 			{"action":"waitfor", "time":10, "search":"#Passwd"},
@@ -21,8 +22,5 @@
 	},
 	"checkAlreadyLogged":[
 		{"search":"a[title='Drive']"}
-	],
-	"checkChangeLogin":[
-		
 	]
 }

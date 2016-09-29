@@ -21,19 +21,20 @@ function logOutFrom(website, sendResponse){
                 extension.tabs.create(currentWindow, msg.detail[0].website.home, false, function(tab){
                     extension.tabs.onUpdated(tab, function (newTab) {
                         tab = newTab;
-                        extension.tabs.inject(tab, ["checkForReload.js", "overlay.css"], function() {});
+                        extension.tabs.inject(tab, ["tools/extensionLight.js","overlay/injectOverlay.js", "overlay/overlay.css"], function() {});
                     });
                     extension.tabs.onMessage(tab, "reloaded", function (event, sendResponse1) {
-                        extension.tabs.inject(tab, ["extension.js","jquery-3.1.0.js","actions.js", "logout.js"], function() {
+                        console.log("-- Page reloaded --");
+                        extension.tabs.inject(tab, ["tools/extension.js","jquery-3.1.0.js","contentScript/actions.js", "contentScript/logout.js"], function() {
                                 extension.tabs.sendMessage(tab, "logout", msg, function(response){
-                                        console.log(response);
+                                        console.log("-- Status : "+response.type+" --");
                                         if(response){
                                             if(response.type == "completed"){
                                                 msg.actionStep = response.actionStep;
                                                 if (msg.actionStep < msg.detail[0].website.logout.todo.length){
                                                     //do nothing
                                                 } else {
-                                                    console.log("Logout done");
+                                                    console.log("-- Log out done --");
                                                     extension.tabs.onUpdatedRemoveListener(tab);
                                                     extension.tabs.onMessageRemoveListener(tab);
                                                     setTimeout(function() {
@@ -42,6 +43,7 @@ function logOutFrom(website, sendResponse){
                                                     sendResponse("Good");
                                                 }
                                             } else {
+                                                console.log("-- Log out fail --");
                                                 extension.tabs.onMessageRemoveListener(tab);
                                                 extension.tabs.onUpdatedRemoveListener(tab);
                                                 setTimeout(function() {
@@ -51,7 +53,7 @@ function logOutFrom(website, sendResponse){
                                             }
                                         }
                                     });
-                                    });
+                            });
                     });
                 });
             });

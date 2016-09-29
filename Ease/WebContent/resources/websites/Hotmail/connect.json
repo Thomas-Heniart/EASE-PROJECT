@@ -1,0 +1,21 @@
+{
+	"name":"Hotmail",
+	"lastLogin":"",
+	"home":"https://www.hotmail.com/",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"input[type='email']", "grave":true},
+			{"action":"fill", "what":"login", "search":".phholder div", "grave":true},
+			{"action":"fill", "what":"password", "search":"input[type='password']", "grave":true},
+			{"action":"click", "search":"input[type='submit']", "grave":true}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"clickona", "search":"a#O365_SubLink_ShellSignout"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":"a#O365_SubLink_ShellSignout"}
+	]
+}

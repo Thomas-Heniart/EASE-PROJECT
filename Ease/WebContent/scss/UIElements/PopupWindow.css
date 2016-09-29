@@ -1,0 +1,395 @@
+.md-overlay {
+  background-color: rgba(56, 55, 98, 0.8) !important; }
+
+.popup .alertDiv.show {
+  display: block;
+  width: 50%;
+  margin: 3px auto;
+  color: red;
+  padding: 0px; }
+  .popup .alertDiv.show p {
+    font-size: 13px;
+    margin: 0px;
+    padding: 0px; }
+
+.popup .md-content {
+  background-color: #373b60 !important;
+  padding: 5px; }
+  .popup .md-content .form {
+    border-radius: 0px !important;
+    width: 100%; }
+    .popup .md-content .form form button {
+      margin-top: 35px; }
+    .popup .md-content .form form .colorChoose {
+      margin-top: 20px; }
+      .popup .md-content .form form .colorChoose .cs-select .cs-placeholder {
+        width: 100%;
+        font-size: 19px; }
+
+#PopupDeleteApp {
+  min-width: 200px;
+  max-width: 100%;
+  width: 400px; }
+  #PopupDeleteApp .md-content {
+    border-radius: 15px;
+    padding-top: 20px;
+    font-family: "Raleway", "Source Sans Pro", sans-serif; }
+    #PopupDeleteApp .md-content p {
+      text-align: center; }
+    #PopupDeleteApp .md-content .title {
+      font-size: 17px; }
+    #PopupDeleteApp .md-content .desc {
+      font-size: 11px; }
+    #PopupDeleteApp .md-content .buttonSet {
+      text-align: center;
+      padding-bottom: 20px; }
+      #PopupDeleteApp .md-content .buttonSet button {
+        display: inline-block;
+        width: 49%;
+        padding: 7px; }
+      #PopupDeleteApp .md-content .buttonSet #accept {
+        background-color: #ec555b;
+        border-color: #ec555b; }
+        #PopupDeleteApp .md-content .buttonSet #accept:hover {
+          background-color: #ee6368; }
+      #PopupDeleteApp .md-content .buttonSet #close {
+        background-color: white;
+        color: black;
+        border-color: white; }
+        #PopupDeleteApp .md-content .buttonSet #close:hover {
+          background-color: #f7f7f7; }
+
+#PopupAddApp {
+  min-width: 200px;
+  max-width: 100%;
+  width: 400px; }
+  #PopupAddApp .md-content {
+    border-radius: 15px;
+    padding-top: 20px;
+    font-family: "Raleway", "Source Sans Pro", sans-serif; }
+    #PopupAddApp .md-content .popupHeader {
+      overflow: hidden;
+      padding: 0px;
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      margin-bottom: 5px; }
+      #PopupAddApp .md-content .popupHeader .logoApp {
+        width: 20%;
+        float: left;
+        height: auto;
+        top: 10%;
+        left: 3%;
+        border-radius: 3px; }
+      #PopupAddApp .md-content .popupHeader .textContent {
+        width: 80%;
+        float: left; }
+        #PopupAddApp .md-content .popupHeader .textContent p {
+          padding: 0px;
+          padding-left: 2px;
+          text-align: center; }
+        #PopupAddApp .md-content .popupHeader .textContent .title {
+          font-size: 17px; }
+        #PopupAddApp .md-content .popupHeader .textContent .desc {
+          font-size: 11px; }
+    #PopupAddApp .md-content #name {
+      display: block;
+      font-size: 1.15em;
+      font-weight: 300;
+      height: 29px;
+      width: 80%;
+      margin: 5px auto;
+      color: black;
+      padding-left: 3px;
+      border-radius: 5px;
+      border: 1px hidden; }
+    #PopupAddApp .md-content .loginWithChooser.hidden {
+      display: none; }
+    #PopupAddApp .md-content .loginWithChooser {
+      padding: 0px;
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      text-align: center;
+      display: block; }
+      #PopupAddApp .md-content .loginWithChooser p {
+        margin: 0px;
+        padding: 0px; }
+      #PopupAddApp .md-content .loginWithChooser .loginWithButton.hidden {
+        display: none; }
+      #PopupAddApp .md-content .loginWithChooser .loginWithButton {
+        padding: 5px;
+        display: inline-block;
+        max-width: 32%;
+        width: 31%;
+        margin-bottom: 5px;
+        border-radius: 5px; }
+        #PopupAddApp .md-content .loginWithChooser .loginWithButton p {
+          padding: 0px; }
+        #PopupAddApp .md-content .loginWithChooser .loginWithButton:hover {
+          cursor: pointer; }
+    #PopupAddApp .md-content .loginAppChooser {
+      max-height: 500px;
+      padding: 0px;
+      margin: 0px;
+      width: 70%;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative; }
+      #PopupAddApp .md-content .loginAppChooser .buttonBack {
+        font-size: 25px;
+        position: absolute;
+        right: 0;
+        top: 0;
+        color: white; }
+        #PopupAddApp .md-content .loginAppChooser .buttonBack:hover {
+          color: #e6e6e6;
+          cursor: pointer; }
+      #PopupAddApp .md-content .loginAppChooser p {
+        text-align: center; }
+      #PopupAddApp .md-content .loginAppChooser .AccountApp.selected {
+        border: 1px solid white; }
+      #PopupAddApp .md-content .loginAppChooser .ChooserContent {
+        max-height: 100px;
+        overflow: auto; }
+        #PopupAddApp .md-content .loginAppChooser .ChooserContent .AccountApp {
+          max-height: 30px;
+          height: 30px;
+          cursor: pointer;
+          padding: 2px;
+          margin-bottom: 4px; }
+          #PopupAddApp .md-content .loginAppChooser .ChooserContent .AccountApp p, #PopupAddApp .md-content .loginAppChooser .ChooserContent .AccountApp .imageHandler {
+            display: inline-block; }
+          #PopupAddApp .md-content .loginAppChooser .ChooserContent .AccountApp p {
+            text-align: left;
+            margin: 0px;
+            margin-left: 5px;
+            padding: 0px; }
+          #PopupAddApp .md-content .loginAppChooser .ChooserContent .AccountApp .imageHandler {
+            height: 100%; }
+            #PopupAddApp .md-content .loginAppChooser .ChooserContent .AccountApp .imageHandler img {
+              height: 100%; }
+    #PopupAddApp .md-content #AddAppForm {
+      width: 80%;
+      margin: 5px auto;
+      padding: 0px; }
+      #PopupAddApp .md-content #AddAppForm input {
+        height: 29px;
+        width: 100%;
+        margin-top: 5px;
+        color: black;
+        padding-left: 3px;
+        border-radius: 5px;
+        border: 1px hidden; }
+    #PopupAddApp .md-content .buttonSet {
+      text-align: center;
+      padding-bottom: 20px; }
+      #PopupAddApp .md-content .buttonSet button {
+        display: inline-block;
+        width: 49%;
+        padding: 7px; }
+      #PopupAddApp .md-content .buttonSet #accept {
+        background-color: #ec555b;
+        border-color: #ec555b; }
+        #PopupAddApp .md-content .buttonSet #accept:hover {
+          background-color: #ee6368; }
+      #PopupAddApp .md-content .buttonSet #close {
+        background-color: white;
+        color: black;
+        border-color: white; }
+        #PopupAddApp .md-content .buttonSet #close:hover {
+          background-color: #f7f7f7; }
+
+#PopupDeleteProfile {
+  min-width: 200px;
+  max-width: 100%;
+  width: 400px; }
+  #PopupDeleteProfile .md-content {
+    border-radius: 15px;
+    padding-top: 20px;
+    font-family: "Raleway", "Source Sans Pro", sans-serif;
+    text-align: center; }
+    #PopupDeleteProfile .md-content p {
+      text-align: center; }
+    #PopupDeleteProfile .md-content .title {
+      font-size: 17px; }
+    #PopupDeleteProfile .md-content .desc {
+      font-size: 11px; }
+    #PopupDeleteProfile .md-content input {
+      width: 80%;
+      border-radius: 5px;
+      border: 1px hidden;
+      height: 29px;
+      color: #373b60;
+      padding-left: 3px;
+      background-color: #efefef;
+      border: none;
+      text-align: center; }
+    #PopupDeleteProfile .md-content .buttonSet {
+      text-align: center;
+      padding-bottom: 20px; }
+      #PopupDeleteProfile .md-content .buttonSet button {
+        display: inline-block;
+        width: 49%;
+        padding: 7px; }
+      #PopupDeleteProfile .md-content .buttonSet #accept {
+        background-color: #ec555b;
+        border-color: #ec555b; }
+        #PopupDeleteProfile .md-content .buttonSet #accept:hover {
+          background-color: #ee6368; }
+      #PopupDeleteProfile .md-content .buttonSet #close {
+        background-color: white;
+        color: black;
+        border-color: white; }
+        #PopupDeleteProfile .md-content .buttonSet #close:hover {
+          background-color: #f7f7f7; }
+
+#PopupModifyApp {
+  min-width: 200px;
+  max-width: 100%;
+  width: 400px; }
+  #PopupModifyApp .md-content {
+    border-radius: 15px;
+    padding-top: 20px;
+    font-family: "Raleway", "Source Sans Pro", sans-serif; }
+    #PopupModifyApp .md-content .popupHeader {
+      overflow: hidden;
+      padding: 0px;
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      margin-bottom: 5px; }
+      #PopupModifyApp .md-content .popupHeader .logoApp {
+        width: 20%;
+        float: left;
+        height: auto;
+        top: 10%;
+        left: 3%;
+        border-radius: 3px; }
+      #PopupModifyApp .md-content .popupHeader .textContent {
+        width: 80%;
+        float: left; }
+        #PopupModifyApp .md-content .popupHeader .textContent p {
+          padding: 0px;
+          padding-left: 2px;
+          text-align: center; }
+        #PopupModifyApp .md-content .popupHeader .textContent .title {
+          font-size: 17px; }
+        #PopupModifyApp .md-content .popupHeader .textContent .desc {
+          font-size: 11px; }
+    #PopupModifyApp .md-content .loginWithChooser.hidden {
+      display: none; }
+    #PopupModifyApp .md-content #name {
+      display: block;
+      font-size: 1.15em;
+      font-weight: 300;
+      height: 29px;
+      width: 80%;
+      margin: 5px auto;
+      color: black;
+      padding-left: 3px;
+      border-radius: 5px;
+      border: 1px hidden; }
+    #PopupModifyApp .md-content .loginWithChooser {
+      padding: 0px;
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      text-align: center;
+      display: block; }
+      #PopupModifyApp .md-content .loginWithChooser p {
+        margin: 0px;
+        padding: 0px; }
+      #PopupModifyApp .md-content .loginWithChooser .loginWithButton.hidden {
+        display: none; }
+      #PopupModifyApp .md-content .loginWithChooser .loginWithButton {
+        padding: 5px;
+        display: inline-block;
+        max-width: 32%;
+        width: 31%;
+        margin-bottom: 5px;
+        border-radius: 5px; }
+        #PopupModifyApp .md-content .loginWithChooser .loginWithButton p {
+          padding: 0px; }
+        #PopupModifyApp .md-content .loginWithChooser .loginWithButton:hover {
+          cursor: pointer; }
+    #PopupModifyApp .md-content .loginAppChooser {
+      max-height: 500px;
+      padding: 0px;
+      margin: 0px;
+      width: 70%;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative; }
+      #PopupModifyApp .md-content .loginAppChooser .buttonBack {
+        font-size: 25px;
+        position: absolute;
+        right: 0;
+        top: 0;
+        color: white; }
+        #PopupModifyApp .md-content .loginAppChooser .buttonBack:hover {
+          color: #e6e6e6;
+          cursor: pointer; }
+      #PopupModifyApp .md-content .loginAppChooser p {
+        text-align: center; }
+      #PopupModifyApp .md-content .loginAppChooser .AccountApp.selected {
+        border: 1px solid white; }
+      #PopupModifyApp .md-content .loginAppChooser .ChooserContent {
+        max-height: 100px;
+        overflow: auto; }
+        #PopupModifyApp .md-content .loginAppChooser .ChooserContent .AccountApp {
+          max-height: 30px;
+          height: 30px;
+          cursor: pointer;
+          padding: 2px;
+          margin-bottom: 4px; }
+          #PopupModifyApp .md-content .loginAppChooser .ChooserContent .AccountApp p, #PopupModifyApp .md-content .loginAppChooser .ChooserContent .AccountApp .imageHandler {
+            display: inline-block; }
+          #PopupModifyApp .md-content .loginAppChooser .ChooserContent .AccountApp p {
+            text-align: left;
+            margin: 0px;
+            margin-left: 5px;
+            padding: 0px; }
+          #PopupModifyApp .md-content .loginAppChooser .ChooserContent .AccountApp .imageHandler {
+            height: 100%; }
+            #PopupModifyApp .md-content .loginAppChooser .ChooserContent .AccountApp .imageHandler img {
+              height: 100%; }
+    #PopupModifyApp .md-content #modifyAppForm {
+      width: 80%;
+      margin: 5px auto;
+      padding: 0px; }
+      #PopupModifyApp .md-content #modifyAppForm input {
+        height: 29px;
+        border-radius: 5px;
+        border: 1px hidden;
+        width: 100%;
+        margin-top: 5px;
+        color: black;
+        padding-left: 3px; }
+    #PopupModifyApp .md-content .buttonSet {
+      text-align: center;
+      padding-bottom: 20px; }
+      #PopupModifyApp .md-content .buttonSet button {
+        display: inline-block;
+        width: 49%;
+        padding: 7px; }
+      #PopupModifyApp .md-content .buttonSet #accept {
+        background-color: #ec555b;
+        border-color: #ec555b; }
+        #PopupModifyApp .md-content .buttonSet #accept:hover {
+          background-color: #ee6368; }
+      #PopupModifyApp .md-content .buttonSet #close {
+        background-color: white;
+        color: black;
+        border-color: white; }
+        #PopupModifyApp .md-content .buttonSet #close:hover {
+          background-color: #f7f7f7; }
+
+.md-show ~ .md-overlay {
+  opacity: 0.3 !important; }
+
+/*# sourceMappingURL=PopupWindow.css.map */

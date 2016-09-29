@@ -7,7 +7,8 @@
 		"url":"https://gmail.com",
 		"todo":[
 			{"action":"aclick", "search":"#account-chooser-link"},
-			{"action":"aclick", "search":"#account-chooser-add-account"},
+			{"action":"clickona", "search":"#account-chooser-add-account"},
+			{"action":"waitfor", "search":"#Email"},
 			{"action":"fill", "what":"login", "search":"#Email", "grave":true},
 			{"action":"click", "search":"#next", "grave":true},
 			{"action":"waitfor", "time":10, "search":"#Passwd"},

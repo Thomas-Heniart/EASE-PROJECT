@@ -2,15 +2,6 @@ var listenersUpdates = [];
 var listenersMessages = [];
 
 var extension = {
-    notifications:{
-        print:function(message, folder, time){
-             chrome.notifications.create({"type":"basic", "iconUrl":"https://ease.space/resources/websites/"+ folder +"/logo.png","title":message,"message":message}, function(notifId){
-                 setTimeout(function(){
-                     chrome.notifications.clear(notifId);
-                 }, time);
-             });
-        } 
-    },
 	storage:{
 		get:function(key, callback){
 			chrome.storage.local.get(key, function(res){
@@ -111,6 +102,38 @@ var extension = {
         },
         onUpdatedRemoveListener:function(tab){
             chrome.tabs.onUpdated.removeListener(listenersUpdates[tab.id]);
+        },
+        onNavigation:function(fct){
+            chrome.windows.onFocusChanged.addListener(function (windowId){
+                if(windowId != -1) chrome.windows.get(windowId, {"populate":true}, function(window){
+                    for(var i in window.tabs){
+                        if(window.tabs[i].active && window.tabs[i].url){
+                           fct(window.tabs[i].url);
+                        }
+                    }
+                });
+            });
+
+            chrome.tabs.onActivated.addListener(function (infos){
+                chrome.tabs.get(infos.tabId, function(activatedTab){
+                    if(activatedTab.url){
+                       fct(activatedTab.url);
+                    } else {
+                        chrome.tabs.onUpdated.addListener(function tabIsReady(tabId, params, tab){
+                            if(tabId == infos.tabId){
+                                chrome.tabs.onUpdated.removeListener(tabIsReady);
+                                fct(tab.url);
+                            }
+                        });
+                    }
+                });       
+            });
+
+            chrome.tabs.onUpdated.addListener(function (tabId, params, tab){
+                if(tab.active) {
+                    fct(tab.url);
+                }                  
+            });
         },
 		sendMessage:function(tab, name, msg, callback){
 			chrome.tabs.sendMessage(tab.id, {"name":name, "message":msg}, callback);

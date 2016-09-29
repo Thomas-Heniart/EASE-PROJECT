@@ -14,17 +14,10 @@ function getNewLogin(msg, i){
 }
 
 function alreadyVisited(msg){
-	
-	for(var loginHost in (msg.allConnections)){
-        if(loginHost == getHost(msg.detail[msg.bigStep].website.loginUrl)){
-            if(msg.allConnections[loginHost] == getNewLogin(msg, msg.bigStep)){
-                return true;
-            } else {
-                break;
-            }
-        }
+    if(msg.allConnections[getHost(msg.detail[msg.bigStep].website.loginUrl)]){
+         if(msg.allConnections[getHost(msg.detail[msg.bigStep].website.loginUrl)] == getNewLogin(msg, msg.bigStep))
+            return true;
     }
-    
 	return false;
 }
 
