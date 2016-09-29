@@ -7,8 +7,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <div id="loginBody">
 <canvas id="demo-canvas" style="position: absolute;"></canvas>
-<div class="logo">
-<img src="resources/images/Ease_Logo.png"/>
+<div id='search-google'>
+	<%@ include file="SearchBar.jsp"%>
 </div>
 <% 
 	Cookie 	cookie = null;
@@ -58,6 +58,7 @@
 <div class="FormsContainer">
 <% if (iden == 3){ %>
 	<div class="form" id="knownUser">
+		<img class='ease-logo' src='resources/icons/Ease_Logo_couleur.png'/>
 		<div class="savedUser">
 		<p>Hello again, <%= new String(Base64.getDecoder().decode(fname), StandardCharsets.UTF_8) %> !</p>
 		<span class="input input--minoru">
@@ -69,12 +70,12 @@
 				<p>Incorrect password !</p>
 			</div> 
 	    <button id="savedUserButton">Login</button>
-	    <a id="changeAccount">Connect with an other account</a>
 	    </div>
-	   
+		<div id="changeAccount">Other account <img class='switch-account' src="resources/icons/account.png" /></div>   
 	</div>
 <%}%>
 <div class="form" id="unknownUser" <% if (iden == 3){ %> style="visibility:hidden;" <% }%>>
+<img class='ease-logo' src='resources/icons/Ease_Logo_couleur.png'/>
 <form action="connection" method="POST" id="loginForm" role="form">
 				<span class="input input--minoru">
 					<input class="input__field input__field--minoru" id="email" name="email" type="email" id="input-8" placeholder="Email"/>
@@ -93,10 +94,21 @@
 
 
     <button id="helloButton">Login</button>
-    <% if (iden == 3){ %><a id="back">Back</a><%}%>
 </form>
+<% if (iden == 3) {%>
+<div id="back"><%= new String(Base64.getDecoder().decode(fname), StandardCharsets.UTF_8) %> account <img class='switch-account' src="resources/icons/account.png" /></div>
+<% } %>
 </div>
 
+
+
+</div>
+
+<div class='univ-presentation'>
+	<h2>We are ease.space</h2>
+	<p>We built a home page that enables you to easily connect to website's accounts, without using passwords, and regardless of the computer</p>
+	<!--<p>This page is the new way to access your school's web services</p> -->
+	<p>If you do not have your account yet, <a target='_blank' href='http://www.ease-app.co'>let's go</a></p>
 </div>
 
 <script type="text/javascript">
