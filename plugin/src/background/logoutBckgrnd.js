@@ -1,7 +1,9 @@
 extension.runtime.bckgrndOnMessage("Logout", function (msg, sendResponse) {
     extension.storage.get("visitedWebsites", function(visitedWebsites) {        
-        
-        for(var i in visitedWebsites){logOutFrom(visitedWebsites[i], sendResponse);}
+        var finished = 0;
+        for(var i in visitedWebsites){
+            logOutFrom(visitedWebsites[i], sendResponse);
+        }
         extension.storage.set("visitedWebsites", []);
                                             
     });
@@ -42,7 +44,7 @@ function logOutFrom(website, sendResponse){
                                                     setTimeout(function() {
                                                         extension.tabs.close(tab, function() {});
                                                     }, 1000);
-                                                    sendResponse("Logout from " + msg.detail[0].website);
+                                                    sendResponse("Good");
                                                 }
                                             } else {
                                                 console.log("-- Log out fail --");
