@@ -2,29 +2,83 @@
 
 #downloadExtension {
 	text-align: center;
-	width: 45%;
-	max-width: 50%;
+	width: 500px;
+	max-width: 45%;
 	background-color: $themeColor;
 	padding: 15px;
 	color: white;
 	border-radius: 10px;
-	.title {
-		font-size: 37px;
-		margin-bottom: 34px;
+	z-index: 1;
+	.popupContent{
+		p {
+			font-size: 30px;
+		}
+		.title {
+			font-size: 37px;
+			margin-bottom: 34px;
+		}
+		.info {
+			font-size: 17px;
+			margin-bottom: 15px;
+		}
+		#install-button {
+			margin-bottom: 15px;
+			background-color: #ec555b;
+			color:white;
+			border-radius: 5px;
+			border: none;
+			padding: 5px 30px;
+			transition: all 0.3s; 
+			border: 1px solid #ec555b;
+			outline: none;
+			font-size: 14px;
+		}
+		#moreInfoButton {
+			margin:0px;
+			text-decoration: underline;
+			font-size: 12px;
+			text-align: right;
+			position: absolute;
+			right: 5px;
+			bottom: 5px;
+			&:hover {
+				cursor: pointer;
+			}
+		}
 	}
-	.info {
-		font-size: 17px;
-		margin-bottom: 55px;
-	}
-	#install-button {
-		background-color: #ec555b;
-		color:white;
-		border-radius: 5px;
-		border: none;
-		padding: 5px 30px;
-		transition: all 0.3s; 
-		border: 1px solid #ec555b;
-		outline: none;
-		font-size: 14px;
+	.popupHelper {
+		span {
+			font-weight: 600;
+		}
+		button {
+			background-color: #ec555b;
+			color:white;
+			border-radius: 5px;
+			border: none;
+			padding: 5px 30px;
+			transition: all 0.3s; 
+			border: 1px solid #ec555b;
+			outline: none;
+			font-size: 14px;
+		}
+		.firstLine {
+			overflow: hidden;
+			.imageHandler {
+				width: 40%;
+				display: inline-block;
+				float: left;
+				img {
+					width: 100%;
+				}
+			}
+			.textHelper {
+				padding: 5px;
+				padding-left: 10px;
+				text-align: left;
+				float: left;
+				width: 60%;
+				display: inline-block;
+			}
+		}
 	}
 }

@@ -262,7 +262,8 @@ response.addCookie(email);
 			$('#downloadExtension').css('display', 'block');
 			$('#downloadExtension').find('#install-button').click(
 				function() {
-					if (getUserNavigator() == "Chrome") {
+					var NavigatorName = getUserNavigator();
+					if (NavigatorName == "Chrome") {
 						chrome.webstore
 						.install(
 							'https://chrome.google.com/webstore/detail/echjdhmhmgildgidlcdlepfkaledeokm',
@@ -274,6 +275,9 @@ response.addCookie(email);
 								window.location
 								.replace("index.jsp");
 							})
+					}
+					else if (NavigatorName == "Safari"){
+						window.location.replace("https://ease.space/safariExtension/EaseExtension.safariextz");
 					}
 				});
 		}
@@ -486,7 +490,6 @@ response.addCookie(email);
 </div>
 </div>
 </c:forEach>
-</div>
 </div>
 <script type="text/javascript">
 	$(document).ready(function(){

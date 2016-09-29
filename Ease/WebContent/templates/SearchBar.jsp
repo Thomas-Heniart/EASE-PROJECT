@@ -11,7 +11,7 @@
 
 function search(value) {
 	window.open('https://www.google.fr/search?q=' + value, '_blank');
-	$("#searchBar input").val("");
+	$("#searchBar input").val('');
 }
 
 $(document).ready(function(){

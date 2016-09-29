@@ -31,77 +31,10 @@
 			<i class="fa fa-caret-left" aria-hidden="true"></i>
 		</div>
 	</div>
-	<div class="bublePopup step4" style="display: none;">
-		<img src="resources/other/Arrow.png" />
+	<div class="bublePopup step4" style="display: none;width:200px;pointer-events: none;">
+		<img src="resources/other/arrow2.png" style="width:100%"/>
+		<div class="popupContent" style="background-color: transparent; color: #373b60;width:100%;">
+		<p>Drag and drop</br>the apps you use !</p>
+		</div>
 	</div>
 </div>
-
-<script type="text/javascript">
-	var TutorialSteps = 0;
-
-	function enterEditModeTutorial(){
-		if (TutorialSteps == 0){
-			TutorialSteps++;
-		}
-		$('.step0').css('display', 'none');
-		$('.step1').css('display', 'none');
-		$('.step2').css('display', 'none');
-		if (TutorialSteps == 1){
-			if ($(".emptyAppIndicator").length){
-				$('.step3').css({
-					'display': 'block',
-					'top': $(".emptyAppIndicator").offset().top - $(".siteLinkBox").height() + $(".emptyAppIndicator").height() / 2,
-					'left': $(".emptyAppIndicator").offset().left + $(".emptyAppIndicator").width()
-				});			
-			}else {
-				TutorialSteps++;
-			}
-		} 
-		if (TutorialSteps == 2){
-			$('step4').css('display', 'block');
-		}
-	}
-	function leaveEditModeTutorial (){
-		$('.step3').css('display', 'none');
-		$('.step4').css('display', 'none');
-		if (TutorialSteps == 3){
-			checkForExtension();
-		}
-	}
-	function modifyAppTutorial(){
-		if (TutorialSteps == 1){
-			TutorialSteps++;
-			$('.step3').css('display', 'none');
-			$('.step4').css('display', 'block');
-		}
-	}
-	function addAppTutorial (){
-		if (TutorialSteps == 2){
-			TutorialSteps++;
-			$('.step4').css('display', 'none');
-		}
-	}
-	$(document).ready(function(){
-		setTimeout(function (){
-		$('.step0').css({
-			'display': 'block',
-			'top': '1%',
-			'right': '2%'
-		});
-		$('.step1').css({
-			'display': 'block',
-			'right': '2%',
-			'top': '40%',
-			'transform': 'translateX(-17%)'
-		});
-		if ($(".ProfileBox[custom='true']").length){
-			$('.step2').css({
-				'display': 'block',
-				'top': $(".ProfileBox[custom='true']").offset().top,
-				'left': $(".ProfileBox[custom='true']").offset().left + $(".ProfileBox[custom='true']").width()
-			});			
-		}
-		}, 1000);
-
-	});
-</script>

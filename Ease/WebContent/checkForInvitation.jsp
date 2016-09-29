@@ -14,9 +14,6 @@ pageEncoding="UTF-8"%>
 	<link rel="stylesheet" href="css/default_style.css" />
 	<link href='https://fonts.googleapis.comcss?family=Source+Sans+Pro' rel='stylesheet' type='textcss' />
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="css/owl.carousel.css" />
-	<link rel="stylesheet" href="css/owl.theme.css" />
-	<link rel="stylesheet" href="css/owl.transitions.css" />
 
 
 
@@ -42,20 +39,31 @@ pageEncoding="UTF-8"%>
 	<script src="js/modalEffects.js"></script>
 	<script src="js/selectFx.js"></script>
 	<link rel="stylesheet" type="text/css" href="component.css" />
+
 </head>
+<% String activity = request.getParameter("activity");
+	if (activity == null){
+		activity = "";
+	}
+%> 
+
 <body id="invitationBody">
 	<div class="logo">
 		<img src="resources/images/Ease_Logo.png"/>
 	</div>
-	<div id="registrationBlock">
+	<div class="registrationBlock" id="checkInvitation">
 		<div class="title">
-			<p>Are you on the list ?</p>
+			<p>Hello dear <%= activity %> member</p>
 		</div>
 		<form action="getEmailLink" id="registrationForm" style="text-align: center;">
-			<div class="custom-info">
-				<p>Enter your email address</p>
+			<div class="custom-info" style="margin-bottom: 20px;font-size: 17px;">
+				<p>Type in your <%= activity %> email to start :)</p>
+			</div>
+			<div class="custom-info confirmDiv" style="margin-bottom: 20px;margin-top:20px;font-size: 17px;display: none;">
+				<p>Thank you !</p>
 			</div>
 			<span class="input input--minoru">
+				<div class="confirmDiv confirmCheckCircle" style="display: none;"><i class="fa fa-check-circle" aria-hidden="true"></i></div>
 				<input style="text-align: center;" class="input__field input__field--minoru" name="email" type="email" id="input-8" placeholder="Email"/>
 				<label class="input__label input__label--minoru" for="input-8">
 				</label>
@@ -64,8 +72,11 @@ pageEncoding="UTF-8"%>
 		<div class="alertDiv">
 			<p></p>
 		</div>
+		<div class="confirmDiv confirmBox" style="display: none;">
+			<p>Take a look in your mail box ;)</p>
+		</div>
 		<div class="custom-button">
-			<button type="submit" form="registrationForm" value="Submit">GO</button>
+			<button type="submit" form="registrationForm" value="Submit">Goo !</button>
 		</div>
 	</div>
 </body>
@@ -82,11 +93,9 @@ pageEncoding="UTF-8"%>
 				},
 				function(data){
 					if (data[0] == 's'){
-						$('.alertDiv').text('go check your mails now');
-						$('.alertDiv').css('color', 'green');
-						$('.alertDiv').addClass('show');
-						
-					}else {
+						$('#checkInvitation').find('.title, .custom-info, .custom-button').css('display', 'none');
+						$('#checkInvitation').find('.confirmDiv').css('display', 'block');						
+					} else {
 						var str = data.substring(7, data.length);
 						$('.alertDiv').css('color', 'red');
 						$('.alertDiv').text(str);
