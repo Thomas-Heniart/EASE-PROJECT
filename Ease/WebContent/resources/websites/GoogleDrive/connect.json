@@ -16,7 +16,6 @@
 			]
 	},
 	"logout":{
-		"url":"https://googledrive.com",
 		"todo":[
 			{"action":"click", "search":"a[href*='https://accounts.google.com/SignOutOptions?']", "grave":true},
 			{"action":"waitfor", "search":"a[href*='https://accounts.google.com/Logout?']"},

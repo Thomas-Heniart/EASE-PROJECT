@@ -113,17 +113,36 @@ body {
  padding-bottom: 50px;
  background-size: 100% 100%;
  height: 100%;
- background-image:url(../resources/backgrounds/sunset.jpg);
+ background-image:url(../resources/backgrounds/background.jpeg);
  background-position: 50% 50%;
- .logo {
-  width: 20%;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 50px;
-  img {
-   width: 100%;
- }
-}
+  .ease-logo {
+    width: 50px;
+  }
+  #demo-canvas {
+    display: none;
+  }
+  #searchBar {
+    top: 8%;
+  }
+
+  .univ-presentation {
+    margin: auto;
+    margin-top: 15%;
+    width: 45%;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    color: $themeColor;
+    font-family: $defaultFont;
+    h2 {
+      font-size: 40px;
+    }
+    p {
+      font-size: 15px;
+      margin-bottom: 20px;
+    }
+  }
 }
 #loggedBody {
  height: 100%;
@@ -171,35 +190,47 @@ body {
       }
     }
     p {
-      font-size: 20px;
+      font-size: 17px;
+      margin-bottom: 5px;
+      color: $themeColor;
     }
+  }
+  .switch-account {
+    width: 25px;
+  }
+  div#back, div#changeAccount {
+    background-color: rgba(239,239,239, 0.7);
+    color: $themeColor;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    position: absolute;
+    right: 0;
+    margin-top: 8%;
+    width: 100%;
+    padding: 3%;
   }
   .form {
     position: absolute;
-    min-height: 254px;
+    top: 5%;
+    right: 1%;
     vertical-align: middle;
     display: inline-block;
     text-align: center;
-    width: 20%;
     min-width: 200px;
-    margin-left: auto;
-    margin-right: auto;
-    left: 0;
-    right: 0;
+    width: 10%;
     padding-left: 2%;
     padding-right: 2%;
-    border-radius: 7px;
-    padding-bottom: 25px;
-    padding-top: 20px;
+    border-radius: 4px;
+    padding-bottom: 1%;
+    padding-top: 1%;
     background-color: rgba(239,239,239, 0.7);
     span.input {
       max-width: 100%;
       width: 100%;
-      margin-left: 0px;
-      margin-right: 0px;
-      margin-top: 21px;
-      margin-bottom: 10px;
-      font-size: 15px;
+      margin: 0;
+      font-size: 12px;
       label span {
         padding-top: 8px;
         padding-bottom: 8px;
@@ -208,8 +239,10 @@ body {
         color: $themeColor;
         padding-top: 5px;
         padding-bottom: 4px;
+        margin-bottom: 3px;
         border-radius: 5px;
         background-color: white;
+        font-weight: 100;
         text-align: center;
       }
       input:-webkit-autofill {
@@ -221,7 +254,7 @@ body {
    }
    button {
     width: 70%;
-    margin-top: 25px;
+    margin-top: 10px;
     padding-bottom: 5px;
     padding-top: 7px;
     border-radius: 7px;
@@ -252,12 +285,21 @@ body {
     }
   }
 
-  form {
-   margin-left: auto;
-   margin-right: auto;
-   text-align:center;
-   width: 100%;
- }
+  /*form {
+    position: absolute;
+     top: 5%;
+     right: 1%;
+     vertical-align: middle;
+     display: inline-block;
+     text-align: center;
+     min-width: 200px;
+     padding-left: 2%;
+     padding-right: 2%;
+     border-radius: 7px;
+     padding-bottom: 1%;
+     padding-top: 1%;
+     background-color: rgba(239, 239, 239, 0.7);
+ }*/
 }
 }
 @media screen and (max-width: 771px) {

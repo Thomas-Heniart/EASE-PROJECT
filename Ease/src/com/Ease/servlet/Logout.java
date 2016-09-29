@@ -42,7 +42,7 @@ public class Logout extends HttpServlet {
 		 db.connect();
 		 Stats.saveAction(session.getServletContext(), user, Stats.Action.Logout, "");
 		 session.invalidate();
-		 RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+		 RequestDispatcher rd = request.getRequestDispatcher("logout.jsp");
 		 rd.forward(request, response);
 	}
 

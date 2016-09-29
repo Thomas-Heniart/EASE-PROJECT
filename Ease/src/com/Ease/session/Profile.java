@@ -48,6 +48,7 @@ public class Profile {
 			this.name = name;
 			this.color = color;
 			this.description = desc;
+			this.custom = custom;
 			this.index = user.getProfiles().size();
 			apps = new LinkedList<App>();
 			profileId = user.getNextProfileId();
