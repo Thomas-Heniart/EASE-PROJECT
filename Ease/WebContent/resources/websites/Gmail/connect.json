@@ -6,6 +6,7 @@
 	"connect":{
 		"url":"https://gmail.com",
 		"todo":[
+            {"action":"waitfor", "search":"div[aria-label='Google']"},
 			{"action":"aclick", "search":"#account-chooser-link"},
 			{"action":"clickona", "search":"#account-chooser-add-account"},
 			{"action":"waitfor", "search":"#Email"},
@@ -20,7 +21,7 @@
 		"todo":[
 			{"action":"click", "search":"a[href*='https://accounts.google.com/SignOutOptions?']", "grave":true},
 			{"action":"waitfor", "search":"a[href*='https://accounts.google.com/Logout?']"},
-			{"action":"aclick", "search":"a[href*='https://accounts.google.com/Logout?']", "grave":true}
+			{"action":"aclick", "search":"a[href*='https://accounts.google.com/Logout?']", "grave":true}          
 		]
 	},
 	"checkAlreadyLogged":[

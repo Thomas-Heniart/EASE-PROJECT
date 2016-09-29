@@ -25,7 +25,7 @@ function logOutFrom(website, sendResponse){
                     });
                     extension.tabs.onMessage(tab, "reloaded", function (event, sendResponse1) {
                         console.log("-- Page reloaded --");
-                        extension.tabs.inject(tab, ["tools/extension.js","jquery-3.1.0.js","contentScript/actions.js", "contentScript/logout.js"], function() {
+                        extension.tabs.inject(tab, ["tools/extension.js","jquery-3.1.0.js","contentScripts/actions.js", "contentScripts/logout.js"], function() {
                                 extension.tabs.sendMessage(tab, "logout", msg, function(response){
                                         console.log("-- Status : "+response.type+" --");
                                         if(response){

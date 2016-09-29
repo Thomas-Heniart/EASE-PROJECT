@@ -96,6 +96,11 @@ var extension = {
                 }
             }, false);
 		},
+        onNavigation:function(fct){
+            extension.runtime.bckgrndOnMessage("newFocus", fonction(message, sendResponse){
+                fct(message.url);
+            });
+        },
         onMessage:function(tab, name, fct){
         	listenersMessages[tab.id] = function (event){
 				if(event.name==name && event.target.id == tab.id){
@@ -111,6 +116,12 @@ var extension = {
             safari.application.removeEventListener("message", listenersMessages[tab.id], false);  
         },
 		injectScript:function(tab, fileName, callback){
+			callback();
+		},
+		injectCSS:function(tab, fileName, callback){
+			callback();
+		},
+		inject:function(tab, files, callback){
 			callback();
 		}
 	}
