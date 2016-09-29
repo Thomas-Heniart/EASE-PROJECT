@@ -4,7 +4,6 @@
 	"sso":"Google",
 	"home":"https://gmail.com",
 	"connect":{
-		"url":"https://gmail.com",
 		"todo":[
 			{"action":"aclick", "search":"#account-chooser-link"},
 			{"action":"clickona", "search":"#account-chooser-add-account"},
@@ -20,13 +19,11 @@
 		"todo":[
 			{"action":"click", "search":"a[href*='https://accounts.google.com/SignOutOptions?']", "grave":true},
 			{"action":"waitfor", "search":"a[href*='https://accounts.google.com/Logout?']"},
-			{"action":"aclick", "search":"a[href*='https://accounts.google.com/Logout?']", "grave":true}
+			{"action":"clickona", "search":"a[href*='https://accounts.google.com/Logout?']", "grave":true},
+			{"action":"waitload"}
 		]
 	},
 	"checkAlreadyLogged":[
 		{"search":"a[href*='https://accounts.google.com/SignOutOptions?']"}
-	],
-	"checkChangeLogin":[
-		
 	]
 }

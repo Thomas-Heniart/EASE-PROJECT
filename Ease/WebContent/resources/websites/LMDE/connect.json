@@ -1,0 +1,20 @@
+{
+    "name":"LMDE",
+    "lastlogin":"",
+    "home":"https://my.lmde.fr/web/guest/espace-personnel/authentification",
+    "connect": {
+    	"todo": [
+    		{"action":"fill", "what":"login", "search":"#_58_login"},
+    		{"action":"fill", "what":"password", "search":"#_58_password"},
+    		{"action":"click", "search":"#button-authentification"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"goto", "url":"https://my.lmde.fr/c/portal/logout"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"li.myaccount"}
+    ]
+}

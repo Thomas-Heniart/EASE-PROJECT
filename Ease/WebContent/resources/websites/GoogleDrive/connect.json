@@ -15,10 +15,11 @@
 			]
 	},
 	"logout":{
-		"url":"https://googledrive.com",
 		"todo":[
+			{"action":"waitfor", "search":"a[href*='Logout']"},
 			{"action":"goto", "url":"https://accounts.google.com/Logout?hl=fr&continue=https://drive.google.com/drive/"}
-			]
+			{"action":"waitload"}	
+		]
 	},
 	"checkAlreadyLogged":[
 		{"search":"a[title='Drive']"}
