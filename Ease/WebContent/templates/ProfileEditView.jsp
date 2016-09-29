@@ -91,8 +91,9 @@
 		setupOwlCarousel();
 		$('.scaleOutAnimation').removeClass('scaleOutAnimation');
 		$('.MenuButtonSet').removeClass('editMode');
-		if (('#tutorialView').length)
+		if (('#tutorialView').length){
 			leaveEditModeTutorial();
+		}
 	}
 
 	$(document).ready(function() {

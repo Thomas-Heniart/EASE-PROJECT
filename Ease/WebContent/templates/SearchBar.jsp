@@ -1,28 +1,35 @@
 
-<div>
-	<input autofocus="autofocus" id="searchBar">
-	<button id="searchBarButton"><span>Search</span></button>
-	<a id="googleLink" href="" style="display: none" target="_blank"></a>
+<div id="searchBar" class="centeredItem">
+	<input autofocus="autofocus" type="text" placeholder="Search">
+	<div id="searchBarButton">
+		<img src="resources/other/google-logo.png" />
+<!--		<i class="fa fa-google" aria-hidden="true"></i>-->
+	</div>
 </div>
 
 <script>
 
 function search(value) {
-	$("#googleLink").attr('href', 'https://www.google.fr/search?q=' + value); 
-	$("#googleLink")[0].click();
-	$("#searchBar").val("");
+	window.open('https://www.google.fr/search?q=' + value, '_blank');
 }
 
 $(document).ready(function(){
-	$("#searchBar").keyup(function (e) {
+	$("#searchBar input").keyup(function (e) {
+		$('#searchBarButton').addClass('active');
     	if (e.keyCode == 13) {
-    		if ($("#searchBar").val() != "")
-				search($("#searchBar").val());
+    		if ($("#searchBar input").val() != "")
+				search($("#searchBar input").val());
     	}
 	});
 	$("#searchBarButton").click(function() {
-		if ($("#searchBar").val() != "")
-			search($("#searchBar").val());
+		if ($("#searchBar input").val() != "")
+			search($("#searchBar input").val());
+	});
+	$("#searchBar input").focus(function(){
+		$('#searchBarButton').addClass('active');
+	});
+	$("#searchBar input").blur(function(){
+		$('#searchBarButton').removeClass('active');
 	});
 });
 
