@@ -19,7 +19,7 @@
 		display: inline-block;
 		float: left;
 		width: 95%;
-		background-color: $themeColor;
+		background-color: rgba($themeColor, 0.85);
 		color: white;
 		padding: 3px;
 		border-radius: 5px;
@@ -32,7 +32,7 @@
 	.caretHelper {
 		display: inline-block;
 		float: left;
-		color: $themeColor;
+		color: rgba($themeColor, 0.85);
 		i {
 			line-height: 100%;
 			margin-left: 0px;

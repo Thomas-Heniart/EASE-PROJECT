@@ -26,6 +26,17 @@
 			padding: 2px;
 			border-radius: 5px;
 		}
+		.confirmCheckCircle {
+			position: absolute;
+			right: 0;
+			top: 0;
+			font-size: 25px;
+			height: 100%;
+			width: 30px;
+			color: green;
+			z-index: 1;
+			text-align: center;
+		}
 	}
 	.registrationBlock {
 		padding: 5px;
