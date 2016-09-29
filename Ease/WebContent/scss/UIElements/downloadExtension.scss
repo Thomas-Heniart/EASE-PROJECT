@@ -2,17 +2,19 @@
 
 #downloadExtension {
 	text-align: center;
-	width: 400px;
+	width: 45%;
 	max-width: 50%;
 	background-color: $themeColor;
-	padding: 10px 5px;
+	padding: 15px;
 	color: white;
 	border-radius: 10px;
 	.title {
-		font-size: 30px;
+		font-size: 37px;
+		margin-bottom: 34px;
 	}
 	.info {
-		margin-bottom: 20px;
+		font-size: 17px;
+		margin-bottom: 55px;
 	}
 	#install-button {
 		background-color: #ec555b;
@@ -23,6 +25,6 @@
 		transition: all 0.3s; 
 		border: 1px solid #ec555b;
 		outline: none;
-		font-size: 12px;
+		font-size: 14px;
 	}
 }

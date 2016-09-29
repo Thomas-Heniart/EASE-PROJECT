@@ -7,6 +7,7 @@
 		<div id="downloadExtension" class="centeredItem" style="display:none;">
 			<p class="title">You are almost done ...<i class="fa fa-heart" aria-hidden="true"></i></p>
 			<p class="info">Now, you need our addon for Ease to automagically work on this computer. (thank god it takes just 1 second  to download)</p>
+			<p><i class="fa fa-angle-down" aria-hidden="true"></i></p>
 			<button id="install-button">Get Ease Addon</button>
 		</div>
 	</div>

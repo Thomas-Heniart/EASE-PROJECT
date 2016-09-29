@@ -23,6 +23,8 @@ public class SiteManager {
 	}
 
 	public Site get(String id) {
+		if (id == null)
+			return null;
 		for (int i = 0; i < sites.size(); ++i) {
 			if (((Site) sites.get(i)).getId().equals(id))
 				return sites.get(i);
@@ -138,7 +140,7 @@ public class SiteManager {
 	@SuppressWarnings("unchecked")
 	public JSONArray getSitesListJsonWithSearchAndTags(String search, String[] selectedIds) {
 		// If everything is empty then returns all websites
-		if (selectedIds.length == 0 && (search.isEmpty() || search == null))
+		if (selectedIds.length == 0 && (search.isEmpty() || search == null || search.equals("")))
 			return getSitesListJson();
 
 		List<Tag> selectedTags = new LinkedList<Tag>();

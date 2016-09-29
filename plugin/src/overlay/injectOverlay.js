@@ -25,16 +25,12 @@ function startOverlay(){
     spinner.style = "background-color: #6C7FA0";
     overlay.appendChild(spinner);
     
-    var closeContainer = document.createElement('div');
-    closeContainer.className = "closeEaseOverlayContainer";
-    spinner.appendChild(closeContainer);
-    
     var close = document.createElement('a');
     close.href = "javascript:void(0)";
     close.className = "closeEaseOverlay";
     close.setAttribute('onClick',"document.getElementById('ease_overlay_mamene').style='display: none';");
     close.innerHTML = '&times;';
-    closeContainer.appendChild(close);
+    spinner.appendChild(close);
     
     var text = document.createElement('div');
     text.id = "loading-text-ease-mamene";

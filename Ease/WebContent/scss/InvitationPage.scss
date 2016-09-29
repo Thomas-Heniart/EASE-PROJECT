@@ -14,16 +14,30 @@
 	p {
 		margin-bottom: 3px;
 	}
-	#registrationBlock {
+	.registrationBlock#checkInvitation {
+		padding-bottom: 50px;
+		.confirmBox {
+			text-align: center;
+			max-width: 60%;
+			margin: 0px auto;
+			margin-top: 20px;
+			border: 2px solid #a1c986;
+			color: #a1c986;
+			padding: 2px;
+			border-radius: 5px;
+		}
+	}
+	.registrationBlock {
 		padding: 5px;
 		border-radius: 5px;
 		border: 1px hidden;
 		margin-left: auto;
 		margin-right: auto;
 		margin-bottom: 30px;
-		width: 20%;
-		min-width: 285px;
+		width: 19%;
+		min-width: 200px;
 		background-color: white;
+
 		.alertDiv {
 			width: 90%;
 			text-align: center;
@@ -32,7 +46,7 @@
 		.title {
 			width: 90%;
 			margin: 10px auto;
-			font-size: 20px;
+			font-size: 17px;
 			text-align: center;
 		}
 		.registrationTips {
@@ -44,6 +58,7 @@
 				font-weight: 600;
 			}
 		}
+
 		#registrationForm {
 			width: 90%;
 			margin: 0px auto;
