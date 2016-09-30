@@ -1,7 +1,4 @@
-var isHere = $('#ease_extension').get();
-if (!isHere[0]) {
-    $('body').prepend('<div id="ease_extension" style="dislay:none;">');
-}
+$('body').prepend('<div id="ease_extension" style="dislay:none;">');
 
 document.addEventListener("isConnected", function(event){
     if(event.detail==true){
@@ -22,3 +19,5 @@ document.addEventListener("NewConnection", function(event){
 
 }, false);
 
+var settings = $('#settings').get()[0];
+extension.runtime.sendMessage("settings", {"homepage":settings.getAttribute("homepage")}, function(response){});
