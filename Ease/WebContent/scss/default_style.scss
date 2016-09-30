@@ -125,7 +125,7 @@ body {
     top: 8%;
   }
 
-  .univ-presentation {
+  /*.univ-presentation {
     margin: auto;
     margin-top: 15%;
     width: 45%;
@@ -142,7 +142,7 @@ body {
       font-size: 15px;
       margin-bottom: 20px;
     }
-  }
+  }*/
 }
 #loggedBody {
  height: 100%;
@@ -260,7 +260,7 @@ body {
     border-radius: 7px;
     font-size: 14px;
     background-color: $themeColor;
-    border: 1px hidden $themeColor;
+    border: 1px solid $themeColor;
     color: white;
     outline: none;
     position: relative;

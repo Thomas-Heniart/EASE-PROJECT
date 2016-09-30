@@ -104,12 +104,13 @@
 
 </div>
 
-<div class='univ-presentation'>
+<!-- <div class='univ-presentation'>
 	<h2>We are ease.space</h2>
 	<p>We built a home page that enables you to easily connect to website's accounts, without using passwords, and regardless of the computer</p>
-	<!--<p>This page is the new way to access your school's web services</p> -->
+	<p>This page is the new way to access your school's web services</p>
 	<p>If you do not have your account yet, <a target='_blank' href='http://www.ease-app.co'>let's go</a></p>
 </div>
+-->
 
 <script type="text/javascript">
 $(document).ready(function(){
