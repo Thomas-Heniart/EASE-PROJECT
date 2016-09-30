@@ -8,13 +8,14 @@
 <script src="js/jquery1.12.4.js"></script>
 	<script src="js/jquery-ui-1.12.0.js"></script>
 	<link rel="stylesheet" href="css/logout.css" />
+<link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 </head>
 <body class='logout'>
 <script type="text/javascript">
 	$(document).ready(function() {
 		setTimeout(function() {
 			window.location.replace("index.jsp");
-		}, 4000);
+		}, 2500);
 	});
 </script>
 

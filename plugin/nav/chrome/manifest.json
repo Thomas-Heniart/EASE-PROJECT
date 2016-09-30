@@ -2,7 +2,7 @@
 "manifest_version": 2,
     
 "name" :"Ease",
-"version" :"1.2.1",
+"version" :"1.2.2",
 "description" :"Ease extension, log you in and out",
     
 "icons": {
@@ -17,6 +17,7 @@
 "content_scripts": [
     {
       "matches": ["https://ease.space/*", "https://www.ease.space/*", "http://ease.space/*", "http://www.ease.space/*","http://localhost:8080/HelloWorld/*", "https://localhost:8443/HelloWorld/*", "http://localhost:8080/BackofficeUniv/*"],
+      "css": ["settings.css"],
       "js": ["jquery-3.1.0.js", "tools/extension.js", "easeListener.js"]
     },
     {

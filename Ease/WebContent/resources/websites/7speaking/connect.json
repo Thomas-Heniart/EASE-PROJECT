@@ -11,15 +11,11 @@
 			]
 	},
 	"logout":{
-		"url":"https://www.7speaking.com/newsite/controlnew/newlogin.cfm",
 		"todo":[
 			{"action":"click", "search":"td[onclick=javascript:document.location='/newsite/controlnew/newdelog.cfm';]"}
 			]
 	},
 	"checkAlreadyLogged":[
 		{"search":"#dswsdqsdqsdqsdqsd"}
-	],
-	"checkChangeLogin":[
-		{"action":"click", "search":"#loginbutton"}
 	]
 }

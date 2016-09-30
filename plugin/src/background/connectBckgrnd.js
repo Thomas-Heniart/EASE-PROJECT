@@ -33,12 +33,12 @@ function endConnection(currentWindow, tab, msg, sendResponse){
     }*/
 }
 
-extension.runtime.bckgrndOnMessage("NewConnection", function (msg, sendResponse) {
+extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, sendResponse) {
     msg.todo = "checkAlreadyLogged";
     msg.bigStep = 0;
     msg.actionStep = 0;
     extension.currentWindow(function(currentWindow) {
-        extension.tabs.create(currentWindow, msg.detail[0].website.home, msg.highlight, function(tab){
+        extension.tabs.createOrUpdate(currentWindow, senderTab, msg.detail[0].website.home, msg.highlight, function(tab){
             extension.tabs.onUpdated(tab, function (newTab) {
                 tab = newTab;
                 extension.tabs.inject(tab, ["tools/extensionLight.js","overlay/overlay.css", "overlay/injectOverlay.js"], function(){});
@@ -51,14 +51,14 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, sendResponse)
                             msg.visitedWebsites = visitedWebsites;
                             msg.allConnections = allConnections;
                             extension.tabs.sendMessage(tab, "goooo", msg, function(response){
-                                console.log("-- Status : "+response.type+" --");
                               if (response){
+                                console.log("-- Status : "+response.type+" --");
                                 if (response.type == "completed") {
                                     msg.todo = response.todo;
                                     msg.bigStep = response.bigStep;
                                     msg.actionStep = response.actionStep;
                                     msg.detail[msg.bigStep].website.lastLogin = response.detail[msg.bigStep].website.lastLogin;
-                                    if (msg.todo != "end" && msg.actionStep < msg.detail[msg.bigStep].website[msg.todo].todo.length){
+                                    if (msg.todo != "end" && msg.todo!="nextBigStep" && msg.actionStep < msg.detail[msg.bigStep].website[msg.todo].todo.length){
                                         //do nothing
                                     } else {
                                         if (msg.todo == "logout"){
@@ -87,15 +87,17 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, sendResponse)
                                             msg.todo = "end";
                                             console.log("Check already log to end connection");
                                         }*/
+                                        } else if (msg.todo=="nextBigStep"){
+                                            msg.todo = "checkAlreadyLogged";
+                                            extension.tabs.update(tab, msg.detail[msg.bigStep].website.home, function() {});
                                         } else {
                                             rememberWebsite(msg.detail[msg.bigStep].website);
                                             msg.todo = "checkAlreadyLogged";
                                             msg.actionStep = 0;
                                             msg.bigStep++;
                                             if (msg.bigStep < msg.detail.length){
-                                                setTimeout(function () {
-                                                    extension.tabs.update(tab, msg.detail[msg.bigStep].website.home, function() {});
-                                                }, 1000);
+                                                msg.todo="nextBigStep";
+                                                console.log("wait for nextBigStep");
                                             } else {
                                                 msg.result = "Success";
                                                 endConnection(currentWindow, tab, msg, sendResponse);

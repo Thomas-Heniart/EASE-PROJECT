@@ -19,7 +19,9 @@
     ],
     "Facebook":{
     	"todo":[
-    		{"action":"click", "search":"#fb-signup-btn"}
+    		{"action":"waitfor", "search":"#has-account"},
+        	{"action":"clickona", "search":"#has-account"},
+    		{"action":"click", "search":"#fb-login-btn"}
         ]
      }
 }

@@ -175,7 +175,9 @@ $(document).ready(function() {
 			amount = '+=' + $('.tagContainer .tags').css('width');
     	scroll();
 			$('.tagContainer i.fa-angle-left').show();
-			if ($('.tagContainer .tags').scrollLeft() == parseInt($('.tagContainer .tags').outerWidth()))
+			console.log($('.tagContainer .tags').scrollLeft());
+			console.log(getTagsFullWidth());
+			if ($('.tagContainer .tags').scrollLeft() + parseInt($('.tagContainer .tags').width()) >= getTagsFullWidth())
 				$('.tagContainer i.fa-angle-right').hide();
 			else
 				$('.tagContainer i.fa-angle-right').show();
@@ -189,6 +191,14 @@ $(document).ready(function() {
 				$('.tagContainer i.fa-angle-left').css("display", "none");
 		});
 });
+
+function getTagsFullWidth() {
+	var res = 0;
+	$(".tag").each(function(index, e) {
+		res += $(e).outerWidth();
+	});
+	return res;
+}
 
 var amount = "";
 

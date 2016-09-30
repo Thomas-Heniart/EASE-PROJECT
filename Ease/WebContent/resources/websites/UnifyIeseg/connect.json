@@ -12,8 +12,7 @@
 	},
 	"logout":{
 		"todo":[
-			{"action":"click", "search":"a:nth-child(3) span.x-btn-wrap.x-btn-arrow.x-btn-arrow-right"},
-			{"action":"click", "search":"div.icon-decline"}
+			{"action":"goto", "url":"https://srvadfs.ieseg.fr/adfs/ls/?wa=wsignout1.0&wreply=https://unify.ieseg.fr/"}
 			]
 	},
 	"checkAlreadyLogged":[
