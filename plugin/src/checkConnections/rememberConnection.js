@@ -1,4 +1,4 @@
-extension.runtime.bckgrndOnMessage('newConnectionToRandomWebsite', function(msg, sendResponse){
+extension.runtime.bckgrndOnMessage('newConnectionToRandomWebsite', function(msg, senderTab, sendResponse){
     rememberConnection(msg.username, msg.website, false);
 });
 

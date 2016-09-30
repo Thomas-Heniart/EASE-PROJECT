@@ -61,6 +61,9 @@ extension.runtime.onMessage("goooo", function(msg, sendResponse) {
         }*/
         msg.type = "completed";
         sendResponse(msg);
+    } else if(msg.todo=="nextBigStep"){
+        msg.type = "completed";
+        sendResponse(msg);
     }
 	else {
         doThings(msg, sendResponse);

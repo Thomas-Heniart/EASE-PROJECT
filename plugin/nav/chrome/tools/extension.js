@@ -15,7 +15,16 @@ var extension = {
 		}
 	},
     currentWindow:function(callback){
-        chrome.windows.getCurrent({}, callback)
+        chrome.windows.getCurrent({"populate":true}, callback)
+    },
+    hasMultipleEaseTabs:function(window){
+        var nb=0;
+        for(var i in window.tabs) {
+            if(window.tabs[i].url.indexOf("ease.space")!=-1){
+                nb++;
+            }
+        }
+        return nb>1;
     },
 	addShortCut:function(fct){
 		chrome.commands.onCommand.addListener(fct);
@@ -58,7 +67,7 @@ var extension = {
         bckgrndOnMessage:function(name, fct){
             chrome.runtime.onMessage.addListener(function(event, sender, sendResponse){
                 if(event.name == name){
-					fct(event.message, sendResponse);
+					fct(event.message, sender.tab, sendResponse);
                     return true;
 				}
 			});
@@ -71,6 +80,13 @@ var extension = {
 		create:function(window, url, active, callback){
 			chrome.tabs.create({"windowId":window.id, "url":url, "active":active}, callback);
 		},
+        createOrUpdate(window, tab, url, active, callback){
+            if(extension.hasMultipleEaseTabs(window)){
+                this.update(tab, url, callback);
+            } else {
+                this.create(window, url, active, callback);
+            }
+        },
         highlight:function(window, tab, callback){
             chrome.tabs.highlight({"windowId":window.id, "tabs":tab.index}, callback);
         },
