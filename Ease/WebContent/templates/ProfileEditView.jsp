@@ -92,12 +92,9 @@
 			function() {
 				$(document).click(
 						function(event) {
-							if ($(".CatalogViewTab").hasClass("show")) {
-								if ( $(event.target).is($(".ProfilesView.show")) && $(".md-modal").hasClass('md-show'))
-									return;
-								if ($(event.target).is($(".md-overlay")))
-									return;
-								if ($(event.target).is($(".col-left.show")) || $(event.target).is($(".ProfilesView.show")) || $(event.target).is($(".ProfilesHandler.editMode")) || $(event.target).is($(".owl-item")))
+							if ($(".CatalogViewTab").hasClass("show") && !($(event.target).closest('.MenuButtonSet').length)) {
+
+								if (!($(event.target).closest('.owl-wrapper-outer, .md-modal, .md-overlay, .CatalogViewTab').length))
 									leaveEditMode();
 							}
 						});
