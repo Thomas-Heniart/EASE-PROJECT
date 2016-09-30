@@ -1,6 +1,6 @@
 
 <div id="searchBar" class="centeredItem">
-	<input autofocus="autofocus" type="text" placeholder="Search">
+	<input type="text" placeholder="Search">
 	<div id="searchBarButton">
 		<img src="resources/other/google-logo.png" />
 <!--		<i class="fa fa-google" aria-hidden="true"></i>-->
