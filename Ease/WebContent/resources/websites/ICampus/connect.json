@@ -12,11 +12,10 @@
     "logout": {
     	"todo": [
     		{"action":"clickona", "search":".navbar-right li a"},
-    		{"action":"waitfor", "search":"a[href=*='logout']"},
-    		{"action":"clickona", "search":"a[href=*='logout']"}
+    		{"action":"clickona", "search":"a[href*='logout']"}
     	]
     },
     "checkAlreadyLogged": [
-    	{"search":"a[href=*='logout']"}
+    	{"search":"a[href*='logout']"}
     ]
 }

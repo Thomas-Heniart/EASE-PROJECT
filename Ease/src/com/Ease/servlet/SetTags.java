@@ -58,52 +58,47 @@ public class SetTags extends HttpServlet {
 
 		User user = (User)session.getAttribute("User");
 
-		if(!user.isAdmin(session.getServletContext())){
-			response.getWriter().print("error: You aint admin bro");
-			return;
-		}
+		try {
+			if(!user.isAdmin(session.getServletContext())){
+				response.getWriter().print("error: You aint admin bro");
+				return;
+			}
 		
-		tagsId = tagsId.replaceAll("\"", "");
-		tagsId = tagsId.substring(1, tagsId.length()-1);
-		String[] tags = tagsId.split(",");
-		int tagId;
-		String dbRequest;
-		
-		db.set("START TRANSACTION;");
-		
-		dbRequest = "DELETE FROM TagAndSiteMap WHERE website_id="+ Integer.parseInt(websiteId) + ";";
-		if(db.set(dbRequest)!=0){
-			retMsg = "error: fail to connect to db";
-			db.set("ROLLBACK;");
-			response.getWriter().print(retMsg);
-			return;
-		}
-		
-		for(String tag : tags){
-			tagId = Integer.parseInt(tag);
-			dbRequest = "INSERT INTO TagAndSiteMap VALUES (" + tagId + "," + Integer.parseInt(websiteId) + ");";
+			tagsId = tagsId.replaceAll("\"", "");
+			tagsId = tagsId.substring(1, tagsId.length()-1);
+			String[] tags = tagsId.split(",");
+			int tagId;
+			String dbRequest;
+			
+			db.set("START TRANSACTION;");
+			
+			dbRequest = "DELETE FROM TagAndSiteMap WHERE website_id="+ Integer.parseInt(websiteId) + ";";
 			if(db.set(dbRequest)!=0){
-				retMsg = "error: fail to insert tag "+tagId;
+				retMsg = "error: fail to connect to db";
 				db.set("ROLLBACK;");
 				response.getWriter().print(retMsg);
 				return;
 			}
-		}
-		
-		db.set("COMMIT;");
-	
-		
-		SiteManager siteManager = ((SiteManager)session.getServletContext().getAttribute("siteManager"));
-		
-		try {
+			
+			for(String tag : tags){
+				tagId = Integer.parseInt(tag);
+				dbRequest = "INSERT INTO TagAndSiteMap VALUES (" + tagId + "," + Integer.parseInt(websiteId) + ");";
+				if(db.set(dbRequest)!=0){
+					retMsg = "error: fail to insert tag " + tagId;
+					db.set("ROLLBACK;");
+					response.getWriter().print(retMsg);
+					return;
+				}
+			}
+			db.set("COMMIT;");
+			SiteManager siteManager = ((SiteManager)session.getServletContext().getAttribute("siteManager"));
 			siteManager.setTagsForSites(session.getServletContext());
 		} catch (SQLException e) {
-			System.out.println("Fail to load tags");
+			retMsg = "error: problem sur la db";
+			response.getWriter().print(retMsg);
 			return;
 		}
-		
 		retMsg = "success";
-		
 		response.getWriter().print(retMsg);
 	}
 }

@@ -104,6 +104,8 @@ public class AddAppSso extends HttpServlet {
 			} catch (IndexOutOfBoundsException e){
 				db.cancel(transaction);
 				retMsg = "error: Bad app index.";
+			} catch (NumberFormatException e) {
+				retMsg = "error: Bad profileId";
 			}
 			Stats.saveAction(session.getServletContext(), user, Stats.Action.AddApp, retMsg + " : " + ((site != null) ? site.getName() : ""));
 			response.getWriter().print(retMsg);

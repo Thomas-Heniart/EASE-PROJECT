@@ -278,6 +278,8 @@ response.addCookie(email);
 					}
 					else if (NavigatorName == "Safari"){
 						window.location.replace("https://ease.space/safariExtension/EaseExtension.safariextz");
+						$('#downloadExtension').find('.popupContent').hide();
+						$('#downloadExtension').find('.safariHelper').show();
 					}
 				});
 		}
@@ -407,6 +409,7 @@ response.addCookie(email);
 				 login=""
 				webId="${app.getSite().getId()}"
 				name="${app.getName()}"
+				move="${app.havePerm('MOVE', session.getServletContext())}"
 				id="${app.getAppId()}">
 				<div class="linkImage" onclick="sendEvent(this)">
 					<div class="emptyAppIndicator" onclick="showModifyAppPopup(this, event)">
@@ -440,6 +443,7 @@ response.addCookie(email);
 					name="${app.getName()}"
 					id="${app.getAppId()}"
 					ssoId="${app.getSite().getSso()}"
+					move="${app.havePerm('MOVE', session.getServletContext())}"
 					logwith="false">
 			</c:if>
 			<c:if test="${app.getType() eq 'LogWithAccount'}">
@@ -447,6 +451,7 @@ response.addCookie(email);
 				webId="${app.getSite().getId()}"
 				name="${app.getName()}"
 				id="${app.getAppId()}"
+				move="${app.havePerm('MOVE', session.getServletContext())}"
 				logwith="${app.getAccount().getLogWithApp(member).getAppId()}">
 			</c:if>
 			<div class="linkImage" onclick="sendEvent(this)">
@@ -499,7 +504,7 @@ response.addCookie(email);
 			},
 			revertOnSpill: true,
 			moves: function(el, container){
-				return !($(el).hasClass('noMove'));
+				return !($(el).attr('move') == 'false');
 			}
 		}).on('drop', function(el, target, source, sibling){
 			$.post(

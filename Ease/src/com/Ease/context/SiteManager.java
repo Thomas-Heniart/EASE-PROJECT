@@ -166,6 +166,7 @@ public class SiteManager {
 						res.add(tmpSite.getId());
 					}
 				}
+				return res;
 			}
 			Iterator<Site> it = sites.iterator();
 			while (it.hasNext()) {
@@ -187,7 +188,7 @@ public class SiteManager {
 		while (siteIterator.hasNext()) {
 			Site tmpSite = siteIterator.next();
 			if (tmpSite.hasAllTags(selectedTags)) {
-				if (search.isEmpty() || tmpSite.getName().toLowerCase().matches("*"+ search.toLowerCase() +"*")) {
+				if (search.isEmpty() || tmpSite.getName().toLowerCase().contains(search.toLowerCase())) {
 					sitesToShow.add(tmpSite);
 					res.add(tmpSite.getId());
 				}

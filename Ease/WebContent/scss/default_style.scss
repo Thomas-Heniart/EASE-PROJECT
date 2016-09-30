@@ -223,7 +223,7 @@ body {
     display: inline-block;
     text-align: center;
     min-width: 200px;
-    width: 10%;
+    width: 15%;
     padding-left: 2%;
     padding-right: 2%;
     border-radius: 4px;
@@ -475,7 +475,6 @@ html {
 .shadowHelper {
   width: 100%;
   height: 100%;
-  z-index: 1;
   pointer-events: none;
   position: absolute;
   top: 0;
