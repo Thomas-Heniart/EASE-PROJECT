@@ -187,7 +187,7 @@ public class SiteManager {
 		while (siteIterator.hasNext()) {
 			Site tmpSite = siteIterator.next();
 			if (tmpSite.hasAllTags(selectedTags)) {
-				if (tmpSite.getName().toLowerCase().matches("*"+ search.toLowerCase() +"*") || search.isEmpty()) {
+				if (search.isEmpty() || tmpSite.getName().toLowerCase().matches("*"+ search.toLowerCase() +"*")) {
 					sitesToShow.add(tmpSite);
 					res.add(tmpSite.getId());
 				}
