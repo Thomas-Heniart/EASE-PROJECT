@@ -11,10 +11,7 @@
     },
     "logout":{
         "todo":[
-			{"action":"waitfor", "time":100, "search":".redactor-toolbar-tooltip.redactor-toolbar-tooltip-0.redactor-toolbar-tooltip-embedlyvideo"},
-			{"action":"click", "search":"#user-dropdown"},
-            {"action":"click", "search":"#user-dropdown-joyride li:eq(3) a i", "grave":true},
-            {"action":"waitload"}
+			{"action":"goto", "url":"https://ieseg-network.hivebrite.com/sign-out"}
            	]
     },
     "checkAlreadyLogged":[
@@ -22,7 +19,7 @@
     ],
     "Facebook":{
     	"todo":[
-    		{"action":"goto", "url":"https://hivebrite.com/auth/facebook?network_id=42"}
+    		{"action":"clickona", "search":"a.button-social__facebook"}
     	]	
     },
     "Linkedin": {

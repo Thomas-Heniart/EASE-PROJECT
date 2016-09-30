@@ -11,11 +11,11 @@
 			]
 	},
 	"logout":{
-		"url":"https://login.microsoftonline.com",
 		"todo":[
-			{"action":"goto", "url":"https://www.office.com/estslogout?"},
-			{"action":"waitload"},
-			{"action":"goto", "url":"https://login.microsoftonline.com"}
+			{"action":"waitfor", "search":"div[role='banner'] div.o365cs-nav-topItem:last-child() button"},
+			{"action":"aclick", "search":"div[role='banner'] div.o365cs-nav-topItem:last-child() button"},
+			{"action":"waitfor", "search":"a[href*='logout']"},
+			{"action":"aclick", "search":"a[href*='logout']"}
 			]
 	},
 	"checkAlreadyLogged":[

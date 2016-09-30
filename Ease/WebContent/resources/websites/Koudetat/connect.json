@@ -16,11 +16,13 @@
     },
     "logout": {
     	"todo": [
-    		{"action":"aclick", "search":"#bs-navbar-collapse ul li.dropdown a[onclick='App.logout();']"}
+    		{"action":"clickona", "search":".dropdown-toggle"},
+    		{"action":"waitfor", "search":"a[onclick='App.logout();']"},
+    		{"action":"clickona", "search":"a[onclick='App.logout();']"}
     	]
     },
     "checkAlreadyLogged": [
-    	{"search":"section#main"}
+    	{"search":"a[onclick='App.logout();']"}
     ]
     
 }
