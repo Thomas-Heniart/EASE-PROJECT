@@ -64,33 +64,68 @@ public class createInvitation extends HttpServlet {
 		HttpSession session = request.getSession();
 		
 		User user = (User)session.getAttribute("User");
-		if(user == null || !user.isAdmin(session.getServletContext())){
+		
+		/*if(user == null || !user.isAdmin(session.getServletContext())){
 			response.getWriter().print("error: You aint admin bro");
-		}
+		}*/
 		
 		try {
 			if (email == null || Regex.isEmail(email) == false){
 				retMsg = "error: Bad email";
-			}else {	Class.forName("com.mysql.jdbc.Driver");
-
-			for (int i = 0;i < 126 ; ++i) {
-				invitationCode += alphabet.charAt(r.nextInt(alphabet.length()));			
-			}
-			DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
-			if (group == null){
-				db.set("insert into invitations values ('" + email + "', '" + invitationCode + "', NULL);");
-				retMsg = "succes";
 			} else {
-				int groupId = Integer.parseInt(group);
-				rs = db.get("select * from groups where id=" + groupId + ";");
-				if (rs.next()){
-					db.set("insert into invitations values ('" + email + "', '" + invitationCode + "', " + groupId + ");");
-					retMsg = "succes";
+				DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
+				db.connect();
+				
+				rs = db.get("select * from users where email='" + email + "';");
+				if (rs.next()) {
+					if (group != null){
+						int groupId = Integer.parseInt(group);
+						ResultSet rs2 = db.get("select * from groups where id=" + groupId + ";");
+						if (rs2.next()){
+							db.set("insert into GroupAndUserMap values (NULL, " + groupId + ", " + rs.getString(1) + ");");
+							retMsg = "succes: User already exist, set a group.";
+						} else {
+							retMsg = "error: This group dosen't exist.";
+						}
+					} else {
+						retMsg = "error: This user already exist";
+					}
 				} else {
-					retMsg = "error: This group dosen't exist.";
+					rs = db.get("select * from invitations where email='" + email + "';");
+					if (rs.next()) {
+						if (group != null){
+							int groupId = Integer.parseInt(group);
+							ResultSet rs2 = db.get("select * from groups where id=" + groupId + ";");
+							if (rs2.next()){
+								db.set("update invitations set group_id=" + groupId + " where email='" + email + "';");
+								retMsg = "succes: change invitation with group.";
+							} else {
+								retMsg = "error: This group dosen't exist.";
+							}
+						} else {
+							retMsg = "error: This user already exist";
+						}
+					} else {
+						for (int i = 0;i < 126 ; ++i) {
+							invitationCode += alphabet.charAt(r.nextInt(alphabet.length()));			
+						}
+						if (group == null){
+							db.set("insert into invitations values ('" + email + "', '" + invitationCode + "', NULL);");
+							retMsg = "succes: Invitation send.";
+						} else {
+							int groupId = Integer.parseInt(group);
+							rs = db.get("select * from groups where id=" + groupId + ";");
+							if (rs.next()){
+								db.set("insert into invitations values ('" + email + "', '" + invitationCode + "', " + groupId + ");");
+								retMsg = "succes: Invitation send with group.";
+							} else {
+								retMsg = "error: This group dosen't exist.";
+							}
+						}
+					}
 				}
+				db.close();
 			}
-
 			
 			/*
 			props.put("mail.smtp.host", "smtp.gmail.com");
@@ -129,18 +164,16 @@ public class createInvitation extends HttpServlet {
 			Transport.send(message);*/
 			
 			System.out.println("Done");
-			}
 		} catch (SQLException e) {
 			retMsg = "error:" + e.getMessage();
 			e.printStackTrace();
 		} /*catch (MessagingException e) {
 			retMsg = "error: error when sending mail.";
-		}*/ catch (ClassNotFoundException e) {
-			retMsg = "error: error when load class.";
-		} catch (NumberFormatException e) {
+		}*/ catch (NumberFormatException e) {
 			retMsg = "error: Bad GroupId";
 		}
 		System.out.println(retMsg);
+		
 		response.getWriter().print(retMsg);
 	}
 }

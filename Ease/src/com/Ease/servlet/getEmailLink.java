@@ -62,7 +62,7 @@ public class getEmailLink extends HttpServlet {
 			} else {		
 				ResultSet rs;
 				if ((rs = db.get("select * from invitations where email ='" + email + "';")) == null || !(rs.next())){
-					retMsg = "error: Seems that you are not on the list.";
+					retMsg = "error: Sorry, you are not on the list. Please try with your school email!";
 					response.getWriter().print(retMsg);
 					return;
 				}
