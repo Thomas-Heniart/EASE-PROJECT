@@ -392,20 +392,36 @@
 	.linkImage {
 		.emptyAppIndicator {
 			position: absolute;
-			width: 35%;
-			bottom: 73%;
-			left: 81%;
+			width: 100%;
+            height: 100%;
 			opacity: 1;
-			border-radius: 100%;
+			border-radius: 5px;
 			padding: 2px;
-			background-color: $themeColor;
 			img {
+                border-radius: 100%;
+                background-color: $themeColor;
+                width: 35%;
+                height: 35%;
+                left:45%;
+                bottom: 12%;
 				line-height: 90%;
 				color: white;
 				font-size: 1vw;
 				position: relative;
 				border: none;
 			}
+            &:hover {
+                background-color: $themeColor;
+                border: 1px solid #efefef;
+                opacity:0.8;
+            }
+            &:hover > img {
+                width:80%;
+                height:80%;
+                left:0%;
+                top:15%;
+                border-radius: 5px;
+            }
 		}
 		.showAppActionsButton {
 			position: absolute;
