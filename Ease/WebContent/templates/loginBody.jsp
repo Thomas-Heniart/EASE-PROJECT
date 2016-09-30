@@ -70,7 +70,7 @@
 				<p>Incorrect password !</p>
 			</div> 
 	    <button id="savedUserButton">Login</button>
-	    <a class='create-account' href='/getEmailLink'>create an account</a>
+	    <!-- <a class='create-account' href='/getEmailLink'>create an account</a> -->
 	    </div>
 		<div id="changeAccount">Other account <img class='switch-account' src="resources/icons/account.png" /></div>   
 	</div>
@@ -95,7 +95,7 @@
 
 
     <button id="helloButton">Login</button>
-    <a class='create-account' href='/getEmailLink'>create an account</a>
+    <!-- <a class='create-account' href='/getEmailLink'>create an account</a> -->
 </form>
 <% if (iden == 3) {%>
 <div id="back"><%= new String(Base64.getDecoder().decode(fname), StandardCharsets.UTF_8) %> account <img class='switch-account' src="resources/icons/account.png" /></div>
