@@ -3,7 +3,6 @@
 	"lastLogin":"",
 	"home":"https://openclassrooms.com/login",
 	"connect":{
-		"url":"https://openclassrooms.com/login",
 		"todo":[
 			{"action":"fill", "what":"login", "search":"input#_username"},
 			{"action":"fill", "what":"password", "search":"input#_password"},
@@ -11,15 +10,16 @@
 			]
 	},
 	"logout":{
-		"url":"https://openclassrooms.com/login",
 		"todo":[
 			{"action":"aclick", "search":"a[href*='/logout?'][class='popOutList__link']"}
 			]
 	},
 	"checkAlreadyLogged":[
 		{"search":"a[href*='/logout?'][class='popOutList__link']"}
-	],
-	"checkChangeLogin":[
-		{"action":"click", "search":"#loginbutton"}
 	]
+	"Facebook": {
+		"todo":[
+			{"action":"clickona", "search":"a.formLogin__facebook"}
+		]
+	}
 }
