@@ -32,6 +32,3 @@ document.addEventListener("Logout", function(event){
 document.addEventListener("NewConnection", function(event){
     extension.runtime.sendMessage("NewConnection", {"highlight":true, "detail":event.detail}, function(response) {});
 }, false);
-
-var settings = $('#settingsExtension').get()[0];
-if(settings) extension.runtime.sendMessage("settings", {"homepage":settings.getAttribute("homepage")}, function(response){});

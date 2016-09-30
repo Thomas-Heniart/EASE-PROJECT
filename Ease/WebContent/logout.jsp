@@ -20,7 +20,7 @@
 </script>
 
 <div class='logout-overlay'>
-	<h3>We are logging you out</h3>
+	<h3>We are logging you out from your websites</h3>
 	<div class="sk-fading-circle">
   <div class="sk-circle1 sk-circle"></div>
   <div class="sk-circle2 sk-circle"></div>

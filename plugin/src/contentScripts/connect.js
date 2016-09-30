@@ -38,6 +38,7 @@ extension.runtime.onMessage("goooo", function(msg, sendResponse) {
                 logoutOverlay(msg);
 			}
 		} else {
+            msg.waitreload = true;
 			if (typeof msg.detail[msg.bigStep].logWith === "undefined") {
 				msg.todo = "connect";
 			} else {

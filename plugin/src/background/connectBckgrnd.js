@@ -37,6 +37,7 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, se
     msg.todo = "checkAlreadyLogged";
     msg.bigStep = 0;
     msg.actionStep = 0;
+    msg.waitreload= false;
     extension.currentWindow(function(currentWindow) {
         extension.tabs.createOrUpdate(currentWindow, senderTab, msg.detail[0].website.home, msg.highlight, function(tab){
             extension.tabs.onUpdated(tab, function (newTab) {
@@ -54,6 +55,7 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, se
                               if (response){
                                 console.log("-- Status : "+response.type+" --");
                                 if (response.type == "completed") {
+                                    msg.waitreload=response.waitreload;
                                     msg.todo = response.todo;
                                     msg.bigStep = response.bigStep;
                                     msg.actionStep = response.actionStep;
@@ -92,13 +94,18 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, se
                                             extension.tabs.update(tab, msg.detail[msg.bigStep].website.home, function() {});
                                         } else {
                                             rememberWebsite(msg.detail[msg.bigStep].website);
-                                            msg.todo = "checkAlreadyLogged";
                                             msg.actionStep = 0;
                                             msg.bigStep++;
                                             if (msg.bigStep < msg.detail.length){
-                                                msg.todo="nextBigStep";
-                                                console.log("wait for nextBigStep");
+                                                if(msg.waitreload){
+                                                    msg.todo="nextBigStep";
+                                                    console.log("wait for nextBigStep");
+                                                } else {
+                                                    msg.todo = "checkAlreadyLogged";
+                                                    extension.tabs.update(tab, msg.detail[msg.bigStep].website.home, function() {});
+                                                }
                                             } else {
+                                                msg.todo = "checkAlreadyLogged";
                                                 msg.result = "Success";
                                                 endConnection(currentWindow, tab, msg, sendResponse);
                                                 extension.tabs.onUpdatedRemoveListener(tab);
