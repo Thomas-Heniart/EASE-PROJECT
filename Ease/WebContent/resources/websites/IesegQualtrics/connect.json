@@ -3,7 +3,6 @@
 	"lastLogin":"",
 	"home":"https://az1.qualtrics.com/ControlPanel/",
 	"connect":{
-		"url":"https://az1.qualtrics.com/ControlPanel/",
 		"todo":[
 			{"action":"fill", "what":"login", "search":"input#UserName"},
 			{"action":"fill", "what":"password", "search":"input#UserPassword"},
@@ -11,18 +10,14 @@
 			]
 	},
 	"logout":{
-		"url":"https://az1.qualtrics.com/ControlPanel/",
 		"todo":[
-			{"action":"search", "search":"div[class-name='user-account-menu']"},
-			{"action":"click", "search":"div[class-name='user-account-menu']", "grave":true},
-			{"action":"waitfor", "time":100, "search":"div.qmenu.dropdown-menu ul.menu-items li:nth-child(7) a"},
-			{"action":"click", "search":"div.qmenu.dropdown-menu ul.menu-items li:nth-child(7) a"}
+			{"action":"waitfor", "search":"span.icon-user-framed"},
+			{"action":"click", "search":"span.icon-user-framed", "grave":true},
+			{"action":"waitfor", "time":100, "search":"div.qmenu.dropdown-menu ul.menu-items li.hoverable a"},
+			{"action":"clickona", "search":"div.qmenu.dropdown-menu ul.menu-items li.hoverable a"}
 			]
 	},
 	"checkAlreadyLogged":[
 		{"search":".icon.icon-user-framed"}
-	],
-	"checkChangeLogin":[
-		{"action":"click", "search":"#loginbutton"}
 	]
 }
