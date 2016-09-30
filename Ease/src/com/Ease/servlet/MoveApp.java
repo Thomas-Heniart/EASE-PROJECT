@@ -89,6 +89,7 @@ public class MoveApp extends HttpServlet {
 					retMsg = "success";
 					db.commit(transaction);
 				} else {
+					System.out.println("no perm");
 					retMsg = "error: You have not the permission";
 				}
 			}
