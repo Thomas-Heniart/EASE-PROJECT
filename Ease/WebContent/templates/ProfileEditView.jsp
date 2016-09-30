@@ -92,9 +92,9 @@
 			function() {
 				$(document).click(
 						function(event) {
-							if ($(".CatalogViewTab").hasClass("show") && !($(event.target).closest('.MenuButtonSet').length)) {
-
-								if (!($(event.target).closest('.owl-wrapper-outer, .md-modal, .md-overlay, .CatalogViewTab').length))
+								console.log(event);
+							if ($(".CatalogViewTab").hasClass("show") && !($(event.target).closest('.MenuButtonSet').length) && $('.md-show').length == 0) {
+								if (!($(event.target).closest('.header, .owl-wrapper-outer, .md-modal, .md-overlay, .CatalogViewTab').length))
 									leaveEditMode();
 							}
 						});
@@ -152,7 +152,6 @@
 											},
 											helper : function(e, ui) {
 												var ret;
-
 												ret = $('<div class="dragHelperLogo" style="position: fixed;"/>');
 												ret.attr("idx", $(this).attr(
 														"idx"));
