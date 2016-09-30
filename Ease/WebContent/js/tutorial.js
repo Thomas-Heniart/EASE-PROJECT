@@ -21,7 +21,7 @@
 			}
 		} 
 		if (TutorialSteps == 2){
-			$('step4').css('display', 'block');
+			$('.step4').css('display', 'block');
 		}
 	}
 	function leaveEditModeTutorial (){
