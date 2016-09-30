@@ -47,18 +47,25 @@ public class GetTags extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		int websiteId = Integer.parseInt(request.getParameter("websiteId"));
-		HttpSession session = request.getSession();
-
-		List<Tag> tags = ((SiteManager)session.getServletContext().getAttribute("siteManager")).getSiteById(websiteId).getTags();
-		
 		String result = "[{";
-		for (Tag tag : tags){
-			result += ("\"id\":" + tag.getId() + ", \"color\": \""+tag.getColor()+"\", \"name\": \""+tag.getName() +"\"},{");
-		}
+		try {
+			int websiteId = Integer.parseInt(request.getParameter("websiteId"));
+			HttpSession session = request.getSession();
+
+			List<Tag> tags = ((SiteManager)session.getServletContext().getAttribute("siteManager")).getSiteById(websiteId).getTags();
 		
-		result = result.substring(0, result.length()-2);
-		result += "]";
+			for (Tag tag : tags){
+				result += ("\"id\":" + tag.getId() + ", \"color\": \""+tag.getColor()+"\", \"name\": \""+tag.getName() +"\"},{");
+			}
+		
+			result = result.substring(0, result.length()-2);
+			result += "]";
+		
+		} catch (NumberFormatException e) {
+			result = "error: Bad websiteId";
+		} catch (NullPointerException e) {
+			result = "error: This website dosen't exist";
+		}
 		
 		response.getWriter().print(result);
 		

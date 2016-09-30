@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.Ease.context.DataBase;
+import com.Ease.session.User;
 
 
 /**
@@ -49,6 +50,11 @@ public class EraseRequestedWebsiteServlet extends HttpServlet {
 		
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 
+		User user = (User)session.getAttribute("User");
+		if(!user.isAdmin(session.getServletContext())){
+			response.getWriter().print("error: You aint admin bro");
+			return;
+		}
 		if(db.set("DELETE FROM askForSite WHERE site='" + website + "';") != 0){
 			retMsg = "error: could not connect to db";
 		} else {
