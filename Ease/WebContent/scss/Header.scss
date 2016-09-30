@@ -39,7 +39,7 @@
 		background: transparent;
 		font-size: 17px;
 		padding-right: 45px;
-		padding-left: 3px;
+		padding-left: 8px;
 		outline: none;
 	}
 	#searchBarButton {
@@ -57,7 +57,7 @@
 			position: relative;
 			height: 80%;
 			top: 10%;
-		}		
+		}
 		i {
 			font-size: 25px;
 			vertical-align: middle;
@@ -70,6 +70,6 @@
 	#searchBarButton.active {
 		transition: all .5s;
 		background-color: #C1C1C1;
-		color: white;		
+		color: white;
 	}
 }

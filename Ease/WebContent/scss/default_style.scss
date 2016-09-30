@@ -104,17 +104,21 @@ body {
   background-image:url(../resources/backgrounds/logo-background.png);
   background-size: 250px	;
 }
+#loginBody::before{
+  content: '';
+  position: absolute;
+  z-index: -1;
+  background-size: 100% 100%;
+  width: 100%;
+  height: 100%;
+  background-image:url(../resources/backgrounds/background.jpeg);
+  background-position: 50% 50%;
+}
 #loginBody {
- width: 100%;
- //    	background-color: $themeColor;
- position: absolute;
- overflow-y: auto;
- overflow-x: hidden;
- padding-bottom: 50px;
- background-size: 100% 100%;
- height: 100%;
- background-image:url(../resources/backgrounds/background.jpeg);
- background-position: 50% 50%;
+  position: absolute;
+  padding-bottom: 50px;
+  width: 100%;
+  height: 100%;
   .ease-logo {
     width: 50px;
   }
@@ -191,7 +195,7 @@ body {
     }
     p {
       font-size: 17px;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
       color: $themeColor;
     }
   }
@@ -219,7 +223,7 @@ body {
     display: inline-block;
     text-align: center;
     min-width: 200px;
-    width: 10%;
+    width: 15%;
     padding-left: 2%;
     padding-right: 2%;
     border-radius: 4px;
@@ -242,7 +246,8 @@ body {
         margin-bottom: 3px;
         border-radius: 5px;
         background-color: white;
-        font-weight: 100;
+        font-weight: 200;
+        font-size: 14px;
         text-align: center;
       }
       input:-webkit-autofill {
@@ -255,22 +260,26 @@ body {
    button {
     width: 70%;
     margin-top: 10px;
+    margin-bottom: 7px;
     padding-bottom: 5px;
     padding-top: 7px;
     border-radius: 7px;
     font-size: 14px;
     background-color: $themeColor;
-    border: 1px solid $themeColor;
+    border: 2px solid $themeColor;
     color: white;
     outline: none;
     position: relative;
     display: inline-block;
     vertical-align: middle;
     &:hover {
-      border: 1px solid $themeColor;
+      border: 2px solid $themeColor;
       background-color: rgba(white, 0.7);
       color: $themeColor;
     }
+  }
+  a.create-account {
+    bottom: 0;
   }
   a {
     font-size: 12px;
