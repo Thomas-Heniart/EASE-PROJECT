@@ -278,6 +278,8 @@ response.addCookie(email);
 					}
 					else if (NavigatorName == "Safari"){
 						window.location.replace("https://ease.space/safariExtension/EaseExtension.safariextz");
+						$('#downloadExtension').find('.popupContent').hide();
+						$('#downloadExtension').find('.safariHelper').show();
 					}
 				});
 		}
