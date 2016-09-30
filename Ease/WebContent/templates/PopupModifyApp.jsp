@@ -11,12 +11,7 @@ pageEncoding="UTF-8"%>
 		</div>
 		<div class="lineInput">
 			<p class="inputTitle">App name :</p>
-			<div class="disabledInput">
-				<input  id="name" name="name" type="text" placeholder="Name" maxlength="14"/>
-				<div class="activateInput">
-					<i class="fa fa-cog"></i>
-				</div>
-			</div>
+			<input  id="name" name="name" type="text" placeholder="Name" maxlength="14"/>
 		</div>
 		<div class="loginWithChooser">
 			<div class="linedSeparator">
@@ -152,7 +147,11 @@ pageEncoding="UTF-8"%>
 		popup.find('.or').css('display', 'block');
 		popup.find('.loginAppChooser .ChooserContent').empty();
 		popup.find('.loginAppChooser').css('display', 'none');
-
+		if (app.hasClass('emptyApp')){
+			popup.find('p.title').html('Finalize <span></span>.</br>Type your info for the last time');
+		}else {
+			popup.find('p.title').html('Modify informations related to <span></span>');
+		}
 		popup.find('.logoApp').attr('src', $(app).find('img.logo').attr('src'));
 		popup.find('span').text($(app).attr('name'));
 		popup.find("#login").val($(app).attr('login'));

@@ -92,7 +92,6 @@
 			function() {
 				$(document).click(
 						function(event) {
-								console.log(event);
 							if ($(".CatalogViewTab").hasClass("show") && !($(event.target).closest('.MenuButtonSet').length) && $('.md-show').length == 0) {
 								if (!($(event.target).closest('.header, .owl-wrapper-outer, .md-modal, .md-overlay, .CatalogViewTab').length))
 									leaveEditMode();

@@ -78,8 +78,7 @@ public class AddWebsite extends HttpServlet {
 
 		if(haveLoginWith == null || haveLoginWith.length==0){
 			haveLogWith = "NULL";
-		}
-		else {
+		} else {
 			haveLogWith = "'";
 			for(String i : haveLoginWith){
 				haveLogWith += i + ","; 
@@ -113,8 +112,5 @@ public class AddWebsite extends HttpServlet {
 		retMsg = "success";
 		
 		response.getWriter().print(retMsg);
-		
-		RequestDispatcher rd = request.getRequestDispatcher("admin.jsp");
-		rd.forward(request, response);
 	}
 }

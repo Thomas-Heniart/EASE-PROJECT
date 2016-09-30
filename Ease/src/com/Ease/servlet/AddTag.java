@@ -73,29 +73,21 @@ public class AddTag extends HttpServlet {
 			response.getWriter().print("error: You aint admin bro");
 			return;
 		}
-		
-		if(name.equals("")){
+		if(name == null || name.equals("")){
 			response.getWriter().print("error: no tag name");
 			return;
 		}
-
-		if (color.equals("0")){
+		if (color == null || color.equals("0")){
 			Random r = new Random();
 			color = Integer.toString(1 + r.nextInt(nbOfColors));
 		}
-		
-
 		String dbRequest = "INSERT INTO tags VALUES (NULL, '" + name + "'," + color + ");";
-
-		if(db.set(dbRequest)!=0){
+		if(db.set(dbRequest) != 0){
 			retMsg = "error: fail to connect to db";
 			response.getWriter().print(retMsg);
 			return;
 		}
-		
 		SiteManager sites = ((SiteManager)session.getServletContext().getAttribute("siteManager"));
-		
-		
 		try {
 			ResultSet rs = db.get("SELECT * FROM tags;");
 			sites.clearTags();
@@ -103,15 +95,11 @@ public class AddTag extends HttpServlet {
 				sites.addNewTag(new Tag(rs, session.getServletContext()));
 			}
 		} catch (SQLException e) {
-			System.out.println("Fail to load tags");
+			retMsg = "error: fail to load tags";
+			response.getWriter().print(retMsg);
 			return;
 		}
-		
 		retMsg = "success";
-		
 		response.getWriter().print(retMsg);
-		
-		RequestDispatcher rd = request.getRequestDispatcher("admin.jsp");
-		rd.forward(request, response);
 	}
 }
