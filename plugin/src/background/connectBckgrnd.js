@@ -20,8 +20,11 @@ function rememberWebsite(website){
         
     });
     if(!website.loginUrl) website.loginUrl = website.home;
-    rememberConnection(website.lastLogin, getHost(website.loginUrl));
-  
+    if(website.lastLogin.logWith){
+        rememberDirectLogWithConnection(getHost(website.loginUrl), website.lastLogin);
+    } else {
+        rememberConnection(website.lastLogin, getHost(website.loginUrl));
+    }  
 }
 
 function endConnection(currentWindow, tab, msg, sendResponse){

@@ -22,7 +22,8 @@
 		"todo":[
 			{"action":"clickona", "search":"#yt-masthead-account-picker", "grave":true},
 			{"action":"waitfor", "search":"a[href='/logout']"},
-			{"action":"clickona", "search":"a[href='/logout']", "grave":true}		
+			{"action":"clickona", "search":"a[href='/logout']", "grave":true},
+			{"action":"waitfor", "search":"button[href*='https://accounts.google.com/ServiceLogin?']"}
 			]
 	},
 	"checkAlreadyLogged":[

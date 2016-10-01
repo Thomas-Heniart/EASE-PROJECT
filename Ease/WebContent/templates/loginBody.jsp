@@ -60,7 +60,7 @@
 	<div class="form" id="knownUser">
 		<img class='ease-logo' src='resources/icons/Ease_Logo_couleur.png'/>
 		<div class="savedUser">
-		<p>Hello again, <%= new String(Base64.getDecoder().decode(fname), StandardCharsets.UTF_8) %> !</p>
+		<p>Hello <%= new String(Base64.getDecoder().decode(fname), StandardCharsets.UTF_8) %> !</p>
 		<span class="input input--minoru">
 			<input class="input__field input__field--minoru" id="password" name="password" type="password" id="input-8" placeholder="Password"/>
 			<label class="input__label input__label--minoru" for="input-8">
