@@ -55,7 +55,7 @@ pageEncoding="UTF-8"%>
 	</div>
 	<h1>Welcome</h1>
 	<div class="registrationBlock" id="checkInvitation">
-		<form action="getEmailLink" id="registrationForm" style="text-align: center;">
+		<form action="letsgo" id="registrationForm" style="text-align: center;">
 			<div class="custom-info" style="margin-bottom: 20px;font-size: 17px;">
 				<p>Please enter your <%= activity %> email to receive your activation link.</p>
 			</div>
