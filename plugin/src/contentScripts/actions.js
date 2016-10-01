@@ -68,9 +68,14 @@ waitfor:function(msg, callback, sendResponse){
             }
         }
         if (iteration > 100){
-            msg.type = "error: connection too long";
-            sendResponse(msg);
-            errorOverlay(msg);
+        	if (msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep].grave == true){
+            	msg.type = "error: connection too long";
+            	sendResponse(msg);
+            	errorOverlay(msg);
+        	} else {
+        		msg.actionStep++;
+            	callback(msg, sendResponse);
+        	}
         } else if(absent){
             setTimeout(function(){
                 iteration ++;

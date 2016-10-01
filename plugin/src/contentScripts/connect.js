@@ -1,8 +1,30 @@
 function isConnected(msg){
-	var object = $(msg.detail[msg.bigStep].website.checkAlreadyLogged[0].search);
-	if (object.length == 0)
-		return false;
-	return true;
+    if ($(msg.detail[msg.bigStep].website.checkAlreadyLogged).length == 1) {
+        var object = $(msg.detail[msg.bigStep].website.checkAlreadyLogged[0].search);
+            if (object.length == 0)
+                return "false";
+            return "true";
+    } else {
+        for (var i in $(msg.detail[msg.bigStep].website.checkAlreadyLogged)) {
+            var object = $(msg.detail[msg.bigStep].website.checkAlreadyLogged[i]);
+            if (object[0].action == "waitPage") {
+                var url = "^" + object[0].url;
+                if (document.URL.match(url)){
+                
+                } else {
+                    if ($(object[0].but).length == 0) {
+                        return "wait";
+                    } else {
+                        return "false";
+                    }
+                }
+            } else if (object[0].action == "search") {
+                if (object[0].search.length == 0)
+                    return "false";
+                return "true";
+            } else {return "false"} 
+        }
+    }
 }
 
 function getNewLogin(msg, i){
@@ -14,7 +36,7 @@ function getNewLogin(msg, i){
 }
 
 function alreadyVisited(msg){
-    if(msg.allConnections[getHost(msg.detail[msg.bigStep].website.loginUrl)]){
+    if(msg.allConnections && msg.allConnections[getHost(msg.detail[msg.bigStep].website.loginUrl)]){
          if(msg.allConnections[getHost(msg.detail[msg.bigStep].website.loginUrl)] == getNewLogin(msg, msg.bigStep))
             return true;
     }
@@ -26,7 +48,8 @@ if (window.top === window) {
 extension.runtime.onMessage("goooo", function(msg, sendResponse) {
 	if (msg.todo == "checkAlreadyLogged"){
         checkConnectionOverlay(msg);
-		if (isConnected(msg) == true) {
+        var ret;
+		if ((ret = isConnected(msg)) == "true") {
 			if (alreadyVisited(msg) == true){
 				msg.todo = "connect";
 				msg.actionStep = msg.detail[msg.bigStep].website[msg.todo].todo.length;
@@ -37,7 +60,7 @@ extension.runtime.onMessage("goooo", function(msg, sendResponse) {
 				doThings(msg, sendResponse);
                 logoutOverlay(msg);
 			}
-		} else {
+		} else if (ret == "false") {
             msg.waitreload = true;
 			if (typeof msg.detail[msg.bigStep].logWith === "undefined") {
 				msg.todo = "connect";
@@ -50,7 +73,9 @@ extension.runtime.onMessage("goooo", function(msg, sendResponse) {
             } else if(msg.todo == "connect"){
                 loginOverlay(msg);
             }
-		}
+		} else if (ret == "wait") {
+
+        }
 	} else if(msg.todo == "end"){
         endOverlay();
         /*if(isConnected(msg) == true){
@@ -67,6 +92,7 @@ extension.runtime.onMessage("goooo", function(msg, sendResponse) {
         sendResponse(msg);
     }
 	else {
+        msg.waitreload = true;
         doThings(msg, sendResponse);
         if(msg.todo == "logout"){
             logoutOverlay(msg);
