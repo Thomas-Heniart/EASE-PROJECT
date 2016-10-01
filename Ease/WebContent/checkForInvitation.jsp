@@ -3,12 +3,10 @@ pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<title>Ease registration</title>
+	<title>Activate your EASE account !</title>
 	<meta http-equiv="Content-Type" contentType="text/html; charset=UTF-8"/>
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1"/>
 	<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/echjdhmhmgildgidlcdlepfkaledeokm">
-	<meta name="description"
-	content="Activate your EASE account." />
 	<meta property="og:image" content="https://ease.space/resources/other/fb_letsgo_icon.jpg" />
 	<link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -76,7 +74,7 @@ pageEncoding="UTF-8"%>
 			<p>Take a look in your mail box ;)</p>
 		</div>
 		<div class="custom-button">
-			<button type="submit" form="registrationForm" value="Submit">Goo !</button>
+			<button type="submit" form="registrationForm" value="Submit">Go !</button>
 		</div>
 	</div>
 </body>

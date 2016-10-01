@@ -67,6 +67,7 @@
 });
 $(document).ready(function(){
 	$('#PopupAddApp .loginWithButton').click(function(){
+		 $(".loginAppChooser p").text("Select your account");
 		var parent = $(this).closest('.md-content');
 		var AppChooser = $(this).closest('.md-content').find('.loginAppChooser .ChooserContent');
 		var webid = $(this).attr('webid');
@@ -82,6 +83,10 @@ $(document).ready(function(){
 		parent.find('.or').css('display', 'none');
 
 		var apps = $(".siteLinkBox[webid='" + webid + "']");
+		if(apps.length == 0) {
+			if(webid=="7") $(".loginAppChooser p").text("No Facebook account detected");
+			if(webid=="28")  $(".loginAppChooser p").text("No Linkedin account detected");
+		}
 		for (var i = 0; i < apps.length; i++) {
 			AppHelper.attr('aId', $(apps[i]).attr("id"));			
 			AppHelper.find('p').text($(apps[i]).attr('login'));
