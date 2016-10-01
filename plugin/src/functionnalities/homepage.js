@@ -1,5 +1,5 @@
 extension.storage.get("settings", function(res){
-    if(res==null) extension.storage.set("settings", {"homepage":true}, function(){});
+    if(!res || !res.homepage) extension.storage.set("settings", {"homepage":true}, function(){});
 });
 
 extension.tabs.onNewTab(function(tab){

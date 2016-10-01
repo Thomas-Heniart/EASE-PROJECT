@@ -12,6 +12,8 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeUtility;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -87,29 +89,18 @@ public class getEmailLink extends HttpServlet {
 					message.setFrom(new InternetAddress("benjamin@ease-app.co", "Ease Team"));
 					message.setRecipients(Message.RecipientType.TO,
 							InternetAddress.parse(email));
-					message.setSubject("Créez votre compte ease");
+					message.setSubject(MimeUtility.encodeText("Active ton compte Ease !", "utf-8", null));
 					String link = "https://ease.space/registerInv?email=" + email + "&code=" + invitationCode;
-					message.setContent(""
-							+ ""
-							+ ""
-							+ "<div style='color:black;'><p style='margin: 0px;'>Hello !</p>"
-							+ "<p style='margin: 0px;'></p>"
-							+ "<p style='margin: 0px'>Bienvenue sur Ease.space !</p>"
-							+ "<p style='margin: 0px;'></p>"
-							+ "<p style='margin: 0px;'>Ease est ton espace personnel intelligent et sécurisé qui regroupe l'ensemble des sites sur lesquels tu as un compte, et qui t’y connecte automatiquement! Ease fonctionne sur Chrome et Safari.</p>"
-							+ "<p style='margin: 0px;'></p>"
-							+ "<p style='margin: 0px;'>Autrement dit, une fois tes identifiants enregistrés sur ton espace Ease, tu n’auras plus jamais à les utiliser. Et ce, où que tu sois, quelque soit l’ordinateur et en toute sécurité. Seul pré-requis: avoir internet ! ;-)</p>"
-							+ "<p style='margin: 0px;'></p>"
-							+ "<p style='margin: 0px;'>Pour activer ton espace, clique sur le lien suivant et laisse toi guider: <a href='"+link+"'>https://ease.space/...</a></p>"
-							+ "<p style='margin: 0px;'></p>"
-							+ "<p style='margin: 0px;'>Avant de nous quitter, quelques petits conseils sur ton mot de passe de ton espace Ease: </p>"
-							+ "<p style='margin: 0px;'></p>"
-							+ "<p style='margin: 5px;'>- Ne choisis pas le nom de ton chien, AZERTY ou 123456: un mot de passe compliqué assure une meilleure sécurité de tes données personnelles</p>"
-							+ "<p style='margin: 5px;'>- N’oublie pas ton mot de passe car, pour garantir la sécurité de tes données personnelles, il n’est pas ré-initialisable.</p>"
-							+ "<p style='margin: 0px;'></p>"
-							+ "<p style='margin: 0px;'>A bientôt sur Ease!</p>"
-							+ "<p style='margin: 0px;'></p>"
-							+ "<p style='margin: 0px;'>La team Ease</p></div>"
+					message.setContent("<div style='color:black;'><p>Hello !</p>"
+							+ "<p>Bienvenue sur Ease.space !</p>"
+							+ "<p>Ease est ton espace personnel intelligent et sécurisé qui regroupe l'ensemble des sites sur lesquels tu as un compte, et qui t’y connecte automatiquement! Ease fonctionne sur Chrome et Safari.</p>"
+							+ "<p>Autrement dit, une fois tes identifiants enregistrés sur ton espace Ease, tu n’auras plus jamais à les utiliser. Et ce, où que tu sois, quelque soit l’ordinateur et en toute sécurité. Seul pré-requis: avoir internet ! ;-)</p>"
+							+ "<p>Pour activer ton espace, clique sur le lien suivant et laisse toi guider: <a href='"+link+"'>https://ease.space/...</a></p>"
+							+ "<p>Avant de nous quitter, quelques petits conseils sur ton mot de passe de ton espace Ease: </p>"
+							+ "<p style='margin-left: 25px;'>- Ne choisis pas le nom de ton chien, AZERTY ou 123456: un mot de passe compliqué assure une meilleure sécurité de tes données personnelles</p>"
+							+ "<p style='margin-left: 25px;'>- N’oublie pas ton mot de passe car, pour garantir la sécurité de tes données personnelles, il n’est pas ré-initialisable.</p>"
+							+ "<p>A bientôt sur Ease!</p>"
+							+ "<p>La team Ease</p></div>"
 							, "text/html;charset=utf-8");
 
 					Transport.send(message);
