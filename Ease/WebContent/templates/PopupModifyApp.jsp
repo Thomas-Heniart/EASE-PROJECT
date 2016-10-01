@@ -62,7 +62,7 @@ pageEncoding="UTF-8"%>
 		$(elem).find('input').prop('disabled', false);
 		$(elem).find('.activateInput').css('display', 'none');
 		if($(elem).find('input').attr('name')=="password"){
-			$(elem).find('input').attr('placeholder','Click on the wheel to modify password');
+			$(elem).find('input').attr('placeholder','Password');
 		}
 	}
 	$(document).ready(function(){
