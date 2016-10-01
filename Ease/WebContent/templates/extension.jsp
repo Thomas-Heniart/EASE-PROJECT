@@ -1,7 +1,7 @@
 		<div id="downloadExtension" class="centeredItem" style="display:none;">
 		<div class="popupContent">
 			<p class="title">You are almost done ...<i class="fa fa-heart" aria-hidden="true"></i></p>
-			<p class="info">Download the Ease addon to automagically work on this computer</br>For now, it works on Chrome and Safari</p>
+			<p class="info">Download the addon to make Ease automagically work on this computer</br>For now, it works on Chrome and Safari</p>
 			<p><i class="fa fa-angle-down" aria-hidden="true"></i></p>
 			<button id="install-button">Get Ease Addon</button>
 			<p id="moreInfoButton" style="margin-top: 5px;">Know more about the Addon.</p>
