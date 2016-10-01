@@ -89,7 +89,7 @@ pageEncoding="UTF-8"%>
 		<div class="alertDiv">
 			<p></p>
 		</div>
-		<p class="registrationTips">We want Ease <span>so safe</span> that if you <span>lose your password</span>, all your data will be lost and we will not be able to recover it. Make sure you will remember it !</p>
+		<p class="registrationTips">Set this password carefully.</br>In case you forget it, we won’t be able to recover it for you ! </p>
 		<div class="custom-button">
 			<button type="submit" form="registrationForm" value="Submit">GO</button>
 		</div>
