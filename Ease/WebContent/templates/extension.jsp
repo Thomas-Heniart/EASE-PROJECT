@@ -8,7 +8,7 @@
 		</div>
 		<div class="safariHelper" style="display: none;">
 			<h1 style="margin-top: 0px;">Final step</h1>
-			<p>You have downloaded our addon (called "EaseExtension.safariext"), simply double click on it to install.</p>
+			<p>You have downloaded our addon (called "EaseExtension.safariextz"), simply double click on it to install.</p>
 			<div style="width: 55%;margin:0px auto 5px auto;"><img style="width: 100%" src="resources/other/safari-addon-example.png"/></div>
 			<p>Once it's done, just reload the page :)</p>
 		</div>

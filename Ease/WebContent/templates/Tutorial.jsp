@@ -2,11 +2,6 @@
     pageEncoding="UTF-8"%>
 
 <div id="tutorialView"  style="z-index: 500;">
-	<div class="bublePopup step0" style="display:none;">
-		<div class="popupContent">
-			<p style="font-size: 20px;">Welcome <%= ((User)(session.getAttribute("User"))).getFirstName() %> !</p>
-		</div>
-	</div>
 	<div class="bublePopup step1" style="display:none;">
 		<div class="popupContent">
 			<p>To add your apps (facebook, google drive…), click the red button to access the catalogue !</p>
