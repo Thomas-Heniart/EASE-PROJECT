@@ -1,11 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    <%@ page import="com.Ease.session.User" %>
-    
+    <%@ page import="com.Ease.session.User" %> 
 <nav id="menu" class="menu">
-<button class="menu__label"><i class="fa fa-fw fa-user"></i><span><%= ((User)(session.getAttribute("User"))).getFirstName() %></span></button>
+<button class="menu__label"><i class="fa fa-fw fa-user"></i><span><%= ((User)(session.getAttribute("User"))).getFirstName().substring(0, (((User)(session.getAttribute("User"))).getFirstName().length() > 8) ? 8 : ((User)(session.getAttribute("User"))).getFirstName().length()) %></span></button>
 	<ul class="menu__inner">
-<!--	<li><a><span>home page</span></a></li>-->
+<!--	<li><a><span>home page</span></a></li>-->arg0
 	<li><a href="#" id="ModifyUserButton"><i class="fa fa-fw fa-cogs"></i><span>Parameters</span></a></li>
 	</ul>
 </nav>
