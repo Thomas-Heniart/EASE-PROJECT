@@ -1,21 +1,27 @@
 @import 'variables';
 
 #invitationBody {
-	background-color: $themeColor;
+	background: url('../resources/backgrounds/background.jpeg');
+	background-size: 100% 100%;
+	background-position: 50% 50%;
 	.logo {
 		width: 20%;
-		margin-left: auto;
-		margin-right: auto;
-		margin-top: 50px;
 		img {
 			width: 100%;
 		}
+	}
+	h1 {
+		color: white;
+		margin: 0px auto 30px auto;
+		text-align: center;
+		font-size: 50px;
 	}
 	p {
 		margin-bottom: 3px;
 	}
 	.registrationBlock#checkInvitation {
 		padding-bottom: 50px;
+		padding-top: 40px;
 		.confirmBox {
 			text-align: center;
 			max-width: 60%;
@@ -46,8 +52,9 @@
 		margin-right: auto;
 		margin-bottom: 30px;
 		width: 19%;
-		min-width: 200px;
-		background-color: white;
+		min-width: 250px;
+		max-width: 250px;
+		background-color: rgba(white, 0.9);
 
 		.alertDiv {
 			width: 90%;
