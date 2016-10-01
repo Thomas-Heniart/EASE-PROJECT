@@ -9,7 +9,7 @@ pageEncoding="UTF-8"%>
 	<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/echjdhmhmgildgidlcdlepfkaledeokm">
 	<meta name="description"
 	content="Activate your EASE account." />
-	<meta property="og:image" content="https://ease.space/resources/icons/Ease_Logo_couleur.png" />
+	<meta property="og:image" content="https://ease.space/resources/other/fb_letsgo_icon.jpg" />
 	<link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
