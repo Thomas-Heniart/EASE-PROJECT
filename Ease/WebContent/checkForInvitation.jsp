@@ -51,13 +51,11 @@ pageEncoding="UTF-8"%>
 	<div class="logo">
 		<img src="resources/images/Ease_Logo.png"/>
 	</div>
+	<h1>Welcome</h1>
 	<div class="registrationBlock" id="checkInvitation">
-		<div class="title">
-			<p>Hello,</p>
-		</div>
 		<form action="getEmailLink" id="registrationForm" style="text-align: center;">
 			<div class="custom-info" style="margin-bottom: 20px;font-size: 17px;">
-				<p>Please enter your email to get started with an easy web.</p>
+				<p>Please enter your <%= activity %> email to receive your activation link.</p>
 			</div>
 			<div class="custom-info confirmDiv" style="margin-bottom: 20px;margin-top:20px;font-size: 17px;display: none;">
 				<p>Thank you !</p>
