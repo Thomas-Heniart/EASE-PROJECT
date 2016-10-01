@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>EASE Logout</title>
+<title>Ease logout</title>
 <script src="js/jquery1.12.4.js"></script>
 	<script src="js/jquery-ui-1.12.0.js"></script>
 	<link rel="stylesheet" href="css/logout.css" />
