@@ -3,11 +3,11 @@ pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<title>Ease registration</title>
+	<title>Activate your EASE account !</title>
 	<meta http-equiv="Content-Type" contentType="text/html; charset=UTF-8"/>
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1"/>
 	<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/echjdhmhmgildgidlcdlepfkaledeokm">
-
+	<meta property="og:image" content="https://ease.space/resources/other/fb_letsgo_icon.jpg" />
 	<link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
@@ -51,13 +51,11 @@ pageEncoding="UTF-8"%>
 	<div class="logo">
 		<img src="resources/images/Ease_Logo.png"/>
 	</div>
+	<h1>Welcome</h1>
 	<div class="registrationBlock" id="checkInvitation">
-		<div class="title">
-			<p>Hello,</p>
-		</div>
-		<form action="getEmailLink" id="registrationForm" style="text-align: center;">
+		<form action="letsgo" id="registrationForm" style="text-align: center;">
 			<div class="custom-info" style="margin-bottom: 20px;font-size: 17px;">
-				<p>Please enter your email to get started with an easy web.</p>
+				<p>Please enter your <%= activity %> email to receive your activation link.</p>
 			</div>
 			<div class="custom-info confirmDiv" style="margin-bottom: 20px;margin-top:20px;font-size: 17px;display: none;">
 				<p>Thank you !</p>
@@ -76,7 +74,7 @@ pageEncoding="UTF-8"%>
 			<p>Take a look in your mail box ;)</p>
 		</div>
 		<div class="custom-button">
-			<button type="submit" form="registrationForm" value="Submit">Goo !</button>
+			<button type="submit" form="registrationForm" value="Submit">Go !</button>
 		</div>
 	</div>
 </body>

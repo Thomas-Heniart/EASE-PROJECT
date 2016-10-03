@@ -23,6 +23,16 @@ function rememberConnection(username, website){
     });    
 }
 
+
+function rememberDirectLogWithConnection(website, logWithDatas){
+    extension.storage.get('allConnections', function(res){
+        if(!res) res = {};
+        res[website] =logWithDatas;
+        console.log("-- Connection with " +logWithDatas + " on website " + website + " remembered --");
+        extension.storage.set('allConnections', res, function(){});
+    });    
+}
+
 function rememberLogWithConnection(website, logWithWebsite){
     extension.storage.get('allConnections', function(res){
         if(!res) res = {};

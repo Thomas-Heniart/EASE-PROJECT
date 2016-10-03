@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>EASE Logout</title>
+<title>Ease logout</title>
 <script src="js/jquery1.12.4.js"></script>
 	<script src="js/jquery-ui-1.12.0.js"></script>
 	<link rel="stylesheet" href="css/logout.css" />
@@ -20,7 +20,7 @@
 </script>
 
 <div class='logout-overlay'>
-	<h3>We are logging you out</h3>
+	<h3>We are logging you out from your websites</h3>
 	<div class="sk-fading-circle">
   <div class="sk-circle1 sk-circle"></div>
   <div class="sk-circle2 sk-circle"></div>

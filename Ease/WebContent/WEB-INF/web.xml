@@ -156,7 +156,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>GetEmailLink</servlet-name>
-    <url-pattern>/getEmailLink</url-pattern>
+    <url-pattern>/letsgo</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>LetsEncrypt</servlet-name>

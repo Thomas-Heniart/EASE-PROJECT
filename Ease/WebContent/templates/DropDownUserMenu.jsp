@@ -1,9 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ page import="com.Ease.session.User" %>
-    
+    <%  String UserName = ((User)(session.getAttribute("User"))).getFirstName();
+    	if (UserName.length() > 7){
+    	UserName = UserName.substring(0, 7) + "...";
+    }
+    %>
 <nav id="menu" class="menu">
-<button class="menu__label"><i class="fa fa-fw fa-user"></i><span><%= ((User)(session.getAttribute("User"))).getFirstName() %></span></button>
+<button class="menu__label"><i class="fa fa-fw fa-user"></i><span><%= UserName %></span></button>
 	<ul class="menu__inner">
 <!--	<li><a><span>home page</span></a></li>-->
 	<li><a href="#" id="ModifyUserButton"><i class="fa fa-fw fa-cogs"></i><span>Parameters</span></a></li>

@@ -37,7 +37,7 @@ pageEncoding="UTF-8"%>
 			<input  name="login" type="text" placeholder="Login" style="display:none;"/>
 			<input  id="login" name="login" type="text" placeholder="Login" />
 			<div class="disabledInput">
-				<input  id="password" name="password" type="password" placeholder="Password"/>
+				<input  id="password" name="password" type="password" placeholder="Click on the wheel to modify password"/>
 				<div class="activateInput">
 					<i class="fa fa-cog"></i>
 				</div>
@@ -54,10 +54,16 @@ pageEncoding="UTF-8"%>
 	function resetDisabledInput(elem){
 		$(elem).find('input').prop('disabled', true);
 		$(elem).find('.activateInput').css('display', 'block');
+		if($(elem).find('input').attr('name')=="password"){
+			$(elem).find('input').attr('placeholder','Click on the wheel to modify password');
+		}
 	}
 	function enableDisabledInput(elem) {
 		$(elem).find('input').prop('disabled', false);
 		$(elem).find('.activateInput').css('display', 'none');
+		if($(elem).find('input').attr('name')=="password"){
+			$(elem).find('input').attr('placeholder','Password');
+		}
 	}
 	$(document).ready(function(){
 		$('#PopupModifyApp .buttonBack').click(function(){
@@ -73,7 +79,11 @@ pageEncoding="UTF-8"%>
 			var inpt = $(this).closest('.disabledInput').find('input');
 			if (inpt.prop('disabled') == true){
 				inpt.prop('disabled', false);
+				if(inpt.attr('name')=="password"){
+					inpt.attr('placeholder','Password');
+				}
 			}
+			
 			$(this).css('display', 'none');
 			$(inpt).focus();
 		});

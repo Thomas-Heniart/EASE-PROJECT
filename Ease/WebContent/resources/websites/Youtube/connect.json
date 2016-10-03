@@ -25,7 +25,7 @@
 			{"action":"clickona", "search":"a[href='/logout']", "grave":true},
 			{"action":"waitfor", "search":".signin-container"},
 			{"action":"waitload"}
-			]
+		]
 	},
 	"checkAlreadyLogged":[
 		{"search":"#yt-masthead-account-picker"}

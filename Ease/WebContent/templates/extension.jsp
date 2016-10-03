@@ -1,16 +1,16 @@
 		<div id="downloadExtension" class="centeredItem" style="display:none;">
 		<div class="popupContent">
 			<p class="title">You are almost done ...<i class="fa fa-heart" aria-hidden="true"></i></p>
-			<p class="info">Now, you need our addon for Ease to automagically work on this computer. (thank god it takes just 1 second  to download)</p>
+			<p class="info">Download the addon to make Ease automagically work on this computer</br>For now, it works on Chrome and Safari</p>
 			<p><i class="fa fa-angle-down" aria-hidden="true"></i></p>
 			<button id="install-button">Get Ease Addon</button>
 			<p id="moreInfoButton" style="margin-top: 5px;">Know more about the Addon.</p>
 		</div>
 		<div class="safariHelper" style="display: none;">
 			<h1 style="margin-top: 0px;">Final step</h1>
-			<p>You have downloaded our addon (called "EaseExtension.safariext"), simply double click on it to install.</p>
+			<p>You have downloaded our addon (called "EaseExtension.safariextz"), simply double click on it to install.</p>
 			<div style="width: 55%;margin:0px auto 5px auto;"><img style="width: 100%" src="resources/other/safari-addon-example.png"/></div>
-			<p>Once it's done, just reload the page :)</p>
+			<p style="font-size: 1.3em;">Once it's done, just refresh the page :)</p>
 		</div>
 		<div class="popupHelper" style="display: none;">
 			<div class="firstLine" style="margin-bottom: 10px;">

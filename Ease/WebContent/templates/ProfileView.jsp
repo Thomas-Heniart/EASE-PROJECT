@@ -60,6 +60,10 @@ response.addCookie(email);
 			var json = new Object();
 			var event;
 
+			if (!($('#ease_extension').length)){
+				checkForExtension();
+				return;
+			}
 			$(obj).addClass('waitingLinkImage');
 			$(obj).addClass('scaleinAnimation');
 			setTimeout(function() {
@@ -284,13 +288,11 @@ response.addCookie(email);
 				});
 		}
 	}
-	$(document).ready(function() {
-		if (!($('#tutorialView').length)) {
+/*	$(document).ready(function() {
 			setTimeout(function() {
 				checkForExtension();
 			}, 1000);
-		}
-	});
+	});*/
 	function closeAllSettingsTabs() {
 		$('.ProfileSettingsButton.settings-show').click();
 	}
