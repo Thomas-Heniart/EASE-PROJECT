@@ -1,0 +1,26 @@
+{
+    "name":"YahooMail",
+    "lastLogin":"",
+    "home":"https://login.yahoo.com/config/mail",
+    "connect":{
+        "todo":[
+            {"action":"fill", "what":"login", "search":"#login-username", "grave":true},
+            {"action":"click", "search":"#login-signin"},
+            {"action":"waitfor", "search":"#login-passwd"},
+            {"action":"fill", "what":"password", "search":"#login-passwd"},
+            {"action":"submit", "search":"#mbr-login-form"},
+            {"action":"waitload"},
+            {"action":"goto", "url":"https://mail.yahoo.com/"}
+        ]
+    },
+    
+    "logout":{
+        "todo":[
+        	{"action":"aclick","search":"#yucs-signout"},
+        	{"action":"goto","url":"https://login.yahoo.com/config/mail"}
+        ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"#yucs-signout"}
+    ]
+}
