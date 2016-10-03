@@ -45,6 +45,8 @@ pageEncoding="UTF-8"%>
 	if (activity == null){
 		activity = "";
 	}
+	if (request.getSession().getAttribute("User") != null)
+		request.getRequestDispatcher("index.jsp").forward(request, response);
 %> 
 
 <body id="invitationBody">
@@ -77,6 +79,7 @@ pageEncoding="UTF-8"%>
 			<button type="submit" form="registrationForm" value="Submit">Go !</button>
 		</div>
 	</div>
+	<%@ include file="templates/ChatButton.jsp" %>
 </body>
 <script type="text/javascript">
 	$(document).ready(function(){
