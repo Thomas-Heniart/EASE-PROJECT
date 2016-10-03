@@ -68,14 +68,9 @@ waitfor:function(msg, callback, sendResponse){
             }
         }
         if (iteration > 100){
-        	if (msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep].grave == true){
-            	msg.type = "error: connection too long";
-            	sendResponse(msg);
-            	errorOverlay(msg);
-        	} else {
-        		msg.actionStep++;
-            	callback(msg, sendResponse);
-        	}
+            msg.type = "error: connection too long";
+            sendResponse(msg);
+            errorOverlay(msg);
         } else if(absent){
             setTimeout(function(){
                 iteration ++;
@@ -102,14 +97,6 @@ setattr:function(msg, callback, sendResponse){
 			callback(msg, sendResponse);
 		}
 	} else {
-        if(actionStep.what){
-            if(actionStep.what=="login"){
-                actionStep.content=msg.detail[0].user.login;
-            }
-            if(actionStep.what=="password"){
-                actionStep.content=msg.detail[0].user.password;
-            }
-        }
 		input.attr(actionStep.attr, actionStep.content);
         msg.actionStep++;
 		callback(msg, sendResponse);
@@ -129,20 +116,14 @@ fill:function(msg, callback, sendResponse){
 		}
 	} else {
 		input.click();
-        input.focus();
+    input.focus();
 		if (actionStep.what == "login") {
-            
 			input.val(msg.detail[0].user.login);
 		} else if (actionStep.what == "password") {
-          
 			input.val(msg.detail[0].user.password);
 		}
-        input.keydown();
-        input.keyup();
-        input.keypress();
-        input.change();
+    input.change();
 		input.blur();
-        
 		msg.actionStep++;
 		callback(msg, sendResponse);
 	}

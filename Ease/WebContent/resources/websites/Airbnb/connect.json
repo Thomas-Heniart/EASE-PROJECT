@@ -21,6 +21,6 @@
             ]
     },
     "checkAlreadyLogged":[
-        {"search":"a[href='/logout']"}
+        {"search":"div.logged_in"}
     ]
 }

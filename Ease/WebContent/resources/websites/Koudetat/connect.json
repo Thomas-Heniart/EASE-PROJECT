@@ -6,7 +6,7 @@
     	"todo": [
     		{"action":"fill", "what":"login","search":"#login-by-email-form input[type='email']#login-email", "grave":"true"},
     		{"action":"fill", "what":"password","search":"#login-by-email-form input[type='password']", "grave":"true"},
-    		{"action":"submit", "search":"#login-by-email-form", "grave":"true"}
+    		{"action":"click", "search":".email-btn.login-btn", "grave":"true"}
     	]
     },
     "Facebook": {

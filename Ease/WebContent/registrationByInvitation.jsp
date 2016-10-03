@@ -47,6 +47,8 @@ pageEncoding="UTF-8"%>
 	<%
 	String invitationCode = request.getParameter("code");
 	String emailAddress = request.getParameter("email");
+	if (invitationCode == null || emailAddress == null) 
+		request.getRequestDispatcher("index.jsp").forward(request, response);
 	%>
 	<div class="logo">
 		<img src="resources/images/Ease_Logo.png"/>
@@ -94,6 +96,7 @@ pageEncoding="UTF-8"%>
 			<button type="submit" form="registrationForm" value="Submit">GO</button>
 		</div>
 	</div>
+	<%@ include file="templates/ChatButton.jsp" %>
 </body>
 <script type="text/javascript">
 	$(document).ready(function(){
