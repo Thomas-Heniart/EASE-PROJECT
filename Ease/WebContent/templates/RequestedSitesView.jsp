@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 
 <div class="MenuButtonSet middleTopLeft">
-	<button id="enterRequestedWebsitesMode" state="off" class="button">
+	<button id="enterRequestedWebsitesMode" state="off" class="button adminButton">
 		<img src="resources/icons/requested_websites.png" />
 	</button>
 </div>
@@ -52,6 +52,10 @@
 
 	$(document).ready(function() {
 		$('#enterRequestedWebsitesMode').click(function() {
+			leaveTagsManagerMode();
+			leaveAddSiteMode();
+			leaveChangeBackMode();
+			leaveAddUsersMode();
 			enterRequestedWebsitesMode();
 		});
 	});

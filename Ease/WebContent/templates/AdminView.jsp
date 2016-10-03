@@ -23,4 +23,5 @@ com.Ease.session.User user = (com.Ease.session.User)(session.getAttribute("User"
 	<%@ include file="RequestedSitesView.jsp"%>
 	<%@ include file="UploadWebsite.jsp" %>
 	<%@ include file="TagsManager.jsp" %>
+	<%@ include file="ChangeBackground.jsp" %>
 </div>
