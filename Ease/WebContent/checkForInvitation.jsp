@@ -30,6 +30,7 @@ pageEncoding="UTF-8"%>
 	<script src="js/classie.js"></script>
 	<script src="js/owl.carousel.js"></script>
 	<script src="js/basic-utils.js" ></script>
+
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"> </script>
 	<script src="js/jquery.mousewheel.min.js"></script>
 	<link rel="stylesheet" href="css/default_style.css" />
@@ -63,7 +64,6 @@ pageEncoding="UTF-8"%>
 				<p>Thank you !</p>
 			</div>
 			<span class="input input--minoru">
-				<div class="confirmDiv confirmCheckCircle" style="display: none;"><i class="fa fa-check-circle" aria-hidden="true"></i></div>
 				<input style="text-align: center;" class="input__field input__field--minoru" name="email" type="email" id="input-8" placeholder="Email"/>
 				<label class="input__label input__label--minoru" for="input-8">
 				</label>
@@ -72,11 +72,25 @@ pageEncoding="UTF-8"%>
 		<div class="alertDiv">
 			<p></p>
 		</div>
-		<div class="confirmDiv confirmBox" style="display: none;">
-			<p>Take a look in your mail box ;)</p>
-		</div>
 		<div class="custom-button">
-			<button type="submit" form="registrationForm" value="Submit">Go !</button>
+			<button type="submit" form="registrationForm" value="Submit"><span>Go !</span></button>
+			<div class="loadHelper centeredItem">
+				<div class="sk-fading-circle">
+				  <div class="sk-circle1 sk-circle"></div>
+				  <div class="sk-circle2 sk-circle"></div>
+				  <div class="sk-circle3 sk-circle"></div>
+				  <div class="sk-circle4 sk-circle"></div>
+				  <div class="sk-circle5 sk-circle"></div>
+				  <div class="sk-circle6 sk-circle"></div>
+				  <div class="sk-circle7 sk-circle"></div>
+				  <div class="sk-circle8 sk-circle"></div>
+				  <div class="sk-circle9 sk-circle"></div>
+				  <div class="sk-circle10 sk-circle"></div>
+				  <div class="sk-circle11 sk-circle"></div>
+				  <div class="sk-circle12 sk-circle"></div>
+				</div>
+			</div>
+			<div class="successHelper centeredItem"><p>Take a look in your mail box ;)</p></div>
 		</div>
 	</div>
 	<%@ include file="templates/ChatButton.jsp" %>
@@ -87,6 +101,8 @@ pageEncoding="UTF-8"%>
 			e.preventDefault();
 			var email = $("#registrationForm input[name='email']").val();
 			$('.alertDiv').removeClass('show');
+			var button = $('.registrationBlock .custom-button');
+			button.addClass('loading');
 			$.post(
 				$('#registrationForm').attr('action'),
 				{
@@ -94,13 +110,17 @@ pageEncoding="UTF-8"%>
 				},
 				function(data){
 					if (data[0] == 's'){
-						$('#checkInvitation').find('.title, .custom-info, .custom-button').css('display', 'none');
-						$('#checkInvitation').find('.confirmDiv').css('display', 'block');						
+						button.removeClass('loading');
+						button.addClass('success');
+						setTimeout(function(){
+							button.removeClass('success');
+						}, 5000);
 					} else {
 						var str = data.substring(7, data.length);
 						$('.alertDiv').css('color', 'red');
 						$('.alertDiv').text(str);
 						$('.alertDiv').addClass('show');
+						button.removeClass('loading');
 					}
 				},
 				'text'
