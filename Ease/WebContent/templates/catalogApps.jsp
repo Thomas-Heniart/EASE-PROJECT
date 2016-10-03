@@ -9,15 +9,7 @@
 			<img src="${item.getFolder()}logo.png" />
 		</div>
 		<div class="catalogAppName">
-			<c:choose>
-				<c:when test="${item.getName().length() > 14}">
-					<p>${item.getName().substring(0,14)}...
-					<p>
-				</c:when>
-				<c:otherwise>
 					<p>${item.getName()}</p>
-				</c:otherwise>
-			</c:choose>
 		</div>
 	</div>
 </c:forEach>
