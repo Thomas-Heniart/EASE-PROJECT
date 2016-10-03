@@ -1,5 +1,21 @@
+var extensionLight = {
+    runtime:{
+        sendMessage:function(name, msg, callback){
+		  chrome.runtime.sendMessage({"name":name, "message":msg}, callback);
+        },
+	   onMessage:function(name, fct){
+           chrome.runtime.onMessage.addListener(function(event, sender, sendResponse){
+	           if(event.name == name){
+                   fct(event.message, sendResponse);
+                   return true;
+               }
+            });
+        }
+    }
+}
+console.log("oui?");
 if (window.top === window) {
-
+    console.log("non?")
     if (!document.getElementById("ease_overlay_mamene")){
         var overlay = document.createElement('div');
         overlay.id = "ease_overlay_mamene";

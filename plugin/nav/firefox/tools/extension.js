@@ -15,7 +15,16 @@ var extension = {
 		}
 	},
     currentWindow:function(callback){
-        chrome.windows.getCurrent({}, callback)
+        chrome.windows.getCurrent({"populate":true}, callback)
+    },
+    hasMultipleEaseTabs:function(window){
+        var nb=0;
+        for(var i in window.tabs) {
+            if(window.tabs[i].url.indexOf("ease.space")!=-1){
+                nb++;
+            }
+        }
+        return nb>1;
     },
 	addShortCut:function(fct){
 		chrome.commands.onCommand.addListener(fct);
@@ -58,19 +67,32 @@ var extension = {
         bckgrndOnMessage:function(name, fct){
             chrome.runtime.onMessage.addListener(function(event, sender, sendResponse){
                 if(event.name == name){
-					fct(event.message, sendResponse);
+					fct(event.message, sender.tab, sendResponse);
                     return true;
 				}
 			});
         }
-	},
+    },
 	tabs:{
+        stopLoad:function(tab, callback){
+            chrome.tabs.executeScript(tab.id, {
+                code: "window.stop();",
+                runAt: "document_start"
+            }, callback);
+        },
 		update:function(tab, url, callback){
 			chrome.tabs.update(tab.id, {"url":url}, callback);
 		},
 		create:function(window, url, active, callback){
 			chrome.tabs.create({"windowId":window.id, "url":url, "active":active}, callback);
 		},
+        createOrUpdate(window, tab, url, active, callback){
+            if(extension.hasMultipleEaseTabs(window)){
+                this.update(tab, url, callback);
+            } else {
+                this.create(window, url, active, callback);
+            }
+        },
         highlight:function(window, tab, callback){
             chrome.tabs.highlight({"windowId":window.id, "tabs":tab.index}, callback);
         },
@@ -150,18 +172,15 @@ var extension = {
             chrome.runtime.onMessage.removeListener(listenersMessages[tab.id]);  
         },
 		injectScript:function(tab, fileName, callback){
-            fileName = chrome.extension.getURL(fileName);
 			chrome.tabs.executeScript(tab.id, {"file":fileName}, callback);
 		},
         injectCSS: function(tab, fileName, callback){
-            fileName = chrome.extension.getURL(fileName);
             chrome.tabs.insertCSS(tab.id, {"file":fileName}, callback);
         },
         inject:function(tab, files, callback){
-        
             function injectonefile(i){
-                files[i] = chrome.extension.getURL(files[i]);
                 if(files[i].substring(files[i].length-3, files[i].length)==".js"){
+                    files[i]="/"+files[i];
                     chrome.tabs.executeScript(tab.id, {"file":files[i]}, function(){
                         i++;
                         if(i>=files.length){
@@ -171,6 +190,7 @@ var extension = {
                         }
                     });
                 } else if(files[i].substring(files[i].length-3, files[i].length)=="css") {
+                    files[i]="/"+files[i];
                     chrome.tabs.insertCSS(tab.id, {"file":files[i]}, function(){
                         i++;
                         if(i>=files.length){
