@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 
 <div class="MenuButtonSet bottomLeft">
-	<button id="enterAddSiteMode" state="off" class="button">
+	<button id="enterAddSiteMode" state="off" class="button adminButton">
 		<img src="resources/icons/add_website_icon.png" />
 	</button>
 </div>
@@ -59,6 +59,10 @@ function leaveAddSiteMode() {
 
 $(document).ready(function() {
 	$('#enterAddSiteMode').click(function() {
+		leaveChangeBackMode();
+		leaveAddUsersMode();
+		leaveRequestedWebsitesMode();
+		leaveTagsManagerMode();
 		enterAddSiteMode();
 	});
 });

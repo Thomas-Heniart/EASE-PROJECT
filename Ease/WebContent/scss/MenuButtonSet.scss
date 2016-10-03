@@ -4,15 +4,21 @@
 	display: block;
 }
 
+.MenuButtonSet.toptopLeft {
+	width: fit-content;
+	top: 2%;
+	left: 2%
+}
+
 .MenuButtonSet.topLeft {
 	width: fit-content;
-	top: 20%;
+	top: 21%;
 	left: 2%
 }
 
 .MenuButtonSet.topRight {
 	width: fit-content;
-	top: 20%;
+	top: 21%;
 	left: 11%
 }
 
@@ -24,13 +30,13 @@
 
 .MenuButtonSet.bottomLeft {
 	width: fit-content;
-	top: 60%;
+	top: 59%;
 	left: 2%;
 }
 
 .MenuButtonSet.superBottomLeft {
 	width: fit-content;
-	top: 80%;
+	top: 78%;
 	left: 2%;
 }
 
@@ -89,12 +95,12 @@
 		background-color: #42b72a;
 	}
 
-	#enterAddUsersMode {
+	.adminButton {
 		max-width: 100px;
 		min-width: 0px;
 		width: 100px;
 		height: 100px;
-		background-color: #555ceb;
+		background-color: #373b60;
 		border-radius: 10px;
 		padding: 7px;
 		margin: 0px;
@@ -107,67 +113,17 @@
 			height: 100%;
 		}
 	}
-	#enterAddUsersMode.on {
+	.adminButton.on {
 		background-color: #42b72a;
 	}
 
-	#enterRequestedWebsitesMode {
-		max-width: 100px;
-		min-width: 0px;
-		width: 100px;
-		height: 100px;
-		background-color: #42b72a;
-		border-radius: 10px;
-		padding: 7px;
-		margin: 0px;
-		transition: background-color 0.3s;
-		&:hover {
-			cursor: pointer;
-		}
-		img {
-			width: 100%;
-			height: 100%;
-		}
-	}
-	#enterAddUsersMode.on {
-		background-color: #42b72a;
-	}
+}
 
-
-	#enterTagsManagerMode {
-		max-width: 100px;
-		min-width: 0px;
-		width: 100px;
-		height: 100px;
-		background-color: #ffaabb;
-		border-radius: 10px;
-		padding: 7px;
-		margin: 0px;
-		transition: background-color 0.3s;
-		&:hover {
-			cursor: pointer;
-		}
-		img {
-			width: 100%;
-			height: 100%;
-		}
-	}
-
-	#enterAddSiteMode {
-		max-width: 100px;
-		min-width: 0px;
-		width: 100px;
-		height: 100px;
-		border-radius: 50px;
-		margin: 0px;
-		padding: 0px;
-		&:hover {
-			cursor: pointer;
-		}
-		img {
-			width: 100%;
-			height: 100%;
-		}
+#addSiteForm {
+	input {
+		margin-top: 10px;
+		width: 50%;
+		margin-left: 25%;
 	}
 }
 
@@ -179,7 +135,7 @@
 	}
 }
 
-#addTagForm {
+#changeBackForm {
 	input {
 		position:relative;
 		margin-top: 1%;

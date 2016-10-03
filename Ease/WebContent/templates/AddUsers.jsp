@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 
 <div class="MenuButtonSet topLeft">
-	<button id="enterAddUsersMode" state="off" class="button">
+	<button id="enterAddUsersMode" state="off" class="button adminButton">
 		<img src="resources/icons/add_users_icon.png" />
 	</button>
 </div>
@@ -68,6 +68,10 @@
 
 	$(document).ready(function() {
 		$('#enterAddUsersMode').click(function() {
+			leaveTagsManagerMode();
+			leaveRequestedWebsitesMode();
+			leaveAddSiteMode();
+			leaveChangeBackMode();
 			enterAddUsersMode();
 		});
 	});
