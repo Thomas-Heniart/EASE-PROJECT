@@ -162,7 +162,6 @@
 			}
 
 			.tag {
-				font-size: 0.8em;
 				margin: 10px 0 10px 20px;
 				border: none;
 			}
@@ -192,15 +191,15 @@
 					color: $themeColor;
 				}
 			}
-				i.fa-angle-right {
-					right: 1%;
-					padding-left: 2px;
-				}
-				i.fa-angle-left {
-					margin-left: 1%;
-					padding-right: 2px;
-					display: none;
-				}
+			i.fa-angle-right {
+				right: 1%;
+				padding-left: 2px;
+			}
+			i.fa-angle-left {
+				margin-left: 1%;
+				padding-right: 2px;
+				display: none;
+			}
 		}
 	}
 	.scaleContainer {
@@ -284,6 +283,9 @@
 				display: inline-block;
 				padding: 5px;
 				float:left;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
 				.catalogAppLogo {
 					width: 65%;
 					height: 65%;
@@ -307,6 +309,10 @@
 					text-align: center;
 					padding-top: 3px;
 					font-size: 12px;
+					p{
+						overflow: hidden;
+						text-overflow: ellipsis;
+					}
 				}
 			}
 		}
@@ -653,8 +659,10 @@
 	border: 1px solid red !important;
 }
 
-@media screen and (max-width: 771px) {
-	.ProfilesEditView {
-
+@media screen and (min-width: 1500px) {
+	.ProfilesHandler {
+		p, i {
+			font-size: 1.4em;
+		}
 	}
 }

@@ -13,7 +13,10 @@
 	overflow: hidden;
 	display: inline-block;
 	height: auto;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 	.ProfileName {
+		position: relative;
 		text-align: left;
 		background-color: #FFD00C;
 		padding: 2px;
@@ -32,9 +35,13 @@
 			line-height: 25px;
 			vertical-align: middle;
 			height: 100%;
+			max-width: 85%;
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 		.ProfileSettingsButton {
-			position: relative;
+			position: absolute;
+			right: 0;
 			overflow: hidden;
 			display: inline-block;
 			float: right;
@@ -204,403 +211,421 @@
 					height: (100% / 6);
 					padding-top: 5px;
 					position: relative;
-					overflow: hidden;
 					.siteName {
 						font-size: 10px;
 						line-height: 9px;
 						p {
 							margin: 0px;
+							white-space: nowrap;
+							text-overflow: ellipsis;
+							overflow: hidden;
+							line-height: 1.5;						}
 						}
-					}
-					.linkImage {
-						&:hover {
-							opacity: 1;
+						.linkImage {
+							&:hover {
+								opacity: 1;
+							}
+							.showAppActionsButton{
+								visibility: hidden;
+							}
+							position: relative;
+							width: 65%;
+							cursor: pointer;
+							opacity: 0.8;
+							margin-left: auto;
+							margin-right: auto;
+							img {
+								border: 1px solid #efefef;
+								border-radius: 5px;			    
+								width: 100%;
+								height: 100%;
+							}
 						}
-						.showAppActionsButton{
-							visibility: hidden;
+						.linkImage.waitingLinkImage {
+							opacity: 0.5;
 						}
-						position: relative;
-						width: 65%;
-						cursor: pointer;
-						opacity: 0.8;
-						margin-left: auto;
-						margin-right: auto;
-						margin-bottom: 2px;
-						img {
-							border: 1px solid #efefef;
-							border-radius: 5px;			    
-							width: 100%;
-							height: 100%;
-						}
-					}
-					.linkImage.waitingLinkImage {
-						opacity: 0.5;
 					}
 				}
 			}
 		}
 	}
-}
 
-.ProfilesView.show	{
-	-webkit-animation: slideLeft 0.8s 1;
-	animation: slideLeft 0.8s 1;
-	display: block;
-}
-
-.ProfilesView {
-	display: none;
-	width: 100%;
-	margin-left: auto;
-	margin-right: auto;
-	position: relative;
-	min-height: 100%;
-	.CatalogViewTab{
-
+	.ProfilesView.show	{
+		-webkit-animation: slideLeft 0.8s 1;
+		animation: slideLeft 0.8s 1;
+		display: block;
 	}
-	.ProfilesHandler.editMode {
-		width: 50%;
-		margin-left: 0px;
-		margin-right: 0px;
-	}
-	.ProfilesHandler {
-		width: 60%;
+
+	.ProfilesView {
+		display: none;
+		width: 100%;
 		margin-left: auto;
 		margin-right: auto;
-		padding-top: 25px;
-		.owl-carousel {
-			width:100%;
-			.owl-wrapper {
-				padding-bottom: 15px;
-				.owl-item {
-					.item {
-						text-align: center;
+		position: relative;
+		min-height: 100%;
+		.CatalogViewTab{
+
+		}
+		.ProfilesHandler.editMode {
+			width: 50%;
+			margin-left: 0px;
+			margin-right: 0px;
+		}
+		.ProfilesHandler {
+			width: 60%;
+			margin-left: auto;
+			margin-right: auto;
+			padding-top: 25px;
+			.owl-carousel {
+				width:100%;
+				.owl-wrapper {
+					padding-bottom: 15px;
+					.owl-item {
+						.item {
+							text-align: center;
+						}
 					}
 				}
 			}
 		}
 	}
-}
 
-.windowAddApp {
-	width: 200px;
-	position: absolute;
-	margin-top: 10px;
-	display: none;
-	.md-overlay {
-		width: 100%;
-		height: 100%;
-		top: 0;
-		left: 0;
-	}
-	.arrow-top {
-		margin-left: 10px;
-		z-index: 2000;
-		position: relative;
-		i {
-			font-size: 28px;
-			line-height: 10px;
-			color: #d9d9d9;
-		}
-	}
-	.content {
-		z-index: 2000;
+	.windowAddApp {
+		width: 200px;
 		position: absolute;
-		border-radius: 3px;
-		background-color: #d9d9d9;
-		.blockHeader {
-			font-size: 12px;
-			text-align: center;
-			padding-left: 2%;
-			padding-right: 2%;
-			margin-top: 5px;
-		}
-		.classicInput {
-			padding-left: 20%;
-			padding-right: 20%;
-			margin-top: 5px;
-			margin-bottom: 5px;
-			input {
-				margin-top: 3px;
-				width: 100%;
-				height: 20px;
-				font-size: 11px;
-			}
-			.button {
-				min-width: 0px;
-				max-width: 500px;
-				padding: 0px;
-				margin: 0px;
-				width: 22px;
-				height: 22px;
-				color: #42b7cb;
-				font-size: 22px;
-				position: absolute;
-				right: 0;
-				margin-right: 7px;
-				bottom: 0%;
-				margin-bottom: 5px;
-				&:hover {
-					transition: color 0.3s;
-					cursor: pointer;
-					color: $themeColor;
-				}
-			}
-		}
-	}
-	
-	.md-overlay.overlay-display {
-		opacity: 0.3;
-		visibility: visible;
-	}
-}
-
-.windowAddApp.displayAbs {
-	display: block;
-}
-
-.ProfilesHandler {
-	#dragAndDropHelper {
+		margin-top: 10px;
 		display: none;
-	}
-	.item {
-		.addProfileView {
-			display: none;
-		}
-	}
-}
-.ProfilesHandler.editMode{
-	.ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage {
-		opacity: 1;
-	}
-	padding-top: 40px;
-	#dragAndDropHelper {
-		display: block;
-	}
-	.item .addProfileView {
-		display: block;
-	}
-}
-.ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox.emptyApp {
-	.linkImage {
-		.showAppActionsButton {
-			display: none;
-		}
-	}
-}
-.ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox {
-	.linkImage {
-		.emptyAppIndicator {
-			position: absolute;
-			width: 100%;
-            height: 100%;
-			opacity: 1;
-			border-radius: 5px;
-			padding: 2px;
-			img {
-				padding: 2px;
-                border-radius: 100%;
-                background-color: $themeColor;
-                width: 35%;
-                height: 35%;
-                left:45%;
-                bottom: 12%;
-				line-height: 90%;
-				color: white;
-				font-size: 1vw;
-				position: relative;
-				border: none;
-			}
-            &:hover {
-                background-color: $themeColor;
-                border: 1px solid #efefef;
-                opacity:0.8;
-            }
-            &:hover > img {
-                width:80%;
-                height:80%;
-                left:0%;
-                top:15%;
-                border-radius: 5px;
-            }
-		}
-		.showAppActionsButton {
-			position: absolute;
-			z-index: 1;
-			width: 35%;
-			top: 78%;
-			left: 81%;
-			visibility: hidden;
-			opacity: 0;
-			&:hover {
-				cursor: pointer;
-			}
-			&:hover > .appActionsPopup {
-				display: block;
-				visibility: visible;
-			}
-			img {
-				border: none;
-			}
-			i.fa-cog {
-				background-color: white;
-				padding: 3px;
-				border-radius: 100%;
-				line-height: 90%;
-				color: $themeColor;
-				font-size: 1vw;
-				position: relative;
-			}
-		}
-		&:hover {
-			.showAppActionsButton {
-				transition: all .1s;
-				transition-delay: .4s;
-				visibility: visible;
-				opacity: 1;
-			}
-		}
-	}
-}
-
-.ProfilesHandler.editMode {
-	.ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox {
-		.linkImage{
-			.showAppActionsButton {
-				transition-delay: 0s;
-			}
-		}
-	}
-}
-
-.appActionsPopup {
-	display: none;
-	visibility: hidden;
-	position: fixed;
-	i {
-		color: $themeColor;
-		position: relative;
-	}
-	.buttonsContainer {
-		background-color: $themeColor;
-		border: 1px solid $themeColor;
-		border-radius: 5px;
-		color: white;
-		min-width: 100px;
-		text-align: center;
-		.menu-item {
-			transition: all 0.3s;
-			padding: 2px;
-			position: relative;
-			overflow: hidden;
-			p {
-				transition: all 0.3s;					
-				margin: 0px;
-			}
-			&:hover {
-				transition: all 0.3s;
-				&:before {
-					left: -5px;
-					line-height: 1.7;
-				}
-			}
-		}
-		.modifyAppButton::before {
-			content: '\f085';			
-		}
-		.deleteAppButton::before {
-			content: '\f014';
-		}
-		.menu-item::before {
-			transition: all 0.3s;
-			z-index: 1;
+		.md-overlay {
 			width: 100%;
 			height: 100%;
-			left: 100%;
 			top: 0;
-			text-align: right;
+			left: 0;
+		}
+		.arrow-top {
+			margin-left: 10px;
+			z-index: 2000;
+			position: relative;
+			i {
+				font-size: 28px;
+				line-height: 10px;
+				color: #d9d9d9;
+			}
+		}
+		.content {
+			z-index: 2000;
 			position: absolute;
-			display: inline-block;
-			line-height: 1.6;
-			font-size: 180%;
-			font: normal normal normal 14px/1 FontAwesome;
-			text-rendering: auto;
-			-webkit-font-smoothing: antialiased;
-			-moz-osx-font-smoothing: grayscale;
+			border-radius: 3px;
+			background-color: #d9d9d9;
+			.blockHeader {
+				font-size: 12px;
+				text-align: center;
+				padding-left: 2%;
+				padding-right: 2%;
+				margin-top: 5px;
+			}
+			.classicInput {
+				padding-left: 20%;
+				padding-right: 20%;
+				margin-top: 5px;
+				margin-bottom: 5px;
+				input {
+					margin-top: 3px;
+					width: 100%;
+					height: 20px;
+					font-size: 11px;
+				}
+				.button {
+					min-width: 0px;
+					max-width: 500px;
+					padding: 0px;
+					margin: 0px;
+					width: 22px;
+					height: 22px;
+					color: #42b7cb;
+					font-size: 22px;
+					position: absolute;
+					right: 0;
+					margin-right: 7px;
+					bottom: 0%;
+					margin-bottom: 5px;
+					&:hover {
+						transition: color 0.3s;
+						cursor: pointer;
+						color: $themeColor;
+					}
+				}
+			}
 		}
-		.menu-item:first-child {
-			border-top-left-radius: 5px;
-			border-top-right-radius: 5px;
-		}
-		.menu-item:last-child {
-			border-top: 1px solid white;
-			border-bottom-right-radius: 5px;
-			border-bottom-left-radius: 5px;
-		}
-		.menu-item:only-child {
-			border:none;
+
+		.md-overlay.overlay-display {
+			opacity: 0.3;
+			visibility: visible;
 		}
 	}
-}
 
-.caretHelper {
-	font-size: 27px;
-	position: relative;
-	overflow: hidden;
-	i {
-		line-height: 40%;
-		float: left;
-		margin-left: 15%;
+	.windowAddApp.displayAbs {
+		display: block;
 	}
-}
-#dragAndDropHelper {
-	top: 4%;
-	width: 8%;
-	z-index: 1;
-}
 
-.centered {
-	position:absolute;
-	top: 50%;
-	left: 50%;
-	transform: translateX(-50%) translateY(-50%);
-}
-.siteLinkBox.gu-mirror {
-	width: 50px !important;
-	height: 50px !important;
-	border-radius: 5px;
-	border: 1px transparent;
-	opacity: 1;
-	.deleteAppButton, .modifyAppButton, .showAppActionsButton, .siteName, .emptyAppIndicator {
+	.ProfilesHandler {
+		#dragAndDropHelper {
+			display: none;
+		}
+		.item {
+			.addProfileView {
+				display: none;
+			}
+		}
+	}
+	.ProfilesHandler.editMode{
+		.ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage {
+			opacity: 1;
+		}
+		padding-top: 40px;
+		#dragAndDropHelper {
+			display: block;
+		}
+		.item .addProfileView {
+			display: block;
+		}
+	}
+	.ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox.emptyApp {
+		.linkImage {
+			.showAppActionsButton {
+				display: none;
+			}
+		}
+	}
+	.ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox {
+		.linkImage {
+			.emptyAppIndicator {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				opacity: 1;
+				border-radius: 5px;
+				padding: 2px;
+				img {
+					padding: 2px;
+					border-radius: 100%;
+					background-color: $themeColor;
+					width: 35%;
+					height: 35%;
+					left:45%;
+					bottom: 12%;
+					line-height: 90%;
+					color: white;
+					font-size: 1vw;
+					position: relative;
+					border: none;
+				}
+				&:hover {
+					background-color: $themeColor;
+					border: 1px solid #efefef;
+					opacity:0.8;
+				}
+				&:hover > img {
+					width:80%;
+					height:80%;
+					left:0%;
+					top:15%;
+					border-radius: 5px;
+				}
+			}
+			.showAppActionsButton {
+				position: absolute;
+				z-index: 1;
+				width: 35%;
+				top: 78%;
+				left: 81%;
+				visibility: hidden;
+				opacity: 0;
+				&:hover {
+					cursor: pointer;
+				}
+				&:hover > .appActionsPopup {
+					display: block;
+					visibility: visible;
+				}
+				img {
+					border: none;
+				}
+				i.fa-cog {
+					background-color: white;
+					padding: 3px;
+					border-radius: 100%;
+					line-height: 90%;
+					color: $themeColor;
+					font-size: 1vw;
+					position: relative;
+				}
+			}
+			&:hover {
+				.showAppActionsButton {
+					transition: all .1s;
+					transition-delay: .4s;
+					visibility: visible;
+					opacity: 1;
+				}
+			}
+		}
+	}
+
+	.ProfilesHandler.editMode {
+		.ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox {
+			.linkImage{
+				.showAppActionsButton {
+					transition-delay: 0s;
+				}
+			}
+		}
+	}
+
+	.appActionsPopup {
 		display: none;
+		visibility: hidden;
+		position: fixed;
+		i {
+			color: $themeColor;
+			position: relative;
+		}
+		.buttonsContainer {
+			background-color: $themeColor;
+			border: 1px solid $themeColor;
+			border-radius: 5px;
+			color: white;
+			min-width: 100px;
+			text-align: center;
+			.menu-item {
+				transition: all 0.3s;
+				padding: 2px;
+				position: relative;
+				overflow: hidden;
+				p {
+					transition: all 0.3s;					
+					margin: 0px;
+				}
+				&:hover {
+					transition: all 0.3s;
+					&:before {
+						left: -5px;
+						line-height: 1.7;
+					}
+				}
+			}
+			.modifyAppButton::before {
+				content: '\f085';			
+			}
+			.deleteAppButton::before {
+				content: '\f014';
+			}
+			.menu-item::before {
+				transition: all 0.3s;
+				z-index: 1;
+				width: 100%;
+				height: 100%;
+				left: 100%;
+				top: 0;
+				text-align: right;
+				position: absolute;
+				display: inline-block;
+				line-height: 1.6;
+				font-size: 180%;
+				font: normal normal normal 14px/1 FontAwesome;
+				text-rendering: auto;
+				-webkit-font-smoothing: antialiased;
+				-moz-osx-font-smoothing: grayscale;
+			}
+			.menu-item:first-child {
+				border-top-left-radius: 5px;
+				border-top-right-radius: 5px;
+			}
+			.menu-item:last-child {
+				border-top: 1px solid white;
+				border-bottom-right-radius: 5px;
+				border-bottom-left-radius: 5px;
+			}
+			.menu-item:only-child {
+				border:none;
+			}
+		}
 	}
-	img {
-		opacity: 1;
+
+	.caretHelper {
+		font-size: 27px;
+		position: relative;
+		overflow: hidden;
+		i {
+			line-height: 40%;
+			float: left;
+			margin-left: 15%;
+		}
+	}
+	#dragAndDropHelper {
+		top: 4%;
+		width: 8%;
+		z-index: 1;
+	}
+
+	.centered {
+		position:absolute;
+		top: 50%;
+		left: 50%;
+		transform: translateX(-50%) translateY(-50%);
+	}
+	.siteLinkBox.gu-mirror {
+		width: 50px !important;
+		height: 50px !important;
 		border-radius: 5px;
-		width: 100%;
-		height: 100%;
+		border: 1px transparent;
+		opacity: 1;
+		.deleteAppButton, .modifyAppButton, .showAppActionsButton, .siteName, .emptyAppIndicator {
+			display: none;
+		}
+		img {
+			opacity: 1;
+			border-radius: 5px;
+			width: 100%;
+			height: 100%;
+		}
 	}
-}
 
-.siteLinkBox.gu-transit {
-	opacity: 0;
-}
+	.siteLinkBox.gu-transit {
+		opacity: 0;
+	}
 
-.ProfilesView .owl-carousel  .owl-wrapper, .ProfilesView .owl-carousel  .owl-item {
-	-webkit-backface-visibility: inherit;
-	-moz-backface-visibility: inherit;
-	-ms-backface-visibility: inherit;
-	transform: none;
-	-webkit-transform: none;
-	-moz-transform: none;
-	-ms-transform: none;
-}
-.clearfix:before,
-.clearfix:after {
-	content: ".";    
-	display: block;    
-	height: 0;    
-	overflow: hidden; 
-}
-.clearfix:after { clear: both; }
-.clearfix { zoom: 1; } 
+	.ProfilesView .owl-carousel  .owl-wrapper, .ProfilesView .owl-carousel  .owl-item {
+		-webkit-backface-visibility: inherit;
+		-moz-backface-visibility: inherit;
+		-ms-backface-visibility: inherit;
+		transform: none;
+		-webkit-transform: none;
+		-moz-transform: none;
+		-ms-transform: none;
+	}
+	.clearfix:before,
+	.clearfix:after {
+		content: ".";    
+		display: block;    
+		height: 0;    
+		overflow: hidden; 
+	}
+	.clearfix:after { clear: both; }
+	.clearfix { zoom: 1; } 
+
+	@media screen and (min-width: 1500px) {
+		.showAppActionsButton {
+			.appActionsPopup {
+				.buttonsContainer {
+					.menu-item {
+						&:before {
+							font-size: 1.4em;
+						}
+						p {
+							width: 150px;
+						}
+					}
+				}
+			}
+		}
+	}
