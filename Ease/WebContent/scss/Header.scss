@@ -29,7 +29,7 @@
 	width: 40%;
 	height: 30px;
 	font-size: 14px;
-	background-color: $themeGreyColor;
+	background-color: rgba(239, 239, 239, 0.7);
 	border-radius: 5px;
 	input {
 		width: 100%;
@@ -41,6 +41,18 @@
 		padding-right: 45px;
 		padding-left: 8px;
 		outline: none;
+	}
+	input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  	color: #F7F7F7;
+	}
+	input::-moz-placeholder { /* Firefox 19+ */
+  	color: #F7F7F7;
+	}
+	input:-ms-input-placeholder { /* IE 10+ */
+  	color: #F7F7F7;
+	}
+	input:-moz-placeholder { /* Firefox 18- */
+  	color: #F7F7F7;
 	}
 	#searchBarButton {
 		transition: all .5s;
