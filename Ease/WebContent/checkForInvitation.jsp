@@ -32,7 +32,7 @@ pageEncoding="UTF-8"%>
 	<script src="js/basic-utils.js" ></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"> </script>
 	<script src="js/jquery.mousewheel.min.js"></script>
-
+	<link rel="stylesheet" href="css/default_style.css" />
 	<link rel="stylesheet" type="text/css" href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/lib/dropDownMenu/dropdown.css" />
 	<script src="js/snap.svg-min.js"></script>
