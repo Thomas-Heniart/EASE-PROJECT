@@ -21,6 +21,7 @@ import javax.servlet.http.HttpSession;
 
 import com.Ease.context.DataBase;
 import com.Ease.data.Regex;
+import com.Ease.session.User;
 
 public class getEmailLink extends HttpServlet {
     
@@ -38,8 +39,17 @@ public class getEmailLink extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher rd = request.getRequestDispatcher("checkForInvitation.jsp");
-		rd.forward(request, response);
+    	HttpSession session = request.getSession();
+
+		User user = (User) session.getAttribute("User");
+		if(user == null) {
+			RequestDispatcher rd = request.getRequestDispatcher("checkForInvitation.jsp");
+			rd.forward(request, response);
+		}
+		else {
+			RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+			rd.forward(request, response);
+		}
 	}
 
 	/**
