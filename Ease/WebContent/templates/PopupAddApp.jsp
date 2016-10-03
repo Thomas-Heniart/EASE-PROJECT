@@ -88,7 +88,9 @@ $(document).ready(function(){
 			if(webid=="28")  $(".loginAppChooser p").text("No Linkedin account detected");
 		}
 		for (var i = 0; i < apps.length; i++) {
-			AppHelper.attr('aId', $(apps[i]).attr("id"));			
+			AppHelper.attr('aId', $(apps[i]).attr("id"));
+			if ($(apps[i]).attr("id") == "1")
+				AppHelper.addClass("selected");
 			AppHelper.find('p').text($(apps[i]).attr('login'));
 			AppHelper.find('img').attr('src',$(apps[i]).find('img.logo').attr('src'));
 			AppHelperCloned = $(AppHelper).clone();
