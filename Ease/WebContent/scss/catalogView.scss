@@ -660,9 +660,16 @@
 }
 
 @media screen and (min-width: 1500px) {
-	.ProfilesHandler {
-		p, i {
+	#catalog {
+		p {
 			font-size: 1.4em;
+		}
+	}
+	.ProfilesHandler {
+		.ProfileContent{
+			p, i {
+				font-size: 1.4em;
+			}
 		}
 	}
 }

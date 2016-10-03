@@ -19,6 +19,7 @@
 		padding: 2px;
 		padding-left: 5px;
 		border-radius: 5px 5px 0px 0px;
+		position: relative;
 		p {
 			text-transform: uppercase;
 			font-weight: 600;
@@ -32,15 +33,20 @@
 			line-height: 25px;
 			vertical-align: middle;
 			height: 100%;
+			max-width: 80%;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
 		}
 		.ProfileSettingsButton {
-			position: relative;
+			position: absolute;
 			overflow: hidden;
 			display: inline-block;
 			float: right;
 			font-size: 20px;
 			vertical-align: middle;
 			color: white;
+			right: 0;
 			margin-top: 3px;
 			cursor: pointer;
 			transition: transform 0.3s;
@@ -66,6 +72,8 @@
 				display: none;
 				width: 100%;
 				font-family: $defaultFont;
+				overflow: hidden;
+				white-space: nowrap;
 				.profileSettingsTab {
 					padding: 2px 5%;
 					position: absolute;
@@ -93,14 +101,17 @@
 							color: $themeColor;
 						}
 						p {
+							overflow: hidden;
+							text-overflow: ellipsis;
 							margin-bottom: 2px;
+							max-width: 100%;
 						}
 						p, div {
 							display: inline-block;
 							vertical-align: middle;
 						}
 						.directInfo {
-
+							width: 40%;
 						}
 					}
 					#ColorSection .directInfo {
@@ -204,7 +215,6 @@
 					height: (100% / 6);
 					padding-top: 5px;
 					position: relative;
-					overflow: hidden;
 					.siteName {
 						font-size: 10px;
 						line-height: 9px;
@@ -612,8 +622,11 @@
 	.showAppActionsButton {
 		.appActionsPopup {
 			.buttonsContainer {
+				min-width: 150px;
 				.menu-item {
-					&:before 
+					&:before {
+						font-size: 1.4em;
+					}
 					p {
 						width: 150px;
 					}
