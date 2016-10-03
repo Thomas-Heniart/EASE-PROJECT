@@ -74,6 +74,12 @@ var extension = {
         }
     },
 	tabs:{
+        stopLoad:function(tab, callback){
+            chrome.tabs.executeScript(tab.id, {
+                code: "window.stop();",
+                runAt: "document_start"
+            }, callback);
+        },
 		update:function(tab, url, callback){
 			chrome.tabs.update(tab.id, {"url":url}, callback);
 		},
@@ -172,9 +178,9 @@ var extension = {
             chrome.tabs.insertCSS(tab.id, {"file":fileName}, callback);
         },
         inject:function(tab, files, callback){
-        
             function injectonefile(i){
                 if(files[i].substring(files[i].length-3, files[i].length)==".js"){
+                    files[i]="/"+files[i];
                     chrome.tabs.executeScript(tab.id, {"file":files[i]}, function(){
                         i++;
                         if(i>=files.length){
@@ -184,6 +190,7 @@ var extension = {
                         }
                     });
                 } else if(files[i].substring(files[i].length-3, files[i].length)=="css") {
+                    files[i]="/"+files[i];
                     chrome.tabs.insertCSS(tab.id, {"file":files[i]}, function(){
                         i++;
                         if(i>=files.length){
