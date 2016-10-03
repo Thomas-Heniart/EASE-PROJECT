@@ -42,18 +42,18 @@
 		padding-left: 8px;
 		outline: none;
 	}
-	input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+	/*#loginBody input::-webkit-input-placeholder {
   	color: #F7F7F7;
 	}
-	input::-moz-placeholder { /* Firefox 19+ */
+	#loginBody input::-moz-placeholder {
   	color: #F7F7F7;
 	}
-	input:-ms-input-placeholder { /* IE 10+ */
+	#loginBody input:-ms-input-placeholder {
   	color: #F7F7F7;
 	}
-	input:-moz-placeholder { /* Firefox 18- */
+	#loginBody input:-moz-placeholder { 
   	color: #F7F7F7;
-	}
+	}*/
 	#searchBarButton {
 		transition: all .5s;
 		position: absolute;
