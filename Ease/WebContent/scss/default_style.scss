@@ -192,6 +192,7 @@ body {
     .alertDiv {
       p {
         font-size: 14px;
+        color: $themeRedColor;
       }
     }
     p {
@@ -388,7 +389,7 @@ body {
 
 .alertDiv {
 	display: none;
-  color: red;
+  color: $themeRedColor;
   font-size: 14px;
 }
 
@@ -408,7 +409,7 @@ body {
 #loginBody form{
   .alertDiv.show {
     display: block;
-    color: red;
+    color: $themeRedColor;
   }
 }
 
