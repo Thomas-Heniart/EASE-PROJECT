@@ -192,6 +192,7 @@ body {
     .alertDiv {
       p {
         font-size: 14px;
+        color: $themeRedColor;
       }
     }
     p {
@@ -204,7 +205,7 @@ body {
     width: 25px;
   }
   div#back, div#changeAccount {
-    background-color: rgba(239,239,239, 0.7);
+    background-color: $themeLightGreyColor;
     color: $themeColor;
     border-radius: 4px;
     cursor: pointer;
@@ -230,7 +231,7 @@ body {
     border-radius: 4px;
     padding-bottom: 1%;
     padding-top: 1%;
-    background-color: rgba(239,239,239, 0.7);
+    background-color: $themeLightGreyColor;
     span.input {
       max-width: 100%;
       width: 100%;
@@ -385,7 +386,7 @@ body {
 
 .alertDiv {
 	display: none;
-  color: red;
+  color: $themeRedColor;
   font-size: 14px;
 }
 
@@ -405,7 +406,7 @@ body {
 #loginBody form{
   .alertDiv.show {
     display: block;
-    color: red;
+    color: $themeRedColor;
   }
 }
 

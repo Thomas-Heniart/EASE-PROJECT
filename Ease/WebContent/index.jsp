@@ -86,6 +86,8 @@ pageEncoding="UTF-8"%>
 			$('#onComputer').attr('style', "display:none");
 			$('#onMobile').attr('style', "display:block");
 		}
+		$('#onComputer').attr('style', "display:none");
+		$('#onMobile').attr('style', "display:block");
 	});
 	
 	function sendConnectionStatus(isConnected) {
