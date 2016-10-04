@@ -177,22 +177,15 @@
 			overflow: hidden;
 			background-color: white;
 			position: relative;
-			::-webkit-scrollbar {
-				height: 3px;
-				background-color: white;
-				position: absolute;
-			}
 			.tag {
 				margin: 10px 0 10px 20px;
 				border: none;
 			}
 			.tags {
-				width: 100%;
-				padding: 0px 5%;
-				overflow-x: auto;
-				overflow-y: hidden;
-				display: inline-block;
-
+				width: 90%;
+				margin: 0px auto;
+				overflow: hidden;
+				display: block;
 				.tag:first-child {
 					margin-left: 3px;
 				}
@@ -220,11 +213,10 @@
 				}
 			}
 			i.fa-angle-right {
-				right: 1%;
+				right: 0;
 				padding-left: 2px;
 			}
 			i.fa-angle-left {
-				margin-left: 1%;
 				padding-right: 2px;
 				display: none;
 			}
