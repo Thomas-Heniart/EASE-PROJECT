@@ -1,5 +1,5 @@
 function rememberWebsite(website){
-    if (website.lastLogin == "")
+    if (website.lastLogin == "" || !website.lastLogin)
         return;
     extension.storage.get("visitedWebsites", function(visitedWebsites) {
         for (var i in visitedWebsites){
