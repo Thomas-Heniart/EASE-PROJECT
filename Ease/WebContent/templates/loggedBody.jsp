@@ -5,6 +5,7 @@
 		<%@ include file="ProfileView.jsp"%>
 		<%@ include file="ProfileEditView.jsp" %>
 		<%@ include file="extension.jsp" %>		
+		<%@ include file="catalogView.jsp"%>
 	</div>
 	<%@ include file="SettingsView.jsp" %>
 	<%@ include file="PopupModifyProfile.jsp" %>
@@ -65,5 +66,4 @@ $(document).ready(function(){
 
   ga('create', 'UA-75916041-5', 'auto');
   ga('send', 'pageview');
-
 </script>

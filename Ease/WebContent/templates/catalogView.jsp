@@ -11,16 +11,17 @@
 
 <div class="CatalogViewTab">
 	<div class="catalogView">
-		<i id="catalog-quit" class="fa fa-times" aria-hidden="true"></i>
+		<div id="catalog-quit"> 
+			<i class="fa fa-times" aria-hidden="true"></i>
+		</div>
 		<div class="catalogSearchbar">
 			<i class="fa fa-search" aria-hidden="true"></i>
 			<div class="selectedTagsContainer"></div>
 			<input type="text" name="catalogSearch" class="form-control"
 				placeholder="Search your favorite websites" />
 		</div>
-
-		<div class="scaleContainerView">
 			<div class=tagContainer>
+				<div class="container">
 				<i class="fa fa-angle-left" aria-hidden="true"></i>
 				<span class="tags">
 					<c:forEach items='${siteManager.getTagsList()}' var="item">
@@ -30,23 +31,28 @@
 					</c:forEach>
 				</span>
 				<i class="fa fa-angle-right" aria-hidden="true"></i>
-			</div>
-			<div class="scaleContainer">
-				<img class="Scaler" src="resources/other/placeholder-63.png"
-					style="width: 100%; height: auto; visibility: hidden;" />
-				<div id="catalog" class="catalogContainer">
-					<h3 class="search-result"><span>Search result</span></h3>
-					<div class="search-result"></div>
-					<h4 class="relatedApps"><span>Related apps</span></h4>
-					<div class="relatedApps"></div>
-					<%@ include file="catalogApps.jsp"%>
-					<div class="no-result-search">
-						<h2>No results yet...<img alt="no-result" src="resources/images/umbrella.png"/></h2>
-						<p>Fine ! Take a look there</p>
-						<img alt="arrow" src="resources/images/curved_arrow.png" />
-					</div>
 				</div>
-				<div class="shadowHelper"> </div>
+			</div>
+
+		<div class="scaleContainerView">
+			<div class="catalogArea">
+				<div class="scaleContainer">
+					<img class="Scaler" src="resources/other/placeholder-64.png"
+						style="width: 100%; height: auto; visibility: hidden;" />
+					<div id="catalog" class="catalogContainer">
+						<h3 class="search-result"><span>Search result</span></h3>
+						<div class="search-result"></div>
+						<h4 class="relatedApps"><span>Related apps</span></h4>
+						<div class="relatedApps"></div>
+						<%@ include file="catalogApps.jsp"%>
+						<div class="no-result-search">
+							<h2>No results yet...<img alt="no-result" src="resources/images/umbrella.png"/></h2>
+							<p>Fine ! Take a look there</p>
+							<img alt="arrow" src="resources/images/curved_arrow.png" />
+						</div>
+					</div>
+					<div class="shadowHelper"> </div>
+				</div>
 			</div>
 		</div>
 		<div class="helpIntegrateApps">
