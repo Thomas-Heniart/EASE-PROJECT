@@ -266,6 +266,10 @@ pageEncoding="UTF-8"%>
 	<%@ page import="java.util.Base64.Encoder" %>
 	<%@ page import="java.nio.charset.StandardCharsets" %>
 	
+	<div id="onMobile" style="display:none;">
+	<%@ include file="templates/Mobile.jsp" %>
+	</div>
+	
 	<div id="onComputer">
 	<div class="cookiesInfo" style="display: none;">
 		<p>En poursuivant votre navigation, vous acceptez l'utilisation de cookies dans le cadre de l’authentification, la sécurité et l’intégrité du site et des produits.</p>
@@ -281,10 +285,6 @@ pageEncoding="UTF-8"%>
 	<div class="la-anim-10" id="loading"></div>
 	<%@ include file="templates/SimpleAlertPopup.jsp" %>
 	<%@ include file="templates/ChatButton.jsp" %>
-	</div>
-	
-	<div id="onMobile" style="display:none;">
-	<%@ include file="templates/Mobile.jsp" %>
 	</div>
 	
 </body>
