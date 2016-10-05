@@ -41,6 +41,7 @@ public class Logout extends HttpServlet {
 		
 		// --
 		 session.invalidate();
+		 SI.setResponse(200, "Logged out.");
 		 SI.sendResponse();
 	}
 

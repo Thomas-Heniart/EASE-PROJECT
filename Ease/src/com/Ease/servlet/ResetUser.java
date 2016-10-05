@@ -80,20 +80,25 @@ public class ResetUser extends HttpServlet {
 				if (rs.next()) {
 					String email = rs.getString(1);
 					rs = db.get("select * from users where email='" + email + "';");
-					String hashedPassword;
-					if ((hashedPassword = Hashing.SHA(password, rs.getString(7))) == null){
-						SI.setResponse(ServletItem.Code.LogicError, "Can't hash password.");
-					} else {
-						String id = rs.getString(1);
-						String cryptedKeyUser = AES.encryptUserKey(rs.getString(9), password, rs.getString(8));
-						db.set("UPDATE users SET `password`='"+ hashedPassword + "', `keyUser`='"+ cryptedKeyUser +"' WHERE `user_id`='"+ id + "';");
-						rs = db.get("select * from profiles where user_id=" + id + ";");
-						while (rs.next()) {
-							String profileId = rs.getString(1);
-							db.set("update apps set account_id=NULL where profile_id=" + profileId + ";");
+					if (rs.next()) {
+						String hashedPassword;
+						if ((hashedPassword = Hashing.SHA(password, rs.getString(7))) == null) {
+							SI.setResponse(ServletItem.Code.LogicError, "Can't hash password.");
+						} else {
+							String id = rs.getString(1);
+							String cryptedKeyUser = AES.encryptUserKey(AES.keyGenerator(), password, rs.getString(8));
+							db.set("UPDATE users SET `password`='" + hashedPassword + "', `keyUser`='" + cryptedKeyUser
+									+ "' WHERE `user_id`='" + id + "';");
+							rs = db.get("select * from profiles where user_id=" + id + ";");
+							while (rs.next()) {
+								String profileId = rs.getString(1);
+								db.set("update apps set account_id=NULL where profile_id=" + profileId + ";");
+							}
+							db.set("delete from PasswordLost where email='" + email + "';");
+							SI.setResponse(200, "User reseted.");
 						}
-						db.set("delete from PasswordLost where email='" + email + "';");
-						SI.setResponse(200, "User reseted.");
+					} else {
+						SI.setResponse(ServletItem.Code.LogicError, "This user dosen't exist.");
 					}
 				} else {
 					SI.setResponse(ServletItem.Code.BadParameters, "This is a bad link code.");
@@ -101,6 +106,7 @@ public class ResetUser extends HttpServlet {
 			}
 		} catch (SQLException e) {
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			e.printStackTrace();
 		}
 		SI.sendResponse();
 	}
