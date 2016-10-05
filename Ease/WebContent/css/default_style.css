@@ -3,7 +3,6 @@
 
 .ProfileBox {
   width: 90%;
-  border: 1px hidden white;
   border-radius: 5px;
   background-color: white;
   overflow: hidden;
@@ -14,7 +13,8 @@
     background-color: #FFD00C;
     padding: 2px;
     padding-left: 5px;
-    border-radius: 5px 5px 0px 0px; }
+    border-radius: 5px 5px 0px 0px;
+    position: relative; }
     .ProfileBox .ProfileName p {
       text-transform: uppercase;
       font-weight: 600;
@@ -27,17 +27,23 @@
       margin-bottom: 0px;
       line-height: 25px;
       vertical-align: middle;
-      height: 100%; }
+      height: 100%;
+      max-width: 80%;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden; }
     .ProfileBox .ProfileName .ProfileSettingsButton {
-      position: relative;
+      position: absolute;
       overflow: hidden;
       display: inline-block;
       float: right;
       font-size: 20px;
       vertical-align: middle;
       color: white;
+      right: 0;
       margin-top: 3px;
-      cursor: pointer; }
+      cursor: pointer;
+      transition: transform 0.3s; }
       .ProfileBox .ProfileName .ProfileSettingsButton i {
         transition: transform 0.3s; }
         .ProfileBox .ProfileName .ProfileSettingsButton i:hover {
@@ -55,24 +61,43 @@
       .ProfileBox .ProfileContent .content .ProfileControlPanel {
         display: none;
         width: 100%;
-        font-family: "Raleway", "Source Sans Pro", sans-serif; }
+        font-family: "Raleway", "Source Sans Pro", sans-serif;
+        overflow: hidden;
+        white-space: nowrap; }
         .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab {
-          padding: 2px 5%; }
+          padding: 2px 5%;
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          background-color: white;
+          z-index: 2;
+          transition: all .3s;
+          overflow: hidden;
+          background-color: #F5F5F5;
+          border-bottom: 3px solid #EFEFEF; }
+          .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab .sectionHeader:first-child {
+            border-top: none; }
           .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab .sectionHeader {
             cursor: pointer;
             text-align: left;
             outline: none;
             padding: 6px 0px;
-            border-bottom: 1px solid #373b60; }
+            border-top: 1px solid #373b60; }
             .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab .sectionHeader .title {
               width: 60%;
               font-weight: 600;
               color: #373b60; }
             .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab .sectionHeader p {
-              margin-bottom: 2px; }
+              overflow: hidden;
+              text-overflow: ellipsis;
+              margin-bottom: 2px;
+              max-width: 100%; }
             .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab .sectionHeader p, .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab .sectionHeader div {
               display: inline-block;
               vertical-align: middle; }
+            .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab .sectionHeader .directInfo {
+              width: 40%; }
           .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab #ColorSection .directInfo {
             width: 20px;
             height: 20px;
@@ -92,6 +117,8 @@
                 border-radius: 20px; }
                 .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab .sectionContent #modifyColorForm .colorChooser .color.selected {
                   border: 2px solid #373b60; }
+            .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab .sectionContent #deleteProfileForm {
+              white-space: normal; }
             .ProfileBox .ProfileContent .content .ProfileControlPanel .profileSettingsTab .sectionContent input {
               outline: none;
               margin-top: 3%;
@@ -142,6 +169,8 @@
               background-color: white;
               color: black; }
       .ProfileBox .ProfileContent .content .SitesContainer {
+        border-left: 1px solid #d0d1d5;
+        border-right: 1px solid #d0d1d5;
         position: relative;
         height: 100%;
         width: 100%; }
@@ -152,21 +181,23 @@
           float: left;
           height: 16.66667%;
           padding-top: 5px;
-          position: relative;
-          overflow: hidden; }
+          position: relative; }
           .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .siteName {
             font-size: 10px;
             line-height: 9px; }
             .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .siteName p {
-              margin: 0px; }
+              margin: 0px;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              line-height: 1.5; }
           .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage {
             position: relative;
             width: 65%;
             cursor: pointer;
             opacity: 0.8;
             margin-left: auto;
-            margin-right: auto;
-            margin-bottom: 2px; }
+            margin-right: auto; }
             .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage:hover {
               opacity: 1; }
             .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton {
@@ -278,13 +309,46 @@
 
 .ProfilesHandler.editMode {
   padding-top: 40px; }
-  .ProfilesHandler.editMode .linkImage {
+  .ProfilesHandler.editMode .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage {
     opacity: 1; }
   .ProfilesHandler.editMode #dragAndDropHelper {
     display: block; }
   .ProfilesHandler.editMode .item .addProfileView {
     display: block; }
 
+.ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox.emptyApp .linkImage .showAppActionsButton {
+  display: none; }
+
+.ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .emptyAppIndicator {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+  border-radius: 5px;
+  padding: 2px; }
+  .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .emptyAppIndicator img {
+    padding: 2px;
+    border-radius: 100%;
+    background-color: #373b60;
+    width: 35%;
+    height: 35%;
+    left: 45%;
+    bottom: 12%;
+    line-height: 90%;
+    color: white;
+    font-size: 1vw;
+    position: relative;
+    border: none; }
+  .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .emptyAppIndicator:hover {
+    background-color: #373b60;
+    border: 1px solid #efefef;
+    opacity: 0.8; }
+  .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .emptyAppIndicator:hover > img {
+    width: 80%;
+    height: 80%;
+    left: 0%;
+    top: 15%;
+    border-radius: 5px; }
 .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton {
   position: absolute;
   z-index: 1;
@@ -314,6 +378,9 @@
   visibility: visible;
   opacity: 1; }
 
+.ProfilesHandler.editMode .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage .showAppActionsButton {
+  transition-delay: 0s; }
+
 .appActionsPopup {
   display: none;
   visibility: hidden;
@@ -338,10 +405,8 @@
         margin: 0px; }
       .appActionsPopup .buttonsContainer .menu-item:hover {
         transition: all 0.3s; }
-        .appActionsPopup .buttonsContainer .menu-item:hover p {
-          transform: translateX(200%); }
         .appActionsPopup .buttonsContainer .menu-item:hover:before {
-          left: 0;
+          left: -5px;
           line-height: 1.7; }
     .appActionsPopup .buttonsContainer .modifyAppButton::before {
       content: '\f085'; }
@@ -352,8 +417,9 @@
       z-index: 1;
       width: 100%;
       height: 100%;
-      left: -100%;
+      left: 100%;
       top: 0;
+      text-align: right;
       position: absolute;
       display: inline-block;
       line-height: 1.6;
@@ -369,6 +435,8 @@
       border-top: 1px solid white;
       border-bottom-right-radius: 5px;
       border-bottom-left-radius: 5px; }
+    .appActionsPopup .buttonsContainer .menu-item:only-child {
+      border: none; }
 
 .caretHelper {
   font-size: 27px;
@@ -390,14 +458,29 @@
   left: 50%;
   transform: translateX(-50%) translateY(-50%); }
 
+.siteLinkBox.sortable-fallback .linkImage {
+  opacity: 1 !important; }
+  .siteLinkBox.sortable-fallback .linkImage .showAppActionsButton, .siteLinkBox.sortable-fallback .linkImage .emptyAppIndicator {
+    display: none; }
+.siteLinkBox.sortable-fallback .siteName {
+  display: none; }
+
 .siteLinkBox.gu-mirror {
   width: 50px !important;
-  height: 50px !important; }
-  .siteLinkBox.gu-mirror .deleteAppButton, .siteLinkBox.gu-mirror .modifyAppButton, .siteLinkBox.gu-mirror .showAppActionsButton, .siteLinkBox.gu-mirror .siteName {
+  height: 50px !important;
+  border-radius: 5px;
+  border: 1px transparent;
+  opacity: 1; }
+  .siteLinkBox.gu-mirror .deleteAppButton, .siteLinkBox.gu-mirror .modifyAppButton, .siteLinkBox.gu-mirror .showAppActionsButton, .siteLinkBox.gu-mirror .siteName, .siteLinkBox.gu-mirror .emptyAppIndicator {
     display: none; }
   .siteLinkBox.gu-mirror img {
+    opacity: 1;
+    border-radius: 5px;
     width: 100%;
     height: 100%; }
+
+.siteLinkBox.gu-transit {
+  opacity: 0; }
 
 .ProfilesView .owl-carousel .owl-wrapper, .ProfilesView .owl-carousel .owl-item {
   -webkit-backface-visibility: inherit;
@@ -421,17 +504,29 @@
 .clearfix {
   zoom: 1; }
 
+@media screen and (min-width: 1500px) {
+  .showAppActionsButton .appActionsPopup .buttonsContainer {
+    min-width: 150px; }
+    .showAppActionsButton .appActionsPopup .buttonsContainer .menu-item:before {
+      font-size: 1.4em; }
+    .showAppActionsButton .appActionsPopup .buttonsContainer .menu-item p {
+      width: 150px; } }
 .MenuButtonSet.show {
   display: block; }
 
+.MenuButtonSet.toptopLeft {
+  width: fit-content;
+  top: 2%;
+  left: 2%; }
+
 .MenuButtonSet.topLeft {
   width: fit-content;
-  top: 20%;
+  top: 21%;
   left: 2%; }
 
 .MenuButtonSet.topRight {
   width: fit-content;
-  top: 20%;
+  top: 21%;
   left: 11%; }
 
 .MenuButtonSet.middleTopLeft {
@@ -441,25 +536,37 @@
 
 .MenuButtonSet.bottomLeft {
   width: fit-content;
-  top: 60%;
+  top: 59%;
   left: 2%; }
 
 .MenuButtonSet.superBottomLeft {
   width: fit-content;
-  top: 80%;
+  top: 78%;
   left: 2%; }
+
+.MenuButtonSet.editMode #enterEditMode {
+  background-color: transparent; }
+.MenuButtonSet.editMode .openCatalogHelper {
+  transition: background-color .3s, height .3s, width .3s, right .3s, top .3s, border-radius .3s, visibility .3s;
+  visibility: visible;
+  width: 46%;
+  height: 100%;
+  right: 1.8%;
+  top: 3%;
+  border-radius: 5px;
+  background-color: #C1C1C1; }
 
 .MenuButtonSet {
   display: none;
   position: fixed;
-  top: 50%;
-  right: 2%;
-  transform: translateY(-50%); }
+  top: 40%;
+  right: 2%; }
   .MenuButtonSet #enterEditMode {
     max-width: 100px;
     min-width: 0px;
     width: 50px;
     height: 50px;
+    color: #373b60;
     background-color: #ec555b;
     border-radius: 10px;
     padding: 7px;
@@ -470,77 +577,47 @@
     .MenuButtonSet #enterEditMode img {
       width: 100%;
       height: 100%; }
-  .MenuButtonSet #enterEditMode.on {
-    background-color: #42b72a; }
-  .MenuButtonSet #enterAddUsersMode {
+  .MenuButtonSet .openCatalogHelper {
+    transition: height .3s, width .3s, right .3s, top .3s, border-radius .3s, visibility .3s;
+    visibility: hidden;
+    width: 50px;
+    height: 50px;
+    background-color: #C1C1C1;
+    position: fixed;
+    top: 40%;
+    right: 2%;
+    z-index: -1;
+    transform: rotate(180deg);
+    border-radius: 10px; }
+  .MenuButtonSet .adminButton {
     max-width: 100px;
     min-width: 0px;
     width: 100px;
     height: 100px;
-    background-color: #555ceb;
+    background-color: #373b60;
     border-radius: 10px;
     padding: 7px;
     margin: 0px;
     transition: background-color 0.3s; }
-    .MenuButtonSet #enterAddUsersMode:hover {
+    .MenuButtonSet .adminButton:hover {
       cursor: pointer; }
-    .MenuButtonSet #enterAddUsersMode img {
+    .MenuButtonSet .adminButton img {
       width: 100%;
       height: 100%; }
-  .MenuButtonSet #enterAddUsersMode.on {
+  .MenuButtonSet .adminButton.on {
     background-color: #42b72a; }
-  .MenuButtonSet #enterRequestedWebsitesMode {
-    max-width: 100px;
-    min-width: 0px;
-    width: 100px;
-    height: 100px;
-    background-color: #42b72a;
-    border-radius: 10px;
-    padding: 7px;
-    margin: 0px;
-    transition: background-color 0.3s; }
-    .MenuButtonSet #enterRequestedWebsitesMode:hover {
-      cursor: pointer; }
-    .MenuButtonSet #enterRequestedWebsitesMode img {
-      width: 100%;
-      height: 100%; }
-  .MenuButtonSet #enterAddUsersMode.on {
-    background-color: #42b72a; }
-  .MenuButtonSet #enterTagsManagerMode {
-    max-width: 100px;
-    min-width: 0px;
-    width: 100px;
-    height: 100px;
-    background-color: #ffaabb;
-    border-radius: 10px;
-    padding: 7px;
-    margin: 0px;
-    transition: background-color 0.3s; }
-    .MenuButtonSet #enterTagsManagerMode:hover {
-      cursor: pointer; }
-    .MenuButtonSet #enterTagsManagerMode img {
-      width: 100%;
-      height: 100%; }
-  .MenuButtonSet #enterAddSiteMode {
-    max-width: 100px;
-    min-width: 0px;
-    width: 100px;
-    height: 100px;
-    border-radius: 50px;
-    margin: 0px;
-    padding: 0px; }
-    .MenuButtonSet #enterAddSiteMode:hover {
-      cursor: pointer; }
-    .MenuButtonSet #enterAddSiteMode img {
-      width: 100%;
-      height: 100%; }
 
 #addSiteForm input {
   margin-top: 10px;
   width: 50%;
   margin-left: 25%; }
 
-#addTagForm input {
+#addSiteForm input {
+  margin-top: 10px;
+  width: 50%;
+  margin-left: 25%; }
+
+#changeBackForm input {
   position: relative;
   margin-top: 1%;
   width: 50%;
@@ -560,7 +637,10 @@
     transition: all .3s linear;
     height: 43px;
     font-size: 16px;
-    color: black; }
+    color: black;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; }
     #menu .menu__label span {
       line-height: 2; }
   #menu .menu__inner {
@@ -588,21 +668,6 @@
           color: #373b60; }
         #menu .menu__inner li a span {
           line-height: 2; }
-      #menu .menu__inner li .ScoreMenuTab {
-        width: 80%;
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: 15px;
-        font-size: 12px; }
-        #menu .menu__inner li .ScoreMenuTab .ScoreHolder {
-          text-align: center; }
-          #menu .menu__inner li .ScoreMenuTab .ScoreHolder .box {
-            border-radius: 2px;
-            width: 17px;
-            height: 17px;
-            display: inline-block; }
-        #menu .menu__inner li .ScoreMenuTab .ScoreDescription {
-          text-align: center; }
 
 #menu.menu--open .menu__inner {
   height: 45px;
@@ -786,6 +851,41 @@ span.input label {
             height: 100%; }
             #PopupAddApp .md-content .loginAppChooser .ChooserContent .AccountApp .imageHandler img {
               height: 100%; }
+    #PopupAddApp .md-content .loginSsoChooser {
+      padding: 0px;
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      text-align: center;
+      display: block; }
+      #PopupAddApp .md-content .loginSsoChooser p {
+        margin: 0px;
+        padding: 0px;
+        text-align: center; }
+      #PopupAddApp .md-content .loginSsoChooser .AccountApp.selected {
+        border: 1px solid white; }
+      #PopupAddApp .md-content .loginSsoChooser .ChooserContent {
+        max-height: 70px;
+        overflow: auto;
+        text-align: left; }
+        #PopupAddApp .md-content .loginSsoChooser .ChooserContent .AccountApp {
+          max-height: 30px;
+          height: 30px;
+          cursor: pointer;
+          padding: 2px;
+          margin-bottom: 4px; }
+          #PopupAddApp .md-content .loginSsoChooser .ChooserContent .AccountApp p, #PopupAddApp .md-content .loginSsoChooser .ChooserContent .AccountApp .imageHandler {
+            display: inline-block; }
+          #PopupAddApp .md-content .loginSsoChooser .ChooserContent .AccountApp p {
+            text-align: left;
+            margin: 0px;
+            margin-left: 5px;
+            padding: 0px; }
+          #PopupAddApp .md-content .loginSsoChooser .ChooserContent .AccountApp .imageHandler {
+            height: 100%; }
+            #PopupAddApp .md-content .loginSsoChooser .ChooserContent .AccountApp .imageHandler img {
+              height: 100%; }
     #PopupAddApp .md-content #AddAppForm {
       width: 80%;
       margin: 5px auto;
@@ -891,6 +991,8 @@ span.input label {
           padding: 0px;
           padding-left: 2px;
           text-align: center; }
+          #PopupModifyApp .md-content .popupHeader .textContent p span {
+            font-weight: 600; }
         #PopupModifyApp .md-content .popupHeader .textContent .title {
           font-size: 17px; }
         #PopupModifyApp .md-content .popupHeader .textContent .desc {
@@ -902,7 +1004,6 @@ span.input label {
       font-weight: 300;
       height: 29px;
       margin: 5px auto;
-      width: 100%;
       color: black;
       padding-left: 3px;
       border-radius: 5px;
@@ -972,6 +1073,47 @@ span.input label {
             height: 100%; }
             #PopupModifyApp .md-content .loginAppChooser .ChooserContent .AccountApp .imageHandler img {
               height: 100%; }
+    #PopupModifyApp .md-content .loginSsoChooser {
+      max-height: 100px;
+      padding: 0px;
+      margin: 0px;
+      width: 70%;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative; }
+      #PopupModifyApp .md-content .loginSsoChooser .buttonBack {
+        font-size: 25px;
+        position: absolute;
+        right: 0;
+        top: 0;
+        color: white; }
+        #PopupModifyApp .md-content .loginSsoChooser .buttonBack:hover {
+          color: #e6e6e6;
+          cursor: pointer; }
+      #PopupModifyApp .md-content .loginSsoChooser p {
+        text-align: center; }
+      #PopupModifyApp .md-content .loginSsoChooser .AccountApp.selected {
+        border: 1px solid white; }
+      #PopupModifyApp .md-content .loginSsoChooser .ChooserContent {
+        max-height: 70px;
+        overflow: auto; }
+        #PopupModifyApp .md-content .loginSsoChooser .ChooserContent .AccountApp {
+          max-height: 30px;
+          height: 30px;
+          cursor: pointer;
+          padding: 2px;
+          margin-bottom: 4px; }
+          #PopupModifyApp .md-content .loginSsoChooser .ChooserContent .AccountApp p, #PopupModifyApp .md-content .loginSsoChooser .ChooserContent .AccountApp .imageHandler {
+            display: inline-block; }
+          #PopupModifyApp .md-content .loginSsoChooser .ChooserContent .AccountApp p {
+            text-align: left;
+            margin: 0px;
+            margin-left: 5px;
+            padding: 0px; }
+          #PopupModifyApp .md-content .loginSsoChooser .ChooserContent .AccountApp .imageHandler {
+            height: 100%; }
+            #PopupModifyApp .md-content .loginSsoChooser .ChooserContent .AccountApp .imageHandler img {
+              height: 100%; }
     #PopupModifyApp .md-content #modifyAppForm {
       width: 80%;
       margin: 5px auto;
@@ -1022,6 +1164,9 @@ span.input label {
     float: right; }
 
 #PopupAddApp .md-content .loginWithChooser .linedSeparator p, #PopupModifyApp .md-content .loginWithChooser .linedSeparator p {
+  padding: 5px 5px; }
+
+#PopupAddApp .md-content .loginSsoChooser .linedSeparator p, #PopupModifyApp .md-content .loginSsoChooser .linedSeparator p {
   padding: 5px 5px; }
 
 .linedSeparator {
@@ -1082,7 +1227,6 @@ span.input label {
   text-align: center;
   visibility: hidden;
   color: white;
-  box-shadow: 0px 1px 1px 1px #777777;
   font-family: "Raleway", "Source Sans Pro", sans-serif;
   font-size: 16px; }
   #alertPopup .popup-content p {
@@ -1109,51 +1253,103 @@ span.input label {
     transform: translateX(100%);
     opacity: 0;
     visibility: hidden; } }
-#tutorialView {
-  text-align: center;
-  width: 60%;
+#tutorialView .step4 {
+  top: 0px;
+  left: 50%;
+  transform: translateX(-50%); }
+
+.bublePopup {
+  width: inherit;
+  overflow: hidden;
+  max-width: 300px;
   position: fixed;
-  left: 60%; }
-  #tutorialView .arrow {
-    transform: translateY(-50%);
-    position: absolute;
-    top: 50%;
-    right: 0;
-    font-size: 50px;
-    color: #434343; }
-    #tutorialView .arrow i {
-      display: inline-block; }
-  #tutorialView .title {
-    font-size: 50px;
-    transform: translateY(-100%); }
-  #tutorialView .info {
-    font-size: 25px;
-    transform: translateY(-100%); }
+  min-width: 200px;
+  z-index: 500; }
+  .bublePopup .popupContent {
+    display: inline-block;
+    float: left;
+    width: 95%;
+    background-color: rgba(55, 59, 96, 0.85);
+    color: white;
+    padding: 3px;
+    border-radius: 5px;
+    border: 1px hidden;
+    text-align: center; }
+    .bublePopup .popupContent p {
+      margin: 0px; }
+  .bublePopup .caretHelper {
+    display: inline-block;
+    float: left;
+    color: rgba(55, 59, 96, 0.85); }
+    .bublePopup .caretHelper i {
+      line-height: 100%;
+      margin-left: 0px; }
 
 #downloadExtension {
   text-align: center;
-  width: 80%; }
-  #downloadExtension .title {
-    font-size: 50px;
-    transform: translateY(-100%); }
-  #downloadExtension .info {
-    font-size: 25px;
-    transform: translateY(-100%); }
-  #downloadExtension #install-button {
-    background-color: #373b60;
+  width: 500px;
+  max-width: 45%;
+  background-color: #373b60;
+  padding: 15px;
+  color: white;
+  border-radius: 10px;
+  z-index: 1000; }
+  #downloadExtension .popupContent p {
+    font-size: 30px; }
+  #downloadExtension .popupContent .title {
+    font-size: 37px;
+    margin-bottom: 34px; }
+  #downloadExtension .popupContent .info {
+    font-size: 16px;
+    margin-bottom: 15px; }
+  #downloadExtension .popupContent #install-button {
+    margin-bottom: 15px;
+    background-color: #ec555b;
     color: white;
     border-radius: 5px;
     border: none;
     padding: 5px 30px;
     transition: all 0.3s;
-    border: 1px solid #373b60;
+    border: 1px solid #ec555b;
     outline: none;
-    font-size: 20px; }
-    #downloadExtension #install-button:hover {
-      border: 1px solid #373b60;
-      color: #373b60;
-      background-color: transparent;
-      transition: all 0.3s; }
+    font-size: 14px; }
+  #downloadExtension .popupContent #moreInfoButton {
+    margin: 0px;
+    text-decoration: underline;
+    font-size: 12px;
+    text-align: right;
+    position: absolute;
+    right: 5px;
+    bottom: 5px; }
+    #downloadExtension .popupContent #moreInfoButton:hover {
+      cursor: pointer; }
+  #downloadExtension .popupHelper span {
+    font-weight: 600; }
+  #downloadExtension .popupHelper button {
+    background-color: #ec555b;
+    color: white;
+    border-radius: 5px;
+    border: none;
+    padding: 5px 30px;
+    transition: all 0.3s;
+    border: 1px solid #ec555b;
+    outline: none;
+    font-size: 14px; }
+  #downloadExtension .popupHelper .firstLine {
+    overflow: hidden; }
+    #downloadExtension .popupHelper .firstLine .imageHandler {
+      width: 40%;
+      display: inline-block;
+      float: left; }
+      #downloadExtension .popupHelper .firstLine .imageHandler img {
+        width: 100%; }
+    #downloadExtension .popupHelper .firstLine .textHelper {
+      padding: 5px;
+      padding-left: 10px;
+      text-align: left;
+      float: left;
+      width: 60%;
+      display: inline-block; }
 
 .SettingsView.show {
   display: block;
@@ -1270,34 +1466,55 @@ span.input label {
   width: 100%;
   font-family: "Raleway", "Source Sans Pro", sans-serif; }
   .catalogView .tag {
-    color: white; }
+    color: white;
+    font-size: 12px;
+    padding: 4px 6px; }
     .catalogView .tag:hover {
       color: white; }
   .catalogView #catalog-quit {
     position: absolute;
-    top: 2%;
-    right: 2%;
-    cursor: pointer; }
+    top: 0%;
+    left: 0%;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    background-color: #ec555b;
+    border-radius: 100px;
+    text-align: center;
+    transform: translate3d(-50%, -50%, 0); }
+    .catalogView #catalog-quit i {
+      color: white;
+      font-size: 20px;
+      line-height: 25px; }
   .catalogView .catalogSearchbar {
-    margin: 20px 0;
-    text-align: center; }
+    margin: 20px auto 0px auto;
+    width: 80%;
+    position: relative; }
     .catalogView .catalogSearchbar input.form-control {
       display: inline;
-      width: 80%;
+      width: 100%;
       padding-left: 20px; }
     .catalogView .catalogSearchbar .fa-search {
       display: inline-block;
-      position: relative;
-      left: 25px;
+      position: absolute;
+      left: 5px;
+      top: 50%;
+      transform: translateY(-50%);
       font-weight: bold; }
     .catalogView .catalogSearchbar .selectedTagsContainer {
-      display: inline-block; }
+      display: inline-block;
+      position: absolute;
+      left: 20px;
+      top: 22%; }
+      .catalogView .catalogSearchbar .selectedTagsContainer .tags-group:first-child .tag {
+        margin-left: 2px; }
       .catalogView .catalogSearchbar .selectedTagsContainer .tag {
         margin-left: 10px; }
         .catalogView .catalogSearchbar .selectedTagsContainer .tag:hover {
           color: white; }
       .catalogView .catalogSearchbar .selectedTagsContainer .btn {
-        border: none; }
+        border: none;
+        z-index: 0; }
   .catalogView .helpIntegrateApps {
     padding: 10px;
     text-align: center;
@@ -1374,143 +1591,162 @@ span.input label {
       margin-bottom: 0px;
       line-height: 30px;
       border-radius: 10px; }
-  .catalogView .scaleContainerView {
-    background-color: white;
-    width: 100%;
-    margin-top: 20px;
-    padding-bottom: 20px; }
-    .catalogView .scaleContainerView .tagContainer {
-      border-bottom: 2px solid grey;
-      height: 50px;
+  .catalogView .tagContainer {
+    width: 100%; }
+    .catalogView .tagContainer .container {
+      width: 90%;
+      margin: 0px auto;
+      padding: 0px;
       white-space: nowrap;
       overflow: hidden;
-      background-color: #C1C1C1; }
-      .catalogView .scaleContainerView .tagContainer ::-webkit-scrollbar {
-        height: 3px;
-        background-color: white;
-        position: absolute; }
-      .catalogView .scaleContainerView .tagContainer .tag {
-        font-size: 0.8em;
-        margin: 10px 0 10px 20px; }
-      .catalogView .scaleContainerView .tagContainer .tags {
-        margin-left: 5%;
+      background-color: white;
+      position: relative; }
+      .catalogView .tagContainer .container .tag {
+        margin: 10px 0 10px 20px;
+        border: none; }
+      .catalogView .tagContainer .container .tags {
         width: 90%;
-        margin-right: 5%;
-        overflow-x: scroll;
-        overflow-y: hidden;
-        display: inline-block; }
-      .catalogView .scaleContainerView .tagContainer i {
+        margin: 0px auto;
+        overflow: hidden;
+        display: block; }
+        .catalogView .tagContainer .container .tags .tag:first-child {
+          margin-left: 3px; }
+      .catalogView .tagContainer .container i {
         font-size: 20px;
         width: 20px;
         height: 20px;
         padding: 0;
         text-align: center;
         vertical-align: middle;
-        color: white;
+        color: #373b60;
+        background-color: white;
+        border-radius: 100px;
         cursor: pointer;
         position: absolute;
-        margin-top: 15px;
+        top: 50%;
+        transform: translateY(-50%);
         transition: all 0.3s; }
-        .catalogView .scaleContainerView .tagContainer i:hover {
+        .catalogView .tagContainer .container i:hover {
           transition: all 0.3s;
-          color: #373b60; }
-      .catalogView .scaleContainerView .tagContainer i.fa-angle-right {
-        right: 1%;
+          color: white;
+          background-color: #373b60; }
+      .catalogView .tagContainer .container i.fa-angle-right {
+        right: 0;
         padding-left: 2px; }
-      .catalogView .scaleContainerView .tagContainer i.fa-angle-left {
-        margin-left: 1%;
-        padding-right: 2px; }
-  .catalogView .scaleContainer {
-    width: 90%;
-    position: relative;
-    margin: 30px auto;
-    margin-bottom: 0; }
-    .catalogView .scaleContainer .catalogContainer {
-      position: absolute;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow-y: auto;
-      overflow-x: hidden; }
-      .catalogView .scaleContainer .catalogContainer .search-result, .catalogView .scaleContainer .catalogContainer .relatedApps {
+      .catalogView .tagContainer .container i.fa-angle-left {
+        padding-right: 2px;
         display: none; }
-      .catalogView .scaleContainer .catalogContainer h3 {
-        text-align: center;
-        font-size: 18px;
-        margin-top: 0px;
-        margin-bottom: 5px;
-        position: relative;
-        z-index: 1; }
-        .catalogView .scaleContainer .catalogContainer h3:before {
-          border-top: 1px solid black;
-          content: "";
-          margin: 0 auto;
-          position: absolute;
-          top: 50%;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          width: 95%;
-          z-index: -1; }
-        .catalogView .scaleContainer .catalogContainer h3 span {
-          background: white;
-          padding: 0 10px; }
-      .catalogView .scaleContainer .catalogContainer h4 {
-        text-align: center;
-        font-size: 14px;
-        margin-top: 0px;
-        margin-bottom: 5px;
-        position: relative;
-        z-index: 1; }
-        .catalogView .scaleContainer .catalogContainer h4:before {
-          border-top: 1px solid black;
-          content: "";
-          margin: 0 auto;
-          position: absolute;
-          top: 50%;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          width: 95%;
-          z-index: -1; }
-        .catalogView .scaleContainer .catalogContainer h4 span {
-          background: white;
-          padding: 0 10px; }
-      .catalogView .scaleContainer .catalogContainer .no-result-search {
-        display: none;
-        text-align: center; }
-        .catalogView .scaleContainer .catalogContainer .no-result-search h2 img {
-          width: 25px;
-          vertical-align: initial; }
-        .catalogView .scaleContainer .catalogContainer .no-result-search p {
-          font-size: 1.4em; }
-        .catalogView .scaleContainer .catalogContainer .no-result-search img {
-          width: 9%; }
-      .catalogView .scaleContainer .catalogContainer .catalogApp {
-        width: 16.66667%;
-        height: 33.33333%;
-        display: inline-block;
-        padding: 5px;
-        float: left; }
-        .catalogView .scaleContainer .catalogContainer .catalogApp .catalogAppLogo {
-          width: 65%;
-          height: 65%;
-          margin-left: auto;
-          margin-right: auto;
-          padding-top: 3px; }
-          .catalogView .scaleContainer .catalogContainer .catalogApp .catalogAppLogo:hover {
-            cursor: pointer; }
-            .catalogView .scaleContainer .catalogContainer .catalogApp .catalogAppLogo:hover img {
-              box-shadow: 0px 0px 4px 0px #cccccc; }
-          .catalogView .scaleContainer .catalogContainer .catalogApp .catalogAppLogo img {
-            width: 100%;
-            border-radius: 5px;
-            height: 100%;
-            border: 1px solid #cccccc; }
-        .catalogView .scaleContainer .catalogContainer .catalogApp .catalogAppName {
+
+.scaleContainerView {
+  background-color: white;
+  width: 100%;
+  padding: 0px 5%;
+  border-bottom: 1px solid #b5b7bd;
+  border-top: 1px solid #b5b7bd;
+  margin-left: auto;
+  margin-right: auto; }
+  .scaleContainerView .catalogArea {
+    width: 100%;
+    margin: 0px auto;
+    padding: 15px;
+    border-radius: 5px; }
+    .scaleContainerView .catalogArea .scaleContainer {
+      width: 100%;
+      position: relative;
+      margin: 0px auto;
+      margin-bottom: 0; }
+      .scaleContainerView .catalogArea .scaleContainer .catalogContainer {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden; }
+        .scaleContainerView .catalogArea .scaleContainer .catalogContainer .search-result, .scaleContainerView .catalogArea .scaleContainer .catalogContainer .relatedApps {
+          display: none; }
+        .scaleContainerView .catalogArea .scaleContainer .catalogContainer h3 {
           text-align: center;
-          padding-top: 3px;
-          font-size: 12px; }
+          font-size: 18px;
+          margin-top: 0px;
+          margin-bottom: 5px;
+          position: relative;
+          z-index: 1; }
+          .scaleContainerView .catalogArea .scaleContainer .catalogContainer h3:before {
+            border-top: 1px solid black;
+            content: "";
+            margin: 0 auto;
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 95%;
+            z-index: -1; }
+          .scaleContainerView .catalogArea .scaleContainer .catalogContainer h3 span {
+            background: white;
+            padding: 0 10px; }
+        .scaleContainerView .catalogArea .scaleContainer .catalogContainer h4 {
+          text-align: center;
+          font-size: 14px;
+          margin-top: 0px;
+          margin-bottom: 5px;
+          position: relative;
+          z-index: 1; }
+          .scaleContainerView .catalogArea .scaleContainer .catalogContainer h4:before {
+            border-top: 1px solid black;
+            content: "";
+            margin: 0 auto;
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 95%;
+            z-index: -1; }
+          .scaleContainerView .catalogArea .scaleContainer .catalogContainer h4 span {
+            background: white;
+            padding: 0 10px; }
+        .scaleContainerView .catalogArea .scaleContainer .catalogContainer .no-result-search {
+          display: none;
+          text-align: center; }
+          .scaleContainerView .catalogArea .scaleContainer .catalogContainer .no-result-search h2 img {
+            width: 25px;
+            vertical-align: initial; }
+          .scaleContainerView .catalogArea .scaleContainer .catalogContainer .no-result-search p {
+            font-size: 1.4em; }
+          .scaleContainerView .catalogArea .scaleContainer .catalogContainer .no-result-search img {
+            width: 9%; }
+        .scaleContainerView .catalogArea .scaleContainer .catalogContainer .catalogApp {
+          width: 16.66667%;
+          height: 25%;
+          display: inline-block;
+          padding: 5px;
+          float: left;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis; }
+          .scaleContainerView .catalogArea .scaleContainer .catalogContainer .catalogApp .catalogAppLogo {
+            width: 65%;
+            height: 65%;
+            margin-left: auto;
+            margin-right: auto;
+            padding-top: 3px; }
+            .scaleContainerView .catalogArea .scaleContainer .catalogContainer .catalogApp .catalogAppLogo:hover {
+              cursor: pointer; }
+              .scaleContainerView .catalogArea .scaleContainer .catalogContainer .catalogApp .catalogAppLogo:hover img {
+                box-shadow: 0px 0px 4px 0px #cccccc; }
+            .scaleContainerView .catalogArea .scaleContainer .catalogContainer .catalogApp .catalogAppLogo img {
+              width: 100%;
+              border-radius: 5px;
+              height: 100%;
+              border: 1px solid #cccccc; }
+          .scaleContainerView .catalogArea .scaleContainer .catalogContainer .catalogApp .catalogAppName {
+            text-align: center;
+            padding-top: 3px;
+            font-size: 12px; }
+            .scaleContainerView .catalogArea .scaleContainer .catalogContainer .catalogApp .catalogAppName p {
+              overflow: hidden;
+              text-overflow: ellipsis; }
 
 .ProfilesHandler.editMode .item .AddProfileView {
   display: block; }
@@ -1525,7 +1761,10 @@ span.input label {
   margin-left: auto;
   margin-right: auto;
   margin-top: 50%;
-  border-radius: 5px; }
+  border-radius: 5px;
+  border-left: 1px solid #d0d1d5;
+  border-right: 1px solid #d0d1d5;
+  border-bottom: 1px solid #d0d1d5; }
   .ProfilesHandler .item .AddProfileView:hover {
     cursor: pointer;
     background-color: #fafafa; }
@@ -1709,8 +1948,10 @@ span.input label {
 
 .dragHelperLogo {
   width: 50px;
-  height: 50px; }
+  height: 50px;
+  z-index: 3; }
   .dragHelperLogo img {
+    border: 1px solid white;
     border-radius: 5px;
     width: 100%; }
 
@@ -1732,27 +1973,28 @@ span.input label {
     position: absolute; }
 
 .CatalogViewTab.show {
-  transition: all 0.3s ease;
   visibility: visible;
-  background-color: #C1C1C1;
-  left: 50%;
+  background-color: white;
+  left: 52.2%;
+  top: 3%;
   opacity: 1; }
 
 .CatalogViewTab {
-  min-height: 100%;
   opacity: 0;
   top: 0;
-  transition: all 0.3s ease;
-  width: 50%;
+  transition: visibility 0s ease .3s;
+  width: 46%;
   float: left;
   left: 100%;
   visibility: hidden;
   position: absolute;
-  background-color: white; }
+  background-color: white;
+  border-radius: 5px;
+  border: 1px solid #d0d1d5; }
   .CatalogViewTab #quit {
     position: absolute;
-    top: 1%;
-    right: 1%;
+    top: 0;
+    right: 2%;
     background-color: #ec555b;
     color: white;
     border: none;
@@ -1771,6 +2013,14 @@ span.input label {
 .borderedView {
   border: 1px solid red !important; }
 
+@media screen and (min-width: 1500px) {
+  .CatalogViewTab .tag {
+    font-size: 1.4em; }
+  .CatalogViewTab #catalog p {
+    font-size: 1.4em; }
+
+  .ProfilesHandler .ProfileContent p, .ProfilesHandler .ProfileContent i {
+    font-size: 1.4em; } }
 #buttonShow {
   height: 12px;
   background-color: transparent;
@@ -1822,6 +2072,7 @@ span.input label {
           transform: translateX(-50%) translateY(-50%); }
 
 .header #logoutButton {
+  position: relative;
   float: right;
   margin-right: 160px;
   background-color: #373b60;
@@ -1841,60 +2092,131 @@ span.input label {
     color: #373b60;
     border: 1px solid #373b60; }
 
+#searchBar {
+  width: 40%;
+  height: 30px;
+  font-size: 14px;
+  background-color: rgba(239, 239, 239, 0.89);
+  border-radius: 5px;
+  	/*#loginBody input::-webkit-input-placeholder {
+    	color: #F7F7F7;
+  	}
+  	#loginBody input::-moz-placeholder {
+    	color: #F7F7F7;
+  	}
+  	#loginBody input:-ms-input-placeholder {
+    	color: #F7F7F7;
+  	}
+  	#loginBody input:-moz-placeholder {
+    	color: #F7F7F7;
+  	}*/ }
+  #searchBar input {
+    width: 100%;
+    position: relative;
+    height: 100%;
+    border: none;
+    background: transparent;
+    font-size: 17px;
+    padding-right: 45px;
+    padding-left: 8px;
+    outline: none; }
+  #searchBar #searchBarButton {
+    transition: all .5s;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 40px;
+    text-align: center;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    color: #373b60; }
+    #searchBar #searchBarButton img {
+      position: relative;
+      height: 80%;
+      top: 10%; }
+    #searchBar #searchBarButton i {
+      font-size: 25px;
+      vertical-align: middle;
+      line-height: 30px; }
+    #searchBar #searchBarButton:hover {
+      cursor: pointer; }
+  #searchBar #searchBarButton.active {
+    transition: all .5s;
+    background-color: #C1C1C1;
+    color: white; }
+
 #invitationBody {
-  background-color: #373b60; }
+  background: url("../resources/backgrounds/background.jpeg");
+  background-size: 100% 100%;
+  background-position: 50% 50%; }
   #invitationBody .logo {
-    width: 20%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 50px; }
+    width: 20%; }
     #invitationBody .logo img {
       width: 100%; }
+  #invitationBody h1 {
+    color: white;
+    margin: 0px auto 30px auto;
+    text-align: center;
+    font-size: 50px; }
   #invitationBody p {
     margin-bottom: 3px; }
-  #invitationBody #registrationBlock {
+  #invitationBody .registrationBlock#checkInvitation {
+    padding-bottom: 50px;
+    padding-top: 40px; }
+    #invitationBody .registrationBlock#checkInvitation .confirmBox {
+      text-align: center;
+      max-width: 60%;
+      margin: 0px auto;
+      margin-top: 20px;
+      border: 2px solid #a1c986;
+      color: #a1c986;
+      padding: 2px;
+      border-radius: 5px; }
+  #invitationBody .registrationBlock {
     padding: 5px;
     border-radius: 5px;
     border: 1px hidden;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 30px;
-    width: 20%;
-    min-width: 285px;
-    background-color: white; }
-    #invitationBody #registrationBlock .alertDiv {
+    width: 19%;
+    min-width: 250px;
+    max-width: 250px;
+    background-color: rgba(255, 255, 255, 0.9); }
+    #invitationBody .registrationBlock .alertDiv {
       width: 90%;
       text-align: center;
       margin: 0px auto; }
-    #invitationBody #registrationBlock .title {
+    #invitationBody .registrationBlock .title {
       width: 90%;
       margin: 10px auto;
-      font-size: 20px;
+      font-size: 17px;
       text-align: center; }
-    #invitationBody #registrationBlock .registrationTips {
+    #invitationBody .registrationBlock .registrationTips {
       width: 90%;
       margin: 0px auto;
       margin-top: 10px;
       text-align: center; }
-      #invitationBody #registrationBlock .registrationTips span {
+      #invitationBody .registrationBlock .registrationTips span {
         font-weight: 600; }
-    #invitationBody #registrationBlock #registrationForm {
+    #invitationBody .registrationBlock #registrationForm {
       width: 90%;
       margin: 0px auto; }
-      #invitationBody #registrationBlock #registrationForm .doubleInput {
+      #invitationBody .registrationBlock #registrationForm .doubleInput {
         width: 100; }
-        #invitationBody #registrationBlock #registrationForm .doubleInput .input {
+        #invitationBody .registrationBlock #registrationForm .doubleInput .input {
           width: 48%; }
-          #invitationBody #registrationBlock #registrationForm .doubleInput .input:nth-child(1) {
+          #invitationBody .registrationBlock #registrationForm .doubleInput .input:nth-child(1) {
             float: left; }
-          #invitationBody #registrationBlock #registrationForm .doubleInput .input:nth-child(2) {
+          #invitationBody .registrationBlock #registrationForm .doubleInput .input:nth-child(2) {
             float: right; }
-      #invitationBody #registrationBlock #registrationForm .input {
+      #invitationBody .registrationBlock #registrationForm .input {
         margin: 0px;
         margin-bottom: 10px;
         width: 100%;
         max-width: 100%; }
-        #invitationBody #registrationBlock #registrationForm .input input {
+        #invitationBody .registrationBlock #registrationForm .input input {
           color: #373b60;
           background-color: #efefef;
           border-radius: 5px;
@@ -1902,31 +2224,214 @@ span.input label {
           width: 100%;
           padding: 2px;
           line-height: 1.5; }
-    #invitationBody #registrationBlock .custom-button {
+    #invitationBody .registrationBlock .custom-button {
       width: 50%;
       margin-left: auto;
-      margin-right: auto; }
-      #invitationBody #registrationBlock .custom-button button {
+      margin-right: auto;
+      margin-top: 25px;
+      text-align: center;
+      position: relative; }
+      #invitationBody .registrationBlock .custom-button button {
         width: 100%;
+        height: 100%;
         border: 1px solid #373b60;
-        margin-top: 25px;
         padding-bottom: 5px;
         padding-top: 7px;
         border-radius: 7px;
         font-size: 14px;
         background-color: #373b60;
-        transition: all .4s;
+        transition: all .3s;
         color: white;
         outline: none;
         position: relative;
         display: inline-block;
-        vertical-align: middle; }
-        #invitationBody #registrationBlock .custom-button button:hover {
+        vertical-align: middle;
+        overflow: hidden;
+        white-space: nowrap; }
+        #invitationBody .registrationBlock .custom-button button:hover {
+          transition: all .3s;
           border: 1px solid #373b60;
-          background-color: rgba(255, 255, 255, 0.7);
-          color: #373b60;
-          transition: all .4s; }
+          background-color: white;
+          color: #373b60; }
+      #invitationBody .registrationBlock .custom-button .loadHelper {
+        transition: all .3s;
+        width: 100%;
+        height: 100%;
+        visibility: hidden;
+        opacity: 0;
+        border-radius: 7px;
+        position: absolute;
+        border: 3px solid #373b60; }
+      #invitationBody .registrationBlock .custom-button .successHelper {
+        width: 100%;
+        height: auto;
+        border: 3px solid green;
+        padding-bottom: 5px;
+        padding-top: 7px;
+        border-radius: 7px;
+        font-size: 14px;
+        background-color: white;
+        transition: all .3s;
+        color: green;
+        opacity: 0;
+        visibility: hidden;
+        outline: none;
+        display: inline-block;
+        vertical-align: middle; }
+    #invitationBody .registrationBlock .custom-button.loading button {
+      transition: all .3s;
+      border-radius: 100px;
+      width: 35px;
+      opacity: 0; }
+      #invitationBody .registrationBlock .custom-button.loading button span {
+        opacity: 0; }
+    #invitationBody .registrationBlock .custom-button.loading .loadHelper {
+      transition: all .3s;
+      width: 35px;
+      height: 100%;
+      border-radius: 100px;
+      border: none;
+      opacity: 1;
+      visibility: visible; }
+    #invitationBody .registrationBlock .custom-button.success .loadHelper {
+      visibility: hidden;
+      opacity: 0; }
+    #invitationBody .registrationBlock .custom-button.success .successHelper {
+      visibility: visible;
+      opacity: 1; }
 
+.sk-fading-circle {
+  width: 100%;
+  height: 100%;
+  position: relative; }
+
+.sk-fading-circle .sk-circle {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0; }
+
+.sk-fading-circle .sk-circle:before {
+  content: '';
+  display: block;
+  margin: 0 auto;
+  width: 15%;
+  height: 15%;
+  background-color: #373b60;
+  border-radius: 100%;
+  -webkit-animation: sk-circleFadeDelay 1.2s infinite ease-in-out both;
+  animation: sk-circleFadeDelay 1.2s infinite ease-in-out both; }
+
+.sk-fading-circle .sk-circle2 {
+  -webkit-transform: rotate(30deg);
+  -ms-transform: rotate(30deg);
+  transform: rotate(30deg); }
+
+.sk-fading-circle .sk-circle3 {
+  -webkit-transform: rotate(60deg);
+  -ms-transform: rotate(60deg);
+  transform: rotate(60deg); }
+
+.sk-fading-circle .sk-circle4 {
+  -webkit-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  transform: rotate(90deg); }
+
+.sk-fading-circle .sk-circle5 {
+  -webkit-transform: rotate(120deg);
+  -ms-transform: rotate(120deg);
+  transform: rotate(120deg); }
+
+.sk-fading-circle .sk-circle6 {
+  -webkit-transform: rotate(150deg);
+  -ms-transform: rotate(150deg);
+  transform: rotate(150deg); }
+
+.sk-fading-circle .sk-circle7 {
+  -webkit-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  transform: rotate(180deg); }
+
+.sk-fading-circle .sk-circle8 {
+  -webkit-transform: rotate(210deg);
+  -ms-transform: rotate(210deg);
+  transform: rotate(210deg); }
+
+.sk-fading-circle .sk-circle9 {
+  -webkit-transform: rotate(240deg);
+  -ms-transform: rotate(240deg);
+  transform: rotate(240deg); }
+
+.sk-fading-circle .sk-circle10 {
+  -webkit-transform: rotate(270deg);
+  -ms-transform: rotate(270deg);
+  transform: rotate(270deg); }
+
+.sk-fading-circle .sk-circle11 {
+  -webkit-transform: rotate(300deg);
+  -ms-transform: rotate(300deg);
+  transform: rotate(300deg); }
+
+.sk-fading-circle .sk-circle12 {
+  -webkit-transform: rotate(330deg);
+  -ms-transform: rotate(330deg);
+  transform: rotate(330deg); }
+
+.sk-fading-circle .sk-circle2:before {
+  -webkit-animation-delay: -1.1s;
+  animation-delay: -1.1s; }
+
+.sk-fading-circle .sk-circle3:before {
+  -webkit-animation-delay: -1s;
+  animation-delay: -1s; }
+
+.sk-fading-circle .sk-circle4:before {
+  -webkit-animation-delay: -0.9s;
+  animation-delay: -0.9s; }
+
+.sk-fading-circle .sk-circle5:before {
+  -webkit-animation-delay: -0.8s;
+  animation-delay: -0.8s; }
+
+.sk-fading-circle .sk-circle6:before {
+  -webkit-animation-delay: -0.7s;
+  animation-delay: -0.7s; }
+
+.sk-fading-circle .sk-circle7:before {
+  -webkit-animation-delay: -0.6s;
+  animation-delay: -0.6s; }
+
+.sk-fading-circle .sk-circle8:before {
+  -webkit-animation-delay: -0.5s;
+  animation-delay: -0.5s; }
+
+.sk-fading-circle .sk-circle9:before {
+  -webkit-animation-delay: -0.4s;
+  animation-delay: -0.4s; }
+
+.sk-fading-circle .sk-circle10:before {
+  -webkit-animation-delay: -0.3s;
+  animation-delay: -0.3s; }
+
+.sk-fading-circle .sk-circle11:before {
+  -webkit-animation-delay: -0.2s;
+  animation-delay: -0.2s; }
+
+.sk-fading-circle .sk-circle12:before {
+  -webkit-animation-delay: -0.1s;
+  animation-delay: -0.1s; }
+
+@-webkit-keyframes sk-circleFadeDelay {
+  0%, 39%, 100% {
+    opacity: 0; }
+  40% {
+    opacity: 1; } }
+@keyframes sk-circleFadeDelay {
+  0%, 39%, 100% {
+    opacity: 0; }
+  40% {
+    opacity: 1; } }
 .AdminMenu.show .MenuButtonSet {
   display: block; }
 
@@ -2162,103 +2667,103 @@ span.input label {
 
 @keyframes shake {
   2% {
-    transform: translate(0.5px, 1.5px) rotate(0.5deg); }
-  4% {
     transform: translate(2.5px, 0.5px) rotate(-0.5deg); }
+  4% {
+    transform: translate(-0.5px, -1.5px) rotate(-0.5deg); }
   6% {
-    transform: translate(-1.5px, 1.5px) rotate(0.5deg); }
+    transform: translate(1.5px, 1.5px) rotate(1.5deg); }
   8% {
-    transform: translate(1.5px, -0.5px) rotate(-0.5deg); }
+    transform: translate(0.5px, -1.5px) rotate(1.5deg); }
   10% {
-    transform: translate(1.5px, -1.5px) rotate(1.5deg); }
-  12% {
-    transform: translate(-0.5px, -0.5px) rotate(0.5deg); }
-  14% {
-    transform: translate(1.5px, -0.5px) rotate(0.5deg); }
-  16% {
-    transform: translate(-0.5px, -1.5px) rotate(0.5deg); }
-  18% {
-    transform: translate(-1.5px, 1.5px) rotate(-0.5deg); }
-  20% {
-    transform: translate(-0.5px, 2.5px) rotate(1.5deg); }
-  22% {
-    transform: translate(0.5px, 2.5px) rotate(0.5deg); }
-  24% {
-    transform: translate(2.5px, 1.5px) rotate(0.5deg); }
-  26% {
-    transform: translate(1.5px, 2.5px) rotate(-0.5deg); }
-  28% {
-    transform: translate(2.5px, 1.5px) rotate(-0.5deg); }
-  30% {
-    transform: translate(0.5px, 1.5px) rotate(-0.5deg); }
-  32% {
-    transform: translate(1.5px, -1.5px) rotate(0.5deg); }
-  34% {
-    transform: translate(-0.5px, -0.5px) rotate(1.5deg); }
-  36% {
-    transform: translate(1.5px, 1.5px) rotate(-0.5deg); }
-  38% {
-    transform: translate(-0.5px, 2.5px) rotate(0.5deg); }
-  40% {
-    transform: translate(2.5px, 0.5px) rotate(0.5deg); }
-  42% {
-    transform: translate(-0.5px, -1.5px) rotate(0.5deg); }
-  44% {
-    transform: translate(1.5px, 2.5px) rotate(1.5deg); }
-  46% {
-    transform: translate(0.5px, 1.5px) rotate(1.5deg); }
-  48% {
-    transform: translate(1.5px, 1.5px) rotate(0.5deg); }
-  50% {
-    transform: translate(0.5px, -0.5px) rotate(0.5deg); }
-  52% {
-    transform: translate(0.5px, 1.5px) rotate(0.5deg); }
-  54% {
     transform: translate(-1.5px, -1.5px) rotate(1.5deg); }
-  56% {
-    transform: translate(-1.5px, -0.5px) rotate(0.5deg); }
-  58% {
-    transform: translate(0.5px, 2.5px) rotate(-0.5deg); }
-  60% {
+  12% {
+    transform: translate(-1.5px, 2.5px) rotate(0.5deg); }
+  14% {
+    transform: translate(0.5px, 1.5px) rotate(-0.5deg); }
+  16% {
+    transform: translate(-0.5px, -0.5px) rotate(0.5deg); }
+  18% {
+    transform: translate(0.5px, -1.5px) rotate(0.5deg); }
+  20% {
+    transform: translate(-0.5px, -0.5px) rotate(-0.5deg); }
+  22% {
+    transform: translate(-1.5px, 1.5px) rotate(0.5deg); }
+  24% {
+    transform: translate(2.5px, 2.5px) rotate(-0.5deg); }
+  26% {
+    transform: translate(0.5px, 2.5px) rotate(1.5deg); }
+  28% {
+    transform: translate(1.5px, 1.5px) rotate(0.5deg); }
+  30% {
+    transform: translate(2.5px, 1.5px) rotate(-0.5deg); }
+  32% {
+    transform: translate(-1.5px, -1.5px) rotate(1.5deg); }
+  34% {
+    transform: translate(-1.5px, -0.5px) rotate(1.5deg); }
+  36% {
+    transform: translate(-0.5px, -1.5px) rotate(1.5deg); }
+  38% {
+    transform: translate(1.5px, 0.5px) rotate(0.5deg); }
+  40% {
     transform: translate(0.5px, 1.5px) rotate(0.5deg); }
-  62% {
-    transform: translate(-0.5px, -1.5px) rotate(0.5deg); }
-  64% {
-    transform: translate(1.5px, 0.5px) rotate(1.5deg); }
-  66% {
-    transform: translate(-0.5px, 0.5px) rotate(-0.5deg); }
-  68% {
+  42% {
+    transform: translate(2.5px, -0.5px) rotate(1.5deg); }
+  44% {
     transform: translate(0.5px, -0.5px) rotate(1.5deg); }
+  46% {
+    transform: translate(1.5px, -1.5px) rotate(-0.5deg); }
+  48% {
+    transform: translate(1.5px, -1.5px) rotate(1.5deg); }
+  50% {
+    transform: translate(-1.5px, 1.5px) rotate(1.5deg); }
+  52% {
+    transform: translate(1.5px, -1.5px) rotate(-0.5deg); }
+  54% {
+    transform: translate(1.5px, -1.5px) rotate(1.5deg); }
+  56% {
+    transform: translate(0.5px, 1.5px) rotate(1.5deg); }
+  58% {
+    transform: translate(2.5px, -0.5px) rotate(0.5deg); }
+  60% {
+    transform: translate(-1.5px, 0.5px) rotate(0.5deg); }
+  62% {
+    transform: translate(-1.5px, -0.5px) rotate(-0.5deg); }
+  64% {
+    transform: translate(1.5px, -0.5px) rotate(0.5deg); }
+  66% {
+    transform: translate(-0.5px, -0.5px) rotate(-0.5deg); }
+  68% {
+    transform: translate(1.5px, 1.5px) rotate(1.5deg); }
   70% {
     transform: translate(0.5px, 2.5px) rotate(1.5deg); }
   72% {
-    transform: translate(2.5px, -0.5px) rotate(-0.5deg); }
+    transform: translate(1.5px, 2.5px) rotate(0.5deg); }
   74% {
-    transform: translate(2.5px, 0.5px) rotate(-0.5deg); }
+    transform: translate(-0.5px, -1.5px) rotate(1.5deg); }
   76% {
-    transform: translate(0.5px, -1.5px) rotate(-0.5deg); }
+    transform: translate(1.5px, -0.5px) rotate(-0.5deg); }
   78% {
-    transform: translate(1.5px, -1.5px) rotate(1.5deg); }
+    transform: translate(-0.5px, 2.5px) rotate(1.5deg); }
   80% {
-    transform: translate(0.5px, 2.5px) rotate(0.5deg); }
-  82% {
-    transform: translate(2.5px, -0.5px) rotate(1.5deg); }
-  84% {
-    transform: translate(2.5px, -0.5px) rotate(0.5deg); }
-  86% {
-    transform: translate(1.5px, -1.5px) rotate(-0.5deg); }
-  88% {
-    transform: translate(1.5px, 1.5px) rotate(1.5deg); }
-  90% {
-    transform: translate(0.5px, 2.5px) rotate(1.5deg); }
-  92% {
     transform: translate(0.5px, 0.5px) rotate(1.5deg); }
+  82% {
+    transform: translate(1.5px, -0.5px) rotate(-0.5deg); }
+  84% {
+    transform: translate(-1.5px, 0.5px) rotate(0.5deg); }
+  86% {
+    transform: translate(2.5px, 1.5px) rotate(1.5deg); }
+  88% {
+    transform: translate(2.5px, -0.5px) rotate(1.5deg); }
+  90% {
+    transform: translate(1.5px, -0.5px) rotate(1.5deg); }
+  92% {
+    transform: translate(-1.5px, 1.5px) rotate(1.5deg); }
   94% {
-    transform: translate(1.5px, 1.5px) rotate(1.5deg); }
+    transform: translate(2.5px, -1.5px) rotate(1.5deg); }
   96% {
-    transform: translate(1.5px, 0.5px) rotate(1.5deg); }
+    transform: translate(-1.5px, 1.5px) rotate(1.5deg); }
   98% {
-    transform: translate(-1.5px, -0.5px) rotate(0.5deg); }
+    transform: translate(-1.5px, 1.5px) rotate(1.5deg); }
   0%, 100% {
     transform: translate(0, 0) rotate(0); } }
 .shake:hover, .shake-trigger:hover .shake, .shake.shake-freeze, .shake.shake-constant {
@@ -2269,101 +2774,101 @@ span.input label {
 
 @keyframes shake-little {
   2% {
-    transform: translate(0px, 1px) rotate(0.5deg); }
+    transform: translate(1px, 1px) rotate(0.5deg); }
   4% {
     transform: translate(0px, 1px) rotate(0.5deg); }
   6% {
-    transform: translate(1px, 1px) rotate(0.5deg); }
+    transform: translate(0px, 1px) rotate(0.5deg); }
   8% {
-    transform: translate(0px, 1px) rotate(0.5deg); }
+    transform: translate(0px, 0px) rotate(0.5deg); }
   10% {
-    transform: translate(0px, 1px) rotate(0.5deg); }
-  12% {
     transform: translate(1px, 1px) rotate(0.5deg); }
+  12% {
+    transform: translate(1px, 0px) rotate(0.5deg); }
   14% {
     transform: translate(1px, 1px) rotate(0.5deg); }
   16% {
-    transform: translate(1px, 0px) rotate(0.5deg); }
-  18% {
-    transform: translate(1px, 1px) rotate(0.5deg); }
-  20% {
     transform: translate(0px, 0px) rotate(0.5deg); }
+  18% {
+    transform: translate(1px, 0px) rotate(0.5deg); }
+  20% {
+    transform: translate(1px, 0px) rotate(0.5deg); }
   22% {
     transform: translate(1px, 1px) rotate(0.5deg); }
   24% {
-    transform: translate(0px, 1px) rotate(0.5deg); }
-  26% {
-    transform: translate(0px, 1px) rotate(0.5deg); }
-  28% {
     transform: translate(1px, 0px) rotate(0.5deg); }
+  26% {
+    transform: translate(1px, 0px) rotate(0.5deg); }
+  28% {
+    transform: translate(1px, 1px) rotate(0.5deg); }
   30% {
     transform: translate(1px, 1px) rotate(0.5deg); }
   32% {
-    transform: translate(1px, 0px) rotate(0.5deg); }
+    transform: translate(1px, 1px) rotate(0.5deg); }
   34% {
-    transform: translate(1px, 0px) rotate(0.5deg); }
+    transform: translate(0px, 1px) rotate(0.5deg); }
   36% {
-    transform: translate(0px, 1px) rotate(0.5deg); }
+    transform: translate(1px, 1px) rotate(0.5deg); }
   38% {
-    transform: translate(0px, 1px) rotate(0.5deg); }
+    transform: translate(1px, 1px) rotate(0.5deg); }
   40% {
     transform: translate(1px, 1px) rotate(0.5deg); }
   42% {
-    transform: translate(0px, 0px) rotate(0.5deg); }
+    transform: translate(1px, 1px) rotate(0.5deg); }
   44% {
     transform: translate(1px, 0px) rotate(0.5deg); }
   46% {
-    transform: translate(0px, 1px) rotate(0.5deg); }
+    transform: translate(0px, 0px) rotate(0.5deg); }
   48% {
     transform: translate(1px, 0px) rotate(0.5deg); }
   50% {
-    transform: translate(1px, 1px) rotate(0.5deg); }
-  52% {
-    transform: translate(0px, 0px) rotate(0.5deg); }
-  54% {
-    transform: translate(0px, 0px) rotate(0.5deg); }
-  56% {
     transform: translate(0px, 1px) rotate(0.5deg); }
+  52% {
+    transform: translate(1px, 1px) rotate(0.5deg); }
+  54% {
+    transform: translate(1px, 1px) rotate(0.5deg); }
+  56% {
+    transform: translate(0px, 0px) rotate(0.5deg); }
   58% {
-    transform: translate(1px, 0px) rotate(0.5deg); }
+    transform: translate(0px, 1px) rotate(0.5deg); }
   60% {
-    transform: translate(0px, 0px) rotate(0.5deg); }
+    transform: translate(1px, 1px) rotate(0.5deg); }
   62% {
-    transform: translate(1px, 1px) rotate(0.5deg); }
+    transform: translate(0px, 0px) rotate(0.5deg); }
   64% {
-    transform: translate(0px, 0px) rotate(0.5deg); }
+    transform: translate(0px, 1px) rotate(0.5deg); }
   66% {
-    transform: translate(0px, 0px) rotate(0.5deg); }
+    transform: translate(0px, 1px) rotate(0.5deg); }
   68% {
-    transform: translate(1px, 1px) rotate(0.5deg); }
+    transform: translate(0px, 0px) rotate(0.5deg); }
   70% {
     transform: translate(1px, 1px) rotate(0.5deg); }
   72% {
-    transform: translate(0px, 1px) rotate(0.5deg); }
-  74% {
-    transform: translate(0px, 0px) rotate(0.5deg); }
-  76% {
-    transform: translate(1px, 0px) rotate(0.5deg); }
-  78% {
-    transform: translate(0px, 0px) rotate(0.5deg); }
-  80% {
     transform: translate(1px, 1px) rotate(0.5deg); }
-  82% {
+  74% {
     transform: translate(0px, 1px) rotate(0.5deg); }
-  84% {
+  76% {
     transform: translate(0px, 0px) rotate(0.5deg); }
-  86% {
+  78% {
+    transform: translate(1px, 0px) rotate(0.5deg); }
+  80% {
     transform: translate(0px, 1px) rotate(0.5deg); }
+  82% {
+    transform: translate(0px, 0px) rotate(0.5deg); }
+  84% {
+    transform: translate(1px, 0px) rotate(0.5deg); }
+  86% {
+    transform: translate(1px, 1px) rotate(0.5deg); }
   88% {
     transform: translate(1px, 1px) rotate(0.5deg); }
   90% {
-    transform: translate(1px, 1px) rotate(0.5deg); }
+    transform: translate(0px, 0px) rotate(0.5deg); }
   92% {
-    transform: translate(0px, 1px) rotate(0.5deg); }
+    transform: translate(1px, 1px) rotate(0.5deg); }
   94% {
-    transform: translate(1px, 1px) rotate(0.5deg); }
+    transform: translate(0px, 0px) rotate(0.5deg); }
   96% {
-    transform: translate(1px, 1px) rotate(0.5deg); }
+    transform: translate(0px, 0px) rotate(0.5deg); }
   98% {
     transform: translate(0px, 1px) rotate(0.5deg); }
   0%, 100% {
@@ -2376,103 +2881,103 @@ span.input label {
 
 @keyframes shake-slow {
   2% {
-    transform: translate(8px, -3px) rotate(2.5deg); }
+    transform: translate(-6px, 7px) rotate(1.5deg); }
   4% {
-    transform: translate(8px, 6px) rotate(-0.5deg); }
+    transform: translate(-7px, 2px) rotate(2.5deg); }
   6% {
-    transform: translate(10px, 3px) rotate(1.5deg); }
+    transform: translate(-8px, 9px) rotate(0.5deg); }
   8% {
-    transform: translate(-4px, 3px) rotate(2.5deg); }
+    transform: translate(-9px, 8px) rotate(3.5deg); }
   10% {
-    transform: translate(7px, 2px) rotate(3.5deg); }
+    transform: translate(-2px, 2px) rotate(3.5deg); }
   12% {
-    transform: translate(7px, -3px) rotate(-2.5deg); }
+    transform: translate(-6px, 5px) rotate(-1.5deg); }
   14% {
-    transform: translate(10px, 6px) rotate(1.5deg); }
+    transform: translate(6px, -5px) rotate(3.5deg); }
   16% {
-    transform: translate(-8px, 7px) rotate(2.5deg); }
+    transform: translate(3px, 1px) rotate(0.5deg); }
   18% {
-    transform: translate(-6px, 6px) rotate(-0.5deg); }
+    transform: translate(9px, -4px) rotate(0.5deg); }
   20% {
-    transform: translate(-1px, 1px) rotate(2.5deg); }
+    transform: translate(-6px, 9px) rotate(2.5deg); }
   22% {
-    transform: translate(-9px, -2px) rotate(-2.5deg); }
+    transform: translate(2px, 4px) rotate(-1.5deg); }
   24% {
-    transform: translate(6px, 5px) rotate(3.5deg); }
+    transform: translate(-5px, -8px) rotate(0.5deg); }
   26% {
-    transform: translate(4px, -7px) rotate(-2.5deg); }
-  28% {
-    transform: translate(5px, 7px) rotate(3.5deg); }
-  30% {
-    transform: translate(1px, -7px) rotate(3.5deg); }
-  32% {
-    transform: translate(5px, -6px) rotate(-0.5deg); }
-  34% {
-    transform: translate(8px, 10px) rotate(2.5deg); }
-  36% {
-    transform: translate(-3px, 8px) rotate(-2.5deg); }
-  38% {
-    transform: translate(-3px, 7px) rotate(-0.5deg); }
-  40% {
-    transform: translate(1px, 0px) rotate(0.5deg); }
-  42% {
-    transform: translate(5px, 8px) rotate(2.5deg); }
-  44% {
-    transform: translate(8px, -9px) rotate(3.5deg); }
-  46% {
-    transform: translate(9px, -6px) rotate(-1.5deg); }
-  48% {
-    transform: translate(-2px, -4px) rotate(2.5deg); }
-  50% {
-    transform: translate(-1px, -6px) rotate(3.5deg); }
-  52% {
-    transform: translate(-7px, 5px) rotate(1.5deg); }
-  54% {
-    transform: translate(2px, 0px) rotate(1.5deg); }
-  56% {
-    transform: translate(9px, -1px) rotate(-0.5deg); }
-  58% {
-    transform: translate(-3px, 5px) rotate(3.5deg); }
-  60% {
-    transform: translate(1px, -6px) rotate(-2.5deg); }
-  62% {
-    transform: translate(10px, 3px) rotate(-2.5deg); }
-  64% {
     transform: translate(7px, 8px) rotate(-0.5deg); }
+  28% {
+    transform: translate(-5px, -2px) rotate(1.5deg); }
+  30% {
+    transform: translate(-1px, -2px) rotate(-1.5deg); }
+  32% {
+    transform: translate(-3px, 10px) rotate(1.5deg); }
+  34% {
+    transform: translate(-7px, 7px) rotate(-0.5deg); }
+  36% {
+    transform: translate(-4px, 10px) rotate(2.5deg); }
+  38% {
+    transform: translate(-1px, -8px) rotate(1.5deg); }
+  40% {
+    transform: translate(-9px, 4px) rotate(-0.5deg); }
+  42% {
+    transform: translate(-3px, 8px) rotate(-0.5deg); }
+  44% {
+    transform: translate(-2px, -1px) rotate(-0.5deg); }
+  46% {
+    transform: translate(0px, -4px) rotate(-1.5deg); }
+  48% {
+    transform: translate(7px, 7px) rotate(3.5deg); }
+  50% {
+    transform: translate(4px, 2px) rotate(3.5deg); }
+  52% {
+    transform: translate(-2px, -9px) rotate(2.5deg); }
+  54% {
+    transform: translate(0px, -1px) rotate(2.5deg); }
+  56% {
+    transform: translate(0px, -5px) rotate(-2.5deg); }
+  58% {
+    transform: translate(6px, 3px) rotate(2.5deg); }
+  60% {
+    transform: translate(0px, -3px) rotate(3.5deg); }
+  62% {
+    transform: translate(4px, 1px) rotate(3.5deg); }
+  64% {
+    transform: translate(-7px, 7px) rotate(2.5deg); }
   66% {
-    transform: translate(-4px, 0px) rotate(1.5deg); }
+    transform: translate(-5px, -5px) rotate(-0.5deg); }
   68% {
-    transform: translate(-2px, -9px) rotate(0.5deg); }
+    transform: translate(-1px, 6px) rotate(-1.5deg); }
   70% {
-    transform: translate(7px, -3px) rotate(-2.5deg); }
+    transform: translate(10px, -8px) rotate(-0.5deg); }
   72% {
-    transform: translate(1px, -4px) rotate(1.5deg); }
+    transform: translate(10px, 6px) rotate(0.5deg); }
   74% {
-    transform: translate(2px, -9px) rotate(2.5deg); }
+    transform: translate(-1px, 7px) rotate(0.5deg); }
   76% {
-    transform: translate(-5px, 7px) rotate(-2.5deg); }
+    transform: translate(5px, -7px) rotate(-1.5deg); }
   78% {
-    transform: translate(4px, 8px) rotate(-1.5deg); }
+    transform: translate(-9px, 1px) rotate(1.5deg); }
   80% {
-    transform: translate(1px, -8px) rotate(3.5deg); }
+    transform: translate(1px, -1px) rotate(3.5deg); }
   82% {
-    transform: translate(-8px, -9px) rotate(2.5deg); }
+    transform: translate(3px, 7px) rotate(0.5deg); }
   84% {
-    transform: translate(4px, -1px) rotate(1.5deg); }
+    transform: translate(-7px, -8px) rotate(-2.5deg); }
   86% {
-    transform: translate(4px, 3px) rotate(-2.5deg); }
+    transform: translate(6px, 8px) rotate(1.5deg); }
   88% {
-    transform: translate(-6px, -7px) rotate(-1.5deg); }
+    transform: translate(7px, 10px) rotate(-0.5deg); }
   90% {
-    transform: translate(-1px, 2px) rotate(3.5deg); }
+    transform: translate(-7px, 6px) rotate(-0.5deg); }
   92% {
-    transform: translate(9px, -6px) rotate(0.5deg); }
+    transform: translate(-3px, -9px) rotate(1.5deg); }
   94% {
-    transform: translate(-6px, 4px) rotate(-1.5deg); }
+    transform: translate(-2px, -9px) rotate(-1.5deg); }
   96% {
-    transform: translate(10px, -1px) rotate(3.5deg); }
+    transform: translate(1px, 1px) rotate(-0.5deg); }
   98% {
-    transform: translate(-6px, 2px) rotate(2.5deg); }
+    transform: translate(7px, -2px) rotate(-1.5deg); }
   0%, 100% {
     transform: translate(0, 0) rotate(0); } }
 .shake-slow:hover, .shake-trigger:hover .shake-slow, .shake-slow.shake-freeze, .shake-slow.shake-constant {
@@ -2483,103 +2988,103 @@ span.input label {
 
 @keyframes shake-hard {
   2% {
-    transform: translate(8px, 5px) rotate(0.5deg); }
+    transform: translate(1px, -6px) rotate(3.5deg); }
   4% {
-    transform: translate(-6px, -5px) rotate(2.5deg); }
+    transform: translate(10px, -6px) rotate(2.5deg); }
   6% {
-    transform: translate(9px, 5px) rotate(-1.5deg); }
+    transform: translate(-6px, -7px) rotate(-1.5deg); }
   8% {
-    transform: translate(-3px, -3px) rotate(2.5deg); }
+    transform: translate(4px, -1px) rotate(-2.5deg); }
   10% {
-    transform: translate(1px, 10px) rotate(1.5deg); }
+    transform: translate(10px, 0px) rotate(1.5deg); }
   12% {
-    transform: translate(-6px, -2px) rotate(0.5deg); }
+    transform: translate(10px, 7px) rotate(-2.5deg); }
   14% {
-    transform: translate(-3px, 0px) rotate(-2.5deg); }
+    transform: translate(-6px, -4px) rotate(1.5deg); }
   16% {
-    transform: translate(1px, 4px) rotate(-1.5deg); }
+    transform: translate(2px, 1px) rotate(1.5deg); }
   18% {
-    transform: translate(-7px, -4px) rotate(3.5deg); }
+    transform: translate(7px, -5px) rotate(-2.5deg); }
   20% {
-    transform: translate(1px, 9px) rotate(-2.5deg); }
+    transform: translate(3px, -5px) rotate(-0.5deg); }
   22% {
-    transform: translate(-1px, 8px) rotate(-2.5deg); }
+    transform: translate(8px, -5px) rotate(-1.5deg); }
   24% {
-    transform: translate(-8px, -7px) rotate(-1.5deg); }
+    transform: translate(-8px, 3px) rotate(-0.5deg); }
   26% {
-    transform: translate(3px, 1px) rotate(-0.5deg); }
+    transform: translate(7px, -9px) rotate(-2.5deg); }
   28% {
-    transform: translate(6px, -2px) rotate(1.5deg); }
+    transform: translate(-6px, -9px) rotate(0.5deg); }
   30% {
-    transform: translate(-7px, -5px) rotate(1.5deg); }
+    transform: translate(1px, 1px) rotate(1.5deg); }
   32% {
-    transform: translate(7px, 0px) rotate(1.5deg); }
+    transform: translate(-4px, 7px) rotate(-0.5deg); }
   34% {
-    transform: translate(-8px, -5px) rotate(0.5deg); }
+    transform: translate(5px, -1px) rotate(2.5deg); }
   36% {
-    transform: translate(-4px, -9px) rotate(2.5deg); }
+    transform: translate(3px, 10px) rotate(1.5deg); }
   38% {
-    transform: translate(-8px, 4px) rotate(-2.5deg); }
+    transform: translate(5px, 9px) rotate(1.5deg); }
   40% {
-    transform: translate(9px, -4px) rotate(1.5deg); }
+    transform: translate(-1px, -3px) rotate(0.5deg); }
   42% {
-    transform: translate(-4px, -3px) rotate(-0.5deg); }
+    transform: translate(0px, -5px) rotate(-1.5deg); }
   44% {
-    transform: translate(3px, -6px) rotate(0.5deg); }
+    transform: translate(3px, -5px) rotate(0.5deg); }
   46% {
-    transform: translate(1px, 2px) rotate(3.5deg); }
+    transform: translate(-8px, 8px) rotate(0.5deg); }
   48% {
-    transform: translate(-8px, -8px) rotate(-2.5deg); }
+    transform: translate(5px, -2px) rotate(-0.5deg); }
   50% {
-    transform: translate(-1px, 2px) rotate(1.5deg); }
+    transform: translate(-7px, -8px) rotate(0.5deg); }
   52% {
-    transform: translate(6px, 8px) rotate(3.5deg); }
+    transform: translate(7px, -5px) rotate(-1.5deg); }
   54% {
-    transform: translate(3px, 10px) rotate(-1.5deg); }
+    transform: translate(5px, 7px) rotate(3.5deg); }
   56% {
-    transform: translate(-1px, -5px) rotate(0.5deg); }
+    transform: translate(-6px, 3px) rotate(2.5deg); }
   58% {
-    transform: translate(0px, -7px) rotate(-0.5deg); }
+    transform: translate(-9px, -3px) rotate(-1.5deg); }
   60% {
-    transform: translate(6px, 1px) rotate(1.5deg); }
+    transform: translate(2px, 3px) rotate(3.5deg); }
   62% {
-    transform: translate(6px, 2px) rotate(2.5deg); }
+    transform: translate(0px, 1px) rotate(-2.5deg); }
   64% {
-    transform: translate(6px, -9px) rotate(3.5deg); }
+    transform: translate(5px, 2px) rotate(-0.5deg); }
   66% {
-    transform: translate(-7px, 0px) rotate(2.5deg); }
+    transform: translate(-8px, 4px) rotate(0.5deg); }
   68% {
-    transform: translate(-1px, -4px) rotate(-1.5deg); }
+    transform: translate(-9px, -3px) rotate(-0.5deg); }
   70% {
-    transform: translate(9px, 10px) rotate(1.5deg); }
+    transform: translate(-2px, -9px) rotate(-0.5deg); }
   72% {
-    transform: translate(-9px, -7px) rotate(-0.5deg); }
+    transform: translate(1px, -7px) rotate(2.5deg); }
   74% {
-    transform: translate(2px, -1px) rotate(1.5deg); }
+    transform: translate(9px, -6px) rotate(-2.5deg); }
   76% {
-    transform: translate(10px, -7px) rotate(-1.5deg); }
+    transform: translate(1px, -2px) rotate(0.5deg); }
   78% {
-    transform: translate(2px, 3px) rotate(0.5deg); }
+    transform: translate(-4px, 7px) rotate(-0.5deg); }
   80% {
-    transform: translate(-2px, -5px) rotate(-2.5deg); }
+    transform: translate(3px, -7px) rotate(2.5deg); }
   82% {
-    transform: translate(6px, 6px) rotate(1.5deg); }
+    transform: translate(1px, -2px) rotate(-2.5deg); }
   84% {
-    transform: translate(4px, 5px) rotate(0.5deg); }
+    transform: translate(10px, 10px) rotate(-2.5deg); }
   86% {
-    transform: translate(-8px, -7px) rotate(-2.5deg); }
+    transform: translate(-5px, 6px) rotate(1.5deg); }
   88% {
-    transform: translate(1px, -4px) rotate(3.5deg); }
+    transform: translate(0px, -8px) rotate(3.5deg); }
   90% {
-    transform: translate(7px, 6px) rotate(-1.5deg); }
+    transform: translate(-4px, -5px) rotate(0.5deg); }
   92% {
-    transform: translate(-7px, -1px) rotate(3.5deg); }
+    transform: translate(4px, 8px) rotate(1.5deg); }
   94% {
-    transform: translate(-1px, 6px) rotate(0.5deg); }
+    transform: translate(0px, 7px) rotate(-2.5deg); }
   96% {
-    transform: translate(-1px, -4px) rotate(-1.5deg); }
+    transform: translate(2px, 1px) rotate(0.5deg); }
   98% {
-    transform: translate(1px, -8px) rotate(-1.5deg); }
+    transform: translate(3px, 6px) rotate(-1.5deg); }
   0%, 100% {
     transform: translate(0, 0) rotate(0); } }
 .shake-hard:hover, .shake-trigger:hover .shake-hard, .shake-hard.shake-freeze, .shake-hard.shake-constant {
@@ -2590,101 +3095,101 @@ span.input label {
 
 @keyframes shake-horizontal {
   2% {
-    transform: translate(6px, 0) rotate(0); }
-  4% {
-    transform: translate(-7px, 0) rotate(0); }
-  6% {
-    transform: translate(-4px, 0) rotate(0); }
-  8% {
-    transform: translate(4px, 0) rotate(0); }
-  10% {
-    transform: translate(-3px, 0) rotate(0); }
-  12% {
-    transform: translate(-6px, 0) rotate(0); }
-  14% {
-    transform: translate(10px, 0) rotate(0); }
-  16% {
-    transform: translate(-5px, 0) rotate(0); }
-  18% {
-    transform: translate(-5px, 0) rotate(0); }
-  20% {
-    transform: translate(-5px, 0) rotate(0); }
-  22% {
-    transform: translate(0px, 0) rotate(0); }
-  24% {
-    transform: translate(-4px, 0) rotate(0); }
-  26% {
-    transform: translate(1px, 0) rotate(0); }
-  28% {
-    transform: translate(-1px, 0) rotate(0); }
-  30% {
-    transform: translate(1px, 0) rotate(0); }
-  32% {
-    transform: translate(8px, 0) rotate(0); }
-  34% {
-    transform: translate(-5px, 0) rotate(0); }
-  36% {
-    transform: translate(-8px, 0) rotate(0); }
-  38% {
-    transform: translate(0px, 0) rotate(0); }
-  40% {
-    transform: translate(2px, 0) rotate(0); }
-  42% {
-    transform: translate(-6px, 0) rotate(0); }
-  44% {
-    transform: translate(-4px, 0) rotate(0); }
-  46% {
-    transform: translate(6px, 0) rotate(0); }
-  48% {
-    transform: translate(0px, 0) rotate(0); }
-  50% {
-    transform: translate(9px, 0) rotate(0); }
-  52% {
-    transform: translate(3px, 0) rotate(0); }
-  54% {
-    transform: translate(-1px, 0) rotate(0); }
-  56% {
-    transform: translate(10px, 0) rotate(0); }
-  58% {
-    transform: translate(9px, 0) rotate(0); }
-  60% {
-    transform: translate(9px, 0) rotate(0); }
-  62% {
-    transform: translate(9px, 0) rotate(0); }
-  64% {
-    transform: translate(-5px, 0) rotate(0); }
-  66% {
-    transform: translate(1px, 0) rotate(0); }
-  68% {
-    transform: translate(-6px, 0) rotate(0); }
-  70% {
-    transform: translate(10px, 0) rotate(0); }
-  72% {
-    transform: translate(0px, 0) rotate(0); }
-  74% {
-    transform: translate(-8px, 0) rotate(0); }
-  76% {
-    transform: translate(7px, 0) rotate(0); }
-  78% {
-    transform: translate(8px, 0) rotate(0); }
-  80% {
-    transform: translate(2px, 0) rotate(0); }
-  82% {
-    transform: translate(2px, 0) rotate(0); }
-  84% {
-    transform: translate(9px, 0) rotate(0); }
-  86% {
-    transform: translate(-4px, 0) rotate(0); }
-  88% {
     transform: translate(-2px, 0) rotate(0); }
-  90% {
+  4% {
+    transform: translate(9px, 0) rotate(0); }
+  6% {
+    transform: translate(0px, 0) rotate(0); }
+  8% {
+    transform: translate(-4px, 0) rotate(0); }
+  10% {
+    transform: translate(5px, 0) rotate(0); }
+  12% {
+    transform: translate(-5px, 0) rotate(0); }
+  14% {
+    transform: translate(2px, 0) rotate(0); }
+  16% {
+    transform: translate(-9px, 0) rotate(0); }
+  18% {
     transform: translate(6px, 0) rotate(0); }
-  92% {
-    transform: translate(6px, 0) rotate(0); }
-  94% {
+  20% {
+    transform: translate(10px, 0) rotate(0); }
+  22% {
+    transform: translate(-6px, 0) rotate(0); }
+  24% {
+    transform: translate(7px, 0) rotate(0); }
+  26% {
+    transform: translate(-7px, 0) rotate(0); }
+  28% {
+    transform: translate(-4px, 0) rotate(0); }
+  30% {
+    transform: translate(7px, 0) rotate(0); }
+  32% {
+    transform: translate(-1px, 0) rotate(0); }
+  34% {
+    transform: translate(-2px, 0) rotate(0); }
+  36% {
+    transform: translate(0px, 0) rotate(0); }
+  38% {
+    transform: translate(-9px, 0) rotate(0); }
+  40% {
+    transform: translate(-2px, 0) rotate(0); }
+  42% {
+    transform: translate(9px, 0) rotate(0); }
+  44% {
+    transform: translate(-7px, 0) rotate(0); }
+  46% {
+    transform: translate(-1px, 0) rotate(0); }
+  48% {
+    transform: translate(2px, 0) rotate(0); }
+  50% {
+    transform: translate(10px, 0) rotate(0); }
+  52% {
+    transform: translate(-3px, 0) rotate(0); }
+  54% {
+    transform: translate(5px, 0) rotate(0); }
+  56% {
+    transform: translate(8px, 0) rotate(0); }
+  58% {
+    transform: translate(8px, 0) rotate(0); }
+  60% {
     transform: translate(-8px, 0) rotate(0); }
+  62% {
+    transform: translate(-9px, 0) rotate(0); }
+  64% {
+    transform: translate(6px, 0) rotate(0); }
+  66% {
+    transform: translate(2px, 0) rotate(0); }
+  68% {
+    transform: translate(-5px, 0) rotate(0); }
+  70% {
+    transform: translate(-7px, 0) rotate(0); }
+  72% {
+    transform: translate(6px, 0) rotate(0); }
+  74% {
+    transform: translate(7px, 0) rotate(0); }
+  76% {
+    transform: translate(-5px, 0) rotate(0); }
+  78% {
+    transform: translate(-8px, 0) rotate(0); }
+  80% {
+    transform: translate(1px, 0) rotate(0); }
+  82% {
+    transform: translate(-3px, 0) rotate(0); }
+  84% {
+    transform: translate(-8px, 0) rotate(0); }
+  86% {
+    transform: translate(4px, 0) rotate(0); }
+  88% {
+    transform: translate(9px, 0) rotate(0); }
+  90% {
+    transform: translate(1px, 0) rotate(0); }
+  92% {
+    transform: translate(-8px, 0) rotate(0); }
+  94% {
+    transform: translate(10px, 0) rotate(0); }
   96% {
-    transform: translate(3px, 0) rotate(0); }
+    transform: translate(-6px, 0) rotate(0); }
   98% {
     transform: translate(0px, 0) rotate(0); }
   0%, 100% {
@@ -2697,103 +3202,103 @@ span.input label {
 
 @keyframes shake-vertical {
   2% {
-    transform: translate(0, 8px) rotate(0); }
+    transform: translate(0, 6px) rotate(0); }
   4% {
-    transform: translate(0, 9px) rotate(0); }
+    transform: translate(0, 0px) rotate(0); }
   6% {
-    transform: translate(0, -6px) rotate(0); }
+    transform: translate(0, -9px) rotate(0); }
   8% {
-    transform: translate(0, -3px) rotate(0); }
+    transform: translate(0, -7px) rotate(0); }
   10% {
-    transform: translate(0, -9px) rotate(0); }
+    transform: translate(0, -4px) rotate(0); }
   12% {
-    transform: translate(0, -4px) rotate(0); }
+    transform: translate(0, 6px) rotate(0); }
   14% {
-    transform: translate(0, 8px) rotate(0); }
+    transform: translate(0, 7px) rotate(0); }
   16% {
-    transform: translate(0, -4px) rotate(0); }
+    transform: translate(0, -1px) rotate(0); }
   18% {
-    transform: translate(0, 6px) rotate(0); }
+    transform: translate(0, 8px) rotate(0); }
   20% {
-    transform: translate(0, -6px) rotate(0); }
+    transform: translate(0, -5px) rotate(0); }
   22% {
-    transform: translate(0, 7px) rotate(0); }
-  24% {
-    transform: translate(0, -5px) rotate(0); }
-  26% {
-    transform: translate(0, -1px) rotate(0); }
-  28% {
-    transform: translate(0, 4px) rotate(0); }
-  30% {
-    transform: translate(0, 4px) rotate(0); }
-  32% {
-    transform: translate(0, 8px) rotate(0); }
-  34% {
-    transform: translate(0, 1px) rotate(0); }
-  36% {
-    transform: translate(0, 9px) rotate(0); }
-  38% {
-    transform: translate(0, -1px) rotate(0); }
-  40% {
-    transform: translate(0, 7px) rotate(0); }
-  42% {
-    transform: translate(0, 0px) rotate(0); }
-  44% {
-    transform: translate(0, 3px) rotate(0); }
-  46% {
-    transform: translate(0, 9px) rotate(0); }
-  48% {
-    transform: translate(0, 4px) rotate(0); }
-  50% {
-    transform: translate(0, -3px) rotate(0); }
-  52% {
-    transform: translate(0, 8px) rotate(0); }
-  54% {
-    transform: translate(0, -1px) rotate(0); }
-  56% {
-    transform: translate(0, 7px) rotate(0); }
-  58% {
-    transform: translate(0, 6px) rotate(0); }
-  60% {
-    transform: translate(0, 2px) rotate(0); }
-  62% {
-    transform: translate(0, 8px) rotate(0); }
-  64% {
-    transform: translate(0, -4px) rotate(0); }
-  66% {
-    transform: translate(0, 4px) rotate(0); }
-  68% {
-    transform: translate(0, 2px) rotate(0); }
-  70% {
-    transform: translate(0, 0px) rotate(0); }
-  72% {
     transform: translate(0, -2px) rotate(0); }
-  74% {
-    transform: translate(0, -7px) rotate(0); }
-  76% {
+  24% {
+    transform: translate(0, -8px) rotate(0); }
+  26% {
     transform: translate(0, 0px) rotate(0); }
-  78% {
-    transform: translate(0, -4px) rotate(0); }
-  80% {
-    transform: translate(0, 7px) rotate(0); }
-  82% {
-    transform: translate(0, 7px) rotate(0); }
-  84% {
-    transform: translate(0, 10px) rotate(0); }
-  86% {
-    transform: translate(0, -5px) rotate(0); }
-  88% {
-    transform: translate(0, -9px) rotate(0); }
-  90% {
-    transform: translate(0, 4px) rotate(0); }
-  92% {
-    transform: translate(0, -7px) rotate(0); }
-  94% {
+  28% {
+    transform: translate(0, 5px) rotate(0); }
+  30% {
     transform: translate(0, 9px) rotate(0); }
-  96% {
+  32% {
+    transform: translate(0, 4px) rotate(0); }
+  34% {
     transform: translate(0, 8px) rotate(0); }
-  98% {
+  36% {
+    transform: translate(0, 8px) rotate(0); }
+  38% {
+    transform: translate(0, -4px) rotate(0); }
+  40% {
+    transform: translate(0, 3px) rotate(0); }
+  42% {
+    transform: translate(0, -2px) rotate(0); }
+  44% {
+    transform: translate(0, 5px) rotate(0); }
+  46% {
+    transform: translate(0, 2px) rotate(0); }
+  48% {
+    transform: translate(0, 3px) rotate(0); }
+  50% {
+    transform: translate(0, -9px) rotate(0); }
+  52% {
+    transform: translate(0, 9px) rotate(0); }
+  54% {
     transform: translate(0, 6px) rotate(0); }
+  56% {
+    transform: translate(0, 5px) rotate(0); }
+  58% {
+    transform: translate(0, -8px) rotate(0); }
+  60% {
+    transform: translate(0, 8px) rotate(0); }
+  62% {
+    transform: translate(0, 7px) rotate(0); }
+  64% {
+    transform: translate(0, -8px) rotate(0); }
+  66% {
+    transform: translate(0, 6px) rotate(0); }
+  68% {
+    transform: translate(0, -6px) rotate(0); }
+  70% {
+    transform: translate(0, -6px) rotate(0); }
+  72% {
+    transform: translate(0, -3px) rotate(0); }
+  74% {
+    transform: translate(0, 1px) rotate(0); }
+  76% {
+    transform: translate(0, 4px) rotate(0); }
+  78% {
+    transform: translate(0, 0px) rotate(0); }
+  80% {
+    transform: translate(0, 3px) rotate(0); }
+  82% {
+    transform: translate(0, -5px) rotate(0); }
+  84% {
+    transform: translate(0, -2px) rotate(0); }
+  86% {
+    transform: translate(0, 2px) rotate(0); }
+  88% {
+    transform: translate(0, 8px) rotate(0); }
+  90% {
+    transform: translate(0, -7px) rotate(0); }
+  92% {
+    transform: translate(0, 8px) rotate(0); }
+  94% {
+    transform: translate(0, -9px) rotate(0); }
+  96% {
+    transform: translate(0, 0px) rotate(0); }
+  98% {
+    transform: translate(0, 7px) rotate(0); }
   0%, 100% {
     transform: translate(0, 0) rotate(0); } }
 .shake-vertical:hover, .shake-trigger:hover .shake-vertical, .shake-vertical.shake-freeze, .shake-vertical.shake-constant {
@@ -2804,103 +3309,103 @@ span.input label {
 
 @keyframes shake-rotate {
   2% {
-    transform: translate(0, 0) rotate(-0.5deg); }
+    transform: translate(0, 0) rotate(2.5deg); }
   4% {
-    transform: translate(0, 0) rotate(-5.5deg); }
+    transform: translate(0, 0) rotate(3.5deg); }
   6% {
-    transform: translate(0, 0) rotate(-1.5deg); }
+    transform: translate(0, 0) rotate(3.5deg); }
   8% {
-    transform: translate(0, 0) rotate(-2.5deg); }
+    transform: translate(0, 0) rotate(-4.5deg); }
   10% {
-    transform: translate(0, 0) rotate(7.5deg); }
+    transform: translate(0, 0) rotate(-3.5deg); }
   12% {
-    transform: translate(0, 0) rotate(-1.5deg); }
+    transform: translate(0, 0) rotate(3.5deg); }
   14% {
-    transform: translate(0, 0) rotate(6.5deg); }
+    transform: translate(0, 0) rotate(2.5deg); }
   16% {
-    transform: translate(0, 0) rotate(5.5deg); }
+    transform: translate(0, 0) rotate(-3.5deg); }
   18% {
-    transform: translate(0, 0) rotate(-2.5deg); }
+    transform: translate(0, 0) rotate(-6.5deg); }
   20% {
     transform: translate(0, 0) rotate(-2.5deg); }
   22% {
-    transform: translate(0, 0) rotate(-0.5deg); }
-  24% {
-    transform: translate(0, 0) rotate(-0.5deg); }
-  26% {
-    transform: translate(0, 0) rotate(-6.5deg); }
-  28% {
-    transform: translate(0, 0) rotate(5.5deg); }
-  30% {
     transform: translate(0, 0) rotate(7.5deg); }
-  32% {
-    transform: translate(0, 0) rotate(-1.5deg); }
-  34% {
-    transform: translate(0, 0) rotate(3.5deg); }
-  36% {
-    transform: translate(0, 0) rotate(6.5deg); }
-  38% {
+  24% {
     transform: translate(0, 0) rotate(-3.5deg); }
-  40% {
+  26% {
+    transform: translate(0, 0) rotate(3.5deg); }
+  28% {
+    transform: translate(0, 0) rotate(2.5deg); }
+  30% {
+    transform: translate(0, 0) rotate(-2.5deg); }
+  32% {
+    transform: translate(0, 0) rotate(-5.5deg); }
+  34% {
     transform: translate(0, 0) rotate(0.5deg); }
-  42% {
-    transform: translate(0, 0) rotate(-6.5deg); }
-  44% {
+  36% {
+    transform: translate(0, 0) rotate(1.5deg); }
+  38% {
+    transform: translate(0, 0) rotate(0.5deg); }
+  40% {
     transform: translate(0, 0) rotate(-1.5deg); }
+  42% {
+    transform: translate(0, 0) rotate(4.5deg); }
+  44% {
+    transform: translate(0, 0) rotate(-0.5deg); }
   46% {
     transform: translate(0, 0) rotate(-6.5deg); }
   48% {
-    transform: translate(0, 0) rotate(7.5deg); }
-  50% {
-    transform: translate(0, 0) rotate(-2.5deg); }
-  52% {
-    transform: translate(0, 0) rotate(7.5deg); }
-  54% {
-    transform: translate(0, 0) rotate(-1.5deg); }
-  56% {
-    transform: translate(0, 0) rotate(-5.5deg); }
-  58% {
     transform: translate(0, 0) rotate(1.5deg); }
+  50% {
+    transform: translate(0, 0) rotate(3.5deg); }
+  52% {
+    transform: translate(0, 0) rotate(3.5deg); }
+  54% {
+    transform: translate(0, 0) rotate(-4.5deg); }
+  56% {
+    transform: translate(0, 0) rotate(-4.5deg); }
+  58% {
+    transform: translate(0, 0) rotate(3.5deg); }
   60% {
-    transform: translate(0, 0) rotate(-6.5deg); }
+    transform: translate(0, 0) rotate(-5.5deg); }
   62% {
-    transform: translate(0, 0) rotate(-4.5deg); }
+    transform: translate(0, 0) rotate(1.5deg); }
   64% {
-    transform: translate(0, 0) rotate(0.5deg); }
+    transform: translate(0, 0) rotate(-5.5deg); }
   66% {
-    transform: translate(0, 0) rotate(6.5deg); }
+    transform: translate(0, 0) rotate(-2.5deg); }
   68% {
-    transform: translate(0, 0) rotate(0.5deg); }
-  70% {
-    transform: translate(0, 0) rotate(-6.5deg); }
-  72% {
-    transform: translate(0, 0) rotate(-4.5deg); }
-  74% {
-    transform: translate(0, 0) rotate(-1.5deg); }
-  76% {
-    transform: translate(0, 0) rotate(-0.5deg); }
-  78% {
-    transform: translate(0, 0) rotate(3.5deg); }
-  80% {
-    transform: translate(0, 0) rotate(3.5deg); }
-  82% {
-    transform: translate(0, 0) rotate(3.5deg); }
-  84% {
-    transform: translate(0, 0) rotate(3.5deg); }
-  86% {
-    transform: translate(0, 0) rotate(3.5deg); }
-  88% {
-    transform: translate(0, 0) rotate(0.5deg); }
-  90% {
-    transform: translate(0, 0) rotate(0.5deg); }
-  92% {
-    transform: translate(0, 0) rotate(-1.5deg); }
-  94% {
-    transform: translate(0, 0) rotate(0.5deg); }
-  96% {
-    transform: translate(0, 0) rotate(4.5deg); }
-  98% {
     transform: translate(0, 0) rotate(6.5deg); }
+  70% {
+    transform: translate(0, 0) rotate(-3.5deg); }
+  72% {
+    transform: translate(0, 0) rotate(6.5deg); }
+  74% {
+    transform: translate(0, 0) rotate(7.5deg); }
+  76% {
+    transform: translate(0, 0) rotate(0.5deg); }
+  78% {
+    transform: translate(0, 0) rotate(-1.5deg); }
+  80% {
+    transform: translate(0, 0) rotate(6.5deg); }
+  82% {
+    transform: translate(0, 0) rotate(1.5deg); }
+  84% {
+    transform: translate(0, 0) rotate(2.5deg); }
+  86% {
+    transform: translate(0, 0) rotate(0.5deg); }
+  88% {
+    transform: translate(0, 0) rotate(2.5deg); }
+  90% {
+    transform: translate(0, 0) rotate(7.5deg); }
+  92% {
+    transform: translate(0, 0) rotate(-6.5deg); }
+  94% {
+    transform: translate(0, 0) rotate(-2.5deg); }
+  96% {
+    transform: translate(0, 0) rotate(2.5deg); }
+  98% {
+    transform: translate(0, 0) rotate(-2.5deg); }
   0%, 100% {
     transform: translate(0, 0) rotate(0); } }
 .shake-rotate:hover, .shake-trigger:hover .shake-rotate, .shake-rotate.shake-freeze, .shake-rotate.shake-constant {
@@ -2911,32 +3416,32 @@ span.input label {
 
 @keyframes shake-opacity {
   10% {
-    transform: translate(0px, 5px) rotate(-0.5deg);
-    opacity: 0.89; }
+    transform: translate(-2px, -3px) rotate(0.5deg);
+    opacity: 0.16; }
   20% {
-    transform: translate(1px, 3px) rotate(2.5deg);
-    opacity: 0.38; }
-  30% {
-    transform: translate(-1px, 5px) rotate(1.5deg);
-    opacity: 0.84; }
-  40% {
-    transform: translate(0px, 4px) rotate(2.5deg);
+    transform: translate(0px, -2px) rotate(2.5deg);
     opacity: 0.28; }
+  30% {
+    transform: translate(1px, 4px) rotate(0.5deg);
+    opacity: 0.7; }
+  40% {
+    transform: translate(-2px, 0px) rotate(1.5deg);
+    opacity: 0.12; }
   50% {
-    transform: translate(5px, 2px) rotate(1.5deg);
-    opacity: 0.34; }
+    transform: translate(-1px, -1px) rotate(0.5deg);
+    opacity: 0.6; }
   60% {
-    transform: translate(-4px, 3px) rotate(2.5deg);
-    opacity: 0.5; }
+    transform: translate(3px, -2px) rotate(1.5deg);
+    opacity: 0.48; }
   70% {
-    transform: translate(2px, 5px) rotate(1.5deg);
-    opacity: 0.46; }
+    transform: translate(0px, -1px) rotate(2.5deg);
+    opacity: 0.38; }
   80% {
-    transform: translate(3px, 0px) rotate(1.5deg);
-    opacity: 0.95; }
+    transform: translate(2px, 4px) rotate(2.5deg);
+    opacity: 0.45; }
   90% {
-    transform: translate(4px, 5px) rotate(-1.5deg);
-    opacity: 0.51; }
+    transform: translate(2px, -2px) rotate(0.5deg);
+    opacity: 0.71; }
   0%, 100% {
     transform: translate(0, 0) rotate(0); } }
 .shake-opacity:hover, .shake-trigger:hover .shake-opacity, .shake-opacity.shake-freeze, .shake-opacity.shake-constant {
@@ -2947,32 +3452,32 @@ span.input label {
 
 @keyframes shake-crazy {
   10% {
-    transform: translate(13px, -16px) rotate(-9deg);
-    opacity: 0.7; }
+    transform: translate(12px, 12px) rotate(8deg);
+    opacity: 0.71; }
   20% {
-    transform: translate(-17px, 1px) rotate(6deg);
-    opacity: 0.86; }
+    transform: translate(7px, -15px) rotate(-9deg);
+    opacity: 0.8; }
   30% {
-    transform: translate(-15px, 13px) rotate(-4deg);
-    opacity: 0.55; }
-  40% {
-    transform: translate(-7px, 17px) rotate(-2deg);
-    opacity: 0.52; }
-  50% {
-    transform: translate(1px, 4px) rotate(-2deg);
-    opacity: 0.45; }
-  60% {
-    transform: translate(-9px, -1px) rotate(10deg);
+    transform: translate(-5px, 12px) rotate(-1deg);
     opacity: 0.42; }
+  40% {
+    transform: translate(9px, -3px) rotate(-2deg);
+    opacity: 0.3; }
+  50% {
+    transform: translate(8px, -2px) rotate(-9deg);
+    opacity: 0.91; }
+  60% {
+    transform: translate(14px, -7px) rotate(-9deg);
+    opacity: 0.63; }
   70% {
-    transform: translate(-6px, 1px) rotate(-4deg);
-    opacity: 0.07; }
+    transform: translate(-5px, -15px) rotate(4deg);
+    opacity: 0.4; }
   80% {
-    transform: translate(-12px, -17px) rotate(3deg);
-    opacity: 0.33; }
+    transform: translate(-5px, -6px) rotate(6deg);
+    opacity: 0.85; }
   90% {
-    transform: translate(-8px, 9px) rotate(6deg);
-    opacity: 0.11; }
+    transform: translate(8px, -12px) rotate(9deg);
+    opacity: 0.01; }
   0%, 100% {
     transform: translate(0, 0) rotate(0); } }
 .shake-crazy:hover, .shake-trigger:hover .shake-crazy, .shake-crazy.shake-freeze, .shake-crazy.shake-constant {
@@ -2983,43 +3488,43 @@ span.input label {
 
 @keyframes shake-chunk {
   2% {
-    transform: translate(-1px, 2px) rotate(-10deg); }
+    transform: translate(7px, 5px) rotate(-10deg); }
   4% {
-    transform: translate(-5px, 1px) rotate(11deg); }
+    transform: translate(-2px, -7px) rotate(13deg); }
   6% {
-    transform: translate(-12px, 10px) rotate(-11deg); }
+    transform: translate(9px, -7px) rotate(-2deg); }
   8% {
-    transform: translate(-14px, -7px) rotate(5deg); }
+    transform: translate(3px, -11px) rotate(13deg); }
   10% {
-    transform: translate(-6px, -1px) rotate(2deg); }
+    transform: translate(9px, 10px) rotate(15deg); }
   12% {
-    transform: translate(-2px, 5px) rotate(13deg); }
+    transform: translate(-7px, 8px) rotate(2deg); }
   14% {
-    transform: translate(-10px, -2px) rotate(-8deg); }
+    transform: translate(0px, 1px) rotate(-11deg); }
   16% {
-    transform: translate(-4px, -7px) rotate(-4deg); }
+    transform: translate(10px, -3px) rotate(10deg); }
   18% {
-    transform: translate(4px, -9px) rotate(-4deg); }
+    transform: translate(-5px, 10px) rotate(-12deg); }
   20% {
-    transform: translate(14px, -7px) rotate(-12deg); }
+    transform: translate(15px, -9px) rotate(10deg); }
   22% {
-    transform: translate(8px, -11px) rotate(-1deg); }
+    transform: translate(-1px, -9px) rotate(8deg); }
   24% {
-    transform: translate(-1px, 4px) rotate(-4deg); }
+    transform: translate(10px, 11px) rotate(-8deg); }
   26% {
-    transform: translate(3px, -3px) rotate(0deg); }
+    transform: translate(3px, 4px) rotate(-6deg); }
   28% {
-    transform: translate(-6px, -7px) rotate(12deg); }
+    transform: translate(7px, -1px) rotate(-10deg); }
   30% {
-    transform: translate(12px, -6px) rotate(0deg); }
+    transform: translate(-11px, -14px) rotate(6deg); }
   32% {
-    transform: translate(-13px, 13px) rotate(3deg); }
+    transform: translate(1px, -9px) rotate(2deg); }
   34% {
-    transform: translate(2px, 8px) rotate(-5deg); }
+    transform: translate(-2px, 7px) rotate(-13deg); }
   36% {
-    transform: translate(-14px, 5px) rotate(-10deg); }
+    transform: translate(4px, -3px) rotate(12deg); }
   38% {
-    transform: translate(5px, -6px) rotate(-1deg); }
+    transform: translate(-12px, -11px) rotate(12deg); }
   0%, 40%, 100% {
     transform: translate(0, 0) rotate(0); } }
 .shake-chunk:hover, .shake-trigger:hover .shake-chunk, .shake-chunk.shake-freeze, .shake-chunk.shake-constant {
@@ -3028,43 +3533,446 @@ span.input label {
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite; }
 
+#mobileBody::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+  background-image: url(../resources/backgrounds/background.jpeg);
+  background-position: 50% 50%; }
+
+#mobileBody {
+  position: absolute;
+  padding-bottom: 50px;
+  width: 100%;
+  height: 100%; }
+
+.mobile-footer {
+  position: absolute;
+  bottom: 4%;
+  margin: auto;
+  left: 50%;
+  width: 80%;
+  text-align: center;
+  transform: translateX(-50%); }
+  .mobile-footer div {
+    display: inline-block;
+    border-radius: 100%;
+    position: relative;
+    background-color: white; }
+    .mobile-footer div a {
+      width: 100%;
+      height: 100%;
+      color: #323B60; }
+      .mobile-footer div a i {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%); }
+
+.mobile-overlay {
+  position: absolute;
+  padding: 2%;
+  border-radius: 10px;
+  left: 15%;
+  right: 15%;
+  top: 35%;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.5);
+  margin: auto; }
+  .mobile-overlay h3 {
+    font-family: 'Raleway', 'Source Sans Pro', sans-serif;
+    color: 373B60;
+    margin: 1vw; }
+
+@media screen and (orientation: landscape) {
+  #mobileBody .logo img {
+    width: 33%; }
+
+  .mobile-overlay h3 {
+    font-size: 3vw; }
+
+  .mobile-footer div {
+    width: 5vw;
+    height: 5vw;
+    margin: 1vw; }
+    .mobile-footer div a {
+      font-size: 3vw; } }
+@media screen and (orientation: portrait) {
+  #mobileBody .logo img {
+    width: 100%; }
+
+  .mobile-overlay h3 {
+    font-size: 6vw; }
+
+  .mobile-footer div {
+    width: 10vw;
+    height: 10vw;
+    margin: 1vw; }
+    .mobile-footer div a {
+      font-size: 7vw; } }
+#lostPasswordBody {
+  background: url("../resources/backgrounds/background.jpeg");
+  background-size: 100% 100%;
+  background-position: 50% 50%; }
+  #lostPasswordBody .logo {
+    width: 20%; }
+    #lostPasswordBody .logo img {
+      width: 100%; }
+  #lostPasswordBody h1 {
+    color: white;
+    margin: 0px auto 30px auto;
+    text-align: center;
+    font-size: 50px; }
+  #lostPasswordBody p {
+    margin-bottom: 3px;
+    font-size: 1em; }
+  #lostPasswordBody .lostPasswordBlock#lostPassword {
+    padding-bottom: 30px;
+    padding-top: 40px; }
+    #lostPasswordBody .lostPasswordBlock#lostPassword .confirmBox {
+      text-align: center;
+      max-width: 60%;
+      margin: 0px auto;
+      margin-top: 20px;
+      border: 2px solid #a1c986;
+      color: #a1c986;
+      padding: 2px;
+      border-radius: 5px; }
+  #lostPasswordBody .lostPasswordBlock {
+    position: relative;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px hidden;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 30px;
+    width: 19%;
+    min-width: 250px;
+    max-width: 250px;
+    background-color: rgba(255, 255, 255, 0.9); }
+    #lostPasswordBody .lostPasswordBlock .alertDiv {
+      width: 90%;
+      text-align: center;
+      margin: 0px auto; }
+    #lostPasswordBody .lostPasswordBlock .title {
+      width: 90%;
+      margin: 10px auto;
+      font-size: 17px;
+      text-align: center; }
+    #lostPasswordBody .lostPasswordBlock .registrationTips {
+      width: 90%;
+      margin: 0px auto;
+      margin-top: 10px;
+      text-align: center; }
+      #lostPasswordBody .lostPasswordBlock .registrationTips span {
+        font-weight: 600; }
+    #lostPasswordBody .lostPasswordBlock #goBack {
+      position: absolute;
+      top: 0;
+      cursor: pointer;
+      color: #373b60; }
+    #lostPasswordBody .lostPasswordBlock #lostPasswordForm {
+      width: 90%;
+      margin: 0px auto; }
+      #lostPasswordBody .lostPasswordBlock #lostPasswordForm .doubleInput {
+        width: 100; }
+        #lostPasswordBody .lostPasswordBlock #lostPasswordForm .doubleInput .input {
+          width: 48%; }
+          #lostPasswordBody .lostPasswordBlock #lostPasswordForm .doubleInput .input:nth-child(1) {
+            float: left; }
+          #lostPasswordBody .lostPasswordBlock #lostPasswordForm .doubleInput .input:nth-child(2) {
+            float: right; }
+      #lostPasswordBody .lostPasswordBlock #lostPasswordForm #enterEmail, #lostPasswordBody .lostPasswordBlock #lostPasswordForm #security, #lostPasswordBody .lostPasswordBlock #lostPasswordForm .input {
+        opacity: 0;
+        height: 0;
+        overflow: hidden;
+        transition: opacity 1s ease-out; }
+      #lostPasswordBody .lostPasswordBlock #lostPasswordForm #enterEmail.show, #lostPasswordBody .lostPasswordBlock #lostPasswordForm #security.show, #lostPasswordBody .lostPasswordBlock #lostPasswordForm .input.show {
+        opacity: 1;
+        height: auto; }
+      #lostPasswordBody .lostPasswordBlock #lostPasswordForm #enterEmail.show, #lostPasswordBody .lostPasswordBlock #lostPasswordForm #security.show {
+        margin-bottom: 20px;
+        font-size: 17px; }
+      #lostPasswordBody .lostPasswordBlock #lostPasswordForm .input.show {
+        display: block;
+        margin-bottom: 10px;
+        overflow: visible; }
+      #lostPasswordBody .lostPasswordBlock #lostPasswordForm .input.confirm-password input {
+        margin-top: 15px;
+        margin-bottom: 15px; }
+      #lostPasswordBody .lostPasswordBlock #lostPasswordForm .input {
+        margin: 0px;
+        width: 100%;
+        max-width: 100%; }
+        #lostPasswordBody .lostPasswordBlock #lostPasswordForm .input input {
+          color: #373b60;
+          background-color: #efefef;
+          border-radius: 5px;
+          border: 1px hidden;
+          width: 100%;
+          padding: 2px;
+          line-height: 1.5; }
+    #lostPasswordBody .lostPasswordBlock #custom-confirm, #lostPasswordBody .lostPasswordBlock .custom-button {
+      opacity: 0;
+      height: 0;
+      overflow: hidden;
+      margin: 0;
+      transition: opacity 1s ease-out;
+      text-align: center;
+      position: relative; }
+      #lostPasswordBody .lostPasswordBlock #custom-confirm button, #lostPasswordBody .lostPasswordBlock .custom-button button {
+        width: 100%;
+        height: 100%;
+        border: 1px solid #373b60;
+        padding-bottom: 5px;
+        padding-top: 7px;
+        border-radius: 7px;
+        font-size: 14px;
+        background-color: #373b60;
+        transition: all .3s;
+        color: white;
+        outline: none;
+        position: relative;
+        display: inline-block;
+        vertical-align: middle;
+        overflow: hidden;
+        white-space: nowrap; }
+        #lostPasswordBody .lostPasswordBlock #custom-confirm button:hover, #lostPasswordBody .lostPasswordBlock .custom-button button:hover {
+          transition: all .3s;
+          border: 1px solid #373b60;
+          background-color: white;
+          color: #373b60; }
+    #lostPasswordBody .lostPasswordBlock #custom-confirm.show, #lostPasswordBody .lostPasswordBlock .custom-button.show {
+      opacity: 1;
+      height: auto;
+      overflow: visible;
+      margin-left: auto;
+      margin-right: auto; }
+    #lostPasswordBody .lostPasswordBlock #custom-confirm {
+      width: fit-content; }
+    #lostPasswordBody .lostPasswordBlock .custom-button.show {
+      margin-top: 25px; }
+    #lostPasswordBody .lostPasswordBlock .custom-button {
+      width: 50%; }
+      #lostPasswordBody .lostPasswordBlock .custom-button .loadHelper {
+        transition: all .3s;
+        width: 100%;
+        height: 100%;
+        visibility: hidden;
+        opacity: 0;
+        border-radius: 7px;
+        position: absolute;
+        border: 3px solid #373b60; }
+      #lostPasswordBody .lostPasswordBlock .custom-button .successHelper {
+        width: 100%;
+        height: auto;
+        border: 3px solid green;
+        padding-bottom: 5px;
+        padding-top: 7px;
+        border-radius: 7px;
+        font-size: 14px;
+        background-color: white;
+        transition: all .3s;
+        color: green;
+        opacity: 0;
+        visibility: hidden;
+        outline: none;
+        display: inline-block;
+        vertical-align: middle; }
+    #lostPasswordBody .lostPasswordBlock .custom-button.loading button {
+      transition: all .3s;
+      border-radius: 100px;
+      width: 35px;
+      opacity: 0; }
+      #lostPasswordBody .lostPasswordBlock .custom-button.loading button span {
+        opacity: 0; }
+    #lostPasswordBody .lostPasswordBlock .custom-button.loading .loadHelper {
+      transition: all .3s;
+      width: 35px;
+      height: 100%;
+      border-radius: 100px;
+      border: none;
+      opacity: 1;
+      visibility: visible; }
+    #lostPasswordBody .lostPasswordBlock .custom-button.success .loadHelper {
+      visibility: hidden;
+      opacity: 0; }
+    #lostPasswordBody .lostPasswordBlock .custom-button.success .successHelper {
+      visibility: visible;
+      opacity: 1; }
+
+.sk-fading-circle {
+  width: 100%;
+  height: 100%;
+  position: relative; }
+
+.sk-fading-circle .sk-circle {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0; }
+
+.sk-fading-circle .sk-circle:before {
+  content: '';
+  display: block;
+  margin: 0 auto;
+  width: 15%;
+  height: 15%;
+  background-color: #373b60;
+  border-radius: 100%;
+  -webkit-animation: sk-circleFadeDelay 1.2s infinite ease-in-out both;
+  animation: sk-circleFadeDelay 1.2s infinite ease-in-out both; }
+
+.sk-fading-circle .sk-circle2 {
+  -webkit-transform: rotate(30deg);
+  -ms-transform: rotate(30deg);
+  transform: rotate(30deg); }
+
+.sk-fading-circle .sk-circle3 {
+  -webkit-transform: rotate(60deg);
+  -ms-transform: rotate(60deg);
+  transform: rotate(60deg); }
+
+.sk-fading-circle .sk-circle4 {
+  -webkit-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  transform: rotate(90deg); }
+
+.sk-fading-circle .sk-circle5 {
+  -webkit-transform: rotate(120deg);
+  -ms-transform: rotate(120deg);
+  transform: rotate(120deg); }
+
+.sk-fading-circle .sk-circle6 {
+  -webkit-transform: rotate(150deg);
+  -ms-transform: rotate(150deg);
+  transform: rotate(150deg); }
+
+.sk-fading-circle .sk-circle7 {
+  -webkit-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  transform: rotate(180deg); }
+
+.sk-fading-circle .sk-circle8 {
+  -webkit-transform: rotate(210deg);
+  -ms-transform: rotate(210deg);
+  transform: rotate(210deg); }
+
+.sk-fading-circle .sk-circle9 {
+  -webkit-transform: rotate(240deg);
+  -ms-transform: rotate(240deg);
+  transform: rotate(240deg); }
+
+.sk-fading-circle .sk-circle10 {
+  -webkit-transform: rotate(270deg);
+  -ms-transform: rotate(270deg);
+  transform: rotate(270deg); }
+
+.sk-fading-circle .sk-circle11 {
+  -webkit-transform: rotate(300deg);
+  -ms-transform: rotate(300deg);
+  transform: rotate(300deg); }
+
+.sk-fading-circle .sk-circle12 {
+  -webkit-transform: rotate(330deg);
+  -ms-transform: rotate(330deg);
+  transform: rotate(330deg); }
+
+.sk-fading-circle .sk-circle2:before {
+  -webkit-animation-delay: -1.1s;
+  animation-delay: -1.1s; }
+
+.sk-fading-circle .sk-circle3:before {
+  -webkit-animation-delay: -1s;
+  animation-delay: -1s; }
+
+.sk-fading-circle .sk-circle4:before {
+  -webkit-animation-delay: -0.9s;
+  animation-delay: -0.9s; }
+
+.sk-fading-circle .sk-circle5:before {
+  -webkit-animation-delay: -0.8s;
+  animation-delay: -0.8s; }
+
+.sk-fading-circle .sk-circle6:before {
+  -webkit-animation-delay: -0.7s;
+  animation-delay: -0.7s; }
+
+.sk-fading-circle .sk-circle7:before {
+  -webkit-animation-delay: -0.6s;
+  animation-delay: -0.6s; }
+
+.sk-fading-circle .sk-circle8:before {
+  -webkit-animation-delay: -0.5s;
+  animation-delay: -0.5s; }
+
+.sk-fading-circle .sk-circle9:before {
+  -webkit-animation-delay: -0.4s;
+  animation-delay: -0.4s; }
+
+.sk-fading-circle .sk-circle10:before {
+  -webkit-animation-delay: -0.3s;
+  animation-delay: -0.3s; }
+
+.sk-fading-circle .sk-circle11:before {
+  -webkit-animation-delay: -0.2s;
+  animation-delay: -0.2s; }
+
+.sk-fading-circle .sk-circle12:before {
+  -webkit-animation-delay: -0.1s;
+  animation-delay: -0.1s; }
+
+@-webkit-keyframes sk-circleFadeDelay {
+  0%, 39%, 100% {
+    opacity: 0; }
+  40% {
+    opacity: 1; } }
+@keyframes sk-circleFadeDelay {
+  0%, 39%, 100% {
+    opacity: 0; }
+  40% {
+    opacity: 1; } }
 @keyframes shake-ease {
   5% {
-    transform: translate(0px, 0.5px) rotate(-0.5deg); }
+    transform: translate(0px, 0.5px) rotate(1.5deg); }
   10% {
     transform: translate(1px, 0.5px) rotate(1.5deg); }
   15% {
-    transform: translate(0px, 0.5px) rotate(0.5deg); }
+    transform: translate(0px, 0.5px) rotate(-0.5deg); }
   20% {
-    transform: translate(0px, 0.5px) rotate(1.5deg); }
+    transform: translate(1px, 0.5px) rotate(0.5deg); }
   25% {
-    transform: translate(0px, 0.5px) rotate(0.5deg); }
+    transform: translate(1px, 0.5px) rotate(1.5deg); }
   30% {
     transform: translate(1px, 0.5px) rotate(0.5deg); }
   35% {
-    transform: translate(0px, 0.5px) rotate(0.5deg); }
+    transform: translate(0px, 0.5px) rotate(-0.5deg); }
   40% {
-    transform: translate(0px, 0.5px) rotate(1.5deg); }
+    transform: translate(1px, 0.5px) rotate(0.5deg); }
   45% {
     transform: translate(0px, 0.5px) rotate(1.5deg); }
   50% {
-    transform: translate(0px, 0.5px) rotate(1.5deg); }
+    transform: translate(1px, 0.5px) rotate(1.5deg); }
   55% {
-    transform: translate(1px, 0.5px) rotate(-0.5deg); }
+    transform: translate(0px, 0.5px) rotate(1.5deg); }
   60% {
-    transform: translate(1px, 0.5px) rotate(-0.5deg); }
+    transform: translate(0px, 0.5px) rotate(0.5deg); }
   65% {
     transform: translate(1px, 0.5px) rotate(-0.5deg); }
   70% {
-    transform: translate(1px, 0.5px) rotate(0.5deg); }
+    transform: translate(1px, 0.5px) rotate(-0.5deg); }
   75% {
-    transform: translate(0px, 0.5px) rotate(0.5deg); }
+    transform: translate(0px, 0.5px) rotate(1.5deg); }
   80% {
-    transform: translate(1px, 0.5px) rotate(0.5deg); }
+    transform: translate(0px, 0.5px) rotate(0.5deg); }
   85% {
     transform: translate(0px, 0.5px) rotate(1.5deg); }
   90% {
-    transform: translate(1px, 0.5px) rotate(-0.5deg); }
+    transform: translate(1px, 0.5px) rotate(1.5deg); }
   95% {
     transform: translate(1px, 0.5px) rotate(1.5deg); }
   0%, 100% {
@@ -3105,7 +4013,7 @@ body {
   width: 50px;
   height: 50px;
   position: fixed;
-  right: 2%;
+  right: 1%;
   bottom: 5%;
   cursor: pointer;
   background-color: #373b60;
@@ -3122,9 +4030,27 @@ body {
     width: 100%;
     height: 100%;
     left: 0; }
+  #chatButton #chatButton-popover {
+    position: absolute;
+    width: 100px;
+    height: 50px;
+    left: 110px;
+    top: 0;
+    color: white;
+    margin-top: -50px; }
+    #chatButton #chatButton-popover p {
+      position: absolute;
+      visibility: hidden;
+      background-color: rgba(239, 239, 239, 0.89);
+      width: 0; }
   #chatButton:hover i {
     transition: transform .3s;
     transform: scale(0.7); }
+  #chatButton:hover #chatButton-popover p {
+    visibility: visible;
+    top: 0;
+    width: 100%;
+    transition: width 1s; }
 
 .mainBody {
   padding-top: 0px;
@@ -3139,23 +4065,44 @@ body {
     position: absolute;
     background-image: url(../resources/backgrounds/logo-background.png);
     background-size: 250px; }
-  .mainBody #loginBody {
-    width: 100%;
+  .mainBody #loginBody::before {
+    content: '';
     position: absolute;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding-bottom: 50px;
+    z-index: -1;
     background-size: 100% 100%;
+    width: 100%;
     height: 100%;
-    background-image: url(../resources/backgrounds/sunset.jpg);
+    background-image: url(../resources/backgrounds/background.jpeg);
     background-position: 50% 50%; }
-    .mainBody #loginBody .logo {
-      width: 20%;
-      margin-left: auto;
-      margin-right: auto;
-      margin-top: 50px; }
-      .mainBody #loginBody .logo img {
-        width: 100%; }
+  .mainBody #loginBody {
+    position: absolute;
+    padding-bottom: 50px;
+    width: 100%;
+    height: 100%;
+    /*.univ-presentation {
+      margin: auto;
+      margin-top: 15%;
+      width: 45%;
+      background-color: rgba(255, 255, 255, 0.7);
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+      color: $themeColor;
+      font-family: $defaultFont;
+      h2 {
+        font-size: 40px;
+      }
+      p {
+        font-size: 15px;
+        margin-bottom: 20px;
+      }
+    }*/ }
+    .mainBody #loginBody .ease-logo {
+      width: 50px; }
+    .mainBody #loginBody #demo-canvas {
+      display: none; }
+    .mainBody #loginBody #searchBar {
+      top: 8%; }
   .mainBody #loggedBody {
     height: 100%;
     padding-top: 43px;
@@ -3165,6 +4112,7 @@ body {
       overflow-y: auto;
       overflow-x: hidden;
       height: 100%;
+      transform: translateX(0);
       -webkit-animation: slideLeft 0.8s 1;
       animation: slideLeft 0.8s 1;
       display: none; }
@@ -3185,35 +4133,61 @@ body {
 .FormsContainer {
   text-align: center; }
   .FormsContainer .savedUser .alertDiv p {
-    font-size: 14px; }
+    font-size: 14px;
+    color: #ec555b; }
   .FormsContainer .savedUser p {
-    font-size: 20px; }
+    font-size: 17px;
+    margin-bottom: 8px;
+    color: #373b60; }
+  .FormsContainer .switch-account {
+    width: 25px; }
+  .FormsContainer div#back, .FormsContainer div#changeAccount {
+    background-color: rgba(239, 239, 239, 0.89);
+    color: #373b60;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    position: absolute;
+    right: 0;
+    margin-top: 8%;
+    width: 100%;
+    padding: 3%; }
   .FormsContainer .form {
     position: absolute;
-    min-height: 254px;
+    top: 5%;
+    right: 1%;
     vertical-align: middle;
     display: inline-block;
     text-align: center;
-    width: 20%;
     min-width: 200px;
-    margin-left: auto;
-    margin-right: auto;
-    left: 0;
-    right: 0;
+    width: 15%;
     padding-left: 2%;
     padding-right: 2%;
-    border-radius: 7px;
-    padding-bottom: 25px;
-    padding-top: 20px;
-    background-color: rgba(239, 239, 239, 0.7); }
+    border-radius: 4px;
+    padding-bottom: 1%;
+    padding-top: 1%;
+    background-color: rgba(239, 239, 239, 0.89);
+   /*form {
+     position: absolute;
+      top: 5%;
+      right: 1%;
+      vertical-align: middle;
+      display: inline-block;
+      text-align: center;
+      min-width: 200px;
+      padding-left: 2%;
+      padding-right: 2%;
+      border-radius: 7px;
+      padding-bottom: 1%;
+      padding-top: 1%;
+      background-color: rgba(239, 239, 239, 0.7);
+  }*/ }
     .FormsContainer .form span.input {
       max-width: 100%;
       width: 100%;
-      margin-left: 0px;
-      margin-right: 0px;
-      margin-top: 21px;
-      margin-bottom: 10px;
-      font-size: 15px; }
+      margin: 0;
+      font-size: 12px; }
       .FormsContainer .form span.input label span {
         padding-top: 8px;
         padding-bottom: 8px; }
@@ -3221,31 +4195,40 @@ body {
         color: #373b60;
         padding-top: 5px;
         padding-bottom: 4px;
+        margin-bottom: 3px;
         border-radius: 5px;
         background-color: white;
+        font-weight: 200;
+        font-size: 14px;
         text-align: center; }
       .FormsContainer .form span.input input:-webkit-autofill {
         -webkit-box-shadow: 0 0 0px 1000px white inset; }
       .FormsContainer .form span.input input:-webkit-autofill:focus {
         -webkit-box-shadow: 0 0 0px 1000px white inset; }
+    .FormsContainer .form .forget-password {
+      bottom: 1px;
+      right: 2px; }
     .FormsContainer .form button {
       width: 70%;
-      margin-top: 25px;
+      margin-top: 10px;
+      margin-bottom: 15px;
       padding-bottom: 5px;
       padding-top: 7px;
       border-radius: 7px;
       font-size: 14px;
       background-color: #373b60;
-      border: 1px hidden #373b60;
+      border: 2px solid #373b60;
       color: white;
       outline: none;
       position: relative;
       display: inline-block;
       vertical-align: middle; }
       .FormsContainer .form button:hover {
-        border: 1px solid #373b60;
+        border: 2px solid #373b60;
         background-color: rgba(255, 255, 255, 0.7);
         color: #373b60; }
+    .FormsContainer .form a.create-account {
+      bottom: 0; }
     .FormsContainer .form a {
       font-size: 12px;
       display: block;
@@ -3256,11 +4239,6 @@ body {
       .FormsContainer .form a:hover {
         cursor: pointer;
         color: darkblue; }
-    .FormsContainer .form form {
-      margin-left: auto;
-      margin-right: auto;
-      text-align: center;
-      width: 100%; }
 
 @media screen and (max-width: 771px) {
   #loginBody .logo {
@@ -3290,10 +4268,7 @@ body {
   width: 100%;
   z-index: 2;
   top: 0px;
-  -moz-box-shadow: 0px -2px 8px 0px #373b60;
-  -webkit-box-shadow: 0px -2px 8px 0px #373b60;
-  -o-box-shadow: 0px -2px 8px 0px #373b60;
-  box-shadow: 0px -2px 8px 0px #373b60; }
+  border-bottom: 1px solid #d0d1d5; }
   .header #breakButton {
     font-size: 12px;
     float: right;
@@ -3317,7 +4292,7 @@ body {
 
 .alertDiv {
   display: none;
-  color: red;
+  color: #ec555b;
   font-size: 14px; }
 
 .userInfo {
@@ -3333,7 +4308,7 @@ body {
 
 #loginBody form .alertDiv.show {
   display: block;
-  color: red; }
+  color: #ec555b; }
 
 .la-animate {
   z-index: 10000; }
@@ -3379,5 +4354,19 @@ html {
   html .ease-button:hover {
     cursor: pointer;
     transition: all 0.3s; }
+
+.shadowHelper {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  -webkit-box-shadow: inset 0px 5px 10px 0px white, inset 0px -5px 10px 0px white;
+  -moz-box-shadow: inset 0px 5px 10px 0px white, inset 0px -5px 10px 0px white;
+  -o-box-shadow: inset 0px 5px 10px 0px white, inset 0px -5px 10px 0px white;
+  box-shadow: inset 0px 5px 10px 0px white, inset 0px -5px 10px 0px white; }
+
+.no-pointer-events {
+  pointer-events: none; }
 
 /*# sourceMappingURL=default_style.css.map */

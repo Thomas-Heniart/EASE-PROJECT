@@ -66,7 +66,7 @@
 					<label class="input__label input__label--minoru" for="input-8">
 					</label>
 			</span>
-			<input type="hidden" value="<% request.getParameter("linkCode"); %>" name="linkCode"/>
+			<input type="hidden" value="<%= request.getParameter("linkCode") %>" name="linkCode"/>
 		</form>
 		<div class="alertDiv">
 			<p></p>
