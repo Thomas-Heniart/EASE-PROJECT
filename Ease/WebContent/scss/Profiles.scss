@@ -582,6 +582,17 @@
 	left: 50%;
 	transform: translateX(-50%) translateY(-50%);
 }
+.siteLinkBox.sortable-fallback {
+	.linkImage {
+		opacity: 1 !important;
+		.showAppActionsButton, .emptyAppIndicator {
+			display: none;
+		}
+	}
+	.siteName {
+		display: none;
+	}
+}
 .siteLinkBox.gu-mirror {
 	width: 50px !important;
 	height: 50px !important;

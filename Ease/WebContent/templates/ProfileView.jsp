@@ -485,6 +485,7 @@ logwith="${app.getAccount().getLogWithApp(member).getAppId()}">
 </div>
 <script type="text/javascript">
 	$(document).ready(function(){
+		/*
 		var drake = dragula({
 			isContainer: function(el){
 				return  el.classList.contains('SitesContainer');
@@ -545,6 +546,76 @@ logwith="${app.getAccount().getLogWithApp(member).getAppId()}">
 			document.body.style.cursor = "move";
 		}).on('dragend', function(el){
 			document.body.style.cursor = "default";
+		});*/
+
+		$('.owl-wrapper').sortable({
+			animation: 300,
+			group:"profiles",
+			handle: ".ProfileName",
+			forceFallback: true,
+			onStart: function(evt){
+				var item = $(evt.item);
+				$('body').css('cursor', 'move');
+				item.css({
+					'pointer-events': 'none',
+					'opacity': '0'
+				});
+			},
+			onEnd: function(evt){
+				var item = $(evt.item);
+				$('body').css('cursor', '');
+				item.css({
+					'pointer-events': '',
+					'opacity': ''
+				});
+				$.post(
+					"moveProfile",
+					{
+						profileId: item.find('.item').attr('id'),
+						index: item.index()
+					},
+					function (data){
+					},
+					'text'
+				);
+			}
+		});
+		$('.SitesContainer').sortable({
+			animation: 300,
+			group:"sites",
+			forceFallback: true,
+			filter: ".siteLinkBox[move='false']",
+			onStart: function(evt){
+				var item = $(evt.item);
+				item.css({
+					'pointer-events': 'none',
+					'opacity': '0'
+				});
+			},
+			onEnd: function(evt){
+				var item = $(evt.item);
+
+				item.css({
+					'pointer-events': '',
+					'opacity': ''
+				});
+				$.post(
+					"moveApp",
+					{
+						appId: item.attr('id'),
+						profileId: item.closest('.item').attr('id') ,
+						index: item.index()
+					},
+					function (data){
+					},
+					'text'
+				);
+			},
+			onMove: function(evt){
+				if ($(evt.dragged).attr('move') == 'false'){
+					return false;
+				}
+			}
 		});
 	});
 </script>

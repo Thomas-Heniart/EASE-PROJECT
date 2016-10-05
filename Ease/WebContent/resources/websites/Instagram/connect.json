@@ -15,9 +15,11 @@
     "Facebook":{
     	"todo":[
     		{"action":"waitfor", "search":["a._niffh","a._fcn8k"]},
+    		{"action":"clickona", "search":"a._fcn8k"},
+    		{"action":"clickona", "search":"a._fcn8k"},
+    		{"action":"clickona", "search":"a._niffh"},
           	{"action":"clickona", "search":"a._fcn8k"},
-            {"action":"clickona", "search":"a._niffh"},
-            {"action":"click", "search":"button._aj7mu._fy2va._kenyh._o0442"}
+            {"action":"click", "search":".coreSpriteFacebookIconInverted._a0z3x"}
     	]
     },
     "logout":{

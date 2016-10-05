@@ -15,7 +15,7 @@
 @import 'AdminMenu';
 @import 'csshake/csshake';
 @import 'Mobile';
-@import 'lostPassword';
+@import 'LostPassword';
 
 .shake-ease {
   @include do-shake('shake-ease', 2px, 1px, 3, 1700ms, .05, $opacity: false);
