@@ -108,6 +108,7 @@
 			$('.alertDiv').removeClass('show');
 			var button = $('.lostPasswordBlock .custom-button');
 			button.addClass('loading');
+			$("#lostPasswordForm .input").removeClass("show");
 			$.post(
 				$('#lostPasswordForm').attr('action'),
 				{
@@ -118,7 +119,6 @@
 				function(data){
 					if (data[0] == 's'){
 						button.removeClass('loading');
-						$("#lostPasswordForm .input").removeClass("show");
 						button.addClass('success');
 						setTimeout(function(){
 							window.location = "index.jsp";
@@ -128,6 +128,7 @@
 						$('.alertDiv').css('color', 'red');
 						$('.alertDiv').text(str);
 						$('.alertDiv').addClass('show');
+						$("#lostPasswordForm .input").addClass("show");
 						button.removeClass('loading');
 					}
 				},
