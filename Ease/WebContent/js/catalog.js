@@ -23,7 +23,7 @@ function sortSites(sites) {
 
 function refreshCatalogContent(data) {
 		if (data[0] == '[') {
-			var json = JSON.parse(data);
+			var json = JSON.parse(res);
 			$('.catalogApp').hide();
 			if (json.length > 0) {
 				$('.catalogContainer .no-result-search').hide();
@@ -49,7 +49,8 @@ function refreshCatalogContent(data) {
 				search : searchVal
 			},
 			function(data) {
-				refreshCatalogContent(data);
+				if (data[0] != 'e')
+					refreshCatalogContent(data.substring(9));
 			},
 			'text'
 		);
