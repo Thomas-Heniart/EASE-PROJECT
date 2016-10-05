@@ -54,6 +54,40 @@ pageEncoding="UTF-8"%>
 	<%}%>
 </head>
 <script type="text/javascript">
+	var Environment = {
+	    //mobile or desktop compatible event name, to be used with '.on' function
+	    TOUCH_DOWN_EVENT_NAME: 'mousedown touchstart',
+	    TOUCH_UP_EVENT_NAME: 'mouseup touchend',
+	    TOUCH_MOVE_EVENT_NAME: 'mousemove touchmove',
+	    TOUCH_DOUBLE_TAB_EVENT_NAME: 'dblclick dbltap',
+
+	    isAndroid: function() {
+	        return navigator.userAgent.match(/Android/i);
+	    },
+	    isBlackBerry: function() {
+	        return navigator.userAgent.match(/BlackBerry/i);
+	    },
+	    isIOS: function() {
+	        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+	    },
+	    isOpera: function() {
+	        return navigator.userAgent.match(/Opera Mini/i);
+	    },
+	    isWindows: function() {
+	        return navigator.userAgent.match(/IEMobile/i);
+	    },
+	    isMobile: function() {
+	        return (Environment.isAndroid() || Environment.isBlackBerry() || Environment.isIOS() || Environment.isOpera() || Environment.isWindows());
+	    }
+	};
+	
+	$(document).ready(function(){
+		if(Environment.isMobile()){
+			$('#onComputer').attr('style', "display:none");
+			$('#onMobile').attr('style', "display:block");
+		}
+	});
+	
 	function sendConnectionStatus(isConnected) {
 		var content = new Object();
 		content.detail = isConnected;
@@ -231,7 +265,12 @@ pageEncoding="UTF-8"%>
 	<%@ page import="java.util.Base64" %>
 	<%@ page import="java.util.Base64.Encoder" %>
 	<%@ page import="java.nio.charset.StandardCharsets" %>
-
+	
+	<div id="onMobile" style="display:none;">
+	<%@ include file="templates/Mobile.jsp" %>
+	</div>
+	
+	<div id="onComputer">
 	<div class="cookiesInfo" style="display: none;">
 		<p>En poursuivant votre navigation, vous acceptez l'utilisation de cookies dans le cadre de l’authentification, la sécurité et l’intégrité du site et des produits.</p>
 		<button id="hideCookies"><i class="fa fa-times" aria-hidden="true"></i></button>
@@ -246,5 +285,7 @@ pageEncoding="UTF-8"%>
 	<div class="la-anim-10" id="loading"></div>
 	<%@ include file="templates/SimpleAlertPopup.jsp" %>
 	<%@ include file="templates/ChatButton.jsp" %>
+	</div>
+	
 </body>
 </html>

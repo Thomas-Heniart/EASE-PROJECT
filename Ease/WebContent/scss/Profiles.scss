@@ -7,7 +7,6 @@
 
 .ProfileBox {
 	width: 90%;
-	border: 1px hidden white;
 	border-radius: 5px;
 	background-color: white;
 	overflow: hidden;
@@ -19,6 +18,7 @@
 		padding: 2px;
 		padding-left: 5px;
 		border-radius: 5px 5px 0px 0px;
+		position: relative;
 		p {
 			text-transform: uppercase;
 			font-weight: 600;
@@ -32,15 +32,20 @@
 			line-height: 25px;
 			vertical-align: middle;
 			height: 100%;
+			max-width: 80%;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
 		}
 		.ProfileSettingsButton {
-			position: relative;
+			position: absolute;
 			overflow: hidden;
 			display: inline-block;
 			float: right;
 			font-size: 20px;
 			vertical-align: middle;
 			color: white;
+			right: 0;
 			margin-top: 3px;
 			cursor: pointer;
 			transition: transform 0.3s;
@@ -66,6 +71,8 @@
 				display: none;
 				width: 100%;
 				font-family: $defaultFont;
+				overflow: hidden;
+				white-space: nowrap;
 				.profileSettingsTab {
 					padding: 2px 5%;
 					position: absolute;
@@ -93,14 +100,17 @@
 							color: $themeColor;
 						}
 						p {
+							overflow: hidden;
+							text-overflow: ellipsis;
 							margin-bottom: 2px;
+							max-width: 100%;
 						}
 						p, div {
 							display: inline-block;
 							vertical-align: middle;
 						}
 						.directInfo {
-
+							width: 40%;
 						}
 					}
 					#ColorSection .directInfo {
@@ -128,6 +138,9 @@
 								}
 							}
 						}
+						#deleteProfileForm {
+							white-space: normal;
+						}
 						input {
 							outline: none;
 							margin-top: 3%;
@@ -140,7 +153,7 @@
 						.buttonSet {
 							text-align: center;
 							margin-top: 3%;
-							margin-bottom: 3%;
+							margin-bottom: 3%;	
 							button {
 								margin: 0px;
 								padding: 2px;
@@ -148,7 +161,7 @@
 								min-width: 0px;
 								max-width: 100%;
 								width: 40%;
-								display: inline-block;
+								display: inline-block;	
 								color: white;
 								border-radius: 3px;
 							}
@@ -167,7 +180,7 @@
 						}
 					}
 				}
-				ul {
+				ul { 
 					padding-left: 0px;
 					li {
 						list-style-type : none;
@@ -188,11 +201,13 @@
 						&:hover {
 							background-color: white;
 							color: black;
-						}
+						}	
 					}
 				}
 			}
 			.SitesContainer {
+				border-left:1px solid $borderFbColor;
+				border-right: 1px solid $borderFbColor;
 				position: relative;
 				height: 100%;
 				width: 100%;
@@ -204,13 +219,15 @@
 					height: (100% / 6);
 					padding-top: 5px;
 					position: relative;
-					overflow: hidden;
 					.siteName {
 						font-size: 10px;
 						line-height: 9px;
 						p {
 							margin: 0px;
-							font-size: 1rem;
+							white-space: nowrap;
+							text-overflow: ellipsis;
+							overflow: hidden;
+							line-height: 1.5;						
 						}
 					}
 					.linkImage {
@@ -226,10 +243,9 @@
 						opacity: 0.8;
 						margin-left: auto;
 						margin-right: auto;
-						margin-bottom: 2px;
 						img {
 							border: 1px solid #efefef;
-							border-radius: 5px;
+							border-radius: 5px;			    
 							width: 100%;
 							height: 100%;
 						}
@@ -394,36 +410,36 @@
 		.emptyAppIndicator {
 			position: absolute;
 			width: 100%;
-            height: 100%;
+			height: 100%;
 			opacity: 1;
 			border-radius: 5px;
 			padding: 2px;
 			img {
 				padding: 2px;
-                border-radius: 100%;
-                background-color: $themeColor;
-                width: 35%;
-                height: 35%;
-                left:45%;
-                bottom: 12%;
+				border-radius: 100%;
+				background-color: $themeColor;
+				width: 35%;
+				height: 35%;
+				left:45%;
+				bottom: 12%;
 				line-height: 90%;
 				color: white;
 				font-size: 1vw;
 				position: relative;
 				border: none;
 			}
-            &:hover {
-                background-color: $themeColor;
-                border: 1px solid #efefef;
-                opacity:0.8;
-            }
-            &:hover > img {
-                width:80%;
-                height:80%;
-                left:0%;
-                top:15%;
-                border-radius: 5px;
-            }
+			&:hover {
+				background-color: $themeColor;
+				border: 1px solid #efefef;
+				opacity:0.8;
+			}
+			&:hover > img {
+				width:80%;
+				height:80%;
+				left:0%;
+				top:15%;
+				border-radius: 5px;
+			}
 		}
 		.showAppActionsButton {
 			position: absolute;
@@ -495,7 +511,7 @@
 			position: relative;
 			overflow: hidden;
 			p {
-				transition: all 0.3s;
+				transition: all 0.3s;					
 				margin: 0px;
 			}
 			&:hover {
@@ -507,7 +523,7 @@
 			}
 		}
 		.modifyAppButton::before {
-			content: '\f085';
+			content: '\f085';			
 		}
 		.deleteAppButton::before {
 			content: '\f014';
@@ -598,10 +614,28 @@
 }
 .clearfix:before,
 .clearfix:after {
-	content: ".";
-	display: block;
-	height: 0;
-	overflow: hidden;
+	content: ".";    
+	display: block;    
+	height: 0;    
+	overflow: hidden; 
 }
 .clearfix:after { clear: both; }
-.clearfix { zoom: 1; }
+.clearfix { zoom: 1; } 
+
+@media screen and (min-width: 1500px) {
+	.showAppActionsButton {
+		.appActionsPopup {
+			.buttonsContainer {
+				min-width: 150px;
+				.menu-item {
+					&:before {
+						font-size: 1.4em;
+					}
+					p {
+						width: 150px;
+					}
+				}
+			}
+		}
+	}
+}

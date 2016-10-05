@@ -255,8 +255,8 @@ response.addCookie(email);
 	<%@ include file="MenuButtonSet.jsp"%>
 
 	<c:if test="${member.getTuto() == '0'}">
-		<%@ include file="Tutorial.jsp"%>
-	</c:if>
+	<%@ include file="Tutorial.jsp"%>
+</c:if>
 
 <script type="text/javascript">
 	function checkForExtension() {
@@ -288,11 +288,6 @@ response.addCookie(email);
 				});
 		}
 	}
-/*	$(document).ready(function() {
-			setTimeout(function() {
-				checkForExtension();
-			}, 1000);
-	});*/
 	function closeAllSettingsTabs() {
 		$('.ProfileSettingsButton.settings-show').click();
 	}
@@ -304,17 +299,15 @@ response.addCookie(email);
 			<div class="ProfileBox" custom="${item.isCustom()}"
 			style="border-bottom: 5px solid ${item.getColor()};"
 			color="${item.getColor()}">
-			<div class="ProfileName"
-			style="background-color: ${item.getColor()};">
-			<p>
-				@
-				<c:out value='${item.getName()}' />
-			</p>
-			<div class="ProfileSettingsButton">
-				<i class="fa fa-fw fa-ellipsis-v"></i>
-			</div>
-		</div>
-		<div class="ProfileContent">
+				<div class="ProfileName"
+				style="background-color: ${item.getColor()};">
+					<p>@<c:out value='${item.getName()}' />
+					</p>
+					<div class="ProfileSettingsButton">
+						<i class="fa fa-fw fa-ellipsis-v"></i>
+					</div>
+				</div>
+				<div class="ProfileContent">
 			<img class="Scaler" src="resources/other/placeholder-36.png"
 			style="width: 100%; height: auto; visibility: hidden;" />
 			<div class=content>
@@ -406,88 +399,80 @@ response.addCookie(email);
 	<c:forEach items='${item.getApps()}' var="app">
 
 	<c:choose>
-		<c:when test="${app.getType() eq 'NoAccount'}">
-			<div class="siteLinkBox emptyApp"
-				 login=""
-				webId="${app.getSite().getId()}"
-				name="${app.getName()}"
-				move="${app.havePerm('MOVE', session.getServletContext())}"
-				id="${app.getAppId()}">
-				<div class="linkImage" onclick="sendEvent(this)">
-					<div class="emptyAppIndicator" onclick="showModifyAppPopup(this, event)">
-						<img src="resources/other/raise-your-hand-to-ask.svg" />
-					</div>
-					<div class="showAppActionsButton" >
-						<i class="fa fa-cog"></i>
-						<div class="appActionsPopup">
-							<div class="buttonsContainer">
-								<div class="modifyAppButton menu-item"
-									onclick="showModifyAppPopup(this, event)">
-									<p>Modify</p>
-								</div>
-								<c:if test="${app.havePerm('DELETE', session.getServletContext())}">
-								<div class="deleteAppButton menu-item"
-									onclick="showConfirmDeleteAppPopup(this, event)">
-									<p>Delete</p>
-								</div>
-								</c:if>
-							</div>
-						</div>
-					</div>
-					<img class="logo" src="<c:out value='${app.getSite().getFolder()}logo.png'/>" />
-				</div>
-		</c:when>
-		<c:otherwise>
-			<c:if test="${app.getType() eq 'ClassicAccount'}">
-				<div class="siteLinkBox"
-					 login="${app.getLogin()}"
-					webId="${app.getSite().getId()}"
-					name="${app.getName()}"
-					id="${app.getAppId()}"
-					ssoId="${app.getSite().getSso()}"
-					move="${app.havePerm('MOVE', session.getServletContext())}"
-					logwith="false">
-			</c:if>
-			<c:if test="${app.getType() eq 'LogWithAccount'}">
-				<div class="siteLinkBox"
-				webId="${app.getSite().getId()}"
-				name="${app.getName()}"
-				id="${app.getAppId()}"
-				move="${app.havePerm('MOVE', session.getServletContext())}"
-				logwith="${app.getAccount().getLogWithApp(member).getAppId()}">
-			</c:if>
-			<div class="linkImage" onclick="sendEvent(this)">
-				<div class="showAppActionsButton">
-					<i class="fa fa-cog"></i>
-					<div class="appActionsPopup">
-						<div class="buttonsContainer">
-							<div class="modifyAppButton menu-item"
-								onclick="showModifyAppPopup(this, event)">
-							<p>Modify</p>
-							</div>
-							<c:if test="${app.havePerm('DELETE', session.getServletContext())}">
-								<div class="deleteAppButton menu-item"
-									onclick="showConfirmDeleteAppPopup(this, event)">
-									<p>Delete</p>
-								</div>
-							</c:if>
-					</div>
-				</div>
-			</div>
-			<img class="logo" src="<c:out value='${app.getSite().getFolder()}logo.png'/>" />
+	<c:when test="${app.getType() eq 'NoAccount'}">
+	<div class="siteLinkBox emptyApp"
+	login=""
+	webId="${app.getSite().getId()}"
+	name="${app.getName()}"
+	move="${app.havePerm('MOVE', session.getServletContext())}"
+	id="${app.getAppId()}">
+	<div class="linkImage" onclick="sendEvent(this)">
+		<div class="emptyAppIndicator" onclick="showModifyAppPopup(this, event)">
+			<img src="resources/other/raise-your-hand-to-ask.svg" />
 		</div>
-	</c:otherwise>
+		<div class="showAppActionsButton" >
+			<i class="fa fa-cog"></i>
+			<div class="appActionsPopup">
+				<div class="buttonsContainer">
+					<div class="modifyAppButton menu-item"
+					onclick="showModifyAppPopup(this, event)">
+					<p>Modify</p>
+				</div>
+				<c:if test="${app.havePerm('DELETE', session.getServletContext())}">
+				<div class="deleteAppButton menu-item"
+				onclick="showConfirmDeleteAppPopup(this, event)">
+				<p>Delete</p>
+			</div>
+		</c:if>
+	</div>
+</div>
+</div>
+<img class="logo" src="<c:out value='${app.getSite().getFolder()}logo.png'/>" />
+</div>
+</c:when>
+<c:otherwise>
+<c:if test="${app.getType() eq 'ClassicAccount'}">
+<div class="siteLinkBox"
+login="${app.getLogin()}"
+webId="${app.getSite().getId()}"
+name="${app.getName()}"
+id="${app.getAppId()}"
+ssoId="${app.getSite().getSso()}"
+move="${app.havePerm('MOVE', session.getServletContext())}"
+logwith="false">
+</c:if>
+<c:if test="${app.getType() eq 'LogWithAccount'}">
+<div class="siteLinkBox"
+webId="${app.getSite().getId()}"
+name="${app.getName()}"
+id="${app.getAppId()}"
+move="${app.havePerm('MOVE', session.getServletContext())}"
+logwith="${app.getAccount().getLogWithApp(member).getAppId()}">
+</c:if>
+<div class="linkImage" onclick="sendEvent(this)">
+	<div class="showAppActionsButton">
+		<i class="fa fa-cog"></i>
+		<div class="appActionsPopup">
+			<div class="buttonsContainer">
+				<div class="modifyAppButton menu-item"
+				onclick="showModifyAppPopup(this, event)">
+				<p>Modify</p>
+			</div>
+			<c:if test="${app.havePerm('DELETE', session.getServletContext())}">
+			<div class="deleteAppButton menu-item"
+			onclick="showConfirmDeleteAppPopup(this, event)">
+			<p>Delete</p>
+		</div>
+	</c:if>
+</div>
+</div>
+</div>
+<img class="logo" src="<c:out value='${app.getSite().getFolder()}logo.png'/>" />
+</div>
+</c:otherwise>
 </c:choose>
 <div class="siteName">
-	<c:choose>
-	<c:when test="${app.getName().length() > 14}">
-	<p>${app.getName().substring(0,14)}...
-		</p>
-		</c:when>
-		<c:otherwise>
-		<p>${app.getName()}</p>
-	</c:otherwise>
-</c:choose>
+<p>${app.getName()}</p>
 </div>
 </div>
 </c:forEach>
@@ -563,8 +548,6 @@ response.addCookie(email);
 		});
 	});
 </script>
-<%@ include file="catalogView.jsp"%>
-
 </div>
 <div id="boxHelper" style="display: none">
 	<div class="siteLinkBox">
@@ -698,7 +681,7 @@ response.addCookie(email);
 		</div>
 	</div>
 </div>
-
+</div>
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('.SitesContainer').each(function() {
@@ -817,7 +800,7 @@ response.addCookie(email);
 			drop : function(event, ui) {
 				event.preventDefault();
 				event.stopPropagation();
-				$(this).css('border', 'none');
+				$(this).css('border', '');
 
 				showAddAppPopup($(this), $(ui.helper));
 
@@ -831,7 +814,7 @@ response.addCookie(email);
 			out : function(event, ui) {
 				event.preventDefault();
 				event.stopPropagation();
-				$(this).css('border', 'none');
+				$(this).css('border', '');
 			}
 		});
 	}

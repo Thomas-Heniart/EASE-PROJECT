@@ -2,7 +2,7 @@
 "manifest_version": 2,
     
 "name" :"Ease",
-"version" :"1.1.31",
+"version" :"1.2.6",
 "description" :"Ease extension, log you in and out",
     
 "icons": {
@@ -10,13 +10,14 @@
 },
     
 "browser_action": {
-    "default_popup" : "popup.html",
+    "default_popup" : "functionnalities/popup.html",
     "default_icon": "images/logo_296.png"
 },
       
 "content_scripts": [
     {
       "matches": ["https://ease.space/*", "https://www.ease.space/*", "http://ease.space/*", "http://www.ease.space/*","http://localhost:8080/HelloWorld/*", "https://localhost:8443/HelloWorld/*", "http://localhost:8080/BackofficeUniv/*"],
+      "css": ["settings.css"],
       "js": ["jquery-3.1.0.js", "tools/extension.js", "easeListener.js"]
     },
     {
@@ -26,7 +27,25 @@
   ],
     
 "background":{
-    "page" : "background/background.html"
+    "page" : "background/background.html",
+    "persistent": false
 },
-"permissions": ["tabs","\u003Call_urls\u003E","http://*/*", "https://*/*","webNavigation","storage"]
+"permissions": ["tabs","\u003Call_urls\u003E","http://*/*", "https://*/*","webNavigation","storage"],
+    
+"commands": {
+      "open-ease": {
+        "suggested_key": {
+          "default": "Ctrl+Space",
+          "mac": "Ctrl+Space"
+        },
+        "description": "Open Ease in a new tab."
+      },
+      "logout-ease": {
+        "suggested_key": {
+          "default": "Ctrl+L",
+          "mac": "Ctrl+L"
+        },
+        "description": "Logout from ease and all connected websites."
+      }
+}
 }

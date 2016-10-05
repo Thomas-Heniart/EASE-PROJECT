@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 
 <div class="MenuButtonSet">
-	<button id="enterEditMode" state="off" class="button"><img src="resources/icons/menu_icon.png"/></button>
+	<button id="enterEditMode" state="off" class="button"><img src="resources/icons/menu_icon.png"/>
 	<div class="openCatalogHelper"></div>
 </div>
 

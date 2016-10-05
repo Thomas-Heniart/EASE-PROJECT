@@ -94,6 +94,23 @@ pageEncoding="UTF-8"%>
 		<p class="registrationTips">Set this password carefully.</br>In case you forget it, we won’t be able to recover it for you ! </p>
 		<div class="custom-button">
 			<button type="submit" form="registrationForm" value="Submit">GO</button>
+			<div class="loadHelper centeredItem">
+				<div class="sk-fading-circle">
+				  <div class="sk-circle1 sk-circle"></div>
+				  <div class="sk-circle2 sk-circle"></div>
+				  <div class="sk-circle3 sk-circle"></div>
+				  <div class="sk-circle4 sk-circle"></div>
+				  <div class="sk-circle5 sk-circle"></div>
+				  <div class="sk-circle6 sk-circle"></div>
+				  <div class="sk-circle7 sk-circle"></div>
+				  <div class="sk-circle8 sk-circle"></div>
+				  <div class="sk-circle9 sk-circle"></div>
+				  <div class="sk-circle10 sk-circle"></div>
+				  <div class="sk-circle11 sk-circle"></div>
+				  <div class="sk-circle12 sk-circle"></div>
+				</div>
+			</div>
+			<div class="successHelper centeredItem"><p>Success !</p></div>
 		</div>
 	</div>
 	<%@ include file="templates/ChatButton.jsp" %>
@@ -108,7 +125,9 @@ pageEncoding="UTF-8"%>
 			var lname = $("#registrationForm input[name='lname']").val();
 			var password = $("#registrationForm input[name='password']").val();
 			var confirmPassword = $("#registrationForm input[name='confirmPassword']").val();
+			var button = $(".registrationBlock .custom-button");
 
+			button.addClass('loading');
 			$.post(
 				$('#registrationForm').attr('action'),
 				{
@@ -121,6 +140,8 @@ pageEncoding="UTF-8"%>
 				},
 				function(data){
 					if (data[0] == 's'){
+						button.removeClass('loading');
+						button.addClass('success');
 						$.post(
 							'connection', 
 							{
@@ -133,6 +154,7 @@ pageEncoding="UTF-8"%>
         			        'text' // Nous souhaitons recevoir "Success" ou "Failed", donc on indique text !
         			        );
 					}else {
+						button.removeClass('loading');
 						var str = data.substring(7, data.length);
 						$('.alertDiv').text(str);
 						$('.alertDiv').addClass('show');

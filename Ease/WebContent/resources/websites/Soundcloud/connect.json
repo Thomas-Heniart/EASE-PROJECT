@@ -5,10 +5,9 @@
     "connect": {
     	"todo": [
     		{"action":"fill", "what":"login","search":".signinForm input[name='username']", "grave":"true"},
-    		{"action":"click", "search":"button.signinForm__cta.signinForm__checkIdentifierCTA"},
-    		{"action":"waitfor", "search":".signinForm__signin_with_password[style='']"},
-    		{"action":"fill", "what":"password","search":".signinForm__signin_with_password input[type='password']", "grave":"true"},
-    		{"action":"click", "search":"button.sc-button-cta", "grave":"true"}
+    		{"action":"submit", "search":"form.signinForm"},
+    		{"action":"fill", "what":"password","search":".signinWithPassword input[name='password']", "grave":"true"},
+    		{"action":"submit", "search":"form.signinForm"}
        	]
     },
     "logout": {
@@ -18,6 +17,6 @@
     	]
     },
     "checkAlreadyLogged": [
-    	{"search":"a[href='/logout']"}
+    	{"search":"div.userNav"}
     ]
 }

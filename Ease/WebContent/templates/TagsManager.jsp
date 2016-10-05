@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 
 <div class="MenuButtonSet superBottomLeft">
-	<button id="enterTagsManagerMode" state="off" class="button">
+	<button id="enterTagsManagerMode" state="off" class="button adminButton">
 		<img src="resources/icons/tags_icon.png" />
 	</button>
 </div>
@@ -19,7 +19,7 @@
 
 		<div>
 			<form method="post" id="addTagForm" action="addTag">
-				<input type="text" name="tagName" class="form-control" placeholder="Tag name" />
+				<input type="text" name="tagName" class="form-control" style="margin-left:25%; margin-top:1%; width:50%; position:relative;" placeholder="Tag name" />
 				<select name="tagColor" class="form-control" style="margin-left:25%; margin-top:1%; width:50%; position:relative;">
 					<option value="0">-- Color (random if not selected) --</option>
 					<option value="1">Yellow</option>
@@ -69,6 +69,10 @@ function leaveTagsManagerMode() {
 
 $(document).ready(function() {
 	$('#enterTagsManagerMode').click(function() {
+		leaveAddSiteMode();
+		leaveChangeBackMode();
+		leaveAddUsersMode();
+		leaveRequestedWebsitesMode();
 		enterTagsManagerMode();
 	});
 });

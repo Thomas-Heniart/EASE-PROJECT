@@ -102,6 +102,44 @@ setattr:function(msg, callback, sendResponse){
 		callback(msg, sendResponse);
 	}
 },
+simulateKeyPress:function(msg, callback, sendResponse){
+	var actionStep = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep];
+	var input = $(actionStep.search);
+	if (input.length == 0){
+		if (actionStep.grave == true){
+			msg.type = "error: "+ actionStep.what +" input not found";
+			sendResponse(msg);
+            errorOverlay(msg);
+		} else {
+			msg.actionStep++;
+			callback(msg, sendResponse);
+		}
+	} else {
+        input.keydown(function(e){
+   console.log('Yes Keydown triggered. ' + e.which)
+});
+        input.keyup(function(e){
+   console.log('Yes Keyup triggered. ' + e.which)
+});
+		input.click();
+        input.focus();
+        var e = jQuery.Event("keydown");
+        e.which = actionStep.keyCode;
+        e.keyCode = actionStep.keyCode;
+        input.trigger(e);
+        e = jQuery.Event("keypress");
+        e.which = actionStep.keyCode;
+        e.keyCode = actionStep.keyCode;
+        input.trigger(e);
+        input.val(input.val()+String.fromCharCode(e.which));
+        e = jQuery.Event("keyup");
+        e.which = actionStep.keyCode;
+        e.keyCode = actionStep.keyCode;
+        input.trigger(e);
+		msg.actionStep++;
+		callback(msg, sendResponse);
+	}
+},
 fill:function(msg, callback, sendResponse){
 	var actionStep = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep];
 	var input = $(actionStep.search);
@@ -115,14 +153,16 @@ fill:function(msg, callback, sendResponse){
 			callback(msg, sendResponse);
 		}
 	} else {
+        input.select();
 		input.click();
     input.focus();
+        input.change();
 		if (actionStep.what == "login") {
 			input.val(msg.detail[0].user.login);
 		} else if (actionStep.what == "password") {
 			input.val(msg.detail[0].user.password);
 		}
-    input.change();
+        input.change();
 		input.blur();
 		msg.actionStep++;
 		callback(msg, sendResponse);

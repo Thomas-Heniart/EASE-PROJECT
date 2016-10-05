@@ -13,6 +13,9 @@
 		height: 43px;
 		font-size: 16px;
 		color: black;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 		span {
 			line-height: 2;
 		}

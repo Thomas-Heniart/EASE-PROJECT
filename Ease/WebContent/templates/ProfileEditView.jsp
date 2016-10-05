@@ -62,11 +62,12 @@
 		}
 		setupOwlCarousel();
 		$('.MenuButtonSet').addClass('editMode');
+		$('.MenuButtonSet.editMode .openCatalogHelper').css('height', $('.CatalogViewTab.show').height() + 'px');
 		enterEditModeTutorial();
 	}
 
 	function leaveEditMode() {
-
+		$('.MenuButtonSet.editMode .openCatalogHelper').css('height', '50px');
 		$('#dragAndDropHelper').css('display', 'none');
 		$(".ProfilesHandler").removeClass('editMode');
 		$('.CatalogViewTab').removeClass('show');
