@@ -12,7 +12,7 @@
        <key>CFBundleVersion</key>
        <string>1</string>
        <key>CFBundleShortVersionString</key>
-       <string>1.1</string>
+       <string>1.2</string>
        <key>URL</key>
        <string>https://ease.space/safariExtension/EaseExtension.safariextz</string>
      </dict>
