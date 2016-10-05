@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Random;
 
+import javax.mail.MessagingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.Ease.context.DataBase;
+import com.Ease.data.Mail;
 import com.Ease.data.Regex;
 import com.Ease.data.ServletItem;
 import com.Ease.session.User;
@@ -74,22 +76,20 @@ public class PasswordLost extends HttpServlet {
 			} else {
 				ResultSet rs = db.get("select * from users where email='" + email + "';");
 				if (rs.next()) {
+					String userName = rs.getString(2);
 					String linkCode = "";
 					Random r = new Random();
 					String			alphabet = "azertyuiopqsdfghjklwxcvbnm1234567890AZERTYUIOPQSDFGHJKLMWXCVBN";
 					for (int i = 0;i < 126 ; ++i) {
 						linkCode += alphabet.charAt(r.nextInt(alphabet.length()));			
 					}
-					db.set("insert into PasswordLost values (" + email + ", " + linkCode + ");");
-					new java.util.Timer().schedule( 
-					        new java.util.TimerTask() {
-					            @Override
-					            public void run() {
-					                db.set("delete from PasswordLost where email='" + email + "';");
-					            }
-					        }, 
-					        7200 
-					);
+					rs = db.get("select * from PasswordLost where email='" + email + "';");
+					if (rs.next()) {
+						db.set("delete from PasswordLost where email='" + email + "';");
+					}
+					db.set("insert into PasswordLost values ('" + email + "', '" + linkCode + "');");
+					Mail mail = new Mail();
+					mail.sendPasswordLostMail(email, linkCode, userName);
 					SI.setResponse(200, "Please, go check your email.");
 				} else {
 					SI.setResponse(ServletItem.Code.BadParameters, "This email is not associate with an account.");
@@ -97,6 +97,8 @@ public class PasswordLost extends HttpServlet {
 			}
 		} catch (SQLException e) {
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+		} catch (MessagingException e) {
+			SI.setResponse(ServletItem.Code.EMailNotSended, "Impossible to send an Email yet, retry in few minutes. Sorry.");
 		}
 		SI.sendResponse();
 	}

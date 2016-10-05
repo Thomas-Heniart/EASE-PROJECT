@@ -16,6 +16,7 @@ import com.Ease.context.DataBase;
 import com.Ease.data.AES;
 import com.Ease.data.Hashing;
 import com.Ease.data.Regex;
+import com.Ease.data.ServletItem;
 import com.Ease.session.User;
 
 /**
@@ -45,24 +46,28 @@ public class ResetUser extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String retMsg;
+
 		HttpSession session = request.getSession();
-		User user = null;
+		User user = (User)(session.getAttribute("User"));
+		ServletItem SI = new ServletItem(ServletItem.Type.ResetUser, request, response, user);
+		
+		// Get Parameters
+		String linkCode = SI.getServletParam("linkCode");
+		String password = SI.getServletParam("password");
+		String confirmPassword = SI.getServletParam("confirmPassword");
+		// --
+
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
-		String linkCode = request.getParameter("linkCode");
-		String password = request.getParameter("password");
-		String confirmPassword = request.getParameter("confirmPassword");
 		
 		try {
-			user = (User)(session.getAttribute("User"));
 			if (user != null) {
-				retMsg = "You are logged to Ease.";
+				SI.setResponse(ServletItem.Code.AlreadyConnected, "You are logged on Ease.");
 			} else if (password == null || Regex.isPassword(password) == false) {
-				retMsg = "error: Bad password.";
+				SI.setResponse(ServletItem.Code.BadParameters, "Bad password.");
 			} else if (confirmPassword == null || confirmPassword.equals(password) == false){
-				retMsg = "error: Bad confirmPassword";
+				SI.setResponse(ServletItem.Code.BadParameters, "Passwords are not the same.");
 			} else if (db.connect() != 0){
-				retMsg = "error: Impossible to connect data base.";
+				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 			} else {
 				ResultSet rs = db.get("select * from PasswordLost where linkCode='" + linkCode + "';");
 				if (rs.next()) {
@@ -70,7 +75,7 @@ public class ResetUser extends HttpServlet {
 					rs = db.get("select * from users where email='" + email + "';");
 					String hashedPassword;
 					if ((hashedPassword = Hashing.SHA(password, rs.getString(7))) == null){
-						retMsg = "error: Can't hash password.";
+						SI.setResponse(ServletItem.Code.LogicError, "Can't hash password.");
 					} else {
 						String id = rs.getString(1);
 						String cryptedKeyUser = AES.encryptUserKey(rs.getString(9), password, rs.getString(8));
@@ -81,17 +86,15 @@ public class ResetUser extends HttpServlet {
 							db.set("update apps set account_id=NULL where profile_id=" + profileId + ";");
 						}
 						db.set("delete from PasswordLost where email='" + email + "';");
-						retMsg = "succes";
+						SI.setResponse(200, "User reseted.");
 					}
 				} else {
-					retMsg = "error: Bad linkCode";
+					SI.setResponse(ServletItem.Code.BadParameters, "This is a bad link code.");
 				}
 			}
 		} catch (SQLException e) {
-			retMsg = "error:" + e.getMessage();
-			e.printStackTrace();
+			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		}
-		response.getWriter().print(retMsg);
+		SI.sendResponse();
 	}
-
 }
