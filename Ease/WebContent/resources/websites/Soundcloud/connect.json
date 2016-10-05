@@ -10,6 +10,12 @@
     		{"action":"submit", "search":"form.signinForm"}
        	]
     },
+    "Facebook":{
+    	"todo":[
+    		{"action":"waitfor", "search":"button.signinInitialStep_fbButton"},
+          	{"action":"click", "search":"button.signinInitialStep_fbButton"}
+    	]
+    },
     "logout": {
     	"todo": [
     		{"action":"goto", "url":"http://www.soundcloud.com/logout"},

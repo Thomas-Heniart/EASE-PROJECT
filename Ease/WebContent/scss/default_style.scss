@@ -15,6 +15,7 @@
 @import 'AdminMenu';
 @import 'csshake/csshake';
 @import 'Mobile';
+@import 'LostPassword';
 
 .shake-ease {
   @include do-shake('shake-ease', 2px, 1px, 3, 1700ms, .05, $opacity: false);
@@ -60,6 +61,7 @@ body {
 }
 }
 
+
 #chatButton {
 	width: 50px;
 	height: 50px;
@@ -83,10 +85,31 @@ body {
 		height: 100%;
 		left: 0;
 	}
+  #chatButton-popover {
+    position: absolute;
+    width: 100px;
+    height: 50px;
+    left: 110px;
+    top: 0;
+    color: white;
+    margin-top: -50px;
+    p {
+      position: absolute;
+      visibility: hidden;
+      background-color: $themeLightGreyColor;
+      width: 0;
+    }
+  }
   &:hover {
     i {
       transition: transform .3s;
       transform: scale(0.7);
+    }
+    #chatButton-popover p {
+      visibility: visible;
+      top: 0;
+      width: 100%;
+      transition: width 1s;
     }
   }
 }
@@ -259,10 +282,14 @@ body {
        -webkit-box-shadow: 0 0 0px 1000px white inset;
      }
    }
+   .forget-password {
+     bottom: 1px;
+     right: 2px;
+   }
    button {
     width: 70%;
     margin-top: 10px;
-    margin-bottom: 7px;
+    margin-bottom: 15px;
     padding-bottom: 5px;
     padding-top: 7px;
     border-radius: 7px;
