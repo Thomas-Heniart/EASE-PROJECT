@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import com.Ease.context.SiteManager;
 import com.Ease.context.Tag;
+import com.Ease.data.ServletItem;
+import com.Ease.session.User;
 
 /**
  * Servlet implementation class AddApp
@@ -47,10 +49,17 @@ public class GetTags extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		HttpSession session = request.getSession();
+		User user = (User)(session.getAttribute("User"));
+		ServletItem SI = new ServletItem(ServletItem.Type.GetTags, request, response, user);
+		
+		// Get Parameters
+		String websiteIdParam = SI.getServletParam("websiteId");
+		// --
+		
 		String result = "[{";
 		try {
-			int websiteId = Integer.parseInt(request.getParameter("websiteId"));
-			HttpSession session = request.getSession();
+			int websiteId = Integer.parseInt(websiteIdParam);
 
 			List<Tag> tags = ((SiteManager)session.getServletContext().getAttribute("siteManager")).getSiteById(websiteId).getTags();
 		
@@ -60,15 +69,12 @@ public class GetTags extends HttpServlet {
 		
 			result = result.substring(0, result.length()-2);
 			result += "]";
-		
+			SI.setResponse(200, result);
 		} catch (NumberFormatException e) {
-			result = "error: Bad websiteId";
+			SI.setResponse(ServletItem.Code.BadParameters, "Bad numbers.");
 		} catch (NullPointerException e) {
-			result = "error: This website dosen't exist";
+			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		}
-		
-		response.getWriter().print(result);
-		
+		SI.sendResponse();
 	}
-		
 }

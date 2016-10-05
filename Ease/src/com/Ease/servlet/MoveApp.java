@@ -11,11 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.Ease.context.DataBase;
+import com.Ease.data.ServletItem;
 import com.Ease.session.App;
 import com.Ease.session.Profile;
 import com.Ease.session.SessionException;
 import com.Ease.session.User;
-import com.Ease.stats.Stats;
 
 /**
  * Servlet implementation class MoveApp
@@ -44,63 +44,62 @@ public class MoveApp extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		HttpSession session = request.getSession();
-		String retMsg;
-		User user = null;
+		User user = (User)(session.getAttribute("User"));
+		ServletItem SI = new ServletItem(ServletItem.Type.MoveApp, request, response, user);
+		
+		// Get Parameters
+		String appIdParam = SI.getServletParam("appId");
+		String profileIdParam = SI.getServletParam("profileId");
+		String indexParam = SI.getServletParam("index");
+		
+		// --
+		
 		boolean transaction = false;
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		
 		try {
-			int appId = Integer.parseInt(request.getParameter("appId"));
+			int appId = Integer.parseInt(appIdParam);
+			int profileId = Integer.parseInt(profileIdParam);
+			int index = Integer.parseInt(indexParam);
 			App app = null;
-			
-			int profileId = Integer.parseInt(request.getParameter("profileId"));
-			int index = Integer.parseInt(request.getParameter("index"));
 			Profile profile = null;
-			
-			user = (User)(session.getAttribute("User"));	
-			
+				
 			if (user == null) {
-				Stats.saveAction(session.getServletContext(), user, Stats.Action.EditProfile, "");
-				RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-				rd.forward(request, response);
-				return ;
+				SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
 			} else if (db.connect() != 0){
-				retMsg = "error: Impossible to connect data base.";
+				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 			} else if ((app = user.getApp(appId)) == null){
-				retMsg = "error: Bad appId";
+				SI.setResponse(ServletItem.Code.BadParameters, "Bad appId");
 			} else if ((profile = user.getProfile(profileId)) == null){
-				retMsg = "error: Bad profileId";
+				SI.setResponse(ServletItem.Code.BadParameters, "Bad profileId");
 			} else if (index < 0 || index > profile.getApps().size()){
-				retMsg = "error: Bad index";
+				SI.setResponse(ServletItem.Code.BadParameters, "Bad index");
 			} else {
 				Profile profileBegin = user.getProfile(app.getProfileId());
 				
 				if (app.havePerm(App.AppPerm.MOVE, session.getServletContext()) && (profile.getProfileId() == profileBegin.getProfileId()) || app.havePerm(App.AppPerm.CHANGEPROFILE, session.getServletContext())){
 					profileBegin.getApps().remove(app.getIndex());
-					//if (index > app.getIndex())
-					//	index--;
 					profile.getApps().add(index, app);
 					transaction = db.start();
 					profileBegin.updateIndex(session.getServletContext());
 					profile.updateIndex(session.getServletContext());
 					if (profile.getProfileId() != profileBegin.getProfileId())
 						app.updateProfileInDB(session.getServletContext(), profile.getId(), profile.getProfileId());
-					retMsg = "success";
+					SI.setResponse(200, "App moved.");
 					db.commit(transaction);
 				} else {
-					System.out.println("no perm");
-					retMsg = "error: You have not the permission";
+					SI.setResponse(ServletItem.Code.NoPermission, "You have not the permission.");
 				}
 			}
 		} catch (SessionException e) {
-			retMsg = "error :" + e.getMsg();
-			db.cancel(transaction);;
-		} catch (NumberFormatException e) {
-			retMsg = "error: Bad number.";
 			db.cancel(transaction);
+			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+		} catch (NumberFormatException e) {
+			db.cancel(transaction);
+			SI.setResponse(ServletItem.Code.BadParameters, "Bad numbers.");
 		}
-		response.getWriter().print(retMsg);	
+		SI.sendResponse();	
 	}
-
 }

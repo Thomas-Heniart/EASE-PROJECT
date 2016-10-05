@@ -10,11 +10,15 @@ public class DataBase {
 	String url = "jdbc:mysql://localhost:3306/test";
 	String login = "client";
 	String password = "P6au23q7";
-	Connection con;
+	Connection con = null;
 	
 	public int connect(){
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
+			if (con != null) {
+				con.close();
+				con = null;
+			}
 			con = DriverManager.getConnection(url, login, password);
 		} catch (SQLException e) {
 			System.out.println("Impossible to connect DB");
@@ -72,23 +76,23 @@ public class DataBase {
 	
 	public void commit(boolean transaction){
 		if(transaction){
-		try {
-			con.createStatement().executeUpdate("COMMIT");
-		} catch (SQLException e) {
-			System.out.println("Impossible to set DB");
-			e.printStackTrace();
-		}
+			try {
+				con.createStatement().executeUpdate("COMMIT");
+			} catch (SQLException e) {
+				System.out.println("Impossible to set DB");
+				e.printStackTrace();
+			}
 		}
 	}
 	
 	public void cancel(boolean transaction){
 		if(transaction){
-		try {
-			con.createStatement().executeUpdate("ROLLBACK");
-		} catch (SQLException e) {
-			System.out.println("Impossible to set DB");
-			e.printStackTrace();
-		}
+			try {
+				con.createStatement().executeUpdate("ROLLBACK");
+			} catch (SQLException e) {
+				System.out.println("Impossible to set DB");
+				e.printStackTrace();
+			}
 		}
 	}
 }

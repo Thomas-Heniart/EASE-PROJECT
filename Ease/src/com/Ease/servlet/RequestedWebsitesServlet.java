@@ -13,6 +13,8 @@ import javax.servlet.http.HttpSession;
 
 
 import com.Ease.context.DataBase;
+import com.Ease.data.ServletItem;
+import com.Ease.session.User;
 
 /**
  * Servlet implementation class AskInfo
@@ -41,31 +43,26 @@ public class RequestedWebsitesServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		String retMsg;
 		HttpSession session = request.getSession();
-
-
+		User user = (User)(session.getAttribute("User"));
+		ServletItem SI = new ServletItem(ServletItem.Type.RequestedWebsitesServlet, request, response, user);
+		
+		// Get Parameters
+		
+		// --
+		
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
-
 		ResultSet rs = null;
-
-		if((rs = db.get("select * from askForSite;"))==null){
-			retMsg = "error: Could not connect to database";
-		} else {
-			retMsg = "success:";
-			try {
-				while(rs.next()){
-					retMsg+=";"+rs.getString(rs.findColumn("site"))+"-SENTBY-"+rs.getString(rs.findColumn("email"));
-				}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				retMsg = "error: Problem with database";
+		try {
+			rs = db.get("select * from askForSite;");
+			String retMsg = "";
+			while(rs.next()){
+				retMsg += ";" + rs.getString(rs.findColumn("site")) + "-SENTBY-" + rs.getString(rs.findColumn("email"));
 			}
+			SI.setResponse(200, retMsg);
+		} catch (SQLException e) {
+			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		}
-
-		response.getWriter().print(retMsg);
+		SI.sendResponse();
 	}
-
 }

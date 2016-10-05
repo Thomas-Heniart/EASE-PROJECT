@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.Ease.context.SiteManager;
+import com.Ease.data.ServletItem;
+import com.Ease.session.User;
 
 /**
  * Servlet implementation class CatalogSearchServlet
@@ -41,11 +43,16 @@ public class CatalogSearchServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		String search = request.getParameter("search");
-		String ids = request.getParameter("tagIds");
+		User user = (User)(session.getAttribute("User"));
+		ServletItem SI = new ServletItem(ServletItem.Type.CatalogSearchServlet, request, response, user);
+		
+		// Get Parameters
+		String search = SI.getServletParam("search");
+		String ids = SI.getServletParam("tagIds");
+		// --
+		
 		String tagIds;
 		if (ids == null)
 			tagIds = "";
@@ -57,9 +64,9 @@ public class CatalogSearchServlet extends HttpServlet {
 		else
 			tagIdsArray = new String[] {};
 		SiteManager siteManager = (SiteManager) session.getServletContext().getAttribute("siteManager");
-		String res;
-		res = siteManager.getSitesListJsonWithSearchAndTags(search, tagIdsArray).toString();
-		response.getWriter().print(res);
+		
+		SI.setResponse(200, siteManager.getSitesListJsonWithSearchAndTags(search, tagIdsArray).toString());
+		SI.sendResponse();
 	}
 
 }

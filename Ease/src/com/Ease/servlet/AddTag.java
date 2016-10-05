@@ -4,8 +4,6 @@ package com.Ease.servlet;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Random;
 
 import javax.servlet.RequestDispatcher;
@@ -16,13 +14,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import com.Ease.context.DataBase;
-import com.Ease.context.Site;
 import com.Ease.context.SiteManager;
 import com.Ease.context.Tag;
-import com.Ease.session.Profile;
-import com.Ease.session.SessionException;
+import com.Ease.data.ServletItem;
 import com.Ease.session.User;
-import com.Ease.stats.Stats;
 
 /**
  * Servlet implementation class AddApp
@@ -56,50 +51,46 @@ public class AddTag extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		String			name = request.getParameter("tagName");
-		String			color = request.getParameter("tagColor");
-		int				nbOfColors = 8;
-		
-		String			retMsg;
-
 		HttpSession session = request.getSession();
+		User user = (User)(session.getAttribute("User"));
+		ServletItem SI = new ServletItem(ServletItem.Type.AddTag, request, response, user);
 		
+		// Get Parameters
+		String name = SI.getServletParam("tagName");
+		String color = SI.getServletParam("tagColor");
+		// --
+		
+		int nbOfColors = 8;		
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 
-		User user = (User)session.getAttribute("User");
-
-		if(!user.isAdmin(session.getServletContext())){
-			response.getWriter().print("error: You aint admin bro");
-			return;
-		}
-		if(name == null || name.equals("")){
-			response.getWriter().print("error: no tag name");
-			return;
-		}
-		if (color == null || color.equals("0")){
-			Random r = new Random();
-			color = Integer.toString(1 + r.nextInt(nbOfColors));
-		}
-		String dbRequest = "INSERT INTO tags VALUES (NULL, '" + name + "'," + color + ");";
-		if(db.set(dbRequest) != 0){
-			retMsg = "error: fail to connect to db";
-			response.getWriter().print(retMsg);
-			return;
-		}
-		SiteManager sites = ((SiteManager)session.getServletContext().getAttribute("siteManager"));
-		try {
-			ResultSet rs = db.get("SELECT * FROM tags;");
-			sites.clearTags();
-			while (rs.next()) {
-				sites.addNewTag(new Tag(rs, session.getServletContext()));
+		if (user == null) {
+			SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
+		} else if (!user.isAdmin(session.getServletContext())) {
+			SI.setResponse(ServletItem.Code.NoPermission, "You have not the permission.");
+		} else if (name == null || name.equals("")) {
+			SI.setResponse(ServletItem.Code.BadParameters, "Bad tag name.");
+		} else {
+			if (color == null || color.equals("0")) {
+				Random r = new Random();
+				color = Integer.toString(1 + r.nextInt(nbOfColors));
 			}
-		} catch (SQLException e) {
-			retMsg = "error: fail to load tags";
-			response.getWriter().print(retMsg);
-			return;
+			if (db.connect() != 0){
+				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
+			} else {
+				db.set("INSERT INTO tags VALUES (NULL, '" + name + "'," + color + ");");
+				SiteManager sites = ((SiteManager)session.getServletContext().getAttribute("siteManager"));
+				try {
+					ResultSet rs = db.get("SELECT * FROM tags;");
+					sites.clearTags();
+					while (rs.next()) {
+						sites.addNewTag(new Tag(rs, session.getServletContext()));
+					}
+					SI.setResponse(200, "Tag added.");
+				} catch (SQLException e) {
+					SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+				}
+			}
 		}
-		retMsg = "success";
-		response.getWriter().print(retMsg);
+		SI.sendResponse();
 	}
 }

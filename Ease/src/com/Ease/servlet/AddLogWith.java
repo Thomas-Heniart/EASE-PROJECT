@@ -12,11 +12,11 @@ import javax.servlet.http.HttpSession;
 import com.Ease.context.DataBase;
 import com.Ease.context.Site;
 import com.Ease.context.SiteManager;
+import com.Ease.data.ServletItem;
 import com.Ease.session.App;
 import com.Ease.session.Profile;
 import com.Ease.session.SessionException;
 import com.Ease.session.User;
-import com.Ease.stats.Stats;
 
 /**
  * Servlet implementation class AddLogWith
@@ -44,40 +44,43 @@ public class AddLogWith extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String retMsg;
+		
 		HttpSession session = request.getSession();
-		User user = null;
+		User user = (User)(session.getAttribute("User"));
+		ServletItem SI = new ServletItem(ServletItem.Type.AddLogWith, request, response, user);
+		
+		// Get Parameters
+		String siteId = SI.getServletParam("siteId");
+		String profileIdParam = SI.getServletParam("profileIdParam");
+		String appIdParam = SI.getServletParam("appId");
+		String name = SI.getServletParam("name");
+		// --
+				
 		Site site = null;
 		boolean transaction = false;
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		try {			
-			int profileId = Integer.parseInt(request.getParameter("profileId"));
-			String siteId = request.getParameter("siteId");
-			int appId = Integer.parseInt(request.getParameter("appId"));
-			String	name	=	request.getParameter("name");
+			int profileId = Integer.parseInt(profileIdParam);
+			int appId = Integer.parseInt(appIdParam);
 			
-			user = (User)(session.getAttribute("User"));
 			Profile profile = null;
 			
 			if (user == null) {
-				Stats.saveAction(session.getServletContext(), user, Stats.Action.AddApp, "");
-				RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-				rd.forward(request, response);
-				return ;
+				SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
 			} else if (db.connect() != 0){
-				retMsg = "error: Impossible to connect data base.";
+				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 			} else if ((profile = user.getProfile(profileId)) == null){
-				retMsg = "error: Bad profileId.";
+				SI.setResponse(ServletItem.Code.BadParameters, "Bad profileId.");
 			} else if (name == null || name.length() > 14) {
-				retMsg = "error: Incorrect name";
+				SI.setResponse(ServletItem.Code.BadParameters, "Bad name.");
 			} else if (user.getApp(appId) == null) {
-				retMsg = "error: Bad appId.";
+				SI.setResponse(ServletItem.Code.BadParameters, "Bad appId.");
 			} else if (user.getApp(appId).getType().equals("ClassicAccount") == false){
-				retMsg = "error: This account is not an account.";
+				SI.setResponse(ServletItem.Code.LogicError, "This account is not a classicAccount.");
 			} else {
 				
 				if ((site = ((SiteManager)session.getServletContext().getAttribute("siteManager")).get(siteId)) == null) {
-					retMsg = "error: This site dosen't exist.";
+					SI.setResponse(ServletItem.Code.BadParameters, "This site dosen't exist.");
 				} else {
 					if (profile.havePerm(Profile.ProfilePerm.ADDAPP, session.getServletContext())){
 						transaction = db.start();
@@ -88,24 +91,23 @@ public class AddLogWith extends HttpServlet {
 							user.tutoComplete();
 							user.updateInDB(session.getServletContext());
 						}
-						retMsg = "success: " + logWith.getAppId();
+						SI.setResponse(200, Integer.toString(logWith.getAppId()));
 						db.commit(transaction);
 					} else {
-						retMsg = "error: You have not the permission";
+						SI.setResponse(ServletItem.Code.NoPermission, "You have not the permission.");
 					}
 				}
 			}
 		} catch (SessionException e) {
 			db.cancel(transaction);
-			retMsg = "error: " + e.getMsg();
+			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		} catch (IndexOutOfBoundsException e){
 			db.cancel(transaction);
-			retMsg = "error: Bad app index.";
+			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		} catch (NumberFormatException e) {
-			retMsg = "error: Bad profileId";
+			SI.setResponse(ServletItem.Code.BadParameters, "Bad numbers");
 		}
-		Stats.saveAction(session.getServletContext(), user, Stats.Action.AddApp, retMsg + " : " + ((site != null) ? site.getName() : ""));
-		response.getWriter().print(retMsg);
+		SI.sendResponse();
 	}
 
 }

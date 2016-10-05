@@ -14,10 +14,10 @@ import javax.servlet.http.HttpSession;
 import com.Ease.context.DataBase;
 import com.Ease.data.Hashing;
 import com.Ease.data.Regex;
+import com.Ease.data.ServletItem;
 import com.Ease.session.SessionException;
 import com.Ease.session.User;
 import com.Ease.session.User.UserData;
-import com.Ease.stats.Stats;
 
 /**
  * Servlet implementation class ConnectionServlet
@@ -39,54 +39,52 @@ public class ConnectionServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String			email = request.getParameter("email");
-		String			password = request.getParameter("password");
-		
-		String			retMsg;
 		
 		HttpSession session = request.getSession();
+		User user = (User)(session.getAttribute("User"));
+		ServletItem SI = new ServletItem(ServletItem.Type.ConnectionServlet, request, response, user);
+		
+		// Get Parameters
+		String email = SI.getServletParam("email");
+		String password = SI.getServletParam("password");
+		// --
+		
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		
-		if (session.getAttribute("User") != null){
-			RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-			rd.forward(request, response);
-			return ;
+		if (user != null){
+			session.invalidate();
 		}
-		
-		User user = null;
 		
 		try {
 			if (db.connect() != 0){
-				retMsg = "error: Impossible to connect data base.";
+				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 			} else if (email == null || Regex.isEmail(email) == false){
-				 retMsg = "error: Bad email";
+				SI.setResponse(ServletItem.Code.BadParameters, "Bad email.");
 			} else if (password == null || Regex.isPassword(password) == false) {
-				retMsg = "error: Bad password.";
+				SI.setResponse(ServletItem.Code.BadParameters, "Bad password");
 			} else {		
 				ResultSet rs;
 				if ((rs = db.get("select * from users where email = '" + email + "';")) == null) {
-					retMsg = "error: Impossible to access data base.";
+					SI.setResponse(ServletItem.Code.LogicError, "Impossible to access data base.");
 				} else if (rs.next()){
 					String saltEase = rs.getString(UserData.SALTEASE.ordinal());
 					String hashedPass = Hashing.SHA(password, saltEase);
 					if (rs.getString(UserData.PASSWORD.ordinal()).equals(hashedPass)){
 						user = new User(rs, password, session.getServletContext());
 						session.setAttribute("User", user);
-						retMsg = "success";
+						SI.setResponse(200, "Connected.");
 					} else {
-						retMsg = "error: Wrong login or password.";
+						SI.setResponse(ServletItem.Code.BadParameters, "Wrong login or password.");
 					}
 				} else {
-					retMsg = "error: Wrong login or password.";
+					SI.setResponse(ServletItem.Code.BadParameters, "Wrong login or password.");
 				}
 			}
 		} catch (SessionException e) {
-			retMsg = "error: " + e.getMsg();
-			e.printStackTrace();
+			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		} catch (SQLException e) {
-			retMsg = "error: Impossible to access data base.";
+			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		}
-		Stats.saveAction(session.getServletContext(), user, Stats.Action.Connect, retMsg);
-		response.getWriter().print(retMsg);
+		SI.sendResponse();
 	}
 }

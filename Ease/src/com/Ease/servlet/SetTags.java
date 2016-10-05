@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import com.Ease.context.DataBase;
 import com.Ease.context.SiteManager;
+import com.Ease.data.ServletItem;
 import com.Ease.session.User;
 
 /**
@@ -48,57 +49,45 @@ public class SetTags extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String			websiteId = request.getParameter("websiteId");
-		String			tagsId = request.getParameter("tagsId");
-		
-		String			retMsg;
-
 		HttpSession session = request.getSession();
-		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
-
-		User user = (User)session.getAttribute("User");
-
-		try {
-			if(!user.isAdmin(session.getServletContext())){
-				response.getWriter().print("error: You aint admin bro");
-				return;
-			}
+		User user = (User)(session.getAttribute("User"));
+		ServletItem SI = new ServletItem(ServletItem.Type.SetTags, request, response, user);
 		
-			tagsId = tagsId.replaceAll("\"", "");
-			tagsId = tagsId.substring(1, tagsId.length()-1);
-			String[] tags = tagsId.split(",");
-			int tagId;
-			String dbRequest;
+		// Get Parameters
+		String websiteIdParam = SI.getServletParam("websiteId");
+		String tagsId = SI.getServletParam("tagsId");
+		// --
 			
-			db.set("START TRANSACTION;");
-			
-			dbRequest = "DELETE FROM TagAndSiteMap WHERE website_id="+ Integer.parseInt(websiteId) + ";";
-			if(db.set(dbRequest)!=0){
-				retMsg = "error: fail to connect to db";
-				db.set("ROLLBACK;");
-				response.getWriter().print(retMsg);
-				return;
-			}
-			
-			for(String tag : tags){
-				tagId = Integer.parseInt(tag);
-				dbRequest = "INSERT INTO TagAndSiteMap VALUES (" + tagId + "," + Integer.parseInt(websiteId) + ");";
-				if(db.set(dbRequest)!=0){
-					retMsg = "error: fail to insert tag " + tagId;
-					db.set("ROLLBACK;");
-					response.getWriter().print(retMsg);
-					return;
+		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
+		try {
+			if (user == null) {
+				SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
+			} else if(!user.isAdmin(session.getServletContext())){
+				SI.setResponse(ServletItem.Code.NoPermission, "You have not the permission");
+			} else {
+				tagsId = tagsId.replaceAll("\"", "");
+				tagsId = tagsId.substring(1, tagsId.length()-1);
+				String[] tags = tagsId.split(",");
+				
+				int websiteId = Integer.parseInt(websiteIdParam);
+				
+				db.set("START TRANSACTION;");
+				db.set("DELETE FROM TagAndSiteMap WHERE website_id="+ websiteId + ";");
+				int tagId;
+				for(String tag : tags){
+					tagId = Integer.parseInt(tag);
+					db.set("INSERT INTO TagAndSiteMap VALUES (" + tagId + "," + websiteId + ");");
 				}
+				db.set("COMMIT;");
+				SiteManager siteManager = ((SiteManager)session.getServletContext().getAttribute("siteManager"));
+				siteManager.setTagsForSites(session.getServletContext());
+				SI.setResponse(200, "Tag set");
 			}
-			db.set("COMMIT;");
-			SiteManager siteManager = ((SiteManager)session.getServletContext().getAttribute("siteManager"));
-			siteManager.setTagsForSites(session.getServletContext());
 		} catch (SQLException e) {
-			retMsg = "error: problem sur la db";
-			response.getWriter().print(retMsg);
-			return;
+			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+		} catch (NumberFormatException e) {
+			SI.setResponse(ServletItem.Code.BadParameters, "Bad numbers.");
 		}
-		retMsg = "success";
-		response.getWriter().print(retMsg);
+		SI.sendResponse();
 	}
 }

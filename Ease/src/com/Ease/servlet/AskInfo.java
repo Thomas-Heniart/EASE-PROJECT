@@ -15,7 +15,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import com.Ease.context.DataBase;
+import com.Ease.data.ServletItem;
 import com.Ease.session.App;
 import com.Ease.session.ClassicAccount;
 import com.Ease.session.LogWithAccount;
@@ -49,29 +49,29 @@ public class AskInfo extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		String retMsg;
 		HttpSession session = request.getSession();
-		User user = null;
-		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
+		User user = (User)(session.getAttribute("User"));
+		ServletItem SI = new ServletItem(ServletItem.Type.AskInfo, request, response, user);
+		
+		// Get Parameters
+		String profileIndexParam = SI.getServletParam("profileIndex");
+		String appIndexParam = SI.getServletParam("appIndex");
+		// --
 		
 		try {
-			int profileIndex = Integer.parseInt(request.getParameter("profileIndex"));
-			int appIndex = Integer.parseInt(request.getParameter("appIndex"));
+			int profileIndex = Integer.parseInt(profileIndexParam);
+			int appIndex = Integer.parseInt(appIndexParam);
 
-			user = (User)(session.getAttribute("User"));
 			if (user == null) {
-				RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-				rd.forward(request, response);
-				return ;
+				SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
 			} else if (profileIndex < 0 || profileIndex >= user.getProfiles().size()) {
-				retMsg = "error: Bad profile's index.";
+				SI.setResponse(ServletItem.Code.BadParameters, "Bad profile's index.");
 			} else if (appIndex < 0 || appIndex >= user.getProfiles().get(profileIndex).getApps().size()) {
-				retMsg = "error: Bad website's index.";
+				SI.setResponse(ServletItem.Code.BadParameters, "Bad app's index.");
 			} else {
 				App app = user.getProfiles().get(profileIndex).getApps().get(appIndex);
 				if (app.isEmpty() == true)
-					retMsg = "error: This is an empty app";
+					SI.setResponse(ServletItem.Code.LogicError, "This is an empty app.");
 				else {
 					boolean again = true;
 					JSONArray ja = new JSONArray();
@@ -93,18 +93,17 @@ public class AskInfo extends HttpServlet {
 						if (app.getType().equals("ClassicAccount")) {
 							again = false;
 						} else {
-							app =  ((LogWithAccount)app.getAccount()).getLogWithApp(user);
+							app = ((LogWithAccount)app.getAccount()).getLogWithApp(user);
 						}
 					}
-					retMsg = "succes: " + ja.toString();
+					SI.setResponse(200, ja.toString());
 				}
 			}
 		} catch (NumberFormatException e) {
-			retMsg = "error: Bad index";
+			SI.setResponse(ServletItem.Code.BadParameters, "Bad numbers.");
 		} catch (ParseException e) {
-			retMsg = "error: " + e.getMessage();
+			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		}
-		response.getWriter().print(retMsg);
+		SI.sendResponse();
 	}
-
 }
