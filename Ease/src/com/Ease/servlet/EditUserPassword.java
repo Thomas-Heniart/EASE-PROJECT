@@ -13,9 +13,10 @@ import javax.servlet.http.HttpSession;
 import com.Ease.context.DataBase;
 import com.Ease.data.Hashing;
 import com.Ease.data.Regex;
+import com.Ease.data.ServletItem;
 import com.Ease.session.SessionException;
 import com.Ease.session.User;
-import com.Ease.stats.Stats;
+
 
 /**
  * Servlet implementation class EditUserPassword
@@ -45,40 +46,39 @@ public class EditUserPassword extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String password = request.getParameter("password");
-		String confirmPassword = request.getParameter("confirmPassword");
-		String oldPassword = request.getParameter("oldPassword");
-		
 		HttpSession session = request.getSession();
-		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		User user = (User)(session.getAttribute("User"));
+		ServletItem SI = new ServletItem(ServletItem.Type.EditUserPassword, request, response, user);
+		
+		// Get Parameters
+		String password = SI.getServletParam("password");
+		String confirmPassword = SI.getServletParam("confirmPassword");
+		String oldPassword = SI.getServletParam("oldPassword");
+		// --
+
+		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		String hashedPassword;
-		String retMsg;
 		try {
 			if (user == null) {
-				Stats.saveAction(session.getServletContext(), user, Stats.Action.EditUser, "");
-				RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-				rd.forward(request, response);
-				return ;
+				SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
 			} else if (db.connect() != 0){
-				retMsg = "error: Impossible to access data base.";
+				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 			} else if (oldPassword == null || !user.getPassword().equals(Hashing.SHA(oldPassword, user.getSaltEase()))){
-				retMsg = "error: Wrong current password.";
+				SI.setResponse(ServletItem.Code.BadParameters, "Wrong password.");
 			} else if (password == null || Regex.isPassword(password) == false) {
-				retMsg = "error: This password does not respect safety rules.";
+				SI.setResponse(ServletItem.Code.BadParameters, "Bad new password");
 			} else if (confirmPassword == null || !confirmPassword.equals(password)) {
-				retMsg = "error: Confirmation password does not match.";
+				SI.setResponse(ServletItem.Code.BadParameters, "Passwords are not the same.");
 			} else if ((hashedPassword = Hashing.SHA(password, user.getSaltEase())) == null){
-				retMsg = "error: Can't hash password.";
+				SI.setResponse(ServletItem.Code.LogicError, "Can't hash password.");
 			} else {
 				user.setPassword(hashedPassword);
 				user.updateInDB(session.getServletContext(), password);
-				retMsg = "success";
+				SI.setResponse(200, "Password edited.");
 			}
 		} catch (SessionException e) {
-			retMsg = "error: " + e.getMsg();
+			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		}
-		Stats.saveAction(session.getServletContext(), user, Stats.Action.EditUser, retMsg);
-		response.getWriter().print(retMsg);
+		SI.sendResponse();
 	}
 }

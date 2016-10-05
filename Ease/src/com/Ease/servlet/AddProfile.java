@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.Ease.session.User;
-import com.Ease.stats.Stats;
 import com.Ease.context.DataBase;
 import com.Ease.data.Regex;
+import com.Ease.data.ServletItem;
 import com.Ease.session.Profile;
 import com.Ease.session.SessionException;
 
@@ -46,40 +46,38 @@ public class AddProfile extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String name = request.getParameter("name");
-		String color = request.getParameter("color");
-		
 		HttpSession session = request.getSession();
+		User user = (User)(session.getAttribute("User"));
+		ServletItem SI = new ServletItem(ServletItem.Type.AddProfile, request, response, user);
+		
+		// Get Parameters
+		String name = SI.getServletParam("name");
+		String color = SI.getServletParam("color");
+		// --
+		
 		boolean transaction = false;
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		
-		String retMsg;
-		
-		User user = (User)(session.getAttribute("User"));
 		if (user == null){
-			Stats.saveAction(session.getServletContext(), user, Stats.Action.AddProfile, "");
-			RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-			rd.forward(request, response);
-			return ;
+			SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
 		} else if (db.connect() != 0){
-			retMsg = "error: Impossible to connect data base.";
+			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 		} else if (name == null || name == ""){
-			retMsg = "error: Bad profile's name.";
+			SI.setResponse(ServletItem.Code.BadParameters, "Bad profile's name.");
 		} else if (color == null || Regex.isColor(color) == false){
-			retMsg = "error: Bad profile's color.";
+			SI.setResponse(ServletItem.Code.BadParameters, "Bad profile's color.");
 		} else {
 			try {
 				transaction = db.start();
 				Profile profile = new Profile(name, color, "", user, null, session.getServletContext());
 				user.addProfile(profile);
-				retMsg = "success: " + profile.getProfileId();
+				SI.setResponse(200, Integer.toString(profile.getProfileId()));
 				db.commit(transaction);
 			} catch (SessionException e) {
 				db.cancel(transaction);
-				retMsg = "error: " + e.getMsg(); ;
+				SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 			}
 		}
-		Stats.saveAction(session.getServletContext(), user, Stats.Action.AddProfile, retMsg);
-		response.getWriter().print(retMsg);
+		SI.sendResponse();
 	}
 }

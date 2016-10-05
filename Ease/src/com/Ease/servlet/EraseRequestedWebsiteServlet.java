@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.Ease.context.DataBase;
+import com.Ease.data.ServletItem;
 import com.Ease.session.User;
 
 
@@ -41,27 +42,27 @@ public class EraseRequestedWebsiteServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		
-		String website = request.getParameter("toErase");
-		String retMsg;
 		HttpSession session = request.getSession();
-
+		User user = (User)(session.getAttribute("User"));
+		ServletItem SI = new ServletItem(ServletItem.Type.EraseRequestedWebsiteServlet, request, response, user);
+		
+		// Get Parameters
+		String website = SI.getServletParam("toErase");
+		// --
 		
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 
-		User user = (User)session.getAttribute("User");
-		if(!user.isAdmin(session.getServletContext())){
-			response.getWriter().print("error: You aint admin bro");
-			return;
-		}
-		if(db.set("DELETE FROM askForSite WHERE site='" + website + "';") != 0){
-			retMsg = "error: could not connect to db";
+		if (user == null) {
+			SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
+		} else if (!user.isAdmin(session.getServletContext())) {
+			SI.setResponse(ServletItem.Code.NoPermission, "You have not the permission");
+		} else if (db.connect() != 0){
+			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 		} else {
-			retMsg = "success";
+			db.set("DELETE FROM askForSite WHERE site='" + website + "';");
+			SI.setResponse(200, "Good");
 		}
-		System.out.println(retMsg);
-		response.getWriter().print(retMsg);
+		SI.sendResponse();
 	}
-
 }

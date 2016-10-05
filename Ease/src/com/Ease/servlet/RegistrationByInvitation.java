@@ -1,5 +1,4 @@
 package com.Ease.servlet;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,10 +12,10 @@ import javax.servlet.http.HttpSession;
 
 import com.Ease.context.DataBase;
 import com.Ease.data.Regex;
+import com.Ease.data.ServletItem;
 import com.Ease.session.Profile;
 import com.Ease.session.SessionException;
 import com.Ease.session.User;
-import com.Ease.stats.Stats;
 
 
 /**
@@ -57,43 +56,46 @@ public class RegistrationByInvitation extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		String invitationCode = request.getParameter("invitationCode");
-		String fname = request.getParameter("fname");
-		String lname = request.getParameter("lname");
-		String email = request.getParameter("email");
+		HttpSession session = request.getSession();
+		User user = (User)(session.getAttribute("User"));
+		ServletItem SI = new ServletItem(ServletItem.Type.RegistrationByInvitation, request, response, user);
+		
+		// Get Parameters
+		String invitationCode = SI.getServletParam("invitationCode");
+		String fname = SI.getServletParam("fname");
+		String lname = SI.getServletParam("lname");
+		String email = SI.getServletParam("email");
+		// --
+		
 		String password = request.getParameter("password");
 		String confirmPassword = request.getParameter("confirmPassword");
+		
 		ResultSet rs = null;
-		
-		String retMsg;
-		User user = null;
-		
-		HttpSession session = request.getSession();
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		
-		if (db.connect() != 0){
-			retMsg = "error: Can't connect data base.";
+		if (user != null) {
+			SI.setResponse(ServletItem.Code.AlreadyConnected, "You are logged on Ease.");
+		} else if (db.connect() != 0){
+			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 		} else if (fname == null || fname.length() < 2){
-			retMsg = "error: You have to set first name.";	
+			SI.setResponse(ServletItem.Code.BadParameters, "Bad fist name.");	
 		} else if (lname == null || lname.length() < 2){
-			retMsg = "error: You have to set last name.";
+			SI.setResponse(ServletItem.Code.BadParameters, "Bad last name.");
 		} else if (email == null || Regex.isEmail(email) == false){
-			retMsg = "error: Incorrect email.";
+			SI.setResponse(ServletItem.Code.BadParameters, "Bad email.");
 		} else if (password == null || Regex.isPassword(password) == false) {
-			retMsg = "error: Your password don't respect safety rules. For safety reasons, your password needs to be at least 8 characters long, including upper-case and lower-case letters, plus at least one numerical digit.";
+			SI.setResponse(ServletItem.Code.BadParameters, "Bad password.");
 		} else if (confirmPassword == null || password.equals(confirmPassword) == false) {
-			retMsg = "error: Passwords does not match.";
+			SI.setResponse(ServletItem.Code.BadParameters, "Passwords are not the same.");
 		} else {
 			try {
 				String group;
-				if ((rs = db.get("select * from invitations where email ='" + email + "' and linkCode = '" + invitationCode + "';")) == null || !(rs.next())){
-					retMsg = "error: Seems that you are not on the list.";
-				} else {
+				rs = db.get("select * from invitations where email ='" + email + "' and linkCode = '" + invitationCode + "';");
+				if (rs.next()) {
 					group = rs.getString(3);
-					if ((rs = db.get("select * from users where email = '" + email + "' limit 0, 1;")) == null) {
-						retMsg = "error: Can't get data from data base.";
-					} else if (rs.next()) {
-						retMsg = "error: Email already used.";
+					rs = db.get("select * from users where email = '" + email + "' limit 0, 1;");
+					if (rs.next()) {
+						SI.setResponse(ServletItem.Code.BadParameters, "Email already used.");
 					} else {
 						user = new User(fname, lname, email, "0606060606", password, session.getServletContext());
 						Profile profile = new Profile("Perso", "#ff974f", "", user, null, session.getServletContext());
@@ -101,16 +103,15 @@ public class RegistrationByInvitation extends HttpServlet {
 						if (group != null && group.equals("null") == false)
 							db.set("insert into GroupAndUserMap values (NULL, " + group + ", " + user.getId() + ");");
 						db.set("delete from invitations where email = '" + email + "' and linkCode = '" + invitationCode + "';");
-						retMsg = "success";
+						SI.setResponse(200, "User registered.");
 					}
 				}
 			} catch (SessionException e) {
-				retMsg = "error: " + e.getMsg();
+				SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 			} catch (SQLException e) {
-				retMsg = "error: Can't access data base.";
+				SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 			}
 		}
-		Stats.saveAction(session.getServletContext(), user, Stats.Action.NewUser, retMsg);
-		response.getWriter().print(retMsg);
+		SI.sendResponse();
 	}
 }

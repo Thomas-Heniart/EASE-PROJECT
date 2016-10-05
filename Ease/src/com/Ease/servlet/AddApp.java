@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,16 +13,16 @@ import javax.servlet.http.HttpSession;
 import com.Ease.context.DataBase;
 import com.Ease.context.Site;
 import com.Ease.context.SiteManager;
+import com.Ease.data.ServletItem;
 import com.Ease.session.App;
 import com.Ease.session.Profile;
 import com.Ease.session.SessionException;
 import com.Ease.session.User;
-import com.Ease.stats.Stats;
 
 /**
  * Servlet implementation class AddApp
  */
-
+@WebServlet("/addApp")
 public class AddApp extends HttpServlet {
 
        
@@ -51,40 +52,41 @@ public class AddApp extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String retMsg;
 		HttpSession session = request.getSession();
-		User user = null;
+		User user = (User)(session.getAttribute("User"));
+		ServletItem SI = new ServletItem(ServletItem.Type.AddApp, request, response, user);
+		
+		// Get Parameters
+		String profileIdParam = SI.getServletParam("profileId");
+		String siteId = SI.getServletParam("siteId");
+		String login = SI.getServletParam("login");
+		String password = request.getParameter("password");
+		String name = SI.getServletParam("name");
+		// --
+		
 		Site site = null;
 		boolean transaction = false;
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		try {
 						
-			int profileId = Integer.parseInt(request.getParameter("profileId"));
-			String siteId = request.getParameter("siteId");
-			String login = request.getParameter("login");
-			String password = request.getParameter("password");
-			String name = request.getParameter("name");
+			int profileId = Integer.parseInt(profileIdParam);
 			
-			user = (User)(session.getAttribute("User"));
 			Profile profile = null;
 			if (user == null) {
-				Stats.saveAction(session.getServletContext(), user, Stats.Action.AddApp, "");
-				RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-				rd.forward(request, response);
-				return ;
+				SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
 			} else if (db.connect() != 0){
-				retMsg = "error: Impossible to connect data base.";
+				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 			} else if (login == null || login.equals("")) {
-				retMsg = "error: Bad login.";
+				SI.setResponse(ServletItem.Code.BadParameters, "Bad login");
 			} else if (name == null || name.length() > 14) {
-				retMsg = "error: Incorrect name";
+				SI.setResponse(ServletItem.Code.BadParameters, "Bad Name");
 			} else if (password == null || password.equals("")) {
-				retMsg = "error: Bad password.";
+				SI.setResponse(ServletItem.Code.BadParameters, "Bad password");
 			} else if ((profile = user.getProfile(profileId)) == null){
-				retMsg = "error: Bad profileId.";
+				SI.setResponse(ServletItem.Code.BadParameters, "Bad profileId");
 			} else {
 				if ((site = ((SiteManager)session.getServletContext().getAttribute("siteManager")).get(siteId)) == null) {
-					retMsg = "error: This site dosen't exist.";
+					SI.setResponse(ServletItem.Code.BadParameters, "This site dosen't exist");
 				} else {
 					if (profile.havePerm(Profile.ProfilePerm.ADDAPP, session.getServletContext()) == true){
 						transaction = db.start();
@@ -95,25 +97,22 @@ public class AddApp extends HttpServlet {
 							user.tutoComplete();
 							user.updateInDB(session.getServletContext());
 						}
-						retMsg = "success: " + app.getAppId();
+						SI.setResponse(200, Integer.toString(app.getAppId()));
 						db.commit(transaction);
 					} else {
-						retMsg = "error: You have not the permission";
+						SI.setResponse(ServletItem.Code.NoPermission, "You have not the permission");
 					}
-					
 				}
 			}
 		} catch (SessionException e) {
 			db.cancel(transaction);
-			retMsg = "error: " + e.getMsg();
+			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		} catch (IndexOutOfBoundsException e){
 			db.cancel(transaction);
-			retMsg = "error: Bad app index.";
+			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		} catch (NumberFormatException e) {
-			retMsg = "error: Bad profileId";
+			SI.setResponse(ServletItem.Code.BadParameters, "Bad numbers.");
 		}
-		Stats.saveAction(session.getServletContext(), user, Stats.Action.AddApp, retMsg + " : " + ((site != null) ? site.getName() : ""));
-		System.out.println(retMsg);
-		response.getWriter().print(retMsg);
+		SI.sendResponse();
 	}
 }

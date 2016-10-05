@@ -11,10 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.Ease.context.DataBase;
+import com.Ease.data.ServletItem;
 import com.Ease.session.Profile;
 import com.Ease.session.SessionException;
 import com.Ease.session.User;
-import com.Ease.stats.Stats;
 
 /**
  * Servlet implementation class EditProfileName
@@ -44,44 +44,42 @@ public class EditProfileName extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String name = request.getParameter("name");
 		HttpSession session = request.getSession();
-		String retMsg;
-		User user = null;
+		User user = (User)(session.getAttribute("User"));
+		ServletItem SI = new ServletItem(ServletItem.Type.EditProfileName, request, response, user);
+		
+		// Get Parameters
+		String name = SI.getServletParam("name");
+		String indexParam = SI.getServletParam("index");
+		// --
+		
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		Profile profile = null;
 		try {
-			int index = Integer.parseInt(request.getParameter("index"));
-			
-			user = (User)(session.getAttribute("User"));	
-			
+			int index = Integer.parseInt(indexParam);
+					
 			if (user == null) {
-				Stats.saveAction(session.getServletContext(), user, Stats.Action.EditProfile, "");
-				RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-				rd.forward(request, response);
-				return ;
+				SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
 			} else if (db.connect() != 0){
-				retMsg = "error: Impossible to connect data base.";
+				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 			} else if ((profile = user.getProfile(index)) == null){
-				retMsg = "error: Bad id.";
+				SI.setResponse(ServletItem.Code.BadParameters, "Bad profileId");
 			} else if (name == null || name == ""){
-				retMsg = "error: Bad profile's name.";
+				SI.setResponse(ServletItem.Code.BadParameters, "Bad name");
 			} else {
 				if (profile.havePerm(Profile.ProfilePerm.RENAME, session.getServletContext())){
 					profile.setName(name);
 					profile.updateInDB(session.getServletContext());
-					retMsg = "success";
+					SI.setResponse(200, "Profile's name changed.");
 				} else {
-					retMsg = "error: You have not the permission.";
+					SI.setResponse(ServletItem.Code.NoPermission, "You have not the permission.");
 				}
 			}
 		} catch (SessionException e) {
-			retMsg = "error :" + e.getMsg();
+			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		} catch (NumberFormatException e) {
-			retMsg = "error: Bad profile's index.";
+			SI.setResponse(ServletItem.Code.BadParameters, "Bad numbers.");
 		}
-		//Stats.saveAction(session.getServletContext(), user, Stats.Action.EditProfile, retMsg);
-		response.getWriter().print(retMsg);
+		SI.sendResponse();
 	}
-
 }

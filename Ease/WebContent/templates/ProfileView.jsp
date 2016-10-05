@@ -89,8 +89,50 @@ response.addCookie(email);
 			}, 'text');
 		}
 	}
-
+		function setupSortableContainer(container){
+			$(container).sortable({
+				animation: 300,
+				group:"sites",
+				forceFallback: true,
+				filter: ".siteLinkBox[move='false']",
+				onStart: function(evt){
+					var item = $(evt.item);
+					item.css({
+						'pointer-events': 'none',
+						'opacity': '0'
+					});
+					$('body').css('cursor', 'move');
+				},
+				onEnd: function(evt){
+					var item = $(evt.item);
+					$('body').css('cursor', '');
+					item.css({
+						'pointer-events': '',
+						'opacity': ''
+					});
+					if (!($(evt.to).is($(evt.from))) || evt.oldIndex != evt.newIndex){
+						$.post(
+							"moveApp",
+							{
+								appId: item.attr('id'),
+								profileId: item.closest('.item').attr('id') ,
+								index: item.index()
+							},
+							function (data){
+							},
+							'text'
+						);
+					}
+				},
+				onMove: function(evt){
+					if ($(evt.dragged).attr('move') == 'false'){
+						return false;
+					}
+				}
+			});
+		}
 	function setupProfileSettings(profile) {
+		setupSortableContainer($(profile).find('.SitesContainer'));
 		$(profile).find('.ProfileControlPanel #cancel').click(function() {
 			var Accordion = $(this).closest('.ui-accordion');
 
@@ -483,142 +525,6 @@ logwith="${app.getAccount().getLogWithApp(member).getAppId()}">
 </div>
 </c:forEach>
 </div>
-<script type="text/javascript">
-	$(document).ready(function(){
-		/*
-		var drake = dragula({
-			isContainer: function(el){
-				return  el.classList.contains('SitesContainer');
-			},
-			revertOnSpill: true,
-			moves: function(el, container){
-				return !($(el).attr('move') == 'false');
-			}
-		}).on('drop', function(el, target, source, sibling){
-			$.post(
-				"moveApp",
-				{
-					appId: $(el).attr('id'),
-					profileId: $(el).closest('.item').attr('id') ,
-					index: $(el).index()
-				},
-				function (data){
-
-				},
-				'text'
-				);
-		}).on('drag', function(el, source){
-			$('.owl-carousel .siteLinkBox').each(function(){
-				var rand = Math.random();
-
-				rand = '-' + rand + 's';
-				$(this).css('animation-delay', rand);
-				$(this).addClass('shake-ease');
-				$(this).addClass('shake-constant');
-				$(el).removeClass('shake-ease');
-				$(el).removeClass('shake-constant');
-			});
-		}).on('dragend', function(el){
-			$('.owl-carousel .siteLinkBox').removeClass('shake-ease');			
-			$('.owl-carousel .siteLinkBox').removeClass('shake-constant');
-		});	
-		var drakeProfiles = dragula({
-			isContainer: function(el){
-				return el.classList.contains('owl-wrapper');
-			},
-			moves: function (el, container, handle) {
-				return handle.classList.contains('ProfileName');
-			},
-			direction: 'horizontal'
-		}).on('drop', function(el, target, source, sibling){
-			$.post(
-				"moveProfile",
-				{
-					profileId: $(el).find('.item').attr('id'),
-					index: $(el).index()
-				},
-				function (data){
-
-				},
-				'text'
-				);
-		}).on('drag', function(el, source){
-			document.body.style.cursor = "move";
-		}).on('dragend', function(el){
-			document.body.style.cursor = "default";
-		});*/
-
-		$('.owl-wrapper').sortable({
-			animation: 300,
-			group:"profiles",
-			handle: ".ProfileName",
-			forceFallback: true,
-			onStart: function(evt){
-				var item = $(evt.item);
-				$('body').css('cursor', 'move');
-				item.css({
-					'pointer-events': 'none',
-					'opacity': '0'
-				});
-			},
-			onEnd: function(evt){
-				var item = $(evt.item);
-				$('body').css('cursor', '');
-				item.css({
-					'pointer-events': '',
-					'opacity': ''
-				});
-				$.post(
-					"moveProfile",
-					{
-						profileId: item.find('.item').attr('id'),
-						index: item.index()
-					},
-					function (data){
-					},
-					'text'
-				);
-			}
-		});
-		$('.SitesContainer').sortable({
-			animation: 300,
-			group:"sites",
-			forceFallback: true,
-			filter: ".siteLinkBox[move='false']",
-			onStart: function(evt){
-				var item = $(evt.item);
-				item.css({
-					'pointer-events': 'none',
-					'opacity': '0'
-				});
-			},
-			onEnd: function(evt){
-				var item = $(evt.item);
-
-				item.css({
-					'pointer-events': '',
-					'opacity': ''
-				});
-				$.post(
-					"moveApp",
-					{
-						appId: item.attr('id'),
-						profileId: item.closest('.item').attr('id') ,
-						index: item.index()
-					},
-					function (data){
-					},
-					'text'
-				);
-			},
-			onMove: function(evt){
-				if ($(evt.dragged).attr('move') == 'false'){
-					return false;
-				}
-			}
-		});
-	});
-</script>
 </div>
 <div id="boxHelper" style="display: none">
 	<div class="siteLinkBox">
