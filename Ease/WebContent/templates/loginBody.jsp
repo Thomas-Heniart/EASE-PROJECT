@@ -58,6 +58,7 @@
 <div class="FormsContainer">
 <% if (iden == 3){ %>
 	<div class="form" id="knownUser">
+		<a class='forget-password' href="PasswordLost">Forgot your password ?</a>
 		<img class='ease-logo' src='resources/icons/Ease_Logo_couleur.png'/>
 		<div class="savedUser">
 		<p>Hello <%= new String(Base64.getDecoder().decode(fname), StandardCharsets.UTF_8) %> !</p>
@@ -78,6 +79,7 @@
 <div class="form" id="unknownUser" <% if (iden == 3){ %> style="visibility:hidden;" <% }%>>
 <img class='ease-logo' src='resources/icons/Ease_Logo_couleur.png'/>
 <form action="connection" method="POST" id="loginForm" role="form">
+				<a class='forget-password' href="PasswordLost">Forgot your password ?</a>
 				<span class="input input--minoru">
 					<input class="input__field input__field--minoru" id="email" name="email" type="email" id="input-8" placeholder="Email"/>
 					<label class="input__label input__label--minoru" for="input-8">
