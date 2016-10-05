@@ -146,7 +146,7 @@ public class ServletItem {
 		String resp = "";
 		if (retCode == 200) {
 			
-			resp = "succes: ";
+			resp = "success: ";
 		} else {
 			resp = "error: ";
 		}

@@ -24,14 +24,14 @@ $(document).ready(function(){
 
 </script>
 <div class="header">
-	<a href="#"><img class="logoImg" src="resources/images/logo.png" ></a>
+	<a href="index.jsp"><img class="logoImg" src="resources/images/logo.png" ></a>
 
 
 
 <% if (session.getAttribute("User") != null){ %>
 		<%@ include file="DropDownUserMenu.jsp"%>
 		<%@ include file="SearchBar.jsp"%>
-	<a href="logout" id="logoutButton"><i class="fa fa-fw fa-sign-out"></i><span>Logout</span></a>	
+	<a id="logoutButton"><i class="fa fa-fw fa-sign-out"></i><span>Logout</span></a>	
 <%}%>
 
 </div>
