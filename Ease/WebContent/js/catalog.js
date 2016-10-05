@@ -23,7 +23,7 @@ function sortSites(sites) {
 
 function refreshCatalogContent(data) {
 		if (data[0] == '[') {
-			var json = JSON.parse(res);
+			var json = JSON.parse(data);
 			$('.catalogApp').hide();
 			if (json.length > 0) {
 				$('.catalogContainer .no-result-search').hide();
