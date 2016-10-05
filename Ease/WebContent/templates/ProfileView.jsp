@@ -52,6 +52,11 @@ response.addCookie(email);
 
 
 <script>
+	$(document).on("contextmenu", ".linkImage", function(e){
+		e.preventDefault();
+		$(this).find('.showAppActionsButton').trigger('hover');
+		return false;
+	});
 	function sendEvent(obj) {
 		if (!($(obj).hasClass('waitingLinkImage'))) {
 			var appIdx = $(obj).closest('.siteLinkBox').index();
@@ -95,6 +100,7 @@ response.addCookie(email);
 				group:"sites",
 				forceFallback: true,
 				filter: ".siteLinkBox[move='false']",
+				fallbackTolerance: 5,
 				onStart: function(evt){
 					var item = $(evt.item);
 					item.css({

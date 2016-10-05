@@ -9,13 +9,22 @@ $(document).ready(function(){
 	$('#logoutButton').click(function(){
 		var event = new CustomEvent("Logout");
 		document.dispatchEvent(event);
+		$.post(
+			'logout',
+			{				
+			},
+			function(data){
+				window.location.replace("logout.jsp");
+			},
+			'text'
+		);
 	});
 });
 
 
 </script>
 <div class="header">
-	<a href="index.jsp"><img class="logoImg" src="resources/images/logo.png" ></a>
+	<a href="#"><img class="logoImg" src="resources/images/logo.png" ></a>
 
 
 
@@ -26,4 +35,3 @@ $(document).ready(function(){
 <%}%>
 
 </div>
-
