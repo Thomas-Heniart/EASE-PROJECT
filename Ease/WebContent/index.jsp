@@ -37,6 +37,8 @@ pageEncoding="UTF-8"%>
 
 	<script src="js/classie.js"></script>
 	<script src="js/dragula.js"></script>
+	<script src="js/Sortable.js"></script>
+	<script src="js/jquery.binding.js"></script>
 	<script src="js/owl.carousel.js"></script>
 	<script src="js/basic-utils.js" ></script>
 	<script src="js/jquery.mousewheel.min.js"></script>
