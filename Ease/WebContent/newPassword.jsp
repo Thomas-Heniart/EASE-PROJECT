@@ -118,6 +118,7 @@
 				function(data){
 					if (data[0] == 's'){
 						button.removeClass('loading');
+						$("#lostPasswordForm .input").removeClass("show");
 						button.addClass('success');
 						setTimeout(function(){
 							window.location = "index.jsp";
