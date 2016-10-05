@@ -55,7 +55,7 @@ public class DeleteProfile extends HttpServlet {
 		ServletItem SI = new ServletItem(ServletItem.Type.DeleteProfile, request, response, user);
 		
 		// Get Parameters
-		String mdp = SI.getServletParam("password");
+		String mdp = request.getParameter("password");
 		String indexParam = SI.getServletParam("index");
 		// --
 		
