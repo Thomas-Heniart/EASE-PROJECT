@@ -24,7 +24,6 @@ pageEncoding="UTF-8"%>
 
 
 
-	<link rel="stylesheet" href="css/dragula.css">
 	<link rel="stylesheet" href="css/lib/vicons-font/vicons-font.css">
 	<link rel="stylesheet" href="css/lib/vicons-font/buttons.css">
 	<link rel="stylesheet" href="css/lib/textInputs/set1.css">
@@ -36,7 +35,6 @@ pageEncoding="UTF-8"%>
 	<link rel="manifest" href="manifest.json">
 
 	<script src="js/classie.js"></script>
-	<script src="js/dragula.js"></script>
 	<script src="js/Sortable.js"></script>
 	<script src="js/jquery.binding.js"></script>
 	<script src="js/owl.carousel.js"></script>
@@ -236,6 +234,40 @@ pageEncoding="UTF-8"%>
 					$(this).css('margin', '0 auto');
 				});
 			}		
+		});
+		$('.owl-wrapper').sortable({
+			animation: 300,
+			group:"profiles",
+			handle: ".ProfileName",
+			forceFallback: true,
+			onStart: function(evt){
+				var item = $(evt.item);
+				$('body').css('cursor', 'move');
+				item.css({
+					'pointer-events': 'none',
+					'opacity': '0'
+				});
+			},
+			onEnd: function(evt){
+				var item = $(evt.item);
+				$('body').css('cursor', '');
+				item.css({
+					'pointer-events': '',
+					'opacity': ''
+				});
+				if (evt.oldIndex != evt.newIndex){
+					$.post(
+						"moveProfile",
+						{
+							profileId: item.find('.item').attr('id'),
+							index: item.index()
+						},
+						function (data){
+						},
+						'text'
+					);
+				}
+			}
 		});
 	}
 	$(document).ready(function() {
