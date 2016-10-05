@@ -46,7 +46,7 @@ public class ConnectionServlet extends HttpServlet {
 		
 		// Get Parameters
 		String email = SI.getServletParam("email");
-		String password = SI.getServletParam("password");
+		String password = request.getParameter("password");
 		// --
 		
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
