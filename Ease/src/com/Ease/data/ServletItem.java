@@ -126,7 +126,7 @@ public class ServletItem {
 		String argsString = "";
 		Set<Entry<String, String>> setHm = args.entrySet();
 	    Iterator<Entry<String, String>> it = setHm.iterator();
-	    while(it.hasNext()){
+	    while (it.hasNext()){
 	    	Entry<String, String> e = it.next();
 	        argsString += "<" + e.getKey() + ":" + e.getValue() + ">";
 	    }
@@ -135,10 +135,17 @@ public class ServletItem {
 	
 	public void sendResponse() throws IOException {
 		DataBase db = (DataBase)request.getSession().getServletContext().getAttribute("DataBase");
+		String ret = retMsg;
+		if (type == Type.AskInfo) {
+			retMsg = "Info sended.";
+		}
 		if (retCode != Code.DatabaseNotConnected.ordinal() && type != Type.CatalogSearchServlet)
 			saveInDB(db);
+		retMsg = ret;
+
 		String resp = "";
 		if (retCode == 200) {
+			
 			resp = "succes: ";
 		} else {
 			resp = "error: ";
