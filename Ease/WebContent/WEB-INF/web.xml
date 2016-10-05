@@ -63,14 +63,6 @@
     <url-pattern>/editUserPassword</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>DeleteUser</servlet-name>
-    <servlet-class>com.Ease.servlet.DeleteUser</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>DeleteUser</servlet-name>
-    <url-pattern>/deleteUser</url-pattern>
-  </servlet-mapping>
-  <servlet>
     <servlet-name>addProfile</servlet-name>
     <servlet-class>com.Ease.servlet.AddProfile</servlet-class>
   </servlet>
@@ -109,14 +101,6 @@
   <servlet-mapping>
     <servlet-name>DeleteProfile</servlet-name>
     <url-pattern>/deleteProfile</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>AddApp</servlet-name>
-    <servlet-class>com.Ease.servlet.AddApp</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>AddApp</servlet-name>
-    <url-pattern>/addApp</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>EditApp</servlet-name>
@@ -230,22 +214,9 @@
     <servlet-name>AddWebsite</servlet-name>
     <url-pattern>/addWebsiteInDB</url-pattern>
   </servlet-mapping>
-  
-<!-- 
-<security-constraint>
-<web-resource-collection>
-<web-resource-name>Protected Context</web-resource-name>
-<url-pattern>/*</url-pattern>
-</web-resource-collection>
-<user-data-constraint>
-<transport-guarantee>CONFIDENTIAL</transport-guarantee>
-</user-data-constraint>
-</security-constraint>
-  -->
-	<session-config>
-    	<session-timeout>240</session-timeout> <!-- in minutes -->
- 	</session-config>
-
+  <session-config>
+    <session-timeout>240</session-timeout>
+  </session-config>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
     <welcome-file>index.htm</welcome-file>
