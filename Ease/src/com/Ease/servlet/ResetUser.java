@@ -37,8 +37,15 @@ public class ResetUser extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-		rd.forward(request, response);
+		String linkCode = null;
+		linkCode = request.getParameter("linkCode");
+		if (linkCode == null) {
+			RequestDispatcher rd = request.getRequestDispatcher("newPassword.jsp");
+			rd.forward(request, response);
+		} else {
+			RequestDispatcher rd = request.getRequestDispatcher("newPassword.jsp");
+			rd.forward(request, response);
+		}
 	}
 
 	/**
