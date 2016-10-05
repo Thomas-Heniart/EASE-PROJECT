@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import com.Ease.context.DataBase;
 import com.Ease.context.Site;
 import com.Ease.context.SiteManager;
+import com.Ease.data.ServletItem;
 import com.Ease.session.User;
 
 /**
@@ -50,67 +51,56 @@ public class AddWebsite extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String			url = request.getParameter("siteUrl");
-		String			name = request.getParameter("siteName");
-		String			folder = request.getParameter("siteFolder");
-		String 			haveLoginButton = request.getParameter("haveLoginButton");
-		String[]		haveLoginWith = request.getParameterValues("haveLoginWith");
-		String			retMsg;
-
 		HttpSession session = request.getSession();
+		User user = (User)(session.getAttribute("User"));
+		ServletItem SI = new ServletItem(ServletItem.Type.AddWebsite, request, response, user);
+		
+		// Get Parameters
+		String url = SI.getServletParam("siteUrl");
+		String name = SI.getServletParam("siteName");
+		String folder = SI.getServletParam("siteFolder");
+		String haveLoginButton = SI.getServletParam("haveLoginButton");
+		String[] haveLoginWith = SI.getServletParamValues("haveLoginWith");
+		// --
+		
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 
-		User user = (User)session.getAttribute("User");
-
-		if(!user.isAdmin(session.getServletContext())){
-			response.getWriter().print("error: You aint admin bro");
-			return;
-		}
-
-		String dbRequest = "INSERT INTO websites VALUES (NULL, '" + url + "', '" + name + "', '" + UPLOAD_DIRECTORY + folder + "/', ";
-		if(haveLoginButton != null){
-			dbRequest += "1, ";
+		if (user == null) {
+			SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
+		} else if (!user.isAdmin(session.getServletContext())) {
+			SI.setResponse(ServletItem.Code.NoPermission, "You have not the permission.");
 		} else {
-			dbRequest += "0, ";
-		}
-
-		String haveLogWith = "";
-
-		if(haveLoginWith == null || haveLoginWith.length==0){
-			haveLogWith = "NULL";
-		} else {
-			haveLogWith = "'";
-			for(String i : haveLoginWith){
-				haveLogWith += i + ","; 
+			String dbRequest = "INSERT INTO websites VALUES (NULL, '" + url + "', '" + name + "', '" + UPLOAD_DIRECTORY + folder + "/', ";
+			if(haveLoginButton != null){
+				dbRequest += "1, ";
+			} else {
+				dbRequest += "0, ";
 			}
-			haveLogWith = haveLogWith.substring(0, haveLogWith.length()-1);
-			haveLogWith += "'";
+			String haveLogWith = "";
+			if(haveLoginWith == null || haveLoginWith.length == 0){
+				haveLogWith = "NULL";
+			} else {
+				haveLogWith = "'";
+				for(String i : haveLoginWith){
+					haveLogWith += i + ","; 
+				}
+				haveLogWith = haveLogWith.substring(0, haveLogWith.length()-1);
+				haveLogWith += "'";
+			}
+			dbRequest = dbRequest + haveLogWith + ", null);";
+			db.set(dbRequest);
+			SiteManager sites = ((SiteManager)session.getServletContext().getAttribute("siteManager"));
+			try {
+			    ResultSet rs = db.get("SELECT * FROM websites ORDER BY website_name;");
+			    sites.clearSites();
+			    while (rs.next()) {
+			    	sites.add(new Site(rs));
+			    }
+			    SI.setResponse(200, "Site added.");
+			} catch (SQLException e) {
+				SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			}
 		}
-
-		dbRequest = dbRequest + haveLogWith + ", null);";
-
-		if(db.set(dbRequest)!=0){
-			retMsg = "error: fail to connect to db";
-			response.getWriter().print(retMsg);
-			return;
-		}
-		
-		SiteManager sites = ((SiteManager)session.getServletContext().getAttribute("siteManager"));
-		
-		try {
-		    	ResultSet rs = db.get("SELECT * FROM websites ORDER BY website_name;");
-		    	sites.clearSites();
-		    	while (rs.next()) {
-		    		sites.add(new Site(rs));
-		    	}
-		} catch (SQLException e) {
-				retMsg = "error: fail to load websites";
-				response.getWriter().print(retMsg);
-		    	return ;
-		}
-		
-		retMsg = "success";
-		
-		response.getWriter().print(retMsg);
+		SI.sendResponse();
 	}
 }
