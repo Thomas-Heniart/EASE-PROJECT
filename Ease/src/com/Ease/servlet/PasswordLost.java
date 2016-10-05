@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import com.Ease.context.DataBase;
 import com.Ease.data.Regex;
+import com.Ease.data.ServletItem;
 import com.Ease.session.User;
 
 /**
@@ -45,20 +46,22 @@ public class PasswordLost extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String retMsg;
 		HttpSession session = request.getSession();
-		User user = null;
-		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
-		String email = request.getParameter("email");
+		User user = (User)(session.getAttribute("User"));
+		ServletItem SI = new ServletItem(ServletItem.Type.PasswordLost, request, response, user);
 		
+		// Get Parameters
+		String email = SI.getServletParam("email");
+		// --
+		
+		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		try {
-			user = (User)(session.getAttribute("User"));
 			if (user != null) {
-				retMsg = "You are logged to Ease.";
+				SI.setResponse(ServletItem.Code.AlreadyConnected, "You are logged on Ease.");
 			} else if (email == null || Regex.isEmail(email) == false) {
-				retMsg = "Bad email.";
+				SI.setResponse(ServletItem.Code.BadParameters, "Bad email.");
 			} else if (db.connect() != 0){
-				retMsg = "error: Impossible to connect data base.";
+				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 			} else {
 				ResultSet rs = db.get("select * from users where email='" + email + "';");
 				if (rs.next()) {
@@ -69,16 +72,23 @@ public class PasswordLost extends HttpServlet {
 						linkCode += alphabet.charAt(r.nextInt(alphabet.length()));			
 					}
 					db.set("insert into PasswordLost values (" + email + ", " + linkCode + ");");
-					retMsg= "succes";
+					new java.util.Timer().schedule( 
+					        new java.util.TimerTask() {
+					            @Override
+					            public void run() {
+					                db.set("delete from PasswordLost where email='" + email + "';");
+					            }
+					        }, 
+					        7200 
+					);
+					SI.setResponse(200, "Please, go check your email.");
 				} else {
-					retMsg = "error: This email is not associate with an account.";
+					SI.setResponse(ServletItem.Code.BadParameters, "This email is not associate with an account.");
 				}
 			}
 		} catch (SQLException e) {
-			retMsg = "error:" + e.getMessage();
-			e.printStackTrace();
+			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		}
-		response.getWriter().print(retMsg);
+		SI.sendResponse();
 	}
-
 }
