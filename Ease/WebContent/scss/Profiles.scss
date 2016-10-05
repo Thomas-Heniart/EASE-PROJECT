@@ -7,7 +7,6 @@
 
 .ProfileBox {
 	width: 90%;
-	border: 1px hidden white;
 	border-radius: 5px;
 	background-color: white;
 	overflow: hidden;
@@ -207,6 +206,8 @@
 				}
 			}
 			.SitesContainer {
+				border-left:1px solid $borderFbColor;
+				border-right: 1px solid $borderFbColor;
 				position: relative;
 				height: 100%;
 				width: 100%;

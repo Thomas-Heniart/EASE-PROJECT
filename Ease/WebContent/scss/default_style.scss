@@ -384,10 +384,7 @@ body {
 	width: 100%;
 	z-index: 2;
 	top: 0px;
-	-moz-box-shadow: 0px -2px 8px 0px $themeColor;
-	-webkit-box-shadow: 0px -2px 8px 0px $themeColor;
-	-o-box-shadow: 0px -2px 8px 0px $themeColor;
-	box-shadow: 0px -2px 8px 0px $themeColor;
+  border-bottom: 1px solid $borderFbColor;
 	#breakButton {
 		&:hover {
 			color: black;
