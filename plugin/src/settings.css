@@ -1,32 +1,30 @@
 .containerParam{
     background-color: rgba(239,239,239, 0.7);
-    width: 200px;
-    height: 40px;
+    min-width: 50%;
+    min-height: 7%;
     position: fixed;
-    text-align: center;
-    left: 1%;
+    left: 3%;
     bottom: 3%;
     z-index:33;
     border-radius: 5px;
 }
 
 .containerParam p{
-    position: absolute;
-    left: 30%;
-    bottom: 4%;
+    position: relative;
+    display: inline-block;
     color: $373b60;
-    font-size: 15px;
+    font-size: 100%;
     font-weight: 600;
+    margin: 4%;
     
 }
 
 .switchParam {
-  position: absolute;
-  left:4%;
-  bottom:7%;
-  display: inline-block;
-  width: 45px;
-  height: 26px;
+    margin: 4%;
+    position: relative;;
+    display: inline-block;
+    width: 45px;
+    height: 26px;
 }
 
 .switchParam input {display:none;}

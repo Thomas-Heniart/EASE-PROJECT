@@ -54,17 +54,6 @@
 </div>
  
  <script>
- $(document).ready(function(){
- 	$('#PopupAddApp .buttonBack').click(function(){
- 		var parent = $(this).closest('.md-content');
-
- 		parent.find('.loginWithButton').removeClass('locked');
- 		parent.find('.loginAppChooser .ChooserContent').empty();
- 		parent.find('.loginAppChooser').css('display', 'none');
- 		parent.find('#AddAppForm').css('display', 'block');
- 		parent.find('.or').css('display', 'block');
- 	});
-});
 $(document).ready(function(){
 	$('#PopupAddApp .loginWithButton').click(function(){
 		 $(".loginAppChooser p").text("Select your account");
@@ -169,6 +158,26 @@ $(document).ready(function(){
 				}
 			}
 		}
+
+		if($(helper).attr('data-nologin')=="true"){
+			popup.find('#AddAppForm').css('display', 'none');
+			$('.or').css('display', 'none');
+		}
+		
+		$('#PopupAddApp .buttonBack').unbind("click");
+		
+		$('#PopupAddApp .buttonBack').click(function(){
+	 		var parent = $(this).closest('.md-content');
+
+	 		parent.find('.loginWithButton').removeClass('locked');
+	 		parent.find('.loginAppChooser .ChooserContent').empty();
+	 		parent.find('.loginAppChooser').css('display', 'none');
+	 		if($(helper).attr('data-nologin')!="true"){
+	 			parent.find('#AddAppForm').css('display', 'block');
+		 		parent.find('.or').css('display', 'block');
+			}
+	 	});
+		
 		popup.find('#accept').unbind('click');
 		popup.find('#accept').click(function(){
 			$(container).append(item);

@@ -87,7 +87,7 @@ public class AddWebsite extends HttpServlet {
 			haveLogWith += "'";
 		}
 
-		dbRequest = dbRequest + haveLogWith + ", null);";
+		dbRequest = dbRequest + haveLogWith + ", null, 0);";
 
 		if(db.set(dbRequest)!=0){
 			retMsg = "error: fail to connect to db";

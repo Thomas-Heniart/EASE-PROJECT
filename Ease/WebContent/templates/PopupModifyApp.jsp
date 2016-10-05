@@ -66,15 +66,6 @@ pageEncoding="UTF-8"%>
 		}
 	}
 	$(document).ready(function(){
-		$('#PopupModifyApp .buttonBack').click(function(){
-			var parent = $(this).closest('.md-content');
-
-			parent.find('.loginWithButton').removeClass('locked');
-			parent.find('.loginAppChooser .ChooserContent').empty();
-			parent.find('.loginAppChooser').css('display', 'none');
-			parent.find('#modifyAppForm').css('display', 'block');
-			parent.find('.or').css('display', 'block');
-		});
 		$('.disabledInput .activateInput').click(function(){
 			var inpt = $(this).closest('.disabledInput').find('input');
 			if (inpt.prop('disabled') == true){
@@ -187,6 +178,20 @@ pageEncoding="UTF-8"%>
 			popup.find(".AccountApp[aid='" + logid + "']").click();
 
 		}
+		
+		$('#PopupModifyApp .buttonBack').unbind("click");
+		$('#PopupModifyApp .buttonBack').click(function(){
+			var parent = $(this).closest('.md-content');
+
+			parent.find('.loginWithButton').removeClass('locked');
+			parent.find('.loginAppChooser .ChooserContent').empty();
+			parent.find('.loginAppChooser').css('display', 'none');
+			if ($(".catalogContainer .catalogApp[idx='" + $(app).attr('webid') + "']").attr('data-nologin') != "true"){
+				parent.find('#modifyAppForm').css('display', 'block');
+				parent.find('.or').css('display', 'block');
+			}
+		});
+		
 		popup.find("#close").unbind('click');
 		popup.find("#close").click(function(){
 			popup.removeClass('md-show');
