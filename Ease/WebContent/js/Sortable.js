@@ -609,6 +609,10 @@
 			this._offUpEvents();
 
 			if (activeGroup.checkPull(this, this, dragEl, evt) == 'clone') {
+				var sortable = rootEl[expando];
+
+//				dragEl = sortable.options.helper(evt);
+//				console.log(cloneEl);
 				cloneEl = _clone(dragEl);
 				_css(cloneEl, 'display', 'none');
 				rootEl.insertBefore(cloneEl, dragEl);
