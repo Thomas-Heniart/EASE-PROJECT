@@ -6,37 +6,43 @@
 
 .MenuButtonSet.toptopLeft {
 	width: fit-content;
-	top: 2%;
+	top: 1%;
 	left: 2%
 }
 
 .MenuButtonSet.topLeft {
 	width: fit-content;
-	top: 21%;
+	top: 11%;
 	left: 2%
 }
 
 .MenuButtonSet.topRight {
 	width: fit-content;
-	top: 21%;
+	top: 11%;
 	left: 11%
 }
 
 .MenuButtonSet.middleTopLeft {
 	width: fit-content;
-	top: 40%;
+	top: 21%;
 	left: 2%
 }
 
 .MenuButtonSet.bottomLeft {
 	width: fit-content;
-	top: 59%;
+	top: 31%;
 	left: 2%;
 }
 
 .MenuButtonSet.superBottomLeft {
 	width: fit-content;
-	top: 78%;
+	top: 41%;
+	left: 2%;
+}
+
+.MenuButtonSet.megaBottomLeft {
+	width: fit-content;
+	top: 51%;
 	left: 2%;
 }
 
@@ -95,10 +101,10 @@
 	}
 
 	.adminButton {
-		max-width: 100px;
+		max-width: 50px;
 		min-width: 0px;
-		width: 100px;
-		height: 100px;
+		width: 50px;
+		height: 50px;
 		background-color: #373b60;
 		border-radius: 10px;
 		padding: 7px;
@@ -142,4 +148,3 @@
 		margin-left: 25%;
 	}
 }
-
