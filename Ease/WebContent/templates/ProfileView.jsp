@@ -18,7 +18,6 @@ pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <%
-com.Ease.session.User user = (com.Ease.session.User) (session.getAttribute("User"));
 List<com.Ease.session.Profile> profiles = user.getProfiles();
 List<Site> sites = ((SiteManager) (session.getServletContext().getAttribute("siteManager"))).getSitesList();
 List<Color> colors = (List<Color>) (session.getServletContext().getAttribute("Colors"));
@@ -75,23 +74,23 @@ response.addCookie(email);
 				$(obj).removeClass("waitingLinkImage");
 				$(obj).removeClass('scaleinAnimation');				
 			}, 1000);
-			$.post("askInfo", {
-				profileIndex : profileIndex,
-				appIndex : appIdx,
-
-			}, function(data) {
-				if (data[0] == 's') {
-					json.detail = JSON.parse(data.substring(8, data.length));
-					event = new CustomEvent("NewConnection", json);
-					document.dispatchEvent(event);
-				} else {
-					if (data[0] != 'e') {
-						document.location.reload(true);
-					} else {
-						showAlertPopup(null, true);
-					}
-				}
-			}, 'text');
+			postHandler.post(
+					"askInfo",
+					{
+						profileIndex : profileIndex,
+						appIndex : appIdx,
+					}, 
+					function(){},
+					function(retMsg){
+						json.detail = JSON.parse(data.substring(8, data.length));
+						event = new CustomEvent("NewConnection", json);
+						document.dispatchEvent(event);
+					},
+					function(retMsg){
+						showAlertPopup(retMsg, true);
+					},
+					'text'
+			);
 		}
 	}
 		function setupSortableContainer(container){
@@ -118,15 +117,16 @@ response.addCookie(email);
 						'opacity': ''
 					});
 					if (!($(evt.to).is($(evt.from))) || evt.oldIndex != evt.newIndex){
-						$.post(
+						postHandler.post(
 							"moveApp",
 							{
 								appId: item.attr('id'),
 								profileId: item.closest('.item').attr('id') ,
 								index: item.index()
 							},
-							function (data){
-							},
+							function(){},
+							function(retMsg){},
+							function(retMsg){},
 							'text'
 						);
 					}
@@ -680,12 +680,19 @@ logwith="${app.getAccount().getLogWithApp(member).getAppId()}">
 		var parent = $(elem).closest('.item');
 		var owl = $(".owl-carousel").data('owlCarousel');
 
-		$.post('addProfile', {
-			name : 'Profile name',
-			color : '#35a7ff'
-		}, function(data) {
-			$(profile).attr('id', data.substring(9, data.length));
-		}, 'text');
+		postHandler.post(
+				'addProfile', 
+				{
+					name : 'Profile name',
+					color : '#35a7ff'
+				}, 
+				function(){},
+				function(retMsg){
+					$(profile).attr('id', retMsg);
+				},
+				function(retMsg){},
+				'text'
+		);
 		makeViewDroppable($(container));
 		setupProfileSettings($(profile));
 		makeSettingsAccordion($($(profile).find(".ProfileSettingsButton")));
@@ -728,14 +735,17 @@ logwith="${app.getAccount().getLogWithApp(member).getAppId()}">
 					var owl = $(".owl-carousel")
 					.data('owlCarousel');
 
-					$.post('addProfile', {
-						name : 'Profile name',
-						color : '#35a7ff'
-					}, function(data) {
-						if (data[0] == 's'){
-							$(profile).attr('id', data.substring(9, data.length));
-						}
-					}, 'text');
+					postHandler.post(
+							'addProfile',
+							{
+								name : 'Profile name',
+								color : '#35a7ff'
+							}, 
+							function(){},
+							function(retMsg){$(profile).attr('id', retMsg);},
+							function(retMsg){},
+							'text'
+					);
 					makeViewDroppable($(container));
 					setupProfileSettings($(profile));
 					makeSettingsAccordion($($(profile).find(

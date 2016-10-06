@@ -113,15 +113,21 @@
 	});
 	
 	function sendInvitation(email, callback){
-		$.post(
+		postHandler.post(
 				'createInvitation',
 				{
 					email : email
 				},
-				function(data) {					
-					$('#progressStatus .progress').append("<p>"+ email + " -> " + data);
+				function() {},
+				function(retMsg){
+					$('#progressStatus .progress').append("<p>"+ email + " -> success");
 					callback();
-				}, 'text'
+				},
+				function(retMsg){
+					$('#progressStatus .progress').append("<p>"+ email + " -> error : " + retMsg);
+					callback();
+				},
+				'text'
 		);
 	}
 </script>

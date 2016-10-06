@@ -211,40 +211,35 @@ pageEncoding="UTF-8"%>
 			var AppToLoginWith = $(popup).find('.AccountApp.selected');
 			if (AppToLoginWith.length){
 				aId = AppToLoginWith.attr('aId');
-				$.post(
+				postHandler.post(
 					'editApp',
 					{
 						name: name,
 						appId: $(app).attr('id'),
 						lwId: aId
 					},
-					function(data){
-						$(app).find('.tmp').remove();
-						if (data[0] == 's'){
-							image.addClass('scaleOutAnimation');
-							setTimeout(function() {
-								image.removeClass('scaleOutAnimation');
-							}, 1000);
-							app.attr('login', '');
-							app.attr('name', name);
-							app.attr('logwith', aId);
-							app.find('.siteName p').text(name);
-							app.find('.emptyAppIndicator').remove();
-							app.removeClass('emptyApp');
-						}else {
-							if (data[0] != 'e'){
-								document.location.reload(true);
-							} else {
-								showAlertPopup(null, true);
-							}
-						}
+					function(){$(app).find('.tmp').remove();},
+					function(retMsg){
+						image.addClass('scaleOutAnimation');
+						setTimeout(function() {
+							image.removeClass('scaleOutAnimation');
+						}, 1000);
+						app.attr('login', '');
+						app.attr('name', name);
+						app.attr('logwith', aId);
+						app.find('.siteName p').text(name);
+						app.find('.emptyAppIndicator').remove();
+						app.removeClass('emptyApp');
+					},
+					function(retMsg){
+						showAlertPopup(retMsg, true);
 					},
 					'text'
-					);
+				);
 			} else {
 				login = popup.find('#login').val();
 				password = popup.find('#password').val();
-				$.post(
+				postHandler.post(
 					'editApp',
 					{
 						name: name,
@@ -252,29 +247,24 @@ pageEncoding="UTF-8"%>
 						login: login,
 						wPassword: password
 					},
-					function(data){
-						$(app).find('.tmp').remove();
-						if (data[0] == 's'){
-							image.addClass('scaleOutAnimation');
-							setTimeout(function() {
-								image.removeClass('scaleOutAnimation');
-							}, 1000);
-							app.attr('login', login);
-							app.attr('name', name);
-							app.attr('logwith', 'false');
-							app.find('.siteName p').text(name);
-							app.find('.emptyAppIndicator').remove();
-							app.removeClass('emptyApp');
-						}else {
-							if (data[0] != 'e'){
-								document.location.reload(true);
-							} else {
-								showAlertPopup(null, true);
-							}
-						}
+					function(){$(app).find('.tmp').remove();},
+					function(retMsg){
+						image.addClass('scaleOutAnimation');
+						setTimeout(function() {
+							image.removeClass('scaleOutAnimation');
+						}, 1000);
+						app.attr('login', login);
+						app.attr('name', name);
+						app.attr('logwith', 'false');
+						app.find('.siteName p').text(name);
+						app.find('.emptyAppIndicator').remove();
+						app.removeClass('emptyApp');
+					},
+					function(retMsg){
+						showAlertPopup(retMsg, true);
 					},
 					'text'
-					);
+				);
 			}
 		});
 		$(popup).addClass('md-show');

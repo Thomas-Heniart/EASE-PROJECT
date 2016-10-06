@@ -60,20 +60,20 @@ $(document).ready( function() {
 	  form.submit( function(e) {
 		     e.preventDefault(); // on empeche l'envoi du formulaire par le navigateur
 				$('#loading').addClass("la-animate");
-		     var datas = $(this).serialize();
-		     $.ajax({
-		          type: 'POST',      // envoi des données en POST
-		          url: $(this).attr('action'),     // envoi au fichier défini dans l'attribut action
-		          data: datas,     // sélection des champs à envoyer
-		          success: function(msg) {
-		        	  	if (msg[0] == 's'){
-	                    	window.location.replace("/HelloWorld/index.jsp");		        	  		
-	    		       		$('#loading').removeClass("la-animate");
-		        	  	}
-    		       		$('#loading').removeClass("la-animate");
-		        	  	showAlertPopup(null, true);
-		          }
-		     });
+		     var datas = ;
+		     
+		     postHandler.post(
+		    		$(this).attr('action'),
+		    		$(this).serialize(),
+					function(){$('#loading').removeClass("la-animate");},
+					function(retMsg){
+						window.location.replace("/HelloWorld/index.jsp");	
+					},
+					function(retMsg){
+						showAlertPopup(retMsg, true);
+					},
+					'text'
+				);
 	  } );
 	} );
 </script>

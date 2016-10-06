@@ -23,18 +23,20 @@
 						$('.helpIntegrateApps #integrateAppForm #integrate').click(
 										function() {
 											var form = $(this).closest('#integrateAppForm');
-											$.post(
+											postHandler.post(
 												'askForNewApp',
 												{
 													ask : $(form).find('#integrateApp').val()
 												},
-												function(data) {
+												function() {
 													$(form).find('.inputs input').val('');
 													$(form).find('.inputs').hide();
 													$(form).find('.confirmation').show().delay(1000).fadeOut(function() {
 														$(form).find('.inputs').show();
 													});
 												},
+												function(retMsg){},
+												function(retMsg){},
 												'text');
 										});
 					});
@@ -116,26 +118,24 @@
 		popup.find("#accept").click(function() {
 			popup.removeClass('md-show');
 			image.addClass('easyScaling');
-			$.post('deleteApp', {
-				appId: $(app).attr('id')
-			}, function(data) {
-				if (data[0] == 's') {
-					image.removeClass('easyScaling');
-					image.addClass('deletingApp');
-					setTimeout(function() {
-						console.log(app);
-						app.remove();
-					}, 500);
-				} else {
-					if (data[0] != 'e') {
-						document.location.reload(true);
-					} else {
-						showAlertPopup(null, true);
-						image.removeClass('easyScaling');
-					}
-
-				}
-			}, 'text');
+			postHandler.post(
+					'deleteApp',
+					{
+						appId: $(app).attr('id')
+					}, 
+					function(){image.removeClass('easyScaling');},
+					function(retMsg){
+						image.addClass('deletingApp');
+						setTimeout(function() {
+							console.log(app);
+							app.remove();
+						}, 500);
+					},
+					function(retMsg){
+						showAlertPopup(retMsg, true);
+					}, 
+					'text'
+				);
 		});
 	}
 

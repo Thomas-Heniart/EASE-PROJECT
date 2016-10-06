@@ -93,27 +93,20 @@ $(document).ready(function(){
 		var fname = $(parent).find('#firstName').val();
 		
 		$('#loading').addClass('la-animate');
-		$.post(
+		postHandler.post(
 				'editUserName',
 				{
 					fname : fname,
 					lname: lname
 				},
-				function(data){
-					$('#loading').removeClass('la-animate');
-					if (data[0] == 's'){
-		        	  	showAlertPopup('Modifications successfully applied !', false);
-						$(parent).closest('#settingsTab').find('#nameSection .directInfo').text(fname + ' ' + lname);
-						$('#menu .menu__label span').text(fname);
-					}else {
-						if (data[0] != 'e'){
-							document.location.reload(true);
-						} else {
-							showAlertPopup(null, true);
-						}
-					}
-					$(parent).find('#firstName').val('');
-					$(parent).find('#lastName').val('');
+				function(){$('#loading').removeClass('la-animate');},
+				function(retMsg){
+					showAlertPopup('Modifications successfully applied !', false);
+					$(parent).closest('#settingsTab').find('#nameSection .directInfo').text(fname + ' ' + lname);
+					$('#menu .menu__label span').text(fname);
+				},
+				function(retMsg){
+					showAlertPopup(retMsg, true);
 				},
 				'text'
 			);
@@ -125,26 +118,23 @@ $(document).ready(function(){
 		var password = $(parent).find('#password').val();
 		
 		$('#loading').addClass('la-animate');
-		$.post(
+		postHandler.post(
 				'editUserEmail',
 				{
 					email : email,
 					password : password
 				},
-				function(data){
+				function(){
 					$('#loading').removeClass('la-animate');
-					if (data[0] == 's'){
-		        	  	showAlertPopup('Modifications successfully applied !', false);
-						$(parent).closest('#settingsTab').find('#contactSection .directInfo').text(email);
-					}else {
-						if (data[0] != 'e'){
-							document.location.reload(true);
-						} else {
-							showAlertPopup(null, true);
-						}
-					}
 					$(parent).find('#email').val('');
 					$(parent).find('#password').val('');
+				},
+				function(retMsg){
+					showAlertPopup('Modifications successfully applied !', false);
+					$(parent).closest('#settingsTab').find('#contactSection .directInfo').text(email);
+				},
+				function(retMsg){
+					showAlertPopup(retMsg, true);
 				},
 				'text'
 			);
@@ -159,29 +149,26 @@ $(document).ready(function(){
 		
 		$(alert).removeClass('show');
 		$('#loading').addClass('la-animate');
-		$.post(
+		postHandler.post(
 				'editUserPassword',
 				{
 					password : newPass,
 					confirmPassword : confNewPass,
 					oldPassword : currentPass
 				},
-				function(data){
+				function(){
 					$('#loading').removeClass('la-animate');
-					if (data[0] == 's'){
-						$(parent).find('.alertDiv').removeClass('show');
-						showAlertPopup('Your password was successfully changed')
-					}else {
-						if (data[0] != 'e'){
-							document.location.reload(true);
-						} else {
-							$(alert).find('p').text(data.substring(7, data.length));
-							$(parent).find('.alertDiv').addClass('show');
-						}						
-					}
 					$(parent).find('#newPassword').val('');
 					$(parent).find('#confirmNewPassword').val('');
 					$(parent).find('#currentPassword').val('');
+				},
+				function(retMsg){
+					$(parent).find('.alertDiv').removeClass('show');
+					showAlertPopup('Your password was successfully changed')
+				},
+				function(retMsg){
+					$(alert).find('p').text(retMsg);
+					$(parent).find('.alertDiv').addClass('show');
 				},
 				'text'
 			);
