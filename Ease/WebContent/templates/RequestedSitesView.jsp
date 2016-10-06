@@ -23,6 +23,9 @@
 <script>
 	function enterRequestedWebsitesMode() {
 		$('#RequestedWebsitesTab').addClass('show');
+	}
+	
+	$(document).ready(function(){
 		$.post(
 				'requestedWebsites',
 				{},
@@ -32,7 +35,7 @@
 					}
 				}, 'text'
 		);
-	}
+	});
 	
 	function printRequestedWebsites(string){
 		var requests = string.split(";");

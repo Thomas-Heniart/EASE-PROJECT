@@ -51,7 +51,7 @@ public class AddLogWith extends HttpServlet {
 		
 		// Get Parameters
 		String siteId = SI.getServletParam("siteId");
-		String profileIdParam = SI.getServletParam("profileIdParam");
+		String profileIdParam = SI.getServletParam("profileId");
 		String appIdParam = SI.getServletParam("appId");
 		String name = SI.getServletParam("name");
 		// --
