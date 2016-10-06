@@ -32,57 +32,24 @@ $(document).ready( function() {
 		
      	$('#loading').addClass("la-animate");
      	$(parent).find('.alertDiv').removeClass('show');
-		$.post(
+		postHandler.post(
 			'deleteProfile',
 			{
 				index: $(parent).find('#index').val(),
 				password: $(parent).find('#password').val()
 			},
-	        function(msg) {
-	       		$('#loading').removeClass("la-animate");
-	      	  	if (msg[0] == 's'){
-                  	window.location.replace("index.jsp");		        	  		
-        	  	}
-	      	  	else {
-	      	  	if (msg[0] != 'e'){
-					document.location.reload(true);
-				} else {
-					$(parent).find('.alertDiv').addClass('show');
-	      	  		$(parent).find('#password').val('');
-	        	  	showAlertPopup(null, true);
-				}		
-	      	  	}
-	          },
-	         'text'
+			function(){$('#loading').removeClass("la-animate");},
+	        function(retMsg) {
+                  	window.location.replace("index.jsp");
+			},
+			function(retMsg){
+				$(parent).find('.alertDiv').addClass('show');
+      	  		$(parent).find('#password').val('');
+        	  	showAlertPopup(retMsg, true);
+			},
+	        'text'
 		);
 	});
 });
-
-$(document).ready( function() {
-	  var form = $('#FormDeleteProfile');
-
-	  
-	  form.submit( function(e) {
-		     e.preventDefault(); // on empeche l'envoi du formulaire par le navigateur
-				$('#loading').addClass("la-animate");
-		     var datas = $(this).serialize();
-		     $.ajax({
-		          type: 'POST',      // envoi des données en POST
-		          url: $(this).attr('action'),     // envoi au fichier défini dans l'attribut action
-		          data: datas,     // sélection des champs à envoyer
-		          success: function(msg) {
-  		       		$('#loading').removeClass("la-animate");
-		        	  	if (msg[0] == 's'){
-	                    	window.location.replace("index.jsp");		        	  		
-		        	  	}
-		        	  	else {
-		        	  		if (data[0] != 'e'){
-		    					document.location.reload(true);
-		    				}	        	  		
-		        	  	}
-		          }
-		     });
-	  } );
-	} );
 </script>
  

@@ -42,16 +42,15 @@ function refreshCatalogContent(data) {
 			ids.push(parseInt($(tag).attr("tagid")));
 		});
 		var json = JSON.stringify(ids);
-		$.post(
+		postHandler.post(
 			'searchInCatalog',
 			{
 				tagIds : json,
 				search : searchVal
 			},
-			function(data) {
-				if (data[0] != 'e')
-					refreshCatalogContent(data.substring(9));
-			},
+			function(){},
+			function(retMsg){refreshCatalogContent(retMsg);},
+			function(retMsg){},
 			'text'
 		);
 	}

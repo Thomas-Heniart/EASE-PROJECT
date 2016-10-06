@@ -179,6 +179,7 @@ $(document).ready(function(){
 	 	});
 		
 		popup.find('#accept').unbind('click');
+		
 		popup.find('#accept').click(function(){
 			$(container).append(item);
 			$(item).find('.linkImage').append($('<img class="tmp" src="resources/other/loading-effect.svg" style="position:absolute;top:0;left:0;"/>'));
@@ -193,7 +194,7 @@ $(document).ready(function(){
 
 			if (AppToLoginWith.length){
 				aId = AppToLoginWith.attr('aId');
-				$.post(
+				postHandler.post(
 					'addLogWith',
 					{
 						name: name,
@@ -201,30 +202,24 @@ $(document).ready(function(){
 						siteId: $(helper).attr('idx'),
 						appId: aId
 					},
-					function(data){	
-						$(item).find('.tmp').remove();
-						if (data[0] == 's'){
-							$(item).find('.linkImage').addClass('scaleOutAnimation');
-							setTimeout(function() {
-								$(item).find('.linkImage').removeClass('scaleOutAnimation');
-							}, 1000);
-							$(item).find('.linkImage').attr('onclick', "sendEvent(this)");
-							$(item).attr('webId', $(helper).attr('idx'));
-							$(item).attr('name', name);
-							$(item).attr('logwith', aId);
-							$(item).find('.siteName p').text(name);
-							$(item).attr('id', data.substring(9, data.length));
-							$(item).attr('ssoid', $(helper).attr('data-sso'));
-							setupAppSettingButtonPopup($(item).find('.showAppActionsButton'));
-
-						} else {
-							if (data[0] != 'e'){
-								document.location.reload(true);
-							} else {
-								showAlertPopup(null, true);
-								$(item).remove();
-							}													
-						}
+					function(){	$(item).find('.tmp').remove();},
+					function(retMsg){
+						$(item).find('.linkImage').addClass('scaleOutAnimation');
+						setTimeout(function() {
+							$(item).find('.linkImage').removeClass('scaleOutAnimation');
+						}, 1000);
+						$(item).find('.linkImage').attr('onclick', "sendEvent(this)");
+						$(item).attr('webId', $(helper).attr('idx'));
+						$(item).attr('name', name);
+						$(item).attr('logwith', aId);
+						$(item).find('.siteName p').text(name);
+						$(item).attr('id', data.substring(9, data.length));
+						$(item).attr('ssoid', $(helper).attr('data-sso'));
+						setupAppSettingButtonPopup($(item).find('.showAppActionsButton'));
+					},
+					function(retMsg){
+						showAlertPopup(retMsg, true);
+						$(item).remove();
 					},
 					'text'
 				);
@@ -234,7 +229,7 @@ $(document).ready(function(){
 
 				login = SsoToLoginWith.find('p').text();
 				aId = SsoToLoginWith.attr('aId');
-				$.post(
+				postHandler.post(
 					'addAppWithSso',
 					{
 						name: name,
@@ -242,29 +237,24 @@ $(document).ready(function(){
 						siteId: $(helper).attr('idx'),
 						appId: aId
 					},
-					function(data){	
-						$(item).find('.tmp').remove();
-						if (data[0] == 's'){
-							$(item).find('.linkImage').addClass('scaleOutAnimation');
-							setTimeout(function() {
-								$(item).find('.linkImage').removeClass('scaleOutAnimation');
-							}, 1000);
-							$(item).find('.linkImage').attr('onclick', "sendEvent(this)");
-							$(item).attr('webId', $(helper).attr('idx'));
-							$(item).attr('login', login);
-							$(item).attr('name', name);
-							$(item).find('.siteName p').text(name);
-							$(item).attr('id', data.substring(9, data.length));
-							$(item).attr('ssoid', $(helper).attr('data-sso'));
-							setupAppSettingButtonPopup($(item).find('.showAppActionsButton'));
-						} else {
-							if (data[0] != 'e'){
-								document.location.reload(true);
-							} else {
-								showAlertPopup(null, true);
-								$(item).remove();
-							}													
-						}
+					function(){$(item).find('.tmp').remove();},
+					function(retMsg){
+						$(item).find('.linkImage').addClass('scaleOutAnimation');
+						setTimeout(function() {
+							$(item).find('.linkImage').removeClass('scaleOutAnimation');
+						}, 1000);
+						$(item).find('.linkImage').attr('onclick', "sendEvent(this)");
+						$(item).attr('webId', $(helper).attr('idx'));
+						$(item).attr('login', login);
+						$(item).attr('name', name);
+						$(item).find('.siteName p').text(name);
+						$(item).attr('id', data.substring(9, data.length));
+						$(item).attr('ssoid', $(helper).attr('data-sso'));
+						setupAppSettingButtonPopup($(item).find('.showAppActionsButton'));
+					},
+					function(retMsg){
+						showAlertPopup(retMsg, true);
+						$(item).remove();
 					},
 					'text'
 				);
@@ -272,7 +262,7 @@ $(document).ready(function(){
 			} else {
 				login = $(popup).find('#login').val();
 				password = $(popup).find('#password').val();
-				$.post(
+				postHandler.post(
 					'addApp',
 					{
 						name: name,
@@ -281,30 +271,25 @@ $(document).ready(function(){
 						profileId: $(container).closest('.item').attr('id'),
 						siteId: $(helper).attr('idx'),
 					},
-					function(data){
-						$(item).find('.tmp').remove();
-						if (data[0] == 's'){
-							$(item).find('.linkImage').addClass('scaleOutAnimation');
-							setTimeout(function() {
-								$(item).find('.linkImage').removeClass('scaleOutAnimation');
-							}, 1000);
-							$(item).find('.linkImage').attr('onclick', "sendEvent(this)");
-							$(item).attr('login', login);
-							$(item).attr('webId', $(helper).attr('idx'));
-							$(item).attr('name', name);
-							$(item).attr('logwith', 'false');
-							$(item).find('.siteName p').text(name);
-							$(item).attr('id', data.substring(9, data.length));
-							$(item).attr('ssoid', $(helper).attr('data-sso'));
-							setupAppSettingButtonPopup($(item).find('.showAppActionsButton'));
-						} else {
-							if (data[0] != 'e'){
-								document.location.reload(true);
-							} else {
-								showAlertPopup(null, true);
-								$(item).remove();
-							}						
-						}
+					function(){$(item).find('.tmp').remove();},
+					function(retMsg){
+						$(item).find('.linkImage').addClass('scaleOutAnimation');
+						setTimeout(function() {
+							$(item).find('.linkImage').removeClass('scaleOutAnimation');
+						}, 1000);
+						$(item).find('.linkImage').attr('onclick', "sendEvent(this)");
+						$(item).attr('login', login);
+						$(item).attr('webId', $(helper).attr('idx'));
+						$(item).attr('name', name);
+						$(item).attr('logwith', 'false');
+						$(item).find('.siteName p').text(name);
+						$(item).attr('id', data.substring(9, data.length));
+						$(item).attr('ssoid', $(helper).attr('data-sso'));
+						setupAppSettingButtonPopup($(item).find('.showAppActionsButton'));
+					},
+					function(retMsg){
+						showAlertPopup(retMsg, true);
+						$(item).remove();
 					},
 					'text'
 				);

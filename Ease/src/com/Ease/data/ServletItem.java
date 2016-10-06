@@ -147,14 +147,7 @@ public class ServletItem {
 		if (retCode != Code.DatabaseNotConnected.ordinal() && type != Type.CatalogSearchServlet)
 			saveInDB(db);
 		retMsg = ret;
-
-		String resp = "";
-		if (retCode == 200) {
-			resp = "success: ";
-		} else {
-			resp = "error: ";
-		}
-		resp += retMsg;
+		String resp = retCode + " " + retMsg;
 		response.getWriter().print(resp);
 	}
 }

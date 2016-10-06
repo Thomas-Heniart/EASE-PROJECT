@@ -4,6 +4,7 @@ pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/xhtml1-transitional.dtd">
 <html xmlns="http://w3.org/1999/xhtml">
 <head>
+	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 	<meta http-equiv="Content-Type" contentType="text/html; charset=UTF-8" />
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1" />
 	<meta name="description"
@@ -21,8 +22,6 @@ pageEncoding="UTF-8"%>
 	<link rel="stylesheet" href="css/owl.carousel.css" />
 	<link rel="stylesheet" href="css/owl.theme.css" />
 	<link rel="stylesheet" href="css/owl.transitions.css" />
-
-
 
 	<link rel="stylesheet" href="css/lib/vicons-font/vicons-font.css">
 	<link rel="stylesheet" href="css/lib/vicons-font/buttons.css">
@@ -42,6 +41,7 @@ pageEncoding="UTF-8"%>
 	<script src="js/jquery.mousewheel.min.js"></script>
 	<script src="js/footer.js"></script>
 	<script src="js/tutorial.js"></script>
+	<script src="js/postHandler.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/lib/dropDownMenu/dropdown.css" />
@@ -49,194 +49,131 @@ pageEncoding="UTF-8"%>
 	<script src="js/modalEffects.js"></script>
 	<script src="js/selectFx.js"></script>
 	<link rel="stylesheet" type="text/css" href="component.css" />
-	<% if (session.getAttribute("User") != null){ %>
+	<%com.Ease.session.User user = (com.Ease.session.User) (session.getAttribute("User"));%>
+	<% if (user != null){ %>
 	<script src="js/checkConnection.js"></script>
-	<%}%>
-</head>
-<script type="text/javascript">
-	var Environment = {
-	    //mobile or desktop compatible event name, to be used with '.on' function
-	    TOUCH_DOWN_EVENT_NAME: 'mousedown touchstart',
-	    TOUCH_UP_EVENT_NAME: 'mouseup touchend',
-	    TOUCH_MOVE_EVENT_NAME: 'mousemove touchmove',
-	    TOUCH_DOUBLE_TAB_EVENT_NAME: 'dblclick dbltap',
+	<script type="text/javascript">console.log("YA UN USER");</script>
+	<%} else {%>
+	<script type="text/javascript">console.log("PAS DE USER");</script>
+	<%} %>
+	<script src="js/isMobile.js"></script>
+	<script src="js/setupOwlCarousel.js"></script>
+	<script type="text/javascript">
+		function getUserNavigator() {
+			var ua = navigator.userAgent;
 
-	    isAndroid: function() {
-	    	return navigator.userAgent.match(/Android/i);
-	    },
-	    isBlackBerry: function() {
-	    	return navigator.userAgent.match(/BlackBerry/i);
-	    },
-	    isIOS: function() {
-	    	return navigator.userAgent.match(/iPhone|iPad|iPod/i);
-	    },
-	    isOpera: function() {
-	    	return navigator.userAgent.match(/Opera Mini/i);
-	    },
-	    isWindows: function() {
-	    	return navigator.userAgent.match(/IEMobile/i);
-	    },
-	    isMobile: function() {
-	    	return (Environment.isAndroid() || Environment.isBlackBerry() || Environment.isIOS() || Environment.isOpera() || Environment.isWindows());
-	    }
-	};
-	
-	$(document).ready(function(){
-		if(Environment.isMobile()){
-			$('#onComputer').attr('style', "display:none");
-			$('#onMobile').attr('style', "display:block");
-		}
-	});
-	
-	function sendConnectionStatus(isConnected) {
-		var content = new Object();
-		content.detail = isConnected;
-		var event = new CustomEvent("isConnected", content);
-		document.dispatchEvent(event);
-	}
-
-	function getUserNavigator() {
-		var ua = navigator.userAgent;
-
-		var x = ua.indexOf("MSIE");
-		var y = "MSIE";
-		if (x == -1) {
-			x = ua.indexOf("Firefox");
-			y = "Firefox";
+			var x = ua.indexOf("MSIE");
+			var y = "MSIE";
 			if (x == -1) {
+				x = ua.indexOf("Firefox");
+				y = "Firefox";
 				if (x == -1) {
-					x = ua.indexOf("Chrome");
-					y = "Chrome";
 					if (x == -1) {
-						x = ua.indexOf("Opera");
-						y = "Opera";
+						x = ua.indexOf("Chrome");
+						y = "Chrome";
 						if (x == -1) {
-							x = ua.indexOf("Safari");
-							if (x != -1) {
-								x = ua.indexOf("Version");
-								y = "Safari";
+							x = ua.indexOf("Opera");
+							y = "Opera";
+							if (x == -1) {
+								x = ua.indexOf("Safari");
+								if (x != -1) {
+									x = ua.indexOf("Version");
+									y = "Safari";
+								}
 							}
 						}
 					}
 				}
 			}
+			return (y);
 		}
-		return (y);
-	}
 
-	function deleteOverlay(item) {
-		var suppDiv = $(item).closest('.logoItem');
+		function deleteOverlay(item) {
+			var suppDiv = $(item).closest('.logoItem');
 
-		suppDiv.remove();
-	}
-	function onInputFocus(ev) {
-		classie.add(ev.target.parentNode, 'input--filled');
-	}
-
-	function onInputBlur(ev) {
-		if (ev.target.value.trim() === '') {
-			classie.remove(ev.target.parentNode, 'input--filled');
+			suppDiv.remove();
 		}
-	}
+		function onInputFocus(ev) {
+			classie.add(ev.target.parentNode, 'input--filled');
+		}
 
-	function addAppRequest(item) {
-		var profile = $(item).closest('.MobilePreview');
-		var logoItem = $(item).closest('.logoItem');
-		var content = $(item).closest('.content');
-		var login = $(content).find('#login');
-		var password = $(content).find('#password');
-
-		$(logoItem).find('.imageBox').append(
-			$('<i class="fa fa-spinner tmp"></i>'));
-		$.post('addApp', {
-			login : $(login).val(),
-			password : $(password).val(),
-			profileId : $(profile).attr("index"),
-			siteId : $(logoItem).attr("index")
-		}, function(data) {
-			$(logoItem).find('.tmp').removeClass('fa-spinner');
-			if (data[0] == 's') {
-				$(logoItem).find('.tmp').addClass('fa-check');
-				setTimeout(function() {
-					$(logoItem).find('.tmp').remove();
-				}, 1000);
-			} else {
-				$(logoItem).find('.tmp').addClass('fa-times');
-				$(logoItem).find('.tmp').css("color", "red");
-				setTimeout(function() {
-					$(logoItem).remove();
-				}, 1000);
+		function onInputBlur(ev) {
+			if (ev.target.value.trim() === '') {
+				classie.remove(ev.target.parentNode, 'input--filled');
 			}
-		}, 'text');
-		$(item).closest('.windowAddApp').remove();
-	}
+		}
 
-	$(document).ready(function() {
-		$('#helloButton').click(function() {
-			$('#loading').addClass("la-animate");
-			var parent = $(this).closest('form');
-			var email = $(parent).find("#email").val();
-			var password = $(parent).find("#password").val();
+		function addAppRequest(item) {
+			var profile = $(item).closest('.MobilePreview');
+			var logoItem = $(item).closest('.logoItem');
+			var content = $(item).closest('.content');
+			var login = $(content).find('#login');
+			var password = $(content).find('#password');
 
-			$(parent).find('.alertDiv').removeClass('show');
-			$.post('connection', // Un script PHP que l'on va créer juste après
-			{
-				email : email, // Nous récupérons la valeur de nos inputs que l'on fait passer à connexion.php
-				password : password
-			},
+			$(logoItem).find('.imageBox').append(
+				$('<i class="fa fa-spinner tmp"></i>'));
+			postHandler.post(
+				'addApp',
+				{
+					login : $(login).val(),
+					password : $(password).val(),
+					profileId : $(profile).attr("index"),
+					siteId : $(logoItem).attr("index")
+				}, 
+				function(){
+					$(logoItem).find('.tmp').removeClass('fa-spinner');
+				},
+				function(retMsg){
+					$(logoItem).find('.tmp').addClass('fa-check');
+					setTimeout(function() {
+						$(logoItem).find('.tmp').remove();
+					}, 1000);
+				},
+				function(retMsg){
+					$(logoItem).find('.tmp').addClass('fa-times');
+					$(logoItem).find('.tmp').css("color", "red");
+					setTimeout(function() {
+						$(logoItem).remove();
+					}, 1000);
+				},
+				'text'
+				);
+			$(item).closest('.windowAddApp').remove();
+		}
+		function disableAutocomplete(){
+			if (document.getElementsByTagName) {
 
-			function(data) { // Cette fonction ne fait rien encore, nous la mettrons à jour plus tard
-				if (data[0] == 's') {
-					$('#loading').removeClass("la-animate");
-					window.location.replace("index.jsp");
-				} else {
-					$('#loading').removeClass("la-animate");
-					$(parent).find('.alertDiv').addClass('show');
-					$(parent).find('#password').val('');
+				var inputElements = document.getElementsByTagName("input");
+
+				for (i=0; inputElements[i]; i++) {
+
+
+						inputElements[i].setAttribute("autocomplete","off");
+
 				}
-			},
 
-			'text' // Nous souhaitons recevoir "Success" ou "Failed", donc on indique text !
-			);
-		});
-		$("#loginForm").submit(function(e) { // On sélectionne le formulaire par son identifiant
-			e.preventDefault(); // Le navigateur ne peut pas envoyer le formulaire
-		});
-	});
-</script>
-
-<script type="text/javascript">
-	$(document).ready(function() {
-		setupOwlCarousel();
-		$('.owl-carousel').on('mousewheel', '.owl-stage', function(e) {
-			if (e.deltaY > 0) {
-				$('.owl-carousel').trigger('next.owl');
-			} else {
-				$('.owl-carousel').trigger('prev.owl');
 			}
-			e.preventDefault();
-		});
-	});
-</script>
-<script type="text/javascript">
-	$(document).ready(function() {
-		$('#hideCookies').click(function() {
-			setCookie("hideCookies", "true", 365);
-			$('.cookiesInfo').css('display', 'none');
-		});
-		var cookie = getCookie('hideCookies');
+		}
+		$(document).ready(function() {
+			$('#hideCookies').click(function() {
+				setCookie("hideCookies", "true", 365);
+				$('.cookiesInfo').css('display', 'none');
+			});
+			var cookie = getCookie('hideCookies');
 
-		if (cookie != 'true')
-			$('.cookiesInfo').css('display', 'block');
-		disableAutocompele();
-	});
-</script>
+			if (cookie != 'true')
+				$('.cookiesInfo').css('display', 'block');
+			disableAutocomplete();
+		});
+	</script>
+</head>
 
 <body role="document" class="mainBody">
 	<%@ page import="java.util.Base64" %>
 	<%@ page import="java.util.Base64.Encoder" %>
 	<%@ page import="java.nio.charset.StandardCharsets" %>
-	
+	<div id="userEmail" data-content=<%= (user != null) ? user.getEmail() : null %>></div>
+
 	<div id="onMobile" style="display:none;">
 		<%@ include file="templates/Mobile.jsp" %>
 	</div>
@@ -246,7 +183,7 @@ pageEncoding="UTF-8"%>
 			<p>En poursuivant votre navigation, vous acceptez l'utilisation de cookies dans le cadre de l’authentification, la sécurité et l’intégrité du site et des produits.</p>
 			<button id="hideCookies"><i class="fa fa-times" aria-hidden="true"></i></button>
 		</div>
-		<% if (session.getValue("User") == null){ %>
+		<% if (user == null){ %>
 		<%@ include file="templates/loginBody.jsp"%>
 		<%}else {%>
 		<%@ include file="templates/Header.jsp"%>
