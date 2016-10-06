@@ -109,7 +109,7 @@ public class ServletItem {
 	
 	public String[] getServletParamValues(String paramName) {
 		String param[] = request.getParameterValues(paramName);
-		args.put(paramName, param.toString());
+		args.put(paramName, (param != null) ? param.toString() : null);
 		return param;
 	}
 	
