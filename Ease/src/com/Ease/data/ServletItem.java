@@ -1,6 +1,9 @@
 package com.Ease.data;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -130,7 +133,9 @@ public class ServletItem {
 	    	Entry<String, String> e = it.next();
 	        argsString += "<" + e.getKey() + ":" + e.getValue() + ">";
 	    }
-		db.set("insert into logs values(" + type.ordinal() + ", " + retCode + ", " + ((user != null) ? user.getId() : "NULL") + ", '" + argsString + "', '" + retMsg + "' );");
+	    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		db.set("insert into logs values(" + type.ordinal() + ", " + retCode + ", " + ((user != null) ? user.getId() : "NULL") + ", '" + argsString + "', '" + retMsg + "', '" + dateFormat.format(date) + "');");
 	}
 	
 	public void sendResponse() throws IOException {
