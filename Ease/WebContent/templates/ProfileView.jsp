@@ -54,7 +54,8 @@ response.addCookie(email);
 <script>
 	$(document).on("contextmenu", ".linkImage", function(e){
 		e.preventDefault();
-		$(this).find('.showAppActionsButton').trigger('hover');
+		$(this).trigger('mouseover');
+		$(this).find('.showAppActionsButton').trigger('mouseover');
 		return false;
 	});
 	function sendEvent(obj) {

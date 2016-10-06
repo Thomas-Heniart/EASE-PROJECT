@@ -1,12 +1,12 @@
 function sendEvent(email, password, userSelector, passSelector, buttonSelector, urlLogin, urlHome){ //dispatch an Event to warn the plugin it has to connect to the websit\e
     var event = new CustomEvent("NewConnection",
-     {'detail':{"user": email,
-     "pass":password,
-     "userField":userSelector,
-      "passField":passSelector,
-      "button": buttonSelector,
+       {'detail':{"user": email,
+       "pass":password,
+       "userField":userSelector,
+       "passField":passSelector,
+       "button": buttonSelector,
        "urlLogin": urlLogin,
-        "urlHome": urlHome}});
+       "urlHome": urlHome}});
     document.dispatchEvent(event);
     console.log("Ease : go to new page");
     console.log(event.detail);
@@ -52,7 +52,7 @@ function changeColor(color, ratio, darker) {
     color = color.replace(
         /^#?([a-f0-9])([a-f0-9])([a-f0-9])$/i,
         '#$1$1$2$2$3$3'
-    );
+        );
 
     // Calculate ratio
     var difference = Math.round(ratio * 256) * (darker ? -1 : 1),
@@ -66,7 +66,7 @@ function changeColor(color, ratio, darker) {
             '(?:\\s*,\\s*' +
             '(0|1|0?\\.\\d+))?' +
             '\\s*\\)$'
-        , 'i')),
+            , 'i')),
         alpha = !!rgb && rgb[4] != null ? rgb[4] : null,
 
         // Convert hex to decimal
@@ -74,56 +74,121 @@ function changeColor(color, ratio, darker) {
             /^#?([a-f0-9][a-f0-9])([a-f0-9][a-f0-9])([a-f0-9][a-f0-9])/i,
             function() {
                 return parseInt(arguments[1], 16) + ',' +
-                    parseInt(arguments[2], 16) + ',' +
-                    parseInt(arguments[3], 16);
+                parseInt(arguments[2], 16) + ',' +
+                parseInt(arguments[3], 16);
             }
-        ).split(/,/),
+            ).split(/,/),
         returnValue;
 
     // Return RGB(A)
     return !!rgb ?
-        'rgb' + (alpha !== null ? 'a' : '') + '(' +
-            Math[darker ? 'max' : 'min'](
-                parseInt(decimal[0], 10) + difference, darker ? 0 : 255
-            ) + ', ' +
-            Math[darker ? 'max' : 'min'](
-                parseInt(decimal[1], 10) + difference, darker ? 0 : 255
-            ) + ', ' +
-            Math[darker ? 'max' : 'min'](
-                parseInt(decimal[2], 10) + difference, darker ? 0 : 255
-            ) +
-            (alpha !== null ? ', ' + alpha : '') +
-            ')' :
+    'rgb' + (alpha !== null ? 'a' : '') + '(' +
+    Math[darker ? 'max' : 'min'](
+        parseInt(decimal[0], 10) + difference, darker ? 0 : 255
+        ) + ', ' +
+    Math[darker ? 'max' : 'min'](
+        parseInt(decimal[1], 10) + difference, darker ? 0 : 255
+        ) + ', ' +
+    Math[darker ? 'max' : 'min'](
+        parseInt(decimal[2], 10) + difference, darker ? 0 : 255
+        ) +
+    (alpha !== null ? ', ' + alpha : '') +
+    ')' :
         // Return hex
         [
-            '#',
-            pad(Math[darker ? 'max' : 'min'](
-                parseInt(decimal[0], 10) + difference, darker ? 0 : 255
+        '#',
+        pad(Math[darker ? 'max' : 'min'](
+            parseInt(decimal[0], 10) + difference, darker ? 0 : 255
             ).toString(16), 2),
-            pad(Math[darker ? 'max' : 'min'](
-                parseInt(decimal[1], 10) + difference, darker ? 0 : 255
+        pad(Math[darker ? 'max' : 'min'](
+            parseInt(decimal[1], 10) + difference, darker ? 0 : 255
             ).toString(16), 2),
-            pad(Math[darker ? 'max' : 'min'](
-                parseInt(decimal[2], 10) + difference, darker ? 0 : 255
+        pad(Math[darker ? 'max' : 'min'](
+            parseInt(decimal[2], 10) + difference, darker ? 0 : 255
             ).toString(16), 2)
         ].join('');
+    }
+
+    function lighterColor(color, ratio) {
+        return changeColor(color, ratio, false);
+    }
+
+
+    function darkerColor(color, ratio) {
+        return changeColor(color, ratio, true);
+    }
+
+    function disableAutocompele(){
+     if (document.getElementsByTagName) {
+        var inputElements = document.getElementsByTagName("input");
+        for (i=0; inputElements[i]; i++) {
+            inputElements[i].setAttribute("autocomplete","off");
+        }
+    }
 }
 
-function lighterColor(color, ratio) {
-    return changeColor(color, ratio, false);
+function setupOwlCarousel(){
+    $('.owl-carousel').owlCarousel({
+        items : 3,
+        itemsCustom : false,
+        itemsDesktop : [ 1199, 3 ],
+        itemsDesktopSmall : [ 980, 3 ],
+        itemsTablet : [ 768, 3 ],
+        itemsTabletSmall : false,
+        itemsMobile : [ 479, 1 ],
+        singleItem : false,
+        itemsScaleUp : false,
+        pagination : false,
+        touchDrag : false,
+        mouseDrag : false,
+        afterInit: function () {
+            $('.owl-carousel').find('.owl-wrapper').each(function () {
+                var w = $(this).width() / 2;
+                $(this).width(w);
+                $(this).css('margin', '0 auto');
+            });
+        },
+        afterUpdate: function () {
+            $('.owl-carousel').find('.owl-wrapper').each(function () {
+                var w = $(this).width() / 2;
+                $(this).width(w);
+                $(this).css('margin', '0 auto');
+            });
+        }       
+    });
+    $('.owl-wrapper').sortable({
+        animation: 300,
+        group:"profiles",
+        handle: ".ProfileName",
+        forceFallback: true,
+        onStart: function(evt){
+            var item = $(evt.item);
+            $('body').css('cursor', 'move');
+            item.css({
+                'pointer-events': 'none',
+                'opacity': '0'
+            });
+        },
+        onEnd: function(evt){
+            var item = $(evt.item);
+            $('body').css('cursor', '');
+            item.css({
+                'pointer-events': '',
+                'opacity': ''
+            });
+            if (evt.oldIndex != evt.newIndex){
+                $.post(
+                    "moveProfile",
+                    {
+                        profileId: item.find('.item').attr('id'),
+                        index: item.index()
+                    },
+                    function (data){
+                    },
+                    'text'
+                    );
+            }
+        }
+    });
 }
 
-
-function darkerColor(color, ratio) {
-    return changeColor(color, ratio, true);
-}
-
-$(document).ready(function() {
-/*  $(".ease-button").hover(function(event) {
-    var darkColor = darkerColor($(event.target).css("background-color"), 0.3);
-    $(event.target).css("background-color", darkColor);
-  }, function(event) {
-    var lightColor = lighterColor($(event.target).css("background-color"), 0.3);
-    $(event.target).css("background-color", lightColor);
-  });*/
-});
