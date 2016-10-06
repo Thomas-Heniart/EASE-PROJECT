@@ -136,7 +136,7 @@ public class ServletItem {
 	public void sendResponse() throws IOException {
 		DataBase db = (DataBase)request.getSession().getServletContext().getAttribute("DataBase");
 		String ret = retMsg;
-		if (type == Type.AskInfo) {
+		if (type == Type.AskInfo && retCode == 200) {
 			retMsg = "Info sended.";
 		}
 		if (retCode != Code.DatabaseNotConnected.ordinal() && type != Type.CatalogSearchServlet)
@@ -145,7 +145,6 @@ public class ServletItem {
 
 		String resp = "";
 		if (retCode == 200) {
-			
 			resp = "success: ";
 		} else {
 			resp = "error: ";

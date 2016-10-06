@@ -58,8 +58,8 @@ public class AddAppSso extends HttpServlet {
 		// Get Parameters
 		String profileIdString = SI.getServletParam("profileId");
 		String appIdString = SI.getServletParam("appId");
-		String siteId = request.getParameter("siteId");
-		String name = request.getParameter("name");
+		String siteId = SI.getServletParam("siteId");
+		String name = SI.getServletParam("name");
 		//--
 
 		Site site = null;
@@ -67,7 +67,7 @@ public class AddAppSso extends HttpServlet {
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		try {
 			int profileId = Integer.parseInt(profileIdString);
-			int appId = Integer.parseInt(request.getParameter(appIdString));
+			int appId = Integer.parseInt(appIdString);
 			
 			Profile profile = null;
 			

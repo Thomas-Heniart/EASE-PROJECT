@@ -225,6 +225,17 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  <!--
+  <security-constraint>
+      <web-resource-collection>
+        <web-resource-name>Viewpoint Secure URLs</web-resource-name>
+        <url-pattern>/*</url-pattern>
+      </web-resource-collection>
+      <user-data-constraint>
+        <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+      </user-data-constraint>
+    </security-constraint>
+  -->
   <error-page>
     <error-code>404</error-code>
     <location>/404page.jsp</location>
