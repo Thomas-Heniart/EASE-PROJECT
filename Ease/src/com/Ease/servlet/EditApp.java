@@ -54,7 +54,7 @@ public class EditApp extends HttpServlet {
 	
 		// Get Parameters
 		String login = SI.getServletParam("login");
-		String wPassword = SI.getServletParam("wPassword");
+		String wPassword = request.getParameter("wPassword");
 		String name = SI.getServletParam("name");
 		String appIdParam = SI.getServletParam("appId");
 		// --
