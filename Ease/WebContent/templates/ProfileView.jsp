@@ -100,7 +100,8 @@ response.addCookie(email);
 				group:"sites",
 				forceFallback: true,
 				filter: ".siteLinkBox[move='false']",
-				fallbackTolerance: 5,
+				handle: ".logo, .emptyAppIndicator",
+				fallbackTolerance: 1,
 				onStart: function(evt){
 					var item = $(evt.item);
 					item.css({

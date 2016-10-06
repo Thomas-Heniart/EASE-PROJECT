@@ -320,10 +320,16 @@
 				return; // only left button or enabled
 			}
 
-			if (options.handle && !_closest(originalTarget, options.handle, el)) {
+			if (options.handle && $(originalTarget).closest(options.handle).length == 0) {
+				
 				return;
 			}
+/*
+			if (options.handle && !_closest(originalTarget, options.handle, el)) {
 
+				return;
+			}
+*/
 			target = _closest(target, options.draggable, el);
 
 			if (!target) {
