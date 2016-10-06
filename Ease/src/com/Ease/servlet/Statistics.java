@@ -74,7 +74,7 @@ public class Statistics extends HttpServlet {
 	    startDate = SI.getServletParam("startDate");
 	    String endDate = null;
 	    endDate = SI.getServletParam("endDate");
-	    String baseRequest = "SELECT count(distinct users.user_id) from stats join users on stats.user_id = users.user_id WHERE";
+	    String baseRequest = "SELECT count(distinct users.user_id) from logs join users on logs.user_id = users.user_id WHERE";
 	    JSONObject jsonRes = new JSONObject();
 	    /* Take date in account */
 	    /*if (startDate != null || endDate != null)
@@ -107,7 +107,7 @@ public class Statistics extends HttpServlet {
 	        dbRequest = baseRequest + " date >= '" + date.toString() + " 00:00:00' AND date <= '" + date.toString() + " 59:59:59'";
 	        
 	        if (afterTuto != null && afterTuto.equals("on")) {
-				rs = db.get(dbRequest + " AND tuto = 1 AND msg = 'success';");
+				rs = db.get(dbRequest + " AND tuto = 1 AND code = 200 AND type = " + ServletItem.Type.ConnectionServlet.ordinal() + ";");
 				try {
 					while(rs.next()) {
 						JSONObject tmpObj = new JSONObject();
