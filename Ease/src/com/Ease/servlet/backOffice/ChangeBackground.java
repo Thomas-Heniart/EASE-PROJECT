@@ -1,4 +1,4 @@
-package com.Ease.servlet;
+package com.Ease.servlet.backOffice;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,12 +23,12 @@ import com.Ease.stats.Stats;
 /**
  * Servlet implementation class UploadWebsite
  */
-@WebServlet("/UploadWebsite")
-public class UploadWebsiteServlet extends HttpServlet {
+@WebServlet("/changeBackground")
+public class ChangeBackground extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+ 
 	// location to store file uploaded
-	private static final String UPLOAD_DIRECTORY = "/var/lib/tomcat7/webapps/ROOT/resources/websites";
+	private static final String UPLOAD_DIRECTORY = "/var/lib/tomcat7/webapps/ROOT/resources/backgrounds";
 	// private static final String UPLOAD_DIRECTORY =
 	// "/Users/thomas/EASE-PROJECT/Ease/WebContent/resources/websites";
 
@@ -40,7 +40,7 @@ public class UploadWebsiteServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public UploadWebsiteServlet() {
+	public ChangeBackground() {
 		super();
 	}
 
@@ -71,9 +71,7 @@ public class UploadWebsiteServlet extends HttpServlet {
 
 		if (!ServletFileUpload.isMultipartContent(request)) {
 			// if not, we stop here
-			PrintWriter writer = response.getWriter();
-			writer.println("Error: Form must has enctype=multipart/form-data.");
-			writer.flush();
+			response.getWriter().print("error: Form must has enctype=multipart/form-data.");
 			return;
 		}
 
@@ -94,65 +92,40 @@ public class UploadWebsiteServlet extends HttpServlet {
 
 		// constructs the directory path to store upload file
 		// this path is relative to application's directory
-		String uploadPath = "";
+		String uploadPath = UPLOAD_DIRECTORY;
 
 		// creates the directory if it does not exist
 
 		try {
 			// parses the request's content to extract file data
 			List<FileItem> formItems = upload.parseRequest(request);
-
 			if (formItems != null && formItems.size() > 0) {
 				// iterates over form's fields
 				for (FileItem item : formItems) {
-					if (item.isFormField()) {
-						if (item.getFieldName().equals("siteName")) {
-							uploadPath = UPLOAD_DIRECTORY + File.separator + item.getString();
-							File uploadDir = new File(uploadPath);
-							if (!uploadDir.exists()) {
-								uploadDir.mkdir();
-							}
-						}
-					}
-					// processes only fields that are not form fields
 					if (!item.isFormField()) {
-						// System.out.println(uploadPath);
-						String fileName = new File(item.getName()).getName();
 						String filePath;
 						File storeFile;
-						if (fileName.endsWith(".json")) {
-
-							filePath = uploadPath + File.separator + "connect.json";
-							// System.out.println(filePath);
-							storeFile = new File(filePath);
-							if (storeFile.exists())
-								storeFile.renameTo(new File(uploadPath + File.separator + "connect_old.json"));
-
-							// saves the file on disk
-							Stats.saveAction(session.getServletContext(), user, Stats.Action.UploadWebsite,
-									"Uploaded " + filePath);
-							item.write(storeFile);
+						filePath = uploadPath + "/" + "background.jpeg";
+						storeFile = new File(filePath);
+						if (storeFile.exists()) {
+							String newPathName = uploadPath + "/"+ "background_old";
+							File temp = new File(newPathName +".jpeg");
+							while(temp.exists()){
+								newPathName += "_old";
+								temp = new File(newPathName +".jpeg");
+							}
+							storeFile.renameTo(temp);
 						}
-						if (fileName.endsWith(".png")) {
-							filePath = uploadPath + File.separator + "logo.png";
-							storeFile = new File(filePath);
-							if (storeFile.exists())
-								storeFile.renameTo(new File(uploadPath + File.separator + "logo_old.png"));
-
-							Stats.saveAction(session.getServletContext(), user, Stats.Action.UploadWebsite,
-									"Uploaded " + filePath);
-							item.write(storeFile);
-
-						}
-						request.setAttribute("message", "Upload has been done successfully!");
+						
+						item.write(storeFile);
 					}
 				}
 			}
 		} catch (Exception ex) {
-			request.setAttribute("message", "There was an error: " + ex.getMessage());
+			response.getWriter().print("error: "+ex);
 		}
 		// redirects client to message page
-		this.doGet(request, response);
+		response.getWriter().print("success");
 	}
 
 }
