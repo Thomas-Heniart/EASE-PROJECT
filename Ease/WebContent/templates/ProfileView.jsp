@@ -905,10 +905,3 @@ logwith="${app.getAccount().getLogWithApp(member).getAppId()}">
 		});
 	});
 </script>
-
-
-
-
-
-
-
