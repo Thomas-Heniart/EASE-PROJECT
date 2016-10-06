@@ -49,7 +49,8 @@ function refreshCatalogContent(data) {
 				search : searchVal
 			},
 			function(data) {
-				refreshCatalogContent(data);
+				if (data[0] != 'e')
+					refreshCatalogContent(data.substring(9));
 			},
 			'text'
 		);
