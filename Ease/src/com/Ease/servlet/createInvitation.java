@@ -89,7 +89,7 @@ public class createInvitation extends HttpServlet {
 								SI.setResponse(ServletItem.Code.BadParameters, "This group dosen't exist.");
 							}
 						} else {
-							SI.setResponse(ServletItem.Code.BadParameters, "This user already exist.");
+							SI.setResponse(199, "This user already exist.");
 						}
 					} else {
 						rs = db.get("select * from invitations where email='" + email + "';");
@@ -104,7 +104,7 @@ public class createInvitation extends HttpServlet {
 									SI.setResponse(ServletItem.Code.BadParameters, "This group dosen't exist.");
 								}
 							} else {
-								SI.setResponse(ServletItem.Code.BadParameters, "This user already exist.");
+								SI.setResponse(199, "This user already exist.");
 							}
 						} else {
 							for (int i = 0;i < 126 ; ++i) {

@@ -92,7 +92,7 @@ public class PasswordLost extends HttpServlet {
 					mail.sendPasswordLostMail(email, linkCode, userName);
 					SI.setResponse(200, "Please, go check your email.");
 				} else {
-					SI.setResponse(ServletItem.Code.BadParameters, "This email is not associate with an account.");
+					SI.setResponse(199, "This email is not associate with an account.");
 				}
 			}
 		} catch (SQLException e) {

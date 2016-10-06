@@ -74,10 +74,10 @@ public class ConnectionServlet extends HttpServlet {
 						session.setAttribute("User", user);
 						SI.setResponse(200, "Connected.");
 					} else {
-						SI.setResponse(ServletItem.Code.BadParameters, "Wrong login or password.");
+						SI.setResponse(199, "Wrong login or password.");
 					}
 				} else {
-					SI.setResponse(ServletItem.Code.BadParameters, "Wrong login or password.");
+					SI.setResponse(199, "Wrong login or password.");
 				}
 			}
 		} catch (SessionException e) {
