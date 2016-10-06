@@ -62,22 +62,22 @@ pageEncoding="UTF-8"%>
 	    TOUCH_DOUBLE_TAB_EVENT_NAME: 'dblclick dbltap',
 
 	    isAndroid: function() {
-	        return navigator.userAgent.match(/Android/i);
+	    	return navigator.userAgent.match(/Android/i);
 	    },
 	    isBlackBerry: function() {
-	        return navigator.userAgent.match(/BlackBerry/i);
+	    	return navigator.userAgent.match(/BlackBerry/i);
 	    },
 	    isIOS: function() {
-	        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+	    	return navigator.userAgent.match(/iPhone|iPad|iPod/i);
 	    },
 	    isOpera: function() {
-	        return navigator.userAgent.match(/Opera Mini/i);
+	    	return navigator.userAgent.match(/Opera Mini/i);
 	    },
 	    isWindows: function() {
-	        return navigator.userAgent.match(/IEMobile/i);
+	    	return navigator.userAgent.match(/IEMobile/i);
 	    },
 	    isMobile: function() {
-	        return (Environment.isAndroid() || Environment.isBlackBerry() || Environment.isIOS() || Environment.isOpera() || Environment.isWindows());
+	    	return (Environment.isAndroid() || Environment.isBlackBerry() || Environment.isIOS() || Environment.isOpera() || Environment.isWindows());
 	    }
 	};
 	
@@ -206,70 +206,6 @@ pageEncoding="UTF-8"%>
 </script>
 
 <script type="text/javascript">
-	function setupOwlCarousel(){
-		$('.owl-carousel').owlCarousel({
-			items : 3,
-			itemsCustom : false,
-			itemsDesktop : [ 1199, 3 ],
-			itemsDesktopSmall : [ 980, 3 ],
-			itemsTablet : [ 768, 3 ],
-			itemsTabletSmall : false,
-			itemsMobile : [ 479, 1 ],
-			singleItem : false,
-			itemsScaleUp : false,
-			pagination : false,
-			touchDrag : false,
-			mouseDrag : false,
-			afterInit: function () {
-				$('.owl-carousel').find('.owl-wrapper').each(function () {
-					var w = $(this).width() / 2;
-					$(this).width(w);
-					$(this).css('margin', '0 auto');
-				});
-			},
-			afterUpdate: function () {
-				$('.owl-carousel').find('.owl-wrapper').each(function () {
-					var w = $(this).width() / 2;
-					$(this).width(w);
-					$(this).css('margin', '0 auto');
-				});
-			}		
-		});
-		$('.owl-wrapper').sortable({
-			animation: 300,
-			group:"profiles",
-			handle: ".ProfileName",
-			forceFallback: true,
-			onStart: function(evt){
-				var item = $(evt.item);
-				$('body').css('cursor', 'move');
-				item.css({
-					'pointer-events': 'none',
-					'opacity': '0'
-				});
-			},
-			onEnd: function(evt){
-				var item = $(evt.item);
-				$('body').css('cursor', '');
-				item.css({
-					'pointer-events': '',
-					'opacity': ''
-				});
-				if (evt.oldIndex != evt.newIndex){
-					$.post(
-						"moveProfile",
-						{
-							profileId: item.find('.item').attr('id'),
-							index: item.index()
-						},
-						function (data){
-						},
-						'text'
-					);
-				}
-			}
-		});
-	}
 	$(document).ready(function() {
 		setupOwlCarousel();
 		$('.owl-carousel').on('mousewheel', '.owl-stage', function(e) {
@@ -292,6 +228,7 @@ pageEncoding="UTF-8"%>
 
 		if (cookie != 'true')
 			$('.cookiesInfo').css('display', 'block');
+		disableAutocompele();
 	});
 </script>
 
@@ -301,24 +238,24 @@ pageEncoding="UTF-8"%>
 	<%@ page import="java.nio.charset.StandardCharsets" %>
 	
 	<div id="onMobile" style="display:none;">
-	<%@ include file="templates/Mobile.jsp" %>
+		<%@ include file="templates/Mobile.jsp" %>
 	</div>
 	
 	<div id="onComputer">
-	<div class="cookiesInfo" style="display: none;">
-		<p>En poursuivant votre navigation, vous acceptez l'utilisation de cookies dans le cadre de l’authentification, la sécurité et l’intégrité du site et des produits.</p>
-		<button id="hideCookies"><i class="fa fa-times" aria-hidden="true"></i></button>
-	</div>
-	<% if (session.getValue("User") == null){ %>
-	<%@ include file="templates/loginBody.jsp"%>
-	<%}else {%>
-	<%@ include file="templates/Header.jsp"%>
-	<%@ include file="templates/loggedBody.jsp"%>
-	<%}%>
-	<%@ include file="templates/Footer.jsp" %>
-	<div class="la-anim-10" id="loading"></div>
-	<%@ include file="templates/SimpleAlertPopup.jsp" %>
-	<%@ include file="templates/ChatButton.jsp" %>
+		<div class="cookiesInfo" style="display: none;">
+			<p>En poursuivant votre navigation, vous acceptez l'utilisation de cookies dans le cadre de l’authentification, la sécurité et l’intégrité du site et des produits.</p>
+			<button id="hideCookies"><i class="fa fa-times" aria-hidden="true"></i></button>
+		</div>
+		<% if (session.getValue("User") == null){ %>
+		<%@ include file="templates/loginBody.jsp"%>
+		<%}else {%>
+		<%@ include file="templates/Header.jsp"%>
+		<%@ include file="templates/loggedBody.jsp"%>
+		<%}%>
+		<%@ include file="templates/Footer.jsp" %>
+		<div class="la-anim-10" id="loading"></div>
+		<%@ include file="templates/SimpleAlertPopup.jsp" %>
+		<%@ include file="templates/ChatButton.jsp" %>
 	</div>
 	
 </body>
