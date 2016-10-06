@@ -23,6 +23,9 @@
 <script>
 	function enterRequestedWebsitesMode() {
 		$('#RequestedWebsitesTab').addClass('show');
+	}
+	
+	$(document).ready(function(){
 		$.post(
 				'requestedWebsites',
 				{},
@@ -32,7 +35,7 @@
 					}
 				}, 'text'
 		);
-	}
+	});
 	
 	function printRequestedWebsites(string){
 		var requests = string.split(";");
@@ -41,9 +44,9 @@
 				var email = requests[i].split("-SENTBY-")[1];
 				var website = requests[i].split("-SENTBY-")[0];
 				$('.requestedWebsitesView').append("<div class='requestedWebsite' website='"+requests[i].split("-SENTBY-")[0]+"'><button class='quit'>X</button><p>Website : "+requests[i].split("-SENTBY-")[0]+" 		ASKED BY email : "+requests[i].split("-SENTBY-")[1]+"</p></div>");
-				$('.requestedWebsite .quit').click(eraseWebsites);
 			}
 		}
+		$('.requestedWebsite .quit').click(eraseWebsites);
 	}
 
 	function leaveRequestedWebsitesMode() {
@@ -81,17 +84,4 @@
 			leaveRequestedWebsitesMode();
 		});
 	});
-	
-	function sendInvitation(email, callback){
-		$.post(
-				'createInvitation',
-				{
-					email : email
-				},
-				function(data) {					
-					$('#progressStatus .progress').append("<p>"+ email + " -> " + data);
-					callback();
-				}, 'text'
-		);
-	}
 </script>

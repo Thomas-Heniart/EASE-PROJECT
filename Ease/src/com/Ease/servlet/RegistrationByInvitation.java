@@ -105,6 +105,8 @@ public class RegistrationByInvitation extends HttpServlet {
 						db.set("delete from invitations where email = '" + email + "' and linkCode = '" + invitationCode + "';");
 						SI.setResponse(200, "User registered.");
 					}
+				} else {
+					SI.setResponse(ServletItem.Code.BadParameters, "You have no invitation or you have already an account.");
 				}
 			} catch (SessionException e) {
 				SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());

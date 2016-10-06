@@ -54,7 +54,8 @@ response.addCookie(email);
 <script>
 	$(document).on("contextmenu", ".linkImage", function(e){
 		e.preventDefault();
-		$(this).find('.showAppActionsButton').trigger('hover');
+		$(this).trigger('mouseover');
+		$(this).find('.showAppActionsButton').trigger('mouseover');
 		return false;
 	});
 	function sendEvent(obj) {
@@ -100,7 +101,8 @@ response.addCookie(email);
 				group:"sites",
 				forceFallback: true,
 				filter: ".siteLinkBox[move='false']",
-				fallbackTolerance: 5,
+				handle: ".logo, .emptyAppIndicator",
+				fallbackTolerance: 1,
 				onStart: function(evt){
 					var item = $(evt.item);
 					item.css({
@@ -904,10 +906,3 @@ logwith="${app.getAccount().getLogWithApp(member).getAppId()}">
 		});
 	});
 </script>
-
-
-
-
-
-
-

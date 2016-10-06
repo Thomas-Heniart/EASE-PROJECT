@@ -320,10 +320,16 @@
 				return; // only left button or enabled
 			}
 
-			if (options.handle && !_closest(originalTarget, options.handle, el)) {
+			if (options.handle && $(originalTarget).closest(options.handle).length == 0) {
+				
 				return;
 			}
+/*
+			if (options.handle && !_closest(originalTarget, options.handle, el)) {
 
+				return;
+			}
+*/
 			target = _closest(target, options.draggable, el);
 
 			if (!target) {
@@ -858,7 +864,7 @@
 							_dispatchEvent(null, parentEl, 'add', dragEl, rootEl, oldIndex, newIndex);
 
 							// Remove event
-							_dispatchEvent(this, rootEl, 'remove', dragEl, rootEl, oldIndex, newIndex);
+							//_dispatchEvent(this, rootEl, 'remove', dragEl, rootEl, oldIndex, newIndex);
 
 							// drag from one list and drop into another
 							_dispatchEvent(null, parentEl, 'sort', dragEl, rootEl, oldIndex, newIndex);

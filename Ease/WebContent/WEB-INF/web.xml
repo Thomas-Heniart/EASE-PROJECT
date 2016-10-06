@@ -151,14 +151,6 @@
     <url-pattern>/.well-known/acme-challenge/qot0z1SUt7tR8jyndaWcmnHR7183Q3vQOL2AOK47yDk</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>AddLogWith</servlet-name>
-    <servlet-class>com.Ease.servlet.AddLogWith</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>AddLogWith</servlet-name>
-    <url-pattern>/addLogWith</url-pattern>
-  </servlet-mapping>
-  <servlet>
     <servlet-name>EditLogWith</servlet-name>
     <servlet-class>com.Ease.servlet.EditLogWith</servlet-class>
   </servlet>
@@ -184,7 +176,7 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>requestedWebsites</servlet-name>
-    <servlet-class>com.Ease.servlet.RequestedWebsitesServlet</servlet-class>
+    <servlet-class>com.Ease.servlet.backOffice.RequestedWebsitesServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>requestedWebsites</servlet-name>
@@ -192,7 +184,7 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>eraseRequestedWebsite</servlet-name>
-    <servlet-class>com.Ease.servlet.EraseRequestedWebsiteServlet</servlet-class>
+    <servlet-class>com.Ease.servlet.backOffice.EraseRequestedWebsiteServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>eraseRequestedWebsite</servlet-name>
@@ -200,7 +192,7 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>UploadWebsite</servlet-name>
-    <servlet-class>com.Ease.servlet.UploadWebsiteServlet</servlet-class>
+    <servlet-class>com.Ease.servlet.backOffice.UploadWebsiteServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>UploadWebsite</servlet-name>
@@ -208,7 +200,7 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>AddWebsite</servlet-name>
-    <servlet-class>com.Ease.servlet.AddWebsite</servlet-class>
+    <servlet-class>com.Ease.servlet.backOffice.AddWebsite</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>AddWebsite</servlet-name>
@@ -225,6 +217,17 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+
+  <security-constraint>
+      <web-resource-collection>
+        <web-resource-name>Viewpoint Secure URLs</web-resource-name>
+        <url-pattern>/*</url-pattern>
+      </web-resource-collection>
+      <user-data-constraint>
+        <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+      </user-data-constraint>
+    </security-constraint>
+
   <error-page>
     <error-code>404</error-code>
     <location>/404page.jsp</location>

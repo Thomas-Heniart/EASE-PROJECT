@@ -1,6 +1,9 @@
 package com.Ease.data;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -109,7 +112,7 @@ public class ServletItem {
 	
 	public String[] getServletParamValues(String paramName) {
 		String param[] = request.getParameterValues(paramName);
-		args.put(paramName, param.toString());
+		args.put(paramName, (param != null) ? param.toString() : null);
 		return param;
 	}
 	
@@ -130,13 +133,15 @@ public class ServletItem {
 	    	Entry<String, String> e = it.next();
 	        argsString += "<" + e.getKey() + ":" + e.getValue() + ">";
 	    }
-		db.set("insert into logs values(" + type.ordinal() + ", " + retCode + ", " + ((user != null) ? user.getId() : "NULL") + ", '" + argsString + "', '" + retMsg + "' );");
+	    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		db.set("insert into logs values(" + type.ordinal() + ", " + retCode + ", " + ((user != null) ? user.getId() : "NULL") + ", '" + argsString + "', '" + retMsg + "', '" + dateFormat.format(date) + "');");
 	}
 	
 	public void sendResponse() throws IOException {
 		DataBase db = (DataBase)request.getSession().getServletContext().getAttribute("DataBase");
 		String ret = retMsg;
-		if (type == Type.AskInfo) {
+		if (type == Type.AskInfo && retCode == 200) {
 			retMsg = "Info sended.";
 		}
 		if (retCode != Code.DatabaseNotConnected.ordinal() && type != Type.CatalogSearchServlet)
@@ -145,7 +150,6 @@ public class ServletItem {
 
 		String resp = "";
 		if (retCode == 200) {
-			
 			resp = "success: ";
 		} else {
 			resp = "error: ";
