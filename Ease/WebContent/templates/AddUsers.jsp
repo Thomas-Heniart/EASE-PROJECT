@@ -104,7 +104,8 @@
 			var emailsSent = 0;
 			
 			for ( var email in emailsList) {
-				sendInvitation(emailsList[email], function(){
+				var tab = emailsList[email].split(":");
+				sendInvitation(tab[0], tab[1], function(){
 					emailsSent++;
 					$('#sent').text(emailsSent + "/" + emailsToSend + " emails sent.");
 				});
@@ -112,11 +113,12 @@
 		});
 	});
 	
-	function sendInvitation(email, callback){
+	function sendInvitation(email, group_id, callback){
 		$.post(
 				'createInvitation',
 				{
-					email : email
+					email : email,
+					groupId : group_id
 				},
 				function(data) {					
 					$('#progressStatus .progress').append("<p>"+ email + " -> " + data);
