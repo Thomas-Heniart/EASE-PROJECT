@@ -50,7 +50,8 @@ public class ServletItem {
 		RequestedWebsitesServlet,
 		ResetUser,
 		SetTags,
-		UploadWebsiteServlet
+		UploadWebsiteServlet,
+		AdminStats
 	}
 	public enum Code
 	{
@@ -140,6 +141,7 @@ public class ServletItem {
 	
 	public void sendResponse() throws IOException {
 		DataBase db = (DataBase)request.getSession().getServletContext().getAttribute("DataBase");
+		user = ((User)request.getSession().getAttribute("User") == null) ? user : (User)request.getSession().getAttribute("User");
 		String ret = retMsg;
 		if (type == Type.AskInfo && retCode == 200) {
 			retMsg = "Info sended.";
