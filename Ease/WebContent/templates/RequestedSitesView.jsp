@@ -30,7 +30,7 @@
 				'requestedWebsites',
 				{},
 				function(){},
-				function(retMsg){printRequestedWebsites(retMsg);}
+				function(retMsg){printRequestedWebsites(retMsg);},
 				function(retMsg){}, 
 				'text'
 		);

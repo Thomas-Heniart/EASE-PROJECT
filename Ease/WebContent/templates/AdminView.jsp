@@ -11,6 +11,7 @@ pageEncoding="UTF-8"%>
 <%@ page import="com.Ease.session.ClassicAccount"%>
 <%@ page import="com.Ease.session.LogWithAccount"%>
 <%@ page import="java.util.List" %>
+<script src="js/postHandler.js"></script>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
