@@ -213,7 +213,7 @@ $(document).ready(function(){
 						$(item).attr('name', name);
 						$(item).attr('logwith', aId);
 						$(item).find('.siteName p').text(name);
-						$(item).attr('id', data.substring(9, data.length));
+						$(item).attr('id', retMsg);
 						$(item).attr('ssoid', $(helper).attr('data-sso'));
 						setupAppSettingButtonPopup($(item).find('.showAppActionsButton'));
 					},
@@ -248,7 +248,7 @@ $(document).ready(function(){
 						$(item).attr('login', login);
 						$(item).attr('name', name);
 						$(item).find('.siteName p').text(name);
-						$(item).attr('id', data.substring(9, data.length));
+						$(item).attr('id', retMsg);
 						$(item).attr('ssoid', $(helper).attr('data-sso'));
 						setupAppSettingButtonPopup($(item).find('.showAppActionsButton'));
 					},
@@ -283,7 +283,7 @@ $(document).ready(function(){
 						$(item).attr('name', name);
 						$(item).attr('logwith', 'false');
 						$(item).find('.siteName p').text(name);
-						$(item).attr('id', data.substring(9, data.length));
+						$(item).attr('id', retMsg);
 						$(item).attr('ssoid', $(helper).attr('data-sso'));
 						setupAppSettingButtonPopup($(item).find('.showAppActionsButton'));
 					},

@@ -117,7 +117,7 @@ pageEncoding="UTF-8"%>
 					}, 5000);
 				},
 				function(retMsg){
-					var str = data.substring(7, data.length);
+					var str = retMsg;
 					$('.alertDiv').css('color', 'red');
 					$('.alertDiv').text(str);
 					$('.alertDiv').addClass('show');

@@ -156,19 +156,14 @@ pageEncoding="UTF-8"%>
     			        'text'
     			     );
 				},
-				function(retMsg){},
-				function(data){
-					if (data[0] == 's'){
-						
-					}else {
-						button.removeClass('loading');
-						var str = data.substring(7, data.length);
-						$('.alertDiv').text(str);
-						$('.alertDiv').addClass('show');
-					}
+				function(retMsg){
+					button.removeClass('loading');
+					var str = retMsg;
+					$('.alertDiv').text(str);
+					$('.alertDiv').addClass('show');
 				},
 				'text'
-				);
+			);
 		});
 	});
 </script>

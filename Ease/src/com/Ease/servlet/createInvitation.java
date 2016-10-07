@@ -66,17 +66,15 @@ public class createInvitation extends HttpServlet {
 		Connection 		con;
 		ResultSet		rs;
 		Random r = new Random();
-		
+		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
+		db.connect();
 		if(user == null || !user.isAdmin(session.getServletContext())){
 			SI.setResponse(ServletItem.Code.NoPermission, "You have not the permission.");
 		} else {
 			try {
 				if (email == null || Regex.isEmail(email) == false){
 					SI.setResponse(ServletItem.Code.BadParameters, "Bad email.");
-				} else {
-					DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
-					db.connect();
-					
+				} else {					
 					rs = db.get("select * from users where email='" + email + "';");
 					if (rs.next()) {
 						if (group != null){
@@ -125,7 +123,6 @@ public class createInvitation extends HttpServlet {
 							}
 						}
 					}
-					db.close();
 				}
 				
 				/*

@@ -53,7 +53,8 @@ response.addCookie(email);
 <script>
 	$(document).on("contextmenu", ".linkImage", function(e){
 		e.preventDefault();
-		$(this).find('.showAppActionsButton').trigger('hover');
+		$(this).trigger('mouseover');
+		$(this).find('.showAppActionsButton').trigger('mouseover');
 		return false;
 	});
 	function sendEvent(obj) {
@@ -82,7 +83,7 @@ response.addCookie(email);
 					}, 
 					function(){},
 					function(retMsg){
-						json.detail = JSON.parse(data.substring(8, data.length));
+						json.detail = JSON.parse(retMsg);
 						event = new CustomEvent("NewConnection", json);
 						document.dispatchEvent(event);
 					},
@@ -161,49 +162,43 @@ response.addCookie(email);
 					'.buttonSet').find('#cancel');
 
 				$('#loading').addClass('la-animate');
-				$
-				.post(
+				postHandler.post(
 					'editProfileName',
 					{
 						name : name,
 						index : index
 					},
-					function(data) {
+					function(){
 						$('#loading').removeClass(
 							'la-animate');
 						$(button).closest(
 							'#modifyNameForm')
 						.find('#profileName')
 						.val('');
-
-						if (data[0] == 's') {
-							$(closeSectionButton)
-							.click();
-							$(button)
-							.closest(
-								'.ProfileBox')
-							.find(
-								'.ProfileName p')
-							.text('@' + name);
-							$(button)
-							.closest(
-								'.profileSettingsTab')
-							.find(
-								'.sectionHeader .directInfo p')
-							.text(name);
-							showAlertPopup(
-								'Modifications successfully applied !',
-								false);
-						} else {
-							if (data[0] != 'e') {
-								document.location
-								.reload(true);
-							} else {
-								showAlertPopup(null,
-									true);
-							}
-						}
-					}, 'text');
+					},
+					function(retMsg){
+						$(closeSectionButton)
+						.click();
+						$(button)
+						.closest(
+							'.ProfileBox')
+						.find(
+							'.ProfileName p')
+						.text('@' + name);
+						$(button)
+						.closest(
+							'.profileSettingsTab')
+						.find(
+							'.sectionHeader .directInfo p')
+						.text(name);
+						showAlertPopup(
+							'Modifications successfully applied !',
+							false);
+					},
+					function(retMsg){
+						showAlertPopup(retMsg,true);
+					},
+					'text');
 			});
 
 		$(profile).find(".colorChooser .color").click(function() {
@@ -226,58 +221,53 @@ response.addCookie(email);
 					'.buttonSet').find('#cancel');
 
 				$('#loading').addClass('la-animate');
-				$
-				.post(
+				postHandler.post(
 					'editProfileColor',
 					{
 						color : color,
 						index : index
 					},
-					function(data) {
+					function(){
 						$('#loading').removeClass(
-							'la-animate');
-						if (data[0] == 's') {
-							$(closeSectionButton)
-							.click();
+						'la-animate');
+					},
+					function(retMsg){
+						$(closeSectionButton)
+						.click();
+						$(button)
+						.closest(
+							'.ProfileBox')
+						.find(
+							'.ProfileName')
+						.css(
+							'background-color',
+							color);
+						$(button).closest(
+							'.ProfileBox')
+						.attr('color',
+							color);
+						var string = '5px solid '
+						+ color;
+						$(button).closest(
+							'.ProfileBox').css(
+							'border-bottom',
+							string);
 							$(button)
 							.closest(
-								'.ProfileBox')
+								'.profileSettingsTab')
 							.find(
-								'.ProfileName')
+								'#ColorSection .directInfo')
 							.css(
 								'background-color',
 								color);
-							$(button).closest(
-								'.ProfileBox')
-							.attr('color',
-								color);
-							var string = '5px solid '
-							+ color;
-							$(button).closest(
-								'.ProfileBox').css(
-								'border-bottom',
-								string);
-								$(button)
-								.closest(
-									'.profileSettingsTab')
-								.find(
-									'#ColorSection .directInfo')
-								.css(
-									'background-color',
-									color);
-								showAlertPopup(
-									'Modifications successfully applied !',
-									false);
-							} else {
-								if (data[0] != 'e') {
-									document.location
-									.reload(true);
-								} else {
-									showAlertPopup(null,
-										true);
-								}
-							}
-						}, 'text');
+							showAlertPopup(
+								'Modifications successfully applied !',
+								false);
+					},
+					function(retMsg){
+						showAlertPopup(retMsg, true);
+					},
+					'text');
 			});
 		$(profile).find('#deleteProfileForm .buttonSet #validate').click(
 			function() {
@@ -915,10 +905,3 @@ logwith="${app.getAccount().getLogWithApp(member).getAppId()}">
 		});
 	});
 </script>
-
-
-
-
-
-
-

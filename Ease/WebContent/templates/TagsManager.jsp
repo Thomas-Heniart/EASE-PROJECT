@@ -108,7 +108,7 @@ $(document).ready(function(){
 			}, 1000);
 		},
 		function(retMsg){
-			$('#setTags').val(data);
+			$('#setTags').val(retMsg);
 			$('#setTags').prop('disabled', true);
 			setTimeout(function(){
 				$('#setTags').val("Validate");
