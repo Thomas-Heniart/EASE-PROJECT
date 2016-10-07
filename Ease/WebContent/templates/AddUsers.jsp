@@ -114,16 +114,22 @@
 	});
 	
 	function sendInvitation(email, group_id, callback){
-		$.post(
+		postHandler.post(
 				'createInvitation',
 				{
 					email : email,
 					groupId : group_id
 				},
-				function(data) {					
-					$('#progressStatus .progress').append("<p>"+ email + " -> " + data);
+				function() {},
+				function(retMsg){
+					$('#progressStatus .progress').append("<p>"+ email + " -> success");
 					callback();
-				}, 'text'
+				},
+				function(retMsg){
+					$('#progressStatus .progress').append("<p>"+ email + " -> error : " + retMsg);
+					callback();
+				},
+				'text'
 		);
 	}
 </script>

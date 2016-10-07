@@ -94,26 +94,28 @@ $(document).ready(function(){
 		var tags = $('#tagsContainer div').map(function(){return $(this).attr("tagId");}).get();
 		tags = JSON.stringify(tags);
 		var websiteId = $("#websiteSelector").val();
-		$.post("setTags", {
+		postHandler.post("setTags", {
 			websiteId : websiteId,
 			tagsId : tags
-		}, function(data) {
-			if (data[0] == 's') {
-				$('#setTags').val("Success");
-				$('#setTags').prop('disabled', true);
-				setTimeout(function(){
-					$('#setTags').val("Validate");
-					$('#setTags').prop('disabled', false);
-				}, 1000);
-			} else {
-				$('#setTags').val(data);
-				$('#setTags').prop('disabled', true);
-				setTimeout(function(){
-					$('#setTags').val("Validate");
-					$('#setTags').prop('disabled', false);
-				}, 1000);
-			}
-		}, 'text');
+		},
+		function(){},
+		function(retMsg){
+			$('#setTags').val("Success");
+			$('#setTags').prop('disabled', true);
+			setTimeout(function(){
+				$('#setTags').val("Validate");
+				$('#setTags').prop('disabled', false);
+			}, 1000);
+		},
+		function(retMsg){
+			$('#setTags').val(retMsg);
+			$('#setTags').prop('disabled', true);
+			setTimeout(function(){
+				$('#setTags').val("Validate");
+				$('#setTags').prop('disabled', false);
+			}, 1000);
+		},
+		'text');
 
 	});
 });
@@ -127,28 +129,28 @@ function showFormTags(){
 		$('#completeForm').attr("style","display:none");
 		
 	} else {
-		$.post("getTags", {
-			websiteId : websiteId
-
-		}, function(data) {
-			if (data[0] == '[') {
-				var tags = JSON.parse(data);
-			} else {
-				var tags = [];
-			}
-			
-			$('#completeForm').attr("style","display:visible");
-			
-			for(var i in tags){
-				$("#tagsContainer").append('<div tagId="'+ tags[i].id +'" class="btn-group tags-group" style="margin-left: 1px; margin-top: 3px;">'
-		    			+'<a href="#" class="tag btn btn-default"'
-						+'style="background-color: '+  tags[i].color +'; border-color: '+  tags[i].color +'; color: white;">'+  tags[i].name
-						+'</a>'
-						+'<a href="#" onClick="deleteTag('+  tags[i].id +')" class="btn btn-default delete-tag">X</a>'
-		    		+'</div>');
-			}
-		}, 'text');
-		
+		postHandler.post(
+			"getTags", 
+			{
+				websiteId : websiteId
+			}, 
+			function(){
+				$('#completeForm').attr("style","display:visible");
+			},
+			function(retMsg){
+				var tags = JSON.parse(retMsg);
+				for(var i in tags){
+					$("#tagsContainer").append('<div tagId="'+ tags[i].id +'" class="btn-group tags-group" style="margin-left: 1px; margin-top: 3px;">'
+			    			+'<a href="#" class="tag btn btn-default"'
+							+'style="background-color: '+  tags[i].color +'; border-color: '+  tags[i].color +'; color: white;">'+  tags[i].name
+							+'</a>'
+							+'<a href="#" onClick="deleteTag('+  tags[i].id +')" class="btn btn-default delete-tag">X</a>'
+			    		+'</div>');
+				}
+			},
+			function(retMsg){},
+			'text'
+		);
 	}
 }
 

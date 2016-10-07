@@ -103,28 +103,28 @@ pageEncoding="UTF-8"%>
 			$('.alertDiv').removeClass('show');
 			var button = $('.registrationBlock .custom-button');
 			button.addClass('loading');
-			$.post(
+			postHandler.post(
 				$('#registrationForm').attr('action'),
 				{
 					email: email
 				},
-				function(data){
-					if (data[0] == 's'){
-						button.removeClass('loading');
-						button.addClass('success');
-						setTimeout(function(){
-							button.removeClass('success');
-						}, 5000);
-					} else {
-						var str = data.substring(7, data.length);
-						$('.alertDiv').css('color', 'red');
-						$('.alertDiv').text(str);
-						$('.alertDiv').addClass('show');
-						button.removeClass('loading');
-					}
+				function(){},
+				function(retMsg){
+					button.removeClass('loading');
+					button.addClass('success');
+					setTimeout(function(){
+						button.removeClass('success');
+					}, 5000);
+				},
+				function(retMsg){
+					var str = retMsg;
+					$('.alertDiv').css('color', 'red');
+					$('.alertDiv').text(str);
+					$('.alertDiv').addClass('show');
+					button.removeClass('loading');
 				},
 				'text'
-				);
+			);
 		});
 	});
 </script>

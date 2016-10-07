@@ -3,19 +3,18 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <%@ page import="java.util.List" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <script>
 $(document).ready(function(){
 	$('#logoutButton').click(function(){
 		var event = new CustomEvent("Logout");
 		document.dispatchEvent(event);
-		$.post(
+		postHandler.post(
 			'logout',
-			{				
-			},
-			function(data){
-				window.location.replace("logout.jsp");
-			},
+			{},
+			function(){},
+			function(retMsg){window.location.replace("logout.jsp");},
+			function(){},
 			'text'
 		);
 	});

@@ -23,18 +23,20 @@
 						$('.helpIntegrateApps #integrateAppForm #integrate').click(
 										function() {
 											var form = $(this).closest('#integrateAppForm');
-											$.post(
+											postHandler.post(
 												'askForNewApp',
 												{
 													ask : $(form).find('#integrateApp').val()
 												},
-												function(data) {
+												function() {
 													$(form).find('.inputs input').val('');
 													$(form).find('.inputs').hide();
 													$(form).find('.confirmation').show().delay(1000).fadeOut(function() {
 														$(form).find('.inputs').show();
 													});
 												},
+												function(retMsg){},
+												function(retMsg){},
 												'text');
 										});
 					});
@@ -90,15 +92,15 @@
 	});
 	
 	$(document).ready(
-			function() {
-				$(document).click(
-						function(event) {
-							if ($(".CatalogViewTab").hasClass("show") && !($(event.target).closest('.MenuButtonSet').length) && $('.md-show').length == 0) {
-								if (!($(event.target).closest('.header, .owl-wrapper-outer, .md-modal, .md-overlay, .CatalogViewTab').length))
-									leaveEditMode();
-							}
-						});
-			});
+		function() {
+			$(document).click(
+				function(event) {
+					if ($(".CatalogViewTab").hasClass("show") && !($(event.target).closest('.MenuButtonSet').length) && $('.md-show').length == 0) {
+						if (!($(event.target).closest('.header, .owl-wrapper-outer, .md-modal, .md-overlay, .CatalogViewTab').length))
+							leaveEditMode();
+					}
+				});
+		});
 
 	function showConfirmDeleteAppPopup(elem, event) {
 		event.preventDefault();
@@ -116,29 +118,101 @@
 		popup.find("#accept").click(function() {
 			popup.removeClass('md-show');
 			image.addClass('easyScaling');
-			$.post('deleteApp', {
-				appId: $(app).attr('id')
-			}, function(data) {
-				if (data[0] == 's') {
-					image.removeClass('easyScaling');
-					image.addClass('deletingApp');
-					setTimeout(function() {
-						console.log(app);
-						app.remove();
-					}, 500);
-				} else {
-					if (data[0] != 'e') {
-						document.location.reload(true);
-					} else {
-						showAlertPopup(null, true);
-						image.removeClass('easyScaling');
-					}
-
-				}
-			}, 'text');
+			postHandler.post(
+					'deleteApp',
+					{
+						appId: $(app).attr('id')
+					}, 
+					function(){image.removeClass('easyScaling');},
+					function(retMsg){
+						image.addClass('deletingApp');
+						setTimeout(function() {
+							console.log(app);
+							app.remove();
+						}, 500);
+					},
+					function(retMsg){
+						showAlertPopup(retMsg, true);
+					}, 
+					'text'
+				);
 		});
-	}
-
+	}/*
+	$(document).ready(function(){
+		$('#catalog').sortable({
+			animation: 300,
+			group:{name: "sites",pull:"clone", put:false},
+			sort: false,
+			forceFallback: true,
+			onStart: function(evt){
+				var item = $(evt.item);
+				$('body').css('cursor', 'move');
+			},
+			onEnd: function(evt){
+				var item = $(evt.item);
+				$('body').css('cursor', '');
+				if (evt.oldIndex != evt.newIndex){
+					$.post(
+						"moveProfile",
+						{
+							profileId: item.find('.item').attr('id'),
+							index: item.index()
+						},
+						function (data){
+						},
+						'text'
+						);
+				}
+			},
+			helper: function(evt){
+				var catalogItem = $(evt.item);
+				var ret;
+				ret = $('<div class="dragHelperLogo" style="position: fixed;"/>');
+				ret.attr("idx", $(catalogItem).attr(
+					"idx"));
+				ret.attr("name", $(catalogItem).find(
+					'p').text());
+				ret.attr("connect", $(catalogItem)
+					.attr("connect"));
+				ret.attr("data-login", $(catalogItem)
+					.attr("data-login"));
+				ret.attr("data-sso", $(catalogItem)
+					.attr("data-sso"));
+				ret.attr("data-nologin", $(catalogItem)
+					.attr("data-nologin"));
+				ret.append($('<img />'));
+				ret.find('img').attr(
+					"src",
+					$(catalogItem).find('img')
+					.attr("src"));
+				return ($(ret).get(0));				
+			},
+			onClone: function(evt){
+				var catalogItem = $(evt.item);
+				var ret;
+				ret = $('<div class="dragHelperLogo" style="position: fixed;"/>');
+				ret.attr("idx", $(catalogItem).attr(
+					"idx"));
+				ret.attr("name", $(catalogItem).find(
+					'p').text());
+				ret.attr("connect", $(catalogItem)
+					.attr("connect"));
+				ret.attr("data-login", $(catalogItem)
+					.attr("data-login"));
+				ret.attr("data-sso", $(catalogItem)
+					.attr("data-sso"));
+				ret.attr("data-nologin", $(catalogItem)
+					.attr("data-nologin"));
+				ret.append($('<img />'));
+				ret.find('img').attr(
+					"src",
+					$(catalogItem).find('img')
+					.attr("src"));
+				evt.clone = ret;
+				evt.item = ret;
+			}
+		});
+	});*/
 	$(document)
 			.ready(
 					function() {
@@ -173,5 +247,5 @@
 												return ret; //Replaced $(ui) with $(this)
 											}
 										});
-					});
-</script>
+									});
+								</script>

@@ -175,7 +175,7 @@
 			padding: 0px;
 			white-space: nowrap;
 			overflow: hidden;
-			background-color: white;
+			background-color: #E7E7E7;
 			position: relative;
 			.tag {
 				margin: 10px 0 10px 20px;
@@ -226,7 +226,7 @@
 	.scaleContainerView {
 		background-color: white;
 		width: 100%;
-		padding: 0px 5%;
+		padding: 0px;
 		border-bottom: 1px solid darken($borderFbColor, 10%);
 		border-top: 1px solid darken($borderFbColor, 10%);
 		margin-left: auto;
@@ -342,7 +342,7 @@
 						.catalogAppName {
 							text-align: center;
 							padding-top: 3px;
-							font-size: 12px;
+							font-size: 10px;
 							p{
 								overflow: hidden;
 								text-overflow: ellipsis;
@@ -656,7 +656,7 @@
 	}
 	.CatalogViewTab.show {
 		visibility: visible;
-		background-color: white;
+		background-color: #E7E7E7;
 		left: 52.2%;
 		top: 3%;
 		opacity: 1;

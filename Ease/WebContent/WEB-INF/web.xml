@@ -149,15 +149,7 @@
   <servlet-mapping>
     <servlet-name>LetsEncrypt</servlet-name>
     <url-pattern>/.well-known/acme-challenge/qot0z1SUt7tR8jyndaWcmnHR7183Q3vQOL2AOK47yDk</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>EditLogWith</servlet-name>
-    <servlet-class>com.Ease.servlet.EditLogWith</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>EditLogWith</servlet-name>
-    <url-pattern>/editLogWith</url-pattern>
-  </servlet-mapping>
+   </servlet-mapping>
   <servlet>
     <servlet-name>AskInfo</servlet-name>
     <servlet-class>com.Ease.servlet.AskInfo</servlet-class>
@@ -207,7 +199,7 @@
     <url-pattern>/addWebsiteInDB</url-pattern>
   </servlet-mapping>
   <session-config>
-    <session-timeout>240</session-timeout>
+    <session-timeout>1</session-timeout>
   </session-config>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
@@ -217,7 +209,7 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
-
+<!--
   <security-constraint>
       <web-resource-collection>
         <web-resource-name>Viewpoint Secure URLs</web-resource-name>
@@ -227,7 +219,7 @@
         <transport-guarantee>CONFIDENTIAL</transport-guarantee>
       </user-data-constraint>
     </security-constraint>
-
+-->
   <error-page>
     <error-code>404</error-code>
     <location>/404page.jsp</location>

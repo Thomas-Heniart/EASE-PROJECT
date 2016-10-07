@@ -149,18 +149,13 @@ public class ServletItem {
 		}
 		if (retCode != Code.DatabaseNotConnected.ordinal() && type != Type.CatalogSearchServlet)
 			saveInDB(db);
+
 		if (retCode == Code.LogicError.ordinal()) {
 			retMsg = "Sorry, an intern problem as occured. We attempt to resolve this.";
 		} else {
 			retMsg = ret;
 		}
-		String resp = "";
-		if (retCode == 200) {
-			resp = "success: ";
-		} else {
-			resp = "error: ";
-		}
-		resp += retMsg;
+		String resp = retCode + " " + retMsg;
 		response.getWriter().print(resp);
 	}
 }
