@@ -52,7 +52,7 @@ public class ConnectionServlet extends HttpServlet {
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		
 		if (user != null){
-			session.invalidate();
+			session.setAttribute("User", null);
 		}
 		
 		try {
