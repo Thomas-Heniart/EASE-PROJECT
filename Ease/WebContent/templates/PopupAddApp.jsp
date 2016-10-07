@@ -191,110 +191,119 @@ $(document).ready(function(){
 
 			var AppToLoginWith = $(popup).find('.loginAppChooser .ChooserContent .AccountApp.selected');
 			var SsoToLoginWith = $('.loginSsoChooser .ChooserContent .AccountApp.selected');
-
-			if (AppToLoginWith.length){
-				aId = AppToLoginWith.attr('aId');
-				postHandler.post(
-					'addLogWith',
-					{
-						name: name,
-						profileId: $(container).closest('.item').attr('id'),
-						siteId: $(helper).attr('idx'),
-						appId: aId
-					},
-					function(){	$(item).find('.tmp').remove();},
-					function(retMsg){
-						$(item).find('.linkImage').addClass('scaleOutAnimation');
-						setTimeout(function() {
-							$(item).find('.linkImage').removeClass('scaleOutAnimation');
-						}, 1000);
-						$(item).find('.linkImage').attr('onclick', "sendEvent(this)");
-						$(item).attr('webId', $(helper).attr('idx'));
-						$(item).attr('name', name);
-						$(item).attr('logwith', aId);
-						$(item).find('.siteName p').text(name);
-						$(item).attr('id', retMsg);
-						$(item).attr('ssoid', $(helper).attr('data-sso'));
-						setupAppSettingButtonPopup($(item).find('.showAppActionsButton'));
-					},
-					function(retMsg){
-						showAlertPopup(retMsg, true);
-						$(item).remove();
-					},
-					'text'
-				);
-				
-				
-			} else if (SsoToLoginWith.length){
-
-				login = SsoToLoginWith.find('p').text();
-				aId = SsoToLoginWith.attr('aId');
-				postHandler.post(
-					'addAppWithSso',
-					{
-						name: name,
-						profileId: $(container).closest('.item').attr('id'),
-						siteId: $(helper).attr('idx'),
-						appId: aId
-					},
-					function(){$(item).find('.tmp').remove();},
-					function(retMsg){
-						$(item).find('.linkImage').addClass('scaleOutAnimation');
-						setTimeout(function() {
-							$(item).find('.linkImage').removeClass('scaleOutAnimation');
-						}, 1000);
-						$(item).find('.linkImage').attr('onclick', "sendEvent(this)");
-						$(item).attr('webId', $(helper).attr('idx'));
-						$(item).attr('login', login);
-						$(item).attr('name', name);
-						$(item).find('.siteName p').text(name);
-						$(item).attr('id', retMsg);
-						$(item).attr('ssoid', $(helper).attr('data-sso'));
-						setupAppSettingButtonPopup($(item).find('.showAppActionsButton'));
-					},
-					function(retMsg){
-						showAlertPopup(retMsg, true);
-						$(item).remove();
-					},
-					'text'
-				);
 			
+			if(name == "" || name == null){
+				showAlertPopup("App name can't be empty !", true);
+			} else if(!AppToLoginWith.length && !SsoToLoginWith.length && !popup.find('#login').val()){
+				showAlertPopup("Login can't be empty !", true);
+			} else if(!AppToLoginWith.length && !SsoToLoginWith.length &&!popup.find('#password').val()){
+				showAlertPopup("Password can't be empty !", true);
 			} else {
-				login = $(popup).find('#login').val();
-				password = $(popup).find('#password').val();
-				postHandler.post(
-					'addApp',
-					{
-						name: name,
-						login: login,
-						password: password,
-						profileId: $(container).closest('.item').attr('id'),
-						siteId: $(helper).attr('idx'),
-					},
-					function(){$(item).find('.tmp').remove();},
-					function(retMsg){
-						$(item).find('.linkImage').addClass('scaleOutAnimation');
-						setTimeout(function() {
-							$(item).find('.linkImage').removeClass('scaleOutAnimation');
-						}, 1000);
-						$(item).find('.linkImage').attr('onclick', "sendEvent(this)");
-						$(item).attr('login', login);
-						$(item).attr('webId', $(helper).attr('idx'));
-						$(item).attr('name', name);
-						$(item).attr('logwith', 'false');
-						$(item).find('.siteName p').text(name);
-						$(item).attr('id', retMsg);
-						$(item).attr('ssoid', $(helper).attr('data-sso'));
-						setupAppSettingButtonPopup($(item).find('.showAppActionsButton'));
-					},
-					function(retMsg){
-						showAlertPopup(retMsg, true);
-						$(item).remove();
-					},
-					'text'
-				);
+				
+				if (AppToLoginWith.length){
+					aId = AppToLoginWith.attr('aId');
+					postHandler.post(
+						'addLogWith',
+						{
+							name: name,
+							profileId: $(container).closest('.item').attr('id'),
+							siteId: $(helper).attr('idx'),
+							appId: aId
+						},
+						function(){	$(item).find('.tmp').remove();},
+						function(retMsg){
+							$(item).find('.linkImage').addClass('scaleOutAnimation');
+							setTimeout(function() {
+								$(item).find('.linkImage').removeClass('scaleOutAnimation');
+							}, 1000);
+							$(item).find('.linkImage').attr('onclick', "sendEvent(this)");
+							$(item).attr('webId', $(helper).attr('idx'));
+							$(item).attr('name', name);
+							$(item).attr('logwith', aId);
+							$(item).find('.siteName p').text(name);
+							$(item).attr('id', retMsg);
+							$(item).attr('ssoid', $(helper).attr('data-sso'));
+							setupAppSettingButtonPopup($(item).find('.showAppActionsButton'));
+						},
+						function(retMsg){
+							showAlertPopup(retMsg, true);
+							$(item).remove();
+						},
+						'text'
+					);
+				
+				
+				} else if (SsoToLoginWith.length){
+	
+					login = SsoToLoginWith.find('p').text();
+					aId = SsoToLoginWith.attr('aId');
+					postHandler.post(
+						'addAppWithSso',
+						{
+							name: name,
+							profileId: $(container).closest('.item').attr('id'),
+							siteId: $(helper).attr('idx'),
+							appId: aId
+						},
+						function(){$(item).find('.tmp').remove();},
+						function(retMsg){
+							$(item).find('.linkImage').addClass('scaleOutAnimation');
+							setTimeout(function() {
+								$(item).find('.linkImage').removeClass('scaleOutAnimation');
+							}, 1000);
+							$(item).find('.linkImage').attr('onclick', "sendEvent(this)");
+							$(item).attr('webId', $(helper).attr('idx'));
+							$(item).attr('login', login);
+							$(item).attr('name', name);
+							$(item).find('.siteName p').text(name);
+							$(item).attr('id', retMsg);
+							$(item).attr('ssoid', $(helper).attr('data-sso'));
+							setupAppSettingButtonPopup($(item).find('.showAppActionsButton'));
+						},
+						function(retMsg){
+							showAlertPopup(retMsg, true);
+							$(item).remove();
+						},
+						'text'
+					);
+			
+				} else {
+					login = $(popup).find('#login').val();
+					password = $(popup).find('#password').val();
+					postHandler.post(
+						'addApp',
+						{
+							name: name,
+							login: login,
+							password: password,
+							profileId: $(container).closest('.item').attr('id'),
+							siteId: $(helper).attr('idx'),
+						},
+						function(){$(item).find('.tmp').remove();},
+						function(retMsg){
+							$(item).find('.linkImage').addClass('scaleOutAnimation');
+							setTimeout(function() {
+								$(item).find('.linkImage').removeClass('scaleOutAnimation');
+							}, 1000);
+							$(item).find('.linkImage').attr('onclick', "sendEvent(this)");
+							$(item).attr('login', login);
+							$(item).attr('webId', $(helper).attr('idx'));
+							$(item).attr('name', name);
+							$(item).attr('logwith', 'false');
+							$(item).find('.siteName p').text(name);
+							$(item).attr('id', retMsg);
+							$(item).attr('ssoid', $(helper).attr('data-sso'));
+							setupAppSettingButtonPopup($(item).find('.showAppActionsButton'));
+						},
+						function(retMsg){
+							showAlertPopup(retMsg, true);
+								$(item).remove();
+						},
+						'text'
+					);
+				}
+				popup.removeClass('md-show');
 			}
-			popup.removeClass('md-show');
 		}) ;	
 		setTimeout(function() {
 				popup.find('#login').focus();

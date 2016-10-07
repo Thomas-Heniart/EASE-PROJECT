@@ -125,9 +125,8 @@
 					}, 3000);
 				},
 				function(retMsg){
-					var str = retMsg;
 					$('.alertDiv').css('color', 'red');
-					$('.alertDiv').text(str);
+					$('.alertDiv p').text(retMsg);
 					$('.alertDiv').addClass('show');
 					$("#lostPasswordForm .input").addClass("show");
 					button.removeClass('loading');

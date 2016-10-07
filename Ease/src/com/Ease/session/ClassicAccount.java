@@ -34,7 +34,6 @@ public class ClassicAccount extends Account{
 		if (db.set("INSERT INTO classicAccounts VALUES ('"+ login + "', '"+ cryptedPassword +"',  LAST_INSERT_ID());") !=0){
 			throw new SessionException("Impossible to insert new classic account in data base.");
 		}
-
 		ResultSet rs = db.get("SELECT LAST_INSERT_ID();");
 		if (rs == null)
 			throw new SessionException("Impossible to insert new classic account in data base. (no rs)");

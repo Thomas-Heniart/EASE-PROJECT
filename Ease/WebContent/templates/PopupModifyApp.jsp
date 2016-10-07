@@ -198,73 +198,82 @@ pageEncoding="UTF-8"%>
 		});
 		popup.find("#accept").unbind('click');
 		popup.find("#accept").click(function(){
-			popup.removeClass('md-show');
-			image.append($('<img class="tmp" src="resources/other/loading-effect.svg" style="position:absolute;top:0;left:0;"/>'));
-			var connect = app.attr('connect');
-			image.removeClass('scaleOutAnimation');
+			
 
 			var name = popup.find('#name').val();
 			var login = '';
 			var password = '';
 			var aId = '';
-
 			var AppToLoginWith = $(popup).find('.AccountApp.selected');
-			if (AppToLoginWith.length){
-				aId = AppToLoginWith.attr('aId');
-				postHandler.post(
-					'editApp',
-					{
-						name: name,
-						appId: $(app).attr('id'),
-						lwId: aId
-					},
-					function(){$(app).find('.tmp').remove();},
-					function(retMsg){
-						image.addClass('scaleOutAnimation');
-						setTimeout(function() {
-							image.removeClass('scaleOutAnimation');
-						}, 1000);
-						app.attr('login', '');
-						app.attr('name', name);
-						app.attr('logwith', aId);
-						app.find('.siteName p').text(name);
-						app.find('.emptyAppIndicator').remove();
-						app.removeClass('emptyApp');
-					},
-					function(retMsg){
-						showAlertPopup(retMsg, true);
-					},
-					'text'
-				);
+			
+			if(name == "" || name == null){
+				showAlertPopup("App name can't be empty !", true);
+			} else if(!AppToLoginWith.length && !popup.find('#login').val()){
+				showAlertPopup("Login can't be empty !", true);
 			} else {
-				login = popup.find('#login').val();
-				password = popup.find('#password').val();
-				postHandler.post(
-					'editApp',
-					{
-						name: name,
-						appId: $(app).attr('id'),
-						login: login,
-						wPassword: password
-					},
-					function(){$(app).find('.tmp').remove();},
-					function(retMsg){
-						image.addClass('scaleOutAnimation');
-						setTimeout(function() {
-							image.removeClass('scaleOutAnimation');
-						}, 1000);
-						app.attr('login', login);
-						app.attr('name', name);
-						app.attr('logwith', 'false');
-						app.find('.siteName p').text(name);
-						app.find('.emptyAppIndicator').remove();
-						app.removeClass('emptyApp');
-					},
-					function(retMsg){
-						showAlertPopup(retMsg, true);
-					},
-					'text'
-				);
+			
+				popup.removeClass('md-show');
+				image.append($('<img class="tmp" src="resources/other/loading-effect.svg" style="position:absolute;top:0;left:0;"/>'));
+				var connect = app.attr('connect');
+				image.removeClass('scaleOutAnimation');
+	
+				if (AppToLoginWith.length){
+					aId = AppToLoginWith.attr('aId');
+					postHandler.post(
+						'editApp',
+						{
+							name: name,
+							appId: $(app).attr('id'),
+							lwId: aId
+						},
+						function(){$(app).find('.tmp').remove();},
+						function(retMsg){
+							image.addClass('scaleOutAnimation');
+							setTimeout(function() {
+								image.removeClass('scaleOutAnimation');
+							}, 1000);
+							app.attr('login', '');
+							app.attr('name', name);
+							app.attr('logwith', aId);
+							app.find('.siteName p').text(name);
+							app.find('.emptyAppIndicator').remove();
+							app.removeClass('emptyApp');
+						},
+						function(retMsg){
+							showAlertPopup(retMsg, true);
+						},
+						'text'
+					);
+				} else {
+					login = popup.find('#login').val();
+					password = popup.find('#password').val();
+					postHandler.post(
+						'editApp',
+						{
+							name: name,
+							appId: $(app).attr('id'),
+							login: login,
+							wPassword: password
+						},
+						function(){$(app).find('.tmp').remove();},
+						function(retMsg){
+							image.addClass('scaleOutAnimation');
+							setTimeout(function() {
+								image.removeClass('scaleOutAnimation');
+							}, 1000);
+								app.attr('login', login);
+							app.attr('name', name);
+							app.attr('logwith', 'false');
+							app.find('.siteName p').text(name);
+							app.find('.emptyAppIndicator').remove();
+							app.removeClass('emptyApp');
+							},
+						function(retMsg){
+							showAlertPopup(retMsg, true);
+						},
+						'text'
+					);
+				}
 			}
 		});
 		$(popup).addClass('md-show');

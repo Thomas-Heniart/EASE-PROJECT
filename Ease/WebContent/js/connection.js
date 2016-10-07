@@ -19,6 +19,7 @@ $(document).ready(function() {
 					}, 
 					function(retMsg) {
 						$('#loading').removeClass("la-animate");
+						$(parent).find('.alertDiv p').text(retMsg);
 						$(parent).find('.alertDiv').addClass('show');
 						$(parent).find('#password').val('');
 					},
@@ -49,7 +50,7 @@ $(document).ready(function() {
 	                },
 	                function(retMsg){
 	                	$('#loading').removeClass("la-animate");
-	                	$(parent).find('.alertDiv').html(retMsg);
+	                	$(parent).find('.alertDiv p').text(retMsg);
 	                	$(parent).find('.alertDiv').addClass('show');
 	                	$(parent).find('#password').val('');
 	                },
