@@ -61,7 +61,8 @@ public class ServletItem {
 		LogicError,
 		NoPermission,
 		AlreadyConnected,
-		EMailNotSended
+		EMailNotSended,
+		Constraints
 	}
 	
 	protected Map<String, String> 	args;
@@ -148,7 +149,12 @@ public class ServletItem {
 		}
 		if (retCode != Code.DatabaseNotConnected.ordinal() && type != Type.CatalogSearchServlet)
 			saveInDB(db);
-		retMsg = ret;
+
+		if (retCode == Code.LogicError.ordinal()) {
+			retMsg = "Sorry, an intern problem as occured. We attempt to resolve this.";
+		} else {
+			retMsg = ret;
+		}
 		String resp = retCode + " " + retMsg;
 		response.getWriter().print(resp);
 	}
