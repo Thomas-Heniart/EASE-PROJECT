@@ -52,9 +52,6 @@ pageEncoding="UTF-8"%>
 	<%com.Ease.session.User user = (com.Ease.session.User) (session.getAttribute("User"));%>
 	<% if (user != null){ %>
 	<script src="js/checkConnection.js"></script>
-	<script type="text/javascript">console.log("YA UN USER");</script>
-	<%} else {%>
-	<script type="text/javascript">console.log("PAS DE USER");</script>
 	<%} %>
 	<script src="js/isMobile.js"></script>
 	<script src="js/setupOwlCarousel.js"></script>

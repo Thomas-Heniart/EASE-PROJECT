@@ -74,7 +74,7 @@ public class EditApp extends HttpServlet {
 			} else {
 				String logWithId = SI.getServletParam("lwId");
 				if (logWithId == null) {
-					if ((login == null || login.equals("")) && (wPassword == null || wPassword.equals(""))) {
+					if ((login == null || login.equals("")) || (wPassword == null || wPassword.equals(""))) {
 						SI.setResponse(ServletItem.Code.BadParameters, "Bad login or password.");
 					} else if (name == null || name.length() > 14) {
 						SI.setResponse(ServletItem.Code.BadParameters, "Bad name.");

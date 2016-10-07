@@ -105,10 +105,24 @@
 	function showConfirmDeleteAppPopup(elem, event) {
 		event.preventDefault();
 		event.stopPropagation();
-		var popup = $('#PopupDeleteApp');
+		
 		var app = $(elem).closest('.siteLinkBox');
 		var image = $(app).find('.linkImage');
-
+		
+		var hasRelatedApps = false;
+		var otherApps = $(".siteLinkBox");
+		for(var j=0;j<otherApps.length;j++){
+			if(otherApps[j].getAttribute('logWith')==app.attr('id')){
+				hasRelatedApps = true;
+				break;
+			}
+		}
+		
+		if(hasRelatedApps){
+			showAlertPopup("You can't delete this app because you need it to log to other websites.", true);
+		} else {
+		
+		var popup = $('#PopupDeleteApp');
 		popup.addClass('md-show');
 		popup.find("#close").unbind('click');
 		popup.find("#close").click(function() {
@@ -137,6 +151,7 @@
 					'text'
 				);
 		});
+		}
 	}/*
 	$(document).ready(function(){
 		$('#catalog').sortable({
