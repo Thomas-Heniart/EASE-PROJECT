@@ -119,7 +119,7 @@
 		}
 		
 		if(hasRelatedApps){
-			showAlertPopup("You can't delete this app because you need it to log to other websites.", true);
+			showAlertPopup("This app is used to connect to several websites. You cannot delete it.", true);
 		} else {
 		
 		var popup = $('#PopupDeleteApp');
