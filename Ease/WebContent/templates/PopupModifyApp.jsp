@@ -210,8 +210,6 @@ pageEncoding="UTF-8"%>
 				showAlertPopup("App name can't be empty !", true);
 			} else if(!AppToLoginWith.length && !popup.find('#login').val()){
 				showAlertPopup("Login can't be empty !", true);
-			} else if(!AppToLoginWith.length && !popup.find('#password').val()){
-				showAlertPopup("Password can't be empty !", true);
 			} else {
 			
 				popup.removeClass('md-show');
