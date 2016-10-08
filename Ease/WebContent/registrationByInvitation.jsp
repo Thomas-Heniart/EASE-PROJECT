@@ -42,6 +42,7 @@ pageEncoding="UTF-8"%>
 	<script src="js/modalEffects.js"></script>
 	<script src="js/selectFx.js"></script>
 	<link rel="stylesheet" type="text/css" href="component.css" />
+	<script src="js/postHandler.js"></script>
 </head>
 <body id="invitationBody">
 	<%

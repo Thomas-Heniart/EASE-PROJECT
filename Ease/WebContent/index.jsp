@@ -137,32 +137,7 @@ pageEncoding="UTF-8"%>
 				);
 			$(item).closest('.windowAddApp').remove();
 		}
-		function disableAutocomplete(){
-			if (document.getElementsByTagName) {
-
-				var inputElements = document.getElementsByTagName("input");
-
-				for (i=0; inputElements[i]; i++) {
-
-
-						inputElements[i].setAttribute("autocomplete","off");
-
-				}
-
-			}
-		}
-		$(document).ready(function() {
-			$('#hideCookies').click(function() {
-				setCookie("hideCookies", "true", 365);
-				$('.cookiesInfo').css('display', 'none');
-			});
-			var cookie = getCookie('hideCookies');
-
-			if (cookie != 'true')
-				$('.cookiesInfo').css('display', 'block');
-			disableAutocomplete();
-		});
-	</script>
+l	</script>
 </head>
 
 <body role="document" class="mainBody">
