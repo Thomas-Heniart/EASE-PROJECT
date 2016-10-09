@@ -199,7 +199,7 @@
     <url-pattern>/addWebsiteInDB</url-pattern>
   </servlet-mapping>
   <session-config>
-    <session-timeout>1</session-timeout>
+    <session-timeout>240</session-timeout>
   </session-config>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
@@ -209,7 +209,7 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
-<!--
+
   <security-constraint>
       <web-resource-collection>
         <web-resource-name>Viewpoint Secure URLs</web-resource-name>
@@ -219,7 +219,7 @@
         <transport-guarantee>CONFIDENTIAL</transport-guarantee>
       </user-data-constraint>
     </security-constraint>
- -->
+-
   <error-page>
     <error-code>404</error-code>
     <location>/404page.jsp</location>
