@@ -48,9 +48,8 @@ function refreshCatalogContent(data) {
 				tagIds : json,
 				search : searchVal
 			},
-			function(){},
-			function(retMsg){refreshCatalogContent(retMsg);},
-			function(retMsg){},
+			function() {},
+			function(retMsg) {refreshCatalogContent(retMsg);},
 			'text'
 		);
 	}

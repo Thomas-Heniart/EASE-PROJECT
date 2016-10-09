@@ -1,12 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-
-<div class="MenuButtonSet topLeft">
-	<button id="enterAddUsersMode" state="off" class="button adminButton">
-		<img src="resources/icons/add_users_icon.png" />
-	</button>
-</div>
-
+	
 <div class="RightSideViewTab" id="AddUsersTab">
 	<button id="quit">
 		<i class="fa fa-times"></i>

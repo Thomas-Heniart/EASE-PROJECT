@@ -30,6 +30,8 @@ function enterStatisticsMode() {
       var appsAdded = $("#appsAdded:checked").val();
 			var appsRemoved = $("#appsRemoved:checked").val();
       var medianAppsAdded = $("#medianAppsAdded:checked").val();
+			$("#statisticsForm").hide();
+			$(".loading-stats").show();
       $.post(
 				'Statistics',
 				{
@@ -84,13 +86,14 @@ function enterStatisticsMode() {
           var appsChartData = {
             labels : dates,
             datasets : appsDatasets
-          }
+          };
           if (usersChartData.datasets.length > 0)
 					     var usersChart = createNewChart(usersCtx, usersChartData, 'line');
           if (connectionsChartData.datasets.length > 0)
             var connectionsChart = createNewChart(connectionsCtx, connectionsChartData, 'line');
           if (appsChartData.datasets.length > 0)
             var appsChart = createNewChart(appsCtx, appsChartData, 'line');
+					$(".loading-stats").hide();
 				}, 'text'
 			);
 		});
