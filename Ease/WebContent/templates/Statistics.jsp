@@ -14,62 +14,37 @@
 	<div id="statisticsForm">
 		<input type="date" name="startDate" id="startDate" />
 		<input type="date" name="endDate" id="endDate" />
-		<input type="checkbox" name="registerAndTutoDone" id="registerAndTutoDone" />
-		<label for="registerAndTutoDone">People connected and who achieve tutorial</label>
-		<button id='getStats'>Try</button>
+		<div id="usersStats">
+			<input type="checkbox" name="dailyConnections" id="dailyConnections" />
+			<label for="dailyConnections">Daily connections</label>
+			<input type="checkbox" name="registeredUsers" id="registeredUsers" />
+			<label for="registeredUsers">Registered users</label>
+			<input type="checkbox" name="registeredUsersWithTuto" id="registeredUsersWithTuto" />
+			<label for="registeredUsersWithTuto">Registered users with tuto done</label>
+		</div>
+		<div id="connectionsStats">
+			<input type="checkbox" name="avgSiteConnections" id="avgSiteConnections"/>
+			<label for="avgSiteConnections">Sites connections average per daily user</label>
+			<input type="checkbox" name="medianSiteConnections" id="medianSiteConnections"/>
+			<label for="medianSiteConnections">Sites connections median per daily user</label>
+		</div>
+		<div id="appsStats">
+			<input type="checkbox" name="appsAdded" id="appsAdded"/>
+			<label for="appsAdded">Apps added</label>
+			<input type="checkbox" name="appsRemoved" id="appsRemoved"/>
+			<label for="appsRemoved">Apps removed</label>
+		</div>
+		<button id='getStats'>Go !</button>
 	</div>
-	<div id="response">
-		<div name="registerAndTutoDone">
-			<p></p>
+	<div id="responses">
+		<div>
+			<canvas id="usersCanvas"></canvas>
+		</div>
+		<div>
+			<canvas id="connectionsCanvas"></canvas>
+		</div>
+		<div>
+			<canvas id="appsCanvas"></canvas>
 		</div>
 	</div>
 </div>
-
-<script>
-	function enterStatisticsMode() {
-		$('#StatisticsTab').addClass('show');
-	}
-
-	function leaveStatisticsMode() {
-		$('#StatisticsTab').removeClass('show');
-	}
-
-	$(document).ready(function() {
-		
-		$('#enterStatisticsMode').click(function() {
-			leaveTagsManagerMode();
-			leaveRequestedWebsitesMode();
-			leaveAddSiteMode();
-			leaveChangeBackMode();
-			leaveAddUsersMode();
-			enterStatisticsMode();
-		});
-	});
-
-	$(document).ready(function() {
-		$("#getStats").click(function() {
-			var startDate = $("#startDate").val();
-			var endDate = $("#endDate").val();
-			var registerAndTutoDone = $("#registerAndTutoDone").val();
-			$.post(
-				'Statistics',
-				{
-					startDate : startDate,
-					endDate : endDate,
-					registerAndTutoDone : registerAndTutoDone
-				},
-				function(data) {
-					/* JSONArray composed by JSONObjects (key => name of the stats, value => value) */
-					var json = JSON.parse(data.substring(9));
-					console.log(json);
-					for (var key in json) {
-						console.log(key + " : " + json);
-					}
-				}, 'text'
-			);
-		});
-		$('#StatisticsTab #quit').click(function() {
-			leaveStatisticsMode();
-		});
-	});
-</script>

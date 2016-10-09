@@ -48,8 +48,9 @@
 <script src="js/snap.svg-min.js"></script>
 <script src="js/modalEffects.js"></script>
 <script src="js/selectFx.js"></script>
+<script src="js/statistics.js"></script>
 <link rel="stylesheet" type="text/css" href="component.css" />
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
 </head>
 
 
