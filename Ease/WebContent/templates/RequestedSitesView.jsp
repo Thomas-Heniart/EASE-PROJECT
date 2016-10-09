@@ -26,14 +26,13 @@
 	}
 	
 	$(document).ready(function(){
-		$.post(
+		postHandler.post(
 				'requestedWebsites',
 				{},
-				function(data) {					
-					if(data[0]=='s'){
-						printRequestedWebsites(data);
-					}
-				}, 'text'
+				function(){},
+				function(retMsg){printRequestedWebsites(retMsg);},
+				function(retMsg){}, 
+				'text'
 		);
 	});
 	
@@ -66,16 +65,15 @@
 	function eraseWebsites() {
 			var div = $(this).parent();
 			var toErase = div.attr('website');
-			$.post(
+			postHandler.post(
 					'eraseRequestedWebsite',
 					{
 						toErase : toErase
 					},
-					function(data) {					
-						if(data[0]=='s'){
-							div.remove();
-						}
-					}, 'text'
+					function(){},
+					function(retMsg){div.remove();},
+					function(retMsg){},
+					'text'
 			);
 		}
 

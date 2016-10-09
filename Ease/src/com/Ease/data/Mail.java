@@ -46,7 +46,7 @@ public class Mail {
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
 			message.setSubject(MimeUtility.encodeText("Mot de passe perdu - Ease", "utf-8", null));
 			String link = "https://ease.space/ResetUser?email=" + email + "&linkCode=" + code;
-			message.setContent("<p>Bonjour " + userName + "</p>"
+			message.setContent("<p>Bonjour " + userName + ",</p>"
 					+ "<p></p>"
 					+ "<p>Tu as perdu ton mot de passe ?</p>"
 					+ "<p>Nous venons de recevoir ta demande de ré-initialisation. (Si tu n’as pas fait cette demande, tu peux ignorer cet e-mail.)</p>"
@@ -58,7 +58,7 @@ public class Mail {
 					+ "<p>À très vite !</p>"
 					+ "<p>La team Ease</p>"
 					+ "<p></p>"
-					+ "<p style='margin: 0px;'>PS: Si tu souhaites plus de conseils sur la sécurité des mots de passe, tu peux consulter notre article : « Les 5 mots de passe à éviter… et le mot de passe ultime ! » lien : <a href='https://medium.com/@Ease./les-5-mots-de-passe-%C3%A0-%C3%A9viter-et-le-mot-de-passe-ultime-8c7b88285b19#.f2i1muio5'>https://medium.com/@Ease...</a></p>"
+					+ "<p style='margin: 0px;'>PS: Si tu souhaites plus de conseils sur la sécurité des mots de passe, tu peux consulter notre article: <a href='https://medium.com/@Ease./les-5-mots-de-passe-%C3%A0-%C3%A9viter-et-le-mot-de-passe-ultime-8c7b88285b19#.f2i1muio5'>« Les 5 mots de passe à éviter… et le mot de passe ultime ! »</a></p>"
 					, "text/html;charset=utf-8");		
 			Transport.send(message);
 		} catch (AddressException e) {

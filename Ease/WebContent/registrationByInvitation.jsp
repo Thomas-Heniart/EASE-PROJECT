@@ -42,6 +42,7 @@ pageEncoding="UTF-8"%>
 	<script src="js/modalEffects.js"></script>
 	<script src="js/selectFx.js"></script>
 	<link rel="stylesheet" type="text/css" href="component.css" />
+	<script src="js/postHandler.js"></script>
 </head>
 <body id="invitationBody">
 	<%
@@ -128,7 +129,7 @@ pageEncoding="UTF-8"%>
 			var button = $(".registrationBlock .custom-button");
 
 			button.addClass('loading');
-			$.post(
+			postHandler.post(
 				$('#registrationForm').attr('action'),
 				{
 					email: email,
@@ -138,30 +139,32 @@ pageEncoding="UTF-8"%>
 					password: password,
 					confirmPassword: confirmPassword
 				},
-				function(data){
-					if (data[0] == 's'){
-						button.removeClass('loading');
-						button.addClass('success');
-						$.post(
-							'connection', 
-							{
-								email : email, 
-								password : password
-							},
-							function(data){ 
-								window.location.replace("index.jsp");
-							},
-        			        'text' // Nous souhaitons recevoir "Success" ou "Failed", donc on indique text !
-        			        );
-					}else {
-						button.removeClass('loading');
-						var str = data.substring(7, data.length);
-						$('.alertDiv').text(str);
-						$('.alertDiv').addClass('show');
-					}
+				function(){},
+				function(retMsg){
+					button.removeClass('loading');
+					button.addClass('success');
+					postHandler.post(
+						'connection', 
+						{
+							email : email, 
+							password : password
+						},
+						function(){
+							window.location.replace("index.jsp");
+						},
+						function(retMsg){},
+						function(retMsg){},
+    			        'text'
+    			     );
+				},
+				function(retMsg){
+					button.removeClass('loading');
+					var str = retMsg;
+					$('.alertDiv').text(str);
+					$('.alertDiv').addClass('show');
 				},
 				'text'
-				);
+			);
 		});
 	});
 </script>

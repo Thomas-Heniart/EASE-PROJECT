@@ -60,8 +60,8 @@ public class ResetUser extends HttpServlet {
 		
 		// Get Parameters
 		String linkCode = SI.getServletParam("linkCode");
-		String password = SI.getServletParam("password");
-		String confirmPassword = SI.getServletParam("confirmPassword");
+		String password = request.getParameter("password");
+		String confirmPassword = request.getParameter("confirmPassword");
 		// --
 
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");

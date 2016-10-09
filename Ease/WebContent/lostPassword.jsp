@@ -40,6 +40,8 @@
 	<script src="js/modalEffects.js"></script>
 	<script src="js/selectFx.js"></script>
 	<link rel="stylesheet" type="text/css" href="component.css" />
+	
+	<script src="js/postHandler.js"></script>
 
 </head>
 <body id="lostPasswordBody">
@@ -115,28 +117,28 @@
 			$('.alertDiv').removeClass('show');
 			var button = $('.lostPasswordBlock .custom-button');
 			button.addClass('loading');
-			$.post(
+			postHandler.post(
 				$('#lostPasswordForm').attr('action'),
 				{
 					email: email
 				},
-				function(data){
-					if (data[0] == 's'){
-						button.removeClass('loading');
-						button.addClass('success');
-						setTimeout(function(){
-							window.location = "index.jsp";
-						}, 3000);
-					} else {
-						var str = data.substring(7, data.length);
-						$('.alertDiv').css('color', 'red');
-						$('.alertDiv').text(str);
-						$('.alertDiv').addClass('show');
-						button.removeClass('loading');
-					}
+				function(){},
+				function(retMsg){
+					button.removeClass('loading');
+					button.addClass('success');
+					setTimeout(function(){
+						window.location = "index.jsp";
+					}, 3000);
+				},
+				function(retMsg){
+					var str = retMsg;
+					$('.alertDiv').css('color', 'red');
+					$('.alertDiv').text(str);
+					$('.alertDiv').addClass('show');
+					button.removeClass('loading');
 				},
 				'text'
-				);
+			);
 		});
 	});
 </script>

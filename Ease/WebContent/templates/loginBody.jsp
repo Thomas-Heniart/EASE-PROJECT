@@ -5,6 +5,7 @@
 <%@ page import="java.nio.charset.StandardCharsets" %>
     
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<script src="js/connection.js"></script>
 <div id="loginBody">
 <canvas id="demo-canvas" style="position: absolute;"></canvas>
 <div id='search-google'>
@@ -117,10 +118,6 @@
 -->
 
 <script type="text/javascript">
-$(document).ready(function(){
-	setTimeout(function(){sendConnectionStatus(false);},500);
-});
-
 $(document).ready( function() {
 	var nbForms = $('.FormsContainer > *').length;
 
@@ -154,34 +151,6 @@ $(document).ready( function() {
 	    	$('.savedUser #savedUserButton').click();
 	    }
 	});
-	$('.savedUser #savedUserButton').click(function(){
-		var parent = $(this).closest('.form');
-		var email = getCookie('email');
-		var password = parent.find('#password').val();
-
-		email = email.substring(1, email.length - 1);
-  		$('#loading').addClass("la-animate");
-	    $.post(
-                'connection', 
-                {
-                    email : email, 
-                    password : password
-                },
-
-                function(data){ 
-                	if (data[0] == 's'){
-                		$('#loading').removeClass("la-animate");
-                    	window.location.replace("index.jsp");
-                	}else {
-                		$('#loading').removeClass("la-animate");
-                		$(parent).find('.alertDiv').addClass('show');
-                		$(parent).find('#password').val('');
-                	}
-                },
-
-                'text' // Nous souhaitons recevoir "Success" ou "Failed", donc on indique text !
-	    );
-    });
 });
 </script>
 

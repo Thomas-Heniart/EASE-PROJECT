@@ -52,16 +52,16 @@ public class ConnectionServlet extends HttpServlet {
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		
 		if (user != null){
-			session.invalidate();
+			session.setAttribute("User", null);
 		}
 		
 		try {
 			if (db.connect() != 0){
 				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 			} else if (email == null || Regex.isEmail(email) == false){
-				SI.setResponse(ServletItem.Code.BadParameters, "Bad email.");
+				SI.setResponse(ServletItem.Code.BadParameters, "Incorrect email.");
 			} else if (password == null || Regex.isPassword(password) == false) {
-				SI.setResponse(ServletItem.Code.BadParameters, "Bad password");
+				SI.setResponse(ServletItem.Code.BadParameters, "Incorrect password");
 			} else {		
 				ResultSet rs;
 				if ((rs = db.get("select * from users where email = '" + email + "';")) == null) {

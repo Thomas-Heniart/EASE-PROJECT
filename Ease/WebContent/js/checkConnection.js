@@ -2,7 +2,7 @@ function refresh() {
   $.ajax({
     url: 'index.jsp'
   }).success(function() {
-    setTimeout(refresh, 110 * 60 * 1000);
+    setTimeout(refresh, 5*1000);
   });
 }
 
