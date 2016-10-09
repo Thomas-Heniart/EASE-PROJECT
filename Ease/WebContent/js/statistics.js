@@ -44,8 +44,7 @@ function enterStatisticsMode() {
           appsRemoved : appsRemoved
 				},
 				function(data) {
-					var json = JSON.parse(data.substring(9));
-          console.log(json);
+					var json = JSON.parse(data.substring(4));
 					var usersCtx = $("#usersCanvas");
           var connectionsCtx = $("#connectionsCanvas");
           var appsCtx = $("#appsCanvas");

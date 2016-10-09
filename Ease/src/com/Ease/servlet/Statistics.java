@@ -93,6 +93,9 @@ public class Statistics extends HttpServlet {
 		String dailyConnections = SI.getServletParam("dailyConnections");
 		String registeredUsers = SI.getServletParam("registeredUsers");
 		String registeredUsersWithTuto = SI.getServletParam("registeredUsersWithTuto");
+		
+		String websitesConnections = SI.getServletParam("websitesConnections");
+		
 		String appsAddedParam = SI.getServletParam("appsAdded");
 		String appsRemovedParam = SI.getServletParam("appsRemoved");
 
@@ -110,6 +113,9 @@ public class Statistics extends HttpServlet {
 		if (registeredUsersWithTuto != null)
 			jsonRes.put("registeredUsersWithTuto", getRegisteredUsersWithTuto(db, start, end, SI));
 
+		if (websitesConnections != null)
+			jsonRes.put("websitesConnections", getConnectionsOnWebsites(db, start, end, SI));
+		
 		if (appsAddedParam != null)
 			jsonRes.put("appsAdded", getAppsAdded(db, start, end, SI));
 
@@ -178,6 +184,21 @@ public class Statistics extends HttpServlet {
 				"usersChart");
 	}
 
+	public JSONObject getConnectionsOnWebsites(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) {
+		JSONArray values = new JSONArray();
+		ResultSet rs = db.get(newRequest(startDate, endDate, " AND type = " + ServletItem.Type.AskInfo.ordinal()));
+		try {
+			while (rs.next()) {
+				values.add(Integer.parseInt(rs.getString(2)));
+			}
+		} catch (SQLException e) {
+			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			e.printStackTrace();
+		}
+		return getJsonObjectFor(values, "Apps removed", "rgba(255, 99, 132, 0.2)", "rgba(255, 99, 132, 1)",
+				"connectionsChart");
+	}
+	
 	public String getDailyUsersRequest(LocalDate startDate, LocalDate endDate) {
 		return "(SELECT user_id FROM (SELECT DISTINCT user_id, CAST(date AS DATE) AS date FROM logs where code = 200 AND type = 9 AND CAST(date AS DATE)  between '"
 				+ startDate.toString() + "' and '" + endDate.toString()
