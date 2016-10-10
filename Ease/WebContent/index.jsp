@@ -137,7 +137,7 @@ pageEncoding="UTF-8"%>
 				);
 			$(item).closest('.windowAddApp').remove();
 		}
-l	</script>
+	</script>
 </head>
 
 <body role="document" class="mainBody">
