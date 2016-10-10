@@ -9,14 +9,22 @@ function getNewLogin(msg, i){
 	if (msg.detail[i].user){
 		return (msg.detail[i].user.login);
 	} else if (msg.detail[i].logWith){
-		return {"user":getNewLogin(msg, i-1), "logWith":getHost(msg.detail[i].website.loginUrl)};
+		return {"user":getNewLogin(msg, i-1), "logWith":getHost(msg.detail[i-1].website.loginUrl)};
 	}
 }
 
 function alreadyVisited(msg){
     if(msg.allConnections[getHost(msg.detail[msg.bigStep].website.loginUrl)]){
-         if(msg.allConnections[getHost(msg.detail[msg.bigStep].website.loginUrl)] == getNewLogin(msg, msg.bigStep))
-            return true;
+        console.log( getNewLogin(msg, msg.bigStep));
+        console.log(msg.allConnections[getHost(msg.detail[msg.bigStep].website.loginUrl)]);
+        var NewLogin = getNewLogin(msg, msg.bigStep);
+        if(NewLogin.logWith){
+            if(NewLogin.user == msg.allConnections[getHost(msg.detail[msg.bigStep].website.loginUrl)].user && NewLogin.logWith == msg.allConnections[getHost(msg.detail[msg.bigStep].website.loginUrl)].logWith)
+                return true
+        } else {
+            if(msg.allConnections[getHost(msg.detail[msg.bigStep].website.loginUrl)] == getNewLogin(msg, msg.bigStep))
+                return true;
+        }
     }
 	return false;
 }
@@ -33,11 +41,13 @@ extension.runtime.onMessage("goooo", function(msg, sendResponse) {
 				msg.type = "completed";
 				sendResponse(msg);
 			} else {
+                msg.waitreload=true;
 				msg.todo = "logout";
 				doThings(msg, sendResponse);
                 logoutOverlay(msg);
 			}
 		} else {
+            msg.waitreload=true;
 			if (typeof msg.detail[msg.bigStep].logWith === "undefined") {
 				msg.todo = "connect";
 			} else {
