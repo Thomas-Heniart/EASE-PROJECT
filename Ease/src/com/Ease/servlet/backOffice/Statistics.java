@@ -99,6 +99,8 @@ public class Statistics extends HttpServlet {
 		String appsAddedParam = SI.getServletParam("appsAdded");
 		String appsRemovedParam = SI.getServletParam("appsRemoved");
 
+		String dailyUsers = SI.getServletParam("dailyUsers");
+
 		JSONArray dates = new JSONArray();
 
 		for (LocalDate date = start; date.isBefore(end); date = date.plusDays(1))
@@ -122,6 +124,9 @@ public class Statistics extends HttpServlet {
 		if (appsRemovedParam != null)
 			jsonRes.put("appsRemoved", getAppsRemoved(db, start, end, SI));
 
+		if (dailyUsers != null)
+			jsonRes.put("dailyUsers", getDailyUsersRequest(db, start, end, SI));
+
 		if (!jsonRes.isEmpty())
 			jsonRes.put("dates", dates);
 		SI.setResponse(200, jsonRes.toString());
@@ -140,7 +145,7 @@ public class Statistics extends HttpServlet {
 	}
 
 	public JSONObject getDailyConnections(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) {
-		String request = "SELECT DISTINCT date, count(*) FROM (SELECT DISTINCT CAST(date AS DATE) AS date, user_id FROM logs WHERE type = "
+		String request = "SELECT DISTINCT date, count(user_id) FROM (SELECT DISTINCT CAST(date AS DATE) AS date, user_id FROM logs WHERE type = "
 				+ ServletItem.Type.ConnectionServlet.ordinal() + " AND CAST(date AS DATE) BETWEEN '"
 				+ startDate.toString() + "' AND '" + endDate.toString() + "') AS t GROUP BY date;";
 		JSONArray values = getValuesForSimpleRequest(db, request, SI);
@@ -169,11 +174,23 @@ public class Statistics extends HttpServlet {
 				"connectionsChart");
 	}
 
-	public String getDailyUsersRequest(LocalDate startDate, LocalDate endDate) {
-		return "(SELECT user_id FROM (SELECT DISTINCT user_id, CAST(date AS DATE) AS date FROM logs where code = 200 AND type = 9 AND CAST(date AS DATE)  between '"
+	public int getDailyUsersRequest(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) {
+		int dailyUserStep = (int) (ChronoUnit.DAYS.between(startDate, endDate) * (75 / 100.0f));
+		String request = "SELECT count(*) FROM (SELECT user_id FROM (SELECT DISTINCT user_id, CAST(date AS DATE) AS date FROM logs where code = 200 AND type = 9 AND CAST(date AS DATE)  between '"
 				+ startDate.toString() + "' and '" + endDate.toString()
-				+ "') AS tmp GROUP BY user_id HAVING count(date) = " + ChronoUnit.DAYS.between(startDate, endDate)
-				+ ") as DailyUsers";
+				+ "') AS tmp GROUP BY user_id HAVING count(date) >= " + dailyUserStep + ") AS DailyUsers;";
+		int res = 0;
+		ResultSet rs = db.get(request);
+		try {
+			while (rs.next())
+				res = Integer.parseInt(rs.getString(1));
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			e.printStackTrace();
+		}
+		return res;
 	}
 
 	public JSONObject getAverageConnectionsPerDailyUsers(DataBase db, LocalDate startDate, LocalDate endDate,
@@ -190,7 +207,6 @@ public class Statistics extends HttpServlet {
 			while (rs2.next())
 				dailyUsers = Integer.parseInt(rs2.getString(1));
 			while (rs.next()) {
-				System.out.println(rs.getString(1));
 				jArray.add(Integer.parseInt(rs.getString(2)));
 			}
 

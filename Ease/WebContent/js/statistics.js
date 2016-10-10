@@ -30,6 +30,7 @@ function enterStatisticsMode() {
       var appsAdded = $("#appsAdded:checked").val();
 			var appsRemoved = $("#appsRemoved:checked").val();
       var medianAppsAdded = $("#medianAppsAdded:checked").val();
+			var dailyUsers = $("#dailyUsers:checked").val();
 			$("#statisticsForm").hide();
 			$(".loading-stats").show();
       $.post(
@@ -43,7 +44,8 @@ function enterStatisticsMode() {
           avgSiteConnections : avgSiteConnections,
           medianSiteConnections : medianSiteConnections,
           appsAdded : appsAdded,
-          appsRemoved : appsRemoved
+          appsRemoved : appsRemoved,
+					dailyUsers : dailyUsers
 				},
 				function(data) {
 					var json = JSON.parse(data.substring(4));
@@ -55,9 +57,10 @@ function enterStatisticsMode() {
           var usersDatasets = [];
           var connectionsDatasets = [];
           var appsDatasets = [];
+					var dailyUsers = null;
           for (key in json) {
             var tmpObj = json[key];
-            if (key != "dates") {
+            if (key != "dates" && key != "dailyUsers") {
               switch (tmpObj.chart) {
                 case "usersChart":
                   pushObjInDatasets(tmpObj, usersDatasets);
@@ -72,8 +75,12 @@ function enterStatisticsMode() {
                   break;
 
               }
-            } else
+            } else if (key == "dates")
               dates = tmpObj;
+						else {
+							console.log(tmpObj);
+							dailyUsers = tmpObj;
+						}
           }
           var usersChartData = {
             labels : dates,
@@ -87,12 +94,24 @@ function enterStatisticsMode() {
             labels : dates,
             datasets : appsDatasets
           };
-          if (usersChartData.datasets.length > 0)
+          if (usersChartData.datasets.length > 0) {
 					     var usersChart = createNewChart(usersCtx, usersChartData, 'line');
-          if (connectionsChartData.datasets.length > 0)
+							 $("#usersGraph").addClass("show");
+					}
+          if (connectionsChartData.datasets.length > 0) {
             var connectionsChart = createNewChart(connectionsCtx, connectionsChartData, 'line');
-          if (appsChartData.datasets.length > 0)
+						$("#connectionsGraph").addClass("show");
+					}
+          if (appsChartData.datasets.length > 0) {
             var appsChart = createNewChart(appsCtx, appsChartData, 'line');
+						$("#appsGraph").addClass("show");
+					}
+					if (dailyUsers != null) {
+						$("#dailyUsersNumber").text(dailyUsers);
+						$("#startDateSelected").text(dates[0]);
+						$("#endDateSelected").text(dates[dates.length - 1]);
+						$(".general-values").addClass("show");
+					}
 					$(".loading-stats").hide();
 				}, 'text'
 			);

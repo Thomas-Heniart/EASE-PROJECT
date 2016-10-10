@@ -1,11 +1,34 @@
 @import 'variables';
 @import 'mixins';
 
-#responses div {
-  width: 90%;
-  position: relative;
-  margin: auto;
-  margin-top: 10px;
+#responses {
+  .stats-graph {
+    width: 90%;
+    display: block;
+    position: relative;
+    height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: opacity 1s ease-out;
+  }
+  .stats-graph.show {
+    margin: 10px auto;
+    opacity: 1;
+    height: auto;
+  }
+  .general-values {
+    display: block;
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+    transition: opacity 1s ease-out;
+    position: relative;
+  }
+  .general-values.show {
+    opacity: 1;
+    height: auto;
+    margin: 10px auto;
+  }
 }
 
 #statisticsForm {

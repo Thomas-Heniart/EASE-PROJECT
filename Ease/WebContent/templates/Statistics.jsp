@@ -65,16 +65,26 @@
 					for="appsRemoved">Apps removed</label>
 			</div>
 		</div>
+		<div class="stats-input-group">
+			<div class="stats-input">
+				<input type="checkbox" name="dailyUsers" id="dailyUsers" /> <label
+					for="dailyUsers">Daily users for selected period</label>
+			</div>
+		</div>
 		<a id='getStats'>Go !</a>
 	</div>
 	<div id="responses">
-		<div>
+		<div class="general-values">
+			<p>From: <span id="startDateSelected"></span> To: <span id="endDateSelected"></span></p>
+			<p><span id="dailyUsersNumber"></span> daily users</p>
+		</div>
+		<div class="stats-graph" id="usersGraph">
 			<canvas id="usersCanvas"></canvas>
 		</div>
-		<div>
+		<div class="stats-graph" id="connectionsGraph">
 			<canvas id="connectionsCanvas"></canvas>
 		</div>
-		<div>
+		<div class="stats-graph" id="appsGraph">
 			<canvas id="appsCanvas"></canvas>
 		</div>
 	</div>
