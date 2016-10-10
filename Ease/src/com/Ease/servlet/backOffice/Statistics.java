@@ -1,4 +1,4 @@
-package com.Ease.servlet;
+package com.Ease.servlet.backOffice;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -93,9 +93,9 @@ public class Statistics extends HttpServlet {
 		String dailyConnections = SI.getServletParam("dailyConnections");
 		String registeredUsers = SI.getServletParam("registeredUsers");
 		String registeredUsersWithTuto = SI.getServletParam("registeredUsersWithTuto");
-		
+
 		String websitesConnections = SI.getServletParam("websitesConnections");
-		
+
 		String appsAddedParam = SI.getServletParam("appsAdded");
 		String appsRemovedParam = SI.getServletParam("appsRemoved");
 
@@ -115,7 +115,7 @@ public class Statistics extends HttpServlet {
 
 		if (websitesConnections != null)
 			jsonRes.put("websitesConnections", getConnectionsOnWebsites(db, start, end, SI));
-		
+
 		if (appsAddedParam != null)
 			jsonRes.put("appsAdded", getAppsAdded(db, start, end, SI));
 
@@ -140,65 +140,35 @@ public class Statistics extends HttpServlet {
 	}
 
 	public JSONObject getDailyConnections(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) {
-		JSONArray values = new JSONArray();
-		ResultSet rs = db.get(newRequest(startDate, endDate,
-				" AND tuto = 1 AND code = 200 AND type = " + ServletItem.Type.ConnectionServlet.ordinal()));
-		try {
-			while (rs.next())
-				values.add(Integer.parseInt(rs.getString(2)));
-		} catch (SQLException e) {
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
-			e.printStackTrace();
-		}
+		String request = "SELECT DISTINCT date, count(*) FROM (SELECT DISTINCT CAST(date AS DATE) AS date, user_id FROM logs WHERE type = "
+				+ ServletItem.Type.ConnectionServlet.ordinal() + " AND CAST(date AS DATE) BETWEEN '"
+				+ startDate.toString() + "' AND '" + endDate.toString() + "') AS t GROUP BY date;";
+		JSONArray values = getValuesForSimpleRequest(db, request, SI);
 		return getJsonObjectFor(values, "Daily connections", "rgba(132, 99, 255, 0.2)", "rgba(132, 99, 255, 1)",
 				"usersChart");
 	}
 
 	public JSONObject getRegisteredUsers(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) {
-		JSONArray values = new JSONArray();
-		ResultSet rs = db.get(newRequest(startDate, endDate,
-				" AND code = 200 AND type = " + ServletItem.Type.RegistrationByInvitation.ordinal()));
-		try {
-			while (rs.next())
-				values.add(Integer.parseInt(rs.getString(2)));
-		} catch (SQLException e) {
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
-			e.printStackTrace();
-		}
+		JSONArray values = getValuesForRequest(db, startDate, endDate,
+				" AND code = 200 AND type = " + ServletItem.Type.RegistrationByInvitation.ordinal(), SI);
 		return getJsonObjectFor(values, "Registred users", "rgba(132, 255, 99, 0.2)", "rgba(132, 255, 99, 1)",
 				"usersChart");
 	}
 
 	public JSONObject getRegisteredUsersWithTuto(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) {
-		JSONArray values = new JSONArray();
-		ResultSet rs = db.get(newRequest(startDate, endDate,
-				" AND code = 200 AND tuto = 1 AND type = " + ServletItem.Type.RegistrationByInvitation.ordinal()));
-		try {
-			while (rs.next())
-				values.add(Integer.parseInt(rs.getString(2)));
-		} catch (SQLException e) {
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
-			e.printStackTrace();
-		}
+		JSONArray values = getValuesForRequest(db, startDate, endDate,
+				" AND code = 200 AND tuto = 1 AND type = " + ServletItem.Type.RegistrationByInvitation.ordinal(), SI);
 		return getJsonObjectFor(values, "Registred users with tuto", "rgba(255, 132, 99, 0.2)", "rgba(255, 132, 99, 1)",
 				"usersChart");
 	}
 
 	public JSONObject getConnectionsOnWebsites(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) {
-		JSONArray values = new JSONArray();
-		ResultSet rs = db.get(newRequest(startDate, endDate, " AND type = " + ServletItem.Type.AskInfo.ordinal()));
-		try {
-			while (rs.next()) {
-				values.add(Integer.parseInt(rs.getString(2)));
-			}
-		} catch (SQLException e) {
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
-			e.printStackTrace();
-		}
+		JSONArray values = getValuesForRequest(db, startDate, endDate,
+				" AND type = " + ServletItem.Type.AskInfo.ordinal(), SI);
 		return getJsonObjectFor(values, "Apps removed", "rgba(255, 99, 132, 0.2)", "rgba(255, 99, 132, 1)",
 				"connectionsChart");
 	}
-	
+
 	public String getDailyUsersRequest(LocalDate startDate, LocalDate endDate) {
 		return "(SELECT user_id FROM (SELECT DISTINCT user_id, CAST(date AS DATE) AS date FROM logs where code = 200 AND type = 9 AND CAST(date AS DATE)  between '"
 				+ startDate.toString() + "' and '" + endDate.toString()
@@ -232,6 +202,22 @@ public class Statistics extends HttpServlet {
 				"rgba(255, 99, 132, 1)", "connectionsChart");
 	}
 
+	public JSONObject getAppsAdded(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) {
+		JSONArray values = getValuesForRequest(db, startDate, endDate,
+				" AND (type = " + ServletItem.Type.AddApp.ordinal() + " OR type = "
+						+ ServletItem.Type.AddAppSso.ordinal() + " OR type = " + ServletItem.Type.AddLogWith.ordinal()
+						+ ")",
+				SI);
+		return getJsonObjectFor(values, "Apps added", "rgba(99, 132, 255, 0.2)", "rgba(99, 132, 255, 1)", "appsChart");
+	}
+
+	public JSONObject getAppsRemoved(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) {
+		JSONArray values = getValuesForRequest(db, startDate, endDate,
+				" AND type = " + ServletItem.Type.DeleteApp.ordinal(), SI);
+		return getJsonObjectFor(values, "Apps removed", "rgba(255, 99, 132, 0.2)", "rgba(255, 99, 132, 1)",
+				"appsChart");
+	}
+
 	public String newRequest(LocalDate startDate, LocalDate endDate, String conditions) {
 		return ("SELECT d.selected_date, count(logs.user_id) FROM (SELECT selected_date from (SELECT adddate('1970-01-01',t4.i*10000 + t3.i*1000 + t2.i*100 + t1.i*10 + t0.i)  selected_date FROM (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t0,   (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t1,  (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t2,  (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t3,  (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t4) v   where selected_date between '"
 				+ startDate.toString() + "' AND '" + endDate.toString()
@@ -239,35 +225,34 @@ public class Statistics extends HttpServlet {
 				+ conditions + " GROUP BY d.selected_date ORDER BY 1 ASC;");
 	}
 
-	public JSONObject getAppsAdded(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) {
-		JSONArray values = new JSONArray();
-		ResultSet rs = db.get(newRequest(startDate, endDate,
-				" AND (type = " + ServletItem.Type.AddApp.ordinal() + " OR type = "
-						+ ServletItem.Type.AddAppSso.ordinal() + " OR type = " + ServletItem.Type.AddLogWith.ordinal()
-						+ ")"));
-		try {
-			while (rs.next()) {
-				values.add(Integer.parseInt(rs.getString(2)));
-			}
-		} catch (SQLException e) {
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
-			e.printStackTrace();
-		}
-		return getJsonObjectFor(values, "Apps added", "rgba(99, 132, 255, 0.2)", "rgba(99, 132, 255, 1)", "appsChart");
+	/* Request using newRequest() */
+	public JSONArray getValuesForRequest(DataBase db, LocalDate startDate, LocalDate endDate, String request,
+			ServletItem SI) {
+		ResultSet rs = db.get(newRequest(startDate, endDate, request));
+		return extractValuesFromResultSet(rs, SI);
+
 	}
 
-	public JSONObject getAppsRemoved(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) {
+	/* Request without newRequest() */
+	public JSONArray getValuesForSimpleRequest(DataBase db, String request, ServletItem SI) {
+		ResultSet rs = db.get(request);
+		return extractValuesFromResultSet(rs, SI);
+
+	}
+
+	/*
+	 * We extract the second column of ResultSet because first column is the
+	 * date
+	 */
+	public JSONArray extractValuesFromResultSet(ResultSet rs, ServletItem SI) {
 		JSONArray values = new JSONArray();
-		ResultSet rs = db.get(newRequest(startDate, endDate, " AND type = " + ServletItem.Type.DeleteApp.ordinal()));
 		try {
-			while (rs.next()) {
+			while (rs.next())
 				values.add(Integer.parseInt(rs.getString(2)));
-			}
 		} catch (SQLException e) {
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 			e.printStackTrace();
 		}
-		return getJsonObjectFor(values, "Apps removed", "rgba(255, 99, 132, 0.2)", "rgba(255, 99, 132, 1)",
-				"appsChart");
+		return values;
 	}
 }
