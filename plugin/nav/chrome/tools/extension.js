@@ -86,7 +86,7 @@ var extension = {
 		create:function(window, url, active, callback){
 			chrome.tabs.create({"windowId":window.id, "url":url, "active":active}, callback);
 		},
-        createOrUpdate(window, tab, url, active, callback){
+        createOrUpdate:function(window, tab, url, active, callback){
             if(extension.hasMultipleEaseTabs(window)){
                 this.update(tab, url, callback);
             } else {

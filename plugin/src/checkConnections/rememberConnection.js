@@ -4,6 +4,12 @@ extension.runtime.bckgrndOnMessage('newConnectionToRandomWebsite', function(msg,
 
 var lastNavigatedWebsite = "";
 
+function printConnections(){
+    extension.storage.get('allConnections', function(res){
+        console.log(res);
+    });
+}
+
 extension.tabs.onNavigation(function(url){
     if(matchFacebookConnectUrl(url) && !matchFacebookConnectUrl(lastNavigatedWebsite)){
         rememberLogWithConnection(lastNavigatedWebsite, "www.facebook.com");
@@ -15,10 +21,10 @@ extension.tabs.onNavigation(function(url){
 });
 
 function rememberConnection(username, website){
-    console.log("-- Connection for email " + username + " on website " + website + " remembered --");
     extension.storage.get('allConnections', function(res){
         if(!res) res = {};
         res[website] = username;
+        console.log("-- Connection for email " + username + " on website " + website + " remembered --");
         extension.storage.set('allConnections', res, function(){});
     });    
 }
@@ -45,15 +51,16 @@ function rememberLogWithConnection(website, logWithWebsite){
 }
 
 function matchFacebookConnectUrl(url){
-    if(url.indexOf("facebook")!==-1 && url.substr(12,8) != "facebook" && url.substr(4,8) != "facebook") {
-        return "true";
+    console.log(url);
+    if(url.indexOf("facebook")!=-1 && (url.indexOf("www.facebook.com")>10 || url.indexOf("www.facebook.com")<0)) {
+        return true; 
     }
     return false;
 }
 
 function matchLinkedinConnectUrl(url){
-    if(url.indexOf("linkedin")!==-1 && url.substr(12,8) != "linkedin") {
-        return "true";
+    if(url.indexOf("linkedin")!=-1 && (url.indexOf("www.linkedin.com")>10 || url.indexOf("www.linkedin.com")<0)) {
+        return true;
     }
     return false;
 }

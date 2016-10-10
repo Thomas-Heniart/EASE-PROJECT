@@ -7,7 +7,7 @@ extension.tabs.onNewTab(function(tab){
         if(res.homepage==true){
             extension.tabs.stopLoad(tab, function(){
                 extension.tabs.update(tab, "https://ease.space", function(){
-                    console.log("ease opened in new window");
+                    console.log("-- Ease opened in new window --");
                 });
             });
         }
@@ -19,7 +19,7 @@ extension.onNewWindow(function(tab){
         if(res.homepage==true){
             extension.tabs.stopLoad(tab, function(){
                 extension.tabs.update(tab, "https://ease.space", function(){
-                    console.log("ease opened in new window");
+                    console.log("-- Ease opened in new window --");
                 });
             });  
         }

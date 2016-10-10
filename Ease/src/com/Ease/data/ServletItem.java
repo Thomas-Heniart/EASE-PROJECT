@@ -155,6 +155,7 @@ public class ServletItem {
 		} else {
 			retMsg = ret;
 		}
+		response.setCharacterEncoding("UTF-8");
 		String resp = retCode + " " + retMsg;
 		response.getWriter().print(resp);
 	}

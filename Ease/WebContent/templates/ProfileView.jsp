@@ -83,6 +83,7 @@ response.addCookie(email);
 					}, 
 					function(){},
 					function(retMsg){
+						console.log(retMsg);
 						json.detail = JSON.parse(retMsg);
 						event = new CustomEvent("NewConnection", json);
 						document.dispatchEvent(event);
