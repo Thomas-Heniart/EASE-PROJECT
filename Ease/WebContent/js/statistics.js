@@ -25,8 +25,7 @@ function enterStatisticsMode() {
 			var dailyConnections = $("#dailyConnections:checked").val();
       var registeredUsers = $("#registeredUsers:checked").val();
       var registeredUsersWithTuto = $("#registeredUsersWithTuto:checked").val();
-      var avgSiteConnections = $("#avgSiteConnections:checked").val();
-      var medianSiteConnections = $("#medianSiteConnections:checked").val();
+      var websitesConnections = $("#websitesConnections:checked").val();
       var appsAdded = $("#appsAdded:checked").val();
 			var appsRemoved = $("#appsRemoved:checked").val();
       var medianAppsAdded = $("#medianAppsAdded:checked").val();
@@ -41,8 +40,7 @@ function enterStatisticsMode() {
 					dailyConnections : dailyConnections,
           registeredUsers : registeredUsers,
           registeredUsersWithTuto : registeredUsersWithTuto,
-          avgSiteConnections : avgSiteConnections,
-          medianSiteConnections : medianSiteConnections,
+					websitesConnections : websitesConnections,
           appsAdded : appsAdded,
           appsRemoved : appsRemoved,
 					dailyUsers : dailyUsers

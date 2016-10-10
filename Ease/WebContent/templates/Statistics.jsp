@@ -45,15 +45,14 @@
 		</div>
 		<div id="connectionsStats" class="stats-input-group">
 			<div class="stats-input">
-				<input type="checkbox" name="avgSiteConnections"
-					id="avgSiteConnections" /> <label for="avgSiteConnections">Sites
-					connections average per daily user</label>
+				<input type="checkbox" name="websitesConnections"
+					id="websitesConnections" /> <label for="websitesConnections">Websites connections via EASE</label>
 			</div>
-			<div class="stats-input">
+			<!-- <div class="stats-input">
 				<input type="checkbox" name="medianSiteConnections"
 					id="medianSiteConnections" /> <label for="medianSiteConnections">Sites
 					connections median per daily user</label>
-			</div>
+			</div> -->
 		</div>
 		<div id="appsStats" class="stats-input-group">
 			<div class="stats-input">

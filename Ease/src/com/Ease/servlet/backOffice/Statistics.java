@@ -169,8 +169,8 @@ public class Statistics extends HttpServlet {
 
 	public JSONObject getConnectionsOnWebsites(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) {
 		JSONArray values = getValuesForRequest(db, startDate, endDate,
-				" AND type = " + ServletItem.Type.AskInfo.ordinal(), SI);
-		return getJsonObjectFor(values, "Apps removed", "rgba(255, 99, 132, 0.2)", "rgba(255, 99, 132, 1)",
+				" AND type = " + ServletItem.Type.AskInfo.ordinal() + " AND code = 200", SI);
+		return getJsonObjectFor(values, "Connections on webistes via EASE", "rgba(255, 99, 132, 0.2)", "rgba(255, 99, 132, 1)",
 				"connectionsChart");
 	}
 
