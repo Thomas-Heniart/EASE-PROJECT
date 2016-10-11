@@ -85,5 +85,6 @@
 		<div class="stats-graph" id="appsGraph">
 			<canvas id="appsCanvas"></canvas>
 		</div>
+		<a href="" style="display:none">Back</a>
 	</div>
 </div>
