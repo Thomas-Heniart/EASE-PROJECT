@@ -17,6 +17,16 @@ function enterStatisticsMode() {
 			enterStatisticsMode();
 		});
 	});
+	
+	$(document).ready(function(){
+		$("#responses a").click(function(){
+			$("#responses .show").removeClass("show");
+			$(".loading-stats").hide();
+			$("#statisticsForm").show();
+			$("#responses a").hide();
+			return false;
+		});
+	});
 
 	$(document).ready(function() {
 		$("#getStats").click(function() {
@@ -32,6 +42,7 @@ function enterStatisticsMode() {
 			var dailyUsers = $("#dailyUsers:checked").val();
 			$("#statisticsForm").hide();
 			$(".loading-stats").show();
+			$("#responses a").show();
       $.post(
 				'Statistics',
 				{
