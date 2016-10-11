@@ -36,6 +36,7 @@
 <script src="js/owl.carousel.js"></script>
 <script src="js/basic-utils.js"></script>
 <script src="js/postHandler.js"></script>
+<script src="js/SettingsView.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
 	
@@ -85,9 +86,6 @@
 	<div class="la-anim-10" id="loading"></div>
 	<%@ include file="templates/SimpleAlertPopup.jsp"%>
 
-	<div id="chatButton">
-		<i class="fa fa-comments-o" aria-hidden="true"></i> 
-			<a href="https://www.facebook.com/messages/easeplatform" target="_blank"></a>
-	</div>
+	<%@ include file="templates/ChatButton.jsp" %>
 </body>
 </html>

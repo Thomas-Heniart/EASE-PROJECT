@@ -42,6 +42,7 @@ pageEncoding="UTF-8"%>
 	<script src="js/footer.js"></script>
 	<script src="js/tutorial.js"></script>
 	<script src="js/postHandler.js"></script>
+	<script src="js/SettingsView.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/lib/dropDownMenu/dropdown.css" />

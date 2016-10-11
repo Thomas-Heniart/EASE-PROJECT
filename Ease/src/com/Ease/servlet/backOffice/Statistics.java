@@ -170,8 +170,8 @@ public class Statistics extends HttpServlet {
 	public JSONObject getConnectionsOnWebsites(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) {
 		JSONArray values = getValuesForRequest(db, startDate, endDate,
 				" AND type = " + ServletItem.Type.AskInfo.ordinal() + " AND code = 200", SI);
-		return getJsonObjectFor(values, "Connections on webistes via EASE", "rgba(255, 99, 132, 0.2)", "rgba(255, 99, 132, 1)",
-				"usersChart");
+		return getJsonObjectFor(values, "Connections on webistes via EASE", "rgba(255, 99, 132, 0.2)",
+				"rgba(255, 99, 132, 1)", "connectionsChart");
 	}
 
 	public JSONObject getDailyUsersRequest(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) {
@@ -179,11 +179,13 @@ public class Statistics extends HttpServlet {
 		int dailyUsers = 0;
 		int totalUsers = 0;
 		int dailyUserStep = (int) (ChronoUnit.DAYS.between(startDate, endDate) * (75 / 100.0f));
-		String request = "SELECT count(*) FROM (SELECT user_id FROM (SELECT DISTINCT user_id, CAST(date AS DATE) AS date FROM logs where code = 200 AND type = 9 AND CAST(date AS DATE)  between '"
+		String totalUsersRequest = "SELECT count(*) FROM (SELECT count(user_id) FROM (SELECT DISTINCT user_id, cast(date AS DATE) AS date FROM logs WHERE code = 200 AND type = 9 AND CAST(date AS DATE) BETWEEN '"
+				+ startDate.toString() + "' AND '" + endDate.toString() + "') AS tmp GROUP BY user_id) AS t;";
+		String dailyUsersRequest = "SELECT count(*) FROM (SELECT user_id FROM (SELECT DISTINCT user_id, CAST(date AS DATE) AS date FROM logs where code = 200 AND type = 9 AND CAST(date AS DATE)  between '"
 				+ startDate.toString() + "' and '" + endDate.toString()
 				+ "') AS tmp GROUP BY user_id HAVING count(date) >= " + dailyUserStep + ") AS DailyUsers;";
-		ResultSet rs1 = db.get("SELECT count(*) FROM users WHERE tuto = 1");
-		ResultSet rs = db.get(request);
+		ResultSet rs1 = db.get(totalUsersRequest);
+		ResultSet rs = db.get(dailyUsersRequest);
 		try {
 			while (rs1.next())
 				totalUsers = Integer.parseInt(rs1.getString(1));
@@ -207,7 +209,7 @@ public class Statistics extends HttpServlet {
 		resObj.put("labels", labels);
 		resObj.put("values", values);
 		resObj.put("colors", colors);
-		
+
 		return resObj;
 	}
 
@@ -262,6 +264,7 @@ public class Statistics extends HttpServlet {
 	/* Request using newRequest() */
 	public JSONArray getValuesForRequest(DataBase db, LocalDate startDate, LocalDate endDate, String request,
 			ServletItem SI) {
+		System.out.println(newRequest(startDate, endDate, request));
 		ResultSet rs = db.get(newRequest(startDate, endDate, request));
 		return extractValuesFromResultSet(rs, SI);
 

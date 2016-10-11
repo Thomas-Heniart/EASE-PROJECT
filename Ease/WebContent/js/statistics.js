@@ -106,10 +106,8 @@ function enterStatisticsMode() {
 						$("#appsGraph").addClass("show");
 					}
 					if (dailyUsers != null) {
-						$("#dailyUsersNumber").text(dailyUsers);
-						$("#startDateSelected").text(dates[0]);
-						$("#endDateSelected").text(dates[dates.length - 1]);
-						$(".general-values").addClass("show");
+						var dailyUsersChart = createNewChart(dailyUsersCtx, {labels: dailyUsers.labels, datasets: [{ data: dailyUsers.values, backgroundColor: dailyUsers.colors, hoverBackgroundColor: dailyUsers.colors}]}, 'doughnut');
+						$("#general-stats").addClass("show");
 					}
 					$(".loading-stats").hide();
 				}, 'text'
