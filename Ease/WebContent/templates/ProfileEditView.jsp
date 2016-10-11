@@ -152,83 +152,8 @@
 				);
 		});
 		}
-	}/*
-	$(document).ready(function(){
-		$('#catalog').sortable({
-			animation: 300,
-			group:{name: "sites",pull:"clone", put:false},
-			sort: false,
-			forceFallback: true,
-			onStart: function(evt){
-				var item = $(evt.item);
-				$('body').css('cursor', 'move');
-			},
-			onEnd: function(evt){
-				var item = $(evt.item);
-				$('body').css('cursor', '');
-				if (evt.oldIndex != evt.newIndex){
-					$.post(
-						"moveProfile",
-						{
-							profileId: item.find('.item').attr('id'),
-							index: item.index()
-						},
-						function (data){
-						},
-						'text'
-						);
-				}
-			},
-			helper: function(evt){
-				var catalogItem = $(evt.item);
-				var ret;
-				ret = $('<div class="dragHelperLogo" style="position: fixed;"/>');
-				ret.attr("idx", $(catalogItem).attr(
-					"idx"));
-				ret.attr("name", $(catalogItem).find(
-					'p').text());
-				ret.attr("connect", $(catalogItem)
-					.attr("connect"));
-				ret.attr("data-login", $(catalogItem)
-					.attr("data-login"));
-				ret.attr("data-sso", $(catalogItem)
-					.attr("data-sso"));
-				ret.attr("data-nologin", $(catalogItem)
-					.attr("data-nologin"));
-				ret.append($('<img />'));
-				ret.find('img').attr(
-					"src",
-					$(catalogItem).find('img')
-					.attr("src"));
-				return ($(ret).get(0));				
-			},
-			onClone: function(evt){
-				var catalogItem = $(evt.item);
-				var ret;
-				ret = $('<div class="dragHelperLogo" style="position: fixed;"/>');
-				ret.attr("idx", $(catalogItem).attr(
-					"idx"));
-				ret.attr("name", $(catalogItem).find(
-					'p').text());
-				ret.attr("connect", $(catalogItem)
-					.attr("connect"));
-				ret.attr("data-login", $(catalogItem)
-					.attr("data-login"));
-				ret.attr("data-sso", $(catalogItem)
-					.attr("data-sso"));
-				ret.attr("data-nologin", $(catalogItem)
-					.attr("data-nologin"));
-				ret.append($('<img />'));
-				ret.find('img').attr(
-					"src",
-					$(catalogItem).find('img')
-					.attr("src"));
-				evt.clone = ret;
-				evt.item = ret;
-			}
-		});
-	});*/
-	$(document)
+	}
+$(document)
 			.ready(
 					function() {
 						$('.catalogApp')

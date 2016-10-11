@@ -16,6 +16,7 @@ pageEncoding="UTF-8"%>
 <%@ page import="java.util.LinkedList"%>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib tagdir="/WEB-INF/tags/dashboard" prefix="dashboard" %>
 
 <%
 List<com.Ease.session.Profile> profiles = user.getProfiles();
@@ -48,7 +49,10 @@ response.addCookie(fname);
 response.addCookie(lname);
 response.addCookie(email);
 %>
-
+<c:set var="session"		scope="session" value="${pageContext.getSession()}"/>
+<c:set var="servletContext" scope="session" value="${session.getServletContext()}"/>
+<c:set var="user"			scope="session" value='${session.getAttribute("User")}'/>
+<c:set var="colors"			scope="session" value='${servletContext.getAttribute("Colors")}'/>
 
 <script>
 	$(document).on("contextmenu", ".linkImage", function(e){
@@ -334,195 +338,10 @@ response.addCookie(email);
 </script>
 <div class="ProfilesHandler">
 	<div class="owl-carousel">
-		<c:forEach items='${profiles}' var="item">
-		<div class="item" id='${item.getProfileId()}' idx=<%=it%>>
-			<div class="ProfileBox" custom="${item.isCustom()}"
-			style="border-bottom: 5px solid ${item.getColor()};"
-			color="${item.getColor()}">
-				<div class="ProfileName"
-				style="background-color: ${item.getColor()};">
-					<p>@<c:out value='${item.getName()}' />
-					</p>
-					<div class="ProfileSettingsButton">
-						<i class="fa fa-fw fa-ellipsis-v"></i>
-					</div>
-				</div>
-				<div class="ProfileContent">
-			<img class="Scaler" src="resources/other/placeholder-36.png"
-			style="width: 100%; height: auto; visibility: hidden;" />
-			<div class=content>
-				<div class="ProfileControlPanel" index=<%=it%>>
-					<%
-					it = it + 1;
-					%>
-					<div class="profileSettingsTab">
-						<div class="sectionHeader" id="NameSection">
-							<p class="title">Profile name</p>
-							<div class="directInfo">
-								<p>${item.getName() }</p>
-							</div>
-						</div>
-						<div class="sectionContent" id="contentName">
-							<div id="modifyNameForm">
-								<input id="profileName" name="profileName" type="text"  maxlength="20"
-								placeholder="Profile name..." />
-								<div class="buttonSet">
-									<button class="button" id="validate">Validate</button>
-									<button class="button" id="cancel">Cancel</button>
-								</div>
-							</div>
-						</div>
-						<div class="sectionHeader" id="ColorSection">
-							<p class="title">Color</p>
-							<div class="directInfo"
-							style="background-color: ${item.getColor()}"></div>
-						</div>
-						<div class="sectionContent" id="contentColor">
-							<p>Choose your color</p>
-							<div id="modifyColorForm">
-								<div class="colorChooser">
-									<input name="color" type="hidden" id="color" />
-									<%
-									int itr = 0;
-									%>
-									<c:forEach items='${colors}' var="color">
-									<%
-									if ((itr % 5) == 0) {
-									%>
-									<div class="lineColor">
-										<%
-									}
-									%>
-									<div class="color" color="${color.getColor()}"
-									style="background-color: ${color.getColor()}"></div>
-									<%
-									itr++;
-									%>
-									<%
-									if ((itr % 5) == 0) {
-									%>
-								</div>
-								<%
-							}
-							%>
-						</c:forEach>
-						<%
-						if (itr % 5 != 0) {
-						%>
-					</div>
-					<%
-				}
-				%>
-			</div>
-			<div class="buttonSet">
-				<button class="button" id="validate">Validate</button>
-				<button class="button" id="cancel">Cancel</button>
-			</div>
-		</div>
+		<c:forEach items='${profiles}' var="item" varStatus="loop">
+			<dashboard:profile profile="${item}"/>
+		</c:forEach>
 	</div>
-	<div class="sectionHeader" id="DeleteProfilSection">
-		<p class="title">Delete profile</p>
-	</div>
-	<div class="sectionContent" id="contentDeleteProfil">
-		<div id="deleteProfileForm">
-			<p>By deleting your profile you will lose all related
-				information and associated accounts</p>
-				<div class="buttonSet">
-					<button class="button" id="validate">Validate</button>
-					<button class="button" id="cancel">Cancel</button>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<div id="profile-<%=it - 1%>" class="SitesContainer">
-	<c:forEach items='${item.getApps()}' var="app">
-
-	<c:choose>
-	<c:when test="${app.getType() eq 'NoAccount'}">
-	<div class="siteLinkBox emptyApp"
-	login=""
-	webId="${app.getSite().getId()}"
-	name="${app.getName()}"
-	move="${app.havePerm('MOVE', session.getServletContext())}"
-	id="${app.getAppId()}">
-	<div class="linkImage" onclick="sendEvent(this)">
-		<div class="emptyAppIndicator" onclick="showModifyAppPopup(this, event)">
-			<img src="resources/other/raise-your-hand-to-ask.svg" />
-		</div>
-		<div class="showAppActionsButton" >
-			<i class="fa fa-cog"></i>
-			<div class="appActionsPopup">
-				<div class="buttonsContainer">
-					<div class="modifyAppButton menu-item"
-					onclick="showModifyAppPopup(this, event)">
-					<p>Modify</p>
-				</div>
-				<c:if test="${app.havePerm('DELETE', session.getServletContext())}">
-				<div class="deleteAppButton menu-item"
-				onclick="showConfirmDeleteAppPopup(this, event)">
-				<p>Delete</p>
-			</div>
-		</c:if>
-	</div>
-</div>
-</div>
-<img class="logo" src="<c:out value='${app.getSite().getFolder()}logo.png'/>" />
-</div>
-</c:when>
-<c:otherwise>
-<c:if test="${app.getType() eq 'ClassicAccount'}">
-<div class="siteLinkBox"
-login="${app.getLogin()}"
-webId="${app.getSite().getId()}"
-name="${app.getName()}"
-id="${app.getAppId()}"
-ssoId="${app.getSite().getSso()}"
-move="${app.havePerm('MOVE', session.getServletContext())}"
-logwith="false">
-</c:if>
-<c:if test="${app.getType() eq 'LogWithAccount'}">
-<div class="siteLinkBox"
-webId="${app.getSite().getId()}"
-name="${app.getName()}"
-id="${app.getAppId()}"
-move="${app.havePerm('MOVE', session.getServletContext())}"
-logwith="${app.getAccount().getLogWithApp(member).getAppId()}">
-</c:if>
-<div class="linkImage" onclick="sendEvent(this)">
-	<div class="showAppActionsButton">
-		<i class="fa fa-cog"></i>
-		<div class="appActionsPopup">
-			<div class="buttonsContainer">
-				<div class="modifyAppButton menu-item"
-				onclick="showModifyAppPopup(this, event)">
-				<p>Modify</p>
-			</div>
-			<c:if test="${app.havePerm('DELETE', session.getServletContext())}">
-			<div class="deleteAppButton menu-item"
-			onclick="showConfirmDeleteAppPopup(this, event)">
-			<p>Delete</p>
-		</div>
-	</c:if>
-</div>
-</div>
-</div>
-<img class="logo" src="<c:out value='${app.getSite().getFolder()}logo.png'/>" />
-</div>
-</c:otherwise>
-</c:choose>
-<div class="siteName">
-<p>${app.getName()}</p>
-</div>
-</div>
-</c:forEach>
-</div>
-</div>
-</div>
-</div>
-</div>
-</c:forEach>
-</div>
 </div>
 <div id="boxHelper" style="display: none">
 	<div class="siteLinkBox">
