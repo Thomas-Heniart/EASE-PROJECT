@@ -100,7 +100,6 @@ public class Statistics extends HttpServlet {
 		String appsRemovedParam = SI.getServletParam("appsRemoved");
 
 		String dailyUsers = SI.getServletParam("dailyUsers");
-
 		JSONArray dates = new JSONArray();
 
 		for (LocalDate date = start; date.isBefore(end); date = date.plusDays(1))
@@ -126,7 +125,7 @@ public class Statistics extends HttpServlet {
 
 		if (dailyUsers != null)
 			jsonRes.put("dailyUsers", getDailyUsersRequest(db, start, end, SI));
-
+		
 		if (!jsonRes.isEmpty())
 			jsonRes.put("dates", dates);
 		SI.setResponse(200, jsonRes.toString());
@@ -170,27 +169,47 @@ public class Statistics extends HttpServlet {
 	public JSONObject getConnectionsOnWebsites(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) {
 		JSONArray values = getValuesForRequest(db, startDate, endDate,
 				" AND type = " + ServletItem.Type.AskInfo.ordinal() + " AND code = 200", SI);
-		return getJsonObjectFor(values, "Connections on webistes via EASE", "rgba(255, 99, 132, 0.2)", "rgba(255, 99, 132, 1)",
-				"connectionsChart");
+		return getJsonObjectFor(values, "Connections on webistes via EASE", "rgba(255, 99, 132, 0.2)",
+				"rgba(255, 99, 132, 1)", "connectionsChart");
 	}
 
-	public int getDailyUsersRequest(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) {
+	public JSONObject getDailyUsersRequest(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) {
+		JSONObject resObj = new JSONObject();
+		int dailyUsers = 0;
+		int totalUsers = 0;
 		int dailyUserStep = (int) (ChronoUnit.DAYS.between(startDate, endDate) * (75 / 100.0f));
-		String request = "SELECT count(*) FROM (SELECT user_id FROM (SELECT DISTINCT user_id, CAST(date AS DATE) AS date FROM logs where code = 200 AND type = 9 AND CAST(date AS DATE)  between '"
+		String totalUsersRequest = "SELECT count(*) FROM (SELECT count(user_id) FROM (SELECT DISTINCT user_id, cast(date AS DATE) AS date FROM logs WHERE code = 200 AND type = 9 AND CAST(date AS DATE) BETWEEN '"
+				+ startDate.toString() + "' AND '" + endDate.toString() + "') AS tmp GROUP BY user_id) AS t;";
+		String dailyUsersRequest = "SELECT count(*) FROM (SELECT user_id FROM (SELECT DISTINCT user_id, CAST(date AS DATE) AS date FROM logs where code = 200 AND type = 9 AND CAST(date AS DATE)  between '"
 				+ startDate.toString() + "' and '" + endDate.toString()
 				+ "') AS tmp GROUP BY user_id HAVING count(date) >= " + dailyUserStep + ") AS DailyUsers;";
-		int res = 0;
-		ResultSet rs = db.get(request);
+		ResultSet rs1 = db.get(totalUsersRequest);
+		ResultSet rs = db.get(dailyUsersRequest);
 		try {
+			while (rs1.next())
+				totalUsers = Integer.parseInt(rs1.getString(1));
 			while (rs.next())
-				res = Integer.parseInt(rs.getString(1));
+				dailyUsers = Integer.parseInt(rs.getString(1));
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 			e.printStackTrace();
 		}
-		return res;
+		JSONArray labels = new JSONArray();
+		JSONArray values = new JSONArray();
+		JSONArray colors = new JSONArray();
+		labels.add("Total users");
+		labels.add("Daily users");
+		values.add(totalUsers);
+		values.add(dailyUsers);
+		colors.add("rgba(99, 132, 255, 1)");
+		colors.add("rgba(255, 132, 99, 1)");
+		resObj.put("labels", labels);
+		resObj.put("values", values);
+		resObj.put("colors", colors);
+
+		return resObj;
 	}
 
 	public JSONObject getAverageConnectionsPerDailyUsers(DataBase db, LocalDate startDate, LocalDate endDate,
@@ -234,6 +253,12 @@ public class Statistics extends HttpServlet {
 				"appsChart");
 	}
 
+	public JSONObject getGeneralInformations(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) {
+		JSONObject resObj = new JSONObject();
+		
+		return resObj;
+	}
+	
 	public String newRequest(LocalDate startDate, LocalDate endDate, String conditions) {
 		return ("SELECT d.selected_date, count(logs.user_id) FROM (SELECT selected_date from (SELECT adddate('1970-01-01',t4.i*10000 + t3.i*1000 + t2.i*100 + t1.i*10 + t0.i)  selected_date FROM (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t0,   (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t1,  (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t2,  (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t3,  (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t4) v   where selected_date between '"
 				+ startDate.toString() + "' AND '" + endDate.toString()
@@ -244,6 +269,7 @@ public class Statistics extends HttpServlet {
 	/* Request using newRequest() */
 	public JSONArray getValuesForRequest(DataBase db, LocalDate startDate, LocalDate endDate, String request,
 			ServletItem SI) {
+		System.out.println(newRequest(startDate, endDate, request));
 		ResultSet rs = db.get(newRequest(startDate, endDate, request));
 		return extractValuesFromResultSet(rs, SI);
 

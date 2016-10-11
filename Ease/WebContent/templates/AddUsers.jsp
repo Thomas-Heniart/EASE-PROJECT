@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	
+
 <div class="RightSideViewTab" id="AddUsersTab">
 	<button id="quit">
 		<i class="fa fa-times"></i>
@@ -37,8 +37,7 @@
 				<p>Sending new users to database ...</p>
 			</div>
 			<div id="progressStatus">
-				<div class="progress">
-				</div>
+				<div class="progress"></div>
 				<div class="buttonSet">
 					<button id="return">
 						<div style="display: inline-block">OK</div>
@@ -52,78 +51,59 @@
 </div>
 
 <script>
-	function enterAddUsersMode() {
-		$('#AddUsersTab').addClass('show');
-	}
-
-	function leaveAddUsersMode() {
-		$('#AddUsersTab').removeClass('show');
-	}
-
-	$(document).ready(function() {
-		$('#enterAddUsersMode').click(function() {
-			leaveTagsManagerMode();
-			leaveRequestedWebsitesMode();
-			leaveAddSiteMode();
-			leaveChangeBackMode();
-			enterAddUsersMode();
-		});
-	});
-
-	$(document).ready(function() {
-		$('#AddUsersTab #quit').click(function() {
-			leaveAddUsersMode();
-		});
-	});
-
 	$(document).ready(function() {
 		$('#return').click(function() {
 			$(".addUsersProgress").addClass('hidden');
 			$(".addUsers").removeClass('hidden');
 			$('#progressStatus .progress p').remove();
-			
-		});
-	});
-	
-	$(document).ready(function() {
-		$('#integrate').click(function() {
-			$(".addUsers").addClass('hidden');
-			$('#progressStatus .progress').append("<p>Sending to database ... </p>");
-			$(".addUsersProgress").removeClass('hidden');
-			$('#progressStatus .progress').append("<p id='sent'>"+ emailsSent + "/" + emailsToSend + " emails sent. </p>");
-			var form = $(this).closest('#addUsersForm');
-			var emailsList = $(form).find('#integrateUsers').val().replace(/ /g, '').split(";");
 
-			var emailsToSend = emailsList.length;
-			var emailsSent = 0;
-			
-			for ( var email in emailsList) {
-				var tab = emailsList[email].split(":");
-				sendInvitation(tab[0], tab[1], function(){
-					emailsSent++;
-					$('#sent').text(emailsSent + "/" + emailsToSend + " emails sent.");
-				});
-			}
 		});
 	});
-	
-	function sendInvitation(email, group_id, callback){
-		postHandler.post(
-				'createInvitation',
-				{
-					email : email,
-					groupId : group_id
-				},
-				function() {},
-				function(retMsg){
-					$('#progressStatus .progress').append("<p>"+ email + " -> success");
-					callback();
-				},
-				function(retMsg){
-					$('#progressStatus .progress').append("<p>"+ email + " -> error : " + retMsg);
-					callback();
-				},
-				'text'
-		);
+
+	$(document).ready(
+			function() {
+				$('#integrate').click(
+						function() {
+							$(".addUsers").addClass('hidden');
+							$('#progressStatus .progress').append(
+									"<p>Sending to database ... </p>");
+							$(".addUsersProgress").removeClass('hidden');
+							$('#progressStatus .progress').append(
+									"<p id='sent'>" + emailsSent + "/"
+											+ emailsToSend
+											+ " emails sent. </p>");
+							var form = $(this).closest('#addUsersForm');
+							var emailsList = $(form).find('#integrateUsers')
+									.val().replace(/ /g, '').split(";");
+
+							var emailsToSend = emailsList.length;
+							var emailsSent = 0;
+
+							for ( var email in emailsList) {
+								var tab = emailsList[email].split(":");
+								sendInvitation(tab[0], tab[1], function() {
+									emailsSent++;
+									$('#sent').text(
+											emailsSent + "/" + emailsToSend
+													+ " emails sent.");
+								});
+							}
+						});
+			});
+
+	function sendInvitation(email, group_id, callback) {
+		postHandler.post('createInvitation', {
+			email : email,
+			groupId : group_id
+		}, function() {
+		}, function(retMsg) {
+			$('#progressStatus .progress')
+					.append("<p>" + email + " -> success");
+			callback();
+		}, function(retMsg) {
+			$('#progressStatus .progress').append(
+					"<p>" + email + " -> error : " + retMsg);
+			callback();
+		}, 'text');
 	}
 </script>

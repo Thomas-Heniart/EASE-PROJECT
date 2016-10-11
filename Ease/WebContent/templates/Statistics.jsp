@@ -73,9 +73,8 @@
 		<a id='getStats'>Go !</a>
 	</div>
 	<div id="responses">
-		<div class="general-values">
-			<p>From: <span id="startDateSelected"></span> To: <span id="endDateSelected"></span></p>
-			<p><span id="dailyUsersNumber"></span> daily users</p>
+		<div class="stats-graph" id="general-stats">
+			<canvas id="dailyUsersCanvas"></canvas>
 		</div>
 		<div class="stats-graph" id="usersGraph">
 			<canvas id="usersCanvas"></canvas>
@@ -86,5 +85,6 @@
 		<div class="stats-graph" id="appsGraph">
 			<canvas id="appsCanvas"></canvas>
 		</div>
+		<a href="" style="display:none">Back</a>
 	</div>
 </div>

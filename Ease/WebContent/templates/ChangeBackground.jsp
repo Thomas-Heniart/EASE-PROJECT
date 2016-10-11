@@ -22,28 +22,3 @@
 		</div>
 	</div>
 </div>
-<script>
-function enterChangeBackMode() {
-	$('#ChangeBackTab').addClass('show');
-}
-
-function leaveChangeBackMode() {
-	$('#ChangeBackTab').removeClass('show');
-}
-
-$(document).ready(function() {
-	$('#enterChangeBackMode').click(function() {
-		leaveAddUsersMode();
-		leaveTagsManagerMode();
-		leaveRequestedWebsitesMode();
-		leaveAddSiteMode();
-		enterChangeBackMode();
-	});
-});
-
-$(document).ready(function() {
-	$('#ChangeBackTab #quit').click(function() {
-		leaveChangeBackMode();
-	});
-});
-</script>
