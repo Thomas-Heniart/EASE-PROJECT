@@ -171,26 +171,44 @@ public class Statistics extends HttpServlet {
 		JSONArray values = getValuesForRequest(db, startDate, endDate,
 				" AND type = " + ServletItem.Type.AskInfo.ordinal() + " AND code = 200", SI);
 		return getJsonObjectFor(values, "Connections on webistes via EASE", "rgba(255, 99, 132, 0.2)", "rgba(255, 99, 132, 1)",
-				"connectionsChart");
+				"usersChart");
 	}
 
-	public int getDailyUsersRequest(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) {
+	public JSONObject getDailyUsersRequest(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) {
+		JSONObject resObj = new JSONObject();
+		int dailyUsers = 0;
+		int totalUsers = 0;
 		int dailyUserStep = (int) (ChronoUnit.DAYS.between(startDate, endDate) * (75 / 100.0f));
 		String request = "SELECT count(*) FROM (SELECT user_id FROM (SELECT DISTINCT user_id, CAST(date AS DATE) AS date FROM logs where code = 200 AND type = 9 AND CAST(date AS DATE)  between '"
 				+ startDate.toString() + "' and '" + endDate.toString()
 				+ "') AS tmp GROUP BY user_id HAVING count(date) >= " + dailyUserStep + ") AS DailyUsers;";
-		int res = 0;
+		ResultSet rs1 = db.get("SELECT count(*) FROM users WHERE tuto = 1");
 		ResultSet rs = db.get(request);
 		try {
+			while (rs1.next())
+				totalUsers = Integer.parseInt(rs1.getString(1));
 			while (rs.next())
-				res = Integer.parseInt(rs.getString(1));
+				dailyUsers = Integer.parseInt(rs.getString(1));
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 			e.printStackTrace();
 		}
-		return res;
+		JSONArray labels = new JSONArray();
+		JSONArray values = new JSONArray();
+		JSONArray colors = new JSONArray();
+		labels.add("Total users");
+		labels.add("Daily users");
+		values.add(totalUsers);
+		values.add(dailyUsers);
+		colors.add("rgba(99, 132, 255, 1)");
+		colors.add("rgba(255, 132, 99, 1)");
+		resObj.put("labels", labels);
+		resObj.put("values", values);
+		resObj.put("colors", colors);
+		
+		return resObj;
 	}
 
 	public JSONObject getAverageConnectionsPerDailyUsers(DataBase db, LocalDate startDate, LocalDate endDate,

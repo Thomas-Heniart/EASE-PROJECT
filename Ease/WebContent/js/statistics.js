@@ -50,6 +50,7 @@ function enterStatisticsMode() {
 					var usersCtx = $("#usersCanvas");
           var connectionsCtx = $("#connectionsCanvas");
           var appsCtx = $("#appsCanvas");
+					var dailyUsersCtx = $("#dailyUsersCanvas");
           var key;
           var dates = null;
           var usersDatasets = [];

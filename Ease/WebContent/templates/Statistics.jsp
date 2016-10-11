@@ -74,6 +74,7 @@
 	</div>
 	<div id="responses">
 		<div class="general-values">
+			<canvas id="dailyUsersCanvas"></canvas>
 			<p>From: <span id="startDateSelected"></span> To: <span id="endDateSelected"></span></p>
 			<p><span id="dailyUsersNumber"></span> daily users</p>
 		</div>
