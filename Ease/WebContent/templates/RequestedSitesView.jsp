@@ -15,65 +15,43 @@
 </div>
 
 <script>
-	function enterRequestedWebsitesMode() {
-		$('#RequestedWebsitesTab').addClass('show');
-	}
-	
-	$(document).ready(function(){
-		postHandler.post(
-				'requestedWebsites',
-				{},
-				function(){},
-				function(retMsg){printRequestedWebsites(retMsg);},
-				function(retMsg){}, 
-				'text'
-		);
+	$(document).ready(function() {
+		postHandler.post('requestedWebsites', {}, function() {
+		}, function(retMsg) {
+			printRequestedWebsites(retMsg);
+		}, function(retMsg) {
+		}, 'text');
 	});
-	
-	function printRequestedWebsites(string){
+
+	function printRequestedWebsites(string) {
 		var requests = string.split(";");
-		for(var i in requests){
-			if(i>0){
+		for ( var i in requests) {
+			if (i > 0) {
 				var email = requests[i].split("-SENTBY-")[1];
 				var website = requests[i].split("-SENTBY-")[0];
-				$('.requestedWebsitesView').append("<div class='requestedWebsite' website='"+requests[i].split("-SENTBY-")[0]+"'><button class='quit'>X</button><p>Website : "+requests[i].split("-SENTBY-")[0]+" 		ASKED BY email : "+requests[i].split("-SENTBY-")[1]+"</p></div>");
+				$('.requestedWebsitesView')
+						.append(
+								"<div class='requestedWebsite' website='"
+										+ requests[i].split("-SENTBY-")[0]
+										+ "'><button class='quit'>X</button><p>Website : "
+										+ requests[i].split("-SENTBY-")[0]
+										+ " 		ASKED BY email : "
+										+ requests[i].split("-SENTBY-")[1]
+										+ "</p></div>");
 			}
 		}
 		$('.requestedWebsite .quit').click(eraseWebsites);
 	}
 
-	function leaveRequestedWebsitesMode() {
-		$('#RequestedWebsitesTab').removeClass('show');
-	}
-
-	$(document).ready(function() {
-		$('#enterRequestedWebsitesMode').click(function() {
-			leaveTagsManagerMode();
-			leaveAddSiteMode();
-			leaveChangeBackMode();
-			leaveAddUsersMode();
-			enterRequestedWebsitesMode();
-		});
-	});
-	
 	function eraseWebsites() {
-			var div = $(this).parent();
-			var toErase = div.attr('website');
-			postHandler.post(
-					'eraseRequestedWebsite',
-					{
-						toErase : toErase
-					},
-					function(){},
-					function(retMsg){div.remove();},
-					function(retMsg){},
-					'text'
-			);
-		}
-
-	$(document).ready(function() {
-		$('#RequestedWebsitesTab #quit').click(function() {
-			leaveRequestedWebsitesMode();
-		});
-	});
+		var div = $(this).parent();
+		var toErase = div.attr('website');
+		postHandler.post('eraseRequestedWebsite', {
+			toErase : toErase
+		}, function() {
+		}, function(retMsg) {
+			div.remove();
+		}, function(retMsg) {
+		}, 'text');
+	}
 </script>

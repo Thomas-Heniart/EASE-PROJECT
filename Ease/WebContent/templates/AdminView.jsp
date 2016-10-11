@@ -21,45 +21,62 @@
 
 <div class="admin-menu">
 	<div>
-		<button id="enterChangeBackMode" class="button adminButton">
+		<button id="enterChangeBackMode" class="button adminButton"
+			target="ChangeBackTab">
 			<img src="resources/icons/upload_back.png" />
 		</button>
 	</div>
 	<div>
-		<button id="enterAddUsersMode" state="off" class="button adminButton">
+		<button id="enterAddUsersMode" state="off" class="button adminButton"
+			target="AddUsersTab">
 			<img src="resources/icons/add_users_icon.png" />
 		</button>
 	</div>
 	<div>
 		<button id="enterRequestedWebsitesMode" state="off"
-			class="button adminButton">
+			class="button adminButton" target="RequestedWebsitesTab">
 			<img src="resources/icons/requested_websites.png" />
 		</button>
 	</div>
 	<div>
-		<button id="enterAddSiteMode" state="off" class="button adminButton">
+		<button id="enterAddSiteMode" state="off" class="button adminButton"
+			target="AddSiteTab">
 			<img src="resources/icons/add_website_icon.png" />
 		</button>
 	</div>
 	<div>
 		<button id="enterTagsManagerMode" state="off"
-			class="button adminButton">
+			class="button adminButton" target="TagsManagerTab">
 			<img src="resources/icons/tags_icon.png" />
 		</button>
 	</div>
 	<div>
 		<button id="enterStatisticsMode" state="off"
-			class="button adminButton">
+			class="button adminButton" target="StatisticsTab">
 			<img src="resources/icons/ascendant-bars-graphic.png" />
 		</button>
 	</div>
 </div>
 
-<div class="AdminMenu show">
-	<%@ include file="Statistics.jsp"%>
-	<%@ include file="AddUsers.jsp"%>
-	<%@ include file="RequestedSitesView.jsp"%>
-	<%@ include file="UploadWebsite.jsp"%>
-	<%@ include file="TagsManager.jsp"%>
-	<%@ include file="ChangeBackground.jsp"%>
-</div>
+<%@ include file="Statistics.jsp"%>
+<%@ include file="AddUsers.jsp"%>
+<%@ include file="RequestedSitesView.jsp"%>
+<%@ include file="UploadWebsite.jsp"%>
+<%@ include file="TagsManager.jsp"%>
+<%@ include file="ChangeBackground.jsp"%>
+
+
+<script>
+	$(".admin-menu button").click(function(e) {
+		$(".RightSideViewTab.show").removeClass("show");
+		var target = $(e.target).closest("button").attr("target");
+		console.log($("#" + target));
+		$("#" + target).addClass("show");
+	});
+	$(".RightSideViewTab button .fa.fa-times").click(function(e) {
+		$(".RightSideViewTab.show").removeClass("show");
+	});
+	/*$(".col-left.show").click(function(e) {
+		$(".RightSideViewTab.show").removeClass("show");
+	});*/
+</script>
