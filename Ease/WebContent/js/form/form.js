@@ -19,11 +19,14 @@ var Form = function (rootEl, inputs, button) {
 		self.qButton.removeClass("Active");
 	};
 	this.qRoot.on("StateChanged", function () {
-		self.checkInputs() && self.enable() || self.disable();
+		if (self.checkInputs())
+			self.enable();
+		else
+			self.disable();
 	});
 	this.checkInputs = function () {
 		for (var i = 0; i < self.qInputs.length; ++i) {
-			if (self.qInput[i].isValid == false) {
+			if (self.qInputs[i].isValid == false) {
 				return false;
 			}
 		}

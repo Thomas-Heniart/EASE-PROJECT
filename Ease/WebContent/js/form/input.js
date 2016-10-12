@@ -12,10 +12,10 @@ var Input = function (rootEl) {
 		return (self.qInput.val().length > 0);
 	};
 	this.onStateChanged = function () {
-		for (var i = 0; i < self.target.length; ++i) {
-			self.listeners[i].trigger("StateChanged");
+		for (var i = 0; i < self.listeners.length; ++i) {
+			self.listeners[i].trigger("StateChanged");		
 		}
-		if (seld.isValid) {
+		if (self.isValid) {
 			self.qInput.removeClass("unValid");
 			self.qInput.addClass("valid");
 		} else {
