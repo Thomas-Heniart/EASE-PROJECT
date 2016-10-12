@@ -1,5 +1,5 @@
 
-var From = function (rootEl, inputs, button) {
+var Form = function (rootEl, inputs, button) {
 	var self = this;
 	this.qRoot = rootEl;
 	this.qInputs = inputs;
