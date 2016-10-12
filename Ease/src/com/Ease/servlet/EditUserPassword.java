@@ -51,7 +51,7 @@ public class EditUserPassword extends HttpServlet {
 		ServletItem SI = new ServletItem(ServletItem.Type.EditUserPassword, request, response, user);
 		
 		// Get Parameters
-		String password = SI.getServletParam("password");
+		String password = request.getParameter("password");
 		String confirmPassword = SI.getServletParam("confirmPassword");
 		String oldPassword = SI.getServletParam("oldPassword");
 		// --
