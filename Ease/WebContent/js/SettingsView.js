@@ -1,5 +1,27 @@
-$(document).ready(
-		function() {
+$(document).ready(function() {
+			
+			if($("body").hasClass("picBckgrnd")){
+				$('#contentStyle div label input').prop("checked", true);
+			}
+			$('#contentStyle div label input').change(function(){
+				postHandler.post(
+					'changeUserBackground',
+					{},
+					function(){},
+					function(retMsg){
+						if($("body").hasClass("picBckgrnd")){
+							$("body").switchClass("picBckgrnd", "logoBckgrnd");
+						} else if($("body").hasClass("logoBckgrnd")){
+							$("body").switchClass("logoBckgrnd", "picBckgrnd");
+						}
+					},
+					function(retMsg){
+						showAlertPopup(retMsg, true);
+					},
+					"text"
+				);
+			});
+			
 			$('#settingsTab #modifyNameForm #validate').click(
 					function() {
 						var parent = $(this).closest('#modifyNameForm');

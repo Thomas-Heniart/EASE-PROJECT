@@ -72,6 +72,7 @@
 					font-weight: 200;
 				}
 				.iconEdit {
+					left: 10px;
 					display: inline-block;
 					float:right;
 					font-weight: 300;
@@ -133,6 +134,44 @@
 		}
 	}
 }
+
+					.checkBox {
+ 						display: none;
+ 					}					
+ 					.slider {
+  						display: inline-block;
+  						width:30px;
+ 						height: 17px;
+  						position: absolute;
+  						cursor: pointer;
+  						border-radius: 17px;
+   						background-color: #ccc;
+   						-webkit-transition: .4s;
+   						transition: .4s;
+   					}
+   					.slider:before {
+   						position: absolute;
+   						border-radius: 50%;
+   						content: "";
+   						height: 13px;
+   						width: 13px;
+   						left: 2px;
+   						bottom: 2px;
+   						background-color: white;
+   						-webkit-transition: .4s;
+   						transition: .4s;
+					}
+					.checkBox:checked + .slider {
+						background-color: #373b60;
+					}
+					.checkBox:focus + .slider {
+						box-shadow: 0 0 1px #373b60;
+					}
+					.checkBox:checked + .slider:before {
+						-webkit-transform: translateX(13px);
+						-ms-transform: translateX(13px);
+						transform: translateX(13px);
+					}
 
 @media screen and (max-width: 771px) {
 	.SettingsView {

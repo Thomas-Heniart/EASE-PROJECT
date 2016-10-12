@@ -60,6 +60,23 @@
 					</div>
 				</div>
 			</div>
+			<div class="sectionHeader" id="styleSection">
+				<p>Style</p>
+				<p class="directInfo"/>
+				<div class="iconEdit">
+					<i class="fa fa-cog"></i>
+					<p>Edit</p>
+				</div>
+			</div>
+			<div class="sectionContent" id="contentStyle">
+				<div>
+					<p style="display:inline-block;">Beautiful background</p>
+					<label style="display:inline-block; float:right; margin-right:30px;">
+  						<input class="checkBox" type="checkbox"/>
+  						<div class="slider"/>
+					</label>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
