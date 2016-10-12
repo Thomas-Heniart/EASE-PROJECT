@@ -1,3 +1,8 @@
+var usersChart = null;
+var connectionsChart = null;
+var dailyUsersChart = null;
+var appsChart = null;
+
 $(document).ready(function(){
 	$("#responses a").click(function(){
 		$("#responses .show").removeClass("show");
@@ -8,6 +13,10 @@ $(document).ready(function(){
 	});
 });
 
+
+function resetCharts() {
+	$("iframe.chartjs-hidden-iframe").remove();
+}
 $(document).ready(function() {
 	$("#getStats").click(function() {
 		var startDate = $("#startDate").val();
@@ -23,6 +32,7 @@ $(document).ready(function() {
 		$("#statisticsForm").hide();
 		$(".loading-stats").show();
 		$("#responses a").show();
+		resetCharts();
     $.post(
 			'Statistics',
 			{
@@ -83,27 +93,24 @@ $(document).ready(function() {
           datasets : appsDatasets
         };
         if (usersChartData.datasets.length > 0) {
-				     var usersChart = createNewChart(usersCtx, usersChartData, 'line');
-						 $("#usersGraph").addClass("show");
+				  usersChart = createNewChart(usersCtx, usersChartData, 'line');
+					$("#usersGraph").addClass("show");
 				}
         if (connectionsChartData.datasets.length > 0) {
-          var connectionsChart = createNewChart(connectionsCtx, connectionsChartData, 'line');
+          connectionsChart = createNewChart(connectionsCtx, connectionsChartData, 'line');
 					$("#connectionsGraph").addClass("show");
 				}
         if (appsChartData.datasets.length > 0) {
-          var appsChart = createNewChart(appsCtx, appsChartData, 'line');
+          appsChart = createNewChart(appsCtx, appsChartData, 'line');
 					$("#appsGraph").addClass("show");
 				}
 				if (dailyUsers != null) {
-					var dailyUsersChart = createNewChart(dailyUsersCtx, {labels: dailyUsers.labels, datasets: [{ data: dailyUsers.values, backgroundColor: dailyUsers.colors, hoverBackgroundColor: dailyUsers.colors}]}, 'doughnut');
+					dailyUsersChart = createNewChart(dailyUsersCtx, {labels: dailyUsers.labels, datasets: [{ data: dailyUsers.values, backgroundColor: dailyUsers.colors, hoverBackgroundColor: dailyUsers.colors}]}, 'doughnut');
 					$("#general-stats").addClass("show");
 				}
 				$(".loading-stats").hide();
 			}, 'text'
 		);
-	});
-	$('#StatisticsTab #quit').click(function() {
-		leaveStatisticsMode();
 	});
 });
 
