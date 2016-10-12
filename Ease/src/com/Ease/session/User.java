@@ -105,7 +105,7 @@ public class User {
 			saltEase = rs.getString(UserData.SALTEASE.ordinal());
 			saltPerso = rs.getString(UserData.SALTPERSO.ordinal());
 			tuto = rs.getString(UserData.TUTO.ordinal());
-			background = ((rs.getString(UserData.BACKGROUND.ordinal()) == "1") ? "picture" : "logo");
+			background = (rs.getString(UserData.BACKGROUND.ordinal()).equals("1")) ? "picture" : "logo";
 			if ((keyUser = AES.decryptUserKey(rs.getString(UserData.KEYUSER.ordinal()), pass, saltPerso)) == null)
 				throw new SessionException("Can't decrypt key.");
 			profiles = new LinkedList<Profile>();
