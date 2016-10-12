@@ -27,7 +27,6 @@ function sendEvent(obj) {
 			appIndex : appIdx,
 		}, function() {
 		}, function(retMsg) {
-			console.log(retMsg);
 			json.detail = JSON.parse(retMsg);
 			event = new CustomEvent("NewConnection", json);
 			document.dispatchEvent(event);
@@ -362,7 +361,6 @@ function showConfirmDeleteAppPopup(elem, event) {
 			}, function(retMsg) {
 				image.addClass('deletingApp');
 				setTimeout(function() {
-					console.log(app);
 					app.remove();
 				}, 500);
 			}, function(retMsg) {
