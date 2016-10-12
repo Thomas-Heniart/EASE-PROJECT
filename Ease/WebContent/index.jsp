@@ -43,6 +43,7 @@ pageEncoding="UTF-8"%>
 	<script src="js/tutorial.js"></script>
 	<script src="js/postHandler.js"></script>
 	<script src="js/SettingsView.js"></script>
+	<script src="js/profiles.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/lib/dropDownMenu/dropdown.css" />
@@ -141,12 +142,13 @@ pageEncoding="UTF-8"%>
 	</script>
 </head>
 
-<body role="document" class="mainBody">
+<body role="document" class=<%= ((user != null && user.getBackground()=="logo") ? "'mainBody logoBckgrnd'" : "'mainBody picBckgrnd'") %>>
 	<%@ page import="java.util.Base64" %>
 	<%@ page import="java.util.Base64.Encoder" %>
 	<%@ page import="java.nio.charset.StandardCharsets" %>
+	
 	<div id="userEmail" data-content=<%= (user != null) ? user.getEmail() : null %>></div>
-
+	
 	<div id="onMobile" style="display:none;">
 		<%@ include file="templates/Mobile.jsp" %>
 	</div>

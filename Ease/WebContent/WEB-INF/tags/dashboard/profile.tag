@@ -47,37 +47,19 @@
 							<div id="modifyColorForm">
 								<div class="colorChooser">
 									<input name="color" type="hidden" id="color" />
-									<%
-									int itr = 0;
-									%>
-									<c:forEach items='${colors}' var="color">
-										<%
-											if ((itr % 5) == 0) {
-										%>
-										<div class="lineColor">
-											<%
-											}
-											%>
+									<c:forEach items='${colors}' var="color" varStatus="loop">
+										<c:if test='${(loop.index % 5) == 0}'>
+											<div class="lineColor">
+										</c:if>
 										<div class="color" color="${color.getColor()}"
 											 style="background-color: ${color.getColor()}"></div>
-										<%
-											itr++;
-										%>
-										<%
-											if ((itr % 5) == 0) {
-										%>
-										</div>
-										<%
-										}
-										%>
+										<c:if test='${((loop.index + 1) % 5) == 0}'>
+											</div>
+										</c:if>
 									</c:forEach>
-								<%
-							if (itr % 5 != 0) {
-							%>
-							</div>
-					<%
-				}
-				%>
+									<c:if test='${(colors.size() % 5) != 0}'>
+										</div>
+									</c:if>
 			</div>
 			<div class="buttonSet">
 				<button class="button" id="validate">Validate</button>

@@ -14,11 +14,6 @@
 <script src="js/postHandler.js"></script>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
-<%
-	com.Ease.session.User user = (com.Ease.session.User) (session.getAttribute("User"));
-%>
-
 <div class="admin-menu">
 	<div>
 		<button id="enterChangeBackMode" class="button adminButton"
@@ -64,19 +59,3 @@
 <%@ include file="UploadWebsite.jsp"%>
 <%@ include file="TagsManager.jsp"%>
 <%@ include file="ChangeBackground.jsp"%>
-
-
-<script>
-	$(".admin-menu button").click(function(e) {
-		$(".RightSideViewTab.show").removeClass("show");
-		var target = $(e.target).closest("button").attr("target");
-		console.log($("#" + target));
-		$("#" + target).addClass("show");
-	});
-	$(".RightSideViewTab button .fa.fa-times").click(function(e) {
-		$(".RightSideViewTab.show").removeClass("show");
-	});
-	/*$(".col-left.show").click(function(e) {
-		$(".RightSideViewTab.show").removeClass("show");
-	});*/
-</script>

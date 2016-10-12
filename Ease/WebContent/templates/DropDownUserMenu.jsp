@@ -8,6 +8,7 @@
 	<ul class="menu__inner">
 <!--	<li><a><span>home page</span></a></li>-->
 	<li><a href="#" id="ModifyUserButton"><i class="fa fa-fw fa-cogs"></i><span>Parameters</span></a></li>
+	<li><a href="#" id="ModifyBackground"><i class=<%= ((user != null && user.getBackground()=="logo") ? "'fa fa-file-o'" : "'fa fa-file-image-o'") %>></i></input><span>Background</span></a></li>
 	</ul>
 </nav>
 <script>
@@ -17,6 +18,23 @@ $(document).ready(function(){
 		$('.col-left').removeClass('show');
 		$('.MenuButtonSet').removeClass('show');
 	});
+	$('#ModifyBackground').hover(changeBackgroundSettingsIcon);
+	
+	$('#ModifyBackground').click(function(){
+		postHandler.post(
+			'changeUserBackground',
+			{},
+			function(){},
+			function(retMsg){
+				window.location.replace("index.jsp");
+			},
+			function(retMsg){
+				showAlertPopup(retMsg, true);
+			},
+			"text"
+		);
+	});
+	
 });
 /*$(document).ready(function(){	
 	$('#menu').click(
@@ -28,6 +46,19 @@ $(document).ready(function(){
 		}
 	);
 });*/
+
+function changeBackgroundSettingsIcon(){
+	console.log("change background icon");
+	if($('#ModifyBackground i').hasClass("fa-file-o")){
+		$('#ModifyBackground i').removeClass("fa-file-o");
+		$('#ModifyBackground i').addClass("fa-file-image-o");
+	} else {
+		$('#ModifyBackground i').removeClass("fa-file-image-o");
+		$('#ModifyBackground i').addClass("fa-file-o");
+	}
+}
+
+
 (function() {
 
 				function SVGDDMenu( el, options ) {

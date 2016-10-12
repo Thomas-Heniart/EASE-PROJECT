@@ -33,25 +33,6 @@
 					</div>
 				</div>
 			</div>
-			<div class="sectionHeader" id="contactSection">
-				<p>Contact</p>
-				<p class="directInfo"><%=user.getEmail()%></p>
-				<div class="iconEdit">
-					<i class="fa fa-cog"></i>
-					<p>Edit</p>
-				</div>
-			</div>
-			<div class="sectionContent" id="contentContact">
-				<div id="modifyEmailForm">
-					<input id="email" name="email" type="email" placeholder="Email" />
-					<input id="password" name="password" type="password"
-						placeholder="Confirm with password" />
-					<div class="buttonSet">
-						<button class="button" id="validate">Validate</button>
-						<button class="button" id="cancel">Cancel</button>
-					</div>
-				</div>
-			</div>
 			<div class="sectionHeader" id="passwordSection">
 				<p>Password</p>
 				<p class="directInfo"></p>
@@ -79,30 +60,6 @@
 					</div>
 				</div>
 			</div>
-			<!--      <div class="sectionHeader" id="phoneSection"><p>Phone</p><p class="directInfo"></p>
-            <div class="iconEdit"><i class="fa fa-cog"></i><p>Edit</p></div>
-      </div>
-      <div class="sectionContent" id="contentPhone">
-      	<div id="modifyPhoneForm">
-      		<input  id="phoneNumber" name="phoneNumber" type="text" placeholder="Phone number"/>
-			<div class="buttonSet">
-			    <button class="button" id="validate">Validate</button>
-			    <button class="button" id="cancel">Cancel</button>
-			</div>	
-      	</div>
-      </div>-->
-			<!--  <div class="sectionHeader" id="languageSection"><p>Language</p><p class="directInfo"></p>
-            <div class="iconEdit"><i class="fa fa-cog"></i><p>Edit</p></div>
-      </div>      
-      <div class="sectionContent" id="contentLanguage">
-      	<div id="modifyLanguageForm">
-      		<input  id="language" name="language" type="text" placeholder="Language"/>
-			<div class="buttonSet">
-			    <button class="button" id="validate">Validate</button>
-			    <button class="button" id="cancel">Cancel</button>
-			</div>	
-      	</div>
-      </div> -->
 		</div>
 	</div>
 </div>
