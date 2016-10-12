@@ -48,7 +48,6 @@ $(document).ready(function(){
 });*/
 
 function changeBackgroundSettingsIcon(){
-	console.log("change background icon");
 	if($('#ModifyBackground i').hasClass("fa-file-o")){
 		$('#ModifyBackground i').removeClass("fa-file-o");
 		$('#ModifyBackground i').addClass("fa-file-image-o");
