@@ -3,7 +3,6 @@
 <div id="loggedBody">
     <div class="col-left show" style="width: 100%; float:left">
 		<%@ include file="ProfileView.jsp"%>
-		<%@ include file="ProfileEditView.jsp" %>
 		<%@ include file="extension.jsp" %>		
 		<%@ include file="catalogView.jsp"%>
 	</div>
