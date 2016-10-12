@@ -141,12 +141,13 @@ pageEncoding="UTF-8"%>
 	</script>
 </head>
 
-<body role="document" class="mainBody">
+<body role="document" class=<%= ((user != null && user.getBackground()=="logo") ? "'mainBody logoBckgrnd'" : "'mainBody picBckgrnd'") %>>
 	<%@ page import="java.util.Base64" %>
 	<%@ page import="java.util.Base64.Encoder" %>
 	<%@ page import="java.nio.charset.StandardCharsets" %>
+	
 	<div id="userEmail" data-content=<%= (user != null) ? user.getEmail() : null %>></div>
-
+	
 	<div id="onMobile" style="display:none;">
 		<%@ include file="templates/Mobile.jsp" %>
 	</div>
