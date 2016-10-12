@@ -37,7 +37,7 @@
 <script src="js/basic-utils.js"></script>
 <script src="js/postHandler.js"></script>
 <script src="js/SettingsView.js"></script>
-<script src="js/admins.js"></script>
+<script src="js/admin.js"></script>
 <script src="js/statistics.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
