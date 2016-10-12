@@ -237,3 +237,153 @@ function setupProfileSettings(profile) {
 			}, 100);
 		});
 }
+
+	function closeAllSettingsTabs() {
+		$('.ProfileSettingsButton.settings-show').click();
+	}
+
+		$(document).ready(function() {
+		$('.SitesContainer').each(function() {
+			makeViewDroppable($(this));
+		});
+	});
+
+	function addProfileView(elem) {
+		var profile = $($('#profileHelper').html());
+		var container = $(profile).find('.SitesContainer');
+
+		var parent = $(elem).closest('.item');
+		var owl = $(".owl-carousel").data('owlCarousel');
+
+		postHandler.post(
+				'addProfile', 
+				{
+					name : 'Profile name',
+					color : '#35a7ff'
+				}, 
+				function(){},
+				function(retMsg){
+					$(profile).attr('id', retMsg);
+				},
+				function(retMsg){},
+				'text'
+		);
+		makeViewDroppable($(container));
+		setupProfileSettings($(profile));
+		makeSettingsAccordion($($(profile).find(".ProfileSettingsButton")));
+		$(profile).find('.profileSettingsTab').accordion({
+			active : 10,
+			collapsible : true,
+			autoHeight : false,
+			heightStyle : "content"
+		});
+		owl.destroy();
+		$('.owl-carousel').append($(profile));
+		$('.owl-carousel').append($(parent));
+		var nbProfiles = $('.owl-carousel > *').length;
+		if (nbProfiles > 3) {
+			var addProfileHelper = $(elem).closest('.item');
+			$('#addProfileHelper').append($(addProfileHelper));
+		}
+		setupOwlCarousel();
+	}
+	$(document).ready(function() {
+		$('.AddProfileView .scalerContainer').click(function() {
+			addProfileView($(this));
+		});
+	});
+	$(document).ready(
+		function() {
+			$('.AddProfileView .scalerContainer').droppable(
+			{
+				accept : ".catalogApp",
+
+				drop : function(event, ui) {
+					event.preventDefault();
+					event.stopPropagation();
+					$(this).css('border', 'none');
+					var nbProfiles = $('.owl-wrapper > *').length;
+					var profile = $($('#profileHelper').html());
+					var container = $(profile).find(
+						'.SitesContainer');
+					var parent = $(this).closest('.item');
+					var owl = $(".owl-carousel")
+					.data('owlCarousel');
+
+					postHandler.post(
+							'addProfile',
+							{
+								name : 'Profile name',
+								color : '#35a7ff'
+							}, 
+							function(){},
+							function(retMsg){$(profile).attr('id', retMsg);},
+							function(retMsg){},
+							'text'
+					);
+					makeViewDroppable($(container));
+					setupProfileSettings($(profile));
+					makeSettingsAccordion($($(profile).find(
+						".ProfileSettingsButton")));
+					$(profile).find('.profileSettingsTab')
+					.accordion({
+						active : 10,
+						collapsible : true,
+						autoHeight : false,
+						heightStyle : "content"
+					});
+					owl.destroy();
+					$('.owl-carousel').append($(profile));
+					$('.owl-carousel').append($(parent));
+					var nbProfiles = $('.owl-carousel > *').length;
+					if (nbProfiles > 3) {
+						var addProfileHelper = $(this).closest(
+							'.item');
+						$('#addProfileHelper').append(
+							$(addProfileHelper));
+					}
+					setupOwlCarousel();
+					showAddAppPopup($(container), $(ui.helper));
+
+				},
+				over : function(event, ui) {
+					event.preventDefault();
+					event.stopPropagation();
+					$(this).css('border', '1px solid #35a7ff');
+				},
+
+				out : function(event, ui) {
+					event.preventDefault();
+					event.stopPropagation();
+					$(this).css('border', 'none');
+				}
+			});
+		});
+
+	function makeViewDroppable(v) {
+		var parent = $(v).closest('.ProfileBox');
+
+		$(v).droppable({
+			accept : ".catalogApp",
+
+			drop : function(event, ui) {
+				event.preventDefault();
+				event.stopPropagation();
+				$(this).css('border', '');
+
+				showAddAppPopup($(this), $(ui.helper));
+
+			},
+			over : function(event, ui) {
+				event.preventDefault();
+				event.stopPropagation();
+				$(this).css('border', '1px solid ' + $(parent).attr('color'));
+			},
+
+			out : function(event, ui) {
+				event.preventDefault();
+				event.stopPropagation();
+				$(this).css('border', '');
+			}
+		});
+	}
