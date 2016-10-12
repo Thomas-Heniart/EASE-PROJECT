@@ -28,7 +28,6 @@ public class ServletItem {
 		AskForNewApp,
 		AskInfo,
 		CatalogSearchServlet,
-		ChangeBackground,
 		ConnectionServlet,
 		CreateInvitation,
 		DeleteApp,
@@ -52,7 +51,8 @@ public class ServletItem {
 		ResetUser,
 		SetTags,
 		UploadWebsiteServlet,
-		AdminStats
+		AdminStats,
+		ChangeBackground
 	}
 	public enum Code
 	{

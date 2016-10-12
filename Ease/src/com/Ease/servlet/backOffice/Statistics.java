@@ -148,6 +148,7 @@ public class Statistics extends HttpServlet {
 				+ ServletItem.Type.ConnectionServlet.ordinal() + " AND CAST(date AS DATE) BETWEEN '"
 				+ startDate.toString() + "' AND '" + endDate.toString() + "') AS t GROUP BY date;";
 		JSONArray values = getValuesForSimpleRequest(db, request, SI);
+		values = getValuesForRequest(db, startDate, endDate, "AND code = 200 AND tuto = 1 AND type = " + ServletItem.Type.ConnectionServlet.ordinal(), SI);
 		return getJsonObjectFor(values, "Daily connections", "rgba(132, 99, 255, 0.2)", "rgba(132, 99, 255, 1)",
 				"usersChart");
 	}

@@ -3,7 +3,7 @@
 
 #responses {
   .stats-graph {
-    width: 45%;
+    width: 0;
     display: inline-block !important;
     position: relative;
     height: 0;
@@ -13,6 +13,7 @@
   }
   .stats-graph.show {
     margin: 10px auto;
+    width: 45%;
     opacity: 1;
     height: auto;
   }
