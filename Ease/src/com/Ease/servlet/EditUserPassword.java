@@ -52,8 +52,8 @@ public class EditUserPassword extends HttpServlet {
 		
 		// Get Parameters
 		String password = request.getParameter("password");
-		String confirmPassword = SI.getServletParam("confirmPassword");
-		String oldPassword = SI.getServletParam("oldPassword");
+		String confirmPassword = request.getParameter("confirmPassword");
+		String oldPassword = request.getParameter("oldPassword");
 		// --
 
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
