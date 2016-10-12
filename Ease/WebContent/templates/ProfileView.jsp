@@ -50,3 +50,13 @@ response.addCookie(email);
 </div>
 <%@ include file="ObjectHelpers.jsp"%>
 </div>
+<script type="text/javascript">
+	var forms = [];
+
+	$(document).ready(function(){
+		$('.ProfileControlPanel #contentName #modifyNameForm').each(function(){
+			var thisForm = new Form($(this), new Input($(this).find('input')), $(this).find('#validate'));
+			forms.push(thisForm);
+		});
+	});
+</script>
