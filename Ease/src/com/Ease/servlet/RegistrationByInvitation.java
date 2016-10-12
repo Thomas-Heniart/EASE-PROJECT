@@ -103,6 +103,7 @@ public class RegistrationByInvitation extends HttpServlet {
 						if (group != null && group.equals("null") == false)
 							db.set("insert into GroupAndUserMap values (NULL, " + group + ", " + user.getId() + ");");
 						db.set("delete from invitations where email = '" + email + "' and linkCode = '" + invitationCode + "';");
+						session.setAttribute("User", user);
 						SI.setResponse(200, "User registered.");
 					}
 				} else {
