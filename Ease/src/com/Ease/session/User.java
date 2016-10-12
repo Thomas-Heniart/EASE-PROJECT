@@ -26,7 +26,8 @@ public class User {
 		SALTEASE,
 		SALTPERSO,
 		KEYUSER,
-		TUTO
+		TUTO,
+		BACKGROUND
 	}
 	String			id;
 	String			firstName;
@@ -38,6 +39,7 @@ public class User {
 	String			saltPerso;
 	String			keyUser;
 	String			tuto;
+	String 			background;
 	List<Profile>	profiles;
 	List<String>	group_ids;
 	
@@ -61,7 +63,7 @@ public class User {
 			throw new SessionException("Can't encrypt key.");
 		} else if ((hashedPassword = Hashing.SHA(pass, saltEase)) == null) {
 			throw new SessionException("Can't hash password.");
-		} else if (db.set("INSERT INTO users VALUES (NULL, '" + fName + "', '" + lName + "', '" + email + "', '" + tel + "', '" + hashedPassword + "', '" + saltEase + "', '" + saltPerso + "', '" + keyCrypted + "', 0);")
+		} else if (db.set("INSERT INTO users VALUES (NULL, '" + fName + "', '" + lName + "', '" + email + "', '" + tel + "', '" + hashedPassword + "', '" + saltEase + "', '" + saltPerso + "', '" + keyCrypted + "', 0, 0);")
 				!= 0) {
 			throw new SessionException("Impossible to insert new user in data base.");
 		} else {
@@ -71,6 +73,7 @@ public class User {
 			this.tel = tel;
 			this.password = pass;
 			this.tuto = "0";
+			this.background = "logo";
 			profiles = new LinkedList<Profile>();
 			maxProfileId = 0;
 			maxAppId = 0;
@@ -102,6 +105,7 @@ public class User {
 			saltEase = rs.getString(UserData.SALTEASE.ordinal());
 			saltPerso = rs.getString(UserData.SALTPERSO.ordinal());
 			tuto = rs.getString(UserData.TUTO.ordinal());
+			background = (rs.getString(UserData.BACKGROUND.ordinal()).equals("1")) ? "picture" : "logo";
 			if ((keyUser = AES.decryptUserKey(rs.getString(UserData.KEYUSER.ordinal()), pass, saltPerso)) == null)
 				throw new SessionException("Can't decrypt key.");
 			profiles = new LinkedList<Profile>();
@@ -150,6 +154,9 @@ public class User {
 	}
 	public String getTuto() {
 		return tuto;
+	}
+	public String getBackground(){
+		return background;
 	}
 	public int getNextProfileId(){
 		maxProfileId++;
@@ -205,6 +212,13 @@ public class User {
 	public void tutoComplete() {
 		this.tuto = "1";
 	}
+	public void changeBackground(){
+		if( this.background == "picture") {
+			this.background = "logo";
+		} else {
+			this.background = "picture";
+		}
+	}
 
 	// UTILS
 	
@@ -242,7 +256,7 @@ public class User {
 	
 	public void updateInDB(ServletContext context) throws SessionException {
 		DataBase db = (DataBase)context.getAttribute("DataBase");
-		if (db.set("UPDATE users SET firstName='" + firstName + "', `lastName`='"+ lastName + "', email='" + email + "', `tel`='"+ tel + "', `tuto`='"+ tuto + "' WHERE `user_id`='"+ id + "';")
+		if (db.set("UPDATE users SET firstName='" + firstName + "', `lastName`='"+ lastName + "', email='" + email + "', `tel`='"+ tel + "', `tuto`='"+ tuto + "', bckgrndPic="+ ((background == "picture") ? "1" : "0") +" WHERE `user_id`='"+ id + "';")
 				!= 0)
 			throw new SessionException("Impossible to update user in data base.");
 	}

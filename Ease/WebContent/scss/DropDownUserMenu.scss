@@ -21,7 +21,7 @@
 		}
 	}
 	.menu__inner {
-		height: 45px;
+		height: 85px;
 		width: 100%;
 		font-size: 12px;
 		padding: 0px;
@@ -35,6 +35,8 @@
 		li {
 			border-top: 2px solid #dbdbdb;
 			font-size: 16px;
+			position : relative;
+			display: block;
 			a {
 				opacity: 1;
 				color: $themeColor;
@@ -53,7 +55,7 @@
 }
 
 #menu.menu--open .menu__inner {
-	height: 45px;
+	height: 85px;
 	width: 100%;
 	background-color: white;
 	opacity: 1;
