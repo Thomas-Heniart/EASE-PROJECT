@@ -28,6 +28,7 @@ public class ServletItem {
 		AskForNewApp,
 		AskInfo,
 		CatalogSearchServlet,
+		ChangeBackground,
 		ConnectionServlet,
 		CreateInvitation,
 		DeleteApp,

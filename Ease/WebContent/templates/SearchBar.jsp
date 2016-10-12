@@ -10,6 +10,7 @@
 <script>
 
 function search(value) {
+	value = value.replace('&', '%26');
 	window.open('https://www.google.fr/search?q=' + value, '_blank');
 	$("#searchBar input").val('');
 }
