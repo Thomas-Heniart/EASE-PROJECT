@@ -73,7 +73,7 @@
 					<p style="display:inline-block;">Beautiful background</p>
 					<label style="display:inline-block; float:right; margin-right:30px;">
   						<input class="checkBox" type="checkbox"/>
-  						<div class="slider"/>
+  						<div class="slider"></div>
 					</label>
 				</div>
 			</div>

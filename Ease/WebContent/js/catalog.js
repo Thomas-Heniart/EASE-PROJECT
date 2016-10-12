@@ -190,9 +190,7 @@ $(document)
 										scroll();
 										$('.tagContainer i.fa-angle-left')
 												.show();
-										console.log($('.tagContainer .tags')
-												.scrollLeft());
-										console.log(getTagsFullWidth());
+
 										if ($('.tagContainer .tags')
 												.scrollLeft()
 												+ parseInt($(
