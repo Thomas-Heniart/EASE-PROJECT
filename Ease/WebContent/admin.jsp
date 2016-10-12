@@ -37,6 +37,8 @@
 <script src="js/basic-utils.js"></script>
 <script src="js/postHandler.js"></script>
 <script src="js/SettingsView.js"></script>
+<script src="js/admins.js"></script>
+<script src="js/statistics.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
 	
@@ -50,9 +52,9 @@
 <script src="js/snap.svg-min.js"></script>
 <script src="js/modalEffects.js"></script>
 <script src="js/selectFx.js"></script>
-<script src="js/statistics.js"></script>
 <link rel="stylesheet" type="text/css" href="component.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
+<%com.Ease.session.User user = (com.Ease.session.User) (session.getAttribute("User"));%>
 </head>
 
 
