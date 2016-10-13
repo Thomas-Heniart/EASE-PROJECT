@@ -5,6 +5,8 @@ $(document).ready(function(){
 		var profile = new Profile($(this));
 		profiles.push(profile);
 	});
+	
+	$("#enterEditMode").click(enterEditMode);
 });
 
 var Profile = function(rootEl){
