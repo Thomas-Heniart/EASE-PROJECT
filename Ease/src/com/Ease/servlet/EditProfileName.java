@@ -19,7 +19,7 @@ import com.Ease.session.User;
 /**
  * Servlet implementation class EditProfileName
  */
-@WebServlet("/EditProfileName")
+@WebServlet("/editProfileName")
 public class EditProfileName extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

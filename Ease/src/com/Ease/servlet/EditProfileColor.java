@@ -20,7 +20,7 @@ import com.Ease.session.User;
 /**
  * Servlet implementation class EditProfileColor
  */
-@WebServlet("/EditProfileColor")
+@WebServlet("/editProfileColor")
 public class EditProfileColor extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

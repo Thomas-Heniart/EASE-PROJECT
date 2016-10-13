@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.annotation.WebServlet;
 
 import com.Ease.data.ServletItem;
 import com.Ease.session.User;
@@ -14,6 +15,7 @@ import com.Ease.session.User;
 /**
  * Servlet implementation class Logout
  */
+@WebServlet("/logout")
 public class Logout extends HttpServlet {
        
     /**

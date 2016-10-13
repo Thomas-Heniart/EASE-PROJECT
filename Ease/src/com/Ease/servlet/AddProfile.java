@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.annotation.WebServlet;
 
 import com.Ease.session.User;
 import com.Ease.context.DataBase;
@@ -22,6 +23,7 @@ import com.Ease.session.SessionException;
 /**
  * Servlet implementation class AddProfile
  */
+@WebServlet("/addProfile")
 public class AddProfile extends HttpServlet {
     /**
 	 * 

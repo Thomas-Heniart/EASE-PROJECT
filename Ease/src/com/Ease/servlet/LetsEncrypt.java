@@ -7,11 +7,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.annotation.WebServlet;
 
 /**
  * Servlet implementation class AddApp
  */
-
+@WebServlet("/.well-known/acme-challenge/qot0z1SUt7tR8jyndaWcmnHR7183Q3vQOL2AOK47yDk")
 public class LetsEncrypt extends HttpServlet {
 
        

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.annotation.WebServlet;
 
 import com.Ease.context.DataBase;
 import com.Ease.context.Site;
@@ -22,7 +23,7 @@ import com.Ease.session.User;
 /**
  * Servlet implementation class EditApp
  */
-
+@WebServlet("/editApp")
 public class EditApp extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

@@ -41,7 +41,8 @@
 	<script src="js/selectFx.js"></script>
 	<link rel="stylesheet" type="text/css" href="component.css" />
 	
-	<script src="js/postHandler.js"></script>
+	<script src="js/postHandler.js"></script>	
+	<script src="js/lostPassword.js"></script>
 
 </head>
 <body id="lostPasswordBody">
@@ -97,49 +98,4 @@
 	</div>
 	<%@ include file="templates/ChatButton.jsp" %>
 </body>
-<script type="text/javascript">
-	$(document).ready(function(){
-		$("#goBack").click(function() {
-			window.location = 'index.jsp';
-		});
-		
-		$("#custom-confirm button").click(function(e) {
-			$("#custom-confirm").removeClass("show");
-			$("#security").removeClass("show");
-			$(".custom-button").addClass("show");
-			$("#enterEmail").addClass("show");
-			$(".input").addClass("show");
-		});
-		
-		$('#lostPasswordForm').submit(function(e){
-			e.preventDefault();
-			var email = $("#lostPasswordForm input[name='email']").val();
-			$('.alertDiv').removeClass('show');
-			var button = $('.lostPasswordBlock .custom-button');
-			button.addClass('loading');
-			postHandler.post(
-				$('#lostPasswordForm').attr('action'),
-				{
-					email: email
-				},
-				function(){},
-				function(retMsg){
-					button.removeClass('loading');
-					button.addClass('success');
-					setTimeout(function(){
-						window.location = "index.jsp";
-					}, 3000);
-				},
-				function(retMsg){
-					var str = retMsg;
-					$('.alertDiv').css('color', 'red');
-					$('.alertDiv').text(str);
-					$('.alertDiv').addClass('show');
-					button.removeClass('loading');
-				},
-				'text'
-			);
-		});
-	});
-</script>
 </html>

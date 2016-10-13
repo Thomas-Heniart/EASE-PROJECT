@@ -1,10 +1,3 @@
-<div id="alertPopup">
-	<div class="popup-content">
-	<p class="msg"><i class="fa fa-smile-o"></i> <span>Cette action comporte une erreur, veuillez réessayer !</span></p>
-	</div>
-</div>
-
-<script>
 function showAlertPopup(msg, error){
 	var popup = $('#alertPopup');
 	var valid = 'fa-smile-o';
@@ -36,4 +29,3 @@ function showAlertPopup(msg, error){
 		popup.removeClass('show');
 	}, 2900);
 }
-</script>
