@@ -21,7 +21,7 @@ import com.Ease.session.User;
 /**
  * Servlet implementation class EditUserPassword
  */
-@WebServlet("/EditUserPassword")
+@WebServlet("/editUserPassword")
 public class EditUserPassword extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

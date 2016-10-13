@@ -35,9 +35,14 @@ response.addCookie(email);
 <c:set var="tagAndSiteMapping"	scope="session" value='servletContext.getAttribute("TagAndSiteMapping")'/>
 
 <div class="ProfilesView show">
+
+	<div class="MenuButtonSet">
+		<button id="enterEditMode" state="off" class="button"><img src="resources/icons/menu_icon.png"/>
+		<div class="openCatalogHelper"></div>
+	</div>
 	<c:if test="${user.getTuto() == '0'}">
-	<%@ include file="Tutorial.jsp"%>
-</c:if>
+		<%@ include file="Tutorial.jsp"%>
+	</c:if>
 
 <div class="ProfilesHandler">
 	<div class="owl-carousel">

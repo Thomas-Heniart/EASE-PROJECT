@@ -2,35 +2,24 @@ package com.Ease.servlet;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 import java.util.Random;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeUtility;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.annotation.WebServlet;
 
 import com.Ease.context.DataBase;
-import com.Ease.data.Hashing;
 import com.Ease.data.Regex;
 import com.Ease.data.ServletItem;
-import com.Ease.session.SessionException;
 import com.Ease.session.User;
-import com.Ease.session.User.UserData;
 
+@WebServlet("/createInvitation")
 public class createInvitation extends HttpServlet {
 
 	/**

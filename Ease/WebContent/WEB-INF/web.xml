@@ -1,206 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
   <display-name>HelloWorld</display-name>
+  
   <listener>
     <listener-class>
-             com.Ease.context.OnStart
-        </listener-class>
+       com.Ease.context.OnStart
+    </listener-class>
   </listener>
-  <servlet>
-    <servlet-name>ConnectionServlet</servlet-name>
-    <servlet-class>com.Ease.servlet.ConnectionServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>ConnectionServlet</servlet-name>
-    <url-pattern>/connection</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>Logout</servlet-name>
-    <servlet-class>com.Ease.servlet.Logout</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>Logout</servlet-name>
-    <url-pattern>/logout</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>NewUser</servlet-name>
-    <servlet-class>com.Ease.servlet.NewUser</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>NewUser</servlet-name>
-    <url-pattern>/newUser</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>EditUser</servlet-name>
-    <servlet-class>com.Ease.servlet.EditUser</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>EditUser</servlet-name>
-    <url-pattern>/editUser</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>EditUserName</servlet-name>
-    <servlet-class>com.Ease.servlet.EditUserName</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>EditUserName</servlet-name>
-    <url-pattern>/editUserName</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>EditUserEmail</servlet-name>
-    <servlet-class>com.Ease.servlet.EditUserEmail</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>EditUserEmail</servlet-name>
-    <url-pattern>/editUserEmail</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>EditUserPassword</servlet-name>
-    <servlet-class>com.Ease.servlet.EditUserPassword</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>EditUserPassword</servlet-name>
-    <url-pattern>/editUserPassword</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>addProfile</servlet-name>
-    <servlet-class>com.Ease.servlet.AddProfile</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>addProfile</servlet-name>
-    <url-pattern>/addProfile</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>EditProfile</servlet-name>
-    <servlet-class>com.Ease.servlet.EditProfile</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>EditProfile</servlet-name>
-    <url-pattern>/editProfile</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>EditProfileName</servlet-name>
-    <servlet-class>com.Ease.servlet.EditProfileName</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>EditProfileName</servlet-name>
-    <url-pattern>/editProfileName</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>EditProfileColor</servlet-name>
-    <servlet-class>com.Ease.servlet.EditProfileColor</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>EditProfileColor</servlet-name>
-    <url-pattern>/editProfileColor</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>DeleteProfile</servlet-name>
-    <servlet-class>com.Ease.servlet.DeleteProfile</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>DeleteProfile</servlet-name>
-    <url-pattern>/deleteProfile</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>EditApp</servlet-name>
-    <servlet-class>com.Ease.servlet.EditApp</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>EditApp</servlet-name>
-    <url-pattern>/editApp</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>DeleteApp</servlet-name>
-    <servlet-class>com.Ease.servlet.DeleteApp</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>DeleteApp</servlet-name>
-    <url-pattern>/deleteApp</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>AskForNewApp</servlet-name>
-    <servlet-class>com.Ease.servlet.AskForNewApp</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>AskForNewApp</servlet-name>
-    <url-pattern>/askForNewApp</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>RegistrationByInvitation</servlet-name>
-    <servlet-class>com.Ease.servlet.RegistrationByInvitation</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>RegistrationByInvitation</servlet-name>
-    <url-pattern>/registerInv</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>GetEmailLink</servlet-name>
-    <servlet-class>com.Ease.servlet.getEmailLink</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>GetEmailLink</servlet-name>
-    <url-pattern>/letsgo</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>LetsEncrypt</servlet-name>
-    <servlet-class>com.Ease.servlet.LetsEncrypt</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>LetsEncrypt</servlet-name>
-    <url-pattern>/.well-known/acme-challenge/qot0z1SUt7tR8jyndaWcmnHR7183Q3vQOL2AOK47yDk</url-pattern>
-   </servlet-mapping>
-  <servlet>
-    <servlet-name>AskInfo</servlet-name>
-    <servlet-class>com.Ease.servlet.AskInfo</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>AskInfo</servlet-name>
-    <url-pattern>/askInfo</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>createInvitation</servlet-name>
-    <servlet-class>com.Ease.servlet.createInvitation</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>createInvitation</servlet-name>
-    <url-pattern>/createInvitation</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>requestedWebsites</servlet-name>
-    <servlet-class>com.Ease.servlet.backOffice.RequestedWebsitesServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>requestedWebsites</servlet-name>
-    <url-pattern>/requestedWebsites</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>eraseRequestedWebsite</servlet-name>
-    <servlet-class>com.Ease.servlet.backOffice.EraseRequestedWebsiteServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>eraseRequestedWebsite</servlet-name>
-    <url-pattern>/eraseRequestedWebsite</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>UploadWebsite</servlet-name>
-    <servlet-class>com.Ease.servlet.backOffice.UploadWebsiteServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>UploadWebsite</servlet-name>
-    <url-pattern>/uploadWebsite</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>AddWebsite</servlet-name>
-    <servlet-class>com.Ease.servlet.backOffice.AddWebsite</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>AddWebsite</servlet-name>
-    <url-pattern>/addWebsiteInDB</url-pattern>
-  </servlet-mapping>
+  
   <session-config>
     <session-timeout>240</session-timeout>
   </session-config>
+  
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
     <welcome-file>index.htm</welcome-file>
@@ -209,7 +20,7 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
-
+<!--
   <security-constraint>
       <web-resource-collection>
         <web-resource-name>Viewpoint Secure URLs</web-resource-name>
@@ -219,7 +30,7 @@
         <transport-guarantee>CONFIDENTIAL</transport-guarantee>
       </user-data-constraint>
     </security-constraint>
--
+-->
   <error-page>
     <error-code>404</error-code>
     <location>/404page.jsp</location>

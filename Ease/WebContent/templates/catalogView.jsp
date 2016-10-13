@@ -12,11 +12,6 @@
 
 <script src="js/catalog.js"></script>
 
-<div class="MenuButtonSet">
-	<button id="enterEditMode" state="off" class="button"><img src="resources/icons/menu_icon.png"/>
-	<div class="openCatalogHelper"></div>
-</div>
-
 <div class="CatalogViewTab">
 	<catalog:catalogContainer siteManager="${siteManager}"/>
 </div>
