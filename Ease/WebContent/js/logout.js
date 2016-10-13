@@ -6,7 +6,7 @@ $(document).ready(function(){
 			'logout',
 			{},
 			function(){},
-			function(retMsg){window.location.replace("logout.jsp");},
+			function(retMsg){window.location.replace("index.jsp?logout");},
 			function(){},
 			'text'
 		);

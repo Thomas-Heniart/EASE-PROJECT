@@ -1,4 +1,15 @@
 $(document).ready(function() {
+	
+		if(window.location.search.split("?")[1]=="logout"){
+			$(".logout-overlay").show();
+			setTimeout(function(){
+				$(".logout-overlay").addClass("transition");
+				setTimeout(function(){
+					$(".logout-overlay").hide();
+				},1000);
+			},3000);
+		}
+		
 		$('#helloButton').click(function() {
 			$('#loading').addClass("la-animate");
 			var parent = $(this).closest('form');

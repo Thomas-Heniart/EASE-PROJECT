@@ -8,10 +8,30 @@
 <script src="js/connection.js"></script>
 <script src="js/rAF.js"></script>
 <script src="js/demo-2.js"></script> 
+
 <div id="loginBody">
 	<canvas id="demo-canvas" style="position: absolute;"></canvas>
 	<div id='search-google'>
 		<%@ include file="SearchBar.jsp"%>
+	</div>
+	
+	<div class='logout-overlay' style="display:none;">
+		<h3>We are logging you out from your websites</h3>
+		<div class="sk-fading-circle">
+			<div class="sk-circle1 sk-circle"></div>
+  			<div class="sk-circle2 sk-circle"></div>
+  			<div class="sk-circle3 sk-circle"></div>
+  			<div class="sk-circle4 sk-circle"></div>
+  			<div class="sk-circle5 sk-circle"></div>
+  			<div class="sk-circle6 sk-circle"></div>
+  			<div class="sk-circle7 sk-circle"></div>
+  			<div class="sk-circle8 sk-circle"></div>
+  			<div class="sk-circle9 sk-circle"></div>
+  			<div class="sk-circle10 sk-circle"></div>
+  			<div class="sk-circle11 sk-circle"></div>
+  			<div class="sk-circle12 sk-circle"></div>
+		</div>
+		<h3>automagically...</h3>
 	</div>
 <% 
 	Cookie 	cookie = null;
