@@ -1,0 +1,47 @@
+@import 'variables';
+
+form.settingsForm {
+  width: 50%;
+  margin: auto;
+  text-align: center;
+  input {
+    outline: none;
+    margin-top: 3%;
+    border-radius: 2px;
+    border: 1px hidden;
+    padding-left: 3px;
+    width: 85%;
+  }
+
+  .buttonSet {
+    text-align: center;
+    margin: 3% auto;
+    button {
+      border: 1px solid transparent;
+      background: none;
+      vertical-align: middle;
+      position: relative;
+      z-index: 1;
+      margin: 0px;
+      padding: 2px;
+      float: none;
+      min-width: 0px;
+      max-width: 100%;
+      width: 40%;
+      display: inline-block;
+      color: white;
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+    button.Active {
+      transition: all 0.3s ease;
+      border-color: $themeColor;
+      background-color: $themeColor;
+      &:hover {
+        transition: all 0.3s ease;
+        background-color: white;
+        color: $themeColor;
+      }
+    }
+  }
+}

@@ -3,12 +3,12 @@
     pageEncoding="UTF-8"%>
 
     
-<form oClass="EditUserNameForm" action="editUserName" id="ModifyNameForm">
+<form oClass="EditUserNameForm" action="editUserName" id="ModifyNameForm" class="settingsForm">
 	<input oClass="NoEmptyInput" type="text" name="firstName" placeholder="First name" />
 	<input oClass="NoEmptyInput" type="text" name="lastName" placeholder="Last name" />
-	<div>
-	<button type="submit">Validate</button>
-	<button type="button">Cancel</button>
+	<div class="buttonSet">
+		<button type="submit">Validate</button>
+		<button type="button" oClass="">Cancel</button>
 	</div>
 </form>
 

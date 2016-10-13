@@ -17,6 +17,7 @@
 @import 'Mobile';
 @import 'Statistics';
 @import 'LostPassword';
+@import 'Forms';
 
 .shake-ease {
   @include do-shake('shake-ease', 2px, 1px, 3, 1700ms, .05, $opacity: false);
