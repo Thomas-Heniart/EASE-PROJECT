@@ -4,28 +4,9 @@
 
 <%@ page import="java.util.List" %>
 
-<script>
-$(document).ready(function(){
-	$('#logoutButton').click(function(){
-		var event = new CustomEvent("Logout");
-		document.dispatchEvent(event);
-		postHandler.post(
-			'logout',
-			{},
-			function(){},
-			function(retMsg){window.location.replace("logout.jsp");},
-			function(){},
-			'text'
-		);
-	});
-});
-
-
-</script>
+<script src="js/logout.js"></script>
 <div class="header">
 	<a href="index.jsp"><img class="logoImg" src="resources/images/logo.png" ></a>
-
-
 
 <% if (session.getAttribute("User") != null){ %>
 		<%@ include file="DropDownUserMenu.jsp"%>

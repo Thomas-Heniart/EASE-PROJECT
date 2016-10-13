@@ -41,7 +41,7 @@
 	<script src="js/selectFx.js"></script>
 	<link rel="stylesheet" type="text/css" href="component.css" />
 	<script src="js/postHandler.js"></script>
-
+	<script src="js/newPassword.js"></script>
 </head>
 <body id="lostPasswordBody">
 	<div class="logo">
@@ -95,46 +95,4 @@
 	</div>
 	<%@ include file="templates/ChatButton.jsp" %>
 </body>
-<script type="text/javascript">
-	$(document).ready(function(){
-		$("#goBack").click(function() {
-			window.location = 'index.jsp';
-		});
-		
-		$('#lostPasswordForm').submit(function(e){
-			e.preventDefault();
-			var password = $("#lostPasswordForm input[name='password']").val();
-			var confirmPassword = $("#lostPasswordForm input[name='confirmPassword']").val();
-			var linkCode = $("#lostPasswordForm input[name='linkCode']").val();
-			$('.alertDiv').removeClass('show');
-			var button = $('.lostPasswordBlock .custom-button');
-			button.addClass('loading');
-			$("#lostPasswordForm .input").removeClass("show");
-			postHandler.post(
-				$('#lostPasswordForm').attr('action'),
-				{
-					password: password,
-					confirmPassword: confirmPassword,
-					linkCode: linkCode
-				},
-				function(){},
-				function(retMsg){
-					button.removeClass('loading');
-					button.addClass('success');
-					setTimeout(function(){
-						window.location = "index.jsp";
-					}, 3000);
-				},
-				function(retMsg){
-					$('.alertDiv').css('color', 'red');
-					$('.alertDiv p').text(retMsg);
-					$('.alertDiv').addClass('show');
-					$("#lostPasswordForm .input").addClass("show");
-					button.removeClass('loading');
-				},
-				'text'
-			);
-		});
-	});
-</script>
 </html>
