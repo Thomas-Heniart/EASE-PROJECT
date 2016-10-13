@@ -69,7 +69,7 @@ $(document).ready(function() {
 					$('#knownUser').css('visibility', 'visible');
 					$('#unknownUser').css('visibility', 'hidden');;
 				});
-			}
+			});
 		}
 		
 		if ($('.savedUser').length) $('.savedUser #password').focus();
