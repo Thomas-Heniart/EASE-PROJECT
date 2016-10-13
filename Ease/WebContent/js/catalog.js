@@ -143,84 +143,62 @@ function addTagIfExists(input) {
 	input.val("");
 }
 
-$(document)
-		.ready(
-				function() {
-					$("#catalog-quit").click(function(event) {
-						event.stopPropagation();
-						leaveEditMode();
-					});
-					$(".tag").click(function(event) {
-						event.stopPropagation();
-						var nbOfTags = $(".tag-active").length;
-						if (nbOfTags < 3) {
-							$(event.target).toggleClass("tag-active");
-							$(event.target).toggleClass("hvr-grow");
-							nbOfTags++;
-							updateCatalogFront($(event.target));
-						}
-					});
-					$("input[name='catalogSearch']").keydown(
-							function(event) {
-								if (event.keyCode == 8) {
-									if ($(event.target).val() == "")
-										removeLastSelectedTag();
-									updateCatalogWith($(event.target).val(),
-											$(".selectedTagsContainer .tag"));
-								}
-							});
-					$("input[name='catalogSearch']").keyup(
-							function(event) {
-								if (event.keyCode == 8) {
-									event.preventDefault();
-									event.stopPropagation();
-								}
-								if (event.keyCode == 32 || event.keyCode == 13)
-									addTagIfExists($(event.target));
-								updateCatalogWith($(event.target).val(),
-										$(".selectedTagsContainer .tag"));
-							});
+$(document).ready(function() {
+		
+	$("#catalog-quit").click(function(event) {
+		event.stopPropagation();
+		leaveEditMode();
+	});
+	
+	$(".tag").click(function(event) {
+		event.stopPropagation();
+		var nbOfTags = $(".tag-active").length;
+		if (nbOfTags < 3) {
+			$(event.target).toggleClass("tag-active");
+			$(event.target).toggleClass("hvr-grow");
+			nbOfTags++;
+			updateCatalogFront($(event.target));
+		}
+	});
+	
+	$("input[name='catalogSearch']").keydown(function(event) {
+		if (event.keyCode == 8) {
+			if ($(event.target).val() == "")
+				removeLastSelectedTag();
+			updateCatalogWith($(event.target).val(),
+			$(".selectedTagsContainer .tag"));
+		}
+	});
+		
+	$("input[name='catalogSearch']").keyup(function(event) {
+		if (event.keyCode == 8) {
+			event.preventDefault();
+			event.stopPropagation();
+		}
+		if (event.keyCode == 32 || event.keyCode == 13)
+			addTagIfExists($(event.target));
+		updateCatalogWith($(event.target).val(),
+		$(".selectedTagsContainer .tag"));
+	});
+		
+	$('.tagContainer i.fa-angle-right').click(function() {
+		amount = '+='+ $('.tagContainer .tags').css('width');
+		scroll();
+		$('.tagContainer i.fa-angle-left').show();
+		if ($('.tagContainer .tags').scrollLeft() + parseInt($('.tagContainer .tags').width()) >= getTagsFullWidth())
+			$('.tagContainer i.fa-angle-right').hide();
+		else
+			$('.tagContainer i.fa-angle-right').show();
+	});
 
-					$('.tagContainer i.fa-angle-right')
-							.click(
-									function() {
-										amount = '+='
-												+ $('.tagContainer .tags').css(
-														'width');
-										scroll();
-										$('.tagContainer i.fa-angle-left')
-												.show();
-
-										if ($('.tagContainer .tags')
-												.scrollLeft()
-												+ parseInt($(
-														'.tagContainer .tags')
-														.width()) >= getTagsFullWidth())
-											$('.tagContainer i.fa-angle-right')
-													.hide();
-										else
-											$('.tagContainer i.fa-angle-right')
-													.show();
-									});
-
-					$('.tagContainer i.fa-angle-left')
-							.click(
-									function() {
-										amount = '-='
-												+ $('.tagContainer .tags').css(
-														'width');
-										$('.tagContainer i.fa-angle-right')
-												.css("display", "inline-block");
-										scroll();
-										if ($('.tagContainer .tags')
-												.scrollLeft()
-												- parseInt($(
-														'.tagContainer .tags')
-														.css('width')) <= 0)
-											$('.tagContainer i.fa-angle-left')
-													.css("display", "none");
-									});
-				});
+	$('.tagContainer i.fa-angle-left').click(function() {
+		amount = '-='+ $('.tagContainer .tags').css('width');
+		$('.tagContainer i.fa-angle-right').css("display", "inline-block");
+		scroll();
+		if ($('.tagContainer .tags').scrollLeft()- parseInt($('.tagContainer .tags').css('width')) <= 0)
+			$('.tagContainer i.fa-angle-left').css("display", "none");
+	});
+});
 
 function getTagsFullWidth() {
 	var res = 0;

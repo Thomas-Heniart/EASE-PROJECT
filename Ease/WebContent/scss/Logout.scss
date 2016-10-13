@@ -1,25 +1,31 @@
-body.logout {
-  background-image: url('../resources/backgrounds/background.jpeg');
-  background-size: 100%;
-  background-repeat:no-repeat;
+div.logout-overlay {
+    position: absolute;
+    top: 30%;
+    left:calc(50% - 150px);
+    border-radius: 4px;
+    vertical-align: middle;
+    display: inline-block;
+    text-align: center;
+    width: 300px;
+    height: 230px;
+    padding-left: 6px;
+    padding-right: 6px;
+    border-radius: 4px;
+    padding-bottom: 12px;
+    padding-top: 12px;
+    background-color: rgba(239, 239, 239, 0.89);
 }
 
-div.logout-overlay {
-  position: fixed;
-  padding: 2%;
-  border-radius: 10px;
-  left: 40%;
-  right: 40%;
-  top: 40%;
-  width: 20%;
-  height: 30%;
-  text-align: center;
-  background-color: rgba(255, 255, 255, 0.5);;
-  margin: auto;
+div.logout-overlay.transition{
+    opacity: 0;
+     -webkit-transition: opacity 1s; /* For Safari 3.1 to 6.0 */
+    transition: opacity 1s;
 }
 
 div.logout-overlay h3 {
   font-family: 'Raleway', 'Source Sans Pro', sans-serif;
+  font-size: 22px;
+  font-weight: 200;
   margin: 0;
 }
 

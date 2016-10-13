@@ -23,7 +23,7 @@ import com.Ease.stats.Stats;
 /**
  * Servlet implementation class UploadWebsite
  */
-@WebServlet("/UploadWebsite")
+@WebServlet("/uploadWebsite")
 public class UploadWebsiteServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

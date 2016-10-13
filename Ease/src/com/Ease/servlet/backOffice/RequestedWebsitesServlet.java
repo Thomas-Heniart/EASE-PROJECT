@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
+import javax.servlet.annotation.WebServlet;
 
 import com.Ease.context.DataBase;
 import com.Ease.data.ServletItem;
@@ -19,7 +19,7 @@ import com.Ease.session.User;
 /**
  * Servlet implementation class AskInfo
  */
-
+@WebServlet("/requestedWebsites")
 public class RequestedWebsitesServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -59,7 +59,7 @@ public class RequestedWebsitesServlet extends HttpServlet {
 			while(rs.next()){
 				retMsg += ";" + rs.getString(rs.findColumn("site")) + "-SENTBY-" + rs.getString(rs.findColumn("email"));
 			}
-			SI.setResponse(200, retMsg);
+			SI.setResponse(200, "Requested websites sent");
 		} catch (SQLException e) {
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		}

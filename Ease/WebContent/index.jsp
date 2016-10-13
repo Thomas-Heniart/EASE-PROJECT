@@ -46,6 +46,7 @@ pageEncoding="UTF-8"%>
 	<script src="js/profiles.js"></script>
 	<script src="js/form/form.js"></script>
 	<script src="js/form/input.js"></script>
+	<script src="js/alertPopup.js"></script>
 	<script src="js/loading.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
@@ -60,89 +61,7 @@ pageEncoding="UTF-8"%>
 	<%} %>
 	<script src="js/isMobile.js"></script>
 	<script src="js/setupOwlCarousel.js"></script>
-	<script type="text/javascript">
-		function getUserNavigator() {
-			var ua = navigator.userAgent;
-
-			var x = ua.indexOf("MSIE");
-			var y = "MSIE";
-			if (x == -1) {
-				x = ua.indexOf("Firefox");
-				y = "Firefox";
-				if (x == -1) {
-					if (x == -1) {
-						x = ua.indexOf("Chrome");
-						y = "Chrome";
-						if (x == -1) {
-							x = ua.indexOf("Opera");
-							y = "Opera";
-							if (x == -1) {
-								x = ua.indexOf("Safari");
-								if (x != -1) {
-									x = ua.indexOf("Version");
-									y = "Safari";
-								}
-							}
-						}
-					}
-				}
-			}
-			return (y);
-		}
-
-		function deleteOverlay(item) {
-			var suppDiv = $(item).closest('.logoItem');
-
-			suppDiv.remove();
-		}
-		function onInputFocus(ev) {
-			classie.add(ev.target.parentNode, 'input--filled');
-		}
-
-		function onInputBlur(ev) {
-			if (ev.target.value.trim() === '') {
-				classie.remove(ev.target.parentNode, 'input--filled');
-			}
-		}
-
-		function addAppRequest(item) {
-			var profile = $(item).closest('.MobilePreview');
-			var logoItem = $(item).closest('.logoItem');
-			var content = $(item).closest('.content');
-			var login = $(content).find('#login');
-			var password = $(content).find('#password');
-
-			$(logoItem).find('.imageBox').append(
-				$('<i class="fa fa-spinner tmp"></i>'));
-			postHandler.post(
-				'addApp',
-				{
-					login : $(login).val(),
-					password : $(password).val(),
-					profileId : $(profile).attr("index"),
-					siteId : $(logoItem).attr("index")
-				}, 
-				function(){
-					$(logoItem).find('.tmp').removeClass('fa-spinner');
-				},
-				function(retMsg){
-					$(logoItem).find('.tmp').addClass('fa-check');
-					setTimeout(function() {
-						$(logoItem).find('.tmp').remove();
-					}, 1000);
-				},
-				function(retMsg){
-					$(logoItem).find('.tmp').addClass('fa-times');
-					$(logoItem).find('.tmp').css("color", "red");
-					setTimeout(function() {
-						$(logoItem).remove();
-					}, 1000);
-				},
-				'text'
-				);
-			$(item).closest('.windowAddApp').remove();
-		}
-	</script>
+	<script src="js/getNavigator.js">	</script>
 </head>
 
 <body role="document" class=<%= ((user != null && user.getBackground()=="logo") ? "'mainBody logoBckgrnd'" : "'mainBody picBckgrnd'") %>>
@@ -169,7 +88,6 @@ pageEncoding="UTF-8"%>
 		<%}%>
 		<%@ include file="templates/Footer.jsp" %>
 		<div class="la-anim-10" id="loading"></div>
-		<%@ include file="templates/SimpleAlertPopup.jsp" %>
 		<%@ include file="templates/ChatButton.jsp" %>
 	</div>
 	

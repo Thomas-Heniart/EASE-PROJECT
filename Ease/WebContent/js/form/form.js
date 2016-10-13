@@ -1,13 +1,27 @@
 
-var Form = function (rootEl, inputs, button) {
+var constructorForm = function (rootEl) {
 	var self = this;
 	this.qRoot = rootEl;
-	this.qInputs = inputs;
-	this.qButton = button;
+	this.oInputs = [];
+	this.qRoot.find('input').each(function (index, elem) {
+		var oClass = $(elem).attr('oClass');
+		if (oClass != null) {
+			self.oInputs.push(new Input[oClass]($(elem)));
+		}
+	});
+	this.qButton = this.qRoot.find("button[type='submit']");
+	this.qButton.click(function (e) {
+		self.submit(e);
+	});
 	this.isEnabled = false;
-	for (var i = 0; i < this.qInputs.length; ++i) {
-		this.qInputs[i].listenBy(this.qRoot);
+	for (var i = 0; i < this.oInputs.length; ++i) {
+		this.oInputs[i].listenBy(this.qRoot);
 	}
+	self.isEnabled = false;
+	self.qButton.prop('disabled', true);
+	self.qButton.removeClass("Active");
+	
+	
 	this.enable = function () {
 		self.isEnabled = true;
 		self.qButton.prop('disabled', false);
@@ -25,8 +39,8 @@ var Form = function (rootEl, inputs, button) {
 			self.disable();
 	});
 	this.checkInputs = function () {
-		for (var i = 0; i < self.qInputs.length; ++i) {
-			if (self.qInputs[i].isValid == false) {
+		for (var i = 0; i < self.oInputs.length; ++i) {
+			if (self.oInputs[i].isValid == false) {
 				return false;
 			}
 		}
@@ -34,8 +48,22 @@ var Form = function (rootEl, inputs, button) {
 	};
 	this.reset = function () {
 		self.disable();
-		for (var i = 0; i < self.qInputs.length; ++i) {
-			self.qInputs[i].reset();
+		for (var i = 0; i < self.oInputs.length; ++i) {
+			self.oInputs[i].reset();
 		}
 	};
+	this.submit = function () {
+		
+	}
+}
+
+var Form = {
+	EditUserNameForm : function (rootEl) {
+		constructorForm.apply(this, arguments);
+		var self = this;
+		this.submit = function (e) {
+			e.preventDefault();
+			console.log("SUBMIT");
+		}
+	}
 }

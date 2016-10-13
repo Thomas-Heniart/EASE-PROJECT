@@ -6,7 +6,6 @@
 <nav id="menu" class="menu">
 <button class="menu__label"><i class="fa fa-fw fa-user"></i><span><%= UserName %></span></button>
 	<ul class="menu__inner">
-<!--	<li><a><span>home page</span></a></li>-->
 	<li><a href="#" id="ModifyUserButton"><i class="fa fa-fw fa-cogs"></i><span>Parameters</span></a></li>
 	</ul>
 </nav>
@@ -18,16 +17,6 @@ $(document).ready(function(){
 		$('.MenuButtonSet').removeClass('show');
 	});	
 });
-/*$(document).ready(function(){	
-	$('#menu').click(
-		function(){
-			$(this).addClass('menu--open');
-		},
-		function(){
-			$(this).removeClass('menu--open');
-		}
-	);
-});*/
 
 (function() {
 
