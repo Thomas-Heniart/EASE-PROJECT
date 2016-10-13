@@ -8,11 +8,7 @@ $(document).ready(function() {
 	$('#integrate').click(integrateUsers);
 
 	/* Requested sites behavior */
-	postHandler.post('requestedWebsites', {}, function() {
-	}, function(retMsg) {
-		printRequestedWebsites(retMsg);
-	}, function(retMsg) {
-	}, 'text');
+	$("#enterRequestedWebsitesMode").click(getRequestedSites);
 
 	/* Tags manager behavior */
 	$("#setTags").click(setTagsClick);
@@ -77,6 +73,14 @@ function sendInvitation(email, group_id, callback) {
 }
 
 /* Requested sites */
+
+function getRequestedSites() {
+	postHandler.post('requestedWebsites', {}, function() {
+	}, function(retMsg) {
+		printRequestedWebsites(retMsg);
+	}, function(retMsg) {
+	}, 'text');
+}
 
 function printRequestedWebsites(string) {
 	var requests = string.split(";");
