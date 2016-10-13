@@ -142,7 +142,9 @@ function addTagIfExists(input) {
 	updateCatalogFront(tag);
 	input.val("");
 }
-
+$(document).ready(function(){
+	
+});
 $(document)
 		.ready(
 				function() {

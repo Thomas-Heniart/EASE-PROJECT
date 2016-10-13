@@ -6,11 +6,13 @@
     
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <script src="js/connection.js"></script>
+<script src="js/rAF.js"></script>
+<script src="js/demo-2.js"></script> 
 <div id="loginBody">
-<canvas id="demo-canvas" style="position: absolute;"></canvas>
-<div id='search-google'>
-	<%@ include file="SearchBar.jsp"%>
-</div>
+	<canvas id="demo-canvas" style="position: absolute;"></canvas>
+	<div id='search-google'>
+		<%@ include file="SearchBar.jsp"%>
+	</div>
 <% 
 	Cookie 	cookie = null;
 	Cookie 	cookies[] = request.getCookies();
@@ -56,141 +58,55 @@
 	}
 }
 %>
-<div class="FormsContainer">
-<% if (iden == 3){ %>
-	<div class="form" id="knownUser">
-		<a class='forget-password' href="PasswordLost">Forgot your password ?</a>
-		<img class='ease-logo' src='resources/icons/Ease_Logo_couleur.png'/>
-		<div class="savedUser">
-		<p>Hello <%= new String(Base64.getDecoder().decode(fname), StandardCharsets.UTF_8) %> !</p>
-		<span class="input input--minoru">
-			<input class="input__field input__field--minoru" id="password" name="password" type="password" id="input-8" placeholder="Password"/>
-			<label class="input__label input__label--minoru" for="input-8">
-			</label>
-		</span>
-		<div class="alertDiv">
-				<p>Incorrect password !</p>
-			</div> 
-	    <button id="savedUserButton">Login</button>
-	    <!-- <a class='create-account' href='/getEmailLink'>create an account</a> -->
-	    </div>
-		<div id="changeAccount">Other account <img class='switch-account' src="resources/icons/account.png" /></div>   
-	</div>
-<%}%>
-<div class="form" id="unknownUser" <% if (iden == 3){ %> style="visibility:hidden;" <% }%>>
-<img class='ease-logo' src='resources/icons/Ease_Logo_couleur.png'/>
-<form action="connection" method="POST" id="loginForm" role="form">
+	<div class="FormsContainer">
+	<% if (iden == 3){ %>
+		<div class="form" id="knownUser">
+			<a class='forget-password' href="PasswordLost">Forgot your password ?</a>
+			<img class='ease-logo' src='resources/icons/Ease_Logo_couleur.png'/>
+			<div class="savedUser">
+				<p>Hello <%= new String(Base64.getDecoder().decode(fname), StandardCharsets.UTF_8) %> !</p>
+				<span class="input input--minoru">
+					<input class="input__field input__field--minoru" id="password" name="password" type="password" id="input-8" placeholder="Password"/>
+					<label class="input__label input__label--minoru" for="input-8"></label>
+				</span>
+				<div class="alertDiv">
+					<p>Incorrect password !</p>
+				</div> 
+	    		<button id="savedUserButton">Login</button>
+	    		<!-- <a class='create-account' href='/getEmailLink'>create an account</a> -->
+			</div>
+			<div id="changeAccount">Other account <img class='switch-account' src="resources/icons/account.png" /></div>   
+		</div>
+	<%}%>
+		<div class="form" id="unknownUser" <% if (iden == 3){ %> style="visibility:hidden;" <% }%>>
+			<img class='ease-logo' src='resources/icons/Ease_Logo_couleur.png'/>
+			<form action="connection" method="POST" id="loginForm" role="form">
 				<a class='forget-password' href="PasswordLost">Forgot your password ?</a>
 				<span class="input input--minoru">
 					<input class="input__field input__field--minoru" id="email" name="email" type="email" id="input-8" placeholder="Email"/>
-					<label class="input__label input__label--minoru" for="input-8">
-					</label>
+					<label class="input__label input__label--minoru" for="input-8"></label>
 				</span>
 				<span class="input input--minoru">
 					<input class="input__field input__field--minoru" id="password" name="password" type="password" id="input-8" placeholder="Password"/>
-					<label class="input__label input__label--minoru" for="input-8">
-					</label>
+					<label class="input__label input__label--minoru" for="input-8"></label>
 				</span>
+				<div class="alertDiv">
+					<p>Incorrect password or email !</p>
+				</div>
+    			<button id="helloButton">Login</button>
+    			<!-- <a class='create-account' href='/getEmailLink'>create an account</a> -->
+			</form>
+			<% if (iden == 3) {%>
+				<div id="back"><%= new String(Base64.getDecoder().decode(fname), StandardCharsets.UTF_8) %> account <img class='switch-account' src="resources/icons/account.png" /></div>
+			<% } %>
+		</div>
+	</div>
 
-			<div class="alertDiv">
-				<p>Incorrect password or email !</p>
-			</div> 
-
-
-    <button id="helloButton">Login</button>
-    <!-- <a class='create-account' href='/getEmailLink'>create an account</a> -->
-</form>
-<% if (iden == 3) {%>
-<div id="back"><%= new String(Base64.getDecoder().decode(fname), StandardCharsets.UTF_8) %> account <img class='switch-account' src="resources/icons/account.png" /></div>
-<% } %>
-</div>
-
-
-
-</div>
-
-<!-- <div class='univ-presentation'>
-	<h2>We are ease.space</h2>
-	<p>We built a home page that enables you to easily connect to website's accounts, without using passwords, and regardless of the computer</p>
-	<p>This page is the new way to access your school's web services</p>
-	<p>If you do not have your account yet, <a target='_blank' href='http://www.ease-app.co'>let's go</a></p>
-</div>
--->
-
-<script type="text/javascript">
-$(document).ready( function() {
-	var nbForms = $('.FormsContainer > *').length;
-
-	if (nbForms > 1){
-		$('#changeAccount').click(function(){
-			$('#loginForm span input').val("");
-			$('#password').val("");
-			$('#unknownUser').css('visibility', 'visible');
-			$('#knownUser').css('visibility', 'hidden');;
-			//$('#useless').remove();
-			
-		});
-	}
-	if (nbForms > 1){
-		$('#back').click(function(){
-			$('#knownUser').css('visibility', 'visible');
-			$('#unknownUser').css('visibility', 'hidden');;
-			//$('#useless').remove();
-			
-		});
-	}
-});	
-</script>
-<script type="text/javascript">
-$(document).ready( function() {
-	if ($('.savedUser').length){
-		$('.savedUser #password').focus();
-	}
-		$('.savedUser #password').keyup(function(event){
-	    if(event.keyCode == 13){
-	    	$('.savedUser #savedUserButton').click();
-	    }
-	});
-});
-</script>
-
-         <script src="js/rAF.js"></script>
-        <script src="js/demo-2.js"></script> 
-		<script>
-		$(document).ready( function() {
-			$('.logo').draggable({snap: true});
-		});
-			(function() {
-				if (!String.prototype.trim) {
-					(function() {
-						// Make sure we trim BOM and NBSP
-						var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
-						String.prototype.trim = function() {
-							return this.replace(rtrim, '');
-						};
-					})();
-				}
-
-				[].slice.call( document.querySelectorAll( 'input.input__field' ) ).forEach( function( inputEl ) {
-					// in case the input is already filled..
-					if( inputEl.value.trim() !== '' ) {
-						classie.add( inputEl.parentNode, 'input--filled' );
-					}
-
-					// events:
-					inputEl.addEventListener( 'focus', onInputFocus );
-					inputEl.addEventListener( 'blur', onInputBlur );
-				} );
-
-				function onInputFocus( ev ) {
-					classie.add( ev.target.parentNode, 'input--filled' );
-				}
-
-				function onInputBlur( ev ) {
-					if( ev.target.value.trim() === '' ) {
-						classie.remove( ev.target.parentNode, 'input--filled' );
-					}
-				}
-			})();
-		</script>
+	<!-- <div class='univ-presentation'>
+		<h2>We are ease.space</h2>
+		<p>We built a home page that enables you to easily connect to website's accounts, without using passwords, and regardless of the computer</p>
+		<p>This page is the new way to access your school's web services</p>
+		<p>If you do not have your account yet, <a target='_blank' href='http://www.ease-app.co'>let's go</a></p>
+	</div>
+	-->
 </div>
