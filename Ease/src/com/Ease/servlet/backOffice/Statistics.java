@@ -262,14 +262,11 @@ public class Statistics extends HttpServlet {
 	}
 
 	public String newRequest(LocalDate startDate, LocalDate endDate, String conditions, Boolean distinct) {
-		String distinctRequest = "";
-		if (distinct)
-			distinctRequest += "DISTINCT";
-		return ("SELECT " + distinctRequest
-				+ " selected_date, count(user_id) FROM (SELECT d.selected_date AS selected_date, logs.user_id AS user_id FROM (SELECT selected_date from (SELECT adddate('1970-01-01',t4.i*10000 + t3.i*1000 + t2.i*100 + t1.i*10 + t0.i)  selected_date FROM (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t0,   (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t1,  (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t2,  (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t3,  (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t4) v   where selected_date between '"
-				+ startDate.toString() + "' AND '" + endDate.toString()
-				+ "' GROUP BY selected_date ) d LEFT OUTER JOIN (logs JOIN users ON logs.user_id = users.user_id) ON d.selected_date = CAST(logs.date AS DATE)"
-				+ conditions + " GROUP BY d.selected_date, logs.user_id ORDER BY 1 ASC) AS r GROUP BY selected_date ORDER BY 1 ASC;");
+		String request = "SELECT date, count(user_id) FROM (SELECT" + (distinct ? " DISTINCT" : "")
+				+ " d.date, logs.user_id FROM (SELECT date FROM date_dimension WHERE date BETWEEN '" + startDate.toString()
+				+ "' AND '" + endDate.toString() + "') d LEFT OUTER JOIN (logs JOIN users ON logs.user_id = users.user_id) ON (d.date = CAST(logs.date AS DATE) "
+				+ conditions + ")) t GROUP BY date;";
+		return (request);
 	}
 
 	/* Request using newRequest() */
