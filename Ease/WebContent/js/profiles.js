@@ -189,11 +189,12 @@ function setupProfileSettings(profile) {
 $(document)
 .ready(
 		
+		
+		
+	function() {
 		$('#enterEditMode').click(function(){
 			enterEditMode();
 		});
-		
-	function() {
 		$('#PopupAddApp #password')
 		.keyup(
 			function(event) {

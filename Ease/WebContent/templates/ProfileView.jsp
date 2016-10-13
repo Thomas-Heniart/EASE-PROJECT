@@ -35,8 +35,6 @@ response.addCookie(email);
 <c:set var="tagAndSiteMapping"	scope="session" value='servletContext.getAttribute("TagAndSiteMapping")'/>
 
 <div class="ProfilesView show">
-	<%@ include file="MenuButtonSet.jsp"%>
-
 	<c:if test="${user.getTuto() == '0'}">
 	<%@ include file="Tutorial.jsp"%>
 </c:if>

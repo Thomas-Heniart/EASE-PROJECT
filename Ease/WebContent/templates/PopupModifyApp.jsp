@@ -7,7 +7,7 @@ pageEncoding="UTF-8"%>
 		<div class="popupHeader">
 			<img class="logoApp" src="resources/images/Deezer.jpeg" />
 			<div class="textContent">
-				<p class="title">Modify informations related to <span>Deezer</span></p>
+				<p class="title">Modify informations related to <span></span></p>
 			</div>
 		</div>
 		<div class="lineInput">
