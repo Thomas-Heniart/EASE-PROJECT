@@ -22,6 +22,7 @@
 			</div>
 			<div class="sectionContent" id="contentName">
 				<div>
+				<!--
 					<div id="modifyNameForm">
 						<input id="firstName" name="firstName" type="text"
 							placeholder="First name" /> <input id="lastName" name="lastName"
@@ -31,6 +32,8 @@
 							<button class="button" id="cancel">Cancel</button>
 						</div>
 					</div>
+				-->
+					<%@ include file="EditUserName.jsp"%>
 				</div>
 			</div>
 			<div class="sectionHeader" id="passwordSection">
