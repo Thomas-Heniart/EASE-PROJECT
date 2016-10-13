@@ -1,3 +1,69 @@
+var profiles = [];
+
+$(document).ready(function(){
+	$('.ProfileBox').each(function(){
+		var profile = new Profile($(this));
+		profiles.push(profile);
+	});
+});
+
+var Profile = function(rootEl){
+	var self = this;
+	this.qRoot = rootEl;
+	this.SettingsButton = this.qRoot.find('.ProfileSettingsButton');
+	this.ControlPanel = this.qRoot.find('.ProfileControlPanel');
+	this.appContainer = this.qRoot.find('.SitesContainer');
+	this.isSettingsOpen = false;
+
+	this.ControlPanel.find(".profileSettingsTab").accordion({
+        active : 10,
+        collapsible : true,
+        autoHeight : false,
+        heightStyle : "content"
+	});
+	this.showSettings = function(){
+		self.SettingsButton.addClass('fa-rotate-90');
+		self.SettingsButton.addClass('settings-show');
+		self.ControlPanel.css('display', 'inline-block');
+		self.isSettingsOpen = true;
+	};
+	this.hideSettings = function (){
+		self.SettingsButton.removeClass('fa-rotate-90');
+		self.SettingsButton.removeClass('settings-show');
+		self.ControlPanel.css('display', 'none');
+		self.isSettingsOpen = false;
+	}
+	this.SettingsButton.click(function(e){
+		e.stopPropagation();
+        $('.ProfileSettingsButton.settings-show').each(function(){
+		   if (!($(this).is(self.SettingsButton))){
+              $(this).click();
+            }
+        });
+		(self.isSettingsOpen) ? self.hideSettings() : self.showSettings();
+	});
+	self.appContainer.droppable({
+		accept: ".catalogApp",
+		drop: function(event, ui){
+			event.preventDefault();
+			event.stopPropagation();
+			$(this).css('border', '');
+			showAddAppPopup($(this), $(ui.helper));
+		},
+		over: function(event, ui){
+			event.preventDefault();
+			event.stopPropagation();
+			$(this).css('border', '1px solid ' + self.qRoot.attr('color'));
+		},
+		out: function(event, ui){
+			event.preventDefault();
+			event.stopPropagation();
+			$(this).css('border', '');
+		}
+	});
+	setupProfileSettings(self.qRoot);
+};
+
 $(document).on("contextmenu", ".linkImage", function(e) {
 	e.preventDefault();
 	$(this).trigger('mouseover');
@@ -154,72 +220,7 @@ function setupProfileSettings(profile) {
 }
 
 
-var Profile = function(rootEl){
-	var self = this;
-	this.qRoot = rootEl;
-	this.SettingsButton = this.qRoot.find('.ProfileSettingsButton');
-	this.ControlPanel = this.qRoot.find('.ProfileControlPanel');
-	this.appContainer = this.qRoot.find('.SitesContainer');
-	this.isSettingsOpen = false;
 
-	this.ControlPanel.find(".profileSettingsTab").accordion({
-        active : 10,
-        collapsible : true,
-        autoHeight : false,
-        heightStyle : "content"
-	});
-	this.showSettings = function(){
-		self.SettingsButton.addClass('fa-rotate-90');
-		self.SettingsButton.addClass('settings-show');
-		self.ControlPanel.css('display', 'inline-block');
-		self.isSettingsOpen = true;
-	};
-	this.hideSettings = function (){
-		self.SettingsButton.removeClass('fa-rotate-90');
-		self.SettingsButton.removeClass('settings-show');
-		self.ControlPanel.css('display', 'none');
-		self.isSettingsOpen = false;
-	}
-	this.SettingsButton.click(function(e){
-		e.stopPropagation();
-        $('.ProfileSettingsButton.settings-show').each(function(){
-		   if (!($(this).is(self.SettingsButton))){
-              $(this).click();
-            }
-        });
-		(self.isSettingsOpen) ? self.hideSettings() : self.showSettings();
-	});
-	self.appContainer.droppable({
-		accept: ".catalogApp",
-		drop: function(event, ui){
-			event.preventDefault();
-			event.stopPropagation();
-			$(this).css('border', '');
-			showAddAppPopup($(this), $(ui.helper));
-		},
-		over: function(event, ui){
-			event.preventDefault();
-			event.stopPropagation();
-			$(this).css('border', '1px solid ' + self.qRoot.attr('color'));
-		},
-		out: function(event, ui){
-			event.preventDefault();
-			event.stopPropagation();
-			$(this).css('border', '');
-		}
-	});
-	setupProfileSettings(self.qRoot);
-};
-
-
-var profiles = [];
-
-$(document).ready(function(){
-	$('.ProfileBox').each(function(){
-		var profile = new Profile($(this));
-		profiles.push(profile);
-	});
-});
 /* Next lines come from ProfileEditView.jsp */
 
 $(document).ready(function() {
