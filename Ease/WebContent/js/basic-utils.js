@@ -1,15 +1,33 @@
-function sendEvent(email, password, userSelector, passSelector, buttonSelector, urlLogin, urlHome){ //dispatch an Event to warn the plugin it has to connect to the websit\e
-    var event = new CustomEvent("NewConnection",
-     {'detail':{"user": email,
-     "pass":password,
-     "userField":userSelector,
-     "passField":passSelector,
-     "button": buttonSelector,
-     "urlLogin": urlLogin,
-     "urlHome": urlHome}});
-    document.dispatchEvent(event);
-    console.log("Ease : go to new page");
-    console.log(event.detail);
+function sendEvent(obj) {
+    if (!($(obj).hasClass('waitingLinkImage'))) {
+        var appIdx = $(obj).closest('.siteLinkBox').index();
+        var logoImage = $(obj).find('.linkImage');
+        var profileIndex = $(obj).closest('.owl-item').index();
+        var json = new Object();
+        var event;
+
+        if (!($('#ease_extension').length)) {
+            checkForExtension();
+            return;
+        }
+        $(obj).addClass('waitingLinkImage');
+        $(obj).addClass('scaleinAnimation');
+        setTimeout(function() {
+            $(obj).removeClass("waitingLinkImage");
+            $(obj).removeClass('scaleinAnimation');
+        }, 1000);
+        postHandler.post("askInfo", {
+            profileIndex : profileIndex,
+            appIndex : appIdx,
+        }, function() {
+        }, function(retMsg) {
+            json.detail = JSON.parse(retMsg);
+            event = new CustomEvent("NewConnection", json);
+            document.dispatchEvent(event);
+        }, function(retMsg) {
+            showAlertPopup(retMsg, true);
+        }, 'text');
+    }
 }
 
 function setCookie(cname, cvalue, exdays) {
@@ -118,15 +136,6 @@ function changeColor(color, ratio, darker) {
         return changeColor(color, ratio, true);
     }
 
-    $(document).ready(function() {
-/*  $(".ease-button").hover(function(event) {
-    var darkColor = darkerColor($(event.target).css("background-color"), 0.3);
-    $(event.target).css("background-color", darkColor);
-  }, function(event) {
-    var lightColor = lighterColor($(event.target).css("background-color"), 0.3);
-    $(event.target).css("background-color", lightColor);
-});*/
-});
     function checkForExtension() {
         var ext = $('#ease_extension');
 
@@ -156,14 +165,6 @@ function changeColor(color, ratio, darker) {
                 });
         }
     }
-    $(document).ready(function() {
-        $(".profileSettingsTab").accordion({
-            active : 10,
-            collapsible : true,
-            autoHeight : false,
-            heightStyle : "content"
-        });
-    });
 
     $(document).click(function (e){
         var profile = $(e.target).closest('.ProfileControlPanel');
@@ -179,63 +180,7 @@ function changeColor(color, ratio, darker) {
             }
         });
     }); 
-    function makeSettingsAccordion(elem) {
-        $(elem).click(
-            function(e) {
-                var parent;
-                var button = $(this);
-                e.stopPropagation();
-                $('.ProfileSettingsButton.settings-show').each(function(){
-                    if (!($(this).is($(button)))){
-                        $(this).click();
-                    }
-                });             
-                parent = $(elem).closest(".ProfileBox");
-                if ($(elem).hasClass("settings-show")) {
-                    $(elem).removeClass("settings-show");
 
-                    elem.removeClass('fa-rotate-90');                       
-                    parent.find(".ProfileControlPanel").css("display","none");
-
-                } else {
-
-                    elem.addClass('fa-rotate-90');
-                    $(elem).addClass("settings-show");
-                    parent.find(".ProfileControlPanel").css("display","inline-block");
-                }
-            });
-    }
-
-    $(document).ready(function() {
-        $('.ProfileSettingsButton').each(function(index, el) {
-            makeSettingsAccordion($(this));
-        });
-        $('.ProfilesHandler .item').each(function(index, el) {
-            setupProfileSettings($(this));
-        });
-
-    });
-
-    $(document).ready(function() {
-        $('.ModifyProfileButton').each(function(index, el) {
-            $(this).click(function() {
-                var parent;
-                var index;
-                var name;
-                var popup;
-
-                parent = $(this).closest(".ProfileBox");
-                index = parent.find(".ProfileControlPanel").attr("index");
-                name = parent.find(".ProfileName").children("p").text();
-                popup = $('#PopupModifyProfile');
-
-                popup.find("#index").val(index);
-                popup.find("#profilName").parent().addClass("input--filled");
-                popup.find("#profilName").val(name.substring(1));
-                $('#PopupModifyProfile').addClass("md-show");
-            });
-        });
-    });
     function setupAppSettingButtonPopup(elem){
         $(elem).on('mouseover', function() {
             var subPopup = $(this).find('.appActionsPopup');

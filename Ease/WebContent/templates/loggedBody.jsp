@@ -7,9 +7,7 @@
 		<%@ include file="catalogView.jsp"%>
 	</div>
 	<%@ include file="SettingsView.jsp" %>
-	<%@ include file="PopupModifyProfile.jsp" %>
 	<%@ include file="PopupDeleteProfile.jsp" %>
-	<%@ include file="PopupModifyUser.jsp" %>
 	<%@ include file="PopupDeleteApp.jsp" %>
 	<%@ include file="PopupAddApp.jsp" %>	
 	<%@ include file="PopupModifyApp.jsp" %>
