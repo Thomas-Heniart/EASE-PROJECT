@@ -263,8 +263,9 @@ public class Statistics extends HttpServlet {
 
 	public String newRequest(LocalDate startDate, LocalDate endDate, String conditions, Boolean distinct) {
 		String request = "SELECT date, count(user_id) FROM (SELECT" + (distinct ? " DISTINCT" : "")
-				+ " d.date, logs.user_id FROM (SELECT date FROM date_dimension WHERE date BETWEEN '" + startDate.toString()
-				+ "' AND '" + endDate.toString() + "') d LEFT OUTER JOIN (logs JOIN users ON logs.user_id = users.user_id) ON (d.date = CAST(logs.date AS DATE) "
+				+ " d.date, logs.user_id FROM (SELECT date FROM date_dimension WHERE date BETWEEN '"
+				+ startDate.toString() + "' AND '" + endDate.toString()
+				+ "') d LEFT OUTER JOIN (logs JOIN users ON logs.user_id = users.user_id) ON (d.date = CAST(logs.date AS DATE) "
 				+ conditions + ")) t GROUP BY date;";
 		return (request);
 	}
