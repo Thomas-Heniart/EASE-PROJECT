@@ -30,7 +30,7 @@ pageEncoding="UTF-8"%>
 	<script src="js/classie.js"></script>
 	<script src="js/owl.carousel.js"></script>
 	<script src="js/basic-utils.js" ></script>
-
+	<script src="js/checkForInvitation.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"> </script>
 	<script src="js/jquery.mousewheel.min.js"></script>
 	<link rel="stylesheet" href="css/default_style.css" />
@@ -97,37 +97,4 @@ pageEncoding="UTF-8"%>
 	</div>
 	<%@ include file="templates/ChatButton.jsp" %>
 </body>
-<script type="text/javascript">
-	$(document).ready(function(){
-		$('#registrationForm').submit(function(e){
-			e.preventDefault();
-			var email = $("#registrationForm input[name='email']").val();
-			$('.alertDiv').removeClass('show');
-			var button = $('.registrationBlock .custom-button');
-			button.addClass('loading');
-			postHandler.post(
-				$('#registrationForm').attr('action'),
-				{
-					email: email
-				},
-				function(){},
-				function(retMsg){
-					button.removeClass('loading');
-					button.addClass('success');
-					setTimeout(function(){
-						button.removeClass('success');
-					}, 5000);
-				},
-				function(retMsg){
-					var str = retMsg;
-					$('.alertDiv').css('color', 'red');
-					$('.alertDiv').text(str);
-					$('.alertDiv').addClass('show');
-					button.removeClass('loading');
-				},
-				'text'
-			);
-		});
-	});
-</script>
 </html>

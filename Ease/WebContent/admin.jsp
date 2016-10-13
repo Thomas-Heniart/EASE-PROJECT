@@ -86,8 +86,6 @@
 
 	<%@ include file="templates/Footer.jsp"%>
 	<div class="la-anim-10" id="loading"></div>
-	<%@ include file="templates/SimpleAlertPopup.jsp"%>
-
 	<%@ include file="templates/ChatButton.jsp" %>
 </body>
 </html>
