@@ -63,7 +63,15 @@ var Form = {
 		var self = this;
 		this.submit = function (e) {
 			e.preventDefault();
-			console.log("SUBMIT");
+			console.log("Change name");
+		}
+	},
+	EditUserPasswordForm : function (rootEl) {
+		constructorForm.apply(this, arguments);
+		var self = this;
+		this.submit = function (e) {
+			e.preventDefault();
+			console.log("Change password");
 		}
 	}
 }

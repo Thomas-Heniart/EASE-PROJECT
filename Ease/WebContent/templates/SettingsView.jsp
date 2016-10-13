@@ -45,7 +45,7 @@
 				</div>
 			</div>
 			<div class="sectionContent" id="contentPassword">
-				<div id="modifyPasswordForm">
+				<!-- <div id="modifyPasswordForm">
 					<p>For safety reasons, your password needs to be at least 8
 						characters long,  including upper-case and lower-case letters,
 						plus at least one numerical digit.</p>
@@ -61,7 +61,8 @@
 						<button class="button" id="validate">Validate</button>
 						<button class="button" id="cancel">Cancel</button>
 					</div>
-				</div>
+				</div> -->
+				<%@ include file="EditUserPassword.jsp"%>
 			</div>
 			<div class="sectionHeader" id="styleSection">
 				<p>Style</p>
