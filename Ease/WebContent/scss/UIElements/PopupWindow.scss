@@ -124,7 +124,7 @@
 				}
 				.desc {
 					font-size: 11px;
-				}	
+				}
 			}
 		}
 		#name {
@@ -142,7 +142,6 @@
 		}
 		.loginWithChooser {
 			padding: 0px;
-			width: 80%;
 			margin-left: auto;
 			margin-right: auto;
 			position: relative;
@@ -402,7 +401,7 @@
 				}
 				.desc {
 					font-size: 11px;
-				}	
+				}
 			}
 		}
 		.loginWithChooser.hidden {
@@ -565,7 +564,7 @@
 				margin-bottom: 2px;
 				color: black;
 				padding-left: 3px;
-			}	
+			}
 		}
 		.buttonSet {
 			text-align: center;
@@ -595,12 +594,11 @@
 }
 
 .md-show ~ .md-overlay {
-	opacity: 0.3 !important;	
+	opacity: 0.3 !important;
 }
 
 .popup {
 	.lineInput {
-		width: 80%;
 		overflow: hidden;
 		margin: 0px auto;
 		padding: 0px;

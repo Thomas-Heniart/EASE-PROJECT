@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 
 <script src="js/addApp.js"></script>
 <div class="md-modal md-effect-15 popup" id="PopupAddApp">
@@ -10,7 +10,8 @@
 				<p>Type your password for the last time ;)</p>
 			</div>
 		</div>
-		<div class="lineInput">
+		<%@ include file="AddAppForm.jsp" %>
+		<!--<div class="lineInput">
 			<p class="inputTitle">App name :</p>
 			<input  id="name" name="name" type="text" placeholder="Name" maxlength="14"/>
 		</div>
@@ -50,6 +51,6 @@
 		<div class="buttonSet">
    			<button id="accept" class="btn btn-default btn-primary btn-group btn-lg">Add</button>
    			<button id="close" class="btn btn-default btn-primary btn-group btn-lg">Cancel</button>
-    	</div>
-</div>
+    	</div>  -->
+	</div>
 </div>
