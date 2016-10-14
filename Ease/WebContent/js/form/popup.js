@@ -43,9 +43,18 @@ var Popup = {
 	AddAppPopup : function () {
 		constructorPopup.apply(this,arguments);
 		var self = this;
-		this.setVal = function () {
-			
+		this.setForm = function(anObject) {
+			self.oForm = anObject;
+			self.oForm.setPopup(self);
+		}
+		this.setVal = function (name) {
+			self.oForm.oInputs[0].val(name);
 		};
+		this.close = function() {
+			self.qRoot.removeClass('md-show');
+			self.reset();
+			$('.classicLogin').css('display', 'block');
+		}
 	},
 	DeleteAppPopup : function () {
 		constructorPopup.apply(this,arguments);

@@ -14,15 +14,20 @@ form.settingsForm {
   }
 }
 
-form.addAppForm {
+#PopupAddApp form.addAppForm {
   input[name='name'] {
     display: inline-block;
     margin-left: 14%;
     width: 60% !important;
   }
-  button[type='submit'].Active {
+  button[type='submit'] {
     background-color: $themeRedColor;
     border-color: $themeRedColor;
+    color: white;
+  }
+  button[type='submit'].Active:hover {
+    background-color: lighten($themeRedColor, 3%);
+    color: white;
   }
 }
 
@@ -48,13 +53,20 @@ form {
       transition: all 0.3s ease;
     }
     button.Active {
-      transition: all 0.3s ease;
       border-color: $themeColor;
       background-color: $themeColor;
       &:hover {
         transition: all 0.3s ease;
         background-color: white;
         color: $themeColor;
+      }
+    }
+    button[oclass="CloseButton"] {
+      background-color: white;
+      color: black;
+      border-color: white;
+      &:hover {
+        background-color: $themeGreyLightColor;
       }
     }
   }

@@ -440,15 +440,15 @@ $(document).ready(function() {
 		helper : function(e, ui) {
 			var ret;
 			ret = $('<div class="dragHelperLogo" style="position: fixed;"/>');
-			addAppForm.siteId($(this).attr("idx"));
-			addAppForm.oInputs[0].val($(this).find('p').text());
 			ret.attr("connect", $(this).attr("connect"));
 			ret.attr("data-login", $(this).attr("data-login"));
 			ret.attr("data-sso", $(this).attr("data-sso"));
 			ret.attr("data-nologin", $(this).attr("data-nologin"));
 			ret.append($('<img />'));
+			ret.attr("idx", $(this).attr("idx"));
+			ret.attr("name", $(this).attr("name"));
 			ret.find('img').attr("src", $(this).find('img').attr("src"));
-			return ret; // Replaced $(ui) with $(this)
+			return ret;
 		}
 	});
 });

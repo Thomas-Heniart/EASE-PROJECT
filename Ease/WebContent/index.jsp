@@ -46,6 +46,8 @@ pageEncoding="UTF-8"%>
 	<script src="js/profiles.js"></script>
 	<script src="js/form/form.js"></script>
 	<script src="js/form/input.js"></script>
+	<script src="js/form/popup.js"></script>
+	<script src="js/form/errorMsg.js"></script>
 	<script src="js/alertPopup.js"></script>
 	<script src="js/loading.js"></script>
 
