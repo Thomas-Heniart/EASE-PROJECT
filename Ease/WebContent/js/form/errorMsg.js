@@ -15,7 +15,7 @@ var constructorErrorMsg = function (rootEl) {
 
 var ErrorMsg = {
 	ClassicErrorMsg : function () {
-		construction.apply(this, argument);
+		constructorErrorMsg.apply(this, arguments);
 		var self = this;
 	}
 }
