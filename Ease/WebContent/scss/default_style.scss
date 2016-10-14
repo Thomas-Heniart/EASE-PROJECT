@@ -35,7 +35,7 @@
 }
 
 .scaleinAnimation {
-   @include scalein-anim('scale-09', 0.9);
+ @include scalein-anim('scale-09', 0.9);
 }
 
 body {
@@ -47,19 +47,19 @@ body {
  ::-webkit-scrollbar:horizontal {
   height: 2px;
   position: absolute;
- }
- ::-webkit-scrollbar-track {
-   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-   -webkit-border-radius: 10px;
-   border-radius: 10px;
- }
- ::-webkit-scrollbar-thumb {
-   -webkit-border-radius: 10px;
-   border-radius: 10px;
-   background: rgba(#afb0bf,0.8);
-   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
- }
- ::-webkit-scrollbar-thumb:window-inactive {
+}
+::-webkit-scrollbar-track {
+ -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+ -webkit-border-radius: 10px;
+ border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+ -webkit-border-radius: 10px;
+ border-radius: 10px;
+ background: rgba(#afb0bf,0.8);
+ -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+::-webkit-scrollbar-thumb:window-inactive {
   background: rgba(#afb0bf,0.4);
 }
 }
@@ -76,84 +76,102 @@ body {
 	border: 1px hidden $themeGreyColor;
 	border-radius: 5px;
 	text-align: center;
-	i {
+	i.fa-comments-o {
     transition: transform .3s;
-		line-height: 50px;
-		font-size: 35px;
-		color: white;
-	}
-	a {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		left: 0;
-	}
-  #chatButton-popover {
-    position: absolute;
-    width: 100px;
-    height: 50px;
-    left: 110px;
-    top: 0;
+    line-height: 50px;
+    font-size: 35px;
     color: white;
-    margin-top: -50px;
-    p {
-      position: absolute;
-      visibility: hidden;
-      background-color: $themeLightGreyColor;
-      width: 0;
+  }
+  a {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+  }
+  .chat-popover {
+    transition: opacity .3s;
+    position: absolute;
+    min-width: 200px;
+    max-width: 300px;
+    pointer-events: none;
+    right: 100%;
+    visibility: hidden;
+    opacity: 0;
+    transform: scale(0.2);
+    .bubbleInfo {
+      padding: 5px;
+      background-color: white;
+      border-radius: 5px;
+      display: inline-block;
+      width: 90%;
+      text-align: center;
+      float: left;
+      p {
+        margin-bottom: 0px;
+      }
+    }
+    .caret-helper {
+      float: left;
+      display: inline-block;
+      margin-left: -2px;
+      color: white;
+      font-size: 30px;
+      i {
+        line-height: 50px;
+      }
     }
   }
   &:hover {
-    i {
+    .chat-popover {
+      transition: opacity .3s, transform .5s cubic-bezier(.62,-0.66,.27,1.63);
+      transform: scale(1);
+      visibility: visible;
+      opacity: 1;
+    }
+    i.fa-comments-o {
       transition: transform .3s;
       transform: scale(0.7);
     }
-    #chatButton-popover p {
-      visibility: visible;
-      top: 0;
-      width: 100%;
-      transition: width 1s;
-    }
   }
 }
 
- .logoBckgrnd::before{
-  	opacity:0.1;
-  	background-image:url(../resources/backgrounds/logo-background.png);
-  	background-size: 250px;
-  }
-  .picBckgrnd::before{
-  	background-image:url(../resources/backgrounds/background.jpeg);
-  	background-position: 50% 50%;
-  	background-size: cover;
-  }
+.logoBckgrnd::before{
+ opacity:0.1;
+ background-image:url(../resources/backgrounds/logo-background.png);
+ background-size: 250px;
+}
+.picBckgrnd::before{
+ background-image:url(../resources/backgrounds/background.jpeg);
+ background-position: 50% 50%;
+ background-size: cover;
+}
 
 .mainBody {
-padding-top: 0px;
- background-color: $themeGreyColor;
- overflow: hidden;
- &:before {
-  content: '';
-  z-index: -1;
-  width: 100%;
-  height: 100%;
-  position:absolute;
-}
+  padding-top: 0px;
+  background-color: $themeGreyColor;
+  overflow: hidden;
+  &:before {
+    content: '';
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    position:absolute;
+  }
 
-#loginBody {
-  position: absolute;
-  padding-bottom: 50px;
-  width: 100%;
-  height: 100%;
-  .ease-logo {
-    width: 50px;
-  }
-  #demo-canvas {
-    display: none;
-  }
-  #searchBar {
-    top: 8%;
-  }
+  #loginBody {
+    position: absolute;
+    padding-bottom: 50px;
+    width: 100%;
+    height: 100%;
+    .ease-logo {
+      width: 50px;
+    }
+    #demo-canvas {
+      display: none;
+    }
+    #searchBar {
+      top: 8%;
+    }
 
   /*.univ-presentation {
     margin: auto;
@@ -172,25 +190,25 @@ padding-top: 0px;
       font-size: 15px;
       margin-bottom: 20px;
     }
-  }*/
-}
-#loggedBody {
- height: 100%;
- padding-top: 43px;
- position: fixed;
- width: 100%;
- .col-left {
-  overflow-y: auto;
-  overflow-x: hidden;
-  height: 100%;
-  transform: translateX(0);
-  -webkit-animation: slideLeft 0.8s 1;
-  animation: slideLeft 0.8s 1;
-  display: none;
-}
-.col-left.show {
-  display: block;
-}
+    }*/
+  }
+  #loggedBody {
+   height: 100%;
+   padding-top: 43px;
+   position: fixed;
+   width: 100%;
+   .col-left {
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 100%;
+    transform: translateX(0);
+    -webkit-animation: slideLeft 0.8s 1;
+    animation: slideLeft 0.8s 1;
+    display: none;
+  }
+  .col-left.show {
+    display: block;
+  }
 }
 }
 
@@ -339,10 +357,10 @@ padding-top: 0px;
      padding-bottom: 1%;
      padding-top: 1%;
      background-color: rgba(239, 239, 239, 0.7);
- }*/
-}
-}
-@media screen and (max-width: 771px) {
+     }*/
+   }
+ }
+ @media screen and (max-width: 771px) {
   #loginBody {
     .logo {
      width: 100%;
@@ -387,16 +405,16 @@ padding-top: 0px;
 	z-index: 2;
 	top: 0px;
   border-bottom: 1px solid $borderFbColor;
-	#breakButton {
-		&:hover {
-			color: black;
-		}
-		span {
-			text-transform: none;
-			vertical-align: initial;
-		}
-		font-size: 12px;
-		float: right;
+  #breakButton {
+    &:hover {
+     color: black;
+   }
+   span {
+     text-transform: none;
+     vertical-align: initial;
+   }
+   font-size: 12px;
+   float: right;
    margin-right: 160px;
    height: 39px;
    color: white;
