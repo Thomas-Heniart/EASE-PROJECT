@@ -3,6 +3,10 @@
 var constructorInput = function (rootEl) {
 	var self = this;
 	this.qInput = rootEl;
+	this.qInput.on('focus', function(e) {
+		$(this).prop('readonly', false);
+	});
+	this.qInput.prop('readonly', true);
 	this.listeners = [];
 	this.listenBy = function (qBy) {
 		self.listeners.push(qBy);
@@ -37,6 +41,9 @@ var constructorInput = function (rootEl) {
 			self.onStateChanged();
 		}
 	};
+	this.getVal = function () {
+		return self.qInput.val();
+	}
 	this.qInput.on("keyup", function () {
 		var tmp = self.validate();
 		if (tmp != self.isValid) {
