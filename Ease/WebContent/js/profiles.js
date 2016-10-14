@@ -237,7 +237,7 @@ function setupProfileSettings(profile) {
 		});
 	$(profile).find('#deleteProfileForm .buttonSet #validate').click(
 		function() {
-			var idx;
+			/*var idx;
 			var name;
 			var popup;
 
@@ -247,12 +247,15 @@ function setupProfileSettings(profile) {
 
 			popup.find("#index").val(idx);
 			popup.find('#password').val('');
-			popup.find('span')
-			.text($(parent).find('.ProfileName p').text());
+			popup.find('span').text($(parent).find('.ProfileName p').text());
 			$('#PopupDeleteProfile').addClass("md-show");
 			setTimeout(function() {
 				$(popup).find('#password').focus();
 			}, 100);
+			*/
+			
+			deleteProfilePopup.open($(this).closest(".item").attr('id'));
+			
 		});
 }
 
@@ -336,7 +339,7 @@ function showConfirmDeleteAppPopup(elem, event) {
 			true);
 	} else {
 
-		var popup = $('#PopupDeleteApp');
+		/*var popup = $('#PopupDeleteApp');
 		popup.addClass('md-show');
 		popup.find("#close").unbind('click');
 		popup.find("#close").click(function() {
@@ -359,6 +362,8 @@ function showConfirmDeleteAppPopup(elem, event) {
 				showAlertPopup(retMsg, true);
 			}, 'text');
 		});
+		*/
+		popupDeleteApp.open($(app).attr('id'));
 	}
 }
 	function addProfileView(elem) {
