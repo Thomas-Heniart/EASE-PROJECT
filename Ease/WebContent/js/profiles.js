@@ -441,8 +441,8 @@ $(document).ready(function() {
 		helper : function(e, ui) {
 			var ret;
 			ret = $('<div class="dragHelperLogo" style="position: fixed;"/>');
-			ret.attr("idx", $(this).attr("idx"));
-			ret.attr("name", $(this).find('p').text());
+			addAppForm.siteId($(this).attr("idx"));
+			addAppForm.oInputs[0].val($(this).find('p').text());
 			ret.attr("connect", $(this).attr("connect"));
 			ret.attr("data-login", $(this).attr("data-login"));
 			ret.attr("data-sso", $(this).attr("data-sso"));
