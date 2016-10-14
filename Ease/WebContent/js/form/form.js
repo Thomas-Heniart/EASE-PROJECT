@@ -3,10 +3,17 @@ var constructorForm = function (rootEl) {
 	var self = this;
 	this.qRoot = rootEl;
 	this.oInputs = [];
+	this.oErrorMsg;
 	this.qRoot.find('input').each(function (index, elem) {
 		var oClass = $(elem).attr('oClass');
 		if (oClass != null) {
 			self.oInputs.push(new Input[oClass]($(elem)));
+		}
+	});
+	this.qRoot.find('div').each(function (index, elem) {
+		var oClass = $(elem).attr('oClass');
+		if (oClass != null) {
+			self.oErrorMsg = new ErrorMsg[oClass]($(elem));
 		}
 	});
 	this.qButton = this.qRoot.find("button[type='submit']");

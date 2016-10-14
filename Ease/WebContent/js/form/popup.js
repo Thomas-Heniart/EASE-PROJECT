@@ -1,27 +1,48 @@
 
-var Popup = function (rootEl, form, closeButton) {
+var constructorPopup = function (rootEl) {
 	var self = this;
 	this.qRoot = rootEl;
-	this.oForm = form;
-	this.qCloseButton = closeButton;
+	this.qRoot.find('form').each(function (index, elem) {
+		var oClass = $(elem).attr('oClass');
+		if (oClass != null) {
+			self.oForm = new Form[oClass]($(elem));
+		}
+	});
+	this.qRoot.find('button').each(function (index, elem) {
+		var oClass = $(elem).attr('oClass');
+		if (oClass == "CloseButton") {
+			self.qCloseButton = $(elem);
+		}
+	});
 	this.open = function () {
 		self.oForm.reset();
-		self.qRoot.addClass('md-show');
+		self.setVal(arguments);
+		self.qRoot.addClass('open');
 	};
 	this.close = function () {
-		self.qRoot.removeClass('md-show');
+		self.qRoot.removeClass('open');
 	};
 	this.qCloseButton.onClick(function () {
 		self.qRoot.close();
 	});
+	this.setVal = function () {
+		
+	};
 }
 
-var DeleteProfilePopup = function (rootEl, form, closeButton) {
-	Popup.apply(this,arguments);
-	var self = this;
-	this.open = function (profileIndex) {
-		self.oForm.reset();
-		self.oForm.oInputs[0].val(profileIndex);
-		self.qRoot.addClass('md-show');
+var Popup = {
+	DeleteProfilePopup : function () {
+		constructorPopup.apply(this,arguments);
+		var self = this;
+		this.setVal = function (profileIndex) {
+			self.qForm.oInputs[0].val(profileIndex);
+		}
+	},
+	AddAppPopup : function () {
+		constructorPopup.apply(this,arguments);
+		var self = this;
+		this.setVal = function () {
+			
+		};
 	}
 }
