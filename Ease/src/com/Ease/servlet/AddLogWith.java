@@ -31,7 +31,6 @@ public class AddLogWith extends HttpServlet {
      */
     public AddLogWith() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -107,6 +106,7 @@ public class AddLogWith extends HttpServlet {
 			db.cancel(transaction);
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		} catch (NumberFormatException e) {
+			e.printStackTrace();
 			SI.setResponse(ServletItem.Code.BadParameters, "Bad numbers");
 		}
 		SI.sendResponse();

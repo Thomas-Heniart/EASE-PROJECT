@@ -110,6 +110,7 @@ var Form = {
 				self.newAppItem.attr('ssoid', self.helper.attr('data-sso'));
 				setupAppSettingButtonPopup(self.newAppItem.find('.showAppActionsButton'));
 				self.reset();
+				$('.classicLogin').attr("display", "block");
 				self.oPopup.close();
 			});
 		}
