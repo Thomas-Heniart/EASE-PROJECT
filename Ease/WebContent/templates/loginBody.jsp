@@ -7,7 +7,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <script src="js/connection.js"></script>
 <script src="js/rAF.js"></script>
-<script src="js/demo-2.js"></script> 
 
 <div id="loginBody">
 	<canvas id="demo-canvas" style="position: absolute;"></canvas>
