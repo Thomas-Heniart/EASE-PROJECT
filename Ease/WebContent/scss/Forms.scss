@@ -12,7 +12,21 @@ form.settingsForm {
     padding-left: 3px;
     width: 85%;
   }
+}
 
+form.addAppForm {
+  input[name='name'] {
+    display: inline-block;
+    margin-left: 14%;
+    width: 60% !important;
+  }
+  button[type='submit'].Active {
+    background-color: $themeRedColor;
+    border-color: $themeRedColor;
+  }
+}
+
+form {
   .buttonSet {
     text-align: center;
     margin: 3% auto;
