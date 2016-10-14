@@ -80,5 +80,21 @@ var Form = {
 			e.preventDefault();
 			console.log("Change password");
 		}
+	},
+	DeleteProfileForm : function (rootEl) {
+		constructorForm.apply(this, arguments);
+		var self = this;
+		this.submit = function (e) {
+			e.preventDefault();
+			console.log("Profile deleted");
+		}
+	},
+	DeleteAppForm : function (rootEl) {
+		constructorForm.apply(this, arguments);
+		var self = this;
+		this.submit = function (e) {
+			e.preventDefault();
+			console.log("App deleted");
+		}
 	}
 }

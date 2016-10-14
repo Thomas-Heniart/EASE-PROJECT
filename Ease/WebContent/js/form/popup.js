@@ -2,6 +2,8 @@
 var constructorPopup = function (rootEl) {
 	var self = this;
 	this.qRoot = rootEl;
+	this.oForm;
+	this.qCloseButton;
 	this.qRoot.find('form').each(function (index, elem) {
 		var oClass = $(elem).attr('oClass');
 		if (oClass != null) {
@@ -17,13 +19,13 @@ var constructorPopup = function (rootEl) {
 	this.open = function () {
 		self.oForm.reset();
 		self.setVal(arguments);
-		self.qRoot.addClass('open');
+		self.qRoot.addClass('md-show');
 	};
 	this.close = function () {
-		self.qRoot.removeClass('open');
+		self.qRoot.removeClass('md-show');
 	};
-	this.qCloseButton.onClick(function () {
-		self.qRoot.close();
+	this.qCloseButton.click(function () {
+		self.close();
 	});
 	this.setVal = function () {
 		
@@ -35,7 +37,7 @@ var Popup = {
 		constructorPopup.apply(this,arguments);
 		var self = this;
 		this.setVal = function (profileIndex) {
-			self.qForm.oInputs[0].val(profileIndex);
+			self.oForm.oInputs[0].val(profileIndex);
 		}
 	},
 	AddAppPopup : function () {
@@ -43,6 +45,13 @@ var Popup = {
 		var self = this;
 		this.setVal = function () {
 			
+		};
+	},
+	DeleteAppPopup : function () {
+		constructorPopup.apply(this,arguments);
+		var self = this;
+		this.setVal = function (appId) {
+			self.oForm.oInputs[0].val(appId);
 		};
 	}
 }
