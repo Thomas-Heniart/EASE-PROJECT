@@ -9,6 +9,41 @@ $(document).ready(function(){
 	$("#enterEditMode").click(enterEditMode);
 });
 
+
+function enterEditMode() {
+	mixpanel.track("Open Catalog");
+	$(".ProfilesHandler").addClass('editMode');
+	catalog.open();
+	var addProfileHelper = $('#addProfileHelper').find('.item');
+	var owl = $(".owl-carousel").data('owlCarousel');
+	owl.destroy();
+	var nbProfiles = $('.owl-carousel > *').length;
+
+	if (nbProfiles < 3) {
+		$('.owl-carousel').append($(addProfileHelper));
+	}
+	setupOwlCarousel();
+	$('.MenuButtonSet').addClass('editMode');
+	$('.MenuButtonSet.editMode .openCatalogHelper').css('height',
+		$('.CatalogViewTab.show').height() + 'px');
+	enterEditModeTutorial();
+}
+
+function leaveEditMode() {
+	$('.MenuButtonSet.editMode .openCatalogHelper').css('height', '50px');
+	$(".ProfilesHandler").removeClass('editMode');
+	catalog.close();
+	var owl = $(".owl-carousel").data('owlCarousel');
+	owl.destroy();
+	var addProfileHelper = $('.AddProfileView').closest('.item');
+
+	$('#addProfileHelper').append($(addProfileHelper));
+	setupOwlCarousel();
+	$('.scaleOutAnimation').removeClass('scaleOutAnimation');
+	$('.MenuButtonSet').removeClass('editMode');
+	leaveEditModeTutorial();
+}
+
 var Profile = function(rootEl){
 	var self = this;
 	this.qRoot = rootEl;
@@ -259,48 +294,7 @@ $(document).ready(function() {
 			});
 	});
 
-function enterEditMode() {
 
-	$('#dragAndDropHelper').css('display', 'block');
-	$(".ProfilesHandler").addClass('editMode');
-	$('.CatalogViewTab').addClass('show');
-	var addProfileHelper = $('#addProfileHelper').find('.item');
-	var owl = $(".owl-carousel").data('owlCarousel');
-	owl.destroy();
-	var nbProfiles = $('.owl-carousel > *').length;
-
-	if (nbProfiles < 3) {
-		$('.owl-carousel').append($(addProfileHelper));
-	}
-	setupOwlCarousel();
-	$('.MenuButtonSet').addClass('editMode');
-	$('.MenuButtonSet.editMode .openCatalogHelper').css('height',
-		$('.CatalogViewTab.show').height() + 'px');
-	enterEditModeTutorial();
-}
-
-function leaveEditMode() {
-	$('.MenuButtonSet.editMode .openCatalogHelper').css('height', '50px');
-	$('#dragAndDropHelper').css('display', 'none');
-	$(".ProfilesHandler").removeClass('editMode');
-	$('.CatalogViewTab').removeClass('show');
-
-	var owl = $(".owl-carousel").data('owlCarousel');
-	owl.destroy();
-	var addProfileHelper = $('.AddProfileView').closest('.item');
-
-	$('#addProfileHelper').append($(addProfileHelper));
-	setupOwlCarousel();
-	$('.scaleOutAnimation').removeClass('scaleOutAnimation');
-	$('.MenuButtonSet').removeClass('editMode');
-	leaveEditModeTutorial();
-}
-
-$(document).ready(function() {
-	$('.CatalogViewTab #quit').click(function() {
-		leaveEditMode();
-	});
-});
 
 $(document)
 .ready(
