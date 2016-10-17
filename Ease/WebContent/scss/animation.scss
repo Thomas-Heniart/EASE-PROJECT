@@ -1,0 +1,82 @@
+	@-webkit-keyframes rotate {
+		from{
+			-webkit-transform: rotate(0deg) translate(-50%, -50%);
+		}
+		to{
+			-webkit-transform: rotate(360deg) translate(-50%, -50%);
+		}
+	}
+
+	@-webkit-keyframes easyScaling {
+		0% {
+			transform: scaleX(0.8) scaleY(0.8);
+		}
+		50% {
+			transform: scaleX(0.5) scaleY(0.5);
+		}
+		100% {
+			transform: scaleX(0.8) scaleY(0.8);
+
+		}
+	}
+
+	@-webkit-keyframes deletingApp {
+		0% {
+			transform: scaleX(1) scaleY(1);
+		}
+		100% {
+			transform: scaleX(0.2) scaleY(0.2);
+		}
+	}
+
+	@-webkit-keyframes scaleOut {
+		0% {
+			transform: scaleX(1) scaleY(1);
+		}
+		80% {
+			transform: scaleX(1.2) scaleY(1.2);
+		}
+		100% {
+			transform: scaleX(1) scaleY(1);
+		}
+	}
+	
+	@keyframes shake {
+		10%, 90% {
+			transform: translate3d(-1px, 1px, 0);
+		}
+
+		20%, 80% {
+			transform: translate3d(1px, -1px, 0);
+		}
+
+		30%, 50%, 70% {
+			transform: translate3d(-2px, 2px, 0);
+		}
+
+		40%, 60% {
+			transform: translate3d(2px, -2px, 0);
+		}
+	}
+
+
+	@-webkit-keyframes slideLeft {
+		0% {
+			transform: translateX(100%);
+			opacity: 0;
+		}
+		100% {
+			transform: translateX(0%);
+			opacity: 1;
+		}
+	}
+	
+  @mixin scalein-anim($animName: 'default', $scaleRate: 0.9){
+  animation: #{$animName} .3s ease-in 0s;
+  @-webkit-keyframes #{$animName} {
+    50% {
+      -webkit-transform: scale($scaleRate);
+      transform: scale($scaleRate);
+    }
+  }
+}
