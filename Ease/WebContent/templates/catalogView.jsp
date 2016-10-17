@@ -25,7 +25,6 @@
 	</div>
 	<div class=tagContainer>
 		<div class="container">
-		<div class="shadowHelper"></div>
 		<i class="fa fa-angle-left" aria-hidden="true"></i>
 		<span class="tags">
 			<c:forEach items='${siteManager.getTagsList()}' var="item">
@@ -40,8 +39,8 @@
 	<div class="scaleContainerView">
 		<div class="catalogArea">
 			<div class="scaleContainer">
-<!--				<img class="Scaler" src="resources/other/placeholder-64.png"
-					style="width: 100%; height: auto; visibility: hidden;" />-->
+				<img class="Scaler" src="resources/other/placeholder-64.png"
+					style="width: 100%; height: auto; visibility: hidden;" />
 				<div id="catalog" class="catalogContainer">
 					<h3 class="search-result"><span>Search result</span></h3>
 					<div class="search-result"></div>

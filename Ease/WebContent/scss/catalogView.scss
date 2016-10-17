@@ -1,7 +1,5 @@
 
 .catalogView {
-	height: 100%;
-	overflow: hidden;
 	width: 100%;
 	font-family: $defaultFont;
 	.tag {
@@ -179,12 +177,6 @@
 			overflow: hidden;
 			background-color: #E7E7E7;
 			position: relative;
-			.shadowHelper {
-				width: 90%;
-				left: 5%;
-				z-index: 1;
-				  @include box-shadow(inset 5px 5px 10px 0px #E7E7E7, inset -5px -5px 10px 0px #E7E7E7);
-			}
 			.tag {
 				margin: 10px 0 10px 20px;
 				border: none;
@@ -232,7 +224,6 @@
 		}
 	}
 	.scaleContainerView {
-		height: 100%;
 		background-color: white;
 		width: 100%;
 		padding: 0px;
@@ -241,13 +232,11 @@
 		margin-left: auto;
 		margin-right: auto;
 		.catalogArea {
-			height: 100%;
 			width: 100%;
 			margin: 0px auto;
 			padding: 15px;
 			border-radius: 5px;
 			.scaleContainer {
-				height: 100%;
 				width: 100%;
 				position: relative;
 				margin: 0px auto;
@@ -544,49 +533,6 @@
 		}
 	}
 
-	@-webkit-keyframes rotate {
-		from{
-			-webkit-transform: rotate(0deg) translate(-50%, -50%);
-		}
-		to{
-			-webkit-transform: rotate(360deg) translate(-50%, -50%);
-		}
-	}
-
-	@-webkit-keyframes easyScaling {
-		0% {
-			transform: scaleX(0.8) scaleY(0.8);
-		}
-		50% {
-			transform: scaleX(0.5) scaleY(0.5);
-		}
-		100% {
-			transform: scaleX(0.8) scaleY(0.8);
-
-		}
-	}
-
-	@-webkit-keyframes deletingApp {
-		0% {
-			transform: scaleX(1) scaleY(1);
-		}
-		100% {
-			transform: scaleX(0.2) scaleY(0.2);
-		}
-	}
-
-	@-webkit-keyframes scaleOut {
-		0% {
-			transform: scaleX(1) scaleY(1);
-		}
-		80% {
-			transform: scaleX(1.2) scaleY(1.2);
-		}
-		100% {
-			transform: scaleX(1) scaleY(1);
-		}
-	}
-
 	.scaleOutAnimation {
 		-webkit-animation: scaleOut .5s linear 1;
 		animation: scaleOut .5s linear 1;
@@ -595,35 +541,7 @@
 	.shakeAnimation {
 		animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both infinite;
 	}
-	@keyframes shake {
-		10%, 90% {
-			transform: translate3d(-1px, 1px, 0);
-		}
-
-		20%, 80% {
-			transform: translate3d(1px, -1px, 0);
-		}
-
-		30%, 50%, 70% {
-			transform: translate3d(-2px, 2px, 0);
-		}
-
-		40%, 60% {
-			transform: translate3d(2px, -2px, 0);
-		}
-	}
-
-
-	@-webkit-keyframes slideLeft {
-		0% {
-			transform: translateX(100%);
-			opacity: 0;
-		}
-		100% {
-			transform: translateX(0%);
-			opacity: 1;
-		}
-	}
+	
 
 	.deletingApp {
 		-webkit-animation: deletingApp 0.5s linear infinite;
@@ -666,7 +584,6 @@
 		}
 	}
 	.CatalogViewTab.show {
-		height: 95%;
 		visibility: visible;
 		background-color: #E7E7E7;
 		left: 52.2%;
@@ -674,7 +591,6 @@
 		opacity: 1;
 	}
 	.CatalogViewTab {
-		height: 95%;
 		opacity: 0;
 		top: 0;
 		transition: visibility 0s ease .3s;

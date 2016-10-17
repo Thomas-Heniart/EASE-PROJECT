@@ -11,8 +11,7 @@
 <% if (session.getAttribute("User") != null){ %>
 		<%@ include file="DropDownUserMenu.jsp"%>
 		<%@ include file="SearchBar.jsp"%>
-	<a id="logoutButton"><i class="fa fa-fw fa-sign-out"></i><span>Logout</span></a>
-	<a id="allLogoutButton"><i class="fa fa-fw fa-sign-out"></i><span>Logout from all websites</span></a>	
+	<a id="logoutButton"><i class="fa fa-fw fa-sign-out"></i><span>Logout</span></a>	
 <%}%>
 
 </div>

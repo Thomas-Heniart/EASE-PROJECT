@@ -34,7 +34,7 @@ public class User {
 	String			lastName;
 	String			email;
 	String			tel;
-	String			password;
+	String			hashedPassword;
 	String			saltEase;
 	String			saltPerso;
 	String			keyUser;
@@ -71,7 +71,7 @@ public class User {
 			this.lastName = lName;
 			this.email = email;
 			this.tel = tel;
-			this.password = pass;
+			this.hashedPassword = hashedPassword;
 			this.tuto = "0";
 			this.background = "logo";
 			profiles = new LinkedList<Profile>();
@@ -79,7 +79,7 @@ public class User {
 			maxAppId = 0;
 			apps = new LinkedList<App>();
 			group_ids = new LinkedList<String>();
-			ResultSet rs = db.get("SELECT MAX(user_id) FROM users;");
+			ResultSet rs = db.get("SELECT user_id FROM users WHERE email='"+ email +";");
 			if (rs == null)
 				throw new SessionException("Impossible to insert new user in data base.");
 			else {
@@ -101,25 +101,71 @@ public class User {
 			lastName = rs.getString(UserData.LASTNAME.ordinal());
 			email = rs.getString(UserData.EMAIL.ordinal());
 			tel = rs.getString(UserData.TEL.ordinal());
-			password = rs.getString(UserData.PASSWORD.ordinal());
-			saltEase = rs.getString(UserData.SALTEASE.ordinal());
-			saltPerso = rs.getString(UserData.SALTPERSO.ordinal());
 			tuto = rs.getString(UserData.TUTO.ordinal());
-			background = (rs.getString(UserData.BACKGROUND.ordinal()).equals("1")) ? "picture" : "logo";
-			if ((keyUser = AES.decryptUserKey(rs.getString(UserData.KEYUSER.ordinal()), pass, saltPerso)) == null)
-				throw new SessionException("Can't decrypt key.");
+			background = (rs.getString(UserData.BACKGROUND.ordinal()).equals("1")) ? "picture" : "logo";			
 			profiles = new LinkedList<Profile>();
 			maxProfileId = 0;
 			maxAppId = 0;
 			apps = new LinkedList<App>();
 			group_ids = new LinkedList<String>();
+			
+			String oldHashedPassword = rs.getString(UserData.PASSWORD.ordinal());
+			String oldSaltEase = rs.getString(UserData.SALTEASE.ordinal());
+			String oldSaltPerso = rs.getString(UserData.SALTPERSO.ordinal());
+
+			if (!oldHashedPassword.equals(Hashing.SHA(pass, oldSaltEase))){
+				throw new SessionException("Wrong password.");
+			} else if ((keyUser = AES.decryptUserKey(rs.getString(UserData.KEYUSER.ordinal()), pass, oldSaltPerso)) == null){
+				throw new SessionException("Can't decrypt key.");
+			} else if ((saltEase = Hashing.generateSalt()) == null){
+				throw new SessionException("Can't create salt.");
+			} else if ((saltPerso = AES.generateSalt()) == null){
+				throw new SessionException("Can't create salt.");
+			} else if ((hashedPassword = Hashing.SHA(pass, saltEase)) == null) {
+				throw new SessionException("Can't hash password.");
+			}
+			updateInDB(context, pass);
+			
 			loadProfiles(context);
 			checkForGroup(context);
 		} catch (SQLException e) {
 			throw new SessionException("Impossible to get all User info.");
 		}
 	}
-
+	
+	//Use this to load user from result set but can't decrypt (direct set of keyuser)
+	public User(ResultSet rs, String keyUser, String userId, ServletContext context) throws SessionException {//userId useless but can't have same arguments than other constructor
+		try {
+			id = rs.getString(UserData.ID.ordinal());
+			if(!userId.equals(id)){
+				System.out.println(userId);
+				System.out.println(id);
+				throw new SessionException("Wrong user");
+			}
+			firstName = rs.getString(UserData.FIRSTNAME.ordinal());
+			lastName = rs.getString(UserData.LASTNAME.ordinal());
+			email = rs.getString(UserData.EMAIL.ordinal());
+			tel = rs.getString(UserData.TEL.ordinal());
+			hashedPassword = rs.getString(UserData.PASSWORD.ordinal());
+			saltEase = rs.getString(UserData.SALTEASE.ordinal());
+			saltPerso = rs.getString(UserData.SALTPERSO.ordinal());
+			tuto = rs.getString(UserData.TUTO.ordinal());
+			background = (rs.getString(UserData.BACKGROUND.ordinal()).equals("1")) ? "picture" : "logo";			
+			profiles = new LinkedList<Profile>();
+			maxProfileId = 0;
+			maxAppId = 0;
+			apps = new LinkedList<App>();
+			group_ids = new LinkedList<String>();
+			
+			this.keyUser = keyUser;
+			
+			loadProfiles(context);
+			checkForGroup(context);
+		} catch (SQLException e) {
+			throw new SessionException("Impossible to get all User info.");
+		}
+	}
+	
 	// GETTER
 	
 	public String getId() {
@@ -137,8 +183,8 @@ public class User {
 	public String getTel() {
 		return tel;
 	}
-	public String getPassword() {
-		return password;
+	public String getHashedPassword() {
+		return hashedPassword;
 	}
 	public List<Profile> getProfiles(){
 		return profiles;
@@ -206,8 +252,8 @@ public class User {
 	public void setTel(String tel) {
 		this.tel = tel;
 	}
-	public void setPassword(String pass) {
-		password = pass;
+	public void setHashedPassword(String pass) {
+		hashedPassword = pass;
 	}
 	public void tutoComplete() {
 		this.tuto = "1";
@@ -249,7 +295,7 @@ public class User {
 	public void updateInDB(ServletContext context, String pass) throws SessionException {
 		DataBase db = (DataBase)context.getAttribute("DataBase");
 		String cryptedKeyUser = AES.encryptUserKey(keyUser, pass, saltPerso);
-		if (db.set("UPDATE users SET firstName='" + firstName + "', `lastName`='"+ lastName + "', email='" + email + "', `tel`='"+ tel + "', `password`='"+ password + "', `keyUser`='"+ cryptedKeyUser +"' WHERE `user_id`='"+ id + "';")
+		if (db.set("UPDATE users SET firstName='" + firstName + "', `lastName`='"+ lastName + "', email='" + email + "', `tel`='"+ tel + "', `password`='"+ hashedPassword + "', `keyUser`='"+ cryptedKeyUser +"', saltEase='"+ saltEase +"', saltPerso='"+ saltPerso +"' WHERE `user_id`='"+ id + "';")
 				!= 0)
 			throw new SessionException("Impossible to update user in data base.");
 	}
