@@ -7,13 +7,13 @@ var constructorPopup = function (rootEl) {
 	this.qRoot.find('form').each(function (index, elem) {
 		var oClass = $(elem).attr('oClass');
 		if (oClass != null) {
-			self.oForm = new Form[oClass]($(elem));
+			self.oForm = new Form[oClass]($(elem), self);
 		}
 	});
 	this.qRoot.find('button').each(function (index, elem) {
 		var oClass = $(elem).attr('oClass');
 		if (oClass == "CloseButton") {
-			self.qCloseButton = $(elem);
+			self.qCloseButton = $(elem, self);
 		}
 	});
 	this.open = function () {
@@ -36,8 +36,9 @@ var Popup = {
 	DeleteProfilePopup : function () {
 		constructorPopup.apply(this,arguments);
 		var self = this;
-		this.setVal = function (profileIndex) {
-			self.oForm.oInputs[0].val(profileIndex);
+		this.setVal = function (arg) {
+			console.log(arg[0]);
+			self.oForm.oInputs[0].val(arg[0]);
 		}
 	},
 	AddAppPopup : function () {
@@ -71,8 +72,10 @@ var Popup = {
 	DeleteAppPopup : function () {
 		constructorPopup.apply(this,arguments);
 		var self = this;
-		this.setVal = function (appId) {
-			self.oForm.oInputs[0].val(appId);
+		this.app;
+		this.setVal = function (arg) {
+			self.oForm.oInputs[0].val(arg[0].attr("id"));
+			self.app = arg[0];
 		};
 	}
 }

@@ -11,7 +11,7 @@ $(document).ready(function(){
 
 
 function enterEditMode() {
-	mixpanel.track("Open Catalog");
+	//mixpanel.track("Open Catalog");
 	$(".ProfilesHandler").addClass('editMode');
 	catalog.open();
 	var addProfileHelper = $('#addProfileHelper').find('.item');
@@ -363,7 +363,7 @@ function showConfirmDeleteAppPopup(elem, event) {
 			}, 'text');
 		});
 		*/
-		popupDeleteApp.open($(app).attr('id'));
+		popupDeleteApp.open(app);
 	}
 }
 	function addProfileView(elem) {

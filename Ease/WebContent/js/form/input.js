@@ -1,8 +1,9 @@
 
 
-var constructorInput = function (rootEl) {
+var constructorInput = function (rootEl, parent) {
 	var self = this;
 	this.qInput = rootEl;
+	this.oParent = parent;
 	this.qInput.on('focus', function(e) {
 		$(this).prop('readonly', false);
 	});

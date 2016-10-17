@@ -1,19 +1,20 @@
-var constructorForm = function(rootEl) {
+var constructorForm = function(rootEl, parent) {
 	var self = this;
 	this.qRoot = rootEl;
+	this.oParent = parent;
 	this.oInputs = [];
 	this.qRoot.find('input').each(function(index, elem) {
 		this.oErrorMsg;
 
 		var oClass = $(elem).attr('oClass');
 		if (oClass != null) {
-			self.oInputs.push(new Input[oClass]($(elem)));
+			self.oInputs.push(new Input[oClass]($(elem), self));
 		}
 	});
 	this.qRoot.find('div').each(function(index, elem) {
 		var oClass = $(elem).attr('oClass');
 		if (oClass != null) {
-			self.oErrorMsg = new ErrorMsg[oClass]($(elem));
+			self.oErrorMsg = new ErrorMsg[oClass]($(elem), self);
 		}
 	});
 	this.qButton = this.qRoot.find("button[type='submit']");
@@ -58,8 +59,26 @@ var constructorForm = function(rootEl) {
 			self.oInputs[i].reset();
 		}
 	};
-	this.submit = function() {
-
+	this.submit = function(e) {
+		e.preventDefault();
+		var params = {};
+		self.oInputs.forEach(function (elem) {
+			params[elem.qInput.attr('name')] = elem.getVal();
+		});
+		self.beforeSubmit();
+		postHandler.post(self.qRoot.attr('action'), params, self.afterSubmit, self.successCallback, self.errorCallback);
+	};
+	this.beforeSubmit = function () {
+		
+	};
+	this.afterSubmit = function () {
+		
+	};
+	this.successCallback = function () {
+		
+	};
+	this.errorCallback = function () {
+		
 	}
 }
 
@@ -67,18 +86,10 @@ var Form = {
 	EditUserNameForm : function(rootEl) {
 		constructorForm.apply(this, arguments);
 		var self = this;
-		this.submit = function(e) {
-			e.preventDefault();
-			console.log("Change name");
-		}
 	},
 	EditUserPasswordForm : function(rootEl) {
 		constructorForm.apply(this, arguments);
 		var self = this;
-		this.submit = function(e) {
-			e.preventDefault();
-			console.log("Change password");
-		}
 	},
 	AddAppForm : function(rooEl) {
 		constructorForm.apply(this, arguments);
@@ -122,7 +133,6 @@ var Form = {
 			});
 		}
 		this.newAppItem = null;
-		this.oPopup = null;
 		this.appsContainer = null;
 		this.helper = null;
 		this.site_id = null;
@@ -134,9 +144,6 @@ var Form = {
 		}
 		this.setHelper = function(qObject) {
 			self.helper = qObject;
-		}
-		this.setPopup = function(anObject) {
-			self.oPopup = anObject;
 		}
 		this.setAppsContainer = function(qObject) {
 			self.appsContainer = qObject;
@@ -224,17 +231,38 @@ var Form = {
 	DeleteProfileForm : function(rootEl) {
 		constructorForm.apply(this, arguments);
 		var self = this;
-		this.submit = function(e) {
-			e.preventDefault();
-			console.log("Profile deleted");
+		this.beforeSubmit = function () {
+			$('#loading').addClass('la-animate');
+		}
+		this.afterSubmit = function () {
+			$('#loading').removeClass("la-animate");
+		}
+        this.successCallback = function(retMsg) {
+			window.location.replace("index.jsp");
+		};
+		this.errorCallback = function(retMsg) {
+			$(parent).find('.alertDiv').addClass('show');
+  	  		$(parent).find('#password').val('');
+    	  	showAlertPopup(retMsg, true);
 		}
 	},
 	DeleteAppForm : function(rootEl) {
 		constructorForm.apply(this, arguments);
-		var self = this;
-		this.submit = function(e) {
-			e.preventDefault();
-			console.log("App deleted");
+		var self = this;this.beforeSubmit = function () {
+			$(self.oParent.app).find('.linkImage').addClass('easyScaling');
+		}
+		this.afterSubmit = function () {
+			self.oParent.close();
+			$(self.oParent.app).find('.linkImage').removeClass('easyScaling');
+		}
+        this.successCallback = function(retMsg) {
+			$(self.oParent.app).find('.linkImage').addClass('deletingApp');
+			setTimeout(function() {
+				self.oParent.app.remove();
+			}, 500);
+		};
+		this.errorCallback = function(retMsg) {
+    	  	showAlertPopup(retMsg, true);
 		}
 	}
 }
