@@ -44,6 +44,7 @@ function showAddAppPopup(container, helper) {
 	var popup = $('#PopupAddApp');
 	var item = $($('#boxHelper').html());
 	console.log(item);
+	console.log("alala");
 
 	addAppForm.profileId($(container).closest('.item').attr('id'));
 	addAppForm.setAppsContainer($(container));
