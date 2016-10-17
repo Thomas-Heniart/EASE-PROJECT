@@ -1,13 +1,9 @@
-
-
-var constructorInput = function (rootEl) {
+var constructorInput = function (rootEl, parent) {
 	var self = this;
 	this.qInput = rootEl;
+	this.oParent = parent;
 	this.qInput.on('focus', function(e) {
 		$(this).prop('readonly', false);
-	});
-	this.qInput.on('blur', function(e) {
-		$(this).prop('readonly', true);
 	});
 	this.qInput.prop('readonly', true);
 	this.listeners = [];
@@ -37,12 +33,14 @@ var constructorInput = function (rootEl) {
 		self.isValid = false;
 	};
 	this.val = function (value) {
+		$(this).prop('readonly', false);
 		self.qInput.val(value);
 		var tmp = self.validate();
 		if (tmp != self.isValid) {
 			self.isValid = tmp;
 			self.onStateChanged();
 		}
+		this.qInput.prop('readonly', true);
 	};
 	this.getVal = function () {
 		return self.qInput.val();
@@ -57,6 +55,16 @@ var constructorInput = function (rootEl) {
 }
 
 var Input = {
+	BasicInput : function (rootEl) {
+		constructorInput.apply(this, arguments);
+		var self = this;
+		this.isValid = true;
+		this.reset = function() {
+			self.qInput.val("");
+			self.qInput.removeClass("valid");
+			self.qInput.removeClass("unValid");
+		}
+	},
 	NoEmptyInput : function (rootEl) {
 		constructorInput.apply(this,arguments);
 		var self = this;

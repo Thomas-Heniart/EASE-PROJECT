@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 
 <script src="js/modifyApp.js"></script>
-<div oclass="ModifyAppPopup" class="md-modal md-effect-15 popup"
+<div oClass="ModifyAppPopup" class="md-modal md-effect-15 popup"
 	id="PopupModifyApp">
 	<div class="md-content">
 		<div class="popupHeader">
@@ -63,4 +63,5 @@
 </div>
 <script>
 	var modifyAppPopup = new Popup["ModifyAppPopup"]($("#PopupModifyApp"));
+	//var modifyAppPopup = new Popup["ModifyAppPopup"]($("#PopupModifyApp"));
 </script>

@@ -13,6 +13,6 @@
 		<%@ include file="AddAppForm.jsp" %>
 	</div>
 </div>
-<<script type="text/javascript">
+<script type="text/javascript">
 	var popupAddApp = new Popup["AddAppPopup"]($("#PopupAddApp"));
 </script>
