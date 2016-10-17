@@ -10,11 +10,12 @@
 		border-radius: 3px;
 		text-decoration: none;
 		transition: all 0.3s;
-		width: 100px;
+		
 		height: 70%;
 		text-align: center;
 		margin-top: 6px;
 		padding: 4px;
+		border: 1px solid $themeColor;
 		&:hover {
 			cursor: pointer;
 			transition: all 0.3s;
@@ -37,6 +38,7 @@
 		text-align: center;
 		margin-top: 6px;
 		padding: 4px;
+		border: 1px solid $themeColor;
 		&:hover {
 			cursor: pointer;
 			transition: all 0.3s;

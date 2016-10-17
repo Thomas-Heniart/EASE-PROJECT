@@ -8,6 +8,15 @@
 <script src="js/connection.js"></script>
 <script src="js/rAF.js"></script>
 
+<script>
+$(document).ready(function(){
+	setTimeout(function(){
+		var event = new CustomEvent("isConnected", {"detail":false});
+		document.dispatchEvent(event);
+	}, 500);
+    
+});
+</script>
 <div id="loginBody">
 	<canvas id="demo-canvas" style="position: absolute;"></canvas>
 	<div id='search-google'>
@@ -38,6 +47,9 @@
 	String 	fname = "";
 	String 	lname = "";
 	String 	email = "";
+	String	sessionId = "";
+	String 	token = "";
+	
 	int		iden = 0;
 
 	if (cookies != null){
@@ -58,6 +70,10 @@
 			fname = cookie.getValue();
 			if (fname.length() > 0)
 				iden++;
+		} else if((cookie.getName()).compareTo("sId") == 0){
+			sessionId = cookie.getValue();
+		} else if((cookie.getName()).compareTo("sTk") == 0){
+			token = cookie.getValue();
 		}
 	}
 	if (iden == 3){
@@ -75,8 +91,15 @@
 			response.sendRedirect("/index.jsp");
 		}
 	}
-}
+	}
 %>
+<% if(sessionId.length() > 0 && token.length() > 0){ %>
+	<jsp:forward page="connectionWithCookies"> 
+		<jsp:param name="sessionId" value="<%=sessionId%>" /> 
+		<jsp:param name="token" value="<%=token%>" /> 
+	</jsp:forward>
+<%} %>
+	
 	<div class="FormsContainer">
 	<% if (iden == 3){ %>
 		<div class="form" id="knownUser">

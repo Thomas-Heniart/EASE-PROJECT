@@ -44,6 +44,6 @@
 	</div>
 	<div class="buttonSet">
 		<button type="submit">Add</button>
-		<button type="button" oClass="CloseButton">Cancel</button>
+		<button type="button">Cancel</button>
 	</div>
 </form>

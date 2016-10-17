@@ -7,13 +7,13 @@ var constructorPopup = function (rootEl) {
 	this.qRoot.find('form').each(function (index, elem) {
 		var oClass = $(elem).attr('oClass');
 		if (oClass != null) {
-			self.oForm = new Form[oClass]($(elem), self);
+			self.oForm = new Form[oClass]($(elem));
 		}
 	});
 	this.qRoot.find('button').each(function (index, elem) {
 		var oClass = $(elem).attr('oClass');
 		if (oClass == "CloseButton") {
-			self.qCloseButton = $(elem, self);
+			self.qCloseButton = $(elem);
 		}
 	});
 	this.open = function () {
@@ -36,9 +36,8 @@ var Popup = {
 	DeleteProfilePopup : function () {
 		constructorPopup.apply(this,arguments);
 		var self = this;
-		this.setVal = function (arg) {
-			console.log(arg[0]);
-			self.oForm.oInputs[0].val(arg[0]);
+		this.setVal = function (profileIndex) {
+			self.oForm.oInputs[0].val(profileIndex);
 		}
 	},
 	AddAppPopup : function () {
@@ -50,7 +49,7 @@ var Popup = {
 		this.close = function() {
 			self.qRoot.removeClass('md-show');
 			self.oForm.reset();
-			$('.classicLogin').css('display', 'block');
+			$('.classicLogin').addClass("show");
 		}
 		this.setHelper = function(jqObj) {
 			self.oForm.setHelper(jqObj);
@@ -81,14 +80,15 @@ var Popup = {
 		this.setApp = function(jObj) {
 			self.oForm.setApp(jObj);
 		}
+		this.setVal = function () {
+			
+		};
 	},
 	DeleteAppPopup : function () {
 		constructorPopup.apply(this,arguments);
 		var self = this;
-		this.app;
-		this.setVal = function (arg) {
-			self.oForm.oInputs[0].val(arg[0].attr("id"));
-			self.app = arg[0];
+		this.setVal = function (appId) {
+			self.oForm.oInputs[0].val(appId);
 		};
 	}
 }

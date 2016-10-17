@@ -9,41 +9,6 @@ $(document).ready(function(){
 	$("#enterEditMode").click(enterEditMode);
 });
 
-
-function enterEditMode() {
-	//mixpanel.track("Open Catalog");
-	$(".ProfilesHandler").addClass('editMode');
-	catalog.open();
-	var addProfileHelper = $('#addProfileHelper').find('.item');
-	var owl = $(".owl-carousel").data('owlCarousel');
-	owl.destroy();
-	var nbProfiles = $('.owl-carousel > *').length;
-
-	if (nbProfiles < 3) {
-		$('.owl-carousel').append($(addProfileHelper));
-	}
-	setupOwlCarousel();
-	$('.MenuButtonSet').addClass('editMode');
-	$('.MenuButtonSet.editMode .openCatalogHelper').css('height',
-		$('.CatalogViewTab.show').height() + 'px');
-	enterEditModeTutorial();
-}
-
-function leaveEditMode() {
-	$('.MenuButtonSet.editMode .openCatalogHelper').css('height', '50px');
-	$(".ProfilesHandler").removeClass('editMode');
-	catalog.close();
-	var owl = $(".owl-carousel").data('owlCarousel');
-	owl.destroy();
-	var addProfileHelper = $('.AddProfileView').closest('.item');
-
-	$('#addProfileHelper').append($(addProfileHelper));
-	setupOwlCarousel();
-	$('.scaleOutAnimation').removeClass('scaleOutAnimation');
-	$('.MenuButtonSet').removeClass('editMode');
-	leaveEditModeTutorial();
-}
-
 var Profile = function(rootEl){
 	var self = this;
 	this.qRoot = rootEl;
@@ -237,7 +202,7 @@ function setupProfileSettings(profile) {
 		});
 	$(profile).find('#deleteProfileForm .buttonSet #validate').click(
 		function() {
-			/*var idx;
+			var idx;
 			var name;
 			var popup;
 
@@ -247,15 +212,12 @@ function setupProfileSettings(profile) {
 
 			popup.find("#index").val(idx);
 			popup.find('#password').val('');
-			popup.find('span').text($(parent).find('.ProfileName p').text());
+			popup.find('span')
+			.text($(parent).find('.ProfileName p').text());
 			$('#PopupDeleteProfile').addClass("md-show");
 			setTimeout(function() {
 				$(popup).find('#password').focus();
 			}, 100);
-			*/
-			
-			deleteProfilePopup.open($(this).closest(".item").attr('id'));
-			
 		});
 }
 
@@ -297,7 +259,48 @@ $(document).ready(function() {
 			});
 	});
 
+function enterEditMode() {
 
+	$('#dragAndDropHelper').css('display', 'block');
+	$(".ProfilesHandler").addClass('editMode');
+	$('.CatalogViewTab').addClass('show');
+	var addProfileHelper = $('#addProfileHelper').find('.item');
+	var owl = $(".owl-carousel").data('owlCarousel');
+	owl.destroy();
+	var nbProfiles = $('.owl-carousel > *').length;
+
+	if (nbProfiles < 3) {
+		$('.owl-carousel').append($(addProfileHelper));
+	}
+	setupOwlCarousel();
+	$('.MenuButtonSet').addClass('editMode');
+	$('.MenuButtonSet.editMode .openCatalogHelper').css('height',
+		$('.CatalogViewTab.show').height() + 'px');
+	enterEditModeTutorial();
+}
+
+function leaveEditMode() {
+	$('.MenuButtonSet.editMode .openCatalogHelper').css('height', '50px');
+	$('#dragAndDropHelper').css('display', 'none');
+	$(".ProfilesHandler").removeClass('editMode');
+	$('.CatalogViewTab').removeClass('show');
+
+	var owl = $(".owl-carousel").data('owlCarousel');
+	owl.destroy();
+	var addProfileHelper = $('.AddProfileView').closest('.item');
+
+	$('#addProfileHelper').append($(addProfileHelper));
+	setupOwlCarousel();
+	$('.scaleOutAnimation').removeClass('scaleOutAnimation');
+	$('.MenuButtonSet').removeClass('editMode');
+	leaveEditModeTutorial();
+}
+
+$(document).ready(function() {
+	$('.CatalogViewTab #quit').click(function() {
+		leaveEditMode();
+	});
+});
 
 $(document)
 .ready(
@@ -339,7 +342,7 @@ function showConfirmDeleteAppPopup(elem, event) {
 			true);
 	} else {
 
-		/*var popup = $('#PopupDeleteApp');
+		var popup = $('#PopupDeleteApp');
 		popup.addClass('md-show');
 		popup.find("#close").unbind('click');
 		popup.find("#close").click(function() {
@@ -362,8 +365,6 @@ function showConfirmDeleteAppPopup(elem, event) {
 				showAlertPopup(retMsg, true);
 			}, 'text');
 		});
-		*/
-		popupDeleteApp.open(app);
 	}
 }
 	function addProfileView(elem) {
@@ -440,15 +441,15 @@ $(document).ready(function() {
 		helper : function(e, ui) {
 			var ret;
 			ret = $('<div class="dragHelperLogo" style="position: fixed;"/>');
+			addAppForm.siteId($(this).attr("idx"));
+			addAppForm.oInputs[0].val($(this).find('p').text());
 			ret.attr("connect", $(this).attr("connect"));
 			ret.attr("data-login", $(this).attr("data-login"));
 			ret.attr("data-sso", $(this).attr("data-sso"));
 			ret.attr("data-nologin", $(this).attr("data-nologin"));
 			ret.append($('<img />'));
-			ret.attr("idx", $(this).attr("idx"));
-			ret.attr("name", $(this).attr("name"));
 			ret.find('img').attr("src", $(this).find('img').attr("src"));
-			return ret;
+			return ret; // Replaced $(ui) with $(this)
 		}
 	});
 });

@@ -578,6 +578,7 @@
 
 	@-webkit-keyframes scaleOut {
 		0% {
+
 			transform: scaleX(1) scaleY(1);
 		}
 		80% {
@@ -623,6 +624,7 @@
 		100% {
 			transform: translateX(0%);
 			opacity: 1;
+
 		}
 	}
 

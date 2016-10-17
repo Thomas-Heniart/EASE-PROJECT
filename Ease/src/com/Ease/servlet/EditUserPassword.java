@@ -63,7 +63,7 @@ public class EditUserPassword extends HttpServlet {
 				SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
 			} else if (db.connect() != 0){
 				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
-			} else if (oldPassword == null || !user.getPassword().equals(Hashing.SHA(oldPassword, user.getSaltEase()))){
+			} else if (oldPassword == null || !user.getHashedPassword().equals(Hashing.SHA(oldPassword, user.getSaltEase()))){
 				SI.setResponse(ServletItem.Code.BadParameters, "Wrong password.");
 			} else if (password == null || Regex.isPassword(password) == false) {
 				SI.setResponse(ServletItem.Code.BadParameters, "Bad new password");
@@ -72,7 +72,7 @@ public class EditUserPassword extends HttpServlet {
 			} else if ((hashedPassword = Hashing.SHA(password, user.getSaltEase())) == null){
 				SI.setResponse(ServletItem.Code.LogicError, "Can't hash password.");
 			} else {
-				user.setPassword(hashedPassword);
+				user.setHashedPassword(hashedPassword);
 				user.updateInDB(session.getServletContext(), password);
 				SI.setResponse(200, "Password edited.");
 			}
