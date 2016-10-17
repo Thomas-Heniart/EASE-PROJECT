@@ -38,7 +38,7 @@
 			<p>or</p>
 		</div>
 	</div>
-	<div class="classicLogin">
+	<div class="classicLogin show">
 		<input oClass="NoEmptyInput" type="text" name="login" placeholder="Login" value="" />
 		<input oClass="NoEmptyInput" type="password" name="password" placeholder="Password" value="" />
 	</div>
