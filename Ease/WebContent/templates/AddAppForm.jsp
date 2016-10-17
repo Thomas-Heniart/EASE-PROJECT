@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 
 <form action="addApp" id="AddAppForm" class="addAppForm" oClass="AddAppForm">
-	<div>
+	<div class="lineInput">
 		<label for="app-name">App name :</label> <input oClass="NoEmptyInput"
 			type="text" id="app-name" name="name" maxlength="14"
 			placeholder="Name" />
@@ -44,6 +44,6 @@
 	</div>
 	<div class="buttonSet">
 		<button type="submit">Add</button>
-		<button type="button" oClass="CloseButton">Cancel</button>
+		<button type="button">Cancel</button>
 	</div>
 </form>

@@ -73,7 +73,7 @@ public class DeleteProfile extends HttpServlet {
 				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 			} else if ((profile = user.getProfile(index)) == null){
 				SI.setResponse(ServletItem.Code.BadParameters, "Bad profileId.");
-			} else if (mdp == null || !Hashing.SHA(mdp, user.getSaltEase()).equals(user.getPassword())) {
+			} else if (mdp == null || !Hashing.SHA(mdp, user.getSaltEase()).equals(user.getHashedPassword())) {
 				SI.setResponse(ServletItem.Code.BadParameters, "Bad password.");
 			} else {
 				if (profile.havePerm(Profile.ProfilePerm.DELETE, session.getServletContext())){

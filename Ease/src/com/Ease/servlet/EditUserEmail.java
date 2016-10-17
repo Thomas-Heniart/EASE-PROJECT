@@ -60,7 +60,7 @@ public class EditUserEmail extends HttpServlet {
 		try {
 			if (user == null) {
 				SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
-			}else if (oldPassword == null || !user.getPassword().equals(Hashing.SHA(oldPassword, user.getSaltEase()))){
+			}else if (oldPassword == null || !user.getHashedPassword().equals(Hashing.SHA(oldPassword, user.getSaltEase()))){
 				SI.setResponse(ServletItem.Code.BadParameters, "Wrong password.");
 			} else if (db.connect() != 0){
 				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
