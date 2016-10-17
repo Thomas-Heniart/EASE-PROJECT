@@ -165,25 +165,26 @@ padding-top: 0px;
       font-size: 15px;
       margin-bottom: 20px;
     }
-  }*/
-}
-#loggedBody {
- height: 100%;
- padding-top: 43px;
- position: fixed;
- width: 100%;
- .col-left {
-  overflow-y: auto;
-  overflow-x: hidden;
-  height: 100%;
-  transform: translateX(0);
-  -webkit-animation: slideLeft 0.8s 1;
-  animation: slideLeft 0.8s 1;
-  display: none;
-}
-.col-left.show {
-  display: block;
-}
+<<<<<<< HEAD
+    }*/
+  }
+  #loggedBody {
+   height: 100%;
+   padding-top: 43px;
+   position: fixed;
+   width: 100%;
+   .col-left {
+    overflow-y: overlay;
+    overflow-x: hidden;
+    height: 100%;
+    transform: translateX(0);
+    -webkit-animation: slideLeft 0.8s 1;
+    animation: slideLeft 0.8s 1;
+    display: none;
+  }
+  .col-left.show {
+    display: block;
+  }
 }
 }
 
@@ -505,4 +506,10 @@ html {
 
 .no-pointer-events {
   pointer-events: none;
+}
+
+input {
+  &:hover {
+    cursor: text;
+  }
 }
