@@ -14,11 +14,50 @@ form.settingsForm {
   }
 }
 
-#PopupAddApp form.addAppForm {
+#PopupAddApp form, #PopupModifyApp form {
+  width: 80%;
+  margin: auto;
+  .lineInput {
+    width: 100%;
+    margin: 0;
+    position: relative;
+    line-height: 29px;
+  }
+  .loginWithChooser {
+    padding: 0;
+    width: 100%;
+    position: relative;
+    text-align: center;
+    display: block;
+    .linedSeparator {
+      position: relative;
+      p {
+        padding: 5px;
+      }
+    }
+  }
+  .loginAppChooser {
+    max-height: 500px;
+    padding: 0;
+    margin: 0 auto;
+    width: 90%;
+    position: relative;
+  }
+
+  input {
+    height: 29px;
+    border-radius: 5px;
+    border: 1px hidden;
+    width: 100%;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    color: black;
+    padding-left: 3px;
+  }
   input[name='name'] {
     display: inline-block;
-    margin-left: 14%;
-    width: 60% !important;
+    width: 60%;
+    float: right;
   }
   button[type='submit'] {
     background-color: $themeRedColor;
@@ -28,6 +67,15 @@ form.settingsForm {
   button[type='submit'].Active:hover {
     background-color: lighten($themeRedColor, 3%);
     color: white;
+  }
+}
+
+#PopupModifyApp {
+  div.classicLogin {
+    display: none;
+  }
+  div.classicLogin.show {
+    display: block;
   }
 }
 
@@ -42,11 +90,11 @@ form {
       position: relative;
       z-index: 1;
       margin: 0px;
-      padding: 2px;
       float: none;
       min-width: 0px;
       max-width: 100%;
-      width: 40%;
+      width: 49%;
+      padding: 7px;
       display: inline-block;
       color: white;
       border-radius: 3px;

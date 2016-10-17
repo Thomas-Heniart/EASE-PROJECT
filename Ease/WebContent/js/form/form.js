@@ -3,14 +3,14 @@ var constructorForm = function(rootEl) {
 	this.qRoot = rootEl;
 	this.oInputs = [];
 	this.qRoot.find('input').each(function(index, elem) {
-	this.oErrorMsg;
-	
+		this.oErrorMsg;
+
 		var oClass = $(elem).attr('oClass');
 		if (oClass != null) {
 			self.oInputs.push(new Input[oClass]($(elem)));
 		}
 	});
-	this.qRoot.find('div').each(function (index, elem) {
+	this.qRoot.find('div').each(function(index, elem) {
 		var oClass = $(elem).attr('oClass');
 		if (oClass != null) {
 			self.oErrorMsg = new ErrorMsg[oClass]($(elem));
@@ -96,21 +96,28 @@ var Form = {
 			}, function(data) {
 				var retMsg = data.substring(4);
 				self.appsContainer.append(self.newAppItem);
-				self.newAppItem.find('.linkImage').addClass('scaleOutAnimation');
+				self.newAppItem.find('.linkImage')
+						.addClass('scaleOutAnimation');
 				setTimeout(function() {
-					self.newAppItem.find('.linkImage').removeClass('scaleOutAnimation');
+					self.newAppItem.find('.linkImage').removeClass(
+							'scaleOutAnimation');
 				}, 1000);
-				self.newAppItem.find('.linkImage').attr('onclick', "sendEvent(this)");
+				self.newAppItem.find('.linkImage').attr('onclick',
+						"sendEvent(this)");
 				self.newAppItem.attr('login', self.oInputs[1].getVal());
 				self.newAppItem.attr('webId', self.helper.attr('idx'));
 				self.newAppItem.attr('name', self.oInputs[0].getVal());
-				self.newAppItem.attr('logwith', 'false');
-				self.newAppItem.find('.siteName p').text(self.oInputs[0].getVal());
+				console.log(self.app_id);
+				self.newAppItem.attr('logwith', (self.app_id == null) ? 'false'
+						: self.app_id);
+				console.log(self.helper);
+				self.newAppItem.find('.siteName p').text(
+						self.oInputs[0].getVal());
 				self.newAppItem.attr('id', retMsg);
 				self.newAppItem.attr('ssoid', self.helper.attr('data-sso'));
-				setupAppSettingButtonPopup(self.newAppItem.find('.showAppActionsButton'));
+				setupAppSettingButtonPopup(self.newAppItem
+						.find('.showAppActionsButton'));
 				self.reset();
-				$('.classicLogin').attr("display", "block");
 				self.oPopup.close();
 			});
 		}
@@ -162,18 +169,70 @@ var Form = {
 			return true;
 		}
 	},
-	DeleteProfileForm : function (rootEl) {
+	ModifyAppForm : function(rootEl) {
 		constructorForm.apply(this, arguments);
 		var self = this;
-		this.submit = function (e) {
+		this.oPopup = null;
+		this.app = null;
+		this.password = null;
+		this.appId = null;
+		this.aId = null;
+		this.setApp = function(jObject) {
+			self.app = jObject;
+			self.oInputs[0].val(self.app.attr("name"));
+			self.oInputs[1].val(self.app.attr("login"));
+			self.appId = self.app.attr("id");
+			self.aId = self.app.attr("aid");
+		}
+		this.submit = function(e) {
+			e.preventDefault();
+			var AppToLoginWith = rootEl.find('.AccountApp.selected');
+			console.log(AppToLoginWith);
+			if (AppToLoginWith.length) {
+				self.aId = AppToLoginWith.attr('aid');
+			}
+			self.login = self.oInputs[1].getVal();
+			self.password = self.oInputs[2].getVal();
+			$
+					.post(
+							'editApp',
+							{
+								name : self.oInputs[0].getVal(),
+								appId : self.appId,
+								lwId : self.aId,
+								login : self.login,
+								wPassword : self.password
+							},
+							function(data) {
+								var retMsg = data.substring(4);
+								var image = self.app.find('.linkImage');
+								image.addClass('scaleOutAnimation');
+								setTimeout(function() {
+									image.removeClass('scaleOutAnimation');
+								}, 1000);
+								self.app.attr('login', self.oInputs[1].getVal());
+								self.app.attr('name', self.oInputs[0].getVal());
+								self.app.attr('logwith', (self.oInputs[1].getVal().length || self.aId) == null ? 'false' : self.aId);
+								self.app.find('.siteName p').text(self.oInputs[0].getVal());
+								self.app.find('.emptyAppIndicator').remove();
+								self.app.removeClass('emptyApp');
+								if (self.oPopup != null)
+									self.oPopup.close();
+							});
+		}
+	},
+	DeleteProfileForm : function(rootEl) {
+		constructorForm.apply(this, arguments);
+		var self = this;
+		this.submit = function(e) {
 			e.preventDefault();
 			console.log("Profile deleted");
 		}
 	},
-	DeleteAppForm : function (rootEl) {
+	DeleteAppForm : function(rootEl) {
 		constructorForm.apply(this, arguments);
 		var self = this;
-		this.submit = function (e) {
+		this.submit = function(e) {
 			e.preventDefault();
 			console.log("App deleted");
 		}

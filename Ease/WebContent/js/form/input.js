@@ -56,6 +56,16 @@ var constructorInput = function (rootEl) {
 }
 
 var Input = {
+	BasicInput : function (rootEl) {
+		constructorInput.apply(this, arguments);
+		var self = this;
+		this.isValid = true;
+		this.reset = function() {
+			self.qInput.val("");
+			self.qInput.removeClass("valid");
+			self.qInput.removeClass("unValid");
+		}
+	},
 	NoEmptyInput : function (rootEl) {
 		constructorInput.apply(this,arguments);
 		var self = this;

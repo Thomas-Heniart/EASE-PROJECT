@@ -47,13 +47,25 @@ var Popup = {
 			self.oForm = anObject;
 			self.oForm.setPopup(self);
 		}
-		this.setVal = function (name) {
+		this.setVal = function(name) {
 			self.oForm.oInputs[0].val(name);
 		};
 		this.close = function() {
 			self.qRoot.removeClass('md-show');
 			self.reset();
 			$('.classicLogin').css('display', 'block');
+		}
+	},
+	ModifyAppPopup : function() {
+		Popup["AddAppPopup"].apply(this, arguments);
+		var self = this;
+		if (self.oForm != null)
+			self.oForm.oPopup = self;
+		this.close = function() {
+			self.qRoot.removeClass('md-show');
+		}
+		this.setApp = function(jObj) {
+			self.oForm.setApp(jObj);
 		}
 	},
 	DeleteAppPopup : function () {
