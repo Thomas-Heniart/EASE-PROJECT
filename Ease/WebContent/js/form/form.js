@@ -122,11 +122,11 @@ var Form = {
 				self.newAppItem.attr('ssoid', self.helper.attr('data-sso'));
 				setupAppSettingButtonPopup(self.newAppItem.find('.showAppActionsButton'));
 				self.reset();
+				$('.classicLogin').attr("display", "block");
 				self.oPopup.close();
 			});
 		}
 		this.newAppItem = null;
-		this.oPopup = null;
 		this.appsContainer = null;
 		this.helper = null;
 		this.site_id = null;
@@ -138,9 +138,6 @@ var Form = {
 		}
 		this.setHelper = function(qObject) {
 			self.helper = qObject;
-		}
-		this.setPopup = function(anObject) {
-			self.oPopup = anObject;
 		}
 		this.setAppsContainer = function(qObject) {
 			self.appsContainer = qObject;

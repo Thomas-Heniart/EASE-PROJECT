@@ -35,12 +35,14 @@ var constructorInput = function (rootEl, parent) {
 		self.isValid = false;
 	};
 	this.val = function (value) {
+		$(this).prop('readonly', false);
 		self.qInput.val(value);
 		var tmp = self.validate();
 		if (tmp != self.isValid) {
 			self.isValid = tmp;
 			self.onStateChanged();
 		}
+		this.qInput.prop('readonly', true);
 	};
 	this.getVal = function () {
 		return self.qInput.val();

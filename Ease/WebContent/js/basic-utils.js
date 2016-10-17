@@ -6,6 +6,7 @@ function sendEvent(obj) {
         var json = new Object();
         var event;
 
+        mixpanel.track("App clicks");
         if (!($('#ease_extension').length)) {
             checkForExtension();
             return;
@@ -22,6 +23,8 @@ function sendEvent(obj) {
         }, function() {
         }, function(retMsg) {
             json.detail = JSON.parse(retMsg);
+            mixpanel.track("App successful clicks");
+            mixpanel.track(json.detail[json.detail.length - 1].website.name + " connections");
             event = new CustomEvent("NewConnection", json);
             document.dispatchEvent(event);
         }, function(retMsg) {
