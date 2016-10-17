@@ -10,7 +10,7 @@ $(document).ready(function() {
 		parent.find('.loginWithButton').removeClass('locked');
 		$(this).addClass('locked');
 		parent.find('.loginAppChooser').css('display', 'block');
-		parent.find('.classicLogin').removeClass("show");
+		parent.find('.classicLogin').css('display', 'none');
 		parent.find('.or').css('display', 'none');
 		var apps = $(".siteLinkBox[webid='" + webid + "']");
 		if (apps.length == 0) {
@@ -27,18 +27,13 @@ $(document).ready(function() {
 			AppHelperCloned.click(function() {
 				$(parent).find('.AccountApp.selected').removeClass('selected');
 				$(this).addClass('selected');
-<<<<<<< HEAD
 				addAppForm.appId($(this).attr("aid"));
 				addAppForm.setPostName('addLogWith');
-=======
-				popupAddApp.appId($(this).attr("aid"));
-				popupAddApp.setPostName('addLogWith');
->>>>>>> 4d125a3f6059f00977f20d0eb50cfda5e549ee79
 			});
 			if (i == 0) {
 				$(AppHelperCloned).addClass("selected");
-				popupAddApp.appId($(AppHelperCloned).attr("aid"));
-				popupAddApp.setPostName('addLogWith');
+				addAppForm.appId($(AppHelperCloned).attr("aid"));
+				addAppForm.setPostName('addLogWith');
 			}
 			AppChooser.append(AppHelperCloned);
 		}
@@ -48,7 +43,6 @@ $(document).ready(function() {
 function showAddAppPopup(container, helper) {
 	var popup = $('#PopupAddApp');
 	var item = $($('#boxHelper').html());
-<<<<<<< HEAD
 	popupAddApp.setForm(addAppForm);
 	
 	
@@ -59,13 +53,6 @@ function showAddAppPopup(container, helper) {
 	addAppForm.setAppsContainer($(container));
 	addAppForm.setNewAppItem(item);
 	addAppForm.setHelper($(helper));
-=======
-	popupAddApp.open();
-	popupAddApp.setHelper($(helper));
-	popupAddApp.setAppsContainer($(container));
-	popupAddApp.setNewAppItem(item);
-	popupAddApp.setVal($(helper).attr("name"));
->>>>>>> 4d125a3f6059f00977f20d0eb50cfda5e549ee79
 
 	popup.find('.loginWithButton').removeClass('locked');
 	popup.find('.or').css('display', 'block');
@@ -115,8 +102,8 @@ function showAddAppPopup(container, helper) {
 					$(this).closest('.ChooserContent').find(
 							'.AccountApp.selected').removeClass('selected');
 					$(this).addClass('selected');
-					popupAddApp.appId(SsoHelper.attr("aid"));
-					popupAddApp.setPostName('addAppWithSso');
+					addAppForm.appId(SsoHelper.attr("aid"));
+					addAppForm.setPostName('addAppWithSso');
 				});
 				SsoChooserContent.append(SsoHelperCloned);
 				logins.push($(apps[i]).attr('login'));
@@ -136,8 +123,8 @@ function showAddAppPopup(container, helper) {
 		parent.find('.loginAppChooser .ChooserContent').empty();
 		parent.find('.loginAppChooser').css('display', 'none');
 		if ($(helper).attr('data-nologin') != "true") {
-			popupAddApp.appId(null);
-			parent.find('.classicLogin').addClass("show");
+			addAppForm.appId(null);
+			parent.find('.classicLogin').css('display', 'block');
 			parent.find('.or').css('display', 'block');
 		}
 	});
