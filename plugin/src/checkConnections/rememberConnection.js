@@ -17,7 +17,6 @@ extension.tabs.onNavigation(function(url){
         rememberLogWithConnection(lastNavigatedWebsite, "www.linkedin.com");
     }
     lastNavigatedWebsite = getHost(url);
-    console.log("-- Last navigated website : "+lastNavigatedWebsite+" --");
 });
 
 function rememberConnection(username, website){
@@ -51,7 +50,6 @@ function rememberLogWithConnection(website, logWithWebsite){
 }
 
 function matchFacebookConnectUrl(url){
-    console.log(url);
     if(url.indexOf("facebook")!=-1 && (url.indexOf("www.facebook.com")>10 || url.indexOf("www.facebook.com")<0)) {
         return true; 
     }

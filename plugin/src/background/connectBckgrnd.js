@@ -50,16 +50,15 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, se
             extension.tabs.onMessage(tab, "reloaded", function (event, sendResponse1) {
                 console.log("-- Page reloaded --");
                     extension.tabs.inject(tab, ["tools/extension.js","jquery-3.1.0.js","contentScripts/actions.js", "contentScripts/connect.js"], function(){
-                          extension.storage.get("visitedWebsites", function(visitedWebsites) {
+                        extension.storage.get("visitedWebsites", function(visitedWebsites) {
                             extension.storage.get("allConnections", function(allConnections) {
                             msg.visitedWebsites = visitedWebsites;
-                            if(allConnections == undefined) allConnections = {};
                             msg.allConnections = allConnections;
                             extension.tabs.sendMessage(tab, "goooo", msg, function(response){
                               if (response){
                                 console.log("-- Status : "+response.type+" --");
                                 if (response.type == "completed") {
-                                    msg.waitreload=response.waitreload;
+                                    msg.waitreload = response.waitreload;
                                     msg.todo = response.todo;
                                     msg.bigStep = response.bigStep;
                                     msg.actionStep = response.actionStep;
@@ -103,7 +102,7 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, se
                                             if (msg.bigStep < msg.detail.length){
                                                 if(msg.waitreload){
                                                     msg.todo="nextBigStep";
-                                                    console.log("wait for nextBigStep");
+                                                    console.log("-- Wait for nextBigStep --");
                                                 } else {
                                                     msg.todo = "checkAlreadyLogged";
                                                     extension.tabs.update(tab, msg.detail[msg.bigStep].website.home, function() {});
@@ -122,7 +121,6 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, se
                                     endConnection(currentWindow, tab, msg, sendResponse);
                                     extension.tabs.onUpdatedRemoveListener(tab);
                                     extension.tabs.onMessageRemoveListener(tab);
-                                    
                                 }
                               }
                               });

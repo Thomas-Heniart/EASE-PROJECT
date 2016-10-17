@@ -28,8 +28,8 @@
 				<p></p>
 			</div>
 			<div class="buttonSet">
-   		 		<button type="submit" class="btn btn-default btn-primary btn-group btn-lg">Remove</button>
-   		 		<button type="button" class="btn btn-default btn-primary btn-group btn-lg" oClass="CloseButton">Cancel</button>
+   		 		<button type="submit" id="accept" class="btn btn-default btn-primary btn-group btn-lg">Remove</button>
+   		 		<button type="button"id="close" class="btn btn-default btn-primary btn-group btn-lg" oClass="CloseButton">Cancel</button>
     		</div>
 		</form>
 	</div>

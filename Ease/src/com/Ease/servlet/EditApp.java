@@ -1,6 +1,5 @@
 package com.Ease.servlet;
 
-
 import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
@@ -26,81 +25,88 @@ import com.Ease.session.User;
 @WebServlet("/editApp")
 public class EditApp extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public EditApp() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public EditApp() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
 		rd.forward(request, response);
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
 		HttpSession session = request.getSession();
-		User user = (User)(session.getAttribute("User"));
+		User user = (User) (session.getAttribute("User"));
 		ServletItem SI = new ServletItem(ServletItem.Type.EditApp, request, response, user);
-	
+
 		// Get Parameters
 		String login = SI.getServletParam("login");
 		String wPassword = request.getParameter("wPassword");
 		String name = SI.getServletParam("name");
 		String appIdParam = SI.getServletParam("appId");
 		// --
-	
+
 		App app = null;
 		boolean transaction = false;
-		
-		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
-		
+
+		DataBase db = (DataBase) session.getServletContext().getAttribute("DataBase");
+
 		try {
 			int appId = Integer.parseInt(appIdParam);
-			
+
 			if (user == null) {
 				SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
 			} else if (db.connect() != 0) {
-				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
+				SI.setResponse(ServletItem.Code.DatabaseNotConnected,
+						"There is a problem with our Database, please retry in few minutes.");
 			} else {
 				String logWithId = SI.getServletParam("lwId");
-				if (logWithId == null) {
+				if (logWithId == null || logWithId.isEmpty()) {
 					if ((login == null || login.equals("")) && (wPassword == null || wPassword.equals(""))) {
 						SI.setResponse(ServletItem.Code.BadParameters, "Bad login or password.");
 					} else if (name == null || name.length() > 14) {
 						SI.setResponse(ServletItem.Code.BadParameters, "Bad name.");
-					}  else if (user.getApp(appId) == null) {
+					} else if (user.getApp(appId) == null) {
 						SI.setResponse(ServletItem.Code.BadParameters, "Bad appId.");
 					} else {
 						app = user.getApp(appId);
-						if (app.havePerm(App.AppPerm.MODIFY, session.getServletContext())){
+						if (app.havePerm(App.AppPerm.MODIFY, session.getServletContext())) {
 							transaction = db.start();
-							if (app.getType().equals("LogWithAccount") == true){
+							if (app.getType().equals("LogWithAccount") == true) {
 								if (login == null || login.equals("") || wPassword == null || wPassword.equals("")) {
 									SI.setResponse(ServletItem.Code.BadParameters, "Bad login or password.");
 								} else {
 									Site site = app.getSite();
 									app.deleteFromDB(session.getServletContext());
 									user.getProfiles().get(app.getProfileIndex()).getApps().remove(app);
-									App tmp = new App(name, login, wPassword, site, user.getProfiles().get(app.getProfileIndex()), user, session.getServletContext());
+									App tmp = new App(name, login, wPassword, site,
+											user.getProfiles().get(app.getProfileIndex()), user,
+											session.getServletContext());
 									user.getProfiles().get(app.getProfileIndex()).addApp(tmp);
 									user.getApps().remove(user.getApp(appId));
 									user.getApps().add(tmp);
 									tmp.setAppId(appId);
 									SI.setResponse(200, tmp.getSite().getName() + " edited.");
 								}
-							} else if (app.getType().equals("ClassicAccount") == true){
-								ClassicAccount account = (ClassicAccount)app.getAccount();
+							} else if (app.getType().equals("ClassicAccount") == true) {
+								ClassicAccount account = (ClassicAccount) app.getAccount();
 								if (login != null && !login.equals(""))
 									account.setLogin(login);
 								if (wPassword != null && !wPassword.equals(""))
@@ -111,7 +117,8 @@ public class EditApp extends HttpServlet {
 								app.updateInDB(session.getServletContext());
 								SI.setResponse(200, app.getSite().getName() + " edited.");
 							} else {
-								ClassicAccount account = new ClassicAccount(login, wPassword, user, session.getServletContext());
+								ClassicAccount account = new ClassicAccount(login, wPassword, user,
+										session.getServletContext());
 								app.setName(name);
 								app.setAccount(account);
 								app.updateInDB(session.getServletContext());
@@ -130,24 +137,28 @@ public class EditApp extends HttpServlet {
 						SI.setResponse(ServletItem.Code.BadParameters, "Bad name.");
 					} else if (user.getApp(lwId) == null) {
 						SI.setResponse(ServletItem.Code.BadParameters, "Bad lwId.");
-					} else if (user.getApp(lwId).getType().equals("ClassicAccount") == false){
+					} else if (user.getApp(lwId).getType().equals("ClassicAccount") == false) {
 						SI.setResponse(ServletItem.Code.LogicError, "This is not a classicAccount.");
 					} else {
-						app = user.getProfiles().get(user.getApp(appId).getProfileIndex()).getApps().get(user.getApp(appId).getIndex());
-						if (app.havePerm(App.AppPerm.MODIFY, session.getServletContext())){
+						app = user.getProfiles().get(user.getApp(appId).getProfileIndex()).getApps()
+								.get(user.getApp(appId).getIndex());
+						if (app.havePerm(App.AppPerm.MODIFY, session.getServletContext())) {
 							transaction = db.start();
-							if (app.getType().equals("ClassicAccount") == true){
+							if (app.getType().equals("ClassicAccount") == true) {
 								Site site = app.getSite();
 								app.deleteFromDB(session.getServletContext());
-								user.getProfiles().get(user.getApp(appId).getProfileIndex()).getApps().remove(user.getApp(appId));
-								App tmp = new App(name, user.getApp(lwId).getId(), site, user.getProfiles().get(user.getApp(appId).getProfileIndex()), user, session.getServletContext());
+								user.getProfiles().get(user.getApp(appId).getProfileIndex()).getApps()
+										.remove(user.getApp(appId));
+								App tmp = new App(name, user.getApp(lwId).getId(), site,
+										user.getProfiles().get(user.getApp(appId).getProfileIndex()), user,
+										session.getServletContext());
 								user.getProfiles().get(user.getApp(appId).getProfileIndex()).addApp(tmp);
 								user.getApps().remove(user.getApp(appId));
 								user.getApps().add(tmp);
 								tmp.setAppId(appId);
 								SI.setResponse(200, tmp.getSite().getName() + " edited.");
 							} else if (app.getType().equals("LogWithAccount") == true) {
-								LogWithAccount logWith = (LogWithAccount)app.getAccount();
+								LogWithAccount logWith = (LogWithAccount) app.getAccount();
 								logWith.setLogWithAppId(user.getApp(lwId).getId());
 								app.setName(name);
 								logWith.updateInDB(session.getServletContext());
@@ -155,7 +166,8 @@ public class EditApp extends HttpServlet {
 								app.updateInDB(session.getServletContext());
 								SI.setResponse(200, app.getSite().getName() + " edited.");
 							} else {
-								LogWithAccount account = new LogWithAccount(user.getApp(lwId).getId(), session.getServletContext());
+								LogWithAccount account = new LogWithAccount(user.getApp(lwId).getId(),
+										session.getServletContext());
 								app.setName(name);
 								app.setAccount(account);
 								app.updateInDB(session.getServletContext());
@@ -168,14 +180,15 @@ public class EditApp extends HttpServlet {
 					}
 				}
 			}
-			 
+
 		} catch (SessionException e) {
 			db.cancel(transaction);
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		} catch (NumberFormatException e) {
 			db.cancel(transaction);
+			e.printStackTrace();
 			SI.setResponse(ServletItem.Code.BadParameters, "Bad numbers.");
-		} catch (IndexOutOfBoundsException e){
+		} catch (IndexOutOfBoundsException e) {
 			db.cancel(transaction);
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		}
