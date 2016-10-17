@@ -26,6 +26,7 @@ $(document).ready(function() {
 					function(){},
 					function(retMsg) {
 						$('#loading').removeClass("la-animate");
+						mixpanel.track("Connexion");
 						window.location.replace("index.jsp");
 					}, 
 					function(retMsg) {

@@ -38,8 +38,8 @@
 			$(this).addClass('locked');
 
 			parent.find('.loginAppChooser').css('display', 'block');
-			parent.find('#modifyAppForm').css('display', 'none');
 			parent.find('.or').css('display', 'none');
+			parent.find(".classicLogin").removeClass("show");
 
 			var apps = $(".siteLinkBox[webid='" + webid + "']");
 			for (var i = 0; i < apps.length; i++) {
@@ -55,25 +55,17 @@
 
 			}
 		});
-
-		$('#PopupModifyApp #password').keyup(function(event){
-			if(event.keyCode == 13){
-				$("#PopupModifyApp .md-content .buttonSet #accept").click();
-			}
-		});
-		$('#PopupModifyApp #login').keyup(function(event){
-			if(event.keyCode == 13){
-				$('#PopupModifyApp #password').focus();
-			}
-		});
 	});
 
 	function showModifyAppPopup(elem, event){
 		event.preventDefault();  
 		event.stopPropagation();
+		modifyAppPopup.open();
 		var popup = $('#PopupModifyApp');
 		var profile = $(elem).closest('.owl-item');
 		var app = $(elem).closest('.siteLinkBox');
+		modifyAppPopup.setApp($(app));
+		popup.find('.logoApp').attr('src', $(app).find('img.logo').attr('src'));
 		var image = $(app).find('.linkImage');
 
 		if ($(app).hasClass('emptyApp')){
@@ -87,7 +79,7 @@
 			});			
 		}
 		popup.find('.loginWithButton').removeClass('locked');
-		popup.find('#modifyAppForm').css('display', 'block');
+		popup.find('.classicLogin').addClass("show");
 		popup.find('.or').css('display', 'block');
 		popup.find('.loginAppChooser .ChooserContent').empty();
 		popup.find('.loginAppChooser').css('display', 'none');
@@ -96,11 +88,7 @@
 		}else {
 			popup.find('p.title').html('Modify informations related to <span></span>');
 		}
-		popup.find('.logoApp').attr('src', $(app).find('img.logo').attr('src'));
-		popup.find('span').text($(app).attr('name'));
-		popup.find("#login").val($(app).attr('login'));
-		popup.find("#password").val($(app).attr('hash'));
-		popup.find("#name").val($(app).attr('name'));
+		
 		var loginChooser = $('#PopupModifyApp .loginWithChooser');
 		var abc = $(".catalogContainer .catalogApp[idx='" + $(app).attr('webid') + "']").attr('data-login').split(',');
 
@@ -115,10 +103,10 @@
 
 		if (app.attr('logwith') != 'false'){
 			var logid = app.attr('logwith');
-
 			var webid = $(".siteLinkBox[id='" + logid + "']").attr('webid');
 			popup.find(".loginWithButton[webid='" + webid + "']").click();
 			popup.find(".AccountApp[aid='" + logid + "']").click();
+			popup.find('.classicLogin').removeClass("show");
 
 		}
 		
@@ -130,98 +118,10 @@
 			parent.find('.loginAppChooser .ChooserContent').empty();
 			parent.find('.loginAppChooser').css('display', 'none');
 			if ($(".catalogContainer .catalogApp[idx='" + $(app).attr('webid') + "']").attr('data-nologin') != "true"){
-				parent.find('#modifyAppForm').css('display', 'block');
+				parent.find('.classicLogin').addClass("show");
 				parent.find('.or').css('display', 'block');
 			}
 		});
-		
-		popup.find("#close").unbind('click');
-		popup.find("#close").click(function(){
-			popup.removeClass('md-show');
-		});
-		popup.find("#accept").unbind('click');
-		popup.find("#accept").click(function(){
-			
-
-			var name = popup.find('#name').val();
-			var login = '';
-			var password = '';
-			var aId = '';
-			var AppToLoginWith = $(popup).find('.AccountApp.selected');
-			
-			if(name == "" || name == null){
-				showAlertPopup("App name can't be empty !", true);
-			} else if(!AppToLoginWith.length && !popup.find('#login').val()){
-				showAlertPopup("Login can't be empty !", true);
-			} else {
-			
-				popup.removeClass('md-show');
-				image.append($('<img class="tmp" src="resources/other/loading-effect.svg" style="position:absolute;top:0;left:0;"/>'));
-				var connect = app.attr('connect');
-				image.removeClass('scaleOutAnimation');
-	
-				if (AppToLoginWith.length){
-					aId = AppToLoginWith.attr('aId');
-					postHandler.post(
-						'editApp',
-						{
-							name: name,
-							appId: $(app).attr('id'),
-							lwId: aId
-						},
-						function(){$(app).find('.tmp').remove();},
-						function(retMsg){
-							image.addClass('scaleOutAnimation');
-							setTimeout(function() {
-								image.removeClass('scaleOutAnimation');
-							}, 1000);
-							app.attr('login', '');
-							app.attr('name', name);
-							app.attr('logwith', aId);
-							app.find('.siteName p').text(name);
-							app.find('.emptyAppIndicator').remove();
-							app.removeClass('emptyApp');
-						},
-						function(retMsg){
-							showAlertPopup(retMsg, true);
-						},
-						'text'
-					);
-				} else {
-					login = popup.find('#login').val();
-					password = popup.find('#password').val();
-					postHandler.post(
-						'editApp',
-						{
-							name: name,
-							appId: $(app).attr('id'),
-							login: login,
-							wPassword: password
-						},
-						function(){$(app).find('.tmp').remove();},
-						function(retMsg){
-							image.addClass('scaleOutAnimation');
-							setTimeout(function() {
-								image.removeClass('scaleOutAnimation');
-							}, 1000);
-								app.attr('login', login);
-							app.attr('name', name);
-							app.attr('logwith', 'false');
-							app.find('.siteName p').text(name);
-							app.find('.emptyAppIndicator').remove();
-							app.removeClass('emptyApp');
-							},
-						function(retMsg){
-							showAlertPopup(retMsg, true);
-						},
-						'text'
-					);
-				}
-			}
-		});
-		$(popup).addClass('md-show');
-		setTimeout(function(){
-			$(popup).find('#login').focus();
-		}, 100);
+		$("#PopupModifyApp .popupHeader .title span").text($(app).attr("name"));
 		modifyAppTutorial();
 	}
