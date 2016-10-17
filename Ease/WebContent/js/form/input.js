@@ -6,6 +6,9 @@ var constructorInput = function (rootEl) {
 	this.qInput.on('focus', function(e) {
 		$(this).prop('readonly', false);
 	});
+	this.qInput.on('blur', function(e) {
+		$(this).prop('readonly', true);
+	});
 	this.qInput.prop('readonly', true);
 	this.listeners = [];
 	this.listenBy = function (qBy) {
