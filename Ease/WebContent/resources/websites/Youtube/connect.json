@@ -6,6 +6,7 @@
 	"folder":"Youtube",
 	"connect":{
 		"todo":[
+			{"action":"waitfor", "search":"button[href*='https://accounts.google.com/ServiceLogin?']"},
 			{"action":"click", "search":"button[href*='https://accounts.google.com/ServiceLogin?']", "grave":true},
 			{"action":"waitload"},
 			{"action":"waitfor", "search":["#account-chooser-link","#account-chooser-add-account"]},
@@ -23,8 +24,7 @@
 			{"action":"clickona", "search":"#yt-masthead-account-picker", "grave":true},
 			{"action":"waitfor", "search":"a[href='/logout']"},
 			{"action":"clickona", "search":"a[href='/logout']", "grave":true},
-			{"action":"waitload"},
-			{"action":"waitfor", "search":".signin-container"}
+			{"action":"waitload"}	
 		]
 	},
 	"checkAlreadyLogged":[

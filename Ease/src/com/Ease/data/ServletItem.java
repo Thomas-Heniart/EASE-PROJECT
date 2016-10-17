@@ -52,7 +52,8 @@ public class ServletItem {
 		SetTags,
 		UploadWebsiteServlet,
 		AdminStats,
-		ChangeBackground
+		ChangeBackground,
+		SaveSessionServlet
 	}
 	public enum Code
 	{
@@ -147,8 +148,10 @@ public class ServletItem {
 		String ret = retMsg;
 		if (type == Type.AskInfo && retCode == 200) {
 			retMsg = "Info sended.";
+		} else if (type == Type.SaveSessionServlet && retCode == 200) {
+			retMsg = "Session saved for user_id "+user.getId();
 		}
-		if (retCode != Code.DatabaseNotConnected.ordinal() && type != Type.CatalogSearchServlet)
+		if (retCode != Code.DatabaseNotConnected.ordinal() && type != Type.CatalogSearchServlet && type != Type.RequestedWebsitesServlet)
 			saveInDB(db);
 
 		if (retCode == Code.LogicError.ordinal()) {

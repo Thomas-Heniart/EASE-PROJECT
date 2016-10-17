@@ -55,13 +55,17 @@ pageEncoding="UTF-8"%>
 	<script src="js/modalEffects.js"></script>
 	<script src="js/selectFx.js"></script>
 	<link rel="stylesheet" type="text/css" href="component.css" />
-	<%com.Ease.session.User user = (com.Ease.session.User) (session.getAttribute("User"));%>
+	
+	<%
+	com.Ease.session.SessionSave sessionSave = (com.Ease.session.SessionSave) (session.getAttribute("SessionSave"));
+	com.Ease.session.User user = (com.Ease.session.User) (session.getAttribute("User"));
+	%>
 	<% if (user != null){ %>
 	<script src="js/checkConnection.js"></script>
 	<%} %>
 	<script src="js/isMobile.js"></script>
 	<script src="js/setupOwlCarousel.js"></script>
-	<script src="js/getNavigator.js">	</script>
+	<script src="js/getNavigator.js"></script>
 </head>
 
 <body role="document" class=<%= ((user != null && user.getBackground()=="logo") ? "'mainBody logoBckgrnd'" : "'mainBody picBckgrnd'") %>>
@@ -81,10 +85,10 @@ pageEncoding="UTF-8"%>
 			<button id="hideCookies"><i class="fa fa-times" aria-hidden="true"></i></button>
 		</div>
 		<% if (user == null){ %>
-		<%@ include file="templates/loginBody.jsp"%>
-		<%}else {%>
-		<%@ include file="templates/Header.jsp"%>
-		<%@ include file="templates/loggedBody.jsp"%>
+			<%@ include file="templates/loginBody.jsp"%>
+		<%} else {%>
+			<%@ include file="templates/Header.jsp"%>
+			<%@ include file="templates/loggedBody.jsp"%>
 		<%}%>
 		<%@ include file="templates/Footer.jsp" %>
 		<div class="la-anim-10" id="loading"></div>

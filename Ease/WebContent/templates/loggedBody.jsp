@@ -1,5 +1,24 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+
+<%
+Cookie sessionId = new Cookie("sId",sessionSave.getSessionId());
+Cookie sessionToken = new Cookie("sTk",sessionSave.getToken());
+
+sessionId.setMaxAge(60 * 60 * 24 * 365);
+sessionToken.setMaxAge(60 * 60 * 24 * 365);
+response.addCookie(sessionId);
+response.addCookie(sessionToken);
+%>
+<script type="text/javascript">
+$(document).ready(function(){
+	setTimeout(function(){
+		var event = new CustomEvent("isConnected", {"detail":true});
+		document.dispatchEvent(event);
+	}, 500);
+    
+
+</script>
 <div id="loggedBody">
     <div class="col-left show" style="width: 100%; float:left">
 		<%@ include file="ProfileView.jsp"%>
@@ -15,6 +34,7 @@
 </div>
 
 <script>
+
 $(document).ready(function(){
 	$('.md-overlay').click(function(){
 		$('.md-show').removeClass('md-show');

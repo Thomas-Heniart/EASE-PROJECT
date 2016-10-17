@@ -17,6 +17,7 @@ import com.Ease.data.Hashing;
 import com.Ease.data.Regex;
 import com.Ease.data.ServletItem;
 import com.Ease.session.SessionException;
+import com.Ease.session.SessionSave;
 import com.Ease.session.User;
 import com.Ease.session.User.UserData;
 
@@ -73,7 +74,9 @@ public class ConnectionServlet extends HttpServlet {
 					String hashedPass = Hashing.SHA(password, saltEase);
 					if (rs.getString(UserData.PASSWORD.ordinal()).equals(hashedPass)){
 						user = new User(rs, password, session.getServletContext());
+						SessionSave sessionSave = new SessionSave(user, session.getServletContext());
 						session.setAttribute("User", user);
+						session.setAttribute("SessionSave", sessionSave);
 						SI.setResponse(200, "Connected.");
 					} else {
 						SI.setResponse(199, "Wrong login or password.");
