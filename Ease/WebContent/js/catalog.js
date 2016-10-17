@@ -49,8 +49,11 @@ function updateCatalogWith(searchVal, tags) {
 		tagIds : json,
 		search : searchVal
 	}, function() {
+		
 	}, function(retMsg) {
 		refreshCatalogContent(retMsg);
+	}, function(retMsg) {
+		
 	}, 'text');
 }
 
