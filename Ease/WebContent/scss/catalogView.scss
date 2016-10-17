@@ -179,6 +179,12 @@
 			overflow: hidden;
 			background-color: #E7E7E7;
 			position: relative;
+			.shadowHelper {
+				width: 90%;
+				left: 5%;
+				z-index: 1;
+				  @include box-shadow(inset 5px 5px 10px 0px #E7E7E7, inset -5px -5px 10px 0px #E7E7E7);
+			}
 			.tag {
 				margin: 10px 0 10px 20px;
 				border: none;
