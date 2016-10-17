@@ -43,6 +43,7 @@ $(document).ready(function() {
 function showAddAppPopup(container, helper) {
 	var popup = $('#PopupAddApp');
 	var item = $($('#boxHelper').html());
+	
 	popupAddApp.open();
 	popupAddApp.setHelper($(helper));
 	popupAddApp.setAppsContainer($(container));
@@ -61,11 +62,6 @@ function showAddAppPopup(container, helper) {
 	item.find('img.logo').attr('src', $(helper).find('img').attr("src"));
 	item.find('.siteName p').text($(helper).attr("name"));
 	popup.find('.logoApp').attr('src', $(helper).find('img').attr("src"));
-
-	popup.find('#close').unbind('click');
-	popup.find('#close').click(function() {
-		popup.removeClass('md-show');
-	});
 
 	var loginChooser = $('#PopupAddApp .loginWithChooser');
 	var loginWith = $(helper).attr('data-login').split(',');
