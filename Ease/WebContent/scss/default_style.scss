@@ -197,7 +197,6 @@ body {
    padding-top: 43px;
    position: fixed;
    width: 100%;
-   z-index: 1;
    .col-left {
     overflow-y: overlay;
     overflow-x: hidden;
@@ -531,4 +530,10 @@ html {
 
 .no-pointer-events {
   pointer-events: none;
+}
+
+input {
+  &:hover {
+    cursor: text;
+  }
 }
