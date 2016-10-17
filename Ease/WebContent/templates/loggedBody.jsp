@@ -15,9 +15,7 @@ $(document).ready(function(){
 	setTimeout(function(){
 		var event = new CustomEvent("isConnected", {"detail":true});
 		document.dispatchEvent(event);
-	}, 500);
-    
-
+	}, 500)});
 </script>
 <div id="loggedBody">
     <div class="col-left show" style="width: 100%; float:left">
