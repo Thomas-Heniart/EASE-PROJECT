@@ -44,17 +44,30 @@ var Popup = {
 	AddAppPopup : function () {
 		constructorPopup.apply(this,arguments);
 		var self = this;
-		this.setForm = function(anObject) {
-			self.oForm = anObject;
-			self.oForm.setPopup(self);
-		}
 		this.setVal = function(name) {
 			self.oForm.oInputs[0].val(name);
 		};
 		this.close = function() {
 			self.qRoot.removeClass('md-show');
-			self.reset();
+			self.oForm.reset();
 			$('.classicLogin').css('display', 'block');
+		}
+		this.setHelper = function(jqObj) {
+			self.oForm.setHelper(jqObj);
+		}
+		this.setAppsContainer = function(jqObj) {
+			self.oForm.setAppsContainer(jqObj);
+		}
+		this.setNewAppItem = function(item) {
+			self.oForm.setNewAppItem(item);
+		}
+		this.appId = function(id) {
+			self.oForm.app_id = id;
+			if (id == null)
+				self.oForm.setPostName('addApp');
+		}
+		this.setPostName = function(aString) {
+			self.oForm.setPostName(aString);
 		}
 	},
 	ModifyAppPopup : function() {

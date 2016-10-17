@@ -43,7 +43,12 @@ form.settingsForm {
     width: 90%;
     position: relative;
   }
-
+  div.classicLogin {
+    display: none;
+  }
+  div.classicLogin.show {
+    display: block;
+  }
   input {
     height: 29px;
     border-radius: 5px;
@@ -67,15 +72,6 @@ form.settingsForm {
   button[type='submit'].Active:hover {
     background-color: lighten($themeRedColor, 3%);
     color: white;
-  }
-}
-
-#PopupModifyApp {
-  div.classicLogin {
-    display: none;
-  }
-  div.classicLogin.show {
-    display: block;
   }
 }
 

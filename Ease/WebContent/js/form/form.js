@@ -94,6 +94,25 @@ var Form = {
 	AddAppForm : function(rooEl) {
 		constructorForm.apply(this, arguments);
 		var self = this;
+		this.newAppItem = null;
+		this.appsContainer = null;
+		this.helper = null;
+		this.site_id = null;
+		this.profile_id = null;
+		this.app_id = null;
+		this.postName = 'addApp';
+		this.helper = null;
+		this.setHelper = function(jqHelper) {
+			self.helper = jqHelper;
+			self.site_id = self.helper.attr("idx");
+		}
+		this.setAppsContainer = function(qObject) {
+			self.appsContainer = qObject;
+			self.profile_id = self.appsContainer.closest('.item').attr('id');
+		}
+		this.setNewAppItem = function(qObject) {
+			self.newAppItem = qObject;
+		}
 		this.submit = function(e) {
 			e.preventDefault();
 			e.stopPropagation();
@@ -118,10 +137,8 @@ var Form = {
 				self.newAppItem.attr('login', self.oInputs[1].getVal());
 				self.newAppItem.attr('webId', self.helper.attr('idx'));
 				self.newAppItem.attr('name', self.oInputs[0].getVal());
-				console.log(self.app_id);
 				self.newAppItem.attr('logwith', (self.app_id == null) ? 'false'
 						: self.app_id);
-				console.log(self.helper);
 				self.newAppItem.find('.siteName p').text(
 						self.oInputs[0].getVal());
 				self.newAppItem.attr('id', retMsg);
@@ -129,40 +146,12 @@ var Form = {
 				setupAppSettingButtonPopup(self.newAppItem
 						.find('.showAppActionsButton'));
 				self.reset();
-				self.oPopup.close();
+				self.oParent.close();
 			});
-		}
-		this.newAppItem = null;
-		this.appsContainer = null;
-		this.helper = null;
-		this.site_id = null;
-		this.profile_id = null;
-		this.app_id = null;
-		this.postName = 'addApp';
-		this.setNewAppItem = function(qObject) {
-			self.newAppItem = qObject;
-		}
-		this.setHelper = function(qObject) {
-			self.helper = qObject;
-		}
-		this.setAppsContainer = function(qObject) {
-			self.appsContainer = qObject;
-		}
-		this.siteId = function(id) {
-			self.site_id = id;
-		}
-		this.profileId = function(id) {
-			self.profile_id = id;
-		}
-		this.appId = function(id) {
-			self.app_id = id;
-			if (id == null) {
-				self.postName = 'addApp';
-				self.qRoot.trigger("StateChanged");
-			}
 		}
 		this.setPostName = function(postName) {
 			self.postName = postName;
+			self.qRoot.attr("action", self.postName);
 			self.qRoot.trigger("StateChanged");
 		}
 		this.checkInputs = function() {
