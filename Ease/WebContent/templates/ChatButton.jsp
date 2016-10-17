@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-<<<<<<< HEAD
 	pageEncoding="UTF-8"%>
 <div id="chatButton">
 	<div class="chat-popover">
@@ -14,10 +13,4 @@
 	</div>
 	<i class="fa fa-comments-o" aria-hidden="true"></i> <a
 		href="https://m.me/easeplatform/" target="_blank"></a>
-=======
-    pageEncoding="UTF-8"%>
-<div id="chatButton" >
-		<i class="fa fa-comments-o" aria-hidden="true"></i>
-		<a href="https://m.me/easeplatform/" target="_blank"></a>
->>>>>>> 28b541bde238a8275fe0933a2458325351f13b8c
 </div>
