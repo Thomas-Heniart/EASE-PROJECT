@@ -95,6 +95,25 @@ var Form = {
 	AddAppForm : function(rooEl) {
 		constructorForm.apply(this, arguments);
 		var self = this;
+		this.newAppItem = null;
+		this.appsContainer = null;
+		this.helper = null;
+		this.site_id = null;
+		this.profile_id = null;
+		this.app_id = null;
+		this.postName = 'addApp';
+		this.helper = null;
+		this.setHelper = function(jqHelper) {
+			self.helper = jqHelper;
+			self.site_id = self.helper.attr("idx");
+		}
+		this.setAppsContainer = function(qObject) {
+			self.appsContainer = qObject;
+			self.profile_id = self.appsContainer.closest('.item').attr('id');
+		}
+		this.setNewAppItem = function(qObject) {
+			self.newAppItem = qObject;
+		}
 		this.submit = function(e) {
 			e.preventDefault();
 			e.stopPropagation();
@@ -108,55 +127,32 @@ var Form = {
 			}, function(data) {
 				var retMsg = data.substring(4);
 				self.appsContainer.append(self.newAppItem);
-				self.newAppItem.find('.linkImage').addClass('scaleOutAnimation');
+				self.newAppItem.find('.linkImage')
+						.addClass('scaleOutAnimation');
 				setTimeout(function() {
-					self.newAppItem.find('.linkImage').removeClass('scaleOutAnimation');
+					self.newAppItem.find('.linkImage').removeClass(
+							'scaleOutAnimation');
 				}, 1000);
-				self.newAppItem.find('.linkImage').attr('onclick', "sendEvent(this)");
+				self.newAppItem.find('.linkImage').attr('onclick',
+						"sendEvent(this)");
 				self.newAppItem.attr('login', self.oInputs[1].getVal());
 				self.newAppItem.attr('webId', self.helper.attr('idx'));
 				self.newAppItem.attr('name', self.oInputs[0].getVal());
-				self.newAppItem.attr('logwith', 'false');
-				self.newAppItem.find('.siteName p').text(self.oInputs[0].getVal());
+				self.newAppItem.attr('logwith', (self.app_id == null) ? 'false'
+						: self.app_id);
+				self.newAppItem.find('.siteName p').text(
+						self.oInputs[0].getVal());
 				self.newAppItem.attr('id', retMsg);
 				self.newAppItem.attr('ssoid', self.helper.attr('data-sso'));
-				setupAppSettingButtonPopup(self.newAppItem.find('.showAppActionsButton'));
+				setupAppSettingButtonPopup(self.newAppItem
+						.find('.showAppActionsButton'));
 				self.reset();
-				$('.classicLogin').attr("display", "block");
-				self.oPopup.close();
+				self.oParent.close();
 			});
-		}
-		this.newAppItem = null;
-		this.appsContainer = null;
-		this.helper = null;
-		this.site_id = null;
-		this.profile_id = null;
-		this.app_id = null;
-		this.postName = 'addApp';
-		this.setNewAppItem = function(qObject) {
-			self.newAppItem = qObject;
-		}
-		this.setHelper = function(qObject) {
-			self.helper = qObject;
-		}
-		this.setAppsContainer = function(qObject) {
-			self.appsContainer = qObject;
-		}
-		this.siteId = function(id) {
-			self.site_id = id;
-		}
-		this.profileId = function(id) {
-			self.profile_id = id;
-		}
-		this.appId = function(id) {
-			self.app_id = id;
-			if (id == null) {
-				self.postName = 'addApp';
-				self.qRoot.trigger("StateChanged");
-			}
 		}
 		this.setPostName = function(postName) {
 			self.postName = postName;
+			self.qRoot.attr("action", self.postName);
 			self.qRoot.trigger("StateChanged");
 		}
 		this.checkInputs = function() {
