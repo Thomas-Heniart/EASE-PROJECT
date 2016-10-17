@@ -1,7 +1,5 @@
 
 .catalogView {
-	height: 100%;
-	overflow: hidden;
 	width: 100%;
 	font-family: $defaultFont;
 	.tag {
@@ -226,7 +224,6 @@
 		}
 	}
 	.scaleContainerView {
-		height: 100%;
 		background-color: white;
 		width: 100%;
 		padding: 0px;
@@ -235,13 +232,11 @@
 		margin-left: auto;
 		margin-right: auto;
 		.catalogArea {
-			height: 100%;
 			width: 100%;
 			margin: 0px auto;
 			padding: 15px;
 			border-radius: 5px;
 			.scaleContainer {
-				height: 100%;
 				width: 100%;
 				position: relative;
 				margin: 0px auto;
@@ -589,7 +584,6 @@
 		}
 	}
 	.CatalogViewTab.show {
-		height: 95%;
 		visibility: visible;
 		background-color: #E7E7E7;
 		left: 52.2%;
@@ -597,7 +591,6 @@
 		opacity: 1;
 	}
 	.CatalogViewTab {
-		height: 95%;
 		opacity: 0;
 		top: 0;
 		transition: visibility 0s ease .3s;

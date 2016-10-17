@@ -14,20 +14,15 @@ form.settingsForm {
   }
 }
 
-#PopupAddApp form.addAppForm {
+form.addAppForm {
   input[name='name'] {
     display: inline-block;
     margin-left: 14%;
     width: 60% !important;
   }
-  button[type='submit'] {
+  button[type='submit'].Active {
     background-color: $themeRedColor;
     border-color: $themeRedColor;
-    color: white;
-  }
-  button[type='submit'].Active:hover {
-    background-color: lighten($themeRedColor, 3%);
-    color: white;
   }
 }
 

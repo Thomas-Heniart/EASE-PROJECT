@@ -27,7 +27,7 @@ $(document).ready(function() {
 			AppHelperCloned.click(function() {
 				$(parent).find('.AccountApp.selected').removeClass('selected');
 				$(this).addClass('selected');
-				addAppForm.appId($(this).attr("aid"));
+				addAppForm.appId(this.aid);
 				addAppForm.setPostName('addLogWith');
 			});
 			if (i == 0) {
@@ -43,12 +43,8 @@ $(document).ready(function() {
 function showAddAppPopup(container, helper) {
 	var popup = $('#PopupAddApp');
 	var item = $($('#boxHelper').html());
-	popupAddApp.setForm(addAppForm);
-	
-	
-	popupAddApp.open();
-	popupAddApp.setVal($(helper).attr("name"));
-	addAppForm.siteId($(helper).attr("idx"));
+	console.log(item);
+
 	addAppForm.profileId($(container).closest('.item').attr('id'));
 	addAppForm.setAppsContainer($(container));
 	addAppForm.setNewAppItem(item);
@@ -66,6 +62,11 @@ function showAddAppPopup(container, helper) {
 	item.find('img.logo').attr('src', $(helper).find('img').attr("src"));
 	item.find('.siteName p').text($(helper).attr("name"));
 	popup.find('.logoApp').attr('src', $(helper).find('img').attr("src"));
+
+	popup.find('#close').unbind('click');
+	popup.find('#close').click(function() {
+		popup.removeClass('md-show');
+	});
 
 	var loginChooser = $('#PopupAddApp .loginWithChooser');
 	var loginWith = $(helper).attr('data-login').split(',');
