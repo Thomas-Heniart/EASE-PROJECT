@@ -108,11 +108,11 @@ form {
    			 }
    		}
     	button[oclass="CloseButton"] {
-      		background-color: $themeGreyColor;
+      		background-color: $themeDarkGreyColor;
       		color: white;
-      		border-color: $themeGreyColor;
+      		border-color: $themeDarkGreyColor;
       		&:hover {
-        		background-color: darken($themeGreyColor, 3%);
+        		background-color: darken($themeDarkGreyColor, 3%);
       		}
 		}
 	}
