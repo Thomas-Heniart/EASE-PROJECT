@@ -1,8 +1,7 @@
 function sendEvent(obj) {
     if (!($(obj).hasClass('waitingLinkImage'))) {
-        var appIdx = $(obj).closest('.siteLinkBox').index();
+        var appId = $(obj).closest('.siteLinkBox').attr('id');
         var logoImage = $(obj).find('.linkImage');
-        var profileIndex = $(obj).closest('.owl-item').index();
         var json = new Object();
         var event;
 
@@ -18,8 +17,7 @@ function sendEvent(obj) {
             $(obj).removeClass('scaleinAnimation');
         }, 1000);
         postHandler.post("askInfo", {
-            profileIndex : profileIndex,
-            appIndex : appIdx,
+            appId : appId,
         }, function() {
         }, function(retMsg) {
             json.detail = JSON.parse(retMsg);
@@ -201,3 +199,4 @@ function changeColor(color, ratio, darker) {
             setupAppSettingButtonPopup($(this));
         });
     });
+
