@@ -117,6 +117,7 @@ var Form = {
 		this.submit = function(e) {
 			e.preventDefault();
 			e.stopPropagation();
+			self.oParent.close();
 			$.post(self.postName, {
 				profileId : self.profile_id,
 				siteId : self.site_id,
@@ -147,7 +148,6 @@ var Form = {
 				setupAppSettingButtonPopup(self.newAppItem
 						.find('.showAppActionsButton'));
 				self.reset();
-				self.oParent.close();
 			});
 		}
 		this.setPostName = function(postName) {
@@ -208,32 +208,30 @@ var Form = {
 			}
 			self.login = self.oInputs[1].getVal();
 			self.password = self.oInputs[2].getVal();
-			$
-					.post(
-							'editApp',
-							{
-								name : self.oInputs[0].getVal(),
-								appId : self.appId,
-								lwId : self.aId,
-								login : self.login,
-								wPassword : self.password
-							},
-							function(data) {
-								var retMsg = data.substring(4);
-								var image = self.app.find('.linkImage');
-								image.addClass('scaleOutAnimation');
-								setTimeout(function() {
-									image.removeClass('scaleOutAnimation');
-								}, 1000);
-								self.app.attr('login', self.oInputs[1].getVal());
-								self.app.attr('name', self.oInputs[0].getVal());
-								self.app.attr('logwith', (self.oInputs[1].getVal().length || self.aId) == null ? 'false' : self.aId);
-								self.app.find('.siteName p').text(self.oInputs[0].getVal());
-								self.app.find('.emptyAppIndicator').remove();
-								self.app.removeClass('emptyApp');
-								if (self.oPopup != null)
-									self.oPopup.close();
-							});
+			$.post(
+					'editApp',
+					{
+						name : self.oInputs[0].getVal(),
+						appId : self.appId,
+						lwId : self.aId,
+						login : self.login,
+						wPassword : self.password
+					},
+					function(data) {
+						var retMsg = data.substring(4);
+						var image = self.app.find('.linkImage');
+						self.oParent.close();
+						image.addClass('scaleOutAnimation');
+						setTimeout(function() {
+							image.removeClass('scaleOutAnimation');
+						}, 1000);
+						self.app.attr('login', self.oInputs[1].getVal());
+						self.app.attr('name', self.oInputs[0].getVal());
+						self.app.attr('logwith', (self.oInputs[1].getVal().length || self.aId) == null ? 'false' : self.aId);
+						self.app.find('.siteName p').text(self.oInputs[0].getVal());
+						self.app.find('.emptyAppIndicator').remove();
+						self.app.removeClass('emptyApp');
+					});
 		}
 	},
 	DeleteAppForm : function (rootEl) {

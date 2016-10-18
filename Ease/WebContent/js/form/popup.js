@@ -1,6 +1,5 @@
 var constructorPopup = function (rootEl) {
 	var self = this;
-	console.log(self);
 	this.qRoot = rootEl;
 	this.oForm;
 	this.qCloseButton;
@@ -49,7 +48,6 @@ var Popup = {
 		};
 		this.close = function() {
 			self.qRoot.removeClass('md-show');
-			self.oForm.reset();
 			$('.classicLogin').addClass("show");
 		}
 		this.setHelper = function(jqObj) {
