@@ -87,11 +87,11 @@ form {
       		position: relative;
       		z-index: 1;
       		margin: 0px;
-      		padding: 2px;
+      		padding: 7px;
       		float: none;
       		min-width: 0px;
       		max-width: 100%;
-      		width: 40%;
+      		width: 49%;
       		display: inline-block;
       		color: white;
       		border-radius: 3px;
@@ -108,11 +108,11 @@ form {
    			 }
    		}
     	button[oclass="CloseButton"] {
-      		background-color: #888888;
+      		background-color: $themeDarkGreyColor;
       		color: white;
-      		border-color: #888888;
+      		border-color: $themeDarkGreyColor;
       		&:hover {
-        		background-color: #666666;
+        		background-color: darken($themeDarkGreyColor, 3%);
       		}
 		}
 	}
