@@ -57,55 +57,72 @@ body {
 }
 }
 
-
 #chatButton {
-	width: 50px;
-	height: 50px;
-	position: fixed;
-	right: 1%;
-	bottom: 5%;
-	cursor: pointer;
-	background-color: $themeColor;
-	border: 1px hidden $themeGreyColor;
-	border-radius: 5px;
-	text-align: center;
-	i {
+  width: 50px;
+  height: 50px;
+  position: fixed;
+  right: 2%;
+  bottom: 5%;
+  cursor: pointer;
+  background-color: $themeColor;
+  border: 1px hidden $themeGreyColor;
+  border-radius: 5px;
+  text-align: center;
+  i.fa-comments-o {
     transition: transform .3s;
-		line-height: 50px;
-		font-size: 35px;
-		color: white;
-	}
-	a {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		left: 0;
-	}
-  #chatButton-popover {
-    position: absolute;
-    width: 100px;
-    height: 50px;
-    left: 110px;
-    top: 0;
+    line-height: 50px;
+    font-size: 35px;
     color: white;
-    margin-top: -50px;
-    p {
-      position: absolute;
-      visibility: hidden;
-      background-color: $themeLightGreyColor;
-      width: 0;
+  }
+  a {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+  }
+  .chat-popover {
+    transition: opacity .3s;
+    position: absolute;
+    min-width: 200px;
+    max-width: 300px;
+    pointer-events: none;
+    right: 100%;
+    visibility: hidden;
+    opacity: 0;
+    transform: scale(0.2);
+    .bubbleInfo {
+      padding: 5px;
+      background-color: white;
+      border-radius: 5px;
+      display: inline-block;
+      width: 90%;
+      text-align: center;
+      float: left;
+      p {
+        margin-bottom: 0px;
+      }
+    }
+    .caret-helper {
+      float: left;
+      display: inline-block;
+      margin-left: -2px;
+      color: white;
+      font-size: 30px;
+      i {
+        line-height: 50px;
+      }
     }
   }
   &:hover {
-    i {
+    .chat-popover {
+      transition: opacity .3s, transform .5s cubic-bezier(.62,-0.66,.27,1.63);
+      transform: scale(1);
+      visibility: visible;
+      opacity: 1;
+    }
+    i.fa-comments-o {
       transition: transform .3s;
       transform: scale(0.7);
-    }
-    #chatButton-popover p {
-      visibility: visible;
-      top: 0;
-      width: 100%;
-      transition: width 1s;
     }
   }
 }
