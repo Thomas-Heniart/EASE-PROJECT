@@ -25,6 +25,7 @@
 	</div>
 	<div class=tagContainer>
 		<div class="container">
+		<div class="shadowHelper"></div>
 		<i class="fa fa-angle-left" aria-hidden="true"></i>
 		<span class="tags">
 			<c:forEach items='${siteManager.getTagsList()}' var="item">

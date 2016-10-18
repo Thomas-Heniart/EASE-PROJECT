@@ -67,6 +67,9 @@ waitfor:function(msg, callback, sendResponse){
                 break;
             }
         }
+        if(iteration % 20 == 0){
+            console.log("-- waiting for element "+div[0]+" --");
+        }
         if (iteration > 100){
             msg.type = "error: connection too long";
             sendResponse(msg);
@@ -278,6 +281,11 @@ function doThings(msg, sendResponse) {
 		msg.type = "completed";
 		if(msg.todo != "logout") msg.detail[msg.bigStep].website.lastLogin = getNewLogin(msg, msg.bigStep);
 		sendResponse(msg);
+        if(msg.todo == "logout") {
+            msg.todo = "connect";
+            msg.actionStep = 0;
+            actions[todo[msg.actionStep].action](msg, doThings, sendResponse);
+        }
 		return ;
 	}
     console.log("-- Ease action : "+todo[msg.actionStep].action+" --");

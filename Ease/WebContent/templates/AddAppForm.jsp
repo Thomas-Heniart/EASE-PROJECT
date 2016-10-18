@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
-<form action="" id="AddAppForm" class="addAppForm">
-	<div>
+<form action="addApp" id="AddAppForm" class="addAppForm" oClass="AddAppForm">
+	<div class="lineInput">
 		<label for="app-name">App name :</label> <input oClass="NoEmptyInput"
 			type="text" id="app-name" name="name" maxlength="14"
 			placeholder="Name" />
@@ -38,15 +38,12 @@
 			<p>or</p>
 		</div>
 	</div>
-	<div class="classicLogin">
+	<div class="classicLogin show">
 		<input oClass="NoEmptyInput" type="text" name="login" placeholder="Login" value="" />
 		<input oClass="NoEmptyInput" type="password" name="password" placeholder="Password" value="" />
 	</div>
 	<div class="buttonSet">
 		<button type="submit">Add</button>
-		<button type="button">Cancel</button>
+		<button type="button" oClass="CloseButton">Cancel</button>
 	</div>
 </form>
-<script>
-	var addAppForm = new Form["AddAppForm"]($("#AddAppForm"));
-</script>

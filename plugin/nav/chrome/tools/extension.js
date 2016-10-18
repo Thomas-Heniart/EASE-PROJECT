@@ -5,7 +5,9 @@ var extension = {
 	storage:{
 		get:function(key, callback){
 			chrome.storage.local.get(key, function(res){
-                callback(res[key]);
+                if(res[key]== undefined) var ans = {};
+                else var ans = res[key];
+                callback(ans);
             });
 		},
 		set:function(key, value, callback){

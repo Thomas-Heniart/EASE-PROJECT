@@ -15,8 +15,6 @@ function getNewLogin(msg, i){
 
 function alreadyVisited(msg){
     if(msg.allConnections[getHost(msg.detail[msg.bigStep].website.loginUrl)]){
-        console.log( getNewLogin(msg, msg.bigStep));
-        console.log(msg.allConnections[getHost(msg.detail[msg.bigStep].website.loginUrl)]);
         var NewLogin = getNewLogin(msg, msg.bigStep);
         if(NewLogin.logWith){
             if(NewLogin.user == msg.allConnections[getHost(msg.detail[msg.bigStep].website.loginUrl)].user && NewLogin.logWith == msg.allConnections[getHost(msg.detail[msg.bigStep].website.loginUrl)].logWith)

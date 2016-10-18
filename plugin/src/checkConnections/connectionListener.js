@@ -1,16 +1,3 @@
-//Override .submit() function to make it fire an event
-var scriptEl = document.createElement( "script" );
-scriptEl.innerHTML = "HTMLFormElement.prototype._nativeSubmit = HTMLFormElement.prototype.submit;"
-    + "HTMLFormElement.prototype.submit = function submit() {"
-    + "var submitEvent = document.createEvent('HTMLEvents');"
-    + "submitEvent.initEvent('submit', true, true);"
-    + "if (this.dispatchEvent(submitEvent)) {"
-    + "    this._nativeSubmit.apply(this, arguments);"
-    + "}"
-    +"};";
-scriptEl.async = false;
-document.head.appendChild(scriptEl);
-
 var allForms = [];
 listenToForms();
 
