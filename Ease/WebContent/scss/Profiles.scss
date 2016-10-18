@@ -65,7 +65,7 @@
 			top: 0;
 			width: 100%;
 			height: 100%;
-			overflow-y: auto;
+			overflow-y: overlay;
 			overflow-x: hidden;
 			.ProfileControlPanel {
 				display: none;
@@ -151,31 +151,42 @@
 							background-color: #efefef;
 						}
 						.buttonSet {
-							text-align: center;
-							margin-top: 3%;
-							margin-bottom: 3%;	
-							button {
-								margin: 0px;
-								padding: 2px;
-								float: none;
-								min-width: 0px;
-								max-width: 100%;
-								width: 40%;
-								display: inline-block;	
-								color: white;
-								border-radius: 3px;
-							}
-							#validate {
-								background-color: $themeColor;
-								&:hover {
-									background-color: darken($themeColor, 2%);
-								}
-							}
-							#cancel {
-								background-color: #888888;
-								&:hover {
-									background-color: darken(#888888, 2%);
-								}
+    						text-align: center;
+    						margin: 3% auto;
+    						button {
+      							border: 1px solid transparent;
+      							background-color: #CCCCCC;
+      							vertical-align: middle;
+      							position: relative;
+      							z-index: 1;
+      							margin: 0px;
+      							padding: 2px;
+      							float: none;
+      							min-width: 0px;
+      							max-width: 100%;
+      							width: 40%;
+      							display: inline-block;
+      							color: white;
+      							border-radius: 3px;
+    						}
+    						button.Active {
+      							border-color: $themeColor;
+     					 		background-color: $themeColor;
+      							@include scalein-anim('validateButton-anim', 1.05);
+					      		transition: all 0.3s ease;
+     					 		&:hover {
+        							transition: all 0.3s ease;
+        							background-color: white;
+					        		color: $themeColor;
+   			 					}
+   							}
+    						button[oclass="CloseButton"] {
+      							background-color: #888888;
+      							color: white;
+     					 		border-color: #888888;
+      							&:hover {
+       								background-color: #666666;
+      							}
 							}
 						}
 					}
