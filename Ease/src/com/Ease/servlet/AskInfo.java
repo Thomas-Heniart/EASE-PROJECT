@@ -55,23 +55,19 @@ public class AskInfo extends HttpServlet {
 		ServletItem SI = new ServletItem(ServletItem.Type.AskInfo, request, response, user);
 		
 		// Get Parameters
-		String profileIndexParam = SI.getServletParam("profileIndex");
-		String appIndexParam = SI.getServletParam("appIndex");
+		String appIdParam = SI.getServletParam("appId");
 		// --
 		
 		try {
-			int profileIndex = Integer.parseInt(profileIndexParam);
-			int appIndex = Integer.parseInt(appIndexParam);
+			int appId = Integer.parseInt(appIdParam);
 
 			if (user == null) {
 				SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
-			} else if (profileIndex < 0 || profileIndex >= user.getProfiles().size()) {
-				SI.setResponse(ServletItem.Code.BadParameters, "Bad profile's index.");
-			} else if (appIndex < 0 || appIndex >= user.getProfiles().get(profileIndex).getApps().size()) {
-				SI.setResponse(ServletItem.Code.BadParameters, "Bad app's index.");
 			} else {
-				App app = user.getProfiles().get(profileIndex).getApps().get(appIndex);
-				if (app.isEmpty() == true)
+				App app = null;
+				if ((app = user.getApp(appId)) == null)
+					SI.setResponse(ServletItem.Code.LogicError, "Bad id.");
+				else if (app.isEmpty() == true)
 					SI.setResponse(ServletItem.Code.LogicError, "This is an empty app.");
 				else {
 					boolean again = true;
