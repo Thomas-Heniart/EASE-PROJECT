@@ -12,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 
 import com.Ease.context.DataBase;
 import com.Ease.context.Site;
+import com.Ease.data.Regex;
 import com.Ease.data.ServletItem;
 import com.Ease.session.App;
 import com.Ease.session.ClassicAccount;
@@ -115,6 +116,8 @@ public class EditApp extends HttpServlet {
 								app.setName(name);
 								app.setAccount(account);
 								app.updateInDB(session.getServletContext());
+								if (Regex.isEmail(login))
+									db.set("CALL addEmail(" + user.getId() + ", '" + user.getEmail() + "');");
 								SI.setResponse(200, app.getSite().getName() + " edited.");
 							} else {
 								ClassicAccount account = new ClassicAccount(login, wPassword, user,
@@ -122,6 +125,8 @@ public class EditApp extends HttpServlet {
 								app.setName(name);
 								app.setAccount(account);
 								app.updateInDB(session.getServletContext());
+								if (Regex.isEmail(login))
+									db.set("CALL addEmail(" + user.getId() + ", '" + user.getEmail() + "');");
 								SI.setResponse(200, app.getSite().getName() + " edited.");
 							}
 							db.commit(transaction);

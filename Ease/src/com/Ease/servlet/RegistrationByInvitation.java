@@ -106,6 +106,7 @@ public class RegistrationByInvitation extends HttpServlet {
 							db.set("insert into GroupAndUserMap values (NULL, " + group + ", " + user.getId() + ");");
 						db.set("delete from invitations where email = '" + email + "' and linkCode = '" + invitationCode + "';");
 						session.setAttribute("User", user);
+						db.set("CALL addEmail(" + user.getId() + ", '" + user.getEmail() + "');");
 						SI.setResponse(200, "User registered.");
 					}
 				} else {
