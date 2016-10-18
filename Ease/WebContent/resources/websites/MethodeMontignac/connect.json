@@ -1,0 +1,31 @@
+{
+    "name":"MethodeMontignac",
+    "lastlogin":"",
+    "home":"http://methode-montignac.aujourdhui.com/compte/",
+    "connect": {
+    	"todo": [
+    		{"action":"fill", "what":"login", "search":"input.login-dtls.username"},
+    		{"action":"fill", "what":"password", "search":"input.login-dtls.password"},
+    		{"action":"click", "search":"input[type='image']"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"goto", "url":"http://plus.lefigaro.fr/deconnexion?goto_url=http://www.lefigaro.fr/"},
+    		{"action":"goto", "url":"https://plus.lefigaro.fr/fpservice/fp_auth/login?goto_url=http://www.lefigaro.fr/"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"span.figh-connection-user__img"}
+    ],
+    "Facebook": {
+    	"todo": [
+    		{"action":"click", "search":".fp-social-auth-facebook"}
+    	]
+    },
+    "Linkedin": {
+    	"todo": [
+    		{"action":"click", "search":"fp-social-auth-linkedin"}
+    	]
+    }
+}
