@@ -1,50 +1,93 @@
 @import 'variables';
 
 .header {
-	#logoutButton {
+	.logoutContainer{
 		position: relative;
-		float: right;
-		margin-right: 160px;
-		background-color: $themeColor;
-		color: white;
-		border-radius: 3px;
-		text-decoration: none;
-		transition: all 0.3s;
-		
-		height: 70%;
-		text-align: center;
-		margin-top: 6px;
-		padding: 4px;
-		border: 1px solid $themeColor;
-		&:hover {
-			cursor: pointer;
-			transition: all 0.3s;
-			background-color: rgba(0,0,0,0);
-			color: $themeColor;
-			border: 1px solid $themeColor;
+		overflow: hidden;
+    	float: right;
+    	margin-right: 160px;
+    	text-decoration: none;
+    	width: 102px;
+    	max-height: 30px;
+    	margin-top: 6px;
+    	border: 1px solid $themeColor;
+    	border-radius: 4px;
+    	-webkit-transition: max-height 0.5s;
+		-moz-transition: max-height 0.5s;
+		transition: max-height 0.5s;
+		#logoutButton {
+			position: relative;
+    		float: right;
+    		background-color: #373b60;
+   		 	color: white;
+   		 	text-decoration: none;
+  	 	 	transition: all 0.3s;
+ 	 	  	width: 84px;
+   		 	height: 30px;
+    		text-align: center;
+    		padding: 4px;
+    		border-top-right-radius: 3px;
+    		border-bottom-right-radius: 3px;
+    		border-left: 1px solid white;
+			&:hover {
+				cursor: pointer;
+				transition: all 0.3s;
+				background-color: white;
+				color: $themeColor;
+			}
 		}
-	}
-	#allLogoutButton {
-		position: relative;
-		float: right;
-		margin-right: 20px;
-		background-color: $themeColor;
-		color: white;
-		border-radius: 3px;
-		text-decoration: none;
-		transition: all 0.3s;
-		
-		height: 70%;
-		text-align: center;
-		margin-top: 6px;
-		padding: 4px;
-		border: 1px solid $themeColor;
-		&:hover {
-			cursor: pointer;
-			transition: all 0.3s;
-			background-color: rgba(0,0,0,0);
-			color: $themeColor;
-			border: 1px solid $themeColor;
+		#arrowLogout {
+			position: relative;
+    		float: left;
+    		background-color: #373b60;
+    		color: white;
+    		transition: all 0.3s;
+    		width: 16px;
+    		height: 30px;
+    		text-align: center;
+    		padding: 2px;
+    		padding-left: 3px;
+    		border-top-left-radius: 3px;
+    		border-bottom-left-radius: 3px;
+    		.bottomTriangle {
+				width: 0; 
+  				height: 0;
+  				margin-top : 10px;
+  				margin-right : 15px;
+  				border-left: 5px solid transparent;
+  				border-right: 5px solid transparent;
+  				border-top: 5px solid white;
+			}
+			&:hover {
+				cursor: pointer;
+				transition: all 0.3s;
+				background-color: white;
+				color: $themeColor;
+				.bottomTriangle{
+					border-top: 5px solid $themeColor;
+				}
+			}
+		}
+		#allLogoutButton {
+			position: relative;
+			display:block;
+    		float: right;
+    		background-color: #373b60;
+    		color: white;
+    		text-decoration: none;
+    		transition: all 0.3s;
+    		width: 100px;
+    		height: 31px;
+    		text-align: center;
+    		padding: 4px;
+    		border-bottom-right-radius: 3px;
+    		border-top: 1px solid white;
+			&:hover {
+				cursor: pointer;
+				transition: all 0.3s;
+				background-color: white;
+				color: $themeColor;
+			}
 		}
 	}
 }

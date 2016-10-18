@@ -4,15 +4,23 @@
 
 <%@ page import="java.util.List" %>
 
-<script src="js/logout.js"></script>
+
 <div class="header">
 	<a href="index.jsp"><img class="logoImg" src="resources/images/logo.png" ></a>
 
 <% if (session.getAttribute("User") != null){ %>
+	<script src="js/logout.js"></script>
 		<%@ include file="DropDownUserMenu.jsp"%>
 		<%@ include file="SearchBar.jsp"%>
-	<a id="logoutButton"><i class="fa fa-fw fa-sign-out"></i><span>Logout</span></a>
-	<a id="allLogoutButton"><i class="fa fa-fw fa-sign-out"></i><span>Logout from all websites</span></a>	
+	<div class="logoutContainer">
+		<a id="arrowLogout"><div class="bottomTriangle"></div></a>
+		<a id="logoutButton"><span>Logout</span></a>
+		<a id="allLogoutButton"><span>Global logout</span></a>
+	</div>
+	
+	<script>
+		
+	</script>
 <%}%>
 
 </div>
