@@ -76,6 +76,23 @@ form.settingsForm {
   }
 }
 
+#AddAppForm  {
+  input[name='login'] {
+    width: 96%;
+    border-radius: 5px 0 0 5px;
+  }
+  i.fa-caret-down {
+    cursor: pointer;
+    border-radius: 0px 5px 5px 0px;
+    position: relative;
+    line-height: 29px;
+    width: 4%;
+    padding-right: 1%;
+    background-color: white;
+    color: black;
+  }
+}
+
 form {
   	.buttonSet {
     	text-align: center;
