@@ -43,4 +43,8 @@ $(document).ready(function(){
 			'text'
 		);
 	});
+	$('#allLogoutButton').click(function(){
+		var event = new CustomEvent("Logout");
+		document.dispatchEvent(event);
+	});
 });

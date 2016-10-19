@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
-<form action="addApp" id="AddAppForm" class="addAppForm" oClass="AddAppForm">
+<form action="addApp" id="AddAppForm" class="addAppForm"
+	oClass="AddAppForm">
 	<div class="lineInput">
 		<label for="app-name">App name :</label> <input oClass="NoEmptyInput"
 			type="text" id="app-name" name="name" maxlength="14"
@@ -39,8 +40,18 @@
 		</div>
 	</div>
 	<div class="classicLogin show">
-		<input oClass="NoEmptyInput" type="text" name="login" placeholder="Login" value="" />
-		<input oClass="NoEmptyInput" type="password" name="password" placeholder="Password" value="" />
+		<div class="login-group-input">
+			<input oClass="NoEmptyInput" type="text" name="login"
+				placeholder="Login" value="" /><i
+				class="fa fa-caret-down email-suggestions" aria-hidden="true"></i>
+			<div id="email-suggestions">
+				<c:forEach items='${user.getEmails().keySet()}' var="item">
+					<p class="email-suggested">@ <span>${item}</span></p>
+				</c:forEach>
+			</div>
+		</div>
+		<input oClass="NoEmptyInput" type="password" name="password"
+			placeholder="Password" value="" />
 	</div>
 	<div class="buttonSet">
 		<button type="submit">Add</button>
