@@ -27,23 +27,27 @@ extension.runtime.sendMessage("getSettings", {}, function(response) {
 
 
 document.addEventListener("isConnected", function(event){
-    if(event.detail==true){
+    if(event.detail=="true"){
+        extension.storage.get("isConnected",function(res){
+            if(res == "false")  extension.storage.set("visitedWebsites", []);
+        });
         extension.storage.set("isConnected","true", function(){});
     } else {
         extension.storage.set("isConnected","false", function(){});
-        extension.storage.set("visitedWebsites", {}, function(){});
+        extension.runtime.sendMessage("Disconnected", null, function(response) {});
     }
 }, false);
 
 document.addEventListener("Logout", function(event){
-    extension.runtime.sendMessage("Logout", null, function(response) {
-        console.log("-- Logout initialized --");
-        console.log(response);
-    });
+    extension.runtime.sendMessage("Logout", null, function(response) {});
 }, false);
 
+extension.runtime.onMessage("logoutFrom", function logoutHandler(visitedWebsites, sendResponse){
+    document.dispatchEvent(new CustomEvent("LogoutFrom", {"detail":visitedWebsites}));
+});
+
 extension.runtime.onMessage("logoutDone", function logoutHandler(message, sendResponse){
-    console.log("-- Logout from "+message.siteName+ ", status : "+message.status); 
+    document.dispatchEvent(new CustomEvent("LogoutDone", {"detail":message}));
 });
 
 document.addEventListener("NewConnection", function(event){

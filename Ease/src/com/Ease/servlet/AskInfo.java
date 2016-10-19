@@ -86,6 +86,7 @@ public class AskInfo extends HttpServlet {
 						JSONObject a = (JSONObject) parser.parse(new FileReader(session.getServletContext().getRealPath(app.getSite().getFolder() + "connect.json")));
 						a.put("loginUrl", app.getSite().getUrl());
 						a.put("siteId", app.getSite().getId());
+						a.put("siteSrc", app.getSite().getFolder());
 						obj.put("website", a);
 						ja.add(0, obj);
 						if (app.getType().equals("ClassicAccount")) {

@@ -73,6 +73,15 @@ var extension = {
                     return true;
 				}
 			});
+        },
+        tempBckgrndOnMessage:function(name, fct){
+            chrome.runtime.onMessage.addListener(function temp(event, sender, sendResponse){
+                if(event.name == name){
+					fct(event.message, sender.tab, sendResponse);
+                    chrome.runtime.onMessage.removeListener(temp);
+                    return true;
+				}
+			});
         }
     },
 	tabs:{

@@ -7,21 +7,27 @@ function isConnected(msg){
 
 function getNewLogin(msg, i){
 	if (msg.detail[i].user){
-		return (msg.detail[i].user.login);
+		return {"user":msg.detail[i].user.login, "password":msg.detail[i].user.password};
 	} else if (msg.detail[i].logWith){
-		return {"user":getNewLogin(msg, i-1), "logWith":getHost(msg.detail[i-1].website.loginUrl)};
+		return {"user":getNewLogin(msg, i-1).user, "logWith":getHost(msg.detail[i-1].website.loginUrl)};
 	}
 }
 
 function alreadyVisited(msg){
-    if(msg.allConnections[getHost(msg.detail[msg.bigStep].website.loginUrl)]){
+    var lastConnection = msg.allConnections[getHost(msg.detail[msg.bigStep].website.loginUrl)];
+    if(lastConnection){
         var NewLogin = getNewLogin(msg, msg.bigStep);
         if(NewLogin.logWith){
-            if(NewLogin.user == msg.allConnections[getHost(msg.detail[msg.bigStep].website.loginUrl)].user && NewLogin.logWith == msg.allConnections[getHost(msg.detail[msg.bigStep].website.loginUrl)].logWith)
+            if(NewLogin.user == lastConnection.user && NewLogin.logWith == lastConnection.logWith)
                 return true
         } else {
-            if(msg.allConnections[getHost(msg.detail[msg.bigStep].website.loginUrl)] == getNewLogin(msg, msg.bigStep))
-                return true;
+            if(lastConnection.user){
+                 if(lastConnection.user == getNewLogin(msg, msg.bigStep).user)
+                     return true;
+            } else {
+                 if(lastConnection == getNewLogin(msg, msg.bigStep).user)
+                     return true;
+            }       
         }
     }
 	return false;
@@ -34,6 +40,7 @@ extension.runtime.onMessage("goooo", function(msg, sendResponse) {
         checkConnectionOverlay(msg);
 		if (isConnected(msg) == true) {
 			if (alreadyVisited(msg) == true){
+                msg.detail[msg.bigStep].website.lastLogin = getNewLogin(msg, msg.bigStep);
 				msg.todo = "connect";
 				msg.actionStep = msg.detail[msg.bigStep].website[msg.todo].todo.length;
 				msg.type = "completed";

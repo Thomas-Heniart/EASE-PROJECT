@@ -3,7 +3,7 @@
     <%@ page import="java.util.Base64" %>
 <%@ page import="java.util.Base64.Encoder" %>
 <%@ page import="java.nio.charset.StandardCharsets" %>
-    
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <script src="js/connection.js"></script>
 <script src="js/rAF.js"></script>
@@ -11,7 +11,7 @@
 <script>
 $(document).ready(function(){
 	setTimeout(function(){
-		var event = new CustomEvent("isConnected", {"detail":false});
+		var event = new CustomEvent("isConnected", {"detail":"false"});
 		document.dispatchEvent(event);
 	}, 500);
     
@@ -22,25 +22,7 @@ $(document).ready(function(){
 	<div id='search-google'>
 		<%@ include file="SearchBar.jsp"%>
 	</div>
-	
-	<div class='logout-overlay' style="display:none;">
-		<h3>We are logging you out from your websites</h3>
-		<div class="sk-fading-circle">
-			<div class="sk-circle1 sk-circle"></div>
-  			<div class="sk-circle2 sk-circle"></div>
-  			<div class="sk-circle3 sk-circle"></div>
-  			<div class="sk-circle4 sk-circle"></div>
-  			<div class="sk-circle5 sk-circle"></div>
-  			<div class="sk-circle6 sk-circle"></div>
-  			<div class="sk-circle7 sk-circle"></div>
-  			<div class="sk-circle8 sk-circle"></div>
-  			<div class="sk-circle9 sk-circle"></div>
-  			<div class="sk-circle10 sk-circle"></div>
-  			<div class="sk-circle11 sk-circle"></div>
-  			<div class="sk-circle12 sk-circle"></div>
-		</div>
-		<h3>automagically...</h3>
-	</div>
+	<%@ include file="Logout.jsp" %>
 <% 
 	Cookie 	cookie = null;
 	Cookie 	cookies[] = request.getCookies();

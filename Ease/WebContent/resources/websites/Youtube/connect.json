@@ -6,7 +6,7 @@
 	"folder":"Youtube",
 	"connect":{
 		"todo":[
-			{"action":"waitfor", "search":"button[href*='https://accounts.google.com/ServiceLogin?']"},
+			{"action":"waitfor", "search":["button[href*='https://accounts.google.com/ServiceLogin?']","div[aria-label='Google']"]},
 			{"action":"click", "search":"button[href*='https://accounts.google.com/ServiceLogin?']", "grave":true},
 			{"action":"waitload"},
 			{"action":"waitfor", "search":["#account-chooser-link","#account-chooser-add-account"]},

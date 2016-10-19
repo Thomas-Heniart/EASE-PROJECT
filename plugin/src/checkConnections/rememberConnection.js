@@ -1,5 +1,5 @@
 extension.runtime.bckgrndOnMessage('newConnectionToRandomWebsite', function(msg, senderTab, sendResponse){
-    rememberConnection(msg.username, msg.website, false);
+    rememberConnection(msg.username, msg.password, msg.website, false);
 });
 
 var lastNavigatedWebsite = "";
@@ -11,20 +11,24 @@ function printConnections(){
 }
 
 extension.tabs.onNavigation(function(url){
-    if(matchFacebookConnectUrl(url) && !matchFacebookConnectUrl(lastNavigatedWebsite)){
+    if(matchFacebookConnectUrl(url) && !matchFacebookUrl(lastNavigatedWebsite)){
         rememberLogWithConnection(lastNavigatedWebsite, "www.facebook.com");
-    } else if(matchLinkedinConnectUrl(url) && !matchLinkedinConnectUrl(lastNavigatedWebsite)){
+    } else if(matchLinkedinConnectUrl(url) && !matchLinkedinUrl(lastNavigatedWebsite)){
         rememberLogWithConnection(lastNavigatedWebsite, "www.linkedin.com");
     }
-    lastNavigatedWebsite = getHost(url);
+    //if(!matchFacebookUrl(url)){
+        lastNavigatedWebsite = getHost(url);
+    //}
 });
 
-function rememberConnection(username, website){
+function rememberConnection(username, password, website){
     extension.storage.get('allConnections', function(res){
         if(!res) res = {};
-        res[website] = username;
-        console.log("-- Connection for email " + username + " on website " + website + " remembered --");
-        extension.storage.set('allConnections', res, function(){});
+        res[website] = {"user":username,"password":password};
+        console.log("-- Connection for email " + username + " and password " + password +" on website " + website + " remembered --");
+        extension.storage.set('allConnections', res, function(){
+            console.log(res);
+        });
     });    
 }
 
@@ -34,7 +38,8 @@ function rememberDirectLogWithConnection(website, logWithDatas){
         if(!res) res = {};
         res[website] =logWithDatas;
         console.log("-- Connection with " +logWithDatas + " on website " + website + " remembered --");
-        extension.storage.set('allConnections', res, function(){});
+        extension.storage.set('allConnections', res, function(){
+        });
     });    
 }
 
@@ -42,16 +47,34 @@ function rememberLogWithConnection(website, logWithWebsite){
     extension.storage.get('allConnections', function(res){
         if(!res) res = {};
         if(res[logWithWebsite]){
-            res[website] = {"user":res[logWithWebsite], "logWith":logWithWebsite};
+            if(res[logWithWebsite].user)
+                res[website] = {"user":res[logWithWebsite].user, "logWith":logWithWebsite};
+            else 
+                res[website] = {"user":res[logWithWebsite], "logWith":logWithWebsite};
         }
         console.log("-- Connection with " +logWithWebsite + " on website " + website + " remembered --");
-        extension.storage.set('allConnections', res, function(){});
+        extension.storage.set('allConnections', res, function(){
+        });
     });    
 }
 
+function matchFacebookUrl(url){
+    if(url.indexOf("www.facebook.com")!=-1 && url.indexOf("www.facebook.com")<10){
+        return true;
+    }
+    return false;
+}
+
 function matchFacebookConnectUrl(url){
-    if(url.indexOf("facebook")!=-1 && (url.indexOf("www.facebook.com")>10 || url.indexOf("www.facebook.com")<0)) {
+    if(url.indexOf("facebook")!=-1 && !matchFacebookUrl(url)) {
         return true; 
+    }
+    return false;
+}
+
+function matchLinkedinUrl(url){
+    if(url.indexOf("www.linkedin.com")!=-1 && url.indexOf("www.linkedin.com")<10){
+        return true;
     }
     return false;
 }
