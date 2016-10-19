@@ -9,9 +9,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib tagdir="/WEB-INF/tags/catalog" prefix="catalog" %>
 
-<script src="js/catalog/catalogApp.js"></script>
-<script src="js/catalog/catalog.js"></script>
-
 <div class="CatalogViewTab">
 <div class="catalogView">
 	<div id="catalog-quit"> 
