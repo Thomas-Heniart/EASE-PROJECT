@@ -77,11 +77,19 @@ form.settingsForm {
 }
 
 #AddAppForm  {
+  div.login-group-input {
+    margin: 2px auto;
+  }
   input[name='login'] {
+    margin: 0;
     width: 96%;
     border-radius: 5px 0 0 5px;
+    &:focus {
+      outline:0px !important;
+      -webkit-appearance:none;
+    }
   }
-  i.fa-caret-down {
+  i.fa-caret-down.email-suggestions {
     cursor: pointer;
     border-radius: 0px 5px 5px 0px;
     position: relative;
@@ -90,6 +98,31 @@ form.settingsForm {
     padding-right: 1%;
     background-color: white;
     color: black;
+  }
+  #email-suggestions {
+    height: 0;
+    background-color: white;
+    border-radius: 5px;
+    transition: height 0.6s ease;
+    position: relative;
+    overflow: hidden;
+    p.email-suggested {
+      color: black;
+      padding: 2px;
+      margin: 2px;
+      border-radius: 2px;
+      cursor: pointer;
+      &:hover {
+        background-color: $themeColor;
+        color: white;
+      }
+    }
+  }
+  #email-suggestions.show {
+    height: 100px;
+    margin: 1px auto;
+    transition: height 0.6s ease;
+    overflow-y: auto;
   }
 }
 

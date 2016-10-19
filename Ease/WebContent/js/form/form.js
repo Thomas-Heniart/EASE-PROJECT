@@ -3,6 +3,7 @@ var constructorForm = function(rootEl, parent) {
 	this.qRoot = rootEl;
 	this.oParent = parent;
 	this.oInputs = [];
+	this.param = {};
 	this.qRoot.find('input').each(function(index, elem) {
 	this.oErrorMsg;
 	
@@ -61,7 +62,6 @@ var constructorForm = function(rootEl, parent) {
 	};
 	this.submit = function(e) {
 		e.preventDefault();
-		var params = {};
 		self.oInputs.forEach(function (elem) {
 			params[elem.qInput.attr('name')] = elem.getVal();
 		});
@@ -114,41 +114,41 @@ var Form = {
 		this.setNewAppItem = function(qObject) {
 			self.newAppItem = qObject;
 		}
-		this.submit = function(e) {
-			e.preventDefault();
-			e.stopPropagation();
+		this.beforeSubmit = function() {
 			self.oParent.close();
-			$.post(self.postName, {
-				profileId : self.profile_id,
-				siteId : self.site_id,
-				name : self.oInputs[0].getVal(),
-				login : self.oInputs[1].getVal(),
-				password : self.oInputs[2].getVal(),
-				appId : self.app_id
-			}, function(data) {
-				var retMsg = data.substring(4);
-				self.appsContainer.append(self.newAppItem);
-				self.newAppItem.find('.linkImage')
-						.addClass('scaleOutAnimation');
-				setTimeout(function() {
-					self.newAppItem.find('.linkImage').removeClass(
-							'scaleOutAnimation');
-				}, 1000);
-				self.newAppItem.find('.linkImage').attr('onclick',
-						"sendEvent(this)");
-				self.newAppItem.attr('login', self.oInputs[1].getVal());
-				self.newAppItem.attr('webId', self.helper.attr('idx'));
-				self.newAppItem.attr('name', self.oInputs[0].getVal());
-				self.newAppItem.attr('logwith', (self.app_id == null) ? 'false'
-						: self.app_id);
-				self.newAppItem.find('.siteName p').text(
-						self.oInputs[0].getVal());
-				self.newAppItem.attr('id', retMsg);
-				self.newAppItem.attr('ssoid', self.helper.attr('data-sso'));
-				setupAppSettingButtonPopup(self.newAppItem
-						.find('.showAppActionsButton'));
-				self.reset();
-			});
+			self.appsContainer.append(self.newAppItem);
+			self.params = {
+					profileId : self.profile_id,
+					siteId : self.site_id,
+					name : self.oInputs[0].getVal(),
+					login : self.oInputs[1].getVal(),
+					password : self.oInputs[2].getVal(),
+					appId : self.app_id
+				};
+		}
+		this.afterSubmit = function() {
+			self.reset();
+		}
+		this.successCallback = function() {
+			self.newAppItem.find('.linkImage').addClass('scaleOutAnimation');
+			setTimeout(function() {
+				self.newAppItem.find('.linkImage').removeClass('scaleOutAnimation');
+			}, 1000);
+			self.newAppItem.find('.linkImage').attr('onclick', "sendEvent(this)");
+			self.newAppItem.attr('login', self.oInputs[1].getVal());
+			self.newAppItem.attr('webId', self.helper.attr('idx'));
+			self.newAppItem.attr('name', self.oInputs[0].getVal());
+			self.newAppItem.attr('logwith', (self.app_id == null) ? 'false' : self.app_id);
+			self.newAppItem.find('.siteName p').text(
+			self.oInputs[0].getVal());
+			self.newAppItem.attr('id', retMsg);
+			self.newAppItem.attr('ssoid', self.helper.attr('data-sso'));
+			setupAppSettingButtonPopup(self.newAppItem.find('.showAppActionsButton'));
+		}
+		this.errorCallback = function(retMsg) {
+			self.newAppItem.remmove();
+			$(parent).find('.alertDiv').addClass('show');
+    	  	showAlertPopup(retMsg, true);
 		}
 		this.setPostName = function(postName) {
 			self.postName = postName;
