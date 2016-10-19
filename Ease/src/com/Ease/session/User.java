@@ -17,7 +17,6 @@ import com.Ease.data.Hashing;
 
 public class User {
 	public enum UserData {
-<<<<<<< HEAD
 		NOTHING,
 		ID,
 		FIRSTNAME,
@@ -54,34 +53,6 @@ public class User {
 	public User(String fName, String lName, String email, String tel, String pass, ServletContext context) throws SessionException {
 		
 		DataBase db = (DataBase)context.getAttribute("DataBase");
-=======
-		NOTHING, ID, FIRSTNAME, LASTNAME, EMAIL, TEL, PASSWORD, SALTEASE, SALTPERSO, KEYUSER, TUTO, BACKGROUND
-	}
-
-	String id;
-	String firstName;
-	String lastName;
-	String email;
-	String tel;
-	String hashedPassword;
-	String saltEase;
-	String saltPerso;
-	String keyUser;
-	String tuto;
-	String background;
-	List<Profile> profiles;
-	List<String> group_ids;
-
-	int maxProfileId;
-	int maxAppId;
-	List<App> apps;
-
-	// Use this to create a new user and set it in database
-	public User(String fName, String lName, String email, String tel, String pass, ServletContext context)
-			throws SessionException {
-
-		DataBase db = (DataBase) context.getAttribute("DataBase");
->>>>>>> ab33aedb3bdc53205e8adb2e693cb679c00a0904
 		String hashedPassword;
 		String keyCrypted;
 		if ((saltEase = Hashing.generateSalt()) == null) {
@@ -511,7 +482,6 @@ public class User {
 			throw new SessionException("Can't get groups. 3");
 		}
 	}
-<<<<<<< HEAD
 	
 	public void loadEmails(ServletContext context) throws SessionException {
 		DataBase db = (DataBase)context.getAttribute("DataBase");
@@ -526,19 +496,6 @@ public class User {
 		} catch (SQLException e) {
 			throw new SessionException("Can't get emails.");
 		}
-=======
 
-	public List<String> getEmails(ServletContext context) {
-		List<String> res = new LinkedList<String>();
-		DataBase db = (DataBase) context.getAttribute("DataBase");
-		ResultSet rs = db.get("SELECT email FROM usersEmails WHERE user_id = " + this.getId() + ";");
-		try {
-			while (rs.next())
-				res.add(rs.getString(1));
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return res;
->>>>>>> ab33aedb3bdc53205e8adb2e693cb679c00a0904
 	}
 }
