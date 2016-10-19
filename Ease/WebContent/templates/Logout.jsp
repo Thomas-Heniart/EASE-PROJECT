@@ -37,7 +37,7 @@
 		}, false);
 	});
 	</script>
-	<div class='logout-overlay' >
+	<div class='logout-overlay' style="display:none;">
 		<h3>We are logging you out from your websites</h3>
 		<div class="sk-fading-circle">
 			<div class="sk-circle1 sk-circle"></div>
