@@ -10,6 +10,7 @@ $(document).ready(function() {
 		console.log($(this).find("span").val());
 		$(".login-group-input input[name='login']").val($(this).find("span").html());
 		$("#email-suggestions").removeClass("show");
+		$("#AddAppForm input[name='password']").focus();
 	});
 	
 	$('#PopupAddApp .loginWithButton').click(function() {
