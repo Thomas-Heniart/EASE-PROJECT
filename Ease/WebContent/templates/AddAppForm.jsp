@@ -45,7 +45,7 @@
 				placeholder="Login" value="" /><i
 				class="fa fa-caret-down email-suggestions" aria-hidden="true"></i>
 			<div id="email-suggestions">
-				<c:forEach items='${user.getEmails(pageContext.servletContext)}' var="item">
+				<c:forEach items='${user.getEmails().keySet()}' var="item">
 					<p class="email-suggested">@ <span>${item}</span></p>
 				</c:forEach>
 			</div>

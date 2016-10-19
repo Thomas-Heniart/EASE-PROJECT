@@ -3,7 +3,7 @@ var constructorForm = function(rootEl, parent) {
 	this.qRoot = rootEl;
 	this.oParent = parent;
 	this.oInputs = [];
-	this.param = {};
+	this.params = {};
 	this.qRoot.find('input').each(function(index, elem) {
 	this.oErrorMsg;
 	
@@ -67,7 +67,7 @@ var constructorForm = function(rootEl, parent) {
 		});
 		console.log(self.qRoot.attr('action'));
 		self.beforeSubmit();
-		postHandler.post(self.qRoot.attr('action'), params, self.afterSubmit, self.successCallback, self.errorCallback);
+		postHandler.post(self.qRoot.attr('action'), self.params, self.afterSubmit, self.successCallback, self.errorCallback);
 	};
 	this.beforeSubmit = function () {
 		
@@ -129,7 +129,7 @@ var Form = {
 		this.afterSubmit = function() {
 			
 		}
-		this.successCallback = function() {
+		this.successCallback = function(retMsg) {
 			self.newAppItem.find('.linkImage').addClass('scaleOutAnimation');
 			setTimeout(function() {
 				self.newAppItem.find('.linkImage').removeClass('scaleOutAnimation');

@@ -267,7 +267,7 @@ var Catalog = function(rootEl){
 		});
 		return null;
 	};
-	this.oUpdate.test();
+	//this.oUpdate.test();
 }
 
 $(document).ready(function(){
