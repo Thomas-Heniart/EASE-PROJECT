@@ -21,7 +21,7 @@ $(document).ready(function(){
     <div class="col-left show" style="width: 100%; float:left">
 		<%@ include file="ProfileView.jsp"%>
 		<%@ include file="extension.jsp" %>		
-		<%@ include file="catalogView.jsp"%>
+		<%@ include file="catalog/catalogView.jsp"%>
 	</div>
 	<%@ include file="SettingsView.jsp" %>
 	<%@ include file="PopupDeleteProfile.jsp" %>

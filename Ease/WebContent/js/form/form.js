@@ -63,7 +63,7 @@ var constructorForm = function(rootEl, parent) {
 	this.submit = function(e) {
 		e.preventDefault();
 		self.oInputs.forEach(function (elem) {
-			params[elem.qInput.attr('name')] = elem.getVal();
+			self.params[elem.qInput.attr('name')] = elem.getVal();
 		});
 		console.log(self.qRoot.attr('action'));
 		self.beforeSubmit();
@@ -127,7 +127,7 @@ var Form = {
 				};
 		}
 		this.afterSubmit = function() {
-			self.reset();
+			
 		}
 		this.successCallback = function() {
 			self.newAppItem.find('.linkImage').addClass('scaleOutAnimation');
@@ -144,9 +144,12 @@ var Form = {
 			self.newAppItem.attr('id', retMsg);
 			self.newAppItem.attr('ssoid', self.helper.attr('data-sso'));
 			setupAppSettingButtonPopup(self.newAppItem.find('.showAppActionsButton'));
+			$("#email-suggestions").append("<p class='email-suggested>@ <span>" + self.oInputs[1].getVal() + "</span>");
+			self.reset();
 		}
 		this.errorCallback = function(retMsg) {
 			self.newAppItem.remmove();
+			self.reset();
 			$(parent).find('.alertDiv').addClass('show');
     	  	showAlertPopup(retMsg, true);
 		}
