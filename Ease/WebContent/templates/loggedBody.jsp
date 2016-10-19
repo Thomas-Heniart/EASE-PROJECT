@@ -13,7 +13,7 @@ response.addCookie(sessionToken);
 <script type="text/javascript">
 $(document).ready(function(){
 	setTimeout(function(){
-		var event = new CustomEvent("isConnected", {"detail":true});
+		var event = new CustomEvent("isConnected", {"detail":"true"});
 		document.dispatchEvent(event);
 	}, 500)});
 </script>

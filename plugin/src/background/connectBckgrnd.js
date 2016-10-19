@@ -13,7 +13,7 @@ function rememberWebsite(website){
                 }
             }
         }
-        if (typeof visitedWebsites === "undefined" || visitedWebsites == null || visitedWebsites == undefined)
+        if (typeof visitedWebsites === "undefined" || visitedWebsites == null || visitedWebsites == undefined || visitedWebsites.length == 0 || visitedWebsites == {})
             visitedWebsites = [];
         visitedWebsites.push(website);
         extension.storage.set("visitedWebsites", visitedWebsites);
@@ -23,7 +23,7 @@ function rememberWebsite(website){
     if(website.lastLogin.logWith){
         rememberDirectLogWithConnection(getHost(website.loginUrl), website.lastLogin);
     } else {
-        rememberConnection(website.lastLogin, getHost(website.loginUrl));
+        rememberConnection(website.lastLogin.user, website.lastLogin.password, getHost(website.loginUrl));
     }  
 }
 

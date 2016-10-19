@@ -1,25 +1,39 @@
 div.logout-overlay {
     position: absolute;
-    top: 30%;
+    top: calc(50% - 130px);
     left:calc(50% - 150px);
     border-radius: 4px;
     vertical-align: middle;
     display: inline-block;
     text-align: center;
     width: 300px;
-    height: 230px;
+    height: 260px;
     padding-left: 6px;
     padding-right: 6px;
     border-radius: 4px;
     padding-bottom: 12px;
     padding-top: 12px;
     background-color: rgba(239, 239, 239, 0.89);
-}
-
-div.logout-overlay.transition{
-    opacity: 0;
-     -webkit-transition: opacity 1s; /* For Safari 3.1 to 6.0 */
-    transition: opacity 1s;
+    opacity: 1;
+    -webkit-transition: opacity 0.8s;
+    transition: opacity 0.8s;
+    .logos-logout-container{
+    	max-witdh: 200px;
+    	overflow: hidden;
+    	display: block;
+    	height: 50px;
+    	img {
+    		witdh: 40px;
+    		height: 40px;
+    		margin: 5px;
+    		border : 1px solid #cccccc;
+    		border-radius : 3px;
+    		opacity: 0.89;
+    		-webkit-transition: opacity 0.5s;
+			-moz-transition: opacity 0.5s;
+			transition: opacity 0.5s;
+    	}
+    }
 }
 
 div.logout-overlay h3 {
@@ -33,8 +47,8 @@ div.logout-overlay h3 {
   margin: auto;
   margin-top: 8%;
   margin-bottom: 8%;
-  width: 20%;
-  height: 40%;
+  width: 100px;
+  height: 100px;
   position: relative;
 }
 

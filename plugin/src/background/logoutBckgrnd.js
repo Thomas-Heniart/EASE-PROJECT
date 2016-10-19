@@ -1,12 +1,14 @@
 extension.runtime.bckgrndOnMessage("Logout", function (msg, easeTab, sendResponse) {
+
     extension.storage.get("visitedWebsites", function(visitedWebsites) {        
-        var finished = 0;
-        sendResponse(visitedWebsites);
+        extension.runtime.tempBckgrndOnMessage("Disconnected", function (msg, easeTab2, sendResponse){
+            easeTab = easeTab2;
+            extension.tabs.sendMessage(easeTab, "logoutFrom", visitedWebsites, function(){});
+        });
         for(var i in visitedWebsites){
-            if(visitedWebsites[i].siteId == undefined) visitedWebsites[i].siteId = "-1";
+            if(visitedWebsites[i].siteId == undefined || visitedWebsites[i].siteSrc == undefined) visitedWebsites[i].siteId = "-1";
             logOutFrom(visitedWebsites[i], easeTab);
         }
-        console.log(easeTab);
         extension.storage.set("visitedWebsites", []);
                                             
     });
@@ -43,7 +45,7 @@ function logOutFrom(website, easeTab){
                                                     console.log("-- Log out done for website "+ website.name +" --");
                                                     extension.tabs.onUpdatedRemoveListener(tab);
                                                     extension.tabs.onMessageRemoveListener(tab);
-                                                    extension.tabs.sendMessage(easeTab, "logoutDone", {"siteId":website.siteId, "siteName":website.name, "status":"success" }, function (){});
+                                                    extension.tabs.sendMessage(easeTab, "logoutDone", {"siteId":website.siteId, "siteSrc":website.siteSrc, "status":"success" }, function (){});
                                                     setTimeout(function(){extension.tabs.close(tab, function() {});},1000);
                                                 }
                                             } else {
@@ -51,7 +53,7 @@ function logOutFrom(website, easeTab){
                                                 extension.tabs.onMessageRemoveListener(tab);
                                                 extension.tabs.onUpdatedRemoveListener(tab);
                                                 extension.tabs.close(tab, function() {});
-                                                extension.tabs.sendMessage(easeTab, "logoutDone", {"siteId":website.siteId, "siteName":website.name, "status":"fail" }, function (){});
+                                                extension.tabs.sendMessage(easeTab, "logoutDone", {"siteId":website.siteId, "siteSrc":website.siteSrc, "status":"fail" }, function (){});
                                             }
                                         }
                                     });

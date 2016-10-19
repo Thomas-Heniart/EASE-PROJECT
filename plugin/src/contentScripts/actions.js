@@ -118,12 +118,6 @@ simulateKeyPress:function(msg, callback, sendResponse){
 			callback(msg, sendResponse);
 		}
 	} else {
-        input.keydown(function(e){
-   console.log('Yes Keydown triggered. ' + e.which)
-});
-        input.keyup(function(e){
-   console.log('Yes Keyup triggered. ' + e.which)
-});
 		input.click();
         input.focus();
         var e = jQuery.Event("keydown");
@@ -158,7 +152,7 @@ fill:function(msg, callback, sendResponse){
 	} else {
         input.select();
 		input.click();
-    input.focus();
+        input.focus();
         input.change();
 		if (actionStep.what == "login") {
 			input.val(msg.detail[0].user.login);
