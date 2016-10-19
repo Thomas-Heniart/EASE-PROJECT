@@ -3,8 +3,10 @@ package com.Ease.session;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 
@@ -15,6 +17,44 @@ import com.Ease.data.Hashing;
 
 public class User {
 	public enum UserData {
+<<<<<<< HEAD
+		NOTHING,
+		ID,
+		FIRSTNAME,
+		LASTNAME,
+		EMAIL,
+		TEL,
+		PASSWORD,
+		SALTEASE,
+		SALTPERSO,
+		KEYUSER,
+		TUTO,
+		BACKGROUND
+	}
+	String			id;
+	String			firstName;
+	String			lastName;
+	String			email;
+	String			tel;
+	String			hashedPassword;
+	String			saltEase;
+	String			saltPerso;
+	String			keyUser;
+	String			tuto;
+	String 			background;
+	List<Profile>	profiles;
+	List<String>	group_ids;
+	Map<String,Boolean>	emails;
+	
+	int				maxProfileId;
+	int				maxAppId;
+	List<App>		apps;
+	
+	//Use this to create a new user and set it in database
+	public User(String fName, String lName, String email, String tel, String pass, ServletContext context) throws SessionException {
+		
+		DataBase db = (DataBase)context.getAttribute("DataBase");
+=======
 		NOTHING, ID, FIRSTNAME, LASTNAME, EMAIL, TEL, PASSWORD, SALTEASE, SALTPERSO, KEYUSER, TUTO, BACKGROUND
 	}
 
@@ -41,6 +81,7 @@ public class User {
 			throws SessionException {
 
 		DataBase db = (DataBase) context.getAttribute("DataBase");
+>>>>>>> ab33aedb3bdc53205e8adb2e693cb679c00a0904
 		String hashedPassword;
 		String keyCrypted;
 		if ((saltEase = Hashing.generateSalt()) == null) {
@@ -77,6 +118,7 @@ public class User {
 				try {
 					rs.next();
 					this.id = rs.getString(1);
+					loadEmails(context);
 				} catch (SQLException e) {
 					throw new SessionException("Impossible to insert new user in data base.");
 				}
@@ -120,6 +162,7 @@ public class User {
 
 			loadProfiles(context);
 			checkForGroup(context);
+			loadEmails(context);
 		} catch (SQLException e) {
 			throw new SessionException("Impossible to get all User info.");
 		}
@@ -163,6 +206,7 @@ public class User {
 
 			loadProfiles(context);
 			checkForGroup(context);
+			loadEmails(context);
 		} catch (SQLException e) {
 			throw new SessionException("Impossible to get all User info.");
 		}
@@ -254,6 +298,10 @@ public class User {
 
 	public List<String> getGroupIds() {
 		return group_ids;
+	}
+	
+	public Map<String, Boolean> getEmails() {
+		return emails;
 	}
 
 	// SETTER
@@ -463,6 +511,22 @@ public class User {
 			throw new SessionException("Can't get groups. 3");
 		}
 	}
+<<<<<<< HEAD
+	
+	public void loadEmails(ServletContext context) throws SessionException {
+		DataBase db = (DataBase)context.getAttribute("DataBase");
+		emails = new HashMap<>();
+		emails.put(this.email, true);
+		try{
+			ResultSet rs;
+			rs = db.get("select * from usersEmails where user_id=" + this.id + ";");
+			while (rs.next()) {
+				emails.put(rs.getString(3), (rs.getString(4).equals("0")) ? false : true);
+			}
+		} catch (SQLException e) {
+			throw new SessionException("Can't get emails.");
+		}
+=======
 
 	public List<String> getEmails(ServletContext context) {
 		List<String> res = new LinkedList<String>();
@@ -475,5 +539,6 @@ public class User {
 			e.printStackTrace();
 		}
 		return res;
+>>>>>>> ab33aedb3bdc53205e8adb2e693cb679c00a0904
 	}
 }
