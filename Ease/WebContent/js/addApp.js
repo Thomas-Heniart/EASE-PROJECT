@@ -1,17 +1,4 @@
 $(document).ready(function() {
-	$(".login-group-input input[name='login']").focus(function() {
-		$("#email-suggestions").addClass("show");
-	});
-	
-	$('.login-group-input .email-suggestions').click(function() {
-		$("#email-suggestions").toggleClass("show");
-	});
-	$("#email-suggestions .email-suggested").click(function() {
-		$(".login-group-input input[name='login']").val($(this).find("span").html());
-		$("#email-suggestions").removeClass("show");
-		$("#AddAppForm input[name='password']").focus();
-	});
-	
 	$('#PopupAddApp .loginWithButton').click(function() {
 		$(".loginAppChooser p").text("Select your account");
 		var parent = $(this).closest('.md-content');

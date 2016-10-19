@@ -76,7 +76,7 @@ form.settingsForm {
   }
 }
 
-#AddAppForm  {
+#AddAppForm, #modifyAppForm {
   div.login-group-input {
     margin: 2px auto;
   }
@@ -99,14 +99,14 @@ form.settingsForm {
     background-color: white;
     color: black;
   }
-  #email-suggestions {
+  .suggested-emails {
     height: 0;
     background-color: white;
     border-radius: 5px;
-    transition: height 0.6s ease;
+    transition: height 0.3s ease;
     position: relative;
     overflow: hidden;
-    p.email-suggested {
+    p.email-suggestion {
       color: black;
       padding: 2px;
       margin: 2px;
@@ -118,10 +118,10 @@ form.settingsForm {
       }
     }
   }
-  #email-suggestions.show {
+  .suggested-emails.show {
     height: 100px;
     margin: 1px auto;
-    transition: height 0.6s ease;
+    transition: height 0.3s ease;
     overflow-y: auto;
   }
 }

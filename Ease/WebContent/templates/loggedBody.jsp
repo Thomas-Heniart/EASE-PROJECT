@@ -35,9 +35,13 @@ $(document).ready(function(){
 
 $(document).ready(function(){
 	$('.md-overlay').click(function(){
+		popupAddApp.close();
+		modifyAppPopup.close();
 		$('.md-show').removeClass('md-show');
 	});
 	$('.popupClose').click(function () {
+		popupAddApp.close();
+		modifyAppPopup.close();
 		$('.md-show').removeClass('md-show');
 	});
 });

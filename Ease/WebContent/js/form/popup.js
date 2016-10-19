@@ -49,7 +49,7 @@ var Popup = {
 		this.close = function() {
 			self.qRoot.removeClass('md-show');
 			$('.classicLogin').addClass("show");
-			$('#email-suggestions').removeClass("show");
+			$('.suggested-emails').removeClass("show");
 		}
 		this.setHelper = function(jqObj) {
 			self.oForm.setHelper(jqObj);
@@ -74,6 +74,8 @@ var Popup = {
 		var self = this;
 		this.close = function() {
 			self.qRoot.removeClass('md-show');
+			$('.classicLogin').addClass("show");
+			$('.suggested-emails').removeClass("show");
 		}
 		this.setApp = function(jObj) {
 			self.oForm.setApp(jObj);

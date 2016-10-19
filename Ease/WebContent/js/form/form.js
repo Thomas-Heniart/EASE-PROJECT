@@ -139,12 +139,13 @@ var Form = {
 			self.newAppItem.attr('webId', self.helper.attr('idx'));
 			self.newAppItem.attr('name', self.oInputs[0].getVal());
 			self.newAppItem.attr('logwith', (self.app_id == null) ? 'false' : self.app_id);
-			self.newAppItem.find('.siteName p').text(
-			self.oInputs[0].getVal());
+			self.newAppItem.find('.siteName p').text(self.oInputs[0].getVal());
 			self.newAppItem.attr('id', retMsg);
 			self.newAppItem.attr('ssoid', self.helper.attr('data-sso'));
 			setupAppSettingButtonPopup(self.newAppItem.find('.showAppActionsButton'));
-			$("#email-suggestions").append("<p class='email-suggested>@ <span>" + self.oInputs[1].getVal() + "</span>");
+			var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+			if (emailRegex.test(self.oInputs[1].getVal()))
+				$(".suggested-emails").append("<p class='email-suggestion'>@ <span>" + self.oInputs[1].getVal() + "</span></p>");
 			self.reset();
 		}
 		this.errorCallback = function(retMsg) {

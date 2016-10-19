@@ -5,6 +5,9 @@ var constructorInput = function (rootEl, parent) {
 	this.qInput.on('focus', function(e) {
 		$(this).prop('readonly', false);
 	});
+	this.qInput.on('change', function() {
+		self.val($(this).val());
+	});
 	this.qInput.prop('readonly', true);
 	this.qInput.prop("autocomplete", "off");
 	this.listeners = [];

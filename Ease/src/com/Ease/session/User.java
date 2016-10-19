@@ -311,6 +311,11 @@ public class User {
 
 	// UTILS
 
+	public void addEmailIfNotPresent(String newEmail) {
+		if (!emails.containsKey(newEmail))
+			emails.put(newEmail, false);
+	}
+	
 	public void loadProfiles(ServletContext context) throws SessionException {
 		DataBase db = (DataBase) context.getAttribute("DataBase");
 		ResultSet rs = db.get("SELECT * FROM profiles WHERE user_id='" + id + "';");

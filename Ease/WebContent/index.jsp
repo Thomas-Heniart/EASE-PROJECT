@@ -38,7 +38,7 @@ pageEncoding="UTF-8"%>
 	<script src="js/form/errorMsg.js"></script>
 	<script src="js/form/input.js"></script>
 	<script src="js/form/popup.js"></script>
-
+	<script src="js/form/emailSuggestions.js"></script>
 
 	<script src="js/classie.js"></script>
 	<script src="js/Sortable.js"></script>

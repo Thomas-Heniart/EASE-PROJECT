@@ -97,8 +97,10 @@ public class AddApp extends HttpServlet {
 							user.tutoComplete();
 							user.updateInDB(session.getServletContext());
 						}
-						if (Regex.isEmail(login))
+						if (Regex.isEmail(login)) {
 							db.set("CALL addEmail(" + user.getId() + ", '" + login + "');");
+							user.addEmailIfNotPresent(login);
+						}
 						SI.setResponse(200, Integer.toString(app.getAppId()));
 						db.commit(transaction);
 					} else {
