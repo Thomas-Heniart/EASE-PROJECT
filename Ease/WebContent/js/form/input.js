@@ -6,6 +6,7 @@ var constructorInput = function (rootEl, parent) {
 		$(this).prop('readonly', false);
 	});
 	this.qInput.prop('readonly', true);
+	this.qInput.prop("autocomplete", "off");
 	this.listeners = [];
 	this.listenBy = function (qBy) {
 		self.listeners.push(qBy);

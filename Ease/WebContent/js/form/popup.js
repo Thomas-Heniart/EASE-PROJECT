@@ -49,6 +49,7 @@ var Popup = {
 		this.close = function() {
 			self.qRoot.removeClass('md-show');
 			$('.classicLogin').addClass("show");
+			$('#email-suggestions').removeClass("show");
 		}
 		this.setHelper = function(jqObj) {
 			self.oForm.setHelper(jqObj);

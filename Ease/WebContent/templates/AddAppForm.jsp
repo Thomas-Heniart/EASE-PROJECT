@@ -40,10 +40,15 @@
 		</div>
 	</div>
 	<div class="classicLogin show">
-		<div class="">
+		<div class="login-group-input">
 			<input oClass="NoEmptyInput" type="text" name="login"
-				placeholder="Login" value="" /><span><i
-				class="fa fa-caret-down" aria-hidden="true"></i></span>
+				placeholder="Login" value="" /><i
+				class="fa fa-caret-down email-suggestions" aria-hidden="true"></i>
+			<div id="email-suggestions">
+				<c:forEach items='${user.getEmails(pageContext.servletContext)}' var="item">
+					<p class="email-suggested">@ <span>${item}</span></p>
+				</c:forEach>
+			</div>
 		</div>
 		<input oClass="NoEmptyInput" type="password" name="password"
 			placeholder="Password" value="" />
