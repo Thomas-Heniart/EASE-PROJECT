@@ -1,0 +1,24 @@
+{
+	"name":"MonPetitGazon",
+	"lastLogin":"",
+	"home":"https://www.monpetitgazon.com/",
+	"connect": {
+		"todo": [
+			{"action":"click", "search":"div[class *= 'buttons'] button[class *= 'positive' ]"},
+			{"action":"waitfor", "search":"input[name='email']"},
+			{"action":"fill", "what":"login", "search":"input[name='email']", "grave":"true"},
+			{"action":"fill", "what":"password", "search":"input[name='password']", "grave":"true"},
+			{"action":"click", "search":"form button"}
+		]
+	},
+    "logout": {
+    	"todo": [
+    		{"action":"click", "search":"div[class *= 'account'] span:last-child()"},
+    		{"action":"waitfor", "search":"div[class *= 'logout']"},
+    		{"action":"click", "search":"div[class *= 'logout'] button"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"div.index__account___1Fava"}
+    ]
+}
