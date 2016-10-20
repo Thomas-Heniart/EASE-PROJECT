@@ -1,11 +1,15 @@
 var allForms = [];
 listenToForms();
+checkForms();
 
-document.body.addEventListener('DOMSubtreeModified', function (res) {
-    if(!equalArrays(document.forms, allForms)){
-        listenToForms();
-    }
-}, false);
+function checkForms(){
+    setTimeout(function(){
+        if(!equalArrays(document.forms, allForms)){
+            listenToForms();
+        }
+        checkForms();
+    },500);
+}
 
 function equalArrays (array1, array2) {
     // compare lengths - can save a lot of time 
@@ -28,16 +32,28 @@ function equalArrays (array1, array2) {
 }
 
 function listenToForms (){
-    allForms = [];
+    console.log("listen : "+(new Date()).getTime());
     for (var i = 0; i < document.forms.length; i++) {
-        allForms.push(document.forms[i]);
-        listenToSubmit(document.forms[i]);
-        listenToClick(document.forms[i]);
+        var listen = true;
+        for (var j = 0; j < allForms.length; j++){
+            if(equalArrays(document.forms[i], allForms[j])){
+                listen = false;
+                break;
+            }
+        }
+        if(listen){
+            listenToSubmit(document.forms[i]);
+            listenToClick(document.forms[i]);
+            allForms.push(document.forms[i]);
+            console.log("Add form : ");
+            console.log(document.forms[i]);
+        }
+        
     }
 }
 
 function listenToSubmit(form){
-     form.addEventListener("submit", function(res){
+     form.addEventListener("submit", function easeSubmitListener(res){
         var fields = res.target.getElementsByTagName("input");
         checkFields(res.target.getElementsByTagName("input"));
     });
@@ -46,7 +62,7 @@ function listenToSubmit(form){
 function listenToClick(form){
     var buttons = form.getElementsByTagName("button");
     for (var i=0;i<buttons.length;i++){
-        buttons[i].addEventListener("click", function(res){
+        buttons[i].addEventListener("click", function easeClickListener(res){
             checkFields(form.getElementsByTagName("input"));
         });
     }
@@ -58,7 +74,7 @@ function listenToClick(form){
         }
     }
     for (var k=0;k<inputSubmit.length;k++){
-        inputSubmit[k].addEventListener("click", function (res){
+        inputSubmit[k].addEventListener("click", function easeClickListener(res){
             checkFields(form.getElementsByTagName("input"));
         });
     }
@@ -77,7 +93,7 @@ function checkFields(fields){
              var password = fields[j].value;
         }
         if(hasEmail && hasPassword){
-            extensionLight.runtime.sendMessage('newConnectionToRandomWebsite', {'website':window.location.host, 'username':email, 'password':password}, function(){});
+            extensionLight.runtime.sendMessage('newConnectionToRandomWebsite', {'website':window.location.host, 'username':email, 'password':"???"}, function(){});
         break;
         }
     }

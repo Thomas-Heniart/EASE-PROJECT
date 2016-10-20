@@ -51,9 +51,9 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, se
                 console.log("-- Page reloaded --");
                     extension.tabs.inject(tab, ["tools/extension.js","jquery-3.1.0.js","contentScripts/actions.js", "contentScripts/connect.js"], function(){
                         extension.storage.get("visitedWebsites", function(visitedWebsites) {
-                            extension.storage.get("allConnections", function(allConnections) {
+                            extension.storage.get("lastConnections", function(lastConnections) {
                             msg.visitedWebsites = visitedWebsites;
-                            msg.allConnections = allConnections;
+                            msg.lastConnections = lastConnections;
                             extension.tabs.sendMessage(tab, "goooo", msg, function(response){
                               if (response){
                                 console.log("-- Status : "+response.type+" --");

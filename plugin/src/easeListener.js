@@ -54,3 +54,21 @@ document.addEventListener("NewConnection", function(event){
     extension.runtime.sendMessage("NewConnection", {"highlight":true, "detail":event.detail}, function(response) {});
 }, false);
 
+document.addEventListener("GetUpdates", function(event){
+    var updatesToSend = [];
+    extension.storage.get("allConnections", function(res){
+        if(JSON.stringify(res)[0] == "{") res = [];
+        for(var j in res){
+            for(var i in event.detail){
+                if(res[j].user == event.detail[j]){
+                    updatesToSend.push(res[j]);
+                }
+            }
+            if(res[j].expiration < (new Date()).getTime()){
+                res.slice(j,1);
+            }
+        }
+        extension.storage.set("allConnections", res, function(){});
+        document.dispatchEvent(new CustomEvent("Updates", {"detail":updatesToSend}));
+    });
+});

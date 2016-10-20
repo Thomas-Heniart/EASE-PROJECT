@@ -70,7 +70,29 @@ pageEncoding="UTF-8"%>
 	%>
 	<% if (user != null){ %>
 	<script src="js/checkConnection.js"></script>
-	<%} %>
+	<%} else { 
+		Cookie 	cookie = null;
+		Cookie 	cookies[] = request.getCookies();
+		String	sessionId = "";
+		String 	token = "";
+		if (cookies != null){
+			for (int i = 0;i < cookies.length ; i++) {
+				cookie = cookies[i];
+				if((cookie.getName()).compareTo("sId") == 0){
+					sessionId = cookie.getValue();
+				} else if((cookie.getName()).compareTo("sTk") == 0){
+					token = cookie.getValue();
+				}
+			}
+		}
+		if(sessionId.length() > 0 && token.length() > 0){ %>
+			<jsp:forward page="connectionWithCookies"> 
+				<jsp:param name="sessionId" value="<%=sessionId%>" /> 
+				<jsp:param name="token" value="<%=token%>" /> 
+			</jsp:forward>
+		<%}
+	}%>
+	
 	<script src="js/isMobile.js"></script>
 	<script src="js/setupOwlCarousel.js"></script>
 	<script src="js/getNavigator.js"></script>

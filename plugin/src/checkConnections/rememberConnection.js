@@ -5,7 +5,7 @@ extension.runtime.bckgrndOnMessage('newConnectionToRandomWebsite', function(msg,
 var lastNavigatedWebsite = "";
 
 function printConnections(){
-    extension.storage.get('allConnections', function(res){
+    extension.storage.get('lastConnections', function(res){
         console.log(res);
     });
 }
@@ -22,29 +22,29 @@ extension.tabs.onNavigation(function(url){
 });
 
 function rememberConnection(username, password, website){
-    extension.storage.get('allConnections', function(res){
+    extension.storage.get('lastConnections', function(res){
         if(!res) res = {};
         res[website] = {"user":username,"password":password};
         console.log("-- Connection for email " + username + " and password " + password +" on website " + website + " remembered --");
-        extension.storage.set('allConnections', res, function(){
-            console.log(res);
-        });
+        extension.storage.set('lastConnections', res, function(){});
+        rememberEveryConnections({user:username, password:password, website:website});
     });    
 }
 
 
 function rememberDirectLogWithConnection(website, logWithDatas){
-    extension.storage.get('allConnections', function(res){
+    extension.storage.get('lastConnections', function(res){
         if(!res) res = {};
         res[website] =logWithDatas;
         console.log("-- Connection with " +logWithDatas + " on website " + website + " remembered --");
-        extension.storage.set('allConnections', res, function(){
-        });
+        extension.storage.set('lastConnections', res, function(){});
+        logWithDatas.website = website;
+        rememberEveryConnections(logWithDatas);
     });    
 }
 
 function rememberLogWithConnection(website, logWithWebsite){
-    extension.storage.get('allConnections', function(res){
+    extension.storage.get('lastConnections', function(res){
         if(!res) res = {};
         if(res[logWithWebsite]){
             if(res[logWithWebsite].user)
@@ -53,9 +53,29 @@ function rememberLogWithConnection(website, logWithWebsite){
                 res[website] = {"user":res[logWithWebsite], "logWith":logWithWebsite};
         }
         console.log("-- Connection with " +logWithWebsite + " on website " + website + " remembered --");
-        extension.storage.set('allConnections', res, function(){
-        });
+        extension.storage.set('lastConnections', res, function(){});
+        rememberEveryConnections({user:res[website].user, logWith:logWithWebsite, website:website});
     });    
+}
+
+function rememberEveryConnections(connectionDatas){
+    var creation = new Date();
+    connectionDatas.expiration = creation.getTime()+604800000; //expiration en 1 semaine
+    extension.storage.get("allConnections", function(res){
+        if(JSON.stringify(res)[0]=="{") res = [];
+        for(var i in res){
+            if(res[i].website && res[i].website == connectionDatas.website){
+                if (res[i].user && res[i].user == connectionDatas.user){
+                    res.splice(i, 1);
+                    break;
+                }
+            }
+        }
+        console.log(connectionDatas);
+        res.push(connectionDatas);
+        console.log(res);
+        extension.storage.set('allConnections', res, function(){});
+    });
 }
 
 function matchFacebookUrl(url){
@@ -93,4 +113,24 @@ function getHost(url){
         return l;
     };
     return getLocation(url).hostname;
+}
+
+function equalArrays (array1, array2) {
+    // compare lengths - can save a lot of time 
+    if (array2.length != array1.length)
+        return false;
+
+    for (var i = 0, l=array2.length; i < l; i++) {
+        // Check if we have nested arrays
+        if (array2[i] instanceof Array && array1[i] instanceof Array) {
+            // recurse into the nested arrays
+            if (!array2[i].equals(array1[i]))
+                return false;       
+        }           
+        else if (array2[i] != array1[i]) { 
+            // Warning - two different object instances will never be equal: {x:20} != {x:20}
+            return false;   
+        }           
+    }       
+    return true;
 }
