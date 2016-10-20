@@ -95,7 +95,6 @@ public class fakeUsers extends HttpServlet {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			db.close();
 			response.getWriter().append("Removed all useless users");
 		}
 	}
