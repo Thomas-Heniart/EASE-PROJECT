@@ -14,7 +14,7 @@ function getNewLogin(msg, i){
 }
 
 function alreadyVisited(msg){
-    var lastConnection = msg.allConnections[getHost(msg.detail[msg.bigStep].website.loginUrl)];
+    var lastConnection = msg.lastConnections[getHost(msg.detail[msg.bigStep].website.loginUrl)];
     if(lastConnection){
         var NewLogin = getNewLogin(msg, msg.bigStep);
         if(NewLogin.logWith){

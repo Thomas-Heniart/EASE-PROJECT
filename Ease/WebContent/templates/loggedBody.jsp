@@ -1,12 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="java.text.DateFormat"%>
+<%@ page import="java.text.SimpleDateFormat"%>
+<%@ page import="java.util.Date"%>
 
 <%
 Cookie sessionId = new Cookie("sId",sessionSave.getSessionId());
 Cookie sessionToken = new Cookie("sTk",sessionSave.getToken());
 
-sessionId.setMaxAge(60 * 60 * 24 * 365);
-sessionToken.setMaxAge(60 * 60 * 24 * 365);
+DateFormat dateFormat = new SimpleDateFormat("HH");
+Date date = new Date();
+int duration = 29 - Integer.parseInt(dateFormat.format(date));
+if(duration > 24) duration = duration - 24;
+duration = (duration*60-30)*60;
+sessionId.setMaxAge(duration);
+sessionToken.setMaxAge(duration);
 response.addCookie(sessionId);
 response.addCookie(sessionToken);
 %>

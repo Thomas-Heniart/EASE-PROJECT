@@ -53,6 +53,7 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, se
                         extension.storage.get("visitedWebsites", function(visitedWebsites) {
                             extension.storage.get("lastConnections", function(lastConnections) {
                             msg.visitedWebsites = visitedWebsites;
+                            if(lastConnections == undefined) lastConnections = {};
                             msg.lastConnections = lastConnections;
                             extension.tabs.sendMessage(tab, "goooo", msg, function(response){
                               if (response){

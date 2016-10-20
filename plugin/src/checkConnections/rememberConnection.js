@@ -1,11 +1,19 @@
+cleanEveryConnections();
+
 extension.runtime.bckgrndOnMessage('newConnectionToRandomWebsite', function(msg, senderTab, sendResponse){
     rememberConnection(msg.username, msg.password, msg.website, false);
 });
 
 var lastNavigatedWebsite = "";
 
-function printConnections(){
+function printLastConnections(){
     extension.storage.get('lastConnections', function(res){
+        console.log(res);
+    });
+}
+
+function printAllConnections(){
+    extension.storage.get('allConnections', function(res){
         console.log(res);
     });
 }
@@ -24,8 +32,8 @@ extension.tabs.onNavigation(function(url){
 function rememberConnection(username, password, website){
     extension.storage.get('lastConnections', function(res){
         if(!res) res = {};
-        res[website] = {"user":username,"password":password};
-        console.log("-- Connection for email " + username + " and password " + password +" on website " + website + " remembered --");
+        res[website] = {"user":username};
+        console.log("-- Connection for email " + username +" on website " + website + " remembered --");
         extension.storage.set('lastConnections', res, function(){});
         rememberEveryConnections({user:username, password:password, website:website});
     });    
@@ -62,20 +70,28 @@ function rememberEveryConnections(connectionDatas){
     var creation = new Date();
     connectionDatas.expiration = creation.getTime()+604800000; //expiration en 1 semaine
     extension.storage.get("allConnections", function(res){
-        if(JSON.stringify(res)[0]=="{") res = [];
-        for(var i in res){
-            if(res[i].website && res[i].website == connectionDatas.website){
-                if (res[i].user && res[i].user == connectionDatas.user){
-                    res.splice(i, 1);
-                    break;
-                }
-            }
-        }
-        console.log(connectionDatas);
-        res.push(connectionDatas);
-        console.log(res);
+        if(res==undefined || !res.validator) res = {validator:"ok"};
+        if(connectionDatas.logWith) res[connectionDatas.user][connectionDatas.website] = {logWith:connectionDatas.logWith, expiration:connectionDatas.expiration};
+        else res[connectionDatas.user][connectionDatas.website] = {password:encryptPassword(connectionDatas.password), expiration:connectionDatas.expiration};
         extension.storage.set('allConnections', res, function(){});
     });
+}
+
+function cleanEveryConnections(){
+    setTimeout(function(){
+        extension.storage.get("allConnections", function(res){
+            if(res==undefined || !res.validator) res = {validator:"ok"};
+            for(var user in res){
+                for (var website in res[user]){
+                    if(res[user][website].expiration < (new Date()).getTime()){
+                        delete res[user][website];
+                    }
+                }
+            }
+            extension.storage.set("allConnections", res, function(){});
+        });
+        cleanEveryConnection();
+    }, 1000*60*60*24);
 }
 
 function matchFacebookUrl(url){

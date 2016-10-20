@@ -56,16 +56,19 @@ document.addEventListener("NewConnection", function(event){
 
 document.addEventListener("GetUpdates", function(event){
     var updatesToSend = [];
+    var id = 0;
     extension.storage.get("allConnections", function(res){
-        if(JSON.stringify(res)[0] == "{") res = [];
-        for(var j in res){
-            for(var i in event.detail){
-                if(res[j].user == event.detail[j]){
-                    updatesToSend.push(res[j]);
+        if(res==undefined || !res.validator) res = {validator:"ok"};
+        var toDelete = [];
+        for(var email in event.detail){
+            if(res[email]){
+                for(var website in res[email]){
+                    if(res[email][website].logWith) var toSend = {user:email, website:website, logWith:res[email][website].logWith, id:id };
+                    else  var toSend = {user:email, website:website, password:res[email][website].password, id:id };
+                    res[email][website].id = id;
+                    id++;
+                    updatesToSend.push(toSend);
                 }
-            }
-            if(res[j].expiration < (new Date()).getTime()){
-                res.slice(j,1);
             }
         }
         extension.storage.set("allConnections", res, function(){});

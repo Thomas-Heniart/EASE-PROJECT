@@ -13,9 +13,9 @@ var extensionLight = {
         }
     }
 }
-console.log("oui?");
+
 if (window.top === window) {
-    console.log("non?")
+
     if (!document.getElementById("ease_overlay_mamene")){
         var overlay = document.createElement('div');
         overlay.id = "ease_overlay_mamene";
