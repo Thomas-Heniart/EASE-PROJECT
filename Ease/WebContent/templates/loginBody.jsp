@@ -29,11 +29,7 @@ $(document).ready(function(){
 	String 	fname = "";
 	String 	lname = "";
 	String 	email = "";
-	String	sessionId = "";
-	String 	token = "";
-	
 	int		iden = 0;
-
 	if (cookies != null){
 	for (int i = 0;i < cookies.length ; i++) {
 		cookie = cookies[i];
@@ -52,10 +48,6 @@ $(document).ready(function(){
 			fname = cookie.getValue();
 			if (fname.length() > 0)
 				iden++;
-		} else if((cookie.getName()).compareTo("sId") == 0){
-			sessionId = cookie.getValue();
-		} else if((cookie.getName()).compareTo("sTk") == 0){
-			token = cookie.getValue();
 		}
 	}
 	if (iden == 3){
@@ -75,13 +67,7 @@ $(document).ready(function(){
 	}
 	}
 %>
-<% if(sessionId.length() > 0 && token.length() > 0){ %>
-	<jsp:forward page="connectionWithCookies"> 
-		<jsp:param name="sessionId" value="<%=sessionId%>" /> 
-		<jsp:param name="token" value="<%=token%>" /> 
-	</jsp:forward>
-<%} %>
-	
+
 	<div class="FormsContainer">
 	<% if (iden == 3){ %>
 		<div class="form" id="knownUser">
