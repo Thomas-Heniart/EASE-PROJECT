@@ -67,7 +67,6 @@ $(document).ready(function(){
 	}
 	}
 %>
-
 	<div class="FormsContainer">
 	<% if (iden == 3){ %>
 		<div class="form" id="knownUser">
