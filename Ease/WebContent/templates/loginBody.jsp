@@ -75,12 +75,6 @@ $(document).ready(function(){
 	}
 	}
 %>
-<% if(sessionId.length() > 0 && token.length() > 0){ %>
-	<jsp:forward page="connectionWithCookies"> 
-		<jsp:param name="sessionId" value="<%=sessionId%>" /> 
-		<jsp:param name="token" value="<%=token%>" /> 
-	</jsp:forward>
-<%} %>
 	
 	<div class="FormsContainer">
 	<% if (iden == 3){ %>
