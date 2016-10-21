@@ -1,26 +1,13 @@
 $(document).ready(function(){
-	
-	$("#arrowLogout").hover(function(){
-		$("#arrowLogout").css("border-bottom-left-radius","0px");
-		$("#logoutButton").css("border-bottom-right-radius","0px");
-		$(".logoutContainer").css("max-height","61px");
-	}, function(){
-		$(".logoutContainer").css("max-height","30px");
-		$("#arrowLogout").css("border-bottom-left-radius","3px");
-		$("#logoutButton").css("border-bottom-right-radius","3px");
+	$("#logoutButton").click(function(e) {
+		e.preventDefault();
+		$('.logoutOptions').toggleClass("show");
 	});
-	
-	$("#allLogoutButton").hover(function(){
-		$("#arrowLogout").css("border-bottom-left-radius","0px");
-		$("#logoutButton").css("border-bottom-right-radius","0px");
-		$(".logoutContainer").css("max-height","61px");
-	}, function(){
-		$(".logoutContainer").css("max-height","30px");
-		$("#arrowLogout").css("border-bottom-left-radius","3px");
-		$("#logoutButton").css("border-bottom-right-radius","3px");
+	$(document).click(function(e) {
+		if(!$(e.target).closest(".logoutOptions, #logoutButton").length)
+			$(".logoutOptions").removeClass("show");
 	});
-	
-	$('#logoutButton').click(function(){
+	$('#easeLogoutButton').click(function(){
 		postHandler.post(
 			'logout',
 			{},
@@ -30,7 +17,6 @@ $(document).ready(function(){
 			'text'
 		);
 	});
-	
 	$('#allLogoutButton').click(function(){
 		var event = new CustomEvent("Logout");
 		document.dispatchEvent(event);
