@@ -3,9 +3,11 @@
 
 <div class="catalogUpdates" style="display: none">
 	<div class="title">
-		<p> </p>
+		<p> Updates</p>
 	</div>
 	<div class="content">
+		<div class="contentList">
 		
+		</div>
 	</div>
 </div>

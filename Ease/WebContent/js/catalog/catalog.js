@@ -244,8 +244,10 @@ var Catalog = function(rootEl){
 		self.isOpen = false;
 	};
 	this.onResize = function(){
+		console.log(self.oUpdate.isOpen == true);
 		self.appsHolder.height(self.qRoot.outerHeight(true) 
-							- (self.searchBar.outerHeight(true)
+							- (((self.oUpdate.isOpen == true) ? self.oUpdate.qRoot.outerHeight(true) : 0)
+							+ self.searchBar.outerHeight(true)
 							+ self.tagContainer.outerHeight(true)
 							+ self.integrateAppArea.outerHeight(true)));
 		self.isOpen && $('.openCatalogHelper').height(self.appsHolder.height());
@@ -267,7 +269,7 @@ var Catalog = function(rootEl){
 		});
 		return null;
 	};
-	//this.oUpdate.test();
+	this.oUpdate.test();
 }
 
 $(document).ready(function(){
