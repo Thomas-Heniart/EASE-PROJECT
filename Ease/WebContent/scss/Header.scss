@@ -1,20 +1,150 @@
 @import 'variables';
 
 .header {
-	.logoutContainer{
+	.userSettingsContainer, .logoutContainer {
 		position: relative;
 		overflow: hidden;
     float: right;
-    margin-right: 160px;
+		margin-top: 6px;
+		max-height: 30px;
+    margin-right: 20px;
     text-decoration: none;
-    width: 102px;
-    max-height: 30px;
-    margin-top: 6px;
-    -webkit-transition: max-height 0.5s;
+		-webkit-transition: max-height 0.5s;
 		-moz-transition: max-height 0.5s;
 		transition: max-height 0.5s;
-		#logoutButton {
+	}
+	.userSettingsContainer {
+		width: 135px;
+		overflow: visible;
+		#userSettingsButton {
+			padding: 5px;
+			text-align: center;
+			width: 100%;
 			position: relative;
+			float: right;
+			background-color: $themeLightGreyColor;
+			color: $themeColor;
+			text-decoration: none;
+			border-radius: 4px;
+			cursor: pointer;
+		}
+		.userSettings {
+			visibility: hidden;
+			opacity: 0;
+			position: relative;
+			margin-top: 42px;
+			transition: opacity 0.3s ease, visibility 0.3s ease;
+			text-align: center;
+			#ModifyUserButton {
+				position: relative;
+				display: block;
+				background-color: white;
+				border-radius: 4px;
+				text-decoration: none;
+				text-align: center;
+				cursor: pointer;
+				padding: 5px;
+				width: 100%;
+				color: $themeColor;
+				margin-top: 5px;
+				span:before {
+					content: "";
+					width: 0;
+					height: 1px;
+					position: absolute;
+					left: 52px;
+    			bottom: 5px;
+					background-color: $themeColor;
+					visibility: visible;
+					-webkit-transform: scaleX(0);
+  				transform: scaleX(0);
+  				-webkit-transition: width 0.3s ease-in-out 0s;
+  				transition: width 0.3s ease-in-out 0s;
+				}
+				span:hover:before {
+					width: 39%;
+					visibility: visible;
+					-webkit-transition: width 0.3s ease-in-out 0s;
+  				transition: width 0.3s ease-in-out 0s;
+  				-webkit-transform: scaleX(1);
+  				transform: scaleX(1);
+				}
+			}
+			.directSettings {
+				height: 100px;
+				background-color: white;
+				border-radius: 4px;
+				position: relative;
+				color: $themeColor;
+				p {
+					padding: 4px;
+					position: relative;
+					width: 100%;
+					text-align: left;
+					span.sliderContainer {
+						margin-left: 26px;
+					}
+				}
+			}
+			.onoffswitch {
+    		position: relative;
+				display: inline-block;
+				float: right;
+				width: 30px;
+    		-webkit-user-select:none;
+				-moz-user-select:none;
+				-ms-user-select: none;
+			}
+			.onoffswitch-checkbox {
+    		display: none;
+			}
+			.onoffswitch-label {
+    		display: block;
+				overflow: hidden;
+				cursor: pointer;
+    		height: 20px;
+				padding: 0;
+				line-height: 20px;
+    		border: 1px solid #CCCCCC;
+				border-radius: 20px;
+    		background-color: #FFFFFF;
+    		transition: background-color 0.3s ease-in;
+			}
+			.onoffswitch-label:before {
+    		content: "";
+    		display: block;
+				width: 20px;
+				height: 20px;
+				margin: 0px;
+    		background: #FFFFFF;
+    		position: absolute;
+				top: 0;
+				bottom: 0;
+    		right: 10px;
+    		border: 1px solid #CCCCCC;
+				border-radius: 20px;
+    		transition: all 0.3s ease-in 0s;
+			}
+			.onoffswitch-checkbox:checked + .onoffswitch-label {
+    		background-color: #373B60;
+			}
+			.onoffswitch-checkbox:checked + .onoffswitch-label, .onoffswitch-checkbox:checked + .onoffswitch-label:before {
+   			border-color: #373B60;
+			}
+			.onoffswitch-checkbox:checked + .onoffswitch-label:before {
+    		right: 0px;
+			}
+		}
+		.userSettings.show {
+			visibility: visible;
+			opacity: 1;
+			transition: opacity 0.3s ease, visibility 0.3s ease;
+		}
+	}
+	.logoutContainer{
+    width: 102px;
+		#logoutButton {
+				position: relative;
     		float: right;
     		background-color: #373b60;
    		 	color: white;
@@ -30,7 +160,7 @@
 			display: block;
 			width: 180px;
 			margin-top: 35px;
-			right: 35px;
+			right: 50px;
 			padding: 5px;
 			opacity: 0;
 			transition: opacity 0.3s ease, visibility 0.3s ease;

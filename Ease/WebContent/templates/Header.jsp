@@ -21,8 +21,6 @@
 			<a id="easeLogoutButton">Logout from Ease</a>
 			<a id="allLogoutButton">Logout from all apps</a>
 		</div>
-		<!-- <a id="logoutButton"><span>Logout</span></a> -->
-		<!-- <a id="allLogoutButton"><span>Global logout</span></a> -->
 	</div>
 	<%
 		}
