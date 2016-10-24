@@ -82,7 +82,7 @@
 		</div>
 	</div>
 </div>
-<div  class="SitesContainer">
+<div  class="SitesContainer" id='${profile.getProfileId()}'>
 	<c:forEach items='${profile.getApps()}' var="app">
 		<dashboard:app app='${app}'/>
 	</c:forEach>

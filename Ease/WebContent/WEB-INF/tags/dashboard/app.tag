@@ -38,21 +38,21 @@
 <c:otherwise>
 <c:if test="${app.getType() eq 'ClassicAccount'}">
 <div class="siteLinkBox"
-login="${app.getLogin()}"
-webId="${app.getSite().getId()}"
-name="${app.getName()}"
-id="${app.getAppId()}"
-ssoId="${app.getSite().getSso()}"
-move="${app.havePerm('MOVE', servletContext)}"
-logwith="false">
+	 login="${app.getLogin()}"
+	 webId="${app.getSite().getId()}"
+	 name="${app.getName()}"
+	 id="${app.getAppId()}"
+	 ssoId="${app.getSite().getSso()}"
+	 move="${app.havePerm('MOVE', servletContext)}"
+	 logwith="false">
 </c:if>
 <c:if test="${app.getType() eq 'LogWithAccount'}">
 <div class="siteLinkBox"
-webId="${app.getSite().getId()}"
-name="${app.getName()}"
-id="${app.getAppId()}"
-move="${app.havePerm('MOVE', servletContext)}"
-logwith="${app.getAccount().getLogWithApp( user ).getAppId()}">
+	 webId="${app.getSite().getId()}"
+	 name="${app.getName()}"
+	 id="${app.getAppId()}"
+	 move="${app.havePerm('MOVE', servletContext)}"
+	 logwith="${app.getAccount().getLogWithApp( user ).getAppId()}">
 </c:if>
 <div class="linkImage" onclick="sendEvent(this)">
 	<div class="showAppActionsButton">
