@@ -52,7 +52,7 @@ function setupOwlCarousel(){
 						"moveProfile",
 						{
 							profileId: item.find('.item').attr('id'),
-							index: item.index()
+							index: item.index() + 1
 						},
 						function(){},
 						function(retMsg){},

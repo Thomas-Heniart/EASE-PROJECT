@@ -1,55 +1,68 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    <%@ page import="com.Ease.session.User" %>
-    <%  String UserName = ((User)(session.getAttribute("User"))).getFirstName();%>
-    
-<nav id="menu" class="menu">
-<button class="menu__label"><i class="fa fa-fw fa-user"></i><span><%= UserName %></span></button>
-	<ul class="menu__inner">
-	<li><a href="#" id="ModifyUserButton"><i class="fa fa-fw fa-cogs"></i><span>Parameters</span></a></li>
-	</ul>
-</nav>
+	pageEncoding="UTF-8"%>
+<%@ page import="com.Ease.session.User"%>
+<%
+	String UserName = ((User) (session.getAttribute("User"))).getFirstName();
+%>
+<div class='userSettingsContainer'>
+	<a id="userSettingsButton"><i class="fa fa-fw fa-user"></i> <%=UserName%></a>
+	<div class="userSettings">
+		<div class="directSettings">
+			<p>
+				<span>Homepage</span><span class="onoffswitch"> <input
+					type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
+					id="homePageSwitch" /> <label class="onoffswitch-label"
+					for="homePageSwitch"></label>
+				</span>
+			</p>
+			<p>
+				<span>Daily photo</span><span class="onoffswitch"> <input
+					type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
+					id=backgroundSwitch checked /> <label class="onoffswitch-label"
+					for="backgroundSwitch"></label>
+				</span>
+			</p>
+		</div>
+		<a id="ModifyUserButton"><i class="fa fa-fw fa-cogs"></i> <span>Settings</span></a>
+	</div>
+</div>
+
 <script>
-$(document).ready(function(){	
-	$('#ModifyUserButton').click(function(){
+$(document).ready(function() {
+	$("#userSettingsButton").click(function() {
+		$(".userSettings").toggleClass("show");
+	});
+
+	$(document).click(function(e) {
+		if (!$(e.target).closest(".userSettings, #userSettingsButton").length)
+			$(".userSettings").removeClass("show");
+	});
+	$('#ModifyUserButton').click(function() {
 		$('.SettingsView').addClass('show');
 		$('.col-left').removeClass('show');
 		$('.MenuButtonSet').removeClass('show');
-	});	
+	});
+	if($("body").hasClass("picBckgrnd")){
+		$('#backgroundSwitch').prop("checked", true);
+	}
+	$("#backgroundSwitch").change(function() {
+		postHandler.post(
+				'changeUserBackground',
+				{},
+				function(){},
+				function(retMsg){
+					if($("body").hasClass("picBckgrnd")){
+						$("body").switchClass("picBckgrnd", "logoBckgrnd");
+					} else if($("body").hasClass("logoBckgrnd")){
+						$("body").switchClass("logoBckgrnd", "picBckgrnd");
+					}
+				},
+				function(retMsg){
+					showAlertPopup(retMsg, true);
+				},
+				"text"
+			);
+	});
 });
 
-(function() {
-
-				function SVGDDMenu( el, options ) {
-					this.el = el;
-					this.init();
-				}
-
-				SVGDDMenu.prototype.init = function() {
-					this.isOpen = false;
-
-					this.initEvents();
-				};
-
-				SVGDDMenu.prototype.initEvents = function() {
-					this.el.addEventListener( 'click', this.toggle.bind(this) );
-						
-				};
-
-				SVGDDMenu.prototype.toggle = function() {
-					var self = this;
-
-					if( this.isOpen ) {
-						classie.remove( self.el, 'menu--open' );
-					}
-					else {
-						classie.add( self.el, 'menu--open' );
-					}
-
-					this.isOpen = !this.isOpen;	
-				};
-
-				new SVGDDMenu( document.getElementById( 'menu' ) );
-
-			})();
 </script>

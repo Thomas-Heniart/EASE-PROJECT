@@ -9,6 +9,77 @@ $(document).ready(function(){
 	$("#enterEditMode").click(enterEditMode);
 });
 
+var ease;
+var easeRoot = function(rootEl){
+	var self = this;
+	this.rootEl = rootEl;
+	this.mainContent = this.rootEl.find('#loggedBody');
+
+	if (!(this.mainContent))
+		return;
+	this.onResize = function(){
+		this.mainContent.css('height', $(window).height() - 43 + 'px');
+	}
+	this.onResize();
+	$(window).resize(function(){
+		self.onResize();
+	});
+};
+
+var easeHiddenProfile;
+$(document).ready(function(){
+	easeHiddenProfile = new hiddenProfile($('.hiddenProfile'));
+	ease = new easeRoot($('#onComputer'));
+});
+
+var hiddenProfile = function(rootEl){
+	var self = this;
+	this.rootEl = rootEl;
+	this.appContainer = this.rootEl.find('.hiddenProfileContainer');
+	this.openHelper = this.rootEl.find('.hiddenProfileHelper');
+
+	this.onResize = function(){
+//		this.appContainer.find('.siteLinkBox').height(this.appContainer.find('.siteLinkBox').width());
+	}
+	
+	this.onResize();
+	$(window).resize(function(){
+		self.onResize();
+	});
+	this.show = function(){
+		self.rootEl.addClass('show');
+	}
+	this.hide = function(){
+		self.rootEl.removeClass('show');
+	}
+	this.openHelper.on('click', function(){
+		self.show();
+	});
+	this.rootEl.on('mouseleave', function(){
+		self.hide();
+	});
+	this.appContainer.droppable({
+		accept: ".catalogApp",
+		drop: function(event, ui){
+			event.preventDefault();
+			event.stopPropagation();
+			$(this).css('border', '');
+			showAddAppPopup($(this), $(ui.helper));
+			popupAddApp.oForm.profile_id = 0;
+		},
+		over: function(event, ui){
+			event.preventDefault();
+			event.stopPropagation();
+			$(this).css('border', '1px solid red');
+		},
+		out: function(event, ui){
+			event.preventDefault();
+			event.stopPropagation();
+			$(this).css('border', '');
+		}
+	});
+	setupSortableContainer(this.appContainer);
+};
 
 function enterEditMode() {
 	//mixpanel.track("Open Catalog");
@@ -53,10 +124,10 @@ var Profile = function(rootEl){
 	this.isSettingsOpen = false;
 
 	this.ControlPanel.find(".profileSettingsTab").accordion({
-        active : 10,
-        collapsible : true,
-        autoHeight : false,
-        heightStyle : "content"
+		active : 10,
+		collapsible : true,
+		autoHeight : false,
+		heightStyle : "content"
 	});
 	this.showSettings = function(){
 		self.SettingsButton.addClass('fa-rotate-90');
@@ -72,11 +143,11 @@ var Profile = function(rootEl){
 	}
 	this.SettingsButton.click(function(e){
 		e.stopPropagation();
-        $('.ProfileSettingsButton.settings-show').each(function(){
-		   if (!($(this).is(self.SettingsButton))){
-              $(this).click();
-            }
-        });
+		$('.ProfileSettingsButton.settings-show').each(function(){
+			if (!($(this).is(self.SettingsButton))){
+				$(this).click();
+			}
+		});
 		(self.isSettingsOpen) ? self.hideSettings() : self.showSettings();
 	});
 	self.appContainer.droppable({
@@ -86,6 +157,7 @@ var Profile = function(rootEl){
 			event.stopPropagation();
 			$(this).css('border', '');
 			showAddAppPopup($(this), $(ui.helper));
+			easeHiddenProfile.rootEl.off('mouseenter');
 		},
 		over: function(event, ui){
 			event.preventDefault();
@@ -115,6 +187,7 @@ function setupSortableContainer(container) {
 		filter : ".siteLinkBox[move='false']",
 		handle : ".logo, .emptyAppIndicator",
 		fallbackTolerance : 1,
+		fallbackOnBody: true,
 		onStart : function(evt) {
 			var item = $(evt.item);
 			item.css({
@@ -122,8 +195,12 @@ function setupSortableContainer(container) {
 				'opacity' : '0'
 			});
 			$('body').css('cursor', 'move');
+			easeHiddenProfile.rootEl.on('mouseenter', function(){
+				easeHiddenProfile.show();
+			});
 		},
 		onEnd : function(evt) {
+			easeHiddenProfile.rootEl.off('mouseenter');
 			var item = $(evt.item);
 			$('body').css('cursor', '');
 			item.css({
@@ -133,7 +210,7 @@ function setupSortableContainer(container) {
 			if (!($(evt.to).is($(evt.from))) || evt.oldIndex != evt.newIndex) {
 				postHandler.post("moveApp", {
 					appId : item.attr('id'),
-					profileId : item.closest('.item').attr('id'),
+					profileId : item.parent().attr('id'),
 					index : item.index()
 				}, function() {
 				}, function(retMsg) {
@@ -264,38 +341,38 @@ function setupProfileSettings(profile) {
 /* Next lines come from ProfileEditView.jsp */
 
 $(document).ready(function() {
-		$('#PopupAddApp #password').keyup(function(event) {
-				if (event.keyCode == 13) {
-					$("#PopupAddApp .md-content .buttonSet #accept").click();
-				}
-			});
-		$('#PopupAddApp #login').keyup(function(event) {
-			if (event.keyCode == 13) {
-				$('#PopupAddApp #password').focus();
-			}
-		});
-		$('.helpIntegrateApps #integrateAppForm #integrateApp').keyup(function(e) {
-				if (e.keyCode == 13)
-					$('.helpIntegrateApps #integrateAppForm #integrate').trigger("click");
-			});
-		$('.helpIntegrateApps #integrateAppForm #integrate').click(function() {
-				var form = $(this).closest('#integrateAppForm');
-				postHandler.post(
-					'askForNewApp',
-					{
-						ask : $(form).find('#integrateApp').val()
-					},
-					function() {
-						$(form).find('.inputs input').val('');
-						$(form).find('.inputs').hide();
-						$(form).find('.confirmation').show().delay(1000).fadeOut(function() {
-								$(form).find('.inputs').show();
-							});
-					}, function(retMsg) {
-					}, function(retMsg) {
-					}, 'text');
-			});
+	$('#PopupAddApp #password').keyup(function(event) {
+		if (event.keyCode == 13) {
+			$("#PopupAddApp .md-content .buttonSet #accept").click();
+		}
 	});
+	$('#PopupAddApp #login').keyup(function(event) {
+		if (event.keyCode == 13) {
+			$('#PopupAddApp #password').focus();
+		}
+	});
+	$('.helpIntegrateApps #integrateAppForm #integrateApp').keyup(function(e) {
+		if (e.keyCode == 13)
+			$('.helpIntegrateApps #integrateAppForm #integrate').trigger("click");
+	});
+	$('.helpIntegrateApps #integrateAppForm #integrate').click(function() {
+		var form = $(this).closest('#integrateAppForm');
+		postHandler.post(
+			'askForNewApp',
+			{
+				ask : $(form).find('#integrateApp').val()
+			},
+			function() {
+				$(form).find('.inputs input').val('');
+				$(form).find('.inputs').hide();
+				$(form).find('.confirmation').show().delay(1000).fadeOut(function() {
+					$(form).find('.inputs').show();
+				});
+			}, function(retMsg) {
+			}, function(retMsg) {
+			}, 'text');
+	});
+});
 
 
 
@@ -306,7 +383,7 @@ $(document)
 		.click(
 			function(event) {
 				if ($(".CatalogViewTab").hasClass("show") && !($(event.target).closest('.MenuButtonSet').length) && $('.md-show').length == 0) {
-					if (!($(event.target).closest('.header, .owl-wrapper-outer, .md-modal, .md-overlay, .CatalogViewTab, .AddProfileView, .updateButton').length))
+					if (!($(event.target).closest('.header, .owl-wrapper-outer, .md-modal, .md-overlay, .CatalogViewTab, .AddProfileView, .updateButton, .hiddenProfile').length))
 						leaveEditMode();
 				}
 			});
@@ -360,80 +437,85 @@ function showConfirmDeleteAppPopup(elem, event) {
 		popupDeleteApp.open(app);
 	}
 }
-	function addProfileView(elem) {
-		var profile = $($('#profileHelper').html());
-		var container = $(profile).find('.SitesContainer');
+function addProfileView(elem) {
+	var profile = $($('#profileHelper').html());
+	var container = $(profile).find('.SitesContainer');
 
-		var parent = $(elem).closest('.item');
-		var owl = $(".owl-carousel").data('owlCarousel');
+	var parent = $(elem).closest('.item');
+	var owl = $(".owl-carousel").data('owlCarousel');
 
-		postHandler.post(
-			'addProfile', 
-			{
-				name : 'Profile name',
-				color : '#35a7ff'
-			}, 
-			function(){},
-			function(retMsg){
-				$(profile).attr('id', retMsg);
-			},
-			function(retMsg){},
-			'text'
-			);
-		profiles.push(new Profile($(profile).find('.ProfileBox')));
-		owl.destroy();
-		$('.owl-carousel').append($(profile));
-		$('.owl-carousel').append($(parent));
-		var nbProfiles = $('.owl-carousel > *').length;
-		if (nbProfiles > 3) {
-			var addProfileHelper = $(elem).closest('.item');
-			$('#addProfileHelper').append($(addProfileHelper));
-		}
-		setupOwlCarousel();
-		return profile;
+	postHandler.post(
+		'addProfile', 
+		{
+			name : 'Profile name',
+			color : '#35a7ff'
+		}, 
+		function(){},
+		function(retMsg){
+			$(profile).attr('id', retMsg);
+			$(profile).find('.SitesContainer').attr('id', retMsg);
+		},
+		function(retMsg){},
+		'text'
+		);
+	profiles.push(new Profile($(profile).find('.ProfileBox')));
+	owl.destroy();
+	$('.owl-carousel').append($(profile));
+	$('.owl-carousel').append($(parent));
+	var nbProfiles = $('.owl-carousel > *').length;
+	if (nbProfiles > 3) {
+		var addProfileHelper = $(elem).closest('.item');
+		$('#addProfileHelper').append($(addProfileHelper));
 	}
+	setupOwlCarousel();
+	return profile;
+}
 
-	$(document).ready(
-		function() {
-			$('.AddProfileView .scalerContainer').click(function() {
-				addProfileView($(this));
-			});
-			$('.AddProfileView .scalerContainer').droppable(
-			{
-				accept : ".catalogApp",
-
-				drop : function(event, ui) {
-					event.preventDefault();
-					event.stopPropagation();
-					$(this).css('border', 'none');
-					var profile = addProfileView($(this));
-					showAddAppPopup($(profile).find('.SitesContainer'), $(ui.helper));
-				},
-				over : function(event, ui) {
-					event.preventDefault();
-					event.stopPropagation();
-					$(this).css('border', '1px solid #35a7ff');
-				},
-
-				out : function(event, ui) {
-					event.preventDefault();
-					event.stopPropagation();
-					$(this).css('border', 'none');
-				}
-			});
+$(document).ready(
+	function() {
+		$('.AddProfileView .scalerContainer').click(function() {
+			addProfileView($(this));
 		});
+		$('.AddProfileView .scalerContainer').droppable(
+		{
+			accept : ".catalogApp",
+
+			drop : function(event, ui) {
+				event.preventDefault();
+				event.stopPropagation();
+				$(this).css('border', 'none');
+				var profile = addProfileView($(this));
+				showAddAppPopup($(profile).find('.SitesContainer'), $(ui.helper));
+			},
+			over : function(event, ui) {
+				event.preventDefault();
+				event.stopPropagation();
+				$(this).css('border', '1px solid #35a7ff');
+			},
+
+			out : function(event, ui) {
+				event.preventDefault();
+				event.stopPropagation();
+				$(this).css('border', 'none');
+			}
+		});
+	});
 
 
 $(document).ready(function() {
 	$('.catalogApp').draggable({
-		cursor : 'none',
+		cursor : 'move',
 		cursorAt : {
 			left : 25,
 			top : 25
 		},
+		appendTo: "body",
 		helper : function(e, ui) {
+			easeHiddenProfile.rootEl.on('mouseenter', function(){
+				easeHiddenProfile.show();
+			});
 			var ret;
-			ret = $('<div class="dragHelperLogo" style="position: fixed;"/>');
+			ret = $('<div class="dragHelperLogo" style="position: fixed; z-index: 3;pointer-events:none;"/>');
 			ret.attr("connect", $(this).attr("connect"));
 			ret.attr("data-login", $(this).attr("data-login"));
 			ret.attr("data-sso", $(this).attr("data-sso"));
