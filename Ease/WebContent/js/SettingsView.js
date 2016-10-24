@@ -111,7 +111,7 @@ $(function() {
 		autoHeight : false,
 		heightStyle : "content"
 	});
-	$('#settingsTab #cancel').click(function() {
+	$("#settingsTab [oClass='CloseButton']").click(function() {
 		var Accordion = $(this).closest('.ui-accordion');
 
 		$(Accordion).find('input').val('');
