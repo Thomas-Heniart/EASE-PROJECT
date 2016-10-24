@@ -87,6 +87,18 @@ var Form = {
 	EditUserNameForm : function(rootEl) {
 		constructorForm.apply(this, arguments);
 		var self = this;
+		this.beforeSubmit = function() {
+			$('#loading').addClass('la-animate');
+		};
+		this.afterSubmit = function() {
+			$('#loading').removeClass('la-animate');
+		}
+		this.successCallback = function () {
+			showAlertPopup('Modifications successfully applied !', false);
+		};
+		this.errorCallback = function (retMsg) {
+			showAlertPopup(retMsg, true);
+		}
 	},
 	EditUserPasswordForm : function(rootEl) {
 		constructorForm.apply(this, arguments);
@@ -257,5 +269,9 @@ var Form = {
 		this.errorCallback = function(retMsg) {
     	  	showAlertPopup(retMsg, true);
 		}
+	},
+	AddEmailForm : function (rootEl) {
+		constructorForm.apply(this, arguments);
+		var self = this;
 	}
 }

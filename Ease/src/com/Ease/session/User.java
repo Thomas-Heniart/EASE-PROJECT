@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -273,6 +274,27 @@ public class User {
 	
 	public Map<String, Boolean> getEmails() {
 		return emails;
+	}
+	
+	public List<String> getVerifiedEmails() {
+		List<String> res = new LinkedList<String>();
+		Iterator<Map.Entry<String, Boolean>> it = emails.entrySet().iterator();
+		while(it.hasNext()) {
+			Map.Entry<String, Boolean> entry = it.next();
+			if (entry.getValue())
+				res.add(entry.getKey());
+		}
+		return res;
+	}
+	public List<String> getUnverifiedEmails() {
+		List<String> res = new LinkedList<String>();
+		Iterator<Map.Entry<String, Boolean>> it = emails.entrySet().iterator();
+		while(it.hasNext()) {
+			Map.Entry<String, Boolean> entry = it.next();
+			if (!entry.getValue())
+				res.add(entry.getKey());
+		}
+		return res;
 	}
 
 	// SETTER
