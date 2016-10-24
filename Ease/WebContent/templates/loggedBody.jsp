@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="java.util.LinkedList"%>
+<%@ page import="com.Ease.context.Tag"%>
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib tagdir="/WEB-INF/tags/dashboard" prefix="dashboard" %>
 
 <%
 Cookie sessionId = new Cookie("sId",sessionSave.getSessionId());
@@ -10,6 +15,32 @@ sessionToken.setMaxAge(60 * 60 * 24 * 365);
 response.addCookie(sessionId);
 response.addCookie(sessionToken);
 %>
+<%
+pageContext.setAttribute("selectedTags", new LinkedList<Tag>());
+
+Cookie fname = new Cookie("fname",
+	Base64.getEncoder().encodeToString(user.getFirstName().getBytes(StandardCharsets.UTF_8)));
+Cookie lname = new Cookie("lname",
+	Base64.getEncoder().encodeToString(user.getLastName().getBytes(StandardCharsets.UTF_8)));
+Cookie email = new Cookie("email", user.getEmail());
+
+fname.setMaxAge(60 * 60 * 24 * 31);
+lname.setMaxAge(60 * 60 * 24 * 31);
+email.setMaxAge(60 * 60 * 24 * 31);
+response.addCookie(fname);
+response.addCookie(lname);
+response.addCookie(email);
+%>
+<c:set var="session"		scope="session" value="${pageContext.getSession()}"/>
+<c:set var="servletContext" scope="session" value="${session.getServletContext()}"/>
+<c:set var="user"			scope="session" value='${session.getAttribute("User")}'/>
+<c:set var="colors"			scope="session" value='${servletContext.getAttribute("Colors")}'/>
+<c:set var="profiles"		scope="session" value='${user.getProfiles()}'/>
+<c:set var="siteManager"	scope="session" value='${servletContext.getAttribute("siteManager")}'/>
+<c:set var="siteList"		scope="session" value='${siteManager.getSitesList()}'/>
+<c:set var="tags"			scope="session"	value='${servletContext.getAttribute("Tags")}'/>
+<c:set var="tagAndSiteMapping"	scope="session" value='servletContext.getAttribute("TagAndSiteMapping")'/>
+
 <script type="text/javascript">
 $(document).ready(function(){
 	setTimeout(function(){
@@ -17,12 +48,14 @@ $(document).ready(function(){
 		document.dispatchEvent(event);
 	}, 500)});
 </script>
+
 <div id="loggedBody">
     <div class="col-left show" style="width: 100%; float:left">
 		<%@ include file="ProfileView.jsp"%>
 		<%@ include file="extension.jsp" %>		
 		<%@ include file="catalogView.jsp"%>
 	</div>
+	<dashboard:hiddenProfile profile="${user.getProfile(0)}"/>
 	<%@ include file="SettingsView.jsp" %>
 	<%@ include file="PopupDeleteProfile.jsp" %>
 	<%@ include file="PopupDeleteApp.jsp" %>
