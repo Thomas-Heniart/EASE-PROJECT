@@ -28,6 +28,24 @@
 			transform: scaleX(0.2) scaleY(0.2);
 		}
 	}
+	
+	@-webkit-keyframes deletingUpdate {
+		0% {
+			transform: scaleX(1) scaleY(1);
+		}
+		100% {
+			transform: scaleX(0) scaleY(0);
+		}
+	}
+	
+	@-webkit-keyframes decaleUpdate {
+		0% {
+			transform: translate(0, 0);
+		}
+		100% {
+			transform: translate(-100%, 0);
+		}
+	}
 
 	@-webkit-keyframes scaleOut {
 		0% {

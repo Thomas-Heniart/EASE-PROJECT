@@ -5,7 +5,9 @@ var extension = {
 	storage:{
 		get:function(key, callback){
 			chrome.storage.local.get(key, function(res){
-                callback(res[key]);
+                if(res[key]== undefined) var ans = {};
+                else var ans = res[key];
+                callback(ans);
             });
 		},
 		set:function(key, value, callback){
@@ -40,15 +42,11 @@ var extension = {
                chrome.tabs.onCreated.addListener(function newWindow(tab){
                 if(tab.windowId == window.id){
                 chrome.tabs.onCreated.removeListener(newWindow);
-                chrome.tabs.onUpdated.addListener(function newtab(tabId, params, newTab){
-                    if(tabId == tab.id){
-                        chrome.tabs.onUpdated.removeListener(newtab);
-                        if(params.url=="chrome://newtab/"){
+                        if(tab.url=="about:home" || tab.title == "Nouvel onglet" || tab.title=="New tab"){
                             fct(newTab);
                         }
-                    }                    
-                });
-            }
+                              
+                }
                }); 
             });
         },
@@ -71,6 +69,15 @@ var extension = {
                     return true;
 				}
 			});
+        },
+        tempBckgrndOnMessage:function(name, fct){
+            chrome.runtime.onMessage.addListener(function temp(event, sender, sendResponse){
+                if(event.name == name){
+					fct(event.message, sender.tab, sendResponse);
+                    chrome.runtime.onMessage.removeListener(temp);
+                    return true;
+				}
+			});
         }
     },
 	tabs:{
@@ -86,7 +93,7 @@ var extension = {
 		create:function(window, url, active, callback){
 			chrome.tabs.create({"windowId":window.id, "url":url, "active":active}, callback);
 		},
-        createOrUpdate(window, tab, url, active, callback){
+        createOrUpdate:function(window, tab, url, active, callback){
             if(extension.hasMultipleEaseTabs(window)){
                 this.update(tab, url, callback);
             } else {
@@ -112,14 +119,9 @@ var extension = {
 		},
         onNewTab:function(fct){
             chrome.tabs.onCreated.addListener(function(tab){
-                chrome.tabs.onUpdated.addListener(function newtab(tabId, params, newTab){
-                    if(tabId == tab.id){
-                        chrome.tabs.onUpdated.removeListener(newtab);
-                        if(params.url=="chrome://newtab/"){
-                            fct(newTab);
-                        }
-                    }                    
-                });
+                if(tab.url=="about:home" || tab.title == "Nouvel onglet" || tab.title=="New tab"){
+                    fct(tab);
+                }
             });
         },
         onUpdatedRemoveListener:function(tab){

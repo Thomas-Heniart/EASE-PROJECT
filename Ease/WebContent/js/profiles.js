@@ -382,14 +382,8 @@ $(document)
 		$(document)
 		.click(
 			function(event) {
-				if ($(".CatalogViewTab").hasClass(
-					"show")
-					&& !($(event.target).closest(
-						'.MenuButtonSet').length)
-					&& $('.md-show').length == 0) {
-					if (!($(event.target)
-						.closest(
-							'.header, .owl-wrapper-outer, .md-modal, .md-overlay, .CatalogViewTab, .AddProfileView, .hiddenProfile').length))
+				if ($(".CatalogViewTab").hasClass("show") && !($(event.target).closest('.MenuButtonSet').length) && $('.md-show').length == 0) {
+					if (!($(event.target).closest('.header, .owl-wrapper-outer, .md-modal, .md-overlay, .CatalogViewTab, .AddProfileView, .updateButton, .hiddenProfile').length))
 						leaveEditMode();
 				}
 			});

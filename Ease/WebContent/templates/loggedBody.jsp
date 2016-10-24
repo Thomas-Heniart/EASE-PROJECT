@@ -1,17 +1,26 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<<<<<<< HEAD
 <%@ page import="java.util.LinkedList"%>
 <%@ page import="com.Ease.context.Tag"%>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib tagdir="/WEB-INF/tags/dashboard" prefix="dashboard" %>
+<%@ page import="java.text.DateFormat"%>
+<%@ page import="java.text.SimpleDateFormat"%>
+<%@ page import="java.util.Date"%>
 
 <%
 Cookie sessionId = new Cookie("sId",sessionSave.getSessionId());
 Cookie sessionToken = new Cookie("sTk",sessionSave.getToken());
 
-sessionId.setMaxAge(60 * 60 * 24 * 365);
-sessionToken.setMaxAge(60 * 60 * 24 * 365);
+DateFormat dateFormat = new SimpleDateFormat("HH");
+Date date = new Date();
+int duration = 29 - Integer.parseInt(dateFormat.format(date));
+if(duration > 24) duration = duration - 24;
+duration = (duration*60-30)*60;
+sessionId.setMaxAge(duration);
+sessionToken.setMaxAge(duration);
 response.addCookie(sessionId);
 response.addCookie(sessionToken);
 %>
@@ -44,7 +53,7 @@ response.addCookie(email);
 <script type="text/javascript">
 $(document).ready(function(){
 	setTimeout(function(){
-		var event = new CustomEvent("isConnected", {"detail":true});
+		var event = new CustomEvent("isConnected", {"detail":"true"});
 		document.dispatchEvent(event);
 	}, 500)});
 </script>
@@ -53,7 +62,7 @@ $(document).ready(function(){
     <div class="col-left show" style="width: 100%; float:left">
 		<%@ include file="ProfileView.jsp"%>
 		<%@ include file="extension.jsp" %>		
-		<%@ include file="catalogView.jsp"%>
+		<%@ include file="catalog/catalogView.jsp"%>
 	</div>
 	<dashboard:hiddenProfile profile="${user.getProfile(0)}"/>
 	<%@ include file="SettingsView.jsp" %>
@@ -68,9 +77,13 @@ $(document).ready(function(){
 
 $(document).ready(function(){
 	$('.md-overlay').click(function(){
+		popupAddApp.close();
+		modifyAppPopup.close();
 		$('.md-show').removeClass('md-show');
 	});
 	$('.popupClose').click(function () {
+		popupAddApp.close();
+		modifyAppPopup.close();
 		$('.md-show').removeClass('md-show');
 	});
 });

@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import com.Ease.context.DataBase;
 import com.Ease.context.Site;
 import com.Ease.context.SiteManager;
+import com.Ease.data.Regex;
 import com.Ease.data.ServletItem;
 import com.Ease.session.App;
 import com.Ease.session.Profile;
@@ -36,7 +37,6 @@ public class AddApp extends HttpServlet {
      */
     public AddApp() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -96,6 +96,10 @@ public class AddApp extends HttpServlet {
 						if (user.getTuto().equals("0")) {
 							user.tutoComplete();
 							user.updateInDB(session.getServletContext());
+						}
+						if (Regex.isEmail(login)) {
+							db.set("CALL addEmail(" + user.getId() + ", '" + login + "');");
+							user.addEmailIfNotPresent(login);
 						}
 						SI.setResponse(200, Integer.toString(app.getAppId()));
 						db.commit(transaction);

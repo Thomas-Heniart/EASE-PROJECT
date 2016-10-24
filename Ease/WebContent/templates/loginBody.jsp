@@ -3,7 +3,7 @@
     <%@ page import="java.util.Base64" %>
 <%@ page import="java.util.Base64.Encoder" %>
 <%@ page import="java.nio.charset.StandardCharsets" %>
-    
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <script src="js/connection.js"></script>
 <script src="js/rAF.js"></script>
@@ -11,7 +11,7 @@
 <script>
 $(document).ready(function(){
 	setTimeout(function(){
-		var event = new CustomEvent("isConnected", {"detail":false});
+		var event = new CustomEvent("isConnected", {"detail":"false"});
 		document.dispatchEvent(event);
 	}, 500);
     
@@ -22,36 +22,14 @@ $(document).ready(function(){
 	<div id='search-google'>
 		<%@ include file="SearchBar.jsp"%>
 	</div>
-	
-	<div class='logout-overlay' style="display:none;">
-		<h3>We are logging you out from your websites</h3>
-		<div class="sk-fading-circle">
-			<div class="sk-circle1 sk-circle"></div>
-  			<div class="sk-circle2 sk-circle"></div>
-  			<div class="sk-circle3 sk-circle"></div>
-  			<div class="sk-circle4 sk-circle"></div>
-  			<div class="sk-circle5 sk-circle"></div>
-  			<div class="sk-circle6 sk-circle"></div>
-  			<div class="sk-circle7 sk-circle"></div>
-  			<div class="sk-circle8 sk-circle"></div>
-  			<div class="sk-circle9 sk-circle"></div>
-  			<div class="sk-circle10 sk-circle"></div>
-  			<div class="sk-circle11 sk-circle"></div>
-  			<div class="sk-circle12 sk-circle"></div>
-		</div>
-		<h3>automagically...</h3>
-	</div>
+	<%@ include file="Logout.jsp" %>
 <% 
 	Cookie 	cookie = null;
 	Cookie 	cookies[] = request.getCookies();
 	String 	fname = "";
 	String 	lname = "";
 	String 	email = "";
-	String	sessionId = "";
-	String 	token = "";
-	
 	int		iden = 0;
-
 	if (cookies != null){
 	for (int i = 0;i < cookies.length ; i++) {
 		cookie = cookies[i];
@@ -70,10 +48,6 @@ $(document).ready(function(){
 			fname = cookie.getValue();
 			if (fname.length() > 0)
 				iden++;
-		} else if((cookie.getName()).compareTo("sId") == 0){
-			sessionId = cookie.getValue();
-		} else if((cookie.getName()).compareTo("sTk") == 0){
-			token = cookie.getValue();
 		}
 	}
 	if (iden == 3){
@@ -93,13 +67,6 @@ $(document).ready(function(){
 	}
 	}
 %>
-<% if(sessionId.length() > 0 && token.length() > 0){ %>
-	<jsp:forward page="connectionWithCookies"> 
-		<jsp:param name="sessionId" value="<%=sessionId%>" /> 
-		<jsp:param name="token" value="<%=token%>" /> 
-	</jsp:forward>
-<%} %>
-	
 	<div class="FormsContainer">
 	<% if (iden == 3){ %>
 		<div class="form" id="knownUser">

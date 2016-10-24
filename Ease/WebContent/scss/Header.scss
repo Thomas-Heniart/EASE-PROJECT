@@ -1,50 +1,198 @@
 @import 'variables';
 
 .header {
-	#logoutButton {
+	.userSettingsContainer, .logoutContainer {
 		position: relative;
-		float: right;
-		margin-right: 160px;
-		background-color: $themeColor;
-		color: white;
-		border-radius: 3px;
-		text-decoration: none;
-		transition: all 0.3s;
-		
-		height: 70%;
-		text-align: center;
+		overflow: hidden;
+    float: right;
 		margin-top: 6px;
-		padding: 4px;
-		border: 1px solid $themeColor;
-		&:hover {
-			cursor: pointer;
-			transition: all 0.3s;
-			background-color: rgba(0,0,0,0);
+		max-height: 30px;
+    margin-right: 20px;
+    text-decoration: none;
+		-webkit-transition: max-height 0.5s;
+		-moz-transition: max-height 0.5s;
+		transition: max-height 0.5s;
+	}
+	.userSettingsContainer {
+		width: 135px;
+		overflow: visible;
+		#userSettingsButton {
+			padding: 5px;
+			text-align: center;
+			width: 100%;
+			position: relative;
+			float: right;
+			background-color: $themeLightGreyColor;
 			color: $themeColor;
-			border: 1px solid $themeColor;
+			text-decoration: none;
+			border-radius: 4px;
+			cursor: pointer;
+		}
+		.userSettings {
+			visibility: hidden;
+			opacity: 0;
+			position: relative;
+			margin-top: 42px;
+			transition: opacity 0.3s ease, visibility 0.3s ease;
+			text-align: center;
+			#ModifyUserButton {
+				position: relative;
+				display: block;
+				background-color: white;
+				border-radius: 4px;
+				text-decoration: none;
+				text-align: center;
+				cursor: pointer;
+				padding: 5px;
+				width: 100%;
+				color: $themeColor;
+				margin-top: 5px;
+				span:before {
+					content: "";
+					width: 0;
+					height: 1px;
+					position: absolute;
+					left: 52px;
+    			bottom: 5px;
+					background-color: $themeColor;
+					visibility: visible;
+					-webkit-transform: scaleX(0);
+  				transform: scaleX(0);
+  				-webkit-transition: width 0.3s ease-in-out 0s;
+  				transition: width 0.3s ease-in-out 0s;
+				}
+				span:hover:before {
+					width: 39%;
+					visibility: visible;
+					-webkit-transition: width 0.3s ease-in-out 0s;
+  				transition: width 0.3s ease-in-out 0s;
+  				-webkit-transform: scaleX(1);
+  				transform: scaleX(1);
+				}
+			}
+			.directSettings {
+				height: 100px;
+				background-color: white;
+				border-radius: 4px;
+				position: relative;
+				color: $themeColor;
+				p {
+					padding: 4px;
+					position: relative;
+					width: 100%;
+					text-align: left;
+					span.sliderContainer {
+						margin-left: 26px;
+					}
+				}
+			}
+			.onoffswitch {
+    		position: relative;
+				display: inline-block;
+				float: right;
+				width: 30px;
+    		-webkit-user-select:none;
+				-moz-user-select:none;
+				-ms-user-select: none;
+			}
+			.onoffswitch-checkbox {
+    		display: none;
+			}
+			.onoffswitch-label {
+    		display: block;
+				overflow: hidden;
+				cursor: pointer;
+    		height: 20px;
+				padding: 0;
+				line-height: 20px;
+    		border: 1px solid #CCCCCC;
+				border-radius: 20px;
+    		background-color: #FFFFFF;
+    		transition: background-color 0.3s ease-in;
+			}
+			.onoffswitch-label:before {
+    		content: "";
+    		display: block;
+				width: 20px;
+				height: 20px;
+				margin: 0px;
+    		background: #FFFFFF;
+    		position: absolute;
+				top: 0;
+				bottom: 0;
+    		right: 10px;
+    		border: 1px solid #CCCCCC;
+				border-radius: 20px;
+    		transition: all 0.3s ease-in 0s;
+			}
+			.onoffswitch-checkbox:checked + .onoffswitch-label {
+    		background-color: #373B60;
+			}
+			.onoffswitch-checkbox:checked + .onoffswitch-label, .onoffswitch-checkbox:checked + .onoffswitch-label:before {
+   			border-color: #373B60;
+			}
+			.onoffswitch-checkbox:checked + .onoffswitch-label:before {
+    		right: 0px;
+			}
+		}
+		.userSettings.show {
+			visibility: visible;
+			opacity: 1;
+			transition: opacity 0.3s ease, visibility 0.3s ease;
 		}
 	}
-	#allLogoutButton {
-		position: relative;
-		float: right;
-		margin-right: 20px;
-		background-color: $themeColor;
-		color: white;
-		border-radius: 3px;
-		text-decoration: none;
-		transition: all 0.3s;
-		
-		height: 70%;
-		text-align: center;
-		margin-top: 6px;
-		padding: 4px;
-		border: 1px solid $themeColor;
-		&:hover {
-			cursor: pointer;
-			transition: all 0.3s;
-			background-color: rgba(0,0,0,0);
-			color: $themeColor;
-			border: 1px solid $themeColor;
+	.logoutContainer{
+    width: 102px;
+		#logoutButton {
+				position: relative;
+    		float: right;
+    		background-color: #373b60;
+   		 	color: white;
+   		 	text-decoration: none;
+  	 	 	transition: all 0.3s;
+    		text-align: center;
+    		padding: 8px;
+    		border-radius: 4px;
+				cursor: pointer;
+		}
+		.logoutOptions {
+			position: fixed;
+			display: block;
+			width: 180px;
+			margin-top: 35px;
+			right: 50px;
+			padding: 5px;
+			opacity: 0;
+			transition: opacity 0.3s ease, visibility 0.3s ease;
+			visibility: hidden;
+			overflow: hidden;
+			#allLogoutButton, #easeLogoutButton {
+				position: relative;
+				display: block;
+    		float: right;
+    		background-color: #373b60;
+  			color: white;
+  			text-decoration: none;
+    		width: 150px;
+				margin: 2px auto;
+				border-radius: 3px;
+				padding: 4px;
+				height: 31px;
+				overflow: hidden;
+				border: 1px solid $themeColor;
+				text-align: center;
+				&:hover {
+					cursor: pointer;
+					transition: all 0.3s;
+					background-color: white;
+					color: $themeColor;
+				}
+			}
+		}
+		.logoutOptions.show {
+			opacity: 1;
+			visibility: visible;
+			transition: opacity 0.3s ease, visibility 0.3s ease;
 		}
 	}
 }

@@ -224,12 +224,16 @@ var Catalog = function(rootEl){
 	var self = this;
 	this.qRoot = rootEl;
 	this.isOpen = false;
+	this.oUpdate = new UpdateManager(this.qRoot.find('.catalogUpdates'), self)
 	this.quitButton = this.qRoot.find('#quit');
 	this.appsHolder = this.qRoot.find('.scaleContainerView');
 	this.searchBar = this.qRoot.find('.catalogSearchbar');
 	this.tagContainer = this.qRoot.find('.tagContainer');
 	this.integrateAppArea = this.qRoot.find('.helpIntegrateApps');
-	this.apps = this.qRoot.find('.catalogApp');
+	this.apps = [];
+	this.qRoot.find('.catalogApp').each(function(index, elem) {
+		self.apps.push(new CatalogApp($(elem)));
+	});
 
 	this.open = function(){
 		self.qRoot.addClass('show');
@@ -240,12 +244,16 @@ var Catalog = function(rootEl){
 		self.isOpen = false;
 	};
 	this.onResize = function(){
+		console.log(self.oUpdate.isOpen == true);
 		self.appsHolder.height(self.qRoot.outerHeight(true) 
-							- (self.searchBar.outerHeight(true)
+							- (((self.oUpdate.isOpen == true) ? self.oUpdate.qRoot.outerHeight(true) : 0)
+							+ self.searchBar.outerHeight(true)
 							+ self.tagContainer.outerHeight(true)
 							+ self.integrateAppArea.outerHeight(true)));
 		self.isOpen && $('.openCatalogHelper').height(self.appsHolder.height());
-		self.apps.height(self.apps.width());
+		self.apps.forEach(function(elem) {
+			elem.qRoot.height(elem.qRoot.width());
+		});
 	};
 	this.onResize();
 	this.quitButton.click(function(){
@@ -254,6 +262,14 @@ var Catalog = function(rootEl){
 	$(window).resize(function(){
 		self.onResize();
 	});
+	this.haveThisUrl = function (url) {
+		this.apps.forEach(function(elem) {
+			if (elem.url == url)
+				return elem;
+		});
+		return null;
+	};
+	this.oUpdate.test();
 }
 
 $(document).ready(function(){

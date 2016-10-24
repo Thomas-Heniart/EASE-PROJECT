@@ -1,0 +1,24 @@
+{
+	"name":"LoL",
+	"lastLogin":"",
+	"home":"https://www.leagueoflegends.com",
+	"connect": {
+		"todo": [
+			{"action":"clickona", "search":"#riotbar-account-anonymous li.link-login a"},
+			{"action":"waitfor", "search":"#login-form-username"},
+			{"action":"fill", "what":"login", "search":"#login-form-username", "grave":"true"},
+			{"action":"fill", "what":"password", "search":"#login-form-password", "grave":"true"},
+			{"action":"submit", "search":"form#login-form"}
+		]
+	},
+    "logout": {
+    	"todo": [
+    		{"action":"clickona", "search":"a[data-riotbar-account-action='logout']"},
+    		{"action":"waitload"},
+    		{"action":"goto", "url":"https://www.leagueoflegends.com"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"span.summoner-name"}
+    ]
+}

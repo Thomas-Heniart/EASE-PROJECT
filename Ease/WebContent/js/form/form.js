@@ -3,6 +3,7 @@ var constructorForm = function(rootEl, parent) {
 	this.qRoot = rootEl;
 	this.oParent = parent;
 	this.oInputs = [];
+	this.params = {};
 	this.qRoot.find('input').each(function(index, elem) {
 	this.oErrorMsg;
 	
@@ -61,13 +62,12 @@ var constructorForm = function(rootEl, parent) {
 	};
 	this.submit = function(e) {
 		e.preventDefault();
-		var params = {};
 		self.oInputs.forEach(function (elem) {
-			params[elem.qInput.attr('name')] = elem.getVal();
+			self.params[elem.qInput.attr('name')] = elem.getVal();
 		});
 		console.log(self.qRoot.attr('action'));
 		self.beforeSubmit();
-		postHandler.post(self.qRoot.attr('action'), params, self.afterSubmit, self.successCallback, self.errorCallback);
+		postHandler.post(self.qRoot.attr('action'), self.params, self.afterSubmit, self.successCallback, self.errorCallback);
 	};
 	this.beforeSubmit = function () {
 		
@@ -114,41 +114,45 @@ var Form = {
 		this.setNewAppItem = function(qObject) {
 			self.newAppItem = qObject;
 		}
-		this.submit = function(e) {
-			e.preventDefault();
-			e.stopPropagation();
-			$.post(self.postName, {
-				profileId : self.profile_id,
-				siteId : self.site_id,
-				name : self.oInputs[0].getVal(),
-				login : self.oInputs[1].getVal(),
-				password : self.oInputs[2].getVal(),
-				appId : self.app_id
-			}, function(data) {
-				var retMsg = data.substring(4);
-				self.appsContainer.append(self.newAppItem);
-				self.newAppItem.find('.linkImage')
-						.addClass('scaleOutAnimation');
-				setTimeout(function() {
-					self.newAppItem.find('.linkImage').removeClass(
-							'scaleOutAnimation');
-				}, 1000);
-				self.newAppItem.find('.linkImage').attr('onclick',
-						"sendEvent(this)");
-				self.newAppItem.attr('login', self.oInputs[1].getVal());
-				self.newAppItem.attr('webId', self.helper.attr('idx'));
-				self.newAppItem.attr('name', self.oInputs[0].getVal());
-				self.newAppItem.attr('logwith', (self.app_id == null) ? 'false'
-						: self.app_id);
-				self.newAppItem.find('.siteName p').text(
-						self.oInputs[0].getVal());
-				self.newAppItem.attr('id', retMsg);
-				self.newAppItem.attr('ssoid', self.helper.attr('data-sso'));
-				setupAppSettingButtonPopup(self.newAppItem
-						.find('.showAppActionsButton'));
-				self.reset();
-				self.oParent.close();
-			});
+		this.beforeSubmit = function() {
+			self.oParent.close();
+			self.appsContainer.append(self.newAppItem);
+			self.params = {
+					profileId : self.profile_id,
+					siteId : self.site_id,
+					name : self.oInputs[0].getVal(),
+					login : self.oInputs[1].getVal(),
+					password : self.oInputs[2].getVal(),
+					appId : self.app_id
+				};
+		}
+		this.afterSubmit = function() {
+			
+		}
+		this.successCallback = function(retMsg) {
+			self.newAppItem.find('.linkImage').addClass('scaleOutAnimation');
+			setTimeout(function() {
+				self.newAppItem.find('.linkImage').removeClass('scaleOutAnimation');
+			}, 1000);
+			self.newAppItem.find('.linkImage').attr('onclick', "sendEvent(this)");
+			self.newAppItem.attr('login', self.oInputs[1].getVal());
+			self.newAppItem.attr('webId', self.helper.attr('idx'));
+			self.newAppItem.attr('name', self.oInputs[0].getVal());
+			self.newAppItem.attr('logwith', (self.app_id == null) ? 'false' : self.app_id);
+			self.newAppItem.find('.siteName p').text(self.oInputs[0].getVal());
+			self.newAppItem.attr('id', retMsg);
+			self.newAppItem.attr('ssoid', self.helper.attr('data-sso'));
+			setupAppSettingButtonPopup(self.newAppItem.find('.showAppActionsButton'));
+			var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+			if (emailRegex.test(self.oInputs[1].getVal()))
+				$(".suggested-emails").append("<p class='email-suggestion'>@ <span>" + self.oInputs[1].getVal() + "</span></p>");
+			self.reset();
+		}
+		this.errorCallback = function(retMsg) {
+			self.newAppItem.remmove();
+			self.reset();
+			$(parent).find('.alertDiv').addClass('show');
+    	  	showAlertPopup(retMsg, true);
 		}
 		this.setPostName = function(postName) {
 			self.postName = postName;
@@ -208,32 +212,30 @@ var Form = {
 			}
 			self.login = self.oInputs[1].getVal();
 			self.password = self.oInputs[2].getVal();
-			$
-					.post(
-							'editApp',
-							{
-								name : self.oInputs[0].getVal(),
-								appId : self.appId,
-								lwId : self.aId,
-								login : self.login,
-								wPassword : self.password
-							},
-							function(data) {
-								var retMsg = data.substring(4);
-								var image = self.app.find('.linkImage');
-								image.addClass('scaleOutAnimation');
-								setTimeout(function() {
-									image.removeClass('scaleOutAnimation');
-								}, 1000);
-								self.app.attr('login', self.oInputs[1].getVal());
-								self.app.attr('name', self.oInputs[0].getVal());
-								self.app.attr('logwith', (self.oInputs[1].getVal().length || self.aId) == null ? 'false' : self.aId);
-								self.app.find('.siteName p').text(self.oInputs[0].getVal());
-								self.app.find('.emptyAppIndicator').remove();
-								self.app.removeClass('emptyApp');
-								if (self.oPopup != null)
-									self.oPopup.close();
-							});
+			$.post(
+					'editApp',
+					{
+						name : self.oInputs[0].getVal(),
+						appId : self.appId,
+						lwId : self.aId,
+						login : self.login,
+						wPassword : self.password
+					},
+					function(data) {
+						var retMsg = data.substring(4);
+						var image = self.app.find('.linkImage');
+						self.oParent.close();
+						image.addClass('scaleOutAnimation');
+						setTimeout(function() {
+							image.removeClass('scaleOutAnimation');
+						}, 1000);
+						self.app.attr('login', self.oInputs[1].getVal());
+						self.app.attr('name', self.oInputs[0].getVal());
+						self.app.attr('logwith', (self.oInputs[1].getVal().length || self.aId) == null ? 'false' : self.aId);
+						self.app.find('.siteName p').text(self.oInputs[0].getVal());
+						self.app.find('.emptyAppIndicator').remove();
+						self.app.removeClass('emptyApp');
+					});
 		}
 	},
 	DeleteAppForm : function (rootEl) {

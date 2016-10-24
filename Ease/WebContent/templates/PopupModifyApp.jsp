@@ -44,8 +44,7 @@
 			</div>
 
 			<div class="classicLogin">
-				<input oClass="BasicInput" name="login" type="text"
-					placeholder="Login" />
+				<%@ include file="inputs/SuggestInput.jsp" %>
 				<div class="disabledInput">
 					<input oClass="BasicInput" name="password" type="password"
 						placeholder="Click on the wheel to modify password" />
