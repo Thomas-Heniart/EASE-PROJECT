@@ -1,9 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<<<<<<< HEAD
 
-=======
->>>>>>> 7e055193cb71fb75a2d884aaf1d546041c63912a
 <%@ page import="java.util.LinkedList"%>
 <%@ page import="com.Ease.context.Tag"%>
 
