@@ -1,6 +1,7 @@
 $('body').prepend('<div id="ease_extension" style="dislay:none;">');
 
 extension.runtime.sendMessage("getSettings", {}, function(response) {
+    $(".displayedByPlugin").show();
     if(response.homepage){
         $("#homePageSwitch").prop("checked", true);
     } else {
@@ -24,7 +25,6 @@ extension.runtime.sendMessage("getSettings", {}, function(response) {
         }
     });
 });
-
 
 document.addEventListener("isConnected", function(event){
     if(event.detail=="true"){

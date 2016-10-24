@@ -71,13 +71,13 @@
 				}
 			}
 			.directSettings {
-				height: 100px;
 				background-color: white;
 				border-radius: 4px;
 				position: relative;
 				color: $themeColor;
+				padding : 4px;
 				p {
-					padding: 4px;
+					padding: 3px;
 					position: relative;
 					width: 100%;
 					text-align: left;
@@ -86,7 +86,9 @@
 					}
 				}
 			}
-			.onoffswitch {
+			
+		}
+		.onoffswitch {
     		position: relative;
 				display: inline-block;
 				float: right;
@@ -134,7 +136,6 @@
 			.onoffswitch-checkbox:checked + .onoffswitch-label:before {
     		right: 0px;
 			}
-		}
 		.userSettings.show {
 			visibility: visible;
 			opacity: 1;

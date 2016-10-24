@@ -8,7 +8,7 @@
 	<a id="userSettingsButton"><i class="fa fa-fw fa-user"></i> <%=UserName%></a>
 	<div class="userSettings">
 		<div class="directSettings">
-			<p>
+			<p class="displayedByPlugin">
 				<span>Homepage</span><span class="onoffswitch"> <input
 					type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
 					id="homePageSwitch" /> <label class="onoffswitch-label"

@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<<<<<<< HEAD
+
 <%@ page import="java.util.LinkedList"%>
 <%@ page import="com.Ease.context.Tag"%>
 
@@ -48,7 +48,7 @@ response.addCookie(email);
 <c:set var="siteManager"	scope="session" value='${servletContext.getAttribute("siteManager")}'/>
 <c:set var="siteList"		scope="session" value='${siteManager.getSitesList()}'/>
 <c:set var="tags"			scope="session"	value='${servletContext.getAttribute("Tags")}'/>
-<c:set var="tagAndSiteMapping"	scope="session" value='servletContext.getAttribute("TagAndSiteMapping")'/>
+<c:set var="tagAndSiteMapping"	scope="session" value='${servletContext.getAttribute("TagAndSiteMapping")}'/>
 
 <script type="text/javascript">
 $(document).ready(function(){
