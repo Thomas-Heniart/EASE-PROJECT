@@ -20,6 +20,7 @@
 @import 'LostPassword';
 @import 'Forms';
 @import 'Logout';
+@import 'hiddenProfile';
 
 .shake-ease {
   @include do-shake('shake-ease', 2px, 1px, 3, 1700ms, .05, $opacity: false);
@@ -42,7 +43,7 @@ body {
   position: absolute;
  }
  ::-webkit-scrollbar-track {
-   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.0);
    -webkit-border-radius: 10px;
    border-radius: 10px;
  }
@@ -165,36 +166,19 @@ padding-top: 0px;
     top: 8%;
   }
 
-  /*.univ-presentation {
-    margin: auto;
-    margin-top: 15%;
-    width: 45%;
-    background-color: rgba(255, 255, 255, 0.7);
-    padding: 10px;
-    border-radius: 10px;
-    text-align: center;
-    color: $themeColor;
-    font-family: $defaultFont;
-    h2 {
-      font-size: 40px;
-    }
-    p {
-      font-size: 15px;
-      margin-bottom: 20px;
-    }
-<<<<<<< HEAD
-    }*/
   }
   #loggedBody {
    height: 100%;
-   padding-top: 43px;
+   top: 43px;
    position: fixed;
    width: 100%;
+   transform: translateX(0);
    .col-left {
     overflow-y: overlay;
     overflow-x: hidden;
     height: 100%;
-    transform: translateX(0);
+    margin-left: 0px;
+    transition: margin .3s;
     -webkit-animation: slideLeft 0.8s 1;
     animation: slideLeft 0.8s 1;
     display: none;
