@@ -110,7 +110,13 @@ $(document).ready(function(){
 			<% } %>
 		</div>
 	</div>
-
+	<p class="homepageOnoffContainer displayedByPlugin">
+		<span>Homepage</span>
+		<span class="onoffswitch">
+			<input	type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="homePageSwitch" />
+			<label class="onoffswitch-label" for="homePageSwitch"></label>
+		</span>
+	</p>
 	<!-- <div class='univ-presentation'>
 		<h2>We are ease.space</h2>
 		<p>We built a home page that enables you to easily connect to website's accounts, without using passwords, and regardless of the computer</p>

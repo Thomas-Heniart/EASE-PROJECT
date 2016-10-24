@@ -183,17 +183,29 @@ function changeColor(color, ratio, darker) {
     }); 
 
     function setupAppSettingButtonPopup(elem){
-        $(elem).on('mouseover', function() {
+ /*       $(elem).on('mouseover', function() {
             var subPopup = $(this).find('.appActionsPopup');
-            var profileParent = (this).closest('.content');
+            var profileParent = $(this).closest('.siteLinkBox').parent();
             var str = '-';
-            var scrollDist = $('.col-left').scrollTop() + $(profileParent).scrollTop() + $(this).height();
+            var scrollDist =  $(profileParent).scrollTop() + $(this).height();
             str += scrollDist + 'px';
             subPopup.css({
                 'margin-top':str
             });
-        }); 
-    }
+        }); */
+    };
+    $(document).on('mouseover', '.showAppActionsButton', function(evt){
+            var subPopup = $(this).find('.appActionsPopup');
+            var profileParent = $(this).closest('.siteLinkBox').parent();
+            var str = '-';
+            var scrollDist =  $(profileParent).scrollTop() + $(this).height();
+            if ($(this).closest('.col-left'))
+                scrollDist += $(this).closest('.col-left').scrollTop();
+            str += scrollDist + 'px';
+            subPopup.css({
+                'margin-top':str
+            });
+    });
     $(document).ready(function() {
         $('.SitesContainer .showAppActionsButton').each(function(){
             setupAppSettingButtonPopup($(this));
