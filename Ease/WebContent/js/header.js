@@ -1,6 +1,7 @@
 var Header = function(rootEl){
 	var self = this;
 	this.rootEl = rootEl;
+	
 }
 
 var easeHeader;

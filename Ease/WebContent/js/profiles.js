@@ -24,6 +24,9 @@ var easeRoot = function(rootEl){
 	$(window).resize(function(){
 		self.onResize();
 	});
+	this.mainContent.find('.col-left').scroll(function(){
+		$(this).scrollTop() > 0 && easeHeader.rootEl.addClass('scrolling') || easeHeader.rootEl.removeClass('scrolling');
+	});
 };
 
 var easeHiddenProfile;
