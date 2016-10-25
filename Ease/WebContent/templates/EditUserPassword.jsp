@@ -10,7 +10,7 @@
 	<input oClass="PasswordInput" type="password" name="confirmNewPassword" placeholder="Confirm new password" />
 	<div class="buttonSet">
 		<button type="submit">Validate</button>
-		<button type="button" oClass="">Cancel</button>
+		<button type="button" oClass="CloseButton">Cancel</button>
 	</div>
 </form>
 
