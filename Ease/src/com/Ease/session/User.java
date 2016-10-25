@@ -338,6 +338,10 @@ public class User {
 			emails.put(newEmail, false);
 	}
 	
+	public void validateEmail(String email) {
+		emails.put(email, true);
+	}
+	
 	public void loadProfiles(ServletContext context) throws SessionException {
 		DataBase db = (DataBase) context.getAttribute("DataBase");
 		ResultSet rs = db.get("SELECT * FROM profiles WHERE user_id='" + id + "';");

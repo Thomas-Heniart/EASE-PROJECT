@@ -96,18 +96,42 @@
 						-webkit-transition: all 0.3s ease;
 					}
 				}
-			 	span.verifiedEmail, span.unverifiedEmail {
-					display: inline-block;
-					cursor: pointer;
-					color: white;
-				}
-				span.verifiedEmail {
-					background-color: green;
-					border-color: green;
-				}
-				span.unverifiedEmail {
-					background-color: orange;
-					border-color: orange;
+			 	.emailLine {
+					span.verifiedEmail, span.unverifiedEmail {
+						display: inline-block;
+						cursor: pointer;
+						color: white;
+					}
+					span.verifiedEmail {
+						background-color: green;
+						border-color: green;
+					}
+					span.unverifiedEmail {
+						background-color: orange;
+						border-color: orange;
+					}
+					.removeEmail, .emailInfo {
+						margin-top: 4px;
+						font-size: 18px;
+						visibility: hidden;
+						line-height: 20px;
+						vertical-align: middle;
+						opacity: 0;
+						overflow: hidden;
+						-webkit-transition: opacity 0.2s ease, visibility 0.2s ease;
+						transition: opacity 0.2s ease, visibility 0.2s ease;
+						&:hover {
+							cursor: pointer;
+						}
+					}
+					&:hover {
+						.removeEmail, .emailInfo {
+							visibility: visible;
+							opacity: 1;
+							-webkit-transition: opacity 0.2s ease, visibility 0.2s ease;
+							transition: opacity 0.2s ease, visibility 0.2s ease;
+						}
+					}
 				}
 				.newEmailInput, .newEmail {
 					visibility: hidden;
@@ -116,6 +140,9 @@
 					height: 0;
 					opacity: 0;
 					transition: opacity 0.3s ease, visibility 0.3s ease;
+				}
+				.newEmail {
+					margin-left: 10px;
 				}
 				.newEmailInput.show, .newEmail.show {
 					visibility: visible;

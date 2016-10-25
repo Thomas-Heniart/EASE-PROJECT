@@ -24,14 +24,16 @@
 	
 	<c:forEach items="<%= verifiedEmails %>" var="item"
 		varStatus="loop">
-		<div>
+		<div class="emailLine">
 			<input type="email" oClass="EmailInput" value="${item}"/>
 			<span class="verifiedEmail">Verified</span>
+			<i class="fa fa-question-circle emailInfo" aria-hidden="true"></i>
+			<i class="fa fa-trash removeEmail" aria-hidden="true"></i>
 		</div>
 	</c:forEach>
 	<c:forEach items="<%= unverifiedEmails %>" var="item"
 		varStatus="loop">
-		<div>
+		<div class="emailLine">
 			<input type="email" oClass="EmailInput" value="${item}"/>
 			<span class="unverifiedEmail">Verified ?</span>
 		</div>

@@ -156,8 +156,10 @@ var Form = {
 			self.newAppItem.attr('ssoid', self.helper.attr('data-sso'));
 			setupAppSettingButtonPopup(self.newAppItem.find('.showAppActionsButton'));
 			var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-			if (emailRegex.test(self.oInputs[1].getVal()))
+			if (emailRegex.test(self.oInputs[1].getVal())) {
 				$(".suggested-emails").append("<p class='email-suggestion'>@ <span>" + self.oInputs[1].getVal() + "</span></p>");
+				$(".unverifiedEmails").prepend("<div> <input type='email' oClass='EmailInput' value='"+ self.oInputs[1].getVal() +"'/><span class='unverifiedEmail'>Verified ?</span></div>");
+			}
 			self.reset();
 		}
 		this.errorCallback = function(retMsg) {
@@ -273,5 +275,15 @@ var Form = {
 	AddEmailForm : function (rootEl) {
 		constructorForm.apply(this, arguments);
 		var self = this;
+		this.addEmail = function (emailVal) {
+			$("#editVerifiedEmails").append("<div><input type='email' oClass='EmailInput' value='"+ emailVal +"'/> <span class='unverifiedEmail'>Verified ?</span></div>");
+			$(".suggested-emails").append("<p class='email-suggestion'>@ <span>" + emailVal + "</span></p>");
+		};
+		this.successCallback = function(retMsg) {
+			self.addEmail(self.oInputs[0].getVal());
+			$(".newEmail").addClass("show");
+			$(".newEmailInput").removeClass("show");
+			self.reset();
+		}
 	}
 }
