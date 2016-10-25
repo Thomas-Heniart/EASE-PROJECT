@@ -65,7 +65,6 @@ var constructorForm = function(rootEl, parent) {
 		self.oInputs.forEach(function (elem) {
 			self.params[elem.qInput.attr('name')] = elem.getVal();
 		});
-		console.log(self.qRoot.attr('action'));
 		self.beforeSubmit();
 		postHandler.post(self.qRoot.attr('action'), self.params, self.afterSubmit, self.successCallback, self.errorCallback);
 	};
@@ -277,7 +276,7 @@ var Form = {
 		var self = this;
 		this.addEmail = function (emailVal) {
 			$("#editVerifiedEmails").append("<div><input type='email' oClass='EmailInput' value='"+ emailVal +"'/> <span class='unverifiedEmail'>Verified ?</span></div>");
-			$(".suggested-emails").append("<p class='email-suggestion'>@ <span>" + emailVal + "</span></p>");
+			$(".suggested-emails").append("<p class='email-suggestion' email='" + emailVal + "'>@ <span>" + emailVal + "</span></p>");
 		};
 		this.successCallback = function(retMsg) {
 			self.addEmail(self.oInputs[0].getVal());
@@ -285,5 +284,15 @@ var Form = {
 			$(".newEmailInput").removeClass("show");
 			self.reset();
 		}
+	},
+	DeleteEmailForm : function (rootEl) {
+		constructorForm.apply(this, arguments);
+		var self = this;
+		this.successCallback = function(retMsg) {
+			$(".emailLine input[value='" + self.oInputs[0].getVal() + "']").parent().remove();
+			$(".email-suggestion[email='" + self.oInputs[0].getVal() + "']").remove();
+			self.reset();
+			self.oParent.close();
+		};
 	}
 }
