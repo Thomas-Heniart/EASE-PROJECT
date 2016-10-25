@@ -54,7 +54,8 @@ public class ServletItem {
 		AdminStats,
 		ChangeBackground,
 		SaveSessionServlet,
-		CleanSavedSessions
+		CleanSavedSessions,
+		AddEmail
 	}
 	public enum Code
 	{
