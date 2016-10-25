@@ -22,7 +22,8 @@ public class SessionSave {
 		SALTTOKEN,
 		KEYUSER,
 		SALTUSER,
-		USER
+		USER,
+		DATE
 	}
 	private String saltToken;
 	private String saltKeyUser;
@@ -50,7 +51,7 @@ public class SessionSave {
 			throw new SessionException("Can't encrypt key.");
 		} else if ((hashedToken = Hashing.SHA(token, saltToken)) == null) {
 			throw new SessionException("Can't hash token.");
-		}  else if (db.set("INSERT INTO savedSessions VALUES (NULL, '" + sessionId + "', '" + hashedToken + "', '" + saltToken + "', '" + cryptedKeyUser + "', '" + saltKeyUser + "', '" + userId + "');")
+		}  else if (db.set("INSERT INTO savedSessions VALUES (NULL, '" + sessionId + "', '" + hashedToken + "', '" + saltToken + "', '" + cryptedKeyUser + "', '" + saltKeyUser + "', '" + userId + "', DEFAULT);")
 				!= 0) {
 			throw new SessionException("Impossible to insert new sessionSave in data base.");
 		}
@@ -85,7 +86,7 @@ public class SessionSave {
 				throw new SessionException("Can't hash token.");
 			} else if(db.set("DELETE FROM savedSessions WHERE sessionId = '"+ oldSessionId +"';") != 0){
 				throw new SessionException("Can't delete session.");
-			}  else if (db.set("INSERT INTO savedSessions VALUES (NULL, '" + sessionId + "', '" + hashedToken + "', '" + saltToken + "', '" + cryptedKeyUser + "', '" + saltKeyUser + "', '" + userId + "');")
+			}  else if (db.set("INSERT INTO savedSessions VALUES (NULL, '" + sessionId + "', '" + hashedToken + "', '" + saltToken + "', '" + cryptedKeyUser + "', '" + saltKeyUser + "', '" + userId + "', DEFAULT);")
 					!= 0) {
 				throw new SessionException("Impossible to insert new sessionSave in data base.");
 			}

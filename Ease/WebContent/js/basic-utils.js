@@ -21,6 +21,9 @@ function sendEvent(obj) {
         }, function() {
         }, function(retMsg) {
             json.detail = JSON.parse(retMsg);
+            json.detail.highlight = true;
+            if (ctrlDown) json.detail.highlight = false;
+            console.log(json.detail);
             mixpanel.track("App successful clicks");
             mixpanel.track(json.detail[json.detail.length - 1].website.name + " connections");
             event = new CustomEvent("NewConnection", json);

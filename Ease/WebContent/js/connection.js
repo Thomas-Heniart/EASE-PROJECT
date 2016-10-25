@@ -11,12 +11,15 @@ $(document).ready(function() {
 		}
 		
 		$('#helloButton').click(function() {
-			$('#loading').addClass("la-animate");
 			var parent = $(this).closest('form');
 			var email = $(parent).find("#email").val();
 			var password = $(parent).find("#password").val();
 
 			$(parent).find('.alertDiv').removeClass('show');
+			$(parent).hide();
+			$(".ease-logo").hide();
+			$("#loadingUnknownUser").css("display","block");
+			$("#back").hide();
 			
 			postHandler.post('connection',
 					{
@@ -25,17 +28,20 @@ $(document).ready(function() {
 					},
 					function(){},
 					function(retMsg) {
-						$('#loading').removeClass("la-animate");
 						mixpanel.track("Connexion");
 						window.location.replace("index.jsp");
 					}, 
 					function(retMsg) {
-						$('#loading').removeClass("la-animate");
+						$("#back").show();
+						$(parent).show();
+						$(".ease-logo").show();
+						$("#loadingUnknownUser").css("display","none");
 						$(parent).find('.alertDiv p').text(retMsg);
 						$(parent).find('.alertDiv').addClass('show');
 						$(parent).find('#password').val('');
 					},
-					'text');
+					'text'
+				);
 		});
 		
 		$("#loginForm").submit(function(e) {
@@ -43,12 +49,18 @@ $(document).ready(function() {
 		});
 		
 		$('.savedUser #savedUserButton').click(function(){
-			var parent = $(this).closest('.form');
+			var parent = $(this).closest('.savedUser');
 			var email = getCookie('email');
 			var password = parent.find('#password').val();
 
 			email = email.substring(1, email.length - 1);
-	  		$('#loading').addClass("la-animate");
+			$(parent).find('.alertDiv').removeClass('show');
+			$(parent).closest(".forget-password").hide();
+			$(parent).hide();
+			$(".ease-logo").hide();
+			$("#loadingKnownUser").css("display","block");
+			$("#changeAccount").hide();
+			
 		    postHandler.post(
 	                'connection', 
 	                {
@@ -57,11 +69,14 @@ $(document).ready(function() {
 	                },
 	                function(){},
 	                function(retMsg){
-	                	$('#loading').removeClass("la-animate");
 	                    window.location.replace("index.jsp");
 	                },
 	                function(retMsg){
-	                	$('#loading').removeClass("la-animate");
+	                	$("#changeAccount").show();
+	                	$(parent).closest(".forget-password").show();
+	        			$(parent).show();
+	        			$(".ease-logo").show();
+	        			$("#loadingKnownUser").css("display","none");
 	                	$(parent).find('.alertDiv p').text(retMsg);
 	                	$(parent).find('.alertDiv').addClass('show');
 	                	$(parent).find('#password').val('');

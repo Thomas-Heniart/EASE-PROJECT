@@ -62,8 +62,8 @@ body {
   width: 50px;
   height: 50px;
   position: fixed;
-  right: 2%;
-  bottom: 5%;
+  right: 1%;
+  bottom: 2%;
   cursor: pointer;
   background-color: $themeColor;
   border: 1px hidden $themeGreyColor;
@@ -350,11 +350,7 @@ padding-top: 0px;
      margin-right: auto;
    }
  }
- .header {
-   .searchInput {
-    display: none;
-  }
-}
+
 #loggedBody {
  .col-left {
   .ProfilesView {
@@ -374,30 +370,6 @@ padding-top: 0px;
   margin-right: auto;
 }
 
-.header{
-	height: 43px;
-	position: fixed;
-	width: 100%;
-	z-index: 2;
-	top: 0px;
-	#breakButton {
-		&:hover {
-			color: black;
-		}
-		span {
-			text-transform: none;
-			vertical-align: initial;
-		}
-		font-size: 12px;
-		float: right;
-   margin-right: 160px;
-   height: 39px;
-   color: white;
-   background-color: rgba(0, 0, 0, 0);
-   margin-top: 2px;
-   margin-bottom: 0px;
- }
-}
 
 .logoImg{
 	height: 125%;
@@ -517,8 +489,10 @@ html {
     vertical-align: middle;
     bottom : 2%;
     left : 1%;
+    z-index: 100;
 	text-align: left;
     border-radius: 4px;
+    margin : 0;
     span{
         font-size: 18px;
     }

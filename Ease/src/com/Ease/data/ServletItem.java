@@ -53,7 +53,8 @@ public class ServletItem {
 		UploadWebsiteServlet,
 		AdminStats,
 		ChangeBackground,
-		SaveSessionServlet
+		SaveSessionServlet,
+		CleanSavedSessions
 	}
 	public enum Code
 	{

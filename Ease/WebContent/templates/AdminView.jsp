@@ -51,6 +51,12 @@
 			<img src="resources/icons/ascendant-bars-graphic.png" />
 		</button>
 	</div>
+	<div>
+		<button id="cleanSavedSessions" state="off"
+			class="button adminButton">
+			<img src="resources/icons/vacuum-cleaner.png" />
+		</button>
+	</div>
 </div>
 
 <%@ include file="Statistics.jsp"%>
