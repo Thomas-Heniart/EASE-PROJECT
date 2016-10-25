@@ -53,7 +53,9 @@ public class ServletItem {
 		UploadWebsiteServlet,
 		AdminStats,
 		ChangeBackground,
-		SaveSessionServlet
+		SaveSessionServlet,
+		CleanSavedSessions,
+		AddEmail
 	}
 	public enum Code
 	{

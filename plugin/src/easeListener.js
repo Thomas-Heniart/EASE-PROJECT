@@ -1,6 +1,7 @@
 $('body').prepend('<div id="ease_extension" style="dislay:none;">');
 
 extension.runtime.sendMessage("getSettings", {}, function(response) {
+    $(".displayedByPlugin").show();
     if(response.homepage){
         $("#homePageSwitch").prop("checked", true);
     } else {
@@ -24,7 +25,6 @@ extension.runtime.sendMessage("getSettings", {}, function(response) {
         }
     });
 });
-
 
 document.addEventListener("isConnected", function(event){
     if(event.detail=="true"){
@@ -51,7 +51,7 @@ extension.runtime.onMessage("logoutDone", function logoutHandler(message, sendRe
 });
 
 document.addEventListener("NewConnection", function(event){
-    extension.runtime.sendMessage("NewConnection", {"highlight":true, "detail":event.detail}, function(response) {});
+    extension.runtime.sendMessage("NewConnection", {"highlight":event.detail.highlight, "detail":event.detail}, function(response) {});
 }, false);
 
 document.addEventListener("GetUpdates", function(event){
@@ -63,15 +63,22 @@ document.addEventListener("GetUpdates", function(event){
         for(var email in event.detail){
             if(res[email]){
                 for(var website in res[email]){
-                    if(res[email][website].logWith) var toSend = {user:email, website:website, logWith:res[email][website].logWith, id:id };
-                    else  var toSend = {user:email, website:website, password:res[email][website].password, id:id };
-                    res[email][website].id = id;
+                    if(res[email][website].logWith) var toSend = {user:email, website:website, logWith:res[email][website].logWith};
+                    else  var toSend = {user:email, website:website, password:res[email][website].password};
                     id++;
                     updatesToSend.push(toSend);
                 }
             }
         }
         extension.storage.set("allConnections", res, function(){});
-        document.dispatchEvent(new CustomEvent("Updates", {"detail":updatesToSend}));
+        document.dispatchEvent(new CustomEvent("NewUpdates", {"detail":updatesToSend}));
     });
+});
+
+document.addEventListener("RemoveUpdate", function remover(event){
+    if(res[event.detail.user]){
+        if(res[event.detail.user][event.detail.website]){
+            delete res[event.detail.user][event.detail.website];
+        }
+    }            
 });

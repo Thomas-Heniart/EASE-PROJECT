@@ -1,6 +1,59 @@
 @import 'variables';
 
 .header {
+	&:before {
+		content: "";
+		position:absolute;
+		width: 100%;
+		height: 100%;
+		background-color: white;
+		top: -100%;
+		z-index: -1;
+		transition: top .1s;
+		border-bottom: 1px solid $borderFbColor;
+	}
+}
+
+.header.scrolling {
+	&:before {
+		content: "";
+		top: 0;
+		transition: top .1s;
+	}
+}
+
+.header{
+	height: 43px;
+	position: fixed;
+	width: 100%;
+	z-index: 2;
+	top: 0px;
+	#breakButton {
+		&:hover {
+			color: black;
+		}
+		span {
+			text-transform: none;
+			vertical-align: initial;
+		}
+		font-size: 12px;
+		float: right;
+   margin-right: 160px;
+   height: 39px;
+   color: white;
+   background-color: rgba(0, 0, 0, 0);
+   margin-top: 2px;
+   margin-bottom: 0px;
+ }
+}
+
+.header {
+	.searchInput {
+		display: none;
+  	}
+}
+
+.header {
 	.userSettingsContainer, .logoutContainer {
 		position: relative;
 		overflow: hidden;
@@ -22,7 +75,7 @@
 			width: 100%;
 			position: relative;
 			float: right;
-			background-color: $themeLightGreyColor;
+			background-color: rgba(white, 0.89);
 			color: $themeColor;
 			text-decoration: none;
 			border-radius: 4px;
@@ -71,13 +124,14 @@
 				}
 			}
 			.directSettings {
-				height: 100px;
 				background-color: white;
 				border-radius: 4px;
 				position: relative;
 				color: $themeColor;
+				padding : 4px;
 				p {
-					padding: 4px;
+					margin : 0;
+					padding: 3px;
 					position: relative;
 					width: 100%;
 					text-align: left;
@@ -86,7 +140,9 @@
 					}
 				}
 			}
-			.onoffswitch {
+			
+		}
+		.onoffswitch {
     		position: relative;
 				display: inline-block;
 				float: right;
@@ -134,7 +190,6 @@
 			.onoffswitch-checkbox:checked + .onoffswitch-label:before {
     		right: 0px;
 			}
-		}
 		.userSettings.show {
 			visibility: visible;
 			opacity: 1;
@@ -197,11 +252,19 @@
 	}
 }
 
+.header.scrolling {
+	#searchBar {
+		background-color: $themeLightGreyColor;
+	}
+	#userSettingsButton {
+		background-color: $themeLightGreyColor;
+	}
+}
 #searchBar {
 	width: 40%;
 	height: 30px;
 	font-size: 14px;
-	background-color: $themeLightGreyColor;
+	background-color: rgba(white, 0.89);
 	border-radius: 5px;
 	input {
 		width: 100%;
@@ -214,18 +277,6 @@
 		padding-left: 8px;
 		outline: none;
 	}
-	/*#loginBody input::-webkit-input-placeholder {
-  	color: #F7F7F7;
-	}
-	#loginBody input::-moz-placeholder {
-  	color: #F7F7F7;
-	}
-	#loginBody input:-ms-input-placeholder {
-  	color: #F7F7F7;
-	}
-	#loginBody input:-moz-placeholder {
-  	color: #F7F7F7;
-	}*/
 	#searchBarButton {
 		transition: all .5s;
 		position: absolute;

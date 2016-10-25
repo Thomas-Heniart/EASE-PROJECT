@@ -7,6 +7,7 @@ $(document).ready(function(){
 	});
 	
 	$("#enterEditMode").click(enterEditMode);
+
 });
 
 var ease;
@@ -18,11 +19,14 @@ var easeRoot = function(rootEl){
 	if (!(this.mainContent))
 		return;
 	this.onResize = function(){
-		this.mainContent.css('height', $(window).height() - 43 + 'px');
+		self.mainContent.css('height', $(window).height() - 43 + 'px');
 	}
 	this.onResize();
 	$(window).resize(function(){
 		self.onResize();
+	});
+	this.mainContent.find('.col-left').scroll(function(){
+		$(this).scrollTop() == 0 && $("body").hasClass("picBckgrnd") && easeHeader.rootEl.removeClass('scrolling') || easeHeader.rootEl.addClass('scrolling');
 	});
 };
 

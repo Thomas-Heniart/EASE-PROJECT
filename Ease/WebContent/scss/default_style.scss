@@ -62,8 +62,8 @@ body {
   width: 50px;
   height: 50px;
   position: fixed;
-  right: 2%;
-  bottom: 5%;
+  right: 1%;
+  bottom: 2%;
   cursor: pointer;
   background-color: $themeColor;
   border: 1px hidden $themeGreyColor;
@@ -350,11 +350,7 @@ padding-top: 0px;
      margin-right: auto;
    }
  }
- .header {
-   .searchInput {
-    display: none;
-  }
-}
+
 #loggedBody {
  .col-left {
   .ProfilesView {
@@ -374,32 +370,6 @@ padding-top: 0px;
   margin-right: auto;
 }
 
-.header{
-	background-color: white;
-	height: 43px;
-	position: fixed;
-	width: 100%;
-	z-index: 2;
-	top: 0px;
-  border-bottom: 1px solid $borderFbColor;
-	#breakButton {
-		&:hover {
-			color: black;
-		}
-		span {
-			text-transform: none;
-			vertical-align: initial;
-		}
-		font-size: 12px;
-		float: right;
-   margin-right: 160px;
-   height: 39px;
-   color: white;
-   background-color: rgba(0, 0, 0, 0);
-   margin-top: 2px;
-   margin-bottom: 0px;
- }
-}
 
 .logoImg{
 	height: 125%;
@@ -509,8 +479,85 @@ html {
   pointer-events: none;
 }
 
+.homepageOnoffContainer{
+    background-color : rgba(239, 239, 239, 0.89);
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-right: 8px;
+    padding-left: 8px;
+	position: absolute;
+    vertical-align: middle;
+    bottom : 2%;
+    left : 1%;
+    z-index: 100;
+	text-align: left;
+    border-radius: 4px;
+    margin : 0;
+    span{
+        font-size: 18px;
+    }
+.onoffswitch {
+    position: relative;
+	display: inline-block;
+	float: right;
+    margin-left: 10px;
+	width: 35px;
+    margin-top: 3px;
+    -webkit-user-select:none;
+	-moz-user-select:none;
+	-ms-user-select: none;
+}
+.onoffswitch-checkbox {
+	display: none;
+}
+.onoffswitch-label {
+    display: block;
+    overflow: hidden;
+    cursor: pointer;
+    height: 20px;
+    padding: 0;
+    line-height: 20px;
+    border: 1px solid #CCCCCC;
+    border-radius: 20px;
+    background-color: #FFFFFF;
+    transition: background-color 0.3s ease-in;
+}
+.onoffswitch-label:before {
+	content: "";
+	display: block;
+    width: 20px;
+    height: 20px;
+	margin: 0px;
+    background: #FFFFFF;
+    position: absolute;
+	top: 0;
+	bottom: 0;
+    right: 15px;
+    border: 1px solid #CCCCCC;
+	border-radius: 20px;
+    transition: all 0.3s ease-in 0s;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label {
+	background-color: #373B60;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label, .onoffswitch-checkbox:checked + .onoffswitch-label:before {
+	border-color: #373B60;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label:before {
+	right: 0px;
+}
+}
+
 input {
   &:hover {
     cursor: text;
   }
+}
+
+.displayedByPlugin {
+    display: none;
+}
+
+button[disabled] {
+  cursor: not-allowed !important;
 }

@@ -68,6 +68,8 @@ var Input = {
 			self.qInput.removeClass("valid");
 			self.qInput.removeClass("unValid");
 		}
+		self.val($(self.qInput.val()));
+		self.onStateChanged();
 	},
 	NoEmptyInput : function (rootEl) {
 		constructorInput.apply(this,arguments);

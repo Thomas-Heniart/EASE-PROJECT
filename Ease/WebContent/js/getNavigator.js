@@ -17,6 +17,8 @@ function getUserNavigator() {
 						if (x != -1) {
 							x = ua.indexOf("Version");
 							y = "Safari";
+						} else {
+							y = "Unknown";
 						}
 					}
 				}

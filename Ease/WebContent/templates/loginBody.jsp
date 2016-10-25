@@ -70,9 +70,10 @@ $(document).ready(function(){
 	<div class="FormsContainer">
 	<% if (iden == 3){ %>
 		<div class="form" id="knownUser">
-			<a class='forget-password' href="PasswordLost">Forgot your password ?</a>
+			
 			<img class='ease-logo' src='resources/icons/Ease_Logo_couleur.png'/>
 			<div class="savedUser">
+				<a class='forget-password' href="PasswordLost">Forgot your password ?</a>
 				<p>Hello <%= new String(Base64.getDecoder().decode(fname), StandardCharsets.UTF_8) %> !</p>
 				<span class="input input--minoru">
 					<input class="input__field input__field--minoru" id="password" name="password" type="password" id="input-8" placeholder="Password"/>
@@ -83,6 +84,20 @@ $(document).ready(function(){
 				</div> 
 	    		<button id="savedUserButton">Login</button>
 	    		<!-- <a class='create-account' href='/getEmailLink'>create an account</a> -->
+			</div>
+			<div class="sk-fading-circle" id="loadingKnownUser" style="display:none;">
+				<div class="sk-circle1 sk-circle"></div>
+  				<div class="sk-circle2 sk-circle"></div>
+  				<div class="sk-circle3 sk-circle"></div>
+  				<div class="sk-circle4 sk-circle"></div>
+  				<div class="sk-circle5 sk-circle"></div>
+  				<div class="sk-circle6 sk-circle"></div>
+  				<div class="sk-circle7 sk-circle"></div>
+  				<div class="sk-circle8 sk-circle"></div>
+  				<div class="sk-circle9 sk-circle"></div>
+  				<div class="sk-circle10 sk-circle"></div>
+  				<div class="sk-circle11 sk-circle"></div>
+  				<div class="sk-circle12 sk-circle"></div>
 			</div>
 			<div id="changeAccount">Other account <img class='switch-account' src="resources/icons/account.png" /></div>   
 		</div>
@@ -105,12 +120,37 @@ $(document).ready(function(){
     			<button id="helloButton">Login</button>
     			<!-- <a class='create-account' href='/getEmailLink'>create an account</a> -->
 			</form>
+			<div class="sk-fading-circle" id="loadingUnknownUser" style="display:none;">
+				<div class="sk-circle1 sk-circle"></div>
+  				<div class="sk-circle2 sk-circle"></div>
+  				<div class="sk-circle3 sk-circle"></div>
+  				<div class="sk-circle4 sk-circle"></div>
+  				<div class="sk-circle5 sk-circle"></div>
+  				<div class="sk-circle6 sk-circle"></div>
+  				<div class="sk-circle7 sk-circle"></div>
+  				<div class="sk-circle8 sk-circle"></div>
+  				<div class="sk-circle9 sk-circle"></div>
+  				<div class="sk-circle10 sk-circle"></div>
+  				<div class="sk-circle11 sk-circle"></div>
+  				<div class="sk-circle12 sk-circle"></div>
+			</div>
 			<% if (iden == 3) {%>
 				<div id="back"><%= new String(Base64.getDecoder().decode(fname), StandardCharsets.UTF_8) %> account <img class='switch-account' src="resources/icons/account.png" /></div>
 			<% } %>
 		</div>
 	</div>
-
+	
+	<div class="phrase">
+		<p>A simple homepage to access all your web without passwords</p>
+	</div>
+	
+	<p class="homepageOnoffContainer displayedByPlugin">
+		<span>Homepage</span>
+		<span class="onoffswitch">
+			<input	type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="homePageSwitch" />
+			<label class="onoffswitch-label" for="homePageSwitch"></label>
+		</span>
+	</p>
 	<!-- <div class='univ-presentation'>
 		<h2>We are ease.space</h2>
 		<p>We built a home page that enables you to easily connect to website's accounts, without using passwords, and regardless of the computer</p>
