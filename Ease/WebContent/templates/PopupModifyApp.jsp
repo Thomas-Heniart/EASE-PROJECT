@@ -62,5 +62,4 @@
 </div>
 <script>
 	var modifyAppPopup = new Popup["ModifyAppPopup"]($("#PopupModifyApp"));
-	//var modifyAppPopup = new Popup["ModifyAppPopup"]($("#PopupModifyApp"));
 </script>

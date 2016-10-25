@@ -1,3 +1,4 @@
+var emailToRemove = null;
 function toggleClosestForm(jObj) {
 	jObj.parent().find("form").toggleClass("show");
 	jObj.parent().find("i.fa-caret-right").toggleClass("down");
@@ -18,7 +19,18 @@ $(document).ready(function() {
 	$(".unverifiedEmail").click(function() {
 		//TODO
 	});
-			
+	
+	$(".removeEmail").click(function() {
+		emailToRemove = $(this).parent().parent().find("input").val();
+		deleteEmailPopup.setEmail(emailToRemove);
+		console.log(deleteEmailPopup.oForm.oInputs[0].getVal());
+		deleteEmailPopup.open();
+		
+	});
+	$(document).click(function(e) {
+		if (!$(e.target).closest('md-content, .removeEmail, .md-modal, .md-overlay').length)
+			deleteEmailPopup.close();
+	});
 });
 
 $(function() {
@@ -26,17 +38,4 @@ $(function() {
 		$('.SettingsView').removeClass('show');
 		$('.col-left').addClass('show');
 	});
-	/*$("#settingsTab").accordion({
-		active : 10,
-		collapsible : true,
-		autoHeight : false,
-		heightStyle : "content"
-	});
-	$('#settingsTab #cancel').click(function() {
-		var Accordion = $(this).closest('.ui-accordion');
-
-		$(Accordion).find('input').val('');
-		$(Accordion).accordion("option", "active", 10);
-
-	});*/
 });

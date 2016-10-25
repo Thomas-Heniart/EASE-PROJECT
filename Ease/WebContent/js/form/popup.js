@@ -36,7 +36,6 @@ var Popup = {
 		constructorPopup.apply(this,arguments);
 		var self = this;
 		this.setVal = function (arg) {
-			console.log(arg[0]);
 			self.oForm.oInputs[0].val(arg[0]);
 		}
 	},
@@ -89,5 +88,13 @@ var Popup = {
 			self.oForm.oInputs[0].val(arg[0].attr("id"));
 			self.app = arg[0];
 		};
+	},
+	DeleteEmailPopup : function () {
+		constructorPopup.apply(this, arguments);
+		var self = this;
+		this.setEmail = function(email) {
+			self.oForm.oInputs[0].val(email);
+			self.oForm.qRoot.trigger("StateChanged");
+		}
 	}
 }

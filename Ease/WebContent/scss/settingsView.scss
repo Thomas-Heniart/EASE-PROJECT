@@ -50,13 +50,35 @@
 		}
 		#settingsTab {
 			color: $themeColor;
+			#DeleteEmailPopup {
+				h2 {
+					text-align: center;
+					font-size: 20px;
+				}
+				button, input[type='submit'] {
+					width: 30%;
+					height: 30px;
+					border: 1px solid transparent;
+					border-radius: 5px;
+					color: white;
+					display: inline-block;
+					margin-top: 0;
+				}
+				input[type='submit'] {
+					background-color: $themeRedColor;
+					margin-left: 20%;
+					&:hover {
+						background-color: darken($themeRedColor, 3%);
+					}
+				}
+			}
 			form {
+				transition: height 0.3s ease, visible 0.3s ease;
+				-webkit-transition: height 0.3s ease, visible 0.3s ease;
 				position: relative;
 				visibility: visible;
 				height: 0;
 				overflow: hidden;
-				transition: height 1.3s ease, visible 1.3s ease;
-				-webkit-transition: height 1.3s ease, visible 1.3s ease;
 				input {
 					outline: none;
 					border-radius: 2px;
@@ -97,6 +119,9 @@
 					}
 				}
 			 	.emailLine {
+					input {
+						cursor: default;
+					}
 					span.verifiedEmail, span.unverifiedEmail {
 						display: inline-block;
 						cursor: pointer;
@@ -120,8 +145,35 @@
 						overflow: hidden;
 						-webkit-transition: opacity 0.2s ease, visibility 0.2s ease;
 						transition: opacity 0.2s ease, visibility 0.2s ease;
+						.info {
+							opacity: 0;
+							visibility: hidden;
+							overflow: hidden;
+							display: block;
+							width: auto;
+							max-width: 140px;
+							height: auto;
+							max-height: 70px;
+							position: fixed;
+							margin-top: -90px;
+							margin-left: 10px;
+							border-radius: 5px;
+							transition: opacity 0.3s;
+							transform: scale(0.2);
+							font-family: $defaultFont;
+							background-color: white;
+							color: $themeColor;
+							padding: 5px;
+							font-size: 11px;
+						}
 						&:hover {
 							cursor: pointer;
+							.info {
+								transition: opacity 0.3s, transform 0.5s cubic-bezier(0.62, -0.66, 0.27, 1.63);
+								transform: scale(1);
+								visibility: visible;
+								opacity: 1;
+							}
 						}
 					}
 					&:hover {
@@ -152,10 +204,10 @@
 				}
 			}
 			form.show {
+				transition: height 0.3s ease, visible 0.3s ease;
+				-webkit-transition: height 0.3s ease, visible 0.3s ease;
 				visibility: visible;
 				height: auto;
-				transition: height 1.3s ease, visible 1.3s ease;
-				-webkit-transition: height 1.3s ease, visible 1.3s ease;
 			}
 			.sectionHeader {
 				outline: none;
