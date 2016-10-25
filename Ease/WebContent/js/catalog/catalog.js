@@ -139,11 +139,21 @@ function addTagIfExists(input) {
 	else
 		name = input.val().toLowerCase();
 	var tag = $('.tagContainer').find('.tag[name="' + name + '"]');
+	var activeTag = $('.tag-active');
 	if (tag.length == 0)
 		return;
-	tag.addClass('tag-active');
-	updateCatalogFront(tag);
-	input.val("");
+	else if (activeTag.length == 0){
+		tag.addClass('tag-active');
+		updateCatalogFront(tag);
+		input.val("");
+	} else {
+		activeTag.toggleClass("hvr-grow");
+		activeTag.toggleClass("tag-active");
+		updateCatalogFront(activeTag);
+		tag.addClass('tag-active');
+		updateCatalogFront(tag);
+		input.val("");
+	}
 }
 
 $(document).ready(function() {
@@ -155,21 +165,20 @@ $(document).ready(function() {
 	
 	$(".tag").click(function(event) {
 		event.stopPropagation();
-		var nbOfTags = $(".tag-active").length;
-		if (nbOfTags < 3) {
-			$(event.target).toggleClass("tag-active");
-			$(event.target).toggleClass("hvr-grow");
-			nbOfTags++;
-			updateCatalogFront($(event.target));
-		}
+		var activeTag = $(".tag-active");
+		activeTag.toggleClass("hvr-grow");
+		activeTag.toggleClass("tag-active");
+		$(event.target).toggleClass("tag-active");
+		$(event.target).toggleClass("hvr-grow");
+		updateCatalogFront(activeTag);
+		updateCatalogFront($(event.target));
 	});
 	
 	$("input[name='catalogSearch']").keydown(function(event) {
 		if (event.keyCode == 8) {
 			if ($(event.target).val() == "")
 				removeLastSelectedTag();
-			updateCatalogWith($(event.target).val(),
-			$(".selectedTagsContainer .tag"));
+			updateCatalogWith($(event.target).val(),$(".selectedTagsContainer .tag"));
 		}
 	});
 		

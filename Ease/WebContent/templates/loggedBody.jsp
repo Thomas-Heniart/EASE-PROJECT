@@ -71,6 +71,7 @@ $(document).ready(function(){
 	<%@ include file="PopupAddApp.jsp" %>	
 	<%@ include file="PopupModifyApp.jsp" %>
 	<div class="md-overlay"></div>
+	
 </div>
 
 <script>

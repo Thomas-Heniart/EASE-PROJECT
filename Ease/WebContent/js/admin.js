@@ -12,13 +12,14 @@ $(document).ready(function() {
 
 	/* Tags manager behavior */
 	$("#setTags").click(setTagsClick);
+	
+	$("#cleanSavedSessions").click(cleanSavedSessions);
 });
 
 /* Interface functions */
 function openSideViewTab(e) {
 	$(".RightSideViewTab.show").removeClass("show");
 	var target = $(e.target).closest("button").attr("target");
-	console.log($("#" + target));
 	$("#" + target).addClass("show");
 }
 
@@ -217,4 +218,19 @@ function addTag() {
 
 function deleteTag(tagId) {
 	$("#completeForm div div[tagId=" + tagId + "]").remove();
+}
+
+function cleanSavedSessions(){
+	postHandler.post(
+		"cleanSavedSessions",
+		{},
+		function(){},
+		function(retMsg){
+			console.log(retMsg);
+		},
+		function(retMsg){
+			console.log(retMsg);
+		},
+		'text'
+	);
 }

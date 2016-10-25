@@ -44,19 +44,20 @@ $(document).ready(function() {
 	});
 	if($("body").hasClass("picBckgrnd")){
 		$('#backgroundSwitch').prop("checked", true);
+	} else {
+		$('#backgroundSwitch').prop("checked", false);
 	}
 	$("#backgroundSwitch").change(function() {
+		if($("body").hasClass("picBckgrnd")){
+			$("body").switchClass("picBckgrnd", "logoBckgrnd");
+		} else if($("body").hasClass("logoBckgrnd")){
+			$("body").switchClass("logoBckgrnd", "picBckgrnd");
+		}
 		postHandler.post(
 				'changeUserBackground',
 				{},
 				function(){},
-				function(retMsg){
-					if($("body").hasClass("picBckgrnd")){
-						$("body").switchClass("picBckgrnd", "logoBckgrnd");
-					} else if($("body").hasClass("logoBckgrnd")){
-						$("body").switchClass("logoBckgrnd", "picBckgrnd");
-					}
-				},
+				function(retMsg){},
 				function(retMsg){
 					showAlertPopup(retMsg, true);
 				},

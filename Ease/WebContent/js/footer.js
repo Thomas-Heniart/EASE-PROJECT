@@ -1,18 +1,13 @@
-function showMediaTab() {
-  $(".footer").show("slide", { direction: "down" }, 500);
-}
-
-function hideMediaTab() {
-  $(".footer").hide("slide", { direction: "down" }, 500);
-}
-
 $(document).ready(function() {
   $("#buttonShow i").hover(function(e) {
-    showMediaTab();
+	$(".footer").show("slide", { direction: "down" }, 500);
+    $(".phrase").css({"-webkit-transform":"translateY(-25px)","transform":"translateY(-25px)"});
     $("#buttonShow").hide("slide", { direction: "down" }, 500);
+
   });
   $(".mediaTab").mouseleave(function() {
-    hideMediaTab();
+	$(".footer").hide("slide", { direction: "down" }, 500);
+    $(".phrase").css({"-webkit-transform":"translateY(0px)","transform":"translateY(0px)"});
     $("#buttonShow").show("slide", { direction: "down" }, 500);
   })
 });

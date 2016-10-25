@@ -1,4 +1,4 @@
-package com.Ease.servlet;
+package com.Ease.servlet.backOffice;
 import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.annotation.WebServlet;
 
+import com.Ease.context.DataBase;
 import com.Ease.data.ServletItem;
 import com.Ease.session.SessionException;
 import com.Ease.session.SessionSave;
@@ -18,8 +19,8 @@ import com.Ease.session.User;
 /**
  * Servlet implementation class Logout
  */
-@WebServlet("/logout")
-public class Logout extends HttpServlet {
+@WebServlet("/cleanSavedSessions")
+public class CleanSavedSessions extends HttpServlet {
        
     /**
 	 * 
@@ -29,7 +30,7 @@ public class Logout extends HttpServlet {
 	/**
      * @see HttpServlet#HttpServlet()
      */
-    public Logout() {
+    public CleanSavedSessions() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -47,33 +48,21 @@ public class Logout extends HttpServlet {
 		
 		HttpSession session = request.getSession();
 		User user = (User)(session.getAttribute("User"));
-		SessionSave sessionSave = (SessionSave)(session.getAttribute("SessionSave"));
+		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
+		ServletItem SI = new ServletItem(ServletItem.Type.CleanSavedSessions, request, response, user);
 		String retMsg;
-		try {
-			sessionSave.erase(session.getServletContext());
-			Cookie 	cookie = null;
-			Cookie 	cookies[] = request.getCookies();
-			if (cookies != null){
-				for (int i = 0;i < cookies.length ; i++) {
-					cookie = cookies[i];
-					if((cookie.getName()).compareTo("sId") == 0){
-						cookie.setValue("");
-						cookie.setMaxAge(0);
-						response.addCookie(cookie);
-					} else if((cookie.getName()).compareTo("sTk") == 0){
-						cookie.setValue("");
-						cookie.setMaxAge(0);
-						response.addCookie(cookie);
-					}
-				}
+
+		if(user == null){
+			SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
+		} else if(!user.isAdmin(session.getServletContext())){
+			SI.setResponse(ServletItem.Code.NoPermission, "You have not the permission.");
+		} else {
+			if(db.set("DELETE FROM savedSessions WHERE datetime < SUBTIME(CURRENT_TIMESTAMP, '2 0:0:0.0');") != 0){
+				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "Error when deleting sessions.");
+			} else {
+				SI.setResponse(200, "Sessions saved clean");
 			}
-			retMsg = "Logged out.";
-		} catch (SessionException e) {
-			retMsg = "Error when deleting session from db.";
 		}
-		ServletItem SI = new ServletItem(ServletItem.Type.Logout, request, response, user);
-		 session.invalidate();
-		 SI.setResponse(200, retMsg);
 		 SI.sendResponse();
 	}
 
