@@ -6,7 +6,8 @@
 
 <div class="catalogApp" idx="${site.getId()}"
 	connect="${site.getFolder()}connect.json"
-	data-login="${site.getLoginWith()}" data-sso="${site.getSso()}" data-nologin="${site.noLogin()}" name="${site.getName()}">
+	data-login="${site.getLoginWith()}" data-sso="${site.getSso()}" data-nologin="${site.noLogin()}" name="${site.getName()}"
+	url="${site.getUrl() }">
 	<div class="catalogAppLogo">
 		<img src="${site.getFolder()}logo.png" />
 	</div>
