@@ -88,7 +88,6 @@ extension.runtime.onMessage("goooo", function(msg, sendResponse) {
             loginOverlay(msg);
         }
     }
-		
 });
 
 }

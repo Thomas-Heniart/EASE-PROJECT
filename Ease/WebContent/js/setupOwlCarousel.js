@@ -1,5 +1,5 @@
 function setupOwlCarousel(){
-		$('.owl-carousel').owlCarousel({
+/*		$('.owl-carousel').owlCarousel({
 			items : 3,
 			itemsCustom : false,
 			itemsDesktop : [ 1199, 3 ],
@@ -26,51 +26,44 @@ function setupOwlCarousel(){
 					$(this).css('margin', '0 auto');
 				});
 			}		
-		});
-		$('.owl-wrapper').sortable({
-			animation: 300,
-			group:"profiles",
-			handle: ".ProfileName",
-			forceFallback: true,
-			onStart: function(evt){
-				var item = $(evt.item);
-				$('body').css('cursor', 'move');
-				item.css({
-					'pointer-events': 'none',
-					'opacity': '0'
-				});
-			},
-			onEnd: function(evt){
-				var item = $(evt.item);
-				$('body').css('cursor', '');
-				item.css({
-					'pointer-events': '',
-					'opacity': ''
-				});
-				if (evt.oldIndex != evt.newIndex){
+		});*/
+/*		$('.dashboardColumn').each(function(){
+			$(this).sortable({
+				animation: 300,
+				group:"profiles",
+				handle: ".ProfileName",
+				forceFallback: true,
+				onStart: function(evt){
+					var item = $(evt.item);
+					$('body').css('cursor', 'move');
+				},
+				onEnd: function(evt){
+					var item = $(evt.item);
+					$('body').css('cursor', '');
 					postHandler.post(
 						"moveProfile",
 						{
-							profileId: item.find('.item').attr('id'),
-							index: item.index() + 1
+							columnIdx: item.parent().index() + 1,
+							profileIdx: item.index(),
+							profileId: item.attr('id')
 						},
 						function(){},
 						function(retMsg){},
 						function(retMsg){},
 						'text'
-					);
+						);
 				}
-			}
-		});
+			});
+		});*/
 	}
 	$(document).ready(function() {
 		setupOwlCarousel();
-		$('.owl-carousel').on('mousewheel', '.owl-stage', function(e) {
+/*		$('.owl-carousel').on('mousewheel', '.owl-stage', function(e) {
 			if (e.deltaY > 0) {
 				$('.owl-carousel').trigger('next.owl');
 			} else {
 				$('.owl-carousel').trigger('prev.owl');
 			}
 			e.preventDefault();
-		});
+		});*/
 	});

@@ -8,7 +8,7 @@
 .ProfileBox {
 	width: 90%;
 	border-radius: 5px;
-	background-color: white;
+	background-color: rgba(white, 0.7);
 	overflow: hidden;
 	display: inline-block;
 	height: auto;
@@ -282,29 +282,34 @@
 	margin-left: auto;
 	margin-right: auto;
 	position: relative;
-	min-height: 100%;
 	.CatalogViewTab{
 
 	}
 	.ProfilesHandler.editMode {
+		transition: margin .3s, width .3s;
 		width: 50%;
-		margin-left: 0px;
-		margin-right: 0px;
+		margin-left:0px;
 	}
 	.ProfilesHandler {
+		transition: margin .3s, width .3s;
 		width: 80%;
-		margin-left: auto;
-		margin-right: auto;
+		margin-bottom: 2vh;
 		padding-top: 25px;
+		white-space: nowrap;
+		margin-left: 10%;
 		position: relative;
 		overflow: hidden;
+		text-align: center;
 		.dashboardColumn {
+			transition: width .3s;
 			width: 25%;
-			float: left;
+			vertical-align: top;
+			display: inline-block;
 			min-height: 100px;
 			position: relative;
 			.item {
 				text-align: center;
+				margin-bottom: 10px;
 			}
 		}
 	}
@@ -592,6 +597,18 @@
 	top: 50%;
 	left: 50%;
 	transform: translateX(-50%) translateY(-50%);
+}
+.ProfilesHandler .item.sortable-ghost {
+	pointer-events: none;
+	.ProfileBox {
+		border: 1px solid $themeColor !important;
+		border-bottom: 1px solid $themeColor !important;
+		background-color: rgba(white, 0);
+		border-radius: 5px;
+		.ProfileName, .ProfileContent {
+			opacity: 0;
+		}
+	}
 }
 .siteLinkBox.sortable-fallback {
 	.linkImage {

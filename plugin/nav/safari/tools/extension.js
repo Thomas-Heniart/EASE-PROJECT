@@ -17,14 +17,30 @@ var extension = {
     currentWindow:function(callback){
         callback(safari.application.activeBrowserWindow);
     },
-	addShortCut:function(fct){
-	},
+    hasMultipleEaseTabs:function(window){
+        var nb=0;
+        for(var i in window.tabs) {
+            if(window.tabs[i].url.indexOf("ease.space")!=-1){
+                nb++;
+            }
+        }
+        return nb>1;
+    },
+	addShortCut:function(fct){},//empty
 	onWindowCreated:function(fct){
 		safari.application.activeBrowserWindow.addEventListener("open", fct, false);
 	},
 	onWindowRemoved:function(fct){
 		safari.application.activeBrowserWindow.addEventListener("close", fct, false);
 	},
+    onNewWindow:function(fct){
+         safari.application.activeBrowserWindow.addEventListener("open", function(event){
+             safari.application.activeBrowserWindowwindow.activeTab.addEventListener("open", function newWindow(event2){
+                 safari.application.activeBrowserWindowwindow.activeTab.removeEventListener(newWindow);
+                 /// ????? safari.application.activeBrowserWindowwindow.activeTab
+             }, false);
+         }, false);
+    },
 	runtime:{
 		sendMessage:function(name, msg, callback){
 			safari.self.tab.dispatchMessage(name, msg);
@@ -56,22 +72,50 @@ var extension = {
 					fct(event.message, sendResponse);
 				}
 			}, false);
-		}        
+		},
+        tempBckgrndOnMessage:function(name, fct){
+            safari.application.addEventListener("message", function temp(event){
+				if(event.name==name){
+                    safari.application.removeListener(temp);
+                    function sendResponse(response){
+                        event.target.page.dispatchMessage(event.name+" response", response);
+                    }
+					fct(event.message, sendResponse);
+				}
+			}, false);
+        }
 	},
 	tabs:{
+        stopLoad:function(tab, callback){},//empty
 		update:function(tab, url, callback){
 			tab.url = url;
 			callback(tab);
 		},
 		create:function(window, url, active, callback){
-			tab = window.openTab();
+			if(active){
+				tab = window.openTab();
+			} else {
+				tab = window.openTab("background");
+			}
 			tab.id = tab_id_increment;
 			tab_id_increment++;
 			tab.url = url;
-			console.log(tab);
 			callback(tab);
 		},
-		close:function(tabId, callback){
+        createOrUpdate:function(window, tab, url, active, callback){
+            if(active){
+                if(extension.hasMultipleEaseTabs(window)){
+                    this.update(tab, url, callback);
+                } else {
+                    this.create(window, url, active, callback);
+                }
+            } else {
+                this.create(window, url, active, callback);
+            }
+        },
+        highlight:function(window, tab, callback){}, //empty
+        focus:function(window, tab, callback){}, //empty
+		close:function(tab, callback){
    			tab.close();
    			callback();
 		},
@@ -84,6 +128,7 @@ var extension = {
         onUpdatedRemoveListener:function(tab){
             tab.removeEventListener("navigate", listenersUpdates[tab.id], false);
         },
+        onNewTab:function(fct){}, //empty
 		sendMessage:function(tab, name, msg, callback){
 			var fullMessage = {"msg":msg, "tab":tab.id};
 			tab.page.dispatchMessage(name, fullMessage);
@@ -97,7 +142,7 @@ var extension = {
             }, false);
 		},
         onNavigation:function(fct){
-            extension.runtime.bckgrndOnMessage("newFocus", fonction(message, sendResponse){
+            extension.runtime.bckgrndOnMessage("newFocus", function(message, sendResponse){
                 fct(message.url);
             });
         },

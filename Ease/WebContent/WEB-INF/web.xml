@@ -9,6 +9,17 @@
   <session-config>
     <session-timeout>240</session-timeout>
   </session-config>
+  <!--
+  <security-constraint>
+    <web-resource-collection>
+       <web-resource-name>Viewpoint Secure URLs</web-resource-name>
+       <url-pattern>/*</url-pattern>
+    </web-resource-collection>
+    <user-data-constraint>
+       <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+  	</user-data-constraint>
+  </security-constraint>
+  -->
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
     <welcome-file>index.htm</welcome-file>

@@ -97,7 +97,7 @@ var Input = {
 		constructorInput.apply(this,arguments);
 		var self = this;
 		this.validate = function () {
-			var reg = /^[A-Za-z0-9$@$!%.*#?&'()-_<>=+\\/:;,]{8,}$/;
+			var reg = /^[-A-Za-z0-9$@$!%.*#?&'()\[\]{}_<>=+\\/:;,]{8,}$/;
 			return reg.test(self.qInput.val());
 		}
 	},
