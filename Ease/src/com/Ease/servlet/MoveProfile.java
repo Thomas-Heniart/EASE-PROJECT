@@ -71,7 +71,7 @@ public class MoveProfile extends HttpServlet {
 				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 			} else if (columnIdx < 1 || columnIdx > 4){
 				SI.setResponse(ServletItem.Code.BadParameters, "Bad columnIdx.");
-			} else if (profileIdx < 1 || profileIdx >= user.getProfilesDashboard().get(columnIdx).size()){
+			} else if (profileIdx < 0 || profileIdx >= user.getProfilesDashboard().get(columnIdx).size()){
 				SI.setResponse(ServletItem.Code.BadParameters, "Bad profileIdx.");
 			} else if ((profile = user.getProfile(profileId)) == null){
 				SI.setResponse(ServletItem.Code.BadParameters, "Bad profileId.");
