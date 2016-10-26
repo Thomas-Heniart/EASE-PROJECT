@@ -23,6 +23,10 @@
 				<i class="fa fa-caret-right" aria-hidden="true"></i><p class="sectionDescription">Ease Password</p>
 				<%@ include file="EditUserPassword.jsp" %>
 			</div>
+			<div class="sectionHeader" id="passwordSection">
+				<i class="fa fa-caret-right" aria-hidden="true"></i><p class="sectionDescription">Delete Ease Account</p>
+				<%@ include file="DeleteAccount.jsp" %>
+			</div>
 		</div>
 	</div>
 </div>

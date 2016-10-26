@@ -19,6 +19,34 @@
 		<button type="submit">Go</button>
 	</div>
 </form>
+<div class="md-modal md-effect-15 popup" id="AddEmailPopup">
+	<div class="md-content">
+		<div class="waiting show">
+			<h2>We are sending you an email</h2>
+			<div class="sk-fading-circle">
+				<div class="sk-circle1 sk-circle"></div>
+				<div class="sk-circle2 sk-circle"></div>
+				<div class="sk-circle3 sk-circle"></div>
+				<div class="sk-circle4 sk-circle"></div>
+				<div class="sk-circle5 sk-circle"></div>
+				<div class="sk-circle6 sk-circle"></div>
+				<div class="sk-circle7 sk-circle"></div>
+				<div class="sk-circle8 sk-circle"></div>
+				<div class="sk-circle9 sk-circle"></div>
+				<div class="sk-circle10 sk-circle"></div>
+				<div class="sk-circle11 sk-circle"></div>
+				<div class="sk-circle12 sk-circle"></div>
+			</div>
+		</div>
+		<div class="email-sent">
+			<h2>Email sent</h2>
+			<i class="fa fa-check" aria-hidden="true"></i>
+		</div>
+		<div class="error">
+			<h2>Unfortunately we cannot send you an email</h2>
+		</div>
+	</div>
+</div>
 <script>
 	var addEmailInput = Form["AddEmailForm"]($("#AddEmailForm"));
 </script>
