@@ -54,7 +54,7 @@ public class Profile {
 			columnIdx = 0;
 			profileIdx = 0;
 		}
-		if (db.set("INSERT INTO profiles VALUES (NULL, '" + user.getId() + "', '" + name + "', '" + color + "', '" + desc + "', " + user.getProfiles().size() + ", " + ((custom != null) ? custom : "NULL") + "', columnIdx='" + columnIdx + "', profileIdx='" + profileIdx + ");")
+		if (db.set("INSERT INTO profiles VALUES (NULL, '" + user.getId() + "', '" + name + "', '" + color + "', '" + desc + "', " + user.getProfiles().size() + ", " + ((custom != null) ? custom : "NULL") + ", " + columnIdx + ", " + profileIdx + ");")
 			!= 0) {
 			throw new SessionException("Impossible to insert new profile in data base.");
 		} else {
@@ -198,7 +198,7 @@ public class Profile {
 	
 	public void updateInDB(ServletContext context) throws SessionException {
 		DataBase db = (DataBase)context.getAttribute("DataBase");
-		if (db.set("UPDATE profiles SET name='" + name + "', `color`='"+ color + "', description='" + description + "', position='" + index + "', columnIdx='" + columnIdx + "', profileIdx='" + profileIdx + "' WHERE `profile_id`='"+ id + "';")
+		if (db.set("UPDATE profiles SET name='" + name + "', `color`='"+ color + "', description='" + description + "', position='" + index + "', columnIdx=" + columnIdx + ", profileIdx=" + profileIdx + " WHERE `profile_id`='"+ id + "';")
 				!= 0)
 			throw new SessionException("Impossible to update profile in data base.");
 	}
