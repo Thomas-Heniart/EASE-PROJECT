@@ -89,14 +89,14 @@ function enterEditMode() {
 	$(".ProfilesHandler").addClass('editMode');
 	catalog.open();
 	var addProfileHelper = $('#addProfileHelper').find('.item');
-	var owl = $(".owl-carousel").data('owlCarousel');
-	owl.destroy();
-	var nbProfiles = $('.owl-carousel > *').length;
+//	var owl = $(".owl-carousel").data('owlCarousel');
+//	owl.destroy();
+//	var nbProfiles = $('.owl-carousel > *').length;
 
-	if (nbProfiles < 3) {
-		$('.owl-carousel').append($(addProfileHelper));
-	}
-	setupOwlCarousel();
+//	if (nbProfiles < 3) {
+//		$('.owl-carousel').append($(addProfileHelper));
+//	}
+//	setupOwlCarousel();
 	$('.MenuButtonSet').addClass('editMode');
 	$('.MenuButtonSet.editMode .openCatalogHelper').css('height',
 		$('.CatalogViewTab.show').height() + 'px');
@@ -107,12 +107,12 @@ function leaveEditMode() {
 	$('.MenuButtonSet.editMode .openCatalogHelper').css('height', '50px');
 	$(".ProfilesHandler").removeClass('editMode');
 	catalog.close();
-	var owl = $(".owl-carousel").data('owlCarousel');
-	owl.destroy();
-	var addProfileHelper = $('.AddProfileView').closest('.item');
-
-	$('#addProfileHelper').append($(addProfileHelper));
-	setupOwlCarousel();
+//	var owl = $(".owl-carousel").data('owlCarousel');
+//	owl.destroy();
+//	var addProfileHelper = $('.AddProfileView').closest('.item');
+//
+//	$('#addProfileHelper').append($(addProfileHelper));
+//	setupOwlCarousel();
 	$('.scaleOutAnimation').removeClass('scaleOutAnimation');
 	$('.MenuButtonSet').removeClass('editMode');
 	leaveEditModeTutorial();
@@ -386,7 +386,7 @@ $(document)
 		.click(
 			function(event) {
 				if ($(".CatalogViewTab").hasClass("show") && !($(event.target).closest('.MenuButtonSet').length) && $('.md-show').length == 0) {
-					if (!($(event.target).closest('.header, .owl-wrapper-outer, .md-modal, .md-overlay, .CatalogViewTab, .AddProfileView, .updateButton, .hiddenProfile').length))
+					if (!($(event.target).closest('.header, .dashboardColumn, .md-modal, .md-overlay, .CatalogViewTab, .AddProfileView, .updateButton, .hiddenProfile').length))
 						leaveEditMode();
 				}
 			});
@@ -412,31 +412,6 @@ function showConfirmDeleteAppPopup(elem, event) {
 			"This app is used to connect to several websites. You cannot delete it.",
 			true);
 	} else {
-
-		/*var popup = $('#PopupDeleteApp');
-		popup.addClass('md-show');
-		popup.find("#close").unbind('click');
-		popup.find("#close").click(function() {
-			popup.removeClass('md-show');
-		});
-		popup.find("#accept").unbind('click');
-		popup.find("#accept").click(function() {
-			popup.removeClass('md-show');
-			image.addClass('easyScaling');
-			postHandler.post('deleteApp', {
-				appId : $(app).attr('id')
-			}, function() {
-				image.removeClass('easyScaling');
-			}, function(retMsg) {
-				image.addClass('deletingApp');
-				setTimeout(function() {
-					app.remove();
-				}, 500);
-			}, function(retMsg) {
-				showAlertPopup(retMsg, true);
-			}, 'text');
-		});
-		*/
 		popupDeleteApp.open(app);
 	}
 }

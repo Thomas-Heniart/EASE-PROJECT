@@ -61,10 +61,11 @@
 	.ProfileContent {
 		position: relative;
 		.content {
-			position: absolute;
+			position: relative;
 			top: 0;
 			width: 100%;
-			height: 100%;
+			min-height: 125%;
+			max-height: 300%;
 			.ProfileControlPanel {
 				display: none;
 				width: 100%;
@@ -149,42 +150,42 @@
 							background-color: #efefef;
 						}
 						.buttonSet {
-    						text-align: center;
-    						margin: 3% auto;
-    						button {
-      							border: 1px solid transparent;
-      							background-color: #CCCCCC;
-      							vertical-align: middle;
-      							position: relative;
-      							z-index: 1;
-      							margin: 0px;
-      							padding: 2px;
-      							float: none;
-      							min-width: 0px;
-      							max-width: 100%;
-      							width: 40%;
-      							display: inline-block;
-      							color: white;
-      							border-radius: 3px;
-    						}
-    						button.Active {
-      							border-color: $themeColor;
-     					 		background-color: $themeColor;
-      							@include scalein-anim('validateButton-anim', 1.05);
-					      		transition: all 0.3s ease;
-     					 		&:hover {
-        							transition: all 0.3s ease;
-        							background-color: white;
-					        		color: $themeColor;
-   			 					}
-   							}
-    						button[oclass="CloseButton"] {
-      							background-color: #888888;
-      							color: white;
-     					 		border-color: #888888;
-      							&:hover {
-       								background-color: #666666;
-      							}
+							text-align: center;
+							margin: 3% auto;
+							button {
+								border: 1px solid transparent;
+								background-color: #CCCCCC;
+								vertical-align: middle;
+								position: relative;
+								z-index: 1;
+								margin: 0px;
+								padding: 2px;
+								float: none;
+								min-width: 0px;
+								max-width: 100%;
+								width: 40%;
+								display: inline-block;
+								color: white;
+								border-radius: 3px;
+							}
+							button.Active {
+								border-color: $themeColor;
+								background-color: $themeColor;
+								@include scalein-anim('validateButton-anim', 1.05);
+								transition: all 0.3s ease;
+								&:hover {
+									transition: all 0.3s ease;
+									background-color: white;
+									color: $themeColor;
+								}
+							}
+							button[oclass="CloseButton"] {
+								background-color: #888888;
+								color: white;
+								border-color: #888888;
+								&:hover {
+									background-color: #666666;
+								}
 							}
 						}
 					}
@@ -227,7 +228,6 @@
 					width: (100% / 3);
 					border: 1px hidden #EFECEA;
 					float: left;
-					height: (100% / 6);
 					padding-top: 5px;
 					position: relative;
 					.siteName {
@@ -292,19 +292,19 @@
 		margin-right: 0px;
 	}
 	.ProfilesHandler {
-		width: 60%;
+		width: 80%;
 		margin-left: auto;
 		margin-right: auto;
 		padding-top: 25px;
-		.owl-carousel {
-			width:100%;
-			.owl-wrapper {
-				padding-bottom: 15px;
-				.owl-item {
-					.item {
-						text-align: center;
-					}
-				}
+		position: relative;
+		overflow: hidden;
+		.dashboardColumn {
+			width: 25%;
+			float: left;
+			min-height: 100px;
+			position: relative;
+			.item {
+				text-align: center;
 			}
 		}
 	}
