@@ -201,7 +201,11 @@ public class User {
 			this.keyUser = keyUser;
 
 			loadProfiles(context);
-			if (profilesDashboard.get(0).isEmpty())
+			if (this.profilesDashboard.get(0).isEmpty()) {
+				Profile profile = new Profile("Side", "#FFFFFF", "", this, "NULL", context, true);
+				this.profiles.add(profile);
+				this.profilesDashboard.get(0).add(profile);
+			}
 			checkForGroup(context);
 			loadEmails(context);
 		} catch (SQLException e) {
@@ -472,8 +476,9 @@ public class User {
 		}
 		for (int j = 1; j < 5; ++j) {
 			for (int i = 0; i < profilesDashboard.get(j).size(); ++i) {
-				if (profilesDashboard.get(j).get(i).getProfileIdx() != i) {
+				if (profilesDashboard.get(j).get(i).getProfileIdx() != i || profilesDashboard.get(j).get(i).getColumnIdx() != j) {
 					profilesDashboard.get(j).get(i).setProfileIdx(i);
+					profilesDashboard.get(j).get(i).setColumnIdx(j);
 					profilesDashboard.get(j).get(i).updateInDB(context);
 				}
 			}

@@ -193,6 +193,9 @@ public class Profile {
 	public void setProfileIdx(int idx) {
 		profileIdx = idx;
 	}
+	public void setColumnIdx(int idx) {
+		columnIdx = idx;
+	}
 	
 	// UTILS
 	
