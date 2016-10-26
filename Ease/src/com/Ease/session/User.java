@@ -282,10 +282,7 @@ public class User {
 		int i = 0;
 		while (i < profiles.size()) {
 			if (id == profiles.get(i).getProfileId())
-				if (profiles.get(i) == profilesDashboard.get(0).get(0))
-					return null;
-				else
-					return profiles.get(i);
+				return profiles.get(i);
 			i++;
 		}
 		return null;

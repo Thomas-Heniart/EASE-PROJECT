@@ -75,6 +75,8 @@ public class MoveProfile extends HttpServlet {
 				SI.setResponse(ServletItem.Code.BadParameters, "Bad profileIdx.");
 			} else if ((profile = user.getProfile(profileId)) == null){
 				SI.setResponse(ServletItem.Code.BadParameters, "Bad profileId.");
+			} else if (profile.getId() == user.getProfilesDashBoard().get(0).get(0).getId()) {
+				SI.setResponse(ServletItem.Code.LogicError, "Trying to move side profile.");	
 			} else {
 				if (profile.havePerm(Profile.ProfilePerm.MOVE, session.getServletContext())){
 					transaction = db.start();
