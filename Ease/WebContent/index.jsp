@@ -57,7 +57,7 @@ pageEncoding="UTF-8"%>
 	<script src="js/alertPopup.js"></script>
 	<script src="js/loading.js"></script>
 	<script src="js/header.js"></script>
-	
+	<script src="js/app.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/lib/dropDownMenu/dropdown.css" />
