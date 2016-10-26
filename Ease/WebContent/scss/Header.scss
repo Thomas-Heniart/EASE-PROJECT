@@ -100,7 +100,7 @@
 				width: 100%;
 				color: $themeColor;
 				margin-top: 5px;
-				span:before {
+				&:before {
 					content: "";
 					width: 0;
 					height: 1px;
@@ -114,7 +114,7 @@
   				-webkit-transition: width 0.3s ease-in-out 0s;
   				transition: width 0.3s ease-in-out 0s;
 				}
-				span:hover:before {
+				&:hover:before {
 					width: 39%;
 					visibility: visible;
 					-webkit-transition: width 0.3s ease-in-out 0s;
@@ -140,7 +140,7 @@
 					}
 				}
 			}
-			
+
 		}
 		.onoffswitch {
     		position: relative;

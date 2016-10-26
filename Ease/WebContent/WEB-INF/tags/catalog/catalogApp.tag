@@ -10,6 +10,7 @@
 	url="${site.getUrl() }">
 	<div class="catalogAppLogo">
 		<img src="${site.getFolder()}logo.png" />
+		<i class="fa fa-link" aria-hidden="true"></i>
 	</div>
 	<div class="catalogAppName">
 		<p>${site.getName()}</p>

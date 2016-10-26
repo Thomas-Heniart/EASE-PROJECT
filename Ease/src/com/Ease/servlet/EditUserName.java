@@ -58,11 +58,10 @@ public class EditUserName extends HttpServlet {
 				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 			} else if (fname == null || fname == "") {
 				SI.setResponse(ServletItem.Code.BadParameters, "Bad first name.");
-			} else if (lname == null || lname == "") {
-				SI.setResponse(ServletItem.Code.BadParameters, "Bad last name.");
 			} else {
 				user.setFirstName(fname);
-				user.setLastName(lname);
+				if (lname != null && lname != "")
+					user.setLastName(lname);
 				user.updateInDB(session.getServletContext());
 				SI.setResponse(200, "Name changed.");
 			}
