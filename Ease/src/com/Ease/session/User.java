@@ -43,6 +43,7 @@ public class User {
 	String			tuto;
 	String 			background;
 	List<Profile>	profiles;
+	List<List<Profile>>		profilesDashboard;
 	List<String>	group_ids;
 	Map<String,Boolean>	emails;
 	
@@ -79,6 +80,10 @@ public class User {
 			this.tuto = "0";
 			this.background = "logo";
 			profiles = new LinkedList<Profile>();
+			profilesDashboard = new LinkedList<List<Profile>>();
+			for (int i = 0; i < 5; ++i) {
+				profilesDashboard.add(new LinkedList<Profile>());
+			}
 			maxProfileId = 0;
 			maxAppId = 0;
 			apps = new LinkedList<App>();
@@ -90,6 +95,12 @@ public class User {
 				try {
 					rs.next();
 					this.id = rs.getString(1);
+					Profile profile = new Profile("Side", "#FFFFFF", "", this, "NULL", context, true);
+					this.profiles.add(profile);
+					this.profilesDashboard.get(0).add(profile);
+					profile = new Profile("Perso", "#FF0000", "", this, "NULL", context, false);
+					this.profiles.add(profile);
+					this.profilesDashboard.get(1).add(profile);
 					loadEmails(context);
 				} catch (SQLException e) {
 					throw new SessionException("Impossible to insert new user in data base.");
@@ -109,6 +120,10 @@ public class User {
 			tuto = rs.getString(UserData.TUTO.ordinal());
 			background = (rs.getString(UserData.BACKGROUND.ordinal()).equals("1")) ? "picture" : "logo";
 			profiles = new LinkedList<Profile>();
+			profilesDashboard = new LinkedList<List<Profile>>();
+			for (int i = 0; i < 5; ++i) {
+				profilesDashboard.add(new LinkedList<Profile>());
+			}
 			maxProfileId = 0;
 			maxAppId = 0;
 			apps = new LinkedList<App>();
@@ -169,6 +184,10 @@ public class User {
 			tuto = rs.getString(UserData.TUTO.ordinal());
 			background = (rs.getString(UserData.BACKGROUND.ordinal()).equals("1")) ? "picture" : "logo";
 			profiles = new LinkedList<Profile>();
+			profilesDashboard = new LinkedList<List<Profile>>();
+			for (int i = 0; i < 5; ++i) {
+				profilesDashboard.add(new LinkedList<Profile>());
+			}
 			maxProfileId = 0;
 			maxAppId = 0;
 			apps = new LinkedList<App>();
@@ -177,6 +196,7 @@ public class User {
 			this.keyUser = keyUser;
 
 			loadProfiles(context);
+			if (profilesDashboard.get(0).isEmpty())
 			checkForGroup(context);
 			loadEmails(context);
 		} catch (SQLException e) {
@@ -262,7 +282,10 @@ public class User {
 		int i = 0;
 		while (i < profiles.size()) {
 			if (id == profiles.get(i).getProfileId())
-				return profiles.get(i);
+				if (profiles.get(i) == profilesDashboard.get(0).get(0))
+					return null;
+				else
+					return profiles.get(i);
 			i++;
 		}
 		return null;
@@ -295,6 +318,9 @@ public class User {
 				res.add(entry.getKey());
 		}
 		return res;
+	}
+	public List<List<Profile>> getProfilesDashBoard () {
+		return this.profilesDashboard;
 	}
 
 	// SETTER
@@ -349,6 +375,7 @@ public class User {
 			while (rs.next()) {
 				Profile profile = new Profile(rs, this, context);
 				profiles.add(profile);
+				profilesDashboard.get(profile.getColumnIdx()).add(profile);
 			}
 			profiles.sort(new Comparator<Profile>() {
 				@Override
@@ -356,6 +383,14 @@ public class User {
 					return a.getIndex() - b.getIndex();
 				}
 			});
+			for (int i = 1; i < 5; ++i) {
+				profilesDashboard.get(i).sort(new Comparator<Profile>() {
+					@Override
+					public int compare(Profile a, Profile b) {
+						return a.getProfileIdx() - b.getProfileIdx();
+					}
+				});
+			}
 			updateIndex(context);
 		} catch (SQLException e) {
 			throw new SessionException("Impossible to load all profiles.");
@@ -364,6 +399,36 @@ public class User {
 
 	public void addProfile(Profile profile) {
 		profiles.add(profile);
+		int column = -1;
+		int minSize = -1;
+		int size;
+		for (int j = 1; j < 5; ++j) {
+			size = 0;
+			for (int i = 0; i < profilesDashboard.get(j).size(); ++i){
+				size += profilesDashboard.get(j).get(i).getYSize();
+			}
+			if (minSize == -1 || minSize > size) {
+				column = j;
+				minSize = size;
+			}
+		}
+		profilesDashboard.get(column).add(profile);
+	}
+	public int getMostEmptyColumn() {
+		int column = -1;
+		int minSize = -1;
+		int size;
+		for (int j = 1; j < 5; ++j) {
+			size = 0;
+			for (int i = 0; i < profilesDashboard.get(j).size(); ++i){
+				size += profilesDashboard.get(j).get(i).getYSize();
+			}
+			if (minSize == -1 || minSize > size) {
+				column = j;
+				minSize = size;
+			}
+		}
+		return column;
 	}
 
 	public void updateInDB(ServletContext context, String pass) throws SessionException {
@@ -399,6 +464,14 @@ public class User {
 				profiles.get(i).updateInDB(context);
 			}
 		}
+		for (int j = 1; j < 5; ++j) {
+			for (int i = 0; i < profilesDashboard.get(j).size(); ++i) {
+				if (profilesDashboard.get(j).get(i).getProfileIdx() != i) {
+					profilesDashboard.get(j).get(i).setProfileIdx(i);
+					profilesDashboard.get(j).get(i).updateInDB(context);
+				}
+			}
+		}
 	}
 
 	public void moveProfileAt(ServletContext context, int profileIndex, int index) throws SessionException {
@@ -406,6 +479,13 @@ public class User {
 		Profile profile = profiles.get(profileIndex);
 		profiles.remove(profileIndex);
 		profiles.add(index, profile);
+		updateIndex(context);
+	}
+	
+	public void moveProfileAt(ServletContext context, Profile profile, int columnIdx, int profileIdx) throws SessionException {
+
+		profilesDashboard.get(profile.getColumnIdx()).remove(profile);
+		profilesDashboard.get(columnIdx).add(profileIdx, profile);
 		updateIndex(context);
 	}
 
@@ -488,8 +568,8 @@ public class User {
 			if (rs.next()) {
 				String customProfileId = rs.getString(1);
 				if ((profile = haveThisCustomProfile(customProfileId)) == null) {
-					profile = new Profile(rs.getString(2), rs.getString(3), "", this, customProfileId, context);
-					profiles.add(profile);
+					profile = new Profile(rs.getString(2), rs.getString(3), "", this, customProfileId, context, false);
+					addProfile(profile);
 				}
 			}
 			if ((rs = db.get("select * from AppAndGroupMap where group_id=" + group_id + ";")) == null) {
@@ -527,6 +607,5 @@ public class User {
 		} catch (SQLException e) {
 			throw new SessionException("Can't get emails.");
 		}
-
 	}
 }
