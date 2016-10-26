@@ -28,12 +28,11 @@ function rememberWebsite(website){
 }
 
 function endConnection(currentWindow, tab, msg, sendResponse){
-    extension.tabs.sendMessage(tab, "rmOverlay", msg, function(response){});
-    /*if(msg.result == "Success"){
-        extension.notifications.print("Connection to "+ msg.detail[msg.detail.length-1].website.name +" : DONE ;)", msg.detail[msg.detail.length-1].website.folder, 2000);
-    } else {
-        extension.notifications.print("Connection to "+ msg.detail[msg.detail.length-1].website.name+" : FAIL :(", msg.detail[msg.detail.length-1].website.folder, 2000);
-    }*/
+    extension.tabs.sendMessage(tab, "rmOverlay", msg, function(response){
+        if(msg.result == "Fail"){
+            server.post("Could not end process for website "+ msg.detail[0].website.name);
+        }
+    });
 }
 
 extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, sendResponse) {

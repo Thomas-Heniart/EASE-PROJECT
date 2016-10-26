@@ -54,6 +54,11 @@ document.addEventListener("NewConnection", function(event){
     extension.runtime.sendMessage("NewConnection", {"highlight":event.detail.highlight, "detail":event.detail}, function(response) {});
 }, false);
 
+document.addEventListener("NewLinkToOpen", function(event){
+    console.log(event);
+    extension.runtime.sendMessage("NewLinkToOpen", event.detail, function(response) {});
+}, false);
+
 document.addEventListener("GetUpdates", function(event){
     var updatesToSend = [];
     var id = 0;

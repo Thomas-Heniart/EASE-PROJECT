@@ -94,8 +94,12 @@ var extension = {
 			chrome.tabs.create({"windowId":window.id, "url":url, "active":active}, callback);
 		},
         createOrUpdate:function(window, tab, url, active, callback){
-            if(extension.hasMultipleEaseTabs(window)){
-                this.update(tab, url, callback);
+            if(active){
+                if(extension.hasMultipleEaseTabs(window)){
+                    this.update(tab, url, callback);
+                } else {
+                    this.create(window, url, active, callback);
+                }
             } else {
                 this.create(window, url, active, callback);
             }
