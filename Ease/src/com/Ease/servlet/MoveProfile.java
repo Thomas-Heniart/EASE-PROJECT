@@ -50,7 +50,7 @@ public class MoveProfile extends HttpServlet {
 		
 		// Get Parameters
 		String profileIdParam = SI.getServletParam("profileId");
-		String indexParam = SI.getServletParam("index");
+		//String indexParam = SI.getServletParam("index");
 		String columnIdxParam = SI.getServletParam("columnIdx");
 		String profileIdxParam = SI.getServletParam("profileIdx");
 		// --
@@ -61,7 +61,7 @@ public class MoveProfile extends HttpServlet {
 		
 		try {
 			int profileId = Integer.parseInt(profileIdParam);
-			int index = Integer.parseInt(indexParam);
+			//int index = Integer.parseInt(indexParam);
 			int profileIdx = Integer.parseInt(profileIdxParam);
 			int columnIdx = Integer.parseInt(columnIdxParam);
 				
@@ -80,7 +80,7 @@ public class MoveProfile extends HttpServlet {
 			} else {
 				if (profile.havePerm(Profile.ProfilePerm.MOVE, session.getServletContext())){
 					transaction = db.start();
-					user.moveProfileAt(session.getServletContext(), profile.getIndex(), index);
+					//user.moveProfileAt(session.getServletContext(), profile.getIndex(), index);
 					user.moveProfileAt(session.getServletContext(), profile, profileIdx, columnIdx);
 					db.commit(transaction);
 					SI.setResponse(200, "Profile moved.");
