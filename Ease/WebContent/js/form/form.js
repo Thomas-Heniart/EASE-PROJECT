@@ -5,14 +5,14 @@ var constructorForm = function(rootEl, parent) {
 	this.oInputs = [];
 	this.params = {};
 	this.qRoot.find('input').each(function(index, elem) {
-	this.oErrorMsg;
-	
+		this.oErrorMsg;
+
 		var oClass = $(elem).attr('oClass');
 		if (oClass != null) {
 			self.oInputs.push(new Input[oClass]($(elem), self));
 		}
 	});
-	this.qRoot.find('div').each(function (index, elem) {
+	this.qRoot.find('div').each(function(index, elem) {
 		var oClass = $(elem).attr('oClass');
 		if (oClass != null) {
 			self.oErrorMsg = new ErrorMsg[oClass]($(elem), self);
@@ -62,24 +62,24 @@ var constructorForm = function(rootEl, parent) {
 	};
 	this.submit = function(e) {
 		e.preventDefault();
-		self.oInputs.forEach(function (elem) {
+		self.oInputs.forEach(function(elem) {
 			self.params[elem.qInput.attr('name')] = elem.getVal();
 		});
-		console.log(self.qRoot.attr('action'));
 		self.beforeSubmit();
-		postHandler.post(self.qRoot.attr('action'), self.params, self.afterSubmit, self.successCallback, self.errorCallback);
+		postHandler.post(self.qRoot.attr('action'), self.params,
+				self.afterSubmit, self.successCallback, self.errorCallback);
 	};
-	this.beforeSubmit = function () {
-		
+	this.beforeSubmit = function() {
+
 	};
-	this.afterSubmit = function () {
-		
+	this.afterSubmit = function() {
+
 	};
-	this.successCallback = function () {
-		
+	this.successCallback = function() {
+
 	};
-	this.errorCallback = function () {
-		
+	this.errorCallback = function() {
+
 	}
 }
 
@@ -93,10 +93,10 @@ var Form = {
 		this.afterSubmit = function() {
 			$('#loading').removeClass('la-animate');
 		}
-		this.successCallback = function () {
+		this.successCallback = function() {
 			showAlertPopup('Modifications successfully applied !', false);
 		};
-		this.errorCallback = function (retMsg) {
+		this.errorCallback = function(retMsg) {
 			showAlertPopup(retMsg, true);
 		}
 	},
@@ -130,35 +130,45 @@ var Form = {
 			self.oParent.close();
 			self.appsContainer.append(self.newAppItem);
 			self.params = {
-					profileId : self.profile_id,
-					siteId : self.site_id,
-					name : self.oInputs[0].getVal(),
-					login : self.oInputs[1].getVal(),
-					password : self.oInputs[2].getVal(),
-					appId : self.app_id
-				};
+				profileId : self.profile_id,
+				siteId : self.site_id,
+				name : self.oInputs[0].getVal(),
+				login : self.oInputs[1].getVal(),
+				password : self.oInputs[2].getVal(),
+				appId : self.app_id
+			};
 		}
 		this.afterSubmit = function() {
-			
+
 		}
 		this.successCallback = function(retMsg) {
 			self.newAppItem.find('.linkImage').addClass('scaleOutAnimation');
 			setTimeout(function() {
-				self.newAppItem.find('.linkImage').removeClass('scaleOutAnimation');
+				self.newAppItem.find('.linkImage').removeClass(
+						'scaleOutAnimation');
 			}, 1000);
-			self.newAppItem.find('.linkImage').attr('onclick', "sendEvent(this)");
+			self.newAppItem.find('.linkImage').attr('onclick',
+					"sendEvent(this)");
 			self.newAppItem.attr('login', self.oInputs[1].getVal());
 			self.newAppItem.attr('webId', self.helper.attr('idx'));
 			self.newAppItem.attr('name', self.oInputs[0].getVal());
-			self.newAppItem.attr('logwith', (self.app_id == null) ? 'false' : self.app_id);
+			self.newAppItem.attr('logwith', (self.app_id == null) ? 'false'
+					: self.app_id);
 			self.newAppItem.find('.siteName p').text(self.oInputs[0].getVal());
 			self.newAppItem.attr('id', retMsg);
 			self.newAppItem.attr('ssoid', self.helper.attr('data-sso'));
-			setupAppSettingButtonPopup(self.newAppItem.find('.showAppActionsButton'));
+			setupAppSettingButtonPopup(self.newAppItem
+					.find('.showAppActionsButton'));
 			var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 			if (emailRegex.test(self.oInputs[1].getVal())) {
-				$(".suggested-emails").append("<p class='email-suggestion'>@ <span>" + self.oInputs[1].getVal() + "</span></p>");
-				$(".unverifiedEmails").prepend("<div> <input type='email' oClass='EmailInput' value='"+ self.oInputs[1].getVal() +"'/><span class='unverifiedEmail'>Verified ?</span></div>");
+				$(".suggested-emails").append(
+						"<p class='email-suggestion'>@ <span>"
+								+ self.oInputs[1].getVal() + "</span></p>");
+				$(".unverifiedEmails")
+						.prepend(
+								"<div> <input type='email' oClass='EmailInput' value='"
+										+ self.oInputs[1].getVal()
+										+ "'/><span class='unverifiedEmail'>Verified ?</span></div>");
 			}
 			self.reset();
 		}
@@ -166,7 +176,7 @@ var Form = {
 			self.newAppItem.remmove();
 			self.reset();
 			$(parent).find('.alertDiv').addClass('show');
-    	  	showAlertPopup(retMsg, true);
+			showAlertPopup(retMsg, true);
 		}
 		this.setPostName = function(postName) {
 			self.postName = postName;
@@ -184,22 +194,22 @@ var Form = {
 			return true;
 		}
 	},
-	DeleteProfileForm : function (rootEl) {
+	DeleteProfileForm : function(rootEl) {
 		constructorForm.apply(this, arguments);
 		var self = this;
-		this.beforeSubmit = function () {
+		this.beforeSubmit = function() {
 			$('#loading').addClass('la-animate');
 		}
-		this.afterSubmit = function () {
+		this.afterSubmit = function() {
 			$('#loading').removeClass("la-animate");
 		}
-        this.successCallback = function(retMsg) {
+		this.successCallback = function(retMsg) {
 			window.location.replace("index.jsp");
 		};
 		this.errorCallback = function(retMsg) {
 			$(parent).find('.alertDiv').addClass('show');
-  	  		$(parent).find('#password').val('');
-    	  	showAlertPopup(retMsg, true);
+			$(parent).find('#password').val('');
+			showAlertPopup(retMsg, true);
 		}
 	},
 	ModifyAppForm : function(rootEl) {
@@ -226,64 +236,106 @@ var Form = {
 			}
 			self.login = self.oInputs[1].getVal();
 			self.password = self.oInputs[2].getVal();
-			$.post(
-					'editApp',
-					{
-						name : self.oInputs[0].getVal(),
-						appId : self.appId,
-						lwId : self.aId,
-						login : self.login,
-						wPassword : self.password
-					},
-					function(data) {
-						var retMsg = data.substring(4);
-						var image = self.app.find('.linkImage');
-						self.oParent.close();
-						image.addClass('scaleOutAnimation');
-						setTimeout(function() {
-							image.removeClass('scaleOutAnimation');
-						}, 1000);
-						self.app.attr('login', self.oInputs[1].getVal());
-						self.app.attr('name', self.oInputs[0].getVal());
-						self.app.attr('logwith', (self.oInputs[1].getVal().length || self.aId) == null ? 'false' : self.aId);
-						self.app.find('.siteName p').text(self.oInputs[0].getVal());
-						self.app.find('.emptyAppIndicator').remove();
-						self.app.removeClass('emptyApp');
-					});
+			$
+					.post(
+							'editApp',
+							{
+								name : self.oInputs[0].getVal(),
+								appId : self.appId,
+								lwId : self.aId,
+								login : self.login,
+								wPassword : self.password
+							},
+							function(data) {
+								var retMsg = data.substring(4);
+								var image = self.app.find('.linkImage');
+								self.oParent.close();
+								image.addClass('scaleOutAnimation');
+								setTimeout(function() {
+									image.removeClass('scaleOutAnimation');
+								}, 1000);
+								self.app
+										.attr('login', self.oInputs[1].getVal());
+								self.app.attr('name', self.oInputs[0].getVal());
+								self.app
+										.attr(
+												'logwith',
+												(self.oInputs[1].getVal().length || self.aId) == null ? 'false'
+														: self.aId);
+								self.app.find('.siteName p').text(
+										self.oInputs[0].getVal());
+								self.app.find('.emptyAppIndicator').remove();
+								self.app.removeClass('emptyApp');
+							});
 		}
 	},
-	DeleteAppForm : function (rootEl) {
+	DeleteAppForm : function(rootEl) {
 		constructorForm.apply(this, arguments);
 		var self = this;
-		this.beforeSubmit = function () {
+		this.beforeSubmit = function() {
 			$(self.oParent.app).find('.linkImage').addClass('easyScaling');
 		}
-		this.afterSubmit = function () {
+		this.afterSubmit = function() {
 			self.oParent.close();
 			$(self.oParent.app).find('.linkImage').removeClass('easyScaling');
 		}
-        this.successCallback = function(retMsg) {
+		this.successCallback = function(retMsg) {
 			$(self.oParent.app).find('.linkImage').addClass('deletingApp');
 			setTimeout(function() {
 				self.oParent.app.remove();
 			}, 500);
 		};
 		this.errorCallback = function(retMsg) {
-    	  	showAlertPopup(retMsg, true);
+			showAlertPopup(retMsg, true);
 		}
 	},
-	AddEmailForm : function (rootEl) {
+	AddEmailForm : function(rootEl) {
 		constructorForm.apply(this, arguments);
 		var self = this;
-		this.addEmail = function (emailVal) {
-			$("#editVerifiedEmails").append("<div><input type='email' oClass='EmailInput' value='"+ emailVal +"'/> <span class='unverifiedEmail'>Verified ?</span></div>");
-			$(".suggested-emails").append("<p class='email-suggestion'>@ <span>" + emailVal + "</span></p>");
+		this.addEmail = function(emailVal) {
+			$("#editVerifiedEmails")
+					.append(
+							"<div class='emailLine'><input type='email' value='"
+									+ emailVal
+									+ "' readonly/> <span class='unverifiedEmail show'>Verified ?</span><div action='SendVerificationEmail' oClass = 'SendVerificationEmailForm' id='SendVerificationEmail'><input type='hidden' name='email'><button type='submit'></button></div></div>");
+			$(".suggested-emails").append(
+					"<p class='email-suggestion' email='" + emailVal
+							+ "'>@ <span>" + emailVal + "</span></p>");
 		};
 		this.successCallback = function(retMsg) {
 			self.addEmail(self.oInputs[0].getVal());
 			$(".newEmail").addClass("show");
 			$(".newEmailInput").removeClass("show");
 			self.reset();
+		}
+	},
+	DeleteEmailForm : function(rootEl) {
+		constructorForm.apply(this, arguments);
+		var self = this;
+		this.successCallback = function(retMsg) {
+			$(".emailLine input[value='" + self.oInputs[0].getVal() + "']")
+					.parent().remove();
+			$(".email-suggestion[email='" + self.oInputs[0].getVal() + "']")
+					.remove();
+			self.reset();
+			self.oParent.close();
+		};
+	},
+	SendVerificationEmailForm : function(rootEl) {
+		constructorForm.apply(this, arguments);
+		var self = this;
+		this.setEmail = function(email) {
+			self.oInputs[0].val(email);
+		};
+		this.beforeSubmit = function() {
+			$(".emailLine").has("input[value='" + self.oInputs[0].getVal() + "']").find(".unverifiedEmail").addClass("wait");
+			$(".emailLine").has("input[value='" + self.oInputs[0].getVal() + "']").find(".email-loading").addClass("show");
+		};
+		this.afterSubmit = function() {
+			setTimeout(function() {
+				$(".emailLine").has("input[value='" + self.oInputs[0].getVal() + "']").find(".unverifiedEmail").removeClass("wait");
+				$(".emailLine").has("input[value='" + self.oInputs[0].getVal() + "']").find(".email-loading").removeClass("show");
+			}, 2000);
 		}
 	}
 }

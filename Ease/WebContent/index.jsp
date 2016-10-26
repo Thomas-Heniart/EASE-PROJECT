@@ -58,6 +58,7 @@ pageEncoding="UTF-8"%>
 	<script src="js/loading.js"></script>
 	<script src="js/header.js"></script>
 	<script src="js/app.js"></script>
+	<script src="js/shortcut.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/lib/dropDownMenu/dropdown.css" />
@@ -128,7 +129,6 @@ mixpanel.init("e87ca36e156107ebbd9a672735e6612c");</script><!-- end Mixpanel -->
 			<%@ include file="templates/loggedBody.jsp"%>
 		<%}%>
 		<%@ include file="templates/Footer.jsp" %>
-		<div class="la-anim-10" id="loading"></div>
 		<%@ include file="templates/ChatButton.jsp" %>
 	</div>
 	

@@ -13,12 +13,44 @@
 		border-bottom: 1px solid $borderFbColor;
 	}
 }
+
 .header.scrolling {
 	&:before {
 		content: "";
 		top: 0;
 		transition: top .1s;
 	}
+}
+
+.header{
+	height: 43px;
+	position: fixed;
+	width: 100%;
+	z-index: 2;
+	top: 0px;
+	#breakButton {
+		&:hover {
+			color: black;
+		}
+		span {
+			text-transform: none;
+			vertical-align: initial;
+		}
+		font-size: 12px;
+		float: right;
+   margin-right: 160px;
+   height: 39px;
+   color: white;
+   background-color: rgba(0, 0, 0, 0);
+   margin-top: 2px;
+   margin-bottom: 0px;
+ }
+}
+
+.header {
+	.searchInput {
+		display: none;
+  	}
 }
 
 .header {
@@ -98,6 +130,7 @@
 				color: $themeColor;
 				padding : 4px;
 				p {
+					margin : 0;
 					padding: 3px;
 					position: relative;
 					width: 100%;
@@ -221,6 +254,9 @@
 
 .header.scrolling {
 	#searchBar {
+		background-color: $themeLightGreyColor;
+	}
+	#userSettingsButton {
 		background-color: $themeLightGreyColor;
 	}
 }

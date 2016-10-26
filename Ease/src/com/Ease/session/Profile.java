@@ -19,7 +19,9 @@ public class Profile {
 		COLOR,
 		DESCRIPTION,
 		POSITION,
-		CUSTOM
+		CUSTOM,
+		COLUMNIDX,
+		PROFILEIDX
 	}
 	public enum ProfilePerm {
 		RENAME,
@@ -33,15 +35,26 @@ public class Profile {
 	String			color;
 	String			description;
 	int				index;
+	int				columnIdx;
+	int				profileIdx;
 	List<App>		apps;
 	String			custom;
 	
 	int				profileId;
 	
 	//Use this to create a new profile and set it in database
-	public Profile(String name, String color, String desc, User user, String custom, ServletContext context) throws SessionException{
+	public Profile(String name, String color, String desc, User user, String custom, ServletContext context, boolean side) throws SessionException{
 		DataBase db = (DataBase)context.getAttribute("DataBase");
-		if (db.set("INSERT INTO profiles VALUES (NULL, '" + user.getId() + "', '" + name + "', '" + color + "', '" + desc + "', " + user.getProfiles().size() + ", " + ((custom != null) ? custom : "NULL") + ");")
+		this.index = user.getProfiles().size();
+		profileId = user.getNextProfileId();
+		if (side == false) {
+			columnIdx = user.getMostEmptyColumn();
+			profileIdx = user.getProfilesDashBoard().get(columnIdx).size();
+		} else {
+			columnIdx = 0;
+			profileIdx = 0;
+		}
+		if (db.set("INSERT INTO profiles VALUES (NULL, '" + user.getId() + "', '" + name + "', '" + color + "', '" + desc + "', " + user.getProfiles().size() + ", " + ((custom != null) ? custom : "NULL") + ", " + columnIdx + ", " + profileIdx + ");")
 			!= 0) {
 			throw new SessionException("Impossible to insert new profile in data base.");
 		} else {
@@ -49,9 +62,7 @@ public class Profile {
 			this.color = color;
 			this.description = desc;
 			this.custom = custom;
-			this.index = user.getProfiles().size();
 			apps = new LinkedList<App>();
-			profileId = user.getNextProfileId();
 			custom = null;
 			ResultSet rs = db.get("SELECT MAX(profile_id) FROM profiles;");
 			if (rs == null)
@@ -70,26 +81,44 @@ public class Profile {
 	//Use this to load profile with a ResultSet from database
 	public Profile(ResultSet rs, User user, ServletContext context) throws SessionException{
 		try {
+			boolean needUpdate = false;
 			id = rs.getString(ProfileData.ID.ordinal());
 			name = rs.getString(ProfileData.NAME.ordinal());
 			color = rs.getString(ProfileData.COLOR.ordinal());
 			description = rs.getString(ProfileData.DESCRIPTION.ordinal());
-			String tmp = rs.getString(ProfileData.POSITION.ordinal());
+			String positionString = rs.getString(ProfileData.POSITION.ordinal());
+			if (positionString == null){
+				needUpdate = true;
+				index = user.getProfiles().size();
+			} else {
+				index = Integer.parseInt(positionString);	
+			}
 			custom = rs.getString(ProfileData.CUSTOM.ordinal());
+			String columnIdxString;
+			if ((columnIdxString = rs.getString(ProfileData.COLUMNIDX.ordinal())) == null || columnIdxString.equals("null") == true) {
+				columnIdx = user.getMostEmptyColumn();
+				needUpdate = true;
+			} else {
+				columnIdx = Integer.parseInt(columnIdxString);
+			}
+			String profileIdxString;
+			if ((profileIdxString = rs.getString(ProfileData.PROFILEIDX.ordinal())) == null || profileIdxString.equals("null") == true) {
+				profileIdx = user.getProfilesDashBoard().get(columnIdx).size();
+				needUpdate = true;
+			} else {
+				profileIdx = Integer.parseInt(profileIdxString);
+			}
 			apps = new LinkedList<App>();
 			profileId = user.getNextProfileId();
-			loadApps(context, user);
-			if (tmp == null){
-				index = user.getProfiles().size();
+			if (needUpdate == true)
 				updateInDB(context);
-			} else {
-				index = Integer.parseInt(tmp);	
-			}
+			loadApps(context, user);
+			
 		} catch (SQLException e) {
 			throw new SessionException("Impossible to get all profile info.");
 		} catch (NumberFormatException e) {
 			throw new SessionException("Impossible to get profile index.");
-		} 
+		}
 	}
 	
 	// GETTER
@@ -118,6 +147,13 @@ public class Profile {
 	public int getProfileId(){
 		return profileId;
 	}
+	public int getColumnIdx(){
+		return columnIdx;
+	}
+	public int getProfileIdx(){
+		return profileIdx;
+	}
+	
 	public boolean isCustom(String cust){
 		if (this.custom == null)
 			return false;
@@ -129,6 +165,13 @@ public class Profile {
 		if (this.custom == null)
 			return false;
 		return true;
+	}
+	public int getYSize() {
+		int size = 2;
+		if (apps.size() > 6) {
+			size = (apps.size() + 2) / 3;
+		}
+		return size;
 	}
 	
 	
@@ -147,11 +190,15 @@ public class Profile {
 		index = ind;
 	}
 	
+	public void setProfileIdx(int idx) {
+		profileIdx = idx;
+	}
+	
 	// UTILS
 	
 	public void updateInDB(ServletContext context) throws SessionException {
 		DataBase db = (DataBase)context.getAttribute("DataBase");
-		if (db.set("UPDATE profiles SET name='" + name + "', `color`='"+ color + "', description='" + description + "', position='" + index + "' WHERE `profile_id`='"+ id + "';")
+		if (db.set("UPDATE profiles SET name='" + name + "', `color`='"+ color + "', description='" + description + "', position='" + index + "', columnIdx=" + columnIdx + ", profileIdx=" + profileIdx + " WHERE `profile_id`='"+ id + "';")
 				!= 0)
 			throw new SessionException("Impossible to update profile in data base.");
 	}

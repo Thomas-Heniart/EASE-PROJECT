@@ -33,7 +33,7 @@
 								placeholder="Profile name..." />
 								<div class="buttonSet">
 									<button class="button" id="validate">Validate</button>
-									<button class="button" id="cancel">Cancel</button>
+									<button class="button" oClass="CloseButton" id="cancel">Cancel</button>
 								</div>
 							</div>
 						</div>
@@ -63,7 +63,7 @@
 			</div>
 			<div class="buttonSet">
 				<button class="button" id="validate">Validate</button>
-				<button class="button" id="cancel">Cancel</button>
+				<button class="button" oClass="CloseButton" id="cancel">Cancel</button>
 			</div>
 		</div>
 	</div>
@@ -76,7 +76,7 @@
 				information and associated accounts</p>
 				<div class="buttonSet">
 					<button class="button" id="validate">Validate</button>
-					<button class="button" id="cancel">Cancel</button>
+					<button class="button" oClass="CloseButton" id="cancel">Cancel</button>
 				</div>
 			</div>
 		</div>
