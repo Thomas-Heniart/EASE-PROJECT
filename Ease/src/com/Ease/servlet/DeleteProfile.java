@@ -75,7 +75,7 @@ public class DeleteProfile extends HttpServlet {
 				SI.setResponse(ServletItem.Code.BadParameters, "Bad profileId.");
 			} else if (mdp == null || !Hashing.SHA(mdp, user.getSaltEase()).equals(user.getHashedPassword())) {
 				SI.setResponse(ServletItem.Code.BadParameters, "Bad password.");
-			} else if (profile.getId() == user.getProfilesDashBoard().get(0).get(0).getId()) {
+			} else if (profile.getId() == user.getProfilesDashboard().get(0).get(0).getId()) {
 				SI.setResponse(ServletItem.Code.LogicError, "Trying to remove side profile.");	
 			} else {
 				if (profile.havePerm(Profile.ProfilePerm.DELETE, session.getServletContext())){

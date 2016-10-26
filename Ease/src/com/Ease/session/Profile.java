@@ -49,12 +49,12 @@ public class Profile {
 		profileId = user.getNextProfileId();
 		if (side == false) {
 			columnIdx = user.getMostEmptyColumn();
-			profileIdx = user.getProfilesDashBoard().get(columnIdx).size();
+			profileIdx = user.getProfilesDashboard().get(columnIdx).size();
 		} else {
 			columnIdx = 0;
 			profileIdx = 0;
 		}
-		if (db.set("INSERT INTO profiles VALUES (NULL, '" + user.getId() + "', '" + name + "', '" + color + "', '" + desc + "', " + user.getProfiles().size() + ", " + ((custom != null) ? custom : "NULL") + ", " + columnIdx + ", " + profileIdx + ");")
+		if (db.set("INSERT INTO profiles VALUES (NULL, '" + user.getId() + "', '" + name + "', '" + color + "', '" + desc + "', " + user.getProfiles().size() + ", " + ((custom != null) ? custom : "NULL") + ", " + columnIdx + ", "+ profileIdx + ");")
 			!= 0) {
 			throw new SessionException("Impossible to insert new profile in data base.");
 		} else {
@@ -103,7 +103,7 @@ public class Profile {
 			}
 			String profileIdxString;
 			if ((profileIdxString = rs.getString(ProfileData.PROFILEIDX.ordinal())) == null || profileIdxString.equals("null") == true) {
-				profileIdx = user.getProfilesDashBoard().get(columnIdx).size();
+				profileIdx = user.getProfilesDashboard().get(columnIdx).size();
 				needUpdate = true;
 			} else {
 				profileIdx = Integer.parseInt(profileIdxString);

@@ -148,6 +148,11 @@ public class User {
 			updateInDB(context, pass);
 
 			loadProfiles(context);
+			if (this.profilesDashboard.get(0).isEmpty()) {
+				Profile profile = new Profile("Side", "#FFFFFF", "", this, "NULL", context, true);
+				this.profiles.add(profile);
+				this.profilesDashboard.get(0).add(profile);
+			}
 			checkForGroup(context);
 			loadEmails(context);
 		} catch (SQLException e) {
@@ -316,7 +321,7 @@ public class User {
 		}
 		return res;
 	}
-	public List<List<Profile>> getProfilesDashBoard () {
+	public List<List<Profile>> getProfilesDashboard () {
 		return this.profilesDashboard;
 	}
 
