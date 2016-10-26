@@ -54,7 +54,8 @@ public class DeleteEmail extends HttpServlet {
 			SI.sendResponse();
 		}
 		String email = SI.getServletParam("email");
-		db.set("DELETE FROM usersEmail where email = '" + email + "' AND user_id = " + user.getId() + ";");
+		db.set("DELETE FROM usersEmails where email = '" + email + "' AND user_id = " + user.getId() + ";");
+		user.removeEmail(email);
 		SI.setResponse(200, "Email successfully deleted");
 		SI.sendResponse();
 	}

@@ -59,6 +59,13 @@ var constructorInput = function (rootEl, parent) {
 }
 
 var Input = {
+	HiddenInput : function (rootEl) {
+		constructorInput.apply(this, arguments);
+		var self = this;
+		this.isValid = true;
+		self.val($(self.qInput).val());
+		self.onStateChanged();
+	},
 	BasicInput : function (rootEl) {
 		constructorInput.apply(this, arguments);
 		var self = this;

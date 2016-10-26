@@ -22,10 +22,15 @@ $(document).ready(function() {
 	
 	$(".removeEmail").click(function() {
 		emailToRemove = $(this).parent().parent().find("input").val();
+		deleteEmailPopup.open();
 		deleteEmailPopup.setEmail(emailToRemove);
 		console.log(deleteEmailPopup.oForm.oInputs[0].getVal());
-		deleteEmailPopup.open();
 		
+	});
+	$(".sendVerificationEmail").click(function() {
+		emailToVerify = $(".emailLine").has($(this)).find("input").val();
+		emailConfirmationForm.setEmail(emailToVerify);
+		$("#SendVerificationEmail button[type='submit']").click();
 	});
 	$(document).click(function(e) {
 		if (!$(e.target).closest('md-content, .removeEmail, .md-modal, .md-overlay').length)
