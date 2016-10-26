@@ -81,7 +81,7 @@ public class MoveProfile extends HttpServlet {
 				if (profile.havePerm(Profile.ProfilePerm.MOVE, session.getServletContext())){
 					transaction = db.start();
 					//user.moveProfileAt(session.getServletContext(), profile.getIndex(), index);
-					user.moveProfileAt(session.getServletContext(), profile, profileIdx, columnIdx);
+					user.moveProfileAt(session.getServletContext(), profile, columnIdx, profileIdx);
 					db.commit(transaction);
 					SI.setResponse(200, "Profile moved.");
 				} else {
