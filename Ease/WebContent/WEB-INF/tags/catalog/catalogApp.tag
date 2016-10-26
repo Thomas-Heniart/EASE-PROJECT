@@ -9,7 +9,7 @@
 	data-login="${site.getLoginWith()}" data-sso="${site.getSso()}" data-nologin="${site.noLogin()}" name="${site.getName()}">
 	<div class="catalogAppLogo">
 		<img src="${site.getFolder()}logo.png" />
-		<i class="fa fa-link" aria-hidden="true"></i>
+		<a href="${ site.getUrl()}" class="siteUrl"><i class="fa fa-link" aria-hidden="true"></i></a>
 	</div>
 	<div class="catalogAppName">
 		<p>${site.getName()}</p>
