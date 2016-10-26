@@ -96,5 +96,20 @@ var Popup = {
 			self.oForm.oInputs[0].val(email);
 			self.oForm.qRoot.trigger("StateChanged");
 		}
+	},
+	PopupDeleteAccount : function() {
+		constructorPopup.apply(this, arguments);
+		var self = this;
+		this.setForm = function(jForm) {
+			var oClass = jForm.attr('oClass');
+			if (oClass != null) {
+				self.oForm = new Form[oClass]($(elem), self);
+			}
+		}
+		self.qRoot.find("button[type='submit']").click(function(e) {
+			e.preventDefault();
+			self.close();
+			self.oForm.submit(e);
+		})
 	}
 }

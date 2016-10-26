@@ -70,10 +70,10 @@ var constructorForm = function(rootEl, parent) {
 				self.afterSubmit, self.successCallback, self.errorCallback);
 	};
 	this.beforeSubmit = function() {
-
+		
 	};
 	this.afterSubmit = function() {
-
+		
 	};
 	this.successCallback = function() {
 
@@ -160,15 +160,29 @@ var Form = {
 			setupAppSettingButtonPopup(self.newAppItem
 					.find('.showAppActionsButton'));
 			var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-			if (emailRegex.test(self.oInputs[1].getVal())) {
+			if (emailRegex.test(self.oInputs[1].getVal()) && !$(".email-suggestion[email='" + self.oInputs[1].getVal() + "']").length) {
 				$(".suggested-emails").append(
-						"<p class='email-suggestion'>@ <span>"
+						"<p class='email-suggestion' email='" + self.oInputs[1].getVal() + "'>@ <span>"
 								+ self.oInputs[1].getVal() + "</span></p>");
-				$(".unverifiedEmails")
-						.prepend(
-								"<div> <input type='email' oClass='EmailInput' value='"
-										+ self.oInputs[1].getVal()
-										+ "'/><span class='unverifiedEmail'>Verified ?</span></div>");
+				$("#editVerifiedEmails").append("<div class='emailLine'>"
+						+ "<input type='email' name='email' oClass='HiddenInput' value='" + self.oInputs[1].getVal() + "'readonly />"
+						+ " <span class='unverifiedEmail'><span class='verify'>Verified ?</span><span class='sendVerificationEmail'>Send verification email</span></span>"
+						+ "<div class='sk-fading-circle email-loading'>"
+						+ "	<span>We are sending you an email</span>"
+						+ "	<div class='sk-circle1 sk-circle'></div>"
+						+ '	<div class="sk-circle2 sk-circle"></div>'
+						+ '	<div class="sk-circle3 sk-circle"></div>'
+						+ '	<div class="sk-circle4 sk-circle"></div>'
+						+ '	<div class="sk-circle5 sk-circle"></div>'
+						+ '	<div class="sk-circle6 sk-circle"></div>'
+						+ '	<div class="sk-circle7 sk-circle"></div>'
+						+ '	<div class="sk-circle8 sk-circle"></div>'
+						+ '	<div class="sk-circle9 sk-circle"></div>'
+						+ ' <div class="sk-circle10 sk-circle"></div>'
+						+ '	<div class="sk-circle11 sk-circle"></div>'
+						+ '	<div class="sk-circle12 sk-circle"></div>'
+						+ '</div>'
+					+ "</div>");
 			}
 			self.reset();
 		}
@@ -293,16 +307,40 @@ var Form = {
 		constructorForm.apply(this, arguments);
 		var self = this;
 		this.addEmail = function(emailVal) {
-			$("#editVerifiedEmails")
-					.append(
-							"<div class='emailLine'><input type='email' value='"
-									+ emailVal
-									+ "' readonly/> <span class='unverifiedEmail show'>Verified ?</span><div action='SendVerificationEmail' oClass = 'SendVerificationEmailForm' id='SendVerificationEmail'><input type='hidden' name='email'><button type='submit'></button></div></div>");
+			$("#editVerifiedEmails").append("<div class='emailLine'>"
+			+ "<input type='email' name='email' oClass='HiddenInput' value='" + emailVal + "'readonly />"
+			+ " <span class='unverifiedEmail'><span class='verify'>Verified ?</span><span class='sendVerificationEmail'>Send verification email</span></span>"
+			+ "<div class='sk-fading-circle email-loading'>"
+			+ "	<span>We are sending you an email</span>"
+			+ "	<div class='sk-circle1 sk-circle'></div>"
+			+ '	<div class="sk-circle2 sk-circle"></div>'
+			+ '	<div class="sk-circle3 sk-circle"></div>'
+			+ '	<div class="sk-circle4 sk-circle"></div>'
+			+ '	<div class="sk-circle5 sk-circle"></div>'
+			+ '	<div class="sk-circle6 sk-circle"></div>'
+			+ '	<div class="sk-circle7 sk-circle"></div>'
+			+ '	<div class="sk-circle8 sk-circle"></div>'
+			+ '	<div class="sk-circle9 sk-circle"></div>'
+			+ ' <div class="sk-circle10 sk-circle"></div>'
+			+ '	<div class="sk-circle11 sk-circle"></div>'
+			+ '	<div class="sk-circle12 sk-circle"></div>'
+			+ '</div>'
+		+ "</div>");
 			$(".suggested-emails").append(
 					"<p class='email-suggestion' email='" + emailVal
 							+ "'>@ <span>" + emailVal + "</span></p>");
 		};
+		this.beforeSubmit = function() {
+			$("#AddEmailPopup").addClass("md-show");
+			$("#AddEmailPopup .waiting").addClass("show");
+		}
 		this.successCallback = function(retMsg) {
+			$("#AddEmailPopup .waiting").removeClass("show");
+			$("#AddEmailPopup .email-sent").addClass("show");
+			setTimeout(function() {
+				$("#AddEmailPopup").removeClass("md-show");
+				$("#AddEmailPopup .waiting, #AddEmailPopup .email-sent").removeClass("show");
+			}, 2000);
 			self.addEmail(self.oInputs[0].getVal());
 			$(".newEmail").addClass("show");
 			$(".newEmailInput").removeClass("show");
@@ -336,6 +374,16 @@ var Form = {
 				$(".emailLine").has("input[value='" + self.oInputs[0].getVal() + "']").find(".unverifiedEmail").removeClass("wait");
 				$(".emailLine").has("input[value='" + self.oInputs[0].getVal() + "']").find(".email-loading").removeClass("show");
 			}, 2000);
+		}
+	},
+	DeleteAccountForm : function(rootEl) {
+		constructorForm.apply(this, arguments);
+		var self = this;
+		this.successCallback = function(retMsg) {
+			window.location = '/index.jsp';
+		}
+		this.beforeSubmit = function() {
+			$("#DeleteAccountWait").addClass("md-show");
 		}
 	}
 }
