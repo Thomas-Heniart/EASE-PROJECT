@@ -44,7 +44,7 @@ response.addCookie(email);
 <c:set var="servletContext" scope="session" value="${session.getServletContext()}"/>
 <c:set var="user"			scope="session" value='${session.getAttribute("User")}'/>
 <c:set var="colors"			scope="session" value='${servletContext.getAttribute("Colors")}'/>
-<c:set var="profiles"		scope="session" value='${user.getProfiles()}'/>
+<c:set var="dashboardColumns" scope="session" value="'${user.getProfilesDashboard()}"/>
 <c:set var="siteManager"	scope="session" value='${servletContext.getAttribute("siteManager")}'/>
 <c:set var="siteList"		scope="session" value='${siteManager.getSitesList()}'/>
 <c:set var="tags"			scope="session"	value='${servletContext.getAttribute("Tags")}'/>
@@ -64,7 +64,7 @@ $(document).ready(function(){
 		<%@ include file="extension.jsp" %>		
 		<%@ include file="catalog/catalogView.jsp"%>
 	</div>
-	<dashboard:hiddenProfile profile="${user.getProfile(0)}"/>
+	<dashboard:hiddenProfile profile="${dashboardColumns.get(0).get(0)}"/>
 	<%@ include file="SettingsView.jsp" %>
 	<%@ include file="PopupDeleteProfile.jsp" %>
 	<%@ include file="PopupDeleteApp.jsp" %>
