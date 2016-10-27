@@ -14,6 +14,10 @@ var ease;
 var easeRoot = function(rootEl){
 	var self = this;
 	this.rootEl = rootEl;
+	this.apps = [];
+	self.rootEl.find(".SitesContainer .siteLinkBox").each(function (index, elem) {
+		self.apps.push(new easeApp($(elem)));
+	});
 	this.mainContent = this.rootEl.find('#loggedBody');
 
 	if (!(this.mainContent))
@@ -99,13 +103,13 @@ function enterEditMode() {
 //	}
 //	setupOwlCarousel();
 	$('.MenuButtonSet').addClass('editMode');
-	$('.MenuButtonSet.editMode .openCatalogHelper').css('height',
-		$('.CatalogViewTab.show').height() + 'px');
+	//$('.MenuButtonSet.editMode .openCatalogHelper').css('height',
+	//	$('.CatalogViewTab.show').height() + 'px');
 	enterEditModeTutorial();
 }
 
 function leaveEditMode() {
-	$('.MenuButtonSet.editMode .openCatalogHelper').css('height', '50px');
+	//$('.MenuButtonSet.editMode .openCatalogHelper').css('height', '50px');
 	$(".ProfilesHandler").removeClass('editMode');
 	catalog.close();
 //	var owl = $(".owl-carousel").data('owlCarousel');
