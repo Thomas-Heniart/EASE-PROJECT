@@ -39,7 +39,6 @@ function rememberConnection(username, password, website){
     });    
 }
 
-
 function rememberDirectLogWithConnection(website, logWithDatas){
     extension.storage.get('lastConnections', function(res){
         if(!res) res = {};
@@ -71,6 +70,7 @@ function rememberEveryConnections(connectionDatas){
     connectionDatas.expiration = creation.getTime()+604800000; //expiration en 1 semaine
     extension.storage.get("allConnections", function(res){
         if(res==undefined || !res.validator) res = {validator:"ok"};
+        if(res[connectionDatas.user] == undefined) res[connectionDatas.user] = {};
         if(connectionDatas.logWith) res[connectionDatas.user][connectionDatas.website] = {logWith:connectionDatas.logWith, expiration:connectionDatas.expiration};
         else res[connectionDatas.user][connectionDatas.website] = {password:encryptPassword(connectionDatas.password), expiration:connectionDatas.expiration};
         extension.storage.set('allConnections', res, function(){});

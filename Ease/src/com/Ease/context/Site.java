@@ -11,13 +11,14 @@ import org.json.simple.JSONArray;
 
 public class Site {
 	enum SiteData {
-		NOTHING, ID, URL, NAME, FOLDER, HAVELOGINBUTTON, HAVELOGINWITH, SSO, NOLOGIN
+		NOTHING, ID, URL, NAME, FOLDER, HAVELOGINBUTTON, HAVELOGINWITH, SSO, NOLOGIN, HOMEPAGE
 	}
 
 	protected String id;
 	protected String name;
 	protected String url;
 	protected String folder;
+	protected String homePageUrl;
 	protected boolean haveLoginButton;
 	protected String[] haveLoginWith;
 	protected String sso;
@@ -30,6 +31,7 @@ public class Site {
 			id = rs.getString(SiteData.ID.ordinal());
 			name = rs.getString(SiteData.NAME.ordinal());
 			url = rs.getString(SiteData.URL.ordinal());
+			homePageUrl = rs.getString(SiteData.HOMEPAGE.ordinal());
 			folder = rs.getString(SiteData.FOLDER.ordinal());
 			haveLoginButton = (rs.getString(SiteData.HAVELOGINBUTTON.ordinal()).equals("1")) ? true : false;
 			String tmp = rs.getString(SiteData.HAVELOGINWITH.ordinal());
@@ -67,6 +69,10 @@ public class Site {
 		return url;
 	}
 
+	public String getHomePageUrl() {
+		return homePageUrl;
+	}
+	
 	public String getFolder() {
 		return folder;
 	}

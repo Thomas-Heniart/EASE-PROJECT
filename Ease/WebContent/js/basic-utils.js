@@ -1,11 +1,13 @@
 function sendEvent(obj) {
     if (!($(obj).hasClass('waitingLinkImage'))) {
         var appId = $(obj).closest('.siteLinkBox').attr('id');
+        var link = $(obj).closest('.siteLinkBox').attr('link');
         var logoImage = $(obj).find('.linkImage');
         var json = new Object();
         var event;
-
+        
         mixpanel.track("App clicks");
+        
         if (!($('#ease_extension').length)) {
             checkForExtension();
             return;
@@ -16,21 +18,30 @@ function sendEvent(obj) {
             $(obj).removeClass("waitingLinkImage");
             $(obj).removeClass('scaleinAnimation');
         }, 1000);
-        postHandler.post("askInfo", {
-            appId : appId,
-        }, function() {
-        }, function(retMsg) {
-            json.detail = JSON.parse(retMsg);
+        if (typeof link !== typeof undefined && link !== false) {
+            json.detail = {"url":link};
             json.detail.highlight = true;
             if (ctrlDown) json.detail.highlight = false;
-            console.log(json.detail);
             mixpanel.track("App successful clicks");
-            mixpanel.track(json.detail[json.detail.length - 1].website.name + " connections");
-            event = new CustomEvent("NewConnection", json);
+            mixpanel.track("link connections");
+            event = new CustomEvent("NewLinkToOpen", json);
             document.dispatchEvent(event);
-        }, function(retMsg) {
-            showAlertPopup(retMsg, true);
-        }, 'text');
+        } else {
+        	postHandler.post("askInfo", {
+        		appId : appId,
+        	}, function() {
+        	}, function(retMsg) {
+        		json.detail = JSON.parse(retMsg);
+        		json.detail.highlight = true;
+        		if (ctrlDown) json.detail.highlight = false;
+        		mixpanel.track("App successful clicks");
+        		mixpanel.track(json.detail[json.detail.length - 1].website.name + " connections");
+        		event = new CustomEvent("NewConnection", json);
+        		document.dispatchEvent(event);
+        	}, function(retMsg) {
+        		showAlertPopup(retMsg, true);
+        	}, 'text');
+        }
     }
 }
 

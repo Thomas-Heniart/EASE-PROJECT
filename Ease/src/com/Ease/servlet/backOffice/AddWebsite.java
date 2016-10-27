@@ -59,6 +59,7 @@ public class AddWebsite extends HttpServlet {
 		// Get Parameters
 		String url = SI.getServletParam("siteUrl");
 		String name = SI.getServletParam("siteName");
+		String homePage = SI.getServletParam("homePage");
 		String folder = SI.getServletParam("siteFolder");
 		String haveLoginButton = SI.getServletParam("haveLoginButton");
 		String[] haveLoginWith = SI.getServletParamValues("haveLoginWith");
@@ -88,7 +89,7 @@ public class AddWebsite extends HttpServlet {
 				haveLogWith = haveLogWith.substring(0, haveLogWith.length()-1);
 				haveLogWith += "'";
 			}
-			dbRequest = dbRequest + haveLogWith + ", null, 0);";
+			dbRequest = dbRequest + haveLogWith + ", null, 0, '" + homePage + "');";
 			db.set(dbRequest);
 			SiteManager sites = ((SiteManager)session.getServletContext().getAttribute("siteManager"));
 			try {

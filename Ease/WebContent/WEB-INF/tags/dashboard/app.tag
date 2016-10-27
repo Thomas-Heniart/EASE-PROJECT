@@ -35,6 +35,33 @@
 <img class="logo" src="<c:out value='${app.getSite().getFolder()}logo.png'/>" />
 </div>
 </c:when>
+<c:when test="${app.getType() eq 'LinkAccount'}">
+	<div class="siteLinkBox"
+	 name="${app.getName()}"
+	 id="${app.getAppId()}"
+	 move="${app.havePerm('MOVE', servletContext)}"
+	 link="${app.getAccount().getLink()}">
+	<div class="linkImage" onclick="sendEvent(this)">
+	<div class="showAppActionsButton">
+		<i class="fa fa-cog"></i>
+		<div class="appActionsPopup">
+			<div class="buttonsContainer">
+				<div class="modifyAppButton menu-item"
+				onclick="showModifyAppPopup(this, event)">
+				<p>Modify</p>
+			</div>
+			<c:if test="${app.havePerm('DELETE', servletContext)}">
+			<div class="deleteAppButton menu-item"
+			onclick="showConfirmDeleteAppPopup(this, event)">
+			<p>Delete</p>
+		</div>
+	</c:if>
+</div>
+</div>
+</div>
+<img class="logo" src="resources/websites/Calendrier/logo.png" />
+</div>
+</c:when>
 <c:otherwise>
 <c:if test="${app.getType() eq 'ClassicAccount'}">
 <div class="siteLinkBox"
