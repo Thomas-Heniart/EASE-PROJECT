@@ -11,7 +11,8 @@
 	url="${site.getUrl() }">
 	<div class="catalogAppLogo">
 		<img src="${site.getFolder()}logo.png" /><a href="${ site.getUrl()}"
-			class="siteUrl"><i class="fa fa-link fa-rotate-90" aria-hidden="true"></i></a>
+			target="_blank" class="siteUrl"><i
+			class="fa fa-link fa-rotate-90" aria-hidden="true"></i></a>
 	</div>
 	<div class="catalogAppName">
 		<p>${site.getName()}</p>

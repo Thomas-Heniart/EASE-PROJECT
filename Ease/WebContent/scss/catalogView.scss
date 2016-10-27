@@ -453,17 +453,16 @@
 							margin-left: auto;
 							margin-right: auto;
 							padding-top: 3px;
+							position: relative;
 							&:hover {
 								cursor: pointer;
 								img {
 									box-shadow: 0px 0px 4px 0px #cccccc;
 									}
 								.siteUrl {
-									i {
-										height: auto;
-										width: fit-content;
-										border: 2px solid white;
-									}
+									height: auto;
+									width: fit-content;
+									padding: 2px;
 								}
 							}
 							img {
@@ -474,17 +473,16 @@
 							}
 							.siteUrl {
 								text-decoration: none;
-								i {
-									height: 0;
-									width: 0;
-									overflow: hidden;
-									position: absolute;
-									margin-top: 6%;
-									margin-left: -3%;
-									background-color: white;
-									border-bottom-left-radius: 16px;
-									color: $themeColor;
-								}
+								position: absolute;
+								bottom: 0;
+								right: 0;
+								height: 0;
+								width: 0;
+								overflow: hidden;
+								background-color: white;
+								border-top-left-radius: 16px;
+								color: $themeColor;
+								font-size: 16px;
 							}
 						}
 						.catalogAppName {
