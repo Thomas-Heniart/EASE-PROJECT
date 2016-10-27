@@ -8,13 +8,12 @@ var easeApp = function(rootEl){
 	this.name = this.rootEl.attr('name');
 	this.id = this.rootEl.attr('id');
 	this.webId = this.rootEl.attr('webid');
-	this.increaseCatalagoAppCount = function() {
-		var x = parseInt($(".catalogApp[idx='" + self.webId + "'] i.apps-integrated").html());
-		console.log($(".catalogApp[idx='" + self.webId + "'] i.apps-integrated"));
-		console.log(x);
-		$(".catalogApp[idx='" + self.webId + "'] i.apps-integrated").html(x+1);
+	this.increaseCatalagAppCount = function() {
+		var x = parseInt($(".catalogApp[idx='" + self.webId + "'] span.apps-integrated i.count").html());
+		$(".catalogApp[idx='" + self.webId + "'] span.apps-integrated i.count").html(x+1);
+		$(".catalogApp[idx='" + self.webId + "'] span.apps-integrated").addClass("showCounter");
 	};
-	self.increaseCatalogAppCount();
+	self.increaseCatalagAppCount();
 	this.setName = function(name){
 		self.name = name;
 		self.nameArea.text(name);

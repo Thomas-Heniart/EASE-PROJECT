@@ -10,10 +10,17 @@
 	data-nologin="${site.noLogin()}" name="${site.getName()}"
 	url="${site.getUrl() }">
 	<div class="catalogAppLogo">
-		<img src="${site.getFolder()}logo.png" /><a href="${ site.getHomePageUrl()}"
-			target="_blank" class="siteUrl"><i
-			class="fa fa-link fa-rotate-90" aria-hidden="true"></i></a>
-			<i class="apps-integrated">0</i>
+		<img src="${site.getFolder()}logo.png" />
+		<a href="${ site.getHomePageUrl()}" target="_blank" class="siteUrl">
+			<span class="fa-stack fa-lg">
+				<i class="fa fa-circle fa-stack-2x"></i>
+				<i class="fa fa-stack-1x fa-link fa-rotate-90"></i>
+			</span>
+		</a>
+		<span class="fa-stack fa-lg apps-integrated">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="count">0</i>
+		</span>
 	</div>
 	<div class="catalogAppName">
 		<p>${site.getName()}</p>
