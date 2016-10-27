@@ -13,6 +13,7 @@
 		<img src="${site.getFolder()}logo.png" /><a href="${ site.getHomePageUrl()}"
 			target="_blank" class="siteUrl"><i
 			class="fa fa-link fa-rotate-90" aria-hidden="true"></i></a>
+			<i class="apps-integrated">0</i>
 	</div>
 	<div class="catalogAppName">
 		<p>${site.getName()}</p>
