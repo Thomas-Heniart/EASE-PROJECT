@@ -10,7 +10,7 @@
 	data-nologin="${site.noLogin()}" name="${site.getName()}"
 	url="${site.getUrl() }">
 	<div class="catalogAppLogo">
-		<img src="${site.getFolder()}logo.png" /><a href="${ site.getUrl()}"
+		<img src="${site.getFolder()}logo.png" /><a href="${ site.getHomePageUrl()}"
 			target="_blank" class="siteUrl"><i
 			class="fa fa-link fa-rotate-90" aria-hidden="true"></i></a>
 	</div>
