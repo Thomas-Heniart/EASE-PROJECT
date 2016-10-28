@@ -78,8 +78,7 @@ function rememberEveryConnections(connectionDatas){
 }
 
 function cleanEveryConnections(){
-    setTimeout(function(){
-        extension.storage.get("allConnections", function(res){
+    extension.storage.get("allConnections", function(res){
             if(res==undefined || !res.validator) res = {validator:"ok"};
             for(var user in res){
                 for (var website in res[user]){
@@ -89,9 +88,8 @@ function cleanEveryConnections(){
                 }
             }
             extension.storage.set("allConnections", res, function(){});
-        });
-        cleanEveryConnection();
-    }, 1000*60*60*24);
+    });
+    setTimeout(cleanEveryConnections, 1000*60*60*2);
 }
 
 function matchFacebookUrl(url){

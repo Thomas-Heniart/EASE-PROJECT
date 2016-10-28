@@ -273,7 +273,6 @@ function doThings(msg, sendResponse) {
 	var todo =  msg.detail[msg.bigStep].website[msg.todo].todo;
 	if (msg.actionStep >= todo.length){
 		msg.type = "completed";
-		if(msg.todo != "logout") msg.detail[msg.bigStep].website.lastLogin = getNewLogin(msg, msg.bigStep);
 		sendResponse(msg);
         if(msg.todo == "logout") {
             msg.todo = "connect";
