@@ -156,6 +156,14 @@ function addTagIfExists(input) {
 	}
 }
 
+function updateVerfiedEmailsCount() {
+	var x = $(".verifiedEmail").length;
+	if (x > 1)
+		$(".integrated-emails-count span").html(x + " validated emails");
+	else
+		$(".integrated-emails-count span").html(x + " validated email");
+}
+
 $(document).ready(function() {
 		
 	$("#catalog-quit").click(function(event) {
@@ -209,6 +217,11 @@ $(document).ready(function() {
 		scroll();
 		if ($('.tagContainer .tags').scrollLeft()- parseInt($('.tagContainer .tags').css('width')) <= 0)
 			$('.tagContainer i.fa-angle-left').css("display", "none");
+	});
+	
+	updateVerfiedEmailsCount();
+	$(".integrated-emails-count span").click(function() {
+		$("#ModifyUserButton").click();
 	});
 });
 

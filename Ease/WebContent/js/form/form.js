@@ -355,10 +355,13 @@ var Form = {
 		constructorForm.apply(this, arguments);
 		var self = this;
 		this.successCallback = function(retMsg) {
-			$(".emailLine input[value='" + self.oInputs[0].getVal() + "']")
-					.parent().remove();
-			$(".email-suggestion[email='" + self.oInputs[0].getVal() + "']")
-					.remove();
+			$(".emailLine input[value='" + self.oInputs[0].getVal() + "']").parent().remove();
+			$(".email-suggestion[email='" + self.oInputs[0].getVal() + "']").remove();
+			var x = $(".verifiedEmail").length;
+			if (x > 1)
+				$(".integrated-emails-count span").html(x + " validated emails");
+			else
+				$(".integrated-emails-count span").html(x + " validated email");
 			self.reset();
 			self.oParent.close();
 		};
