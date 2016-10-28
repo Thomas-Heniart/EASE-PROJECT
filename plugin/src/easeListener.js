@@ -7,15 +7,6 @@ extension.runtime.sendMessage("getSettings", {}, function(response) {
     } else {
         $("#homePageSwitch").prop("checked", false);
     }
-    $(window).resize(function () {
-        var width = $('.containerParam').width();
-        var height = $('.containerParam').height();
-        $('.containerParam p').css({
-            'font-size': (width/9) + 'px',
-            'line-height': height + 'px'
-        });
-    }).trigger('resize');
-    var $div = $('li.leaf.item');
 
     $('#homePageSwitch').change(function() {
         if($(this).is(":checked")) {
