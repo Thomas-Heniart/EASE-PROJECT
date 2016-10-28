@@ -14,13 +14,14 @@ var constructorPopup = function (rootEl) {
 	this.qRoot.find('button').each(function (index, elem) {
 		var oClass = $(elem).attr('oClass');
 		if (oClass == "CloseButton") {
-			console.log($(elem,self));
 			var tmpButton = $(elem, self);
-			tmpButton.click(function() {
-				self.close();
-			})
 			self.qCloseButtons.push(tmpButton);
 		}
+	});
+	self.qCloseButtons.forEach(function(element) {
+		element.click(function() {
+			self.close();
+		})
 	});
 	this.open = function () {
 		self.oForm.reset();
@@ -104,16 +105,5 @@ var Popup = {
 	PopupDeleteAccount : function() {
 		constructorPopup.apply(this, arguments);
 		var self = this;
-		this.setForm = function(jForm) {
-			var oClass = jForm.attr('oClass');
-			if (oClass != null) {
-				self.oForm = new Form[oClass]($(elem), self);
-			}
-		}
-		self.qRoot.find("button[type='submit']").click(function(e) {
-			e.preventDefault();
-			self.close();
-			self.oForm.submit(e);
-		})
 	}
 }

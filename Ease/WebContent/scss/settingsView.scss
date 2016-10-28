@@ -286,6 +286,14 @@
 							text-align: center;
 							padding: 20px;
 						}
+						.errorMessage {
+							color: $themeRedColor;
+							display: none;
+							padding: 0;
+						}
+						.errorMessage.show {
+							display: block;
+						}
 						input {
 							display: block;
 							margin: auto;
@@ -327,6 +335,21 @@
 					}
 					.wait.show {
 						display: block;
+					}
+					.sk-fading-circle {
+						width: 100px;
+				    height: 100px;
+				    position: relative;
+						margin: 30px auto;
+						&:before {
+							background-color: white;
+						}
+						.sk-circle {
+							margin: 0;
+							&:before {
+								background-color: white;
+							}
+						}
 					}
 				}
 				#deleteAccountButton {

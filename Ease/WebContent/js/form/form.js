@@ -387,11 +387,19 @@ var Form = {
 	DeleteAccountForm : function(rootEl) {
 		constructorForm.apply(this, arguments);
 		var self = this;
-		this.successCallback = function(retMsg) {
-			window.location = '/index.jsp';
-		}
 		this.beforeSubmit = function() {
-			$("#DeleteAccountWait").addClass("md-show");
-		}
+			self.qRoot.removeClass("show");
+			$(".wait", self.oParent.qRoot).addClass("show");
+		};
+		this.successCallback = function(retMsg) {
+			setTimeout(function() {
+				window.location = "index.jsp";
+			}, 1000);
+		};
+		this.errorCallback = function(retMsg) {
+			$(".wait", self.oParent.qRoot).removeClass("show");
+			self.qRoot.addClass("show");
+			$(".errorMessage", self.oParent.qRoot).addClass("show");
+		};
 	}
 }

@@ -33,8 +33,11 @@ $(document).ready(function() {
 		$("#SendVerificationEmail button[type='submit']").click();
 	});
 	$(document).click(function(e) {
-		if (!$(e.target).closest('md-content, .removeEmail, .md-modal, .md-overlay').length)
+		if (!$(e.target).closest('#PopupDeleteAccount .md-content, #deleteAccountButton').length)
+			deleteAccountPopup.close();
+		if (!$(e.target).closest("#DeleteEmailPopup .md-content, .removeEmail").length)
 			deleteEmailPopup.close();
+		
 	});
 });
 

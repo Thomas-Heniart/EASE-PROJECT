@@ -14,38 +14,37 @@
 			</div>
 			<form action="DeleteAccount" oClass="DeleteAccountForm" id="DeleteAccountForm">
 				<p>Enter Ease password.</p>
-				<input type="password" name="password" oClass="PasswordInput" />
+				<input type="password" name="password" oClass="PasswordInput" placeholder="Enter password"/>
+				<p class="errorMessage">Incorrect password</p>
 				<div>
 					<button type="submit">Delete my account</button>
 					<button type="button" oClass="CloseButton">Cancel</button>
 				</div>
 			</form>
 			<div class="wait">
-			<h2>We are deleting your account</h2>
-			<div class="sk-fading-circle">
-				<div class="sk-circle1 sk-circle"></div>
-				<div class="sk-circle2 sk-circle"></div>
-				<div class="sk-circle3 sk-circle"></div>
-				<div class="sk-circle4 sk-circle"></div>
-				<div class="sk-circle5 sk-circle"></div>
-				<div class="sk-circle6 sk-circle"></div>
-				<div class="sk-circle7 sk-circle"></div>
-				<div class="sk-circle8 sk-circle"></div>
-				<div class="sk-circle9 sk-circle"></div>
-				<div class="sk-circle10 sk-circle"></div>
-				<div class="sk-circle11 sk-circle"></div>
-				<div class="sk-circle12 sk-circle"></div>
+				<h2>We are deleting your account</h2>
+				<div class="sk-fading-circle">
+					<div class="sk-circle1 sk-circle"></div>
+					<div class="sk-circle2 sk-circle"></div>
+					<div class="sk-circle3 sk-circle"></div>
+					<div class="sk-circle4 sk-circle"></div>
+					<div class="sk-circle5 sk-circle"></div>
+					<div class="sk-circle6 sk-circle"></div>
+					<div class="sk-circle7 sk-circle"></div>
+					<div class="sk-circle8 sk-circle"></div>
+					<div class="sk-circle9 sk-circle"></div>
+					<div class="sk-circle10 sk-circle"></div>
+					<div class="sk-circle11 sk-circle"></div>
+					<div class="sk-circle12 sk-circle"></div>
+				</div>
 			</div>
-		</div>
 		</div>
 	</div>
 </div>
 <script>
 	var deleteAccountPopup = new Popup["PopupDeleteAccount"]($("#PopupDeleteAccount"));
-	$("#DeleteAccountForm button").click(function() {
-		deleteAccountPopup.open();
-	});
-	$("#deleteAccountButton").click(function() {
+	$("#deleteAccountButton").click(function(e) {
+		e.stopPropagation();
 		deleteAccountPopup.open();
 	})
 	$("#PopupDeleteAccount #confirmDeleteAccount").click(function() {
