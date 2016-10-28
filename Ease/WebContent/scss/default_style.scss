@@ -26,8 +26,6 @@
   @include do-shake('shake-ease', 2px, 1px, 3, 1700ms, .05, $opacity: false);
 }
 
-
-
 .scaleinAnimation {
    @include scalein-anim('scale-09', 0.9);
 }
