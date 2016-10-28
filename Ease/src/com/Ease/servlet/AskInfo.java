@@ -66,7 +66,7 @@ public class AskInfo extends HttpServlet {
 			} else {
 				App app = null;
 				if ((app = user.getApp(appId)) == null)
-					SI.setResponse(ServletItem.Code.LogicError, "Bad id.");
+					SI.setResponse(ServletItem.Code.LogicError, "No appId.");
 				else if (app.isEmpty() == true)
 					SI.setResponse(ServletItem.Code.LogicError, "This is an empty app.");
 				else {
@@ -99,7 +99,7 @@ public class AskInfo extends HttpServlet {
 				}
 			}
 		} catch (NumberFormatException e) {
-			SI.setResponse(ServletItem.Code.BadParameters, "Bad numbers.");
+			SI.setResponse(ServletItem.Code.BadParameters, "Numbers exception.");
 		} catch (ParseException e) {
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		}

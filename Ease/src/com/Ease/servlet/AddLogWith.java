@@ -71,17 +71,17 @@ public class AddLogWith extends HttpServlet {
 			} else if (db.connect() != 0){
 				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 			} else if ((profile = user.getProfile(profileId)) == null){
-				SI.setResponse(ServletItem.Code.BadParameters, "Bad profileId.");
+				SI.setResponse(ServletItem.Code.BadParameters, "No profileId.");
 			} else if (name == null || name.length() > 14) {
-				SI.setResponse(ServletItem.Code.BadParameters, "Bad name.");
+				SI.setResponse(ServletItem.Code.BadParameters, "Incorrect app name.");
 			} else if (user.getApp(appId) == null) {
-				SI.setResponse(ServletItem.Code.BadParameters, "Bad appId.");
+				SI.setResponse(ServletItem.Code.BadParameters, "No appId.");
 			} else if (user.getApp(appId).getType().equals("ClassicAccount") == false){
 				SI.setResponse(ServletItem.Code.LogicError, "This account is not a classicAccount.");
 			} else {
 				
 				if ((site = ((SiteManager)session.getServletContext().getAttribute("siteManager")).get(siteId)) == null) {
-					SI.setResponse(ServletItem.Code.BadParameters, "This site dosen't exist.");
+					SI.setResponse(ServletItem.Code.BadParameters, "This website doesn't exist in the database.");
 				} else {
 					if (profile.havePerm(Profile.ProfilePerm.ADDAPP, session.getServletContext())){
 						transaction = db.start();

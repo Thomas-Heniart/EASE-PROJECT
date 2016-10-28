@@ -74,18 +74,18 @@ public class AddAppSso extends HttpServlet {
 			if (user == null) {
 				SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
 			} else if (db.connect() != 0){
-				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
+				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our database, please retry in few minutes.");
 			} else if ((profile = user.getProfile(profileId)) == null){
-				SI.setResponse(ServletItem.Code.BadParameters, "Bad profileId.");
+				SI.setResponse(ServletItem.Code.BadParameters, "No profileId.");
 			} else if (name == null || name.length() > 14) {
-				SI.setResponse(ServletItem.Code.BadParameters, "Incorrect name.");
+				SI.setResponse(ServletItem.Code.BadParameters, "Incorrect app name.");
 			} else if (user.getApp(appId) == null) {
-				SI.setResponse(ServletItem.Code.BadParameters, "Bad appId.");
+				SI.setResponse(ServletItem.Code.BadParameters, "No appId.");
 			} else if (user.getApp(appId).getType().equals("ClassicAccount") == false){
 				SI.setResponse(ServletItem.Code.LogicError, "This account is not a classicAccount.");
 			} else {
 				if ((site = ((SiteManager)session.getServletContext().getAttribute("siteManager")).get(siteId)) == null) {
-					SI.setResponse(ServletItem.Code.BadParameters, "This site dosen't exist.");	
+					SI.setResponse(ServletItem.Code.BadParameters, "This website doesn't exist in the database.");	
 				} else {
 					if (profile.havePerm(Profile.ProfilePerm.ADDAPP, session.getServletContext()) == true){
 						transaction = db.start();
@@ -99,7 +99,7 @@ public class AddAppSso extends HttpServlet {
 						SI.setResponse(200, Integer.toString(app.getAppId()));
 						db.commit(transaction);
 					} else {
-						SI.setResponse(ServletItem.Code.NoPermission, "You have not the permission");
+						SI.setResponse(ServletItem.Code.NoPermission, "You have not the permission.");
 					}
 				}
 			}
@@ -110,7 +110,7 @@ public class AddAppSso extends HttpServlet {
 			db.cancel(transaction);
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		} catch (NumberFormatException e) {
-			SI.setResponse(ServletItem.Code.BadParameters, "Bad numbers.");
+			SI.setResponse(ServletItem.Code.BadParameters, "Numbers exception.");
 		}
 		SI.sendResponse();
 	}
