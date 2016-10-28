@@ -42,7 +42,7 @@
 </div>
 <div id="profileHelper" style="display: none">
 	<div class="item">
-		<div class="ProfileBox" style="border-bottom: 5px solid #35a7ff;"
+		<div class="ProfileBox"
 		color="#35a7ff">
 		<div class="ProfileName" style="background-color: #35a7ff;">
 			<p>@Profile name</p>
@@ -51,8 +51,6 @@
 			</div>
 		</div>
 		<div class="ProfileContent">
-			<img class="Scaler" src="resources/other/placeholder-36.png"
-			style="width: 100%; height: auto; visibility: hidden;">
 			<div class="content">
 				<div class="ProfileControlPanel" index="0">
 
