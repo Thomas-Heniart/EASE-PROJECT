@@ -93,13 +93,10 @@ function enterEditMode() {
 	easeDashboard.enterEditMode();
 	catalog.open();
 	$('.MenuButtonSet').addClass('editMode');
-	//$('.MenuButtonSet.editMode .openCatalogHelper').css('height',
-	//	$('.CatalogViewTab.show').height() + 'px');
 	enterEditModeTutorial();
 }
 
 function leaveEditMode() {
-	$('.MenuButtonSet.editMode .openCatalogHelper').css('height', '50px');
 	easeDashboard.leaveEditMode();
 	catalog.close();
 	$('.scaleOutAnimation').removeClass('scaleOutAnimation');

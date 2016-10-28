@@ -247,21 +247,25 @@ var Catalog = function(rootEl){
 	this.open = function(){
 		self.qRoot.addClass('show');
 		self.isOpen = true;
+		self.onResize();
 	};
 	this.close = function(){
 		self.qRoot.removeClass('show');
 		self.isOpen = false;
 	};
 	this.onResize = function(){
-		console.log(self.oUpdate.isOpen == true);
 		self.appsHolder.height(self.qRoot.outerHeight(true) 
 							- (((self.oUpdate.isOpen == true) ? self.oUpdate.qRoot.outerHeight(true) : 0)
 							+ self.searchBar.outerHeight(true)
 							+ self.tagContainer.outerHeight(true)
+							+ (self.tagContainer.outerHeight(true) / 2)
 							+ self.integrateAppArea.outerHeight(true)));
-		self.isOpen && $('.openCatalogHelper').height(self.appsHolder.height());
+		//self.isOpen && $('.openCatalogHelper').height(self.qRoot.height());
+		var width = 0;
 		self.apps.forEach(function(elem) {
-			elem.qRoot.height(elem.qRoot.width());
+			if (width == 0)
+				width = elem.qRoot.width();
+			elem.qRoot.height(width);
 		});
 	};
 	this.onResize();
@@ -272,13 +276,15 @@ var Catalog = function(rootEl){
 		self.onResize();
 	});
 	this.haveThisUrl = function (url) {
-		this.apps.forEach(function(elem) {
-			if (elem.url == url)
-				return elem;
-		});
-		return null;
+		var apps = [];
+		for (var cpt = 0; cpt < self.apps.length; ++cpt){
+			console.log("catalog: " + self.apps[cpt].url + " update: " + url + "  " + self.apps[cpt].url.indexOf(url));
+			if (self.apps[cpt].url.indexOf(url) > -1)
+				apps.push(self.apps[cpt]);
+		}
+		return apps;
 	};
-	this.oUpdate.test();
+	//this.oUpdate.test();
 }
 
 $(document).ready(function(){

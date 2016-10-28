@@ -15,7 +15,11 @@
 		<i class="fa fa-times" aria-hidden="true"></i>
 	</div>
 	<%@ include file="updates.jsp"%>
+	
 	<div class="catalogSearchbar">
+		<div class="catalogHeader title" >
+			<i class="fa fa-home" aria-hidden="true"></i><p> Find your website </p>
+		</div>
 		<i class="fa fa-search" aria-hidden="true"></i>
 		<div class="selectedTagsContainer"></div>
 		<input type="text" name="catalogSearch" class="form-control"

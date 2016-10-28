@@ -17,13 +17,13 @@ var Update = function(rootEl, updateManager, index) {
 		self.qRoot.removeClass('decaleUpdate');
 		self.isAnimate = false;
 	}
-	this.qRoot.find(".updateCancel").on("click", function () {
+	this.qRoot.find(".cancel").on("click", function () {
 		if (self.isAnimate == false) {
 			self.qRoot.addClass('deletingUpdate');
 			self.oManager.launchAnim(self.index);
 			setTimeout(function () {
 				self.remove();
-				self.oManager.stopAnim();
+				self.oManager.stopAnim(self.index);
 			}, 300);
 		}
 	});
