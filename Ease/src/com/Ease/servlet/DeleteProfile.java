@@ -82,6 +82,9 @@ public class DeleteProfile extends HttpServlet {
 					transaction = db.start();
 					profile.deleteFromDB(session.getServletContext());
 					user.getProfiles().remove(profile.getIndex());
+					for (int i = 0; i < 5; ++i) {
+						user.getProfilesDashboard().get(i).remove(profile);
+					}
 					user.updateIndex(session.getServletContext());
 					SI.setResponse(200, "Profile deleted.");
 					db.commit(transaction);

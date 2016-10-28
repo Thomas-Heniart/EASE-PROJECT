@@ -21,6 +21,12 @@ pageEncoding="UTF-8"%>
 			</div>
 		</c:if>
 	</c:forEach>
+	<div class="profileAdder">
+		<span class="fa-stack fa-lg">
+			<i class="fa fa-circle fa-stack-1x" aria-hidden="true"></i>
+			<i class="fa fa-plus-circle fa-stack-1x" aria-hidden="true"></i>
+		</span>
+	</div>
 </div>
 <%@ include file="ObjectHelpers.jsp"%>
 <p class="shortcutInfo" style="text-shadow: 0 0 30px black, 0 0 30px black, 0 0 30px black, 0 0 30px black; color: white; font-size:12px; font-weight:500; position: absolute; bottom: 1.5%; left:2%; display:none;">Hold ctrl and click to open multiple apps.</p>

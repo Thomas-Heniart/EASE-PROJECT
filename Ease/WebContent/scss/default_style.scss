@@ -29,9 +29,19 @@
 .scaleinAnimation {
    @include scalein-anim('scale-09', 0.9);
 }
+.scaleOut12 {
+  @include scalein-anim('scale-09', 1.2);
+}
 
 body {
   overflow-x: hidden;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;
+
   ::-webkit-scrollbar {
    width: 7px;
    position: absolute;
