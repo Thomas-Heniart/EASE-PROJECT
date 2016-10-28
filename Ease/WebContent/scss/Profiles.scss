@@ -12,6 +12,7 @@
 	overflow: hidden;
 	display: inline-block;
 	height: auto;
+	border-bottom: 1px solid $borderFbColor;
 	.ProfileName {
 		text-align: left;
 		background-color: #FFD00C;
@@ -20,6 +21,7 @@
 		border-radius: 5px 5px 0px 0px;
 		position: relative;
 		p {
+			transition: font-size .3s;
 			text-transform: uppercase;
 			font-weight: 600;
 			letter-spacing: 1px;
@@ -50,7 +52,7 @@
 			cursor: pointer;
 			transition: transform 0.3s;
 			i {
-				transition: transform 0.3s;
+				transition: transform 0.3s, font-size .3s;
 				&:hover {
 					transition: transform 0.3s;
 					transform: rotateZ(-90deg);
@@ -67,14 +69,15 @@
 			min-height: 125%;
 			max-height: 300%;
 			.ProfileControlPanel {
-				display: none;
+				transition: max-height .3s;
 				width: 100%;
+				max-height: 0;
 				font-family: $defaultFont;
 				overflow: hidden;
 				white-space: nowrap;
 				.profileSettingsTab {
 					padding: 2px 5%;
-					position: absolute;
+					position: relative;
 					top:0;
 					left: 0;
 					width: 100%;
@@ -216,13 +219,16 @@
 				}
 			}
 			.SitesContainer {
+				transition: min-height .3s;
 				border-left:1px solid $borderFbColor;
 				border-right: 1px solid $borderFbColor;
 				position: relative;
 				height: 100%;
 				width: 100%;
+				min-height: 13.6vw;
 				overflow-y: overlay;
 				overflow-x: hidden;
+				padding-bottom: 17%;
 				.siteLinkBox {
 					border-radius: 5px;
 					width: (100% / 3);
@@ -248,6 +254,7 @@
 						.showAppActionsButton{
 							visibility: hidden;
 						}
+						transition: width .3s;
 						position: relative;
 						width: 65%;
 						cursor: pointer;
@@ -289,6 +296,32 @@
 		transition: margin .3s, width .3s;
 		width: 50%;
 		margin-left:0px;
+		.profileAdder {
+			transition: opacity .3s;
+			opacity: 1;
+			visibility: visible;
+		}
+		.item {
+			.ProfileBox {
+				.ProfileName {
+					p {
+						font-size: 0.8em;
+					}
+					.ProfileSettingsButton {
+						i {
+							font-size: 0.8em;
+						}
+					}
+				}
+				.ProfileContent {
+					.content {
+						.SitesContainer {
+							min-height: 9.2vw;
+						}
+					}
+				}
+			}
+		}
 	}
 	.ProfilesHandler {
 		transition: margin .3s, width .3s;
@@ -298,16 +331,51 @@
 		white-space: nowrap;
 		margin-left: 10%;
 		position: relative;
-		overflow: hidden;
 		text-align: center;
+		.profileAdder {
+			transition: opacity .3s;
+			position: fixed;
+			color: $themeColor;
+			left: 47%;
+			bottom: 10%;
+			opacity: 0;
+			visibility: hidden;
+			&:hover {
+				cursor: pointer;
+				span {
+					.fa-circle {
+						color: white;
+					}
+					.fa-plus-circle {
+						color: $themeColor;
+					}
+				}
+			}
+			span {
+				font-size: 4vw;
+				width: 1em;
+				height: 1em;
+				line-height: 1em;
+				.fa-circle {
+					transition: color .3s;
+					color: $themeColor;
+				}
+				.fa-plus-circle {
+					transition: color .3s;
+					color: white;
+				}
+			}
+		}
 		.dashboardColumn {
 			transition: width .3s;
-			width: 25%;
+			width: 24.8%;
 			vertical-align: top;
 			display: inline-block;
 			min-height: 100px;
 			position: relative;
 			.item {
+				position: relative;
+				transition: transform .3s;
 				text-align: center;
 				margin-bottom: 10px;
 			}
@@ -499,9 +567,13 @@
 .ProfilesHandler.editMode {
 	.ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox {
 		.linkImage{
+			width: 90%;
 			.showAppActionsButton {
 				transition-delay: 0s;
 			}
+		}
+		.siteName {
+			display: none;
 		}
 	}
 }

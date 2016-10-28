@@ -3,7 +3,7 @@
 	height: 100%;
 	overflow: hidden;
 	width: 100%;
-	border-radius: 25px;
+	border-radius: 10px;
 	font-family: $defaultFont;
 	.tag {
 		color: white;
@@ -35,21 +35,15 @@
 		width: 95%;
 		margin-left: auto;
 		margin-right: auto;
-		div.title {
-			font-size: 15px;
-			padding: 0.2vw 3vw;
-			height: 30px;
-			font-weight: bold;
-		}
 		.content {
+			width: 100%;
 			position: relative;
 			height: 12vh;
 			min-height: 90px;
 			max-height: 120px;
-			width: 100%;
 			background-color: white;
 			border: 1px solid darken($borderFbColor, 10%);
-			border-radius: 10px;
+			border-radius: 4px;
 			white-space: nowrap;
 			margin: auto;
 			overflow-x: auto;
@@ -65,11 +59,13 @@
 				max-height: 120px;
 				top: 50%;
 				transform: translateY(-50%);
+				padding: 2px;
 				.updateBox {
 					position: relative;
 					display: inline-block;
 					height: 100%;
 					margin: 0 0vw;
+					border-radius: 10px;
 					background-color: #FFFFFF;
 					.updateApp {
 						position:relative;
@@ -141,8 +137,8 @@
 		}
 	}
 	.catalogSearchbar {
-		margin: 20px auto 0px auto;
-		width: 80%;
+		margin: 0 auto 0px auto;
+		width: 95%;
 		position: relative;
 		input.form-control {
 			display: inline;
@@ -153,7 +149,7 @@
 			display: inline-block;
 			position: absolute;
 			left: 5px;
-			top: 50%;
+			top: 75%;
 			transform: translateY(-50%);
 			font-weight: bold;
 		}
@@ -161,7 +157,7 @@
 			display: inline-block;
 			position: absolute;
 			left: 20px;
-			top: 22%;
+			top: 56%;
 			.tags-group:first-child {
 				.tag{
 					margin-left: 2px;
@@ -258,26 +254,21 @@
 		}
 	}
 	.catalogHeader {
-		padding: 5px;
-		width: 60%;
-		text-align: center;
+		position:relative;
 		color: $themeColor;
-		margin: 0px auto;
-		margin-top: 2%;
-		border-bottom: 1px solid $themeColor;
-		padding-bottom: 2%;
+		margin: 10px 0px;
+		padding: 0 0;
+		width: 100%;
+		i {
+			padding: 0 10px;	
+		}
 		p {
+			display: inline-block;
 			font-weight: 600;
 			color: $themeColor;
 			text-transform: uppercase;
 			letter-spacing: 1px;
 			font-size: 15px;
-			width: 70%;
-			margin-left: auto;
-			margin-right: auto;
-			margin-bottom: 0px;
-			line-height: 30px;
-			border-radius: 10px;
 		}
 	}
 	.tagContainer {
@@ -348,20 +339,23 @@
 		width: 95%;
 		padding: 0px;
 		border: 1px solid darken($borderFbColor, 10%);
+		border-radius: 4px;
 		margin-left: auto;
 		margin-right: auto;
 		.catalogArea {
 			height: 100%;
 			width: 100%;
 			margin: 0px auto;
-			padding: 15px;
-			border-radius: 5px;
+			padding: 0px;
+			border-radius: 4px;
 			.scaleContainer {
 				height: 100%;
 				width: 100%;
 				position: relative;
-				margin: 0px auto;
-				margin-bottom: 0;
+				margin: 0 auto;
+				.shadowHelper {
+					border-radius: 4px;
+				}
 				.catalogContainer {
 					position: absolute;
 					top: 0;
@@ -369,6 +363,7 @@
 					height: 100%;
 					overflow-y: auto;
 					overflow-x: hidden;
+					border-radius: 4px;
 					.search-result, .relatedApps {
 						display: none;
 					}
@@ -861,7 +856,7 @@
 		visibility: hidden;
 		position: absolute;
 		background-color: white;
-		border-radius: 25px;
+		border-radius: 10px;
 		border: 1px solid #d0d1d5;
 		#quit {
 			position: absolute;
