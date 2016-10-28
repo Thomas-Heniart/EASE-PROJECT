@@ -1,3 +1,11 @@
+function getNewLogin(msg, i){
+	if (msg.detail[i].user){
+		return {"user":msg.detail[i].user.login, "password":msg.detail[i].user.password};
+	} else if (msg.detail[i].logWith){
+		return {"user":getNewLogin(msg, i-1).user, "logWith":getHost(msg.detail[i-1].website.loginUrl)};
+	}
+}
+
 function rememberWebsite(website){
     if (website.lastLogin == "" || !website.lastLogin)
         return;
@@ -28,12 +36,11 @@ function rememberWebsite(website){
 }
 
 function endConnection(currentWindow, tab, msg, sendResponse){
-    extension.tabs.sendMessage(tab, "rmOverlay", msg, function(response){});
-    /*if(msg.result == "Success"){
-        extension.notifications.print("Connection to "+ msg.detail[msg.detail.length-1].website.name +" : DONE ;)", msg.detail[msg.detail.length-1].website.folder, 2000);
-    } else {
-        extension.notifications.print("Connection to "+ msg.detail[msg.detail.length-1].website.name+" : FAIL :(", msg.detail[msg.detail.length-1].website.folder, 2000);
-    }*/
+    extension.tabs.sendMessage(tab, "rmOverlay", msg, function(response){
+        if(msg.result == "Fail"){
+            server.post("Could not end process for website "+ msg.detail[0].website.name);
+        }
+    });
 }
 
 extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, sendResponse) {
@@ -97,6 +104,7 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, se
                                             msg.todo = "checkAlreadyLogged";
                                             extension.tabs.update(tab, msg.detail[msg.bigStep].website.home, function() {});
                                         } else {
+                                             msg.detail[msg.bigStep].website.lastLogin = getNewLogin(msg, msg.bigStep);
                                             rememberWebsite(msg.detail[msg.bigStep].website);
                                             msg.actionStep = 0;
                                             msg.bigStep++;

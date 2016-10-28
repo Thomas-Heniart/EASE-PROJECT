@@ -93,7 +93,6 @@ function logoutOverlay(msg){ //quand todo = logout
 }
 
 function endOverlay(msg){
-    console.log("remove overlay");
     setTimeout(function(){overlay.style = "display: none"}, 300);
 }
 

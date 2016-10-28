@@ -40,7 +40,6 @@ extension.runtime.onMessage("goooo", function(msg, sendResponse) {
         checkConnectionOverlay(msg);
 		if (isConnected(msg) == true) {
 			if (alreadyVisited(msg) == true){
-                msg.detail[msg.bigStep].website.lastLogin = getNewLogin(msg, msg.bigStep);
 				msg.todo = "connect";
 				msg.actionStep = msg.detail[msg.bigStep].website[msg.todo].todo.length;
 				msg.type = "completed";
@@ -88,7 +87,6 @@ extension.runtime.onMessage("goooo", function(msg, sendResponse) {
             loginOverlay(msg);
         }
     }
-		
 });
 
 }

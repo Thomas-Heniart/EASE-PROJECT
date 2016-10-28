@@ -1,3 +1,11 @@
+function getNewLogin(msg, i){
+	if (msg.detail[i].user){
+		return {"user":msg.detail[i].user.login, "password":msg.detail[i].user.password};
+	} else if (msg.detail[i].logWith){
+		return {"user":getNewLogin(msg, i-1).user, "logWith":getHost(msg.detail[i-1].website.loginUrl)};
+	}
+}
+
 function rememberWebsite(website){
     if (website.lastLogin == "" || !website.lastLogin)
         return;
@@ -96,6 +104,7 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, se
                                             msg.todo = "checkAlreadyLogged";
                                             extension.tabs.update(tab, msg.detail[msg.bigStep].website.home, function() {});
                                         } else {
+                                             msg.detail[msg.bigStep].website.lastLogin = getNewLogin(msg, msg.bigStep);
                                             rememberWebsite(msg.detail[msg.bigStep].website);
                                             msg.actionStep = 0;
                                             msg.bigStep++;

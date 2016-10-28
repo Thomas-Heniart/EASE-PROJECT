@@ -449,9 +449,10 @@
 									box-shadow: 0px 0px 4px 0px #cccccc;
 									}
 								.siteUrl {
-									height: auto;
-									width: fit-content;
-									padding: 2px;
+									display: inline;
+								}
+								.apps-integrated {
+									display: none !important;
 								}
 							}
 							img {
@@ -463,15 +464,48 @@
 							.siteUrl {
 								text-decoration: none;
 								position: absolute;
+								bottom: -20%;
+								right: -20%;
+								display: none;
+								span.fa-stack {
+									width: 1.2em;
+									height: 1.2em;
+									line-height: 1.2em;
+									i.fa-circle {
+										font-size: 1.2em;
+										color: white;
+									}
+									i.fa-link {
+										color: $themeColor;
+										font-size: 0.6em;
+									}
+								}
+							}
+							.apps-integrated {
+								position: absolute;
+								display: none;
 								bottom: 0;
 								right: 0;
-								height: 0;
-								width: 0;
-								overflow: hidden;
-								background-color: white;
-								border-top-left-radius: 16px;
-								color: $themeColor;
-								font-size: 16px;
+								color: white;
+								width: 1.1em;
+								height: 1.1em;
+								line-height: 1.1em;
+								i.fa-circle {
+									font-size: 1.1em;
+									color: $themeRedColor;
+								}
+								i.count {
+									font-size: 0.55em;
+									color: white;
+									text-align: center;
+									display: inline-block;
+							    position: absolute;
+							    width: 100%;
+							    left: 0;
+								}
+							}
+							.apps-integrated.showCounter {
+								display: inline;
 							}
 						}
 						.catalogAppName {
