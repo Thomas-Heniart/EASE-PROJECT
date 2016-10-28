@@ -142,6 +142,9 @@ var Form = {
 
 		}
 		this.successCallback = function(retMsg) {
+			var x = parseInt($(".catalogApp[idx='" + self.site_id + "'] span.apps-integrated i.count").html());
+			$(".catalogApp[idx='" + self.site_id + "'] span.apps-integrated i.count").html(x+1);
+			$(".catalogApp[idx='" + self.site_id + "'] span.apps-integrated").addClass("showCounter");
 			self.newAppItem.find('.linkImage').addClass('scaleOutAnimation');
 			setTimeout(function() {
 				self.newAppItem.find('.linkImage').removeClass(
@@ -294,6 +297,11 @@ var Form = {
 			$(self.oParent.app).find('.linkImage').removeClass('easyScaling');
 		}
 		this.successCallback = function(retMsg) {
+			var webId = (self.oParent.app).attr("webid");
+			var x = parseInt($(".catalogApp[idx='" + webId + "'] span.apps-integrated i.count").html());
+			$(".catalogApp[idx='" + webId + "'] span.apps-integrated i.count").html(x-1);
+			if (x == 1)
+				$(".catalogApp[idx='" + webId + "'] span.apps-integrated").removeClass("showCounter");
 			$(self.oParent.app).find('.linkImage').addClass('deletingApp');
 			setTimeout(function() {
 				self.oParent.app.remove();

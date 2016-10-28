@@ -9,7 +9,7 @@
 	List<String> verifiedEmails = ((User) session.getAttribute("User")).getVerifiedEmails();
 	List<String> unverifiedEmails = ((User) session.getAttribute("User")).getUnverifiedEmails();
 %>
-<form action="AddEmail" oClass="AddEmailForm" id="AddEmailForm">
+<form action="AddEmail" oClass="AddEmailForm" id="AddEmailForm" class="show">
 	<div class="newEmail show">
 		<i class="fa fa-plus-circle" aria-hidden="true"></i> Add an email
 	</div>
@@ -51,7 +51,7 @@
 	var addEmailInput = Form["AddEmailForm"]($("#AddEmailForm"));
 </script>
 <form action="editVerifiedEmails" id="editVerifiedEmails"
-	oClass="EditVerifiedEmailsForm">
+	oClass="EditVerifiedEmailsForm" class="show">
 	<c:forEach items="<%=verifiedEmails%>" var="item" varStatus="loop">
 		<div class="emailLine">
 			<input type="email" value="${item}" readonly /> <span

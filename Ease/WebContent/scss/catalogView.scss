@@ -3,6 +3,7 @@
 	height: 100%;
 	overflow: hidden;
 	width: 100%;
+	border-radius: 10px;
 	font-family: $defaultFont;
 	.tag {
 		color: white;
@@ -31,22 +32,18 @@
 	}
 	.catalogUpdates {
 		position: relative;
-		width: 100%;
-		div.title {
-			font-size: 15px;
-			padding: 0.2vw 3vw;
-			height: 30px;
-			font-weight: bold;
-		}
+		width: 95%;
+		margin-left: auto;
+		margin-right: auto;
 		.content {
+			width: 100%;
 			position: relative;
 			height: 12vh;
 			min-height: 90px;
 			max-height: 120px;
-			width: 100%;
 			background-color: white;
-			border-bottom: 1px solid darken($borderFbColor, 10%);
-			border-top: 1px solid darken($borderFbColor, 10%);
+			border: 1px solid darken($borderFbColor, 10%);
+			border-radius: 4px;
 			white-space: nowrap;
 			margin: auto;
 			overflow-x: auto;
@@ -62,11 +59,13 @@
 				max-height: 120px;
 				top: 50%;
 				transform: translateY(-50%);
+				padding: 2px;
 				.updateBox {
 					position: relative;
 					display: inline-block;
 					height: 100%;
 					margin: 0 0vw;
+					border-radius: 10px;
 					background-color: #FFFFFF;
 					.updateApp {
 						position:relative;
@@ -91,18 +90,37 @@
 								border-radius: 5px;
 								border: 1px solid #cccccc;
 							}
+							.cancel {
+								position: absolute;
+								top: 10%;
+								right: 10%;
+								width: 20px;
+								height: 20px;
+								cursor: pointer;
+								background-color: #999999;
+								border: 1px solid #333333;
+								border-radius: 100px;
+								text-align: center;
+								i {
+									margin: 0 0;
+									padding: 0 0;
+									font-size: 18px;
+									line-height: 18px;
+									color: white;
+								}
+							}
 						}
 					}
 					.updateType {
 						position:relative;
-						height: 100%;
-						vertical-align: top;
 						display: inline-block;
 						font-size: 12px;
+						height: 100%;
+						vertical-align: top;
 						.updateInfo {
-							position:relative;
-							top: 10%;
-							width: 100%;
+							position: relative;
+							top: 50%;
+							transform: translateY(-50%);
 							p {
 								margin: 0 0;
 								padding: 0 0;
@@ -110,34 +128,7 @@
 							p.title {
 								margin: 0 0;
 								padding: 0 0;
-								top: 2%;
 								font-weight: bold;
-							}
-						}
-						.updateButton {
-							position:absolute;
-							width: 100%;
-							left: 0;
-							height: 25%;
-							bottom: 5%;
-							button {
-								width: 45%;
-								height: 100%;
-								border-radius: 4px;
-								border: 1px solid #cccccc;
-								background-color: $themeColor;
-								color: #FFFFFF;
-								&:hover {
-									background-color: #FFFFFF;
-									border-color: $themeColor;
-									color: $themeColor;
-								}
-								p {
-									font-size: 13px;
-									font-weight: bold;
-									margin: 0 0;
-									padding: 0 0;
-								}
 							}
 						}
 					}
@@ -146,8 +137,8 @@
 		}
 	}
 	.catalogSearchbar {
-		margin: 20px auto 0px auto;
-		width: 80%;
+		margin: 0 auto 0px auto;
+		width: 95%;
 		position: relative;
 		input.form-control {
 			display: inline;
@@ -158,7 +149,7 @@
 			display: inline-block;
 			position: absolute;
 			left: 5px;
-			top: 50%;
+			top: 75%;
 			transform: translateY(-50%);
 			font-weight: bold;
 		}
@@ -166,7 +157,7 @@
 			display: inline-block;
 			position: absolute;
 			left: 20px;
-			top: 22%;
+			top: 56%;
 			.tags-group:first-child {
 				.tag{
 					margin-left: 2px;
@@ -263,26 +254,21 @@
 		}
 	}
 	.catalogHeader {
-		padding: 5px;
-		width: 60%;
-		text-align: center;
+		position:relative;
 		color: $themeColor;
-		margin: 0px auto;
-		margin-top: 2%;
-		border-bottom: 1px solid $themeColor;
-		padding-bottom: 2%;
+		margin: 10px 0px;
+		padding: 0 0;
+		width: 100%;
+		i {
+			padding: 0 10px;	
+		}
 		p {
+			display: inline-block;
 			font-weight: 600;
 			color: $themeColor;
 			text-transform: uppercase;
 			letter-spacing: 1px;
 			font-size: 15px;
-			width: 70%;
-			margin-left: auto;
-			margin-right: auto;
-			margin-bottom: 0px;
-			line-height: 30px;
-			border-radius: 10px;
 		}
 	}
 	.tagContainer {
@@ -350,24 +336,26 @@
 	.scaleContainerView {
 		height: 100%;
 		background-color: white;
-		width: 100%;
+		width: 95%;
 		padding: 0px;
-		border-bottom: 1px solid darken($borderFbColor, 10%);
-		border-top: 1px solid darken($borderFbColor, 10%);
+		border: 1px solid darken($borderFbColor, 10%);
+		border-radius: 4px;
 		margin-left: auto;
 		margin-right: auto;
 		.catalogArea {
 			height: 100%;
 			width: 100%;
 			margin: 0px auto;
-			padding: 15px;
-			border-radius: 5px;
+			padding: 0px;
+			border-radius: 4px;
 			.scaleContainer {
 				height: 100%;
 				width: 100%;
 				position: relative;
-				margin: 0px auto;
-				margin-bottom: 0;
+				margin: 0 auto;
+				.shadowHelper {
+					border-radius: 4px;
+				}
 				.catalogContainer {
 					position: absolute;
 					top: 0;
@@ -375,6 +363,7 @@
 					height: 100%;
 					overflow-y: auto;
 					overflow-x: hidden;
+					border-radius: 4px;
 					.search-result, .relatedApps {
 						display: none;
 					}
@@ -453,17 +442,17 @@
 							margin-left: auto;
 							margin-right: auto;
 							padding-top: 3px;
+							position: relative;
 							&:hover {
 								cursor: pointer;
 								img {
 									box-shadow: 0px 0px 4px 0px #cccccc;
 									}
 								.siteUrl {
-									i {
-										height: auto;
-										width: fit-content;
-										border: 2px solid white;
-									}
+									display: inline;
+								}
+								.apps-integrated {
+									display: none !important;
 								}
 							}
 							img {
@@ -474,17 +463,49 @@
 							}
 							.siteUrl {
 								text-decoration: none;
-								i {
-									height: 0;
-									width: 0;
-									overflow: hidden;
-									position: absolute;
-									margin-top: 6%;
-									margin-left: -3%;
-									background-color: white;
-									border-bottom-left-radius: 16px;
-									color: $themeColor;
+								position: absolute;
+								bottom: -20%;
+								right: -20%;
+								display: none;
+								span.fa-stack {
+									width: 1.2em;
+									height: 1.2em;
+									line-height: 1.2em;
+									i.fa-circle {
+										font-size: 1.2em;
+										color: white;
+									}
+									i.fa-link {
+										color: $themeColor;
+										font-size: 0.6em;
+									}
 								}
+							}
+							.apps-integrated {
+								position: absolute;
+								display: none;
+								bottom: 0;
+								right: 0;
+								color: white;
+								width: 1.1em;
+								height: 1.1em;
+								line-height: 1.1em;
+								i.fa-circle {
+									font-size: 1.1em;
+									color: $themeRedColor;
+								}
+								i.count {
+									font-size: 0.55em;
+									color: white;
+									text-align: center;
+									display: inline-block;
+							    position: absolute;
+							    width: 100%;
+							    left: 0;
+								}
+							}
+							.apps-integrated.showCounter {
+								display: inline;
 							}
 						}
 						.catalogAppName {
@@ -835,7 +856,7 @@
 		visibility: hidden;
 		position: absolute;
 		background-color: white;
-		border-radius: 5px;
+		border-radius: 10px;
 		border: 1px solid #d0d1d5;
 		#quit {
 			position: absolute;

@@ -100,10 +100,10 @@ form.settingsForm {
     color: black;
   }
   .suggested-emails {
-    height: 0;
+    max-height: 0;
     background-color: white;
     border-radius: 5px;
-    transition: height 0.3s ease;
+    transition: max-height 0.3s ease;
     position: relative;
     overflow: hidden;
     p.email-suggestion {
@@ -119,9 +119,9 @@ form.settingsForm {
     }
   }
   .suggested-emails.show {
-    height: 100px;
+    max-height: 100px;
     margin: 1px auto;
-    transition: height 0.3s ease;
+    transition: max-height 0.3s ease;
     overflow-y: auto;
   }
 }

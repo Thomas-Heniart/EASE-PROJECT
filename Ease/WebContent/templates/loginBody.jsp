@@ -73,7 +73,8 @@ $(document).ready(function(){
 			
 			<img class='ease-logo' src='resources/icons/Ease_Logo_couleur.png'/>
 			<div class="savedUser">
-				<a class='forget-password' href="PasswordLost">Forgot your password ?</a>
+				<a class='new-to-ease' href="http://www.ease-app.co">New to Ease</a>
+				<a class='forget-password' href="PasswordLost">Password lost ?</a>
 				<p>Hello <%= new String(Base64.getDecoder().decode(fname), StandardCharsets.UTF_8) %> !</p>
 				<span class="input input--minoru">
 					<input class="input__field input__field--minoru" id="password" name="password" type="password" id="input-8" placeholder="Password"/>
@@ -105,7 +106,8 @@ $(document).ready(function(){
 		<div class="form" id="unknownUser" <% if (iden == 3){ %> style="visibility:hidden;" <% }%>>
 			<img class='ease-logo' src='resources/icons/Ease_Logo_couleur.png'/>
 			<form action="connection" method="POST" id="loginForm" role="form">
-				<a class='forget-password' href="PasswordLost">Forgot your password ?</a>
+				<a class='new-to-ease' href="http://www.ease-app.co">New to Ease</a>
+				<a class='forget-password' href="PasswordLost">Password lost ?</a>
 				<span class="input input--minoru">
 					<input class="input__field input__field--minoru" id="email" name="email" type="email" id="input-8" placeholder="Email"/>
 					<label class="input__label input__label--minoru" for="input-8"></label>
@@ -141,7 +143,7 @@ $(document).ready(function(){
 	</div>
 	
 	<div class="phrase">
-		<p>A simple homepage to access all your web without passwords</p>
+		<p>A simple homepage to access all your web without passwords. <a href="https://www.ease-app.co" target="_blank">Discover</a></p>
 	</div>
 	
 	<p class="homepageOnoffContainer displayedByPlugin">

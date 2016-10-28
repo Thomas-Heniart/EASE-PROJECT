@@ -63,7 +63,7 @@
 #loginBody .phrase{
     position: absolute;
     bottom: 15px;
-    left:calc(50% - 250px);
+    left:calc(50% - 260px);
     -webkit-transition-duration: 0.5    s;
     transition-duration: 0.5s;
     p {
@@ -71,5 +71,9 @@
         color: white;
         font-size:18px;
         font-weight:600;
+				a {
+					color: white;
+					text-decoration: underline;
+				}
     }
 }

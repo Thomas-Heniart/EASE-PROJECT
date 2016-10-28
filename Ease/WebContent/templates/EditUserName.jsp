@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 
 <form oClass="EditUserNameForm" action="editUserName"
-	id="ModifyNameForm">
+	id="ModifyNameForm" class="show">
 	<input type="text" name="fname" oClass="NoEmptyInput" value="<%=user.getFirstName()%>">
 	<button type="submit">Go</button>
 </form>
