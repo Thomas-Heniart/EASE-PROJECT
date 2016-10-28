@@ -1,4 +1,3 @@
-var easeApps = [];
 
 var easeApp = function(rootEl){
 	var self = this;
@@ -8,7 +7,7 @@ var easeApp = function(rootEl){
 	this.name = this.rootEl.attr('name');
 	this.id = this.rootEl.attr('id');
 	this.webId = this.rootEl.attr('webid');
-
+	this.login = this.rootEl.attr('login');
 	this.setName = function(name){
 		self.name = name;
 		self.nameArea.text(name);
@@ -31,5 +30,4 @@ var easeApp = function(rootEl){
 	this.rootEl.find('.deleteAppButton').length && this.rootEl.find('.deleteAppButton').on('click', function(e){
 		showConfirmDeleteAppPopup(this, e);
 	});
-	easeApps.push(this);
 }
