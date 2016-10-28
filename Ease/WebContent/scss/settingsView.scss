@@ -244,11 +244,103 @@
 					}
 				}
 			}
-			form {
-				transition: height 0.3s ease, visible 0.3s ease;
-				-webkit-transition: height 0.3s ease, visible 0.3s ease;
+			.setting {
+				#PopupDeleteAccount {
+					width: 40%;
+					.delete-advertising {
+						display: none;
+					}
+					.delete-advertising.show {
+						display: block;
+						position: relative;
+						text-align: center;
+						p {
+							width: 75%;
+							margin: auto;
+						}
+						button {
+							display: inline-block;
+							border-radius: 5px;
+							border: 1px solid transparent;
+							padding: 5px 45px;
+							font-size: 1em;
+						}
+						button#confirmDeleteAccount {
+							color: white;
+							background-color: $themeRedColor;
+							&:hover {
+								background-color: darken($themeRedColor, 3%);
+							}
+						}
+						button[oClass="CloseButton"] {
+							color: black;
+							background-color: $themeGreyLightColor;
+							&:hover {
+								background-color: darken($themeGreyLightColor, 3%);
+							}
+						}
+					}
+					#DeleteAccountForm {
+						display: none;
+						p {
+							text-align: center;
+							padding: 20px;
+						}
+						input {
+							display: block;
+							margin: auto;
+					    width: 40%;
+					    color: $themeColor;
+					    margin-bottom: 3%;
+						}
+						div {
+							margin: auto;
+							width: 77%;
+							button {
+								display: inline-block;
+								width: 43%;
+								font-size: 1em;
+								border-radius: 4px;
+								border: 1px solid transparent;
+								line-height: 20px;
+								vertical-align: middle;
+								margin: 2%;
+							}
+							button[type='submit'] {
+								background-color: $themeRedColor;
+								color: white;
+								opacity: 0.6;
+							}
+							button[type='submit'].Active {
+								opacity: 1;
+							}
+							button[oClass="CloseButton"] {
+								color: black;
+							}
+						}
+					}
+					#DeleteAccountForm.show {
+						display: block;
+					}
+					.wait {
+						display: none;
+					}
+					.wait.show {
+						display: block;
+					}
+				}
+				#deleteAccountButton {
+					border: 1px solid #373B60;
+					background-color: #373B60;
+			    color: white;
+			    border-radius: 6px;
+			    margin-left: 10px;
+				}
+			}
+			.setting {
+				transition: height 0.3s ease;
+				-webkit-transition: height 0.3s ease;
 				position: relative;
-				visibility: visible;
 				height: 0;
 				overflow: hidden;
 				input {
@@ -441,10 +533,9 @@
 					transition: opacity 0.3s ease, visibility 0.3s ease;
 				}
 			}
-			form.show {
-				transition: height 0.3s ease, visible 0.3s ease;
-				-webkit-transition: height 0.3s ease, visible 0.3s ease;
-				visibility: visible;
+			.setting.show {
+				transition: height 0.3s ease;
+				-webkit-transition: height 0.3s ease;
 				height: auto;
 			}
 			.sectionHeader {

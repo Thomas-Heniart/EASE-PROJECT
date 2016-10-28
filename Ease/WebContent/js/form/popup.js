@@ -3,6 +3,8 @@ var constructorPopup = function (rootEl) {
 	this.qRoot = rootEl;
 	this.oForm;
 	this.qCloseButton;
+	this.qCloseButtons;
+	self.qCloseButtons = [];
 	this.qRoot.find('form').each(function (index, elem) {
 		var oClass = $(elem).attr('oClass');
 		if (oClass != null) {
@@ -12,7 +14,12 @@ var constructorPopup = function (rootEl) {
 	this.qRoot.find('button').each(function (index, elem) {
 		var oClass = $(elem).attr('oClass');
 		if (oClass == "CloseButton") {
-			self.qCloseButton = $(elem, self);
+			console.log($(elem,self));
+			var tmpButton = $(elem, self);
+			tmpButton.click(function() {
+				self.close();
+			})
+			self.qCloseButtons.push(tmpButton);
 		}
 	});
 	this.open = function () {
@@ -23,9 +30,6 @@ var constructorPopup = function (rootEl) {
 	this.close = function () {
 		self.qRoot.removeClass('md-show');
 	};
-	this.qCloseButton.click(function () {
-		self.close();
-	});
 	this.setVal = function () {
 		
 	};
