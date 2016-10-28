@@ -95,6 +95,8 @@ var Form = {
 		}
 		this.successCallback = function() {
 			showAlertPopup('Modifications successfully applied !', false);
+			$("#userSettingsButton span").html(self.oInputs[0].getVal());
+			self.disable();
 		};
 		this.errorCallback = function(retMsg) {
 			showAlertPopup(retMsg, true);
