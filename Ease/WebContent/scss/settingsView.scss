@@ -222,6 +222,15 @@
 					}
 				}
 			}
+			#ModifyNameForm {
+				p.errorMessage {
+					display: none;
+					color: $themeRedColor;
+				}
+				p.errorMessage.show {
+					display: block;
+				}
+			}
 			#DeleteEmailPopup {
 				h2 {
 					text-align: center;
@@ -531,10 +540,21 @@
 					}
 					.email-loading.show {
 						display: inline-block !important;
-						font-size: 10px;
+						font-size: 12px;
 						margin: 0;
 						width: 20px;
 						height: 20px;
+					}
+					.email-sent {
+						display: none;
+						font-size: 10px;
+						margin: 0;
+						i {
+							color: green;
+						}
+					}
+					.email-sent.show {
+						display: inline-block !important;
 					}
 				}
 				.newEmailInput, .newEmail {

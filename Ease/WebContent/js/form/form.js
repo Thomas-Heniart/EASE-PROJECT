@@ -87,19 +87,13 @@ var Form = {
 	EditUserNameForm : function(rootEl) {
 		constructorForm.apply(this, arguments);
 		var self = this;
-		this.beforeSubmit = function() {
-			$('#loading').addClass('la-animate');
-		};
-		this.afterSubmit = function() {
-			$('#loading').removeClass('la-animate');
-		}
 		this.successCallback = function() {
 			showAlertPopup('Modifications successfully applied !', false);
 			$("#userSettingsButton span").html(self.oInputs[0].getVal());
 			self.disable();
 		};
 		this.errorCallback = function(retMsg) {
-			showAlertPopup(retMsg, true);
+			$(".errorMessage", self.qRoot).addClass("show");
 		}
 	},
 	EditUserPasswordForm : function(rootEl) {
@@ -381,8 +375,8 @@ var Form = {
 		};
 		this.afterSubmit = function() {
 			setTimeout(function() {
-				$(".emailLine").has("input[value='" + self.oInputs[0].getVal() + "']").find(".unverifiedEmail").removeClass("wait");
 				$(".emailLine").has("input[value='" + self.oInputs[0].getVal() + "']").find(".email-loading").removeClass("show");
+				$(".emailLine").has("input[value='" + self.oInputs[0].getVal() + "']").find(".email-sent").addClass("show");
 			}, 2000);
 		}
 	},

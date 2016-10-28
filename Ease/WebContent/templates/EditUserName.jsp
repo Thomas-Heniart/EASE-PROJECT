@@ -5,6 +5,7 @@
 	id="ModifyNameForm" class="setting show">
 	<input type="text" name="fname" oClass="NoEmptyInput" value="<%=user.getFirstName()%>">
 	<button type="submit">Go</button>
+	<p class="errorMessage"></p>
 </form>
 
 <script>

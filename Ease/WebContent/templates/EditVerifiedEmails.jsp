@@ -88,6 +88,7 @@
 					<div class="sk-circle11 sk-circle"></div>
 					<div class="sk-circle12 sk-circle"></div>
 				</div>
+				<span class="email-sent">Email has been successfully sent <i class="fa fa-check" aria-hidden="true"></i></span>
 			</div>
 		</c:forEach>
 	</form>
