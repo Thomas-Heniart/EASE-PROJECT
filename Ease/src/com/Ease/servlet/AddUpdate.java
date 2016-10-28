@@ -81,15 +81,15 @@ public class AddUpdate extends HttpServlet {
 			} else if (db.connect() != 0){
 				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 			} else if (login == null || login.equals("")) {
-				SI.setResponse(ServletItem.Code.BadParameters, "Bad login");
+				SI.setResponse(ServletItem.Code.BadParameters, "Login can't be empty");
 			} else if (name == null || name.length() > 14) {
-				SI.setResponse(ServletItem.Code.BadParameters, "Bad Name");
+				SI.setResponse(ServletItem.Code.BadParameters, "Incorrect app name");
 			} else if (!user.getEmails().get(login)){
 				SI.setResponse(ServletItem.Code.BadParameters, "Email not verified");
 			} else if (cryptedPassword == null || cryptedPassword.equals("")) {
-				SI.setResponse(ServletItem.Code.BadParameters, "Bad password");
+				SI.setResponse(ServletItem.Code.BadParameters, "Password can't be empty");
 			} else if ((profile = user.getProfile(profileId)) == null){
-				SI.setResponse(ServletItem.Code.BadParameters, "Bad profileId");
+				SI.setResponse(ServletItem.Code.BadParameters, "No profileId");
 			} else {
 				if ((site = ((SiteManager)session.getServletContext().getAttribute("siteManager")).get(siteId)) == null) {
 					SI.setResponse(ServletItem.Code.BadParameters, "This site dosen't exist");
@@ -122,7 +122,7 @@ public class AddUpdate extends HttpServlet {
 			db.cancel(transaction);
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		} catch (NumberFormatException e) {
-			SI.setResponse(ServletItem.Code.BadParameters, "Bad numbers.");
+			SI.setResponse(ServletItem.Code.BadParameters, "Numbers exception.");
 		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException
 				| IllegalBlockSizeException | BadPaddingException e) {
 			db.cancel(transaction);

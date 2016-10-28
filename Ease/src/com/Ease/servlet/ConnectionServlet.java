@@ -78,10 +78,10 @@ public class ConnectionServlet extends HttpServlet {
 			if (canConnect(client_ip, db)) {
 				if (email == null || Regex.isEmail(email) == false) {
 					incrementAttempts(client_ip, db);
-					SI.setResponse(ServletItem.Code.BadParameters, "Incorrect email.");
+					SI.setResponse(ServletItem.Code.BadParameters, "Wrong email.");
 				} else if (password == null || Regex.isPassword(password) == false) {
 					incrementAttempts(client_ip, db);
-					SI.setResponse(ServletItem.Code.BadParameters, "Incorrect password");
+					SI.setResponse(ServletItem.Code.BadParameters, "Wrong password");
 				} else {
 					
 
@@ -111,7 +111,7 @@ public class ConnectionServlet extends HttpServlet {
 					}
 				}
 			} else {
-				SI.setResponse(199, "Too much attempt");
+				SI.setResponse(199, "Too much attempts to connect. Please retry in a few minutes.");
 			}
 		} catch (SessionException e) {
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());

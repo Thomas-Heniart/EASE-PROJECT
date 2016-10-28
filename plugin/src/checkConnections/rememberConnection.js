@@ -29,13 +29,13 @@ extension.tabs.onNavigation(function(url){
     //}
 });
 
-function rememberConnection(username, password, website){
+function rememberConnection(username, password, website, fromEase){
     extension.storage.get('lastConnections', function(res){
         if(!res) res = {};
         res[website] = {"user":username};
         console.log("-- Connection for email " + username +" on website " + website + " remembered --");
         extension.storage.set('lastConnections', res, function(){});
-        rememberEveryConnections({user:username, password:password, website:website});
+        if(!fromEase) rememberEveryConnections({user:username, password:password, website:website});
     });    
 }
 
@@ -46,7 +46,7 @@ function rememberDirectLogWithConnection(website, logWithDatas){
         console.log("-- Connection with " +logWithDatas + " on website " + website + " remembered --");
         extension.storage.set('lastConnections', res, function(){});
         logWithDatas.website = website;
-        rememberEveryConnections(logWithDatas);
+        //rememberEveryConnections(logWithDatas);
     });    
 }
 
