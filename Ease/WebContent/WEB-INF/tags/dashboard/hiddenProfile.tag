@@ -4,7 +4,7 @@
 
 <%@ attribute name="profile" type="com.Ease.session.Profile" required="true"%>
 
-<div class="hiddenProfile">
+<div class="hiddenProfile" style="display:none;">
 <div class="hiddenProfileContainer" id='${profile.getProfileId()}'>
 	<c:forEach items='${profile.getApps()}' var="app">
 		<dashboard:app app='${app}'/>

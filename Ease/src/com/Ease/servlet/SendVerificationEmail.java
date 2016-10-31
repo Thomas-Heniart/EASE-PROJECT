@@ -93,7 +93,7 @@ public class SendVerificationEmail extends HttpServlet {
 		SI.sendResponse();
 	}
 
-	public void sendEmail(String verificationCode, String newEmail, String askingEmail)
+	public static void sendEmail(String verificationCode, String newEmail, String askingEmail)
 			throws UnsupportedEncodingException, MessagingException {
 		String link = "https://ease.space/AddEmail?email=" + newEmail + "&code=" + verificationCode;
 		Properties props = new Properties();
