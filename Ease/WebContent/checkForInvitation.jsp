@@ -53,14 +53,31 @@ pageEncoding="UTF-8"%>
 %> 
 
 <body id="invitationBody">
-	<div class="logo">
+	<div class="invitation-header">
 		<img src="resources/images/Ease_Logo.png"/>
+		<div class="header-links">
+			<a href="#">Team</a>
+			<a href="#">Security</a>
+		</div>
+		<div class="header-content">
+			<h2>A simple homepage, accessible from any computer, that gets rid of your password.</h2>
+			<p>As IESEG students or staff, EASE now connects you to your web accounts in 1 click.</p>
+			<form action="letsgo" id="registreationForm">
+				<input name="email" placeholder="Enter your email" /><span><button type="submit">Get started !</button></span>
+			</form>
+		</div>
 	</div>
-	<h1>Welcome</h1>
+	<div class="invitation-content">
+		<div>
+			<img/>
+			<p>The new interface to access IESEG services. Log in to the services without passwords.</p>
+		</div>
+	</div>
+	<!-- <h1>Welcome</h1>
 	<div class="registrationBlock" id="checkInvitation">
 		<form action="letsgo" id="registrationForm" style="text-align: center;">
 			<div class="custom-info" style="margin-bottom: 20px;font-size: 17px;">
-				<p>Please enter your <%= activity %> email to receive your activation link.</p>
+				<p>Please enter your <%-- <%= activity %> --%> email to receive your activation link.</p>
 			</div>
 			<div class="custom-info confirmDiv" style="margin-bottom: 20px;margin-top:20px;font-size: 17px;display: none;">
 				<p>Thank you !</p>
@@ -94,7 +111,7 @@ pageEncoding="UTF-8"%>
 			</div>
 			<div class="successHelper centeredItem"><p>Take a look in your mail box ;)</p></div>
 		</div>
-	</div>
+	</div>  -->
 	<%@ include file="templates/ChatButton.jsp" %>
 </body>
 </html>
