@@ -97,7 +97,7 @@ public class AddEmail extends HttpServlet {
 					+ verificationCode + "');");
 			user.addEmailIfNotPresent(newEmail);
 			try {
-				sendEmail(verificationCode, newEmail);
+				SendVerificationEmail.sendEmail(verificationCode, newEmail, user.getEmail());
 				SI.setResponse(200, "Email successfully added");
 			} catch (MessagingException e) {
 				SI.setResponse(ServletItem.Code.EMailNotSended, "Email not sent");
@@ -105,33 +105,6 @@ public class AddEmail extends HttpServlet {
 			}
 		}
 		SI.sendResponse();
-	}
-
-	public void sendEmail(String verificationCode, String newEmail)
-			throws UnsupportedEncodingException, MessagingException {
-		// String link = "https://ease.space/AddEmail?email=" + newEmail +
-		// "&code=" + verificationCode;
-		String link = "http://localhost:8080/HelloWorld/AddEmail?email=" + newEmail + "&code=" + verificationCode;
-		Properties props = new Properties();
-		props.put("mail.smtp.host", "smtp.gmail.com");
-		props.put("mail.smtp.socketFactory.port", "465");
-		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.port", "465");
-		Session msession = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication("benjamin@ease-app.co", "bpease.P2211");
-			}
-		});
-		MimeMessage message = new MimeMessage(msession);
-		message.setFrom(new InternetAddress("benjamin@ease-app.co", "Ease Team"));
-		message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(newEmail));
-		message.setSubject(MimeUtility.encodeText("Validation email !", "utf-8", null));
-		message.setContent("<div style='color:black;'><p>Hello !</p>"
-				+ "<p>Pour valider ton email et recevoir les updates, clique sur le lien suivant: <a href='" + link
-				+ "'>Valider mon email</a></p>" + "<p>A bientôt sur Ease!</p>" + "<p>La team Ease</p></div>",
-				"text/html;charset=utf-8");
-		Transport.send(message);
 	}
 
 }
