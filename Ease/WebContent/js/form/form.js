@@ -156,8 +156,6 @@ var Form = {
 			self.newAppItem.find('.siteName p').text(self.oInputs[0].getVal());
 			self.newAppItem.attr('id', retMsg);
 			self.newAppItem.attr('ssoid', self.helper.attr('data-sso'));
-			setupAppSettingButtonPopup(self.newAppItem
-					.find('.showAppActionsButton'));
 			var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 			if (emailRegex.test(self.oInputs[1].getVal()) && !$(".email-suggestion[email='" + self.oInputs[1].getVal() + "']").length) {
 				$(".suggested-emails").append(
@@ -219,8 +217,6 @@ var Form = {
 		this.successCallback = function(retMsg) {
 			self.oParent.close();
 			self.oParent.targetProfile.remove();
-			if (profiles.length <= 15)
-				easeDashboard.profileAdder.css('display', '');
 //			window.location.replace("index.jsp");
 		};
 		this.errorCallback = function(retMsg) {
