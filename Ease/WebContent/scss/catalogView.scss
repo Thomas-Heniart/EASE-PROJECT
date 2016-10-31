@@ -494,18 +494,18 @@
 							.apps-integrated {
 								position: absolute;
 								display: none;
-								bottom: 0;
-								right: 0;
+								bottom: -2%;
+								left: 0;
 								color: white;
-								width: 1.1em;
-								height: 1.1em;
-								line-height: 1.1em;
+								width: 1em;
+								height: 1em;
+								line-height: 1em;
 								i.fa-circle {
-									font-size: 1.1em;
-									color: $themeRedColor;
+									font-size: 1em;
+									color: $themeColor;
 								}
 								i.count {
-									font-size: 0.55em;
+									font-size: 0.5em;
 									color: white;
 									text-align: center;
 									display: inline-block;
