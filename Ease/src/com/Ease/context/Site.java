@@ -32,7 +32,7 @@ public class Site {
 			name = rs.getString(SiteData.NAME.ordinal());
 			url = rs.getString(SiteData.URL.ordinal());
 			homePageUrl = rs.getString(SiteData.HOMEPAGE.ordinal());
-			folder = rs.getString(SiteData.FOLDER.ordinal());
+			folder = rs.getString(SiteData.FOLDER.ordinal());;
 			haveLoginButton = (rs.getString(SiteData.HAVELOGINBUTTON.ordinal()).equals("1")) ? true : false;
 			String tmp = rs.getString(SiteData.HAVELOGINWITH.ordinal());
 			haveLoginWith = (tmp != null) ? tmp.split(",") : "".split(",");

@@ -3,6 +3,8 @@ var constructorPopup = function (rootEl) {
 	this.qRoot = rootEl;
 	this.oForm;
 	this.qCloseButton;
+	this.qCloseButtons;
+	self.qCloseButtons = [];
 	this.qRoot.find('form').each(function (index, elem) {
 		var oClass = $(elem).attr('oClass');
 		if (oClass != null) {
@@ -12,8 +14,14 @@ var constructorPopup = function (rootEl) {
 	this.qRoot.find('button').each(function (index, elem) {
 		var oClass = $(elem).attr('oClass');
 		if (oClass == "CloseButton") {
-			self.qCloseButton = $(elem, self);
+			var tmpButton = $(elem, self);
+			self.qCloseButtons.push(tmpButton);
 		}
+	});
+	self.qCloseButtons.forEach(function(element) {
+		element.click(function() {
+			self.close();
+		})
 	});
 	this.open = function () {
 		self.oForm.reset();
@@ -24,9 +32,6 @@ var constructorPopup = function (rootEl) {
 		self.oForm.reset();
 		self.qRoot.removeClass('md-show');
 	};
-	this.qCloseButton.click(function () {
-		self.close();
-	});
 	this.setVal = function () {
 		
 	};
@@ -104,16 +109,5 @@ var Popup = {
 	PopupDeleteAccount : function() {
 		constructorPopup.apply(this, arguments);
 		var self = this;
-		this.setForm = function(jForm) {
-			var oClass = jForm.attr('oClass');
-			if (oClass != null) {
-				self.oForm = new Form[oClass]($(elem), self);
-			}
-		}
-		self.qRoot.find("button[type='submit']").click(function(e) {
-			e.preventDefault();
-			self.close();
-			self.oForm.submit(e);
-		})
 	}
 }

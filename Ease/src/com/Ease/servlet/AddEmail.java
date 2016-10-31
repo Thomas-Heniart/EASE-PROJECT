@@ -55,7 +55,7 @@ public class AddEmail extends HttpServlet {
 			SI.sendResponse();
 		}
 		if (user == null) {
-			SI.setResponse(ServletItem.Code.NotConnected, "Not connected");
+			SI.setResponse(ServletItem.Code.NotConnected, "You are not connected");
 			SI.sendResponse();
 		}
 		String verificationCode = SI.getServletParam("code");

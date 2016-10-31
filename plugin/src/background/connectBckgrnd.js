@@ -31,7 +31,7 @@ function rememberWebsite(website){
     if(website.lastLogin.logWith){
         rememberDirectLogWithConnection(getHost(website.loginUrl), website.lastLogin);
     } else {
-        rememberConnection(website.lastLogin.user, website.lastLogin.password, getHost(website.loginUrl));
+        rememberConnection(website.lastLogin.user, website.lastLogin.password, getHost(website.loginUrl), true);
     }  
 }
 

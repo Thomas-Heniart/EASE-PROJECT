@@ -65,9 +65,9 @@ public class AddProfile extends HttpServlet {
 		} else if (db.connect() != 0){
 			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 		} else if (name == null || name == ""){
-			SI.setResponse(ServletItem.Code.BadParameters, "Bad profile's name.");
+			SI.setResponse(ServletItem.Code.BadParameters, "Empty profile name.");
 		} else if (color == null || Regex.isColor(color) == false){
-			SI.setResponse(ServletItem.Code.BadParameters, "Bad profile's color.");
+			SI.setResponse(ServletItem.Code.BadParameters, "Incorrect profile color.");
 		} else {
 			try {
 				transaction = db.start();
