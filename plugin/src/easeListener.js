@@ -42,6 +42,7 @@ extension.runtime.onMessage("logoutDone", function logoutHandler(message, sendRe
 });
 
 document.addEventListener("NewConnection", function(event){
+    if(event.detail.highlight == undefined) event.detail.highlight = true;
     extension.runtime.sendMessage("NewConnection", {"highlight":event.detail.highlight, "detail":event.detail}, function(response) {});
 }, false);
 

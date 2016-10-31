@@ -29,5 +29,5 @@ pageEncoding="UTF-8"%>
 	</div>
 </div>
 <%@ include file="ObjectHelpers.jsp"%>
-<p class="shortcutInfo" style="text-shadow: 0 0 30px black, 0 0 30px black, 0 0 30px black, 0 0 30px black; color: white; font-size:12px; font-weight:500; position: absolute; bottom: 1.5%; left:2%; display:none;">Hold ctrl and click to open multiple apps.</p>
 </div>
+<p class="shortcutInfo" style="text-shadow: 0 0 30px black, 0 0 30px black, 0 0 30px black, 0 0 30px black; color: white; font-size:12px; font-weight:500; position: fixed; bottom: 1.5%; left:2%; display:none;">Hold ctrl and click to open multiple apps.</p>

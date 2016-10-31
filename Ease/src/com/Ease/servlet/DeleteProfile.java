@@ -72,11 +72,11 @@ public class DeleteProfile extends HttpServlet {
 			} else if (db.connect() != 0){
 				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 			} else if ((profile = user.getProfile(index)) == null){
-				SI.setResponse(ServletItem.Code.BadParameters, "Bad profileId.");
-			} else if (mdp == null || !Hashing.SHA(mdp, user.getSaltEase()).equals(user.getHashedPassword())) {
-				SI.setResponse(ServletItem.Code.BadParameters, "Bad password.");
+				SI.setResponse(ServletItem.Code.BadParameters, "Incorrect profileId.");
 			} else if (profile.getId() == user.getProfilesDashboard().get(0).get(0).getId()) {
-				SI.setResponse(ServletItem.Code.LogicError, "Trying to remove side profile.");	
+				SI.setResponse(ServletItem.Code.LogicError, "Trying to remove side profile.");
+			} else if ((mdp == null && profile.getApps().size() != 0) || !Hashing.SHA(mdp, user.getSaltEase()).equals(user.getHashedPassword())) {
+				SI.setResponse(ServletItem.Code.BadParameters, "Incorrect password.");
 			} else {
 				if (profile.havePerm(Profile.ProfilePerm.DELETE, session.getServletContext())){
 					transaction = db.start();
@@ -97,7 +97,7 @@ public class DeleteProfile extends HttpServlet {
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		} catch (NumberFormatException e) {
 			db.cancel(transaction);
-			SI.setResponse(ServletItem.Code.BadParameters, "Bad numbers.");
+			SI.setResponse(ServletItem.Code.BadParameters, "Numbers exception.");
 		}
 		SI.sendResponse();
 	}
