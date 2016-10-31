@@ -197,8 +197,20 @@ var Profile = function(rootEl){
 	setupSortableContainer(this.appContainer);
 	//settings
 	//delete profile
-	this.qRoot.find('#deleteProfileForm #validate').click(function() {			
-		deleteProfilePopup.open(self);
+	this.qRoot.find('#deleteProfileForm #validate').click(function() {
+		if (self.appContainer.find('.siteLinkBox').length > 0)
+			deleteProfilePopup.open(self);
+		else {
+			postHandler.post('deleteProfile', {
+				index : self.id
+			}, function() {
+				easeLoadingIndicator.hide();
+			}, function(retMsg) {
+				self.remove();
+				easeDashboard.reinitColumns();
+			}, function(retMsg) {
+			}, 'text');			
+		}
 	});
 	//edit name
 	this.qRoot.find('#modifyNameForm #validate').click(function(){
@@ -211,7 +223,7 @@ var Profile = function(rootEl){
 			easeLoadingIndicator.hide();
 		}, function(retMsg) {
 			self.profileHeader.find('p').text('@' + name);
-			$(this).parent().find('input').val('');
+			self.qRoot.find('#modifyNameForm input').val('');
 		}, function(retMsg) {
 		}, 'text');
 	});
@@ -229,8 +241,8 @@ var Profile = function(rootEl){
 		}, function(retMsg) {
 			self.profileHeader.css('background-color', color);
 			self.profileHeader.attr('color', color);
-			}, function(retMsg) {
-			}, 'text');
+		}, function(retMsg) {
+		}, 'text');
 	});
 //	setupProfileSettings(self.qRoot);
 };
