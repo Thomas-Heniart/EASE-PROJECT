@@ -61,36 +61,32 @@ public class SendVerificationEmail extends HttpServlet {
 		User user = (User) (session.getAttribute("User"));
 		ServletItem SI = new ServletItem(ServletItem.Type.SendVerificationEmail, request, response, user);
 		DataBase db = (DataBase) session.getServletContext().getAttribute("DataBase");
+		
+		String email = SI.getServletParam("email");
+		
 		if (user == null) {
 			SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
-			SI.sendResponse();
-		}
-		if (db.connect() != 0) {
-			SI.setResponse(ServletItem.Code.DatabaseNotConnected,
-					"There is a problem with our Database, please retry in few minutes.");
-			SI.sendResponse();
-		}
-		String email = SI.getServletParam("email");
-		if (email != null && !email.isEmpty()) {
+		} else if (db.connect() != 0) {
+			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
+		} else if (email == null || email.isEmpty()) {
+			SI.setResponse(ServletItem.Code.BadParameters, "Bad email");
+		} else {
 			String verificationCode = null;
-			ResultSet rs = db.get("SELECT verificationCode FROM usersEmails WHERE email = '" + email
-					+ "' AND user_id = " + user.getId() + ";");
+			ResultSet rs = db.get("SELECT verificationCode FROM usersEmails WHERE email = '" + email + "' AND user_id = " + user.getId() + ";");
 			try {
 				if (rs.next()) {
 					verificationCode = rs.getString(1);
-					if (verificationCode == null || verificationCode.equals("")) {
-						verificationCode = "";
-						String alphabet = "azertyuiopqsdfghjklwxcvbnm1234567890AZERTYUIOPQSDFGHJKLMWXCVBN";
-						Random r = new Random();
-						for (int i = 0; i < 126; ++i)
-							verificationCode += alphabet.charAt(r.nextInt(alphabet.length()));
-						db.set("UPDATE usersEmails SET verificationCode = '" + verificationCode + "' WHERE user_id = "
-								+ user.getId() + " AND email = '" + email + "';");
-					}
+				} else {
+					String alphabet = "azertyuiopqsdfghjklwxcvbnm1234567890AZERTYUIOPQSDFGHJKLMWXCVBN";
+					Random r = new Random();
+					for (int i = 0; i < 126; ++i)
+						verificationCode += alphabet.charAt(r.nextInt(alphabet.length()));
+					db.set("UPDATE usersEmails SET verificationCode = '" + verificationCode + "' WHERE user_id = " + user.getId() + " AND email = '" + email + "';");
 				}
 				sendEmail(verificationCode, email, user.getEmail());
 			} catch (SQLException | MessagingException e) {
 				e.printStackTrace();
+				SI.setResponse(ServletItem.Code.LogicError, "Error");
 			}
 			SI.setResponse(200, "Email sent");
 		}
