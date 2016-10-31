@@ -911,3 +911,35 @@
 			}
 		}
 	}
+
+
+.arrowDragDrop{
+    top: 0px;
+    display: none;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width:150px;
+	overflow: hidden;
+	max-width: 150px;
+	position: fixed;
+	z-index: 500;
+    opacity: 0;
+    -webkit-transition: opacity 0.5s;
+     -moz-transition: opacity 0.5s;
+    transition: opacity 0.5s;
+	.popupContent {
+		display: inline-block;
+		float: left;
+		width: 95%;
+		background-color: rgba($themeColor, 0.85);
+		color: white;
+		padding: 3px;
+		border-radius: 5px;
+		border: 1px hidden;
+		text-align: center;
+		p {
+            text-shadow: white 0px 0px 20px, white 0px 0px 20px, white 0px 0px 20px;
+			margin: 0px;
+		}
+    }
+}

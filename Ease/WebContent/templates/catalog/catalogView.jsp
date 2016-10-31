@@ -8,7 +8,12 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib tagdir="/WEB-INF/tags/catalog" prefix="catalog" %>
-
+<div class="arrowDragDrop">
+	<img src="resources/other/arrow2.png" style="width:100%"/>
+	<div class="popupContent" style="background-color: transparent; color: #373b60;width:100%;">
+		<p>Drag and drop</br>to add the app !</p>
+	</div>
+</div>
 <div class="CatalogViewTab">
 <div class="catalogView">
 	<div id="catalog-quit"> 
@@ -18,7 +23,7 @@
 	
 	<div class="catalogSearchbar">
 		<div class="catalogHeader title" >
-			<i class="fa fa-home" aria-hidden="true"></i><p> Find your website </p>
+			<i class="fa fa-home" aria-hidden="true"></i><p> Find your websites </p>
 		</div>
 		<i class="fa fa-search" aria-hidden="true"></i>
 		<div class="selectedTagsContainer"></div>
