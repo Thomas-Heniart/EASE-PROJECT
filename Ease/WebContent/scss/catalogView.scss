@@ -461,9 +461,6 @@
 								.siteUrl {
 									display: inline;
 								}
-								.apps-integrated {
-									display: none !important;
-								}
 							}
 							img {
 								width: 100%;
@@ -507,6 +504,7 @@
 								i.count {
 									font-size: 0.5em;
 									color: white;
+									font-style: normal;
 									text-align: center;
 									display: inline-block;
 							    position: absolute;
