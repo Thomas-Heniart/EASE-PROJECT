@@ -54,15 +54,12 @@ public class AddEmail extends HttpServlet {
 			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "Database not connected");
 			SI.sendResponse();
 		}
-		if (user == null) {
-			SI.setResponse(ServletItem.Code.NotConnected, "You are not connected");
-			SI.sendResponse();
-		}
 		String verificationCode = SI.getServletParam("code");
 		String email = SI.getServletParam("email");
-		db.set("UPDATE usersEmails SET verified = 1 WHERE user_id = " + user.getId() + " AND email = '" + email
-				+ "' AND verificationCode = '" + verificationCode + "';");
-		user.validateEmail(email);
+		db.set("UPDATE usersEmails SET verified = 1 WHERE email = '" + email + "' AND verificationCode = '" + verificationCode + "';");
+		if (user != null) {
+			user.validateEmail(email);
+		}
 		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
 		rd.forward(request, response);
 	}
