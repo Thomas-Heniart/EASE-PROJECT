@@ -278,7 +278,6 @@ var Catalog = function(rootEl){
 	this.haveThisUrl = function (url) {
 		var apps = [];
 		for (var cpt = 0; cpt < self.apps.length; ++cpt){
-			console.log("catalog: " + self.apps[cpt].url + " update: " + url + "  " + self.apps[cpt].url.indexOf(url));
 			if (self.apps[cpt].url.indexOf(url) > -1)
 				apps.push(self.apps[cpt]);
 		}

@@ -64,6 +64,8 @@ public class AddProfile extends HttpServlet {
 			SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
 		} else if (db.connect() != 0){
 			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
+		} else if (user.getProfiles().size() > 16){
+			SI.setResponse(ServletItem.Code.LogicError, "Too many profiles.");
 		} else if (name == null || name == ""){
 			SI.setResponse(ServletItem.Code.BadParameters, "Bad profile's name.");
 		} else if (color == null || Regex.isColor(color) == false){

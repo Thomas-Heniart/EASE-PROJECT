@@ -1,7 +1,8 @@
 
-var constructorErrorMsg = function (rootEl) {
+var constructorErrorMsg = function (rootEl, parent) {
 	var self = this;
 	this.qRoot = rootEl;
+	this.oParent = parent;
 	this.qMsg = this.qRoot.find("p");
 	this.display = function (msg) {
 		self.qMsg.addClass("show");

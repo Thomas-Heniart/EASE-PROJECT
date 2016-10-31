@@ -393,5 +393,9 @@ var Form = {
 		this.beforeSubmit = function() {
 			$("#DeleteAccountWait").addClass("md-show");
 		}
+	},
+	AddUpdateForm : function(rootEl) {
+		constructorForm.apply(this, arguments);
+		var self = this;
 	}
 }
