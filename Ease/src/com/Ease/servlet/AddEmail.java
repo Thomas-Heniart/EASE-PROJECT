@@ -60,6 +60,10 @@ public class AddEmail extends HttpServlet {
 		}
 		String verificationCode = SI.getServletParam("code");
 		String email = SI.getServletParam("email");
+		if (verificationCode == null) {
+			RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+			rd.forward(request, response);
+		}
 		db.set("UPDATE usersEmails SET verified = 1 WHERE user_id = " + user.getId() + " AND email = '" + email
 				+ "' AND verificationCode = '" + verificationCode + "';");
 		user.validateEmail(email);
