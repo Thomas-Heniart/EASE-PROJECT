@@ -240,7 +240,7 @@ var Profile = function(rootEl){
 			easeLoadingIndicator.hide();
 		}, function(retMsg) {
 			self.profileHeader.css('background-color', color);
-			self.profileHeader.attr('color', color);
+			self.qRoot.attr('color', color);
 		}, function(retMsg) {
 		}, 'text');
 	});

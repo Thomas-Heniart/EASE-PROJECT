@@ -69,6 +69,7 @@ var Dashboard = function(rootEl){
 			animation: 300,
 			group:"profiles",
 			handle: ".ProfileName",
+			filter: ".ProfileSettingsButton",
 			forceFallback: true,
 			onStart: function(evt){
 				var item = $(evt.item);
