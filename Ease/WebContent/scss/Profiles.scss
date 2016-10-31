@@ -16,12 +16,12 @@
 	.ProfileName {
 		text-align: left;
 		background-color: #FFD00C;
-		padding: 2px;
-		padding-left: 5px;
+		padding: 0px 0px 0px 5px;
+//		padding-left: 5px;
 		border-radius: 5px 5px 0px 0px;
 		position: relative;
 		p {
-			transition: font-size .3s;
+			transition: font-size .3s, line-height .3s;
 			text-transform: uppercase;
 			font-weight: 600;
 			letter-spacing: 1px;
@@ -48,11 +48,11 @@
 			vertical-align: middle;
 			color: white;
 			right: 0;
-			margin-top: 3px;
 			cursor: pointer;
 			transition: transform 0.3s;
 			i {
-				transition: transform 0.3s, font-size .3s;
+				transition: transform 0.3s, font-size .3s, line-height .3s;
+				line-height: 25px;
 				&:hover {
 					transition: transform 0.3s;
 					transform: rotateZ(-90deg);
@@ -306,10 +306,12 @@
 				.ProfileName {
 					p {
 						font-size: 0.8em;
+						line-height: 20px;
 					}
 					.ProfileSettingsButton {
 						i {
 							font-size: 0.8em;
+							line-height: 20px;
 						}
 					}
 				}

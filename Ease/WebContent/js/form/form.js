@@ -217,7 +217,11 @@ var Form = {
 			$('#loading').removeClass("la-animate");
 		}
 		this.successCallback = function(retMsg) {
-			window.location.replace("index.jsp");
+			self.oParent.close();
+			self.oParent.targetProfile.remove();
+			if (profiles.length <= 15)
+				easeDashboard.profileAdder.css('display', '');
+//			window.location.replace("index.jsp");
 		};
 		this.errorCallback = function(retMsg) {
 			$(parent).find('.alertDiv').addClass('show');

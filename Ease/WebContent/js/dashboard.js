@@ -10,6 +10,9 @@ var Dashboard = function(rootEl){
 	this.leaveEditMode = function(){
 		self.rootEl.removeClass('editMode');
 	}
+	if ($('.ProfilesHandler .item').length >= 15){
+		this.profileAdder.css('display', 'none');
+	}
 	//profileAdder click event
 	this.profileAdder.on('click', function(){
 		var profile = $($('#profileHelper').html());
@@ -32,6 +35,9 @@ var Dashboard = function(rootEl){
 		setTimeout(function(){
 			$(profile).removeClass('scaleOut12');
 		}, 500);
+		if ((profiles.length + 1) >= 15){
+			$(this).css('display', 'none');
+		}
 		postHandler.post(
 			'addProfile', 
 			{

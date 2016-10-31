@@ -29,6 +29,7 @@ var constructorPopup = function (rootEl) {
 		self.qRoot.addClass('md-show');
 	};
 	this.close = function () {
+		self.oForm.reset();
 		self.qRoot.removeClass('md-show');
 	};
 	this.setVal = function () {
@@ -40,8 +41,11 @@ var Popup = {
 	DeleteProfilePopup : function () {
 		constructorPopup.apply(this,arguments);
 		var self = this;
+		self.targetProfile;
+
 		this.setVal = function (arg) {
-			self.oForm.oInputs[0].val(arg[0]);
+			self.oForm.oInputs[0].val(arg[0].id);
+			self.targetProfile = arg[0];
 		}
 	},
 	AddAppPopup : function () {
