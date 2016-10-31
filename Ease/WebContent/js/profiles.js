@@ -1,14 +1,3 @@
-var profiles = [];
-
-$(document).ready(function(){
-	$('.ProfileBox').each(function(){
-		var profile = new Profile($(this));
-		profiles.push(profile);
-	});
-	
-	$("#enterEditMode").click(enterEditMode);
-
-});
 
 var ease;
 var easeRoot = function(rootEl){
@@ -96,13 +85,25 @@ function enterEditMode() {
 	enterEditModeTutorial();
 }
 
-function leaveEditMode() {
+	function leaveEditMode() {
 	easeDashboard.leaveEditMode();
 	catalog.close();
 	$('.scaleOutAnimation').removeClass('scaleOutAnimation');
 	$('.MenuButtonSet').removeClass('editMode');
 	leaveEditModeTutorial();
 }
+
+var profiles = [];
+
+$(document).ready(function(){
+	$('.ProfileBox').each(function(){
+		var profile = new Profile($(this));
+		profiles.push(profile);
+	});
+	
+	$("#enterEditMode").click(enterEditMode);
+
+});
 
 var Profile = function(rootEl){
 	var self = this;
@@ -112,6 +113,7 @@ var Profile = function(rootEl){
 	this.ControlPanel = this.qRoot.find('.ProfileControlPanel');
 	this.appContainer = this.qRoot.find('.SitesContainer');
 	this.isSettingsOpen = false;
+	this.id = this.parentItem.attr('id');
 
 	this.ControlPanel.find(".profileSettingsTab").accordion({
 		active : 10,
@@ -119,6 +121,18 @@ var Profile = function(rootEl){
 		autoHeight : false,
 		heightStyle : "content"
 	});
+	this.remove = function(){
+		profiles.splice(profiles.indexOf(self), 1);
+		self.parentItem.animate({
+			height: '0',
+			'margin-bottom': '0'
+		}, 300);
+		setTimeout(function(){
+			self.parentItem.remove();
+		}, 300);
+		if (profiles.length <= 15)
+			easeDashboard.profileAdder.css('display', '');
+	}
 	this.showSettings = function(){
 		self.SettingsButton.addClass('fa-rotate-90');
 		self.SettingsButton.addClass('settings-show');
@@ -173,6 +187,9 @@ var Profile = function(rootEl){
 			$(this).css('border', '');
 		}
 	});
+	this.qRoot.find('#deleteProfileForm .buttonSet #validate').click(function() {			
+			deleteProfilePopup.open(self);
+		});
 	setupProfileSettings(self.qRoot);
 };
 
@@ -314,11 +331,6 @@ function setupProfileSettings(profile) {
 					}, function(retMsg) {
 						showAlertPopup(retMsg, true);
 					}, 'text');
-		});
-	$(profile).find('#deleteProfileForm .buttonSet #validate').click(
-		function() {			
-			deleteProfilePopup.open($(this).closest(".item").attr('id'));
-			
 		});
 }
 
