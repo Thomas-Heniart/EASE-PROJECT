@@ -38,14 +38,10 @@ function rememberWebsite(website){
 function endConnection(currentWindow, tab, msg, sendResponse){
     extension.tabs.sendMessage(tab, "rmOverlay", msg, function(response){
         if(msg.result == "Fail"){
-            server.post("Could not end process for website "+ msg.detail[0].website.name);
+            //server.post("Could not end process for website "+ msg.detail[0].website.name);
         }
     });
 }
-
-chrome.windows.onCreated.addListener(function(){
-    console.log("oooooo");
-});
 
 extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, sendResponse) {
     msg.todo = "checkAlreadyLogged";

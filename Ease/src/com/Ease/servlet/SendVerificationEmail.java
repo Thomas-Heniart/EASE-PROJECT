@@ -74,9 +74,9 @@ public class SendVerificationEmail extends HttpServlet {
 			String verificationCode = null;
 			ResultSet rs = db.get("SELECT verificationCode FROM usersEmails WHERE email = '" + email + "' AND user_id = " + user.getId() + ";");
 			try {
-				if (rs.next())
+				if (rs.next()) {
 					verificationCode = rs.getString(1);
-				else {
+				} else {
 					String alphabet = "azertyuiopqsdfghjklwxcvbnm1234567890AZERTYUIOPQSDFGHJKLMWXCVBN";
 					Random r = new Random();
 					for (int i = 0; i < 126; ++i)

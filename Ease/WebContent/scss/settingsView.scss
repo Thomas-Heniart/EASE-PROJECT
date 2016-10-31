@@ -113,11 +113,26 @@
 			}
 			#ModifyNameForm {
 				p.errorMessage {
+					margin-left: 10px;
+					margin-top: 5px;
 					display: none;
 					color: $themeRedColor;
 				}
 				p.errorMessage.show {
 					display: block;
+				}
+			}
+			#ModifyPasswordForm {
+				p.response {
+					display: none;
+				}
+				p.success {
+					display: block;
+					color: green;
+				}
+				p.error {
+					display: block;
+					color: $themeRedColor;
 				}
 			}
 			#DeleteEmailPopup {

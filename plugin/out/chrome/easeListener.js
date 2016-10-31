@@ -42,11 +42,11 @@ extension.runtime.onMessage("logoutDone", function logoutHandler(message, sendRe
 });
 
 document.addEventListener("NewConnection", function(event){
+    if(event.detail.highlight == undefined) event.detail.highlight = true;
     extension.runtime.sendMessage("NewConnection", {"highlight":event.detail.highlight, "detail":event.detail}, function(response) {});
 }, false);
 
 document.addEventListener("NewLinkToOpen", function(event){
-    console.log(event);
     extension.runtime.sendMessage("NewLinkToOpen", event.detail, function(response) {});
 }, false);
 
@@ -56,7 +56,7 @@ document.addEventListener("GetUpdates", function(event){
     extension.storage.get("allConnections", function(res){
         if(res==undefined || !res.validator) res = {validator:"ok"};
         var toDelete = [];
-        for(var email in event.detail){
+	event.detail.forEach(function (email) {
             if(res[email]){
                 for(var website in res[email]){
                     if(res[email][website].logWith) var toSend = {user:email, website:website, logWith:res[email][website].logWith};
@@ -65,7 +65,7 @@ document.addEventListener("GetUpdates", function(event){
                     updatesToSend.push(toSend);
                 }
             }
-        }
+        });
         extension.storage.set("allConnections", res, function(){});
         document.dispatchEvent(new CustomEvent("NewUpdates", {"detail":updatesToSend}));
     });
@@ -76,5 +76,5 @@ document.addEventListener("RemoveUpdate", function remover(event){
         if(res[event.detail.user][event.detail.website]){
             delete res[event.detail.user][event.detail.website];
         }
-    }            
+    }
 });

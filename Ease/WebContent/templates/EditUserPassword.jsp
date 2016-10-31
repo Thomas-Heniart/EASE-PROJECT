@@ -9,6 +9,7 @@
 	<input oClass="PasswordInput" type="password" name="password" placeholder="New password" />
 	<input oClass="PasswordInput" type="password" name="confirmPassword" placeholder="Confirm new password" />
 	<button type="submit">Go</button>
+	<p class="response"></p>
 </form>
 
 <script>
