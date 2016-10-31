@@ -76,15 +76,17 @@ public class SendVerificationEmail extends HttpServlet {
 			ResultSet rs = db.get("SELECT verificationCode FROM usersEmails WHERE email = '" + email
 					+ "' AND user_id = " + user.getId() + ";");
 			try {
-				if (rs.next())
+				if (rs.next()) {
 					verificationCode = rs.getString(1);
-				else {
-					String alphabet = "azertyuiopqsdfghjklwxcvbnm1234567890AZERTYUIOPQSDFGHJKLMWXCVBN";
-					Random r = new Random();
-					for (int i = 0; i < 126; ++i)
-						verificationCode += alphabet.charAt(r.nextInt(alphabet.length()));
-					db.set("UPDATE usersEmails SET verificationCode = '" + verificationCode + "' WHERE user_id = "
-							+ user.getId() + " AND email = '" + email + "';");
+					if (verificationCode == null || verificationCode.equals("")) {
+						verificationCode = "";
+						String alphabet = "azertyuiopqsdfghjklwxcvbnm1234567890AZERTYUIOPQSDFGHJKLMWXCVBN";
+						Random r = new Random();
+						for (int i = 0; i < 126; ++i)
+							verificationCode += alphabet.charAt(r.nextInt(alphabet.length()));
+						db.set("UPDATE usersEmails SET verificationCode = '" + verificationCode + "' WHERE user_id = "
+								+ user.getId() + " AND email = '" + email + "';");
+					}
 				}
 				sendEmail(verificationCode, email);
 			} catch (SQLException | MessagingException e) {
