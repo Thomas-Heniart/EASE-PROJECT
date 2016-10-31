@@ -18,7 +18,7 @@
 	
 	<div class="catalogSearchbar">
 		<div class="catalogHeader title" >
-			<i class="fa fa-home" aria-hidden="true"></i><p> Find your website </p>
+			<i class="fa fa-home" aria-hidden="true"></i><p> Find your websites </p>
 		</div>
 		<i class="fa fa-search" aria-hidden="true"></i>
 		<div class="selectedTagsContainer"></div>
