@@ -19,8 +19,7 @@
     		{"action":"click", "search":".header__signin-button[data-ember-action='877']"},
             {"action":"waitfor", "time":100, "search":".signin__button"},
             {"action":"wait", "timeout":200},
-            {"action":"click", "search":".social-signin-facebook"},
-            {"action":"click", "search":".social-signin-facebook"}
+            {"action":"checkIfPopup"}
     	]
     },
     "logout":{

@@ -165,6 +165,18 @@ fill:function(msg, callback, sendResponse){
 		callback(msg, sendResponse);
 	}
 },
+checkIfPopup:function(msg, callback, sendResponse){
+    /*var popupButton = document.createElement("button");
+    popupButton.id = "testtest23";
+     document.body.appendChild(popupButton);
+    $("#testtest23").click(function(){window.open('http://www.zebest3000.com','lenomdusite','width=300, height=250'); return false;});
+   
+    $("#testtest23").click();*/
+    
+    
+    msg.actionStep++;
+    callback(msg, sendResponse);
+},
 click:function(msg, callback, sendResponse){
 	var actionStep = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep];
 	var button = $(actionStep.search);

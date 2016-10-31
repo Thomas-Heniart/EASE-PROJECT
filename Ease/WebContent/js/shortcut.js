@@ -7,8 +7,9 @@ $(document).ready(function(){
 	if(isMac) {
 		if(getUserNavigator() == "Firefox") ctrlCode = 224;
 		else if(getUserNavigator() == "Chrome" || getUserNavigator() == "Safari") ctrlCode = 91;
+		$(".shortcutInfo").text("Hold cmd and click to open multiple apps.");
 	}
-	$(".shortcutInfo").text();
+	
 	$("body").keydown(function(e){
 		if(e.which == ctrlCode) {
 			$(".shortcutInfo").show();
