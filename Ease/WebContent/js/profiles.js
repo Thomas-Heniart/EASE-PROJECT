@@ -157,7 +157,7 @@ var Profile = function(rootEl){
 	});
 	//catalog droppable
 	self.appContainer.droppable({
-		accept: ".catalogApp",
+		accept: ".catalogApp,.updateBox",
 		drop: function(event, ui){
 			event.preventDefault();
 			event.stopPropagation();
@@ -167,7 +167,11 @@ var Profile = function(rootEl){
 			setTimeout(function(){
 				self.parentItem.css('transform', '');
 			}, 300);
-			showAddAppPopup($(this), $(ui.helper));
+			if (ui.helper.attr('type') == "update") {
+				popupAddUpdate.open(self, $(ui.helper));
+			} else if (ui.helper.attr('type') == "catalog") {
+				showAddAppPopup($(this), $(ui.helper));	
+			}
 			easeHiddenProfile.rootEl.off('mouseenter');
 		},
 		over: function(event, ui){
@@ -463,6 +467,7 @@ $(document).ready(function() {
 			});
 			var ret;
 			ret = $('<div class="dragHelperLogo" style="position: fixed; z-index: 3;pointer-events:none;"/>');
+			ret.attr("type", "catalog");
 			ret.attr("connect", $(this).attr("connect"));
 			ret.attr("data-login", $(this).attr("data-login"));
 			ret.attr("data-sso", $(this).attr("data-sso"));

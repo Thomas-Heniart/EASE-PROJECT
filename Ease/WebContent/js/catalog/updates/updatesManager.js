@@ -15,18 +15,12 @@ var UpdateManager = function (rootEl, catalog) {
 		setTimeout( function () {
 			event = new CustomEvent("GetUpdates", {"detail": self.emails});
 		    document.dispatchEvent(event);
-		    console.log(self.emails);
-		    console.log("event sended");
 		}, 500);
 	};
 	$(document).on("NewUpdates", function (e) {
-		console.log("new updates receive: ");
-		console.log(e.detail);
 		e.detail.forEach(function (elem) {
 			var catalogApp = null;
-			console.log("update: " + elem.website);
 			if ((catalogApps = self.catalog.haveThisUrl(elem.website)) != null) {
-				console.log("have this url");
 				catalogApps.forEach(function (catalogApp) {
 					var haveThisApp = false;
 					ease.apps.forEach(function (app) {
@@ -46,11 +40,34 @@ var UpdateManager = function (rootEl, catalog) {
 				});	
 			}
 		});
+		$('.updateBox').draggable({
+			cursor : 'move',
+			cursorAt : {
+				left : 25,
+				top : 25
+			},
+			appendTo: "body",
+			helper : function(e, ui) {
+				easeHiddenProfile.rootEl.on('mouseenter', function(){
+					easeHiddenProfile.show();
+				});
+				var ret;
+				ret = $('<div class="dragHelperLogo" style="position: fixed; z-index: 3;pointer-events:none;"/>');
+				ret.attr("type", "update");
+				ret.append($('<img />'));
+				ret.attr("siteId", $(this).find('.updateApp').attr('siteId'));
+				ret.attr("login", $(this).find(".updateType .updateInfo p.updateLogin").html());
+				ret.attr("cryptedPassword", $(this).attr("crypt"));
+				ret.attr("siteName", $(this).find('.updateApp').attr('siteName'));
+				ret.find('img').attr("src", $(this).find('img').attr("src"));
+				return ret;
+			}
+		});
 	});
 	
 	this.displayUpdate = function(catalogApp, elem) {
-		self.qContent.append("<div class='updateBox'>" +
-				 "	<div class='updateApp'>" +
+		self.qContent.append("<div class='updateBox' crypt='" + elem.password + "'>" +
+				 "	<div class='updateApp' siteId='" + catalogApp.id + "' siteName='" + catalogApp.name + "'>" +
 				 "		<div>" +
 				 "			<img src='' >" +
 				 "			<div class='cancel'>" + 
@@ -60,8 +77,8 @@ var UpdateManager = function (rootEl, catalog) {
 				 "	</div>" +
 				 "	<div class='updateType'>" +
 				 "		<div class='updateInfo'>" +
-				 "			<p class='title'>New " + catalogApp.name + "</p>" +
-				 "			<p>" + elem.user + " </p>" +
+				 "			<p class='title'><u>New account</u>: " + catalogApp.name + "</p>" +
+				 "			<p class='updateLogin'>" + elem.user + " </p>" +
 				 "			<p>" + ((elem.password != null) ? "********" : "elem.logWith") + " </p>" +
 				 "		</div>" +
 				 " 	</div>" +
@@ -71,7 +88,7 @@ var UpdateManager = function (rootEl, catalog) {
 		updateBox.find("img").attr("src", catalogApp.qRoot.find("img").attr("src"));
 		self.updates.push(new Update($(updateBox), self, self.updates.length));
 	};
-	this.getNewUpdates();
+	//this.getNewUpdates();
 	this.launchAnim = function (index) {
 		for (var cpt = 1; cpt < 6 && index + cpt < self.updates.length; ++cpt){
 			self.updates[index + cpt].animate();

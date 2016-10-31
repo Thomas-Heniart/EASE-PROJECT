@@ -1,13 +1,14 @@
 extension.runtime.bckgrndOnMessage("Logout", function (msg, easeTab, sendResponse) {
-
-    extension.storage.get("visitedWebsites", function(visitedWebsites) {        
+    console.log("-- Global logout --");
+    extension.storage.get("visitedWebsites", function(visitedWebsites) {
         extension.runtime.tempBckgrndOnMessage("Disconnected", function (msg, easeTab2, sendResponse){
             easeTab = easeTab2;
             extension.tabs.sendMessage(easeTab, "logoutFrom", visitedWebsites, function(){});
         });
         for(var i in visitedWebsites){
-            if(visitedWebsites[i].siteId == undefined || visitedWebsites[i].siteSrc == undefined) visitedWebsites[i].siteId = "-1";
-            logOutFrom(visitedWebsites[i], easeTab);
+            var website = visitedWebsites[i];
+            if(website.siteId == undefined || website.siteSrc == undefined) website.siteId = "-1";
+            logOutFrom(website, easeTab);
         }
         extension.storage.set("visitedWebsites", []);
                                             

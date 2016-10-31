@@ -10,6 +10,9 @@
 	webId="${app.getSite().getId()}"
 	name="${app.getName()}"
 	move="${app.havePerm('MOVE', servletContext)}"
+	logWith="${app.getDataLogin()}"
+	ssoId="${app.getSite().getSso()}"
+	
 	id="${app.getAppId()}">
 	<div class="linkImage" onclick="sendEvent(this)">
 		<div class="emptyAppIndicator" onclick="showModifyAppPopup(this, event)">

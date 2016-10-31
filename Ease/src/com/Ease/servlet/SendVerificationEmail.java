@@ -61,45 +61,41 @@ public class SendVerificationEmail extends HttpServlet {
 		User user = (User) (session.getAttribute("User"));
 		ServletItem SI = new ServletItem(ServletItem.Type.SendVerificationEmail, request, response, user);
 		DataBase db = (DataBase) session.getServletContext().getAttribute("DataBase");
+		
+		String email = SI.getServletParam("email");
+		
 		if (user == null) {
 			SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
-			SI.sendResponse();
-		}
-		if (db.connect() != 0) {
-			SI.setResponse(ServletItem.Code.DatabaseNotConnected,
-					"There is a problem with our Database, please retry in few minutes.");
-			SI.sendResponse();
-		}
-		String email = SI.getServletParam("email");
-		if (email != null && !email.isEmpty()) {
+		} else if (db.connect() != 0) {
+			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
+		} else if (email == null || email.isEmpty()) {
+			SI.setResponse(ServletItem.Code.BadParameters, "Bad email");
+		} else {
 			String verificationCode = null;
-			ResultSet rs = db.get("SELECT verificationCode FROM usersEmails WHERE email = '" + email
-					+ "' AND user_id = " + user.getId() + ";");
+			ResultSet rs = db.get("SELECT verificationCode FROM usersEmails WHERE email = '" + email + "' AND user_id = " + user.getId() + ";");
 			try {
-				if (rs.next())
+				if (rs.next()) {
 					verificationCode = rs.getString(1);
-				else {
+				} else {
 					String alphabet = "azertyuiopqsdfghjklwxcvbnm1234567890AZERTYUIOPQSDFGHJKLMWXCVBN";
 					Random r = new Random();
 					for (int i = 0; i < 126; ++i)
 						verificationCode += alphabet.charAt(r.nextInt(alphabet.length()));
-					db.set("UPDATE usersEmails SET verificationCode = '" + verificationCode + "' WHERE user_id = "
-							+ user.getId() + " AND email = '" + email + "';");
+					db.set("UPDATE usersEmails SET verificationCode = '" + verificationCode + "' WHERE user_id = " + user.getId() + " AND email = '" + email + "';");
 				}
-				sendEmail(verificationCode, email);
+				sendEmail(verificationCode, email, user.getEmail());
 			} catch (SQLException | MessagingException e) {
 				e.printStackTrace();
+				SI.setResponse(ServletItem.Code.LogicError, "Error");
 			}
 			SI.setResponse(200, "Email sent");
 		}
 		SI.sendResponse();
 	}
 
-	public void sendEmail(String verificationCode, String newEmail)
+	public static void sendEmail(String verificationCode, String newEmail, String askingEmail)
 			throws UnsupportedEncodingException, MessagingException {
-		// String link = "https://ease.space/AddEmail?email=" + newEmail +
-		// "&code=" + verificationCode;
-		String link = "http://localhost:8080/HelloWorld/AddEmail?email=" + newEmail + "&code=" + verificationCode;
+		String link = "https://ease.space/AddEmail?email=" + newEmail + "&code=" + verificationCode;
 		Properties props = new Properties();
 		props.put("mail.smtp.host", "smtp.gmail.com");
 		props.put("mail.smtp.socketFactory.port", "465");
@@ -116,9 +112,10 @@ public class SendVerificationEmail extends HttpServlet {
 		message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(newEmail));
 		message.setSubject(MimeUtility.encodeText("Validation email !", "utf-8", null));
 		message.setContent("<div style='color: black;'><p>Hello !<br /></p>"
-				+ "<p>To validate your email in order to receive updates, click on the link <a href='" + link
+				+ "<p>A validation email has been asked by " + askingEmail + ". "
+				+ "To validate this new email in order to receive updates, click on the link <a href='" + link
 				+ "'>here</a>.</p>"
-				+ "<p>If you have not asked for a validation on <a href='https://ease.space'>https://ease.space</a>, you can ignore this email.</p>"
+				+ "<p>(If you have not asked for a validation on <a href='https://ease.space'>https://ease.space</a>, you can ignore this email.)</p>"
 				+ "<p>See you soon !</p>" + "<p>The Ease team</p>" + "</div>", "text/html;charset=utf-8");
 		Transport.send(message);
 	}

@@ -109,5 +109,28 @@ var Popup = {
 	PopupDeleteAccount : function() {
 		constructorPopup.apply(this, arguments);
 		var self = this;
+		this.setForm = function(jForm) {
+			var oClass = jForm.attr('oClass');
+			if (oClass != null) {
+				self.oForm = new Form[oClass]($(elem), self);
+			}
+		}
+		self.qRoot.find("button[type='submit']").click(function(e) {
+			e.preventDefault();
+			self.close();
+			self.oForm.submit(e);
+		})
+	},
+	AddUpdatePopup : function() {
+		constructorPopup.apply(this, arguments);
+		var self = this;
+		this.setVal = function (arg) {
+			self.oForm.oInputs[0].val($(arg[1]).attr("siteId"));
+			self.oForm.oInputs[1].val(1);
+			self.oForm.oInputs[2].val($(arg[1]).attr("cryptedPassword"));
+			self.oForm.oInputs[3].val($(arg[1]).attr("login"));
+			self.oForm.oInputs[4].val($(arg[1]).attr("siteName"));
+		};
+
 	}
 }

@@ -30,7 +30,8 @@
 		<div style="margin-top: 5%">
 			<form method="post" id="addSiteForm" action="addWebsiteInDB">
 				<input type="text" name="siteUrl" class="form-control"
-					placeholder="Website url" /> <input type="text" name="siteName"
+					placeholder="Website url" /> <input type="text" name="homePage" class="form-control"
+					placeholder="Homepage url" /> <input type="text" name="siteName"
 					class="form-control" placeholder="Website name" /> <input
 					type="text" name="siteFolder" class="form-control"
 					placeholder="Website folder. DO : 'Facebook' , DONT : 'resources/wesites/Facebook/'" />

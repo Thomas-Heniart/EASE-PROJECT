@@ -8,7 +8,7 @@
 	<div class="suggested-emails">
 		<c:forEach items='${user.getEmails().keySet()}' var="item">
 			<p class="email-suggestion" email="${item}">
-				@ <span>${item}</span>
+				<span>${item}</span>
 			</p>
 		</c:forEach>
 	</div>

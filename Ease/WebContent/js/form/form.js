@@ -99,6 +99,19 @@ var Form = {
 	EditUserPasswordForm : function(rootEl) {
 		constructorForm.apply(this, arguments);
 		var self = this;
+		this.successCallback = function (retMsg) {
+			$("p.response", self.qRoot).removeClass("error");
+			$("p.response", self.qRoot).addClass("success");
+			$("p.response", self.qRoot).text(retMsg);
+		}
+		this.errorCallback = function (retMsg) {
+			$("p.response", self.qRoot).removeClass("success");
+			$("p.response", self.qRoot).addClass("error");
+			$("p.response", self.qRoot).text(retMsg);
+		}
+		this.afterSubmit = function () {
+			self.reset();
+		}
 	},
 	AddAppForm : function(rooEl) {
 		constructorForm.apply(this, arguments);
@@ -388,6 +401,7 @@ var Form = {
 		var self = this;
 		this.beforeSubmit = function() {
 			self.qRoot.removeClass("show");
+			$("#DeleteAccountWait").addClass("md-show");
 			$(".wait", self.oParent.qRoot).addClass("show");
 		};
 		this.successCallback = function(retMsg) {
@@ -400,5 +414,10 @@ var Form = {
 			self.qRoot.addClass("show");
 			$(".errorMessage", self.oParent.qRoot).addClass("show");
 		};
+	},
+	AddUpdateForm : function(rootEl) {
+		constructorForm.apply(this, arguments);
+		var self = this;
+		
 	}
 }

@@ -38,6 +38,7 @@ public class App {
 	
 	protected int appId;
 	protected int profileId;
+	private String dataLogin;
 	
 	//Use this to create a new app as classic account and set it in database
 	public App(String name, String login, String password, Site site, Profile profile, User user, ServletContext context) throws SessionException {
@@ -136,7 +137,17 @@ public class App {
 	//Use this to create a new app without account and set it in database
 		public App(String name, Site site, Profile profile, String custom, User user, ServletContext context) throws SessionException {
 			DataBase db = (DataBase)context.getAttribute("DataBase");
-			
+			ResultSet rs1 = db.get("SELECT haveLoginWith FROM websites WHERE website_id = " + site.getId() + ";");
+			try {
+				if (rs1.next()) {
+					if (!(rs1.getString(1) == null && rs1.getString(1).equals("null")))
+						this.dataLogin = rs1.getString(1);
+					else
+						this.dataLogin = "false";
+				}
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 			if (db.set("INSERT INTO apps VALUES (NULL, NULL, "+ site.getId() + ", " + profile.getId() + ", '" + profile.getApps().size() + "', '" + name + "', " + custom + ");")
 					!= 0) {
 				throw new SessionException("Impossible to insert new app in data base.");
@@ -208,6 +219,18 @@ public class App {
 			String accountId = rs.getString(AppData.ACCOUNT_ID.ordinal());
 			this.custom = rs.getString(AppData.CUSTOM.ordinal());;
 			account = Account.getAccount(accountId, user, context);
+			DataBase db = (DataBase)context.getAttribute("DataBase");
+			ResultSet rs1 = db.get("SELECT haveLoginWith FROM websites where website_id = " + site.getId() + ";");
+			try {
+				if (rs1.next()) {
+					if (!(rs1.getString(1) == null || rs1.getString(1).equals("null")))
+						this.dataLogin = rs1.getString(1);
+					else
+						this.dataLogin = "false";
+				}
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 			if (tmp == null) {
 				index = profile.getApps().size();
 				updateInDB(context);
@@ -245,6 +268,10 @@ public class App {
 			return ((ClassicAccount) account).getLogin();
 		} 
 		return null;
+	}
+	
+	public String getDataLogin() {
+		return this.dataLogin;
 	}
 	
 	public int getAppId(){
