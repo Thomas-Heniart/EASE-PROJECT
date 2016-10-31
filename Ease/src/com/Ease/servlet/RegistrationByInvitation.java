@@ -100,8 +100,6 @@ public class RegistrationByInvitation extends HttpServlet {
 						SI.setResponse(ServletItem.Code.BadParameters, "Email already used.");
 					} else {
 						user = new User(fname, lname, email, "0606060606", password, session.getServletContext());
-						Profile profile = new Profile("Perso", "#ff974f", "", user, null, session.getServletContext());
-						user.addProfile(profile);
 						if (group != null && group.equals("null") == false)
 							db.set("insert into GroupAndUserMap values (NULL, " + group + ", " + user.getId() + ");");
 						db.set("delete from invitations where email = '" + email + "' and linkCode = '" + invitationCode + "';");
