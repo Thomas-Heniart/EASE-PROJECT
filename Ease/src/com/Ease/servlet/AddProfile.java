@@ -67,9 +67,9 @@ public class AddProfile extends HttpServlet {
 		} else if (user.getProfiles().size() > 16){
 			SI.setResponse(ServletItem.Code.LogicError, "Too many profiles.");
 		} else if (name == null || name == ""){
-			SI.setResponse(ServletItem.Code.BadParameters, "Bad profile's name.");
+			SI.setResponse(ServletItem.Code.BadParameters, "Empty profile name.");
 		} else if (color == null || Regex.isColor(color) == false){
-			SI.setResponse(ServletItem.Code.BadParameters, "Bad profile's color.");
+			SI.setResponse(ServletItem.Code.BadParameters, "Incorrect profile color.");
 		} else {
 			try {
 				transaction = db.start();

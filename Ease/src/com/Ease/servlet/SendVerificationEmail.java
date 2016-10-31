@@ -115,10 +115,11 @@ public class SendVerificationEmail extends HttpServlet {
 		message.setFrom(new InternetAddress("benjamin@ease-app.co", "Ease Team"));
 		message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(newEmail));
 		message.setSubject(MimeUtility.encodeText("Validation email !", "utf-8", null));
-		message.setContent("<div style='color:black;'><p>Hello !</p>"
-				+ "<p>Pour valider ton email et recevoir les updates, clique sur le lien suivant: <a href='" + link
-				+ "'>Valider mon email</a></p>" + "<p>A bientôt sur Ease!</p>" + "<p>La team Ease</p></div>",
-				"text/html;charset=utf-8");
+		message.setContent("<div style='color: black;'><p>Hello !<br /></p>"
+				+ "<p>To validate your email in order to receive updates, click on the link <a href='" + link
+				+ "'>here</a>.</p>"
+				+ "<p>If you have not asked for a validation on <a href='https://ease.space'>https://ease.space</a>, you can ignore this email.</p>"
+				+ "<p>See you soon !</p>" + "<p>The Ease team</p>" + "</div>", "text/html;charset=utf-8");
 		Transport.send(message);
 	}
 

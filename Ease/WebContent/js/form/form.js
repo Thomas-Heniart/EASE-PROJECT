@@ -87,17 +87,13 @@ var Form = {
 	EditUserNameForm : function(rootEl) {
 		constructorForm.apply(this, arguments);
 		var self = this;
-		this.beforeSubmit = function() {
-			$('#loading').addClass('la-animate');
-		};
-		this.afterSubmit = function() {
-			$('#loading').removeClass('la-animate');
-		}
 		this.successCallback = function() {
 			showAlertPopup('Modifications successfully applied !', false);
+			$("#userSettingsButton span").html(self.oInputs[0].getVal());
+			self.disable();
 		};
 		this.errorCallback = function(retMsg) {
-			showAlertPopup(retMsg, true);
+			$(".errorMessage", self.qRoot).addClass("show");
 		}
 	},
 	EditUserPasswordForm : function(rootEl) {
@@ -221,7 +217,11 @@ var Form = {
 			$('#loading').removeClass("la-animate");
 		}
 		this.successCallback = function(retMsg) {
-			window.location.replace("index.jsp");
+			self.oParent.close();
+			self.oParent.targetProfile.remove();
+			if (profiles.length <= 15)
+				easeDashboard.profileAdder.css('display', '');
+//			window.location.replace("index.jsp");
 		};
 		this.errorCallback = function(retMsg) {
 			$(parent).find('.alertDiv').addClass('show');
@@ -359,10 +359,13 @@ var Form = {
 		constructorForm.apply(this, arguments);
 		var self = this;
 		this.successCallback = function(retMsg) {
-			$(".emailLine input[value='" + self.oInputs[0].getVal() + "']")
-					.parent().remove();
-			$(".email-suggestion[email='" + self.oInputs[0].getVal() + "']")
-					.remove();
+			$(".emailLine input[value='" + self.oInputs[0].getVal() + "']").parent().remove();
+			$(".email-suggestion[email='" + self.oInputs[0].getVal() + "']").remove();
+			var x = $(".verifiedEmail").length;
+			if (x > 1)
+				$(".integrated-emails-count span").html(x + " validated emails");
+			else
+				$(".integrated-emails-count span").html(x + " validated email");
 			self.reset();
 			self.oParent.close();
 		};
@@ -379,23 +382,33 @@ var Form = {
 		};
 		this.afterSubmit = function() {
 			setTimeout(function() {
-				$(".emailLine").has("input[value='" + self.oInputs[0].getVal() + "']").find(".unverifiedEmail").removeClass("wait");
 				$(".emailLine").has("input[value='" + self.oInputs[0].getVal() + "']").find(".email-loading").removeClass("show");
+				$(".emailLine").has("input[value='" + self.oInputs[0].getVal() + "']").find(".email-sent").addClass("show");
 			}, 2000);
 		}
 	},
 	DeleteAccountForm : function(rootEl) {
 		constructorForm.apply(this, arguments);
 		var self = this;
-		this.successCallback = function(retMsg) {
-			window.location = '/index.jsp';
-		}
 		this.beforeSubmit = function() {
+			self.qRoot.removeClass("show");
 			$("#DeleteAccountWait").addClass("md-show");
-		}
+			$(".wait", self.oParent.qRoot).addClass("show");
+		};
+		this.successCallback = function(retMsg) {
+			setTimeout(function() {
+				window.location = "index.jsp";
+			}, 1000);
+		};
+		this.errorCallback = function(retMsg) {
+			$(".wait", self.oParent.qRoot).removeClass("show");
+			self.qRoot.addClass("show");
+			$(".errorMessage", self.oParent.qRoot).addClass("show");
+		};
 	},
 	AddUpdateForm : function(rootEl) {
 		constructorForm.apply(this, arguments);
 		var self = this;
+		
 	}
 }

@@ -5,7 +5,7 @@
 	String UserName = ((User) (session.getAttribute("User"))).getFirstName();
 %>
 <div class='userSettingsContainer'>
-	<a id="userSettingsButton"><i class="fa fa-fw fa-user"></i> <%=UserName%></a>
+	<a id="userSettingsButton"><i class="fa fa-fw fa-user"></i> <span><%=UserName%></span></a>
 	<div class="userSettings">
 		<div class="directSettings">
 			<p class="displayedByPlugin">

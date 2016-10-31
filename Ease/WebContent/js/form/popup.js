@@ -3,6 +3,8 @@ var constructorPopup = function (rootEl) {
 	this.qRoot = rootEl;
 	this.oForm;
 	this.qCloseButton;
+	this.qCloseButtons;
+	self.qCloseButtons = [];
 	this.qRoot.find('form').each(function (index, elem) {
 		var oClass = $(elem).attr('oClass');
 		if (oClass != null) {
@@ -12,8 +14,14 @@ var constructorPopup = function (rootEl) {
 	this.qRoot.find('button').each(function (index, elem) {
 		var oClass = $(elem).attr('oClass');
 		if (oClass == "CloseButton") {
-			self.qCloseButton = $(elem, self);
+			var tmpButton = $(elem, self);
+			self.qCloseButtons.push(tmpButton);
 		}
+	});
+	self.qCloseButtons.forEach(function(element) {
+		element.click(function() {
+			self.close();
+		})
 	});
 	this.open = function () {
 		self.oForm.reset();
@@ -21,11 +29,9 @@ var constructorPopup = function (rootEl) {
 		self.qRoot.addClass('md-show');
 	};
 	this.close = function () {
+		self.oForm.reset();
 		self.qRoot.removeClass('md-show');
 	};
-	this.qCloseButton.click(function () {
-		self.close();
-	});
 	this.setVal = function () {
 		
 	};
@@ -35,8 +41,11 @@ var Popup = {
 	DeleteProfilePopup : function () {
 		constructorPopup.apply(this,arguments);
 		var self = this;
+		self.targetProfile;
+
 		this.setVal = function (arg) {
-			self.oForm.oInputs[0].val(arg[0]);
+			self.oForm.oInputs[0].val(arg[0].id);
+			self.targetProfile = arg[0];
 		}
 	},
 	AddAppPopup : function () {
@@ -122,5 +131,6 @@ var Popup = {
 			self.oForm.oInputs[3].val($(arg[1]).attr("login"));
 			self.oForm.oInputs[4].val($(arg[1]).attr("siteName"));
 		};
+
 	}
 }

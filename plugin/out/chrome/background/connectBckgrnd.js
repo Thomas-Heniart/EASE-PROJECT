@@ -31,7 +31,7 @@ function rememberWebsite(website){
     if(website.lastLogin.logWith){
         rememberDirectLogWithConnection(getHost(website.loginUrl), website.lastLogin);
     } else {
-        rememberConnection(website.lastLogin.user, website.lastLogin.password, getHost(website.loginUrl));
+        rememberConnection(website.lastLogin.user, website.lastLogin.password, getHost(website.loginUrl), true);
     }  
 }
 
@@ -42,6 +42,10 @@ function endConnection(currentWindow, tab, msg, sendResponse){
         }
     });
 }
+
+chrome.windows.onCreated.addListener(function(){
+    console.log("oooooo");
+});
 
 extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, sendResponse) {
     msg.todo = "checkAlreadyLogged";
