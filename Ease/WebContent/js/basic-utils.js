@@ -196,18 +196,6 @@ function changeColor(color, ratio, darker) {
         });
     }); 
 
-    function setupAppSettingButtonPopup(elem){
- /*       $(elem).on('mouseover', function() {
-            var subPopup = $(this).find('.appActionsPopup');
-            var profileParent = $(this).closest('.siteLinkBox').parent();
-            var str = '-';
-            var scrollDist =  $(profileParent).scrollTop() + $(this).height();
-            str += scrollDist + 'px';
-            subPopup.css({
-                'margin-top':str
-            });
-        }); */
-    };
     $(document).on('mouseover', '.showAppActionsButton', function(evt){
             var subPopup = $(this).find('.appActionsPopup');
             var profileParent = $(this).closest('.siteLinkBox').parent();
@@ -220,9 +208,3 @@ function changeColor(color, ratio, darker) {
                 'margin-top':str
             });
     });
-    $(document).ready(function() {
-        $('.SitesContainer .showAppActionsButton').each(function(){
-            setupAppSettingButtonPopup($(this));
-        });
-    });
-

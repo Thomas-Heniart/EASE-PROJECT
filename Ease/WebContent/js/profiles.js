@@ -133,6 +133,8 @@ var Profile = function(rootEl){
 		}, 300);
 		if (profiles.length <= 15)
 			easeDashboard.profileAdder.css('display', '');
+		if (self.parentItem.parent().find('.item').length == 1)
+			self.parentItem.parent().width('0px');
 	}
 	this.showSettings = function(){
 		self.SettingsButton.addClass('fa-rotate-90');
@@ -207,7 +209,6 @@ var Profile = function(rootEl){
 				easeLoadingIndicator.hide();
 			}, function(retMsg) {
 				self.remove();
-				easeDashboard.reinitColumns();
 			}, function(retMsg) {
 			}, 'text');			
 		}
