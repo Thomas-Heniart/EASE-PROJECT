@@ -8,7 +8,13 @@ $(document).ready(function(){
 			var password = $("#registrationForm input[name='password']").val();
 			var confirmPassword = $("#registrationForm input[name='confirmPassword']").val();
 			var button = $(".registrationBlock .custom-button");
-
+			
+			console.log($('#registrationForm').find('.term .check').prop("checked"));
+			if (!$('#registrationForm').find('.term .check').prop("checked")){
+				$('.alertDiv').text("Please accept terms and conditions");
+				$('.alertDiv').addClass('show');
+			} else {
+			
 			button.addClass('loading');
 			postHandler.post(
 				$('#registrationForm').attr('action'),
@@ -46,5 +52,6 @@ $(document).ready(function(){
 				},
 				'text'
 			);
+			}
 		});
 	});

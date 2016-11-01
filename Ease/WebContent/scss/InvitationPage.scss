@@ -241,7 +241,18 @@
 			padding: 2px;
 			border-radius: 5px;
 		}
+		.custom-info{
+			text-align: center;
+		}
 	}
+	.title {
+			min-width: 250px;
+			max-width: 30%;
+			margin: 10px auto;
+			font-size: 50px;
+			color: #FFFFFF;
+			text-align: center;
+		}
 	.registrationBlock {
 		padding: 5px;
 		border-radius: 5px;
@@ -249,30 +260,32 @@
 		margin-left: auto;
 		margin-right: auto;
 		margin-bottom: 30px;
-		width: 19%;
 		min-width: 250px;
-		max-width: 250px;
+		max-width: 400px;
 		background-color: rgba(white, 0.9);
-
+		.advice {
+			width: 100%;
+			border: 2px solid $themeColor;
+			border-radius: 5px;
+			margin-bottom: 10px;
+		}
+		.term {
+			.check {
+				display: inline-block;
+				height: 20px;
+				width: 20px;
+				margin: 5px 5px;
+				vertical-align: bottom;
+			}
+			p {
+				display: inline-block;
+			}
+		}
+		
 		.alertDiv {
 			width: 90%;
 			text-align: center;
 			margin:0px auto;
-		}
-		.title {
-			width: 90%;
-			margin: 10px auto;
-			font-size: 17px;
-			text-align: center;
-		}
-		.registrationTips {
-			width: 90%;
-			margin: 0px auto;
-			margin-top: 10px;
-			text-align: center;
-			span {
-				font-weight: 600;
-			}
 		}
 
 		#registrationForm {

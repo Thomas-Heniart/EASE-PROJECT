@@ -55,29 +55,41 @@ pageEncoding="UTF-8"%>
 		<img src="resources/images/Ease_Logo.png"/>
 	</div>
 	<div id="helpInformations" email="<%= emailAddress %>" code="<%= invitationCode%>" style="display: none;"></div>
+	<div class="title">
+		<p><b>Final step</b></p>
+	</div>
 	<div class="registrationBlock">
-		<div class="title">
-			<p>Set up your account !</p>
-		</div>
 		<form action="registerInv" id="registrationForm">
+		<center>
 			<div class="custom-info">
-				<p>What's your name ?</p>
+				<p>How would you like us to call you ? </p>
 			</div>
-			<div class="doubleInput">
-				<span class="input input--minoru">
-					<input class="input__field input__field--minoru" name="fname" type="text" id="input-8" placeholder="First name"/>
+			<span class="input input--minoru">
+					<input class="input__field input__field--minoru" name="fname" type="text" id="input-8" placeholder="Your name"/>
 					<label class="input__label input__label--minoru" for="input-8">
 					</label>
 				</span>
+			<!--<div class="doubleInput">-->
+				<!--
 				<span class="input input--minoru">
-					<input class="input__field input__field--minoru" name="lname" type="text" id="input-8" placeholder="Last name"/>
+					<input class="input__field input__field--minoru" name="fname" type="text" id="input-8" placeholder="First name" style="display: none"/>
 					<label class="input__label input__label--minoru" for="input-8">
 					</label>
 				</span>
-			</div>
+				-->
+					<span class="input input--minoru">
+					<input class="input__field input__field--minoru" name="lname" type="text" id="input-8" value="Unknow" style="display: none"/>
+					<label class="input__label input__label--minoru" for="input-8">
+					</label>
+				</span>
+				 
+			<!--</div>-->
 			<div class="custom-info">
-				<p>Set up your Ease password</p>
+				<p>Create your Ease password :</p>
 			</div>
+			<p class="advice"><u>Advice</u>: make it memorable, add digits, upper & lower cases. It must be more than 8 characters long.</p>
+			<p class="advice"><u>Info</u>: As we don’t know your Ease password, if you forget it, you will have to reset your account and enter again the passwords of the apps you added.</p>
+			
 			<span class="input input--minoru">
 				<input class="input__field input__field--minoru" name="password" type="password" id="input-8" placeholder="Password"/>
 				<label class="input__label input__label--minoru" for="input-8">
@@ -88,11 +100,16 @@ pageEncoding="UTF-8"%>
 				<label class="input__label input__label--minoru" for="input-8">
 				</label>
 			</span>
+			<div class="term">
+				<a href="http://www.ease-app.co/privacy" target="_blank">Here is a link to our terms and conditions.</a>
+				<p>I accept the terms and conditions</p><input class="check" type="checkbox" />
+			</div>
+			</center>
 		</form>
 		<div class="alertDiv">
 			<p></p>
 		</div>
-		<p class="registrationTips">Set this password carefully.</br>In case you forget it, we won’t be able to recover it for you ! </p>
+		
 		<div class="custom-button">
 			<button type="submit" form="registrationForm" value="Submit">GO</button>
 			<div class="loadHelper centeredItem">
