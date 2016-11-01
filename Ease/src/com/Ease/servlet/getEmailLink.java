@@ -26,7 +26,7 @@ import com.Ease.data.Regex;
 import com.Ease.data.ServletItem;
 import com.Ease.session.User;
 
-@WebServlet("/letsgo")
+@WebServlet("/ieseg")
 public class getEmailLink extends HttpServlet {
     
     /**

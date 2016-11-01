@@ -68,12 +68,12 @@
 		<div class="image-overlay"></div>
 		<img src="resources/images/Ease_Logo.png" />
 		<div class="header-links">
-			<a href="http://www.ease-app.co/secure">Data security at Ease</a>
+			<a target="_blank" href="http://www.ease-app.co/security">Data security at Ease</a>
 		</div>
 		<div class="header-content">
 			<h2>A simple homepage, accessible from any computer, that gets rid of your passwords.</h2>
 			<p>As IESEG students or staff, EASE now connects you to your web accounts in 1 click.</p>
-			<form action="letsgo" id="invitationForm" class="show">
+			<form action="ieseg" id="invitationForm" class="show">
 				<input name="email" placeholder="Enter your email" /><button type="submit">Get started !</button>
 				<div class="sk-fading-circle loading">
 	 				<div class="sk-circle1 sk-circle"></div>
@@ -89,8 +89,8 @@
 					<div class="sk-circle11 sk-circle"></div>
 					<div class="sk-circle12 sk-circle"></div>
 				</div>
-				<p class="error"></p>
-				<p class="success"></p>
+				<p class="error">Sorry you are not on the list</p>
+				<p class="success">Take a look in your mail box ;)</p>
 			</form>
 		</div>
 	</div>
@@ -99,9 +99,9 @@
 			<div>
 				<p>The new interface to access IESEG services</p>
 				<p>Ease connects you automatically</p>
-				<div class="triangle"></div>
+				<i class="fa fa-chevron-down" aria-hidden="true"></i>
 			</div>
-			<video width="720" height="480" controls autoplay>
+			<video width="720" height="480" loop controls autoplay>
   				<source src="resources/videos/video1.mp4" type="video/mp4">
 				Your browser does not support the video tag.
 			</video>
@@ -109,9 +109,9 @@
 		<div>
 			<div>
 				<p>Add your own websites from the catalog</p>
-				<div class="triangle"></div>
+				<i class="fa fa-chevron-down" aria-hidden="true"></i>
 			</div>
-			<video width="720" height="480" controls autoplay>
+			<video width="720" height="480" loop controls autoplay>
   				<source src="resources/videos/video2.mp4" type="video/mp4">
 				Your browser does not support the video tag.
 			</video>
@@ -119,9 +119,9 @@
 		<div>
 			<div>
 				<p>Customize your platform as easily as a smartphone</p>
-				<div class="triangle"></div>
+				<i class="fa fa-chevron-down" aria-hidden="true"></i>
 			</div>
-			<video width="720" height="480" controls autoplay>
+			<video width="720" height="480" loop controls autoplay>
   				<source src="resources/videos/video3.mp4" type="video/mp4">
 				Your browser does not support the video tag.
 			</video>
@@ -130,16 +130,16 @@
 			<div>
 				<p>Never forget to logout again</p>
 				<p>Logout from everywhere at once, from Ease</p>
-				<p class="triangle"></p>
+				<i class="fa fa-chevron-down" aria-hidden="true"></i>
 			</div>
-			<video width="720" height="480" controls autoplay>
+			<video width="720" height="480" loop controls autoplay>
   				<source src="resources/videos/video4.mp4" type="video/mp4">
 				Your browser does not support the video tag.
 			</video>
 		</div>
 	</div>
 	<div class="invitation-footer">
-		<form action="letsgo" id="invitationForm2" class="show">
+		<form action="ieseg" id="invitationForm2" class="show">
 			<input name="email" placeholder="Enter your email" /><button type="submit">Get started !</button>
 			<div class="sk-fading-circle loading">
 	 				<div class="sk-circle1 sk-circle"></div>
@@ -155,12 +155,12 @@
 					<div class="sk-circle11 sk-circle"></div>
 					<div class="sk-circle12 sk-circle"></div>
 				</div>
-				<p class="error"></p>
+				<p class="error">Sorry you are not on the list</p>
 				<p class="success">Take a look in your mail box ;)</p>
 		</form>
 		<div class="security">
 			<h3>Security policy</h3>
-			<p>Our specific encryption method enables a transfer of information without knowing its nature, it is used during your daily connections. This is why Ease does not know either your “Ease password” or your “accounts passwords”. </p>
+			<p>Our specific encryption method enables a transfer of information without knowing its nature, it is used during your daily connections. This is why Ease does not know either your “Ease password” or your “accounts passwords”. <a target="_blank" href="http://www.ease-app.co/security">Know more</a></p>
 		</div>
 		<div class="business">
 			<h3>Business Model</h3>
@@ -197,7 +197,6 @@
 				$("#invitationForm, #invitationForm2").addClass("show");
 				$(".error").addClass("show");
 				$(".success").removeClass("show");
-				$(".error").text(retMsg)
 			}, 1000);
 		});
 	});
