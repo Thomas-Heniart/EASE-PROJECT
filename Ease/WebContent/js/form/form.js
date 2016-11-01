@@ -256,7 +256,6 @@ var Form = {
 		this.submit = function(e) {
 			e.preventDefault();
 			var AppToLoginWith = rootEl.find('.AccountApp.selected');
-			console.log(AppToLoginWith);
 			if (AppToLoginWith.length) {
 				self.aId = AppToLoginWith.attr('aid');
 			}

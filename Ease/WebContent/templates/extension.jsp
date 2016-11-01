@@ -1,7 +1,7 @@
 		<div id="downloadExtension" class="centeredItem" style="display:none;">
 		<div class="popupContent">
 			<p class="title classicContent">You are almost done ...<i class="fa fa-heart" aria-hidden="true"></i></p>
-			<p class="title safariUpdate">Your addon is too old !<i class="fa fa-recycle" aria-hidden="true"></i></p>
+			<p class="title safariUpdate">Your addon is too old ! <i class="fa fa-recycle" aria-hidden="true"></i></p>
 			<p class="info classicContent">Download the addon to make Ease automagically work on this computer</br>For now, it only works on Chrome and Safari.</p>
 			<p class="info safariUpdate">Update it to make Ease automagically work on this computer.</p>
 			<p><i class="fa fa-angle-down" aria-hidden="true"></i></p>

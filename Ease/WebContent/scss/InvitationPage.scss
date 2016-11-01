@@ -1,11 +1,56 @@
 @import 'variables';
 
 #invitationBody {
-  background: url(https://d7zgbk06ve7c.cloudfront.net/assets/63939/cuf4uxd6krflz4sctrn1/7a1f1c2c3b97461eae39f9a4e889b25c_24_1600.jpg) no-repeat center top;
-  background-attachment: fixed;
-  background-position: center center;
-  background-size: cover;
+  #invitationForm, #invitationForm2 {
+    input, button {
+        display: none !important;
+    }
+  }
+  #invitationForm.show, #invitationForm2.show {
+    input, button {
+        display: inline-block !important;
+    }
+  }
+  .loading {
+    transition: all .3s;
+    width: 50px;
+    height: 50px;
+    display: none;
+    position: relative;
+    margin: auto;
+    .sk-circle:before {
+      background-color: $themeColor;
+    }
+  }
+  .loading.show {
+    transition: all .3s;
+    display: block;
+  }
+  .success {
+    display: none;
+  }
+  .success.show {
+    display: block;
+    width: 30%;
+    margin: auto;
+    text-align: center;
+    color: $themeWhiteColor;
+  }
+  .error {
+    display: none;
+  }
+  .error.show {
+    display: block;
+    width: 30%;
+    margin: auto;
+    text-align: center;
+    color: $themeRedColor;
+  }
   .invitation-header {
+    background: url(https://d7zgbk06ve7c.cloudfront.net/assets/63939/cuf4uxd6krflz4sctrn1/7a1f1c2c3b97461eae39f9a4e889b25c_24_1600.jpg) no-repeat center top;
+    background-attachment: fixed;
+    background-position: center center;
+    background-size: cover;
     position: absolute;
     height: 45%;
     width: 100%;
@@ -30,6 +75,13 @@
       width: fit-content;
       right: 1%;
       top: 4%;
+      a {
+        background-color: green;
+        padding: 10px;
+        border-radius: 10px;
+        opacity: 0.8;
+        color: $themeWhiteColor;
+      }
     }
     .header-content {
       position: absolute;
@@ -38,6 +90,8 @@
       left: 20%;
       color: $themeWhiteColor;
       bottom: 10%;
+      font-weight: normal;
+      font-family: Helvetica;
       h2 {
         font-size: 2.2em;
         margin-bottom: 30px;
@@ -46,7 +100,7 @@
         width: 49%;
         margin: 10px auto;
       }
-      #registrationForm {
+      #invitationForm {
         width: 70%;
         margin: auto;
         input {
@@ -77,43 +131,101 @@
     position: absolute;
     width: 100%;
     top: 45%;
+    padding: 35px 0;
     background-color: $themeWhiteColor;
     div {
       position: relative;
       width: 90%;
       margin: auto;
-      img {
-        width: 50%;
-        padding: 3% 6%;
+      video {
+        display: block;
+        margin: auto;
+        padding: 0;
+        margin-bottom: 30px;
       }
       div {
-        display: inline-block;
+        display: block;
         position: relative;
-        width: 45%;
+        width: 80%;
         p {
-          width: 70%;
+          width: 100%;
           text-align: center;
           margin: auto;
           font-size: 1.25em;
         }
+        .triangle {
+          width: 0;
+          height: 0;
+          min-height: 0;
+          max-height: 0;
+          border-style: solid;
+          border-width: 15px 10px 0 10px;
+          border-color: $themeColor transparent transparent transparent;
+          margin: auto;
+        }
       }
     }
   }
-	.logo {
-		width: 20%;
-		img {
-			width: 100%;
-		}
-	}
-	h1 {
-		color: white;
-		margin: 0px auto 30px auto;
-		text-align: center;
-		font-size: 50px;
-	}
-	p {
-		margin-bottom: 3px;
-	}
+  .invitation-footer {
+    position: absolute;
+    top: 2600px;
+    background: url("../resources/images/footer-bckgnd.jpg") center no-repeat;
+    background-attachment: fixed;
+    padding: 20px 0;
+    background-size: 100%;
+    #invitationForm2 {
+      width: 60%;
+      margin: auto;
+      text-align: center;
+      input {
+        border: none;
+        width: 35%;
+        height: 32px;
+        border-radius: 5px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        padding-left: 3px;
+        color: black;
+      }
+      button {
+        border-radius: 5px;
+        height: 32px;
+        line-height: 29px;
+        vertical-align: bottom;
+        background-color: $themeColor;
+        color: $themeWhiteColor;
+        border: 0px solid;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+    }
+    .security, .business {
+      display: inline-block;
+      width: 49%;
+      margin-top: 70px;
+      color: $themeWhiteColor;
+      h3 {
+        font-size: 1.2em;
+        font-weight: bold;
+        width: 50%;
+        text-align: center;
+        margin: 20px auto;
+      }
+      p {
+        margin: auto;
+        width: 52%;
+        text-align: justify;
+        font-size: 1em;
+      }
+    }
+    .information {
+      width: 40%;
+      text-align: center;
+      color: $themeWhiteColor;
+      margin: 40px auto;
+      margin-top: 100px;
+    }
+  }
 	.registrationBlock#checkInvitation {
 		padding-bottom: 50px;
 		padding-top: 40px;
@@ -236,16 +348,7 @@
 					color: $themeColor;
 				}
 			}
-			.loadHelper {
-				transition: all .3s;
-				width: 100%;
-				height: 100%;
-				visibility: hidden;
-				opacity: 0;
-				border-radius: 7px;
-				position: absolute;
-				border: 3px solid $themeColor;
-			}
+
 			.successHelper {
 				width: 100%;
 				height: auto;
@@ -275,16 +378,6 @@
 					opacity: 0;
 				}
 			}
-			.loadHelper {
-				transition: all .3s;
-				width: 35px;
-				height: 100%;
-				border-radius: 100px;
-				border: none;
-				opacity: 1;
-				visibility: visible;
-			}
-		}
 		.custom-button.success {
 			.loadHelper {
 				visibility: hidden;
@@ -296,12 +389,5 @@
 			}
 		}
 	}
-  .sk-fading-circle {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    .sk-circle:before {
-      background-color: $themeColor;
-    }
-  }
+}
 }
