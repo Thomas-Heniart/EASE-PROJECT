@@ -76,7 +76,7 @@
 				overflow: hidden;
 				white-space: nowrap;
 				.profileSettingsTab {
-					padding: 2px 5%;
+					padding: 5px 10%;
 					position: relative;
 					top:0;
 					left: 0;
@@ -86,135 +86,76 @@
 					transition: all .3s;
 					overflow: hidden;
 					background-color: #F5F5F5;
-					border-bottom: 3px solid #EFEFEF;
-					.sectionHeader:first-child {
-						border-top: none;
-					}
-					.sectionHeader {
-						cursor: pointer;
-						text-align: left;
-						outline: none;
-						padding: 6px 0px;
-						border-top: 1px solid $themeColor;
-						.title {
-							width: 60%;
-							font-weight: 600;
-							color: $themeColor;
-						}
-						p {
-							overflow: hidden;
-							text-overflow: ellipsis;
-							margin-bottom: 2px;
-							max-width: 100%;
-						}
-						p, div {
-							display: inline-block;
-							vertical-align: middle;
-						}
-						.directInfo {
-							width: 40%;
-						}
-					}
-					#ColorSection .directInfo {
-						width: 20px;
-						height:20px;
-						border-radius: 20px;
-						background-color: $themeColor;
+					border-bottom: 2px solid $themeColor;
+					#contentColor {
+						border-bottom: 2px solid $themeColor;
+						padding-bottom: 5px;
+						padding-top: 5px;
+						margin-bottom: 10px;
 					}
 					.sectionContent {
-						margin-top: 3px;
-						#modifyColorForm {
-							.colorChooser {
-								width: 80%;
-								margin: 0px auto;
-								.color {
+						display: block;
+						margin-bottom: 5px;
+						i, p , div, input {
+							font-size: 1vw;
+						}
+						#modifyNameForm {
+							input {
+								display: inline-block;
+								border:none;
+								border-radius: 3px;
+								padding:0px 5px 0px 5px;
+								width: 75%;
+							}
+							#validate {
+								display: inline-block;
+								background-color: $themeColor;
+								border-radius: 5px;
+								padding: 2px 4px;
+								i {
+									transition: transform .3s;
+									color: white;
+									transform: rotateZ(0deg);
+								}
+								&:hover {
 									cursor: pointer;
-									display: inline-block;
-									background-color: black;
-									width: 20px;
-									height: 20px;
-									border-radius: 20px;
-									&.selected {
-										border: 2px solid $themeColor;
+									i {
+										transform: rotateZ(90deg);
 									}
 								}
 							}
 						}
-						#deleteProfileForm {
+						#modifyColorForm {
 							white-space: normal;
-						}
-						input {
-							outline: none;
-							margin-top: 3%;
-							border-radius: 2px;
-							border: 1px hidden;
-							padding-left: 3px;
-							width: 80%;
-							background-color: #efefef;
-						}
-						.buttonSet {
-							text-align: center;
-							margin: 3% auto;
-							button {
-								border: 1px solid transparent;
-								background-color: #CCCCCC;
-								vertical-align: middle;
-								position: relative;
-								z-index: 1;
-								margin: 0px;
-								padding: 2px;
-								float: none;
-								min-width: 0px;
-								max-width: 100%;
-								width: 40%;
+							font-size: 10px;
+							.color {
+								width: 11%;
+								padding-top: 11%;
+								cursor: pointer;
 								display: inline-block;
-								color: white;
-								border-radius: 3px;
+								border-radius: 100%;
 							}
-							button.Active {
-								border-color: $themeColor;
+							.color.choosen {
+								//border: 2px solid white;
+							}
+						}
+						#deleteProfileForm {
+							#validate {
+								transition: all .3s;
+								display: inline-block;
+								cursor: pointer;
 								background-color: $themeColor;
-								@include scalein-anim('validateButton-anim', 1.05);
-								transition: all 0.3s ease;
+								color: white;
+								border: 1px solid $themeColor;
+								padding: 1px 3px 1px 3px;
+								border-radius: 3px;
 								&:hover {
-									transition: all 0.3s ease;
 									background-color: white;
 									color: $themeColor;
-								}
-							}
-							button[oclass="CloseButton"] {
-								background-color: #888888;
-								color: white;
-								border-color: #888888;
-								&:hover {
-									background-color: #666666;
+									border: 1px solid $themeColor;
 								}
 							}
 						}
-					}
-				}
-				ul { 
-					padding-left: 0px;
-					li {
-						list-style-type : none;
-						cursor: pointer;
-						line-height: 50px;
-						font-size: 20px;
-						border-bottom: 1px solid #AAAAAA;
-						i {
-							float: left;
-							font-size: 40px;
-							margin-top: 5px;
-							margin-left: 10px;
-						}
-						p {
-							margin-bottom: 0px;
-							font-family: $defaultFont;
-						}
-						&:hover {
-							background-color: white;
-							color: black;
-						}	
 					}
 				}
 			}
@@ -747,6 +688,19 @@
 					p {
 						width: 150px;
 						font-size: 1.4em;
+					}
+				}
+			}
+		}
+	}
+	.ProfileBox {
+		.ProfileContent {
+			.content {
+				.ProfileControlPanel {
+					.profileSettingsTab {
+						input, div, p, i {
+//							font-size: 1.4em;
+						}
 					}
 				}
 			}

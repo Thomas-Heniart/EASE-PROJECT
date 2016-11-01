@@ -10,6 +10,13 @@ var Dashboard = function(rootEl){
 	this.leaveEditMode = function(){
 		self.rootEl.removeClass('editMode');
 	}
+	this.reinitColumns = function(){
+		alert('lala');
+		this.columns.each(function(){
+			if (!($(this).find('.item').length))
+				$(this).css('width', '0px');
+		});
+	}
 	if ($('.ProfilesHandler .item').length >= 15){
 		this.profileAdder.css('display', 'none');
 	}
@@ -63,9 +70,12 @@ var Dashboard = function(rootEl){
 			animation: 300,
 			group:"profiles",
 			handle: ".ProfileName",
+			filter: ".ProfileSettingsButton",
 			forceFallback: true,
 			onStart: function(evt){
 				var item = $(evt.item);
+
+				item.css('transition', 'transform 0s')
 				$('body').css('cursor', 'move');
 				self.columns.each(function(){
 					if (!($(this).find('.item').length)){
@@ -75,6 +85,8 @@ var Dashboard = function(rootEl){
 			},
 			onEnd: function(evt){
 				var item = $(evt.item);
+
+				item.css('transition', '')
 				$('body').css('cursor', '');
 				self.columns.each(function(){
 					if (!($(this).find('.item').length)){

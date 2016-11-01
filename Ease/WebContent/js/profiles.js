@@ -37,45 +37,45 @@ var hiddenProfile = function(rootEl){
 
 	this.onResize = function(){
 //		this.appContainer.find('.siteLinkBox').height(this.appContainer.find('.siteLinkBox').width());
+}
+
+this.onResize();
+$(window).resize(function(){
+	self.onResize();
+});
+this.show = function(){
+	self.rootEl.addClass('show');
+}
+this.hide = function(){
+	self.rootEl.removeClass('show');
+}
+this.openHelper.on('click', function(){
+	self.show();
+});
+this.rootEl.on('mouseleave', function(){
+	self.hide();
+});
+this.appContainer.droppable({
+	accept: ".catalogApp",
+	drop: function(event, ui){
+		event.preventDefault();
+		event.stopPropagation();
+		$(this).css('border', '');
+		showAddAppPopup($(this), $(ui.helper));
+		popupAddApp.oForm.profile_id = 0;
+	},
+	over: function(event, ui){
+		event.preventDefault();
+		event.stopPropagation();
+		$(this).css('border', '1px solid red');
+	},
+	out: function(event, ui){
+		event.preventDefault();
+		event.stopPropagation();
+		$(this).css('border', '');
 	}
-	
-	this.onResize();
-	$(window).resize(function(){
-		self.onResize();
-	});
-	this.show = function(){
-		self.rootEl.addClass('show');
-	}
-	this.hide = function(){
-		self.rootEl.removeClass('show');
-	}
-	this.openHelper.on('click', function(){
-		self.show();
-	});
-	this.rootEl.on('mouseleave', function(){
-		self.hide();
-	});
-	this.appContainer.droppable({
-		accept: ".catalogApp",
-		drop: function(event, ui){
-			event.preventDefault();
-			event.stopPropagation();
-			$(this).css('border', '');
-			showAddAppPopup($(this), $(ui.helper));
-			popupAddApp.oForm.profile_id = 0;
-		},
-		over: function(event, ui){
-			event.preventDefault();
-			event.stopPropagation();
-			$(this).css('border', '1px solid red');
-		},
-		out: function(event, ui){
-			event.preventDefault();
-			event.stopPropagation();
-			$(this).css('border', '');
-		}
-	});
-	setupSortableContainer(this.appContainer);
+});
+setupSortableContainer(this.appContainer);
 };
 
 function enterEditMode() {
@@ -85,7 +85,7 @@ function enterEditMode() {
 	enterEditModeTutorial();
 }
 
-	function leaveEditMode() {
+function leaveEditMode() {
 	easeDashboard.leaveEditMode();
 	catalog.close();
 	$('.scaleOutAnimation').removeClass('scaleOutAnimation');
@@ -109,18 +109,19 @@ var Profile = function(rootEl){
 	var self = this;
 	this.qRoot = rootEl;
 	this.parentItem = this.qRoot.closest('.item');
+	this.profileHeader = this.qRoot.find('.ProfileName');
 	this.SettingsButton = this.qRoot.find('.ProfileSettingsButton');
 	this.ControlPanel = this.qRoot.find('.ProfileControlPanel');
 	this.appContainer = this.qRoot.find('.SitesContainer');
 	this.isSettingsOpen = false;
 	this.id = this.parentItem.attr('id');
 
-	this.ControlPanel.find(".profileSettingsTab").accordion({
+/*	this.ControlPanel.find(".profileSettingsTab").accordion({
 		active : 10,
 		collapsible : true,
 		autoHeight : false,
 		heightStyle : "content"
-	});
+	});*/
 	this.remove = function(){
 		profiles.splice(profiles.indexOf(self), 1);
 		self.parentItem.animate({
@@ -132,6 +133,8 @@ var Profile = function(rootEl){
 		}, 300);
 		if (profiles.length <= 15)
 			easeDashboard.profileAdder.css('display', '');
+		if (self.parentItem.parent().find('.item').length == 1)
+			self.parentItem.parent().width('0px');
 	}
 	this.showSettings = function(){
 		self.SettingsButton.addClass('fa-rotate-90');
@@ -154,6 +157,7 @@ var Profile = function(rootEl){
 		});
 		(self.isSettingsOpen) ? self.hideSettings() : self.showSettings();
 	});
+	//catalog droppable
 	self.appContainer.droppable({
 		accept: ".catalogApp,.updateBox",
 		drop: function(event, ui){
@@ -191,10 +195,57 @@ var Profile = function(rootEl){
 			$(this).css('border', '');
 		}
 	});
-	this.qRoot.find('#deleteProfileForm .buttonSet #validate').click(function() {			
+	//apps move
+	setupSortableContainer(this.appContainer);
+	//settings
+	//delete profile
+	this.qRoot.find('#deleteProfileForm #validate').click(function() {
+		if (self.appContainer.find('.siteLinkBox').length > 0)
 			deleteProfilePopup.open(self);
-		});
-	setupProfileSettings(self.qRoot);
+		else {
+			postHandler.post('deleteProfile', {
+				index : self.id
+			}, function() {
+				easeLoadingIndicator.hide();
+			}, function(retMsg) {
+				self.remove();
+			}, function(retMsg) {
+			}, 'text');			
+		}
+	});
+	//edit name
+	this.qRoot.find('#modifyNameForm #validate').click(function(){
+		var name = $(this).parent().find('input').val();
+		easeLoadingIndicator.show();
+		postHandler.post('editProfileName', {
+			name : name,
+			index : self.id
+		}, function() {
+			easeLoadingIndicator.hide();
+		}, function(retMsg) {
+			self.profileHeader.find('p').text('@' + name);
+			self.qRoot.find('#modifyNameForm input').val('');
+		}, function(retMsg) {
+		}, 'text');
+	});
+	//edit color section
+	this.qRoot.find('#modifyColorForm .color').click(function(){
+		var color = $(this).attr('color');
+		easeLoadingIndicator.show();
+		self.qRoot.find('#modifyColorForm .color.choosen').removeClass('choosen');
+		$(this).addClass('choosen');
+		postHandler.post('editProfileColor', {
+			color : color,
+			index : self.id
+		}, function() {
+			easeLoadingIndicator.hide();
+		}, function(retMsg) {
+			self.profileHeader.css('background-color', color);
+			self.qRoot.attr('color', color);
+		}, function(retMsg) {
+		}, 'text');
+	});
+//	setupProfileSettings(self.qRoot);
 };
 
 $(document).on("contextmenu", ".linkImage", function(e) {
@@ -249,8 +300,8 @@ function setupSortableContainer(container) {
 		}
 	});
 }
+/*
 function setupProfileSettings(profile) {
-	setupSortableContainer($(profile).find('.SitesContainer'));
 	$(profile).find('.ProfileControlPanel #cancel').click(function() {
 		var Accordion = $(this).closest('.ui-accordion');
 
@@ -337,7 +388,7 @@ function setupProfileSettings(profile) {
 					}, 'text');
 		});
 }
-
+*/
 
 
 /* Next lines come from ProfileEditView.jsp */
@@ -416,6 +467,12 @@ function showConfirmDeleteAppPopup(elem, event) {
 }
 
 $(document).ready(function() {
+	$('.catalogApp').click(function(){
+		$(".arrowDragDrop").css("opacity",1);
+		setTimeout(function(){
+			$(".arrowDragDrop").css("opacity",0);
+		},1000);
+	});
 	$('.catalogApp').draggable({
 		cursor : 'move',
 		cursorAt : {
