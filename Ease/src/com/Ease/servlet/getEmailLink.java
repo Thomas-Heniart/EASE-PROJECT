@@ -106,18 +106,35 @@ public class getEmailLink extends HttpServlet {
 								InternetAddress.parse(email));
 						message.setSubject(MimeUtility.encodeText("Active ton compte Ease !", "utf-8", null));
 						String link = "https://ease.space/registerInv?email=" + email + "&code=" + invitationCode;
-						message.setContent("<div style='color:black;'><p>Hello !</p>"
-								+ "<p>Bienvenue sur Ease.space !</p>"
-								+ "<p>Ease est ton espace personnel intelligent et sécurisé qui regroupe l'ensemble des sites sur lesquels tu as un compte, et qui t’y connecte automatiquement!</br>Ease fonctionne sur Chrome et Safari.</p>"
-								+ "<p>Autrement dit, une fois tes identifiants enregistrés sur ton espace Ease, tu n’auras plus jamais à les utiliser. Et ce, où que tu sois, quelque soit l’ordinateur et en toute sécurité. Seul pré-requis: avoir internet ! ;-)</p>"
-								+ "<p>Pour activer ton espace, clique sur le lien suivant et laisse toi guider: <a href='"+link+"'>https://ease.space/...</a></p>"
-								+ "<p>Avant de nous quitter, quelques petits conseils sur ton mot de passe de ton espace Ease: </p>"
-								+ "<p style='margin-left: 25px;'>- Ne choisis pas le nom de ton chien, AZERTY ou 123456: un mot de passe compliqué assure une meilleure sécurité de tes données personnelles.</p>"
-								+ "<p style='margin-left: 25px;'>- N’oublie pas ton mot de passe car, pour garantir la sécurité de tes données personnelles, il n’est pas ré-initialisable.</p>"
-								+ "<p>A bientôt sur Ease!</p>"
-								+ "<p>La team Ease</p></div>"
+						message.setContent("<p>*FrenchVersionBelow*</p>" +
+								"<p></p>" +
+								"<p>Hello & welcome to Ease !</p>" +
+								"<p></p>" +
+								"<p>Ease.space gathers the websites on which you have an account and allows you to login & logout to them in 1 click. All this from a secured personal homepage on your browser. For now, we work on Chrome and Safari.</p>" +
+								"<p></p>" +
+								"<p>This means that once you have added the credentials of an account on your space, you’ll never have to use them again, regardless of the computer or device you have in front of you. The only thing you need is Internet.</p>" +
+								"<p></p>" +
+								"<p>To activate your space : click on the link and follow the steps : h<a href='"+link+"'>https://ease.space/...</a></p>" +
+								"<p></p>" +
+								"<p>See you soon !</p>" +
+								"<p></p>" +
+								"<p>The Ease team</p>" +
+								"<p></p>" +
+								"<hr>" +
+								"<p></p>" +
+								"<p>Hello & bienvenue sur Ease.space !</p>" +
+								"<p></p>" +	
+								"<p>Ease est ton espace personnel intelligent et sécurisé qui regroupe l'ensemble des sites sur lesquels tu as un compte, et qui t’y connecte et déconnecte automatiquement! Ease fonctionne sur Chrome et Safari.</p>" +
+								"<p></p>" +
+								"<p>Autrement dit, une fois tes identifiants enregistrés sur ton espace Ease, tu n’auras plus jamais à les utiliser. Et ce, où que tu sois, quelque soit l’ordinateur et en toute sécurité. Seul pré-requis: avoir internet !</p>" +
+								"<p></p>" +
+								"<p>Pour activer ton espace, clique sur le lien suivant et laisse toi guider: <a href='"+link+"'>https://ease.space/...</a></p>" +
+								"<p></p>" +
+								"<p>A bientôt !</p>" +
+								"<p></p>" +
+								"<p>La team Ease</p>"
 								, "text/html;charset=utf-8");
-
+						
 						Transport.send(message);
 						SI.setResponse(200, "Please, go check your email.");
 					}
