@@ -62,6 +62,7 @@ public class Mail {
 					"<p></p>" +
 					"<p>The Ease team</p>" +
 					"<p></p>" +
+					"<p></p>" +
 					"<hr>" +
 					"<p></p>" +
 					"<p>Hello,</p>" + 

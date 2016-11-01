@@ -114,11 +114,12 @@ public class getEmailLink extends HttpServlet {
 								"<p></p>" +
 								"<p>This means that once you have added the credentials of an account on your space, you’ll never have to use them again, regardless of the computer or device you have in front of you. The only thing you need is Internet.</p>" +
 								"<p></p>" +
-								"<p>To activate your space : click on the link and follow the steps : h<a href='"+link+"'>https://ease.space/...</a></p>" +
+								"<p>To activate your space : click on the link and follow the steps : <a href='"+link+"'>https://ease.space/...</a></p>" +
 								"<p></p>" +
 								"<p>See you soon !</p>" +
 								"<p></p>" +
 								"<p>The Ease team</p>" +
+								"<p></p>" +
 								"<p></p>" +
 								"<hr>" +
 								"<p></p>" +
