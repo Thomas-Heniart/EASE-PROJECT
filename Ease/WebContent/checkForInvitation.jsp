@@ -68,7 +68,7 @@
 		<div class="image-overlay"></div>
 		<img src="resources/images/Ease_Logo.png" />
 		<div class="header-links">
-			<a href="http://www.ease-app.co/secure">Data security at Ease</a>
+			<a href="http://www.ease-app.co/security">Data security at Ease</a>
 		</div>
 		<div class="header-content">
 			<h2>A simple homepage, accessible from any computer, that gets rid of your passwords.</h2>
@@ -99,7 +99,7 @@
 			<div>
 				<p>The new interface to access IESEG services</p>
 				<p>Ease connects you automatically</p>
-				<div class="triangle"></div>
+				<i class="fa fa-chevron-down" aria-hidden="true"></i>
 			</div>
 			<video width="720" height="480" controls autoplay>
   				<source src="resources/videos/video1.mp4" type="video/mp4">
@@ -109,7 +109,7 @@
 		<div>
 			<div>
 				<p>Add your own websites from the catalog</p>
-				<div class="triangle"></div>
+				<i class="fa fa-chevron-down" aria-hidden="true"></i>
 			</div>
 			<video width="720" height="480" controls autoplay>
   				<source src="resources/videos/video2.mp4" type="video/mp4">
@@ -130,7 +130,7 @@
 			<div>
 				<p>Never forget to logout again</p>
 				<p>Logout from everywhere at once, from Ease</p>
-				<p class="triangle"></p>
+				<i class="fa fa-chevron-down" aria-hidden="true"></i>
 			</div>
 			<video width="720" height="480" controls autoplay>
   				<source src="resources/videos/video4.mp4" type="video/mp4">
@@ -160,7 +160,7 @@
 		</form>
 		<div class="security">
 			<h3>Security policy</h3>
-			<p>Our specific encryption method enables a transfer of information without knowing its nature, it is used during your daily connections. This is why Ease does not know either your “Ease password” or your “accounts passwords”. </p>
+			<p>Our specific encryption method enables a transfer of information without knowing its nature, it is used during your daily connections. This is why Ease does not know either your “Ease password” or your “accounts passwords”. <a href="http://www.ease-app.co/security">Know more</a></p>
 		</div>
 		<div class="business">
 			<h3>Business Model</h3>
