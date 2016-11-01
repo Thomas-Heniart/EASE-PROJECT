@@ -162,6 +162,9 @@
 				width: 20px;
 				margin: 5px 5px;
 				vertical-align: bottom;
+				&:hover{
+					cursor:pointer;
+				}
 			}
 			p {
 				display: inline-block;
