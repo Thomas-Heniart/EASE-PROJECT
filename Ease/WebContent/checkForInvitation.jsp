@@ -89,8 +89,8 @@
 					<div class="sk-circle11 sk-circle"></div>
 					<div class="sk-circle12 sk-circle"></div>
 				</div>
-				<p class="error"></p>
-				<p class="success"></p>
+				<p class="error">Sorry you are not on the list</p>
+				<p class="success">Take a look in your mail box ;)</p>
 			</form>
 		</div>
 	</div>
@@ -155,7 +155,7 @@
 					<div class="sk-circle11 sk-circle"></div>
 					<div class="sk-circle12 sk-circle"></div>
 				</div>
-				<p class="error"></p>
+				<p class="error">Sorry you are not on the list</p>
 				<p class="success">Take a look in your mail box ;)</p>
 		</form>
 		<div class="security">
@@ -197,7 +197,6 @@
 				$("#invitationForm, #invitationForm2").addClass("show");
 				$(".error").addClass("show");
 				$(".success").removeClass("show");
-				$(".error").text(retMsg)
 			}, 1000);
 		});
 	});
