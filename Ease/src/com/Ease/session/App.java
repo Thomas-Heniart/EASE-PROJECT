@@ -138,12 +138,11 @@ public class App {
 		public App(String name, Site site, Profile profile, String custom, User user, ServletContext context) throws SessionException {
 			DataBase db = (DataBase)context.getAttribute("DataBase");
 			ResultSet rs1 = db.get("SELECT haveLoginWith FROM websites WHERE website_id = " + site.getId() + ";");
+			this.dataLogin = "false";
 			try {
 				if (rs1.next()) {
 					if (rs1.getString(1) != null && !(rs1.getString(1).equals("null")))
 						this.dataLogin = rs1.getString(1);
-					else
-						this.dataLogin = "false";
 				}
 			} catch (SQLException e1) {
 				e1.printStackTrace();
@@ -221,13 +220,12 @@ public class App {
 			account = Account.getAccount(accountId, user, context);
 			DataBase db = (DataBase)context.getAttribute("DataBase");
 			if(siteId != null) {
+				this.dataLogin = "false";
 				ResultSet rs1 = db.get("SELECT haveLoginWith FROM websites where website_id = " + site.getId() + ";");
 				try {
 					if (rs1.next()) {
-						if (!(rs1.getString(1) == null || rs1.getString(1).equals("null")))
+						if (rs1.getString(1) != null && !(rs1.getString(1).equals("null")))
 							this.dataLogin = rs1.getString(1);
-						else
-							this.dataLogin = "false";
 					}
 				} catch (SQLException e1) {
 					e1.printStackTrace();
