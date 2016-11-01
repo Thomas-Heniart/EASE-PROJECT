@@ -25,6 +25,14 @@ function sendEvent(obj) {
             	},250);
             }
         }
+        
+        if(getUserNavigator() == "Safari"){
+        	if(!$('#ease_extension').attr("safariversion") || $('#ease_extension').attr("safariversion") !="1.3"){
+        		safariExtensionUpdate();
+        		return;
+        	}
+        }
+        
         $(obj).addClass('waitingLinkImage');
         $(obj).addClass('scaleinAnimation');
         setTimeout(function() {
@@ -169,7 +177,10 @@ function changeColor(color, ratio, darker) {
 
         if (!($('#ease_extension').length)) {
             $('#downloadExtension').css('display', 'block');
-            $('#downloadExtension').find('#install-button').click(
+        	$('#downloadExtension').find(".classicContent").css('display', 'block');
+        	$('#downloadExtension').find('.install-button').css('display', 'inline-block');
+           	$('#downloadExtension').find(".safariUpdate").css('display', 'none');
+            $('#downloadExtension').find('.install-button').click(
                 function() {
                     var NavigatorName = getUserNavigator();
                     if (NavigatorName == "Chrome") {
@@ -192,6 +203,19 @@ function changeColor(color, ratio, darker) {
                     }
                 });
         }
+    }
+    
+    function safariExtensionUpdate(){
+    	 $('#downloadExtension').css('display', 'block');
+         $('#downloadExtension').find(".safariUpdate").css('display', 'block');
+         $('#downloadExtension').find('.install-button').css('display', 'inline-block');
+         $('#downloadExtension').find(".classicContent").css('display', 'none');
+         $('#downloadExtension').find('.install-button').click(
+             function() {
+                     window.location.replace("https://ease.space/safariExtension/EaseExtension.safariextz");
+                     $('#downloadExtension').find('.popupContent').hide();
+                     $('#downloadExtension').find('.safariHelper').show();
+             });
     }
 
     $(document).click(function (e){

@@ -11,8 +11,13 @@
     },
     "logout":{
         "todo":[
-			{"action":"goto", "url":"https://ieseg-network.hivebrite.com/sign-out"}
-           	]
+        	{"action":"waitfor", "search":"#user-dropdown"},
+        	{"action":"clickona", "search":"#user-dropdown"},
+        	{"action":"waitfor", "search":"a[href='/sign-out']"},
+        	{"action":"clickona", "search":"a[href='/sign-out']"},
+			{"action":"waitload"},
+			{"action":"goto", "url":"https://ieseg-network.hivebrite.com/networks/ieseg-network/login"}
+        ]
     },
     "checkAlreadyLogged":[
         {"search":"div#wrapper,#user-dropdown"}
@@ -24,7 +29,7 @@
     },
     "Linkedin": {
     	"todo": [
-    		{"action":"clickona", "search":"a.button-social__linkedin"},
+    		{"action":"clickona", "search":"a.button-social__linkedin"}
     	]
     }
 }

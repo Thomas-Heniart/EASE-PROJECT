@@ -197,7 +197,7 @@ var Form = {
 			self.reset();
 		}
 		this.errorCallback = function(retMsg) {
-			self.newAppItem.remmove();
+			self.newAppItem.remove();
 			self.reset();
 			$(parent).find('.alertDiv').addClass('show');
 			showAlertPopup(retMsg, true);
