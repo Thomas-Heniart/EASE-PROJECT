@@ -1,3 +1,10 @@
+var waitForExtension = true;
+$(document).ready(function(){
+	setTimeout(function(){
+		waitForExtension = false;
+	},1000);
+});
+
 function sendEvent(obj) {
     if (!($(obj).hasClass('waitingLinkImage'))) {
         var appId = $(obj).closest('.siteLinkBox').attr('id');
@@ -9,8 +16,14 @@ function sendEvent(obj) {
         mixpanel.track("App clicks");
         
         if (!($('#ease_extension').length)) {
-            checkForExtension();
-            return;
+            if(!waitForExtension){
+            	checkForExtension();
+                return;
+            } else {
+            	setTimeout(function(){
+            		sendEvent(obj);
+            	},250);
+            }
         }
         $(obj).addClass('waitingLinkImage');
         $(obj).addClass('scaleinAnimation');

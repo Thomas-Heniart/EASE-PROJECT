@@ -467,13 +467,9 @@ function showConfirmDeleteAppPopup(elem, event) {
 
 $(document).ready(function() {
 	$('.catalogApp').click(function(){
-		$(".arrowDragDrop").show();
-		setTimeout(function(){$(".arrowDragDrop").css("opacity",1);},10);
+		$(".arrowDragDrop").css("opacity",1);
 		setTimeout(function(){
 			$(".arrowDragDrop").css("opacity",0);
-			setTimeout(function(){
-				$(".arrowDragDrop").hide();
-			}, 500);
 		},1000);
 	});
 	$('.catalogApp').draggable({
