@@ -140,7 +140,7 @@ public class App {
 			ResultSet rs1 = db.get("SELECT haveLoginWith FROM websites WHERE website_id = " + site.getId() + ";");
 			try {
 				if (rs1.next()) {
-					if (!(rs1.getString(1) == null && rs1.getString(1).equals("null")))
+					if (rs1.getString(1) != null && !(rs1.getString(1).equals("null")))
 						this.dataLogin = rs1.getString(1);
 					else
 						this.dataLogin = "false";
