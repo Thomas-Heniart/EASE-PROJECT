@@ -54,6 +54,7 @@ pageEncoding="UTF-8"%>
 
 <body id="invitationBody">
 	<div class="invitation-header">
+		<div class="image-overlay"></div>
 		<img src="resources/images/Ease_Logo.png"/>
 		<div class="header-links">
 			<a href="#">Team</a>
@@ -63,7 +64,7 @@ pageEncoding="UTF-8"%>
 			<h2>A simple homepage, accessible from any computer, that gets rid of your password.</h2>
 			<p>As IESEG students or staff, EASE now connects you to your web accounts in 1 click.</p>
 			<form action="letsgo" id="registrationForm">
-				<input name="email" placeholder="Enter your email" /><span><button type="submit">Get started !</button></span>
+				<input name="email" placeholder="Enter your email" /><button type="submit">Get started !</button>
 			</form>
 		</div>
 	</div>
