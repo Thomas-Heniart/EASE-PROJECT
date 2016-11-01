@@ -73,7 +73,7 @@
 		<div class="header-content">
 			<h2>A simple homepage, accessible from any computer, that gets rid of your passwords.</h2>
 			<p>As IESEG students or staff, EASE now connects you to your web accounts in 1 click.</p>
-			<form action="letsgo" id="invitationForm" class="show">
+			<form action="ieseg" id="invitationForm" class="show">
 				<input name="email" placeholder="Enter your email" /><button type="submit">Get started !</button>
 				<div class="sk-fading-circle loading">
 	 				<div class="sk-circle1 sk-circle"></div>
@@ -101,7 +101,7 @@
 				<p>Ease connects you automatically</p>
 				<i class="fa fa-chevron-down" aria-hidden="true"></i>
 			</div>
-			<video width="720" height="480" controls autoplay>
+			<video width="720" height="480" loop controls autoplay>
   				<source src="resources/videos/video1.mp4" type="video/mp4">
 				Your browser does not support the video tag.
 			</video>
@@ -111,7 +111,7 @@
 				<p>Add your own websites from the catalog</p>
 				<i class="fa fa-chevron-down" aria-hidden="true"></i>
 			</div>
-			<video width="720" height="480" controls autoplay>
+			<video width="720" height="480" loop controls autoplay>
   				<source src="resources/videos/video2.mp4" type="video/mp4">
 				Your browser does not support the video tag.
 			</video>
@@ -121,7 +121,7 @@
 				<p>Customize your platform as easily as a smartphone</p>
 				<div class="triangle"></div>
 			</div>
-			<video width="720" height="480" controls autoplay>
+			<video width="720" height="480" loop controls autoplay>
   				<source src="resources/videos/video3.mp4" type="video/mp4">
 				Your browser does not support the video tag.
 			</video>
@@ -132,14 +132,14 @@
 				<p>Logout from everywhere at once, from Ease</p>
 				<i class="fa fa-chevron-down" aria-hidden="true"></i>
 			</div>
-			<video width="720" height="480" controls autoplay>
+			<video width="720" height="480" loop controls autoplay>
   				<source src="resources/videos/video4.mp4" type="video/mp4">
 				Your browser does not support the video tag.
 			</video>
 		</div>
 	</div>
 	<div class="invitation-footer">
-		<form action="letsgo" id="invitationForm2" class="show">
+		<form action="ieseg" id="invitationForm2" class="show">
 			<input name="email" placeholder="Enter your email" /><button type="submit">Get started !</button>
 			<div class="sk-fading-circle loading">
 	 				<div class="sk-circle1 sk-circle"></div>
@@ -173,7 +173,6 @@
 	<script>
 	$("#invitationForm, #invitationForm2").submit(function(e) {
 		e.preventDefault();
-		var self = $(this);
 		var email = $(this).find("input[name='email']").val();
 		$("#invitationForm, #invitationForm2").removeClass("show");
 		$(".loading").addClass("show");
