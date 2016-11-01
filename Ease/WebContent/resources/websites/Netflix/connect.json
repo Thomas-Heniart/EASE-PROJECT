@@ -4,24 +4,24 @@
     "home":"https://www.netflix.com/Login",
     "connect":{
         "todo":[
-        	{"action":"fill", "what":"login", "search":".simple-login-form input[type='email']", "grave":true},
-            {"action":"click", "search":".simple-login-form button.login-button"},
-            {"action":"waitfor", "search":".loginPassword button.login-button"},
-            {"action":"fill", "what":"password", "search":".two-step-login-form input[type='password']"},
-            {"action":"click", "search":".loginPassword button.login-button"}
+        	{"action":"fill", "what":"login", "search":".login-form input[name='email']", "grave":true},
+            {"action":"fill", "what":"password", "search":".login-form input[name='password']"},
+            {"action":"click", "search":".btn.login-button.btn-submit"}
          ]
     },
     "Facebook":{
     	"todo":[
-    		{"action":"click", "search":".login-form .fb-login-form-btn"}
+    		{"action":"click", "search":".btn.fb-login-form-btn.btn-submit"}
     	]
     },
     "logout":{
         "todo":[
-            {"action":"goto", "url":"https://www.instagram.com/accounts/logout/"}
-            ]
+            {"action":"goto", "url":"https://www.netflix.com/SignOut?lnkctr=mL"},
+            {"action":"waitload"},
+            {"action":"goto", "url":"https://www.netflix.com/Login"}
+        ]
     },
     "checkAlreadyLogged":[
-        {"search":"a._soakw._vbtk2.coreSpriteDesktopNavProfile"}
+        {"search":".account-menu-item"}
     ]
 }

@@ -43,6 +43,75 @@
 	}
 }
 
+#AddUpdatePopup {
+	min-width: 200px;
+	max-width: 100%;
+	width: 400px;
+	font-family: $defaultFont;
+	.md-content {
+		border-radius: 15px;
+		padding-top: 20px;
+		font-family: $defaultFont;
+	p.title {
+		text-align: center;
+		font-size: 20px;
+		
+	}
+	p.text {
+		text-align: center;
+		margin-top: 5%;
+		margin-bottom: 5%;
+	}
+	p.error {
+		margin-top: 5%;
+		margin-bottom: 5%;
+		color: #FF0000;
+	}
+	.app {
+		margin: auto;
+		img {
+			height: 10%;
+			width: 10%;
+		}
+		p {
+			display: inline-block;
+			margin: 0 5px;
+		}
+		input{
+			display: inline-block;
+			color: #000000;
+		}
+	}
+	.error {
+		margin-bottom: 10px;
+	}
+	.buttonSet {
+			text-align: center;
+			padding-bottom: 20px;
+			button {
+				display: inline-block;
+				width: 49%;
+				padding: 7px;
+			}
+			#accept {
+				background-color: #ec555b;
+				border-color: #ec555b;
+				&:hover {
+					background-color: lighten(#ec555b, 3%);
+				}
+			}
+			#close {
+				background-color: white;
+				color: black;
+				border-color: white;
+				&:hover {
+					background-color: darken(white, 3%);
+				}
+			}
+		}
+	}
+}
+
 #PopupDeleteApp {
 	min-width: 200px;
 	max-width: 100%;
@@ -115,6 +184,7 @@
 				width: 80%;
 				float: left;
 				p {
+                    font-size: 1.15em;
 					padding: 0px;
 					padding-left: 2px;
 					text-align: center;

@@ -12,7 +12,9 @@
 	},
 	"logout":{
 		"todo":[
-			{"action":"click", "search":"td[onclick=javascript:document.location='/newsite/controlnew/newdelog.cfm';]"}
+			{"action":"goto", "url":"https://www.7speaking.com/newsite/controlnew/newdelog.cfm"},
+			{"action":"waitload"},
+			{"action":"goto", "url":"https://www.7speaking.com/newsite/controlnew/newlogin.cfm"}
 			]
 	},
 	"checkAlreadyLogged":[

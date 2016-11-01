@@ -7,7 +7,7 @@
 		<div class="popupHeader">
 			<img class="logoApp" src="" />
 			<div class="textContent">
-				<p>Type your password for the last time ;)</p>
+				<p>Type your password<br>for the last time ;)</p>
 			</div>
 		</div>
 		<%@ include file="AddAppForm.jsp" %>
