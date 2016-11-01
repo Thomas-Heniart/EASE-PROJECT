@@ -71,9 +71,18 @@
         color: white;
         font-size:18px;
         font-weight:600;
-				a {
-					color: white;
-					text-decoration: underline;
-				}
+        a {
+			color: white;
+			text-decoration: underline;
+            &:visited {
+                color: white;
+            }
+            &:hover {
+                color: lightgrey;
+            }
+            &:active {
+                color: darkgrey;
+            }
+        }
     }
 }
