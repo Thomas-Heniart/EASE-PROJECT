@@ -18,9 +18,6 @@ pageEncoding="UTF-8"%>
 	<link rel="stylesheet" href="css/owl.theme.css" />
 	<link rel="stylesheet" href="css/owl.transitions.css" />
 
-
-
-
 	<link rel="stylesheet" href="css/lib/vicons-font/vicons-font.css">
 	<link rel="stylesheet" href="css/lib/vicons-font/buttons.css">
 	<link rel="stylesheet" href="css/lib/textInputs/set1.css">
@@ -101,8 +98,7 @@ pageEncoding="UTF-8"%>
 				</label>
 			</span>
 			<div class="term">
-				<a href="http://www.ease-app.co/privacy" target="_blank">Here is a link to our terms and conditions.</a>
-				<p>I accept the terms and conditions</p><input class="check" type="checkbox" />
+				<p>I accept the <a href="http://www.ease-app.co/privacy" target="_blank">terms and conditions</a></p><input class="check" type="checkbox" />
 			</div>
 			</center>
 		</form>

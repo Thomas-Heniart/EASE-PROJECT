@@ -77,7 +77,7 @@ public class getEmailLink extends HttpServlet {
 			if (db.connect() != 0){
 				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 			} else if (email == null || Regex.isEmail(email) == false){
-				SI.setResponse(ServletItem.Code.BadParameters, "Bad email.");
+				SI.setResponse(ServletItem.Code.BadParameters, "Incorrect email.");
 			} else {		
 				ResultSet rs;
 				rs = db.get("select * from users where email ='" + email + "';");
@@ -106,7 +106,7 @@ public class getEmailLink extends HttpServlet {
 								InternetAddress.parse(email));
 						message.setSubject(MimeUtility.encodeText("Active ton compte Ease !", "utf-8", null));
 						String link = "https://ease.space/registerInv?email=" + email + "&code=" + invitationCode;
-						message.setContent("<p>*FrenchVersionBelow*</p>" +
+						message.setContent("<p>*French version below*</p>" +
 								"<p></p>" +
 								"<p>Hello & welcome to Ease !</p>" +
 								"<p></p>" +
