@@ -119,7 +119,7 @@
 		<div>
 			<div>
 				<p>Customize your platform as easily as a smartphone</p>
-				<div class="triangle"></div>
+				<i class="fa fa-chevron-down" aria-hidden="true"></i>
 			</div>
 			<video width="720" height="480" loop controls autoplay>
   				<source src="resources/videos/video3.mp4" type="video/mp4">
