@@ -6,9 +6,12 @@
         "url":"https://login.skype.com/login/",
         "todo":[
             {"action":"fill", "what":"login", "search":"input[name='username']"},
-            {"action":"fill", "what":"password", "search":"input[name='password']"},
-            {"action":"submit", "search":"form#loginForm"}
-            ]
+            {"action":"submit", "search":"form#loginForm"},
+            {"action":"waitfor", "search":"input[name='loginfmt']"},
+            {"action":"fill", "what":"login", "search":"input[name='loginfmt']"},
+            {"action":"fill", "what":"login", "search":"input[name='SUName0']"},
+            {"action":"fill", "what":"password", "search":"input[name='passwd']"}
+        ]
     },
     "Facebook":{
     	"todo":[

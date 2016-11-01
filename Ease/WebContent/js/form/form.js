@@ -418,6 +418,13 @@ var Form = {
 	AddUpdateForm : function(rootEl) {
 		constructorForm.apply(this, arguments);
 		var self = this;
-		
+		this.beforeSubmit = function() {
+		};
+		this.successCallback = function(retMsg) {
+			self.oParent.close();
+		};
+		this.errorCallback = function(retMsg) {
+			self.oParent.error.html(retMsg);
+		};
 	}
 }

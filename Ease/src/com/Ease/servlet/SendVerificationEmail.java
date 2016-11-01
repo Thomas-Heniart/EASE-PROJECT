@@ -70,6 +70,8 @@ public class SendVerificationEmail extends HttpServlet {
 			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 		} else if (email == null || email.isEmpty()) {
 			SI.setResponse(ServletItem.Code.BadParameters, "Bad email");
+		} else if (user.getEmails().containsKey(email) == false) {
+			SI.setResponse(ServletItem.Code.LogicError, "Email already verified.");
 		} else {
 			String verificationCode = null;
 			ResultSet rs = db.get("SELECT verificationCode FROM usersEmails WHERE email = '" + email + "' AND user_id = " + user.getId() + ";");
@@ -95,8 +97,8 @@ public class SendVerificationEmail extends HttpServlet {
 
 	public static void sendEmail(String verificationCode, String newEmail, String askingEmail)
 			throws UnsupportedEncodingException, MessagingException {
-		String link = "https://localhost:8080/HelloWorld/AddEmail?email=" + newEmail + "&code=" + verificationCode;
-		//String link = "https://ease.space/AddEmail?email=" + newEmail + "&code=" + verificationCode;
+		//String link = "https://localhost:8080/HelloWorld/AddEmail?email=" + newEmail + "&code=" + verificationCode;
+		String link = "https://ease.space/AddEmail?email=" + newEmail + "&code=" + verificationCode;
 		Properties props = new Properties();
 		props.put("mail.smtp.host", "smtp.gmail.com");
 		props.put("mail.smtp.socketFactory.port", "465");

@@ -55,76 +55,37 @@
 				<div class="ProfileControlPanel" index="0">
 
 					<div class="profileSettingsTab">
-						<div class="sectionHeader" id="NameSection">
-							<p class="title">Profile name</p>
-							<div class="directInfo">
-								<p>Profile name</p>
-							</div>
-						</div>
 						<div class="sectionContent" id="contentName">
 							<div id="modifyNameForm">
-								<input id="profileName" name="profileName" type="text"
-								placeholder="Profile name...">
-								<div class="buttonSet">
-									<button class="button" id="validate">Validate</button>
-									<button class="button" id="cancel">Cancel</button>
+								<input id="profileName" name="profileName" type="text"  maxlength="20"
+								placeholder="Profile name..." />
+								<div id="validate">
+									<i class="fa fa-refresh" aria-hidden="true"></i>
 								</div>
 							</div>
-						</div>
-						<div class="sectionHeader" id="ColorSection">
-							<p class="title">Color</p>
-							<div class="directInfo" style="background-color: #35a7ff"></div>
 						</div>
 						<div class="sectionContent" id="contentColor">
-							<p>Choose your color</p>
 							<div id="modifyColorForm">
-								<div class="colorChooser">
-									<input name="color" type="hidden" id="color">
-									<div class="lineColor">
-										<div class="color" color="#ffe74c"
-										style="background-color: #ffe74c"></div>
-										<div class="color" color="#35a7ff"
-										style="background-color: #35a7ff"></div>
-										<div class="color" color="#6bf178"
-										style="background-color: #6bf178"></div>
-										<div class="color" color="#ec555b"
-										style="background-color: #ec555b"></div>
-										<div class="color" color="#805b9b"
-										style="background-color: #805b9b"></div>
-									</div>
-									<div class="lineColor">
-										<div class="color" color="#ff974f"
-										style="background-color: #ff974f"></div>
-										<div class="color" color="#373b60"
-										style="background-color: #373b60"></div>
-										<div class="color" color="#ff618a"
-										style="background-color: #ff618a"></div>
-									</div>
-								</div>
-								<div class="buttonSet">
-									<button class="button" id="validate">Validate</button>
-									<button class="button" id="cancel">Cancel</button>
-								</div>
+								<div class="color" color="#ffe74c" style="background-color: #ffe74c"></div>
+								<div class="color" color="#35a7ff" style="background-color: #35a7ff"></div>
+								<div class="color" color="#6bf178" style="background-color: #6bf178"></div>
+								<div class="color" color="#ec555b" style="background-color: #ec555b"></div>
+								<div class="color" color="#805b9b" style="background-color: #805b9b"></div>
+								<div class="color" color="#ff974f" style="background-color: #ff974f"></div>
+								<div class="color" color="#373b60" style="background-color: #373b60"></div>
+								<div class="color" color="#ff618a" style="background-color: #ff618a"></div>
 							</div>
-						</div>
-						<div class="sectionHeader" id="DeleteProfilSection">
-							<p class="title">Delete profile</p>
 						</div>
 						<div class="sectionContent" id="contentDeleteProfil">
 							<div id="deleteProfileForm">
-								<p>By deleting your profile you will lose all related
-									information and associated accounts</p>
-									<div class="buttonSet">
-										<button class="button" id="validate">Validate</button>
-										<button class="button" id="cancel">Cancel</button>
-									</div>
-								</div>
+								<div id="validate">Delete profile</div>
 							</div>
 						</div>
 					</div>
-					<div class="SitesContainer"></div>
 				</div>
+				<div class="SitesContainer"></div>
 			</div>
 		</div>
 	</div>
+</div>
 </div>

@@ -9,12 +9,14 @@
 		$('.step1').css('display', 'none');
 		$('.step2').css('display', 'none');
 		if (TutorialSteps == 1){
-			if ($(".emptyAppIndicator").length){
-				$('.step3').css({
-					'display': 'block',
-					'top': $(".emptyAppIndicator").offset().top - $(".siteLinkBox").height() + $(".emptyAppIndicator").height() / 2,
-					'left': $(".emptyAppIndicator").offset().left + $(".emptyAppIndicator").width()
-				});			
+			if ($(".siteLinkBox.emptyApp").length){
+				setTimeout(function(){
+					$('.step3').css({
+						'display': 'block',
+						'top': $(".siteLinkBox.emptyApp").offset().top,
+						'left': $(".siteLinkBox.emptyApp").offset().left + $(".siteLinkBox.emptyApp").width()
+					});
+				}, 500);
 			}else {
 				TutorialSteps++;
 			}
@@ -35,7 +37,8 @@
 		if (TutorialSteps == 1){
 			TutorialSteps++;
 			$('.step3').css('display', 'none');
-			$('.step4').css('display', 'block');
+			if (easeDashboard.isEditMode)
+				$('.step4').css('display', 'block');
 		}
 	}
 	function addAppTutorial (){
@@ -50,19 +53,19 @@
 		if ($('#tutorialView').length == 0)
 			return;
 		setTimeout(function (){
-		$('.step1').css({
-			'display': 'block',
-			'right': '2%',
-			'top': '40%',
-			'transform': 'translateX(-17%)'
-		});
-		if ($(".ProfileBox[custom='true']").length){
-			$('.step2').css({
+			$('.step1').css({
 				'display': 'block',
-				'top': $(".ProfileBox[custom='true']").offset().top,
-				'left': $(".ProfileBox[custom='true']").offset().left + $(".ProfileBox[custom='true']").width()
-			});			
-		}
+				'right': '2%',
+				'top': '40%',
+				'transform': 'translateX(-17%)'
+			});
+			if ($(".ProfileBox[custom='true']").length){
+				$('.step2').css({
+					'display': 'block',
+					'top': $(".ProfileBox[custom='true']").offset().top,
+					'left': $(".ProfileBox[custom='true']").offset().left + $(".ProfileBox[custom='true']").width()
+				});			
+			}
 		}, 1000);
 
 	});

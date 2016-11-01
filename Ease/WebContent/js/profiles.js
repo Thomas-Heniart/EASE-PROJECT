@@ -133,6 +133,8 @@ var Profile = function(rootEl){
 		}, 300);
 		if (profiles.length <= 15)
 			easeDashboard.profileAdder.css('display', '');
+		if (self.parentItem.parent().find('.item').length == 1)
+			self.parentItem.parent().width('0px');
 	}
 	this.showSettings = function(){
 		self.SettingsButton.addClass('fa-rotate-90');
@@ -197,8 +199,19 @@ var Profile = function(rootEl){
 	setupSortableContainer(this.appContainer);
 	//settings
 	//delete profile
-	this.qRoot.find('#deleteProfileForm #validate').click(function() {			
-		deleteProfilePopup.open(self);
+	this.qRoot.find('#deleteProfileForm #validate').click(function() {
+		if (self.appContainer.find('.siteLinkBox').length > 0)
+			deleteProfilePopup.open(self);
+		else {
+			postHandler.post('deleteProfile', {
+				index : self.id
+			}, function() {
+				easeLoadingIndicator.hide();
+			}, function(retMsg) {
+				self.remove();
+			}, function(retMsg) {
+			}, 'text');			
+		}
 	});
 	//edit name
 	this.qRoot.find('#modifyNameForm #validate').click(function(){
@@ -211,7 +224,7 @@ var Profile = function(rootEl){
 			easeLoadingIndicator.hide();
 		}, function(retMsg) {
 			self.profileHeader.find('p').text('@' + name);
-			$(this).parent().find('input').val('');
+			self.qRoot.find('#modifyNameForm input').val('');
 		}, function(retMsg) {
 		}, 'text');
 	});
@@ -228,9 +241,9 @@ var Profile = function(rootEl){
 			easeLoadingIndicator.hide();
 		}, function(retMsg) {
 			self.profileHeader.css('background-color', color);
-			self.profileHeader.attr('color', color);
-			}, function(retMsg) {
-			}, 'text');
+			self.qRoot.attr('color', color);
+		}, function(retMsg) {
+		}, 'text');
 	});
 //	setupProfileSettings(self.qRoot);
 };
@@ -454,6 +467,14 @@ function showConfirmDeleteAppPopup(elem, event) {
 }
 
 $(document).ready(function() {
+	$('.catalogApp').click(function(){
+		if ($('#tutorialView').length)
+			return;
+		$(".arrowDragDrop").css("opacity",1);
+		setTimeout(function(){
+			$(".arrowDragDrop").css("opacity",0);
+		},1000);
+	});
 	$('.catalogApp').draggable({
 		cursor : 'move',
 		cursorAt : {

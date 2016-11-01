@@ -143,7 +143,7 @@ $(document).ready(function(){
 	</div>
 	
 	<div class="phrase">
-		<p>A simple homepage to access all your web without passwords. <a href="https://www.ease-app.co" target="_blank">Discover</a></p>
+		<p>A simple homepage to access all your web without passwords. <a href="http://www.ease-app.co" target="_blank">Discover</a></p>
 	</div>
 	
 	<p class="homepageOnoffContainer displayedByPlugin">
