@@ -153,15 +153,12 @@
           margin: auto;
           font-size: 1.25em;
         }
-        .triangle {
-          width: 0;
-          height: 0;
-          min-height: 0;
-          max-height: 0;
-          border-style: solid;
-          border-width: 15px 10px 0 10px;
-          border-color: $themeColor transparent transparent transparent;
-          margin: auto;
+        i {
+          display: block;
+          text-align: center;
+          color: $themeColor;
+          margin-top: 10px;
+          font-size: 1.5em;
         }
       }
     }
@@ -216,6 +213,11 @@
         width: 52%;
         text-align: justify;
         font-size: 1em;
+        a {
+          text-decoration: underline;
+          color: $themeWhiteColor;
+          cursor: pointer;
+        }
       }
     }
     .information {
