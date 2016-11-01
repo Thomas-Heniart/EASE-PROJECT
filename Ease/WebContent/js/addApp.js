@@ -57,7 +57,10 @@ function showAddAppPopup(container, helper) {
 
 	popup.find('.loginSsoChooser .ChooserContent').empty();
 	popup.find('.loginSsoChooser').css('display', 'none');
-
+	
+	popup.find("button.Active").prop('disabled', true);
+	popup.find("button.Active").removeClass("Active");
+	
 	item.attr('name', $(helper).attr("name"));
 	item.find('img.logo').attr('src', $(helper).find('img').attr("src"));
 	item.find('.siteName p').text($(helper).attr("name"));
@@ -88,7 +91,8 @@ function showAddAppPopup(container, helper) {
 		if (apps.length != 0)
 			ssoChooser.css('display', 'block');
 		for (var i = 0; i < apps.length; i++) {
-			if (!logins.includes($(apps[i]).attr('login'))) {
+			console.log($(apps[i]).attr('login'));
+			if (!logins.includes($(apps[i]).attr('login')) && $(apps[i]).attr('login')!="" && $(apps[i]).attr('login')!=null ) {
 				SsoHelper.find('p').text($(apps[i]).attr('login'));
 				SsoHelper.attr('aId', $(apps[i]).attr("id"));
 				SsoHelper.find('img').attr('src',
@@ -108,7 +112,7 @@ function showAddAppPopup(container, helper) {
 	}
 
 	if ($(helper).attr('data-nologin') == "true") {
-		popup.find('#AddAppForm').css('display', 'none');
+		popup.find('.classicLogin').removeClass("show");
 		$('.or').css('display', 'none');
 	}
 

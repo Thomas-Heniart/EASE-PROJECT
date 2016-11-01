@@ -11,7 +11,7 @@ import org.json.simple.JSONArray;
 
 public class Site {
 	enum SiteData {
-		NOTHING, ID, URL, NAME, FOLDER, HAVELOGINBUTTON, HAVELOGINWITH, SSO, NOLOGIN, HOMEPAGE
+		NOTHING, ID, URL, NAME, FOLDER, HAVELOGINBUTTON, HAVELOGINWITH, SSO, NOLOGIN, HOMEPAGE, HIDDEN
 	}
 
 	protected String id;
@@ -23,6 +23,7 @@ public class Site {
 	protected String[] haveLoginWith;
 	protected String sso;
 	protected boolean noLogin;
+	protected boolean hidden;
 	protected List<Tag> tags;
 
 	public Site(ResultSet rs) {
@@ -38,6 +39,7 @@ public class Site {
 			haveLoginWith = (tmp != null) ? tmp.split(",") : "".split(",");
 			sso = rs.getString(SiteData.SSO.ordinal());
 			noLogin = (rs.getString(SiteData.NOLOGIN.ordinal()).equals("1")) ? true : false;
+			hidden = (rs.getString(SiteData.HIDDEN.ordinal()).equals("1")) ? true : false;
 		} catch (SQLException e) {
 
 		}
@@ -95,6 +97,10 @@ public class Site {
 	
 	public boolean noLogin(){
 		return noLogin;
+	}
+	
+	public boolean isHidden(){
+		return hidden;
 	}
 
 	public String getLoginWith() {
