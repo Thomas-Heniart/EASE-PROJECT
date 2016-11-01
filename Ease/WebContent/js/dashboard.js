@@ -11,9 +11,10 @@ var Dashboard = function(rootEl){
 		self.rootEl.removeClass('editMode');
 	}
 	this.reinitColumns = function(){
+		alert('lala');
 		this.columns.each(function(){
-			if ($(this).find('.item').length == 0)
-				$(this).css('width', '0');
+			if (!($(this).find('.item').length))
+				$(this).css('width', '0px');
 		});
 	}
 	if ($('.ProfilesHandler .item').length >= 15){
