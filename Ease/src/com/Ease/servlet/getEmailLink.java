@@ -110,7 +110,7 @@ public class getEmailLink extends HttpServlet {
 								"<p></p>" +
 								"<p>Hello & welcome to Ease !</p>" +
 								"<p></p>" +
-								"<p>Ease.space gathers the websites on which you have an account and allows you to login & logout to them in 1 click. All this from a secured personal homepage on your browser. For now, we work on Chrome and Safari.</p>" +
+								"<p>Ease.space gathers the websites on which you have an account and allows you to login & logout to them in 1 click. All this from a secured personal homepage on your browser. For now, it works on Chrome and Safari.</p>" +
 								"<p></p>" +
 								"<p>This means that once you have added the credentials of an account on your space, you’ll never have to use them again, regardless of the computer or device you have in front of you. The only thing you need is Internet.</p>" +
 								"<p></p>" +
