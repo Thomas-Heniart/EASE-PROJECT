@@ -3,12 +3,15 @@ var Dashboard = function(rootEl){
 	this.rootEl = rootEl;
 	this.columns = this.rootEl.find('.dashboardColumn');
 	this.profileAdder = this.rootEl.find('.profileAdder');
+	this.isEditMode = false;
 
 	this.enterEditMode = function(){
 		self.rootEl.addClass('editMode');
+		self.isEditMode = true;
 	}
 	this.leaveEditMode = function(){
 		self.rootEl.removeClass('editMode');
+		self.isEditMode = false;
 	}
 	this.reinitColumns = function(){
 		alert('lala');
