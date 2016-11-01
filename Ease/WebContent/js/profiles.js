@@ -468,6 +468,8 @@ function showConfirmDeleteAppPopup(elem, event) {
 
 $(document).ready(function() {
 	$('.catalogApp').click(function(){
+		if ($('#tutorialView').length)
+			return;
 		$(".arrowDragDrop").css("opacity",1);
 		setTimeout(function(){
 			$(".arrowDragDrop").css("opacity",0);
