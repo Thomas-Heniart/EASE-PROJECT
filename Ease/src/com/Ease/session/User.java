@@ -592,11 +592,18 @@ public class User {
 				if ((app = haveThisCustomApp(customAppId)) == null) {
 					ResultSet rs2 = db.get("select * from customApps where id=" + customAppId + ";");
 					rs2.next();
-					app = new App(rs2.getString(4),
-							((SiteManager) context.getAttribute("siteManager")).get(rs2.getString(2)), profile,
-							customAppId, this, context);
-					apps.add(app);
-					profile.addApp(app);
+					String websiteId = rs2.getString(2);
+					if (websiteId != null) {
+						app = new App(rs2.getString(4), ((SiteManager) context.getAttribute("siteManager")).get(websiteId), profile, customAppId, this, context);
+					} else {
+						ResultSet rs3 = db.get("select * from celcatId where email='" + email + "';");
+						if (rs3.next())
+							app = new App(rs2.getString(4), rs3.getString(2), profile, customAppId, this, context);
+					}
+					if (app != null) {
+						apps.add(app);
+						profile.addApp(app);
+					}
 				}
 			}
 			return profile;
