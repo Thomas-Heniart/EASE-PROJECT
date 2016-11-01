@@ -173,6 +173,7 @@
 	<script>
 	$("#invitationForm, #invitationForm2").submit(function(e) {
 		e.preventDefault();
+		var self = $(this);
 		var email = $(this).find("input[name='email']").val();
 		$("#invitationForm, #invitationForm2").removeClass("show");
 		$(".loading").addClass("show");
