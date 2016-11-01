@@ -78,7 +78,7 @@
 		<div class="custom-button">
 			<button type="submit" form="lostPasswordForm" value="Submit"><span>Go !</span></button>
 			<div class="loadHelper centeredItem">
-				<div class="sk-fading-circle">
+				<div class="sk-fading-circle loading">
 				  <div class="sk-circle1 sk-circle"></div>
 				  <div class="sk-circle2 sk-circle"></div>
 				  <div class="sk-circle3 sk-circle"></div>
