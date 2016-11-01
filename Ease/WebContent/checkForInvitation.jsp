@@ -62,15 +62,39 @@ pageEncoding="UTF-8"%>
 		<div class="header-content">
 			<h2>A simple homepage, accessible from any computer, that gets rid of your password.</h2>
 			<p>As IESEG students or staff, EASE now connects you to your web accounts in 1 click.</p>
-			<form action="letsgo" id="registreationForm">
+			<form action="letsgo" id="registrationForm">
 				<input name="email" placeholder="Enter your email" /><span><button type="submit">Get started !</button></span>
 			</form>
 		</div>
 	</div>
 	<div class="invitation-content">
 		<div>
-			<img/>
-			<p>The new interface to access IESEG services. Log in to the services without passwords.</p>
+			<img src="resources/images/bckGround.png"/>
+			<div>
+				<p>The new interface to access IESEG services.</p>
+				<p>Log in to the services without passwords.</p>
+			</div>
+		</div>
+		<div>
+			<div>
+				<p>Add your own websites from the catalog</p>
+				<p>1 click away from anywhere on the web.</p>
+			</div>
+			<img src="resources/images/bckGround.png"/>
+		</div>
+		<div>
+			<img src="resources/images/bckGround.png"/>
+			<div>
+				<p>Customize your platform</p>
+				<p>As easy as a smartphone.</p>
+			</div>
+		</div>
+		<div>
+			<div>
+				<p>Never forget to logout, again.</p>
+				<p>Logout from everywhere at once, from Ease.</p>
+			</div>
+			<img src="resources/images/bckGround.png"/>
 		</div>
 	</div>
 	<!-- <h1>Welcome</h1>

@@ -26,7 +26,7 @@
       width: 60%;
       text-align: center;
       left: 20%;
-      color: white;
+      color: $themeWhiteColor;
       bottom: 10%;
       h2 {
         text-shadow: black 0px 0px 30px, black 0px 0px 30px, black 0px 0px 30px, black 0px 0px 30px;
@@ -50,6 +50,7 @@
           border-top-right-radius: 0;
           border-bottom-right-radius: 0;
           padding-left: 3px;
+          color: black;
         }
         button {
           border-radius: 5px;
@@ -57,6 +58,32 @@
           border: 0px solid;
           border-top-left-radius: 0;
           border-bottom-left-radius: 0;
+        }
+      }
+    }
+  }
+  .invitation-content {
+    position: absolute;
+    width: 100%;
+    top: 45%;
+    background-color: $themeWhiteColor;
+    div {
+      position: relative;
+      width: 90%;
+      margin: auto;
+      img {
+        width: 50%;
+        padding: 3% 6%;
+      }
+      div {
+        display: inline-block;
+        position: relative;
+        width: 45%;
+        p {
+          width: 70%;
+          text-align: center;
+          margin: auto;
+          font-size: 1.25em;
         }
       }
     }
