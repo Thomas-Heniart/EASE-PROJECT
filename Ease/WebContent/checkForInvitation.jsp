@@ -68,7 +68,7 @@
 		<div class="image-overlay"></div>
 		<img src="resources/images/Ease_Logo.png" />
 		<div class="header-links">
-			<a href="http://www.ease-app.co/security">Data security at Ease</a>
+			<a target="_blank" href="http://www.ease-app.co/security">Data security at Ease</a>
 		</div>
 		<div class="header-content">
 			<h2>A simple homepage, accessible from any computer, that gets rid of your passwords.</h2>
@@ -160,7 +160,7 @@
 		</form>
 		<div class="security">
 			<h3>Security policy</h3>
-			<p>Our specific encryption method enables a transfer of information without knowing its nature, it is used during your daily connections. This is why Ease does not know either your “Ease password” or your “accounts passwords”. <a href="http://www.ease-app.co/security">Know more</a></p>
+			<p>Our specific encryption method enables a transfer of information without knowing its nature, it is used during your daily connections. This is why Ease does not know either your “Ease password” or your “accounts passwords”. <a target="_blank" href="http://www.ease-app.co/security">Know more</a></p>
 		</div>
 		<div class="business">
 			<h3>Business Model</h3>
