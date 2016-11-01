@@ -37,7 +37,8 @@
 		if (TutorialSteps == 1){
 			TutorialSteps++;
 			$('.step3').css('display', 'none');
-			$('.step4').css('display', 'block');
+			if (easeDashboard.isEditMode)
+				$('.step4').css('display', 'block');
 		}
 	}
 	function addAppTutorial (){
