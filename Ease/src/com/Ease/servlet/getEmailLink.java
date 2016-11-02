@@ -85,7 +85,7 @@ public class getEmailLink extends HttpServlet {
 					SI.setResponse(ServletItem.Code.BadParameters, "An account already exist with this email, to claim it, please email : benjamin@ease-app.co");
 				} else {
 					if ((rs = db.get("select * from invitations where email ='" + email + "';")) == null || !(rs.next())){
-						SI.setResponse(ServletItem.Code.BadParameters, "Sorry, you are not on the list. Please try with your school email!");
+						SI.setResponse(ServletItem.Code.BadParameters, "Sorry you are not on the list. If you are an IESEG student, please try with your IESEG mail. If the problem persists, contact us at victor@ease-app.co or on our Facebook page.");
 					} else {
 						invitationCode = rs.getString(2);
 						props.put("mail.smtp.host", "smtp.gmail.com");

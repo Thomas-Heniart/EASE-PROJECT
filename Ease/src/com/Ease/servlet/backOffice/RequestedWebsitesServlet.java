@@ -59,7 +59,7 @@ public class RequestedWebsitesServlet extends HttpServlet {
 			while(rs.next()){
 				retMsg += ";" + rs.getString(rs.findColumn("site")) + "-SENTBY-" + rs.getString(rs.findColumn("email"));
 			}
-			SI.setResponse(200, "Requested websites sent");
+			SI.setResponse(200, retMsg);
 		} catch (SQLException e) {
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		}
