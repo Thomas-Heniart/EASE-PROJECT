@@ -80,13 +80,13 @@ public class RegistrationByInvitation extends HttpServlet {
 		} else if (db.connect() != 0){
 			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 		} else if (fname == null || fname.length() < 2){
-			SI.setResponse(ServletItem.Code.BadParameters, "Bad fist name.");	
+			SI.setResponse(ServletItem.Code.BadParameters, "Incorrect fist name.");	
 		} else if (lname == null || lname.length() < 2){
-			SI.setResponse(ServletItem.Code.BadParameters, "Bad last name.");
+			SI.setResponse(ServletItem.Code.BadParameters, "Incorrect last name.");
 		} else if (email == null || Regex.isEmail(email) == false){
-			SI.setResponse(ServletItem.Code.BadParameters, "Bad email.");
+			SI.setResponse(ServletItem.Code.BadParameters, "Incorrect email.");
 		} else if (password == null || Regex.isPassword(password) == false) {
-			SI.setResponse(ServletItem.Code.BadParameters, "Bad password.");
+			SI.setResponse(ServletItem.Code.BadParameters, "Password is too short (at least 8 characters).");
 		} else if (confirmPassword == null || password.equals(confirmPassword) == false) {
 			SI.setResponse(ServletItem.Code.BadParameters, "Passwords are not the same.");
 		} else {
@@ -97,7 +97,7 @@ public class RegistrationByInvitation extends HttpServlet {
 					group = rs.getString(3);
 					rs = db.get("select * from users where email = '" + email + "' limit 0, 1;");
 					if (rs.next()) {
-						SI.setResponse(ServletItem.Code.BadParameters, "Email already used.");
+						SI.setResponse(ServletItem.Code.BadParameters, "You already have an account.");
 					} else {
 						user = new User(fname, lname, email, "0606060606", password, session.getServletContext());
 						if (group != null && group.equals("null") == false)
@@ -109,7 +109,7 @@ public class RegistrationByInvitation extends HttpServlet {
 						SI.setResponse(200, "User registered.");
 					}
 				} else {
-					SI.setResponse(ServletItem.Code.BadParameters, "You have no invitation or you have already an account.");
+					SI.setResponse(ServletItem.Code.BadParameters, "You have no invitation or you already have an account.");
 				}
 			} catch (SessionException e) {
 				SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
