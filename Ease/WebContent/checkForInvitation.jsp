@@ -59,8 +59,6 @@
 	if (activity == null) {
 		activity = "";
 	}
-	if (request.getSession().getAttribute("User") != null)
-		request.getRequestDispatcher("index.jsp").forward(request, response);
 %>
 
 <body id="invitationBody">
@@ -95,7 +93,7 @@
 		</div>
 	</div>
 	<div class="invitation-content">
-		<div>
+		<div class="content-item">
 			<div>
 				<p>The new interface to access IESEG services</p>
 				<p>Ease connects you automatically</p>
@@ -106,7 +104,7 @@
 				Your browser does not support the video tag.
 			</video>
 		</div>
-		<div>
+		<div class="content-item">
 			<div>
 				<p>Add your own websites from the catalog</p>
 				<i class="fa fa-chevron-down" aria-hidden="true"></i>
@@ -116,7 +114,7 @@
 				Your browser does not support the video tag.
 			</video>
 		</div>
-		<div>
+		<div class="content-item">
 			<div>
 				<p>Customize your platform as easily as a smartphone</p>
 				<i class="fa fa-chevron-down" aria-hidden="true"></i>
@@ -126,7 +124,7 @@
 				Your browser does not support the video tag.
 			</video>
 		</div>
-		<div>
+		<div class="content-item">
 			<div>
 				<p>Never forget to logout again</p>
 				<p>Logout from everywhere at once, from Ease</p>
@@ -137,11 +135,10 @@
 				Your browser does not support the video tag.
 			</video>
 		</div>
-	</div>
-	<div class="invitation-footer">
-		<form action="ieseg" id="invitationForm2" class="show">
-			<input name="email" placeholder="Enter your email" /><button type="submit">Get started !</button>
-			<div class="sk-fading-circle loading">
+		<div class="invitation-footer">
+			<form action="ieseg" id="invitationForm2" class="show">
+				<input name="email" placeholder="Enter your email" /><button type="submit">Get started !</button>
+				<div class="sk-fading-circle loading">
 	 				<div class="sk-circle1 sk-circle"></div>
 					<div class="sk-circle2 sk-circle"></div>
 					<div class="sk-circle3 sk-circle"></div>
@@ -157,19 +154,51 @@
 				</div>
 				<p class="error">Sorry you are not on the list</p>
 				<p class="success">Take a look in your mail box ;)</p>
-		</form>
-		<div class="security">
-			<h3>Security policy</h3>
-			<p>Our specific encryption method enables a transfer of information without knowing its nature, it is used during your daily connections. This is why Ease does not know either your “Ease password” or your “accounts passwords”. <a target="_blank" href="http://www.ease-app.co/security">Know more</a></p>
-		</div>
-		<div class="business">
-			<h3>Business Model</h3>
-			<p>Users data remain anonymous and are not used for commercial purposes. Our business is to sell user licences to business & engineering schools that have multiple platforms: intranet, e-learnings, online schedule, alumni network, etc.</p>
-		</div>
-		<div class="information">
-			<p>EASE works with a browser extension available on Chrome and Safari for now. The mobile version is coming during the month of january.</p>
+			</form>
+			<div class="security">
+				<h3>Security policy</h3>
+				<p>Our specific encryption method enables a transfer of information without knowing its nature, it is used during your daily connections. This is why Ease does not know either your “Ease password” or your “accounts passwords”. <a target="_blank" href="http://www.ease-app.co/security">Know more</a></p>
+			</div>
+			<div class="business">
+				<h3>Business Model</h3>
+				<p>Users data remain anonymous and are not used for commercial purposes. Our business is to sell user licences to business & engineering schools that have multiple platforms: intranet, e-learnings, online schedule, alumni network, etc.</p>
+			</div>
+			<div class="information">
+				<p>EASE works with a browser extension available on Chrome and Safari for now. The mobile version is coming during the month of january.</p>
+			</div>
+			<div class="contact">
+				<div class="security-cgu">
+					<a href="http://www.ease-app.co/secure" target="_blank">Security</a>
+					<a href="http://www.ease-app.co/privacy" target="_blank">Terms and conditions</a>
+				</div>
+				<div class="mediaTab">
+					<div class="link">
+						<a href="https://www.facebook.com/EasePlatform/"  target="_blank"><i class="fa fa-facebook"></i></a>
+					</div>
+					<div class="link">
+						<a href="https://twitter.com/Ease_app"  target="_blank"><i class="fa fa-twitter"></i></a>
+					</div>
+					<div class="link">
+						<a href="https://www.linkedin.com/company/ease."  target="_blank"><i class="fa fa-linkedin"></i></a>
+					</div>
+					<div class="link">
+						<a href="https://www.instagram.com/ease_app/"  target="_blank"><i class="fa fa-instagram"></i></a>
+					</div>
+					<div class="link">
+						<a href="http://www.ease-app.co"  target="_blank"><i class="fa fa-globe" aria-hidden="true"></i></a>
+					</div>
+					<div class="link">
+						<a href="http://www.ease-app.co/secure"  target="_blank"><i class="fa fa-lock" aria-hidden="true"></i></a>
+					</div>
+				</div>
+				<div class="ease-contact">
+					<a href="mailto:contact@ease-app.co">contact@ease-app.co</a>
+					<p>+33 6 26 97 88 97</p>
+				</div>
+			</div>
 		</div>
 	</div>
+	
 	<script>
 	$("#invitationForm, #invitationForm2").submit(function(e) {
 		e.preventDefault();
@@ -195,6 +224,7 @@
 			setTimeout(function() {
 				$(".loading").removeClass("show");
 				$("#invitationForm, #invitationForm2").addClass("show");
+				$(".error").text(retMsg);
 				$(".error").addClass("show");
 				$(".success").removeClass("show");
 			}, 1000);

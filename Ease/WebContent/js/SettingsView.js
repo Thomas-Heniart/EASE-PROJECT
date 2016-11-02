@@ -16,15 +16,10 @@ $(document).ready(function() {
 		$(".newEmailInput").addClass("show");
 	});
 	
-	$(".unverifiedEmail").click(function() {
-		//TODO
-	});
-	
 	$(".removeEmail").click(function() {
 		emailToRemove = $(this).parent().parent().find("input").val();
 		deleteEmailPopup.open();
 		deleteEmailPopup.setEmail(emailToRemove);
-		console.log(deleteEmailPopup.oForm.oInputs[0].getVal());
 		
 	});
 	$(".sendVerificationEmail").click(function() {
@@ -33,11 +28,8 @@ $(document).ready(function() {
 		$("#SendVerificationEmail button[type='submit']").click();
 	});
 	$(document).click(function(e) {
-		if (!$(e.target).closest('#PopupDeleteAccount .md-content, #deleteAccountButton').length)
-			deleteAccountPopup.close();
 		if (!$(e.target).closest("#DeleteEmailPopup .md-content, .removeEmail").length)
 			deleteEmailPopup.close();
-		
 	});
 });
 

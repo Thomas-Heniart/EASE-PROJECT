@@ -51,4 +51,8 @@
 		$(".delete-advertising").removeClass("show");
 		$("#DeleteAccountForm").addClass("show");
 	});
+	$(document).click(function(e) {
+		if (!$(e.target).closest('#PopupDeleteAccount .md-content, #deleteAccountButton').length)
+			deleteAccountPopup.close();
+	});
 </script>
