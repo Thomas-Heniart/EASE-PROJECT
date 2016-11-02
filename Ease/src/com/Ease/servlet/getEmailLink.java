@@ -82,7 +82,7 @@ public class getEmailLink extends HttpServlet {
 				ResultSet rs;
 				rs = db.get("select * from users where email ='" + email + "';");
 				if (rs.next()) {
-					SI.setResponse(ServletItem.Code.BadParameters, "You have already an account.");
+					SI.setResponse(ServletItem.Code.BadParameters, "An account already exist with this email, to claim it, please email : benjamin@ease-app.co");
 				} else {
 					if ((rs = db.get("select * from invitations where email ='" + email + "';")) == null || !(rs.next())){
 						SI.setResponse(ServletItem.Code.BadParameters, "Sorry, you are not on the list. Please try with your school email!");

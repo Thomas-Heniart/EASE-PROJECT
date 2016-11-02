@@ -196,6 +196,7 @@
 			setTimeout(function() {
 				$(".loading").removeClass("show");
 				$("#invitationForm, #invitationForm2").addClass("show");
+				$(".error").text(retMsg);
 				$(".error").addClass("show");
 				$(".success").removeClass("show");
 			}, 1000);
