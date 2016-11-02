@@ -41,7 +41,7 @@ pageEncoding="UTF-8"%>
 	<link rel="stylesheet" type="text/css" href="component.css" />
 	<script src="js/postHandler.js"></script>
 </head>
-<body id="invitationBody">
+<body id="registrationBody">
 	<%
 	String invitationCode = request.getParameter("code");
 	String emailAddress = request.getParameter("email");
