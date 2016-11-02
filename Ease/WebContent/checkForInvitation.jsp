@@ -59,8 +59,6 @@
 	if (activity == null) {
 		activity = "";
 	}
-	if (request.getSession().getAttribute("User") != null)
-		request.getRequestDispatcher("index.jsp").forward(request, response);
 %>
 
 <body id="invitationBody">
