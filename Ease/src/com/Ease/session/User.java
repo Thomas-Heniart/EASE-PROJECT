@@ -88,7 +88,7 @@ public class User {
 			maxAppId = 0;
 			apps = new LinkedList<App>();
 			group_ids = new LinkedList<String>();
-			ResultSet rs = db.get("SELECT user_id FROM users WHERE email='" + email + ";");
+			ResultSet rs = db.get("SELECT user_id FROM users WHERE email='" + email + "';");
 			if (rs == null)
 				throw new SessionException("Impossible to insert new user in data base.");
 			else {
