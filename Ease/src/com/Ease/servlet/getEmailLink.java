@@ -43,17 +43,8 @@ public class getEmailLink extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	HttpSession session = request.getSession();
-
-		User user = (User) session.getAttribute("User");
-		if(user == null) {
-			RequestDispatcher rd = request.getRequestDispatcher("checkForInvitation.jsp");
-			rd.forward(request, response);
-		}
-		else {
-			RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-			rd.forward(request, response);
-		}
+		RequestDispatcher rd = request.getRequestDispatcher("checkForInvitation.jsp");
+		rd.forward(request, response);
 	}
 
 	/**

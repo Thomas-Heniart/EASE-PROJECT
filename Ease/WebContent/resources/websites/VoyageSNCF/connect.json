@@ -10,7 +10,7 @@
             {"action":"fill", "what":"password", "search":"input#ccl-password"},
             {"action":"click", "search":"input#edit-connect"},
             {"action":"click", "search":".vsc__header-menu"}
-            ]
+        ]
     },
     "logout":{
         "url":"http://www.voyages-sncf.com/",
@@ -19,7 +19,7 @@
             ]
     },
     "checkAlreadyLogged":[
-        {"search":"a.vsc__menu-ccl__step__logout"}
+        {"search":"#vsc-menu-ccl-step-connected[style*='display: block']"}
     ],
     "checkChangeLogin":[
         {"action":"click", "search":"#loginbutton"}

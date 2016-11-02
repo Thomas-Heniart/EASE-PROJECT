@@ -59,8 +59,6 @@
 	if (activity == null) {
 		activity = "";
 	}
-	if (request.getSession().getAttribute("User") != null)
-		request.getRequestDispatcher("index.jsp").forward(request, response);
 %>
 
 <body id="invitationBody">
@@ -167,6 +165,36 @@
 			</div>
 			<div class="information">
 				<p>EASE works with a browser extension available on Chrome and Safari for now. The mobile version is coming during the month of january.</p>
+			</div>
+			<div class="contact">
+				<div class="security-cgu">
+					<a href="http://www.ease-app.co/secure" target="_blank">Security</a>
+					<a href="http://www.ease-app.co/privacy" target="_blank">Terms and conditions</a>
+				</div>
+				<div class="mediaTab">
+					<div class="link">
+						<a href="https://www.facebook.com/EasePlatform/"  target="_blank"><i class="fa fa-facebook"></i></a>
+					</div>
+					<div class="link">
+						<a href="https://twitter.com/Ease_app"  target="_blank"><i class="fa fa-twitter"></i></a>
+					</div>
+					<div class="link">
+						<a href="https://www.linkedin.com/company/ease."  target="_blank"><i class="fa fa-linkedin"></i></a>
+					</div>
+					<div class="link">
+						<a href="https://www.instagram.com/ease_app/"  target="_blank"><i class="fa fa-instagram"></i></a>
+					</div>
+					<div class="link">
+						<a href="http://www.ease-app.co"  target="_blank"><i class="fa fa-globe" aria-hidden="true"></i></a>
+					</div>
+					<div class="link">
+						<a href="http://www.ease-app.co/secure"  target="_blank"><i class="fa fa-lock" aria-hidden="true"></i></a>
+					</div>
+				</div>
+				<div class="ease-contact">
+					<a href="mailto:contact@ease-app.co">contact@ease-app.co</a>
+					<p>+33 6 26 97 88 97</p>
+				</div>
 			</div>
 		</div>
 	</div>

@@ -170,8 +170,8 @@
     top: 0;
     background: url("../resources/images/footer-bckgnd.jpg") center no-repeat;
     background-attachment: fixed;
-    padding: 20px 0;
-    background-size: 100%;
+    padding-top: 20px;
+    background-size: cover;
     #invitationForm2 {
       width: 60%;
       margin: auto;
@@ -229,169 +229,93 @@
       margin: 40px auto;
       margin-top: 100px;
     }
+    .contact {
+      position: relative;
+      padding: 10px 20px;
+      bottom: 0;
+      background-color: rgba(255, 255, 255, 0.4);
+      .security-cgu {
+        position: relative;
+        display: inline-block;
+        a {
+          display: block;
+          font-weight: bold;
+          color: $themeColor;
+          text-decoration: none;
+          &:hover {
+            text-decoration: underline;
+            cursor: pointer;
+          }
+        }
+      }
+      .mediaTab {
+    	padding: 5px 0px;
+      position: relative;
+      left: 30%;
+      display: inline-block;
+    		.link {
+    			display: inline-block;
+    			background-color: $themeColor;
+    			width: 30px;
+    			height: 30px;
+    			border-radius: 30px;
+    			position: relative;
+    			&:hover {
+    				background-color: white;
+    				transition: .3s linear;
+            cursor: pointer;
+    				a {
+    					color: $themeColor;
+    				}
+    			}
+    			a {
+    				width: 100%;
+    				height: 100%;
+    				color: white;
+    				font-size: 22px;
+    				i {
+    					position: absolute;
+    					top: 50%;
+    					left: 50%;
+    					transform: translateX(-50%) translateY(-50%);
+    				}
+    			}
+    		}
+    	}
+      .ease-contact {
+        position: relative;
+        float: right;
+        a, p {
+          color: $themeColor;
+          font-weight: bold;
+        }
+        a {
+          text-decoration: underline;
+        }
+      }
+    }
   }
-	.registrationBlock#checkInvitation {
-		padding-bottom: 50px;
-		padding-top: 40px;
-		.confirmBox {
-			text-align: center;
-			max-width: 60%;
-			margin: 0px auto;
-			margin-top: 20px;
-			border: 2px solid #a1c986;
-			color: #a1c986;
-			padding: 2px;
-			border-radius: 5px;
-		}
-		.custom-info{
-			text-align: center;
-		}
-	}
-	.title {
-			min-width: 250px;
-			max-width: 30%;
-			margin: 10px auto;
-			font-size: 50px;
-			color: #FFFFFF;
-			text-align: center;
-		}
-	.registrationBlock {
-		padding: 5px;
-		border-radius: 5px;
-		border: 1px hidden;
-		margin-left: auto;
-		margin-right: auto;
-		margin-bottom: 30px;
-		min-width: 250px;
-		max-width: 400px;
-		background-color: rgba(white, 0.9);
-		.advice {
-			width: 100%;
-			border: 2px solid $themeColor;
-			border-radius: 5px;
-			margin-bottom: 10px;
-		}
-		.term {
-			.check {
-				display: inline-block;
-				height: 20px;
-				width: 20px;
-				margin: 5px 5px;
-				vertical-align: bottom;
-			}
-			p {
-				display: inline-block;
-			}
-		}
-
-		.alertDiv {
-			width: 90%;
-			text-align: center;
-			margin:0px auto;
-		}
-
-		#registrationForm {
-			width: 90%;
-			margin: 0px auto;
-			.doubleInput {
-				width: 100;
-				.input {
-					width: 48%;
-					&:nth-child(1) {
-						float: left;
-					}
-					&:nth-child(2){
-						float: right;
-					}
-				}
-			}
-			.input {
-				margin: 0px;
-				margin-bottom: 10px;
-				width: 100%;
-				max-width: 100%;
-				input {
-					color: $themeColor;
-					background-color: $themeGreyColor;
-					border-radius: 5px;
-					border: 1px hidden;
-					width: 100%;
-					padding: 2px;
-					line-height: 1.5;
-				}
-			}
-		}
-		.custom-button {
-			width: 50%;
-			margin-left: auto;
-			margin-right: auto;
-			margin-top: 25px;
-			text-align: center;
-			position: relative;
-			button {
-				width: 100%;
-				height: 100%;
-				border: 1px solid $themeColor;
-				padding-bottom: 5px;
-				padding-top: 7px;
-				border-radius: 7px;
-				font-size: 14px;
-				background-color: $themeColor;
-				transition: all .3s;
-				color: white;
-				outline: none;
-				position: relative;
-				display: inline-block;
-				vertical-align: middle;
-				overflow: hidden;
-				white-space: nowrap;
-				&:hover {
-					transition: all .3s;
-					border: 1px solid $themeColor;
-					background-color: white;
-					color: $themeColor;
-				}
-			}
-
-			.successHelper {
-				width: 100%;
-				height: auto;
-				border: 3px solid green;
-				padding-bottom: 5px;
-				padding-top: 7px;
-				border-radius: 7px;
-				font-size: 14px;
-				background-color: white;
-				transition: all .3s;
-				color: green;
-				opacity: 0;
-				visibility: hidden;
-				outline: none;
-				display: inline-block;
-				vertical-align: middle;
-			}
-		}
-		.custom-button.loading {
-			button {
-				transition: all .3s;
-				border-radius: 100px;
-				width: 35px;
-				//visibility: hidden;
-				opacity: 0;
-				span {
-					opacity: 0;
-				}
-			}
-		.custom-button.success {
-			.loadHelper {
-				visibility: hidden;
-				opacity: 0;
-			}
-			.successHelper {
-				visibility: visible;
-				opacity: 1;
-			}
-		}
-	}
-}
+  @media only screen and (max-width: 768px) {
+    .invitation-header {
+      width: 496px;
+    }
+    .invitation-content {
+      width: 496px;
+      .content-item {
+        width: 100%;
+        video {
+          width: 480px;
+          height: 320px;
+        }
+      }
+      .invitation-footer {
+        .mediaTab {
+          left: 11%;
+        }
+      }
+    }
+    #invitationForm, #invitationForm2 {
+      width: 100% !important;
+    }
+  }
 }
