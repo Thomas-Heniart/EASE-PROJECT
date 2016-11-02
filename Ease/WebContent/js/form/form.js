@@ -161,6 +161,8 @@ var Form = {
 			}, 1000);
 			self.newAppItem.find('.linkImage').attr('onclick',
 					"sendEvent(this)");
+			easeTracker.trackEvent('App added');
+			easeTracker.trackEvent($(".catalogApp[idx='" + self.site_id + "']").attr('name') + " app added");
 			self.newAppItem.attr('login', self.oInputs[1].getVal());
 			self.newAppItem.attr('webId', self.helper.attr('idx'));
 			self.newAppItem.attr('name', self.oInputs[0].getVal());
@@ -197,6 +199,8 @@ var Form = {
 			self.reset();
 		}
 		this.errorCallback = function(retMsg) {
+			easeTracker.trackEvent("Add app failed");
+			easeTracker.trackEvent($(".catalogApp[idx='" + self.site_id + "']").attr('name') + " add app failed");
 			self.newAppItem.remove();
 			self.reset();
 			$(parent).find('.alertDiv').addClass('show');

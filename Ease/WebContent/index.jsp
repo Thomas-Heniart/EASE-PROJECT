@@ -60,6 +60,7 @@ pageEncoding="UTF-8"%>
 	<script src="js/app.js"></script>
 	<script src="js/shortcut.js"></script>
 	<script src="js/dashboard.js"></script>
+	<script src="js/tracker.js"></script>	
 	<link rel="stylesheet" type="text/css" href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/lib/dropDownMenu/dropdown.css" />
 	<script src="js/snap.svg-min.js"></script>

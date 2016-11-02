@@ -14,7 +14,7 @@
 	ssoId="${app.getSite().getSso()}"
 	
 	id="${app.getAppId()}">
-	<div class="linkImage" onclick="sendEvent(this)">
+	<div class="linkImage">
 		<div class="emptyAppIndicator" onclick="showModifyAppPopup(this, event)">
 			<img src="resources/other/raise-your-hand-to-ask.svg" />
 		</div>
@@ -43,7 +43,7 @@
 	 id="${app.getAppId()}"
 	 move="${app.havePerm('MOVE', servletContext)}"
 	 link="${app.getAccount().getLink()}">
-	<div class="linkImage" onclick="sendEvent(this)">
+	<div class="linkImage">
 	<c:if test="${app.havePerm('DELETE', servletContext)}">
 	<div class="showAppActionsButton">
 		<i class="fa fa-cog"></i>
@@ -81,7 +81,7 @@
 	 move="${app.havePerm('MOVE', servletContext)}"
 	 logwith="${app.getAccount().getLogWithApp( user ).getAppId()}">
 </c:if>
-<div class="linkImage" onclick="sendEvent(this)">
+<div class="linkImage">
 	<div class="showAppActionsButton">
 		<i class="fa fa-cog"></i>
 		<div class="appActionsPopup">

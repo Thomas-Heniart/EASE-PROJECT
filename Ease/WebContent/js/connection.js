@@ -28,7 +28,7 @@ $(document).ready(function() {
 					},
 					function(){},
 					function(retMsg) {
-						mixpanel.track("Connexion");
+						easeTracker.trackEvent("Connexion");
 						window.location.replace("index.jsp");
 					}, 
 					function(retMsg) {
