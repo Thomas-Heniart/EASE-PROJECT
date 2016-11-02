@@ -1,6 +1,7 @@
 $(document).ready(function(){
 		$('#registrationForm').submit(function(e){
 			e.preventDefault();
+			$('.alertDiv').removeClass('show');
 			var email = $('#helpInformations').attr('email');
 			var invitationCode = $('#helpInformations').attr('code');
 			var fname = $("#registrationForm input[name='fname']").val();
@@ -8,8 +9,6 @@ $(document).ready(function(){
 			var password = $("#registrationForm input[name='password']").val();
 			var confirmPassword = $("#registrationForm input[name='confirmPassword']").val();
 			var button = $(".registrationBlock .custom-button");
-			
-			console.log($('#registrationForm').find('.term .check').prop("checked"));
 			if (!$('#registrationForm').find('.term .check').prop("checked")){
 				$('.alertDiv').text("Please accept terms and conditions");
 				$('.alertDiv').addClass('show');

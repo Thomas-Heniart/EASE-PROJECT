@@ -159,7 +159,7 @@ public class ServletItem {
 			saveInDB(db);
 
 		if (retCode == Code.LogicError.ordinal()) {
-			retMsg = "Sorry, an intern problem as occured. We attempt to resolve this.";
+			retMsg = "Sorry an internal problem occurred. We are solving it.";
 		} else {
 			retMsg = ret;
 		}
