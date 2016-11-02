@@ -169,7 +169,7 @@
 			<div class="contact">
 				<div class="security-cgu">
 					<a href="http://www.ease-app.co/secure" target="_blank">Security</a>
-					<a href="http://www.ease-app.co/" target="_blank">Terms and conditions</a>
+					<a href="http://www.ease-app.co/privacy" target="_blank">Terms and conditions</a>
 				</div>
 				<div class="mediaTab">
 					<div class="link">

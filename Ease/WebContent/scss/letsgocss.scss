@@ -242,6 +242,10 @@
           font-weight: bold;
           color: $themeColor;
           text-decoration: none;
+          &:hover {
+            text-decoration: underline;
+            cursor: pointer;
+          }
         }
       }
       .mediaTab {
@@ -259,6 +263,7 @@
     			&:hover {
     				background-color: white;
     				transition: .3s linear;
+            cursor: pointer;
     				a {
     					color: $themeColor;
     				}
@@ -312,56 +317,5 @@
     #invitationForm, #invitationForm2 {
       width: 100% !important;
     }
-    /*#invitationForm, #invitationForm2 {
-      input, button {
-          display: none !important;
-      }
-      input {
-        width: 80%;
-      }
-      button {
-        width: 20%;
-      }
-      .loading {
-        transition: all .3s;
-        width: 50px;
-        height: 50px;
-        display: none;
-        position: relative;
-        margin: auto;
-        .sk-circle:before {
-          background-color: $themeColor;
-        }
-      }
-      .loading.show {
-        transition: all .3s;
-        display: block;
-      }
-    }
-    #invitationForm.show, #invitationForm2.show {
-      input, button {
-          display: inline-block !important;
-      }
-    }
-    .success {
-      display: none;
-    }
-    .success.show {
-      display: block;
-      width: 30%;
-      margin: auto;
-      text-align: center;
-      color: $themeWhiteColor;
-    }
-    .error {
-      display: none;
-    }
-    .error.show {
-      display: block;
-      width: 30%;
-      margin: auto;
-      text-align: center;
-      color: $themeRedColor;
-    }*/
   }
 }
