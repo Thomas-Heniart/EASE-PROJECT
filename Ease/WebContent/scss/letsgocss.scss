@@ -5,26 +5,26 @@
     input, button {
         display: none !important;
     }
+    .loading {
+      transition: all .3s;
+      width: 50px;
+      height: 50px;
+      display: none;
+      position: relative;
+      margin: auto;
+      .sk-circle:before {
+        background-color: $themeColor;
+      }
+    }
+    .loading.show {
+      transition: all .3s;
+      display: block;
+    }
   }
   #invitationForm.show, #invitationForm2.show {
     input, button {
         display: inline-block !important;
     }
-  }
-  .loading {
-    transition: all .3s;
-    width: 50px;
-    height: 50px;
-    display: none;
-    position: relative;
-    margin: auto;
-    .sk-circle:before {
-      background-color: $themeColor;
-    }
-  }
-  .loading.show {
-    transition: all .3s;
-    display: block;
   }
   .success {
     display: none;
@@ -131,9 +131,9 @@
     position: absolute;
     width: 100%;
     top: 45%;
-    padding: 35px 0;
+    padding-top: 35px;
     background-color: $themeWhiteColor;
-    div {
+    .content-item {
       position: relative;
       width: 90%;
       margin: auto;
@@ -147,6 +147,7 @@
         display: block;
         position: relative;
         width: 80%;
+        margin: auto;
         p {
           width: 100%;
           text-align: center;
@@ -164,8 +165,9 @@
     }
   }
   .invitation-footer {
-    position: absolute;
-    top: 2600px;
+    width: 100%;
+    position: relative;
+    top: 0;
     background: url("../resources/images/footer-bckgnd.jpg") center no-repeat;
     background-attachment: fixed;
     padding: 20px 0;
@@ -281,7 +283,7 @@
 				display: inline-block;
 			}
 		}
-		
+
 		.alertDiv {
 			width: 90%;
 			text-align: center;
