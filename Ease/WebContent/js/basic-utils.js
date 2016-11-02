@@ -13,7 +13,7 @@ function sendEvent(obj) {
         var json = new Object();
         var event;
         
-        mixpanel.track("App clicks");
+        easeTracker.trackEvent("App clicks");
         
         if (!($('#ease_extension').length)) {
             if(!waitForExtension){
@@ -43,8 +43,8 @@ function sendEvent(obj) {
             json.detail = {"url":link};
             json.detail.highlight = true;
             if (ctrlDown) json.detail.highlight = false;
-            mixpanel.track("App successful clicks");
-            mixpanel.track("link connections");
+            easeTracker.trackEvent("App successful clicks");
+            easeTracker.trackEvent("link connections");
             event = new CustomEvent("NewLinkToOpen", json);
             document.dispatchEvent(event);
         } else {
@@ -55,8 +55,8 @@ function sendEvent(obj) {
         		json.detail = JSON.parse(retMsg);
         		json.detail.highlight = true;
         		if (ctrlDown) json.detail.highlight = false;
-        		mixpanel.track("App successful clicks");
-        		mixpanel.track(json.detail[json.detail.length - 1].website.name + " connections");
+        		easeTracker.trackEvent("App successful clicks");
+        		easeTracker.trackEvent(json.detail[json.detail.length - 1].website.name + " connections");
         		event = new CustomEvent("NewConnection", json);
         		document.dispatchEvent(event);
         	}, function(retMsg) {

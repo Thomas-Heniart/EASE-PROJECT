@@ -17,7 +17,7 @@
 		text-align: left;
 		background-color: #FFD00C;
 		padding: 0px 0px 0px 5px;
-//		padding-left: 5px;
+		//		padding-left: 5px;
 		border-radius: 5px 5px 0px 0px;
 		position: relative;
 		p {
@@ -283,18 +283,12 @@
 			bottom: 10%;
 			opacity: 0;
 			visibility: hidden;
-			&:hover {
-				cursor: pointer;
-				span {
-					.fa-circle {
-						color: white;
-					}
-					.fa-plus-circle {
-						color: $themeColor;
-					}
-				}
+			.opener.show {
+				transform: rotate(45deg);
 			}
-			span {
+			.opener {
+				transition: transform .3s;
+				transform: rotate(0deg);
 				font-size: 4vw;
 				width: 1em;
 				height: 1em;
@@ -306,6 +300,130 @@
 				.fa-plus-circle {
 					transition: color .3s;
 					color: white;
+				}
+				&:hover {
+					cursor: pointer;
+					.fa-circle {
+						color: white;
+					}
+					.fa-plus-circle {
+						color: $themeColor;
+					}
+				}
+			}
+			.profileHeaderPreview.show {
+				opacity: 1;
+				transform: scale(1);
+				visibility: visible;
+				pointer-events: auto;
+			}
+			.profileHeaderPreview {
+				transition: opacity .3s, visibility .3s, transform .3s cubic-bezier(.62,-0.66,.27,1.63);
+				opacity: 0;
+				transform: scale(0.2);
+				visibility: hidden;
+				pointer-events: none;
+				position: absolute;
+				bottom: calc(50% + 0.5vw);
+				right: calc(100% + 2vw);
+				width: 16vw;
+				height: 2vw;
+				.nameInput {
+					background-color: black;
+					border: 1px solid $borderFbColor;
+					width: 70%;
+					height: 100%;
+					left:0;
+					top:0;
+					padding: 0.1vw;
+					border-radius: 5px;
+					color: white;
+					text-shadow: 0px 0px 1px $themeColor, 0px 0px 1px $themeColor,0px 0px 1px $themeColor;
+					p {
+						position: absolute;
+						font-size: 1.3vw;
+						line-height: 1.8vw;
+					}
+					input {
+						outline: none;
+						text-shadow: 0px 0px 1px $themeColor,0px 0px 1px $themeColor,0px 0px 1px $themeColor;
+						width: 100%;
+						height: 100%;
+						padding-left: 1.35vw;
+						font-size: 1.2vw;
+						background-color: rgba(255,255,255, 0);
+						border: none;
+					}
+				}
+				.confirm {
+					transition: background-color .3s, color .3s, border .3s;
+					width: 25%;
+					height: 100%;
+					right: 0;
+					top:0;
+					position: absolute;
+					background-color: $themeColor;
+					border: 1px solid white;
+					color: white;
+					border-radius: 5px;
+					font-size: 1.3vw;
+					&:hover{
+						cursor: pointer;
+						background-color: white;
+						color: $themeColor;
+						border: 1px solid $themeColor;
+					}
+				}
+			}
+			.colorChooser.show {
+				opacity: 1;
+				visibility: visible;
+				pointer-events: auto;
+			}
+			.colorChooser {
+				transition: opacity .3s, visibility .3s;
+				opacity: 0;
+				visibility: hidden;
+				pointer-events: none;
+				width: 20vw;
+				height: 2vw;
+				position: absolute;
+				top: 50%;
+				right: 100%;
+				font-size: 0px;
+				.colorHolder {
+					transition: right .3s;
+					position: absolute;
+					width: 2.5vw;
+					height: 2vw;
+					padding: 0.1vw 0.35vw;
+					display: inline-block;
+					right: 0;
+					.color.choosen {
+						border: 2px solid white;
+						&:before {
+							content: "\f0d0";
+							position: absolute;
+							top: 50%;
+							left:50%;
+							transform: translateX(-50%) translateY(-50%);
+							color: white;
+							text-shadow: 0px 0px 1px $themeColor,0px 0px 1px $themeColor,0px 0px 1px $themeColor;						
+						}
+					}
+					.color {
+						font: normal normal normal 14px/1 FontAwesome;
+ 				        font-size: 1.5vw;
+					    text-rendering: auto;
+					    -webkit-font-smoothing: antialiased;
+						position: relative;
+						width: 100%;
+						height: 100%;
+						border-radius: 5px;
+						&:hover {
+							cursor:pointer;
+						}
+					}
 				}
 			}
 		}
@@ -699,7 +817,7 @@
 				.ProfileControlPanel {
 					.profileSettingsTab {
 						input, div, p, i {
-//							font-size: 1.4em;
+							//							font-size: 1.4em;
 						}
 					}
 				}

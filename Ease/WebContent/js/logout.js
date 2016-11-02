@@ -12,10 +12,13 @@ $(document).ready(function(){
 			'logout',
 			{},
 			function(){},
-			function(retMsg){window.location.replace("index.jsp");},
+			function(retMsg){
+				easeTracker.trackEvent('Normal logout');
+				window.location.replace("index.jsp");
+			},
 			function(){},
 			'text'
-		);
+			);
 	});
 	$('#allLogoutButton').click(function(){
 		var event = new CustomEvent("Logout");
@@ -24,9 +27,12 @@ $(document).ready(function(){
 			'logout',
 			{},
 			function(){},
-			function(retMsg){window.location.replace("index.jsp");},
+			function(retMsg){
+				easeTracker.trackEvent('General logout');
+				window.location.replace("index.jsp");
+			},
 			function(){},
 			'text'
-		);
+			);
 	});
 });
