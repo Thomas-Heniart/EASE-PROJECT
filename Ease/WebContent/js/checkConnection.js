@@ -2,16 +2,14 @@ function refresh() {
 	postHandler.post('checkConnection',
 			{},
 			function(){},
-			function(retMsg) {
-				console.log(retMsg);
-			}, 
+			function(retMsg) {}, 
 			function(retMsg) {
 				mixpanel.track("Session lost");
 				window.location.replace("index.jsp");
 			},
 			'text'
 		);
-	setTimeout(refresh, 20*1000);
+	setTimeout(refresh, 45*1000);
  /* $.ajax({
     url: 'index.jsp'
   }).success(function() {

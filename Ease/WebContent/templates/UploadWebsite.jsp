@@ -28,7 +28,7 @@
 		</div>
 
 		<div style="margin-top: 5%">
-			<form method="post" id="addSiteForm" action="addWebsiteInDB">
+			<form method="post" id="addSiteForm" action="addWebsite">
 				<input type="text" name="siteUrl" class="form-control"
 					placeholder="Website url" /> <input type="text" name="homePage" class="form-control"
 					placeholder="Homepage url" /> <input type="text" name="siteName"
