@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/xhtml1-transitional.dtd">
 <html xmlns="http://w3.org/1999/xhtml">
 <head>
@@ -36,13 +37,13 @@
 <script src="js/owl.carousel.js"></script>
 <script src="js/basic-utils.js"></script>
 <script src="js/postHandler.js"></script>
-<script src="js/SettingsView.js"></script>
 <script src="js/admin.js"></script>
 <script src="js/statistics.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
 	
 </script>
+
 <script src="js/jquery.mousewheel.min.js"></script>
 
 <link rel="stylesheet" type="text/css"
@@ -62,7 +63,7 @@
 	<%@ page import="java.util.Base64"%>
 	<%@ page import="java.util.Base64.Encoder"%>
 	<%@ page import="java.nio.charset.StandardCharsets"%>
-
+	<c:set var="adminMessage" scope="session" value='${servletContext.getAttribute("AdminMessage")}'/>
 	<%
 		if (session.getValue("User") != null && ((User)session.getValue("User")).isAdmin(session.getServletContext())) {
 	%>

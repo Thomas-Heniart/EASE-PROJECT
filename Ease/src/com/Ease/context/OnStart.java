@@ -2,16 +2,12 @@ package com.Ease.context;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-
-import com.Ease.context.Color.ColorData;
-import com.Ease.context.Tag.TagData;
 
 public class OnStart implements ServletContextListener {
 
@@ -25,7 +21,13 @@ public class OnStart implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent evt) {
 		System.out.print("ServletContextListener started...");
 		ServletContext context = evt.getServletContext();
-
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+			return;
+		}
 		DataBase db = new DataBase();
 		context.setAttribute("DataBase", db);
 		if (db.connect() != 0) {

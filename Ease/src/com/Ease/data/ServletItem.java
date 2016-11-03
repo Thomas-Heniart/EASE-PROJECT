@@ -58,7 +58,8 @@ public class ServletItem {
 		DeleteEmail,
 		CleanSavedSessions,
 		SendVerificationEmail,
-		CheckConnection
+		CheckConnection,
+		UpdateAdminMessage
 	}
 	public enum Code
 	{

@@ -72,3 +72,4 @@
 <%@ include file="UploadWebsite.jsp"%>
 <%@ include file="TagsManager.jsp"%>
 <%@ include file="ChangeBackground.jsp"%>
+<%@ include file="SetAdminMessage.jsp"%>

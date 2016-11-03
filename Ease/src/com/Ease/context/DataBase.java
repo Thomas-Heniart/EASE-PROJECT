@@ -14,16 +14,14 @@ public class DataBase {
 	
 	public int connect(){
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			if (con != null) {
+			if(con == null || con.isClosed()){
+				con = DriverManager.getConnection(url, login, password);
+			}
+			/*if (con != null) {
 				con.close();
 				con = null;
-			}
-			con = DriverManager.getConnection(url, login, password);
+			}*/				
 		} catch (SQLException e) {
-			System.out.println("Impossible to connect DB");
-			return 1;
-		} catch (ClassNotFoundException e) {
 			System.out.println("Impossible to connect DB");
 			return 1;
 		}

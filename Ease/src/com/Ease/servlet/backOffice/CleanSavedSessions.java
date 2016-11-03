@@ -5,7 +5,6 @@ import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,8 +15,6 @@ import com.Ease.context.DataBase;
 import com.Ease.context.Site;
 import com.Ease.context.SiteManager;
 import com.Ease.data.ServletItem;
-import com.Ease.session.SessionException;
-import com.Ease.session.SessionSave;
 import com.Ease.session.User;
 
 /**
@@ -54,7 +51,6 @@ public class CleanSavedSessions extends HttpServlet {
 		User user = (User)(session.getAttribute("User"));
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		ServletItem SI = new ServletItem(ServletItem.Type.CleanSavedSessions, request, response, user);
-		String retMsg = "";
 
 		if(user == null){
 			SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");

@@ -128,6 +128,7 @@ mixpanel.init("e87ca36e156107ebbd9a672735e6612c");</script><!-- end Mixpanel -->
 			<%@ include file="templates/Header.jsp"%>
 			<%@ include file="templates/loggedBody.jsp"%>
 		<%}%>
+		<%@ include file="templates/AdminMessage.jsp" %>
 		<%@ include file="templates/Footer.jsp" %>
 		<%@ include file="templates/ChatButton.jsp" %>
 	</div>
