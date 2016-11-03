@@ -131,6 +131,7 @@ var Dashboard = function(rootEl){
 			var newProfile = new Profile($(profile).find('.ProfileBox'));
 			newProfile.setName(Name);
 			newProfile.setColor(Color);
+			profiles.push(newProfile);	
 			$(self.columns[columnIdx]).css('width', '');
 			$(self.columns[columnIdx]).append($(profile));
 			self.adder.close();
@@ -143,12 +144,11 @@ var Dashboard = function(rootEl){
 				function(){},
 				function(retMsg){
 					newProfile.setId(retMsg);
-					profiles.push(newProfile);	
 					easeTracker.trackEvent('Profile added');
 				},
 				function(retMsg){
+					newProfile.remove();
 					delete newProfile;
-					$(profile).remove();
 					self.adder.rootEl.css('display', '');
 				},
 				'text'

@@ -260,6 +260,7 @@ var Catalog = function(rootEl){
 	this.open = function(){
 		self.qRoot.addClass('show');
 		self.isOpen = true;
+		easeTracker.trackEvent('Catalog opened');
 		self.onResize();
 	};
 	this.close = function(){
