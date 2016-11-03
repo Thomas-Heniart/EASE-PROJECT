@@ -28,7 +28,7 @@ public class ChangeBackground extends HttpServlet {
 	private static final long serialVersionUID = 1L;
  
 	// location to store file uploaded
-	private static final String UPLOAD_DIRECTORY = "/var/lib/tomcat7/webapps/ROOT/resources/backgrounds";
+	private static final String UPLOAD_DIRECTORY = "/var/lib/tomcat7/webapps/backgrounds";
 	// private static final String UPLOAD_DIRECTORY =
 	// "/Users/thomas/EASE-PROJECT/Ease/WebContent/resources/websites";
 

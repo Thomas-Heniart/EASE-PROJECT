@@ -5,7 +5,7 @@
     "connect":{
         "url":"https://www.captaintrain.com",
         "todo":[
-        	{"action":"waitfor", "time":100, "search":".header__signin-button[data-ember-action='877']:contains(Se connecter)"},
+        	{"action":"waitfor", "time":100, "search":".header__signin-button[data-ember-action='877']"},
             {"action":"click", "search":".header__signin-button[data-ember-action='877']"},
             {"action":"waitfor", "time":100, "search":".signin__button"},
             {"action":"fill", "what":"login", "search":"#signin-form input[name='email']"},
@@ -15,7 +15,7 @@
     },
     "Facebook":{
     	"todo":[
-    		{"action":"waitfor", "time":100, "search":".header__signin-button[data-ember-action='877']:contains(Se connecter)"},
+    		{"action":"waitfor", "time":100, "search":".header__signin-button[data-ember-action='877']"},
     		{"action":"click", "search":".header__signin-button[data-ember-action='877']"},
             {"action":"waitfor", "time":100, "search":".signin__button"},
             {"action":"click", "search":".social-signin-facebook"}

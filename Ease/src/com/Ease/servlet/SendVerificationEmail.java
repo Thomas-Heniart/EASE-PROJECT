@@ -69,7 +69,7 @@ public class SendVerificationEmail extends HttpServlet {
 		} else if (db.connect() != 0) {
 			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 		} else if (email == null || email.isEmpty()) {
-			SI.setResponse(ServletItem.Code.BadParameters, "Bad email");
+			SI.setResponse(ServletItem.Code.BadParameters, "Incorrect email");
 		} else if (user.getEmails().containsKey(email) == false) {
 			SI.setResponse(ServletItem.Code.LogicError, "Email already verified.");
 		} else {

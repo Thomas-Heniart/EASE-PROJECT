@@ -1,9 +1,10 @@
 {
     "name":"Twitch",
     "lastLogin":"",
-    "home":"https://www.twitch.tv/login",
+    "home":"https://www.twitch.tv",
     "connect":{
         "todo":[
+        	{"action":"goto", "url":"https://www.twitch.tv/login"},
         	{"action":"fill", "what":"login", "search":"#username", "grave":true},
             {"action":"fill", "what":"password", "search":"input[name='password']"},
             {"action":"click", "search":"button.primary.button.js-login-button"}
@@ -11,16 +12,17 @@
     },
     "Facebook":{
     	"todo":[
-    		{"action":"clickona", "search":"a[href='/oauth_connect?from=facebook_login&service=facebook']"}
+    		{"action":"click", "search":".fb_button.button"}
     	]
     },
     "logout":{
         "todo":[
-            {"action":"goto", "url":"https://www.airbnb.com/logout"},
-            {"action":"goto", "url":"https://www.airbnb.com/Login"}
+        	{"action":"clickona", "search":"#user_display_name"},
+        	{"action":"clickona", "search":"#self_logout"},
+            {"action":"waitload"}
             ]
     },
     "checkAlreadyLogged":[
-        {"search":"a[href='/logout']"}
+        {"search":"#user_display_name"}
     ]
 }
