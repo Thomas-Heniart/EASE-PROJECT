@@ -10,10 +10,10 @@ function refresh() {
 			'text'
 		);
 	setTimeout(refresh, 45*1000);
- /* $.ajax({
+ /*$.ajax({
     url: 'index.jsp'
   }).success(function() {
-    setTimeout(refresh, 60*60*1000);
+    setTimeout(refresh, 20*60*1000);
   });*/
 }
 

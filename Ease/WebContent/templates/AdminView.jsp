@@ -52,11 +52,18 @@
 		</button>
 	</div>
 	<div>
+		<button id="setAdminMessage" state="off"
+			class="button adminButton" target="AdminMessageTab">
+			<img src="resources/icons/admin-info.png" />
+		</button>
+	</div>
+	<div>
 		<button id="cleanSavedSessions" state="off"
 			class="button adminButton">
 			<img src="resources/icons/vacuum-cleaner.png" />
 		</button>
 	</div>
+	
 </div>
 
 <%@ include file="Statistics.jsp"%>

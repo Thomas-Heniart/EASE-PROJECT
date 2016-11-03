@@ -33,7 +33,7 @@ public class OnStart implements ServletContextListener {
 		}
 
 		// Récupération des sites et des options de connection
-
+		
 		SiteManager siteManager = new SiteManager();
 		try {
 			ResultSet rs = db.get("SELECT * FROM websites ORDER BY website_name;");
@@ -82,7 +82,11 @@ public class OnStart implements ServletContextListener {
 			return;
 		}
 		context.setAttribute("Colors", colors);
-
+		
+		//Intialize adminMessage
+		AdminMessage adminMessage = new AdminMessage();
+		context.setAttribute("AdminMessage", adminMessage);
+		
 		System.out.println("done.");
 		db.close();
 	}
