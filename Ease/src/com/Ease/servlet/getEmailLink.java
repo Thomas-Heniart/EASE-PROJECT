@@ -132,9 +132,8 @@ public class getEmailLink extends HttpServlet {
 					}
 				}
 			}
-		} catch (SQLException e) {
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
-		}catch (MessagingException e) {
+		} catch (SQLException | MessagingException e) {
+			e.printStackTrace();
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		}
 		SI.sendResponse();

@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
-<form action="addApp" id="AddAppForm" class="addAppForm"
+<form action="addApp" id="AddAppForm" class="addAppForm popupForm"
 	oClass="AddAppForm">
 	<div class="lineInput">
 		<label for="app-name">App name :</label> <input oClass="NoEmptyInput"
@@ -45,7 +45,7 @@
 			placeholder="Password" value="" />
 	</div>
 	<div class="buttonSet">
-		<button type="submit">Add</button>
-		<button type="button" oClass="CloseButton">Cancel</button>
+		<button type="submit" id="accept">Add</button>
+		<button type="button" oClass="CloseButton" id="close">Cancel</button>
 	</div>
 </form>

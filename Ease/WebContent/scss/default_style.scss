@@ -22,6 +22,7 @@
 @import 'Forms';
 @import 'Logout';
 @import 'hiddenProfile';
+@import 'buttons';
 
 .shake-ease {
   @include do-shake('shake-ease', 2px, 1px, 3, 1700ms, .05, $opacity: false);

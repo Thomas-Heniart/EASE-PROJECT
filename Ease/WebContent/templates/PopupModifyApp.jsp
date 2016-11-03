@@ -13,7 +13,7 @@
 				</p>
 			</div>
 		</div>
-		<form action="editApp" oClass="ModifyAppForm" id="modifyAppForm">
+		<form action="editApp" oClass="ModifyAppForm" id="modifyAppForm" class="popupForm">
 			<div class="lineInput">
 				<label for="app-name">App name :</label>
 				<input oClass="NoEmptyInput" id="app-name" name="name" type="text"
@@ -54,8 +54,8 @@
 				</div>
 			</div>
 			<div class="buttonSet">
-				<button type="submit">Update</button>
-				<button type="button" oClass="CloseButton">Cancel</button>
+				<button type="submit" id="accept">Update</button>
+				<button type="button" oClass="CloseButton" id="close">Cancel</button>
 			</div>
 		</form>
 	</div>

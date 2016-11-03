@@ -116,6 +116,11 @@ var Profile = function(rootEl){
 	this.isSettingsOpen = false;
 	this.id = this.parentItem.attr('id');
 
+	this.profileHeader.on('contextmenu', function(e){
+		e.preventDefault();
+		e.stopPropagation();
+		self.showSettings();
+	});
 	this.setId = function(tId){
 		self.id = tId;
 		self.parentItem.attr('id', tId);
@@ -136,12 +141,20 @@ var Profile = function(rootEl){
 			self.parentItem.parent().width('0px');
 	}
 	this.showSettings = function(){
+		if (self.isSettingsOpen)
+			return;
 		self.SettingsButton.addClass('fa-rotate-90');
 		self.SettingsButton.addClass('settings-show');
 		self.ControlPanel.css('max-height', '500px');
 		self.isSettingsOpen = true;
+		profiles.forEach(function(elem, idx){
+			if (elem.isSettingsOpen && elem != self)
+				elem.hideSettings();
+		});
 	};
 	this.hideSettings = function (){
+		if (!(self.isSettingsOpen))
+			return;
 		self.SettingsButton.removeClass('fa-rotate-90');
 		self.SettingsButton.removeClass('settings-show');
 		self.ControlPanel.css('max-height', '');
@@ -255,6 +268,21 @@ var Profile = function(rootEl){
 	});
 //	setupProfileSettings(self.qRoot);
 };
+$(document).click(function (e){
+	var profile = $(e.target).closest('.ProfileControlPanel');
+	var settingsButton = null;
+
+	if (profile.length){
+		settingsButton = profile.closest('.ProfileBox').find('.ProfileSettingsButton.settings-show');
+	}
+
+	$('.ProfileSettingsButton.settings-show').each(function(){
+		if (!($(this).is($(settingsButton)))){
+			$(this).click();
+		}
+	});
+}); 
+
 
 $(document).on("contextmenu", ".linkImage", function(e) {
 	e.preventDefault();

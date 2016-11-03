@@ -65,15 +65,6 @@ form.settingsForm {
     margin-left: 14%;
     width: 60% !important;
   }
-  button[type='submit'].Active {
-    background-color: $themeRedColor;
-    border-color: $themeRedColor;
-    color: white;
-  }
-  button[type='submit'].Active:hover {
-    background-color: lighten($themeRedColor, 3%);
-    color: white;
-  }
 }
 
 #AddAppForm, #modifyAppForm {

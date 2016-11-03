@@ -39,7 +39,7 @@ pageEncoding="UTF-8"%>
 	<div class="profileHeaderPreview">
 		<div class="nameInput">
 			<p>@</p>
-			<input type="text" name="name" placeholder="Profile name..." maxlength="20" />
+			<input type="text" placeholder="Profile name..." maxlength="20" />
 		</div>
 		<div class="confirm">
 			Go

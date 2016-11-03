@@ -218,21 +218,6 @@ function changeColor(color, ratio, darker) {
              });
     }
 
-    $(document).click(function (e){
-        var profile = $(e.target).closest('.ProfileControlPanel');
-        var settingsButton = null;
-
-        if (profile.length){
-            settingsButton = profile.closest('.ProfileBox').find('.ProfileSettingsButton.settings-show');
-        }
-
-        $('.ProfileSettingsButton.settings-show').each(function(){
-            if (!($(this).is($(settingsButton)))){
-                $(this).click();
-            }
-        });
-    }); 
-
     $(document).on('mouseover', '.showAppActionsButton', function(evt){
             var subPopup = $(this).find('.appActionsPopup');
             var profileParent = $(this).closest('.siteLinkBox').parent();
