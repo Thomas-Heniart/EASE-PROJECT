@@ -1,0 +1,27 @@
+{
+    "name":"Songkick",
+    "lastLogin":"",
+    "home":"https://www.songkick.com/",
+    "connect":{
+        "todo":[
+        	{"action":"aclick", "search":"a[href*='session/new']"},
+            {"action":"fill", "what":"login", "search":"#username_or_email"},
+            {"action":"fill", "what":"password", "search":"#password"},
+            {"action":"click", "search":".songkick-login input[type='submit']"}
+        ]
+    },
+    "logout":{
+        "todo":[
+            {"action":"aclick", "search":"a[href*='destroy']"}
+        ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a[href*='destroy']"}
+    ],
+    "Facebook":{
+    	"todo": [
+    		{"action":"aclick", "search":"a[href*='session/new']"},
+    		{"action":"click", "search":"button.facebook-connect"}
+    	]
+    }
+}
