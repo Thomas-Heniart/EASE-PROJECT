@@ -13,8 +13,8 @@
     "logout":{
         "url":"https://ieseg.jobteaser.com/",
         "todo":[
-            {"action":"click", "search":"div#login div ul.dropdown-menu li:nth-child(4) a"}
-            ]
+            {"action":"click", "search":"div#login div ul.dropdown-menu li:nth-child(4) a.oooooooo", "grave":true}
+         ]
     },
     "checkAlreadyLogged":[
         {"search":"div#login"}

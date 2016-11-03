@@ -4,6 +4,7 @@
     "home":"https://www.zara.com",
     "connect": {
     	"todo": [
+    		{"action":"click", "search":"input[type='submit']"},
     		{"action":"waitfor", "search":"._accountLink._login a"},
     		{"action":"clickona", "search":"._accountLink._login a"},
     		{"action":"waitload"},

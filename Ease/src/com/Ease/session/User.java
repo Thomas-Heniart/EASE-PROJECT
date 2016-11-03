@@ -98,7 +98,7 @@ public class User {
 					Profile profile = new Profile("Side", "#FFFFFF", "", this, "NULL", context, true);
 					this.profiles.add(profile);
 					this.profilesDashboard.get(0).add(profile);
-					profile = new Profile("Perso", "#FF0000", "", this, "NULL", context, false);
+					profile = new Profile("Perso", "#35a7ff", "", this, "NULL", context, false);
 					this.profiles.add(profile);
 					this.profilesDashboard.get(1).add(profile);
 					loadEmails(context);

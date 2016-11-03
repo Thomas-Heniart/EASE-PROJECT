@@ -87,7 +87,7 @@
 					<div class="sk-circle11 sk-circle"></div>
 					<div class="sk-circle12 sk-circle"></div>
 				</div>
-				<p class="error">Sorry you are not on the list</p>
+				<p class="error">Sorry you are not on the list. If you are an IESEG student, please try with your IESEG mail. If the problem persists, contact us at victor@ease-app.co or on our Facebook page.</p>
 				<p class="success">Take a look in your mail box ;)</p>
 			</form>
 		</div>

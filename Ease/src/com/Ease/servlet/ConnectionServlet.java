@@ -78,7 +78,7 @@ public class ConnectionServlet extends HttpServlet {
 			if (canConnect(client_ip, db)) {
 				if (email == null || Regex.isEmail(email) == false) {
 					incrementAttempts(client_ip, db);
-					SI.setResponse(ServletItem.Code.BadParameters, "Wrong email.");
+					SI.setResponse(ServletItem.Code.BadParameters, "Wrong email");
 				} else if (password == null || Regex.isPassword(password) == false) {
 					incrementAttempts(client_ip, db);
 					SI.setResponse(ServletItem.Code.BadParameters, "Wrong password");
@@ -102,9 +102,8 @@ public class ConnectionServlet extends HttpServlet {
 							SI.setResponse(200, "Connected.");
 						} else {
 							incrementAttempts(client_ip, db);
-							SI.setResponse(199, "Wrong login or password.");
+							SI.setResponse(199, "Wrong password.");
 						}
-
 					} else {
 						incrementAttempts(client_ip, db);
 						SI.setResponse(199, "Wrong login or password.");
