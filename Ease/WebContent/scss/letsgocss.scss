@@ -237,6 +237,7 @@
       .security-cgu {
         position: relative;
         display: inline-block;
+        width: 12%;
         a {
           display: block;
           font-weight: bold;
@@ -251,8 +252,9 @@
       .mediaTab {
     	padding: 5px 0px;
       position: relative;
-      left: 30%;
       display: inline-block;
+      width: 75%;
+      text-align: center;
     		.link {
     			display: inline-block;
     			background-color: $themeColor;
@@ -285,6 +287,7 @@
       .ease-contact {
         position: relative;
         float: right;
+        width: 12%;
         a, p {
           color: $themeColor;
           font-weight: bold;
