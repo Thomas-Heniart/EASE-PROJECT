@@ -48,8 +48,8 @@ pageEncoding="UTF-8"%>
 		<img src="resources/images/Ease_Logo.png"/>
 	</div>
 	<div class=holder>
-		<h2>Oooooops ! This page was lost in the space...</h2>
-		<a href="/">back to earth</a>
+		<h2 class="black-shadow">Ooooops ! This page is lost in space...</h2>
+		<a class="black-shadow" href="/">Click here to go back to earth</a>
 	</div>
 </body>
 </html>

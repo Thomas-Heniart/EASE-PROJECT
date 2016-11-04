@@ -1,7 +1,6 @@
 $('body').prepend('<div id="ease_extension" style="dislay:none;">');
-
+$(".displayedByPlugin").show();
 extension.runtime.sendMessage("getSettings", {}, function(response) {
-    $(".displayedByPlugin").show();
     if(response.homepage){
         $("#homePageSwitch").prop("checked", true);
     } else {

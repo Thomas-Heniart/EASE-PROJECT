@@ -22,6 +22,7 @@
 @import 'Forms';
 @import 'Logout';
 @import 'hiddenProfile';
+@import 'page500';
 @import 'buttons';
 
 .shake-ease {
@@ -461,7 +462,7 @@ html {
     position: absolute;
     top: 0;
     background-color: $themeColor;
-    background-image: url('../resources/backgrounds/space.jpg');
+    background-image: url('../resources/backgrounds/astronaut.jpg');
     background-position: 50% 50%;
   	background-size: cover;
     min-width: 100%;
@@ -483,7 +484,6 @@ html {
     }
     a {
       font-size: 30px;
-      text-decoration: none;
       color: white;
     }
   }
@@ -782,4 +782,12 @@ button[disabled] {
   		}
   	}
   }
+
+.color-shadow {
+    text-shadow: 0 0 30px #373B60, 0 0 20px #373B60, 0 0 10px #373B60
+}
+
+.black-shadow {
+    text-shadow: 0 0 30px #000, 0 0 20px #000, 0 0 10px #000
+}
 

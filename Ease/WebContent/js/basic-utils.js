@@ -2,7 +2,7 @@ var waitForExtension = true;
 $(document).ready(function(){
 	setTimeout(function(){
 		waitForExtension = false;
-	},1000);
+	},800);
 });
 
 function sendEvent(obj) {
@@ -12,9 +12,10 @@ function sendEvent(obj) {
         var logoImage = $(obj).find('.linkImage');
         var json = new Object();
         var event;
-        
+        safariExtensionUpdate();
+		return;
         easeTracker.trackEvent("App clicks");
-        
+ 
         if (!($('#ease_extension').length)) {
             if(!waitForExtension){
             	checkForExtension();
@@ -22,12 +23,12 @@ function sendEvent(obj) {
             } else {
             	setTimeout(function(){
             		sendEvent(obj);
-            	},250);
+            	},200);
             }
         }
         
         if(getUserNavigator() == "Safari"){
-        	if(!$('#ease_extension').attr("safariversion") || $('#ease_extension').attr("safariversion") !="1.3"){
+        	if(!$('#ease_extension').attr("safariversion") || $('#ease_extension').attr("safariversion") !="1.4"){
         		safariExtensionUpdate();
         		return;
         	}
@@ -175,11 +176,11 @@ function changeColor(color, ratio, darker) {
     function checkForExtension() {
         var ext = $('#ease_extension');
 
-        if (!($('#ease_extension').length)) {
             $('#downloadExtension').css('display', 'block');
         	$('#downloadExtension').find(".classicContent").css('display', 'block');
         	$('#downloadExtension').find('.install-button').css('display', 'inline-block');
            	$('#downloadExtension').find(".safariUpdate").css('display', 'none');
+            if(getUserNavigator() == "Safari"){$('#safariInfoButton').css('display', 'block');}
             $('#downloadExtension').find('.install-button').click(
                 function() {
                     var NavigatorName = getUserNavigator();
@@ -199,10 +200,9 @@ function changeColor(color, ratio, darker) {
                     else if (NavigatorName == "Safari"){
                         window.location.replace("https://ease.space/safariExtension/EaseExtension.safariextz");
                         $('#downloadExtension').find('.popupContent').hide();
-                        $('#downloadExtension').find('.safariHelper').show();
+                        $('#downloadExtension').find('#afterdownload.safariHelper').show();
                     }
                 });
-        }
     }
     
     function safariExtensionUpdate(){
@@ -210,6 +210,7 @@ function changeColor(color, ratio, darker) {
          $('#downloadExtension').find(".safariUpdate").css('display', 'block');
          $('#downloadExtension').find('.install-button').css('display', 'inline-block');
          $('#downloadExtension').find(".classicContent").css('display', 'none');
+         $('#safariInfoButton').css('display', 'block');
          $('#downloadExtension').find('.install-button').click(
              function() {
                      window.location.replace("https://ease.space/safariExtension/EaseExtension.safariextz");
