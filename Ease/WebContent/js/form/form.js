@@ -221,6 +221,10 @@ var Form = {
 			}
 			return true;
 		}
+		self.oInputs[1].onEnter(function(e) {
+			e.preventDefault();
+			self.oInputs[2].focus();
+		});
 	},
 	DeleteProfileForm : function(rootEl) {
 		constructorForm.apply(this, arguments);

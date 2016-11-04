@@ -18,6 +18,18 @@ var constructorInput = function (rootEl, parent) {
 	this.validate = function () {
 		return true;
 	};
+	this.onEnter = function(callback) {
+		console.log(self.qInput);
+		self.qInput.keypress(function(e) {
+			if (e.which == 13)
+				callback(e);
+		});
+	};
+	this.focus = function() {
+		self.qInput.select();
+		self.qInput.click();
+		self.qInput.focus();
+	}
 	this.onStateChanged = function () {
 		for (var i = 0; i < self.listeners.length; ++i) {
 			self.listeners[i].trigger("StateChanged");		
