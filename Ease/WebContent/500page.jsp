@@ -19,8 +19,6 @@ pageEncoding="UTF-8"%>
 	<link rel="stylesheet" href="css/owl.transitions.css" />
 
 
-
-
 	<link rel="stylesheet" href="css/lib/vicons-font/vicons-font.css">
 	<link rel="stylesheet" href="css/lib/vicons-font/buttons.css">
 	<link rel="stylesheet" href="css/lib/textInputs/set1.css">
@@ -43,13 +41,18 @@ pageEncoding="UTF-8"%>
 	<script src="js/selectFx.js"></script>
 	<link rel="stylesheet" type="text/css" href="component.css" />
 </head>
-<body id="errorPage">
+<body id="reloadPage">
 	<div class="logo">
 		<img src="resources/images/Ease_Logo.png"/>
 	</div>
 	<div class=holder>
-		<h2 class="black-shadow">Ooooops ! This page is lost in space...</h2>
-		<a class="black-shadow" href="/">Click here to go back to earth</a>
+		<h2 class="black-shadow">We are currently launching a new version of Ease.<br>The server will restart in a few seconds.</h2>
+		<a class="black-shadow" href="/">Click here to reload the page</a>
 	</div>
+	<script>
+		setTimeout(function(){
+			window.location.replace("index.jsp");
+		},10*1000)
+	</script>
 </body>
 </html>

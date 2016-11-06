@@ -139,11 +139,11 @@ public class ConnectionServlet extends HttpServlet {
 	}
 
 	public void addIpInDataBase(String client_ip, DataBase db) {
-		ResultSet rs = db.get("SELECT * FROM askingIps WHERE ip='" + client_ip + "'");
+		ResultSet rs = db.get("SELECT * FROM askingIps WHERE ip='" + client_ip + "';");
 		try {
 			if (rs.next())
 				return;
-			db.set("INSERT INTO askingIps values (NULL, '" + client_ip + "', 0, '" + getCurrentTime() + "', '" + getExpirationTime() + "')");
+			db.set("INSERT INTO askingIps values (NULL, '" + client_ip + "', 0, '" + getCurrentTime() + "', '" + getExpirationTime() + "');");
 		} catch (SQLException e) {
 
 		}
@@ -162,17 +162,17 @@ public class ConnectionServlet extends HttpServlet {
 	}
 
 	public void removeIpFromDataBase(String client_ip, DataBase db) {
-		db.set("DELETE FROM askingIps WHERE ip = '" + client_ip + "'");
+		db.set("DELETE FROM askingIps WHERE ip = '" + client_ip + "';");
 	}
 
 	public void incrementAttempts(String client_ip, DataBase db) {
 		System.out.println(getExpirationTime());
 		db.set("UPDATE askingIps SET attempts = attempts + 1, attemptDate = '" + getCurrentTime()
-				+ "', expirationDate = '" + getExpirationTime() + "' WHERE ip = '" + client_ip + "'");
+				+ "', expirationDate = '" + getExpirationTime() + "' WHERE ip = '" + client_ip + "';");
 	}
 
 	public boolean canConnect(String client_ip, DataBase db) {
-		ResultSet rs = db.get("SELECT attempts, expirationDate FROM askingIps WHERE ip='" + client_ip + "'");
+		ResultSet rs = db.get("SELECT attempts, expirationDate FROM askingIps WHERE ip='" + client_ip + "';");
 		int attempts = 0;
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date expirationDate = new Date();

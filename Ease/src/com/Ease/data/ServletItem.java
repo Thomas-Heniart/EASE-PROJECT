@@ -59,6 +59,7 @@ public class ServletItem {
 		CleanSavedSessions,
 		SendVerificationEmail,
 		CheckConnection,
+		UpdateAdminMessage,
 		ChangeSitePosition
 	}
 	public enum Code
