@@ -54,6 +54,7 @@ public class AddWebsite extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		User user = (User)(session.getAttribute("User"));
+		SiteManager siteManager = (SiteManager)session.getAttribute("siteManager");
 		ServletItem SI = new ServletItem(ServletItem.Type.AddWebsite, request, response, user);
 		
 		// Get Parameters
@@ -98,6 +99,7 @@ public class AddWebsite extends HttpServlet {
 			    while (rs.next()) {
 			    	sites.add(new Site(rs));
 			    }
+			    siteManager.refresh(db);
 			    SI.setResponse(200, "Site added.");
 			} catch (SQLException e) {
 				SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());

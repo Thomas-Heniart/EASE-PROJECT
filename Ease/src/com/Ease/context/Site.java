@@ -9,9 +9,22 @@ import javax.servlet.ServletContext;
 
 import org.json.simple.JSONArray;
 
-public class Site {
+public class Site implements Comparable<Site> {
 	enum SiteData {
-		NOTHING, ID, URL, NAME, FOLDER, HAVELOGINBUTTON, HAVELOGINWITH, SSO, NOLOGIN, HOMEPAGE, HIDDEN
+		NOTHING, 
+		ID, 
+		URL, 
+		NAME, 
+		FOLDER, 
+		HAVELOGINBUTTON, 
+		HAVELOGINWITH, 
+		SSO, 
+		NOLOGIN, 
+		HOMEPAGE, 
+		HIDDEN, 
+		RATIO, 
+		POSITION, 
+		INSERTDATE
 	}
 
 	protected String id;
@@ -24,6 +37,8 @@ public class Site {
 	protected String sso;
 	protected boolean noLogin;
 	protected boolean hidden;
+	protected int ratio;
+	protected String position;
 	protected List<Tag> tags;
 
 	public Site(ResultSet rs) {
@@ -40,6 +55,8 @@ public class Site {
 			sso = rs.getString(SiteData.SSO.ordinal());
 			noLogin = (rs.getString(SiteData.NOLOGIN.ordinal()).equals("1")) ? true : false;
 			hidden = (rs.getString(SiteData.HIDDEN.ordinal()).equals("1")) ? true : false;
+			ratio = Integer.parseInt(rs.getString(SiteData.RATIO.ordinal()));
+			position = rs.getString(SiteData.POSITION.ordinal());
 		} catch (SQLException e) {
 
 		}
@@ -101,6 +118,10 @@ public class Site {
 	
 	public boolean isHidden(){
 		return hidden;
+	}
+	
+	public String getPosition() {
+		return position;
 	}
 
 	public String getLoginWith() {
@@ -168,5 +189,38 @@ public class Site {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	public void increaseRatio() {
+		this.ratio++;
+	}
+	
+	public void decreaseRatio() {
+		this.ratio--;
+	}
+	
+	public void increasePosition() {
+		String newPosition = Integer.toString(Integer.parseInt(position) + 1);
+		position = newPosition;
+	}
+	
+	public void beFirst() {
+		this.position = "1";
+	}
+
+	@Override
+	public int compareTo(Site o) {
+		String tmpPos = this.position;
+		this.position = o.position;
+		o.position = tmpPos;
+		if (this.ratio <= o.ratio) 
+			return 1;
+		return -1;
+	}
+	
+	@Override
+	public String toString() {
+		return this.id + " : " + this.ratio;
+		
 	}
 }

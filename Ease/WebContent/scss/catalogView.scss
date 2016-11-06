@@ -374,6 +374,7 @@
 					overflow-y: auto;
 					overflow-x: hidden;
 					border-radius: 4px;
+					padding-top: 1%;
 					.search-result, .relatedApps {
 						display: none;
 					}
@@ -514,6 +515,17 @@
 							}
 							.apps-integrated.showCounter {
 								display: inline;
+							}
+							.newCatalogApp {
+								position: absolute;
+								right: -21%;
+						    font-size: 10px;
+						    text-align: center;
+						    top: -4%;
+						    background-color: #373b60;
+						    color: white;
+						    padding: 1px 5px;
+						    border-radius: 8px;
 							}
 						}
 						.catalogAppName {
