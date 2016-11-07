@@ -79,10 +79,10 @@ public class ConnectionServlet extends HttpServlet {
 			if (canConnect(client_ip, db)) {
 				if (email == null || Regex.isEmail(email) == false) {
 					attempts = incrementAttempts(client_ip, db);
-					SI.setResponse(ServletItem.Code.BadParameters, "Wrong email." + " " + attempts + "/" + max_attempts);
+					SI.setResponse(ServletItem.Code.BadParameters, "Wrong email." + " You still have " + (max_attempts - attempts) + " trials.");
 				} else if (password == null || Regex.isPassword(password) == false) {
 					attempts = incrementAttempts(client_ip, db);
-					SI.setResponse(ServletItem.Code.BadParameters, "Wrong password" + " " + attempts + "/" + max_attempts);
+					SI.setResponse(ServletItem.Code.BadParameters, "Wrong password" + " You still have " + (max_attempts - attempts) + " trials.");
 				} else {
 					
 
@@ -103,12 +103,12 @@ public class ConnectionServlet extends HttpServlet {
 							SI.setResponse(200, "Connected.");
 						} else {
 							attempts = incrementAttempts(client_ip, db);
-							SI.setResponse(199, "Wrong login or password." + " " + attempts + "/" + max_attempts);
+							SI.setResponse(199, "Wrong login or password." + " You still have " + (max_attempts - attempts) + " trials.");
 
 						}
 					} else {
 						attempts = incrementAttempts(client_ip, db);
-						SI.setResponse(199, "Wrong login or password." + " " + attempts + "/" + max_attempts);
+						SI.setResponse(199, "Wrong login or password." + " You still have " + (max_attempts - attempts) + " trials.");
 					}
 				}
 			} else {
