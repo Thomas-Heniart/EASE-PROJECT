@@ -82,7 +82,7 @@ public class ConnectionServlet extends HttpServlet {
 					SI.setResponse(ServletItem.Code.BadParameters, "Wrong email." + " You still have " + (max_attempts - attempts) + " trials.");
 				} else if (password == null || Regex.isPassword(password) == false) {
 					attempts = incrementAttempts(client_ip, db);
-					SI.setResponse(ServletItem.Code.BadParameters, "Wrong password" + " You still have " + (max_attempts - attempts) + " trials.");
+					SI.setResponse(ServletItem.Code.BadParameters, "Wrong password." + " You still have " + (max_attempts - attempts) + " trials.");
 				} else {
 					
 
