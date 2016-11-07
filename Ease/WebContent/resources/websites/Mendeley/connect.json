@@ -1,0 +1,22 @@
+{
+    "name":"Mendeley",
+    "lastLogin":"",
+    "home":"https://www.mendeley.com",
+    "connect":{
+        "todo":[
+        	{"action":"goto", "url":"https://www.mendeley.com/sign-in/"},
+            {"action":"fill", "what":"login", "search":"#username"},
+            {"action":"fill", "what":"password", "search":"#password"},
+            {"action":"click", "search":"#signin-form-submit"}
+        ]
+    },
+    "logout":{
+        "todo":[
+            {"action":"aclick", "search":"a[href='/logout/']"},
+            {"action":"waitload"}
+        ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a[href='/logout/']"}
+    ]
+}

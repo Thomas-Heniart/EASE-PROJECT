@@ -13,6 +13,7 @@
 @import 'Footer';
 @import 'Header';
 @import 'InvitationPage';
+@import 'letsgocss';
 @import 'AdminMenu';
 @import 'csshake/csshake';
 @import 'Mobile';
@@ -21,6 +22,8 @@
 @import 'Forms';
 @import 'Logout';
 @import 'hiddenProfile';
+@import 'page500';
+@import 'buttons';
 
 .shake-ease {
   @include do-shake('shake-ease', 2px, 1px, 3, 1700ms, .05, $opacity: false);
@@ -143,7 +146,7 @@ body {
 
   }
   .picBckgrnd::before{
-  	background-image:url(../resources/backgrounds/background.jpeg);
+  	background-image:url(../backgrounds/background.jpeg);
   	background-position: 50% 50%;
   	background-size: cover;
   	-webkit-transition: opacity 1000ms linear;
@@ -306,10 +309,12 @@ padding-top: 0px;
    .forget-password {
      bottom: 1px;
      right: 3px;
+     color: #373B60;
    }
    .new-to-ease {
    	 bottom: 1px;
      left: 3px;
+     color: #373B60;
    }
    button {
     width: 70%;
@@ -343,7 +348,6 @@ padding-top: 0px;
     bottom: 10px;
     &:hover {
       cursor: pointer;
-      color: darkblue;
     }
   }
 
@@ -458,8 +462,9 @@ html {
     position: absolute;
     top: 0;
     background-color: $themeColor;
-    background-image: url('../resources/backgrounds/space.jpg');
-    background-size: 100% 100%;
+    background-image: url('../resources/backgrounds/astronaut.jpg');
+    background-position: 50% 50%;
+  	background-size: cover;
     min-width: 100%;
     min-height: 100%;
     .logo {
@@ -479,7 +484,6 @@ html {
     }
     a {
       font-size: 30px;
-      text-decoration: none;
       color: white;
     }
   }
@@ -718,3 +722,72 @@ button[disabled] {
   0%, 39%, 100% { opacity: 0; }
   40% { opacity: 1; }
 }
+
+.shake-anim {
+  animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
+ }
+ 
+  .info-msg {
+  	position : fixed;
+  	left : 10px;
+  	top : 50px;
+  	margin: 10px 0;
+  	padding: 6px 0px 6px 9px;
+  	border-radius: 100%;
+  	color: #059;
+  	background-color: #BEF;
+  	opacity: 0.89;
+  	overflow:hidden;
+  	-webkit-transition: max-width 0.5s;
+  	transition: max-width 0.5s;
+  	-webkit-transition: border-radius 0.1s;
+  	transition: border-radius 0.1s;
+  	max-width: 50px;
+  	i {
+  		margin-right: 6px;
+  	}
+  	p {
+  		max-width: 0px;
+  		-webkit-transition: max-width 0.5s;
+  		transition: max-width 0.5s;
+  		display: inline-block;
+  	}
+  	&:hover{
+  		border-radius: 5px;
+  		padding-right: 9px;
+  		max-width: 1000px;
+  		p {
+  			max-width: 1000px;
+  		}
+  	}
+  }
+
+.color-shadow {
+    text-shadow: 0 0 30px #373B60, 0 0 20px #373B60, 0 0 10px #373B60
+}
+
+.black-shadow {
+    text-shadow: 0 0 30px #000, 0 0 20px #000, 0 0 10px #000
+}
+

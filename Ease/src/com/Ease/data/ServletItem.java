@@ -58,7 +58,10 @@ public class ServletItem {
 		DeleteEmail,
 		CleanSavedSessions,
 		SendVerificationEmail,
-		checkVerifiedEmail
+		checkVerifiedEmail,
+		CheckConnection,
+		UpdateAdminMessage,
+		ChangeSitePosition
 	}
 	public enum Code
 	{
@@ -69,7 +72,8 @@ public class ServletItem {
 		NoPermission,
 		AlreadyConnected,
 		EMailNotSended,
-		Constraints
+		Constraints,
+		ConnectionLost
 	}
 	
 	protected Map<String, String> 	args;
@@ -156,11 +160,11 @@ public class ServletItem {
 		} else if (type == Type.SaveSessionServlet && retCode == 200) {
 			retMsg = "Session saved for user_id "+user.getId();
 		}
-		if (retCode != Code.DatabaseNotConnected.ordinal() && type != Type.CatalogSearchServlet && type != Type.RequestedWebsitesServlet)
+		if (retCode != Code.DatabaseNotConnected.ordinal() && type != Type.CatalogSearchServlet && type != Type.RequestedWebsitesServlet && !retMsg.equals(""))
 			saveInDB(db);
 
 		if (retCode == Code.LogicError.ordinal()) {
-			retMsg = "Sorry, an intern problem as occured. We attempt to resolve this.";
+			retMsg = "Sorry an internal problem occurred. We are solving it.";
 		} else {
 			retMsg = ret;
 		}

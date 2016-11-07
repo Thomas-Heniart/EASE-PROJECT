@@ -28,7 +28,7 @@
 		</div>
 
 		<div style="margin-top: 5%">
-			<form method="post" id="addSiteForm" action="addWebsiteInDB">
+			<form method="post" id="addSiteForm" action="addWebsite">
 				<input type="text" name="siteUrl" class="form-control"
 					placeholder="Website url" /> <input type="text" name="homePage" class="form-control"
 					placeholder="Homepage url" /> <input type="text" name="siteName"
@@ -52,7 +52,37 @@
 				<input type="submit" class="btn btn-default btn-primary"
 					value="Send to database" />
 			</form>
-
+		</div>
+		
+		<div class="movable-websites">
+			<c:forEach items="${siteManager.getSitesList()}" var="item" varStatus="loop">
+				<c:if test="${!item.isHidden()}">
+					<div style="margin: 10px 0;">
+						<img width="50" src="${item.getFolder()}logo.png" />
+						<span style="margin-left: 10px;">${item.getName()}</span>
+						<span>position : ${item.getPosition()}</span>
+						<button class="test-move" siteId="${item.getId()}">Move to top</button>
+					</div>
+				</c:if>
+			</c:forEach>
+			<form action="ChangeSitePosition">
+				<input type="hidden" name="position" />
+			</form>
+			<script>
+				$(".test-move").click(function() {
+					var siteId = $(this).attr("siteId");
+					var itemToPrepend = $(this).parent();
+					$.post(
+						'ChangeSitePosition',
+						{
+							siteId: siteId
+						},
+						function(data) {
+							$(".movable-websites").prepend(itemToPrepend);
+						}
+					);
+				});
+			</script>
 		</div>
 	</div>
 </div>

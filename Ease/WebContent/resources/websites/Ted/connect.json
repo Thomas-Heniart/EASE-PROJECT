@@ -13,11 +13,11 @@
     
     "logout":{
         "todo":[
-        	{"action":"goto","url":"https://yoopies.fr/logout"}
+        	{"action":"goto","url":"https://auth.ted.com/session/logout?referer=http://www.ted.com/session/logout"}
         ]
     },
     "checkAlreadyLogged":[
-        {"search":"a[href*='logout']"}
+        {"search":".Main-nav__account-button__avatar[style*='background-image']"}
     ],
     "Facebook": {
     	"todo": [

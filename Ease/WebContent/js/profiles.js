@@ -116,12 +116,16 @@ var Profile = function(rootEl){
 	this.isSettingsOpen = false;
 	this.id = this.parentItem.attr('id');
 
-/*	this.ControlPanel.find(".profileSettingsTab").accordion({
-		active : 10,
-		collapsible : true,
-		autoHeight : false,
-		heightStyle : "content"
-	});*/
+	this.profileHeader.on('contextmenu', function(e){
+		e.preventDefault();
+		e.stopPropagation();
+		self.showSettings();
+	});
+	this.setId = function(tId){
+		self.id = tId;
+		self.parentItem.attr('id', tId);
+		self.appContainer.attr('id', tId);
+	};
 	this.remove = function(){
 		profiles.splice(profiles.indexOf(self), 1);
 		self.parentItem.animate({
@@ -132,17 +136,25 @@ var Profile = function(rootEl){
 			self.parentItem.remove();
 		}, 300);
 		if (profiles.length <= 15)
-			easeDashboard.profileAdder.css('display', '');
+			easeDashboard.adder.rootEl.css('display', '');
 		if (self.parentItem.parent().find('.item').length == 1)
 			self.parentItem.parent().width('0px');
 	}
 	this.showSettings = function(){
+		if (self.isSettingsOpen)
+			return;
 		self.SettingsButton.addClass('fa-rotate-90');
 		self.SettingsButton.addClass('settings-show');
 		self.ControlPanel.css('max-height', '500px');
 		self.isSettingsOpen = true;
+		profiles.forEach(function(elem, idx){
+			if (elem.isSettingsOpen && elem != self)
+				elem.hideSettings();
+		});
 	};
 	this.hideSettings = function (){
+		if (!(self.isSettingsOpen))
+			return;
 		self.SettingsButton.removeClass('fa-rotate-90');
 		self.SettingsButton.removeClass('settings-show');
 		self.ControlPanel.css('max-height', '');
@@ -233,6 +245,7 @@ var Profile = function(rootEl){
 			}, function() {
 				easeLoadingIndicator.hide();
 			}, function(retMsg) {
+				easeTracker.trackEvent('Profile deleted');
 				self.remove();
 			}, function(retMsg) {
 			}, 'text');			
@@ -248,11 +261,19 @@ var Profile = function(rootEl){
 		}, function() {
 			easeLoadingIndicator.hide();
 		}, function(retMsg) {
-			self.profileHeader.find('p').text('@' + name);
+			easeTracker.trackEvent('Profile name changed');
+			self.setName(name);
 			self.qRoot.find('#modifyNameForm input').val('');
 		}, function(retMsg) {
 		}, 'text');
 	});
+	this.setName = function(tName){
+		self.profileHeader.find('p').text('@' + tName);
+	};
+	this.setColor = function(tColor){
+		self.profileHeader.css('background-color', tColor);
+		self.qRoot.attr('color', tColor);		
+	};
 	//edit color section
 	this.qRoot.find('#modifyColorForm .color').click(function(){
 		var color = $(this).attr('color');
@@ -265,13 +286,28 @@ var Profile = function(rootEl){
 		}, function() {
 			easeLoadingIndicator.hide();
 		}, function(retMsg) {
-			self.profileHeader.css('background-color', color);
-			self.qRoot.attr('color', color);
+			easeTracker.trackEvent('Profile color changed');
+			self.setColor(color);
 		}, function(retMsg) {
 		}, 'text');
 	});
 //	setupProfileSettings(self.qRoot);
 };
+$(document).click(function (e){
+	var profile = $(e.target).closest('.ProfileControlPanel');
+	var settingsButton = null;
+
+	if (profile.length){
+		settingsButton = profile.closest('.ProfileBox').find('.ProfileSettingsButton.settings-show');
+	}
+
+	$('.ProfileSettingsButton.settings-show').each(function(){
+		if (!($(this).is($(settingsButton)))){
+			$(this).click();
+		}
+	});
+}); 
+
 
 $(document).on("contextmenu", ".linkImage", function(e) {
 	e.preventDefault();

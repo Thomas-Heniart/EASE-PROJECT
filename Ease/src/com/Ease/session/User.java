@@ -46,6 +46,7 @@ public class User {
 	List<List<Profile>>		profilesDashboard;
 	List<String>	group_ids;
 	Map<String,Boolean>	emails;
+	PersonalSiteManager personalSiteManager;
 	
 	int				maxProfileId;
 	int				maxAppId;
@@ -88,7 +89,7 @@ public class User {
 			maxAppId = 0;
 			apps = new LinkedList<App>();
 			group_ids = new LinkedList<String>();
-			ResultSet rs = db.get("SELECT user_id FROM users WHERE email='" + email + ";");
+			ResultSet rs = db.get("SELECT user_id FROM users WHERE email='" + email + "';");
 			if (rs == null)
 				throw new SessionException("Impossible to insert new user in data base.");
 			else {
@@ -98,7 +99,7 @@ public class User {
 					Profile profile = new Profile("Side", "#FFFFFF", "", this, "NULL", context, true);
 					this.profiles.add(profile);
 					this.profilesDashboard.get(0).add(profile);
-					profile = new Profile("Perso", "#FF0000", "", this, "NULL", context, false);
+					profile = new Profile("Perso", "#35a7ff", "", this, "NULL", context, false);
 					this.profiles.add(profile);
 					this.profilesDashboard.get(1).add(profile);
 					loadEmails(context);
@@ -625,5 +626,14 @@ public class User {
 		} catch (SQLException e) {
 			throw new SessionException("Can't get emails.");
 		}
+	}
+	
+	public void setPersonalSiteManager(ServletContext context) throws SessionException {
+		SiteManager siteManager = (SiteManager)context.getAttribute("siteManager");
+		personalSiteManager = new PersonalSiteManager(siteManager);
+	}
+	
+	public PersonalSiteManager getPersonalSiteManager() {
+		return personalSiteManager;
 	}
 }

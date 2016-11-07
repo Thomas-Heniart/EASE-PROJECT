@@ -1,7 +1,14 @@
 extension.storage.get("settings", function(res){
+    console.log(res);
+    console.log("dzdza");
     if(!res || res.homepage==undefined) extension.storage.set("settings", {"homepage":true}, function(){});
+    if(res.homepage==true){
+        window.location.replace("https://ease.space");
+    } else {
+        window.location.replace("about:blank");
+    }
 });
-
+/*
 extension.tabs.onNewTab(function(tab){
     extension.storage.get("settings", function(res){
         if(res.homepage==true){
@@ -24,4 +31,4 @@ extension.onNewWindow(function(tab){
             });  
         }
     });
-});
+});*/

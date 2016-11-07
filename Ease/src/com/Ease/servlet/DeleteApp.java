@@ -5,13 +5,14 @@ import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.annotation.WebServlet;
 
 import com.Ease.context.DataBase;
+import com.Ease.context.SiteManager;
 import com.Ease.data.ServletItem;
 import com.Ease.session.App;
 import com.Ease.session.SessionException;
@@ -73,6 +74,9 @@ public class DeleteApp extends HttpServlet {
 					app.deleteFromDB(session.getServletContext());
 					user.getProfile(app.getProfileId()).getApps().remove(app);
 					user.getApps().remove(app);
+					db.set("CALL decreaseRatio(" + app.getSite().getId() + ");");
+					SiteManager siteManager = (SiteManager)session.getAttribute("siteManager");
+					siteManager.decreaseSiteRatio(app.getSite().getId());
 					SI.setResponse(200, appName + " deleted.");
 					db.commit(transaction);
 				} else {

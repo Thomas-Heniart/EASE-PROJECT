@@ -104,8 +104,8 @@ public class ConnectionServlet extends HttpServlet {
 						} else {
 							attempts = incrementAttempts(client_ip, db);
 							SI.setResponse(199, "Wrong login or password." + " " + attempts + "/" + max_attempts);
-						}
 
+						}
 					} else {
 						attempts = incrementAttempts(client_ip, db);
 						SI.setResponse(199, "Wrong login or password." + " " + attempts + "/" + max_attempts);
@@ -141,11 +141,11 @@ public class ConnectionServlet extends HttpServlet {
 	}
 
 	public void addIpInDataBase(String client_ip, DataBase db) {
-		ResultSet rs = db.get("SELECT * FROM askingIps WHERE ip='" + client_ip + "'");
+		ResultSet rs = db.get("SELECT * FROM askingIps WHERE ip='" + client_ip + "';");
 		try {
 			if (rs.next())
 				return;
-			db.set("INSERT INTO askingIps values (NULL, '" + client_ip + "', 0, '" + getCurrentTime() + "', '" + getExpirationTime() + "')");
+			db.set("INSERT INTO askingIps values (NULL, '" + client_ip + "', 0, '" + getCurrentTime() + "', '" + getExpirationTime() + "');");
 		} catch (SQLException e) {
 
 		}
@@ -164,7 +164,7 @@ public class ConnectionServlet extends HttpServlet {
 	}
 
 	public void removeIpFromDataBase(String client_ip, DataBase db) {
-		db.set("DELETE FROM askingIps WHERE ip = '" + client_ip + "'");
+		db.set("DELETE FROM askingIps WHERE ip = '" + client_ip + "';");
 	}
 
 	public int incrementAttempts(String client_ip, DataBase db) {

@@ -26,7 +26,7 @@ import com.Ease.data.Regex;
 import com.Ease.data.ServletItem;
 import com.Ease.session.User;
 
-@WebServlet("/ieseg")
+@WebServlet(urlPatterns = {"/ieseg", "/letsgo"})
 public class getEmailLink extends HttpServlet {
     
     /**
@@ -43,17 +43,8 @@ public class getEmailLink extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	HttpSession session = request.getSession();
-
-		User user = (User) session.getAttribute("User");
-		if(user == null) {
-			RequestDispatcher rd = request.getRequestDispatcher("checkForInvitation.jsp");
-			rd.forward(request, response);
-		}
-		else {
-			RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-			rd.forward(request, response);
-		}
+		RequestDispatcher rd = request.getRequestDispatcher("checkForInvitation.jsp");
+		rd.forward(request, response);
 	}
 
 	/**
@@ -77,15 +68,15 @@ public class getEmailLink extends HttpServlet {
 			if (db.connect() != 0){
 				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 			} else if (email == null || Regex.isEmail(email) == false){
-				SI.setResponse(ServletItem.Code.BadParameters, "Bad email.");
+				SI.setResponse(ServletItem.Code.BadParameters, "Incorrect email.");
 			} else {		
 				ResultSet rs;
 				rs = db.get("select * from users where email ='" + email + "';");
 				if (rs.next()) {
-					SI.setResponse(ServletItem.Code.BadParameters, "You have already an account.");
+					SI.setResponse(ServletItem.Code.BadParameters, "An account already exist with this email, to claim it, please email : benjamin@ease-app.co");
 				} else {
 					if ((rs = db.get("select * from invitations where email ='" + email + "';")) == null || !(rs.next())){
-						SI.setResponse(ServletItem.Code.BadParameters, "Sorry, you are not on the list. Please try with your school email!");
+						SI.setResponse(ServletItem.Code.BadParameters, "Sorry you are not on the list. Try with your IESEG mail or contact us at victor@ease-app.co");
 					} else {
 						invitationCode = rs.getString(2);
 						props.put("mail.smtp.host", "smtp.gmail.com");
@@ -106,11 +97,11 @@ public class getEmailLink extends HttpServlet {
 								InternetAddress.parse(email));
 						message.setSubject(MimeUtility.encodeText("Active ton compte Ease !", "utf-8", null));
 						String link = "https://ease.space/registerInv?email=" + email + "&code=" + invitationCode;
-						message.setContent("<p>*FrenchVersionBelow*</p>" +
+						message.setContent("<p>*French version below*</p>" +
 								"<p></p>" +
 								"<p>Hello & welcome to Ease !</p>" +
 								"<p></p>" +
-								"<p>Ease.space gathers the websites on which you have an account and allows you to login & logout to them in 1 click. All this from a secured personal homepage on your browser. For now, we work on Chrome and Safari.</p>" +
+								"<p>Ease.space gathers the websites on which you have an account and allows you to login & logout to them in 1 click. All this from a secured personal homepage on your browser. For now, it works on Chrome and Safari.</p>" +
 								"<p></p>" +
 								"<p>This means that once you have added the credentials of an account on your space, you’ll never have to use them again, regardless of the computer or device you have in front of you. The only thing you need is Internet.</p>" +
 								"<p></p>" +
@@ -141,9 +132,8 @@ public class getEmailLink extends HttpServlet {
 					}
 				}
 			}
-		} catch (SQLException e) {
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
-		}catch (MessagingException e) {
+		} catch (SQLException | MessagingException e) {
+			e.printStackTrace();
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		}
 		SI.sendResponse();

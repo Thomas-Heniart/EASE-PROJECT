@@ -28,7 +28,7 @@ $(document).ready(function() {
 					},
 					function(){},
 					function(retMsg) {
-						mixpanel.track("Connexion");
+						easeTracker.trackEvent("Connexion");
 						window.location.replace("index.jsp");
 					}, 
 					function(retMsg) {
@@ -54,6 +54,7 @@ $(document).ready(function() {
 			var password = parent.find('#password').val();
 
 			email = email.substring(1, email.length - 1);
+			console.log("Connection for email "+email+" requested.");
 			$(parent).find('.alertDiv').removeClass('show');
 			$(parent).closest(".forget-password").hide();
 			$(parent).hide();
