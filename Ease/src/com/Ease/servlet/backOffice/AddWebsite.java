@@ -90,7 +90,7 @@ public class AddWebsite extends HttpServlet {
 				haveLogWith = haveLogWith.substring(0, haveLogWith.length()-1);
 				haveLogWith += "'";
 			}
-			dbRequest = dbRequest + haveLogWith + ", null, 0, '" + homePage + "', 0);";
+			dbRequest = dbRequest + haveLogWith + ", null, 0, '" + homePage + "', 0, default, default, default, default, default);";
 			db.set(dbRequest);
 			SiteManager sites = ((SiteManager)session.getServletContext().getAttribute("siteManager"));
 			try {
