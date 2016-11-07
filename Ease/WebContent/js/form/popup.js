@@ -124,13 +124,40 @@ var Popup = {
 	AddUpdatePopup : function() {
 		constructorPopup.apply(this, arguments);
 		var self = this;
+		this.title = self.qRoot.find('.title');
+		this.text = self.qRoot.find('.text');
+		this.error = self.qRoot.find('.error');
 		this.setVal = function (arg) {
-			self.oForm.oInputs[0].val($(arg[1]).attr("siteId"));
-			self.oForm.oInputs[1].val(1);
-			self.oForm.oInputs[2].val($(arg[1]).attr("cryptedPassword"));
-			self.oForm.oInputs[3].val($(arg[1]).attr("login"));
 			self.oForm.oInputs[4].val($(arg[1]).attr("siteName"));
+			self.qRoot.find("img").attr("src", $(arg[1]).find('img').attr("src"));
+			postHandler.post("checkVerifiedEmail", {"email": $(arg[1]).attr("login")},
+				function () {}, 
+				function (msg) {
+					self.oForm.oInputs[0].val($(arg[1]).attr("siteId"));
+					self.oForm.oInputs[1].val(arg[0].id);
+					self.oForm.oInputs[2].val($(arg[1]).attr("cryptedPassword"));
+					self.oForm.oInputs[3].val($(arg[1]).attr("login"));
+					var ret = msg.split(" ")[0];
+					if (ret == "1"){
+						self.title.html($(arg[1]).attr("login") + "<br>has not been confirmed.");
+						self.text.html("An email was sent to your inbox.<br>Updates will work for this email after confirmation.");
+					} else if (ret == "2") {
+						self.title.html($(arg[1]).attr("login") + "<br>has been confirmed.");
+						self.text.html("Click OK to add this website.");
+					} else {
+						self.text.html("An error has occured, please retry in a few minutes.");
+					}
+				}, 
+				function (msg) {
+					self.text.html("An error has occured, please retry in a few minutes.");
+				});
 		};
-
+		this.close = function () {
+			self.oForm.reset();
+			self.title.html("Verifiying email...");
+			self.text.html("");
+			self.error.html("");
+			self.qRoot.removeClass('md-show');
+		};
 	}
 }

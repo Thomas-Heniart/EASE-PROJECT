@@ -421,6 +421,12 @@ var Form = {
 		};
 		this.successCallback = function(retMsg) {
 			self.oParent.close();
+			profiles.forEach(function (item) {
+				if (item.id == self.params['profileId']) {
+					item.addApp(self.params['login'], self.params['siteId'], self.params['name'], retMsg, "", false, self.qRoot.find("img").attr("src"));
+				}
+			});
+			
 		};
 		this.errorCallback = function(retMsg) {
 			self.oParent.error.html(retMsg);

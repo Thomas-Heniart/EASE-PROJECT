@@ -157,6 +157,31 @@ var Profile = function(rootEl){
 		});
 		(self.isSettingsOpen) ? self.hideSettings() : self.showSettings();
 	});
+	this.addApp = function(login, webid, name, id, ssoid, logwith, url) {
+		self.appContainer.append('<div class="siteLinkBox" login="' + login + '" webid="' + webid + '" name="' + name + '" id="' + id + '" ssoid="' + ssoid + '" move="true" logwith="' + logwith + '">' + 
+									'<div class="linkImage" onclick="sendEvent(this)">' +
+										'<div class="showAppActionsButton">' +
+											'<i class="fa fa-cog"></i>' +
+											'<div class="appActionsPopup">' +
+												'<div class="buttonsContainer">' +
+													'<div class="modifyAppButton menu-item" onclick="showModifyAppPopup(this, event)">' +
+														'<p>Modify</p>' +
+													'</div>' +
+													'<div class="deleteAppButton menu-item" onclick="showConfirmDeleteAppPopup(this, event)">' +
+														'<p>Delete</p>' +
+													'</div>' +
+												'</div>' +
+											'</div>' +
+										'</div>' +
+										'<img class="logo" src="' + url + '">' +
+									'</div>' +
+									'<div class="siteName">' +
+										'<p>' + name + '</p>' +
+									'</div>' +
+								'</div>');
+		easeRoot.apps.push(new easeApp(self.appContainer.find("div.siteLinkBox[id=" + id + "]")));
+	}
+	
 	//catalog droppable
 	self.appContainer.droppable({
 		accept: ".catalogApp,.updateBox",
