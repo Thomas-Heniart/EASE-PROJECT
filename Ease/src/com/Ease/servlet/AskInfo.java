@@ -78,7 +78,10 @@ public class AskInfo extends HttpServlet {
 						while (accountInformationsRs.next()) {
 							String information_name = accountInformationsRs.getString(1);
 							String information_value = accountInformationsRs.getString(2);
-							classicAccountObject.put(information_name, information_value);
+							if (information_name.equals("password"))
+								classicAccountObject.put(information_name, app.getAccount().getPassword());
+							else
+								classicAccountObject.put(information_name, information_value);
 						}
 					}
 					

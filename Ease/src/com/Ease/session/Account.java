@@ -23,6 +23,7 @@ public abstract class Account {
 	}
 	
 	public abstract Map<String, String> getVisibleInformations();
+	public abstract String getPassword();
 	
 	public static Account getAccount(String accountId, User user, ServletContext context) throws SessionException{
 		DataBase db = (DataBase)context.getAttribute("DataBase");

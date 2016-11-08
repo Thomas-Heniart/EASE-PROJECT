@@ -69,6 +69,10 @@ var constructorForm = function(rootEl, parent) {
 		for (var i = 0; i < self.oInputs.length; ++i) {
 			self.oInputs[i].reset();
 		}
+		self.afterReset();
+	};
+	this.afterReset = function() {
+		
 	};
 	this.submit = function(e) {
 		e.preventDefault();
@@ -163,6 +167,18 @@ var Form = {
 		this.setNewAppItem = function(qObject) {
 			self.newAppItem = qObject;
 		}
+		this.removeAddedFields = function() {
+			self.oInputs.forEach(function(element) {
+				if (element.qInput.attr("name") != "login" && element.qInput.attr("name") != "password" && element.qInput.attr("name") != "name") {
+					element.qInput.remove();
+					var index = self.oInputs.indexOf(element);
+					self.oInputs.splice(index, 1);
+				}
+			});
+		};
+		this.afterReset = function() {
+			self.removeAddedFields();
+		};
 		this.beforeSubmit = function() {
 			self.oParent.close();
 			self.appsContainer.append(self.newAppItem);
@@ -181,13 +197,7 @@ var Form = {
 			});
 		}
 		this.afterSubmit = function() {
-			self.oInputs.forEach(function(element) {
-				if (element.qInput.attr("name") != "login" && element.qInput.attr("name") != "password" && element.qInput.attr("name") != "name") {
-					element.qInput.remove();
-					var index = self.oInputs.indexOf(element);
-					self.oInputs.splice(index, 1);
-				}
-			});		
+			self.removeAddedFields();
 		}
 		this.successCallback = function(retMsg) {
 			var x = parseInt($(".catalogApp[idx='" + self.site_id + "'] span.apps-integrated i.count").html());
@@ -313,18 +323,35 @@ var Form = {
 						self.oInputs[0].val(objAttr[key]);
 						break;
 					case "team":
-						console.log("test");
-						var newInput = $(".classicLogin", self.qRoot).append("<input type='" + objAttr[key] + "' name='" + key + "' oClass='NoEmptyInput' placeholder='Team name' />");
-						var newInputObj = new Input["NoEmptyInput"]($("input[name='" + key + "']", self.qRoot), self);
-						newInputObj.listenBy(self.qRoot);
-						self.oInputs.push(newInputObj);
-						newInputObj.val(objAttr[key]);
+						var existingInput = $(".classicLogin input[name='" + key + "']", self.qRoot);
+						if (!existingInput.length) {
+							var newInput = $(".classicLogin", self.qRoot).append("<input type='" + objAttr[key] + "' name='" + key + "' oClass='NoEmptyInput' placeholder='Team name' />");
+							var newInputObj = new Input["NoEmptyInput"]($("input[name='" + key + "']", self.qRoot), self);
+							newInputObj.listenBy(self.qRoot);
+							self.oInputs.push(newInputObj);
+							newInputObj.val(objAttr[key]);
+						} else {
+							existingInput.val(objAttr[key]);
+							existingInput.change();
+						}
 						break;
 					default:
 						break;
 				}
 			}
 		}
+		this.removeAddedFields = function() {
+			self.oInputs.forEach(function(element) {
+				if (element.qInput.attr("name") != "login" && element.qInput.attr("name") != "password" && element.qInput.attr("name") != "name") {
+					element.qInput.remove();
+					var index = self.oInputs.indexOf(element);
+					self.oInputs.splice(index, 1);
+				}
+			});
+		};
+		this.afterReset = function() {
+			self.removeAddedFields();
+		};
 		this.submit = function(e) {
 			e.preventDefault();
 			var AppToLoginWith = rootEl.find('.AccountApp.selected');
@@ -372,13 +399,7 @@ var Form = {
 								self.app.find('.siteName p').text(self.oInputs[0].getVal());
 								self.app.find('.emptyAppIndicator').remove();
 								self.app.removeClass('emptyApp');
-								self.oInputs.forEach(function(element) {
-									if (element.qInput.attr("name") != "login" && element.qInput.attr("name") != "password" && element.qInput.attr("name") != "name") {
-										element.qInput.remove();
-										var index = self.oInputs.indexOf(element);
-										self.oInputs.splice(index, 1);
-									}
-								});
+								self.removeAddedFields();
 							});
 		}
 	},

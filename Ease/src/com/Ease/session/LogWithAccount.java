@@ -101,5 +101,11 @@ public class LogWithAccount extends Account {
 	public Map<String, String> getVisibleInformations() {
 		return new HashMap<String, String>();
 	}
+
+	@Override
+	public String getPassword() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
 

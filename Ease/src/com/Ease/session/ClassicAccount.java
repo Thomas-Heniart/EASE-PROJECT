@@ -16,6 +16,7 @@ public class ClassicAccount extends Account{
 		ACCOUNT_ID
 	}
 	private Map<String, String> accountInformations;
+	private String passwd;
 
 	//Use this to create a new account and set it in database
 	public ClassicAccount(Map<String, String> accountInformations, User user, ServletContext context) throws SessionException {
@@ -64,7 +65,7 @@ public class ClassicAccount extends Account{
 				String info_name = informationsRs.getString(1);
 				String info_value = informationsRs.getString(2);
 				if (info_name.equals("password")) {
-					String passwd = AES.decrypt(info_value, user.getUserKey());
+					passwd = AES.decrypt(info_value, user.getUserKey());
 					if (passwd == null)
 						throw new SessionException("Can't decrypt website password. " + id);
 					this.accountInformations.put(info_name, passwd);
@@ -83,7 +84,7 @@ public class ClassicAccount extends Account{
 		return this.accountInformations.get("login");
 	}
 	public String getPassword() {
-		return this.accountInformations.get("password");
+		return this.passwd;
 	}	
 
 	public void setLogin(String login) {
