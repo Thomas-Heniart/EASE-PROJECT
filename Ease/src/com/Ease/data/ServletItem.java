@@ -58,6 +58,7 @@ public class ServletItem {
 		DeleteEmail,
 		CleanSavedSessions,
 		SendVerificationEmail,
+		checkVerifiedEmail,
 		CheckConnection,
 		UpdateAdminMessage,
 		ChangeSitePosition,
