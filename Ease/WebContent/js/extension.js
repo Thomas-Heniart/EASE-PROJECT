@@ -108,6 +108,6 @@ function safariExtensionUpdate(){
          function() {
                  window.location.replace("https://ease.space/safariExtension/EaseExtension.safariextz");
                  $('#downloadExtension').find('.popupContent').hide();
-                 $('#downloadExtension').find('#afterdownload').show();
+                 $('#downloadExtension').find('#afterdownload.safariHelper').show();
          });
 }
