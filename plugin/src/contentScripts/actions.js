@@ -154,7 +154,6 @@ fill:function(msg, callback, sendResponse){
 		  input.click();
       input.focus();
       input.change();
-      console.log(msg.detail[0].user[actionStep.what]);
       input.val(msg.detail[0].user[actionStep.what]);
       input.change();
 		  input.blur();
