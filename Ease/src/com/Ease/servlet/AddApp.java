@@ -101,6 +101,9 @@ public class AddApp extends HttpServlet {
 							db.set("CALL addEmail(" + user.getId() + ", '" + login + "');");
 							user.addEmailIfNotPresent(login);
 						}
+						db.set("CALL increaseRatio(" + siteId + ");");
+						SiteManager siteManager = (SiteManager)session.getAttribute("siteManager");
+						siteManager.increaseSiteRatio(siteId);
 						SI.setResponse(200, Integer.toString(app.getAppId()));
 						db.commit(transaction);
 					} else {

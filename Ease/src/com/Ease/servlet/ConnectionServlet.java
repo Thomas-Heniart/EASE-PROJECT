@@ -75,13 +75,14 @@ public class ConnectionServlet extends HttpServlet {
 			}
 			// Put current ip in db
 			addIpInDataBase(client_ip, db);
+			int attempts = 0;
 			if (canConnect(client_ip, db)) {
 				if (email == null || Regex.isEmail(email) == false) {
-					incrementAttempts(client_ip, db);
-					SI.setResponse(ServletItem.Code.BadParameters, "Wrong email");
+					attempts = incrementAttempts(client_ip, db);
+					SI.setResponse(ServletItem.Code.BadParameters, "Wrong email." + " You still have " + (max_attempts - attempts) + " trials.");
 				} else if (password == null || Regex.isPassword(password) == false) {
-					incrementAttempts(client_ip, db);
-					SI.setResponse(ServletItem.Code.BadParameters, "Wrong password");
+					attempts = incrementAttempts(client_ip, db);
+					SI.setResponse(ServletItem.Code.BadParameters, "Wrong password." + " You still have " + (max_attempts - attempts) + " trials.");
 				} else {
 					
 
@@ -101,12 +102,13 @@ public class ConnectionServlet extends HttpServlet {
 							removeIpFromDataBase(client_ip, db);
 							SI.setResponse(200, "Connected.");
 						} else {
-							incrementAttempts(client_ip, db);
-							SI.setResponse(199, "Wrong password.");
+							attempts = incrementAttempts(client_ip, db);
+							SI.setResponse(199, "Wrong login or password." + " You still have " + (max_attempts - attempts) + " trials.");
+
 						}
 					} else {
-						incrementAttempts(client_ip, db);
-						SI.setResponse(199, "Wrong login or password.");
+						attempts = incrementAttempts(client_ip, db);
+						SI.setResponse(199, "Wrong login or password." + " You still have " + (max_attempts - attempts) + " trials.");
 					}
 				}
 			} else {
@@ -165,10 +167,18 @@ public class ConnectionServlet extends HttpServlet {
 		db.set("DELETE FROM askingIps WHERE ip = '" + client_ip + "';");
 	}
 
-	public void incrementAttempts(String client_ip, DataBase db) {
+	public int incrementAttempts(String client_ip, DataBase db) {
 		System.out.println(getExpirationTime());
 		db.set("UPDATE askingIps SET attempts = attempts + 1, attemptDate = '" + getCurrentTime()
 				+ "', expirationDate = '" + getExpirationTime() + "' WHERE ip = '" + client_ip + "';");
+		ResultSet rs = db.get("select attempts from askingIps where ip='" + client_ip + "';");
+		try {
+			rs.next();
+			return Integer.parseInt(rs.getString(1));
+		} catch (NumberFormatException | SQLException e) {
+			e.printStackTrace();
+			return 0;
+		}
 	}
 
 	public boolean canConnect(String client_ip, DataBase db) {

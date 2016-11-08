@@ -99,7 +99,7 @@
 				<p>Ease connects you automatically</p>
 				<i class="fa fa-chevron-down" aria-hidden="true"></i>
 			</div>
-			<video width="720" height="480" loop controls autoplay>
+			<video width="720" height="480" loop autoplay>
   				<source src="resources/videos/video1.mp4" type="video/mp4">
 				Your browser does not support the video tag.
 			</video>
@@ -109,7 +109,7 @@
 				<p>Add your own websites from the catalog</p>
 				<i class="fa fa-chevron-down" aria-hidden="true"></i>
 			</div>
-			<video width="720" height="480" loop controls autoplay>
+			<video width="720" height="480" loop autoplay>
   				<source src="resources/videos/video2.mp4" type="video/mp4">
 				Your browser does not support the video tag.
 			</video>
@@ -119,7 +119,7 @@
 				<p>Customize your platform as easily as a smartphone</p>
 				<i class="fa fa-chevron-down" aria-hidden="true"></i>
 			</div>
-			<video width="720" height="480" loop controls autoplay>
+			<video width="720" height="480" loop autoplay>
   				<source src="resources/videos/video3.mp4" type="video/mp4">
 				Your browser does not support the video tag.
 			</video>
@@ -130,7 +130,7 @@
 				<p>Logout from everywhere at once, from Ease</p>
 				<i class="fa fa-chevron-down" aria-hidden="true"></i>
 			</div>
-			<video width="720" height="480" loop controls autoplay>
+			<video width="720" height="480" loop autoplay>
   				<source src="resources/videos/video4.mp4" type="video/mp4">
 				Your browser does not support the video tag.
 			</video>

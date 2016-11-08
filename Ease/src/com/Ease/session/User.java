@@ -46,6 +46,7 @@ public class User {
 	List<List<Profile>>		profilesDashboard;
 	List<String>	group_ids;
 	Map<String,Boolean>	emails;
+	PersonalSiteManager personalSiteManager;
 	
 	int				maxProfileId;
 	int				maxAppId;
@@ -625,5 +626,14 @@ public class User {
 		} catch (SQLException e) {
 			throw new SessionException("Can't get emails.");
 		}
+	}
+	
+	public void setPersonalSiteManager(ServletContext context) throws SessionException {
+		SiteManager siteManager = (SiteManager)context.getAttribute("siteManager");
+		personalSiteManager = new PersonalSiteManager(siteManager);
+	}
+	
+	public PersonalSiteManager getPersonalSiteManager() {
+		return personalSiteManager;
 	}
 }

@@ -3,12 +3,13 @@
 <%@ taglib tagdir="/WEB-INF/tags/catalog" prefix="catalog"%>
 
 <%@ attribute name="site" type="com.Ease.context.Site" required="true"%>
+<%@ attribute name="newApp" type="java.lang.Boolean" required="false" %>
 
 <div class="catalogApp" idx="${site.getId()}"
 	connect="${site.getFolder()}connect.json"
 	data-login="${site.getLoginWith()}" data-sso="${site.getSso()}"
 	data-nologin="${site.noLogin()}" name="${site.getName()}"
-	url="${site.getUrl() }">
+	url="${site.getUrl() }" newApp="${newApp}">
 	<div class="catalogAppLogo">
 		<img src="${site.getFolder()}logo.png" />
 		<a href="${ site.getHomePageUrl()}" target="_blank" class="siteUrl">
@@ -21,6 +22,9 @@
 			<i class="fa fa-circle fa-stack-2x"></i>
 			<i class="count">0</i>
 		</span>
+		<c:if test="${newApp == true}">
+			<span class="newCatalogApp">New!</span>
+		</c:if>
 	</div>
 	<div class="catalogAppName">
 		<p>${site.getName()}</p>

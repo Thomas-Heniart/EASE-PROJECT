@@ -1,6 +1,8 @@
 package com.Ease.context;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,10 +13,12 @@ import org.json.simple.JSONArray;
 
 public class SiteManager {
 	protected List<Site> sites;
+	protected List<Site> lastSites;
 	protected List<Tag> tags;
 
 	public SiteManager() {
 		sites = new LinkedList<Site>();
+		lastSites = new LinkedList<Site>();
 		tags = new LinkedList<Tag>();
 	}
 
@@ -22,18 +26,46 @@ public class SiteManager {
 		sites.add(site);
 	}
 
+	public void addLastSite(Site site) {
+		lastSites.add(site);
+	}
+
 	public Site get(String id) {
 		if (id == null)
 			return null;
-		for (int i = 0; i < sites.size(); ++i) {
-			if (((Site) sites.get(i)).getId().equals(id))
-				return sites.get(i);
+		Iterator<Site> it = sites.iterator();
+		Iterator<Site> it2 = lastSites.iterator();
+		while (it.hasNext()) {
+			Site tmpSite = it.next();
+			if (tmpSite.getId().equals(id))
+				return tmpSite;
+		}
+		while (it2.hasNext()) {
+			Site tmpSite = it2.next();
+			if (tmpSite.getId().equals(id))
+				return tmpSite;
 		}
 		return null;
 	}
 
 	public void clearSites() {
 		sites.clear();
+		lastSites.clear();
+
+	}
+
+	public void refresh(DataBase db) throws SQLException {
+		this.clearSites();
+		db.set("CALL updateWebsitesPositions();");
+		ResultSet lastSitesRs = db
+				.get("SELECT * FROM websites WHERE insertDate >= CURDATE() - INTERVAL 3 DAY ORDER BY position ASC;");
+		while (lastSitesRs.next())
+			this.addLastSite(new Site(lastSitesRs));
+		ResultSet otherSitesRs = db
+				.get("SELECT * FROM websites WHERE insertDate < CURDATE() - INTERVAL 3 DAY ORDER BY position ASC;");
+		while (otherSitesRs.next())
+			this.add(new Site(otherSitesRs));
+
 	}
 
 	public void clearTags() {
@@ -43,8 +75,19 @@ public class SiteManager {
 	public List<Site> getSitesList() {
 		return sites;
 	}
-	
-	public List<Site> getSso(String ssoId){
+
+	public List<Site> getLastSitesList() {
+		return lastSites;
+	}
+
+	public List<Site> getAllSites() {
+		List<Site> allSites = new LinkedList<Site>();
+		allSites.addAll(lastSites);
+		allSites.addAll(sites);
+		return allSites;
+	}
+
+	public List<Site> getSso(String ssoId) {
 		List<Site> res = new LinkedList<Site>();
 		Iterator<Site> iterator = sites.iterator();
 		while (iterator.hasNext()) {
@@ -54,11 +97,11 @@ public class SiteManager {
 		}
 		return res;
 	}
-	
-	public List<Site> getSso(Site site){
+
+	public List<Site> getSso(Site site) {
 		List<Site> res = new LinkedList<Site>();
 		String ssoId = site.getSso();
-		if(ssoId==null){
+		if (ssoId == null) {
 			res.add(site);
 			return res;
 		}
@@ -85,6 +128,16 @@ public class SiteManager {
 		return null;
 	}
 
+	public Site getLastSiteById(int siteId) {
+		Iterator<Site> iterator = lastSites.iterator();
+		while (iterator.hasNext()) {
+			Site tmpSite = iterator.next();
+			if (siteId == Integer.parseInt(tmpSite.getId()))
+				return tmpSite;
+		}
+		return null;
+	}
+
 	public Tag getTagById(int tagId) {
 		Iterator<Tag> iterator = tags.iterator();
 		while (iterator.hasNext()) {
@@ -100,8 +153,16 @@ public class SiteManager {
 	}
 
 	public void setTagsForSites(ServletContext context) throws SQLException {
-		for (int i = 0; i < sites.size(); i++)
-			sites.get(i).setTags(context);
+		Iterator<Site> it = sites.iterator();
+		Iterator<Site> it2 = lastSites.iterator();
+		while (it.hasNext()) {
+			Site tmpSite = it.next();
+			tmpSite.setTags(context);
+		}
+		while (it2.hasNext()) {
+			Site tmpSite = it2.next();
+			tmpSite.setTags(context);
+		}
 	}
 
 	public void setSitesForTags(ServletContext context) throws SQLException {
@@ -128,12 +189,13 @@ public class SiteManager {
 		Iterator<Site> iterator = sites.iterator();
 		while (iterator.hasNext()) {
 			Site tmpSite = iterator.next();
-			/*JSONArray tmpJson = new JSONArray();
-			tmpJson.add(tmpSite.getId());
-			tmpJson.add("");*/
+			/*
+			 * JSONArray tmpJson = new JSONArray();
+			 * tmpJson.add(tmpSite.getId()); tmpJson.add("");
+			 */
 			res.add(tmpSite.getId());
 		}
-			
+
 		return res;
 	}
 
@@ -161,8 +223,10 @@ public class SiteManager {
 					Site tmpSite = it.next();
 					if (!sitesToShow.contains(tmpSite)) {
 						sitesToShow.add(tmpSite);
-						/*JSONArray jsonArray = tmpSite.getJson();
-						jsonArray.add("hasSomeTags");*/
+						/*
+						 * JSONArray jsonArray = tmpSite.getJson();
+						 * jsonArray.add("hasSomeTags");
+						 */
 						res.add(tmpSite.getId());
 					}
 				}
@@ -174,8 +238,10 @@ public class SiteManager {
 				if (tmpSite.getName().toLowerCase().contains(search.toLowerCase()))
 					if (!sitesToShow.contains(tmpSite)) {
 						sitesToShow.add(tmpSite);
-						/*JSONArray jsonArray = tmpSite.getJson();
-						jsonArray.add("hasSomeTags");*/
+						/*
+						 * JSONArray jsonArray = tmpSite.getJson();
+						 * jsonArray.add("hasSomeTags");
+						 */
 						res.add(tmpSite.getId());
 					}
 
@@ -195,5 +261,19 @@ public class SiteManager {
 			}
 		}
 		return res;
+	}
+
+	public void increaseSiteRatio(String siteId) {
+		this.get(siteId).increaseRatio();
+		this.updateSitesOrder();
+	}
+
+	public void decreaseSiteRatio(String siteId) {
+		this.get(siteId).decreaseRatio();
+		this.updateSitesOrder();
+	}
+
+	public void updateSitesOrder() {
+		Collections.sort(sites);
 	}
 }

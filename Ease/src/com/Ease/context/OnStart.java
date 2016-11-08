@@ -20,6 +20,7 @@ public class OnStart implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent evt) {
 		System.out.print("ServletContextListener started...");
+		List<Color> colors = new LinkedList<Color>();
 		ServletContext context = evt.getServletContext();
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -34,56 +35,28 @@ public class OnStart implements ServletContextListener {
 			return;
 		}
 
-		// Récupération des sites et des options de connection
-		
-		SiteManager siteManager = new SiteManager();
-		try {
-			ResultSet rs = db.get("SELECT * FROM websites ORDER BY website_name;");
-			while (rs.next()) {
-				siteManager.add(new Site(rs));
-			}
-		} catch (SQLException e) {
-			System.out.println("Fail to load websites.");
-			return;
-		}
-		context.setAttribute("siteManager", siteManager);
 		
 		try {
+			// SiteManager initialization
+			SiteManager siteManager = new SiteManager();
+			siteManager.refresh(db);
+			context.setAttribute("siteManager", siteManager);
 			ResultSet rs = db.get("SELECT * FROM tags;");
 			while (rs.next()) {
 				siteManager.addNewTag(new Tag(rs, context));
 			}
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
-
-		// Set tags for websites
-		try {
 			siteManager.setTagsForSites(context);
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
-		// Set websites for tags
-		try {
 			siteManager.setSitesForTags(context);
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
-		
-
-		// Récupération des couleurs de profil
-
-		List<Color> colors = new LinkedList<Color>();
-		try {
-			ResultSet rs = db.get("SELECT * FROM colors;");
+			
+			// Colors initializations
+			rs = db.get("SELECT * FROM colors;");
 			while (rs.next()) {
 				colors.add(new Color(rs));
 			}
-		} catch (SQLException e) {
-			System.out.println("Fail to load colors.");
-			return;
+			context.setAttribute("Colors", colors);
+		} catch (SQLException e1) {
+			e1.printStackTrace();
 		}
-		context.setAttribute("Colors", colors);
 		
 		//Intialize adminMessage
 		AdminMessage adminMessage = new AdminMessage();

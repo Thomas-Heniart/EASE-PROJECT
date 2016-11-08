@@ -1,18 +1,16 @@
 package com.Ease.servlet.backOffice;
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.annotation.WebServlet;
 
 import com.Ease.context.DataBase;
-import com.Ease.context.Site;
 import com.Ease.context.SiteManager;
 import com.Ease.data.ServletItem;
 import com.Ease.session.User;
@@ -33,7 +31,6 @@ public class CleanSavedSessions extends HttpServlet {
 	 */
 	public CleanSavedSessions() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -60,17 +57,15 @@ public class CleanSavedSessions extends HttpServlet {
 			if(db.set("DELETE FROM savedSessions WHERE datetime < SUBTIME(CURRENT_TIMESTAMP, '2 0:0:0.0');") != 0){
 				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "Error when deleting sessions.");
 			} else {
-				SiteManager sites = ((SiteManager)session.getServletContext().getAttribute("siteManager"));
+				SiteManager siteManager = ((SiteManager)session.getServletContext().getAttribute("siteManager"));
 				try {
-					ResultSet rs = db.get("SELECT * FROM websites ORDER BY website_name;");
-					sites.clearSites();
-					while (rs.next()) {
-						sites.add(new Site(rs));
-					}
-					SI.setResponse(200,"SavedSessions cleaned and SiteManager refreshed.");
+					siteManager.refresh(db);
 				} catch (SQLException e) {
-					SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+					e.printStackTrace();
+					SI.setResponse(ServletItem.Code.LogicError, "Sql failed");
+					SI.sendResponse();
 				}
+				SI.setResponse(200,"SavedSessions cleaned and SiteManager refreshed.");
 			}
 		}
 		SI.sendResponse();
