@@ -12,10 +12,9 @@ function sendEvent(obj) {
         var logoImage = $(obj).find('.linkImage');
         var json = new Object();
         var event;
-        safariExtensionUpdate();
-		return;
+        
         easeTracker.trackEvent("App clicks");
- 
+
         if (!($('#ease_extension').length)) {
             if(!waitForExtension){
             	checkForExtension();
@@ -215,7 +214,7 @@ function changeColor(color, ratio, darker) {
              function() {
                      window.location.replace("https://ease.space/safariExtension/EaseExtension.safariextz");
                      $('#downloadExtension').find('.popupContent').hide();
-                     $('#downloadExtension').find('.safariHelper').show();
+                     $('#downloadExtension').find('#afterdownload').show();
              });
     }
 

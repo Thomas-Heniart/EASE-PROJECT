@@ -16,6 +16,11 @@ $(document).ready(function(){
 			ctrlDown = true;
 		}
 	});
+	$(window).blur(function(e){
+		console.log("focusout");
+		$(".shortcutInfo").hide();
+		ctrlDown = false;
+	});
 	$("body").keyup(function(e){
 		if(e.which == ctrlCode){
 			$(".shortcutInfo").hide();
