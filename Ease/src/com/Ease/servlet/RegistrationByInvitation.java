@@ -116,7 +116,7 @@ public class RegistrationByInvitation extends HttpServlet {
 						session.setAttribute("User", user);
 						db.set("CALL addEmail(" + user.getId() + ", '" + user.getEmail() + "');");
 						db.set("UPDATE usersEmais SET verified = 1 WHERE user_id = " + user.getId() + " AND email = '" + user.getEmail() + "';");
-						if(email.contains("ieseg.fr"))
+						if(email.contains("@ieseg.fr"))
 							try {
 								sendChallengeEmail(email);
 							} catch (MessagingException e) {
