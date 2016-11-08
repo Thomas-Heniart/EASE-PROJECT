@@ -54,6 +54,16 @@ var constructorForm = function(rootEl, parent) {
 		}
 		return true;
 	};
+	this.findByName = function(aString) {
+		var res = null;
+		self.oInputs.forEach(function(element) {
+			if (element.qInput.attr("name") == aString) {
+				res = element.qInput;
+				return;
+			}
+		});
+		return res;
+	}
 	this.reset = function() {
 		self.disable();
 		for (var i = 0; i < self.oInputs.length; ++i) {
@@ -119,6 +129,7 @@ var Form = {
 		this.newAppItem = null;
 		this.appsContainer = null;
 		this.helper = null;
+		this.attributesToSet = {};
 		this.site_id = null;
 		this.profile_id = null;
 		this.app_id = null;
@@ -127,6 +138,23 @@ var Form = {
 		this.setHelper = function(jqHelper) {
 			self.helper = jqHelper;
 			self.site_id = self.helper.attr("idx");
+			var attrs = jqHelper.attr();
+			for (var key in attrs) {
+				if (!attrs.hasOwnProperty(key))
+					continue;
+				switch (key) {
+					case "team":
+						var newInput = $(".classicLogin", self.qRoot).append("<input type='" + attrs[key] + "' name='" + key + "' oClass='NoEmptyInput' placeholder='Team name' />");
+						var newInputObj = new Input["NoEmptyInput"]($("input[name='" + key + "']", self.qRoot), self);
+						newInputObj.listenBy(self.qRoot);
+						self.oInputs.push(newInputObj);
+						break;
+					default:
+						break;
+				}
+				
+			}
+			self.checkInputs();
 		}
 		this.setAppsContainer = function(qObject) {
 			self.appsContainer = qObject;
@@ -141,14 +169,25 @@ var Form = {
 			self.params = {
 				profileId : self.profile_id,
 				siteId : self.site_id,
-				name : self.oInputs[0].getVal(),
-				login : self.oInputs[1].getVal(),
-				password : self.oInputs[2].getVal(),
 				appId : self.app_id
 			};
+			self.oInputs.forEach(function(element) {
+				var elemName = element.qInput.attr("name");
+				var elemValue = element.qInput.val();
+				self.params[elemName] = elemValue;
+				if (elemName != "password") {
+					self.attributesToSet[elemName] = elemValue;
+				}
+			});
 		}
 		this.afterSubmit = function() {
-
+			self.oInputs.forEach(function(element) {
+				if (element.qInput.attr("name") != "login" && element.qInput.attr("name") != "password" && element.qInput.attr("name") != "name") {
+					element.qInput.remove();
+					var index = self.oInputs.indexOf(element);
+					self.oInputs.splice(index, 1);
+				}
+			});		
 		}
 		this.successCallback = function(retMsg) {
 			var x = parseInt($(".catalogApp[idx='" + self.site_id + "'] span.apps-integrated i.count").html());
@@ -163,14 +202,17 @@ var Form = {
 					"sendEvent(this)");
 			easeTracker.trackEvent('App added');
 			easeTracker.trackEvent($(".catalogApp[idx='" + self.site_id + "']").attr('name') + " app added");
-			self.newAppItem.attr('login', self.oInputs[1].getVal());
 			self.newAppItem.attr('webId', self.helper.attr('idx'));
-			self.newAppItem.attr('name', self.oInputs[0].getVal());
 			self.newAppItem.attr('logwith', (self.app_id == null) ? 'false'
 					: self.app_id);
 			self.newAppItem.find('.siteName p').text(self.oInputs[0].getVal());
 			self.newAppItem.attr('id', retMsg);
 			self.newAppItem.attr('ssoid', self.helper.attr('data-sso'));
+			for (var key in self.attributesToSet) {
+				if (!self.attributesToSet.hasOwnProperty(key))
+					continue;
+				self.newAppItem.attr(key, self.attributesToSet[key]);
+			}
 			var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 			if (emailRegex.test(self.oInputs[1].getVal()) && !$(".email-suggestion[email='" + self.oInputs[1].getVal() + "']").length) {
 				$(".suggested-emails").append(
@@ -254,12 +296,34 @@ var Form = {
 		this.password = null;
 		this.appId = null;
 		this.aId = null;
+		this.attributesToSet = {};
 		this.setApp = function(jObject) {
 			self.app = jObject;
-			self.oInputs[0].val(self.app.attr("name"));
-			self.oInputs[1].val(self.app.attr("login"));
 			self.appId = self.app.attr("id");
 			self.aId = self.app.attr("aid");
+			var objAttr = jObject.attr();
+			for (var key in objAttr) {
+				if (!objAttr.hasOwnProperty(key))
+					continue;
+				switch (key) {
+					case "login":
+						self.oInputs[1].val(objAttr[key]);
+						break;
+					case "name":
+						self.oInputs[0].val(objAttr[key]);
+						break;
+					case "team":
+						console.log("test");
+						var newInput = $(".classicLogin", self.qRoot).append("<input type='" + objAttr[key] + "' name='" + key + "' oClass='NoEmptyInput' placeholder='Team name' />");
+						var newInputObj = new Input["NoEmptyInput"]($("input[name='" + key + "']", self.qRoot), self);
+						newInputObj.listenBy(self.qRoot);
+						self.oInputs.push(newInputObj);
+						newInputObj.val(objAttr[key]);
+						break;
+					default:
+						break;
+				}
+			}
 		}
 		this.submit = function(e) {
 			e.preventDefault();
@@ -267,18 +331,30 @@ var Form = {
 			if (AppToLoginWith.length) {
 				self.aId = AppToLoginWith.attr('aid');
 			}
-			self.login = self.oInputs[1].getVal();
-			self.password = self.oInputs[2].getVal();
+			self.oInputs.forEach(function(element) {
+				var elemName = element.qInput.attr("name");
+				var elemValue = element.qInput.val();
+				self.params[elemName] = elemValue;
+				if (elemName != "password")
+					self.attributesToSet[elemName] = elemValue;
+				else
+					self.password = elemValue;
+			});
+			self.params = {
+				name : self.oInputs[0].getVal(),
+				appId : self.appId,
+				lwId : self.aId,
+				wPassword : self.password	
+			};
+			for (var key in self.attributesToSet) {
+				if (!self.attributesToSet.hasOwnProperty(key))
+					continue;
+				self.params[key] = self.attributesToSet[key];
+			}
 			$
 					.post(
 							'editApp',
-							{
-								name : self.oInputs[0].getVal(),
-								appId : self.appId,
-								lwId : self.aId,
-								login : self.login,
-								wPassword : self.password
-							},
+							self.params,
 							function(data) {
 								var retMsg = data.substring(4);
 								var image = self.app.find('.linkImage');
@@ -287,18 +363,22 @@ var Form = {
 								setTimeout(function() {
 									image.removeClass('scaleOutAnimation');
 								}, 1000);
-								self.app
-										.attr('login', self.oInputs[1].getVal());
-								self.app.attr('name', self.oInputs[0].getVal());
-								self.app
-										.attr(
-												'logwith',
-												(self.oInputs[1].getVal().length || self.aId) == null ? 'false'
-														: self.aId);
-								self.app.find('.siteName p').text(
-										self.oInputs[0].getVal());
+								for (var key in self.attributesToSet) {
+									if (!self.attributesToSet.hasOwnProperty(key))
+										continue;
+									self.app.attr(key, self.attributesToSet[key]);
+								}
+								self.app.attr('logwith', (self.oInputs[1].getVal().length || self.aId) == null ? 'false' : self.aId);
+								self.app.find('.siteName p').text(self.oInputs[0].getVal());
 								self.app.find('.emptyAppIndicator').remove();
 								self.app.removeClass('emptyApp');
+								self.oInputs.forEach(function(element) {
+									if (element.qInput.attr("name") != "login" && element.qInput.attr("name") != "password" && element.qInput.attr("name") != "name") {
+										element.qInput.remove();
+										var index = self.oInputs.indexOf(element);
+										self.oInputs.splice(index, 1);
+									}
+								});
 							});
 		}
 	},

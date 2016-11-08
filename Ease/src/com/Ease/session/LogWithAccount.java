@@ -2,6 +2,8 @@ package com.Ease.session;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 
@@ -93,6 +95,11 @@ public class LogWithAccount extends Account {
 			throw new SessionException("Impossible to delete logwith account in data base.");
 		if (db.set("DELETE FROM accounts WHERE account_id=" + id + ";") != 0)
 			throw new SessionException("Impossible to delete account in data base.");
+	}
+
+	@Override
+	public Map<String, String> getVisibleInformations() {
+		return new HashMap<String, String>();
 	}
 }
 

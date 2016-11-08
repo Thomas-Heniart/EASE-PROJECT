@@ -2,6 +2,10 @@ package com.Ease.servlet;
 
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import com.Ease.context.DataBase;
 import com.Ease.context.Site;
 import com.Ease.context.SiteManager;
@@ -59,16 +64,19 @@ public class AddApp extends HttpServlet {
 		// Get Parameters
 		String profileIdParam = SI.getServletParam("profileId");
 		String siteId = SI.getServletParam("siteId");
-		String login = SI.getServletParam("login");
-		String password = request.getParameter("password");
 		String name = SI.getServletParam("name");
+		Map<String, String> inputs= new HashMap<String, String>();
+		
 		// --
 		
 		Site site = null;
 		boolean transaction = false;
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		try {
-						
+			ResultSet inputsRs = db.get("SELECT information_name FROM websitesInformations WHERE website_id=" + siteId + ";");
+			while(inputsRs.next())
+				inputs.put(inputsRs.getString(1), request.getParameter(inputsRs.getString(1)));
+			
 			int profileId = Integer.parseInt(profileIdParam);
 			
 			Profile profile = null;
@@ -76,11 +84,11 @@ public class AddApp extends HttpServlet {
 				SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
 			} else if (db.connect() != 0){
 				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
-			} else if (login == null || login.equals("")) {
+			} else if (inputs.get("login") == null || inputs.get("login").equals("")) {
 				SI.setResponse(ServletItem.Code.BadParameters, "Login can't be empty.");
 			} else if (name.length() > 14) {
 				SI.setResponse(ServletItem.Code.BadParameters, "Incorrect app name.");
-			} else if (password == null || password.equals("")) {
+			} else if (inputs.get("password") == null || inputs.get("password").equals("")) {
 				SI.setResponse(ServletItem.Code.BadParameters, "Password can't be empty.");
 			} else if ((profile = user.getProfile(profileId)) == null){
 				SI.setResponse(ServletItem.Code.BadParameters, "No profileId.");
@@ -90,16 +98,16 @@ public class AddApp extends HttpServlet {
 				} else {
 					if (profile.havePerm(Profile.ProfilePerm.ADDAPP, session.getServletContext()) == true){
 						transaction = db.start();
-						App app = new App(name, login, password, site, profile, user, session.getServletContext());
+						App app = new App(inputs, name, site, profile, user, session.getServletContext());
 						profile.addApp(app);
 						user.getApps().add(app);
 						if (user.getTuto().equals("0")) {
 							user.tutoComplete();
 							user.updateInDB(session.getServletContext());
 						}
-						if (Regex.isEmail(login)) {
-							db.set("CALL addEmail(" + user.getId() + ", '" + login + "');");
-							user.addEmailIfNotPresent(login);
+						if (Regex.isEmail(inputs.get("login"))) {
+							db.set("CALL addEmail(" + user.getId() + ", '" + inputs.get("login") + "');");
+							user.addEmailIfNotPresent(inputs.get("login"));
 						}
 						db.set("CALL increaseRatio(" + siteId + ");");
 						SiteManager siteManager = (SiteManager)session.getAttribute("siteManager");
@@ -114,7 +122,7 @@ public class AddApp extends HttpServlet {
 		} catch (SessionException e) {
 			db.cancel(transaction);
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
-		} catch (IndexOutOfBoundsException e){
+		} catch (IndexOutOfBoundsException | SQLException e){
 			db.cancel(transaction);
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		} catch (NumberFormatException e) {

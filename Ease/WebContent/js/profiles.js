@@ -524,17 +524,41 @@ $(document).ready(function() {
 			});
 			var ret;
 			ret = $('<div class="dragHelperLogo" style="position: fixed; z-index: 3;pointer-events:none;"/>');
+			var attrs = $(this).attr();
+			for (var key in attrs) {
+				if (!attrs.hasOwnProperty(key))
+					continue;
+				switch (key) {
+				case "class":
+					break;
+				case "style":
+					break;
+				default:
+					ret.attr(key, attrs[key]);
+					break;
+				}
+			}
 			ret.attr("type", "catalog");
-			ret.attr("connect", $(this).attr("connect"));
-			ret.attr("data-login", $(this).attr("data-login"));
-			ret.attr("data-sso", $(this).attr("data-sso"));
-			ret.attr("data-nologin", $(this).attr("data-nologin"));
 			ret.append($('<img />'));
-			ret.attr("idx", $(this).attr("idx"));
-			ret.attr("name", $(this).attr("name"));
 			ret.find('img').attr("src", $(this).find('img').attr("src"));
 			return ret;
 		}
 	});
 });
+
+(function(old) {
+	  $.fn.attr = function() {
+	    if(arguments.length === 0) {
+	      if(this.length === 0)
+	        return null;
+	      var obj = {};
+	      $.each(this[0].attributes, function() {
+	        if(this.specified)
+	          obj[this.name] = this.value;
+	      });
+	      return obj;
+	    }
+	    return old.apply(this, arguments);
+	  };
+})($.fn.attr);
 

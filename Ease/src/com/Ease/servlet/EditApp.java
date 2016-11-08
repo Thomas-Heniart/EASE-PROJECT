@@ -1,14 +1,18 @@
 package com.Ease.servlet;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.annotation.WebServlet;
 
 import com.Ease.context.DataBase;
 import com.Ease.context.Site;
@@ -56,22 +60,28 @@ public class EditApp extends HttpServlet {
 		HttpSession session = request.getSession();
 		User user = (User) (session.getAttribute("User"));
 		ServletItem SI = new ServletItem(ServletItem.Type.EditApp, request, response, user);
-
+		DataBase db = (DataBase) session.getServletContext().getAttribute("DataBase");
 		// Get Parameters
-		String login = SI.getServletParam("login");
 		String wPassword = request.getParameter("wPassword");
 		String name = SI.getServletParam("name");
 		String appIdParam = SI.getServletParam("appId");
+		Map<String, String> informations = new HashMap<String, String>();
+		
 		// --
 
 		App app = null;
 		boolean transaction = false;
 
-		DataBase db = (DataBase) session.getServletContext().getAttribute("DataBase");
+		
 
 		try {
 			int appId = Integer.parseInt(appIdParam);
-
+			ResultSet informationsRs = db.get("SELECT information_name FROM WebsitesInformations WHERE website_id =" + user.getApp(appId).getSite().getId() + " AND information_name <> 'password';");
+			while (informationsRs.next())
+				informations.put(informationsRs.getString(1), SI.getServletParam(informationsRs.getString(1)));
+			informations.put("password", wPassword);
+			String login = informations.get("login");
+			
 			if (user == null) {
 				SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
 			} else if (db.connect() != 0) {
@@ -97,7 +107,7 @@ public class EditApp extends HttpServlet {
 									Site site = app.getSite();
 									app.deleteFromDB(session.getServletContext());
 									user.getProfiles().get(app.getProfileIndex()).getApps().remove(app);
-									App tmp = new App(name, login, wPassword, site,
+									App tmp = new App(informations, name, site,
 											user.getProfiles().get(app.getProfileIndex()), user,
 											session.getServletContext());
 									user.getProfiles().get(app.getProfileIndex()).addApp(tmp);
@@ -108,10 +118,7 @@ public class EditApp extends HttpServlet {
 								}
 							} else if (app.getType().equals("ClassicAccount") == true) {
 								ClassicAccount account = (ClassicAccount) app.getAccount();
-								if (login != null && !login.equals(""))
-									account.setLogin(login);
-								if (wPassword != null && !wPassword.equals(""))
-									account.setPassword(wPassword);
+								account.updateWithInformations(informations);
 								account.updateInDB(session.getServletContext(), user.getUserKey());
 								app.setName(name);
 								app.setAccount(account);
@@ -120,8 +127,7 @@ public class EditApp extends HttpServlet {
 									db.set("CALL addEmail(" + user.getId() + ", '" + user.getEmail() + "');");
 								SI.setResponse(200, app.getSite().getName() + " edited.");
 							} else {
-								ClassicAccount account = new ClassicAccount(login, wPassword, user,
-										session.getServletContext());
+								ClassicAccount account = new ClassicAccount(informations, user, session.getServletContext());
 								app.setName(name);
 								app.setAccount(account);
 								app.updateInDB(session.getServletContext());
@@ -193,8 +199,9 @@ public class EditApp extends HttpServlet {
 			db.cancel(transaction);
 			e.printStackTrace();
 			SI.setResponse(ServletItem.Code.BadParameters, "Bad numbers.");
-		} catch (IndexOutOfBoundsException e) {
+		} catch (IndexOutOfBoundsException | SQLException e) {
 			db.cancel(transaction);
+			e.printStackTrace();
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		}
 		SI.sendResponse();

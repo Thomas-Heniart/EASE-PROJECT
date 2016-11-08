@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <%@ attribute name="app" type="com.Ease.session.App" required="true"%>
-
+<%@ attribute name="informations" type="java.util.Map" required="false" %>
 <c:choose>
 	<c:when test="${app.getType() eq 'NoAccount'}">
 	<div class="siteLinkBox emptyApp"
@@ -65,7 +65,9 @@
 <c:otherwise>
 <c:if test="${app.getType() eq 'ClassicAccount'}">
 <div class="siteLinkBox"
-	 login="${app.getLogin()}"
+	<c:forEach items="${informations}" var="entry">
+		${entry.key}="${entry.value}"
+	</c:forEach>
 	 webId="${app.getSite().getId()}"
 	 name="${app.getName()}"
 	 id="${app.getAppId()}"

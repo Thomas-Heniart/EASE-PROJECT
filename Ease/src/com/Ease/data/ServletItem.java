@@ -60,7 +60,8 @@ public class ServletItem {
 		SendVerificationEmail,
 		CheckConnection,
 		UpdateAdminMessage,
-		ChangeSitePosition
+		ChangeSitePosition,
+		ReminderEmail
 	}
 	public enum Code
 	{
