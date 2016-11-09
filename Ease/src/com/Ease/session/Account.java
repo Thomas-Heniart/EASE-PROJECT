@@ -2,15 +2,13 @@ package com.Ease.session;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 
 import com.Ease.context.DataBase;
-import com.Ease.context.Site;
-import com.Ease.context.SiteManager;
-import com.Ease.data.AES;
 
-abstract class Account {
+public abstract class Account {
 	
 	protected String id;
 	protected String type;
@@ -23,6 +21,9 @@ abstract class Account {
 	public String getId() {
 		return id;
 	}
+	
+	public abstract Map<String, String> getVisibleInformations();
+	public abstract String getPassword();
 	
 	public static Account getAccount(String accountId, User user, ServletContext context) throws SessionException{
 		DataBase db = (DataBase)context.getAttribute("DataBase");

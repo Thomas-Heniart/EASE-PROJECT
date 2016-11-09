@@ -10,7 +10,7 @@
 			top: 5%;
 			right: 1px;
 			i {
-				font-size: 18px;
+				font-size: 15px;
 			}
 		}
 		.showPassDiv.show {
@@ -156,14 +156,14 @@
 		text-align: center;
 	}
 	.registrationBlock {
-		padding: 5px;
+		padding: 15px;
 		border-radius: 5px;
 		border: 1px hidden;
 		margin-left: auto;
 		margin-right: auto;
 		margin-bottom: 30px;
-		min-width: 250px;
-		max-width: 400px;
+		min-width: 270px;
+		max-width: 420px;
 		background-color: rgba(white, 0.9);
 		.advice {
 			width: 100%;
@@ -224,6 +224,11 @@
 					width: 100%;
 					padding: 2px;
 					line-height: 1.5;
+				}
+				img {
+					position: absolute;
+					left: 102%;
+					top:5px;
 				}
 			}
 		}

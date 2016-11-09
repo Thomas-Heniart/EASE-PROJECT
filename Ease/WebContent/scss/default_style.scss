@@ -36,6 +36,23 @@
   @include scalein-anim('scale-09', 1.2);
 }
 
+.input {
+  .showPassDiv {
+    position: absolute;
+    width: 23px;
+    right: 1px;
+    cursor: pointer;
+    border-radius: 5px;
+    height: 90%;
+    top: 5%;
+    color: $themeColor;
+  }
+  .showPassDiv.show {
+      color: white;
+      background-color: $themeColor;
+  }
+}
+
 body {
   overflow-x: hidden;
   -webkit-touch-callout: none; /* iOS Safari */

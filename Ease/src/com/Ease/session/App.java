@@ -2,6 +2,8 @@ package com.Ease.session;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 
@@ -41,11 +43,10 @@ public class App {
 	private String dataLogin;
 	
 	//Use this to create a new app as classic account and set it in database
-	public App(String name, String login, String password, Site site, Profile profile, User user, ServletContext context) throws SessionException {
+	public App(Map<String, String> accountInformations, String name, Site site, Profile profile, User user, ServletContext context) throws SessionException {
 		DataBase db = (DataBase)context.getAttribute("DataBase");
 		
-		Account account = new ClassicAccount(login, password, user, context);
-		
+		Account account = new ClassicAccount(accountInformations, user, context);
 		if (db.set("INSERT INTO apps VALUES (NULL, "+ account.getId() +", "+ site.getId() + ", " + profile.getId() + ", '" + profile.getApps().size() + "', '" + name + "', NULL);")
 				!= 0) {
 			throw new SessionException("Impossible to insert new app in data base.");
@@ -69,7 +70,37 @@ public class App {
 		} catch (SQLException e) {
 			throw new SessionException("Impossible to insert new account in data base. (no str1)");
 		}
+	}
+	
+	public App(String name, String login, String password, Site site, Profile profile, User user, ServletContext context) throws SessionException {
+		DataBase db = (DataBase)context.getAttribute("DataBase");
+		Map<String, String> accountInformations = new HashMap<String, String>();
+		accountInformations.put("login", login);
+		accountInformations.put("password", password);
+		Account account = new ClassicAccount(accountInformations, user, context);
+		if (db.set("INSERT INTO apps VALUES (NULL, "+ account.getId() +", "+ site.getId() + ", " + profile.getId() + ", '" + profile.getApps().size() + "', '" + name + "', NULL);")
+				!= 0) {
+			throw new SessionException("Impossible to insert new app in data base.");
+		}
 		
+		ResultSet rs = db.get("SELECT LAST_INSERT_ID();");
+		if (rs == null){
+			throw new SessionException("Impossible to insert new app in data base. (no rs)");
+		}
+		try {
+			rs.next();
+			this.id = rs.getString(1);
+			this.account = account;
+			this.site = site;
+			this.index = profile.getApps().size();
+			this.name = name;
+			this.profileIndex = profile.getIndex();
+			this.profileId = profile.getProfileId();
+			appId = user.getNextAppId();
+			this.custom = null;
+		} catch (SQLException e) {
+			throw new SessionException("Impossible to insert new account in data base. (no str1)");
+		}
 	}
 	
 	//Use this to create a new app as logWith account and set it in database
@@ -262,6 +293,10 @@ public class App {
 	//Getter
 	public Account getAccount(){
 		return account;
+	}
+	
+	public Map<String, String> getVisibleInformations() {
+		return this.account.getVisibleInformations();
 	}
 	
 	public String getLogin(){

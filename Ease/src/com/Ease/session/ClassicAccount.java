@@ -2,36 +2,34 @@ package com.Ease.session;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 
 import com.Ease.context.DataBase;
-import com.Ease.context.Site;
-import com.Ease.context.SiteManager;
 import com.Ease.data.AES;
 
 public class ClassicAccount extends Account{
 	enum ClassicAccountData {
 		NOTHING,
-		LOGIN,
-		PASSWORD,
 		ACCOUNT_ID
 	}
-	private String	login;
-	private	String	password;
+	private Map<String, String> accountInformations;
+	private String passwd;
 
 	//Use this to create a new account and set it in database
-	public ClassicAccount(String login, String password, User user, ServletContext context) throws SessionException {
+	public ClassicAccount(Map<String, String> accountInformations, User user, ServletContext context) throws SessionException {
 		DataBase db = (DataBase)context.getAttribute("DataBase");
 		String cryptedPassword;
-		if ((cryptedPassword = AES.encrypt(password, user.getUserKey())) == null){
+		if ((cryptedPassword = AES.encrypt(accountInformations.get("password"), user.getUserKey())) == null){
 			throw new SessionException("Can't encrypt password.");
 		}
 		if (db.set("INSERT INTO accounts VALUES (NULL);")
 				!= 0) {
 			throw new SessionException("Impossible to insert new account in data base.");
 		}
-		if (db.set("INSERT INTO classicAccounts VALUES ('"+ login + "', '"+ cryptedPassword +"',  LAST_INSERT_ID());") !=0){
+		if (db.set("INSERT INTO classicAccounts VALUES (LAST_INSERT_ID());") !=0){
 			throw new SessionException("Impossible to insert new classic account in data base.");
 		}
 		ResultSet rs = db.get("SELECT LAST_INSERT_ID();");
@@ -40,15 +38,19 @@ public class ClassicAccount extends Account{
 		else {
 			try {
 				rs.next();
+				this.accountInformations = accountInformations;
 				this.id = rs.getString(1);
-				this.login = login;
-				this.password = password;
 				this.type = "ClassicAccount";
+				for (Map.Entry<String, String> entry : this.accountInformations.entrySet()) {
+					if (entry.getKey().equals("password"))
+						db.set("INSERT INTO ClassicAccountsInformations VALUES (NULL, " + this.id + ", '" + entry.getKey() + "', '" + cryptedPassword + "');");
+					else
+						db.set("INSERT INTO ClassicAccountsInformations VALUES (NULL, " + this.id + ", '" + entry.getKey() + "', '" + entry.getValue() + "');");
+				}
 			} catch (SQLException e) {
 				throw new SessionException("Impossible to insert new classic account in data base. (no str1)");
 			}
-		}	
-
+		}
 	}
 
 	//Use this to load account with a ResultSet from database
@@ -56,10 +58,22 @@ public class ClassicAccount extends Account{
 		try {
 			type = "ClassicAccount";
 			id = rs.getString(ClassicAccountData.ACCOUNT_ID.ordinal());
-			login = rs.getString(ClassicAccountData.LOGIN.ordinal());
-			if ((password = AES.decrypt(rs.getString(ClassicAccountData.PASSWORD.ordinal()), user.getUserKey())) == null)
-				throw new SessionException("Can't decrypt website password. " + id);
+			accountInformations = new HashMap<String, String>();
+			DataBase db = (DataBase)context.getAttribute("DataBase");
+			ResultSet informationsRs = db.get("SELECT information_name, information_value FROM ClassicAccountsInformations WHERE account_id = " + this.id +";");
+			while(informationsRs.next()) {
+				String info_name = informationsRs.getString(1);
+				String info_value = informationsRs.getString(2);
+				if (info_name.equals("password")) {
+					passwd = AES.decrypt(info_value, user.getUserKey());
+					if (passwd == null)
+						throw new SessionException("Can't decrypt website password. " + id);
+					this.accountInformations.put(info_name, passwd);
+				} else
+					this.accountInformations.put(info_name, info_value);
+			}
 		} catch (SQLException e) {
+			e.printStackTrace();
 			throw new SessionException("Impossible to get all classic account info.");
 		}
 	}
@@ -67,42 +81,69 @@ public class ClassicAccount extends Account{
 	// GETTER
 
 	public String getLogin() {
-		return login;
+		return this.accountInformations.get("login");
 	}
 	public String getPassword() {
-		return password;
+		return this.passwd;
 	}	
-	// SETTER
 
 	public void setLogin(String login) {
-		this.login = login;
+		this.accountInformations.put("login", login);
 	}
+	
 	public void setPassword(String password) {
-		this.password = password;
+		this.accountInformations.put("password", password);
 	}
-
+	
+	public Map<String, String> getVisibleInformations() {
+		Map<String, String> res = new HashMap<String, String>();
+		for(Map.Entry<String, String> entry : this.accountInformations.entrySet()) {
+			if (!entry.getKey().equals("password"))
+				res.put(entry.getKey(), entry.getValue());
+		}
+		return res;
+	}
+	
+	public void updateWithInformations(Map<String, String> informations) {
+		this.accountInformations = informations;
+	}
+	
 	// UTILS
 
 	public void updateInDB(ServletContext context, String keyUser) throws SessionException {
 		DataBase db = (DataBase)context.getAttribute("DataBase");
 		String cryptedPassword = "";
-		if ((cryptedPassword = AES.encrypt(password, keyUser)) == null) {
+		if ((cryptedPassword = AES.encrypt(this.accountInformations.get("password"), keyUser)) == null) {
 			throw new SessionException("Can't encrypt password.");
 		}
-		if (db.set("UPDATE classicAccounts SET login='" + login + "', `password`='"+ cryptedPassword + "' WHERE account_id=" + id + ";")
-				!= 0)
-			throw new SessionException("Impossible to update classic account in data base.");
+		for (Map.Entry<String, String> entry : this.accountInformations.entrySet()) {
+			if (!entry.getKey().equals("password")) {
+				if (db.set("UPDATE ClassicAccountsInformations SET information_value = '" + entry.getValue() + "' WHERE information_name = '" + entry.getKey() + "' AND account_id =  " + this.id + ";") != 0)
+					throw new SessionException("Impossible to update classic account in data base.");
+			}
+				
+			else {
+				if (db.set("UPDATE ClassicAccountsInformations SET information_value = '" + cryptedPassword + "' WHERE information_name = '" + entry.getKey() + "'") != 0)
+					throw new SessionException("Impossible to update classic account in data base.");
+			}
+				
+		}
 	}
 
 	public void updateInDB(ServletContext context) throws SessionException {
 		DataBase db = (DataBase)context.getAttribute("DataBase");
-		if (db.set("UPDATE classicAccounts SET login='" + login + "' WHERE account_id=" + id + ";")
-				!= 0)
-			throw new SessionException("Impossible to update classic account in data base.");
+		for (Map.Entry<String, String> entry : this.accountInformations.entrySet()) {
+			if (!entry.getKey().equals("password")) {
+				if (db.set("UPDATE ClassicAccountsInformations SET information_value = '" + entry.getValue() + "' WHERE information_name = '" + entry.getKey() + "' AND account_id =  " + this.id + ";") != 0)
+					throw new SessionException("Impossible to update classic account in data base.");
+			}
+		}
 	}
 
 	public void deleteFromDB(ServletContext context) throws SessionException {
 		DataBase db = (DataBase)context.getAttribute("DataBase");
+		if (db.set("DELETE FROM ClassicAccountsInformations WHERE account_id=" + id + ";") != 0)
+			throw new SessionException("Impossible to delete classic account informations in db.");
 		if (db.set("DELETE FROM classicAccounts WHERE account_id=" + id + ";") != 0)
 			throw new SessionException("Impossible to delete classic account in data base.");
 		if (db.set("DELETE FROM accounts WHERE account_id=" + id + ";") != 0)

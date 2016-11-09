@@ -25,7 +25,6 @@ public class OnStart implements ServletContextListener {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e2) {
-			// TODO Auto-generated catch block
 			e2.printStackTrace();
 			return;
 		}

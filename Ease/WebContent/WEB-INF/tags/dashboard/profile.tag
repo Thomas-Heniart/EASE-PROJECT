@@ -48,7 +48,12 @@
 		</div>
 		<div  class="SitesContainer" id='${profile.getProfileId()}'>
 			<c:forEach items='${profile.getApps()}' var="app">
-			<dashboard:app app='${app}'/>
+				<c:if test="${app.getType() eq 'ClassicAccount'}">
+					<dashboard:app app='${app}' informations="${app.getVisibleInformations()}"/>	
+				</c:if>
+				<c:if test="${app.getType() ne 'ClassicAccount'}">
+					<dashboard:app app='${app}'/>	
+				</c:if>
 		</c:forEach>
 	</div>
 </div>

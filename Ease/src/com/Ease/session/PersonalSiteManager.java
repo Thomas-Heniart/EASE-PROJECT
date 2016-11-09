@@ -13,7 +13,7 @@ public class PersonalSiteManager {
 	protected Map<String, String> sites;
 	
 	public PersonalSiteManager(SiteManager siteManager) {
-		Iterator<Site> it = siteManager.getAllSites().iterator();
+		Iterator<Site> it = siteManager.getSitesList().iterator();
 		this.sites = new HashMap<String, String>();
 		while (it.hasNext()) {
 			Site tmpSite = it.next();
