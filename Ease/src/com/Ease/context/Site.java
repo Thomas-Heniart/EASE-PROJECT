@@ -241,6 +241,10 @@ public class Site implements Comparable<Site> {
 		String tmpPos = this.position;
 		this.position = o.position;
 		o.position = tmpPos;
+		if (o.isNew())
+			return 1;
+		if (this.isNew())
+			return -1;
 		if (this.ratio <= o.ratio) 
 			return 1;
 		return -1;

@@ -6,15 +6,10 @@
 		placeholder="Login" value="" /><i
 		class="fa fa-caret-down email-suggestions" aria-hidden="true"></i>
 	<div class="suggested-emails">
-		<div class="suggestions">
-			<c:forEach items='${user.getEmails().keySet()}' var="item">
-			<p class="email-suggestion" email="${item}">
-				<span>${item}</span>
-			</p>
+		<c:forEach items='${user.getEmails().keySet()}' var="item">
+		<p class="email-suggestion" email="${item}">
+			<span>${item}</span>
+		</p>
 		</c:forEach>
-		</div>
-		<div class="edit-emails">
-			<i class="fa fa-cog" aria-hidden="true"></i>
-		</div>
 	</div>
 </div>

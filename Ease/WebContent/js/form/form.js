@@ -226,7 +226,7 @@ var Form = {
 			var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 			if (emailRegex.test(self.oInputs[1].getVal()) && !$(".email-suggestion[email='" + self.oInputs[1].getVal() + "']").length) {
 				$(".suggested-emails").append(
-						"<p class='email-suggestion' email='" + self.oInputs[1].getVal() + "'>@ <span>"
+						"<p class='email-suggestion' email='" + self.oInputs[1].getVal() + "'><span>"
 								+ self.oInputs[1].getVal() + "</span></p>");
 				$("#editVerifiedEmails").append("<div class='emailLine'>"
 						+ "<input type='email' name='email' oClass='HiddenInput' value='" + self.oInputs[1].getVal() + "'readonly />"
@@ -414,12 +414,16 @@ var Form = {
 			$(self.oParent.app).find('.linkImage').removeClass('easyScaling');
 		}
 		this.successCallback = function(retMsg) {
+			var json = JSON.parse(retMsg);
+			console.log(json);
 			var webId = (self.oParent.app).attr("webid");
 			var x = parseInt($(".catalogApp[idx='" + webId + "'] span.apps-integrated i.count").html());
 			$(".catalogApp[idx='" + webId + "'] span.apps-integrated i.count").html(x-1);
 			if (x == 1)
 				$(".catalogApp[idx='" + webId + "'] span.apps-integrated").removeClass("showCounter");
 			$(self.oParent.app).find('.linkImage').addClass('deletingApp');
+			$(".suggested-emails p[email='" + json['email'] + "']").remove();
+			$("#editVerifiedEmails .emailLine input[value='" + json['email'] + "']").parent().remove();
 			setTimeout(function() {
 				self.oParent.app.remove();
 			}, 500);
@@ -453,7 +457,7 @@ var Form = {
 		+ "</div>");
 			$(".suggested-emails").append(
 					"<p class='email-suggestion' email='" + emailVal
-							+ "'>@ <span>" + emailVal + "</span></p>");
+							+ "'><span>" + emailVal + "</span></p>");
 		};
 		this.beforeSubmit = function() {
 			$("#AddEmailPopup").addClass("md-show");

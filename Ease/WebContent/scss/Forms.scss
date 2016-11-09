@@ -91,50 +91,29 @@ form.settingsForm {
     color: black;
   }
   .suggested-emails {
-    height: 0;
+    max-height: 0;
     background-color: white;
     border-radius: 5px;
-    transition: height 0.3s ease;
+    transition: max-height 0.3s ease;
     position: relative;
     overflow: hidden;
-    .suggestions {
-      max-height: 100px;
-      height: 0;
-      overflow: hidden;
-      transition: height 0.3s ease;
-      p.email-suggestion {
-        color: black;
-        padding: 2px;
-        margin: 2px;
-        border-radius: 2px;
-        cursor: pointer;
-        &:hover {
-          background-color: $themeColor;
-          color: white;
-        }
+    p.email-suggestion {
+      color: black;
+      padding: 2px;
+      margin: 2px;
+      border-radius: 2px;
+      cursor: pointer;
+      &:hover {
+        background-color: $themeColor;
+        color: white;
       }
-    }
-    .edit-emails {
-      height: 0;
-      overflow: hidden;
-      transition: height 0.3s ease;
-      color: $themeColor;
     }
   }
   .suggested-emails.show {
-    height: auto;
-    margin: 1px auto;
-    transition: height 0.3s ease;
+    max-height: 100px;
     overflow-y: auto;
-    .suggestions {
-      height: auto;
-      overflow-y: auto;
-      transition: height 0.3s ease;
-    }
-    .edit-emails {
-      height: auto;
-      transition: height 0.3s ease;
-    }
+    margin: 1px auto;
+    transition: max-height 0.3s ease;
   }
 }
 
