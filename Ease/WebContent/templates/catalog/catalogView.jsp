@@ -54,18 +54,11 @@
 					<div class="search-result"></div>
 					<h4 class="relatedApps"><span>Related apps</span></h4>
 					<div class="relatedApps"></div>
-					<c:forEach items="${siteManager.getLastSitesList()}" var="item" varStatus="loop">
-						<c:if test="${!item.isHidden()}">
-							<div class="${item.isHidden()}"></div>
-							<catalog:catalogApp site="${item}" newApp="true"/>
-						</c:if>
+					<c:forEach items="${siteManager.getSitesList()}" var="item" varStatus="loop">
+						<div class="${item.isHidden()}"></div>
+						<catalog:catalogApp site="${item}" newApp="${item.isNew()}"/>
 					</c:forEach>
-					<c:forEach items='${siteManager.getSitesList()}' var="item" varStatus="loop">
-						<c:if test="${!item.isHidden()}">
-							<div class="${item.isHidden()}"></div>
-							<catalog:catalogApp site="${item}"/>
-						</c:if>
-					</c:forEach>
+					
 					<div class="no-result-search">
 						<h2>No results yet...<img alt="no-result" src="resources/images/umbrella.png"/></h2>
 						<p>Fine ! Take a look there</p>

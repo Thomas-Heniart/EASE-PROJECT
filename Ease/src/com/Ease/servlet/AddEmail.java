@@ -37,7 +37,6 @@ public class AddEmail extends HttpServlet {
 	 */
 	public AddEmail() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -48,24 +47,25 @@ public class AddEmail extends HttpServlet {
 			throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		User user = (User) (session.getAttribute("User"));
-		ServletItem SI = new ServletItem(ServletItem.Type.AddEmail, request, response, user);
+		
 		DataBase db = (DataBase) session.getServletContext().getAttribute("DataBase");
+		
+		String verificationCode = request.getParameter("code");
+		String email = request.getParameter("email");
+		if (verificationCode == null || email == null) {
+			RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+			rd.forward(request, response);
+		}
+		ServletItem SI = new ServletItem(ServletItem.Type.AddEmail, request, response, user);
 		if (db.connect() != 0) {
 			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "Database not connected");
 			SI.sendResponse();
-		}
-		String verificationCode = SI.getServletParam("code");
-		String email = SI.getServletParam("email");
-		if (verificationCode == null) {
-			RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-			rd.forward(request, response);
 		}
 		db.set("UPDATE usersEmails SET verified = 1 WHERE email = '" + email + "' AND verificationCode = '" + verificationCode + "';");
 		if (user != null) {
 			user.validateEmail(email);
 		}
-		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-		rd.forward(request, response);
+		SI.setResponse(200, "Successfully added email");
 	}
 
 	/**
