@@ -22,6 +22,16 @@
 	.popupForm {
 		width: 80%;
 		margin: auto;
+		.input {
+			width: 100%;
+			margin: 0px;
+			max-width: inherit;
+			position: relative;
+			display: block;
+			input {
+				width: 100% !important;
+			}
+		}
 	}
 	.buttonSet {
 		button {
@@ -354,6 +364,12 @@
 			width: 80%;
 			margin: 5px auto;
 			padding: 0px;
+		}
+		.input {
+			margin: 2px 0px;
+			input {
+				margin: 0px 0px 0px 0px;
+			}
 		}
 		.buttonSet {
 			text-align: center;

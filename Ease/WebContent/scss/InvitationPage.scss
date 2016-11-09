@@ -5,6 +5,19 @@
 	background-attachment: fixed;
 	background-position: center center;
 	background-size: cover;
+	.input.password {
+		.showPassDiv {
+			top: 5%;
+			right: 1px;
+			i {
+				font-size: 15px;
+			}
+		}
+		.showPassDiv.show {
+			color: white;
+			background-color: $themeColor;
+		}
+	}
 	.invitation-header {
 		position: absolute;
 		height: 45%;
@@ -58,6 +71,9 @@
 					border-bottom-right-radius: 0;
 					padding-left: 3px;
 					color: black;
+				}
+				.input.password input {
+					padding-right: 27px;
 				}
 				button {
 					border-radius: 5px;
@@ -192,6 +208,9 @@
 					}
 				}
 			}
+			.input.password input {
+				padding-right: 27px;
+			}
 			.input {
 				margin: 0px;
 				margin-bottom: 10px;
@@ -208,7 +227,7 @@
 				}
 				img {
 					position: absolute;
-					right:5px;
+					left: 102%;
 					top:5px;
 				}
 			}

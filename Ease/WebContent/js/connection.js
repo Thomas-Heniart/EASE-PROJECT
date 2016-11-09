@@ -70,6 +70,7 @@ $(document).ready(function() {
 	                },
 	                function(){},
 	                function(retMsg){
+						easeTracker.trackEvent("Connexion");
 	                    window.location.replace("index.jsp");
 	                },
 	                function(retMsg){
