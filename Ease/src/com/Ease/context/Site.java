@@ -2,6 +2,10 @@ package com.Ease.context;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -41,8 +45,18 @@ public class Site implements Comparable<Site> {
 	protected String position;
 	protected List<Tag> tags;
 	protected List<SiteInformation> informations; //String one = info_name And String two = info_type
-
+	protected boolean newSite;
+	
 	public Site(ResultSet rs, DataBase db) {
+		setUpFromRs(rs, db);
+	}
+		
+	public Site(ResultSet rs, DataBase db, boolean isNew) {
+		setUpFromRs(rs, db);
+		newSite = true;
+	}
+	
+	public void setUpFromRs(ResultSet rs, DataBase db) {
 		try {
 			tags = new LinkedList<Tag>();
 			id = rs.getString(SiteData.ID.ordinal());
@@ -59,6 +73,7 @@ public class Site implements Comparable<Site> {
 			ratio = Integer.parseInt(rs.getString(SiteData.RATIO.ordinal()));
 			position = rs.getString(SiteData.POSITION.ordinal());
 			informations = new LinkedList<SiteInformation>();
+			newSite = false;
 			ResultSet informationsRs = db.get("SELECT information_name, information_type FROM websitesInformations WHERE website_id = " + this.id + ";");
 			while (informationsRs.next())
 				informations.add(new SiteInformation(informationsRs));
@@ -141,6 +156,10 @@ public class Site implements Comparable<Site> {
 				ret += ",";
 		}
 		return ret;
+	}
+	
+	public boolean isNew() {
+		return this.newSite;
 	}
 
 	public JSONArray getJson() {

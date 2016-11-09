@@ -73,8 +73,6 @@ public class Tag {
 		ResultSet rs = db.get("SELECT website_id FROM TagAndSiteMap WHERE tag_id=" + id + ";");
 		while (rs.next()) {
 			Site tmpSite = siteManager.getSiteById(new Integer(rs.getString(1)));
-			if (tmpSite == null)
-				tmpSite = siteManager.getLastSiteById(new Integer(rs.getString(1)));
 			addSite(tmpSite);
 		}
 	}
