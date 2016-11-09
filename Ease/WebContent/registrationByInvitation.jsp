@@ -86,14 +86,22 @@ pageEncoding="UTF-8"%>
 			<p class="advice"><u>Advice</u>: make it memorable, add digits, upper & lower cases. It must be more than 8 characters long.</p>
 			<p class="advice"><u>Info</u>: As we don’t know your Ease password, if you forget it, you will have to reset your account and enter again the passwords of the apps you added.</p>
 			
-			<span class="input input--minoru">
+			<span class="input input--minoru password">
 				<input class="input__field input__field--minoru" name="password" type="password" id="input-8" placeholder="Password"/>
-				<label class="input__label input__label--minoru" for="input-8"></label>
+				<label class="input__label input__label--minoru" for="input-8">
+				</label>
+				<div class="showPassDiv">
+					<i class="fa fa-eye centeredItem" aria-hidden="true"></i>
+				</div>
 				<img src="./resources/icons/error.png" id="validatorPassword" style="display:none;"/>
 			</span>
-			<span class="input input--minoru">
+			<span class="input input--minoru password">
 				<input class="input__field input__field--minoru" name="confirmPassword" type="password" id="input-8" placeholder="Confirm password"/>
-				<label class="input__label input__label--minoru" for="input-8"></label>
+				<label class="input__label input__label--minoru" for="input-8">
+				</label>
+				<div class="showPassDiv">
+					<i class="fa fa-eye centeredItem" aria-hidden="true"></i>
+				</div>
 				<img src="./resources/icons/error.png" id="validatorConfirmPass" style="display:none;"/>
 			</span>
 			<div class="term">
