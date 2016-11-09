@@ -309,12 +309,12 @@ $(document).click(function (e){
 }); 
 
 
-$(document).on("contextmenu", ".linkImage", function(e) {
+/*$(document).on("contextmenu", ".linkImage", function(e) {
 	e.preventDefault();
 	$(this).trigger('mouseover');
 	$(this).find('.showAppActionsButton').trigger('mouseover');
 	return false;
-});
+});*/
 function setupSortableContainer(container) {
 	$(container).sortable({
 		animation : 300,

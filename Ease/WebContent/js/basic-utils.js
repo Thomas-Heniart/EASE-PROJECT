@@ -222,6 +222,7 @@ function changeColor(color, ratio, darker) {
     $(document).on('mouseover', '.showAppActionsButton', function(evt){
             var subPopup = $(this).find('.appActionsPopup');
             var profileParent = $(this).closest('.siteLinkBox').parent();
+            $(this).closest('.linkImage').addClass('settingsShow');
             var str = '-';
             var scrollDist =  $(profileParent).scrollTop() + $(this).height();
             if ($(this).closest('.col-left'))
@@ -231,3 +232,21 @@ function changeColor(color, ratio, darker) {
                 'margin-top':str
             });
     });
+    $(document).on('mouseleave', '.showAppActionsButton', function(evt){
+            $(this).closest('.linkImage').removeClass('settingsShow');
+    });
+
+$(document).ready(function(){
+    $('.showPassDiv').click(function(){
+        var input = $(this).parent().find('input');
+        if ($(this).hasClass('show')){
+            input.attr('type', 'password');
+            input.focus();
+            $(this).removeClass('show');
+        }else {
+            input.attr('type', 'text');
+            input.focus();
+            $(this).addClass('show');
+        }
+    });
+});
