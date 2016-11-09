@@ -203,7 +203,6 @@ public class SiteManager {
 		// If everything is empty then returns all websites
 		if (selectedIds.length == 0 && (search.isEmpty() || search == null))
 			return getSitesListJson();
-
 		List<Tag> selectedTags = new LinkedList<Tag>();
 		JSONArray res = new JSONArray();
 		List<Site> sitesToShow = new LinkedList<Site>();
@@ -212,7 +211,6 @@ public class SiteManager {
 		for (int i = 0; i < selectedIds.length; i++) {
 			selectedTags.add(getTagById(Integer.parseInt(selectedIds[i])));
 		}
-
 		if (selectedTags.size() == 0) {
 			Tag searchTag = getTagForSearch(search, selectedTags);
 			if (searchTag != null) {
