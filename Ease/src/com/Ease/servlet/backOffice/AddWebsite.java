@@ -37,7 +37,6 @@ public class AddWebsite extends HttpServlet {
 	 */
 	public AddWebsite() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -97,7 +96,7 @@ public class AddWebsite extends HttpServlet {
 			    ResultSet rs = db.get("SELECT * FROM websites ORDER BY website_name;");
 			    sites.clearSites();
 			    while (rs.next()) {
-			    	sites.add(new Site(rs));
+			    	sites.add(new Site(rs, db, true));
 			    }
 			    siteManager.refresh(db);
 			    SI.setResponse(200, "Site added.");
