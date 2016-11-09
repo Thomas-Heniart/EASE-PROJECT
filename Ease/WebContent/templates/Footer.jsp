@@ -5,6 +5,7 @@
 		<i></i>
 </div>
 <div class="footer" style="display: none">
+
 	<div class="mediaTab">
 		<div class="link">
 		<a href="https://www.facebook.com/EasePlatform/"  target="_blank"><i class="fa fa-facebook"></i></a>
@@ -24,5 +25,9 @@
 		<div class="link">
 		<a href="http://www.ease-app.co/secure"  target="_blank"><i class="fa fa-lock" aria-hidden="true"></i></a>
 		</div>
+	</div>
+	<div class="credits">
+		<p>Background picture : <a target="_blank" href="https://unsplash.com">unsplash.com</a></p>
+		<p>Icons : <a target="_blank" href="http://fontawesome.io/">fontawesome.io</a></p>
 	</div>
 </div>

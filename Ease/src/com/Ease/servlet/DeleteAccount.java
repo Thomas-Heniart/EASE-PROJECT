@@ -53,7 +53,6 @@ public class DeleteAccount extends HttpServlet {
 			throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		User user = (User) (session.getAttribute("User"));
-		SessionSave sessionSave = (SessionSave)(session.getAttribute("SessionSave"));
 		ServletItem SI = new ServletItem(ServletItem.Type.SendVerificationEmail, request, response, user);
 		DataBase db = (DataBase) session.getServletContext().getAttribute("DataBase");
 		if (user == null) {
@@ -78,7 +77,6 @@ public class DeleteAccount extends HttpServlet {
 				String hashedPass = Hashing.SHA(password, saltEase);
 				if (rs.getString(UserData.PASSWORD.ordinal()).equals(hashedPass)) {
 					db.set("CALL deleteUser(" + user.getId() + ")");
-					sessionSave.erase(session.getServletContext());
 					Cookie 	cookie = null;
 					Cookie 	cookies[] = request.getCookies();
 					if (cookies != null){
@@ -102,7 +100,7 @@ public class DeleteAccount extends HttpServlet {
 				}
 
 			}
-		} catch (SQLException | SessionException e) {
+		} catch (SQLException e) {
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 			e.printStackTrace();
 			SI.sendResponse();

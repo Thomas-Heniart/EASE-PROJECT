@@ -62,9 +62,9 @@ pageEncoding="UTF-8"%>
 				<p>How would you like us to call you ? </p>
 			</div>
 			<span class="input input--minoru">
-					<input class="input__field input__field--minoru" name="fname" type="text" id="input-8" placeholder="Your name"/>
-					<label class="input__label input__label--minoru" for="input-8">
-					</label>
+					<input class="input__field input__field--minoru" name="fname" type="text" id="input-8" placeholder="Your name" autofocus/>
+					<label class="input__label input__label--minoru" for="input-8"></label>
+					<img src="./resources/icons/error.png" id="validatorFname" style="display:none;"/>
 				</span>
 			<!--<div class="doubleInput">-->
 				<!--
@@ -76,8 +76,7 @@ pageEncoding="UTF-8"%>
 				-->
 					<span class="input input--minoru">
 					<input class="input__field input__field--minoru" name="lname" type="text" id="input-8" value="Unknow" style="display: none"/>
-					<label class="input__label input__label--minoru" for="input-8">
-					</label>
+					<label class="input__label input__label--minoru" for="input-8"></label>
 				</span>
 				 
 			<!--</div>-->
@@ -89,13 +88,13 @@ pageEncoding="UTF-8"%>
 			
 			<span class="input input--minoru">
 				<input class="input__field input__field--minoru" name="password" type="password" id="input-8" placeholder="Password"/>
-				<label class="input__label input__label--minoru" for="input-8">
-				</label>
+				<label class="input__label input__label--minoru" for="input-8"></label>
+				<img src="./resources/icons/error.png" id="validatorPassword" style="display:none;"/>
 			</span>
 			<span class="input input--minoru">
 				<input class="input__field input__field--minoru" name="confirmPassword" type="password" id="input-8" placeholder="Confirm password"/>
-				<label class="input__label input__label--minoru" for="input-8">
-				</label>
+				<label class="input__label input__label--minoru" for="input-8"></label>
+				<img src="./resources/icons/error.png" id="validatorConfirmPass" style="display:none;"/>
 			</span>
 			<div class="term">
 				<p>I accept the <a href="http://www.ease-app.co/privacy" target="_blank">terms and conditions</a></p><input class="check" type="checkbox" />
@@ -128,5 +127,34 @@ pageEncoding="UTF-8"%>
 		</div>
 	</div>
 	<%@ include file="templates/ChatButton.jsp" %>
+	<script>
+		$("input[name='fname']").keyup(function(e){
+			$("#validatorFname").css("display","block");
+			if($("input[name='fname']").val() == "") 
+				$("#validatorFname").attr("src","./resources/icons/error.png");
+			else
+				$("#validatorFname").attr("src","./resources/icons/success.png");
+		});
+		
+		$("input[name='password']").keyup(function(e){
+			$("#validatorPassword").css("display","block");
+			if($("input[name='password']").val().length < 8) 
+				$("#validatorPassword").attr("src","./resources/icons/error.png");
+			else
+				$("#validatorPassword").attr("src","./resources/icons/success.png");
+			if($("input[name='password']").val().length < 8 || $("input[name='confirmPassword']").val() != $("input[name='password']").val()) 
+				$("#validatorConfirmPass").attr("src","./resources/icons/error.png");
+			else
+				$("#validatorConfirmPass").attr("src","./resources/icons/success.png");
+		});
+		
+		$("input[name='confirmPassword']").keyup(function(e){
+			$("#validatorConfirmPass").css("display","block");
+			if($("input[name='password']").val().length < 8 || $("input[name='confirmPassword']").val() != $("input[name='password']").val()) 
+				$("#validatorConfirmPass").attr("src","./resources/icons/error.png");
+			else
+				$("#validatorConfirmPass").attr("src","./resources/icons/success.png");
+		});
+	</script>
 </body>
 </html>

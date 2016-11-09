@@ -70,7 +70,7 @@ public class User {
 			throw new SessionException("Can't hash password.");
 		} else if (db.set("INSERT INTO users VALUES (NULL, '" + fName + "', '" + lName + "', '" + email + "', '" + tel
 				+ "', '" + hashedPassword + "', '" + saltEase + "', '" + saltPerso + "', '" + keyCrypted
-				+ "', 0, 0);") != 0) {
+				+ "', 0, 1);") != 0) {
 			throw new SessionException("Impossible to insert new user in data base.");
 		} else {
 			this.firstName = fName;
