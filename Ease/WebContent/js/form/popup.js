@@ -159,5 +159,15 @@ var Popup = {
 			self.error.html("");
 			self.qRoot.removeClass('md-show');
 		};
+	},
+	RegisterPopup : function() {
+		constructorPopup.apply(this, arguments);
+		var self = this;
+		this.open = function () {
+			self.oForm.reset();
+			self.setVal(arguments);
+			self.qRoot.addClass('md-show');
+			$(".md-overlay", self.qRoot.parrent).addClass("md-show");
+		};
 	}
 }

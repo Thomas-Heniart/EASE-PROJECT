@@ -53,12 +53,17 @@ public class RegistrationByInvitation extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
+		String invitationCode = request.getParameter("invitationCode");
+		String email = request.getParameter("email");
 		User user = (User) session.getAttribute("User");
 		if (user != null) {
 			RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
 			rd.forward(request, response);
+		} else if (invitationCode == null || email == null) {
+			RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+			rd.forward(request, response);
 		} else {
-			RequestDispatcher rd = request.getRequestDispatcher("registrationByInvitation.jsp");
+			RequestDispatcher rd = request.getRequestDispatcher("checkForInvitation.jsp");
 			rd.forward(request, response);
 		}
 	}
@@ -91,9 +96,7 @@ public class RegistrationByInvitation extends HttpServlet {
 			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 		} else if (fname == null || fname.length() < 2){
 			SI.setResponse(ServletItem.Code.BadParameters, "Wrong name");	
-		} else if (lname == null || lname.length() < 2){
-			SI.setResponse(ServletItem.Code.BadParameters, "Incorrect last name.");
-		} else if (email == null || Regex.isEmail(email) == false){
+		}  else if (email == null || Regex.isEmail(email) == false){
 			SI.setResponse(ServletItem.Code.BadParameters, "Incorrect email.");
 		} else if (password == null || Regex.isPassword(password) == false) {
 			SI.setResponse(ServletItem.Code.BadParameters, "Password is too short (at least 8 characters).");
@@ -109,13 +112,14 @@ public class RegistrationByInvitation extends HttpServlet {
 					if (rs.next()) {
 						SI.setResponse(ServletItem.Code.BadParameters, "You already have an account.");
 					} else {
+						lname = "";
 						user = new User(fname, lname, email, "0606060606", password, session.getServletContext());
 						if (group != null && group.equals("null") == false)
 							db.set("insert into GroupAndUserMap values (NULL, " + group + ", " + user.getId() + ");");
 						db.set("delete from invitations where email = '" + email + "' and linkCode = '" + invitationCode + "';");
 						session.setAttribute("User", user);
 						db.set("CALL addEmail(" + user.getId() + ", '" + user.getEmail() + "');");
-						db.set("UPDATE usersEmais SET verified = 1 WHERE user_id = " + user.getId() + " AND email = '" + user.getEmail() + "';");
+						db.set("UPDATE usersemails SET verified = 1 WHERE user_id = " + user.getId() + " AND email = '" + user.getEmail() + "';");
 						SI.setResponse(200, "User registered.");
 					}
 				} else {
