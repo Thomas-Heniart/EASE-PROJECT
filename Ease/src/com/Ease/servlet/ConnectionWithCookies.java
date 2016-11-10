@@ -47,6 +47,7 @@ public class ConnectionWithCookies extends HttpServlet {
 		String sessionId = request.getParameter("sessionId");
 		String token = request.getParameter("token");
 		// --
+		
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		
 		try {

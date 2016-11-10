@@ -1,19 +1,24 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+pageEncoding="UTF-8"%>
 
 <div oClass="DeleteProfilePopup" id="PopupDeleteProfile" class="md-modal md-effect-15 popup">
 	<div class="md-content">
 		<form oClass="DeleteProfileForm" action="deleteProfile" class="popupForm">
 			<p class="title">By deleting your profile, you will lose all related information and associated accounts.</br>-</br>Confirm by entering your ease password.<span></span></p>
 			<input oClass="NoEmptyInput" type="hidden" name="index" />
-			<input oClass="PasswordInput" name="password" type="password" placeholder="Enter your password"/>
+			<span class="input">
+				<input oClass="PasswordInput" name="password" type="password" placeholder="Enter your password"/>
+				<div class="showPassDiv">
+					<i class="fa fa-eye centeredItem" aria-hidden="true"></i>
+				</div>
+			</span>
 			<div oClass="ClassicErrorMsg" class="alertDiv">
 				<p></p>
 			</div>
 			<div class="buttonSet">
-   		 		<button type="submit" id="accept" class="btn btn-default btn-primary btn-group btn-lg">Remove</button>
-   		 		<button type="button"id="close" class="btn btn-default btn-primary btn-group btn-lg" oClass="CloseButton">Cancel</button>
-    		</div>
+				<button type="submit" id="accept" class="btn btn-default btn-primary btn-group btn-lg">Remove</button>
+				<button type="button"id="close" class="btn btn-default btn-primary btn-group btn-lg" oClass="CloseButton">Cancel</button>
+			</div>
 		</form>
 	</div>
 </div>

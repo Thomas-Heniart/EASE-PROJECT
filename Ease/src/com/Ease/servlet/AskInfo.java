@@ -2,20 +2,23 @@ package com.Ease.servlet;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.annotation.WebServlet;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import com.Ease.context.DataBase;
 import com.Ease.data.ServletItem;
 import com.Ease.session.App;
 import com.Ease.session.ClassicAccount;
@@ -35,7 +38,6 @@ public class AskInfo extends HttpServlet {
      */
     public AskInfo() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -53,7 +55,7 @@ public class AskInfo extends HttpServlet {
 		HttpSession session = request.getSession();
 		User user = (User)(session.getAttribute("User"));
 		ServletItem SI = new ServletItem(ServletItem.Type.AskInfo, request, response, user);
-		
+		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		// Get Parameters
 		String appIdParam = SI.getServletParam("appId");
 		// --
@@ -70,15 +72,25 @@ public class AskInfo extends HttpServlet {
 				else if (app.isEmpty() == true)
 					SI.setResponse(ServletItem.Code.LogicError, "This is an empty app.");
 				else {
+					JSONObject classicAccountObject = new JSONObject();
+					if (app.getType().equals("ClassicAccount")) {
+						ResultSet accountInformationsRs = db.get("SELECT information_name, information_value FROM ClassicAccountsInformations WHERE account_id=" + app.getAccount().getId() + ";");
+						while (accountInformationsRs.next()) {
+							String information_name = accountInformationsRs.getString(1);
+							String information_value = accountInformationsRs.getString(2);
+							if (information_name.equals("password"))
+								classicAccountObject.put(information_name, app.getAccount().getPassword());
+							else
+								classicAccountObject.put(information_name, information_value);
+						}
+					}
+					
 					boolean again = true;
 					JSONArray ja = new JSONArray();
 					while (again){
 						JSONObject obj = new JSONObject();
 						if (app.getType().equals("ClassicAccount")) {
-							JSONObject appUser = new JSONObject();
-							appUser.put("login", ((ClassicAccount)app.getAccount()).getLogin());
-							appUser.put("password", ((ClassicAccount)app.getAccount()).getPassword());
-							obj.put("user", appUser);
+							obj.put("user", classicAccountObject);
 						} else if (app.getType().equals("LogWithAccount")) {
 							obj.put("logWith", ((LogWithAccount)app.getAccount()).getLogWithApp(user).getSite().getName());
 						}
@@ -102,6 +114,9 @@ public class AskInfo extends HttpServlet {
 			SI.setResponse(ServletItem.Code.BadParameters, "Numbers exception.");
 		} catch (ParseException e) {
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+		} catch (SQLException e) {
+			SI.setResponse(ServletItem.Code.LogicError, "SQL error");
+			e.printStackTrace();
 		}
 		SI.sendResponse();
 	}

@@ -58,6 +58,25 @@
 			}
 		}
 	}
+	.credits {
+		position: absolute;
+		bottom: 0px;
+		margin-left: 5px;
+		text-align: left;
+		p {	
+			left: 0px;
+			color:white;
+			font-size: 12px;
+			a {	
+				color: white;
+				text-decoration: underline;
+				&:hover{
+					color:white;
+					cursor: pointer;
+				}
+			}
+		}
+	}
 }
 
 #loginBody .phrase{

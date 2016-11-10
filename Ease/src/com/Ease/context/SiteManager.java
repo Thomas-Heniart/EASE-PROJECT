@@ -13,12 +13,10 @@ import org.json.simple.JSONArray;
 
 public class SiteManager {
 	protected List<Site> sites;
-	protected List<Site> lastSites;
 	protected List<Tag> tags;
 
 	public SiteManager() {
 		sites = new LinkedList<Site>();
-		lastSites = new LinkedList<Site>();
 		tags = new LinkedList<Tag>();
 	}
 
@@ -26,22 +24,12 @@ public class SiteManager {
 		sites.add(site);
 	}
 
-	public void addLastSite(Site site) {
-		lastSites.add(site);
-	}
-
 	public Site get(String id) {
 		if (id == null)
 			return null;
 		Iterator<Site> it = sites.iterator();
-		Iterator<Site> it2 = lastSites.iterator();
 		while (it.hasNext()) {
 			Site tmpSite = it.next();
-			if (tmpSite.getId().equals(id))
-				return tmpSite;
-		}
-		while (it2.hasNext()) {
-			Site tmpSite = it2.next();
 			if (tmpSite.getId().equals(id))
 				return tmpSite;
 		}
@@ -50,21 +38,19 @@ public class SiteManager {
 
 	public void clearSites() {
 		sites.clear();
-		lastSites.clear();
 
 	}
 
 	public void refresh(DataBase db) throws SQLException {
 		this.clearSites();
 		db.set("CALL updateWebsitesPositions();");
-		ResultSet lastSitesRs = db
-				.get("SELECT * FROM websites WHERE insertDate >= CURDATE() - INTERVAL 3 DAY ORDER BY position ASC;");
+		ResultSet lastSitesRs = db.get("SELECT * FROM websites WHERE insertDate >= CURDATE() - INTERVAL 3 DAY ORDER BY position ASC;");
 		while (lastSitesRs.next())
-			this.addLastSite(new Site(lastSitesRs));
+			this.add(new Site(lastSitesRs, db, true));
 		ResultSet otherSitesRs = db
 				.get("SELECT * FROM websites WHERE insertDate < CURDATE() - INTERVAL 3 DAY ORDER BY position ASC;");
 		while (otherSitesRs.next())
-			this.add(new Site(otherSitesRs));
+			this.add(new Site(otherSitesRs, db));
 
 	}
 
@@ -74,17 +60,6 @@ public class SiteManager {
 
 	public List<Site> getSitesList() {
 		return sites;
-	}
-
-	public List<Site> getLastSitesList() {
-		return lastSites;
-	}
-
-	public List<Site> getAllSites() {
-		List<Site> allSites = new LinkedList<Site>();
-		allSites.addAll(lastSites);
-		allSites.addAll(sites);
-		return allSites;
 	}
 
 	public List<Site> getSso(String ssoId) {
@@ -128,16 +103,6 @@ public class SiteManager {
 		return null;
 	}
 
-	public Site getLastSiteById(int siteId) {
-		Iterator<Site> iterator = lastSites.iterator();
-		while (iterator.hasNext()) {
-			Site tmpSite = iterator.next();
-			if (siteId == Integer.parseInt(tmpSite.getId()))
-				return tmpSite;
-		}
-		return null;
-	}
-
 	public Tag getTagById(int tagId) {
 		Iterator<Tag> iterator = tags.iterator();
 		while (iterator.hasNext()) {
@@ -154,13 +119,8 @@ public class SiteManager {
 
 	public void setTagsForSites(ServletContext context) throws SQLException {
 		Iterator<Site> it = sites.iterator();
-		Iterator<Site> it2 = lastSites.iterator();
 		while (it.hasNext()) {
 			Site tmpSite = it.next();
-			tmpSite.setTags(context);
-		}
-		while (it2.hasNext()) {
-			Site tmpSite = it2.next();
 			tmpSite.setTags(context);
 		}
 	}

@@ -19,7 +19,6 @@ var constructorInput = function (rootEl, parent) {
 		return true;
 	};
 	this.onEnter = function(callback) {
-		console.log(self.qInput);
 		self.qInput.keypress(function(e) {
 			if (e.which == 13)
 				callback(e);
@@ -122,3 +121,4 @@ var Input = {
 		}
 	}
 }
+

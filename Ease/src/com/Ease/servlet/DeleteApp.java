@@ -2,6 +2,8 @@ package com.Ease.servlet;
 
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,10 +13,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONObject;
+
 import com.Ease.context.DataBase;
 import com.Ease.context.SiteManager;
 import com.Ease.data.ServletItem;
 import com.Ease.session.App;
+import com.Ease.session.ClassicAccount;
 import com.Ease.session.SessionException;
 import com.Ease.session.User;
 
@@ -68,22 +73,38 @@ public class DeleteApp extends HttpServlet {
 				SI.setResponse(ServletItem.Code.BadParameters, "Bad appId.");
 			} else {
 				App app = user.getApp(appId);
+				JSONObject res = new JSONObject();
 				if (app.havePerm(App.AppPerm.DELETE, session.getServletContext())){
 					transaction = db.start();	
 					appName = app.getSite().getName();
+					String email = null;
+					if (app.getAccount().getType().equals("ClassicAccount"))
+						email = ((ClassicAccount)app.getAccount()).getLogin();
 					app.deleteFromDB(session.getServletContext());
 					user.getProfile(app.getProfileId()).getApps().remove(app);
 					user.getApps().remove(app);
 					db.set("CALL decreaseRatio(" + app.getSite().getId() + ");");
+					if (email != null) {
+						ResultSet emailRs = db.get("SELECT count(distinct usersEmails.email) FROM (((apps join profiles ON apps.profile_id = profiles.profile_id) JOIN users on profiles.user_id = users.user_id) JOIN usersEmails ON users.user_id = usersEmails.user_id) JOIN ClassicAccountsInformations ON apps.account_id = ClassicAccountsInformations.account_id AND usersEmails.email = ClassicAccountsInformations.information_value WHERE users.user_id = " + user.getId() + " AND usersEmails.email = '" + email + "' AND verified=0;");
+						if (emailRs.next()) {
+							int ct = Integer.parseInt(emailRs.getString(1));
+							if (ct == 0) {
+								user.removeEmail(email);
+								db.set("DELETE FROM usersEmails WHERE user_id=" + user.getId() + " AND email='" + email + "' AND verified=0;");
+								res.put("email", email);
+							}
+						}
+					}
+					db.commit(transaction);
+					res.put("app", appName);
 					SiteManager siteManager = (SiteManager)session.getAttribute("siteManager");
 					siteManager.decreaseSiteRatio(app.getSite().getId());
-					SI.setResponse(200, appName + " deleted.");
-					db.commit(transaction);
+					SI.setResponse(200, res.toString());
 				} else {
 					SI.setResponse(ServletItem.Code.NoPermission, "You have not the permission.");
 				}
 			}
-		} catch (SessionException e) {
+		} catch (SessionException | SQLException e) {
 			db.cancel(transaction);
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		} catch (NumberFormatException e) {

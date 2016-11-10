@@ -9,11 +9,10 @@
 <%@ page import="java.text.DateFormat"%>
 <%@ page import="java.text.SimpleDateFormat"%>
 <%@ page import="java.util.Date"%>
-
+<script src="js/SettingsView.js"></script>
 <%
 Cookie sessionId = new Cookie("sId",sessionSave.getSessionId());
 Cookie sessionToken = new Cookie("sTk",sessionSave.getToken());
-
 DateFormat dateFormat = new SimpleDateFormat("HH");
 Date date = new Date();
 int duration = 29 - Integer.parseInt(dateFormat.format(date));

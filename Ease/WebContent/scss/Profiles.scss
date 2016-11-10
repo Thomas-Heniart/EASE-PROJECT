@@ -185,10 +185,27 @@
 							white-space: nowrap;
 							text-overflow: ellipsis;
 							overflow: hidden;
-							line-height: 1.5;						
+							line-height: 1.5;
+						}
+					}
+					.linkImage.settingsShow {
+						&:before {
+							box-shadow: inset 0px 0px 0px 5px $themeColor;
 						}
 					}
 					.linkImage {
+						&:before {
+							transition: box-shadow .3s;
+							content: "";
+							border-radius: 5px;
+							width: 100%;
+							height: 100%;
+							position: absolute;
+							top: 0;
+							left: 0;
+							box-shadow: inset 0px 0px 0px 0px $themeColor;
+						}
+
 						&:hover {
 							opacity: 1;
 						}
@@ -202,11 +219,15 @@
 						opacity: 0.8;
 						margin-left: auto;
 						margin-right: auto;
-						img {
+						.logo {
 							border: 1px solid #efefef;
-							border-radius: 5px;			    
+							border-radius: 5px;
 							width: 100%;
 							height: 100%;
+							box-shadow: inset 0px 0px 5px rgba(0,0,0,0);
+							&:before {
+								content: "";
+							}
 						}
 					}
 					.linkImage.waitingLinkImage {
@@ -408,14 +429,14 @@
 							left:50%;
 							transform: translateX(-50%) translateY(-50%);
 							color: white;
-							text-shadow: 0px 0px 1px $themeColor,0px 0px 1px $themeColor,0px 0px 1px $themeColor;						
+							text-shadow: 0px 0px 1px $themeColor,0px 0px 1px $themeColor,0px 0px 1px $themeColor;
 						}
 					}
 					.color {
 						font: normal normal normal 14px/1 FontAwesome;
- 				        font-size: 1.5vw;
-					    text-rendering: auto;
-					    -webkit-font-smoothing: antialiased;
+						font-size: 1.5vw;
+						text-rendering: auto;
+						-webkit-font-smoothing: antialiased;
 						position: relative;
 						width: 100%;
 						height: 100%;
@@ -594,6 +615,7 @@
 			left: 81%;
 			visibility: hidden;
 			opacity: 0;
+
 			&:hover {
 				cursor: pointer;
 			}
@@ -628,9 +650,11 @@
 .ProfilesHandler.editMode {
 	.ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox {
 		.linkImage{
-			width: 90%;
+			width: 80%;
 			.showAppActionsButton {
 				transition-delay: 0s;
+				top: 72%;
+				left: 68%;
 			}
 		}
 		.siteName {
@@ -660,7 +684,7 @@
 			position: relative;
 			overflow: hidden;
 			p {
-				transition: all 0.3s;					
+				transition: all 0.3s;
 				margin: 0px;
 			}
 			&:hover {
@@ -672,7 +696,7 @@
 			}
 		}
 		.modifyAppButton::before {
-			content: '\f085';			
+			content: '\f085';
 		}
 		.deleteAppButton::before {
 			content: '\f014';
@@ -786,13 +810,13 @@
 }
 .clearfix:before,
 .clearfix:after {
-	content: ".";    
-	display: block;    
-	height: 0;    
-	overflow: hidden; 
+	content: ".";
+	display: block;
+	height: 0;
+	overflow: hidden;
 }
 .clearfix:after { clear: both; }
-.clearfix { zoom: 1; } 
+.clearfix { zoom: 1; }
 
 @media screen and (min-width: 1500px) {
 	.showAppActionsButton {

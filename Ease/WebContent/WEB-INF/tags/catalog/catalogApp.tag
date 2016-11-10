@@ -9,7 +9,10 @@
 	connect="${site.getFolder()}connect.json"
 	data-login="${site.getLoginWith()}" data-sso="${site.getSso()}"
 	data-nologin="${site.noLogin()}" name="${site.getName()}"
-	url="${site.getUrl() }" newApp="${newApp}">
+	url="${site.getUrl() }" newApp="${newApp}"
+	<c:forEach items='${site.getInformations()}' var="item">
+		${item.getInformationName()}="${item.getInformationType()}"
+	</c:forEach>>
 	<div class="catalogAppLogo">
 		<img src="${site.getFolder()}logo.png" />
 		<a href="${ site.getHomePageUrl()}" target="_blank" class="siteUrl">
