@@ -70,6 +70,7 @@ $(document).ready(function(){
 	<%@ include file="PopupDeleteApp.jsp" %>
 	<%@ include file="PopupAddApp.jsp" %>	
 	<%@ include file="PopupModifyApp.jsp" %>
+	<%@ include file="PopupAddUpdate.jsp" %>
 	<div class="md-overlay"></div>
 	
 </div>

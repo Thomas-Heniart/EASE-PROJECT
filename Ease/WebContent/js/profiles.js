@@ -191,7 +191,7 @@ var Profile = function(rootEl){
 										'<p>' + name + '</p>' +
 									'</div>' +
 								'</div>');
-		easeRoot.apps.push(new easeApp(self.appContainer.find("div.siteLinkBox[id=" + id + "]")));
+		ease.apps.push(new easeApp(self.appContainer.find("div.siteLinkBox[id=" + id + "]")));
 	}
 	
 	//catalog droppable

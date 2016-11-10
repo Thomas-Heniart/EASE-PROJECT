@@ -432,6 +432,8 @@ var Form = {
 			profiles.forEach(function (item) {
 				if (item.id == self.params['profileId']) {
 					item.addApp(self.params['login'], self.params['siteId'], self.params['name'], retMsg, "", false, self.qRoot.find("img").attr("src"));
+					console.log(self.oParent.updateIndex);
+					catalog.oUpdate.updates[self.oParent.updateIndex].remove();
 				}
 			});
 			
