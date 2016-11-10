@@ -1,5 +1,4 @@
 function refresh() {
-	console.log($("#userEmail").data("content"));
 	postHandler.post('checkConnection',
 			{"email":$("#userEmail").data("content")},
 			function(){},

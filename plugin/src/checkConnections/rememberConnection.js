@@ -1,4 +1,24 @@
 cleanEveryConnections();
+var lastEaseUser = "";
+var lastEaseTab = null;
+
+extension.runtime.bckgrndOnMessage("ChangeEaseUser", function(message, sender, sendResponse){
+    lastEaseUser = message.user;
+    lastEaseTab = sender;
+});
+
+extension.runtime.bckgrndOnMessage("GetEaseUser", function(message, sender, sendReponse){
+    sendResponse(getCurrentUser());
+});
+
+function getCurrentUser(){
+        if(extension.nbOfEaseTabs()==0){
+            return "anonymous";
+        } else {
+            return lastEaseUser;
+        }
+        
+}
 
 extension.runtime.bckgrndOnMessage('newConnectionToRandomWebsite', function(msg, senderTab, sendResponse){
     rememberConnection(msg.username, msg.password, msg.website, false);
@@ -68,28 +88,50 @@ function rememberLogWithConnection(website, logWithWebsite){
 
 function rememberEveryConnections(connectionDatas){
     var creation = new Date();
+    var easeUser = getCurrentUser();
     connectionDatas.expiration = creation.getTime()+604800000; //expiration en 1 semaine
     extension.storage.get("allConnections", function(res){
-        if(res==undefined || !res.validator) res = {validator:"ok"};
-        if(res[connectionDatas.user] == undefined) res[connectionDatas.user] = {};
-        if(connectionDatas.logWith) res[connectionDatas.user][connectionDatas.website] = {logWith:connectionDatas.logWith, expiration:connectionDatas.expiration};
-        else res[connectionDatas.user][connectionDatas.website] = {password:encryptPassword(connectionDatas.password), expiration:connectionDatas.expiration};
-        extension.storage.set('allConnections', res, function(){});
+        if(res[easeUser] == undefined) 
+            res[easeUser] = {};
+        if(res[easeUser][connectionDatas.user] == undefined) 
+            res[easeUser][connectionDatas.user] = {};
+        if(connectionDatas.logWith) 
+            res[easeUser][connectionDatas.user][connectionDatas.website] = {logWith:connectionDatas.logWith, expiration:connectionDatas.expiration};
+        else 
+            res[easeUser][connectionDatas.user][connectionDatas.website] = {password:encryptPassword(connectionDatas.password), expiration:connectionDatas.expiration};
+        extension.storage.set('allConnections', res, function(){
+            if(easeUser!="anonymous" && lastEaseTab != null){
+                extension.tabs.sendMessage(lastEaseTab, "SendUpdate", connectionDatas, function(){});
+            }
+        });        
     });
+    
 }
 
 function cleanEveryConnections(){
-    extension.storage.get("allConnections", function(res){
-        if(res==undefined || !res.validator) res = {validator:"ok"};
-        for(var user in res){
-            for (var website in res[user]){
-                if(res[user][website].expiration < (new Date()).getTime()){
-                    delete res[user][website];
-                }
-            }
-            if(res[user].length == 0 || jQuery.isEmptyObject(res[user]))
-                delete res[user];
+    extension.storage.get("allConnections", function(response){
+        if((response==undefined || !response.validator) && !response.newValidator) 
+            response) = {validator:"ok"};
+        if(!response.newValidator){
+            var res = {newValidator:"ok"};
+            res["anonymous"]=response;
+        } else {
+            var res = response;
         }
+        for (var easeUser in res){
+            for(var user in res[easeUser]){
+                for (var website in res[easeUser][user]){
+                    if(res[easeUser][user][website].expiration < (new Date()).getTime()){
+                        delete res[easeUser][user][website];
+                    }
+                }
+                if(jQuery.isEmptyObject(res[easeUser][user]))
+                    delete res[easeUser][user];
+            }
+            if(jQuery.isEmptyObject(res[easeUser]))
+                delete res[easeUser];
+        }
+        
         extension.storage.set("allConnections", res, function(){});
     });
     setTimeout(cleanEveryConnections, 1000*60*60*4);

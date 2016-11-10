@@ -52,7 +52,7 @@ response.addCookie(email);
 <script type="text/javascript">
 $(document).ready(function(){
 	setTimeout(function(){
-		var event = new CustomEvent("isConnected", {"detail":"true"});
+		var event = new CustomEvent("NewEaseUser", {"detail":$("#userEmail").data("content")});
 		document.dispatchEvent(event);
 	}, 500)});
 </script>
