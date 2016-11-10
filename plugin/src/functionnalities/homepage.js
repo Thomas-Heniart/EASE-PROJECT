@@ -1,6 +1,4 @@
 extension.storage.get("settings", function(res){
-    console.log(res);
-    console.log("dzdza");
     if(!res || res.homepage==undefined) extension.storage.set("settings", {"homepage":true}, function(){});
     if(res.homepage==true){
         window.location.replace("https://ease.space");

@@ -27,10 +27,14 @@ var constructorPopup = function (rootEl) {
 		self.oForm.reset();
 		self.setVal(arguments);
 		self.qRoot.addClass('md-show');
+		setTimeout(self.postOpen, 100);
 	};
 	this.close = function () {
 		self.oForm.reset();
 		self.qRoot.removeClass('md-show');
+	};
+	this.postOpen = function(){
+
 	};
 	this.setVal = function () {
 		
@@ -54,6 +58,9 @@ var Popup = {
 		this.setVal = function(name) {
 			self.oForm.oInputs[0].val(name);
 		};
+		this.postOpen = function(){
+			self.oForm.oInputs[1].qInput.focus();			
+		}
 		this.close = function() {
 			self.qRoot.removeClass('md-show');
 			$('.classicLogin').addClass("show");

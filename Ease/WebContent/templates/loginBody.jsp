@@ -11,7 +11,7 @@
 <script>
 $(document).ready(function(){
 	setTimeout(function(){
-		var event = new CustomEvent("isConnected", {"detail":"false"});
+		var event = new CustomEvent("NewEaseUser", {"detail":"anonymous"});
 		document.dispatchEvent(event);
 	}, 500);
     
