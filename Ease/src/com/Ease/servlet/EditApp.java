@@ -76,7 +76,7 @@ public class EditApp extends HttpServlet {
 
 		try {
 			int appId = Integer.parseInt(appIdParam);
-			ResultSet informationsRs = db.get("SELECT information_name FROM WebsitesInformations WHERE website_id =" + user.getApp(appId).getSite().getId() + " AND information_name <> 'password';");
+			ResultSet informationsRs = db.get("SELECT information_name FROM websitesInformations WHERE website_id =" + user.getApp(appId).getSite().getId() + " AND information_name <> 'password';");
 			while (informationsRs.next())
 				informations.put(informationsRs.getString(1), SI.getServletParam(informationsRs.getString(1)));
 			informations.put("password", wPassword);

@@ -19,7 +19,7 @@
 		    	}, 10000)
 		    	document.addEventListener("LogoutDone", function(event2){
 		    		if($('.logos-logout-container img[idx="'+ event2.detail.siteId +'"]')){
-		    			console.log("disappear "+ event2.detail);
+		    			//console.log("disappear "+ event2.detail);
 		    			nb--;
 		    			$('.logos-logout-container img[idx="'+ event2.detail.siteId +'"]').css("opacity", 0);
 		    			setTimeout(function(){

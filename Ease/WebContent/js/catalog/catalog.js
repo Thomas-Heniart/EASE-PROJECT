@@ -2,7 +2,7 @@ function getAndSites(json) {
 	var andJson = json.filter(function(e, i) {
 		return e[1] == "and";
 	});
-	console.log(andJson);
+	//console.log(andJson);
 	return $('.catalogApp').filter(function(i, e) {
 		andJson.includes($(e).attr("idx").toString());
 	});
@@ -53,7 +53,6 @@ function updateCatalogWith(searchVal, tags) {
 	}, function(retMsg) {
 		refreshCatalogContent(retMsg);
 	}, function(retMsg) {
-		
 	}, 'text');
 }
 

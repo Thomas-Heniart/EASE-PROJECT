@@ -17,7 +17,6 @@ $(document).ready(function(){
 		}
 	});
 	$(window).blur(function(e){
-		console.log("focusout");
 		$(".shortcutInfo").hide();
 		ctrlDown = false;
 	});
