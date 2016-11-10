@@ -60,6 +60,10 @@ $(document).ready(function(){
 <div id="loggedBody">
     <div class="col-left show" style="width: 100%; float:left">
 		<%@ include file="ProfileView.jsp"%>
+			<div class="MenuButtonSet">
+		<button id="enterEditMode" state="off" class="button"><img src="resources/icons/menu_icon.png"/>
+			<div class="openCatalogHelper"></div>
+		</div>
 		<%@ include file="extension.jsp" %>		
 		<%@ include file="catalog/catalogView.jsp"%>
 	</div>
