@@ -4,7 +4,6 @@
     "home":{"http":"https://", "subdomain":"team", "domain":"slack.com"},
     "connect":{
         "todo":[
-        	{"action":"goto", "url":{"http":"https://", "subdomain":"team", "domain":"slack.com"}},
             {"action":"fill", "what":"login", "search":"#email"},
             {"action":"fill", "what":"password", "search":"#password"},
             {"action":"click", "search":"#signin_btn"}
