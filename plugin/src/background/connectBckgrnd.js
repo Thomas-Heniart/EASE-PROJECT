@@ -25,14 +25,16 @@ function rememberWebsite(website){
             visitedWebsites = [];
         visitedWebsites.push(website);
         extension.storage.set("visitedWebsites", visitedWebsites);
-        
+
     });
-    if(!website.loginUrl) website.loginUrl = website.home;
+    //if(!website.loginUrl) website.loginUrl = website.home;
+		if (!website.loginUrl)
+			website.loginUrl = website.home;
     if(website.lastLogin.logWith){
         rememberDirectLogWithConnection(getHost(website.loginUrl), website.lastLogin);
     } else {
         rememberConnection(website.lastLogin.user, website.lastLogin.password, getHost(website.loginUrl), true);
-    }  
+    }
 }
 
 function endConnection(currentWindow, tab, msg, sendResponse){
@@ -43,20 +45,41 @@ function endConnection(currentWindow, tab, msg, sendResponse){
     });
 }
 
-extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, sendResponse) {
-    msg.todo = "checkAlreadyLogged";
-    msg.bigStep = 0;
-    if(msg.detail[0].website.name == "Facebook"){
+function checkFacebook(msg, callback){
+     if(msg.detail[0].website.name == "Facebook" && msg.detail[1]){
         extension.storage.get("lastConnections", function(lastConnections){
             if(lastConnections != undefined) {
-                if(lastConnections["www.facebook.com"] && lastConnections["www.facebook.com"]==msg.detail[0].user.login)
-                    msg.bigStep = 1;
+                if(lastConnections["www.facebook.com"] && lastConnections["www.facebook.com"].user==msg.detail[0].user.login) {
+                    callback(msg.bigStep+1);
+                    return
+                } else {
+                    callback(msg.bigStep);
+                    return
+                }
+            } else {
+                callback(msg.bigStep);
+                return
             }
         });
+    } else {
+        callback(msg.bigStep);
+        return
     }
+}
+
+extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, sendResponse) {
+  msg.todo = "checkAlreadyLogged";
+  msg.bigStep = 0;
+  checkFacebook(msg, function(newBigStep){
+    msg.bigStep = newBigStep;
     msg.actionStep = 0;
     msg.waitreload= false;
     extension.currentWindow(function(currentWindow) {
+				var home = msg.detail[msg.bigStep].website.home;
+				if (typeof home == "object") {
+					var tmpUrl = (home.http + msg.detail[0].user[home.subdomain] + "." + home.domain);
+					msg.detail[msg.bigStep].website.home = tmpUrl;
+				}
         extension.tabs.createOrUpdate(currentWindow, senderTab, msg.detail[msg.bigStep].website.home, msg.highlight, function(tab){
             extension.tabs.onUpdated(tab, function (newTab) {
                 tab = newTab;
@@ -146,7 +169,6 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, se
                         });
                     });
             });
-        });   
+        });
+    });
 });
-
-

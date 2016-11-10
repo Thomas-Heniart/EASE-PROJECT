@@ -4,8 +4,6 @@ extension.runtime.bckgrndOnMessage('newConnectionToRandomWebsite', function(msg,
     rememberConnection(msg.username, msg.password, msg.website, false);
 });
 
-var lastNavigatedWebsite = "";
-
 function printLastConnections(){
     extension.storage.get('lastConnections', function(res){
         console.log(res);
@@ -18,6 +16,9 @@ function printAllConnections(){
     });
 }
 
+//SCRAPPEUR LOG WITH. NON FONCTIONNEL
+/*var lastNavigatedWebsite = "";
+
 extension.tabs.onNavigation(function(url){
     if(matchFacebookConnectUrl(url) && !matchFacebookUrl(lastNavigatedWebsite)){
         rememberLogWithConnection(lastNavigatedWebsite, "www.facebook.com");
@@ -27,7 +28,7 @@ extension.tabs.onNavigation(function(url){
     //if(!matchFacebookUrl(url)){
         lastNavigatedWebsite = getHost(url);
     //}
-});
+});*/
 
 function rememberConnection(username, password, website, fromEase){
     extension.storage.get('lastConnections', function(res){
@@ -79,17 +80,19 @@ function rememberEveryConnections(connectionDatas){
 
 function cleanEveryConnections(){
     extension.storage.get("allConnections", function(res){
-            if(res==undefined || !res.validator) res = {validator:"ok"};
-            for(var user in res){
-                for (var website in res[user]){
-                    if(res[user][website].expiration < (new Date()).getTime()){
-                        delete res[user][website];
-                    }
+        if(res==undefined || !res.validator) res = {validator:"ok"};
+        for(var user in res){
+            for (var website in res[user]){
+                if(res[user][website].expiration < (new Date()).getTime()){
+                    delete res[user][website];
                 }
             }
-            extension.storage.set("allConnections", res, function(){});
+            if(res[user].length == 0 || jQuery.isEmptyObject(res[user]))
+                delete res[user];
+        }
+        extension.storage.set("allConnections", res, function(){});
     });
-    setTimeout(cleanEveryConnections, 1000*60*60*2);
+    setTimeout(cleanEveryConnections, 1000*60*60*4);
 }
 
 extension.runtime.bckgrndOnMessage("fbDisconnected", function(){

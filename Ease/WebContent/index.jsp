@@ -66,6 +66,7 @@ pageEncoding="UTF-8"%>
 	<script src="js/snap.svg-min.js"></script>
 	<script src="js/modalEffects.js"></script>
 	<script src="js/selectFx.js"></script>
+	<script src="js/checkConnection.js"></script>
 	<link rel="stylesheet" type="text/css" href="component.css" />
 	
 	<%
@@ -73,7 +74,6 @@ pageEncoding="UTF-8"%>
 	com.Ease.session.User user = (com.Ease.session.User) (session.getAttribute("User"));
 	%>
 	<% if (user != null){ %>
-	<script src="js/checkConnection.js"></script>
 	<%} else { 
 		Cookie 	cookie = null;
 		Cookie 	cookies[] = request.getCookies();

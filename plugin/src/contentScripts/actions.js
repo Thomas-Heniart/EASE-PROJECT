@@ -270,10 +270,17 @@ search:function(msg, callback, sendResponse){
 },
 goto:function(msg, callback, sendResponse){
 	var actionStep = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep];
-    window.location.href = actionStep.url;
+    var siteUrl;
+    if (typeof actionStep.url == "object") {
+      siteUrl = (actionStep.url.http + msg.detail[0].user[actionStep.url.subdomain] + "." + actionStep.url.domain);
+    }
+    else {
+      siteUrl = actionStep.url;
+    }
+    window.location.href = siteUrl;
     msg.actionStep++;
     msg.type = "completed";
-	sendResponse(msg);
+	   sendResponse(msg);
 }
 };
 

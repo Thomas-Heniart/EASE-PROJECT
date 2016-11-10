@@ -1,24 +1,22 @@
 {
     "name":"Slack",
     "lastLogin":"",
-    "home":"https://www.slack.com/signin",
+    "home":{"http":"https://", "subdomain":"team", "domain":"slack.com"},
     "connect":{
         "todo":[
-            {"action":"fill", "what":"team", "search":"#domain"},
-            {"action":"click", "search":"#submit_team_domain"},
-            {"action":"waitfor", "search":"#email"},
             {"action":"fill", "what":"login", "search":"#email"},
             {"action":"fill", "what":"password", "search":"#password"},
             {"action":"click", "search":"#signin_btn"}
         ]
     }
     "logout":{
-        "url":"https://login.skype.com/login/",
         "todo":[
-            {"action":"aclick", "search":"a[data-link-type='logout']"}
+            {"action":"clickona", "search":"#team_menu"},
+            {"action":"waitfor", "search":"a[href*='signout']"},
+            {"action":"aclick", "search":"a[href*='signout']"}
             ]
     },
     "checkAlreadyLogged":[
-        {"search":"li.account.authenticated.username"}
+        {"search":"#team_menu"}
     ]
 }

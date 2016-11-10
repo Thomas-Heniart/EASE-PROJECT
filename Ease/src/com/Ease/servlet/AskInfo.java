@@ -72,24 +72,21 @@ public class AskInfo extends HttpServlet {
 				else if (app.isEmpty() == true)
 					SI.setResponse(ServletItem.Code.LogicError, "This is an empty app.");
 				else {
-					JSONObject classicAccountObject = new JSONObject();
-					if (app.getType().equals("ClassicAccount")) {
-						ResultSet accountInformationsRs = db.get("SELECT information_name, information_value FROM ClassicAccountsInformations WHERE account_id=" + app.getAccount().getId() + ";");
-						while (accountInformationsRs.next()) {
-							String information_name = accountInformationsRs.getString(1);
-							String information_value = accountInformationsRs.getString(2);
-							if (information_name.equals("password"))
-								classicAccountObject.put(information_name, app.getAccount().getPassword());
-							else
-								classicAccountObject.put(information_name, information_value);
-						}
-					}
-					
+					JSONObject classicAccountObject = new JSONObject();					
 					boolean again = true;
 					JSONArray ja = new JSONArray();
 					while (again){
 						JSONObject obj = new JSONObject();
 						if (app.getType().equals("ClassicAccount")) {
+							ResultSet accountInformationsRs = db.get("SELECT information_name, information_value FROM ClassicAccountsInformations WHERE account_id=" + app.getAccount().getId() + ";");
+							while (accountInformationsRs.next()) {
+								String information_name = accountInformationsRs.getString(1);
+								String information_value = accountInformationsRs.getString(2);
+								/*if (information_name.equals("password")){
+									classicAccountObject.put(information_name, app.getAccount().getPassword());
+								} else*/
+								classicAccountObject.put(information_name, ((ClassicAccount)app.getAccount()).getInfo(information_name));
+							}
 							obj.put("user", classicAccountObject);
 						} else if (app.getType().equals("LogWithAccount")) {
 							obj.put("logWith", ((LogWithAccount)app.getAccount()).getLogWithApp(user).getSite().getName());
