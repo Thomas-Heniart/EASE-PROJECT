@@ -14,9 +14,9 @@ pageEncoding="UTF-8"%>
 	<div class="ProfilesHandler">
 		<c:forEach items='${dashboardColumns}' var='column' varStatus="loop">
 		<c:if test="${loop.index != 0}">
-		<div class="dashboardColumn">
+		<div class="dashboardColumn" style="${column.size() == 0 ? 'width:0;': ''}">
 			<c:forEach items='${column}' var="profile">
-			<dashboard:profile profile="${profile}"/>			
+			<dashboard:profile profile="${profile}"/>
 		</c:forEach>
 	</div>
 </c:if>

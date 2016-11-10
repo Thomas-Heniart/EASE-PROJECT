@@ -6,11 +6,7 @@ pageEncoding="UTF-8"%>
 		<form oClass="DeleteProfileForm" action="deleteProfile" class="popupForm">
 			<p class="title">By deleting your profile, you will lose all related information and associated accounts.</br>-</br>Confirm by entering your ease password.<span></span></p>
 			<input oClass="NoEmptyInput" type="hidden" name="index" />
-			<span class="input">
-				<input oClass="PasswordInput" name="password" type="password" placeholder="Enter your password"/>
-				<div class="showPassDiv">
-					<i class="fa fa-eye centeredItem" aria-hidden="true"></i>
-				</div>
+			<input oClass="PasswordInput" name="password" type="password" placeholder="Enter your password"/>
 			</span>
 			<div oClass="ClassicErrorMsg" class="alertDiv">
 				<p></p>
