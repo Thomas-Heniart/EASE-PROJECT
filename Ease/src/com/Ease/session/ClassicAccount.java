@@ -85,7 +85,10 @@ public class ClassicAccount extends Account{
 	}
 	public String getPassword() {
 		return this.passwd;
-	}	
+	}
+	public String getInfo(String info){
+		return this.accountInformations.get(info);
+	}
 
 	public void setLogin(String login) {
 		this.accountInformations.put("login", login);
@@ -123,7 +126,7 @@ public class ClassicAccount extends Account{
 			}
 				
 			else {
-				if (db.set("UPDATE ClassicAccountsInformations SET information_value = '" + cryptedPassword + "' WHERE information_name = '" + entry.getKey() + "'") != 0)
+				if (db.set("UPDATE ClassicAccountsInformations SET information_value = '" + cryptedPassword + "' WHERE information_name = '" + entry.getKey() + "' AND account_id =  " + this.id + ";") != 0)
 					throw new SessionException("Impossible to update classic account in data base.");
 			}
 				

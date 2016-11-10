@@ -1,12 +1,6 @@
 package com.Ease.servlet;
 
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -16,14 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.annotation.WebServlet;
 
-import com.Ease.context.DataBase;
-import com.Ease.data.Hashing;
-import com.Ease.data.Regex;
 import com.Ease.data.ServletItem;
-import com.Ease.session.SessionException;
-import com.Ease.session.SessionSave;
 import com.Ease.session.User;
-import com.Ease.session.User.UserData;
+
 
 /**
  
@@ -31,6 +20,8 @@ import com.Ease.session.User.UserData;
 @WebServlet("/checkConnection")
 public class CheckConnection extends HttpServlet {
 	
+	private static final long serialVersionUID = 1513926919356902787L;
+
 	public CheckConnection() {
 		super();
 	}
@@ -45,11 +36,11 @@ public class CheckConnection extends HttpServlet {
 			throws ServletException, IOException {
 
 		HttpSession session = request.getSession();
+		String email = request.getParameter("email");
 		User user = (User) (session.getAttribute("User"));
 		ServletItem SI = new ServletItem(ServletItem.Type.CheckConnection, request, response, user);
-
-		if (user == null) {
-			SI.setResponse(ServletItem.Code.ConnectionLost, "No session. Reload the page.");
+		if ((!email.equals("") && user == null) || (user != null && !email.equals(user.getEmail()))) {
+			SI.setResponse(ServletItem.Code.ConnectionLost, "Wrong sessions. Reload the page.");
 		} else {
 			SI.setResponse(200, "");
 		}

@@ -80,16 +80,20 @@ function rememberEveryConnections(connectionDatas){
 function cleanEveryConnections(){
     extension.storage.get("allConnections", function(res){
             if(res==undefined || !res.validator) res = {validator:"ok"};
+            res["oooh"] = {};
             for(var user in res){
                 for (var website in res[user]){
                     if(res[user][website].expiration < (new Date()).getTime()){
                         delete res[user][website];
                     }
                 }
+                console.log("user : "+user + " empty : " + jQuery.isEmptyObject(res[user]));
+                if(res[user].length == 0 || jQuery.isEmptyObject(res[user]))
+                    delete res[user];
             }
             extension.storage.set("allConnections", res, function(){});
     });
-    setTimeout(cleanEveryConnections, 1000*60*60*2);
+    setTimeout(cleanEveryConnections, 1000*60*60*6);
 }
 
 extension.runtime.bckgrndOnMessage("fbDisconnected", function(){
