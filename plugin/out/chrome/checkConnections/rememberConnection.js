@@ -92,6 +92,10 @@ function cleanEveryConnections(){
     setTimeout(cleanEveryConnections, 1000*60*60*2);
 }
 
+extension.runtime.bckgrndOnMessage("fbDisconnected", function(){
+     rememberConnection("disconnected", "", "www.facebook.com", true);
+});
+
 function matchFacebookUrl(url){
     if(url.indexOf("www.facebook.com")!=-1 && url.indexOf("www.facebook.com")<10){
         return true;

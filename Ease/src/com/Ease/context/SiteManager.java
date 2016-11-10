@@ -47,8 +47,7 @@ public class SiteManager {
 		ResultSet lastSitesRs = db.get("SELECT * FROM websites WHERE insertDate >= CURDATE() - INTERVAL 3 DAY ORDER BY position ASC;");
 		while (lastSitesRs.next())
 			this.add(new Site(lastSitesRs, db, true));
-		ResultSet otherSitesRs = db
-				.get("SELECT * FROM websites WHERE insertDate < CURDATE() - INTERVAL 3 DAY ORDER BY position ASC;");
+		ResultSet otherSitesRs = db.get("SELECT * FROM websites WHERE insertDate < CURDATE() - INTERVAL 3 DAY ORDER BY position ASC;");
 		while (otherSitesRs.next())
 			this.add(new Site(otherSitesRs, db));
 
