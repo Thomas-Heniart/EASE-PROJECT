@@ -25,14 +25,16 @@ function rememberWebsite(website){
             visitedWebsites = [];
         visitedWebsites.push(website);
         extension.storage.set("visitedWebsites", visitedWebsites);
-        
+
     });
-    if(!website.loginUrl) website.loginUrl = website.home;
+    //if(!website.loginUrl) website.loginUrl = website.home;
+		if (!website.loginUrl)
+			website.loginUrl = website.home;
     if(website.lastLogin.logWith){
         rememberDirectLogWithConnection(getHost(website.loginUrl), website.lastLogin);
     } else {
         rememberConnection(website.lastLogin.user, website.lastLogin.password, getHost(website.loginUrl), true);
-    }  
+    }
 }
 
 function endConnection(currentWindow, tab, msg, sendResponse){
@@ -73,6 +75,11 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, se
     msg.actionStep = 0;
     msg.waitreload= false;
     extension.currentWindow(function(currentWindow) {
+				var home = msg.detail[msg.bigStep].website.home;
+				if (typeof home == "object") {
+					var tmpUrl = (home.http + msg.detail[0].user[home.subdomain] + "." + home.domain);
+					msg.detail[msg.bigStep].website.home = tmpUrl;
+				}
         extension.tabs.createOrUpdate(currentWindow, senderTab, msg.detail[msg.bigStep].website.home, msg.highlight, function(tab){
             extension.tabs.onUpdated(tab, function (newTab) {
                 tab = newTab;
@@ -165,5 +172,3 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, se
         });
     });
 });
-
-

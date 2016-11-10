@@ -214,14 +214,23 @@ padding-top: 0px;
     height: 100%;
     margin-left: 0px;
     transition: margin .3s;
-    -webkit-animation: slideLeft 0.8s 1;
-    animation: slideLeft 0.8s 1;
+    -webkit-animation: fadeIn 0.8s 1;
+    animation: fadeIn 0.8s 1;
     display: none;
   }
   .col-left.show {
     display: block;
   }
 }
+}
+
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @-webkit-keyframes scaleIt {
