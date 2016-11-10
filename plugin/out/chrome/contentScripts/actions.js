@@ -150,19 +150,16 @@ fill:function(msg, callback, sendResponse){
 			callback(msg, sendResponse);
 		}
 	} else {
-        input.select();
-		input.click();
-        input.focus();
-        input.change();
-		if (actionStep.what == "login") {
-			input.val(msg.detail[0].user.login);
-		} else if (actionStep.what == "password") {
-			input.val(msg.detail[0].user.password);
-		}
-        input.change();
-		input.blur();
-		msg.actionStep++;
-		callback(msg, sendResponse);
+      input.select();
+		  input.click();
+      input.focus();
+      input.change();
+      console.log(msg.detail[0].user[actionStep.what]);
+      input.val(msg.detail[0].user[actionStep.what]);
+      input.change();
+		  input.blur();
+		  msg.actionStep++;
+		  callback(msg, sendResponse);
 	}
 },
 checkIfPopup:function(msg, callback, sendResponse){
@@ -170,10 +167,10 @@ checkIfPopup:function(msg, callback, sendResponse){
     popupButton.id = "testtest23";
      document.body.appendChild(popupButton);
     $("#testtest23").click(function(){window.open('http://www.zebest3000.com','lenomdusite','width=300, height=250'); return false;});
-   
+
     $("#testtest23").click();*/
-    
-    
+
+
     msg.actionStep++;
     callback(msg, sendResponse);
 },
