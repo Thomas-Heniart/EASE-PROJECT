@@ -150,15 +150,15 @@ fill:function(msg, callback, sendResponse){
 			callback(msg, sendResponse);
 		}
 	} else {
-      input.select();
-		  input.click();
-      input.focus();
-      input.change();
-      input.val(msg.detail[0].user[actionStep.what]);
-      input.change();
-		  input.blur();
-		  msg.actionStep++;
-		  callback(msg, sendResponse);
+	    input.select();
+	    input.click();
+	    input.focus();
+	    input.change();
+	    input.val(msg.detail[0].user[actionStep.what]);
+	    input.change();
+	    input.blur();
+	    msg.actionStep++;
+	    callback(msg, sendResponse);
 	}
 },
 checkIfPopup:function(msg, callback, sendResponse){
