@@ -91,7 +91,7 @@ function showAddAppPopup(container, helper) {
 		if (apps.length != 0)
 			ssoChooser.css('display', 'block');
 		for (var i = 0; i < apps.length; i++) {
-			console.log($(apps[i]).attr('login'));
+			//console.log($(apps[i]).attr('login'));
 			if (!logins.includes($(apps[i]).attr('login')) && $(apps[i]).attr('login')!="" && $(apps[i]).attr('login')!=null ) {
 				SsoHelper.find('p').text($(apps[i]).attr('login'));
 				SsoHelper.attr('aId', $(apps[i]).attr("id"));

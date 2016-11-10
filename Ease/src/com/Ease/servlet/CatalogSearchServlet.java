@@ -64,7 +64,6 @@ public class CatalogSearchServlet extends HttpServlet {
 		else
 			tagIdsArray = new String[] {};
 		SiteManager siteManager = (SiteManager) session.getServletContext().getAttribute("siteManager");
-		
 		SI.setResponse(200, siteManager.getSitesListJsonWithSearchAndTags(search, tagIdsArray).toString());
 		SI.sendResponse();
 	}

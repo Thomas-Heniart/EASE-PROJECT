@@ -23,6 +23,10 @@
     {
         "matches": ["<all_urls>"],
         "js": ["tools/extensionLight.js","checkConnections/connectionListener.js"]
+    },
+    {
+        "matches":["https://www.facebook.com/*"],
+        "js":["facebookCo/checkFacebookConnection.js"]
     }
   ],
     

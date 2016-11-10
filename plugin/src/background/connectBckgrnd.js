@@ -46,10 +46,18 @@ function endConnection(currentWindow, tab, msg, sendResponse){
 extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, sendResponse) {
     msg.todo = "checkAlreadyLogged";
     msg.bigStep = 0;
+    if(msg.detail[0].website.name == "Facebook"){
+        extension.storage.get("lastConnections", function(lastConnections){
+            if(lastConnections != undefined) {
+                if(lastConnections["www.facebook.com"] && lastConnections["www.facebook.com"]==msg.detail[0].user.login)
+                    msg.bigStep = 1;
+            }
+        });
+    }
     msg.actionStep = 0;
     msg.waitreload= false;
     extension.currentWindow(function(currentWindow) {
-        extension.tabs.createOrUpdate(currentWindow, senderTab, msg.detail[0].website.home, msg.highlight, function(tab){
+        extension.tabs.createOrUpdate(currentWindow, senderTab, msg.detail[msg.bigStep].website.home, msg.highlight, function(tab){
             extension.tabs.onUpdated(tab, function (newTab) {
                 tab = newTab;
                 extension.tabs.inject(tab, ["tools/extensionLight.js","overlay/overlay.css", "overlay/injectOverlay.js"], function(){});

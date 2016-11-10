@@ -13,3 +13,11 @@ extension.runtime.bckgrndOnMessage("getSettings", function (msg, tab, sendRespon
         sendResponse(res);
     });
 });
+
+extension.runtime.bckgrndOnMessage("setUser", function (msg, tab, sendResponse) {
+    extension.currentUser.set(msg.email);
+});
+
+extension.runtime.bckgrndOnMessage("resetUser", function (msg, tab, sendResponse) {
+    extension.currentUser.reset();
+});
