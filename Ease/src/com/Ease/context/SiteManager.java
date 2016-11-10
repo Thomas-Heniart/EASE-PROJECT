@@ -47,8 +47,7 @@ public class SiteManager {
 		ResultSet lastSitesRs = db.get("SELECT * FROM websites WHERE insertDate >= CURDATE() - INTERVAL 3 DAY ORDER BY position ASC;");
 		while (lastSitesRs.next())
 			this.add(new Site(lastSitesRs, db, true));
-		ResultSet otherSitesRs = db
-				.get("SELECT * FROM websites WHERE insertDate < CURDATE() - INTERVAL 3 DAY ORDER BY position ASC;");
+		ResultSet otherSitesRs = db.get("SELECT * FROM websites WHERE insertDate < CURDATE() - INTERVAL 3 DAY ORDER BY position ASC;");
 		while (otherSitesRs.next())
 			this.add(new Site(otherSitesRs, db));
 
@@ -164,7 +163,6 @@ public class SiteManager {
 		// If everything is empty then returns all websites
 		if (selectedIds.length == 0 && (search.isEmpty() || search == null))
 			return getSitesListJson();
-
 		List<Tag> selectedTags = new LinkedList<Tag>();
 		JSONArray res = new JSONArray();
 		List<Site> sitesToShow = new LinkedList<Site>();
@@ -173,7 +171,6 @@ public class SiteManager {
 		for (int i = 0; i < selectedIds.length; i++) {
 			selectedTags.add(getTagById(Integer.parseInt(selectedIds[i])));
 		}
-
 		if (selectedTags.size() == 0) {
 			Tag searchTag = getTagForSearch(search, selectedTags);
 			if (searchTag != null) {
