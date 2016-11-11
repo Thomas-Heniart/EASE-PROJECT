@@ -1,0 +1,23 @@
+{
+    "name":"Bitly",
+    "lastLogin":"",
+    "home":"https://bitly.com/",
+    "connect":{
+        "todo":[
+        	{"action":"goto", "url":"https://bitly.com/a/sign_in"},
+            {"action":"fill", "what":"login", "search":"input[name='username']"},
+            {"action":"val", "what":"password", "search":"input[name='password']"},
+            {"action":"search", "search":"form#sign-in input[type='submit'].button.button-primary.sign-up-in"},
+            {"action":"click", "search":"form#sign-in input[type='submit'].button.button-primary.sign-up-in"}
+        ]
+    },
+    "logout":{
+        "todo":[
+        	{"action":"goto", "url":"https://bitly.com/a/sign_out"},
+            {"action":"goto", "url":"https://bitly.com/a/sign_in"}
+            ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a[title='Settings']"}
+    ]
+}

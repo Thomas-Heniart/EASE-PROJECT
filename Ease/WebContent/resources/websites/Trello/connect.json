@@ -1,69 +1,24 @@
 {
-    "website":"trello",
-    
-    "urls":{
-        "login":"https://trello.com/login"
+    "name":"Trello",
+    "lastLogin":"",
+    "home":"https://trello.com/login/",
+    "connect":{
+        "todo":[
+            {"action":"fill", "what":"login", "search":"input#user"},
+            {"action":"val", "what":"password", "search":"input[name='password']#password"},
+            {"action":"click", "search":"input#login"}
+        ]
     },
-    
-    "elements":{
-        
-        "userField":{
-            "id":"user"
-        },
-        "passField":{
-            "id":"password"
-        },
-        "buttonLogIn":{
-            "id":"login"
-        }
-        
-    },
-    
-    "connectionSteps":[
-        {
-            "action":"goTo",
-            "url":"login"
-        },
-        
-        {
-                "action":"catchFail",
-                "if":"missingElement",
-                "elementName":"passField",
-                "actionsIfFail":[{"action":"end"}],
-                "send":"alreadyConnected"
-        },
-        
-        {
-            "action":"do",
-            "elements":[
-                {
-                    "name":"userField",
-                    "action":"fill",
-                    "value":"user"
-                },
-                {
-                    "name":"passField",
-                    "action":"fill",
-                    "value":"pass"
-                },
-                {
-                    "name":"buttonLogIn",
-                    "action":"click"
-                }
+    "logout":{
+        "todo":[
+            {"action":"clickona", "search":"a.header-btn.header-member.js-open-header-member-menu"},
+            {"action":"waitfor", "search":"a.js-logout"},
+            {"action":"clickona", "search":"a.js-logout"},
+            {"action":"waitload"},
+            {"action":"goto", "url":"https://trello.com/login/"}
             ]
-        },
-        
-        {
-            "action":"nextPage",
-            "lastPage":true
-        },
-        
-        {
-            "action":"catchFail",
-            "if":"existingElement",
-            "elementName":"passField",
-            "actionsIfFail":[{"action":"end"}],
-            "send":"wrongPassword"
-        }
+    },
+    "checkAlreadyLogged":[
+        {"search":"a.header-btn.js-open-header-info-menu"}
     ]
 }
