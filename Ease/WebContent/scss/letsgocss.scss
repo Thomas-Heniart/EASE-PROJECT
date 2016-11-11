@@ -179,16 +179,20 @@
         padding-top: 7px;
         padding-bottom: 5px;
 				opacity: 1;
-			}
-      .errorHelper.error {
       }
     }
   }
+  #GetEmailForm2 {
+    width: 30%;
+  }
+  #GetEmailForm {
+    width: 50%;
+  }
   form[action='getEmailLink'] {
-    width: 100%;
     text-align: center;
     height: 26px;
     line-height: 26px;
+    margin: auto;
     margin-top: 15px;
     position: relative;
     input, button {
@@ -209,6 +213,52 @@
     button {
       border-radius: 0px 5px 5px 0px !important;
       text-align: center;
+    }
+    .successHelper, .errorHelper {
+      position: relative;
+      text-align: center;
+      width: auto;
+      margin: auto;
+      padding: 0 5px;
+      height: 0;
+      overflow: hidden;
+      border-radius: 7px;
+      font-size: 10px;
+      background-color: $themeWhiteColor;
+      transition: opacity .3s;
+      opacity: 0;
+      outline: none;
+      display: inline-block;
+      vertical-align: middle;
+      p {
+        margin: 0;
+      }
+    }
+    .successHelper {
+      border-color: green;
+      color: green;
+    }
+    .errorHelper {
+      border-color: $themeRedColor;
+      color: $themeRedColor;
+    }
+    .successHelper.success, .errorHelper.error {
+      transition: opacity .3s;
+      height: auto;
+      border: 3px solid;
+      padding-top: 7px;
+      padding-bottom: 5px;
+      opacity: 1;
+    }
+  }
+  form[action='getEmailLink'].loading {
+    input, button {
+      display: none !important;
+    }
+    .loadHelper.loading {
+      position: relative;
+      height: 50px;
+      width: 50px;
     }
   }
   .invitation-header {
