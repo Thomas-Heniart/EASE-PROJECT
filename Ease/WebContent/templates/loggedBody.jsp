@@ -60,7 +60,7 @@ $(document).ready(function(){
 <div id="loggedBody">
     <div class="col-left show" style="width: 100%; float:left">
 		<%@ include file="ProfileView.jsp"%>
-			<div class="MenuButtonSet">
+			<div class="MenuButtonSet show">
 		<button id="enterEditMode" state="off" class="button"><img src="resources/icons/menu_icon.png"/>
 			<div class="openCatalogHelper"></div>
 		</div>
@@ -73,7 +73,6 @@ $(document).ready(function(){
 	<%@ include file="PopupDeleteApp.jsp" %>
 	<%@ include file="PopupAddApp.jsp" %>	
 	<%@ include file="PopupModifyApp.jsp" %>
-	<%@ include file="PopupAddUpdate.jsp" %>
 	<div class="md-overlay"></div>
 	
 </div>
@@ -82,14 +81,7 @@ $(document).ready(function(){
 
 $(document).ready(function(){
 	$('.md-overlay').click(function(){
-		popupAddApp.close();
-		modifyAppPopup.close();
-		$('.md-show').removeClass('md-show');
-	});
-	$('.popupClose').click(function () {
-		popupAddApp.close();
-		modifyAppPopup.close();
-		$('.md-show').removeClass('md-show');
+		closeAllPopups();
 	});
 });
 </script>

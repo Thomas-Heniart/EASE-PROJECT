@@ -15,16 +15,15 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.annotation.WebServlet;
 
 import com.Ease.context.DataBase;
 import com.Ease.data.Regex;
 import com.Ease.data.ServletItem;
-import com.Ease.session.Profile;
 import com.Ease.session.SessionException;
 import com.Ease.session.SessionSave;
 import com.Ease.session.User;
@@ -33,7 +32,7 @@ import com.Ease.session.User;
 /**
  * Servlet implementation class NewUser
  */
-@WebServlet("/registerInv")
+@WebServlet(urlPatterns = {"/ieseg", "/letsgo"})
 public class RegistrationByInvitation extends HttpServlet {
        
     /**
@@ -46,7 +45,6 @@ public class RegistrationByInvitation extends HttpServlet {
      */
     public RegistrationByInvitation() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -57,16 +55,16 @@ public class RegistrationByInvitation extends HttpServlet {
 		String invitationCode = request.getParameter("invitationCode");
 		String email = request.getParameter("email");
 		User user = (User) session.getAttribute("User");
-		if (user != null) {
-			RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-			rd.forward(request, response);
-		} else if (invitationCode == null || email == null) {
-			RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-			rd.forward(request, response);
-		} else {
-			RequestDispatcher rd = request.getRequestDispatcher("checkForInvitation.jsp");
-			rd.forward(request, response);
-		}
+		RequestDispatcher rd = null;
+		String dispatch;
+		if (user != null)
+			dispatch = "index.jsp";
+		else if (invitationCode == null || email == null)
+			dispatch = "checkForInvitation.jsp";
+		else
+			dispatch = "registrationByInvitation.jsp";
+		rd = request.getRequestDispatcher(dispatch);
+		rd.forward(request, response);
 	}
 
 	/**
@@ -124,7 +122,7 @@ public class RegistrationByInvitation extends HttpServlet {
 						SessionSave sessionSave = new SessionSave(user, session.getServletContext());
 						session.setAttribute("User", user);
 						session.setAttribute("SessionSave", sessionSave);
-						SI.setResponse(200, "User registered.");
+						SI.setResponse(200, "Successfull registration! You will be redirect in few seconds :)");
 					}
 				} else {
 					SI.setResponse(ServletItem.Code.BadParameters, "You have no invitation or you already have an account.");
