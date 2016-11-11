@@ -97,6 +97,10 @@ public class createInvitation extends HttpServlet {
 							for (int i = 0;i < 126 ; ++i) {
 								invitationCode += alphabet.charAt(r.nextInt(alphabet.length()));			
 							}
+							email.replaceAll(" ", "");
+							email.replaceAll("\r", "");
+							email.replaceAll("\n", "");
+							email.replaceAll("\t", "");
 							if (group == null){
 								db.set("insert into invitations values ('" + email + "', '" + invitationCode + "', NULL);");
 								SI.setResponse(200, "Invitation send.");
