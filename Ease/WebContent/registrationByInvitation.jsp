@@ -45,8 +45,8 @@ pageEncoding="UTF-8"%>
 	<%
 	String invitationCode = request.getParameter("code");
 	String emailAddress = request.getParameter("email");
-	if (invitationCode == null || emailAddress == null) 
-		request.getRequestDispatcher("index.jsp").forward(request, response);
+	/*if (invitationCode == null || emailAddress == null) 
+		request.getRequestDispatcher("index.jsp").forward(request, response);*/
 	%>
 	<div class="logo">
 		<img src="resources/images/Ease_Logo.png"/>

@@ -3,24 +3,14 @@ var listenersMessages = [];
 var currentUser = "anonymous";
 
 var extension = {
-	currentUser:{
-        set:function(email){
-            currentUser = email;
-        },
-        reset:function(){
-            currentUser = "anonymous";
-        },
-        get:function(callback){
-            extension.currentWindow(function(window){
-                if(!hasEaseTab(window)){
-                    currentUser = "anonymous";
-                    callback(currentUser);
-                }
-                else {
-                    currentUser = 0;
-                }
-            });
+	nbOfEaseTabs:function(){
+        var nb=0;
+        for(var i in window.tabs) {
+            if(window.tabs[i].url.indexOf("ease.space")!=-1){
+                nb++;
+            }
         }
+        return nb;
     },
     storage:{
 		get:function(key, callback){
@@ -47,15 +37,6 @@ var extension = {
             }
         }
         return nb>1;
-    },
-    hasEaseTab:function(window){
-        var nb=0;
-        for(var i in window.tabs) {
-            if(window.tabs[i].url.indexOf("ease.space")!=-1){
-                nb++;
-            }
-        }
-        return nb>0;
     },
 	addShortCut:function(fct){
 		chrome.commands.onCommand.addListener(fct);

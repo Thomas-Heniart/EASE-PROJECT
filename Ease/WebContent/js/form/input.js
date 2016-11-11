@@ -119,6 +119,24 @@ var Input = {
 			var reg = /^[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
 			return reg.test(self.qInput.val());
 		}
+	},
+	CheckboxInput : function (rootEl) {
+		constructorInput.apply(this,arguments);
+		var self = this;
+		if (self.qInput.is(":checked"))
+			self.isValid = true;
+		else
+			self.isValid = false;
+		self.validate = function() {
+			return self.qInput.is(":checked");
+		}
+		self.qInput.on("click", function () {
+			var tmp = self.validate();
+			if (tmp != self.isValid) {
+				self.isValid = tmp;
+				self.onStateChanged();
+			}
+		});
 	}
 }
 

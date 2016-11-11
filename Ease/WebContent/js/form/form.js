@@ -546,5 +546,21 @@ var Form = {
 		this.errorCallback = function(retMsg) {
 			self.oParent.error.html(retMsg);
 		};
+	},
+	RegisterForm : function(rootEl) {
+		constructorForm.apply(this, arguments);
+		var self = this;
+		this.email = $("input[name='email']", self.qRoot).val();
+		this.invitationCode = $("input[name='invitationCode']", self.qRoot).val();
+		this.params = {
+				email : self.email,
+				invitationCode : self.invitationCode
+		}
+		this.successCallback = function(retMsg) {
+			setTimeout(function() {
+				window.location= "index.jsp";
+			}, 1000)
+		}
+		
 	}
 }
