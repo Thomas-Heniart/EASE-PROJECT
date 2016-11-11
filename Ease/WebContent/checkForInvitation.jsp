@@ -128,7 +128,7 @@
 			</div>
 			<div class="contact">
 				<div class="security-cgu">
-					<a href="http://www.ease-app.co/secure" target="_blank">Security</a>
+					<a href="http://www.ease-app.co/security" target="_blank">Security</a>
 					<a href="http://www.ease-app.co/privacy" target="_blank">Terms and conditions</a>
 				</div>
 				<div class="mediaTab">
@@ -148,7 +148,7 @@
 						<a href="http://www.ease-app.co"  target="_blank"><i class="fa fa-globe" aria-hidden="true"></i></a>
 					</div>
 					<div class="link">
-						<a href="http://www.ease-app.co/secure"  target="_blank"><i class="fa fa-lock" aria-hidden="true"></i></a>
+						<a href="http://www.ease-app.co/security"  target="_blank"><i class="fa fa-lock" aria-hidden="true"></i></a>
 					</div>
 				</div>
 				<div class="ease-contact">
