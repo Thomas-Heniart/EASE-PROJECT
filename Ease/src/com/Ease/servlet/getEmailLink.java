@@ -68,7 +68,7 @@ public class getEmailLink extends HttpServlet {
 			if (db.connect() != 0){
 				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 			} else if (email == null || Regex.isEmail(email) == false){
-				SI.setResponse(ServletItem.Code.BadParameters, "Incorrect email.");
+				SI.setResponse(ServletItem.Code.BadParameters, "This is not an email.");
 			} else {		
 				ResultSet rs;
 				rs = db.get("select * from users where email ='" + email + "';");
