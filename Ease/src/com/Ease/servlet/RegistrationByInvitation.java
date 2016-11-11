@@ -57,10 +57,10 @@ public class RegistrationByInvitation extends HttpServlet {
 		User user = (User) session.getAttribute("User");
 		RequestDispatcher rd = null;
 		String dispatch;
-		if (user != null)
-			dispatch = "index.jsp";
-		else if (invitationCode == null || email == null)
+		if (invitationCode == null || email == null)
 			dispatch = "checkForInvitation.jsp";
+		else if (user != null)
+			dispatch = "index.jsp";
 		else
 			dispatch = "registrationByInvitation.jsp";
 		rd = request.getRequestDispatcher(dispatch);

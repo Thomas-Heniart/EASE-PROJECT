@@ -27,7 +27,7 @@ function sendEvent(obj) {
         }
         
         if(getUserNavigator() == "Safari"){
-        	if(!$('#ease_extension').attr("safariversion") || $('#ease_extension').attr("safariversion") !="1.4"){
+        	if(!$('#ease_extension').attr("safariversion") || $('#ease_extension').attr("safariversion") !="1.5"){
         		safariExtensionUpdate();
         		return;
         	}

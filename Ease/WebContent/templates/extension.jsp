@@ -3,7 +3,7 @@
 			<p class="title classicContent">You are almost done ...<i class="fa fa-heart" aria-hidden="true"></i></p>
 			<p class="title safariUpdate">Your addon is too old ! <i class="fa fa-recycle" aria-hidden="true"></i></p>
 			<p class="info classicContent">Download the addon to make Ease automagically work on this computer</br>For now, it only works on Chrome and Safari.</p>
-			<p class="info safariUpdate"><span>Thank you Willy for reporting a bug ;)</span> The new addon version is now available. <br> Update it to make Ease automagically work on this computer. </p>
+			<p class="info safariUpdate">The new addon version is now available. We fixed several bugs and made it faster !<br> Update it to make Ease automagically work on this computer. </p>
 			<p><i class="fa fa-angle-down" aria-hidden="true"></i></p>
 			<button class="install-button classicContent">Get Ease Addon</button>
 			<button class="install-button safariUpdate">Update Ease Addon</button>
