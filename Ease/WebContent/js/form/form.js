@@ -567,7 +567,7 @@ var Form = {
 			$(".successHelper", self.qRoot).addClass("success");
 			setTimeout(function() {
 				window.location= "index.jsp";
-			}, 1000);
+			}, 750);
 		};
 		this.errorCallback = function(retMsg) {
 			$(".loadHelper, button[type='submit']", self.qRoot).removeClass("loading");
