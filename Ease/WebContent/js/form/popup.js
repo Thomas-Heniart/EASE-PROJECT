@@ -134,6 +134,8 @@ var Popup = {
 				function () {}, 
 				function (msg) {
 					self.oForm.oInputs[0].val($(arg[1]).attr("siteId"));
+					self.updateIndex = $(arg[1]).attr("index");
+					console.log(self.updateIndex);
 					self.oForm.oInputs[1].val(arg[0].id);
 					self.oForm.oInputs[2].val($(arg[1]).attr("cryptedPassword"));
 					self.oForm.oInputs[3].val($(arg[1]).attr("login"));
