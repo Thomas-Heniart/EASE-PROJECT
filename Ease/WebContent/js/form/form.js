@@ -557,6 +557,8 @@ var Form = {
 				invitationCode : self.invitationCode
 		};
 		this.beforeSubmit = function() {
+			$(".successHelper", self.qRoot).removeClass("success");
+			$(".errorHelper", self.qRoot).removeClass("error");
 			$(".loadHelper, button[type='submit']", self.qRoot).addClass("loading");
 		};
 		this.successCallback = function(retMsg) {

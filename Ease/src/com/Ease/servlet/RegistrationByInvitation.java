@@ -128,8 +128,10 @@ public class RegistrationByInvitation extends HttpServlet {
 					SI.setResponse(ServletItem.Code.BadParameters, "You have no invitation or you already have an account.");
 				}
 			} catch (SessionException e) {
+				e.printStackTrace();
 				SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 			} catch (SQLException e) {
+				e.printStackTrace();
 				SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 			}
 		}
