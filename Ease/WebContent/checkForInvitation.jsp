@@ -58,15 +58,8 @@
 <script src="js/form/popup.js"></script>
 
 </head>
-<%
-	String activity = request.getParameter("activity");
-	if (activity == null) {
-		activity = "";
-	}
-%>
 
 <body id="invitationBody">
-	<%@ include file="templates/PopupRegister.jsp" %>
 	<div class="invitation-header">
 		<div class="image-overlay"></div>
 		<img src="resources/images/Ease_Logo.png" />
@@ -75,7 +68,27 @@
 			<h3>A simple homepage to access your web.</h3>
 			<p>IESEG students & IESEG staff,</p>
 			<p>EASE now connects you to your school web accounts in 1 click.</p>
-			<button type="button" class="openRegisterPopup">Get started in 1 min !</button>
+			<form oClass="GetEmailForm" id="GetEmailForm" action="getEmailLink">
+				<input type="email" oClass="EmailInput" name="email"/><button type="submit" class="openRegisterPopup">Go</button>
+				<div class="loadHelper centeredItem">
+					<div class="sk-fading-circle">
+				  		<div class="sk-circle1 sk-circle"></div>
+				  		<div class="sk-circle2 sk-circle"></div>
+				  		<div class="sk-circle3 sk-circle"></div>
+				  		<div class="sk-circle4 sk-circle"></div>
+				  		<div class="sk-circle5 sk-circle"></div>
+				  		<div class="sk-circle6 sk-circle"></div>
+				  		<div class="sk-circle7 sk-circle"></div>
+				  		<div class="sk-circle8 sk-circle"></div>
+				  		<div class="sk-circle9 sk-circle"></div>
+				  		<div class="sk-circle10 sk-circle"></div>
+				  		<div class="sk-circle11 sk-circle"></div>
+				  		<div class="sk-circle12 sk-circle"></div>
+					</div>
+				</div>
+				<div class="successHelper centeredItem"><p></p></div>
+				<div class="errorHelper centeredItem"><p></p></div>			
+			</form>
 		</div>
 	</div>
 	<div class="invitation-content">
@@ -114,7 +127,27 @@
 			</video>
 		</div>
 		<div class="invitation-footer">
-			<button type="button" class="openRegisterPopup">Get started in 1 min !</button>
+			<form oClass="GetEmailForm" id="GetEmailForm2" action="getEmailLink">
+				<input type="email" oClass="EmailInput" name="email"/><button type="submit" class="openRegisterPopup">Go</button>			
+				<div class="loadHelper centeredItem">
+					<div class="sk-fading-circle">
+				  		<div class="sk-circle1 sk-circle"></div>
+				  		<div class="sk-circle2 sk-circle"></div>
+				  		<div class="sk-circle3 sk-circle"></div>
+				  		<div class="sk-circle4 sk-circle"></div>
+				  		<div class="sk-circle5 sk-circle"></div>
+				  		<div class="sk-circle6 sk-circle"></div>
+				  		<div class="sk-circle7 sk-circle"></div>
+				  		<div class="sk-circle8 sk-circle"></div>
+				  		<div class="sk-circle9 sk-circle"></div>
+				  		<div class="sk-circle10 sk-circle"></div>
+				  		<div class="sk-circle11 sk-circle"></div>
+				  		<div class="sk-circle12 sk-circle"></div>
+					</div>
+				</div>
+				<div class="successHelper centeredItem"><p></p></div>
+				<div class="errorHelper centeredItem"><p></p></div>
+			</form>
 			<div class="security">
 				<h3>Security policy</h3>
 				<p>Our encryption method enables a transfer of information without knowing it, it is used during your daily connections. This is why Ease does not know either your “Ease password” or your “accounts passwords”. <a target="_blank" href="http://www.ease-app.co/security">Know more</a></p>
@@ -159,9 +192,8 @@
 		</div>
 	</div>
 	<script>
-	$(".openRegisterPopup").click(function() {
-		popupRegister.open();
-	})
+	var getEmailForm = new Form["GetEmailForm"]($("#GetEmailForm"));
+	var getEmailForm2 = new Form["GetEmailForm"]($("#GetEmailForm2"));
 	</script>
 </body>
 </html>

@@ -184,6 +184,33 @@
       }
     }
   }
+  form[action='getEmailLink'] {
+    width: 100%;
+    text-align: center;
+    height: 26px;
+    line-height: 26px;
+    margin-top: 15px;
+    position: relative;
+    input, button {
+      outline: none;
+      height: 100%;
+      border: none;
+      line-height: 100%;
+      vertical-align: middle;
+      margin: 0 !important;
+      position: relative;
+      display: inline-block !important;
+    }
+    input {
+      color: black;
+      padding: 3px;
+      border-radius: 5px 0px 0px 5px;
+    }
+    button {
+      border-radius: 0px 5px 5px 0px !important;
+      text-align: center;
+    }
+  }
   .invitation-header {
     background: url("../resources/images/header-bckgnd.jpg") center no-repeat;
     background-position: center center;

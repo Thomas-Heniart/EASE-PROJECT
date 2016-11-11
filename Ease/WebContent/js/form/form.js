@@ -572,5 +572,25 @@ var Form = {
 			$(".errorHelper p", self.qRoot).text(retMsg);
 			$(".errorHelper", self.qRoot).addClass("error");
 		}
+	},
+	GetEmailForm : function(rootEl) {
+		constructorForm.apply(this, arguments);
+		var self = this;
+		this.beforeSubmit = function () {
+			$(".loadHelper, button[type='submit']", self.qRoot).addClass("loading");
+		};
+		this.successCallback = function(retMsg) {
+			$(".loadHelper", self.qRoot).removeClass("loading");
+			$(".successHelper p", self.qRoot).text(retMsg);
+			$(".successHelper", self.qRoot).addClass("success");
+			setTimeout(function() {
+				window.location= "index.jsp";
+			}, 1000);
+		};
+		this.errorCallback = function(retMsg) {
+			$(".loadHelper", self.qRoot).removeClass("loading");
+			$(".errorHelper p", self.qRoot).text(retMsg);
+			$(".errorHelper", self.qRoot).addClass("error");
+		}
 	}
 }
