@@ -1,0 +1,26 @@
+{
+    "name":"Calendly",
+    "lastLogin":"",
+    "home":"https://calendly.com/dashboard",
+    "connect":{
+        "todo":[
+        	{"action":"goto", "url":"https://calendly.com/login"},
+            {"action":"clickona", "search":"a.js-reset"},
+            {"action":"waitfor", "search":"input.js-email-input"},
+            {"action":"fill", "what":"login", "search":"input.js-email-input"},
+            {"action":"click", "search":"input.button.js-loading-hide"},
+            {"action":"waitfor", "search":"input.js-password-input"},
+            {"action":"fill", "what":"password", "search":"input.js-password-input"},
+            {"action":"click", "search":"input.button.js-loading-hide"}
+        ]
+    },
+    "logout":{
+        "todo":[
+        	{"action":"clickona", "search":"a#logout_link"},
+        	{"action":"waitload"}
+            ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"div.account-label"}
+    ]
+}

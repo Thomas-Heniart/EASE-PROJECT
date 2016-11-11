@@ -63,5 +63,6 @@ public class OnStart implements ServletContextListener {
 		
 		System.out.println("done.");
 		db.close();
+		
 	}
 }
