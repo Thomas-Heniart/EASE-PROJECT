@@ -69,7 +69,7 @@
 			<p>IESEG students & IESEG staff,</p>
 			<p>EASE now connects you to your school web accounts in 1 click.</p>
 			<form oClass="GetEmailForm" id="GetEmailForm" action="getEmailLink">
-				<input type="email" oClass="EmailInput" name="email"/><button type="submit" class="openRegisterPopup">Go</button>
+				<input type="text" oClass="NoEmptyInput" name="email"/><button type="submit" class="openRegisterPopup">Go</button>
 				<div class="loadHelper centeredItem">
 					<div class="sk-fading-circle">
 				  		<div class="sk-circle1 sk-circle"></div>
@@ -128,7 +128,7 @@
 		</div>
 		<div class="invitation-footer">
 			<form oClass="GetEmailForm" id="GetEmailForm2" action="getEmailLink">
-				<input type="email" oClass="EmailInput" name="email"/><button type="submit" class="openRegisterPopup">Go</button>			
+				<input type="text" oClass="NoEmptyInput" name="email"/><button type="submit" class="openRegisterPopup">Go</button>			
 				<div class="loadHelper centeredItem">
 					<div class="sk-fading-circle">
 				  		<div class="sk-circle1 sk-circle"></div>

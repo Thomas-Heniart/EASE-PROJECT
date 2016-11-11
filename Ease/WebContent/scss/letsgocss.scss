@@ -190,14 +190,14 @@
   }
   form[action='getEmailLink'] {
     text-align: center;
-    height: 26px;
-    line-height: 26px;
+    height: 40px;
     margin: auto;
     margin-top: 15px;
     position: relative;
     input, button {
       outline: none;
-      height: 100%;
+      height: 26px;
+      line-height: 26px;
       border: none;
       line-height: 100%;
       vertical-align: middle;
@@ -217,29 +217,31 @@
     .successHelper, .errorHelper {
       position: relative;
       text-align: center;
+      display: block;
       width: auto;
       margin: auto;
       padding: 0 5px;
       height: 0;
       overflow: hidden;
       border-radius: 7px;
-      font-size: 10px;
-      background-color: $themeWhiteColor;
+      font-size: 14px;
       transition: opacity .3s;
       opacity: 0;
       outline: none;
-      display: inline-block;
       vertical-align: middle;
+      border: none !important;
+
       p {
+        width: auto;
+        text-shadow: 0 0 15px $themeColor, 0 0 10px $themeColor, 0 0 5px $themeColor;
+        font-weight: bold;
         margin: 0;
       }
     }
     .successHelper {
-      border-color: green;
-      color: green;
+      color: white;
     }
     .errorHelper {
-      border-color: $themeRedColor;
       color: $themeRedColor;
     }
     .successHelper.success, .errorHelper.error {
@@ -303,7 +305,7 @@
       text-align: center;
       left: 20%;
       color: $themeWhiteColor;
-      bottom: 10%;
+      bottom: 14%;
       font-weight: normal;
       font-family: Helvetica;
       h2 {

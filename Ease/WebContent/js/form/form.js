@@ -580,27 +580,21 @@ var Form = {
 		var self = this;
 		this.beforeSubmit = function () {
 			$(".loadHelper", self.qRoot).addClass("loading");
+			$(".errorHelper", self.qRoot).removeClass("error");
+			$(".successHelper", self.qRoot).removeClass("success");
 			self.qRoot.addClass("loading");
 		};
 		this.successCallback = function(retMsg) {
-			$(".loadHelper", self.qRoot).removeClass("loading");
+			self.qRoot.removeClass("loading");
 			$(".successHelper p", self.qRoot).text(retMsg);
 			$(".successHelper", self.qRoot).addClass("success");
 			self.reset();
-			setTimeout(function() {
-				$(".successHelper", self.qRoot).removeClass("success");
-				self.qRoot.removeClass("loading");
-			}, 1000);
 		};
 		this.errorCallback = function(retMsg) {
-			$(".loadHelper", self.qRoot).removeClass("loading");
+			self.qRoot.removeClass("loading");
 			$(".errorHelper p", self.qRoot).text(retMsg);
 			$(".errorHelper", self.qRoot).addClass("error");
 			self.reset();
-			setTimeout(function() {
-				$(".errorHelper", self.qRoot).removeClass("error");
-				self.qRoot.removeClass("loading");
-			}, 1000);
-		}
+		};
 	}
 }
