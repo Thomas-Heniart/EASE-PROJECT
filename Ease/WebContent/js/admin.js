@@ -64,7 +64,7 @@ function sendInvitation(email, group_id, callback) {
 		groupId : group_id
 	}, function() {
 	}, function(retMsg) {
-		$('#progressStatus .progress').append("<p>" + email + " -> success");
+		$('#progressStatus .progress').append("<p>" + email + " -> success : "+retMsg);
 		callback();
 	}, function(retMsg) {
 		$('#progressStatus .progress').append(

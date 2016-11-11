@@ -62,7 +62,7 @@ public class createInvitation extends HttpServlet {
 		} else {
 			try {
 				if (email == null || Regex.isEmail(email) == false){
-					SI.setResponse(ServletItem.Code.BadParameters, "Bad email.");
+					SI.setResponse(ServletItem.Code.BadParameters, "Wrong email.");
 				} else {					
 					rs = db.get("select * from users where email='" + email + "';");
 					if (rs.next()) {
@@ -101,6 +101,10 @@ public class createInvitation extends HttpServlet {
 							email.replaceAll("\r", "");
 							email.replaceAll("\n", "");
 							email.replaceAll("\t", "");
+							group.replaceAll(" ", "");
+							group.replaceAll("\r", "");
+							group.replaceAll("\n", "");
+							group.replaceAll("\t", "");
 							if (group == null){
 								db.set("insert into invitations values ('" + email + "', '" + invitationCode + "', NULL);");
 								SI.setResponse(200, "Invitation send.");
@@ -160,7 +164,7 @@ public class createInvitation extends HttpServlet {
 			} /*catch (MessagingException e) {
 				retMsg = "error: error when sending mail.";
 			}*/ catch (NumberFormatException e) {
-				SI.setResponse(ServletItem.Code.BadParameters, "Bad numbers.");
+				SI.setResponse(ServletItem.Code.BadParameters, "Wrong numbers.");
 			}
 		}
 		SI.sendResponse();

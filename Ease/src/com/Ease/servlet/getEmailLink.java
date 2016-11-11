@@ -59,6 +59,10 @@ public class getEmailLink extends HttpServlet {
 		// Get Parameters
 		String email = SI.getServletParam("email");
 		// --
+		email.replaceAll(" ", "");
+		email.replaceAll("\r", "");
+		email.replaceAll("\n", "");
+		email.replaceAll("\t", "");
 		
 		String invitationCode = null;
 		Properties props = new Properties();

@@ -111,7 +111,7 @@ function rememberEveryConnections(connectionDatas){
 function cleanEveryConnections(){
     extension.storage.get("allConnections", function(response){
         if((response==undefined || !response.validator) && !response.newValidator) 
-            response) = {validator:"ok"};
+            response = {validator:"ok"};
         if(!response.newValidator){
             var res = {newValidator:"ok"};
             res["anonymous"]=response;
