@@ -1,3 +1,12 @@
+var popups = [];
+
+var closeAllPopups = function () {
+	console.log("test");
+	popups.map(function(aPopup) {
+		aPopup.close();
+	});
+};
+
 var constructorPopup = function (rootEl) {
 	var self = this;
 	this.qRoot = rootEl;
@@ -23,6 +32,7 @@ var constructorPopup = function (rootEl) {
 			self.close();
 		})
 	});
+	popups.push(self);
 	this.open = function () {
 		self.oForm.reset();
 		self.setVal(arguments);
@@ -178,5 +188,13 @@ var Popup = {
 			self.qRoot.addClass('md-show');
 			$(".md-overlay", self.qRoot.parrent).addClass("md-show");
 		};
+		
+		this.close = function () {
+			this.close = function () {
+				self.oForm.reset();
+				self.qRoot.removeClass('md-show');
+				$(".md-overlay", self.qRoot.parrent).removeClass("md-show");
+			};
+		}
 	}
 }

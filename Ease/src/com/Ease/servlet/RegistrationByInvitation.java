@@ -26,6 +26,7 @@ import com.Ease.data.Regex;
 import com.Ease.data.ServletItem;
 import com.Ease.session.Profile;
 import com.Ease.session.SessionException;
+import com.Ease.session.SessionSave;
 import com.Ease.session.User;
 
 
@@ -120,6 +121,9 @@ public class RegistrationByInvitation extends HttpServlet {
 						session.setAttribute("User", user);
 						db.set("CALL addEmail(" + user.getId() + ", '" + user.getEmail() + "');");
 						db.set("UPDATE usersemails SET verified = 1 WHERE user_id = " + user.getId() + " AND email = '" + user.getEmail() + "';");
+						SessionSave sessionSave = new SessionSave(user, session.getServletContext());
+						session.setAttribute("User", user);
+						session.setAttribute("SessionSave", sessionSave);
 						SI.setResponse(200, "User registered.");
 					}
 				} else {
