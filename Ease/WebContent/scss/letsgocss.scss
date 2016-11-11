@@ -17,7 +17,7 @@
     .md-content {
       background-color: transparent !important;
       #RegisterForm {
-        background-color: rgba($themeGreySilverColor, 0.9);
+        background-color: lighten($themeGreySilverColor, 0.3);
         padding: 25px;
         border: 2px solid $themeColor;
         border-radius: 5px;
@@ -112,11 +112,75 @@
       button[type='submit'].Active {
         background-color: $themeColor;
         color: white;
+        transition: opacity 0.2s ease;
         &:hover {
           background-color: white;
           color: $themeColor;
-          transition: all 0.2s ease;
+          transition: opacity 0.2s ease;
         }
+      }
+      .loadHelper {
+				transition: opacity .3s;
+        position: relative;
+				width: 40px;
+				opacity: 0;
+        height: O;
+        overflow: hidden;
+        .sk-circle::before {
+          background-color: $themeColor;
+        }
+			}
+      .successHelper, .errorHelper {
+        position: relative;
+        text-align: center;
+        min-width: 40%;
+        max-width: 90%;
+        padding: 0 5px;
+				height: 0;
+        overflow: hidden;
+				border-radius: 7px;
+				font-size: 14px;
+				background-color: $themeWhiteColor;
+				transition: opacity .3s;
+        opacity: 0;
+				outline: none;
+				display: inline-block;
+				vertical-align: middle;
+        p {
+          margin: 0;
+        }
+      }
+			.successHelper {
+				border-color: green;
+				color: green;
+			}
+      .errorHelper {
+        border-color: $themeRedColor;
+        color: $themeRedColor;
+      }
+      .loadHelper.loading {
+				transition: opacity .3s;
+				opacity: 1;
+        height: 40px;
+			}
+      button[type='submit'].loading {
+        transition: opacity .3s;
+				border-radius: 100px;
+				width: 35px;
+        visibility: hidden;
+				opacity: 0;
+        height: 0;
+      }
+      .successHelper.success, .errorHelper.error {
+        margin-top: 35px;
+				transition: opacity .3s;
+        height: auto;
+        border: 3px solid;
+        padding-top: 7px;
+        padding-bottom: 5px;
+				opacity: 1;
+			}
+      .errorHelper.error {
       }
     }
   }

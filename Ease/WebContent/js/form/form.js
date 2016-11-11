@@ -555,12 +555,22 @@ var Form = {
 		this.params = {
 				email : self.email,
 				invitationCode : self.invitationCode
-		}
+		};
+		this.beforeSubmit = function() {
+			$(".loadHelper, button[type='submit']", self.qRoot).addClass("loading");
+		};
 		this.successCallback = function(retMsg) {
+			$(".loadHelper", self.qRoot).removeClass("loading");
+			$(".successHelper p", self.qRoot).text(retMsg);
+			$(".successHelper", self.qRoot).addClass("success");
 			setTimeout(function() {
 				window.location= "index.jsp";
-			}, 1000)
+			}, 1000);
+		};
+		this.errorCallback = function(retMsg) {
+			$(".loadHelper, button[type='submit']", self.qRoot).removeClass("loading");
+			$(".errorHelper p", self.qRoot).text(retMsg);
+			$(".errorHelper", self.qRoot).addClass("error");
 		}
-		
 	}
 }

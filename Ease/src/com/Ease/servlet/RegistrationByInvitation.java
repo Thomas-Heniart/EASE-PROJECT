@@ -124,7 +124,7 @@ public class RegistrationByInvitation extends HttpServlet {
 						SessionSave sessionSave = new SessionSave(user, session.getServletContext());
 						session.setAttribute("User", user);
 						session.setAttribute("SessionSave", sessionSave);
-						SI.setResponse(200, "User registered.");
+						SI.setResponse(200, "Successfull registration! You will be redirect in few seconds :)");
 					}
 				} else {
 					SI.setResponse(ServletItem.Code.BadParameters, "You have no invitation or you already have an account.");
