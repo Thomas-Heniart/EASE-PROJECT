@@ -150,15 +150,33 @@ fill:function(msg, callback, sendResponse){
 			callback(msg, sendResponse);
 		}
 	} else {
-      input.select();
-		  input.click();
-      input.focus();
-      input.change();
-      input.val(msg.detail[0].user[actionStep.what]);
-      input.change();
-		  input.blur();
-		  msg.actionStep++;
-		  callback(msg, sendResponse);
+        input.select();
+		input.click();
+        input.focus();
+        input.change();
+        input.val(msg.detail[0].user[actionStep.what]);
+        input.change();
+		input.blur();
+		msg.actionStep++;
+		callback(msg, sendResponse);
+	}
+},
+val:function(msg, callback, sendResponse){
+    var actionStep = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep];
+	var input = $(actionStep.search);
+	if (input.length == 0){
+		if (actionStep.grave == true){
+			msg.type = "error: "+ actionStep.what +" input not found";
+			sendResponse(msg);
+            errorOverlay(msg);
+		} else {
+			msg.actionStep++;
+			callback(msg, sendResponse);
+		}
+	} else {
+        input.val(msg.detail[0].user[actionStep.what]);
+        msg.actionStep++;
+        callback(msg, sendResponse);
 	}
 },
 checkIfPopup:function(msg, callback, sendResponse){
