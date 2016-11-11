@@ -1,7 +1,6 @@
 var popups = [];
 
 var closeAllPopups = function () {
-	console.log("test");
 	popups.map(function(aPopup) {
 		aPopup.close();
 	});
