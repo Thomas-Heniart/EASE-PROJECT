@@ -11,7 +11,7 @@
 	},
 	"logout":{
 		"todo":[
-    		{"action":"goto", "url":"https://www.fun-mooc.fr/logout"},
+    		{"action":"goto", "url":"https://www.fun-mooc.fr/logout"}
 		]
 	},
 	"checkAlreadyLogged":[

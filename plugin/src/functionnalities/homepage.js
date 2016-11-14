@@ -3,10 +3,19 @@ extension.storage.get("settings", function(res){
         extension.storage.set("settings", {"homepage":true}, function(){});
         res = {"homepage":true};
     }
-    if(res.homepage==true){
-        chrome.runtime.sendMessage({"name":"changeHomepage", "message":{}}, function(){});
-        //window.location.replace("https://ease.space");
-    } else {
-        window.location.replace("about:blank");
-    }
+    
+    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+        var active = tabs[0].id;
+        if(res.homepage==true){
+            chrome.tabs.update(active, { url: "https://ease.space" }, function(){});
+            //chrome.runtime.sendMessage({"name":"changeHomepage", "message":{}}, function(){});
+            //window.location.replace("https://ease.space");
+        } else {          
+            // Set the URL to the Local-NTP (New Tab Page)
+			chrome.tabs.update(active, { url: "chrome-search://local-ntp/local-ntp.html" }, function(){});
+		}
+        
+        //window.location.replace("about:blank");
+    });
+   
 });

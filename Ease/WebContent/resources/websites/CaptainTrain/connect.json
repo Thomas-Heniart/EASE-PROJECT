@@ -1,9 +1,8 @@
 {
     "name":"Captain train",
     "lastLogin":"",
-    "home":"https://www.captaintrain.com",
+    "home":"https://www.trainline.eu/",
     "connect":{
-        "url":"https://www.captaintrain.com",
         "todo":[
         	{"action":"waitfor", "time":100, "search":".header__signin-button[data-ember-action='877']"},
             {"action":"click", "search":".header__signin-button[data-ember-action='877']"},
