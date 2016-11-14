@@ -48,11 +48,11 @@ public class RegistrationTheFamily extends HttpServlet {
 		RequestDispatcher rd = null;
 		String dispatch;
 		if (invitationCode == null || email == null)
-			dispatch = "TheFamilyInvitation.jsp";//TO CHANGE
+			dispatch = "TheFamilyInvitation.jsp";
 		else if (user != null)
 			dispatch = "index.jsp";
 		else
-			dispatch = "TheFamilyRegistration.jsp";//TO CHANGE
+			dispatch = "TheFamilyRegistration.jsp";
 		rd = request.getRequestDispatcher(dispatch);
 		rd.forward(request, response);
 	}

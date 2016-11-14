@@ -86,6 +86,7 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, se
                 extension.tabs.inject(tab, ["tools/extensionLight.js","overlay/overlay.css", "overlay/injectOverlay.js"], function(){});
             });
             extension.tabs.onMessage(tab, "reloaded", function (event, sendResponse1) {
+                if(tab.url.indexOf("ease.space")==-1){
                 console.log("-- Page reloaded --");
                     extension.tabs.inject(tab, ["tools/extension.js","jquery-3.1.0.js","contentScripts/actions.js", "contentScripts/connect.js"], function(){
                         extension.storage.get("visitedWebsites", function(visitedWebsites) {
@@ -167,7 +168,10 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, se
                             });
                             });
                         });
-                    });
+                    } else {
+                        endConnection(currentWindow, tab, msg, sendResponse);
+                    }
+                });
             });
         });
     });
