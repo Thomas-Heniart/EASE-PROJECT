@@ -130,15 +130,17 @@ public class getEmailLink extends HttpServlet {
 								"<p></p>" +
 								"<p>La team Ease</p>"
 								, "text/html;charset=utf-8");
-						
 						Transport.send(message);
 						SI.setResponse(200, "Please, go check your email.");
 					}
 				}
 			}
-		} catch (SQLException | MessagingException e) {
+		} catch (SQLException e){
 			e.printStackTrace();
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+		} catch (MessagingException e) {
+			e.printStackTrace();
+			SI.setResponse(ServletItem.Code.EMailNotSended, e.getStackTrace().toString());
 		}
 		SI.sendResponse();
 	}

@@ -54,9 +54,9 @@ public class CleanSavedSessions extends HttpServlet {
 		} else if(!user.isAdmin(session.getServletContext())){
 			SI.setResponse(ServletItem.Code.NoPermission, "You have not the permission.");
 		} else {
-			/*if(db.set("DELETE FROM savedSessions WHERE datetime < SUBTIME(CURRENT_TIMESTAMP, '2 0:0:0.0');") != 0){
+			if(db.set("DELETE FROM savedSessions WHERE datetime < SUBTIME(CURRENT_TIMESTAMP, '2 0:0:0.0');") != 0){
 				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "Error when deleting sessions.");
-			} else {*/
+			} else {
 				SiteManager siteManager = ((SiteManager)session.getServletContext().getAttribute("siteManager"));
 				try {
 					siteManager.refresh(db);
@@ -65,8 +65,8 @@ public class CleanSavedSessions extends HttpServlet {
 					SI.setResponse(ServletItem.Code.LogicError, "Sql failed");
 					SI.sendResponse();
 				}
-				SI.setResponse(200,/*SavedSessions cleaned and */"SiteManager refreshed.");
-			//}
+				SI.setResponse(200,"SavedSessions cleaned and SiteManager refreshed.");
+			}
 		}
 		SI.sendResponse();
 	}

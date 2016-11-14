@@ -57,10 +57,10 @@ public class RegistrationByInvitation extends HttpServlet {
 		User user = (User) session.getAttribute("User");
 		RequestDispatcher rd = null;
 		String dispatch;
-		if (user != null)
-			dispatch = "index.jsp";
-		else if (invitationCode == null || email == null)
+		if (invitationCode == null || email == null)
 			dispatch = "checkForInvitation.jsp";
+		else if (user != null)
+			dispatch = "index.jsp";
 		else
 			dispatch = "registrationByInvitation.jsp";
 		rd = request.getRequestDispatcher(dispatch);
@@ -128,8 +128,10 @@ public class RegistrationByInvitation extends HttpServlet {
 					SI.setResponse(ServletItem.Code.BadParameters, "You have no invitation or you already have an account.");
 				}
 			} catch (SessionException e) {
+				e.printStackTrace();
 				SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 			} catch (SQLException e) {
+				e.printStackTrace();
 				SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 			}
 		}

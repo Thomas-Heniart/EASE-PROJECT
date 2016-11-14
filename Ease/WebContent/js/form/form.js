@@ -557,6 +557,8 @@ var Form = {
 				invitationCode : self.invitationCode
 		};
 		this.beforeSubmit = function() {
+			$(".successHelper", self.qRoot).removeClass("success");
+			$(".errorHelper", self.qRoot).removeClass("error");
 			$(".loadHelper, button[type='submit']", self.qRoot).addClass("loading");
 		};
 		this.successCallback = function(retMsg) {
@@ -565,7 +567,7 @@ var Form = {
 			$(".successHelper", self.qRoot).addClass("success");
 			setTimeout(function() {
 				window.location= "index.jsp";
-			}, 1000);
+			}, 750);
 		};
 		this.errorCallback = function(retMsg) {
 			$(".loadHelper, button[type='submit']", self.qRoot).removeClass("loading");
@@ -583,12 +585,14 @@ var Form = {
 			self.qRoot.addClass("loading");
 		};
 		this.successCallback = function(retMsg) {
+			$(".loadHelper", self.qRoot).removeClass("loading");
 			self.qRoot.removeClass("loading");
 			$(".successHelper p", self.qRoot).text(retMsg);
 			$(".successHelper", self.qRoot).addClass("success");
 			self.reset();
 		};
 		this.errorCallback = function(retMsg) {
+			$(".loadHelper", self.qRoot).removeClass("loading");
 			self.qRoot.removeClass("loading");
 			$(".errorHelper p", self.qRoot).text(retMsg);
 			$(".errorHelper", self.qRoot).addClass("error");
