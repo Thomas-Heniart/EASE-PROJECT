@@ -67,6 +67,7 @@
 		<div class="header-content">
 			<h2>Never bother about authentication again.</h2>
 			<h3>A simple homepage to access your web.</h3>
+			<p></p>
 			<p>EASE connects you to your web accounts in 1 click.</p>
 			<button type="button" class="openRegisterPopup">Get started in 1 min !</button>
 		</div>

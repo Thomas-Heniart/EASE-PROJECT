@@ -42,8 +42,7 @@
 				</span>
 			</div>
 			<div class="terms">
-				<a href="http://www.ease-app.co/privacy" target="_blank">Here is a link to our terms and conditions</a>
-				<label for="termsAndConditions">I accept the terms and conditions</label>
+				<label for="termsAndConditions">I accept the <a href="http://www.ease-app.co/privacy" target="_blank">terms and conditions</a></label>
 				<input oClass="CheckboxInput" type="checkbox" required id="termsAndConditions" name="termsAndConditions" />
 			</div>
 			<button type=submit>GO</button>

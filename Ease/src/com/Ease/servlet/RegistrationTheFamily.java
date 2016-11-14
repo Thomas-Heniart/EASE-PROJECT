@@ -22,7 +22,7 @@ import com.Ease.session.User;
 /**
  * Servlet implementation class NewUser
  */
-@WebServlet(urlPatterns = {"/thefamily"})
+@WebServlet("/thefamily")
 public class RegistrationTheFamily extends HttpServlet {
        
     /**

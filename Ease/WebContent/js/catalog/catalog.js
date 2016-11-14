@@ -175,10 +175,12 @@ $(document).ready(function() {
 		var activeTag = $(".tag-active");
 		activeTag.toggleClass("hvr-grow");
 		activeTag.toggleClass("tag-active");
-		$(event.target).toggleClass("tag-active");
-		$(event.target).toggleClass("hvr-grow");
 		updateCatalogFront(activeTag);
-		updateCatalogFront($(event.target));
+		if(!$(event.target).hasClass("tag-active")){
+			$(event.target).toggleClass("tag-active");
+			$(event.target).toggleClass("hvr-grow");
+			updateCatalogFront($(event.target));
+		}
 	});
 	
 	$("input[name='catalogSearch']").keydown(function(event) {

@@ -8,7 +8,7 @@
             {"action":"fill", "what":"password", "search":"#password"},
             {"action":"click", "search":"#signin_btn"}
         ]
-    }
+    },
     "logout":{
         "todo":[
             {"action":"clickona", "search":"#team_menu"},

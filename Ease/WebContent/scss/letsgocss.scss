@@ -237,13 +237,12 @@
       }
     }
   }
-  form[action='getEmailLink'] {
     .successHelper, .errorHelper {
       position: relative;
       text-align: center;
       display: block;
       width: auto;
-      margin: auto;
+      margin-top: 5px;
       padding: 0 5px;
       height: 0;
       overflow: hidden;
@@ -255,7 +254,7 @@
       border: none !important;
       p {
         margin-top: 2em;
-        font-size: 0.8em;
+        font-size: 0.9em;
         width: auto;
         text-shadow: 0 0 15px $themeColor, 0 0 10px $themeColor, 0 0 5px $themeColor;
         font-weight: bold;
@@ -276,8 +275,17 @@
       padding-bottom: 5px;
       opacity: 1;
     }
-  }
   form[action='getEmailLink'].loading {
+    input, button {
+      display: none !important;
+    }
+    .loadHelper.loading {
+      position: relative;
+      height: 23px;
+      width: 23px;
+    }
+  }
+  form[action='directInvitation'].loading {
     input, button {
       display: none !important;
     }
@@ -493,7 +501,7 @@
           margin-bottom: 3%;
         }
         #GetEmailForm {
-          margin-top: 0 !important;
+          margin-top: 0px !important;
           input, button {
             height: 2em !important;
           }
@@ -507,6 +515,10 @@
     .invitation-content {
       top: 45%;
       form[action='getEmailLink'].loading .loadHelper.loading {
+        height: 50px;
+        width: 50px;
+      }
+      form[action='directInvitation'].loading .loadHelper.loading {
         height: 50px;
         width: 50px;
       }

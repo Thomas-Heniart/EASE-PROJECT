@@ -4,8 +4,8 @@
     "home":"https://www.trainline.eu/",
     "connect":{
         "todo":[
-        	{"action":"waitfor", "time":100, "search":".header__signin-button[data-ember-action='877']"},
-            {"action":"click", "search":".header__signin-button[data-ember-action='877']"},
+        	{"action":"waitfor", "time":100, "search":"button.header__signin-button"},
+            {"action":"click", "search":"button.header__signin-button"},
             {"action":"waitfor", "time":100, "search":".signin__button"},
             {"action":"fill", "what":"login", "search":"#signin-form input[name='email']"},
             {"action":"fill", "what":"password", "search":"#signin-form input[name='password']"},
@@ -14,8 +14,8 @@
     },
     "Facebook":{
     	"todo":[
-    		{"action":"waitfor", "time":100, "search":".header__signin-button[data-ember-action='877']"},
-    		{"action":"click", "search":".header__signin-button[data-ember-action='877']"},
+    		{"action":"waitfor", "time":100, "search":"button.header__signin-button"},
+    		{"action":"click", "search":"button.header__signin-button"},
             {"action":"waitfor", "time":100, "search":".signin__button"},
             {"action":"click", "search":".social-signin-facebook"}
     	]
