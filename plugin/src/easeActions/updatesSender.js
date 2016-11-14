@@ -5,6 +5,9 @@ var directUpdateToDelete = {};
 
 document.addEventListener("NewEaseUser", function(event){
     user = event.detail;
+    if(user=="anonymous"){
+        extension.runtime.sendMessage("Disconnected",{}, function(){});
+    }
     extension.runtime.sendMessage("ChangeEaseUser",{user:event.detail},function(res){});
 }, false);
 

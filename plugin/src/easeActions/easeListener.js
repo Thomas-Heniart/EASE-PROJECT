@@ -21,10 +21,12 @@ document.addEventListener("Logout", function(event){
 }, false);
 
 extension.runtime.onMessage("logoutFrom", function logoutHandler(visitedWebsites, sendResponse){
+    console.log("logout from");
     document.dispatchEvent(new CustomEvent("LogoutFrom", {"detail":visitedWebsites}));
 });
 
 extension.runtime.onMessage("logoutDone", function logoutHandler(message, sendResponse){
+    console.log("logout done");
     document.dispatchEvent(new CustomEvent("LogoutDone", {"detail":message}));
 });
 
