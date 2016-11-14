@@ -207,6 +207,7 @@ var Form = {
 			setTimeout(function() {
 				self.newAppItem.find('.linkImage').removeClass(
 						'scaleOutAnimation');
+				self.newAppItem = null;
 			}, 1000);
 			self.newAppItem.find('.linkImage').attr('onclick',
 					"sendEvent(this)");
@@ -249,6 +250,14 @@ var Form = {
 					+ "</div>");
 			}
 			self.reset();
+			self.appsContainer = null;
+			self.helper = null;
+			self.attributesToSet = {};
+			self.site_id = null;
+			self.profile_id = null;
+			self.app_id = null;
+			self.setPostName('addApp');
+			self.helper = null;
 		}
 		this.errorCallback = function(retMsg) {
 			easeTracker.trackEvent("Add app failed");
@@ -286,6 +295,7 @@ var Form = {
 		}
 		this.afterSubmit = function() {
 			$('#loading').removeClass("la-animate");
+			self.qRoot.find('.AccountApp.selected').removeClass("selected");
 		}
 		this.successCallback = function(retMsg) {
 			self.oParent.close();
@@ -354,7 +364,7 @@ var Form = {
 		};
 		this.submit = function(e) {
 			e.preventDefault();
-			var AppToLoginWith = rootEl.find('.AccountApp.selected');
+			var AppToLoginWith = self.qRoot.find('.AccountApp.selected');
 			if (AppToLoginWith.length) {
 				self.aId = AppToLoginWith.attr('aid');
 			}
@@ -399,6 +409,7 @@ var Form = {
 								self.app.find('.siteName p').text(self.oInputs[0].getVal());
 								self.app.find('.emptyAppIndicator').remove();
 								self.app.removeClass('emptyApp');
+								self.qRoot.find('.AccountApp.selected').removeClass("selected");
 								self.removeAddedFields();
 							});
 		}
@@ -415,7 +426,6 @@ var Form = {
 		}
 		this.successCallback = function(retMsg) {
 			var json = JSON.parse(retMsg);
-			console.log(json);
 			var webId = (self.oParent.app).attr("webid");
 			var x = parseInt($(".catalogApp[idx='" + webId + "'] span.apps-integrated i.count").html());
 			$(".catalogApp[idx='" + webId + "'] span.apps-integrated i.count").html(x-1);

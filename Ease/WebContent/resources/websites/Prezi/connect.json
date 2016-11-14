@@ -1,101 +1,32 @@
 {
-    "website":"prezi",
-    
-    "urls":{
-        "login":"https://prezi.com/login/"
+    "name":"Prezi",
+    "lastLogin":"",
+    "home":"https://prezi.com/",
+    "connect":{
+        "todo":[
+        	{"action":"goto", "url":"https://prezi.com/login"},
+           	{"action":"fill", "what":"login", "search":"input#id_username"},
+            {"action":"val", "what":"password", "search":"input#id_password"},
+            {"action":"click", "search":"button#btn_login"}
+        ]
     },
-    
-    "elements":{
-        
-        "userField":{
-            "id":"id_username"
-        },
-        "passField":{
-            "id":"id_password"
-        },
-        "buttonLogIn":{
-            "id":"btn_login"
-        },
-        "facebookButton":{
-            "id":"facebook-login"
-        }
-        
+    "logout":{
+        "todo":[
+        	{"action":"clickona", "search":"a.logout-page"},
+			{"action":"waitload"}
+           	]
     },
-    
-    "connectionSteps":[
-        {
-            "action":"goTo",
-            "url":"login"
-        },
-        
-        {
-                "action":"catchFail",
-                "if":"missingElement",
-                "elementName":"passField",
-                "actionsIfFail":[{"action":"end"}],
-                "send":"alreadyConnected"
-        },
-        
-        {
-            "action":"do",
-            "elements":[
-                {
-                    "name":"userField",
-                    "action":"fill",
-                    "value":"user"
-                },
-                {
-                    "name":"passField",
-                    "action":"fill",
-                    "value":"pass"
-                },
-                {
-                    "name":"buttonLogIn",
-                    "action":"click"
-                }
-            ]
-        },
-        
-        {
-            "action":"nextPage",
-            "lastPage":true
-        },
-        
-        {
-            "action":"catchFail",
-            "if":"existingElement",
-            "elementName":"passField",
-            "actionsIfFail":[{"action":"end"}],
-            "send":"wrongPassword"
-        }
+    "checkAlreadyLogged":[
+        {"search":"div#header-raleway-notifications"}
     ],
-    
-    "facebookConnectionSteps":[
-        {
-            "action":"goTo",
-            "url":"login"
-        },
-        
-        {
-                "action":"catchFail",
-                "if":"missingElement",
-                "elementName":"passField",
-                "actionsIfFail":[{"action":"end"}],
-                "send":"alreadyConnected"
-        },
-            
-        {
-            "action":"do",
-            "elements":[
-                {
-                    "name":"facebookButton",
-                    "action":"click"
-                }
-            ]
-        },
-        
-        {
-            "action":"facebookConnection"
-        }
-    ]
+    "Facebook": {
+    	"todo": [
+    		{"action":"clickona", "search":"a#facebook-login"}
+    	]
+    },
+    "Linkedin": {
+    	"todo": [
+    		{"action":"clickona", "search":"a#linkedin-login"}
+    	]
+    }
 }
