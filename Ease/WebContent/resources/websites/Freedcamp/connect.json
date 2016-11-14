@@ -1,0 +1,27 @@
+{
+	"name":"Freedcamp",
+	"lastLogin":"",
+	"home":"https://freedcamp.com/login",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#username_input", "grave":true},
+			{"action":"fill", "what":"password", "search":"#password_input", "grave":true},
+			{"action":"click", "search":"button[type='submit']", "grave":true}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"aclick", "search":"a[href*='logout']", "grave":true},
+			{"action":"waitload"},
+			{"action":"goto", "search":"https://freedcamp.com/login"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":"a[href*='logout']"}
+	],
+	"Facebook":{
+		"todo":[
+			{"action":"aclick", "search":"li.facebook a"}
+		]
+	}
+}

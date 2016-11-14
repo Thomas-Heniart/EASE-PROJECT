@@ -91,13 +91,13 @@ public class AddWebsite extends HttpServlet {
 			}
 			dbRequest = dbRequest + haveLogWith + ", null, 0, '" + homePage + "', 0, default, default, default, default, default);";
 			db.set(dbRequest);
-			SiteManager sites = ((SiteManager)session.getServletContext().getAttribute("siteManager"));
+			ResultSet lastIdRs = db.get("SELECT website_id FROM websites WHERE website_id = LAST_INSERT_ID()");
 			try {
-			    ResultSet rs = db.get("SELECT * FROM websites ORDER BY website_name;");
-			    sites.clearSites();
-			    while (rs.next()) {
-			    	sites.add(new Site(rs, db, true));
-			    }
+					if (lastIdRs.next()) {
+						String lastId = lastIdRs.getString(1);
+						db.set("INSET INTO websitesInformations values (NULL, " + lastId + ", 'login', 'text');");
+						db.set("INSET INTO websitesInformations values (NULL, " + lastId + ", 'password', 'password');");
+					}
 			    siteManager.refresh(db);
 			    SI.setResponse(200, "Site added.");
 			} catch (SQLException e) {
