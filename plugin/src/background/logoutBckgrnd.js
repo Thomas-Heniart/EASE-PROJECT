@@ -2,6 +2,7 @@ extension.runtime.bckgrndOnMessage("Logout", function (msg, easeTab, sendRespons
     console.log("-- Global logout --");
     extension.storage.get("visitedWebsites", function(visitedWebsites) {
         extension.runtime.tempBckgrndOnMessage("Disconnected", function (msg, easeTab2, sendResponse){
+            console.log("déco");
             easeTab = easeTab2;
             extension.tabs.sendMessage(easeTab, "logoutFrom", visitedWebsites, function(){});
         });

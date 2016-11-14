@@ -62,7 +62,9 @@ public class ServletItem {
 		CheckConnection,
 		UpdateAdminMessage,
 		ChangeSitePosition,
-		ReminderEmail
+		ReminderEmail,
+		TheFamilyInvitation,
+		TheFamilyRegistration
 	}
 	public enum Code
 	{
@@ -165,7 +167,7 @@ public class ServletItem {
 			saveInDB(db);
 
 		if (retCode == Code.LogicError.ordinal()) {
-			retMsg = "Sorry an internal problem occurred. We are solving it.";
+			retMsg = "Sorry an internal problem occurred. We are solving it asap.";
 		} else {
 			retMsg = ret;
 		}

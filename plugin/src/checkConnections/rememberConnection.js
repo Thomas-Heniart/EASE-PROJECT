@@ -3,6 +3,7 @@ var lastEaseUser = "";
 var lastEaseTab = null;
 
 extension.runtime.bckgrndOnMessage("ChangeEaseUser", function(message, sender, sendResponse){
+    console.log("-- Current ease user : "+message.user +" --");
     lastEaseUser = message.user;
     lastEaseTab = sender;
 });
