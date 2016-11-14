@@ -47,6 +47,18 @@ public class createInvitation extends HttpServlet {
 		// Get Parameters
 		String			email = SI.getServletParam("email");
 		String			group = SI.getServletParam("groupId");
+		if(email!=null){
+			email.replaceAll(" ", "");
+			email.replaceAll("\r", "");
+			email.replaceAll("\n", "");
+			email.replaceAll("\t", "");
+		}
+		if(group!=null){
+			group.replaceAll(" ", "");
+			group.replaceAll("\r", "");
+			group.replaceAll("\n", "");
+			group.replaceAll("\t", "");
+		}
 		// --
 		
 		String			alphabet = "azertyuiopqsdfghjklwxcvbnm1234567890AZERTYUIOPQSDFGHJKLMWXCVBN";
@@ -57,7 +69,7 @@ public class createInvitation extends HttpServlet {
 		Random r = new Random();
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		db.connect();
-		if(/*user == null || !user.isAdmin(session.getServletContext())*/ false){
+		if(user == null || !user.isAdmin(session.getServletContext())){
 			SI.setResponse(ServletItem.Code.NoPermission, "You have not the permission.");
 		} else {
 			try {
@@ -97,14 +109,6 @@ public class createInvitation extends HttpServlet {
 							for (int i = 0;i < 126 ; ++i) {
 								invitationCode += alphabet.charAt(r.nextInt(alphabet.length()));			
 							}
-							email.replaceAll(" ", "");
-							email.replaceAll("\r", "");
-							email.replaceAll("\n", "");
-							email.replaceAll("\t", "");
-							group.replaceAll(" ", "");
-							group.replaceAll("\r", "");
-							group.replaceAll("\n", "");
-							group.replaceAll("\t", "");
 							if (group == null){
 								db.set("insert into invitations values ('" + email + "', '" + invitationCode + "', NULL);");
 								SI.setResponse(200, "Invitation send.");
@@ -160,7 +164,7 @@ public class createInvitation extends HttpServlet {
 				
 				
 			} catch (SQLException e) {
-				SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+				SI.setResponse(ServletItem.Code.LogicError, "SQL Exception");
 			} /*catch (MessagingException e) {
 				retMsg = "error: error when sending mail.";
 			}*/ catch (NumberFormatException e) {
