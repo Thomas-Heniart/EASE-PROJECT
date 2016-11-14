@@ -8,6 +8,295 @@
     visibility: visible;
     opacity: 0.6;
   }
+  .invitation-header {
+    background: url("../resources/images/header-bckgnd.jpg") center no-repeat;
+    background-position: center center;
+    background-size: 100%;
+    position: absolute;
+    width: 100%;
+    height: 35%;
+    .image-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      padding-top: 1.125rem;
+      opacity: 0.4;
+      background-color: #4a4b66;
+    }
+    img {
+      position: absolute;
+      width: 20%;
+      left: 0;
+      top: 0;
+    }
+    .header-content {
+      position: relative;
+      color: #F9F7F7;
+      font-weight: normal;
+      font-family: $defaultFont;
+      width: 80%;
+      margin: auto;
+      margin-top: 13%;
+      text-align: center;
+      h2 {
+        font-size: 1.6em;
+        margin-bottom: 6%;
+      }
+      h3 {
+        font-size: 1.3em;
+        margin-bottom: 10%;
+      }
+      p {
+        font-size: 1em;
+        width: 60%;
+        margin: 0 auto;
+        &:nth-child(4) {
+          margin-bottom: 2em;
+        }
+      }
+      #GetEmailForm {
+        margin-top: 10%;
+        input {
+          outline: none;
+          color: $themeColor;
+          height: 3em;
+          border: none;
+          border-radius: 5px 0px 0px 5px;
+        }
+        button {
+          border: none;
+          border-radius: 0px 5px 5px 0px;
+          height: 3em;
+          background-color: $themeColor;
+          line-height: 3em;
+          vertical-align: middle;
+          color: white;
+        }
+      }
+    }
+  }
+  .invitation-content {
+    position: absolute;
+    top: 35%;
+    width: 100%;
+    text-align: center;
+    .invitation-content-presentation {
+      margin: 2%;
+      p {
+        margin: 0
+      }
+      div {
+        border-bottom: 1px solid $themeColor;
+        width: 35%;
+        margin: auto;
+      }
+    }
+    .content-item {
+      display: block;
+      width: 90%;
+      margin: auto;
+      div {
+        margin: 1%;
+      }
+      video {
+        max-width: 100%;
+	      height: auto;
+      }
+    }
+    .invitation-footer {
+      margin-top: 5%;
+      width: 100%;
+      position: relative;
+      top: 0;
+      background: url("../resources/images/footer-bckgnd.jpg") center no-repeat;
+      background-position: center center;
+      padding-top: 20px;
+      background-size: 100%;
+      #GetEmailForm2 {
+        input {
+          outline: none;
+          color: $themeColor;
+          height: 3em;
+          border: none;
+          border-radius: 5px 0px 0px 5px;
+        }
+        button {
+          border: none;
+          border-radius: 0px 5px 5px 0px;
+          height: 3em;
+          background-color: $themeColor;
+          line-height: 3em;
+          vertical-align: middle;
+          color: white;
+        }
+      }
+      .security, .business {
+        display: inline-block;
+        width: 49%;
+        color: $themeWhiteColor;
+        margin-top: 5%;
+        h3 {
+          font-size: 1.0em;
+          font-weight: bold;
+          width: 50%;
+          text-align: center;
+          margin: 4% auto;
+          margin-top: 1%;
+        }
+        p {
+          margin: auto;
+          width: 75%;
+          text-align: justify;
+          font-size: .8em;
+          a {
+            text-decoration: underline;
+            color: $themeWhiteColor;
+            cursor: pointer;
+          }
+        }
+      }
+      .information {
+        width: 40%;
+        text-align: center;
+        color: $themeWhiteColor;
+        margin: 5% auto;
+      }
+      .contact {
+        position: relative;
+        padding: 0 5px;
+        bottom: 0;
+        background-color: $themeGreySilverColor;
+        font-size: 0.8em;
+        .security-cgu {
+          position: relative;
+          display: inline-block;
+          width: 19%;
+          a {
+            display: block;
+            font-weight: bold;
+            color: $themeColor;
+            text-decoration: none;
+            &:hover {
+              text-decoration: underline;
+              cursor: pointer;
+            }
+          }
+        }
+        .mediaTab {
+      	padding: 5px 0px;
+        position: relative;
+        display: inline-block;
+        width: 60%;
+        text-align: center;
+      		.link {
+      			display: inline-block;
+      			background-color: $themeColor;
+      			width: 20px;
+      			height: 20px;
+      			border-radius: 20px;
+      			position: relative;
+      			&:hover {
+      				background-color: white;
+      				transition: .3s linear;
+              cursor: pointer;
+      				a {
+      					color: $themeColor;
+      				}
+      			}
+      			a {
+      				width: 100%;
+      				height: 100%;
+      				color: white;
+              font-size: 4em;
+      				i {
+      					position: absolute;
+      					top: 50%;
+      					left: 50%;
+                font-size: 50%;
+      					transform: translateX(-50%) translateY(-50%);
+      				}
+      			}
+      		}
+      	}
+        .ease-contact {
+          position: relative;
+          display: inline-block;
+          width: 19%;
+          a, p {
+            color: $themeColor;
+            font-weight: bold;
+            margin: 0;
+          }
+          a {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+  form[action='getEmailLink'] {
+    .successHelper, .errorHelper {
+      position: relative;
+      text-align: center;
+      display: block;
+      width: auto;
+      margin: auto;
+      padding: 0 5px;
+      height: 0;
+      overflow: hidden;
+      border-radius: 7px;
+      transition: opacity .3s;
+      opacity: 0;
+      outline: none;
+      vertical-align: middle;
+      border: none !important;
+
+      p {
+        margin-top: 2em;
+        font-size: 0.8em;
+        width: auto;
+        text-shadow: 0 0 15px $themeColor, 0 0 10px $themeColor, 0 0 5px $themeColor;
+        font-weight: bold;
+        margin: 0;
+      }
+    }
+    .successHelper {
+      color: white;
+    }
+    .errorHelper {
+      color: $themeRedColor;
+    }
+    .successHelper.success, .errorHelper.error {
+      transition: opacity .3s;
+      height: auto;
+      border: 3px solid;
+      padding-top: 7px;
+      padding-bottom: 5px;
+      opacity: 1;
+    }
+  }
+  form[action='getEmailLink'].loading {
+    input, button {
+      display: none !important;
+    }
+    .loadHelper.loading {
+      position: relative;
+      height: 23px;
+      width: 23px;
+    }
+  }
+  button.openRegisterPopup {
+    background-color: #373B60;
+    border: none;
+    border-radius: 10px;
+    padding: 1% 3%;
+    font-size: 1.5em;
+    display: block;
+    margin: auto;
+    color: white;
+  }
   #RegisterPopup {
     width: 30%;
     h2 {
@@ -87,6 +376,7 @@
         a {
           text-decoration: underline;
           color: $themeColor;
+          display: block;
         }
         label {
           font-weight: normal;
@@ -96,6 +386,7 @@
         input {
           display: inline-block !important;
           cursor: pointer;
+          height: 1.8em;
         }
       }
       button[type="submit"] {
@@ -120,207 +411,465 @@
         }
       }
       .loadHelper {
-				transition: opacity .3s;
+        transition: opacity .3s;
         position: relative;
-				width: 40px;
-				opacity: 0;
+        width: 40px;
+        opacity: 0;
         height: O;
         overflow: hidden;
         .sk-circle::before {
           background-color: $themeColor;
         }
-			}
+      }
       .successHelper, .errorHelper {
         position: relative;
         text-align: center;
         min-width: 40%;
         max-width: 90%;
         padding: 0 5px;
-				height: 0;
+        height: 0;
         overflow: hidden;
-				border-radius: 7px;
-				font-size: 14px;
-				background-color: $themeWhiteColor;
-				transition: opacity .3s;
+        border-radius: 7px;
+        font-size: 14px;
+        background-color: $themeWhiteColor;
+        transition: opacity .3s;
         opacity: 0;
-				outline: none;
-				display: inline-block;
-				vertical-align: middle;
+        outline: none;
+        display: inline-block;
+        vertical-align: middle;
         p {
           margin: 0;
         }
       }
-			.successHelper {
-				border-color: green;
-				color: green;
-			}
+      .successHelper {
+        border-color: green;
+        color: green;
+      }
       .errorHelper {
         border-color: $themeRedColor;
         color: $themeRedColor;
       }
       .loadHelper.loading {
-				transition: opacity .3s;
-				opacity: 1;
+        transition: opacity .3s;
+        opacity: 1;
         height: 40px;
-			}
+      }
       button[type='submit'].loading {
         transition: opacity .3s;
-				border-radius: 100px;
-				width: 35px;
+        border-radius: 100px;
+        width: 35px;
         visibility: hidden;
-				opacity: 0;
+        opacity: 0;
         height: 0;
       }
       .successHelper.success, .errorHelper.error {
         margin-top: 35px;
-				transition: opacity .3s;
+        transition: opacity .3s;
         height: auto;
         border: 3px solid;
         padding-top: 7px;
         padding-bottom: 5px;
-				opacity: 1;
+        opacity: 1;
       }
     }
   }
-  #GetEmailForm2 {
-    width: 30%;
-  }
-  #GetEmailForm {
-    width: 50%;
-  }
-  form[action='getEmailLink'] {
-    text-align: center;
-    height: 40px;
-    margin: auto;
-    margin-top: 15px;
-    position: relative;
-    input, button {
-      outline: none;
-      height: 26px;
-      line-height: 26px;
-      border: none;
-      line-height: 100%;
-      vertical-align: middle;
-      margin: 0 !important;
-      position: relative;
-      display: inline-block !important;
-    }
-    input {
-      color: black;
-      padding: 3px;
-      border-radius: 5px 0px 0px 5px;
-    }
-    button {
-      border-radius: 0px 5px 5px 0px !important;
-      text-align: center;
-    }
-    .successHelper, .errorHelper {
-      position: relative;
-      text-align: center;
-      display: block;
-      width: auto;
-      margin: auto;
-      padding: 0 5px;
-      height: 0;
-      overflow: hidden;
-      border-radius: 7px;
-      font-size: 14px;
-      transition: opacity .3s;
-      opacity: 0;
-      outline: none;
-      vertical-align: middle;
-      border: none !important;
+}
 
-      p {
-        width: auto;
-        text-shadow: 0 0 15px $themeColor, 0 0 10px $themeColor, 0 0 5px $themeColor;
-        font-weight: bold;
-        margin: 0;
-      }
+@media only screen and (min-width: 768px) {
+  #invitationBody {
+    .md-overlay {
+      background-color: white !important;
     }
-    .successHelper {
-      color: white;
+    .md-overlay.md-show {
+      visibility: visible;
+      opacity: 0.6;
     }
-    .errorHelper {
-      color: $themeRedColor;
-    }
-    .successHelper.success, .errorHelper.error {
-      transition: opacity .3s;
-      height: auto;
-      border: 3px solid;
-      padding-top: 7px;
-      padding-bottom: 5px;
-      opacity: 1;
-    }
-  }
-  form[action='getEmailLink'].loading {
-    input, button {
-      display: none !important;
-    }
-    .loadHelper.loading {
-      position: relative;
-      height: 50px;
-      width: 50px;
-    }
-  }
-  .invitation-header {
-    background: url("../resources/images/header-bckgnd.jpg") center no-repeat;
-    background-position: center center;
-    background-size: 100%;
-    position: absolute;
-    height: 45%;
-    width: 100%;
-    .image-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      padding-top: 1.125rem;
-      opacity: 0.4;
-      background-color: #4a4b66;
-    }
-    img {
-      position: absolute;
-      width: 10%;
-      left: 0;
-      top: 0;
-    }
-    .header-links {
-      position: absolute;
-      width: fit-content;
-      right: 1%;
-      top: 4%;
-      a {
-        background-color: green;
-        padding: 10px;
-        border-radius: 10px;
-        opacity: 0.8;
-        color: $themeWhiteColor;
-      }
-    }
-    .header-content {
-      position: absolute;
-      width: 60%;
-      text-align: center;
-      left: 20%;
-      color: $themeWhiteColor;
-      bottom: 14%;
-      font-weight: normal;
-      font-family: Helvetica;
+    #RegisterPopup {
+      width: 30%;
       h2 {
-        font-size: 2.2em;
-        margin-bottom: 30px;
+        text-align: center;
+        color: $themeColor;
       }
-      h3 {
-        margin-bottom: 50px;
+      .md-content {
+        background-color: transparent !important;
+        #RegisterForm {
+          background-color: lighten($themeGreySilverColor, 0.3);
+          padding: 25px;
+          border: 2px solid $themeColor;
+          border-radius: 5px;
+          label, input {
+            display: block;
+            color: $themeColor;
+          }
+          input[type='text'], input[type='password'] {
+            width: 70%;
+            border-radius: 4px;
+            border: none;
+            padding: 2px 5px;
+            margin-bottom: 8px;
+            -webkit-appearance: none;
+            &:focus {
+              box-shadow: 0px 0px 0px 2px $themeColor;
+              outline: none;
+            }
+          }
+          label {
+            margin-bottom: 0;
+          }
+          .advice {
+            width: 100%;
+            padding: 5px 10px;
+            border: 1px solid $themeColor;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            p {
+              font-size: 0.8em;
+              color: $themeColor;
+              text-align: justify;
+              margin: 0;
+              strong {
+                text-decoration: underline;
+                font-weight: bold;
+              }
+            }
+          }
+          .input.input--minoru {
+            margin: 0;
+            margin-bottom: 8px;
+            width: 100%;
+            input {
+              float: left;
+              margin-bottom: 0;
+            }
+            .showPassDiv {
+              height: 80%;
+              right: 31%;
+              top: 10%;
+            }
+            #validatorPassword, #validatorConfirmPass {
+              display: inline-block;
+              position: absolute;
+              height: 68%;
+              margin-left: 2%;
+              top: 11%;
+            }
+          }
+        }
+        .terms {
+          width: 80%;
+          font-size: 0.8em;
+          margin: 15px auto;
+          text-align: center;
+          a {
+            text-decoration: underline;
+            color: $themeColor;
+          }
+          label {
+            font-weight: normal;
+            display: inline-block !important;
+            cursor: pointer;
+          }
+          input {
+            display: inline-block !important;
+            cursor: pointer;
+          }
+        }
+        button[type="submit"] {
+          border: 1px solid $themeColor;
+          display: block;
+          width: 30%;
+          margin: auto;
+          padding: 5px;
+          border-radius: 10px;
+          transition: all 0.2s ease;
+          background-color: white;
+          color: $themeColor;
+        }
+        button[type='submit'].Active {
+          background-color: $themeColor;
+          color: white;
+          transition: opacity 0.2s ease;
+          &:hover {
+            background-color: white;
+            color: $themeColor;
+            transition: opacity 0.2s ease;
+          }
+        }
+        .loadHelper {
+  				transition: opacity .3s;
+          position: relative;
+  				width: 40px;
+  				opacity: 0;
+          height: O;
+          overflow: hidden;
+          .sk-circle::before {
+            background-color: $themeColor;
+          }
+  			}
+        .successHelper, .errorHelper {
+          position: relative;
+          text-align: center;
+          min-width: 40%;
+          max-width: 90%;
+          padding: 0 5px;
+  				height: 0;
+          overflow: hidden;
+  				border-radius: 7px;
+  				font-size: 14px;
+  				background-color: $themeWhiteColor;
+  				transition: opacity .3s;
+          opacity: 0;
+  				outline: none;
+  				display: inline-block;
+  				vertical-align: middle;
+          p {
+            margin: 0;
+          }
+        }
+  			.successHelper {
+  				border-color: green;
+  				color: green;
+  			}
+        .errorHelper {
+          border-color: $themeRedColor;
+          color: $themeRedColor;
+        }
+        .loadHelper.loading {
+  				transition: opacity .3s;
+  				opacity: 1;
+          height: 40px;
+  			}
+        button[type='submit'].loading {
+          transition: opacity .3s;
+  				border-radius: 100px;
+  				width: 35px;
+          visibility: hidden;
+  				opacity: 0;
+          height: 0;
+        }
+        .successHelper.success, .errorHelper.error {
+          margin-top: 35px;
+  				transition: opacity .3s;
+          height: auto;
+          border: 3px solid;
+          padding-top: 7px;
+          padding-bottom: 5px;
+  				opacity: 1;
+        }
       }
-      p {
-        width: 52%;
-        margin: 0 auto;
+    }
+    #GetEmailForm2 {
+      width: 30%;
+    }
+    #GetEmailForm {
+      width: 50%;
+    }
+    form[action='getEmailLink'] {
+      text-align: center;
+      height: 40px;
+      margin: auto;
+      margin-top: 15px;
+      position: relative;
+      input, button {
+        outline: none;
+        height: 26px;
+        line-height: 26px;
+        border: none;
+        line-height: 100%;
+        vertical-align: middle;
+        margin: 0 !important;
+        position: relative;
+        display: inline-block !important;
+      }
+      input {
+        color: black;
+        padding: 3px;
+        border-radius: 5px 0px 0px 5px;
       }
       button {
-        margin-top: 10px;
+        border-radius: 0px 5px 5px 0px !important;
+        text-align: center;
+      }
+      .successHelper, .errorHelper {
+        position: relative;
+        text-align: center;
+        display: block;
+        width: auto;
+        margin: auto;
+        padding: 0 5px;
+        height: 0;
+        overflow: hidden;
+        border-radius: 7px;
+        font-size: 14px;
+        transition: opacity .3s;
+        opacity: 0;
+        outline: none;
+        vertical-align: middle;
+        border: none !important;
+
+        p {
+          width: auto;
+          text-shadow: 0 0 15px $themeColor, 0 0 10px $themeColor, 0 0 5px $themeColor;
+          font-weight: bold;
+          margin: 0;
+        }
+      }
+      .successHelper {
+        color: white;
+      }
+      .errorHelper {
+        color: $themeRedColor;
+      }
+      .successHelper.success, .errorHelper.error {
+        transition: opacity .3s;
+        height: auto;
+        border: 3px solid;
+        padding-top: 7px;
+        padding-bottom: 5px;
+        opacity: 1;
+      }
+    }
+    form[action='getEmailLink'].loading {
+      input, button {
+        display: none !important;
+      }
+      .loadHelper.loading {
+        position: relative;
+        height: 50px;
+        width: 50px;
+      }
+    }
+    .invitation-header {
+      background: url("../resources/images/header-bckgnd.jpg") center no-repeat;
+      background-position: center center;
+      background-size: 100%;
+      position: absolute;
+      height: 45%;
+      width: 100%;
+      .image-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        padding-top: 1.125rem;
+        opacity: 0.4;
+        background-color: #4a4b66;
+      }
+      img {
+        position: absolute;
+        width: 10%;
+        left: 0;
+        top: 0;
+      }
+      .header-links {
+        position: absolute;
+        width: fit-content;
+        right: 1%;
+        top: 4%;
+        a {
+          background-color: green;
+          padding: 10px;
+          border-radius: 10px;
+          opacity: 0.8;
+          color: $themeWhiteColor;
+        }
+      }
+      .header-content {
+        position: absolute;
+        width: 60%;
+        text-align: center;
+        left: 20%;
+        color: $themeWhiteColor;
+        bottom: 14%;
+        font-weight: normal;
+        font-family: Helvetica;
+        h2 {
+          font-size: 2.2em;
+          margin-bottom: 30px;
+        }
+        h3 {
+          margin-bottom: 50px;
+        }
+        p {
+          width: 52%;
+          margin: 0 auto;
+        }
+        button {
+          margin-top: 10px;
+          color: white;
+          background-color: $themeColor;
+          border: 1px solid $themeColor;
+          padding: 7px 30px;
+          border-radius: 5px;
+          text-align: center;
+        }
+      }
+    }
+    .invitation-content {
+      position: absolute;
+      width: 100%;
+      top: 45%;
+      padding-top: 15px;
+      background-color: $themeWhiteColor;
+      .invitation-content-presentation {
+        color: $themeColor;
+        margin-bottom: 50px;
+        p {
+          text-align: center;
+          font-size: 1.25em;
+          margin-bottom: 5px;
+        }
+        div {
+          border-bottom: 1px solid $themeColor;
+          width: 28%;
+          margin: auto;
+        }
+      }
+      .content-item {
+        position: relative;
+        width: 90%;
+        margin: auto;
+        video {
+          display: block;
+          margin: auto;
+          padding: 0;
+          margin-bottom: 30px;
+        }
+        div {
+          display: block;
+          position: relative;
+          width: 80%;
+          margin: auto;
+          p {
+            width: 100%;
+            text-align: center;
+            margin: auto;
+            font-size: 1.25em;
+            color: $themeColor;
+          }
+          i {
+            display: block;
+            text-align: center;
+            color: $themeColor;
+            margin-top: 10px;
+            font-size: 1.5em;
+          }
+        }
+      }
+    }
+    .invitation-footer {
+      width: 100%;
+      position: relative;
+      top: 0;
+      background: url("../resources/images/footer-bckgnd.jpg") center no-repeat;
+      background-position: center center;
+      padding-top: 20px;
+      background-size: 100%;
+      button {
+        margin-top: 50px;
+        display: block;
+        margin: auto;
         color: white;
         background-color: $themeColor;
         border: 1px solid $themeColor;
@@ -328,200 +877,105 @@
         border-radius: 5px;
         text-align: center;
       }
-    }
-  }
-  .invitation-content {
-    position: absolute;
-    width: 100%;
-    top: 45%;
-    padding-top: 15px;
-    background-color: $themeWhiteColor;
-    .invitation-content-presentation {
-      color: $themeColor;
-      margin-bottom: 50px;
-      p {
-        text-align: center;
-        font-size: 1.25em;
-        margin-bottom: 5px;
-      }
-      div {
-        border-bottom: 1px solid $themeColor;
-        width: 28%;
-        margin: auto;
-      }
-    }
-    .content-item {
-      position: relative;
-      width: 90%;
-      margin: auto;
-      video {
-        display: block;
-        margin: auto;
-        padding: 0;
-        margin-bottom: 30px;
-      }
-      div {
-        display: block;
-        position: relative;
-        width: 80%;
-        margin: auto;
-        p {
-          width: 100%;
-          text-align: center;
-          margin: auto;
-          font-size: 1.25em;
-          color: $themeColor;
-        }
-        i {
-          display: block;
-          text-align: center;
-          color: $themeColor;
-          margin-top: 10px;
-          font-size: 1.5em;
-        }
-      }
-    }
-  }
-  .invitation-footer {
-    width: 100%;
-    position: relative;
-    top: 0;
-    background: url("../resources/images/footer-bckgnd.jpg") center no-repeat;
-    background-position: center center;
-    padding-top: 20px;
-    background-size: 100%;
-    button {
-      margin-top: 50px;
-      display: block;
-      margin: auto;
-      color: white;
-      background-color: $themeColor;
-      border: 1px solid $themeColor;
-      padding: 7px 30px;
-      border-radius: 5px;
-      text-align: center;
-    }
-    .security, .business {
-      display: inline-block;
-      width: 49%;
-      margin-top: 70px;
-      color: $themeWhiteColor;
-      h3 {
-        font-size: 1.2em;
-        font-weight: bold;
-        width: 50%;
-        text-align: center;
-        margin: 20px auto;
-      }
-      p {
-        margin: auto;
-        width: 52%;
-        text-align: justify;
-        font-size: 1em;
-        a {
-          text-decoration: underline;
-          color: $themeWhiteColor;
-          cursor: pointer;
-        }
-      }
-    }
-    .information {
-      width: 40%;
-      text-align: center;
-      color: $themeWhiteColor;
-      margin: 40px auto;
-      margin-top: 100px;
-    }
-    .contact {
-      position: relative;
-      padding: 10px 20px;
-      bottom: 0;
-      background-color: $themeGreySilverColor;
-      .security-cgu {
-        position: relative;
+      .security, .business {
         display: inline-block;
-        width: 12%;
-        a {
-          display: block;
+        width: 49%;
+        margin-top: 70px;
+        color: $themeWhiteColor;
+        h3 {
+          font-size: 1.2em;
           font-weight: bold;
-          color: $themeColor;
-          text-decoration: none;
-          &:hover {
+          width: 50%;
+          text-align: center;
+          margin: 20px auto;
+        }
+        p {
+          margin: auto;
+          width: 52%;
+          text-align: justify;
+          font-size: 1em;
+          a {
             text-decoration: underline;
+            color: $themeWhiteColor;
             cursor: pointer;
           }
         }
       }
-      .mediaTab {
-    	padding: 5px 0px;
-      position: relative;
-      display: inline-block;
-      width: 75%;
-      text-align: center;
-    		.link {
-    			display: inline-block;
-    			background-color: $themeColor;
-    			width: 30px;
-    			height: 30px;
-    			border-radius: 30px;
-    			position: relative;
-    			&:hover {
-    				background-color: white;
-    				transition: .3s linear;
-            cursor: pointer;
-    				a {
-    					color: $themeColor;
-    				}
-    			}
-    			a {
-    				width: 100%;
-    				height: 100%;
-    				color: white;
-    				font-size: 22px;
-    				i {
-    					position: absolute;
-    					top: 50%;
-    					left: 50%;
-    					transform: translateX(-50%) translateY(-50%);
-    				}
-    			}
-    		}
-    	}
-      .ease-contact {
+      .information {
+        width: 40%;
+        text-align: center;
+        color: $themeWhiteColor;
+        margin: 40px auto;
+        margin-top: 100px;
+      }
+      .contact {
         position: relative;
-        float: right;
-        width: 12%;
-        a, p {
-          color: $themeColor;
-          font-weight: bold;
+        padding: 10px 20px;
+        bottom: 0;
+        background-color: $themeGreySilverColor;
+        .security-cgu {
+          position: relative;
+          display: inline-block;
+          width: 12%;
+          a {
+            display: block;
+            font-weight: bold;
+            color: $themeColor;
+            text-decoration: none;
+            &:hover {
+              text-decoration: underline;
+              cursor: pointer;
+            }
+          }
         }
-        a {
-          text-decoration: underline;
-        }
-      }
-    }
-  }
-  @media only screen and (max-width: 768px) {
-    .invitation-header {
-      width: 496px;
-    }
-    .invitation-content {
-      width: 496px;
-      .content-item {
-        width: 100%;
-        video {
-          width: 480px;
-          height: 320px;
-        }
-      }
-      .invitation-footer {
         .mediaTab {
-          left: 11%;
+      	padding: 5px 0px;
+        position: relative;
+        display: inline-block;
+        width: 75%;
+        text-align: center;
+      		.link {
+      			display: inline-block;
+      			background-color: $themeColor;
+      			width: 30px;
+      			height: 30px;
+      			border-radius: 30px;
+      			position: relative;
+      			&:hover {
+      				background-color: white;
+      				transition: .3s linear;
+              cursor: pointer;
+      				a {
+      					color: $themeColor;
+      				}
+      			}
+      			a {
+      				width: 100%;
+      				height: 100%;
+      				color: white;
+      				font-size: 22px;
+      				i {
+      					position: absolute;
+      					top: 50%;
+      					left: 50%;
+      					transform: translateX(-50%) translateY(-50%);
+      				}
+      			}
+      		}
+      	}
+        .ease-contact {
+          position: relative;
+          float: right;
+          width: 12%;
+          a, p {
+            color: $themeColor;
+            font-weight: bold;
+          }
+          a {
+            text-decoration: underline;
+          }
         }
       }
-    }
-    #invitationForm, #invitationForm2 {
-      width: 100% !important;
     }
   }
 }
