@@ -95,8 +95,8 @@ public class AddWebsite extends HttpServlet {
 			try {
 					if (lastIdRs.next()) {
 						String lastId = lastIdRs.getString(1);
-						db.set("INSET INTO websitesInformations values (NULL, " + lastId + ", 'login', 'text');");
-						db.set("INSET INTO websitesInformations values (NULL, " + lastId + ", 'password', 'password');");
+						db.set("INSERT INTO websitesInformations values (NULL, " + lastId + ", 'login', 'text');");
+						db.set("INSERT INTO websitesInformations values (NULL, " + lastId + ", 'password', 'password');");
 					}
 			    siteManager.refresh(db);
 			    SI.setResponse(200, "Site added.");

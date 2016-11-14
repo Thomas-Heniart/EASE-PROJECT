@@ -11,17 +11,21 @@
 	},
 	"logout":{
 		"todo":[
-			{"action":"aclick", "search":"a[href*='logout']", "grave":true},
-			{"action":"waitload"},
-			{"action":"goto", "search":"https://freedcamp.com/login"}
+			{"action":"goto", "url":"https://freedcamp.com/logout", "grave":true},
+			{"action":"goto", "url":"https://freedcamp.com/login"}
 		]
 	},
 	"checkAlreadyLogged":[
-		{"search":"a[href*='logout']"}
+		{"search":".user"}
 	],
 	"Facebook":{
 		"todo":[
 			{"action":"aclick", "search":"li.facebook a"}
+		]
+	},
+	"Linkedin":{
+		"todo":[
+			{"action":"aclick", "search":"li.linkedin a"}
 		]
 	}
 }
