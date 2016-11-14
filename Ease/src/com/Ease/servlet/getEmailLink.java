@@ -100,7 +100,7 @@ public class getEmailLink extends HttpServlet {
 						message.setRecipients(Message.RecipientType.TO,
 								InternetAddress.parse(email));
 						message.setSubject(MimeUtility.encodeText("Active ton compte Ease !", "utf-8", null));
-						String link = "https://ease.space/registerInv?email=" + email + "&code=" + invitationCode;
+						String link = "https://ease.space/ieseg?email=" + email + "&invitationCode=" + invitationCode;
 						message.setContent("<p>*French version below*</p>" +
 								"<p></p>" +
 								"<p>Hello & welcome to Ease !</p>" +
