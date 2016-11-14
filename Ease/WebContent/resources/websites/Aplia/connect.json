@@ -4,21 +4,17 @@
 	"home":"http://aplia.com/",
 	"connect":{
 		"todo":[
-			{"action":"waitfor", "search":"#sign-in"},
-			{"action":"fill", "what":"login", "search":"#appleId", "grave":true},
-			{"action":"fill", "what":"password", "search":"#pwd", "grave":true},
-			{"action":"click", "search":"#sign-in", "grave":true}
+			{"action":"fill", "what":"login", "search":"#txtEmail", "grave":true},
+			{"action":"fill", "what":"password", "search":"#txtPassword", "grave":true},
+			{"action":"click", "search":"#signin button[type='submit']", "grave":true}
 		]
 	},
 	"logout":{
 		"todo":[
-			{"action":"click", "search":".account-menu", "grave":true},
-			{"action":"waitfor", "search":"div[role='menu']"},
-			{"action":"click", "search":"div[role='menu'] .sc-view .sc-view:nth-child(2) .sc-view .sc-view:last-child()"},
-			{"action":"waitload"}
+			{"action":"goto", "url":"https://courses.aplia.com/af/servlet/logoff"}
 		]
 	},
 	"checkAlreadyLogged":[
-		{"search":".atv4.sc-view.blur-overlay.sc-hidden"}
+		{"search":"a[href='https://courses.aplia.com/af/servlet/logoff']"}
 	]
 }
