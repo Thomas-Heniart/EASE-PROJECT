@@ -171,26 +171,26 @@ var Profile = function(rootEl){
 	});
 	this.addApp = function(login, webid, name, id, ssoid, logwith, url) {
 		self.appContainer.append('<div class="siteLinkBox" login="' + login + '" webid="' + webid + '" name="' + name + '" id="' + id + '" ssoid="' + ssoid + '" move="true" logwith="' + logwith + '">' + 
-									'<div class="linkImage" onclick="sendEvent(this)">' +
-										'<div class="showAppActionsButton">' +
-											'<i class="fa fa-cog"></i>' +
-											'<div class="appActionsPopup">' +
-												'<div class="buttonsContainer">' +
-													'<div class="modifyAppButton menu-item" onclick="showModifyAppPopup(this, event)">' +
-														'<p>Modify</p>' +
-													'</div>' +
-													'<div class="deleteAppButton menu-item" onclick="showConfirmDeleteAppPopup(this, event)">' +
-														'<p>Delete</p>' +
-													'</div>' +
-												'</div>' +
-											'</div>' +
-										'</div>' +
-										'<img class="logo" src="' + url + '">' +
-									'</div>' +
-									'<div class="siteName">' +
-										'<p>' + name + '</p>' +
-									'</div>' +
-								'</div>');
+			'<div class="linkImage" onclick="sendEvent(this)">' +
+			'<div class="showAppActionsButton">' +
+			'<i class="fa fa-cog"></i>' +
+			'<div class="appActionsPopup">' +
+			'<div class="buttonsContainer">' +
+			'<div class="modifyAppButton menu-item" onclick="showModifyAppPopup(this, event)">' +
+			'<p>Modify</p>' +
+			'</div>' +
+			'<div class="deleteAppButton menu-item" onclick="showConfirmDeleteAppPopup(this, event)">' +
+			'<p>Delete</p>' +
+			'</div>' +
+			'</div>' +
+			'</div>' +
+			'</div>' +
+			'<img class="logo" src="' + url + '">' +
+			'</div>' +
+			'<div class="siteName">' +
+			'<p>' + name + '</p>' +
+			'</div>' +
+			'</div>');
 		ease.apps.push(new easeApp(self.appContainer.find("div.siteLinkBox[id=" + id + "]")));
 	}
 	
@@ -254,18 +254,24 @@ var Profile = function(rootEl){
 	//edit name
 	this.qRoot.find('#modifyNameForm #validate').click(function(){
 		var name = $(this).parent().find('input').val();
-		easeLoadingIndicator.show();
-		postHandler.post('editProfileName', {
-			name : name,
-			index : self.id
-		}, function() {
-			easeLoadingIndicator.hide();
-		}, function(retMsg) {
-			easeTracker.trackEvent('Profile name changed');
-			self.setName(name);
-			self.qRoot.find('#modifyNameForm input').val('');
-		}, function(retMsg) {
-		}, 'text');
+		if (name.length){
+			easeLoadingIndicator.show();
+			postHandler.post('editProfileName', {
+				name : name,
+				index : self.id
+			}, function() {
+				easeLoadingIndicator.hide();
+			}, function(retMsg) {
+				easeTracker.trackEvent('Profile name changed');
+				self.setName(name);
+				self.qRoot.find('#modifyNameForm input').val('');
+			}, function(retMsg) {
+			}, 'text');
+		}
+	});
+	this.qRoot.find('#modifyNameForm input').keyup(function(e){
+		if (e.which == 13)
+			self.qRoot.find('#modifyNameForm #validate').click();
 	});
 	this.setName = function(tName){
 		self.profileHeader.find('p').text('@' + tName);
@@ -464,11 +470,11 @@ $(document).ready(function() {
 				if (!attrs.hasOwnProperty(key))
 					continue;
 				switch (key) {
-				case "class":
+					case "class":
 					break;
-				case "style":
+					case "style":
 					break;
-				default:
+					default:
 					ret.attr(key, attrs[key]);
 					break;
 				}
@@ -482,18 +488,18 @@ $(document).ready(function() {
 });
 
 (function(old) {
-	  $.fn.attr = function() {
-	    if(arguments.length === 0) {
-	      if(this.length === 0)
-	        return null;
-	      var obj = {};
-	      $.each(this[0].attributes, function() {
-	        if(this.specified)
-	          obj[this.name] = this.value;
-	      });
-	      return obj;
-	    }
-	    return old.apply(this, arguments);
-	  };
+	$.fn.attr = function() {
+		if(arguments.length === 0) {
+			if(this.length === 0)
+				return null;
+			var obj = {};
+			$.each(this[0].attributes, function() {
+				if(this.specified)
+					obj[this.name] = this.value;
+			});
+			return obj;
+		}
+		return old.apply(this, arguments);
+	};
 })($.fn.attr);
 

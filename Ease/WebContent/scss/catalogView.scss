@@ -832,7 +832,8 @@
 		height:50px;
 		z-index: 3;
 		img {
-			border: 1px solid white;
+		background-color: white;
+			border: 1px solid $borderFbColor;
 			border-radius: 5px;
 			width: 100%;
 		}
