@@ -106,8 +106,8 @@ public class SendVerificationEmail extends HttpServlet {
 
 	public static void sendEmail(String verificationCode, String newEmail, String askingEmail)
 			throws UnsupportedEncodingException, MessagingException {
-		String link = "https://localhost:8080/HelloWorld/AddEmail?email=" + newEmail + "&code=" + verificationCode;
-		//String link = "https://ease.space/AddEmail?email=" + newEmail + "&code=" + verificationCode;
+		//String link = "https://localhost:8080/HelloWorld/AddEmail?email=" + newEmail + "&code=" + verificationCode;
+		String link = "https://ease.space/AddEmail?email=" + newEmail + "&code=" + verificationCode;
 		Properties props = new Properties();
 		props.put("mail.smtp.host", "smtp.gmail.com");
 		props.put("mail.smtp.socketFactory.port", "465");
