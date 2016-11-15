@@ -385,7 +385,6 @@
         a {
           text-decoration: underline;
           color: $themeColor;
-          display: block;
         }
         label {
           font-weight: normal;
@@ -433,6 +432,7 @@
       .successHelper, .errorHelper {
         position: relative;
         text-align: center;
+        text-shadow: none !important;
         min-width: 40%;
         max-width: 90%;
         padding: 0 5px;
@@ -478,6 +478,7 @@
         border: 3px solid;
         padding-top: 7px;
         padding-bottom: 5px;
+        text-shadow: none;
         opacity: 1;
       }
     }
