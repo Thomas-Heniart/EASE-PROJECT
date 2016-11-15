@@ -127,7 +127,7 @@ public class SendVerificationEmail extends HttpServlet {
 				+ "<p>A validation email has been asked by " + askingEmail + ". "
 				+ "<br /><br />To validate this new email in order to receive updates, click on the link <a href='" + link
 				+ "'>here</a>.<br></p>"
-				+ "<p>(If you have not asked for a validation on <span style='text-decoration: underline'>\"ease.space\"</span>, you can ignore this email.)</p>"
+				+ "<p>(If you have not asked for a validation on \"<span style='text-decoration: underline'>ease.space</span>\", you can ignore this email.)</p>"
 				+ "<p>See you soon !</p>" + "<p>The Ease team</p>" + "</div>", "text/html;charset=utf-8");
 		Transport.send(message);
 	}
