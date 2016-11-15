@@ -9,7 +9,7 @@
     },
     "logout": {
     	"todo": [
-    		{"action":"click", "search":"li[ng-click='logout()']"},
+    		{"action":"click", "search":"li[ng-click='logout()']"}
     	]
     },
     "checkAlreadyLogged": [

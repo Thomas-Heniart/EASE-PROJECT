@@ -23,6 +23,7 @@ function rememberWebsite(website){
         }
         if (typeof visitedWebsites === "undefined" || visitedWebsites == null || visitedWebsites == undefined || visitedWebsites.length == 0 || visitedWebsites == {})
             visitedWebsites = [];
+        console.log(visitedWebsites);
         visitedWebsites.push(website);
         extension.storage.set("visitedWebsites", visitedWebsites);
 

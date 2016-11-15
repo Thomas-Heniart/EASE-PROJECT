@@ -240,6 +240,7 @@
     }
   }
     .successHelper, .errorHelper {
+      pointer-events: none;
       position: relative;
       text-align: center;
       display: block;
@@ -269,6 +270,7 @@
       color: $themeRedColor;
     }
     .successHelper.success, .errorHelper.error {
+      pointer-events: none;
       transition: opacity .3s;
       height: auto;
       border: 3px solid;
