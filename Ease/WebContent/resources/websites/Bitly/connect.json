@@ -7,7 +7,6 @@
         	{"action":"goto", "url":"https://bitly.com/a/sign_in"},
             {"action":"fill", "what":"login", "search":"input[name='username']"},
             {"action":"val", "what":"password", "search":"input[name='password']"},
-            {"action":"search", "search":"form#sign-in input[type='submit'].button.button-primary.sign-up-in"},
             {"action":"click", "search":"form#sign-in input[type='submit'].button.button-primary.sign-up-in"}
         ]
     },
