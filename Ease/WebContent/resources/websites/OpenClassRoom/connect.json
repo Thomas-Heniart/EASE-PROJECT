@@ -16,7 +16,7 @@
 	},
 	"checkAlreadyLogged":[
 		{"search":"a[href*='/logout?'][class='popOutList__link']"}
-	]
+	],
 	"Facebook": {
 		"todo":[
 			{"action":"clickona", "search":"a.formLogin__facebook"}

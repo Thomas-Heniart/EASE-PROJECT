@@ -1,15 +1,27 @@
 cleanEveryConnections();
 var lastEaseUser = "";
+var lastEaseUserNotAnonymous = "";
 var lastEaseTab = null;
 
 extension.runtime.bckgrndOnMessage("ChangeEaseUser", function(message, sender, sendResponse){
     console.log("-- Current ease user : "+message.user +" --");
     lastEaseUser = message.user;
+    if(lastEaseUser != "anonymous" && lastEaseUser != lastEaseUserNotAnonymous){
+        extension.storage.set("visitedWebsites", [], function(){});
+        lastEaseUserNotAnonymous = lastEaseUser;
+        console.log("-- Current ease user : "+ lastEaseUserNotAnonymous +" --");
+    } else if (lastEaseUser == "anonymous"){
+        console.log("-- Disconnected from Ease --");
+    }
     lastEaseTab = sender;
 });
 
 extension.runtime.bckgrndOnMessage("GetEaseUser", function(message, sender, sendReponse){
     sendResponse(getCurrentUser());
+});
+
+extension.runtime.bckgrndOnMessage("GetLastEaseUser", function(message, sender, sendReponse){
+    sendResponse(lastEaseUserNotAnonymous);
 });
 
 function getCurrentUser(){
