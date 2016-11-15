@@ -73,11 +73,20 @@ public class SendVerificationEmail extends HttpServlet {
 		} else if (user.getEmails().containsKey(email) == false) {
 			SI.setResponse(ServletItem.Code.LogicError, "Email already verified.");
 		} else {
-			String verificationCode = null;
+			String verificationCode = "";
 			ResultSet rs = db.get("SELECT verificationCode FROM usersEmails WHERE email = '" + email + "' AND user_id = " + user.getId() + ";");
 			try {
 				if (rs.next()) {
-					verificationCode = rs.getString(1);
+					String code = rs.getString(1);
+					if (code == null) {
+						String alphabet = "azertyuiopqsdfghjklwxcvbnm1234567890AZERTYUIOPQSDFGHJKLMWXCVBN";
+						Random r = new Random();
+						for (int i = 0; i < 126; ++i)
+							verificationCode += alphabet.charAt(r.nextInt(alphabet.length()));
+						db.set("UPDATE usersEmails SET verificationCode = '" + verificationCode + "' WHERE user_id = " + user.getId() + " AND email = '" + email + "';");
+					}
+					else
+						verificationCode = code;
 				} else {
 					String alphabet = "azertyuiopqsdfghjklwxcvbnm1234567890AZERTYUIOPQSDFGHJKLMWXCVBN";
 					Random r = new Random();
@@ -97,8 +106,8 @@ public class SendVerificationEmail extends HttpServlet {
 
 	public static void sendEmail(String verificationCode, String newEmail, String askingEmail)
 			throws UnsupportedEncodingException, MessagingException {
-		//String link = "https://localhost:8080/HelloWorld/AddEmail?email=" + newEmail + "&code=" + verificationCode;
-		String link = "https://ease.space/AddEmail?email=" + newEmail + "&code=" + verificationCode;
+		String link = "https://localhost:8080/HelloWorld/AddEmail?email=" + newEmail + "&code=" + verificationCode;
+		//String link = "https://ease.space/AddEmail?email=" + newEmail + "&code=" + verificationCode;
 		Properties props = new Properties();
 		props.put("mail.smtp.host", "smtp.gmail.com");
 		props.put("mail.smtp.socketFactory.port", "465");
@@ -116,9 +125,9 @@ public class SendVerificationEmail extends HttpServlet {
 		message.setSubject(MimeUtility.encodeText("Validation email !", "utf-8", null));
 		message.setContent("<div style='color: black;'><p>Hello !<br /></p>"
 				+ "<p>A validation email has been asked by " + askingEmail + ". "
-				+ "To validate this new email in order to receive updates, click on the link <a href='" + link
-				+ "'>here</a>.</p>"
-				+ "<p>(If you have not asked for a validation on <a href='https://ease.space'>https://ease.space</a>, you can ignore this email.)</p>"
+				+ "<br /><br />To validate this new email in order to receive updates, click on the link <a href='" + link
+				+ "'>here</a>.<br></p>"
+				+ "<p>(If you have not asked for a validation on <span style='text-decoration: underline'>\"ease.space\"</span>, you can ignore this email.)</p>"
 				+ "<p>See you soon !</p>" + "<p>The Ease team</p>" + "</div>", "text/html;charset=utf-8");
 		Transport.send(message);
 	}

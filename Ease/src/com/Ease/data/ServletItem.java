@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -174,5 +176,25 @@ public class ServletItem {
 		response.setCharacterEncoding("UTF-8");
 		String resp = retCode + " " + retMsg;
 		response.getWriter().print(resp);
+	}
+	
+	public void sendResponseAndRedirect(String url) throws IOException, ServletException {
+		DataBase db = (DataBase)request.getSession().getServletContext().getAttribute("DataBase");
+		user = ((User)request.getSession().getAttribute("User") == null) ? user : (User)request.getSession().getAttribute("User");
+		String ret = retMsg;
+		if (type == Type.AskInfo && retCode == 200) {
+			retMsg = "Info sended.";
+		} else if (type == Type.SaveSessionServlet && retCode == 200) {
+			retMsg = "Session saved for user_id "+user.getId();
+		}
+		if (retCode != Code.DatabaseNotConnected.ordinal() && type != Type.CatalogSearchServlet && type != Type.RequestedWebsitesServlet && !retMsg.equals(""))
+			saveInDB(db);
+
+		if (retCode == Code.LogicError.ordinal()) {
+			retMsg = "Sorry an internal problem occurred. We are solving it asap.";
+		} else {
+			retMsg = ret;
+		}
+		response.sendRedirect(url);
 	}
 }

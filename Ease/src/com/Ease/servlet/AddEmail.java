@@ -66,6 +66,7 @@ public class AddEmail extends HttpServlet {
 			user.validateEmail(email);
 		}
 		SI.setResponse(200, "Successfully added email");
+		SI.sendResponseAndRedirect("index.jsp?openSettings='true'");
 	}
 
 	/**
