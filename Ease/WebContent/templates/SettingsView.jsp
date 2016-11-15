@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<div class="SettingsView">
+<div class="SettingsView <c:if test='${settingsOpen ne null}'>show</c:if>">
 	<div class="settingsWindow">
 		<div class="quit">
 			<i class="fa fa-times" aria-hidden="true"></i>

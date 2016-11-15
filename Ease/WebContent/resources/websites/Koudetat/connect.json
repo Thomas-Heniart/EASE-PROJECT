@@ -11,6 +11,7 @@
     },
     "Facebook": {
     	"todo": [
+    		{"action":"waitfor", "search":"button.facebook-btn.login-btn"},
     		{"action":"click", "search":"button.facebook-btn.login-btn"}
     	]
     },
