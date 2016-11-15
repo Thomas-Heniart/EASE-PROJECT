@@ -66,6 +66,9 @@ public class EditApp extends HttpServlet {
 		String name = SI.getServletParam("name");
 		String appIdParam = SI.getServletParam("appId");
 		Map<String, String> informations = new HashMap<String, String>();
+
+		if (wPassword != null)
+			informations.put("password", wPassword);
 		// --
 
 		App app = null;
@@ -76,7 +79,7 @@ public class EditApp extends HttpServlet {
 			ResultSet informationsRs = db.get("SELECT information_name FROM websitesInformations WHERE website_id =" + user.getApp(appId).getSite().getId() + " AND information_name <> 'password';");
 			while (informationsRs.next())
 				informations.put(informationsRs.getString(1), SI.getServletParam(informationsRs.getString(1)));
-			informations.put("password", wPassword);
+			
 			String login = informations.get("login");
 			
 			if (user == null) {
@@ -87,7 +90,7 @@ public class EditApp extends HttpServlet {
 			} else {
 				String logWithId = SI.getServletParam("lwId");
 				if (logWithId == null || logWithId.isEmpty()) {
-					if ((login == null || login.equals("")) && (wPassword == null || wPassword.equals(""))) {
+					if ((login == null || login.equals(""))) {
 						SI.setResponse(ServletItem.Code.BadParameters, "Bad login or password.");
 					} else if (name == null || name.length() > 14) {
 						SI.setResponse(ServletItem.Code.BadParameters, "Bad name.");
@@ -98,7 +101,7 @@ public class EditApp extends HttpServlet {
 						if (app.havePerm(App.AppPerm.MODIFY, session.getServletContext())) {
 							transaction = db.start();
 							if (app.getType().equals("LogWithAccount") == true) {
-								if (login == null || login.equals("") || wPassword == null || wPassword.equals("")) {
+								if (login == null || login.equals("")) {
 									SI.setResponse(ServletItem.Code.BadParameters, "Bad login or password.");
 								} else {
 									Site site = app.getSite();
@@ -114,6 +117,7 @@ public class EditApp extends HttpServlet {
 									SI.setResponse(200, tmp.getSite().getName() + " edited.");
 								}
 							} else if (app.getType().equals("ClassicAccount") == true) {
+								
 								ClassicAccount account = (ClassicAccount) app.getAccount();
 								account.updateWithInformations(informations);
 								account.updateInDB(session.getServletContext(), user.getUserKey());
