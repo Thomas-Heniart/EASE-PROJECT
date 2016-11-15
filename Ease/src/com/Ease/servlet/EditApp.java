@@ -66,13 +66,10 @@ public class EditApp extends HttpServlet {
 		String name = SI.getServletParam("name");
 		String appIdParam = SI.getServletParam("appId");
 		Map<String, String> informations = new HashMap<String, String>();
-		
 		// --
 
 		App app = null;
 		boolean transaction = false;
-
-		
 
 		try {
 			int appId = Integer.parseInt(appIdParam);
