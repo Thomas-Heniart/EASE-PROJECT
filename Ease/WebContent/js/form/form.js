@@ -374,15 +374,20 @@ var Form = {
 				self.params[elemName] = elemValue;
 				if (elemName != "password")
 					self.attributesToSet[elemName] = elemValue;
-				else
-					self.password = elemValue;
+				else {
+					if (elemValue != null && elemValue != "" ) {
+						self.password = elemValue;
+					}
+						
+				}
 			});
 			self.params = {
 				name : self.oInputs[0].getVal(),
 				appId : self.appId,
-				lwId : self.aId,
-				wPassword : self.password	
+				lwId : self.aId	
 			};
+			if (self.password != null)
+				self.params["wPassword"] = self.password;
 			for (var key in self.attributesToSet) {
 				if (!self.attributesToSet.hasOwnProperty(key))
 					continue;
