@@ -4,7 +4,7 @@
 <div id="tutorialView"  style="z-index: 500;">
 	<div class="bublePopup step1" style="display:none;">
 		<div class="popupContent">
-			<p>Access the catalogue to add your personal apps</p>
+			<p>Access the catalog to add your personal apps</p>
 		</div>
 		<div class="caretHelper">
 			<i class="fa fa-caret-right" aria-hidden="true"></i>
