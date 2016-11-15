@@ -96,10 +96,10 @@ public class User {
 				try {
 					rs.next();
 					this.id = rs.getString(1);
-					Profile profile = new Profile("Side", "#FFFFFF", "", this, "NULL", context, true);
+					Profile profile = new Profile("Side", "#FFFFFF", "", this, null, context, true);
 					this.profiles.add(profile);
 					this.profilesDashboard.get(0).add(profile);
-					profile = new Profile("Perso", "#35a7ff", "", this, "NULL", context, false);
+					profile = new Profile("Perso", "#35a7ff", "", this, null, context, false);
 					this.profiles.add(profile);
 					this.profilesDashboard.get(1).add(profile);
 					loadEmails(context);
@@ -150,7 +150,7 @@ public class User {
 
 			loadProfiles(context);
 			if (this.profilesDashboard.get(0).isEmpty()) {
-				Profile profile = new Profile("Side", "#FFFFFF", "", this, "NULL", context, true);
+				Profile profile = new Profile("Side", "#FFFFFF", "", this, null, context, true);
 				this.profiles.add(profile);
 				this.profilesDashboard.get(0).add(profile);
 			}
@@ -203,7 +203,7 @@ public class User {
 
 			loadProfiles(context);
 			if (this.profilesDashboard.get(0).isEmpty()) {
-				Profile profile = new Profile("Side", "#FFFFFF", "", this, "NULL", context, true);
+				Profile profile = new Profile("Side", "#FFFFFF", "", this, null, context, true);
 				this.profiles.add(profile);
 				this.profilesDashboard.get(0).add(profile);
 			}

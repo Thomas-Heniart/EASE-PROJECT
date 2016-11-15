@@ -378,13 +378,14 @@
         }
       }
       .terms {
-        width: 80%;
+        width: 100%;
         font-size: 0.8em;
         margin: 15px auto;
         text-align: center;
         a {
           text-decoration: underline;
           color: $themeColor;
+          display : inline-block;
         }
         label {
           font-weight: normal;
@@ -393,6 +394,7 @@
         }
         input {
           display: inline-block !important;
+          vertical-align: middle;
           cursor: pointer;
           height: 1.8em;
         }
@@ -430,9 +432,9 @@
         }
       }
       .successHelper, .errorHelper {
+        pointer-events: none;
         position: relative;
         text-align: center;
-        text-shadow: none !important;
         min-width: 40%;
         max-width: 90%;
         padding: 0 5px;
@@ -444,10 +446,11 @@
         transition: opacity .3s;
         opacity: 0;
         outline: none;
-        display: inline-block;
+        display: block;
         vertical-align: middle;
         p {
-          margin: 0;
+          margin: 0 !important;
+          text-shadow: none !important;
         }
       }
       .successHelper {

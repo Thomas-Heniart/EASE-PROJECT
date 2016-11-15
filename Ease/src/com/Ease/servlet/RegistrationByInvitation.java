@@ -94,7 +94,7 @@ public class RegistrationByInvitation extends HttpServlet {
 		} else if (db.connect() != 0){
 			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 		} else if (fname == null || fname.length() < 2){
-			SI.setResponse(ServletItem.Code.BadParameters, "Wrong name");	
+			SI.setResponse(ServletItem.Code.BadParameters, "Your name is too short.");	
 		}  else if (email == null || Regex.isEmail(email) == false){
 			SI.setResponse(ServletItem.Code.BadParameters, "Incorrect email.");
 		} else if (password == null || Regex.isPassword(password) == false) {

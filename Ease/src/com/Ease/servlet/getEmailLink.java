@@ -131,7 +131,7 @@ public class getEmailLink extends HttpServlet {
 								"<p>La team Ease</p>"
 								, "text/html;charset=utf-8");
 						Transport.send(message);
-						SI.setResponse(200, "Please, go check your email.");
+						SI.setResponse(200, "Please, go check your email at "+email+" ;)");
 					}
 				}
 			}

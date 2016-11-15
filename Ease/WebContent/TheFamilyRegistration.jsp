@@ -60,7 +60,7 @@
 </head>
 
 <body id="invitationBody">
-	<%@ include file="templates/PopupRegister.jsp" %>
+	<%@ include file="templates/PopupRegisterTheFamily.jsp" %>
 	<div class="invitation-header">
 		<div class="image-overlay"></div>
 		<img src="resources/images/Ease_Logo.png" />
