@@ -59,6 +59,7 @@
       #GetEmailForm {
         margin-top: 10%;
         input {
+          padding : 5px;
           outline: none;
           color: $themeColor;
           height: 3em;
@@ -116,6 +117,7 @@
       background-size: 100%;
       #GetEmailForm2 {
         input {
+          padding: 5px;
           outline: none;
           color: $themeColor;
           height: 3em;
@@ -242,7 +244,6 @@
       text-align: center;
       display: block;
       width: auto;
-      margin-top: 5px;
       padding: 0 5px;
       height: 0;
       overflow: hidden;
@@ -253,7 +254,7 @@
       vertical-align: middle;
       border: none !important;
       p {
-        margin-top: 2em;
+        margin-top: 2em !important;
         font-size: 0.9em;
         width: auto;
         text-shadow: 0 0 15px $themeColor, 0 0 10px $themeColor, 0 0 5px $themeColor;
