@@ -31,11 +31,11 @@ public class Mail {
 			Session msession = Session.getDefaultInstance(props,
 					new javax.mail.Authenticator() {
 				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication("sergii@ease-app.co","xaYsgG4-");
+					return new PasswordAuthentication("benjamin@ease-app.co","bpease.P2211");
 				}
 			});
 			message = new MimeMessage(msession);
-			message.setFrom(new InternetAddress("sergii@ease-app.co", "Ease Team"));
+			message.setFrom(new InternetAddress("benjamin@ease-app.co", "Ease Team"));
 		} catch (UnsupportedEncodingException e) {
 			throw new MessagingException();
 		} 		
