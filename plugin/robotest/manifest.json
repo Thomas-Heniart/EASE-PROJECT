@@ -1,0 +1,29 @@
+{
+"manifest_version": 2,
+    
+"name" :"ROBOTEST",
+"version" :"0.0.1",
+"description" :"Ease extension, log you in and out",
+    
+"icons": {
+    "128": "images/logo_128.png"
+},
+    
+"browser_action": {
+    "default_popup" : "functionnalities/popup.html",
+    "default_icon": "images/logo_296.png"
+},
+      
+"content_scripts": [
+    {
+      "matches": ["https://ease.space/*", "https://www.ease.space/*", "http://ease.space/*", "http://www.ease.space/*","http://localhost:8080/HelloWorld/*", "https://localhost:8443/HelloWorld/*", "http://localhost:8080/BackofficeUniv/*"],
+      "js": ["jquery-3.1.0.js", "tools/extension.js", "easeListener.js"]
+    }
+  ],
+    
+"background":{
+    "page" : "background/background.html",
+    "persistent": false
+},
+"permissions": ["tabs","\u003Call_urls\u003E","http://*/*", "https://*/*","webNavigation","storage"]
+}
