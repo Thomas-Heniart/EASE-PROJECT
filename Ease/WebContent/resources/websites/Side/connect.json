@@ -1,0 +1,24 @@
+{
+	"name":"Side",
+	"lastLogin":"",
+	"home":"https://www.side.co/job-board",
+	"connect":{
+		"todo":[
+    		{"action":"goto", "url":"https://www.side.co/signin"},
+			{"action":"fill", "what":"login", "search":"#signin-block-content input[name='email']", "grave":true},
+			{"action":"fill", "what":"password", "search":"#signin-block-content input[name='password']", "grave":true},
+			{"action":"click", "search":"#login-button[type='submit']", "grave":true}
+		]
+	},
+	"logout":{
+		"todo":[
+            {"action":"waitfor", "search":".sidebar #applicant-settings-sb a"},
+	   		{"action":"clickona", "search":".sidebar #applicant-settings-sb a"},
+            {"action":"waitfor", "search":"#disconnect"},
+    		{"action":"clickona", "search":"#disconnect"}    		
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":".sidebar"}
+	]
+}

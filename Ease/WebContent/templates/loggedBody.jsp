@@ -48,7 +48,7 @@ response.addCookie(email);
 <c:set var="siteList"		scope="session" value='${siteManager.getSitesList()}'/>
 <c:set var="tags"			scope="session"	value='${servletContext.getAttribute("Tags")}'/>
 <c:set var="tagAndSiteMapping"	scope="session" value='${servletContext.getAttribute("TagAndSiteMapping")}'/>
-
+<c:set var="settingsOpen" scope="session" value="${param.openSettings}"/>
 <script type="text/javascript">
 $(document).ready(function(){
 	setTimeout(function(){
@@ -58,9 +58,9 @@ $(document).ready(function(){
 </script>
 
 <div id="loggedBody">
-    <div class="col-left show" style="width: 100%; float:left">
+    <div class="col-left <c:if test='${settingsOpen eq null}'>show</c:if>" style="width: 100%; float:left">
 		<%@ include file="ProfileView.jsp"%>
-			<div class="MenuButtonSet show">
+			<div class="MenuButtonSet">
 		<button id="enterEditMode" state="off" class="button"><img src="resources/icons/menu_icon.png"/>
 			<div class="openCatalogHelper"></div>
 		</div>

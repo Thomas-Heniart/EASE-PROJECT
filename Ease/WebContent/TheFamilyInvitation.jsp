@@ -66,9 +66,9 @@
 		<div class="header-content">
 			<h2>Never bother about authentication again.</h2>
 			<h3>A simple homepage to access your web.</h3>
-			<p>IESEG students & IESEG staff,</p>
-			<p>EASE now connects you to your school web accounts in 1 click.</p>
-			<form oClass="GetEmailForm" id="GetEmailForm" action="getEmailLink">
+			<p></p>
+			<p>EASE connects you to your web accounts in 1 click.</p>
+			<form oClass="GetEmailForm" id="GetEmailForm" action="directInvitation">
 				<input type="text" oClass="NoEmptyInput" name="email" placeholder="Enter your email"/><button type="submit">Go</button>
 				<div class="loadHelper centeredItem">
 					<div class="sk-fading-circle">
@@ -93,7 +93,7 @@
 	</div>
 	<div class="invitation-content">
 		<div class="invitation-content-presentation">
-			<p>Scroll to see the new interface to access IESEG services… and more ;) !</p>
+			<p>Scroll to see the new interface… and more ;) !</p>
 			<div></div>
 		</div>
 		<div class="content-item">
@@ -127,7 +127,7 @@
 			</video>
 		</div>
 		<div class="invitation-footer">
-			<form oClass="GetEmailForm" id="GetEmailForm2" action="getEmailLink">
+			<form oClass="GetEmailForm" id="GetEmailForm2" action="directInvitation">
 				<input type="text" oClass="NoEmptyInput" name="email" placeholder="Enter your email"/><button type="submit">Go</button>			
 				<div class="loadHelper centeredItem">
 					<div class="sk-fading-circle">

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.Random;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -24,65 +25,71 @@ import javax.servlet.annotation.WebServlet;
 import com.Ease.context.DataBase;
 import com.Ease.data.Regex;
 import com.Ease.data.ServletItem;
-import com.Ease.session.User;
 
-@WebServlet("/getEmailLink")
-public class getEmailLink extends HttpServlet {
-    
-    /**
+@WebServlet("/directInvitation")
+public class directInvitation extends HttpServlet {
+
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
-     * @see HttpServlet#HttpServlet()
-     */
-    public getEmailLink() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public directInvitation() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
 		rd.forward(request, response);
 	}
-
+	
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		HttpSession session = request.getSession();
-		User user = (User)(session.getAttribute("User"));
-		ServletItem SI = new ServletItem(ServletItem.Type.GetMailLink, request, response, user);
+		ServletItem SI = new ServletItem(ServletItem.Type.TheFamilyInvitation, request, response, null);
 		
 		// Get Parameters
-		String email = SI.getServletParam("email");
+		String	email = SI.getServletParam("email");
+		if(email!=null){
+			email.replaceAll(" ", "");
+			email.replaceAll("\r", "");
+			email.replaceAll("\n", "");
+			email.replaceAll("\t", "");
+		}
 		// --
-		email.replaceAll(" ", "");
-		email.replaceAll("\r", "");
-		email.replaceAll("\n", "");
-		email.replaceAll("\t", "");
 		
-		String invitationCode = null;
+		String			alphabet = "azertyuiopqsdfghjklwxcvbnm1234567890AZERTYUIOPQSDFGHJKLMWXCVBN";
+		String			invitationCode = "";
 		Properties props = new Properties();
-		
+		ResultSet		rs;
+		Random r = new Random();
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
-		try {
-			if (db.connect() != 0){
-				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
-			} else if (email == null || Regex.isEmail(email) == false){
-				SI.setResponse(ServletItem.Code.BadParameters, "This is not an email.");
-			} else {		
-				ResultSet rs;
-				rs = db.get("select * from users where email ='" + email + "';");
-				if (rs.next()) {
-					SI.setResponse(ServletItem.Code.BadParameters, "An account already exist with this email, to claim it, please email : benjamin@ease-app.co");
-				} else {
-					if ((rs = db.get("select * from invitations where email ='" + email + "';")) == null || !(rs.next())){
-						SI.setResponse(ServletItem.Code.BadParameters, "Sorry you are not on the list. Try with your IESEG mail or contact us at victor@ease-app.co");
+		db.connect();
+
+			try {
+				if (email == null || Regex.isEmail(email) == false){
+					SI.setResponse(ServletItem.Code.BadParameters, "This is not an email.");
+				} else {					
+					rs = db.get("select * from users where email='" + email + "';");
+					if (rs.next()) {
+						SI.setResponse(199, "You already have an account.");
 					} else {
-						invitationCode = rs.getString(2);
+						rs = db.get("select * from invitations where email='" + email + "';");
+						if (rs.next()) {
+							invitationCode = rs.getString(2);
+						} else {
+							for (int i = 0;i < 126 ; ++i) {
+								invitationCode += alphabet.charAt(r.nextInt(alphabet.length()));			
+							}
+							db.set("insert into invitations values ('" + email + "', '" + invitationCode + "', NULL);");
+						}
+
 						props.put("mail.smtp.host", "smtp.gmail.com");
 						props.put("mail.smtp.socketFactory.port", "465");
 						props.put("mail.smtp.socketFactory.class",
@@ -100,7 +107,7 @@ public class getEmailLink extends HttpServlet {
 						message.setRecipients(Message.RecipientType.TO,
 								InternetAddress.parse(email));
 						message.setSubject(MimeUtility.encodeText("Active ton compte Ease !", "utf-8", null));
-						String link = "https://ease.space/ieseg?email=" + email + "&invitationCode=" + invitationCode;
+						String link = "https://ease.space/thefamily?email=" + email + "&invitationCode=" + invitationCode;
 						message.setContent("<p>*French version below*</p>" +
 								"<p></p>" +
 								"<p>Hello & welcome to Ease !</p>" +
@@ -131,17 +138,14 @@ public class getEmailLink extends HttpServlet {
 								"<p>La team Ease</p>"
 								, "text/html;charset=utf-8");
 						Transport.send(message);
-						SI.setResponse(200, "Please, go check your email at "+email+" ;)");
+						SI.setResponse(200, "Please, go check your mails at "+ email +" ;)");
 					}
 				}
+			} catch (SQLException e) {
+				SI.setResponse(ServletItem.Code.LogicError, "SQL Exception");
+			} catch (MessagingException e) {
+				SI.setResponse(ServletItem.Code.EMailNotSended, "Error when sending email. Check if the email is correct, or reload the page and try again.");
 			}
-		} catch (SQLException e){
-			e.printStackTrace();
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
-		} catch (MessagingException e) {
-			e.printStackTrace();
-			SI.setResponse(ServletItem.Code.EMailNotSended, e.getStackTrace().toString());
-		}
 		SI.sendResponse();
 	}
 }

@@ -46,15 +46,16 @@
 		background-color: #CCCCCC;
 		border: 1px solid $borderFbColor;
 		letter-spacing: 1px;
-		color: $themeColor;
+		color: white;
 		opacity: 1;
-		font-weight: 700;
+		font-weight: normal;
 	}
 	button#accept.Active {
-		background-color: darken($themeGreenColor, 20%);
-		text-shadow: 0px 0px 1px white;
+		background-color: darken($themeGreenColor, 10%);
+		border: 1px solid darken($themeGreenColor, 10%);
 		&:hover {
 			background-color: $themeGreenColor;
+			border-color: $themeGreenColor;
 		}
 	}
 	button#close {
@@ -62,8 +63,7 @@
 		color: white;
 		border-color: $themeDarkGreyColor;
 		letter-spacing: 1px;
-		font-weight: 700;
-		text-shadow: 0px 0px 2px $themeColor;
+		font-weight: normal;
 		&:hover {
 			background-color: darken($themeDarkGreyColor, 3%);
 		}

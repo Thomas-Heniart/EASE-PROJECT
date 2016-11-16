@@ -64,7 +64,10 @@
 					'display': 'block',
 					'top': $(".ProfileBox[custom='true']").offset().top,
 					'left': $(".ProfileBox[custom='true']").offset().left + $(".ProfileBox[custom='true']").width()
-				});			
+				});
+				var profileName = $(".ProfileBox[custom='true']").find('.ProfileName p').text();
+				profileName = profileName.substring(1, profileName.length);
+				$(".step2").find('span').text(profileName);
 			}
 		}, 1000);
 
