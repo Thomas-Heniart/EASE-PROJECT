@@ -108,9 +108,9 @@ public class ClassicAccount extends Account{
 	}
 	
 	public void updateWithInformations(Map<String, String> informations) {
-		for(Map.Entry<String, String> entry : informations.entrySet())
+		for(Map.Entry<String, String> entry : informations.entrySet()){
 				this.accountInformations.put(entry.getKey(), entry.getValue());
-		this.accountInformations = informations;
+		}
 	}
 	
 	// UTILS

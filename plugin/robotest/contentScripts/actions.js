@@ -289,7 +289,7 @@ function doThingsConnect(msg, sendResponse) {
         if(msg.todo == "logout") {
             msg.todo = "connect";
             msg.actionStep = 0;
-            actions[todo[msg.actionStep].action](msg, doThings, sendResponse);
+            actions[todo[msg.actionStep].action](msg, doThingsConnect, sendResponse);
         }
 		return ;
 	}
@@ -305,7 +305,7 @@ function doThings(msg, sendResponse) {
 		return ;
 	}
     console.log("-- Ease action : "+todo[msg.actionStep].action+" --");
-	actions[todo[msg.actionStep].action](msg, doThingsLogout, sendResponse);
+	actions[todo[msg.actionStep].action](msg, doThings, sendResponse);
 }
 
 function getHost(url){
@@ -430,7 +430,7 @@ extension.runtime.onMessage("lastcheck", function(msg, sendResponse) {
     if (msg.todo == "checkAlreadyLogged"){
         checkConnectionOverlay(msg);
         if (isConnected(msg) == true) {
-			msg.type = "success";
+			msg.type = "completed";
 		    sendResponse(msg);
 		} else {
             msg.waitreload=true;

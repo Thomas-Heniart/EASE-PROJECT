@@ -70,7 +70,6 @@ public class EditApp extends HttpServlet {
 		if (wPassword != null)
 			informations.put("password", wPassword);
 		// --
-
 		App app = null;
 		boolean transaction = false;
 
@@ -78,10 +77,9 @@ public class EditApp extends HttpServlet {
 			int appId = Integer.parseInt(appIdParam);
 			ResultSet informationsRs = db.get("SELECT information_name FROM websitesInformations WHERE website_id =" + user.getApp(appId).getSite().getId() + " AND information_name <> 'password';");
 			while (informationsRs.next())
-				informations.put(informationsRs.getString(1), SI.getServletParam(informationsRs.getString(1)));
+					informations.put(informationsRs.getString(1), SI.getServletParam(informationsRs.getString(1)));
 			
 			String login = informations.get("login");
-			
 			if (user == null) {
 				SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
 			} else if (db.connect() != 0) {
@@ -91,18 +89,18 @@ public class EditApp extends HttpServlet {
 				String logWithId = SI.getServletParam("lwId");
 				if (logWithId == null || logWithId.isEmpty()) {
 					if ((login == null || login.equals(""))) {
-						SI.setResponse(ServletItem.Code.BadParameters, "Bad login or password.");
+						SI.setResponse(ServletItem.Code.BadParameters, "Incorrect login or password.");
 					} else if (name == null || name.length() > 14) {
-						SI.setResponse(ServletItem.Code.BadParameters, "Bad name.");
+						SI.setResponse(ServletItem.Code.BadParameters, "Incorrect name.");
 					} else if (user.getApp(appId) == null) {
-						SI.setResponse(ServletItem.Code.BadParameters, "Bad appId.");
+						SI.setResponse(ServletItem.Code.BadParameters, "Incorrect appId.");
 					} else {
 						app = user.getApp(appId);
 						if (app.havePerm(App.AppPerm.MODIFY, session.getServletContext())) {
 							transaction = db.start();
 							if (app.getType().equals("LogWithAccount") == true) {
-								if (login == null || login.equals("")) {
-									SI.setResponse(ServletItem.Code.BadParameters, "Bad login or password.");
+								if (login == null || login.equals("") || wPassword==null || wPassword.equals("")) {
+									SI.setResponse(ServletItem.Code.BadParameters, "Incorrect login or password.");
 								} else {
 									Site site = app.getSite();
 									app.deleteFromDB(session.getServletContext());
@@ -125,7 +123,7 @@ public class EditApp extends HttpServlet {
 								app.setAccount(account);
 								app.updateInDB(session.getServletContext());
 								if (Regex.isEmail(login))
-									db.set("CALL addEmail(" + user.getId() + ", '" + user.getEmail() + "');");
+									db.set("CALL addEmail(" + user.getId() + ", '" +login + "');");
 								SI.setResponse(200, app.getSite().getName() + " edited.");
 							} else {
 								ClassicAccount account = new ClassicAccount(informations, user, session.getServletContext());
@@ -133,7 +131,7 @@ public class EditApp extends HttpServlet {
 								app.setAccount(account);
 								app.updateInDB(session.getServletContext());
 								if (Regex.isEmail(login))
-									db.set("CALL addEmail(" + user.getId() + ", '" + user.getEmail() + "');");
+									db.set("CALL addEmail(" + user.getId() + ", '" + login + "');");
 								SI.setResponse(200, app.getSite().getName() + " edited.");
 							}
 							db.commit(transaction);

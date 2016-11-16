@@ -57,7 +57,19 @@ function sendEvent(obj) {
         		if (ctrlDown) json.detail.highlight = false;
         		easeTracker.trackEvent("App successful clicks");
         		easeTracker.trackEvent(json.detail[json.detail.length - 1].website.name + " connections");
+        		
+        		/*
+        		// TO REMOVE
+        		var test = [];
+        		test.push(json);
+        		console.log(test);
+        		event = new CustomEvent("Test", {detail:test});
+        		// END TO REMOVE
+        		*/
+        		
+        		//TO RE ADD 
         		event = new CustomEvent("NewConnection", json);
+        		
         		document.dispatchEvent(event);
         	}, function(retMsg) {
         		showAlertPopup(retMsg, true);
