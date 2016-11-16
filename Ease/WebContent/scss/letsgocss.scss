@@ -493,7 +493,7 @@
 @media only screen and (min-width: 768px) {
   #invitationBody {
     .invitation-header {
-      height: 45%;
+      height: 50%;
       margin: auto;
       img {
         width: 10%;
@@ -520,7 +520,7 @@
       }
     }
     .invitation-content {
-      top: 45%;
+      top: 50%;
       form[action='getEmailLink'].loading .loadHelper.loading {
         height: 50px;
         width: 50px;
