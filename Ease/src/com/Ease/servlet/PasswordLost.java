@@ -67,12 +67,18 @@ public class PasswordLost extends HttpServlet {
 		
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		try {
+			db.connect();
+		} catch (SQLException e) {
+			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
+			SI.sendResponse();
+			return ;
+		}
+		
+		try {
 			if (user != null) {
 				SI.setResponse(ServletItem.Code.AlreadyConnected, "You are logged on Ease.");
 			} else if (email == null || Regex.isEmail(email) == false) {
 				SI.setResponse(ServletItem.Code.BadParameters, "Bad email.");
-			} else if (db.connect() != 0){
-				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 			} else {
 				ResultSet rs = db.get("select * from users where email='" + email + "';");
 				if (rs.next()) {

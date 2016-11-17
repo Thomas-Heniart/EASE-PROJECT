@@ -63,6 +63,14 @@ public class AddTag extends HttpServlet {
 		int nbOfColors = 8;		
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 
+		try {
+			db.connect();
+		} catch (SQLException e) {
+			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
+			SI.sendResponse();
+			return ;
+		}
+		
 		if (user == null) {
 			SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
 		} else if (!user.isAdmin(session.getServletContext())) {
@@ -74,12 +82,9 @@ public class AddTag extends HttpServlet {
 				Random r = new Random();
 				color = Integer.toString(1 + r.nextInt(nbOfColors));
 			}
-			if (db.connect() != 0){
-				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
-			} else {
-				db.set("INSERT INTO tags VALUES (NULL, '" + name + "'," + color + ");");
-				SiteManager sites = ((SiteManager)session.getServletContext().getAttribute("siteManager"));
 				try {
+					db.set("INSERT INTO tags VALUES (NULL, '" + name + "'," + color + ");");
+					SiteManager sites = ((SiteManager)session.getServletContext().getAttribute("siteManager"));
 					ResultSet rs = db.get("SELECT * FROM tags;");
 					sites.clearTags();
 					while (rs.next()) {
@@ -89,7 +94,6 @@ public class AddTag extends HttpServlet {
 				} catch (SQLException e) {
 					SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 				}
-			}
 		}
 		SI.sendResponse();
 	}

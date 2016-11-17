@@ -13,41 +13,20 @@ public class DataBase {
 	String password = "P6au23q7";
 	Connection con = null;
 	
-	public int connect(){
-		try {
-			if(con == null || con.isClosed()){
-				con = DriverManager.getConnection(url, login, password);
-			}
-			/*if (con != null) {
-				con.close();
-				con = null;
-			}*/				
-		} catch (SQLException e) {
-			System.out.println("Impossible to connect DB");
-			return 1;
-		}
-		return 0;
+	public void connect() throws SQLException {
+		if(con == null || con.isClosed()){
+			con = DriverManager.getConnection(url, login, password);
+		}				
 	}
 	
-	public int close() {
-		try {
-			con.close();
-		} catch (SQLException e) {
-			System.out.println("Impossible to close DB");
-			return 1;
-		}
-		return 0;
+	public void close() throws SQLException {
+		con.close();
 	}
 	
-	public ResultSet get(String request) {
-		try {
-			ResultSet rs = con.createStatement().executeQuery(request);
-			return rs;
-		} catch (SQLException e) {
-			System.out.println("Impossible to get DB");
-			e.printStackTrace();
-			return null;
-		}
+	public ResultSet get(String request) throws SQLException {
+		ResultSet rs = con.createStatement().executeQuery(request);
+		return rs;
+		
 	}
 	
 	public Integer set(String request) throws SQLException {
@@ -62,36 +41,18 @@ public class DataBase {
         return id_row;
 	}
 	
-	public boolean start(){
-		try {
-			con.createStatement().executeUpdate("START TRANSACTION");
-			return true;
-		} catch (SQLException e) {
-			System.out.println("Impossible to set DB");
-			e.printStackTrace();
-			return false;
-		}
+	public boolean start() throws SQLException {
+		con.createStatement().executeUpdate("START TRANSACTION");
+		return true;
 	}
 	
-	public void commit(boolean transaction){
-		if(transaction){
-			try {
-				con.createStatement().executeUpdate("COMMIT");
-			} catch (SQLException e) {
-				System.out.println("Impossible to set DB");
-				e.printStackTrace();
-			}
-		}
+	public void commit(boolean transaction) throws SQLException{
+		if (transaction)
+			con.createStatement().executeUpdate("COMMIT");
 	}
 	
-	public void cancel(boolean transaction){
-		if(transaction){
-			try {
-				con.createStatement().executeUpdate("ROLLBACK");
-			} catch (SQLException e) {
-				System.out.println("Impossible to set DB");
-				e.printStackTrace();
-			}
-		}
+	public void cancel(boolean transaction) throws SQLException {
+		if (transaction)
+			con.createStatement().executeUpdate("ROLLBACK");
 	}
 }

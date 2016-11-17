@@ -67,6 +67,14 @@ public class AddWebsite extends HttpServlet {
 		
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 
+		try {
+			db.connect();
+		} catch (SQLException e) {
+			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
+			SI.sendResponse();
+			return ;
+		}
+		
 		if (user == null) {
 			SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
 		} else if (!user.isAdmin(session.getServletContext())) {
@@ -90,14 +98,14 @@ public class AddWebsite extends HttpServlet {
 				haveLogWith += "'";
 			}
 			dbRequest = dbRequest + haveLogWith + ", null, 0, '" + homePage + "', 0, default, default, default, default, default);";
-			db.set(dbRequest);
-			ResultSet lastIdRs = db.get("SELECT website_id FROM websites WHERE website_id = LAST_INSERT_ID()");
 			try {
-					if (lastIdRs.next()) {
-						String lastId = lastIdRs.getString(1);
-						db.set("INSERT INTO websitesInformations values (NULL, " + lastId + ", 'login', 'text');");
-						db.set("INSERT INTO websitesInformations values (NULL, " + lastId + ", 'password', 'password');");
-					}
+				db.set(dbRequest);
+				ResultSet lastIdRs = db.get("SELECT website_id FROM websites WHERE website_id = LAST_INSERT_ID()");
+				if (lastIdRs.next()) {
+					String lastId = lastIdRs.getString(1);
+					db.set("INSERT INTO websitesInformations values (NULL, " + lastId + ", 'login', 'text');");
+					db.set("INSERT INTO websitesInformations values (NULL, " + lastId + ", 'password', 'password');");
+				}
 			    siteManager.refresh(db);
 			    SI.setResponse(200, "Site added.");
 			} catch (SQLException e) {

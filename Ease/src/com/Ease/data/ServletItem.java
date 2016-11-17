@@ -67,7 +67,8 @@ public class ServletItem {
 		ChangeSitePosition,
 		ReminderEmail,
 		TheFamilyInvitation,
-		TheFamilyRegistration
+		TheFamilyRegistration,
+		StockUpdate
 	}
 	public enum Code
 	{
@@ -100,7 +101,16 @@ public class ServletItem {
 		this.response = response;
 		this.user = user;
 		DataBase db = (DataBase)request.getSession().getServletContext().getAttribute("DataBase");
-		db.connect();
+		try {
+			db.connect();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			try {
+				response.getWriter().print("Sorry an internal problem occurred. We are solving it asap.");
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
 	}
 	
 	//Getter
@@ -144,7 +154,7 @@ public class ServletItem {
 		this.retMsg = msg;
 	}
 	
-	protected void saveInDB(DataBase db) {
+	protected void saveInDB(DataBase db) throws SQLException {
 		String argsString = "";
 		Set<Entry<String, String>> setHm = args.entrySet();
 	    Iterator<Entry<String, String>> it = setHm.iterator();
@@ -154,12 +164,8 @@ public class ServletItem {
 	    }
 	    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = new Date();
-		try {
-			db.set("insert into logs values(" + type.ordinal() + ", " + retCode + ", " + ((user != null) ? user.getId() : "NULL") + ", '" + argsString + "', '" + retMsg + "', '" + dateFormat.format(date) + "');");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		System.out.println("insert into logs values(" + type.ordinal() + ", " + retCode + ", " + ((user != null) ? user.getId() : "NULL") + ", '" + argsString + "', '" + retMsg + "', '" + dateFormat.format(date) + "');");
+		db.set("insert into logs values(" + type.ordinal() + ", " + retCode + ", " + ((user != null) ? user.getId() : "NULL") + ", '" + argsString + "', '" + retMsg + "', '" + dateFormat.format(date) + "');");
 	}
 	
 	public void sendResponse() throws IOException {
@@ -172,8 +178,11 @@ public class ServletItem {
 			retMsg = "Session saved for user_id "+user.getId();
 		}
 		if (retCode != Code.DatabaseNotConnected.ordinal() && type != Type.CatalogSearchServlet && type != Type.RequestedWebsitesServlet && !retMsg.equals(""))
-			saveInDB(db);
-
+			try {
+				saveInDB(db);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		if (retCode == Code.LogicError.ordinal()) {
 			retMsg = "Sorry an internal problem occurred. We are solving it asap.";
 		} else {
@@ -194,8 +203,11 @@ public class ServletItem {
 			retMsg = "Session saved for user_id "+user.getId();
 		}
 		if (retCode != Code.DatabaseNotConnected.ordinal() && type != Type.CatalogSearchServlet && type != Type.RequestedWebsitesServlet && !retMsg.equals(""))
-			saveInDB(db);
-
+			try {
+				saveInDB(db);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		if (retCode == Code.LogicError.ordinal()) {
 			retMsg = "Sorry an internal problem occurred. We are solving it asap.";
 		} else {

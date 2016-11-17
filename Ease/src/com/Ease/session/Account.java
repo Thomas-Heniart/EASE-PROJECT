@@ -28,8 +28,8 @@ public abstract class Account {
 	public static Account getAccount(String accountId, User user, ServletContext context) throws SessionException{
 		DataBase db = (DataBase)context.getAttribute("DataBase");
 		
-		ResultSet rs = db.get("SELECT * FROM accounts WHERE account_id = "+ accountId + ";");
 		try {
+			ResultSet rs = db.get("SELECT * FROM accounts WHERE account_id = "+ accountId + ";");
 			if(rs.next()){
 				ResultSet classicRs = db.get("SELECT * FROM classicAccounts WHERE account_id = "+ accountId + ";");
 				if(classicRs.next()){

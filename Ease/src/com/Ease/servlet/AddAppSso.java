@@ -2,6 +2,7 @@ package com.Ease.servlet;
 
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -65,6 +66,15 @@ public class AddAppSso extends HttpServlet {
 		Site site = null;
 		boolean transaction = false;
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
+		
+		try {
+			db.connect();
+		} catch (SQLException e) {
+			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
+			SI.sendResponse();
+			return ;
+		}
+		
 		try {
 			int profileId = Integer.parseInt(profileIdString);
 			int appId = Integer.parseInt(appIdString);
@@ -73,8 +83,6 @@ public class AddAppSso extends HttpServlet {
 			
 			if (user == null) {
 				SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
-			} else if (db.connect() != 0){
-				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our database, please retry in few minutes.");
 			} else if ((profile = user.getProfile(profileId)) == null){
 				SI.setResponse(ServletItem.Code.BadParameters, "No profileId.");
 			} else if (name == null || name.length() > 14) {
@@ -103,11 +111,19 @@ public class AddAppSso extends HttpServlet {
 					}
 				}
 			}
-		} catch (SessionException e) {
-			db.cancel(transaction);
+		} catch (SessionException | SQLException e) {
+			try {
+				db.cancel(transaction);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		} catch (IndexOutOfBoundsException e){
-			db.cancel(transaction);
+			try {
+				db.cancel(transaction);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		} catch (NumberFormatException e) {
 			SI.setResponse(ServletItem.Code.BadParameters, "Numbers exception.");

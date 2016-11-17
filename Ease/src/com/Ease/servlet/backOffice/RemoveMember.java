@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.Ease.context.DataBase;
+import com.Ease.data.ServletItem;
 import com.Ease.session.User;
 import com.Ease.stats.Stats;
 
@@ -49,6 +50,13 @@ public class RemoveMember extends HttpServlet {
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		
 		try {
+			db.connect();
+		} catch (SQLException e) {
+			response.getWriter().print("Db not connected");	
+			return ;
+		}
+		
+		try {
 			int groupId = Integer.parseInt(request.getParameter("groupId"));
 			String email = request.getParameter("user");
 			
@@ -59,8 +67,6 @@ public class RemoveMember extends HttpServlet {
 				RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
 				rd.forward(request, response);
 				return ;
-			} else if (db.connect() != 0){
-				retMsg = "error: Impossible to connect data base.";
 			} else if (user.isAdmin(session.getServletContext()) == null){
 				retMsg = "error: You have not the permission";
 			} else {

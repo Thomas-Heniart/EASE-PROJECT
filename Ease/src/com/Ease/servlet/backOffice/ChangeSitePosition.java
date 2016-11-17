@@ -50,9 +50,12 @@ public class ChangeSitePosition extends HttpServlet {
 		User user = (User)(session.getAttribute("User"));
 		DataBase db = (DataBase) session.getServletContext().getAttribute("DataBase");
 		ServletItem SI = new ServletItem(ServletItem.Type.ChangeSitePosition, request, response, user);
-		if (db.connect() != 0) {
-			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "Failed to connect to db");
+		try {
+			db.connect();
+		} catch (SQLException e) {
+			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 			SI.sendResponse();
+			return ;
 		}
 		if (user == null || !user.isAdmin(session.getServletContext())) {
 			RequestDispatcher rd = request.getRequestDispatcher("admin.jsp");

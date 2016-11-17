@@ -51,8 +51,10 @@ public class SessionSave {
 			throw new SessionException("Can't encrypt key.");
 		} else if ((hashedToken = Hashing.SHA(token, saltToken)) == null) {
 			throw new SessionException("Can't hash token.");
-		}  else if (db.set("INSERT INTO savedSessions VALUES (NULL, '" + sessionId + "', '" + hashedToken + "', '" + saltToken + "', '" + cryptedKeyUser + "', '" + saltKeyUser + "', '" + userId + "', DEFAULT);")
-				!= 0) {
+		} 
+		try {
+			db.set("INSERT INTO savedSessions VALUES (NULL, '" + sessionId + "', '" + hashedToken + "', '" + saltToken + "', '" + cryptedKeyUser + "', '" + saltKeyUser + "', '" + userId + "', DEFAULT);");
+		} catch (SQLException e) {
 			throw new SessionException("Impossible to insert new sessionSave in data base.");
 		}
 		context.setAttribute("SessionSave", this);
@@ -84,12 +86,9 @@ public class SessionSave {
 				throw new SessionException("Can't encrypt key.");
 			} else if ((hashedToken = Hashing.SHA(token, saltToken)) == null) {
 				throw new SessionException("Can't hash token.");
-			} else if(db.set("DELETE FROM savedSessions WHERE sessionId = '"+ oldSessionId +"';") != 0){
-				throw new SessionException("Can't delete session.");
-			}  else if (db.set("INSERT INTO savedSessions VALUES (NULL, '" + sessionId + "', '" + hashedToken + "', '" + saltToken + "', '" + cryptedKeyUser + "', '" + saltKeyUser + "', '" + userId + "', DEFAULT);")
-					!= 0) {
-				throw new SessionException("Impossible to insert new sessionSave in data base.");
 			}
+			db.set("DELETE FROM savedSessions WHERE sessionId = '"+ oldSessionId +"';");
+			db.set("INSERT INTO savedSessions VALUES (NULL, '" + sessionId + "', '" + hashedToken + "', '" + saltToken + "', '" + cryptedKeyUser + "', '" + saltKeyUser + "', '" + userId + "', DEFAULT);");
 		} catch (SQLException e) {
 			throw new SessionException("Database error.");
 		}
@@ -113,7 +112,9 @@ public class SessionSave {
 
 	public void erase(ServletContext context) throws SessionException{
 		DataBase db = (DataBase) context.getAttribute("DataBase");
-		if(db.set("DELETE FROM savedSessions WHERE sessionId = '"+ sessionId +"';") != 0){
+		try {
+			db.set("DELETE FROM savedSessions WHERE sessionId = '"+ sessionId +"';");
+		} catch (SQLException e) {
 			throw new SessionException("Can't delete session.");
 		}
 	}

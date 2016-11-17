@@ -4,6 +4,7 @@ package com.Ease.servlet;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -19,7 +20,6 @@ import com.Ease.context.DataBase;
 import com.Ease.context.Site;
 import com.Ease.context.SiteManager;
 import com.Ease.data.RSA;
-import com.Ease.data.Regex;
 import com.Ease.data.ServletItem;
 import com.Ease.session.App;
 import com.Ease.session.Profile;
@@ -71,6 +71,15 @@ public class AddUpdate extends HttpServlet {
 		Site site = null;
 		boolean transaction = false;
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
+		
+		try {
+			db.connect();
+		} catch (SQLException e) {
+			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
+			SI.sendResponse();
+			return ;
+		}
+		
 		try {
 						
 			int profileId = Integer.parseInt(profileIdParam);
@@ -78,14 +87,12 @@ public class AddUpdate extends HttpServlet {
 			Profile profile = null;
 			if (user == null) {
 				SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
-			} else if (db.connect() != 0){
-				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 			} else if (login == null || login.equals("")) {
 				SI.setResponse(ServletItem.Code.BadParameters, "Login can't be empty");
 			} else if (name == null || name.length() > 14) {
 				SI.setResponse(ServletItem.Code.BadParameters, "Incorrect app name");
 			} else if (!user.getEmails().get(login)){
-				SI.setResponse(ServletItem.Code.BadParameters, "Email not verified");
+				SI.setResponse(ServletItem.Code.BadParameters, "Email not verified, check your mailbox before add this update.");
 			} else if (cryptedPassword == null || cryptedPassword.equals("")) {
 				SI.setResponse(ServletItem.Code.BadParameters, "Password can't be empty");
 			} else if ((profile = user.getProfile(profileId)) == null){
@@ -104,10 +111,6 @@ public class AddUpdate extends HttpServlet {
 							user.tutoComplete();
 							user.updateInDB(session.getServletContext());
 						}
-						if (Regex.isEmail(login)) {
-							db.set("CALL addEmail(" + user.getId() + ", '" + login + "');");
-							user.addEmailIfNotPresent(login);
-						}
 						SI.setResponse(200, Integer.toString(app.getAppId()));
 						db.commit(transaction);
 					} else {
@@ -115,17 +118,22 @@ public class AddUpdate extends HttpServlet {
 					}
 				}
 			}
-		} catch (SessionException e) {
-			db.cancel(transaction);
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
-		} catch (IndexOutOfBoundsException e){
-			db.cancel(transaction);
+		} catch (SessionException | IndexOutOfBoundsException | SQLException e) {
+			try {
+				db.cancel(transaction);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		} catch (NumberFormatException e) {
 			SI.setResponse(ServletItem.Code.BadParameters, "Numbers exception.");
 		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException
 				| IllegalBlockSizeException | BadPaddingException e) {
-			db.cancel(transaction);
+			try {
+				db.cancel(transaction);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		}
 		SI.sendResponse();
