@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class DataBase {
 	//Class.forName("com.mysql.jdbc.Driver");
@@ -49,16 +50,16 @@ public class DataBase {
 		}
 	}
 	
-	public int set(String request) {
-		try {
-			con.createStatement().executeUpdate(request);
-			System.out.println(request);
-			return 0;
-		} catch (SQLException e) {
-			System.out.println("Impossible to set DB");
-			e.printStackTrace();
-			return 1;
-		}
+	public Integer set(String request) throws SQLException {
+		Statement stmt = con.createStatement();
+		stmt.executeUpdate(request, Statement.RETURN_GENERATED_KEYS);
+		ResultSet rs = stmt.getGeneratedKeys();
+		Integer id_row = -1;
+        if (rs.next()){
+            id_row = rs.getInt(1);
+        }
+        rs.close();
+        return id_row;
 	}
 	
 	public boolean start(){

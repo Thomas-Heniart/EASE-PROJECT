@@ -1,6 +1,7 @@
 package com.Ease.data;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -153,7 +154,12 @@ public class ServletItem {
 	    }
 	    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = new Date();
-		db.set("insert into logs values(" + type.ordinal() + ", " + retCode + ", " + ((user != null) ? user.getId() : "NULL") + ", '" + argsString + "', '" + retMsg + "', '" + dateFormat.format(date) + "');");
+		try {
+			db.set("insert into logs values(" + type.ordinal() + ", " + retCode + ", " + ((user != null) ? user.getId() : "NULL") + ", '" + argsString + "', '" + retMsg + "', '" + dateFormat.format(date) + "');");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void sendResponse() throws IOException {

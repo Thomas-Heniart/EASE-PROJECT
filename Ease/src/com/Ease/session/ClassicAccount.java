@@ -25,6 +25,7 @@ public class ClassicAccount extends Account{
 		if ((cryptedPassword = AES.encrypt(accountInformations.get("password"), user.getUserKey())) == null){
 			throw new SessionException("Can't encrypt password.");
 		}
+		//boolean transaction = db.start();
 		if (db.set("INSERT INTO accounts VALUES (NULL);")
 				!= 0) {
 			throw new SessionException("Impossible to insert new account in data base.");
