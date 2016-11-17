@@ -121,6 +121,7 @@ public class RegistrationByInvitation extends HttpServlet {
 						user = new User(fname, lname, email, "0606060606", password, session.getServletContext());
 						if (group != null && group.equals("null") == false)
 							db.set("insert into GroupAndUserMap values (NULL, " + group + ", " + user.getId() + ");");
+						user.checkForGroup(session.getServletContext());
 						db.set("delete from invitations where email = '" + email + "' and linkCode = '" + invitationCode + "';");
 						session.setAttribute("User", user);
 						db.set("CALL addEmail(" + user.getId() + ", '" + user.getEmail() + "');");
