@@ -125,10 +125,10 @@ public class RegistrationTheFamily extends HttpServlet {
 				}
 			} catch (SessionException e) {
 				e.printStackTrace();
-				SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+				SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 			} catch (SQLException e) {
 				e.printStackTrace();
-				SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+				SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 			}
 		}
 		SI.sendResponse();

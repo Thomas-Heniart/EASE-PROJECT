@@ -124,7 +124,7 @@ public class AddUpdate extends HttpServlet {
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 		} catch (NumberFormatException e) {
 			SI.setResponse(ServletItem.Code.BadParameters, "Numbers exception.");
 		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException
@@ -134,7 +134,7 @@ public class AddUpdate extends HttpServlet {
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 		}
 		SI.sendResponse();
 	}

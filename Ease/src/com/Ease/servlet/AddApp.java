@@ -80,16 +80,6 @@ public class AddApp extends HttpServlet {
 			SI.sendResponse();
 			return ;
 		}
-		
-		/*try {
-			db.set("DELETE FROM users where user_id=348;");
-		} catch (Exception e){
-			String retMsg = e.toString()+".\nStackTrace :";
-			for(int i=0;i<e.getStackTrace().length;i++){
-				retMsg = retMsg + "\n"+e.getStackTrace()[i];
-			}
-			System.out.println(retMsg);
-		}*/
 
 		try {
 			ResultSet inputsRs = db.get("SELECT information_name FROM websitesInformations WHERE website_id=" + siteId + ";");
@@ -142,14 +132,14 @@ public class AddApp extends HttpServlet {
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 		} catch (IndexOutOfBoundsException e){
 			try {
 				db.cancel(transaction);
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 		} catch (NumberFormatException e) {
 			SI.setResponse(ServletItem.Code.BadParameters, "Numbers exception.");
 		}

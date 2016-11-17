@@ -102,7 +102,7 @@ public class PasswordLost extends HttpServlet {
 				}
 			}
 		} catch (SQLException e) {
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 		} catch (MessagingException e) {
 			SI.setResponse(ServletItem.Code.EMailNotSended, "Impossible to send an Email yet, retry in few minutes. Sorry.");
 		}

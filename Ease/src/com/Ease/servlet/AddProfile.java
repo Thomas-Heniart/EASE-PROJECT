@@ -88,7 +88,7 @@ public class AddProfile extends HttpServlet {
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
-				SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+				SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 			} catch (SQLException e) {
 				SI.setResponse(ServletItem.Code.LogicError, "There is a problem with our Database, please retry in few minutes.");
 				e.printStackTrace();

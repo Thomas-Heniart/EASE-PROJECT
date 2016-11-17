@@ -75,7 +75,7 @@ public class EditUserName extends HttpServlet {
 				SI.setResponse(200, "Name changed.");
 			}
 		} catch (SessionException e) {
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 		}
 		SI.sendResponse();
 	}

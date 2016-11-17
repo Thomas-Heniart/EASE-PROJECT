@@ -75,7 +75,7 @@ public class AddEmail extends HttpServlet {
 			SI.setResponse(200, "Successfully added email");
 			SI.sendResponseAndRedirect("index.jsp?openSettings='true'");
 		} catch (SQLException e) {
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 			SI.sendResponse();
 		}
 	}

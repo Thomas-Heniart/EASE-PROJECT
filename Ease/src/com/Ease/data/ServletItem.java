@@ -215,4 +215,12 @@ public class ServletItem {
 		}
 		response.sendRedirect(url);
 	}
+	
+	public static String getExceptionTrace(Exception e){
+		String retMsg = e.toString()+".\nStackTrace :";
+		for(int i=0;i<e.getStackTrace().length;i++){
+			retMsg = retMsg + "\n"+e.getStackTrace()[i];
+		}
+		return retMsg;
+	}
 }
