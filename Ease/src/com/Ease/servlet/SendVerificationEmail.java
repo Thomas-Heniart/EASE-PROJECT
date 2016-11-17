@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.Ease.context.DataBase;
+import com.Ease.data.Mail;
 import com.Ease.data.ServletItem;
 import com.Ease.session.User;
 
@@ -114,28 +115,8 @@ public class SendVerificationEmail extends HttpServlet {
 			throws UnsupportedEncodingException, MessagingException {
 		//String link = "https://localhost:8080/HelloWorld/AddEmail?email=" + newEmail + "&code=" + verificationCode;
 		String link = "https://ease.space/AddEmail?email=" + newEmail + "&code=" + verificationCode;
-		Properties props = new Properties();
-		props.put("mail.smtp.host", "smtp.gmail.com");
-		props.put("mail.smtp.socketFactory.port", "465");
-		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.port", "465");
-		Session msession = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication("benjamin@ease-app.co", "bpease.P2211");
-			}
-		});
-		MimeMessage message = new MimeMessage(msession);
-		message.setFrom(new InternetAddress("benjamin@ease-app.co", "Ease Team"));
-		message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(newEmail));
-		message.setSubject(MimeUtility.encodeText("Validation email !", "utf-8", null));
-		message.setContent("<div style='color: black;'><p>Hello !<br /></p>"
-				+ "<p>A validation email has been asked by " + askingEmail + ". "
-				+ "<br /><br />To validate this new email in order to receive updates, click on the link <a href='" + link
-				+ "'>here</a>.<br></p>"
-				+ "<p>(If you have not asked for a validation on \"<span style='text-decoration: underline'>ease.space</span>\", you can ignore this email.)</p>"
-				+ "<p>See you soon !</p>" + "<p>The Ease team</p>" + "</div>", "text/html;charset=utf-8");
-		Transport.send(message);
+		Mail newMail = new Mail();
+		newMail.sendVerificationEmail(newEmail, askingEmail, link);
 	}
 
 }
