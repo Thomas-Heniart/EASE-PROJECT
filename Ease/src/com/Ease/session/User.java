@@ -54,7 +54,6 @@ public class User {
 	
 	//Use this to create a new user and set it in database
 	public User(String fName, String lName, String email, String tel, String pass, ServletContext context) throws SessionException {
-		
 		DataBase db = (DataBase)context.getAttribute("DataBase");
 		String hashedPassword;
 		String keyCrypted;
@@ -164,15 +163,6 @@ public class User {
 	// Use this to load user from result set but can't decrypt (direct set of
 	// keyuser)
 	public User(ResultSet rs, String keyUser, String userId, ServletContext context) throws SessionException {// userId
-																												// useless
-																												// but
-																												// can't
-																												// have
-																												// same
-																												// arguments
-																												// than
-																												// other
-																												// constructor
 		try {
 			id = rs.getString(UserData.ID.ordinal());
 			if (!userId.equals(id)) {
@@ -619,9 +609,9 @@ public class User {
 		emails.put(this.email, true);
 		try{
 			ResultSet rs;
-			rs = db.get("select * from usersEmails where user_id=" + this.id + ";");
+			rs = db.get("select email, verified from usersEmails where user_id=" + this.id + ";");
 			while (rs.next()) {
-				emails.put(rs.getString(3), (rs.getString(4).equals("0")) ? false : true);
+				emails.put(rs.getString(1), (rs.getString(2).equals("0")) ? false : true);
 			}
 		} catch (SQLException e) {
 			throw new SessionException("Can't get emails.");
