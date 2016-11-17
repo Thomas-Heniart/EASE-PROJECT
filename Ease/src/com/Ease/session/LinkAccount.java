@@ -23,13 +23,9 @@ public class LinkAccount extends Account{
 		public LinkAccount(String link, User user, ServletContext context) throws SessionException {
 			DataBase db = (DataBase)context.getAttribute("DataBase");			
 			try {
-				db.set("INSERT INTO accounts VALUES (NULL);");
-				db.set("INSERT INTO linkAccounts VALUES ('"+ link +"',  LAST_INSERT_ID());");
-
-				ResultSet rs = db.get("SELECT LAST_INSERT_ID();");
-
-				rs.next();
-				this.id = rs.getString(1);
+				Integer accountId = db.set("INSERT INTO accounts VALUES (NULL);");
+				db.set("INSERT INTO linkAccounts VALUES ('"+ link +"',  "+accountId+");");
+				this.id = accountId.toString();
 				this.link = link;
 				this.type = "LinkAccount";
 			} catch (SQLException e) {

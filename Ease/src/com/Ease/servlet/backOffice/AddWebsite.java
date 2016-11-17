@@ -99,8 +99,8 @@ public class AddWebsite extends HttpServlet {
 			}
 			dbRequest = dbRequest + haveLogWith + ", null, 0, '" + homePage + "', 0, default, default, default, default, default);";
 			try {
-				db.set(dbRequest);
-				ResultSet lastIdRs = db.get("SELECT website_id FROM websites WHERE website_id = LAST_INSERT_ID()");
+				Integer websiteId = db.set(dbRequest);
+				ResultSet lastIdRs = db.get("SELECT website_id FROM websites WHERE website_id = "+websiteId+";");
 				if (lastIdRs.next()) {
 					String lastId = lastIdRs.getString(1);
 					db.set("INSERT INTO websitesInformations values (NULL, " + lastId + ", 'login', 'text');");

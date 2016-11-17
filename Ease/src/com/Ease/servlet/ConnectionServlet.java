@@ -149,7 +149,6 @@ public class ConnectionServlet extends HttpServlet {
 			if (rs.next())
 				return;
 			db.set("INSERT INTO askingIps values (NULL, '" + client_ip + "', 0, '" + getCurrentTime() + "', '" + getExpirationTime() + "');");
-		
 	}
 
 	public String getCurrentTime() {

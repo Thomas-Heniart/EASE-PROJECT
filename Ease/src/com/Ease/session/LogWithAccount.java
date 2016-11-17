@@ -24,11 +24,9 @@ public class LogWithAccount extends Account {
 		DataBase db = (DataBase)context.getAttribute("DataBase");
 		
 		try {
-			db.set("INSERT INTO accounts VALUES (NULL);");	
-			db.set("INSERT INTO logWithAccounts VALUES ("+ app_id + ",  LAST_INSERT_ID());");
-			ResultSet rs = db.get("SELECT LAST_INSERT_ID();");
-			rs.next();
-			this.id = rs.getString(1);
+			Integer accountId = db.set("INSERT INTO accounts VALUES (NULL);");	
+			db.set("INSERT INTO logWithAccounts VALUES ("+ app_id + ",  "+accountId+");");
+			this.id = accountId.toString();
 			this.app_id = app_id;
 			this.type = "LogWithAccount";
 		} catch (SQLException e) {

@@ -55,16 +55,14 @@ public class Profile {
 			profileIdx = 0;
 		}
 		try {
-			db.set("INSERT INTO profiles VALUES (NULL, '" + user.getId() + "', '" + name + "', '" + color + "', '" + desc + "', " + user.getProfiles().size() + ", " + ((custom != null) ? custom : "NULL") + ", " + columnIdx + ", "+ profileIdx + ");");
+			Integer profileId = db.set("INSERT INTO profiles VALUES (NULL, '" + user.getId() + "', '" + name + "', '" + color + "', '" + desc + "', " + user.getProfiles().size() + ", " + ((custom != null) ? custom : "NULL") + ", " + columnIdx + ", "+ profileIdx + ");");
 			this.name = name;
 			this.color = color;
 			this.description = desc;
 			this.custom = custom;
 			apps = new LinkedList<App>();
 			custom = null;
-			ResultSet rs = db.get("SELECT MAX(profile_id) FROM profiles;");
-				rs.next();
-				this.id = rs.getString(1);
+			this.id = profileId.toString();
 		} catch (SQLException e) {
 			throw new SessionException("Impossible to insert new user in data base.");
 		}

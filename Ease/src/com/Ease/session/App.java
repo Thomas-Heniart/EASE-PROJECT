@@ -49,13 +49,8 @@ public class App {
 		Account account = new ClassicAccount(accountInformations, user, context);
 		
 		try {
-			db.set("INSERT INTO apps VALUES (NULL, "+ account.getId() +", "+ site.getId() + ", " + profile.getId() + ", '" + profile.getApps().size() + "', '" + name + "', NULL);");
-			ResultSet rs = db.get("SELECT LAST_INSERT_ID();");
-			if (rs == null){
-				throw new SessionException("Impossible to insert new app in data base. (no rs)");
-			}
-			rs.next();
-			this.id = rs.getString(1);
+			Integer appId = db.set("INSERT INTO apps VALUES (NULL, "+ account.getId() +", "+ site.getId() + ", " + profile.getId() + ", '" + profile.getApps().size() + "', '" + name + "', NULL);");
+			this.id = appId.toString();
 			this.account = account;
 			this.site = site;
 			this.index = profile.getApps().size();
@@ -76,14 +71,8 @@ public class App {
 		accountInformations.put("password", password);
 		Account account = new ClassicAccount(accountInformations, user, context);
 		try {
-			db.set("INSERT INTO apps VALUES (NULL, "+ account.getId() +", "+ site.getId() + ", " + profile.getId() + ", '" + profile.getApps().size() + "', '" + name + "', NULL);");
-			
-			ResultSet rs = db.get("SELECT LAST_INSERT_ID();");
-			if (rs == null){
-				throw new SessionException("Impossible to insert new app in data base. (no rs)");
-			}
-			rs.next();
-			this.id = rs.getString(1);
+			Integer appId = db.set("INSERT INTO apps VALUES (NULL, "+ account.getId() +", "+ site.getId() + ", " + profile.getId() + ", '" + profile.getApps().size() + "', '" + name + "', NULL);");
+			this.id = appId.toString();
 			this.account = account;
 			this.site = site;
 			this.index = profile.getApps().size();
@@ -104,15 +93,8 @@ public class App {
 		Account account = new LogWithAccount(app_id, context);
 		
 		try {
-			db.set("INSERT INTO apps VALUES (NULL, "+ account.getId() +", "+ site.getId() + ", " + profile.getId() + ", '" + profile.getApps().size() + "', '" + name + "', NULL);");
-			
-			ResultSet rs = db.get("SELECT LAST_INSERT_ID();");
-			if (rs == null){
-				throw new SessionException("Impossible to insert new app in data base. (no rs)");
-			}
-
-			rs.next();
-			this.id = rs.getString(1);
+			Integer appId = db.set("INSERT INTO apps VALUES (NULL, "+ account.getId() +", "+ site.getId() + ", " + profile.getId() + ", '" + profile.getApps().size() + "', '" + name + "', NULL);");
+			this.id = appId.toString();
 			this.account = account;
 			this.site = site;
 			this.index = profile.getApps().size();
@@ -132,14 +114,8 @@ public class App {
 			DataBase db = (DataBase)context.getAttribute("DataBase");
 			
 			try {
-				db.set("INSERT INTO apps VALUES (NULL, "+ account.getId() +", "+ site.getId() + ", " + profile.getId() + ", '" + profile.getApps().size() + "', '" + name + "', NULL);");
-				
-				ResultSet rs = db.get("SELECT LAST_INSERT_ID();");
-				if (rs == null){
-					throw new SessionException("Impossible to insert new app in data base. (no rs)");
-				}
-				rs.next();
-				this.id = rs.getString(1);
+				Integer appId = db.set("INSERT INTO apps VALUES (NULL, "+ account.getId() +", "+ site.getId() + ", " + profile.getId() + ", '" + profile.getApps().size() + "', '" + name + "', NULL);");
+				this.id = appId.toString();
 				this.account = account;
 				this.site = site;
 				this.index = profile.getApps().size();
@@ -168,14 +144,8 @@ public class App {
 				e1.printStackTrace();
 			}
 			try {
-				db.set("INSERT INTO apps VALUES (NULL, NULL, "+ site.getId() + ", " + profile.getId() + ", '" + profile.getApps().size() + "', '" + name + "', " + custom + ");");
-				
-				ResultSet rs = db.get("SELECT LAST_INSERT_ID();");
-				if (rs == null){
-					throw new SessionException("Impossible to insert new app in data base. (no rs)");
-				}
-				rs.next();
-				this.id = rs.getString(1);
+				Integer appId = db.set("INSERT INTO apps VALUES (NULL, NULL, "+ site.getId() + ", " + profile.getId() + ", '" + profile.getApps().size() + "', '" + name + "', " + custom + ");");
+				this.id = appId.toString();
 				this.account = null;
 				this.site = site;
 				this.index = profile.getApps().size();
@@ -196,14 +166,8 @@ public class App {
 
 			try {
 				this.account = new LinkAccount(link, user, context);
-				db.set("INSERT INTO apps VALUES (NULL, "+ account.getId() +", NULL, " + profile.getId() + ", '" + profile.getApps().size() + "', '" + name + "', " + custom + ");");
-				
-				ResultSet rs = db.get("SELECT LAST_INSERT_ID();");
-				if (rs == null){
-					throw new SessionException("Impossible to insert new app in data base. (no rs)");
-				}
-				rs.next();
-				this.id = rs.getString(1);
+				Integer appId = db.set("INSERT INTO apps VALUES (NULL, "+ account.getId() +", NULL, " + profile.getId() + ", '" + profile.getApps().size() + "', '" + name + "', " + custom + ");");
+				this.id = appId.toString();
 				this.site = null;
 				this.index = profile.getApps().size();
 				this.name = name;

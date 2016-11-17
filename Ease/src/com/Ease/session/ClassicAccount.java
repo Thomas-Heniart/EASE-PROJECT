@@ -26,29 +26,19 @@ public class ClassicAccount extends Account{
 			throw new SessionException("Can't encrypt password.");
 		}
 		try {
-			db.set("INSERT INTO accounts VALUES (NULL);");
-			db.set("INSERT INTO classicAccounts VALUES (LAST_INSERT_ID());");
-		} catch (SQLException e) {
-			throw new SessionException("Impossible to insert new account in data base.");
-		}
-		try {
-			ResultSet rs = db.get("SELECT LAST_INSERT_ID();");
-			if (rs == null)
-				throw new SessionException("Impossible to insert new classic account in data base. (no rs)");
-			else {
-				rs.next();
-				this.accountInformations = accountInformations;
-				this.id = rs.getString(1);
-				this.type = "ClassicAccount";
-				for (Map.Entry<String, String> entry : this.accountInformations.entrySet()) {
-					if (entry.getKey().equals("password"))
-						db.set("INSERT INTO ClassicAccountsInformations VALUES (NULL, " + this.id + ", '" + entry.getKey() + "', '" + cryptedPassword + "');");
-					else
-						db.set("INSERT INTO ClassicAccountsInformations VALUES (NULL, " + this.id + ", '" + entry.getKey() + "', '" + entry.getValue() + "');");
-				}
+			Integer accountId = db.set("INSERT INTO accounts VALUES (NULL);");
+			db.set("INSERT INTO classicAccounts VALUES ("+accountId+");");
+			this.accountInformations = accountInformations;
+			this.id = accountId.toString();
+			this.type = "ClassicAccount";
+			for (Map.Entry<String, String> entry : this.accountInformations.entrySet()) {
+				if (entry.getKey().equals("password"))
+					db.set("INSERT INTO ClassicAccountsInformations VALUES (NULL, " + this.id + ", '" + entry.getKey() + "', '" + cryptedPassword + "');");
+				else
+					db.set("INSERT INTO ClassicAccountsInformations VALUES (NULL, " + this.id + ", '" + entry.getKey() + "', '" + entry.getValue() + "');");
 			}
 		} catch (SQLException e) {
-			throw new SessionException("Impossible to insert new classic account in data base. (no str1)");
+			throw new SessionException("Impossible to insert new classic account in data base.");
 		}
 	}
 
