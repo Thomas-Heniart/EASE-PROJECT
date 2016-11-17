@@ -28,11 +28,14 @@ OnCalendar=*-*-* 05:00:00
 [Install]
 WantedBy=multi-user.target
 ```
-Enable task : ```bash systemctl enable task.timer```
-Start task : ```bash systemctl start task.timer```
-If you want to verify
+Enable, start end check task
 ```bash
+systemctl enable task.timer
+systemctl start task.timer
 systemctl is-enabled task.timer
 systemctl is-active task.timer
 ```
-If you change a file, execute : ```bash systemctl daemon-reload```
+If you change a file, execute :
+```bash
+systemctl daemon-reload
+```
