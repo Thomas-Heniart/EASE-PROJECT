@@ -393,8 +393,7 @@ var Form = {
 					continue;
 				self.params[key] = self.attributesToSet[key];
 			}
-			$
-					.post(
+			$.post(
 							'editApp',
 							self.params,
 							function(data) {

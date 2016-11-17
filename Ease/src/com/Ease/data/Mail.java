@@ -88,4 +88,29 @@ public class Mail {
 			throw new MessagingException();
 		}
 	}
+	
+	public void sendGameEmail(String email) throws MessagingException {
+		try {
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+			message.setSubject(MimeUtility.encodeText("Mr. Ammeux got one, time to get yours", "utf-8", null));
+			String link = "https://goo.gl/forms/TBTvUDfwpoelcmV22";
+			message.setContent("<p>Hello dear Ease user!</p>" +
+					"<p></p>" +
+					"<p>We would like to thank you for being in one of the first 1000 users of Ease! </p>" +
+					"<p></p>" +
+					"<p>To celebrate we offer you a chance to win your Ease sweat-shirt (the one like JP Ammeux 😉. You must invite 3 IESEG friends to join!</p>" +
+					"<p>Click here to get your chance: <a href='"+link+"'>ease.space/...</a></p>" +
+					"<p></p>" +
+					"<p>See you soon,</p>" +
+					"<p></p>" +
+					"<p>The Ease Team</p>",
+					"text/html;charset=utf-8");		
+			Transport.send(message);
+			
+		} catch (AddressException e) {
+			throw new MessagingException();
+		} catch (UnsupportedEncodingException e) {
+			throw new MessagingException();
+		}
+	}
 }

@@ -1,7 +1,7 @@
 package com.Ease.servlet.backOffice;
 
 import java.io.IOException;
-
+import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -54,15 +54,26 @@ public class EraseRequestedWebsiteServlet extends HttpServlet {
 		
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 
+		try {
+			db.connect();
+		} catch (SQLException e) {
+			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
+			SI.sendResponse();
+			return ;
+		}
+		
 		if (user == null) {
 			SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
 		} else if (!user.isAdmin(session.getServletContext())) {
 			SI.setResponse(ServletItem.Code.NoPermission, "You have not the permission");
-		} else if (db.connect() != 0){
-			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 		} else {
-			db.set("DELETE FROM askForSite WHERE site='" + website + "';");
-			SI.setResponse(200, "Good");
+			try {
+				db.set("DELETE FROM askForSite WHERE site='" + website + "';");
+				SI.setResponse(200, "Good");
+			} catch (SQLException e) {
+				e.printStackTrace();
+				SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			}
 		}
 		SI.sendResponse();
 	}

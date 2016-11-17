@@ -1,12 +1,12 @@
 extension.runtime.bckgrndOnMessage("TestConnections", function(msg, senderTab, sendResponse){
-    extension.storage.set("WebsitesToTest", [] ,function(){
+    //extension.storage.set("WebsitesToTest", [] ,function(){
         var j = 0;
         for(var i in msg){
-            var coInfos = {detail:msg.detail[i]};
+            var coInfos = msg[i];
             console.log(coInfos.detail[coInfos.detail.length-1].website.name + " : Initialize test");
             connectTo(coInfos);
         }
-    });
+    //});
 });
 
 function connectTo(msg){
@@ -57,7 +57,7 @@ function connectTo(msg){
                                             msg.result = "Success";
                                             setTimeout(function(){
                                                 logoutFrom(msg, tab);
-                                            },2000);
+                                            },5000);
                                             extension.tabs.onUpdatedRemoveListener(tab);
                                             extension.tabs.onMessageRemoveListener(tab);
                                         }
@@ -159,8 +159,8 @@ function reconnect(msg, tab){
                                             msg.todo = "checkAlreadyLogged";
                                             msg.result = "Success";
                                            setTimeout(function(){
-                                                lastcheck(msg, tab);
-                                            }, 2000);
+                                                lastCheck(msg, tab);
+                                            }, 5000);
                                             extension.tabs.onUpdatedRemoveListener(tab);
                                             extension.tabs.onMessageRemoveListener(tab);
                                         }
@@ -185,7 +185,7 @@ function reconnect(msg, tab){
 
 function lastCheck(msg, tab){
     msg.todo = "checkAlreadyLogged";
-    msg.bigStep = 0;
+    msg.bigStep = msg.detail.length-1;
     msg.actionStep = 0;
     msg.waitreload= false;
     extension.tabs.inject(tab, ["tools/extensionLight.js","overlay/overlay.css", "overlay/injectOverlay.js", "tools/extension.js","jquery-3.1.0.js","contentScripts/actions.js"], function(){

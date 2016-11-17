@@ -37,8 +37,8 @@ public class Group {
 		ResultSet rs = null;
 		String parent = "null";
 		
-		rs = db.get("SELECT * FROM groups WHERE id = "+ group_id + ";");
 		try {
+			rs = db.get("SELECT * FROM groups WHERE id = "+ group_id + ";");
 			rs.next();
 			parent = rs.getString(3);
 			if (parent == null || parent.equals("null")) {
@@ -70,8 +70,8 @@ public class Group {
 		ResultSet rs = null;
 		List<CustomApp> customApps = new LinkedList<CustomApp>();
 		
-		rs = db.get("SELECT * FROM customApps WHERE group_id = "+ id + ";");
 		try {
+			rs = db.get("SELECT * FROM customApps WHERE group_id = "+ id + ";");
 			while (rs.next()) {
 				customApps.add(new CustomApp(rs.getString(1), rs.getString(2), Integer.parseInt(rs.getString(3)), rs.getString(4), context));
 			}

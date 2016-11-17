@@ -89,13 +89,19 @@ public class RegistrationByInvitation extends HttpServlet {
 		ResultSet rs = null;
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		
+		try {
+			db.connect();
+		} catch (SQLException e) {
+			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
+			SI.sendResponse();
+			return ;
+		}
+		
 		if (user != null) {
 			SI.setResponse(ServletItem.Code.AlreadyConnected, "You are logged on Ease.");
-		} else if (db.connect() != 0){
-			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 		} else if (fname == null || fname.length() < 2){
 			SI.setResponse(ServletItem.Code.BadParameters, "Your name is too short.");	
-		}  else if (email == null || Regex.isEmail(email) == false){
+		} else if (email == null || Regex.isEmail(email) == false){
 			SI.setResponse(ServletItem.Code.BadParameters, "Incorrect email.");
 		} else if (password == null || Regex.isPassword(password) == false) {
 			SI.setResponse(ServletItem.Code.BadParameters, "Password is too short (at least 8 characters).");
@@ -115,6 +121,7 @@ public class RegistrationByInvitation extends HttpServlet {
 						user = new User(fname, lname, email, "0606060606", password, session.getServletContext());
 						if (group != null && group.equals("null") == false)
 							db.set("insert into GroupAndUserMap values (NULL, " + group + ", " + user.getId() + ");");
+						user.checkForGroup(session.getServletContext());
 						db.set("delete from invitations where email = '" + email + "' and linkCode = '" + invitationCode + "';");
 						session.setAttribute("User", user);
 						db.set("CALL addEmail(" + user.getId() + ", '" + user.getEmail() + "');");

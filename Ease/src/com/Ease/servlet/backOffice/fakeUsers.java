@@ -47,16 +47,19 @@ public class fakeUsers extends HttpServlet {
 			RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
 			rd.forward(request, response);
 		} else {
-			if (db.connect() != 0) {
-				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "Connection failed");
+			try {
+				db.connect();
+			} catch (SQLException e) {
+				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 				SI.sendResponse();
+				return ;
 			}
 			Set<Integer> idsToRemove = new HashSet<Integer>();
-			ResultSet profilesWithoutApps = db.get(
-					"SELECT DISTINCT user_id FROM profiles left join apps on apps.profile_id = profiles.profile_id WHERE apps.profile_id IS NULL;");
-			ResultSet noProfiles = db.get(
-					"SELECT DISTINCT users.user_id FROM users LEFT JOIN profiles ON users.user_id = profiles.user_id WHERE profiles.user_id IS NULL AND users.user_id < 288");
-			try {
+				try {
+					ResultSet profilesWithoutApps = db.get(
+									"SELECT DISTINCT user_id FROM profiles left join apps on apps.profile_id = profiles.profile_id WHERE apps.profile_id IS NULL;");
+					ResultSet noProfiles = db.get(
+									"SELECT DISTINCT users.user_id FROM users LEFT JOIN profiles ON users.user_id = profiles.user_id WHERE profiles.user_id IS NULL AND users.user_id < 288");
 				String user_id = null;
 				while (profilesWithoutApps.next()) {
 					user_id = profilesWithoutApps.getString(1);

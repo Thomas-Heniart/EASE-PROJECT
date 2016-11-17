@@ -22,29 +22,16 @@ public class LogWithAccount extends Account {
 	public LogWithAccount(String app_id, ServletContext context) throws SessionException {
 		
 		DataBase db = (DataBase)context.getAttribute("DataBase");
-
-		if (db.set("INSERT INTO accounts VALUES (NULL);")
-				!= 0) {
-			throw new SessionException("Impossible to insert new account in data base.");
-		}
-		if (db.set("INSERT INTO logWithAccounts VALUES ("+ app_id + ",  LAST_INSERT_ID());") !=0){
-			throw new SessionException("Impossible to insert new logwith account in data base.");
-		}
-
-		ResultSet rs = db.get("SELECT LAST_INSERT_ID();");
-		if (rs == null)
-			throw new SessionException("Impossible to insert new logwith account in data base. (no rs)");
-		else {
-			try {
-				rs.next();
-				this.id = rs.getString(1);
-				this.app_id = app_id;
-				this.type = "LogWithAccount";
-			} catch (SQLException e) {
-				throw new SessionException("Impossible to insert new logwith account in data base. (no str1)");
-			}
-		}	
 		
+		try {
+			Integer accountId = db.set("INSERT INTO accounts VALUES (NULL);");	
+			db.set("INSERT INTO logWithAccounts VALUES ("+ app_id + ",  "+accountId+");");
+			this.id = accountId.toString();
+			this.app_id = app_id;
+			this.type = "LogWithAccount";
+		} catch (SQLException e) {
+			throw new SessionException("Impossible to insert new logwith account in data base. (no str1)");
+		}	
 	}
 	
 	// Load logWith;
@@ -84,17 +71,21 @@ public class LogWithAccount extends Account {
 	public void updateInDB(ServletContext context) throws SessionException {
 		DataBase db = (DataBase)context.getAttribute("DataBase");
 		
-		if (db.set("UPDATE logWithAccounts SET logWithApp=" + app_id + " WHERE account_id="+ id + ";")
-				!= 0)
+		try {
+			db.set("UPDATE logWithAccounts SET logWithApp=" + app_id + " WHERE account_id="+ id + ";");
+		} catch (SQLException e) {
 			throw new SessionException("Impossible to update logWith in data base.");
+		}
 	}
 	
 	public void deleteFromDB(ServletContext context) throws SessionException {
 		DataBase db = (DataBase)context.getAttribute("DataBase");
-		if (db.set("DELETE FROM logWithAccounts WHERE account_id=" + id + ";") != 0)
-			throw new SessionException("Impossible to delete logwith account in data base.");
-		if (db.set("DELETE FROM accounts WHERE account_id=" + id + ";") != 0)
+		try {
+			db.set("DELETE FROM logWithAccounts WHERE account_id=" + id + ";");
+			db.set("DELETE FROM accounts WHERE account_id=" + id + ";");
+		} catch (SQLException e) {
 			throw new SessionException("Impossible to delete account in data base.");
+		}
 	}
 
 	@Override

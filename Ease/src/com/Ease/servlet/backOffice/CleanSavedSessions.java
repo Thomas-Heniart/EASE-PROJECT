@@ -49,26 +49,29 @@ public class CleanSavedSessions extends HttpServlet {
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		ServletItem SI = new ServletItem(ServletItem.Type.CleanSavedSessions, request, response, user);
 
+		try {
+			db.connect();
+		} catch (SQLException e) {
+			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
+			SI.sendResponse();
+			return ;
+		}
+		
 		if(user == null){
 			SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
 		} else if(!user.isAdmin(session.getServletContext())){
 			SI.setResponse(ServletItem.Code.NoPermission, "You have not the permission.");
 		} else {
-			if(db.set("DELETE FROM savedSessions WHERE datetime < SUBTIME(CURRENT_TIMESTAMP, '2 0:0:0.0');") != 0){
-				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "Error when deleting sessions.");
-			} else {
+			try {
+				db.set("DELETE FROM savedSessions WHERE datetime < SUBTIME(CURRENT_TIMESTAMP, '2 0:0:0.0');");	
 				SiteManager siteManager = ((SiteManager)session.getServletContext().getAttribute("siteManager"));
-				try {
-					siteManager.refresh(db);
-				} catch (SQLException e) {
-					e.printStackTrace();
-					SI.setResponse(ServletItem.Code.LogicError, "Sql failed");
-					SI.sendResponse();
-				}
+				siteManager.refresh(db);
 				SI.setResponse(200,"SavedSessions cleaned and SiteManager refreshed.");
+			} catch (SQLException e) {
+				e.printStackTrace();
+				SI.setResponse(ServletItem.Code.LogicError, "Sql failed");
 			}
 		}
 		SI.sendResponse();
 	}
-
 }

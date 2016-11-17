@@ -1,6 +1,7 @@
 package com.Ease.servlet;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -48,15 +49,22 @@ public class DeleteEmail extends HttpServlet {
 			SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
 			SI.sendResponse();
 		}
-		if (db.connect() != 0) {
-			SI.setResponse(ServletItem.Code.DatabaseNotConnected,
-					"There is a problem with our Database, please retry in few minutes.");
+		try {
+			db.connect();
+		} catch (SQLException e) {
+			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 			SI.sendResponse();
+			return ;
 		}
 		String email = SI.getServletParam("email");
-		db.set("DELETE FROM usersEmails where email = '" + email + "' AND user_id = " + user.getId() + ";");
-		user.removeEmail(email);
-		SI.setResponse(200, "Email successfully deleted");
+		try {
+			db.set("DELETE FROM usersEmails where email = '" + email + "' AND user_id = " + user.getId() + ";");
+			user.removeEmail(email);
+			SI.setResponse(200, "Email successfully deleted");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+		}
 		SI.sendResponse();
 	}
 

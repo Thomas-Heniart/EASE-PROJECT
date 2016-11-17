@@ -1,6 +1,8 @@
 package com.Ease.servlet;
 
 import java.io.IOException;
+import java.sql.SQLException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -48,9 +50,12 @@ public class EditVerifiedEmails extends HttpServlet {
 			SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
 			SI.sendResponse();
 		}
-		if (db.connect() != 0){
+		try {
+			db.connect();
+		} catch (SQLException e) {
 			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 			SI.sendResponse();
+			return ;
 		}
 		
 		//getParams

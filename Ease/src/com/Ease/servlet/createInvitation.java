@@ -68,7 +68,13 @@ public class createInvitation extends HttpServlet {
 		ResultSet		rs;
 		Random r = new Random();
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
-		db.connect();
+		try {
+			db.connect();
+		} catch (SQLException e) {
+			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
+			SI.sendResponse();
+			return ;
+		}
 		if(user == null || !user.isAdmin(session.getServletContext())){
 			SI.setResponse(ServletItem.Code.NoPermission, "You have not the permission.");
 		} else {

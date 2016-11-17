@@ -69,10 +69,14 @@ public class ConnectionServlet extends HttpServlet {
 		}
 
 		try {
-			if (db.connect() != 0) {
-				SI.setResponse(ServletItem.Code.DatabaseNotConnected,
-						"There is a problem with our Database, please retry in few minutes.");
-			}
+			db.connect();
+		} catch (SQLException e) {
+			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
+			SI.sendResponse();
+			return ;
+		}
+		
+		try {
 			// Put current ip in db
 			addIpInDataBase(client_ip, db);
 			int attempts = 0;
@@ -140,15 +144,11 @@ public class ConnectionServlet extends HttpServlet {
 		return request.getRemoteAddr();
 	}
 
-	public void addIpInDataBase(String client_ip, DataBase db) {
-		ResultSet rs = db.get("SELECT * FROM askingIps WHERE ip='" + client_ip + "';");
-		try {
+	public void addIpInDataBase(String client_ip, DataBase db) throws SQLException {
+			ResultSet rs = db.get("SELECT * FROM askingIps WHERE ip='" + client_ip + "';");
 			if (rs.next())
 				return;
 			db.set("INSERT INTO askingIps values (NULL, '" + client_ip + "', 0, '" + getCurrentTime() + "', '" + getExpirationTime() + "');");
-		} catch (SQLException e) {
-
-		}
 	}
 
 	public String getCurrentTime() {
@@ -163,11 +163,11 @@ public class ConnectionServlet extends HttpServlet {
 		return dateFormat.format(new Date(date.getTime() + (expiration_time * ONE_MINUTE_IN_MILLIS)));
 	}
 
-	public void removeIpFromDataBase(String client_ip, DataBase db) {
+	public void removeIpFromDataBase(String client_ip, DataBase db)  throws SQLException {
 		db.set("DELETE FROM askingIps WHERE ip = '" + client_ip + "';");
 	}
 
-	public int incrementAttempts(String client_ip, DataBase db) {
+	public int incrementAttempts(String client_ip, DataBase db)  throws SQLException {
 		System.out.println(getExpirationTime());
 		db.set("UPDATE askingIps SET attempts = attempts + 1, attemptDate = '" + getCurrentTime()
 				+ "', expirationDate = '" + getExpirationTime() + "' WHERE ip = '" + client_ip + "';");
@@ -181,7 +181,7 @@ public class ConnectionServlet extends HttpServlet {
 		}
 	}
 
-	public boolean canConnect(String client_ip, DataBase db) {
+	public boolean canConnect(String client_ip, DataBase db)  throws SQLException {
 		ResultSet rs = db.get("SELECT attempts, expirationDate FROM askingIps WHERE ip='" + client_ip + "';");
 		int attempts = 0;
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

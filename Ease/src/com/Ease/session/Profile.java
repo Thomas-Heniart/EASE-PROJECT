@@ -54,27 +54,17 @@ public class Profile {
 			columnIdx = 0;
 			profileIdx = 0;
 		}
-		if (db.set("INSERT INTO profiles VALUES (NULL, '" + user.getId() + "', '" + name + "', '" + color + "', '" + desc + "', " + user.getProfiles().size() + ", " + ((custom != null) ? custom : "NULL") + ", " + columnIdx + ", "+ profileIdx + ");")
-			!= 0) {
-			throw new SessionException("Impossible to insert new profile in data base.");
-		} else {
+		try {
+			Integer profileId = db.set("INSERT INTO profiles VALUES (NULL, '" + user.getId() + "', '" + name + "', '" + color + "', '" + desc + "', " + user.getProfiles().size() + ", " + ((custom != null) ? custom : "NULL") + ", " + columnIdx + ", "+ profileIdx + ");");
 			this.name = name;
 			this.color = color;
 			this.description = desc;
 			this.custom = custom;
 			apps = new LinkedList<App>();
 			custom = null;
-			ResultSet rs = db.get("SELECT MAX(profile_id) FROM profiles;");
-			if (rs == null)
-				throw new SessionException("Impossible to insert new user in data base.");
-			else {
-				try {
-					rs.next();
-					this.id = rs.getString(1);
-				} catch (SQLException e) {
-					throw new SessionException("Impossible to insert new user in data base.");
-				}
-			}
+			this.id = profileId.toString();
+		} catch (SQLException e) {
+			throw new SessionException("Impossible to insert new user in data base.");
 		}
 	}
 
@@ -201,15 +191,17 @@ public class Profile {
 	
 	public void updateInDB(ServletContext context) throws SessionException {
 		DataBase db = (DataBase)context.getAttribute("DataBase");
-		if (db.set("UPDATE profiles SET name='" + name + "', `color`='"+ color + "', description='" + description + "', position='" + index + "', columnIdx=" + columnIdx + ", profileIdx=" + profileIdx + " WHERE `profile_id`='"+ id + "';")
-				!= 0)
+		try {
+			db.set("UPDATE profiles SET name='" + name + "', `color`='"+ color + "', description='" + description + "', position='" + index + "', columnIdx=" + columnIdx + ", profileIdx=" + profileIdx + " WHERE `profile_id`='"+ id + "';");	
+		} catch (SQLException e) {
 			throw new SessionException("Impossible to update profile in data base.");
+		}
 	}
 	
 	public void loadApps(ServletContext context, User user) throws SessionException {
 		DataBase db = (DataBase)context.getAttribute("DataBase");
-		ResultSet rs = db.get("SELECT * FROM apps WHERE profile_id='" + id + "';");
 		try {
+			ResultSet rs = db.get("SELECT * FROM apps WHERE profile_id='" + id + "';");
 			while (rs.next()) {
 				App app = new App(rs, this, user, context);
 				apps.add(app);
@@ -237,8 +229,11 @@ public class Profile {
 		for (int i = 0; i < apps.size(); ++i) {
 			apps.get(i).deleteFromDB(context);
 		}
-		if (db.set("DELETE FROM profiles WHERE profile_id='" + id + "';") != 0)
+		try {
+			db.set("DELETE FROM profiles WHERE profile_id='" + id + "';");
+		} catch (SQLException e) {
 			throw new SessionException("Impossible to delete profile in data base.");
+		}
 	}
 	
 	public void updateIndex(ServletContext context) throws SessionException {

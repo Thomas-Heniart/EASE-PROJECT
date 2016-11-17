@@ -1,6 +1,7 @@
 package com.Ease.servlet;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -60,6 +61,14 @@ public class MoveApp extends HttpServlet {
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		
 		try {
+			db.connect();
+		} catch (SQLException e) {
+			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
+			SI.sendResponse();
+			return ;
+		}
+		
+		try {
 			int appId = Integer.parseInt(appIdParam);
 			int profileId = Integer.parseInt(profileIdParam);
 			int index = Integer.parseInt(indexParam);
@@ -68,8 +77,6 @@ public class MoveApp extends HttpServlet {
 				
 			if (user == null) {
 				SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
-			} else if (db.connect() != 0){
-				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 			} else if ((app = user.getApp(appId)) == null){
 				SI.setResponse(ServletItem.Code.BadParameters, "Bad appId");
 			} else if ((profile = user.getProfile(profileId)) == null){
@@ -93,11 +100,19 @@ public class MoveApp extends HttpServlet {
 					SI.setResponse(ServletItem.Code.NoPermission, "You have not the permission.");
 				}
 			}
-		} catch (SessionException e) {
-			db.cancel(transaction);
+		} catch (SessionException | SQLException e) {
+			try {
+				db.cancel(transaction);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		} catch (NumberFormatException e) {
-			db.cancel(transaction);
+			try {
+				db.cancel(transaction);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 			SI.setResponse(ServletItem.Code.BadParameters, "Bad numbers.");
 		}
 		SI.sendResponse();	
