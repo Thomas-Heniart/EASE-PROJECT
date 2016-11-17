@@ -17,17 +17,15 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.annotation.WebServlet;
 
 import com.Ease.context.DataBase;
-import com.Ease.data.Regex;
+import com.Ease.data.Mail;
 import com.Ease.data.ServletItem;
-import com.Ease.data.Hashing;
-import com.Ease.session.SessionException;
 import com.Ease.session.User;
 
 /**
@@ -109,27 +107,8 @@ public class checkVerifiedEmail extends HttpServlet {
 					verificationCode += alphabet.charAt(r.nextInt(alphabet.length()));
 				db.set("UPDATE usersEmails SET verificationCode = '" + verificationCode + "' WHERE user_id = " + user.getId() + " AND email = '" + email + "';");
 			}
-			String link = "http://localhost:8080/HelloWorld/AddEmail?email=" + email + "&code=" + verificationCode;
-			Properties props = new Properties();
-			props.put("mail.smtp.host", "smtp.gmail.com");
-			props.put("mail.smtp.socketFactory.port", "465");
-			props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-			props.put("mail.smtp.auth", "true");
-			props.put("mail.smtp.port", "465");
-			Session msession = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
-				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication("benjamin@ease-app.co", "bpease.P2211");
-				}
-			});
-			MimeMessage message = new MimeMessage(msession);
-			message.setFrom(new InternetAddress("benjamin@ease-app.co", "Ease Team"));
-			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
-			message.setSubject(MimeUtility.encodeText("Validation email !", "utf-8", null));
-			message.setContent("<div style='color: black;'><p>Hello !<br /></p>"
-					+ "<p>To validate your email in order to receive updates, click on the link <a href='" + link
-					+ "'>here</a>.</p>"
-					+ "<p>If you have not asked for a validation on <a href='https://ease.space'>https://ease.space</a>, you can ignore this email.</p>"
-					+ "<p>See you soon !</p>" + "<p>The Ease team</p>" + "</div>", "text/html;charset=utf-8");
-			Transport.send(message);
+			String link = "https://ease.space/AddEmail?email=" + email + "&code=" + verificationCode;
+			Mail newMail = new Mail();
+			newMail.sendVerificationEmail(email, link);
 	}
 }
