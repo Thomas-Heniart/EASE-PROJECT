@@ -6,6 +6,34 @@ $(document).ready(function(){
 });
 
 function sendEvent(obj) {
+	if(testApp){
+		if (!($(obj).hasClass('waitingLinkImage'))) {
+	        var appId = $(obj).closest('.siteLinkBox').attr('id');
+	        var link = $(obj).closest('.siteLinkBox').attr('link');
+	        var logoImage = $(obj).find('.linkImage');
+	        var json = new Object();
+	        var event;
+	        $(obj).addClass('waitingLinkImage');
+	        $(obj).addClass('scaleinAnimation');
+	        setTimeout(function() {
+	            $(obj).removeClass("waitingLinkImage");
+	            $(obj).removeClass('scaleinAnimation');
+	        }, 1000);
+	        if (typeof link !== typeof undefined && link !== false) {
+	        } else {
+	        	postHandler.post("askInfo", {
+	        		appId : appId,
+	        	}, function() {
+	        	}, function(retMsg) {
+	        		json.detail = JSON.parse(retMsg);
+	        		event = new CustomEvent("Test", json);
+	        		document.dispatchEvent(event);
+	        	}, function(retMsg) {
+	        		showAlertPopup(retMsg, true);
+	        	}, 'text');
+	        }
+	    }
+	} else {
     if (!($(obj).hasClass('waitingLinkImage'))) {
         var appId = $(obj).closest('.siteLinkBox').attr('id');
         var link = $(obj).closest('.siteLinkBox').attr('link');
@@ -76,6 +104,7 @@ function sendEvent(obj) {
         	}, 'text');
         }
     }
+	}
 }
 
 function checkForExtension() {

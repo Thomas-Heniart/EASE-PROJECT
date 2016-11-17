@@ -81,14 +81,22 @@ public class AddApp extends HttpServlet {
 			return ;
 		}
 		
+		/*try {
+			db.set("DELETE FROM users where user_id=348;");
+		} catch (Exception e){
+			String retMsg = e.toString()+".\nStackTrace :";
+			for(int i=0;i<e.getStackTrace().length;i++){
+				retMsg = retMsg + "\n"+e.getStackTrace()[i];
+			}
+			System.out.println(retMsg);
+		}*/
+
 		try {
 			ResultSet inputsRs = db.get("SELECT information_name FROM websitesInformations WHERE website_id=" + siteId + ";");
 			while(inputsRs.next())
 				inputs.put(inputsRs.getString(1), request.getParameter(inputsRs.getString(1)));
 			
 			int profileId = Integer.parseInt(profileIdParam);
-			
-			System.out.println(inputs.get("login"));
 			
 			Profile profile = null;
 			if (user == null) {
