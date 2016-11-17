@@ -70,8 +70,17 @@ public class AddApp extends HttpServlet {
 		// --
 		
 		Site site = null;
-		boolean transaction = false;
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
+		boolean transaction = false;
+		
+		try {
+			db.connect();
+		} catch (SQLException e) {
+			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
+			SI.sendResponse();
+			return ;
+		}
+		
 		try {
 			ResultSet inputsRs = db.get("SELECT information_name FROM websitesInformations WHERE website_id=" + siteId + ";");
 			while(inputsRs.next())
@@ -79,11 +88,11 @@ public class AddApp extends HttpServlet {
 			
 			int profileId = Integer.parseInt(profileIdParam);
 			
+			System.out.println(inputs.get("login"));
+			
 			Profile profile = null;
 			if (user == null) {
 				SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
-			} else if (db.connect() != 0){
-				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 			} else if (inputs.get("login") == null || inputs.get("login").equals("")) {
 				SI.setResponse(ServletItem.Code.BadParameters, "Login can't be empty.");
 			} else if (name.length() > 14) {
@@ -106,7 +115,7 @@ public class AddApp extends HttpServlet {
 							user.updateInDB(session.getServletContext());
 						}
 						if (Regex.isEmail(inputs.get("login"))) {
-							db.set("CALL addEmail(" + user.getId() + ", '" + inputs.get("login") + "');");
+							db.set("CALL AddEmail(" + user.getId() + ", '" + inputs.get("login") + "');");
 							user.addEmailIfNotPresent(inputs.get("login"));
 						}
 						db.set("CALL increaseRatio(" + siteId + ");");
@@ -119,11 +128,19 @@ public class AddApp extends HttpServlet {
 					}
 				}
 			}
-		} catch (SessionException e) {
-			db.cancel(transaction);
+		} catch (SessionException | SQLException e) {
+			try {
+				db.cancel(transaction);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
-		} catch (IndexOutOfBoundsException | SQLException e){
-			db.cancel(transaction);
+		} catch (IndexOutOfBoundsException e){
+			try {
+				db.cancel(transaction);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		} catch (NumberFormatException e) {
 			SI.setResponse(ServletItem.Code.BadParameters, "Numbers exception.");

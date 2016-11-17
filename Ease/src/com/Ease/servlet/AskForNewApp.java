@@ -1,6 +1,7 @@
 package com.Ease.servlet;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,7 +12,6 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.annotation.WebServlet;
 
 import com.Ease.context.DataBase;
-import com.Ease.data.Regex;
 import com.Ease.data.ServletItem;
 import com.Ease.session.User;
 
@@ -52,14 +52,26 @@ public class AskForNewApp extends HttpServlet {
 		// --
 		
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
-		if (user == null) {
-			SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
-		} else if (db.connect() != 0){
-			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our database, please retry in few minutes.");
-		} else {
-			db.set("INSERT INTO askForSite VALUES ('" + user.getEmail() + "', '" + ask + "');");
-			SI.setResponse(200, "Site asked.");
+		
+		try {
+			db.connect();
+		} catch (SQLException e) {
+			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
+			SI.sendResponse();
+			return ;
+		}
+		
+		try {
+			if (user == null) {
+				SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
+			} else {
+				db.set("INSERT INTO askForSite VALUES ('" + user.getEmail() + "', '" + ask + "');");
+				SI.setResponse(200, "Site asked.");
+			}
+		} catch (SQLException e) {
+			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		}
 		SI.sendResponse();
+		
 	}
 }

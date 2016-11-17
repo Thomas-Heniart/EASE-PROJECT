@@ -52,6 +52,15 @@ public class SiteManager {
 			this.add(new Site(otherSitesRs, db));
 
 	}
+	
+	public String haveThisUrl(String url) {
+		for (int i = 0; i < sites.size(); ++i) {
+			if (sites.get(i).getUrl().contains(url)) {
+				return sites.get(i).getId();
+			}
+		}
+		return null;
+	}
 
 	public void clearTags() {
 		tags.clear();

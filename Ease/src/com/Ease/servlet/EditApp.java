@@ -75,6 +75,14 @@ public class EditApp extends HttpServlet {
 		boolean transaction = false;
 
 		try {
+			db.connect();
+		} catch (SQLException e) {
+			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
+			SI.sendResponse();
+			return ;
+		}
+		
+		try {
 			int appId = Integer.parseInt(appIdParam);
 			ResultSet informationsRs = db.get("SELECT information_name FROM websitesInformations WHERE website_id =" + user.getApp(appId).getSite().getId() + " AND information_name <> 'password';");
 			while (informationsRs.next())
@@ -84,9 +92,6 @@ public class EditApp extends HttpServlet {
 			
 			if (user == null) {
 				SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
-			} else if (db.connect() != 0) {
-				SI.setResponse(ServletItem.Code.DatabaseNotConnected,
-						"There is a problem with our Database, please retry in few minutes.");
 			} else {
 				String logWithId = SI.getServletParam("lwId");
 				if (logWithId == null || logWithId.isEmpty()) {
@@ -193,17 +198,22 @@ public class EditApp extends HttpServlet {
 				}
 			}
 
-		} catch (SessionException e) {
-			db.cancel(transaction);
+		} catch (SessionException | IndexOutOfBoundsException | SQLException e) {
+			try {
+				db.cancel(transaction);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		} catch (NumberFormatException e) {
-			db.cancel(transaction);
+			try {
+				db.cancel(transaction);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 			e.printStackTrace();
 			SI.setResponse(ServletItem.Code.BadParameters, "Bad numbers.");
-		} catch (IndexOutOfBoundsException | SQLException e) {
-			db.cancel(transaction);
-			e.printStackTrace();
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		}
 		SI.sendResponse();
 	}

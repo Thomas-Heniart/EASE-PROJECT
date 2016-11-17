@@ -1,6 +1,6 @@
 package com.Ease.servlet;
 import java.io.IOException;
-
+import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -59,11 +59,16 @@ public class AddProfile extends HttpServlet {
 		
 		boolean transaction = false;
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
+		try {
+			db.connect();
+		} catch (SQLException e) {
+			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
+			SI.sendResponse();
+			return ;
+		}
 		
 		if (user == null){
 			SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
-		} else if (db.connect() != 0){
-			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 		} else if (user.getProfiles().size() > 16){
 			SI.setResponse(ServletItem.Code.LogicError, "Too many profiles.");
 		} else if (name == null || name == ""){
@@ -78,8 +83,15 @@ public class AddProfile extends HttpServlet {
 				SI.setResponse(200, Integer.toString(profile.getProfileId()));
 				db.commit(transaction);
 			} catch (SessionException e) {
-				db.cancel(transaction);
+				try {
+					db.cancel(transaction);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
 				SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			} catch (SQLException e) {
+				SI.setResponse(ServletItem.Code.LogicError, "There is a problem with our Database, please retry in few minutes.");
+				e.printStackTrace();
 			}
 		}
 		SI.sendResponse();

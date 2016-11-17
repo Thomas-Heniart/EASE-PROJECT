@@ -15,6 +15,7 @@ import com.Ease.context.DataBase;
 import com.Ease.context.SiteManager;
 import com.Ease.data.AES;
 import com.Ease.data.Hashing;
+import com.Ease.session.update.Update;
 
 public class User {
 	public enum UserData {
@@ -51,6 +52,8 @@ public class User {
 	int				maxProfileId;
 	int				maxAppId;
 	List<App>		apps;
+	List<Update>	updates;
+	Integer			maxKnowId = 0;
 	
 	//Use this to create a new user and set it in database
 	public User(String fName, String lName, String email, String tel, String pass, ServletContext context) throws SessionException {
@@ -68,11 +71,11 @@ public class User {
 			throw new SessionException("Can't encrypt key.");
 		} else if ((hashedPassword = Hashing.SHA(pass, saltEase)) == null) {
 			throw new SessionException("Can't hash password.");
-		} else if (db.set("INSERT INTO users VALUES (NULL, '" + fName + "', '" + lName + "', '" + email + "', '" + tel
-				+ "', '" + hashedPassword + "', '" + saltEase + "', '" + saltPerso + "', '" + keyCrypted
-				+ "', 0, 1);") != 0) {
-			throw new SessionException("Impossible to insert new user in data base.");
-		} else {
+		} 
+		try {
+			db.set("INSERT INTO users VALUES (NULL, '" + fName + "', '" + lName + "', '" + email + "', '" + tel
+					+ "', '" + hashedPassword + "', '" + saltEase + "', '" + saltPerso + "', '" + keyCrypted
+					+ "', 0, 1);");
 			this.firstName = fName;
 			this.lastName = lName;
 			this.email = email;
@@ -88,25 +91,21 @@ public class User {
 			maxProfileId = 0;
 			maxAppId = 0;
 			apps = new LinkedList<App>();
+			updates = new LinkedList<Update>();
 			group_ids = new LinkedList<String>();
 			ResultSet rs = db.get("SELECT user_id FROM users WHERE email='" + email + "';");
-			if (rs == null)
-				throw new SessionException("Impossible to insert new user in data base.");
-			else {
-				try {
-					rs.next();
-					this.id = rs.getString(1);
-					Profile profile = new Profile("Side", "#FFFFFF", "", this, null, context, true);
-					this.profiles.add(profile);
-					this.profilesDashboard.get(0).add(profile);
-					profile = new Profile("Perso", "#35a7ff", "", this, null, context, false);
-					this.profiles.add(profile);
-					this.profilesDashboard.get(1).add(profile);
-					loadEmails(context);
-				} catch (SQLException e) {
-					throw new SessionException("Impossible to insert new user in data base.");
-				}
-			}
+			
+			rs.next();
+			this.id = rs.getString(1);
+			Profile profile = new Profile("Side", "#FFFFFF", "", this, null, context, true);
+			this.profiles.add(profile);
+			this.profilesDashboard.get(0).add(profile);
+			profile = new Profile("Perso", "#35a7ff", "", this, null, context, false);
+			this.profiles.add(profile);
+			this.profilesDashboard.get(1).add(profile);
+			loadEmails(context);
+		} catch (SQLException e) {
+			throw new SessionException("Impossible to insert new user in data base.");
 		}
 	}
 
@@ -128,6 +127,7 @@ public class User {
 			maxProfileId = 0;
 			maxAppId = 0;
 			apps = new LinkedList<App>();
+			updates = new LinkedList<Update>();
 			group_ids = new LinkedList<String>();
 
 			String oldHashedPassword = rs.getString(UserData.PASSWORD.ordinal());
@@ -197,6 +197,7 @@ public class User {
 			maxProfileId = 0;
 			maxAppId = 0;
 			apps = new LinkedList<App>();
+			updates = new LinkedList<Update>();
 			group_ids = new LinkedList<String>();
 
 			this.keyUser = keyUser;
@@ -273,9 +274,16 @@ public class User {
 		maxAppId++;
 		return maxAppId;
 	}
+	public String getNextKnowId() {
+		maxKnowId++;
+		return maxKnowId.toString();
+	}
 
 	public List<App> getApps() {
 		return apps;
+	}
+	public List<Update> getUpdates() {
+		return updates;
 	}
 
 	public App getApp(int id) {
@@ -381,8 +389,8 @@ public class User {
 	
 	public void loadProfiles(ServletContext context) throws SessionException {
 		DataBase db = (DataBase) context.getAttribute("DataBase");
-		ResultSet rs = db.get("SELECT * FROM profiles WHERE user_id='" + id + "';");
 		try {
+			ResultSet rs = db.get("SELECT * FROM profiles WHERE user_id='" + id + "';");
 			while (rs.next()) {
 				Profile profile = new Profile(rs, this, context);
 				profiles.add(profile);
@@ -445,18 +453,25 @@ public class User {
 	public void updateInDB(ServletContext context, String pass) throws SessionException {
 		DataBase db = (DataBase) context.getAttribute("DataBase");
 		String cryptedKeyUser = AES.encryptUserKey(keyUser, pass, saltPerso);
-		if (db.set("UPDATE users SET firstName='" + firstName + "', `lastName`='" + lastName + "', email='" + email
+		try {
+			db.set("UPDATE users SET firstName='" + firstName + "', `lastName`='" + lastName + "', email='" + email
 				+ "', `tel`='" + tel + "', `password`='" + hashedPassword + "', `keyUser`='" + cryptedKeyUser
-				+ "', saltEase='" + saltEase + "', saltPerso='" + saltPerso + "' WHERE `user_id`='" + id + "';") != 0)
+				+ "', saltEase='" + saltEase + "', saltPerso='" + saltPerso + "' WHERE `user_id`='" + id + "';");
+		} catch (SQLException e) {
 			throw new SessionException("Impossible to update user in data base.");
+		}
 	}
 
 	public void updateInDB(ServletContext context) throws SessionException {
 		DataBase db = (DataBase) context.getAttribute("DataBase");
-		if (db.set("UPDATE users SET firstName='" + firstName + "', `lastName`='" + lastName + "', email='" + email
+		
+		try {
+			db.set("UPDATE users SET firstName='" + firstName + "', `lastName`='" + lastName + "', email='" + email
 				+ "', `tel`='" + tel + "', `tuto`='" + tuto + "', bckgrndPic=" + ((background == "picture") ? "1" : "0")
-				+ " WHERE `user_id`='" + id + "';") != 0)
+				+ " WHERE `user_id`='" + id + "';");
+		} catch (SQLException e) {
 			throw new SessionException("Impossible to update user in data base.");
+		}
 	}
 
 	public void deleteFromDB(ServletContext context) throws SessionException {
@@ -464,8 +479,11 @@ public class User {
 		for (int i = 0; i < profiles.size(); ++i) {
 			profiles.get(i).deleteFromDB(context);
 		}
-		if (db.set("DELETE FROM users WHERE user_id='" + id + "';") != 0)
+		try {
+			db.set("DELETE FROM users WHERE user_id='" + id + "';");
+		} catch (SQLException e) {
 			throw new SessionException("Impossible to delete user in data base.");
+		}
 	}
 
 	public void updateIndex(ServletContext context) throws SessionException {
@@ -505,17 +523,11 @@ public class User {
 		DataBase db = (DataBase) context.getAttribute("DataBase");
 
 		try {
-			if (db.connect() != 0) {
-				return false;
-			} else {
-				ResultSet rs;
-				if ((rs = db.get("select * from admins where email = '" + email + "';")) == null || !rs.next()) {
-					return false;
-				} else {
-					return true;
-				}
-			}
-
+			db.connect();
+			ResultSet rs;
+			rs = db.get("select * from admins where email = '" + email + "';");
+			rs.next();
+			return true;
 		} catch (SQLException e) {
 			return false;
 		}
@@ -525,20 +537,14 @@ public class User {
 		DataBase db = (DataBase) context.getAttribute("DataBase");
 
 		try {
-			if (db.connect() != 0) {
-				return;
-			} else {
-				ResultSet rs;
-				if ((rs = db.get("select group_id from GroupAndUserMap where user_id=" + id + ";")) == null) {
-					throw new SessionException("Can't get groups. 1");
-				}
+			db.connect();
+			ResultSet rs;
+			rs = db.get("select group_id from GroupAndUserMap where user_id=" + id + ";");
 				while (rs.next()) {
 					String group_id = rs.getString(1);
 					loadGroup(context, group_id);
 					group_ids.add(group_id);
 				}
-			}
-
 		} catch (SQLException e) {
 			throw new SessionException("Can't get groups. 0");
 		}

@@ -67,14 +67,20 @@ public class ResetUser extends HttpServlet {
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
 		
 		try {
+			db.connect();
+		} catch (SQLException e) {
+			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
+			SI.sendResponse();
+			return ;
+		}
+		
+		try {
 			if (user != null) {
 				SI.setResponse(ServletItem.Code.AlreadyConnected, "You are logged on Ease.");
 			} else if (password == null || Regex.isPassword(password) == false) {
 				SI.setResponse(ServletItem.Code.BadParameters, "Bad password.");
 			} else if (confirmPassword == null || confirmPassword.equals(password) == false){
 				SI.setResponse(ServletItem.Code.BadParameters, "Passwords are not the same.");
-			} else if (db.connect() != 0){
-				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 			} else {
 				ResultSet rs = db.get("select * from PasswordLost where linkCode='" + linkCode + "';");
 				if (rs.next()) {

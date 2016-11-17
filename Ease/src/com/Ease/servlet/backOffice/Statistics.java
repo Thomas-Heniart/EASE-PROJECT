@@ -69,7 +69,12 @@ public class Statistics extends HttpServlet {
 
 		/* Connect db */
 		DataBase db = (DataBase) session.getServletContext().getAttribute("DataBase");
-		db.connect();
+		try {
+			db.connect();
+		} catch (SQLException e) {
+			response.getWriter().print("Db not connected");	
+			return ;
+		}
 		String dbRequest = null;
 
 		String startDate = null;
@@ -105,6 +110,8 @@ public class Statistics extends HttpServlet {
 		for (LocalDate date = start; date.isBefore(end); date = date.plusDays(1))
 			dates.add(date.toString());
 
+		try {
+		
 		if (dailyConnections != null)
 			jsonRes.put("dailyConnections", getDailyConnections(db, start, end, SI));
 
@@ -129,6 +136,9 @@ public class Statistics extends HttpServlet {
 		if (!jsonRes.isEmpty())
 			jsonRes.put("dates", dates);
 		SI.setResponse(200, jsonRes.toString());
+		} catch (SQLException e) {
+			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+		}
 		SI.sendResponse();
 	}
 
@@ -143,7 +153,7 @@ public class Statistics extends HttpServlet {
 		return resObj;
 	}
 
-	public JSONObject getDailyConnections(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) {
+	public JSONObject getDailyConnections(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) throws SQLException{
 		String request = "SELECT DISTINCT date, count(user_id) FROM (SELECT DISTINCT CAST(date AS DATE) AS date, user_id FROM logs WHERE type = "
 				+ ServletItem.Type.ConnectionServlet.ordinal() + " AND CAST(date AS DATE) BETWEEN '"
 				+ startDate.toString() + "' AND '" + endDate.toString() + "') AS t GROUP BY date;";
@@ -154,28 +164,28 @@ public class Statistics extends HttpServlet {
 				"usersChart");
 	}
 
-	public JSONObject getRegisteredUsers(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) {
+	public JSONObject getRegisteredUsers(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) throws SQLException{
 		JSONArray values = getValuesForRequest(db, startDate, endDate,
 				" AND code = 200 AND type = " + ServletItem.Type.RegistrationByInvitation.ordinal(), SI);
 		return getJsonObjectFor(values, "Registred users", "rgba(132, 255, 99, 0.2)", "rgba(132, 255, 99, 1)",
 				"usersChart");
 	}
 
-	public JSONObject getRegisteredUsersWithTuto(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) {
+	public JSONObject getRegisteredUsersWithTuto(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) throws SQLException{
 		JSONArray values = getValuesForRequest(db, startDate, endDate,
 				" AND code = 200 AND tuto = 1 AND type = " + ServletItem.Type.RegistrationByInvitation.ordinal(), SI);
 		return getJsonObjectFor(values, "Registred users with tuto", "rgba(255, 132, 99, 0.2)", "rgba(255, 132, 99, 1)",
 				"usersChart");
 	}
 
-	public JSONObject getConnectionsOnWebsites(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) {
+	public JSONObject getConnectionsOnWebsites(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI)throws SQLException {
 		JSONArray values = getValuesForRequest(db, startDate, endDate,
 				" AND type = " + ServletItem.Type.AskInfo.ordinal() + " AND code = 200", SI);
 		return getJsonObjectFor(values, "Connections on webistes via EASE", "rgba(255, 99, 132, 0.2)",
 				"rgba(255, 99, 132, 1)", "connectionsChart");
 	}
 
-	public JSONObject getDailyUsersRequest(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) {
+	public JSONObject getDailyUsersRequest(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) throws SQLException{
 		JSONObject resObj = new JSONObject();
 		int dailyUsers = 0;
 		int totalUsers = 0;
@@ -215,7 +225,7 @@ public class Statistics extends HttpServlet {
 	}
 
 	public JSONObject getAverageConnectionsPerDailyUsers(DataBase db, LocalDate startDate, LocalDate endDate,
-			String dailyUsersRequest, ServletItem SI) {
+			String dailyUsersRequest, ServletItem SI)throws SQLException {
 		ResultSet rs = db
 				.get("SELECT date, count(*) from (SELECT CAST(date AS DATE) AS date FROM logs JOIN " + dailyUsersRequest
 						+ " ON DailyUsers.user_id = logs.user_id where type = 7 AND code = 200) as tmp group BY date;");
@@ -239,7 +249,7 @@ public class Statistics extends HttpServlet {
 				"rgba(255, 99, 132, 1)", "connectionsChart");
 	}
 
-	public JSONObject getAppsAdded(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) {
+	public JSONObject getAppsAdded(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI)throws SQLException {
 		JSONArray values = getValuesForRequest(db, startDate, endDate,
 				" AND (type = " + ServletItem.Type.AddApp.ordinal() + " OR type = "
 						+ ServletItem.Type.AddAppSso.ordinal() + " OR type = " + ServletItem.Type.AddLogWith.ordinal()
@@ -248,7 +258,7 @@ public class Statistics extends HttpServlet {
 		return getJsonObjectFor(values, "Apps added", "rgba(99, 132, 255, 0.2)", "rgba(99, 132, 255, 1)", "appsChart");
 	}
 
-	public JSONObject getAppsRemoved(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI) {
+	public JSONObject getAppsRemoved(DataBase db, LocalDate startDate, LocalDate endDate, ServletItem SI)throws SQLException {
 		JSONArray values = getValuesForRequest(db, startDate, endDate,
 				" AND type = " + ServletItem.Type.DeleteApp.ordinal(), SI);
 		return getJsonObjectFor(values, "Apps removed", "rgba(255, 99, 132, 0.2)", "rgba(255, 99, 132, 1)",
@@ -272,7 +282,7 @@ public class Statistics extends HttpServlet {
 
 	/* Request using newRequest() */
 	public JSONArray getValuesForRequest(DataBase db, LocalDate startDate, LocalDate endDate, String request,
-			ServletItem SI) {
+			ServletItem SI) throws SQLException{
 		System.out.println(newRequest(startDate, endDate, request, false));
 		ResultSet rs = db.get(newRequest(startDate, endDate, request, false));
 		return extractValuesFromResultSet(rs, SI);
@@ -280,7 +290,7 @@ public class Statistics extends HttpServlet {
 	}
 
 	public JSONArray getValuesForRequest(DataBase db, LocalDate startDate, LocalDate endDate, String request,
-			Boolean distinct, ServletItem SI) {
+			Boolean distinct, ServletItem SI) throws SQLException{
 		System.out.println(newRequest(startDate, endDate, request, distinct));
 		ResultSet rs = db.get(newRequest(startDate, endDate, request, distinct));
 		return extractValuesFromResultSet(rs, SI);
@@ -288,7 +298,7 @@ public class Statistics extends HttpServlet {
 	}
 
 	/* Request without newRequest() */
-	public JSONArray getValuesForSimpleRequest(DataBase db, String request, ServletItem SI) {
+	public JSONArray getValuesForSimpleRequest(DataBase db, String request, ServletItem SI) throws SQLException {
 		ResultSet rs = db.get(request);
 		return extractValuesFromResultSet(rs, SI);
 

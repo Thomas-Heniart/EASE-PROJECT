@@ -30,12 +30,10 @@ public class OnStart implements ServletContextListener {
 		}
 		DataBase db = new DataBase();
 		context.setAttribute("DataBase", db);
-		if (db.connect() != 0) {
-			return;
-		}
 
 		
 		try {
+			db.connect();
 			// SiteManager initialization
 			SiteManager siteManager = new SiteManager();
 			siteManager.refresh(db);
@@ -53,16 +51,15 @@ public class OnStart implements ServletContextListener {
 				colors.add(new Color(rs));
 			}
 			context.setAttribute("Colors", colors);
+			//Intialize adminMessage
+			AdminMessage adminMessage = new AdminMessage();
+			context.setAttribute("AdminMessage", adminMessage);
+			
+			System.out.println("done.");
+			db.close();
 		} catch (SQLException e1) {
 			e1.printStackTrace();
+			return ;
 		}
-		
-		//Intialize adminMessage
-		AdminMessage adminMessage = new AdminMessage();
-		context.setAttribute("AdminMessage", adminMessage);
-		
-		System.out.println("done.");
-		db.close();
-		
 	}
 }

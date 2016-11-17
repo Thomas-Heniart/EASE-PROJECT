@@ -59,19 +59,22 @@ public class DeleteAccount extends HttpServlet {
 			SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
 			SI.sendResponse();
 		}
-		if (db.connect() != 0) {
-			SI.setResponse(ServletItem.Code.DatabaseNotConnected,
-					"There is a problem with our Database, please retry in few minutes.");
+		try {
+			db.connect();
+		} catch (SQLException e) {
+			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 			SI.sendResponse();
+			return ;
 		}
 		String password = request.getParameter("password");
 		ResultSet rs;
-		rs = db.get("select * from users where email = '" + user.getEmail() + "';");
-		if (rs == null) {
-			SI.setResponse(ServletItem.Code.LogicError, "Impossible to access data base.");
-			SI.sendResponse();
-		}
+		
 		try {
+			rs = db.get("select * from users where email = '" + user.getEmail() + "';");
+			if (rs == null) {
+				SI.setResponse(ServletItem.Code.LogicError, "Impossible to access data base.");
+				SI.sendResponse();
+			}
 			if (rs.next()) {
 				String saltEase = rs.getString(UserData.SALTEASE.ordinal());
 				String hashedPass = Hashing.SHA(password, saltEase);

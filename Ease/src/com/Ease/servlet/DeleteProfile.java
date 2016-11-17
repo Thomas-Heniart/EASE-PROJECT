@@ -2,6 +2,7 @@ package com.Ease.servlet;
 
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -63,14 +64,19 @@ public class DeleteProfile extends HttpServlet {
 		Profile profile = null;
 		boolean transaction = false;
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
+		try {
+			db.connect();
+		} catch (SQLException e) {
+			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
+			SI.sendResponse();
+			return ;
+		}
 		
 		try {
 			int index = Integer.parseInt(indexParam);
 
 			if (user == null) {
 				SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
-			} else if (db.connect() != 0){
-				SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
 			} else if ((profile = user.getProfile(index)) == null){
 				SI.setResponse(ServletItem.Code.BadParameters, "Incorrect profileId.");
 			} else if (profile.getId() == user.getProfilesDashboard().get(0).get(0).getId()) {
@@ -94,11 +100,19 @@ public class DeleteProfile extends HttpServlet {
 					SI.setResponse(ServletItem.Code.NoPermission, "You have not the permission.");
 				}
 			}
-		} catch (SessionException e) {
-			db.cancel(transaction);
+		} catch (SessionException | SQLException e) {
+			try {
+				db.cancel(transaction);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
 		} catch (NumberFormatException e) {
-			db.cancel(transaction);
+			try {
+				db.cancel(transaction);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 			SI.setResponse(ServletItem.Code.BadParameters, "Numbers exception.");
 		}
 		SI.sendResponse();
