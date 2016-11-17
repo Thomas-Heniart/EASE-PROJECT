@@ -84,7 +84,7 @@ public class EditProfileName extends HttpServlet {
 				}
 			}
 		} catch (SessionException e) {
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 		} catch (NumberFormatException e) {
 			SI.setResponse(ServletItem.Code.BadParameters, "Bad numbers.");
 		}

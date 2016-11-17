@@ -16,7 +16,7 @@ public class LogwithUpdate extends Update {
 		UPDATE_ID,
 		LOGWITH
 	}
-	App			logwith;
+	App		logwith;
 	
 	public LogwithUpdate(String DBid, String websiteId, String login, App app, String knowId)  throws SessionException {
 		this.DBid = DBid;
@@ -61,8 +61,8 @@ public static LogwithUpdate CreateLogwithUpdate(String websiteId, String login, 
 			transaction = db.start();
 			String DBid = db.set("INSERT INTO updates VALUES (" + user.getId() + ", " + websiteId + ", " + login + ", 'classic');").toString();
 			db.set("INSERT INTO classicUpdates VALUES (" + DBid + ", " + appId + ");");
-			update = new LogwithUpdate(DBid, websiteId, login, user.getApp(appId), user.getNextKnowId());
 			db.commit(transaction);
+			update = new LogwithUpdate(DBid, websiteId, login, user.getApp(appId), user.getNextKnowId());
 			return update;
 		} catch (SQLException e) {
 			try {

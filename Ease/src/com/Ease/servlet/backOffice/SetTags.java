@@ -84,7 +84,7 @@ public class SetTags extends HttpServlet {
 				SI.setResponse(200, "Tag set");
 			}
 		} catch (SQLException e) {
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 		} catch (NumberFormatException e) {
 			SI.setResponse(ServletItem.Code.BadParameters, "Bad numbers.");
 		}

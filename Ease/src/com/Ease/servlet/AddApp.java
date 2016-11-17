@@ -80,15 +80,13 @@ public class AddApp extends HttpServlet {
 			SI.sendResponse();
 			return ;
 		}
-		
+
 		try {
 			ResultSet inputsRs = db.get("SELECT information_name FROM websitesInformations WHERE website_id=" + siteId + ";");
 			while(inputsRs.next())
 				inputs.put(inputsRs.getString(1), request.getParameter(inputsRs.getString(1)));
 			
 			int profileId = Integer.parseInt(profileIdParam);
-			
-			System.out.println(inputs.get("login"));
 			
 			Profile profile = null;
 			if (user == null) {
@@ -134,14 +132,14 @@ public class AddApp extends HttpServlet {
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 		} catch (IndexOutOfBoundsException e){
 			try {
 				db.cancel(transaction);
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 		} catch (NumberFormatException e) {
 			SI.setResponse(ServletItem.Code.BadParameters, "Numbers exception.");
 		}

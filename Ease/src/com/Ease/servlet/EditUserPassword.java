@@ -83,7 +83,7 @@ public class EditUserPassword extends HttpServlet {
 				SI.setResponse(200, "Password edited.");
 			}
 		} catch (SessionException e) {
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 		}
 		SI.sendResponse();
 	}

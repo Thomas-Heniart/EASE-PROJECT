@@ -63,7 +63,7 @@ public class DeleteEmail extends HttpServlet {
 			SI.setResponse(200, "Email successfully deleted");
 		} catch (SQLException e) {
 			e.printStackTrace();
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 		}
 		SI.sendResponse();
 	}

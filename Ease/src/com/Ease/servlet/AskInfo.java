@@ -110,7 +110,7 @@ public class AskInfo extends HttpServlet {
 		} catch (NumberFormatException e) {
 			SI.setResponse(ServletItem.Code.BadParameters, "Numbers exception.");
 		} catch (ParseException e) {
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 		} catch (SQLException e) {
 			SI.setResponse(ServletItem.Code.LogicError, "SQL error");
 			e.printStackTrace();

@@ -90,10 +90,10 @@ public class getEmailLink extends HttpServlet {
 			}
 		} catch (SQLException e){
 			e.printStackTrace();
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 		} catch (MessagingException e) {
 			e.printStackTrace();
-			SI.setResponse(ServletItem.Code.EMailNotSended, e.getStackTrace().toString());
+			SI.setResponse(ServletItem.Code.EMailNotSended, ServletItem.getExceptionTrace(e));
 		}
 		SI.sendResponse();
 	}

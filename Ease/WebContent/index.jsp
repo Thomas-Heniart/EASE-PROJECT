@@ -73,8 +73,11 @@ pageEncoding="UTF-8"%>
 	com.Ease.session.SessionSave sessionSave = (com.Ease.session.SessionSave) (session.getAttribute("SessionSave"));
 	com.Ease.session.User user = (com.Ease.session.User) (session.getAttribute("User"));
 	%>
-	<% if (user != null){ %>
-	<%} else { 
+	<% if (user != null){
+		if(user.isAdmin(session.getServletContext())){%>
+			<script src="js/robotest.js"></script>
+		<%}
+	} else { 
 		Cookie 	cookie = null;
 		Cookie 	cookies[] = request.getCookies();
 		String	sessionId = "";

@@ -73,7 +73,7 @@ public class GetTags extends HttpServlet {
 		} catch (NumberFormatException e) {
 			SI.setResponse(ServletItem.Code.BadParameters, "Bad numbers.");
 		} catch (NullPointerException e) {
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 		}
 		SI.sendResponse();
 	}

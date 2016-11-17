@@ -109,7 +109,7 @@ public class AddWebsite extends HttpServlet {
 			    siteManager.refresh(db);
 			    SI.setResponse(200, "Site added.");
 			} catch (SQLException e) {
-				SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+				SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 			}
 		}
 		SI.sendResponse();

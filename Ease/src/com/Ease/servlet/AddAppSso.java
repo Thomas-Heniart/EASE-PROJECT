@@ -117,14 +117,14 @@ public class AddAppSso extends HttpServlet {
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 		} catch (IndexOutOfBoundsException e){
 			try {
 				db.cancel(transaction);
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 		} catch (NumberFormatException e) {
 			SI.setResponse(ServletItem.Code.BadParameters, "Numbers exception.");
 		}
