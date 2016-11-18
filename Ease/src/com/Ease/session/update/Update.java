@@ -3,11 +3,10 @@ package com.Ease.session.update;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.servlet.ServletContext;
-
-import com.Ease.context.DataBase;
-import com.Ease.session.SessionException;
 import com.Ease.session.User;
+import com.Ease.utils.DataBaseConnection;
+import com.Ease.utils.GeneralException;
+import com.Ease.utils.ServletManager;
 
 public class Update {
 	public enum UpdateData {
@@ -40,8 +39,8 @@ public class Update {
 		return type;
 	}
 	
-	public static void loadUpdates(User user, ServletContext context) throws SessionException {
-		DataBase db = (DataBase)context.getAttribute("DataBase");
+	public static void loadUpdates(User user, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
 		try {
 			ResultSet rs;
 			ResultSet rs2;
@@ -68,13 +67,13 @@ public class Update {
 						rs2.close();
 						break;
 					default:
-						throw new SessionException("Unknown update type");
+						throw new GeneralException(ServletManager.Code.InternError, "Unknown update type");
 				}
 			}
 			rs.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new SessionException("db error");
+			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
 }
