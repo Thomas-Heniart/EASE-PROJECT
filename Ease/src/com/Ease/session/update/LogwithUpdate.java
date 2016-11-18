@@ -1,13 +1,10 @@
 package com.Ease.session.update;
 
-import java.sql.SQLException;
-
-import javax.servlet.ServletContext;
-
-import com.Ease.context.DataBase;
 import com.Ease.session.App;
-import com.Ease.session.SessionException;
 import com.Ease.session.User;
+import com.Ease.utils.DataBaseConnection;
+import com.Ease.utils.GeneralException;
+import com.Ease.utils.ServletManager;
 
 public class LogwithUpdate extends Update {
 	public enum LogwithUpdateData {
@@ -18,7 +15,7 @@ public class LogwithUpdate extends Update {
 	}
 	App			logwith;
 	
-	public LogwithUpdate(String DBid, String websiteId, String login, App app, String knowId)  throws SessionException {
+	public LogwithUpdate(String DBid, String websiteId, String login, App app, String knowId) {
 		this.DBid = DBid;
 		this.knowId = knowId;
 		this.websiteId = websiteId;
@@ -31,46 +28,25 @@ public class LogwithUpdate extends Update {
 		return logwith;
 	}
 	
-	public void removeFromDB(ServletContext context) {
-		DataBase db = (DataBase) context.getAttribute("DataBase");
+	public void removeFromDB(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
 		
-		boolean transaction = false;
-		try {
-			transaction = db.start();
-			db.set("DELETE FROM classicUpdates WHERE update_id=" + this.DBid + ";");
-			db.set("DELETE FROM Updates WHERE id=" + this.DBid + ";");
-			db.set("INSERT INTO removedUpdate values(NULL, " + this.websiteId + ", " + this.login + ", " + logwith.getSite().getId() + ");");
-			db.commit(transaction);
-		} catch (SQLException e) {
-			try {
-				db.cancel(transaction);
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
-		}
+		int transaction = db.startTransaction();
+		db.set("DELETE FROM classicUpdates WHERE update_id=" + this.DBid + ";");
+		db.set("DELETE FROM Updates WHERE id=" + this.DBid + ";");
+		db.set("INSERT INTO removedUpdate values(NULL, " + this.websiteId + ", " + this.login + ", " + logwith.getSite().getId() + ");");
+		db.commitTransaction(transaction);
 	}
 	
-public static LogwithUpdate CreateLogwithUpdate(String websiteId, String login, int appId, User user, ServletContext context) throws SessionException {
+public static LogwithUpdate CreateLogwithUpdate(String websiteId, String login, int appId, User user, ServletManager sm) throws GeneralException {
 		
-		DataBase db = (DataBase) context.getAttribute("DataBase");
+		DataBaseConnection db = sm.getDB();
 		
-		LogwithUpdate update;
-		boolean transaction = false;
-		
-		try {
-			transaction = db.start();
-			String DBid = db.set("INSERT INTO updates VALUES (" + user.getId() + ", " + websiteId + ", " + login + ", 'classic');").toString();
-			db.set("INSERT INTO classicUpdates VALUES (" + DBid + ", " + appId + ");");
-			update = new LogwithUpdate(DBid, websiteId, login, user.getApp(appId), user.getNextKnowId());
-			db.commit(transaction);
-			return update;
-		} catch (SQLException e) {
-			try {
-				db.cancel(transaction);
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
-			throw new SessionException("db error");
-		} 
+		int transaction = db.startTransaction();
+		String DBid = db.set("INSERT INTO updates VALUES (" + user.getId() + ", " + websiteId + ", " + login + ", 'classic');").toString();
+		db.set("INSERT INTO classicUpdates VALUES (" + DBid + ", " + appId + ");");
+		LogwithUpdate update = new LogwithUpdate(DBid, websiteId, login, user.getApp(appId), user.getNextKnowId());
+		db.commitTransaction(transaction);
+		return update;
 	}
 }
