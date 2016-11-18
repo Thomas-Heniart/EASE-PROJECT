@@ -65,7 +65,7 @@ public class AskForNewApp extends HttpServlet {
 			if (user == null) {
 				SI.setResponse(ServletItem.Code.NotConnected, "You are not connected.");
 			} else {
-				db.set("INSERT INTO askForSite VALUES ('" + user.getEmail() + "', '" + ask + "');");
+				db.set("INSERT INTO askForSite VALUES ('" + user.getEmail() + "', '" + ask + "', DEFAULT);");
 				SI.setResponse(200, "Site asked.");
 			}
 		} catch (SQLException e) {

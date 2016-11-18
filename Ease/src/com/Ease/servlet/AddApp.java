@@ -106,6 +106,7 @@ public class AddApp extends HttpServlet {
 					if (profile.havePerm(Profile.ProfilePerm.ADDAPP, session.getServletContext()) == true){
 						transaction = db.start();
 						App app = new App(inputs, name, site, profile, user, session.getServletContext());
+						System.out.println(app.getAppId());
 						profile.addApp(app);
 						user.getApps().add(app);
 						if (user.getTuto().equals("0")) {
