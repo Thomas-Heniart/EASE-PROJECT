@@ -10,8 +10,7 @@ extension.runtime.bckgrndOnMessage("Logout", function (msg, easeTab, sendRespons
             if(website.siteId == undefined || website.siteSrc == undefined) website.siteId = "-1";
             logOutFrom(website, easeTab);
         }
-        extension.storage.set("visitedWebsites", []);
-                                            
+        extension.storage.set("visitedWebsites", [], function(){});       
     });
 });
 

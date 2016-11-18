@@ -97,7 +97,7 @@ public class directInvitation extends HttpServlet {
 							db.set("insert into invitations values ('" + email + "', '" + invitationCode + "', NULL);");
 						}
 						Mail newEmail = new Mail();
-						newEmail.sendTheFamilyInvitation(alphabet, invitationCode);
+						newEmail.sendTheFamilyInvitation(email, invitationCode);
 						SI.setResponse(200, "Please, go check your mails at "+ email +" ;)");
 					}
 				}
