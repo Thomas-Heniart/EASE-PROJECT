@@ -92,7 +92,7 @@ public class AddTag extends HttpServlet {
 					}
 					SI.setResponse(200, "Tag added.");
 				} catch (SQLException e) {
-					SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+					SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 				}
 		}
 		SI.sendResponse();

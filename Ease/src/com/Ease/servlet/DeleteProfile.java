@@ -106,7 +106,7 @@ public class DeleteProfile extends HttpServlet {
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 		} catch (NumberFormatException e) {
 			try {
 				db.cancel(transaction);

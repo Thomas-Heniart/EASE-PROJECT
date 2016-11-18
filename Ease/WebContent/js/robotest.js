@@ -1,30 +1,29 @@
-var ctrlDown = false;
-var isMac = false;
-var testApp = false;
-if (navigator.appVersion.indexOf("Mac")!=-1) isMac= true;
-
 $(document).ready(function(){
-	var ctrlCode = 17;
+	var majCode = 16;
 	if(isMac) {
 		if(getUserNavigator() == "Firefox") ctrlCode = 224;
 		else if(getUserNavigator() == "Chrome" || getUserNavigator() == "Safari") ctrlCode = 91;
 		$(".shortcutInfo").text("Hold cmd and click to open multiple apps.");
 	}
+	var textCtrl = $(".shortcutInfo").text();
 	
 	$("body").keydown(function(e){
-		if(e.which == ctrlCode) {
+		if(e.which == majCode) {
+			$(".shortcutInfo").text("Hold shift and click to test an app.");
 			$(".shortcutInfo").show();
-			ctrlDown = true;
+			testApp = true;
 		}
 	});
 	$(window).blur(function(e){
 		$(".shortcutInfo").hide();
-		ctrlDown = false;
+		$(".shortcutInfo").text(textCtrl);
+		testApp = false;
 	});
 	$("body").keyup(function(e){
-		if(e.which == ctrlCode){
+		if(e.which == majCode){
 			$(".shortcutInfo").hide();
-			ctrlDown = false;
+			$(".shortcutInfo").text(textCtrl);
+			testApp = false;
 		}
 	});
 });

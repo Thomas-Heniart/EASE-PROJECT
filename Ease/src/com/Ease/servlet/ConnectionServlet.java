@@ -119,9 +119,9 @@ public class ConnectionServlet extends HttpServlet {
 				SI.setResponse(199, "Too much attempts to connect. Please retry in 5 minutes.");
 			}
 		} catch (SessionException e) {
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 		} catch (SQLException e) {
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 		}
 		SI.sendResponse();
 	}

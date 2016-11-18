@@ -69,7 +69,7 @@ public class AskForNewApp extends HttpServlet {
 				SI.setResponse(200, "Site asked.");
 			}
 		} catch (SQLException e) {
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 		}
 		SI.sendResponse();
 		

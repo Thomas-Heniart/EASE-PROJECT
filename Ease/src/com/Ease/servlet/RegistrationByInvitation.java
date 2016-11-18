@@ -136,36 +136,12 @@ public class RegistrationByInvitation extends HttpServlet {
 				}
 			} catch (SessionException e) {
 				e.printStackTrace();
-				SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+				SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 			} catch (SQLException e) {
 				e.printStackTrace();
-				SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+				SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 			}
 		}
 		SI.sendResponse();
-	}
-	
-	public static void sendChallengeEmail(String email) throws UnsupportedEncodingException, MessagingException {
-		Properties props = new Properties();
-		props.put("mail.smtp.host", "smtp.gmail.com");
-		props.put("mail.smtp.socketFactory.port", "465");
-		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.port", "465");
-		Session msession = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication("benjamin@ease-app.co", "bpease.P2211");
-			}
-		});
-		MimeMessage message = new MimeMessage(msession);
-		message.setFrom(new InternetAddress("benjamin@ease-app.co", "Ease Team"));
-		message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
-		message.setSubject(MimeUtility.encodeText("Mr. Ammeux got one, time to win yours !", "utf-8", null));
-		message.setContent("<div style='color: black;'><p>Hello dear Ease user !<br /></p>"
-				+ "<p>We would like to thank you for being one of the first 1000 users of Ease!</p>"
-				+ "<p>To celebrate, we offer you a chance to win your Ease sweat-shirt (the one like JP Ammeux 😉). You must invite 3 IESEG friends to join!<br/>"
-				+ "Click here to get your chance:  <a href='https://goo.gl/forms/TBTvUDfwpoelcmV22'>ease.space/...</a></p>"
-				+ "<p>See you soon !</p>" + "<p>The Ease team</p>" + "</div>", "text/html;charset=utf-8");
-		Transport.send(message);
 	}
 }

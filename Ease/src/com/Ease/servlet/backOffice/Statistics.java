@@ -137,7 +137,7 @@ public class Statistics extends HttpServlet {
 			jsonRes.put("dates", dates);
 		SI.setResponse(200, jsonRes.toString());
 		} catch (SQLException e) {
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 		}
 		SI.sendResponse();
 	}
@@ -205,7 +205,7 @@ public class Statistics extends HttpServlet {
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 			e.printStackTrace();
 		}
 		JSONArray labels = new JSONArray();
@@ -242,7 +242,7 @@ public class Statistics extends HttpServlet {
 			}
 
 		} catch (SQLException e) {
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 			e.printStackTrace();
 		}
 		return getJsonObjectFor(jArray, "Average site connection per day per user", "rgba(255, 99, 132, 0.2)",
@@ -314,7 +314,7 @@ public class Statistics extends HttpServlet {
 			while (rs.next())
 				values.add(Integer.parseInt(rs.getString(2)));
 		} catch (SQLException e) {
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 			e.printStackTrace();
 		}
 		return values;

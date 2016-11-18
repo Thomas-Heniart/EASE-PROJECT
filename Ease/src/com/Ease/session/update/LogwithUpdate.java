@@ -13,7 +13,7 @@ public class LogwithUpdate extends Update {
 		UPDATE_ID,
 		LOGWITH
 	}
-	App			logwith;
+	App		logwith;
 	
 	public LogwithUpdate(String DBid, String websiteId, String login, App app, String knowId) {
 		this.DBid = DBid;
@@ -41,7 +41,6 @@ public class LogwithUpdate extends Update {
 public static LogwithUpdate CreateLogwithUpdate(String websiteId, String login, int appId, User user, ServletManager sm) throws GeneralException {
 		
 		DataBaseConnection db = sm.getDB();
-		
 		int transaction = db.startTransaction();
 		String DBid = db.set("INSERT INTO updates VALUES (" + user.getId() + ", " + websiteId + ", " + login + ", 'classic');").toString();
 		db.set("INSERT INTO classicUpdates VALUES (" + DBid + ", " + appId + ");");

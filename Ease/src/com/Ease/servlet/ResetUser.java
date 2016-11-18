@@ -111,7 +111,7 @@ public class ResetUser extends HttpServlet {
 				}
 			}
 		} catch (SQLException e) {
-			SI.setResponse(ServletItem.Code.LogicError, e.getStackTrace().toString());
+			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
 			e.printStackTrace();
 		}
 		SI.sendResponse();
