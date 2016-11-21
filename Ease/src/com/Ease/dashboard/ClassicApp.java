@@ -1,5 +1,8 @@
 package com.Ease.dashboard;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.Ease.context.Site;
@@ -9,6 +12,32 @@ import com.Ease.utils.GeneralException;
 import com.Ease.utils.ServletManager;
 
 public class ClassicApp extends WebsiteApp {
+	
+	public enum ClassicAppData {
+		NOTHING,
+		ID,
+		WEBSITE_APP_ID,
+		WEBSITE_ID
+	}
+	
+	protected static ClassicApp loadContent(String name, Profile profile, Permissions permissions, int position, String db_id, boolean working, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		ResultSet rs = db.get("SELECT classicApps.id, website_app_id, website_id FROM classicApps JOIN websiteApps ON website_app_id = websiteApps.id WHERE websiteApps.app_id = " + db_id + ";");
+		try {
+			if (rs.next()) {
+				Site site = Site.loadSite(rs.getString(ClassicAppData.WEBSITE_ID.ordinal()), sm);
+				Account account = Account.loadAccount(rs.getString(ClassicAppData.ID.ordinal()), sm);
+				return new ClassicApp(name, profile, permissions, position, sm.getNextSingleId(), db_id, working, site, account);
+			}
+			db.commitTransaction(transaction);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+		return null;
+	}
+	
 	public static ClassicApp createClassicApp(String name, Profile profile, Site site, Map<String, String> informations, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
@@ -21,13 +50,13 @@ public class ClassicApp extends WebsiteApp {
 			db.set("INSERT INTO accounts values (null, " + classic_app_id + ", '" + entry.getKey() + "', '" + entry.getValue() + "');");
 		db.commitTransaction(transaction);
 		Account account = new Account(classic_app_id, informations);
-		return new ClassicApp(name, profile, permissions, position, sm.getNextSingleId(), String.valueOf(app_id), site, account);
+		return new ClassicApp(name, profile, permissions, position, sm.getNextSingleId(), String.valueOf(app_id), true, site, account);
 	}
 	
 	protected Account account;
 	
-	public ClassicApp(String name, Profile profile, Permissions permissions, int position, int single_id, String db_id, Site site, Account account) {
-		super(name, profile, permissions, position, single_id, db_id, site);
+	public ClassicApp(String name, Profile profile, Permissions permissions, int position, int single_id, String db_id, boolean working, Site site, Account account) {
+		super(name, profile, permissions, position, single_id, db_id, working, site);
 		this.account = account;
 	}
 	
