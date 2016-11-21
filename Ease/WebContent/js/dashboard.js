@@ -168,9 +168,9 @@ var Dashboard = function(rootEl){
 			forceFallback: true,
 			onStart: function(evt){
 				var item = $(evt.item);
-
 				item.css('transition', 'transform 0s')
 				$('body').css('cursor', 'move');
+				$('.ProfileBox .ProfileContent').css('pointer-events', 'none');
 				self.columns.each(function(){
 					if (!($(this).find('.item').length)){
 						$(this).width('24.8%');
@@ -182,6 +182,7 @@ var Dashboard = function(rootEl){
 
 				item.css('transition', '')
 				$('body').css('cursor', '');
+				$('.ProfileBox .ProfileContent').css('pointer-events', '');
 				self.columns.each(function(){
 					if (!($(this).find('.item').length)){
 						$(this).width(0);
