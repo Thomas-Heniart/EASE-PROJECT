@@ -16,6 +16,24 @@ $(document).ready(function() {
 	$("#setTags").click(setTagsClick);
 	
 	$("#cleanSavedSessions").click(cleanSavedSessions);
+	
+	/* Move websites positions in catalog */
+	$(".goTop").click(function() {
+		changePositionForm.setPostName("goTop");
+		changePositionForm.setSiteToMove($(this).parent());
+	});
+	$(".goDown").click(function() {
+		changePositionForm.setPostName("goDown");
+		changePositionForm.setSiteToMove($(this).parent());
+	});
+	$(".top").click(function() {
+		changePositionForm.setPostName("top");
+		changePositionForm.setSiteToMove($(this).parent());
+	});
+	$(".down").click(function() {
+		changePositionForm.setPostName("down");
+		changePositionForm.setSiteToMove($(this).parent());
+	});
 });
 
 /* Interface functions */

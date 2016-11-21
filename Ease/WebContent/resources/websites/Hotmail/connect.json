@@ -1,21 +1,24 @@
 {
 	"name":"Hotmail",
 	"lastLogin":"",
-	"home":"https://www.hotmail.com/",
+	"home":"https://login.live.com/",
 	"connect":{
 		"todo":[
 			{"action":"fill", "what":"login", "search":"input[type='email']", "grave":true},
 			{"action":"fill", "what":"login", "search":".phholder div", "grave":true},
 			{"action":"fill", "what":"password", "search":"input[type='password']", "grave":true},
+			{"action":"click", "search":"input[type='submit']", "grave":true},
+    		{"action":"waitfor", "search":"div[data-viewid='2']"},
 			{"action":"click", "search":"input[type='submit']", "grave":true}
 		]
 	},
 	"logout":{
 		"todo":[
-			{"action":"clickona", "search":"a#O365_SubLink_ShellSignout"}
+	   		{"action":"waitfor", "search":[".msame_Drop_signIn a"]},
+			{"action":"clickona", "search":".msame_Drop_signIn a"}
 		]
 	},
 	"checkAlreadyLogged":[
-		{"search":"a#O365_SubLink_ShellSignout"}
+		{"search":".shell-header-user"}
 	]
 }

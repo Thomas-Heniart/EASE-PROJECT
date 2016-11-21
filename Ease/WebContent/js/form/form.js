@@ -612,5 +612,64 @@ var Form = {
 			$(".errorHelper", self.qRoot).addClass("error");
 			self.reset();
 		};
+	},
+	ChangePositionForm : function(rootEl) {
+		constructorForm.apply(this, arguments);
+		var self = this;
+		this.jqSites = $(".movable-sites");
+		this.siteToMove = null;
+		self.enable();
+		this.setPostName = function(action) {
+			self.qRoot.attr("action", action);
+		};
+		this.setSiteToMove = function(jqObj) {
+			self.siteToMove = jqObj;
+			self.params["siteId"] = jqObj.attr("siteId");
+			self.params["position"] = jqObj.attr("position");
+		};
+		this.increaseWebsitesPositions = function (startPosition, endPosition) {
+			for (var i=startPosition; i<endPosition; i++) {
+				$(".website[position='" + i + "']", self.jqSites).attr("position", i+1);
+			}
+		};
+		this.decreaseWebsitesPositions = function (startPosition, endPosition) {
+			for (var i=startPosition; i<endPosition; i++) {
+				$(".website[position='" + i + "']", self.jqSites).attr("position", i-1);
+			}
+		};
+		this.successCallback = function(retMsg) {
+			var oldPosition = parseInt($(".website-position", self.siteToMove).text());
+			switch (self.qRoot.attr("action")) {
+				case "goTop":
+					self.increaseWebsitesPositions(1, oldPosition);
+					$(".website-position", self.siteToMove).text("1");
+					self.siteToMove.attr("position", "1");
+					self.jqSites.prepend(self.siteToMove);
+					break;
+				case "top":
+					var siteToUpdate = $(".website[position='" + (oldPosition - 1) + "']", self.jqSites);
+					siteToUpdate.insertAfter(self.siteToMove);
+					siteToUpdate.attr("position", oldPosition);
+					$(".website-position", siteToUpdate).text(oldPosition);
+					$(".website-position", self.siteToMove).text(oldPosition - 1);
+					self.siteToMove.attr("position", oldPosition - 1);
+					break;
+				case "down":
+					var siteToUpdate = $(".website[position='" + (oldPosition + 1) + "']", self.jqSites);
+					siteToUpdate.insertBefore(self.siteToMove);
+					siteToUpdate.attr("position", oldPosition);
+					$(".website-position", siteToUpdate).text(oldPosition);
+					$(".website-position", self.siteToMove).text(oldPosition + 1);
+					self.siteToMove.attr("position", oldPosition + 1);
+					break;
+				case "goDown":
+					var lastPosition = parseInt(self.jqSites.last().attr("position"));
+					self.decreaseWebsitesPositions(oldPosition + 1, lastPosition);
+					$(".website-position", self.siteToMove).text(lastPosition);
+					self.siteToMove.attr("position", lastPosition);
+					self.jqSites.append(self.siteToMove);
+					break;
+			}
+		};
 	}
-}
+};

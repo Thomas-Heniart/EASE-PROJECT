@@ -40,6 +40,12 @@
 		</button>
 	</div>
 	<div>
+		<button id="enterMoveSitesMode" state="off" class="button adminButton"
+			target="MoveSitesTab">
+			<img src="resources/icons/apps.png" />
+		</button>
+	</div>
+	<div>
 		<button id="enterTagsManagerMode" state="off"
 			class="button adminButton" target="TagsManagerTab">
 			<img src="resources/icons/tags_icon.png" />
@@ -70,6 +76,7 @@
 <%@ include file="AddUsers.jsp"%>
 <%@ include file="RequestedSitesView.jsp"%>
 <%@ include file="UploadWebsite.jsp"%>
+<%@ include file="MoveSites.jsp" %>
 <%@ include file="TagsManager.jsp"%>
 <%@ include file="ChangeBackground.jsp"%>
 <%@ include file="SetAdminMessage.jsp"%>

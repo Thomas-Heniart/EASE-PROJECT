@@ -67,7 +67,6 @@ public class directInvitation extends HttpServlet {
 		
 		String			alphabet = "azertyuiopqsdfghjklwxcvbnm1234567890AZERTYUIOPQSDFGHJKLMWXCVBN";
 		String			invitationCode = "";
-		Properties props = new Properties();
 		ResultSet		rs;
 		Random r = new Random();
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");

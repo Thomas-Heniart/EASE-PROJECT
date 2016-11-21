@@ -37,6 +37,11 @@
 <script src="js/owl.carousel.js"></script>
 <script src="js/basic-utils.js"></script>
 <script src="js/postHandler.js"></script>
+<script src="js/form/form.js"></script>
+<script src="js/form/errorMsg.js"></script>
+<script src="js/form/input.js"></script>
+<script src="js/form/popup.js"></script>
+<script src="js/form/emailSuggestions.js"></script>
 <script src="js/admin.js"></script>
 <script src="js/statistics.js"></script>
 <script
