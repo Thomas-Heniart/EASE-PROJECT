@@ -40,7 +40,7 @@ public class Profile {
 				perms = ProfilePermissions.loadProfilePermissions(rs.getString(Data.PERMS.ordinal()), sm);
 				columnIdx = rs.getInt(Data.COLUMN_IDX.ordinal());
 				positionIdx = rs.getInt(Data.POSITION_IDX.ordinal());
-				single_id = user.getNextSingleId();
+				single_id = sm.getNextSingleId();
 				profile = new Profile(db_id, user, name, color, perms, columnIdx, positionIdx, single_id);
 				user.getProfileColumn().get(columnIdx).add(profile);
 			}
@@ -61,7 +61,7 @@ public class Profile {
 		int columnIdx = Profile.getMostLittleProfileColumn(user);
 		int positionIdx = user.getProfilesColumn().get(columnIdx).size();
 		Permissions perm = ProfilePermissions.loadDefaultProfilePermissions(sm);
-		int single_id = user.getNextSingleId();
+		int single_id = sm.getNextSingleId();
 		DataBaseConnection db = sm.getDB();
 		int db_id = db.set("INSERT INTO profiles VALUES(NULL, " + user.getDBid() + ", '" + name + "', '" + color + "', " + perm.getDBid() + ", " + columnIdx + ", " + positionIdx + ");");
 		return new Profile(db_id, user, name, color, perm, columnIdx, positionIdx, single_id);
