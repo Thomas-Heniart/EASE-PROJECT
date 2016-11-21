@@ -33,7 +33,8 @@ public class LogWithApp extends WebsiteApp {
 	}
 	
 	public void setLogWithApp(WebsiteApp logWithApp, ServletManager sm) throws GeneralException {
-		//Todo do db
+		DataBaseConnection db = sm.getDB();
+		db.set("UPDATE logWithApps SET website_app_id = " + logWithApp.getDb_id() + " WHERE id = " + this.getDb_id() + ";");
 		this.logWithApp = logWithApp;
 	}
 }

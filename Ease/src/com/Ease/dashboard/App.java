@@ -2,6 +2,7 @@ package com.Ease.dashboard;
 
 import org.json.simple.JSONObject;
 
+import com.Ease.utils.DataBaseConnection;
 import com.Ease.utils.GeneralException;
 import com.Ease.utils.ServletManager;
 
@@ -56,14 +57,16 @@ public abstract class App {
 		return profile;
 	}
 	public void setProfile(Profile profile, ServletManager sm) throws GeneralException {
-		//Set profile for this app in db
+		DataBaseConnection db = sm.getDB();
+		db.set("UPDATE apps SET profile_id = " + profile.getDb_id() + " WHERE id = " + this.getDb_id() + ";");
 		this.profile = profile;
 	}
 	public int getPosition() {
 		return position;
 	}
 	public void setPosition(int position, ServletManager sm) throws GeneralException {
-		//Set position for this app in db
+		DataBaseConnection db = sm.getDB();
+		db.set("UPDATE apps SET position = " + position + " WHERE id = " + this.getDb_id() + ";");
 		this.position = position;
 	}
 	
