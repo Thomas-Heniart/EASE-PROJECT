@@ -34,4 +34,13 @@ public class ClassicApp extends WebsiteApp {
 	public Account getAccount() {
 		return this.account;
 	}
+	
+	public void removeFromDb(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		this.account.removeFromDb(sm);
+		db.set("DELETE FROM classicApps WHERE id = " + this.getDb_id() + ";");
+		super.removeFromDb(sm);
+		db.commitTransaction(transaction);
+	}
 }

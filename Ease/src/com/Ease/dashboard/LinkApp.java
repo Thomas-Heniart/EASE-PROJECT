@@ -49,4 +49,12 @@ public class LinkApp extends App {
 	public String getImgUrl() {
 		return this.imgUrl;
 	}
+	
+	public void removeFromDb(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		db.set("DELETE FROM linkApps WHERE id = " + this.getDb_id() + ";");
+		super.removeFromDb(sm);
+		db.commitTransaction(transaction);
+	}
 }

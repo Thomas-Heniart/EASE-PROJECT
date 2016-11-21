@@ -79,4 +79,15 @@ public abstract class App {
 		// get JSON for connection
 		return res;
 	}
+	
+	public void remove(ServletManager sm) throws GeneralException {
+		this.removeFromDb(sm);
+		this.profile.getApps().remove(this);
+		this.profile.updateAppsIndex(sm);
+	}
+	
+	public void removeFromDb(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		db.set("DELETE FROM apps WHERE id = " + this.getDb_id() + ";");
+	}
 }

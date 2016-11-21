@@ -32,4 +32,12 @@ public class WebsiteApp extends App {
 	public Site getSite() {
 		return this.site;
 	}
+	
+	public void removeFromDb(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		db.set("DELETE FROM websiteApps WHERE id = " + this.getDb_id() + ";");
+		super.removeFromDb(sm);
+		db.commitTransaction(transaction);
+	}
 }

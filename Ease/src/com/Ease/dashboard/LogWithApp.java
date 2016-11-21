@@ -37,4 +37,12 @@ public class LogWithApp extends WebsiteApp {
 		db.set("UPDATE logWithApps SET website_app_id = " + logWithApp.getDb_id() + " WHERE id = " + this.getDb_id() + ";");
 		this.logWithApp = logWithApp;
 	}
+	
+	public void removeFromDb(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		db.set("DELETE FROM logWithApps WHERE id = " + this.getDb_id() + ";");
+		super.removeFromDb(sm);
+		db.commitTransaction(transaction);
+	}
 }
