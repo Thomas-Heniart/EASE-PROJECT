@@ -57,6 +57,9 @@ public class Profile {
 	 * Getter and Setter
 	 * 
 	 */
+	public String getDb_id() {
+		return this.db_id;
+	}
 	
 	public String getName() {
 		return name;
