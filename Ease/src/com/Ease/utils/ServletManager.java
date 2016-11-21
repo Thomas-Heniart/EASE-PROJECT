@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.Ease.utils.DataBase;
-import com.Ease.session.User;
 
 
 public class ServletManager {
@@ -150,5 +149,9 @@ public class ServletManager {
 		} catch (IOException e) {
 			System.err.println("Send response failed.");
 		}	
+	}
+	
+	public int getNextSingleId() {
+		return user.getNextSingleId();
 	}
 }

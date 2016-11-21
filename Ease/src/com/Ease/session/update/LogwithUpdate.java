@@ -42,8 +42,8 @@ public static LogwithUpdate CreateLogwithUpdate(String websiteId, String login, 
 		
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		String DBid = db.set("INSERT INTO updates VALUES (" + user.getId() + ", " + websiteId + ", " + login + ", 'classic');").toString();
-		db.set("INSERT INTO classicUpdates VALUES (" + DBid + ", " + appId + ");");
+		String DBid = db.set("INSERT INTO updates VALUES (" + user.getId() + ", " + websiteId + ", " + login + ", 'logwith');").toString();
+		db.set("INSERT INTO logwithUpdates VALUES (" + DBid + ", " + appId + ");");
 		LogwithUpdate update = new LogwithUpdate(DBid, websiteId, login, user.getApp(appId), user.getNextKnowId());
 		db.commitTransaction(transaction);
 		return update;

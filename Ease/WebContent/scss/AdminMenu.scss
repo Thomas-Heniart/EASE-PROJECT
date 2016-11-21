@@ -281,3 +281,15 @@
 		}
 	}
 }
+.movable-websites {
+	i.goTop, i.goDown, i.top, i.down {
+		font-weight: bold;
+    font-size: 1.3em;
+    background-color: $themeColor;
+		color: white;
+    border-radius: 1.3em;
+		margin: 0 1px;
+		padding: 3px 6px;
+		cursor: pointer;
+	}
+}

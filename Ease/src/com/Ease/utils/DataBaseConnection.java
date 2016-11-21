@@ -32,11 +32,16 @@ public class DataBaseConnection {
 			Statement stmt = con.createStatement();
 			stmt.executeUpdate(request, Statement.RETURN_GENERATED_KEYS);
 			ResultSet rs = stmt.getGeneratedKeys();
-			Integer id_row = -1;
+			Integer id_row = null;
 	        if (rs.next()){
-	            id_row = rs.getInt(1);
+	        	try {
+	        		id_row = Integer.parseInt(rs.getString(1));
+	        	} catch (NumberFormatException e) {
+	        		id_row = null;
+	        	}
 	        }
 	        rs.close();
+	        stmt.close();
 	        return id_row;
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
