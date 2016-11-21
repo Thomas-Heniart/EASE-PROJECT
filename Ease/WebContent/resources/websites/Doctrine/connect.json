@@ -1,0 +1,23 @@
+{
+	"name":"Doctrine",
+	"lastLogin":"",
+	"home":"https://www.doctrine.fr/",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"form input[type='email']"},
+			{"action":"fill", "what":"password", "search":"form input[type='password']"},
+			{"action":"submit", "search":"form button[type='submit']"}
+			]
+	},
+	"Linkedin":{
+		"todo":[{"action":"goto", "url":"https://www.doctrine.fr/login_linked_in"}]
+	},
+	"logout":{
+		"todo":[
+			{"action":"clickona", "search":"a[ng-click='userLogout()']"}
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":"a.nav__avatar"}
+	]
+}
