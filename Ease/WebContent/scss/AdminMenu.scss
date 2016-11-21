@@ -55,7 +55,7 @@
 		position: relative;
 		background-color: white;
 		#quit {
-			position: absolute;
+			position: fixed;
 			top: 1%;
 			right: 1%;
 			background-color: $themeRedColor;
@@ -279,7 +279,13 @@
 		margin-top: 2%;
 		border-bottom: 1px solid $themeColor;
 		padding-bottom: 2%;
-		p {
+		#sendAllMails {
+			display:inline;
+			float:left;
+			border-radius: 5px;
+		}
+		p {	
+			display: inline;
 			font-weight: 600;
 			color: $themeColor;
 			text-transform: uppercase;

@@ -11,6 +11,10 @@ $(document).ready(function() {
 	$("#enterRequestedWebsitesMode").click(function(){
 		getRequestedSites();
 	});
+	
+	$("#sendAllMails").click(function(){
+		sendEmailsWebsiteIntegrated();
+	});
 
 	/* Tags manager behavior */
 	$("#setTags").click(setTagsClick);
@@ -121,16 +125,16 @@ function printRequestedWebsites(string) {
 							+ ")</p></div>");
 		}
 	}
-	$('.requestedWebsite .quit').click(eraseWebsites);
-	$('.requestedWebsite .sendEmail').click(function(){
-		sendEmailWebsiteIntegrated($(this).parent(".requestedWebsite").attr("email"), $(this).parent(".requestedWebsite").attr("website"));
+	$('.requestedWebsite .quit').click(function(){
+		eraseWebsite($(this));
 	});
 }
 
-function eraseWebsites() {
-	var div = $(this).parent();
+function eraseWebsite(div) {
 	var toErase = div.attr('website');
+	var email = div.attr("email");
 	postHandler.post('eraseRequestedWebsite', {
+		email: email,
 		toErase : toErase
 	}, function() {
 	}, function(retMsg) {
@@ -139,20 +143,74 @@ function eraseWebsites() {
 	}, 'text');
 }
 
-function sendEmailWebsiteIntegrated(email, website){
-	$("#PopupSendEmailWebsite #accept").unbind("click");
-	$("#PopupSendEmailWebsite #close").unbind("click");
-	$("#PopupSendEmailWebsite .title").text("Do you want to send this email to "+email+" ?");
-	var link = website;
-	$("#PopupSendEmailWebsite .desc").text();
+function sendEmailsWebsiteIntegrated(){
+	var toSend = {};
+	$('.requestedWebsite .sendEmail').each(function(){
+		if($(this).is(':checked')){
+			var email = $(this).parent(".requestedWebsite").attr("email");
+			if(!toSend[email])
+				toSend[email]=[];
+			toSend[email].push($(this).parent(".requestedWebsite").attr("website"));
+		}
+	});
 	$("#PopupSendEmailWebsite").addClass("md-show");
-	$("#PopupSendEmailWebsite #close").click(function(e){
-		$("#PopupSendEmailWebsite").removeClass("md-show");
-	});
-	$("#PopupSendEmailWebsite #accept").click(function(e){
-		e.preventDefault();
-		console.log("Send to "+email+" website "+website);
-	});
+	var emails=[];
+	for (var email in toSend){
+		emails.push(email);
+	}
+	nextPopup(0, emails, toSend);
+	
+	function nextPopup(i, emails, toSend){
+		$("#PopupSendEmailWebsite #accept").unbind("click");
+		$("#PopupSendEmailWebsite #close").unbind("click");
+		$("#PopupSendEmailWebsite .md-content input").remove();
+		var email = emails[i];
+		var websites = toSend[email];
+		$("#PopupSendEmailWebsite .title").text("Send an email to "+email+" for these websites ?");
+		for(var webIndex in websites){
+			$("<input value='"+websites[webIndex]+"'></input>").insertBefore("#PopupSendEmailWebsite .md-content .buttonSet");
+		}
+		$("#PopupSendEmailWebsite #close").click(function(e){
+			if(emails[i+1])
+				nextPopup(i+1, emails, toSend)
+			else
+				$("#PopupSendEmailWebsite").removeClass("md-show");
+		});
+		$("#PopupSendEmailWebsite #accept").click(function(e){
+			var values = [];
+			$("#PopupSendEmailWebsite .md-content input").each(function(){
+				values.push($(this).val());
+			});
+			sendEmails(email, values, websites);
+			if(emails[i+1])
+				nextPopup(i+1, emails, toSend)
+			else
+				$("#PopupSendEmailWebsite").removeClass("md-show");
+		});
+	}
+	
+	function sendEmails(email, values, initialValues){
+		var valuesToSend="";
+		for(var i in values){
+			valuesToSend += values[i]+"---&---";
+		}
+		valuesToSend=valuesToSend.substring(0,valuesToSend.length-7);
+		postHandler.post(
+				"sendWebsitesIntegrated",
+				{email:email, websites:valuesToSend},
+				function(){},
+				function(retMsg){
+					$(".requestedWebsite").each(function(){
+						if($(this).attr("email")==email && initialValues.indexOf($(this).attr("website"))!=-1)
+							eraseWebsite($(this));
+					});
+				},
+				function(retMsg){
+					console.log("Could not send email to "+email+", message : retMsg");
+				},
+				'text'
+		);
+	}
 }
 
 /* Tags functions */
