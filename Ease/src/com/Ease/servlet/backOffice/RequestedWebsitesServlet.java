@@ -57,7 +57,7 @@ public class RequestedWebsitesServlet extends HttpServlet {
 			rs = db.get("select * from askForSite;");
 			String retMsg = "";
 			while(rs.next()){
-				retMsg += ";" + rs.getString(rs.findColumn("site")) + "-SENTBY-" + rs.getString(rs.findColumn("email") + "-DATE-"+ rs.getString(rs.findColumn("date")));
+				retMsg += ";" + rs.getString(rs.findColumn("site")) + "-SENTBY-" + rs.getString(rs.findColumn("email")) + "-DATE-"+ rs.getString(rs.findColumn("date"));
 			}
 			SI.setResponse(200, retMsg);
 		} catch (SQLException e) {

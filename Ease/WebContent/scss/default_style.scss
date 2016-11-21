@@ -611,6 +611,10 @@ input {
   }
 }
 
+input[type=checkbox]:hover{
+	cursor:pointer !important;
+}
+
 .displayedByPlugin {
     display: none;
 }
