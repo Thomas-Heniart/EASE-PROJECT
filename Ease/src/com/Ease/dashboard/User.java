@@ -37,6 +37,24 @@ public class User {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
+	
+	public static User loadUserFromId(int id, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		try {
+			ResultSet rs = db.get("SELECT * FROM users where id=" + id + ";");
+			String db_id = rs.getString(Data.ID.ordinal());
+			String firstName = rs.getString(Data.FIRSTNAME.ordinal());
+			String lastName = rs.getString(Data.LASTNAME.ordinal());
+			Keys keys = Keys.loadKeys(rs.getString(Data.KEYSID.ordinal()), sm);
+			Options options = Keys.loadKeys(rs.getString(Data.OPTIONSID.ordinal()), sm);
+			Status status = Keys.loadKeys(rs.getString(Data.STATUSID.ordinal()), sm);
+			String registrationDate = rs.getString(Data.REGISTRATIONDATE.ordinal());
+			return new User(db_id, firstName, lastName, email, registrationDate, keys, options, status);
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+	}
+	
 	public static User createUser(String email, String firstName, String lastName, String password) throws GeneralException {
 		//do your stuff here
 	}

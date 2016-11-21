@@ -44,7 +44,7 @@ public abstract class App {
 				working = rs.getString(AppData.WORK.ordinal()).equals("1") ? true : false;
 				position = Integer.parseInt(rs.getString(AppData.POSITION.ordinal()));
 				type = rs.getString(AppData.TYPE.ordinal());
-				Method method = Class.forName("com.Ease.dashboard" + type).getMethod("loadContent", String.class, Profile.class, Permissions.class, Integer.class, String.class, Boolean.class, ServletManager.class);
+				Method method = Class.forName("com.Ease.dashboard." + type).getMethod("loadContent", String.class, Profile.class, Permissions.class, Integer.class, String.class, Boolean.class, ServletManager.class);
 				App loadApp =  (App) method.invoke(null, name, profile, permissions, position, db_id, working, sm);
 				profile.getApps().add(loadApp);
 			}
