@@ -1,5 +1,45 @@
 @import '../variables';
 
+#SmallNotificationPopup {
+	display: block;
+	position: fixed;
+	padding: 1%;
+	right: 1%;
+	top: 4%;
+	height: 15%;
+	width: 12%;
+	border-radius: 10px;
+	opacity: 0;
+	background-color: darken(rgba($themeLightGreyColor, 0.7), 15%);
+	-webkit-transition: opacity 0.3s ease;
+	transition: opacity 0.3s ease;
+	.notification-icon, .notification-content {
+		position: relative;
+	}
+	.notification-icon {
+		font-size: 1.2em;
+		margin-right: 8%;
+	}
+	.notification-content {
+		position: absolute;
+    vertical-align: middle;
+    margin-left: 5%;
+    top: 2%;
+		font-size: 0.9em;
+	}
+	.notification-separator {
+		height: 70%;
+		position: absolute;
+		top: 13%;
+		border-left: 2px solid darken($themeLightGreyColor, 30%);
+	}
+}
+#SmallNotificationPopup.show {
+	opacity: 1;
+	-webkit-transition: opacity 0.3s ease;
+	transition: opacity 0.3s ease;
+}
+
 .md-overlay {
 	background-color: rgba(56,55,98,0.8) !important;
 }
@@ -594,6 +634,41 @@
 		}
 	}
 }
+
+#PopupSendEmailWebsite {
+	min-width: 200px;
+	max-width: 100%;
+	width: 400px;
+	.md-content {
+		border-radius: 15px;
+		padding-top: 20px;
+		font-family: $defaultFont;
+		p {
+			text-align: center;
+		}
+		.title {
+			font-size: 17px;
+		}
+		.desc {
+			font-size: 11px;
+			color: black;
+			min-width: 300px;
+            min-height: 200px;
+            max-width: 300px;
+            max-height: 200px;
+		}
+		.buttonSet {
+			text-align: center;
+			button {
+				display: inline-block;
+				width: 49%;
+				padding: 3px;
+				font-size: 14px;
+			}
+		}
+	}
+}
+
 
 .md-show ~ .md-overlay {
 	opacity: 0.3 !important;

@@ -1,10 +1,20 @@
 package com.Ease.dashboard;
 
 import com.Ease.context.Site;
+import com.Ease.utils.DataBaseConnection;
+import com.Ease.utils.GeneralException;
+import com.Ease.utils.ServletManager;
 
 public class WebsiteApp extends App {
 	public static WebsiteApp createEmptyApp(String name, Profile profile, Site site, ServletManager sm) throws GeneralException {
-		
+		DataBaseConnection db = sm.getDB();
+		Permissions permissions = AppPermissions.loadDefaultAppPermissions(sm);
+		int position = profile.getNextPosition();
+		int transaction = db.startTransaction();
+		int app_id = db.set("INSERT INTO apps values (null, '" + name + "', " + profile.getDb_id() + ", " + position + " , " + permissions.getDBid() + ", 'WebsiteApp', 1);");
+		db.set("INSERT INTO websiteApps values (null, " + site.getDb_id() + ", " + app_id + ");");
+		db.commitTransaction(transaction);
+		return new WebsiteApp(name, profile, permissions, position, sm.getNextSingleId(), String.valueOf(app_id), site);
 	}
 	
 	protected Site site;
@@ -21,5 +31,13 @@ public class WebsiteApp extends App {
 	
 	public Site getSite() {
 		return this.site;
+	}
+	
+	public void removeFromDb(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		db.set("DELETE FROM websiteApps WHERE id = " + this.getDb_id() + ";");
+		super.removeFromDb(sm);
+		db.commitTransaction(transaction);
 	}
 }

@@ -1,8 +1,21 @@
 package com.Ease.dashboard;
 
+import com.Ease.session.User;
+import com.Ease.utils.DataBaseConnection;
+import com.Ease.utils.GeneralException;
+import com.Ease.utils.ServletManager;
+
 public class LinkApp extends App {
-	public static createLinkApp(String name, Profile profile, String link, String imgUrl, ServletManager sm) throws GeneralException {
-		//todo
+	public static LinkApp createLinkApp(String name, Profile profile, String link, String imgUrl, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		Permissions permissions = AppPermissions.loadDefaultAppPermissions(sm);
+		int transaction;
+		int position = profile.getNextPosition();
+		transaction = db.startTransaction();
+		Integer app_id = db.set("INSERT INTO apps values (null, '" + name + "' , " + profile.getDb_id() + ", " + position + ", " + permissions.getDBid() + ", 'LinkApp', 1);");
+		db.set("INSERT INTO linkApps values (null, " + app_id + ", '" + link + "', '" + imgUrl + "');");
+		db.commitTransaction(transaction);
+		return new LinkApp(name, profile, permissions, position, sm.getNextAppId(), app_id, link, imgUrl);
 	}
 	
 	protected String link;
@@ -35,5 +48,13 @@ public class LinkApp extends App {
 	
 	public String getImgUrl() {
 		return this.imgUrl;
+	}
+	
+	public void removeFromDb(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		db.set("DELETE FROM linkApps WHERE id = " + this.getDb_id() + ";");
+		super.removeFromDb(sm);
+		db.commitTransaction(transaction);
 	}
 }
