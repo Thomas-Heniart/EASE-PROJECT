@@ -67,7 +67,6 @@ public class directInvitation extends HttpServlet {
 		
 		String			alphabet = "azertyuiopqsdfghjklwxcvbnm1234567890AZERTYUIOPQSDFGHJKLMWXCVBN";
 		String			invitationCode = "";
-		Properties props = new Properties();
 		ResultSet		rs;
 		Random r = new Random();
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
@@ -97,7 +96,7 @@ public class directInvitation extends HttpServlet {
 							db.set("insert into invitations values ('" + email + "', '" + invitationCode + "', NULL);");
 						}
 						Mail newEmail = new Mail();
-						newEmail.sendTheFamilyInvitation(alphabet, invitationCode);
+						newEmail.sendTheFamilyInvitation(email, invitationCode);
 						SI.setResponse(200, "Please, go check your mails at "+ email +" ;)");
 					}
 				}
