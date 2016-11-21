@@ -39,6 +39,9 @@ public abstract class App {
 	public String getName() {
 		return name;
 	}
+	public String getDb_id() {
+		return this.db_id;
+	}
 	public void setName(String name, ServletManager sm) throws GeneralException {
 		//Update name in db
 		this.name = name;

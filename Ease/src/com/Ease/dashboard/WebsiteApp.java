@@ -13,6 +13,7 @@ public class WebsiteApp extends App {
 		int transaction = db.startTransaction();
 		int app_id = db.set("INSERT INTO apps values (null, '" + name + "', " + profile.getDb_id() + ", " + position + " , " + permissions.getDBid() + ", 'WebsiteApp', 1);");
 		db.set("INSERT INTO websiteApps values (null, " + site.getDb_id() + ", " + app_id + ");");
+		db.commitTransaction(transaction);
 		return new WebsiteApp(name, profile, permissions, position, sm.getNextSingleId(), String.valueOf(app_id), site);
 	}
 	
