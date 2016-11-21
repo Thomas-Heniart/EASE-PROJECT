@@ -663,7 +663,6 @@
 			}
 
 			moved = true;
-
 			if (activeGroup && !options.disabled &&
 				(isOwner
 					? canSort || (revert = !rootEl.contains(dragEl)) // Reverting item into the original list
@@ -676,7 +675,6 @@
 			) {
 				// Smart auto-scrolling
 				_autoScroll(evt, options, this.el);
-
 				if (_silent) {
 					return;
 				}
@@ -684,7 +682,6 @@
 				target = _closest(evt.target, options.draggable, el);
 				dragRect = dragEl.getBoundingClientRect();
 				putSortable = this;
-
 				if (revert) {
 					_cloneHide(true);
 					parentEl = rootEl; // actualization
@@ -729,7 +726,6 @@
 						lastCSS = _css(target);
 						lastParentCSS = _css(target.parentNode);
 					}
-
 					targetRect = target.getBoundingClientRect();
 
 					var width = targetRect.right - targetRect.left,
@@ -747,7 +743,6 @@
 					if (moveVector !== false) {
 						_silent = true;
 						setTimeout(_unsilent, 30);
-
 						_cloneHide(isOwner);
 
 						if (moveVector === 1 || moveVector === -1) {

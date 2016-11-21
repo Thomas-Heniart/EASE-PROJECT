@@ -14,8 +14,8 @@ import java.util.Map.Entry;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.Ease.dashboard.User;
 import com.Ease.utils.DataBase;
-
 
 public class ServletManager {
 	
@@ -117,7 +117,7 @@ public class ServletManager {
 	    }
 		if (this.logResponse == null)
 			this.logResponse = retMsg;
-		db.set("insert into logs values('" + this.servletName + "', " + this.retCode + ", " + ((this.user != null) ? this.user.getId() : "NULL") + ", '" + argsString + "', '" + this.logResponse + "', '" + this.date + "');");
+		db.set("insert into logs values('" + this.servletName + "', " + this.retCode + ", " + ((this.user != null) ? this.user.getDBid() : "NULL") + ", '" + argsString + "', '" + this.logResponse + "', '" + this.date + "');");
 	}
 	
 	public void sendResponse() {

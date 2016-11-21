@@ -13,7 +13,7 @@ import com.Ease.utils.GeneralException;
 import com.Ease.utils.ServletManager;
 
 public abstract class App {
-	enum AppData {
+	enum Data {
 		NOTHING,
 		ID,
 		NAME,
@@ -22,14 +22,6 @@ public abstract class App {
 		PERMISSION_ID,
 		TYPE,
 		WORK
-	}
-	public enum AppPerm {
-		RENAME,
-		MODIFY,
-		MOVE,
-		CHANGEPROFILE,
-		SHOWINFO,
-		DELETE
 	}
 	
 	protected static abstract App loadContent(String name, Profile profile, Permissions permissions, int position, String db_id, boolean working, ServletManager sm) throws GeneralException;
