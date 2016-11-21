@@ -8,6 +8,7 @@
 
 	<div class="requestedWebsitesView">
 		<div class="requestedWebsitesHeader">
+			<button id="sendAllMails">Send all emails</button>
 			<p>People asked if we could add these websites</p>
 		</div>
 	</div>
@@ -15,14 +16,11 @@
 
 <div class="md-modal md-effect-15 popup" id="PopupSendEmailWebsite">
 	<div class="md-content">
-		<form class="popupForm">
-			<p class="title"></p>
-			<textarea class="desc"></textarea>
-			<input type="hidden" name="appId" />
-			<div class="buttonSet">
-    			<button type="button" id="accept" class="btn btn-default btn-primary btn-group btn-lg">Remove</button>
-    			<button type="button" id="close" class="btn btn-default btn-primary btn-group btn-lg">Cancel</button>
-    		</div>
-    	</form>
-</div>
+		<p class="title"></p>
+		<input></input>
+		<div class="buttonSet">
+    		<button type="button" id="accept" class="btn btn-default btn-primary btn-group btn-lg">Yes</button>
+    		<button type="button" id="close" class="btn btn-default btn-primary btn-group btn-lg">No</button>
+    	</div>
+	</div>
 </div>

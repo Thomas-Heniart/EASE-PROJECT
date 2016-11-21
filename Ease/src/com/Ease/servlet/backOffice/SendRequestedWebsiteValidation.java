@@ -3,6 +3,7 @@ package com.Ease.servlet.backOffice;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import javax.mail.MessagingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.annotation.WebServlet;
 
 import com.Ease.context.DataBase;
+import com.Ease.data.Mail;
 import com.Ease.data.ServletItem;
 import com.Ease.session.User;
 
@@ -19,14 +21,14 @@ import com.Ease.session.User;
 /**
  * Servlet implementation class AskInfo
  */
-@WebServlet("/eraseRequestedWebsite")
-public class EraseRequestedWebsiteServlet extends HttpServlet {
+@WebServlet("/sendWebsitesIntegrated")
+public class SendRequestedWebsiteValidation extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public EraseRequestedWebsiteServlet() {
+	public SendRequestedWebsiteValidation() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -46,11 +48,11 @@ public class EraseRequestedWebsiteServlet extends HttpServlet {
 		
 		HttpSession session = request.getSession();
 		User user = (User)(session.getAttribute("User"));
-		ServletItem SI = new ServletItem(ServletItem.Type.EraseRequestedWebsiteServlet, request, response, user);
+		ServletItem SI = new ServletItem(ServletItem.Type.SendRequestedWebsiteValidation, request, response, user);
 		
 		// Get Parameters
-		String email = SI.getServletParam("email");
-		String website = SI.getServletParam("toErase");
+		String email= SI.getServletParam("email");
+		String websites = SI.getServletParam("websites");
 		// --
 		
 		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
@@ -69,11 +71,12 @@ public class EraseRequestedWebsiteServlet extends HttpServlet {
 			SI.setResponse(ServletItem.Code.NoPermission, "You have not the permission");
 		} else {
 			try {
-				db.set("DELETE FROM askForSite WHERE site='" + website + "' and email='"+email+"';");
-				SI.setResponse(200, "Good");
-			} catch (SQLException e) {
-				e.printStackTrace();
-				SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
+				String[] websitesArray = websites.split("---&---");
+				Mail mail = new Mail();
+				mail.sendIntegratedWebsitesMail(email, websitesArray, null);
+				SI.setResponse(200, "Success");
+			} catch (MessagingException e) {
+				SI.setResponse(ServletItem.Code.EMailNotSended, ServletItem.getExceptionTrace(e));
 			}
 		}
 		SI.sendResponse();

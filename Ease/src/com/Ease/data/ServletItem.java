@@ -68,7 +68,8 @@ public class ServletItem {
 		ReminderEmail,
 		TheFamilyInvitation,
 		TheFamilyRegistration,
-		StockUpdate
+		StockUpdate,
+		SendRequestedWebsiteValidation
 	}
 	public enum Code
 	{
