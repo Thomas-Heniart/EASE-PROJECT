@@ -20,24 +20,6 @@ public class ClassicApp extends WebsiteApp {
 		WEBSITE_ID
 	}
 	
-	protected static ClassicApp loadContent(String name, Profile profile, Permissions permissions, int position, String db_id, boolean working, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		int transaction = db.startTransaction();
-		ResultSet rs = db.get("SELECT classicApps.id, website_app_id, website_id FROM classicApps JOIN websiteApps ON website_app_id = websiteApps.id WHERE websiteApps.app_id = " + db_id + ";");
-		try {
-			if (rs.next()) {
-				Site site = Site.loadSite(rs.getString(ClassicAppData.WEBSITE_ID.ordinal()), sm);
-				Account account = Account.loadAccount(rs.getString(ClassicAppData.ID.ordinal()), sm);
-				return new ClassicApp(name, profile, permissions, position, sm.getNextSingleId(), db_id, working, site, account);
-			}
-			db.commitTransaction(transaction);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
-		return null;
-	}
-	
 	public static ClassicApp createClassicApp(String name, Profile profile, Site site, Map<String, String> informations, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
@@ -58,6 +40,15 @@ public class ClassicApp extends WebsiteApp {
 	public ClassicApp(String name, Profile profile, Permissions permissions, int position, int single_id, String db_id, boolean working, Site site, Account account) {
 		super(name, profile, permissions, position, single_id, db_id, working, site);
 		this.account = account;
+	}
+	
+	public ClassicApp(String app_id, ServletManager sm) throws GeneralException {
+		super(app_id, sm);
+		DataBaseConnection db = sm.getDB();
+		ResultSet rs = db.get("SELECT classicApps.id FROM (apps JOIN websiteApps ON apps.id = websiteApps.app_id) JOIN classicApps ON classicApps.website_app_id = websiteApps.id WHERE apps.id = " + db_id + ";");
+		if (rs.next()) {
+			this.account = Account.loadAccount(rs.getString(1), sm);
+		}
 	}
 	
 	public Account getAccount() {

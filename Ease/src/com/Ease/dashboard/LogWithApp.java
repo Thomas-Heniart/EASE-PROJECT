@@ -21,7 +21,7 @@ public class LogWithApp extends WebsiteApp {
 		WEBSITE_ID
 	}
 	
-	protected static LogWithApp loadContent(String name, Profile profile, Permissions permissions, int position, String db_id, boolean working, ServletManager sm) throws GeneralException {
+	public LogWithApp loadContent(String name, Profile profile, Permissions permissions, int position, String db_id, boolean working, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		ResultSet rs = db.get("SELECT logWithApp.id, website_app_id, logWith_app_id, website_id FROM logWithApps JOIN websiteApps ON website_app_id = websiteApps.id WHERE websiteApps.app_id = " + db_id + ";");
@@ -56,6 +56,18 @@ public class LogWithApp extends WebsiteApp {
 	public LogWithApp(String name, Profile profile, Permissions permissions, int position, int single_id, String db_id, boolean working, Site site, WebsiteApp logWithApp) {
 		super(name, profile, permissions, position, single_id, db_id, working, site);
 		this.logWithApp = logWithApp;
+	}
+	
+	public LogWithApp(String db_id, ServletManager sm) throws GeneralException {
+		super(db_id, sm);
+		DataBaseConnection db = sm.getDB();
+		ResultSet rs = db.get("SELECT logWith_app_id FROM logWithApps JOIN websiteApps ON website_app_id = websiteApps.id WHERE websiteApps.app_id = " + db_id + ";");
+		try {
+			this.logWithApp = WebsiteApp.loadApp(rs.getString(1), sm);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
 	}
 	
 	public WebsiteApp getLogWithApp() {
