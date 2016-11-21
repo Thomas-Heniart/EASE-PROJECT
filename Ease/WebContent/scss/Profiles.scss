@@ -453,6 +453,7 @@
 			min-height: 100px;
 			position: relative;
 			.item {
+				float: left;
 				position: relative;
 				transition: transform .3s;
 				text-align: center;

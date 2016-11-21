@@ -1,5 +1,45 @@
 @import '../variables';
 
+#SmallNotificationPopup {
+	display: block;
+	position: fixed;
+	padding: 1%;
+	right: 1%;
+	top: 4%;
+	height: 15%;
+	width: 12%;
+	border-radius: 10px;
+	opacity: 0;
+	background-color: darken(rgba($themeLightGreyColor, 0.7), 15%);
+	-webkit-transition: opacity 0.3s ease;
+	transition: opacity 0.3s ease;
+	.notification-icon, .notification-content {
+		position: relative;
+	}
+	.notification-icon {
+		font-size: 1.2em;
+		margin-right: 8%;
+	}
+	.notification-content {
+		position: absolute;
+    vertical-align: middle;
+    margin-left: 5%;
+    top: 2%;
+		font-size: 0.9em;
+	}
+	.notification-separator {
+		height: 70%;
+		position: absolute;
+		top: 13%;
+		border-left: 2px solid darken($themeLightGreyColor, 30%);
+	}
+}
+#SmallNotificationPopup.show {
+	opacity: 1;
+	-webkit-transition: opacity 0.3s ease;
+	transition: opacity 0.3s ease;
+}
+
 .md-overlay {
 	background-color: rgba(56,55,98,0.8) !important;
 }
