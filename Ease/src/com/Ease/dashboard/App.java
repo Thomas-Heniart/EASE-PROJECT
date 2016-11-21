@@ -6,7 +6,7 @@ import com.Ease.utils.GeneralException;
 import com.Ease.utils.ServletManager;
 
 public abstract class App {
-	enum AppData {
+	enum Data {
 		NOTHING,
 		ID,
 		ACCOUNT_ID,
@@ -15,14 +15,6 @@ public abstract class App {
 		POSITION,
 		NAME,
 		CUSTOM
-	}
-	public enum AppPerm {
-		RENAME,
-		MODIFY,
-		MOVE,
-		CHANGEPROFILE,
-		SHOWINFO,
-		DELETE
 	}
 	
 	public static void loadApps(Profile profile, ServletManager sm) throws GeneralException {

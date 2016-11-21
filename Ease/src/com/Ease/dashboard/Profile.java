@@ -27,7 +27,7 @@ public class Profile {
 		String db_id;
 		String name;
 		String color;
-		Permissions perms;
+		ProfilePermissions perms;
 		int columnIdx;
 		int positionIdx;
 		int single_id;
@@ -42,13 +42,13 @@ public class Profile {
 				positionIdx = rs.getInt(Data.POSITION_IDX.ordinal());
 				single_id = sm.getNextSingleId();
 				profile = new Profile(db_id, user, name, color, perms, columnIdx, positionIdx, single_id);
-				user.getProfileColumn().get(columnIdx).add(profile);
+				user.getProfilesColumn().get(columnIdx).add(profile);
 			}
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
-		for (int i = 0; i < user.getProfileColumn().size(); ++i) {
-			user.getProfileColumn().get(i).sort(new Comparator<Profile>() {
+		for (int i = 0; i < user.getProfilesColumn().size(); ++i) {
+			user.getProfilesColumn().get(i).sort(new Comparator<Profile>() {
 				@Override
 				public int compare(Profile a, Profile b) {
 					return a.getPositionIdx() - b.getPositionIdx();
@@ -60,10 +60,10 @@ public class Profile {
 	public static Profile createProfile(String name, String color, User user, ServletManager sm) throws GeneralException {
 		int columnIdx = Profile.getMostLittleProfileColumn(user);
 		int positionIdx = user.getProfilesColumn().get(columnIdx).size();
-		Permissions perm = ProfilePermissions.loadDefaultProfilePermissions(sm);
+		ProfilePermissions perm = ProfilePermissions.loadDefaultProfilePermissions(sm);
 		int single_id = sm.getNextSingleId();
 		DataBaseConnection db = sm.getDB();
-		int db_id = db.set("INSERT INTO profiles VALUES(NULL, " + user.getDBid() + ", '" + name + "', '" + color + "', " + perm.getDBid() + ", " + columnIdx + ", " + positionIdx + ");");
+		String db_id = db.set("INSERT INTO profiles VALUES(NULL, " + user.getDBid() + ", '" + name + "', '" + color + "', " + perm.getDBid() + ", " + columnIdx + ", " + positionIdx + ");").toString();
 		return new Profile(db_id, user, name, color, perm, columnIdx, positionIdx, single_id);
 	}
 	
@@ -71,14 +71,14 @@ public class Profile {
 	protected User		user;
 	protected String	name;
 	protected String	color;
-	protected Permissions permissions;
+	protected ProfilePermissions permissions;
 	protected int		columnIdx;
 	protected int		positionIdx;
 	protected List<App> apps;
 	protected int 		single_id;
 
 	
-	public Profile(String db_id, User user, String name, String color, Permissions perms, int columnIdx, int positionIdx, int single_id) {
+	public Profile(String db_id, User user, String name, String color, ProfilePermissions perms, int columnIdx, int positionIdx, int single_id) {
 		this.db_id = db_id;
 		this.user = user;
 		this.name = name;
@@ -88,6 +88,21 @@ public class Profile {
 		this.positionIdx = positionIdx;
 		this.apps = new LinkedList<App>();
 		this.single_id = single_id;
+	}
+	
+	public void removeFromDB(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		db.set("DELETE FROM profiles WHERE id=" + this.db_id + ";");
+	}
+	
+	public void remove(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		//delete all apps
+		this.removeFromDB(sm);
+		this.user.getProfilesColumn().get(this.columnIdx).remove(this);
+		this.user.updateProfilesIndex(sm);
+		db.commitTransaction(transaction);
 	}
 	
 	/*
@@ -100,7 +115,11 @@ public class Profile {
 	}
 	public void setName(String name, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE FROM profiles SET name='" + name + "' WHERE id=" + this.db_id + ";");
+		if (this.permissions.havePermission(ProfilePermissions.Perm.RENAME.ordinal())) {
+			db.set("UPDATE FROM profiles SET name='" + name + "' WHERE id=" + this.db_id + ";");
+		} else {
+			throw new GeneralException(ServletManager.Code.ClientWarning, "You don't have the permission to change this profile's name.");
+		}
 		this.name = name;
 	}
 	
@@ -113,7 +132,11 @@ public class Profile {
 	}
 	public void setColor(String color, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE FROM profiles SET color='" + color + "' WHERE id=" + this.db_id + ";");
+		if (this.permissions.havePermission(ProfilePermissions.Perm.COLOR.ordinal())) {
+			db.set("UPDATE FROM profiles SET color='" + color + "' WHERE id=" + this.db_id + ";");
+		} else {
+			throw new GeneralException(ServletManager.Code.ClientWarning, "You don't have the permission to change this profile's color.");
+		}
 		this.color = color;
 	}
 	
@@ -122,7 +145,11 @@ public class Profile {
 	}
 	public void setColumnIdx(int idx, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE FROM profiles SET columnIdx=" + idx + " WHERE id=" + this.db_id + ";");
+		if (this.permissions.havePermission(ProfilePermissions.Perm.MOVE.ordinal())) {
+			db.set("UPDATE FROM profiles SET columnIdx=" + idx + " WHERE id=" + this.db_id + ";");
+		} else {
+			throw new GeneralException(ServletManager.Code.ClientWarning, "You don't have the permission to move this profile.");
+		}
 		this.columnIdx = idx;
 	}
 	
@@ -131,12 +158,24 @@ public class Profile {
 	}
 	public void setPositionIdx(int idx, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE FROM profiles SET positionIdx=" + idx + " WHERE id=" + this.db_id + ";");
+		if (this.permissions.havePermission(ProfilePermissions.Perm.MOVE.ordinal())) {
+			db.set("UPDATE FROM profiles SET positionIdx=" + idx + " WHERE id=" + this.db_id + ";");
+		} else {
+			throw new GeneralException(ServletManager.Code.ClientWarning, "You don't have the permission to move this profile.");
+		}
 		this.positionIdx = idx;
 	}
 	
 	public List<App> getApps() {
 		return apps;
+	}
+	
+	public App getApp(int single_id) throws GeneralException {
+		for (int i = 0; i < apps.size(); ++i) {
+			if (apps.get(i).getSingle_id() == single_id)
+				return apps.get(i);
+		}
+		throw new GeneralException(ServletManager.Code.ClientError, "App's single id dosen't exist.");
 	}
 	
 	public int getSingleId() {
@@ -174,5 +213,22 @@ public class Profile {
 			}
 		}
 		return mostLittleProfileColumnIdx;
+	}
+	
+	public void move(int columnIdx, int positionIdx, ServletManager sm) throws GeneralException {
+		this.user.getProfilesColumn().get(this.columnIdx).remove(this);
+		this.user.getProfilesColumn().get(columnIdx).add(positionIdx, this);
+		this.user.updateProfilesIndex(sm);
+	}
+	
+	public void updateAppsIndex(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		for (int i = 0; i < apps.size(); ++i) {
+			if (apps.get(i).getPosition() != i) {
+				apps.get(i).setPosition(i, sm);
+			}
+		}
+		db.commitTransaction(transaction);
 	}
 }
