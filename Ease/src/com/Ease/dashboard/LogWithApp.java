@@ -1,5 +1,8 @@
 package com.Ease.dashboard;
 
+import com.Ease.utils.GeneralException;
+import com.Ease.utils.ServletManager;
+
 public class LogWithApp extends WebsiteApp {
 	public static LogWithApp createLogWithApp(String name, Profile profile, Site site, WebsiteApp logWithApp, ServletManager sm) throws GeneralException {
 		

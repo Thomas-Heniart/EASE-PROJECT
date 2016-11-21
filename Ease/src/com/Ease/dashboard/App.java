@@ -2,6 +2,9 @@ package com.Ease.dashboard;
 
 import org.json.simple.JSONObject;
 
+import com.Ease.utils.GeneralException;
+import com.Ease.utils.ServletManager;
+
 public abstract class App {
 	enum AppData {
 		NOTHING,
@@ -67,7 +70,7 @@ public abstract class App {
 	
 	public JSONObject getInformations() {
 		JSONObject res = new JSONObject();
-		
+		// get JSON for connection
 		return res;
 	}
 }
