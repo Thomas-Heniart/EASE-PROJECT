@@ -57,7 +57,7 @@ public class App {
 			this.name = name;
 			this.profileIndex = profile.getIndex();
 			this.profileId = profile.getProfileId();
-			appId = user.getNextAppId();
+			this.appId = user.getNextAppId();
 			this.custom = null;
 		} catch (SQLException e) {
 			throw new SessionException("Impossible to insert new account in data base. (no str1)");

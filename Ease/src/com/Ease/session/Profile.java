@@ -61,7 +61,6 @@ public class Profile {
 			this.description = desc;
 			this.custom = custom;
 			apps = new LinkedList<App>();
-			custom = null;
 			this.id = profileId.toString();
 		} catch (SQLException e) {
 			throw new SessionException("Impossible to insert new user in data base.");

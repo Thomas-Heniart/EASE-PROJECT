@@ -1,13 +1,6 @@
 extension.runtime.bckgrndOnMessage("TestConnection", function(msg, senderTab, sendResponse){
-    //extension.storage.set("WebsitesToTest", [] ,function(){
-        console.log(msg.detail[msg.detail.length-1].website.name + " : Initialize test");
-        connectTo(msg);
-        /*for(var i in msg){
-            var coInfos = msg[i];
-            console.log(coInfos.detail[coInfos.detail.length-1].website.name + " : Initialize test");
-            connectTo(coInfos);
-        }*/
-    //});
+    console.log("*** Initialize test for "+msg.detail[msg.detail.length-1].website.name+" ***");
+    connectTo(msg);
 });
 
 function connectTo(msg){
@@ -57,8 +50,8 @@ function connectTo(msg){
                                             msg.todo = "checkAlreadyLogged";
                                             msg.result = "Success";
                                             setTimeout(function(){
-                                                logoutFrom(msg, tab);
-                                            },10000);
+                                                checkConnected(msg, tab, currentWindow, "logout");
+                                            },20000);
                                             extension.tabs.onUpdatedRemoveListener(tab);
                                             extension.tabs.onMessageRemoveListener(tab);
                                         }
@@ -79,12 +72,11 @@ function connectTo(msg){
     });   
 }
 
-function logoutFrom(msg, oldTab) {
-    msg.todo = "checkAlreadyLogged";
+function logoutFrom(msg, oldTab, currentWindow) {
+    msg.todo = "logout";
     msg.bigStep = msg.detail.length-1;
     msg.actionStep = 0;
     msg.waitreload= false;
-    extension.currentWindow(function(currentWindow) {
          extension.tabs.update(oldTab, msg.detail[msg.bigStep].website.home, function(tab){
             extension.tabs.onUpdated(tab, function (newTab) {
                 tab = newTab;
@@ -92,38 +84,31 @@ function logoutFrom(msg, oldTab) {
             });
             extension.tabs.onMessage(tab, "reloaded", function (event, sendResponse1) {
                     extension.tabs.inject(tab, ["tools/extension.js","jquery-3.1.0.js","contentScripts/actions.js"], function(){
-                            console.log("send logout");
                             extension.tabs.sendMessage(tab, "logout", msg, function(response){
-                                if(response){
-                                    if(response.type == "completed"){
-                                        msg.actionStep = response.actionStep;
-                                        if (msg.actionStep < msg.detail[msg.bigStep].website.logout.todo.length){
-                                            //do nothing
-                                        } else {
-                                            extension.tabs.onUpdatedRemoveListener(tab);
-                                            extension.tabs.onMessageRemoveListener(tab);
-                                            reconnect(msg, tab);
-                                        }
-                                    } else if(response.type == "connection fail") {
-                                        printConsole(false, "connection", msg);
-                                        extension.tabs.onMessageRemoveListener(tab);
+                            if(response){
+                                if(response.type == "completed"){
+                                    msg.actionStep = response.actionStep;
+                                    if (msg.actionStep < msg.detail[msg.bigStep].website.logout.todo.length){
+                                        //do nothing
+                                    } else {
                                         extension.tabs.onUpdatedRemoveListener(tab);
-                                        //extension.tabs.close(tab, function() {});
-                                    } else if (response != undefined){
-                                        printConsole(false, "logout", msg);
                                         extension.tabs.onMessageRemoveListener(tab);
-                                        extension.tabs.onUpdatedRemoveListener(tab);
-                                        //extension.tabs.close(tab, function() {});
+                                        reconnect(msg, tab, currentWindow);
                                     }
+                                } else if (response != undefined){
+                                    printConsole(false, "logout", msg);
+                                    extension.tabs.onMessageRemoveListener(tab);
+                                    extension.tabs.onUpdatedRemoveListener(tab);
+                                    //extension.tabs.close(tab, function() {});
                                 }
-                            });
+                            }
                         });
+                    });
                 });
-            });
-        });   
+            });   
 }
 
-function reconnect(msg, tab){
+function reconnect(msg, tab, currentWindow){
     msg.todo = "checkAlreadyLogged";
     msg.bigStep = 0;
     msg.actionStep = 0;
@@ -131,55 +116,6 @@ function reconnect(msg, tab){
     extension.tabs.onUpdated(tab, function (newTab) {
         tab = newTab;
         extension.tabs.inject(tab, ["tools/extensionLight.js","overlay/overlay.css", "overlay/injectOverlay.js"], function(){});
-    });
-    extension.tabs.inject(tab, ["tools/extension.js","jquery-3.1.0.js","contentScripts/actions.js"], function(){
-                extension.tabs.sendMessage(tab, "reconnect", msg, function(response){
-                        if (response){
-                            if (response.type == "completed") {
-                                msg.waitreload = response.waitreload;
-                                msg.todo = response.todo;
-                                msg.bigStep = response.bigStep;
-                                msg.actionStep = response.actionStep;
-                                if (msg.todo != "end" && msg.todo!="nextBigStep" && msg.actionStep < msg.detail[msg.bigStep].website[msg.todo].todo.length){
-                                    //do nothing
-                                } else {
-                                    if (msg.todo=="nextBigStep"){
-                                        msg.todo = "checkAlreadyLogged";
-                                        extension.tabs.update(tab, msg.detail[msg.bigStep].website.home, function(){});
-                                    } else {
-                                        msg.actionStep = 0;
-                                        msg.bigStep++;
-                                        if (msg.bigStep < msg.detail.length){
-                                            if(msg.waitreload){
-                                                msg.todo="nextBigStep";
-                                            } else {
-                                                msg.todo = "checkAlreadyLogged";
-                                                extension.tabs.update(tab, msg.detail[msg.bigStep].website.home, function(){});
-                                            }
-                                        } else {
-                                            msg.todo = "checkAlreadyLogged";
-                                            msg.result = "Success";
-                                           setTimeout(function(){
-                                                lastCheck(msg, tab);
-                                            }, 10000);
-                                            extension.tabs.onUpdatedRemoveListener(tab);
-                                            extension.tabs.onMessageRemoveListener(tab);
-                                        }
-                                    }
-                                }
-                            } else if(response.type == "logout fail") {
-                                        printConsole(false, "logout", msg);
-                                        extension.tabs.onMessageRemoveListener(tab);
-                                        extension.tabs.onUpdatedRemoveListener(tab);
-                                        //extension.tabs.close(tab, function() {});
-                            } else if (response != undefined){
-                                        printConsole(false, "reconnection", msg);
-                                        extension.tabs.onMessageRemoveListener(tab);
-                                        extension.tabs.onUpdatedRemoveListener(tab);
-                                        //extension.tabs.close(tab, function() {});
-                            }
-            } 
-        });
     });
     extension.tabs.onMessage(tab, "reloaded", function (event, sendResponse1) {
         extension.tabs.inject(tab, ["tools/extension.js","jquery-3.1.0.js","contentScripts/actions.js"], function(){
@@ -210,8 +146,8 @@ function reconnect(msg, tab){
                                             msg.todo = "checkAlreadyLogged";
                                             msg.result = "Success";
                                            setTimeout(function(){
-                                                lastCheck(msg, tab);
-                                            }, 10000);
+                                                checkConnected(msg, tab, currentWindow, "end");
+                                            }, 20000);
                                             extension.tabs.onUpdatedRemoveListener(tab);
                                             extension.tabs.onMessageRemoveListener(tab);
                                         }
@@ -234,21 +170,28 @@ function reconnect(msg, tab){
                 });  
 }
 
-function lastCheck(msg, tab){
+function checkConnected(msg, tab, currentWindow, nextAction){
     msg.todo = "checkAlreadyLogged";
     msg.bigStep = msg.detail.length-1;
     msg.actionStep = 0;
     msg.waitreload= false;
     extension.tabs.inject(tab, ["tools/extensionLight.js","overlay/overlay.css", "overlay/injectOverlay.js", "tools/extension.js","jquery-3.1.0.js","contentScripts/actions.js"], function(){
-        extension.tabs.sendMessage(tab, "lastcheck", msg, function(response){
+        extension.tabs.sendMessage(tab, "checkConnected", msg, function(response){
                 if(response){
                     if(response.type == "completed"){
                         extension.tabs.onUpdatedRemoveListener(tab);
                         extension.tabs.onMessageRemoveListener(tab);
-                        printConsole(true, "", msg);
-                        extension.tabs.close(tab, function() {});
-                    } else if(response.type == "reconnection fail") {
-                        printConsole(false, "reconnection", msg);
+                        if(nextAction=="logout")
+                            logoutFrom(msg, tab, currentWindow);
+                        else if(nextAction=="end"){
+                            printConsole(true, "", msg);
+                            extension.tabs.close(tab, function() {});
+                        }
+                    } else if(response.type == "fail") {
+                        if(nextAction=="logout")
+                            printConsole(false, "connection", msg);
+                        else if(nextAction="end")
+                            printConsole(false, "reconnection", msg);
                         extension.tabs.onMessageRemoveListener(tab);
                         extension.tabs.onUpdatedRemoveListener(tab);
                         //extension.tabs.close(tab, function() {});
@@ -272,11 +215,11 @@ function printConsole(success, type, msg){
         var connectionType = "connection with website "+ msg.detail[msg.detail.length-1].logWith;
     }
     if(success){
-        console.log(website + " : SUCCESS connection, logout and reconnection for "+connectionType);
+        console.log("> "+website + " : SUCCESS connection, logout and reconnection for "+connectionType);
     } else {
         if(type != "logout")
-            console.log(website + " : FAIL "+type+" for "+connectionType);
+            console.log("> "+website + " : FAIL "+type+" for "+connectionType);
         else
-            console.log(website + " : FAIL "+type);
+            console.log("> "+website + " : FAIL "+type);
     }
 }

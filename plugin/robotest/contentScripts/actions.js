@@ -154,15 +154,29 @@ fill:function(msg, callback, sendResponse){
 		input.click();
         input.focus();
         input.change();
-		if (actionStep.what == "login") {
-			input.val(msg.detail[0].user.login);
-		} else if (actionStep.what == "password") {
-			input.val(msg.detail[0].user.password);
-		}
+        input.val(msg.detail[0].user[actionStep.what]);
         input.change();
 		input.blur();
 		msg.actionStep++;
 		callback(msg, sendResponse);
+	}
+},
+val:function(msg, callback, sendResponse){
+    var actionStep = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep];
+	var input = $(actionStep.search);
+	if (input.length == 0){
+		if (actionStep.grave == true){
+			msg.type = "error: "+ actionStep.what +" input not found";
+			sendResponse(msg);
+            errorOverlay(msg);
+		} else {
+			msg.actionStep++;
+			callback(msg, sendResponse);
+		}
+	} else {
+        input.val(msg.detail[0].user[actionStep.what]);
+        msg.actionStep++;
+        callback(msg, sendResponse);
 	}
 },
 checkIfPopup:function(msg, callback, sendResponse){
@@ -170,10 +184,10 @@ checkIfPopup:function(msg, callback, sendResponse){
     popupButton.id = "testtest23";
      document.body.appendChild(popupButton);
     $("#testtest23").click(function(){window.open('http://www.zebest3000.com','lenomdusite','width=300, height=250'); return false;});
-   
+
     $("#testtest23").click();*/
-    
-    
+
+
     msg.actionStep++;
     callback(msg, sendResponse);
 },
@@ -274,12 +288,21 @@ search:function(msg, callback, sendResponse){
 },
 goto:function(msg, callback, sendResponse){
 	var actionStep = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep];
-    window.location.href = actionStep.url;
+    var siteUrl;
+    if (typeof actionStep.url == "object") {
+      siteUrl = (actionStep.url.http + msg.detail[0].user[actionStep.url.subdomain] + "." + actionStep.url.domain);
+    }
+    else {
+      siteUrl = actionStep.url;
+    }
+    window.location.href = siteUrl;
     msg.actionStep++;
     msg.type = "completed";
-	sendResponse(msg);
+	   sendResponse(msg);
 }
 };
+
+
 
 function doThingsConnect(msg, sendResponse) {
 	var todo =  msg.detail[msg.bigStep].website[msg.todo].todo;
@@ -318,6 +341,7 @@ function getHost(url){
 }
 
 function isConnected(msg){
+    console.log("-- Ease action : check if is connected --");
 	var object = $(msg.detail[msg.bigStep].website.checkAlreadyLogged[0].search);
 	if (object.length == 0)
 		return false;
@@ -366,18 +390,9 @@ extension.runtime.onMessage("goooo", function(msg, sendResponse) {
 });
     
 extension.runtime.onMessage("logout", function(msg, sendResponse) {
-    if (msg.todo == "checkAlreadyLogged"){
-        checkConnectionOverlay(msg);
-        if (isConnected(msg) == true) {
-            msg.waitreload=true;
-			msg.todo = "logout";
-			doThings(msg, sendResponse);
-            logoutOverlay(msg);
-		} else {
-            msg.waitreload=true;
-			msg.type = "connection fail";
-		    sendResponse(msg);
-		}
+    if (msg.todo == "logout"){
+        logoutOverlay(msg);
+        doThings(msg, sendResponse);
 	} else if(msg.todo == "end"){
         endOverlay();
         msg.type = "completed";
@@ -386,14 +401,7 @@ extension.runtime.onMessage("logout", function(msg, sendResponse) {
         msg.type = "completed";
         sendResponse(msg);
     }
-	else {
-        doThings(msg, sendResponse);
-        if(msg.todo == "logout"){
-            logoutOverlay(msg);
-        } else if(msg.todo == "connect"){
-            loginOverlay(msg);
-        }
-    }
+	else {}
 });
     
 extension.runtime.onMessage("reconnect", function(msg, sendResponse) {
@@ -426,15 +434,16 @@ extension.runtime.onMessage("reconnect", function(msg, sendResponse) {
     }
 });
     
-extension.runtime.onMessage("lastcheck", function(msg, sendResponse) {
+extension.runtime.onMessage("checkConnected", function(msg, sendResponse) {
     if (msg.todo == "checkAlreadyLogged"){
         checkConnectionOverlay(msg);
         if (isConnected(msg) == true) {
 			msg.type = "completed";
 		    sendResponse(msg);
 		} else {
+            endOverlay();
             msg.waitreload=true;
-			msg.type = "reconnection fail";
+			msg.type = "fail";
 		    sendResponse(msg);
 		}
 	}
