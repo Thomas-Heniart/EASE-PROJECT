@@ -1,6 +1,8 @@
 package com.Ease.dashboard;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,25 +11,60 @@ import com.Ease.utils.GeneralException;
 import com.Ease.utils.ServletManager;
 
 public class Profile {
-	
+	enum Data {
+		NOTHING,
+		ID,
+		USER_ID,
+		NAME,
+		COLOR,
+		PERMS,
+		COLUMN_IDX,
+		POSITION_IDX
+	}
 	public static void loadProfiles(User user, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		ResultSet rs = db.get("SELECT * FROM profiles where user_id=" + user.getDBid() + ";");
-		while(rs.next()) {
-			
+		String db_id;
+		String name;
+		String color;
+		Permissions perms;
+		int columnIdx;
+		int positionIdx;
+		int single_id;
+		Profile profile;
+		try {
+			while (rs.next()) {
+				db_id = rs.getString(Data.ID.ordinal());
+				name = rs.getString(Data.NAME.ordinal());
+				color = rs.getString(Data.COLOR.ordinal());
+				perms = ProfilePermissions.loadProfilePermissions(rs.getString(Data.PERMS.ordinal()), sm);
+				columnIdx = rs.getInt(Data.COLUMN_IDX.ordinal());
+				positionIdx = rs.getInt(Data.POSITION_IDX.ordinal());
+				single_id = user.getNextSingleId();
+				profile = new Profile(db_id, user, name, color, perms, columnIdx, positionIdx, single_id);
+				user.getProfileColumn().get(columnIdx).add(profile);
+			}
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
-		
-		
+		for (int i = 0; i < user.getProfileColumn().size(); ++i) {
+			user.getProfileColumn().get(i).sort(new Comparator<Profile>() {
+				@Override
+				public int compare(Profile a, Profile b) {
+					return a.getPositionIdx() - b.getPositionIdx();
+				}
+			});
+		}
 	}
 
 	public static Profile createProfile(String name, String color, User user, ServletManager sm) throws GeneralException {
 		int columnIdx = Profile.getMostLittleProfileColumn(user);
 		int positionIdx = user.getProfilesColumn().get(columnIdx).size();
-		Permissions perm = 
+		Permissions perm = ProfilePermissions.loadDefaultProfilePermissions(sm);
 		int single_id = user.getNextSingleId();
 		DataBaseConnection db = sm.getDB();
-		int db_id = db.set("INSERT INTO profiles VALUES(NULL, " + user.getDBid() + ", '" + name + "', '" + color + "', );");
-		
+		int db_id = db.set("INSERT INTO profiles VALUES(NULL, " + user.getDBid() + ", '" + name + "', '" + color + "', " + perm.getDBid() + ", " + columnIdx + ", " + positionIdx + ");");
+		return new Profile(db_id, user, name, color, perm, columnIdx, positionIdx, single_id);
 	}
 	
 	protected String	db_id;
@@ -116,6 +153,10 @@ public class Profile {
 			return 2;
 		}
 		return (apps.size() + 2) / 3;
+	}
+	
+	public int getNextPosition() {
+		return apps.size();
 	}
 	
 	public static int getMostLittleProfileColumn(User user) {
