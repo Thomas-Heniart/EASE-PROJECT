@@ -1,5 +1,11 @@
+var results = {};
+
+extension.runtime.bckgrndOnMessage("getPopupContent", function(msg, senderTab, sendResponse){
+    sendResponse(results);
+});
+
 extension.runtime.bckgrndOnMessage("TestConnection", function(msg, senderTab, sendResponse){
-    console.log("*** Initialize test for "+msg.detail[msg.detail.length-1].website.name+" ***");
+    results[msg.detail[msg.detail.length-1].website.name]="*** Testing website "+msg.detail[msg.detail.length-1].website.name+" ***";
     connectTo(msg);
 });
 
@@ -215,11 +221,11 @@ function printConsole(success, type, msg){
         var connectionType = "connection with website "+ msg.detail[msg.detail.length-1].logWith;
     }
     if(success){
-        console.log("> "+website + " : SUCCESS connection, logout and reconnection for "+connectionType);
+        results[website]="> "+website + " : SUCCESS connection, logout and reconnection for "+connectionType;
     } else {
         if(type != "logout")
-            console.log("> "+website + " : FAIL "+type+" for "+connectionType);
+            results[website]="> "+website + " : FAIL "+type+" for "+connectionType;
         else
-            console.log("> "+website + " : FAIL "+type);
+            results[website]="> "+website + " : FAIL "+type;
     }
 }

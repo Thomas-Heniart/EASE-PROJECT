@@ -635,6 +635,41 @@
 	}
 }
 
+#PopupSendEmailWebsite {
+	min-width: 200px;
+	max-width: 100%;
+	width: 400px;
+	.md-content {
+		border-radius: 15px;
+		padding-top: 20px;
+		font-family: $defaultFont;
+		p {
+			text-align: center;
+		}
+		.title {
+			font-size: 17px;
+		}
+		.desc {
+			font-size: 11px;
+			color: black;
+			min-width: 300px;
+            min-height: 200px;
+            max-width: 300px;
+            max-height: 200px;
+		}
+		.buttonSet {
+			text-align: center;
+			button {
+				display: inline-block;
+				width: 49%;
+				padding: 3px;
+				font-size: 14px;
+			}
+		}
+	}
+}
+
+
 .md-show ~ .md-overlay {
 	opacity: 0.3 !important;
 }

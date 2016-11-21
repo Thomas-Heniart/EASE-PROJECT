@@ -8,7 +8,9 @@ $(document).ready(function() {
 	$('#integrate').click(integrateUsers);
 
 	/* Requested sites behavior */
-	$("#enterRequestedWebsitesMode").click(getRequestedSites);
+	$("#enterRequestedWebsitesMode").click(function(){
+		getRequestedSites();
+	});
 
 	/* Tags manager behavior */
 	$("#setTags").click(setTagsClick);
@@ -105,18 +107,24 @@ function printRequestedWebsites(string) {
 	var requests = string.split(";");
 	for ( var i in requests) {
 		if (i > 0) {
-			var email = requests[i].split("-SENTBY-")[1];
-			var website = requests[i].split("-SENTBY-")[0];
 			$('.requestedWebsitesView').append(
 					"<div class='requestedWebsite' website='"
 							+ requests[i].split("-SENTBY-")[0]
-							+ "'><button class='quit'>X</button><p>Website : "
+							+ "' email='"
+							+ requests[i].split("-SENTBY-")[1].split("-DATE-")[0]
+							+"'><input type='checkbox' class='sendEmail'/><button class='quit'>X</button><p>"
 							+ requests[i].split("-SENTBY-")[0]
-							+ " 		ASKED BY email : "
-							+ requests[i].split("-SENTBY-")[1] + "</p></div>");
+							+ " ("
+							+ requests[i].split("-SENTBY-")[1].split("-DATE-")[0]
+							+ ", "
+							+ requests[i].split("-SENTBY-")[1].split("-DATE-")[1].substring(0,10)
+							+ ")</p></div>");
 		}
 	}
 	$('.requestedWebsite .quit').click(eraseWebsites);
+	$('.requestedWebsite .sendEmail').click(function(){
+		sendEmailWebsiteIntegrated($(this).parent(".requestedWebsite").attr("email"), $(this).parent(".requestedWebsite").attr("website"));
+	});
 }
 
 function eraseWebsites() {
@@ -129,6 +137,22 @@ function eraseWebsites() {
 		div.remove();
 	}, function(retMsg) {
 	}, 'text');
+}
+
+function sendEmailWebsiteIntegrated(email, website){
+	$("#PopupSendEmailWebsite #accept").unbind("click");
+	$("#PopupSendEmailWebsite #close").unbind("click");
+	$("#PopupSendEmailWebsite .title").text("Do you want to send this email to "+email+" ?");
+	var link = website;
+	$("#PopupSendEmailWebsite .desc").text();
+	$("#PopupSendEmailWebsite").addClass("md-show");
+	$("#PopupSendEmailWebsite #close").click(function(e){
+		$("#PopupSendEmailWebsite").removeClass("md-show");
+	});
+	$("#PopupSendEmailWebsite #accept").click(function(e){
+		e.preventDefault();
+		console.log("Send to "+email+" website "+website);
+	});
 }
 
 /* Tags functions */
