@@ -10,6 +10,7 @@ import com.Ease.utils.ServletManager;
 
 public class Website {
 	public enum WebsiteData {
+		NOTHING,
 		ID,
 		LOGIN_URL,
 		NAME,

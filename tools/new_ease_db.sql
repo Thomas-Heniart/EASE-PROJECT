@@ -279,15 +279,22 @@ CREATE TABLE classicApps (
   FOREIGN KEY (website_app_id) REFERENCES websiteApps(id)
 );
 
-CREATE TABLE accounts
+CREATE TABLE account
 (
 id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 classic_app_id INT(10) UNSIGNED NOT NULL,
-information_name VARCHAR(255) NOT NULL,
-information_value VARCHAR(255) NOT NULL,
 PRIMARY KEY (id),
 FOREIGN KEY (classic_app_id) REFERENCES classicApps(id)
 );
+
+CREATE TABLE `accountsInformations` (
+  id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  account_id INT(10) UNSIGNED NOT NULL,
+  information_name VARCHAR(255) NOT NULL,
+  information_value VARCHAR(255) NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (account_id) REFERENCES accounts(id);
+)
 
 CREATE TABLE logWithApps
 (
