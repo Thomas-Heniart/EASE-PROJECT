@@ -64,6 +64,21 @@ public class Account {
 		this.account_informations = new LinkedList<AccountInformation>();
 	}
 	
+	public void setAccountInformations(List<AccountInformation> account_informations) {
+		this.account_informations = account_informations;
+	}
+	
+	public void updateAccountInformation(String information_name, String information_value, ServletManager sm) throws GeneralException {
+		Iterator<AccountInformation> it = this.account_informations.iterator();
+		while(it.hasNext()) {
+			AccountInformation tmpInfo = it.next();
+			if (tmpInfo.getInformationName().equals(information_name)) {
+				tmpInfo.setInformation_value(information_value, sm);
+				return;
+			}
+		}
+	}
+	
 	public void removeFromDb(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();

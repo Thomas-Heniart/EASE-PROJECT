@@ -3,6 +3,7 @@ package com.Ease.dashboard;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -114,7 +115,13 @@ public class Profile {
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		Iterator<App> it = this.apps.iterator();
+		while(it.hasNext()) {
+			it.next().removeFromDb(sm);
+		}
 		db.set("DELETE FROM profiles WHERE id=" + this.db_id + ";");
+		db.commitTransaction(transaction);
 	}
 	
 	public void remove(ServletManager sm) throws GeneralException {
