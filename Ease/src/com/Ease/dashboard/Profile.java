@@ -253,6 +253,11 @@ public class Profile {
 		this.user.updateProfilesIndex(sm);
 	}
 	
+	public void replaceApp(App appToReplace, App newApp) {
+		int position = this.apps.indexOf(appToReplace);
+		this.apps.set(position, newApp);
+	}
+	
 	public void updateAppsIndex(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();

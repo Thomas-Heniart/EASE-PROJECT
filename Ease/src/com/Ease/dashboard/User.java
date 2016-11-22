@@ -45,6 +45,7 @@ public class User {
 			String db_id = rs.getString(Data.ID.ordinal());
 			String firstName = rs.getString(Data.FIRSTNAME.ordinal());
 			String lastName = rs.getString(Data.LASTNAME.ordinal());
+			String email = rs.getString(Data.EMAIL.ordinal());
 			Keys keys = Keys.loadKeys(rs.getString(Data.KEYSID.ordinal()), sm);
 			Options options = Keys.loadKeys(rs.getString(Data.OPTIONSID.ordinal()), sm);
 			Status status = Keys.loadKeys(rs.getString(Data.STATUSID.ordinal()), sm);

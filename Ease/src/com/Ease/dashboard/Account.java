@@ -20,6 +20,7 @@ public class Account {
 	
 	public static Account loadAccount(String classicAppId, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
+		
 		int transaction = db.startTransaction();
 		ResultSet rs = db.get("SELECT id FROM accounts WHERE classic_app_id = " + classicAppId + ";");
 		try {

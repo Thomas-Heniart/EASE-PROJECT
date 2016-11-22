@@ -93,6 +93,10 @@ public abstract class App {
 		return res;
 	}
 	
+	public void updateApp(App updatedApp) {
+		this.profile.replaceApp(this, updatedApp);
+	}
+	
 	public void remove(ServletManager sm) throws GeneralException {
 		this.removeFromDb(sm);
 		this.profile.getApps().remove(this);
