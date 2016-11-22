@@ -232,7 +232,7 @@ CREATE TABLE `usersEmails` (
   `verified` TINYINT(1) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`,`email`),
-  CONSTRAINT `usersemails_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 );
 
 CREATE TABLE `usersEmailsPending` (

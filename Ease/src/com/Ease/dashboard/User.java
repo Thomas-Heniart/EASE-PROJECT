@@ -32,7 +32,9 @@ public class User {
 			Options options = Keys.loadKeys(rs.getString(Data.OPTIONSID.ordinal()), sm);
 			Status status = Keys.loadKeys(rs.getString(Data.STATUSID.ordinal()), sm);
 			String registrationDate = rs.getString(Data.REGISTRATIONDATE.ordinal());
-			return new User(db_id, firstName, lastName, email, registrationDate, keys, options, status);
+			List<UserEmail> emails = UserEmail.loadEmails(db_id, sm);
+			User newUser =  new User(db_id, firstName, lastName, email, registrationDate, keys, options, status);
+			newUser.setEmails(emails);
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
@@ -70,6 +72,7 @@ public class User {
 	protected Status	status;
 	protected List<List<Profile>> profiles_column;
 	protected int		max_single_id;
+	protected List<UserEmail> emails;
 	
 	public User(String db_id, String first_name, String last_name, String email, String registration_date, Keys keys, Options opt, Status status) {
 		this.db_id = db_id;
@@ -85,6 +88,7 @@ public class User {
 			this.profiles_column.add(new LinkedList<Profile>()); 
 		}
 		this.max_single_id = 0;
+		this.emails = new LinkedList<UserEmail>();
 	}
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
@@ -128,6 +132,10 @@ public class User {
 		return this.registration_date;
 	}
 	
+	public void setEmails(List<UserEmail> emails) {
+		this.emails = emails;
+	}
+	
 	public List<List<Profile>> getProfilesColumn() {
 		return this.profiles_column;
 	}
@@ -141,6 +149,10 @@ public class User {
 	public int getNextSingleId() {
 		this.max_single_id++;
 		return max_single_id;
+	}
+	
+	public void removeEmail(UserEmail email) {
+		this.emails.remove(email);
 	}
 	
 	public void updateProfilesIndex(ServletManager sm)  throws GeneralException {
