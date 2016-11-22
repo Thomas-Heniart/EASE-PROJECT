@@ -18,7 +18,7 @@ public class LogWithApp extends WebsiteApp {
 		WEBSITE_ID
 	}
 	
-	public LogWithApp loadContent(String name, Profile profile, Permissions permissions, int position, String db_id, boolean working, ServletManager sm) throws GeneralException {
+	/*public LogWithApp loadContent(String name, Profile profile, Permissions permissions, int position, String db_id, boolean working, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		ResultSet rs = db.get("SELECT logWithApp.id, website_app_id, logWith_app_id, website_id FROM logWithApps JOIN websiteApps ON website_app_id = websiteApps.id WHERE websiteApps.app_id = " + db_id + ";");
@@ -34,7 +34,7 @@ public class LogWithApp extends WebsiteApp {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 		return null;
-	}
+	}*/
 	
 	public static LogWithApp createLogWithApp(String name, Profile profile, Website site, WebsiteApp logWithApp, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();

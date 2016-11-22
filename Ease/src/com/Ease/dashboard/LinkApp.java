@@ -27,7 +27,7 @@ public class LinkApp extends App {
 		IMG_URL
 	}
 	
-	public LinkApp loadContent(String name, Profile profile, Permissions permissions, int position, String db_id, boolean working, ServletManager sm) throws GeneralException {
+	/*public LinkApp loadContent(String name, Profile profile, Permissions permissions, int position, String db_id, boolean working, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		String link;
 		String imgUrl;
@@ -43,7 +43,7 @@ public class LinkApp extends App {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 		return null;
-	}
+	}*/
 	
 	public static LinkApp createLinkApp(String name, Profile profile, String link, String imgUrl, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();

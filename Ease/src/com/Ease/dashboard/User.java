@@ -38,7 +38,7 @@ public class User {
 		}
 	}
 	
-	public static User loadUserFromId(int id, ServletManager sm) throws GeneralException {
+	/*public static User loadUserFromId(int id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		try {
 			ResultSet rs = db.get("SELECT * FROM users where id=" + id + ";");
@@ -54,7 +54,7 @@ public class User {
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
-	}
+	}*/
 	
 	public static User createUser(String email, String firstName, String lastName, String password) throws GeneralException {
 		//do your stuff here

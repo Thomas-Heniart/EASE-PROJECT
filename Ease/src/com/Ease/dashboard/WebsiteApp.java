@@ -36,7 +36,7 @@ public class WebsiteApp extends App {
 		WORK
 	}
 	
-	@SuppressWarnings("unchecked")
+	/*@SuppressWarnings("unchecked")
 	public static WebsiteApp loadApp(String db_id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
@@ -53,7 +53,7 @@ public class WebsiteApp extends App {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 		return null;
-	}
+	}*/
 	
 	public static WebsiteApp createEmptyApp(String name, Profile profile, Website site, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
