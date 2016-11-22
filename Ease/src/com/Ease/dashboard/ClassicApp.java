@@ -20,7 +20,7 @@ public class ClassicApp extends WebsiteApp {
 		WEBSITE_ID
 	}
 	
-	public static ClassicApp createClassicApp(String name, Profile profile, Site site, Map<String, String> informations, ServletManager sm) throws GeneralException {
+	public static ClassicApp createClassicApp(String name, Profile profile, Website site, Map<String, String> informations, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		Permissions permissions = AppPermissions.loadDefaultAppPermissions(sm);
@@ -37,7 +37,7 @@ public class ClassicApp extends WebsiteApp {
 	
 	protected Account account;
 	
-	public ClassicApp(String name, Profile profile, Permissions permissions, int position, int single_id, String db_id, boolean working, Site site, Account account) {
+	public ClassicApp(String name, Profile profile, Permissions permissions, int position, int single_id, String db_id, boolean working, Website site, Account account) {
 		super(name, profile, permissions, position, single_id, db_id, working, site);
 		this.account = account;
 	}
