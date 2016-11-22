@@ -91,10 +91,11 @@ public class DeleteApp extends HttpServlet {
 					user.getApps().remove(app);
 					db.set("CALL decreaseRatio(" + app.getSite().getId() + ");");
 					if (email != null) {
-						ResultSet emailRs = db.get("SELECT count(distinct usersEmails.email) FROM (((apps join profiles ON apps.profile_id = profiles.profile_id) JOIN users on profiles.user_id = users.user_id) JOIN usersEmails ON users.user_id = usersEmails.user_id) JOIN ClassicAccountsInformations ON apps.account_id = ClassicAccountsInformations.account_id AND usersEmails.email = ClassicAccountsInformations.information_value WHERE users.user_id = " + user.getId() + " AND usersEmails.email = '" + email + "' AND verified=0;");
+						ResultSet emailRs = db.get("SELECT count(distinct usersEmails.email), usersEmails.verified FROM (((apps join profiles ON apps.profile_id = profiles.profile_id) JOIN users on profiles.user_id = users.user_id) JOIN usersEmails ON users.user_id = usersEmails.user_id ) JOIN ClassicAccountsInformations ON apps.account_id = ClassicAccountsInformations.account_id AND usersEmails.email = ClassicAccountsInformations.information_value WHERE users.user_id = " + user.getId() + " AND usersEmails.email = '" + email+"';");
 						if (emailRs.next()) {
-							int ct = Integer.parseInt(emailRs.getString(1));
-							if (ct == 0) {
+							int ct = emailRs.getInt(1);
+							boolean verif = emailRs.getBoolean(2);
+							if (ct == 0 && !verif) {
 								user.removeEmail(email);
 								db.set("DELETE FROM usersEmails WHERE user_id=" + user.getId() + " AND email='" + email + "' AND verified=0;");
 								res.put("email", email);
