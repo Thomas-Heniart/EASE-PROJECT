@@ -64,13 +64,13 @@ public class WebsiteApp extends App {
 		
 	}
 	
-	public WebsiteApp(String app_id, ServletManager sm) throws GeneralException {
+	public WebsiteApp(String app_id, Profile profile, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		ResultSet rs = db.get("SELECT id, name, profile_id, website_id, position, permission_id, work FROM apps JOIN websiteApps ON apps.id = websiteApps.app_id WHERE apps.id = " + db_id + ";");
 		try {
 			if (rs.next()) {
 				this.name = rs.getString(LoadData.NAME.ordinal());
-				this.profile = Profile.loadProfile(rs.getString(LoadData.PROFILE_ID.ordinal()), sm);
+				this.profile = profile;
 				this.site = Website.loadWebsite(rs.getString(LoadData.WEBSITE_ID.ordinal()), sm);
 				this.position = rs.getInt(LoadData.POSITION.ordinal());
 				this.permissions = AppPermissions.loadAppPermissions(rs.getString(LoadData.PERMISSION_ID.ordinal()), sm);

@@ -37,8 +37,8 @@ public class ClassicApp extends WebsiteApp {
 		this.account = account;
 	}
 	
-	public ClassicApp(String app_id, ServletManager sm) throws GeneralException {
-		super(app_id, sm);
+	public ClassicApp(String app_id, Profile profile, ServletManager sm) throws GeneralException {
+		super(app_id, profile, sm);
 		DataBaseConnection db = sm.getDB();
 		ResultSet rs = db.get("SELECT classicApps.id FROM (apps JOIN websiteApps ON apps.id = websiteApps.app_id) JOIN classicApps ON classicApps.website_app_id = websiteApps.id WHERE apps.id = " + db_id + ";");
 		try {

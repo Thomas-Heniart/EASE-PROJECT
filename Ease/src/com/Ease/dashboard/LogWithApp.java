@@ -36,8 +36,8 @@ public class LogWithApp extends WebsiteApp {
 		this.logWithApp_id = logWithApp_id;
 	}
 	
-	public LogWithApp(String db_id, ServletManager sm) throws GeneralException {
-		super(db_id, sm);
+	public LogWithApp(String db_id, Profile profile, ServletManager sm) throws GeneralException {
+		super(db_id, profile, sm);
 		DataBaseConnection db = sm.getDB();
 		ResultSet rs = db.get("SELECT logWith_app_id FROM logWithApps JOIN websiteApps ON website_app_id = websiteApps.id WHERE websiteApps.app_id = " + db_id + ";");
 		try {
