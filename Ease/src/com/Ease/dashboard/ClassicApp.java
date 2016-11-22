@@ -2,11 +2,8 @@ package com.Ease.dashboard;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Map;
 
-import com.Ease.context.Site;
-import com.Ease.dashboard.Account;
 import com.Ease.utils.DataBaseConnection;
 import com.Ease.utils.GeneralException;
 import com.Ease.utils.ServletManager;

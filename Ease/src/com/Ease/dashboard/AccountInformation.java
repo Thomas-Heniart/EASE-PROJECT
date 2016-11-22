@@ -72,6 +72,20 @@ public class AccountInformation {
 		this.information_value = information_value;
 	}
 	
+	public String getInformationName() {
+		return this.information_name;
+	}
+	
+	public String getInformationValue() {
+		return this.information_value;
+	}
+	
+	public void setInformation_value(String information_value, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		db.set("UPDATE accountsInformations SET information_value='" + information_value + "' WHERE id=" + this.db_id + ";");
+		this.information_value = information_value;
+	}
+	
 	public void removeFromDb(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		db.set("DELETE FROM accountsInformations WHERE id=" + this.db_id + ";");
