@@ -25,7 +25,7 @@ public class ClassicApp extends WebsiteApp {
 		Integer app_id = db.set("INSERT INTO apps values (null, '" + name + "' , " + profile.getDb_id() + ", " + position + ", " + permissions.getDBid() + ", 'LinkApp', 1);");
 		Integer website_app_id = db.set("INSERT INTO websiteApps values (null, " + site.getDb_id() + ", " + app_id + ");");
 		Integer classic_app_id = db.set("INSERT INTO classicApps values (null, " + website_app_id + ");");
-		Account account = Account.createAccount(String.valueOf(classic_app_id), informations, sm);
+		Account account = Account.createAccount(String.valueOf(classic_app_id), informations, profile.getUser(), sm);
 		db.commitTransaction(transaction);
 		return new ClassicApp(name, profile, permissions, position, sm.getNextSingleId(), String.valueOf(app_id), true, site, account);
 	}
@@ -43,7 +43,7 @@ public class ClassicApp extends WebsiteApp {
 		ResultSet rs = db.get("SELECT classicApps.id FROM (apps JOIN websiteApps ON apps.id = websiteApps.app_id) JOIN classicApps ON classicApps.website_app_id = websiteApps.id WHERE apps.id = " + db_id + ";");
 		try {
 			if (rs.next()) {
-				this.account = Account.loadAccount(rs.getString(1), sm);
+				this.account = Account.loadAccount(rs.getString(1), profile.getUser(), sm);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
