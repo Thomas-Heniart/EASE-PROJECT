@@ -18,7 +18,7 @@ public class Account {
 		CLASSIC_APP_ID
 	}
 	
-	public static Account loadAccount(String classicAppId, ServletManager sm) throws GeneralException {
+	public static Account loadAccount(String classicAppId, User user, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		
 		int transaction = db.startTransaction();
@@ -26,7 +26,7 @@ public class Account {
 		try {
 			if (rs.next()) {
 				String db_id = rs.getString(AccountData.ID.ordinal());
-				List<AccountInformation> account_informations = AccountInformation.loadInformations(db_id, sm);
+				List<AccountInformation> account_informations = AccountInformation.loadInformations(db_id, user, sm);
 				db.commitTransaction(transaction);
 				return new Account(db_id, sm.getNextSingleId(), classicAppId, account_informations);
 			}
@@ -38,11 +38,11 @@ public class Account {
 		return null;
 	}
 	
-	public static Account createAccount(String classicAppId, Map<String, String> account_informations, ServletManager sm) throws GeneralException {
+	public static Account createAccount(String classicAppId, Map<String, String> account_informations, User user, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		int db_id = db.set("INSERT INTO accounts values (null, " + classicAppId + ");");
-		List<AccountInformation> accountInformations = AccountInformation.createAccountInformations(String.valueOf(db_id), account_informations, sm);
+		List<AccountInformation> accountInformations = AccountInformation.createAccountInformations(String.valueOf(db_id), account_informations, user, sm);
 		db.commitTransaction(transaction);
 		return new Account(String.valueOf(db_id), sm.getNextSingleId(), classicAppId, accountInformations);
 	}
@@ -69,12 +69,12 @@ public class Account {
 		this.account_informations = account_informations;
 	}
 	
-	public void updateAccountInformation(String information_name, String information_value, ServletManager sm) throws GeneralException {
+	public void updateAccountInformation(String information_name, String information_value, User user, ServletManager sm) throws GeneralException {
 		Iterator<AccountInformation> it = this.account_informations.iterator();
 		while(it.hasNext()) {
 			AccountInformation tmpInfo = it.next();
 			if (tmpInfo.getInformationName().equals(information_name)) {
-				tmpInfo.setInformation_value(information_value, sm);
+				tmpInfo.setInformation_value(information_value, user, sm);
 				return;
 			}
 		}

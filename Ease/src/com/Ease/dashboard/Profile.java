@@ -58,7 +58,7 @@ public class Profile {
 		}
 	}
 
-	public static Profile loadProfile(String db_id, ServletManager sm) throws GeneralException {
+	/*public static Profile loadProfile(String db_id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		ResultSet rs = db.get("SELECT * FROM profiles WHERE id=" + db_id + ";");
 		try {
@@ -78,7 +78,7 @@ public class Profile {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 		return null;
-	}
+	}*/
 	
 	public static Profile createProfile(String name, String color, User user, ServletManager sm) throws GeneralException {
 		int columnIdx = Profile.getMostLittleProfileColumn(user);

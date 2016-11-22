@@ -32,8 +32,8 @@ public abstract class App {
 			while (rs.next()) {
 				String db_id = rs.getString(AppData.ID.ordinal());
 				String type = rs.getString(AppData.TYPE.ordinal());
-				Constructor<App> c = (Constructor<App>) Class.forName("com.Ease.dashboard." + type).getConstructor(String.class, ServletManager.class);
-				App tmpApp = (App) c.newInstance(db_id, sm);
+				Constructor<App> c = (Constructor<App>) Class.forName("com.Ease.dashboard." + type).getConstructor(String.class, Profile.class, ServletManager.class);
+				App tmpApp = (App) c.newInstance(db_id, profile, sm);
 				profile.getApps().add(tmpApp);
 			}
 		} catch (SQLException | SecurityException | IllegalArgumentException | NoSuchMethodException | ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
