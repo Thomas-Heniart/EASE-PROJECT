@@ -36,25 +36,6 @@ public class WebsiteApp extends App {
 		WORK
 	}
 	
-	@SuppressWarnings("unchecked")
-	public static WebsiteApp loadApp(String db_id, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		int transaction = db.startTransaction();
-		ResultSet rs = db.get("SELECT name, profile_id, position, permission_id, type, work, website_id FROM apps JOIN websiteApps ON apps.id = app_id WHERE apps.id = " + db_id + ";");
-		try {
-			if (rs.next()) {
-				String type = rs.getString(WebsiteLogWithData.TYPE.ordinal());
-				db.commitTransaction(transaction);
-				Constructor<App> c = (Constructor<App>) Class.forName("com.Ease.dashboard." + type).getConstructor(String.class, ServletManager.class);
-				return (WebsiteApp) c.newInstance(db_id, sm);
-			}
-		} catch (SQLException | NoSuchMethodException | SecurityException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			e.printStackTrace();
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
-		return null;
-	}
-	
 	public static WebsiteApp createEmptyApp(String name, Profile profile, Website site, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		Permissions permissions = AppPermissions.loadDefaultAppPermissions(sm);

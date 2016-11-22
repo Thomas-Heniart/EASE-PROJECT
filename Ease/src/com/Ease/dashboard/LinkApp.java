@@ -27,24 +27,6 @@ public class LinkApp extends App {
 		IMG_URL
 	}
 	
-	public LinkApp loadContent(String name, Profile profile, Permissions permissions, int position, String db_id, boolean working, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		String link;
-		String imgUrl;
-		ResultSet rs = db.get("SELECT * FROM linkApps WHERE app_id = " + db_id + ";");
-		try {
-			if (rs.next()) {
-				link = rs.getString(LinkAppData.LINK.ordinal());
-				imgUrl = rs.getString(LinkAppData.IMG_URL.ordinal());
-				return new LinkApp(name, profile, permissions, position, sm.getNextSingleId(), db_id, link, imgUrl, working);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
-		return null;
-	}
-	
 	public static LinkApp createLinkApp(String name, Profile profile, String link, String imgUrl, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		Permissions permissions = AppPermissions.loadDefaultAppPermissions(sm);
