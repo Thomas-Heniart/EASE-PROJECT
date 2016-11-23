@@ -35,9 +35,11 @@ public class User {
 			List<UserEmail> emails = UserEmail.loadEmails(db_id, sm);
 			User newUser =  new User(db_id, firstName, lastName, email, registrationDate, keys, options, status);
 			newUser.setEmails(emails);
+			return newUser;
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
+		return null;
 	}
 	
 	/*public static User loadUserFromId(int id, ServletManager sm) throws GeneralException {
