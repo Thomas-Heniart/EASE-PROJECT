@@ -1,18 +1,15 @@
-CREATE DATABASE easedb;
-USE easedb;
-
 CREATE TABLE keys (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `password` varchar(50) NOT NULL,
-  `saltEase` char(28) DEFAULT NULL,
-  `saltPerso` char(28) DEFAULT NULL,
-  `keyUser` char(44) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  id int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  password varchar(50) NOT NULL,
+  saltEase char(28) DEFAULT NULL,
+  saltPerso char(28) DEFAULT NULL,
+  keyUser char(44) DEFAULT NULL,
+  PRIMARY KEY (id)
 );
 
 CREATE TABLE options (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `bckgrndPic` tinyint(1) NOT NULL DEFAULT 0,
+  `background_picked` tinyint(1) NOT NULL DEFAULT 0,
   `infinite_session` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (id)
 );

@@ -15,10 +15,10 @@ public class Option {
 		INFINITE_SESSION
 	}
 	
-	public static Option createOption(boolean background_picked, boolean infinite_session, ServletManager sm) throws GeneralException {
+	public static Option createOption(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		int db_id = db.set("INSERT INTO options values (null, " + (background_picked ? 1 : 0) + ", " + (infinite_session ? 1 : 0) + ");");
-		return new Option(String.valueOf(db_id), background_picked, infinite_session);
+		int db_id = db.set("INSERT INTO options values (null, 1, 0);");
+		return new Option(String.valueOf(db_id), true, false);
 	}
 
 	public static Option loadOption(String db_id, ServletManager sm) throws GeneralException {
