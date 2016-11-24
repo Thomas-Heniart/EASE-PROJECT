@@ -12,7 +12,8 @@ CREATE TABLE keys (
 
 CREATE TABLE options (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `bckgrndPic` tinyint(1) NOT NULL DEFAULT '0',
+  `bckgrndPic` tinyint(1) NOT NULL DEFAULT 0,
+  `infinite_session` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (id)
 );
 
