@@ -3,6 +3,7 @@ package com.Ease.dashboard;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -57,6 +58,28 @@ public class Profile {
 		}
 	}
 
+	/*public static Profile loadProfile(String db_id, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		ResultSet rs = db.get("SELECT * FROM profiles WHERE id=" + db_id + ";");
+		try {
+			if (rs.next()) {
+				db_id = rs.getString(Data.ID.ordinal());
+				String name = rs.getString(Data.NAME.ordinal());
+				String color = rs.getString(Data.COLOR.ordinal());
+				ProfilePermissions perms = ProfilePermissions.loadProfilePermissions(rs.getString(Data.PERMS.ordinal()), sm);
+				int columnIdx = rs.getInt(Data.COLUMN_IDX.ordinal());
+				int positionIdx = rs.getInt(Data.POSITION_IDX.ordinal());
+				int single_id = sm.getNextSingleId();
+				User user = User.loadUserFromId(rs.getInt(Data.USER_ID.ordinal()), sm);
+				return new Profile(db_id, user, name, color, perms, columnIdx, positionIdx, single_id);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+		return null;
+	}*/
+	
 	public static Profile createProfile(String name, String color, User user, ServletManager sm) throws GeneralException {
 		int columnIdx = Profile.getMostLittleProfileColumn(user);
 		int positionIdx = user.getProfilesColumn().get(columnIdx).size();
@@ -92,7 +115,13 @@ public class Profile {
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		Iterator<App> it = this.apps.iterator();
+		while(it.hasNext()) {
+			it.next().removeFromDb(sm);
+		}
 		db.set("DELETE FROM profiles WHERE id=" + this.db_id + ";");
+		db.commitTransaction(transaction);
 	}
 	
 	public void remove(ServletManager sm) throws GeneralException {
@@ -222,6 +251,11 @@ public class Profile {
 		this.user.getProfilesColumn().get(this.columnIdx).remove(this);
 		this.user.getProfilesColumn().get(columnIdx).add(positionIdx, this);
 		this.user.updateProfilesIndex(sm);
+	}
+	
+	public void replaceApp(App appToReplace, App newApp) {
+		int position = this.apps.indexOf(appToReplace);
+		this.apps.set(position, newApp);
 	}
 	
 	public void updateAppsIndex(ServletManager sm) throws GeneralException {

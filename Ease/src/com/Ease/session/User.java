@@ -516,8 +516,10 @@ public class User {
 			db.connect();
 			ResultSet rs;
 			rs = db.get("select * from admins where email = '" + email + "';");
-			rs.next();
-			return true;
+			if(rs.next())
+				return true;
+			else
+				return false;
 		} catch (SQLException e) {
 			return false;
 		}

@@ -168,4 +168,38 @@ public class Mail {
 			throw new MessagingException();
 		}
 	}
+	
+	public void sendIntegratedWebsitesMail(String email, String[] websites, String userName) throws MessagingException {
+		try {
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+			message.setSubject(MimeUtility.encodeText("We added what you asked for !", "utf-8", null));
+			String link = "https://ease.space/index.jsp?openCatalog=true";
+			boolean multiple = websites.length>1;
+			String wholeMessage = "<p>Hello"+ ((userName!=null)? " "+userName : "") +", we hope everything is going smoothly on your Ease platform !</p>" + "<p></p>"
+					+ "<p>You recently asked us to integrate ";
+			if(multiple){
+				for(int i=0;i<websites.length-1;i++){
+					if(i!=0)
+						wholeMessage +=", ";
+					wholeMessage += websites[i];
+				}
+				wholeMessage += " and "+websites[websites.length-1];
+			} else {
+				wholeMessage += websites[0];
+			}
+			wholeMessage += " to our catalog. Here is a little message to let you know that " + ((multiple)? "they have":"it has")+" arrived on Ease just for you !! <a href='" + link + "'>Check it out now ;)</a>"
+					+ "<p></p>"
+					+ "<p>Thanks to you, other users can add " + ((multiple)? "them":"it") + " to their own platform. To add it to your own now, <a href='" + link + "'>click here !</a></p>"
+					+ "<p></p>"
+					+ "<p>Do not hesitate to contact us if you find anything we could improve on Ease.</p>"
+					+ "<p></p>"
+					+ "<p>Take care, talk to you soon. :)</p>"
+					+ "<p>The Ease team</p>";
+			
+			message.setContent(wholeMessage,"text/html;charset=utf-8");
+			Transport.send(message);
+		} catch (AddressException | UnsupportedEncodingException e) {
+			throw new MessagingException();
+		}
+	}
 }

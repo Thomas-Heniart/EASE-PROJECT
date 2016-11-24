@@ -1,5 +1,10 @@
 package com.Ease.dashboard;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.json.simple.JSONObject;
 
 import com.Ease.utils.DataBaseConnection;
@@ -7,19 +12,35 @@ import com.Ease.utils.GeneralException;
 import com.Ease.utils.ServletManager;
 
 public abstract class App {
-	enum Data {
+	enum AppData {
 		NOTHING,
 		ID,
-		ACCOUNT_ID,
-		WEBSITE_ID,
+		NAME,
 		PROFILE_ID,
 		POSITION,
-		NAME,
-		CUSTOM
+		PERMISSION_ID,
+		TYPE,
+		WORK
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static void loadApps(Profile profile, ServletManager sm) throws GeneralException {
-		
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		ResultSet rs = db.get("SELECT * FROM apps WHERE profile_id=" + profile.getDb_id() + ";");
+		try {
+			while (rs.next()) {
+				String db_id = rs.getString(AppData.ID.ordinal());
+				String type = rs.getString(AppData.TYPE.ordinal());
+				Constructor<App> c = (Constructor<App>) Class.forName("com.Ease.dashboard." + type).getConstructor(String.class, Profile.class, ServletManager.class);
+				App tmpApp = (App) c.newInstance(db_id, profile, sm);
+				profile.getApps().add(tmpApp);
+			}
+		} catch (SQLException | SecurityException | IllegalArgumentException | NoSuchMethodException | ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+			e.printStackTrace();
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+		db.commitTransaction(transaction);
 	}
 	
 	protected String name;
@@ -70,6 +91,10 @@ public abstract class App {
 		JSONObject res = new JSONObject();
 		// get JSON for connection
 		return res;
+	}
+	
+	public void updateApp(App updatedApp) {
+		this.profile.replaceApp(this, updatedApp);
 	}
 	
 	public void remove(ServletManager sm) throws GeneralException {
