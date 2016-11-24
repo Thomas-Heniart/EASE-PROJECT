@@ -185,20 +185,54 @@ CREATE TABLE `websites` (
   FOREIGN KEY (`sso`) REFERENCES sso (id)
 );
 
-CREATE TABLE apps
+CREATE TABLE appsInformations
 (
   id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   name VARCHAR(14) NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE groupApps
+(
+  id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  group_profile_id INT(10) UNSIGNED NOT NULL,
+  permisson_id INT(10) UNSIGNED NOT NULL,
+  position INT(10) UNSIGNED NOT NULL,
+  type VARCHAR(255) NOT NULL,
+  app_info_id INT(10) UNSIGNED NOT NULL,
+  common TINYINT(1) UNSIGNED NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (group_profile_id) REFERENCES groupProfiles(id),
+  FOREIGN KEY (permisson_id) REFERENCES appPermissions(id),
+  FOREIGN KEY (app_info_id) REFERENCES appsInformations(id)
+);
+
+CREATE TABLE apps
+(
+  id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   profile_id INT(10) UNSIGNED NOT NULL,
   position TINYINT(3) UNSIGNED NOT NULL,
-  permission_id INT(10) UNSIGNED NOT NULL,
   insertDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   trashDate DATETIME,
   type VARCHAR(255) NOT NULL,
   work TINYINT(1) NOT NULL,
+  app_info_id INT(10) UNSIGNED NOT NULL,
+  group_app_id INT(10) UNSIGNED,
   PRIMARY KEY (id),
   FOREIGN KEY (profile_id) REFERENCES profiles (id),
-  FOREIGN KEY (permission_id) REFERENCES appPermissions (id)
+  FOREIGN KEY (app_info_id) REFERENCES appsInformations (id),
+  FOREIGN KEY (group_app_id) REFERENCES groupApps (id)
+);
+
+CREATE TABLE groupWebsiteApps
+(
+  id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  group_app_id INT(10) UNSIGNED NOT NULL,
+  website_id INT(10) UNSIGNED NOT NULL,
+  type VARCHAR(255) NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (group_app_id) REFERENCES groupApps(id),
+  FOREIGN KEY (website_id) REFERENCES websites(id)
 );
 
 CREATE TABLE websiteApps
@@ -206,10 +240,12 @@ CREATE TABLE websiteApps
 id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 website_id INT(10) UNSIGNED NOT NULL,
 app_id INT(10) UNSIGNED NOT NULL,
+group_website_app_id INT(10) UNSIGNED,
 type VARCHAR(255) NOT NULL,
 PRIMARY KEY (id),
 FOREIGN KEY (app_id) REFERENCES apps (id),
-FOREIGN KEY (website_id) REFERENCES websites (id)
+FOREIGN KEY (website_id) REFERENCES websites (id),
+FOREIGN KEY (group_website_app_id) REFERENCES groupWebsiteApps (id)
 );
 
 CREATE TABLE `tags` (
@@ -337,24 +373,6 @@ shared TINYINT(1) NOT NULL DEFAULT 0,
 PRIMARY KEY (id)
 );
 
-CREATE TABLE groupApps
-(
-  id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  group_profile_id INT(10) UNSIGNED NOT NULL,
-  permisson_id INT(10) UNSIGNED NOT NULL,
-  PRIMARY KEY (id),
-  FOREIGN KEY (group_profile_id) REFERENCES groupProfiles(id),
-  FOREIGN KEY (permisson_id) REFERENCES appPermissions(id)
-);
-
-CREATE TABLE groupWebsiteApps
-(
-  id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  group_app_id INT(10) UNSIGNED NOT NULL,
-  PRIMARY KEY (id),
-  FOREIGN KEY (group_app_id) REFERENCES groupApps(id)
-);
-
 CREATE TABLE groupClassicApps
 (
   id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -394,24 +412,56 @@ CREATE TABLE `accountsInformations` (
   FOREIGN KEY (account_id) REFERENCES accounts(id)
 );
 
+CREATE TABLE groupLogWithApps
+(
+  id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  group_website_app_id INT(10) UNSIGNED NOT NULL,
+  logWith_group_website_app_id INT(10) UNSIGNED NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (group_website_app_id) REFERENCES groupWebsiteApps(id),
+  FOREIGN KEY (logWith_group_website_app_id) REFERENCES groupWebsiteApps(id)
+);
+
 CREATE TABLE logWithApps
 (
 id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 website_app_id INT(10) UNSIGNED NOT NULL,
 logWith_website_app_id INT(10) UNSIGNED NOT NULL,
+group_logWith_app_id INT(10) UNSIGNED,
 PRIMARY KEY (id),
 FOREIGN KEY (website_app_id) REFERENCES websiteApps(id),
-FOREIGN KEY (logWith_website_app_id) REFERENCES websiteApps(id)
+FOREIGN KEY (logWith_website_app_id) REFERENCES websiteApps(id),
+FOREIGN KEY (group_logWith_app_id) REFERENCES groupLogWithApps(id)
+);
+
+CREATE TABLE linkAppInformations
+(
+  id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  url VARCHAR(2000) NOT NULL,
+  img_url VARCHAR(255) NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE groupLinkApps
+(
+  id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  link_app_info INT(10) UNSIGNED NOT NULL,
+  group_app_id INT(10) UNSIGNED NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (link_app_info) REFERENCES linkAppInformations(id),
+  FOREIGN KEY (group_app_id) REFERENCES groupApps(id)
 );
 
 CREATE TABLE linkApps
 (
 id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 app_id INT(10) UNSIGNED NOT NULL,
-url VARCHAR(255),
-img_url VARCHAR(255),
+link_app_info INT(10) UNSIGNED NOT NULL,
+group_link_app_id INT(10) UNSIGNED,
 PRIMARY KEY (id),
-FOREIGN KEY (app_id) REFERENCES apps(id)
+FOREIGN KEY (app_id) REFERENCES apps(id),
+FOREIGN KEY (link_app_info) REFERENCES linkAppInformations(id),
+FOREIGN KEY (group_link_app_id) REFERENCES groupLinkApps(id)
 );
 
 CREATE TABLE `websitesInformations` (
@@ -523,6 +573,8 @@ CREATE TABLE `classicUpdates` (
   PRIMARY KEY (`id`),
   FOREIGN KEY (`update_id`) REFERENCES `updates` (`id`)
 );
+
+
 
 CREATE TABLE `removedUpdates` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
