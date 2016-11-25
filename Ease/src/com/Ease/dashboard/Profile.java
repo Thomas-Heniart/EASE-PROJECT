@@ -58,27 +58,6 @@ public class Profile {
 		}
 	}
 
-	/*public static Profile loadProfile(String db_id, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		ResultSet rs = db.get("SELECT * FROM profiles WHERE id=" + db_id + ";");
-		try {
-			if (rs.next()) {
-				db_id = rs.getString(Data.ID.ordinal());
-				String name = rs.getString(Data.NAME.ordinal());
-				String color = rs.getString(Data.COLOR.ordinal());
-				ProfilePermissions perms = ProfilePermissions.loadProfilePermissions(rs.getString(Data.PERMS.ordinal()), sm);
-				int columnIdx = rs.getInt(Data.COLUMN_IDX.ordinal());
-				int positionIdx = rs.getInt(Data.POSITION_IDX.ordinal());
-				int single_id = sm.getNextSingleId();
-				User user = User.loadUserFromId(rs.getInt(Data.USER_ID.ordinal()), sm);
-				return new Profile(db_id, user, name, color, perms, columnIdx, positionIdx, single_id);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
-		return null;
-	}*/
 	
 	public static Profile createProfile(String name, String color, User user, ServletManager sm) throws GeneralException {
 		int columnIdx = Profile.getMostLittleProfileColumn(user);
@@ -135,6 +114,7 @@ public class Profile {
 	}
 	
 	/*
+	 * 
 	 * Getter and Setter
 	 * 
 	 */
