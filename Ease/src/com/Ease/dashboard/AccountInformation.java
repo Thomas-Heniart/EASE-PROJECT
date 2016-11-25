@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.Ease.data.AES;
 import com.Ease.utils.DataBaseConnection;
 import com.Ease.utils.GeneralException;
 import com.Ease.utils.ServletManager;

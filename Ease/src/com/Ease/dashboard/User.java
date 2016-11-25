@@ -218,4 +218,12 @@ public class User {
 		this.status.removeFromDB(sm);
 		db.commitTransaction(transaction);
 	}
+	
+	public String encrypt(String password) {
+		return this.keys.encrypt(password);
+	}
+	
+	public String decrypt(String password) {
+		return this.keys.decrypt(password);
+	}
 }
