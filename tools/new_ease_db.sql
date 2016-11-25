@@ -122,6 +122,7 @@ CREATE TABLE `groupProfiles`
   group_id INT(10) UNSIGNED NOT NULL,
   permission_id INT(10) UNSIGNED NOT NULL,
   profile_info_id INT(10) UNSIGNED NOT NULL,
+  common TINYINT(1) UNSIGNED NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (group_id) REFERENCES groups(id),
   FOREIGN KEY (permission_id) REFERENCES profilePermissions(id),

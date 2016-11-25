@@ -101,7 +101,7 @@ public class Keys {
 	}
 	
 	public String encrypt(String data) throws GeneralException {
-		return AES.decrypt(data, this.keyUser);
+		return AES.encrypt(data, this.keyUser);
 	}
 	public String decrypt(String data) throws GeneralException {
 		return AES.decrypt(data, this.keyUser);
