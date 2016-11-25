@@ -71,8 +71,12 @@ public abstract class App {
 	}
 	public void setProfile(Profile profile, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE apps SET profile_id = " + profile.getDb_id() + " WHERE id = " + this.getDb_id() + ";");
-		this.profile = profile;
+		if (this.profile.getPermissions().havePermission(ProfilePermissions.Perm.MOVE_APP_OUTSIDE.ordinal())) {
+			db.set("UPDATE apps SET profile_id = " + profile.getDb_id() + " WHERE id = " + this.getDb_id() + ";");
+			this.profile = profile;
+		}
+		else
+			throw new GeneralException(ServletManager.Code.ClientWarning, "Can't move apps outside this profile");
 	}
 	public int getPosition() {
 		return position;

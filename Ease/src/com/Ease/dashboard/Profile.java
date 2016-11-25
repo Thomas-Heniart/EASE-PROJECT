@@ -203,6 +203,10 @@ public class Profile {
 		return apps.size();
 	}
 	
+	public Permissions getPermissions() {
+		return this.permissions;
+	}
+	
 	public static int getMostLittleProfileColumn(User user) {
 		int mostLittleProfileColumnIdx = -1;
 		int size;

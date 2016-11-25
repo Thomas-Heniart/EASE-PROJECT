@@ -265,7 +265,7 @@ CREATE TABLE `tagsAndSitesMap` (
   FOREIGN KEY (`website_id`) REFERENCES `websites` (`id`)
 );
 
-CREATE TABLE `PasswordLost` (
+CREATE TABLE `passwordLost` (
   `user_id` int(10) unsigned NOT NULL,
   `linkCode` varchar(255) DEFAULT NULL,
   UNIQUE KEY `user_id` (`user_id`),
