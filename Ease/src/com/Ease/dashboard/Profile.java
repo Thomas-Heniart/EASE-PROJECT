@@ -158,11 +158,7 @@ public class Profile {
 	}
 	public void setColumnIdx(int idx, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		if (this.permissions.havePermission(ProfilePermissions.Perm.MOVE.ordinal())) {
-			db.set("UPDATE FROM profiles SET columnIdx=" + idx + " WHERE id=" + this.db_id + ";");
-		} else {
-			throw new GeneralException(ServletManager.Code.ClientWarning, "You don't have the permission to move this profile.");
-		}
+		db.set("UPDATE FROM profiles SET columnIdx=" + idx + " WHERE id=" + this.db_id + ";");
 		this.columnIdx = idx;
 	}
 	
@@ -171,11 +167,7 @@ public class Profile {
 	}
 	public void setPositionIdx(int idx, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		if (this.permissions.havePermission(ProfilePermissions.Perm.MOVE.ordinal())) {
-			db.set("UPDATE FROM profiles SET positionIdx=" + idx + " WHERE id=" + this.db_id + ";");
-		} else {
-			throw new GeneralException(ServletManager.Code.ClientWarning, "You don't have the permission to move this profile.");
-		}
+		db.set("UPDATE FROM profiles SET positionIdx=" + idx + " WHERE id=" + this.db_id + ";");
 		this.positionIdx = idx;
 	}
 	

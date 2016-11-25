@@ -17,8 +17,8 @@ public class ProfilePermissions extends Permissions {
 	enum Perm {
 		RENAME,
 		COLOR,
-		MOVE,
 		DELETE,
+		MOVE_APP_OUTSIDE,
 		ADDAPP
 	}
 	protected static String DEFAULT_PERM_ID = "0";
