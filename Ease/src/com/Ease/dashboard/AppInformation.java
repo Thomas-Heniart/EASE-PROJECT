@@ -20,6 +20,10 @@ public class AppInformation {
 		this.name = name;
 	}
 	
+	public String getDb_id() {
+		return this.db_id;
+	}
+	
 	public String getName() {
 		return this.getName();
 	}

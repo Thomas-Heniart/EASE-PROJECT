@@ -20,11 +20,10 @@ public class ClassicApp extends WebsiteApp {
 	public static ClassicApp createClassicApp(String name, Profile profile, Website site, Map<String, String> informations, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		Permissions permissions = AppPermissions.loadDefaultAppPermissions(sm);
 		int position = profile.getNextPosition();
-		Integer app_id = db.set("INSERT INTO apps values (null, '" + name + "' , " + profile.getDb_id() + ", " + position + ", " + permissions.getDBid() + ", 'LinkApp', 1);");
-		Integer website_app_id = db.set("INSERT INTO websiteApps values (null, " + site.getDb_id() + ", " + app_id + ");");
-		Integer classic_app_id = db.set("INSERT INTO classicApps values (null, " + website_app_id + ");");
+		int app_id = db.set("INSERT INTO apps values (null, '" + name + "' , " + profile.getDb_id() + ", " + position + ", " + permissions.getDBid() + ", 'LinkApp', 1);");
+		int website_app_id = db.set("INSERT INTO websiteApps values (null, " + site.getDb_id() + ", " + app_id + ");");
+		int classic_app_id = db.set("INSERT INTO classicApps values (null, " + website_app_id + ");");
 		Account account = Account.createAccount(String.valueOf(classic_app_id), informations, profile.getUser(), sm);
 		db.commitTransaction(transaction);
 		return new ClassicApp(name, profile, permissions, position, sm.getNextSingleId(), String.valueOf(app_id), true, site, account);

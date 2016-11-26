@@ -11,7 +11,7 @@ import com.Ease.utils.DataBaseConnection;
 import com.Ease.utils.GeneralException;
 import com.Ease.utils.ServletManager;
 
-public abstract class App {
+public abstract class App<infoClass extends AppInformation> {
 	enum AppData {
 		NOTHING,
 		ID,
@@ -33,8 +33,8 @@ public abstract class App {
 		try {
 			while (rs.next()) {
 				String type = rs.getString(AppData.TYPE.ordinal());
-				Constructor<App> c = (Constructor<App>) Class.forName("com.Ease.dashboard." + type).getConstructor(ResultSet.class, Profile.class, ServletManager.class);
-				App tmpApp = (App) c.newInstance(rs, profile, sm);
+				Constructor<App<?>> c = (Constructor<App<?>>) Class.forName("com.Ease.dashboard." + type).getConstructor(ResultSet.class, Profile.class, ServletManager.class);
+				App<?> tmpApp = (App<?>) c.newInstance(rs, profile, sm);
 				profile.getApps().add(tmpApp);
 			}
 		} catch (SQLException | SecurityException | IllegalArgumentException | NoSuchMethodException | ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
@@ -50,7 +50,7 @@ public abstract class App {
 	protected Permissions permissions;
 	protected boolean working;
 	protected int position;
-	protected AppInformation informations;
+	protected infoClass informations;
 	
 	public String getDb_id() {
 		return this.db_id;
@@ -98,7 +98,7 @@ public abstract class App {
 		return res;
 	}
 	
-	public void updateApp(App updatedApp) {
+	public void updateApp(App<?> updatedApp) {
 		this.profile.replaceApp(this, updatedApp);
 	}
 	

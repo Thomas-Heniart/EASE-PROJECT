@@ -10,6 +10,8 @@ import com.Ease.utils.ServletManager;
 public class LinkAppInformation extends AppInformation {
 	
 	public enum LoadData {
+		NOTHING,
+		ID,
 		NAME,
 		LINK,
 		IMG_URL
@@ -20,17 +22,17 @@ public class LinkAppInformation extends AppInformation {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		int db_id = db.set("INSERT INTO appInformations (null, '" + name + "');");
-		db.set("INSERT INTO linkAppInformations (null, " + db_id + ", '" + link + "', '" + imgUrl + "');");
+		int linkAppInfo_id = db.set("INSERT INTO linkAppInformations (null, " + db_id + ", '" + link + "', '" + imgUrl + "');");
 		db.commitTransaction(transaction);
-		return new LinkAppInformation(String.valueOf(db_id), name, link, imgUrl);
+		return new LinkAppInformation(String.valueOf(db_id), linkAppInfo_id, name, link, imgUrl);
 	}
 
 	public static LinkAppInformation loadLinkAppInformation(String db_id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		ResultSet rs = db.get("SELECT name, url, imgUrl FROM appInformations JOIN linkAppInformations ON appsInformations.id = linkAppInformations.app_information_id WHERE linkAppInformations.app_information_id = " + db_id + ";");
+		ResultSet rs = db.get("SELECT linkAppInformations.id, name, url, imgUrl FROM appInformations JOIN linkAppInformations ON appsInformations.id = linkAppInformations.app_information_id WHERE linkAppInformations.app_information_id = " + db_id + ";");
 		try {
 			rs.next();
-			return new LinkAppInformation(db_id, rs.getString(LoadData.NAME.ordinal()), rs.getString(LoadData.LINK.ordinal()), rs.getString(LoadData.IMG_URL.ordinal()));
+			return new LinkAppInformation(db_id, rs.getInt(LoadData.ID.ordinal()), rs.getString(LoadData.NAME.ordinal()), rs.getString(LoadData.LINK.ordinal()), rs.getString(LoadData.IMG_URL.ordinal()));
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new GeneralException(ServletManager.Code.InternError, e);
@@ -39,11 +41,17 @@ public class LinkAppInformation extends AppInformation {
 
 	protected String link;
 	protected String imgUrl;
+	protected int linkAppInfo_id;
 
-	public LinkAppInformation(String db_id, String name, String link, String imgUrl) {
+	public LinkAppInformation(String db_id, int linkAppInfo_id, String name, String link, String imgUrl) {
 		super(db_id, name);
+		this.linkAppInfo_id = linkAppInfo_id;
 		this.link = link;
 		this.imgUrl = imgUrl;
+	}
+	
+	public int getLinkAppInfo_id() {
+		return this.linkAppInfo_id;
 	}
 	
 	public String getLink() {

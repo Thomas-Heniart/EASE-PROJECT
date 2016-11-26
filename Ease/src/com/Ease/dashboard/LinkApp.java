@@ -7,7 +7,7 @@ import com.Ease.utils.DataBaseConnection;
 import com.Ease.utils.GeneralException;
 import com.Ease.utils.ServletManager;
 
-public class LinkApp extends App {
+public class LinkApp extends App<LinkAppInformation> {
 	
 	enum LinkAppData {
 		NOTHING,
@@ -33,13 +33,12 @@ public class LinkApp extends App {
 		int position = profile.getNextPosition();
 		transaction = db.startTransaction();
 		LinkAppInformation informations = LinkAppInformation.createLinkAppInformation(name, link, imgUrl, sm);
-		int app_id = db.set("INSERT INTO apps values (null, '" + name + "' , " + profile.getDb_id() + ", " + position + ", " + permissions.getDBid() + ", 'LinkApp', 1);");
-		db.set("INSERT INTO linkApps values (null, " + app_id + ", '" + link + "', '" + imgUrl + "');");
+		int app_id = db.set("INSERT INTO apps values (null, " + profile.getDb_id() + ", " + position + ", default, null, 'LinkApp', 1, " + informations.getDb_id() + ", null);");
+		db.set("INSERT INTO linkApps values (null, " + app_id + ", " + informations.getLinkAppInfo_id() + ", null);");
 		db.commitTransaction(transaction);
 		return new LinkApp(profile, permissions, position, sm.getNextSingleId(), String.valueOf(app_id), true, informations);
 	}
 	
-	protected LinkAppInformation informations;
 	
 	public LinkApp(Profile profile, Permissions permissions, int position, int single_id, String db_id, boolean working, LinkAppInformation informations) {
 		this.profile = profile;
@@ -87,7 +86,7 @@ public class LinkApp extends App {
 	}
 	
 	public String getLink() {
-		return this.informations.link;
+		return this.informations.getLink();
 	}
 	
 	public void setImgUrl(String imgUrl, ServletManager sm) throws GeneralException {

@@ -387,11 +387,11 @@ CREATE TABLE classicApps (
   id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   website_app_id INT(10) UNSIGNED NOT NULL,
   account_id INT(10) UNSIGNED NOT NULL,
-  group_classic_apps_id INT(10) UNSIGNED,
+  group_classic_app_id INT(10) UNSIGNED,
   PRIMARY KEY (id),
   FOREIGN KEY (website_app_id) REFERENCES websiteApps(id),
   FOREIGN KEY (account_id) REFERENCES accounts(id),
-  FOREIGN KEY (group_classic_apps_id) REFERENCES groupClassicApps(id)
+  FOREIGN KEY (group_classic_app_id) REFERENCES groupClassicApps(id)
 );
 
 CREATE TABLE sharedKeys
