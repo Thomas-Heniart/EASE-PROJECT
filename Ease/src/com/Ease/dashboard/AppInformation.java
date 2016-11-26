@@ -29,4 +29,9 @@ public class AppInformation {
 		db.set("UPDATE appInformations SET name='" + name + "' WHERE id=" + this.db_id + ";");
 		this.name = name;
 	}
+	
+	public void removeFromDb(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		db.set("DELETE FROM appInformations WHERE id=" + this.db_id + ";");
+	}
 }

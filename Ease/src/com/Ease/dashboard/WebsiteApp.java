@@ -36,7 +36,7 @@ public class WebsiteApp extends App {
 	
 	public static WebsiteApp createEmptyApp(String name, Profile profile, Website site, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		Permissions permissions = AppPermissions.loadDefaultAppPermissions(sm);
+		Permissions permissions = AppPermissions.loadPersonnalAppPermissions(sm);
 		int position = profile.getNextPosition();
 		int transaction = db.startTransaction();
 		int app_id = db.set("INSERT INTO apps values (null, '" + name + "', " + profile.getDb_id() + ", " + position + " , " + permissions.getDBid() + ", 'WebsiteApp', 1);");

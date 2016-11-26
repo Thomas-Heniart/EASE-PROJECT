@@ -437,9 +437,11 @@ FOREIGN KEY (group_logWith_app_id) REFERENCES groupLogWithApps(id)
 CREATE TABLE linkAppInformations
 (
   id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  app_information_id INT(10) UNSIGNED NOT NULL,
   url VARCHAR(2000) NOT NULL,
   img_url VARCHAR(255) NOT NULL,
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  FOREIGN KEY (app_information_id) REFERENCES apps(id)
 );
 
 CREATE TABLE groupLinkApps

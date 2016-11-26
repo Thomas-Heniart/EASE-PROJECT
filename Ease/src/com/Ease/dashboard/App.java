@@ -50,7 +50,7 @@ public abstract class App {
 	protected Permissions permissions;
 	protected boolean working;
 	protected int position;
-	protected AppInformation app_informations;
+	protected AppInformation informations;
 	
 	public String getDb_id() {
 		return this.db_id;
@@ -103,9 +103,12 @@ public abstract class App {
 	}
 	
 	public void remove(ServletManager sm) throws GeneralException {
-		this.removeFromDb(sm);
-		this.profile.getApps().remove(this);
-		this.profile.updateAppsIndex(sm);
+		if (this.permissions.havePermission(AppPermissions.Perm.DELETE.ordinal())) {
+			this.removeFromDb(sm);
+			this.profile.getApps().remove(this);
+			this.profile.updateAppsIndex(sm);
+		} else
+			throw new GeneralException(ServletManager.Code.ClientWarning, "Can't remove this app");
 	}
 	
 	public void removeFromDb(ServletManager sm) throws GeneralException {

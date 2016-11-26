@@ -28,28 +28,27 @@ public class LinkApp extends App {
 
 	public static LinkApp createLinkApp(String name, Profile profile, String link, String imgUrl, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		Permissions permissions = AppPermissions.loadDefaultAppPermissions(sm);
+		Permissions permissions = AppPermissions.loadPersonnalAppPermissions(sm);
 		int transaction;
 		int position = profile.getNextPosition();
 		transaction = db.startTransaction();
+		LinkAppInformation informations = LinkAppInformation.createLinkAppInformation(name, link, imgUrl, sm);
 		int app_id = db.set("INSERT INTO apps values (null, '" + name + "' , " + profile.getDb_id() + ", " + position + ", " + permissions.getDBid() + ", 'LinkApp', 1);");
 		db.set("INSERT INTO linkApps values (null, " + app_id + ", '" + link + "', '" + imgUrl + "');");
 		db.commitTransaction(transaction);
-		return new LinkApp(profile, permissions, position, sm.getNextSingleId(), String.valueOf(app_id), link, imgUrl, true);
+		return new LinkApp(profile, permissions, position, sm.getNextSingleId(), String.valueOf(app_id), true, informations);
 	}
 	
-	protected String link;
-	protected String imgUrl;
+	protected LinkAppInformation informations;
 	
-	public LinkApp(Profile profile, Permissions permissions, int position, int single_id, String db_id, String link, String imgUrl, boolean working) {
+	public LinkApp(Profile profile, Permissions permissions, int position, int single_id, String db_id, boolean working, LinkAppInformation informations) {
 		this.profile = profile;
-		this.link = link;
-		this.imgUrl = imgUrl;
 		this.position = position;
 		this.permissions = permissions;
 		this.single_id = single_id;
 		this.db_id = db_id;
 		this.working = working;
+		this.informations = informations;
 	}
 	
 	public LinkApp(String db_id, Profile profile, ServletManager sm) throws GeneralException {
@@ -67,12 +66,14 @@ public class LinkApp extends App {
 					ResultSet rs2 = db.get("SELECT permission_id, common FROM groupApps JOIN groupLinkApps ON groupApps.id = groupLinkApps.group_app_id WHERE groupLinkApps.id = " + group_link_app_id + ";");
 					rs2.next();
 					if(rs2.getBoolean(2))
-						this.permissions = AppPermissions.loadCommonAppPermissions(sm);
+						this.permissions = AppPermissions.loadCommomAppPermissions(sm);
 					else
 						this.permissions = AppPermissions.loadAppPermissions(rs2.getString(1), sm);
 				} else {
 					this.permissions = AppPermissions.loadPersonnalAppPermissions(sm);
 				}
+				String link_app_info_id = rs.getString(LoadData.INFO_ID.ordinal());
+				this.informations = LinkAppInformation.loadLinkAppInformation(link_app_info_id, sm);
 			} 
 		}
 		catch (SQLException e) {
@@ -82,28 +83,25 @@ public class LinkApp extends App {
 	}
 	
 	public void setLink(String link, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE linkApps SET url = '" + link + "';");
-		this.link = link;
+		this.informations.setLink(link, sm);
 	}
 	
 	public String getLink() {
-		return this.link;
+		return this.informations.link;
 	}
 	
 	public void setImgUrl(String imgUrl, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE linkApps SET img_url = '" + imgUrl + "';");
-		this.imgUrl = imgUrl;
+		this.informations.setImgUrl(imgUrl, sm);
 	}
 	
 	public String getImgUrl() {
-		return this.imgUrl;
+		return this.informations.getImgUrl();
 	}
 	
 	public void removeFromDb(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
+		this.informations.removeFromDb(sm);
 		db.set("DELETE FROM linkApps WHERE id = " + this.getDb_id() + ";");
 		super.removeFromDb(sm);
 		db.commitTransaction(transaction);

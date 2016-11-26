@@ -14,15 +14,25 @@ public class AppPermissions extends Permissions {
 		GROUP_ID,
 		PERMS
 	}
-	enum Perm {
-		RENAME,
-		MODIFY,
-		MOVE,
-		CHANGEPROFILE,
-		SHOWINFO,
-		DELETE
+	public static enum Perm {
+		RENAME(1),
+		MODIFY(2),
+		MOVE5(4),
+		CHANGEPROFILE(8),
+		SHOWINFO(16),
+		DELETE(32),
+		ALL(1048575);
+		
+		private int value;    
+
+		private Perm(int value) {
+			this.value = value;
+		}
+
+		public int getValue() {
+			return value;
+		}
 	}
-	protected static String DEFAULT_PERM_ID = "0";
 	
 	public static AppPermissions loadAppPermissions(String id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
@@ -37,8 +47,13 @@ public class AppPermissions extends Permissions {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
-	public static AppPermissions loadDefaultAppPermissions(ServletManager sm) throws GeneralException {
-		return loadAppPermissions(DEFAULT_PERM_ID, sm);
+	
+	public static AppPermissions loadPersonnalAppPermissions(ServletManager sm) throws GeneralException {
+		return new AppPermissions(null, null, Perm.ALL.getValue());
+	}
+	
+	public static AppPermissions loadCommomAppPermissions(ServletManager sm) throws GeneralException {
+		return new AppPermissions(null, null, Perm.CHANGEPROFILE.getValue() + Perm.MODIFY.getValue() + Perm.DELETE.getValue());
 	}
 	
 	public static AppPermissions CreateAppPermissions(int perms, String group_id, ServletManager sm) throws GeneralException {
@@ -50,6 +65,7 @@ public class AppPermissions extends Permissions {
 	public AppPermissions(String db_id, String group_id, int perms) {
 		super(db_id, group_id, perms);
 	}
+	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		db.set("REMOVE FROM appPermissions WHERE id=" + this.db_id + ";");
