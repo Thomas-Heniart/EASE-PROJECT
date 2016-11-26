@@ -16,12 +16,18 @@ public class Profile {
 		NOTHING,
 		ID,
 		USER_ID,
-		PERMS,
 		COLUMN_IDX,
 		POSITION_IDX,
 		GROUP_PROFILE_ID,
 		PROFILE_INFO_ID,
 	}
+	
+	/*
+	 * 
+	 * Loader and Creator
+	 * 
+	 */
+	
 	public static void loadProfiles(User user, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		ResultSet rs = db.get("SELECT * FROM profiles where user_id=" + user.getDBid() + ";");
@@ -59,12 +65,16 @@ public class Profile {
 			single_id = sm.getNextSingleId();
 			String group_profile_id = rs.getString(Data.GROUP_PROFILE_ID.ordinal());
 			if (!(group_profile_id == null || group_profile_id.equals("null"))) {
-				ResultSet rs2 = db.get("SELECT permission_id FROM groupProfiles WHERE id=" + group_profile_id + ";");
+				ResultSet rs2 = db.get("SELECT permission_id, common FROM groupProfiles WHERE id=" + group_profile_id + ";");
 				rs2.next();
-				perms = ProfilePermissions.loadProfilePermissions(rs2.getString(1), sm);
+				if (rs2.getBoolean(2)) {
+					perms = ProfilePermissions.loadCommomProfilePermissions(sm);
+				} else {
+					perms = ProfilePermissions.loadProfilePermissions(rs2.getString(1), sm);
+				}
 			}
 			else
-				perms = ProfilePermissions.loadProfilePermissions(rs.getString(Data.PERMS.ordinal()), sm);
+				perms = ProfilePermissions.loadPersonnalProfilePermissions(sm);
 			informations = ProfileInformation.loadProfileInformation(rs.getString(Data.PROFILE_INFO_ID.ordinal()), sm);
 			return new Profile(db_id, user, perms, columnIdx, positionIdx, single_id, informations);
 		} catch (SQLException e) {
@@ -76,27 +86,37 @@ public class Profile {
 	public static Profile createProfile(String name, String color, String group_profile_id, User user, ServletManager sm) throws GeneralException {
 		int columnIdx = Profile.getMostLittleProfileColumn(user);
 		int positionIdx = user.getProfilesColumn().get(columnIdx).size();
-		ProfilePermissions perm; 
+		ProfilePermissions perms; 
 		int single_id = sm.getNextSingleId();
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		if (group_profile_id == null || group_profile_id.equals("null"))
-			perm = ProfilePermissions.loadDefaultProfilePermissions(sm);
+			perms = ProfilePermissions.loadPersonnalProfilePermissions(sm);
 		else {
-			ResultSet rs2 = db.get("SELECT permission_id FROM groupProfiles WHERE id=" + group_profile_id + ";");
+			ResultSet rs2 = db.get("SELECT permission_id, common FROM groupProfiles WHERE id=" + group_profile_id + ";");
 			try {
 				rs2.next();
-				perm = ProfilePermissions.loadProfilePermissions(rs2.getString(1), sm);
+				if (rs2.getBoolean(2)) {
+					perms = ProfilePermissions.loadCommomProfilePermissions(sm);
+				} else {
+					perms = ProfilePermissions.loadProfilePermissions(rs2.getString(1), sm);
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 				throw new GeneralException(ServletManager.Code.InternError, e);
 			}
 		}
 		ProfileInformation informations = ProfileInformation.createProfileInformation(name, color, sm);
-		String db_id = db.set("INSERT INTO profiles VALUES(NULL, " + user.getDBid() + ", '" + name + "', '" + color + "', " + perm.getDBid() + ", " + columnIdx + ", " + positionIdx + ");").toString();
+		String db_id = db.set("INSERT INTO profiles VALUES(NULL, " + user.getDBid() + ", '" + name + "', '" + color + ", " + columnIdx + ", " + positionIdx + ");").toString();
 		db.commitTransaction(transaction);
-		return new Profile(db_id, user, perm, columnIdx, positionIdx, single_id, informations);
+		return new Profile(db_id, user, perms, columnIdx, positionIdx, single_id, informations);
 	}
+	
+	/*
+	 * 
+	 * Constructor
+	 * 
+	 */
 	
 	protected String	db_id;
 	protected User		user;
@@ -119,17 +139,6 @@ public class Profile {
 		this.informations = informations;
 	}
 	
-	public void removeFromDB(ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		int transaction = db.startTransaction();
-		Iterator<App> it = this.apps.iterator();
-		while(it.hasNext()) {
-			it.next().removeFromDb(sm);
-		}
-		db.set("DELETE FROM profiles WHERE id=" + this.db_id + ";");
-		db.commitTransaction(transaction);
-	}
-	
 	public void remove(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
@@ -145,6 +154,7 @@ public class Profile {
 	 * Getter and Setter
 	 * 
 	 */
+	
 	public String getDb_id() {
 		return this.db_id;
 	}
@@ -192,6 +202,17 @@ public class Profile {
 	 * 
 	 */
 	
+	public void removeFromDB(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		Iterator<App> it = this.apps.iterator();
+		while(it.hasNext()) {
+			it.next().removeFromDb(sm);
+		}
+		db.set("DELETE FROM profiles WHERE id=" + this.db_id + ";");
+		db.commitTransaction(transaction);
+	}
+	
 	public int getSize() {
 		if (apps.size() <= 3) {
 			return 2;
@@ -203,7 +224,7 @@ public class Profile {
 		return apps.size();
 	}
 	
-	public Permissions getPermissions() {
+	public ProfilePermissions getPermissions() {
 		return this.permissions;
 	}
 	
