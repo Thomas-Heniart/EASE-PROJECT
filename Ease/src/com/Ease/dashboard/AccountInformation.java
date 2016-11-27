@@ -20,7 +20,7 @@ public class AccountInformation {
 		INFORMATION_VALUE
 	}
 	
-	public static List<AccountInformation> createAccountInformations(String account_id, Map<String, String> account_informations, User user, ServletManager sm) throws GeneralException {
+	public static List<AccountInformation> createAccountInformations(String account_id, Map<String, String> account_informations, ServletManager sm) throws GeneralException {
 		List<AccountInformation> informations = new LinkedList<AccountInformation> ();
 		for (Map.Entry<String, String> entry : account_informations.entrySet()) {
 			informations.add(createAccountInformation(account_id, entry.getKey(), entry.getValue(), sm));
