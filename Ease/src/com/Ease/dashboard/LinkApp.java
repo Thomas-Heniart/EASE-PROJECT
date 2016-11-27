@@ -39,7 +39,6 @@ public class LinkApp extends App<LinkAppInformation> {
 		return new LinkApp(profile, permissions, position, sm.getNextSingleId(), String.valueOf(app_id), true, informations);
 	}
 	
-	
 	public LinkApp(Profile profile, Permissions permissions, int position, int single_id, String db_id, boolean working, LinkAppInformation informations) {
 		this.profile = profile;
 		this.position = position;

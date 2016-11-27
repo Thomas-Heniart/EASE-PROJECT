@@ -14,17 +14,20 @@ public class ClassicApp extends WebsiteApp {
 		NOTHING,
 		ID,
 		WEBSITE_APP_ID,
-		WEBSITE_ID
+		ACCOUNT_ID,
+		GROUP_CLASSIC_APP_ID
 	}
 	
 	public static ClassicApp createClassicApp(String name, Profile profile, Website site, Map<String, String> informations, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		int position = profile.getNextPosition();
-		int app_id = db.set("INSERT INTO apps values (null, '" + name + "' , " + profile.getDb_id() + ", " + position + ", " + permissions.getDBid() + ", 'LinkApp', 1);");
-		int website_app_id = db.set("INSERT INTO websiteApps values (null, " + site.getDb_id() + ", " + app_id + ");");
-		int classic_app_id = db.set("INSERT INTO classicApps values (null, " + website_app_id + ");");
-		Account account = Account.createAccount(String.valueOf(classic_app_id), informations, profile.getUser(), sm);
+		Permissions permissions = AppPermissions.loadPersonnalAppPermissions(sm);
+		Account account = Account.createAccount(informations, profile.getUser(), sm);
+		int app_id = db.set("INSERT INTO apps values (null, " + profile.getDb_id() + ", " + position + ", default, null, 'ClassicApp', 1, null);");
+		int website_app_id = db.set("INSERT INTO websiteApps values (null, " + site.getDb_id() + ", " + app_id + ", null, 'ClassicApp');");
+		int classic_app_id = db.set("INSERT INTO classicApps values (null, " + website_app_id + ", " + account.getDb_id()  + ");");
+		
 		db.commitTransaction(transaction);
 		return new ClassicApp(name, profile, permissions, position, sm.getNextSingleId(), String.valueOf(app_id), true, site, account);
 	}
