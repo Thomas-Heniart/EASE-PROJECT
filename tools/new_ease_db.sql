@@ -139,7 +139,6 @@ group_profile_id INT(10) UNSIGNED,
 profile_info_id INT(10) UNSIGNED NOT NULL,
 PRIMARY KEY (id),
 FOREIGN KEY (user_id) REFERENCES users (id),
-FOREIGN KEY (permission_id) REFERENCES profilePermissions (id),
 FOREIGN KEY (group_profile_id) REFERENCES groupProfiles (id),
 FOREIGN KEY (profile_info_id) REFERENCES profileInfo (id)
 );
@@ -450,7 +449,7 @@ CREATE TABLE groupLinkApps
   link_app_info_id INT(10) UNSIGNED NOT NULL,
   group_app_id INT(10) UNSIGNED NOT NULL,
   PRIMARY KEY (id),
-  FOREIGN KEY (link_app_info) REFERENCES linkAppInformations(id),
+  FOREIGN KEY (link_app_info_id) REFERENCES linkAppInformations(id),
   FOREIGN KEY (group_app_id) REFERENCES groupApps(id)
 );
 
@@ -462,7 +461,7 @@ link_app_info_id INT(10) UNSIGNED NOT NULL,
 group_link_app_id INT(10) UNSIGNED,
 PRIMARY KEY (id),
 FOREIGN KEY (app_id) REFERENCES apps(id),
-FOREIGN KEY (link_app_info) REFERENCES linkAppInformations(id),
+FOREIGN KEY (link_app_info_id) REFERENCES linkAppInformations(id),
 FOREIGN KEY (group_link_app_id) REFERENCES groupLinkApps(id)
 );
 
