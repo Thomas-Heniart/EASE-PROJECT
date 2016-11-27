@@ -21,19 +21,20 @@ public class LogWithApp extends WebsiteApp {
 	public static LogWithApp createLogWithApp(String name, Profile profile, Website site, WebsiteApp logWithApp, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		Permissions permissions = AppPermissions.loadDefaultAppPermissions(sm);
 		int position = profile.getNextPosition();
-		Integer app_id = db.set("INSERT INTO apps values (null, '" + name + "' , " + profile.getDb_id() + ", " + position + ", " + permissions.getDBid() + ", 'LinkApp', 1);");
-		Integer website_app_id = db.set("INSERT INTO websiteApps values (null, " + site.getDb_id() + ", " + app_id + ");");
-		db.set("INSERT INTO logWithApps values (null, " + website_app_id + ", " + logWithApp.getDb_id() + ");");
+		Permissions permissions = AppPermissions.loadPersonnalAppPermissions(sm);
+		AppInformation app_information = AppInformation.createAppInformation(name, sm);
+		int app_id = db.set("INSERT INTO apps values (null, " + profile.getDb_id() + ", " + position + ", default, null, 'LogWithApp', 1, null);");
+		int website_app_id = db.set("INSERT INTO websiteApps values (null, " + site.getDb_id() + ", " + app_id + ", null, 'LogWithApp');");
+		db.set("INSERT INTO logWithApps values (null, " + website_app_id + ", " + logWithApp.getDb_id() + ", null);");
 		db.commitTransaction(transaction);
-		return new LogWithApp(name, profile, permissions, position, sm.getNextSingleId(), String.valueOf(app_id), true, site, logWithApp.getDb_id());
+		return new LogWithApp(profile, permissions, position, sm.getNextSingleId(), String.valueOf(app_id), true, site, logWithApp.getDb_id(), app_information);
 	}
 	
 	protected String logWithApp_id;
 	
-	public LogWithApp(String name, Profile profile, Permissions permissions, int position, int single_id, String db_id, boolean working, Website site, String logWithApp_id) {
-		super(name, profile, permissions, position, single_id, db_id, working, site);
+	public LogWithApp(Profile profile, Permissions permissions, int position, int single_id, String db_id, boolean working, Website site, String logWithApp_id, AppInformation app_information) {
+		super(profile, permissions, position, single_id, db_id, working, site, app_information);
 		this.logWithApp_id = logWithApp_id;
 	}
 	
