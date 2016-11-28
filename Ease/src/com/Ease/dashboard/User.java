@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.Ease.utils.DataBaseConnection;
 import com.Ease.utils.GeneralException;
@@ -225,5 +226,9 @@ public class User {
 	
 	public String decrypt(String password) {
 		return this.keys.decrypt(password);
+	}
+	
+	public void addInContext(Map<String, User> usersMap) {
+		usersMap.put(this.email, this);
 	}
 }
