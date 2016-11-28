@@ -29,7 +29,6 @@ public class OnStart implements ServletContextListener{
 			e.printStackTrace();
 			return;
 		}
-		context.setAttribute("DataBase", db);
 		try {
 			// SiteManager initialization
 			/*SiteManager siteManager = new SiteManager();
