@@ -7,22 +7,35 @@ import com.Ease.utils.DataBaseConnection;
 import com.Ease.utils.GeneralException;
 import com.Ease.utils.ServletManager;
 
-public class AppPermissions extends Permissions {
+public class AppPermissions{
 	enum Data {
 		NOTHING,
 		ID,
 		GROUP_ID,
 		PERMS
 	}
-	enum Perm {
-		RENAME,
-		MODIFY,
-		MOVE,
-		CHANGEPROFILE,
-		SHOWINFO,
-		DELETE
+	public static enum Perm {
+		RENAME(1),
+		EDIT(2),
+		DELETE(4),
+		ALL(1048575);
+		
+		private int value;    
+
+		private Perm(int value) {
+			this.value = value;
+		}
+
+		public int getValue() {
+			return value;
+		}
 	}
-	protected static String DEFAULT_PERM_ID = "0";
+	
+	/*
+	 * 
+	 * Loader and Creator
+	 * 
+	 */
 	
 	public static AppPermissions loadAppPermissions(String id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
@@ -37,8 +50,12 @@ public class AppPermissions extends Permissions {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
-	public static AppPermissions loadDefaultAppPermissions(ServletManager sm) throws GeneralException {
-		return loadAppPermissions(DEFAULT_PERM_ID, sm);
+	public static AppPermissions loadPersonnalAppPermissions(ServletManager sm) throws GeneralException {
+		return new AppPermissions(null, null, Perm.ALL.getValue());
+	}
+	
+	public static AppPermissions loadCommomAppPermissions(ServletManager sm) throws GeneralException {
+		return new AppPermissions(null, null, Perm.MOVE_APP_OUTSIDE.getValue() + Perm.ADDAPP.getValue());
 	}
 	
 	public static AppPermissions CreateAppPermissions(int perms, String group_id, ServletManager sm) throws GeneralException {
@@ -47,11 +64,51 @@ public class AppPermissions extends Permissions {
 		return new AppPermissions(db_id, group_id, perms);
 	}
 	
+	/*
+	 * 
+	 * Constructor
+	 * 
+	 */
+	
+	protected String	db_id;
+	protected String	group_id;
+	protected int		perms;
+	
 	public AppPermissions(String db_id, String group_id, int perms) {
-		super(db_id, group_id, perms);
+		this.db_id = db_id;
+		this.group_id = group_id;
+		this.perms = perms;
 	}
+	
+	/*
+	 * 
+	 * Getter and Setter
+	 * 
+	 */
+	
+	public String getDBid() {
+		return db_id;
+	}
+	public String getGroupId() {
+		return group_id;
+	}
+	
+	/*
+	 * 
+	 * Utils
+	 * 
+	 */
+	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("REMOVE FROM appPermissions WHERE id=" + this.db_id + ";");
+		if (this.db_id != null)
+			db.set("REMOVE FROM appPermissions WHERE id=" + this.db_id + ";");
+	}
+	
+	public boolean havePermission(int perm) {
+		if ((perms >> perm) % 2 == 1){
+			return true;
+		}
+		return false;
 	}
 }

@@ -76,7 +76,7 @@ public class Profile {
 			else
 				perms = ProfilePermissions.loadPersonnalProfilePermissions(sm);
 			informations = ProfileInformation.loadProfileInformation(rs.getString(Data.PROFILE_INFO_ID.ordinal()), sm);
-			return new Profile(db_id, user, perms, columnIdx, positionIdx, single_id, informations);
+			return new Profile(db_id, user, perms, columnIdx, positionIdx, single_id, group_profile_id, informations);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new GeneralException(ServletManager.Code.InternError, e);
@@ -109,7 +109,7 @@ public class Profile {
 		ProfileInformation informations = ProfileInformation.createProfileInformation(name, color, sm);
 		String db_id = db.set("INSERT INTO profiles VALUES(NULL, " + user.getDBid() + ", '" + name + "', '" + color + ", " + columnIdx + ", " + positionIdx + ");").toString();
 		db.commitTransaction(transaction);
-		return new Profile(db_id, user, perms, columnIdx, positionIdx, single_id, informations);
+		return new Profile(db_id, user, perms, columnIdx, positionIdx, single_id, group_profile_id, informations);
 	}
 	
 	/*
@@ -125,10 +125,11 @@ public class Profile {
 	protected int		positionIdx;
 	protected List<App> apps;
 	protected int 		single_id;
+	protected String	groupProfileId;
 	ProfileInformation informations;
 
 	
-	public Profile(String db_id, User user, ProfilePermissions perms, int columnIdx, int positionIdx, int single_id, ProfileInformation informations) {
+	public Profile(String db_id, User user, ProfilePermissions perms, int columnIdx, int positionIdx, int single_id, String groupProfileId, ProfileInformation informations) {
 		this.db_id = db_id;
 		this.user = user;
 		this.permissions = perms;
@@ -136,6 +137,7 @@ public class Profile {
 		this.positionIdx = positionIdx;
 		this.apps = new LinkedList<App>();
 		this.single_id = single_id;
+		this.groupProfileId = groupProfileId;
 		this.informations = informations;
 	}
 	
@@ -265,5 +267,64 @@ public class Profile {
 			}
 		}
 		db.commitTransaction(transaction);
+	}
+	
+	/*
+	 * 
+	 * Share, Common And Personnal changement
+	 * 
+	 */
+	
+	public void changeToCommon(ServletManager sm) throws GeneralException {
+		if (this.groupProfileId != null) {
+			try {
+				DataBaseConnection db = sm.getDB();
+				ResultSet rs = db.get("SELECT common, profile_info_id FROM groupProfiles where id=" + this.groupProfileId + ";");
+				rs.next();
+				if (rs.getBoolean(1)) {
+					throw new GeneralException(ServletManager.Code.ClientWarning, "This profile is already set as 'Common'.");
+				} else {
+					int transaction = db.startTransaction();
+					String profile_info_id = rs.getString(2);
+					db.set("UPDATE profiles set profile_info_id=" + profile_info_id + " WHERE id=" + this.db_id + ";");
+					this.informations.removeFromDB(sm);
+					this.informations = ProfileInformation.loadProfileInformation(profile_info_id, sm);
+					this.permissions = ProfilePermissions.loadCommomProfilePermissions(sm);
+					//Send 'UpdateProfile' into WebSocket
+					db.commitTransaction(transaction);
+				}
+			} catch (SQLException e) {
+				throw new GeneralException(ServletManager.Code.InternError, e);
+			}
+		} else {
+			throw new GeneralException(ServletManager.Code.ClientWarning, "Impossible to set 'Common' a personnal profile.");
+		}
+	}
+	
+	public void changeToEditable(ServletManager sm) throws GeneralException {
+		if (this.groupProfileId != null) {
+			try {
+				DataBaseConnection db = sm.getDB();
+				ResultSet rs = db.get("SELECT common, profile_info_id, permission_id FROM groupProfiles where id=" + this.groupProfileId + ";");
+				rs.next();
+				if (rs.getBoolean(1)) {
+					ResultSet rs2 = db.get("SELECT name, color FROM profileInfo WHERE id=" + rs.getString(2) + ";");
+					String name = rs2.getString(1);
+					String color = rs2.getString(2);
+					int transaction = db.startTransaction();
+					this.informations = ProfileInformation.createProfileInformation(name, color, sm);
+					db.set("UPDATE profiles set profile_info_id=" + this.informations.getDBid() + " WHERE id=" + this.db_id + ";");
+					this.permissions = ProfilePermissions.loadProfilePermissions(rs.getString(3), sm);
+					//Send 'UpdateProfile' into WebSocket
+					db.commitTransaction(transaction);
+				} else {
+					throw new GeneralException(ServletManager.Code.ClientWarning, "This profile is already set as 'Common'.");
+				}
+			} catch (SQLException e) {
+				throw new GeneralException(ServletManager.Code.InternError, e);
+			}
+		} else {
+			throw new GeneralException(ServletManager.Code.ClientWarning, "Impossible to set 'Editable' a personnal profile.");
+		}
 	}
 }
