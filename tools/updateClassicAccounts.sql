@@ -7,7 +7,7 @@ CREATE TABLE ClassicAccountsInformations (
   information_name VARCHAR(255) NOT NULL,
   information_value VARCHAR(255) NOT NULL,
   PRIMARY KEY (information_id),
-  FOREIGN KEY (account_id) REFERENCES ClassicAccounts (account_id)
+  FOREIGN KEY (account_id) REFERENCES classicAccounts (account_id)
 );
 
 CREATE TABLE websitesInformations (
@@ -19,22 +19,19 @@ CREATE TABLE websitesInformations (
   FOREIGN KEY (website_id) REFERENCES websites (website_id)
 );
 
-DROP PROCEDURE IF EXISTS updateAccountsInformations;
-DROP PROCEDURE IF EXISTS updateWebsitesInformations;
-
 DELIMITER //
 
-CREATE PROCEDURE updateAccountsInformations()
+CREATE PROCEDURE updateAccountsInformations2()
 BEGIN
   INSERT INTO ClassicAccountsInformations (account_id, information_name, information_value)
-    SELECT account_id, "login", login FROM ClassicAccounts;
+    SELECT account_id, "login", login FROM classicAccounts;
   INSERT INTO ClassicAccountsInformations (account_id, information_name, information_value)
-    SELECT account_id, "password", password FROM ClassicAccounts;
-  ALTER TABLE ClassicAccounts DROP COLUMN login;
-  ALTER TABLE ClassicAccounts DROP COLUMN password;
+    SELECT account_id, "password", password FROM classicAccounts;
+  ALTER TABLE classicAccounts DROP COLUMN login;
+  ALTER TABLE classicAccounts DROP COLUMN password;
 END //
 
-CREATE PROCEDURE updateWebsitesInformations()
+CREATE PROCEDURE updateWebsitesInformations2()
 BEGIN
   INSERT INTO websitesInformations (website_id, information_name, information_type)
     SELECT website_id, "login", "text" FROM websites;

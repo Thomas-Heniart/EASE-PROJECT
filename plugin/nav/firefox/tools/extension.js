@@ -1,7 +1,17 @@
 var listenersUpdates = [];
 var listenersMessages = [];
+var currentUser = "anonymous";
 
 var extension = {
+    nbOfEaseTabs:function(){
+        var nb=0;
+        for(var i in window.tabs) {
+            if(window.tabs[i].url.indexOf("ease.space")!=-1){
+                nb++;
+            }
+        }
+        return nb;
+    },
 	storage:{
 		get:function(key, callback){
 			chrome.storage.local.get(key, function(res){

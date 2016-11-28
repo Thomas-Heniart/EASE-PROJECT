@@ -102,7 +102,7 @@ $(document).ready(function(){
 	});
 	
 	$("#enterEditMode").click(enterEditMode);
-
+	
 });
 
 var Profile = function(rootEl){
@@ -502,4 +502,6 @@ $(document).ready(function() {
 		return old.apply(this, arguments);
 	};
 })($.fn.attr);
+
+
 
