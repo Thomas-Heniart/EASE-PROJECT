@@ -108,7 +108,6 @@ public class ConnectionServlet extends HttpServlet {
 						} else {
 							attempts = incrementAttempts(client_ip, db);
 							SI.setResponse(199, "Wrong login or password." + " You have " + (max_attempts - attempts) + "/10 attempts left.");
-
 						}
 					} else {
 						attempts = incrementAttempts(client_ip, db);

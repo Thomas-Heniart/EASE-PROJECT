@@ -43,7 +43,18 @@ public class Option {
 		this.background_picked = background_picked;
 		this.infinite_session = infinite_session;
 	}
+	
+	public void removeFromDB(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		db.set("DELETE FROM options where id=" + this.db_id + ";");
+	}
 
+	/*
+	 * 
+	 * Getter and Setter
+	 * 
+	 */
+	
 	public String getDb_id() {
 		return this.db_id;
 	}

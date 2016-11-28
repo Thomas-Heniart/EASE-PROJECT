@@ -21,20 +21,20 @@ public class User {
 		REGISTRATIONDATE,
 		STATUSID
 	}
-	public static User loadUser(String email, ServletManager sm) throws GeneralException {
+	static int MAX_COLUMN = 5;
+	public static User loadUser(String email, String password, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		try {
 			ResultSet rs = db.get("SELECT * FROM users where email='" + email + "';");
 			String db_id = rs.getString(Data.ID.ordinal());
 			String firstName = rs.getString(Data.FIRSTNAME.ordinal());
 			String lastName = rs.getString(Data.LASTNAME.ordinal());
-			Keys keys = Keys.loadKeys(rs.getString(Data.KEYSID.ordinal()), sm);
-			Options options = Keys.loadKeys(rs.getString(Data.OPTIONSID.ordinal()), sm);
-			Status status = Keys.loadKeys(rs.getString(Data.STATUSID.ordinal()), sm);
+			Keys keys = Keys.loadKeys(rs.getString(Data.KEYSID.ordinal()), password, sm);
+			Option options = Option.loadOption(rs.getString(Data.OPTIONSID.ordinal()), sm);
+			Status status = Status.loadStatus(rs.getString(Data.STATUSID.ordinal()), sm);
 			String registrationDate = rs.getString(Data.REGISTRATIONDATE.ordinal());
 			List<UserEmail> emails = UserEmail.loadEmails(db_id, sm);
-			User newUser =  new User(db_id, firstName, lastName, email, registrationDate, keys, options, status);
-			newUser.setEmails(emails);
+			User newUser =  new User(db_id, firstName, lastName, email, registrationDate, keys, options, status, emails);
 			return newUser;
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
@@ -42,26 +42,19 @@ public class User {
 		return null;
 	}
 	
-	/*public static User loadUserFromId(int id, ServletManager sm) throws GeneralException {
+	public static User createUser(String email, String firstName, String lastName, String password, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		try {
-			ResultSet rs = db.get("SELECT * FROM users where id=" + id + ";");
-			String db_id = rs.getString(Data.ID.ordinal());
-			String firstName = rs.getString(Data.FIRSTNAME.ordinal());
-			String lastName = rs.getString(Data.LASTNAME.ordinal());
-			String email = rs.getString(Data.EMAIL.ordinal());
-			Keys keys = Keys.loadKeys(rs.getString(Data.KEYSID.ordinal()), sm);
-			Options options = Keys.loadKeys(rs.getString(Data.OPTIONSID.ordinal()), sm);
-			Status status = Keys.loadKeys(rs.getString(Data.STATUSID.ordinal()), sm);
-			String registrationDate = rs.getString(Data.REGISTRATIONDATE.ordinal());
-			return new User(db_id, firstName, lastName, email, registrationDate, keys, options, status);
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
-	}*/
-	
-	public static User createUser(String email, String firstName, String lastName, String password) throws GeneralException {
-		//do your stuff here
+		Keys keys = Keys.createKeys(password, sm);
+		Option opt = Option.createOption(sm);
+		Status status = Status.createStatus(sm);
+		//String registrationDate = GET_CURRENT_TIME;
+		List<UserEmail> emails = new LinkedList<UserEmail>();
+		int transaction = db.startTransaction();
+		String db_id = db.set("INSERT INTO users VALUES(NULL, '" + firstName + "', '" + lastName + "', '" + email + "', " + keys.getDBid() + ", " + opt.getDb_id() + ", '" + registrationDate + "', " + status.getDBid() + ");").toString();
+		User newUser = new User(db_id, firstName, lastName, email, registrationDate, keys, opt, status, emails);
+		newUser.getUserEmails().add(UserEmail.createUserEmail(email, newUser, sm));
+		db.commitTransaction(transaction);
+		return newUser;
 	}
 	
 	protected String	db_id;
@@ -70,13 +63,13 @@ public class User {
 	protected String	email;
 	protected String	registration_date;
 	protected Keys		keys;
-	protected Options	opt;
+	protected Option	opt;
 	protected Status	status;
 	protected List<List<Profile>> profiles_column;
 	protected int		max_single_id;
 	protected List<UserEmail> emails;
 	
-	public User(String db_id, String first_name, String last_name, String email, String registration_date, Keys keys, Options opt, Status status) {
+	public User(String db_id, String first_name, String last_name, String email, String registration_date, Keys keys, Option opt, Status status, List<UserEmail> emails) {
 		this.db_id = db_id;
 		this.first_name = first_name;
 		this.last_name = last_name;
@@ -85,6 +78,7 @@ public class User {
 		this.keys = keys;
 		this.opt = opt;
 		this.status = status;
+		this.emails = emails;
 		this.profiles_column = new LinkedList<List<Profile>>();
 		for (int i = 0; i < 5; ++i) {
 			this.profiles_column.add(new LinkedList<Profile>()); 
@@ -134,8 +128,20 @@ public class User {
 		return this.registration_date;
 	}
 	
-	public void setEmails(List<UserEmail> emails) {
-		this.emails = emails;
+	public Keys getKeys() {
+		return keys;
+	}
+	
+	public Option getOptions() {
+		return opt;
+	}
+	
+	public Status getStatus() {
+		return status;
+	}
+	
+	public List<UserEmail> getUserEmails() {
+		return emails;
 	}
 	
 	public List<List<Profile>> getProfilesColumn() {
@@ -157,7 +163,7 @@ public class User {
 		this.emails.remove(email);
 	}
 	
-	public void updateProfilesIndex(ServletManager sm)  throws GeneralException {
+	public void updateProfilesIndex(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		for (int i = 0; i < profiles_column.size(); ++i) {
@@ -171,5 +177,53 @@ public class User {
 			}
 		}
 		db.commitTransaction(transaction);
+	}
+	
+	public Profile getProfile(int single_id) throws GeneralException {
+		for (List<Profile> column: this.profiles_column) {
+			for (Profile profile: column) {
+				if (profile.getSingleId() == single_id)
+					return profile;
+			}
+		}
+		throw new GeneralException(ServletManager.Code.ClientError, "This profile's single_id dosen't exist.");
+	}
+	
+	public App getApp(int single_id) throws GeneralException {
+		for (List<Profile> column: this.profiles_column) {
+			for (Profile profile: column) {
+				for (App app: profile.getApps()) {
+					if (app.getSingle_id() == single_id)
+						return app;
+				}
+			}
+		}
+		throw new GeneralException(ServletManager.Code.ClientError, "This app's single_id dosen't exist.");
+	}
+	
+	public void removeDefinitly(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		for (UserEmail mail: emails) {
+			mail.removeFromDB(sm);
+		}
+		for (List<Profile> column: this.profiles_column) {
+			while (column.size() > 0) {
+				column.get(0).remove(sm);
+			}
+		}
+		this.removeFromDB(sm);
+		this.keys.removeFromDB(sm);
+		this.opt.removeFromDB(sm);
+		this.status.removeFromDB(sm);
+		db.commitTransaction(transaction);
+	}
+	
+	public String encrypt(String password) {
+		return this.keys.encrypt(password);
+	}
+	
+	public String decrypt(String password) {
+		return this.keys.decrypt(password);
 	}
 }
