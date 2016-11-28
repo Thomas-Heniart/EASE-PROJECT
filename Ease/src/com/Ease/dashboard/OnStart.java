@@ -12,6 +12,6 @@ public class OnStart implements ServletContextListener{
 	// Run this before web application is started
 	@Override
 	public void contextInitialized(ServletContextEvent evt) {
-		
+		//test it
 	}
 }
