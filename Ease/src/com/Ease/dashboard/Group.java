@@ -2,8 +2,10 @@ package com.Ease.dashboard;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.Ease.utils.DataBaseConnection;
 import com.Ease.utils.GeneralException;
@@ -50,6 +52,26 @@ public class Group {
 		}
 	}
 	
+	public static Map<String, Group> getGroupMap(List<Group> groupTrees) {
+		Map<String, Group> groupsMap = new HashMap<String, Group>();
+		for (Group group : groupTrees) {
+			groupsMap.put(group.getDBid(), group);
+			groupsMap.putAll(getGroupMap(group.getChildren()));
+		}
+		return groupsMap;
+	}
+	
+	public static Map<String, GroupProfile> getGroupProfileMap(List<Group> groupTrees) {
+		Map<String, GroupProfile> groupProfileMap = new HashMap<String, GroupProfile>();
+		for (Group group : groupTrees) {
+			for (GroupProfile groupProfile : group.getGroupProfiles()) {
+				groupProfileMap.put(groupProfile.getDBid(), groupProfile);
+			}
+			groupProfileMap.putAll(getGroupProfileMap(group.getChildren()));
+		}
+		return groupProfileMap;
+	}
+	
 	/*
 	 * 
 	 * Constructor
@@ -83,5 +105,11 @@ public class Group {
 	}
 	private void setGroupProfiles(List<GroupProfile> groupProfiles) {
 		this.groupProfiles = groupProfiles;
+	}
+	public List<Group> getChildren() {
+		return this.children;
+	}
+	public List<GroupProfile> getGroupProfiles() {
+		return this.groupProfiles;
 	}
 }

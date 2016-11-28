@@ -1,7 +1,9 @@
 package com.Ease.dashboard;
 
+
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -30,6 +32,14 @@ public class OnStart implements ServletContextListener{
 			return;
 		}
 		try {
+			List<Group> groups = Group.loadGroups(db);
+			Map<String, Group> groupsMap = new HashMap<String, Group>();
+			groupsMap.putAll(Group.getGroupMap(groups));
+			evt.getServletContext().setAttribute("groups", groupsMap);
+			
+			Map<String, GroupProfile> groupProfilesMap = new HashMap<String, GroupProfile>();
+			groupProfilesMap.putAll(Group.getGroupProfileMap(groups));
+			evt.getServletContext().setAttribute("groupProfiles", groups);
 			// SiteManager initialization
 			/*SiteManager siteManager = new SiteManager();
 			siteManager.refresh(db);
