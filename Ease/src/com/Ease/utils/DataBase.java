@@ -11,7 +11,7 @@ public final class DataBase {
 
     static {
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/test");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/ease");
         dataSource.setUsername("client");
         dataSource.setPassword("P6au23q7");
     }

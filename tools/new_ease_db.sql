@@ -203,7 +203,7 @@ CREATE TABLE groupApps
   common TINYINT(1) UNSIGNED NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (group_profile_id) REFERENCES groupProfiles(id),
-  FOREIGN KEY (group_id) REFERENCES group(id),
+  FOREIGN KEY (group_id) REFERENCES groups(id),
   FOREIGN KEY (permisson_id) REFERENCES appPermissions(id),
   FOREIGN KEY (app_info_id) REFERENCES appsInformations(id)
 );
@@ -438,8 +438,7 @@ CREATE TABLE linkAppInformations
   id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   url VARCHAR(2000) NOT NULL,
   img_url VARCHAR(255) NOT NULL,
-  PRIMARY KEY (id),
-  FOREIGN KEY (app_information_id) REFERENCES apps(id)
+  PRIMARY KEY (id)
 );
 
 CREATE TABLE groupLinkApps
