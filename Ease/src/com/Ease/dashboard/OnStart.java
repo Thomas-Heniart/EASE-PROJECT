@@ -1,7 +1,15 @@
 package com.Ease.dashboard;
 
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+
+import com.Ease.utils.DataBase;
+import com.Ease.utils.DataBaseConnection;
 
 public class OnStart implements ServletContextListener{
 	@Override
@@ -12,6 +20,34 @@ public class OnStart implements ServletContextListener{
 	// Run this before web application is started
 	@Override
 	public void contextInitialized(ServletContextEvent evt) {
-		//test it
+		System.out.print("ServletContextListener started...");
+		ServletContext context = evt.getServletContext();
+		DataBaseConnection db;
+		try {
+			db = new DataBaseConnection(DataBase.getConnection());
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return;
+		}
+		context.setAttribute("DataBase", db);
+		try {
+			// SiteManager initialization
+			/*SiteManager siteManager = new SiteManager();
+			siteManager.refresh(db);
+			context.setAttribute("siteManager", siteManager);
+			ResultSet rs = db.get("SELECT * FROM tags;");
+			while (rs.next()) {
+				siteManager.addNewTag(new Tag(rs, context));
+			}
+			siteManager.setTagsForSites(context);
+			siteManager.setSitesForTags(context);
+			*/
+			Map<String, User> usersMap = new HashMap<String, User>();
+			context.setAttribute("users", usersMap);
+			System.out.println("done.");
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return ;
+		}
 	}
 }
