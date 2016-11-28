@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.json.simple.JSONObject;
+
 import com.Ease.utils.DataBaseConnection;
 import com.Ease.utils.GeneralException;
 import com.Ease.utils.ServletManager;
@@ -127,7 +129,6 @@ public class Profile {
 	protected int 		single_id;
 	protected String	groupProfileId;
 	ProfileInformation informations;
-
 	
 	public Profile(String db_id, User user, ProfilePermissions perms, int columnIdx, int positionIdx, int single_id, String groupProfileId, ProfileInformation informations) {
 		this.db_id = db_id;
@@ -326,5 +327,16 @@ public class Profile {
 		} else {
 			throw new GeneralException(ServletManager.Code.ClientWarning, "Impossible to set 'Editable' a personnal profile.");
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public JSONObject getJSON() {
+		JSONObject res = new JSONObject();
+		res.put("id", this.db_id);
+		res.put("user_id", this.user.getDBid());
+		res.put("column", this.columnIdx);
+		res.put("position", this.positionIdx);
+		res.put("group_profile_id", this.groupProfileId);
+		return res;
 	}
 }
