@@ -23,11 +23,11 @@ public class LogWithApp extends WebsiteApp {
 		int transaction = db.startTransaction();
 		int position = profile.getNextPosition();
 		AppInformation app_information = AppInformation.createAppInformation(name, sm);
-		int app_id = db.set("INSERT INTO apps values (null, " + profile.getDb_id() + ", " + position + ", default, null, 'LogWithApp', 1, null);");
-		int website_app_id = db.set("INSERT INTO websiteApps values (null, " + site.getDb_id() + ", " + app_id + ", null, 'LogWithApp');");
+		String app_id = App.insertNewAppInDb(profile, position, "LogWithApp", app_information, null, sm);
+		String website_app_id = WebsiteApp.insertNewWebsiteAppInDb(profile, position, "LogWithApp", app_information, null, site, sm);
 		db.set("INSERT INTO logWithApps values (null, " + website_app_id + ", " + logWithApp.getDb_id() + ", null);");
 		db.commitTransaction(transaction);
-		return new LogWithApp(profile, position, sm.getNextSingleId(), String.valueOf(app_id), true, site, logWithApp.getDb_id(), app_information);
+		return new LogWithApp(profile, position, sm.getNextSingleId(), app_id, true, site, logWithApp.getDb_id(), app_information);
 	}
 	
 	protected String logWithApp_id;

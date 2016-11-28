@@ -19,4 +19,12 @@ public class GroupWebsiteApp extends GroupApp {
 		this.group_app = group_app;
 		this.site = site;
 	}
+	
+	public String getGroupAppId() {
+		return this.group_app.getDb_id();
+	}
+	
+	public GroupApp getGroupApp() {
+		return this.group_app;
+	}
 }

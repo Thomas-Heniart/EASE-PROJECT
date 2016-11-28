@@ -34,18 +34,16 @@ public class WebsiteApp extends App {
 			throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int position = profile.getNextPosition();
-		int transaction = db.startTransaction();
-		db.set("INSERT INTO websiteApps values (null, " + site.getDb_id() + ", " + app_id + ");");
-		db.commitTransaction(transaction);
+		WebsiteApp.insertNewWebsiteAppInDb(profile, position, "WebsiteApp", app_information, groupWebsiteApp, site, sm)
 		AppInformation informations = AppInformation.createAppInformation(name, sm);
 		return new WebsiteApp(profile, position, sm.getNextSingleId(), String.valueOf(app_id), true, site,
 				informations);
 	}
 
-	public static String insertNewWebsiteAppInDb(Profile profile, int position, String type, AppInformation app_information, GroupWebsiteApp groupWebsiteApp, Website site, ServletManager sm) {
+	public static String insertNewWebsiteAppInDb(Profile profile, int position, String type, AppInformation app_information, GroupWebsiteApp groupWebsiteApp, Website site, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		String app_id = App.insertNewAppInDb(profile, position, type, app_information, (groupWebsiteApp == null) ? null : groupWebsiteApp.getGroupAppId(), sm);
+		String app_id = App.insertNewAppInDb(profile, position, type, app_information, (groupWebsiteApp == null) ? null : groupWebsiteApp.getGroupApp(), sm);
 		int website_app_id = db.set("INSERT INTO websiteApps values (null, " + site.getDb_id() + ", " + app_id + ", " + ((groupWebsiteApp == null) ? "null" : groupWebsiteApp.getDb_id()) + ");");
 		db.commitTransaction(transaction);
 		return String.valueOf(website_app_id);
