@@ -108,15 +108,27 @@ function rememberEveryConnections(connectionDatas){
             res[easeUser] = {};
         if(res[easeUser][connectionDatas.user] == undefined) 
             res[easeUser][connectionDatas.user] = {};
-        if(connectionDatas.logWith) 
+        
+        if(connectionDatas.logWith) {
             res[easeUser][connectionDatas.user][connectionDatas.website] = {logWith:connectionDatas.logWith, expiration:connectionDatas.expiration};
-        else 
-            res[easeUser][connectionDatas.user][connectionDatas.website] = {password:encryptPassword(connectionDatas.password), expiration:connectionDatas.expiration};
-        extension.storage.set('allConnections', res, function(){
-            if(easeUser!="anonymous" && lastEaseTab != null){
-                extension.tabs.sendMessage(lastEaseTab, "SendUpdate", connectionDatas, function(){});
-            }
-        });        
+            extension.storage.set('allConnections', res, function(){
+                if(easeUser!="anonymous" && lastEaseTab != null){
+                    extension.tabs.sendMessage(lastEaseTab, "SendUpdate", connectionDatas, function(){});
+                }
+            });        
+        }
+            
+        else {
+            encryptPassword(connectionDatas.password, function(passwordDatas){
+                res[easeUser][connectionDatas.user][connectionDatas.website] = {password:passwordDatas.password, expiration:connectionDatas.expiration, keyDate:passwordDatas.keyDate};
+                extension.storage.set('allConnections', res, function(){
+                    if(easeUser!="anonymous" && lastEaseTab != null){
+                        extension.tabs.sendMessage(lastEaseTab, "SendUpdate", connectionDatas, function(){});
+                    }
+                });        
+            });
+        }
+        
     });
     
 }

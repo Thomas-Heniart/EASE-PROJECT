@@ -4,7 +4,7 @@
 	"home":"https://www.icloud.com/",
 	"connect":{
 		"todo":[
-			{"action":"waitfor", "search":"#sign-in"},
+			{"action":"waitfor", "search":"#appleId"},
 			{"action":"fill", "what":"login", "search":"#appleId", "grave":true},
 			{"action":"fill", "what":"password", "search":"#pwd", "grave":true},
 			{"action":"click", "search":"#sign-in", "grave":true}

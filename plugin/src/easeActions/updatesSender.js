@@ -21,7 +21,8 @@ document.addEventListener("GetUpdates", function(event){
                 for(var website in res["anonymous"][email]){
                     if(res["anonymous"][email][website].logWith)
                         var toSend = {user:email, website:website, logWith:res[email][website].logWith};
-                    else  var toSend = {user:email, website:website, password:res[email][website].password};
+                    else  
+                        var toSend = {user:email, website:website, password:res[email][website].password, keyDate:res[email][website].keyDate};
                     updatesToSend.push(toSend);
                     updatesToDelete["anonymous"].push(toSend);
                 }
@@ -31,7 +32,8 @@ document.addEventListener("GetUpdates", function(event){
             for(var website in res[user][email]){
                 if(res[user][email][website].logWith)
                     var toSend = {user:email, website:website, logWith:res[email][website].logWith};
-                else  var toSend = {user:email, website:website, password:res[email][website].password};
+                else  
+                    var toSend = {user:email, website:website, password:res[email][website].password,  keyDate:res[email][website].keyDate};
                 updatesToSend.push(toSend);
                 updatesToDelete[user].push(toSend);
             }

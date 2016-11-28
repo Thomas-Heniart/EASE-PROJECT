@@ -208,4 +208,12 @@ var Dashboard = function(rootEl){
 var easeDashboard;
 $(document).ready(function(){
 	easeDashboard = new Dashboard($('.ProfilesHandler'));
+	var urlParams = window.location.search.substring(1,window.location.search.length).split("&");
+	for(var i in urlParams){
+		var param = urlParams[i].split("=")[0];
+		var value = urlParams[i].split("=")[1];
+		if(param=="openCatalog" && value=="true"){
+			enterEditMode();
+		}
+	}
 });

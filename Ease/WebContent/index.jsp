@@ -99,7 +99,6 @@ pageEncoding="UTF-8"%>
 			</jsp:forward>
 		<%}
 	}%>
-	<c:set var="adminMessage" scope="session" value='${servletContext.getAttribute("AdminMessage")}'/>
 	<script src="js/isMobile.js"></script>
 	<script src="js/getNavigator.js"></script>
 	<!-- start Mixpanel --><script type="text/javascript">(function(e,a){if(!a.__SV){var b=window;try{var c,l,i,j=b.location,g=j.hash;c=function(a,b){return(l=a.match(RegExp(b+"=([^&]*)")))?l[1]:null};g&&c(g,"state")&&(i=JSON.parse(decodeURIComponent(c(g,"state"))),"mpeditor"===i.action&&(b.sessionStorage.setItem("_mpcehash",g),history.replaceState(i.desiredHash||"",e.title,j.pathname+j.search)))}catch(m){}var k,h;window.mixpanel=a;a._i=[];a.init=function(b,c,f){function e(b,a){var c=a.split(".");2==c.length&&(b=b[c[0]],a=c[1]);b[a]=function(){b.push([a].concat(Array.prototype.slice.call(arguments,
@@ -131,7 +130,6 @@ mixpanel.init("e87ca36e156107ebbd9a672735e6612c");</script><!-- end Mixpanel -->
 			<%@ include file="templates/Header.jsp"%>
 			<%@ include file="templates/loggedBody.jsp"%>
 		<%}%>
-		<%@ include file="templates/AdminMessage.jsp" %>
 		<%@ include file="templates/Footer.jsp" %>
 		<%@ include file="templates/ChatButton.jsp" %>
 	</div>

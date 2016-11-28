@@ -68,7 +68,6 @@
 	<%@ page import="java.util.Base64"%>
 	<%@ page import="java.util.Base64.Encoder"%>
 	<%@ page import="java.nio.charset.StandardCharsets"%>
-	<c:set var="adminMessage" scope="session" value='${servletContext.getAttribute("AdminMessage")}'/>
 	<%
 		if (session.getValue("User") != null && ((User)session.getValue("User")).isAdmin(session.getServletContext())) {
 	%>

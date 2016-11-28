@@ -24,7 +24,7 @@ public class AES {
 			e.printStackTrace();
 			return null;
 		}
-    	keyGen.init(128); // for example
+    	keyGen.init(128);
     	SecretKey secretKey = keyGen.generateKey();
     	return new Base64().encodeToString(secretKey.getEncoded());
     }
