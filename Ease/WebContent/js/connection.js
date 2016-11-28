@@ -1,5 +1,4 @@
 $(document).ready(function() {
-	
 		if(window.location.search.split("?")[1]=="logout"){
 			$(".logout-overlay").show();
 			setTimeout(function(){
@@ -20,7 +19,6 @@ $(document).ready(function() {
 			$(".ease-logo").hide();
 			$("#loadingUnknownUser").css("display","block");
 			$("#back").hide();
-			
 			postHandler.post('connection',
 					{
 						email : email,
@@ -29,7 +27,7 @@ $(document).ready(function() {
 					function(){},
 					function(retMsg) {
 						easeTracker.trackEvent("Connexion");
-						window.location.replace("index.jsp");
+						window.location.reload();
 					}, 
 					function(retMsg) {
 						$("#back").show();
@@ -61,7 +59,6 @@ $(document).ready(function() {
 			$(".ease-logo").hide();
 			$("#loadingKnownUser").css("display","block");
 			$("#changeAccount").hide();
-			
 		    postHandler.post(
 	                'connection', 
 	                {
@@ -71,7 +68,7 @@ $(document).ready(function() {
 	                function(){},
 	                function(retMsg){
 						easeTracker.trackEvent("Connexion");
-	                    window.location.replace("index.jsp");
+	                    window.location.reload();
 	                },
 	                function(retMsg){
 	                	$("#changeAccount").show();

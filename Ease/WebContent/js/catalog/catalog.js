@@ -302,5 +302,5 @@ var Catalog = function(rootEl){
 }
 
 $(document).ready(function(){
-	catalog = new Catalog($('.CatalogViewTab'));	
+	catalog = new Catalog($('.CatalogViewTab'));
 });

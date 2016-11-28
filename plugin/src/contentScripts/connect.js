@@ -1,7 +1,11 @@
 function isConnected(msg){
+    console.log("-- Ease action : checking connnection --");
 	var object = $(msg.detail[msg.bigStep].website.checkAlreadyLogged[0].search);
-	if (object.length == 0)
+	if (object.length == 0){
+        console.log("-- Ease action : not connected Intialize connection --");
 		return false;
+    }
+    console.log("-- Ease action : connected. Intialize logout --");
 	return true;
 }
 

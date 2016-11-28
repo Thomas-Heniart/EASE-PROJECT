@@ -1,3 +1,11 @@
+function fire_onchange(a) {
+    var d = a.ownerDocument.createEvent("Events");
+    d.initEvent("change", !0, !0);
+    a.dispatchEvent(d);
+    d = a.ownerDocument.createEvent("Events");
+    d.initEvent("input", !0, !0);
+    a.dispatchEvent(d);
+}
 var actions = {
 fillThenSubmit:function(msg, callback, sendResponse) {
   var actionStep = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep];
@@ -152,11 +160,10 @@ fill:function(msg, callback, sendResponse){
 	} else {
         input.select();
 		input.click();
-        input.focus();
-        input.change();
-        input.val(msg.detail[0].user[actionStep.what]);
-        input.change();
-		input.blur();
+        input[0].focus();
+        input[0].value = msg.detail[0].user[actionStep.what];
+	    fire_onchange(input[0]);
+		input[0].blur();
 		msg.actionStep++;
 		callback(msg, sendResponse);
 	}

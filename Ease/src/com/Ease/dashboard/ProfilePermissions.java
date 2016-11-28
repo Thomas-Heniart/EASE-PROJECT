@@ -39,8 +39,7 @@ public class ProfilePermissions{
 	 * 
 	 */
 	
-	public static ProfilePermissions loadProfilePermissions(String id, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
+	public static ProfilePermissions loadProfilePermissions(String id, DataBaseConnection db) throws GeneralException {
 		try {
 			ResultSet rs = db.get("SELECT * FROM profilePermissions WHERE id=" + id + ";");
 			rs.next();
@@ -93,6 +92,11 @@ public class ProfilePermissions{
 	}
 	public String getGroupId() {
 		return group_id;
+	}
+	
+	public void setPerms(int permissions, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		db.set("UPDATE profilePermissions SET permission=" + permissions + " WHERE id=" + this.db_id + ";");
 	}
 	
 	/*

@@ -21,9 +21,8 @@ function rememberWebsite(website){
                 }
             }
         }
-        if (typeof visitedWebsites === "undefined" || visitedWebsites == null || visitedWebsites == undefined || visitedWebsites.length == 0 || visitedWebsites == {})
+        if (typeof visitedWebsites === "undefined" || visitedWebsites == null || visitedWebsites == undefined || visitedWebsites.length == 0 || visitedWebsites.constructor !== Array)
             visitedWebsites = [];
-        console.log(visitedWebsites);
         visitedWebsites.push(website);
         extension.storage.set("visitedWebsites", visitedWebsites);
 

@@ -1,6 +1,7 @@
 package com.Ease.servlet.backOffice;
 
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.mail.MessagingException;
@@ -72,11 +73,17 @@ public class SendRequestedWebsiteValidation extends HttpServlet {
 		} else {
 			try {
 				String[] websitesArray = websites.split("---&---");
+				ResultSet rs = db.get("SELECT firstName FROM users WHERE email='"+ email +"';");
 				Mail mail = new Mail();
-				mail.sendIntegratedWebsitesMail(email, websitesArray, null);
+				if(rs.next())
+					mail.sendIntegratedWebsitesMail(email, websitesArray, rs.getString(1));
+				else
+					mail.sendIntegratedWebsitesMail(email, websitesArray, null);
 				SI.setResponse(200, "Success");
 			} catch (MessagingException e) {
 				SI.setResponse(ServletItem.Code.EMailNotSended, ServletItem.getExceptionTrace(e));
+			} catch (SQLException e) {
+				SI.setResponse(ServletItem.Code.DatabaseNotConnected, ServletItem.getExceptionTrace(e));
 			}
 		}
 		SI.sendResponse();

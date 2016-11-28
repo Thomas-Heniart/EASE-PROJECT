@@ -5,7 +5,4 @@ var tracker = function(){
 	}
 }
 
-var easeTracker;
-$(document).ready(function(){
-	easeTracker = new tracker();
-});
+var easeTracker= new tracker();

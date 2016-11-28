@@ -69,7 +69,7 @@
 
 .spinnerElementEase
 {
-    overflow: hidden;
+    overflow: visible;
     
     position: absolute;
     

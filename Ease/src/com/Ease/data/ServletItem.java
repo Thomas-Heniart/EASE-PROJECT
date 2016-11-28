@@ -63,7 +63,7 @@ public class ServletItem {
 		SendVerificationEmail,
 		checkVerifiedEmail,
 		CheckConnection,
-		UpdateAdminMessage,
+		DeletedTypeKeptForLogsCoherence,
 		ChangeSitePosition,
 		ReminderEmail,
 		TheFamilyInvitation,

@@ -51,9 +51,6 @@ public class OnStart implements ServletContextListener {
 				colors.add(new Color(rs));
 			}
 			context.setAttribute("Colors", colors);
-			//Intialize adminMessage
-			AdminMessage adminMessage = new AdminMessage();
-			context.setAttribute("AdminMessage", adminMessage);
 			
 			System.out.println("done.");
 			db.close();

@@ -14,14 +14,20 @@ public class ProfileInformation {
 		NAME,
 		COLOR
 	}
+	
+	/*
+	 * 
+	 * Loader and Creator
+	 * 
+	 */
+	
 	public static ProfileInformation createProfileInformation(String name, String color, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int db_id = db.set("INSERT INTO profileInfo values (null, '" + name + "', '" + color + "');");
 		return new ProfileInformation(String.valueOf(db_id), name, color);
 	}
 	
-	public static ProfileInformation loadProfileInformation(String db_id, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
+	public static ProfileInformation loadProfileInformation(String db_id, DataBaseConnection db) throws GeneralException {
 		ResultSet rs = db.get("SELECT * FROM profileInfo WHERE id=" + db_id + ";");
 		try {
 			if (rs.next())
@@ -33,6 +39,12 @@ public class ProfileInformation {
 		return null;
 	}
 	
+	/*
+	 * 
+	 * Constructor
+	 * 
+	 */
+	
 	protected String db_id;
 	protected String name;
 	protected String color;
@@ -41,5 +53,35 @@ public class ProfileInformation {
 		this.db_id = db_id;
 		this.name = name;
 		this.color = color;
+	}
+	
+	public void removeFromDB(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		db.set("DELETE FROM profileInfo WHERE id=" + this.db_id + ";");
+	}
+	
+	/*
+	 * 
+	 * Getter and Setter
+	 * 
+	 */
+	
+	public String getDBid() {
+		return this.db_id;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		db.set("UPDATE profileInformations SET name='" + name + "' WHERE id=" + this.db_id + ";");
+	}
+	public String getColor() {
+		return color;
+	}
+	public void setColor(String color, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		db.set("UPDATE profileInformations SET color='" + color + "' WHERE id=" + this.db_id + ";");
 	}
 }
