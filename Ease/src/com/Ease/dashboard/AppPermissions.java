@@ -17,7 +17,8 @@ public class AppPermissions{
 	public static enum Perm {
 		RENAME(1),
 		EDIT(2),
-		DELETE(4),
+		SHOWINFO(4),
+		DELETE(8),
 		ALL(1048575);
 		
 		private int value;    
@@ -30,6 +31,7 @@ public class AppPermissions{
 			return value;
 		}
 	}
+
 	
 	/*
 	 * 
@@ -50,12 +52,13 @@ public class AppPermissions{
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
+
 	public static AppPermissions loadPersonnalAppPermissions(ServletManager sm) throws GeneralException {
 		return new AppPermissions(null, null, Perm.ALL.getValue());
 	}
 	
 	public static AppPermissions loadCommomAppPermissions(ServletManager sm) throws GeneralException {
-		return new AppPermissions(null, null, Perm.MOVE_APP_OUTSIDE.getValue() + Perm.ADDAPP.getValue());
+		return new AppPermissions(null, null, 0);
 	}
 	
 	public static AppPermissions CreateAppPermissions(int perms, String group_id, ServletManager sm) throws GeneralException {

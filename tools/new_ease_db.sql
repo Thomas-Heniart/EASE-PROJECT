@@ -139,7 +139,6 @@ group_profile_id INT(10) UNSIGNED,
 profile_info_id INT(10) UNSIGNED NOT NULL,
 PRIMARY KEY (id),
 FOREIGN KEY (user_id) REFERENCES users (id),
-FOREIGN KEY (permission_id) REFERENCES profilePermissions (id),
 FOREIGN KEY (group_profile_id) REFERENCES groupProfiles (id),
 FOREIGN KEY (profile_info_id) REFERENCES profileInfo (id)
 );
@@ -212,8 +211,8 @@ CREATE TABLE apps
   id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   profile_id INT(10) UNSIGNED NOT NULL,
   position TINYINT(3) UNSIGNED NOT NULL,
-  insertDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  trashDate DATETIME,
+  insert_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  trash_date DATETIME,
   type VARCHAR(255) NOT NULL,
   work TINYINT(1) NOT NULL,
   app_info_id INT(10) UNSIGNED NOT NULL,
@@ -387,11 +386,11 @@ CREATE TABLE classicApps (
   id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   website_app_id INT(10) UNSIGNED NOT NULL,
   account_id INT(10) UNSIGNED NOT NULL,
-  group_classic_apps_id INT(10) UNSIGNED,
+  group_classic_app_id INT(10) UNSIGNED,
   PRIMARY KEY (id),
   FOREIGN KEY (website_app_id) REFERENCES websiteApps(id),
   FOREIGN KEY (account_id) REFERENCES accounts(id),
-  FOREIGN KEY (group_classic_apps_id) REFERENCES groupClassicApps(id)
+  FOREIGN KEY (group_classic_app_id) REFERENCES groupClassicApps(id)
 );
 
 CREATE TABLE sharedKeys
@@ -437,18 +436,20 @@ FOREIGN KEY (group_logWith_app_id) REFERENCES groupLogWithApps(id)
 CREATE TABLE linkAppInformations
 (
   id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  app_information_id INT(10) UNSIGNED NOT NULL,
   url VARCHAR(2000) NOT NULL,
   img_url VARCHAR(255) NOT NULL,
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  FOREIGN KEY (app_information_id) REFERENCES apps(id)
 );
 
 CREATE TABLE groupLinkApps
 (
   id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  link_app_info INT(10) UNSIGNED NOT NULL,
+  link_app_info_id INT(10) UNSIGNED NOT NULL,
   group_app_id INT(10) UNSIGNED NOT NULL,
   PRIMARY KEY (id),
-  FOREIGN KEY (link_app_info) REFERENCES linkAppInformations(id),
+  FOREIGN KEY (link_app_info_id) REFERENCES linkAppInformations(id),
   FOREIGN KEY (group_app_id) REFERENCES groupApps(id)
 );
 
@@ -456,11 +457,11 @@ CREATE TABLE linkApps
 (
 id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 app_id INT(10) UNSIGNED NOT NULL,
-link_app_info INT(10) UNSIGNED NOT NULL,
+link_app_info_id INT(10) UNSIGNED NOT NULL,
 group_link_app_id INT(10) UNSIGNED,
 PRIMARY KEY (id),
 FOREIGN KEY (app_id) REFERENCES apps(id),
-FOREIGN KEY (link_app_info) REFERENCES linkAppInformations(id),
+FOREIGN KEY (link_app_info_id) REFERENCES linkAppInformations(id),
 FOREIGN KEY (group_link_app_id) REFERENCES groupLinkApps(id)
 );
 

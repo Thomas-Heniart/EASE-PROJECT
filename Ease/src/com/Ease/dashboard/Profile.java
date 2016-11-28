@@ -123,7 +123,7 @@ public class Profile {
 	protected ProfilePermissions permissions;
 	protected int		columnIdx;
 	protected int		positionIdx;
-	protected List<App> apps;
+	protected List<App<?>> apps;
 	protected int 		single_id;
 	protected String	groupProfileId;
 	ProfileInformation informations;
@@ -135,7 +135,7 @@ public class Profile {
 		this.permissions = perms;
 		this.columnIdx = columnIdx;
 		this.positionIdx = positionIdx;
-		this.apps = new LinkedList<App>();
+		this.apps = new LinkedList<App<?>>();
 		this.single_id = single_id;
 		this.groupProfileId = groupProfileId;
 		this.informations = informations;
@@ -183,11 +183,11 @@ public class Profile {
 		this.positionIdx = idx;
 	}
 	
-	public List<App> getApps() {
+	public List<App<?>> getApps() {
 		return apps;
 	}
 	
-	public App getApp(int single_id) throws GeneralException {
+	public App<?> getApp(int single_id) throws GeneralException {
 		for (int i = 0; i < apps.size(); ++i) {
 			if (apps.get(i).getSingle_id() == single_id)
 				return apps.get(i);
@@ -207,7 +207,7 @@ public class Profile {
 	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		Iterator<App> it = this.apps.iterator();
+		Iterator<App<?>> it = this.apps.iterator();
 		while(it.hasNext()) {
 			it.next().removeFromDb(sm);
 		}
@@ -253,7 +253,7 @@ public class Profile {
 		this.user.updateProfilesIndex(sm);
 	}
 	
-	public void replaceApp(App appToReplace, App newApp) {
+	public void replaceApp(App<?> appToReplace, App<?> newApp) {
 		int position = this.apps.indexOf(appToReplace);
 		this.apps.set(position, newApp);
 	}
