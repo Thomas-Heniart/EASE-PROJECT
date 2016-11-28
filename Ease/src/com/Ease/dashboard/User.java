@@ -1,10 +1,13 @@
 package com.Ease.dashboard;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import javax.websocket.Session;
 
 import com.Ease.utils.DataBaseConnection;
 import com.Ease.utils.GeneralException;
@@ -23,6 +26,7 @@ public class User {
 		STATUSID
 	}
 	static int MAX_COLUMN = 5;
+	private static int tabId = 0;
 	public static User loadUser(String email, String password, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		try {
@@ -69,6 +73,7 @@ public class User {
 	protected List<List<Profile>> profiles_column;
 	protected int		max_single_id;
 	protected List<UserEmail> emails;
+	protected List<Session> sessions;
 	
 	public User(String db_id, String first_name, String last_name, String email, String registration_date, Keys keys, Option opt, Status status, List<UserEmail> emails) {
 		this.db_id = db_id;
@@ -86,6 +91,7 @@ public class User {
 		}
 		this.max_single_id = 0;
 		this.emails = new LinkedList<UserEmail>();
+		this.sessions = new LinkedList<Session>();
 	}
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
@@ -228,7 +234,31 @@ public class User {
 		return this.keys.decrypt(password);
 	}
 	
+	public List<Session> getSessions() {
+		return this.sessions;
+	}
+	
 	public void addInContext(Map<String, User> usersMap) {
 		usersMap.put(this.email, this);
+	}
+
+	public void removeFromContextIfNeeded(Map<String, User> users) {
+		users.remove(this.email, this);
+	}
+
+	public boolean removeSession(Session session) {
+		this.sessions.remove(session);
+		return this.sessions.isEmpty();
+	}
+
+	public void addSession(Session session) {
+		this.sessions.add(session);
+		try {
+			session.getBasicRemote().sendText(String.valueOf(tabId++));
+		} catch (IOException e) {
+			e.printStackTrace();
+			sessions.remove(session);
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
 	}
 }
