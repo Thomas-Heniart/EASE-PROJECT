@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.json.simple.JSONObject;
+
 import com.Ease.utils.DataBaseConnection;
 import com.Ease.utils.GeneralException;
 import com.Ease.utils.ServletManager;
@@ -169,6 +171,15 @@ public class Profile {
 	 * Utils
 	 * 
 	 */
-
 	
+	@SuppressWarnings("unchecked")
+	public JSONObject getJSON() {
+		JSONObject res = new JSONObject();
+		res.put("id", this.db_id);
+		res.put("user_id", this.user.getDBid());
+		res.put("column", this.columnIdx);
+		res.put("position", this.positionIdx);
+		res.put("group_profile_id", this.groupProfileId);
+		return res;
+	}
 }
