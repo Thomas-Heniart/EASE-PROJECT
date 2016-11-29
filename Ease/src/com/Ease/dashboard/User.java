@@ -3,6 +3,7 @@ package com.Ease.dashboard;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,6 @@ public class User {
 		STATUSID
 	}
 	static int MAX_COLUMN = 5;
-	private static int tabId = 0;
 	public static User loadUser(String email, String password, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		try {
@@ -73,7 +73,7 @@ public class User {
 	protected List<List<Profile>> profiles_column;
 	protected int		max_single_id;
 	protected List<UserEmail> emails;
-	protected List<Session> websockets;
+	protected Map<String, Session> websockets;
 	
 	public User(String db_id, String first_name, String last_name, String email, String registration_date, Keys keys, Option opt, Status status, List<UserEmail> emails) {
 		this.db_id = db_id;
@@ -91,7 +91,7 @@ public class User {
 		}
 		this.max_single_id = 0;
 		this.emails = new LinkedList<UserEmail>();
-		this.websockets = new LinkedList<Session>();
+		this.websockets = new HashMap<String, Session>();
 	}
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
@@ -234,20 +234,21 @@ public class User {
 		return this.keys.decrypt(password);
 	}
 	
-	public List<Session> getWebsockets() {
+	public Map<String, Session> getWebsockets() {
 		return this.websockets;
 	}
 
 	public void removeWebsocket(Session session) {
-		this.websockets.remove(session);
+		this.websockets.remove(session.getId());
 	}
 
 	public void addWebsocket(Session session) {
-		this.websockets.add(session);
 		try {
-			session.getBasicRemote().sendText(String.valueOf(tabId++));
+			session.getBasicRemote().sendText(String.valueOf(this.getNextSingleId()));
+			this.websockets.put(session.getId() , session);
 		} catch (IOException e) {
 			e.printStackTrace();
+			session.close();
 			websockets.remove(session);
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}

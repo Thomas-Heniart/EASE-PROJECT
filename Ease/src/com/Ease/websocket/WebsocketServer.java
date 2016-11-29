@@ -1,5 +1,6 @@
 package com.Ease.websocket;
 
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,8 +29,13 @@ public class WebsocketServer {
 		this.config = config;
 		HttpSession httpSession = (HttpSession)config.getUserProperties().get("httpSession");
 		User user = (User)httpSession.getAttribute("user");
-		if (user == null)
-			return;
+		if (user == null) {
+			try {
+				session.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		user.addWebsocket(session);
 	}
 
@@ -40,6 +46,7 @@ public class WebsocketServer {
 		if (user == null)
 			return;
 		user.removeWebsocket(session);
+		//session.getBasicRemote().sendText(arg0);
 	}
 
 	@OnError

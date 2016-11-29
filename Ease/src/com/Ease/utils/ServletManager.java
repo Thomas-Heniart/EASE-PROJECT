@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.Ease.dashboard.User;
+import com.Ease.websocket.WebsocketMessage;
 
 public class ServletManager {
 	
@@ -42,6 +44,7 @@ public class ServletManager {
 	protected boolean				saveLogs;
 	protected String				logResponse;
 	protected String				date;
+	protected List<WebsocketMessage> messages;
 	
 	public ServletManager(String servletName, HttpServletRequest request, HttpServletResponse response, boolean saveLogs) {
 		this.args = new HashMap<>();
