@@ -44,9 +44,10 @@ public class ServletManager {
 	protected boolean				saveLogs;
 	protected String				logResponse;
 	protected String				date;
+	protected int					tabId;
 	protected List<WebsocketMessage> messages;
 	
-	public ServletManager(String servletName, HttpServletRequest request, HttpServletResponse response, boolean saveLogs) {
+	public ServletManager(String servletName, HttpServletRequest request, HttpServletResponse response, boolean saveLogs, boolean needToBeConnected) throws Exception {
 		this.args = new HashMap<>();
 		this.servletName = servletName;
 		this.retMsg = "No message";
@@ -63,10 +64,27 @@ public class ServletManager {
 			this.db = new DataBaseConnection(DataBase.getConnection());
 		} catch (SQLException e) {
 			try {
-				response.getWriter().print("Sorry an internal problem occurred. We are solving it asap.");
+				response.getWriter().print("1 Sorry an internal problem occurred. We are solving it asap.");
 			} catch (IOException e1) {
 				e1.printStackTrace();
 				System.err.println("Send response failed.");
+			}
+		}
+		String tabId;
+		if (needToBeConnected == true) {
+			try {
+				if (user == null) {
+					response.getWriter().print("3 You are not connected.");
+					throw new Exception("Not connected.");
+				} else if ((tabId = request.getParameter("tabId")) == null) {
+					response.getWriter().print("1 Sorry an internal problem occurred. We are solving it asap.");
+					throw new Exception("No tabId.");
+				} else if (user.getWebsockets().containsKey(tabId) == false) {
+					response.getWriter().print("1 Sorry an internal problem occurred. We are solving it asap.");
+					throw new Exception("Wrong tabId");
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 	}
@@ -160,5 +178,4 @@ public class ServletManager {
 	public Object getContextAttr(String attr) {
 		return request.getServletContext().getAttribute(attr);
 	}
-
 }

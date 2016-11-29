@@ -26,7 +26,6 @@ public class User {
 		REGISTRATIONDATE,
 		STATUSID
 	}
-	static int MAX_COLUMN = 5;
 	public static User loadUser(String email, String password, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		try {
@@ -36,27 +35,29 @@ public class User {
 			String lastName = rs.getString(Data.LASTNAME.ordinal());
 			Keys keys = Keys.loadKeys(rs.getString(Data.KEYSID.ordinal()), password, sm);
 			Option options = Option.loadOption(rs.getString(Data.OPTIONSID.ordinal()), sm);
-			Status status = Status.loadStatus(rs.getString(Data.STATUSID.ordinal()), sm);
+			//Status status = Status.loadStatus(rs.getString(Data.STATUSID.ordinal()), sm);
 			String registrationDate = rs.getString(Data.REGISTRATIONDATE.ordinal());
 			List<UserEmail> emails = UserEmail.loadEmails(db_id, sm);
-			User newUser =  new User(db_id, firstName, lastName, email, registrationDate, keys, options, status, emails);
+			User newUser =  new User(db_id, firstName, lastName, email, registrationDate, keys, options, null, emails);
+			newUser.loadProfiles(sm);
 			return newUser;
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
-		return null;
 	}
 	
 	public static User createUser(String email, String firstName, String lastName, String password, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		Keys keys = Keys.createKeys(password, sm);
+		//Keys keys = Keys.createKeys(password, sm);
 		Option opt = Option.createOption(sm);
-		Status status = Status.createStatus(sm);
+		//Status status = Status.createStatus(sm);
 		//String registrationDate = GET_CURRENT_TIME;
 		List<UserEmail> emails = new LinkedList<UserEmail>();
 		int transaction = db.startTransaction();
-		String db_id = db.set("INSERT INTO users VALUES(NULL, '" + firstName + "', '" + lastName + "', '" + email + "', " + keys.getDBid() + ", " + opt.getDb_id() + ", '" + registrationDate + "', " + status.getDBid() + ");").toString();
-		User newUser = new User(db_id, firstName, lastName, email, registrationDate, keys, opt, status, emails);
+		String db_id = db.set("INSERT INTO users VALUES(NULL, '" + firstName + "', '" + lastName + "', '" + email + "', NULL, " + opt.getDb_id() + ", '" + registrationDate + /*"', " + status.getDBid() + */");").toString();
+		User newUser = new User(db_id, firstName, lastName, email, registrationDate, null, opt, null, emails);
+		newUser.getProfilesColumn().get(0).add(Profile.createPersonnalProfile(newUser, 0, 0, "Side", "#000000", sm));
+		newUser.getProfilesColumn().get(1).add(Profile.createPersonnalProfile(newUser, 1, 0, "Perso", "#000000", sm));
 		newUser.getUserEmails().add(UserEmail.createUserEmail(email, newUser, sm));
 		db.commitTransaction(transaction);
 		return newUser;
@@ -69,13 +70,13 @@ public class User {
 	protected String	registration_date;
 	protected Keys		keys;
 	protected Option	opt;
-	protected Status	status;
+	//protected Status	status;
 	protected List<List<Profile>> profiles_column;
 	protected int		max_single_id;
 	protected List<UserEmail> emails;
 	protected Map<String, Session> websockets;
 	
-	public User(String db_id, String first_name, String last_name, String email, String registration_date, Keys keys, Option opt, Status status, List<UserEmail> emails) {
+	public User(String db_id, String first_name, String last_name, String email, String registration_date, Keys keys, Option opt, /*Status*/ String status, List<UserEmail> emails) {
 		this.db_id = db_id;
 		this.first_name = first_name;
 		this.last_name = last_name;
@@ -83,7 +84,7 @@ public class User {
 		this.registration_date = registration_date;
 		this.keys = keys;
 		this.opt = opt;
-		this.status = status;
+		//this.status = status;
 		this.emails = emails;
 		this.profiles_column = new LinkedList<List<Profile>>();
 		for (int i = 0; i < 5; ++i) {
@@ -143,9 +144,9 @@ public class User {
 		return opt;
 	}
 	
-	public Status getStatus() {
+	/*public Status getStatus() {
 		return status;
-	}
+	}*/
 	
 	public List<UserEmail> getUserEmails() {
 		return emails;
@@ -164,6 +165,10 @@ public class User {
 	public int getNextSingleId() {
 		this.max_single_id++;
 		return max_single_id;
+	}
+	
+	public void loadProfiles(ServletManager sm) throws GeneralException {
+		this.profiles_column = Profile.loadProfiles(this, sm);
 	}
 	
 	public void removeEmail(UserEmail email) {
@@ -189,7 +194,7 @@ public class User {
 	public Profile getProfile(int single_id) throws GeneralException {
 		for (List<Profile> column: this.profiles_column) {
 			for (Profile profile: column) {
-				if (profile.getSingle_id() == single_id)
+				if (profile.getSingleId() == single_id)
 					return profile;
 			}
 		}
@@ -222,15 +227,15 @@ public class User {
 		this.removeFromDB(sm);
 		this.keys.removeFromDB(sm);
 		this.opt.removeFromDB(sm);
-		this.status.removeFromDB(sm);
+		//this.status.removeFromDB(sm);
 		db.commitTransaction(transaction);
 	}
 	
-	public String encrypt(String password) {
+	public String encrypt(String password) throws GeneralException {
 		return this.keys.encrypt(password);
 	}
 	
-	public String decrypt(String password) {
+	public String decrypt(String password) throws GeneralException {
 		return this.keys.decrypt(password);
 	}
 	
@@ -242,13 +247,17 @@ public class User {
 		this.websockets.remove(session.getId());
 	}
 
-	public void addWebsocket(Session session) {
+	public void addWebsocket(Session session) throws GeneralException {
 		try {
 			session.getBasicRemote().sendText(String.valueOf(this.getNextSingleId()));
 			this.websockets.put(session.getId() , session);
 		} catch (IOException e) {
 			e.printStackTrace();
-			session.close();
+			try {
+				session.close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 			websockets.remove(session);
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
