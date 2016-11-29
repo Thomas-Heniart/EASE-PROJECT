@@ -209,8 +209,8 @@ public class User {
 			mail.removeFromDB(sm);
 		}
 		for (List<Profile> column: this.profiles_column) {
-			while (column.size() > 0) {
-				column.get(0).remove(sm);
+			for (Profile profile : column) {
+				profile.removeFromDB(sm);
 			}
 		}
 		this.removeFromDB(sm);

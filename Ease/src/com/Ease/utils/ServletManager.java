@@ -58,7 +58,7 @@ public class ServletManager {
 		Date mydate = new Date();
 		this.date = dateFormat.format(mydate);
 		try {
-			this.db = new DataBaseConnection(((DataBase)request.getSession().getServletContext().getAttribute("DataBase")).getConnection());
+			this.db = new DataBaseConnection(DataBase.getConnection());
 		} catch (SQLException e) {
 			try {
 				response.getWriter().print("Sorry an internal problem occurred. We are solving it asap.");
@@ -153,5 +153,9 @@ public class ServletManager {
 	
 	public int getNextSingleId() {
 		return user.getNextSingleId();
+	}
+	
+	public Object getContextAttr(String attr) {
+		return request.getServletContext().getAttribute(attr);
 	}
 }

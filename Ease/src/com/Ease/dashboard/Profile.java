@@ -28,88 +28,58 @@ public class Profile {
 	 * 
 	 */
 	
-	public static void loadProfiles(User user, ServletManager sm) throws GeneralException {
+	public static List<Profile> loadProfiles(User user, ServletManager sm) throws GeneralException {
+		List<Profile> profiles = new LinkedList<Profile>();
 		DataBaseConnection db = sm.getDB();
-		ResultSet rs = db.get("SELECT * FROM profiles where user_id=" + user.getDBid() + ";");
-		Profile profile;
 		try {
+			ResultSet rs = db.get("SELECT * FROM profiles WHERE user_id=" + user.getDBid() + ";");
+			String db_id;
+			int	columnIdx;
+			int	posIdx;
+			GroupProfile groupProfile;
+			ProfileInformation infos;
+			int single_id;
 			while (rs.next()) {
-				profile = loadProfile(user, rs, sm);
-				user.getProfilesColumn().get(rs.getInt(Data.COLUMN_IDX.ordinal())).add(profile);
+				db_id = rs.getString(Data.ID.ordinal());
+				columnIdx = rs.getInt(Data.COLUMN_IDX.ordinal());
+				posIdx = rs.getInt(Data.POSITION_IDX.ordinal());
+				String groupProfileId = rs.getString(Data.GROUP_PROFILE_ID.ordinal());
+				groupProfile = (groupProfileId == null) ? null : GroupProfile.getGroupProfile(groupProfileId, sm);
+				infos = ProfileInformation.loadProfileInformation(rs.getString(Data.PROFILE_INFO_ID.ordinal()), db);
+				single_id = user.getNextSingleId();
+				profiles.add(new Profile(db_id, user, columnIdx, posIdx, groupProfile, infos, single_id));
 			}
-		} catch (SQLException e) {
+		} catch (SQLException e){
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
-		for (int i = 0; i < user.getProfilesColumn().size(); ++i) {
-			user.getProfilesColumn().get(i).sort(new Comparator<Profile>() {
-				@Override
-				public int compare(Profile a, Profile b) {
-					return a.getPositionIdx() - b.getPositionIdx();
-				}
-			});
-		}
-	}
-
-	public static Profile loadProfile(User user, ResultSet rs, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		String db_id;
-		ProfilePermissions perms;
-		ProfileInformation informations;
-		int columnIdx;
-		int positionIdx;
-		int single_id;
-		try {
-			db_id = rs.getString(Data.ID.ordinal());
-			columnIdx = rs.getInt(Data.COLUMN_IDX.ordinal());
-			positionIdx = rs.getInt(Data.POSITION_IDX.ordinal());
-			single_id = sm.getNextSingleId();
-			String group_profile_id = rs.getString(Data.GROUP_PROFILE_ID.ordinal());
-			if (!(group_profile_id == null || group_profile_id.equals("null"))) {
-				ResultSet rs2 = db.get("SELECT permission_id, common FROM groupProfiles WHERE id=" + group_profile_id + ";");
-				rs2.next();
-				if (rs2.getBoolean(2)) {
-					perms = ProfilePermissions.loadCommomProfilePermissions(sm);
-				} else {
-					perms = ProfilePermissions.loadProfilePermissions(rs2.getString(1), sm);
-				}
-			}
-			else
-				perms = ProfilePermissions.loadPersonnalProfilePermissions(sm);
-			informations = ProfileInformation.loadProfileInformation(rs.getString(Data.PROFILE_INFO_ID.ordinal()), sm);
-			return new Profile(db_id, user, perms, columnIdx, positionIdx, single_id, group_profile_id, informations);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
+		return profiles;
 	}
 	
-	public static Profile createProfile(String name, String color, String group_profile_id, User user, ServletManager sm) throws GeneralException {
-		int columnIdx = Profile.getMostLittleProfileColumn(user);
-		int positionIdx = user.getProfilesColumn().get(columnIdx).size();
-		ProfilePermissions perms; 
-		int single_id = sm.getNextSingleId();
+	public static Profile createProfileWithGroup(User user, int columnIdx, int posIdx, GroupProfile groupProfile, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		if (group_profile_id == null || group_profile_id.equals("null"))
-			perms = ProfilePermissions.loadPersonnalProfilePermissions(sm);
-		else {
-			ResultSet rs2 = db.get("SELECT permission_id, common FROM groupProfiles WHERE id=" + group_profile_id + ";");
-			try {
-				rs2.next();
-				if (rs2.getBoolean(2)) {
-					perms = ProfilePermissions.loadCommomProfilePermissions(sm);
-				} else {
-					perms = ProfilePermissions.loadProfilePermissions(rs2.getString(1), sm);
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-				throw new GeneralException(ServletManager.Code.InternError, e);
-			}
+		ProfileInformation info;
+		if (groupProfile.isCommon()) {
+			info = groupProfile.getInfo();
+		} else {
+			info = ProfileInformation.createProfileInformation(groupProfile.getName(), groupProfile.getColor(), sm);
 		}
-		ProfileInformation informations = ProfileInformation.createProfileInformation(name, color, sm);
-		String db_id = db.set("INSERT INTO profiles VALUES(NULL, " + user.getDBid() + ", '" + name + "', '" + color + ", " + columnIdx + ", " + positionIdx + ");").toString();
+		String db_id = db.set("INSERT INTO profiles VALUES(NULL, " + user.db_id + ", " + columnIdx + ", " + posIdx + ", " + groupProfile.db_id + ", " + info.getDBid() + ");").toString();
+		int single_id = user.getNextSingleId();
+		Profile profile = new Profile(db_id, user, columnIdx, posIdx, groupProfile, info, single_id);
 		db.commitTransaction(transaction);
-		return new Profile(db_id, user, perms, columnIdx, positionIdx, single_id, group_profile_id, informations);
+		return profile;
+	}
+	
+	public static Profile createPersonnalProfile(User user, int columnIdx, int posIdx, String name, String color, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		ProfileInformation info = ProfileInformation.createProfileInformation(name, color, sm);
+		String db_id = db.set("INSERT INTO profiles VALUES(NULL, " + user.db_id + ", " + columnIdx + ", " + posIdx + ", NULL, " + info.getDBid() + ");").toString();
+		int single_id = user.getNextSingleId();
+		Profile profile = new Profile(db_id, user, columnIdx, posIdx, null, info, single_id);
+		db.commitTransaction(transaction);
+		return profile;
 	}
 	
 	/*
@@ -118,36 +88,31 @@ public class Profile {
 	 * 
 	 */
 	
-	protected String	db_id;
+	protected String 	db_id;
 	protected User		user;
-	protected ProfilePermissions permissions;
 	protected int		columnIdx;
-	protected int		positionIdx;
-	protected List<App> apps;
-	protected int 		single_id;
-	protected String	groupProfileId;
-	ProfileInformation informations;
-
+	protected int		posIdx;
+	protected GroupProfile groupProfile;
+	protected ProfileInformation infos;
+	protected int	single_id;
 	
-	public Profile(String db_id, User user, ProfilePermissions perms, int columnIdx, int positionIdx, int single_id, String groupProfileId, ProfileInformation informations) {
+	public Profile(String db_id, User user, int columnIdx, int posIdx, GroupProfile groupProfile, ProfileInformation infos, int single_id) {
 		this.db_id = db_id;
 		this.user = user;
-		this.permissions = perms;
 		this.columnIdx = columnIdx;
-		this.positionIdx = positionIdx;
-		this.apps = new LinkedList<App>();
+		this.posIdx = posIdx;
+		this.groupProfile = groupProfile;
+		this.infos = infos;
 		this.single_id = single_id;
-		this.groupProfileId = groupProfileId;
-		this.informations = informations;
 	}
 	
-	public void remove(ServletManager sm) throws GeneralException {
+	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		//delete all apps
-		this.removeFromDB(sm);
-		this.user.getProfilesColumn().get(this.columnIdx).remove(this);
-		this.user.updateProfilesIndex(sm);
+		if (this.groupProfile == null || this.groupProfile.isCommon() == false) {
+			this.infos.removeFromDB(sm);
+		}
+		db.set("DELETE FROM profiles WHERE id=" + this.db_id + ";");
 		db.commitTransaction(transaction);
 	}
 	
@@ -157,174 +122,53 @@ public class Profile {
 	 * 
 	 */
 	
-	public String getDb_id() {
+	public String getDBid() {
 		return this.db_id;
 	}
-	
 	public User getUser() {
-		return user;
+		return this.user;
 	}
-	
 	public int getColumnIdx() {
-		return columnIdx;
+		return this.columnIdx;
 	}
-	public void setColumnIdx(int idx, ServletManager sm) throws GeneralException {
+	public void setColumnIdx(int idx, ServletManager sm) throws GeneralException{
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE FROM profiles SET columnIdx=" + idx + " WHERE id=" + this.db_id + ";");
-		this.columnIdx = idx;
+		db.set("UPDATE profiles SET column_idx=" + idx + " WHERE id=" + this.db_id + ";");
 	}
 	
 	public int getPositionIdx() {
-		return this.positionIdx;
+		return this.posIdx;
 	}
-	public void setPositionIdx(int idx, ServletManager sm) throws GeneralException {
+	public void setPositionIdx(int idx, ServletManager sm) throws GeneralException{
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE FROM profiles SET positionIdx=" + idx + " WHERE id=" + this.db_id + ";");
-		this.positionIdx = idx;
+		db.set("UPDATE profiles SET position_idx=" + idx + " WHERE id=" + this.db_id + ";");
 	}
 	
-	public List<App> getApps() {
-		return apps;
+	public GroupProfile getGroupProfile() {
+		return this.groupProfile;
+	}
+	public String getName() {
+		return this.infos.getName();
+	}
+	public void setName(String name, ServletManager sm) throws GeneralException {
+		this.infos.setName(name, sm);
+	}
+	public String getColor() {
+		return this.infos.color;
+	}
+	public void setColor(String color, ServletManager sm) throws GeneralException {
+		this.infos.setColor(color, sm);
 	}
 	
-	public App getApp(int single_id) throws GeneralException {
-		for (int i = 0; i < apps.size(); ++i) {
-			if (apps.get(i).getSingle_id() == single_id)
-				return apps.get(i);
-		}
-		throw new GeneralException(ServletManager.Code.ClientError, "App's single id dosen't exist.");
-	}
-	
-	public int getSingleId() {
-		return this.single_id;
-	}
-	
-	/*
-	 * Utils functions
-	 * 
-	 */
-	
-	public void removeFromDB(ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		int transaction = db.startTransaction();
-		Iterator<App> it = this.apps.iterator();
-		while(it.hasNext()) {
-			it.next().removeFromDb(sm);
-		}
-		db.set("DELETE FROM profiles WHERE id=" + this.db_id + ";");
-		db.commitTransaction(transaction);
-	}
-	
-	public int getSize() {
-		if (apps.size() <= 3) {
-			return 2;
-		}
-		return (apps.size() + 2) / 3;
-	}
-	
-	public int getNextPosition() {
-		return apps.size();
-	}
-	
-	public ProfilePermissions getPermissions() {
-		return this.permissions;
-	}
-	
-	public static int getMostLittleProfileColumn(User user) {
-		int mostLittleProfileColumnIdx = -1;
-		int size;
-		int ret = -1;
-		for (int i = 0; i < user.getProfilesColumn().size(); ++i) {
-			size = 0;
-			for (int j = 0; j < user.getProfilesColumn().get(i).size(); ++j) {
-				size += user.getProfilesColumn().get(i).get(j).getSize();
-			}
-			if (ret == -1 || ret > size) {
-				ret = size;
-				mostLittleProfileColumnIdx = i;
-			}
-		}
-		return mostLittleProfileColumnIdx;
-	}
-	
-	public void move(int columnIdx, int positionIdx, ServletManager sm) throws GeneralException {
-		this.user.getProfilesColumn().get(this.columnIdx).remove(this);
-		this.user.getProfilesColumn().get(columnIdx).add(positionIdx, this);
-		this.user.updateProfilesIndex(sm);
-	}
-	
-	public void replaceApp(App appToReplace, App newApp) {
-		int position = this.apps.indexOf(appToReplace);
-		this.apps.set(position, newApp);
-	}
-	
-	public void updateAppsIndex(ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		int transaction = db.startTransaction();
-		for (int i = 0; i < apps.size(); ++i) {
-			if (apps.get(i).getPosition() != i) {
-				apps.get(i).setPosition(i, sm);
-			}
-		}
-		db.commitTransaction(transaction);
+	public int getSingle_id() {
+		return single_id;
 	}
 	
 	/*
 	 * 
-	 * Share, Common And Personnal changement
+	 * Utils
 	 * 
 	 */
+
 	
-	public void changeToCommon(ServletManager sm) throws GeneralException {
-		if (this.groupProfileId != null) {
-			try {
-				DataBaseConnection db = sm.getDB();
-				ResultSet rs = db.get("SELECT common, profile_info_id FROM groupProfiles where id=" + this.groupProfileId + ";");
-				rs.next();
-				if (rs.getBoolean(1)) {
-					throw new GeneralException(ServletManager.Code.ClientWarning, "This profile is already set as 'Common'.");
-				} else {
-					int transaction = db.startTransaction();
-					String profile_info_id = rs.getString(2);
-					db.set("UPDATE profiles set profile_info_id=" + profile_info_id + " WHERE id=" + this.db_id + ";");
-					this.informations.removeFromDB(sm);
-					this.informations = ProfileInformation.loadProfileInformation(profile_info_id, sm);
-					this.permissions = ProfilePermissions.loadCommomProfilePermissions(sm);
-					//Send 'UpdateProfile' into WebSocket
-					db.commitTransaction(transaction);
-				}
-			} catch (SQLException e) {
-				throw new GeneralException(ServletManager.Code.InternError, e);
-			}
-		} else {
-			throw new GeneralException(ServletManager.Code.ClientWarning, "Impossible to set 'Common' a personnal profile.");
-		}
-	}
-	
-	public void changeToEditable(ServletManager sm) throws GeneralException {
-		if (this.groupProfileId != null) {
-			try {
-				DataBaseConnection db = sm.getDB();
-				ResultSet rs = db.get("SELECT common, profile_info_id, permission_id FROM groupProfiles where id=" + this.groupProfileId + ";");
-				rs.next();
-				if (rs.getBoolean(1)) {
-					ResultSet rs2 = db.get("SELECT name, color FROM profileInfo WHERE id=" + rs.getString(2) + ";");
-					String name = rs2.getString(1);
-					String color = rs2.getString(2);
-					int transaction = db.startTransaction();
-					this.informations = ProfileInformation.createProfileInformation(name, color, sm);
-					db.set("UPDATE profiles set profile_info_id=" + this.informations.getDBid() + " WHERE id=" + this.db_id + ";");
-					this.permissions = ProfilePermissions.loadProfilePermissions(rs.getString(3), sm);
-					//Send 'UpdateProfile' into WebSocket
-					db.commitTransaction(transaction);
-				} else {
-					throw new GeneralException(ServletManager.Code.ClientWarning, "This profile is already set as 'Common'.");
-				}
-			} catch (SQLException e) {
-				throw new GeneralException(ServletManager.Code.InternError, e);
-			}
-		} else {
-			throw new GeneralException(ServletManager.Code.ClientWarning, "Impossible to set 'Editable' a personnal profile.");
-		}
-	}
 }
