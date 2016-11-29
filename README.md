@@ -1,5 +1,12 @@
 # EASE-PROJECT
 
+##Java documentation
+###Generate random code
+To generate a new random code
+```java
+String newCode = CodeGenerator.generateNewCode();
+```
+
 ##Server documentation
 ###Add a new timer
 Goto
