@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.Ease.dashboard.User;
-import com.Ease.websocket.SessionHandler;
 
 public class ServletManager {
 	
@@ -43,7 +42,6 @@ public class ServletManager {
 	protected boolean				saveLogs;
 	protected String				logResponse;
 	protected String				date;
-	protected SessionHandler sessionHandler;
 	
 	public ServletManager(String servletName, HttpServletRequest request, HttpServletResponse response, boolean saveLogs) {
 		this.args = new HashMap<>();
@@ -58,7 +56,6 @@ public class ServletManager {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date mydate = new Date();
 		this.date = dateFormat.format(mydate);
-		this.sessionHandler = SessionHandler.getInstance();
 		try {
 			this.db = new DataBaseConnection(DataBase.getConnection());
 		} catch (SQLException e) {
@@ -160,7 +157,5 @@ public class ServletManager {
 	public Object getContextAttr(String attr) {
 		return request.getServletContext().getAttribute(attr);
 	}
-	public SessionHandler getSessionHandler() {
-		return this.sessionHandler;
-	}
+
 }

@@ -178,8 +178,8 @@ public class Profile {
 		res.put("id", this.db_id);
 		res.put("user_id", this.user.getDBid());
 		res.put("column", this.columnIdx);
-		res.put("position", this.positionIdx);
-		res.put("group_profile_id", this.groupProfileId);
+		res.put("position", this.posIdx);
+		res.put("group_profile_id", this.groupProfile.getDBid());
 		return res;
 	}
 }

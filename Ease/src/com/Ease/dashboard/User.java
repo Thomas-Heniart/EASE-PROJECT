@@ -73,7 +73,7 @@ public class User {
 	protected List<List<Profile>> profiles_column;
 	protected int		max_single_id;
 	protected List<UserEmail> emails;
-	protected List<Session> sessions;
+	protected List<Session> websockets;
 	
 	public User(String db_id, String first_name, String last_name, String email, String registration_date, Keys keys, Option opt, Status status, List<UserEmail> emails) {
 		this.db_id = db_id;
@@ -91,7 +91,7 @@ public class User {
 		}
 		this.max_single_id = 0;
 		this.emails = new LinkedList<UserEmail>();
-		this.sessions = new LinkedList<Session>();
+		this.websockets = new LinkedList<Session>();
 	}
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
@@ -189,7 +189,7 @@ public class User {
 	public Profile getProfile(int single_id) throws GeneralException {
 		for (List<Profile> column: this.profiles_column) {
 			for (Profile profile: column) {
-				if (profile.getSingleId() == single_id)
+				if (profile.getSingle_id() == single_id)
 					return profile;
 			}
 		}
@@ -234,30 +234,21 @@ public class User {
 		return this.keys.decrypt(password);
 	}
 	
-	public List<Session> getSessions() {
-		return this.sessions;
-	}
-	
-	public void addInContext(Map<String, User> usersMap) {
-		usersMap.put(this.email, this);
+	public List<Session> getWebsockets() {
+		return this.websockets;
 	}
 
-	public void removeFromContextIfNeeded(Map<String, User> users) {
-		users.remove(this.email, this);
+	public void removeWebsocket(Session session) {
+		this.websockets.remove(session);
 	}
 
-	public boolean removeSession(Session session) {
-		this.sessions.remove(session);
-		return this.sessions.isEmpty();
-	}
-
-	public void addSession(Session session) {
-		this.sessions.add(session);
+	public void addWebsocket(Session session) {
+		this.websockets.add(session);
 		try {
 			session.getBasicRemote().sendText(String.valueOf(tabId++));
 		} catch (IOException e) {
 			e.printStackTrace();
-			sessions.remove(session);
+			websockets.remove(session);
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
