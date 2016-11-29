@@ -25,7 +25,6 @@ public class User {
 		REGISTRATIONDATE,
 		STATUSID
 	}
-	static int MAX_COLUMN = 5;
 	private static int tabId = 0;
 	public static User loadUser(String email, String password, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
@@ -40,6 +39,7 @@ public class User {
 			String registrationDate = rs.getString(Data.REGISTRATIONDATE.ordinal());
 			List<UserEmail> emails = UserEmail.loadEmails(db_id, sm);
 			User newUser =  new User(db_id, firstName, lastName, email, registrationDate, keys, options, status, emails);
+			newUser.loadProfiles(sm);
 			return newUser;
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
@@ -166,6 +166,10 @@ public class User {
 		return max_single_id;
 	}
 	
+	public void loadProfiles(ServletManager sm) throws GeneralException {
+		this.profiles_column = Profile.loadProfiles(this, sm);
+	}
+	
 	public void removeEmail(UserEmail email) {
 		this.emails.remove(email);
 	}
@@ -256,7 +260,6 @@ public class User {
 		try {
 			session.getBasicRemote().sendText(String.valueOf(tabId++));
 		} catch (IOException e) {
-			e.printStackTrace();
 			sessions.remove(session);
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}

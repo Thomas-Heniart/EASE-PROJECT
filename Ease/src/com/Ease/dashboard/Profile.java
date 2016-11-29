@@ -3,7 +3,6 @@ package com.Ease.dashboard;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,15 +22,18 @@ public class Profile {
 		GROUP_PROFILE_ID,
 		PROFILE_INFO_ID,
 	}
-	
+	static int MAX_COLUMN = 5;
 	/*
 	 * 
 	 * Loader and Creator
 	 * 
 	 */
 	
-	public static List<Profile> loadProfiles(User user, ServletManager sm) throws GeneralException {
-		List<Profile> profiles = new LinkedList<Profile>();
+	public static List<List<Profile>> loadProfiles(User user, ServletManager sm) throws GeneralException {
+		List<List<Profile>> profilesColumn = new LinkedList<List<Profile>>();
+		for (int i = 0; i < MAX_COLUMN; ++i) {
+			profilesColumn.add(new LinkedList<Profile>());
+		}
 		DataBaseConnection db = sm.getDB();
 		try {
 			ResultSet rs = db.get("SELECT * FROM profiles WHERE user_id=" + user.getDBid() + ";");
@@ -49,12 +51,20 @@ public class Profile {
 				groupProfile = (groupProfileId == null) ? null : GroupProfile.getGroupProfile(groupProfileId, sm);
 				infos = ProfileInformation.loadProfileInformation(rs.getString(Data.PROFILE_INFO_ID.ordinal()), db);
 				single_id = user.getNextSingleId();
-				profiles.add(new Profile(db_id, user, columnIdx, posIdx, groupProfile, infos, single_id));
+				profilesColumn.get(columnIdx).add(new Profile(db_id, user, columnIdx, posIdx, groupProfile, infos, single_id));
 			}
 		} catch (SQLException e){
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
-		return profiles;
+		for (List<Profile> column : profilesColumn) {
+			column.sort(new Comparator<Profile>() {
+				@Override
+				public int compare(Profile a, Profile b) {
+					return a.getPositionIdx() - b.getPositionIdx();
+				}
+			});
+		}
+		return profilesColumn;
 	}
 	
 	public static Profile createProfileWithGroup(User user, int columnIdx, int posIdx, GroupProfile groupProfile, ServletManager sm) throws GeneralException {
@@ -162,7 +172,7 @@ public class Profile {
 		this.infos.setColor(color, sm);
 	}
 	
-	public int getSingle_id() {
+	public int getSingleId() {
 		return single_id;
 	}
 	
@@ -178,8 +188,9 @@ public class Profile {
 		res.put("id", this.db_id);
 		res.put("user_id", this.user.getDBid());
 		res.put("column", this.columnIdx);
-		res.put("position", this.positionIdx);
-		res.put("group_profile_id", this.groupProfileId);
+		res.put("position", this.posIdx);
+		res.put("group_profile_id", this.groupProfile.getDBid());
 		return res;
 	}
+	
 }
