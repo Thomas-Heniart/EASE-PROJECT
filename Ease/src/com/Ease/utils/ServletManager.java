@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.Ease.dashboard.User;
+import com.Ease.websocket.WebsocketMessage;
 
 public class ServletManager {
 	
@@ -43,8 +45,9 @@ public class ServletManager {
 	protected String				logResponse;
 	protected String				date;
 	protected int					tabId;
+	protected List<WebsocketMessage> messages;
 	
-	public ServletManager(String servletName, HttpServletRequest request, HttpServletResponse response, boolean saveLogs, boolean needToBeConnected) {
+	public ServletManager(String servletName, HttpServletRequest request, HttpServletResponse response, boolean saveLogs, boolean needToBeConnected) throws Exception {
 		this.args = new HashMap<>();
 		this.servletName = servletName;
 		this.retMsg = "No message";
@@ -72,9 +75,14 @@ public class ServletManager {
 			try {
 				if (user == null) {
 					response.getWriter().print("3 You are not connected.");
+					throw new Exception("Not connected.");
 				} else if ((tabId = request.getParameter("tabId")) == null) {
 					response.getWriter().print("1 Sorry an internal problem occurred. We are solving it asap.");
-				} else if (user.)
+					throw new Exception("No tabId.");
+				} else if (user.getWebsockets().containsKey(tabId) == false) {
+					response.getWriter().print("1 Sorry an internal problem occurred. We are solving it asap.");
+					throw new Exception("Wrong tabId");
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.Ease.utils.DataBaseConnection;
 import com.Ease.utils.GeneralException;
@@ -90,6 +91,9 @@ public class GroupProfile {
 	public Group getGroup() {
 		return this.group;
 	}
+	public ProfileInformation getInfo() {
+		return this.infos;
+	}
 	
 	public ProfilePermissions getPerms() {
 		return this.perm;
@@ -114,4 +118,18 @@ public class GroupProfile {
 		return common;
 	}
 	
+	/*
+	 * 
+	 * Utils
+	 * 
+	 */
+	
+	public static GroupProfile getGroupProfile(String db_id, ServletManager sm) throws GeneralException {
+		@SuppressWarnings("unchecked")
+		Map<String, GroupProfile> groupProfileMap = (Map<String, GroupProfile>)sm.getContextAttr("groupProfiles");
+		GroupProfile groupProfile = groupProfileMap.get(db_id);
+		if (groupProfile == null)
+			throw new GeneralException(ServletManager.Code.InternError, "This groupProfile dosen't exist!");
+		return groupProfile;
+	}
 }
