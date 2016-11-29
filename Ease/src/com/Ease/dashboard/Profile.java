@@ -106,7 +106,8 @@ public class Profile {
 	protected int		posIdx;
 	protected GroupProfile groupProfile;
 	protected ProfileInformation infos;
-	protected int	single_id;
+	protected int		single_id;
+	protected List<App> apps;
 	
 	public Profile(String db_id, User user, int columnIdx, int posIdx, GroupProfile groupProfile, ProfileInformation infos, int single_id) {
 		this.db_id = db_id;
@@ -116,6 +117,7 @@ public class Profile {
 		this.groupProfile = groupProfile;
 		this.infos = infos;
 		this.single_id = single_id;
+		this.apps = new LinkedList<App>();
 	}
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
@@ -174,6 +176,9 @@ public class Profile {
 	
 	public int getSingleId() {
 		return single_id;
+	}
+	public List<App> getApps() {
+		return apps;
 	}
 	
 	/*
