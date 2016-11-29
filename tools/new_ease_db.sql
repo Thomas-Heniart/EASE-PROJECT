@@ -70,10 +70,10 @@ CREATE TABLE `users` (
   `firstName` varchar(30) NOT NULL,
   `lastName` varchar(30) NOT NULL,
   `email` varchar(100) NOT NULL,
-  `key_id` int(10) unsigned NOT NULL,
+  `key_id` int(10) unsigned,
   `option_id` int(10) unsigned NOT NULL,
   `registration_date` DATETIME,
-  `status_id` INT(10) UNSIGNED NOT NULL,
+  /*`status_id` INT(10) UNSIGNED NOT NULL,*/
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
   FOREIGN KEY (key_id) REFERENCES userKeys (id),

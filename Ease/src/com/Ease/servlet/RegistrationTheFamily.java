@@ -1,6 +1,5 @@
 package com.Ease.servlet;
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
@@ -11,12 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.Ease.context.DataBase;
+import com.Ease.dashboard.User;
 import com.Ease.data.Regex;
 import com.Ease.data.ServletItem;
 import com.Ease.session.SessionException;
 import com.Ease.session.SessionSave;
-import com.Ease.session.User;
+import com.Ease.utils.ServletManager;
 
 
 /**
@@ -64,41 +63,30 @@ public class RegistrationTheFamily extends HttpServlet {
 
 		HttpSession session = request.getSession();
 		User user = (User)(session.getAttribute("User"));
-		ServletItem SI = new ServletItem(ServletItem.Type.TheFamilyRegistration, request, response, user);
-		
+		ServletManager sm  = new ServletManager(this.getClass().getName(), request, response, true);
 		// Get Parameters
-		String invitationCode = SI.getServletParam("invitationCode");
-		String fname = SI.getServletParam("fname");
-		String lname = SI.getServletParam("lname");
-		String email = SI.getServletParam("email");
+		String invitationCode = sm.getServletParam("invitationCode", false);
+		String fname = sm.getServletParam("fname", true);
+		String lname = sm.getServletParam("lname", true);
+		String email = sm.getServletParam("email", true);
 		// --
 		
-		String password = request.getParameter("password");
-		String confirmPassword = request.getParameter("confirmPassword");
+		String password = sm.getServletParam("password", false);
+		String confirmPassword = sm.getServletParam("confirmPassword", false);
 		
-		ResultSet rs = null;
-		DataBase db = (DataBase)session.getServletContext().getAttribute("DataBase");
-		
-		try {
-			db.connect();
-		} catch (SQLException e) {
-			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
-			SI.sendResponse();
-			return ;
-		}
-		
-		if (user != null) {
-			SI.setResponse(ServletItem.Code.AlreadyConnected, "You are logged on Ease.");
-		} else if (fname == null || fname.length() < 2){
-			SI.setResponse(ServletItem.Code.BadParameters, "Your name is too short.");	
-		} else if (email == null || Regex.isEmail(email) == false){
-			SI.setResponse(ServletItem.Code.BadParameters, "Incorrect email.");
-		} else if (password == null || Regex.isPassword(password) == false) {
-			SI.setResponse(ServletItem.Code.BadParameters, "Password is too short (at least 8 characters).");
-		} else if (confirmPassword == null || password.equals(confirmPassword) == false) {
-			SI.setResponse(ServletItem.Code.BadParameters, "Passwords are not the same.");
-		} else {
+		if (user != null)
+			sm.setResponse(ServletManager.Code.ClientError, "You are logged on Ease.");
+		else if (fname == null || fname.length() < 2)
+			sm.setResponse(ServletManager.Code.UserMiss, "Your name is too short.");	
+		else if (email == null || Regex.isEmail(email) == false)
+			sm.setResponse(ServletManager.Code.UserMiss, "Incorrect email.");
+		else if (password == null || Regex.isPassword(password) == false)
+			sm.setResponse(ServletManager.Code.UserMiss, "Password is too short (at least 8 characters).");
+		else if (confirmPassword == null || password.equals(confirmPassword) == false)
+			sm.setResponse(ServletManager.Code.UserMiss, "Passwords are not the same.");
+		else {
 			try {
+				
 				String group;
 				rs = db.get("select * from invitations where email ='" + email + "' and linkCode = '" + invitationCode + "';");
 				if (rs.next()) {
@@ -107,7 +95,7 @@ public class RegistrationTheFamily extends HttpServlet {
 					if (rs.next()) {
 						SI.setResponse(ServletItem.Code.BadParameters, "You already have an account.");
 					} else {
-						lname = "";
+						User newUser = User.createUser(email, fname, "", confirmPassword, sm);
 						user = new User(fname, lname, email, "0606060606", password, session.getServletContext());
 						if (group != null && group.equals("null") == false)
 							db.set("insert into GroupAndUserMap values (NULL, " + group + ", " + user.getId() + ");");
