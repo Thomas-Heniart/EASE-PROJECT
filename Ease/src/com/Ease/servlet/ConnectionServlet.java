@@ -4,26 +4,22 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.annotation.WebServlet;
 
-import com.Ease.context.DataBase;
-import com.Ease.data.Hashing;
+import com.Ease.dashboard.User;
 import com.Ease.data.Regex;
-import com.Ease.data.ServletItem;
-import com.Ease.session.SessionException;
-import com.Ease.session.SessionSave;
-import com.Ease.session.User;
-import com.Ease.session.User.UserData;
+import com.Ease.utils.DataBaseConnection;
+import com.Ease.utils.GeneralException;
+import com.Ease.utils.ServletManager;
 
 /**
  * Servlet implementation class ConnectionServlet
@@ -53,76 +49,41 @@ public class ConnectionServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		HttpSession session = request.getSession();
-		User user = (User) (session.getAttribute("User"));
-		ServletItem SI = new ServletItem(ServletItem.Type.ConnectionServlet, request, response, user);
-
+		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+		DataBaseConnection db = sm.getDB();
 		// Get Parameters
-		String email = SI.getServletParam("email");
-		String password = request.getParameter("password");
+		String email = sm.getServletParam("email", true);
+		String password = sm.getServletParam("password", false);
 		// --
 
-		DataBase db = (DataBase) session.getServletContext().getAttribute("DataBase");
 		String client_ip = getIpAddr(request);
 
-		if (user != null) {
-			session.setAttribute("User", null);
-		}
-
+		// Put current ip in db
 		try {
-			db.connect();
-		} catch (SQLException e) {
-			SI.setResponse(ServletItem.Code.DatabaseNotConnected, "There is a problem with our Database, please retry in few minutes.");
-			SI.sendResponse();
-			return ;
-		}
-		
-		try {
-			// Put current ip in db
 			addIpInDataBase(client_ip, db);
-			int attempts = 0;
+
 			if (canConnect(client_ip, db)) {
-				if (email == null || Regex.isEmail(email) == false) {
-					attempts = incrementAttempts(client_ip, db);
-					SI.setResponse(ServletItem.Code.BadParameters, "Wrong email." + " You have " + (max_attempts - attempts) + "/10 attempts left.");
-				} else if (password == null || Regex.isPassword(password) == false) {
-					attempts = incrementAttempts(client_ip, db);
-					SI.setResponse(ServletItem.Code.BadParameters, "Wrong password." + " You have " + (max_attempts - attempts) + "/10 attempts left.");
-				} else {
-					
+				if (email == null || Regex.isEmail(email) == false)
+					sm.setResponse(ServletManager.Code.UserMiss, "Empty email");
+				else if (password == null)
+					sm.setResponse(ServletManager.Code.UserMiss, "Empty password");
+				else {
 
-					ResultSet rs;
-
-					if ((rs = db.get("select * from users where email = '" + email + "';")) == null) {
-						SI.setResponse(ServletItem.Code.LogicError, "Impossible to access data base.");
-					} else if (rs.next()) {
-
-						String saltEase = rs.getString(UserData.SALTEASE.ordinal());
-						String hashedPass = Hashing.SHA(password, saltEase);
-						if (rs.getString(UserData.PASSWORD.ordinal()).equals(hashedPass)) {
-							user = new User(rs, password, session.getServletContext());
-							SessionSave sessionSave = new SessionSave(user, session.getServletContext());
-							session.setAttribute("User", user);
-							session.setAttribute("SessionSave", sessionSave);
-							removeIpFromDataBase(client_ip, db);
-							SI.setResponse(200, "Connected.");
-						} else {
-							attempts = incrementAttempts(client_ip, db);
-							SI.setResponse(199, "Wrong login or password." + " You have " + (max_attempts - attempts) + "/10 attempts left.");
-						}
-					} else {
-						attempts = incrementAttempts(client_ip, db);
-						SI.setResponse(199, "Wrong login or password." + " You have " + (max_attempts - attempts) + " /10 attempts left.");
+					User user = User.loadUser(email, password, sm);
+					if (user == null)
+						sm.setResponse(ServletManager.Code.UserMiss, "Bad login or password");
+					else {
+						session.setAttribute("user", user);
+						sm.setResponse(ServletManager.Code.Success, "Successfully connected");
 					}
 				}
 			} else {
-				SI.setResponse(199, "Too much attempts to connect. Please retry in 5 minutes.");
+				sm.setResponse(ServletManager.Code.UserMiss, "Too much attempts to connect. Please retry in 5 minutes.");
 			}
-		} catch (SessionException e) {
-			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
-		} catch (SQLException e) {
-			SI.setResponse(ServletItem.Code.LogicError, ServletItem.getExceptionTrace(e));
+		} catch (GeneralException e) {
+			sm.setResponse(e);
 		}
-		SI.sendResponse();
+		sm.sendResponse();
 	}
 
 	public String getIpAddr(HttpServletRequest request) {
@@ -143,11 +104,16 @@ public class ConnectionServlet extends HttpServlet {
 		return request.getRemoteAddr();
 	}
 
-	public void addIpInDataBase(String client_ip, DataBase db) throws SQLException {
+	public void addIpInDataBase(String client_ip, DataBaseConnection db) throws GeneralException {
+		try {
 			ResultSet rs = db.get("SELECT * FROM askingIps WHERE ip='" + client_ip + "';");
 			if (rs.next())
 				return;
-			db.set("INSERT INTO askingIps values (NULL, '" + client_ip + "', 0, '" + getCurrentTime() + "', '" + getExpirationTime() + "');");
+			db.set("INSERT INTO askingIps values (NULL, '" + client_ip + "', 0, '" + getCurrentTime() + "', '"
+					+ getExpirationTime() + "');");
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
 	}
 
 	public String getCurrentTime() {
@@ -162,11 +128,11 @@ public class ConnectionServlet extends HttpServlet {
 		return dateFormat.format(new Date(date.getTime() + (expiration_time * ONE_MINUTE_IN_MILLIS)));
 	}
 
-	public void removeIpFromDataBase(String client_ip, DataBase db)  throws SQLException {
+	public void removeIpFromDataBase(String client_ip, DataBaseConnection db) throws GeneralException {
 		db.set("DELETE FROM askingIps WHERE ip = '" + client_ip + "';");
 	}
 
-	public int incrementAttempts(String client_ip, DataBase db)  throws SQLException {
+	public int incrementAttempts(String client_ip, DataBaseConnection db) throws GeneralException {
 		System.out.println(getExpirationTime());
 		db.set("UPDATE askingIps SET attempts = attempts + 1, attemptDate = '" + getCurrentTime()
 				+ "', expirationDate = '" + getExpirationTime() + "' WHERE ip = '" + client_ip + "';");
@@ -180,7 +146,7 @@ public class ConnectionServlet extends HttpServlet {
 		}
 	}
 
-	public boolean canConnect(String client_ip, DataBase db)  throws SQLException {
+	public boolean canConnect(String client_ip, DataBaseConnection db) throws GeneralException {
 		ResultSet rs = db.get("SELECT attempts, expirationDate FROM askingIps WHERE ip='" + client_ip + "';");
 		int attempts = 0;
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -190,12 +156,8 @@ public class ConnectionServlet extends HttpServlet {
 				attempts = Integer.parseInt(rs.getString(1));
 				expirationDate = dateFormat.parse(rs.getString(2));
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 		return attempts < max_attempts || expirationDate.compareTo(new Date()) <= 0;
 	}
