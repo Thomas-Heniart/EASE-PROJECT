@@ -94,6 +94,17 @@ public class Group {
 		return this.groupProfiles;
 	}
 	
+	public String getName() {
+		return name;
+	}
+	public Group getInfra() {
+		if (parent == null) {
+			return this;
+		} else {
+			return this.parent.getInfra();
+		}
+	}
+	
 	/*
 	 * 
 	 * Utils 
