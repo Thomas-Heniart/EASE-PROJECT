@@ -1,4 +1,4 @@
-SET FOREIGN_KEY_CHECKS = 0;
+/*SET FOREIGN_KEY_CHECKS = 0;
 SET @tables = NULL;
 SELECT GROUP_CONCAT(table_schema, '.', table_name) INTO @tables
   FROM information_schema.tables
@@ -9,7 +9,7 @@ PREPARE stmt FROM @tables;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 SET FOREIGN_KEY_CHECKS = 1;
-
+*/
 CREATE TABLE userKeys (
   id int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   password varchar(50) NOT NULL,
@@ -288,11 +288,10 @@ CREATE TABLE websitesLogWithMap (
 
 CREATE TABLE `invitations` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `user_id` INT(10) UNSIGNED NOT NULL,
+  `email` VARCHAR(255),
   `linkCode` varchar(255) DEFAULT NULL,
   `group_id` INT(10) UNSIGNED,
   PRIMARY KEY (id),
-  FOREIGN KEY (user_id) REFERENCES users(id),
   FOREIGN KEY (group_id) REFERENCES groups(id)
 );
 
@@ -585,4 +584,13 @@ CREATE TABLE `removedUpdates` (
   PRIMARY KEY (`id`),
   FOREIGN KEY (`website_id`) REFERENCES `websites` (`id`),
   FOREIGN KEY (`loginWithWebsites_id`) REFERENCES `loginWithWebsites` (`id`)
+);
+
+CREATE TABLE `logs` (
+  `servlet_name` VARCHAR(255) NOT NULL,
+  `code` int(10) unsigned NOT NULL,
+  `user_id` int(10) unsigned DEFAULT NULL,
+  `args` text NOT NULL,
+  `retMsg` text NOT NULL,
+  `date` datetime NOT NULL
 );

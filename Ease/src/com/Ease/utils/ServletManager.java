@@ -113,6 +113,7 @@ public class ServletManager {
 	}
 	
 	public void setResponse(GeneralException e) {
+		System.out.println(e.getMsg());
 		this.retCode = e.getCode().getValue();
 		this.retMsg = e.getMsg();
 	}

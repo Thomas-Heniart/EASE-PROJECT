@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.Ease.dashboard.Invitation;
+import com.Ease.dashboard.User;
 import com.Ease.data.Regex;
 import com.Ease.utils.DataBaseConnection;
 import com.Ease.utils.GeneralException;
@@ -56,6 +56,8 @@ public class directInvitation extends HttpServlet {
 		try {
 			DataBaseConnection db = sm.getDB();
 			String email = sm.getServletParam("email", true);
+			String invitationCode = sm.getServletParam("invitationCode", true);
+			String groupId = sm.getServletParam("groupId", true);
 			if (email != null) {
 				email.replaceAll(" ", "");
 				email.replaceAll("\r", "");
@@ -71,7 +73,11 @@ public class directInvitation extends HttpServlet {
 					if (rs.next())
 						sm.setResponse(ServletManager.Code.UserMiss, "You already have an account.");
 					else {
+						if (invitationCode != null && groupId != null) {
+							User newUser = User.createUser(email, ,sm)
+						}
 						Invitation.createInvitation(email, null, sm);
+						sm.setResponse(ServletManager.Code.Success, "Go to see your mailbox");
 					}
 				} catch (GeneralException e) {
 					throw e;
