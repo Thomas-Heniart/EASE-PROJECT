@@ -39,9 +39,8 @@ public class User {
 			Keys keys = Keys.loadKeys(rs.getString(Data.KEYSID.ordinal()), password, sm);
 			Option options = Option.loadOption(rs.getString(Data.OPTIONSID.ordinal()), sm);
 			//Status status = Status.loadStatus(rs.getString(Data.STATUSID.ordinal()), sm);
-			String registrationDate = rs.getString(Data.REGISTRATIONDATE.ordinal());
 			List<UserEmail> emails = UserEmail.loadEmails(db_id, sm);
-			User newUser =  new User(db_id, firstName, lastName, email, registrationDate, keys, options, null, emails);
+			User newUser =  new User(db_id, firstName, lastName, email, keys, options, null, emails);
 			newUser.loadProfiles(sm);
 			return newUser;
 		} catch (SQLException e) {
@@ -49,19 +48,14 @@ public class User {
 		}
 	}
 	
-	public static User createUser(String email, String firstName, String lastName, String password, ServletManager sm) throws GeneralException {
+	public static User createUser(String email, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		//Keys keys = Keys.createKeys(password, sm);
 		Option opt = Option.createOption(sm);
 		//Status status = Status.createStatus(sm);
-		//String registrationDate = GET_CURRENT_TIME;
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date = new Date();
-		String registrationDate = dateFormat.format(date);
 		List<UserEmail> emails = new LinkedList<UserEmail>();
 		int transaction = db.startTransaction();
-		String db_id = db.set("INSERT INTO users VALUES(NULL, '" + firstName + "', '" + lastName + "', '" + email + "', NULL, " + opt.getDb_id() + ", '" + registrationDate + /*"', " + status.getDBid() + */");").toString();
-		User newUser = new User(db_id, firstName, lastName, email, registrationDate, null, opt, null, emails);
+		String db_id = db.set("INSERT INTO users VALUES(NULL, NULL, NULL, '" + email + "', NULL, " + opt.getDb_id() + ", NULL);").toString();
+		User newUser = new User(db_id, null, null, email, null, opt, null, emails);
 		newUser.getProfilesColumn().get(0).add(Profile.createPersonnalProfile(newUser, 0, 0, "Side", "#000000", sm));
 		newUser.getProfilesColumn().get(1).add(Profile.createPersonnalProfile(newUser, 1, 0, "Perso", "#000000", sm));
 		newUser.getUserEmails().add(UserEmail.createUserEmail(email, newUser, sm));
@@ -73,7 +67,6 @@ public class User {
 	protected String	first_name;
 	protected String	last_name;
 	protected String	email;
-	protected String	registration_date;
 	protected Keys		keys;
 	protected Option	opt;
 	//protected Status	status;
@@ -82,12 +75,11 @@ public class User {
 	protected List<UserEmail> emails;
 	protected Map<String, Session> websockets;
 	
-	public User(String db_id, String first_name, String last_name, String email, String registration_date, Keys keys, Option opt, /*Status*/ String status, List<UserEmail> emails) {
+	public User(String db_id, String first_name, String last_name, String email, Keys keys, Option opt, /*Status*/ String status, List<UserEmail> emails) {
 		this.db_id = db_id;
 		this.first_name = first_name;
 		this.last_name = last_name;
 		this.email = email;
-		this.registration_date = registration_date;
 		this.keys = keys;
 		this.opt = opt;
 		//this.status = status;
@@ -138,10 +130,6 @@ public class User {
 		return this.email;
 	}
 	
-	public String registration_date() {
-		return this.registration_date;
-	}
-	
 	public Keys getKeys() {
 		return keys;
 	}
@@ -167,6 +155,20 @@ public class User {
 	 * Utils
 	 * 
 	 */
+	
+	public void validateUser(String firstName, String lastName, String password, Group group, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		keys = Keys.createKeys(password, sm);
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		String registrationDate = dateFormat.format(date);
+		db.set("UPDATE users SET firstName='" + firstName + "', lastName='" + lastName + "', key_id=" + keys.getDBid() + ", registration_date='" + registrationDate + "' WHERE id=" + this.db_id + ";");
+		if (group != null){
+			group.loadContent(this, sm);
+		}
+		db.commitTransaction(transaction);
+	}
 	
 	public int getNextSingleId() {
 		this.max_single_id++;
@@ -267,5 +269,23 @@ public class User {
 			websockets.remove(session);
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
+	}
+	
+	public int getMostEmptyProfileColumn() {
+		int col = 0;
+		int minSize = -1;
+		for (List<Profile> column : this.profiles_column) {
+			int colSize = 0;
+			if (this.profiles_column.indexOf(column) != 0){
+				for (Profile profile: column) {
+					colSize += profile.getSize();
+				}
+				if (minSize == - 1 || colSize < minSize) {
+					minSize = colSize;
+					col = this.profiles_column.indexOf(column);
+				}
+			}
+		}
+		return col;
 	}
 }

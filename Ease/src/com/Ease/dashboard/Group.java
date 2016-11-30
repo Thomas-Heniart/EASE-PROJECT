@@ -119,4 +119,17 @@ public class Group {
 		}
 		return groupProfileMap;
 	}
+
+	public void loadContent(User user, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		if (this.parent != null)
+			parent.loadContent(user, sm);
+		int mostEmptyColumn;
+		for (GroupProfile gProfile : this.groupProfiles) {
+			mostEmptyColumn = user.getMostEmptyProfileColumn();
+			user.getProfilesColumn().get(mostEmptyColumn).add(Profile.createProfileWithGroup(user, mostEmptyColumn, user.getProfilesColumn().get(mostEmptyColumn).size(), gProfile, sm));
+		}
+		db.commitTransaction(transaction);
+	}
 }

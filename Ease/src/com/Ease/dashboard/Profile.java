@@ -187,6 +187,16 @@ public class Profile {
 	 * 
 	 */
 	
+	public int getSize() {
+		int size;
+		if (apps.size() < 4)
+			size = 2;
+		else {
+			size = (apps.size() + 2) / 3;
+		}
+		return size;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public JSONObject getJSON() {
 		JSONObject res = new JSONObject();
