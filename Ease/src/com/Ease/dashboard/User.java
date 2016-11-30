@@ -50,6 +50,7 @@ public class User {
 	
 	public static User createUser(String email, String firstName, String lastName, String password, String code, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
 		Group group = Invitation.verifyInvitation(email, code, sm);
 		Option opt = Option.createOption(sm);
 		//Status status = Status.createStatus(sm);
@@ -58,7 +59,6 @@ public class User {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = new Date();
 		String registrationDate = dateFormat.format(date);
-		int transaction = db.startTransaction();
 		String db_id = db.set("INSERT INTO users VALUES(NULL, '" + firstName + "', '" + lastName + "', '" + email + "', " + keys.getDBid() + ", " + opt.getDb_id() + ", '" + registrationDate + "');").toString();
 		User newUser = new User(db_id, null, null, email, null, opt, null, emails);
 		newUser.getProfilesColumn().get(0).add(Profile.createPersonnalProfile(newUser, 0, 0, "Side", "#000000", sm));
