@@ -68,7 +68,7 @@
 			<h3>A simple homepage to access your web.</h3>
 			<p></p>
 			<p>EASE connects you to your web accounts in 1 click.</p>
-			<form oClass="GetEmailForm" id="GetEmailForm" action="directInvitation">
+			<form oClass="GetEmailForm" id="GetEmailForm" action="checkInvitation">
 				<input type="text" oClass="NoEmptyInput" name="email" placeholder="Enter your email"/><button type="submit">Go</button>
 				<div class="loadHelper centeredItem">
 					<div class="sk-fading-circle">
@@ -127,7 +127,7 @@
 			</video>
 		</div>
 		<div class="invitation-footer">
-			<form oClass="GetEmailForm" id="GetEmailForm2" action="directInvitation">
+			<form oClass="GetEmailForm" id="GetEmailForm2" action="checkInvitation">
 				<input type="text" oClass="NoEmptyInput" name="email" placeholder="Enter your email"/><button type="submit">Go</button>			
 				<div class="loadHelper centeredItem">
 					<div class="sk-fading-circle">
