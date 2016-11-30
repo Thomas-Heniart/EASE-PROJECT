@@ -24,8 +24,8 @@ import com.Ease.utils.ServletManager;
 /**
  * Servlet implementation class NewUser
  */
-@WebServlet("/thefamily")
-public class RegistrationTheFamily extends HttpServlet {
+@WebServlet("/RegistrationWithCode")
+public class RegistrationWithCode extends HttpServlet {
 
 	/**
 	 * 
@@ -35,7 +35,7 @@ public class RegistrationTheFamily extends HttpServlet {
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public RegistrationTheFamily() {
+	public RegistrationWithCode() {
 		super();
 	}
 
@@ -70,7 +70,8 @@ public class RegistrationTheFamily extends HttpServlet {
 
 		HttpSession session = request.getSession();
 		User user = (User) (session.getAttribute("User"));
-		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true, false);
+		ServletManager sm;
+		sm = new ServletManager(this.getClass().getName(), request, response, true);
 		DataBaseConnection db = sm.getDB();
 		try {
 			String invitationCode = sm.getServletParam("invitationCode", false);
