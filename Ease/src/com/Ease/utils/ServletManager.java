@@ -44,7 +44,7 @@ public class ServletManager {
 	protected boolean				saveLogs;
 	protected String				logResponse;
 	protected String				date;
-	protected int					tabId;
+	protected String				tabId;
 	protected List<WebsocketMessage> messages;
 	
 	public ServletManager(String servletName, HttpServletRequest request, HttpServletResponse response, boolean saveLogs, boolean needToBeConnected) throws Exception {
@@ -70,22 +70,16 @@ public class ServletManager {
 				System.err.println("Send response failed.");
 			}
 		}
-		String tabId;
-		if (needToBeConnected == true) {
-			try {
-				if (user == null) {
-					response.getWriter().print("3 You are not connected.");
-					throw new Exception("Not connected.");
-				} else if ((tabId = request.getParameter("tabId")) == null) {
-					response.getWriter().print("1 Sorry an internal problem occurred. We are solving it asap.");
-					throw new Exception("No tabId.");
-				} else if (user.getWebsockets().containsKey(tabId) == false) {
-					response.getWriter().print("1 Sorry an internal problem occurred. We are solving it asap.");
-					throw new Exception("Wrong tabId");
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		
+	}
+	
+	public void needToBeConnected() throws GeneralException {
+		if (user == null) {
+			throw new GeneralException(Code.ClientWarning, "You need to be connected to do that.");
+		} else if ((tabId = request.getParameter("tabId"))== null) {
+			throw new GeneralException(Code.ClientError, "No tabId.");
+		} else if (user.getWebsockets().containsKey(tabId) == false) {
+			throw new GeneralException(Code.ClientError, "Wrong tabId.");
 		}
 	}
 	
