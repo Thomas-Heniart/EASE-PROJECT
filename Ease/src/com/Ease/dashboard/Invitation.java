@@ -10,7 +10,7 @@ import com.Ease.utils.ServletManager;
 
 public class Invitation {
 	
-	public static Group verifyInformations(String email, String invitationCode, ServletManager sm) throws GeneralException {
+	public static Group verifyInvitation(String email, String invitationCode, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		Map<String, Group> groups = (Map<String, Group>) sm.getContextAttr("groups");
 		ResultSet rs = db.get("SELECT group_id FROM invitations WHERE email='" + email + "' AND invitationCode='" + invitationCode + "'");
