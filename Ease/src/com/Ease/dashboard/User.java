@@ -48,16 +48,23 @@ public class User {
 		}
 	}
 	
-	public static User createUser(String email, ServletManager sm) throws GeneralException {
+	public static User createUser(String email, String firstName, String lastName, String password, String code, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
+		Group group = Invitation.verifyInvitation(email, code, sm);
 		Option opt = Option.createOption(sm);
 		//Status status = Status.createStatus(sm);
 		List<UserEmail> emails = new LinkedList<UserEmail>();
+		Keys keys = Keys.createKeys(password, sm);
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		String registrationDate = dateFormat.format(date);
 		int transaction = db.startTransaction();
-		String db_id = db.set("INSERT INTO users VALUES(NULL, NULL, NULL, '" + email + "', NULL, " + opt.getDb_id() + ", NULL);").toString();
+		String db_id = db.set("INSERT INTO users VALUES(NULL, '" + firstName + "', '" + lastName + "', '" + email + "', " + keys.getDBid() + ", " + opt.getDb_id() + ", '" + registrationDate + "');").toString();
 		User newUser = new User(db_id, null, null, email, null, opt, null, emails);
 		newUser.getProfilesColumn().get(0).add(Profile.createPersonnalProfile(newUser, 0, 0, "Side", "#000000", sm));
 		newUser.getProfilesColumn().get(1).add(Profile.createPersonnalProfile(newUser, 1, 0, "Perso", "#000000", sm));
+		if (group)
+			group.loadContent(newUser, sm);
 		newUser.getUserEmails().add(UserEmail.createUserEmail(email, newUser, sm));
 		db.commitTransaction(transaction);
 		return newUser;
@@ -155,20 +162,6 @@ public class User {
 	 * Utils
 	 * 
 	 */
-	
-	public void validateUser(String firstName, String lastName, String password, Group group, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		int transaction = db.startTransaction();
-		keys = Keys.createKeys(password, sm);
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date = new Date();
-		String registrationDate = dateFormat.format(date);
-		db.set("UPDATE users SET firstName='" + firstName + "', lastName='" + lastName + "', key_id=" + keys.getDBid() + ", registration_date='" + registrationDate + "' WHERE id=" + this.db_id + ";");
-		if (group != null){
-			group.loadContent(this, sm);
-		}
-		db.commitTransaction(transaction);
-	}
 	
 	public int getNextSingleId() {
 		this.max_single_id++;
