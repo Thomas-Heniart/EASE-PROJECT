@@ -33,9 +33,12 @@ public class Invitation {
 	
 	public static void sendInvitation(String email, String group_id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
+		Map<String, Group> groups = (Map<String, Group>) sm.getContextAttr("groups");
+		String infraName = groups.get(group_id).getInfra().getName();
 		String invitationCode = CodeGenerator.generateNewCode();
 		db.set("UPDATE invitations SET linkCode='" + invitationCode + "' WHERE email='" + email + "'");
+		
 		Mail mailToSend = new Mail();
-		mailToSend.sendInvitationEmail(email, invitationCode);
+		mailToSend.sendInvitationEmail(email, infraName, invitationCode);
 	}
 }

@@ -203,4 +203,32 @@ public class Mail {
 			throw new MessagingException();
 		}
 	}
+
+	public void sendInvitationEmail(String email, String infraName, String invitationCode) throws MessagingException {
+		try {
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+			message.setSubject(MimeUtility.encodeText("Active ton compte Ease !", "utf-8", null));
+			//String link = "https://ease.space/thefamily?email=" + email + "&invitationCode=" + invitationCode;
+			String link = "http://localhost:8080/register?email=" + email + "&invitationCode=" + invitationCode;
+			message.setContent("<p>*French version below*</p>" + "<p></p>" + "<p>Hello & welcome to Ease !</p>"
+					+ "<p></p>"
+					+ "<p>Ease.space gathers the websites on which you have an account and allows you to login & logout to them in 1 click. All this from a secured personal homepage on your browser. For now, it works on Chrome and Safari.</p>"
+					+ "<p></p>"
+					+ "<p>This means that once you have added the credentials of an account on your space, you’ll never have to use them again, regardless of the computer or device you have in front of you. The only thing you need is Internet.</p>"
+					+ "<p></p>" + "<p>To activate your space : click on the link and follow the steps : <a href='"
+					+ link + "'>https://ease.space/...</a></p>" + "<p></p>" + "<p>See you soon !</p>" + "<p></p>"
+					+ "<p>The Ease team</p>" + "<p></p>" + "<p></p>" + "<hr>" + "<p></p>"
+					+ "<p>Hello & bienvenue sur Ease.space !</p>" + "<p></p>"
+					+ "<p>Ease est ton espace personnel intelligent et sécurisé qui regroupe l'ensemble des sites sur lesquels tu as un compte, et qui t’y connecte et déconnecte automatiquement! Ease fonctionne sur Chrome et Safari.</p>"
+					+ "<p></p>"
+					+ "<p>Autrement dit, une fois tes identifiants enregistrés sur ton espace Ease, tu n’auras plus jamais à les utiliser. Et ce, où que tu sois, quelque soit l’ordinateur et en toute sécurité. Seul pré-requis: avoir internet !</p>"
+					+ "<p></p>"
+					+ "<p>Pour activer ton espace, clique sur le lien suivant et laisse toi guider: <a href='" + link
+					+ "'>https://ease.space/...</a></p>" + "<p></p>" + "<p>A bientôt !</p>" + "<p></p>"
+					+ "<p>La team Ease</p>", "text/html;charset=utf-8");
+			Transport.send(message);
+		} catch (AddressException | UnsupportedEncodingException e) {
+			throw new MessagingException();
+		}
+	}
 }
