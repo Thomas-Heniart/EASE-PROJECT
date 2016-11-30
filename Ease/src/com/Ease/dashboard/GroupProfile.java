@@ -29,7 +29,7 @@ public class GroupProfile {
 	public static List<GroupProfile> loadGroupProfiles(Group group, DataBaseConnection db) throws GeneralException {
 		List<GroupProfile> profiles = new LinkedList<GroupProfile>();
 		try {
-			ResultSet rs = db.get("SELECT * FROM groupProfile WHERE group_id=" + group.getDBid() + ";");
+			ResultSet rs = db.get("SELECT * FROM groupProfiles WHERE group_id=" + group.getDBid() + ";");
 			String db_id;
 			ProfilePermissions perms;
 			ProfileInformation infos;

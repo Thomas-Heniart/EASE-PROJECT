@@ -39,6 +39,7 @@ public class Registration extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		System.out.println("poeutte");
 		HttpSession session = request.getSession();
 		String invitationCode = request.getParameter("invitationCode");
 		String email = request.getParameter("email");

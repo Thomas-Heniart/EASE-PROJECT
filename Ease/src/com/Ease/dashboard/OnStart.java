@@ -33,11 +33,10 @@ public class OnStart implements ServletContextListener{
 		}
 		try {
 			List<Group> groups = Group.loadGroups(db);
-			Map<String, Group> groupsMap = new HashMap<String, Group>();
-			groupsMap.putAll(Group.getGroupMap(groups));
+			System.out.println(groups);
+			Map<String, Group> groupsMap = Group.getGroupMap(groups);
 			evt.getServletContext().setAttribute("infra", groups);
 			evt.getServletContext().setAttribute("groups", groupsMap);
-			
 			Map<String, GroupProfile> groupProfilesMap = new HashMap<String, GroupProfile>();
 			groupProfilesMap.putAll(Group.getGroupProfileMap(groups));
 			evt.getServletContext().setAttribute("groupProfiles", groups);

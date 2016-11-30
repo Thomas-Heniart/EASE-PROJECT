@@ -16,8 +16,7 @@ public class Group {
 		NOTHING,
 		ID,
 		NAME,
-		PARENT,
-		INFRA
+		PARENT
 	}
 	
 	/*
@@ -33,12 +32,13 @@ public class Group {
 	public static List<Group> loadGroup(DataBaseConnection db, Group parent) throws GeneralException {
 		try {
 			List<Group> groups = new LinkedList<Group>();
-			ResultSet rs = db.get("SELECT * FROM groups WHERE parent=" + (parent == null ? "NULL" : parent.getDBid()) + ";");
+			ResultSet rs = db.get("SELECT * FROM groups WHERE parent " + ((parent == null) ? " IS NULL" : ("="+parent.getDBid())) + ";");
 			String db_id;
 			String name;
 			List<GroupProfile> groupProfiles;
 			while (rs.next()) {
 				db_id = rs.getString(Data.ID.ordinal());
+				System.out.println(db_id);
 				name = rs.getString(Data.NAME.ordinal());
 				Group child = new Group(db_id, name, parent);
 				groupProfiles = GroupProfile.loadGroupProfiles(child, db);
@@ -142,5 +142,9 @@ public class Group {
 			user.getProfilesColumn().get(mostEmptyColumn).add(Profile.createProfileWithGroup(user, mostEmptyColumn, user.getProfilesColumn().get(mostEmptyColumn).size(), gProfile, sm));
 		}
 		db.commitTransaction(transaction);
+	}
+	
+	public String toString() {
+		return (this.db_id + " : " + this.name);
 	}
 }

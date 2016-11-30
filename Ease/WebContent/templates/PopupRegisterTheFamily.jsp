@@ -4,7 +4,7 @@
 <div oClass="RegisterPopup" class="md-modal md-effect-15 popup" id="RegisterPopup">
 	<div class="md-content">
 		<h2>Final step</h2>
-		<form oClass="RegisterForm" id="RegisterForm" action="thefamily">
+		<form oClass="RegisterForm" id="RegisterForm" action="register">
 			<div>
 				<label for="school-email">Your email</label>
 				<input type="text" style="cursor: initial;" readonly id="school-email" value=<%= request.getParameter("email") %> name="email"/>
