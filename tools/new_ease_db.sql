@@ -77,8 +77,8 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
   FOREIGN KEY (key_id) REFERENCES userKeys (id),
-  FOREIGN KEY (option_id) REFERENCES options (id),
-  FOREIGN KEY (status_id) REFERENCES status (id)
+  FOREIGN KEY (option_id) REFERENCES options (id)
+  /*FOREIGN KEY (status_id) REFERENCES status (id)*/
 );
 
 CREATE TABLE infrastructuresAdminsMap (
