@@ -74,7 +74,6 @@ public class RegistrationTheFamily extends HttpServlet {
 		DataBaseConnection db = sm.getDB();
 		try {
 			String invitationCode = sm.getServletParam("invitationCode", false);
-			String groupId = sm.getServletParam("groupId", true);
 			String fname = sm.getServletParam("fname", true);
 			String email = sm.getServletParam("email", true);
 			String password = sm.getServletParam("password", false);
@@ -92,45 +91,9 @@ public class RegistrationTheFamily extends HttpServlet {
 			else if (confirmPassword == null || password.equals(confirmPassword) == false)
 				throw new GeneralException(ServletManager.Code.UserMiss, "Passwords are not the same.");
 			else if (invitationCode == null) {
-				throw new GeneralException(ServletManager.Code.InternError, e);
-			}
-			else {
-				try {
-					User newUser = User.createUser(email,  fname, "", confirmPassword, invitationCode, sm);
-					String group;
-					ResultSet rs = db.get("select * from invitations where email ='" + email + "' and linkCode = '"
-							+ invitationCode + "';");
-					if (rs.next()) {
-						group = rs.getString(3);
-						rs = db.get("select * from users where email = '" + email + "' limit 0, 1;");
-						if (rs.next()) {
-							SI.setResponse(ServletItem.Code.BadParameters, "You already have an account.");
-						} else {
-							User newUser = User.createUser(email, fname, "", confirmPassword, sm);
-							user = new User(fname, lname, email, "0606060606", password, session.getServletContext());
-							if (group != null && group.equals("null") == false)
-								db.set("insert into GroupAndUserMap values (NULL, " + group + ", " + user.getId()
-										+ ");");
-							db.set("delete from invitations where email = '" + email + "' and linkCode = '"
-									+ invitationCode + "';");
-							session.setAttribute("User", user);
-							db.set("CALL addEmail(" + user.getId() + ", '" + user.getEmail() + "');");
-							System.out.println("UPDATE usersEmails SET verified = 1 WHERE user_id = " + user.getId()
-									+ " AND email = '" + user.getEmail() + "';");
-							db.set("UPDATE usersEmails SET verified = 1 WHERE user_id = " + user.getId()
-									+ " AND email = '" + user.getEmail() + "';");
-							SessionSave sessionSave = new SessionSave(user, session.getServletContext());
-							session.setAttribute("User", user);
-							session.setAttribute("SessionSave", sessionSave);
-							SI.setResponse(200, "Successfull registration! You will be redirect in few seconds :)");
-						}
-					} else {
-						SI.setResponse(ServletItem.Code.BadParameters,
-								"You have no invitation or you already have an account.");
-					}
-				} catch (SessionException | SQLException e) {
-					throw new GeneralException(ServletManager.Code.InternError, e);
-				}
+				throw new GeneralException(ServletManager.Code.InternError, "No invitation code");
+			} else {
+				User newUser = User.createUser(email, fname, "", confirmPassword, invitationCode, sm);
 
 			}
 		} catch (GeneralException e) {
