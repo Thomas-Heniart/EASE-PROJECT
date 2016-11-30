@@ -63,7 +63,7 @@ public class User {
 		User newUser = new User(db_id, null, null, email, null, opt, null, emails);
 		newUser.getProfilesColumn().get(0).add(Profile.createPersonnalProfile(newUser, 0, 0, "Side", "#000000", sm));
 		newUser.getProfilesColumn().get(1).add(Profile.createPersonnalProfile(newUser, 1, 0, "Perso", "#000000", sm));
-		if (group)
+		if (group != null)
 			group.loadContent(newUser, sm);
 		newUser.getUserEmails().add(UserEmail.createUserEmail(email, newUser, sm));
 		db.commitTransaction(transaction);
