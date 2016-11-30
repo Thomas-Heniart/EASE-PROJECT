@@ -67,18 +67,18 @@ CREATE TABLE appPermissions (
 
 CREATE TABLE `users` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `firstName` varchar(30) NOT NULL,
-  `lastName` varchar(30) NOT NULL,
+  `firstName` varchar(30),
+  `lastName` varchar(30),
   `email` varchar(100) NOT NULL,
   `key_id` int(10) unsigned,
-  `option_id` int(10) unsigned NOT NULL,
+  `option_id` int(10) unsigned,
   `registration_date` DATETIME,
   /*`status_id` INT(10) UNSIGNED NOT NULL,*/
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
   FOREIGN KEY (key_id) REFERENCES userKeys (id),
-  FOREIGN KEY (option_id) REFERENCES options (id),
-  FOREIGN KEY (status_id) REFERENCES status (id)
+  FOREIGN KEY (option_id) REFERENCES options (id)
+  /*FOREIGN KEY (status_id) REFERENCES status (id)*/
 );
 
 CREATE TABLE infrastructuresAdminsMap (
@@ -290,8 +290,10 @@ CREATE TABLE `invitations` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` INT(10) UNSIGNED NOT NULL,
   `linkCode` varchar(255) DEFAULT NULL,
+  `group_id` INT(10) UNSIGNED,
   PRIMARY KEY (id),
-  FOREIGN KEY (user_id) REFERENCES users(id)
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (group_id) REFERENCES groups(id)
 );
 
 CREATE TABLE `usersEmails` (
