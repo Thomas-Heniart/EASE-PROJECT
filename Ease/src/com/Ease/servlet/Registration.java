@@ -1,8 +1,6 @@
 package com.Ease.servlet;
 
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,18 +12,14 @@ import javax.servlet.http.HttpSession;
 
 import com.Ease.dashboard.User;
 import com.Ease.data.Regex;
-import com.Ease.data.ServletItem;
-import com.Ease.session.SessionException;
-import com.Ease.session.SessionSave;
-import com.Ease.utils.DataBaseConnection;
 import com.Ease.utils.GeneralException;
 import com.Ease.utils.ServletManager;
 
 /**
  * Servlet implementation class NewUser
  */
-@WebServlet("/RegistrationWithCode")
-public class RegistrationWithCode extends HttpServlet {
+@WebServlet("/register")
+public class Registration extends HttpServlet {
 
 	/**
 	 * 
@@ -35,7 +29,7 @@ public class RegistrationWithCode extends HttpServlet {
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public RegistrationWithCode() {
+	public Registration() {
 		super();
 	}
 
@@ -70,9 +64,7 @@ public class RegistrationWithCode extends HttpServlet {
 
 		HttpSession session = request.getSession();
 		User user = (User) (session.getAttribute("User"));
-		ServletManager sm;
-		sm = new ServletManager(this.getClass().getName(), request, response, true);
-		DataBaseConnection db = sm.getDB();
+		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		try {
 			String invitationCode = sm.getServletParam("invitationCode", false);
 			String fname = sm.getServletParam("fname", true);
@@ -91,11 +83,9 @@ public class RegistrationWithCode extends HttpServlet {
 						"Password is too short (at least 8 characters).");
 			else if (confirmPassword == null || password.equals(confirmPassword) == false)
 				throw new GeneralException(ServletManager.Code.UserMiss, "Passwords are not the same.");
-			else if (invitationCode == null) {
-				throw new GeneralException(ServletManager.Code.InternError, "No invitation code");
-			} else {
+			else {
 				User newUser = User.createUser(email, fname, "", confirmPassword, invitationCode, sm);
-
+				session.setAttribute("user", newUser);
 			}
 		} catch (GeneralException e) {
 			sm.setResponse(e);
