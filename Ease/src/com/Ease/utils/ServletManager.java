@@ -47,7 +47,7 @@ public class ServletManager {
 	protected String				tabId;
 	protected List<WebsocketMessage> messages;
 	
-	public ServletManager(String servletName, HttpServletRequest request, HttpServletResponse response, boolean saveLogs, boolean needToBeConnected) throws Exception {
+	public ServletManager(String servletName, HttpServletRequest request, HttpServletResponse response, boolean saveLogs) {
 		this.args = new HashMap<>();
 		this.servletName = servletName;
 		this.retMsg = "No message";
