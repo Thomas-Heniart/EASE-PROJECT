@@ -59,6 +59,7 @@ public class ServletManager {
 		this.redirectUrl = null;
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date mydate = new Date();
+		this.saveLogs = saveLogs;
 		this.date = dateFormat.format(mydate);
 		try {
 			this.db = new DataBaseConnection(DataBase.getConnection());
