@@ -61,24 +61,18 @@ public class ConnectionServlet extends HttpServlet {
 		// Put current ip in db
 		try {
 			addIpInDataBase(client_ip, db);
-
 			if (canConnect(client_ip, db)) {
 				if (email == null || Regex.isEmail(email) == false)
 					sm.setResponse(ServletManager.Code.ClientWarning, "Empty email");
 				else if (password == null)
 					sm.setResponse(ServletManager.Code.ClientWarning, "Empty password");
 				else {
-
 					User user = User.loadUser(email, password, sm);
-					if (user == null)
-						sm.setResponse(ServletManager.Code., "Bad login or password");
-					else {
-						session.setAttribute("user", user);
-						sm.setResponse(ServletManager.Code.Success, "Successfully connected");
-					}
+					session.setAttribute("user", user);
+					sm.setResponse(ServletManager.Code.Success, "Successfully connected");
 				}
 			} else {
-				sm.setResponse(ServletManager.Code.UserMiss, "Too much attempts to connect. Please retry in 5 minutes.");
+				throw new GeneralException(ServletManager.Code.UserMiss, "Too much attempts to connect. Please retry in 5 minutes.");
 			}
 		} catch (GeneralException e) {
 			sm.setResponse(e);

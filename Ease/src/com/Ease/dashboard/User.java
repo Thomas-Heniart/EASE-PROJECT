@@ -45,10 +45,14 @@ public class User {
 			User newUser =  new User(db_id, firstName, lastName, email, keys, options, null, emails);
 			newUser.loadProfiles(sm);
 			ResultSet rs2 = db.get("SELECT group_id FROM groupsAndUsersMap WHERE user_id=" + newUser.getDBid() + ";");
-			rs2.next();
-			Group userGroup = groups.get(rs2.getString(1));
-			if (userGroup != null)
-				userGroup.connectUser(newUser);
+			Group userGroup;
+			while (rs2.next()) {
+				userGroup = groups.get(rs2.getString(1));
+				if (userGroup != null) {
+					newUser.getGroups().add(userGroup);
+					userGroup.connectUser(newUser);
+				}
+			}
 			return newUser;
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
@@ -73,6 +77,7 @@ public class User {
 		if (group != null) {
 			group.addUser(newUser, sm);
 			group.loadContent(newUser, sm);
+			newUser.getGroups().add(group);
 		}
 		UserEmail userEmail = UserEmail.createUserEmail(email, newUser, (code != null), sm);
 		newUser.getUserEmails().add(userEmail);
@@ -91,6 +96,7 @@ public class User {
 	protected int		max_single_id;
 	protected List<UserEmail> emails;
 	protected Map<String, Session> websockets;
+	protected List<Group> groups;
 	
 	public User(String db_id, String first_name, String last_name, String email, Keys keys, Option opt, /*Status*/ String status, List<UserEmail> emails) {
 		this.db_id = db_id;
@@ -108,6 +114,7 @@ public class User {
 		this.max_single_id = 0;
 		this.emails = new LinkedList<UserEmail>();
 		this.websockets = new HashMap<String, Session>();
+		this.groups = new LinkedList<Group>();
 	}
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
@@ -165,6 +172,10 @@ public class User {
 	
 	public List<List<Profile>> getProfilesColumn() {
 		return this.profiles_column;
+	}
+	
+	public List<Group> getGroups() {
+		return groups;
 	}
 	
 	/*
@@ -296,7 +307,7 @@ public class User {
 		Map<String, Group> groups = (Map<String, Group>) sm.getContextAttr("groups");
 		Map<String, User> users = (Map<String, User>) sm.getContextAttr("users");
 		for (Map.Entry<String, Group> entry : groups.entrySet())
-			entry.getValue().removeUser(this);
+			entry.getValue().deconnectUser(this);
 		users.remove(this.email);
 	}
 }
