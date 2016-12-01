@@ -266,6 +266,10 @@ public class User {
 	public void removeWebsocket(Session session) {
 		this.websockets.remove(session.getId());
 	}
+	
+	public void removeWebsocket(WebsocketSession session) {
+		this.websockets.remove(session.getSessionId());
+	}
 
 	public void addWebsocket(Session session) throws GeneralException {
 		try {

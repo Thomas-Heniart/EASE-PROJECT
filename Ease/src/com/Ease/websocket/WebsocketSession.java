@@ -15,4 +15,8 @@ public class WebsocketSession {
 	public void sendMessage(WebsocketMessage message) throws IOException {
 		this.session.getBasicRemote().sendText(message.getJSONString());
 	}
+	
+	public String getSessionId() {
+		return this.session.getId();
+	}
 }
