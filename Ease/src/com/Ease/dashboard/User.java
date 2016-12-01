@@ -16,6 +16,7 @@ import javax.websocket.Session;
 import com.Ease.utils.DataBaseConnection;
 import com.Ease.utils.GeneralException;
 import com.Ease.utils.ServletManager;
+import com.Ease.websocket.WebsocketSession;
 
 public class User {
 	enum Data {
@@ -90,7 +91,7 @@ public class User {
 	protected List<List<Profile>> profiles_column;
 	protected int		max_single_id;
 	protected List<UserEmail> emails;
-	protected Map<String, Session> websockets;
+	protected Map<String, WebsocketSession> websockets;
 	
 	public User(String db_id, String first_name, String last_name, String email, Keys keys, Option opt, /*Status*/ String status, List<UserEmail> emails) {
 		this.db_id = db_id;
@@ -107,7 +108,7 @@ public class User {
 		}
 		this.max_single_id = 0;
 		this.emails = new LinkedList<UserEmail>();
-		this.websockets = new HashMap<String, Session>();
+		this.websockets = new HashMap<String, WebsocketSession>();
 	}
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
@@ -250,7 +251,7 @@ public class User {
 		return this.keys.decrypt(password);
 	}
 	
-	public Map<String, Session> getWebsockets() {
+	public Map<String, WebsocketSession> getWebsockets() {
 		return this.websockets;
 	}
 
@@ -261,7 +262,7 @@ public class User {
 	public void addWebsocket(Session session) throws GeneralException {
 		try {
 			session.getBasicRemote().sendText(String.valueOf(this.getNextSingleId()));
-			this.websockets.put(session.getId() , session);
+			this.websockets.put(session.getId() , new WebsocketSession(session));
 		} catch (IOException e) {
 			e.printStackTrace();
 			try {
