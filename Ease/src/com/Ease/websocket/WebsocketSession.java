@@ -4,9 +4,6 @@ import java.io.IOException;
 
 import javax.websocket.Session;
 
-import com.Ease.utils.GeneralException;
-import com.Ease.utils.ServletManager;
-
 public class WebsocketSession {
 	
 	protected Session session;
@@ -15,11 +12,7 @@ public class WebsocketSession {
 		this.session = session;
 	}
 	
-	public void sendMessage(WebsocketMessage message) throws GeneralException {
-		try {
-			this.session.getBasicRemote().sendText(message.getJSONString());
-		} catch (IOException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
+	public void sendMessage(WebsocketMessage message) throws IOException {
+		this.session.getBasicRemote().sendText(message.getJSONString());
 	}
 }
