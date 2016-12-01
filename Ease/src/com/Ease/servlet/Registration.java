@@ -86,6 +86,7 @@ public class Registration extends HttpServlet {
 			else {
 				User newUser = User.createUser(email, fname, "", confirmPassword, invitationCode, sm);
 				session.setAttribute("user", newUser);
+				sm.setResponse(ServletManager.Code.Success, "Registered successfully");
 			}
 		} catch (GeneralException e) {
 			sm.setResponse(e);

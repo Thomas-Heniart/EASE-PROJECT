@@ -43,7 +43,9 @@ public class User {
 			Option options = Option.loadOption(rs.getString(Data.OPTIONSID.ordinal()), sm);
 			//Status status = Status.loadStatus(rs.getString(Data.STATUSID.ordinal()), sm);
 			List<UserEmail> emails = UserEmail.loadEmails(db_id, sm);
-			User newUser =  new User(db_id, firstName, lastName, email, keys, options, null, emails);
+			ResultSet adminRs = db.get("SELECT user_id FROM admins WHERE user_id = " + db_id + ";");
+			boolean isAdmin = adminRs.next();
+			User newUser =  new User(db_id, firstName, lastName, email, keys, options, null, emails, isAdmin);
 			newUser.loadProfiles(sm);
 			ResultSet rs2 = db.get("SELECT group_id FROM groupsAndUsersMap WHERE user_id=" + newUser.getDBid() + ";");
 			Group userGroup;
@@ -71,7 +73,7 @@ public class User {
 		Date date = new Date();
 		String registrationDate = dateFormat.format(date);
 		String db_id = db.set("INSERT INTO users VALUES(NULL, '" + firstName + "', '" + lastName + "', '" + email + "', " + keys.getDBid() + ", " + opt.getDb_id() + ", '" + registrationDate + "');").toString();
-		User newUser = new User(db_id, null, null, email, null, opt, null, emails);
+		User newUser = new User(db_id, null, null, email, null, opt, null, emails, false);
 		newUser.getProfilesColumn().get(0).add(Profile.createPersonnalProfile(newUser, 0, 0, "Side", "#000000", sm));
 		newUser.getProfilesColumn().get(1).add(Profile.createPersonnalProfile(newUser, 1, 0, "Perso", "#000000", sm));
 		for (Group group : groups) {
@@ -95,8 +97,9 @@ public class User {
 	protected List<UserEmail> emails;
 	protected Map<String, WebsocketSession> websockets;
 	protected List<Group> groups;
+	protected boolean isAdmin;
 	
-	public User(String db_id, String first_name, String last_name, String email, Keys keys, Option opt, /*Status*/ String status, List<UserEmail> emails) {
+	public User(String db_id, String first_name, String last_name, String email, Keys keys, Option opt, /*Status*/ String status, List<UserEmail> emails, boolean isAdmin) {
 		this.db_id = db_id;
 		this.first_name = first_name;
 		this.last_name = last_name;
@@ -113,6 +116,7 @@ public class User {
 		this.emails = new LinkedList<UserEmail>();
 		this.websockets = new HashMap<String, WebsocketSession>();
 		this.groups = new LinkedList<Group>();
+		this.isAdmin = isAdmin;
 	}
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
@@ -311,5 +315,9 @@ public class User {
 			group.deconnectUser(this);
 		}
 		users.remove(this.email);
+	}
+	
+	public boolean isAdmin() {
+		return this.isAdmin;
 	}
 }

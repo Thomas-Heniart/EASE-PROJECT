@@ -66,15 +66,14 @@ pageEncoding="UTF-8"%>
 	<script src="js/snap.svg-min.js"></script>
 	<script src="js/modalEffects.js"></script>
 	<script src="js/selectFx.js"></script>
-	<script src="js/checkConnection.js"></script>
 	<link rel="stylesheet" type="text/css" href="component.css" />
 	
 	<%
 	com.Ease.session.SessionSave sessionSave = (com.Ease.session.SessionSave) (session.getAttribute("SessionSave"));
-	com.Ease.session.User user = (com.Ease.session.User) (session.getAttribute("User"));
+	com.Ease.dashboard.User user = (com.Ease.dashboard.User) (session.getAttribute("user"));
 	%>
 	<% if (user != null){
-		if(user.isAdmin(session.getServletContext())){%>
+		if (user.isAdmin()){%>
 			<script src="js/robotest.js"></script>
 		<%}
 	} else { 

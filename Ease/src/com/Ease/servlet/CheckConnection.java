@@ -35,7 +35,7 @@ public class CheckConnection extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		HttpSession session = request.getSession();
+		/*HttpSession session = request.getSession();
 		String email = request.getParameter("email");
 		User user = (User) (session.getAttribute("User"));
 		ServletItem SI = new ServletItem(ServletItem.Type.CheckConnection, request, response, user);
@@ -44,6 +44,6 @@ public class CheckConnection extends HttpServlet {
 		} else {
 			SI.setResponse(200, "");
 		}
-		SI.sendResponse();
+		SI.sendResponse();*/
 	}
 }

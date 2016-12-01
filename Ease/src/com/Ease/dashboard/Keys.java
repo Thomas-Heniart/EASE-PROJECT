@@ -22,6 +22,7 @@ public class Keys {
 		DataBaseConnection db = sm.getDB();
 		ResultSet rs = db.get("SELECT * FROM userKeys WHERE id=" + id + ";");
 		try {
+			rs.next();
 			String db_id = rs.getString(Data.ID.ordinal());
 			String hashed_password = rs.getString(Data.PASSWORD.ordinal());
 			String saltEase = rs.getString(Data.SALTEASE.ordinal());

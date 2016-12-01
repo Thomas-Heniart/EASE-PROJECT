@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -61,6 +62,7 @@ public class ServletManager {
 		Date mydate = new Date();
 		this.saveLogs = saveLogs;
 		this.date = dateFormat.format(mydate);
+		this.messages = new LinkedList<WebsocketMessage>();
 		try {
 			this.db = new DataBaseConnection(DataBase.getConnection());
 		} catch (SQLException e) {

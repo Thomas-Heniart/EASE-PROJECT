@@ -31,10 +31,10 @@ CREATE TABLE groups (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(25) NOT NULL,
   `parent` int(10) unsigned,
-  `infrastructure_id` int(10) unsigned NOT NULL,
+  /*`infrastructure_id` int(10) unsigned NOT NULL,*/
   PRIMARY KEY (id),
-  FOREIGN KEY (parent) REFERENCES groups(id),
-  FOREIGN KEY (infrastructure_id) REFERENCES infrastructures(id)
+  FOREIGN KEY (parent) REFERENCES groups(id)
+  /*FOREIGN KEY (infrastructure_id) REFERENCES infrastructures(id)*/
 );
 
 CREATE TABLE profilePermissions (

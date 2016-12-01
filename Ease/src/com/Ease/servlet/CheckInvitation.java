@@ -67,17 +67,14 @@ public class CheckInvitation extends HttpServlet {
 			} else if (email == null || !Regex.isEmail(email))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "This is not an email");
 			else {
-				ResultSet rs = db.get("SELECT group_id FROM invitations WHERE email='" + email + "';");
+				ResultSet rs = db.get("SELECT group_id FROM invitationsAndGroupsMap JOIN invitations ON invitationsAndGroupsMap.invitation_id = invitations.id WHERE email='" + email + "';");
 				try {
 					if (rs.next()) {
-						String groupId = rs.getString(1);
-						if (groupId == null) {
-							sm.setResponse(ServletManager.Code.Success, "2 Go to registration");
-						} else {
-							Invitation.sendInvitation(email, rs.getString(1), sm);
-							String retMsg = "1 You receveid an email";
-							sm.setResponse(ServletManager.Code.Success, retMsg);
-						}
+						Invitation.sendInvitation(email, rs.getString(1), sm);
+						String retMsg = "1 You receveid an email";
+						sm.setResponse(ServletManager.Code.Success, retMsg);
+					} else {
+						sm.setResponse(ServletManager.Code.Success, "2 Go to registration");
 					}
 				} catch (SQLException e) {
 					throw new GeneralException(ServletManager.Code.InternError, e);
