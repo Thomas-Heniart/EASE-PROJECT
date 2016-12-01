@@ -74,9 +74,7 @@ public class User {
 			group.addNewUser(newUser, sm);
 			group.loadContent(newUser, sm);
 		}
-		UserEmail userEmail = UserEmail.createUserEmail(email, newUser, sm);
-		if (code != null)
-			userEmail.beVerified(sm);
+		UserEmail userEmail = UserEmail.createUserEmail(email, newUser, (code != null), sm);
 		newUser.getUserEmails().add(userEmail);
 		db.commitTransaction(transaction);
 		return newUser;
