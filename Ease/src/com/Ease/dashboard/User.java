@@ -48,7 +48,7 @@ public class User {
 			rs2.next();
 			Group userGroup = groups.get(rs2.getString(1));
 			if (userGroup != null)
-				userGroup.addUser(newUser);
+				userGroup.connectUser(newUser);
 			return newUser;
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
@@ -71,7 +71,7 @@ public class User {
 		newUser.getProfilesColumn().get(0).add(Profile.createPersonnalProfile(newUser, 0, 0, "Side", "#000000", sm));
 		newUser.getProfilesColumn().get(1).add(Profile.createPersonnalProfile(newUser, 1, 0, "Perso", "#000000", sm));
 		if (group != null) {
-			group.addNewUser(newUser, sm);
+			group.addUser(newUser, sm);
 			group.loadContent(newUser, sm);
 		}
 		UserEmail userEmail = UserEmail.createUserEmail(email, newUser, sm);

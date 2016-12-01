@@ -63,12 +63,11 @@ public class CheckInvitation extends HttpServlet {
 
 		try {
 			if (user != null) {
-				throw new GeneralException(ServletManager.Code.UserMiss, "You are logged on Ease.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "You are logged on Ease.");
 			} else if (email == null || !Regex.isEmail(email))
-				throw new GeneralException(ServletManager.Code.UserMiss, "This is not an email");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "This is not an email");
 			else {
-
-				ResultSet rs = db.get("SELECT group_id FROM invitations WHERE email='" + email + "'");
+				ResultSet rs = db.get("SELECT group_id FROM invitations WHERE email='" + email + "';");
 				try {
 					if (rs.next()) {
 						String groupId = rs.getString(1);
@@ -76,7 +75,7 @@ public class CheckInvitation extends HttpServlet {
 							sm.setResponse(ServletManager.Code.Success, "2 Go to registration");
 						} else {
 							Invitation.sendInvitation(email, rs.getString(1), sm);
-							String retMsg = "You receveid an email";
+							String retMsg = "1 You receveid an email";
 							sm.setResponse(ServletManager.Code.Success, retMsg);
 						}
 					}

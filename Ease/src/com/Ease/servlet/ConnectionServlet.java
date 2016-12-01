@@ -64,14 +64,14 @@ public class ConnectionServlet extends HttpServlet {
 
 			if (canConnect(client_ip, db)) {
 				if (email == null || Regex.isEmail(email) == false)
-					sm.setResponse(ServletManager.Code.UserMiss, "Empty email");
+					sm.setResponse(ServletManager.Code.ClientWarning, "Empty email");
 				else if (password == null)
-					sm.setResponse(ServletManager.Code.UserMiss, "Empty password");
+					sm.setResponse(ServletManager.Code.ClientWarning, "Empty password");
 				else {
 
 					User user = User.loadUser(email, password, sm);
 					if (user == null)
-						sm.setResponse(ServletManager.Code.UserMiss, "Bad login or password");
+						sm.setResponse(ServletManager.Code., "Bad login or password");
 					else {
 						session.setAttribute("user", user);
 						sm.setResponse(ServletManager.Code.Success, "Successfully connected");

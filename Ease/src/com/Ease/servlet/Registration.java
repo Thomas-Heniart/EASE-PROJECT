@@ -74,16 +74,15 @@ public class Registration extends HttpServlet {
 			String confirmPassword = sm.getServletParam("confirmPassword", false);
 
 			if (user != null)
-				throw new GeneralException(ServletManager.Code.ClientError, "You are logged on Ease.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "You are logged on Ease.");
 			else if (fname == null || fname.length() < 2)
-				throw new GeneralException(ServletManager.Code.UserMiss, "Your name is too short.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Your name is too short.");
 			else if (email == null || Regex.isEmail(email) == false)
-				throw new GeneralException(ServletManager.Code.UserMiss, "Incorrect email.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Incorrect email.");
 			else if (password == null || Regex.isPassword(password) == false)
-				throw new GeneralException(ServletManager.Code.UserMiss,
-						"Password is too short (at least 8 characters).");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Password is too short (at least 8 characters).");
 			else if (confirmPassword == null || password.equals(confirmPassword) == false)
-				throw new GeneralException(ServletManager.Code.UserMiss, "Passwords are not the same.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Passwords are not the same.");
 			else {
 				User newUser = User.createUser(email, fname, "", confirmPassword, invitationCode, sm);
 				session.setAttribute("user", newUser);
