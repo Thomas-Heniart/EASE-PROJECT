@@ -2,6 +2,8 @@ package com.Ease.dashboard;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import javax.mail.MessagingException;
@@ -14,18 +16,29 @@ import com.Ease.utils.ServletManager;
 
 public class Invitation {
 
-	public static Group verifyInvitation(String email, String invitationCode, ServletManager sm) throws GeneralException {
+	public static List<Group> verifyInvitation(String email, String invitationCode, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		Map<String, Group> groups = (Map<String, Group>) sm.getContextAttr("groups");
-		ResultSet rs = db.get("SELECT group_id FROM invitations WHERE email='" + email + "' AND linkCode='" + invitationCode + "';");
+		List<Group> groups = new LinkedList<Group>();
+		Map<String, Group> allGroups = (Map<String, Group>) sm.getContextAttr("groups");
+		ResultSet rs = db.get("SELECT id FROM invitations WHERE email='" + email + "' AND linkCode='" + invitationCode + "';");
 		try {
 			if (rs.next()) {
-				String groupId = rs.getString(1);
-				db.set("DELETE FROM invitations WHERE id=" + groupId + ";");
-				return groups.get(groupId);
-			} else {
-				return null;
+				String id = rs.getString(1);
+				ResultSet rs2 = db.get("SELECT group_id FROM invitationsAndGroupsMap WHERE invitation_id=" + id + ";");
+				while (rs2.next()) {
+					Group group = allGroups.get(rs.getString(1));
+					if (group != null) {
+						groups.add(group);
+					} else {
+						throw new GeneralException(ServletManager.Code.InternError, "This group dosen't exist.");
+					}
+				}
+				int transaction = db.startTransaction();
+				db.set("DELETE FROM invitationsAndGroupsMap WHERE invitation_id=" + id + ";");
+				db.set("DELETE FROM invitations WHERE id=" + id + ";");
+				db.commitTransaction(transaction);
 			}
+			return groups;
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}

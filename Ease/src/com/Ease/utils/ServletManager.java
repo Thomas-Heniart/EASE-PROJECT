@@ -160,7 +160,11 @@ public class ServletManager {
 					if (msg.getWho() == WebsocketMessage.Who.ALLTABS ||
 						(msg.getWho() == WebsocketMessage.Who.OTHERTABS && key != tabId) ||
 						(msg.getWho() == WebsocketMessage.Who.THISTAB && key == tabId)) {
-						socket.sendMessage(msg);
+						try {
+							socket.sendMessage(msg);
+						} catch (IOException e) {
+							this.user.removeWebsocket(socket);
+						}
 					}
 				});
 			}

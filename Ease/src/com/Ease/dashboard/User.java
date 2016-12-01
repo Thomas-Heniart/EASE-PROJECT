@@ -62,7 +62,7 @@ public class User {
 	public static User createUser(String email, String firstName, String lastName, String password, String code, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		Group group = Invitation.verifyInvitation(email, code, sm);
+		List<Group> groups = Invitation.verifyInvitation(email, code, sm);
 		Option opt = Option.createOption(sm);
 		//Status status = Status.createStatus(sm);
 		List<UserEmail> emails = new LinkedList<UserEmail>();
@@ -74,7 +74,7 @@ public class User {
 		User newUser = new User(db_id, null, null, email, null, opt, null, emails);
 		newUser.getProfilesColumn().get(0).add(Profile.createPersonnalProfile(newUser, 0, 0, "Side", "#000000", sm));
 		newUser.getProfilesColumn().get(1).add(Profile.createPersonnalProfile(newUser, 1, 0, "Perso", "#000000", sm));
-		if (group != null) {
+		for (Group group : groups) {
 			group.addUser(newUser, sm);
 		}
 		UserEmail userEmail = UserEmail.createUserEmail(email, newUser, (code != null), sm);
