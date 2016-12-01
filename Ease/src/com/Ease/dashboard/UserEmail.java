@@ -37,10 +37,10 @@ public class UserEmail {
 		return emails;
 	}
 	
-	public static UserEmail createUserEmail(String email, User user, ServletManager sm) throws GeneralException {
+	public static UserEmail createUserEmail(String email, User user, boolean verified, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		String db_id = db.set("INSERT INTO usersEmails VALUES(NULL, " + user.getDBid() + ", '" + email + "', 0);").toString();
-		return new UserEmail(db_id, email, false);
+		String db_id = db.set("INSERT INTO usersEmails VALUES(NULL, " + user.getDBid() + ", '" + email + "', " + (verified ? 1 : 0) + ");").toString();
+		return new UserEmail(db_id, email, verified);
 	}
 	
 	protected String db_id;
@@ -110,8 +110,12 @@ public class UserEmail {
 			ResultSet rs = db.get("SELECT * FROM usersEmailsPending WHERE userEmail_id=" + this.db_id + ";");
 			if (rs.next()) {
 				String verificationCode = rs.getString(3);
-				if (verificationCode.equals(code))
+				if (verificationCode.equals(code)) {
+					int transaction = db.startTransaction();
+					db.set("DELETE FROM usersEmailsPending WHERE userEmail_id=" + this.db_id + ";");
 					this.beVerified(sm);
+					db.commitTransaction(transaction);
+				}
 				else {
 					throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong verification code.");
 				}
@@ -125,10 +129,7 @@ public class UserEmail {
 	
 	public void beVerified(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		int transaction = db.startTransaction();
-		db.set("DELETE FROM usersEmailsPending WHERE userEmail_id=" + this.db_id + ";");
 		db.set("UPDATE usersEmails SET verified=1 WHERE id=" + this.db_id + ";");
-		db.commitTransaction(transaction);
 		this.verified = true;
 	}
 }
