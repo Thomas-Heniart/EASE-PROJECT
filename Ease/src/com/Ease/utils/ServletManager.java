@@ -160,7 +160,7 @@ public class ServletManager {
 					if (msg.getWho() == WebsocketMessage.Who.ALLTABS ||
 						(msg.getWho() == WebsocketMessage.Who.OTHERTABS && key != tabId) ||
 						(msg.getWho() == WebsocketMessage.Who.THISTAB && key == tabId)) {
-						//send to socket
+						socket.sendMessage(msg);
 					}
 				});
 			}

@@ -152,21 +152,38 @@ public class Group {
 
 	public void connectUser(User user) {
 		this.users.add(user);
+		user.getGroups().add(this);
 	}
 	
-	public void addUser(User newUser, ServletManager sm) throws GeneralException {
+	public void addUser(User user, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("INSERT INTO groupsAndUsersMap values (null, " + this.db_id + ", " + newUser.db_id + ");");
-		this.connectUser(newUser);
-		
+		int transaction = db.startTransaction();
+		db.set("INSERT INTO groupsAndUsersMap values (null, " + this.db_id + ", " + user.db_id + ");");
+		this.loadContent(user, sm);
+		this.connectUser(user);
+		db.commitTransaction(transaction);
 	}
+	
 	public void deconnectUser(User user) {
 		this.users.remove(user);
+		user.getGroups().remove(this);
 	}
 	
 	public void removeUser(User user, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		for (List<Profile> column : user.getProfilesColumn()) {
+			for (Profile profile : column) {
+				GroupProfile groupProfile = profile.getGroupProfile();
+				if (groupProfile != null && groupProfile.getGroup() == this) {
+					profile.removeFromDB(sm);
+					column.remove(profile);
+				}
+			}
+		}
+		user.updateProfilesIndex(sm);
 		db.set("DELETE FROM groupsAndUsersMap WHERE group_id=" + this.db_id + " AND user_id=" + user.getDBid() + ";");
+		db.commitTransaction(transaction);
 		this.deconnectUser(user);
 	}
 }
