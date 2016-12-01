@@ -1,5 +1,14 @@
 # EASE-PROJECT
 
+##Tests before production
+###Create user
+* Check with wrong inputs
+* Without group
+  * Check in db (users, keys, profiles, usersEmails, not in groups)
+
+* With a group
+  * * Check in db (users, keys, profiles, usersEmails, groups)
+
 ##Java documentation
 ###Generate random code
 To generate a new random code
