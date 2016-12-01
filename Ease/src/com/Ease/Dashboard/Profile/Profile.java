@@ -79,7 +79,7 @@ public class Profile {
 		} else {
 			info = ProfileInformation.createProfileInformation(groupProfile.getName(), groupProfile.getColor(), sm);
 		}
-		String db_id = db.set("INSERT INTO profiles VALUES(NULL, " + user.db_id + ", " + columnIdx + ", " + posIdx + ", " + groupProfile.db_id + ", " + info.getDBid() + ");").toString();
+		String db_id = db.set("INSERT INTO profiles VALUES(NULL, " + user.getDBid() + ", " + columnIdx + ", " + posIdx + ", " + groupProfile.getDBid() + ", " + info.getDBid() + ");").toString();
 		int single_id = user.getNextSingleId();
 		Profile profile = new Profile(db_id, user, columnIdx, posIdx, groupProfile, info, single_id);
 		db.commitTransaction(transaction);
@@ -90,7 +90,7 @@ public class Profile {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		ProfileInformation info = ProfileInformation.createProfileInformation(name, color, sm);
-		String db_id = db.set("INSERT INTO profiles VALUES(NULL, " + user.db_id + ", " + columnIdx + ", " + posIdx + ", NULL, " + info.getDBid() + ");").toString();
+		String db_id = db.set("INSERT INTO profiles VALUES(NULL, " + user.getDBid() + ", " + columnIdx + ", " + posIdx + ", NULL, " + info.getDBid() + ");").toString();
 		int single_id = user.getNextSingleId();
 		Profile profile = new Profile(db_id, user, columnIdx, posIdx, null, info, single_id);
 		db.commitTransaction(transaction);

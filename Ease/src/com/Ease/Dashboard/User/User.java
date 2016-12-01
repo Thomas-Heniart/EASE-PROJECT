@@ -14,6 +14,8 @@ import java.util.Map;
 import javax.websocket.Session;
 
 import com.Ease.Context.Group.Group;
+import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Invitation;

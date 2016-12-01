@@ -160,7 +160,7 @@ public class Group {
 	public void addUser(User user, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		db.set("INSERT INTO groupsAndUsersMap values (null, " + this.db_id + ", " + user.db_id + ");");
+		db.set("INSERT INTO groupsAndUsersMap values (null, " + this.db_id + ", " + user.getDBid() + ");");
 		this.loadContent(user, sm);
 		this.connectUser(user);
 		db.commitTransaction(transaction);

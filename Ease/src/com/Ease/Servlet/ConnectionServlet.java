@@ -63,9 +63,9 @@ public class ConnectionServlet extends HttpServlet {
 			addIpInDataBase(client_ip, db);
 			if (canConnect(client_ip, db)) {
 				if (email == null || Regex.isEmail(email) == false)
-					sm.setResponse(ServletManager.Code.ClientWarning, "Empty email");
+					sm.setResponse(ServletManager.Code.ClientWarning, "Wrong email");
 				else if (password == null)
-					sm.setResponse(ServletManager.Code.ClientWarning, "Empty password");
+					sm.setResponse(ServletManager.Code.ClientWarning, "Wrong password");
 				else {
 					User user = User.loadUser(email, password, sm);
 					session.setAttribute("user", user);
