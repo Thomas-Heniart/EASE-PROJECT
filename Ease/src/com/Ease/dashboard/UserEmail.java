@@ -110,13 +110,9 @@ public class UserEmail {
 			ResultSet rs = db.get("SELECT * FROM usersEmailsPending WHERE userEmail_id=" + this.db_id + ";");
 			if (rs.next()) {
 				String verificationCode = rs.getString(3);
-				if (verificationCode.equals(code)) {
-					int transaction = db.startTransaction();
-					db.set("DELETE FROM usersEmailsPending WHERE userEmail_id=" + this.db_id + ";");
-					db.set("UPDATE usersEmails set verified=1 WHERE userEmail_id=" + this.db_id + ";");
-					this.verified = true;
-					db.commitTransaction(transaction);
-				} else {
+				if (verificationCode.equals(code))
+					this.beVerified(sm);
+				else {
 					throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong verification code.");
 				}
 			} else {
@@ -125,5 +121,14 @@ public class UserEmail {
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
+	}
+	
+	public void beVerified(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		db.set("DELETE FROM usersEmailsPending WHERE userEmail_id=" + this.db_id + ";");
+		db.set("UPDATE usersEmails SET verified=1 WHERE id=" + this.db_id + ";");
+		db.commitTransaction(transaction);
+		this.verified = true;
 	}
 }
