@@ -150,18 +150,23 @@ public class Group {
 		return (this.db_id + " : " + this.name);
 	}
 
-	public void addUser(User user) {
+	public void connectUser(User user) {
 		this.users.add(user);
 	}
 	
-	public void addNewUser(User newUser, ServletManager sm) throws GeneralException {
+	public void addUser(User newUser, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		db.set("INSERT INTO groupsAndUsersMap values (null, " + this.db_id + ", " + newUser.db_id + ");");
-		this.addUser(newUser);
+		this.connectUser(newUser);
 		
 	}
-
-	public void removeUser(User user) {
+	public void deconnectUser(User user) {
 		this.users.remove(user);
+	}
+	
+	public void removeUser(User user, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		db.set("DELETE FROM groupsAndUsersMap WHERE group_id=" + this.db_id + " AND user_id=" + user.getDBid() + ";");
+		this.deconnectUser(user);
 	}
 }

@@ -155,6 +155,15 @@ public class ServletManager {
 			}
 		}
 		try {
+			for (WebsocketMessage msg: this.messages) {
+				this.user.getWebsockets().forEach((key, socket) -> {
+					if (msg.getWho() == WebsocketMessage.Who.ALLTABS ||
+						(msg.getWho() == WebsocketMessage.Who.OTHERTABS && key != tabId) ||
+						(msg.getWho() == WebsocketMessage.Who.THISTAB && key == tabId)) {
+						//send to socket
+					}
+				});
+			}
 			if (this.redirectUrl != null) {
 				response.sendRedirect(this.redirectUrl);
 			} else {
@@ -173,5 +182,9 @@ public class ServletManager {
 	
 	public Object getContextAttr(String attr) {
 		return request.getServletContext().getAttribute(attr);
+	}
+	
+	public void addToSocket(WebsocketMessage msg) {
+		messages.add(msg);
 	}
 }

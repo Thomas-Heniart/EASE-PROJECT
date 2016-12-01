@@ -14,8 +14,7 @@ import com.Ease.utils.ServletManager;
 
 public class Invitation {
 
-	public static Group verifyInvitation(String email, String invitationCode, ServletManager sm)
-			throws GeneralException {
+	public static Group verifyInvitation(String email, String invitationCode, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		Map<String, Group> groups = (Map<String, Group>) sm.getContextAttr("groups");
 		ResultSet rs = db.get("SELECT group_id FROM invitations WHERE email='" + email + "' AND linkCode='" + invitationCode + "';");
@@ -24,9 +23,7 @@ public class Invitation {
 				String groupId = rs.getString(1);
 				db.set("DELETE FROM invitations WHERE id=" + groupId + ";");
 				return groups.get(groupId);
-			}
-
-			else {
+			} else {
 				return null;
 			}
 		} catch (SQLException e) {
@@ -40,7 +37,6 @@ public class Invitation {
 		String infraName = groups.get(group_id).getInfra().getName();
 		String invitationCode = CodeGenerator.generateNewCode();
 		db.set("UPDATE invitations SET linkCode='" + invitationCode + "' WHERE email='" + email + "'");
-
 		Mail mailToSend;
 		try {
 			mailToSend = new Mail();
@@ -48,6 +44,5 @@ public class Invitation {
 		} catch (MessagingException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
-
 	}
 }
