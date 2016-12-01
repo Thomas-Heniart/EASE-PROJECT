@@ -64,12 +64,14 @@ public class Group {
 	protected List<Group> children;
 	protected Group		parent;
 	protected List<GroupProfile> groupProfiles;
+	protected List<User> users;
 	
 	public Group(String db_id, String name, Group parent) {
 		this.db_id = db_id;
 		this.name = name;
 		this.children = null;
 		this.parent = parent;
+		this.users = new LinkedList<User>();
 	}
 	
 	/*
@@ -146,5 +148,20 @@ public class Group {
 	
 	public String toString() {
 		return (this.db_id + " : " + this.name);
+	}
+
+	public void addUser(User user) {
+		this.users.add(user);
+	}
+	
+	public void addNewUser(User newUser, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		db.set("INSERT INTO groupsAndUsersMap values (null, " + this.db_id + ", " + newUser.db_id + ");");
+		this.addUser(newUser);
+		
+	}
+
+	public void removeUser(User user) {
+		this.users.remove(user);
 	}
 }

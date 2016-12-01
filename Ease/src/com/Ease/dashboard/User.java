@@ -31,8 +31,10 @@ public class User {
 	}
 	public static User loadUser(String email, String password, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
+		Map<String, Group> groups = (Map<String, Group>) sm.getContextAttr("groups");
 		try {
 			ResultSet rs = db.get("SELECT * FROM users where email='" + email + "';");
+			rs.next();
 			String db_id = rs.getString(Data.ID.ordinal());
 			String firstName = rs.getString(Data.FIRSTNAME.ordinal());
 			String lastName = rs.getString(Data.LASTNAME.ordinal());
@@ -42,6 +44,11 @@ public class User {
 			List<UserEmail> emails = UserEmail.loadEmails(db_id, sm);
 			User newUser =  new User(db_id, firstName, lastName, email, keys, options, null, emails);
 			newUser.loadProfiles(sm);
+			ResultSet rs2 = db.get("SELECT group_id FROM groupsAndUsersMap WHERE user_id=" + newUser.getDBid() + ";");
+			rs2.next();
+			Group userGroup = groups.get(rs2.getString(1));
+			if (userGroup != null)
+				userGroup.addUser(newUser);
 			return newUser;
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
@@ -63,8 +70,11 @@ public class User {
 		User newUser = new User(db_id, null, null, email, null, opt, null, emails);
 		newUser.getProfilesColumn().get(0).add(Profile.createPersonnalProfile(newUser, 0, 0, "Side", "#000000", sm));
 		newUser.getProfilesColumn().get(1).add(Profile.createPersonnalProfile(newUser, 1, 0, "Perso", "#000000", sm));
-		if (group != null)
+		if (group != null) {
+			group.addNewUser(newUser, sm);
 			group.loadContent(newUser, sm);
+		}
+			
 		newUser.getUserEmails().add(UserEmail.createUserEmail(email, newUser, sm));
 		db.commitTransaction(transaction);
 		return newUser;
@@ -280,5 +290,13 @@ public class User {
 			}
 		}
 		return col;
+	}
+	
+	public void deconnect(ServletManager sm) {
+		Map<String, Group> groups = (Map<String, Group>) sm.getContextAttr("groups");
+		Map<String, User> users = (Map<String, User>) sm.getContextAttr("users");
+		for (Map.Entry<String, Group> entry : groups.entrySet())
+			entry.getValue().removeUser(this);
+		users.remove(this.email);
 	}
 }

@@ -49,12 +49,7 @@ public class ConnectionServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		HttpSession session = request.getSession();
-		ServletManager sm = null;
-		try {
-			sm = new ServletManager(this.getClass().getName(), request, response, true, false);
-		} catch (Exception e1) {
-			response.getWriter().println(e1.getMessage());
-		}
+		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		DataBaseConnection db = sm.getDB();
 		// Get Parameters
 		String email = sm.getServletParam("email", true);
