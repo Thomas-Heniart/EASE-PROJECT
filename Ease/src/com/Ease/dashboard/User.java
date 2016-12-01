@@ -50,7 +50,6 @@ public class User {
 			while (rs2.next()) {
 				userGroup = groups.get(rs2.getString(1));
 				if (userGroup != null) {
-					newUser.getGroups().add(userGroup);
 					userGroup.connectUser(newUser);
 				}
 			}
@@ -77,8 +76,6 @@ public class User {
 		newUser.getProfilesColumn().get(1).add(Profile.createPersonnalProfile(newUser, 1, 0, "Perso", "#000000", sm));
 		if (group != null) {
 			group.addUser(newUser, sm);
-			group.loadContent(newUser, sm);
-			newUser.getGroups().add(group);
 		}
 		UserEmail userEmail = UserEmail.createUserEmail(email, newUser, (code != null), sm);
 		newUser.getUserEmails().add(userEmail);
@@ -305,10 +302,10 @@ public class User {
 	}
 	
 	public void deconnect(ServletManager sm) {
-		Map<String, Group> groups = (Map<String, Group>) sm.getContextAttr("groups");
 		Map<String, User> users = (Map<String, User>) sm.getContextAttr("users");
-		for (Map.Entry<String, Group> entry : groups.entrySet())
-			entry.getValue().deconnectUser(this);
+		for (Group group : groups) {
+			group.deconnectUser(this);
+		}
 		users.remove(this.email);
 	}
 }
