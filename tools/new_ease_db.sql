@@ -278,8 +278,15 @@ CREATE TABLE `invitations` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(255),
   `linkCode` varchar(255) DEFAULT NULL,
-  `group_id` INT(10) UNSIGNED,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE invitationsAndGroupsMap (
+  id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  invitation_id INT(10) UNSIGNED NOT NULL,
+  group_id INT(10) UNSIGNED NOT NULL,
   PRIMARY KEY (id),
+  FOREIGN KEY (invitation_id) REFERENCES invitations(id),
   FOREIGN KEY (group_id) REFERENCES groups(id)
 );
 
