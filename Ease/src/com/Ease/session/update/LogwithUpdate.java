@@ -1,10 +1,10 @@
 package com.Ease.session.update;
 
+import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.ServletManager;
 import com.Ease.session.App;
 import com.Ease.session.User;
-import com.Ease.utils.DataBaseConnection;
-import com.Ease.utils.GeneralException;
-import com.Ease.utils.ServletManager;
 
 public class LogwithUpdate extends Update {
 	public enum LogwithUpdateData {

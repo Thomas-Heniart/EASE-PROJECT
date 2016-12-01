@@ -8,12 +8,12 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-import com.Ease.data.AES;
-import com.Ease.data.RSA;
+import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.Crypto.AES;
+import com.Ease.Utils.Crypto.RSA;
 import com.Ease.session.User;
-import com.Ease.utils.DataBaseConnection;
-import com.Ease.utils.GeneralException;
-import com.Ease.utils.ServletManager;
 
 public class ClassicUpdate extends Update {
 	public enum ClassicUpdateData {

@@ -14,9 +14,9 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
-import com.Ease.dashboard.User;
-import com.Ease.utils.GeneralException;
-import com.Ease.utils.ServletManager;
+import com.Ease.Dashboard.User.User;
+import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.ServletManager;
 
 @ApplicationScoped
 @ServerEndpoint(value="/actions", configurator=GetHttpSessionConfigurator.class)

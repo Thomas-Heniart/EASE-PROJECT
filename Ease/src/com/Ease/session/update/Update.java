@@ -3,10 +3,10 @@ package com.Ease.session.update;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.ServletManager;
 import com.Ease.session.User;
-import com.Ease.utils.DataBaseConnection;
-import com.Ease.utils.GeneralException;
-import com.Ease.utils.ServletManager;
 
 public class Update {
 	public enum UpdateData {

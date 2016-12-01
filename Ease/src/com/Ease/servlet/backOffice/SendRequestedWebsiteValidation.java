@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.annotation.WebServlet;
 
+import com.Ease.Utils.Mail;
 import com.Ease.context.DataBase;
-import com.Ease.data.Mail;
 import com.Ease.data.ServletItem;
 import com.Ease.session.User;
 
