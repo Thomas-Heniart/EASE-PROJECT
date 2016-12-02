@@ -1,0 +1,21 @@
+.header #logoutButton {
+  float: right;
+  margin-right: 160px;
+  background-color: #373b60;
+  color: white;
+  border-radius: 3px;
+  text-decoration: none;
+  transition: all 0.3s;
+  width: 100px;
+  height: 70%;
+  text-align: center;
+  margin-top: 6px;
+  padding: 4px; }
+  .header #logoutButton:hover {
+    cursor: pointer;
+    transition: all 0.3s;
+    background-color: transparent;
+    color: #373b60;
+    border: 1px solid #373b60; }
+
+/*# sourceMappingURL=Header.css.map */
