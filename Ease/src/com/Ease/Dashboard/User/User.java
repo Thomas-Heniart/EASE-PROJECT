@@ -34,9 +34,9 @@ public class User {
 		REGISTRATIONDATE,
 		STATUSID
 	}
+	@SuppressWarnings("unchecked")
 	public static User loadUser(String email, String password, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		@SuppressWarnings("unchecked")
 		Map<String, Group> groups = (Map<String, Group>) sm.getContextAttr("groups");
 		try {
 			ResultSet rs = db.get("SELECT * FROM users where email='" + email + "';");
@@ -60,6 +60,7 @@ public class User {
 						newUser.getGroups().add(userGroup);
 					}
 				}
+				((Map<String, User>)sm.getContextAttr("users")).put(email, newUser);
 				return newUser;
 			} else {
 				throw new GeneralException(ServletManager.Code.UserMiss, "Wrong email or password.");
@@ -69,6 +70,7 @@ public class User {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static User createUser(String email, String firstName, String lastName, String password, String code, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
@@ -84,8 +86,9 @@ public class User {
 		User newUser = new User(db_id, null, null, email, null, opt, null, emails, false);
 		newUser.getProfilesColumn().get(0).add(Profile.createPersonnalProfile(newUser, 0, 0, "Side", "#000000", sm));
 		newUser.getProfilesColumn().get(1).add(Profile.createPersonnalProfile(newUser, 1, 0, "Perso", "#000000", sm));
+		((Map<String, User>)sm.getContextAttr("users")).put(email, newUser);
 		for (Group group : groups) {
-			group.addUser(newUser, sm);
+			group.addUser(email, sm);
 			newUser.getGroups().add(group);
 		}
 		UserEmail userEmail = UserEmail.createUserEmail(email, newUser, (code != null), sm);
@@ -326,5 +329,19 @@ public class User {
 	
 	public boolean isAdmin() {
 		return this.isAdmin;
+	}
+	
+	public static String findDBid(String email, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		try {
+			ResultSet rs = db.get("SELECT id FROM users WHERE email='" + email + "';");
+			if (rs.next()) {
+				return (rs.getString(1));
+			} else {
+				throw new GeneralException(ServletManager.Code.ClientError, "This user dosen't exist."); 
+			}
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
 	}
 }

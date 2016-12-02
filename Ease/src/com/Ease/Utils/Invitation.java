@@ -16,6 +16,7 @@ public class Invitation {
 	public static List<Group> verifyInvitation(String email, String invitationCode, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		List<Group> groups = new LinkedList<Group>();
+		@SuppressWarnings("unchecked")
 		Map<String, Group> allGroups = (Map<String, Group>) sm.getContextAttr("groups");
 		ResultSet rs = db.get("SELECT id FROM invitations WHERE email='" + email + "' AND linkCode='" + invitationCode + "';");
 		try {
@@ -43,6 +44,7 @@ public class Invitation {
 
 	public static void sendInvitation(String email, String name, String group_id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
+		@SuppressWarnings("unchecked")
 		Map<String, Group> groups = (Map<String, Group>) sm.getContextAttr("groups");
 		String infraName = groups.get(group_id).getInfra().getName();
 		String invitationCode = CodeGenerator.generateNewCode();

@@ -2,7 +2,6 @@ package com.Ease.Context.Group;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -131,11 +130,11 @@ public class Group {
 		return groupProfileMap;
 	}*/
 
-	public void loadContent(User user, ServletManager sm) throws GeneralException {
+	public void loadContentForConnectedUser(User user, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		if (this.parent != null)
-			parent.loadContent(user, sm);
+			parent.loadContentForConnectedUser(user, sm);
 		int mostEmptyColumn;
 		for (GroupProfile gProfile : this.groupProfiles) {
 			mostEmptyColumn = user.getMostEmptyProfileColumn();
@@ -144,19 +143,15 @@ public class Group {
 		db.commitTransaction(transaction);
 	}
 	
-	public String toString() {
-		return (this.db_id + " : " + this.name);
-	}
-	
-	public void addUser(User user, ServletManager sm) throws GeneralException {
+	public void loadContentForUnconnectedUser(String db_id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		db.set("INSERT INTO groupsAndUsersMap values (null, " + this.db_id + ", " + user.getDBid() + ");");
-		this.loadContent(user, sm);
+		if (this.parent != null)
+			this.parent.loadContentForUnconnectedUser(db_id, sm);
 		db.commitTransaction(transaction);
 	}
 	
-	public void removeUser(User user, ServletManager sm) throws GeneralException {
+	public void removeContentForConnectedUser(User user, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		for (List<Profile> column : user.getProfilesColumn()) {
@@ -169,7 +164,48 @@ public class Group {
 			}
 		}
 		user.updateProfilesIndex(sm);
-		db.set("DELETE FROM groupsAndUsersMap WHERE group_id=" + this.db_id + " AND user_id=" + user.getDBid() + ";");
+		db.commitTransaction(transaction);
+	}
+	
+	public void removeContentForUnconnectedUser(String db_id, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+	}
+	
+	public String toString() {
+		return (this.db_id + " : " + this.name);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void addUser(String email, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		User user;
+		String userDBid;
+		int transaction = db.startTransaction();
+		if ((user = ((Map<String, User>)sm.getContextAttr("users")).get(email)) == null) {
+			userDBid = User.findDBid(email, sm);
+			this.loadContentForUnconnectedUser(userDBid, sm);
+		} else {
+			userDBid = user.getDBid();
+			this.loadContentForConnectedUser(user, sm);
+		}
+		db.set("INSERT INTO groupsAndUsersMap values (null, " + this.db_id + ", " + userDBid + ");");
+		db.commitTransaction(transaction);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void removeUser(String email, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		User user;
+		String userDBid;
+		int transaction = db.startTransaction();
+		if ((user = ((Map<String, User>)sm.getContextAttr("users")).get(email)) == null) {
+			userDBid = User.findDBid(email, sm);
+			this.removeContentForUnconnectedUser(userDBid, sm);
+		} else {
+			userDBid = user.getDBid();
+			this.removeContentForConnectedUser(user, sm);
+		}
+		db.set("DELETE FROM groupsAndUsersMap WHERE group_id=" + this.db_id + " AND user_id=" + userDBid + ";");
 		db.commitTransaction(transaction);
 	}
 }

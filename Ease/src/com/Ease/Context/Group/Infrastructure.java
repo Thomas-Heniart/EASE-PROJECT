@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.Ease.Context.Group.Group.Data;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
