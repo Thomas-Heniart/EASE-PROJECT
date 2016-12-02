@@ -1,8 +1,0 @@
-/***************************************************************************/
-/*                                                                         */
-/*  This obfuscated code was created by Javascript Obfuscator Free Version.*/
-/*  Javascript Obfuscator Free Version can be downloaded here              */
-/*  http://javascriptobfuscator.com                                        */
-/*                                                                         */
-/***************************************************************************/
-var _$_d23c=["\x73\x65\x74\x53\x65\x74\x74\x69\x6E\x67\x73","\x73\x65\x74\x74\x69\x6E\x67\x73","\x68\x6F\x6D\x65\x70\x61\x67\x65","\x2D\x2D\x20\x45\x61\x73\x65\x20\x73\x65\x74\x20\x61\x73\x20\x68\x6F\x6D\x65\x70\x61\x67\x65\x20\x3A\x20","\x20\x2D\x2D","\x6C\x6F\x67","\x73\x65\x74","\x73\x74\x6F\x72\x61\x67\x65","\x67\x65\x74","\x62\x63\x6B\x67\x72\x6E\x64\x4F\x6E\x4D\x65\x73\x73\x61\x67\x65","\x72\x75\x6E\x74\x69\x6D\x65","\x67\x65\x74\x53\x65\x74\x74\x69\x6E\x67\x73"];extension[_$_d23c[10]][_$_d23c[9]](_$_d23c[0],function(b,k,c){extension[_$_d23c[7]][_$_d23c[8]](_$_d23c[1],function(q){if(q== null){q= {};q[_$_d23c[2]]= true};q[_$_d23c[2]]= b[_$_d23c[2]];console[_$_d23c[5]](_$_d23c[3]+ q[_$_d23c[2]]+ _$_d23c[4]);extension[_$_d23c[7]][_$_d23c[6]](_$_d23c[1],q,function(){})})});extension[_$_d23c[10]][_$_d23c[9]](_$_d23c[11],function(b,k,c){extension[_$_d23c[7]][_$_d23c[8]](_$_d23c[1],function(q){if(q== null){q= {};q[_$_d23c[2]]= true};c(q)})})
