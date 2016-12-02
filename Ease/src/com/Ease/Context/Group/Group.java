@@ -27,14 +27,14 @@ public class Group {
 	 * 
 	 */
 	
-	public static List<Group> loadGroups(DataBaseConnection db)throws GeneralException {
-		return loadGroup(db, null);
+	public static List<Group> loadGroups(DataBaseConnection db, Infrastructure infra)throws GeneralException {
+		return loadGroup(db, null, infra);
 	}
 	
-	public static List<Group> loadGroup(DataBaseConnection db, Group parent) throws GeneralException {
+	public static List<Group> loadGroup(DataBaseConnection db, Group parent, Infrastructure infra) throws GeneralException {
 		try {
 			List<Group> groups = new LinkedList<Group>();
-			ResultSet rs = db.get("SELECT * FROM groups WHERE parent " + ((parent == null) ? " IS NULL" : ("="+parent.getDBid())) + ";");
+			ResultSet rs = db.get("SELECT * FROM groups WHERE parent " + ((parent == null) ? " IS NULL" : ("="+parent.getDBid())) + " AND infra_id=" + infra.getDBid() + ";");
 			String db_id;
 			String name;
 			List<GroupProfile> groupProfiles;
@@ -42,9 +42,9 @@ public class Group {
 				db_id = rs.getString(Data.ID.ordinal());
 				System.out.println(db_id);
 				name = rs.getString(Data.NAME.ordinal());
-				Group child = new Group(db_id, name, parent);
+				Group child = new Group(db_id, name, parent, infra);
 				groupProfiles = GroupProfile.loadGroupProfiles(child, db);
-				child.setChildrens(loadGroup(db, child));
+				child.setChildrens(loadGroup(db, child, infra));
 				child.setGroupProfiles(groupProfiles);
 				groups.add(child);
 			}
@@ -66,14 +66,14 @@ public class Group {
 	protected List<Group> children;
 	protected Group		parent;
 	protected List<GroupProfile> groupProfiles;
-	protected List<User> users;
+	protected Infrastructure infra;
 	
-	public Group(String db_id, String name, Group parent) {
+	public Group(String db_id, String name, Group parent, Infrastructure infra) {
 		this.db_id = db_id;
 		this.name = name;
 		this.children = null;
 		this.parent = parent;
-		this.users = new LinkedList<User>();
+		this.infra = infra;
 	}
 	
 	/*
@@ -101,12 +101,8 @@ public class Group {
 	public String getName() {
 		return name;
 	}
-	public Group getInfra() {
-		if (parent == null) {
-			return this;
-		} else {
-			return this.parent.getInfra();
-		}
+	public Infrastructure getInfra() {
+		return infra;
 	}
 	
 	/*
@@ -115,7 +111,7 @@ public class Group {
 	 * 
 	 */
 	
-	public static Map<String, Group> getGroupMap(List<Group> groupTrees) {
+	/*public static Map<String, Group> getGroupMap(List<Group> groupTrees) {
 		Map<String, Group> groupsMap = new HashMap<String, Group>();
 		for (Group group : groupTrees) {
 			groupsMap.put(group.getDBid(), group);
@@ -133,7 +129,7 @@ public class Group {
 			groupProfileMap.putAll(getGroupProfileMap(group.getChildren()));
 		}
 		return groupProfileMap;
-	}
+	}*/
 
 	public void loadContent(User user, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
@@ -151,24 +147,13 @@ public class Group {
 	public String toString() {
 		return (this.db_id + " : " + this.name);
 	}
-
-	public void connectUser(User user) {
-		this.users.add(user);
-		user.getGroups().add(this);
-	}
 	
 	public void addUser(User user, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		db.set("INSERT INTO groupsAndUsersMap values (null, " + this.db_id + ", " + user.getDBid() + ");");
 		this.loadContent(user, sm);
-		this.connectUser(user);
 		db.commitTransaction(transaction);
-	}
-	
-	public void deconnectUser(User user) {
-		this.users.remove(user);
-		user.getGroups().remove(this);
 	}
 	
 	public void removeUser(User user, ServletManager sm) throws GeneralException {
@@ -186,6 +171,5 @@ public class Group {
 		user.updateProfilesIndex(sm);
 		db.set("DELETE FROM groupsAndUsersMap WHERE group_id=" + this.db_id + " AND user_id=" + user.getDBid() + ";");
 		db.commitTransaction(transaction);
-		this.deconnectUser(user);
 	}
 }
