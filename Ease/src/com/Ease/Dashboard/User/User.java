@@ -36,34 +36,30 @@ public class User {
 	}
 	public static User loadUser(String email, String password, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		@SuppressWarnings("unchecked")
 		Map<String, Group> groups = (Map<String, Group>) sm.getContextAttr("groups");
 		try {
 			ResultSet rs = db.get("SELECT * FROM users where email='" + email + "';");
-			if (rs.next()) {
-				String db_id = rs.getString(Data.ID.ordinal());
-				String firstName = rs.getString(Data.FIRSTNAME.ordinal());
-				String lastName = rs.getString(Data.LASTNAME.ordinal());
-				Keys keys = Keys.loadKeys(rs.getString(Data.KEYSID.ordinal()), password, sm);
-				Option options = Option.loadOption(rs.getString(Data.OPTIONSID.ordinal()), sm);
-				//Status status = Status.loadStatus(rs.getString(Data.STATUSID.ordinal()), sm);
-				List<UserEmail> emails = UserEmail.loadEmails(db_id, sm);
-				ResultSet adminRs = db.get("SELECT user_id FROM admins WHERE user_id = " + db_id + ";");
-				boolean isAdmin = adminRs.next();
-				User newUser =  new User(db_id, firstName, lastName, email, keys, options, null, emails, isAdmin);
-				newUser.loadProfiles(sm);
-				ResultSet rs2 = db.get("SELECT group_id FROM groupsAndUsersMap WHERE user_id=" + newUser.getDBid() + ";");
-				Group userGroup;
-				while (rs2.next()) {
-					userGroup = groups.get(rs2.getString(1));
-					if (userGroup != null) {
-						newUser.getGroups().add(userGroup);
-					}
+			rs.next();
+			String db_id = rs.getString(Data.ID.ordinal());
+			String firstName = rs.getString(Data.FIRSTNAME.ordinal());
+			String lastName = rs.getString(Data.LASTNAME.ordinal());
+			Keys keys = Keys.loadKeys(rs.getString(Data.KEYSID.ordinal()), password, sm);
+			Option options = Option.loadOption(rs.getString(Data.OPTIONSID.ordinal()), sm);
+			//Status status = Status.loadStatus(rs.getString(Data.STATUSID.ordinal()), sm);
+			List<UserEmail> emails = UserEmail.loadEmails(db_id, sm);
+			ResultSet adminRs = db.get("SELECT user_id FROM admins WHERE user_id = " + db_id + ";");
+			boolean isAdmin = adminRs.next();
+			User newUser =  new User(db_id, firstName, lastName, email, keys, options, null, emails, isAdmin);
+			newUser.loadProfiles(sm);
+			ResultSet rs2 = db.get("SELECT group_id FROM groupsAndUsersMap WHERE user_id=" + newUser.getDBid() + ";");
+			Group userGroup;
+			while (rs2.next()) {
+				userGroup = groups.get(rs2.getString(1));
+				if (userGroup != null) {
+					userGroup.connectUser(newUser);
 				}
-				return newUser;
-			} else {
-				throw new GeneralException(ServletManager.Code.UserMiss, "Wrong email or password.");
 			}
+			return newUser;
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
@@ -86,7 +82,6 @@ public class User {
 		newUser.getProfilesColumn().get(1).add(Profile.createPersonnalProfile(newUser, 1, 0, "Perso", "#000000", sm));
 		for (Group group : groups) {
 			group.addUser(newUser, sm);
-			newUser.getGroups().add(group);
 		}
 		UserEmail userEmail = UserEmail.createUserEmail(email, newUser, (code != null), sm);
 		newUser.getUserEmails().add(userEmail);
@@ -319,8 +314,10 @@ public class User {
 	}
 	
 	public void deconnect(ServletManager sm) {
-		@SuppressWarnings("unchecked")
 		Map<String, User> users = (Map<String, User>) sm.getContextAttr("users");
+		for (Group group : groups) {
+			group.deconnectUser(this);
+		}
 		users.remove(this.email);
 	}
 	

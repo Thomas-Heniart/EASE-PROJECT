@@ -12,7 +12,6 @@ import javax.servlet.ServletContextListener;
 
 import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupProfile;
-import com.Ease.Context.Group.Infrastructure;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBase;
 import com.Ease.Utils.DataBaseConnection;
@@ -36,9 +35,14 @@ public class OnStart implements ServletContextListener{
 			return;
 		}
 		try {
-			List<Infrastructure> infras = Infrastructure.loadInfrastructures(db);
-			evt.getServletContext().setAttribute("infras", infras);
-						
+			List<Group> groups = Group.loadGroups(db);
+			System.out.println(groups);
+			Map<String, Group> groupsMap = Group.getGroupMap(groups);
+			evt.getServletContext().setAttribute("infra", groups);
+			evt.getServletContext().setAttribute("groups", groupsMap);
+			Map<String, GroupProfile> groupProfilesMap = new HashMap<String, GroupProfile>();
+			groupProfilesMap.putAll(Group.getGroupProfileMap(groups));
+			evt.getServletContext().setAttribute("groupProfiles", groups);
 			// SiteManager initialization
 			/*SiteManager siteManager = new SiteManager();
 			siteManager.refresh(db);
