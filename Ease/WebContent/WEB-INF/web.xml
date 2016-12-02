@@ -3,7 +3,7 @@
   <display-name>HelloWorld</display-name>
   <listener>
     <listener-class>
-       com.Ease.dashboard.OnStart
+       com.Ease.Context.OnStart
     </listener-class>
   </listener>
   <session-config>
