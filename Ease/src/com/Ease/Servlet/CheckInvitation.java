@@ -60,17 +60,20 @@ public class CheckInvitation extends HttpServlet {
 		DataBaseConnection db = sm.getDB();
 
 		String email = sm.getServletParam("email", true);
+		String name = sm.getServletParam("name", true);
 
 		try {
 			if (user != null) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "You are logged on Ease.");
 			} else if (email == null || !Regex.isEmail(email)) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "This is not an email");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "This is not an email.");
+			} else if (name == null || name.length() < 2) {
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Name too short.");
 			} else {
 				ResultSet rs = db.get("SELECT group_id FROM invitationsAndGroupsMap JOIN invitations ON invitationsAndGroupsMap.invitation_id = invitations.id WHERE email='" + email + "';");
 				try {
 					if (rs.next()) {
-						Invitation.sendInvitation(email, rs.getString(1), sm);
+						Invitation.sendInvitation(email, name, rs.getString(1), sm);
 						sm.setResponse(ServletManager.Code.Success, "1 You receveid an email");
 					} else {
 						sm.setResponse(ServletManager.Code.Success, "2 Go to registration");
