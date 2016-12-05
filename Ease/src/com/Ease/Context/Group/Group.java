@@ -2,6 +2,7 @@ package com.Ease.Context.Group;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -182,18 +183,31 @@ public class Group {
 		db.commitTransaction(transaction);
 	}
 	
-	public void removeFromDb(ServletManager sm) throws GeneralException, SQLException {
+	public void removeFromDb(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		Map<String, User> users = (Map<String, User>) sm.getContextAttr("users");
-		ResultSet rs = db.get("SELECT email, user_id FROM groupsAndUsersMap JOIN users ON user_id = users.id WHERE group_id=" + this.db_id + ";");
-		while (rs.next()) {
-			String email = rs.getString(1);
-			String user_id = rs.getString(2);
-			if (users.containsKey(email))
-				this.removeContentForConnectedUser(users.get(email), false, sm);
-			else
-				this.removeContentForUnconnectedUser(user_id, false, sm);
+		Iterator<Group> it = this.children.iterator();
+		while (it.hasNext())
+			it.next().removeFromDb(sm);
+		ResultSet rs = db.get("SELECT user_id FROM groupsAndUsersMap WHERE group_id = " + this.db_id + ";");
+		try {
+			while (rs.next()) {
+				db.set("UPDATE groupsAndUsersMap SET group_id=" + this.parent.db_id + ", user_id = " + rs.getString(1) + " WHERE group_id=" + this.db_id + ";");
+			}
+		
+			Map<String, User> users = (Map<String, User>) sm.getContextAttr("users");
+			rs = db.get("SELECT email, user_id FROM groupsAndUsersMap JOIN users ON user_id = users.id WHERE group_id=" + this.db_id + ";");
+		
+			while (rs.next()) {
+				String email  = rs.getString(1);
+				String user_id = rs.getString(2);
+				if (users.containsKey(email))
+					this.removeContentForConnectedUser(users.get(email), false, sm);
+				else
+					this.removeContentForUnconnectedUser(user_id, false, sm);
+			} 
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 		db.commitTransaction(transaction);
 	}
