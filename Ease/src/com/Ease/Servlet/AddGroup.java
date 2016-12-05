@@ -49,23 +49,24 @@ public class AddGroup extends HttpServlet {
 			String parent_id = sm.getServletParam("parent_id", true);
 			Group parent = null;
 			Infrastructure infra = null;
+			sm.needToBeConnected();
 			Map<Integer, Group> groups = (Map<Integer, Group>) sm.getContextAttr("groups");
 			if (name == null || name.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Name is empty.");
-			sm.needToBeConnected();
 			if (parent_id != null) {
 				try {
 					parent = groups.get(Integer.parseInt(parent_id));
 					if (parent == null)
 						throw new GeneralException(ServletManager.Code.ClientError, "This group does not exist");
 					infra = parent.getInfra();
+					Group newGroup = Group.createGroup(name, parent, infra, sm);
+					groups.put(newGroup.getSingleId(), newGroup);
+					sm.setResponse(ServletManager.Code.Success, newGroup.getJSONString());
 				} catch (NumberFormatException e) {
 					throw new GeneralException(ServletManager.Code.ClientError, e);
 				}
-			}
-			Group newGroup = Group.createGroup(name, parent, infra, sm);
-			groups.put(newGroup.getSingleId(), newGroup);
-			sm.setResponse(ServletManager.Code.Success, newGroup.getJSONString());
+			} else
+				throw new GeneralException(ServletManager.Code.ClientError, "Parent cannot be null");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		}
