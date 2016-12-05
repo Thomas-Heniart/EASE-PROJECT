@@ -9,9 +9,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.Infrastructure;
+import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -41,14 +43,15 @@ public class AddGroup extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		User user = (User) (session.getAttribute("User"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
-		
 		try {
+			sm.needToBeConnected();
 			String name = sm.getServletParam("name", true);
 			String parent_id = sm.getServletParam("parent_id", true);
 			Group parent = null;
 			Infrastructure infra = null;
-			sm.needToBeConnected();
 			@SuppressWarnings("unchecked")
 			Map<Integer, Group> groups = (Map<Integer, Group>) sm.getContextAttr("groups");
 			if (name == null || name.equals(""))
@@ -56,6 +59,7 @@ public class AddGroup extends HttpServlet {
 			if (parent_id != null) {
 				try {
 					parent = groups.get(Integer.parseInt(parent_id));
+					parent.getInfra().isAdmin(user, sm);
 					if (parent == null)
 						throw new GeneralException(ServletManager.Code.ClientError, "This group does not exist.");
 					infra = parent.getInfra();

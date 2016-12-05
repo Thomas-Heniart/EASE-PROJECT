@@ -182,7 +182,7 @@ public class Group {
 		db.commitTransaction(transaction);
 	}
 	
-	public void removeContentForConnectedUser(User user, ServletManager sm) throws GeneralException {
+	public void removeContentForConnectedUser(User user, boolean recursive, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		for (List<Profile> column : user.getProfilesColumn()) {
@@ -195,12 +195,12 @@ public class Group {
 			}
 		}
 		user.updateProfilesIndex(sm);
-		if (this.parent != null)
-			removeContentForConnectedUser(user, sm);
+		if (recursive && this.parent != null)
+			parent.removeContentForConnectedUser(user, recursive, sm);
 		db.commitTransaction(transaction);
 	}
 	
-	public void removeContentForUnconnectedUser(String db_id, ServletManager sm) throws GeneralException {
+	public void removeContentForUnconnectedUser(String db_id, boolean recursive, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		try {
@@ -211,8 +211,8 @@ public class Group {
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
-		if (this.parent != null)
-			removeContentForUnconnectedUser(db_id, sm);
+		if (recursive && this.parent != null)
+			parent.removeContentForUnconnectedUser(db_id, recursive, sm);
 		db.commitTransaction(transaction);
 	}
 	
@@ -245,10 +245,10 @@ public class Group {
 		int transaction = db.startTransaction();
 		if ((user = ((Map<String, User>)sm.getContextAttr("users")).get(email)) == null) {
 			userDBid = User.findDBid(email, sm);
-			this.removeContentForUnconnectedUser(userDBid, sm);
+			this.removeContentForUnconnectedUser(userDBid, true, sm);
 		} else {
 			userDBid = user.getDBid();
-			this.removeContentForConnectedUser(user, sm);
+			this.removeContentForConnectedUser(user, true, sm);
 		}
 		db.set("DELETE FROM groupsAndUsersMap WHERE group_id=" + this.db_id + " AND user_id=" + userDBid + ";");
 		db.commitTransaction(transaction);
