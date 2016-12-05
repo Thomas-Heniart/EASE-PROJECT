@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.Ease.Context.Group.Group;
-import com.Ease.Context.Group.GroupProfile;
 import com.Ease.Context.Group.Infrastructure;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
@@ -54,6 +53,7 @@ public class AddGroup extends HttpServlet {
 			Group parent = null;
 			Infrastructure infra = null;
 			sm.needToBeConnected();
+			@SuppressWarnings("unchecked")
 			Map<Integer, Group> groups = (Map<Integer, Group>) sm.getContextAttr("groups");
 			if (name == null || name.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Name is empty.");
@@ -61,7 +61,7 @@ public class AddGroup extends HttpServlet {
 				try {
 					parent = groups.get(Integer.parseInt(parent_id));
 					if (parent == null)
-						throw new GeneralException(ServletManager.Code.ClientError, "This group does not exist");
+						throw new GeneralException(ServletManager.Code.ClientError, "This group does not exist.");
 					infra = parent.getInfra();
 					infra.isAdmin(user, sm);
 					Group newGroup = Group.createGroup(name, parent, infra, sm);
@@ -71,7 +71,7 @@ public class AddGroup extends HttpServlet {
 					throw new GeneralException(ServletManager.Code.ClientError, e);
 				}
 			} else
-				throw new GeneralException(ServletManager.Code.ClientError, "Parent cannot be null");
+				throw new GeneralException(ServletManager.Code.ClientError, "Parent is empty.");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		}
