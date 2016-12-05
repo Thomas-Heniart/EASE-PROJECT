@@ -16,7 +16,7 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 public class Profile {
-	enum Data {
+	public enum Data {
 		NOTHING,
 		ID,
 		USER_ID,
@@ -25,7 +25,7 @@ public class Profile {
 		GROUP_PROFILE_ID,
 		PROFILE_INFO_ID,
 	}
-	static int MAX_COLUMN = 5;
+	public static int MAX_COLUMN = 5;
 	/*
 	 * 
 	 * Loader and Creator
@@ -86,6 +86,20 @@ public class Profile {
 		return profile;
 	}
 	
+	public static String createProfileWithGroupForUnconnected(String db_id, int columnIdx, int posIdx, GroupProfile groupProfile, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		String info_id;
+		if (groupProfile.isCommon()) {
+			info_id = groupProfile.getInfo().getDBid();
+		} else {
+			info_id = ProfileInformation.createProfileInformationForUnconnected(groupProfile.getName(), groupProfile.getColor(), sm);
+		}
+		String id = db.set("INSERT INTO profiles VALUES(NULL, " + db_id + ", " + columnIdx + ", " + posIdx + ", " + groupProfile.getDBid() + ", " + info_id + ");").toString();
+		db.commitTransaction(transaction);
+		return id;
+	}
+	
 	public static Profile createPersonnalProfile(User user, int columnIdx, int posIdx, String name, String color, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
@@ -96,6 +110,26 @@ public class Profile {
 		db.commitTransaction(transaction);
 		return profile;
 	}
+	
+	public static String createPersonnalProfileForUnconnected(String db_id, int columnIdx, int posIdx, String name, String color, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		String info_id = ProfileInformation.createProfileInformationForUnconnected(name, color, sm);
+		String id = db.set("INSERT INTO profiles VALUES(NULL, " + db_id + ", " + columnIdx + ", " + posIdx + ", NULL, " + info_id + ");").toString();
+		db.commitTransaction(transaction);
+		return id;
+	}
+	
+	public static void removeProfileForUnconnected(String db_id, String info_id, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		db.set("DELETE FROM profiles WHERE id=" + db_id + "");
+		if (info_id != null) {
+			db.set("DELETE FROM profilesInformations WHERE id=" + info_id + ";");
+		}
+		db.commitTransaction(transaction);
+	}
+	
 	
 	/*
 	 * 
@@ -215,4 +249,20 @@ public class Profile {
 		return this.getJSON().toString();
 	}
 	
+	public static int getSizeForUnconnected(String db_id, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		try {
+			ResultSet rs = db.get("SELECT COUNT(*) apps WHERE profile_id=" + db_id + ";");
+			if (rs.next()) {
+				int ret = rs.getInt(1);
+				if (ret < 4)
+					return 2;
+				return (ret + 2) / 3;
+			} else {
+				throw new GeneralException(ServletManager.Code.InternError, "Bizare.");
+			}
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+	}
 }

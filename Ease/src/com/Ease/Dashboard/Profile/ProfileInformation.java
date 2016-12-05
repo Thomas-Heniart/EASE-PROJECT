@@ -27,6 +27,12 @@ public class ProfileInformation {
 		return new ProfileInformation(String.valueOf(db_id), name, color);
 	}
 	
+	public static String createProfileInformationForUnconnected(String name, String color, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		String db_id = db.set("INSERT INTO profileInfo values (null, '" + name + "', '" + color + "');").toString();
+		return db_id;
+	}
+	
 	public static ProfileInformation loadProfileInformation(String db_id, DataBaseConnection db) throws GeneralException {
 		ResultSet rs = db.get("SELECT * FROM profileInfo WHERE id=" + db_id + ";");
 		try {

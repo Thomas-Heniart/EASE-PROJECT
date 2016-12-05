@@ -366,4 +366,43 @@ public class User {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
+	
+	public static int getMostEmptyProfileColumnForUnconnected(String db_id, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		try {
+			Integer[] columns = new Integer[5];
+			for (int i = 0; i < Profile.MAX_COLUMN; ++i) {
+				columns[i] = 0;
+			}
+			ResultSet rs = db.get("SELECT id, column_idx FROM profiles WHERE user_id=" + db_id + ";");
+			while (rs.next()) {
+				columns[rs.getInt(2)] += Profile.getSizeForUnconnected(rs.getString(1), sm);
+			}
+			int col = 1;
+			int minSize = -1;
+			for (int i = 1; i < Profile.MAX_COLUMN; ++i) {
+				if (minSize == - 1 || columns[i] < minSize) {
+					minSize = columns[i];
+					col = i;
+				}
+			}
+			return col;
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+	}
+	
+	public static int getColumnNextPositionForUnconnected(String db_id, int column_idx, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		try {
+			ResultSet rs = db.get("SELECT count(*) FROM profiles WHERE user_id=" + db_id + " AND column_idx=" + column_idx + ";");
+			if (rs.next()) {
+				return rs.getInt(1);
+			} else {
+				throw new GeneralException(ServletManager.Code.InternError, "Bizare.");
+			}
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+	}
 }
