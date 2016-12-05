@@ -12,24 +12,22 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.Ease.Context.Group.Group;
-import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class GroupAddUsers
+ * Servlet implementation class GroupRemoveUser
  */
-@WebServlet("/groupAddUsers")
-public class GroupAddUsers extends HttpServlet {
+@WebServlet("/GroupRemoveUser")
+public class GroupRemoveUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GroupAddUsers() {
+    public GroupRemoveUser() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -64,10 +62,10 @@ public class GroupAddUsers extends HttpServlet {
 				DataBaseConnection db = sm.getDB();
 				int transaction = db.startTransaction();
 				for (String email : emails) {
-					group.addUser(email, sm);
+					group.removeUser(email, sm);
 				}
 				db.commitTransaction(transaction);
-				sm.setResponse(ServletManager.Code.Success, "Users added.");
+				sm.setResponse(ServletManager.Code.Success, "Users removed.");
 			}
 			
 		} catch (GeneralException e) {

@@ -46,13 +46,12 @@ public class AddGroup extends HttpServlet {
 		HttpSession session = request.getSession();
 		User user = (User) (session.getAttribute("User"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
-		
 		try {
+			sm.needToBeConnected();
 			String name = sm.getServletParam("name", true);
 			String parent_id = sm.getServletParam("parent_id", true);
 			Group parent = null;
 			Infrastructure infra = null;
-			sm.needToBeConnected();
 			@SuppressWarnings("unchecked")
 			Map<Integer, Group> groups = (Map<Integer, Group>) sm.getContextAttr("groups");
 			if (name == null || name.equals(""))
@@ -60,6 +59,7 @@ public class AddGroup extends HttpServlet {
 			if (parent_id != null) {
 				try {
 					parent = groups.get(Integer.parseInt(parent_id));
+					parent.getInfra().isAdmin(user, sm);
 					if (parent == null)
 						throw new GeneralException(ServletManager.Code.ClientError, "This group does not exist.");
 					infra = parent.getInfra();

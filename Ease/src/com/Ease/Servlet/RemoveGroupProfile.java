@@ -9,9 +9,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupProfile;
+import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
@@ -42,8 +44,10 @@ public class RemoveGroupProfile extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		
+		HttpSession session = request.getSession();
+		User user = (User) (session.getAttribute("User"));
+		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);		
 		try {
 			String single_id = sm.getServletParam("single_id", true);
 			if (single_id == null || single_id.equals(""))
