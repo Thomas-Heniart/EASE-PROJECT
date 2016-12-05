@@ -15,6 +15,7 @@ import com.Ease.Context.Group.Group;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 
 /**
@@ -62,6 +63,8 @@ public class GroupRemoveUser extends HttpServlet {
 				DataBaseConnection db = sm.getDB();
 				int transaction = db.startTransaction();
 				for (String email : emails) {
+					if (Regex.isEmail(email) == false)
+						throw new GeneralException(ServletManager.Code.ClientError, "Wrong user email.");
 					group.removeUser(email, sm);
 				}
 				db.commitTransaction(transaction);

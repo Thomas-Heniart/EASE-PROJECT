@@ -64,6 +64,8 @@ public class GroupAddUsers extends HttpServlet {
 				DataBaseConnection db = sm.getDB();
 				int transaction = db.startTransaction();
 				for (String email : emails) {
+					if (Regex.isEmail(email) == false)
+						throw new GeneralException(ServletManager.Code.ClientError, "Wrong user email.");
 					group.addUser(email, sm);
 				}
 				db.commitTransaction(transaction);
