@@ -207,8 +207,12 @@ public class Profile {
 		res.put("user_id", this.user.getDBid());
 		res.put("column", this.columnIdx);
 		res.put("position", this.posIdx);
-		res.put("group_profile_id", this.groupProfile.getDBid());
+		res.put("group_profile_id", (this.groupProfile == null) ? "null" : this.groupProfile.getDBid());
 		return res;
+	}
+	
+	public String getJSONString() {
+		return this.getJSON().toString();
 	}
 	
 }
