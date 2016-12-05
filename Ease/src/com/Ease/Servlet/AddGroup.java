@@ -9,28 +9,24 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupProfile;
-import com.Ease.Context.Group.ProfilePermissions;
-import com.Ease.Dashboard.Profile.Profile;
-import com.Ease.Dashboard.User.User;
+import com.Ease.Context.Group.Infrastructure;
 import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class AddGroupProfile
+ * Servlet implementation class AddGroup
  */
-@WebServlet("/AddGroupProfile")
-public class AddGroupProfile extends HttpServlet {
+@WebServlet("/AddGroup")
+public class AddGroup extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddGroupProfile() {
+    public AddGroup() {
         super();
     }
 
@@ -50,21 +46,21 @@ public class AddGroupProfile extends HttpServlet {
 		
 		try {
 			String name = sm.getServletParam("name", true);
-			String color = sm.getServletParam("color", true);
-			boolean common = Boolean.parseBoolean(sm.getServletParam("common", true));
-			int perms = Integer.parseInt(sm.getServletParam("perms", true));
-			String group_id = sm.getServletParam("group_id", true);
+			String parent_id = sm.getServletParam("parent_id", true);
+			Group parent = null;
+			Infrastructure infra = null;
+			Map<Integer, Group> groups = (Map<Integer, Group>) sm.getContextAttr("groups");
 			if (name == null || name.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Name empty.");
-			else if (color == null || Regex.isColor(color) == false)
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong color.");
-			else if (group_id == null || group_id.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientError, "Group error.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Name is empty.");
 			sm.needToBeConnected();
-			Map<String, Group> groups = (Map<String, Group>) sm.getContextAttr("groups");
-			Group group = groups.get(group_id);
-			GroupProfile newGroupProfile = GroupProfile.createGroupProfile(group, perms, name, color, common, sm);
-			sm.setResponse(ServletManager.Code.Success, newGroupProfile.getJSONString());
+			if (parent_id != null) {
+				parent = groups.get(Integer.parseInt(parent_id));
+				infra = parent.getInfra();
+			}
+			Group newGroup = Group.createGroup(name, parent, infra, sm);
+			groups.put(newGroup.getSingleId(), newGroup);
+			GroupProfile groupProfile = groupProfiles.get(Integer.parseInt(single_id));
+			sm.setResponse(ServletManager.Code.Success, "Group profile removed");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		}

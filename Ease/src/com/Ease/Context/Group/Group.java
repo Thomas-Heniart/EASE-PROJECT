@@ -26,6 +26,12 @@ public class Group {
 	 * 
 	 */
 	
+	public static Group createGroup(String name, Group parent, Infrastructure infra, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int db_id = db.set("INSERT INTO groups values (null, '" + name + "', " + parent.getDBid() + ");");
+		return new Group(String.valueOf(db_id), name, parent, infra);
+	}
+	
 	public static List<Group> loadGroups(DataBaseConnection db, Infrastructure infra)throws GeneralException {
 		return loadGroup(db, null, infra);
 	}
