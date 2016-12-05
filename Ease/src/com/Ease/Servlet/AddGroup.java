@@ -59,9 +59,9 @@ public class AddGroup extends HttpServlet {
 			if (parent_id != null) {
 				try {
 					parent = groups.get(Integer.parseInt(parent_id));
-					parent.getInfra().isAdmin(user, sm);
 					if (parent == null)
 						throw new GeneralException(ServletManager.Code.ClientError, "This group does not exist.");
+					parent.getInfra().isAdmin(user, sm);
 					infra = parent.getInfra();
 					infra.isAdmin(user, sm);
 					Group newGroup = Group.createGroup(name, parent, infra, sm);

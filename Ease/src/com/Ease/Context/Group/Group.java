@@ -127,6 +127,13 @@ public class Group {
 	public String getName() {
 		return name;
 	}
+	
+	public void setName(String name, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		db.set("UPDATE groups SET name='" + name + "' WHERE id=" + this.db_id + ";");
+		this.name = name;
+	}
+	
 	public Infrastructure getInfra() {
 		return infra;
 	}
