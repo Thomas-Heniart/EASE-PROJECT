@@ -1,6 +1,8 @@
 package com.Ease.Servlet;
 
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -16,16 +18,16 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class AddProfile
+ * Servlet implementation class RemoveProfile
  */
-@WebServlet("/AddProfile")
-public class AddProfile extends HttpServlet {
+@WebServlet("/RemoveProfile")
+public class RemoveProfile extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddProfile() {
+    public RemoveProfile() {
         super();
     }
 
@@ -46,21 +48,34 @@ public class AddProfile extends HttpServlet {
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		
 		try {
-			String name = sm.getServletParam("name", true);
-			String color = sm.getServletParam("color", true);
-			if (name == null)
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Name empty");
-			else if (color == null)
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Color empty");
+			String single_id = sm.getServletParam("single_id", true);
+			if (single_id == null)
+				throw new GeneralException(ServletManager.Code.ClientError, "Single_id empty");
 			sm.needToBeConnected();
-			
-			int column = user.getMostEmptyProfileColumn();
-			Profile newProfile = Profile.createPersonnalProfile(user, column, user.getProfilesColumn().get(column).size(), name, color, sm);
-			sm.setResponse(ServletManager.Code.Success, newProfile.getJSONString());
+			removeProfile(user.getProfilesColumn(), Integer.parseInt(single_id), sm);
+			user.updateProfilesIndex(sm);
+			sm.setResponse(ServletManager.Code.Success, "Profile removed");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		}
 		sm.sendResponse();
+	}
+	
+	public void removeProfile(List<List<Profile>> profiles, int single_id, ServletManager sm) throws GeneralException {
+		Iterator<List<Profile>> it = profiles.iterator();
+		while (it.hasNext()) {
+			List<Profile> rows = it.next();
+			Iterator<Profile> it2 = rows.iterator();
+			while (it2.hasNext()) {
+				Profile tmpProfile = it2.next();
+				if (tmpProfile.getSingleId() == single_id) {
+					tmpProfile.removeFromDB(sm);
+					rows.remove(tmpProfile);
+					return;
+				}
+			}
+		}
+		throw new GeneralException(ServletManager.Code.InternError, "Cannot remove this profile");
 	}
 
 }
