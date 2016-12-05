@@ -54,13 +54,18 @@ public class AddGroup extends HttpServlet {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Name is empty.");
 			sm.needToBeConnected();
 			if (parent_id != null) {
-				parent = groups.get(Integer.parseInt(parent_id));
-				infra = parent.getInfra();
+				try {
+					parent = groups.get(Integer.parseInt(parent_id));
+					if (parent == null)
+						throw new GeneralException(ServletManager.Code.ClientError, "This group does not exist");
+					infra = parent.getInfra();
+				} catch (NumberFormatException e) {
+					throw new GeneralException(ServletManager.Code.ClientError, e);
+				}
 			}
 			Group newGroup = Group.createGroup(name, parent, infra, sm);
 			groups.put(newGroup.getSingleId(), newGroup);
-			GroupProfile groupProfile = groupProfiles.get(Integer.parseInt(single_id));
-			sm.setResponse(ServletManager.Code.Success, "Group profile removed");
+			sm.setResponse(ServletManager.Code.Success, newGroup.getJSONString());
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		}

@@ -8,6 +8,8 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import org.json.simple.JSONObject;
+
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
@@ -31,8 +33,10 @@ public class Group {
 	
 	public static Group createGroup(String name, Group parent, Infrastructure infra, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
+		String parent_id = (parent == null) ? "null" : parent.getDBid();
+		String infra_id = (infra == null) ? "null" : infra.getDBid();
 		IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
-		int db_id = db.set("INSERT INTO groups values (null, '" + name + "', " + parent.getDBid() + ");");
+		int db_id = db.set("INSERT INTO groups values (null, '" + name + "', " + parent_id + ", " + infra_id + ");");
 		return new Group(String.valueOf(db_id), name, parent, infra, idGenerator.getNextId());
 	}
 	
@@ -101,6 +105,11 @@ public class Group {
 	public String getDBid() {
 		return this.db_id;
 	}
+	
+	public int getSingleId() {
+		return this.single_id;
+	}
+	
 	public void setChildrens(List<Group> children) {
 		this.children = children;
 	}
@@ -243,5 +252,15 @@ public class Group {
 		}
 		db.set("DELETE FROM groupsAndUsersMap WHERE group_id=" + this.db_id + " AND user_id=" + userDBid + ";");
 		db.commitTransaction(transaction);
+	}
+	
+	public JSONObject getJSON() {
+		JSONObject res = new JSONObject();
+		
+		return res;
+	}
+	
+	public String getJSONString() {
+		return this.getJSON().toString();
 	}
 }
