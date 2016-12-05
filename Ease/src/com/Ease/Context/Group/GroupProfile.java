@@ -2,6 +2,7 @@ package com.Ease.Context.Group;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,9 @@ import javax.servlet.ServletContext;
 
 import org.json.simple.JSONObject;
 
+import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.Profile.ProfileInformation;
+import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
@@ -153,6 +156,54 @@ public class GroupProfile {
 		return groupProfile;
 	}
 
+	public void removeFromDb(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		@SuppressWarnings("unchecked")
+		Map<String, User> users = (Map<String, User>)sm.getContextAttr("users");
+		ResultSet rs = db.get("SELECT email, user_id, profile_id FROM profiles JOIN users ON user_id = users.id WHERE group_profile_id = " + this.db_id + ";");
+		try {
+			while (rs.next()) {
+				String email = rs.getString(1);
+				String user_id = rs.getString(2);
+				if (users.containsKey(email))
+					this.removeContentForConnectedUser(users.get(email), sm);
+				else
+					this.removeContentForUnconnectedUser(user_id, sm);
+			}
+			db.set("DELETE FROM groupProfiles WHERE id=" + this.db_id + ";");
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+		
+	}
+	
+	public void removeContentForConnectedUser(User user, ServletManager sm) throws GeneralException {
+		Iterator<List<Profile>> it = user.getProfilesColumn().iterator();
+		while (it.hasNext()) {
+			Iterator<Profile> it2 = it.next().iterator();
+			while (it2.hasNext()) {
+				Profile tmpProfile = it2.next();
+				GroupProfile tmpGroupProfile = tmpProfile.getGroupProfile();
+				if (tmpGroupProfile.getDBid() == this.db_id) {
+					tmpProfile.removeFromDB(sm);
+					return;
+				}
+			}
+		}
+		throw new GeneralException(ServletManager.Code.ClientError, "Group profile not found");
+	}
+	
+	public void removeContentForUnconnectedUser(String user_id, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		ResultSet rs = db.get("SELECT id, profile_info_id FROM profiles WHERE user_id = " + user_id + ";");
+		try {
+			while (rs.next())
+				Profile.removeProfileForUnconnected(rs.getString(1), rs.getString(2), sm);
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+	}
+	
 	public JSONObject getJSON() {
 		JSONObject res = new JSONObject();
 		
