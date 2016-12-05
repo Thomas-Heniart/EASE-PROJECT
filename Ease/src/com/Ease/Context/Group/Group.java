@@ -2,6 +2,7 @@ package com.Ease.Context.Group;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -182,6 +183,25 @@ public class Group {
 		db.commitTransaction(transaction);
 	}
 	
+	public void removeFromDb(ServletManager sm) throws GeneralException, SQLException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		Map<String, User> users = (Map<String, User>) sm.getContextAttr("users");
+		Iterator<User> it = users.values().iterator();
+		while (it.hasNext())
+			removeContentForConnectedUser(it.next(), sm);
+		ResultSet rs = db.get("SELECT email, user_id FROM groupsAndUsersMap JOIN users ON user_id = users.id WHERE group_id=" + this.db_id + ";");
+		while (rs.next()) {
+			String email = rs.getString(1);
+			String user_id = rs.getString(2);
+			if (users.containsKey(email))
+				this.removeContentForConnectedUser(users.get(email), sm, false);
+			else
+				this.removeContentForUnconnectedUser(user_id, sm, false);
+		}
+		db.commitTransaction(transaction);
+	}
+	
 	public void removeContentForConnectedUser(User user, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
@@ -196,7 +216,7 @@ public class Group {
 		}
 		user.updateProfilesIndex(sm);
 		if (this.parent != null)
-			removeContentForConnectedUser(user, sm);
+			this.parent.removeContentForConnectedUser(user, sm);
 		db.commitTransaction(transaction);
 	}
 	
@@ -212,7 +232,7 @@ public class Group {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 		if (this.parent != null)
-			removeContentForUnconnectedUser(db_id, sm);
+			this.removeContentForUnconnectedUser(db_id, sm);
 		db.commitTransaction(transaction);
 	}
 	
