@@ -50,32 +50,18 @@ public class RemoveProfile extends HttpServlet {
 		try {
 			String single_id = sm.getServletParam("single_id", true);
 			if (single_id == null)
-				throw new GeneralException(ServletManager.Code.ClientError, "Single_id empty");
+				throw new GeneralException(ServletManager.Code.ClientError, "Single_id empty.");
 			sm.needToBeConnected();
-			removeProfile(user.getProfilesColumn(), Integer.parseInt(single_id), sm);
-			user.updateProfilesIndex(sm);
-			sm.setResponse(ServletManager.Code.Success, "Profile removed");
+			try {
+				user.removeProfile(Integer.parseInt(single_id), sm);
+				user.updateProfilesIndex(sm);
+				sm.setResponse(ServletManager.Code.Success, "Profile removed");
+			} catch (NumberFormatException e) {
+				sm.setResponse(ServletManager.Code.ClientError, "Wrong single_id.");
+			}
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		}
 		sm.sendResponse();
 	}
-	
-	public void removeProfile(List<List<Profile>> profiles, int single_id, ServletManager sm) throws GeneralException {
-		Iterator<List<Profile>> it = profiles.iterator();
-		while (it.hasNext()) {
-			List<Profile> rows = it.next();
-			Iterator<Profile> it2 = rows.iterator();
-			while (it2.hasNext()) {
-				Profile tmpProfile = it2.next();
-				if (tmpProfile.getSingleId() == single_id) {
-					tmpProfile.removeFromDB(sm);
-					rows.remove(tmpProfile);
-					return;
-				}
-			}
-		}
-		throw new GeneralException(ServletManager.Code.InternError, "Cannot remove this profile");
-	}
-
 }
