@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 
 /**
@@ -48,12 +49,11 @@ public class AddProfile extends HttpServlet {
 		try {
 			String name = sm.getServletParam("name", true);
 			String color = sm.getServletParam("color", true);
-			if (name == null)
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Name empty");
-			else if (color == null)
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Color empty");
+			if (name == null || name.equals(""))
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Name empty.");
+			else if (color == null || Regex.isColor(color) == false)
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong color.");
 			sm.needToBeConnected();
-			
 			int column = user.getMostEmptyProfileColumn();
 			Profile newProfile = Profile.createPersonnalProfile(user, column, user.getProfilesColumn().get(column).size(), name, color, sm);
 			sm.setResponse(ServletManager.Code.Success, newProfile.getJSONString());

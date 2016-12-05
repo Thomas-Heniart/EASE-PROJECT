@@ -7,6 +7,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -209,6 +210,27 @@ public class User {
 	
 	public void removeEmail(UserEmail email) {
 		this.emails.remove(email);
+	}
+	
+	public void removeProfile(int single_id, ServletManager sm) throws GeneralException {
+		Iterator<List<Profile>> it = this.profiles_column.iterator();
+		while (it.hasNext()) {
+			List<Profile> column = it.next();
+			Iterator<Profile> it2 = column.iterator();
+			while (it2.hasNext()) {
+				Profile profile = it2.next();
+				if (profile.getSingleId() == single_id) {
+					DataBaseConnection db = sm.getDB();
+					int transaction = db.startTransaction();
+					profile.removeFromDB(sm);
+					column.remove(profile);
+					this.updateProfilesIndex(sm);
+					db.commitTransaction(transaction);
+					return;
+				}
+			}
+		}
+		throw new GeneralException(ServletManager.Code.InternError, "Cannot remove this profile");
 	}
 	
 	public void updateProfilesIndex(ServletManager sm) throws GeneralException {
