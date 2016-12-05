@@ -6,10 +6,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
 
 public class Group {
@@ -26,26 +29,31 @@ public class Group {
 	 * 
 	 */
 	
-	public static List<Group> loadGroups(DataBaseConnection db, Infrastructure infra)throws GeneralException {
-		return loadGroup(db, null, infra);
+	public static List<Group> loadGroups(DataBaseConnection db, Infrastructure infra, ServletContext context)throws GeneralException {
+		return loadGroup(db, null, infra, context);
 	}
 	
-	public static List<Group> loadGroup(DataBaseConnection db, Group parent, Infrastructure infra) throws GeneralException {
+	@SuppressWarnings("unchecked")
+	public static List<Group> loadGroup(DataBaseConnection db, Group parent, Infrastructure infra, ServletContext context) throws GeneralException {
 		try {
+			IdGenerator idGenerator = (IdGenerator)context.getAttribute("idGenerator");
 			List<Group> groups = new LinkedList<Group>();
 			ResultSet rs = db.get("SELECT * FROM groups WHERE parent " + ((parent == null) ? " IS NULL" : ("="+parent.getDBid())) + " AND infra_id=" + infra.getDBid() + ";");
 			String db_id;
 			String name;
+			int single_id;
 			List<GroupProfile> groupProfiles;
 			while (rs.next()) {
 				db_id = rs.getString(Data.ID.ordinal());
 				System.out.println(db_id);
 				name = rs.getString(Data.NAME.ordinal());
-				Group child = new Group(db_id, name, parent, infra);
-				groupProfiles = GroupProfile.loadGroupProfiles(child, db);
-				child.setChildrens(loadGroup(db, child, infra));
+				single_id = idGenerator.getNextId();
+				Group child = new Group(db_id, name, parent, infra, single_id);
+				groupProfiles = GroupProfile.loadGroupProfiles(child, db, context);
+				child.setChildrens(loadGroup(db, child, infra, context));
 				child.setGroupProfiles(groupProfiles);
 				groups.add(child);
+				((Map<Integer, Group>)context.getAttribute("groups")).put(single_id, child);
 			}
 			return groups;
 		} catch (SQLException e) {
@@ -66,13 +74,15 @@ public class Group {
 	protected Group		parent;
 	protected List<GroupProfile> groupProfiles;
 	protected Infrastructure infra;
+	protected int	single_id;
 	
-	public Group(String db_id, String name, Group parent, Infrastructure infra) {
+	public Group(String db_id, String name, Group parent, Infrastructure infra, int single_id) {
 		this.db_id = db_id;
 		this.name = name;
 		this.children = null;
 		this.parent = parent;
 		this.infra = infra;
+		this.single_id = single_id;
 	}
 	
 	/*
@@ -148,6 +158,11 @@ public class Group {
 		int transaction = db.startTransaction();
 		if (this.parent != null)
 			this.parent.loadContentForUnconnectedUser(db_id, sm);
+		for (GroupProfile groupProfile : this.groupProfiles) {
+			int columnIdx = User.getMostEmptyProfileColumnForUnconnected(db_id, sm);
+			int posIdx = User.getColumnNextPositionForUnconnected(db_id, columnIdx, sm);
+			Profile.createProfileWithGroupForUnconnected(db_id, columnIdx, posIdx, groupProfile, sm);
+		}
 		db.commitTransaction(transaction);
 	}
 	
@@ -164,11 +179,25 @@ public class Group {
 			}
 		}
 		user.updateProfilesIndex(sm);
+		if (this.parent != null)
+			removeContentForConnectedUser(user, sm);
 		db.commitTransaction(transaction);
 	}
 	
 	public void removeContentForUnconnectedUser(String db_id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		try {
+			for (GroupProfile groupProfile : this.groupProfiles) {	
+				ResultSet rs = db.get("SELECT * FROM profiles WHERE user_id=" + db_id + " AND group_profile_id=" + groupProfile.getDBid() + ";");
+				Profile.removeProfileForUnconnected(rs.getString(Profile.Data.ID.ordinal()), (groupProfile.isCommon()) ? null : rs.getString(Profile.Data.PROFILE_INFO_ID.ordinal()), sm);
+			}
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+		if (this.parent != null)
+			removeContentForUnconnectedUser(db_id, sm);
+		db.commitTransaction(transaction);
 	}
 	
 	public String toString() {

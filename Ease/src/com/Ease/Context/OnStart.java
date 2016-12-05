@@ -10,10 +10,13 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import com.Ease.Context.Group.Group;
+import com.Ease.Context.Group.GroupProfile;
 import com.Ease.Context.Group.Infrastructure;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBase;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.IdGenerator;
 
 public class OnStart implements ServletContextListener{
 	@Override
@@ -34,8 +37,13 @@ public class OnStart implements ServletContextListener{
 			return;
 		}
 		try {
-			List<Infrastructure> infras = Infrastructure.loadInfrastructures(db);
+			evt.getServletContext().setAttribute("idGenerator", new IdGenerator());
+			
+			evt.getServletContext().setAttribute("groups", new HashMap<Integer, Group>());
+			evt.getServletContext().setAttribute("groupProfiles", new HashMap<Integer, GroupProfile>());
+			List<Infrastructure> infras = Infrastructure.loadInfrastructures(db, evt.getServletContext());
 			evt.getServletContext().setAttribute("infras", infras);
+			
 						
 			// SiteManager initialization
 			/*SiteManager siteManager = new SiteManager();

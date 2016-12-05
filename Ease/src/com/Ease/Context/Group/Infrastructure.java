@@ -5,6 +5,9 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.servlet.ServletContext;
+
+import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
@@ -22,7 +25,7 @@ public class Infrastructure {
 	 * 
 	 */
 	
-	public static List<Infrastructure> loadInfrastructures(DataBaseConnection db) throws GeneralException {
+	public static List<Infrastructure> loadInfrastructures(DataBaseConnection db, ServletContext context) throws GeneralException {
 		try {
 			List<Infrastructure> infras = new LinkedList<Infrastructure>();
 			ResultSet rs = db.get("SELECT * FROM infrastructures;");
@@ -34,7 +37,7 @@ public class Infrastructure {
 				db_id = rs.getString(Data.ID.ordinal());
 				name = rs.getString(Data.NAME.ordinal());
 				infra = new Infrastructure(db_id, name);
-				groups = Group.loadGroups(db, infra);
+				groups = Group.loadGroups(db, infra, context);
 				infra.setGroups(groups);
 			}
 			return infras;
@@ -87,5 +90,25 @@ public class Infrastructure {
 	
 	public String getDBid() {
 		return db_id;
+	}
+	
+	/*
+	 * 
+	 * Utils
+	 * 
+	 */
+	
+	public boolean isAdmin(User user, ServletManager sm) throws GeneralException {
+		try {
+			DataBaseConnection db = sm.getDB();
+			ResultSet rs = db.get("SELECT * FROM infrastructuresAdminsMap WHERE infrastructure_id=" + this.db_id + " AND user_id=" + user.getDBid() + ";");
+			if (rs.next()) {
+				return true;
+			} else {
+				throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permissions to do that.");
+			}
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
 	}
 }
