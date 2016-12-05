@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.json.simple.JSONObject;
+
 import com.Ease.Dashboard.Profile.ProfileInformation;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
@@ -132,5 +134,15 @@ public class GroupProfile {
 		if (groupProfile == null)
 			throw new GeneralException(ServletManager.Code.InternError, "This groupProfile dosen't exist!");
 		return groupProfile;
+	}
+
+	public JSONObject getJSON() {
+		JSONObject res = new JSONObject();
+		
+		return res;
+	}
+	
+	public String getJSONString() {
+		return this.getJSON().toString();
 	}
 }
