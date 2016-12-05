@@ -9,10 +9,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupProfile;
 import com.Ease.Context.Group.Infrastructure;
+import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -42,6 +44,8 @@ public class AddGroup extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		User user = (User) (session.getAttribute("User"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		
 		try {
@@ -59,6 +63,7 @@ public class AddGroup extends HttpServlet {
 					if (parent == null)
 						throw new GeneralException(ServletManager.Code.ClientError, "This group does not exist");
 					infra = parent.getInfra();
+					infra.isAdmin(user, sm);
 					Group newGroup = Group.createGroup(name, parent, infra, sm);
 					groups.put(newGroup.getSingleId(), newGroup);
 					sm.setResponse(ServletManager.Code.Success, newGroup.getJSONString());
