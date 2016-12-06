@@ -100,6 +100,13 @@ public class ServletManager {
 		return param;
 	}
 	
+	public Map<String, String[]> getServletParametersMap(boolean saveInLogs) {
+		Map<String, String[]> params = request.getParameterMap();
+		if (saveInLogs)
+			args.put("parameters map", (params != null) ? params.toString() : null);
+		return params;
+	}
+	
 	public DataBaseConnection getDB() {
 		return this.db;
 	}
