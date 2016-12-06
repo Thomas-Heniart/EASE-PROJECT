@@ -59,6 +59,7 @@ public class AddClassicApp extends HttpServlet {
 		Website site = null;
 		Map<String, String> informations = new HashMap<String, String>();
 		try {
+			sm.needToBeConnected();
 			String single_id = sm.getServletParam("single_id", true);
 			Map<String, String[]> params = sm.getServletParametersMap(true);
 			Profile profile = user.getProfile(Integer.parseInt(single_id));
