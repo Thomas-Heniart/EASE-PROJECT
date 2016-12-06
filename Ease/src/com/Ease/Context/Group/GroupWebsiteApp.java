@@ -1,7 +1,7 @@
 package com.Ease.Context.Group;
 
 import com.Ease.Dashboard.App.AppInformation;
-import com.Ease.context.Site;
+import com.Ease.Dashboard.App.Website;
 
 public class GroupWebsiteApp extends GroupApp {
 	
@@ -13,9 +13,9 @@ public class GroupWebsiteApp extends GroupApp {
 	}
 	
 	protected GroupApp group_app;
-	protected Site site;
+	protected Website site;
 	
-	public GroupWebsiteApp(String db_id, GroupProfile groupProfile, Group group, AppPermissions permissions, String type, AppInformation app_informations, boolean common, GroupApp group_app, Site site) {
+	public GroupWebsiteApp(String db_id, GroupProfile groupProfile, Group group, AppPermissions permissions, String type, AppInformation app_informations, boolean common, GroupApp group_app, Website site) {
 		super(db_id, groupProfile, group, permissions, type, app_informations, common);
 		this.group_app = group_app;
 		this.site = site;
