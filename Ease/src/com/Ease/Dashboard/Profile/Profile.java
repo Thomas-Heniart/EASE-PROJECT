@@ -265,4 +265,15 @@ public class Profile {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
+	
+	public void updateAppsIndex(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		for (int i = 0; i < apps.size(); ++i) {
+			if (apps.get(i).getPosition() != i) {
+				apps.get(i).setPosition(i, sm);
+			}
+		}
+		db.commitTransaction(transaction);
+	}
 }

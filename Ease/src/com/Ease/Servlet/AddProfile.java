@@ -51,7 +51,7 @@ public class AddProfile extends HttpServlet {
 			String name = sm.getServletParam("name", true);
 			String color = sm.getServletParam("color", true);
 			if (name == null || name.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Name empty.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
 			else if (color == null || Regex.isColor(color) == false)
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong color.");
 			int column = user.getMostEmptyProfileColumn();
