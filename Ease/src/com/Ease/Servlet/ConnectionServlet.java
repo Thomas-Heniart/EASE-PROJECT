@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.Ease.Dashboard.User.SessionSave;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
@@ -68,7 +69,10 @@ public class ConnectionServlet extends HttpServlet {
 					sm.setResponse(ServletManager.Code.ClientWarning, "Wrong password");
 				else {
 					User user = User.loadUser(email, password, sm);
+					SessionSave sessionSave = SessionSave.createSessionSave(user, sm);
 					session.setAttribute("user", user);
+					session.setAttribute("SessionSave", sessionSave);
+					removeIpFromDataBase(client_ip,db);
 					sm.setResponse(ServletManager.Code.Success, "Successfully connected");
 				}
 			} else {
