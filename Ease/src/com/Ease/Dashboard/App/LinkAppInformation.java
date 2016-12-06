@@ -19,12 +19,16 @@ public class LinkAppInformation {
 	public static LinkAppInformation createLinkAppInformation(String link, String imgUrl,
 			ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		int transaction = db.startTransaction();
 		int db_id = db.set("INSERT INTO linkAppInformations (null, " + link + "', '" + imgUrl + "');");
-		db.commitTransaction(transaction);
 		return new LinkAppInformation(String.valueOf(db_id), link, imgUrl);
 	}
 
+	public static String createLinkAppInformationForUnconnected(String link, String imgUrl, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int db_id = db.set("INSERT INTO linkAppInformations (null, " + link + "', '" + imgUrl + "');"); 
+		return String.valueOf(db_id);
+	}
+	
 	public static LinkAppInformation loadLinkAppInformation(String db_id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		ResultSet rs = db.get("SELECT * FROM linkAppInformations WHERE id = " + db_id + ";");

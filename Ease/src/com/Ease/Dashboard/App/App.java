@@ -7,7 +7,10 @@ import java.sql.SQLException;
 
 import org.json.simple.JSONObject;
 
+import com.Ease.Context.Group.GroupApp;
+import com.Ease.Context.Group.GroupLinkApp;
 import com.Ease.Context.Group.ProfilePermissions;
+import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
@@ -30,7 +33,7 @@ public abstract class App {
 	public static void loadApps(Profile profile, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		ResultSet rs = db.get("SELECT * FROM apps WHERE profile_id=" + profile.getDb_id() + ";");
+		ResultSet rs = db.get("SELECT * FROM apps WHERE profile_id=" + profile.getDBid() + ";");
 		try {
 			while (rs.next()) {
 				String type = rs.getString(AppData.TYPE.ordinal());
@@ -45,9 +48,15 @@ public abstract class App {
 		db.commitTransaction(transaction);
 	}
 	
-	public static String insertNewAppInDb(Profile profile, int position, String type, AppInformation informations, GroupApp groupApp, ServletManager sm) {
+	public static String insertNewAppInDb(Profile profile, int position, String type, AppInformation informations, GroupApp groupApp, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		int app_id = db.set("INSERT INTO apps values (null, " + profile.getDb_id() + ", " + position + " , default, null, '" + type + "', 1, " + informations.getDb_id() + ", " + ((groupApp == null) ? "null" : groupApp.getDb_id()) +  ");");
+		int app_id = db.set("INSERT INTO apps values (null, " + profile.getDBid() + ", " + position + " , default, null, '" + type + "', 1, " + informations.getDb_id() + ", " + ((groupApp == null) ? "null" : groupApp.getDb_id()) +  ");");
+		return String.valueOf(app_id);
+	}
+	
+	public static String insertNewAppInDb(String profile_id, int position, String type, String appInfo_id, GroupLinkApp groupLinkApp, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int app_id = db.set("INSERT INTO apps values (null, " + profile_id + ", " + position + ", default, null, '" + type + "', 1, " + appInfo_id + ", " + groupLinkApp.getDb_id() + ");");
 		return String.valueOf(app_id);
 	}
 	
@@ -57,6 +66,7 @@ public abstract class App {
 	protected boolean working;
 	protected int position;
 	protected AppInformation informations;
+	protected GroupApp groupApp;
 	
 	public String getDb_id() {
 		return this.db_id;
@@ -76,8 +86,8 @@ public abstract class App {
 	
 	public void setProfile(Profile profile, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		if (this.profile.getPermissions().havePermission(ProfilePermissions.Perm.MOVE_APP_OUTSIDE.ordinal())) {
-			db.set("UPDATE apps SET profile_id = " + profile.getDb_id() + " WHERE id = " + this.getDb_id() + ";");
+		if (this.profile.getGroupProfile() == null || this.profile.getGroupProfile().getPerms().havePermission(ProfilePermissions.Perm.MOVE_APP_OUTSIDE.getValue())) {
+			db.set("UPDATE apps SET profile_id = " + profile.getDBid() + " WHERE id = " + this.getDb_id() + ";");
 			this.profile = profile;
 		}
 		else
@@ -102,10 +112,6 @@ public abstract class App {
 		JSONObject res = new JSONObject();
 		// get JSON for connection
 		return res;
-	}
-	
-	public void updateApp(App updatedApp) {
-		this.profile.replaceApp(this, updatedApp);
 	}
 	
 	public void remove(ServletManager sm) throws GeneralException {
