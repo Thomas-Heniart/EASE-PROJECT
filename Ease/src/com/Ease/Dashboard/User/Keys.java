@@ -38,6 +38,22 @@ public class Keys {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
+	
+	public static Keys loadKeysWithoutPassword(String id, String keyUser, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		ResultSet rs = db.get("SELECT * FROM userKeys WHERE id=" + id + ";");
+		try {
+			rs.next();
+			String db_id = rs.getString(Data.ID.ordinal());
+			String hashed_password = rs.getString(Data.PASSWORD.ordinal());
+			String saltEase = rs.getString(Data.SALTEASE.ordinal());
+			String saltPerso = rs.getString(Data.SALTPERSO.ordinal());
+			return new Keys(db_id, hashed_password, saltEase, saltPerso, keyUser);
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+	}
+	
 	public static Keys createKeys(String password, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		String saltEase = AES.generateSalt();
