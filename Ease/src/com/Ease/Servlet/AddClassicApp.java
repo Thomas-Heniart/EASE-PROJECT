@@ -59,6 +59,7 @@ public class AddClassicApp extends HttpServlet {
 		Website site = null;
 		Map<String, String> informations = new HashMap<String, String>();
 		try {
+			sm.needToBeConnected();
 			String single_id = sm.getServletParam("single_id", true);
 			Map<String, String[]> params = sm.getServletParametersMap(true);
 			Profile profile = user.getProfile(Integer.parseInt(single_id));
@@ -79,13 +80,13 @@ public class AddClassicApp extends HttpServlet {
 					case "password":
 						password = entry.getValue()[0];
 						if (password == null || password.equals(""))
-							throw new GeneralException(ServletManager.Code.ClientError, "Empty password.");
+							throw new GeneralException(ServletManager.Code.ClientWarning, "Empty password.");
 						break;
 
 					case "name":
 						name = entry.getValue()[0];
 						if (name == null || name.equals(""))
-							throw new GeneralException(ServletManager.Code.ClientError, "Empty name.");
+							throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
 						break;
 
 					case "single_id":

@@ -45,6 +45,7 @@ public class AddGroupProfile extends HttpServlet {
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		
 		try {
+			sm.needToBeConnected();
 			String name = sm.getServletParam("name", true);
 			String color = sm.getServletParam("color", true);
 			boolean common = Boolean.parseBoolean(sm.getServletParam("common", true));
@@ -56,7 +57,6 @@ public class AddGroupProfile extends HttpServlet {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong color.");
 			else if (group_id == null || group_id.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientError, "Group error.");
-			sm.needToBeConnected();
 			@SuppressWarnings("unchecked")
 			Map<String, Group> groups = (Map<String, Group>) sm.getContextAttr("groups");
 			Group group = groups.get(group_id);

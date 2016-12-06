@@ -3,6 +3,7 @@ package com.Ease.Dashboard.App;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
@@ -30,11 +31,11 @@ public class LinkApp extends App {
 	public static LinkApp createLinkApp(String name, Profile profile, String link, String imgUrl, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction;
-		int position = profile.getNextPosition();
+		int position = profile.getApps().size();
 		transaction = db.startTransaction();
 		AppInformation informations = AppInformation.createAppInformation(name, sm);
 		LinkAppInformation link_app_informations = LinkAppInformation.createLinkAppInformation(link, imgUrl, sm);
-		int app_id = db.set("INSERT INTO apps values (null, " + profile.getDb_id() + ", " + position + ", default, null, 'LinkApp', 1, " + informations.getDb_id() + ", null);");
+		int app_id = db.set("INSERT INTO apps values (null, " + profile.getDBid() + ", " + position + ", default, null, 'LinkApp', 1, " + informations.getDb_id() + ", null);");
 		db.set("INSERT INTO linkApps values (null, " + app_id + ", " + link_app_informations.getDb_id() + ", null);");
 		db.commitTransaction(transaction);
 		return new LinkApp(profile, position, sm.getNextSingleId(), String.valueOf(app_id), true, informations, link_app_informations);
@@ -42,7 +43,7 @@ public class LinkApp extends App {
 
 	protected LinkAppInformation link_app_informations;
 	
-	public LinkApp(Profile profile, int position, int single_id, String db_id, boolean working, AppInformation informations, LinkAppInformation link_app_informations) {
+	public LinkApp(Profile profile, int position, int single_id, String db_id, boolean working, AppInformation informations, LinkAppInformation link_app_informations, GroupLinkApp groupLinkApp) {
 		this.profile = profile;
 		this.position = position;
 		this.single_id = single_id;
@@ -50,6 +51,7 @@ public class LinkApp extends App {
 		this.working = working;
 		this.informations = informations;
 		this.link_app_informations = link_app_informations;
+		this.groupApp = groupLinkApp;
 	}
 	
 	public LinkApp(String db_id, Profile profile, ServletManager sm) throws GeneralException {

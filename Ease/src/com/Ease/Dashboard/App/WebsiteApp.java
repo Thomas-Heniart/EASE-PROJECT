@@ -33,28 +33,28 @@ public class WebsiteApp extends App {
 		NOTHING, NAME, PROFILE_ID, WEBSITE_ID, POSITION, PERMISSION_ID, WORK, GROUP_WEBSITE_APP_ID, APP_INFO_ID
 	}
 
-	public static WebsiteApp createEmptyApp(String name, Profile profile, Website site, ServletManager sm)
+	public static WebsiteApp createEmptyApp(String name, Profile profile, GroupApp groupApp, GroupWebsiteApp groupWebsiteApp, Website site, ServletManager sm)
 			throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		int position = profile.getNextPosition();
-		WebsiteApp.insertNewWebsiteAppInDb(profile, position, "WebsiteApp", app_information, groupWebsiteApp, site, sm)
-		AppInformation informations = AppInformation.createAppInformation(name, sm);
-		return new WebsiteApp(profile, position, sm.getNextSingleId(), String.valueOf(app_id), true, site,
-				informations);
+		int position = profile.getApps().size();
+		AppInformation app_information = AppInformation.createAppInformation(name, sm);
+		String app_id = WebsiteApp.insertNewWebsiteAppInDb(profile, position, "WebsiteApp", app_information, null, site, sm);
+		return new WebsiteApp(profile, position, sm.getNextSingleId(), app_id, true, site,
+				app_information, groupApp, groupWebsiteApp);
 	}
 
 	public static String insertNewWebsiteAppInDb(Profile profile, int position, String type, AppInformation app_information, GroupWebsiteApp groupWebsiteApp, Website site, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		String app_id = App.insertNewAppInDb(profile, position, type, app_information, (groupWebsiteApp == null) ? null : groupWebsiteApp.getGroupApp(), sm);
-		int website_app_id = db.set("INSERT INTO websiteApps values (null, " + site.getDb_id() + ", " + app_id + ", " + ((groupWebsiteApp == null) ? "null" : groupWebsiteApp.getDb_id()) + ");");
+		db.set("INSERT INTO websiteApps values (null, " + site.getDb_id() + ", " + app_id + ", " + ((groupWebsiteApp == null) ? "null" : groupWebsiteApp.getDb_id()) + ");");
 		db.commitTransaction(transaction);
-		return String.valueOf(website_app_id);
+		return app_id;
 	}
 	
 	protected Website site;
+	protected GroupWebsiteApp groupWebsiteApp;
 
-	public WebsiteApp(Profile profile, int position, int single_id, String db_id, boolean working, Website site, AppInformation informations) {
+	public WebsiteApp(Profile profile, int position, int single_id, String db_id, boolean working, Website site, AppInformation informations, GrouApp groupApp, GroupWebsiteApp groupWebsiteApp) {
 		this.profile = profile;
 		this.position = position;
 		this.single_id = single_id;
@@ -62,6 +62,8 @@ public class WebsiteApp extends App {
 		this.site = site;
 		this.working = working;
 		this.informations = informations;
+		this.groupWebsiteApp = groupWebsiteApp;
+		this.groupApp = groupApp;
 	}
 
 	public WebsiteApp() {
@@ -82,8 +84,6 @@ public class WebsiteApp extends App {
 			this.single_id = sm.getNextSingleId();
 			this.db_id = app_id;
 			String group_website_app_id = rs.getString(LoadData.GROUP_WEBSITE_APP_ID.ordinal());
-			if (group_website_app_id == null || group_website_app_id.equals("null"))
-				this.permissions = AppPermissions.loadPersonnalAppPermissions(sm);
 			else {
 				ResultSet rs2 = db.get("SELECT permission_id, common FROM groupApps JOIN groupWebsiteApps ON groupsApps.id = groupWebsiteApps.group_app_id WHERE groupWebsiteApps.id=" + group_website_app_id + ";");
 				try {
