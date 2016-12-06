@@ -36,4 +36,12 @@ public class GroupApp {
 	public String getDb_id() {
 		return this.db_id;
 	}
+	
+	public boolean isCommon() {
+		return this.common;
+	}
+	
+	public AppInformation getAppInfo() {
+		return this.app_informations;
+	}
 }

@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import org.json.simple.JSONObject;
 
 import com.Ease.Context.Group.GroupApp;
+import com.Ease.Context.Group.GroupLinkApp;
 import com.Ease.Context.Group.ProfilePermissions;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Utils.DataBaseConnection;
@@ -50,6 +51,12 @@ public abstract class App {
 	public static String insertNewAppInDb(Profile profile, int position, String type, AppInformation informations, GroupApp groupApp, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int app_id = db.set("INSERT INTO apps values (null, " + profile.getDBid() + ", " + position + " , default, null, '" + type + "', 1, " + informations.getDb_id() + ", " + ((groupApp == null) ? "null" : groupApp.getDb_id()) +  ");");
+		return String.valueOf(app_id);
+	}
+	
+	public static String insertNewAppInDb(String profile_id, int position, String type, String appInfo_id, GroupLinkApp groupLinkApp, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int app_id = db.set("INSERT INTO apps values (null, " + profile_id + ", " + position + ", default, null, '" + type + "', 1, " + appInfo_id + ", " + groupLinkApp.getDb_id() + ");");
 		return String.valueOf(app_id);
 	}
 	

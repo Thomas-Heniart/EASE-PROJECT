@@ -33,13 +33,13 @@ public class WebsiteApp extends App {
 		NOTHING, NAME, PROFILE_ID, WEBSITE_ID, POSITION, PERMISSION_ID, WORK, GROUP_WEBSITE_APP_ID, APP_INFO_ID
 	}
 
-	public static WebsiteApp createEmptyApp(String name, Profile profile, GroupApp groupApp, GroupWebsiteApp groupWebsiteApp, Website site, ServletManager sm)
+	public static WebsiteApp createEmptyApp(String name, Profile profile, GroupWebsiteApp groupWebsiteApp, Website site, ServletManager sm)
 			throws GeneralException {
 		int position = profile.getApps().size();
 		AppInformation app_information = AppInformation.createAppInformation(name, sm);
 		String app_id = WebsiteApp.insertNewWebsiteAppInDb(profile, position, "WebsiteApp", app_information, null, site, sm);
 		return new WebsiteApp(profile, position, sm.getNextSingleId(), app_id, true, site,
-				app_information, groupApp, groupWebsiteApp);
+				app_information, groupWebsiteApp);
 	}
 
 	public static String insertNewWebsiteAppInDb(Profile profile, int position, String type, AppInformation app_information, GroupWebsiteApp groupWebsiteApp, Website site, ServletManager sm) throws GeneralException {
@@ -54,7 +54,7 @@ public class WebsiteApp extends App {
 	protected Website site;
 	protected GroupWebsiteApp groupWebsiteApp;
 
-	public WebsiteApp(Profile profile, int position, int single_id, String db_id, boolean working, Website site, AppInformation informations, GrouApp groupApp, GroupWebsiteApp groupWebsiteApp) {
+	public WebsiteApp(Profile profile, int position, int single_id, String db_id, boolean working, Website site, AppInformation informations, GroupWebsiteApp groupWebsiteApp) {
 		this.profile = profile;
 		this.position = position;
 		this.single_id = single_id;
@@ -63,7 +63,7 @@ public class WebsiteApp extends App {
 		this.working = working;
 		this.informations = informations;
 		this.groupWebsiteApp = groupWebsiteApp;
-		this.groupApp = groupApp;
+		this.groupApp = groupWebsiteApp;
 	}
 
 	public WebsiteApp() {

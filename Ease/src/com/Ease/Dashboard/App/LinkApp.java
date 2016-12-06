@@ -3,6 +3,7 @@ package com.Ease.Dashboard.App;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.Ease.Context.Group.GroupLinkApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
@@ -28,7 +29,7 @@ public class LinkApp extends App {
 	}
 	
 
-	public static LinkApp createLinkApp(String name, Profile profile, String link, String imgUrl, ServletManager sm) throws GeneralException {
+	public static LinkApp createPersonnalLinkApp(String name, Profile profile, String link, String imgUrl, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction;
 		int position = profile.getApps().size();
@@ -38,7 +39,45 @@ public class LinkApp extends App {
 		int app_id = db.set("INSERT INTO apps values (null, " + profile.getDBid() + ", " + position + ", default, null, 'LinkApp', 1, " + informations.getDb_id() + ", null);");
 		db.set("INSERT INTO linkApps values (null, " + app_id + ", " + link_app_informations.getDb_id() + ", null);");
 		db.commitTransaction(transaction);
-		return new LinkApp(profile, position, sm.getNextSingleId(), String.valueOf(app_id), true, informations, link_app_informations);
+		return new LinkApp(profile, position, sm.getNextSingleId(), String.valueOf(app_id), true, informations, link_app_informations, null);
+	}
+	
+	public static LinkApp createLinkAppWithGroup(Profile profile, String name, String link, String imgUrl, GroupLinkApp groupLinkApp, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		AppInformation appInfo;
+		LinkAppInformation linkAppInfo;
+		if (groupLinkApp.isCommon()) {
+			appInfo = groupLinkApp.getAppInfo();
+			linkAppInfo = groupLinkApp.getLinkAppInfo();
+		} else {
+			appInfo = AppInformation.createAppInformation(name, sm);
+			linkAppInfo = LinkAppInformation.createLinkAppInformation(link, imgUrl, sm);
+		}
+		int transaction = db.startTransaction();
+		int position = profile.getApps().size();
+		String db_id = App.insertNewAppInDb(profile, position, "LinkApp", appInfo, groupLinkApp, sm);
+		db.set("INSERT INTO linkApps values (null, " + db_id + ", " + linkAppInfo.getDb_id() + ", " + groupLinkApp.getDb_id() + ");");
+		db.commitTransaction(transaction);
+		return new LinkApp(profile, position, sm.getNextSingleId(), db_id, true, appInfo, linkAppInfo, groupLinkApp);	
+	}
+	
+	public String createLinkAppWithGroupForUnconnected(String profile_id, String name, String link, String imgUrl, GroupLinkApp groupLinkApp, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		String linkAppInfo_id;
+		String appInfo_id;
+		if (groupLinkApp.isCommon()) {
+			appInfo_id = groupLinkApp.getAppInfo().getDb_id();
+			linkAppInfo_id = groupLinkApp.getLinkAppInfo().getDb_id();
+		} else {
+			appInfo_id = AppInformation.createAppInformationForUnconnected(name, sm);
+			linkAppInfo_id = LinkAppInformation.createLinkAppInformationForUnconnected(link, imgUrl, sm);
+		}
+		int transaction = db.startTransaction();
+		int position = profile.getApps().size();
+		String db_id = App.insertNewAppInDb(profile_id, position, "LinkApp", appInfo_id, groupLinkApp, sm);
+		db.set("INSERT INTO linkApps values (null, " + db_id + ", " + linkAppInfo_id + ", " + groupLinkApp.getDb_id() + ");");
+		db.commitTransaction(transaction);
+		return db_id;	
 	}
 
 	protected LinkAppInformation link_app_informations;

@@ -21,6 +21,12 @@ public class AppInformation {
 		return new AppInformation(String.valueOf(db_id), name);
 	}
 	
+	public static String createAppInformationForUnconnected(String name, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int db_id = db.set("INSERT INTO appInformations values (null, '" + name + "');");
+		return String.valueOf(db_id);
+	}
+	
 	public static AppInformation loadAppInformation(String db_id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		ResultSet rs = db.get("SELECT * FROM appInformations WHERE id = " + db_id + " ;");
