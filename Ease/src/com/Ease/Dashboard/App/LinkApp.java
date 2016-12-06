@@ -105,8 +105,7 @@ public class LinkApp extends App {
 				this.db_id = db_id;
 				String group_link_app_id = rs.getString(LoadData.GROUP_ID.ordinal());
 				if (!(group_link_app_id == null || group_link_app_id.equals("null"))) {
-					ResultSet rs2 = db.get("SELECT permission_id, common FROM groupApps JOIN groupLinkApps ON groupApps.id = groupLinkApps.group_app_id WHERE groupLinkApps.id = " + group_link_app_id + ";");
-					rs2.next();
+					GroupLinkApp.load
 				} else {
 				}
 				String app_info_id = rs.getString(LoadData.APP_INFO_ID.ordinal());
