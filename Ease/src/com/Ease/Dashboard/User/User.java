@@ -72,6 +72,44 @@ public class User {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public static User loadUserFromCookies(SessionSave sessionSave, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		String db_id = sessionSave.getUserId();
+		String keyUser = sessionSave.getKeyUser();
+		Map<String, Group> groups = (Map<String, Group>) sm.getContextAttr("groups");
+		try {
+			ResultSet rs = db.get("SELECT * FROM users where id='" + db_id + "';");
+			if (rs.next()) {
+				String email = rs.getString(Data.EMAIL.ordinal());
+				String firstName = rs.getString(Data.FIRSTNAME.ordinal());
+				String lastName = rs.getString(Data.LASTNAME.ordinal());
+				Keys keys = Keys.loadKeysWithoutPassword(rs.getString(Data.KEYSID.ordinal()), keyUser, sm);
+				Option options = Option.loadOption(rs.getString(Data.OPTIONSID.ordinal()), sm);
+				//Status status = Status.loadStatus(rs.getString(Data.STATUSID.ordinal()), sm);
+				List<UserEmail> emails = UserEmail.loadEmails(db_id, sm);
+				ResultSet adminRs = db.get("SELECT user_id FROM admins WHERE user_id = " + db_id + ";");
+				boolean isAdmin = adminRs.next();
+				User newUser =  new User(db_id, firstName, lastName, email, keys, options, null, emails, isAdmin);
+				newUser.loadProfiles(sm);
+				ResultSet rs2 = db.get("SELECT group_id FROM groupsAndUsersMap WHERE user_id=" + newUser.getDBid() + ";");
+				Group userGroup;
+				while (rs2.next()) {
+					userGroup = groups.get(rs2.getString(1));
+					if (userGroup != null) {
+						newUser.getGroups().add(userGroup);
+					}
+				}
+				((Map<String, User>)sm.getContextAttr("users")).put(email, newUser);
+				return newUser;
+			} else {
+				throw new GeneralException(ServletManager.Code.UserMiss, "Wrong email or password.");
+			}
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
 	public static User createUser(String email, String firstName, String lastName, String password, String code, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
