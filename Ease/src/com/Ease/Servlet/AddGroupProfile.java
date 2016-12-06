@@ -9,13 +9,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupProfile;
-import com.Ease.Context.Group.ProfilePermissions;
-import com.Ease.Dashboard.Profile.Profile;
-import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
@@ -61,6 +57,7 @@ public class AddGroupProfile extends HttpServlet {
 			else if (group_id == null || group_id.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientError, "Group error.");
 			sm.needToBeConnected();
+			@SuppressWarnings("unchecked")
 			Map<String, Group> groups = (Map<String, Group>) sm.getContextAttr("groups");
 			Group group = groups.get(group_id);
 			GroupProfile newGroupProfile = GroupProfile.createGroupProfile(group, perms, name, color, common, sm);
