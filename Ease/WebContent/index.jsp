@@ -108,7 +108,7 @@ mixpanel.init("e87ca36e156107ebbd9a672735e6612c");</script><!-- end Mixpanel -->
 
 </head>
 
-<body role="document" class=<%= ((user != null && user.getBackground()=="logo") ? "'mainBody logoBckgrnd'" : "'mainBody picBckgrnd'") %>>
+<body role="document" class=<%= ((user != null && user.getOptions().isBackground_picked()) ? "'mainBody logoBckgrnd'" : "'mainBody picBckgrnd'") %>>
 	<%@ page import="java.util.Base64" %>
 	<%@ page import="java.util.Base64.Encoder" %>
 	<%@ page import="java.nio.charset.StandardCharsets" %>
