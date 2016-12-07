@@ -1,13 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="com.Ease.Dashboard.User.User"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page import="java.util.Map"%>
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.LinkedList"%>
+
 <%
-	List<String> verifiedEmails = ((User) session.getAttribute("user")).getVerifiedEmails();
-	List<String> unverifiedEmails = ((User) session.getAttribute("user")).getUnverifiedEmails();
+	List<String> verifiedEmails = user.getVerifiedEmails();
+	List<String> unverifiedEmails = user.getUnverifiedEmails();
 %>
 <div class="setting show">
 	<form action="AddEmail" oClass="AddEmailForm" id="AddEmailForm"
