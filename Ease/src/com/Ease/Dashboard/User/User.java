@@ -443,4 +443,22 @@ public class User {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
+	
+	public List<String> getVerifiedEmails() {
+		List<String> verifiedEmails = new LinkedList<String> ();
+		for (UserEmail email : this.emails) {
+			if (email.isVerified())
+				verifiedEmails.add(email.getEmail());
+		}
+		return verifiedEmails;
+	}
+	
+	public List<String> getUnverifiedEmails() {
+		List<String> unverifiedEmails = new LinkedList<String> ();
+		for (UserEmail email : this.emails) {
+			if (!email.isVerified())
+				unverifiedEmails.add(email.getEmail());
+		}
+		return unverifiedEmails;
+	}
 }
