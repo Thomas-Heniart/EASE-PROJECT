@@ -122,8 +122,8 @@ public class User {
 		String registrationDate = dateFormat.format(date);
 		String db_id = db.set("INSERT INTO users VALUES(NULL, '" + firstName + "', '" + lastName + "', '" + email + "', " + keys.getDBid() + ", " + opt.getDb_id() + ", '" + registrationDate + "');").toString();
 		User newUser = new User(db_id, null, null, email, null, opt, null, emails, false);
-		newUser.getProfilesColumn().get(0).add(Profile.createPersonnalProfile(newUser, 0, 0, "Side", "#000000", sm));
-		newUser.getProfilesColumn().get(1).add(Profile.createPersonnalProfile(newUser, 1, 0, "Perso", "#000000", sm));
+		newUser.getProfileColumns().get(0).add(Profile.createPersonnalProfile(newUser, 0, 0, "Side", "#000000", sm));
+		newUser.getProfileColumns().get(1).add(Profile.createPersonnalProfile(newUser, 1, 0, "Perso", "#000000", sm));
 		((Map<String, User>)sm.getContextAttr("users")).put(email, newUser);
 		for (Group group : groups) {
 			group.addUser(email, sm);
@@ -142,7 +142,7 @@ public class User {
 	protected Keys		keys;
 	protected Option	opt;
 	//protected Status	status;
-	protected List<List<Profile>> profiles_column;
+	protected List<List<Profile>> profile_columns;
 	protected int		max_single_id;
 	protected List<UserEmail> emails;
 	protected Map<String, WebsocketSession> websockets;
@@ -158,9 +158,9 @@ public class User {
 		this.opt = opt;
 		//this.status = status;
 		this.emails = emails;
-		this.profiles_column = new LinkedList<List<Profile>>();
+		this.profile_columns = new LinkedList<List<Profile>>();
 		for (int i = 0; i < 5; ++i) {
-			this.profiles_column.add(new LinkedList<Profile>()); 
+			this.profile_columns.add(new LinkedList<Profile>()); 
 		}
 		this.max_single_id = 0;
 		this.emails = new LinkedList<UserEmail>();
@@ -222,8 +222,8 @@ public class User {
 		return emails;
 	}
 	
-	public List<List<Profile>> getProfilesColumn() {
-		return this.profiles_column;
+	public List<List<Profile>> getProfileColumns() {
+		return this.profile_columns;
 	}
 	
 	public List<Group> getGroups() {
@@ -242,7 +242,7 @@ public class User {
 	}
 	
 	public void loadProfiles(ServletManager sm) throws GeneralException {
-		this.profiles_column = Profile.loadProfiles(this, sm);
+		this.profile_columns = Profile.loadProfiles(this, sm);
 	}
 	
 	public void removeEmail(UserEmail email) {
@@ -250,7 +250,7 @@ public class User {
 	}
 	
 	public void removeProfile(int single_id, ServletManager sm) throws GeneralException {
-		Iterator<List<Profile>> it = this.profiles_column.iterator();
+		Iterator<List<Profile>> it = this.profile_columns.iterator();
 		while (it.hasNext()) {
 			List<Profile> column = it.next();
 			Iterator<Profile> it2 = column.iterator();
@@ -273,13 +273,13 @@ public class User {
 	public void updateProfilesIndex(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		for (int i = 0; i < profiles_column.size(); ++i) {
-			for (int j = 0; j < profiles_column.get(i).size(); ++j) {
-				if (profiles_column.get(i).get(j).getPositionIdx() != j) {
-					profiles_column.get(i).get(j).setPositionIdx(j, sm);
+		for (int i = 0; i < profile_columns.size(); ++i) {
+			for (int j = 0; j < profile_columns.get(i).size(); ++j) {
+				if (profile_columns.get(i).get(j).getPositionIdx() != j) {
+					profile_columns.get(i).get(j).setPositionIdx(j, sm);
 				}
-				if (profiles_column.get(i).get(j).getColumnIdx() != i) {
-					profiles_column.get(i).get(j).setColumnIdx(i, sm);
+				if (profile_columns.get(i).get(j).getColumnIdx() != i) {
+					profile_columns.get(i).get(j).setColumnIdx(i, sm);
 				}
 			}
 		}
@@ -287,7 +287,7 @@ public class User {
 	}
 	
 	public Profile getProfile(int single_id) throws GeneralException {
-		for (List<Profile> column: this.profiles_column) {
+		for (List<Profile> column: this.profile_columns) {
 			for (Profile profile: column) {
 				if (profile.getSingleId() == single_id)
 					return profile;
@@ -297,7 +297,7 @@ public class User {
 	}
 	
 	public App getApp(int single_id) throws GeneralException {
-		for (List<Profile> column: this.profiles_column) {
+		for (List<Profile> column: this.profile_columns) {
 			for (Profile profile: column) {
 				for (App app: profile.getApps()) {
 					if (app.getSingle_id() == single_id)
@@ -314,7 +314,7 @@ public class User {
 		for (UserEmail mail: emails) {
 			mail.removeFromDB(sm);
 		}
-		for (List<Profile> column: this.profiles_column) {
+		for (List<Profile> column: this.profile_columns) {
 			for (Profile profile : column) {
 				profile.removeFromDB(sm);
 			}
@@ -365,15 +365,15 @@ public class User {
 	public int getMostEmptyProfileColumn() {
 		int col = 0;
 		int minSize = -1;
-		for (List<Profile> column : this.profiles_column) {
+		for (List<Profile> column : this.profile_columns) {
 			int colSize = 0;
-			if (this.profiles_column.indexOf(column) != 0){
+			if (this.profile_columns.indexOf(column) != 0){
 				for (Profile profile: column) {
 					colSize += profile.getSize();
 				}
 				if (minSize == - 1 || colSize < minSize) {
 					minSize = colSize;
-					col = this.profiles_column.indexOf(column);
+					col = this.profile_columns.indexOf(column);
 				}
 			}
 		}

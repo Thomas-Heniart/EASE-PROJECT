@@ -172,7 +172,7 @@ public class Group {
 		int mostEmptyColumn;
 		for (GroupProfile gProfile : this.groupProfiles) {
 			mostEmptyColumn = user.getMostEmptyProfileColumn();
-			user.getProfilesColumn().get(mostEmptyColumn).add(Profile.createProfileWithGroup(user, mostEmptyColumn, user.getProfilesColumn().get(mostEmptyColumn).size(), gProfile, sm));
+			user.getProfileColumns().get(mostEmptyColumn).add(Profile.createProfileWithGroup(user, mostEmptyColumn, user.getProfileColumns().get(mostEmptyColumn).size(), gProfile, sm));
 		}
 		db.commitTransaction(transaction);
 	}
@@ -222,7 +222,7 @@ public class Group {
 	public void removeContentForConnectedUser(User user, boolean recursive, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		for (List<Profile> column : user.getProfilesColumn()) {
+		for (List<Profile> column : user.getProfileColumns()) {
 			for (Profile profile : column) {
 				GroupProfile groupProfile = profile.getGroupProfile();
 				if (groupProfile != null && groupProfile.getGroup() == this) {
