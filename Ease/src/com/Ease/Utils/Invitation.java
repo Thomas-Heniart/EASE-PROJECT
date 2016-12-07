@@ -42,7 +42,7 @@ public class Invitation {
 		}
 	}
 
-	public static void sendInvitation(String email, String name, String group_id, ServletManager sm) throws GeneralException {
+	public static void sendInvitation(String email, String group_id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		@SuppressWarnings("unchecked")
 		Map<String, Group> groups = (Map<String, Group>) sm.getContextAttr("groups");
@@ -52,7 +52,7 @@ public class Invitation {
 		Mail mailToSend;
 		try {
 			mailToSend = new Mail();
-			mailToSend.sendInvitationEmail(email, infraName, name, invitationCode);
+			mailToSend.sendInvitationEmail(email, infraName, invitationCode);
 		} catch (MessagingException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
