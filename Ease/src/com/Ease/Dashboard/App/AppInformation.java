@@ -27,8 +27,7 @@ public class AppInformation {
 		return String.valueOf(db_id);
 	}
 	
-	public static AppInformation loadAppInformation(String db_id, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
+	public static AppInformation loadAppInformation(String db_id, DataBaseConnection db) throws GeneralException {
 		ResultSet rs = db.get("SELECT * FROM appInformations WHERE id = " + db_id + " ;");
 		String name;
 		try {

@@ -1,4 +1,4 @@
-package com.Ease.Context.Group;
+package com.Ease.Dashboard.App;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,9 +8,14 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
-import com.Ease.Dashboard.App.AppInformation;
+import com.Ease.Context.Group.Group;
+import com.Ease.Context.Group.GroupManager;
+import com.Ease.Dashboard.App.LinkApp.GroupLinkApp;
+import com.Ease.Dashboard.App.WebsiteApp.GroupWebsiteApp;
+import com.Ease.Dashboard.Profile.GroupProfile;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
 
 public class GroupApp {
@@ -33,6 +38,7 @@ public class GroupApp {
 	
 	public static List<GroupApp> loadGroupApps(Group group, DataBaseConnection db, ServletContext context) throws GeneralException {
 		try {
+			IdGenerator idGenerator = (IdGenerator)context.getAttribute("idGenerator");
 			List<GroupApp> groupApps = new LinkedList<GroupApp>();
 			ResultSet rs = db.get("SELECT * FROM groupApps WHERE group_id=" + group.getDBid() + ";");
 			String db_id;
@@ -41,18 +47,20 @@ public class GroupApp {
 			String type;
 			AppInformation appInfo;
 			boolean common;
+			int single_id;
 			while (rs.next()) {
 				db_id = rs.getString(Data.ID.ordinal());
-				groupProfile = group.getGroupProfile(rs.getString(Data.GROUP_PROFILE_ID.ordinal()));
+				groupProfile = GroupManager.getGroupManager(context).getGroupProfileFromDBid(rs.getString(Data.GROUP_PROFILE_ID.ordinal()));
 				perms = AppPermissions.loadAppPermissions(rs.getString(Data.PERMISSION_ID.ordinal()), db);
 				appInfo = AppInformation.loadAppInformation(rs.getString(Data.APP_INFO_ID.ordinal()), db);
 				common = rs.getBoolean(Data.COMMON.ordinal());
+				single_id = idGenerator.getNextId();
 				switch (rs.getString(Data.TYPE.ordinal())) {
 					case "groupLinkApp":
-						groupApps.add(GroupLinkApp.loadGroupLinkApp(db_id, group, groupProfile, perms, appInfo, common, db, context));
+						groupApps.add(GroupLinkApp.loadGroupLinkApp(db_id, group, groupProfile, perms, appInfo, common, single_id, db, context));
 					break;
 					case "groupWebsiteApp":
-						groupApps.add(GroupLinkApp.loadGroupWebsiteApp(db_id, group, groupProfile, perms, appInfo, common, db, context));
+						groupApps.add(GroupWebsiteApp.loadGroupWebsiteApp(db_id, group, groupProfile, perms, appInfo, common, single_id, db, context));
 					break;
 					default:
 						throw new GeneralException(ServletManager.Code.InternError, "This GroupApp type dosen't exist.");
@@ -76,58 +84,23 @@ public class GroupApp {
 	protected AppPermissions permissions;
 	protected AppInformation app_informations;
 	protected boolean common;
+	int				single_id;
 	
-	public GroupApp(String db_id, GroupProfile groupProfile, Group group, AppPermissions permissions, AppInformation app_informations, boolean common) {
+	public GroupApp(String db_id, GroupProfile groupProfile, Group group, AppPermissions permissions, AppInformation app_informations, boolean common, int single_id) {
 		this.db_id = db_id;
 		this.groupProfile = groupProfile;
 		this.group = group;
 		this.permissions = permissions;
 		this.app_informations = app_informations;
 		this.common = common;
+		this.single_id = single_id;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public GroupApp(String db_id, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		this.db_id = db_id;
-		Map<Integer, GroupProfile> groupProfiles = (Map<Integer, GroupProfile>) sm.getContextAttr("groupProfiles");
-		Map<Integer, Group> groups = (Map<Integer, Group>) sm.getContextAttr("groups");
-		ResultSet rs = db.get("SELECT * FROM groupApps WHERE id=" + db_id + ";");
-		try {
-			rs.next();
-			this.permissions = AppPermissions.loadAppPermissions(rs.getString(Data.PERMISSION_ID.ordinal()), sm);
-			this.group = null;
-			this.groupProfile = null;
-			String group_id = rs.getString(Data.GROUP_ID.ordinal());
-			String group_profile_id = rs.getString(Data.GROUP_PROFILE_ID.ordinal());
-			for (Map.Entry<Integer, Group> entry : groups.entrySet()) {
-				Group tmpGroup = entry.getValue();
-				if (tmpGroup.getDBid().equals(group_id)) {
-					this.group = tmpGroup;
-					return;
-				}
-			}
-			if (this.group == null)
-				throw new GeneralException(ServletManager.Code.ClientError, "No group to load.");
-			for (Map.Entry<Integer, GroupProfile> entry : groupProfiles.entrySet()) {
-				GroupProfile tmpGroupProfile = entry.getValue();
-				if (tmpGroupProfile.getDBid().equals(group_profile_id)) {
-					this.groupProfile = tmpGroupProfile;
-					return;
-				}
-			}
-			if (this.groupProfile == null)
-				throw new GeneralException(ServletManager.Code.ClientError, "No group profile to load.");
-			this.app_informations = AppInformation.loadAppInformation(rs.getString(Data.APP_INFO_ID.ordinal()), sm);
-			this.common = rs.getBoolean(Data.COMMON.ordinal());
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
-		
-	}
-	
-	public String getDb_id() {
+	public String getDBid() {
 		return this.db_id;
+	}
+	public int getSingleId() {
+		return single_id;
 	}
 	
 	public boolean isCommon() {

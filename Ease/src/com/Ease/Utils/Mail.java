@@ -204,7 +204,7 @@ public class Mail {
 		}
 	}
 
-	public void sendInvitationEmail(String email, String infraName, String name, String invitationCode) throws MessagingException {
+	public void sendInvitationEmail(String email, String name, String infraName, String invitationCode) throws MessagingException {
 		try {
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
 			message.setSubject(MimeUtility.encodeText("Active ton compte Ease !", "utf-8", null));

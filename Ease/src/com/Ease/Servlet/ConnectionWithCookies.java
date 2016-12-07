@@ -51,7 +51,6 @@ public class ConnectionWithCookies extends HttpServlet {
 			SessionSave sessionSave = SessionSave.loadSessionSave(sessionId, token, sm);
 			user = User.loadUserFromCookies(sessionSave, sm);
 			session.setAttribute("User", user);
-			session.setAttribute("SessionSave", sessionSave);
 			sm.setResponse(ServletManager.Code.Success, "Connected with cookies.");
 			success = true;
 		}

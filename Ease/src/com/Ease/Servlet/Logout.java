@@ -1,30 +1,32 @@
 package com.Ease.Servlet;
 
 import java.io.IOException;
-import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import com.Ease.Dashboard.Profile.GroupProfile;
+import com.Ease.Dashboard.User.SessionSave;
+import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class RemoveGroupProfile
+ * Servlet implementation class Logout
  */
-@WebServlet("/RemoveGroupProfile")
-public class RemoveGroupProfile extends HttpServlet {
+@WebServlet("/Logout")
+public class Logout extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public RemoveGroupProfile() {
+    public Logout() {
         super();
     }
 
@@ -40,24 +42,32 @@ public class RemoveGroupProfile extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);		
+		HttpSession session = request.getSession();
+		User user = (User)session.getAttribute("user");
+		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+		String retMsg;
 		try {
-			sm.needToBeConnected();
-			String single_id = sm.getServletParam("single_id", true);
-			if (single_id == null || single_id.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientError, "Client error.");
-			@SuppressWarnings("unchecked")
-			Map<String, GroupProfile> groupProfiles = (Map<String, GroupProfile>) sm.getContextAttr("groupProfiles");
-			try {
-				GroupProfile groupProfile = groupProfiles.get(Integer.parseInt(single_id));
-				if (groupProfile == null)
-					throw new GeneralException(ServletManager.Code.ClientError, "This group profile does not exist");
-				groupProfile.removeFromDb(sm);
-			} catch (NumberFormatException e) {
-				throw new GeneralException(ServletManager.Code.ClientError, e);
+			user.getSessionSave().eraseFromDB(sm);
+			Cookie 	cookie = null;
+			Cookie 	cookies[] = request.getCookies();
+			if (cookies != null){
+				for (int i = 0;i < cookies.length ; i++) {
+					cookie = cookies[i];
+					if((cookie.getName()).compareTo("sId") == 0){
+						cookie.setValue("");
+						cookie.setMaxAge(0);
+						response.addCookie(cookie);
+					} else if((cookie.getName()).compareTo("sTk") == 0){
+						cookie.setValue("");
+						cookie.setMaxAge(0);
+						response.addCookie(cookie);
+					}
+				}
 			}
-			
-			sm.setResponse(ServletManager.Code.Success, "Group profile removed");
+			user.deconnect(sm);
+			session.invalidate();
+			retMsg = "Logged out.";
+			sm.setResponse(ServletManager.Code.Success, retMsg);
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		}

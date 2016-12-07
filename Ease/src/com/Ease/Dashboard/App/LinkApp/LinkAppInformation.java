@@ -1,4 +1,4 @@
-package com.Ease.Dashboard.App;
+package com.Ease.Dashboard.App.LinkApp;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,8 +16,13 @@ public class LinkAppInformation {
 		IMG_URL
 	}
 	
-	public static LinkAppInformation createLinkAppInformation(String link, String imgUrl,
-			ServletManager sm) throws GeneralException {
+	/*
+	 * 
+	 * Loader And Creator
+	 * 
+	 */
+	
+	public static LinkAppInformation createLinkAppInformation(String link, String imgUrl, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int db_id = db.set("INSERT INTO linkAppInformations (null, " + link + "', '" + imgUrl + "');");
 		return new LinkAppInformation(String.valueOf(db_id), link, imgUrl);
@@ -29,18 +34,22 @@ public class LinkAppInformation {
 		return String.valueOf(db_id);
 	}
 	
-	public static LinkAppInformation loadLinkAppInformation(String db_id, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
+	public static LinkAppInformation loadLinkAppInformation(String db_id, DataBaseConnection db) throws GeneralException {
 		ResultSet rs = db.get("SELECT * FROM linkAppInformations WHERE id = " + db_id + ";");
 		try {
 			rs.next();
 			return new LinkAppInformation(db_id, rs.getString(LoadData.LINK.ordinal()), rs.getString(LoadData.IMG_URL.ordinal()));
 		} catch (SQLException e) {
-			e.printStackTrace();
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
 
+	/*
+	 * 
+	 * Constructor
+	 * 
+	 */
+	
 	protected String db_id;
 	protected String link;
 	protected String imgUrl;
@@ -50,6 +59,17 @@ public class LinkAppInformation {
 		this.link = link;
 		this.imgUrl = imgUrl;
 	}
+	
+	public void removeFromDb(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		db.set("DELETE FROM linkAppInformations WHERE id = " + this.db_id + ";");
+	}
+	
+	/*
+	 * 
+	 * Getter And Setter
+	 * 
+	 */
 	
 	public String getDb_id() {
 		return this.db_id;
@@ -73,12 +93,5 @@ public class LinkAppInformation {
 		DataBaseConnection db = sm.getDB();
 		db.set("UPDATE linkAppInformations SET img_url='" + imgUrl + "' WHERE id = " + this.db_id + "");
 		this.imgUrl = imgUrl;
-	}
-	
-	public void removeFromDb(ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		int transaction = db.startTransaction();
-		db.set("DELETE FROM linkAppInformations WHERE id = " + this.db_id + ";");
-		db.commitTransaction(transaction);
 	}
 }

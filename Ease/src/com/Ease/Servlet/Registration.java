@@ -39,6 +39,7 @@ public class Registration extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		System.out.println("poeutte");
 		HttpSession session = request.getSession();
 		String invitationCode = request.getParameter("invitationCode");
 		String email = request.getParameter("email");
@@ -67,7 +68,7 @@ public class Registration extends HttpServlet {
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		try {
 			String invitationCode = sm.getServletParam("invitationCode", false);
-			String fname = sm.getServletParam("name", true);
+			String fname = sm.getServletParam("fname", true);
 			String email = sm.getServletParam("email", true);
 			String password = sm.getServletParam("password", false);
 			String confirmPassword = sm.getServletParam("confirmPassword", false);

@@ -1,10 +1,12 @@
-package com.Ease.Dashboard.App;
+package com.Ease.Dashboard.App.WebsiteApp.ClassicApp;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import com.Ease.Dashboard.App.AppInformation;
+import com.Ease.Dashboard.App.Website;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;

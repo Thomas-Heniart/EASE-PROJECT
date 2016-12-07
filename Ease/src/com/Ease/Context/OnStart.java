@@ -10,9 +10,12 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Group.Group;
-import com.Ease.Context.Group.GroupProfile;
+import com.Ease.Context.Group.GroupManager;
 import com.Ease.Context.Group.Infrastructure;
+import com.Ease.Dashboard.App.GroupApp;
+import com.Ease.Dashboard.Profile.GroupProfile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBase;
 import com.Ease.Utils.DataBaseConnection;
@@ -38,11 +41,9 @@ public class OnStart implements ServletContextListener{
 		}
 		try {
 			evt.getServletContext().setAttribute("idGenerator", new IdGenerator());
-			
-			evt.getServletContext().setAttribute("groups", new HashMap<Integer, Group>());
-			evt.getServletContext().setAttribute("groupProfiles", new HashMap<Integer, GroupProfile>());
-			List<Infrastructure> infras = Infrastructure.loadInfrastructures(db, evt.getServletContext());
-			evt.getServletContext().setAttribute("infras", infras);
+			evt.getServletContext().setAttribute("catalog", new Catalog(db));
+			evt.getServletContext().setAttribute("groupManager", new GroupManager());
+			Infrastructure.loadInfrastructures(db, evt.getServletContext());
 			
 						
 			// SiteManager initialization

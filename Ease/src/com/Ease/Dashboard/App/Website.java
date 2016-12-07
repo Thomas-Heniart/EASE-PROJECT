@@ -2,6 +2,7 @@ package com.Ease.Dashboard.App;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,22 +28,23 @@ public class Website {
 		LOCKED_EXPIRATION
 	}
 	
-	public static Website getWebsite(String db_id, ServletManager sm) throws GeneralException {
+	public static Website getWebsite(int single_id, ServletManager sm) throws GeneralException {
 		@SuppressWarnings("unchecked")
 		Map<Integer, Website> websitesMap = (Map<Integer, Website>)sm.getContextAttr("websites");
-		Website site = websitesMap.get(db_id);
+		Website site = websitesMap.get(single_id);
 		if (site == null)
 			throw new GeneralException(ServletManager.Code.InternError, "This website dosen't exist!");
 		return site;
 	}
 	
-	public static Website loadWebsite(String db_id, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		int transaction = db.startTransaction();
-		ResultSet rs = db.get("SELECT * FROM websites WHERE id=" + db_id + ";");
-		List<WebsiteInformation> website_informations = WebsiteInformation.loadInformations(db_id, sm);
+	
+	public static List<Website> loadWebsite(DataBaseConnection db) throws GeneralException {
 		try {
-			if (rs.next()) {
+			List<Website> websites = new LinkedList<Website>();
+			ResultSet rs = db.get("SELECT * FROM websites;");
+			while (rs.next()) {
+				String db_id = rs.getString(WebsiteData.ID.ordinal());
+				List<WebsiteInformation> website_informations = WebsiteInformation.loadInformations(db_id, sm);
 				String loginUrl = rs.getString(WebsiteData.LOGIN_URL.ordinal());
 				String name = rs.getString(WebsiteData.NAME.ordinal());
 				String folder = rs.getString(WebsiteData.FOLDER.ordinal());
@@ -55,14 +57,12 @@ public class Website {
 				String insertDate = rs.getString(WebsiteData.INSERT_DATE.ordinal());
 				boolean locked = rs.getBoolean(WebsiteData.LOCKED.ordinal());
 				String lockedExpiration = rs.getString(WebsiteData.LOCKED_EXPIRATION.ordinal());
-				db.commitTransaction(transaction);
-				return new Website(db_id, sm.getNextSingleId(), name, loginUrl, folder, sso, noLogin, website_homepage, hidden, ratio, position, insertDate, locked, lockedExpiration, website_informations);
+				websites.add(new Website(db_id, sm.getNextSingleId(), name, loginUrl, folder, sso, noLogin, website_homepage, hidden, ratio, position, insertDate, locked, lockedExpiration, website_informations));
 			}
+			return websites;
 		} catch (SQLException e) {
-			e.printStackTrace();
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
-		return null;
 	}
 	
 	protected String db_id;

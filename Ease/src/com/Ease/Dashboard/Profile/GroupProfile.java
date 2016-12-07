@@ -1,4 +1,4 @@
-package com.Ease.Context.Group;
+package com.Ease.Dashboard.Profile;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,8 +11,8 @@ import javax.servlet.ServletContext;
 
 import org.json.simple.JSONObject;
 
-import com.Ease.Dashboard.Profile.Profile;
-import com.Ease.Dashboard.Profile.ProfileInformation;
+import com.Ease.Context.Group.Group;
+import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
@@ -40,7 +40,6 @@ public class GroupProfile {
 		IdGenerator idGenerator = (IdGenerator)context.getAttribute("idGenerator");
 		try {
 			@SuppressWarnings("unchecked")
-			Map<Integer, GroupProfile> groupProfiles = (Map<Integer, GroupProfile>) context.getAttribute("groupProfiles");
 			ResultSet rs = db.get("SELECT * FROM groupProfiles WHERE group_id=" + group.getDBid() + ";");
 			String db_id;
 			ProfilePermissions perms;
@@ -55,8 +54,8 @@ public class GroupProfile {
 				common = rs.getBoolean(Data.COMMON.ordinal());
 				single_id = idGenerator.getNextId();
 				groupProfile = new GroupProfile(db_id, group, perms, infos, common, single_id);
+				GroupManager.getGroupManager(context).add(groupProfile);
 				profiles.add(groupProfile);
-				groupProfiles.put(single_id, groupProfile);
 			}
 			return profiles;
 		} catch (SQLException e) {
@@ -68,14 +67,13 @@ public class GroupProfile {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		@SuppressWarnings("unchecked")
-		Map<Integer, GroupProfile> groupProfiles = (Map<Integer, GroupProfile>) sm.getContextAttr("groupProfiles");
 		ProfilePermissions perms = ProfilePermissions.CreateProfilePermissions(permissions, group.getDBid(), sm);
 		ProfileInformation infos = ProfileInformation.createProfileInformation(name, color, sm);
 		String db_id = db.set("INSERT INTO groupProfile VALUES(NULL, " + group.getDBid() + ", " + perms.getDBid() + ", " + infos.getDBid() + ", " + ((common == true) ? 1 : 0) + ");").toString();
 		IdGenerator idGen = (IdGenerator) sm.getContextAttr("idGenerator");
 		int single_id = idGen.getNextId();
 		GroupProfile groupProfile = new GroupProfile(db_id, group, perms, infos, common, single_id);
-		groupProfiles.put(single_id, groupProfile);
+		GroupManager.getGroupManager(sm).add(groupProfile);
 		db.commitTransaction(transaction);
 		return groupProfile;
 	}
@@ -99,6 +97,7 @@ public class GroupProfile {
 		this.perm = perms;
 		this.infos = infos;
 		this.common = common;
+		this.single_id = single_id;
 	}
 	
 	/*
@@ -109,6 +108,9 @@ public class GroupProfile {
 	
 	public String getDBid() {
 		return this.db_id;
+	}
+	public int getSingleId() {
+		return single_id;
 	}
 	
 	public Group getGroup() {
@@ -146,15 +148,6 @@ public class GroupProfile {
 	 * Utils
 	 * 
 	 */
-	
-	public static GroupProfile getGroupProfile(String db_id, ServletManager sm) throws GeneralException {
-		@SuppressWarnings("unchecked")
-		Map<String, GroupProfile> groupProfileMap = (Map<String, GroupProfile>)sm.getContextAttr("groupProfiles");
-		GroupProfile groupProfile = groupProfileMap.get(db_id);
-		if (groupProfile == null)
-			throw new GeneralException(ServletManager.Code.InternError, "This groupProfile dosen't exist!");
-		return groupProfile;
-	}
 
 	public void removeFromDb(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
@@ -175,6 +168,18 @@ public class GroupProfile {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 		
+	}
+	
+	public void loadContentForUnconnectedUser(String db_id, ServletManager sm) throws GeneralException {
+		int columnIdx = User.getMostEmptyProfileColumnForUnconnected(db_id, sm);
+		int posIdx = User.getColumnNextPositionForUnconnected(db_id, columnIdx, sm);
+		Profile.createProfileWithGroupForUnconnected(db_id, columnIdx, posIdx, this, sm);
+	}
+	
+	public void loadContentForConnectedUser(User user, ServletManager sm) throws GeneralException {
+		int mostEmptyColumn = user.getMostEmptyProfileColumn();
+		user.getProfilesColumn().get(mostEmptyColumn).add(Profile.createProfileWithGroup(user, mostEmptyColumn, user.getProfilesColumn().get(mostEmptyColumn).size(), this, sm));
+
 	}
 	
 	public void removeContentForConnectedUser(User user, ServletManager sm) throws GeneralException {
@@ -202,15 +207,5 @@ public class GroupProfile {
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
-	}
-	
-	public JSONObject getJSON() {
-		JSONObject res = new JSONObject();
-		
-		return res;
-	}
-	
-	public String getJSONString() {
-		return this.getJSON().toString();
 	}
 }

@@ -1,9 +1,10 @@
-package com.Ease.Dashboard.App;
+package com.Ease.Dashboard.App.LinkApp;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.Ease.Context.Group.GroupLinkApp;
+import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.App.AppInformation;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;

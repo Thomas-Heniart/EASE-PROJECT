@@ -1,4 +1,4 @@
-package com.Ease.Context.Group;
+package com.Ease.Dashboard.Profile;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -1,4 +1,4 @@
-package com.Ease.Context.Group;
+package com.Ease.Dashboard.App;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,8 +39,7 @@ public class AppPermissions{
 	 * 
 	 */
 	
-	public static AppPermissions loadAppPermissions(String id, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
+	public static AppPermissions loadAppPermissions(String id, DataBaseConnection db) throws GeneralException {
 		try {
 			ResultSet rs = db.get("SELECT * FROM appPermissions WHERE id=" + id + ";");
 			rs.next();

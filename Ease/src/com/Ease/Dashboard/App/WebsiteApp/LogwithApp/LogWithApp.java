@@ -1,8 +1,11 @@
-package com.Ease.Dashboard.App;
+package com.Ease.Dashboard.App.WebsiteApp.LogwithApp;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.App.AppInformation;
+import com.Ease.Dashboard.App.Website;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
