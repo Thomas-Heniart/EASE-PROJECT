@@ -19,6 +19,10 @@ public class Tag {
 		return new Tag(String.valueOf(db_id), sm.getNextSingleId(), tagName, tagColor, tagSites);
 	}
 	
+	public static Map<Integer, Tag> loadTags(ServletManager sm) {
+		
+	}
+	
 	protected String db_id;
 	protected int single_id;
 	protected String tagName;
