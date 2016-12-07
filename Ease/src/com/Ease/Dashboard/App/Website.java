@@ -3,6 +3,7 @@ package com.Ease.Dashboard.App;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
@@ -24,6 +25,15 @@ public class Website {
 		INSERT_DATE,
 		LOCKED,
 		LOCKED_EXPIRATION
+	}
+	
+	public static Website getWebsite(String db_id, ServletManager sm) throws GeneralException {
+		@SuppressWarnings("unchecked")
+		Map<Integer, Website> websitesMap = (Map<Integer, Website>)sm.getContextAttr("websites");
+		Website site = websitesMap.get(db_id);
+		if (site == null)
+			throw new GeneralException(ServletManager.Code.InternError, "This website dosen't exist!");
+		return site;
 	}
 	
 	public static Website loadWebsite(String db_id, ServletManager sm) throws GeneralException {
