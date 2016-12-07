@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 
 <%@ page import="java.util.LinkedList"%>
-<%@ page import="com.Ease.context.Tag"%>
+<%@ page import="com.Ease.Dashboard.App.Tag"%>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib tagdir="/WEB-INF/tags/dashboard" prefix="dashboard" %>

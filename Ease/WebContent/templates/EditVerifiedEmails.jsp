@@ -6,8 +6,8 @@
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.LinkedList"%>
 <%
-	List<String> verifiedEmails = ((User) session.getAttribute("User")).getVerifiedEmails();
-	List<String> unverifiedEmails = ((User) session.getAttribute("User")).getUnverifiedEmails();
+	List<String> verifiedEmails = ((User) session.getAttribute("user")).getVerifiedEmails();
+	List<String> unverifiedEmails = ((User) session.getAttribute("user")).getUnverifiedEmails();
 %>
 <div class="setting show">
 	<form action="AddEmail" oClass="AddEmailForm" id="AddEmailForm"
