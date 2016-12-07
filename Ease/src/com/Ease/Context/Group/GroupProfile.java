@@ -178,7 +178,7 @@ public class GroupProfile {
 	}
 	
 	public void removeContentForConnectedUser(User user, ServletManager sm) throws GeneralException {
-		Iterator<List<Profile>> it = user.getProfilesColumn().iterator();
+		Iterator<List<Profile>> it = user.getProfileColumns().iterator();
 		while (it.hasNext()) {
 			Iterator<Profile> it2 = it.next().iterator();
 			while (it2.hasNext()) {

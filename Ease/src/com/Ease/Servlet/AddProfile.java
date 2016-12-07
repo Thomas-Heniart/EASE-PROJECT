@@ -55,7 +55,7 @@ public class AddProfile extends HttpServlet {
 			else if (color == null || Regex.isColor(color) == false)
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong color.");
 			int column = user.getMostEmptyProfileColumn();
-			Profile newProfile = Profile.createPersonnalProfile(user, column, user.getProfilesColumn().get(column).size(), name, color, sm);
+			Profile newProfile = Profile.createPersonnalProfile(user, column, user.getProfileColumns().get(column).size(), name, color, sm);
 			sm.setResponse(ServletManager.Code.Success, newProfile.getJSONString());
 		} catch (GeneralException e) {
 			sm.setResponse(e);

@@ -52,7 +52,7 @@ public class Invitation {
 		Mail mailToSend;
 		try {
 			mailToSend = new Mail();
-			mailToSend.sendInvitationEmail(email, infraName, name, invitationCode);
+			mailToSend.sendInvitationEmail(email, name, infraName, invitationCode);
 		} catch (MessagingException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
