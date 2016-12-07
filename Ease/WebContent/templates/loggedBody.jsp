@@ -43,7 +43,7 @@ response.addCookie(email);
 <c:set var="servletContext" scope="session" value="${session.getServletContext()}"/>
 <c:set var="user"			scope="session" value='${session.getAttribute("User")}'/>
 <c:set var="colors"			scope="session" value='${servletContext.getAttribute("Colors")}'/>
-<c:set var="dashboardColumns" scope="session" value="${user.getProfilesDashboard()}"/>
+<c:set var="dashboardColumns" scope="session" value="${user.getProfileColumns()}"/>
 <c:set var="siteManager"	scope="session" value='${servletContext.getAttribute("siteManager")}'/>
 <c:set var="siteList"		scope="session" value='${siteManager.getSitesList()}'/>
 <c:set var="tags"			scope="session"	value='${servletContext.getAttribute("Tags")}'/>
