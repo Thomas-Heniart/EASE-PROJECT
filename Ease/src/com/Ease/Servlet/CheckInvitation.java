@@ -70,8 +70,11 @@ public class CheckInvitation extends HttpServlet {
 			} else if (name == null || name.length() < 2) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Name too short.");
 			} else {
-				ResultSet rs = db.get("SELECT group_id FROM invitationsAndGroupsMap JOIN invitations ON invitationsAndGroupsMap.invitation_id = invitations.id WHERE email='" + email + "';");
 				try {
+					ResultSet rs = db.get("SELECT user_id FROM users WHERE email = '" + email + "';");
+					if (rs.next())
+						throw new GeneralException(ServletManager.Code.ClientWarning, "You already have an account");
+					rs = db.get("SELECT group_id FROM invitationsAndGroupsMap JOIN invitations ON invitationsAndGroupsMap.invitation_id = invitations.id WHERE email='" + email + "';");
 					if (rs.next()) {
 						Invitation.sendInvitation(email, name, rs.getString(1), sm);
 						sm.setResponse(ServletManager.Code.Success, "1 You receveid an email");
