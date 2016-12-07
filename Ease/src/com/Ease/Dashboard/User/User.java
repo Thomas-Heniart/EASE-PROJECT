@@ -38,7 +38,6 @@ public class User {
 	@SuppressWarnings("unchecked")
 	public static User loadUser(String email, String password, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		Map<String, Group> groups = (Map<String, Group>) sm.getContextAttr("groups");
 		try {
 			ResultSet rs = db.get("SELECT * FROM users where email='" + email + "';");
 			if (rs.next()) {
@@ -56,7 +55,7 @@ public class User {
 				ResultSet rs2 = db.get("SELECT group_id FROM groupsAndUsersMap WHERE user_id=" + newUser.getDBid() + ";");
 				Group userGroup;
 				while (rs2.next()) {
-					userGroup = groups.get(rs2.getString(1));
+					userGroup = Group.getGroup((rs2.getString(1)), sm);
 					if (userGroup != null) {
 						newUser.getGroups().add(userGroup);
 					}

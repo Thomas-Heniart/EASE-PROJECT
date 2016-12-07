@@ -300,4 +300,15 @@ public class Group {
 	public String getJSONString() {
 		return this.getJSON().toString();
 	}
+
+	public static Group getGroup(String db_id, ServletManager sm) throws GeneralException {
+		@SuppressWarnings("unchecked")
+		Map<Integer, Group> groups = (Map<Integer, Group>) sm.getContextAttr("groups");
+		for (Map.Entry<Integer, Group> entry : groups.entrySet()) {
+			Group tmpGroup = entry.getValue();
+			if (tmpGroup.getDBid().equals(db_id))
+				return tmpGroup;
+		}
+		throw new GeneralException(ServletManager.Code.ClientError, "This group does not exist.");
+	}
 }
