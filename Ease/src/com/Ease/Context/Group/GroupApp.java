@@ -2,7 +2,11 @@ package com.Ease.Context.Group;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+
+import javax.servlet.ServletContext;
 
 import com.Ease.Dashboard.App.AppInformation;
 import com.Ease.Utils.DataBaseConnection;
@@ -21,6 +25,50 @@ public class GroupApp {
 		APP_INFO_ID,
 		COMMON
 	}
+	/*
+	 * 
+	 * Loader And Creator
+	 * 
+	 */
+	
+	public static List<GroupApp> loadGroupApps(Group group, DataBaseConnection db, ServletContext context) throws GeneralException {
+		try {
+			List<GroupApp> groupApps = new LinkedList<GroupApp>();
+			ResultSet rs = db.get("SELECT * FROM groupApps WHERE group_id=" + group.getDBid() + ";");
+			String db_id;
+			GroupProfile groupProfile;
+			AppPermissions perms;
+			String type;
+			AppInformation appInfo;
+			boolean common;
+			while (rs.next()) {
+				db_id = rs.getString(Data.ID.ordinal());
+				groupProfile = group.getGroupProfile(rs.getString(Data.GROUP_PROFILE_ID.ordinal()));
+				perms = AppPermissions.loadAppPermissions(rs.getString(Data.PERMISSION_ID.ordinal()), db);
+				appInfo = AppInformation.loadAppInformation(rs.getString(Data.APP_INFO_ID.ordinal()), db);
+				common = rs.getBoolean(Data.COMMON.ordinal());
+				switch (rs.getString(Data.TYPE.ordinal())) {
+					case "groupLinkApp":
+						groupApps.add(GroupLinkApp.loadGroupLinkApp(db_id, group, groupProfile, perms, appInfo, common, db, context));
+					break;
+					case "groupWebsiteApp":
+						groupApps.add(GroupLinkApp.loadGroupWebsiteApp(db_id, group, groupProfile, perms, appInfo, common, db, context));
+					break;
+					default:
+						throw new GeneralException(ServletManager.Code.InternError, "This GroupApp type dosen't exist.");
+				}
+			}
+			return groupApps;
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+	}
+	
+	/*
+	 * 
+	 * Constructor
+	 * 
+	 */
 	
 	protected String db_id;
 	protected GroupProfile groupProfile;
