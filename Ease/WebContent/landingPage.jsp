@@ -383,13 +383,12 @@ pageEncoding="UTF-8"%>
 				</div>
 				<div class="bodysHandler">
 					<div class="popupBody" id="2">
-						<form class="handler" action="thefamily">
-							<div class="row">
+						<form class="handler" action="register">
+<!--							<div class="row">
 								<p class="row-heading">
 									How would you like us to call you ?
 								</p>
-								<input type="text" name="fname" placeholder="Name..." />
-							</div>
+							</div>-->
 							<div class="row">
 								<p class="row-heading">
 									Create your Ease password :
@@ -401,6 +400,7 @@ pageEncoding="UTF-8"%>
 								</div>
 							</div>
 							<div class="row">
+								<input type="hidden" name="fname" value=<%=request.getParameter("name")%>/>
 								<input type="hidden" name="email" value=<%= request.getParameter("email")%> />
 								<input type="hidden" name="invitationCode" value=<%= request.getParameter("invitationCode") %> />
 								<span class="input">
@@ -432,13 +432,13 @@ pageEncoding="UTF-8"%>
 						</form>
 					</div>
 					<div class="popupBody show" id="1">
-						<form class="handler" action="directInvitation">
-<!--					<div class="row">
+						<form class="handler" action="checkInvitation">
+					<div class="row">
 						<p class="row-heading">
 						How would you like us to call you ?
 						</p>
 						<input type="text" name="name" placeholder="Name..." />
-					</div>-->
+					</div>
 					<div class="row">
 						<p class="row-heading">
 							What's your email ?
@@ -491,8 +491,8 @@ pageEncoding="UTF-8"%>
 		});
 		this.qRoot.find('#1 form').submit(function(e){
 			e.preventDefault();
-			var self = $(this);
-			var emailVal = $(this).find("input[type='email']").val();
+			var emailVal = $(this).find("input[name='email']").val();
+			var name = $(this).find("input[name='name']").val();
 			var loading = $(this).find('.loading');
 			var submitButton = $(this).find(".submitButton");
 			var alertMessage = $(this).find(".alert-message");
@@ -507,7 +507,8 @@ pageEncoding="UTF-8"%>
 			submitButton.addClass('not-show');
 			postHandler.post($(this).attr('action'),
 			{
-				email : emailVal
+				email : emailVal,
+				name : name
 			},
 			function(){
 				loading.removeClass('show');
@@ -516,11 +517,17 @@ pageEncoding="UTF-8"%>
 				alertMessage.text(retMsg);
 				alertMessage.css('color', '#24d666');
 				alertMessage.addClass('show');
-				setTimeout(function(){
-					alertMessage.removeClass('show');
-					submitButton.removeClass('not-show');
-				}, 7000);
-			}, 
+				if (retMsg[0] == '1'){
+					setTimeout(function(){
+						alertMessage.removeClass('show');
+						submitButton.removeClass('not-show');
+					}, 7000);
+				} else if (retMsg[0] == '2'){
+					self.qRoot.find("#2 input[name='fname']").val(name);
+					self.qRoot.find("#2 input[name='email']").val(emailVal);
+					self.openRegistration();
+				}
+			},
 			function(retMsg) {
 				alertMessage.text(retMsg);
 				alertMessage.css('color', '#ec555b')
