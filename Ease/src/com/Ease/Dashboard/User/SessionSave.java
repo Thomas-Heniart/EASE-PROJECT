@@ -71,10 +71,8 @@ public class SessionSave {
 
 	}
 	
-	public static SessionSave createSessionSave(User user, ServletManager sm) throws GeneralException {
+	public static SessionSave createSessionSave(String keyUser, String userId, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		String keyUser = user.getKeys().getKeyUser();
-		String userId = user.getDBid();
 		String cryptedKeyUser;
 		String hashedToken;
 		String token = tokenGenerator();

@@ -69,9 +69,7 @@ public class ConnectionServlet extends HttpServlet {
 					sm.setResponse(ServletManager.Code.ClientWarning, "Wrong password");
 				else {
 					User user = User.loadUser(email, password, sm);
-					SessionSave sessionSave = SessionSave.createSessionSave(user, sm);
 					session.setAttribute("user", user);
-					session.setAttribute("SessionSave", sessionSave);
 					removeIpFromDataBase(client_ip,db);
 					sm.setResponse(ServletManager.Code.Success, "Successfully connected");
 				}

@@ -69,9 +69,9 @@ pageEncoding="UTF-8"%>
 	<script src="js/selectFx.js"></script>
 	<link rel="stylesheet" type="text/css" href="component.css" />
 	
-	<%
-	SessionSave sessionSave = (SessionSave) (session.getAttribute("SessionSave"));
+	<% %>
 	User user = (User) (session.getAttribute("user"));
+	SessionSave sessionSave = (SessionSave) (user.getSessionSave());
 	%>
 	<% if (user != null){
 		if (user.isAdmin()){%>
