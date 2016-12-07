@@ -71,7 +71,7 @@ public class CheckInvitation extends HttpServlet {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Name too short.");
 			} else {
 				try {
-					ResultSet rs = db.get("SELECT user_id FROM users WHERE email = '" + email + "';");
+					ResultSet rs = db.get("SELECT id FROM users WHERE email = '" + email + "';");
 					if (rs.next())
 						throw new GeneralException(ServletManager.Code.ClientWarning, "You already have an account");
 					rs = db.get("SELECT group_id FROM invitationsAndGroupsMap JOIN invitations ON invitationsAndGroupsMap.invitation_id = invitations.id WHERE email='" + email + "';");

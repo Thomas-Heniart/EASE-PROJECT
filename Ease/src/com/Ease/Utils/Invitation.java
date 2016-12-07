@@ -44,9 +44,7 @@ public class Invitation {
 
 	public static void sendInvitation(String email, String name, String group_id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		@SuppressWarnings("unchecked")
-		Map<String, Group> groups = (Map<String, Group>) sm.getContextAttr("groups");
-		String infraName = groups.get(group_id).getInfra().getName();
+		String infraName = Group.getGroup(group_id, sm).getInfra().getName();
 		String invitationCode = CodeGenerator.generateNewCode();
 		db.set("UPDATE invitations SET linkCode='" + invitationCode + "' WHERE email='" + email + "'");
 		Mail mailToSend;
