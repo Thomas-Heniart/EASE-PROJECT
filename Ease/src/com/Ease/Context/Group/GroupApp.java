@@ -74,16 +74,14 @@ public class GroupApp {
 	protected GroupProfile groupProfile;
 	protected Group group;
 	protected AppPermissions permissions;
-	protected String type;
 	protected AppInformation app_informations;
 	protected boolean common;
 	
-	public GroupApp(String db_id, GroupProfile groupProfile, Group group, AppPermissions permissions, String type, AppInformation app_informations, boolean common) {
+	public GroupApp(String db_id, GroupProfile groupProfile, Group group, AppPermissions permissions, AppInformation app_informations, boolean common) {
 		this.db_id = db_id;
 		this.groupProfile = groupProfile;
 		this.group = group;
 		this.permissions = permissions;
-		this.type = type;
 		this.app_informations = app_informations;
 		this.common = common;
 	}
@@ -121,7 +119,6 @@ public class GroupApp {
 			if (this.groupProfile == null)
 				throw new GeneralException(ServletManager.Code.ClientError, "No group profile to load.");
 			this.app_informations = AppInformation.loadAppInformation(rs.getString(Data.APP_INFO_ID.ordinal()), sm);
-			this.type = rs.getString(Data.TYPE.ordinal());
 			this.common = rs.getBoolean(Data.COMMON.ordinal());
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
@@ -131,10 +128,6 @@ public class GroupApp {
 	
 	public String getDb_id() {
 		return this.db_id;
-	}
-	
-	public String getType() {
-		return this.type;
 	}
 	
 	public boolean isCommon() {

@@ -10,7 +10,7 @@ import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
-public class WebsiteApp extends App {
+public class WebsiteApp<groupAppClass extends GroupWebsiteApp> extends App<GroupWebsiteApp> {
 
 	public enum Data {
 		NOTHING,
@@ -33,12 +33,12 @@ public class WebsiteApp extends App {
 		NOTHING, NAME, PROFILE_ID, WEBSITE_ID, POSITION, PERMISSION_ID, WORK, GROUP_WEBSITE_APP_ID, APP_INFO_ID
 	}
 
-	public static WebsiteApp createEmptyApp(String name, Profile profile, GroupWebsiteApp groupWebsiteApp, Website site, ServletManager sm)
+	public static WebsiteApp<?> createEmptyApp(String name, Profile profile, GroupWebsiteApp groupWebsiteApp, Website site, ServletManager sm)
 			throws GeneralException {
 		int position = profile.getApps().size();
 		AppInformation app_information = AppInformation.createAppInformation(name, sm);
 		String app_id = WebsiteApp.insertNewWebsiteAppInDb(profile, position, "WebsiteApp", app_information, null, site, sm);
-		return new WebsiteApp(profile, position, sm.getNextSingleId(), app_id, true, site,
+		return new WebsiteApp<GroupWebsiteApp>(profile, position, sm.getNextSingleId(), app_id, true, site,
 				app_information, groupWebsiteApp);
 	}
 
