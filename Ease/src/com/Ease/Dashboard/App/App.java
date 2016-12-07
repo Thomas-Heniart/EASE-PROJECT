@@ -15,7 +15,7 @@ import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
-public abstract class App {
+public abstract class App<groupAppClass extends GroupApp> {
 	enum AppData {
 		NOTHING,
 		ID,
@@ -37,8 +37,8 @@ public abstract class App {
 		try {
 			while (rs.next()) {
 				String type = rs.getString(AppData.TYPE.ordinal());
-				Constructor<App> c = (Constructor<App>) Class.forName("com.Ease.dashboard." + type).getConstructor(ResultSet.class, Profile.class, ServletManager.class);
-				App tmpApp = (App) c.newInstance(rs, profile, sm);
+				Constructor<App<?>> c = (Constructor<App<?>>) Class.forName("com.Ease.dashboard." + type).getConstructor(ResultSet.class, Profile.class, ServletManager.class);
+				App<?> tmpApp = (App<?>) c.newInstance(rs, profile, sm);
 				profile.getApps().add(tmpApp);
 			}
 		} catch (SQLException | SecurityException | IllegalArgumentException | NoSuchMethodException | ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
@@ -66,7 +66,7 @@ public abstract class App {
 	protected boolean working;
 	protected int position;
 	protected AppInformation informations;
-	protected GroupApp groupApp;
+	protected groupAppClass groupApp;
 	
 	public String getDb_id() {
 		return this.db_id;
@@ -123,5 +123,9 @@ public abstract class App {
 	public void removeFromDb(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		db.set("DELETE FROM apps WHERE id = " + this.getDb_id() + ";");
+	}
+	
+	public groupAppClass getGroupApp() {
+		return this.groupApp;
 	}
 }

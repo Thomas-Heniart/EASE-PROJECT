@@ -9,7 +9,7 @@ import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
-public class LinkApp extends App {
+public class LinkApp extends App<GroupLinkApp> {
 	
 	enum LinkAppData {
 		NOTHING,
@@ -103,11 +103,10 @@ public class LinkApp extends App {
 				this.working = rs.getBoolean(LoadData.WORK.ordinal());
 				this.single_id = sm.getNextSingleId();
 				this.db_id = db_id;
+				this.groupApp = null;
 				String group_link_app_id = rs.getString(LoadData.GROUP_ID.ordinal());
-				if (!(group_link_app_id == null || group_link_app_id.equals("null"))) {
-					GroupLinkApp.load
-				} else {
-				}
+				if (!(group_link_app_id == null || group_link_app_id.equals("null")))
+					this.groupApp = new GroupLinkApp(group_link_app_id, sm);
 				String app_info_id = rs.getString(LoadData.APP_INFO_ID.ordinal());
 				this.informations = AppInformation.loadAppInformation(app_info_id, sm);
 				String link_app_info_id = rs.getString(LoadData.LINK_APP_INFO_ID.ordinal());
