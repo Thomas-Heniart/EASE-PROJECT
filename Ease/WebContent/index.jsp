@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<%@page import="com.Ease.Dashboard.User.*"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/xhtml1-transitional.dtd">
@@ -68,9 +69,9 @@ pageEncoding="UTF-8"%>
 	<script src="js/selectFx.js"></script>
 	<link rel="stylesheet" type="text/css" href="component.css" />
 	
-	<%
-	com.Ease.session.SessionSave sessionSave = (com.Ease.session.SessionSave) (session.getAttribute("SessionSave"));
-	com.Ease.dashboard.User user = (com.Ease.dashboard.User) (session.getAttribute("user"));
+	<% %>
+	User user = (User) (session.getAttribute("user"));
+	SessionSave sessionSave = (SessionSave) (user.getSessionSave());
 	%>
 	<% if (user != null){
 		if (user.isAdmin()){%>
@@ -107,7 +108,7 @@ mixpanel.init("e87ca36e156107ebbd9a672735e6612c");</script><!-- end Mixpanel -->
 
 </head>
 
-<body role="document" class=<%= ((user != null && user.getBackground()=="logo") ? "'mainBody logoBckgrnd'" : "'mainBody picBckgrnd'") %>>
+<body role="document" class=<%= ((user != null && user.getOptions().isBackground_picked()) ? "'mainBody logoBckgrnd'" : "'mainBody picBckgrnd'") %>>
 	<%@ page import="java.util.Base64" %>
 	<%@ page import="java.util.Base64.Encoder" %>
 	<%@ page import="java.nio.charset.StandardCharsets" %>

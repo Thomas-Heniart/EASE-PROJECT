@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 
 <%@ page import="java.util.LinkedList"%>
-<%@ page import="com.Ease.context.Tag"%>
+<%@ page import="com.Ease.Dashboard.App.Tag"%>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib tagdir="/WEB-INF/tags/dashboard" prefix="dashboard" %>
@@ -43,7 +43,7 @@ response.addCookie(email);
 <c:set var="servletContext" scope="session" value="${session.getServletContext()}"/>
 <c:set var="user"			scope="session" value='${session.getAttribute("User")}'/>
 <c:set var="colors"			scope="session" value='${servletContext.getAttribute("Colors")}'/>
-<c:set var="dashboardColumns" scope="session" value="${user.getProfilesDashboard()}"/>
+<c:set var="dashboardColumns" scope="session" value="${user.getProfileColumns()}"/>
 <c:set var="siteManager"	scope="session" value='${servletContext.getAttribute("siteManager")}'/>
 <c:set var="siteList"		scope="session" value='${siteManager.getSitesList()}'/>
 <c:set var="tags"			scope="session"	value='${servletContext.getAttribute("Tags")}'/>

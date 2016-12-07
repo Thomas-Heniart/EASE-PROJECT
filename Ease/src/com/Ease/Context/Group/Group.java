@@ -9,7 +9,6 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
-import org.json.simple.JSONObject;
 
 import com.Ease.Dashboard.App.GroupApp;
 import com.Ease.Dashboard.Profile.GroupProfile;

@@ -2,10 +2,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib tagdir="/WEB-INF/tags/dashboard" prefix="dashboard" %>
 
-<%@ attribute name="profile" type="com.Ease.session.Profile" required="true"%>
+<%@ attribute name="profile" type="com.Ease.Dashboard.Profile.Profile" required="true"%>
 
-<div class="item" id='${profile.getProfileId()}'>
-	<div class="ProfileBox" custom="${profile.isCustom()}"
+<div class="item" id='${profile.getSingleId()}'>
+	<div class="ProfileBox" "
 	color="${profile.getColor()}">
 	<div class="ProfileName"
 	style="background-color: ${profile.getColor()};">
@@ -46,7 +46,7 @@
 				</div>
 			</div>
 		</div>
-		<div  class="SitesContainer" id='${profile.getProfileId()}'>
+		<div  class="SitesContainer" id='${profile.getSingleId()}'>
 			<c:forEach items='${profile.getApps()}' var="app">
 				<c:if test="${app.getType() eq 'ClassicAccount'}">
 					<dashboard:app app='${app}' informations="${app.getVisibleInformations()}"/>	
