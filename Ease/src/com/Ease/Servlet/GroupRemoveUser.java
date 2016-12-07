@@ -19,17 +19,18 @@ import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class GroupAddUsers
+ * Servlet implementation class GroupRemoveUser
  */
-@WebServlet("/groupAddUsers")
-public class GroupAddUsers extends HttpServlet {
+@WebServlet("/GroupRemoveUser")
+public class GroupRemoveUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GroupAddUsers() {
+    public GroupRemoveUser() {
         super();
+        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -64,10 +65,10 @@ public class GroupAddUsers extends HttpServlet {
 				for (String email : emails) {
 					if (Regex.isEmail(email) == false)
 						throw new GeneralException(ServletManager.Code.ClientError, "Wrong user email.");
-					group.addUser(email, sm);
+					group.removeUser(email, sm);
 				}
 				db.commitTransaction(transaction);
-				sm.setResponse(ServletManager.Code.Success, "Users added.");
+				sm.setResponse(ServletManager.Code.Success, "Users removed.");
 			}
 			
 		} catch (GeneralException e) {

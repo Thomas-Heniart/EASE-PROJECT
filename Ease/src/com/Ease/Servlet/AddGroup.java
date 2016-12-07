@@ -12,23 +12,22 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.Ease.Context.Group.Group;
+import com.Ease.Context.Group.Infrastructure;
 import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class GroupAddUsers
+ * Servlet implementation class AddGroup
  */
-@WebServlet("/groupAddUsers")
-public class GroupAddUsers extends HttpServlet {
+@WebServlet("/AddGroup")
+public class AddGroup extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GroupAddUsers() {
+    public AddGroup() {
         super();
     }
 
@@ -47,34 +46,36 @@ public class GroupAddUsers extends HttpServlet {
 		HttpSession session = request.getSession();
 		User user = (User) (session.getAttribute("User"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
-		
 		try {
 			sm.needToBeConnected();
-			String single_id = sm.getServletParam("single_id", true);
-			String[] emails = sm.getServletParamArray("emails", true);
+			String name = sm.getServletParam("name", true);
+			String parent_id = sm.getServletParam("parent_id", true);
+			Group parent = null;
+			Infrastructure infra = null;
 			@SuppressWarnings("unchecked")
-			Map<Integer, Group> groups = (Map<Integer, Group>)sm.getContextAttr("groups");
-			Group group = groups.get(Integer.parseInt(single_id));
-			if (group == null) {
-				sm.setResponse(ServletManager.Code.ClientError, "This group dosen't exist.");
-			} else {
-				group.getInfra().isAdmin(user, sm);
-				DataBaseConnection db = sm.getDB();
-				int transaction = db.startTransaction();
-				for (String email : emails) {
-					if (Regex.isEmail(email) == false)
-						throw new GeneralException(ServletManager.Code.ClientError, "Wrong user email.");
-					group.addUser(email, sm);
+			Map<Integer, Group> groups = (Map<Integer, Group>) sm.getContextAttr("groups");
+			if (name == null || name.equals(""))
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Name is empty.");
+			if (parent_id != null) {
+				try {
+					parent = groups.get(Integer.parseInt(parent_id));
+					if (parent == null)
+						throw new GeneralException(ServletManager.Code.ClientError, "This group does not exist.");
+					parent.getInfra().isAdmin(user, sm);
+					infra = parent.getInfra();
+					infra.isAdmin(user, sm);
+					Group newGroup = Group.createGroup(name, parent, infra, sm);
+					groups.put(newGroup.getSingleId(), newGroup);
+					sm.setResponse(ServletManager.Code.Success, newGroup.getJSONString());
+				} catch (NumberFormatException e) {
+					throw new GeneralException(ServletManager.Code.ClientError, e);
 				}
-				db.commitTransaction(transaction);
-				sm.setResponse(ServletManager.Code.Success, "Users added.");
-			}
-			
+			} else
+				throw new GeneralException(ServletManager.Code.ClientError, "Parent is empty.");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
-		} catch (NumberFormatException e) {
-			sm.setResponse(ServletManager.Code.ClientError, "Wrong single_id.");
 		}
 		sm.sendResponse();
 	}
+
 }

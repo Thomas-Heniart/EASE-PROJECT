@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-import com.Ease.Context.Group.AppPermissions;
+import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
@@ -23,23 +23,22 @@ public class ClassicApp extends WebsiteApp {
 	public static ClassicApp createClassicApp(String name, Profile profile, Website site, String password, Map<String, String> informations, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		int position = profile.getNextPosition();
-		Permissions permissions = AppPermissions.loadPersonnalAppPermissions(sm);
+		int position = profile.getApps().size();
 		Account account = Account.createAccount(password, false, profile.getUser(), sm);
 		List<AccountInformation> account_informations = AccountInformation.createAccountInformations(account.getDb_id(), informations, sm);
 		AppInformation app_information = AppInformation.createAppInformation(name, sm);
-		int app_id = db.set("INSERT INTO apps values (null, " + profile.getDb_id() + ", " + position + ", default, null, 'ClassicApp', 1, null);");
+		int app_id = db.set("INSERT INTO apps values (null, " + profile.getDBid() + ", " + position + ", default, null, 'ClassicApp', 1, null);");
 		int website_app_id = db.set("INSERT INTO websiteApps values (null, " + site.getDb_id() + ", " + app_id + ", null, 'ClassicApp');");
 		db.set("INSERT INTO classicApps values (null, " + website_app_id + ", " + account.getDb_id()  + ");");
 		db.commitTransaction(transaction);
-		return new ClassicApp(profile, permissions, position, sm.getNextSingleId(), String.valueOf(app_id), true, site, account, account_informations, app_information);
+		return new ClassicApp(profile, position, sm.getNextSingleId(), String.valueOf(app_id), true, site, account, account_informations, app_information);
 	}
 	
 	protected Account account;
 	protected List<AccountInformation> account_informations;
 	
-	public ClassicApp(Profile profile, Permissions permissions, int position, int single_id, String db_id, boolean working, Website site, Account account, List<AccountInformation> account_informations, AppInformation app_information) {
-		super(profile, permissions, position, single_id, db_id, working, site, app_information);
+	public ClassicApp(Profile profile, int position, int single_id, String db_id, boolean working, Website site, Account account, List<AccountInformation> account_informations, AppInformation app_information) {
+		super(profile, position, single_id, db_id, working, site, app_information);
 		this.account = account;
 		this.account_informations = account_informations;
 	}

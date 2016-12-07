@@ -1,7 +1,8 @@
 package com.Ease.Servlet;
 
 import java.io.IOException;
-import java.util.Map;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,24 +12,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.Ease.Context.Group.Group;
+import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class GroupAddUsers
+ * Servlet implementation class RemoveProfile
  */
-@WebServlet("/groupAddUsers")
-public class GroupAddUsers extends HttpServlet {
+@WebServlet("/RemoveProfile")
+public class RemoveProfile extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GroupAddUsers() {
+    public RemoveProfile() {
         super();
     }
 
@@ -49,31 +48,19 @@ public class GroupAddUsers extends HttpServlet {
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		
 		try {
-			sm.needToBeConnected();
 			String single_id = sm.getServletParam("single_id", true);
-			String[] emails = sm.getServletParamArray("emails", true);
-			@SuppressWarnings("unchecked")
-			Map<Integer, Group> groups = (Map<Integer, Group>)sm.getContextAttr("groups");
-			Group group = groups.get(Integer.parseInt(single_id));
-			if (group == null) {
-				sm.setResponse(ServletManager.Code.ClientError, "This group dosen't exist.");
-			} else {
-				group.getInfra().isAdmin(user, sm);
-				DataBaseConnection db = sm.getDB();
-				int transaction = db.startTransaction();
-				for (String email : emails) {
-					if (Regex.isEmail(email) == false)
-						throw new GeneralException(ServletManager.Code.ClientError, "Wrong user email.");
-					group.addUser(email, sm);
-				}
-				db.commitTransaction(transaction);
-				sm.setResponse(ServletManager.Code.Success, "Users added.");
+			if (single_id == null)
+				throw new GeneralException(ServletManager.Code.ClientError, "Single_id empty.");
+			sm.needToBeConnected();
+			try {
+				user.removeProfile(Integer.parseInt(single_id), sm);
+				user.updateProfilesIndex(sm);
+				sm.setResponse(ServletManager.Code.Success, "Profile removed");
+			} catch (NumberFormatException e) {
+				sm.setResponse(ServletManager.Code.ClientError, "Wrong single_id.");
 			}
-			
 		} catch (GeneralException e) {
 			sm.setResponse(e);
-		} catch (NumberFormatException e) {
-			sm.setResponse(ServletManager.Code.ClientError, "Wrong single_id.");
 		}
 		sm.sendResponse();
 	}

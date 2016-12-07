@@ -19,16 +19,16 @@ import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class GroupAddUsers
+ * Servlet implementation class GroupMoveUsers
  */
-@WebServlet("/groupAddUsers")
-public class GroupAddUsers extends HttpServlet {
+@WebServlet("/GroupMoveUsers")
+public class GroupMoveUsers extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GroupAddUsers() {
+    public GroupMoveUsers() {
         super();
     }
 
@@ -47,33 +47,35 @@ public class GroupAddUsers extends HttpServlet {
 		HttpSession session = request.getSession();
 		User user = (User) (session.getAttribute("User"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
-		
+		DataBaseConnection db = sm.getDB();
 		try {
 			sm.needToBeConnected();
-			String single_id = sm.getServletParam("single_id", true);
+			String s_id_src = sm.getServletParam("s_id_src", true);
+			String s_id_dst = sm.getServletParam("s_id_dst", true);
 			String[] emails = sm.getServletParamArray("emails", true);
 			@SuppressWarnings("unchecked")
 			Map<Integer, Group> groups = (Map<Integer, Group>)sm.getContextAttr("groups");
-			Group group = groups.get(Integer.parseInt(single_id));
-			if (group == null) {
-				sm.setResponse(ServletManager.Code.ClientError, "This group dosen't exist.");
-			} else {
-				group.getInfra().isAdmin(user, sm);
-				DataBaseConnection db = sm.getDB();
+			try {
+				Group groupSrc = groups.get(Integer.parseInt(s_id_src));
+				Group groupDst = groups.get(Integer.parseInt(s_id_dst));
+				if (groupSrc == null || groupDst == null)
+					throw new GeneralException(ServletManager.Code.ClientError, "Group source or group destination is null");
+				groupSrc.getInfra().isAdmin(user, sm);
+				groupDst.getInfra().isAdmin(user, sm);
 				int transaction = db.startTransaction();
 				for (String email : emails) {
-					if (Regex.isEmail(email) == false)
+					if (! Regex.isEmail(email))
 						throw new GeneralException(ServletManager.Code.ClientError, "Wrong user email.");
-					group.addUser(email, sm);
+					groupDst.addUser(email, sm);
+					groupSrc.removeUser(email, sm);
 				}
 				db.commitTransaction(transaction);
-				sm.setResponse(ServletManager.Code.Success, "Users added.");
+				sm.setResponse(ServletManager.Code.Success, "Users moved from group source to group destination.");
+			} catch (NumberFormatException e) {
+				throw new GeneralException(ServletManager.Code.ClientError, e);
 			}
-			
 		} catch (GeneralException e) {
 			sm.setResponse(e);
-		} catch (NumberFormatException e) {
-			sm.setResponse(ServletManager.Code.ClientError, "Wrong single_id.");
 		}
 		sm.sendResponse();
 	}

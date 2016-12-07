@@ -9,26 +9,24 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.Ease.Context.Group.Group;
-import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Context.Group.GroupProfile;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class GroupAddUsers
+ * Servlet implementation class AddGroupProfile
  */
-@WebServlet("/groupAddUsers")
-public class GroupAddUsers extends HttpServlet {
+@WebServlet("/AddGroupProfile")
+public class AddGroupProfile extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GroupAddUsers() {
+    public AddGroupProfile() {
         super();
     }
 
@@ -44,37 +42,30 @@ public class GroupAddUsers extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
-		User user = (User) (session.getAttribute("User"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		
 		try {
 			sm.needToBeConnected();
-			String single_id = sm.getServletParam("single_id", true);
-			String[] emails = sm.getServletParamArray("emails", true);
+			String name = sm.getServletParam("name", true);
+			String color = sm.getServletParam("color", true);
+			boolean common = Boolean.parseBoolean(sm.getServletParam("common", true));
+			int perms = Integer.parseInt(sm.getServletParam("perms", true));
+			String group_id = sm.getServletParam("group_id", true);
+			if (name == null || name.equals(""))
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Name empty.");
+			else if (color == null || Regex.isColor(color) == false)
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong color.");
+			else if (group_id == null || group_id.equals(""))
+				throw new GeneralException(ServletManager.Code.ClientError, "Group error.");
 			@SuppressWarnings("unchecked")
-			Map<Integer, Group> groups = (Map<Integer, Group>)sm.getContextAttr("groups");
-			Group group = groups.get(Integer.parseInt(single_id));
-			if (group == null) {
-				sm.setResponse(ServletManager.Code.ClientError, "This group dosen't exist.");
-			} else {
-				group.getInfra().isAdmin(user, sm);
-				DataBaseConnection db = sm.getDB();
-				int transaction = db.startTransaction();
-				for (String email : emails) {
-					if (Regex.isEmail(email) == false)
-						throw new GeneralException(ServletManager.Code.ClientError, "Wrong user email.");
-					group.addUser(email, sm);
-				}
-				db.commitTransaction(transaction);
-				sm.setResponse(ServletManager.Code.Success, "Users added.");
-			}
-			
+			Map<String, Group> groups = (Map<String, Group>) sm.getContextAttr("groups");
+			Group group = groups.get(group_id);
+			GroupProfile newGroupProfile = GroupProfile.createGroupProfile(group, perms, name, color, common, sm);
+			sm.setResponse(ServletManager.Code.Success, newGroupProfile.getJSONString());
 		} catch (GeneralException e) {
 			sm.setResponse(e);
-		} catch (NumberFormatException e) {
-			sm.setResponse(ServletManager.Code.ClientError, "Wrong single_id.");
 		}
 		sm.sendResponse();
 	}
+
 }

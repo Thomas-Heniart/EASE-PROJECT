@@ -1,7 +1,7 @@
 <%@ tag language="java" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<%@ attribute name="app" type="com.Ease.session.App" required="true"%>
+<%@ attribute name="app" type="com.Ease.Dashboard.App.App" required="true"%>
 <%@ attribute name="informations" type="java.util.Map" required="false" %>
 <c:choose>
 	<c:when test="${app.getType() eq 'NoAccount'}">
