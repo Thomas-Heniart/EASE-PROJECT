@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.Ease.Dashboard.User.SessionSave;
+import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -42,6 +43,7 @@ public class Logout extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
+		User user = (User)session.getAttribute("user");
 		SessionSave sessionSave = (SessionSave)(session.getAttribute("SessionSave"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		String retMsg;
@@ -63,6 +65,7 @@ public class Logout extends HttpServlet {
 					}
 				}
 			}
+			user.deconnect(sm);
 			session.invalidate();
 			retMsg = "Logged out.";
 			sm.setResponse(ServletManager.Code.Success, retMsg);
