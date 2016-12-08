@@ -44,7 +44,7 @@ public class Website {
 			ResultSet rs = db.get("SELECT * FROM websites;");
 			while (rs.next()) {
 				String db_id = rs.getString(WebsiteData.ID.ordinal());
-				List<WebsiteInformation> website_informations = WebsiteInformation.loadInformations(db_id, sm);
+				List<WebsiteInformation> website_informations = WebsiteInformation.loadInformations(db_id, db);
 				String loginUrl = rs.getString(WebsiteData.LOGIN_URL.ordinal());
 				String name = rs.getString(WebsiteData.NAME.ordinal());
 				String folder = rs.getString(WebsiteData.FOLDER.ordinal());
