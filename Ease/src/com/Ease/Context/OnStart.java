@@ -3,7 +3,6 @@ package com.Ease.Context;
 
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -11,11 +10,8 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import com.Ease.Context.Catalog.Catalog;
-import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Context.Group.Infrastructure;
-import com.Ease.Dashboard.App.GroupApp;
-import com.Ease.Dashboard.Profile.GroupProfile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBase;
 import com.Ease.Utils.DataBaseConnection;

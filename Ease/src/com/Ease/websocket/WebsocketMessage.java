@@ -61,6 +61,7 @@ public class WebsocketMessage {
 		this.mapStringString.put(argName, obj);
 	}*/
 	
+	@SuppressWarnings("unchecked")
 	public JSONObject getJSON() {
 		JSONObject res = new JSONObject();
 		res.put("action", this.action);

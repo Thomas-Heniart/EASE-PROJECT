@@ -20,14 +20,17 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 @ApplicationScoped
-@ServerEndpoint(value = "/actions", configurator = GetHttpSessionConfigurator.class)
+@ServerEndpoint("/actions")
 public class WebsocketServer {
 
 	private EndpointConfig config;
 	private int tabId = 0;
 
 	@OnOpen
-	public void open(Session session, EndpointConfig config) throws GeneralException {
+	public void open(Session session) {
+		System.out.println("Coucou");
+	}
+	/*public void open(Session session, EndpointConfig config) throws GeneralException {
 		this.config = config;
 		HttpSession httpSession = (HttpSession) config.getUserProperties().get("httpSession");
 		System.out.println("Session find");
@@ -46,7 +49,7 @@ public class WebsocketServer {
 		} else {
 			user.addWebsocket(session);
 		}
-	}
+	}*/
 
 	@OnClose
 	public void close(Session session) {
@@ -55,7 +58,6 @@ public class WebsocketServer {
 		if (user == null)
 			return;
 		user.removeWebsocket(session);
-		// session.getBasicRemote().sendText(arg0);
 	}
 
 	@OnError
