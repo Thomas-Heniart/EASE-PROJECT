@@ -231,7 +231,7 @@ public class Profile {
 		else {
 			size = (apps.size() + 2) / 3;
 		}
-		return size;
+		return size;s
 	}
 	
 	@SuppressWarnings("unchecked")

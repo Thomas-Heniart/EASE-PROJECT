@@ -189,10 +189,6 @@ public class ServletManager {
 		}	
 	}
 	
-	public int getNextSingleId() {
-		return user.getNextSingleId();
-	}
-	
 	public Object getContextAttr(String attr) {
 		return request.getServletContext().getAttribute(attr);
 	}

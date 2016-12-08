@@ -178,7 +178,7 @@ public class GroupProfile {
 	
 	public void loadContentForConnectedUser(User user, ServletManager sm) throws GeneralException {
 		int mostEmptyColumn = user.getMostEmptyProfileColumn();
-		user.getProfilesColumn().get(mostEmptyColumn).add(Profile.createProfileWithGroup(user, mostEmptyColumn, user.getProfilesColumn().get(mostEmptyColumn).size(), this, sm));
+		user.getProfileColumns().get(mostEmptyColumn).add(Profile.createProfileWithGroup(user, mostEmptyColumn, user.getProfileColumns().get(mostEmptyColumn).size(), this, sm));
 
 	}
 	
