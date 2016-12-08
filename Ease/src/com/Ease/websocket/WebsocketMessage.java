@@ -1,9 +1,5 @@
 package com.Ease.websocket;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public class WebsocketMessage {
@@ -11,6 +7,10 @@ public class WebsocketMessage {
 		ALLTABS,
 		OTHERTABS,
 		THISTAB
+	}
+	
+	public static WebsocketMessage connectionMessage() {
+		return new WebsocketMessage("connect", new JSONObject(), Who.OTHERTABS);
 	}
 	
 	protected String action;

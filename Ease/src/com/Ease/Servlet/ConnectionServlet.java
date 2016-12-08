@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -21,6 +22,8 @@ import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
+import com.Ease.websocket.WebsocketMessage;
+import com.Ease.websocket.WebsocketSession;
 
 /**
  * Servlet implementation class ConnectionServlet
@@ -46,6 +49,7 @@ public class ConnectionServlet extends HttpServlet {
 		rd.forward(request, response);
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
@@ -79,6 +83,8 @@ public class ConnectionServlet extends HttpServlet {
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		}
+		sm.addWebsockets((Map<String, WebsocketSession>)session.getAttribute("unconnectedSessions"));
+		sm.addToSocket(WebsocketMessage.connectionMessage());
 		sm.sendResponse();
 	}
 

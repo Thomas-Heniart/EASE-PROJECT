@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.Ease.Dashboard.User.User;
 import com.Ease.websocket.WebsocketMessage;
+import com.Ease.websocket.WebsocketSession;
 
 public class ServletManager {
 	
@@ -47,6 +48,7 @@ public class ServletManager {
 	protected String				date;
 	protected String				tabId;
 	protected List<WebsocketMessage> messages;
+	protected Map<String, WebsocketSession> websockets;
 	
 	public ServletManager(String servletName, HttpServletRequest request, HttpServletResponse response, boolean saveLogs) {
 		this.args = new HashMap<>();
@@ -63,6 +65,7 @@ public class ServletManager {
 		this.saveLogs = saveLogs;
 		this.date = dateFormat.format(mydate);
 		this.messages = new LinkedList<WebsocketMessage>();
+		this.websockets = new HashMap<String, WebsocketSession>();
 		try {
 			this.db = new DataBaseConnection(DataBase.getConnection());
 		} catch (SQLException e) {
@@ -164,7 +167,7 @@ public class ServletManager {
 			}
 		}
 		try {
-			for (WebsocketMessage msg: this.messages) {
+			/*for (WebsocketMessage msg: this.messages) {
 				this.user.getWebsockets().forEach((key, socket) -> {
 					if (msg.getWho() == WebsocketMessage.Who.ALLTABS ||
 						(msg.getWho() == WebsocketMessage.Who.OTHERTABS && key != tabId) ||
@@ -175,6 +178,19 @@ public class ServletManager {
 							this.user.removeWebsocket(socket);
 						}
 					}
+				});
+			}*/
+			for (WebsocketMessage msg : this.messages) {
+				this.websockets.forEach((key, socket) -> {
+					if (msg.getWho() == WebsocketMessage.Who.ALLTABS ||
+							(msg.getWho() == WebsocketMessage.Who.OTHERTABS && key != tabId) ||
+							(msg.getWho() == WebsocketMessage.Who.THISTAB && key == tabId)) {
+							try {
+								socket.sendMessage(msg);
+							} catch (IOException e) {
+								this.user.removeWebsocket(socket);
+							}
+						}
 				});
 			}
 			if (this.redirectUrl != null) {
@@ -195,6 +211,14 @@ public class ServletManager {
 	
 	public Object getContextAttr(String attr) {
 		return request.getServletContext().getAttribute(attr);
+	}
+	
+	public void addWebsockets(Map<String, WebsocketSession> websockets) {
+		this.websockets.putAll(websockets);
+	}
+	
+	public void addWebsocket(String tabId, WebsocketSession websocket) {
+		this.websockets.put(tabId, websocket);
 	}
 	
 	public void addToSocket(WebsocketMessage msg) {

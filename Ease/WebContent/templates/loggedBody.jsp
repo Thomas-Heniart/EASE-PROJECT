@@ -3,6 +3,7 @@
 
 <%@ page import="java.util.LinkedList"%>
 <%@ page import="com.Ease.Dashboard.App.Tag"%>
+<%@ page import="com.Ease.Dashboard.User.SessionSave" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib tagdir="/WEB-INF/tags/dashboard" prefix="dashboard" %>
@@ -11,17 +12,20 @@
 <%@ page import="java.util.Date"%>
 <script src="js/SettingsView.js"></script>
 <%
-Cookie sessionId = new Cookie("sId",sessionSave.getSessionId());
-Cookie sessionToken = new Cookie("sTk",sessionSave.getToken());
-DateFormat dateFormat = new SimpleDateFormat("HH");
-Date date = new Date();
-int duration = 29 - Integer.parseInt(dateFormat.format(date));
-if(duration > 24) duration = duration - 24;
-duration = (duration*60-30)*60;
-sessionId.setMaxAge(duration);
-sessionToken.setMaxAge(duration);
-response.addCookie(sessionId);
-response.addCookie(sessionToken);
+if (user != null) {
+	SessionSave sessionSave = user.getSessionSave();
+	Cookie sessionId = new Cookie("sId",sessionSave.getSessionId());
+	Cookie sessionToken = new Cookie("sTk",sessionSave.getToken());
+	DateFormat dateFormat = new SimpleDateFormat("HH");
+	Date date = new Date();
+	int duration = 29 - Integer.parseInt(dateFormat.format(date));
+	if(duration > 24) duration = duration - 24;
+	duration = (duration*60-30)*60;
+	sessionId.setMaxAge(duration);
+	sessionToken.setMaxAge(duration);
+	response.addCookie(sessionId);
+	response.addCookie(sessionToken);	
+}
 %>
 <%
 pageContext.setAttribute("selectedTags", new LinkedList<Tag>());
