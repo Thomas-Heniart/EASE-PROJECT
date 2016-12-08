@@ -6,8 +6,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
 
 public class Website {
@@ -38,7 +41,7 @@ public class Website {
 	}
 	
 	
-	public static List<Website> loadWebsite(DataBaseConnection db) throws GeneralException {
+	public static List<Website> loadWebsite(DataBaseConnection db, ServletContext context) throws GeneralException {
 		try {
 			List<Website> websites = new LinkedList<Website>();
 			ResultSet rs = db.get("SELECT * FROM websites;");
@@ -57,7 +60,8 @@ public class Website {
 				String insertDate = rs.getString(WebsiteData.INSERT_DATE.ordinal());
 				boolean locked = rs.getBoolean(WebsiteData.LOCKED.ordinal());
 				String lockedExpiration = rs.getString(WebsiteData.LOCKED_EXPIRATION.ordinal());
-				websites.add(new Website(db_id, sm.getNextSingleId(), name, loginUrl, folder, sso, noLogin, website_homepage, hidden, ratio, position, insertDate, locked, lockedExpiration, website_informations));
+				int single_id = ((IdGenerator)context.getAttribute("idGenerator")).getNextId();
+				websites.add(new Website(db_id, single_id, name, loginUrl, folder, sso, noLogin, website_homepage, hidden, ratio, position, insertDate, locked, lockedExpiration, website_informations));
 			}
 			return websites;
 		} catch (SQLException e) {

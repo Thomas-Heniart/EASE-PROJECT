@@ -14,6 +14,7 @@ import com.Ease.Dashboard.App.GroupApp;
 import com.Ease.Dashboard.App.Website;
 import com.Ease.Dashboard.App.LinkApp.GroupLinkApp;
 import com.Ease.Dashboard.App.LinkApp.LinkAppInformation;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.GroupClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.GroupLogwithApp;
 import com.Ease.Dashboard.Profile.GroupProfile;
 import com.Ease.Utils.DataBaseConnection;
@@ -48,10 +49,8 @@ public enum Data {
 						return groupWebsiteApp;
 					case "ClassicApp":
 						return GroupClassicApp.loadGroupClassicApp(db_id, groupProfile, group, perms, info, common, single_id, website, db_id2, db, context);
-					break;
 					case "LogwithApp":
 						return GroupLogwithApp.loadGroupLogwithApp(db_id, groupProfile, group, perms, info, common, single_id, website, db_id2, db, context);
-					break;
 					default:
 						throw new GeneralException(ServletManager.Code.InternError, "This GroupWebsiteApp type dosen't exist.");
 				}

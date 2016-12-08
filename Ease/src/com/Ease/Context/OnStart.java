@@ -41,7 +41,7 @@ public class OnStart implements ServletContextListener{
 		}
 		try {
 			evt.getServletContext().setAttribute("idGenerator", new IdGenerator());
-			evt.getServletContext().setAttribute("catalog", new Catalog(db));
+			evt.getServletContext().setAttribute("catalog", new Catalog(db, context));
 			evt.getServletContext().setAttribute("groupManager", new GroupManager());
 			Infrastructure.loadInfrastructures(db, evt.getServletContext());
 			

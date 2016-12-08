@@ -2,6 +2,8 @@ package com.Ease.Context.Catalog;
 
 import java.util.List;
 
+import javax.servlet.ServletContext;
+
 import com.Ease.Dashboard.App.Website;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
@@ -16,8 +18,8 @@ public class Catalog {
 	
 	protected List<Website> websites;
 	
-	public Catalog(DataBaseConnection db) throws GeneralException {
-		this.websites = Website.loadWebsite(db);
+	public Catalog(DataBaseConnection db, ServletContext context) throws GeneralException {
+		this.websites = Website.loadWebsite(db, context);
 	}
 	
 	/*

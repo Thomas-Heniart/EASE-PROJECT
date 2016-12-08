@@ -15,6 +15,7 @@ import java.util.Map;
 import javax.websocket.Session;
 
 import com.Ease.Context.Group.Group;
+import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Utils.DataBaseConnection;
@@ -56,7 +57,7 @@ public class User {
 				ResultSet rs2 = db.get("SELECT group_id FROM groupsAndUsersMap WHERE user_id=" + newUser.getDBid() + ";");
 				Group userGroup;
 				while (rs2.next()) {
-					userGroup = Group.getGroup((rs2.getString(1)), sm);
+					userGroup = GroupManager.getGroupManager(sm).getGroupFromDBid(rs2.getString(1));
 					if (userGroup != null) {
 						newUser.getGroups().add(userGroup);
 					}
@@ -77,7 +78,6 @@ public class User {
 		String db_id = sessionSave.getUserId();
 		String keyUser = sessionSave.getKeyUser();
 		sessionSave.eraseFromDB(sm);
-		Map<String, Group> groups = (Map<String, Group>) sm.getContextAttr("groups");
 		try {
 			ResultSet rs = db.get("SELECT * FROM users where id='" + db_id + "';");
 			if (rs.next()) {
@@ -96,7 +96,7 @@ public class User {
 				ResultSet rs2 = db.get("SELECT group_id FROM groupsAndUsersMap WHERE user_id=" + newUser.getDBid() + ";");
 				Group userGroup;
 				while (rs2.next()) {
-					userGroup = groups.get(rs2.getString(1));
+					userGroup = GroupManager.getGroupManager(sm).getGroupFromDBid(rs2.getString(1));
 					if (userGroup != null) {
 						newUser.getGroups().add(userGroup);
 					}
