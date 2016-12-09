@@ -13,6 +13,12 @@ public class WebsocketMessage {
 		return new WebsocketMessage("connect", new JSONObject(), Who.OTHERTABS);
 	}
 	
+	public static WebsocketMessage assignIdMessage(String wSessionId) {
+		JSONObject data = new JSONObject();
+		data.put("socketId", wSessionId);
+		return new WebsocketMessage("setSocketId", data, Who.OTHERTABS);
+	}
+	
 	protected String action;
 	protected JSONObject data;
 	protected Who 	who;

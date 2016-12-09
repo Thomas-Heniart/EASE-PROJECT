@@ -167,25 +167,15 @@ public class ServletManager {
 			}
 		}
 		try {
-			/*for (WebsocketMessage msg: this.messages) {
-				this.user.getWebsockets().forEach((key, socket) -> {
-					if (msg.getWho() == WebsocketMessage.Who.ALLTABS ||
-						(msg.getWho() == WebsocketMessage.Who.OTHERTABS && key != tabId) ||
-						(msg.getWho() == WebsocketMessage.Who.THISTAB && key == tabId)) {
-						try {
-							socket.sendMessage(msg);
-						} catch (IOException e) {
-							this.user.removeWebsocket(socket);
-						}
-					}
-				});
-			}*/
 			for (WebsocketMessage msg : this.messages) {
 				this.websockets.forEach((key, socket) -> {
 					if (msg.getWho() == WebsocketMessage.Who.ALLTABS ||
-							(msg.getWho() == WebsocketMessage.Who.OTHERTABS && key != tabId) ||
-							(msg.getWho() == WebsocketMessage.Who.THISTAB && key == tabId)) {
+							(msg.getWho() == WebsocketMessage.Who.OTHERTABS && (! key.equals(tabId))) ||
+							(msg.getWho() == WebsocketMessage.Who.THISTAB && key.equals(tabId))) {
 							try {
+								System.out.println(msg.getWho().name());
+								System.out.println(key);
+								
 								socket.sendMessage(msg);
 							} catch (IOException e) {
 								this.user.removeWebsocket(socket);
@@ -207,6 +197,10 @@ public class ServletManager {
 	
 	public Object getContextAttr(String attr) {
 		return request.getServletContext().getAttribute(attr);
+	}
+	
+	public void setTabId(String tabId) {
+		this.tabId = tabId;
 	}
 	
 	public void addWebsockets(Map<String, WebsocketSession> websockets) {

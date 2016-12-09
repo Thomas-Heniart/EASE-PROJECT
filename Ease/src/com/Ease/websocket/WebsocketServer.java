@@ -1,9 +1,8 @@
 package com.Ease.websocket;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.servlet.http.HttpSession;
@@ -20,49 +19,48 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 @ApplicationScoped
-@ServerEndpoint("/actions")
+@ServerEndpoint(value = "/actions", configurator = GetHttpSessionConfigurator.class)
 public class WebsocketServer {
 
 	private EndpointConfig config;
-	private int tabId = 0;
 
 	@OnOpen
-	public void open(Session session) {
-		System.out.println("Coucou");
-	}
-	/*public void open(Session session, EndpointConfig config) throws GeneralException {
+	public void open(Session session, EndpointConfig config) throws GeneralException {
 		this.config = config;
-		HttpSession httpSession = (HttpSession) config.getUserProperties().get("httpSession");
-		System.out.println("Session find");
+		HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
 		User user = (User) httpSession.getAttribute("user");
+		WebsocketSession wSession = new WebsocketSession(session);
 		if (user == null) {
 			@SuppressWarnings("unchecked")
-			Map<String, WebsocketSession> unconnectedSessions = (Map<String, WebsocketSession>) httpSession
-					.getAttribute("unconnectedSessions");
+			Map<String, WebsocketSession> unconnectedSessions = (Map<String, WebsocketSession>) httpSession.getAttribute("unconnectedSessions");
 			if (unconnectedSessions == null) {
 				unconnectedSessions = new HashMap<String, WebsocketSession>();
 				httpSession.setAttribute("unconnectedSessions", unconnectedSessions);
 			}
-			unconnectedSessions.put(String.valueOf(tabId), new WebsocketSession(session));
-			System.out.println("Session find");
-			tabId++;
+			unconnectedSessions.put(wSession.getSessionId(), wSession);
 		} else {
-			user.addWebsocket(session);
+			user.addWebsocket(wSession);
 		}
-	}*/
+		try {
+			System.out.println(wSession.getSessionId());
+			wSession.sendMessage(WebsocketMessage.assignIdMessage(wSession.getSessionId()));
+		} catch (IOException e) {
+			throw new GeneralException(ServletManager.Code.ClientError, e);
+		}
+	}
 
 	@OnClose
 	public void close(Session session) {
-		HttpSession httpSession = (HttpSession) config.getUserProperties().get("httpSession");
+		HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
 		User user = (User) httpSession.getAttribute("user");
 		if (user == null)
-			return;
-		user.removeWebsocket(session);
+			WebsocketSession.removeWebsocketSession(session, httpSession);
+		else
+			user.removeWebsocket(session);
 	}
 
 	@OnError
 	public void onError(Throwable error) {
-		Logger.getLogger(WebsocketServer.class.getName()).log(Level.SEVERE, null, error);
 	}
 
 	@OnMessage
