@@ -8,6 +8,6 @@ function onMessage(event) {
     if (response.action === "connect") {
     	location.href = "index.jsp";
     } else if (response.action === "setSocketId") {
-    	socketId = response["socketId"];
+    	socketId = response.data.socketId;
     }
 }

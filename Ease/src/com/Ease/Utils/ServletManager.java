@@ -48,7 +48,7 @@ public class ServletManager {
 	protected String				date;
 	protected String				tabId;
 	protected List<WebsocketMessage> messages;
-	protected Map<String, WebsocketSession> websockets;
+	public static Map<String, WebsocketSession> websockets = new HashMap<String, WebsocketSession>();
 	
 	public ServletManager(String servletName, HttpServletRequest request, HttpServletResponse response, boolean saveLogs) {
 		this.args = new HashMap<>();
@@ -65,7 +65,6 @@ public class ServletManager {
 		this.saveLogs = saveLogs;
 		this.date = dateFormat.format(mydate);
 		this.messages = new LinkedList<WebsocketMessage>();
-		this.websockets = new HashMap<String, WebsocketSession>();
 		try {
 			this.db = new DataBaseConnection(DataBase.getConnection());
 		} catch (SQLException e) {
@@ -167,15 +166,14 @@ public class ServletManager {
 			}
 		}
 		try {
+			System.out.println(websockets.entrySet().size());
 			for (WebsocketMessage msg : this.messages) {
-				this.websockets.forEach((key, socket) -> {
+				websockets.forEach((key, socket) -> {
 					if (msg.getWho() == WebsocketMessage.Who.ALLTABS ||
 							(msg.getWho() == WebsocketMessage.Who.OTHERTABS && (! key.equals(tabId))) ||
 							(msg.getWho() == WebsocketMessage.Who.THISTAB && key.equals(tabId))) {
 							try {
-								System.out.println(msg.getWho().name());
-								System.out.println(key);
-								
+								System.out.println("socketId = " + key);
 								socket.sendMessage(msg);
 							} catch (IOException e) {
 								this.user.removeWebsocket(socket);
@@ -203,12 +201,16 @@ public class ServletManager {
 		this.tabId = tabId;
 	}
 	
-	public void addWebsockets(Map<String, WebsocketSession> websockets) {
-		this.websockets.putAll(websockets);
+	public void addWebsockets(Map<String, WebsocketSession> websocketsMap) {
+		websockets.putAll(websocketsMap);
 	}
 	
 	public void addWebsocket(String tabId, WebsocketSession websocket) {
-		this.websockets.put(tabId, websocket);
+		websockets.put(tabId, websocket);
+	}
+	
+	public static void removeWebsocket(String tabId) {
+		websockets.remove(tabId);
 	}
 	
 	public void addToSocket(WebsocketMessage msg) {

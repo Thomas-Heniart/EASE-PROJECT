@@ -11,12 +11,20 @@ public class WebsocketSession {
 	public static void removeWebsocketSession(Session session, HttpSession httpSession) {
 		@SuppressWarnings("unchecked")
 		Map<String, WebsocketSession> unconnectedSessions = (Map<String, WebsocketSession>) httpSession.getAttribute("unconnectedSessions");
+		if (unconnectedSessions == null)
+			return;
 		for (Map.Entry<String, WebsocketSession> entry : unconnectedSessions.entrySet()) {
 			if (entry.getValue() == session) {
 				unconnectedSessions.remove(entry.getKey());
 				return;
 			}
 		}
+	}
+	
+	public static void removeAll(HttpSession httpSession) {
+		@SuppressWarnings("unchecked")
+		Map<String, WebsocketSession> unconnectedSessions = (Map<String, WebsocketSession>) httpSession.getAttribute("unconnectedSessions");
+		unconnectedSessions.clear();
 	}
 	
 	protected Session session;

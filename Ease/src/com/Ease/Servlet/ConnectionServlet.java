@@ -51,7 +51,6 @@ public class ConnectionServlet extends HttpServlet {
 	@SuppressWarnings("unchecked")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		boolean success = false;
 		HttpSession session = request.getSession();
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		DataBaseConnection db = sm.getDB();
@@ -60,7 +59,8 @@ public class ConnectionServlet extends HttpServlet {
 		String password = sm.getServletParam("password", false);
 		String socketId = sm.getServletParam("socketId", true);
 		// --
-
+		boolean success = false;
+		Map<String, WebsocketSession> unconnectedSessions = (Map<String, WebsocketSession>)session.getAttribute("unconnectedSessions");
 		String client_ip = getIpAddr(request);
 
 		// Put current ip in db
@@ -78,6 +78,16 @@ public class ConnectionServlet extends HttpServlet {
 					session.setAttribute("user", user);
 					removeIpFromDataBase(client_ip,db);
 					sm.setResponse(ServletManager.Code.Success, "Successfully connected");
+					sm.addWebsockets(unconnectedSessions);
+					sm.addToSocket(WebsocketMessage.connectionMessage());
+					sm.setTabId(socketId);
+					unconnectedSessions.forEach((key, socket) -> {
+						try {
+							user.addWebsocket(socket);
+						} catch (GeneralException e) {
+							sm.setResponse(e);
+						}
+					});
 					success = true;
 				}
 			} else {
@@ -86,13 +96,9 @@ public class ConnectionServlet extends HttpServlet {
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		}
-		sm.addWebsockets((Map<String, WebsocketSession>)session.getAttribute("unconnectedSessions"));
-		sm.addToSocket(WebsocketMessage.connectionMessage());
-		sm.setTabId(socketId);
 		sm.sendResponse();
-		if (success) {
-			session.setAttribute("unconnectedSessions", null);
-		}
+		if (success)
+			session.removeAttribute("unconnectedSessions");
 	}
 
 	public String getIpAddr(HttpServletRequest request) {
