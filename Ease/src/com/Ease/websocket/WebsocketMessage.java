@@ -2,6 +2,10 @@ package com.Ease.websocket;
 
 import org.json.simple.JSONObject;
 
+import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
+import com.Ease.Dashboard.Profile.Profile;
+
 public class WebsocketMessage {
 	public enum Who {
 		ALLTABS,
@@ -17,6 +21,30 @@ public class WebsocketMessage {
 		JSONObject data = new JSONObject();
 		data.put("socketId", wSessionId);
 		return new WebsocketMessage("setSocketId", data, Who.OTHERTABS);
+	}
+	
+	public static WebsocketMessage addClassicAppMessage(ClassicApp app) {
+		JSONObject data = new JSONObject();
+		// TODO set data
+		return new WebsocketMessage ("addClassicApp", data, Who.OTHERTABS);
+	}
+	
+	public static WebsocketMessage addLogWithAppMessage(ClassicApp app) {
+		JSONObject data = new JSONObject();
+		// TODO set data
+		return new WebsocketMessage ("addLogWithApp", data, Who.OTHERTABS);
+	}
+	
+	public static WebsocketMessage addEmptyAppMessage (WebsiteApp app) {
+		JSONObject data = new JSONObject();
+		// TODO set data
+		return new WebsocketMessage ("addEmptyApp", data, Who.OTHERTABS);
+	}
+	
+	public static WebsocketMessage addProfile (Profile profile) {
+		JSONObject data = new JSONObject();
+		// TODO set data
+		return new WebsocketMessage ("addProfile", data, Who.OTHERTABS);
 	}
 	
 	protected String action;
