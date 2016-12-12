@@ -35,8 +35,7 @@ public class AccountInformation {
 		return new AccountInformation(String.valueOf(db_id), account_id, information_name, information_value);
 	}
 	
-	public static List<AccountInformation> loadInformations(String account_id, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
+	public static List<AccountInformation> loadInformations(String account_id, DataBaseConnection db) throws GeneralException {
 		List<AccountInformation> account_informations = new LinkedList<AccountInformation>();
 		ResultSet rs = db.get("SELECT * FROM accountsInformations WHERE account_id=" + account_id + ";");
 		try {

@@ -46,9 +46,11 @@ public class ServletManager {
 	protected boolean				saveLogs;
 	protected String				logResponse;
 	protected String				date;
-	protected String				tabId;
+	protected String				socketId;
 	protected List<WebsocketMessage> messages;
+	
 	public static Map<String, WebsocketSession> websockets = new HashMap<String, WebsocketSession>();
+	public static boolean debug = true;
 	
 	public ServletManager(String servletName, HttpServletRequest request, HttpServletResponse response, boolean saveLogs) {
 		this.args = new HashMap<>();
@@ -81,10 +83,12 @@ public class ServletManager {
 	public void needToBeConnected() throws GeneralException {
 		if (user == null) {
 			throw new GeneralException(Code.ClientWarning, "You need to be connected to do that.");
-		} else if ((tabId = request.getParameter("tabId"))== null) {
-			throw new GeneralException(Code.ClientError, "No tabId.");
-		} else if (user.getWebsockets().containsKey(tabId) == false) {
-			throw new GeneralException(Code.ClientError, "Wrong tabId.");
+		} else if (!debug) {
+			if ((socketId = request.getParameter("socketId"))== null) {
+				throw new GeneralException(Code.ClientError, "No socketId.");
+			} else if (user.getWebsockets().containsKey(socketId) == false) {
+				throw new GeneralException(Code.ClientError, "Wrong socketId.");
+			}
 		}
 	}
 	
@@ -169,8 +173,8 @@ public class ServletManager {
 			for (WebsocketMessage msg : this.messages) {
 				websockets.forEach((key, socket) -> {
 					if (msg.getWho() == WebsocketMessage.Who.ALLTABS ||
-							(msg.getWho() == WebsocketMessage.Who.OTHERTABS && (! key.equals(tabId))) ||
-							(msg.getWho() == WebsocketMessage.Who.THISTAB && key.equals(tabId))) {
+							(msg.getWho() == WebsocketMessage.Who.OTHERTABS && (! key.equals(socketId))) ||
+							(msg.getWho() == WebsocketMessage.Who.THISTAB && key.equals(socketId))) {
 							try {
 								socket.sendMessage(msg);
 							} catch (IOException e) {
@@ -197,23 +201,43 @@ public class ServletManager {
 		return request.getServletContext().getAttribute(attr);
 	}
 	
-	public void setTabId(String tabId) {
-		this.tabId = tabId;
+	public void setSocketId(String socketId) throws GeneralException {
+		if (debug)
+			return;
+		else if (socketId == null)
+			throw new GeneralException(Code.ClientError, "Socket id is null");
+		this.socketId = socketId;
 	}
 	
-	public void addWebsockets(Map<String, WebsocketSession> websocketsMap) {
+	public void addWebsockets(Map<String, WebsocketSession> websocketsMap) throws GeneralException {
+		if (debug)
+			return;
+		else if (websocketsMap == null)
+			throw new GeneralException(Code.ClientError, "WebsocketsMap is null");
 		websockets.putAll(websocketsMap);
 	}
 	
-	public void addWebsocket(String tabId, WebsocketSession websocket) {
+	public void addWebsocket(String tabId, WebsocketSession websocket) throws GeneralException {
+		if (debug)
+			return;
+		else if (websocket == null || tabId == null)
+			throw new GeneralException(Code.ClientError, "Websocket or tabId is null");
 		websockets.put(tabId, websocket);
 	}
 	
-	public static void removeWebsocket(String tabId) {
+	public static void removeWebsocket(String tabId) throws GeneralException {
+		if (debug)
+			return;
+		else if (tabId == null)
+			throw new GeneralException(Code.ClientError, "tabId is null");
 		websockets.remove(tabId);
 	}
 	
-	public void addToSocket(WebsocketMessage msg) {
+	public void addToSocket(WebsocketMessage msg) throws GeneralException {
+		if (debug)
+			return;
+		else if (msg == null)
+			throw new GeneralException(Code.ClientError, "msg is null");
 		messages.add(msg);
 	}
 }

@@ -1,3 +1,31 @@
+function addProfileToDashboard(name, color, profile_id) {
+	columns = $('.dashboardColumn');
+	var profile = $($('#profileHelper').html());
+	var a = 1000;
+	var columnIdx = 0;
+	for (var i = 0; i < columns.length; i++) {
+		var tmp = 0;			
+		$(columns[i]).find('.item').each(function(){
+			var appsNb = $(this).find('.siteLinkBox').length;
+			tmp += (appsNb < 7) ? 2 : (appsNb + 2) / 3;
+		});
+		if (tmp < a){
+			a = tmp;
+			columnIdx = i;
+		}
+	}
+	if ((profiles.length + 1) >= 15){
+		self.adder.rootEl.css('display', 'none');
+	}
+	var newProfile = new Profile($(profile).find('.ProfileBox'));
+	newProfile.setName(name);
+	newProfile.setColor(color);
+	profiles.push(newProfile);	
+	$(columns[columnIdx]).css('width', '');
+	$(columns[columnIdx]).append($(profile));
+	newProfile.setId(profile_id);
+}
+
 var profileAdder = function(rootEl){
 	var self = this;
 	this.rootEl = rootEl;
@@ -136,7 +164,7 @@ var Dashboard = function(rootEl){
 			$(self.columns[columnIdx]).append($(profile));
 			self.adder.close();
 			postHandler.post(
-				'addProfile', 
+				'AddProfile', 
 				{
 					name : Name,
 					color : Color

@@ -59,36 +59,27 @@ public class ConnectionServlet extends HttpServlet {
 		String password = sm.getServletParam("password", false);
 		String socketId = sm.getServletParam("socketId", true);
 		// --
-		boolean success = false;
 		Map<String, WebsocketSession> unconnectedSessions = (Map<String, WebsocketSession>)session.getAttribute("unconnectedSessions");
 		String client_ip = getIpAddr(request);
-
+		User user = null;
 		// Put current ip in db
 		try {
 			addIpInDataBase(client_ip, db);
 			if (canConnect(client_ip, db)) {
 				if (email == null || Regex.isEmail(email) == false)
-					sm.setResponse(ServletManager.Code.ClientWarning, "Wrong email");
-				else if (password == null)
-					sm.setResponse(ServletManager.Code.ClientWarning, "Wrong password");
-				else if (socketId == null)
-					sm.setResponse(ServletManager.Code.ClientWarning, "No websocket");
+					sm.setResponse(ServletManager.Code.ClientWarning, "Wrong email.");
+				else if (password == null || password.isEmpty())
+					sm.setResponse(ServletManager.Code.ClientWarning, "Wrong password.");
+				else if (socketId == null || socketId.isEmpty())
+					sm.setResponse(ServletManager.Code.ClientWarning, "No websocket.");
 				else {
-					User user = User.loadUser(email, password, sm);
+					user = User.loadUser(email, password, sm);
 					session.setAttribute("user", user);
 					removeIpFromDataBase(client_ip,db);
-					sm.setResponse(ServletManager.Code.Success, "Successfully connected");
+					sm.setResponse(ServletManager.Code.Success, "Successfully connected.");
 					sm.addWebsockets(unconnectedSessions);
 					sm.addToSocket(WebsocketMessage.connectionMessage());
-					sm.setTabId(socketId);
-					unconnectedSessions.forEach((key, socket) -> {
-						try {
-							user.addWebsocket(socket);
-						} catch (GeneralException e) {
-							sm.setResponse(e);
-						}
-					});
-					success = true;
+					sm.setSocketId(socketId);
 				}
 			} else {
 				throw new GeneralException(ServletManager.Code.UserMiss, "Too much attempts to connect. Please retry in 5 minutes.");
@@ -97,8 +88,16 @@ public class ConnectionServlet extends HttpServlet {
 			sm.setResponse(e);
 		}
 		sm.sendResponse();
-		if (success)
+		if (user != null) {
+			for (Map.Entry<String, WebsocketSession> entry : unconnectedSessions.entrySet() ) {
+				try {
+					user.addWebsocket(entry.getValue());
+				} catch (GeneralException e) {
+					sm.setResponse(e);
+				}
+			}
 			session.removeAttribute("unconnectedSessions");
+		}
 	}
 
 	public String getIpAddr(HttpServletRequest request) {

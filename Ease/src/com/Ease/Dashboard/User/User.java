@@ -1,6 +1,5 @@
 package com.Ease.Dashboard.User;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -278,7 +277,7 @@ public class User {
 				}
 			}
 		}
-		throw new GeneralException(ServletManager.Code.InternError, "Cannot remove this profile");
+		throw new GeneralException(ServletManager.Code.InternError, "This profile dosen't exist.");
 	}
 	
 	public void updateProfilesIndex(ServletManager sm) throws GeneralException {
@@ -465,5 +464,37 @@ public class User {
 				unverifiedEmails.add(email.getEmail());
 		}
 		return unverifiedEmails;
+	}
+	
+	public Profile addProfile(String name, String color, ServletManager sm) throws GeneralException {
+		int column = this.getMostEmptyProfileColumn();
+		Profile newProfile = Profile.createPersonnalProfile(this, column, this.getProfileColumns().get(column).size(), name, color, sm);
+		this.profile_columns.get(column).add(newProfile);
+		return newProfile;
+	}
+
+	public void removeApp(int single_id, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		App app = this.getApp(single_id);
+		Profile profile = app.getProfile();
+		profile.getApps().remove(app);
+		app.removeFromDB(sm);
+		profile.updateAppsIndex(sm);
+		db.commitTransaction(transaction);
+	}
+
+	public void moveProfile(int profileId, int columnIdx, int position, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		Profile profile = this.getProfile(profileId);
+		if (columnIdx < 1 || columnIdx >= Profile.MAX_COLUMN)
+			throw new GeneralException(ServletManager.Code.ClientError, "Wrong columnIdx.");
+		if (position < 0 || position > this.profile_columns.get(columnIdx).size())
+			throw new GeneralException(ServletManager.Code.ClientError, "Wrong position.");
+		this.profile_columns.get(profile.getColumnIdx()).remove(profile);
+		this.profile_columns.get(columnIdx).add(profile);
+		this.updateProfilesIndex(sm);
+		db.commitTransaction(transaction);
 	}
 }
