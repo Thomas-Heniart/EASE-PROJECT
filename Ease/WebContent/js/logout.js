@@ -9,7 +9,7 @@ $(document).ready(function(){
 	});
 	$('#easeLogoutButton').click(function(){
 		postHandler.post(
-			'logout',
+			'Logout',
 			{},
 			function(){},
 			function(retMsg){

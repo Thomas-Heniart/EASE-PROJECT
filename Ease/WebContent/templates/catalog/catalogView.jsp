@@ -33,7 +33,7 @@
 		<i class="fa fa-angle-left" aria-hidden="true"></i>
 		<span class="tags">
 			<c:forEach items='${siteManager.getTagsList()}' var="item">
-				<a href="#" tagId="${item.getId()}" class="tag btn btn-default ease-button hvr-grow" name="${item.getName()}"
+				<a href="#" tagId="${item.getSingledId()}" class="tag btn btn-default ease-button hvr-grow" name="${item.getName()}"
 					style="background-color: ${item.getColor()};">
 					${item.getName()}</a>
 			</c:forEach>
