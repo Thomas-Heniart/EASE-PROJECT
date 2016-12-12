@@ -78,30 +78,3 @@
 		}
 	}
 }
-
-#loginBody .phrase{
-    position: absolute;
-    bottom: 20px;
-    left:calc(50% - 300px);
-    -webkit-transition-duration: 0.5s;
-    transition-duration: 0.5s;
-    p {
-        text-shadow: 0 0 30px #373B60, 0 0 20px #373B60, 0 0 10px #373B60;
-        color: white;
-        font-size:18px;
-        font-weight:600;
-        a {
-			color: white;
-			text-decoration: underline;
-            &:visited {
-                color: white;
-            }
-            &:hover {
-                color: lightgrey;
-            }
-            &:active {
-                color: darkgrey;
-            }
-        }
-    }
-}

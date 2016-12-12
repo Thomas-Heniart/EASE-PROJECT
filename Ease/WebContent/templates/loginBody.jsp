@@ -4,7 +4,6 @@
 <%@ page import="java.util.Base64.Encoder" %>
 <%@ page import="java.nio.charset.StandardCharsets" %>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <script src="js/connection.js"></script>
 <script src="js/rAF.js"></script>
 
@@ -18,16 +17,15 @@ $(document).ready(function(){
 });
 </script>
 <div id="loginBody">
-	<canvas id="demo-canvas" style="position: absolute;"></canvas>
-	<div id='search-google'>
-		<%@ include file="SearchBar.jsp"%>
+	<div class="ease-logo">
+		<img src="resources/icons/Ease_logo_blue.png" />
 	</div>
+
 	<%@ include file="Logout.jsp" %>
 <% 
 	Cookie 	cookie = null;
 	Cookie 	cookies[] = request.getCookies();
 	String 	fname = "";
-	String 	lname = "";
 	String 	email = "";
 	int		iden = 0;
 	if (cookies != null){
@@ -38,21 +36,14 @@ $(document).ready(function(){
 			if (email.length() > 0)
 				iden++;
 		}
-		else if ((cookie.getName()).compareTo("lname") == 0){
-			lname = cookie.getValue();
-			if (lname.length() > 0){
-				iden++;
-			}
-		}
 		else if ((cookie.getName()).compareTo("fname") == 0){
 			fname = cookie.getValue();
 			if (fname.length() > 0)
 				iden++;
 		}
 	}
-	if (iden == 3){
+	if (iden == 2){
 		try {
-		new String(Base64.getDecoder().decode(lname), StandardCharsets.UTF_8);
 		new String(Base64.getDecoder().decode(fname), StandardCharsets.UTF_8);
 		} catch (IllegalArgumentException e){
 			for (int i = 0;i < cookies.length ; i++) {
@@ -61,25 +52,25 @@ $(document).ready(function(){
                  response.addCookie(cookies[i]);
 			}
 			fname = "";
-			lname = "";
 			response.sendRedirect("/index.jsp");
 		}
 	}
 	}
+	boolean knownUser = iden == 2 ? true : false;
 %>
 	<div class="FormsContainer">
-	<% if (iden == 3){ %>
-		<div class="form" id="knownUser">
-			
-			<img class='ease-logo' src='resources/icons/Ease_Logo_couleur.png'/>
+		<div class="handler">
+	<% if (knownUser){ %>
+		<p id="userName" style="display:none;"><%= new String(Base64.getDecoder().decode(fname), StandardCharsets.UTF_8) %></p>
+		<div class="form show" id="knownUser">			
 			<div class="savedUser">
-				<a class='new-to-ease' href="http://www.ease-app.co">New to Ease</a>
-				<a class='forget-password' href="PasswordLost">Password lost ?</a>
-				<p>Hello <%= new String(Base64.getDecoder().decode(fname), StandardCharsets.UTF_8) %> !</p>
-				<span class="input input--minoru">
-					<input class="input__field input__field--minoru" id="password" name="password" type="password" id="input-8" placeholder="Password"/>
-					<label class="input__label input__label--minoru" for="input-8"></label>
-				</span>
+				<h2 class="title">Hello <%= new String(Base64.getDecoder().decode(fname), StandardCharsets.UTF_8) %>,</h2>
+				<div class="line">
+					<p>Please type your password to access your space</p>
+				</div>
+				<div class="line">
+					<input id="password" name="password" type="password" id="input-8" placeholder="Password"/>
+				</div>
 				<div class="alertDiv">
 					<p>Incorrect password !</p>
 				</div> 
@@ -100,22 +91,18 @@ $(document).ready(function(){
   				<div class="sk-circle11 sk-circle"></div>
   				<div class="sk-circle12 sk-circle"></div>
 			</div>
-			<div id="changeAccount">Other account <img class='switch-account' src="resources/icons/account.png" /></div>   
 		</div>
 	<%}%>
-		<div class="form" id="unknownUser" <% if (iden == 3){ %> style="visibility:hidden;" <% }%>>
-			<img class='ease-logo' src='resources/icons/Ease_Logo_couleur.png'/>
+		<div class="form <% if (!knownUser){ %> show <% }%>" id="unknownUser" >
+<!--			<img class='ease-logo' src='resources/icons/Ease_Logo_couleur.png'/>-->
 			<form action="connection" method="POST" id="loginForm" role="form">
-				<a class='new-to-ease' href="http://www.ease-app.co">New to Ease</a>
-				<a class='forget-password' href="PasswordLost">Password lost ?</a>
-				<span class="input input--minoru">
-					<input class="input__field input__field--minoru" id="email" name="email" type="email" id="input-8" placeholder="Email"/>
-					<label class="input__label input__label--minoru" for="input-8"></label>
-				</span>
-				<span class="input input--minoru">
-					<input class="input__field input__field--minoru" id="password" name="password" type="password" id="input-8" placeholder="Password"/>
-					<label class="input__label input__label--minoru" for="input-8"></label>
-				</span>
+				<h2 class="title">Hello,</h2>
+				<div class="line">
+					<input id="email" name="email" type="email" id="input-8" placeholder="Email"/>
+					</div>
+					<div class="line">
+					<input id="password" name="password" type="password" id="input-8" placeholder="Password"/>
+					</div>
 				<div class="alertDiv">
 					<p>Incorrect password or email !</p>
 				</div>
@@ -136,14 +123,18 @@ $(document).ready(function(){
   				<div class="sk-circle11 sk-circle"></div>
   				<div class="sk-circle12 sk-circle"></div>
 			</div>
-			<% if (iden == 3) {%>
-				<div id="back"><%= new String(Base64.getDecoder().decode(fname), StandardCharsets.UTF_8) %> account <img class='switch-account' src="resources/icons/account.png" /></div>
-			<% } %>
+		</div>
 		</div>
 	</div>
 	
-	<div class="phrase">
-		<p>A simple homepage to access your web without passwords. <a href="https://ease.space/ieseg" target="_blank">Discover</a></p>
+	<div class="controls">
+		<% if (knownUser) {%>
+			<a id="changeAccount">Other account</a>
+			<i class="fa fa-circle" aria-hidden="true"></i>
+		<% } %>
+		<a href="PasswordLost" target="_blank">Password lost</a>
+		<i class="fa fa-circle" aria-hidden="true"></i>
+		<a href="landingPage.jsp" target="_blank">Discover ease</a>
 	</div>
 	
 	<p class="homepageOnoffContainer displayedByPlugin">

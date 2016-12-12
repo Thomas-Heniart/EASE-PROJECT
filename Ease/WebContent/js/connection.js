@@ -86,7 +86,30 @@ $(document).ready(function() {
 		    	);
 		});
 		
-		var nbForms = $('.FormsContainer > *').length;
+		var changeAccButton = $('#changeAccount');
+		var opened = true;
+
+		if (changeAccButton){
+			var knownUser = $('#knownUser');
+			var newUser = $('#unknownUser');
+			var name = $('#userName').text();
+
+			$('#userName').remove();
+			changeAccButton.click(function(){
+				if (opened){
+					knownUser.removeClass('show');
+					newUser.addClass('show');
+					changeAccButton.text(name + "'s account");
+				}else {
+					knownUser.addClass('show');
+					newUser.removeClass('show');
+					changeAccButton.text("Other account");
+				}
+				opened = !opened;
+			});
+		}
+
+/*		var nbForms = $('.FormsContainer > *').length;
 		if (nbForms > 1){
 			$('#changeAccount').click(function(){
 				$('#loginForm span input').val("");
@@ -98,46 +121,10 @@ $(document).ready(function() {
 					$('#unknownUser').css('visibility', 'hidden');;
 				});
 			});
-		}
+		}*/
 		
 		if ($('.savedUser').length) $('.savedUser #password').focus();
 		$('.savedUser #password').keyup(function(event){ 
 			if(event.keyCode == 13) $('.savedUser #savedUserButton').click();
-		});
-		
-		$('.logo').draggable({snap: true});
+		});	
 });
-			
-
-			(function() {
-				if (!String.prototype.trim) {
-					(function() {
-						// Make sure we trim BOM and NBSP
-						var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
-						String.prototype.trim = function() {
-							return this.replace(rtrim, '');
-						};
-					})();
-				}
-
-				[].slice.call( document.querySelectorAll( 'input.input__field' ) ).forEach( function( inputEl ) {
-					// in case the input is already filled..
-					if( inputEl.value.trim() !== '' ) {
-						classie.add( inputEl.parentNode, 'input--filled' );
-					}
-
-					// events:
-					inputEl.addEventListener( 'focus', onInputFocus );
-					inputEl.addEventListener( 'blur', onInputBlur );
-				} );
-
-				function onInputFocus( ev ) {
-					classie.add( ev.target.parentNode, 'input--filled' );
-				}
-
-				function onInputBlur( ev ) {
-					if( ev.target.value.trim() === '' ) {
-						classie.remove( ev.target.parentNode, 'input--filled' );
-					}
-				}
-			})();

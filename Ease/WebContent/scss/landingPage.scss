@@ -646,11 +646,13 @@ header .intro-text .intro-heading {
                             }
                             ::-moz-selection {
                                 text-shadow: none;
-                                background: #fed136;
+                                background: #373B60;
+                                color: white;
                             }
                             ::selection {
                                 text-shadow: none;
-                                background: #fed136;
+                                background: #373B60;
+                                color: white;
                             }
                             img::selection {
                                 background: 0 0;
@@ -695,11 +697,13 @@ header .intro-text .intro-heading {
                               .mockupPresentation {
                                   position: relative;
                                   video {
-                                     position: absolute;
+                                     position: relative;
+                                     border-radius: 5px;
                                      left: 12.1%;
                                      width: 76%;
                                      top: 5.5%;
                                      height: 80.5%;
+                                     box-shadow: 0 2px 4px -1px rgba(0,0,0,.14),0 4px 5px 0 rgba(0,0,0,.098),0 1px 10px 0 rgba(0,0,0,.084);
                                  }
                              }
                          }
@@ -1027,7 +1031,7 @@ header .intro-text .intro-heading {
 }
 }
 
-@media screen and (min-width: 771px) {
+@media screen and (min-width: 768px) {
 section {
     padding: 75px 0px;
 }
@@ -1071,7 +1075,7 @@ header {
     }
 }
 }
-@media screen and (max-width: 771px) {
+@media screen and (max-width: 768px) {
     #mainNav {
         .container {
             .navbar-header {
@@ -1218,6 +1222,19 @@ header {
 }
 }
 
+/* nav bar styles */
+
+.navbar-brand {
+    height: 42px;
+}
+.navbar-nav > li > a {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.navbar-nav > li:last-child > a {
+        border: 1px solid;
+        border-radius: 5px;
+}
 /* ease popups */
 .submitButton {
     transition: opacity 0.3s, visibility 0.3s;
