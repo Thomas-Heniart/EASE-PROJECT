@@ -30,7 +30,7 @@ public class WebsocketServer {
 		HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
 		User user = (User) httpSession.getAttribute("user");
 		WebsocketSession wSession = new WebsocketSession(session);
-		System.out.println(user == null);
+		System.out.println("Open websocket " + (user == null ? "no user" : user.getFirstName() ));
 		if (user == null) {
 			@SuppressWarnings("unchecked")
 			Map<String, WebsocketSession> unconnectedSessions = (Map<String, WebsocketSession>) httpSession.getAttribute("unconnectedSessions");
@@ -54,7 +54,7 @@ public class WebsocketServer {
 		HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
 		User user = (User) httpSession.getAttribute("user");
 		ServletManager.removeWebsocket(session.getId());
-		System.out.println(user == null );
+		System.out.println("Close session " + (user == null ? "no user" : user.getFirstName() ));
 		if (user == null)
 			WebsocketSession.removeWebsocketSession(session, httpSession);
 		else
@@ -63,8 +63,6 @@ public class WebsocketServer {
 
 	@OnError
 	public void onError(Throwable error) {
-		System.out.println("Whut ?!");
-		error.printStackTrace(System.err);
 	}
 
 	@OnMessage

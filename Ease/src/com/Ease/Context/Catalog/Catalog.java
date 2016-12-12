@@ -20,10 +20,11 @@ public class Catalog {
 	
 	protected Map<String, Website> websiteDBmap;
 	protected Map<Integer, Website> websiteIDmap;
+	protected List<Website> websites;
 	
 	public Catalog(DataBaseConnection db, ServletContext context) throws GeneralException {
 		
-		List<Website> websites = Website.loadWebsite(db, context);
+		websites = Website.loadWebsite(db, context);
 		websiteDBmap = new HashMap<String, Website>();
 		websiteIDmap = new HashMap<Integer, Website>();
 		for (Website site : websites) {
@@ -52,5 +53,9 @@ public class Catalog {
 		if (ret != null)
 			return ret;
 		throw new GeneralException(ServletManager.Code.InternError, "This website dosen't exist.");
+	}
+	
+	public List<Website> getWebsites() {
+		return this.websites;
 	}
 }

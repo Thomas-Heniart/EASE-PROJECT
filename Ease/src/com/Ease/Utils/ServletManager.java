@@ -83,8 +83,9 @@ public class ServletManager {
 	public void needToBeConnected() throws GeneralException {
 		if (user == null) {
 			throw new GeneralException(Code.ClientWarning, "You need to be connected to do that.");
-		} else if (!debug) {
-			if ((socketId = request.getParameter("socketId"))== null) {
+		} else {
+			socketId = request.getParameter("socketId");
+			if (!debug && socketId == null) {
 				throw new GeneralException(Code.ClientError, "No socketId.");
 			} else if (user.getWebsockets().containsKey(socketId) == false) {
 				throw new GeneralException(Code.ClientError, "Wrong socketId.");
@@ -172,6 +173,7 @@ public class ServletManager {
 		try {
 			for (WebsocketMessage msg : this.messages) {
 				websockets.forEach((key, socket) -> {
+					System.out.println( (user == null ? "No user" : user.getFirstName()) + " client socketId : " + key + ", sm socketId : " + socketId);
 					if (msg.getWho() == WebsocketMessage.Who.ALLTABS ||
 							(msg.getWho() == WebsocketMessage.Who.OTHERTABS && (! key.equals(socketId))) ||
 							(msg.getWho() == WebsocketMessage.Who.THISTAB && key.equals(socketId))) {
