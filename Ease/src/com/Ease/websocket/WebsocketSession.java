@@ -21,12 +21,6 @@ public class WebsocketSession {
 		}
 	}
 	
-	public static void removeAll(HttpSession httpSession) {
-		@SuppressWarnings("unchecked")
-		Map<String, WebsocketSession> unconnectedSessions = (Map<String, WebsocketSession>) httpSession.getAttribute("unconnectedSessions");
-		unconnectedSessions.clear();
-	}
-	
 	protected Session session;
 	
 	public WebsocketSession(Session session) {

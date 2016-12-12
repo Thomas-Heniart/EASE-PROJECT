@@ -44,19 +44,6 @@ public class OnStart implements ServletContextListener{
 			evt.getServletContext().setAttribute("catalog", new Catalog(db, context));
 			evt.getServletContext().setAttribute("groupManager", new GroupManager());
 			Infrastructure.loadInfrastructures(db, evt.getServletContext());
-			
-						
-			// SiteManager initialization
-			/*SiteManager siteManager = new SiteManager();
-			siteManager.refresh(db);
-			context.setAttribute("siteManager", siteManager);
-			ResultSet rs = db.get("SELECT * FROM tags;");
-			while (rs.next()) {
-				siteManager.addNewTag(new Tag(rs, context));
-			}
-			siteManager.setTagsForSites(context);
-			siteManager.setSitesForTags(context);
-			*/
 			Map<String, User> usersMap = new HashMap<String, User>();
 			context.setAttribute("users", usersMap);
 			System.out.println("done.");

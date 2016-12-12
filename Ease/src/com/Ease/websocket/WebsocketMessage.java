@@ -6,6 +6,7 @@ import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.Profile.Profile;
 
+@SuppressWarnings("unchecked")
 public class WebsocketMessage {
 	public enum Who {
 		ALLTABS,
@@ -43,7 +44,9 @@ public class WebsocketMessage {
 	
 	public static WebsocketMessage addProfileMessage (Profile profile) {
 		JSONObject data = new JSONObject();
-		// TODO set data
+		data.put("name", profile.getName());
+		data.put("color", profile.getColor());
+		data.put("profile_id", profile.getSingleId());
 		return new WebsocketMessage ("addProfile", data, Who.OTHERTABS);
 	}
 	
@@ -107,7 +110,6 @@ public class WebsocketMessage {
 		this.mapStringString.put(argName, obj);
 	}*/
 	
-	@SuppressWarnings("unchecked")
 	public JSONObject getJSON() {
 		JSONObject res = new JSONObject();
 		res.put("action", this.action);
