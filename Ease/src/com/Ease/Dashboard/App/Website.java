@@ -123,11 +123,11 @@ public class Website {
 	public Map<String, String> getNeededInfos(ServletManager sm) throws GeneralException {
 		Map<String, String> infos = new HashMap<String, String>();
 		for (WebsiteInformation info : website_informations) {
-			String value = sm.getServletParam(info.getInformation_name(), true);
+			String value = sm.getServletParam(info.getInformationName(), true);
 			if (value == null || value.isEmpty()) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong info: " + info.getInformation_name() + ".");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong info: " + info.getInformationName() + ".");
 			}
-			infos.put(info.getInformation_name(), value);
+			infos.put(info.getInformationName(), value);
 		}
 		return infos;
 	}
