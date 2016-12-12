@@ -1,3 +1,12 @@
+CREATE TABLE serverKeys(
+  login VARCHAR(255) NOT NULL,
+  password varchar(50) NOT NULL,
+  saltEase char(28) DEFAULT NULL,
+  saltPerso char(28) DEFAULT NULL,
+  keyServer char(44) DEFAULT NULL,
+  PRIMARY KEY (login)
+);
+
 CREATE TABLE userKeys (
   id int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   password varchar(50) NOT NULL,
@@ -24,6 +33,7 @@ CREATE TABLE status (
 CREATE TABLE infrastructures (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(25) NOT NULL,
+  `group_key` CHAR(44) NOT NULL,
   PRIMARY KEY (id)
 );
 
@@ -31,10 +41,10 @@ CREATE TABLE groups (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(25) NOT NULL,
   `parent` int(10) unsigned,
-  /*`infrastructure_id` int(10) unsigned NOT NULL,*/
+  `infrastructure_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (id),
-  FOREIGN KEY (parent) REFERENCES groups(id)
-  /*FOREIGN KEY (infrastructure_id) REFERENCES infrastructures(id)*/
+  FOREIGN KEY (parent) REFERENCES groups(id),
+  FOREIGN KEY (infrastructure_id) REFERENCES infrastructures(id)
 );
 
 CREATE TABLE profilePermissions (
@@ -185,7 +195,6 @@ CREATE TABLE groupApps
   group_profile_id INT(10) UNSIGNED NOT NULL,
   group_id INT(10) UNSIGNED NOT NULL,
   permisson_id INT(10) UNSIGNED NOT NULL,
-  position INT(10) UNSIGNED NOT NULL,
   type VARCHAR(255) NOT NULL,
   app_info_id INT(10) UNSIGNED NOT NULL,
   common TINYINT(1) UNSIGNED NOT NULL,
@@ -202,9 +211,7 @@ CREATE TABLE apps
   profile_id INT(10) UNSIGNED NOT NULL,
   position TINYINT(3) UNSIGNED NOT NULL,
   insert_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  trash_date DATETIME,
   type VARCHAR(255) NOT NULL,
-  work TINYINT(1) NOT NULL,
   app_info_id INT(10) UNSIGNED NOT NULL,
   group_app_id INT(10) UNSIGNED,
   PRIMARY KEY (id),
@@ -218,6 +225,7 @@ CREATE TABLE groupWebsiteApps
   id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   group_app_id INT(10) UNSIGNED NOT NULL,
   website_id INT(10) UNSIGNED NOT NULL,
+  type VARCHAR(255) NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (group_app_id) REFERENCES groupApps(id),
   FOREIGN KEY (website_id) REFERENCES websites(id)
@@ -229,6 +237,7 @@ id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 website_id INT(10) UNSIGNED NOT NULL,
 app_id INT(10) UNSIGNED NOT NULL,
 group_website_app_id INT(10) UNSIGNED,
+type VARCHAR(255) NOT NULL,
 PRIMARY KEY (id),
 FOREIGN KEY (app_id) REFERENCES apps (id),
 FOREIGN KEY (website_id) REFERENCES websites (id),
@@ -407,7 +416,7 @@ CREATE TABLE `accountsInformations` (
   FOREIGN KEY (account_id) REFERENCES accounts(id)
 );
 
-CREATE TABLE groupLogWithApps
+CREATE TABLE groupLogwithApps
 (
   id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   group_website_app_id INT(10) UNSIGNED NOT NULL,
@@ -417,7 +426,7 @@ CREATE TABLE groupLogWithApps
   FOREIGN KEY (logWith_group_website_app_id) REFERENCES groupWebsiteApps(id)
 );
 
-CREATE TABLE logWithApps
+CREATE TABLE logwithApps
 (
 id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 website_app_id INT(10) UNSIGNED NOT NULL,
