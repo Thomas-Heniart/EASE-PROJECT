@@ -15,6 +15,7 @@ import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
+import com.Ease.websocket.WebsocketMessage;
 
 /**
  * Servlet implementation class AddProfile
@@ -43,7 +44,7 @@ public class AddProfile extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		User user = (User) (session.getAttribute("User"));
+		User user = (User) (session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		
 		try {
@@ -56,6 +57,8 @@ public class AddProfile extends HttpServlet {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong color.");
 			Profile newProfile = user.addProfile(name, color, sm);
 			sm.setResponse(ServletManager.Code.Success, newProfile.getJSONString());
+			sm.addWebsockets(user.getWebsockets());
+			sm.addToSocket(WebsocketMessage.addProfileMessage(newProfile));
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		}

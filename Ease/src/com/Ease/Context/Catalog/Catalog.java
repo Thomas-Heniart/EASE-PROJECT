@@ -28,7 +28,7 @@ public class Catalog {
 		websiteIDmap = new HashMap<Integer, Website>();
 		for (Website site : websites) {
 			websiteDBmap.put(site.getDb_id(), site);
-			websiteIDmap.put(site.getSingle_id(), site);
+			websiteIDmap.put(site.getSingleId(), site);
 		}
 	}
 	

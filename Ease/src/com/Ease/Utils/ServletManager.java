@@ -59,7 +59,7 @@ public class ServletManager {
 		this.retCode = 0;
 		this.request = request;
 		this.response = response;
-		this.user = (User)request.getSession().getAttribute("User");
+		this.user = (User)request.getSession().getAttribute("user");
 		this.logResponse = null;
 		this.redirectUrl = null;
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
