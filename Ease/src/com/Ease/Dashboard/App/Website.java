@@ -151,6 +151,10 @@ public class Website {
 		return res;
 	}
 	
+	public List<WebsiteInformation> getInformations() {
+		return this.website_informations;
+	}
+	
 	public boolean noLogin() {
 		return this.noLogin;
 	}
@@ -161,6 +165,5 @@ public class Website {
 	
 	public boolean isNew() {
 		return this.isNew;
-		
 	}
 }

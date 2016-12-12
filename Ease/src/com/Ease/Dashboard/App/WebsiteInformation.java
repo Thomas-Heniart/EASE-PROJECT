@@ -33,7 +33,7 @@ public class WebsiteInformation {
 		this.information_value = information_value;
 	}
 
-	public String getInformation_name() {
+	public String getInformationName() {
 		return information_name;
 	}
 
@@ -41,7 +41,7 @@ public class WebsiteInformation {
 		this.information_name = information_name;
 	}
 
-	public String getInformation_value() {
+	public String getInformationValue() {
 		return information_value;
 	}
 

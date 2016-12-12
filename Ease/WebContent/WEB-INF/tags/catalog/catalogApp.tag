@@ -11,7 +11,7 @@
 	data-nologin="${site.noLogin()}" name="${site.getName()}"
 	url="${site.getUrl() }" newApp="${newApp}"
 	<c:forEach items='${site.getInformations()}' var="item">
-		${item.getInformationName()}="${item.getInformationType()}"
+		${item.getInformationName()}="${item.getInformationValue()}"
 	</c:forEach>>
 	<div class="catalogAppLogo">
 		<img src="${site.getFolder()}logo.png" />
