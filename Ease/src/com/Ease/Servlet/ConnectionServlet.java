@@ -70,7 +70,7 @@ public class ConnectionServlet extends HttpServlet {
 					sm.setResponse(ServletManager.Code.ClientWarning, "Wrong email.");
 				else if (password == null || password.isEmpty())
 					sm.setResponse(ServletManager.Code.ClientWarning, "Wrong password.");
-				else if (socketId == null || socketId.isEmpty())
+				else if (ServletManager.debug == false && (socketId == null || socketId.isEmpty()))
 					sm.setResponse(ServletManager.Code.ClientWarning, "No websocket.");
 				else {
 					user = User.loadUser(email, password, sm);

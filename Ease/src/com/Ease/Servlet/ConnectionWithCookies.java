@@ -33,7 +33,7 @@ public class ConnectionWithCookies extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		HttpSession session = request.getSession();
-		User user = (User) (session.getAttribute("User"));
+		User user = (User) (session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 
 		String sessionId = sm.getServletParam("sessionId", false);

@@ -50,7 +50,7 @@ public class AddProfile extends HttpServlet {
 		try {
 			sm.needToBeConnected();
 			String name = sm.getServletParam("name", true);
-			String color = sm.getServletParam("color", true);
+			String color = "#000000";//sm.getServletParam("color", true);
 			if (name == null || name.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
 			else if (color == null || Regex.isColor(color) == false)

@@ -152,7 +152,7 @@ public class ServletManager {
 	}
 	
 	public void sendResponse() {
-		user = ((User)request.getSession().getAttribute("User") == null) ? user : (User)request.getSession().getAttribute("User");
+		user = ((User)request.getSession().getAttribute("User") == null) ? user : (User)request.getSession().getAttribute("user");
 	
 		if (this.saveLogs) {
 			try {
