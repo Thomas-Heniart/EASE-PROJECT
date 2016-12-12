@@ -2,6 +2,8 @@ package com.Ease.Dashboard.App.WebsiteApp.LogwithApp;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 
@@ -14,6 +16,7 @@ import com.Ease.Dashboard.App.WebsiteApp.GroupWebsiteApp;
 import com.Ease.Dashboard.Profile.GroupProfile;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
 
 public class GroupLogwithApp extends GroupWebsiteApp {
@@ -45,6 +48,22 @@ public class GroupLogwithApp extends GroupWebsiteApp {
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
+	}
+	
+	public static GroupLogwithApp createGroupLogwithApp(GroupProfile groupProfile, Group group, int perms, String name, boolean common, Website site, GroupWebsiteApp logwith, ServletManager sm) throws GeneralException {
+		Map<String, Object> elevator = new HashMap<String, Object>();
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		String websiteAppId = GroupWebsiteApp.createGroupWebsiteApp(groupProfile, group, perms, name, common, site, "groupLogwithApp", elevator, sm);
+		AppPermissions permissions = (AppPermissions) elevator.get("perms");
+		AppInformation appInfos = (AppInformation) elevator.get("appInfos");
+		String appId = (String) elevator.get("appId");
+		String db_id = db.set("INSERT INTO groupLogwithApps VALUES(NULL, " + websiteAppId + ", " + logwith.getDBid() + ");").toString();
+		int single_id = ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId();
+		GroupLogwithApp groupLogwithApp = new GroupLogwithApp(appId, groupProfile, group, permissions, appInfos, common, single_id, site, websiteAppId, logwith, db_id);
+		GroupManager.getGroupManager(sm).add(groupLogwithApp);
+		db.commitTransaction(transaction);
+		return groupLogwithApp;
 	}
 	
 	/*

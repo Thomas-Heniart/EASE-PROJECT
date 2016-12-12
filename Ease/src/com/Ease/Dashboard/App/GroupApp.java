@@ -25,7 +25,6 @@ public class GroupApp {
 		GROUP_PROFILE_ID,
 		GROUP_ID,
 		PERMISSION_ID,
-		POSITION,
 		TYPE,
 		APP_INFO_ID,
 		COMMON
@@ -44,7 +43,6 @@ public class GroupApp {
 			String db_id;
 			GroupProfile groupProfile;
 			AppPermissions perms;
-			String type;
 			AppInformation appInfo;
 			boolean common;
 			int single_id;
@@ -70,6 +68,18 @@ public class GroupApp {
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
+	}
+	
+	public static String createGroupApp(GroupProfile groupProfile, Group group, int perms, String name, boolean common, String type, Map<String, Object> elevator, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		AppPermissions permissions = AppPermissions.CreateAppPermissions(perms, group.getDBid(), sm);
+		AppInformation infos = AppInformation.createAppInformation(name, sm);
+		String db_id = db.set("INSERT INTO groupApps VALUES(NULL, " + groupProfile.getDBid() + ", " + group.getDBid() + ", " + permissions.getDBid() + ", '" + type + "', " + infos.getDb_id() + ", " + ((common) ? "1" : "0") + ");").toString();
+		elevator.put("perms", permissions);
+		elevator.put("appInfos", infos);
+		db.commitTransaction(transaction);
+		return db_id;
 	}
 	
 	/*

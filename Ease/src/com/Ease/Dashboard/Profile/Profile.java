@@ -5,11 +5,16 @@ import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.json.simple.JSONObject;
 
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.App.Website;
+import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
+import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
@@ -54,7 +59,9 @@ public class Profile {
 				groupProfile = (groupProfileId == null) ? null : GroupManager.getGroupManager(sm).getGroupProfileFromDBid(groupProfileId);
 				infos = ProfileInformation.loadProfileInformation(rs.getString(Data.PROFILE_INFO_ID.ordinal()), db);
 				single_id = user.getNextSingleId();
-				profilesColumn.get(columnIdx).add(new Profile(db_id, user, columnIdx, posIdx, groupProfile, infos, single_id));
+				Profile profile = new Profile(db_id, user, columnIdx, posIdx, groupProfile, infos, single_id);
+				profile.setApps(App.loadApps(profile, sm));
+				profilesColumn.get(columnIdx).add(profile);
 			}
 		} catch (SQLException e){
 			throw new GeneralException(ServletManager.Code.InternError, e);
@@ -160,6 +167,9 @@ public class Profile {
 	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
+		for (App app : apps) {
+			app.removeFromDB(sm);
+		}
 		if (this.groupProfile == null || this.groupProfile.isCommon() == false) {
 			this.infos.removeFromDB(sm);
 		}
@@ -216,6 +226,10 @@ public class Profile {
 	}
 	public List<App> getApps() {
 		return apps;
+	}
+	
+	public void setApps(List<App> apps) {
+		this.apps = apps;
 	}
 	
 	/*
@@ -275,5 +289,22 @@ public class Profile {
 			}
 		}
 		db.commitTransaction(transaction);
+	}
+	
+	public ClassicApp addClassicApp(String name, Website site, String password, Map<String, String> infos, ServletManager sm) throws GeneralException {
+		int position = this.apps.size();
+		ClassicApp app = ClassicApp.createClassicApp(this, position, name, site, password, infos, sm, user);
+		this.apps.add(app);
+		return app;
+	}
+	
+	public LogwithApp addLogwithApp(String name, Website site, App logwith, ServletManager sm) throws GeneralException {
+		int position = this.apps.size();
+		if (logwith.getClass().getName() == "LogwithApp" || logwith.getClass().getName() == "ClassicApp") {
+			LogwithApp app = LogwithApp.createLogwithApp(this, position, name, site, (WebsiteApp)logwith, sm);
+			this.apps.add(app);
+			return app;
+		}
+		throw new GeneralException(ServletManager.Code.ClientError, "This app is not a Classic or Logwith app.");
 	}
 }

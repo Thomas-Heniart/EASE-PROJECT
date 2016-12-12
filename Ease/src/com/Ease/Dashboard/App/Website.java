@@ -2,6 +2,7 @@ package com.Ease.Dashboard.App;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -114,7 +115,23 @@ public class Website {
 	public String getDb_id() {
 		return this.db_id;
 	}
+		
+	public List<WebsiteInformation> getInfos() {
+		return website_informations;
+	}
 	
+	public Map<String, String> getNeededInfos(ServletManager sm) throws GeneralException {
+		Map<String, String> infos = new HashMap<String, String>();
+		for (WebsiteInformation info : website_informations) {
+			String value = sm.getServletParam(info.getInformationName(), true);
+			if (value == null || value.isEmpty()) {
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong info: " + info.getInformationName() + ".");
+			}
+			infos.put(info.getInformationName(), value);
+		}
+		return infos;
+	}
+
 	public int getSingleId() {
 		return this.single_id;
 	}

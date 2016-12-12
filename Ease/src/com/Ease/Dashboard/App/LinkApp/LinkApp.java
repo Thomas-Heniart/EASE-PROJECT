@@ -2,146 +2,94 @@ package com.Ease.Dashboard.App.LinkApp;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
+import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.AppInformation;
+import com.Ease.Dashboard.App.GroupApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
 
-public class LinkApp extends App<GroupLinkApp> {
+public class LinkApp extends App {
 	
-	enum LinkAppData {
+	public enum Data {
 		NOTHING,
 		ID,
 		APP_ID,
-		LINK,
-		IMG_URL
-	}
-	
-	public enum LoadData {
-		NOTHING,
-		POSITION,
-		WORK,
-		APP_INFO_ID,
 		LINK_APP_INFO_ID,
-		GROUP_ID
+		GROUP_LINK_APP_ID
 	}
 	
-
-	public static LinkApp createPersonnalLinkApp(String name, Profile profile, String link, String imgUrl, ServletManager sm) throws GeneralException {
+	/*
+	 * 
+	 * Loader And Creator
+	 * 
+	 */
+	
+	public static LinkApp loadLinkApp(String appDBid, Profile profile, int position, String insertDate, AppInformation appInfos, GroupApp groupApp, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		int transaction;
-		int position = profile.getApps().size();
-		transaction = db.startTransaction();
-		AppInformation informations = AppInformation.createAppInformation(name, sm);
-		LinkAppInformation link_app_informations = LinkAppInformation.createLinkAppInformation(link, imgUrl, sm);
-		int app_id = db.set("INSERT INTO apps values (null, " + profile.getDBid() + ", " + position + ", default, null, 'LinkApp', 1, " + informations.getDb_id() + ", null);");
-		db.set("INSERT INTO linkApps values (null, " + app_id + ", " + link_app_informations.getDb_id() + ", null);");
-		db.commitTransaction(transaction);
-		return new LinkApp(profile, position, sm.getNextSingleId(), String.valueOf(app_id), true, informations, link_app_informations, null);
-	}
-	
-	public static LinkApp createLinkAppWithGroup(Profile profile, String name, String link, String imgUrl, GroupLinkApp groupLinkApp, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		AppInformation appInfo;
-		LinkAppInformation linkAppInfo;
-		if (groupLinkApp.isCommon()) {
-			appInfo = groupLinkApp.getAppInfo();
-			linkAppInfo = groupLinkApp.getLinkAppInfo();
-		} else {
-			appInfo = AppInformation.createAppInformation(name, sm);
-			linkAppInfo = LinkAppInformation.createLinkAppInformation(link, imgUrl, sm);
-		}
-		int transaction = db.startTransaction();
-		int position = profile.getApps().size();
-		String db_id = App.insertNewAppInDb(profile, position, "LinkApp", appInfo, groupLinkApp, sm);
-		db.set("INSERT INTO linkApps values (null, " + db_id + ", " + linkAppInfo.getDb_id() + ", " + groupLinkApp.getDb_id() + ");");
-		db.commitTransaction(transaction);
-		return new LinkApp(profile, position, sm.getNextSingleId(), db_id, true, appInfo, linkAppInfo, groupLinkApp);	
-	}
-	
-	public String createLinkAppWithGroupForUnconnected(String profile_id, String name, String link, String imgUrl, GroupLinkApp groupLinkApp, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		String linkAppInfo_id;
-		String appInfo_id;
-		if (groupLinkApp.isCommon()) {
-			appInfo_id = groupLinkApp.getAppInfo().getDb_id();
-			linkAppInfo_id = groupLinkApp.getLinkAppInfo().getDb_id();
-		} else {
-			appInfo_id = AppInformation.createAppInformationForUnconnected(name, sm);
-			linkAppInfo_id = LinkAppInformation.createLinkAppInformationForUnconnected(link, imgUrl, sm);
-		}
-		int transaction = db.startTransaction();
-		int position = profile.getApps().size();
-		String db_id = App.insertNewAppInDb(profile_id, position, "LinkApp", appInfo_id, groupLinkApp, sm);
-		db.set("INSERT INTO linkApps values (null, " + db_id + ", " + linkAppInfo_id + ", " + groupLinkApp.getDb_id() + ");");
-		db.commitTransaction(transaction);
-		return db_id;	
-	}
-
-	protected LinkAppInformation link_app_informations;
-	
-	public LinkApp(Profile profile, int position, int single_id, String db_id, boolean working, AppInformation informations, LinkAppInformation link_app_informations, GroupLinkApp groupLinkApp) {
-		this.profile = profile;
-		this.position = position;
-		this.single_id = single_id;
-		this.db_id = db_id;
-		this.working = working;
-		this.informations = informations;
-		this.link_app_informations = link_app_informations;
-		this.groupApp = groupLinkApp;
-	}
-	
-	public LinkApp(String db_id, Profile profile, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		ResultSet rs = db.get("SELECT position, work, app_info_id, link_app_info_id, group_link_app_id FROM apps JOIN linkApps ON apps.id = linkApps.app_id WHERE apps.id = " + db_id + ";");
 		try {
+			ResultSet rs = db.get("SELECT * from linkApps WHERE app_id=" + appDBid + ";");
 			if (rs.next()) {
-				this.profile = profile;
-				this.position = rs.getInt(LoadData.POSITION.ordinal());
-				this.working = rs.getBoolean(LoadData.WORK.ordinal());
-				this.single_id = sm.getNextSingleId();
-				this.db_id = db_id;
-				this.groupApp = null;
-				String group_link_app_id = rs.getString(LoadData.GROUP_ID.ordinal());
-				if (!(group_link_app_id == null || group_link_app_id.equals("null")))
-					this.groupApp = new GroupLinkApp(group_link_app_id, sm);
-				String app_info_id = rs.getString(LoadData.APP_INFO_ID.ordinal());
-				this.informations = AppInformation.loadAppInformation(app_info_id, sm);
-				String link_app_info_id = rs.getString(LoadData.LINK_APP_INFO_ID.ordinal());
-				this.link_app_informations = LinkAppInformation.loadLinkAppInformation(link_app_info_id, sm);
+				LinkAppInformation linkInfos = LinkAppInformation.loadLinkAppInformation(rs.getString(Data.LINK_APP_INFO_ID.ordinal()), db);
+				GroupLinkApp groupLinkApp = (GroupLinkApp) GroupManager.getGroupManager(sm).getGroupAppFromDBid(rs.getString(Data.GROUP_LINK_APP_ID.ordinal()));
+				IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
+				return new LinkApp(appDBid, profile, position, appInfos, groupApp, insertDate, idGenerator.getNextId(), linkInfos, groupLinkApp, rs.getString(Data.ID.ordinal()));
 			} 
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
+			throw new GeneralException(ServletManager.Code.InternError, "Link app not complete in db.");
+		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
 	
-	public void setLink(String link, ServletManager sm) throws GeneralException {
-		this.link_app_informations.setLink(link, sm);
-	}
-	
-	public String getLink() {
-		return this.link_app_informations.getLink();
-	}
-	
-	public void setImgUrl(String imgUrl, ServletManager sm) throws GeneralException {
-		this.link_app_informations.setImgUrl(imgUrl, sm);
-	}
-	
-	public String getImgUrl() {
-		return this.link_app_informations.getImgUrl();
-	}
-	
-	public void removeFromDb(ServletManager sm) throws GeneralException {
+	public static LinkApp createLinkApp(Profile profile, int position, String name, String url, String imgUrl, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		this.informations.removeFromDb(sm);
-		db.set("DELETE FROM linkApps WHERE id = " + this.getDb_id() + ";");
-		super.removeFromDb(sm);
+		Map<String, Object> elevator = new HashMap<String, Object>();
+		String appDBid = App.createApp(profile, position, name, "linkApp", elevator, sm);
+		LinkAppInformation infos = LinkAppInformation.createLinkAppInformation(url, imgUrl, sm);
+		String linkDBid = db.set("INSERT INTO linkApps values(NULL, " + appDBid + ", " + infos.getDb_id() + ", NULL);").toString();
+		db.commitTransaction(transaction);
+		return new LinkApp(appDBid, profile, position, (AppInformation)elevator.get("appInfos"), null, (String)elevator.get("registrationDate"), ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId(), infos, null, linkDBid);
+	}
+	
+	/*
+	 * 
+	 * Constructor
+	 * 
+	 */
+	
+	protected LinkAppInformation	linkInfos;
+	protected GroupLinkApp			groupLinkApp;
+	protected String				linkAppDBid;
+	
+	public LinkApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, LinkAppInformation linkInfos, GroupLinkApp groupLinkApp, String linkAppDBid) {
+		super(db_id, profile, position, infos, groupApp, insertDate, single_id);
+		this.linkInfos = linkInfos;
+		this.groupLinkApp = groupLinkApp;
+		this.linkAppDBid = linkAppDBid;
+	}
+	
+	public void removeFromDB(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		if (this.groupApp == null || this.groupApp.isCommon() == false)
+			linkInfos.removeFromDb(sm);
+		db.set("DELETE FROM linkApps WHERE id=" + linkAppDBid + ";");
+		super.removeFromDB(sm);
 		db.commitTransaction(transaction);
 	}
+	
+	/*
+	 * 
+	 * Getter And Setter
+	 * 
+	 */
+	
 }
+	

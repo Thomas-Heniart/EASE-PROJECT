@@ -1,6 +1,8 @@
 package com.Ease.Context.Catalog;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 
@@ -16,10 +18,18 @@ public class Catalog {
 	 * 
 	 */
 	
-	protected List<Website> websites;
+	protected Map<String, Website> websiteDBmap;
+	protected Map<Integer, Website> websiteIDmap;
 	
 	public Catalog(DataBaseConnection db, ServletContext context) throws GeneralException {
-		this.websites = Website.loadWebsite(db, context);
+		
+		List<Website> websites = Website.loadWebsite(db, context);
+		websiteDBmap = new HashMap<String, Website>();
+		websiteIDmap = new HashMap<Integer, Website>();
+		for (Website site : websites) {
+			websiteDBmap.put(site.getDb_id(), site);
+			websiteIDmap.put(site.getSingle_id(), site);
+		}
 	}
 	
 	/*
@@ -28,16 +38,19 @@ public class Catalog {
 	 * 
 	 */
 	
-	public Website getWebsite(String db_id) throws GeneralException {
-		for (Website website : websites) {
-			if (website.getDb_id() == db_id){
-				return website;
-			}
-		}
+	public Website getWebsiteWithDBid(String db_id) throws GeneralException {
+		Website ret = null;
+		ret = websiteDBmap.get(db_id);
+		if (ret != null)
+			return ret;
 		throw new GeneralException(ServletManager.Code.InternError, "This website dosen't exist.");
 	}
 	
-	public List<Website> getWebsites() {
-		return this.websites;
+	public Website getWebsiteWithSingleId(Integer single_id) throws GeneralException {
+		Website ret = null;
+		ret = websiteIDmap.get(single_id);
+		if (ret != null)
+			return ret;
+		throw new GeneralException(ServletManager.Code.InternError, "This website dosen't exist.");
 	}
 }
