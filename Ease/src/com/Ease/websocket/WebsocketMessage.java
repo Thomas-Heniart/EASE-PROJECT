@@ -41,10 +41,22 @@ public class WebsocketMessage {
 		return new WebsocketMessage ("addEmptyApp", data, Who.OTHERTABS);
 	}
 	
-	public static WebsocketMessage addProfile (Profile profile) {
+	public static WebsocketMessage addProfileMessage (Profile profile) {
 		JSONObject data = new JSONObject();
 		// TODO set data
 		return new WebsocketMessage ("addProfile", data, Who.OTHERTABS);
+	}
+	
+	public static WebsocketMessage removeProfileMessage(String profile_id) {
+		JSONObject data = new JSONObject();
+		data.put("profile_id", profile_id);
+		return new WebsocketMessage("removeProfile", data, Who.OTHERTABS);
+	}
+	
+	public static WebsocketMessage removeAppMessage(String app_id) {
+		JSONObject data = new JSONObject();
+		data.put("app_id", app_id);
+		return new WebsocketMessage("removeApp", data, Who.OTHERTABS);
 	}
 	
 	protected String action;

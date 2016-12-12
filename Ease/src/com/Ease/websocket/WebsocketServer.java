@@ -38,10 +38,8 @@ public class WebsocketServer {
 				httpSession.setAttribute("unconnectedSessions", unconnectedSessions);
 			}
 			unconnectedSessions.put(wSession.getSessionId(), wSession);
-			System.out.println("Unconnected sessions keys size = " +  unconnectedSessions.entrySet().size());
 		} else {
 			user.addWebsocket(wSession);
-			System.out.println(user.getWebsockets().entrySet().size());
 		}
 		try {
 			wSession.sendMessage(WebsocketMessage.assignIdMessage(wSession.getSessionId()));
@@ -52,7 +50,6 @@ public class WebsocketServer {
 
 	@OnClose
 	public void close(Session session) {
-		System.out.println("close");
 		HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
 		User user = (User) httpSession.getAttribute("user");
 		ServletManager.removeWebsocket(session.getId());

@@ -166,21 +166,21 @@ public class ServletManager {
 			}
 		}
 		try {
-			System.out.println(websockets.entrySet().size());
 			for (WebsocketMessage msg : this.messages) {
 				websockets.forEach((key, socket) -> {
 					if (msg.getWho() == WebsocketMessage.Who.ALLTABS ||
 							(msg.getWho() == WebsocketMessage.Who.OTHERTABS && (! key.equals(tabId))) ||
 							(msg.getWho() == WebsocketMessage.Who.THISTAB && key.equals(tabId))) {
 							try {
-								System.out.println("socketId = " + key);
 								socket.sendMessage(msg);
 							} catch (IOException e) {
-								this.user.removeWebsocket(socket);
+								websockets.remove(key, socket);
 							}
 						}
 				});
 			}
+			this.messages.clear();
+			websockets.clear();
 			if (this.redirectUrl != null) {
 				response.sendRedirect(this.redirectUrl);
 			} else {

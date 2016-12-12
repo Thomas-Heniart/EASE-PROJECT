@@ -51,7 +51,7 @@
 					<div class="search-result"></div>
 					<h4 class="relatedApps"><span>Related apps</span></h4>
 					<div class="relatedApps"></div>
-					<c:forEach items="${siteManager.getSitesList()}" var="item" varStatus="loop">
+					<c:forEach items="${catalog.getWebsites()}" var="item" varStatus="loop">
 						<c:if test="${!item.isHidden()}">
 							<catalog:catalogApp site="${item}" newApp="${item.isNew()}"/>
 						</c:if>
