@@ -1,8 +1,8 @@
 package com.Ease.websocket;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.servlet.http.HttpSession;
@@ -19,39 +19,48 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 @ApplicationScoped
-@ServerEndpoint(value="/actions", configurator=GetHttpSessionConfigurator.class)
+@ServerEndpoint(value = "/actions", configurator = GetHttpSessionConfigurator.class)
 public class WebsocketServer {
 
 	private EndpointConfig config;
-	
+
 	@OnOpen
 	public void open(Session session, EndpointConfig config) throws GeneralException {
 		this.config = config;
-		HttpSession httpSession = (HttpSession)config.getUserProperties().get("httpSession");
-		User user = (User)httpSession.getAttribute("user");
+		HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
+		User user = (User) httpSession.getAttribute("user");
+		WebsocketSession wSession = new WebsocketSession(session);
 		if (user == null) {
-			try {
-				session.close();
-			} catch (IOException e) {
-				e.printStackTrace();
+			@SuppressWarnings("unchecked")
+			Map<String, WebsocketSession> unconnectedSessions = (Map<String, WebsocketSession>) httpSession.getAttribute("unconnectedSessions");
+			if (unconnectedSessions == null) {
+				unconnectedSessions = new HashMap<String, WebsocketSession>();
+				httpSession.setAttribute("unconnectedSessions", unconnectedSessions);
 			}
+			unconnectedSessions.put(wSession.getSessionId(), wSession);
+		} else {
+			user.addWebsocket(wSession);
 		}
-		user.addWebsocket(session);
+		try {
+			wSession.sendMessage(WebsocketMessage.assignIdMessage(wSession.getSessionId()));
+		} catch (IOException e) {
+			throw new GeneralException(ServletManager.Code.ClientError, e);
+		}
 	}
 
 	@OnClose
 	public void close(Session session) {
-		HttpSession httpSession = (HttpSession)config.getUserProperties().get("httpSession");
-		User user = (User)httpSession.getAttribute("user");
+		HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
+		User user = (User) httpSession.getAttribute("user");
+		ServletManager.removeWebsocket(session.getId());
 		if (user == null)
-			return;
-		user.removeWebsocket(session);
-		//session.getBasicRemote().sendText(arg0);
+			WebsocketSession.removeWebsocketSession(session, httpSession);
+		else
+			user.removeWebsocket(session);
 	}
 
 	@OnError
 	public void onError(Throwable error) {
-		Logger.getLogger(WebsocketServer.class.getName()).log(Level.SEVERE, null, error);
 	}
 
 	@OnMessage

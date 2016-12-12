@@ -44,11 +44,10 @@ public class Logout extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		User user = (User)session.getAttribute("user");
-		SessionSave sessionSave = (SessionSave)(session.getAttribute("SessionSave"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		String retMsg;
 		try {
-			sessionSave.eraseFromDB(sm);
+			user.getSessionSave().eraseFromDB(sm);
 			Cookie 	cookie = null;
 			Cookie 	cookies[] = request.getCookies();
 			if (cookies != null){

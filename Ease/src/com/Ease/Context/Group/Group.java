@@ -9,8 +9,9 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
-import org.json.simple.JSONObject;
 
+import com.Ease.Dashboard.App.GroupApp;
+import com.Ease.Dashboard.Profile.GroupProfile;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
@@ -38,7 +39,9 @@ public class Group {
 		String infra_id = (infra == null) ? "null" : infra.getDBid();
 		IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
 		int db_id = db.set("INSERT INTO groups values (null, '" + name + "', " + parent_id + ", " + infra_id + ");");
-		return new Group(String.valueOf(db_id), name, parent, infra, idGenerator.getNextId());
+		Group group = new Group(String.valueOf(db_id), name, parent, infra, idGenerator.getNextId());
+		GroupManager.getGroupManager(sm).add(group);
+		return group;
 	}
 	
 	public static List<Group> loadGroups(DataBaseConnection db, Infrastructure infra, ServletContext context)throws GeneralException {
@@ -55,17 +58,20 @@ public class Group {
 			String name;
 			int single_id;
 			List<GroupProfile> groupProfiles;
+			List<GroupApp> groupApps;
 			while (rs.next()) {
 				db_id = rs.getString(Data.ID.ordinal());
 				System.out.println(db_id);
 				name = rs.getString(Data.NAME.ordinal());
 				single_id = idGenerator.getNextId();
 				Group child = new Group(db_id, name, parent, infra, single_id);
-				groupProfiles = GroupProfile.loadGroupProfiles(child, db, context);
 				child.setChildrens(loadGroup(db, child, infra, context));
-				child.setGroupProfiles(groupProfiles);
+				groupProfiles = GroupProfile.loadGroupProfiles(child, db, context);
+				child.setGroupProfiles(groupProfiles);	
+				groupApps = GroupApp.loadGroupApps(child, db, context);
+				child.setGroupApps(groupApps);
 				groups.add(child);
-				((Map<Integer, Group>)context.getAttribute("groups")).put(single_id, child);
+				GroupManager.getGroupManager(context).add(child);
 			}
 			return groups;
 		} catch (SQLException e) {
@@ -85,6 +91,7 @@ public class Group {
 	protected List<Group> children;
 	protected Group		parent;
 	protected List<GroupProfile> groupProfiles;
+	protected List<GroupApp> groupApps;
 	protected Infrastructure infra;
 	protected int	single_id;
 	
@@ -95,6 +102,8 @@ public class Group {
 		this.parent = parent;
 		this.infra = infra;
 		this.single_id = single_id;
+		this.groupProfiles = null;
+		this.groupApps = null;
 	}
 	
 	/*
@@ -117,11 +126,17 @@ public class Group {
 	private void setGroupProfiles(List<GroupProfile> groupProfiles) {
 		this.groupProfiles = groupProfiles;
 	}
+	private void setGroupApps(List<GroupApp> groupApps) {
+		this.groupApps = groupApps;
+	}
 	public List<Group> getChildren() {
 		return this.children;
 	}
 	public List<GroupProfile> getGroupProfiles() {
 		return this.groupProfiles;
+	}
+	public List<GroupApp> getGroupApps() {
+		return this.groupApps;
 	}
 	
 	public String getName() {
@@ -144,171 +159,105 @@ public class Group {
 	 * 
 	 */
 	
-	/*public static Map<String, Group> getGroupMap(List<Group> groupTrees) {
-		Map<String, Group> groupsMap = new HashMap<String, Group>();
-		for (Group group : groupTrees) {
-			groupsMap.put(group.getDBid(), group);
-			groupsMap.putAll(getGroupMap(group.getChildren()));
-		}
-		return groupsMap;
-	}
-	
-	public static Map<String, GroupProfile> getGroupProfileMap(List<Group> groupTrees) {
-		Map<String, GroupProfile> groupProfileMap = new HashMap<String, GroupProfile>();
-		for (Group group : groupTrees) {
-			for (GroupProfile groupProfile : group.getGroupProfiles()) {
-				groupProfileMap.put(groupProfile.getDBid(), groupProfile);
-			}
-			groupProfileMap.putAll(getGroupProfileMap(group.getChildren()));
-		}
-		return groupProfileMap;
-	}*/
-
-	public void loadContentForConnectedUser(User user, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		int transaction = db.startTransaction();
-		if (this.parent != null)
-			parent.loadContentForConnectedUser(user, sm);
-		int mostEmptyColumn;
-		for (GroupProfile gProfile : this.groupProfiles) {
-			mostEmptyColumn = user.getMostEmptyProfileColumn();
-			user.getProfileColumns().get(mostEmptyColumn).add(Profile.createProfileWithGroup(user, mostEmptyColumn, user.getProfileColumns().get(mostEmptyColumn).size(), gProfile, sm));
-		}
-		db.commitTransaction(transaction);
-	}
-	
-	public void loadContentForUnconnectedUser(String db_id, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		int transaction = db.startTransaction();
-		if (this.parent != null)
-			this.parent.loadContentForUnconnectedUser(db_id, sm);
-		for (GroupProfile groupProfile : this.groupProfiles) {
-			int columnIdx = User.getMostEmptyProfileColumnForUnconnected(db_id, sm);
-			int posIdx = User.getColumnNextPositionForUnconnected(db_id, columnIdx, sm);
-			Profile.createProfileWithGroupForUnconnected(db_id, columnIdx, posIdx, groupProfile, sm);
-		}
-		db.commitTransaction(transaction);
-	}
-	
 	public void removeFromDb(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		Iterator<Group> it = this.children.iterator();
-		while (it.hasNext())
-			it.next().removeFromDb(sm);
-		ResultSet rs = db.get("SELECT user_id FROM groupsAndUsersMap WHERE group_id = " + this.db_id + ";");
-		try {
-			while (rs.next()) {
-				db.set("UPDATE groupsAndUsersMap SET group_id=" + this.parent.db_id + ", user_id = " + rs.getString(1) + " WHERE group_id=" + this.db_id + ";");
-			}
-		
+		for (Group group : children) {
+			group.removeFromDb(sm);
+		}
+		try {	
 			Map<String, User> users = (Map<String, User>) sm.getContextAttr("users");
-			rs = db.get("SELECT email, user_id FROM groupsAndUsersMap JOIN users ON user_id = users.id WHERE group_id=" + this.db_id + ";");
-		
+			ResultSet rs = db.get("SELECT email, user_id FROM groupsAndUsersMap JOIN users ON user_id = users.id WHERE group_id=" + this.db_id + ";");
 			while (rs.next()) {
 				String email  = rs.getString(1);
 				String user_id = rs.getString(2);
-				if (users.containsKey(email))
-					this.removeContentForConnectedUser(users.get(email), false, sm);
-				else
-					this.removeContentForUnconnectedUser(user_id, false, sm);
-			} 
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
-		db.commitTransaction(transaction);
-	}
-	
-	public void removeContentForConnectedUser(User user, boolean recursive, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		int transaction = db.startTransaction();
-		for (List<Profile> column : user.getProfileColumns()) {
-			for (Profile profile : column) {
-				GroupProfile groupProfile = profile.getGroupProfile();
-				if (groupProfile != null && groupProfile.getGroup() == this) {
-					profile.removeFromDB(sm);
-					column.remove(profile);
+				User user;
+				if ((user = users.get(email)) != null) {
+					this.removeContentForConnectedUser(user, sm);
+				} else {
+					this.removeContentForUnconnectedUser(user_id, sm);
 				}
 			}
-		}
-		user.updateProfilesIndex(sm);
-		if (recursive && this.parent != null)
-			parent.removeContentForConnectedUser(user, recursive, sm);
-		db.commitTransaction(transaction);
-	}
-	
-	public void removeContentForUnconnectedUser(String db_id, boolean recursive, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		int transaction = db.startTransaction();
-		try {
-			for (GroupProfile groupProfile : this.groupProfiles) {	
-				ResultSet rs = db.get("SELECT * FROM profiles WHERE user_id=" + db_id + " AND group_profile_id=" + groupProfile.getDBid() + ";");
-				Profile.removeProfileForUnconnected(rs.getString(Profile.Data.ID.ordinal()), (groupProfile.isCommon()) ? null : rs.getString(Profile.Data.PROFILE_INFO_ID.ordinal()), sm);
+			rs = db.get("SELECT user_id FROM groupsAndUsersMap WHERE group_id = " + this.db_id + ";");
+			while (rs.next()) {
+				if (this.parent != null) {
+					db.set("UPDATE groupsAndUsersMap SET group_id=" + this.parent.db_id + " WHERE group_id=" + this.db_id + " AND user_id = " + rs.getString(1) + ";");
+				} else {
+					db.set("DELETE FROM groupsAndUsersMap WHERE group_id=" + this.db_id + " AND user_id = " + rs.getString(1) + ";");
+				}
 			}
+			for (GroupProfile groupProfile : this.groupProfiles) {
+				groupProfile.removeFromDb(sm);
+			}
+			for (GroupApp groupApp : this.groupApps) {
+				groupApp.removeFromDb(sm);
+			}
+			GroupManager.getGroupManager(sm).remove(this);
+			db.set("DELETE FROM groups WHERE id=" + this.db_id + ";");
+			db.commitTransaction(transaction);
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
-		if (recursive && this.parent != null)
-			parent.removeContentForUnconnectedUser(db_id, recursive, sm);
-		db.commitTransaction(transaction);
 	}
 	
-	public String toString() {
-		return (this.db_id + " : " + this.name);
+	private void loadContentForConnectedUser(User user, ServletManager sm) throws GeneralException {
+		for (GroupProfile groupProfile: this.groupProfiles) {
+			groupProfile.loadContentForConnectedUser(user, sm);
+		}
+		for (GroupApp groupApp: this.groupApps) {
+			groupApp.loadContentForConnectedUser(user, sm);
+		}
+	}
+	private void loadContentForUnconnectedUser(String db_id, ServletManager sm) throws GeneralException {
+		for (GroupProfile groupProfile: this.groupProfiles) {
+			groupProfile.loadContentForUnconnectedUser(db_id, sm);
+		}
+		for (GroupApp groupApp: this.groupApps) {
+			groupApp.loadContentForUnconnectedUser(db_id, sm);
+		}
+	}
+	private void removeContentForConnectedUser(User user, ServletManager sm) throws GeneralException {
+		for (GroupProfile groupProfile: this.groupProfiles) {
+			groupProfile.removeContentForConnectedUser(user, sm);
+		}
+		for (GroupApp groupApp: this.groupApps) {
+			groupApp.removeContentForConnectedUser(user, sm);
+		}
+	}
+	private void removeContentForUnconnectedUser(String db_id, ServletManager sm) throws GeneralException {
+		for (GroupProfile groupProfile: this.groupProfiles) {
+			groupProfile.removeContentForUnconnectedUser(db_id, sm);
+		}
+		for (GroupApp groupApp: this.groupApps) {
+			groupApp.removeContentForUnconnectedUser(db_id, sm);
+		}
 	}
 	
-	@SuppressWarnings("unchecked")
+	private void loadAllContentUnconnected(String db_id, ServletManager sm) throws GeneralException {
+		if (this.parent != null)
+			this.parent.loadAllContentUnconnected(db_id, sm);
+		this.loadContentForUnconnectedUser(db_id, sm);
+	}
+	
+	private void loadAllContentConnected(User user, ServletManager sm) throws GeneralException {
+		if (this.parent != null)
+			this.parent.loadAllContentConnected(user, sm);
+		this.loadContentForConnectedUser(user, sm);
+	}
+	
 	public void addUser(String email, ServletManager sm) throws GeneralException {
+		Map<String, User> users = (Map<String, User>) sm.getContextAttr("users");
 		DataBaseConnection db = sm.getDB();
-		User user;
-		String userDBid;
 		int transaction = db.startTransaction();
-		if ((user = ((Map<String, User>)sm.getContextAttr("users")).get(email)) == null) {
-			userDBid = User.findDBid(email, sm);
-			this.loadContentForUnconnectedUser(userDBid, sm);
-		} else {
-			userDBid = user.getDBid();
-			this.loadContentForConnectedUser(user, sm);
-		}
-		db.set("INSERT INTO groupsAndUsersMap values (null, " + this.db_id + ", " + userDBid + ");");
-		db.commitTransaction(transaction);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public void removeUser(String email, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
+		String db_id = User.findDBid(email, sm);
 		User user;
-		String userDBid;
-		int transaction = db.startTransaction();
-		if ((user = ((Map<String, User>)sm.getContextAttr("users")).get(email)) == null) {
-			userDBid = User.findDBid(email, sm);
-			this.removeContentForUnconnectedUser(userDBid, true, sm);
+		Group group;
+		if ((user = users.get(email)) == null) {
+			this.loadAllContentConnected(user, sm);
 		} else {
-			userDBid = user.getDBid();
-			this.removeContentForConnectedUser(user, true, sm);
+			this.loadAllContentUnconnected(db_id, sm);
 		}
-		db.set("DELETE FROM groupsAndUsersMap WHERE group_id=" + this.db_id + " AND user_id=" + userDBid + ";");
+		db.set("INSERT INTO groupsAndUsersMap VALUES(NULL, " + this.db_id + ", " + db_id + ");");
 		db.commitTransaction(transaction);
-	}
-	
-	public JSONObject getJSON() {
-		JSONObject res = new JSONObject();
-		
-		return res;
-	}
-	
-	public String getJSONString() {
-		return this.getJSON().toString();
-	}
-
-	public static Group getGroup(String db_id, ServletManager sm) throws GeneralException {
-		@SuppressWarnings("unchecked")
-		Map<Integer, Group> groups = (Map<Integer, Group>) sm.getContextAttr("groups");
-		for (Map.Entry<Integer, Group> entry : groups.entrySet()) {
-			Group tmpGroup = entry.getValue();
-			if (tmpGroup.getDBid().equals(db_id))
-				return tmpGroup;
-		}
-		throw new GeneralException(ServletManager.Code.ClientError, "This group does not exist.");
 	}
 }

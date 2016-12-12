@@ -3,15 +3,15 @@ package com.Ease.Context;
 
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import com.Ease.Context.Group.Group;
-import com.Ease.Context.Group.GroupProfile;
+import com.Ease.Context.Catalog.Catalog;
+import com.Ease.Context.Group.GroupManager;
 import com.Ease.Context.Group.Infrastructure;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBase;
@@ -37,12 +37,13 @@ public class OnStart implements ServletContextListener{
 			return;
 		}
 		try {
-			evt.getServletContext().setAttribute("idGenerator", new IdGenerator());
+			 Scanner scan = new Scanner(System.in);
+			 String pass = scan.next();
 			
-			evt.getServletContext().setAttribute("groups", new HashMap<Integer, Group>());
-			evt.getServletContext().setAttribute("groupProfiles", new HashMap<Integer, GroupProfile>());
-			List<Infrastructure> infras = Infrastructure.loadInfrastructures(db, evt.getServletContext());
-			evt.getServletContext().setAttribute("infras", infras);
+			evt.getServletContext().setAttribute("idGenerator", new IdGenerator());
+			evt.getServletContext().setAttribute("catalog", new Catalog(db, context));
+			evt.getServletContext().setAttribute("groupManager", new GroupManager());
+			Infrastructure.loadInfrastructures(db, evt.getServletContext());
 			
 						
 			// SiteManager initialization

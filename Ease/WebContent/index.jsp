@@ -67,13 +67,13 @@ pageEncoding="UTF-8"%>
 	<script src="js/snap.svg-min.js"></script>
 	<script src="js/modalEffects.js"></script>
 	<script src="js/selectFx.js"></script>
+	<script src="js/websocket.js"></script>
 	<link rel="stylesheet" type="text/css" href="component.css" />
 	
-	<%
-	SessionSave sessionSave = (SessionSave) (session.getAttribute("SessionSave"));
+	<% 
 	User user = (User) (session.getAttribute("user"));
-	%>
-	<% if (user != null){
+	if (user != null){
+		SessionSave sessionSave = (SessionSave) (user.getSessionSave());
 		if (user.isAdmin()){%>
 			<script src="js/robotest.js"></script>
 		<%}

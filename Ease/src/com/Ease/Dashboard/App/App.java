@@ -7,10 +7,9 @@ import java.sql.SQLException;
 
 import org.json.simple.JSONObject;
 
-import com.Ease.Context.Group.GroupApp;
-import com.Ease.Context.Group.GroupLinkApp;
-import com.Ease.Context.Group.ProfilePermissions;
+import com.Ease.Dashboard.App.LinkApp.GroupLinkApp;
 import com.Ease.Dashboard.Profile.Profile;
+import com.Ease.Dashboard.Profile.ProfilePermissions;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;

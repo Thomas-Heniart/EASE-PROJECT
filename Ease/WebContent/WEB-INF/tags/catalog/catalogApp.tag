@@ -5,13 +5,13 @@
 <%@ attribute name="site" type="com.Ease.Dashboard.App.Website" required="true"%>
 <%@ attribute name="newApp" type="java.lang.Boolean" required="false" %>
 
-<div class="catalogApp" idx="${site.getId()}"
+<div class="catalogApp" idx="${site.getSingleId()}"
 	connect="${site.getFolder()}connect.json"
 	data-login="${site.getLoginWith()}" data-sso="${site.getSso()}"
 	data-nologin="${site.noLogin()}" name="${site.getName()}"
 	url="${site.getUrl() }" newApp="${newApp}"
 	<c:forEach items='${site.getInformations()}' var="item">
-		${item.getInformationName()}="${item.getInformationType()}"
+		${item.getInformationName()}="${item.getInformationValue()}"
 	</c:forEach>>
 	<div class="catalogAppLogo">
 		<img src="${site.getFolder()}logo.png" />

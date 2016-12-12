@@ -11,11 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.Ease.Context.Group.GroupProfile;
-import com.Ease.Context.Group.ProfilePermissions;
-import com.Ease.Dashboard.App.ClassicApp;
 import com.Ease.Dashboard.App.Website;
+import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp.ClassicApp.ClassicApp;
+import com.Ease.Dashboard.Profile.GroupProfile;
 import com.Ease.Dashboard.Profile.Profile;
+import com.Ease.Dashboard.Profile.ProfilePermissions;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;

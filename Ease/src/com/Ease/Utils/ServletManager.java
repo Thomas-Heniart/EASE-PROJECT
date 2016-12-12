@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.Ease.Dashboard.User.User;
 import com.Ease.websocket.WebsocketMessage;
+import com.Ease.websocket.WebsocketSession;
 
 public class ServletManager {
 	
@@ -47,6 +48,7 @@ public class ServletManager {
 	protected String				date;
 	protected String				tabId;
 	protected List<WebsocketMessage> messages;
+	public static Map<String, WebsocketSession> websockets = new HashMap<String, WebsocketSession>();
 	
 	public ServletManager(String servletName, HttpServletRequest request, HttpServletResponse response, boolean saveLogs) {
 		this.args = new HashMap<>();
@@ -164,19 +166,21 @@ public class ServletManager {
 			}
 		}
 		try {
-			for (WebsocketMessage msg: this.messages) {
-				this.user.getWebsockets().forEach((key, socket) -> {
+			for (WebsocketMessage msg : this.messages) {
+				websockets.forEach((key, socket) -> {
 					if (msg.getWho() == WebsocketMessage.Who.ALLTABS ||
-						(msg.getWho() == WebsocketMessage.Who.OTHERTABS && key != tabId) ||
-						(msg.getWho() == WebsocketMessage.Who.THISTAB && key == tabId)) {
-						try {
-							socket.sendMessage(msg);
-						} catch (IOException e) {
-							this.user.removeWebsocket(socket);
+							(msg.getWho() == WebsocketMessage.Who.OTHERTABS && (! key.equals(tabId))) ||
+							(msg.getWho() == WebsocketMessage.Who.THISTAB && key.equals(tabId))) {
+							try {
+								socket.sendMessage(msg);
+							} catch (IOException e) {
+								websockets.remove(key, socket);
+							}
 						}
-					}
 				});
 			}
+			this.messages.clear();
+			websockets.clear();
 			if (this.redirectUrl != null) {
 				response.sendRedirect(this.redirectUrl);
 			} else {
@@ -189,12 +193,24 @@ public class ServletManager {
 		}	
 	}
 	
-	public int getNextSingleId() {
-		return user.getNextSingleId();
-	}
-	
 	public Object getContextAttr(String attr) {
 		return request.getServletContext().getAttribute(attr);
+	}
+	
+	public void setTabId(String tabId) {
+		this.tabId = tabId;
+	}
+	
+	public void addWebsockets(Map<String, WebsocketSession> websocketsMap) {
+		websockets.putAll(websocketsMap);
+	}
+	
+	public void addWebsocket(String tabId, WebsocketSession websocket) {
+		websockets.put(tabId, websocket);
+	}
+	
+	public static void removeWebsocket(String tabId) {
+		websockets.remove(tabId);
 	}
 	
 	public void addToSocket(WebsocketMessage msg) {

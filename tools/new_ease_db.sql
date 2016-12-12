@@ -168,6 +168,7 @@ CREATE TABLE `websites` (
   `insertDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `locked` tinyint(1) unsigned DEFAULT '0',
   `lockedExpiration` datetime DEFAULT NULL,
+  `new` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   FOREIGN KEY (`sso`) REFERENCES sso (id)
 );

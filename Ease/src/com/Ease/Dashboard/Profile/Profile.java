@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.json.simple.JSONObject;
 
-import com.Ease.Context.Group.GroupProfile;
+import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
@@ -51,7 +51,7 @@ public class Profile {
 				columnIdx = rs.getInt(Data.COLUMN_IDX.ordinal());
 				posIdx = rs.getInt(Data.POSITION_IDX.ordinal());
 				String groupProfileId = rs.getString(Data.GROUP_PROFILE_ID.ordinal());
-				groupProfile = (groupProfileId == null) ? null : GroupProfile.getGroupProfile(groupProfileId, sm);
+				groupProfile = (groupProfileId == null) ? null : GroupManager.getGroupManager(sm).getGroupProfileFromDBid(groupProfileId);
 				infos = ProfileInformation.loadProfileInformation(rs.getString(Data.PROFILE_INFO_ID.ordinal()), db);
 				single_id = user.getNextSingleId();
 				profilesColumn.get(columnIdx).add(new Profile(db_id, user, columnIdx, posIdx, groupProfile, infos, single_id));
@@ -231,7 +231,7 @@ public class Profile {
 		else {
 			size = (apps.size() + 2) / 3;
 		}
-		return size;
+		return size;s
 	}
 	
 	@SuppressWarnings("unchecked")

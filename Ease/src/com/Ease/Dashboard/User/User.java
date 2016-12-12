@@ -15,6 +15,7 @@ import java.util.Map;
 import javax.websocket.Session;
 
 import com.Ease.Context.Group.Group;
+import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Utils.DataBaseConnection;
@@ -50,12 +51,13 @@ public class User {
 				List<UserEmail> emails = UserEmail.loadEmails(db_id, sm);
 				ResultSet adminRs = db.get("SELECT user_id FROM admins WHERE user_id = " + db_id + ";");
 				boolean isAdmin = adminRs.next();
-				User newUser =  new User(db_id, firstName, lastName, email, keys, options, null, emails, isAdmin);
+				SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, sm);
+				User newUser =  new User(db_id, firstName, lastName, email, keys, options, null, emails, isAdmin, sessionSave);
 				newUser.loadProfiles(sm);
 				ResultSet rs2 = db.get("SELECT group_id FROM groupsAndUsersMap WHERE user_id=" + newUser.getDBid() + ";");
 				Group userGroup;
 				while (rs2.next()) {
-					userGroup = Group.getGroup((rs2.getString(1)), sm);
+					userGroup = GroupManager.getGroupManager(sm).getGroupFromDBid(rs2.getString(1));
 					if (userGroup != null) {
 						newUser.getGroups().add(userGroup);
 					}
@@ -75,7 +77,7 @@ public class User {
 		DataBaseConnection db = sm.getDB();
 		String db_id = sessionSave.getUserId();
 		String keyUser = sessionSave.getKeyUser();
-		Map<String, Group> groups = (Map<String, Group>) sm.getContextAttr("groups");
+		sessionSave.eraseFromDB(sm);
 		try {
 			ResultSet rs = db.get("SELECT * FROM users where id='" + db_id + "';");
 			if (rs.next()) {
@@ -88,12 +90,13 @@ public class User {
 				List<UserEmail> emails = UserEmail.loadEmails(db_id, sm);
 				ResultSet adminRs = db.get("SELECT user_id FROM admins WHERE user_id = " + db_id + ";");
 				boolean isAdmin = adminRs.next();
-				User newUser =  new User(db_id, firstName, lastName, email, keys, options, null, emails, isAdmin);
+				SessionSave newSessionSave = SessionSave.createSessionSave(keyUser, db_id, sm);
+				User newUser =  new User(db_id, firstName, lastName, email, keys, options, null, emails, isAdmin, newSessionSave);
 				newUser.loadProfiles(sm);
 				ResultSet rs2 = db.get("SELECT group_id FROM groupsAndUsersMap WHERE user_id=" + newUser.getDBid() + ";");
 				Group userGroup;
 				while (rs2.next()) {
-					userGroup = groups.get(rs2.getString(1));
+					userGroup = GroupManager.getGroupManager(sm).getGroupFromDBid(rs2.getString(1));
 					if (userGroup != null) {
 						newUser.getGroups().add(userGroup);
 					}
@@ -121,7 +124,8 @@ public class User {
 		Date date = new Date();
 		String registrationDate = dateFormat.format(date);
 		String db_id = db.set("INSERT INTO users VALUES(NULL, '" + firstName + "', '" + lastName + "', '" + email + "', " + keys.getDBid() + ", " + opt.getDb_id() + ", '" + registrationDate + "');").toString();
-		User newUser = new User(db_id, null, null, email, null, opt, null, emails, false);
+		SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(),  db_id, sm);
+		User newUser = new User(db_id, null, null, email, null, opt, null, emails, false, sessionSave);
 		newUser.getProfileColumns().get(0).add(Profile.createPersonnalProfile(newUser, 0, 0, "Side", "#000000", sm));
 		newUser.getProfileColumns().get(1).add(Profile.createPersonnalProfile(newUser, 1, 0, "Perso", "#000000", sm));
 		((Map<String, User>)sm.getContextAttr("users")).put(email, newUser);
@@ -149,7 +153,9 @@ public class User {
 	protected List<Group> groups;
 	protected boolean isAdmin;
 	
-	public User(String db_id, String first_name, String last_name, String email, Keys keys, Option opt, /*Status*/ String status, List<UserEmail> emails, boolean isAdmin) {
+	protected SessionSave sessionSave;
+	
+	public User(String db_id, String first_name, String last_name, String email, Keys keys, Option opt, /*Status*/ String status, List<UserEmail> emails, boolean isAdmin, SessionSave sessionSave) {
 		this.db_id = db_id;
 		this.first_name = first_name;
 		this.last_name = last_name;
@@ -167,6 +173,7 @@ public class User {
 		this.websockets = new HashMap<String, WebsocketSession>();
 		this.groups = new LinkedList<Group>();
 		this.isAdmin = isAdmin;
+		this.sessionSave = sessionSave;
 	}
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
@@ -228,6 +235,10 @@ public class User {
 	
 	public List<Group> getGroups() {
 		return groups;
+	}
+	
+	public SessionSave getSessionSave() {
+		return sessionSave;
 	}
 	
 	/*
@@ -346,20 +357,8 @@ public class User {
 		this.websockets.remove(session.getSessionId());
 	}
 
-	public void addWebsocket(Session session) throws GeneralException {
-		try {
-			session.getBasicRemote().sendText(String.valueOf(this.getNextSingleId()));
-			this.websockets.put(session.getId() , new WebsocketSession(session));
-		} catch (IOException e) {
-			e.printStackTrace();
-			try {
-				session.close();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			websockets.remove(session);
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
+	public void addWebsocket(WebsocketSession wSession) throws GeneralException {
+		this.websockets.put(wSession.getSessionId() , wSession);
 	}
 	
 	public int getMostEmptyProfileColumn() {
@@ -441,6 +440,13 @@ public class User {
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
+	}
+	
+	public List<String> getEmails() {
+		List<String> res = new LinkedList<String> ();
+		for (UserEmail email : this.emails)
+			res.add(email.getEmail());
+		return res;
 	}
 	
 	public List<String> getVerifiedEmails() {

@@ -11,8 +11,7 @@ import com.Ease.Utils.ServletManager;
 
 public class WebsiteInformation {
 	
-	public static List<WebsiteInformation> loadInformations(String website_id, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
+	public static List<WebsiteInformation> loadInformations(String website_id, DataBaseConnection db) throws GeneralException {
 		List<WebsiteInformation> website_informations = new LinkedList<WebsiteInformation>();
 		ResultSet rs = db.get("SELECT information_name, information_type FROM websitesInformations WHERE website_id=" + website_id + ";");
 		try {
@@ -34,7 +33,7 @@ public class WebsiteInformation {
 		this.information_value = information_value;
 	}
 
-	public String getInformation_name() {
+	public String getInformationName() {
 		return information_name;
 	}
 
@@ -42,7 +41,7 @@ public class WebsiteInformation {
 		this.information_name = information_name;
 	}
 
-	public String getInformation_value() {
+	public String getInformationValue() {
 		return information_value;
 	}
 

@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.Ease.Context.Group.GroupProfile;
+import com.Ease.Dashboard.Profile.GroupProfile;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
