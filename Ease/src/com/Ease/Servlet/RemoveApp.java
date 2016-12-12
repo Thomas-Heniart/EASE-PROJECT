@@ -1,7 +1,6 @@
 package com.Ease.Servlet;
 
 import java.io.IOException;
-import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,23 +8,25 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import com.Ease.Dashboard.Profile.GroupProfile;
+import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class RemoveGroupProfile
+ * Servlet implementation class RemoveApp
  */
-@WebServlet("/RemoveGroupProfile")
-public class RemoveGroupProfile extends HttpServlet {
+@WebServlet("/RemoveApp")
+public class RemoveApp extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public RemoveGroupProfile() {
+    public RemoveApp() {
         super();
+        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -40,26 +41,21 @@ public class RemoveGroupProfile extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);		
+		HttpSession session = request.getSession();
+		User user = (User) (session.getAttribute("User"));
+		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+		
 		try {
 			sm.needToBeConnected();
-			String single_id = sm.getServletParam("single_id", true);
-			if (single_id == null || single_id.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientError, "Client error.");
-			@SuppressWarnings("unchecked")
-			Map<String, GroupProfile> groupProfiles = (Map<String, GroupProfile>) sm.getContextAttr("groupProfiles");
-			try {
-				GroupProfile groupProfile = groupProfiles.get(Integer.parseInt(single_id));
-				if (groupProfile == null)
-					throw new GeneralException(ServletManager.Code.ClientError, "This group profile does not exist");
-				groupProfile.removeFromDb(sm);
-			} catch (NumberFormatException e) {
-				throw new GeneralException(ServletManager.Code.ClientError, e);
-			}
-			
-			sm.setResponse(ServletManager.Code.Success, "Group profile removed");
+			String appId = sm.getServletParam("appId", true);
+			if (appId == null || appId.isEmpty())
+				throw new GeneralException(ServletManager.Code.ClientError, "Wrong appId.");
+			user.removeApp(Integer.parseInt(appId), sm);
+			sm.setResponse(ServletManager.Code.Success, "App removed.");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
+		} catch (NumberFormatException e) {
+			sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");
 		}
 		sm.sendResponse();
 	}

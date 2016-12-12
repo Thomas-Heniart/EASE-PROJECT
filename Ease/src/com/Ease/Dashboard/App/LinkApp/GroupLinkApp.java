@@ -2,6 +2,8 @@ package com.Ease.Dashboard.App.LinkApp;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 
@@ -13,6 +15,7 @@ import com.Ease.Dashboard.App.GroupApp;
 import com.Ease.Dashboard.Profile.GroupProfile;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
 
 public class GroupLinkApp extends GroupApp {
@@ -41,6 +44,22 @@ public class GroupLinkApp extends GroupApp {
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
+	}
+	
+	public static GroupLinkApp createGroupLinkApp(GroupProfile groupProfile, Group group, int perms, String name, boolean common, String url, String img_url, ServletManager sm) throws GeneralException {
+		Map<String, Object> elevator = new HashMap<String, Object>();
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		String appDBid = GroupApp.createGroupApp(groupProfile, group, perms, name, common, "groupLinkApp", elevator, sm);
+		AppPermissions permissions = (AppPermissions) elevator.get("perms");
+		AppInformation appInfos = (AppInformation) elevator.get("appInfos");
+		LinkAppInformation infos = LinkAppInformation.createLinkAppInformation(url, img_url, sm);
+		String db_id = db.set("INSERT INTO groupLinkApps VALUES(NULL, " + infos.getDb_id() + ", " + appDBid + ");").toString();
+		int single_id = ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId();
+		GroupLinkApp groupLinkApp = new GroupLinkApp(appDBid, groupProfile, group, permissions, appInfos, infos, common, single_id, db_id);
+		GroupManager.getGroupManager(sm).add(groupLinkApp);
+		db.commitTransaction(transaction);
+		return groupLinkApp;
 	}
 	
 	/*

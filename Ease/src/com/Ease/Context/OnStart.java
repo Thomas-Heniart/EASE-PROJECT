@@ -4,7 +4,6 @@ package com.Ease.Context;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -27,7 +26,6 @@ public class OnStart implements ServletContextListener{
 	// Run this before web application is started
 	@Override
 	public void contextInitialized(ServletContextEvent evt) {
-		System.out.print("ServletContextListener started...");
 		ServletContext context = evt.getServletContext();
 		DataBaseConnection db;
 		try {
@@ -37,9 +35,8 @@ public class OnStart implements ServletContextListener{
 			return;
 		}
 		try {
-			 Scanner scan = new Scanner(System.in);
-			 String pass = scan.next();
-			
+			evt.getServletContext().setAttribute("serverKey", new ServerKey(db));
+			System.out.print("ServletContextListener started...");
 			evt.getServletContext().setAttribute("idGenerator", new IdGenerator());
 			evt.getServletContext().setAttribute("catalog", new Catalog(db, context));
 			evt.getServletContext().setAttribute("groupManager", new GroupManager());

@@ -2,19 +2,24 @@ package com.Ease.Dashboard.App.WebsiteApp.ClassicApp;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.Ease.Dashboard.App.AppInformation;
+import com.Ease.Dashboard.App.GroupApp;
 import com.Ease.Dashboard.App.Website;
+import com.Ease.Dashboard.App.WebsiteApp.GroupWebsiteApp;
+import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.Profile.Profile;
+import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
 
 public class ClassicApp extends WebsiteApp {
 	
-	public enum ClassicAppData {
+	public enum Data {
 		NOTHING,
 		ID,
 		WEBSITE_APP_ID,
@@ -22,53 +27,63 @@ public class ClassicApp extends WebsiteApp {
 		GROUP_CLASSIC_APP_ID
 	}
 	
-	public static ClassicApp createClassicApp(String name, Profile profile, Website site, String password, Map<String, String> informations, ServletManager sm) throws GeneralException {
+	/*
+	 *
+	 * Loader And Creator
+	 * 
+	 */
+	
+	public static ClassicApp loadClassicApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, String websiteAppDBid, GroupWebsiteApp groupWebsiteApp, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		int transaction = db.startTransaction();
-		int position = profile.getApps().size();
-		Account account = Account.createAccount(password, false, profile.getUser(), sm);
-		List<AccountInformation> account_informations = AccountInformation.createAccountInformations(account.getDb_id(), informations, sm);
-		AppInformation app_information = AppInformation.createAppInformation(name, sm);
-		int app_id = db.set("INSERT INTO apps values (null, " + profile.getDBid() + ", " + position + ", default, null, 'ClassicApp', 1, null);");
-		int website_app_id = db.set("INSERT INTO websiteApps values (null, " + site.getDb_id() + ", " + app_id + ", null, 'ClassicApp');");
-		db.set("INSERT INTO classicApps values (null, " + website_app_id + ", " + account.getDb_id()  + ");");
-		db.commitTransaction(transaction);
-		return new ClassicApp(profile, position, sm.getNextSingleId(), String.valueOf(app_id), true, site, account, account_informations, app_information);
-	}
-	
-	protected Account account;
-	protected List<AccountInformation> account_informations;
-	
-	public ClassicApp(Profile profile, int position, int single_id, String db_id, boolean working, Website site, Account account, List<AccountInformation> account_informations, AppInformation app_information) {
-		super(profile, position, single_id, db_id, working, site, app_information);
-		this.account = account;
-		this.account_informations = account_informations;
-	}
-	
-	public ClassicApp(String app_id, Profile profile, ServletManager sm) throws GeneralException {
-		super(app_id, profile, sm);
-		DataBaseConnection db = sm.getDB();
-		ResultSet rs = db.get("SELECT classicApps.id FROM (apps JOIN websiteApps ON apps.id = websiteApps.app_id) JOIN classicApps ON classicApps.website_app_id = websiteApps.id WHERE apps.id = " + db_id + ";");
 		try {
+			ResultSet rs = db.get("SELECT * from websiteApps WHERE app_id=" + websiteAppDBid + ";");
 			if (rs.next()) {
-				this.account = Account.loadAccount(rs.getString(1), profile.getUser(), sm);
-			}
+				Account account = Account.loadAccount(rs.getString(Data.ACCOUNT_ID.ordinal()), db);
+				String classicDBid = rs.getString(Data.ID.ordinal());
+				IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
+				return new ClassicApp(db_id, profile, position, infos, groupApp, insertDate, idGenerator.getNextId(), site, websiteAppDBid, groupWebsiteApp, account, classicDBid);
+			} 
+			throw new GeneralException(ServletManager.Code.InternError, "Classic app not complete in db.");
 		} catch (SQLException e) {
-			e.printStackTrace();
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
 	
-	public Account getAccount() {
-		return this.account;
-	}
-	
-	public void removeFromDb(ServletManager sm) throws GeneralException {
+	public static ClassicApp createClassicApp(Profile profile, int position, String name, Website site, String password, Map<String, String> infos, ServletManager sm, User user) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		this.account.removeFromDb(sm);
-		db.set("DELETE FROM classicApps WHERE id = " + this.getDb_id() + ";");
-		super.removeFromDb(sm);
+		Map<String, Object> elevator = new HashMap<String, Object>();
+		String websiteAppDBid = WebsiteApp.createWebsiteApp(profile, position, name, "classicApp", site, elevator, sm);
+		Account account = Account.createAccount(password, false, infos, user, sm);
+		String classicDBid = db.set("INSERT INTO classicApps VALUES(NULL, " + websiteAppDBid + ", " + account.getDBid() + ", NULL);").toString();
+		db.commitTransaction(transaction);
+		return new ClassicApp((String)elevator.get("appDBid"), profile, position, (AppInformation)elevator.get("appInfos"), null, (String)elevator.get("registrationDate"), ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, null, account, classicDBid);
+	}
+	
+	
+	/*
+	 * 
+	 * Constructor
+	 * 
+	 */
+	
+	protected Account account;
+	protected String classicDBid;
+	
+	public ClassicApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid, GroupWebsiteApp groupWebsiteApp, Account account, String classicDBid) {
+		super(db_id, profile, position, infos, groupApp, insertDate, single_id, site, websiteAppDBid, groupWebsiteApp);
+		this.account = account;
+		this.classicDBid = classicDBid;
+	}
+	
+	public void removeFromDB(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		if (this.groupApp == null || this.groupApp.isCommon() == false)
+			account.removeFromDB(sm);
+		db.set("DELETE FROM classicApps WHERE id=" + classicDBid + ";");
+		super.removeFromDB(sm);
 		db.commitTransaction(transaction);
 	}
+	
 }

@@ -1,7 +1,6 @@
 package com.Ease.Servlet;
 
 import java.io.IOException;
-import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,24 +10,26 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.Ease.Context.Group.Group;
+import com.Ease.Context.Catalog.Catalog;
+import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.App.Website;
+import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
+import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class GroupRemoveUser
+ * Servlet implementation class AddLogwithApp
  */
-@WebServlet("/GroupRemoveUser")
-public class GroupRemoveUser extends HttpServlet {
+@WebServlet("/AddLogwithApp")
+public class AddLogwithApp extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GroupRemoveUser() {
+    public AddLogwithApp() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -51,31 +52,26 @@ public class GroupRemoveUser extends HttpServlet {
 		
 		try {
 			sm.needToBeConnected();
-			String single_id = sm.getServletParam("single_id", true);
-			String[] emails = sm.getServletParamArray("emails", true);
-			@SuppressWarnings("unchecked")
-			Map<Integer, Group> groups = (Map<Integer, Group>)sm.getContextAttr("groups");
-			Group group = groups.get(Integer.parseInt(single_id));
-			if (group == null) {
-				sm.setResponse(ServletManager.Code.ClientError, "This group dosen't exist.");
-			} else {
-				group.getInfra().isAdmin(user, sm);
-				DataBaseConnection db = sm.getDB();
-				int transaction = db.startTransaction();
-				for (String email : emails) {
-					if (Regex.isEmail(email) == false)
-						throw new GeneralException(ServletManager.Code.ClientError, "Wrong user email.");
-					group.removeUser(email, sm);
-				}
-				db.commitTransaction(transaction);
-				sm.setResponse(ServletManager.Code.Success, "Users removed.");
+			String name = sm.getServletParam("name", true);
+			String websiteId = sm.getServletParam("websiteId", true);
+			String profileId = sm.getServletParam("profileId", true);
+			String logwithId = sm.getServletParam("logwithId", true);
+			Website site = null;
+			if (name == null || name.equals(""))
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
+			try {
+				Profile profile = user.getProfile(Integer.parseInt(profileId));
+				App logwith = user.getApp(Integer.parseInt(logwithId));
+				site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(websiteId));
+				LogwithApp newApp = profile.addLogwithApp(name, site, logwith, sm);
+				sm.setResponse(ServletManager.Code.Success, "ClassicApp added.");
+			} catch (NumberFormatException e) {
+				sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");
 			}
-			
 		} catch (GeneralException e) {
 			sm.setResponse(e);
-		} catch (NumberFormatException e) {
-			sm.setResponse(ServletManager.Code.ClientError, "Wrong single_id.");
 		}
 		sm.sendResponse();
 	}
+
 }

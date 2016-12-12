@@ -2,6 +2,8 @@ package com.Ease.Dashboard.App.WebsiteApp.ClassicApp;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 
@@ -11,11 +13,10 @@ import com.Ease.Dashboard.App.AppInformation;
 import com.Ease.Dashboard.App.AppPermissions;
 import com.Ease.Dashboard.App.Website;
 import com.Ease.Dashboard.App.WebsiteApp.GroupWebsiteApp;
-import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.GroupLogwithApp;
-import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.GroupLogwithApp.Data;
 import com.Ease.Dashboard.Profile.GroupProfile;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
 
 public class GroupClassicApp extends GroupWebsiteApp{
@@ -37,7 +38,7 @@ public class GroupClassicApp extends GroupWebsiteApp{
 			ResultSet rs = db.get("SELECT * FROM groupLogwithApps WHERE group_website_app_id=" + db_id + ";");
 			if (rs.next()) {
 				String db_id3 = rs.getString(Data.ID.ordinal());
-				Account account = Account.loadAccount(rs.getString(Data.ACCOUNT_ID), user, sm);
+				Account account = Account.loadAccount(rs.getString(Data.ACCOUNT_ID.ordinal()), db);
 				GroupClassicApp groupClassicApp = new GroupClassicApp(db_id, groupProfile, group, perms, info, common, single_id, site, db_id2, account, db_id3);
 				GroupManager.getGroupManager(context).add(groupClassicApp);
 				return groupClassicApp;
@@ -47,6 +48,23 @@ public class GroupClassicApp extends GroupWebsiteApp{
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
+	}
+	
+	public static GroupClassicApp createGroupClassicApp(GroupProfile groupProfile, Group group, int perms, String name, boolean common, Website site, String password, Map<String, String> accInfos, ServletManager sm) throws GeneralException {
+		Map<String, Object> elevator = new HashMap<String, Object>();
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		String websiteAppId = GroupWebsiteApp.createGroupWebsiteApp(groupProfile, group, perms, name, common, site, "groupClassicApp", elevator, sm);
+		AppPermissions permissions = (AppPermissions) elevator.get("perms");
+		AppInformation appInfos = (AppInformation) elevator.get("appInfos");
+		String appId = (String) elevator.get("appId");
+		Account account = Account.createGroupAccount(password, false, accInfos, group.getInfra(), sm);
+		String db_id = db.set("INSERT INTO groupClassicApps VALUES(NULL, " + websiteAppId + ", " + account.getDBid() + ");").toString();
+		int single_id = ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId();
+		GroupClassicApp groupClassicApp = new GroupClassicApp(appId, groupProfile, group, permissions, appInfos, common, single_id, site, websiteAppId, account, db_id);
+		GroupManager.getGroupManager(sm).add(groupClassicApp);
+		db.commitTransaction(transaction);
+		return groupClassicApp;
 	}
 	
 	/*

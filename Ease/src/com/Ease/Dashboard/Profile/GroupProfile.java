@@ -9,8 +9,6 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
-import org.json.simple.JSONObject;
-
 import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.User.User;
@@ -39,7 +37,6 @@ public class GroupProfile {
 		List<GroupProfile> profiles = new LinkedList<GroupProfile>();
 		IdGenerator idGenerator = (IdGenerator)context.getAttribute("idGenerator");
 		try {
-			@SuppressWarnings("unchecked")
 			ResultSet rs = db.get("SELECT * FROM groupProfiles WHERE group_id=" + group.getDBid() + ";");
 			String db_id;
 			ProfilePermissions perms;
@@ -66,7 +63,6 @@ public class GroupProfile {
 	public static GroupProfile createGroupProfile(Group group, int permissions, String name, String color, Boolean common, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		@SuppressWarnings("unchecked")
 		ProfilePermissions perms = ProfilePermissions.CreateProfilePermissions(permissions, group.getDBid(), sm);
 		ProfileInformation infos = ProfileInformation.createProfileInformation(name, color, sm);
 		String db_id = db.set("INSERT INTO groupProfile VALUES(NULL, " + group.getDBid() + ", " + perms.getDBid() + ", " + infos.getDBid() + ", " + ((common == true) ? 1 : 0) + ");").toString();
@@ -74,6 +70,23 @@ public class GroupProfile {
 		int single_id = idGen.getNextId();
 		GroupProfile groupProfile = new GroupProfile(db_id, group, perms, infos, common, single_id);
 		GroupManager.getGroupManager(sm).add(groupProfile);
+		try {
+			ResultSet rs = db.get("SELECT email, user_id FROM groups JOIN users ON user_id = users.id WHERE group_id = " + group.getDBid() + ";");
+			@SuppressWarnings("unchecked")
+			Map<String, User> users = (Map<String, User>) sm.getContextAttr("users");
+			String user_email;
+			User user;
+			while (rs.next()) {
+				user_email = rs.getString(1);
+				if ((user = users.get(user_email)) != null) {
+					groupProfile.loadContentForConnectedUser(user, sm);
+				} else {
+					groupProfile.loadContentForUnconnectedUser(rs.getString(2), sm);
+				}
+			}
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
 		db.commitTransaction(transaction);
 		return groupProfile;
 	}

@@ -68,16 +68,16 @@ public class ConnectionServlet extends HttpServlet {
 			addIpInDataBase(client_ip, db);
 			if (canConnect(client_ip, db)) {
 				if (email == null || Regex.isEmail(email) == false)
-					sm.setResponse(ServletManager.Code.ClientWarning, "Wrong email");
-				else if (password == null)
-					sm.setResponse(ServletManager.Code.ClientWarning, "Wrong password");
-				else if (socketId == null)
-					sm.setResponse(ServletManager.Code.ClientWarning, "No websocket");
+					sm.setResponse(ServletManager.Code.ClientWarning, "Wrong email.");
+				else if (password == null || password.isEmpty())
+					sm.setResponse(ServletManager.Code.ClientWarning, "Wrong password.");
+				else if (socketId == null || socketId.isEmpty())
+					sm.setResponse(ServletManager.Code.ClientWarning, "No websocket.");
 				else {
 					User user = User.loadUser(email, password, sm);
 					session.setAttribute("user", user);
 					removeIpFromDataBase(client_ip,db);
-					sm.setResponse(ServletManager.Code.Success, "Successfully connected");
+					sm.setResponse(ServletManager.Code.Success, "Successfully connected.");
 					sm.addWebsockets(unconnectedSessions);
 					sm.addToSocket(WebsocketMessage.connectionMessage());
 					sm.setTabId(socketId);
