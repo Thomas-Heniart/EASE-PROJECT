@@ -471,4 +471,11 @@ public class User {
 		}
 		return unverifiedEmails;
 	}
+	
+	public Profile addProfile(String name, String color, ServletManager sm) throws GeneralException {
+		int column = this.getMostEmptyProfileColumn();
+		Profile newProfile = Profile.createPersonnalProfile(this, column, this.getProfileColumns().get(column).size(), name, color, sm);
+		this.profile_columns.get(column).add(newProfile);
+		return newProfile;
+	}
 }
