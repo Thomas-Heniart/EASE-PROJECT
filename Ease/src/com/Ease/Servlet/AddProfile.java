@@ -43,13 +43,13 @@ public class AddProfile extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		User user = (User) (session.getAttribute("User"));
+		User user = (User) (session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		
 		try {
 			sm.needToBeConnected();
 			String name = sm.getServletParam("name", true);
-			String color = sm.getServletParam("color", true);
+			String color = "#000000";//sm.getServletParam("color", true);
 			if (name == null || name.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
 			else if (color == null || Regex.isColor(color) == false)

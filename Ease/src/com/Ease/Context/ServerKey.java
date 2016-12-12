@@ -51,12 +51,14 @@ public class ServerKey {
 			}
 		}
 		scan.close();
+		
 		/*String saltEase = AES.generateSalt();
 		String saltPerso = AES.generateSalt();
 		String keyUser = AES.keyGenerator();
-		String crypted_keyUser = AES.encryptUserKey(keyUser, "MDP", saltPerso);
-		String hashed_password = Hashing.SHA("MDP", saltEase);
-		db.set("INSERT INTO serverKeys VALUES('felix', '" + hashed_password + "', '" + saltEase + "', '" + saltPerso + "', '" + crypted_keyUser + "');");*/
+		String crypted_keyUser = AES.encryptUserKey(keyUser, "?yjoIxfI", saltPerso);
+		String hashed_password = Hashing.SHA("?yjoIxfI", saltEase);
+		db.set("INSERT INTO serverKeys VALUES('flemingite', '" + hashed_password + "', '" + saltEase + "', '" + saltPerso + "', '" + crypted_keyUser + "');");
+		*/
 	}
 	
 	public String getKeyServer() {
