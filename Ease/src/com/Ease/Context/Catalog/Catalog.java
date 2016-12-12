@@ -36,4 +36,8 @@ public class Catalog {
 		}
 		throw new GeneralException(ServletManager.Code.InternError, "This website dosen't exist.");
 	}
+	
+	public List<Website> getWebsites() {
+		return this.websites;
+	}
 }

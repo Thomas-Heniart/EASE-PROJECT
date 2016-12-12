@@ -13,16 +13,18 @@ $(document).ready(function() {
 			var parent = $(this).closest('form');
 			var email = $(parent).find("#email").val();
 			var password = $(parent).find("#password").val();
-
 			$(parent).find('.alertDiv').removeClass('show');
 			$(parent).hide();
 			$(".ease-logo").hide();
 			$("#loadingUnknownUser").css("display","block");
 			$("#back").hide();
+			console.log(email);
+			console.log(socketId);
 			postHandler.post('connection',
 					{
 						email : email,
-						password : password
+						password : password,
+						socketId : socketId
 					},
 					function(){},
 					function(retMsg) {

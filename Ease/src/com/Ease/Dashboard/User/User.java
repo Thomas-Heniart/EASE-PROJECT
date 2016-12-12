@@ -357,20 +357,8 @@ public class User {
 		this.websockets.remove(session.getSessionId());
 	}
 
-	public void addWebsocket(Session session) throws GeneralException {
-		try {
-			session.getBasicRemote().sendText(String.valueOf(this.getNextSingleId()));
-			this.websockets.put(session.getId() , new WebsocketSession(session));
-		} catch (IOException e) {
-			e.printStackTrace();
-			try {
-				session.close();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			websockets.remove(session);
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
+	public void addWebsocket(WebsocketSession wSession) throws GeneralException {
+		this.websockets.put(wSession.getSessionId() , wSession);
 	}
 	
 	public int getMostEmptyProfileColumn() {
@@ -452,6 +440,13 @@ public class User {
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
+	}
+	
+	public List<String> getEmails() {
+		List<String> res = new LinkedList<String> ();
+		for (UserEmail email : this.emails)
+			res.add(email.getEmail());
+		return res;
 	}
 	
 	public List<String> getVerifiedEmails() {

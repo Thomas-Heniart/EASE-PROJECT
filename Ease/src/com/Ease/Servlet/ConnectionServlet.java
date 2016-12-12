@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.Ease.Dashboard.User.SessionSave;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
@@ -52,15 +51,16 @@ public class ConnectionServlet extends HttpServlet {
 	@SuppressWarnings("unchecked")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
 		HttpSession session = request.getSession();
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		DataBaseConnection db = sm.getDB();
 		// Get Parameters
 		String email = sm.getServletParam("email", true);
 		String password = sm.getServletParam("password", false);
+		String socketId = sm.getServletParam("socketId", true);
 		// --
-
+		boolean success = false;
+		Map<String, WebsocketSession> unconnectedSessions = (Map<String, WebsocketSession>)session.getAttribute("unconnectedSessions");
 		String client_ip = getIpAddr(request);
 
 		// Put current ip in db
@@ -71,11 +71,24 @@ public class ConnectionServlet extends HttpServlet {
 					sm.setResponse(ServletManager.Code.ClientWarning, "Wrong email");
 				else if (password == null)
 					sm.setResponse(ServletManager.Code.ClientWarning, "Wrong password");
+				else if (socketId == null)
+					sm.setResponse(ServletManager.Code.ClientWarning, "No websocket");
 				else {
 					User user = User.loadUser(email, password, sm);
 					session.setAttribute("user", user);
 					removeIpFromDataBase(client_ip,db);
 					sm.setResponse(ServletManager.Code.Success, "Successfully connected");
+					sm.addWebsockets(unconnectedSessions);
+					sm.addToSocket(WebsocketMessage.connectionMessage());
+					sm.setTabId(socketId);
+					unconnectedSessions.forEach((key, socket) -> {
+						try {
+							user.addWebsocket(socket);
+						} catch (GeneralException e) {
+							sm.setResponse(e);
+						}
+					});
+					success = true;
 				}
 			} else {
 				throw new GeneralException(ServletManager.Code.UserMiss, "Too much attempts to connect. Please retry in 5 minutes.");
@@ -83,9 +96,9 @@ public class ConnectionServlet extends HttpServlet {
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		}
-		sm.addWebsockets((Map<String, WebsocketSession>)session.getAttribute("unconnectedSessions"));
-		sm.addToSocket(WebsocketMessage.connectionMessage());
 		sm.sendResponse();
+		if (success)
+			session.removeAttribute("unconnectedSessions");
 	}
 
 	public String getIpAddr(HttpServletRequest request) {

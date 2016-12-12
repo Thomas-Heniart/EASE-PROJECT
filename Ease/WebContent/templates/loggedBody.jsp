@@ -48,8 +48,8 @@ response.addCookie(email);
 <c:set var="user"			scope="session" value='${session.getAttribute("User")}'/>
 <c:set var="colors"			scope="session" value='${servletContext.getAttribute("Colors")}'/>
 <c:set var="dashboardColumns" scope="session" value="${user.getProfileColumns()}"/>
-<c:set var="siteManager"	scope="session" value='${servletContext.getAttribute("siteManager")}'/>
-<c:set var="siteList"		scope="session" value='${siteManager.getSitesList()}'/>
+<c:set var="catalog"	scope="session" value='${servletContext.getAttribute("catalog")}'/>
+<c:set var="siteList"		scope="session" value='${catalog.getWebsites()}'/>
 <c:set var="tags"			scope="session"	value='${servletContext.getAttribute("Tags")}'/>
 <c:set var="tagAndSiteMapping"	scope="session" value='${servletContext.getAttribute("TagAndSiteMapping")}'/>
 <c:set var="settingsOpen" scope="session" value="${param.openSettings}"/>
