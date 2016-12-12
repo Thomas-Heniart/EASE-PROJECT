@@ -497,4 +497,12 @@ public class User {
 		this.updateProfilesIndex(sm);
 		db.commitTransaction(transaction);
 	}
+
+	public void putAllSockets(Map<String, WebsocketSession> unconnectedSessions) throws GeneralException {
+		if (ServletManager.debug && unconnectedSessions == null)
+			return;
+		else if (unconnectedSessions == null)
+			throw new GeneralException(ServletManager.Code.ClientError, "Unconnected session is null");
+		this.websockets.putAll(unconnectedSessions);
+	}
 }

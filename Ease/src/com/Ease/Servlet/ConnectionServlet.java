@@ -80,6 +80,8 @@ public class ConnectionServlet extends HttpServlet {
 					sm.addWebsockets(unconnectedSessions);
 					sm.addToSocket(WebsocketMessage.connectionMessage());
 					sm.setSocketId(socketId);
+					user.putAllSockets(unconnectedSessions);
+					session.removeAttribute("unconnectedSessions");
 				}
 			} else {
 				throw new GeneralException(ServletManager.Code.UserMiss, "Too much attempts to connect. Please retry in 5 minutes.");
@@ -88,16 +90,6 @@ public class ConnectionServlet extends HttpServlet {
 			sm.setResponse(e);
 		}
 		sm.sendResponse();
-		if (user != null) {
-			for (Map.Entry<String, WebsocketSession> entry : unconnectedSessions.entrySet() ) {
-				try {
-					user.addWebsocket(entry.getValue());
-				} catch (GeneralException e) {
-					sm.setResponse(e);
-				}
-			}
-			session.removeAttribute("unconnectedSessions");
-		}
 	}
 
 	public String getIpAddr(HttpServletRequest request) {
