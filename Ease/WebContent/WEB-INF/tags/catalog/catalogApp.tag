@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib tagdir="/WEB-INF/tags/catalog" prefix="catalog"%>
 
-<%@ attribute name="site" type="com.Ease.Dashboard.App.Website" required="true"%>
+<%@ attribute name="site" type="com.Ease.Context.Catalog.Website" required="true"%>
 <%@ attribute name="newApp" type="java.lang.Boolean" required="false" %>
 
 <div class="catalogApp" idx="${site.getSingleId()}"

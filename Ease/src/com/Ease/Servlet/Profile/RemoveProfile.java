@@ -53,7 +53,6 @@ public class RemoveProfile extends HttpServlet {
 				throw new GeneralException(ServletManager.Code.ClientError, "Wrong profileId.");
 			user.removeProfile(Integer.parseInt(profileId), sm);
 			sm.setResponse(ServletManager.Code.Success, "Profile removed.");
-			sm.setResponse(ServletManager.Code.Success, "Profile removed.");
 			sm.addWebsockets(user.getWebsockets());
 			sm.addToSocket(WebsocketMessage.removeProfileMessage(profileId));
 		} catch (GeneralException e) {

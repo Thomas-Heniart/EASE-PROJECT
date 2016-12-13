@@ -1,4 +1,4 @@
-package com.Ease.Dashboard.App;
+package com.Ease.Context.Catalog;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

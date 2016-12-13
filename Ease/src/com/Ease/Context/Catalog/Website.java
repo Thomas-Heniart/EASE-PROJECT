@@ -1,4 +1,4 @@
-package com.Ease.Dashboard.App;
+package com.Ease.Context.Catalog;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,7 +10,6 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
-import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;

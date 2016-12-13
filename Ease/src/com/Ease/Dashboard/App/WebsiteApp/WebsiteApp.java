@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.Ease.Context.Catalog.Catalog;
+import com.Ease.Context.Catalog.Website;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.AppInformation;
 import com.Ease.Dashboard.App.GroupApp;
-import com.Ease.Dashboard.App.Website;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.Profile.Profile;

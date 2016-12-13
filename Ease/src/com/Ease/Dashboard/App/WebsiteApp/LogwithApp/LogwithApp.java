@@ -5,9 +5,9 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.AppInformation;
 import com.Ease.Dashboard.App.GroupApp;
-import com.Ease.Dashboard.App.Website;
 import com.Ease.Dashboard.App.WebsiteApp.GroupWebsiteApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.Profile.Profile;
