@@ -62,6 +62,10 @@ public class WebsocketMessage {
 		return new WebsocketMessage("removeApp", data, Who.OTHERTABS);
 	}
 	
+	public static WebsocketMessage logoutMessage() {
+		return new WebsocketMessage("logout", Who.OTHERTABS);
+	}
+	
 	protected String action;
 	protected JSONObject data;
 	protected Who 	who;
@@ -76,6 +80,12 @@ public class WebsocketMessage {
 		//this.mapStringJson = new HashMap<String, JSONObject>();
 		//this.mapStringArray = new HashMap<String, JSONArray>();
 		//this.mapStringString = new HashMap<String, String>();
+	}
+	
+	public WebsocketMessage(String action, Who who) {
+		this.action = action;
+		this.data = new JSONObject();
+		this.who = who;
 	}
 	
 	public String getAction() {

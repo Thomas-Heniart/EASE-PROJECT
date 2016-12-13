@@ -1,6 +1,7 @@
 package com.Ease.Servlet;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,6 +15,8 @@ import javax.servlet.http.HttpSession;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
+import com.Ease.websocket.WebsocketMessage;
+import com.Ease.websocket.WebsocketSession;
 
 /**
  * Servlet implementation class Logout
@@ -45,7 +48,9 @@ public class Logout extends HttpServlet {
 		User user = (User)session.getAttribute("user");
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		String retMsg;
+		
 		try {
+			sm.needToBeConnected();
 			user.getSessionSave().eraseFromDB(sm);
 			Cookie 	cookie = null;
 			Cookie 	cookies[] = request.getCookies();
@@ -63,6 +68,10 @@ public class Logout extends HttpServlet {
 					}
 				}
 			}
+			@SuppressWarnings("unchecked")
+			Map<String, WebsocketSession> browserWebsockets = (Map<String, WebsocketSession>) session.getAttribute("browserWebsockets");
+			sm.addWebsockets(browserWebsockets);
+			sm.addToSocket(WebsocketMessage.logoutMessage());
 			user.deconnect(sm);
 			session.invalidate();
 			retMsg = "Logged out.";
