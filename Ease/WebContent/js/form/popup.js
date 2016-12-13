@@ -87,7 +87,7 @@ var Popup = {
 		this.appId = function(id) {
 			self.oForm.app_id = id;
 			if (id == null)
-				self.oForm.setPostName('addApp');
+				self.oForm.setPostName('AddClassicApp');
 		}
 		this.setPostName = function(aString) {
 			self.oForm.setPostName(aString);
