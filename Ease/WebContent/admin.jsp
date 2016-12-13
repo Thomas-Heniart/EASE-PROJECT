@@ -60,7 +60,7 @@
 <script src="js/selectFx.js"></script>
 <link rel="stylesheet" type="text/css" href="component.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
-<%com.Ease.session.User user = (com.Ease.session.User) (session.getAttribute("User"));%>
+<%com.Ease.Dashboard.User.User user = (com.Ease.Dashboard.User.User) (session.getAttribute("user"));%>
 </head>
 
 
@@ -69,7 +69,7 @@
 	<%@ page import="java.util.Base64.Encoder"%>
 	<%@ page import="java.nio.charset.StandardCharsets"%>
 	<%
-		if (session.getValue("User") != null && ((User)session.getValue("User")).isAdmin(session.getServletContext())) {
+		if (session.getAttribute("user") != null && ((User)session.getAttribute("user")).isAdmin()) {
 	%>
 	<%@ include file="templates/Header.jsp"%>
 	<div id="loggedBody">

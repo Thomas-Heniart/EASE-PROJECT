@@ -43,7 +43,7 @@ public class Registration extends HttpServlet {
 		HttpSession session = request.getSession();
 		String invitationCode = request.getParameter("invitationCode");
 		String email = request.getParameter("email");
-		User user = (User) session.getAttribute("User");
+		User user = (User) session.getAttribute("user");
 		RequestDispatcher rd = null;
 		String dispatch;
 		if (invitationCode == null || email == null)

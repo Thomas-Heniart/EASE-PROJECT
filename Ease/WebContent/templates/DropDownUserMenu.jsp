@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ page import="com.Ease.Dashboard.User.User"%>
 <%
-	String UserName = ((User) (session.getAttribute("User"))).getFirstName();
+	String UserName = ((User) (session.getAttribute("user"))).getFirstName();
 %>
 <div class='userSettingsContainer'>
 	<a id="userSettingsButton"><i class="fa fa-fw fa-user"></i> <span><%=UserName%></span></a>

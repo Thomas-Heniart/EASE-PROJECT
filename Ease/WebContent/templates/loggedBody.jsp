@@ -45,7 +45,7 @@ response.addCookie(email);
 %>
 <c:set var="session"		scope="session" value="${pageContext.getSession()}"/>
 <c:set var="servletContext" scope="session" value="${session.getServletContext()}"/>
-<c:set var="user"			scope="session" value='${session.getAttribute("User")}'/>
+<c:set var="user"			scope="session" value='${session.getAttribute("user")}'/>
 <c:set var="colors"			scope="session" value='${servletContext.getAttribute("Colors")}'/>
 <c:set var="dashboardColumns" scope="session" value="${user.getProfileColumns()}"/>
 <c:set var="catalog"	scope="session" value='${servletContext.getAttribute("catalog")}'/>

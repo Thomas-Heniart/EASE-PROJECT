@@ -10,7 +10,7 @@
 		src="resources/images/logo.png"></a>
 
 	<%
-		if (session.getAttribute("User") != null) {
+		if (session.getAttribute("user") != null) {
 	%>
 	<script src="js/logout.js"></script>
 	<%@ include file="DropDownUserMenu.jsp"%>
