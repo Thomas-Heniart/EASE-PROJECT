@@ -129,7 +129,7 @@ public class Website {
 	}
 	
 	public void loadLoginWithWebsites(DataBaseConnection db, Catalog catalog) throws GeneralException {
-		ResultSet rs = db.get("SELECT website_logwith_id FROM websitesLogWithMap WHERE website_id=" + this.db_id + ";");
+		ResultSet rs = db.get("SELECT loginWithWebsites.website_id FROM loginWithWebsites JOIN websitesLogWithMap ON loginWithWebsites.id = website_logwith_id WHERE websitesLogWithMap.website_id=" + this.db_id + ";");
 		try {
 			while (rs.next()) {
 				this.loginWithWebsites.add(catalog.getWebsiteWithDBid(rs.getString(1)));
