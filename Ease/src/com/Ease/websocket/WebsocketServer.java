@@ -71,7 +71,8 @@ public class WebsocketServer {
 			else {
 				@SuppressWarnings("unchecked")
 				Map<String, WebsocketSession> browserWebsockets = (Map<String, WebsocketSession>) httpSession.getAttribute("browserWebsockets");
-				browserWebsockets.remove(session.getId());
+				if (browserWebsockets != null)
+					browserWebsockets.remove(session.getId());
 				System.out.println(user == null);
 				user.removeWebsocket(session);
 			}
