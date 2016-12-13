@@ -28,6 +28,22 @@ function onMessage(event) {
     	    profiles[profile_index].remove();
     	}
     	console.log(profiles);
+    } else if (action === "moveProfile") {
+    	easeDashboard.columns.each(function(){
+			if (!($(this).find('.item').length)){
+				$(this).width('24.8%');
+			}
+		});
+    	var profile_id = data.profile_id;
+    	var profileIdx = data.profileIdx;
+    	var columnIdx = data.columnIdx;
+    	var profile = $("#" + profile_id + ".item");
+    	$(".dashboardColumn:nth-child(" + columnIdx + ") .item:nth-child(" + profileIdx + ")").append(profile);
+    	easeDashboard.columns.each(function(){
+			if (!($(this).find('.item').length)){
+				$(this).width(0);
+			}
+		});
     }
 }
 

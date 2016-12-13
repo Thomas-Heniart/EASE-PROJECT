@@ -217,11 +217,12 @@ var Dashboard = function(rootEl){
 					}
 				});
 				postHandler.post(
-					"moveProfile",
+					"MoveProfile",
 					{
-						columnIdx: item.parent().index() + 1,
-						profileIdx: item.index(),
-						profileId: item.attr('id')
+						columnIdxDest: (item.parent().index() + 1),
+						positionDest: item.index(),
+						profileId: item.attr('id'),
+						socketId: socketId
 					},
 					function(){},
 					function(retMsg){},

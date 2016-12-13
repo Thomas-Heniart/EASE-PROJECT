@@ -1,10 +1,13 @@
 package com.Ease.websocket;
 
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.Profile.Profile;
+import com.Ease.Utils.ServletManager;
 
 @SuppressWarnings("unchecked")
 public class WebsocketMessage {
@@ -133,5 +136,13 @@ public class WebsocketMessage {
 	
 	public String getJSONString() {
 		return this.getJSON().toString();
+	}
+
+	public static WebsocketMessage moveProfileMessage(String profile_id, String profileIdx, String columnIdx) {
+		JSONObject data = new JSONObject();
+		data.put("profileIdx", profileIdx);
+		data.put("columnIdx", columnIdx);
+		data.put("profile_id", profile_id);
+		return new WebsocketMessage("moveProfile", data, Who.OTHERTABS);
 	}
 }

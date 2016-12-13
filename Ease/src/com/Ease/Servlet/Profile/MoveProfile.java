@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
+import com.Ease.websocket.WebsocketMessage;
 
 /**
  * Servlet implementation class MoveProfile
@@ -58,6 +59,8 @@ public class MoveProfile extends HttpServlet {
 				throw new GeneralException(ServletManager.Code.ClientError, "Wrong position.");
 			user.moveProfile(Integer.parseInt(profileId), Integer.parseInt(columnIdx), Integer.parseInt(position), sm);
 			sm.setResponse(ServletManager.Code.Success, "Profile moved.");
+			sm.addWebsockets(user.getWebsockets());
+			sm.addToSocket(WebsocketMessage.moveProfileMessage(profileId, position, columnIdx));
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		} catch (NumberFormatException e) {
