@@ -146,5 +146,12 @@ public class App {
 	public void setPosition(int pos, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		db.set("UPDATE apps SET position=" + pos + " WHERE id=" + this.db_id + ";");
+		this.position = pos;
+	}
+	
+	public void setProfile(Profile profile, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		db.set("UPDATE apps SET profileId=" + profile.getDBid() + " WHERE id=" + this.db_id + ";");
+		this.profile = profile;
 	}
 }

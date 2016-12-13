@@ -173,7 +173,7 @@ public class Profile {
 		for (App app : apps) {
 			app.removeFromDB(sm);
 		}
-		if (this.groupProfile == null || this.groupProfile.isCommon() == false) {
+		if (this.groupProfile == null || (this.groupProfile.isCommon() == false && this.groupProfile.getPerms().havePermission(ProfilePermissions.Perm.DELETE.ordinal()))) {
 			this.infos.removeFromDB(sm);
 		}
 		db.set("DELETE FROM profiles WHERE id=" + this.db_id + ";");
@@ -198,6 +198,7 @@ public class Profile {
 	public void setColumnIdx(int idx, ServletManager sm) throws GeneralException{
 		DataBaseConnection db = sm.getDB();
 		db.set("UPDATE profiles SET column_idx=" + idx + " WHERE id=" + this.db_id + ";");
+		this.columnIdx = idx;
 	}
 	
 	public int getPositionIdx() {
@@ -206,6 +207,7 @@ public class Profile {
 	public void setPositionIdx(int idx, ServletManager sm) throws GeneralException{
 		DataBaseConnection db = sm.getDB();
 		db.set("UPDATE profiles SET position_idx=" + idx + " WHERE id=" + this.db_id + ";");
+		this.posIdx = idx;
 	}
 	
 	public GroupProfile getGroupProfile() {
@@ -295,6 +297,9 @@ public class Profile {
 		for (int i = 0; i < apps.size(); ++i) {
 			if (apps.get(i).getPosition() != i) {
 				apps.get(i).setPosition(i, sm);
+			}
+			if (apps.get(i).getProfile() != this) {
+				apps.get(i).setProfile(this, sm);
 			}
 		}
 		db.commitTransaction(transaction);
