@@ -139,6 +139,10 @@ public class App {
 		return position;
 	}
 	
+	public String getType() {
+		return this.getClass().getName();
+	}
+	
 	public void setPosition(int pos, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		db.set("UPDATE apps SET position=" + pos + " WHERE id=" + this.db_id + ";");

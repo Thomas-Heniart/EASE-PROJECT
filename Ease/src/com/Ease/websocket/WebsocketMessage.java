@@ -66,20 +66,18 @@ public class WebsocketMessage {
 		return new WebsocketMessage("logout", Who.OTHERTABS);
 	}
 	
+	public static WebsocketMessage pingMessage() {
+		return new WebsocketMessage("ping", Who.THISTAB);
+	}
+	
 	protected String action;
 	protected JSONObject data;
 	protected Who 	who;
-	//protected Map<String, JSONObject> mapStringJson;
-	//protected Map<String, String> mapStringString;
-	//protected Map<String, JSONArray> mapStringArray;
 	
 	public WebsocketMessage(String action, JSONObject data, Who who) {
 		this.action = action;
 		this.data = data;
 		this.who = who;
-		//this.mapStringJson = new HashMap<String, JSONObject>();
-		//this.mapStringArray = new HashMap<String, JSONArray>();
-		//this.mapStringString = new HashMap<String, String>();
 	}
 	
 	public WebsocketMessage(String action, Who who) {

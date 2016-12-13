@@ -14,5 +14,12 @@ function onMessage(event) {
     	addProfileToDashboard(data.name, data.color, data.profile_id);
     } else if (action === "logout") {
     	window.location.replace("index.jsp");
+    } else if (action === "ping") {
+    	pingServer();
     }
+}
+
+function pingServer() {
+	$.get("localhost:8080/connectionWithCookies");
+	setTimeout(pingServer(), 10000);
 }
