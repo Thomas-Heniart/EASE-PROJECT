@@ -170,10 +170,9 @@ public class Profile {
 		for (App app : apps) {
 			app.removeFromDB(sm);
 		}
-		if (this.groupProfile == null || this.groupProfile.isCommon() == false) {
-			this.infos.removeFromDB(sm);
-		}
 		db.set("DELETE FROM profiles WHERE id=" + this.db_id + ";");
+		if (this.groupProfile == null || this.groupProfile.isCommon() == false)
+			this.infos.removeFromDB(sm);
 		db.commitTransaction(transaction);
 	}
 	

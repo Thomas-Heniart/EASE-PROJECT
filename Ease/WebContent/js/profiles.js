@@ -240,8 +240,9 @@ var Profile = function(rootEl){
 		if (self.appContainer.find('.siteLinkBox').length > 0)
 			deleteProfilePopup.open(self);
 		else {
-			postHandler.post('deleteProfile', {
-				index : self.id
+			postHandler.post('RemoveProfile', {
+				profileId : self.id,
+				socketId: socketId
 			}, function() {
 				easeLoadingIndicator.hide();
 			}, function(retMsg) {
