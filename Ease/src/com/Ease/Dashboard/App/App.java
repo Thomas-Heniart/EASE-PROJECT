@@ -76,7 +76,7 @@ public class App {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = new Date();
 		String registrationDate = dateFormat.format(date);
-		String appDBid = db.set("INSERT INTO apps VALUES(NULL, " + profile.getDBid() + ", " + position + ", " + registrationDate + ", " + type + ", " + infos.getDb_id() + ", NULL);").toString();
+		String appDBid = db.set("INSERT INTO apps VALUES (NULL, " + profile.getDBid() + ", " + position + ", '" + registrationDate + "', NULL, '" + type + "', 1, " + infos.getDb_id() + ", NULL);").toString();
 		elevator.put("appInfos", infos);
 		elevator.put("insertDate", registrationDate);
 		db.commitTransaction(transaction);

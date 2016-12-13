@@ -17,7 +17,7 @@ public class AppInformation {
 	
 	public static AppInformation createAppInformation(String name, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		int db_id = db.set("INSERT INTO appInformations values (null, '" + name + "');");
+		int db_id = db.set("INSERT INTO appsInformations values (null, '" + name + "');");
 		return new AppInformation(String.valueOf(db_id), name);
 	}
 	

@@ -63,7 +63,7 @@ public class WebsiteApp extends App {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		String appDBid = App.createApp(profile, position, name, "websiteApp", elevator, sm);
-		String websiteAppDBid = db.set("INSERT INTO websiteApp VALUES(NULL, " + site.getDb_id() + ", " + appDBid + ", NULL, " + type + ");").toString();
+		String websiteAppDBid = db.set("INSERT INTO websiteApps VALUES(NULL, " + site.getDb_id() + ", " + appDBid + ", NULL);").toString();
 		elevator.put("appDBid", appDBid);
 		db.commitTransaction(transaction);
 		return websiteAppDBid;
@@ -74,7 +74,7 @@ public class WebsiteApp extends App {
 		int transaction = db.startTransaction();
 		Map<String, Object> elevator = new HashMap<String, Object>();
 		String appDBid = App.createApp(profile, position, name, "websiteApp", elevator, sm);
-		String websiteAppDBid = db.set("INSERT INTO websiteApps VALUES(NULL, " + site.getDb_id() + ", " + appDBid + ", NULL, 'emptyApp');").toString();
+		String websiteAppDBid = db.set("INSERT INTO websiteApps VALUES(NULL, " + site.getDb_id() + ", " + appDBid + ", NULL);").toString();
 		db.commitTransaction(transaction);
 		return new WebsiteApp(appDBid, profile, position, (AppInformation)elevator.get("appInfos"), null, (String)elevator.get("registrationDate"), ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, null);
 	}

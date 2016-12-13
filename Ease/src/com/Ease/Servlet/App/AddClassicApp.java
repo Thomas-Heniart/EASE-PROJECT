@@ -17,7 +17,6 @@ import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 
 /**
@@ -71,7 +70,7 @@ public class AddClassicApp extends HttpServlet {
 				site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(websiteId));
 				infos = site.getNeededInfos(sm);
 				ClassicApp newApp = profile.addClassicApp(name, site, password, infos, sm);
-				sm.setResponse(ServletManager.Code.Success, "ClassicApp added.");
+				sm.setResponse(ServletManager.Code.Success, String.valueOf(newApp.getSingle_id()));
 			} catch (NumberFormatException e) {
 				sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");
 			}
