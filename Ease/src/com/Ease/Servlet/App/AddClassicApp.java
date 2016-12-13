@@ -64,7 +64,7 @@ public class AddClassicApp extends HttpServlet {
 			Map<String, String> infos = null;
 			if (name == null || name.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
-			else if (password == null || Regex.isPassword(password) == false)
+			else if (password == null)
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong password.");
 			try {
 				Profile profile = user.getProfile(Integer.parseInt(profileId));
