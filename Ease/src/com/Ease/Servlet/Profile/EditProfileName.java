@@ -1,4 +1,4 @@
-package com.Ease.Servlet;
+package com.Ease.Servlet.Profile;
 
 import java.io.IOException;
 
@@ -15,16 +15,16 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class MoveProfile
+ * Servlet implementation class EditProfileName
  */
-@WebServlet("/MoveProfile")
-public class MoveProfile extends HttpServlet {
+@WebServlet("/EditProfileName")
+public class EditProfileName extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public MoveProfile() {
+    public EditProfileName() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -47,17 +47,14 @@ public class MoveProfile extends HttpServlet {
 		
 		try {
 			sm.needToBeConnected();
+			String name = sm.getServletParam("name", true);
 			String profileId = sm.getServletParam("profileId", true);
-			String columnIdx = sm.getServletParam("columnIdx", true);
-			String position = sm.getServletParam("position", true);
-			if (profileId == null || profileId.isEmpty())
-				throw new GeneralException(ServletManager.Code.ClientError, "Wrong profileId.");
-			if (columnIdx == null || columnIdx.isEmpty())
-				throw new GeneralException(ServletManager.Code.ClientError, "Wrong columnIdx.");
-			if (position == null || position.isEmpty())
-				throw new GeneralException(ServletManager.Code.ClientError, "Wrong position.");
-			user.moveProfile(Integer.parseInt(profileId), Integer.parseInt(columnIdx), Integer.parseInt(position), sm);
-			sm.setResponse(ServletManager.Code.Success, "Profile moved.");
+			if (name == null || name.equals(""))
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong name.");
+			else if (profileId == null || profileId.isEmpty())
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong profileId.");
+			user.getProfile(Integer.parseInt(profileId)).setName(name, sm);
+			sm.setResponse(ServletManager.Code.Success, "Name changed.");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		} catch (NumberFormatException e) {

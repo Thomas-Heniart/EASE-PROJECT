@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.mail.MessagingException;
 
 import com.Ease.Context.Group.Group;
+import com.Ease.Context.Group.GroupManager;
 import com.Ease.Utils.Crypto.CodeGenerator;
 
 public class Invitation {
@@ -44,7 +45,7 @@ public class Invitation {
 
 	public static void sendInvitation(String email, String name, String group_id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		String infraName = Group.getGroup(group_id, sm).getInfra().getName();
+		String infraName = GroupManager.getGroupManager(sm).getGroupFromDBid(group_id).getInfra().getName();
 		String invitationCode = CodeGenerator.generateNewCode();
 		db.set("UPDATE invitations SET linkCode='" + invitationCode + "' WHERE email='" + email + "'");
 		Mail mailToSend;

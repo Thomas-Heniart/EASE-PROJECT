@@ -506,6 +506,14 @@ public class User {
 		this.updateProfilesIndex(sm);
 		db.commitTransaction(transaction);
 	}
+	
+	public void moveApp(int appId, int profileIdDest, int positionDest, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		App app = this.getApp(appId);
+		Profile profileDest = this.getProfile(profileIdDest);
+		db.commitTransaction(transaction);
+	}
 
 	public void putAllSockets(Map<String, WebsocketSession> unconnectedSessions) throws GeneralException {
 		if (ServletManager.debug && unconnectedSessions == null)

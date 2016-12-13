@@ -1,4 +1,4 @@
-package com.Ease.Servlet;
+package com.Ease.Servlet.Profile;
 
 import java.io.IOException;
 
@@ -10,26 +10,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.Ease.Context.Catalog.Catalog;
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.Website;
-import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
-import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class AddLogwithApp
+ * Servlet implementation class MoveProfile
  */
-@WebServlet("/AddLogwithApp")
-public class AddLogwithApp extends HttpServlet {
+@WebServlet("/MoveProfile")
+public class MoveProfile extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddLogwithApp() {
+    public MoveProfile() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -52,24 +47,21 @@ public class AddLogwithApp extends HttpServlet {
 		
 		try {
 			sm.needToBeConnected();
-			String name = sm.getServletParam("name", true);
-			String websiteId = sm.getServletParam("websiteId", true);
 			String profileId = sm.getServletParam("profileId", true);
-			String logwithId = sm.getServletParam("logwithId", true);
-			Website site = null;
-			if (name == null || name.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
-			try {
-				Profile profile = user.getProfile(Integer.parseInt(profileId));
-				App logwith = user.getApp(Integer.parseInt(logwithId));
-				site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(websiteId));
-				LogwithApp newApp = profile.addLogwithApp(name, site, logwith, sm);
-				sm.setResponse(ServletManager.Code.Success, "ClassicApp added.");
-			} catch (NumberFormatException e) {
-				sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");
-			}
+			String columnIdx = sm.getServletParam("columnIdxDest", true);
+			String position = sm.getServletParam("positionDest", true);
+			if (profileId == null || profileId.isEmpty())
+				throw new GeneralException(ServletManager.Code.ClientError, "Wrong profileId.");
+			if (columnIdx == null || columnIdx.isEmpty())
+				throw new GeneralException(ServletManager.Code.ClientError, "Wrong columnIdx.");
+			if (position == null || position.isEmpty())
+				throw new GeneralException(ServletManager.Code.ClientError, "Wrong position.");
+			user.moveProfile(Integer.parseInt(profileId), Integer.parseInt(columnIdx), Integer.parseInt(position), sm);
+			sm.setResponse(ServletManager.Code.Success, "Profile moved.");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
+		} catch (NumberFormatException e) {
+			sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");
 		}
 		sm.sendResponse();
 	}

@@ -1,4 +1,4 @@
-package com.Ease.Servlet;
+package com.Ease.Servlet.App;
 
 import java.io.IOException;
 import java.util.Map;

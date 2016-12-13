@@ -1,4 +1,4 @@
-package com.Ease.Servlet;
+package com.Ease.Servlet.App;
 
 import java.io.IOException;
 
@@ -12,20 +12,19 @@ import javax.servlet.http.HttpSession;
 
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class EditProfileColor
+ * Servlet implementation class RemoveApp
  */
-@WebServlet("/EditProfileColor")
-public class EditProfileColor extends HttpServlet {
+@WebServlet("/RemoveApp")
+public class RemoveApp extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public EditProfileColor() {
+    public RemoveApp() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -48,14 +47,11 @@ public class EditProfileColor extends HttpServlet {
 		
 		try {
 			sm.needToBeConnected();
-			String color = sm.getServletParam("color", true);
-			String profileId = sm.getServletParam("profileId", true);
-			if (color == null || !Regex.isColor(color))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong color.");
-			else if (profileId == null || profileId.isEmpty())
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong profileId.");
-			user.getProfile(Integer.parseInt(profileId)).setColor(color, sm);
-			sm.setResponse(ServletManager.Code.Success, "Color changed.");
+			String appId = sm.getServletParam("appId", true);
+			if (appId == null || appId.isEmpty())
+				throw new GeneralException(ServletManager.Code.ClientError, "Wrong appId.");
+			user.removeApp(Integer.parseInt(appId), sm);
+			sm.setResponse(ServletManager.Code.Success, "App removed.");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		} catch (NumberFormatException e) {
@@ -63,4 +59,5 @@ public class EditProfileColor extends HttpServlet {
 		}
 		sm.sendResponse();
 	}
+
 }
