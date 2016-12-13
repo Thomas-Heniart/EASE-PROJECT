@@ -8,12 +8,12 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 
 import com.Ease.Context.Catalog.Catalog;
+import com.Ease.Context.Catalog.Website;
 import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.AppInformation;
 import com.Ease.Dashboard.App.AppPermissions;
 import com.Ease.Dashboard.App.GroupApp;
-import com.Ease.Dashboard.App.Website;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.GroupClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.GroupLogwithApp;
 import com.Ease.Dashboard.Profile.GroupProfile;

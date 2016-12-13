@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
+import com.Ease.websocket.WebsocketMessage;
 
 /**
  * Servlet implementation class RemoveProfile
@@ -52,6 +53,8 @@ public class RemoveProfile extends HttpServlet {
 				throw new GeneralException(ServletManager.Code.ClientError, "Wrong profileId.");
 			user.removeProfile(Integer.parseInt(profileId), sm);
 			sm.setResponse(ServletManager.Code.Success, "Profile removed.");
+			sm.addWebsockets(user.getWebsockets());
+			sm.addToSocket(WebsocketMessage.removeProfileMessage(profileId));
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		} catch (NumberFormatException e) {

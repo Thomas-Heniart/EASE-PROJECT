@@ -6,7 +6,6 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
-import com.Ease.Dashboard.App.Website;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;

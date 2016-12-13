@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.Ease.Context.Catalog.Catalog;
+import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.Website;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
