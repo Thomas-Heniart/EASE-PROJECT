@@ -56,7 +56,7 @@ public class MoveApp extends HttpServlet {
 				throw new GeneralException(ServletManager.Code.ClientError, "Wrong profileId.");
 			if (position == null || position.isEmpty())
 				throw new GeneralException(ServletManager.Code.ClientError, "Wrong position.");
-			user.moveApp(Integer.parseInt(appId), Integer.parseInt(profileId), Integer.parseInt(position));
+			user.moveApp(Integer.parseInt(appId), Integer.parseInt(profileId), Integer.parseInt(position), sm);
 			sm.setResponse(ServletManager.Code.Success, "App moved.");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
@@ -65,5 +65,4 @@ public class MoveApp extends HttpServlet {
 		}
 		sm.sendResponse();
 	}
-
 }

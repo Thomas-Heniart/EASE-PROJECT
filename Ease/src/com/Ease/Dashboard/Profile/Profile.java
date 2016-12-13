@@ -165,13 +165,16 @@ public class Profile {
 	}
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
-		if (this.groupProfile != null && this.groupProfile.isCommon()) {
+		if (this.groupProfile != null && (this.groupProfile.isCommon() || !this.groupProfile.getPerms().havePermission(ProfilePermissions.Perm.DELETE.ordinal()))) {
 			throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permission to remove this profile.");
 		}
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		for (App app : apps) {
 			app.removeFromDB(sm);
+		}
+		if (this.groupProfile == null || this.groupProfile.isCommon() == false) {
+			this.infos.removeFromDB(sm);
 		}
 		db.set("DELETE FROM profiles WHERE id=" + this.db_id + ";");
 		if (this.groupProfile == null || this.groupProfile.isCommon() == false)
@@ -197,6 +200,7 @@ public class Profile {
 	public void setColumnIdx(int idx, ServletManager sm) throws GeneralException{
 		DataBaseConnection db = sm.getDB();
 		db.set("UPDATE profiles SET column_idx=" + idx + " WHERE id=" + this.db_id + ";");
+		this.columnIdx = idx;
 	}
 	
 	public int getPositionIdx() {
@@ -205,6 +209,7 @@ public class Profile {
 	public void setPositionIdx(int idx, ServletManager sm) throws GeneralException{
 		DataBaseConnection db = sm.getDB();
 		db.set("UPDATE profiles SET position_idx=" + idx + " WHERE id=" + this.db_id + ";");
+		this.posIdx = idx;
 	}
 	
 	public GroupProfile getGroupProfile() {
@@ -294,6 +299,9 @@ public class Profile {
 		for (int i = 0; i < apps.size(); ++i) {
 			if (apps.get(i).getPosition() != i) {
 				apps.get(i).setPosition(i, sm);
+			}
+			if (apps.get(i).getProfile() != this) {
+				apps.get(i).setProfile(this, sm);
 			}
 		}
 		db.commitTransaction(transaction);

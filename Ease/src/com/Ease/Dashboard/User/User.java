@@ -17,6 +17,7 @@ import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.Profile.Profile;
+import com.Ease.Dashboard.Profile.ProfilePermissions;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Invitation;
@@ -501,8 +502,11 @@ public class User {
 			throw new GeneralException(ServletManager.Code.ClientError, "Wrong columnIdx.");
 		if (position < 0 || position > this.profile_columns.get(columnIdx).size())
 			throw new GeneralException(ServletManager.Code.ClientError, "Wrong position.");
+		if (columnIdx == profile.getColumnIdx() && position > profile.getPositionIdx()) {
+			position--;
+		}
 		this.profile_columns.get(profile.getColumnIdx()).remove(profile);
-		this.profile_columns.get(columnIdx).add(profile);
+		this.profile_columns.get(columnIdx).add(position, profile);
 		this.updateProfilesIndex(sm);
 		db.commitTransaction(transaction);
 	}
@@ -512,6 +516,23 @@ public class User {
 		int transaction = db.startTransaction();
 		App app = this.getApp(appId);
 		Profile profileDest = this.getProfile(profileIdDest);
+		if (profileDest == app.getProfile()) {
+			if (positionDest > app.getPosition())
+				positionDest--;
+			profileDest.getApps().remove(app);
+			profileDest.getApps().add(positionDest, app);
+			profileDest.updateAppsIndex(sm);
+		} else {
+			if (profileDest.getGroupProfile() == null || (profileDest.getGroupProfile().isCommon() == false && profileDest.getGroupProfile().getPerms().havePermission(ProfilePermissions.Perm.ADDAPP.ordinal())))
+				throw new GeneralException(ServletManager.Code.ClientWarning, "You don't have the permission to add app in this profile.");
+			Profile profileSrc = app.getProfile();
+			if (profileSrc.getGroupProfile() == null || (profileSrc.getGroupProfile().isCommon() == false && profileSrc.getGroupProfile().getPerms().havePermission(ProfilePermissions.Perm.MOVE_APP_OUTSIDE.ordinal())))
+				throw new GeneralException(ServletManager.Code.ClientWarning, "You don't have the permission to add app in this profile.");
+			profileSrc.getApps().remove(app);
+			profileSrc.updateAppsIndex(sm);
+			profileDest.getApps().add(positionDest, app);
+			profileDest.updateAppsIndex(sm);
+		}
 		db.commitTransaction(transaction);
 	}
 
