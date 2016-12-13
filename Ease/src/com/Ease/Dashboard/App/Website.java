@@ -169,7 +169,7 @@ public class Website {
 		while (it.hasNext()) {
 			res += it.next().getSingleId();
 			if (it.hasNext())
-				res += ", ";
+				res += ",";
 		}
 		return res;
 	}

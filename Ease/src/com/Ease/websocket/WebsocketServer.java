@@ -73,7 +73,6 @@ public class WebsocketServer {
 				Map<String, WebsocketSession> browserWebsockets = (Map<String, WebsocketSession>) httpSession.getAttribute("browserWebsockets");
 				if (browserWebsockets != null)
 					browserWebsockets.remove(session.getId());
-				System.out.println(user == null);
 				user.removeWebsocket(session);
 			}
 		} catch (IllegalStateException ise) {
