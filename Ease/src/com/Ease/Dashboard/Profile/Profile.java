@@ -165,7 +165,7 @@ public class Profile {
 	}
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
-		if (this.groupProfile != null && this.groupProfile.isCommon()) {
+		if (this.groupProfile != null && (this.groupProfile.isCommon() || !this.groupProfile.getPerms().havePermission(ProfilePermissions.Perm.DELETE.ordinal()))) {
 			throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permission to remove this profile.");
 		}
 		DataBaseConnection db = sm.getDB();
@@ -173,10 +173,12 @@ public class Profile {
 		for (App app : apps) {
 			app.removeFromDB(sm);
 		}
-		if (this.groupProfile == null || (this.groupProfile.isCommon() == false && this.groupProfile.getPerms().havePermission(ProfilePermissions.Perm.DELETE.ordinal()))) {
+		if (this.groupProfile == null || this.groupProfile.isCommon() == false) {
 			this.infos.removeFromDB(sm);
 		}
 		db.set("DELETE FROM profiles WHERE id=" + this.db_id + ";");
+		if (this.groupProfile == null || this.groupProfile.isCommon() == false)
+			this.infos.removeFromDB(sm);
 		db.commitTransaction(transaction);
 	}
 	
