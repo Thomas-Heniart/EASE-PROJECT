@@ -64,6 +64,9 @@ $(document).ready(function(){
 		<p id="userName" style="display:none;"><%= new String(Base64.getDecoder().decode(fname), StandardCharsets.UTF_8) %></p>
 		<div class="form show" id="knownUser">			
 			<div class="savedUser">
+				<div class="line emoji">
+					<img src="resources/emojis/wink.png" />
+				</div>
 				<h2 class="title">Hello <%= new String(Base64.getDecoder().decode(fname), StandardCharsets.UTF_8) %>,</h2>
 				<div class="line">
 					<p>Please type your password to access your space</p>
@@ -96,6 +99,9 @@ $(document).ready(function(){
 		<div class="form <% if (!knownUser){ %> show <% }%>" id="unknownUser" >
 <!--			<img class='ease-logo' src='resources/icons/Ease_Logo_couleur.png'/>-->
 			<form action="connection" method="POST" id="loginForm" role="form">
+				<div class="line emoji">
+					<img src="resources/emojis/smile.png" />
+				</div>
 				<h2 class="title">Hello,</h2>
 				<div class="line">
 					<input id="email" name="email" type="email" id="input-8" placeholder="Email"/>

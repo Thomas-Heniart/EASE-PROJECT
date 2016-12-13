@@ -34,6 +34,7 @@ pageEncoding="UTF-8"%>
 <link rel="stylesheet" type="text/css" href="css/lib/dropDownMenu/dropdown.css" />
 <script src="js/selectFx.js"></script>
 <script src="js/jquery.complexify.min.js"></script>
+<script type="text/javascript">$crisp=[];CRISP_WEBSITE_ID="6e9fe14b-66f7-487c-8ac9-5912461be78a";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.im/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
 </head>
 
 <body id="landingBody">
@@ -50,19 +51,16 @@ pageEncoding="UTF-8"%>
 						<a href="#page-top"></a>
 					</li>
 					<li>
-						<a href="https://ease.space" target="_blank">Connexion</a>
-					</li>
-					<li>
-						<a class="page-scroll" href="#features">Fonctionnalités</a>
-					</li>
-					<li>
 						<a href="http://www.ease-app.co/secure" target="_blank">Sécurité</a>
 					</li>
 					<li>
-						<a href="#">Equipe</a>
+						<a href="equipe.jsp">Equipe</a>
 					</li>
 					<li>
-						<a href="#">Contact</a>
+						<a href="contact.jsp">Contact</a>
+					</li>
+					<li>
+						<a href="https://ease.space" target="_blank">Connexion</a>
 					</li>
 				</ul>
 			</div>
@@ -71,8 +69,8 @@ pageEncoding="UTF-8"%>
 	<header>
 		<div class="container">
 			<div class="intro-text">
-				<div class="intro-heading">A simple homepage to access your web</div>
-				<div class="intro-lead-in">Never bother about authentication again</div>
+				<div class="intro-heading">Une page d’accueil pour accéder à votre web, simplement</div>
+				<div class="intro-lead-in">Ne vous souciez plus jamais de vos mots de passe</div>
 				<a href="#services" class="btn btn-xl signUpButton">Commencez gratuitement !</a>
 			</div>
 		</div>
@@ -81,12 +79,11 @@ pageEncoding="UTF-8"%>
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-12 text-center">
-					<h2 class="section-heading">Here's how it works</h2>
-					<h3 class="section-subheading text-muted">Checkout this video for details</h3>
+					<h2 class="section-heading">Comment ça marche ?</h2>
+					<h3 class="section-subheading text-muted">Regardez la vidéo ;)</h3>
 				</div>
 			</div>
 			<div class="mockupPresentation">
-				<img src="resources/images/MacBookMockup.png"/>
 				<video width="100%" height="auto" controls>
 					<source src="resources/videos/video1.mp4" type="video/mp4">
 						Your browser does not support the video tag.
@@ -99,7 +96,7 @@ pageEncoding="UTF-8"%>
 				<div class="row">
 					<div class="col-lg-12 text-center">
 						<h2 class="section-heading">Avantages</h2>
-						<h3 class="section-subheading text-muted">Sounds good :)</h3>
+						<h3 class="section-subheading text-muted">Nous sommes là pour vous faciliter la vie</h3>
 					</div>
 				</div>
 				<div class="row w70 showcase">
@@ -143,8 +140,8 @@ pageEncoding="UTF-8"%>
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-12 text-center">
-						<h2 class="section-heading">Features</h2>
-						<h3 class="section-subheading text-muted">Some tasty stuff :)</h3>
+						<h2 class="section-heading">Fonctionnalités</h2>
+						<h3 class="section-subheading text-muted">Rien que pour vous !</h3>
 					</div>
 				</div>
 				<div class="row">
@@ -266,8 +263,8 @@ pageEncoding="UTF-8"%>
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-12 text-center">
-						<h2 class="section-heading">Feedbacks</h2>
-						<h3 class="section-subheading text-muted">We <i class="fa fa-heart" aria-hidden="true"></i> our customers and they <i class="fa fa-heart" aria-hidden="true"></i> us too</h3>
+						<h2 class="section-heading">Ce que disent nos utilisateurs</h2>
+						<h3 class="section-subheading text-muted">Notre priorité, c’est vous !</h3>
 					</div>
 				</div>
 				<div class="row">
@@ -298,7 +295,7 @@ pageEncoding="UTF-8"%>
 							<img src="resources/landing/clem.png"/>
 						</div>
 						<div class="message">
-							<p class="mess">"J’aime beaucoup voyager et Ease me permets de le faire sans ordinateur ! La plateforme étant disponible depuis n’importe où, j’accède facilement à l'intégralité de mon web."
+							<p class="mess">"J’utilise Ease pour accéder à l’ensemble de mon web depuis n’importe où ! Très pratique en stage ou en voyage lorsque je ne suis pas sur mon ordinateur personnel."
 							</p>
 							<a  target="_blank" href="https://fr.linkedin.com/in/clémentine-prud-homme-691945103">Clémentine Prud’homme</a>
 							<p class="position">Etudiante à l’EDHEC</p>
@@ -309,7 +306,7 @@ pageEncoding="UTF-8"%>
 							<img src="resources/landing/JBroux.png"/>
 						</div>
 						<div class="message">
-							<p class="mess">"En utilisant Ease, j’ai juste à cliquer sur des apps pour me connecter à mon web, aussi facilement que sur un smartphone en fait. Je ne vois plus de mots de passe de la journée, c'est la homepage parfaite." 
+							<p class="mess">"Ease me permet d’être sur le web depuis un  ordinateur aussi facilement que sur un smartphone: j’ai mes apps dans un dashboard, je clique dessus, je suis connecté !" 
 							</p>
 							<a target="_blank" href="https://uk.linkedin.com/in/rouxjeanbaptiste">Jean-Batiste Roux</a>
 							<p class="position">Account Manager à Barnebys</p>
@@ -325,51 +322,7 @@ pageEncoding="UTF-8"%>
 				</div>
 			</div>
 		</section>
-		<section id="footer">
-			<div class="container">
-				<div class="row">
-					<div class="left-part left">
-						<div class="menu-column">
-							<h3>Produit</h3>
-							<div class="links">
-								<a class="page-scroll" href="#features">Fonctionnalités</a>
-								<a href="http://www.ease-app.co/secure" target="_blank">Sécurité</a>
-								<a href="#">Créer un compte</a>
-								<a href="#">Se connecter</a>
-							</div>
-						</div>
-						<div class="menu-column">
-							<h3>Entreprise</h3>
-							<div class="links">
-								<a href="#">Equipe</a>
-								<a href="#">Partenaires</a>
-								<a href="#">CGV</a>
-								<a href="#">Nous contacter</a>
-							</div>
-						</div>
-					</div>
-					<div class="easeExplore right">
-						<div class="logo">
-							<img src="resources/icons/Ease_logo_blue.png"/>
-						</div>
-						<div class="social_links">
-							<div class="link">
-								<a href="https://www.facebook.com/EasePlatform/"  target="_blank"><i class="fa fa-facebook"></i></a>
-							</div>
-							<div class="link">
-								<a href="https://twitter.com/Ease_app"  target="_blank"><i class="fa fa-twitter"></i></a>
-							</div>
-							<div class="link">
-								<a href="https://www.linkedin.com/company/ease."  target="_blank"><i class="fa fa-linkedin"></i></a>
-							</div>
-							<div class="link">
-								<a href="https://www.instagram.com/ease_app/"  target="_blank"><i class="fa fa-instagram"></i></a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
+		<%@ include file="templates/landingPage/landingFooter.jsp" %>
 		<script src="js/landingPage.js"></script>
 		<script src="js/bootstrapjq.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
@@ -470,7 +423,7 @@ pageEncoding="UTF-8"%>
 			self.qRoot.find('#1').removeClass('show');					
 			self.handler.addClass('myshow');
 			$('body').css('overflow', 'hidden');
-		}
+		};
 		this.open = function(){
 			self.handler.addClass('myshow');
 			$('body').css('overflow', 'hidden');
@@ -514,7 +467,7 @@ pageEncoding="UTF-8"%>
 				loading.removeClass('show');
 			},
 			function(retMsg) {
-				alertMessage.text(retMsg);
+				alertMessage.text(retMsg.substring(2, retMsg.length));
 				alertMessage.css('color', '#24d666');
 				alertMessage.addClass('show');
 				if (retMsg[0] == '1'){
@@ -529,7 +482,7 @@ pageEncoding="UTF-8"%>
 				}
 			},
 			function(retMsg) {
-				alertMessage.text(retMsg);
+				alertMessage.text(retMsg.substring(2, retMsg.length));
 				alertMessage.css('color', '#ec555b')
 				alertMessage.addClass('show');
 				setTimeout(function(){
@@ -575,7 +528,7 @@ pageEncoding="UTF-8"%>
 				alertMessage.css('color', '#24d666');
 				alertMessage.addClass('show');
 				setTimeout(function() {
-					window.location= "index.jsp";
+					window.location = "index.jsp";
 				}, 750);
 			}, 
 			function(retMsg) {

@@ -80,7 +80,7 @@ var constructorForm = function(rootEl, parent) {
 			self.params[elem.qInput.attr('name')] = elem.getVal();
 		});
 		self.beforeSubmit();
-		params["socketId"] = socketId;
+		self.params["socketId"] = socketId;
 		postHandler.post(self.qRoot.attr('action'), self.params,
 				self.afterSubmit, self.successCallback, self.errorCallback);
 	};
@@ -138,7 +138,7 @@ var Form = {
 		this.site_id = null;
 		this.profile_id = null;
 		this.app_id = null;
-		this.postName = 'addApp';
+		this.postName = 'AddClassicApp';
 		this.helper = null;
 		this.setHelper = function(jqHelper) {
 			self.helper = jqHelper;
@@ -157,7 +157,6 @@ var Form = {
 					default:
 						break;
 				}
-				
 			}
 			self.checkInputs();
 		}
@@ -185,8 +184,8 @@ var Form = {
 			self.appsContainer.append(self.newAppItem);
 			self.params = {
 				profileId : self.profile_id,
-				siteId : self.site_id,
-				appId : self.app_id
+				websiteId : self.site_id,
+				logwithId : self.app_id
 			};
 			self.oInputs.forEach(function(element) {
 				var elemName = element.qInput.attr("name");
@@ -257,7 +256,7 @@ var Form = {
 			self.site_id = null;
 			self.profile_id = null;
 			self.app_id = null;
-			self.setPostName('addApp');
+			self.setPostName('AddClassicApp');
 			self.helper = null;
 		}
 		this.errorCallback = function(retMsg) {
@@ -274,7 +273,7 @@ var Form = {
 			self.qRoot.trigger("StateChanged");
 		}
 		this.checkInputs = function() {
-			if (self.postName != 'addApp')
+			if (self.postName != 'AddClassicApp')
 				return true;
 			for (var i = 0; i < self.oInputs.length; ++i) {
 				if (self.oInputs[i].isValid == false) {

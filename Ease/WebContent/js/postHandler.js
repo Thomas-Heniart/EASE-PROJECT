@@ -43,6 +43,6 @@ var postHandler = {
 					type);
 			} else {
 				document.location.reload(true);
-			}			
+			}
 		}
 }

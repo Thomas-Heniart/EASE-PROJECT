@@ -14,9 +14,9 @@ $(document).ready(function() {
 		parent.find('.or').css('display', 'none');
 		var apps = $(".siteLinkBox[webid='" + webid + "']");
 		if (apps.length == 0) {
-			if (webid == "7")
+			if (webid == "2")
 				$(".loginAppChooser p").text("No Facebook account detected");
-			if (webid == "28")
+			if (webid == "3")
 				$(".loginAppChooser p").text("No Linkedin account detected");
 		}
 		for (var i = 0; i < apps.length; i++) {
@@ -28,12 +28,12 @@ $(document).ready(function() {
 				$(parent).find('.AccountApp.selected').removeClass('selected');
 				$(this).addClass('selected');
 				popupAddApp.appId($(this).attr("aid"));
-				popupAddApp.setPostName('addLogWith');
+				popupAddApp.setPostName('AddLogwithApp');
 			});
 			if (i == 0) {
 				$(AppHelperCloned).addClass("selected");
 				popupAddApp.appId($(AppHelperCloned).attr("aid"));
-				popupAddApp.setPostName('addLogWith');
+				popupAddApp.setPostName('AddLogwithApp');
 			}
 			AppChooser.append(AppHelperCloned);
 		}

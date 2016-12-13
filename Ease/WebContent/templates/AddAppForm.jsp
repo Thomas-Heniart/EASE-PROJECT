@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
 
-<form action="addApp" id="AddAppForm" class="addAppForm popupForm"
+<form action="AddClassicApp" id="AddAppForm" class="addAppForm popupForm"
 oClass="AddAppForm">
 <div class="lineInput">
 	<label for="app-name">App name :</label> <input oClass="NoEmptyInput"
@@ -13,10 +13,10 @@ oClass="AddAppForm">
 		<div class="backgroundLine"></div>
 		<p>Log in with</p>
 	</div>
-	<div class="loginWithButton facebook hidden" webid="7">
+	<div class="loginWithButton facebook hidden" webid="2">
 		<p>Facebook</p>
 	</div>
-	<div class="loginWithButton linkedin hidden" webid="28">
+	<div class="loginWithButton linkedin hidden" webid="3">
 		<p>Linkedin</p>
 	</div>
 	<div class="linedSeparator or">
