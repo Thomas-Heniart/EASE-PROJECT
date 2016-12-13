@@ -212,13 +212,19 @@ public class Profile {
 		return this.infos.getName();
 	}
 	public void setName(String name, ServletManager sm) throws GeneralException {
-		this.infos.setName(name, sm);
+		if (this.groupProfile == null || (!this.groupProfile.isCommon() && this.groupProfile.getPerms().havePermission(ProfilePermissions.Perm.RENAME.ordinal())))
+			this.infos.setName(name, sm);
+		else
+			throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permissions to change the profile's name.");
 	}
 	public String getColor() {
 		return this.infos.color;
 	}
 	public void setColor(String color, ServletManager sm) throws GeneralException {
-		this.infos.setColor(color, sm);
+		if (this.groupProfile == null || (!this.groupProfile.isCommon() && this.groupProfile.getPerms().havePermission(ProfilePermissions.Perm.COLOR.ordinal())))
+			this.infos.setColor(color, sm);
+		else
+			throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permissions to change the profile's color.");
 	}
 	
 	public int getSingleId() {
@@ -289,6 +295,18 @@ public class Profile {
 			}
 		}
 		db.commitTransaction(transaction);
+	}
+	
+	public boolean canEditName() {
+		if (this.groupProfile == null || (!this.groupProfile.isCommon() && this.groupProfile.getPerms().havePermission(ProfilePermissions.Perm.RENAME.ordinal())))
+			return true;
+		return false;
+	}
+	
+	public boolean canEditColor() {
+		if (this.groupProfile == null || (!this.groupProfile.isCommon() && this.groupProfile.getPerms().havePermission(ProfilePermissions.Perm.COLOR.ordinal())))
+			return true;
+		return false;
 	}
 	
 	public ClassicApp addClassicApp(String name, Website site, String password, Map<String, String> infos, ServletManager sm) throws GeneralException {
