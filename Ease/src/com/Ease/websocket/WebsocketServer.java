@@ -65,15 +65,14 @@ public class WebsocketServer {
 		try {
 			httpSession.getCreationTime();
 			User user = (User) httpSession.getAttribute("user");
-			ServletManager.removeWebsocket(session.getId());
 			System.out.println("Close session " + (user == null ? "no user" : user.getFirstName()));
 			if (user == null)
 				WebsocketSession.removeWebsocketSession(session, httpSession);
 			else {
 				@SuppressWarnings("unchecked")
-				Map<String, WebsocketSession> browserWebsockets = (Map<String, WebsocketSession>) httpSession
-						.getAttribute("browserWebsockets");
+				Map<String, WebsocketSession> browserWebsockets = (Map<String, WebsocketSession>) httpSession.getAttribute("browserWebsockets");
 				browserWebsockets.remove(session.getId());
+				System.out.println(user == null);
 				user.removeWebsocket(session);
 			}
 		} catch (IllegalStateException ise) {

@@ -49,7 +49,7 @@ public class ServletManager {
 	protected String				socketId;
 	protected List<WebsocketMessage> messages;
 	
-	public static Map<String, WebsocketSession> websockets = new HashMap<String, WebsocketSession>();
+	public Map<String, WebsocketSession> websockets = new HashMap<String, WebsocketSession>();
 	public static boolean debug = true;
 	
 	public ServletManager(String servletName, HttpServletRequest request, HttpServletResponse response, boolean saveLogs) {
@@ -227,7 +227,7 @@ public class ServletManager {
 		websockets.put(tabId, websocket);
 	}
 	
-	public static void removeWebsocket(String tabId) throws GeneralException {
+	public void removeWebsocket(String tabId) throws GeneralException {
 		if (debug && tabId == null)
 			return;
 		else if (tabId == null)
