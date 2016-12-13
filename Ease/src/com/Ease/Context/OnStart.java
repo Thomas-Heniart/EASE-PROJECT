@@ -3,6 +3,7 @@ package com.Ease.Context;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -16,6 +17,7 @@ import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBase;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.IdGenerator;
+import com.Ease.websocket.WebsocketSession;
 
 public class OnStart implements ServletContextListener{
 	@Override
@@ -37,9 +39,10 @@ public class OnStart implements ServletContextListener{
 		try {
 			evt.getServletContext().setAttribute("serverKey", new ServerKey(db));
 			System.out.print("ServletContextListener started...");
-			evt.getServletContext().setAttribute("idGenerator", new IdGenerator());
-			evt.getServletContext().setAttribute("catalog", new Catalog(db, context));
-			evt.getServletContext().setAttribute("groupManager", new GroupManager());
+			context.setAttribute("idGenerator", new IdGenerator());
+			context.setAttribute("catalog", new Catalog(db, context));
+			context.setAttribute("groupManager", new GroupManager());
+			context.setAttribute("usersWebsocketsMap", new HashMap<String, List<WebsocketSession>>());
 			Infrastructure.loadInfrastructures(db, evt.getServletContext());
 			Map<String, User> usersMap = new HashMap<String, User>();
 			context.setAttribute("users", usersMap);

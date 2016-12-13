@@ -37,8 +37,12 @@ public class User {
 	}
 	@SuppressWarnings("unchecked")
 	public static User loadUser(String email, String password, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
+		Map<String, User> usersMap = (Map<String, User>) sm.getContextAttr("users");
+		User connectedUser = usersMap.get(email);
+		if (connectedUser != null)
+			return connectedUser;
 		try {
+			DataBaseConnection db = sm.getDB();
 			ResultSet rs = db.get("SELECT * FROM users where email='" + email + "';");
 			if (rs.next()) {
 				String db_id = rs.getString(Data.ID.ordinal());
@@ -78,9 +82,14 @@ public class User {
 		String keyUser = sessionSave.getKeyUser();
 		sessionSave.eraseFromDB(sm);
 		try {
+			
 			ResultSet rs = db.get("SELECT * FROM users where id='" + db_id + "';");
 			if (rs.next()) {
 				String email = rs.getString(Data.EMAIL.ordinal());
+				Map<String, User> usersMap = (Map<String, User>) sm.getContextAttr("users");
+				User connectedUser = usersMap.get(email);
+				if (connectedUser != null)
+					return connectedUser;
 				String firstName = rs.getString(Data.FIRSTNAME.ordinal());
 				String lastName = rs.getString(Data.LASTNAME.ordinal());
 				Keys keys = Keys.loadKeysWithoutPassword(rs.getString(Data.KEYSID.ordinal()), keyUser, sm);
@@ -128,6 +137,7 @@ public class User {
 		newUser.getProfileColumns().get(0).add(Profile.createPersonnalProfile(newUser, 0, 0, "Side", "#000000", sm));
 		newUser.getProfileColumns().get(1).add(Profile.createPersonnalProfile(newUser, 1, 0, "Perso", "#000000", sm));
 		((Map<String, User>)sm.getContextAttr("users")).put(email, newUser);
+		System.out.println(((Map<String, User>)sm.getContextAttr("users")));
 		for (Group group : groups) {
 			group.addUser(email, sm);
 			newUser.getGroups().add(group);
@@ -504,5 +514,9 @@ public class User {
 		else if (unconnectedSessions == null)
 			throw new GeneralException(ServletManager.Code.ClientError, "Unconnected session is null");
 		this.websockets.putAll(unconnectedSessions);
+	}
+	
+	public String toString() {
+		return ("User " + this.first_name); 
 	}
 }

@@ -41,6 +41,8 @@ public class WebsocketServer {
 			unconnectedSessions.put(wSession.getSessionId(), wSession);
 		} else {
 			user.addWebsocket(wSession);
+			System.out.println("socketId : " + wSession.getSessionId());
+			System.out.println(user.getFirstName() + " websockets size : " + user.getWebsockets().size());
 		}
 		try {
 			wSession.sendMessage(WebsocketMessage.assignIdMessage(wSession.getSessionId()));
