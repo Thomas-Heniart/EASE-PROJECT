@@ -41,19 +41,20 @@ public class ConnectionWithCookies extends HttpServlet {
 
 		boolean success = false;
 		try{
-		if(user != null){
-			sm.setResponse(ServletManager.Code.ClientError,"An user is already connected.");
-		} else if (sessionId == null){
-			sm.setResponse(ServletManager.Code.ClientWarning, "Wrong session id.");
-		} else if (token == null) {
-			sm.setResponse(ServletManager.Code.ClientWarning, "Wrong token.");
-		} else {
-			SessionSave sessionSave = SessionSave.loadSessionSave(sessionId, token, sm);
-			user = User.loadUserFromCookies(sessionSave, sm);
-			session.setAttribute("user", user);
-			sm.setResponse(ServletManager.Code.Success, "Connected with cookies.");
-			success = true;
-		}
+			if(user != null){
+				sm.setResponse(ServletManager.Code.ClientError,"An user is already connected.");
+			} else if (sessionId == null){
+				sm.setResponse(ServletManager.Code.ClientWarning, "Wrong session id.");
+			} else if (token == null) {
+				sm.setResponse(ServletManager.Code.ClientWarning, "Wrong token.");
+			} else {
+				SessionSave sessionSave = SessionSave.loadSessionSave(sessionId, token, sm);
+				user = User.loadUserFromCookies(sessionSave, sm);
+				session.setAttribute("user", user);
+				//sm.setResponse(ServletManager.Code.Success, "Connected with cookies.");
+				sm.redirect("index.jsp");
+				success = true;
+			}
 		} catch (GeneralException e){
 			sm.setResponse(e);
 		}
@@ -77,8 +78,8 @@ public class ConnectionWithCookies extends HttpServlet {
 			}
 		}
 
-		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-		rd.forward(request, response);
+		//RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+		//rd.forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {}
