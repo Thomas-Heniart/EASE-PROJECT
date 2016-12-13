@@ -165,6 +165,9 @@ public class Profile {
 	}
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
+		if (this.groupProfile != null && this.groupProfile.isCommon()) {
+			throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permission to remove this profile.");
+		}
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		for (App app : apps) {
