@@ -1,4 +1,4 @@
-package com.Ease.Servlet;
+package com.Ease.Servlet.Profile;
 
 import java.io.IOException;
 

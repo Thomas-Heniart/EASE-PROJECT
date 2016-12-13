@@ -1,8 +1,8 @@
 package com.Ease.Servlet;
 
 import java.io.IOException;
+import java.util.Map;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -15,6 +15,8 @@ import com.Ease.Dashboard.User.SessionSave;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
+import com.Ease.websocket.WebsocketMessage;
+import com.Ease.websocket.WebsocketSession;
 /**
  * Servlet implementation class ConnectionServlet
  */
@@ -38,6 +40,10 @@ public class ConnectionWithCookies extends HttpServlet {
 
 		String sessionId = sm.getServletParam("sessionId", false);
 		String token = sm.getServletParam("token",false);
+		String socketId = sm.getServletParam("socketId", true);
+		// --
+		@SuppressWarnings("unchecked")
+		Map<String, WebsocketSession> unconnectedSessions = (Map<String, WebsocketSession>)session.getAttribute("unconnectedSessions");
 
 		boolean success = false;
 		try{
@@ -53,6 +59,11 @@ public class ConnectionWithCookies extends HttpServlet {
 				session.setAttribute("user", user);
 				//sm.setResponse(ServletManager.Code.Success, "Connected with cookies.");
 				sm.redirect("index.jsp");
+				sm.addWebsockets(unconnectedSessions);
+				sm.addToSocket(WebsocketMessage.connectionMessage());
+				sm.setSocketId(socketId);
+				user.putAllSockets(unconnectedSessions);
+				session.removeAttribute("unconnectedSessions");
 				success = true;
 			}
 		} catch (GeneralException e){

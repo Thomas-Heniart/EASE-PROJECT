@@ -1,4 +1,4 @@
-package com.Ease.Servlet;
+package com.Ease.Servlet.Profile;
 
 import java.io.IOException;
 
@@ -10,25 +10,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
-import com.Ease.websocket.WebsocketMessage;
 
 /**
- * Servlet implementation class AddProfile
+ * Servlet implementation class EditProfileColor
  */
-@WebServlet("/AddProfile")
-public class AddProfile extends HttpServlet {
+@WebServlet("/EditProfileColor")
+public class EditProfileColor extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddProfile() {
+    public EditProfileColor() {
         super();
+        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -49,20 +48,19 @@ public class AddProfile extends HttpServlet {
 		
 		try {
 			sm.needToBeConnected();
-			String name = sm.getServletParam("name", true);
 			String color = sm.getServletParam("color", true);
-			if (name == null || name.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
-			else if (color == null || Regex.isColor(color) == false)
+			String profileId = sm.getServletParam("profileId", true);
+			if (color == null || !Regex.isColor(color))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong color.");
-			Profile newProfile = user.addProfile(name, color, sm);
-			sm.setResponse(ServletManager.Code.Success, newProfile.getJSONString());
-			sm.addWebsockets(user.getWebsockets());
-			sm.addToSocket(WebsocketMessage.addProfileMessage(newProfile));
+			else if (profileId == null || profileId.isEmpty())
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong profileId.");
+			user.getProfile(Integer.parseInt(profileId)).setColor(color, sm);
+			sm.setResponse(ServletManager.Code.Success, "Color changed.");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
+		} catch (NumberFormatException e) {
+			sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");
 		}
 		sm.sendResponse();
 	}
-
 }

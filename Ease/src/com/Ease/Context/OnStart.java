@@ -1,6 +1,7 @@
 package com.Ease.Context;
 
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -17,11 +18,21 @@ import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBase;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.IdGenerator;
+import com.Ease.websocket.WebsocketMessage;
 import com.Ease.websocket.WebsocketSession;
 
 public class OnStart implements ServletContextListener{
 	@Override
 	public void contextDestroyed(ServletContextEvent evt) {
+		@SuppressWarnings("unchecked")
+		Map<String, WebsocketSession> usersWebsocketsMap = (Map<String, WebsocketSession>) evt.getServletContext().getAttribute("usersMap");
+		usersWebsocketsMap.values().forEach((websocket) -> {
+			try {
+				websocket.sendMessage(WebsocketMessage.pingMessage());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
 		System.out.println("ServletContextListener destroyed");
 	}
 

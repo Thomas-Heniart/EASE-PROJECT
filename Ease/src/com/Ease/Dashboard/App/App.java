@@ -111,6 +111,8 @@ public class App {
 	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
+		if (this.groupApp != null && (this.groupApp.isCommon() == true || !this.groupApp.getPermissions().havePermission(AppPermissions.Perm.DELETE.ordinal())))
+			throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permission to remove this app.");
 		if (this.groupApp == null || this.groupApp.isCommon() == false)
 			informations.removeFromDb(sm);
 		db.set("DELETE FROM apps WHERE id=" + db_id + ";");
@@ -139,8 +141,19 @@ public class App {
 		return position;
 	}
 	
+	public String getType() {
+		return this.getClass().getName();
+	}
+	
 	public void setPosition(int pos, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		db.set("UPDATE apps SET position=" + pos + " WHERE id=" + this.db_id + ";");
+		this.position = pos;
+	}
+	
+	public void setProfile(Profile profile, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		db.set("UPDATE apps SET profileId=" + profile.getDBid() + " WHERE id=" + this.db_id + ";");
+		this.profile = profile;
 	}
 }

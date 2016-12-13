@@ -1,4 +1,4 @@
-package com.Ease.Servlet;
+package com.Ease.Servlet.Profile;
 
 import java.io.IOException;
 
@@ -10,23 +10,25 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
+import com.Ease.websocket.WebsocketMessage;
 
 /**
- * Servlet implementation class RemoveApp
+ * Servlet implementation class AddProfile
  */
-@WebServlet("/RemoveApp")
-public class RemoveApp extends HttpServlet {
+@WebServlet("/AddProfile")
+public class AddProfile extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public RemoveApp() {
+    public AddProfile() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -47,15 +49,18 @@ public class RemoveApp extends HttpServlet {
 		
 		try {
 			sm.needToBeConnected();
-			String appId = sm.getServletParam("appId", true);
-			if (appId == null || appId.isEmpty())
-				throw new GeneralException(ServletManager.Code.ClientError, "Wrong appId.");
-			user.removeApp(Integer.parseInt(appId), sm);
-			sm.setResponse(ServletManager.Code.Success, "App removed.");
+			String name = sm.getServletParam("name", true);
+			String color = "#000000";//sm.getServletParam("color", true);
+			if (name == null || name.equals(""))
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
+			else if (color == null || Regex.isColor(color) == false)
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong color.");
+			Profile newProfile = user.addProfile(name, color, sm);
+			sm.setResponse(ServletManager.Code.Success, newProfile.getJSONString());
+			sm.addWebsockets(user.getWebsockets());
+			sm.addToSocket(WebsocketMessage.addProfileMessage(newProfile));
 		} catch (GeneralException e) {
 			sm.setResponse(e);
-		} catch (NumberFormatException e) {
-			sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");
 		}
 		sm.sendResponse();
 	}

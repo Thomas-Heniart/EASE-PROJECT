@@ -1,4 +1,4 @@
-package com.Ease.Servlet;
+package com.Ease.Servlet.App;
 
 import java.io.IOException;
 
@@ -15,16 +15,16 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class MoveProfile
+ * Servlet implementation class RemoveApp
  */
-@WebServlet("/MoveProfile")
-public class MoveProfile extends HttpServlet {
+@WebServlet("/RemoveApp")
+public class RemoveApp extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public MoveProfile() {
+    public RemoveApp() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -47,17 +47,11 @@ public class MoveProfile extends HttpServlet {
 		
 		try {
 			sm.needToBeConnected();
-			String profileId = sm.getServletParam("profileId", true);
-			String columnIdx = sm.getServletParam("columnIdx", true);
-			String position = sm.getServletParam("position", true);
-			if (profileId == null || profileId.isEmpty())
-				throw new GeneralException(ServletManager.Code.ClientError, "Wrong profileId.");
-			if (columnIdx == null || columnIdx.isEmpty())
-				throw new GeneralException(ServletManager.Code.ClientError, "Wrong columnIdx.");
-			if (position == null || position.isEmpty())
-				throw new GeneralException(ServletManager.Code.ClientError, "Wrong position.");
-			user.moveProfile(Integer.parseInt(profileId), Integer.parseInt(columnIdx), Integer.parseInt(position), sm);
-			sm.setResponse(ServletManager.Code.Success, "Profile moved.");
+			String appId = sm.getServletParam("appId", true);
+			if (appId == null || appId.isEmpty())
+				throw new GeneralException(ServletManager.Code.ClientError, "Wrong appId.");
+			user.removeApp(Integer.parseInt(appId), sm);
+			sm.setResponse(ServletManager.Code.Success, "App removed.");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		} catch (NumberFormatException e) {
