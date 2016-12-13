@@ -24,13 +24,15 @@ public class Catalog {
 	
 	public Catalog(DataBaseConnection db, ServletContext context) throws GeneralException {
 		
-		websites = Website.loadWebsite(db, context);
+		websites = Website.loadWebsites(db, context);
 		websiteDBmap = new HashMap<String, Website>();
 		websiteIDmap = new HashMap<Integer, Website>();
 		for (Website site : websites) {
 			websiteDBmap.put(site.getDb_id(), site);
 			websiteIDmap.put(site.getSingleId(), site);
 		}
+		for (Website site : websites)
+			site.loadLoginWithWebsites(db, this);
 	}
 	
 	/*

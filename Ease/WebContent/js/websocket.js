@@ -1,4 +1,4 @@
-var socket = new WebSocket("ws://localhost:8080/HelloWorld/actions");
+var socket = new WebSocket("ws://localhost:8080/actions");
 socket.onmessage = onMessage;
 socketId = null;
 
@@ -12,5 +12,7 @@ function onMessage(event) {
     	socketId = data.socketId;
     } else if (action === "addProfile") {
     	addProfileToDashboard(data.name, data.color, data.profile_id);
+    } else if (action === "logout") {
+    	window.location.replace("index.jsp");
     }
 }

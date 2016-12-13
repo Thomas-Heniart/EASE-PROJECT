@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
@@ -44,18 +45,13 @@ public class Website {
 	}
 	
 	
-	public static List<Website> loadWebsite(DataBaseConnection db, ServletContext context) throws GeneralException {
+	public static List<Website> loadWebsites(DataBaseConnection db, ServletContext context) throws GeneralException {
 		try {
 			List<Website> websites = new LinkedList<Website>();
 			ResultSet rs = db.get("SELECT * FROM websites;");
 			while (rs.next()) {
 				String db_id = rs.getString(WebsiteData.ID.ordinal());
 				List<WebsiteInformation> website_informations = WebsiteInformation.loadInformations(db_id, db);
-				List<String> loginWithIds = new LinkedList<String>();
-				ResultSet rs2 = db.get("SELECT website_logwith_id FROM websitesLogWithMap WHERE website_id=" + db_id + ";");
-				while (rs2.next()) {
-					loginWithIds.add(rs2.getString(1));
-				}
 				String loginUrl = rs.getString(WebsiteData.LOGIN_URL.ordinal());
 				String name = rs.getString(WebsiteData.NAME.ordinal());
 				String folder = rs.getString(WebsiteData.FOLDER.ordinal());
@@ -69,7 +65,7 @@ public class Website {
 				String lockedExpiration = rs.getString(WebsiteData.LOCKED_EXPIRATION.ordinal());
 				boolean isNew = rs.getBoolean(WebsiteData.NEW.ordinal());
 				int single_id = ((IdGenerator)context.getAttribute("idGenerator")).getNextId();
-				websites.add(new Website(db_id, single_id, name, loginUrl, folder, sso, noLogin, website_homepage, hidden, ratio, position, locked, lockedExpiration, isNew, website_informations, loginWithIds));
+				websites.add(new Website(db_id, single_id, name, loginUrl, folder, sso, noLogin, website_homepage, hidden, ratio, position, locked, lockedExpiration, isNew, website_informations));
 			}
 			return websites;
 		} catch (SQLException e) {
@@ -92,9 +88,9 @@ public class Website {
 	protected boolean isNew;
 	protected String lockedExpiration;
 	protected List<WebsiteInformation> website_informations;
-	protected List<String> loginWithIds;
+	protected List<Website> loginWithWebsites;
 	
-	public Website(String db_id, int single_id, String name, String loginUrl, String folder, int sso, boolean noLogin, String website_homepage, boolean hidden, int ratio, int position, boolean locked, String lockedExpiration, boolean isNew, List<WebsiteInformation> website_informations, List<String> loginWithIds) {
+	public Website(String db_id, int single_id, String name, String loginUrl, String folder, int sso, boolean noLogin, String website_homepage, boolean hidden, int ratio, int position, boolean locked, String lockedExpiration, boolean isNew, List<WebsiteInformation> website_informations) {
 		this.db_id = db_id;
 		this.single_id = single_id;
 		this.loginUrl = loginUrl;
@@ -109,7 +105,7 @@ public class Website {
 		this.name = name;
 		this.position = position;
 		this.isNew = isNew;
-		this.loginWithIds = loginWithIds;
+		this.loginWithWebsites = new LinkedList<Website>();
 	}
 	
 	public String getDb_id() {
@@ -130,6 +126,17 @@ public class Website {
 			infos.put(info.getInformationName(), value);
 		}
 		return infos;
+	}
+	
+	public void loadLoginWithWebsites(DataBaseConnection db, Catalog catalog) throws GeneralException {
+		ResultSet rs = db.get("SELECT website_logwith_id FROM websitesLogWithMap WHERE website_id=" + this.db_id + ";");
+		try {
+			while (rs.next()) {
+				this.loginWithWebsites.add(catalog.getWebsiteWithDBid(rs.getString(1)));
+			}
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
 	}
 
 	public int getSingleId() {
@@ -158,10 +165,9 @@ public class Website {
 	
 	public String getLoginWith() {
 		String res = "";
-		Iterator<String> it = this.loginWithIds.iterator();
+		Iterator<Website> it = this.loginWithWebsites.iterator();
 		while (it.hasNext()) {
-			String tmp = it.next();
-			res += tmp;
+			res += it.next().getSingleId();
 			if (it.hasNext())
 				res += ", ";
 		}

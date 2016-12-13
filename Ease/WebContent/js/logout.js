@@ -10,7 +10,9 @@ $(document).ready(function(){
 	$('#easeLogoutButton').click(function(){
 		postHandler.post(
 			'Logout',
-			{},
+			{
+				socketId: socketId
+			},
 			function(){},
 			function(retMsg){
 				easeTracker.trackEvent('Normal logout');
