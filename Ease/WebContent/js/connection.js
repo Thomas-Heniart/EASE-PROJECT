@@ -63,7 +63,8 @@ $(document).ready(function() {
 	                'connection', 
 	                {
 	                    email : email, 
-	                    password : password
+	                    password : password,
+	                    socketId : socketId
 	                },
 	                function(){},
 	                function(retMsg){

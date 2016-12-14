@@ -328,7 +328,8 @@ public class Profile {
 	
 	public LogwithApp addLogwithApp(String name, Website site, App logwith, ServletManager sm) throws GeneralException {
 		int position = this.apps.size();
-		if (logwith.getClass().getName() == "LogwithApp" || logwith.getClass().getName() == "ClassicApp") {
+		System.out.println("---->" + logwith.getType());
+		if (logwith.getType().equals("LogwithApp") || logwith.getType().equals("ClassicApp")) {
 			LogwithApp app = LogwithApp.createLogwithApp(this, position, name, site, (WebsiteApp)logwith, sm);
 			this.apps.add(app);
 			return app;

@@ -78,9 +78,9 @@ public class ConnectionServlet extends HttpServlet {
 					removeIpFromDataBase(client_ip,db);
 					sm.setResponse(ServletManager.Code.Success, "Successfully connected.");
 					user.putAllSockets(sessionWebsockets);
+					sm.setSocketId(socketId);
 					sm.addWebsockets(sessionWebsockets);
 					sm.addToSocket(WebsocketMessage.connectionMessage());
-					sm.setSocketId(socketId);
 				}
 			} else {
 				throw new GeneralException(ServletManager.Code.UserMiss, "Too much attempts to connect. Please retry in 5 minutes.");
@@ -88,7 +88,9 @@ public class ConnectionServlet extends HttpServlet {
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		}
+		System.out.println("Send connection response");
 		sm.sendResponse();
+		System.out.println("Connection done");
 	}
 
 	public String getIpAddr(HttpServletRequest request) {

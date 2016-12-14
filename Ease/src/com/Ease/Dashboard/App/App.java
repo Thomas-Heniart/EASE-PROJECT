@@ -137,7 +137,7 @@ public class App {
 		return db_id;
 	}
 	
-	public int getSingle_id() {
+	public int getSingleId() {
 		return single_id;
 	}
 	
@@ -154,7 +154,9 @@ public class App {
 	}
 	
 	public String getType() {
-		return this.getClass().getName();
+		String name;
+		name = this.getClass().getName().substring(this.getClass().getName().lastIndexOf(".")+1);
+		return name;
 	}
 	
 	public void setPosition(int pos, ServletManager sm) throws GeneralException {
