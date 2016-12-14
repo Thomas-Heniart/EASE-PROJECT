@@ -106,28 +106,10 @@ public class WebsocketMessage {
 		return who;
 	}
 	
-	/*public void add(String argName, JSONObject obj) {
-		this.mapStringJson.put(argName, obj);
-	}
-	
-	public void add(String argName, JSONArray obj) {
-		this.mapStringArray.put(argName, obj);
-	}
-	
-	public void add(String argName, String obj) {
-		this.mapStringString.put(argName, obj);
-	}*/
-	
 	public JSONObject getJSON() {
 		JSONObject res = new JSONObject();
 		res.put("action", this.action);
 		res.put("data", this.data);
-		/*for (Map.Entry<String, JSONObject> entry : this.mapStringJson.entrySet())
-			res.put(entry.getKey(), entry.getValue());
-		for (Map.Entry<String, JSONArray> entry : this.mapStringArray.entrySet())
-			res.put(entry.getKey(), entry.getValue());
-		for (Map.Entry<String, String> entry : this.mapStringString.entrySet())
-			res.put(entry.getKey(), entry.getValue());*/
 		return res;
 	}
 	
