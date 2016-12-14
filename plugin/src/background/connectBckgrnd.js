@@ -1,3 +1,6 @@
+extension.reloadEaseTabs();
+console.log("le reload frère");
+
 function getNewLogin(msg, i){
 	if (msg.detail[i].user){
 		return {"user":msg.detail[i].user.login, "password":msg.detail[i].user.password};
@@ -68,7 +71,7 @@ function checkFacebook(msg, callback){
 }
 
 extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, sendResponse) {
-  msg.todo = "checkAlreadyLogged";
+  msg.todo = "checkAlreadyConnected";
   msg.bigStep = 0;
   checkFacebook(msg, function(newBigStep){
     msg.bigStep = newBigStep;
@@ -115,7 +118,7 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, se
                                             msg.actionStep = 0;
                                         /*} else if(msg.todo == "end"){
                                             rememberWebsite(msg.detail[msg.bigStep].website);
-                                            msg.todo = "checkAlreadyLogged";
+                                            msg.todo = "checkAlreadyConnected";
                                             msg.actionStep = 0;
                                             msg.bigStep++;
                                             if (msg.bigStep < msg.detail.length){
@@ -133,7 +136,7 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, se
                                             console.log("Check already log to end connection");
                                         }*/
                                         } else if (msg.todo=="nextBigStep"){
-                                            msg.todo = "checkAlreadyLogged";
+                                            msg.todo = "checkAlreadyConnected";
                                             extension.tabs.update(tab, msg.detail[msg.bigStep].website.home, function() {});
                                         } else {
                                              msg.detail[msg.bigStep].website.lastLogin = getNewLogin(msg, msg.bigStep);
@@ -145,11 +148,11 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, se
                                                     msg.todo="nextBigStep";
                                                     console.log("-- Wait for nextBigStep --");
                                                 } else {
-                                                    msg.todo = "checkAlreadyLogged";
+                                                    msg.todo = "checkAlreadyConnected";
                                                     extension.tabs.update(tab, msg.detail[msg.bigStep].website.home, function() {});
                                                 }
                                             } else {
-                                                msg.todo = "checkAlreadyLogged";
+                                                msg.todo = "checkAlreadyConnected";
                                                 msg.result = "Success";
                                                 endConnection(currentWindow, tab, msg, sendResponse);
                                                 extension.tabs.onUpdatedRemoveListener(tab);

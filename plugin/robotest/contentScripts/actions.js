@@ -236,16 +236,15 @@ aclick:function(msg, callback, sendResponse){
 	var actionStep = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep];
 	var button = $(actionStep.search);
 	if (button.length == 0){
-		if (actionStep.grave == true){
-			msg.type = "error: link not found";
+        if (actionStep.grave == true){
+			msg.type = "error: button not found";
 			sendResponse(msg);
             errorOverlay(msg);
-		}
-		else{
+		} else {
 			msg.actionStep++;
 			callback(msg, sendResponse);
 		}
-	} else {
+    } else {
 		window.location.href = button.attr('href');
 		msg.actionStep++;
 		msg.type = "completed";
@@ -298,7 +297,7 @@ goto:function(msg, callback, sendResponse){
     window.location.href = siteUrl;
     msg.actionStep++;
     msg.type = "completed";
-	   sendResponse(msg);
+    sendResponse(msg);
 }
 };
 
@@ -434,10 +433,10 @@ extension.runtime.onMessage("reconnect", function(msg, sendResponse) {
     }
 });
     
-extension.runtime.onMessage("checkConnected", function(msg, sendResponse) {
+extension.runtime.onMessage("checkConnectionStatus", function(msg, sendResponse) {
     if (msg.todo == "checkAlreadyLogged"){
         checkConnectionOverlay(msg);
-        if (isConnected(msg) == true) {
+        if (isConnected(msg) == msg.checkConnected) {
 			msg.type = "completed";
 		    sendResponse(msg);
 		} else {
