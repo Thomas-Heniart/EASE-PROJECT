@@ -26,6 +26,7 @@ public class Account {
 	 */
 	
 	public static Account loadAccount(String db_id, DataBaseConnection db) throws GeneralException {
+		System.out.println("Account db_id : " + db_id);
 		ResultSet rs = db.get("SELECT * FROM accounts WHERE id = " + db_id + ";");
 		try {
 			if (rs.next()) {
