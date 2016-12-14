@@ -19,6 +19,7 @@ pageEncoding="UTF-8"%>
 	<link rel="stylesheet" href="css/default_style.css" />
 	<link href='https://fonts.googleapis.comcss?family=Source+Sans+Pro'
 	rel='stylesheet' type='textcss' />
+	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
 	<link rel="stylesheet" href="css/bootstrap.css" />
 	<link rel="stylesheet" href="css/owl.carousel.css" />
 	<link rel="stylesheet" href="css/owl.theme.css" />
@@ -131,8 +132,8 @@ mixpanel.init("e87ca36e156107ebbd9a672735e6612c");</script><!-- end Mixpanel -->
 		<%} else {%>
 			<%@ include file="templates/Header.jsp"%>
 			<%@ include file="templates/loggedBody.jsp"%>
+			<%@ include file="templates/Footer.jsp" %>
 		<%}%>
-		<%@ include file="templates/Footer.jsp" %>
 	</div>
 	
 </body>

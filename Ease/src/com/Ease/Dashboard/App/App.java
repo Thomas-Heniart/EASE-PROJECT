@@ -9,6 +9,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.LinkApp.LinkApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
@@ -155,5 +157,8 @@ public class App {
 		DataBaseConnection db = sm.getDB();
 		db.set("UPDATE apps SET profileId=" + profile.getDBid() + " WHERE id=" + this.db_id + ";");
 		this.profile = profile;
+	}
+	public boolean havePerm(String perm, ServletContext sc){
+		return true;
 	}
 }
