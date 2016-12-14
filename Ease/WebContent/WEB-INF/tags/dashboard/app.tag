@@ -4,16 +4,16 @@
 <%@ attribute name="app" type="com.Ease.Dashboard.App.App" required="true"%>
 <%@ attribute name="informations" type="java.util.Map" required="false" %>
 <c:choose>
-	<c:when test="${app.getType() eq 'NoAccount'}">
+	<c:when test="${app.getType() eq 'WebsiteApp'}">
 	<div class="siteLinkBox emptyApp"
 	login=""
-	webId="${app.getSite().getId()}"
+	webId="${app.getSite().getSingleId()}"
 	name="${app.getName()}"
 	move="${app.havePerm('MOVE', servletContext)}"
 	logWith="${app.getDataLogin()}"
 	ssoId="${app.getSite().getSso()}"
 	
-	id="${app.getAppId()}">
+	id="${app.getSingleId()}">
 	<div class="linkImage">
 		<div class="emptyAppIndicator" onclick="showModifyAppPopup(this, event)">
 			<img src="resources/other/raise-your-hand-to-ask.svg" />
@@ -37,10 +37,10 @@
 		<img class="logo" src="<c:out value='${app.getSite().getFolder()}logo.png'/>" />
 	</div>
 </c:when>
-<c:when test="${app.getType() eq 'LinkAccount'}">
+<c:when test="${app.getType() eq 'LinkApp'}">
 	<div class="siteLinkBox"
 	 name="${app.getName()}"
-	 id="${app.getAppId()}"
+	 id="${app.getSingleId()}"
 	 move="${app.havePerm('MOVE', servletContext)}"
 	 link="${app.getAccount().getLink()}">
 	<div class="linkImage">
@@ -63,23 +63,24 @@
 	</div>
 </c:when>
 <c:otherwise>
-<c:if test="${app.getType() eq 'ClassicAccount'}">
+<div class="${app.getType()}"></div>
+<c:if test="${app.getType() eq 'ClassicApp'}">
 <div class="siteLinkBox"
 	<c:forEach items="${informations}" var="entry">
 		${entry.key}="${entry.value}"
 	</c:forEach>
-	 webId="${app.getSite().getId()}"
+	 webId="${app.getSite().getSingleId()}"
 	 name="${app.getName()}"
-	 id="${app.getAppId()}"
+	 id="${app.getSingleId()}"
 	 ssoId="${app.getSite().getSso()}"
 	 move="${app.havePerm('MOVE', servletContext)}"
 	 logwith="false">
 </c:if>
-<c:if test="${app.getType() eq 'LogWithAccount'}">
+<c:if test="${app.getType() eq 'LogwithApp'}">
 <div class="siteLinkBox"
-	 webId="${app.getSite().getId()}"
+	 webId="${app.getSite().getSingleId()}"
 	 name="${app.getName()}"
-	 id="${app.getAppId()}"
+	 id="${app.getSingleId()}"
 	 move="${app.havePerm('MOVE', servletContext)}"
 	 logwith="${app.getAccount().getLogWithApp( user ).getAppId()}">
 </c:if>
