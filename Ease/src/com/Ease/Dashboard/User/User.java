@@ -527,7 +527,7 @@ public class User {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "You don't have the permission to add app in this profile.");
 			Profile profileSrc = app.getProfile();
 			if (profileSrc.getGroupProfile() == null || (profileSrc.getGroupProfile().isCommon() == false && profileSrc.getGroupProfile().getPerms().havePermission(ProfilePermissions.Perm.MOVE_APP_OUTSIDE.ordinal())))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "You don't have the permission to add app in this profile.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "You don't have the permission to move app out of this profile.");
 			profileSrc.getApps().remove(app);
 			profileSrc.updateAppsIndex(sm);
 			profileDest.getApps().add(positionDest, app);
