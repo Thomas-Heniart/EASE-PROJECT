@@ -10,7 +10,11 @@
             {"action":"waitfor", "search":"input[name='loginfmt']"},
             {"action":"fill", "what":"login", "search":"input[name='loginfmt']"},
             {"action":"fill", "what":"login", "search":"input[name='SUName0']"},
-            {"action":"fill", "what":"password", "search":"input[name='passwd']"}
+            {"action":"click", "search":"#idSIButton9"},
+            {"action":"waitfor", "search":"#idA_PWD_ForgotPassword"},
+            {"action":"wait", "timeout":"500"},
+            {"action":"fill", "what":"password", "search":"input[name='passwd']"},
+            {"action":"submit","search":"form[name='f1']"}
         ]
     },
     "Facebook":{
@@ -23,6 +27,7 @@
     "logout":{
         "url":"https://login.skype.com/login/",
         "todo":[
+        	{"action":"waitfor", "search":"a[data-link-type='logout']"},
             {"action":"aclick", "search":"a[data-link-type='logout']"}
             ]
     },
