@@ -76,8 +76,7 @@ public class WebsocketServer {
 				user.removeWebsocket(session);
 			}
 		} catch (IllegalStateException ise) {
-			// Invalid session
-
+			//httpSession invalid
 		}
 	}
 
