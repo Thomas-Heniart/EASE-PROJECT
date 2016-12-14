@@ -62,6 +62,7 @@ this.appContainer.droppable({
 		event.stopPropagation();
 		$(this).css('border', '');
 		showAddAppPopup($(this), $(ui.helper));
+		console.log($(ui.helper));
 		popupAddApp.oForm.profile_id = 0;
 	},
 	over: function(event, ui){

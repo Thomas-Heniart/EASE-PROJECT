@@ -25,8 +25,7 @@ public class WebsiteApp extends App {
 		ID,
 		WEBSITE_ID,
 		APP_ID,
-		GROUP_WEBSITE_ID,
-		TYPE
+		GROUP_WEBSITE_ID
 	}
 	
 	/*
@@ -35,26 +34,34 @@ public class WebsiteApp extends App {
 	 * 
 	 */
 	
-	public static WebsiteApp loadWebsiteApp(String appDBid, Profile profile, int position, String insertDate, AppInformation appInfos, GroupApp groupApp, ServletManager sm) throws GeneralException {
+	public static WebsiteApp loadWebsiteApp(String appDBid, Profile profile, int position, String insertDate, AppInformation appInfos, GroupApp groupApp, String type, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		try {
 			ResultSet rs = db.get("SELECT * from websiteApps WHERE app_id=" + appDBid + ";");
-			if (rs.next()) {
-				String websiteAppDBid = rs.getString(Data.ID.ordinal());
-				Website website = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithDBid(rs.getString(Data.WEBSITE_ID.ordinal()));
-				GroupWebsiteApp groupWebsiteApp = (GroupWebsiteApp) GroupManager.getGroupManager(sm).getGroupAppFromDBid(rs.getString(Data.GROUP_WEBSITE_ID.ordinal()));
-				IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
-				switch (rs.getString(Data.TYPE.ordinal())) {
-				case "emptyApp" :
-					return new WebsiteApp(appDBid, profile, position, appInfos, groupApp, insertDate, idGenerator.getNextId(), website, websiteAppDBid, groupWebsiteApp);
-				case "logwithApp" :
-					return LogwithApp.loadLogwithApp(appDBid, profile, position, appInfos, groupApp, insertDate, website, websiteAppDBid, groupWebsiteApp, sm);
-				case "classicApp" :
-					return ClassicApp.loadClassicApp(appDBid, profile, position, appInfos, groupApp, insertDate, website, websiteAppDBid, groupWebsiteApp, sm);
-				}
-			} 
-			throw new GeneralException(ServletManager.Code.InternError, "Website app not complete in db.");
-		} catch (SQLException e) {
+			System.out.println(appDBid);
+			try {
+				if (rs.next()) {
+					String websiteAppDBid = rs.getString(Data.ID.ordinal());
+					Website website = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithDBid(rs.getString(Data.WEBSITE_ID.ordinal()));
+					GroupWebsiteApp groupWebsiteApp = null;
+					String groupWebsiteId = rs.getString(Data.GROUP_WEBSITE_ID.ordinal());
+					if (groupWebsiteId != null)
+						groupWebsiteApp = (GroupWebsiteApp) GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupWebsiteId);
+					IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
+					switch (type) {
+					case "websiteApp" :
+						return new WebsiteApp(appDBid, profile, position, appInfos, groupApp, insertDate, idGenerator.getNextId(), website, websiteAppDBid, groupWebsiteApp);
+					case "logwithApp" :
+						return LogwithApp.loadLogwithApp(appDBid, profile, position, appInfos, groupApp, insertDate, website, websiteAppDBid, groupWebsiteApp, sm);
+					case "classicApp" :
+						return ClassicApp.loadClassicApp(appDBid, profile, position, appInfos, groupApp, insertDate, website, websiteAppDBid, groupWebsiteApp, sm);
+					}
+				} 
+				throw new GeneralException(ServletManager.Code.InternError, "Website app not complete in db.");
+			} catch (SQLException e) {
+				throw new GeneralException(ServletManager.Code.InternError, e);
+			}
+		} catch (GeneralException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
@@ -62,7 +69,7 @@ public class WebsiteApp extends App {
 	public static String createWebsiteApp(Profile profile, int position, String name, String type, Website site, Map<String, Object>elevator, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		String appDBid = App.createApp(profile, position, name, "websiteApp", elevator, sm);
+		String appDBid = App.createApp(profile, position, name, type, elevator, sm);
 		String websiteAppDBid = db.set("INSERT INTO websiteApps VALUES(NULL, " + site.getDb_id() + ", " + appDBid + ", NULL);").toString();
 		elevator.put("appDBid", appDBid);
 		db.commitTransaction(transaction);

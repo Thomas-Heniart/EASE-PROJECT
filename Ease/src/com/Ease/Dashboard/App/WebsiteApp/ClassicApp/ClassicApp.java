@@ -36,7 +36,7 @@ public class ClassicApp extends WebsiteApp {
 	public static ClassicApp loadClassicApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, String websiteAppDBid, GroupWebsiteApp groupWebsiteApp, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		try {
-			ResultSet rs = db.get("SELECT * from websiteApps WHERE app_id=" + websiteAppDBid + ";");
+			ResultSet rs = db.get("SELECT * from classicApps WHERE website_app_id=" + websiteAppDBid + ";");
 			if (rs.next()) {
 				Account account = Account.loadAccount(rs.getString(Data.ACCOUNT_ID.ordinal()), db);
 				String classicDBid = rs.getString(Data.ID.ordinal());

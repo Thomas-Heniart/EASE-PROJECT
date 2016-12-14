@@ -28,15 +28,18 @@ public class AppInformation {
 	}
 	
 	public static AppInformation loadAppInformation(String db_id, DataBaseConnection db) throws GeneralException {
-		ResultSet rs = db.get("SELECT * FROM appInformations WHERE id = " + db_id + " ;");
+		ResultSet rs = db.get("SELECT * FROM appsInformations WHERE id = " + db_id + " ;");
 		String name;
 		try {
-			name = rs.getString(Data.NAME.ordinal());
+			if (rs.next()) {
+				name = rs.getString(Data.NAME.ordinal());
+				return new AppInformation(db_id, name);
+			} else
+				throw new GeneralException(ServletManager.Code.InternError, "No app information");
 		} catch (SQLException e) {
-			e.printStackTrace();
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
-		return new AppInformation(db_id, name);
+		
 	}
 	
 	protected String db_id;
