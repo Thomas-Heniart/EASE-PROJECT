@@ -320,7 +320,7 @@ public class User {
 		for (List<Profile> column: this.profile_columns) {
 			for (Profile profile: column) {
 				for (App app: profile.getApps()) {
-					if (app.getSingle_id() == single_id)
+					if (app.getSingleId() == single_id)
 						return app;
 				}
 			}

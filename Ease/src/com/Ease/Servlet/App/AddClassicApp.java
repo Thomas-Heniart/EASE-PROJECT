@@ -70,7 +70,7 @@ public class AddClassicApp extends HttpServlet {
 				site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(websiteId));
 				infos = site.getNeededInfos(sm);
 				ClassicApp newApp = profile.addClassicApp(name, site, password, infos, sm);
-				sm.setResponse(ServletManager.Code.Success, String.valueOf(newApp.getSingle_id()));
+				sm.setResponse(ServletManager.Code.Success, String.valueOf(newApp.getSingleId()));
 			} catch (NumberFormatException e) {
 				sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");
 			}
