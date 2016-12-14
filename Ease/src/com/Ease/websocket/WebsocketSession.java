@@ -13,7 +13,7 @@ public class WebsocketSession {
 	}
 	
 	public void sendMessage(WebsocketMessage message) throws IOException {
-		this.session.getBasicRemote().sendText(message.getJSONString());
+		this.session.getAsyncRemote().sendText(message.getJSONString());
 	}
 	
 	public String getSessionId() {

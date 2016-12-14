@@ -83,4 +83,12 @@ public class DataBaseConnection {
 			}
 		}
 	}
+	
+	public void close() {
+		try {
+			con.close();
+		} catch (SQLException e) {
+			System.err.println("DB Con close failed.");
+		}
+	}
 }

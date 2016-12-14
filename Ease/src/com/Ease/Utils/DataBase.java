@@ -17,7 +17,6 @@ public final class DataBase {
     }
 
     private DataBase() {
-        //
     }
 
     public static Connection getConnection() throws SQLException {
