@@ -70,7 +70,7 @@ public class WebsiteApp extends App {
 	public static String createWebsiteApp(Profile profile, int position, String name, String type, Website site, Map<String, Object>elevator, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		String appDBid = App.createApp(profile, position, name, type, elevator, sm);
+		String appDBid = App.createApp(profile, position, name, "websiteApp", elevator, sm);
 		String websiteAppDBid = db.set("INSERT INTO websiteApps VALUES(NULL, " + site.getDb_id() + ", " + appDBid + ", NULL, '" + type + "');").toString();
 		elevator.put("appDBid", appDBid);
 		db.commitTransaction(transaction);
