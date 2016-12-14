@@ -45,6 +45,7 @@ function showAddAppPopup(container, helper) {
 	var item = $($('#boxHelper').html());
 	
 	popupAddApp.open();
+	popupAddApp.appId(null);
 	popupAddApp.setHelper($(helper));
 	popupAddApp.setAppsContainer($(container));
 	popupAddApp.setNewAppItem(item);
