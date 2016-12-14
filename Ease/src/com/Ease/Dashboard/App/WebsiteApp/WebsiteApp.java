@@ -25,7 +25,8 @@ public class WebsiteApp extends App {
 		ID,
 		WEBSITE_ID,
 		APP_ID,
-		GROUP_WEBSITE_ID
+		GROUP_WEBSITE_ID,
+		TYPE
 	}
 	
 	/*
@@ -34,7 +35,7 @@ public class WebsiteApp extends App {
 	 * 
 	 */
 	
-	public static WebsiteApp loadWebsiteApp(String appDBid, Profile profile, int position, String insertDate, AppInformation appInfos, GroupApp groupApp, String type, ServletManager sm) throws GeneralException {
+	public static WebsiteApp loadWebsiteApp(String appDBid, Profile profile, int position, String insertDate, AppInformation appInfos, GroupApp groupApp, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		try {
 			ResultSet rs = db.get("SELECT * from websiteApps WHERE app_id=" + appDBid + ";");
@@ -48,7 +49,7 @@ public class WebsiteApp extends App {
 					if (groupWebsiteId != null)
 						groupWebsiteApp = (GroupWebsiteApp) GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupWebsiteId);
 					IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
-					switch (type) {
+					switch (rs.getString(Data.TYPE.ordinal())) {
 					case "websiteApp" :
 						return new WebsiteApp(appDBid, profile, position, appInfos, groupApp, insertDate, idGenerator.getNextId(), website, websiteAppDBid, groupWebsiteApp);
 					case "logwithApp" :
@@ -70,7 +71,7 @@ public class WebsiteApp extends App {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		String appDBid = App.createApp(profile, position, name, type, elevator, sm);
-		String websiteAppDBid = db.set("INSERT INTO websiteApps VALUES(NULL, " + site.getDb_id() + ", " + appDBid + ", NULL);").toString();
+		String websiteAppDBid = db.set("INSERT INTO websiteApps VALUES(NULL, " + site.getDb_id() + ", " + appDBid + ", NULL, '" + type + "');").toString();
 		elevator.put("appDBid", appDBid);
 		db.commitTransaction(transaction);
 		return websiteAppDBid;
@@ -81,7 +82,7 @@ public class WebsiteApp extends App {
 		int transaction = db.startTransaction();
 		Map<String, Object> elevator = new HashMap<String, Object>();
 		String appDBid = App.createApp(profile, position, name, "websiteApp", elevator, sm);
-		String websiteAppDBid = db.set("INSERT INTO websiteApps VALUES(NULL, " + site.getDb_id() + ", " + appDBid + ", NULL);").toString();
+		String websiteAppDBid = db.set("INSERT INTO websiteApps VALUES(NULL, " + site.getDb_id() + ", " + appDBid + ", NULL, 'websiteApp');").toString();
 		db.commitTransaction(transaction);
 		return new WebsiteApp(appDBid, profile, position, (AppInformation)elevator.get("appInfos"), null, (String)elevator.get("registrationDate"), ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, null);
 	}
