@@ -117,5 +117,9 @@ public class WebsiteApp extends App {
 	 * 
 	 */
 	
+	public Website getSite() {
+		return this.website;
+	}
+	
 	
 }
