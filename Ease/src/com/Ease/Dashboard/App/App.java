@@ -55,15 +55,12 @@ public class App {
 				String groupAppId = rs.getString(Data.GROUP_APP_ID.ordinal());
 				if (groupAppId != null)
 					groupApp = GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupAppId);
-				String type = rs.getString(Data.TYPE.ordinal());
-				switch (type) {
+				switch (rs.getString(Data.TYPE.ordinal())) {
 					case "linkApp":
 						apps.add(LinkApp.loadLinkApp(db_id, profile, position, insertDate, infos, groupApp, sm));
 					break;
-					case "classicApp":
-					case "logWithApp":
 					case "websiteApp":
-						apps.add(WebsiteApp.loadWebsiteApp(db_id, profile, position, insertDate, infos, groupApp, type, sm));
+						apps.add(WebsiteApp.loadWebsiteApp(db_id, profile, position, insertDate, infos, groupApp, sm));
 					break;
 					default:
 						throw new GeneralException(ServletManager.Code.InternError, "This app type dosen't exist.");
@@ -137,6 +134,10 @@ public class App {
 	
 	public int getSingle_id() {
 		return single_id;
+	}
+	
+	public String getName() {
+		return this.informations.getName();
 	}
 	
 	public Profile getProfile() {
