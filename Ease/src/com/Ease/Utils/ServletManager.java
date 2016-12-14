@@ -77,7 +77,6 @@ public class ServletManager {
 				System.err.println("Send response failed.");
 			}
 		}
-		
 	}
 	
 	public void needToBeConnected() throws GeneralException {

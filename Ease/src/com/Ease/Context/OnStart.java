@@ -53,7 +53,6 @@ public class OnStart implements ServletContextListener{
 			context.setAttribute("idGenerator", new IdGenerator());
 			context.setAttribute("catalog", new Catalog(db, context));
 			context.setAttribute("groupManager", new GroupManager());
-			context.setAttribute("usersWebsocketsMap", new HashMap<String, List<WebsocketSession>>());
 			Infrastructure.loadInfrastructures(db, evt.getServletContext());
 			Map<String, User> usersMap = new HashMap<String, User>();
 			context.setAttribute("users", usersMap);
