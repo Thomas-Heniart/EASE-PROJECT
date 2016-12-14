@@ -24,15 +24,6 @@ import com.Ease.websocket.WebsocketSession;
 public class OnStart implements ServletContextListener{
 	@Override
 	public void contextDestroyed(ServletContextEvent evt) {
-		@SuppressWarnings("unchecked")
-		Map<String, WebsocketSession> usersWebsocketsMap = (Map<String, WebsocketSession>) evt.getServletContext().getAttribute("usersMap");
-		usersWebsocketsMap.values().forEach((websocket) -> {
-			try {
-				websocket.sendMessage(WebsocketMessage.pingMessage());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		});
 		System.out.println("ServletContextListener destroyed");
 	}
 

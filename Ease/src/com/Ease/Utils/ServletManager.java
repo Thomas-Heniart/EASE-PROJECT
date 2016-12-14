@@ -171,6 +171,7 @@ public class ServletManager {
 			}
 		}
 		try {
+			System.out.println("wMessages loop start");
 			for (WebsocketMessage msg : this.messages) {
 				websockets.forEach((key, socket) -> {
 					System.out.println( (user == null ? "No user" : user.getFirstName()) + " client socketId : " + key + ", sm socketId : " + socketId);
@@ -178,13 +179,16 @@ public class ServletManager {
 							(msg.getWho() == WebsocketMessage.Who.OTHERTABS && (! key.equals(socketId))) ||
 							(msg.getWho() == WebsocketMessage.Who.THISTAB && key.equals(socketId))) {
 							try {
+								System.out.println("Send message to " + key);
 								socket.sendMessage(msg);
+								System.out.println("Message sent to " + key);
 							} catch (IOException e) {
 								websockets.remove(key, socket);
 							}
 						}
 				});
 			}
+			System.out.println("wMessages loop done");
 			if (this.redirectUrl != null) {
 				response.sendRedirect(this.redirectUrl);
 			} else {
