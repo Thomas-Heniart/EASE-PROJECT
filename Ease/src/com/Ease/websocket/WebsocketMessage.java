@@ -1,13 +1,10 @@
 package com.Ease.websocket;
 
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.Profile.Profile;
-import com.Ease.Utils.ServletManager;
 
 @SuppressWarnings("unchecked")
 public class WebsocketMessage {
@@ -24,7 +21,7 @@ public class WebsocketMessage {
 	public static WebsocketMessage assignIdMessage(String wSessionId) {
 		JSONObject data = new JSONObject();
 		data.put("socketId", wSessionId);
-		return new WebsocketMessage("setSocketId", data, Who.OTHERTABS);
+		return new WebsocketMessage("setSocketId", data, Who.THISTAB);
 	}
 	
 	public static WebsocketMessage addClassicAppMessage(ClassicApp app) {

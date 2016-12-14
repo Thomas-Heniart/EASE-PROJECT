@@ -1,7 +1,6 @@
 package com.Ease.websocket;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -31,27 +30,12 @@ public class WebsocketServer {
 		HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
 		User user = (User) httpSession.getAttribute("user");
 		WebsocketSession wSession = new WebsocketSession(session);
+		Map<String, WebsocketSession> sessionWebsockets = (Map<String, WebsocketSession>) httpSession.getAttribute("sessionWebsockets");
+		
 		System.out.println("Open websocket " + (user == null ? "no user" : user.getFirstName()));
-		if (user == null) {
-			Map<String, WebsocketSession> unconnectedSessions = (Map<String, WebsocketSession>) httpSession
-					.getAttribute("unconnectedSessions");
-			if (unconnectedSessions == null) {
-				unconnectedSessions = new HashMap<String, WebsocketSession>();
-				httpSession.setAttribute("unconnectedSessions", unconnectedSessions);
-			}
-			unconnectedSessions.put(wSession.getSessionId(), wSession);
-		} else {
-			Map<String, WebsocketSession> browserWebsockets = (Map<String, WebsocketSession>) httpSession
-					.getAttribute("browserWebsockets");
-			if (browserWebsockets == null) {
-				browserWebsockets = new HashMap<String, WebsocketSession>();
-				httpSession.setAttribute("browserWebsockets", browserWebsockets);
-			}
-			browserWebsockets.put(wSession.getSessionId(), wSession);
+		sessionWebsockets.put(wSession.getSessionId(), wSession);
+		if (user != null)
 			user.addWebsocket(wSession);
-			System.out.println("socketId : " + wSession.getSessionId());
-			System.out.println(user.getFirstName() + " websockets size : " + user.getWebsockets().size());
-		}
 		try {
 			wSession.sendMessage(WebsocketMessage.assignIdMessage(wSession.getSessionId()));
 		} catch (IOException e) {
@@ -66,18 +50,13 @@ public class WebsocketServer {
 			httpSession.getCreationTime();
 			User user = (User) httpSession.getAttribute("user");
 			System.out.println("Close session " + (user == null ? "no user" : user.getFirstName()));
-			if (user == null)
-				WebsocketSession.removeWebsocketSession(session, httpSession);
-			else {
-				@SuppressWarnings("unchecked")
-				Map<String, WebsocketSession> browserWebsockets = (Map<String, WebsocketSession>) httpSession.getAttribute("browserWebsockets");
-				if (browserWebsockets != null)
-					browserWebsockets.remove(session.getId());
+			@SuppressWarnings("unchecked")
+			Map<String, WebsocketSession> sessionWebsockets = (Map<String, WebsocketSession>) httpSession.getAttribute("sessionWebsockets");
+			sessionWebsockets.remove(session.getId());
+			if (user != null)
 				user.removeWebsocket(session);
-			}
 		} catch (IllegalStateException ise) {
-			// Invalid session
-
+			//httpSession invalid
 		}
 	}
 

@@ -26,9 +26,7 @@ public class App {
 		PROFILE_ID,
 		POSITION,
 		INSERT_DATE,
-		TRASH_DATE,
 		TYPE,
-		WORK,
 		APP_INFO_ID,
 		GROUP_APP_ID
 	}
@@ -57,15 +55,12 @@ public class App {
 				String groupAppId = rs.getString(Data.GROUP_APP_ID.ordinal());
 				if (groupAppId != null)
 					groupApp = GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupAppId);
-				String type = rs.getString(Data.TYPE.ordinal());
-				switch (type) {
+				switch (rs.getString(Data.TYPE.ordinal())) {
 					case "linkApp":
 						apps.add(LinkApp.loadLinkApp(db_id, profile, position, insertDate, infos, groupApp, sm));
 					break;
-					case "classicApp":
-					case "logWithApp":
 					case "websiteApp":
-						apps.add(WebsiteApp.loadWebsiteApp(db_id, profile, position, insertDate, infos, groupApp, type, sm));
+						apps.add(WebsiteApp.loadWebsiteApp(db_id, profile, position, insertDate, infos, groupApp, sm));
 					break;
 					default:
 						throw new GeneralException(ServletManager.Code.InternError, "This app type dosen't exist.");
@@ -84,7 +79,7 @@ public class App {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = new Date();
 		String registrationDate = dateFormat.format(date);
-		String appDBid = db.set("INSERT INTO apps VALUES (NULL, " + profile.getDBid() + ", " + position + ", '" + registrationDate + "', NULL, '" + type + "', 1, " + infos.getDb_id() + ", NULL);").toString();
+		String appDBid = db.set("INSERT INTO apps VALUES (NULL, " + profile.getDBid() + ", " + position + ", '" + registrationDate + "', '" + type + "', " + infos.getDb_id() + ", NULL);").toString();
 		elevator.put("appInfos", infos);
 		elevator.put("insertDate", registrationDate);
 		db.commitTransaction(transaction);
@@ -139,6 +134,10 @@ public class App {
 	
 	public int getSingle_id() {
 		return single_id;
+	}
+	
+	public String getName() {
+		return this.informations.getName();
 	}
 	
 	public Profile getProfile() {

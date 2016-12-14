@@ -391,7 +391,8 @@ public class User {
 	public void deconnect(ServletManager sm) {
 		@SuppressWarnings("unchecked")
 		Map<String, User> users = (Map<String, User>) sm.getContextAttr("users");
-		users.remove(this.email);
+		if (this.websockets.isEmpty())
+			users.remove(this.email);
 	}
 	
 	public boolean isAdmin() {
@@ -536,15 +537,25 @@ public class User {
 		db.commitTransaction(transaction);
 	}
 
-	public void putAllSockets(Map<String, WebsocketSession> unconnectedSessions) throws GeneralException {
-		if (ServletManager.debug && unconnectedSessions == null)
+	public void putAllSockets(Map<String, WebsocketSession> sessionWebsockets) throws GeneralException {
+		if (ServletManager.debug && sessionWebsockets == null)
 			return;
-		else if (unconnectedSessions == null)
+		else if (sessionWebsockets == null)
 			throw new GeneralException(ServletManager.Code.ClientError, "Unconnected session is null");
-		this.websockets.putAll(unconnectedSessions);
+		this.websockets.putAll(sessionWebsockets);
 	}
 	
 	public String toString() {
 		return ("User " + this.first_name); 
+	}
+
+	public void removeWebsockets(Map<String, WebsocketSession> sessionWebsockets) throws GeneralException {
+		if (ServletManager.debug && sessionWebsockets == null)
+			return;
+		else if (sessionWebsockets == null)
+			throw new GeneralException(ServletManager.Code.ClientError, "Browser websockets is null");
+		for (Map.Entry<String, WebsocketSession> entry : sessionWebsockets.entrySet())
+			this.websockets.remove(entry.getKey());
+		
 	}
 }

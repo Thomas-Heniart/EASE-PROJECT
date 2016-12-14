@@ -59,7 +59,7 @@ public class ConnectionServlet extends HttpServlet {
 		String password = sm.getServletParam("password", false);
 		String socketId = sm.getServletParam("socketId", true);
 		// --
-		Map<String, WebsocketSession> unconnectedSessions = (Map<String, WebsocketSession>)session.getAttribute("unconnectedSessions");
+		Map<String, WebsocketSession> sessionWebsockets = (Map<String, WebsocketSession>)session.getAttribute("sessionWebsockets");
 		String client_ip = getIpAddr(request);
 		User user = null;
 		// Put current ip in db
@@ -77,11 +77,10 @@ public class ConnectionServlet extends HttpServlet {
 					session.setAttribute("user", user);
 					removeIpFromDataBase(client_ip,db);
 					sm.setResponse(ServletManager.Code.Success, "Successfully connected.");
-					sm.addWebsockets(unconnectedSessions);
+					user.putAllSockets(sessionWebsockets);
+					sm.addWebsockets(sessionWebsockets);
 					sm.addToSocket(WebsocketMessage.connectionMessage());
 					sm.setSocketId(socketId);
-					user.putAllSockets(unconnectedSessions);
-					session.removeAttribute("unconnectedSessions");
 				}
 			} else {
 				throw new GeneralException(ServletManager.Code.UserMiss, "Too much attempts to connect. Please retry in 5 minutes.");

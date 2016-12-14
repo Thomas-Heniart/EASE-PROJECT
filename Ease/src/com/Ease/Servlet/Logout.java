@@ -69,17 +69,20 @@ public class Logout extends HttpServlet {
 				}
 			}
 			@SuppressWarnings("unchecked")
-			Map<String, WebsocketSession> browserWebsockets = (Map<String, WebsocketSession>) session.getAttribute("browserWebsockets");
-			sm.addWebsockets(browserWebsockets);
+			Map<String, WebsocketSession> sessionWebsockets = (Map<String, WebsocketSession>) session.getAttribute("sessionWebsockets");
+			sm.addWebsockets(sessionWebsockets);
 			sm.addToSocket(WebsocketMessage.logoutMessage());
-			user.deconnect(sm);
-			session.invalidate();
 			retMsg = "Logged out.";
 			sm.setResponse(ServletManager.Code.Success, retMsg);
+			sm.sendResponse();
+			user.removeWebsockets(sessionWebsockets);
+			user.deconnect(sm);
+			session.invalidate();
 		} catch (GeneralException e) {
 			sm.setResponse(e);
+			sm.sendResponse();
 		}
-		sm.sendResponse();
+		
 	}
 
 }
