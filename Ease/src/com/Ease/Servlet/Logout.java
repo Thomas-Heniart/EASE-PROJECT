@@ -68,13 +68,17 @@ public class Logout extends HttpServlet {
 					}
 				}
 			}
+			
+			System.out.println("User websockets size : " + user.getWebsockets().size());
 			@SuppressWarnings("unchecked")
 			Map<String, WebsocketSession> sessionWebsockets = (Map<String, WebsocketSession>) session.getAttribute("sessionWebsockets");
+			System.out.println("Session websockets size : " + sessionWebsockets.size());
 			sm.addWebsockets(sessionWebsockets);
 			sm.addToSocket(WebsocketMessage.logoutMessage());
 			retMsg = "Logged out.";
 			sm.setResponse(ServletManager.Code.Success, retMsg);
 			sm.sendResponse();
+			System.out.println("Send response done");
 			user.removeWebsockets(sessionWebsockets);
 			user.deconnect(sm);
 			session.invalidate();

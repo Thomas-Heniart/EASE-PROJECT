@@ -1,6 +1,7 @@
 package com.Ease.websocket;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -31,8 +32,11 @@ public class WebsocketServer {
 		User user = (User) httpSession.getAttribute("user");
 		WebsocketSession wSession = new WebsocketSession(session);
 		Map<String, WebsocketSession> sessionWebsockets = (Map<String, WebsocketSession>) httpSession.getAttribute("sessionWebsockets");
-		
-		System.out.println("Open websocket " + (user == null ? "no user" : user.getFirstName()));
+		if (sessionWebsockets == null) {
+			sessionWebsockets = new HashMap<String, WebsocketSession>();
+			httpSession.setAttribute("sessionWebsockets", sessionWebsockets);
+		}
+		System.out.println("Open websocket " + (user == null ? "no user" : user.getFirstName()) + " socketId : " + wSession.getSessionId());
 		sessionWebsockets.put(wSession.getSessionId(), wSession);
 		if (user != null)
 			user.addWebsocket(wSession);
@@ -49,7 +53,7 @@ public class WebsocketServer {
 		try {
 			httpSession.getCreationTime();
 			User user = (User) httpSession.getAttribute("user");
-			System.out.println("Close session " + (user == null ? "no user" : user.getFirstName()));
+			System.out.println("Close socket " + (user == null ? "no user" : user.getFirstName()) + " socketId : " + session.getId());
 			@SuppressWarnings("unchecked")
 			Map<String, WebsocketSession> sessionWebsockets = (Map<String, WebsocketSession>) httpSession.getAttribute("sessionWebsockets");
 			sessionWebsockets.remove(session.getId());

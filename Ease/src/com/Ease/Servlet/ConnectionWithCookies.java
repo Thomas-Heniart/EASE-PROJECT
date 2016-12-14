@@ -59,10 +59,10 @@ public class ConnectionWithCookies extends HttpServlet {
 				session.setAttribute("user", user);
 				//sm.setResponse(ServletManager.Code.Success, "Connected with cookies.");
 				sm.redirect("index.jsp");
+				sm.setSocketId(socketId);
 				sm.addWebsockets(sessionWebsockets);
 				user.putAllSockets(sessionWebsockets);
 				sm.addToSocket(WebsocketMessage.connectionMessage());
-				sm.setSocketId(socketId);
 				success = true;
 			}
 		} catch (GeneralException e){

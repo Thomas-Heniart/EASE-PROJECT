@@ -27,11 +27,13 @@ $(document).ready(function(){
 		document.dispatchEvent(event);
 		postHandler.post(
 			'Logout',
-			{},
+			{
+				socketId: socketId
+			},
 			function(){},
 			function(retMsg){
 				easeTracker.trackEvent('General logout');
-				window.location.replace("index.jsp");
+				location.href = "index.jsp";
 			},
 			function(){},
 			'text'
