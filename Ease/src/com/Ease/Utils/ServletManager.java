@@ -186,8 +186,6 @@ public class ServletManager {
 						}
 				});
 			}
-			this.messages.clear();
-			websockets.clear();
 			if (this.redirectUrl != null) {
 				response.sendRedirect(this.redirectUrl);
 			} else {
