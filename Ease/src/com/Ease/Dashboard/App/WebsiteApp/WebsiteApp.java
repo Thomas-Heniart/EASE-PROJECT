@@ -70,7 +70,7 @@ public class WebsiteApp extends App {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		String appDBid = App.createApp(profile, position, name, type, elevator, sm);
-		String websiteAppDBid = db.set("INSERT INTO websiteApps VALUES(NULL, " + site.getDb_id() + ", " + appDBid + ", NULL);").toString();
+		String websiteAppDBid = db.set("INSERT INTO websiteApps VALUES(NULL, " + site.getDb_id() + ", " + appDBid + ", NULL, '" + type + "');").toString();
 		elevator.put("appDBid", appDBid);
 		db.commitTransaction(transaction);
 		return websiteAppDBid;
