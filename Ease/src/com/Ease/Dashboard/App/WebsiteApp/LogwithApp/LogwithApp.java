@@ -1,9 +1,16 @@
 package com.Ease.Dashboard.App.WebsiteApp.LogwithApp;
 
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.AppInformation;
@@ -77,6 +84,14 @@ public class LogwithApp extends WebsiteApp {
 		db.set("DELETE FROM logwithApps WHERE id=" + logwithDBid + ";");
 		super.removeFromDB(sm);
 		db.commitTransaction(transaction);
+	}
+	
+	public JSONArray getJSON(ServletManager sm) throws GeneralException{
+		JSONArray infos = logwith.getJSON(sm);
+		JSONObject websiteInfos = (JSONObject) super.getJSON(sm).get(0);
+		websiteInfos.put("logwith", logwith.getName());
+		infos.add(websiteInfos);
+		return infos;
 	}
 	
 }

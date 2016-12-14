@@ -1,5 +1,8 @@
 package com.Ease.Context.Catalog;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -9,6 +12,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
@@ -187,5 +195,15 @@ public class Website {
 	
 	public boolean isNew() {
 		return this.isNew;
+	}
+	
+	public JSONObject getJSON(ServletManager sm) throws GeneralException{
+		JSONParser parser = new JSONParser();
+		try {
+			JSONObject a = (JSONObject) parser.parse(new FileReader(sm.getRealPath(this.folder + "connect.json")));
+			return a;
+		} catch (IOException | ParseException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
 	}
 }

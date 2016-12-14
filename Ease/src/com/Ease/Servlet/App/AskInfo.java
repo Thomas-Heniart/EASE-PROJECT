@@ -122,7 +122,7 @@ public class AskInfo extends HttpServlet {
 		SI.sendResponse();
 	}*/
 	
-		HttpSession session = request.getSession();
+		/*HttpSession session = request.getSession();
 		User user = (User) (session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		
@@ -138,6 +138,6 @@ public class AskInfo extends HttpServlet {
 		} catch (NumberFormatException e) {
 			sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");
 		}
-		sm.sendResponse();
+		sm.sendResponse();*/
 	}
 }

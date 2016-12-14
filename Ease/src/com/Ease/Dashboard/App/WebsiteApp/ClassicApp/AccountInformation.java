@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
@@ -82,4 +83,6 @@ public class AccountInformation {
 		DataBaseConnection db = sm.getDB();
 		db.set("DELETE FROM accountsInformations WHERE id=" + this.db_id + ";");
 	}
+	
+	
 }
