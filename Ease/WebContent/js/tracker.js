@@ -1,7 +1,7 @@
 var tracker = function(){
 	this.trackEvent = function(eventName){
 		if (window.location.href.indexOf("ease.space") > -1)
-	        mixpanel.track(eventName);
+	       amplitude.getInstance().logEvent(eventName);
 	}
 }
 

@@ -9,6 +9,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.LinkApp.LinkApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
@@ -24,6 +26,7 @@ public class App {
 		PROFILE_ID,
 		POSITION,
 		INSERT_DATE,
+		TRASH_DATE,
 		TYPE,
 		WORK,
 		APP_INFO_ID,
@@ -45,19 +48,24 @@ public class App {
 			int position;
 			String insertDate;
 			AppInformation infos;
-			GroupApp groupApp;
+			GroupApp groupApp = null;
 			while (rs.next()) {
 				db_id = rs.getString(Data.ID.ordinal());
 				position = rs.getInt(Data.POSITION.ordinal());
 				insertDate = rs.getString(Data.INSERT_DATE.ordinal());
 				infos = AppInformation.loadAppInformation(rs.getString(Data.APP_INFO_ID.ordinal()), db);
-				groupApp = GroupManager.getGroupManager(sm).getGroupAppFromDBid(rs.getString(Data.GROUP_APP_ID.ordinal()));
-				switch (rs.getString(Data.TYPE.ordinal())) {
+				String groupAppId = rs.getString(Data.GROUP_APP_ID.ordinal());
+				if (groupAppId != null)
+					groupApp = GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupAppId);
+				String type = rs.getString(Data.TYPE.ordinal());
+				switch (type) {
 					case "linkApp":
 						apps.add(LinkApp.loadLinkApp(db_id, profile, position, insertDate, infos, groupApp, sm));
 					break;
+					case "classicApp":
+					case "logWithApp":
 					case "websiteApp":
-						apps.add(WebsiteApp.loadWebsiteApp(db_id, profile, position, insertDate, infos, groupApp, sm));
+						apps.add(WebsiteApp.loadWebsiteApp(db_id, profile, position, insertDate, infos, groupApp, type, sm));
 					break;
 					default:
 						throw new GeneralException(ServletManager.Code.InternError, "This app type dosen't exist.");
@@ -155,5 +163,8 @@ public class App {
 		DataBaseConnection db = sm.getDB();
 		db.set("UPDATE apps SET profileId=" + profile.getDBid() + " WHERE id=" + this.db_id + ";");
 		this.profile = profile;
+	}
+	public boolean havePerm(String perm, ServletContext sc){
+		return true;
 	}
 }

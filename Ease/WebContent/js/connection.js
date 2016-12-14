@@ -18,8 +18,6 @@ $(document).ready(function() {
 			$(".ease-logo").hide();
 			$("#loadingUnknownUser").css("display","block");
 			$("#back").hide();
-			console.log(email);
-			console.log(socketId);
 			postHandler.post('connection',
 					{
 						email : email,
@@ -28,7 +26,7 @@ $(document).ready(function() {
 					},
 					function(){},
 					function(retMsg) {
-						easeTracker.trackEvent("Connexion");
+						easeTracker.trackEvent("Connect");
 						window.location.reload();
 					}, 
 					function(retMsg) {
@@ -69,7 +67,7 @@ $(document).ready(function() {
 	                },
 	                function(){},
 	                function(retMsg){
-						easeTracker.trackEvent("Connexion");
+						easeTracker.trackEvent("Connect");
 	                    window.location.reload();
 	                },
 	                function(retMsg){
