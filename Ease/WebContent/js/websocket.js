@@ -13,7 +13,7 @@ function onMessage(event) {
     } else if (action === "addProfile") {
     	addProfileToDashboard(data.name, data.color, data.profile_id);
     } else if (action === "logout") {
-    	window.location.replace("index.jsp");
+    	location.href = "index.jsp";
     } else if (action === "ping") {
     	console.log("ping");
     	pingServer();
