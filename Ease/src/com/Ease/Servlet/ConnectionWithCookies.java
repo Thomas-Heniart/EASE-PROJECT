@@ -43,7 +43,7 @@ public class ConnectionWithCookies extends HttpServlet {
 		String socketId = sm.getServletParam("socketId", true);
 		// --
 		@SuppressWarnings("unchecked")
-		Map<String, WebsocketSession> unconnectedSessions = (Map<String, WebsocketSession>)session.getAttribute("unconnectedSessions");
+		Map<String, WebsocketSession> sessionWebsockets = (Map<String, WebsocketSession>)session.getAttribute("sessionWebsockets");
 
 		boolean success = false;
 		try{
@@ -59,11 +59,10 @@ public class ConnectionWithCookies extends HttpServlet {
 				session.setAttribute("user", user);
 				//sm.setResponse(ServletManager.Code.Success, "Connected with cookies.");
 				sm.redirect("index.jsp");
-				sm.addWebsockets(unconnectedSessions);
+				sm.addWebsockets(sessionWebsockets);
+				user.putAllSockets(sessionWebsockets);
 				sm.addToSocket(WebsocketMessage.connectionMessage());
 				sm.setSocketId(socketId);
-				user.putAllSockets(unconnectedSessions);
-				session.removeAttribute("unconnectedSessions");
 				success = true;
 			}
 		} catch (GeneralException e){

@@ -16,7 +16,7 @@ $(document).ready(function(){
 			function(){},
 			function(retMsg){
 				easeTracker.trackEvent('Normal logout');
-				window.location.replace("index.jsp");
+				location.href = "index.jsp";
 			},
 			function(){},
 			'text'
