@@ -68,7 +68,9 @@ public class ServletManager {
 		this.date = dateFormat.format(mydate);
 		this.messages = new LinkedList<WebsocketMessage>();
 		try {
+			System.out.println("vvvvvvvvvvvvvvvvvvvvvvvv");
 			this.db = new DataBaseConnection(DataBase.getConnection());
+			System.out.println("DBDBDBDBDBDBDBDBDBDBDBDB");
 		} catch (SQLException e) {
 			try {
 				response.getWriter().print("1 Sorry an internal problem occurred. We are solving it asap.");
@@ -198,7 +200,8 @@ public class ServletManager {
 			}
 		} catch (IOException e) {
 			System.err.println("Send response failed.");
-		}	
+		}
+		db.close();
 	}
 	
 	public Object getContextAttr(String attr) {
