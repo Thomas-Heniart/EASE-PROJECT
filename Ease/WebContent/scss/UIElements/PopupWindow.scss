@@ -847,8 +847,8 @@
 	.bodysHandler {
 		position: relative;
 		width: 100%;
+		overflow: hidden;
 		.popupBody.show {
-			display: block;
 			opacity: 1;
 			z-index: 1;
 			position: relative;
@@ -869,7 +869,6 @@
 			top:0;
 			width: 100%;
 			opacity: 0;
-			display: none;
 			z-index: -1;
 			.handler {
 				transition: visibility .5s, opacity .5s;
@@ -928,8 +927,8 @@
 						font-size: 1.35vw;
 						border-radius: 3px;
 						border: 1px solid #aaa;
-						background-color: #efefef;
 						padding-left: 5px;
+						padding: 10px 5px;
 					}
 					.btn {
 						color: white;
