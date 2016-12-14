@@ -72,14 +72,16 @@ public class Logout extends HttpServlet {
 			Map<String, WebsocketSession> browserWebsockets = (Map<String, WebsocketSession>) session.getAttribute("browserWebsockets");
 			sm.addWebsockets(browserWebsockets);
 			sm.addToSocket(WebsocketMessage.logoutMessage());
-			user.deconnect(sm);
-			session.invalidate();
 			retMsg = "Logged out.";
 			sm.setResponse(ServletManager.Code.Success, retMsg);
+			sm.sendResponse();
+			user.deconnect(sm);
+			session.invalidate();
 		} catch (GeneralException e) {
 			sm.setResponse(e);
+			sm.sendResponse();
 		}
-		sm.sendResponse();
+		
 	}
 
 }
