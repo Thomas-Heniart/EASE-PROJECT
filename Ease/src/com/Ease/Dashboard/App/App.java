@@ -132,7 +132,7 @@ public class App {
 		return db_id;
 	}
 	
-	public int getSingle_id() {
+	public int getSingleId() {
 		return single_id;
 	}
 	

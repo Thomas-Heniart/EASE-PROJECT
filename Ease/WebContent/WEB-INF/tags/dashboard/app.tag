@@ -7,7 +7,7 @@
 	<c:when test="${app.getType() eq 'NoAccount'}">
 	<div class="siteLinkBox emptyApp"
 	login=""
-	webId="${app.getSite().getId()}"
+	webId="${app.getSite().getSingleId()}"
 	name="${app.getName()}"
 	move="${app.havePerm('MOVE', servletContext)}"
 	logWith="${app.getDataLogin()}"
@@ -68,7 +68,7 @@
 	<c:forEach items="${informations}" var="entry">
 		${entry.key}="${entry.value}"
 	</c:forEach>
-	 webId="${app.getSite().getId()}"
+	 webId="${app.getSite().getSingleId()}"
 	 name="${app.getName()}"
 	 id="${app.getAppId()}"
 	 ssoId="${app.getSite().getSso()}"
@@ -77,7 +77,7 @@
 </c:if>
 <c:if test="${app.getType() eq 'LogWithAccount'}">
 <div class="siteLinkBox"
-	 webId="${app.getSite().getId()}"
+	 webId="${app.getSite().getSingleId()}"
 	 name="${app.getName()}"
 	 id="${app.getAppId()}"
 	 move="${app.havePerm('MOVE', servletContext)}"
