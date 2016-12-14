@@ -1,30 +1,8 @@
 var listenersUpdates = [];
 var listenersMessages = [];
-var currentUser = "anonymous";
 
 var extension = {
-	nbOfEaseTabs:function(){
-        var nb=0;
-        for(var i in window.tabs) {
-            if(window.tabs[i].url.indexOf("ease.space")!=-1){
-                nb++;
-            }
-        }
-        return nb;
-    },
-    reloadEaseTabs:function(){
-        chrome.windows.getAll({populate:true, windowTypes:['normal']}, function(windows){
-            for(var i in windows){
-                for(var j in windows[i].tabs){
-                    if(windows[i].tabs[j].url.indexOf("https://ease.space")==0){
-                        chrome.tabs.reload(windows[i].tabs[j].id, {}, function(){});
-                    }
-                }
-            }
-        });
-        
-    },
-    storage:{
+	storage:{
 		get:function(key, callback){
 			chrome.storage.local.get(key, function(res){
                 if(res[key]== undefined) var ans = {};
@@ -238,8 +216,7 @@ var extension = {
                     });
                 }
             }
-            injectonefile(0);
-               
+            injectonefile(0);   
         }
     }
 }
