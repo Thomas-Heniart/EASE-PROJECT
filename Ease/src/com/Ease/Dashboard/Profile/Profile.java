@@ -51,6 +51,7 @@ public class Profile {
 			GroupProfile groupProfile;
 			ProfileInformation infos;
 			int single_id;
+			List<App> apps;
 			while (rs.next()) {
 				db_id = rs.getString(Data.ID.ordinal());
 				columnIdx = rs.getInt(Data.COLUMN_IDX.ordinal());
@@ -60,7 +61,12 @@ public class Profile {
 				infos = ProfileInformation.loadProfileInformation(rs.getString(Data.PROFILE_INFO_ID.ordinal()), db);
 				single_id = user.getNextSingleId();
 				Profile profile = new Profile(db_id, user, columnIdx, posIdx, groupProfile, infos, single_id);
-				profile.setApps(App.loadApps(profile, sm));
+				apps = App.loadApps(profile, sm);
+				profile.setApps(apps);
+				for (App app : apps) {
+					user.getAppsDBmap().put(app.getDBid(), app);
+					user.getAppsIDmap().put(app.getSingleId(), app);
+				}
 				profilesColumn.get(columnIdx).add(profile);
 			}
 		} catch (SQLException e){
@@ -307,14 +313,8 @@ public class Profile {
 		db.commitTransaction(transaction);
 	}
 	
-	public boolean canEditName() {
-		if (this.groupProfile == null || (!this.groupProfile.isCommon() && this.groupProfile.getPerms().havePermission(ProfilePermissions.Perm.RENAME.ordinal())))
-			return true;
-		return false;
-	}
-	
-	public boolean canEditColor() {
-		if (this.groupProfile == null || (!this.groupProfile.isCommon() && this.groupProfile.getPerms().havePermission(ProfilePermissions.Perm.COLOR.ordinal())))
+	public boolean havePermission(ProfilePermissions.Perm perm) {
+		if (this.groupProfile == null || (!this.groupProfile.isCommon() && this.groupProfile.getPerms().havePermission(perm.ordinal())))
 			return true;
 		return false;
 	}

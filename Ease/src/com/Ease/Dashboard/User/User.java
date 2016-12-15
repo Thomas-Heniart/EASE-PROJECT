@@ -16,6 +16,8 @@ import javax.websocket.Session;
 import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
+import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.Profile.ProfilePermissions;
 import com.Ease.Utils.DataBaseConnection;
@@ -58,6 +60,13 @@ public class User {
 				SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, sm);
 				User newUser =  new User(db_id, firstName, lastName, email, keys, options, null, emails, isAdmin, sessionSave);
 				newUser.loadProfiles(sm);
+				for (Map.Entry<String, App> entry : newUser.getAppsDBmap().entrySet()){
+				    if (entry.getValue().getType().equals("LogwithApp")) {
+				    	LogwithApp logwithApp = (LogwithApp)entry.getValue();
+				    	App app = newUser.getAppsDBmap().get(logwithApp.getLogwithDBid());
+				    	logwithApp.setLogwith((WebsiteApp)app);
+				    }
+				}
 				ResultSet rs2 = db.get("SELECT group_id FROM groupsAndUsersMap WHERE user_id=" + newUser.getDBid() + ";");
 				Group userGroup;
 				while (rs2.next()) {
@@ -156,6 +165,8 @@ public class User {
 	protected Option	opt;
 	//protected Status	status;
 	protected List<List<Profile>> profile_columns;
+	protected Map<String, App> appsDBmap;
+	protected Map<Integer, App> appsIDmap;
 	protected int		max_single_id;
 	protected List<UserEmail> emails;
 	protected Map<String, WebsocketSession> websockets;
@@ -183,6 +194,8 @@ public class User {
 		this.groups = new LinkedList<Group>();
 		this.isAdmin = isAdmin;
 		this.sessionSave = sessionSave;
+		this.appsDBmap = new HashMap<String, App>();
+		this.appsIDmap = new HashMap<Integer, App>();
 	}
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
@@ -248,6 +261,14 @@ public class User {
 	
 	public SessionSave getSessionSave() {
 		return sessionSave;
+	}
+	
+	public Map<String, App> getAppsDBmap() {
+		return appsDBmap;
+	}
+	
+	public Map<Integer, App> getAppsIDmap() {
+		return appsIDmap;
 	}
 	
 	/*
@@ -321,6 +342,18 @@ public class User {
 			for (Profile profile: column) {
 				for (App app: profile.getApps()) {
 					if (app.getSingleId() == single_id)
+						return app;
+				}
+			}
+		}
+		throw new GeneralException(ServletManager.Code.ClientError, "This app's single_id dosen't exist.");
+	}
+	
+	public App getAppWithDBid(String DBid) throws GeneralException {
+		for (List<Profile> column: this.profile_columns) {
+			for (Profile profile: column) {
+				for (App app: profile.getApps()) {
+					if (app.getDBid() == DBid)
 						return app;
 				}
 			}

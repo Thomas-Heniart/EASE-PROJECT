@@ -62,21 +62,39 @@ public class LogwithApp extends WebsiteApp {
 	 * 
 	 */
 	
+	protected String logwithAppDBid;
 	protected String logwithDBid;
-	protected String logwith;
+	protected WebsiteApp logwith;
 	
 	public LogwithApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid, GroupWebsiteApp groupWebsiteApp, String logwith, String logwithDBid) {
 		super(db_id, profile, position, infos, groupApp, insertDate, single_id, site, websiteAppDBid, groupWebsiteApp);
-		this.logwith = logwith;
-		this.logwithDBid = logwithDBid;
+		this.logwithDBid = logwith;
+		this.logwithAppDBid = logwithDBid;
 	}
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		db.set("DELETE FROM logWithApps WHERE id=" + logwithDBid + ";");
+		db.set("DELETE FROM logWithApps WHERE id=" + logwithAppDBid + ";");
 		super.removeFromDB(sm);
 		db.commitTransaction(transaction);
 	}
 	
+	/*
+	 * 
+	 * Getter And Setter
+	 * 
+	 */
+	
+	public WebsiteApp getLogwith() {
+		return logwith;
+	}
+	
+	public String getLogwithDBid() {
+		return logwithDBid;
+	}
+	
+	public void setLogwith(WebsiteApp logwith) {
+		this.logwith = logwith;
+	}
 }

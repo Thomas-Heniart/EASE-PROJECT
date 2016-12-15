@@ -9,12 +9,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
-
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.LinkApp.LinkApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
+import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.Profile.Profile;
+import com.Ease.Dashboard.Profile.ProfilePermissions;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
@@ -47,6 +47,7 @@ public class App {
 			String insertDate;
 			AppInformation infos;
 			GroupApp groupApp = null;
+			App app = null;
 			while (rs.next()) {
 				db_id = rs.getString(Data.ID.ordinal());
 				position = rs.getInt(Data.POSITION.ordinal());
@@ -57,15 +58,17 @@ public class App {
 					groupApp = GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupAppId);
 				switch (rs.getString(Data.TYPE.ordinal())) {
 					case "linkApp":
-						apps.add(LinkApp.loadLinkApp(db_id, profile, position, insertDate, infos, groupApp, sm));
+						app = LinkApp.loadLinkApp(db_id, profile, position, insertDate, infos, groupApp, sm);
 					break;
 					case "websiteApp":
-						apps.add(WebsiteApp.loadWebsiteApp(db_id, profile, position, insertDate, infos, groupApp, sm));
+						app = WebsiteApp.loadWebsiteApp(db_id, profile, position, insertDate, infos, groupApp, sm);
 					break;
 					default:
 						throw new GeneralException(ServletManager.Code.InternError, "This app type dosen't exist.");
 				}
+				apps.add(app);
 			}
+			
 			return apps;
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
@@ -114,7 +117,7 @@ public class App {
 	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		if (this.groupApp != null && (this.groupApp.isCommon() == true || !this.groupApp.getPermissions().havePermission(AppPermissions.Perm.DELETE.ordinal())))
+		if (this.groupApp != null && (this.groupApp.isCommon() == true || !this.groupApp.getPerms().havePermission(AppPermissions.Perm.DELETE.ordinal())))
 			throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permission to remove this app.");
 		if (this.groupApp == null || this.groupApp.isCommon() == false)
 			informations.removeFromDb(sm);
@@ -165,7 +168,9 @@ public class App {
 		db.set("UPDATE apps SET profileId=" + profile.getDBid() + " WHERE id=" + this.db_id + ";");
 		this.profile = profile;
 	}
-	public boolean havePerm(String perm, ServletContext sc){
-		return true;
+	public boolean havePerm(ProfilePermissions.Perm perm) {
+		if (this.groupApp == null || (!this.groupApp.isCommon() && this.groupApp.getPerms().havePermission(perm.ordinal())))
+			return true;
+		return false;
 	}
 }
