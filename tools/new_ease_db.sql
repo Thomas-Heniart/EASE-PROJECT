@@ -164,6 +164,15 @@ CREATE TABLE `sso` (
   PRIMARY KEY (`id`)
 );
 
+CREATE TABLE websiteAttributes (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `locked` tinyint(1) unsigned DEFAULT '0',
+  `lockedExpiration` datetime DEFAULT NULL,
+  `new` tinyint(1) NOT NULL DEFAULT '1',
+  `work` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`id`)
+);
+
 CREATE TABLE `websites` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `login_url` text NOT NULL,
@@ -181,19 +190,10 @@ CREATE TABLE `websites` (
   FOREIGN KEY (`website_attributes_id`) REFERENCES websiteAttributes (id)
 );
 
-CREATE TABLE websiteAttributes (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `locked` tinyint(1) unsigned DEFAULT '0',
-  `lockedExpiration` datetime DEFAULT NULL,
-  `new` tinyint(1) NOT NULL DEFAULT '1',
-  `work` tinyint(1) DEFAULT '0',
-  PRIMARY KEY (`id`)
-);
-
 CREATE TABLE websitesAndGroupsMap (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `website_id` int(10) unsigned NOT NULL,
-  `group_id` int(10) unsigned NOT NULL
+  `group_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`website_id`) REFERENCES websites (id),
   FOREIGN KEY (`group_id`) REFERENCES groups (id)
