@@ -49,7 +49,7 @@ public class AddLogwithApp extends HttpServlet {
 		HttpSession session = request.getSession();
 		User user = (User) (session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
-		
+		System.out.println("Add logwith app");
 		try {
 			sm.needToBeConnected();
 			String name = sm.getServletParam("name", true);

@@ -127,6 +127,16 @@ public class WebsiteApp extends App {
 		return this.website;
 	}
 	
+	public String getWebsiteAppDBid() {
+		return this.websiteAppDBid;
+	}
+	
+	/*
+	 * 
+	 * Utils
+	 * 
+	 */
+	
 	public JSONArray getJSON(ServletManager sm) throws GeneralException{
 		JSONArray infos = new JSONArray();
 		JSONObject websiteInfos = new JSONObject();

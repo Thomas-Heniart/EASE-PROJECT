@@ -66,6 +66,9 @@ public class Profile {
 				for (App app : apps) {
 					user.getAppsDBmap().put(app.getDBid(), app);
 					user.getAppsIDmap().put(app.getSingleId(), app);
+					if (app.getType().equals("ClassicApp") || app.getType().equals("LogwithApp")) {
+						user.getWebsiteAppsDBmap().put(((WebsiteApp)app).getWebsiteAppDBid(), (WebsiteApp)app);
+					}
 				}
 				profilesColumn.get(columnIdx).add(profile);
 			}

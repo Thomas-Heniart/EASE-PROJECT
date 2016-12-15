@@ -9,7 +9,7 @@
 	login=""
 	webId="${app.getSite().getSingleId()}"
 	name="${app.getName()}"
-	move="${app.havePerm('MOVE', servletContext)}"
+	move="true"
 	logWith="${app.getDataLogin()}"
 	ssoId="${app.getSite().getSso()}"
 	
@@ -26,7 +26,7 @@
 					onclick="showModifyAppPopup(this, event)">
 						<p>Modify</p>
 					</div>
-					<c:if test="${app.havePerm('DELETE', servletContext)}">
+					<c:if test="${app.havePerm(AppPermissions.Perm.DELETE)}">
 						<div class="deleteAppButton menu-item" onclick="showConfirmDeleteAppPopup(this, event)">
 							<p>Delete</p>
 						</div>
@@ -41,10 +41,9 @@
 	<div class="siteLinkBox"
 	 name="${app.getName()}"
 	 id="${app.getSingleId()}"
-	 move="${app.havePerm('MOVE', servletContext)}"
-	 link="${app.getAccount().getLink()}">
+	 move="true">
 	<div class="linkImage">
-	<c:if test="${app.havePerm('DELETE', servletContext)}">
+	<c:if test="${app.havePerm(AppPermissions.Perm.DELETE)}">
 	<div class="showAppActionsButton">
 		<i class="fa fa-cog"></i>
 		<div class="appActionsPopup">
@@ -65,14 +64,14 @@
 <c:otherwise>
 <c:if test="${app.getType() eq 'ClassicApp'}">
 <div class="siteLinkBox"
-	<c:forEach items="${informations}" var="entry">
-		${entry.key}="${entry.value}"
+	<c:forEach items="${app.getAccount().getAccountInformations()}" var="entry">
+		${entry.getInformationName()}="${entry.getInformationValue()}"
 	</c:forEach>
 	 webId="${app.getSite().getSingleId()}"
 	 name="${app.getName()}"
 	 id="${app.getSingleId()}"
 	 ssoId="${app.getSite().getSso()}"
-	 move="${app.havePerm('MOVE', servletContext)}"
+	 move="true"
 	 logwith="false">
 </c:if>
 <c:if test="${app.getType() eq 'LogwithApp'}">
@@ -80,8 +79,8 @@
 	 webId="${app.getSite().getSingleId()}"
 	 name="${app.getName()}"
 	 id="${app.getSingleId()}"
-	 move="${app.havePerm('MOVE', servletContext)}"
-	 logwith="${app.getAccount().getLogWithApp( user ).getAppId()}">
+	 move="true"
+	 logwith="${app.getLogwith().getSingleId()}">
 </c:if>
 <div class="linkImage">
 	<div class="showAppActionsButton">
@@ -92,7 +91,7 @@
 				onclick="showModifyAppPopup(this, event)">
 				<p>Modify</p>
 			</div>
-			<c:if test="${app.havePerm('DELETE', servletContext)}">
+			<c:if test="${app.havePerm(AppPermissions.Perm.DELETE)}">
 			<div class="deleteAppButton menu-item"
 			onclick="showConfirmDeleteAppPopup(this, event)">
 			<p>Delete</p>

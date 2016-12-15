@@ -80,7 +80,6 @@ var constructorForm = function(rootEl, parent) {
 			self.params[elem.qInput.attr('name')] = elem.getVal();
 		});
 		self.beforeSubmit();
-		self.params["socketId"] = socketId;
 		postHandler.post(self.qRoot.attr('action'), self.params,
 				self.afterSubmit, self.successCallback, self.errorCallback);
 	};
