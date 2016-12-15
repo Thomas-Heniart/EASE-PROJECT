@@ -67,42 +67,30 @@ function sendEvent(obj) {
             $(obj).removeClass("waitingLinkImage");
             $(obj).removeClass('scaleinAnimation');
         }, 1000);
-        if (typeof link !== typeof undefined && link !== false) {
-            json.detail = {"url":link};
-            json.detail.highlight = true;
-            if (ctrlDown) json.detail.highlight = false;
-            easeTracker.trackEvent("App successful clicks");
-            easeTracker.trackEvent("link connections");
-            event = new CustomEvent("NewLinkToOpen", json);
-            document.dispatchEvent(event);
-        } else {
         	postHandler.post("askInfo", {
         		appId : appId,
         	}, function() {
         	}, function(retMsg) {
         		json.detail = JSON.parse(retMsg);
+        		var message = "NewConnection";
         		json.detail.highlight = true;
         		if (ctrlDown) json.detail.highlight = false;
         		easeTracker.trackEvent("App successful clicks");
-        		easeTracker.trackEvent(json.detail[json.detail.length - 1].website.name + " connections");
-        		
-        		/*
-        		// TO REMOVE
-        		var test = [];
-        		test.push(json);
-        		console.log(test);
-        		event = new CustomEvent("Test", {detail:test});
-        		// END TO REMOVE
-        		*/
+        		if(json.detail[0] && json.detail[0].url){
+        			json.detail = {"url":json.detail[0].url};
+        			message = "NewLinkToOpen";
+        			easeTracker.trackEvent("link connections");
+        		} else {
+        			easeTracker.trackEvent(json.detail[json.detail.length - 1].website.name + " connections");
+        		}
         		
         		//TO RE ADD 
-        		event = new CustomEvent("NewConnection", json);
-        		
+        		event = new CustomEvent(message, json);
         		document.dispatchEvent(event);
         	}, function(retMsg) {
+        		easeTracker.trackEvent("App fail clicks");
         		showAlertPopup(retMsg, true);
         	}, 'text');
-        }
     }
 	}
 }
