@@ -77,12 +77,12 @@ CREATE TABLE `users` (
   `key_id` int(10) unsigned,
   `option_id` int(10) unsigned,
   `registration_date` DATETIME,
-  /*`status_id` INT(10) UNSIGNED NOT NULL,*/
+  `status_id` INT(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
   FOREIGN KEY (key_id) REFERENCES userKeys (id),
   FOREIGN KEY (option_id) REFERENCES options (id)
-  /*FOREIGN KEY (status_id) REFERENCES status (id)*/
+  FOREIGN KEY (status_id) REFERENCES status (id)
 );
 
 CREATE TABLE infrastructuresAdminsMap (

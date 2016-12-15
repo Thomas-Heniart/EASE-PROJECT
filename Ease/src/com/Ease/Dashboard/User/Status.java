@@ -68,6 +68,10 @@ public class Status {
 		this.tuto_done = tuto_done;
 	}
 	
+	public String getDbId() {
+		return this.db_id;
+	}
+	
 	public void passStep(String tutoStep, DataBaseConnection db) throws GeneralException {
 		Class<?> c = this.getClass();
 		try {
