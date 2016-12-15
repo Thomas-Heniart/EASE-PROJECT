@@ -190,6 +190,7 @@ public class ServletManager {
 			}
 			System.out.println("wMessages loop done");
 			if (this.redirectUrl != null) {
+				System.out.println("redirect to "+this.redirectUrl);
 				response.sendRedirect(this.redirectUrl);
 			} else {
 				response.setCharacterEncoding("UTF-8");

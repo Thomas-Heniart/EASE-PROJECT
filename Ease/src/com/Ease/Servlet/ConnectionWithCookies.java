@@ -69,8 +69,6 @@ public class ConnectionWithCookies extends HttpServlet {
 		} catch (GeneralException e){
 			sm.setResponse(e);
 		}
-		sm.sendResponse();
-
 
 		Cookie 	cookie = null;
 		Cookie 	cookies[] = request.getCookies();
@@ -88,6 +86,8 @@ public class ConnectionWithCookies extends HttpServlet {
 				}
 			}
 		}
+		
+		sm.sendResponse();
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {}
