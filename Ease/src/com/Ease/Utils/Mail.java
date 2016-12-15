@@ -154,12 +154,14 @@ public class Mail {
 		}
 	}
 	
-	public void sendVerificationEmail(String newEmail, String askingEmail, String link) throws MessagingException {
+	public void sendVerificationEmail(String newEmail, String userName, String code) throws MessagingException {
 		try {
+			String link = "https://ease.space/VerifieEmail?email=" + newEmail + "&code=" + code;
+
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(newEmail));
 			message.setSubject(MimeUtility.encodeText("Validation email !", "utf-8", null));
 			message.setContent("<div style='color: black;'><p>Hello !<br /></p>"
-					+ "<p>A validation email has been asked by " + askingEmail + ". "
+					+ "<p>A validation email has been asked by " + userName + ". "
 					+ "<br /><br />To validate this new email in order to receive updates, click on the link <a href='" + link
 					+ "'>here</a>.<br></p>"
 					+ "<p>(If you have not asked for a validation on \"<span style='text-decoration: underline'>ease.space</span>\", you can ignore this email.)</p>"

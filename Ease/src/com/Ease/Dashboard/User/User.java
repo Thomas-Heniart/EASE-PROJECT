@@ -54,7 +54,7 @@ public class User {
 				Keys keys = Keys.loadKeys(rs.getString(Data.KEYSID.ordinal()), password, sm);
 				Option options = Option.loadOption(rs.getString(Data.OPTIONSID.ordinal()), sm);
 				//Status status = Status.loadStatus(rs.getString(Data.STATUSID.ordinal()), sm);
-				List<UserEmail> emails = UserEmail.loadEmails(db_id, sm);
+				Map<String, UserEmail> emails = UserEmail.loadEmails(db_id, sm);
 				ResultSet adminRs = db.get("SELECT user_id FROM admins WHERE user_id = " + db_id + ";");
 				boolean isAdmin = adminRs.next();
 				SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, sm);
@@ -105,7 +105,7 @@ public class User {
 				Keys keys = Keys.loadKeysWithoutPassword(rs.getString(Data.KEYSID.ordinal()), keyUser, sm);
 				Option options = Option.loadOption(rs.getString(Data.OPTIONSID.ordinal()), sm);
 				//Status status = Status.loadStatus(rs.getString(Data.STATUSID.ordinal()), sm);
-				List<UserEmail> emails = UserEmail.loadEmails(db_id, sm);
+				Map<String, UserEmail> emails = UserEmail.loadEmails(db_id, sm);
 				ResultSet adminRs = db.get("SELECT user_id FROM admins WHERE user_id = " + db_id + ";");
 				boolean isAdmin = adminRs.next();
 				SessionSave newSessionSave = SessionSave.createSessionSave(keyUser, db_id, sm);
@@ -143,7 +143,7 @@ public class User {
 		List<Group> groups = Invitation.verifyInvitation(email, code, sm);
 		Option opt = Option.createOption(sm);
 		//Status status = Status.createStatus(sm);
-		List<UserEmail> emails = new LinkedList<UserEmail>();
+		Map<String, UserEmail> emails = new HashMap<String, UserEmail>();
 		Keys keys = Keys.createKeys(password, sm);
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = new Date();
@@ -158,8 +158,8 @@ public class User {
 			group.addUser(email, sm);
 			newUser.getGroups().add(group);
 		}
-		UserEmail userEmail = UserEmail.createUserEmail(email, newUser, (code != null), sm);
-		newUser.getUserEmails().add(userEmail);
+		UserEmail userEmail = UserEmail.createUserEmail(email, newUser, !groups.isEmpty(), sm);
+		newUser.getUserEmails().put(email, userEmail);
 		db.commitTransaction(transaction);
 		return newUser;
 	}
@@ -176,14 +176,14 @@ public class User {
 	protected Map<String, WebsiteApp> websiteAppsDBmap;
 	protected Map<Integer, App> appsIDmap;
 	protected int		max_single_id;
-	protected List<UserEmail> emails;
+	protected Map<String, UserEmail> emails;
 	protected Map<String, WebsocketSession> websockets;
 	protected List<Group> groups;
 	protected boolean isAdmin;
 	
 	protected SessionSave sessionSave;
 	
-	public User(String db_id, String first_name, String last_name, String email, Keys keys, Option opt, /*Status*/ String status, List<UserEmail> emails, boolean isAdmin, SessionSave sessionSave) {
+	public User(String db_id, String first_name, String last_name, String email, Keys keys, Option opt, /*Status*/ String status, Map<String, UserEmail> emails, boolean isAdmin, SessionSave sessionSave) {
 		this.db_id = db_id;
 		this.first_name = first_name;
 		this.last_name = last_name;
@@ -197,7 +197,7 @@ public class User {
 			this.profile_columns.add(new LinkedList<Profile>()); 
 		}
 		this.max_single_id = 0;
-		this.emails = new LinkedList<UserEmail>();
+		this.emails = new HashMap<String, UserEmail>();
 		this.websockets = new HashMap<String, WebsocketSession>();
 		this.groups = new LinkedList<Group>();
 		this.isAdmin = isAdmin;
@@ -256,7 +256,7 @@ public class User {
 		return status;
 	}*/
 	
-	public List<UserEmail> getUserEmails() {
+	public Map<String, UserEmail> getUserEmails() {
 		return emails;
 	}
 	
@@ -377,8 +377,8 @@ public class User {
 	public void removeDefinitly(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		for (UserEmail mail: emails) {
-			mail.removeFromDB(sm);
+		for (Map.Entry<String, UserEmail> entry : emails.entrySet()) {
+			entry.getValue().removeFromDB(sm);
 		}
 		for (List<Profile> column: this.profile_columns) {
 			for (Profile profile : column) {
@@ -500,25 +500,26 @@ public class User {
 	
 	public List<String> getEmails() {
 		List<String> res = new LinkedList<String> ();
-		for (UserEmail email : this.emails)
-			res.add(email.getEmail());
+		for (Map.Entry<String, UserEmail> entry : emails.entrySet()) {
+			res.add(entry.getValue().getEmail());
+		}
 		return res;
 	}
 	
 	public List<String> getVerifiedEmails() {
 		List<String> verifiedEmails = new LinkedList<String> ();
-		for (UserEmail email : this.emails) {
-			if (email.isVerified())
-				verifiedEmails.add(email.getEmail());
+		for (Map.Entry<String, UserEmail> entry : emails.entrySet()) {
+			if (entry.getValue().isVerified())
+				verifiedEmails.add(entry.getValue().getEmail());
 		}
 		return verifiedEmails;
 	}
 	
 	public List<String> getUnverifiedEmails() {
 		List<String> unverifiedEmails = new LinkedList<String> ();
-		for (UserEmail email : this.emails) {
-			if (!email.isVerified())
-				unverifiedEmails.add(email.getEmail());
+		for (Map.Entry<String, UserEmail> entry : emails.entrySet()) {
+			if (!entry.getValue().isVerified())
+				unverifiedEmails.add(entry.getValue().getEmail());
 		}
 		return unverifiedEmails;
 	}
@@ -602,5 +603,22 @@ public class User {
 			throw new GeneralException(ServletManager.Code.ClientError, "Browser websockets is null");
 		for (Map.Entry<String, WebsocketSession> entry : sessionWebsockets.entrySet())
 			this.websockets.remove(entry.getKey());
+	}
+
+	public void sendVerificationEmail(String email, ServletManager sm) throws GeneralException {
+		if (this.emails.get(email) != null) {
+			this.emails.get(email).askForVerification(this, sm);
+		} else {
+			throw new GeneralException(ServletManager.Code.ClientError, "This email dosen't exist.");
+		}
+	}
+
+	public void verifieEmail(String email, String code, ServletManager sm) throws GeneralException {
+		if (this.emails.get(email) != null) {
+			this.emails.get(email).verifie(code, sm);
+		} else {
+			throw new GeneralException(ServletManager.Code.ClientError, "This email dosen't exist.");
+		}
+		
 	}
 }
