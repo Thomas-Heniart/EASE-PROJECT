@@ -24,9 +24,13 @@ public class WebsocketMessage {
 		return new WebsocketMessage("setSocketId", data, Who.THISTAB);
 	}
 	
-	public static WebsocketMessage addClassicAppMessage(ClassicApp app) {
+	public static WebsocketMessage addClassicAppMessage(ClassicApp app, String newAppItem, String sitesContainerId) {
 		JSONObject data = new JSONObject();
-		// TODO set data
+		data.put("newAppItem", newAppItem);
+		data.put("websiteId", app.getSite().getSingleId());
+		data.put("appId", app.getSingleId());
+		data.put("name", app.getName());
+		data.put("sitesContainerId", sitesContainerId);
 		return new WebsocketMessage ("addClassicApp", data, Who.OTHERTABS);
 	}
 	
