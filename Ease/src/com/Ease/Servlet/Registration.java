@@ -86,7 +86,7 @@ public class Registration extends HttpServlet {
 			else {
 				User newUser = User.createUser(email, fname, "", confirmPassword, invitationCode, sm);
 				session.setAttribute("user", newUser);
-				//sm.redirect("index.jsp");
+				//sm.setRedirectUrl("index.jsp");
 				sm.setResponse(ServletManager.Code.Success, "Registered successfully");
 			}
 		} catch (GeneralException e) {
