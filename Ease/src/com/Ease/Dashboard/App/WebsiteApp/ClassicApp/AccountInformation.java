@@ -73,7 +73,7 @@ public class AccountInformation {
 		return this.information_value;
 	}
 	
-	public void setInformation_value(String information_value, User user, ServletManager sm) throws GeneralException {
+	public void setInformation_value(String information_value, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		db.set("UPDATE accountsInformations SET information_value='" + information_value + "' WHERE id=" + this.db_id + ";");
 		this.information_value = information_value;

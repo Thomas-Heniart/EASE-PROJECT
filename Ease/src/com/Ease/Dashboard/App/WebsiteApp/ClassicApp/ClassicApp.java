@@ -12,6 +12,7 @@ import org.json.simple.parser.ParseException;
 
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.AppInformation;
+import com.Ease.Dashboard.App.AppPermissions;
 import com.Ease.Dashboard.App.GroupApp;
 import com.Ease.Dashboard.App.WebsiteApp.GroupWebsiteApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
@@ -88,6 +89,31 @@ public class ClassicApp extends WebsiteApp {
 			account.removeFromDB(sm);
 		db.set("DELETE FROM classicApps WHERE id=" + classicDBid + ";");
 		super.removeFromDB(sm);
+		db.commitTransaction(transaction);
+	}
+	
+	/*
+	 * 
+	 * Getter And Setter
+	 *
+	 */
+	
+	
+	
+	/*
+	 * 
+	 * Utils
+	 * 
+	 */
+	
+	public void edit(String name, Map<String, String> infos, String password, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		this.setName(name, sm);
+		if (this.groupApp == null || (!this.groupApp.isCommon() && this.groupApp.getPerms().havePermission(AppPermissions.Perm.EDIT.ordinal()))) {
+			this.account.editInfos(infos, sm);
+			this.account.setPassword(password, this.getProfile().getUser(), sm);
+		}
 		db.commitTransaction(transaction);
 	}
 	
