@@ -63,7 +63,6 @@
 	</div>
 </c:when>
 <c:otherwise>
-<div class="${app.getType()}"></div>
 <c:if test="${app.getType() eq 'ClassicApp'}">
 <div class="siteLinkBox"
 	<c:forEach items="${informations}" var="entry">

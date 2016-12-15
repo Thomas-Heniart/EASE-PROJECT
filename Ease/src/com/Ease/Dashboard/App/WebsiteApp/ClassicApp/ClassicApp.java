@@ -5,6 +5,11 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.AppInformation;
 import com.Ease.Dashboard.App.GroupApp;
@@ -84,6 +89,13 @@ public class ClassicApp extends WebsiteApp {
 		db.set("DELETE FROM classicApps WHERE id=" + classicDBid + ";");
 		super.removeFromDB(sm);
 		db.commitTransaction(transaction);
+	}
+	
+	public JSONArray getJSON(ServletManager sm) throws GeneralException{
+		JSONArray infos = super.getJSON(sm);
+		JSONObject websiteInfos = (JSONObject) infos.get(0);
+		websiteInfos.put("user", this.account.getJSON(sm));
+		return infos;
 	}
 	
 }

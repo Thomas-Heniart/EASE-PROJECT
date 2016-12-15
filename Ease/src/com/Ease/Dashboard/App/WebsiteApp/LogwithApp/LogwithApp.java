@@ -1,9 +1,16 @@
 package com.Ease.Dashboard.App.WebsiteApp.LogwithApp;
 
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.AppInformation;
@@ -33,7 +40,7 @@ public class LogwithApp extends WebsiteApp {
 	public static LogwithApp loadLogwithApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, String websiteAppDBid, GroupWebsiteApp groupWebsiteApp, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		try {
-			ResultSet rs = db.get("SELECT * from websiteApps WHERE app_id=" + websiteAppDBid + ";");
+			ResultSet rs = db.get("SELECT * from logWithApps WHERE website_app_id=" + websiteAppDBid + ";");
 			if (rs.next()) {
 				String logwith = rs.getString(Data.LOGWITH_APP_ID.ordinal());
 				String logwithDBid = rs.getString(Data.ID.ordinal());
@@ -51,7 +58,7 @@ public class LogwithApp extends WebsiteApp {
 		int transaction = db.startTransaction();
 		Map<String, Object> elevator = new HashMap<String, Object>();
 		String websiteAppDBid = WebsiteApp.createWebsiteApp(profile, position, name, "logwithApp", site, elevator, sm);
-		String logwithDBid = db.set("INSERT INTO logwithApps VALUES(NULL, " + websiteAppDBid + ", " + logwith.getDBid() + ", NULL);").toString();
+		String logwithDBid = db.set("INSERT INTO logWithApps VALUES(NULL, " + websiteAppDBid + ", " + logwith.getDBid() + ", NULL);").toString();
 		db.commitTransaction(transaction);
 		return new LogwithApp((String)elevator.get("appDBid"), profile, position, (AppInformation)elevator.get("appInfos"), null, (String)elevator.get("registrationDate"), ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, null, logwith.getDBid(), logwithDBid);
 	}
@@ -74,9 +81,17 @@ public class LogwithApp extends WebsiteApp {
 	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		db.set("DELETE FROM logwithApps WHERE id=" + logwithDBid + ";");
+		db.set("DELETE FROM logWithApps WHERE id=" + logwithDBid + ";");
 		super.removeFromDB(sm);
 		db.commitTransaction(transaction);
+	}
+	
+	public JSONArray getJSON(ServletManager sm) throws GeneralException{
+		JSONArray infos = logwith.getJSON(sm);
+		JSONObject websiteInfos = (JSONObject) super.getJSON(sm).get(0);
+		websiteInfos.put("logwith", logwith.getName());
+		infos.add(websiteInfos);
+		return infos;
 	}
 	
 }

@@ -556,6 +556,5 @@ public class User {
 			throw new GeneralException(ServletManager.Code.ClientError, "Browser websockets is null");
 		for (Map.Entry<String, WebsocketSession> entry : sessionWebsockets.entrySet())
 			this.websockets.remove(entry.getKey());
-		
 	}
 }
