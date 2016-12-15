@@ -5,6 +5,11 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.AppInformation;
@@ -90,6 +95,14 @@ public class LinkApp extends App {
 	 * Getter And Setter
 	 * 
 	 */
+	
+	public JSONArray getJSON(ServletManager sm){
+		JSONObject link = new JSONObject();
+		link.put("link", linkInfos.getLink());
+		JSONArray result = new JSONArray();
+		result.add(link);
+		return result;
+	}
 	
 }
 	
