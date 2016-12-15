@@ -23,7 +23,7 @@ pageEncoding="UTF-8"%>
 		<c:forEach items="${colors}" var="color" varStatus="loop">
 			<c:if test="${loop.index < 8}">
 				<div class="colorHolder">
-					<div class="color" color="${color.getColor()}" style="background-color: ${color.getColor()}">
+					<div class="color" color="${color}" style="background-color: ${color}">
 					</div>
 				</div>
 			</c:if>
