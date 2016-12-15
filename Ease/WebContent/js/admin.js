@@ -100,7 +100,7 @@ function sendInvitation(email, group_id, callback) {
 /* Requested sites */
 
 function getRequestedSites() {
-	postHandler.post('requestedWebsites', {}, function() {
+	$.get('requestedWebsites', {socketId:socketId}, function() {
 	}, function(retMsg) {
 		printRequestedWebsites(retMsg);
 	}, function(retMsg) {
@@ -110,7 +110,6 @@ function getRequestedSites() {
 function printRequestedWebsites(string) {
 	var requests = string.split(";");
 	for ( var i in requests) {
-		if (i > 0) {
 			$('.requestedWebsitesView').append(
 					"<div class='requestedWebsite' website='"
 							+ requests[i].split("-SENTBY-")[0]
@@ -123,7 +122,6 @@ function printRequestedWebsites(string) {
 							+ ", "
 							+ requests[i].split("-SENTBY-")[1].split("-DATE-")[1].substring(0,10)
 							+ ")</p></div>");
-		}
 	}
 	$('.requestedWebsite .quit').click(function(){
 		eraseWebsite($(this));

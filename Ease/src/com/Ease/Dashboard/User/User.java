@@ -17,12 +17,15 @@ import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.AccountInformation;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.Profile.ProfilePermissions;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Invitation;
+import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 import com.Ease.websocket.WebsocketSession;
 
@@ -540,6 +543,18 @@ public class User {
 		profile.getApps().remove(app);
 		app.removeFromDB(sm);
 		profile.updateAppsIndex(sm);
+		if (app.getType().equals("ClassicApp")) {
+			for (AccountInformation info : ((ClassicApp)app).getAccount().getAccountInformations()) {
+				if (Regex.isEmail(info.getInformationValue()) == true) {
+					String email = info.getInformationValue();
+					UserEmail userEmail;
+					if ((userEmail = this.emails.get(email)) != null) {
+						userEmail.removeIfNotUsed(this.db_id, sm);
+					}
+				}
+			}
+				
+		}
 		db.commitTransaction(transaction);
 	}
 
