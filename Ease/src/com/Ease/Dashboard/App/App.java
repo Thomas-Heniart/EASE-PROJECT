@@ -123,9 +123,9 @@ public class App {
 		int transaction = db.startTransaction();
 		if (this.groupApp != null && (this.groupApp.isCommon() == true || !this.groupApp.getPerms().havePermission(AppPermissions.Perm.DELETE.ordinal())))
 			throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permission to remove this app.");
+		db.set("DELETE FROM apps WHERE id=" + db_id + ";");
 		if (this.groupApp == null || this.groupApp.isCommon() == false)
 			informations.removeFromDb(sm);
-		db.set("DELETE FROM apps WHERE id=" + db_id + ";");
 		db.commitTransaction(transaction);
 	}
 	
