@@ -108,6 +108,18 @@ public class Account {
 		return infos;
 	}
 	
+	public void setPassword(String password, User user, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		String cryptedPassword = user.encrypt(password);
+		db.set("UPDATE FROM accounts SET password='" + cryptedPassword + "' WHERE id=" + this.db_id + ";");
+	}
+	
+	/*
+	 * 
+	 * Utils
+	 * 
+	 */
+	
 	public JSONObject getJSON(ServletManager sm) throws GeneralException{
 		JSONObject obj = new JSONObject();
 		obj.put("password", sm.getUser().decrypt(this.crypted_password));
@@ -115,5 +127,19 @@ public class Account {
 			obj.put(info.getInformationName(), info.getInformationValue());
 		}
 		return obj;
+	}
+	
+	public void editInfos(Map<String, String> infos, ServletManager sm) throws GeneralException {
+		String value;
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		for (AccountInformation info : this.infos) {
+			if ((value = infos.get(info.getInformationName())) != null) {
+				 info.setInformation_value(value, sm);
+			} else {
+				throw new GeneralException(ServletManager.Code.ClientError, "Wrong information names.");
+			}
+		}
+		db.commitTransaction(transaction);
 	}
 }

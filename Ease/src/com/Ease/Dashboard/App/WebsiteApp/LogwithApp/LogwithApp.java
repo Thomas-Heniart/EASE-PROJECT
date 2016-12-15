@@ -9,7 +9,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.Ease.Context.Catalog.Website;
+import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.AppInformation;
+import com.Ease.Dashboard.App.AppPermissions;
 import com.Ease.Dashboard.App.GroupApp;
 import com.Ease.Dashboard.App.WebsiteApp.GroupWebsiteApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
@@ -54,9 +56,11 @@ public class LogwithApp extends WebsiteApp {
 		int transaction = db.startTransaction();
 		Map<String, Object> elevator = new HashMap<String, Object>();
 		String websiteAppDBid = WebsiteApp.createWebsiteApp(profile, position, name, "logwithApp", site, elevator, sm);
-		String logwithDBid = db.set("INSERT INTO logWithApps VALUES(NULL, " + websiteAppDBid + ", " + logwith.getDBid() + ", NULL);").toString();
+		String logwithDBid = db.set("INSERT INTO logWithApps VALUES(NULL, " + websiteAppDBid + ", " + logwith.getWebsiteAppDBid() + ", NULL);").toString();
 		db.commitTransaction(transaction);
-		return new LogwithApp((String)elevator.get("appDBid"), profile, position, (AppInformation)elevator.get("appInfos"), null, (String)elevator.get("registrationDate"), ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, null, logwith.getDBid(), logwithDBid);
+		LogwithApp app = new LogwithApp((String)elevator.get("appDBid"), profile, position, (AppInformation)elevator.get("appInfos"), null, (String)elevator.get("registrationDate"), ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, null, logwith.getDBid(), logwithDBid);
+		app.rempLogwith(logwith);
+		return app;
 	}
 	
 	/*
@@ -97,8 +101,15 @@ public class LogwithApp extends WebsiteApp {
 		return logwithDBid;
 	}
 	
-	public void setLogwith(WebsiteApp logwith) {
+	public void rempLogwith(WebsiteApp logwith) {
 		this.logwith = logwith;
+	}
+	
+	public void setLogwith(WebsiteApp logwith, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		db.set("UPDATE FROM logWithApps SET logwith_website_app_id=" + logwith.getDBid() + " WHERE id=" + this.db_id + ";");
+		this.logwith = logwith;
+		this.logwithDBid = logwith.getDBid();
 	}
 
 	public JSONArray getJSON(ServletManager sm) throws GeneralException{
@@ -107,5 +118,17 @@ public class LogwithApp extends WebsiteApp {
 		websiteInfos.put("logwith", logwith.getName());
 		infos.add(websiteInfos);
 		return infos;
+	}
+
+	public void edit(String name, App logwith, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		this.setName(name, sm);
+		if (this.groupApp == null || (!this.groupApp.isCommon() && this.groupApp.getPerms().havePermission(AppPermissions.Perm.EDIT.ordinal()))) {
+			if (logwith.getType().equals("ClassicApp") || logwith.getType().equals("LogwithApp")) {
+				this.setLogwith((WebsiteApp)logwith, sm);
+			}
+		}
+		db.commitTransaction(transaction);
 	}
 }

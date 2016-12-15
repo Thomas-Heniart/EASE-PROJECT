@@ -7,11 +7,10 @@ import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.AppInformation;
+import com.Ease.Dashboard.App.AppPermissions;
 import com.Ease.Dashboard.App.GroupApp;
 import com.Ease.Dashboard.App.WebsiteApp.GroupWebsiteApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
@@ -93,6 +92,31 @@ public class ClassicApp extends WebsiteApp {
 	
 	public Account getAccount(){
 		return account;
+	}
+	/*
+	 * 
+	 * Getter And Setter
+	 *
+	 */
+	
+	
+	
+	/*
+	 * 
+	 * Utils
+	 * 
+	 */
+	
+	public void edit(String name, Map<String, String> infos, String password, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		this.setName(name, sm);
+		if (this.groupApp == null || (!this.groupApp.isCommon() && this.groupApp.getPerms().havePermission(AppPermissions.Perm.EDIT.ordinal()))) {
+			this.account.editInfos(infos, sm);
+			if (password != null && !password.equals(""))
+				this.account.setPassword(password, this.getProfile().getUser(), sm);
+		}
+		db.commitTransaction(transaction);
 	}
 	
 	public JSONArray getJSON(ServletManager sm) throws GeneralException{
