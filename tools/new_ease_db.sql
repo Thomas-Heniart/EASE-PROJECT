@@ -459,7 +459,7 @@ group_logWith_app_id INT(10) UNSIGNED,
 PRIMARY KEY (id),
 FOREIGN KEY (website_app_id) REFERENCES websiteApps(id),
 FOREIGN KEY (logWith_website_app_id) REFERENCES websiteApps(id),
-FOREIGN KEY (group_logWith_app_id) REFERENCES groupLogWithApps(id)
+FOREIGN KEY (group_logWith_app_id) REFERENCES groupLogwithApps(id)
 );
 
 CREATE TABLE linkAppInformations
