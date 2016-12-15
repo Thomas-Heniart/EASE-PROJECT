@@ -257,7 +257,7 @@ var Profile = function(rootEl){
 		var name = $(this).parent().find('input').val();
 		if (name.length){
 			easeLoadingIndicator.show();
-			postHandler.post('editProfileName', {
+			postHandler.post('EditProfileName', {
 				name : name,
 				index : self.id
 			}, function() {
@@ -287,7 +287,7 @@ var Profile = function(rootEl){
 		easeLoadingIndicator.show();
 		self.qRoot.find('#modifyColorForm .color.choosen').removeClass('choosen');
 		$(this).addClass('choosen');
-		postHandler.post('editProfileColor', {
+		postHandler.post('EditProfileColor', {
 			color : color,
 			index : self.id
 		}, function() {
@@ -351,7 +351,7 @@ function setupSortableContainer(container) {
 				'opacity' : ''
 			});
 			if (!($(evt.to).is($(evt.from))) || evt.oldIndex != evt.newIndex) {
-				postHandler.post("moveApp", {
+				postHandler.post("MoveApp", {
 					appId : item.attr('id'),
 					profileId : item.parent().attr('id'),
 					index : item.index()
@@ -389,7 +389,7 @@ $(document).ready(function() {
 	$('.helpIntegrateApps #integrateAppForm #integrate').click(function() {
 		var form = $(this).closest('#integrateAppForm');
 		postHandler.post(
-			'askForNewApp',
+			'WebsiteRequest',
 			{
 				ask : $(form).find('#integrateApp').val()
 			},

@@ -428,15 +428,12 @@ var Form = {
 			$(self.oParent.app).find('.linkImage').removeClass('easyScaling');
 		}
 		this.successCallback = function(retMsg) {
-			var json = JSON.parse(retMsg);
 			var webId = (self.oParent.app).attr("webid");
 			var x = parseInt($(".catalogApp[idx='" + webId + "'] span.apps-integrated i.count").html());
 			$(".catalogApp[idx='" + webId + "'] span.apps-integrated i.count").html(x-1);
 			if (x == 1)
 				$(".catalogApp[idx='" + webId + "'] span.apps-integrated").removeClass("showCounter");
 			$(self.oParent.app).find('.linkImage').addClass('deletingApp');
-			$(".suggested-emails p[email='" + json['email'] + "']").remove();
-			$("#editVerifiedEmails .emailLine input[value='" + json['email'] + "']").parent().remove();
 			setTimeout(function() {
 				self.oParent.app.remove();
 			}, 500);
