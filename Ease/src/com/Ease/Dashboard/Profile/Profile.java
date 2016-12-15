@@ -186,9 +186,6 @@ public class Profile {
 		db.set("DELETE FROM profiles WHERE id=" + this.db_id + ";");
 		if (this.groupProfile == null || this.groupProfile.isCommon() == false)
 			this.infos.removeFromDB(sm);
-		if (this.groupProfile == null || this.groupProfile.isCommon() == false) {
-			this.infos.removeFromDB(sm);
-		}
 		db.commitTransaction(transaction);
 	}
 	
