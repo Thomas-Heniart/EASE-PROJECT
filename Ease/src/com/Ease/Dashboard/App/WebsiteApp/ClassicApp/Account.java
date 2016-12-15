@@ -104,6 +104,10 @@ public class Account {
 		return db_id;
 	}
 	
+	public List<AccountInformation> getAccountInformations(){
+		return infos;
+	}
+	
 	public JSONObject getJSON(ServletManager sm) throws GeneralException{
 		JSONObject obj = new JSONObject();
 		obj.put("password", sm.getUser().decrypt(this.crypted_password));

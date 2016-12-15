@@ -21,7 +21,7 @@ function sendEvent(obj) {
 	        }, 1000);
 	        if (typeof link !== typeof undefined && link !== false) {
 	        } else {
-	        	postHandler.post("askInfo", {
+	        	postHandler.post("AskInfo", {
 	        		appId : appId,
 	        	}, function() {
 	        	}, function(retMsg) {
@@ -67,7 +67,7 @@ function sendEvent(obj) {
             $(obj).removeClass("waitingLinkImage");
             $(obj).removeClass('scaleinAnimation');
         }, 1000);
-        	postHandler.post("askInfo", {
+        	postHandler.post("AskInfo", {
         		appId : appId,
         	}, function() {
         	}, function(retMsg) {
@@ -83,10 +83,10 @@ function sendEvent(obj) {
         		} else {
         			easeTracker.trackEvent(json.detail[json.detail.length - 1].website.name + " connections");
         		}
-        		
-        		//TO RE ADD 
+        		console.log(json);
+        		/*
         		event = new CustomEvent(message, json);
-        		document.dispatchEvent(event);
+        		document.dispatchEvent(event);*/
         	}, function(retMsg) {
         		easeTracker.trackEvent("App fail clicks");
         		showAlertPopup(retMsg, true);
