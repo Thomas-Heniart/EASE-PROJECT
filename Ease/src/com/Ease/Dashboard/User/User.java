@@ -172,6 +172,7 @@ public class User {
 	protected Map<String, WebsocketSession> websockets;
 	protected List<Group> groups;
 	protected boolean isAdmin;
+	protected Status status;
 	
 	protected SessionSave sessionSave;
 	
@@ -589,5 +590,9 @@ public class User {
 			throw new GeneralException(ServletManager.Code.ClientError, "Browser websockets is null");
 		for (Map.Entry<String, WebsocketSession> entry : sessionWebsockets.entrySet())
 			this.websockets.remove(entry.getKey());
+	}
+
+	public void passStep(String tutoStep, DataBaseConnection db) throws GeneralException {
+		this.status.passStep(tutoStep, db);
 	}
 }
