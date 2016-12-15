@@ -208,6 +208,14 @@ public class ServletManager {
 		return request.getServletContext().getAttribute(attr);
 	}
 	
+	public User getUser(){
+		return user;
+	}
+	
+	public String getRealPath(String path){
+		return request.getServletContext().getRealPath(path);
+	}
+	
 	public void setSocketId(String socketId) throws GeneralException {
 		if (debug && socketId == null)
 			return;

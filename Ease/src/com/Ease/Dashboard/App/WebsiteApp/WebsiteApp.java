@@ -5,6 +5,11 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Context.Group.GroupManager;
@@ -120,6 +125,15 @@ public class WebsiteApp extends App {
 	
 	public Website getSite() {
 		return this.website;
+	}
+	
+	public JSONArray getJSON(ServletManager sm) throws GeneralException{
+		JSONArray infos = new JSONArray();
+		JSONObject websiteInfos = new JSONObject();
+		websiteInfos.put("website", website.getJSON(sm));
+		infos.add(websiteInfos);
+		return infos;
+		
 	}
 	
 	

@@ -172,15 +172,31 @@ CREATE TABLE `websites` (
   `sso` int(10) unsigned DEFAULT NULL,
   `noLogin` tinyint(1) DEFAULT '0',
   `website_homepage` text NOT NULL,
-  `hidden` tinyint(1) DEFAULT '0',
   `ratio` int(10) unsigned DEFAULT '0',
   `position` int(10) unsigned DEFAULT '1',
   `insertDate` datetime DEFAULT CURRENT_TIMESTAMP,
+  `website_attributes_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`sso`) REFERENCES sso (id),
+  FOREIGN KEY (`website_attributes_id`) REFERENCES websiteAttributes (id)
+);
+
+CREATE TABLE websiteAttributes (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `locked` tinyint(1) unsigned DEFAULT '0',
   `lockedExpiration` datetime DEFAULT NULL,
   `new` tinyint(1) NOT NULL DEFAULT '1',
+  `work` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE websitesAndGroupsMap (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `website_id` int(10) unsigned NOT NULL,
+  `group_id` int(10) unsigned NOT NULL
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`sso`) REFERENCES sso (id)
+  FOREIGN KEY (`website_id`) REFERENCES websites (id),
+  FOREIGN KEY (`group_id`) REFERENCES groups (id)
 );
 
 CREATE TABLE appsInformations

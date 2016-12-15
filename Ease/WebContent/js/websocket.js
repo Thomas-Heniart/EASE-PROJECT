@@ -44,6 +44,18 @@ function onMessage(event) {
 				$(this).width(0);
 			}
 		});
+    } else if (action == "addClassicApp") {
+    	console.log("addClassicApp");
+    	var sitesContainerId = data.sitesContainerId;
+    	var newAppItem = $.parseHTML(data.newAppItem);
+    	newAppItem.attr("webid", data.websiteId);
+    	newAppItem.attr("name", data.name);
+    	newAppItem.attr("logwith", "false");
+    	newAppItem.attr("id", data.appId);
+    	newAppItem.attr("move", "true");
+    	newAppItem.attr("ssoid", "0");
+    	newAppItem.attr("class", "siteLinkBox");
+    	$("#" + sitesContainerId + ".SitesContainer").append(newAppItem);
     }
 }
 

@@ -9,6 +9,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+
+import org.json.simple.JSONArray;
+
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.LinkApp.LinkApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
@@ -172,5 +176,9 @@ public class App {
 		if (this.groupApp == null || (!this.groupApp.isCommon() && this.groupApp.getPerms().havePermission(perm.ordinal())))
 			return true;
 		return false;
+	}
+	
+	public JSONArray getJSON(ServletManager sm) throws GeneralException{
+		return new JSONArray();
 	}
 }

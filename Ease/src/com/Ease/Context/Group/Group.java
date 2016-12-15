@@ -2,17 +2,16 @@ package com.Ease.Context.Group;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
 
-
+import com.Ease.Context.Catalog.Catalog;
+import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.GroupApp;
 import com.Ease.Dashboard.Profile.GroupProfile;
-import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
@@ -52,6 +51,7 @@ public class Group {
 	public static List<Group> loadGroup(DataBaseConnection db, Group parent, Infrastructure infra, ServletContext context) throws GeneralException {
 		try {
 			IdGenerator idGenerator = (IdGenerator)context.getAttribute("idGenerator");
+			Catalog catalog = (Catalog) context.getAttribute("catalog");
 			List<Group> groups = new LinkedList<Group>();
 			ResultSet rs = db.get("SELECT * FROM groups WHERE parent " + ((parent == null) ? " IS NULL" : ("="+parent.getDBid())) + " AND infra_id=" + infra.getDBid() + ";");
 			String db_id;
@@ -71,6 +71,7 @@ public class Group {
 				groupApps = GroupApp.loadGroupApps(child, db, context);
 				child.setGroupApps(groupApps);
 				groups.add(child);
+				child.loadWebsites(db, catalog);
 				GroupManager.getGroupManager(context).add(child);
 			}
 			return groups;
@@ -80,6 +81,18 @@ public class Group {
 	}
 	
 	
+	private void loadWebsites(DataBaseConnection db, Catalog catalog) throws GeneralException {
+		ResultSet rs = db.get("SELECT website_id FROM websitesAndGroupsMap WHERE group_id = " + this.db_id + ";");
+		try {
+			while (rs.next()) {
+				this.groupWebsites.add(catalog.getWebsiteWithDBid(rs.getString(1)));
+			}
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+	}
+
+
 	/*
 	 * 
 	 * Constructor
@@ -94,6 +107,7 @@ public class Group {
 	protected List<GroupApp> groupApps;
 	protected Infrastructure infra;
 	protected int	single_id;
+	protected List<Website> groupWebsites;
 	
 	public Group(String db_id, String name, Group parent, Infrastructure infra, int single_id) {
 		this.db_id = db_id;
@@ -104,6 +118,7 @@ public class Group {
 		this.single_id = single_id;
 		this.groupProfiles = null;
 		this.groupApps = null;
+		this.groupWebsites = new LinkedList<Website>();
 	}
 	
 	/*

@@ -5,6 +5,12 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+
 import com.Ease.Context.Group.Infrastructure;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
@@ -96,5 +102,14 @@ public class Account {
 	
 	public String getDBid() {
 		return db_id;
+	}
+	
+	public JSONObject getJSON(ServletManager sm) throws GeneralException{
+		JSONObject obj = new JSONObject();
+		obj.put("password", sm.getUser().decrypt(this.crypted_password));
+		for(AccountInformation info : this.infos){
+			obj.put(info.getInformationName(), info.getInformationValue());
+		}
+		return obj;
 	}
 }
