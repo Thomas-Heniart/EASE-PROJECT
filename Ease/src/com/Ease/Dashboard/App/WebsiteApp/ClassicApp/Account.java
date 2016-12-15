@@ -104,6 +104,10 @@ public class Account {
 		return db_id;
 	}
 	
+	public List<AccountInformation> getAccountInformations(){
+		return infos;
+	}
+	
 	public void setPassword(String password, User user, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		String cryptedPassword = user.encrypt(password);

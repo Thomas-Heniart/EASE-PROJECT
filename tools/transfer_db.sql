@@ -1,14 +1,8 @@
 INSERT INTO ease.sso
 SELECT * FROM test.sso;
 
-
-INSERT INTO ease.websiteAttributes
-SELECT null, locked, lockedExpiration, 1, hidden FROM test.websites;
-
-SET @var := 0;
-
 INSERT INTO ease.websites
-SELECT website_id, website_url, website_name, folder, sso, noLogin, website_homepage, ratio, position, insertDate, (@var := @var + 1) FROM test.websites ;
+SELECT website_id, website_url, website_name, folder, sso, noLogin, website_homepage, hidden, ratio, position, insertDate, locked, lockedExpiration FROM test.websites;
 
 INSERT INTO ease.websitesInformations
 SELECT * FROM test.websitesInformations;

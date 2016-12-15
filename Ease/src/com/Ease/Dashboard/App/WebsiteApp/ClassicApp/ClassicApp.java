@@ -90,6 +90,9 @@ public class ClassicApp extends WebsiteApp {
 		db.commitTransaction(transaction);
 	}
 	
+	public Account getAccount(){
+		return account;
+	}
 	/*
 	 * 
 	 * Getter And Setter

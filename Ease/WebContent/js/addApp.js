@@ -86,7 +86,7 @@ function showAddAppPopup(container, helper) {
 	var ssoChooser = $('#PopupAddApp .loginSsoChooser');
 	var ssoId = $(helper).attr('data-sso');
 
-	if (ssoId != "" && ssoId != null) {
+	if (ssoId != "" && ssoId != "0") {
 		var apps = $(".siteLinkBox[ssoId='" + ssoId + "']");
 		var logins = [];
 		if (apps.length != 0)
