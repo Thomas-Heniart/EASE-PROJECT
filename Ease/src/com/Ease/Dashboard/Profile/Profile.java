@@ -16,8 +16,10 @@ import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.User.User;
+import com.Ease.Dashboard.User.UserEmail;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 
 public class Profile {
@@ -323,9 +325,19 @@ public class Profile {
 	}
 	
 	public ClassicApp addClassicApp(String name, Website site, String password, Map<String, String> infos, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
 		int position = this.apps.size();
 		ClassicApp app = ClassicApp.createClassicApp(this, position, name, site, password, infos, sm, user);
 		this.apps.add(app);
+		for (Map.Entry<String, String> entry : infos.entrySet()) {
+			if (Regex.isEmail(entry.getValue()) == true) {
+				if (this.getUser().getUserEmails().get(entry.getValue()) == null) {
+					this.getUser().getUserEmails().put(entry.getValue(), UserEmail.createUserEmail(entry.getValue(), user, false, sm));
+				}
+			}
+		}
+		db.commitTransaction(transaction);
 		return app;
 	}
 	

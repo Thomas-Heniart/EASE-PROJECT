@@ -261,18 +261,22 @@ public class Group {
 	}
 	
 	public void addUser(String email, ServletManager sm) throws GeneralException {
+		@SuppressWarnings("unchecked")
 		Map<String, User> users = (Map<String, User>) sm.getContextAttr("users");
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		String db_id = User.findDBid(email, sm);
 		User user;
-		Group group;
 		if ((user = users.get(email)) == null) {
 			this.loadAllContentConnected(user, sm);
 		} else {
 			this.loadAllContentUnconnected(db_id, sm);
 		}
-		db.set("INSERT INTO groupsAndUsersMap VALUES(NULL, " + this.db_id + ", " + db_id + ");");
+		db.set("INSERT INTO groupsAndUsersMap VALUES(NULL, " + this.db_id + ", " + db_id + ", " + (user.tutoDone() ? "1" : "0") + ");");
 		db.commitTransaction(transaction);
+	}
+
+	public void tutoStepDone(String user_id, DataBaseConnection db) throws GeneralException {
+		db.set("UPDATA groupsAndUsersMap SET saw_group = 1 WHERE group_id=" + this.db_id + " AND user_id = " + user_id + ");");
 	}
 }

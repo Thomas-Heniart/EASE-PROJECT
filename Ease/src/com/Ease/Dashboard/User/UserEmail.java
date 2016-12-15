@@ -2,12 +2,16 @@ package com.Ease.Dashboard.User;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.mail.MessagingException;
 
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.Mail;
 import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.Crypto.CodeGenerator;
 
 public class UserEmail {
 	
@@ -19,16 +23,16 @@ public class UserEmail {
 		VERIFIED
 	}
 	
-	public static List<UserEmail> loadEmails(String user_id, ServletManager sm) throws GeneralException {
+	public static Map<String, UserEmail> loadEmails(String user_id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		List<UserEmail> emails = new LinkedList<UserEmail>();
+		Map<String, UserEmail> emails = new HashMap<String, UserEmail>();
 		ResultSet rs = db.get("SELECT * FROM usersEmails WHERE user_id=" + user_id + ";");
 		try {
 			while(rs.next()) {
 				String db_id = rs.getString(UserEmailData.ID.ordinal());
 				String email = rs.getString(UserEmailData.EMAIL.ordinal());
 				boolean verified = rs.getBoolean(UserEmailData.VERIFIED.ordinal());
-				emails.add(new UserEmail(db_id, email, verified));
+				emails.put(email, new UserEmail(db_id, email, verified));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -102,6 +106,20 @@ public class UserEmail {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 		return false;
+	}
+	
+	public void askForVerification(User user, ServletManager sm) throws GeneralException{
+		try {
+			Mail mailToSend = new Mail();
+			String code = CodeGenerator.generateNewCode();
+			DataBaseConnection db = sm.getDB();
+			int transaction = db.startTransaction();
+			db.set("INSERT INTO usersEmailsPending VALUES(NULL, " + this.db_id + ", '" + code + "')");
+			mailToSend.sendVerificationEmail(this.email, user.getFirstName(), code);
+			db.commitTransaction(transaction);
+		} catch (MessagingException e) {
+			throw new GeneralException(ServletManager.Code.InternError, "Email not sended.");
+		}
 	}
 	
 	public void verifie(String code, ServletManager sm) throws GeneralException {

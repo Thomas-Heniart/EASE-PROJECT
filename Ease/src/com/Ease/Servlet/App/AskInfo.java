@@ -73,10 +73,8 @@ public class AskInfo extends HttpServlet {
 			sm.setLogResponse("Info sended for app "+app.getDBid());
 			sm.setResponse(ServletManager.Code.Success, result);
 		} catch (GeneralException e) {
-			sm.setLogResponse(null);
 			sm.setResponse(e);
 		} catch (NumberFormatException e) {
-			sm.setLogResponse(null);
 			sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");
 		}
 		sm.sendResponse();
