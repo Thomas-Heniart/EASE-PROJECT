@@ -191,7 +191,7 @@ CREATE TABLE `websites` (
   `ratio` int(10) unsigned DEFAULT '0',
   `position` int(10) unsigned DEFAULT '1',
   `insertDate` datetime DEFAULT CURRENT_TIMESTAMP,
-  `website_attributes_id` int(10) unsigned NOT NULL,
+  `website_attributes_id` int(10) unsigned,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`sso`) REFERENCES sso (id),
   FOREIGN KEY (`website_attributes_id`) REFERENCES websiteAttributes (id)

@@ -634,4 +634,13 @@ public class User {
 	public boolean tutoDone() {
 		return this.status.tutoIsDone();
 	}
+
+	public void addEmailIfNeeded(String email, ServletManager sm) throws GeneralException {
+		UserEmail userEmail = this.emails.get(email);
+		if (userEmail != null)
+			return;
+		userEmail = UserEmail.createUserEmail(email, this, false, sm);
+		this.emails.put(email, userEmail);
+		
+	}
 }

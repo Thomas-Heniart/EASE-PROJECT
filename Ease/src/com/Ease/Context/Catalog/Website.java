@@ -1,6 +1,5 @@
 package com.Ease.Context.Catalog;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -13,7 +12,6 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -33,13 +31,9 @@ public class Website {
 		SSO,
 		NO_LOGIN,
 		WEBSITE_HOMEPAGE,
-		HIDDEN,
 		RATIO,
 		POSITION,
-		INSERT_DATE,
-		LOCKED,
-		LOCKED_EXPIRATION,
-		NEW
+		WEBSITE_ATTRIBUTES_ID
 	}
 	
 	public static Website getWebsite(int single_id, ServletManager sm) throws GeneralException {
@@ -65,14 +59,14 @@ public class Website {
 				int sso = rs.getInt(WebsiteData.SSO.ordinal());
 				boolean noLogin = rs.getBoolean(WebsiteData.NO_LOGIN.ordinal());
 				String website_homepage = rs.getString(WebsiteData.WEBSITE_HOMEPAGE.ordinal());
-				boolean hidden = rs.getBoolean(WebsiteData.HIDDEN.ordinal());
 				int ratio = rs.getInt(WebsiteData.RATIO.ordinal());
 				int position = rs.getInt(WebsiteData.POSITION.ordinal());
-				boolean locked = rs.getBoolean(WebsiteData.LOCKED.ordinal());
-				String lockedExpiration = rs.getString(WebsiteData.LOCKED_EXPIRATION.ordinal());
-				boolean isNew = rs.getBoolean(WebsiteData.NEW.ordinal());
+				String websiteAttributesId = rs.getString(WebsiteData.WEBSITE_ATTRIBUTES_ID.ordinal());
+				WebsiteAttributes websiteAttributes = null;
+				if (websiteAttributesId != null)
+					websiteAttributes = WebsiteAttributes.loadWebsiteAttributes(websiteAttributesId, db);
 				int single_id = ((IdGenerator)context.getAttribute("idGenerator")).getNextId();
-				websites.add(new Website(db_id, single_id, name, loginUrl, folder, sso, noLogin, website_homepage, hidden, ratio, position, locked, lockedExpiration, isNew, website_informations));
+				websites.add(new Website(db_id, single_id, name, loginUrl, folder, sso, noLogin, website_homepage, ratio, position, website_informations, websiteAttributes));
 			}
 			return websites;
 		} catch (SQLException e) {
@@ -89,15 +83,12 @@ public class Website {
 	protected int sso;
 	protected boolean noLogin;
 	protected String website_homepage;
-	protected boolean hidden;
 	protected int ratio;
-	protected boolean locked;
-	protected boolean isNew;
-	protected String lockedExpiration;
+	protected WebsiteAttributes websiteAttributes;
 	protected List<WebsiteInformation> website_informations;
 	protected List<Website> loginWithWebsites;
 	
-	public Website(String db_id, int single_id, String name, String loginUrl, String folder, int sso, boolean noLogin, String website_homepage, boolean hidden, int ratio, int position, boolean locked, String lockedExpiration, boolean isNew, List<WebsiteInformation> website_informations) {
+	public Website(String db_id, int single_id, String name, String loginUrl, String folder, int sso, boolean noLogin, String website_homepage, int ratio, int position, List<WebsiteInformation> website_informations, WebsiteAttributes websiteAttributes) {
 		this.db_id = db_id;
 		this.single_id = single_id;
 		this.loginUrl = loginUrl;
@@ -105,14 +96,12 @@ public class Website {
 		this.sso = sso;
 		this.noLogin = noLogin;
 		this.website_homepage = website_homepage;
-		this.hidden = hidden;
 		this.ratio = ratio;
-		this.locked = locked;
 		this.website_informations = website_informations;
 		this.name = name;
 		this.position = position;
-		this.isNew = isNew;
 		this.loginWithWebsites = new LinkedList<Website>();
+		this.websiteAttributes = websiteAttributes;
 	}
 	
 	public String getDb_id() {
@@ -190,11 +179,15 @@ public class Website {
 	}
 	
 	public boolean isHidden() {
-		return this.hidden;
+		return this.websiteAttributes.isWorking();
+	}
+	
+	public boolean work() {
+		return this.websiteAttributes.isWorking();
 	}
 	
 	public boolean isNew() {
-		return this.isNew;
+		return this.websiteAttributes.isNew();
 	}
 	
 	public JSONObject getJSON(ServletManager sm) throws GeneralException{

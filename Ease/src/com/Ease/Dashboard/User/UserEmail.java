@@ -3,10 +3,13 @@ package com.Ease.Dashboard.User;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import javax.mail.MessagingException;
 
+import com.Ease.Dashboard.App.App;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Mail;
@@ -49,12 +52,14 @@ public class UserEmail {
 	
 	protected String db_id;
 	protected String email;
+	protected List<App> appsUsing;
 	protected boolean verified;
 	
 	public UserEmail(String db_id, String email, boolean verified) {
 		this.db_id = db_id;
 		this.email = email;
 		this.verified = verified;
+		this.appsUsing = new LinkedList<App>();
 	}
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
@@ -91,7 +96,7 @@ public class UserEmail {
 	
 	public boolean removeIfNotUsed(String user_id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		ResultSet emailRs = db.get("SELECT count(distinct usersEmails.email), usersEmails.verified FROM (((apps join profiles ON apps.profile_id = profiles.profile_id) JOIN users on profiles.user_id = users.user_id) JOIN usersEmails ON users.user_id = usersEmails.user_id ) JOIN ClassicAccountsInformations ON apps.account_id = ClassicAccountsInformations.account_id AND usersEmails.email = ClassicAccountsInformations.information_value WHERE users.user_id = " + user_id + " AND usersEmails.email = '" + email+"';");
+		ResultSet emailRs = db.get("SELECT count(distinct usersEmails.email), usersEmails.verified FROM () (((classicApps join  profiles ON apps.profile_id = profiles.id) JOIN users on profiles.user_id = users.id) JOIN usersEmails ON users.id = usersEmails.user_id ) JOIN accounts ON accounts.id =  accountsInformations ON apps.account_id = ClassicAccountsInformations.account_id AND usersEmails.email = ClassicAccountsInformations.information_value WHERE users.user_id = " + user_id + " AND usersEmails.email = '" + email+"';");
 		try {
 			if (emailRs.next()) {
 				int ct = emailRs.getInt(1);
