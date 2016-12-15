@@ -60,12 +60,12 @@ public class AppInformation {
 	
 	public void setName(String name, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE appInformations SET name='" + name + "' WHERE id=" + this.db_id + ";");
+		db.set("UPDATE appsInformations SET name='" + name + "' WHERE id=" + this.db_id + ";");
 		this.name = name;
 	}
 	
 	public void removeFromDb(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("DELETE FROM appInformations WHERE id=" + this.db_id + ";");
+		db.set("DELETE FROM appsInformations WHERE id=" + this.db_id + ";");
 	}
 }

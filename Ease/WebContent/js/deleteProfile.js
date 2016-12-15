@@ -14,7 +14,7 @@ $(document).ready( function() {
      	$('#loading').addClass("la-animate");
      	$(parent).find('.alertDiv').removeClass('show');
 		postHandler.post(
-			'deleteProfile',
+			'RemoveProfile',
 			{
 				index: $(parent).find('#index').val(),
 				password: $(parent).find('#password').val()
