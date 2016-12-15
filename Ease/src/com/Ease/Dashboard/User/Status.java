@@ -31,6 +31,7 @@ public class Status {
 	public static Status loadStatus(String db_id, DataBaseConnection db) throws GeneralException {
 		ResultSet rs = db.get("SELECT * FROM status WHERE id=" + db_id + ";");
 		try {
+			rs.next();
 			boolean first_connection = rs.getBoolean(Data.FIRST_CONNECTION.ordinal());
 			boolean CGU = rs.getBoolean(Data.CGU.ordinal());
 			boolean chrome_scrapping = rs.getBoolean(Data.CHROME_SCRAPPING.ordinal());
