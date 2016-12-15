@@ -606,6 +606,15 @@ public class User {
 	}
 
 	public void passStep(String tutoStep, DataBaseConnection db) throws GeneralException {
-		this.status.passStep(tutoStep, db);
+		if (tutoStep.equals("saw_group")) {
+			for(Group group : this.groups)
+				group.tutoStepDone(this.db_id, db);
+		}
+		else
+			this.status.passStep(tutoStep, db);
+	}
+	
+	public boolean tutoDone() {
+		return this.status.tutoIsDone();
 	}
 }
