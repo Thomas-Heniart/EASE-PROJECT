@@ -389,7 +389,7 @@ $(document).ready(function() {
 	$('.helpIntegrateApps #integrateAppForm #integrate').click(function() {
 		var form = $(this).closest('#integrateAppForm');
 		postHandler.post(
-			'askForNewApp',
+			'WebsiteRequest',
 			{
 				ask : $(form).find('#integrateApp').val()
 			},
