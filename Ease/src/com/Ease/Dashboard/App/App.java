@@ -12,9 +12,6 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.LinkApp.LinkApp;
@@ -172,5 +169,9 @@ public class App {
 	}
 	public boolean havePerm(String perm, ServletContext sc){
 		return true;
+	}
+	
+	public JSONArray getJSON(ServletManager sm) throws GeneralException{
+		return new JSONArray();
 	}
 }
