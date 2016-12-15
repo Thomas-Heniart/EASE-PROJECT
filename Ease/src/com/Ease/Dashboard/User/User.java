@@ -111,6 +111,13 @@ public class User {
 				SessionSave newSessionSave = SessionSave.createSessionSave(keyUser, db_id, sm);
 				User newUser =  new User(db_id, firstName, lastName, email, keys, options, null, emails, isAdmin, newSessionSave);
 				newUser.loadProfiles(sm);
+				for (Map.Entry<String, WebsiteApp> entry : newUser.getWebsiteAppsDBmap().entrySet()){
+				    if (entry.getValue().getType().equals("LogwithApp")) {
+				    	LogwithApp logwithApp = (LogwithApp)entry.getValue();
+				    	App app = newUser.getWebsiteAppsDBmap().get(logwithApp.getLogwithDBid());
+				    	logwithApp.rempLogwith((WebsiteApp)app);
+				    }
+				}
 				ResultSet rs2 = db.get("SELECT group_id FROM groupsAndUsersMap WHERE user_id=" + newUser.getDBid() + ";");
 				Group userGroup;
 				while (rs2.next()) {
