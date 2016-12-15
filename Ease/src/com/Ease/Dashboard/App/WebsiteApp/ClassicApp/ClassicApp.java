@@ -7,8 +7,6 @@ import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.AppInformation;
@@ -112,7 +110,8 @@ public class ClassicApp extends WebsiteApp {
 		this.setName(name, sm);
 		if (this.groupApp == null || (!this.groupApp.isCommon() && this.groupApp.getPerms().havePermission(AppPermissions.Perm.EDIT.ordinal()))) {
 			this.account.editInfos(infos, sm);
-			this.account.setPassword(password, this.getProfile().getUser(), sm);
+			if (password != null && !password.equals(""))
+				this.account.setPassword(password, this.getProfile().getUser(), sm);
 		}
 		db.commitTransaction(transaction);
 	}

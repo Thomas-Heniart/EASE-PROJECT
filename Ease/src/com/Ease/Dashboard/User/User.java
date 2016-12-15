@@ -60,11 +60,11 @@ public class User {
 				SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, sm);
 				User newUser =  new User(db_id, firstName, lastName, email, keys, options, null, emails, isAdmin, sessionSave);
 				newUser.loadProfiles(sm);
-				for (Map.Entry<String, App> entry : newUser.getAppsDBmap().entrySet()){
+				for (Map.Entry<String, WebsiteApp> entry : newUser.getWebsiteAppsDBmap().entrySet()){
 				    if (entry.getValue().getType().equals("LogwithApp")) {
 				    	LogwithApp logwithApp = (LogwithApp)entry.getValue();
-				    	App app = newUser.getAppsDBmap().get(logwithApp.getLogwithDBid());
-				    	logwithApp.setLogwith((WebsiteApp)app);
+				    	App app = newUser.getWebsiteAppsDBmap().get(logwithApp.getLogwithDBid());
+				    	logwithApp.rempLogwith((WebsiteApp)app);
 				    }
 				}
 				ResultSet rs2 = db.get("SELECT group_id FROM groupsAndUsersMap WHERE user_id=" + newUser.getDBid() + ";");
@@ -166,6 +166,7 @@ public class User {
 	//protected Status	status;
 	protected List<List<Profile>> profile_columns;
 	protected Map<String, App> appsDBmap;
+	protected Map<String, WebsiteApp> websiteAppsDBmap;
 	protected Map<Integer, App> appsIDmap;
 	protected int		max_single_id;
 	protected List<UserEmail> emails;
@@ -195,6 +196,7 @@ public class User {
 		this.isAdmin = isAdmin;
 		this.sessionSave = sessionSave;
 		this.appsDBmap = new HashMap<String, App>();
+		this.websiteAppsDBmap = new HashMap<String, WebsiteApp>();
 		this.appsIDmap = new HashMap<Integer, App>();
 	}
 	
@@ -265,6 +267,10 @@ public class User {
 	
 	public Map<String, App> getAppsDBmap() {
 		return appsDBmap;
+	}
+	
+	public Map<String, WebsiteApp> getWebsiteAppsDBmap() {
+		return websiteAppsDBmap;
 	}
 	
 	public Map<Integer, App> getAppsIDmap() {
