@@ -128,10 +128,8 @@ public class ServletManager {
 		this.retMsg = e.getMsg();
 	}
 	
-	public void redirect(String url) {
+	public void setRedirectUrl(String url) {
 		this.redirectUrl = url;
-		this.retCode = 200;
-		this.retMsg = "Redirected to " + url;
 	}
 	
 	public void setLogResponse(String msg) {

@@ -41,8 +41,7 @@
 	<div class="siteLinkBox"
 	 name="${app.getName()}"
 	 id="${app.getSingleId()}"
-	 move="true"
-	 link="${app.getAccount().getLink()}">
+	 move="true">
 	<div class="linkImage">
 	<c:if test="${app.havePerm(AppPermissions.Perm.DELETE)}">
 	<div class="showAppActionsButton">
@@ -81,7 +80,7 @@
 	 name="${app.getName()}"
 	 id="${app.getSingleId()}"
 	 move="true"
-	 logwith="${app.getAccount().getLogWithApp( user ).getAppId()}">
+	 logwith="${app.getLogwith().getSingleId()}">
 </c:if>
 <div class="linkImage">
 	<div class="showAppActionsButton">

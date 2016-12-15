@@ -22,7 +22,7 @@ function sendEvent(obj) {
 	        if (typeof link !== typeof undefined && link !== false) {
 	        } else {
 	        	postHandler.post("AskInfo", {
-	        		appId : appId,
+	        		appId : appId
 	        	}, function() {
 	        	}, function(retMsg) {
 	        		json.detail = JSON.parse(retMsg);
@@ -76,8 +76,9 @@ function sendEvent(obj) {
         		json.detail.highlight = true;
         		if (ctrlDown) json.detail.highlight = false;
         		easeTracker.trackEvent("App successful clicks");
+        		console.log(json.detail[0].url);
         		if(json.detail[0] && json.detail[0].url){
-        			json.detail = {"url":json.detail[0].url};
+        			json.detail = json.detail[0];
         			message = "NewLinkToOpen";
         			easeTracker.trackEvent("link connections");
         		} else {

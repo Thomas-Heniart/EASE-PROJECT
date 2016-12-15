@@ -21,8 +21,7 @@ $(document).ready(function() {
 			postHandler.post('connection',
 					{
 						email : email,
-						password : password,
-						socketId : socketId
+						password : password
 					},
 					function(){},
 					function(retMsg) {
@@ -63,8 +62,7 @@ $(document).ready(function() {
 	                'connection', 
 	                {
 	                    email : email, 
-	                    password : password,
-	                    socketId : socketId
+	                    password : password
 	                },
 	                function(){},
 	                function(retMsg){

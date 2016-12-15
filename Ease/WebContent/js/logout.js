@@ -10,9 +10,7 @@ $(document).ready(function(){
 	$('#easeLogoutButton').click(function(){
 		postHandler.post(
 			'Logout',
-			{
-				socketId: socketId
-			},
+			{},
 			function(){},
 			function(retMsg){
 				easeTracker.trackEvent('Normal logout');
@@ -27,9 +25,7 @@ $(document).ready(function(){
 		document.dispatchEvent(event);
 		postHandler.post(
 			'Logout',
-			{
-				socketId: socketId
-			},
+			{},
 			function(){},
 			function(retMsg){
 				easeTracker.trackEvent('General logout');

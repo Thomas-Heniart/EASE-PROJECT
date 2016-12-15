@@ -242,8 +242,7 @@ var Profile = function(rootEl){
 			deleteProfilePopup.open(self);
 		else {
 			postHandler.post('RemoveProfile', {
-				profileId : self.id,
-				socketId: socketId
+				profileId : self.id
 			}, function() {
 				easeLoadingIndicator.hide();
 			}, function(retMsg) {

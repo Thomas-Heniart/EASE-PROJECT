@@ -26,7 +26,13 @@ CREATE TABLE options (
 CREATE TABLE status (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `registered` tinyint(1) NOT NULL,
-  `tuto` tinyint(1) NOT NULL,
+  `CGU` tinyint(1) NOT NULL,
+  `chrome_scrapping` tinyint(1) NOT NULL,
+  `click_on_app` tinyint(1) NOT NULL,
+  `move_apps` tinyint(1) NOT NULL,
+  `open_catalog` tinyint(1) NOT NULL,
+  `drag_and_drop` tinyint(1) NOT NULL,
+  `tuto_done` tinyint(1) NOT NULL,
   PRIMARY KEY (id)
 );
 
@@ -71,12 +77,12 @@ CREATE TABLE `users` (
   `key_id` int(10) unsigned,
   `option_id` int(10) unsigned,
   `registration_date` DATETIME,
-  /*`status_id` INT(10) UNSIGNED NOT NULL,*/
+  `status_id` INT(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
   FOREIGN KEY (key_id) REFERENCES userKeys (id),
   FOREIGN KEY (option_id) REFERENCES options (id)
-  /*FOREIGN KEY (status_id) REFERENCES status (id)*/
+  FOREIGN KEY (status_id) REFERENCES status (id)
 );
 
 CREATE TABLE infrastructuresAdminsMap (
@@ -92,6 +98,7 @@ CREATE TABLE groupsAndUsersMap (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `group_id` int(10) unsigned NOT NULL,
   `user_id` int(10) unsigned NOT NULL,
+  `saw_group` tinyint(1) unsigned NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (group_id) REFERENCES groups(id),
   FOREIGN KEY (user_id) REFERENCES users(id)
