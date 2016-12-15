@@ -221,8 +221,7 @@ var Dashboard = function(rootEl){
 					{
 						columnIdxDest: (item.parent().index() + 1),
 						positionDest: item.index(),
-						profileId: item.attr('id'),
-						socketId: socketId
+						profileId: item.attr('id')
 					},
 					function(){},
 					function(retMsg){},

@@ -14,6 +14,8 @@ import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.AppInformation;
 import com.Ease.Dashboard.App.GroupApp;
+import com.Ease.Dashboard.App.WebsiteApp.GroupWebsiteApp;
+import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp.Data;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
@@ -42,7 +44,10 @@ public class LinkApp extends App {
 			ResultSet rs = db.get("SELECT * from linkApps WHERE app_id=" + appDBid + ";");
 			if (rs.next()) {
 				LinkAppInformation linkInfos = LinkAppInformation.loadLinkAppInformation(rs.getString(Data.LINK_APP_INFO_ID.ordinal()), db);
-				GroupLinkApp groupLinkApp = (GroupLinkApp) GroupManager.getGroupManager(sm).getGroupAppFromDBid(rs.getString(Data.GROUP_LINK_APP_ID.ordinal()));
+				GroupLinkApp groupLinkApp = null;
+				String groupLinkId = rs.getString(Data.GROUP_LINK_APP_ID.ordinal());
+				if (groupLinkId != null)
+					groupLinkApp  = (GroupLinkApp) GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupLinkId);
 				IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
 				return new LinkApp(appDBid, profile, position, appInfos, groupApp, insertDate, idGenerator.getNextId(), linkInfos, groupLinkApp, rs.getString(Data.ID.ordinal()));
 			} 
@@ -98,7 +103,7 @@ public class LinkApp extends App {
 	
 	public JSONArray getJSON(ServletManager sm){
 		JSONObject link = new JSONObject();
-		link.put("link", linkInfos.getLink());
+		link.put("url", linkInfos.getLink());
 		JSONArray result = new JSONArray();
 		result.add(link);
 		return result;
