@@ -129,7 +129,7 @@ public class GroupApp {
 		return this.group;
 	}
 	
-	public AppPermissions getPermissions() {
+	public AppPermissions getPerms() {
 		return this.permissions;
 	}
 }
