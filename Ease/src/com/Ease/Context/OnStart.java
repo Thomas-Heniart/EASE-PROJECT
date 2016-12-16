@@ -3,6 +3,7 @@ package com.Ease.Context;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,16 @@ public class OnStart implements ServletContextListener{
 			context.setAttribute("idGenerator", new IdGenerator());
 			context.setAttribute("catalog", new Catalog(db, context));
 			context.setAttribute("groupManager", new GroupManager());
+			List<String> colors = new ArrayList<String>();
+			colors.add("#ffe74c");
+			colors.add("#35a7ff");
+			colors.add("#6bf178");
+			colors.add("#ec555b");
+			colors.add("#805b9b");
+			colors.add("#ff974f");
+			colors.add("#373b60");
+			colors.add("#ff618a");
+			context.setAttribute("colors", colors);
 			Infrastructure.loadInfrastructures(db, evt.getServletContext());
 			Map<String, User> usersMap = new HashMap<String, User>();
 			context.setAttribute("users", usersMap);

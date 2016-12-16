@@ -16,7 +16,6 @@ import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.User.User;
-import com.Ease.Dashboard.User.UserEmail;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Regex;
@@ -184,9 +183,6 @@ public class Profile {
 		for (App app : apps) {
 			app.removeFromDB(sm);
 		}
-		if (this.groupProfile == null || this.groupProfile.isCommon() == false) {
-			this.infos.removeFromDB(sm);
-		}
 		db.set("DELETE FROM profiles WHERE id=" + this.db_id + ";");
 		if (this.groupProfile == null || this.groupProfile.isCommon() == false)
 			this.infos.removeFromDB(sm);
@@ -331,11 +327,8 @@ public class Profile {
 		ClassicApp app = ClassicApp.createClassicApp(this, position, name, site, password, infos, sm, user);
 		this.apps.add(app);
 		for (Map.Entry<String, String> entry : infos.entrySet()) {
-			if (Regex.isEmail(entry.getValue()) == true) {
-				if (this.getUser().getUserEmails().get(entry.getValue()) == null) {
-					this.getUser().getUserEmails().put(entry.getValue(), UserEmail.createUserEmail(entry.getValue(), user, false, sm));
-				}
-			}
+			if (Regex.isEmail(entry.getValue()) == true)
+				this.user.addEmailIfNeeded(entry.getValue(), sm);
 		}
 		db.commitTransaction(transaction);
 		return app;
@@ -343,7 +336,6 @@ public class Profile {
 	
 	public LogwithApp addLogwithApp(String name, Website site, App logwith, ServletManager sm) throws GeneralException {
 		int position = this.apps.size();
-		System.out.println("---->" + logwith.getType());
 		if (logwith.getType().equals("LogwithApp") || logwith.getType().equals("ClassicApp")) {
 			LogwithApp app = LogwithApp.createLogwithApp(this, position, name, site, (WebsiteApp)logwith, sm);
 			this.apps.add(app);

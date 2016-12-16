@@ -22,8 +22,6 @@ import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.Profile.ProfilePermissions;
-import com.Ease.Servlet.dans;
-import com.Ease.Servlet.verif;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Invitation;
@@ -657,7 +655,7 @@ public class User {
 	public static void passwordLost(String userId, String newPassword, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		verif du code dans la db que l'on a pas
+		//verif du code dans la db que l'on a pas
 		try {
 			ResultSet rs = db.get("SELECT * FROM profiles WHERE user_id=" + userId + ";");
 			while (rs.next()) {
@@ -674,5 +672,14 @@ public class User {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 		db.commitTransaction(transaction);
+	}
+	
+	public void addEmailIfNeeded(String email, ServletManager sm) throws GeneralException {
+		UserEmail userEmail = this.emails.get(email);
+		if (userEmail != null)
+			return;
+		userEmail = UserEmail.createUserEmail(email, this, false, sm);
+		this.emails.put(email, userEmail);
+		
 	}
 }

@@ -190,8 +190,7 @@ CREATE TABLE `websites` (
   `website_homepage` text NOT NULL,
   `ratio` int(10) unsigned DEFAULT '0',
   `position` int(10) unsigned DEFAULT '1',
-  `insertDate` datetime DEFAULT CURRENT_TIMESTAMP,
-  `website_attributes_id` int(10) unsigned NOT NULL,
+  `website_attributes_id` int(10) unsigned,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`sso`) REFERENCES sso (id),
   FOREIGN KEY (`website_attributes_id`) REFERENCES websiteAttributes (id)
@@ -459,7 +458,7 @@ group_logWith_app_id INT(10) UNSIGNED,
 PRIMARY KEY (id),
 FOREIGN KEY (website_app_id) REFERENCES websiteApps(id),
 FOREIGN KEY (logWith_website_app_id) REFERENCES websiteApps(id),
-FOREIGN KEY (group_logWith_app_id) REFERENCES groupLogWithApps(id)
+FOREIGN KEY (group_logWith_app_id) REFERENCES groupLogwithApps(id)
 );
 
 CREATE TABLE linkAppInformations

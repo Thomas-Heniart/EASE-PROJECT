@@ -5,7 +5,7 @@
 <%@ attribute name="profile" type="com.Ease.Dashboard.Profile.Profile" required="true"%>
 
 <div class="item" id='${profile.getSingleId()}'>
-	<div class="ProfileBox" "
+	<div class="ProfileBox" 
 	color="${profile.getColor()}">
 	<div class="ProfileName"
 	style="background-color: ${profile.getColor()};">
@@ -33,7 +33,7 @@
 					<div id="modifyColorForm">
 						<c:forEach items="${colors}" var="color" varStatus="loop">
 							<c:if test="${loop.index < 8}">
-									<div class="color ${profile.getColor() == color.getColor() ? 'choosen': ''}" color="${color.getColor()}" style="background-color: ${color.getColor()}">
+									<div class="color ${profile.getColor() == color ? 'choosen': ''}" color="${color}" style="background-color: ${color}">
 									</div>
 							</c:if>
 						</c:forEach>
