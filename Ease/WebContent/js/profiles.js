@@ -322,6 +322,12 @@ $(document).click(function (e){
 	$(this).find('.showAppActionsButton').trigger('mouseover');
 	return false;
 });*/
+
+// var for started dragging app's parent Id
+//Cause bug in lib where (evt.to == evt.from) in onEnd callback;
+var appDragCurrentIdHelper = 0;
+
+//drag and drop initializing function on a container 
 function setupSortableContainer(container) {
 	$(container).sortable({
 		animation : 300,
@@ -333,6 +339,7 @@ function setupSortableContainer(container) {
 		fallbackOnBody: true,
 		onStart : function(evt) {
 			var item = $(evt.item);
+			appDragCurrentIdHelper = item.parent().attr('id');
 			item.css({
 				'pointer-events' : 'none',
 				'opacity' : '0'
@@ -350,11 +357,13 @@ function setupSortableContainer(container) {
 				'pointer-events' : '',
 				'opacity' : ''
 			});
-			if (!($(evt.to).is($(evt.from))) || evt.oldIndex != evt.newIndex) {
+			console.log($(evt.to));
+			console.log($(evt.from));
+			if (appDragCurrentIdHelper != item.parent().attr('id') || evt.oldIndex != evt.newIndex) {
 				postHandler.post("MoveApp", {
 					appId : item.attr('id'),
-					profileId : item.parent().attr('id'),
-					index : item.index()
+					profileIdDest : item.parent().attr('id'),
+					positionDest : item.index()
 				}, function() {
 				}, function(retMsg) {
 				}, function(retMsg) {

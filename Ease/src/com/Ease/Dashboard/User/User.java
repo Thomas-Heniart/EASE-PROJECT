@@ -320,6 +320,8 @@ public class User {
 					DataBaseConnection db = sm.getDB();
 					int transaction = db.startTransaction();
 					if (profile.getApps().size() > 0) {
+						if (password == null)
+							throw new GeneralException(ServletManager.Code.ClientWarning, "No password.");
 						this.keys.isGoodPassword(password);
 					}
 					profile.removeFromDB(sm);
@@ -579,17 +581,17 @@ public class User {
 		int transaction = db.startTransaction();
 		App app = this.getApp(appId);
 		Profile profileDest = this.getProfile(profileIdDest);
+		if (positionDest < 0 || positionDest > profileDest.getApps().size())
+			throw new GeneralException(ServletManager.Code.ClientError, "PositionDest fucked.");
 		if (profileDest == app.getProfile()) {
-			if (positionDest > app.getPosition())
-				positionDest--;
 			profileDest.getApps().remove(app);
 			profileDest.getApps().add(positionDest, app);
 			profileDest.updateAppsIndex(sm);
 		} else {
-			if (profileDest.getGroupProfile() == null || (profileDest.getGroupProfile().isCommon() == false && profileDest.getGroupProfile().getPerms().havePermission(ProfilePermissions.Perm.ADDAPP.ordinal())))
+			if (profileDest.getGroupProfile() != null && (profileDest.getGroupProfile().isCommon() == true || !profileDest.getGroupProfile().getPerms().havePermission(ProfilePermissions.Perm.ADDAPP.ordinal())))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "You don't have the permission to add app in this profile.");
 			Profile profileSrc = app.getProfile();
-			if (profileSrc.getGroupProfile() == null || (profileSrc.getGroupProfile().isCommon() == false && profileSrc.getGroupProfile().getPerms().havePermission(ProfilePermissions.Perm.MOVE_APP_OUTSIDE.ordinal())))
+			if (profileSrc.getGroupProfile() != null && (profileSrc.getGroupProfile().isCommon() == false || !profileSrc.getGroupProfile().getPerms().havePermission(ProfilePermissions.Perm.MOVE_APP_OUTSIDE.ordinal())))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "You don't have the permission to move app out of this profile.");
 			profileSrc.getApps().remove(app);
 			profileSrc.updateAppsIndex(sm);
@@ -657,6 +659,5 @@ public class User {
 			return;
 		userEmail = UserEmail.createUserEmail(email, this, false, sm);
 		this.emails.put(email, userEmail);
-		
 	}
 }

@@ -1257,11 +1257,11 @@ header {
     font-weight: 600;
 }
 
-#validatorPassword, #validatorConfirmPass {
+.passwordValidator {
     position: absolute;
     height: 68%;
     left: 100%;
-    margin-left: 2%;
+    margin-left: 1%;
     top: 11%;
 }
 .alert-message, .loading {
