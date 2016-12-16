@@ -584,8 +584,6 @@ public class User {
 		if (positionDest < 0 || positionDest > profileDest.getApps().size())
 			throw new GeneralException(ServletManager.Code.ClientError, "PositionDest fucked.");
 		if (profileDest == app.getProfile()) {
-			//if (positionDest > app.getPosition())
-			//	positionDest--;
 			profileDest.getApps().remove(app);
 			profileDest.getApps().add(positionDest, app);
 			profileDest.updateAppsIndex(sm);
