@@ -3,10 +3,17 @@ package com.Ease.Dashboard.User;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.mail.MessagingException;
+
+import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
+import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.Mail;
 import com.Ease.Utils.ServletManager;
 import com.Ease.Utils.Crypto.AES;
+import com.Ease.Utils.Crypto.CodeGenerator;
 import com.Ease.Utils.Crypto.Hashing;
 
 public class Keys {
@@ -123,14 +130,56 @@ public class Keys {
 	public String decrypt(String data) throws GeneralException {
 		return AES.decrypt(data, this.keyUser);
 	}
-
-	public static void changePasswordForUnconnected(String newPassword, String keysId, ServletManager sm) throws GeneralException {
+	
+	public static void passwordLost(String email, String userId, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		String saltEase = AES.generateSalt();
-		String saltPerso = AES.generateSalt();
-		String keyUser = AES.keyGenerator();
-		String crypted_keyUser = AES.encryptUserKey(keyUser, newPassword, saltPerso);
-		String hashed_password = Hashing.SHA(newPassword, saltEase);
-		db.set("UPDATE FROM userKeys SET password='" + hashed_password + "', saltEase='" + saltEase + "', saltPerso='" + saltPerso + "', keyUser='" + crypted_keyUser + "' WHERE id=" + keysId + ";");
+		int transaction = db.startTransaction();
+		try {
+			Mail mailToSend = new Mail();
+			String code = CodeGenerator.generateNewCode();
+			ResultSet rs = db.get("SELECT * FROM passwordLost WHERE user_id=" + userId + ";");
+			if (rs.next()) {
+				db.set("DELETE FROM passwordLost WHERE user_id=" + userId + ";");
+			}
+			db.set("INSERT INTO passwordLost VALUE(" + userId +", " + code + ");");
+			mailToSend.sendPasswordLostMail(email, code);
+		} catch (MessagingException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+		db.commitTransaction(transaction);
+	}
+	
+	public static void resetPassword(String userId, String newPassword, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		try {
+			ResultSet rs3 = db.get("SELECT * FROM passwordLost WHERE user_id=" + userId + ";");
+			if (rs3.next()) {
+				ResultSet rs = db.get("SELECT * FROM profiles WHERE user_id=" + userId + ";");
+				while (rs.next()) {
+					ResultSet rs2 = db.get("SELECT * FROM apps WHERE profile_id=" + rs.getString(Profile.Data.ID.ordinal()) + ";");
+					while (rs2.next()) {
+						if (rs2.getString(App.Data.TYPE.ordinal()).equals("websiteApp")) {
+							WebsiteApp.Empty(rs2.getString(App.Data.ID.ordinal()), sm);
+						}
+					}
+				}
+				rs = db.get("SELECT key_id FROM users WHERE id=" + userId + ";");
+				String saltEase = AES.generateSalt();
+				String saltPerso = AES.generateSalt();
+				String keyUser = AES.keyGenerator();
+				String crypted_keyUser = AES.encryptUserKey(keyUser, newPassword, saltPerso);
+				String hashed_password = Hashing.SHA(newPassword, saltEase);
+				db.set("UPDATE FROM userKeys SET password='" + hashed_password + "', saltEase='" + saltEase + "', saltPerso='" + saltPerso + "', keyUser='" + crypted_keyUser + "' WHERE id=" + rs.getString(1) + ";");
+				db.set("DELETE FROM passwordLost WHERE user_id=" + userId + ";");
+			} else {
+				throw new GeneralException(ServletManager.Code.ClientWarning, "You have not ask for reset your password.");
+			}
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+		db.commitTransaction(transaction);
 	}
 }

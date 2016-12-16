@@ -10,23 +10,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.Ease.Dashboard.User.Keys;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class ResetPassword
+ * Servlet implementation class EditPassword
  */
-@WebServlet("/ResetPassword")
-public class ResetPassword extends HttpServlet {
+@WebServlet("/EditPassword")
+public class EditPassword extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ResetPassword() {
+    public EditPassword() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -47,26 +46,21 @@ public class ResetPassword extends HttpServlet {
 		User user = (User) (session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 
-		String email = sm.getServletParam("email", true);
-		String code = sm.getServletParam("code", true);
-		String password = sm.getServletParam("password", false);
-		String confirmPassword = sm.getServletParam("confirmPassword", false);
+		String oldPassword = sm.getServletParam("oldPassword", true);
+		String password = sm.getServletParam("password", true);
+		String confirmPassword = sm.getServletParam("confirmPassword", true);
 		
 		try {
-			if (user != null) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "You are logged on Ease.");
-			} else if (email == null || email.equals("")) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email.");
-			} else if (code == null || code.equals("")) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong code.");
+			sm.needToBeConnected();
+			if (oldPassword == null || Regex.isPassword(oldPassword)) {
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong oldPassword.");
 			} else if (password == null || Regex.isPassword(password)) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong password.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong newPassword.");
 			} else if (confirmPassword == null || !confirmPassword.equals(password)) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Passwords are not same.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Passwords are not the same.");
 			}
-			String userId = User.findDBid(email, sm);
-			Keys.resetPassword(userId, password, sm);
-			sm.setResponse(ServletManager.Code.Success, "Account trunced and password set.");
+			user.getKeys().changePassword(password, sm);
+			sm.setResponse(ServletManager.Code.Success, "Password changed.");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		}

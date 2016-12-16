@@ -27,8 +27,6 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Invitation;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
-import com.Ease.Utils.Crypto.AES;
-import com.Ease.Utils.Crypto.Hashing;
 import com.Ease.websocket.WebsocketSession;
 
 public class User {
@@ -233,7 +231,7 @@ public class User {
 	}
 	public void setFirstName(String first_name, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE FROM users set firstName='" + first_name + "' WHERE id=" + this.db_id + ";");
+		db.set("UPDATE users set firstName='" + first_name + "' WHERE id=" + this.db_id + ";");
 		this.first_name = first_name;
 	}
 	
@@ -242,7 +240,7 @@ public class User {
 	}
 	public void setLastName(String last_name, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE FROM users set lastName='" + last_name + "' WHERE id=" + this.db_id + ";");
+		db.set("UPDATE users set lastName='" + last_name + "' WHERE id=" + this.db_id + ";");
 		this.last_name = last_name;
 	}
 	
@@ -309,7 +307,7 @@ public class User {
 		this.emails.remove(email);
 	}
 	
-	public void removeProfile(int single_id, ServletManager sm) throws GeneralException {
+	public void removeProfile(int single_id, String password, ServletManager sm) throws GeneralException {
 		Iterator<List<Profile>> it = this.profile_columns.iterator();
 		while (it.hasNext()) {
 			List<Profile> column = it.next();
@@ -319,6 +317,9 @@ public class User {
 				if (profile.getSingleId() == single_id) {
 					DataBaseConnection db = sm.getDB();
 					int transaction = db.startTransaction();
+					if (profile.getApps().size() > 0) {
+						this.keys.isGoodPassword(password);
+					}
 					profile.removeFromDB(sm);
 					column.remove(profile);
 					this.updateProfilesIndex(sm);
@@ -652,27 +653,7 @@ public class User {
 		return this.status.tutoIsDone();
 	}
 	
-	public static void passwordLost(String userId, String newPassword, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		int transaction = db.startTransaction();
-		//verif du code dans la db que l'on a pas
-		try {
-			ResultSet rs = db.get("SELECT * FROM profiles WHERE user_id=" + userId + ";");
-			while (rs.next()) {
-				ResultSet rs2 = db.get("SELECT * FROM apps WHERE profile_id=" + rs.getString(Profile.Data.ID.ordinal()) + ";");
-				while (rs2.next()) {
-					if (rs2.getString(App.Data.TYPE.ordinal()).equals("websiteApp")) {
-						WebsiteApp.Empty(rs2.getString(App.Data.ID.ordinal()), sm);
-					}
-				}
-			}
-			rs = db.get("SELECT key_id FROM users WHERE id=" + userId + ";");
-			Keys.changePasswordForUnconnected(newPassword, rs.getString(1), sm);
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
-		db.commitTransaction(transaction);
-	}
+	
 	
 	public void addEmailIfNeeded(String email, ServletManager sm) throws GeneralException {
 		UserEmail userEmail = this.emails.get(email);

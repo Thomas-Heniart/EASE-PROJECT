@@ -49,9 +49,12 @@ public class RemoveProfile extends HttpServlet {
 		try {
 			sm.needToBeConnected();
 			String profileId = sm.getServletParam("profileId", true);
+			String password = sm.getServletParam("password", true);
 			if (profileId == null || profileId.isEmpty())
 				throw new GeneralException(ServletManager.Code.ClientError, "Wrong profileId.");
-			user.removeProfile(Integer.parseInt(profileId), sm);
+			if (password == null || password.isEmpty())
+				throw new GeneralException(ServletManager.Code.ClientError, "Wrong password.");
+			user.removeProfile(Integer.parseInt(profileId), password, sm);
 			sm.setResponse(ServletManager.Code.Success, "Profile removed.");
 			sm.addWebsockets(user.getWebsockets());
 			sm.addToSocket(WebsocketMessage.removeProfileMessage(profileId));
