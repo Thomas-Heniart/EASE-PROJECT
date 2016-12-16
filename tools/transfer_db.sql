@@ -4,7 +4,7 @@ INSERT INTO ease.sso
 SELECT * FROM test.sso;
 
 INSERT INTO ease.websiteAttributes
-SELECT null, locked, lockedExpiration, 1, hidden FROM test.websites;
+SELECT null, locked, null, 1, hidden FROM test.websites;
 
 SET @var = 0;
 
@@ -53,10 +53,20 @@ SELECT * FROM test.savedSessions;
 
 /* profiles */
 
+DELETE FROM test.apps WHERE profile_id IN (SELECT profile_id FROM test.profiles WHERE position IS NULL);
+DELETE FROM test.profiles WHERE position IS NULL;
+DELETE FROM test.GroupAndUserMap WHERE user_id NOT IN (SELECT user_id FROM test.profiles);
+DELETE FROM test.usersEmails WHERE user_id NOT IN (SELECT user_id FROM test.profiles);
+DELETE FROM test.users WHERE user_id NOT IN (SELECT user_id FROM test.profiles);
+
+UPDATE test.profiles
+SET columnIdx = 1, profileIdx = 0 WHERE columnIdx IS NULL;
+
 INSERT INTO ease.profileInfo
 SELECT null, name, color FROM test.profiles;
 
 SET @var = 0;
+
 
 INSERT INTO ease.profiles
 SELECT profile_id, user_id, columnIdx, profileIdx, NULL, (@var := @var + 1) FROM test.profiles;
