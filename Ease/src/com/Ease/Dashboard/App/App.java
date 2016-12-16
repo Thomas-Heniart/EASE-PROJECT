@@ -9,14 +9,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
-
 import org.json.simple.JSONArray;
 
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.LinkApp.LinkApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
-import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.Profile.ProfilePermissions;
 import com.Ease.Utils.DataBaseConnection;
@@ -183,6 +180,10 @@ public class App {
 	public boolean havePerm(ProfilePermissions.Perm perm) {
 		if (this.groupApp == null || (!this.groupApp.isCommon() && this.groupApp.getPerms().havePermission(perm.ordinal())))
 			return true;
+		return false;
+	}
+	
+	public boolean isClassicApp() {
 		return false;
 	}
 	

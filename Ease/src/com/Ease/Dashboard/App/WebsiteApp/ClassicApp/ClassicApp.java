@@ -119,6 +119,10 @@ public class ClassicApp extends WebsiteApp {
 		db.commitTransaction(transaction);
 	}
 	
+	public boolean isClassicApp() {
+		return true;
+	}
+	
 	public JSONArray getJSON(ServletManager sm) throws GeneralException{
 		JSONArray infos = super.getJSON(sm);
 		JSONObject websiteInfos = (JSONObject) infos.get(0);

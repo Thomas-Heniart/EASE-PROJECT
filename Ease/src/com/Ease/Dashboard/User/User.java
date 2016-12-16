@@ -27,8 +27,6 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Invitation;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
-import com.Ease.Utils.Crypto.AES;
-import com.Ease.Utils.Crypto.Hashing;
 import com.Ease.websocket.WebsocketSession;
 
 public class User {
@@ -101,7 +99,6 @@ public class User {
 		String keyUser = sessionSave.getKeyUser();
 		sessionSave.eraseFromDB(sm);
 		try {
-			
 			ResultSet rs = db.get("SELECT * FROM users where id='" + db_id + "';");
 			if (rs.next()) {
 				String email = rs.getString(Data.EMAIL.ordinal());
@@ -552,10 +549,8 @@ public class User {
 			for (AccountInformation info : ((ClassicApp)app).getAccount().getAccountInformations()) {
 				if (Regex.isEmail(info.getInformationValue()) == true) {
 					String email = info.getInformationValue();
-					UserEmail userEmail;
-					if ((userEmail = this.emails.get(email)) != null) {
-						userEmail.removeIfNotUsed(this.db_id, sm);
-					}
+					if (this.emails.get(email).removeIfNotUsed(sm))
+						this.emails.remove(email);
 				}
 			}
 				

@@ -10,6 +10,8 @@ import java.util.Map;
 import javax.mail.MessagingException;
 
 import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.AccountInformation;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Mail;
@@ -96,23 +98,24 @@ public class UserEmail {
 	 * 
 	 */
 	
-	public boolean removeIfNotUsed(String user_id, ServletManager sm) throws GeneralException {
+	public boolean removeIfNotUsed(ServletManager sm) throws GeneralException {
+		if (this.verified)
+			return false;
 		DataBaseConnection db = sm.getDB();
-		ResultSet emailRs = db.get("SELECT count(distinct usersEmails.email), usersEmails.verified FROM (classicApps JOIN websiteApps ON ) (((classicApps join  profiles ON apps.profile_id = profiles.id) JOIN users on profiles.user_id = users.id) JOIN usersEmails ON users.id = usersEmails.user_id ) JOIN accounts ON accounts.id =  accountsInformations ON apps.account_id = ClassicAccountsInformations.account_id AND usersEmails.email = ClassicAccountsInformations.information_value WHERE users.user_id = " + user_id + " AND usersEmails.email = '" + email+"';");
-		try {
-			if (emailRs.next()) {
-				int ct = emailRs.getInt(1);
-				boolean verif = emailRs.getBoolean(2);
-				if (ct == 0 && !verif) {
-					db.set("DELETE FROM usersEmails WHERE user_id=" + user_id + " AND email='" + email + "' AND verified=0;");
-					return true;
-				}
+		for(App app : this.user.getAppsIDmap().values()) {
+			if (app.isClassicApp()) {
+				List<AccountInformation> appInformations = ((ClassicApp) app).getAccount().getAccountInformations();
+				for (AccountInformation accountInformation : appInformations) {
+					if (accountInformation.getInformationName().toLowerCase().equals("login")) {
+						if (this.email.equals(accountInformation.getInformationValue()))
+							return false;
+					}
+				};
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new GeneralException(ServletManager.Code.InternError, e);
+				
 		}
-		return false;
+		db.set("DELETE FROM usersEmails WHERE id=" + this.db_id + ";");
+		return true;
 	}
 	
 	public void askForVerification(User user, ServletManager sm) throws GeneralException{
