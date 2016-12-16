@@ -1,7 +1,6 @@
 package com.Ease.Context;
 
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,8 +18,6 @@ import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBase;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.IdGenerator;
-import com.Ease.websocket.WebsocketMessage;
-import com.Ease.websocket.WebsocketSession;
 
 public class OnStart implements ServletContextListener{
 	@Override

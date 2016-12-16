@@ -13,10 +13,10 @@ oClass="AddAppForm">
 		<div class="backgroundLine"></div>
 		<p>Log in with</p>
 	</div>
-	<div class="loginWithButton facebook hidden" webid="2">
+	<div class="loginWithButton facebook hidden" name="Facebook">
 		<p>Facebook</p>
 	</div>
-	<div class="loginWithButton linkedin hidden" webid="3">
+	<div class="loginWithButton linkedin hidden" name="Linkedin">
 		<p>Linkedin</p>
 	</div>
 	<div class="linedSeparator or">

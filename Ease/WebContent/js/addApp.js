@@ -3,7 +3,7 @@ $(document).ready(function() {
 		$(".loginAppChooser p").text("Select your account");
 		var parent = $(this).closest('.md-content');
 		var AppChooser = $(this).closest('.md-content').find('.loginAppChooser .ChooserContent');
-		var webid = $(this).attr('webid');
+		var webid = $(".catalogApp[name='"+$(this).attr('name')+"']").attr("idx");
 		var AppHelper = $("<div class='AccountApp'><div class='imageHandler'><img src='' /></div><p></p></div>");
 		AppChooser.empty();
 		var AppHelperCloned;
@@ -14,10 +14,9 @@ $(document).ready(function() {
 		parent.find('.or').css('display', 'none');
 		var apps = $(".siteLinkBox[webid='" + webid + "']");
 		if (apps.length == 0) {
-			if (webid == "2")
-				$(".loginAppChooser p").text("No Facebook account detected");
-			if (webid == "3")
-				$(".loginAppChooser p").text("No Linkedin account detected");
+			var websiteName = $(".catalogApp[idx='"+webid+"']").attr("name");
+			if(websiteName)
+				$(".loginAppChooser p").text("No "+websiteName+" account detected");
 		}
 		for (var i = 0; i < apps.length; i++) {
 			AppHelper.attr('aId', $(apps[i]).attr("id"));
@@ -75,7 +74,7 @@ function showAddAppPopup(container, helper) {
 	if ($(helper).attr('data-login') != "") {
 		loginChooser.removeClass('hidden');
 		for (var i = 0; i < loginWith.length; i++) {
-			loginChooser.find(".loginWithButton[webid='" + loginWith[i] + "']")
+			loginChooser.find(".loginWithButton[name='" + $(".catalogApp[idx='"+loginWith[i]+"']").attr("name") + "']")
 					.removeClass('hidden');
 		}
 	}

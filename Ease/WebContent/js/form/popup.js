@@ -98,8 +98,11 @@ var Popup = {
 		var self = this;
 		this.close = function() {
 			self.qRoot.removeClass('md-show');
-			$('.classicLogin').addClass("show");
-			$('.suggested-emails').removeClass("show");
+			setTimeout(function(){
+				console.log("ok");
+				$('.classicLogin').addClass("show");
+				$('.suggested-emails').removeClass("show");
+			},500);
 		}
 		this.setApp = function(jObj) {
 			self.oForm.setApp(jObj);

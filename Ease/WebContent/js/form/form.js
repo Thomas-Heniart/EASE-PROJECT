@@ -199,6 +199,7 @@ var Form = {
 			self.removeAddedFields();
 		}
 		this.successCallback = function(retMsg) {
+			console.log(self);
 			var x = parseInt($(".catalogApp[idx='" + self.site_id + "'] span.apps-integrated i.count").html());
 			$(".catalogApp[idx='" + self.site_id + "'] span.apps-integrated i.count").html(x+1);
 			$(".catalogApp[idx='" + self.site_id + "'] span.apps-integrated").addClass("showCounter");
@@ -219,7 +220,7 @@ var Form = {
 			self.newAppItem.attr('id', retMsg);
 			self.newAppItem.attr('ssoid', self.helper.attr('data-sso'));
 			for (var key in self.attributesToSet) {
-				if (!self.attributesToSet.hasOwnProperty(key))
+				if (!self.attributesToSet.hasOwnProperty(key) || key=="password")
 					continue;
 				self.newAppItem.attr(key, self.attributesToSet[key]);
 			}
@@ -363,58 +364,86 @@ var Form = {
 		};
 		this.submit = function(e) {
 			e.preventDefault();
-			var AppToLoginWith = self.qRoot.find('.AccountApp.selected');
-			if (AppToLoginWith.length) {
-				self.aId = AppToLoginWith.attr('aid');
-			}
-			self.oInputs.forEach(function(element) {
-				var elemName = element.qInput.attr("name");
-				var elemValue = element.qInput.val();
-				self.params[elemName] = elemValue;
-				if (elemName != "password")
-					self.attributesToSet[elemName] = elemValue;
-				else {
-					if (elemValue != null && elemValue != "" ) {
-						self.password = elemValue;
-					}
-						
-				}
-			});
 			self.params = {
 				name : self.oInputs[0].getVal(),
 				appId : self.appId,
-				lwId : self.aId	
 			};
-			if (self.password != null)
-				self.params["wPassword"] = self.password;
-			for (var key in self.attributesToSet) {
-				if (!self.attributesToSet.hasOwnProperty(key))
-					continue;
-				self.params[key] = self.attributesToSet[key];
+			var AppToLoginWith = self.qRoot.find('.AccountApp.selected');
+			if (AppToLoginWith.length) {
+				self.params.logwithId = AppToLoginWith.attr('aid');
+				postHandler.post(
+					'EditLogwithApp',
+					self.params,
+					function(){},
+					function(data) {
+						var retMsg = data.substring(4);
+						var image = self.app.find('.linkImage');
+						self.oParent.close();
+						image.addClass('scaleOutAnimation');
+						setTimeout(function() {
+							image.removeClass('scaleOutAnimation');
+						}, 1000);
+						for (var key in self.attributesToSet) {
+							if (!self.attributesToSet.hasOwnProperty(key))
+								continue;
+							self.app.attr(key, self.attributesToSet[key]);
+						}
+						self.app.attr('logwith', self.params.logwithId );
+						self.app.find('.siteName p').text(self.oInputs[0].getVal());
+						self.app.find('.emptyAppIndicator').remove();
+						self.app.removeClass('emptyApp');
+						self.qRoot.find('.AccountApp.selected').removeClass("selected");
+						self.removeAddedFields();
+					}, function(){},
+					'text');
+			} else {
+				self.oInputs.forEach(function(element) {
+					var elemName = element.qInput.attr("name");
+					var elemValue = element.qInput.val();
+					self.params[elemName] = elemValue;
+					if (elemName != "password")
+						self.attributesToSet[elemName] = elemValue;
+					else {
+						if (elemValue != null && elemValue != "" ) {
+							self.password = elemValue;
+						}
+							
+					}
+				});
+				if (self.password != null)
+					self.params["password"] = self.password;
+				for (var key in self.attributesToSet) {
+					if (!self.attributesToSet.hasOwnProperty(key))
+						continue;
+					self.params[key] = self.attributesToSet[key];
+				}
+				postHandler.post(
+					'EditClassicApp',
+					self.params,
+					function(){},
+					function(data) {
+						var retMsg = data.substring(4);
+						var image = self.app.find('.linkImage');
+						self.oParent.close();
+						image.addClass('scaleOutAnimation');
+						setTimeout(function() {
+							image.removeClass('scaleOutAnimation');
+						}, 1000);
+						for (var key in self.attributesToSet) {
+							if (!self.attributesToSet.hasOwnProperty(key))
+								continue;
+							self.app.attr(key, self.attributesToSet[key]);
+						}
+						self.app.attr('logwith', (self.oInputs[1].getVal().length || self.aId) == null ? 'false' : self.aId);
+						self.app.find('.siteName p').text(self.oInputs[0].getVal());
+						self.app.find('.emptyAppIndicator').remove();
+						self.app.removeClass('emptyApp');
+						self.qRoot.find('.AccountApp.selected').removeClass("selected");
+						self.removeAddedFields();
+					}, function(){}, 
+					'text'
+				);
 			}
-			$.post(
-							'editApp',
-							self.params,
-							function(data) {
-								var retMsg = data.substring(4);
-								var image = self.app.find('.linkImage');
-								self.oParent.close();
-								image.addClass('scaleOutAnimation');
-								setTimeout(function() {
-									image.removeClass('scaleOutAnimation');
-								}, 1000);
-								for (var key in self.attributesToSet) {
-									if (!self.attributesToSet.hasOwnProperty(key))
-										continue;
-									self.app.attr(key, self.attributesToSet[key]);
-								}
-								self.app.attr('logwith', (self.oInputs[1].getVal().length || self.aId) == null ? 'false' : self.aId);
-								self.app.find('.siteName p').text(self.oInputs[0].getVal());
-								self.app.find('.emptyAppIndicator').remove();
-								self.app.removeClass('emptyApp');
-								self.qRoot.find('.AccountApp.selected').removeClass("selected");
-								self.removeAddedFields();
-							});
 		}
 	},
 	DeleteAppForm : function(rootEl) {
