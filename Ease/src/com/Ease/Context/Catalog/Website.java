@@ -178,10 +178,6 @@ public class Website {
 		return this.noLogin;
 	}
 	
-	public boolean isHidden() {
-		return this.websiteAttributes.isWorking();
-	}
-	
 	public boolean work() {
 		return this.websiteAttributes.isWorking();
 	}

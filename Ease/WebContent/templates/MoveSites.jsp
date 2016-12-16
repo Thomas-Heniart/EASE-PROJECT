@@ -7,7 +7,7 @@
 	<div class="movable-websites">
 		<c:forEach items="${siteManager.getSitesList()}" var="item"
 			varStatus="loop">
-			<c:if test="${!item.isHidden()}">
+			<c:if test="${!item.work()}">
 				<div class="website" position="${item.getPosition()}" siteId="${item.getId()}" style="margin: 10px 0;">
 					<img width="50" src="${item.getFolder()}logo.png" /> <span
 						style="margin-left: 10px;">${item.getName()}</span> <span class="website-position">position
