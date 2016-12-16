@@ -26,7 +26,7 @@ public class UserEmail {
 		VERIFIED
 	}
 	
-	public static Map<String, UserEmail> loadEmails(String user_id, ServletManager sm) throws GeneralException {
+	public static Map<String, UserEmail> loadEmails(String user_id, User user, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		Map<String, UserEmail> emails = new HashMap<String, UserEmail>();
 		ResultSet rs = db.get("SELECT * FROM usersEmails WHERE user_id=" + user_id + ";");
@@ -35,7 +35,7 @@ public class UserEmail {
 				String db_id = rs.getString(UserEmailData.ID.ordinal());
 				String email = rs.getString(UserEmailData.EMAIL.ordinal());
 				boolean verified = rs.getBoolean(UserEmailData.VERIFIED.ordinal());
-				emails.put(email, new UserEmail(db_id, email, verified));
+				emails.put(email, new UserEmail(db_id, email, verified, user));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -47,19 +47,21 @@ public class UserEmail {
 	public static UserEmail createUserEmail(String email, User user, boolean verified, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		String db_id = db.set("INSERT INTO usersEmails VALUES(NULL, " + user.getDBid() + ", '" + email + "', " + (verified ? 1 : 0) + ");").toString();
-		return new UserEmail(db_id, email, verified);
+		return new UserEmail(db_id, email, verified, user);
 	}
 	
 	protected String db_id;
 	protected String email;
 	protected List<App> appsUsing;
 	protected boolean verified;
+	protected User user;
 	
-	public UserEmail(String db_id, String email, boolean verified) {
+	public UserEmail(String db_id, String email, boolean verified, User user) {
 		this.db_id = db_id;
 		this.email = email;
 		this.verified = verified;
 		this.appsUsing = new LinkedList<App>();
+		this.user = user;
 	}
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
@@ -96,7 +98,7 @@ public class UserEmail {
 	
 	public boolean removeIfNotUsed(String user_id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		ResultSet emailRs = db.get("SELECT count(distinct usersEmails.email), usersEmails.verified FROM () (((classicApps join  profiles ON apps.profile_id = profiles.id) JOIN users on profiles.user_id = users.id) JOIN usersEmails ON users.id = usersEmails.user_id ) JOIN accounts ON accounts.id =  accountsInformations ON apps.account_id = ClassicAccountsInformations.account_id AND usersEmails.email = ClassicAccountsInformations.information_value WHERE users.user_id = " + user_id + " AND usersEmails.email = '" + email+"';");
+		ResultSet emailRs = db.get("SELECT count(distinct usersEmails.email), usersEmails.verified FROM (classicApps JOIN websiteApps ON ) (((classicApps join  profiles ON apps.profile_id = profiles.id) JOIN users on profiles.user_id = users.id) JOIN usersEmails ON users.id = usersEmails.user_id ) JOIN accounts ON accounts.id =  accountsInformations ON apps.account_id = ClassicAccountsInformations.account_id AND usersEmails.email = ClassicAccountsInformations.information_value WHERE users.user_id = " + user_id + " AND usersEmails.email = '" + email+"';");
 		try {
 			if (emailRs.next()) {
 				int ct = emailRs.getInt(1);
