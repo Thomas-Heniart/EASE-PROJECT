@@ -83,9 +83,9 @@ public class ClassicApp extends WebsiteApp {
 	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
+		db.set("DELETE FROM classicApps WHERE id=" + classicDBid + ";");
 		if (this.groupApp == null || this.groupApp.isCommon() == false)
 			account.removeFromDB(sm);
-		db.set("DELETE FROM classicApps WHERE id=" + classicDBid + ";");
 		super.removeFromDB(sm);
 		db.commitTransaction(transaction);
 	}
@@ -117,6 +117,10 @@ public class ClassicApp extends WebsiteApp {
 				this.account.setPassword(password, this.getProfile().getUser(), sm);
 		}
 		db.commitTransaction(transaction);
+	}
+	
+	public boolean isClassicApp() {
+		return true;
 	}
 	
 	public JSONArray getJSON(ServletManager sm) throws GeneralException{

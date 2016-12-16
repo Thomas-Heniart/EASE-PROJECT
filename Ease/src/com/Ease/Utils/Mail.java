@@ -38,7 +38,7 @@ public class Mail {
 		}
 	}
 
-	public void sendPasswordLostMail(String email, String code, String userName) throws MessagingException {
+	public void sendPasswordLostMail(String email, String code) throws MessagingException {
 		try {
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
 			message.setSubject(MimeUtility.encodeText("Mot de passe perdu - Ease", "utf-8", null));

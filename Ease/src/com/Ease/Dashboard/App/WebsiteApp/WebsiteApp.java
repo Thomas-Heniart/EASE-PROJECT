@@ -90,6 +90,26 @@ public class WebsiteApp extends App {
 		return new WebsiteApp(appDBid, profile, position, (AppInformation)elevator.get("appInfos"), null, (String)elevator.get("registrationDate"), ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, null);
 	}
 	
+	public static void Empty(String appId, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		try {
+			ResultSet rs = db.get("SELECT * FROM websiteApps WHERE app_id=" + appId + ";");
+			switch (rs.getString(Data.TYPE.ordinal())) {
+				case ("classicApp"):
+					//remove classic app for unconnected user;
+				break;
+				case ("logwithApp"):
+					//remove logwith app for unconnected user;
+				break;
+			}
+			db.set("UPDATE FROM websiteApps SET type='emptyApp' WHERE app_id=" + appId + ";");
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+		db.commitTransaction(transaction);
+	}
+	
 	/*
 	 * 
 	 * Constructor

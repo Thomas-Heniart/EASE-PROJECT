@@ -362,6 +362,10 @@ pageEncoding="UTF-8"%>
 									<div class="showPassDiv">
 										<i class="fa fa-eye centeredItem" aria-hidden="true"></i>
 									</div>
+									<div id="validatorPassword" class="passwordValidator" style="display:none">
+										<i class="fa fa-times error" aria-hidden="true" style="color:#d75a4a;"></i>
+										<i class="fa fa-check success" aria-hidden="true" style="color:#24d666;"></i>
+									</div>
 									<img src="./resources/icons/error.png" id="validatorPassword" style="display:none;"/>
 								</span>
 								<div class="progress">
@@ -375,7 +379,10 @@ pageEncoding="UTF-8"%>
 									<div class="showPassDiv">
 										<i class="fa fa-eye centeredItem" aria-hidden="true"></i>
 									</div>
-									<img src="./resources/icons/error.png" id="validatorConfirmPass" style="display:none;"
+									<div id="validatorConfirmPass" class="passwordValidator" style="display:none">
+										<i class="fa fa-times error" aria-hidden="true" style="color:#d75a4a;"></i>
+										<i class="fa fa-check success" aria-hidden="true" style="color:#24d666;"></i>
+									</div>
 								</span>
 							</div>
 							<div class="row text-center">
@@ -387,209 +394,209 @@ pageEncoding="UTF-8"%>
 					</div>
 					<div class="popupBody show" id="1">
 						<form class="handler" action="checkInvitation">
-					<div class="row">
-						<p class="row-heading">
-						How would you like us to call you ?
-						</p>
-						<input type="text" name="name" placeholder="Name..." />
+							<div class="row">
+								<p class="row-heading">
+									How would you like us to call you ?
+								</p>
+								<input type="text" name="name" placeholder="Name..." />
+							</div>
+							<div class="row">
+								<p class="row-heading">
+									What's your email ?
+								</p>
+								<input type="email" name="email" placeholder="@something..." />
+							</div>
+							<div class="row terms">
+								<p>I accept the <a href="#">terms and conditions</a></p>
+								<input type="checkbox" value="">
+							</div>
+							<div class="row text-center">
+								<img class="loading" src="resources/other/facebook-loading.svg"/>
+								<button class="btn submitButton" type="submit">Let's start !</button>
+								<p class="alert-message"></p>
+							</div>
+						</form>
 					</div>
-					<div class="row">
-						<p class="row-heading">
-							What's your email ?
-						</p>
-						<input type="email" name="email" placeholder="@something..." />
-					</div>
-					<div class="row terms">
-						<p>I accept the <a href="#">terms and conditions</a></p>
-						<input type="checkbox" value="">
-					</div>
-					<div class="row text-center">
-						<img class="loading" src="resources/other/facebook-loading.svg"/>
-						<button class="btn submitButton" type="submit">Let's start !</button>
-						<p class="alert-message"></p>
-					</div>
-				</form>
+				</div>
 			</div>
 		</div>
-	</div>
-</div>
-<script type="text/javascript">
-	var signUpPopup = function(elem){
-		var self = this;
-		this.handler = $(elem).closest('.popupHandler');
-		this.qRoot = $(elem);
+		<script type="text/javascript">
+			var signUpPopup = function(elem){
+				var self = this;
+				this.handler = $(elem).closest('.popupHandler');
+				this.qRoot = $(elem);
 
-		this.openRegistration = function(){
-			self.qRoot.find('#2').addClass('show');
-			self.qRoot.find('#1').removeClass('show');					
-			self.handler.addClass('myshow');
-			$('body').css('overflow', 'hidden');
-		};
-		this.open = function(){
-			self.handler.addClass('myshow');
-			$('body').css('overflow', 'hidden');
-		};
-		this.close = function(){
-			self.handler.removeClass('myshow');
-			$('body').css('overflow', '');
-		};
-		$(document).click(function(e){
-			if ($(e.target).hasClass('popupHandler')){
-				$(e.target).css('display', 'none');
-				$(e.target).removeClass('myshow');
-				$('body').css('overflow', '');
-				setTimeout(function(){
-					$(e.target).css('display', '');
-				}, 100);
-			}
-		});
-		this.qRoot.find('#1 form').submit(function(e){
-			e.preventDefault();
-			var emailVal = $(this).find("input[name='email']").val();
-			var name = $(this).find("input[name='name']").val();
-			var loading = $(this).find('.loading');
-			var submitButton = $(this).find(".submitButton");
-			var alertMessage = $(this).find(".alert-message");
+				this.openRegistration = function(){
+					self.qRoot.find('#2').addClass('show');
+					self.qRoot.find('#1').removeClass('show');					
+					self.handler.addClass('myshow');
+					$('body').css('overflow', 'hidden');
+				};
+				this.open = function(){
+					self.handler.addClass('myshow');
+					$('body').css('overflow', 'hidden');
+				};
+				this.close = function(){
+					self.handler.removeClass('myshow');
+					$('body').css('overflow', '');
+				};
+				$(document).click(function(e){
+					if ($(e.target).hasClass('popupHandler')){
+						$(e.target).css('display', 'none');
+						$(e.target).removeClass('myshow');
+						$('body').css('overflow', '');
+						setTimeout(function(){
+							$(e.target).css('display', '');
+						}, 100);
+					}
+				});
+				this.qRoot.find('#1 form').submit(function(e){
+					e.preventDefault();
+					var emailVal = $(this).find("input[name='email']").val();
+					var name = $(this).find("input[name='name']").val();
+					var loading = $(this).find('.loading');
+					var submitButton = $(this).find(".submitButton");
+					var alertMessage = $(this).find(".alert-message");
 
-			if (!emailVal.length)
-				return;
-			if (!($(this).find(".terms input[type='checkbox']").prop('checked'))){
-				return;
-			}
+					if (!emailVal.length)
+						return;
+					if (!($(this).find(".terms input[type='checkbox']").prop('checked'))){
+						return;
+					}
 
-			loading.addClass('show');
-			submitButton.addClass('not-show');
-			postHandler.post($(this).attr('action'),
-			{
-				email : emailVal,
-				name : name
-			},
-			function(){
-				loading.removeClass('show');
-			},
-			function(retMsg) {
-				alertMessage.text(retMsg.substring(2, retMsg.length));
-				alertMessage.css('color', '#24d666');
-				alertMessage.addClass('show');
-				if (retMsg[0] == '1'){
-					setTimeout(function(){
-						alertMessage.removeClass('show');
-						submitButton.removeClass('not-show');
-					}, 7000);
-				} else if (retMsg[0] == '2'){
-					self.qRoot.find("#2 input[name='fname']").val(name);
-					self.qRoot.find("#2 input[name='email']").val(emailVal);
-					self.openRegistration();
+					loading.addClass('show');
+					submitButton.addClass('not-show');
+					postHandler.post($(this).attr('action'),
+					{
+						email : emailVal,
+						name : name
+					},
+					function(){
+						loading.removeClass('show');
+					},
+					function(retMsg) {
+						alertMessage.text(retMsg.substring(2, retMsg.length));
+						alertMessage.css('color', '#24d666');
+						alertMessage.addClass('show');
+						if (retMsg[0] == '1'){
+							setTimeout(function(){
+								alertMessage.removeClass('show');
+								submitButton.removeClass('not-show');
+							}, 7000);
+						} else if (retMsg[0] == '2'){
+							self.qRoot.find("#2 input[name='fname']").val(name);
+							self.qRoot.find("#2 input[name='email']").val(emailVal);
+							self.openRegistration();
+						}
+					},
+					function(retMsg) {
+						alertMessage.text(retMsg.substring(2, retMsg.length));
+						alertMessage.css('color', '#ec555b')
+						alertMessage.addClass('show');
+						setTimeout(function(){
+							alertMessage.removeClass('show');
+							submitButton.removeClass('not-show');
+						}, 3000);
+					},
+					'text'
+					);
+				});
+				this.qRoot.find('#2 form').submit(function(e){
+					e.preventDefault();
+					var self = $(this);
+					var name = $(this).find("input[name='fname']").val();
+					var email = $(this).find("input[name='email']").val();
+					var code = $(this).find("input[name='invitationCode']").val();
+					var password = $(this).find("input[name='password']").val();
+					var confirmPassword = $(this).find("input[name='confirmPassword']").val();
+
+					var loading = $(this).find('.loading');
+					var submitButton = $(this).find(".submitButton");
+					var alertMessage = $(this).find(".alert-message");
+
+					if (!name.length || !email.length || !code.length || !(password == confirmPassword))
+						return;
+
+					loading.addClass('show');
+					submitButton.addClass('not-show');
+					postHandler.post($(this).attr('action'),
+					{
+						email : email,
+						fname : name,
+						invitationCode : code,
+						password : password,
+						confirmPassword : confirmPassword,
+						lname : "unknown"
+					},
+					function(){
+						loading.removeClass('show');
+					},
+					function(retMsg) {
+						alertMessage.text(retMsg);
+						alertMessage.css('color', '#24d666');
+						alertMessage.addClass('show');
+						setTimeout(function() {
+							window.location = "index.jsp";
+						}, 750);
+					}, 
+					function(retMsg) {
+						alertMessage.text(retMsg);
+						alertMessage.css('color', '#ec555b')
+						alertMessage.addClass('show');
+						setTimeout(function(){
+							alertMessage.removeClass('show');
+							submitButton.removeClass('not-show');
+						}, 3000);
+					},
+					'text'
+					);
+				});
+				$("input[name='password']").keyup(function(e){
+					$("#validatorPassword").css("display","inline-block");
+					if($("input[name='password']").val().length < 8) 
+						$("#validatorPassword").removeClass('valid');
+					else
+						$("#validatorPassword").addClass('valid');
+					if($("input[name='password']").val().length < 8 || $("input[name='confirmPassword']").val() != $("input[name='password']").val())
+						$("#validatorConfirmPass").removeClass('valid');
+					else
+						$("#validatorConfirmPass").addClass('valid');
+				});
+				$("input[name='confirmPassword']").keyup(function(e){
+					$("#validatorConfirmPass").css("display","inline-block");
+					if($("input[name='password']").val().length < 8 || $("input[name='confirmPassword']").val() != $("input[name='password']").val())
+						$("#validatorConfirmPass").removeClass('valid');
+					else
+						$("#validatorConfirmPass").addClass('valid');
+				});
+				$("#2 input[name='password']").complexify({
+					strengthScaleFactor: 0.7
+				}, function(valid, complexity){
+					$(".progress .progress-bar").css('width', complexity + "%");
+					if (complexity < 20){
+						$(".progress .progress-bar").css('background-color', '#e4543b');				
+					} else if (complexity < 40){
+						$(".progress .progress-bar").css('background-color', '#e07333');
+					}else if (complexity < 60){
+						$(".progress .progress-bar").css('background-color', '#ead94a');
+					}else if (complexity < 80){
+						$(".progress .progress-bar").css('background-color', '#ddf159');
+					}else {
+						$(".progress .progress-bar").css('background-color', '#b0df33');
+					}
+				});
+			};
+			var easeSignUpPopup = new signUpPopup($('#signUpPopup'));
+			$('.signUpButton').click(function(){
+				easeSignUpPopup.open();
+			});
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				if ($('#2').find("input[name='email']").val() != 'null'){
+					easeSignUpPopup.openRegistration();
 				}
-			},
-			function(retMsg) {
-				alertMessage.text(retMsg.substring(2, retMsg.length));
-				alertMessage.css('color', '#ec555b')
-				alertMessage.addClass('show');
-				setTimeout(function(){
-					alertMessage.removeClass('show');
-					submitButton.removeClass('not-show');
-				}, 3000);
-			},
-			'text'
-			);
-		});
-		this.qRoot.find('#2 form').submit(function(e){
-			e.preventDefault();
-			var self = $(this);
-			var name = $(this).find("input[name='fname']").val();
-			var email = $(this).find("input[name='email']").val();
-			var code = $(this).find("input[name='invitationCode']").val();
-			var password = $(this).find("input[name='password']").val();
-			var confirmPassword = $(this).find("input[name='confirmPassword']").val();
-
-			var loading = $(this).find('.loading');
-			var submitButton = $(this).find(".submitButton");
-			var alertMessage = $(this).find(".alert-message");
-
-			if (!name.length || !email.length || !code.length || !(password == confirmPassword))
-				return;
-
-			loading.addClass('show');
-			submitButton.addClass('not-show');
-			postHandler.post($(this).attr('action'),
-			{
-				email : email,
-				fname : name,
-				invitationCode : code,
-				password : password,
-				confirmPassword : confirmPassword,
-				lname : "unknown"
-			},
-			function(){
-				loading.removeClass('show');
-			},
-			function(retMsg) {
-				alertMessage.text(retMsg);
-				alertMessage.css('color', '#24d666');
-				alertMessage.addClass('show');
-				setTimeout(function() {
-					window.location = "index.jsp";
-				}, 750);
-			}, 
-			function(retMsg) {
-				alertMessage.text(retMsg);
-				alertMessage.css('color', '#ec555b')
-				alertMessage.addClass('show');
-				setTimeout(function(){
-					alertMessage.removeClass('show');
-					submitButton.removeClass('not-show');
-				}, 3000);
-			},
-			'text'
-			);
-		});
-		$("input[name='password']").keyup(function(e){
-			$("#validatorPassword").css("display","inline-block");
-			if($("input[name='password']").val().length < 8) 
-				$("#validatorPassword").attr("src","./resources/icons/error.png");
-			else
-				$("#validatorPassword").attr("src","./resources/icons/success.png");
-			if($("input[name='password']").val().length < 8 || $("input[name='confirmPassword']").val() != $("input[name='password']").val()) 
-				$("#validatorConfirmPass").attr("src","./resources/icons/error.png");
-			else
-				$("#validatorConfirmPass").attr("src","./resources/icons/success.png");
-		});
-		$("input[name='confirmPassword']").keyup(function(e){
-			$("#validatorConfirmPass").css("display","inline-block");
-			if($("input[name='password']").val().length < 8 || $("input[name='confirmPassword']").val() != $("input[name='password']").val()) 
-				$("#validatorConfirmPass").attr("src","./resources/icons/error.png");
-			else
-				$("#validatorConfirmPass").attr("src","./resources/icons/success.png");
-		});
-		$("#2 input[name='password']").complexify({
-			strengthScaleFactor: 0.7
-		}, function(valid, complexity){
-			$(".progress .progress-bar").css('width', complexity + "%");
-			if (complexity < 20){
-				$(".progress .progress-bar").css('background-color', '#e4543b');				
-			} else if (complexity < 40){
-				$(".progress .progress-bar").css('background-color', '#e07333');
-			}else if (complexity < 60){
-				$(".progress .progress-bar").css('background-color', '#ead94a');
-			}else if (complexity < 80){
-				$(".progress .progress-bar").css('background-color', '#ddf159');
-			}else {
-				$(".progress .progress-bar").css('background-color', '#b0df33');
-			}
-		});
-	};
-	var easeSignUpPopup = new signUpPopup($('#signUpPopup'));
-	$('.signUpButton').click(function(){
-		easeSignUpPopup.open();
-	});
-</script>
-<script type="text/javascript">
-	$(document).ready(function(){
-		if ($('#2').find("input[name='email']").val() != 'null'){
-			easeSignUpPopup.openRegistration();
-		}
-	});
-</script>
-</body>
-</html>
+			});
+		</script>
+	</body>
+	</html>

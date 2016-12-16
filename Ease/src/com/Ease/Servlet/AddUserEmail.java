@@ -1,8 +1,6 @@
-package com.Ease.Servlet.Profile;
+package com.Ease.Servlet;
 
 import java.io.IOException;
-
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,33 +8,33 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
+import com.Ease.Dashboard.User.UserEmail;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
-import com.Ease.websocket.WebsocketMessage;
 
 /**
- * Servlet implementation class AddProfile
+ * Servlet implementation class AddUserEmail
  */
-@WebServlet("/AddProfile")
-public class AddProfile extends HttpServlet {
+@WebServlet("/AddUserEmail")
+public class AddUserEmail extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddProfile() {
+    public AddUserEmail() {
         super();
+        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-		rd.forward(request, response);
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**
@@ -46,19 +44,18 @@ public class AddProfile extends HttpServlet {
 		HttpSession session = request.getSession();
 		User user = (User) (session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+
+		String email = sm.getServletParam("email", false);
 		
 		try {
 			sm.needToBeConnected();
-			String name = sm.getServletParam("name", true);
-			String color = sm.getServletParam("color", true);
-			if (name == null || name.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
-			else if (color == null || Regex.isColor(color) == false)
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong color.");
-			Profile newProfile = user.addProfile(name, color, sm);
-			sm.setResponse(ServletManager.Code.Success, Integer.toString(newProfile.getSingleId()));
-			sm.addWebsockets(user.getWebsockets());
-			sm.addToSocket(WebsocketMessage.addProfileMessage(newProfile));
+			if (email == null || !Regex.isEmail(email)) {
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email.");
+			}
+			if (user.getEmails().get(email) != null)
+				throw new GeneralException(ServletManager.Code.ClientError, "You already have this email.");
+			user.getEmails().put(email, UserEmail.createUserEmail(email, user, false, sm));
+			sm.setResponse(ServletManager.Code.Success, "Password changed.");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		}

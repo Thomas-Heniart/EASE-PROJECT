@@ -56,13 +56,13 @@ public class User {
 				String lastName = rs.getString(Data.LASTNAME.ordinal());
 				Keys keys = Keys.loadKeys(rs.getString(Data.KEYSID.ordinal()), password, sm);
 				Option options = Option.loadOption(rs.getString(Data.OPTIONSID.ordinal()), sm);
-				Map<String, UserEmail> emails = UserEmail.loadEmails(db_id, sm);
 				Status status = Status.loadStatus(rs.getString(Data.STATUSID.ordinal()), db);
 				ResultSet adminRs = db.get("SELECT user_id FROM admins WHERE user_id = " + db_id + ";");
 				boolean isAdmin = adminRs.next();
 				SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, sm);
-				User newUser =  new User(db_id, firstName, lastName, email, keys, options, emails, isAdmin, sessionSave, status);
+				User newUser =  new User(db_id, firstName, lastName, email, keys, options, isAdmin, sessionSave, status);
 				newUser.loadProfiles(sm);
+				newUser.loadEmails(sm);
 				for (Map.Entry<String, WebsiteApp> entry : newUser.getWebsiteAppsDBmap().entrySet()){
 				    if (entry.getValue().getType().equals("LogwithApp")) {
 				    	LogwithApp logwithApp = (LogwithApp)entry.getValue();
@@ -88,6 +88,10 @@ public class User {
 		}
 	}
 	
+	private void loadEmails(ServletManager sm) throws GeneralException {
+			this.emails = UserEmail.loadEmails(db_id, this, sm);
+	}
+		
 	@SuppressWarnings("unchecked")
 	public static User loadUserFromCookies(SessionSave sessionSave, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
@@ -95,7 +99,6 @@ public class User {
 		String keyUser = sessionSave.getKeyUser();
 		sessionSave.eraseFromDB(sm);
 		try {
-			
 			ResultSet rs = db.get("SELECT * FROM users where id='" + db_id + "';");
 			if (rs.next()) {
 				String email = rs.getString(Data.EMAIL.ordinal());
@@ -107,13 +110,13 @@ public class User {
 				String lastName = rs.getString(Data.LASTNAME.ordinal());
 				Keys keys = Keys.loadKeysWithoutPassword(rs.getString(Data.KEYSID.ordinal()), keyUser, sm);
 				Option options = Option.loadOption(rs.getString(Data.OPTIONSID.ordinal()), sm);
-				Map<String, UserEmail> emails = UserEmail.loadEmails(db_id, sm);
 				Status status = Status.loadStatus(rs.getString(Data.STATUSID.ordinal()), db);
 				ResultSet adminRs = db.get("SELECT user_id FROM admins WHERE user_id = " + db_id + ";");
 				boolean isAdmin = adminRs.next();
 				SessionSave newSessionSave = SessionSave.createSessionSave(keyUser, db_id, sm);
-				User newUser =  new User(db_id, firstName, lastName, email, keys, options, emails, isAdmin, newSessionSave, status);
+				User newUser =  new User(db_id, firstName, lastName, email, keys, options, isAdmin, newSessionSave, status);
 				newUser.loadProfiles(sm);
+				newUser.loadEmails(sm);
 				for (Map.Entry<String, WebsiteApp> entry : newUser.getWebsiteAppsDBmap().entrySet()){
 				    if (entry.getValue().getType().equals("LogwithApp")) {
 				    	LogwithApp logwithApp = (LogwithApp)entry.getValue();
@@ -146,7 +149,6 @@ public class User {
 		List<Group> groups = Invitation.verifyInvitation(email, code, sm);
 		Option opt = Option.createOption(sm);
 		//Status status = Status.createStatus(sm);
-		Map<String, UserEmail> emails = new HashMap<String, UserEmail>();
 		Keys keys = Keys.createKeys(password, sm);
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = new Date();
@@ -154,7 +156,7 @@ public class User {
 		Status status = Status.createStatus(db);
 		String db_id = db.set("INSERT INTO users VALUES(NULL, '" + firstName + "', '" + lastName + "', '" + email + "', " + keys.getDBid() + ", " + opt.getDb_id() + ", '" + registrationDate + "', " + status.getDbId() + ");").toString();
 		SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(),  db_id, sm);
-		User newUser = new User(db_id, firstName, lastName, email, keys, opt, emails, false, sessionSave, status);
+		User newUser = new User(db_id, firstName, lastName, email, keys, opt, false, sessionSave, status);
 		newUser.getProfileColumns().get(0).add(Profile.createPersonnalProfile(newUser, 0, 0, "Side", "#000000", sm));
 		newUser.getProfileColumns().get(1).add(Profile.createPersonnalProfile(newUser, 1, 0, "Perso", "#000000", sm));
 		((Map<String, User>)sm.getContextAttr("users")).put(email, newUser);
@@ -187,14 +189,14 @@ public class User {
 	
 	protected SessionSave sessionSave;
 	
-	public User(String db_id, String first_name, String last_name, String email, Keys keys, Option opt, Map<String, UserEmail> emails, boolean isAdmin, SessionSave sessionSave, Status status) {
+	public User(String db_id, String first_name, String last_name, String email, Keys keys, Option opt, boolean isAdmin, SessionSave sessionSave, Status status) {
 		this.db_id = db_id;
 		this.first_name = first_name;
 		this.last_name = last_name;
 		this.email = email;
 		this.keys = keys;
 		this.opt = opt;
-		this.emails = emails;
+		this.emails = new HashMap<String, UserEmail>();
 		this.profile_columns = new LinkedList<List<Profile>>();
 		for (int i = 0; i < 5; ++i) {
 			this.profile_columns.add(new LinkedList<Profile>()); 
@@ -307,7 +309,7 @@ public class User {
 		this.emails.remove(email);
 	}
 	
-	public void removeProfile(int single_id, ServletManager sm) throws GeneralException {
+	public void removeProfile(int single_id, String password, ServletManager sm) throws GeneralException {
 		Iterator<List<Profile>> it = this.profile_columns.iterator();
 		while (it.hasNext()) {
 			List<Profile> column = it.next();
@@ -317,6 +319,9 @@ public class User {
 				if (profile.getSingleId() == single_id) {
 					DataBaseConnection db = sm.getDB();
 					int transaction = db.startTransaction();
+					if (profile.getApps().size() > 0) {
+						this.keys.isGoodPassword(password);
+					}
 					profile.removeFromDB(sm);
 					column.remove(profile);
 					this.updateProfilesIndex(sm);
@@ -502,12 +507,8 @@ public class User {
 		}
 	}
 	
-	public List<String> getEmails() {
-		List<String> res = new LinkedList<String> ();
-		for (Map.Entry<String, UserEmail> entry : emails.entrySet()) {
-			res.add(entry.getValue().getEmail());
-		}
-		return res;
+	public Map<String, UserEmail> getEmails() {
+		return this.emails;
 	}
 	
 	public List<String> getVerifiedEmails() {
@@ -547,10 +548,8 @@ public class User {
 			for (AccountInformation info : ((ClassicApp)app).getAccount().getAccountInformations()) {
 				if (Regex.isEmail(info.getInformationValue()) == true) {
 					String email = info.getInformationValue();
-					UserEmail userEmail;
-					if ((userEmail = this.emails.get(email)) != null) {
-						userEmail.removeIfNotUsed(this.db_id, sm);
-					}
+					if (this.emails.get(email).removeIfNotUsed(sm))
+						this.emails.remove(email);
 				}
 			}
 				
@@ -649,7 +648,9 @@ public class User {
 	public boolean tutoDone() {
 		return this.status.tutoIsDone();
 	}
-
+	
+	
+	
 	public void addEmailIfNeeded(String email, ServletManager sm) throws GeneralException {
 		UserEmail userEmail = this.emails.get(email);
 		if (userEmail != null)

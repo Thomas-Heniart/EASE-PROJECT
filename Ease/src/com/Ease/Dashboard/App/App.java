@@ -21,7 +21,7 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 public class App {
-	enum Data {
+	public enum Data {
 		NOTHING,
 		ID,
 		PROFILE_ID,
@@ -180,6 +180,10 @@ public class App {
 	public boolean havePerm(ProfilePermissions.Perm perm) {
 		if (this.groupApp == null || (!this.groupApp.isCommon() && this.groupApp.getPerms().havePermission(perm.ordinal())))
 			return true;
+		return false;
+	}
+	
+	public boolean isClassicApp() {
 		return false;
 	}
 	

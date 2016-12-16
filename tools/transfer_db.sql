@@ -1,3 +1,5 @@
+/* Websites */
+
 INSERT INTO ease.sso
 SELECT * FROM test.sso;
 
@@ -20,3 +22,32 @@ SELECT null, website_id, 1 FROM test.websites WHERE FIND_IN_SET('7', haveLoginWi
 
 INSERT INTO ease.websitesLogWithMap
 SELECT null, website_id, 2 FROM test.websites WHERE FIND_IN_SET('28', haveLoginWith) > 0;
+
+/* date_dimension */
+
+INSERT INTO ease.date_dimension
+SELECT * FROM test.date_dimension;
+
+/* Users */
+
+INSERT INTO ease.userKeys
+SELECT null, password, saltEase, saltPerso, keyUser FROM test.users;
+
+INSERT INTO ease.options
+SELECT null, bckgrndPic, 0 FROM test.users;
+
+INSERT INTO ease.status
+SELECT null, 1, 0, 0, 0, 0, 0, 0, tuto FROM test.users;
+
+UPDATE ease.status SET first_connection=1, CGU=1, chrome_scrapping=1, click_on_app=1, move_apps=1, open_catalog=1, drag_and_drop=1 WHERE tuto_done = 1;
+
+SET @var = 0;
+
+INSERT INTO ease.users
+SELECT user_id, firstName, lastName, email, (@var := @var + 1), @var, CURRENT_TIMESTAMP, @var FROM test.users;
+
+/* savedSessions */
+
+INSERT INTO ease.savedSessions
+SELECT * FROM test.savedSessions;
+

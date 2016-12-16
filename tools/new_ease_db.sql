@@ -25,7 +25,7 @@ CREATE TABLE options (
 
 CREATE TABLE status (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `registered` tinyint(1) NOT NULL,
+  `first_connection` tinyint(1) NOT NULL,
   `CGU` tinyint(1) NOT NULL,
   `chrome_scrapping` tinyint(1) NOT NULL,
   `click_on_app` tinyint(1) NOT NULL,
@@ -76,7 +76,7 @@ CREATE TABLE `users` (
   `email` varchar(100) NOT NULL,
   `key_id` int(10) unsigned,
   `option_id` int(10) unsigned,
-  `registration_date` DATETIME,
+  `registration_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status_id` INT(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
