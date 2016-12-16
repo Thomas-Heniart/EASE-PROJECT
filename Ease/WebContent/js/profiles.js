@@ -353,8 +353,8 @@ function setupSortableContainer(container) {
 			if (!($(evt.to).is($(evt.from))) || evt.oldIndex != evt.newIndex) {
 				postHandler.post("MoveApp", {
 					appId : item.attr('id'),
-					profileId : item.parent().attr('id'),
-					index : item.index()
+					profileIdDest : item.parent().attr('id'),
+					positionDest : item.index()
 				}, function() {
 				}, function(retMsg) {
 				}, function(retMsg) {
