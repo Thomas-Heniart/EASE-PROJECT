@@ -507,12 +507,8 @@ public class User {
 		}
 	}
 	
-	public List<String> getEmails() {
-		List<String> res = new LinkedList<String> ();
-		for (Map.Entry<String, UserEmail> entry : emails.entrySet()) {
-			res.add(entry.getValue().getEmail());
-		}
-		return res;
+	public Map<String, UserEmail> getEmails() {
+		return this.emails;
 	}
 	
 	public List<String> getVerifiedEmails() {
