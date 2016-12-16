@@ -51,3 +51,26 @@ SELECT user_id, firstName, lastName, email, (@var := @var + 1), @var, CURRENT_TI
 INSERT INTO ease.savedSessions
 SELECT * FROM test.savedSessions;
 
+/* profiles */
+
+INSERT INTO ease.profileInfo
+SELECT null, name, color FROM test.profiles;
+
+SET @var = 0;
+
+INSERT INTO ease.profiles
+SELECT profile_id, user_id, columnIdx, profileIdx, NULL, (@var := @var + 1) FROM test.profiles;
+
+
+/* groups */
+
+INSERT INTO ease.infrastructures
+SELECT null, name, 'aaa' FROM test.groups WHERE parent IS NULL;
+
+INSERT INTO ease.groups
+SELECT id, name, parent, 1 FROM test.groups;
+
+UPDATE ease.groups
+SET infrastructure_id = 2 WHERE id >= 4;
+
+/* group profiles */
