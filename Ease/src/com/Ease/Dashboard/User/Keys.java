@@ -123,4 +123,14 @@ public class Keys {
 	public String decrypt(String data) throws GeneralException {
 		return AES.decrypt(data, this.keyUser);
 	}
+
+	public static void changePasswordForUnconnected(String newPassword, String keysId, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		String saltEase = AES.generateSalt();
+		String saltPerso = AES.generateSalt();
+		String keyUser = AES.keyGenerator();
+		String crypted_keyUser = AES.encryptUserKey(keyUser, newPassword, saltPerso);
+		String hashed_password = Hashing.SHA(newPassword, saltEase);
+		db.set("UPDATE FROM userKeys SET password='" + hashed_password + "', saltEase='" + saltEase + "', saltPerso='" + saltPerso + "', keyUser='" + crypted_keyUser + "' WHERE id=" + keysId + ";");
+	}
 }
