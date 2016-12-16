@@ -120,7 +120,7 @@ public class Keys {
 		DataBaseConnection db = sm.getDB();
 		String new_hashed_password = Hashing.SHA(new_password, saltEase);
 		String new_crypted_keyUser = AES.encryptUserKey(keyUser, new_password, saltPerso);
-		db.set("UPDATE userKeys SET password='" + new_hashed_password + "', saltEase='" + saltEase + "', saltPerso='" + saltPerso + "', keyUser='" + new_crypted_keyUser + "' WHERE id=" + this.db_id + ");");
+		db.set("UPDATE userKeys SET password='" + new_hashed_password + "', saltEase='" + saltEase + "', saltPerso='" + saltPerso + "', keyUser='" + new_crypted_keyUser + "' WHERE id=" + this.db_id + ";");
 		this.hashed_password = new_hashed_password;
 	}
 	
