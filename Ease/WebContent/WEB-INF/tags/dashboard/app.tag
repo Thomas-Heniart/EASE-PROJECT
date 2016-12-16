@@ -9,10 +9,7 @@
 	login=""
 	webId="${app.getSite().getSingleId()}"
 	name="${app.getName()}"
-	move="true"
-	logWith="${app.getDataLogin()}"
-	ssoId="${app.getSite().getSso()}"
-	
+	move="true"	
 	id="${app.getSingleId()}">
 	<div class="linkImage">
 		<div class="emptyAppIndicator" onclick="showModifyAppPopup(this, event)">
