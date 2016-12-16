@@ -24,7 +24,7 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 public class App {
-	enum Data {
+	public enum Data {
 		NOTHING,
 		ID,
 		PROFILE_ID,

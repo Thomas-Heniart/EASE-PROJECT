@@ -22,11 +22,15 @@ import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.Profile.ProfilePermissions;
+import com.Ease.Servlet.dans;
+import com.Ease.Servlet.verif;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Invitation;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.Crypto.AES;
+import com.Ease.Utils.Crypto.Hashing;
 import com.Ease.websocket.WebsocketSession;
 
 public class User {
@@ -648,5 +652,27 @@ public class User {
 	
 	public boolean tutoDone() {
 		return this.status.tutoIsDone();
+	}
+	
+	public static void passwordLost(String userId, String newPassword, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		verif du code dans la db que l'on a pas
+		try {
+			ResultSet rs = db.get("SELECT * FROM profiles WHERE user_id=" + userId + ";");
+			while (rs.next()) {
+				ResultSet rs2 = db.get("SELECT * FROM apps WHERE profile_id=" + rs.getString(Profile.Data.ID.ordinal()) + ";");
+				while (rs2.next()) {
+					if (rs2.getString(App.Data.TYPE.ordinal()).equals("websiteApp")) {
+						WebsiteApp.Empty(rs2.getString(App.Data.ID.ordinal()), sm);
+					}
+				}
+			}
+			rs = db.get("SELECT key_id FROM users WHERE id=" + userId + ";");
+			Keys.changePasswordForUnconnected(newPassword, rs.getString(1), sm);
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+		db.commitTransaction(transaction);
 	}
 }
