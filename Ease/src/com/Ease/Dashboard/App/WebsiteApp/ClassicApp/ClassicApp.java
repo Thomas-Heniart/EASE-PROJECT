@@ -64,6 +64,19 @@ public class ClassicApp extends WebsiteApp {
 		return new ClassicApp((String)elevator.get("appDBid"), profile, position, (AppInformation)elevator.get("appInfos"), null, (String)elevator.get("registrationDate"), ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, null, account, classicDBid);
 	}
 	
+	public static ClassicApp createFromWebsiteApp(WebsiteApp websiteApp, String name, String password, Map<String, String> infos, ServletManager sm, User user) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		String websiteAppDBid = websiteApp.getWebsiteAppDBid();
+		db.set("UPDATE websiteApps SET type='classicApp' WHERE id='"+ websiteAppDBid +"';");
+		Account account = Account.createAccount(password, false, infos, user, sm);
+		String classicDBid = db.set("INSERT INTO classicApps VALUES(NULL, " + websiteAppDBid + ", " + account.getDBid() + ", NULL);").toString();
+		db.commitTransaction(transaction);
+		ClassicApp newClassicApp = new ClassicApp(websiteApp.getDBid(),user.getProfileFromApp(websiteApp.getSingleId()), websiteApp.getPosition(),websiteApp.getAppInformation(), null, websiteApp.getInsertDate(), websiteApp.getSingleId(), websiteApp.getSite(), websiteAppDBid, null, account, classicDBid);
+		user.replaceApp(newClassicApp);
+		return newClassicApp;
+	}
+	
 	
 	/*
 	 * 

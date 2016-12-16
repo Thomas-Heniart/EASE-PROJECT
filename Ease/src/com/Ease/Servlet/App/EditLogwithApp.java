@@ -58,6 +58,8 @@ public class EditLogwithApp extends HttpServlet {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong appId.");
 			try {
 				App app = user.getApp(Integer.parseInt(appId));
+				if (!app.getType().equals("LogwithApp"))
+					throw new GeneralException(ServletManager.Code.ClientError, "This is not a empty app.");
 				App logwith = user.getApp(Integer.parseInt(logwithId));
 				((LogwithApp)app).edit(name, logwith, sm);
 				sm.setResponse(ServletManager.Code.Success, "Logwith app edited.");

@@ -129,6 +129,7 @@
 				var webid = $(".siteLinkBox[id='" + logid + "']").attr('webid');
 				loginChooser.removeClass('hidden');
 				popup.find('.loginAppChooser').css('display', 'block');
+				loginChooser.find(".loginWithButton").addClass('hidden');
 				loginChooser.find(".loginWithButton[name='" + $(".catalogApp[idx='"+webid+"']").attr("name") + "']").removeClass('hidden');
 				popup.find(".loginWithButton[name='" + $(".catalogApp[idx='"+webid+"']").attr("name") + "']").click();
 				popup.find(".AccountApp[aid='" + logid + "']").click();

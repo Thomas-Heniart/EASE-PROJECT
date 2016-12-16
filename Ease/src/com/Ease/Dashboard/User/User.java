@@ -373,6 +373,22 @@ public class User {
 		throw new GeneralException(ServletManager.Code.ClientError, "This app's single_id dosen't exist.");
 	}
 	
+	public Profile getProfileFromApp(int single_id) throws GeneralException {
+		for (List<Profile> column: this.profile_columns) {
+			for (Profile profile: column) {
+				for (App app: profile.getApps()) {
+					if (app.getSingleId() == single_id)
+						return profile;
+				}
+			}
+		}
+		throw new GeneralException(ServletManager.Code.ClientError, "This app's single_id dosen't exist.");
+	}
+	
+	public void replaceApp(App app) throws GeneralException{
+		app.getProfile().getApps().set(app.getPosition(), app);		
+	}
+	
 	public App getAppWithDBid(String DBid) throws GeneralException {
 		for (List<Profile> column: this.profile_columns) {
 			for (Profile profile: column) {

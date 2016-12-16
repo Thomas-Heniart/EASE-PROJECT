@@ -371,8 +371,11 @@ var Form = {
 			var AppToLoginWith = self.qRoot.find('.AccountApp.selected');
 			if (AppToLoginWith.length) {
 				self.params.logwithId = AppToLoginWith.attr('aid');
+				var postMessage = 'EditLogwithApp';
+				if(self.app.hasClass('emptyApp'))
+					postMessage = 'WebsiteAppToLogwithApp';
 				postHandler.post(
-					'EditLogwithApp',
+					postMessage,
 					self.params,
 					function(){},
 					function(data) {
@@ -417,8 +420,11 @@ var Form = {
 						continue;
 					self.params[key] = self.attributesToSet[key];
 				}
+				var postMessage = 'EditClassicApp';
+				if(self.app.hasClass('emptyApp'))
+					postMessage = 'WebsiteAppToClassicApp';
 				postHandler.post(
-					'EditClassicApp',
+					postMessage,
 					self.params,
 					function(){},
 					function(data) {
@@ -434,7 +440,7 @@ var Form = {
 								continue;
 							self.app.attr(key, self.attributesToSet[key]);
 						}
-						self.app.attr('logwith', (self.oInputs[1].getVal().length || self.aId) == null ? 'false' : self.aId);
+						self.app.attr('logwith', 'false');
 						self.app.find('.siteName p').text(self.oInputs[0].getVal());
 						self.app.find('.emptyAppIndicator').remove();
 						self.app.removeClass('emptyApp');
