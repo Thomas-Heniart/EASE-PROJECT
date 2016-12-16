@@ -582,8 +582,8 @@ public class User {
 		App app = this.getApp(appId);
 		Profile profileDest = this.getProfile(profileIdDest);
 		if (profileDest == app.getProfile()) {
-			if (positionDest > app.getPosition())
-				positionDest--;
+			//if (positionDest > app.getPosition())
+			//	positionDest--;
 			profileDest.getApps().remove(app);
 			profileDest.getApps().add(positionDest, app);
 			profileDest.updateAppsIndex(sm);

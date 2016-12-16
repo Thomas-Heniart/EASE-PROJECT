@@ -174,7 +174,7 @@ public class App {
 	
 	public void setProfile(Profile profile, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE apps SET profileId=" + profile.getDBid() + " WHERE id=" + this.db_id + ";");
+		db.set("UPDATE apps SET profile_id=" + profile.getDBid() + " WHERE id=" + this.db_id + ";");
 		this.profile = profile;
 	}
 	public boolean havePerm(ProfilePermissions.Perm perm) {
