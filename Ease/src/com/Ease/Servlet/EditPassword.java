@@ -46,15 +46,15 @@ public class EditPassword extends HttpServlet {
 		User user = (User) (session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 
-		String oldPassword = sm.getServletParam("oldPassword", true);
-		String password = sm.getServletParam("password", true);
-		String confirmPassword = sm.getServletParam("confirmPassword", true);
+		String oldPassword = sm.getServletParam("oldPassword", false);
+		String password = sm.getServletParam("password", false);
+		String confirmPassword = sm.getServletParam("confirmPassword", false);
 		
 		try {
 			sm.needToBeConnected();
-			if (oldPassword == null || Regex.isPassword(oldPassword)) {
+			if (oldPassword == null || !Regex.isPassword(oldPassword)) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong oldPassword.");
-			} else if (password == null || Regex.isPassword(password)) {
+			} else if (password == null || !Regex.isPassword(password)) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong newPassword.");
 			} else if (confirmPassword == null || !confirmPassword.equals(password)) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Passwords are not the same.");
