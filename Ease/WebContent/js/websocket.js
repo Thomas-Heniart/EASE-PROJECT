@@ -1,4 +1,4 @@
-var socket = new WebSocket("ws://localhost:8080/HelloWorld/actions");
+var socket = new WebSocket("ws://localhost:8080/actions");
 socket.onmessage = onMessage;
 socketId = null;
 
