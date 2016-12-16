@@ -3,7 +3,7 @@ pageEncoding="UTF-8"%>
 
 <div oClass="DeleteProfilePopup" id="PopupDeleteProfile" class="md-modal md-effect-15 popup">
 	<div class="md-content">
-		<form oClass="DeleteProfileForm" action="deleteProfile" class="popupForm">
+		<form oClass="DeleteProfileForm" action="RemoveProfile" class="popupForm">
 			<p class="title">By deleting your profile, you will lose all related information and associated accounts.</br>-</br>Confirm by entering your ease password.<span></span></p>
 			<input oClass="NoEmptyInput" type="hidden" name="index" />
 			<input oClass="PasswordInput" name="password" type="password" placeholder="Enter your password"/>
