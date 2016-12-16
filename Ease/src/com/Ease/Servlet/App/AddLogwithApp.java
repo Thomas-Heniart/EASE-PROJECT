@@ -64,7 +64,7 @@ public class AddLogwithApp extends HttpServlet {
 				App logwith = user.getApp(Integer.parseInt(logwithId));
 				site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(websiteId));
 				LogwithApp newApp = profile.addLogwithApp(name, site, logwith, sm);
-				sm.setResponse(ServletManager.Code.Success, "ClassicApp added.");
+				sm.setResponse(ServletManager.Code.Success,  String.valueOf(newApp.getSingleId()));
 			} catch (NumberFormatException e) {
 				sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");
 			}

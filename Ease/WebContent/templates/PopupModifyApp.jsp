@@ -13,7 +13,7 @@
 				</p>
 			</div>
 		</div>
-		<form action="editApp" oClass="ModifyAppForm" id="modifyAppForm" class="popupForm">
+		<form action="EditClassicApp" oClass="ModifyAppForm" id="modifyAppForm" class="popupForm">
 			<div class="lineInput">
 				<label for="app-name">App name :</label>
 				<input oClass="NoEmptyInput" id="app-name" name="name" type="text"
@@ -24,10 +24,10 @@
 					<div class="backgroundLine"></div>
 					<p>Log in with</p>
 				</div>
-				<div class="loginWithButton facebook hidden" webid="7">
+				<div class="loginWithButton facebook hidden" name="Facebook">
 					<p>Facebook</p>
 				</div>
-				<div class="loginWithButton linkedin hidden" webid="28">
+				<div class="loginWithButton linkedin hidden" name="Linkedin">
 					<p>Linkedin</p>
 				</div>
 				<div class="linedSeparator or">
@@ -37,9 +37,6 @@
 			</div>
 			<div class="loginAppChooser" style="display: none;">
 				<p>Select your account</p>
-				<div class="buttonBack">
-					<i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i>
-				</div>
 				<div class="ChooserContent"></div>
 			</div>
 

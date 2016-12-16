@@ -107,7 +107,7 @@ public class LogwithApp extends WebsiteApp {
 	
 	public void setLogwith(WebsiteApp logwith, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE FROM logWithApps SET logwith_website_app_id=" + logwith.getDBid() + " WHERE id=" + this.db_id + ";");
+		db.set("UPDATE logWithApps SET logwith_website_app_id=" + logwith.getDBid() + " WHERE id=" + this.db_id + ";");
 		this.logwith = logwith;
 		this.logwithDBid = logwith.getDBid();
 	}

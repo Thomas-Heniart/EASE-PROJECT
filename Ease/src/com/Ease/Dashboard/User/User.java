@@ -231,7 +231,7 @@ public class User {
 	}
 	public void setFirstName(String first_name, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE FROM users set firstName='" + first_name + "' WHERE id=" + this.db_id + ";");
+		db.set("UPDATE users set firstName='" + first_name + "' WHERE id=" + this.db_id + ";");
 		this.first_name = first_name;
 	}
 	
@@ -240,7 +240,7 @@ public class User {
 	}
 	public void setLastName(String last_name, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE FROM users set lastName='" + last_name + "' WHERE id=" + this.db_id + ";");
+		db.set("UPDATE users set lastName='" + last_name + "' WHERE id=" + this.db_id + ";");
 		this.last_name = last_name;
 	}
 	

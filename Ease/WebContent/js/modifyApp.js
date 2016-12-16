@@ -29,7 +29,7 @@
 		$('#PopupModifyApp .loginWithButton').click(function(){
 			var parent = $(this).closest('.md-content');
 			var AppChooser = $(this).closest('.md-content').find('.loginAppChooser .ChooserContent');
-			var webid = $(this).attr('webid');
+			var webid = $(".catalogApp[name='"+$(this).attr('name')+"']").attr("idx");
 			var AppHelper = $("<div class='AccountApp'><div class='imageHandler'><img src='' /></div><p></p></div>");
 			AppChooser.empty();
 			var AppHelperCloned;
@@ -43,10 +43,9 @@
 
 			var apps = $(".siteLinkBox[webid='" + webid + "']");
 			if (apps.length == 0) {
-				if (webid == "7")
-					$(".loginAppChooser p").text("No Facebook account detected");
-				if (webid == "28")
-					$(".loginAppChooser p").text("No Linkedin account detected");
+				var websiteName = $(".catalogApp[idx='"+webid+"']").attr("name");
+				if(websiteName)
+					$(".loginAppChooser p").text("No "+websiteName+" account detected");
 			}
 			for (var i = 0; i < apps.length; i++) {
 				AppHelper.attr('aId', $(apps[i]).attr('id'));			
@@ -78,8 +77,78 @@
 		modifyAppPopup.setApp($(app));
 		popup.find('.logoApp').attr('src', $(app).find('img.logo').attr('src'));
 		var image = $(app).find('.linkImage');
+		
+		if($(app).hasClass('emptyApp')){
+			popup.find('.disabledInput').each(function(){
+				enableDisabledInput($(this));
+			});
+			popup.find('.loginWithButton').removeClass('locked');
+			popup.find('.classicLogin').addClass("show");
+			popup.find('.or').css('display', 'block');
+			popup.find('.loginAppChooser .ChooserContent').empty();
+			popup.find('.loginAppChooser').css('display', 'none');
+			popup.find('p.title').html('Finalize <span></span>.</br>Type your info for the last time');
+			
+			var loginChooser = $('#PopupModifyApp .loginWithChooser');
+			var abc = $(".catalogContainer .catalogApp[idx='" + $(app).attr('webid') + "']").attr('data-login').split(',');
 
-		if ($(app).hasClass('emptyApp')){
+			loginChooser.addClass('hidden');
+			loginChooser.find('.loginWithButton').addClass('hidden');
+			if ($(".catalogContainer .catalogApp[idx='" + $(app).attr('webid') + "']").attr('data-login') != ""){
+				loginChooser.removeClass('hidden');
+				for (var i = 0; i < abc.length; i++) {
+					loginChooser.find(".loginWithButton[name='" + $(".catalogApp[idx='"+abc[i]+"']").attr("name") + "']").removeClass('hidden');
+				}
+			}
+
+			$('#PopupModifyApp .buttonBack').unbind("click");
+			$('#PopupModifyApp .buttonBack').click(function(){
+				var parent = $(this).closest('.md-content');
+
+				parent.find('.loginWithButton').removeClass('locked');
+				parent.find('.loginAppChooser .ChooserContent').empty();
+				parent.find('.loginAppChooser').css('display', 'none');
+				if ($(".catalogContainer .catalogApp[idx='" + $(app).attr('webid') + "']").attr('data-nologin') != "true"){
+					parent.find('.classicLogin').addClass("show");
+					parent.find('.or').css('display', 'block');
+				}
+			});
+			$("#PopupModifyApp .popupHeader .title span").text($(app).attr("name"));
+			modifyAppTutorial();
+		} else {
+			popup.find('.disabledInput').each(function(){
+				resetDisabledInput($(this));
+			});
+			
+			var loginChooser = $('#PopupModifyApp .loginWithChooser');
+			var abc = $(".catalogContainer .catalogApp[idx='" + $(app).attr('webid') + "']").attr('data-login').split(',');
+			
+			popup.find('p.title').html('Modify informations related to <span></span>');
+			if (app.attr('logwith') != 'false'){
+				var logid = app.attr('logwith');
+				var webid = $(".siteLinkBox[id='" + logid + "']").attr('webid');
+				loginChooser.removeClass('hidden');
+				popup.find('.loginAppChooser').css('display', 'block');
+				loginChooser.find(".loginWithButton[name='" + $(".catalogApp[idx='"+webid+"']").attr("name") + "']").removeClass('hidden');
+				popup.find(".loginWithButton[name='" + $(".catalogApp[idx='"+webid+"']").attr("name") + "']").click();
+				popup.find(".AccountApp[aid='" + logid + "']").click();
+				popup.find('.classicLogin').removeClass("show");
+			} else {
+				popup.find('.classicLogin').addClass("show");
+				loginChooser.addClass('hidden');
+				loginChooser.find('.loginWithButton').addClass('hidden');
+				//popup.find('.loginAppChooser .ChooserContent').empty();
+				popup.find('.loginAppChooser').css('display', 'none');
+				var loginChooser = $('#PopupModifyApp .loginWithChooser');
+			}
+			$("#PopupModifyApp .popupHeader .title span").text($(app).attr("name"));
+			modifyAppTutorial();
+		}
+		
+		
+		
+		
+		/*if ($(app).hasClass('emptyApp')){
 			popup.find('.disabledInput').each(function(){
 				enableDisabledInput($(this));
 			});
@@ -108,16 +177,17 @@
 		if ($(".catalogContainer .catalogApp[idx='" + $(app).attr('webid') + "']").attr('data-login') != ""){
 			loginChooser.removeClass('hidden');
 			for (var i = 0; i < abc.length; i++) {
-				loginChooser.find(".loginWithButton[webid='" + abc[i] + "']").removeClass('hidden');
+				loginChooser.find(".loginWithButton[name='" + $(".catalogApp[idx='"+abc[i]+"']").attr("name") + "']").removeClass('hidden');
 			}
 		}
 
 		if (app.attr('logwith') != 'false'){
+			
 			var logid = app.attr('logwith');
 			var webid = $(".siteLinkBox[id='" + logid + "']").attr('webid');
-			popup.find(".loginWithButton[webid='" + webid + "']").click();
+			popup.find(".loginWithButton[name='" + $(".catalogApp[idx='"+webid+"']").attr("name") + "']").click();
 			popup.find(".AccountApp[aid='" + logid + "']").click();
-			//popup.find('.classicLogin').removeClass("show");
+			popup.find('.classicLogin').removeClass("show");
 		}
 		
 		$('#PopupModifyApp .buttonBack').unbind("click");
@@ -133,5 +203,5 @@
 			}
 		});
 		$("#PopupModifyApp .popupHeader .title span").text($(app).attr("name"));
-		modifyAppTutorial();
+		modifyAppTutorial();*/
 	}
