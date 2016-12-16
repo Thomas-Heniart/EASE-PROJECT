@@ -52,11 +52,11 @@ public class MoveProfile extends HttpServlet {
 			String columnIdx = sm.getServletParam("columnIdxDest", true);
 			String position = sm.getServletParam("positionDest", true);
 			if (profileId == null || profileId.isEmpty())
-				throw new GeneralException(ServletManager.Code.ClientError, "Wrong profileId.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong profileId.");
 			if (columnIdx == null || columnIdx.isEmpty())
-				throw new GeneralException(ServletManager.Code.ClientError, "Wrong columnIdx.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong columnIdx.");
 			if (position == null || position.isEmpty())
-				throw new GeneralException(ServletManager.Code.ClientError, "Wrong position.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong position.");
 			user.moveProfile(Integer.parseInt(profileId), Integer.parseInt(columnIdx), Integer.parseInt(position), sm);
 			sm.setResponse(ServletManager.Code.Success, "Profile moved.");
 			sm.addWebsockets(user.getWebsockets());
