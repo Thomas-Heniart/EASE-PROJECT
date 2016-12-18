@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import com.Ease.Dashboard.App.Tag;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
@@ -21,6 +22,9 @@ public class Catalog {
 	protected Map<String, Website> websiteDBmap;
 	protected Map<Integer, Website> websiteIDmap;
 	protected List<Website> websites;
+	protected Map<String, Tag> tagDBmap;
+	protected Map<Integer, Tag> tagIDmap;
+	protected List<Tag> tags;
 	
 	public Catalog(DataBaseConnection db, ServletContext context) throws GeneralException {
 		
@@ -33,6 +37,8 @@ public class Catalog {
 		}
 		for (Website site : websites)
 			site.loadLoginWithWebsites(db, this);
+		tags = Tag.loadTags(db, context);
+		
 	}
 	
 	/*
@@ -68,5 +74,9 @@ public class Catalog {
 				res.add(website);
 		});
 		return res;
+	}
+	
+	public List<Tag> getTags() {
+		return this.tags;
 	}
 }
