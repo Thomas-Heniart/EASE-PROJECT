@@ -49,7 +49,7 @@ public class Website {
 	public static List<Website> loadWebsites(DataBaseConnection db, ServletContext context) throws GeneralException {
 		try {
 			List<Website> websites = new LinkedList<Website>();
-			ResultSet rs = db.get("SELECT * FROM websites;");
+			ResultSet rs = db.get("SELECT * FROM websites");
 			while (rs.next()) {
 				String db_id = rs.getString(WebsiteData.ID.ordinal());
 				List<WebsiteInformation> website_informations = WebsiteInformation.loadInformations(db_id, db);
@@ -172,6 +172,10 @@ public class Website {
 	
 	public List<WebsiteInformation> getInformations() {
 		return this.website_informations;
+	}
+	
+	public boolean isInPublicCatalog() {
+		return this.websiteAttributes != null;
 	}
 	
 	public boolean noLogin() {

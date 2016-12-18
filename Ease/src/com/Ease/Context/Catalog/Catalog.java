@@ -1,6 +1,7 @@
 package com.Ease.Context.Catalog;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -58,5 +59,14 @@ public class Catalog {
 	
 	public List<Website> getWebsites() {
 		return this.websites;
+	}
+	
+	public List<Website> getPublicWebsites() {
+		List<Website> res = new LinkedList<Website> ();
+		this.websites.forEach((website) -> {
+			if (website.isInPublicCatalog())
+				res.add(website);
+		});
+		return res;
 	}
 }

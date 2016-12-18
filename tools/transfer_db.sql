@@ -23,6 +23,11 @@ SELECT null, website_id, 1 FROM test.websites WHERE FIND_IN_SET('7', haveLoginWi
 INSERT INTO ease.websitesLogWithMap
 SELECT null, website_id, 2 FROM test.websites WHERE FIND_IN_SET('28', haveLoginWith) > 0;
 
+/* Tags */
+
+INSERT INTO ease.tags
+SELECT * FROM test.tags;
+
 /* date_dimension */
 
 INSERT INTO ease.date_dimension
