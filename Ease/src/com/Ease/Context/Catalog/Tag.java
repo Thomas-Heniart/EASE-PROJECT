@@ -94,4 +94,15 @@ public class Tag {
 	public List<Website> getWebsites() {
 		return this.sites;
 	}
+	
+	public String search(String search) {
+		String result= "";
+		for (Website site : this.sites) {
+			if (site.getName().startsWith(search)) {
+				result += site.getSingleId();
+				result += " ";
+			}
+		}
+		return result;
+	}
 }

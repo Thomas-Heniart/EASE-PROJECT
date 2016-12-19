@@ -83,4 +83,27 @@ public class Catalog {
 	public List<Tag> getTags() {
 		return this.tags;
 	}
+
+	public String search(String search, String[] tags) throws GeneralException {
+		String result = "";
+		if (tags.length <= 0) {
+			for (Website site : this.websites) {
+				if (site.getName().startsWith(search)) {
+					result += site.getSingleId();
+					result += " ";
+				}
+			}
+		} else {
+			Tag tag;
+			for (String tagName : tags) {
+				tag = this.tagIDmap.get(tagName);
+				if (tag != null) {
+					result += tag.search(search);
+				} else {
+					throw new GeneralException(ServletManager.Code.ClientWarning, "This tag dosen't exist.");
+				}
+			}
+		}
+		return result;
+	}
 }
