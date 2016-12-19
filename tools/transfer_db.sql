@@ -113,8 +113,59 @@ SET group_profile_id = 2 WHERE id IN (SELECT profile_id FROM test.profiles WHERE
 UPDATE ease.profiles
 SET group_profile_id = 3 WHERE id IN (SELECT profile_id FROM test.profiles WHERE custom = 3);
 
-/* apps */
+/* LinkApps */
+
+UPDATE test.apps
+SET position = 0 WHERE position IS NULL;
+
+SET @a_info_id = 0;
+SET @app_id = 0;
+
+INSERT INTO ease.appsInformations
+SELECT (@a_info_id := @a_info_id + 1), name FROM test.apps WHERE website_id IS NULL;
+
+SET @var = 0;
+
+INSERT INTO ease.apps
+SELECT (@app_id := @app_id + 1), profile_id, position, CURRENT_TIMESTAMP, 'linkApp', (@var := @var + 1), null FROM test.apps WHERE website_id IS NULL;
+
+INSERT INTO ease.linkAppInformations
+SELECT null, link, 'img_url' FROM test.linkAccounts JOIN test.apps ON apps.account_id = linkAccounts.account_id;
+
+SET @var = 0;
+SET @link_app_info = 0;
+
+INSERT INTO ease.linkApps
+SELECT null, (@var := @var + 1), (@link_app_info := @link_app_info + 1), NULL FROM test.linkAccounts JOIN test.apps ON apps.account_id = linkAccounts.account_id;
+
+SET @link_app_info = 0;
+SET @var = 0;
+
+INSERT INTO ease.appPermissions
+SELECT null, group_id, perm FROM test.customApps WHERE website_id IS NOT NULL;
+
+SET @g_app_info_id = 0;
+SET @app_perm = 0;
+
+INSERT INTO ease.appsInformations
+SELECT null, name FROM test.customApps WHERE website_id IS NOT NULL;
+
+INSERT INTO ease.groupApps
+SELECT null, 1, group_id, (@app_perm := @app_perm + 1), 'websiteApp', (@g_app_info_id := @g_app_info_id + 1), 0 FROM test.customApps WHERE website_id IS NOT NULL;
+
+SET @g_app_id = 0;
+
+INSERT INTO ease.groupWebsiteApps
+SELECT null, (@g_app_id := @g_app_id + 1), website_id, 'websiteApp' FROM test.customApps WHERE website_id IS NOT NULL;
+
+
+/*INSERT INTO ease.linkAppInformations
+SELECT 
+
+INSERT INTO ease.groupApps*/
 
 
 
-
+/* Delete useless data */
+DELETE FROM ease.websitesInformations WHERE information_name = 'password';
+DELETE FROM ease.accountsInformations WHERE information_name = 'password';
