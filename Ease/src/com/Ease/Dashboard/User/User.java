@@ -689,4 +689,16 @@ public class User {
 		userEmail = UserEmail.createUserEmail(email, this, false, sm);
 		this.emails.put(email, userEmail);
 	}
+	
+	public void rememberNotIntegratedApp(Object o){
+		
+	}
+	
+	public void rememberNotIntegratedFacebookApp(Object o){
+		
+	}
+
+	public void rememberNotIntegratedLinkedinApp(Object o){
+	
+	}
 }
