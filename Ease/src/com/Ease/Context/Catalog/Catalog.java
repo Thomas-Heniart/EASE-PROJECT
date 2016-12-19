@@ -7,7 +7,6 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
-import com.Ease.Dashboard.App.Tag;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
@@ -38,7 +37,12 @@ public class Catalog {
 		for (Website site : websites)
 			site.loadLoginWithWebsites(db, this);
 		tags = Tag.loadTags(db, context);
-		
+		tagDBmap = new HashMap<String, Tag>();
+		tagIDmap = new HashMap<Integer, Tag>();
+		for (Tag tag : tags) {
+			tagDBmap.put(tag.getDbId(), tag);
+			tagIDmap.put(tag.getSingleId(), tag);
+		}
 	}
 	
 	/*
@@ -78,5 +82,28 @@ public class Catalog {
 	
 	public List<Tag> getTags() {
 		return this.tags;
+	}
+
+	public String search(String search, String[] tags) throws GeneralException {
+		String result = "";
+		if (tags.length <= 0) {
+			for (Website site : this.websites) {
+				if (site.getName().startsWith(search)) {
+					result += site.getSingleId();
+					result += " ";
+				}
+			}
+		} else {
+			Tag tag;
+			for (String tagName : tags) {
+				tag = this.tagIDmap.get(tagName);
+				if (tag != null) {
+					result += tag.search(search);
+				} else {
+					throw new GeneralException(ServletManager.Code.ClientWarning, "This tag dosen't exist.");
+				}
+			}
+		}
+		return result;
 	}
 }

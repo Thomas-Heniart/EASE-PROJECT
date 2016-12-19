@@ -1,13 +1,13 @@
-package com.Ease.Dashboard.App;
+package com.Ease.Context.Catalog;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 
-import com.Ease.Context.Catalog.Website;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
@@ -52,20 +52,20 @@ public class Tag {
 	
 	protected String db_id;
 	protected int single_id;
-	protected String tagName;
-	protected String tagColor;
-	protected List<Website> tagSites;
+	protected String name;
+	protected String color;
+	protected List<Website> sites;
 	
 	public Tag(String db_id, int single_id, String tagName, String tagColor) {
 		this.db_id = db_id;
 		this.single_id = single_id;
-		this.tagName = tagName;
-		this.tagColor = tagColor;
-		this.tagSites = new LinkedList<Website> ();
+		this.name = tagName;
+		this.color = tagColor;
+		this.sites = new LinkedList<Website> ();
 	}
 	
 	public String getName() {
-		return this.tagName;
+		return this.name;
 	}
 	
 	public int getSingleId() {
@@ -77,6 +77,32 @@ public class Tag {
 	}
 	
 	public String getColor() {
-		return this.tagColor;
+		return this.color;
+	}
+	
+	public void setSites(Map<String, Website> sitesDBmap, DataBaseConnection db) throws GeneralException {
+		try {
+			ResultSet rs = db.get("SELECT website_id FROM tagsAndSitesMap WHERE tag_id=" + this.db_id + ";");
+			while (rs.next()) {
+				this.sites.add(sitesDBmap.get(rs.getString(1)));
+			}
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, "rs fail...");
+		}
+	}
+	
+	public List<Website> getWebsites() {
+		return this.sites;
+	}
+	
+	public String search(String search) {
+		String result= "";
+		for (Website site : this.sites) {
+			if (site.getName().startsWith(search)) {
+				result += site.getSingleId();
+				result += " ";
+			}
+		}
+		return result;
 	}
 }

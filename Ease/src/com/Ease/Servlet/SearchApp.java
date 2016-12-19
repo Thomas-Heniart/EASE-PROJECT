@@ -10,23 +10,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Dashboard.User.User;
-import com.Ease.Dashboard.User.UserEmail;
 import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class AddUserEmail
+ * Servlet implementation class SearchApp
  */
-@WebServlet("/AddUserEmail")
-public class AddUserEmail extends HttpServlet {
+@WebServlet("/SearchApp")
+public class SearchApp extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddUserEmail() {
+    public SearchApp() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -46,21 +45,14 @@ public class AddUserEmail extends HttpServlet {
 		HttpSession session = request.getSession();
 		User user = (User) (session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
-
-		String email = sm.getServletParam("email", false);
-		
 		try {
 			sm.needToBeConnected();
-			if (email == null || !Regex.isEmail(email)) {
-				System.out.println(email);
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email.");
-			}
-			if (user.getEmails().get(email) != null)
-				throw new GeneralException(ServletManager.Code.ClientError, "You already have this email.");
-			UserEmail newEmail =  UserEmail.createUserEmail(email, user, false, sm);
-			user.getEmails().put(email, newEmail);
-			newEmail.askForVerification(user, sm);
-			sm.setResponse(ServletManager.Code.Success, "Email added");
+			String search = sm.getServletParam("search", true);
+			String[] tags = sm.getServletParamArray("tags", true);
+			if (search == null || search.equals(""))
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty search.");
+			String result = ((Catalog)sm.getContextAttr("catalog")).search(search, tags);
+			sm.setResponse(ServletManager.Code.Success, result);
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		}
