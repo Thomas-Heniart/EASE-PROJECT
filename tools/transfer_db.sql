@@ -216,26 +216,26 @@ SELECT (@w_app_id := @w_app_id + 1), website_id, (@var := @var + 1), 1, 'website
 SET @account_id = 0;
 
 INSERT INTO ease.accounts
-SELECT NULL, information_value, 0 FROM test.ClassicAccountsInformations WHERE information_name = "password" AND account_id IN (SELECT account_id FROM test.apps) AND account_id IN (SELECT account_id FROM test.ClassicAccountsInformations);
+SELECT NULL, information_value, 0 FROM test.apps JOIN test.ClassicAccountsInformations ON test.apps.account_id = test.ClassicAccountsInformations.account_id WHERE information_name = "password" AND test.ClassicAccountsInformations.account_id IN (SELECT account_id FROM test.apps) AND test.apps.account_id IN (SELECT account_id FROM test.ClassicAccountsInformations);
 
 INSERT INTO ease.accountsInformations
-SELECT NULL, (@account_id := @account_id + 1), information_name, information_value FROM test.ClassicAccountsInformations WHERE information_name NOT LIKE "password" AND information_name NOT LIKE "team" AND account_id IN (SELECT account_id FROM test.apps) AND account_id IN (SELECT account_id FROM test.ClassicAccountsInformations);
+SELECT NULL, (@account_id := @account_id + 1), information_name, information_value FROM test.apps JOIN test.ClassicAccountsInformations ON test.apps.account_id = test.ClassicAccountsInformations.account_id WHERE information_name NOT LIKE "password" AND information_name NOT LIKE "team" AND test.ClassicAccountsInformations.account_id IN (SELECT account_id FROM test.apps) AND test.apps.account_id IN (SELECT account_id FROM test.ClassicAccountsInformations);
 
 INSERT INTO ease.appsInformations
-SELECT (@a_info_id := @a_info_id + 1), name FROM test.apps WHERE website_id IS NOT NULL AND account_id IS NOT NULL AND account_id NOT IN (SELECT account_id FROM test.logWithAccounts) AND account_id IN (SELECT account_id FROM test.apps) AND account_id IN (SELECT account_id FROM test.ClassicAccountsInformations);
+SELECT (@a_info_id := @a_info_id + 1), name FROM test.apps JOIN test.ClassicAccountsInformations ON test.apps.account_id = test.ClassicAccountsInformations.account_id WHERE website_id IS NOT NULL AND test.apps.account_id IS NOT NULL AND test.ClassicAccountsInformations.account_id NOT IN (SELECT account_id FROM test.logWithAccounts) AND test.ClassicAccountsInformations.account_id IN (SELECT account_id FROM test.apps) AND test.apps.account_id IN (SELECT account_id FROM test.ClassicAccountsInformations);
 
 INSERT INTO ease.apps
-SELECT (@app_id := @app_id + 1), profile_id, position, CURRENT_TIMESTAMP, 'websiteApp', (@app_info_id := @app_info_id + 1), custom FROM test.apps WHERE website_id IS NOT NULL AND account_id IS NOT NULL AND account_id NOT IN (SELECT account_id FROM test.logWithAccounts) AND account_id IN (SELECT account_id FROM test.apps) AND account_id IN (SELECT account_id FROM test.ClassicAccountsInformations);
+SELECT (@app_id := @app_id + 1), profile_id, position, CURRENT_TIMESTAMP, 'websiteApp', (@app_info_id := @app_info_id + 1), custom FROM test.apps JOIN test.ClassicAccountsInformations ON test.apps.account_id = test.ClassicAccountsInformations.account_id WHERE website_id IS NOT NULL AND test.apps.account_id IS NOT NULL AND test.ClassicAccountsInformations.account_id NOT IN (SELECT account_id FROM test.logWithAccounts) AND test.ClassicAccountsInformations.account_id IN (SELECT account_id FROM test.apps) AND test.apps.account_id IN (SELECT account_id FROM test.ClassicAccountsInformations);
 
 SET @website_app_id = 0;
 SELECT @w_app_id INTO @website_app_id;
 SET @app_account_id = 0;
 
 INSERT INTO ease.websiteApps
-SELECT (@w_app_id := @w_app_id + 1), website_id, (@var := @var + 1), NULL, 'classicApp' FROM test.apps WHERE website_id IS NOT NULL AND account_id IS NOT NULL AND account_id NOT IN (SELECT account_id FROM test.logWithAccounts) AND account_id IN (SELECT account_id FROM test.apps) AND account_id IN (SELECT account_id FROM test.ClassicAccountsInformations);
+SELECT (@w_app_id := @w_app_id + 1), website_id, (@var := @var + 1), NULL, 'classicApp' FROM test.apps JOIN test.ClassicAccountsInformations ON test.apps.account_id = test.ClassicAccountsInformations.account_id WHERE website_id IS NOT NULL AND test.apps.account_id IS NOT NULL AND test.ClassicAccountsInformations.account_id NOT IN (SELECT account_id FROM test.logWithAccounts) AND test.ClassicAccountsInformations.account_id IN (SELECT account_id FROM test.apps) AND test.apps.account_id IN (SELECT account_id FROM test.ClassicAccountsInformations);
 
 INSERT INTO ease.classicApps
-SELECT null, (@website_app_id := @website_app_id + 1), (@app_account_id := @app_account_id + 1), NULL FROM test.apps WHERE website_id IS NOT NULL AND account_id IS NOT NULL AND account_id NOT IN (SELECT account_id FROM test.logWithAccounts) AND account_id IN (SELECT account_id FROM test.apps) AND account_id IN (SELECT account_id FROM test.ClassicAccountsInformations);
+SELECT null, (@website_app_id := @website_app_id + 1), (@app_account_id := @app_account_id + 1), NULL FROM test.apps JOIN test.ClassicAccountsInformations ON test.apps.account_id = test.ClassicAccountsInformations.account_id WHERE website_id IS NOT NULL AND test.apps.account_id IS NOT NULL AND test.ClassicAccountsInformations.account_id NOT IN (SELECT account_id FROM test.logWithAccounts) AND test.ClassicAccountsInformations.account_id IN (SELECT account_id FROM test.apps) AND test.apps.account_id IN (SELECT account_id FROM test.ClassicAccountsInformations);
 
 
 /* Delete useless data */
