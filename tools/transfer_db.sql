@@ -166,31 +166,10 @@ INSERT INTO ease.linkAppInformations
 SELECT null, 'http://extranet.ieseg.fr/celcat', 'calendar_img_url' FROM test.customApps WHERE website_id IS NULL;
 
 INSERT INTO  ease.groupApps
-SELECT (@g_app := @g_app = 1	), 1, group_id, (@app_perm := @app_perm + 1), 'groupLinkApp', (@g_app_info_id := @g_app_info_id + 1), 0 FROM test.customApps WHERE website_id IS NULL;
+SELECT (@g_app := @g_app + 1), 1, group_id, (@app_perm := @app_perm + 1), 'groupLinkApp', (@g_app_info_id := @g_app_info_id + 1), 0 FROM test.customApps WHERE website_id IS NULL;
 
 INSERT INTO ease.groupLinkApps
 SELECT null, (@l_app_info_id := @l_app_info_id + 1), (@g_app_id := @g_app_id + 1) FROM test.customApps WHERE website_id IS NULL;
-
-
-/* LinkApps */
-
-INSERT INTO ease.appsInformations
-SELECT (@a_info_id := @a_info_id + 1), name FROM test.apps WHERE website_id IS NULL;
-
-SET @var = 0;
-SET @app_id = 0;
-
-INSERT INTO ease.apps
-SELECT (@app_id := @app_id + 1), profile_id, position, CURRENT_TIMESTAMP, 'linkApp', (@var := @var + 1), null FROM test.apps WHERE website_id IS NULL;
-
-INSERT INTO ease.linkAppInformations
-SELECT null, link, 'img_url' FROM test.linkAccounts JOIN test.apps ON apps.account_id = linkAccounts.account_id;
-
-SET @var = 0;
-SET @link_app_info = 0;
-
-INSERT INTO ease.linkApps
-SELECT null, (@var := @var + 1), (@link_app_info := @link_app_info + 1), NULL FROM test.linkAccounts JOIN test.apps ON apps.account_id = linkAccounts.account_id;
 
 
 /* Update groupProfile for groupApps */
@@ -199,10 +178,64 @@ UPDATE ease.groupApps SET group_profile_id = 2 WHERE id BETWEEN 7 AND 19;
 UPDATE ease.groupApps SET group_profile_id = 3 WHERE id BETWEEN 20 AND 32;
 UPDATE ease.groupApps SET group_profile_id = 2 WHERE id = 33;
 
+/* LinkApps */
+
+INSERT INTO ease.appsInformations
+SELECT (@a_info_id := @a_info_id + 1), name FROM test.apps WHERE website_id IS NULL;
+
+SET @app_info_id = 0;
+SET @app_id = 0;
+
+INSERT INTO ease.apps
+SELECT (@app_id := @app_id + 1), profile_id, position, CURRENT_TIMESTAMP, 'linkApp', (@app_info_id := @app_info_id + 1), 33 FROM test.apps WHERE website_id IS NULL;
+
+INSERT INTO ease.linkAppInformations
+SELECT null, link, 'img_url' FROM test.linkAccounts JOIN test.apps ON apps.account_id = linkAccounts.account_id;
+
+SET @var = 0;
+SET @link_app_info = 0;
+
+INSERT INTO ease.linkApps
+SELECT null, (@var := @var + 1), (@link_app_info := @link_app_info + 1), 1 FROM test.linkAccounts JOIN test.apps ON apps.account_id = linkAccounts.account_id;
+
 /* Empty apps */
 
-/*INSERT INTO ease.apps
-SELECT (@app_id := @app_id + 1), profile_id, position, CURRENT_TIMESTAMP, 'websiteApp', (@var := @var + 1), 1*/
+SET @w_app_id = 0;
+
+INSERT INTO ease.appsInformations
+SELECT (@a_info_id := @a_info_id + 1), name FROM test.apps WHERE website_id IS NOT NULL AND account_id IS NULL;
+
+INSERT INTO ease.apps
+SELECT (@app_id := @app_id + 1), profile_id, position, CURRENT_TIMESTAMP, 'websiteApp', (@app_info_id := @app_info_id + 1), 1 FROM test.apps WHERE website_id IS NOT NULL AND account_id IS NULL;
+
+INSERT INTO ease.websiteApps
+SELECT (@w_app_id := @w_app_id + 1), website_id, (@var := @var + 1), 1, 'websiteApp' FROM test.apps WHERE website_id IS NOT NULL AND account_id IS NULL;
+
+/* Classic apps */
+
+SET @account_id = 0;
+
+INSERT INTO ease.accounts
+SELECT NULL, information_value, 0 FROM test.ClassicAccountsInformations WHERE information_name = "password" AND account_id IN (SELECT account_id FROM test.apps) AND account_id IN (SELECT account_id FROM test.ClassicAccountsInformations);
+
+INSERT INTO ease.accountsInformations
+SELECT NULL, (@account_id := @account_id + 1), information_name, information_value FROM test.ClassicAccountsInformations WHERE information_name NOT LIKE "password" AND information_name NOT LIKE "team" AND account_id IN (SELECT account_id FROM test.apps) AND account_id IN (SELECT account_id FROM test.ClassicAccountsInformations);
+
+INSERT INTO ease.appsInformations
+SELECT (@a_info_id := @a_info_id + 1), name FROM test.apps WHERE website_id IS NOT NULL AND account_id IS NOT NULL AND account_id NOT IN (SELECT account_id FROM test.logWithAccounts) AND account_id IN (SELECT account_id FROM test.apps) AND account_id IN (SELECT account_id FROM test.ClassicAccountsInformations);
+
+INSERT INTO ease.apps
+SELECT (@app_id := @app_id + 1), profile_id, position, CURRENT_TIMESTAMP, 'websiteApp', (@app_info_id := @app_info_id + 1), custom FROM test.apps WHERE website_id IS NOT NULL AND account_id IS NOT NULL AND account_id NOT IN (SELECT account_id FROM test.logWithAccounts) AND account_id IN (SELECT account_id FROM test.apps) AND account_id IN (SELECT account_id FROM test.ClassicAccountsInformations);
+
+SET @website_app_id = 0;
+SELECT @w_app_id INTO @website_app_id;
+SET @app_account_id = 0;
+
+INSERT INTO ease.websiteApps
+SELECT (@w_app_id := @w_app_id + 1), website_id, (@var := @var + 1), NULL, 'classicApp' FROM test.apps WHERE website_id IS NOT NULL AND account_id IS NOT NULL AND account_id NOT IN (SELECT account_id FROM test.logWithAccounts) AND account_id IN (SELECT account_id FROM test.apps) AND account_id IN (SELECT account_id FROM test.ClassicAccountsInformations);
+
+INSERT INTO ease.classicApps
+SELECT null, (@website_app_id := @website_app_id + 1), (@app_account_id := @app_account_id + 1), NULL FROM test.apps WHERE website_id IS NOT NULL AND account_id IS NOT NULL AND account_id NOT IN (SELECT account_id FROM test.logWithAccounts) AND account_id IN (SELECT account_id FROM test.apps) AND account_id IN (SELECT account_id FROM test.ClassicAccountsInformations);
 
 
 /* Delete useless data */
