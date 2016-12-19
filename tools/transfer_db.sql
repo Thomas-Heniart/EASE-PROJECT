@@ -67,8 +67,10 @@ DELETE FROM test.users WHERE user_id NOT IN (SELECT user_id FROM test.profiles);
 UPDATE test.profiles
 SET columnIdx = 1, profileIdx = 0 WHERE columnIdx IS NULL;
 
+SET @p_info_id = 0;
+
 INSERT INTO ease.profileInfo
-SELECT null, name, color FROM test.profiles;
+SELECT (@p_info_id := @p_info_id + 1), name, color FROM test.profiles;
 
 SET @var = 0;
 
@@ -88,4 +90,31 @@ SELECT id, name, parent, 1 FROM test.groups;
 UPDATE ease.groups
 SET infrastructure_id = 2 WHERE id >= 4;
 
+
 /* group profiles */
+
+INSERT INTO ease.profilePermissions
+SELECT null, group_id, perm FROM test.customProfiles;
+
+INSERT INTO ease.profileInfo
+SELECT null, name, color FROM test.customProfiles;
+
+SET @var = 0;
+
+INSERT INTO ease.groupProfiles
+SELECT null, group_id, (@var := @var + 1), (@p_info_id := @p_info_id + 1), 0 FROM test.customProfiles;
+
+UPDATE ease.profiles
+SET group_profile_id = 1 WHERE id IN (SELECT profile_id FROM test.profiles WHERE custom = 1);
+
+UPDATE ease.profiles
+SET group_profile_id = 2 WHERE id IN (SELECT profile_id FROM test.profiles WHERE custom = 2);
+
+UPDATE ease.profiles
+SET group_profile_id = 3 WHERE id IN (SELECT profile_id FROM test.profiles WHERE custom = 3);
+
+/* apps */
+
+
+
+
