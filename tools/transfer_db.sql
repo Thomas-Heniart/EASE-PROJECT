@@ -193,7 +193,16 @@ INSERT INTO ease.linkApps
 SELECT null, (@var := @var + 1), (@link_app_info := @link_app_info + 1), NULL FROM test.linkAccounts JOIN test.apps ON apps.account_id = linkAccounts.account_id;
 
 
+/* Update groupProfile for groupApps */
+UPDATE ease.groupApps SET group_profile_id = 1 WHERE id BETWEEN 1 AND 6;
+UPDATE ease.groupApps SET group_profile_id = 2 WHERE id BETWEEN 7 AND 19;
+UPDATE ease.groupApps SET group_profile_id = 3 WHERE id BETWEEN 20 AND 32;
+UPDATE ease.groupApps SET group_profile_id = 2 WHERE id = 33;
+
 /* Empty apps */
+
+/*INSERT INTO ease.apps
+SELECT (@app_id := @app_id + 1), profile_id, position, CURRENT_TIMESTAMP, 'websiteApp', (@var := @var + 1), 1*/
 
 
 /* Delete useless data */
