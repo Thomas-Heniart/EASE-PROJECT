@@ -1,4 +1,4 @@
-package com.Ease.Servlet;
+package com.Ease.Servlet.Tuto;
 
 import java.io.IOException;
 
