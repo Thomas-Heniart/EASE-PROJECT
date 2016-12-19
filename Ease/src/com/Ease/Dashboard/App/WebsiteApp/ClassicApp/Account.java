@@ -137,7 +137,7 @@ public class Account {
 			if ((value = infos.get(info.getInformationName())) != null) {
 				 info.setInformation_value(value, sm);
 			} else {
-				throw new GeneralException(ServletManager.Code.ClientError, "Wrong information names.");
+				throw new GeneralException(ServletManager.Code.ClientError, "Wrong information name : "+ info.getInformationName() +".");
 			}
 		}
 		db.commitTransaction(transaction);
