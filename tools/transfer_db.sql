@@ -1,3 +1,15 @@
+/* Delete apps duplicated and accounts duplicated */
+
+USE test;
+
+DELETE a FROM test.logWithAccounts AS a JOIN test.apps AS b ON a.logWithApp = b.app_id;
+DELETE FROM apps WHERE account_id IS NULL AND custom IS NULL;
+DELETE a FROM test.apps AS a JOIN test.apps AS b ON a.account_id = b.account_id AND a.app_id <> b.app_id;
+DELETE FROM test.ClassicAccountsInformations WHERE account_id NOT IN (SELECT account_id FROM test.apps);
+DELETE FROM test.linkAccounts WHERE account_id NOT IN (SELECT account_id FROM test.apps);
+DELETE FROM test.logWithAccounts WHERE account_id NOT IN (SELECT account_id FROM test.apps);
+DELETE FROM test.accounts WHERE account_id NOT IN (SELECT account_id FROM test.apps);
+
 /* Websites */
 
 INSERT INTO ease.sso
@@ -121,23 +133,43 @@ SET position = 0 WHERE position IS NULL;
 SET @link_app_info = 0;
 SET @var = 0;
 
-INSERT INTO ease.appPermissions
-SELECT null, group_id, perm FROM test.customApps WHERE website_id IS NOT NULL;
-
 SET @g_app_info_id = 0;
 SET @app_perm = 0;
 SET @a_info_id = 0;
+SET @g_app = 0;
+
+INSERT INTO ease.appPermissions
+SELECT (@var := @var + 1), group_id, perm FROM test.customApps WHERE website_id IS NOT NULL;
+
+INSERT INTO ease.appPermissions
+SELECT (@var := @var + 1), group_id, perm FROM test.customApps WHERE website_id IS NULL;
+
+SET @var = 0;
 
 INSERT INTO ease.appsInformations
 SELECT (@a_info_id := @a_info_id + 1), name FROM test.customApps WHERE website_id IS NOT NULL;
 
 INSERT INTO ease.groupApps
-SELECT null, 1, group_id, (@app_perm := @app_perm + 1), 'websiteApp', (@g_app_info_id := @g_app_info_id + 1), 0 FROM test.customApps WHERE website_id IS NOT NULL;
+SELECT (@g_app := @g_app + 1), 1, group_id, (@app_perm := @app_perm + 1), 'groupWebsiteApp', (@g_app_info_id := @g_app_info_id + 1), 0 FROM test.customApps WHERE website_id IS NOT NULL;
 
 SET @g_app_id = 0;
 
 INSERT INTO ease.groupWebsiteApps
-SELECT null, (@g_app_id := @g_app_id + 1), website_id, 'websiteApp' FROM test.customApps WHERE website_id IS NOT NULL;
+SELECT null, (@g_app_id := @g_app_id + 1), website_id, 'groupEmptyApp' FROM test.customApps WHERE website_id IS NOT NULL;
+
+INSERT INTO ease.appsInformations
+SELECT (@a_info_id := @a_info_id + 1), name FROM test.customApps WHERE website_id IS NULL;
+
+SET @l_app_info_id = 0;
+
+INSERT INTO ease.linkAppInformations
+SELECT null, 'http://extranet.ieseg.fr/celcat', 'calendar_img_url' FROM test.customApps WHERE website_id IS NULL;
+
+INSERT INTO  ease.groupApps
+SELECT (@g_app := @g_app = 1	), 1, group_id, (@app_perm := @app_perm + 1), 'groupLinkApp', (@g_app_info_id := @g_app_info_id + 1), 0 FROM test.customApps WHERE website_id IS NULL;
+
+INSERT INTO ease.groupLinkApps
+SELECT null, (@l_app_info_id := @l_app_info_id + 1), (@g_app_id := @g_app_id + 1) FROM test.customApps WHERE website_id IS NULL;
 
 
 /* LinkApps */
@@ -160,11 +192,8 @@ SET @link_app_info = 0;
 INSERT INTO ease.linkApps
 SELECT null, (@var := @var + 1), (@link_app_info := @link_app_info + 1), NULL FROM test.linkAccounts JOIN test.apps ON apps.account_id = linkAccounts.account_id;
 
-/*INSERT INTO ease.linkAppInformations
-SELECT 
 
-INSERT INTO ease.groupApps*/
-
+/* Empty apps */
 
 
 /* Delete useless data */
