@@ -13,24 +13,25 @@ import javax.servlet.http.HttpSession;
 
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
+import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class AddClassicApp
+ * Servlet implementation class WebsiteAppToClassicApp
  */
-@WebServlet("/AddClassicApp")
-public class AddClassicApp extends HttpServlet {
+@WebServlet("/WebsiteAppToClassicApp")
+public class WebsiteAppToClassicApp extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public AddClassicApp() {
+	public WebsiteAppToClassicApp() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -53,28 +54,24 @@ public class AddClassicApp extends HttpServlet {
 		HttpSession session = request.getSession();
 		User user = (User) (session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
-		System.out.println("Add classic App");
+		System.out.println("Fill empty app with classicApp");
 		try {
 			sm.needToBeConnected();
+			String appId = sm.getServletParam("appId", true);
 			String name = sm.getServletParam("name", true);
-			String websiteId = sm.getServletParam("websiteId", true);
-			String profileId = sm.getServletParam("profileId", true);
 			String password = sm.getServletParam("password", false);
-			Website site = null;
 			Map<String, String> infos = null;
 			if (name == null || name.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
-			else if (password == null)
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong password.");
+			if (appId == null || appId.equals(""))
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong appId.");
 			try {
-				Profile profile = user.getProfile(Integer.parseInt(profileId));
-				site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(websiteId));
-				infos = site.getNeededInfos(sm);
-				ClassicApp newApp = profile.addClassicApp(name, site, password, infos, sm);
-				if(infos.get("login")!=null && Regex.isEmail(infos.get("login"))){
-					user.addEmailIfNeeded(infos.get("login"), sm);
-				}
-				sm.setResponse(ServletManager.Code.Success, String.valueOf(newApp.getSingleId()));
+				App app = user.getApp(Integer.parseInt(appId));
+				if (!app.getType().equals("WebsiteApp"))
+					throw new GeneralException(ServletManager.Code.ClientError, "This is not an empty app.");
+				infos = ((WebsiteApp)app).getSite().getNeededInfos(sm);
+				ClassicApp.createFromWebsiteApp((WebsiteApp)app, name, password, infos, sm, user);
+				sm.setResponse(ServletManager.Code.Success, "Classic app created instead of website app.");
 			} catch (NumberFormatException e) {
 				sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");
 			}

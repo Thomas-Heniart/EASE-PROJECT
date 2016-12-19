@@ -1,4 +1,3 @@
-
 var easeApp = function(rootEl){
 	var self = this;
 	this.rootEl = rootEl;

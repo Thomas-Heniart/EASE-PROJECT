@@ -11,6 +11,7 @@
 <%@ page import="java.text.SimpleDateFormat"%>
 <%@ page import="java.util.Date"%>
 <script src="js/SettingsView.js"></script>
+<script src="js/checkConnection.js"></script>
 <%
 if (user != null) {
 	SessionSave sessionSave = user.getSessionSave();

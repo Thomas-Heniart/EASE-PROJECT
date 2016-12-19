@@ -169,7 +169,7 @@ public class ServletManager {
 			}
 		}
 		try {
-			System.out.println("wMessages loop start");
+			//System.out.println("wMessages loop start");
 			for (WebsocketMessage msg : this.messages) {
 				websockets.forEach((key, socket) -> {
 					System.out.println( (user == null ? "No user" : user.getFirstName()) + " client socketId : " + key + ", sm socketId : " + socketId);
@@ -186,7 +186,7 @@ public class ServletManager {
 						}
 				});
 			}
-			System.out.println("wMessages loop done");
+			//System.out.println("wMessages loop done");
 			if (this.redirectUrl != null) {
 				System.out.println("redirect to "+this.redirectUrl);
 				response.sendRedirect(this.redirectUrl);

@@ -19,6 +19,7 @@ import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
+import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 
 public class ClassicApp extends WebsiteApp {
@@ -60,6 +61,11 @@ public class ClassicApp extends WebsiteApp {
 		String websiteAppDBid = WebsiteApp.createWebsiteApp(profile, position, name, "classicApp", site, elevator, sm);
 		Account account = Account.createAccount(password, false, infos, user, sm);
 		String classicDBid = db.set("INSERT INTO classicApps VALUES(NULL, " + websiteAppDBid + ", " + account.getDBid() + ", NULL);").toString();
+		for (String info : infos.values()) {
+			if (Regex.isEmail(info) == true) {
+				user.addEmailIfNeeded(info, sm);
+			}
+		}
 		db.commitTransaction(transaction);
 		return new ClassicApp((String)elevator.get("appDBid"), profile, position, (AppInformation)elevator.get("appInfos"), null, (String)elevator.get("registrationDate"), ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, null, account, classicDBid);
 	}
@@ -74,6 +80,11 @@ public class ClassicApp extends WebsiteApp {
 		db.commitTransaction(transaction);
 		ClassicApp newClassicApp = new ClassicApp(websiteApp.getDBid(),user.getProfileFromApp(websiteApp.getSingleId()), websiteApp.getPosition(),websiteApp.getAppInformation(), null, websiteApp.getInsertDate(), websiteApp.getSingleId(), websiteApp.getSite(), websiteAppDBid, null, account, classicDBid);
 		user.replaceApp(newClassicApp);
+		for (String info : infos.values()) {
+			if (Regex.isEmail(info) == true) {
+				user.addEmailIfNeeded(info, sm);
+			}
+		}
 		return newClassicApp;
 	}
 	
@@ -124,10 +135,20 @@ public class ClassicApp extends WebsiteApp {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		this.setName(name, sm);
+		for(AccountInformation info : this.account.getAccountInformations()){
+			if (Regex.isEmail(info.getInformationValue()) == true) {
+				this.getProfile().getUser().removeEmailIfNeeded(info.getInformationValue(), sm);
+			}
+		}
 		if (this.groupApp == null || (!this.groupApp.isCommon() && this.groupApp.getPerms().havePermission(AppPermissions.Perm.EDIT.ordinal()))) {
 			this.account.editInfos(infos, sm);
 			if (password != null && !password.equals(""))
 				this.account.setPassword(password, this.getProfile().getUser(), sm);
+		}
+		for (String info : infos.values()) {
+			if (Regex.isEmail(info) == true) {
+				this.getProfile().getUser().addEmailIfNeeded(info, sm);
+			}
 		}
 		db.commitTransaction(transaction);
 	}

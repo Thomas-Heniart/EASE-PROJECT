@@ -525,8 +525,21 @@ public class User {
 		}
 	}
 	
+	public void removeEmailIfNeeded(String email, ServletManager sm) throws GeneralException {
+		if (this.emails.get(email).removeIfNotUsed(sm))
+			this.emails.remove(email);
+	}
+	
 	public Map<String, UserEmail> getEmails() {
 		return this.emails;
+	}
+	
+	public List<String> getEmailsString(){
+		List<String> emails = new LinkedList<String> ();
+		for (Map.Entry<String, UserEmail> entry : this.emails.entrySet()) {
+			emails.add(entry.getValue().getEmail());
+		}
+		return emails;
 	}
 	
 	public List<String> getVerifiedEmails() {

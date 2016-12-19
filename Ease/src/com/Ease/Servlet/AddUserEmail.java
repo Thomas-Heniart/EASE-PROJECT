@@ -50,12 +50,15 @@ public class AddUserEmail extends HttpServlet {
 		try {
 			sm.needToBeConnected();
 			if (email == null || !Regex.isEmail(email)) {
+				System.out.println(email);
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email.");
 			}
 			if (user.getEmails().get(email) != null)
 				throw new GeneralException(ServletManager.Code.ClientError, "You already have this email.");
-			user.getEmails().put(email, UserEmail.createUserEmail(email, user, false, sm));
-			sm.setResponse(ServletManager.Code.Success, "Password changed.");
+			UserEmail newEmail =  UserEmail.createUserEmail(email, user, false, sm);
+			user.getEmails().put(email, newEmail);
+			newEmail.askForVerification(user, sm);
+			sm.setResponse(ServletManager.Code.Success, "Email added");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		}

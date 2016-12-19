@@ -10,13 +10,13 @@
 	List<String> unverifiedEmails = user.getUnverifiedEmails();
 %>
 <div class="setting show">
-	<form action="AddEmail" oClass="AddEmailForm" id="AddEmailForm"
+	<form action="AddUserEmail" oClass="AddEmailForm" id="AddEmailForm"
 		class="show">
 		<div class="newEmail show">
 			<i class="fa fa-plus-circle" aria-hidden="true"></i> Add an email
 		</div>
 		<div class="newEmailInput">
-			<input type="email" name="newEmail" id="newEmail" oClass="EmailInput"
+			<input type="email" name="email" id="newEmail" oClass="EmailInput"
 				placeholder="Enter email..." />
 			<button type="submit">Go</button>
 		</div>
@@ -103,7 +103,7 @@
 			</form>
 		</div>
 	</div>
-	<form action="SendVerificationEmail" id="SendVerificationEmail"
+	<form action="AskVerificationEmail" id="SendVerificationEmail"
 		oClass="SendVerificationEmailForm">
 		<input type="hidden" name="email" oClass="HiddenInput">
 		<button type="submit">Send email</button>
