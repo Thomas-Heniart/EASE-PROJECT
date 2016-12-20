@@ -1,6 +1,5 @@
 $('body').prepend('<div id="ease_extension" safariversion="2.0.1" style="dislay:none;">');
 $(".displayedByPlugin").show();
-
 extension.runtime.sendMessage("getSettings", {}, function(response) {
     if(response.homepage){
         $("#homePageSwitch").prop("checked", true);
@@ -31,8 +30,7 @@ extension.runtime.onMessage("logoutDone", function logoutHandler(message, sendRe
 
 document.addEventListener("NewConnection", function(event){
     if(event.detail.highlight == undefined) event.detail.highlight = true;
-    console.log(event.detail);
-    /*extension.runtime.sendMessage("NewConnection", {"highlight":event.detail.highlight, "detail":event.detail}, function(response) {});*/
+    extension.runtime.sendMessage("NewConnection", {"highlight":event.detail.highlight, "detail":event.detail}, function(response) {});
 }, false);
 
 document.addEventListener("NewLinkToOpen", function(event){

@@ -55,8 +55,12 @@ public class App {
 				insertDate = rs.getString(Data.INSERT_DATE.ordinal());
 				infos = AppInformation.loadAppInformation(rs.getString(Data.APP_INFO_ID.ordinal()), db);
 				String groupAppId = rs.getString(Data.GROUP_APP_ID.ordinal());
-				if (groupAppId != null)
+				if (groupAppId != null) {
+					System.out.println(groupAppId);
 					groupApp = GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupAppId);
+					System.out.println(groupApp == null);
+				}
+					
 				switch (rs.getString(Data.TYPE.ordinal())) {
 					case "linkApp":
 						app = LinkApp.loadLinkApp(db_id, profile, position, insertDate, infos, groupApp, sm);
@@ -186,7 +190,11 @@ public class App {
 		this.profile = profile;
 	}
 	public boolean havePerm(ProfilePermissions.Perm perm) {
-		if (this.groupApp == null || (!this.groupApp.isCommon() && this.groupApp.getPerms().havePermission(perm.ordinal())))
+		if (this.groupApp == null)
+			return true;
+		if (!this.groupApp.isCommon())
+			return true;
+		if (this.groupApp.getPerms().havePermission(perm.ordinal()))
 			return true;
 		return false;
 	}
