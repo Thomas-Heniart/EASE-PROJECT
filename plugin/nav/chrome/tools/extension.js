@@ -134,11 +134,8 @@ var extension = {
                 this.create(window, url, active, callback);
             }
         },
-        highlight:function(tab, callback){
-            chrome.tabs.highlight({"tabs":tab.id}, callback);
-        },
-        focus:function(window, tab, callback){
-            chrome.tabs.highlight({"tabs":tab.id}, callback);
+        focus:function(tab, callback){
+            chrome.tabs.highlight({"windowId":tab.windowId,"tabs":tab.index}, callback);
         },
 		close:function(tab, callback){
    			chrome.tabs.remove(tab.id, callback);

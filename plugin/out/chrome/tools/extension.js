@@ -137,7 +137,7 @@ var extension = {
         highlight:function(tab, callback){
             chrome.tabs.highlight({"tabs":tab.id}, callback);
         },
-        focus:function(window, tab, callback){
+        focus:function(tab, callback){
             chrome.tabs.highlight({"tabs":tab.id}, callback);
         },
 		close:function(tab, callback){

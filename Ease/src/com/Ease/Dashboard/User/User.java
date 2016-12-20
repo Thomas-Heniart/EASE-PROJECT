@@ -361,6 +361,18 @@ public class User {
 		throw new GeneralException(ServletManager.Code.ClientError, "This profile's single_id dosen't exist.");
 	}
 	
+	public List<Profile> getProfilesList() {
+		List<Profile> profiles = new LinkedList<Profile>();
+		for (int i = 1; i<this.profile_columns.size(); i++){
+			List<Profile> column = this.profile_columns.get(i);
+			for (Profile profile: column) {
+				if (profile != null)
+					profiles.add(profile);
+			}
+		}
+		return profiles;
+	}
+	
 	public App getApp(int single_id) throws GeneralException {
 		for (List<Profile> column: this.profile_columns) {
 			for (Profile profile: column) {
