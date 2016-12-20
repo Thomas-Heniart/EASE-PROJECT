@@ -75,6 +75,7 @@ public class FilterScrap extends HttpServlet {
 						Website website = catalog.getWebsiteWithSingleId(singleId);
 						newApp.put("name",website.getName());
 						newApp.put("profileId",firstProfileId);
+						newApp.put("img",website.getFolder()+"logo.png");
 						facebookAppsToKeep.add(newApp);
 					} else {
 						user.rememberNotIntegratedFacebookApp(app);
@@ -95,6 +96,7 @@ public class FilterScrap extends HttpServlet {
 						Website website = catalog.getWebsiteWithSingleId(singleId);
 						newApp.put("name",website.getName());
 						newApp.put("profileId",firstProfileId);
+						newApp.put("img",website.getFolder()+"logo.png");
 						linkedinAppsToKeep.add(newApp);
 					} else {
 						user.rememberNotIntegratedLinkedinApp(app);
@@ -120,6 +122,7 @@ public class FilterScrap extends HttpServlet {
 							newApp.put("password",app.get("pass"));
 							newApp.put("websiteId",websiteId);
 							newApp.put("keyDate",app.get("keyDate"));
+							newApp.put("img",website.getFolder()+"logo.png");
 							chromeAppsToKeep.add(newApp);
 						}
 					} else {

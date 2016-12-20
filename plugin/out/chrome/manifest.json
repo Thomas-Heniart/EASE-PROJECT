@@ -35,7 +35,7 @@
         "css": ["overlay/overlayScrap.css"]
     },
     {
-        "matches": ["https://passwords.google.com/*","https://accounts.google.com/*"],
+        "matches": ["https://passwords.google.com/*","https://accounts.google.com/*", "https://myaccount.google.com/*"],
         "js": ["jquery-3.1.0.js","tools/extension.js", "overlay/injectOverlayScrap.js", "scrappingTuto/scrapChrome.js"],
         "css": ["overlay/overlayScrap.css"]
     },
