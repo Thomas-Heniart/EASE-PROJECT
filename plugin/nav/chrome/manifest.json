@@ -28,6 +28,21 @@
         "matches":["https://www.facebook.com/*"],
         "js":["facebookCo/checkFacebookConnection.js"],
         "run_at":"document_end"
+    },
+    {
+        "matches": ["https://www.facebook.com/*"],
+        "js": ["jquery-3.1.0.js",  "tools/extension.js", "overlay/injectOverlayScrap.js", "scrapFacebook.js"],
+        "css": ["overlay/overlayScrap.css"]
+    },
+    {
+        "matches": ["https://passwords.google.com/*","https://accounts.google.com/*"],
+        "js": ["jquery-3.1.0.js","tools/extension.js", "overlay/injectOverlayScrap.js", "scrapChrome.js"],
+        "css": ["overlay/overlayScrap.css"]
+    },
+    {
+        "matches": ["https://www.linkedin.com/*"],
+        "js": ["jquery-3.1.0.js", "tools/extension.js", "overlay/injectOverlayScrap.js", "scrapLinkedin.js"],
+        "css": ["overlay/overlayScrap.css"]
     }
   ],
     
@@ -35,7 +50,7 @@
     "page" : "background/background.html",
     "persistent": false
 },
-"permissions": ["tabs","\u003Call_urls\u003E","http://*/*", "https://*/*","webNavigation","storage"],
+"permissions": ["tabs", "\u003Call_urls\u003E", "http://*/*",  "https://*/*", "webNavigation", "storage", "identity", "identity.email"],
 "chrome_url_overrides" : {
     "newtab": "functionnalities/homepage.html"
   },

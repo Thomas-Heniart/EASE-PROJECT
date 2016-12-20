@@ -35,7 +35,7 @@
     "page" : "background/background.html",
     "persistent": false
 },
-"permissions": ["tabs","\u003Call_urls\u003E","http://*/*", "https://*/*","webNavigation","storage"],
+"permissions": ["tabs", "\u003Call_urls\u003E", "http://*/*",  "https://*/*", "webNavigation", "storage", "identity", "identity.email"],
 "chrome_url_overrides" : {
     "newtab": "functionnalities/homepage.html"
   },

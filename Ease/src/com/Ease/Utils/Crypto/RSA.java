@@ -40,6 +40,11 @@ public class RSA {
 
 	}
 	
+	public static String Decrypt(String cypher, int keyDate) throws GeneralException {
+		String key = getPrivateKey(keyDate);
+		return Decrypt(cypher, key);
+	}
+	
 	public static String getPrivateKey(int date) throws GeneralException {
 		String ligne ;
 		String key = null;
@@ -58,49 +63,35 @@ public class RSA {
 		return key;
 	}
 
-	public static String Encrypt(String plain, String publicK) throws NoSuchAlgorithmException,
-	NoSuchPaddingException, InvalidKeyException,
-	IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {      
+	public static String Encrypt(String plain, String publicK) throws GeneralException {      
 
 		byte[] byteKeyPublic = new Base64().decode(publicK);
-
-		KeyFactory kf = KeyFactory.getInstance("RSA");
-
-		PublicKey publicKey = null;
 		try {
-
-			publicKey = kf.generatePublic(new X509EncodedKeySpec(byteKeyPublic));
-
-		} catch (InvalidKeySpecException e) {
-			e.printStackTrace();
+			KeyFactory kf;
+			kf = KeyFactory.getInstance("RSA");
+			PublicKey publicKey = null;
+			publicKey = kf.generatePublic(new X509EncodedKeySpec(byteKeyPublic));		
+			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+			return Base64.encodeBase64String(cipher.doFinal(plain.getBytes("UTF-8")));
+		} catch (InvalidKeySpecException | NoSuchAlgorithmException | IllegalBlockSizeException | BadPaddingException | UnsupportedEncodingException | InvalidKeyException | NoSuchPaddingException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
-		
-		Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-		cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-		return Base64.encodeBase64String(cipher.doFinal(plain.getBytes("UTF-8")));
 
 	}
 
-	public static String Decrypt(String cypher, String privateK) throws NoSuchAlgorithmException,
-	NoSuchPaddingException, InvalidKeyException,
-	IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
-		
-		byte[] byteKeyPrivate = new Base64().decode(privateK);
-
-		KeyFactory kf = KeyFactory.getInstance("RSA");
-
-		PrivateKey privateKey = null;
+	public static String Decrypt(String cypher, String privateK) throws GeneralException {
 		try {
-
+			byte[] byteKeyPrivate = new Base64().decode(privateK);
+			KeyFactory kf = KeyFactory.getInstance("RSA");
+			PrivateKey privateKey = null;
 			privateKey = kf.generatePrivate(new PKCS8EncodedKeySpec(byteKeyPrivate));
-
-		} catch (InvalidKeySpecException e) {
-			e.printStackTrace();
+			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+			cipher.init(Cipher.DECRYPT_MODE, privateKey);
+			return new String(cipher.doFinal(new Base64().decode(cypher)),"UTF-8");
+		} catch (InvalidKeySpecException | NoSuchAlgorithmException | IllegalBlockSizeException | BadPaddingException | UnsupportedEncodingException | InvalidKeyException | NoSuchPaddingException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
-
-		Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-		cipher.init(Cipher.DECRYPT_MODE, privateKey);
-		return new String(cipher.doFinal(new Base64().decode(cypher)),"UTF-8");
 
 	}
 	

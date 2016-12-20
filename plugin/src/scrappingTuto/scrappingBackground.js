@@ -1,4 +1,8 @@
-chrome.identity.getProfileUserInfo(function(userInfo){console.log(userInfo);});
+extension.runtime.bckgrndOnMessage("GetChromeUser", function (msg, senderTab, sendResponse) {
+    chrome.identity.getProfileUserInfo(function(userInfo){
+        sendResponse(userInfo.email);
+    });
+})
 
 function testOverlay(){
     extension.currentWindow(function(window){
@@ -12,22 +16,60 @@ function testOverlay(){
 }
 
 
-function startScrapFacebook(login, password){
+extension.runtime.bckgrndOnMessage("ScrapFacebook", function (msg, senderTab, sendResponse) {
+    startScrapFacebook(msg.user.login, msg.user.password, function(success, response){
+        if(success && response.length==0){
+            success=false;
+            response = "You did not connect to any website with this Facebook account. Try it with another account."
+        }
+        extension.tabs.focus(senderTab, function(){});
+        sendResponse({"success":success, "msg":response});
+    });
+});
+
+extension.runtime.bckgrndOnMessage("ScrapLinkedin", function (msg, senderTab, sendResponse) {
+    startScrapLinkedin(msg.user.login, msg.user.password, function(success, response){
+        if(success && response.length==0){
+            success=false;
+            response = "You did not connect to any website with this Linkedin account. Try it with another account."
+        }
+        extension.tabs.focus(senderTab, function(){});
+        sendResponse({"success":success, "msg":response});
+    });
+});
+
+extension.runtime.bckgrndOnMessage("ScrapChrome", function (msg, senderTab, sendResponse) {
+    startScrapChrome(msg.user.login, msg.user.password, function(success, response){
+        if(success && response.length==0){
+            success=false;
+            response = "There is no password saved on this chrome account. Try it with another account."
+        }
+        extension.tabs.focus(senderTab, function(){});
+        sendResponse({"success":success, "msg":response});
+    });
+});
+
+
+function startScrapFacebook(login, password, finalCallback){
     extension.currentWindow(function(window){
         extension.tabs.create(window, "https://www.facebook.com", false, function(tab){
             extension.tabs.onUpdated(tab, function (newTab) {
                 tab = newTab;
                 extension.tabs.sendMessage(tab, "scrapOverlay", "Facebook", function(){});
             });
+            extension.tabs.onClosed(tab, function () {
+                finalCallback(false,"It seems that you closed the tab. Please try again.");
+                extension.tabs.onClosedRemoveListener(tab);
+            });
             extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
                 extension.tabs.onMessageRemoveListener(tab);
                 extension.tabs.sendMessage(tab, "checkFbCo", {}, function(response){
                     if(response==true){
                         logoutFromFb(tab, function(tab){
-                            connectToFb(tab,login, password, scrapFb);
+                            connectToFb(tab,login, password, finalCallback);
                         });
                     } else {
-                        connectToFb(tab, login, password,scrapFb);
+                        connectToFb(tab, login, password,finalCallback);
                     }
                 });
             });
@@ -40,7 +82,7 @@ function logoutFromFb(tab, callback){
         extension.tabs.update(tab, "https://www.facebook.com", function(tab){
             extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
                 extension.tabs.onMessageRemoveListener(tab);
-                callback(tab);
+                scraFb(tab, callback);
             });
         });
     });
@@ -52,21 +94,29 @@ function connectToFb(tab, login, pass, callback){
             extension.tabs.onMessageRemoveListener(tab);
             extension.tabs.sendMessage(tab, "checkFbCo", {}, function(response){
                 if(response == false){
-                    console.log("error : wrong fb login or password");
+                    callback(false,"Wrong login or password. Please try again.");
+                    extension.tabs.onClosedRemoveListener(tab);
+                    setTimeout(function(){
+                        extension.tabs.close(tab);
+                    }, 500);
                 } else {
-                    callback(tab);
+                    scrapFb(tab, callback);
                 }
             });
         });
     });
 }
 
-function scrapFb(tab){
+function scrapFb(tab, callback){
     extension.tabs.update(tab, "https://www.facebook.com/settings?tab=applications", function(tab){
         extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
             extension.tabs.onMessageRemoveListener(tab);
             extension.tabs.sendMessage(tab, "scrapFb", {}, function(response){
-                console.log(response);
+                callback(true,response);
+                extension.tabs.onClosedRemoveListener(tab);
+                setTimeout(function(){
+                    extension.tabs.close(tab);
+                }, 500);
             });
         });
     });
@@ -74,12 +124,16 @@ function scrapFb(tab){
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function startScrapChrome(login, password){
+function startScrapChrome(login, password, finalCallback){
     extension.currentWindow(function(window){
         extension.tabs.create(window, "https://accounts.google.com/Logout", false, function(tab){
              extension.tabs.onUpdated(tab, function (newTab) {
                 tab = newTab;
                  extension.tabs.sendMessage(tab, "scrapOverlay", "Chrome", function(){});
+            });
+            extension.tabs.onClosed(tab, function () {
+                finalCallback(false,"It seems that you closed the tab. Please try again.");
+                extension.tabs.onClosedRemoveListener(tab);
             });
             extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
                 extension.tabs.onMessageRemoveListener(tab);
@@ -88,13 +142,21 @@ function startScrapChrome(login, password){
                         extension.tabs.onMessageRemoveListener(tab);
                         extension.tabs.sendMessage(tab, "connectToChrome", {login:login, pass:password}, function(response){
                             if(response==false){
-                                console.log("cant connect to this chrome account");
+                                finalCallback(false,"Wrong login or password. Please try again");
+                                extension.tabs.onClosedRemoveListener(tab);
+                                setTimeout(function(){
+                                    extension.tabs.close(tab);
+                                }, 500);
                             } else {
                                 extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
                                     extension.tabs.onMessageRemoveListener(tab);
                                     extension.tabs.sendMessage(tab, "checkChromeCo", {}, function(isConnected){
                                         if(!isConnected){
-                                            console.log("cant connect to this chrome account");
+                                            finalCallback(false,"Wrong login or password. Please try again");
+                                            extension.tabs.onClosedRemoveListener(tab);
+                                            setTimeout(function(){
+                                                extension.tabs.close(tab);
+                                            }, 500);
                                         } else {
                                             extension.tabs.update(tab, "https://passwords.google.com/", function(tab){
                                                 extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
@@ -102,14 +164,20 @@ function startScrapChrome(login, password){
                                                     extension.tabs.sendMessage(tab, "typePasswordChrome", {pass:password}, function(response){
                                                         extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
                                                             extension.tabs.onMessageRemoveListener(tab);
-                                                                extension.tabs.sendMessage(tab, "scrapChrome", {}, function(response){
-                                                                    console.log(response);
+                                                            extension.tabs.sendMessage(tab, "scrapChrome", {}, function(response){
+                                                                encryptAllPasswords(response, function(finalRes){
+                                                                    extension.tabs.onClosedRemoveListener(tab);
+                                                                    setTimeout(function(){
+                                                                        extension.tabs.close(tab);
+                                                                    }, 500);
+                                                                    finalCallback(true,finalRes);
                                                                 });
                                                             });
                                                         });
                                                     });
                                                 });
-                                            }
+                                            });
+                                        }
                                     });
                                 });
                             }
@@ -123,22 +191,26 @@ function startScrapChrome(login, password){
 
 ////////////////////////////////////////////////////////////////////////////////
 
-function startScrapLinkedin(login, password){
+function startScrapLinkedin(login, password, finalCallback){
     extension.currentWindow(function(window){
         extension.tabs.create(window, "https://www.linkedin.com/psettings/third-party-applications", false, function(tab){
              extension.tabs.onUpdated(tab, function (newTab) {
                 tab = newTab;
                 extension.tabs.sendMessage(tab, "scrapOverlay", "Linkedin", function(){});
             });
+            extension.tabs.onClosed(tab, function () {
+                finalCallback(false,"It seems that you closed the tab. Please try again.");
+                extension.tabs.onClosedRemoveListener(tab);
+            });
             extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
                 extension.tabs.onMessageRemoveListener(tab);
                 extension.tabs.sendMessage(tab, "checkLnkdnCo", {}, function(response){
                     if(response==true){
                         logoutFromLnkdn(tab, function(tab){
-                            connectToLnkdn(tab,login, password, scrapLnkdn);
+                            connectToLnkdn(tab,login, password, finalCallback);
                         });
                     } else {
-                        connectToLnkdn(tab, login, password,scrapLnkdn);
+                        connectToLnkdn(tab, login, password,finalCallback);
                     }
                 });
             });
@@ -166,17 +238,25 @@ function connectToLnkdn(tab, login, pass, callback){
             extension.tabs.onMessageRemoveListener(tab);
             extension.tabs.sendMessage(tab, "checkLnkdnCo", {}, function(response){
                 if(response == false){
-                    console.log("error : wrong lnkdn login or password");
+                    callback(false,"Wrong login or password. Please try again");
+                    extension.tabs.onClosedRemoveListener(tab);
+                    setTimeout(function(){
+                        extension.tabs.close(tab);
+                    }, 500);
                 } else {
-                    callback(tab);
+                    scrapLnkdn(tab, callback);
                 }
             });
         });
     });
 }
 
-function scrapLnkdn(tab){
+function scrapLnkdn(tab, callback){
     extension.tabs.sendMessage(tab, "scrapLnkdn", {}, function(response){
-        console.log(response);
+        extension.tabs.onClosedRemoveListener(tab);
+        callback(true,response);
+        setTimeout(function(){
+            extension.tabs.close(tab);
+        }, 500);
     });
 }

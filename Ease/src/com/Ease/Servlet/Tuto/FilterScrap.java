@@ -20,6 +20,7 @@ import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.Crypto.RSA;
 
 /**
  * Servlet implementation class TutoStep
@@ -88,12 +89,13 @@ public class FilterScrap extends HttpServlet {
 			for(Object appNoType : chromeApps){
 				JSONObject app = (JSONObject) appNoType;
 				String appName = (String) app.get("website");
+				Integer keyDate = Integer.valueOf((String) app.get("date"));
 				JSONArray websiteSingleIds;
 				if((websiteSingleIds = Website.existsInDb(appName, sm)).size() > 0){
 					for(Object websiteId : websiteSingleIds){
 						JSONObject newApp = new JSONObject();
 						newApp.put("login",app.get("login"));
-						newApp.put("pass",app.get("pass"));
+						newApp.put("pass",RSA.Decrypt((String) app.get("pass"), keyDate));
 						newApp.put("website",websiteId);
 						chromeAppsToKeep.add(newApp);
 					}

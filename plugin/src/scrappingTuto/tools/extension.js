@@ -1,31 +1,8 @@
 var listenersUpdates = [];
 var listenersMessages = [];
-var listenersClose = [];
-var currentUser = "anonymous";
 
 var extension = {
-	nbOfEaseTabs:function(){
-        var nb=0;
-        for(var i in window.tabs) {
-            if(window.tabs[i].url.indexOf("ease.space")!=-1){
-                nb++;
-            }
-        }
-        return nb;
-    },
-    reloadEaseTabs:function(){
-        chrome.windows.getAll({populate:true, windowTypes:['normal']}, function(windows){
-            for(var i in windows){
-                for(var j in windows[i].tabs){
-                    if(windows[i].tabs[j].url.indexOf("https://ease.space")==0){
-                        chrome.tabs.reload(windows[i].tabs[j].id, {}, function(){});
-                    }
-                }
-            }
-        });
-        
-    },
-    storage:{
+	storage:{
 		get:function(key, callback){
 			chrome.storage.local.get(key, function(res){
                 if(res[key]== undefined) var ans = {};
@@ -78,9 +55,6 @@ var extension = {
         });
     },
 	runtime:{
-        onUpdate:function(fct){
-            chrome.runtime.onInstalled.addListener(fct);
-        },
 		sendMessage:function(name, msg, callback){
 			chrome.runtime.sendMessage({"name":name, "message":msg}, callback);
 		},
@@ -134,11 +108,11 @@ var extension = {
                 this.create(window, url, active, callback);
             }
         },
-        highlight:function(tab, callback){
-            chrome.tabs.highlight({"tabs":tab.id}, callback);
+        highlight:function(window, tab, callback){
+            chrome.tabs.highlight({"windowId":window.id, "tabs":tab.index}, callback);
         },
         focus:function(window, tab, callback){
-            chrome.tabs.highlight({"tabs":tab.id}, callback);
+            chrome.tabs.highlight({"windowId":window.id, "tabs":tab.index}, callback);
         },
 		close:function(tab, callback){
    			chrome.tabs.remove(tab.id, callback);
@@ -165,18 +139,6 @@ var extension = {
         },
         onUpdatedRemoveListener:function(tab){
             chrome.tabs.onUpdated.removeListener(listenersUpdates[tab.id]);
-        },
-        onClosed:function(tab, fct){
-            listenersClose[tab.id] = function (tabId, removeInfos){
-				if(tab.id==tabId){
-				    fct();
-				}
-			}
-			chrome.tabs.onRemoved.addListener(listenersClose[tab.id]);
-            onRemoved
-        },
-        onClosedRemoveListener:function(tab){
-            chrome.tabs.onRemoved.removeListener(listenersClose[tab.id]);
         },
         onNavigation:function(fct){
             chrome.windows.onFocusChanged.addListener(function (windowId){
@@ -254,8 +216,7 @@ var extension = {
                     });
                 }
             }
-            injectonefile(0);
-               
+            injectonefile(0);   
         }
     }
 }
