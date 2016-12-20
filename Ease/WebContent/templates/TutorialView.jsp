@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="css/Tutorial.css" />
 
 <div class="popupHandler myshow" id="tutorial">
-	<div class="easePopup show" id="importation">
+	<div class="easePopup" id="importation">
 		<div class="title">
 			<p>Accounts importation</p>
 		</div>
@@ -119,9 +119,10 @@
 			</div>
 		</div>
 	</div>
-	<div class="easePopup" id="saving">
+	<div class="easePopup show" id="saving">
 		<div class="title">
 			<p>What do you want to keep ?</p>
+			<p class="sub-title">Anything you are not keeping, we are not keeping.</p>
 		</div>
 		<div class="bodysHandler">
 			<div class="popupBody show" id="selectScraping">
@@ -129,9 +130,10 @@
 					<div class="row">
 						<div class="scrapedAppsContainer">
 							<div class="appHandler">
-								<div class="app">
+								<div class="app selected">
 									<div class="logo">
 										<img src="resources/images/Chrome.png"/>
+										<img class="by" src="resources/websites/Facebook/logo.png">
 									</div>
 									<p class="name">Google Chrome</p>
 									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
@@ -141,6 +143,7 @@
 								<div class="app">
 									<div class="logo">
 										<img src="resources/images/Chrome.png"/>
+										<img class="by" src="resources/websites/Facebook/logo.png">
 									</div>
 									<p class="name">Google Chrome</p>
 									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
@@ -150,6 +153,7 @@
 								<div class="app">
 									<div class="logo">
 										<img src="resources/images/Chrome.png"/>
+										<img class="by" src="resources/websites/Facebook/logo.png">
 									</div>
 									<p class="name">Google Chrome</p>
 									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
@@ -159,6 +163,7 @@
 								<div class="app">
 									<div class="logo">
 										<img src="resources/images/Chrome.png"/>
+										<img class="by" src="resources/websites/Facebook/logo.png">
 									</div>
 									<p class="name">Google Chrome</p>
 									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
@@ -168,6 +173,7 @@
 								<div class="app">
 									<div class="logo">
 										<img src="resources/images/Chrome.png"/>
+										<img class="by" src="resources/websites/Facebook/logo.png">
 									</div>
 									<p class="name">Google Chrome</p>
 									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
@@ -177,6 +183,77 @@
 								<div class="app">
 									<div class="logo">
 										<img src="resources/images/Chrome.png"/>
+										<img class="by" src="resources/websites/Facebook/logo.png">
+									</div>
+									<p class="name">Google Chrome</p>
+									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
+								</div>
+							</div>
+							<div class="appHandler">
+								<div class="app">
+									<div class="logo">
+										<img src="resources/images/Chrome.png"/>
+										<img class="by" src="resources/websites/Facebook/logo.png">
+									</div>
+									<p class="name">Google Chrome</p>
+									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
+								</div>
+							</div>
+							<div class="appHandler">
+								<div class="app">
+									<div class="logo">
+										<img src="resources/images/Chrome.png"/>
+										<img class="by" src="resources/websites/Facebook/logo.png">
+									</div>
+									<p class="name">Google Chrome</p>
+									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
+								</div>
+							</div>
+							<div class="appHandler">
+								<div class="app">
+									<div class="logo">
+										<img src="resources/images/Chrome.png"/>
+										<img class="by" src="resources/websites/Facebook/logo.png">
+									</div>
+									<p class="name">Google Chrome</p>
+									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
+								</div>
+							</div>
+							<div class="appHandler">
+								<div class="app">
+									<div class="logo">
+										<img src="resources/images/Chrome.png"/>
+										<img class="by" src="resources/websites/Facebook/logo.png">
+									</div>
+									<p class="name">Google Chrome</p>
+									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
+								</div>
+							</div>
+							<div class="appHandler">
+								<div class="app">
+									<div class="logo">
+										<img src="resources/images/Chrome.png"/>
+										<img class="by" src="resources/websites/Facebook/logo.png">
+									</div>
+									<p class="name">Google Chrome</p>
+									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
+								</div>
+							</div>
+							<div class="appHandler">
+								<div class="app">
+									<div class="logo">
+										<img src="resources/images/Chrome.png"/>
+										<img class="by" src="resources/websites/Facebook/logo.png">
+									</div>
+									<p class="name">Google Chrome</p>
+									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
+								</div>
+							</div>
+							<div class="appHandler">
+								<div class="app">
+									<div class="logo">
+										<img src="resources/images/Chrome.png"/>
+										<img class="by" src="resources/websites/Facebook/logo.png">
 									</div>
 									<p class="name">Google Chrome</p>
 									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>

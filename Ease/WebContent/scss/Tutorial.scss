@@ -42,6 +42,8 @@
         pointer-events: none;
         z-index: -1;
         position: absolute;
+        height: 0;
+        overflow: hidden;
         &.show {
             transition: opacity .3s, visibility .3s;
             opacity: 1;
@@ -49,6 +51,8 @@
             pointer-events: auto;
             z-index: 1;
             position: relative;
+            height: auto;
+            overflow: auto;
         }
     }
     #importation {
@@ -132,6 +136,7 @@
                 .row {
                     .scrapedAppsContainer {
                         height: 15vw;
+                        overflow: auto;
                         .appHandler{
                             width: 25%;
                             float: left;
@@ -139,11 +144,46 @@
                             padding: 1vw;
                             .app {
                                 overflow: hidden;
+                                position: relative;
                                 .logo {
                                     width: 70%;
                                     margin:auto;
+                                    position: relative;
+                                    border-radius: 3px;
                                     img {
+                                        border-radius:3px;
                                         width: 100%;
+                                    }
+                                    .by {
+                                        border-radius: 3px;
+                                        filter: grayscale(100%);
+                                        -webkit-filter: grayscale(100%);
+                                        width: 25%;
+                                        position: absolute;
+                                        bottom: 2%;
+                                        right: 2%;
+                                    }
+                                }
+                            }
+                            .app.selected {
+                                .logo {
+                                    &:before {
+                                        content:"";
+                                        position: absolute;
+                                        width: 100%;
+                                        height: 100%;
+                                        background-color: rgba(0,0,0,0.35);
+                                        border-radius: 3px;
+                                    }
+                                    &:after {
+                                        content: "\f00c";
+                                        position: absolute;
+                                        left: 50%;
+                                        top: 50%;
+                                        color: rgba(white, 0.8);
+                                        transform: translate3d(-50%, -50%, 0);
+                                        font-family: FontAwesome;
+                                        font-size: 3vw;
                                     }
                                 }
                             }
