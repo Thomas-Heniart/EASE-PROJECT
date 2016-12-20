@@ -1,0 +1,101 @@
+.onoffswitch {
+    position: relative; width: 4vw;
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+}
+.onoffswitch-checkbox {
+    display: none;
+}
+.onoffswitch-label {
+    display: block; overflow: hidden; cursor: pointer;
+    height: 2vw; padding: 0; line-height: 25px;
+    border: 2px solid #CCCCCC; border-radius: 2vw;
+    background-color: #FFFFFF;
+    transition: background-color 0.3s ease-in;
+}
+.onoffswitch-label:before {
+    content: "";
+    display: block; width: 2vw; margin: 0px;
+    background: #FFFFFF;
+    position: absolute; top: 0; bottom: 0;
+    right: 2vw;
+    height: 2vw;
+    border: 2px solid #CCCCCC; border-radius: 2vw;
+    transition: all 0.3s ease-in 0s; 
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label {
+    background-color: #49E845;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label, .onoffswitch-checkbox:checked + .onoffswitch-label:before {
+   border-color: #49E845;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label:before {
+    right: 0px; 
+}
+
+#tutorial {
+    #importation {
+        .popupBody {
+            .handler {
+                .row {
+                    .account{
+                        margin-bottom: 1vw;
+                        height: 4vw;
+                        &:last-child {
+                            margin-bottom: 0px;
+                        }
+                        div, p {
+                            display: inline-block;
+                        }
+                        .name {
+                            font-size: 1.5vw;
+                            margin-left: 1vw;
+                        }
+                        .onoffswitch {
+                            float: right;
+                            top: 50%;
+                            transform: translateY(-50%);
+                            label {
+                                margin-bottom: 0px;
+                            }
+                        }
+                        .logo {
+                            height: 100%;
+                            img {
+                                height: 100%;
+                                border-radius: 3px;
+                            }
+                        }
+                    }
+                    input, .input {
+                        margin-bottom: 1.2vw;
+                        &:last-child {
+                            margin-bottom: 0px;
+                        }
+                    }
+                    .sub-title {
+                        font-size:1.8vw;
+                        font-weight:600;
+                    }
+                    .post-title {
+                        font-size:1.7vw;
+                    }
+                }
+            }
+        }
+        #accountCredentials {
+            .imageHandler {
+                width: 5vw;
+                display: inline-block;
+                img {
+                    width: 100%;
+                }
+            }
+        }
+        #scrapingInfo {
+            .info-text {
+                font-size: 1.5vw;
+                font-weight: 200;
+            }
+        }
+    }
+}

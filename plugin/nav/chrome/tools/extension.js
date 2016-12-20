@@ -1,5 +1,6 @@
 var listenersUpdates = [];
 var listenersMessages = [];
+var listenersClose = [];
 var currentUser = "anonymous";
 
 var extension = {
@@ -133,11 +134,11 @@ var extension = {
                 this.create(window, url, active, callback);
             }
         },
-        highlight:function(window, tab, callback){
-            chrome.tabs.highlight({"windowId":window.id, "tabs":tab.index}, callback);
+        highlight:function(tab, callback){
+            chrome.tabs.highlight({"tabs":tab.id}, callback);
         },
         focus:function(window, tab, callback){
-            chrome.tabs.highlight({"windowId":window.id, "tabs":tab.index}, callback);
+            chrome.tabs.highlight({"tabs":tab.id}, callback);
         },
 		close:function(tab, callback){
    			chrome.tabs.remove(tab.id, callback);
@@ -164,6 +165,17 @@ var extension = {
         },
         onUpdatedRemoveListener:function(tab){
             chrome.tabs.onUpdated.removeListener(listenersUpdates[tab.id]);
+        },
+        onClosed:function(tab, fct){
+            listenersClose[tab.id] = function (tabId, removeInfos){
+				if(tab.id==tabId){
+				    fct();
+				}
+			}
+			chrome.tabs.onRemoved.addListener(listenersClose[tab.id]);
+        },
+        onClosedRemoveListener:function(tab){
+            chrome.tabs.onRemoved.removeListener(listenersClose[tab.id]);
         },
         onNavigation:function(fct){
             chrome.windows.onFocusChanged.addListener(function (windowId){

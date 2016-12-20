@@ -20,6 +20,7 @@ import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.Crypto.RSA;
 
 /**
  * Servlet implementation class TutoStep
@@ -95,6 +96,7 @@ public class FilterScrap extends HttpServlet {
 						newApp.put("login",app.get("login"));
 						newApp.put("pass",app.get("pass"));
 						newApp.put("website",websiteId);
+						newApp.put("keyDate",app.get("keyDate"));
 						chromeAppsToKeep.add(newApp);
 					}
 				} else {

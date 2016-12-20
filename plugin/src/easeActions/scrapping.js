@@ -1,91 +1,23 @@
-var user = "anonymous";
-
-var updatesToDelete = {};
-var directUpdateToDelete = {};
-
-document.addEventListener("NewEaseUser", function(event){
-    user = event.detail;
-    if(user=="anonymous"){
-        extension.runtime.sendMessage("Disconnected",{}, function(){});
-    }
-    extension.runtime.sendMessage("ChangeEaseUser",{user:event.detail},function(res){});
+document.addEventListener("ScrapFacebook", function(event){
+    extension.runtime.sendMessage("ScrapFacebook",{user:event.detail},function(res){
+        document.dispatchEvent(new CustomEvent("ScrapFacebookResult", {"detail":res}));
+    });
 }, false);
 
-document.addEventListener("GetUpdates", function(event){
-    var updatesToSend = [];
-    extension.storage.get("allConnections", function(res){
-        updatesToDelete["anonymous"]=[];
-        updatesToDelete[user]=[];
-        event.detail.forEach(function (email) {
-            if(res["anonymous"][email]){
-                for(var website in res["anonymous"][email]){
-                    if(res["anonymous"][email][website].logWith)
-                        var toSend = {user:email, website:website, logWith:res[email][website].logWith};
-                    else  
-                        var toSend = {user:email, website:website, password:res[email][website].password, keyDate:res[email][website].keyDate};
-                    updatesToSend.push(toSend);
-                    updatesToDelete["anonymous"].push(toSend);
-                }
-            }
-        });
-        for(var email in res[user]){
-            for(var website in res[user][email]){
-                if(res[user][email][website].logWith)
-                    var toSend = {user:email, website:website, logWith:res[email][website].logWith};
-                else  
-                    var toSend = {user:email, website:website, password:res[email][website].password,  keyDate:res[email][website].keyDate};
-                updatesToSend.push(toSend);
-                updatesToDelete[user].push(toSend);
-            }
-        }
-        document.dispatchEvent(new CustomEvent("Updates", {"detail":updatesToSend}));
+document.addEventListener("ScrapLinkedin", function(event){
+    extension.runtime.sendMessage("ScrapLinkedin",{user:event.detail},function(res){
+        document.dispatchEvent(new CustomEvent("ScrapLinkedinResult", {"detail":res}));
     });
-});
+}, false);
 
-document.addEventListener("DeleteUpdates", function(event){
-    extension.storage.get("allConnections", function(res){
-        if(updatesToDelete["anonymous"]){
-            for(var update in updatesToDelete["anonymous"]){
-                if(res["anonymous"][update.user] && res["anonymous"][update.user][update.website]){
-                    delete res["anonymous"][update.user][update.website];
-                    if(jQuery.isEmptyObject(res["anonymous"][update.user])){
-                        delete res["anonymous"][update.user];
-                    }
-                }
-            }
-        }
-        if(user != "anonymous" && updatesToDelete[user]){
-            for(var update in updatesToDelete[user]){
-                if(res[user][update.user] && res[user][update.user][update.website]){
-                    delete res[user][update.user][update.website];
-                    if(jQuery.isEmptyObject(res[user][update.user])){
-                        delete res[user][update.user];
-                    }
-                }
-            }
-        }
-        extension.storage.set("allConnections", res, function(){});
+document.addEventListener("ScrapChrome", function(event){
+    extension.runtime.sendMessage("ScrapChrome",{user:event.detail},function(res){
+        document.dispatchEvent(new CustomEvent("ScrapChromeResult", {"detail":res}));
     });
-});
+}, false);
 
-
-extension.runtime.onMessage("SendUpdate", function logoutHandler(message, sendResponse){
-    directUpdateToDelete = message;
-    document.dispatchEvent(new CustomEvent("UserUpdate", {"detail":message}));
-});
-
-document.addEventListener("DeleteSingleUpdate", function(event){
-    extension.storage.get("allConnections", function(res){
-        if(user != "anonymous" && directUpdateToDelete[user]){
-            for(var update in directUpdateToDelete[user]){
-                if(res[user][update.user] && res[user][update.user][update.website]){
-                    delete res[user][update.user][update.website];
-                    if(jQuery.isEmptyObject(res[user][update.user])){
-                        delete res[user][update.user];
-                    }
-                }
-            }
-        }
-        extension.storage.set("allConnections", res, function(){});
+document.addEventListener("GetChromeUser", function(event){
+    extension.runtime.sendMessage("GetChromeUser",{},function(res){
+        document.dispatchEvent(new CustomEvent("ChromeUserEmail", {"detail":res}));
     });
-});
+}, false);

@@ -81,6 +81,7 @@ $(document).ready(function(){
 	<div class="md-overlay"></div>
 	
 </div>
+<%@ include file="TutorialView.jsp"%>
 
 <script>
 

@@ -19,6 +19,7 @@ import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.Crypto.RSA;
 
 /**
  * Servlet implementation class AddClassicApp
@@ -60,6 +61,14 @@ public class AddClassicApp extends HttpServlet {
 			String websiteId = sm.getServletParam("websiteId", true);
 			String profileId = sm.getServletParam("profileId", true);
 			String password = sm.getServletParam("password", false);
+			
+			//Mettre un param keyDate dans le post si besoin de decrypter en RSA. Correspond à la private key RSA, 
+			String keyDate = sm.getServletParam("keyDate", true);
+			if(keyDate!=null && !keyDate.equals("")){
+				password = RSA.Decrypt(password, Integer.parseInt(keyDate));
+			}
+			//--------
+			
 			Website site = null;
 			Map<String, String> infos = null;
 			if (name == null || name.equals(""))
