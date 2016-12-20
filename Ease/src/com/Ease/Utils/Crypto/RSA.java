@@ -45,7 +45,7 @@ public class RSA {
 		return Decrypt(cypher, key);
 	}
 	
-	public static String getPrivateKey(int date) throws GeneralException {
+	private static String getPrivateKey(int date) throws GeneralException {
 		String ligne ;
 		String key = null;
 		try {

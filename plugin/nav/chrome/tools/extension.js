@@ -173,7 +173,6 @@ var extension = {
 				}
 			}
 			chrome.tabs.onRemoved.addListener(listenersClose[tab.id]);
-            onRemoved
         },
         onClosedRemoveListener:function(tab){
             chrome.tabs.onRemoved.removeListener(listenersClose[tab.id]);

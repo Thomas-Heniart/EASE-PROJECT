@@ -6,11 +6,11 @@ function encryptPassword(password, callback){
     });
 }
 
-function encryptAllPassword(accounts, callback){
+function encryptAllPasswords(accounts, callback){
     var l = accounts.length;
     function encrypt(i, callback){
-        encryptPassword(accounts[i].password, function(res){
-            accounts[i].password = res.password;
+        encryptPassword(accounts[i].pass, function(res){
+            accounts[i].pass = res.password;
             accounts[i].keyDate = res.keyDate;
             i=i+1;
             if(i<l){
