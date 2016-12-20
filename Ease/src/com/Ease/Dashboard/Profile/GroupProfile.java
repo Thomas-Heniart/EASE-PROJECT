@@ -46,7 +46,7 @@ public class GroupProfile {
 			GroupProfile groupProfile;
 			while (rs.next()) {
 				db_id = rs.getString(Data.ID.ordinal());
-				perms = ProfilePermissions.loadProfilePermissions(rs.getString(Data.GROUP_ID.ordinal()), db);
+				perms = ProfilePermissions.loadProfilePermissions(rs.getString(Data.PERM_ID.ordinal()), db);
 				infos = ProfileInformation.loadProfileInformation(rs.getString(Data.INFO_ID.ordinal()), db);
 				common = rs.getBoolean(Data.COMMON.ordinal());
 				single_id = idGenerator.getNextId();

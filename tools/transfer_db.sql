@@ -225,17 +225,113 @@ INSERT INTO ease.appsInformations
 SELECT (@a_info_id := @a_info_id + 1), name FROM test.apps JOIN test.ClassicAccountsInformations ON test.apps.account_id = test.ClassicAccountsInformations.account_id WHERE website_id IS NOT NULL AND test.apps.account_id IS NOT NULL AND test.ClassicAccountsInformations.account_id NOT IN (SELECT account_id FROM test.logWithAccounts) AND test.ClassicAccountsInformations.account_id IN (SELECT account_id FROM test.apps) AND test.apps.account_id IN (SELECT account_id FROM test.ClassicAccountsInformations);
 
 INSERT INTO ease.apps
-SELECT (@app_id := @app_id + 1), profile_id, position, CURRENT_TIMESTAMP, 'websiteApp', (@app_info_id := @app_info_id + 1), custom FROM test.apps JOIN test.ClassicAccountsInformations ON test.apps.account_id = test.ClassicAccountsInformations.account_id WHERE website_id IS NOT NULL AND test.apps.account_id IS NOT NULL AND test.ClassicAccountsInformations.account_id NOT IN (SELECT account_id FROM test.logWithAccounts) AND test.ClassicAccountsInformations.account_id IN (SELECT account_id FROM test.apps) AND test.apps.account_id IN (SELECT account_id FROM test.ClassicAccountsInformations);
+SELECT (@app_id := @app_id + 1), profile_id, position, CURRENT_TIMESTAMP, 'websiteApp', (@app_info_id := @app_info_id + 1), custom FROM test.apps JOIN test.ClassicAccountsInformations ON test.apps.account_id = test.ClassicAccountsInformations.account_id WHERE website_id IS NOT NULL AND information_name NOT LIKE "password" AND information_name NOT LIKE "team" AND test.apps.account_id IS NOT NULL AND test.ClassicAccountsInformations.account_id NOT IN (SELECT account_id FROM test.logWithAccounts) AND test.ClassicAccountsInformations.account_id IN (SELECT account_id FROM test.apps) AND test.apps.account_id IN (SELECT account_id FROM test.ClassicAccountsInformations);
+
+UPDATE ease.apps
+SET group_app_id = 2 WHERE group_app_id = 3;
+
+UPDATE ease.apps
+SET group_app_id = 3 WHERE group_app_id = 5;
+
+UPDATE ease.apps
+SET group_app_id = 4 WHERE group_app_id = 6;
+
+UPDATE ease.apps
+SET group_app_id = 5 WHERE group_app_id = 9;
+
+UPDATE ease.apps
+SET group_app_id = 6 WHERE group_app_id = 10;
+
+UPDATE ease.apps
+SET group_app_id = 7 WHERE group_app_id = 11;
+
+UPDATE ease.apps
+SET group_app_id = 8 WHERE group_app_id = 12;
+
+UPDATE ease.apps
+SET group_app_id = 9 WHERE group_app_id = 13;
+
+UPDATE ease.apps
+SET group_app_id = 10 WHERE group_app_id = 14;
+
+UPDATE ease.apps
+SET group_app_id = 11 WHERE group_app_id = 15;
+
+UPDATE ease.apps
+SET group_app_id = 12 WHERE group_app_id = 16;
+
+UPDATE ease.apps
+SET group_app_id = 13 WHERE group_app_id = 17;
+
+UPDATE ease.apps
+SET group_app_id = 14 WHERE group_app_id = 18;
+
+UPDATE ease.apps
+SET group_app_id = 15 WHERE group_app_id = 19;
+
+UPDATE ease.apps
+SET group_app_id = 16 WHERE group_app_id = 20;
+
+UPDATE ease.apps
+SET group_app_id = 17 WHERE group_app_id = 21;
+
+UPDATE ease.apps
+SET group_app_id = 18 WHERE group_app_id = 22;
+
+UPDATE ease.apps
+SET group_app_id = 19 WHERE group_app_id = 23;
+
+UPDATE ease.apps
+SET group_app_id = 20 WHERE group_app_id = 24;
+
+UPDATE ease.apps
+SET group_app_id = 21 WHERE group_app_id = 25;
+
+UPDATE ease.apps
+SET group_app_id = 22 WHERE group_app_id = 26;
+
+UPDATE ease.apps
+SET group_app_id = 23 WHERE group_app_id = 27;
+
+UPDATE ease.apps
+SET group_app_id = 24 WHERE group_app_id = 28;
+
+UPDATE ease.apps
+SET group_app_id = 25 WHERE group_app_id = 29;
+
+UPDATE ease.apps
+SET group_app_id = 26 WHERE group_app_id = 30;
+
+UPDATE ease.apps
+SET group_app_id = 27 WHERE group_app_id = 31;
+
+UPDATE ease.apps
+SET group_app_id = 28 WHERE group_app_id = 32;
+
+UPDATE ease.apps
+SET group_app_id = 29 WHERE group_app_id = 33;
+
+UPDATE ease.apps
+SET group_app_id = 30 WHERE group_app_id = 34;
+
+UPDATE ease.apps
+SET group_app_id = 31 WHERE group_app_id = 35;
+
+UPDATE ease.apps
+SET group_app_id = 32 WHERE group_app_id = 36;
+
+UPDATE ease.apps
+SET group_app_id = 33 WHERE group_app_id = 37;
 
 SET @website_app_id = 0;
 SELECT @w_app_id INTO @website_app_id;
 SET @app_account_id = 0;
 
 INSERT INTO ease.websiteApps
-SELECT (@w_app_id := @w_app_id + 1), website_id, (@var := @var + 1), NULL, 'classicApp' FROM test.apps JOIN test.ClassicAccountsInformations ON test.apps.account_id = test.ClassicAccountsInformations.account_id WHERE website_id IS NOT NULL AND test.apps.account_id IS NOT NULL AND test.ClassicAccountsInformations.account_id NOT IN (SELECT account_id FROM test.logWithAccounts) AND test.ClassicAccountsInformations.account_id IN (SELECT account_id FROM test.apps) AND test.apps.account_id IN (SELECT account_id FROM test.ClassicAccountsInformations);
+SELECT (@w_app_id := @w_app_id + 1), website_id, (@var := @var + 1), NULL, 'classicApp' FROM test.apps JOIN test.ClassicAccountsInformations ON test.apps.account_id = test.ClassicAccountsInformations.account_id WHERE website_id IS NOT NULL AND information_name NOT LIKE "password" AND information_name NOT LIKE "team" AND test.apps.account_id IS NOT NULL AND test.ClassicAccountsInformations.account_id NOT IN (SELECT account_id FROM test.logWithAccounts) AND test.ClassicAccountsInformations.account_id IN (SELECT account_id FROM test.apps) AND test.apps.account_id IN (SELECT account_id FROM test.ClassicAccountsInformations);
 
 INSERT INTO ease.classicApps
-SELECT null, (@website_app_id := @website_app_id + 1), (@app_account_id := @app_account_id + 1), NULL FROM test.apps JOIN test.ClassicAccountsInformations ON test.apps.account_id = test.ClassicAccountsInformations.account_id WHERE website_id IS NOT NULL AND test.apps.account_id IS NOT NULL AND test.ClassicAccountsInformations.account_id NOT IN (SELECT account_id FROM test.logWithAccounts) AND test.ClassicAccountsInformations.account_id IN (SELECT account_id FROM test.apps) AND test.apps.account_id IN (SELECT account_id FROM test.ClassicAccountsInformations);
+SELECT null, (@website_app_id := @website_app_id + 1), (@app_account_id := @app_account_id + 1), NULL FROM test.apps JOIN test.ClassicAccountsInformations ON test.apps.account_id = test.ClassicAccountsInformations.account_id WHERE website_id IS NOT NULL AND information_name NOT LIKE "password" AND information_name NOT LIKE "team" AND test.apps.account_id IS NOT NULL AND test.ClassicAccountsInformations.account_id NOT IN (SELECT account_id FROM test.logWithAccounts) AND test.ClassicAccountsInformations.account_id IN (SELECT account_id FROM test.apps) AND test.apps.account_id IN (SELECT account_id FROM test.ClassicAccountsInformations);
 
 
 /* Delete useless data */
