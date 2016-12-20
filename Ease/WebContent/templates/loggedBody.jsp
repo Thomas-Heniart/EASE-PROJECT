@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 
 <%@ page import="java.util.LinkedList"%>
-<%@ page import="com.Ease.Dashboard.App.Tag"%>
+<%@ page import="com.Ease.Context.Catalog.Tag"%>
 <%@ page import="com.Ease.Dashboard.User.SessionSave" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
