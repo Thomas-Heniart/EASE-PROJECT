@@ -183,15 +183,17 @@ public class GroupProfile {
 		
 	}
 	
-	public void loadContentForUnconnectedUser(String db_id, ServletManager sm) throws GeneralException {
+	public String loadContentForUnconnectedUser(String db_id, ServletManager sm) throws GeneralException {
 		int columnIdx = User.getMostEmptyProfileColumnForUnconnected(db_id, sm);
 		int posIdx = User.getColumnNextPositionForUnconnected(db_id, columnIdx, sm);
-		Profile.createProfileWithGroupForUnconnected(db_id, columnIdx, posIdx, this, sm);
+		return Profile.createProfileWithGroupForUnconnected(db_id, columnIdx, posIdx, this, sm);
 	}
 	
-	public void loadContentForConnectedUser(User user, ServletManager sm) throws GeneralException {
+	public Profile loadContentForConnectedUser(User user, ServletManager sm) throws GeneralException {
 		int mostEmptyColumn = user.getMostEmptyProfileColumn();
-		user.getProfileColumns().get(mostEmptyColumn).add(Profile.createProfileWithGroup(user, mostEmptyColumn, user.getProfileColumns().get(mostEmptyColumn).size(), this, sm));
+		Profile profile = Profile.createProfileWithGroup(user, mostEmptyColumn, user.getProfileColumns().get(mostEmptyColumn).size(), this, sm);
+		user.getProfileColumns().get(mostEmptyColumn).add(profile);
+		return profile;
 
 	}
 	

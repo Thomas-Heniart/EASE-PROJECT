@@ -13,6 +13,7 @@ import com.Ease.Dashboard.App.AppInformation;
 import com.Ease.Dashboard.App.AppPermissions;
 import com.Ease.Dashboard.App.GroupApp;
 import com.Ease.Dashboard.Profile.GroupProfile;
+import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
@@ -86,5 +87,36 @@ public class GroupLinkApp extends GroupApp {
 	public LinkAppInformation getLinkAppInfo() {
 		return this.link_app_informations;
 	}
+	
+	/*
+	 * 
+	 * Utils
+	 * 
+	 */
 
+	public void removeFromDb(ServletManager sm) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void loadContentForConnectedUser(User user, ServletManager sm) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void loadContentForUnconnectedUser(String db_id2, ServletManager sm) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void removeContentForConnectedUser(User user, ServletManager sm) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void removeContentForUnconnectedUser(String db_id2, ServletManager sm) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }
