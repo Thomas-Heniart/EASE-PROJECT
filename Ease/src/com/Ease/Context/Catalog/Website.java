@@ -12,6 +12,7 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -73,6 +74,68 @@ public class Website {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
+	
+	///// Check if website exist when scrapp
+	
+	public static JSONArray existsInDb(String websiteHost, ServletManager sm) throws GeneralException{
+		DataBaseConnection db = sm.getDB();
+		Catalog catalog = (Catalog)sm.getContextAttr("catalog");
+		ResultSet rs = db.get("select * from websites where noLogin=0;");
+		JSONArray result = new JSONArray();
+		try {
+			while(rs.next()){
+				String loginUrl = rs.getString(WebsiteData.LOGIN_URL.ordinal());
+				websiteHost = websiteHost.toLowerCase();
+				loginUrl = loginUrl.toLowerCase();
+				if(loginUrl.contains(websiteHost)){
+					result.add(String.valueOf((catalog.getWebsiteWithDBid(rs.getString(WebsiteData.ID.ordinal())).getSingleId())));
+				}
+			}
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+		return result;
+	}
+	
+	public static String existsInDbFacebook(String appName, ServletManager sm) throws GeneralException{
+		DataBaseConnection db = sm.getDB();
+		Catalog catalog = (Catalog)sm.getContextAttr("catalog");
+		ResultSet rs = db.get("select * from websites where id in (select website_id from websiteslogwithmap where website_logwith_id in (select id from loginwithwebsites where website_id in (select id from websites where website_name='Facebook')));");
+		try {
+			while(rs.next()){
+				String name = rs.getString(WebsiteData.NAME.ordinal());
+				appName = appName.toLowerCase();
+				name = name.toLowerCase();
+				if(appName.contains(name)){
+					return String.valueOf((catalog.getWebsiteWithDBid(rs.getString(WebsiteData.ID.ordinal())).getSingleId()));
+				}
+			}
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+		return null;
+	}
+	
+	public static String existsInDbLinkedin(String appName, ServletManager sm) throws GeneralException{
+		DataBaseConnection db = sm.getDB();
+		Catalog catalog = (Catalog)sm.getContextAttr("catalog");
+		ResultSet rs = db.get("select * from websites where id in (select website_id from websiteslogwithmap where website_logwith_id in (select id from loginwithwebsites where website_id in (select id from websites where website_name='Linkedin')));");
+		try {
+			while(rs.next()){
+				String name = rs.getString(WebsiteData.NAME.ordinal());
+				appName = appName.toLowerCase();
+				name = name.toLowerCase();
+				if(appName.contains(name)){
+					return String.valueOf((catalog.getWebsiteWithDBid(rs.getString(WebsiteData.ID.ordinal())).getSingleId()));
+				}
+			}
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+		return null;
+	}
+	
+	//// -------
 	
 	protected String db_id;
 	protected int single_id;

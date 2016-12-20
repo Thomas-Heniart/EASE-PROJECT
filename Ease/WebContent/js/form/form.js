@@ -224,31 +224,6 @@ var Form = {
 					continue;
 				self.newAppItem.attr(key, self.attributesToSet[key]);
 			}
-			var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-			if (emailRegex.test(self.oInputs[1].getVal()) && !$(".email-suggestion[email='" + self.oInputs[1].getVal() + "']").length) {
-				$(".suggested-emails").append(
-						"<p class='email-suggestion' email='" + self.oInputs[1].getVal() + "'><span>"
-								+ self.oInputs[1].getVal() + "</span></p>");
-				$("#editVerifiedEmails").append("<div class='emailLine'>"
-						+ "<input type='email' name='email' oClass='HiddenInput' value='" + self.oInputs[1].getVal() + "'readonly />"
-						+ " <span class='unverifiedEmail'><span class='verify'>Verified ?</span><span class='sendVerificationEmail'>Send verification email</span></span>"
-						+ "<div class='sk-fading-circle email-loading'>"
-						+ "	<span>We are sending you an email</span>"
-						+ "	<div class='sk-circle1 sk-circle'></div>"
-						+ '	<div class="sk-circle2 sk-circle"></div>'
-						+ '	<div class="sk-circle3 sk-circle"></div>'
-						+ '	<div class="sk-circle4 sk-circle"></div>'
-						+ '	<div class="sk-circle5 sk-circle"></div>'
-						+ '	<div class="sk-circle6 sk-circle"></div>'
-						+ '	<div class="sk-circle7 sk-circle"></div>'
-						+ '	<div class="sk-circle8 sk-circle"></div>'
-						+ '	<div class="sk-circle9 sk-circle"></div>'
-						+ ' <div class="sk-circle10 sk-circle"></div>'
-						+ '	<div class="sk-circle11 sk-circle"></div>'
-						+ '	<div class="sk-circle12 sk-circle"></div>'
-						+ '</div>'
-					+ "</div>");
-			}
 			self.reset();
 			self.appsContainer = null;
 			self.helper = null;
@@ -258,6 +233,7 @@ var Form = {
 			self.app_id = null;
 			self.setPostName('AddClassicApp');
 			self.helper = null;
+			cleanEmails();
 		}
 		this.errorCallback = function(retMsg) {
 			easeTracker.trackEvent("Add app failed");
@@ -423,6 +399,7 @@ var Form = {
 				var postMessage = 'EditClassicApp';
 				if(self.app.hasClass('emptyApp'))
 					postMessage = 'WebsiteAppToClassicApp';
+				console.log("modify");
 				postHandler.post(
 					postMessage,
 					self.params,
@@ -444,8 +421,10 @@ var Form = {
 						self.app.find('.siteName p').text(self.oInputs[0].getVal());
 						self.app.find('.emptyAppIndicator').remove();
 						self.app.removeClass('emptyApp');
+						console.log(self.params["login"]);
 						self.qRoot.find('.AccountApp.selected').removeClass("selected");
 						self.removeAddedFields();
+						cleanEmails();
 					}, function(){}, 
 					'text'
 				);
@@ -472,6 +451,7 @@ var Form = {
 			setTimeout(function() {
 				self.oParent.app.remove();
 			}, 500);
+			cleanEmails();
 		};
 		this.errorCallback = function(retMsg) {
 			showAlertPopup(retMsg, true);

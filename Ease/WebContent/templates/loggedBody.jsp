@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 
 <%@ page import="java.util.LinkedList"%>
-<%@ page import="com.Ease.Dashboard.App.Tag"%>
+<%@ page import="com.Ease.Context.Catalog.Tag"%>
 <%@ page import="com.Ease.Dashboard.User.SessionSave" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -11,6 +11,7 @@
 <%@ page import="java.text.SimpleDateFormat"%>
 <%@ page import="java.util.Date"%>
 <script src="js/SettingsView.js"></script>
+<script src="js/checkConnection.js"></script>
 <%
 if (user != null) {
 	SessionSave sessionSave = user.getSessionSave();
@@ -80,6 +81,7 @@ $(document).ready(function(){
 	<div class="md-overlay"></div>
 	
 </div>
+<%@ include file="TutorialView.jsp"%>
 
 <script>
 

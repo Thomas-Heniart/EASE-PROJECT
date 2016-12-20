@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
@@ -17,6 +18,9 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
 import org.apache.tomcat.util.codec.binary.Base64;
+
+import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.ServletManager;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -34,6 +38,24 @@ public class RSA {
 		System.out.println(new Base64().encodeToString(publicKey.getEncoded()));
 		System.out.println(new Base64().encodeToString(privateKey.getEncoded()));
 
+	}
+	
+	public static String getPrivateKey(int date) throws GeneralException {
+		String ligne ;
+		String key = null;
+		try {
+			BufferedReader fichier = new BufferedReader(new FileReader("C:\\Users\\FelixPro\\Documents\\EASE\\\"Ease project\"\\New\\EASE-PROJECT\\Ease\\src\\com\\Ease\\Utils\\Crypto\\privateKeys.txt"));
+			while ((ligne = fichier.readLine()) != null) {
+				String[] keyDatas = ligne.split(":");
+				if(Integer.parseInt(keyDatas[0])==date){
+					key=keyDatas[1];
+				}
+			}
+			fichier.close();
+		} catch (NumberFormatException | IOException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+		return key;
 	}
 
 	public static String Encrypt(String plain, String publicK) throws NoSuchAlgorithmException,
