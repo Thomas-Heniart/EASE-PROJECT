@@ -15,10 +15,10 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class ClassicAppsTransfert
+ * Servlet implementation class EmptyAppTransfert
  */
-@WebServlet("/ClassicAppsTransfert")
-public class ClassicAppsTransfert extends HttpServlet {
+@WebServlet("/EmptyAppTransfert")
+public class EmptyAppTransfert extends HttpServlet {
 	
 	public enum AppData {
 		NOTHING,
@@ -36,7 +36,7 @@ public class ClassicAppsTransfert extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ClassicAppsTransfert() {
+    public EmptyAppTransfert() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -48,7 +48,7 @@ public class ClassicAppsTransfert extends HttpServlet {
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		DataBaseConnection db = sm.getDB();
 		try {
-			ResultSet appsRs = db.get("SELECT * FROM test.apps WHERE website_id IS NOT NULL AND account_id IS NOT NULL AND account_id IN (SELECT account_id FROM test.classicAccounts)");
+			ResultSet appsRs = db.get("SELECT * FROM test.apps WHERE website_id IS NOT NULL AND account_id IS NULL AND custom IS NOT NULL;");
 			try {
 				while (appsRs.next()) {
 					int transaction = db.startTransaction();
@@ -75,8 +75,7 @@ public class ClassicAppsTransfert extends HttpServlet {
 							break;
 							
 							case "24":
-							custom = "33";
-							break;
+							throw new GeneralException(ServletManager.Code.InternError, "WTF biatch");
 							
 							default:
 							custom = String.valueOf(Integer.parseInt(custom) - 5);
@@ -88,19 +87,7 @@ public class ClassicAppsTransfert extends HttpServlet {
 					String app_id = appsRs.getString(AppData.APP_ID.ordinal());
 					db.set("INSERT INTO ease.apps values (" + app_id + ", " + profile_id + ", " + position + ", default, 'websiteApp', " + app_info_id + ", " + custom + ");");
 					String website_id = appsRs.getString(AppData.WEBSITE_ID.ordinal());
-					String website_app_id = db.set("INSERT INTO ease.websiteApps values (null, " + website_id + ", " + app_id + ", " + custom + ", 'classicApp');").toString();
-					String account_id = appsRs.getString(AppData.ACCOUNT_ID.ordinal());
-					ResultSet passwordRs = db.get("SELECT information_value FROM test.ClassicAccountsInformations WHERE account_id = " + account_id + " AND information_name = 'password';");
-					passwordRs.next();
-					String passwd = passwordRs.getString(1);
-					String new_account_id = db.set("INSERT INTO ease.accounts values (null, '" + passwd + "', 0);").toString();
-					ResultSet infoRs = db.get("SELECT information_name, information_value FROM test.ClassicAccountsInformations WHERE account_id = " + account_id + " AND information_name NOT LIKE 'password';");
-					while (infoRs.next()) {
-						String info_name = infoRs.getString(1);
-						String info_value = infoRs.getString(2);
-						db.set("INSERT INTO ease.accountsInformations values (null, " + new_account_id + ", '" + info_name +"', '" + info_value + "')");
-					}
-					db.set("INSERT INTO ease.classicApps values (null, " + website_app_id + ", " + new_account_id + ", null);");
+					db.set("INSERT INTO ease.websiteApps values (null, " + website_id + ", " + app_id + ", " + custom + ", 'websiteApp');").toString();
 					db.commitTransaction(transaction);
 					sm.setResponse(ServletManager.Code.Success, "Successfully transfert classic apps");
 				}

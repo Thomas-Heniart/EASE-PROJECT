@@ -15,10 +15,10 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class ClassicAppsTransfert
+ * Servlet implementation class LogwithAppTransfert
  */
-@WebServlet("/ClassicAppsTransfert")
-public class ClassicAppsTransfert extends HttpServlet {
+@WebServlet("/LogwithAppTransfert")
+public class LogwithAppTransfert extends HttpServlet {
 	
 	public enum AppData {
 		NOTHING,
@@ -36,7 +36,7 @@ public class ClassicAppsTransfert extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ClassicAppsTransfert() {
+    public LogwithAppTransfert() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -48,7 +48,7 @@ public class ClassicAppsTransfert extends HttpServlet {
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		DataBaseConnection db = sm.getDB();
 		try {
-			ResultSet appsRs = db.get("SELECT * FROM test.apps WHERE website_id IS NOT NULL AND account_id IS NOT NULL AND account_id IN (SELECT account_id FROM test.classicAccounts)");
+			ResultSet appsRs = db.get("SELECT * FROM test.apps WHERE website_id IS NOT NULL AND account_id IS NOT NULL AND account_id IN (SELECT account_id FROM test.logWithAccounts)");
 			try {
 				while (appsRs.next()) {
 					int transaction = db.startTransaction();
@@ -56,53 +56,18 @@ public class ClassicAppsTransfert extends HttpServlet {
 					String app_info_id = db.set("INSERT INTO appsInformations VALUES (null, '" + name + "');").toString();
 					String profile_id = appsRs.getString(AppData.PROFILE_ID.ordinal());
 					String position = appsRs.getString(AppData.POSITION.ordinal());
-					String custom = appsRs.getString(AppData.CUSTOM.ordinal());
-					if (!(custom == null)) {
-						switch(custom) {
-							case "1":
-							break;
-						
-							case "3":
-							custom = "2";
-							break;
-							
-							case "5":
-							custom = "3";
-							break;
-							
-							case "6":
-							custom = "4";
-							break;
-							
-							case "24":
-							custom = "33";
-							break;
-							
-							default:
-							custom = String.valueOf(Integer.parseInt(custom) - 5);
-							break;
-						}
-					} else {
-						custom = "null";
-					}
 					String app_id = appsRs.getString(AppData.APP_ID.ordinal());
-					db.set("INSERT INTO ease.apps values (" + app_id + ", " + profile_id + ", " + position + ", default, 'websiteApp', " + app_info_id + ", " + custom + ");");
+					db.set("INSERT INTO ease.apps values (" + app_id + ", " + profile_id + ", " + position + ", default, 'websiteApp', " + app_info_id + ", null);");
 					String website_id = appsRs.getString(AppData.WEBSITE_ID.ordinal());
-					String website_app_id = db.set("INSERT INTO ease.websiteApps values (null, " + website_id + ", " + app_id + ", " + custom + ", 'classicApp');").toString();
+					String website_app_id = db.set("INSERT INTO ease.websiteApps values (null, " + website_id + ", " + app_id + ", null, 'logwithApp');").toString();
 					String account_id = appsRs.getString(AppData.ACCOUNT_ID.ordinal());
-					ResultSet passwordRs = db.get("SELECT information_value FROM test.ClassicAccountsInformations WHERE account_id = " + account_id + " AND information_name = 'password';");
-					passwordRs.next();
-					String passwd = passwordRs.getString(1);
-					String new_account_id = db.set("INSERT INTO ease.accounts values (null, '" + passwd + "', 0);").toString();
-					ResultSet infoRs = db.get("SELECT information_name, information_value FROM test.ClassicAccountsInformations WHERE account_id = " + account_id + " AND information_name NOT LIKE 'password';");
-					while (infoRs.next()) {
-						String info_name = infoRs.getString(1);
-						String info_value = infoRs.getString(2);
-						db.set("INSERT INTO ease.accountsInformations values (null, " + new_account_id + ", '" + info_name +"', '" + info_value + "')");
-					}
-					db.set("INSERT INTO ease.classicApps values (null, " + website_app_id + ", " + new_account_id + ", null);");
+					ResultSet logWithAppRs = db.get("SELECT logWithApp FROM test.logWithAccounts WHERE account_id = " + account_id + ";");
+					logWithAppRs.next();
+					ResultSet rs = db.get("SELECT id FROM websiteApps WHERE app_id = " + logWithAppRs.getString(1) + ";");
+					rs.next();
+					db.set("INSERT INTO logwithApps VALUES (null, " + website_app_id + ", " + rs.getString(1) + ", null)");
 					db.commitTransaction(transaction);
-					sm.setResponse(ServletManager.Code.Success, "Successfully transfert classic apps");
+					sm.setResponse(ServletManager.Code.Success, "Successfully transfert logwith apps");
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();

@@ -52,6 +52,7 @@ public class FilterScrap extends HttpServlet {
 		HttpSession session = request.getSession();
 		User user = (User) (session.getAttribute("user"));
 		Catalog catalog = (Catalog) (session.getAttribute("catalog"));
+		int firstProfileId = user.getProfilesList().get(0).getSingleId();
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		DataBaseConnection db = sm.getDB();
 		try {
@@ -75,7 +76,7 @@ public class FilterScrap extends HttpServlet {
 						int singleId = Integer.parseInt((String)websiteSingleId);
 						Website website = catalog.getWebsiteWithSingleId(singleId);
 						newApp.put("name",website.getName());
-						newApp.put("profileId",user.getProfileColumns().get(1).get(0).getSingleId());
+						newApp.put("profileId",firstProfileId);
 						facebookAppsToKeep.add(newApp);
 					} else {
 						user.rememberNotIntegratedFacebookApp(app);
@@ -95,7 +96,7 @@ public class FilterScrap extends HttpServlet {
 						int singleId = Integer.parseInt((String)websiteSingleId);
 						Website website = catalog.getWebsiteWithSingleId(singleId);
 						newApp.put("name",website.getName());
-						newApp.put("profileId",user.getProfileColumns().get(1).get(0).getSingleId());
+						newApp.put("profileId",firstProfileId);
 						linkedinAppsToKeep.add(newApp);
 					} else {
 						user.rememberNotIntegratedLinkedinApp(app);
@@ -116,7 +117,7 @@ public class FilterScrap extends HttpServlet {
 							int singleId = Integer.parseInt((String)websiteId);
 							Website website = catalog.getWebsiteWithSingleId(singleId);
 							newApp.put("name",website.getName());
-							newApp.put("profileId",user.getProfileColumns().get(1).get(0).getSingleId());
+							newApp.put("profileId",firstProfileId);
 							newApp.put("login",app.get("login"));
 							newApp.put("password",app.get("pass"));
 							newApp.put("websiteId",websiteId);
