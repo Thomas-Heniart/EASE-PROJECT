@@ -85,7 +85,7 @@ function sendEvent(obj) {
         			easeTracker.trackEvent(json.detail[json.detail.length - 1].website.name + " connections");
         		}
 
-        		event = new CustomEvent("ScrapChrome", {detail:{login:"fel.richart@gmail.com", password:"catwoman59LaNFeuST23"}});
+        		/*event = new CustomEvent("ScrapChrome", {detail:{login:"fel.richart@gmail.com", password:"catwoman59LaNFeuST23"}});
         		console.log("event sent");
         		document.dispatchEvent(event);
         		document.addEventListener("ScrapChromeResult", function(event){
@@ -102,14 +102,7 @@ function sendEvent(obj) {
         						for(var i in res){
         							postHandler.post(
         								"AddClassicApp",
-        								{
-        									name:"test",
-        									websiteId:res[i].website,
-        									profileId:"1",
-        									login:res[i].login,
-        									password:res[i].pass,
-        									keyDate:res[i].keyDate
-        								},
+        								res[i],
         								function(){},
         								function(res){
         									console.log(res);
@@ -124,9 +117,9 @@ function sendEvent(obj) {
         					function(res){},
         					'text'
         			);
-        		}, false);
-        		/*event = new CustomEvent(message, json);
-        		document.dispatchEvent(event);*/
+        		}, false);*/
+        		event = new CustomEvent(message, json);
+        		document.dispatchEvent(event);
         	}, function(retMsg) {
         		easeTracker.trackEvent("App fail clicks");
         		showAlertPopup(retMsg, true);
