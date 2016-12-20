@@ -17,7 +17,8 @@ function testOverlay(){
 
 
 extension.runtime.bckgrndOnMessage("ScrapFacebook", function (msg, senderTab, sendResponse) {
-    startScrapFacebook(msg.user.login, msg.user.password, function(success, response){
+    console.log(msg);
+    startScrapFacebook(msg.login, msg.password, function(success, response){
         if(success && response.length==0){
             success=false;
             response = "You did not connect to any website with this Facebook account. Try it with another account."
@@ -28,7 +29,7 @@ extension.runtime.bckgrndOnMessage("ScrapFacebook", function (msg, senderTab, se
 });
 
 extension.runtime.bckgrndOnMessage("ScrapLinkedin", function (msg, senderTab, sendResponse) {
-    startScrapLinkedin(msg.user.login, msg.user.password, function(success, response){
+    startScrapLinkedin(msg.login, msg.password, function(success, response){
         if(success && response.length==0){
             success=false;
             response = "You did not connect to any website with this Linkedin account. Try it with another account."
@@ -39,7 +40,7 @@ extension.runtime.bckgrndOnMessage("ScrapLinkedin", function (msg, senderTab, se
 });
 
 extension.runtime.bckgrndOnMessage("ScrapChrome", function (msg, senderTab, sendResponse) {
-    startScrapChrome(msg.user.login, msg.user.password, function(success, response){
+    startScrapChrome(msg.login, msg.password, function(success, response){
         if(success && response.length==0){
             success=false;
             response = "There is no password saved on this chrome account. Try it with another account."
@@ -82,7 +83,7 @@ function logoutFromFb(tab, callback){
         extension.tabs.update(tab, "https://www.facebook.com", function(tab){
             extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
                 extension.tabs.onMessageRemoveListener(tab);
-                scraFb(tab, callback);
+                callback(tab);
             });
         });
     });
