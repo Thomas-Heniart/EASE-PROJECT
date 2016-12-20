@@ -5,11 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
 
 import com.Ease.Context.Group.Infrastructure;
 import com.Ease.Dashboard.User.User;
@@ -32,7 +28,6 @@ public class Account {
 	 */
 	
 	public static Account loadAccount(String db_id, DataBaseConnection db) throws GeneralException {
-		System.out.println("Account db_id : " + db_id);
 		ResultSet rs = db.get("SELECT * FROM accounts WHERE id = " + db_id + ";");
 		try {
 			if (rs.next()) {
