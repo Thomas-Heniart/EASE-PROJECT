@@ -36,7 +36,7 @@ public class GroupLinkApp extends GroupApp {
 		ResultSet rs = db.get("SELECT link_app_info_id FROM groupLinkApps WHERE group_app_id = " + db_id + ";");
 		try {
 			rs.next();
-			String db_id2 = rs.getString(Data.ID.toString());
+			String db_id2 = rs.getString(1);
 			LinkAppInformation linkAppInformations = LinkAppInformation.loadLinkAppInformation(db_id2, db);
 			GroupLinkApp groupLinkApp = new GroupLinkApp(db_id, groupProfile, group, permissions, informations, linkAppInformations, common, single_id, db_id2);
 			GroupManager.getGroupManager(context).add(groupLinkApp);
