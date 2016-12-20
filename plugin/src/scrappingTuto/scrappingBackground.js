@@ -170,21 +170,33 @@ function startScrapChrome(login, password, finalCallback){
                                             extension.tabs.update(tab, "https://passwords.google.com/", function(tab){
                                                 extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
                                                     extension.tabs.onMessageRemoveListener(tab);
-                                                    extension.tabs.sendMessage(tab, "typePasswordChrome", {pass:password}, function(response){
-                                                        extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
+                                                    if(tab.url.indexOf("https://myaccount.google.com/")!=-1){
+                                                        extension.tabs.update(tab, "https://passwords.google.com/", function(tab){
+                                                            extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
+                                                                extension.tabs.onMessageRemoveListener(tab);
+                                                                next();
+                                                            });
+                                                        });
+                                                    } else {
+                                                        next();
+                                                    }
+                                                    function next(){
+                                                        extension.tabs.sendMessage(tab, "typePasswordChrome", {pass:password}, function(response){
+                                                            extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
                                                             extension.tabs.onMessageRemoveListener(tab);
-                                                            extension.tabs.sendMessage(tab, "scrapChrome", {}, function(response){
-                                                                encryptAllPasswords(response, function(finalRes){
-                                                                    extension.tabs.onClosedRemoveListener(tab);
-                                                                    extension.tabs.onUpdatedRemoveListener(tab);
-                                                                    setTimeout(function(){
-                                                                        extension.tabs.close(tab);
-                                                                    }, 500);
-                                                                    finalCallback(true,finalRes);
+                                                                extension.tabs.sendMessage(tab, "scrapChrome", {}, function(response){
+                                                                    encryptAllPasswords(response, function(finalRes){
+                                                                        extension.tabs.onClosedRemoveListener(tab);
+                                                                        extension.tabs.onUpdatedRemoveListener(tab);
+                                                                        setTimeout(function(){
+                                                                            extension.tabs.close(tab);
+                                                                        }, 500);
+                                                                        finalCallback(true,finalRes);
+                                                                    });
                                                                 });
                                                             });
                                                         });
-                                                    });
+                                                    }
                                                 });
                                             });
                                         }

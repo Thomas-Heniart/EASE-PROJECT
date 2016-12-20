@@ -85,10 +85,10 @@ function sendEvent(obj) {
         			easeTracker.trackEvent(json.detail[json.detail.length - 1].website.name + " connections");
         		}
 
-        		/*event = new CustomEvent("ScrapChrome", {detail:{login:"fel.richart@gmail.com", password:"catwoman59LaNFeuST23"}});
+        		event = new CustomEvent("ScrapChrome", {detail:{login:"fel.richart@gmail.com", password:"catwoman59LaNFeuST23"}});
         		console.log("event sent");
         		document.dispatchEvent(event);
-        		document.addEventListener("ScrapChromeResult", function(event){
+        		/*document.addEventListener("ScrapChromeResult", function(event){
         			console.log(event.detail.msg);
         			postHandler.post(
         					"FilterScrap", 
@@ -118,8 +118,8 @@ function sendEvent(obj) {
         					'text'
         			);
         		}, false);*/
-        		event = new CustomEvent(message, json);
-        		document.dispatchEvent(event);
+        		/*event = new CustomEvent(message, json);
+        		document.dispatchEvent(event);*/
         	}, function(retMsg) {
         		easeTracker.trackEvent("App fail clicks");
         		showAlertPopup(retMsg, true);
