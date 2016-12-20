@@ -8,7 +8,7 @@ if (window.top === window) {
             extension.runtime.sendMessage('scrapReloaded',{}, function(){});
             
             var textWebsite;
-            var logoWebsite;
+            var logoWebsite="scrappingTuto/";
             var titleWebsite;
             var titleWebsite2
             var websiteColor;
@@ -17,19 +17,19 @@ if (window.top === window) {
                 titleWebsite = "Importing accounts";
                 titleWebsite2 = "you connected with";
                 textWebsite = "Sign in with Linkedin";
-                logoWebsite = "linkedin.png";
+                logoWebsite += "linkedin.png";
                 websiteColor = "3b5998";
             } else if (msg == "Facebook"){
                 titleWebsite = "Importing accounts";
                 titleWebsite2 = "you connected with";
                 textWebsite = "Sign in with Facebook";
-                logoWebsite = "facebook.png";
+                logoWebsite += "facebook.png";
                 websiteColor = "3b5998";
             } else if (msg == "Chrome"){
                 titleWebsite = "Importing accounts saved in";
                 titleWebsite2 = false;
                 textWebsite = "Google Chrome";
-                logoWebsite = "chrome.png";
+                logoWebsite += "chrome.png";
                 websiteColor = false;
             }
             
@@ -39,7 +39,7 @@ if (window.top === window) {
             overlay.appendChild(container);
             
             var logoEase = document.createElement('img');
-            logoEase.src = chrome.extension.getURL('logo.png');
+            logoEase.src = chrome.extension.getURL('scrappingTuto/logo.png');
             logoEase.className = "logoEase";
             container.appendChild(logoEase);
             

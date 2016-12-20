@@ -8,7 +8,6 @@ function encryptPassword(password, callback){
 
 function encryptAllPassword(accounts, callback){
     var l = accounts.length;
-    var return = accounts;
     function encrypt(i, callback){
         encryptPassword(accounts[i].password, function(res){
             accounts[i].password = res.password;
