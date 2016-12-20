@@ -1,6 +1,8 @@
 package com.Ease.Servlet;
 
 import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -33,8 +35,8 @@ public class AddUserEmail extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+		rd.forward(request, response);
 	}
 
 	/**
@@ -50,12 +52,15 @@ public class AddUserEmail extends HttpServlet {
 		try {
 			sm.needToBeConnected();
 			if (email == null || !Regex.isEmail(email)) {
+				System.out.println(email);
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email.");
 			}
 			if (user.getEmails().get(email) != null)
 				throw new GeneralException(ServletManager.Code.ClientError, "You already have this email.");
-			user.getEmails().put(email, UserEmail.createUserEmail(email, user, false, sm));
-			sm.setResponse(ServletManager.Code.Success, "Password changed.");
+			UserEmail newEmail =  UserEmail.createUserEmail(email, user, false, sm);
+			user.getEmails().put(email, newEmail);
+			newEmail.askForVerification(user, sm);
+			sm.setResponse(ServletManager.Code.Success, "Email added");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		}

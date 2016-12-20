@@ -32,8 +32,8 @@
 		<div class="shadowHelper"></div>
 		<i class="fa fa-angle-left" aria-hidden="true"></i>
 		<span class="tags">
-			<c:forEach items='${siteManager.getTagsList()}' var="item">
-				<a href="#" tagId="${item.getSingledId()}" class="tag btn btn-default ease-button hvr-grow" name="${item.getName()}"
+			<c:forEach items='${catalog.getTags()}' var="item">
+				<a href="#" tagId="${item.getSingleId()}" class="tag btn btn-default ease-button hvr-grow" name="${item.getName()}"
 					style="background-color: ${item.getColor()};">
 					${item.getName()}</a>
 			</c:forEach>
@@ -51,7 +51,7 @@
 					<div class="search-result"></div>
 					<h4 class="relatedApps"><span>Related apps</span></h4>
 					<div class="relatedApps"></div>
-					<c:forEach items="${catalog.getWebsites()}" var="item" varStatus="loop">
+					<c:forEach items="${catalog.getPublicWebsites()}" var="item" varStatus="loop">
 						<c:if test="${!item.work()}">
 							<catalog:catalogApp site="${item}" newApp="${item.isNew()}"/>
 						</c:if>

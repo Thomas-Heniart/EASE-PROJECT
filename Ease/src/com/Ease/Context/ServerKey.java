@@ -25,7 +25,7 @@ public class ServerKey {
 	protected String	keyServer;
 	
 	public ServerKey(DataBaseConnection db) throws GeneralException, SQLException {
-		String password;
+		/*String password;
 		String login;
 		this.keyServer = null;
 		Scanner scan = new Scanner(System.in);
@@ -52,7 +52,7 @@ public class ServerKey {
 		}
 		scan.close();
 		
-		/*String saltEase = AES.generateSalt();
+		String saltEase = AES.generateSalt();
 		String saltPerso = AES.generateSalt();
 		String keyUser = AES.keyGenerator();
 		String crypted_keyUser = AES.encryptUserKey(keyUser, "lala", saltPerso);

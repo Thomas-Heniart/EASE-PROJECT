@@ -160,6 +160,14 @@ public class App {
 		return position;
 	}
 	
+	public String getInsertDate(){
+		return insertDate;
+	}
+	
+	public AppInformation getAppInformation(){
+		return informations;
+	}
+	
 	public String getType() {
 		String name;
 		name = this.getClass().getName().substring(this.getClass().getName().lastIndexOf(".")+1);

@@ -56,7 +56,7 @@ extension.runtime.onMessage("scrapChrome", function(msg, sendResponse){
                         waitingTime = 50;
                         setTimeout(waitPass, waitingTime);
                     } else {
-                        results.push({app:$(element).find(".Zaa").text(),login:$(element).find(".CW").text(), pass:$(field).val()});
+                        results.push({website:$(element).find(".Zaa").text(),login:$(element).find(".CW").text(), pass:$(field).val()});
                         if(index+1 < nbOfPass)
                             getPass(index+1);
                         else{

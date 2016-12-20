@@ -6,7 +6,7 @@
 		placeholder="Login" value="" /><i
 		class="fa fa-caret-down email-suggestions" aria-hidden="true"></i>
 	<div class="suggested-emails">
-		<c:forEach items='${user.getEmails()}' var="item">
+		<c:forEach items='${user.getEmailsString()}' var="item">
 		<p class="email-suggestion" email="${item}">
 			<span>${item}</span>
 		</p>

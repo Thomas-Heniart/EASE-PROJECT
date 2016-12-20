@@ -15,7 +15,10 @@ import com.Ease.Dashboard.App.AppPermissions;
 import com.Ease.Dashboard.App.GroupApp;
 import com.Ease.Dashboard.App.WebsiteApp.GroupWebsiteApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.Account;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.Profile.Profile;
+import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
@@ -45,7 +48,7 @@ public class LogwithApp extends WebsiteApp {
 				IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
 				return new LogwithApp(db_id, profile, position, infos, groupApp, insertDate, idGenerator.getNextId(), site, websiteAppDBid, groupWebsiteApp, logwith, logwithDBid);
 			} 
-			throw new GeneralException(ServletManager.Code.InternError, "Classic app not complete in db.");
+			throw new GeneralException(ServletManager.Code.InternError, "Logwith app not complete in db.");
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
@@ -61,6 +64,19 @@ public class LogwithApp extends WebsiteApp {
 		LogwithApp app = new LogwithApp((String)elevator.get("appDBid"), profile, position, (AppInformation)elevator.get("appInfos"), null, (String)elevator.get("registrationDate"), ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, null, logwith.getDBid(), logwithDBid);
 		app.rempLogwith(logwith);
 		return app;
+	}
+	
+	public static LogwithApp createFromWebsiteApp(WebsiteApp websiteApp, String name, WebsiteApp logwith, ServletManager sm, User user) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		String websiteAppDBid = websiteApp.getWebsiteAppDBid();
+		db.set("UPDATE websiteApps SET type='logwithApp' WHERE id='"+ websiteAppDBid +"';");
+		String logwithDBid = db.set("INSERT INTO logWithApps VALUES(NULL, " + websiteAppDBid + ", " + logwith.getWebsiteAppDBid() + ", NULL);").toString();
+		db.commitTransaction(transaction);
+		LogwithApp newLogwithApp = new LogwithApp(websiteApp.getDBid(), user.getProfileFromApp(websiteApp.getSingleId()), websiteApp.getPosition(), websiteApp.getAppInformation(),null, websiteApp.getInsertDate(), websiteApp.getSingleId(), websiteApp.getSite(), websiteAppDBid, null, logwith.getDBid(), logwithDBid);
+		newLogwithApp.rempLogwith(logwith);
+		user.replaceApp(newLogwithApp);
+		return newLogwithApp;
 	}
 	
 	/*

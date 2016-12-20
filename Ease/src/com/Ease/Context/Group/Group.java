@@ -53,7 +53,7 @@ public class Group {
 			IdGenerator idGenerator = (IdGenerator)context.getAttribute("idGenerator");
 			Catalog catalog = (Catalog) context.getAttribute("catalog");
 			List<Group> groups = new LinkedList<Group>();
-			ResultSet rs = db.get("SELECT * FROM groups WHERE parent " + ((parent == null) ? " IS NULL" : ("="+parent.getDBid())) + " AND infra_id=" + infra.getDBid() + ";");
+			ResultSet rs = db.get("SELECT * FROM groups WHERE parent " + ((parent == null) ? " IS NULL" : ("="+parent.getDBid())) + " AND infrastructure_id=" + infra.getDBid() + ";");
 			String db_id;
 			String name;
 			int single_id;

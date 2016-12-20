@@ -373,6 +373,22 @@ public class User {
 		throw new GeneralException(ServletManager.Code.ClientError, "This app's single_id dosen't exist.");
 	}
 	
+	public Profile getProfileFromApp(int single_id) throws GeneralException {
+		for (List<Profile> column: this.profile_columns) {
+			for (Profile profile: column) {
+				for (App app: profile.getApps()) {
+					if (app.getSingleId() == single_id)
+						return profile;
+				}
+			}
+		}
+		throw new GeneralException(ServletManager.Code.ClientError, "This app's single_id dosen't exist.");
+	}
+	
+	public void replaceApp(App app) throws GeneralException{
+		app.getProfile().getApps().set(app.getPosition(), app);		
+	}
+	
 	public App getAppWithDBid(String DBid) throws GeneralException {
 		for (List<Profile> column: this.profile_columns) {
 			for (Profile profile: column) {
@@ -509,8 +525,21 @@ public class User {
 		}
 	}
 	
+	public void removeEmailIfNeeded(String email, ServletManager sm) throws GeneralException {
+		if (this.emails.get(email).removeIfNotUsed(sm))
+			this.emails.remove(email);
+	}
+	
 	public Map<String, UserEmail> getEmails() {
 		return this.emails;
+	}
+	
+	public List<String> getEmailsString(){
+		List<String> emails = new LinkedList<String> ();
+		for (Map.Entry<String, UserEmail> entry : this.emails.entrySet()) {
+			emails.add(entry.getValue().getEmail());
+		}
+		return emails;
 	}
 	
 	public List<String> getVerifiedEmails() {
@@ -659,5 +688,17 @@ public class User {
 			return;
 		userEmail = UserEmail.createUserEmail(email, this, false, sm);
 		this.emails.put(email, userEmail);
+	}
+	
+	public void rememberNotIntegratedApp(Object o){
+		
+	}
+	
+	public void rememberNotIntegratedFacebookApp(Object o){
+		
+	}
+
+	public void rememberNotIntegratedLinkedinApp(Object o){
+	
 	}
 }
