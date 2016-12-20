@@ -8,7 +8,7 @@
 			<p>Accounts importation</p>
 		</div>
 		<div class="bodysHandler">
-			<div class="popupBody" id="selectScraping">
+			<div class="popupBody show" id="selectScraping">
 				<div class="handler">
 					<div class="row text-center">
 						<p class="sub-title">Build your ease plateform<br> in 1 minute.</p>
@@ -88,7 +88,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="popupBody show" id="scrapingInfo">
+			<div class="popupBody" id="scrapingInfo">
 				<div class="handler">
 					<div class="row text-center">
 						<p class="sub-title"><span>Google Chrome</span> is being imported</p>
@@ -117,3 +117,5 @@
 		</div>
 	</div>
 </div>
+
+<script type="text/javascript" src="js/Tutorial.js" > </script>

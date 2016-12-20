@@ -55,6 +55,8 @@ public class FilterScrap extends HttpServlet {
 		try {
 			sm.needToBeConnected();
 			String scrappedAppsString = sm.getServletParam("scrapjson", false);
+			if (scrappedAppsString == null)
+				throw new GeneralException(ServletManager.Code.ClientError, "Scrap Json empty");
 			JSONParser parser = new JSONParser();
 			Object temp = parser.parse(scrappedAppsString);
 			JSONObject scrappedAppsJson = (JSONObject) temp;
