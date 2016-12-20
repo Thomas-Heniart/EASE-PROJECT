@@ -1,3 +1,5 @@
+@import 'variables';
+
 .onoffswitch {
     position: relative; width: 4vw;
     -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
@@ -33,6 +35,22 @@
 }
 
 #tutorial {
+    .easePopup {
+        transition: opacity .3s, visibility .3s;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        z-index: -1;
+        position: absolute;
+        &.show {
+            transition: opacity .3s, visibility .3s;
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            z-index: 1;
+            position: relative;
+        }
+    }
     #importation {
         .popupBody {
             .handler {
@@ -83,6 +101,16 @@
             }
         }
         #accountCredentials {
+            .errorText {
+                display: none;
+                &.show {
+                    display: block;
+                }
+                p {
+                    color: $themeRedColor;
+                    font-size: 1.5vw;
+                }
+            }
             .imageHandler {
                 width: 5vw;
                 display: inline-block;
@@ -95,6 +123,33 @@
             .info-text {
                 font-size: 1.5vw;
                 font-weight: 200;
+            }
+        }
+    }
+    #saving {
+        .popupBody {
+            .handler {
+                .row {
+                    .scrapedAppsContainer {
+                        height: 15vw;
+                        .appHandler{
+                            width: 25%;
+                            float: left;
+                            text-align: center;
+                            padding: 1vw;
+                            .app {
+                                overflow: hidden;
+                                .logo {
+                                    width: 70%;
+                                    margin:auto;
+                                    img {
+                                        width: 100%;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }

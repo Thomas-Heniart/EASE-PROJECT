@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="css/Tutorial.css" />
 
 <div class="popupHandler myshow" id="tutorial">
-	<div class="easePopup" id="importation">
+	<div class="easePopup show" id="importation">
 		<div class="title">
 			<p>Accounts importation</p>
 		</div>
@@ -56,7 +56,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="popupBody" id="accountCredentials">
+			<div class="popupBody show" id="accountCredentials">
 				<div class="handler">
 					<div class="row text-center">
 						<p class="sub-title">Your <span>Google Chrome</span> account is needed</p>
@@ -67,6 +67,9 @@
 								<img src="resources/images/Chrome.png"/>
 							</div>
 						</div>
+					</div>
+					<div class="row text-center errorText">
+						<p>The email or password is incorrect. Please try again.</p>
 					</div>
 					<div class="row text-center">
 						<p class="post-title">Type the info you use for this account</p>
@@ -111,6 +114,78 @@
 					</div>
 					<div class="row text-center">
 						<img class="loading" src="resources/other/facebook-loading.svg">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="easePopup" id="saving">
+		<div class="title">
+			<p>What do you want to keep ?</p>
+		</div>
+		<div class="bodysHandler">
+			<div class="popupBody show" id="selectScraping">
+				<div class="handler">
+					<div class="row">
+						<div class="scrapedAppsContainer">
+							<div class="appHandler">
+								<div class="app">
+									<div class="logo">
+										<img src="resources/images/Chrome.png"/>
+									</div>
+									<p class="name">Google Chrome</p>
+									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
+								</div>
+							</div>
+							<div class="appHandler">
+								<div class="app">
+									<div class="logo">
+										<img src="resources/images/Chrome.png"/>
+									</div>
+									<p class="name">Google Chrome</p>
+									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
+								</div>
+							</div>
+							<div class="appHandler">
+								<div class="app">
+									<div class="logo">
+										<img src="resources/images/Chrome.png"/>
+									</div>
+									<p class="name">Google Chrome</p>
+									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
+								</div>
+							</div>
+							<div class="appHandler">
+								<div class="app">
+									<div class="logo">
+										<img src="resources/images/Chrome.png"/>
+									</div>
+									<p class="name">Google Chrome</p>
+									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
+								</div>
+							</div>
+							<div class="appHandler">
+								<div class="app">
+									<div class="logo">
+										<img src="resources/images/Chrome.png"/>
+									</div>
+									<p class="name">Google Chrome</p>
+									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
+								</div>
+							</div>
+							<div class="appHandler">
+								<div class="app">
+									<div class="logo">
+										<img src="resources/images/Chrome.png"/>
+									</div>
+									<p class="name">Google Chrome</p>
+									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row text-center">
+						<button class="btn" type="submit">I am done!</button>
 					</div>
 				</div>
 			</div>
