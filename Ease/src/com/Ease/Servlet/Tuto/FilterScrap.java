@@ -15,6 +15,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
@@ -50,6 +51,7 @@ public class FilterScrap extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		User user = (User) (session.getAttribute("user"));
+		Catalog catalog = (Catalog) (session.getAttribute("catalog"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		DataBaseConnection db = sm.getDB();
 		try {
@@ -61,46 +63,67 @@ public class FilterScrap extends HttpServlet {
 			
 			JSONArray facebookApps = (JSONArray)scrappedAppsJson.get("Facebook");
 			JSONArray facebookAppsToKeep = new JSONArray();
-			for(Object appNoType : facebookApps){
-				String app = (String) appNoType;
-				String websiteSingleId;
-				if((websiteSingleId = Website.existsInDbFacebook(app, sm))!=null){
-					facebookAppsToKeep.add(websiteSingleId);
-				} else {
-					user.rememberNotIntegratedFacebookApp(app);
+			if(facebookApps != null){
+				for(Object appNoType : facebookApps){
+					String app = (String) appNoType;
+					String websiteSingleId;
+					if((websiteSingleId = Website.existsInDbFacebook(app, sm))!=null){
+						JSONObject newApp = new JSONObject();
+						newApp.put("websiteId", websiteSingleId);
+						int singleId = Integer.parseInt((String)websiteSingleId);
+						Website website = catalog.getWebsiteWithSingleId(singleId);
+						newApp.put("name",website.getName());
+						newApp.put("profileId",user.getProfileColumns().get(1).get(0).getSingleId());
+						facebookAppsToKeep.add(newApp);
+					} else {
+						user.rememberNotIntegratedFacebookApp(app);
+					}
 				}
 			}
 			
 			JSONArray linkedinApps = (JSONArray)scrappedAppsJson.get("Linkedin");
 			JSONArray linkedinAppsToKeep = new JSONArray();
-			for(Object appNoType : linkedinApps){
-				String app = (String) appNoType;
-				String websiteSingleId;
-				if((websiteSingleId = Website.existsInDbLinkedin(app, sm))!=null){
-					linkedinAppsToKeep.add(websiteSingleId);
-				} else {
-					user.rememberNotIntegratedLinkedinApp(app);
+			if(linkedinApps != null){
+				for(Object appNoType : linkedinApps){
+					String app = (String) appNoType;
+					String websiteSingleId;
+					if((websiteSingleId = Website.existsInDbLinkedin(app, sm))!=null){
+						JSONObject newApp = new JSONObject();
+						newApp.put("websiteId", websiteSingleId);
+						int singleId = Integer.parseInt((String)websiteSingleId);
+						Website website = catalog.getWebsiteWithSingleId(singleId);
+						newApp.put("name",website.getName());
+						newApp.put("profileId",user.getProfileColumns().get(1).get(0).getSingleId());
+						linkedinAppsToKeep.add(newApp);
+					} else {
+						user.rememberNotIntegratedLinkedinApp(app);
+					}
 				}
 			}
-			
-			
+
 			JSONArray chromeApps = (JSONArray)scrappedAppsJson.get("Chrome");
 			JSONArray chromeAppsToKeep = new JSONArray();
-			for(Object appNoType : chromeApps){
-				JSONObject app = (JSONObject) appNoType;
-				String appName = (String) app.get("website");
-				JSONArray websiteSingleIds;
-				if((websiteSingleIds = Website.existsInDb(appName, sm)).size() > 0){
-					for(Object websiteId : websiteSingleIds){
-						JSONObject newApp = new JSONObject();
-						newApp.put("login",app.get("login"));
-						newApp.put("pass",app.get("pass"));
-						newApp.put("website",websiteId);
-						newApp.put("keyDate",app.get("keyDate"));
-						chromeAppsToKeep.add(newApp);
+			if(chromeApps != null){
+				for(Object appNoType : chromeApps){
+					JSONObject app = (JSONObject) appNoType;
+					String appName = (String) app.get("website");
+					JSONArray websiteSingleIds;
+					if((websiteSingleIds = Website.existsInDb(appName, sm)).size() > 0){
+						for(Object websiteId : websiteSingleIds){
+							JSONObject newApp = new JSONObject();
+							int singleId = Integer.parseInt((String)websiteId);
+							Website website = catalog.getWebsiteWithSingleId(singleId);
+							newApp.put("name",website.getName());
+							newApp.put("profileId",user.getProfileColumns().get(1).get(0).getSingleId());
+							newApp.put("login",app.get("login"));
+							newApp.put("password",app.get("pass"));
+							newApp.put("websiteId",websiteId);
+							newApp.put("keyDate",app.get("keyDate"));
+							chromeAppsToKeep.add(newApp);
+						}
+					} else {
+						user.rememberNotIntegratedApp(app);
 					}
-				} else {
-					user.rememberNotIntegratedApp(app);
 				}
 			}
 			

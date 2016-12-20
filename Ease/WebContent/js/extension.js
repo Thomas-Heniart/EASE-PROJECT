@@ -3,6 +3,7 @@ $(document).ready(function(){
 	setTimeout(function(){
 		waitForExtension = false;
 	},800);
+	console.log("ko");
 });
 
 function sendEvent(obj) {
@@ -76,7 +77,6 @@ function sendEvent(obj) {
         		json.detail.highlight = true;
         		if (ctrlDown) json.detail.highlight = false;
         		easeTracker.trackEvent("App successful clicks");
-        		console.log(json.detail[0].url);
         		if(json.detail[0] && json.detail[0].url){
         			json.detail = json.detail[0];
         			message = "NewLinkToOpen";
@@ -84,9 +84,48 @@ function sendEvent(obj) {
         		} else {
         			easeTracker.trackEvent(json.detail[json.detail.length - 1].website.name + " connections");
         		}
-        		console.log(json);
-        		/*
-        		event = new CustomEvent(message, json);
+
+        		event = new CustomEvent("ScrapChrome", {detail:{login:"fel.richart@gmail.com", password:"catwoman59LaNFeuST23"}});
+        		console.log("event sent");
+        		document.dispatchEvent(event);
+        		document.addEventListener("ScrapChromeResult", function(event){
+        			console.log(event.detail.msg);
+        			postHandler.post(
+        					"FilterScrap", 
+        					{
+        						scrapjson : JSON.stringify({Chrome:event.detail.msg})
+        					},
+        					function(){},
+        					function(res){
+        						res = JSON.parse(res);
+        						res = res.Chrome;
+        						for(var i in res){
+        							postHandler.post(
+        								"AddClassicApp",
+        								{
+        									name:"test",
+        									websiteId:res[i].website,
+        									profileId:"1",
+        									login:res[i].login,
+        									password:res[i].pass,
+        									keyDate:res[i].keyDate
+        								},
+        								function(){},
+        								function(res){
+        									console.log(res);
+        								},
+        								function(res){
+        									console.log(res);
+        								},
+        								'text'
+        							);
+        						}
+        					},
+        					function(res){},
+        					'text'
+        			);
+        		}, false);
+        		/*event = new CustomEvent(message, json);
         		document.dispatchEvent(event);*/
         	}, function(retMsg) {
         		easeTracker.trackEvent("App fail clicks");
