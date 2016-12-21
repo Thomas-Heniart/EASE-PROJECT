@@ -137,8 +137,8 @@ var extension = {
         focus:function(tab, callback){
             chrome.tabs.highlight({"windowId":tab.windowId,"tabs":tab.index}, callback);
         },
-		close:function(tab, callback){
-   			chrome.tabs.remove(tab.id, callback);
+		close:function(tab){
+   			chrome.tabs.remove(tab.id, function(){});
 		},
 		onUpdated:function(tab, fct){
 			listenersUpdates[tab.id] = function (tabId, params, newTab){

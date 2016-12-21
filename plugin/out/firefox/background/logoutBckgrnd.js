@@ -46,13 +46,13 @@ function logOutFrom(website, easeTab){
                                                     extension.tabs.onUpdatedRemoveListener(tab);
                                                     extension.tabs.onMessageRemoveListener(tab);
                                                     extension.tabs.sendMessage(easeTab, "logoutDone", {"siteId":website.siteId, "siteSrc":website.siteSrc, "status":"success" }, function (){});
-                                                    setTimeout(function(){extension.tabs.close(tab, function() {});},1000);
+                                                    setTimeout(function(){extension.tabs.close(tab);},1000);
                                                 }
                                             } else {
                                                 console.log("-- Log out fail --");
                                                 extension.tabs.onMessageRemoveListener(tab);
                                                 extension.tabs.onUpdatedRemoveListener(tab);
-                                                extension.tabs.close(tab, function() {});
+                                                extension.tabs.close(tab);
                                                 extension.tabs.sendMessage(easeTab, "logoutDone", {"siteId":website.siteId, "siteSrc":website.siteSrc, "status":"fail" }, function (){});
                                             }
                                         }
