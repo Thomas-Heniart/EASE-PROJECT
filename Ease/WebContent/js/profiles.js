@@ -19,7 +19,7 @@ var easeRoot = function(rootEl){
 		self.onResize();
 	});
 	this.mainContent.find('.col-left').scroll(function(){
-		$(this).scrollTop() == 0 && $("body").hasClass("picBckgrnd") && easeHeader.rootEl.removeClass('scrolling') || easeHeader.rootEl.addClass('scrolling');
+		$(this).scrollTop() == 0 && easeHeader.rootEl.removeClass('scrolling') || easeHeader.rootEl.addClass('scrolling');
 	});
 };
 
@@ -357,8 +357,6 @@ function setupSortableContainer(container) {
 				'pointer-events' : '',
 				'opacity' : ''
 			});
-			console.log($(evt.to));
-			console.log($(evt.from));
 			if (appDragCurrentIdHelper != item.parent().attr('id') || evt.oldIndex != evt.newIndex) {
 				postHandler.post("MoveApp", {
 					appId : item.attr('id'),
