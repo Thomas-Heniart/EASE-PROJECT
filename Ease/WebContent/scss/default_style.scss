@@ -24,6 +24,8 @@
 @import 'hiddenProfile';
 @import 'page500';
 @import 'buttons';
+@import 'Extension';
+@import 'UIElements/Tips';
 
 .shake-ease {
   @include do-shake('shake-ease', 2px, 1px, 3, 1700ms, .05, $opacity: false);
@@ -54,6 +56,7 @@
 }
 
 body {
+  font-family: $defaultFont;
   overflow-x: hidden;
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none;   /* Chrome/Safari/Opera */

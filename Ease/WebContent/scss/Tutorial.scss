@@ -35,26 +35,6 @@
 }
 
 #tutorial {
-    .easePopup {
-        transition: opacity .3s, visibility .3s;
-        opacity: 0;
-        visibility: hidden;
-        pointer-events: none;
-        z-index: -1;
-        position: absolute;
-        height: 0;
-        overflow: hidden;
-        &.show {
-            transition: opacity .3s, visibility .3s;
-            opacity: 1;
-            visibility: visible;
-            pointer-events: auto;
-            z-index: 1;
-            position: relative;
-            height: auto;
-            overflow: auto;
-        }
-    }
     #importation {
         .popupBody {
             .handler {
@@ -146,6 +126,7 @@
                                 overflow: hidden;
                                 position: relative;
                                 .logo {
+                                    cursor: pointer;
                                     width: 70%;
                                     margin:auto;
                                     position: relative;

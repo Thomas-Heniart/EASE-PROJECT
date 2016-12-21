@@ -1,0 +1,54 @@
+#extension {
+	#step1 {
+		width: 30vw;
+		#chrome, #safari {
+			p {
+				font-size: 1.5vw;
+			}
+		}
+		#safari {
+			.handler {
+				.row {
+					p {
+						display: inline-block;
+						vertical-align: top;
+					}
+				}
+			}
+			.installSafariHelper {
+				position: fixed;
+				width: 30vw;
+				padding: 1vw;
+				background-color: #efefef;
+				top: 0.5vw;
+				right: 0.5vw;
+				border-radius: 5px;
+				.row {
+					margin-right: 0px;
+					margin-left: 0px;
+					p {
+						font-size: 1.2vw;
+					}
+				}
+			}
+		}
+		#download {
+			#showExtensionInfo {
+				cursor: pointer;
+			}
+		}
+	}
+	#extensionInfo {
+		width: 30vw;
+		.popupBody {
+			.row {
+				p {
+					font-size: 1.4vw;
+					span {
+						font-weight: 600;
+					}
+				}
+			}
+		}
+	}
+}

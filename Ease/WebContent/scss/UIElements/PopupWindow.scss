@@ -796,7 +796,7 @@
 			pointer-events: none;
 			z-index: -1;
 			position: absolute;
-			height: 0;
+//			height: 0;
 			overflow: hidden;
 			&.show {
 				transition: opacity .3s, visibility .3s;
@@ -805,7 +805,7 @@
 				pointer-events: auto;
 				z-index: 1;
 				position: relative;
-				height: auto;
+//				height: auto;
 				overflow: auto;
 			}
 		}
@@ -815,7 +815,6 @@
 		position: relative;
 		margin: auto;
 		transition: transform .3s, opacity .3s, background-color .3s;
-		transform: translateY(-40px);
 		opacity: 0;
 	}
 }
@@ -825,11 +824,6 @@
 	background-color: rgba(0,0,0, 0.5);
 	visibility: visible;
 	pointer-events: auto;
-	.easePopup {
-		transition: transform .3s, opacity .3s, background-color .3s;
-		transform: translateY(0);
-		opacity: 1;
-	}
 }
 
 .easePopup {
