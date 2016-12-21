@@ -137,8 +137,11 @@
 
 						</div>
 					</div>
-					<div class="row text-center">
+					<div id="scrapping_done_submit" class="row text-center">
 						<button class="btn" type="submit">I am done!</button>
+					</div>
+					<div id="add_app_progress hide">
+  						<div id="progress_bar"></div>
 					</div>
 				</div>
 			</div>

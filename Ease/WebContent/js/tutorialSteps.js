@@ -2,6 +2,7 @@ var scrapping = [];
 var appToAdd = [];
 var jsonscrap = {};
 var scrappingFinished = [];
+var loadingStep = 0;
 
 function displayTutoApps(apps, by) {
 	apps.forEach(function (element) {
@@ -40,8 +41,11 @@ function showSavingPopup(filterJson) {
 }
 
 function addTutoApps(logwithId, i) {
-	if (i >= appToAdd.length)
-		return ;
+	if (i >= appToAdd.length) {
+		location.href("index.jsp");
+		return;
+	}
+	goToNextLoadingStep();
 	if ((!appToAdd[i].keyDate && appToAdd[i].password) || $("div#saving div.scrapedAppsContainer div[index='" + i + "']").hasClass("selected")) {
 		if (appToAdd[i].keyDate) {
 			postHandler.post('AddClassicApp', {
@@ -96,7 +100,25 @@ function addTutoApps(logwithId, i) {
 	}
 }
 
+function calculStep(appsNumber) {
+	return Math.round(100/appsNumber);
+}
+
+function goToNextLoadingStep() {
+	var progressBar = $("#add_app_progress #progress_bar");
+    var width = progressBar.width();
+    var parentWidth = progressBar.offsetParent().width();
+    var percent = 100*width/parentWidth;
+    var nextPercent = percent + loadingStep;
+    if (nextPercent > 100)
+    	nextPercent = 100;
+    progressBar.width(nextPercent + "%");
+}
+
 $('div#saving div#selectScraping button').click(function () {
+	loadingStep = calculStep(appToAdd.length);
+	$("#scrapping_done_submit").addClass("hide");
+	$("#add_app_progress").removeClass("hide");
 	addTutoApps(0, 0);
 });
 
@@ -147,7 +169,6 @@ function ScrapingInfoFinished() {
 			//always
 		}, function(retMsg) {
 			//succes
-			filterJson = retMsg;
 			showSavingPopup(JSON.parse(retMsg));
 			
 		}, function(retMsg) {
