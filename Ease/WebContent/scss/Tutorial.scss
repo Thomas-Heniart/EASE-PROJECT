@@ -176,14 +176,22 @@
                 }
                 #add_app_progress {
                   position: relative;
-                  width: 100%;
-                  height: 30px;
+                  width: 80%;
+                  margin: auto;
+                  height: 1.5vw;
+                  border-radius: 1.5vw;
                   background-color: grey;
                   #progress_bar {
                     position: absolute;
                     width: 0%;
+                    border-radius: 1.5vw;
                     height: 100%;
                     background-color: green;
+                    #label {
+                      text-align: center;
+                      line-height: 1.5vw;
+                      color: white;
+                    }
                   }
                 }
                 #add_app_progress.hide {

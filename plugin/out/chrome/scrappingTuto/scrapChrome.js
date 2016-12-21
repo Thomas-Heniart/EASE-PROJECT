@@ -29,6 +29,7 @@ extension.runtime.onMessage("connectToChrome", function(msg, sendResponse){
 });
 
 extension.runtime.onMessage("scrapChrome", function(msg, sendResponse){
+  console.log("start scrap");
     function waitload(callback){
         if($(".z-Of.cba.z-op").length != 0){
             callback();
@@ -43,12 +44,11 @@ extension.runtime.onMessage("scrapChrome", function(msg, sendResponse){
         var loadingString = "";
         var waitingTime = 5;
         console.log($(".z-Of.cba.z-op").length);
-        var nbOfPass = $(".z-Of.cba.z-op").length;  
+        var nbOfPass = $(".z-Of.cba.z-op").length;
         var results = [];
         function getPass(index){
             var element = $(".z-Of.cba.z-op").get(index);
             var field = $(element).find(".bba.EW.a-Fa");
-            $(element).find(".Vaa.AW.BW").click();
             function waitPass(){
                 if($(field).val()!="••••••••" && $(field).val()!=loadingString){
                     if(waitingTime == 5){//Get the string "Chargement en cours" whatever language
@@ -62,15 +62,29 @@ extension.runtime.onMessage("scrapChrome", function(msg, sendResponse){
                         else{
                             $(element).find(".Vaa.AW.aga").click();
                             sendResponse(results);
-                        }   
+                        }
                     }
                 } else {
                     setTimeout(waitPass, waitingTime);
                 }
             }
-            waitPass();
+            if($(element).find(".Vaa.AW.BW").length!=0){
+              $(element).find(".Vaa.AW.BW").click();
+              waitPass();
+            } else {
+              console.log("pas de bouton oeil");
+              console.log(index+1);
+              console.log(nbOfPass);
+              if(index+1 < nbOfPass)
+                  getPass(index+1);
+              else{
+                  //$(element).find(".Vaa.AW.aga").click();
+                  //sendResponse(results);
+                  console.log("cest fini");
+              }
+            }
+
         }
         getPass(0);
-    });   
+    });
 });
-

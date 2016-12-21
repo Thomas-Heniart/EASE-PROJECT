@@ -140,8 +140,10 @@
 					<div id="scrapping_done_submit" class="row text-center">
 						<button class="btn" type="submit">I am done!</button>
 					</div>
-					<div id="add_app_progress hide">
-  						<div id="progress_bar"></div>
+					<div id="add_app_progress" class="hide">
+  						<div id="progress_bar">
+  							<div id="label"><span id="currentStep">0</span>/<span id="maxStep"></span></div>
+  						</div>
 					</div>
 				</div>
 			</div>

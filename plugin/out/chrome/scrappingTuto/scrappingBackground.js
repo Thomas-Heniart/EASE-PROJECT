@@ -1,4 +1,4 @@
-// -- Listeners -- 
+// -- Listeners --
 
 extension.runtime.bckgrndOnMessage("GetChromeUser", function (msg, senderTab, sendResponse) {
     chrome.identity.getProfileUserInfo(function(userInfo){
@@ -182,25 +182,24 @@ function startScrapChrome(login, password, finalCallback){
                                                     callback();
                                                 }
                                             }
-                                            
+
                                             waitRightPage(event.url, function(){
                                                 extension.tabs.update(tab, "https://passwords.google.com/", function(tab){
                                                     extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
                                                         extension.tabs.onMessageRemoveListener(tab);
-                                                        extension.tabs.sendMessage(tab, "typePasswordChrome", {pass:password}, function(response){
-                                                            extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
-                                                                extension.tabs.onMessageRemoveListener(tab);
-                                                                extension.tabs.sendMessage(tab, "scrapChrome", {}, function(response){
-                                                                    encryptAllPasswords(response, function(finalRes){
-                                                                        extension.tabs.onClosedRemoveListener(tab);
-                                                                        extension.tabs.onUpdatedRemoveListener(tab);
-                                                                        setTimeout(function(){
-                                                                            extension.tabs.close(tab);
-                                                                        }, 500);
-                                                                        finalCallback(true,finalRes);
-                                                                    });
-                                                                });
-                                                            });
+                                                        extension.tabs.sendMessage(tab, "typePasswordChrome", {pass:password}, function(response){});
+                                                        extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
+                                                          extension.tabs.onMessageRemoveListener(tab);
+                                                          extension.tabs.sendMessage(tab, "scrapChrome", {}, function(response){
+                                                              encryptAllPasswords(response, function(finalRes){
+                                                                  extension.tabs.onClosedRemoveListener(tab);
+                                                                  extension.tabs.onUpdatedRemoveListener(tab);
+                                                                  setTimeout(function(){
+                                                                      extension.tabs.close(tab);
+                                                                  }, 500);
+                                                                  finalCallback(true,finalRes);
+                                                              });
+                                                          });
                                                         });
                                                     });
                                                 });

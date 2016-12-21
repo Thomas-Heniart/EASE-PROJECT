@@ -3,6 +3,8 @@ var appToAdd = [];
 var jsonscrap = {};
 var scrappingFinished = [];
 var loadingStep = 0;
+var currentStep = 0;
+var maxSteps = 0;
 
 function displayTutoApps(apps, by) {
 	apps.forEach(function (element) {
@@ -42,11 +44,23 @@ function showSavingPopup(filterJson) {
 
 function addTutoApps(logwithId, i) {
 	if (i >= appToAdd.length) {
-		location.href("index.jsp");
+		/*loadingStep = 0;
+		currentStep = 0;
+		maxSteps = 0;*/
+		postHandler.post('TutoStep', {
+			"tutoStep" : "chrome_scrapping"
+		}, function() {
+			//always
+		}, function(retMsg) {
+			//succes
+			location.reload();
+		}, function(retMsg) {
+			//error
+		}, 'text');
 		return;
 	}
-	goToNextLoadingStep();
 	if ((!appToAdd[i].keyDate && appToAdd[i].password) || $("div#saving div.scrapedAppsContainer div[index='" + i + "']").hasClass("selected")) {
+		goToNextLoadingStep();
 		if (appToAdd[i].keyDate) {
 			postHandler.post('AddClassicApp', {
 				"name" : appToAdd[i].name,
@@ -100,12 +114,18 @@ function addTutoApps(logwithId, i) {
 	}
 }
 
-function calculStep(appsNumber) {
-	return Math.round(100/appsNumber);
+function calculStep() {
+	for (var i=0; i<appToAdd.length; i++) {
+		if ($("div#saving div.scrapedAppsContainer div[index='" + i + "']").hasClass("selected"))
+			maxSteps++
+	}	
+	return Math.round(100/maxSteps);
 }
 
 function goToNextLoadingStep() {
+	currentStep++;
 	var progressBar = $("#add_app_progress #progress_bar");
+	$("#currentStep", progressBar).text(currentStep);
     var width = progressBar.width();
     var parentWidth = progressBar.offsetParent().width();
     var percent = 100*width/parentWidth;
@@ -116,7 +136,8 @@ function goToNextLoadingStep() {
 }
 
 $('div#saving div#selectScraping button').click(function () {
-	loadingStep = calculStep(appToAdd.length);
+	loadingStep = calculStep();
+	$("#add_app_progress #progress_bar #maxStep").text(maxSteps);
 	$("#scrapping_done_submit").addClass("hide");
 	$("#add_app_progress").removeClass("hide");
 	addTutoApps(0, 0);
