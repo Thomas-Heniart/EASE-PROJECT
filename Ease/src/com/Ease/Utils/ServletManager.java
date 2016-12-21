@@ -156,7 +156,7 @@ public class ServletManager {
 			try {
 				saveLogs();
 			} catch (GeneralException e) {
-				System.out.println(e.getMessage());
+				System.out.println(e.getMsg());
 				System.err.println("Logs not sended to database.");
 			}
 		}
