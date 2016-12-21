@@ -1,0 +1,57 @@
+.tip {
+	transition: opacity .3s, visibility .3s, transform .3s cubic-bezier(.62,-0.66,.27,1.63);
+	width: 15vw;
+	overflow: hidden;
+	opacity: 0;	
+	visibility: hidden;
+	pointer-events: none;
+	z-index: -1;
+	position: absolute;
+	background-color: #efefef;
+	border-radius: 5px;
+	padding: 0.5vw;
+	transform: scale(0.2);
+	&.show {
+		transition: opacity .3s, visibility .3s, transform .3s cubic-bezier(.62,-0.66,.27,1.63);
+		opacity: 1;
+		visibility: visible;
+		pointer-events: auto;
+		z-index: 1;
+		transform: scale(1);
+	}
+	.leftIcon {
+		position: relative;
+		display: inline-block;
+		width: 20%;
+		float: left;
+		img {
+			width: 90%;
+			margin:auto;
+		}
+	}
+	.rightText{
+		position: relative;
+		display: inline-block;
+		width: 80%;
+		float: left;
+		border-left: 1px solid $themeColor;
+		padding-left: 20px;
+		text-align: center;
+	  font-family: $defaultFont;
+		p {
+			text-align: left;
+			margin-bottom: 0.5vw;
+			font-size: 1vw;
+			color: $themeColor;
+		}
+		button {
+			background-color: #24d666;
+			color: white;
+			font-size: 0.9vw;
+			font-weight: 600;
+			&:hover, &:focus {
+				background-color:#28a956;
+			}
+		}
+	}
+}
