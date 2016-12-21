@@ -2,6 +2,7 @@ var scrapping = [];
 var appToAdd = [];
 var jsonscrap = {};
 var scrappingFinished = [];
+var profileIds = [];
 
 function displayTutoApps(apps, by) {
 	apps.forEach(function (element) {
@@ -96,8 +97,34 @@ function addTutoApps(logwithId, i) {
 	}
 }
 
+function addTutoProfiles(i, profileId) {
+	if (i >= appToAdd.length)
+		addTutoApsp(0, 0);
+	else {
+		if (i == 10 || i == 30) {
+			postHandler.post('AddProfile', {
+				"name" : "Choose name",
+				"color" : "#FF0000"
+			}, function() {
+				//always
+			}, function(retMsg) {
+				//succes
+				appToAdd[i].profileId = retMsg;
+				addTutoProfiles(i + 1, retMsg);
+			}, function(retMsg) {
+				//error
+			}, 'text');
+		} else {
+			if (i > 10) {
+				appToAdd[i].profileId = profileId;
+			}
+			addTutoProfiles(i + 1, profileId);
+		}
+	}
+}
+
 $('div#saving div#selectScraping button').click(function () {
-	addTutoApps(0, 0);
+	addTutoProfiles(0, 0);
 });
 
 function showAccountCredentials(retMsg) {
