@@ -22,6 +22,8 @@ function encryptAllPasswords(accounts, callback){
     }
     if(l>0){
         encrypt(0, callback);
+    } else {
+        callback([]);
     }
 }
 
