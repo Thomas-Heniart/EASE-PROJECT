@@ -1,9 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.Ease.Context.Catalog.Catalog"%>
+
 
 <link rel="stylesheet" href="css/Tutorial.css" />
 
+
 <div class="popupHandler myshow" id="tutorial">
-	<div class="easePopup" id="importation">
+	<div class="easePopup show" id="importation">
 		<div class="title">
 			<p>Accounts importation</p>
 		</div>
@@ -33,7 +36,7 @@
 							</div>
 							<p class="name">LinkedIn</p>
 							<div class="onoffswitch">
-								<input type="checkbox" name="Linkedin" class="onoffswitch-checkbox" id="Linkedin">
+								<input type="checkbox" name="Linkedin" class="onoffswitch-checkbox" id="Linkedin" websiteId="${catalog.getWebsiteWithName("Linkedin").getSingleId()}">
 								<label class="onoffswitch-label" for="Linkedin"></label>
 							</div>
 						</div>
@@ -43,7 +46,7 @@
 							</div>
 							<p class="name">Facebook</p>
 							<div class="onoffswitch">
-								<input type="checkbox" name="Facebook" class="onoffswitch-checkbox" id="Facebook">
+								<input type="checkbox" name="Facebook" class="onoffswitch-checkbox" id="Facebook" websiteId="${catalog.getWebsiteWithName("Facebook").getSingleId()}">
 								<label class="onoffswitch-label" for="Facebook"></label>
 							</div>
 						</div>
@@ -121,7 +124,7 @@
 	</div>
 
 
-	<div class="easePopup show" id="saving">
+	<div class="easePopup" id="saving">
 		<div class="title">
 			<p>What do you want to keep ?</p>
 			<p class="sub-title">Anything you are not keeping, we are not keeping.</p>
@@ -131,136 +134,7 @@
 				<div class="handler">
 					<div class="row">
 						<div class="scrapedAppsContainer">
-							<div class="appHandler">
-								<div class="app selected">
-									<div class="logo">
-										<img src="resources/images/Chrome.png"/>
-										<img class="by" src="resources/websites/Facebook/logo.png">
-									</div>
-									<p class="name">Google Chrome</p>
-									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
-								</div>
-							</div>
-							<div class="appHandler">
-								<div class="app">
-									<div class="logo">
-										<img src="resources/images/Chrome.png"/>
-										<img class="by" src="resources/websites/Facebook/logo.png">
-									</div>
-									<p class="name">Google Chrome</p>
-									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
-								</div>
-							</div>
-							<div class="appHandler">
-								<div class="app">
-									<div class="logo">
-										<img src="resources/images/Chrome.png"/>
-										<img class="by" src="resources/websites/Facebook/logo.png">
-									</div>
-									<p class="name">Google Chrome</p>
-									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
-								</div>
-							</div>
-							<div class="appHandler">
-								<div class="app">
-									<div class="logo">
-										<img src="resources/images/Chrome.png"/>
-										<img class="by" src="resources/websites/Facebook/logo.png">
-									</div>
-									<p class="name">Google Chrome</p>
-									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
-								</div>
-							</div>
-							<div class="appHandler">
-								<div class="app">
-									<div class="logo">
-										<img src="resources/images/Chrome.png"/>
-										<img class="by" src="resources/websites/Facebook/logo.png">
-									</div>
-									<p class="name">Google Chrome</p>
-									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
-								</div>
-							</div>
-							<div class="appHandler">
-								<div class="app">
-									<div class="logo">
-										<img src="resources/images/Chrome.png"/>
-										<img class="by" src="resources/websites/Facebook/logo.png">
-									</div>
-									<p class="name">Google Chrome</p>
-									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
-								</div>
-							</div>
-							<div class="appHandler">
-								<div class="app">
-									<div class="logo">
-										<img src="resources/images/Chrome.png"/>
-										<img class="by" src="resources/websites/Facebook/logo.png">
-									</div>
-									<p class="name">Google Chrome</p>
-									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
-								</div>
-							</div>
-							<div class="appHandler">
-								<div class="app">
-									<div class="logo">
-										<img src="resources/images/Chrome.png"/>
-										<img class="by" src="resources/websites/Facebook/logo.png">
-									</div>
-									<p class="name">Google Chrome</p>
-									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
-								</div>
-							</div>
-							<div class="appHandler">
-								<div class="app">
-									<div class="logo">
-										<img src="resources/images/Chrome.png"/>
-										<img class="by" src="resources/websites/Facebook/logo.png">
-									</div>
-									<p class="name">Google Chrome</p>
-									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
-								</div>
-							</div>
-							<div class="appHandler">
-								<div class="app">
-									<div class="logo">
-										<img src="resources/images/Chrome.png"/>
-										<img class="by" src="resources/websites/Facebook/logo.png">
-									</div>
-									<p class="name">Google Chrome</p>
-									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
-								</div>
-							</div>
-							<div class="appHandler">
-								<div class="app">
-									<div class="logo">
-										<img src="resources/images/Chrome.png"/>
-										<img class="by" src="resources/websites/Facebook/logo.png">
-									</div>
-									<p class="name">Google Chrome</p>
-									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
-								</div>
-							</div>
-							<div class="appHandler">
-								<div class="app">
-									<div class="logo">
-										<img src="resources/images/Chrome.png"/>
-										<img class="by" src="resources/websites/Facebook/logo.png">
-									</div>
-									<p class="name">Google Chrome</p>
-									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
-								</div>
-							</div>
-							<div class="appHandler">
-								<div class="app">
-									<div class="logo">
-										<img src="resources/images/Chrome.png"/>
-										<img class="by" src="resources/websites/Facebook/logo.png">
-									</div>
-									<p class="name">Google Chrome</p>
-									<p class="login">lalaqdqdqddqsdqsdqsdqs@lalaqsdqdqsdqd.com</p>
-								</div>
-							</div>
+
 						</div>
 					</div>
 					<div class="row text-center">
