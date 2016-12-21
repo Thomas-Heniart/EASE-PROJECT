@@ -5,7 +5,7 @@ if (window.top === window) {
             overlay.id = "ease_overlay_scrap";
             document.body.appendChild(overlay);
             
-            extension.runtime.sendMessage('scrapReloaded',{}, function(){});
+            extension.runtime.sendMessage('scrapReloaded',{url:window.location.href}, function(){});
             
             var textWebsite;
             var logoWebsite="scrappingTuto/";

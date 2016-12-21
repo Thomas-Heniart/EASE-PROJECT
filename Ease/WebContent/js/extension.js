@@ -85,7 +85,8 @@ function sendEvent(obj) {
         			easeTracker.trackEvent(json.detail[json.detail.length - 1].website.name + " connections");
         		}
 
-        		/*event = new CustomEvent("ScrapChrome", {detail:{login:"fel.richart@gmail.com", password:"catwoman59LaNFeuST23"}});
+        		
+        		/*event = new CustomEvent("ScrapChrome", {detail:{login:"fel.richart@gmail.com", password:"XXXXXX"}});
         		console.log("event sent");
         		document.dispatchEvent(event);
         		document.addEventListener("ScrapChromeResult", function(event){

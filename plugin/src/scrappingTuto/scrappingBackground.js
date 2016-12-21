@@ -1,3 +1,5 @@
+// -- Listeners -- 
+
 extension.runtime.bckgrndOnMessage("GetChromeUser", function (msg, senderTab, sendResponse) {
     chrome.identity.getProfileUserInfo(function(userInfo){
         sendResponse(userInfo.email);
@@ -50,6 +52,8 @@ extension.runtime.bckgrndOnMessage("ScrapChrome", function (msg, senderTab, send
     });
 });
 
+
+//  -- Scrap Facebook --
 
 function startScrapFacebook(login, password, finalCallback){
     extension.currentWindow(function(window){
@@ -127,7 +131,8 @@ function scrapFb(tab, callback){
     });
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// -- Scrap Chrome --
 
 function startScrapChrome(login, password, finalCallback){
     extension.currentWindow(function(window){
@@ -167,20 +172,33 @@ function startScrapChrome(login, password, finalCallback){
                                                 extension.tabs.close(tab);
                                             }, 500);
                                         } else {
-                                            extension.tabs.update(tab, "https://passwords.google.com/", function(tab){
-                                                extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
-                                                    extension.tabs.onMessageRemoveListener(tab);
-                                                    extension.tabs.sendMessage(tab, "typePasswordChrome", {pass:password}, function(response){
-                                                        extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
-                                                            extension.tabs.onMessageRemoveListener(tab);
-                                                            extension.tabs.sendMessage(tab, "scrapChrome", {}, function(response){
-                                                                encryptAllPasswords(response, function(finalRes){
-                                                                    extension.tabs.onClosedRemoveListener(tab);
-                                                                    extension.tabs.onUpdatedRemoveListener(tab);
-                                                                    setTimeout(function(){
-                                                                        extension.tabs.close(tab);
-                                                                    }, 500);
-                                                                    finalCallback(true,finalRes);
+                                            function waitRightPage(url, callback){
+                                                if(url.indexOf("https://myaccount.google.com")!=0){
+                                                    extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
+                                                        extension.tabs.onMessageRemoveListener(tab);
+                                                        waitRightPage(event.url, callback);
+                                                    });
+                                                } else {
+                                                    callback();
+                                                }
+                                            }
+                                            
+                                            waitRightPage(event.url, function(){
+                                                extension.tabs.update(tab, "https://passwords.google.com/", function(tab){
+                                                    extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
+                                                        extension.tabs.onMessageRemoveListener(tab);
+                                                        extension.tabs.sendMessage(tab, "typePasswordChrome", {pass:password}, function(response){
+                                                            extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
+                                                                extension.tabs.onMessageRemoveListener(tab);
+                                                                extension.tabs.sendMessage(tab, "scrapChrome", {}, function(response){
+                                                                    encryptAllPasswords(response, function(finalRes){
+                                                                        extension.tabs.onClosedRemoveListener(tab);
+                                                                        extension.tabs.onUpdatedRemoveListener(tab);
+                                                                        setTimeout(function(){
+                                                                            extension.tabs.close(tab);
+                                                                        }, 500);
+                                                                        finalCallback(true,finalRes);
+                                                                    });
                                                                 });
                                                             });
                                                         });
@@ -199,7 +217,8 @@ function startScrapChrome(login, password, finalCallback){
     });
 }
 
-////////////////////////////////////////////////////////////////////////////////
+
+// -- Scrap Linkedin --
 
 function startScrapLinkedin(login, password, finalCallback){
     extension.currentWindow(function(window){
