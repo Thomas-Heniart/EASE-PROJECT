@@ -71,6 +71,14 @@ public class Catalog {
 		return this.websites;
 	}
 	
+	public Website getWebsiteWithName(String name) throws GeneralException {
+		for (Website site : this.websites) {
+			if (site.getName().equals(name))
+				return site;
+		}
+		throw new GeneralException(ServletManager.Code.ClientError, "This website name dosen't exist.");
+	}
+	
 	public List<Website> getPublicWebsites() {
 		List<Website> res = new LinkedList<Website> ();
 		this.websites.forEach((website) -> {
