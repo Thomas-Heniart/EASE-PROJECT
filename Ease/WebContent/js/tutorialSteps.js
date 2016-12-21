@@ -3,6 +3,9 @@ var appToAdd = [];
 var jsonscrap = {};
 var scrappingFinished = [];
 var profileIds = [];
+var loadingStep = 0;
+var currentStep = 0;
+var maxSteps = 0;
 
 function displayTutoApps(apps, by) {
 	apps.forEach(function (element) {
@@ -41,9 +44,24 @@ function showSavingPopup(filterJson) {
 }
 
 function addTutoApps(logwithId, i) {
-	if (i >= appToAdd.length)
-		return ;
+	if (i >= appToAdd.length) {
+		/*loadingStep = 0;
+		currentStep = 0;
+		maxSteps = 0;*/
+		postHandler.post('TutoStep', {
+			"tutoStep" : "chrome_scrapping"
+		}, function() {
+			//always
+		}, function(retMsg) {
+			//succes
+			location.reload();
+		}, function(retMsg) {
+			//error
+		}, 'text');
+		return;
+	}
 	if ((!appToAdd[i].keyDate && appToAdd[i].password) || $("div#saving div.scrapedAppsContainer div[index='" + i + "']").hasClass("selected")) {
+		goToNextLoadingStep();
 		if (appToAdd[i].keyDate) {
 			postHandler.post('AddClassicApp', {
 				"name" : appToAdd[i].name,
@@ -123,7 +141,32 @@ function addTutoProfiles(i, profileId) {
 	}
 }
 
+function calculStep() {
+	for (var i=0; i<appToAdd.length; i++) {
+		if ($("div#saving div.scrapedAppsContainer div[index='" + i + "']").hasClass("selected"))
+			maxSteps++
+	}	
+	return Math.round(100/maxSteps);
+}
+
+function goToNextLoadingStep() {
+	currentStep++;
+	var progressBar = $("#add_app_progress #progress_bar");
+	$("#currentStep", progressBar).text(currentStep);
+    var width = progressBar.width();
+    var parentWidth = progressBar.offsetParent().width();
+    var percent = 100*width/parentWidth;
+    var nextPercent = percent + loadingStep;
+    if (nextPercent > 100)
+    	nextPercent = 100;
+    progressBar.width(nextPercent + "%");
+}
+
 $('div#saving div#selectScraping button').click(function () {
+	loadingStep = calculStep();
+	$("#add_app_progress #progress_bar #maxStep").text(maxSteps);
+	$("#scrapping_done_submit").addClass("hide");
+	$("#add_app_progress").removeClass("hide");
 	addTutoProfiles(0, 0);
 });
 
@@ -174,7 +217,6 @@ function ScrapingInfoFinished() {
 			//always
 		}, function(retMsg) {
 			//succes
-			filterJson = retMsg;
 			showSavingPopup(JSON.parse(retMsg));
 			
 		}, function(retMsg) {

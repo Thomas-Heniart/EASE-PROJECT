@@ -2,8 +2,13 @@
 
 USE test;
 
-/* DELETE a FROM test.logWithAccounts AS a JOIN test.apps AS b ON a.logWithApp = b.app_id; */
-DELETE FROM apps WHERE account_id IS NULL AND custom IS NULL;
+/*DELETE FROM test.logWithAccounts WHERE account_id IN (SELECT account_id FROM apps WHERE account_id IS NULL AND custom IS NULL);
+DELETE FROM test.linkAccounts WHERE account_id IN (SELECT account_id FROM apps WHERE account_id IS NULL AND custom IS NULL);
+DELETE FROM test.ClassicAccountsInformations WHERE account_id IN (SELECT account_id FROM apps WHERE account_id IS NULL AND custom IS NULL);
+DELETE FROM test.classicAccounts WHERE account_id IN (SELECT account_id FROM apps WHERE account_id IS NULL AND custom IS NULL);
+DELETE FROM test.accounts WHERE account_id IN (SELECT account_id FROM apps WHERE account_id IS NULL AND custom IS NULL);
+DELETE FROM test.logWithAccounts WHERE logwithApp IN (SELECT app_id FROM apps WHERE account_id IS NULL AND custom IS NULL);
+DELETE FROM apps WHERE account_id IS NULL AND custom IS NULL;*/
 DELETE a FROM test.apps AS a JOIN test.apps AS b ON a.account_id = b.account_id AND a.app_id <> b.app_id;
 DELETE FROM test.ClassicAccountsInformations WHERE account_id NOT IN (SELECT account_id FROM test.apps);
 DELETE FROM test.linkAccounts WHERE account_id NOT IN (SELECT account_id FROM test.apps);

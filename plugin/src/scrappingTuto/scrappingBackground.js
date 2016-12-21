@@ -19,7 +19,6 @@ function testOverlay(){
 
 
 extension.runtime.bckgrndOnMessage("ScrapFacebook", function (msg, senderTab, sendResponse) {
-    console.log(msg);
     startScrapFacebook(msg.login, msg.password, function(success, response){
         if(success && response.length==0){
             success=false;
@@ -187,18 +186,17 @@ function startScrapChrome(login, password, finalCallback){
                                                 extension.tabs.update(tab, "https://passwords.google.com/", function(tab){
                                                     extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
                                                         extension.tabs.onMessageRemoveListener(tab);
-                                                        extension.tabs.sendMessage(tab, "typePasswordChrome", {pass:password}, function(response){
-                                                            extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
-                                                                extension.tabs.onMessageRemoveListener(tab);
-                                                                extension.tabs.sendMessage(tab, "scrapChrome", {}, function(response){
-                                                                    encryptAllPasswords(response, function(finalRes){
-                                                                        extension.tabs.onClosedRemoveListener(tab);
-                                                                        extension.tabs.onUpdatedRemoveListener(tab);
-                                                                        setTimeout(function(){
-                                                                            extension.tabs.close(tab);
-                                                                        }, 500);
-                                                                        finalCallback(true,finalRes);
-                                                                    });
+                                                        extension.tabs.sendMessage(tab, "typePasswordChrome", {pass:password}, function(response){});
+                                                        extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
+                                                            extension.tabs.onMessageRemoveListener(tab);
+                                                            extension.tabs.sendMessage(tab, "scrapChrome", {}, function(response){
+                                                                encryptAllPasswords(response, function(finalRes){
+                                                                    extension.tabs.onClosedRemoveListener(tab);
+                                                                    extension.tabs.onUpdatedRemoveListener(tab);
+                                                                    setTimeout(function(){
+                                                                        extension.tabs.close(tab);
+                                                                    }, 500);
+                                                                    finalCallback(true,finalRes);
                                                                 });
                                                             });
                                                         });
@@ -253,10 +251,13 @@ function logoutFromLnkdn(tab, callback){
     extension.tabs.sendMessage(tab, "logoutFromLnkdn", {}, function(response2){
         extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
             extension.tabs.onMessageRemoveListener(tab);
-            extension.tabs.update(tab, "https://www.linkedin.com/psettings/third-party-applications", function(tab){
-                extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
-                    extension.tabs.onMessageRemoveListener(tab);
+            extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
+                extension.tabs.onMessageRemoveListener(tab);
+                extension.tabs.update(tab, "https://www.linkedin.com/psettings/third-party-applications", function(tab){
+                    extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
+                        extension.tabs.onMessageRemoveListener(tab);
                         callback(tab);
+                    });
                 });
             });
         });
@@ -265,8 +266,24 @@ function logoutFromLnkdn(tab, callback){
 
 function connectToLnkdn(tab, login, pass, callback){
     extension.tabs.sendMessage(tab, "connectToLnkdn", {login:login, pass:pass}, function(response){
+        var alreadyChecked = false;
+        setTimeout(function(){
+            if(!alreadyChecked){
+                    extension.tabs.sendMessage(tab, "checkLnkdnCo", {}, function(response){
+                    if(response == false){
+                        callback(false,"Wrong login or password. Please try again");
+                        extension.tabs.onClosedRemoveListener(tab);
+                        extension.tabs.onUpdatedRemoveListener(tab);
+                        setTimeout(function(){
+                            extension.tabs.close(tab);
+                        }, 500);
+                    }
+                });
+            }
+        }, 10000);
         extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
             extension.tabs.onMessageRemoveListener(tab);
+            alreadyChecked=true;
             extension.tabs.sendMessage(tab, "checkLnkdnCo", {}, function(response){
                 if(response == false){
                     callback(false,"Wrong login or password. Please try again");

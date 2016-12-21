@@ -82,6 +82,7 @@ public class Status {
 				return;
 			f.set(this, true);
 			db.set("UPDATE status SET " + tutoStep + "=1 WHERE id=" + this.db_id + ";");
+			validateTuto(db);
 		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
 			throw new GeneralException(ServletManager.Code.ClientError, e);
 		}
@@ -89,5 +90,10 @@ public class Status {
 	
 	public boolean tutoIsDone() {
 		return this.tuto_done;
+	}
+	
+	public void validateTuto(DataBaseConnection db) throws GeneralException {
+		if (!this.tuto_done && this.CGU && this.move_apps && this.click_on_app && this.drag_and_drop && this.first_connection && this.open_catalog)
+			this.passStep("tuto_done", db);
 	}
 }
