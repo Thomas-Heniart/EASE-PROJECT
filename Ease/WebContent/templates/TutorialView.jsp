@@ -146,4 +146,4 @@
 	</div>
 </div>
 
-<script type="text/javascript" src="js/Tutorial.js" > </script>
+<script type="text/javascript" src="js/tutorialSteps.js" > </script>
