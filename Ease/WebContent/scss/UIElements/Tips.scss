@@ -46,6 +46,7 @@
 		padding: 0.3vw;
 		border: 1px solid #ccc;
 		transform: scale(0.2);
+		box-shadow: -2px 2px 15px #b3b3b3;
 		&.show {
 			transition: opacity .3s, visibility .3s, transform .3s cubic-bezier(.62,-0.66,.27,1.63);
 			opacity: 1;
