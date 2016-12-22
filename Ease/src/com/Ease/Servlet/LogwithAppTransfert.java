@@ -65,7 +65,7 @@ public class LogwithAppTransfert extends HttpServlet {
 					logWithAppRs.next();
 					ResultSet rs = db.get("SELECT id FROM websiteApps WHERE app_id = " + logWithAppRs.getString(1) + ";");
 					rs.next();
-					db.set("INSERT INTO logwithApps VALUES (null, " + website_app_id + ", " + rs.getString(1) + ", null)");
+					db.set("INSERT INTO logWithApps VALUES (null, " + website_app_id + ", " + rs.getString(1) + ", null)");
 					db.commitTransaction(transaction);
 					sm.setResponse(ServletManager.Code.Success, "Successfully transfert logwith apps");
 				}
