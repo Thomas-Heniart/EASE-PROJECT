@@ -117,7 +117,7 @@ function addTutoApps(logwithId, i) {
 
 function addTutoProfiles(i, profileId) {
 	if (i >= appToAdd.length)
-		addTutoApsp(0, 0);
+		addTutoApps(0, 0);
 	else {
 		if (i == 10 || i == 30) {
 			postHandler.post('AddProfile', {
@@ -152,7 +152,7 @@ function calculStep() {
 function goToNextLoadingStep() {
 	currentStep++;
 	var progressBar = $("#add_app_progress #progress_bar");
-	$("#currentStep", progressBar).text(currentStep);
+	$("#add_app_progress #currentStep").text(currentStep);
     var width = progressBar.width();
     var parentWidth = progressBar.offsetParent().width();
     var percent = 100*width/parentWidth;
@@ -164,7 +164,7 @@ function goToNextLoadingStep() {
 
 $('div#saving div#selectScraping button').click(function () {
 	loadingStep = calculStep();
-	$("#add_app_progress #progress_bar #maxStep").text(maxSteps);
+	$("#add_app_progress #maxStep").text(maxSteps);
 	$("#scrapping_done_submit").addClass("hide");
 	$("#add_app_progress").removeClass("hide");
 	addTutoProfiles(0, 0);

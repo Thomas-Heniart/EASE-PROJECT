@@ -62,16 +62,16 @@ pageEncoding="UTF-8"%>
 	<script src="js/app.js"></script>
 	<script src="js/shortcut.js"></script>
 	<script src="js/dashboard.js"></script>
-	<script src="js/tracker.js"></script>	
+	<script src="js/tracker.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/lib/dropDownMenu/dropdown.css" />
 	<script src="js/snap.svg-min.js"></script>
 	<script src="js/modalEffects.js"></script>
 	<script src="js/selectFx.js"></script>
 	<script src="js/websocket.js"></script>
-	
+
 	<!-- Amplitude script -->
-	
+
 	<script type="text/javascript">
   (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script");r.type="text/javascript";
   r.async=true;r.src="https://d24n15hnbwhuhn.cloudfront.net/libs/amplitude-3.0.1-min.gz.js";
@@ -86,20 +86,24 @@ pageEncoding="UTF-8"%>
   if(!n._iq.hasOwnProperty(e)){n._iq[e]={_q:[]};v(n._iq[e])}return n._iq[e]};e.amplitude=n;
   })(window,document);
 
-  amplitude.getInstance().init("74f6ebfba0c7743a0c63012dc3a9fef0");
+  /* Prod */
+	//amplitude.getInstance().init("74f6ebfba0c7743a0c63012dc3a9fef0");
+
+	/* Test */
+  amplitude.getInstance().init("73264447f97c4623fb38d92b9e7eaeea");
 </script>
-	
+
 	<!-- Amplitude script -->
 	<link rel="stylesheet" type="text/css" href="component.css" />
-	
-	<% 
+
+	<%
 	User user = (User) (session.getAttribute("user"));
 	if (user != null){
 		SessionSave sessionSave = (SessionSave) (user.getSessionSave());
 		if (user.isAdmin()){%>
 			<script src="js/robotest.js"></script>
 		<%}
-	} else { 
+	} else {
 		Cookie 	cookie = null;
 		Cookie 	cookies[] = request.getCookies();
 		String	sessionId = "";
@@ -115,9 +119,9 @@ pageEncoding="UTF-8"%>
 			}
 		}
 		if(sessionId.length() > 0 && token.length() > 0){ %>
-			<jsp:forward page="connectionWithCookies"> 
-				<jsp:param name="sessionId" value="<%=sessionId%>" /> 
-				<jsp:param name="token" value="<%=token%>" /> 
+			<jsp:forward page="connectionWithCookies">
+				<jsp:param name="sessionId" value="<%=sessionId%>" />
+				<jsp:param name="token" value="<%=token%>" />
 			</jsp:forward>
 		<%}
 	}%>
@@ -136,13 +140,13 @@ mixpanel.init("e87ca36e156107ebbd9a672735e6612c");</script><!-- end Mixpanel -->
 	<%@ page import="java.util.Base64" %>
 	<%@ page import="java.util.Base64.Encoder" %>
 	<%@ page import="java.nio.charset.StandardCharsets" %>
-	
+
 	<div id="userEmail" data-content=<%= (user != null) ? user.getEmail() : null %>></div>
-	
+
 	<div id="onMobile" style="display:none;">
 		<%@ include file="templates/Mobile.jsp" %>
 	</div>
-	
+
 	<div id="onComputer">
 		<div class="cookiesInfo" style="display: none;">
 			<p>En poursuivant votre navigation, vous acceptez l'utilisation de cookies dans le cadre de l’authentification, la sécurité et l’intégrité du site et des produits.</p>
@@ -156,6 +160,6 @@ mixpanel.init("e87ca36e156107ebbd9a672735e6612c");</script><!-- end Mixpanel -->
 			<%@ include file="templates/Footer.jsp" %>
 		<%}%>
 	</div>
-	
+
 </body>
 </html>
