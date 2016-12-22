@@ -144,10 +144,12 @@ boolean knownUser = iden == 2 ? true : false;
 				<div class="line">
 					<input id="email" name="email" type="email" id="input-8" placeholder="Email"/>
 				</div>
-				<div class="alertDiv">
-					<p>Incorrect password !</p>
-				</div> 
-				<button id="lostPasswordButton">Reset password</button>
+				<div class="line">
+					<div class="alertDiv">
+						<p>Incorrect password !</p>
+					</div> 
+					<button id="lostPasswordButton">Reset password</button>
+				</div>
 				<div class="line">
 					<p id="goBack">Go back</p>
 				</div>
