@@ -39,204 +39,275 @@
     .title {
       p {
         font-size: 1.7vw;
-      }
     }
-    .row {
-      width: 80%;
-      margin: auto;
-      margin-top: 1vw;
-      &:first-child, &:last-child {
-        margin-top: 0;
-      }
-      .btn {
-        font-size: 1.3vw;
-        margin-top: 0.3vw;
-      }
-      a {
-        cursor: pointer;
-        color: $themeDarkGreyColor;
-        font-size: 0.85vw;
-      }
-    }
-  }
-    #importation {
-        .popupBody {
-            .handler {
-                .row {
-                    .account{
-                        margin-bottom: 0.5vw;
-                        height: 2.8vw;
-                        div, p {
-                            display: inline-block;
-                        }
-                        .name {
-                            font-size: 1vw;
-                            margin-left: 1vw;
-                        }
-                        .onoffswitch {
-                            float: right;
-                            top: 50%;
-                            transform: translateY(-50%);
-                            label {
-                                margin-bottom: 0px;
-                            }
-                        }
-                        .logo {
-                            height: 100%;
-                            img {
-                                height: 100%;
-                                border-radius: 3px;
-                            }
-                        }
-                        &:last-child {
-                          margin-bottom: 0;
-                        }
+}
+.row {
+  width: 80%;
+  margin: auto;
+  margin-top: 1vw;
+  &:first-child, &:last-child {
+    margin-top: 0;
+}
+.btn {
+    font-size: 1.3vw;
+    margin-top: 0.3vw;
+}
+a {
+    cursor: pointer;
+    color: $themeDarkGreyColor;
+    font-size: 0.85vw;
+}
+}
+}
+#importation {
+    .popupBody {
+        .handler {
+            .row {
+                .account{
+                    margin-bottom: 0.5vw;
+                    height: 2.8vw;
+                    div, p {
+                        display: inline-block;
                     }
-                    span.input {
-                      margin: 0;
-                      max-width: 100%;
-                    }
-                    input {
-                        outline: none;
-                        margin-bottom: 1.2vw;
+                    .name {
                         font-size: 1vw;
-                        &:last-child {
+                        margin-left: 1vw;
+                    }
+                    .onoffswitch {
+                        float: right;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        label {
                             margin-bottom: 0px;
                         }
                     }
-                    .sub-title {
-                        font-size:1.3vw;
-                        font-weight:600;
+                    .logo {
+                        height: 100%;
+                        img {
+                            height: 100%;
+                            border-radius: 3px;
+                        }
                     }
-                    .post-title {
-                        font-size:1vw;
-                    }
-                }
-            }
-        }
-        #accountCredentials {
-            .errorText {
-                display: none;
-                &.show {
-                    display: block;
-                }
-                p {
-                    color: $themeRedColor;
-                    font-size: 1vw;
-                }
-            }
-            .imageHandler {
-                width: 5vw;
-                display: inline-block;
-                img {
-                    width: 100%;
-                }
-            }
-        }
-        #scrapingInfo {
-            .info-text {
+                    &:last-child {
+                      margin-bottom: 0;
+                  }
+              }
+              span.input {
+                  margin: 0;
+                  max-width: 100%;
+              }
+              input {
+                outline: none;
+                margin-bottom: 1.2vw;
                 font-size: 1vw;
-                font-weight: 200;
+                &:last-child {
+                    margin-bottom: 0px;
+                }
+            }
+            .sub-title {
+                font-size:1.3vw;
+                font-weight:600;
+            }
+            .post-title {
+                font-size:1vw;
             }
         }
     }
-    #saving {
-        .popupBody {
-            .handler {
-                #scrapping_done_submit.hide {
-                  display: none;
-                }
-                .row {
-                    .scrapedAppsContainer {
-                        height: 15vw;
-                        overflow: auto;
-                        .appHandler{
-                            width: 25%;
-                            float: left;
-                            text-align: center;
-                            padding: 1vw;
-                            .app {
-                                overflow: hidden;
-                                position: relative;
-                                .logo {
-                                    cursor: pointer;
-                                    width: 70%;
-                                    margin:auto;
-                                    position: relative;
-                                    border-radius: 3px;
-                                    img {
-                                        border-radius:3px;
-                                        width: 100%;
-                                    }
-                                    &:before {
-                                        content:"";
-                                        position: absolute;
-                                        width: 100%;
-                                        height: 100%;
-                                        background-color: rgba(0,0,0,0.35);
-                                        border-radius: 3px;
-                                    }
-                                    .by {
-                                        //border-radius: 3px;
-                                        filter: grayscale(100%);
-                                        -webkit-filter: grayscale(100%);
-                                        width: 31%;
-                                        position: absolute;
-                                        bottom: 3%;
-                                        right: 3%;
-                                    }
-                                }
+}
+#accountCredentials {
+    .errorText {
+        display: none;
+        &.show {
+            display: block;
+        }
+        p {
+            color: $themeRedColor;
+            font-size: 1vw;
+        }
+    }
+    .imageHandler {
+        width: 5vw;
+        display: inline-block;
+        img {
+            width: 100%;
+        }
+    }
+}
+#scrapingInfo {
+    .info-text {
+        font-size: 1vw;
+        font-weight: 200;
+    }
+}
+}
+#saving {
+    .popupBody {
+        .handler {
+            #scrapping_done_submit.hide {
+              display: none;
+          }
+          .row {
+            .scrapedAppsContainer {
+                height: 15vw;
+                overflow: auto;
+                .appHandler{
+                    width: 25%;
+                    float: left;
+                    text-align: center;
+                    padding: 1vw;
+                    .app {
+                        overflow: hidden;
+                        position: relative;
+                        .logo {
+                            cursor: pointer;
+                            width: 70%;
+                            margin:auto;
+                            position: relative;
+                            border-radius: 3px;
+                            img {
+                                border-radius:3px;
+                                width: 100%;
                             }
-                            .app.selected {
-                                .logo {
-                                  .by {
-                                      filter: grayscale(0);
-                                      -webkit-filter: grayscale(0);
-                                  }
-                                    &:before {
-                                        background-color: rgba(0,0,0,0.15);
-                                    }
-                                    &:after {
-                                        content: "\f00c";
-                                        position: absolute;
-                                        left: 50%;
-                                        top: 50%;
-                                        color: white;
-                                        transform: translate3d(-50%, -50%, 0);
-                                        font-family: FontAwesome;
-                                        font-size: 2.7vw;
-                                    }
-                                }
+                            &:before {
+                                content:"";
+                                position: absolute;
+                                width: 100%;
+                                height: 100%;
+                                background-color: rgba(0,0,0,0.35);
+                                border-radius: 3px;
+                            }
+                            .by {
+                                //border-radius: 3px;
+                                filter: grayscale(100%);
+                                -webkit-filter: grayscale(100%);
+                                width: 31%;
+                                position: absolute;
+                                bottom: 3%;
+                                right: 3%;
                             }
                         }
                     }
-                    #add_app_progress {
-                      position: relative;
-                      width: 80%;
-                      margin: auto;
-                      height: 1.5vw;
-                      border-radius: 1.5vw;
-                      background-color: grey;
-                      #progress_bar {
-                        position: absolute;
-                        width: 0%;
-                        border-radius: 1.5vw;
-                        height: 100%;
-                        background-color: green;
-                      }
-                      #label {
-                        position: absolute;
-                        width: 100%;
-                        text-align: center;
-                        line-height: 1.5vw;
-                        color: white;
-                      }
+                    .app.selected {
+                        .logo {
+                          .by {
+                              filter: grayscale(0);
+                              -webkit-filter: grayscale(0);
+                          }
+                          &:before {
+                            background-color: rgba(0,0,0,0.15);
+                        }
+                        &:after {
+                            content: "\f00c";
+                            position: absolute;
+                            left: 50%;
+                            top: 50%;
+                            color: white;
+                            transform: translate3d(-50%, -50%, 0);
+                            font-family: FontAwesome;
+                            font-size: 2.7vw;
+                        }
                     }
-                    #add_app_progress.hide {
-                      display: none;
+                }
+            }
+        }
+        #add_app_progress {
+          position: relative;
+          width: 80%;
+          margin: auto;
+          height: 1.5vw;
+          border-radius: 1.5vw;
+          background-color: grey;
+          #progress_bar {
+            position: absolute;
+            width: 0%;
+            border-radius: 1.5vw;
+            height: 100%;
+            background-color: green;
+        }
+        #label {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            line-height: 1.5vw;
+            color: white;
+        }
+    }
+    #add_app_progress.hide {
+      display: none;
+  }
+}
+}
+}
+}
+#simpleImportation {
+    .popupBody {
+        .handler {
+          .row {
+            .appsContainer {
+                height: 15vw;
+                overflow: auto;
+                .appHandler{
+                    width: 25%;
+                    float: left;
+                    text-align: center;
+                    padding: 1vw;
+                    .app {
+                        overflow: hidden;
+                        position: relative;
+                        .logo {
+                            cursor: pointer;
+                            width: 70%;
+                            margin:auto;
+                            position: relative;
+                            border-radius: 3px;
+                            img {
+                                border-radius:3px;
+                                width: 100%;
+                            }
+                            &:before {
+                                content:"";
+                                position: absolute;
+                                width: 100%;
+                                height: 100%;
+                                background-color: rgba(0,0,0,0.35);
+                                border-radius: 3px;
+                            }
+                            .by {
+                                //border-radius: 3px;
+                                filter: grayscale(100%);
+                                -webkit-filter: grayscale(100%);
+                                width: 31%;
+                                position: absolute;
+                                bottom: 3%;
+                                right: 3%;
+                            }
+                        }
+                    }
+                    .app.selected {
+                        .logo {
+                          .by {
+                              filter: grayscale(0);
+                              -webkit-filter: grayscale(0);
+                          }
+                          &:before {
+                            background-color: rgba(0,0,0,0.15);
+                        }
+                        &:after {
+                            content: "\f00c";
+                            position: absolute;
+                            left: 50%;
+                            top: 50%;
+                            color: white;
+                            transform: translate3d(-50%, -50%, 0);
+                            font-family: FontAwesome;
+                            font-size: 2.7vw;
+                        }
                     }
                 }
             }
         }
     }
+}
+}
+}
 }

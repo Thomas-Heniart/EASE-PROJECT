@@ -144,11 +144,25 @@ boolean knownUser = iden == 2 ? true : false;
 				<div class="line">
 					<input id="email" name="email" type="email" id="input-8" placeholder="Email"/>
 				</div>
-				<div class="line">
-					<div class="alertDiv">
-						<p>Incorrect password !</p>
-					</div> 
-					<button id="lostPasswordButton">Reset password</button>
+				<div class="alertDiv">
+					<p>Incorrect password !</p>
+				</div> 
+				<div class="line buttonSet">
+					<button id="lostPasswordButton" class="show">Reset password</button>
+					<div class="sk-fading-circle centeredItem">
+						<div class="sk-circle1 sk-circle"></div>
+						<div class="sk-circle2 sk-circle"></div>
+						<div class="sk-circle3 sk-circle"></div>
+						<div class="sk-circle4 sk-circle"></div>
+						<div class="sk-circle5 sk-circle"></div>
+						<div class="sk-circle6 sk-circle"></div>
+						<div class="sk-circle7 sk-circle"></div>
+						<div class="sk-circle8 sk-circle"></div>
+						<div class="sk-circle9 sk-circle"></div>
+						<div class="sk-circle10 sk-circle"></div>
+						<div class="sk-circle11 sk-circle"></div>
+						<div class="sk-circle12 sk-circle"></div>
+					</div>
 				</div>
 				<div class="line">
 					<p id="goBack">Go back</p>

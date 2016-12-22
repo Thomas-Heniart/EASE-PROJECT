@@ -111,6 +111,8 @@ $(document).ready(function() {
 		$('.controls').removeClass('show');
 		$('.FormsContainer #connection').removeClass('show');
 		$('.FormsContainer #passwordLost').addClass('show');
+		$('.FormsContainer #passwordLost .alertDiv').removeClass('show');
+		$('.FormsContainer #passwordLost input').val('');
 	});
 
 	$('.FormsContainer #passwordLost #goBack').click(function(){
@@ -121,23 +123,30 @@ $(document).ready(function() {
 	$('form#passwordLost').submit(function(e){
 		var self = $(this);
 		e.preventDefault();
+		self.find('.alertDiv').removeClass('show');
+		self.find('button').removeClass('show');
+		self.find('.sk-fading-circle').addClass('show');
 		postHandler.post(
-		$(this).attr('action'),
-		{
-			email : $(this).find("input[name='email']").val()	
-		},
-		function(){
+			$(this).attr('action'),
+			{
+				email : $(this).find("input[name='email']").val()	
+			},
+			function(){
 
-		},
-		function(data){
-			self.find('.alertDiv').text(data);
-			self.find('.alertDiv').addClass('show');
-		},
-		function(data){
-			self.find('.alertDiv').text(data);
-			self.find('.alertDiv').addClass('show');
-		},
-		'text');
+			},
+			function(data){
+				self.find('.alertDiv p').text(data);
+				self.find('.alertDiv').addClass('show');
+				self.find('button').addClass('show');
+				self.find('.sk-fading-circle').removeClass('show');
+			},
+			function(data){
+				self.find('.alertDiv p').text(data);
+				self.find('.alertDiv').addClass('show');
+				self.find('button').addClass('show');
+				self.find('.sk-fading-circle').removeClass('show');
+			},
+			'text');
 	});
 
 	if ($('.savedUser').length) $('.savedUser #password').focus();
