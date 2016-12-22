@@ -71,6 +71,7 @@ $(document).ready(function(){
 		</div>
 		<%@ include file="extension.jsp" %>		
 		<%@ include file="catalog/catalogView.jsp"%>
+		<%@ include file="Tips.jsp" %>
 	</div>
 	<dashboard:hiddenProfile profile="${dashboardColumns.get(0).get(0)}"/>
 	<%@ include file="SettingsView.jsp" %>
@@ -81,6 +82,7 @@ $(document).ready(function(){
 	<div class="md-overlay"></div>
 	
 </div>
+<%@ include file="new_extension.jsp" %>
 <%@ include file="TutorialView.jsp"%>
 
 <script>
