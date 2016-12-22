@@ -692,7 +692,9 @@ public class User {
 		return this.status.tutoIsDone();
 	}
 	
-	
+	public boolean appsImported() {
+		return this.status.appsImported();
+	}
 	
 	public void addEmailIfNeeded(String email, ServletManager sm) throws GeneralException {
 		UserEmail userEmail = this.emails.get(email);

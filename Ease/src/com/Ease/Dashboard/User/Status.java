@@ -16,6 +16,7 @@ public class Status {
 		FIRST_CONNECTION,
 		CGU,
 		CHROME_SCRAPPING,
+		APPS_MANUALLY_ADDED,
 		CLICK_ON_APP,
 		MOVE_APPS,
 		OPEN_CATALOG,
@@ -24,8 +25,8 @@ public class Status {
 	}
 	
 	public static Status createStatus(DataBaseConnection db) throws GeneralException {
-		String db_id = db.set("INSERT INTO status values (null, 0, 0, 0, 0, 0, 0, 0, 0);").toString();
-		return new Status(db_id, false, false, false, false, false, false, false, false);
+		String db_id = db.set("INSERT INTO status values (null, 0, 0, 0, 0, 0, 0, 0, 0, 0);").toString();
+		return new Status(db_id, false, false, false, false, false, false, false, false, false);
 	}
 	
 	public static Status loadStatus(String db_id, DataBaseConnection db) throws GeneralException {
@@ -35,12 +36,13 @@ public class Status {
 			boolean first_connection = rs.getBoolean(Data.FIRST_CONNECTION.ordinal());
 			boolean CGU = rs.getBoolean(Data.CGU.ordinal());
 			boolean chrome_scrapping = rs.getBoolean(Data.CHROME_SCRAPPING.ordinal());
+			boolean apps_manually_added = rs.getBoolean(Data.APPS_MANUALLY_ADDED.ordinal());
 			boolean click_on_app = rs.getBoolean(Data.CLICK_ON_APP.ordinal());
 			boolean	move_apps = rs.getBoolean(Data.MOVE_APPS.ordinal());
 			boolean open_catalog = rs.getBoolean(Data.OPEN_CATALOG.ordinal());
 			boolean drag_and_drop = rs.getBoolean(Data.DRAG_AND_DROP.ordinal());
 			boolean tuto_done = rs.getBoolean(Data.TUTO_DONE.ordinal());
-			return new Status(db_id, first_connection, CGU, chrome_scrapping, click_on_app, move_apps, open_catalog, drag_and_drop, tuto_done);
+			return new Status(db_id, first_connection, CGU, chrome_scrapping, apps_manually_added, click_on_app, move_apps, open_catalog, drag_and_drop, tuto_done);
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
@@ -51,17 +53,19 @@ public class Status {
 	protected boolean first_connection;
 	protected boolean CGU;
 	protected boolean chrome_scrapping;
+	protected boolean apps_manually_added;
 	protected boolean click_on_app;
 	protected boolean move_apps;
 	protected boolean open_catalog;
 	protected boolean drag_and_drop;
 	protected boolean tuto_done;
 	
-	public Status(String db_id, boolean first_connection, boolean CGU, boolean chrome_scrapping, boolean click_on_app, boolean move_apps, boolean open_catalog, boolean drag_and_drop, boolean tuto_done) {
+	public Status(String db_id, boolean first_connection, boolean CGU, boolean chrome_scrapping, boolean apps_manually_added, boolean click_on_app, boolean move_apps, boolean open_catalog, boolean drag_and_drop, boolean tuto_done) {
 		this.db_id = db_id;
 		this.first_connection = first_connection;
 		this.CGU = CGU;
 		this.chrome_scrapping = chrome_scrapping;
+		this.apps_manually_added = apps_manually_added;
 		this.click_on_app = click_on_app;
 		this.move_apps = move_apps;
 		this.open_catalog = open_catalog;
@@ -95,5 +99,9 @@ public class Status {
 	public void validateTuto(DataBaseConnection db) throws GeneralException {
 		if (!this.tuto_done && this.CGU && this.move_apps && this.click_on_app && this.drag_and_drop && this.first_connection && this.open_catalog)
 			this.passStep("tuto_done", db);
+	}
+
+	public boolean appsImported() {
+		return this.chrome_scrapping || this.apps_manually_added;
 	}
 }

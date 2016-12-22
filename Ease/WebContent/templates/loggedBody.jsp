@@ -82,8 +82,11 @@ $(document).ready(function(){
 	<div class="md-overlay"></div>
 	
 </div>
+
+<c:if test='${user.appsImported() eq false}'>
+	<%@ include file="TutorialView.jsp"%>
+</c:if>
 <%@ include file="new_extension.jsp" %>
-<%@ include file="TutorialView.jsp"%>
 
 <script>
 

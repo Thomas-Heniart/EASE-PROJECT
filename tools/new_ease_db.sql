@@ -28,6 +28,7 @@ CREATE TABLE status (
   `first_connection` tinyint(1) NOT NULL,
   `CGU` tinyint(1) NOT NULL,
   `chrome_scrapping` tinyint(1) NOT NULL,
+  `apps_manually_added` tinyint(1) NOT NULL,
   `click_on_app` tinyint(1) NOT NULL,
   `move_apps` tinyint(1) NOT NULL,
   `open_catalog` tinyint(1) NOT NULL,
