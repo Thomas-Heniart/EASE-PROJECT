@@ -103,8 +103,8 @@ public class Mail {
 		try {
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
 			message.setSubject(MimeUtility.encodeText("Active ton compte Ease !", "utf-8", null));
-			//String link = "https://ease.space/thefamily?email=" + email + "&invitationCode=" + invitationCode;
-			String link = "http://localhost:8080/thefamily?email=" + email + "&invitationCode=" + invitationCode;
+			String link = "https://ease.space/thefamily?email=" + email + "&invitationCode=" + invitationCode;
+			//String link = "http://localhost:8080/thefamily?email=" + email + "&invitationCode=" + invitationCode;
 			message.setContent("<p>*French version below*</p>" + "<p></p>" + "<p>Hello & welcome to Ease !</p>"
 					+ "<p></p>"
 					+ "<p>Ease.space gathers the websites on which you have an account and allows you to login & logout to them in 1 click. All this from a secured personal homepage on your browser. For now, it works on Chrome and Safari.</p>"
@@ -210,8 +210,8 @@ public class Mail {
 		try {
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
 			message.setSubject(MimeUtility.encodeText("Active ton compte Ease !", "utf-8", null));
-			//String link = "https://ease.space/thefamily?email=" + email + "&invitationCode=" + invitationCode;
-			String link = "http://localhost:8080/register?email=" + email + "&name=" + name + "&invitationCode=" + invitationCode;
+			String link = "https://ease.space/thefamily?email=" + email + "&invitationCode=" + invitationCode;
+			//String link = "http://localhost:8080/register?email=" + email + "&name=" + name + "&invitationCode=" + invitationCode;
 			message.setContent("<p>*French version below*</p>" + "<p></p>" + "<p>Hello & welcome to Ease !</p>"
 					+ "<p></p>"
 					+ "<p>Ease.space gathers the websites on which you have an account and allows you to login & logout to them in 1 click. All this from a secured personal homepage on your browser. For now, it works on Chrome and Safari.</p>"

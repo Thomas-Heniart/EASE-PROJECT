@@ -189,12 +189,11 @@ public class App {
 		db.set("UPDATE apps SET profile_id=" + profile.getDBid() + " WHERE id=" + this.db_id + ";");
 		this.profile = profile;
 	}
-	public boolean havePerm(ProfilePermissions.Perm perm) {
+	
+	public boolean havePerm(AppPermissions.Perm perm) {
 		if (this.groupApp == null)
 			return true;
-		if (!this.groupApp.isCommon())
-			return true;
-		if (this.groupApp.getPerms().havePermission(perm.ordinal()))
+		if (!this.groupApp.isCommon() && this.groupApp.getPerms().havePermission(perm.ordinal()))
 			return true;
 		return false;
 	}

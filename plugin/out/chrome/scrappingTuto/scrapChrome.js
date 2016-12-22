@@ -29,7 +29,6 @@ extension.runtime.onMessage("connectToChrome", function(msg, sendResponse){
 });
 
 extension.runtime.onMessage("scrapChrome", function(msg, sendResponse){
-  console.log("start scrap");
     function waitload(callback){
         if($(".z-Of.cba.z-op").length != 0){
             console.log("start scrap");
@@ -47,7 +46,7 @@ extension.runtime.onMessage("scrapChrome", function(msg, sendResponse){
         var loadingString = "";
         var waitingTime = 5;
         console.log($(".z-Of.cba.z-op").length);
-        var nbOfPass = $(".z-Of.cba.z-op").length;
+        var nbOfPass = $(".z-Of.cba.z-op").length;  
         var results = [];
         console.log(nbOfPass);
         function getPass(index){
@@ -69,7 +68,7 @@ extension.runtime.onMessage("scrapChrome", function(msg, sendResponse){
                         else{
                             $(element).find(".Vaa.AW.aga").click();
                             sendResponse(results);
-                        }
+                        }   
                     }
                 } else {
                     setTimeout(waitPass, waitingTime);
@@ -89,5 +88,5 @@ extension.runtime.onMessage("scrapChrome", function(msg, sendResponse){
             
         }
         getPass(0);
-    });
+    });   
 });

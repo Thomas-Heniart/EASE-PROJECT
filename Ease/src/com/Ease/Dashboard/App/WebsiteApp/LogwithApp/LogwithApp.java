@@ -38,7 +38,7 @@ public class LogwithApp extends WebsiteApp {
 	 * 
 	 */
 	
-	public static LogwithApp loadLogwithApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, String websiteAppDBid, GroupWebsiteApp groupWebsiteApp, ServletManager sm) throws GeneralException {
+	public static LogwithApp loadLogwithApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, String websiteAppDBid, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		try {
 			ResultSet rs = db.get("SELECT * from logWithApps WHERE website_app_id=" + websiteAppDBid + ";");
@@ -46,7 +46,7 @@ public class LogwithApp extends WebsiteApp {
 				String logwith = rs.getString(Data.LOGWITH_APP_ID.ordinal());
 				String logwithDBid = rs.getString(Data.ID.ordinal());
 				IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
-				return new LogwithApp(db_id, profile, position, infos, groupApp, insertDate, idGenerator.getNextId(), site, websiteAppDBid, groupWebsiteApp, logwith, logwithDBid);
+				return new LogwithApp(db_id, profile, position, infos, groupApp, insertDate, idGenerator.getNextId(), site, websiteAppDBid, logwith, logwithDBid);
 			} 
 			throw new GeneralException(ServletManager.Code.InternError, "Logwith app not complete in db.");
 		} catch (SQLException e) {
@@ -61,7 +61,7 @@ public class LogwithApp extends WebsiteApp {
 		String websiteAppDBid = WebsiteApp.createWebsiteApp(profile, position, name, "logwithApp", site, elevator, sm);
 		String logwithDBid = db.set("INSERT INTO logWithApps VALUES(NULL, " + websiteAppDBid + ", " + logwith.getWebsiteAppDBid() + ", NULL);").toString();
 		db.commitTransaction(transaction);
-		LogwithApp app = new LogwithApp((String)elevator.get("appDBid"), profile, position, (AppInformation)elevator.get("appInfos"), null, (String)elevator.get("registrationDate"), ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, null, logwith.getDBid(), logwithDBid);
+		LogwithApp app = new LogwithApp((String)elevator.get("appDBid"), profile, position, (AppInformation)elevator.get("appInfos"), null, (String)elevator.get("registrationDate"), ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, logwith.getDBid(), logwithDBid);
 		app.rempLogwith(logwith);
 		return app;
 	}
@@ -73,7 +73,7 @@ public class LogwithApp extends WebsiteApp {
 		db.set("UPDATE websiteApps SET type='logwithApp' WHERE id='"+ websiteAppDBid +"';");
 		String logwithDBid = db.set("INSERT INTO logWithApps VALUES(NULL, " + websiteAppDBid + ", " + logwith.getWebsiteAppDBid() + ", NULL);").toString();
 		db.commitTransaction(transaction);
-		LogwithApp newLogwithApp = new LogwithApp(websiteApp.getDBid(), user.getProfileFromApp(websiteApp.getSingleId()), websiteApp.getPosition(), websiteApp.getAppInformation(),null, websiteApp.getInsertDate(), websiteApp.getSingleId(), websiteApp.getSite(), websiteAppDBid, null, logwith.getDBid(), logwithDBid);
+		LogwithApp newLogwithApp = new LogwithApp(websiteApp.getDBid(), user.getProfileFromApp(websiteApp.getSingleId()), websiteApp.getPosition(), websiteApp.getAppInformation(),null, websiteApp.getInsertDate(), websiteApp.getSingleId(), websiteApp.getSite(), websiteAppDBid, logwith.getDBid(), logwithDBid);
 		newLogwithApp.rempLogwith(logwith);
 		user.replaceApp(newLogwithApp);
 		return newLogwithApp;
@@ -89,8 +89,8 @@ public class LogwithApp extends WebsiteApp {
 	protected String logwithDBid;
 	protected WebsiteApp logwith;
 	
-	public LogwithApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid, GroupWebsiteApp groupWebsiteApp, String logwith, String logwithDBid) {
-		super(db_id, profile, position, infos, groupApp, insertDate, single_id, site, websiteAppDBid, groupWebsiteApp);
+	public LogwithApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid, String logwith, String logwithDBid) {
+		super(db_id, profile, position, infos, groupApp, insertDate, single_id, site, websiteAppDBid);
 		this.logwithDBid = logwith;
 		this.logwithAppDBid = logwithDBid;
 	}
