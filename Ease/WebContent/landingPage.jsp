@@ -70,8 +70,8 @@ pageEncoding="UTF-8"%>
 	<header>
 		<div class="container">
 			<div class="intro-text">
-				<div class="intro-heading">Une page d’accueil pour accéder à votre web, simplement</div>
-				<div class="intro-lead-in">Ne vous souciez plus jamais de vos mots de passe</div>
+				<div class="intro-heading">Se connecter à ses sites préférés<br>n'a jamais été aussi simple</div>
+				<div class="intro-lead-in">Une page d'accueil qui rassemble vos comptes web,<br>pour vous y connecter en un clic</div>
 				<a href="#services" class="btn btn-xl signUpButton">Commencez gratuitement !</a>
 			</div>
 		</div>
@@ -80,13 +80,13 @@ pageEncoding="UTF-8"%>
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-12 text-center">
-					<h2 class="section-heading">Comment ça marche ?</h2>
-					<h3 class="section-subheading text-muted">Regardez la vidéo ;)</h3>
+					<h2 class="section-heading">Voici comment on vous connecte</h2>
+					<h3 class="section-subheading text-muted">Petite démo ;)</h3>
 				</div>
 			</div>
 			<div class="mockupPresentation">
 				<video width="100%" height="auto" controls>
-					<source src="resources/videos/video1.mp4" type="video/mp4">
+					<source src="resources/videos/video5.mp4" type="video/mp4">
 						Your browser does not support the video tag.
 					</video>
 				</div>
@@ -96,8 +96,8 @@ pageEncoding="UTF-8"%>
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-12 text-center">
-						<h2 class="section-heading">Avantages</h2>
-						<h3 class="section-subheading text-muted">Nous sommes là pour vous faciliter la vie</h3>
+						<h2 class="section-heading">Voici comment on vous simplifie la vie</h2>
+						<h3 class="section-subheading text-muted">Avantages</h3>
 					</div>
 				</div>
 				<div class="row w70 showcase">
@@ -105,35 +105,35 @@ pageEncoding="UTF-8"%>
 						<i class="fa fa-circle-thin fa-stack-2x"></i>
 						<i class="fa fa-magic fa-stack-1x"></i>
 					</span>
-					<p><span>N'utilisez plus jamais de mots de passe:</span> Ease vous connecte en 1 clic automagiquement</p>
+					<p><span>N'utilisez plus jamais de mots de passe:</span> Ease vous connecte en 1 clic automatiquement</p>
 				</div>
 				<div class="row w70 showcase">
 					<span class="fa-stack fa-lg">
 						<i class="fa fa-circle-thin fa-stack-2x"></i>
 						<i class="fa fa-rocket fa-stack-1x"></i>
 					</span>
-					<p><span>Gagnez du temps:</span> Ease fait économiser en moyenne 30 heures par an à ses utilisateurs</p>
+					<p><span>Gagnez du temps et de la tranquillité:</span> Ease fait économiser en moyenne 55 heures par an</p>
 				</div>
 				<div class="row w70 showcase">
 					<span class="fa-stack fa-lg">
 						<i class="fa fa-circle-thin fa-stack-2x"></i>
 						<i class="fa fa-globe fa-stack-1x"></i>
 					</span>
-					<p><span>Accédez à vos sites depuis n’importe où:</span> Ease est disponible sur tout ordinateur</p>
+					<p><span>Accédez à vos sites depuis n’importe où:</span> Votre espace Ease est accessible de la même manière quel que soit l'ordinateur</p>
 				</div>
 				<div class="row w70 showcase">
 					<span class="fa-stack fa-lg">
 						<i class="fa fa-circle-thin fa-stack-2x"></i>
 						<i class="fa fa-refresh fa-stack-1x"></i>
 					</span>
-					<p><span>Centralisez votre web:</span> Ease intègre tout type de comptes comme ceux connectés avec Facebook et LinkedIn</p>
+					<p><span>Retrouvez votre web facilement:</span> Ease centralise vos comptes, même avec une connexion Facebook, LinkedIn, etc...</p>
 				</div>
 			</div>
 		</section>
 		<section class="vp" style="background-color:#eee;">
 			<div clas="container">
 				<div class="row">
-					<a href="#services" class="btn btn-xl signUpButton">Commencez gratuitement !</a>
+					<a href="#services" class="btn btn-xl signUpButton">Essayez maintenant, c'est gratuit !</a>
 				</div>
 			</div>
 		</section>
@@ -155,7 +155,7 @@ pageEncoding="UTF-8"%>
 						</div>
 						<div class="feature">
 							<span>
-								Switch de comptes automatique
+								Gestion de plusieurs comptes sur un même site
 							</span>
 							<i class="fa fa-check" aria-hidden="true"></i>
 						</div>
@@ -167,7 +167,13 @@ pageEncoding="UTF-8"%>
 						</div>
 						<div class="feature">
 							<span>
-								Customisation selon vos besoin
+								Organisation selon vos besoin
+							</span>
+							<i class="fa fa-check" aria-hidden="true"></i>
+						</div>
+						<div class="feature">
+							<span>
+								Compatibilité navigateurs Chrome et Safari
 							</span>
 							<i class="fa fa-check" aria-hidden="true"></i>
 						</div>
@@ -175,7 +181,7 @@ pageEncoding="UTF-8"%>
 					<div class="fList right">
 						<div class="feature">
 							<span>
-								Déconnexion centralisée de votre web
+								Déconnexion de tous vos comptes en 1 clic, depuis Ease
 							</span>
 							<i class="fa fa-check" aria-hidden="true"></i>
 						</div>
@@ -187,13 +193,13 @@ pageEncoding="UTF-8"%>
 						</div>
 						<div class="feature">
 							<span>
-								Partage d’identifiants entre collaborateurs
+								Partage d’identifiants avec votre équipe
 							</span>
 							<i class="fa fa-check" aria-hidden="true"></i>
 						</div>
 						<div class="feature">
 							<span>
-								Gestion des apps connectées avec Facebook et LinkedIn
+								Gestion des comptes avec une connexion Facebook, LinkedIn, etc...
 							</span>
 							<i class="fa fa-check" aria-hidden="true"></i>
 						</div>
@@ -206,53 +212,53 @@ pageEncoding="UTF-8"%>
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-12 text-center">
-						<h2 class="section-heading">ils nous font confiance</h2>
+						<h2 class="section-heading">Ils nous font confiance</h2>
 					</div>
 				</div>
 				<div class="row">
 					<div class="markColumn">
 						<div class="markHandler">
-							<a href="" >
+							<a href="http://bunkrapp.com/" >
 								<img src="resources/landing/bunkr-logo.png" />
 							</a>
 						</div>
 						<div class="markHandler">
-							<a href="" >
+							<a href="http://jeflabel.com/" >
 								<img src="resources/landing/jef-logo.png" />
 							</a>
 						</div>
 						<div class="markHandler">
-							<a href="" >
+							<a href="https://www.sosav.fr/" >
 								<img src="resources/landing/sosav-logo.png" />
 							</a>
 						</div>
 						<div class="markHandler">
-							<a href="" >
+							<a href="http://www.ineat-conseil.com/" >
 								<img src="resources/landing/ineat-logo.png" />
 							</a>
 						</div>
 						<div class="markHandler">
-							<a href="" >
+							<a href="https://tribe.pm/" >
 								<img src="resources/landing/tribe-logo.png" />
 							</a>
 						</div>
 						<div class="markHandler">
-							<a href="" >
+							<a href="http://ecota.co/" >
 								<img src="resources/landing/ecotaco-logo.png" />
 							</a>
 						</div>
 						<div class="markHandler">
-							<a href="" >
+							<a href="http://www.side-law.com/" >
 								<img src="resources/landing/side-logo.png" />
 							</a>
 						</div>
 						<div class="markHandler">
-							<a href="" >
+							<a href="https://www.nestorparis.com/" >
 								<img src="resources/landing/nestor-logo.png" />
 							</a>
 						</div>
 						<div class="markHandler">
-							<a href="" >
+							<a href="https://www.mobeye-app.com" >
 								<img src="resources/landing/mobeye-logo.png" />
 							</a>
 						</div>
