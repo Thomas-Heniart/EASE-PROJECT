@@ -16,6 +16,7 @@
 			<div style="width: 55%;margin:5px auto 5px auto;"><img style="width: 100%" src="resources/other/safari-addon-example.png"/></div>
 			<p style="font-size: 1.3em;">Once it's done, just <a href="/">click here to reload the page</a> :)</p>
 		</div>
+		
 		<div class="safariHelper" id="alreadydownloaded" style="display: none;">
 			<p style="font-size: 1.2em; margin-top:5px;">If you have already downloaded the addon, try to double click on "EaseExtension.safariextz" in your downloads folder to install it. Then <a href="/">reload the page</a>.
 			<br>If it's still not working, you can contact us on <a href="https://www.facebook.com/EasePlatform/?fref=ts" target="_blank">our facebook page.</a></p>
