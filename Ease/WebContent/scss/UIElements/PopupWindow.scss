@@ -1,0 +1,963 @@
+@import '../variables';
+
+#SmallNotificationPopup {
+	display: block;
+	position: fixed;
+	padding: 1%;
+	right: 1%;
+	top: 4%;
+	height: 15%;
+	width: 12%;
+	border-radius: 10px;
+	opacity: 0;
+	background-color: darken(rgba($themeLightGreyColor, 0.7), 15%);
+	-webkit-transition: opacity 0.3s ease;
+	transition: opacity 0.3s ease;
+	.notification-icon, .notification-content {
+		position: relative;
+	}
+	.notification-icon {
+		font-size: 1.2em;
+		margin-right: 8%;
+	}
+	.notification-content {
+		position: absolute;
+		vertical-align: middle;
+		margin-left: 5%;
+		top: 2%;
+		font-size: 0.9em;
+	}
+	.notification-separator {
+		height: 70%;
+		position: absolute;
+		top: 13%;
+		border-left: 2px solid darken($themeLightGreyColor, 30%);
+	}
+}
+#SmallNotificationPopup.show {
+	opacity: 1;
+	-webkit-transition: opacity 0.3s ease;
+	transition: opacity 0.3s ease;
+}
+
+.md-overlay {
+	background-color: rgba(56,55,98,0.8) !important;
+}
+.popup {
+	.alertDiv.show {
+		display: block;
+		width: 50%;
+		margin: 3px auto;
+		color: red;
+		padding: 0px;
+		p {
+			font-size: 13px;
+			margin: 0px;
+			padding: 0px;
+		}
+	}
+}
+
+.popup {
+	.popupForm {
+		width: 80%;
+		margin: auto;
+		.input {
+			width: 100%;
+			margin: 0px;
+			max-width: inherit;
+			position: relative;
+			display: block;
+			input {
+				width: 100% !important;
+			}
+		}
+	}
+	.buttonSet {
+		button {
+			display: inline-block;
+			width: 49%;
+			padding: 3px;
+			font-size: 14px;
+		}
+	}
+	button#accept {
+		transition: background-color .3s;
+		background-color: #CCCCCC;
+		border: 1px solid $borderFbColor;
+		letter-spacing: 1px;
+		color: white;
+		opacity: 1;
+		font-weight: normal;
+	}
+	button#accept.Active {
+		background-color: darken($themeGreenColor, 10%);
+		border: 1px solid darken($themeGreenColor, 10%);
+		&:hover {
+			background-color: $themeGreenColor;
+			border-color: $themeGreenColor;
+		}
+	}
+	button#close {
+		background-color: $themeDarkGreyColor;
+		color: white;
+		border-color: $themeDarkGreyColor;
+		letter-spacing: 1px;
+		font-weight: normal;
+		&:hover {
+			background-color: darken($themeDarkGreyColor, 3%);
+		}
+
+	}
+}
+
+.popup {
+	.md-content {
+		background-color: $themeColor !important;
+		padding: 5px;
+		.form {
+			border-radius: 0px !important;
+			width: 100%;
+			form {
+				button {
+					margin-top: 35px;
+				}
+				.colorChoose {
+					margin-top: 20px;
+					.cs-select {
+						.cs-placeholder {
+							width: 100%;
+							font-size: 19px;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+#AddUpdatePopup {
+	min-width: 200px;
+	max-width: 100%;
+	width: 400px;
+	font-family: $defaultFont;
+	.md-content {
+		border-radius: 15px;
+		padding-top: 20px;
+		font-family: $defaultFont;
+		p.title {
+			text-align: center;
+			font-size: 20px;
+
+		}
+		p.text {
+			text-align: center;
+			margin-top: 5%;
+			margin-bottom: 5%;
+		}
+		p.error {
+			margin-top: 5%;
+			margin-bottom: 5%;
+			color: #FF0000;
+		}
+		.app {
+			margin: auto;
+			img {
+				height: 10%;
+				width: 10%;
+			}
+			p {
+				display: inline-block;
+				margin: 0 5px;
+			}
+			input{
+				display: inline-block;
+				color: #000000;
+			}
+		}
+		.error {
+			margin-bottom: 10px;
+		}
+		.buttonSet {
+			text-align: center;
+			padding-bottom: 20px;
+			button {
+				display: inline-block;
+				width: 49%;
+				padding: 7px;
+			}
+			#accept {
+				background-color: #ec555b;
+				border-color: #ec555b;
+				&:hover {
+					background-color: lighten(#ec555b, 3%);
+				}
+			}
+			#close {
+				background-color: white;
+				color: black;
+				border-color: white;
+				&:hover {
+					background-color: darken(white, 3%);
+				}
+			}
+		}
+	}
+}
+
+#PopupDeleteApp {
+	min-width: 200px;
+	max-width: 100%;
+	width: 400px;
+	.md-content {
+		border-radius: 15px;
+		padding-top: 20px;
+		font-family: $defaultFont;
+		p {
+			text-align: center;
+		}
+		.title {
+			font-size: 17px;
+		}
+		.desc {
+			font-size: 11px;
+		}
+		.buttonSet {
+			text-align: center;
+			button {
+				display: inline-block;
+				width: 49%;
+				padding: 3px;
+				font-size: 14px;
+			}
+		}
+	}
+}
+
+#PopupAddApp {
+	min-width: 200px;
+	max-width: 100%;
+	width: 400px;
+	.md-content {
+		border-radius: 15px;
+		padding-top: 20px;
+		font-family: $defaultFont;
+		.popupHeader {
+			overflow: hidden;
+			padding: 0px;
+			width: 80%;
+			margin-left: auto;
+			margin-right: auto;
+			position: relative;
+			margin-bottom: 5px;
+			.logoApp {
+				width: 20%;
+				float: left;
+				height: auto;
+				top: 10%;
+				left: 3%;
+				border-radius: 3px;
+			}
+			.textContent {
+				width: 80%;
+				float: left;
+				p {
+					font-size: 1.15em;
+					padding: 0px;
+					padding-left: 2px;
+					text-align: center;
+				}
+				.title {
+					font-size: 17px;
+				}
+				.desc {
+					font-size: 11px;
+				}
+			}
+		}
+		#name {
+			font-size: 1.15em;
+			font-weight: 300;
+			height: 29px;
+			margin: 5px auto;
+			color: black;
+			padding-left: 3px;
+			border-radius: 5px;
+			border: 1px hidden;
+		}
+		.loginWithChooser.hidden {
+			display: none;
+		}
+		.loginWithChooser {
+			p {
+				margin: 0px;
+				padding: 0px;
+			}
+			.loginWithButton.hidden {
+				display: none;
+			}
+			.loginWithButton {
+				padding: 5px;
+				display: inline-block;
+				max-width: 32%;
+				width: 31%;
+				margin-bottom: 5px;
+				border-radius: 5px;
+				p {
+					padding: 0px;
+				}
+				&:hover {
+					cursor: pointer;
+				}
+			}
+		}
+		.loginAppChooser {
+			.buttonBack {
+				font-size: 25px;
+				position: absolute;
+				right: 0;
+				top: 0;
+				color: white;
+				&:hover {
+					color: darken(white, 10%);
+					cursor: pointer;
+				}
+			}
+			p {
+				text-align: center;
+			}
+			.AccountApp.selected {
+				border: 1px solid white;
+			}
+			.ChooserContent {
+				max-height: 100px;
+				overflow: auto;
+				.AccountApp {
+					max-height: 30px;
+					height: 30px;
+					cursor: pointer;
+					padding: 2px;
+					margin-bottom: 4px;
+					p, .imageHandler {
+						display: inline-block;
+					}
+					p {
+						text-align: left;
+						margin : 0px;
+						margin-left: 5px;
+						padding: 0px;
+					}
+					.imageHandler {
+						height: 100%;
+						img {
+							height: 100%;
+						}
+					}
+				}
+			}
+		}
+		.loginSsoChooser {
+			padding: 0px;
+			width: 80%;
+			margin-left: auto;
+			margin-right: auto;
+			position: relative;
+			text-align: center;
+			display: block;
+			p {
+				margin: 0px;
+				padding: 0px;
+				text-align: center;
+			}
+			.AccountApp.selected {
+				border: 1px solid white;
+			}
+			.ChooserContent {
+				max-height: 70px;
+				overflow: auto;
+				text-align: left;
+				.AccountApp {
+					max-height: 30px;
+					height: 30px;
+					cursor: pointer;
+					padding: 2px;
+					margin-bottom: 4px;
+					p, .imageHandler {
+						display: inline-block;
+					}
+					p {
+						text-align: left;
+						margin : 0px;
+						margin-left: 5px;
+						padding: 0px;
+					}
+					.imageHandler {
+						height: 100%;
+						img {
+							height: 100%;
+						}
+					}
+				}
+			}
+		}
+		#AddAppForm {
+			width: 80%;
+			margin: 5px auto;
+			padding: 0px;
+		}
+		.input {
+			margin: 2px 0px;
+			input {
+				margin: 0px 0px 0px 0px;
+			}
+		}
+		.buttonSet {
+			text-align: center;
+		}
+	}
+}
+
+#PopupDeleteProfile {
+	min-width: 200px;
+	max-width: 100%;
+	width: 400px;
+	.md-content {
+		border-radius: 15px;
+		padding-top: 20px;
+		font-family: $defaultFont;
+		text-align: center;
+		.popupForm {
+			width: 80%;
+			margin: auto;
+			p {
+				text-align: center;
+			}
+			.title {
+				font-size: 17px;
+				margin-bottom: 10px;
+			}
+			.desc {
+				font-size: 11px;
+			}
+			input {
+				width: 80%;
+				border-radius: 5px;
+				border: 1px hidden;
+				height: 29px;
+				color: $themeColor;
+				padding-left: 3px;
+				background-color: #efefef;
+				border: none;
+				text-align: center;
+			}
+			.buttonSet {
+				text-align: center;
+			}
+		}
+	}
+}
+#PopupModifyApp {
+	min-width: 200px;
+	max-width: 100%;
+	width: 400px;
+	.md-content {
+		border-radius: 15px;
+		padding-top: 20px;
+		font-family: $defaultFont;
+		.popupHeader {
+			overflow: hidden;
+			padding: 0px;
+			width: 80%;
+			margin-left: auto;
+			margin-right: auto;
+			position: relative;
+			margin-bottom: 5px;
+			.logoApp {
+				width: 20%;
+				float: left;
+				height: auto;
+				top: 10%;
+				left: 3%;
+				border-radius: 3px;
+			}
+			.textContent {
+				width: 80%;
+				float: left;
+				p {
+					padding: 0px;
+					padding-left: 2px;
+					text-align: center;
+					span {
+						font-weight: 600;
+					}
+				}
+				.title {
+					font-size: 17px;
+				}
+				.desc {
+					font-size: 11px;
+				}
+			}
+		}
+		.loginWithChooser.hidden {
+			display: none;
+		}
+		#name {
+			font-size: 1.15em;
+			font-weight: 300;
+			height: 29px;
+			margin: 5px auto;
+			color: black;
+			padding-left: 3px;
+			border-radius: 5px;
+			border: 1px hidden;
+		}
+		.loginWithChooser {
+			p {
+				margin: 0px;
+				padding: 0px;
+			}
+			.loginWithButton.hidden {
+				display: none;
+			}
+			.loginWithButton {
+				padding: 5px;
+				display: inline-block;
+				max-width: 32%;
+				width: 31%;
+				margin-bottom: 5px;
+				border-radius: 5px;
+				p {
+					padding: 0px;
+				}
+				&:hover {
+					cursor: pointer;
+				}
+			}
+		}
+		.loginAppChooser {
+			.buttonBack {
+				font-size: 25px;
+				position: absolute;
+				right: 0;
+				top: 0;
+				color: white;
+				&:hover {
+					color: darken(white, 10%);
+					cursor: pointer;
+				}
+			}
+			p {
+				text-align: center;
+			}
+			.AccountApp.selected {
+				border: 1px solid white;
+			}
+			.ChooserContent {
+				max-height: 100px;
+				overflow: auto;
+				.AccountApp {
+					max-height: 30px;
+					height: 30px;
+					cursor: pointer;
+					padding: 2px;
+					margin-bottom: 4px;
+					p, .imageHandler {
+						display: inline-block;
+					}
+					p {
+						text-align: left;
+						margin : 0px;
+						margin-left: 5px;
+						padding: 0px;
+					}
+					.imageHandler {
+						height: 100%;
+						img {
+							height: 100%;
+						}
+					}
+				}
+			}
+		}
+		.loginSsoChooser {
+			max-height: 100px;
+			padding: 0px;
+			margin: 0px;
+			width: 90%;
+			margin-left: auto;
+			margin-right: auto;
+			position: relative;
+			.buttonBack {
+				font-size: 25px;
+				position: absolute;
+				right: 0;
+				top: 0;
+				color: white;
+				&:hover {
+					color: darken(white, 10%);
+					cursor: pointer;
+				}
+			}
+			p {
+				text-align: center;
+			}
+			.AccountApp.selected {
+				border: 1px solid white;
+			}
+			.ChooserContent {
+				max-height: 70px;
+				overflow: auto;
+				.AccountApp {
+					max-height: 30px;
+					height: 30px;
+					cursor: pointer;
+					padding: 2px;
+					margin-bottom: 4px;
+					p, .imageHandler {
+						display: inline-block;
+					}
+					p {
+						text-align: left;
+						margin : 0px;
+						margin-left: 5px;
+						padding: 0px;
+					}
+					.imageHandler {
+						height: 100%;
+						img {
+							height: 100%;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+#PopupSendEmailWebsite {
+	min-width: 200px;
+	max-width: 100%;
+	width: 400px;
+	.md-content {
+		border-radius: 15px;
+		padding-top: 20px;
+		font-family: $defaultFont;
+		p {
+			text-align: center;
+		}
+		.title {
+			font-size: 17px;
+		}
+		input {
+			display: block;
+			margin-top: 3px;
+			margin-bottom: 3px;
+			color: black;
+			width: 99%;
+			border-radius: 5px;
+		}
+		.desc {
+			font-size: 11px;
+			color: black;
+			min-width: 300px;
+			min-height: 200px;
+			max-width: 300px;
+			max-height: 200px;
+		}
+		.buttonSet {
+			text-align: center;
+			button {
+				display: inline-block;
+				width: 49%;
+				padding: 3px;
+				font-size: 14px;
+			}
+		}
+	}
+}
+
+
+.md-show ~ .md-overlay {
+	opacity: 0.3 !important;
+}
+
+.popup {
+	.lineInput {
+		width: 80%;
+		overflow: hidden;
+		margin: 0px auto;
+		padding: 0px;
+		.inputTitle {
+			display: inline-block;
+			width: 35%;
+			float: left;
+		}
+		input {
+			display: inline-block;
+			width: 60%;
+			float: right;
+		}
+	}
+}
+.linedSeparator {
+	position: relative;
+	.backgroundLine {
+		width: 100%;
+		position: absolute;
+		border: 1px solid white;
+		z-index: -1;
+		top: 50%;
+	}
+	p {
+		background-color: $themeColor;
+		padding: 2px;
+		display: inline-block;
+	}
+}
+
+.loginWithButton.facebook {
+	background-color: #999999;
+	&:hover {
+		background-color: lighten(#3B5998, 10%);
+	}
+}
+.loginWithButton.facebook.locked {
+	background-color: lighten(#3B5998, 15%);
+	border: 1px solid white;
+}
+
+.loginWithButton.linkedin {
+	background-color:#999999;
+	&:hover {
+		background-color: lighten(#007BB6, 10%);
+	}
+}
+.loginWithButton.linkedin.locked {
+	background-color: lighten(#007BB6, 15%);
+	border: 1px solid white;
+}
+
+.disabledInput {
+	position: relative;
+	overflow: hidden;
+	.activateInput {
+		color: $themeColor;
+		padding: 2px;
+		position: absolute;
+		top: 50%;
+		right: 0;
+		font-size: 18px;
+		transform: translate3d(-50%, -50%, 0);
+		&:hover {
+			color: lighten($themeColor, 10%);
+			cursor: pointer;
+		}
+	}
+}
+
+.popupHandler {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	-moz-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-box-pack: center;
+	-webkit-justify-content: center;
+	-moz-box-pack: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+	height: 100%;
+	min-height: 100vh;
+	width: 100%;
+	min-width: 100vw;
+	transition: background-color .3s;
+	visibility: hidden;
+	z-index: -1;
+	pointer-events: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0);
+	overflow: auto;
+	&.myshow {
+		z-index: 10000;
+		.easePopup {
+			transition: opacity .3s, visibility .3s;
+			opacity: 0;
+			visibility: hidden;
+			pointer-events: none;
+			z-index: -1;
+			position: absolute;
+//			height: 0;
+			overflow: hidden;
+			&.show {
+				transition: opacity .3s, visibility .3s;
+				opacity: 1;
+				visibility: visible;
+				pointer-events: auto;
+				z-index: 1;
+				position: relative;
+//				height: auto;
+				overflow: auto;
+			}
+		}
+	}
+	.easePopup {
+		top: auto;
+		position: relative;
+		margin: auto;
+		transition: transform .3s, opacity .3s, background-color .3s;
+		opacity: 0;
+	}
+}
+
+.popupHandler.myshow {
+	transition: background-color .3s;
+	background-color: rgba(0,0,0, 0.5);
+	visibility: visible;
+	pointer-events: auto;
+}
+
+.easePopup {
+	display: block;
+	width: 40vw;
+	margin: 0px auto;
+	color: $themeColor;
+	input::selection {
+		background: $themeColor;
+		color: white;
+		text-shadow: none;
+	}
+	input::-moz-selection {
+		background: $themeColor;
+		color: white;
+		text-shadow: none;
+	}
+	p {
+		margin-bottom: 0px;
+	}
+	.title {
+		font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
+		background-color: #efefef;
+		text-align: center;
+		border-top-left-radius: 3px;
+		border-top-right-radius: 3px;
+		padding: 0.6vw 20px;
+		border-bottom: 1px solid #d0d1d5;
+		p {
+			font-size: 2.3vw;
+		}
+		.sub-title {
+			color: #666666;
+			font-size: 1.2vw;
+		}
+	}
+	.bodysHandler {
+		position: relative;
+		width: 100%;
+		overflow: hidden;
+		.popupBody.show {
+			opacity: 1;
+			z-index: 1;
+			position: relative;
+			.handler {
+				transition: visibility .5s, opacity .5s;
+				visibility: visible;
+				opacity: 1;
+				pointer-events: auto;
+			}
+		}
+		.popupBody {
+			border-bottom-right-radius: 3px;
+			border-bottom-left-radius: 3px;
+			background-color: white;
+			padding: 1.5vw 8%;
+			position: absolute;
+			left: 0;
+			top:0;
+			width: 100%;
+			opacity: 0;
+			z-index: -1;
+			.handler {
+				transition: visibility .5s, opacity .5s;
+				opacity: 0;
+				visibility: hidden;
+				pointer-events: none;
+				.terms {
+					text-align: center;
+					p {
+						font-size: 1.1vw;
+						display: inline-block;
+					}
+					input[type="checkbox"] {
+						display: inline-block;
+						position: relative;
+						width: auto;
+						vertical-align: middle;
+						margin-top: 0px;
+						margin-left: 0.5vw;
+						transform: scale(1.9);
+					}
+				}
+				.row {
+					.infoText {
+						padding: 1vw;
+						border: 1px solid $themeColor;
+						border-radius: 3px;
+
+						p {
+							font-size: 0.8vw;
+						}
+					}
+					&:last-child {
+						margin-bottom: 0px;
+					}
+					position:relative;
+					margin-left: 0px;
+					margin-right: 0px;
+					margin-bottom: 1.2vw;
+					.row-heading {
+						font-size: 1.4vw;
+					}
+					.input {
+						font-weight: normal;
+						display: block;
+						position: relative;
+						width: 100%;
+						.showPassDiv {
+							width: 2vw;
+							right: 2px;
+							font-size: 1.3vw;
+						}
+					}
+					input {
+						width: 100%;
+						font-size: 1.35vw;
+						border-radius: 3px;
+						border: 1px solid #aaa;
+						padding-left: 5px;
+						padding: 10px 5px;
+					}
+					.btn {
+						color: white;
+						width: 80%;
+						font-size: 1.5vw;
+						margin: 0px auto;
+						background-color: #24d666;
+						&:hover, &:focus {
+							background-color:#28a956;
+						}
+					}
+				}
+			}
+		}
+	}
+}

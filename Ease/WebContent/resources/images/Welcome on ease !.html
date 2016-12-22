@@ -1,0 +1,218 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/xhtml1-transitional.dtd">
+<!-- saved from url=(0043)http://localhost:8080/HelloWorld/Connection -->
+<html xmlns="http://w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    <meta http-equiv="Content-Type" contenttype="text/html; charset=UTF-8">
+    <title>Welcome on ease !</title>
+    <script src="./Welcome on ease !_files/jquery.min.js"></script>
+    <link rel="stylesheet" href="./Welcome on ease !_files/style.css">
+    <link rel="stylesheet" href="./Welcome on ease !_files/style2.css">
+    <link rel="stylesheet" href="./Welcome on ease !_files/default_style.css">
+    <link href="https://fonts.googleapis.comcss/?family=Source+Sans+Pro" rel="stylesheet" type="textcss">
+    <link rel="stylesheet" href="./Welcome on ease !_files/bootstrap.min.css">
+    <link rel="stylesheet" href="./Welcome on ease !_files/owl.carousel.css">
+    
+    <link rel="stylesheet" href="./Welcome on ease !_files/vicons-font.css">
+    <link rel="stylesheet" href="./Welcome on ease !_files/buttons.css">
+    <link rel="stylesheet" href="./Welcome on ease !_files/normalize.css">
+    <link rel="stylesheet" href="./Welcome on ease !_files/base.css">
+    
+	<script src="./Welcome on ease !_files/classie.js"></script>
+   	<script src="./Welcome on ease !_files/owl.carousel.js"></script>
+    <script src="./Welcome on ease !_files/basic-utils.js"></script>
+    <script src="./Welcome on ease !_files/bootstrap.min.js"> </script>
+    <script src="./Welcome on ease !_files/jquery.mousewheel.min.js"></script>
+    
+    		<link rel="stylesheet" type="text/css" href="./Welcome on ease !_files/normalize.css">
+		<link rel="stylesheet" type="text/css" href="./Welcome on ease !_files/font-awesome.min.css">
+		<link rel="stylesheet" type="text/css" href="./Welcome on ease !_files/dropdown.css">
+		<script src="./Welcome on ease !_files/snap.svg-min.js"></script>
+    
+    
+<script type="text/javascript">
+function loadPage() {
+	 $('.owl-carousel').owlCarousel({
+		    loop:true,
+		    center:true,
+		    margin:0,
+		    nav:false,
+		    responsive:{
+		        0:{
+		            items:1
+		        },
+		        600:{
+		            items:3
+		        },
+		        1000:{
+		            items:3
+		        }
+		    }
+		});
+	 $('.owl-carousel').on('mousewheel', '.owl-stage', function (e) {
+		    if (e.deltaY>0) {
+		    	$('.owl-carousel').trigger('next.owl');
+		    } else {
+		    	$('.owl-carousel').trigger('prev.owl');
+		    }
+		    e.preventDefault();
+		});
+}
+</script></head>
+
+
+<body role="document" onload="loadPage();" class="mainBody">
+
+
+
+
+
+
+
+
+
+<div class="header">
+    <img class="logoImg" src="./Welcome on ease !_files/logo.png">
+    <div class="searchInput">
+    	<input type="text" name="search" placeholder=" Search..." autofocus="">
+	</div>
+
+<!--	<div class="userInfo">
+ 		<p>Bonjour, Michel !</p>
+    	<a href="Logout" class="logoutButton">
+    		<img src="resources/images/logout.jpg">
+    	</a>
+	</div>
+    	 -->
+		
+<nav id="menu" class="menu menu--open">
+<button class="menu__label"><i class="fa fa-fw fa-bars"></i><span>Michel</span></button>
+	<ul class="menu__inner">
+	<li><a href="http://localhost:8080/HelloWorld/Connection#"><i class="fa fa-fw fa-bookmark-o"></i><span>Parameters</span></a></li>
+	<li><a href="http://localhost:8080/HelloWorld/Connection#"><i class="fa fa-fw fa-hdd-o"></i><span>Logout</span></a></li>
+	</ul>
+</nav>
+    
+		<script>
+			(function() {
+
+				function SVGDDMenu( el, options ) {
+					this.el = el;
+					this.init();
+				}
+
+				SVGDDMenu.prototype.init = function() {
+
+					this.isOpen = false;
+
+					this.initEvents();
+				};
+
+				SVGDDMenu.prototype.initEvents = function() {
+					this.el.addEventListener( 'click', this.toggle.bind(this) );
+						
+					// For Demo purposes only
+					[].slice.call( this.el.querySelectorAll('a') ).forEach( function(el) {
+						el.onclick = function() { return false; }
+					} );
+				};
+
+				SVGDDMenu.prototype.toggle = function() {
+					var self = this;
+
+					if( this.isOpen ) {
+						classie.remove( self.el, 'menu--open' );
+					}
+					else {
+						classie.add( self.el, 'menu--open' );
+					}
+
+
+					this.isOpen = !this.isOpen;	
+				};
+
+				new SVGDDMenu( document.getElementById( 'menu' ) );
+
+			})();
+		</script>
+    
+	
+
+</div>
+
+
+	
+
+
+
+
+
+
+
+
+
+<div class="ProfilesView">
+<div class="owl-carousel owl-theme owl-center owl-loaded">
+
+	
+
+	
+
+<div class="owl-stage-outer"><div class="owl-stage" style="transition: 0s; width: 1024px; transform: translate3d(512px, 0px, 0px);"><div class="owl-item active center" style="width: 512px; margin-right: 0px;"><div class="item">
+	<div class="ProfileBox">
+		<div class="ProfileName">
+			<p>@IESEG</p>
+		</div>
+		<div class="SitesContainer">
+		
+				<div class="siteLinkBox">
+					<div class="linkImage" onclick="sendEvent(&#39;benjamin.prigent@ieseg.fr&#39;,&#39;bw9m1xo&#39;,&#39;username&#39;,&#39;password&#39;,&#39;loginbtn&#39;,&#39;https://www.ieseg-online.com/login/&#39;,&#39;https://www.ieseg-online.com/&#39;)">
+					      <img src="./Welcome on ease !_files/IO.png">
+					      </div>
+				</div>
+		
+				<div class="siteLinkBox">
+					<div class="linkImage" onclick="sendEvent(&#39;benjamin.prigent@ieseg.fr&#39;,&#39;bw9m1xo&#39;,&#39;username&#39;,&#39;password&#39;,&#39;loginbtn&#39;,&#39;https://www.ieseg-online.com/login/&#39;,&#39;https://www.ieseg-online.com/&#39;)">
+					      <img src="./Welcome on ease !_files/IO.png">
+					      </div>
+				</div>
+		
+				<div class="siteLinkBox">
+					<div class="linkImage" onclick="sendEvent(&#39;benjamin.prigent@ieseg.fr&#39;,&#39;bw9m1xo&#39;,&#39;username&#39;,&#39;password&#39;,&#39;loginbtn&#39;,&#39;https://www.ieseg-online.com/login/&#39;,&#39;https://www.ieseg-online.com/&#39;)">
+					      <img src="./Welcome on ease !_files/IO.png">
+					      </div>
+				</div>
+		
+				<div class="siteLinkBox">
+					<div class="linkImage" onclick="sendEvent(&#39;benjamin.prigent@ieseg.fr&#39;,&#39;bw9m1xo&#39;,&#39;username&#39;,&#39;password&#39;,&#39;loginbtn&#39;,&#39;https://www.ieseg-online.com/login/&#39;,&#39;https://www.ieseg-online.com/&#39;)">
+					      <img src="./Welcome on ease !_files/IO.png">
+					      </div>
+				</div>
+		
+		</div>
+	</div>
+	</div></div><div class="owl-item active" style="width: 512px; margin-right: 0px;"><div class="item">
+	<div class="ProfileBox">
+		<div class="ProfileName">
+			<p>@IESEG</p>
+		</div>
+		<div class="SitesContainer">
+		
+		</div>
+	</div>
+	</div></div></div></div><div class="owl-controls"><div class="owl-nav"><div class="owl-prev" style="display: none;">prev</div><div class="owl-next" style="display: none;">next</div></div><div class="owl-dots" style=""><div class="owl-dot active"><span></span></div><div class="owl-dot"><span></span></div></div></div></div>
+</div>
+
+
+<div class="MenuButtonSet">
+	<button class="button button--sacnite button--round-l"><i class="button__icon icon icon-plus"></i><span>User</span></button>
+	<button class="button button--sacnite button--round-l"><i class="button__icon icon icon-bookmark"></i><span>Bookmark</span></button>
+	<button class="button button--sacnite button--round-l"><i class="button__icon icon icon-bell"></i><span>Alert</span></button>
+</div>
+
+
+
+
+
+
+
+
+</body></html>
