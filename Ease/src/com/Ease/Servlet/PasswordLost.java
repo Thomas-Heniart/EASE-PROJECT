@@ -52,7 +52,7 @@ public class PasswordLost extends HttpServlet {
 		try {
 			if (user != null) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "You are logged on Ease.");
-			} else if (email == null || Regex.isEmail(email)) {
+			} else if (email == null || !Regex.isEmail(email)) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email.");
 			}
 			String userId = User.findDBid(email, sm);
