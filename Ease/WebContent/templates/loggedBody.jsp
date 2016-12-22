@@ -82,8 +82,8 @@ $(document).ready(function(){
 	<div class="md-overlay"></div>
 	
 </div>
-<%@ include file="new_extension.jsp" %>
-<%@ include file="TutorialView.jsp"%>
+<!--<%@ include file="new_extension.jsp" %>-->
+<!--<%@ include file="TutorialView.jsp"%>-->
 
 <script>
 
