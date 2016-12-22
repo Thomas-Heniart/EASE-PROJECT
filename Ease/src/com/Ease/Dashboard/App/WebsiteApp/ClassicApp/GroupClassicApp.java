@@ -35,7 +35,7 @@ public class GroupClassicApp extends GroupWebsiteApp{
 	
 	public static GroupClassicApp loadGroupClassicApp(String db_id, GroupProfile groupProfile, Group group, AppPermissions perms, AppInformation info, boolean common, int single_id, Website site, String db_id2, DataBaseConnection db, ServletContext context) throws GeneralException {
 		try {
-			ResultSet rs = db.get("SELECT * FROM groupLogwithApps WHERE group_website_app_id=" + db_id + ";");
+			ResultSet rs = db.get("SELECT * FROM groupLogWithApps WHERE group_website_app_id=" + db_id + ";");
 			if (rs.next()) {
 				String db_id3 = rs.getString(Data.ID.ordinal());
 				Account account = Account.loadAccount(rs.getString(Data.ACCOUNT_ID.ordinal()), db);

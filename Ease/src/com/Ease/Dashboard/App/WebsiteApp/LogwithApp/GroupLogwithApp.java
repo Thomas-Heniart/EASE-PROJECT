@@ -35,7 +35,7 @@ public class GroupLogwithApp extends GroupWebsiteApp {
 	
 	public static GroupLogwithApp loadGroupLogwithApp(String db_id, GroupProfile groupProfile, Group group, AppPermissions perms, AppInformation info, boolean common, int single_id, Website site, String db_id2, DataBaseConnection db, ServletContext context) throws GeneralException {
 		try {
-			ResultSet rs = db.get("SELECT * FROM groupLogwithApps WHERE group_website_app_id=" + db_id + ";");
+			ResultSet rs = db.get("SELECT * FROM groupLogWithApps WHERE group_website_app_id=" + db_id + ";");
 			if (rs.next()) {
 				String db_id3 = rs.getString(Data.ID.ordinal());
 				GroupWebsiteApp logwith = (GroupWebsiteApp)GroupManager.getGroupManager(context).getGroupAppFromDBid(rs.getString(Data.LOGWITH_GROUP_WEBSITE_APP_ID.ordinal()));
@@ -58,7 +58,7 @@ public class GroupLogwithApp extends GroupWebsiteApp {
 		AppPermissions permissions = (AppPermissions) elevator.get("perms");
 		AppInformation appInfos = (AppInformation) elevator.get("appInfos");
 		String appId = (String) elevator.get("appId");
-		String db_id = db.set("INSERT INTO groupLogwithApps VALUES(NULL, " + websiteAppId + ", " + logwith.getDBid() + ");").toString();
+		String db_id = db.set("INSERT INTO groupLogWithApps VALUES(NULL, " + websiteAppId + ", " + logwith.getDBid() + ");").toString();
 		int single_id = ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId();
 		GroupLogwithApp groupLogwithApp = new GroupLogwithApp(appId, groupProfile, group, permissions, appInfos, common, single_id, site, websiteAppId, logwith, db_id);
 		GroupManager.getGroupManager(sm).add(groupLogwithApp);
