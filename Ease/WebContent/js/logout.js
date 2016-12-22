@@ -16,7 +16,9 @@ $(document).ready(function(){
 				easeTracker.trackEvent('Normal logout');
 				location.href = "index.jsp";
 			},
-			function(){},
+			function(retMsg){
+				console.log(retMsg);
+			},
 			'text'
 			);
 	});
@@ -31,7 +33,9 @@ $(document).ready(function(){
 				easeTracker.trackEvent('General logout');
 				location.href = "index.jsp";
 			},
-			function(){},
+			function(retMsg){
+				console.log(retMsg);
+			},
 			'text'
 			);
 	});

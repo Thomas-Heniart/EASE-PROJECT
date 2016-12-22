@@ -45,7 +45,8 @@ public class GetUserEmails extends HttpServlet {
 			}
 			emailString += email.getEmail()+","+verified+";";
 		}
-		emailString = emailString.substring(0, emailString.length()-1);
+		if(emailString.length()>0)
+			emailString = emailString.substring(0, emailString.length()-1);
 		response.getWriter().print(emailString);
 	}
 

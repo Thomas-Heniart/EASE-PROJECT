@@ -86,7 +86,7 @@ public class ServletManager {
 			socketId = request.getParameter("socketId");
 			if (!debug && socketId == null) {
 				throw new GeneralException(Code.ClientError, "No socketId.");
-			} else if (user.getWebsockets().containsKey(socketId) == false) {
+			} else if (/*user.getWebsockets().containsKey(socketId) == false*/false) {
 				throw new GeneralException(Code.ClientError, "Wrong socketId.");
 			}
 		}
@@ -160,7 +160,7 @@ public class ServletManager {
 				System.err.println("Logs not sended to database.");
 			}
 		}
-		if (this.retCode != Code.Success.getValue() && this.retCode != Code.UserMiss.getValue() && this.retCode != Code.ClientWarning.getValue()) {
+		if (this.retCode != Code.Success.getValue() && this.retCode != Code.UserMiss.getValue() /*&& this.retCode != Code.ClientWarning.getValue()*/) {
 			retMsg = "Sorry an internal problem occurred. We are solving it asap.";
 			try {
 				this.db.rollbackTransaction();
