@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <div id="tipsHandler">
-	<div class="tip" id="0">
+	<div class="tip" id="0" step="click_on_app">
 		<div class="leftIcon">
 			<img class="icon" src="resources/emojis/finger.png" />
 		</div>
@@ -9,7 +9,7 @@
 			<button class="btn" type="submit">Got it!</button>
 		</div>
 	</div>
-	<div class="tip xCentered" id="1">
+	<div class="tip xCentered" id="1" step="drag_and_drop">
 		<div class="leftIcon">
 			<img class="icon" src="resources/emojis/handMove.png" />
 		</div>
@@ -18,7 +18,7 @@
 			<button class="btn" type="submit">Got it!</button>
 		</div>
 	</div>
-	<div class="tip" id="2">
+	<div class="tip" id="2" step="saw_group">
 		<div class="leftIcon">
 			<img class="icon" src="resources/emojis/schoolCap.png" />
 		</div>
@@ -28,7 +28,7 @@
 		</div>
 	</div>
 	
-	<div class="tip" id="3">
+	<div class="tip" id="3" step="open_catalog">
 		<div class="leftIcon">
 			<img class="icon" src="resources/emojis/world.png" />
 		</div>
@@ -37,7 +37,7 @@
 			<button class="btn" type="submit">Got it!</button>
 		</div>
 	</div>
-	<div class="tip xCentered catalogNeed" id="4">
+	<div class="tip xCentered catalogNeed" id="4" step="add_an_app">
 		<div class="leftIcon">
 			<img class="icon" src="resources/emojis/lightning.png" />
 		</div>
@@ -60,12 +60,7 @@
 			'top': $('.ProfileBox').offset().top + $('.ProfileBox').height() - headerHeight
 		});
 		
-		if ($(".ProfileBox[custom='true']").length == 0){
-			$('#tipsHandler #3').css({
-				'left': $('.MenuButtonSet').offset().left - $('#tipsHandler #3').outerWidth(true),
-				'top': $('.MenuButtonSet').offset().top - headerHeight
-			});
-		} else{
+		if ($(".ProfileBox[custom='true']").length > 0){
 			$('#tipsHandler #2').css({
 				'left': $(".ProfileBox[custom='true']").offset().left - $('#tipsHandler #2').outerWidth(true),
 				'top': $(".ProfileBox[custom='true']").offset().top + $('#tipsHandler #2').height() - headerHeight
@@ -77,11 +72,6 @@
 			'top': $('.MenuButtonSet').offset().top - headerHeight
 		});
 		
-		$('#tipsHandler #4').css({
-			'left': '50%',
-			'top': '2%'
-		});
-		
 		<c:choose>
 			<c:when test='${user.clickOnAppDone() eq false}'>
 				$("#tipsHandler #0").addClass("show");
@@ -89,11 +79,11 @@
 			<c:when test='${user.clickOnAppDone() && (user.moveAppDone() eq false)}'>
 				$("#tipsHandler #1").addClass("show");
 			</c:when>
-			<c:when test='${user.moveAppDone() && (user.openCatalogDone() eq false)}'>
-				if ($(".ProfileBox[custom='true']").length == 0)
-					$('#tipsHandler #3').addClass('show');
-				else
-					$("#tipsHandler #2").addClass('show');
+			<c:when test='${user.moveAppDone() && (user.sawGroupProfile() eq false)}'>
+				$("#tipsHandler #2").addClass("show");
+			</c:when>
+			<c:when test='${user.sawGroupProfile() && (user.openCatalogDone() eq false)}'>
+				$('#tipsHandler #3').addClass('show');
 			</c:when>
 		</c:choose>
 		
@@ -130,16 +120,36 @@
 			$('#tipsHandler #2').removeClass('show');
 			$('#tipsHandler #3').addClass('show');		
 		});
+		var clickOnCatalog = false;
 		$('#tipsHandler #3 button').click(function(){
 			$('#tipsHandler #4').css({
 				'left': '50%',
 				'top': '2%'
 			});
+			if (!clickOnCatalog) {
+				clickOnCatalog = true;
+				enterEditMode();
+			}
+				
 			$('#tipsHandler #3').removeClass('show');
 			$('#tipsHandler #4').addClass('show');
 		});
 		$('#tipsHandler #4 button').click(function(){
 			$('#tipsHandler #4').removeClass('show');
+		});
+		
+		$("#tipsHandler .tip button").click(function(e) {
+			var self = $(this).parent().parent();
+			postHandler.post('TutoStep', {
+				"tutoStep" : self.attr("step")
+			}, function() {
+				//always
+			}, function(retMsg) {
+				//succes
+				self.remove();
+			}, function(retMsg) {
+				//error
+			}, 'text');
 		});
 	});
 </script>

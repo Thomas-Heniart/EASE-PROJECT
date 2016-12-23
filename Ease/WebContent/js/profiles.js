@@ -511,5 +511,18 @@ $(document).ready(function() {
 	};
 })($.fn.attr);
 
+function enterEditModeTutorial() {
+	if ($("#tipsHandler #3").length) {
+		$("#tipsHandler #3 button").click();
+	} else if ($("#tipsHandler #4").length) {
+		$('#tipsHandler #4').addClass('show');
+	}
+}
+
+function leaveEditModeTutorial() {
+	if ($("#tipsHandler #4").length)
+		$('#tipsHandler #4').removeClass('show');
+}
+
 
 
