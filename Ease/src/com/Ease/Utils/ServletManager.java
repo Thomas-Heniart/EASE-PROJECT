@@ -130,6 +130,15 @@ public class ServletManager {
 		this.retMsg = e.getMsg();
 	}
 	
+	public void setResponse(Exception e) {
+		this.retCode = Code.InternError.getValue();
+		this.retMsg = e.toString()+".\nStackTrace :";
+		for(int i = 0; i < e.getStackTrace().length; i++){
+			this.retMsg += "\n" + e.getStackTrace()[i];
+		}
+		e.printStackTrace();
+	}
+	
 	public void setRedirectUrl(String url) {
 		this.redirectUrl = url;
 	}

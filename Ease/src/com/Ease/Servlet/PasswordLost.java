@@ -60,6 +60,8 @@ public class PasswordLost extends HttpServlet {
 			sm.setResponse(ServletManager.Code.Success, "Email send.");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
+		} catch (Exception e) {
+			sm.setResponse(e);
 		}
 		sm.sendResponse();
 	}

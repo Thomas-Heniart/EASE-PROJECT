@@ -71,6 +71,8 @@ public class EditClassicApp extends HttpServlet {
 			}
 		} catch (GeneralException e) {
 			sm.setResponse(e);
+		} catch (Exception e) {
+			sm.setResponse(e);
 		}
 		sm.sendResponse();
 	}

@@ -49,7 +49,7 @@ public class RSA {
 		String ligne ;
 		String key = null;
 		try {
-			BufferedReader fichier = new BufferedReader(new FileReader("C:/Users/FelixPro/Documents/EASE/Ease project/New/EASE-PROJECT/Ease/src/com/Ease/Utils/Crypto/privateKeys.txt"));
+			BufferedReader fichier = new BufferedReader(new FileReader("/home/debruy_p/projects/EASE-PROJECT/privateKeys.txt"));
 			while ((ligne = fichier.readLine()) != null) {
 				String[] keyDatas = ligne.split(":");
 				if(Integer.parseInt(keyDatas[0].trim()) == date){

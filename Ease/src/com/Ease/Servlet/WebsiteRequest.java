@@ -60,6 +60,8 @@ public class WebsiteRequest extends HttpServlet {
 			sm.setResponse(ServletManager.Code.Success, retMsg);
 		} catch (GeneralException e) {
 			sm.setResponse(e);
+		} catch (Exception e) {
+			sm.setResponse(e);
 		}
 		sm.sendResponse();
 	}
@@ -77,6 +79,8 @@ public class WebsiteRequest extends HttpServlet {
 			String site = sm.getServletParam("ask", true);
 			db.set("INSERT INTO requestedWebsites values (null, " + user.getDBid() + ", '" + site + "', default");
 		} catch (GeneralException e) {
+			sm.setResponse(e);
+		} catch (Exception e) {
 			sm.setResponse(e);
 		}
 		sm.sendResponse();

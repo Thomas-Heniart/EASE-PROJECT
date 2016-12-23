@@ -51,6 +51,8 @@ public class TutoStep extends HttpServlet {
 			user.passStep(tutoStep, db);
 		} catch (GeneralException e) {
 			sm.setResponse(e);
+		} catch (Exception e) {
+			sm.setResponse(e);
 		}
 		sm.sendResponse();
 	}
