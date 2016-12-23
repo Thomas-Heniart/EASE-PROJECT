@@ -83,7 +83,7 @@ $(document).ready(function(){
 	
 </div>
 <!--<%@ include file="new_extension.jsp" %>-->
-<!--<%@ include file="TutorialView.jsp"%>-->
+<%@ include file="TutorialView.jsp"%>
 
 <script>
 
