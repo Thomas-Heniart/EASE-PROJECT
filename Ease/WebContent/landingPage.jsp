@@ -85,7 +85,7 @@ pageEncoding="UTF-8"%>
 				</div>
 			</div>
 			<div class="mockupPresentation">
-				<video width="100%" height="auto" controls>
+				<video width="100%" height="auto" controls="noshow">
 					<source src="resources/videos/video5.mp4" type="video/mp4">
 						Your browser does not support the video tag.
 					</video>
@@ -335,7 +335,7 @@ pageEncoding="UTF-8"%>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
 		<div class="popupHandler">
 			<div class="overlay"></div>
-			<div class="easePopup" id="signUpPopup">
+			<div class="easePopup show" id="signUpPopup">
 				<div class="title">
 					<p>
 						Welcome!

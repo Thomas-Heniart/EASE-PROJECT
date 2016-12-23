@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="css/Tutorial.css" />
 
 <div class="popupHandler myshow" id="tutorial">
-	<div class="easePopup show" id="importation">
+	<div class="easePopup" id="importation">
 		<div class="title">
 			<p>Accounts importation</p>
 		</div>
@@ -140,9 +140,32 @@
 							<button class="btn" type="submit">I am done!</button>
 						</div>
 						<div id="add_app_progress" class="hide">
-  							<div id="progress_bar"></div>
-  							<div id="label"><span id="currentStep">0</span>/<span id="maxStep"></span></div>
+							<div id="progress_bar"></div>
+							<div id="label"><span id="currentStep">0</span>/<span id="maxStep"></span></div>
 						</div>					
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="easePopup show" id="simpleImportation">
+		<div class="title">
+			<p>Start with apps you use frequently</p>
+			<p class="sub-title">Click on at least 4 icons</p>
+		</div>
+		<div class="bodysHandler">
+			<div class="popupBody show">
+				<div class="handler">
+					<div class="row">
+						<div class="appsContainer">
+
+						</div>
+					</div>
+					<div class="row text-center">
+						<button class="btn" type="submit">I am done!</button>
+					</div>
+					<div class="row text-center">
+						<a>If you have more than one account on a website, you’ll be able to add it later.</a>
 					</div>
 				</div>
 			</div>

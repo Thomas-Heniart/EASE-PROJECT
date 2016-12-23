@@ -300,9 +300,53 @@ body {
   background-color: transparent;
   overflow: auto;
   .handler#passwordLost {
-    #goBack {
-      text-decoration: underline;
-      cursor: pointer;
+    .form {
+      .buttonSet {
+        button {
+          transition: opacity .3s, visibility .3s;
+          opacity: 0;
+          position: relative;
+          visibility: hidden;
+          pointer-events: none;
+          z-index: -1;
+          text-align: center;
+          margin: auto;
+          &.show {
+            transition: opacity .3s, visibility .3s;
+            opacity: 1;
+            position: relative;
+            visibility: visible;
+            pointer-events: auto;
+            z-index: 1;
+            &:hover {
+              opacity: 0.7;
+            }
+          }
+        }
+        .sk-fading-circle {
+          transition: opacity .3s, visibility .3s;
+          opacity: 0;
+          position: absolute;
+          visibility: hidden;
+          pointer-events: none;
+          z-index: -1;
+          text-align: center;
+          margin: auto;
+          height: 2.5vw;
+          &.show {
+            transition: opacity .3s, visibility .3s;
+            opacity: 1;
+            position: absolute;
+            visibility: visible;
+            pointer-events: auto;
+            z-index: 1;
+          }
+        }
+      }
+      #goBack {
+        text-decoration: underline;
+        cursor: pointer;
+      }
     }
   }
   .handler.show {
@@ -375,7 +419,7 @@ body {
           width: 20%;
         }
       }
-      .alertDiv {
+      .line .alertDiv, .alertDiv {
         p {
           font-size: 1vw;
           color: $themeRedColor;

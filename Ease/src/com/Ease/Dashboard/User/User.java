@@ -538,7 +538,7 @@ public class User {
 	}
 	
 	public void removeEmailIfNeeded(String email, ServletManager sm) throws GeneralException {
-		if (this.emails.get(email).removeIfNotUsed(sm))
+		if (this.emails.get(email)!=null && this.emails.get(email).removeIfNotUsed(sm))
 			this.emails.remove(email);
 	}
 	
@@ -591,7 +591,7 @@ public class User {
 			for (AccountInformation info : ((ClassicApp)app).getAccount().getAccountInformations()) {
 				if (Regex.isEmail(info.getInformationValue()) == true) {
 					String email = info.getInformationValue();
-					if (this.emails.get(email).removeIfNotUsed(sm))
+					if (this.emails.get(email)!=null && this.emails.get(email).removeIfNotUsed(sm))
 						this.emails.remove(email);
 				}
 			}
