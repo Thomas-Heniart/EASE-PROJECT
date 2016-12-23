@@ -95,6 +95,7 @@ public class WebsiteApp extends App {
 		int transaction = db.startTransaction();
 		try {
 			ResultSet rs = db.get("SELECT * FROM websiteApps WHERE app_id=" + appId + ";");
+			rs.next();
 			switch (rs.getString(Data.TYPE.ordinal())) {
 				case ("classicApp"):
 					//remove classic app for unconnected user;
@@ -103,7 +104,7 @@ public class WebsiteApp extends App {
 					//remove logwith app for unconnected user;
 				break;
 			}
-			db.set("UPDATE FROM websiteApps SET type='emptyApp' WHERE app_id=" + appId + ";");
+			db.set("UPDATE websiteApps SET type='websiteApp' WHERE app_id=" + appId + ";");
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
