@@ -132,7 +132,7 @@
 		<div class="bodysHandler">
 			<div class="popupBody show" id="selectScraping">
 				<div class="handler">
-					<div class="row">
+					<div class="row" style="margin-bottom:1.5vw;">
 						<div class="scrapedAppsContainer">
 
 						</div>
@@ -160,7 +160,102 @@
 				<div class="handler">
 					<div class="row">
 						<div class="appsContainer">
-
+							<div class="appHandler">
+								<div class="app" id="${catalog.getWebsiteWithName('Facebook').getSingleId()}">
+									<div class="logo">
+										<img src="resources/websites/Facebook/logo.png">
+									</div>
+									<p class="name">Facebook</p>
+								</div>
+							</div>
+							<div class="appHandler">
+								<div class="app" id="${catalog.getWebsiteWithName('Linkedin').getSingleId()}">
+									<div class="logo">
+										<img src="resources/websites/Linkedin/logo.png">
+									</div>
+									<p class="name">Linkedin</p>
+								</div>
+							</div>
+							<div class="appHandler">
+								<div class="app"  id="${catalog.getWebsiteWithName('Gmail').getSingleId()}">
+									<div class="logo">
+										<img src="resources/websites/Gmail/logo.png">
+									</div>
+									<p class="name">Gmail</p>
+								</div>
+							</div>
+							<div class="appHandler">
+								<div class="app" id="${catalog.getWebsiteWithName('Youtube').getSingleId()}">
+									<div class="logo">
+										<img src="resources/websites/Youtube/logo.png">
+									</div>
+									<p class="name">Youtube</p>
+								</div>
+							</div>
+							<div class="appHandler">
+								<div class="app"  id="${catalog.getWebsiteWithName('Google Drive').getSingleId()}">
+									<div class="logo">
+										<img src="resources/websites/GoogleDrive/logo.png">
+									</div>
+									<p class="name">Google Drive</p>
+								</div>
+							</div>
+							<div class="appHandler">
+								<div class="app"  id="${catalog.getWebsiteWithName('Twitter').getSingleId()}">
+									<div class="logo">
+										<img src="resources/websites/Twitter/logo.png">
+									</div>
+									<p class="name">Twitter</p>
+								</div>
+							</div>
+							<div class="appHandler">
+								<div class="app" id="${catalog.getWebsiteWithName('Instagram').getSingleId()}">
+									<div class="logo">
+										<img src="resources/websites/Instagram/logo.png">
+									</div>
+									<p class="name">Instagram</p>
+								</div>
+							</div>
+							<div class="appHandler">
+								<div class="app" id="${catalog.getWebsiteWithName('Airbnb').getSingleId()}">
+									<div class="logo">
+										<img src="resources/websites/Airbnb/logo.png">
+									</div>
+									<p class="name">Airbnb</p>
+								</div>
+							</div>
+							<div class="appHandler">
+								<div class="app" id="${catalog.getWebsiteWithName('BlaBlaCar').getSingleId()}">
+									<div class="logo">
+										<img src="resources/websites/BlaBlaCar/logo.png">
+									</div>
+									<p class="name">BlaBlaCar</p>
+								</div>
+							</div>
+							<div class="appHandler">
+								<div class="app" id="${catalog.getWebsiteWithName('Hotmail').getSingleId()}">
+									<div class="logo">
+										<img src="resources/websites/Hotmail/logo.png">
+									</div>
+									<p class="name">Hotmail</p>
+								</div>
+							</div>
+							<div class="appHandler">
+								<div class="app"  id="${catalog.getWebsiteWithName('Suite Office').getSingleId()}">
+									<div class="logo">
+										<img src="resources/websites/Office365/logo.png">
+									</div>
+									<p class="name">Office365 Mail</p>
+								</div>
+							</div>
+							<div class="appHandler">
+								<div class="app" id="${catalog.getWebsiteWithName('Skype').getSingleId()}">
+									<div class="logo">
+										<img src="resources/websites/Skype/logo.png">
+									</div>
+									<p class="name">Skype</p>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="row text-center">
@@ -168,6 +263,45 @@
 					</div>
 					<div class="row text-center">
 						<a>If you have more than one account on a website, you’ll be able to add it later.</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="easePopup" id="addAppTutorial">
+		<div class="title">
+			<p>Type your password for<br>the last time, ever.</p>
+		</div>		
+		<div class="bodysHandler">
+			<div class="popupBody show">
+				<div class="handler">
+					<div class="row text-center">
+						<div class="logo">
+							<img src="resources/websites/Facebook/logo.png"/>
+						</div>
+					</div>
+					<form action="" method="POST">
+						<div class="row text-center">
+							<input id="name" type="text" name="name" placeholder="Name" />
+						</div>
+						<div class="row text-center lineBehind">
+							<p class="post-title">How do you access your <span>Facebook</span> account ?</p>
+						</div>
+						<div class="row">
+							<input type="text" name="login" id="login" placeholder="Login" />
+							<span class="input">
+								<div class="showPassDiv">
+									<i class="fa fa-eye centeredItem" aria-hidden="true"></i>
+								</div>
+								<input type="password" name="password" placeholder="Your password..." />
+							</span>
+						</div>
+						<div class="row text-center">
+							<button class="btn" type="submit">Add this app</button>
+						</div>
+					</form>
+					<div class="row text-center">
+						<p id="skipButton">Skip</p>
 					</div>
 				</div>
 			</div>

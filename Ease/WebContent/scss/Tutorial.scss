@@ -28,7 +28,7 @@
     background-color: #49E845;
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label, .onoffswitch-checkbox:checked + .onoffswitch-label:before {
-   border-color: #49E845;
+ border-color: #49E845;
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label:before {
     right: 0px;
@@ -154,10 +154,24 @@ a {
                     width: 25%;
                     float: left;
                     text-align: center;
-                    padding: 1vw;
+                    padding: 1vw 0.5vw;
                     .app {
                         overflow: hidden;
                         position: relative;
+                        .name {
+                            font-size: 0.8vw;
+                            font-weight: 600;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+                        .login {
+                            font-size: 0.7vw;
+                            white-space: nowrap;
+                            height: 0.9vw;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
                         .logo {
                             cursor: pointer;
                             width: 70%;
@@ -240,9 +254,24 @@ a {
 }
 }
 #simpleImportation {
+    .title {
+        .sub-title {
+            font-size: 1vw;
+        }
+    }
     .popupBody {
         .handler {
+            & > .row:first-child, & > .row:last-child {
+                margin-top: 0;
+            }
           .row {
+              margin-top: 1vw;
+              margin-bottom: 0;
+            a {
+                color: $themeDarkGreyColor;
+                text-decoration: underline;
+                font-size: 0.85vw;
+            }
             .appsContainer {
                 height: 15vw;
                 overflow: auto;
@@ -250,10 +279,24 @@ a {
                     width: 25%;
                     float: left;
                     text-align: center;
-                    padding: 1vw;
+                    padding: 1vw 0.5vw;
                     .app {
                         overflow: hidden;
                         position: relative;
+                        .name {
+                            font-size: 0.8vw;
+                            font-weight: 600;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+                        .login {
+                            font-size: 0.7vw;
+                            white-space: nowrap;
+                            height: 0.9vw;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
                         .logo {
                             cursor: pointer;
                             width: 70%;
@@ -308,6 +351,77 @@ a {
         }
     }
 }
+}
+}
+#addAppTutorial, #simpleImportation, #importation {
+    .title {
+        p {
+            font-size: 1.7vw;
+        }
+    }
+}
+
+#addAppTutorial {
+    width: 30vw;
+    .popupBody {
+        .handler {
+            & > .row:first-child, & > .row:last-child {
+                margin-top: 0;
+            }
+            .row.lineBehind {
+                &:before {
+                    border-top: 2px solid $themeColor;
+                    content:"";
+                    margin: 0 auto;
+                    position: absolute;
+                    top: 50%; left: 0; right: 0; bottom: 0;
+                    width: 100%;
+                    z-index: -1;                    
+                }
+            }
+            .row {
+                width: 80%;
+                margin: auto;
+                margin-top: 1vw;
+                .logo {
+                    width: 30%;
+                    margin: auto;
+                    img {
+                        width: 100%;
+                        border-radius: 5px;
+                    }
+                }
+                #name {
+                    width: 60%;
+                    text-align: center;
+                }
+                span.input {
+                  margin: 0;
+                  max-width: 100%;
+              }
+              .post-title {
+                font-size: 1.3vw;
+                font-weight: 600;
+                background-color: white;
+                width: 80%;
+                margin:auto;
+            }
+            input {
+                outline: none;
+                margin-bottom: 1.2vw;
+                font-size: 1vw;
+                &:last-child {
+                    margin-bottom: 0px;
+                }
+            }
+            #skipButton {
+                cursor: pointer;
+                color: $themeDarkGreyColor;
+                font-size: 0.85vw;
+                text-decoration: underline;
+            }
+        }
+    }
 }
 }
 }
