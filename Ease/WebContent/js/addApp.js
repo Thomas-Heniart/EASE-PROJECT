@@ -127,5 +127,4 @@ function showAddAppPopup(container, helper) {
 			parent.find('.or').css('display', 'block');
 		}
 	});
-	addAppTutorial();
 }
