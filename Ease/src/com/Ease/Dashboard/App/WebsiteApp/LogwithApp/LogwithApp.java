@@ -41,7 +41,7 @@ public class LogwithApp extends WebsiteApp {
 	public static LogwithApp loadLogwithApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, String websiteAppDBid, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		try {
-			ResultSet rs = db.get("SELECT * from logWithApps WHERE website_app_id=" + websiteAppDBid + ";");
+			ResultSet rs = db.get("SELECT * from logwithApps WHERE website_app_id=" + websiteAppDBid + ";");
 			if (rs.next()) {
 				String logwith = rs.getString(Data.LOGWITH_APP_ID.ordinal());
 				String logwithDBid = rs.getString(Data.ID.ordinal());
@@ -59,7 +59,7 @@ public class LogwithApp extends WebsiteApp {
 		int transaction = db.startTransaction();
 		Map<String, Object> elevator = new HashMap<String, Object>();
 		String websiteAppDBid = WebsiteApp.createWebsiteApp(profile, position, name, "logwithApp", site, elevator, sm);
-		String logwithDBid = db.set("INSERT INTO logWithApps VALUES(NULL, " + websiteAppDBid + ", " + logwith.getWebsiteAppDBid() + ", NULL);").toString();
+		String logwithDBid = db.set("INSERT INTO logwithApps VALUES(NULL, " + websiteAppDBid + ", " + logwith.getWebsiteAppDBid() + ", NULL);").toString();
 		db.commitTransaction(transaction);
 		LogwithApp app = new LogwithApp((String)elevator.get("appDBid"), profile, position, (AppInformation)elevator.get("appInfos"), null, (String)elevator.get("registrationDate"), ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, logwith.getDBid(), logwithDBid);
 		app.rempLogwith(logwith);
@@ -71,7 +71,7 @@ public class LogwithApp extends WebsiteApp {
 		int transaction = db.startTransaction();
 		String websiteAppDBid = websiteApp.getWebsiteAppDBid();
 		db.set("UPDATE websiteApps SET type='logwithApp' WHERE id='"+ websiteAppDBid +"';");
-		String logwithDBid = db.set("INSERT INTO logWithApps VALUES(NULL, " + websiteAppDBid + ", " + logwith.getWebsiteAppDBid() + ", NULL);").toString();
+		String logwithDBid = db.set("INSERT INTO logwithApps VALUES(NULL, " + websiteAppDBid + ", " + logwith.getWebsiteAppDBid() + ", NULL);").toString();
 		db.commitTransaction(transaction);
 		LogwithApp newLogwithApp = new LogwithApp(websiteApp.getDBid(), user.getProfileFromApp(websiteApp.getSingleId()), websiteApp.getPosition(), websiteApp.getAppInformation(),null, websiteApp.getInsertDate(), websiteApp.getSingleId(), websiteApp.getSite(), websiteAppDBid, logwith.getDBid(), logwithDBid);
 		newLogwithApp.rempLogwith(logwith);
@@ -98,7 +98,7 @@ public class LogwithApp extends WebsiteApp {
 	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		db.set("DELETE FROM logWithApps WHERE id=" + logwithAppDBid + ";");
+		db.set("DELETE FROM logwithApps WHERE id=" + logwithAppDBid + ";");
 		super.removeFromDB(sm);
 		db.commitTransaction(transaction);
 	}
@@ -123,7 +123,7 @@ public class LogwithApp extends WebsiteApp {
 	
 	public void setLogwith(WebsiteApp logwith, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE logWithApps SET logwith_website_app_id=" + logwith.getDBid() + " WHERE id=" + this.db_id + ";");
+		db.set("UPDATE logwithApps SET logwith_website_app_id=" + logwith.getDBid() + " WHERE id=" + this.db_id + ";");
 		this.logwith = logwith;
 		this.logwithDBid = logwith.getDBid();
 	}

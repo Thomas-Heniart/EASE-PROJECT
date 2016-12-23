@@ -10,7 +10,6 @@
 		position: absolute;
 		background-color: #efefef;
 		border-radius: 5px;
-		padding: 0.3vw;
 		border: 1px solid #ccc;
 		transform: scale(0.2);
 	}
@@ -43,7 +42,8 @@
 		position: absolute;
 		background-color: #efefef;
 		border-radius: 5px;
-		padding: 0.3vw;
+		padding: 0.9vw 0.3vw;
+		padding-left: 0px;
 		border: 1px solid #ccc;
 		transform: scale(0.2);
 		box-shadow: -2px 2px 15px #b3b3b3;

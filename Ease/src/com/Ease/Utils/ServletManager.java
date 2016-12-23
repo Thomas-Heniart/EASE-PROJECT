@@ -1,6 +1,8 @@
 package com.Ease.Utils;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -147,7 +149,15 @@ public class ServletManager {
 	    }
 		if (this.logResponse == null)
 			this.logResponse = retMsg;
-		db.set("insert into logs values('" + this.servletName + "', " + this.retCode + ", " + ((this.user != null) ? this.user.getDBid() : "NULL") + ", '" + argsString + "', '" + this.logResponse + "', '" + this.date + "');");
+		try {
+			this.logResponse = URLEncoder.encode(this.logResponse, "UTF-8");
+			argsString = URLEncoder.encode(argsString, "UTF-8");
+			System.err.println("insert into logs values('" + this.servletName + "', " + this.retCode + ", " + ((this.user != null) ? this.user.getDBid() : "NULL") + ", '" + argsString + "', '" + this.logResponse + "', '" + this.date + "');");
+			db.set("insert into logs values('" + this.servletName + "', " + this.retCode + ", " + ((this.user != null) ? this.user.getDBid() : "NULL") + ", '" + argsString + "', '" + this.logResponse + "', '" + this.date + "');");
+		} catch (UnsupportedEncodingException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+		
 	}
 	
 	public void sendResponse() {
