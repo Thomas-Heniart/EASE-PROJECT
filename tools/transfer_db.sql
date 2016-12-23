@@ -176,6 +176,8 @@ SELECT (@g_app := @g_app + 1), 1, group_id, (@app_perm := @app_perm + 1), 'group
 INSERT INTO ease.groupLinkApps
 SELECT null, (@l_app_info_id := @l_app_info_id + 1), (@g_app_id := @g_app_id + 1) FROM test.customApps WHERE website_id IS NULL;
 
+INSERT INTO usersEmails
+SELECT null, user_id, email, verified FORM test.usersEmails;
 
 /* Update groupProfile for groupApps */
 UPDATE ease.groupApps SET group_profile_id = 1 WHERE id BETWEEN 1 AND 6;
