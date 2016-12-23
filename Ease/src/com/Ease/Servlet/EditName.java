@@ -54,6 +54,8 @@ public class EditName extends HttpServlet {
 			sm.setResponse(ServletManager.Code.Success, "Name changed.");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
+		} catch (Exception e) {
+			sm.setResponse(e);
 		}
 		sm.sendResponse();
 	}

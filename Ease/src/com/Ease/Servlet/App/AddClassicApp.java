@@ -62,32 +62,30 @@ public class AddClassicApp extends HttpServlet {
 			String profileId = sm.getServletParam("profileId", true);
 			String password = sm.getServletParam("password", false);
 			
-			//Mettre un param keyDate dans le post si besoin de decrypter en RSA. Correspond à la private key RSA, 
-			String keyDate = sm.getServletParam("keyDate", true);
-			if(keyDate!=null && !keyDate.equals("")){
-				password = RSA.Decrypt(password, Integer.parseInt(keyDate));
-			}
-			//--------
-			
 			Website site = null;
 			Map<String, String> infos = null;
 			if (name == null || name.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
 			else if (password == null)
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong password.");
+			//Mettre un param keyDate dans le post si besoin de decrypter en RSA. Correspond à la private key RSA, 
+			String keyDate = sm.getServletParam("keyDate", true);
+			if (keyDate != null && !keyDate.equals("")) {
+				password = RSA.Decrypt(password, Integer.parseInt(keyDate));
+			}
+			//--------
 			try {
 				Profile profile = user.getProfile(Integer.parseInt(profileId));
 				site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(websiteId));
 				infos = site.getNeededInfos(sm);
 				ClassicApp newApp = profile.addClassicApp(name, site, password, infos, sm);
-				if(infos.get("login")!=null && Regex.isEmail(infos.get("login"))){
-					user.addEmailIfNeeded(infos.get("login"), sm);
-				}
 				sm.setResponse(ServletManager.Code.Success, String.valueOf(newApp.getSingleId()));
 			} catch (NumberFormatException e) {
 				sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");
 			}
 		} catch (GeneralException e) {
+			sm.setResponse(e);
+		} catch (Exception e) {
 			sm.setResponse(e);
 		}
 		sm.sendResponse();

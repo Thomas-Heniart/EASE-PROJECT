@@ -100,7 +100,7 @@ public class Website {
 	public static String existsInDbFacebook(String appName, ServletManager sm) throws GeneralException{
 		DataBaseConnection db = sm.getDB();
 		Catalog catalog = (Catalog)sm.getContextAttr("catalog");
-		ResultSet rs = db.get("select * from websites where id in (select website_id from websiteslogwithmap where website_logwith_id in (select id from loginwithwebsites where website_id in (select id from websites where website_name='Facebook')));");
+		ResultSet rs = db.get("select * from websites where id in (select website_id from websitesLogWithMap where website_logwith_id in (select id from loginWithWebsites where website_id in (select id from websites where website_name='Facebook')));");
 		try {
 			while(rs.next()){
 				String name = rs.getString(WebsiteData.NAME.ordinal());
@@ -119,7 +119,7 @@ public class Website {
 	public static String existsInDbLinkedin(String appName, ServletManager sm) throws GeneralException{
 		DataBaseConnection db = sm.getDB();
 		Catalog catalog = (Catalog)sm.getContextAttr("catalog");
-		ResultSet rs = db.get("select * from websites where id in (select website_id from websiteslogwithmap where website_logwith_id in (select id from loginwithwebsites where website_id in (select id from websites where website_name='Linkedin')));");
+		ResultSet rs = db.get("select * from websites where id in (select website_id from websitesLogWithMap where website_logwith_id in (select id from loginWithWebsites where website_id in (select id from websites where website_name='Linkedin')));");
 		try {
 			while(rs.next()){
 				String name = rs.getString(WebsiteData.NAME.ordinal());

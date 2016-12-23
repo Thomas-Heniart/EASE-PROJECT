@@ -63,6 +63,8 @@ public class EditPassword extends HttpServlet {
 			sm.setResponse(ServletManager.Code.Success, "Password changed.");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
+		} catch (Exception e) {
+			sm.setResponse(e);
 		}
 		sm.sendResponse();
 	}

@@ -1,6 +1,8 @@
 package com.Ease.Utils;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -83,12 +85,13 @@ public class ServletManager {
 		if (user == null) {
 			throw new GeneralException(Code.ClientWarning, "You need to be connected to do that.");
 		} else {
-			socketId = request.getParameter("socketId");
+			/*socketId = request.getParameter("socketId");
 			if (!debug && socketId == null) {
 				throw new GeneralException(Code.ClientError, "No socketId.");
-			} else if (/*user.getWebsockets().containsKey(socketId) == false*/false) {
+			} else if (user.getWebsockets().containsKey(socketId) == false) {
+				System.out.println(user.getWebsockets().size());
 				throw new GeneralException(Code.ClientError, "Wrong socketId.");
-			}
+			}*/
 		}
 	}
 	
@@ -128,6 +131,15 @@ public class ServletManager {
 		this.retMsg = e.getMsg();
 	}
 	
+	public void setResponse(Exception e) {
+		this.retCode = Code.InternError.getValue();
+		this.retMsg = e.toString()+".\nStackTrace :";
+		for(int i = 0; i < e.getStackTrace().length; i++){
+			this.retMsg += "\n" + e.getStackTrace()[i];
+		}
+		e.printStackTrace();
+	}
+	
 	public void setRedirectUrl(String url) {
 		this.redirectUrl = url;
 	}
@@ -146,7 +158,15 @@ public class ServletManager {
 	    }
 		if (this.logResponse == null)
 			this.logResponse = retMsg;
-		db.set("insert into logs values('" + this.servletName + "', " + this.retCode + ", " + ((this.user != null) ? this.user.getDBid() : "NULL") + ", '" + argsString + "', '" + this.logResponse + "', '" + this.date + "');");
+		try {
+			this.logResponse = URLEncoder.encode(this.logResponse, "UTF-8");
+			argsString = URLEncoder.encode(argsString, "UTF-8");
+			System.err.println("insert into logs values('" + this.servletName + "', " + this.retCode + ", " + ((this.user != null) ? this.user.getDBid() : "NULL") + ", '" + argsString + "', '" + this.logResponse + "', '" + this.date + "');");
+			db.set("insert into logs values('" + this.servletName + "', " + this.retCode + ", " + ((this.user != null) ? this.user.getDBid() : "NULL") + ", '" + argsString + "', '" + this.logResponse + "', '" + this.date + "');");
+		} catch (UnsupportedEncodingException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+		
 	}
 	
 	public void sendResponse() {

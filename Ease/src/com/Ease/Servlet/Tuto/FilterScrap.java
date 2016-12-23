@@ -145,6 +145,8 @@ public class FilterScrap extends HttpServlet {
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			sm.setResponse(new GeneralException(ServletManager.Code.InternError, e));
+		} catch (Exception e) {
+			sm.setResponse(e);
 		}
 		sm.sendResponse();
 	}

@@ -141,7 +141,7 @@ public class Keys {
 			if (rs.next()) {
 				db.set("DELETE FROM passwordLost WHERE user_id=" + userId + ";");
 			}
-			db.set("INSERT INTO passwordLost VALUE(" + userId +", " + code + ");");
+			db.set("INSERT INTO passwordLost VALUE(" + userId +", '" + code + "');");
 			mailToSend.sendPasswordLostMail(email, code);
 		} catch (MessagingException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
@@ -167,12 +167,13 @@ public class Keys {
 					}
 				}
 				rs = db.get("SELECT key_id FROM users WHERE id=" + userId + ";");
+				rs.next();
 				String saltEase = AES.generateSalt();
 				String saltPerso = AES.generateSalt();
 				String keyUser = AES.keyGenerator();
 				String crypted_keyUser = AES.encryptUserKey(keyUser, newPassword, saltPerso);
 				String hashed_password = Hashing.SHA(newPassword, saltEase);
-				db.set("UPDATE FROM userKeys SET password='" + hashed_password + "', saltEase='" + saltEase + "', saltPerso='" + saltPerso + "', keyUser='" + crypted_keyUser + "' WHERE id=" + rs.getString(1) + ";");
+				db.set("UPDATE userKeys SET password='" + hashed_password + "', saltEase='" + saltEase + "', saltPerso='" + saltPerso + "', keyUser='" + crypted_keyUser + "' WHERE id=" + rs.getString(1) + ";");
 				db.set("DELETE FROM passwordLost WHERE user_id=" + userId + ";");
 			} else {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "You have not ask for reset your password.");

@@ -99,6 +99,8 @@ public class EmptyAppTransfert extends HttpServlet {
 		} catch (GeneralException e) {
 			e.printStackTrace();
 			sm.setResponse(e);
+		} catch (Exception e) {
+			sm.setResponse(e);
 		}
 		sm.sendResponse();
 	}
