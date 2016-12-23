@@ -59,8 +59,12 @@ public class User {
 				Status status = Status.loadStatus(rs.getString(Data.STATUSID.ordinal()), db);
 				ResultSet adminRs = db.get("SELECT user_id FROM admins WHERE user_id = " + db_id + ";");
 				boolean isAdmin = adminRs.next();
+				ResultSet sawGroupProfileRs = db.get("SELECT saw_group FROM groupsAndUsersMap WHERE user_id = " + db_id + " LIMIT 1;");
+				boolean sawGroupProfile = false;
+				if (sawGroupProfileRs.next())
+					sawGroupProfile = sawGroupProfileRs.getBoolean(1);
 				SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, sm);
-				User newUser =  new User(db_id, firstName, lastName, email, keys, options, isAdmin, sessionSave, status);
+				User newUser =  new User(db_id, firstName, lastName, email, keys, options, isAdmin, sawGroupProfile, sessionSave, status);
 				newUser.loadProfiles(sm);
 				newUser.loadEmails(sm);
 				for (Map.Entry<String, WebsiteApp> entry : newUser.getWebsiteAppsDBmap().entrySet()){
@@ -114,7 +118,11 @@ public class User {
 				ResultSet adminRs = db.get("SELECT user_id FROM admins WHERE user_id = " + db_id + ";");
 				boolean isAdmin = adminRs.next();
 				SessionSave newSessionSave = SessionSave.createSessionSave(keyUser, db_id, sm);
-				User newUser =  new User(db_id, firstName, lastName, email, keys, options, isAdmin, newSessionSave, status);
+				ResultSet sawGroupProfileRs = db.get("SELECT saw_group FROM groupsAndUsersMap WHERE user_id = " + db_id + " LIMIT 1;");
+				boolean sawGroupProfile = false;
+				if (sawGroupProfileRs.next())
+					sawGroupProfile = sawGroupProfileRs.getBoolean(1);
+				User newUser =  new User(db_id, firstName, lastName, email, keys, options, isAdmin, sawGroupProfile,newSessionSave, status);
 				newUser.loadProfiles(sm);
 				newUser.loadEmails(sm);
 				for (Map.Entry<String, WebsiteApp> entry : newUser.getWebsiteAppsDBmap().entrySet()){
@@ -156,7 +164,7 @@ public class User {
 		Status status = Status.createStatus(db);
 		String db_id = db.set("INSERT INTO users VALUES(NULL, '" + firstName + "', '" + lastName + "', '" + email + "', " + keys.getDBid() + ", " + opt.getDb_id() + ", '" + registrationDate + "', " + status.getDbId() + ");").toString();
 		SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(),  db_id, sm);
-		User newUser = new User(db_id, firstName, lastName, email, keys, opt, false, sessionSave, status);
+		User newUser = new User(db_id, firstName, lastName, email, keys, opt, false, false, sessionSave, status);
 		newUser.getProfileColumns().get(0).add(Profile.createPersonnalProfile(newUser, 0, 0, "Side", "#000000", sm));
 		newUser.getProfileColumns().get(1).add(Profile.createPersonnalProfile(newUser, 1, 0, "Perso", "#000000", sm));
 		((Map<String, User>)sm.getContextAttr("users")).put(email, newUser);
@@ -185,11 +193,12 @@ public class User {
 	protected Map<String, WebsocketSession> websockets;
 	protected List<Group> groups;
 	protected boolean isAdmin;
+	protected boolean sawGroupProfile;
 	protected Status status;
 	
 	protected SessionSave sessionSave;
 	
-	public User(String db_id, String first_name, String last_name, String email, Keys keys, Option opt, boolean isAdmin, SessionSave sessionSave, Status status) {
+	public User(String db_id, String first_name, String last_name, String email, Keys keys, Option opt, boolean isAdmin, boolean sawGroupProfile, SessionSave sessionSave, Status status) {
 		this.db_id = db_id;
 		this.first_name = first_name;
 		this.last_name = last_name;
@@ -211,6 +220,7 @@ public class User {
 		this.websiteAppsDBmap = new HashMap<String, WebsiteApp>();
 		this.appsIDmap = new HashMap<Integer, App>();
 		this.status = status;
+		this.sawGroupProfile = sawGroupProfile;
 	}
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
@@ -683,6 +693,7 @@ public class User {
 		if (tutoStep.equals("saw_group")) {
 			for(Group group : this.groups)
 				group.tutoStepDone(this.db_id, db);
+			this.sawGroupProfile = true;
 		}
 		else
 			this.status.passStep(tutoStep, db);
@@ -692,7 +703,36 @@ public class User {
 		return this.status.tutoIsDone();
 	}
 	
+	public boolean appsImported() {
+		return this.status.appsImported();
+	}
 	
+	public boolean allTipsDone() {
+		return this.status.allTipsDone();
+	}
+	
+	public boolean clickOnAppDone() {
+		return this.status.clickOnAppDone();
+	}
+	
+	public boolean moveAppDone() {
+		return this.status.moveAppDone();
+	}
+	
+	public boolean openCatalogDone() {
+		return this.status.openCatalogDone();
+	}
+	
+	public boolean addAnAppDone() {
+		return this.status.addAnAppDone();
+	}
+	
+	public boolean sawGroupProfile() {
+		if (this.groups.isEmpty())
+			return true;
+		else
+			return this.sawGroupProfile();
+	}
 	
 	public void addEmailIfNeeded(String email, ServletManager sm) throws GeneralException {
 		UserEmail userEmail = this.emails.get(email);

@@ -1,9 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.Ease.Context.Catalog.Catalog"%>
 
-
 <link rel="stylesheet" href="css/Tutorial.css" />
-
 
 <div class="popupHandler myshow" id="tutorial">
 	<div class="easePopup" id="importation">

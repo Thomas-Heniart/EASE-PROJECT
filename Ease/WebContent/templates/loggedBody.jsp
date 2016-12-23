@@ -71,7 +71,9 @@ $(document).ready(function(){
 		</div>
 		<%@ include file="extension.jsp" %>		
 		<%@ include file="catalog/catalogView.jsp"%>
-		<%@ include file="Tips.jsp" %>
+		<c:if test='${user.allTipsDone() eq false}'>
+			<%@ include file="Tips.jsp" %>
+		</c:if>
 	</div>
 	<dashboard:hiddenProfile profile="${dashboardColumns.get(0).get(0)}"/>
 	<%@ include file="SettingsView.jsp" %>
@@ -82,8 +84,11 @@ $(document).ready(function(){
 	<div class="md-overlay"></div>
 	
 </div>
-<!--<%@ include file="new_extension.jsp" %>-->
-<%@ include file="TutorialView.jsp"%>
+
+<c:if test='${user.appsImported() eq false}'>
+	<%@ include file="TutorialView.jsp"%>
+</c:if>
+<!-- <%@ include file="new_extension.jsp" %> -->
 
 <script>
 
