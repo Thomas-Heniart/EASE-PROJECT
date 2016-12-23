@@ -60,6 +60,8 @@ public class RemoveProfile extends HttpServlet {
 			sm.setResponse(e);
 		} catch (NumberFormatException e) {
 			sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");
+		} catch (Exception e) {
+			sm.setResponse(e);
 		}
 		sm.sendResponse();
 	}

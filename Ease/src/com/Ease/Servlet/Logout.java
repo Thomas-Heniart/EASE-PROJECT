@@ -77,16 +77,16 @@ public class Logout extends HttpServlet {
 			sm.addToSocket(WebsocketMessage.logoutMessage());
 			retMsg = "Logged out.";
 			sm.setResponse(ServletManager.Code.Success, retMsg);
-			sm.sendResponse();
 			System.out.println("Send response done");
 			user.removeWebsockets(sessionWebsockets);
 			user.deconnect(sm);
 			session.invalidate();
 		} catch (GeneralException e) {
 			sm.setResponse(e);
-			sm.sendResponse();
+		} catch (Exception e) {
+			sm.setResponse(e);
 		}
-		
+		sm.sendResponse();
 	}
 
 }

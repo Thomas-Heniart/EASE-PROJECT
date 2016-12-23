@@ -69,6 +69,8 @@ public class ResetPassword extends HttpServlet {
 			sm.setResponse(ServletManager.Code.Success, "Account trunced and password set.");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
+		} catch (Exception e) {
+			sm.setResponse(e);
 		}
 		sm.sendResponse();
 	}

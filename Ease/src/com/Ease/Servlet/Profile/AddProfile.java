@@ -61,6 +61,8 @@ public class AddProfile extends HttpServlet {
 			sm.addToSocket(WebsocketMessage.addProfileMessage(newProfile));
 		} catch (GeneralException e) {
 			sm.setResponse(e);
+		} catch (Exception e) {
+			sm.setResponse(e);
 		}
 		sm.sendResponse();
 	}

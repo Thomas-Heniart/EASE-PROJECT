@@ -161,8 +161,5 @@ public class WebsiteApp extends App {
 		websiteInfos.put("website", website.getJSON(sm));
 		infos.add(websiteInfos);
 		return infos;
-		
 	}
-	
-	
 }

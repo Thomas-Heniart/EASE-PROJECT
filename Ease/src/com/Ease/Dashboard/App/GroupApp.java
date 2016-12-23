@@ -13,6 +13,7 @@ import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.LinkApp.GroupLinkApp;
 import com.Ease.Dashboard.App.WebsiteApp.GroupWebsiteApp;
 import com.Ease.Dashboard.Profile.GroupProfile;
+import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
@@ -131,5 +132,33 @@ public class GroupApp {
 	
 	public AppPermissions getPerms() {
 		return this.permissions;
+	}
+
+	public void removeFromDb(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		
+		db.commitTransaction(transaction);
+		
+	}
+
+	public void loadContentForConnectedUser(User user, ServletManager sm) throws GeneralException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void loadContentForUnconnectedUser(String db_id2, ServletManager sm) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void removeContentForConnectedUser(User user, ServletManager sm) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void removeContentForUnconnectedUser(String db_id2, ServletManager sm) {
+		// TODO Auto-generated method stub
+		
 	}
 }

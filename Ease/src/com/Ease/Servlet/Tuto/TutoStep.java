@@ -52,6 +52,8 @@ public class TutoStep extends HttpServlet {
 			sm.setResponse(ServletManager.Code.Success, "step succesfully passed");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
+		} catch (Exception e) {
+			sm.setResponse(e);
 		}
 		sm.sendResponse();
 	}

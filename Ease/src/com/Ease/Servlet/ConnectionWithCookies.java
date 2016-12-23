@@ -46,7 +46,6 @@ public class ConnectionWithCookies extends HttpServlet {
 		// --
 		@SuppressWarnings("unchecked")
 		Map<String, WebsocketSession> sessionWebsockets = (Map<String, WebsocketSession>)session.getAttribute("sessionWebsockets");
-
 		boolean success = false;
 		try{
 			if(user != null){
@@ -67,6 +66,8 @@ public class ConnectionWithCookies extends HttpServlet {
 				sm.setResponse(ServletManager.Code.Success,"Connected with cookies.");
 			}
 		} catch (GeneralException e){
+			sm.setResponse(e);
+		} catch (Exception e) {
 			sm.setResponse(e);
 		}
 
