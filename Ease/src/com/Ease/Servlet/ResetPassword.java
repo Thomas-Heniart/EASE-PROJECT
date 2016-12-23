@@ -48,10 +48,9 @@ public class ResetPassword extends HttpServlet {
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 
 		String email = sm.getServletParam("email", true);
-		String code = sm.getServletParam("code", true);
+		String code = sm.getServletParam("linkCode", true);
 		String password = sm.getServletParam("password", false);
 		String confirmPassword = sm.getServletParam("confirmPassword", false);
-		
 		try {
 			if (user != null) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "You are logged on Ease.");
@@ -59,7 +58,7 @@ public class ResetPassword extends HttpServlet {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email.");
 			} else if (code == null || code.equals("")) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong code.");
-			} else if (password == null || Regex.isPassword(password)) {
+			} else if (password == null || !Regex.isPassword(password)) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong password.");
 			} else if (confirmPassword == null || !confirmPassword.equals(password)) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Passwords are not same.");
