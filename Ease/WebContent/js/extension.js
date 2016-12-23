@@ -72,6 +72,7 @@ function sendEvent(obj) {
         		appId : appId,
         	}, function() {
         	}, function(retMsg) {
+        		console.log(retMsg);
         		json.detail = JSON.parse(retMsg);
         		var message = "NewConnection";
         		json.detail.highlight = true;
