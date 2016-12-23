@@ -1,5 +1,7 @@
-var socket = new WebSocket("ws://localhost:8080/actions");
+//var socket = new WebSocket("ws://localhost:8080/actions");
+//var socket = new WebSocket("ws://ease.space/actions");
 //var socket = new WebSocket("ws://51.254.207.91:80/actions");
+
 socket.onmessage = onMessage;
 socketId = null;
 

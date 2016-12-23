@@ -26,16 +26,19 @@ public class WebsocketServer {
 
 	@SuppressWarnings("unchecked")
 	@OnOpen
-	public void open(Session session, EndpointConfig config) throws GeneralException {
+	public void open(Session session, EndpointConfig config) throws GeneralException{
 		this.config = config;
 		HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
-		User user = (User) httpSession.getAttribute("user");
+		User user = null; 
+		user = (User) httpSession.getAttribute("user");
 		WebsocketSession wSession = new WebsocketSession(session);
-		Map<String, WebsocketSession> sessionWebsockets = (Map<String, WebsocketSession>) httpSession.getAttribute("sessionWebsockets");
+		Map<String, WebsocketSession> sessionWebsockets = null;
+		sessionWebsockets = (Map<String, WebsocketSession>) httpSession.getAttribute("sessionWebsockets");
 		if (sessionWebsockets == null) {
 			sessionWebsockets = new HashMap<String, WebsocketSession>();
 			httpSession.setAttribute("sessionWebsockets", sessionWebsockets);
 		}
+		//throw new NullPointerException("Open websocket " + (user == null ? "no user" : user.getFirstName()) + " socketId : " + wSession.getSessionId());
 		System.out.println("Open websocket " + (user == null ? "no user" : user.getFirstName()) + " socketId : " + wSession.getSessionId());
 		sessionWebsockets.put(wSession.getSessionId(), wSession);
 		if (user != null)
@@ -66,6 +69,11 @@ public class WebsocketServer {
 
 	@OnError
 	public void onError(Throwable error) {
+		String msg = error.toString()+".\nStackTrace :";
+		for(int i = 0; i < error.getStackTrace().length; i++){
+			msg += "\n" + error.getStackTrace()[i];
+		}
+		throw new NullPointerException(msg);
 	}
 
 	@OnMessage

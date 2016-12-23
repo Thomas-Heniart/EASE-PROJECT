@@ -85,13 +85,13 @@ public class ServletManager {
 		if (user == null) {
 			throw new GeneralException(Code.ClientWarning, "You need to be connected to do that.");
 		} else {
-			socketId = request.getParameter("socketId");
+			/*socketId = request.getParameter("socketId");
 			if (!debug && socketId == null) {
 				throw new GeneralException(Code.ClientError, "No socketId.");
 			} else if (user.getWebsockets().containsKey(socketId) == false) {
 				System.out.println(user.getWebsockets().size());
 				throw new GeneralException(Code.ClientError, "Wrong socketId.");
-			}
+			}*/
 		}
 	}
 	
