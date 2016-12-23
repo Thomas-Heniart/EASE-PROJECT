@@ -33,6 +33,7 @@ CREATE TABLE status (
   `move_apps` tinyint(1) NOT NULL,
   `open_catalog` tinyint(1) NOT NULL,
   `drag_and_drop` tinyint(1) NOT NULL,
+  `add_an_app` tinyint(1) NOT NULL,
   `tuto_done` tinyint(1) NOT NULL,
   PRIMARY KEY (id)
 );
@@ -440,7 +441,7 @@ CREATE TABLE `accountsInformations` (
   FOREIGN KEY (account_id) REFERENCES accounts(id)
 );
 
-CREATE TABLE groupLogwithApps
+CREATE TABLE groupLogWithApps
 (
   id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   group_website_app_id INT(10) UNSIGNED NOT NULL,
@@ -450,7 +451,7 @@ CREATE TABLE groupLogwithApps
   FOREIGN KEY (logWith_group_website_app_id) REFERENCES groupWebsiteApps(id)
 );
 
-CREATE TABLE logwithApps
+CREATE TABLE logWithApps
 (
 id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 website_app_id INT(10) UNSIGNED NOT NULL,
@@ -459,7 +460,7 @@ group_logWith_app_id INT(10) UNSIGNED,
 PRIMARY KEY (id),
 FOREIGN KEY (website_app_id) REFERENCES websiteApps(id),
 FOREIGN KEY (logWith_website_app_id) REFERENCES websiteApps(id),
-FOREIGN KEY (group_logWith_app_id) REFERENCES groupLogwithApps(id)
+FOREIGN KEY (group_logWith_app_id) REFERENCES groupLogWithApps(id)
 );
 
 CREATE TABLE linkAppInformations

@@ -696,6 +696,28 @@ public class User {
 		return this.status.appsImported();
 	}
 	
+	public boolean allTipsDone() {
+		//return this.status.allTipsDone();
+		return false;
+	}
+	
+	public boolean clickOnAppDone() {
+		return this.status.clickOnAppDone();
+	}
+	
+	public boolean moveAppDone() {
+		return this.status.moveAppDone();
+	}
+	
+	public boolean openCatalogDone() {
+		//return this.status.openCatalogDone();
+		return false;
+	}
+	
+	public boolean addAnAppDone() {
+		return this.status.addAnAppDone();
+	}
+	
 	public void addEmailIfNeeded(String email, ServletManager sm) throws GeneralException {
 		UserEmail userEmail = this.emails.get(email);
 		if (userEmail != null)

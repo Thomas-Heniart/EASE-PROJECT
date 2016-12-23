@@ -59,9 +59,9 @@ INSERT INTO ease.options
 SELECT null, bckgrndPic, 0 FROM test.users;
 
 INSERT INTO ease.status
-SELECT null, 1, 0, 0, 0, 0, 0, 0, 0, tuto FROM test.users;
+SELECT null, 1, 0, 0, 0, 0, 0, 0, 0, 0, tuto FROM test.users;
 
-UPDATE ease.status SET first_connection=1, CGU=1, chrome_scrapping=1, click_on_app=1, move_apps=1, open_catalog=1, drag_and_drop=1 WHERE tuto_done = 1;
+UPDATE ease.status SET first_connection=1, CGU=1, chrome_scrapping=1, apps_manually_added=1, click_on_app=1, move_apps=1, open_catalog=1, drag_and_drop=1, add_an_app=1 WHERE tuto_done = 1;
 
 SET @var = 0;
 

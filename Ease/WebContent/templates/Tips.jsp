@@ -27,6 +27,7 @@
 			<button class="btn" type="submit">Got it!</button>
 		</div>
 	</div>
+	
 	<div class="tip" id="3">
 		<div class="leftIcon">
 			<img class="icon" src="resources/emojis/world.png" />
@@ -54,7 +55,48 @@
 			'left': $('.ProfileBox').offset().left - $('#tipsHandler #0').outerWidth(true),
 			'top': $('.ProfileBox').offset().top - headerHeight
 		});
-		$('#tipsHandler #0').addClass('show');
+		$('#tipsHandler #1').css({
+			'left': $('.ProfileBox').offset().left + $('.ProfileBox').outerWidth(true) / 2,
+			'top': $('.ProfileBox').offset().top + $('.ProfileBox').height() - headerHeight
+		});
+		
+		if ($(".ProfileBox[custom='true']").length == 0){
+			$('#tipsHandler #3').css({
+				'left': $('.MenuButtonSet').offset().left - $('#tipsHandler #3').outerWidth(true),
+				'top': $('.MenuButtonSet').offset().top - headerHeight
+			});
+		} else{
+			$('#tipsHandler #2').css({
+				'left': $(".ProfileBox[custom='true']").offset().left - $('#tipsHandler #2').outerWidth(true),
+				'top': $(".ProfileBox[custom='true']").offset().top + $('#tipsHandler #2').height() - headerHeight
+			});
+		}
+		
+		$('#tipsHandler #3').css({
+			'left': $('.MenuButtonSet').offset().left - $('#tipsHandler #3').outerWidth(true),
+			'top': $('.MenuButtonSet').offset().top - headerHeight
+		});
+		
+		$('#tipsHandler #4').css({
+			'left': '50%',
+			'top': '2%'
+		});
+		
+		<c:choose>
+			<c:when test='${user.clickOnAppDone() eq false}'>
+				$("#tipsHandler #0").addClass("show");
+			</c:when>
+			<c:when test='${user.clickOnAppDone() && (user.moveAppDone() eq false)}'>
+				$("#tipsHandler #1").addClass("show");
+			</c:when>
+			<c:when test='${user.moveAppDone() && (user.openCatalogDone() eq false)}'>
+				if ($(".ProfileBox[custom='true']").length == 0)
+					$('#tipsHandler #3').addClass('show');
+				else
+					$("#tipsHandler #2").addClass('show');
+			</c:when>
+		</c:choose>
+		
 		$('#tipsHandler #0 button').click(function(){
 			$('#tipsHandler #1').css({
 				'left': $('.ProfileBox').offset().left + $('.ProfileBox').outerWidth(true) / 2,
