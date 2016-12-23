@@ -88,7 +88,8 @@ public class ServletManager {
 			socketId = request.getParameter("socketId");
 			if (!debug && socketId == null) {
 				throw new GeneralException(Code.ClientError, "No socketId.");
-			} else if (/*user.getWebsockets().containsKey(socketId) == false*/false) {
+			} else if (user.getWebsockets().containsKey(socketId) == false) {
+				System.out.println(user.getWebsockets().size());
 				throw new GeneralException(Code.ClientError, "Wrong socketId.");
 			}
 		}
