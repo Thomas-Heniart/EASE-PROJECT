@@ -87,6 +87,8 @@ public class ConnectionServlet extends HttpServlet {
 			}
 		} catch (GeneralException e) {
 			sm.setResponse(e);
+		} catch (Exception e) {
+			sm.setResponse(e);
 		}
 		System.out.println("Send connection response");
 		sm.sendResponse();

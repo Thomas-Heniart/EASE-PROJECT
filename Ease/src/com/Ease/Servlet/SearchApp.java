@@ -55,6 +55,8 @@ public class SearchApp extends HttpServlet {
 			sm.setResponse(ServletManager.Code.Success, result);
 		} catch (GeneralException e) {
 			sm.setResponse(e);
+		} catch (Exception e) {
+			sm.setResponse(e);
 		}
 		sm.sendResponse();
 	}

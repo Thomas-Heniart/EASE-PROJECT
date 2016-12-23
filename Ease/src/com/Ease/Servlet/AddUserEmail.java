@@ -63,6 +63,8 @@ public class AddUserEmail extends HttpServlet {
 			sm.setResponse(ServletManager.Code.Success, "Email added");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
+		} catch (Exception e) {
+			sm.setResponse(e);
 		}
 		sm.sendResponse();
 	}

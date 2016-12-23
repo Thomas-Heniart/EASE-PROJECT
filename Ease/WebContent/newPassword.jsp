@@ -30,7 +30,7 @@
 	<script src="js/classie.js"></script>
 	<script src="js/owl.carousel.js"></script>
 	<script src="js/basic-utils.js" ></script>
-
+	<script src="js/websocket.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"> </script>
 	<script src="js/jquery.mousewheel.min.js"></script>
 	<link rel="stylesheet" href="css/default_style.css" />
@@ -55,7 +55,7 @@
 		<div id="security" style="text-align: center;" class="show">
 			<p>Set you new password carefully</p>
 		</div>
-		<form action="ResetUser" id="lostPasswordForm" style="text-align: center;" autocomplete="off">
+		<form action="ResetPassword" id="lostPasswordForm" style="text-align: center;" autocomplete="off">
 			<span class="input input--minoru show">
 				<input required style="text-align: center;" class="input__field input__field--minoru" name="password" type="password" id="input-8" placeholder="New password" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');"/>
 				<label class="input__label input__label--minoru" for="input-8">
@@ -67,6 +67,7 @@
 					<label class="input__label input__label--minoru" for="input-8">
 					</label>
 			</span>
+			<input type="hidden" value="<%= request.getParameter("email") %>" name="email"/>
 			<input type="hidden" value="<%= request.getParameter("linkCode") %>" name="linkCode"/>
 		</form>
 		<div class="alertDiv">

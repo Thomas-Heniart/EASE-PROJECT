@@ -67,6 +67,8 @@ public class ConnectionWithCookies extends HttpServlet {
 			}
 		} catch (GeneralException e){
 			sm.setResponse(e);
+		} catch (Exception e) {
+			sm.setResponse(e);
 		}
 
 		Cookie 	cookie = null;
