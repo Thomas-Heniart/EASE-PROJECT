@@ -3,7 +3,6 @@ $(document).ready(function(){
 	setTimeout(function(){
 		waitForExtension = false;
 	},800);
-	console.log("ko");
 });
 
 function sendEvent(obj) {

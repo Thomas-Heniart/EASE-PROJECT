@@ -38,7 +38,7 @@ public class ClassicApp extends WebsiteApp {
 	 * 
 	 */
 	
-	public static ClassicApp loadClassicApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, String websiteAppDBid, GroupWebsiteApp groupWebsiteApp, ServletManager sm) throws GeneralException {
+	public static ClassicApp loadClassicApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, String websiteAppDBid, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		try {
 			ResultSet rs = db.get("SELECT * from classicApps WHERE website_app_id=" + websiteAppDBid + ";");
@@ -46,7 +46,7 @@ public class ClassicApp extends WebsiteApp {
 				Account account = Account.loadAccount(rs.getString(Data.ACCOUNT_ID.ordinal()), db);
 				String classicDBid = rs.getString(Data.ID.ordinal());
 				IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
-				return new ClassicApp(db_id, profile, position, infos, groupApp, insertDate, idGenerator.getNextId(), site, websiteAppDBid, groupWebsiteApp, account, classicDBid);
+				return new ClassicApp(db_id, profile, position, infos, groupApp, insertDate, idGenerator.getNextId(), site, websiteAppDBid, account, classicDBid);
 			} 
 			throw new GeneralException(ServletManager.Code.InternError, "Classic app not complete in db.");
 		} catch (SQLException e) {
@@ -67,7 +67,7 @@ public class ClassicApp extends WebsiteApp {
 			}
 		}
 		db.commitTransaction(transaction);
-		return new ClassicApp((String)elevator.get("appDBid"), profile, position, (AppInformation)elevator.get("appInfos"), null, (String)elevator.get("registrationDate"), ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, null, account, classicDBid);
+		return new ClassicApp((String)elevator.get("appDBid"), profile, position, (AppInformation)elevator.get("appInfos"), null, (String)elevator.get("registrationDate"), ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, account, classicDBid);
 	}
 	
 	public static ClassicApp createFromWebsiteApp(WebsiteApp websiteApp, String name, String password, Map<String, String> infos, ServletManager sm, User user) throws GeneralException {
@@ -78,7 +78,7 @@ public class ClassicApp extends WebsiteApp {
 		Account account = Account.createAccount(password, false, infos, user, sm);
 		String classicDBid = db.set("INSERT INTO classicApps VALUES(NULL, " + websiteAppDBid + ", " + account.getDBid() + ", NULL);").toString();
 		db.commitTransaction(transaction);
-		ClassicApp newClassicApp = new ClassicApp(websiteApp.getDBid(),user.getProfileFromApp(websiteApp.getSingleId()), websiteApp.getPosition(),websiteApp.getAppInformation(), null, websiteApp.getInsertDate(), websiteApp.getSingleId(), websiteApp.getSite(), websiteAppDBid, null, account, classicDBid);
+		ClassicApp newClassicApp = new ClassicApp(websiteApp.getDBid(),user.getProfileFromApp(websiteApp.getSingleId()), websiteApp.getPosition(),websiteApp.getAppInformation(), null, websiteApp.getInsertDate(), websiteApp.getSingleId(), websiteApp.getSite(), websiteAppDBid, account, classicDBid);
 		user.replaceApp(newClassicApp);
 		for (String info : infos.values()) {
 			if (Regex.isEmail(info) == true) {
@@ -98,8 +98,8 @@ public class ClassicApp extends WebsiteApp {
 	protected Account account;
 	protected String classicDBid;
 	
-	public ClassicApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid, GroupWebsiteApp groupWebsiteApp, Account account, String classicDBid) {
-		super(db_id, profile, position, infos, groupApp, insertDate, single_id, site, websiteAppDBid, groupWebsiteApp);
+	public ClassicApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid, Account account, String classicDBid) {
+		super(db_id, profile, position, infos, groupApp, insertDate, single_id, site, websiteAppDBid);
 		this.account = account;
 		this.classicDBid = classicDBid;
 	}

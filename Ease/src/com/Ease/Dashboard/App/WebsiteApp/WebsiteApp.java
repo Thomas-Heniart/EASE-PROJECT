@@ -47,18 +47,18 @@ public class WebsiteApp extends App {
 				if (rs.next()) {
 					String websiteAppDBid = rs.getString(Data.ID.ordinal());
 					Website website = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithDBid(rs.getString(Data.WEBSITE_ID.ordinal()));
-					GroupWebsiteApp groupWebsiteApp = null;
+					/*GroupWebsiteApp groupWebsiteApp = null;
 					String groupWebsiteId = rs.getString(Data.GROUP_WEBSITE_ID.ordinal());
 					if (groupWebsiteId != null)
-						groupWebsiteApp = (GroupWebsiteApp) GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupWebsiteId);
+						groupWebsiteApp = (GroupWebsiteApp) GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupWebsiteId);*/
 					IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
 					switch (rs.getString(Data.TYPE.ordinal())) {
 					case "websiteApp" :
-						return new WebsiteApp(appDBid, profile, position, appInfos, groupApp, insertDate, idGenerator.getNextId(), website, websiteAppDBid, groupWebsiteApp);
+						return new WebsiteApp(appDBid, profile, position, appInfos, groupApp, insertDate, idGenerator.getNextId(), website, websiteAppDBid);
 					case "logwithApp" :
-						return LogwithApp.loadLogwithApp(appDBid, profile, position, appInfos, groupApp, insertDate, website, websiteAppDBid, groupWebsiteApp, sm);
+						return LogwithApp.loadLogwithApp(appDBid, profile, position, appInfos, groupApp, insertDate, website, websiteAppDBid, sm);
 					case "classicApp" :
-						return ClassicApp.loadClassicApp(appDBid, profile, position, appInfos, groupApp, insertDate, website, websiteAppDBid, groupWebsiteApp, sm);
+						return ClassicApp.loadClassicApp(appDBid, profile, position, appInfos, groupApp, insertDate, website, websiteAppDBid, sm);
 					}
 				} 
 				throw new GeneralException(ServletManager.Code.InternError, "Website app not complete in db.");
@@ -87,7 +87,7 @@ public class WebsiteApp extends App {
 		String appDBid = App.createApp(profile, position, name, "websiteApp", elevator, sm);
 		String websiteAppDBid = db.set("INSERT INTO websiteApps VALUES(NULL, " + site.getDb_id() + ", " + appDBid + ", NULL, 'websiteApp');").toString();
 		db.commitTransaction(transaction);
-		return new WebsiteApp(appDBid, profile, position, (AppInformation)elevator.get("appInfos"), null, (String)elevator.get("registrationDate"), ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, null);
+		return new WebsiteApp(appDBid, profile, position, (AppInformation)elevator.get("appInfos"), null, (String)elevator.get("registrationDate"), ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid);
 	}
 	
 	public static void Empty(String appId, ServletManager sm) throws GeneralException {
@@ -120,11 +120,11 @@ public class WebsiteApp extends App {
 	protected String		websiteAppDBid;
 	protected GroupWebsiteApp groupWebsiteApp;
 	
-	public WebsiteApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid, GroupWebsiteApp groupWebsiteApp) {
+	public WebsiteApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid) {
 		super(db_id, profile, position, infos, groupApp, insertDate, single_id);
 		this.website = site;
 		this.websiteAppDBid = websiteAppDBid;
-		this.groupWebsiteApp = groupWebsiteApp;
+		this.groupWebsiteApp = (GroupWebsiteApp) groupApp;
 	}
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
