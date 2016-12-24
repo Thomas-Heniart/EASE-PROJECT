@@ -231,11 +231,11 @@
 								</div>
 							</div>
 							<div class="appHandler">
-								<div class="app" id="${catalog.getWebsiteWithName('Hotmail').getSingleId()}">
+								<div class="app" id="${catalog.getWebsiteWithName('Messenger').getSingleId()}">
 									<div class="logo">
-										<img src="resources/websites/Hotmail/logo.png">
+										<img src="resources/websites/Messenger/logo.png">
 									</div>
-									<p class="name">Hotmail</p>
+									<p class="name">Messenger</p>
 								</div>
 							</div>
 							<div class="appHandler">
@@ -278,9 +278,10 @@
 							<img src="resources/websites/Facebook/logo.png"/>
 						</div>
 					</div>
-					<form action="" method="POST">
+					<form action="addClassicApp" method="POST">
 						<div class="row text-center">
 							<input id="name" type="text" name="name" placeholder="Name" />
+							<input id="profileId" type="hidden" name="profileId" value="${user.getProfilesList().get(0).getSingleId() }"/>
 						</div>
 						<div class="row text-center lineBehind">
 							<p class="post-title">How do you access your <span>Facebook</span> account ?</p>
@@ -291,7 +292,7 @@
 								<div class="showPassDiv">
 									<i class="fa fa-eye centeredItem" aria-hidden="true"></i>
 								</div>
-								<input type="password" name="password" placeholder="Your password..." />
+								<input id="password" type="password" name="password" placeholder="Your password..." />
 							</span>
 						</div>
 						<div class="row text-center">
@@ -299,7 +300,7 @@
 						</div>
 					</form>
 					<div class="row text-center">
-						<p id="skipButton">Skip</p>
+						<a id="skipButton">Skip</a>
 					</div>
 				</div>
 			</div>

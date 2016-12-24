@@ -1,3 +1,76 @@
+
+/////////
+/////////	Integrate apps
+/////////
+
+var addAppTutoCpt = 0;
+
+function showAddAppTuto(i) {
+	$("div#addAppTutorial").addClass("show");
+	$("div#addAppTutorial img").attr("src", $("div#simpleImportation div.appHandler div.app.selected:eq(" + i + ")").find("img").attr("src"));	
+	$("div#addAppTutorial input#name").val($("div#simpleImportation div.appHandler div.app.selected:eq(" + i + ")").find("p.name").text());
+	$("div#addAppTutorial p.post-title span").text($("div#simpleImportation div.appHandler div.app.selected:eq(" + i + ")").find("p.name").text());
+	$("div#addAppTutorial input#login").val("");
+	$("div#addAppTutorial input#password").val("");
+}
+
+$("div#simpleImportation div.appHandler").click(function() {
+	if ($(this).find("div.app").hasClass("selected")) {
+		$(this).find("div.app").removeClass("selected");	
+	} else {
+		$(this).find("div.app").addClass("selected");	
+	}
+})
+
+$('div#addAppTutorial form').submit(function (e) {
+	e.preventDefault();
+	postHandler.post('AddClassicApp', {
+		"name" : $("div#addAppTutorial input#name").val(),
+		"login" : $("div#addAppTutorial input#login").val(),
+		"profileId" : $("div#addAppTutorial input#profileId").val(),
+		"password" : $("div#addAppTutorial input#password").val(),
+		"websiteId" : $("div#simpleImportation div.appHandler div.app.selected:eq(" + addAppTutoCpt + ")").attr("id")
+	}, function() {
+		//always
+	}, function(retMsg) {
+		//succes
+		console.log(retMsg);
+	}, function(retMsg) {
+		//error
+		console.log(retMsg);
+	}, 'text');
+	if ($("div#addAppTutorial input#login").val() != "" && $("div#addAppTutorial input#password").val() != "" && $("div#addAppTutorial input#name").val() != "") {
+		addAppTutoCpt++;
+		if ($("div#simpleImportation div.appHandler div.app.selected").length > addAppTutoCpt) {
+			showAddAppTuto(addAppTutoCpt);
+		} else {
+			$("div#addAppTutorial").removeClass("show");
+			$("div#tutorial").removeClass("myshow");
+		}
+	}
+})
+
+$("div#addAppTutorial a").click(function() {
+	addAppTutoCpt++;
+	if ($("div#simpleImportation div.appHandler div.app.selected").length > addAppTutoCpt) {
+		showAddAppTuto(addAppTutoCpt);
+	} else {
+		$("div#addAppTutorial").removeClass("show");
+		$("div#tutorial").removeClass("myshow");
+	}
+})
+
+$("div#simpleImportation button").click(function() {
+	if ($("div#simpleImportation div.appHandler div.app.selected").length >= 4) {
+		$("div#simpleImportation").removeClass("show");
+		showAddAppTuto(addAppTutoCpt);
+	}
+})
+
+/////////
+/////////	Scrapping for apps
+/////////
+
 var scrapping = [];
 var appToAdd = [];
 var jsonscrap = {};
@@ -246,6 +319,11 @@ $('div#importation div#selectScraping button').click(function () {
 		$('div#importation div#selectScraping').removeClass("show");
 		showAccountCredentials("");
 	}
+});
+
+$('div#importation div#selectScraping a').click(function () {
+	$('div#importation').removeClass("show");
+	$('div#simpleImportation').addClass("show");
 });
 
 $('#accountCredentials input').keypress(function (e) {
