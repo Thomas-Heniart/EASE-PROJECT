@@ -1,3 +1,8 @@
+$("#manualImportation").click(function() {
+	$("#simpleImportation").addClass("show");
+});
+
+
 
 /////////
 /////////	Integrate apps
@@ -11,6 +16,7 @@ function showAddAppTuto(i) {
 	$("div#addAppTutorial input#name").val($("div#simpleImportation div.appHandler div.app.selected:eq(" + i + ")").find("p.name").text());
 	$("div#addAppTutorial p.post-title span").text($("div#simpleImportation div.appHandler div.app.selected:eq(" + i + ")").find("p.name").text());
 	$("div#addAppTutorial input#login").val("");
+	$("div#addAppTutorial input#login").focus();
 	$("div#addAppTutorial input#password").val("");
 }
 
@@ -20,7 +26,40 @@ $("div#simpleImportation div.appHandler").click(function() {
 	} else {
 		$(this).find("div.app").addClass("selected");	
 	}
-})
+});
+
+function goToNextStep() {
+	addAppTutoCpt++;
+	if ($("div#simpleImportation div.appHandler div.app.selected").length > addAppTutoCpt) {
+		showAddAppTuto(addAppTutoCpt);
+	} else {
+		postHandler.post("TutoStep", {
+			"tutoStep" : "apps_manually_added"
+		}, function() {
+			//always
+		}, function(retMsg) {
+			//success
+			location.reload();
+		}, function(retMsg) {
+			//error
+		}, 'text');
+	}
+}
+
+$("div#addAppTutorial #skipButton").click(function() {
+	postHandler.post("AddEmptyApp", {
+		"name" : $("div#addAppTutorial input#name").val(),
+		"profileId" : $("div#addAppTutorial input#profileId").val(),
+		"websiteId" : $("div#simpleImportation div.appHandler div.app.selected:eq(" + addAppTutoCpt + ")").attr("id")
+	}, function() {
+		//always
+	}, function(retMsg) {
+		//success
+	}, function(retMsg) {
+		//error
+	}, 'text');
+	goToNextStep();
+});
 
 $('div#addAppTutorial form').submit(function (e) {
 	e.preventDefault();
@@ -41,31 +80,16 @@ $('div#addAppTutorial form').submit(function (e) {
 	}, 'text');
 	if ($("div#addAppTutorial input#login").val() != "" && $("div#addAppTutorial input#password").val() != "" && $("div#addAppTutorial input#name").val() != "") {
 		addAppTutoCpt++;
-		if ($("div#simpleImportation div.appHandler div.app.selected").length > addAppTutoCpt) {
-			showAddAppTuto(addAppTutoCpt);
-		} else {
-			$("div#addAppTutorial").removeClass("show");
-			$("div#tutorial").removeClass("myshow");
-		}
+		goToNextStep();
 	}
-})
-
-$("div#addAppTutorial a").click(function() {
-	addAppTutoCpt++;
-	if ($("div#simpleImportation div.appHandler div.app.selected").length > addAppTutoCpt) {
-		showAddAppTuto(addAppTutoCpt);
-	} else {
-		$("div#addAppTutorial").removeClass("show");
-		$("div#tutorial").removeClass("myshow");
-	}
-})
+});
 
 $("div#simpleImportation button").click(function() {
 	if ($("div#simpleImportation div.appHandler div.app.selected").length >= 4) {
 		$("div#simpleImportation").removeClass("show");
 		showAddAppTuto(addAppTutoCpt);
 	}
-})
+});
 
 /////////
 /////////	Scrapping for apps
