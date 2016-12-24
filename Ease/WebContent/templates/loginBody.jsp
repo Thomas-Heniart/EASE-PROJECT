@@ -179,7 +179,7 @@ boolean knownUser = iden == 2 ? true : false;
 	<% } %>
 	<a id="passwordLost">Password lost</a>
 	<i class="fa fa-circle" aria-hidden="true"></i>
-	<a href="landingPage.jsp" target="_blank">Discover ease</a>
+	<a href="discover" target="_blank">Discover ease</a>
 </div>
 
 <p class="homepageOnoffContainer displayedByPlugin">
