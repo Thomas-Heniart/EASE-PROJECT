@@ -50,7 +50,7 @@
 						</div>
 					</div>
 					<div class="row text-center">
-						<button class="btn" type="submit">Go!</button>
+						<button class="btn locked" type="submit">Go!</button>
 					</div>
 					<div class="row text-center">
 						<a id="manualImportation">I prefere to import all my accounts 1 by 1</a>
@@ -85,7 +85,7 @@
 						</span>
 					</div>
 					<div class="row text-center">
-						<button class="btn" type="submit">Go!</button>
+						<button class="btn locked" type="submit">Go!</button>
 					</div>
 					<div class="row text-center">
 						<a>Skip this step</a>

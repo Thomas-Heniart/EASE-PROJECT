@@ -61,7 +61,7 @@ pageEncoding="UTF-8"%>
 						<a href="contact.jsp">Contact</a>
 					</li>
 					<li>
-						<a href="https://ease.space" target="_blank">Connexion</a>
+						<a href="/" target="_blank">Connexion</a>
 					</li>
 				</ul>
 			</div>

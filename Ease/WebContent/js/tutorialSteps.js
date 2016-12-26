@@ -1,3 +1,5 @@
+/* Transitions */	
+
 $("#manualImportation").click(function() {
 	$("#simpleImportation").addClass("show");
 });
@@ -281,6 +283,7 @@ function showAccountCredentials(retMsg) {
 		$('#accountCredentials div.errorText').addClass("show");
 	}
 	$("#accountCredentials input[name='password']").val("");
+	$("#accountCredentials input[name='password']").change();
 }
 
 function showScrapingInfo() {
@@ -358,6 +361,30 @@ $('#accountCredentials input').keypress(function (e) {
 		setTimeout(function() {used = false}, 500);
 	}
 });
+
+$('#accountCredentials input').keyup(function() {
+	$(this).change();
+})
+
+$('#accountCredentials input').change(function() {
+	checkInputs($("#accountCredentials"));
+});
+
+function checkInputs(contextElement) {
+	var shouldBeLocked = false;
+	var inputs = contextElement.find("input");
+	inputs.each(function(index, element) {
+		if ($(element).val() === "") {
+			shouldBeLocked = true;
+			return;
+		}
+	});
+	if (shouldBeLocked)
+		$("button[type='submit']", contextElement).addClass("locked");
+	else
+		$("button[type='submit']", contextElement).removeClass("locked");
+		
+}
 
 $('#accountCredentials a').click(function () {
 	ScrapingInfoFinished();
