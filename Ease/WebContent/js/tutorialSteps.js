@@ -41,6 +41,7 @@ function goToNextStep() {
 			//always
 		}, function(retMsg) {
 			//success
+			easeTracker.trackEvent("AppsManuallyAdded");
 			location.reload();
 		}, function(retMsg) {
 			//error
@@ -153,6 +154,7 @@ function addTutoApps(logwithId, i) {
 			//always
 		}, function(retMsg) {
 			//succes
+			easeTracker.trackEvent("ScrappingDone");
 			location.reload();
 		}, function(retMsg) {
 			//error
