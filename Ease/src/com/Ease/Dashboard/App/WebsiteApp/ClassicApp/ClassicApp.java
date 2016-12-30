@@ -161,6 +161,8 @@ public class ClassicApp extends WebsiteApp {
 		JSONArray infos = super.getJSON(sm);
 		JSONObject websiteInfos = (JSONObject) infos.get(0);
 		websiteInfos.put("user", this.account.getJSON(sm));
+		websiteInfos.put("type", "ClassicApp");
+		websiteInfos.put("app_name", this.informations.getName());
 		return infos;
 	}
 	
