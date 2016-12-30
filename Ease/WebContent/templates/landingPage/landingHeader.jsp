@@ -11,13 +11,13 @@
 						<a href="#page-top"></a>
 					</li>
 					<li>
-						<a href="http://www.ease-app.co/secure" target="_blank">Sécurité</a>
+						<a href="secure.jsp" target="_blank">Sécurité</a>
 					</li>
 					<li>
-						<a href="equipe.jsp">Equipe</a>
+						<a href="equipe.jsp" target="_blank">Equipe</a>
 					</li>
 					<li>
-						<a href="contact.jsp">Contact</a>
+						<a href="contact.jsp" target="_blank">Contact</a>
 					</li>
 					<li>
 						<a href="https://ease.space" target="_blank">Connexion</a>

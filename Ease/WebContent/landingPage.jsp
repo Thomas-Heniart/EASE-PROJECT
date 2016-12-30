@@ -74,7 +74,7 @@ pageEncoding="UTF-8"%>
 						<a href="#page-top"></a>
 					</li>
 					<li>
-						<a href="http://www.ease-app.co/secure" target="_blank">Sécurité</a>
+						<a href="secure.jsp" target="_blank">Sécurité</a>
 					</li>
 					<li>
 						<a href="equipe.jsp">Equipe</a>
