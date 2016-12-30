@@ -6,7 +6,7 @@
 				<div class="menu-column">
 					<h3>Produit</h3>
 					<div class="links">
-						<a href="http://www.ease-app.co/secure" target="_blank">Sécurité</a>
+						<a href="secure.jsp" target="_blank">Sécurité</a>
 						<a href="#">Créer un compte</a>
 						<a href="https://ease.space">Se connecter</a>
 						<a class="typeform-share" href="https://victor304.typeform.com/to/VtXcOm" data-mode="1" target="_blank">Donner votre avis</a>
@@ -17,8 +17,7 @@
 					<h3>Entreprise</h3>
 					<div class="links">
 						<a href="equipe.jsp">Equipe</a>
-						<a href="#">Partenaires</a>
-						<a href="http://www.ease-app.co/privacy">CGU</a>
+						<a href="privacy.jsp" target="_blank">CGU</a>
 						<a href="contact.jsp">Nous contacter</a>
 					</div>
 				</div>

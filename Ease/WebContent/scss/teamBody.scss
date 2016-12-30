@@ -43,7 +43,11 @@
 		background-color: white;
 	}
 	#contact_us {
+		background-color: #eee;
 		margin-top: 62px;
+		.section-heading {
+			margin-bottom: 40px;
+		}
 		#contactUsForm {
 			.contactForm {
 				padding: 30px;
