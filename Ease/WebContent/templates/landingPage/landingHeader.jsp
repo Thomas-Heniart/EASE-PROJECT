@@ -20,7 +20,7 @@
 						<a href="contact.jsp" target="_blank">Contact</a>
 					</li>
 					<li>
-						<a href="https://ease.space" target="_blank">Connexion</a>
+						<a href="/" target="_blank">Connexion</a>
 					</li>
 				</ul>
 			</div>

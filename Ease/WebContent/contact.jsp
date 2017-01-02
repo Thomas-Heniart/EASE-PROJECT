@@ -67,6 +67,28 @@ pageEncoding="UTF-8"%>
 				</div>
 			</div>
 		</section>
+		<script type="text/javascript">
+			$('form.contactForm').submit(function(e){
+				var self = $(this);
+				e.preventDefault();
+				postHandler.post(
+					self.attr('action'),
+					{
+						email: self.find("input[name='email']").val(),
+						message: self.find("textarea[name='message']").val()
+					},
+					function(){
+
+					},
+					function(msg){
+
+					},
+					function(msg){
+
+					},
+					'text');
+			});
+		</script>
 		<%@ include file="templates/landingPage/landingFooter.jsp" %>
 		<script src="js/bootstrapjq.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
