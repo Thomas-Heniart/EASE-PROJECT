@@ -41,7 +41,7 @@ function sendEvent(obj) {
         var json = new Object();
         var event;
         
-        easeTracker.trackEvent("App clicks");
+        //easeTracker.trackEvent("App clicks");
 
         if (!($('#ease_extension').length)) {
             if(!waitForExtension){
@@ -76,13 +76,16 @@ function sendEvent(obj) {
         		var message = "NewConnection";
         		json.detail.highlight = true;
         		if (ctrlDown) json.detail.highlight = false;
-        		easeTracker.trackEvent("App successful clicks");
+        		//easeTracker.trackEvent("ClickOnApp");
         		if(json.detail[0] && json.detail[0].url){
         			json.detail = json.detail[0];
         			message = "NewLinkToOpen";
-        			easeTracker.trackEvent("link connections");
+        			//easeTracker.trackEvent("ClickOnLinkApp");
+        			easeTracker.trackEvent("ClickOnApp", {type : "LinkApp", appName : json.detail.app_name});
         		} else {
-        			easeTracker.trackEvent(json.detail[json.detail.length - 1].website.name + " connections");
+        			var jsonDetail = json.detail[json.detail.length - 1];
+        			easeTracker.trackEvent("ClickOnApp", {type : jsonDetail.type, appName : jsonDetail.app_name, websiteName : jsonDetail.wbesite_name});
+        			//easeTracker.trackEvent(.website.name + " connections");
         		}
 
         		
@@ -122,7 +125,7 @@ function sendEvent(obj) {
         		event = new CustomEvent(message, json);
         		document.dispatchEvent(event);
         	}, function(retMsg) {
-        		easeTracker.trackEvent("App fail clicks");
+        		//easeTracker.trackEvent("App fail clicks");
         		showAlertPopup(retMsg, true);
         	}, 'text');
     }

@@ -172,7 +172,7 @@ var Dashboard = function(rootEl){
 				function(){},
 				function(retMsg){
 					newProfile.setId(retMsg);
-					easeTracker.trackEvent('Profile added');
+					easeTracker.trackEvent('AddProfile');
 				},
 				function(retMsg){
 					newProfile.remove();

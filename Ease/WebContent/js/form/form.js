@@ -211,8 +211,8 @@ var Form = {
 			}, 1000);
 			self.newAppItem.find('.linkImage').attr('onclick',
 					"sendEvent(this)");
-			easeTracker.trackEvent('App added');
-			easeTracker.trackEvent($(".catalogApp[idx='" + self.site_id + "']").attr('name') + " app added");
+			//easeTracker.trackEvent('App added');
+			//easeTracker.trackEvent($(".catalogApp[idx='" + self.site_id + "']").attr('name') + " app added");
 			self.newAppItem.attr('webId', self.helper.attr('idx'));
 			self.newAppItem.attr('logwith', (self.app_id == null) ? 'false'
 					: self.app_id);
@@ -231,13 +231,15 @@ var Form = {
 			self.site_id = null;
 			self.profile_id = null;
 			self.app_id = null;
+			/* TODO : add json to give type, app name, website name etc... */
+			easeTracker.trackEvent(self.postName);
 			self.setPostName('AddClassicApp');
 			self.helper = null;
 			cleanEmails();
 		}
 		this.errorCallback = function(retMsg) {
-			easeTracker.trackEvent("Add app failed");
-			easeTracker.trackEvent($(".catalogApp[idx='" + self.site_id + "']").attr('name') + " add app failed");
+			//easeTracker.trackEvent("Add app failed");
+			//easeTracker.trackEvent($(".catalogApp[idx='" + self.site_id + "']").attr('name') + " add app failed");
 			self.newAppItem.remove();
 			self.reset();
 			$(parent).find('.alertDiv').addClass('show');

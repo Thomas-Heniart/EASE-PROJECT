@@ -99,6 +99,7 @@ public class LinkApp extends App {
 	
 	public JSONArray getJSON(ServletManager sm){
 		JSONObject link = new JSONObject();
+		link.put("app_name", this.informations.getName());
 		link.put("url", linkInfos.getLink());
 		JSONArray result = new JSONArray();
 		result.add(link);
