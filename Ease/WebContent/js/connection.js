@@ -25,9 +25,10 @@ $(document).ready(function() {
 		},
 		function(){},
 		function(retMsg) {
+			easeTracker.setUserId(email);
 			easeTracker.trackEvent("Connect");
 			window.location.reload();
-		}, 
+		},
 		function(retMsg) {
 			$("#back").show();
 			$(parent).show();
@@ -59,13 +60,14 @@ $(document).ready(function() {
 			$("#loadingKnownUser").css("display","block");
 			$("#changeAccount").hide();
 			postHandler.post(
-				'connection', 
+				'connection',
 				{
-					email : email, 
+					email : email,
 					password : password
 				},
 				function(){},
 				function(retMsg){
+					easeTracker.setUserId(email);
 					easeTracker.trackEvent("Connect");
 					window.location.reload();
 				},
@@ -118,7 +120,7 @@ $(document).ready(function() {
 	$('.FormsContainer #passwordLost #goBack').click(function(){
 		$('.controls').addClass('show');
 		$('.FormsContainer #connection').addClass('show');
-		$('.FormsContainer #passwordLost').removeClass('show');		
+		$('.FormsContainer #passwordLost').removeClass('show');
 	});
 	$('form#passwordLost').submit(function(e){
 		var self = $(this);
@@ -129,7 +131,7 @@ $(document).ready(function() {
 		postHandler.post(
 			$(this).attr('action'),
 			{
-				email : $(this).find("input[name='email']").val()	
+				email : $(this).find("input[name='email']").val()
 			},
 			function(){
 
@@ -150,7 +152,7 @@ $(document).ready(function() {
 	});
 
 	if ($('.savedUser').length) $('.savedUser #password').focus();
-	$('.savedUser #password').keyup(function(event){ 
+	$('.savedUser #password').keyup(function(event){
 		if(event.keyCode == 13) $('.savedUser #savedUserButton').click();
-	});	
+	});
 });

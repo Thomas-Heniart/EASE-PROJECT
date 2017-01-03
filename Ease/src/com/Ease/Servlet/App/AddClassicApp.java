@@ -17,7 +17,6 @@ import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 import com.Ease.Utils.Crypto.RSA;
 
@@ -33,7 +32,6 @@ public class AddClassicApp extends HttpServlet {
 	 */
 	public AddClassicApp() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

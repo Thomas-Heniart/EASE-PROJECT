@@ -140,12 +140,18 @@
 		
 		$("#tipsHandler .tip button").click(function(e) {
 			var self = $(this).parent().parent();
+			var step = self.attr("step");
 			postHandler.post('TutoStep', {
-				"tutoStep" : self.attr("step")
+				"tutoStep" : step
 			}, function() {
 				//always
 			}, function(retMsg) {
 				//succes
+				var amplitudeStep = "";
+				step.split("_").forEach(function(element) {
+					ampltiudeStep += (element.charAt(0).toUpperCase() + element.slice(1));
+				});
+				easeTracker.trackEvent(amplitudeStep);
 				self.remove();
 			}, function(retMsg) {
 				//error

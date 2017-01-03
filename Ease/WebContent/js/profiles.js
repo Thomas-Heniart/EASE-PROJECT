@@ -246,7 +246,7 @@ var Profile = function(rootEl){
 			}, function() {
 				easeLoadingIndicator.hide();
 			}, function(retMsg) {
-				easeTracker.trackEvent('Profile deleted');
+				easeTracker.trackEvent('DeleteProfile');
 				self.remove();
 			}, function(retMsg) {
 			}, 'text');			
@@ -263,7 +263,7 @@ var Profile = function(rootEl){
 			}, function() {
 				easeLoadingIndicator.hide();
 			}, function(retMsg) {
-				easeTracker.trackEvent('Profile name changed');
+				easeTracker.trackEvent('EditProfileName');
 				self.setName(name);
 				self.qRoot.find('#modifyNameForm input').val('');
 			}, function(retMsg) {
@@ -293,7 +293,7 @@ var Profile = function(rootEl){
 		}, function() {
 			easeLoadingIndicator.hide();
 		}, function(retMsg) {
-			easeTracker.trackEvent('Profile color changed');
+			easeTracker.trackEvent('EditProfileColor');
 			self.setColor(color);
 		}, function(retMsg) {
 		}, 'text');

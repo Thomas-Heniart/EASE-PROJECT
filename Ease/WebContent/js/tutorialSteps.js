@@ -1,3 +1,10 @@
+/* Transitions */	
+
+$("#manualImportation").click(function() {
+	$("#simpleImportation").addClass("show");
+});
+
+
 
 /////////
 /////////	Integrate apps
@@ -11,6 +18,7 @@ function showAddAppTuto(i) {
 	$("div#addAppTutorial input#name").val($("div#simpleImportation div.appHandler div.app.selected:eq(" + i + ")").find("p.name").text());
 	$("div#addAppTutorial p.post-title span").text($("div#simpleImportation div.appHandler div.app.selected:eq(" + i + ")").find("p.name").text());
 	$("div#addAppTutorial input#login").val("");
+	$("div#addAppTutorial input#login").focus();
 	$("div#addAppTutorial input#password").val("");
 }
 
@@ -20,7 +28,41 @@ $("div#simpleImportation div.appHandler").click(function() {
 	} else {
 		$(this).find("div.app").addClass("selected");	
 	}
-})
+});
+
+function goToNextStep() {
+	addAppTutoCpt++;
+	if ($("div#simpleImportation div.appHandler div.app.selected").length > addAppTutoCpt) {
+		showAddAppTuto(addAppTutoCpt);
+	} else {
+		postHandler.post("TutoStep", {
+			"tutoStep" : "apps_manually_added"
+		}, function() {
+			//always
+		}, function(retMsg) {
+			//success
+			easeTracker.trackEvent("AppsManuallyAdded");
+			location.reload();
+		}, function(retMsg) {
+			//error
+		}, 'text');
+	}
+}
+
+$("div#addAppTutorial #skipButton").click(function() {
+	postHandler.post("AddEmptyApp", {
+		"name" : $("div#addAppTutorial input#name").val(),
+		"profileId" : $("div#addAppTutorial input#profileId").val(),
+		"websiteId" : $("div#simpleImportation div.appHandler div.app.selected:eq(" + addAppTutoCpt + ")").attr("id")
+	}, function() {
+		//always
+	}, function(retMsg) {
+		//success
+	}, function(retMsg) {
+		//error
+	}, 'text');
+	goToNextStep();
+});
 
 $('div#addAppTutorial form').submit(function (e) {
 	e.preventDefault();
@@ -41,31 +83,16 @@ $('div#addAppTutorial form').submit(function (e) {
 	}, 'text');
 	if ($("div#addAppTutorial input#login").val() != "" && $("div#addAppTutorial input#password").val() != "" && $("div#addAppTutorial input#name").val() != "") {
 		addAppTutoCpt++;
-		if ($("div#simpleImportation div.appHandler div.app.selected").length > addAppTutoCpt) {
-			showAddAppTuto(addAppTutoCpt);
-		} else {
-			$("div#addAppTutorial").removeClass("show");
-			$("div#tutorial").removeClass("myshow");
-		}
+		goToNextStep();
 	}
-})
-
-$("div#addAppTutorial a").click(function() {
-	addAppTutoCpt++;
-	if ($("div#simpleImportation div.appHandler div.app.selected").length > addAppTutoCpt) {
-		showAddAppTuto(addAppTutoCpt);
-	} else {
-		$("div#addAppTutorial").removeClass("show");
-		$("div#tutorial").removeClass("myshow");
-	}
-})
+});
 
 $("div#simpleImportation button").click(function() {
 	if ($("div#simpleImportation div.appHandler div.app.selected").length >= 4) {
 		$("div#simpleImportation").removeClass("show");
 		showAddAppTuto(addAppTutoCpt);
 	}
-})
+});
 
 /////////
 /////////	Scrapping for apps
@@ -127,6 +154,7 @@ function addTutoApps(logwithId, i) {
 			//always
 		}, function(retMsg) {
 			//succes
+			easeTracker.trackEvent("ScrappingDone");
 			location.reload();
 		}, function(retMsg) {
 			//error
@@ -257,6 +285,7 @@ function showAccountCredentials(retMsg) {
 		$('#accountCredentials div.errorText').addClass("show");
 	}
 	$("#accountCredentials input[name='password']").val("");
+	$("#accountCredentials input[name='password']").change();
 }
 
 function showScrapingInfo() {
@@ -334,6 +363,30 @@ $('#accountCredentials input').keypress(function (e) {
 		setTimeout(function() {used = false}, 500);
 	}
 });
+
+$('#accountCredentials input').keyup(function() {
+	$(this).change();
+})
+
+$('#accountCredentials input').change(function() {
+	checkInputs($("#accountCredentials"));
+});
+
+function checkInputs(contextElement) {
+	var shouldBeLocked = false;
+	var inputs = contextElement.find("input");
+	inputs.each(function(index, element) {
+		if ($(element).val() === "") {
+			shouldBeLocked = true;
+			return;
+		}
+	});
+	if (shouldBeLocked)
+		$("button[type='submit']", contextElement).addClass("locked");
+	else
+		$("button[type='submit']", contextElement).removeClass("locked");
+		
+}
 
 $('#accountCredentials a').click(function () {
 	ScrapingInfoFinished();

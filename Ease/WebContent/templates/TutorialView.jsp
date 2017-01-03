@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="css/Tutorial.css" />
 
 <div class="popupHandler myshow" id="tutorial">
-	<div class="easePopup" id="importation">
+	<div class="easePopup show" id="importation">
 		<div class="title">
 			<p>Accounts importation</p>
 		</div>
@@ -50,10 +50,10 @@
 						</div>
 					</div>
 					<div class="row text-center">
-						<button class="btn" type="submit">Go!</button>
+						<button class="btn locked" type="submit">Go!</button>
 					</div>
 					<div class="row text-center">
-						<a>I prefere to import all my accounts 1 by 1</a>
+						<a id="manualImportation">I prefere to import all my accounts 1 by 1</a>
 					</div>
 				</div>
 			</div>
@@ -85,7 +85,7 @@
 						</span>
 					</div>
 					<div class="row text-center">
-						<button class="btn" type="submit">Go!</button>
+						<button class="btn locked" type="submit">Go!</button>
 					</div>
 					<div class="row text-center">
 						<a>Skip this step</a>
@@ -148,7 +148,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="easePopup show" id="simpleImportation">
+	<div class="easePopup" id="simpleImportation">
 		<div class="title">
 			<p>Start with apps you use frequently</p>
 			<p class="sub-title">Click on at least 4 icons</p>

@@ -343,4 +343,14 @@ public class Profile {
 		}
 		throw new GeneralException(ServletManager.Code.ClientError, "This app is not a Classic or Logwith app.");
 	}
+
+	public WebsiteApp addEmptyApp(String name, Website site, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		int position = this.apps.size();
+		WebsiteApp app = WebsiteApp.createEmptyApp(this, position, name, site, sm); 
+		this.apps.add(app);
+		db.commitTransaction(transaction);
+		return app;
+	}
 }

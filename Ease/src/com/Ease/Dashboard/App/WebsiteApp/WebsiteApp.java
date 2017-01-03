@@ -10,7 +10,6 @@ import org.json.simple.JSONObject;
 
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
-import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.AppInformation;
 import com.Ease.Dashboard.App.GroupApp;

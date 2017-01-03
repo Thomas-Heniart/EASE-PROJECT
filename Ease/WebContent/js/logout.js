@@ -13,7 +13,7 @@ $(document).ready(function(){
 			{},
 			function(){},
 			function(retMsg){
-				easeTracker.trackEvent('Normal logout');
+				easeTracker.trackEvent('EaseLogout');
 				location.href = "index.jsp";
 			},
 			function(retMsg){
@@ -30,7 +30,7 @@ $(document).ready(function(){
 			{},
 			function(){},
 			function(retMsg){
-				easeTracker.trackEvent('General logout');
+				easeTracker.trackEvent('AllAppsLogout');
 				location.href = "index.jsp";
 			},
 			function(retMsg){

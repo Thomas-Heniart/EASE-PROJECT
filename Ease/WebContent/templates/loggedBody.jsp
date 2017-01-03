@@ -71,7 +71,7 @@ $(document).ready(function(){
 		</div>
 		<%@ include file="extension.jsp" %>		
 		<%@ include file="catalog/catalogView.jsp"%>
-		<c:if test='${user.allTipsDone() eq false}'>
+		<c:if test='${user.appsImported() && (user.allTipsDone() eq false)}'>
 			<%@ include file="Tips.jsp" %>
 		</c:if>
 	</div>

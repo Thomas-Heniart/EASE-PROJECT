@@ -2,7 +2,7 @@
 	<nav id="mainNav" class="navbar navbar-default navbar-custom navbar-fixed-top affix">
 		<div class="container">
 			<div class="navbar-header page-scroll">
-				<a class="navbar-brand page-scroll" href="landingPage.jsp"><img src="resources/landing/ease-white-logo.png" /></a>
+				<a class="navbar-brand page-scroll" href="discover"><img src="resources/landing/ease-white-logo.png" /></a>
 			</div>
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -11,16 +11,16 @@
 						<a href="#page-top"></a>
 					</li>
 					<li>
-						<a href="http://www.ease-app.co/secure" target="_blank">Sécurité</a>
+						<a href="secure.jsp" target="_blank">Sécurité</a>
 					</li>
 					<li>
-						<a href="equipe.jsp">Equipe</a>
+						<a href="equipe.jsp" target="_blank">Equipe</a>
 					</li>
 					<li>
-						<a href="contact.jsp">Contact</a>
+						<a href="contact.jsp" target="_blank">Contact</a>
 					</li>
 					<li>
-						<a href="https://ease.space" target="_blank">Connexion</a>
+						<a href="/" target="_blank">Connexion</a>
 					</li>
 				</ul>
 			</div>
