@@ -1,0 +1,40 @@
+{
+    "name":"LesEchos",
+    "lastLogin":"",
+    "home":"http://www.lesechos.fr/",
+    "connect":{
+        "todo":[
+        	{"action":"clickona", "search":"#btn-compte"},
+          {"action":"waitfor", "search":"iframe"},
+          {"action":"enterIframe", "search":"iframe"},
+          {"action":"waitfor", "search":"#frmFusion"},
+          {"action":"fill", "what":"login", "search":"#frmFusion #USER"},
+          {"action":"fill", "what":"password", "search":"#frmFusion #PASS"},
+          {"action":"click", "search":"#frmFusion #GOAUTH"}
+        ]
+    },
+    "Facebook":{
+    	"todo":[
+        {"action":"goto", "urlr":"http://connect.lesechos.fr/social/facebook/"}
+    	]
+    },
+    "Linkedin":{
+    	"todo":[
+        {"action":"goto", "url":"http://connect.lesechos.fr/social/linkedin/"}
+    	]
+    },
+    "Google":{
+      "todo":[
+        {"action":"goto", "url":"http://connect.lesechos.fr/social/googleplus/"}
+      ]
+    },
+    "logout":{
+        "todo":[
+            {"action":"clickona", "search":".btn-sedeconnecter"},
+            {"action":"waitfor", "search":"#btn-compte"}
+          ]
+    },
+    "checkAlreadyLogged":[
+        {"search":".btn-sedeconnecter"}
+    ]
+}
