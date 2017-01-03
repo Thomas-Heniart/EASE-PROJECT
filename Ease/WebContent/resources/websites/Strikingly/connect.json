@@ -13,13 +13,13 @@
     "Facebook":{
     	"todo":[
         {"action":"aclick", "search":"a[href*='login']"},
-    		{"action":"clicona", "search":".facebook-login"}
+    		{"action":"clickona", "search":".facebook-login"}
     	]
     },
     "Linkedin":{
     	"todo":[
         {"action":"aclick", "search":"a[href*='login']"},
-    		{"action":"aclic", "search":"a[href*='auth/linkedin']"}
+    		{"action":"aclick", "search":"a[href*='auth/linkedin']"}
     	]
     },
     "logout":{
