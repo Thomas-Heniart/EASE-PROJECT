@@ -5,6 +5,7 @@
 	"home":"https://analytics.google.com",
 	"connect":{
 		"todo":[
+		    {"action":"waitfor", "search":"div[aria-label='Google']"},
 			{"action":"aclick", "search":"#account-chooser-link"},
 			{"action":"clickona", "search":"#account-chooser-add-account"},
 			{"action":"waitfor", "search":"#Email"},
@@ -22,6 +23,6 @@
 		]
 	},
 	"checkAlreadyLogged":[
-		{"search":"#ID-homeAccountsTable"}
+		{"search":"#ID-footerPanel"}
 	]
 }
