@@ -6,14 +6,13 @@
         "todo":[
         	{"action":"goto", "url":"https://pinterest.com/login/"},
            	{"action":"fill", "what":"login", "search":"input[type='email']"},
-            {"action":"val", "what":"password", "search":"input[type='password']"},
+            {"action":"fill", "what":"password", "search":"input[type='password']"},
             {"action":"click", "search":"button[type='submit']"}
         ]
     },
     "logout":{
         "todo":[
-        	{"action":"goto", "url":"https://pinterest.com/logout/"},
-			{"action":"waitload"}
+        	{"action":"goto", "url":"https://pinterest.com/logout/"}
            	]
     },
     "checkAlreadyLogged":[

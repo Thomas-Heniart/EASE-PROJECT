@@ -17,7 +17,6 @@
     "logout":{
         "todo":[
             {"action":"goto", "url":"https://www.netflix.com/SignOut?lnkctr=mL"},
-            {"action":"waitload"},
             {"action":"goto", "url":"https://www.netflix.com/Login"}
         ]
     },
