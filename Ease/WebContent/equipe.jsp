@@ -73,122 +73,122 @@ pageEncoding="UTF-8"%>
 				</div>
 			</div>
 			<div class="row">
-<div id="members">
-				<div class="memberDescription">
-					<div class="memberPhoto">
-						<img src="resources/landing/ben.jpg"/>
+				<div id="members">
+					<div class="memberDescription">
+						<div class="memberPhoto">
+							<img src="resources/landing/ben.jpg"/>
+						</div>
+						<div class="name">
+							<a>Benjamin Prigent</a>
+						</div>
+						<div class="post">
+							<p>CEO</p>
+						</div>
 					</div>
-					<div class="name">
-						<a>Benjamin Prigent</a>
+					<div class="memberDescription">
+						<div class="memberPhoto">
+							<img src="resources/landing/ben.jpg"/>
+						</div>
+						<div class="name">
+						<a>Victor Nivet</a>
+						</div>
+						<div class="post">
+							<p>COO</p>
+						</div>
 					</div>
-					<div class="post">
-						<p>CEO</p>
+					<div class="memberDescription">
+						<div class="memberPhoto">
+							<img src="resources/landing/ben.jpg"/>
+						</div>
+						<div class="name">
+							<a>Félix Richard</a>
+						</div>
+						<div class="post">
+							<p>Data security</p>
+						</div>
 					</div>
-				</div>
-				<div class="memberDescription">
-					<div class="memberPhoto">
-						<img src="resources/landing/ben.jpg"/>
+					<div class="memberDescription">
+						<div class="memberPhoto">
+							<img src="resources/landing/ben.jpg"/>
+						</div>
+						<div class="name">
+							<a>Sergii Fisun</a>
+						</div>
+						<div class="post">
+							<p>Design</p>
+						</div>
 					</div>
-					<div class="name">
-						<a>Benjamin Prigent</a>
+					<div class="memberDescription">
+						<div class="memberPhoto">
+							<img src="resources/landing/ben.jpg"/>
+						</div>
+						<div class="name">
+							<a>Pierre De Bruyne</a>
+						</div>
+						<div class="post">
+							<p>Infrastructure</p>
+						</div>
 					</div>
-					<div class="post">
-						<p>CEO</p>
+					<div class="memberDescription">
+						<div class="memberPhoto">
+							<img src="resources/landing/ben.jpg"/>
+						</div>
+						<div class="name">
+							<a>Thomas Heniart</a>
+						</div>
+						<div class="post">
+							<p>Back-end</p>
+						</div>
 					</div>
-				</div>
-				<div class="memberDescription">
-					<div class="memberPhoto">
-						<img src="resources/landing/ben.jpg"/>
+					<div class="memberDescription">
+						<div class="memberPhoto">
+							<img src="resources/landing/ben.jpg"/>
+						</div>
+						<div class="name">
+							<a>Inès Yous</a>
+						</div>
+						<div class="post">
+							<p>Care</p>
+						</div>
 					</div>
-					<div class="name">
-						<a>Benjamin Prigent</a>
+					<div class="memberDescription">
+						<div class="memberPhoto">
+							<img src="resources/landing/ben.jpg"/>
+						</div>
+						<div class="name">
+							<a>Alexandre Nicolau</a>
+						</div>
+						<div class="post">
+							<p>Marketing</p>
+						</div>
 					</div>
-					<div class="post">
-						<p>CEO</p>
+					<div class="memberDescription">
+						<div class="memberPhoto">
+							<img src="resources/landing/ben.jpg"/>
+						</div>
+						<div class="name">
+							<a>Agathe Meslier</a>
+						</div>
+						<div class="post">
+							<p>Law</p>
+						</div>
 					</div>
-				</div>
-				<div class="memberDescription">
-					<div class="memberPhoto">
-						<img src="resources/landing/ben.jpg"/>
-					</div>
-					<div class="name">
-						<a>Benjamin Prigent</a>
-					</div>
-					<div class="post">
-						<p>CEO</p>
-					</div>
-				</div>
-				<div class="memberDescription">
-					<div class="memberPhoto">
-						<img src="resources/landing/ben.jpg"/>
-					</div>
-					<div class="name">
-						<a>Benjamin Prigent</a>
-					</div>
-					<div class="post">
-						<p>CEO</p>
-					</div>
-				</div>
-				<div class="memberDescription">
-					<div class="memberPhoto">
-						<img src="resources/landing/ben.jpg"/>
-					</div>
-					<div class="name">
-						<a>Benjamin Prigent</a>
-					</div>
-					<div class="post">
-						<p>CEO</p>
-					</div>
-				</div>
-				<div class="memberDescription">
-					<div class="memberPhoto">
-						<img src="resources/landing/ben.jpg"/>
-					</div>
-					<div class="name">
-						<a>Benjamin Prigent</a>
-					</div>
-					<div class="post">
-						<p>CEO</p>
-					</div>
-				</div>
-				<div class="memberDescription">
-					<div class="memberPhoto">
-						<img src="resources/landing/ben.jpg"/>
-					</div>
-					<div class="name">
-						<a>Benjamin Prigent</a>
-					</div>
-					<div class="post">
-						<p>CEO</p>
-					</div>
-				</div>
-				<div class="memberDescription">
-					<div class="memberPhoto">
-						<img src="resources/landing/ben.jpg"/>
-					</div>
-					<div class="name">
-						<a>Benjamin Prigent</a>
-					</div>
-					<div class="post">
-						<p>CEO</p>
-					</div>
-				</div>
-				<div class="memberDescription">
-					<div class="memberPhoto">
-						<img src="resources/landing/ben.jpg"/>
-					</div>
-					<div class="name">
-						<a>Benjamin Prigent</a>
-					</div>
-					<div class="post">
-						<p>CEO</p>
+					<div class="memberDescription">
+						<div class="memberPhoto">
+							<img src="resources/landing/ben.jpg"/>
+						</div>
+						<div class="name">
+							<a>Barthelemy Leveque</a>
+						</div>
+						<div class="post">
+							<p>Data Science</p>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-	</section>
-	<%@ include file="templates/landingPage/landingFooter.jsp" %>
-	<script src="js/bootstrapjq.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
-</body>
-</html>
+		</section>
+		<%@ include file="templates/landingPage/landingFooter.jsp" %>
+		<script src="js/bootstrapjq.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+	</body>
+	</html>
