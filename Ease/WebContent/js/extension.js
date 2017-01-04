@@ -81,10 +81,10 @@ function sendEvent(obj) {
         			json.detail = json.detail[0];
         			message = "NewLinkToOpen";
         			//easeTracker.trackEvent("ClickOnLinkApp");
-        			easeTracker.trackEvent("ClickOnApp", {type : "LinkApp", appName : json.detail.app_name});
+        			easeTracker.trackEvent("ClickOnApp", {"type":"LinkApp", "appName":json.detail.app_name});
         		} else {
         			var jsonDetail = json.detail[json.detail.length - 1];
-        			easeTracker.trackEvent("ClickOnApp", {type : jsonDetail.type, appName : jsonDetail.app_name, websiteName : jsonDetail.wbesite_name});
+        			easeTracker.trackEvent("ClickOnApp", {"type":jsonDetail.type, "appName":jsonDetail.app_name, "websiteName": jsonDetail.wbesite_name});
         			//easeTracker.trackEvent(.website.name + " connections");
         		}
 
@@ -177,3 +177,9 @@ function safariExtensionUpdate(){
                  $('#downloadExtension').find('#afterdownload.safariHelper').show();
          });
 }
+
+$(document).ready(function() {
+	 $('#homePageSwitch').change(function() {
+		 console.log($(this).is(":checked"));
+	 });
+});
