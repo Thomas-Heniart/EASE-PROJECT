@@ -83,7 +83,9 @@ journalctl -u sshd |tail -10
 ##LA CRYPTO 2.0 :+1:
 
 [x] Passer à BCrypt
+
 [x] Salage + poivrage
+
 [] AES 256 => Trop couteux en ressources pour le gain de sécurité. AES128 est déjà très très solide.
 
 ###Hashage (BCrypt)
