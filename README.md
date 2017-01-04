@@ -96,7 +96,7 @@ journalctl -u sshd |tail -10
     
     * public static boolean compare(String plainText, String hashText);
     ```java
-    if (hashedPass.equals(hashed_password) == false) {
+    if(!Hashing.compare(password, hashed_password)){
         throw new GeneralException(ServletManager.Code.UserMiss, "Wrong email or password.");
     }
     ```
