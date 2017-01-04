@@ -25,6 +25,7 @@ public class Keys {
 		SALTPERSO,
 		KEYUSER
 	}
+	
 	public static Keys loadKeys(String id, String password, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		ResultSet rs = db.get("SELECT * FROM userKeys WHERE id=" + id + ";");
@@ -35,12 +36,31 @@ public class Keys {
 			String saltEase = rs.getString(Data.SALTEASE.ordinal());
 			String saltPerso = rs.getString(Data.SALTPERSO.ordinal());
 			String crypted_keyUser = rs.getString(Data.KEYUSER.ordinal());
-			String hashedPass = Hashing.SHA(password, saltEase);
-			if (hashedPass.equals(hashed_password) == false) {
-				throw new GeneralException(ServletManager.Code.UserMiss, "Wrong email or password.");
+			String keyUser;
+			//-- Pour mettre à jour la crypto (nouveau hashage et nouveau salage.
+			if(saltEase != null){
+				System.out.println("reset keys");
+				String hashedPass = Hashing.SHA(password, saltEase);
+				if (hashedPass.equals(hashed_password) == false) {
+					throw new GeneralException(ServletManager.Code.UserMiss, "Wrong email or password.");
+				}
+				keyUser = AES.oldDecryptUserKey(crypted_keyUser, password, saltPerso);
+				String newSalt = AES.generateSalt();
+				crypted_keyUser = AES.encryptUserKey(keyUser, password, newSalt);
+				hashed_password = Hashing.hash(password);
+				saltEase = null;
+				saltPerso = newSalt;
+				db.set("UPDATE userKeys SET password='"+hashed_password+"', saltEase=null, saltPerso='"+newSalt+"', keyUser='"+crypted_keyUser+"' WHERE id="+id+";");
+				System.out.println("ok");
+			} else {
+			//-- Ne garder que le else quand tout le monde sera à jour
+				if(!Hashing.compare(password, hashed_password)){
+					throw new GeneralException(ServletManager.Code.UserMiss, "Wrong email or password.");
+				}
+				keyUser = AES.decryptUserKey(crypted_keyUser, password, saltPerso);
 			}
-			String keyUser = AES.decryptUserKey(crypted_keyUser, password, saltPerso);
-			return new Keys(db_id, hashed_password, saltEase, saltPerso, keyUser);
+			
+			return new Keys(db_id, hashed_password, saltPerso, keyUser);
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
@@ -53,9 +73,8 @@ public class Keys {
 			rs.next();
 			String db_id = rs.getString(Data.ID.ordinal());
 			String hashed_password = rs.getString(Data.PASSWORD.ordinal());
-			String saltEase = rs.getString(Data.SALTEASE.ordinal());
 			String saltPerso = rs.getString(Data.SALTPERSO.ordinal());
-			return new Keys(db_id, hashed_password, saltEase, saltPerso, keyUser);
+			return new Keys(db_id, hashed_password, saltPerso, keyUser);
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
@@ -63,25 +82,22 @@ public class Keys {
 	
 	public static Keys createKeys(String password, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		String saltEase = AES.generateSalt();
 		String saltPerso = AES.generateSalt();
 		String keyUser = AES.keyGenerator();
 		String crypted_keyUser = AES.encryptUserKey(keyUser, password, saltPerso);
-		String hashed_password = Hashing.SHA(password, saltEase);
-		String db_id = db.set("INSERT INTO userKeys VALUES(NULL, '" + hashed_password + "', '" + saltEase + "', '" + saltPerso + "', '" + crypted_keyUser + "');").toString();
-		return new Keys(db_id, hashed_password, saltEase, saltPerso, keyUser);
+		String hashed_password = Hashing.hash(password);
+		String db_id = db.set("INSERT INTO userKeys VALUES(NULL, '" + hashed_password + "', null, '" + saltPerso + "', '" + crypted_keyUser + "');").toString();
+		return new Keys(db_id, hashed_password, saltPerso, keyUser);
 	}
 	
 	protected String 	db_id;
 	protected String	hashed_password;
-	protected String	saltEase;
 	protected String	saltPerso;
 	protected String	keyUser;
 	
-	public Keys(String db_id, String hashed_password, String saltEase, String saltPerso, String keyUser) {
+	public Keys(String db_id, String hashed_password, String saltPerso, String keyUser) {
 		this.db_id = db_id;
 		this.hashed_password = hashed_password;
-		this.saltEase = saltEase;
 		this.saltPerso = saltPerso;
 		this.keyUser = keyUser;
 	}
@@ -112,15 +128,15 @@ public class Keys {
 	 */
 	
 	public boolean isGoodPassword(String password) throws GeneralException {
-		String hashedPass = Hashing.SHA(password, saltEase);
+		String hashedPass = Hashing.hash(password);
 		return hashedPass.equals(hashed_password);
 	}
 	
 	public void changePassword(String new_password, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		String new_hashed_password = Hashing.SHA(new_password, saltEase);
+		String new_hashed_password = Hashing.hash(new_password);
 		String new_crypted_keyUser = AES.encryptUserKey(keyUser, new_password, saltPerso);
-		db.set("UPDATE userKeys SET password='" + new_hashed_password + "', saltEase='" + saltEase + "', saltPerso='" + saltPerso + "', keyUser='" + new_crypted_keyUser + "' WHERE id=" + this.db_id + ";");
+		db.set("UPDATE userKeys SET password='" + new_hashed_password + "', saltEase=null, saltPerso='" + saltPerso + "', keyUser='" + new_crypted_keyUser + "' WHERE id=" + this.db_id + ";");
 		this.hashed_password = new_hashed_password;
 	}
 	
@@ -168,12 +184,11 @@ public class Keys {
 				}
 				rs = db.get("SELECT key_id FROM users WHERE id=" + userId + ";");
 				rs.next();
-				String saltEase = AES.generateSalt();
 				String saltPerso = AES.generateSalt();
 				String keyUser = AES.keyGenerator();
 				String crypted_keyUser = AES.encryptUserKey(keyUser, newPassword, saltPerso);
-				String hashed_password = Hashing.SHA(newPassword, saltEase);
-				db.set("UPDATE userKeys SET password='" + hashed_password + "', saltEase='" + saltEase + "', saltPerso='" + saltPerso + "', keyUser='" + crypted_keyUser + "' WHERE id=" + rs.getString(1) + ";");
+				String hashed_password = Hashing.hash(newPassword);
+				db.set("UPDATE userKeys SET password='" + hashed_password + "', saltEase=null, saltPerso='" + saltPerso + "', keyUser='" + crypted_keyUser + "' WHERE id=" + rs.getString(1) + ";");
 				db.set("DELETE FROM passwordLost WHERE user_id=" + userId + ";");
 			} else {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "You have not ask for reset your password.");
