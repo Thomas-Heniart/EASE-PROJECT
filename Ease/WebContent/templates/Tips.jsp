@@ -149,7 +149,7 @@
 				//succes
 				var amplitudeStep = "";
 				step.split("_").forEach(function(element) {
-					ampltiudeStep += (element.charAt(0).toUpperCase() + element.slice(1));
+					amplitudeStep += (element.charAt(0).toUpperCase() + element.slice(1));
 				});
 				easeTracker.trackEvent(amplitudeStep);
 				self.remove();

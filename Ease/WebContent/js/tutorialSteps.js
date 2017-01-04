@@ -50,14 +50,17 @@ function goToNextStep() {
 }
 
 $("div#addAppTutorial #skipButton").click(function() {
+	
+	var appName = $("div#addAppTutorial input#name").val();
 	postHandler.post("AddEmptyApp", {
-		"name" : $("div#addAppTutorial input#name").val(),
+		"name" : appName,
 		"profileId" : $("div#addAppTutorial input#profileId").val(),
 		"websiteId" : $("div#simpleImportation div.appHandler div.app.selected:eq(" + addAppTutoCpt + ")").attr("id")
 	}, function() {
 		//always
 	}, function(retMsg) {
 		//success
+		easeTracker.trackEvent("AddApp", {"type":"EmptyApp", "appName":appName});
 	}, function(retMsg) {
 		//error
 	}, 'text');
@@ -66,8 +69,9 @@ $("div#addAppTutorial #skipButton").click(function() {
 
 $('div#addAppTutorial form').submit(function (e) {
 	e.preventDefault();
+	var appName = $("div#addAppTutorial input#name").val();
 	postHandler.post('AddClassicApp', {
-		"name" : $("div#addAppTutorial input#name").val(),
+		"name" : appName,
 		"login" : $("div#addAppTutorial input#login").val(),
 		"profileId" : $("div#addAppTutorial input#profileId").val(),
 		"password" : $("div#addAppTutorial input#password").val(),
@@ -77,6 +81,7 @@ $('div#addAppTutorial form').submit(function (e) {
 	}, function(retMsg) {
 		//succes
 		console.log(retMsg);
+		easeTracker.trackEvent("AddApp", {"type":"ClassicApp", "appName":appName});
 	}, function(retMsg) {
 		//error
 		console.log(retMsg);
@@ -175,6 +180,7 @@ function addTutoApps(logwithId, i) {
 				//always
 			}, function(retMsg) {
 				//succes
+				easeTracker.trackEvent("AddApp", {"type":"ClassicApp", "appName":appToAdd[i].name});
 				addTutoApps(logwithId, i + 1);
 			}, function(retMsg) {
 				//error
@@ -191,6 +197,7 @@ function addTutoApps(logwithId, i) {
 					//always
 				}, function(retMsg) {
 					//succes
+					easeTracker.trackEvent("AddApp", {"type":"ClassicApp", "appName":appToAdd[i].name});
 					addTutoApps(retMsg, i + 1);
 				}, function(retMsg) {
 					//error
@@ -205,6 +212,7 @@ function addTutoApps(logwithId, i) {
 					//always
 				}, function(retMsg) {
 					//succes
+					easeTracker.trackEvent("AddApp", {"type":"LogWithApp", "appName":appToAdd[i].name});
 					addTutoApps(logwithId, i + 1);
 				}, function(retMsg) {
 					//error
@@ -228,6 +236,7 @@ function addTutoProfiles(i, profileId) {
 				//always
 			}, function(retMsg) {
 				//succes
+				easeTracker.trackEvent("AddProfile", {"profileName":"Choose name", "profileColor":"#FF0000"});
 				appToAdd[i].profileId = retMsg;
 				addTutoProfiles(i + 1, retMsg);
 			}, function(retMsg) {

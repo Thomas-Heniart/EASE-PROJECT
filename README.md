@@ -55,3 +55,27 @@ If you change a file, execute :
 ```bash
 systemctl daemon-reload
 ```
+
+###Add sudo user
+```bash
+useradd -m -G wheel -s /bin/bash newUser
+passwd newUser
+```
+
+###Edit ssh paremeters
+```bash
+emacs /etc/ssh/sshd_config
+
+PermitRootLogin no
+AllowUsers user1 user2 user3
+```
+**Then**
+```bash
+systemctl restart sshd
+```
+
+###Logs
+* SSH logs
+```bash
+journalctl -u sshd |tail -10
+```
