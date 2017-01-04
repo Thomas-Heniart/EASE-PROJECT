@@ -64,7 +64,7 @@ passwd newUser
 
 ###Edit ssh paremeters
 ```bash
-emacs /etc/ssh/sshd_config
+emacs /etc/ssh/sshd_config.pacnew
 
 PermitRootLogin no
 AllowUsers user1 user2 user3
