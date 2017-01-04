@@ -80,68 +80,58 @@ systemctl restart sshd
 journalctl -u sshd |tail -10
 ```
 
-##NOUVELLE CRYPTO :+1:
+##LA CRYPTO 2.0 :+1:
 
-###BCrypt
-* *com.Ease.Utils.Crypto.Hashing*
+[x] Passer à BCrypt
+[x] Salage + poivrage
+[] AES 256 => Trop couteux en ressources pour le gain de sécurité. AES128 est déjà très très solide.
+
+###Hashage (BCrypt)
+* Tout est en static dans la classe *com.Ease.Utils.Crypto.Hashing*
     * public static String hash(String toHash);
-    
-    > Cette méthode hash un text en utilisant des méthodes de la classe *com.Ease.Utils.Crypto.BCrypt*. Elle utilise un salt mais il n'y a pas besoin de l'enregistrer (Magic bcrypt). Du coup ça rend useless les colonnes "saltEase" de la table userKeys et "saltToken" de savedSessions.
+    ```java
+    String hashed_password = Hashing.hash(password);
+    ```
+    > Hash directement avec BCrypt. Le salage est fait dans la méthode.
     
     * public static boolean compare(String plainText, String hashText);
-    
-    > Cette méthode renvoie true ssi le hashText est bien un hashé du plainText. _Si j'ai bien compris, ya pas besoin du salt parce que BCrypt(plain, salt) = BCrypt(plain, hash(plain, salt)). En gros si on réutilise le hashé comme salt retombe sur le meme hashé._
-
-###Nouveau salage pour AES
-* *com.Ease.Utils.Crypto.AES*
-    * private final static String[] PEPPERS;
-    
-    > Des salts supplémentaires, en dur dans le code pour qu'un mec ayant accès à la BDD n'ait quand meme pas accès aux infos
-    
-    * public static String encryptUserKey(String plainKey, String easePass, String salt);
-    * public static String decryptUserKey(String encryptedKey, String easePass, String salt);
-    
-    > Le nouveau salage est utilisé dans les méthodes encryptUserKey et decryptUserKey et consiste à additionner le sel de la base de donnée avec un pepper.
-    
-    * private static String getPepper(String pass);
-    
-    > Permet de déterminer quel pepper utiliser suivant le easePass utilisé pour chiffrer la clef user.
-    
-    * private static byte[] pepperedSalt(byte[] saltBytes, String pass);
-    
-    > Fait la somme du salt et du pepper.
-    
-    * public static oldDecryptUserKey(String encryptedKey, String easePass, String salt);
-    
-    > Ancienne méthode, utile pour switcher à la nouvelle crypto
-    
-###Transition de l'ancienne crypto à la nouvelle
-* *com.Ease.Dashboard.User.Keys*
-    * public static Keys loadKeys(String id, String password, ServletManager sm);
     ```java
-    if(saltEase != null){
-	   System.out.println("reset keys");
-       String hashedPass = Hashing.SHA(password, saltEase);
-       if (hashedPass.equals(hashed_password) == false) {
-            throw new GeneralException(ServletManager.Code.UserMiss, "Wrong email or password.");
-        }
-		keyUser = AES.oldDecryptUserKey(crypted_keyUser, password, saltPerso);
-		String newSalt = AES.generateSalt();
-		crypted_keyUser = AES.encryptUserKey(keyUser, password, newSalt);
-		hashed_password = Hashing.hash(password);
-		saltEase = null;
-		saltPerso = newSalt;
-        db.set("UPDATE userKeys SET password='"+hashed_password+"', saltEase=null, saltPerso='"+newSalt+"', keyUser='"+crypted_keyUser+"' WHERE id="+id+";");
-	   System.out.println("ok");
+    if (hashedPass.equals(hashed_password) == false) {
+        throw new GeneralException(ServletManager.Code.UserMiss, "Wrong email or password.");
     }
     ```
-    > C'est cette partie de code, au moment où on load les keys, qui transforma la BDD. Cette opération n'est pas faite dans l'autre méthode "loadKeysWithoutPassword". Il faut donc **absolument vider la tables savedSessions** la première fois que ceci est mis en prod, pour que personne ne se reconnecte via les cookies.
-* Base de données
-    * userKeys
+    > Compare un text en clair et un hashé et renvoie true si le hashé est un hashé du clair.
+
+###Chiffrement AES128
+* Tout est en static dans la classe *com.Ease.Utils.Crypto.AES*
+    * Attribut static de cette classe :
+    ```java
+    private static final int KEY_SIZE = 128;
+    private final static String[] PEPPERS  = {"xxxx", "xxxx" /* etc. */};
+    ```
+    > Pour changer la key_size en 256, il faut importer une lib qui permet à java de dépasser sa limite naturelle de clef qui est de 128.
+    > Les peppers servent au salage et sont en dur dans le code pour qu'un mec ayant accès à la BDD n'ait quand meme pas accès aux infos.
     
-    > Au fure et à mesure de la transition vers le nouveau hashage, la colonne "saltEase" va prendre des valeur null. A terme, il faudra la supprimer.
+    * Crypter et décrypter un mot de passe (*pareil qu'avant*) :
+    ```java
+    String cryptedPasswd = AES.encrypt(data, keyUser);
+    String passwd = AES.decrypt(cryptedPasswd, keyUser);
+    ```
     
-    * savedSessions
+    * Crypter et décrypter la keyUser à partir du easePass :
+    ```java
+    String salt = AES.generateSalt();
+    String crypted_keyUser = AES.encryptUserKey(keyUser, password, salt);
+    String decrypted_keyUser = AES.decryptUserKey(crypted_keyUser, password, salt);
+    ```
+    > Le salt sert à saler le password avant de le transformer en clef pour chiffrer la keyUser. Cependant, le salt est combiné avec un pepper dans la méthode avant de saler le password.
     
-    > On a supprimé la colonne saltToken.
+    * Les méthodes oldDecryptUserKey et oldEncryptUserKey sont toujours présentes pour faire la transition de l'ancienne à la nouvelle crypto.
+    
+###Transition de l'ancienne crypto à la nouvelle
+* Dans *com.Ease.Dashboard.User.Keys*, dans la méthode loadKeys, un bout de code est entouré de deux commentaires. C'est lui qui permet de passer de l'ancien chiffrement au nouveau. Il faudra supprimer ce bout de code quand la transition sera finie.
+
+* Si la valeur de la colonne "saltEase" dans la table **userKeys** est nulle, c'est que le user est passé à la nouvelle crypto.
+
+* Il faut **absolument vider la tables savedSessions** la première fois que la nouvelle crypto est mis en prod, pour que personne ne se reconnecte via les cookies, et bien via la connexion normale.
     
