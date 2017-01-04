@@ -1239,7 +1239,6 @@ CREATE TABLE `savedsessions` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `sessionId` char(56) NOT NULL,
   `sessionToken` varchar(255) DEFAULT NULL,
-  `saltToken` varchar(28) DEFAULT NULL,
   `keyUser` char(44) NOT NULL,
   `saltUser` char(28) NOT NULL,
   `user_id` int(10) unsigned NOT NULL,
@@ -1257,7 +1256,7 @@ CREATE TABLE `savedsessions` (
 
 LOCK TABLES `savedsessions` WRITE;
 /*!40000 ALTER TABLE `savedsessions` DISABLE KEYS */;
-INSERT INTO `savedsessions` VALUES (19024,'zOvPI7cffd3tiCE+wdKi857zsaf4SC+YvUA/y8xvU5Lyp+5y0spAvqwo','$2a$10$.XvEl9tA6svY./EdjzZ8Me/3nWa0eN5qdRMU/RMeq2fm8SoNQR9b6',NULL,'xrRgTwAaRyDRRBh5Mmf54TXoBSrN3dOOkRgi4/NqVp0=','5GxZSXQa1dfLRdzhT558LnI/Zy0=',33,'2017-01-04 16:40:02');
+INSERT INTO `savedsessions` VALUES (19024,'zOvPI7cffd3tiCE+wdKi857zsaf4SC+YvUA/y8xvU5Lyp+5y0spAvqwo','$2a$10$.XvEl9tA6svY./EdjzZ8Me/3nWa0eN5qdRMU/RMeq2fm8SoNQR9b6','xrRgTwAaRyDRRBh5Mmf54TXoBSrN3dOOkRgi4/NqVp0=','5GxZSXQa1dfLRdzhT558LnI/Zy0=',33,'2017-01-04 16:40:02');
 /*!40000 ALTER TABLE `savedsessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1819,4 +1818,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-01-04 16:57:06
+-- Dump completed on 2017-01-04 18:03:32

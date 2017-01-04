@@ -18,7 +18,6 @@ public class SessionSave {
 		ID,
 		SESSIONID,
 		TOKEN,
-		SALTTOKEN,
 		KEYUSER,
 		SALTUSER,
 		USER,
@@ -30,7 +29,6 @@ public class SessionSave {
 		try {
 			ResultSet rs = db.get("select * from savedSessions where sessionId = '" + sessionId + "';");
 			if (rs.next()){
-				String saltToken = rs.getString(SessionSaveData.SALTTOKEN.ordinal());
 				String hashedToken = rs.getString(SessionSaveData.TOKEN.ordinal());			
 				String saltKeyUser = rs.getString(SessionSaveData.SALTUSER.ordinal());
 				String cryptedKeyUser = rs.getString(SessionSaveData.KEYUSER.ordinal());			
