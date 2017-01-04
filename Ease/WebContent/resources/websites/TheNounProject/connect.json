@@ -12,7 +12,9 @@
     },
     "logout":{
         "todo":[
-        	{"action":"goto","url":"https://thenounproject.com/accounts/logout/"}
+        	{"action":"goto","url":"https://thenounproject.com/accounts/logout/"},
+        	{"action":"click", "search":".button.sign-out"},
+        	{"action":"waitload"}
         ]
     },
     "checkAlreadyLogged":[

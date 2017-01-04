@@ -15,7 +15,7 @@
     	]
     },
     "checkAlreadyLogged": [
-    	{"search":"a[href*='signout']"}
+    	{"search":".user-profile-picture"}
     ],
     "Facebook": {
     	"todo": [
