@@ -82,11 +82,7 @@ journalctl -u sshd |tail -10
 
 ##LA CRYPTO 2.0 :+1:
 
-[x] Passer à BCrypt
-
-[x] Salage + poivrage
-
-[] AES 256 => Trop couteux en ressources pour le gain de sécurité. AES128 est déjà très très solide.
+On ne passe pas à AES 256 => On augmente de 40% le coût en ressources pour le gain de sécurité. AES128 est déjà très très solide.
 
 ###Hashage (BCrypt)
 * Tout est en static dans la classe *com.Ease.Utils.Crypto.Hashing*
