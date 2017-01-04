@@ -80,9 +80,9 @@ systemctl restart sshd
 journalctl -u sshd |tail -10
 ```
 
-### NOUVELLE CRYPTO :+1:
+##NOUVELLE CRYPTO :+1:
 
-##BCrypt
+###BCrypt
 * *com.Ease.Utils.Crypto.Hashing*
     * public static String hash(String toHash);
     
@@ -92,7 +92,7 @@ journalctl -u sshd |tail -10
     
     > Cette méthode renvoie true ssi le hashText est bien un hashé du plainText. _Si j'ai bien compris, ya pas besoin du salt parce que BCrypt(plain, salt) = BCrypt(plain, hash(plain, salt)). En gros si on réutilise le hashé comme salt retombe sur le meme hashé._
 
-##Nouveau salage pour AES
+###Nouveau salage pour AES
 * *com.Ease.Utils.Crypto.AES*
     * private final static String[] PEPPERS;
     
@@ -115,7 +115,7 @@ journalctl -u sshd |tail -10
     
     > Ancienne méthode, utile pour switcher à la nouvelle crypto
     
-##Transition de l'ancienne crypte à la nouvelle
+###Transition de l'ancienne crypto à la nouvelle
 * *com.Ease.Dashboard.User.Keys*
     * public static Keys loadKeys(String id, String password, ServletManager sm);
     ```java
@@ -142,5 +142,6 @@ journalctl -u sshd |tail -10
     > Au fure et à mesure de la transition vers le nouveau hashage, la colonne "saltEase" va prendre des valeur null. A terme, il faudra la supprimer.
     
     * savedSessions
+    
     > On a supprimé la colonne saltToken.
     
