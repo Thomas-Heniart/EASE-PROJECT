@@ -28,9 +28,6 @@ public class ServerKey {
 	protected String	salt;
 	protected String	keyServer;
 	
-	private static final String LOGIN_PATH = "C:/Users/FelixPro/Documents/EASE/Ease project/New/EASE-PROJECT/Ease/src/com/Ease/Context/serverLogin.txt"; //Féfé
-	//private static final String LOGIN_PATH = "/var/lib/tomcat/webapps/serverLogin"; //Préprod
-	
 	public static ServerKey loadServerKey(DataBaseConnection db) throws GeneralException, SQLException {
 		ResultSet rs = db.get("SELECT login FROM serverKeys;");
 		if(!rs.next()){ //S'il  n'y a pas encore de serverKey dans la BDD, on crée la première, qui a pour login/passwd : root/root
@@ -38,26 +35,29 @@ public class ServerKey {
 			System.out.println("Creating root user.");
 			return createServerKey("root","root", AES.keyGenerator(), db);
 		} else {
-			
-			String[] loginFileContent = getLoginFileContent();
-			String login = loginFileContent[0];
-			String password = loginFileContent[1];
-			cleanLoginFileContent();
-			
+			String login, password;
+			if(Variables.LOCAL){
+				login = "root";
+				password = "root";
+			} else {
+				String[] loginFileContent = getLoginFileContent();
+				login = loginFileContent[0];
+				password = loginFileContent[1];
+				cleanLoginFileContent();
+			}
 			rs = db.get("SELECT * FROM serverKeys WHERE login='" + login + "';");
 			if (rs.next()) {
 				String hashed_password = rs.getString(Data.PASSWORD.ordinal());
 				String salt = rs.getString(Data.SALT.ordinal());
 				String crypted_keyUser = rs.getString(Data.KEYSERVER.ordinal());
 				if (!Hashing.compare(password, hashed_password)) {
-					throw new GeneralException(ServletManager.Code.InternError, "Wrong login or password.");
+					throw new GeneralException(ServletManager.Code.InternError, "Wrong login or password (login : "+login+").");
 				} else {
 					String keyServer = AES.decryptUserKey(crypted_keyUser, password, salt);
-					System.out.println("Server started by "+login+", the most awesome dev of Ease !");
 					return new ServerKey(login, hashed_password, salt, keyServer);
 				}
 			} else {
-				throw new GeneralException(ServletManager.Code.InternError, "Wrong login or password.");
+				throw new GeneralException(ServletManager.Code.InternError, "Wrong login or password (login : "+login+").");
 			}
 		}
 	}
@@ -107,7 +107,7 @@ public class ServerKey {
 	
 	private static void cleanLoginFileContent() throws GeneralException{
 		try {
-			PrintWriter writer = new PrintWriter(LOGIN_PATH);
+			PrintWriter writer = new PrintWriter(Variables.SERVER_LOGIN_PATH);
 			writer.close();
 			return;
 		} catch (FileNotFoundException e) {
@@ -120,9 +120,8 @@ public class ServerKey {
 		String ligne ;
 		String[] res = {"",""};
 		try {
-			BufferedReader fichier = new BufferedReader(new FileReader(LOGIN_PATH));
+			BufferedReader fichier = new BufferedReader(new FileReader(Variables.SERVER_LOGIN_PATH));
 			if ((ligne = fichier.readLine()) != null) {
-				System.out.println(ligne);
 				res[0] = ligne;
 				if ((ligne = fichier.readLine()) != null) {
 					System.out.println(ligne);

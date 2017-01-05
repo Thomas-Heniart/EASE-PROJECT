@@ -43,8 +43,8 @@ public class OnStart implements ServletContextListener{
 		}
 		try {
 			try {
+				System.out.println("ServletContextListener starting on \""+ Variables.ENVIRONNEMENT +"\" ...");
 				context.setAttribute("serverKey", ServerKey.loadServerKey(db));
-				System.out.println("ServletContextListener starting...");
 				context.setAttribute("idGenerator", new IdGenerator());
 				context.setAttribute("catalog", new Catalog(db, context));
 				context.setAttribute("groupManager", new GroupManager());
@@ -67,6 +67,7 @@ public class OnStart implements ServletContextListener{
 			} catch (GeneralException e1) {
 				System.out.println("Start failed");
 				String logResponse = URLEncoder.encode(e1.getMsg(), "UTF-8");
+				//String logResponse = e1.getMsg();
 				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				Date mydate = new Date();
 				String date = dateFormat.format(mydate);

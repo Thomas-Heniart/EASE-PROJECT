@@ -33,15 +33,13 @@ public class SessionSave {
 				String saltKeyUser = rs.getString(SessionSaveData.SALTUSER.ordinal());
 				String cryptedKeyUser = rs.getString(SessionSaveData.KEYUSER.ordinal());			
 				String userId = rs.getString(SessionSaveData.USER.ordinal());
-
 				String keyUser;
-
-				if (Hashing.compare(hashedToken,token)) {
+				if (!Hashing.compare(token,hashedToken)) {
 					throw new GeneralException(ServletManager.Code.ClientError, "Wrong token.");
 				} else if((keyUser = AES.decryptUserKey(cryptedKeyUser, token, saltKeyUser)) == null){
 					throw new GeneralException(ServletManager.Code.InternError, "Can't decrypt key user.");
 				}
-
+				
 				SessionSave sessionSave = new SessionSave(saltKeyUser, token, sessionId, keyUser, userId);
 				return sessionSave;
 			} else {
@@ -66,7 +64,7 @@ public class SessionSave {
 			throw new GeneralException(ServletManager.Code.InternError, "Can't encrypt key.");
 		} else if ((hashedToken = Hashing.hash(token)) == null) {
 			throw new GeneralException(ServletManager.Code.InternError, "Can't hash token.");
-		} 
+		}
 		db.set("INSERT INTO savedSessions VALUES (NULL, '" + sessionId + "', '" + hashedToken + "', '" + cryptedKeyUser + "', '" + saltKeyUser + "', '" + userId + "', DEFAULT);");
 		SessionSave sessionSave = new SessionSave(saltKeyUser, token, sessionId, keyUser, userId);
 		return sessionSave;
