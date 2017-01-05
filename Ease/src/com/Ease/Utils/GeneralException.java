@@ -8,6 +8,7 @@ public class GeneralException extends Exception{
 	public GeneralException(ServletManager.Code code, String msg){
 		this.msg = msg;
 		this.code = code;
+		System.out.println(msg);
 	}
 	
 	public GeneralException(ServletManager.Code code, Exception e){
@@ -15,6 +16,7 @@ public class GeneralException extends Exception{
 		for(int i = 0; i < e.getStackTrace().length; i++){
 			this.msg += "\n" + e.getStackTrace()[i];
 		}
+		System.out.println(msg);
 		this.code = code;
 	}
 	
