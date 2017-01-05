@@ -12,8 +12,7 @@ body {
   webkit-tap-highlight-color: #fed136; }
 
 .btn-primary, .btn-xl, h1, h2, h3, h4, h5, h6 {
-  font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  text-transform: uppercase; }
+  font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif; }
 
 .text-muted {
   color: #777; }
@@ -177,14 +176,12 @@ header .intro-text {
 
 header .intro-text .intro-lead-in {
   font-family: "Raleway", "Droid Serif", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-style: italic;
   font-size: 22px;
   line-height: 22px;
   margin-bottom: 25px; }
 
 header .intro-text .intro-heading {
   font-family: "Raleway", Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  text-transform: uppercase;
   font-size: 50px;
   line-height: 50px;
   margin-bottom: 25px; }
@@ -196,27 +193,24 @@ header .intro-text .intro-heading {
 
   header .intro-text .intro-lead-in {
     font-family: "Raleway", "Droid Serif", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-style: italic;
     font-size: 40px;
     line-height: 40px;
     margin-bottom: 50px; }
 
   header .intro-text .intro-heading {
     font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
-    text-transform: uppercase;
     font-size: 75px;
     line-height: 75px;
     margin-bottom: 25px; } }
 #portfolio .portfolio-item .portfolio-caption p, section h3.section-subheading {
-  font-family: "Droid Serif", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-style: italic; }
+  font-family: "Droid Serif", "Helvetica Neue", Helvetica, Arial, sans-serif; }
 
 section {
   padding: 100px 0; }
 
 section h2.section-heading {
   color: #373B60;
-  font-size: 40px;
+  font-size: 2vw;
   margin-top: 0;
   margin-bottom: 15px; }
 
@@ -829,7 +823,8 @@ section.vp {
       margin-left: 3px; }
     #footer .container .row .left-part .menu-column {
       margin-left: 20px;
-      display: inline-block; }
+      display: inline-block;
+      vertical-align: top; }
       #footer .container .row .left-part .menu-column h3 {
         font-size: 18px; }
       #footer .container .row .left-part .menu-column .links a {
@@ -923,11 +918,11 @@ section.vp {
     padding-top: 14vw;
     padding-bottom: 10vw; }
     header .container .intro-text .intro-lead-in {
-      font-size: 2vw;
-      line-height: 2vw; }
+      font-size: 1.2vw;
+      line-height: 1.5vw; }
     header .container .intro-text .intro-heading {
       font-size: 3vw;
-      line-height: 3vw; }
+      line-height: 4vw; }
 
   #userFeedbacks .container .row .comment:last-child, #userFeedbacks .container .row .comment:nth-child(3) {
     margin-bottom: 0px; } }

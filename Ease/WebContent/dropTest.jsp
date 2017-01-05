@@ -13,6 +13,5 @@
 </script>
 <BODY>
 
-<tags:EmailInput />
-
+<iframe src="/"></iframe>
 </BODY>
