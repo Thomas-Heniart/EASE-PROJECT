@@ -53,7 +53,7 @@ public class EditProfileColor extends HttpServlet {
 			if (color == null || !Regex.isColor(color))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong color.");
 			else if (profileId == null || profileId.isEmpty())
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong profileId.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Unknown profile.");
 			user.getProfile(Integer.parseInt(profileId)).setColor(color, sm);
 			sm.setResponse(ServletManager.Code.Success, "Color changed.");
 		} catch (GeneralException e) {

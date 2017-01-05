@@ -52,7 +52,7 @@ public class EditProfileName extends HttpServlet {
 			if (name == null || name.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong name.");
 			else if (profileId == null || profileId.isEmpty())
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong profileId.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Unknown profile.");
 			user.getProfile(Integer.parseInt(profileId)).setName(name, sm);
 			sm.setResponse(ServletManager.Code.Success, "Name changed.");
 		} catch (GeneralException e) {

@@ -53,7 +53,7 @@ public class AddUserEmail extends HttpServlet {
 			sm.needToBeConnected();
 			if (email == null || !Regex.isEmail(email)) {
 				System.out.println(email);
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "This is not an email.");
 			}
 			if (user.getEmails().get(email) != null)
 				throw new GeneralException(ServletManager.Code.ClientError, "You already have this email.");

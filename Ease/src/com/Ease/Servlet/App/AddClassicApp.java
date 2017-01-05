@@ -65,7 +65,7 @@ public class AddClassicApp extends HttpServlet {
 			if (name == null || name.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
 			else if (password == null)
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong password.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty password.");
 			//Mettre un param keyDate dans le post si besoin de decrypter en RSA. Correspond à la private key RSA, 
 			String keyDate = sm.getServletParam("keyDate", true);
 			if (keyDate != null && !keyDate.equals("")) {

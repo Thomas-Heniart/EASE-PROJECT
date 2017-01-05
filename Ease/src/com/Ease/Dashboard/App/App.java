@@ -152,7 +152,7 @@ public class App {
 		if (this.groupApp == null || (!this.groupApp.isCommon() && this.groupApp.getPerms().havePermission(AppPermissions.Perm.RENAME.ordinal()))) {
 			this.informations.setName(name, sm);
 		} else {
-			throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permission t change this app's name.");
+			throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permission to change this app's name.");
 		}
 	}
 	

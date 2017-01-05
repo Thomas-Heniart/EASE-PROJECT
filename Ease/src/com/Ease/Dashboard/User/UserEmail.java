@@ -148,7 +148,7 @@ public class UserEmail {
 					throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong verification code.");
 				}
 			} else {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "This email not need to be verified.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "This email doesn't need to be verified.");
 			}
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);

@@ -56,7 +56,7 @@ public class WebsiteAppToLogwithApp extends HttpServlet {
 			if (name == null || name.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
 			if (appId == null || appId.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong appId.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Unknown app.");
 			try {
 				App app = user.getApp(Integer.parseInt(appId));
 				if (!app.getType().equals("WebsiteApp"))
