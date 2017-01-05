@@ -15,6 +15,26 @@ import org.apache.tomcat.util.codec.binary.Base64;
 
  
 public class AES {
+	
+	private static final int KEY_SIZE = 128;
+	private static final String[] PEPPERS = {
+			"rRAwXwaUjL/nGlk7L9RAYRFVqLI=",
+			"hf0awq2mJFe1NUzT+KciUL4HRN8=",
+			"UQu1FQwf8vldwQjzjzdP9IOFwHY=",
+			"bvRJY4LXt7HC5nOyKRaLvXD9PlA=",
+			"DlbP/mkKmfgKQxZt/4f0TmMioAk=",
+			"X9qsP83Z3LxCqQbzyf/bcwkjCO4=",
+			"L19F+V3UeKDD1ZK7oMTJjhklJZE=",
+			"c9dWZjJmUBggG0dKVNBLOGhGfdU=",
+			"8L+jERqOQakTl8WtnaiR6YMVpvg=",
+			"KXxjWw1Ml/Y8y9vEqZvHTSmoJKY=",
+			"k+GSXW/HFayjL2YO4BvLiAeCjZ8=",
+			"9DwQs2gHBEFjZxgX0YenAchXTG0=",
+			"UCFDA1tyZ+Y1yV+CfJnad0MZWYs=",
+			"6JHmUWTJ87MsaSKzabclPK9fCZ8=",
+			"8bMk9l5zP9inrpNQeNDUnT4Pv+Q=",
+			"qg5Vh9xiL2GZtkK7hUPNI61ov3o="
+		};
  
     public static String keyGenerator(){
     	KeyGenerator keyGen;
@@ -24,7 +44,7 @@ public class AES {
 			e.printStackTrace();
 			return null;
 		}
-    	keyGen.init(128);
+    	keyGen.init(KEY_SIZE);
     	SecretKey secretKey = keyGen.generateKey();
     	return new Base64().encodeToString(secretKey.getEncoded());
     }
@@ -76,10 +96,10 @@ public class AES {
     public static String encryptUserKey(String plainKey, String easePass, String salt) {   
          
     	try {
-    		byte[] saltBytes = salt.getBytes();
+    		byte[] saltBytes = pepperedSalt(salt.getBytes(), easePass);
 
     		SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-    		PBEKeySpec spec = new PBEKeySpec(easePass.toCharArray(), saltBytes, 65536, 128);
+    		PBEKeySpec spec = new PBEKeySpec(easePass.toCharArray(), saltBytes, 65536, KEY_SIZE);
     		SecretKey secretKey = skf.generateSecret(spec);
          
     		return encrypt(plainKey, new Base64().encodeToString(secretKey.getEncoded()));
@@ -92,10 +112,42 @@ public class AES {
  
     public static String decryptUserKey(String encryptedKey, String easePass, String salt) {
     	try {
+    		byte[] saltBytes = pepperedSalt(salt.getBytes(), easePass);
+
+    		SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+    		PBEKeySpec spec = new PBEKeySpec(easePass.toCharArray(), saltBytes, 65536, KEY_SIZE);
+    		SecretKey secretKey = skf.generateSecret(spec);
+        
+    		return decrypt(encryptedKey, new Base64().encodeToString(secretKey.getEncoded()));
+        } catch (Exception e) {
+        	System.out.println("Error while decrypting key : " + e.toString());
+        }
+    	return null;
+    }
+    
+    public static String oldEncryptUserKey(String plainKey, String easePass, String salt) {   
+        
+    	try {
     		byte[] saltBytes = salt.getBytes();
 
     		SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-    		PBEKeySpec spec = new PBEKeySpec(easePass.toCharArray(), saltBytes, 65536, 128);
+    		PBEKeySpec spec = new PBEKeySpec(easePass.toCharArray(), saltBytes, 65536, KEY_SIZE);
+    		SecretKey secretKey = skf.generateSecret(spec);
+         
+    		return encrypt(plainKey, new Base64().encodeToString(secretKey.getEncoded()));
+    	} catch (Exception e){
+    		System.out.println("Error while encrypting key : " + e.toString());
+    	}
+    	return null;
+        
+    }
+ 
+    public static String oldDecryptUserKey(String encryptedKey, String easePass, String salt) {
+    	try {
+    		byte[] saltBytes = salt.getBytes();
+
+    		SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+    		PBEKeySpec spec = new PBEKeySpec(easePass.toCharArray(), saltBytes, 65536, KEY_SIZE);
     		SecretKey secretKey = skf.generateSecret(spec);
         
     		return decrypt(encryptedKey, new Base64().encodeToString(secretKey.getEncoded()));
@@ -105,10 +157,32 @@ public class AES {
     	return null;
     }
  
-	public static String generateSalt() {
+    public static String generateSalt() {
         SecureRandom random = new SecureRandom();
         byte bytes[] = new byte[20];
         random.nextBytes(bytes);
         return new Base64().encodeToString(bytes);
+    }
+    
+    private static String getPepper(String pass){
+    	byte[] passBytes = pass.getBytes();
+    	byte tmp=0;
+    	for(int i=0;i<passBytes.length;i++){
+    		tmp = (byte)(tmp + passBytes[i]);
+    	}
+    	int pepperIndex = (tmp+127)/16;
+    	return PEPPERS[pepperIndex];
+    }
+    
+    private static byte[] pepperedSalt(byte[] saltBytes, String pass) throws Exception {
+    	byte[] pepperBytes = getPepper(pass).getBytes();
+		if(pepperBytes.length != saltBytes.length){
+			throw new Exception("Different sizes between pepper and salt");
+		} else {
+			for(int i = 0; i<saltBytes.length; i++){
+				saltBytes[i] = (byte) (saltBytes[i] + pepperBytes[i]);
+			}
+		}
+		return saltBytes;
     }
 }

@@ -1,3 +1,21 @@
+function sendKey(input, key) {
+    var e = input.ownerDocument.createEvent("KeyboardEvent");
+    // FIREFOX : e.initKeyEvent("keydown", 1, 1, null, 0, 0, 0, 0, key, 0)
+    e.initKeyboardEvent("keydown", 1, 1, document.defaultView, 0, 0, 0, 0, key, key);
+    var f = input.dispatchEvent(e);
+    //FIREFOX f && (e = input.ownerDocument.createEvent("KeyboardEvent"), e.initKeyEvent("keypress", 1, 1, null, 0, 0, 0, 0, key, 0), f = input.dispatchEvent(e));
+    e = input.ownerDocument.createEvent("KeyboardEvent");
+    //FIREFOX e.initKeyEvent("keyup", 1, 1, null, 0, 0, 0, 0, key, 0)
+    e.initKeyboardEvent("keyup", 1, 1, null, 0, 0, 0, 0, key, key);
+    input.dispatchEvent(e);
+}
+
+function fire_before_fill(a){
+    sendKey(a, 16); //shift
+    sendKey(a, 32); //space
+    sendKey(a, 8); //backspace
+}
+
 function fire_onchange(a) {
     var d = a.ownerDocument.createEvent("Events");
     d.initEvent("change", !0, !0);
@@ -6,6 +24,7 @@ function fire_onchange(a) {
     d.initEvent("input", !0, !0);
     a.dispatchEvent(d);
 }
+
 var actions = {
 fillThenSubmit:function(msg, callback, sendResponse) {
   var actionStep = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep];
@@ -161,6 +180,7 @@ fill:function(msg, callback, sendResponse){
         input.select();
 		input.click();
         input[0].focus();
+        fire_before_fill(input[0]);
         input[0].value = msg.detail[0].user[actionStep.what];
 	    fire_onchange(input[0]);
 		input[0].blur();

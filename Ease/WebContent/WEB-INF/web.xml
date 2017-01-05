@@ -6,6 +6,21 @@
        com.Ease.Context.OnStart
     </listener-class>
   </listener>
+
+  <!--  filter for prevent iframe use -->
+  <filter>
+   <filter-name>IFrameBusterFilter</filter-name>
+   <filter-class>com.Ease.Utils.IFrameBusterFilter</filter-class>
+   <init-param>
+	  <param-name>test-param</param-name>
+	  <param-value>Initialization Paramter</param-value>
+   </init-param>
+</filter>
+<filter-mapping>
+   <filter-name>IFrameBusterFilter</filter-name>
+   <url-pattern>/*</url-pattern>
+</filter-mapping>
+
   <session-config>
     <session-timeout>240</session-timeout>
   </session-config>

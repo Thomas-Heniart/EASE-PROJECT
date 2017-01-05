@@ -76,7 +76,7 @@ pageEncoding="UTF-8"%>
 				<div id="members">
 					<div class="memberDescription">
 						<div class="memberPhoto">
-							<img src="resources/landing/ben.jpg"/>
+							<img src="resources/team/ben.png"/>
 						</div>
 						<div class="name">
 							<a>Benjamin Prigent</a>
@@ -87,7 +87,7 @@ pageEncoding="UTF-8"%>
 					</div>
 					<div class="memberDescription">
 						<div class="memberPhoto">
-							<img src="resources/landing/ben.jpg"/>
+							<img src="resources/team/lanive.png"/>
 						</div>
 						<div class="name">
 						<a>Victor Nivet</a>
@@ -98,7 +98,7 @@ pageEncoding="UTF-8"%>
 					</div>
 					<div class="memberDescription">
 						<div class="memberPhoto">
-							<img src="resources/landing/ben.jpg"/>
+							<img src="resources/team/Fefe.png"/>
 						</div>
 						<div class="name">
 							<a>Félix Richard</a>
@@ -109,7 +109,7 @@ pageEncoding="UTF-8"%>
 					</div>
 					<div class="memberDescription">
 						<div class="memberPhoto">
-							<img src="resources/landing/ben.jpg"/>
+							<img src="resources/team/Fifi.png"/>
 						</div>
 						<div class="name">
 							<a>Sergii Fisun</a>
@@ -120,7 +120,7 @@ pageEncoding="UTF-8"%>
 					</div>
 					<div class="memberDescription">
 						<div class="memberPhoto">
-							<img src="resources/landing/ben.jpg"/>
+							<img src="resources/team/Pedro.png"/>
 						</div>
 						<div class="name">
 							<a>Pierre De Bruyne</a>
@@ -131,7 +131,7 @@ pageEncoding="UTF-8"%>
 					</div>
 					<div class="memberDescription">
 						<div class="memberPhoto">
-							<img src="resources/landing/ben.jpg"/>
+							<img src="resources/team/Toto.png"/>
 						</div>
 						<div class="name">
 							<a>Thomas Heniart</a>
@@ -142,7 +142,7 @@ pageEncoding="UTF-8"%>
 					</div>
 					<div class="memberDescription">
 						<div class="memberPhoto">
-							<img src="resources/landing/ben.jpg"/>
+							<img src="resources/team/ines.png"/>
 						</div>
 						<div class="name">
 							<a>Inès Yous</a>
@@ -153,7 +153,7 @@ pageEncoding="UTF-8"%>
 					</div>
 					<div class="memberDescription">
 						<div class="memberPhoto">
-							<img src="resources/landing/ben.jpg"/>
+							<img src="resources/team/alex.png"/>
 						</div>
 						<div class="name">
 							<a>Alexandre Nicolau</a>
@@ -164,7 +164,7 @@ pageEncoding="UTF-8"%>
 					</div>
 					<div class="memberDescription">
 						<div class="memberPhoto">
-							<img src="resources/landing/ben.jpg"/>
+							<img src="resources/team/agathe.png"/>
 						</div>
 						<div class="name">
 							<a>Agathe Meslier</a>
@@ -175,7 +175,7 @@ pageEncoding="UTF-8"%>
 					</div>
 					<div class="memberDescription">
 						<div class="memberPhoto">
-							<img src="resources/landing/ben.jpg"/>
+							<img src="resources/team/barthos.png"/>
 						</div>
 						<div class="name">
 							<a>Barthelemy Leveque</a>

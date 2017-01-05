@@ -12,8 +12,7 @@
     },
     "logout":{
         "todo":[
-            {"action":"aclick", "search":"a[href='/logout/']"},
-            {"action":"waitload"}
+            {"action":"aclick", "search":"a[href='/logout/']"}
         ]
     },
     "checkAlreadyLogged":[

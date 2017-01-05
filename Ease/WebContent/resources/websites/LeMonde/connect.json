@@ -15,7 +15,7 @@
     	]
     },
     "checkAlreadyLogged": [
-    	{"search":".acces_compte"}
+    	{"search":".menu-compte-inscrit"}
     ]
     
 }

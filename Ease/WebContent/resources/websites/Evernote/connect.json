@@ -12,7 +12,10 @@
 	"logout":{
 		"todo":[
             {"action":"click", "search":"#gwt-debug-AccountMenu-avatar"},
-			{"action":"click", "search":"#gwt-debug-AccountMenu-logout"}
+            {"action":"waitfor", "search":"#gwt-debug-AccountMenu-logout > div"},
+			{"action":"click", "search":"#gwt-debug-AccountMenu-logout > div"},
+			{"action":"waitload"},
+			{"action":"goto", "url":"https://www.evernote.com/Login.action"}
         ]
 	},
 	"checkAlreadyLogged":[

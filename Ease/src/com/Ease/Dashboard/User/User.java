@@ -17,16 +17,20 @@ import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.Account;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.AccountInformation;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.Profile.ProfilePermissions;
+import com.Ease.Dashboard.User.Keys.Data;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Invitation;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.Crypto.AES;
+import com.Ease.Utils.Crypto.Hashing;
 import com.Ease.websocket.WebsocketSession;
 
 public class User {
@@ -41,6 +45,7 @@ public class User {
 		REGISTRATIONDATE,
 		STATUSID
 	}
+
 	@SuppressWarnings("unchecked")
 	public static User loadUser(String email, String password, ServletManager sm) throws GeneralException {
 		Map<String, User> usersMap = (Map<String, User>) sm.getContextAttr("users");
@@ -50,39 +55,11 @@ public class User {
 		try {
 			DataBaseConnection db = sm.getDB();
 			ResultSet rs = db.get("SELECT * FROM users where email='" + email + "';");
+			int transaction = db.startTransaction();
 			if (rs.next()) {
-				String db_id = rs.getString(Data.ID.ordinal());
-				String firstName = rs.getString(Data.FIRSTNAME.ordinal());
-				String lastName = rs.getString(Data.LASTNAME.ordinal());
 				Keys keys = Keys.loadKeys(rs.getString(Data.KEYSID.ordinal()), password, sm);
-				Option options = Option.loadOption(rs.getString(Data.OPTIONSID.ordinal()), sm);
-				Status status = Status.loadStatus(rs.getString(Data.STATUSID.ordinal()), db);
-				ResultSet adminRs = db.get("SELECT user_id FROM admins WHERE user_id = " + db_id + ";");
-				boolean isAdmin = adminRs.next();
-				ResultSet sawGroupProfileRs = db.get("SELECT saw_group FROM groupsAndUsersMap WHERE user_id = " + db_id + " LIMIT 1;");
-				boolean sawGroupProfile = false;
-				if (sawGroupProfileRs.next())
-					sawGroupProfile = sawGroupProfileRs.getBoolean(1);
-				SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, sm);
-				User newUser =  new User(db_id, firstName, lastName, email, keys, options, isAdmin, sawGroupProfile, sessionSave, status);
-				newUser.loadProfiles(sm);
-				newUser.loadEmails(sm);
-				for (Map.Entry<String, WebsiteApp> entry : newUser.getWebsiteAppsDBmap().entrySet()){
-				    if (entry.getValue().getType().equals("LogwithApp")) {
-				    	LogwithApp logwithApp = (LogwithApp)entry.getValue();
-				    	App app = newUser.getWebsiteAppsDBmap().get(logwithApp.getLogwithDBid());
-				    	logwithApp.rempLogwith((WebsiteApp)app);
-				    }
-				}
-				ResultSet rs2 = db.get("SELECT group_id FROM groupsAndUsersMap WHERE user_id=" + newUser.getDBid() + ";");
-				Group userGroup;
-				while (rs2.next()) {
-					userGroup = GroupManager.getGroupManager(sm).getGroupFromDBid(rs2.getString(1));
-					if (userGroup != null) {
-						newUser.getGroups().add(userGroup);
-					}
-				}
-				((Map<String, User>)sm.getContextAttr("users")).put(email, newUser);
+				User newUser = loadUserWithKeys(rs, keys, sm);
+				db.commitTransaction(transaction);
 				return newUser;
 			} else {
 				throw new GeneralException(ServletManager.Code.UserMiss, "Wrong email or password.");
@@ -91,56 +68,29 @@ public class User {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
-	
+
 	private void loadEmails(ServletManager sm) throws GeneralException {
-			this.emails = UserEmail.loadEmails(db_id, this, sm);
+		this.emails = UserEmail.loadEmails(db_id, this, sm);
 	}
-		
+
 	@SuppressWarnings("unchecked")
 	public static User loadUserFromCookies(SessionSave sessionSave, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
 		String db_id = sessionSave.getUserId();
 		String keyUser = sessionSave.getKeyUser();
 		sessionSave.eraseFromDB(sm);
 		try {
+			DataBaseConnection db = sm.getDB();
 			ResultSet rs = db.get("SELECT * FROM users where id='" + db_id + "';");
+			int transaction = db.startTransaction();
 			if (rs.next()) {
 				String email = rs.getString(Data.EMAIL.ordinal());
 				Map<String, User> usersMap = (Map<String, User>) sm.getContextAttr("users");
 				User connectedUser = usersMap.get(email);
 				if (connectedUser != null)
 					return connectedUser;
-				String firstName = rs.getString(Data.FIRSTNAME.ordinal());
-				String lastName = rs.getString(Data.LASTNAME.ordinal());
 				Keys keys = Keys.loadKeysWithoutPassword(rs.getString(Data.KEYSID.ordinal()), keyUser, sm);
-				Option options = Option.loadOption(rs.getString(Data.OPTIONSID.ordinal()), sm);
-				Status status = Status.loadStatus(rs.getString(Data.STATUSID.ordinal()), db);
-				ResultSet adminRs = db.get("SELECT user_id FROM admins WHERE user_id = " + db_id + ";");
-				boolean isAdmin = adminRs.next();
-				SessionSave newSessionSave = SessionSave.createSessionSave(keyUser, db_id, sm);
-				ResultSet sawGroupProfileRs = db.get("SELECT saw_group FROM groupsAndUsersMap WHERE user_id = " + db_id + " LIMIT 1;");
-				boolean sawGroupProfile = false;
-				if (sawGroupProfileRs.next())
-					sawGroupProfile = sawGroupProfileRs.getBoolean(1);
-				User newUser =  new User(db_id, firstName, lastName, email, keys, options, isAdmin, sawGroupProfile,newSessionSave, status);
-				newUser.loadProfiles(sm);
-				newUser.loadEmails(sm);
-				for (Map.Entry<String, WebsiteApp> entry : newUser.getWebsiteAppsDBmap().entrySet()){
-				    if (entry.getValue().getType().equals("LogwithApp")) {
-				    	LogwithApp logwithApp = (LogwithApp)entry.getValue();
-				    	App app = newUser.getWebsiteAppsDBmap().get(logwithApp.getLogwithDBid());
-				    	logwithApp.rempLogwith((WebsiteApp)app);
-				    }
-				}
-				ResultSet rs2 = db.get("SELECT group_id FROM groupsAndUsersMap WHERE user_id=" + newUser.getDBid() + ";");
-				Group userGroup;
-				while (rs2.next()) {
-					userGroup = GroupManager.getGroupManager(sm).getGroupFromDBid(rs2.getString(1));
-					if (userGroup != null) {
-						newUser.getGroups().add(userGroup);
-					}
-				}
-				((Map<String, User>)sm.getContextAttr("users")).put(email, newUser);
+				User newUser = loadUserWithKeys(rs, keys, sm);
+				db.commitTransaction(transaction);
 				return newUser;
 			} else {
 				throw new GeneralException(ServletManager.Code.UserMiss, "Wrong email or password.");
@@ -149,7 +99,49 @@ public class User {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
-	
+
+	private static User loadUserWithKeys(ResultSet rs, Keys keys, ServletManager sm) throws GeneralException {
+		try {
+			DataBaseConnection db = sm.getDB();
+			String db_id = rs.getString(Data.ID.ordinal());
+			String email = rs.getString(Data.EMAIL.ordinal());
+			String firstName = rs.getString(Data.FIRSTNAME.ordinal());
+			String lastName = rs.getString(Data.LASTNAME.ordinal());
+			Option options = Option.loadOption(rs.getString(Data.OPTIONSID.ordinal()), sm);
+			Status status = Status.loadStatus(rs.getString(Data.STATUSID.ordinal()), db);
+			ResultSet adminRs = db.get("SELECT user_id FROM admins WHERE user_id = " + db_id + ";");
+			boolean isAdmin = adminRs.next();
+			ResultSet sawGroupProfileRs = db.get("SELECT saw_group FROM groupsAndUsersMap WHERE user_id = " + db_id + " LIMIT 1;");
+			boolean sawGroupProfile = false;
+			if (sawGroupProfileRs.next())
+				sawGroupProfile = sawGroupProfileRs.getBoolean(1);
+			SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, sm);
+			User newUser =  new User(db_id, firstName, lastName, email, keys, options, isAdmin, sawGroupProfile, sessionSave, status);
+			newUser.loadProfiles(sm);
+			newUser.loadEmails(sm);
+			for (Map.Entry<String, WebsiteApp> entry : newUser.getWebsiteAppsDBmap().entrySet()){
+				if (entry.getValue().getType().equals("LogwithApp")) {
+					LogwithApp logwithApp = (LogwithApp)entry.getValue();
+					App app = newUser.getWebsiteAppsDBmap().get(logwithApp.getLogwithDBid());
+					logwithApp.rempLogwith((WebsiteApp)app);
+				}
+			}
+			ResultSet rs2 = db.get("SELECT group_id FROM groupsAndUsersMap WHERE user_id=" + newUser.getDBid() + ";");
+			Group userGroup;
+			while (rs2.next()) {
+				userGroup = GroupManager.getGroupManager(sm).getGroupFromDBid(rs2.getString(1));
+				if (userGroup != null) {
+					newUser.getGroups().add(userGroup);
+				}
+			}
+			((Map<String, User>)sm.getContextAttr("users")).put(email, newUser);
+			return newUser;
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+
+	}
+
 	@SuppressWarnings("unchecked")
 	public static User createUser(String email, String firstName, String lastName, String password, String code, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
@@ -177,7 +169,7 @@ public class User {
 		db.commitTransaction(transaction);
 		return newUser;
 	}
-	
+
 	protected String	db_id;
 	protected String	first_name;
 	protected String	last_name;
@@ -195,9 +187,9 @@ public class User {
 	protected boolean isAdmin;
 	protected boolean sawGroupProfile;
 	protected Status status;
-	
+
 	protected SessionSave sessionSave;
-	
+
 	public User(String db_id, String first_name, String last_name, String email, Keys keys, Option opt, boolean isAdmin, boolean sawGroupProfile, SessionSave sessionSave, Status status) {
 		this.db_id = db_id;
 		this.first_name = first_name;
@@ -222,22 +214,22 @@ public class User {
 		this.status = status;
 		this.sawGroupProfile = sawGroupProfile;
 	}
-	
+
 	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		db.set("DELETE FROM users WHERE id=" + this.db_id + ";");
 	}
-	
+
 	/*
 	 * 
 	 * Getter and Setter
 	 * 
 	 */
-	
+
 	public String getDBid(){
 		return this.db_id;
 	}
-	
+
 	public String getFirstName() {
 		return first_name;
 	}
@@ -246,7 +238,7 @@ public class User {
 		db.set("UPDATE users set firstName='" + first_name + "' WHERE id=" + this.db_id + ";");
 		this.first_name = first_name;
 	}
-	
+
 	public String getLastName() {
 		return last_name;
 	}
@@ -255,70 +247,70 @@ public class User {
 		db.set("UPDATE users set lastName='" + last_name + "' WHERE id=" + this.db_id + ";");
 		this.last_name = last_name;
 	}
-	
+
 	public String getEmail() {
 		return this.email;
 	}
-	
+
 	public Keys getKeys() {
 		return keys;
 	}
-	
+
 	public Option getOptions() {
 		return opt;
 	}
-	
+
 	/*public Status getStatus() {
 		return status;
 	}*/
-	
+
 	public Map<String, UserEmail> getUserEmails() {
 		return emails;
 	}
-	
+
 	public List<List<Profile>> getProfileColumns() {
 		return this.profile_columns;
 	}
-	
+
 	public List<Group> getGroups() {
 		return groups;
 	}
-	
+
 	public SessionSave getSessionSave() {
 		return sessionSave;
 	}
-	
+
 	public Map<String, App> getAppsDBmap() {
 		return appsDBmap;
 	}
-	
+
 	public Map<String, WebsiteApp> getWebsiteAppsDBmap() {
 		return websiteAppsDBmap;
 	}
-	
+
 	public Map<Integer, App> getAppsIDmap() {
 		return appsIDmap;
 	}
-	
+
 	/*
 	 * 
 	 * Utils
 	 * 
 	 */
-	
+
 	public int getNextSingleId() {
 		this.max_single_id++;
 		return max_single_id;
 	}
-	
+
 	public void loadProfiles(ServletManager sm) throws GeneralException {
 		this.profile_columns = Profile.loadProfiles(this, sm);
 	}
-	
+
 	public void removeEmail(UserEmail email) {
 		this.emails.remove(email);
 	}
-	
+
 	public void removeProfile(int single_id, String password, ServletManager sm) throws GeneralException {
 		Iterator<List<Profile>> it = this.profile_columns.iterator();
 		while (it.hasNext()) {
@@ -344,7 +336,7 @@ public class User {
 		}
 		throw new GeneralException(ServletManager.Code.InternError, "This profile dosen't exist.");
 	}
-	
+
 	public void updateProfilesIndex(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
@@ -360,7 +352,7 @@ public class User {
 		}
 		db.commitTransaction(transaction);
 	}
-	
+
 	public Profile getProfile(int single_id) throws GeneralException {
 		for (List<Profile> column: this.profile_columns) {
 			for (Profile profile: column) {
@@ -370,7 +362,7 @@ public class User {
 		}
 		throw new GeneralException(ServletManager.Code.ClientError, "This profile's single_id dosen't exist.");
 	}
-	
+
 	public List<Profile> getProfilesList() {
 		List<Profile> profiles = new LinkedList<Profile>();
 		for (int i = 1; i<this.profile_columns.size(); i++){
@@ -382,7 +374,7 @@ public class User {
 		}
 		return profiles;
 	}
-	
+
 	public App getApp(int single_id) throws GeneralException {
 		for (List<Profile> column: this.profile_columns) {
 			for (Profile profile: column) {
@@ -394,7 +386,7 @@ public class User {
 		}
 		throw new GeneralException(ServletManager.Code.ClientError, "This app's single_id dosen't exist.");
 	}
-	
+
 	public Profile getProfileFromApp(int single_id) throws GeneralException {
 		for (List<Profile> column: this.profile_columns) {
 			for (Profile profile: column) {
@@ -406,11 +398,11 @@ public class User {
 		}
 		throw new GeneralException(ServletManager.Code.ClientError, "This app's single_id dosen't exist.");
 	}
-	
+
 	public void replaceApp(App app) throws GeneralException{
 		app.getProfile().getApps().set(app.getPosition(), app);		
 	}
-	
+
 	public App getAppWithDBid(String DBid) throws GeneralException {
 		for (List<Profile> column: this.profile_columns) {
 			for (Profile profile: column) {
@@ -422,7 +414,7 @@ public class User {
 		}
 		throw new GeneralException(ServletManager.Code.ClientError, "This app's single_id dosen't exist.");
 	}
-	
+
 	public void removeDefinitly(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
@@ -440,15 +432,15 @@ public class User {
 		//this.status.removeFromDB(sm);
 		db.commitTransaction(transaction);
 	}
-	
+
 	public String encrypt(String password) throws GeneralException {
 		return this.keys.encrypt(password);
 	}
-	
+
 	public String decrypt(String password) throws GeneralException {
 		return this.keys.decrypt(password);
 	}
-	
+
 	public Map<String, WebsocketSession> getWebsockets() {
 		return this.websockets;
 	}
@@ -456,7 +448,7 @@ public class User {
 	public void removeWebsocket(Session session) {
 		this.websockets.remove(session.getId());
 	}
-	
+
 	public void removeWebsocket(WebsocketSession session) {
 		this.websockets.remove(session.getSessionId());
 	}
@@ -464,7 +456,7 @@ public class User {
 	public void addWebsocket(WebsocketSession wSession) throws GeneralException {
 		this.websockets.put(wSession.getSessionId() , wSession);
 	}
-	
+
 	public int getMostEmptyProfileColumn() {
 		int col = 0;
 		int minSize = -1;
@@ -482,18 +474,18 @@ public class User {
 		}
 		return col;
 	}
-	
+
 	public void deconnect(ServletManager sm) {
 		@SuppressWarnings("unchecked")
 		Map<String, User> users = (Map<String, User>) sm.getContextAttr("users");
 		if (this.websockets.isEmpty())
 			users.remove(this.email);
 	}
-	
+
 	public boolean isAdmin() {
 		return this.isAdmin;
 	}
-	
+
 	public static String findDBid(String email, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		try {
@@ -507,7 +499,7 @@ public class User {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
-	
+
 	public static int getMostEmptyProfileColumnForUnconnected(String db_id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		try {
@@ -532,7 +524,7 @@ public class User {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
-	
+
 	public static int getColumnNextPositionForUnconnected(String db_id, int column_idx, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		try {
@@ -546,16 +538,16 @@ public class User {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
-	
+
 	public void removeEmailIfNeeded(String email, ServletManager sm) throws GeneralException {
 		if (this.emails.get(email)!=null && this.emails.get(email).removeIfNotUsed(sm))
 			this.emails.remove(email);
 	}
-	
+
 	public Map<String, UserEmail> getEmails() {
 		return this.emails;
 	}
-	
+
 	public List<String> getEmailsString(){
 		List<String> emails = new LinkedList<String> ();
 		for (Map.Entry<String, UserEmail> entry : this.emails.entrySet()) {
@@ -563,7 +555,7 @@ public class User {
 		}
 		return emails;
 	}
-	
+
 	public List<String> getVerifiedEmails() {
 		List<String> verifiedEmails = new LinkedList<String> ();
 		for (Map.Entry<String, UserEmail> entry : emails.entrySet()) {
@@ -572,7 +564,7 @@ public class User {
 		}
 		return verifiedEmails;
 	}
-	
+
 	public List<String> getUnverifiedEmails() {
 		List<String> unverifiedEmails = new LinkedList<String> ();
 		for (Map.Entry<String, UserEmail> entry : emails.entrySet()) {
@@ -581,7 +573,7 @@ public class User {
 		}
 		return unverifiedEmails;
 	}
-	
+
 	public Profile addProfile(String name, String color, ServletManager sm) throws GeneralException {
 		int column = this.getMostEmptyProfileColumn();
 		Profile newProfile = Profile.createPersonnalProfile(this, column, this.getProfileColumns().get(column).size(), name, color, sm);
@@ -605,7 +597,7 @@ public class User {
 						this.emails.remove(email);
 				}
 			}
-				
+
 		}
 		db.commitTransaction(transaction);
 	}
@@ -626,7 +618,7 @@ public class User {
 		this.updateProfilesIndex(sm);
 		db.commitTransaction(transaction);
 	}
-	
+
 	public void moveApp(int appId, int profileIdDest, int positionDest, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
@@ -659,7 +651,7 @@ public class User {
 			throw new GeneralException(ServletManager.Code.ClientError, "Unconnected session is null");
 		this.websockets.putAll(sessionWebsockets);
 	}
-	
+
 	public String toString() {
 		return ("User " + this.first_name); 
 	}
@@ -688,7 +680,7 @@ public class User {
 			throw new GeneralException(ServletManager.Code.ClientError, "This email dosen't exist.");
 		}
 	}
-		
+
 	public void passStep(String tutoStep, DataBaseConnection db) throws GeneralException {
 		if (tutoStep.equals("saw_group")) {
 			for(Group group : this.groups)
@@ -698,42 +690,42 @@ public class User {
 		else
 			this.status.passStep(tutoStep, db);
 	}
-	
+
 	public boolean tutoDone() {
 		return this.status.tutoIsDone();
 	}
-	
+
 	public boolean appsImported() {
 		return this.status.appsImported();
 	}
-	
+
 	public boolean allTipsDone() {
 		return this.status.allTipsDone();
 	}
-	
+
 	public boolean clickOnAppDone() {
 		return this.status.clickOnAppDone();
 	}
-	
+
 	public boolean moveAppDone() {
 		return this.status.moveAppDone();
 	}
-	
+
 	public boolean openCatalogDone() {
 		return this.status.openCatalogDone();
 	}
-	
+
 	public boolean addAnAppDone() {
 		return this.status.addAnAppDone();
 	}
-	
+
 	public boolean sawGroupProfile() {
 		if (this.groups.isEmpty())
 			return true;
 		else
 			return this.sawGroupProfile();
 	}
-	
+
 	public void addEmailIfNeeded(String email, ServletManager sm) throws GeneralException {
 		UserEmail userEmail = this.emails.get(email);
 		if (userEmail != null)
@@ -741,16 +733,16 @@ public class User {
 		userEmail = UserEmail.createUserEmail(email, this, false, sm);
 		this.emails.put(email, userEmail);
 	}
-	
+
 	public void rememberNotIntegratedApp(Object o){
-		
+
 	}
-	
+
 	public void rememberNotIntegratedFacebookApp(Object o){
-		
+
 	}
 
 	public void rememberNotIntegratedLinkedinApp(Object o){
-	
+
 	}
 }

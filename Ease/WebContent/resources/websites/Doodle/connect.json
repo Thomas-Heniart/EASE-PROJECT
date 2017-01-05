@@ -13,6 +13,8 @@
     },
     "Facebook":{
     	"todo":[
+    		{"action":"clickona", "search":"a.login-menu"},
+        	{"action":"waitfor", "search":"#logisterEmail"},
             {"action":"click", "search":".third-party-btn.facebook"}
     	]
     },

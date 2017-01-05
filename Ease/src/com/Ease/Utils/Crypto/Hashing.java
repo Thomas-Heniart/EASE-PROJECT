@@ -29,4 +29,12 @@ public class Hashing {
 		
 		return new Base64().encodeToString(hashed);		
 	}
+	
+	public static String hash(String toHash){
+		return BCrypt.hashpw(toHash, BCrypt.gensalt());
+	}
+	
+	public static boolean compare(String plain, String hash){
+		return BCrypt.checkpw(plain, hash);
+	}
 }

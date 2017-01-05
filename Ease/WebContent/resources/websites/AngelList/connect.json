@@ -10,24 +10,6 @@
             {"action":"click", "search":"#new_user input[type='submit']"}
         ]
     },
-    "Facebook":{
-    	"todo":[
-    		{"action":"goto", "url":"https://angel.co/login"},
-            {"action":"aclick", "search":"a[href*='/auth/facebook']"}
-    	]
-    },
-    "Twitter": {
-    	"todo":[
-    		{"action":"goto", "url":"https://angel.co/login"},
-            {"action":"aclick", "search":"a[href*='/auth/twitter']"}
-    	]
-    },
-    "Linkedin": {
-    	"todo":[
-    		{"action":"goto", "url":"https://angel.co/login"},
-            {"action":"aclick", "search":"a[href*='/linkedin']"}
-    	]
-    },
     "logout":{
         "todo":[
             {"action":"goto", "url":"https://angel.co/logout"}

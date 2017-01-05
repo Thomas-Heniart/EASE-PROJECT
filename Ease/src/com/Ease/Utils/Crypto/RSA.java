@@ -102,8 +102,8 @@ public class RSA {
 		System.out.println();
 	}
 	
-	/*public static void main(String[] args){
-			
+	/*public static void main(String[] args){		
+		
 		FileReader fr;
 		try {
 			fr = new FileReader("C:/Users/FelixPro/Documents/privateKeys.txt");
@@ -121,7 +121,7 @@ public class RSA {
 			e.printStackTrace();
 		}  
 			//GenerateKey();
-			/*String privateK = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAK52yu3Usv6uplfTq3vVSzLAX0Mt9+WfddaCjqoqEugaMZBMu/uczFDeFrzYlbzEGHD0IWB8AHVtEpYDt5wrBmNhzlDM+9o4pzmhrSj2CuQoc4ZQQOSyTcL1TYTUSU9imAZOIaiQeG9At5wsriBagVE017p8/Zq0qbFjMV522S21AgMBAAECgYA2gYCW2zvs2622hLfvoUy0F2vrtiHbyHztPq7JtQlhIEXZ2k9kpbEjlq8t4tCtP+qO54bB+Ru/lAsZeSHVFZAR2n3wQ6qoyPiSEU1gD2kWA9eTI6QvydypYMwfOG+r3/sQnCE3NRXw8mO4tIPBmHroo49EsOd2DHD9yZfOe9YRhQJBANXSATz0JDmG9prU0ZKnSD/O239cMUQzoIxsEGq2cigiotoPZq2n69+eYR9XvLSwiAq/1H+ffVIrX1JgRjNNZkcCQQDQ4UhA1jSoObFK8ZSbGdK8TM78D/TCB4oUSpFTMc/EVJkdM8lNg4GpiGtMZady5ZbiQIFTUwAKkkwulEEECT4jAkB2ZJHK7mQgdlqV4MEqMvYOXrurCaE94lhDaJKug9cx4fvKQjzYauJwL4IXmL0kT5sEWLOQ9v6tQNbHBgfY4EKBAkBHcCUT966+siyOoxzeBvDp8aMA1jwxd/6jffVB7NFQJlbPg/yfBBD+eGeqE0I3q4n1C3avlr124B4p+A5cYQTdAkEAtSbgmAMN9g7bfUVhREkMLx4fTqZj3rkJCLSWSOsOKoxnkge5IpfM3mvabFvIDsbwOkkW4Jiv4reWh+0AsURVuA==";
+			String privateK = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAK52yu3Usv6uplfTq3vVSzLAX0Mt9+WfddaCjqoqEugaMZBMu/uczFDeFrzYlbzEGHD0IWB8AHVtEpYDt5wrBmNhzlDM+9o4pzmhrSj2CuQoc4ZQQOSyTcL1TYTUSU9imAZOIaiQeG9At5wsriBagVE017p8/Zq0qbFjMV522S21AgMBAAECgYA2gYCW2zvs2622hLfvoUy0F2vrtiHbyHztPq7JtQlhIEXZ2k9kpbEjlq8t4tCtP+qO54bB+Ru/lAsZeSHVFZAR2n3wQ6qoyPiSEU1gD2kWA9eTI6QvydypYMwfOG+r3/sQnCE3NRXw8mO4tIPBmHroo49EsOd2DHD9yZfOe9YRhQJBANXSATz0JDmG9prU0ZKnSD/O239cMUQzoIxsEGq2cigiotoPZq2n69+eYR9XvLSwiAq/1H+ffVIrX1JgRjNNZkcCQQDQ4UhA1jSoObFK8ZSbGdK8TM78D/TCB4oUSpFTMc/EVJkdM8lNg4GpiGtMZady5ZbiQIFTUwAKkkwulEEECT4jAkB2ZJHK7mQgdlqV4MEqMvYOXrurCaE94lhDaJKug9cx4fvKQjzYauJwL4IXmL0kT5sEWLOQ9v6tQNbHBgfY4EKBAkBHcCUT966+siyOoxzeBvDp8aMA1jwxd/6jffVB7NFQJlbPg/yfBBD+eGeqE0I3q4n1C3avlr124B4p+A5cYQTdAkEAtSbgmAMN9g7bfUVhREkMLx4fTqZj3rkJCLSWSOsOKoxnkge5IpfM3mvabFvIDsbwOkkW4Jiv4reWh+0AsURVuA==";
 
 				try {
 					System.out.println(Decrypt("YMYD0f9sNG9ylmurVHQ0PM1qF0HbknjV8T9wP/rr0hRpoXi8g1ZQFNFY18nxpnZmZXtYdrQn1Hv0rcXiIyOZz10wpMr2KQH/QH14q18AVjNxHTsjfrvLhQ3AucduCBGd3JuhCb1Uwcvdq+FnGF+Lgjl9qBYXCEh+n6+DsB/FXGw=", privateK));

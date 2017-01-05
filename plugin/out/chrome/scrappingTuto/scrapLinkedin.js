@@ -8,11 +8,11 @@ extension.runtime.onMessage("checkLnkdnCo", function(msg, sendResponse){
 
 extension.runtime.onMessage("logoutFromLnkdn", function(msg, sendResponse){
     window.location.href = $(".account-submenu-split-link").attr("href");
-    sendResponse();
 });
 
 extension.runtime.onMessage("connectToLnkdn", function(msg, sendResponse){
     if($("#session_key-login").length==0){
+        alert("non");
         sendResponse(false);
     } else {
         $("#session_key-login").val(msg.login);
