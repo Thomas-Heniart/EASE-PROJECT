@@ -44,7 +44,7 @@ public class GroupLogwithApp extends GroupWebsiteApp {
 				GroupManager.getGroupManager(context).add(groupLogwithApp);
 				return groupLogwithApp;
 			} else {
-				throw new GeneralException(ServletManager.Code.InternError, "This GroupWebsiteApp dosen't exist.");
+				throw new GeneralException(ServletManager.Code.InternError, "This GroupWebsiteApp doesn't exist.");
 			}
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);

@@ -51,9 +51,9 @@ public class ConnectionWithCookies extends HttpServlet {
 			if(user != null){
 				sm.setResponse(ServletManager.Code.ClientError,"An user is already connected.");
 			} else if (sessionId == null){
-				sm.setResponse(ServletManager.Code.ClientWarning, "Wrong session id.");
+				sm.setResponse(ServletManager.Code.ClientWarning, "Wrong user informations.");
 			} else if (token == null) {
-				sm.setResponse(ServletManager.Code.ClientWarning, "Wrong token.");
+				sm.setResponse(ServletManager.Code.ClientWarning, "Wrong user informations.");
 			} else {
 				SessionSave sessionSave = SessionSave.loadSessionSave(sessionId, token, sm);
 				user = User.loadUserFromCookies(sessionSave, sm);

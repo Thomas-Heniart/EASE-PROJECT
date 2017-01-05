@@ -331,7 +331,7 @@ public class User {
 					int transaction = db.startTransaction();
 					if (profile.getApps().size() > 0) {
 						if (password == null)
-							throw new GeneralException(ServletManager.Code.ClientWarning, "No password.");
+							throw new GeneralException(ServletManager.Code.ClientWarning, "Password confirmation needed.");
 						this.keys.isGoodPassword(password);
 					}
 					profile.removeFromDB(sm);

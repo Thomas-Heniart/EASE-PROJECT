@@ -41,9 +41,9 @@ public class VerifieEmail extends HttpServlet {
 			String email = sm.getServletParam("email", true);
 			String code = sm.getServletParam("code", true);
 			if (email == null || email.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientError, "Wrong email.");
+				throw new GeneralException(ServletManager.Code.ClientError, "Empty email.");
 			if (code == null || code.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientError, "Wrong verification code.");
+				throw new GeneralException(ServletManager.Code.ClientError, "Empty verification code.");
 			user.verifieEmail(email, code, sm);
 			sm.setResponse(ServletManager.Code.Success, "Verification email sended.");
 		} catch (GeneralException e) {

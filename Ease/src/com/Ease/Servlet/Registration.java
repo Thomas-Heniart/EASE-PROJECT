@@ -78,7 +78,7 @@ public class Registration extends HttpServlet {
 			else if (fname == null || fname.length() < 2)
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Your name is too short.");
 			else if (email == null || Regex.isEmail(email) == false)
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Incorrect email.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Incorrect email format.");
 			else if (password == null || Regex.isPassword(password) == false)
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Password is too short (at least 8 characters).");
 			else if (confirmPassword == null || password.equals(confirmPassword) == false)

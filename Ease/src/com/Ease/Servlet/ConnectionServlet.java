@@ -67,11 +67,11 @@ public class ConnectionServlet extends HttpServlet {
 			addIpInDataBase(client_ip, db);
 			if (canConnect(client_ip, db)) {
 				if (email == null || Regex.isEmail(email) == false)
-					sm.setResponse(ServletManager.Code.ClientWarning, "Wrong email.");
+					sm.setResponse(ServletManager.Code.ClientWarning, "Wrong email or password.");
 				else if (password == null || password.isEmpty())
-					sm.setResponse(ServletManager.Code.ClientWarning, "Wrong password.");
+					sm.setResponse(ServletManager.Code.ClientWarning, "Wrong email or password.");
 				else if (ServletManager.debug == false && (socketId == null || socketId.isEmpty()))
-					sm.setResponse(ServletManager.Code.ClientWarning, "No websocket.");
+					sm.setResponse(ServletManager.Code.ClientWarning, "Connection failed. Please try again.");
 				else {
 					user = User.loadUser(email, password, sm);
 					session.setAttribute("user", user);

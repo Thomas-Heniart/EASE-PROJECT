@@ -52,9 +52,9 @@ public class MoveProfile extends HttpServlet {
 			String columnIdx = sm.getServletParam("columnIdxDest", true);
 			String position = sm.getServletParam("positionDest", true);
 			if (profileId == null || profileId.isEmpty())
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong profileId.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Unknown profile.");
 			if (columnIdx == null || columnIdx.isEmpty())
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong columnIdx.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Unknown column.");
 			if (position == null || position.isEmpty())
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong position.");
 			user.moveProfile(Integer.parseInt(profileId), Integer.parseInt(columnIdx), Integer.parseInt(position), sm);

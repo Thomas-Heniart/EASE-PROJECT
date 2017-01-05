@@ -55,13 +55,13 @@ public class ResetPassword extends HttpServlet {
 			if (user != null) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "You are logged on Ease.");
 			} else if (email == null || email.equals("")) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email or password.");
 			} else if (code == null || code.equals("")) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong code.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong informations.");
 			} else if (password == null || !Regex.isPassword(password)) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong password.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email or password.");
 			} else if (confirmPassword == null || !confirmPassword.equals(password)) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Passwords are not same.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Passwords doesn't match.");
 			}
 			String userId = User.findDBid(email, sm);
 			Keys.resetPassword(userId, password, sm);

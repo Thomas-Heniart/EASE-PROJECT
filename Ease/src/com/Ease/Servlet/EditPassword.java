@@ -53,11 +53,11 @@ public class EditPassword extends HttpServlet {
 		try {
 			sm.needToBeConnected();
 			if (oldPassword == null || !Regex.isPassword(oldPassword)) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong oldPassword.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong current password.");
 			} else if (password == null || !Regex.isPassword(password)) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong newPassword.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong new password.");
 			} else if (confirmPassword == null || !confirmPassword.equals(password)) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Passwords are not the same.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Passwords doesn't match.");
 			}
 			user.getKeys().changePassword(password, sm);
 			sm.setResponse(ServletManager.Code.Success, "Password changed.");

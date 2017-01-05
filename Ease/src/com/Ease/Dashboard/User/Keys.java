@@ -176,7 +176,7 @@ public class Keys {
 				db.set("UPDATE userKeys SET password='" + hashed_password + "', saltEase='" + saltEase + "', saltPerso='" + saltPerso + "', keyUser='" + crypted_keyUser + "' WHERE id=" + rs.getString(1) + ";");
 				db.set("DELETE FROM passwordLost WHERE user_id=" + userId + ";");
 			} else {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "You have not ask for reset your password.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "You did not ask for password resetting.");
 			}
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);

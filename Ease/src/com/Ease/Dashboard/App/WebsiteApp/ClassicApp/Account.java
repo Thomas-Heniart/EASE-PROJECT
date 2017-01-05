@@ -39,7 +39,7 @@ public class Account {
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
-		throw new GeneralException(ServletManager.Code.InternError, "This account dosen't exist.");
+		throw new GeneralException(ServletManager.Code.InternError, "This account doesn't exist.");
 	}
 	
 	public static Account createAccount(String password, boolean shared, Map<String, String> informations, User user, ServletManager sm) throws GeneralException {
