@@ -1,0 +1,17 @@
+#!/bin/sh
+echo -n "Enter the current path of the .war to deploy : "
+read -e path
+echo -n "Enter your login : "
+read login   
+echo -n "Enter your password : "
+stty_orig=`stty -g` # save original terminal setting.
+stty -echo          # turn-off echoing.
+read passwd         # read the password
+stty $stty_orig     # restore terminal setting.
+echo
+rm -f ROOT.war
+rm -rf -f ROOT
+systemctl restart tomcat
+echo "$login" > serverLogin
+echo -n "$passwd" >> serverLogin
+cp $path ROOT.war

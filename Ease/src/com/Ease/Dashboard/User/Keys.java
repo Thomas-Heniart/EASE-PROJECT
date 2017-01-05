@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import javax.mail.MessagingException;
 
+import com.Ease.Context.ServerKey;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.Profile.Profile;
@@ -23,7 +24,8 @@ public class Keys {
 		PASSWORD,
 		SALTEASE,
 		SALTPERSO,
-		KEYUSER
+		KEYUSER,
+		BACKUPKEY
 	}
 	
 	public static Keys loadKeys(String id, String password, ServletManager sm) throws GeneralException {
@@ -50,8 +52,9 @@ public class Keys {
 				hashed_password = Hashing.hash(password);
 				saltEase = null;
 				saltPerso = newSalt;
-				db.set("UPDATE userKeys SET password='"+hashed_password+"', saltEase=null, saltPerso='"+newSalt+"', keyUser='"+crypted_keyUser+"' WHERE id="+id+";");
-				System.out.println("ok");
+				ServerKey serverKey = (ServerKey) sm.getContextAttr("serverKey");
+				String backUpKey = AES.encrypt(keyUser, serverKey.getKeyServer());
+				db.set("UPDATE userKeys SET password='"+hashed_password+"', saltEase=null, saltPerso='"+newSalt+"', keyUser='"+crypted_keyUser+"', backUpKey='"+backUpKey+"' WHERE id="+id+";");
 			} else {
 			//-- Ne garder que le else quand tout le monde sera à jour
 				if(!Hashing.compare(password, hashed_password)){
@@ -86,7 +89,9 @@ public class Keys {
 		String keyUser = AES.keyGenerator();
 		String crypted_keyUser = AES.encryptUserKey(keyUser, password, saltPerso);
 		String hashed_password = Hashing.hash(password);
-		String db_id = db.set("INSERT INTO userKeys VALUES(NULL, '" + hashed_password + "', null, '" + saltPerso + "', '" + crypted_keyUser + "');").toString();
+		ServerKey serverKey = (ServerKey) sm.getContextAttr("serverKey");
+		String backUpKey = AES.encrypt(keyUser, serverKey.getKeyServer());
+		String db_id = db.set("INSERT INTO userKeys VALUES(NULL, '" + hashed_password + "', null, '" + saltPerso + "', '" + crypted_keyUser + "', '"+backUpKey+"');").toString();
 		return new Keys(db_id, hashed_password, saltPerso, keyUser);
 	}
 	

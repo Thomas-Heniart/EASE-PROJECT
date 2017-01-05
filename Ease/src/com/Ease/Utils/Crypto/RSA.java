@@ -19,6 +19,7 @@ import java.security.spec.X509EncodedKeySpec;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 
+import com.Ease.Context.OnStart;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -29,6 +30,9 @@ import javax.crypto.NoSuchPaddingException;
 
 public class RSA {
 
+	private static final String KEYS_PATH = "C:/Users/FelixPro/Documents/EASE/Ease project/New/EASE-PROJECT/Ease/src/com/Ease/Utils/Crypto/privateKeys.txt";//Féfé
+	//private static final String KEYS_PATH = "/var/lib/tomcat/webapps/ROOT/WEB-INF/classes/com/Ease/Utils/Crypto/privateKeys.txt";//Préprod
+	
 	public static void GenerateKey() throws NoSuchAlgorithmException{
 		KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
 		kpg.initialize(1024);
@@ -49,7 +53,7 @@ public class RSA {
 		String ligne ;
 		String key = null;
 		try {
-			BufferedReader fichier = new BufferedReader(new FileReader("/home/debruy_p/projects/EASE-PROJECT/privateKeys.txt"));
+			BufferedReader fichier = new BufferedReader(new FileReader(KEYS_PATH));
 			while ((ligne = fichier.readLine()) != null) {
 				String[] keyDatas = ligne.split(":");
 				if(Integer.parseInt(keyDatas[0].trim()) == date){

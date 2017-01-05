@@ -67,7 +67,7 @@ public class SessionSave {
 		} else if ((hashedToken = Hashing.hash(token)) == null) {
 			throw new GeneralException(ServletManager.Code.InternError, "Can't hash token.");
 		} 
-		db.set("INSERT INTO savedSessions VALUES (NULL, '" + sessionId + "', '" + hashedToken + "', null, '" + cryptedKeyUser + "', '" + saltKeyUser + "', '" + userId + "', DEFAULT);");
+		db.set("INSERT INTO savedSessions VALUES (NULL, '" + sessionId + "', '" + hashedToken + "', '" + cryptedKeyUser + "', '" + saltKeyUser + "', '" + userId + "', DEFAULT);");
 		SessionSave sessionSave = new SessionSave(saltKeyUser, token, sessionId, keyUser, userId);
 		return sessionSave;
 	}
