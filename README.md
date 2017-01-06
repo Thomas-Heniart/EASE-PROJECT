@@ -153,7 +153,6 @@ bash deploy
 
 * Une instance de la classe *com.Ease.Server.Context.ServerKey* est créée dans le "OnStart" à partir des crédentials de déploiement. Dans cette classe :
     
-    ---
     ```java
     public static ServerKey loadServerKey(DataBaseConnection db) throws GeneralException, SQLException ;
     ```
@@ -190,3 +189,8 @@ bash deploy
     private String 	user, hashed_password, salt, keyServer;
     ```
     > Attributs d'une instance de *ServerKey*. (La classe contient aussi un constructeur et un getter).
+    
+##Variables
+La classe *com.Ease.Context.Variables* contient des variables spécifiques à la machine sur laquelle le projet tourne.
+Pour l'instant il faut juste décommenter la partie qui nous concerne quand on pull. C'est pas ouf mais c'est déjà mieux qu'avant.
+> Il y a une variables "LOCAL" qui dit si c'est en local. Si c'est le cas, le serveur se lance avec les credentials root/root donc il ne faut pas les supprimer dans sa base en local.
