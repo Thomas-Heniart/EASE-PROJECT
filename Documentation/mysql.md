@@ -1,5 +1,8 @@
 #MySQL
 
+[AddUsers](#AddUsers)
+
+
 ##Logging
 Edit /etc/my.cnf.d/server.cnf
 ````bash
@@ -17,7 +20,7 @@ Check MySQL variables
 MariaDB [(none)]> show variables like '%log%';
 ```
 
-##AddUsers
+##AddUsers <a id="AddUsers"></a>
 **Root user**
 ````mysql
 CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
