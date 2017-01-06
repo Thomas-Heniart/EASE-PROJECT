@@ -1,7 +1,7 @@
 package com.Ease.Context;
 
 public class Variables {
-	
+	 
 	//Prod
 	/*
 	public static final String ENVIRONNEMENT = "Prod";
