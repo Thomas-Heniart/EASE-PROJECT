@@ -1,5 +1,8 @@
 #MySQL
 
+[AddUsers](#AddUsers)
+
+
 ##Logging
 Edit /etc/my.cnf.d/server.cnf
 ````bash
@@ -16,8 +19,8 @@ Check MySQL variables
 ````bash
 MariaDB [(none)]> show variables like '%log%';
 ```
-
-##AddUsers
+<a id="AddUsers"></a>
+##AddUsers 
 **Root user**
 ````mysql
 CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
@@ -50,4 +53,16 @@ SELECT host, user, FROM mysql.user;
 **Show privileges of a user**
 ```mysql
 SHOW GRANTS FOR user@'somewhere';
+```
+
+###Reset root password
+```bash
+systemctl stop mysqld
+mysqld_safe --skip-grant-tables
+mysql --user=root mysql
+```
+```mysql
+UPDATE user SET password=PASSWORD('new-password') WHERE user='root';
+FLUSH PRIVILEGES
+EXIT;
 ```
