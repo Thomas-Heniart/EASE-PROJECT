@@ -1,7 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<c:set var="language" value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}" scope="session" />
+<fmt:setLocale value="${language}" />
+<fmt:setBundle basename="com.Ease.Languages.text" />
+<html lang="${language}">
 <head>
 	<title>Discover Ease !</title>
 	<meta http-equiv="Content-Type" contentType="text/html; charset=UTF-8" />
@@ -74,16 +79,24 @@ pageEncoding="UTF-8"%>
 						<a href="#page-top"></a>
 					</li>
 					<li>
-						<a href="secure.jsp" target="_blank">Sécurité</a>
+						<a href="secure.jsp" target="_blank">
+							<fmt:message key="landing.header.security-link" />
+						</a>
 					</li>
 					<li>
-						<a href="equipe.jsp">Equipe</a>
+						<a href="equipe.jsp">
+							<fmt:message key="landing.header.team-link" />
+						</a>
 					</li>
 					<li>
-						<a href="contact.jsp">Contact</a>
+						<a href="contact.jsp">
+							<fmt:message key="landing.header.contact-link" />
+						</a>
 					</li>
 					<li>
-						<a href="/" target="_blank">Connexion</a>
+						<a href="/" target="_blank">
+							<fmt:message key="landing.header.connexion-link" />
+						</a>
 					</li>
 				</ul>
 			</div>
@@ -92,9 +105,15 @@ pageEncoding="UTF-8"%>
 	<header>
 		<div class="container">
 			<div class="intro-text">
-				<div class="intro-heading">Se connecter à ses sites préférés<br>n'a jamais été aussi simple</div>
-				<div class="intro-lead-in">Une page d'accueil qui rassemble vos comptes web,<br>pour vous y connecter en un clic</div>
-				<a href="#services" class="btn btn-xl signUpButton">Commencez gratuitement !</a>
+				<div class="intro-heading">
+					<fmt:message key="landing.title" />
+				</div>
+				<div class="intro-lead-in">
+					<fmt:message key="landing.sub-title" />					
+				</div>
+				<a href="#services" class="btn btn-xl signUpButton">
+					<fmt:message key="landing.signup-button.text" />
+				</a>
 			</div>
 		</div>
 	</header>
@@ -102,8 +121,12 @@ pageEncoding="UTF-8"%>
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-12 text-center">
-					<h2 class="section-heading">Voici comment on vous connecte</h2>
-					<h3 class="section-subheading text-muted">Petite démo ;)</h3>
+					<h2 class="section-heading">
+						<fmt:message key="landing.section-presentation.title" />
+					</h2>
+					<h3 class="section-subheading text-muted">
+						<fmt:message key="landing.section-presentation.sub-title" />
+					</h3>
 				</div>
 			</div>
 			<div class="mockupPresentation">
@@ -115,11 +138,15 @@ pageEncoding="UTF-8"%>
 			</div>
 		</section>
 		<section id="avantages">
-			<div class="container">
+			<div class=	"container">
 				<div class="row">
 					<div class="col-lg-12 text-center">
-						<h2 class="section-heading">Voici comment on vous simplifie la vie</h2>
-						<h3 class="section-subheading text-muted">Avantages</h3>
+						<h2 class="section-heading">
+							<fmt:message key="landing.section-avantages.title" />
+						</h2>
+						<h3 class="section-subheading text-muted">
+							<fmt:message key="landing.section-avantages.sub-title" />
+						</h3>
 					</div>
 				</div>
 				<div class="row w70 showcase">
@@ -127,35 +154,37 @@ pageEncoding="UTF-8"%>
 						<i class="fa fa-circle-thin fa-stack-2x"></i>
 						<i class="fa fa-magic fa-stack-1x"></i>
 					</span>
-					<p><span>N'utilisez plus jamais de mots de passe:</span> Ease vous connecte en 1 clic automatiquement</p>
+					<p><span><fmt:message key="landing.section-avantages.1st-line.title"/>:</span> <fmt:message key="landing.section-avantages.1st-line.sub-title"/></p>
 				</div>
 				<div class="row w70 showcase">
 					<span class="fa-stack fa-lg">
 						<i class="fa fa-circle-thin fa-stack-2x"></i>
 						<i class="fa fa-rocket fa-stack-1x"></i>
 					</span>
-					<p><span>Gagnez du temps et de la tranquillité:</span> Ease fait économiser en moyenne 55 heures par an</p>
+					<p><span><fmt:message key="landing.section-avantages.2nd-line.title"/>:</span> <fmt:message key="landing.section-avantages.2nd-line.sub-title"/></p>
 				</div>
 				<div class="row w70 showcase">
 					<span class="fa-stack fa-lg">
 						<i class="fa fa-circle-thin fa-stack-2x"></i>
 						<i class="fa fa-globe fa-stack-1x"></i>
 					</span>
-					<p><span>Accédez à vos sites depuis n’importe où:</span> Votre espace Ease est accessible de la même manière quel que soit l'ordinateur</p>
+					<p><span><fmt:message key="landing.section-avantages.3rd-line.title"/>:</span> <fmt:message key="landing.section-avantages.3rd-line.sub-title"/></p>
 				</div>
 				<div class="row w70 showcase">
 					<span class="fa-stack fa-lg">
 						<i class="fa fa-circle-thin fa-stack-2x"></i>
 						<i class="fa fa-refresh fa-stack-1x"></i>
 					</span>
-					<p><span>Retrouvez votre web facilement:</span> Ease centralise vos comptes, même avec une connexion Facebook, LinkedIn, etc...</p>
+					<p><span><fmt:message key="landing.section-avantages.4th-line.title"/>:</span> <fmt:message key="landing.section-avantages.4th-line.sub-title"/></p>
 				</div>
 			</div>
 		</section>
 		<section class="vp" style="background-color:#eee;">
 			<div clas="container">
 				<div class="row">
-					<a href="#services" class="btn btn-xl signUpButton">Essayez maintenant, c'est gratuit !</a>
+					<a href="#services" class="btn btn-xl signUpButton">
+						<fmt:message key="landing.signup-button.2nd-text"/>
+					</a>
 				</div>
 			</div>
 		</section>
@@ -163,39 +192,43 @@ pageEncoding="UTF-8"%>
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-12 text-center">
-						<h2 class="section-heading">Fonctionnalités</h2>
-						<h3 class="section-subheading text-muted">Rien que pour vous !</h3>
+						<h2 class="section-heading">
+							<fmt:message key="landing.section-features.title"/>
+						</h2>
+						<h3 class="section-subheading text-muted">
+							<fmt:message key="landing.section-features.sub-title"/>
+						</h3>
 					</div>
 				</div>
 				<div class="row">
 					<div class="fList left">
 						<div class="feature">
 							<span>
-								Connexion à vos sites en 1 clic
+								<fmt:message key="landing.section-features.sentence-1"/>
 							</span>
 							<i class="fa fa-check" aria-hidden="true"></i>
 						</div>
 						<div class="feature">
 							<span>
-								Gestion de plusieurs comptes sur un même site
+								<fmt:message key="landing.section-features.sentence-2"/>
 							</span>
 							<i class="fa fa-check" aria-hidden="true"></i>
 						</div>
 						<div class="feature">
 							<span>
-								Mise à jour automatique de vos mots de passe
+								<fmt:message key="landing.section-features.sentence-3"/>
 							</span>
 							<i class="fa fa-check" aria-hidden="true"></i>
 						</div>
 						<div class="feature">
 							<span>
-								Organisation selon vos besoin
+								<fmt:message key="landing.section-features.sentence-4"/>
 							</span>
 							<i class="fa fa-check" aria-hidden="true"></i>
 						</div>
 						<div class="feature">
 							<span>
-								Compatibilité navigateurs Chrome et Safari
+								<fmt:message key="landing.section-features.sentence-5"/>
 							</span>
 							<i class="fa fa-check" aria-hidden="true"></i>
 						</div>
@@ -203,25 +236,25 @@ pageEncoding="UTF-8"%>
 					<div class="fList right">
 						<div class="feature">
 							<span>
-								Déconnexion de tous vos comptes en 1 clic, depuis Ease
+								<fmt:message key="landing.section-features.sentence-6"/>
 							</span>
 							<i class="fa fa-check" aria-hidden="true"></i>
 						</div>
 						<div class="feature">
 							<span>
-								Données sécurisées avec AES 256 et Bcrypt
+								<fmt:message key="landing.section-features.sentence-7"/>
 							</span>
 							<i class="fa fa-check" aria-hidden="true"></i>
 						</div>
 						<div class="feature">
 							<span>
-								Partage d’identifiants avec votre équipe
+								<fmt:message key="landing.section-features.sentence-8"/>
 							</span>
 							<i class="fa fa-check" aria-hidden="true"></i>
 						</div>
 						<div class="feature">
 							<span>
-								Gestion des comptes avec une connexion Facebook, LinkedIn, etc...
+								<fmt:message key="landing.section-features.sentence-9"/>
 							</span>
 							<i class="fa fa-check" aria-hidden="true"></i>
 						</div>
@@ -234,7 +267,9 @@ pageEncoding="UTF-8"%>
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-12 text-center">
-						<h2 class="section-heading">Ils nous font confiance</h2>
+						<h2 class="section-heading">
+							<fmt:message key="landing.section-marks.title"/>
+						</h2>
 					</div>
 				</div>
 				<div class="row">
@@ -292,8 +327,12 @@ pageEncoding="UTF-8"%>
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-12 text-center">
-						<h2 class="section-heading">Ce que disent nos utilisateurs</h2>
-						<h3 class="section-subheading text-muted">Notre priorité, c’est vous !</h3>
+						<h2 class="section-heading">
+							<fmt:message key="landing.section-feedbacks.title"/>
+						</h2>
+						<h3 class="section-subheading text-muted">
+							<fmt:message key="landing.section-feedbacks.sub-title"/>
+						</h3>
 					</div>
 				</div>
 				<div class="row">
@@ -302,7 +341,8 @@ pageEncoding="UTF-8"%>
 							<img src="resources/landing/JPA.png"/>
 						</div>
 						<div class="message">
-							<p class="mess">"A l’IESEG, nos étudiants et staffs sont quotidiennement connectés sur différents outils web: intranet, calendrier, e-learnings, etc. Ease a permis une centralisation des comptes pour un accès plus facile." 
+							<p class="mess">
+								<fmt:message key="landing.section-feedbacks.text-1"/> 
 							</p>
 							<a href="">Jean Philippe Ammeux</a>
 							<p class="position">Directeur de IESEG School of Management</p>
@@ -313,7 +353,8 @@ pageEncoding="UTF-8"%>
 							<img src="resources/landing/alice-zagury.png"/>
 						</div>
 						<div class="message">
-							<p class="mess">"J’ai plusieurs comptes instagram, twitter et Facebook, et régulièrement j’ai besoin de switcher entre eux. Ease s’occupe de gérer les différents comptes et de me connecter sur le bon instantanément." 
+							<p class="mess">
+								<fmt:message key="landing.section-feedbacks.text-2"/> 
 							</p>
 							<a href="https://fr.linkedin.com/in/alicezagu" target="_blank">Alice Zagury</a>
 							<p class="position">CEO de TheFamily</p>
@@ -324,7 +365,8 @@ pageEncoding="UTF-8"%>
 							<img src="resources/landing/clem.png"/>
 						</div>
 						<div class="message">
-							<p class="mess">"J’utilise Ease pour accéder à l’ensemble de mon web depuis n’importe où ! Très pratique en stage ou en voyage lorsque je ne suis pas sur mon ordinateur personnel."
+							<p class="mess">
+							<fmt:message key="landing.section-feedbacks.text-3"/> 
 							</p>
 							<a  target="_blank" href="https://fr.linkedin.com/in/clémentine-prud-homme-691945103">Clémentine Prud’homme</a>
 							<p class="position">Etudiante à l’EDHEC</p>
@@ -335,7 +377,8 @@ pageEncoding="UTF-8"%>
 							<img src="resources/landing/JBroux.png"/>
 						</div>
 						<div class="message">
-							<p class="mess">"Ease me permet d’être sur le web depuis un  ordinateur aussi facilement que sur un smartphone: j’ai mes apps dans un dashboard, je clique dessus, je suis connecté !" 
+							<p class="mess">
+							<fmt:message key="landing.section-feedbacks.text-4"/>  
 							</p>
 							<a target="_blank" href="https://uk.linkedin.com/in/rouxjeanbaptiste">Jean-Batiste Roux</a>
 							<p class="position">Account Manager à Barnebys</p>
@@ -347,7 +390,9 @@ pageEncoding="UTF-8"%>
 		<section class="vp" style="background-color:white;">
 			<div clas="container">
 				<div class="row">
-					<a href="#services" class="btn btn-xl signUpButton">Commencez gratuitement !</a>
+					<a href="#services" class="btn btn-xl signUpButton">
+						<fmt:message key="landing.signup-button.3rd-text"/>
+					</a>
 				</div>
 			</div>
 		</section>
@@ -360,7 +405,7 @@ pageEncoding="UTF-8"%>
 			<div class="easePopup show" id="signUpPopup">
 				<div class="title">
 					<p>
-						Welcome!
+						<fmt:message key="landing.signup-popup.title"/>
 					</p>
 				</div>
 				<div class="bodysHandler">
@@ -373,11 +418,11 @@ pageEncoding="UTF-8"%>
 							</div>-->
 							<div class="row">
 								<p class="row-heading">
-									Create your Ease password :
+									<fmt:message key="landing.signup-popup.page-2.password-title"/>
 								</p>
 								<div class="infoText">
 									<p>
-										<span>Info:</span> Make your password memorable. As we don’t know your Ease password, if you forget it, you will have to reset your account and enter again the passwords of the apps you added.
+										<span>Info:</span> <fmt:message key="landing.signup-popup.page-2.password-info"/>
 									</p>
 								</div>
 							</div>
@@ -386,7 +431,7 @@ pageEncoding="UTF-8"%>
 								<input type="hidden" name="email" value=<%= request.getParameter("email")%> />
 								<input type="hidden" name="invitationCode" value=<%= request.getParameter("invitationCode") %> />
 								<span class="input">
-									<input type="password" name="password" placeholder="Your password..." />
+									<input type="password" name="password" placeholder=<fmt:message key="landing.signup-popup.page-2.password-placeholder"/> />
 									<div class="showPassDiv">
 										<i class="fa fa-eye centeredItem" aria-hidden="true"></i>
 									</div>
@@ -403,7 +448,7 @@ pageEncoding="UTF-8"%>
 							</div>
 							<div class="row">
 								<span class="input">
-									<input type="password" name="confirmPassword" placeholder="Confirm password..." />
+									<input type="password" name="confirmPassword" placeholder=<fmt:message key="landing.signup-popup.page-2.password-confirm-placeholder"/> />
 									<div class="showPassDiv">
 										<i class="fa fa-eye centeredItem" aria-hidden="true"></i>
 									</div>
@@ -415,7 +460,9 @@ pageEncoding="UTF-8"%>
 							</div>
 							<div class="row text-center">
 								<img class="loading" src="resources/other/facebook-loading.svg"/>
-								<button class="btn submitButton" type="submit">I'm ready !</button>
+								<button class="btn submitButton" type="submit">
+									<fmt:message key="landing.signup-popup.page-2.button"/>
+								</button>
 								<p class="alert-message"></p>
 							</div>
 						</form>
@@ -424,23 +471,25 @@ pageEncoding="UTF-8"%>
 						<form class="handler" action="checkInvitation">
 							<div class="row">
 								<p class="row-heading">
-									How would you like us to call you ?
+									<fmt:message key="landing.signup-popup.page-2.name-title"/>
 								</p>
 								<input type="text" name="name" placeholder="Name..." />
 							</div>
 							<div class="row">
 								<p class="row-heading">
-									What's your email ?
+									<fmt:message key="landing.signup-popup.email-title"/>
 								</p>
 								<input type="email" name="email" placeholder="@something..." />
 							</div>
 							<div class="row terms">
-								<p>I accept the <a href="#">terms and conditions</a></p>
+								<p><fmt:message key="landing.signup-popup.page-1.terms-accept"/> <a href="privacy.jsp" target="_blank"><fmt:message key="landing.signup-popup.page-1.terms"/></a></p>
 								<input type="checkbox" value="">
 							</div>
 							<div class="row text-center">
 								<img class="loading" src="resources/other/facebook-loading.svg"/>
-								<button class="btn submitButton" type="submit">Let's start !</button>
+								<button class="btn submitButton" type="submit">
+									<fmt:message key="landing.signup-popup.page-1.button"/>
+								</button>
 								<p class="alert-message"></p>
 							</div>
 						</form>
