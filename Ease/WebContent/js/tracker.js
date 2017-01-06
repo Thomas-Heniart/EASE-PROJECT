@@ -9,6 +9,14 @@ var tracker = function(){
 	this.resetUserId = function () {
 		amplitude.getInstance().setUserId(null);
 	}
+	this.setHomepage = function (checked) {
+		 var identify = new amplitude.Identify().set('homepage', checked);
+		 amplitude.getInstance().identify(identify);
+	}
+	this.setDailyPhoto = function (checked) {
+		var identify = new amplitude.Identify().set('dailyPhoto', checked);
+		 amplitude.getInstance().identify(identify);
+	}
 }
 
 var easeTracker= new tracker();
