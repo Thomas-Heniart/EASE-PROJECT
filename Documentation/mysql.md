@@ -51,3 +51,15 @@ SELECT host, user, FROM mysql.user;
 ```mysql
 SHOW GRANTS FOR user@'somewhere';
 ```
+
+###Reset root password
+```bash
+systemctl stop mysqld
+mysqld_safe --skip-grant-tables
+mysql --user=root mysql
+```
+```mysql
+UPDATE user SET password=PASSWORD('new-password') WHERE user='root';
+FLUSH PRIVILEGES
+EXIT;
+```
