@@ -53,11 +53,15 @@ $(document).ready(function() {
 		} else if($("body").hasClass("logoBckgrnd")){
 			$("body").switchClass("logoBckgrnd", "picBckgrnd");
 		}
+		var self = $(this);
 		postHandler.post(
 				'changeUserBackground',
 				{},
 				function(){},
-				function(retMsg){},
+				function(retMsg){
+					easeTracker.trackEvent("DailyPhotoSwitch");
+					easeTracker.setDailyPhoto(self.is("checked"));
+				},
 				function(retMsg){
 					showAlertPopup(retMsg, true);
 				},

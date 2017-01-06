@@ -180,6 +180,8 @@ function safariExtensionUpdate(){
 
 $(document).ready(function() {
 	 $('#homePageSwitch').change(function() {
-		 console.log($(this).is(":checked"));
+		easeTracker.setHomepage($(this).is("checked"));
+		easeTracker.trackEvent("HomepageSwitch");
 	 });
+	 
 });

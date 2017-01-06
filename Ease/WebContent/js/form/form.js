@@ -233,6 +233,7 @@ var Form = {
 			self.app_id = null;
 			/* TODO : add json to give type, app name, website name etc... */
 			easeTracker.trackEvent(self.postName);
+			easeTracker.increaseAppCounter();
 			self.setPostName('AddClassicApp');
 			self.helper = null;
 			cleanEmails();
@@ -447,6 +448,8 @@ var Form = {
 			var webId = (self.oParent.app).attr("webid");
 			var x = parseInt($(".catalogApp[idx='" + webId + "'] span.apps-integrated i.count").html());
 			$(".catalogApp[idx='" + webId + "'] span.apps-integrated i.count").html(x-1);
+			easeTracker.trackEvent("DeleteApp");
+			easeTracker.decreaseAppCounter();
 			if (x == 1)
 				$(".catalogApp[idx='" + webId + "'] span.apps-integrated").removeClass("showCounter");
 			$(self.oParent.app).find('.linkImage').addClass('deletingApp');
