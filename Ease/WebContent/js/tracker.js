@@ -17,6 +17,15 @@ var tracker = function(){
 		var identify = new amplitude.Identify().set('dailyPhoto', checked);
 		 amplitude.getInstance().identify(identify);
 	}
+	this.increaseAppCounter = function () {
+		var identify = new amplitude.Identify().add('appCounter', 1);
+		amplitude.getInstance().identify(identify);
+	}
+	
+	this.decreaseAppCounter = function () {
+		var identify = new amplitude.Identify().add('appCounter', -1);
+		amplitude.getInstance().identify(identify);
+	}
 }
 
 var easeTracker= new tracker();
