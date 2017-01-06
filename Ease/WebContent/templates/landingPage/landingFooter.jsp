@@ -4,21 +4,39 @@
 		<div class="row">
 			<div class="left-part left">
 				<div class="menu-column">
-					<h3>Produit</h3>
+					<h3>
+						<fmt:message key="landing.footer.section-product.title"/>
+					</h3>
 					<div class="links">
-						<a href="secure.jsp" target="_blank">Sécurité</a>
-						<a href="#">Créer un compte</a>
-						<a href="https://ease.space">Se connecter</a>
-						<a class="typeform-share" href="https://victor304.typeform.com/to/VtXcOm" data-mode="1" target="_blank">Donner votre avis</a>
+						<a href="secure.jsp" target="_blank">
+							<fmt:message key="landing.header.security-link"/>
+						</a>
+						<a href="#">
+							<fmt:message key="landing.footer.link.create-account"/>
+						</a>
+						<a href="https://ease.space">
+							<fmt:message key="landing.header.connexion-link"/>
+						</a>
+						<a class="typeform-share" href="https://victor304.typeform.com/to/VtXcOm" data-mode="1" target="_blank">
+							<fmt:message key="landing.footer.link.thinks"/>
+						</a>
 						<script>(function(){var qs,js,q,s,d=document,gi=d.getElementById,ce=d.createElement,gt=d.getElementsByTagName,id='typef_orm',b='https://s3-eu-west-1.amazonaws.com/share.typeform.com/';if(!gi.call(d,id)){js=ce.call(d,'script');js.id=id;js.src=b+'share.js';q=gt.call(d,'script')[0];q.parentNode.insertBefore(js,q)}id=id+'_';if(!gi.call(d,id)){qs=ce.call(d,'link');qs.rel='stylesheet';qs.id=id;qs.href=b+'share-button.css';s=gt.call(d,'head')[0];s.appendChild(qs,s)}})()</script>
 					</div>
 				</div>
 				<div class="menu-column">
-					<h3>Entreprise</h3>
+					<h3>
+						<fmt:message key="landing.footer.section-product.company"/>
+					</h3>
 					<div class="links">
-						<a href="equipe.jsp">Equipe</a>
-						<a href="privacy.jsp" target="_blank">CGU</a>
-						<a href="contact.jsp">Nous contacter</a>
+						<a href="equipe.jsp">
+							<fmt:message key="landing.header.team-link"/>
+						</a>
+						<a href="privacy.jsp" target="_blank">
+							<fmt:message key="landing.footer.link.terms"/>
+						</a>
+						<a href="contact.jsp">
+							<fmt:message key="landing.header.contact-link"/>
+						</a>
 					</div>
 				</div>
 			</div>

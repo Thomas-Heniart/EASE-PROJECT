@@ -2,14 +2,6 @@
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
-<%@ page import="com.Ease.session.User"%>
-<%@ page import="com.Ease.session.Profile"%>
-<%@ page import="com.Ease.context.Site"%>
-<%@ page import="com.Ease.context.SiteManager"%>
-<%@ page import="com.Ease.context.Color"%>
-<%@ page import="com.Ease.session.App"%>
-<%@ page import="com.Ease.session.ClassicAccount"%>
-<%@ page import="com.Ease.session.LogWithAccount"%>
 <%@ page import="java.util.List"%>
 <script src="js/postHandler.js"></script>
 
@@ -37,6 +29,12 @@
 		<button id="enterAddSiteMode" state="off" class="button adminButton"
 			target="AddSiteTab">
 			<img src="resources/icons/add_website_icon.png" />
+		</button>
+	</div>
+	<div>
+		<button id="enterServerKeysManagerMode" state="off" class="button adminButton"
+			target="ServerKeysManagerTab">
+			<img src="resources/icons/earth-lock.png" />
 		</button>
 	</div>
 	<div>

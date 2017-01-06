@@ -19,6 +19,8 @@ import java.security.spec.X509EncodedKeySpec;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 
+import com.Ease.Context.OnStart;
+import com.Ease.Context.Variables;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -49,7 +51,7 @@ public class RSA {
 		String ligne ;
 		String key = null;
 		try {
-			BufferedReader fichier = new BufferedReader(new FileReader("/home/debruy_p/projects/EASE-PROJECT/privateKeys.txt"));
+			BufferedReader fichier = new BufferedReader(new FileReader(Variables.KEYS_PATH));
 			while ((ligne = fichier.readLine()) != null) {
 				String[] keyDatas = ligne.split(":");
 				if(Integer.parseInt(keyDatas[0].trim()) == date){
