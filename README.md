@@ -141,6 +141,7 @@ On ne passe pas à AES 256 => On augmente de 40% le coût en ressources pour le 
 ```bash
 bash deploy
 ```
+    
     * Ce script doit être dans le dossier webapps
     * Le script demande le path du .war importé sur le serveur et le login/pwd de déploiement
 
@@ -153,39 +154,40 @@ bash deploy
 > Cette keyServer permet notamment de chiffrer toutes les keyUser. Les keyUser chiffrées par la keyServer sont stockées dans la table "userKeys" dans la colonne "backUpKey".
 
 * Une instance de la classe *com.Ease.Server.Context.ServerKey* est créée dans le "OnStart" à partir des crédentials de déploiement. Dans cette classe :
-
+    
+    *
     ```java
     public static ServerKey loadServerKey(DataBaseConnection db) throws GeneralException, SQLException ;
     ```
     > Initialise une ServerKey au déploiement. La méthode lit les crédentials de déploiement dans le fichier "serverLogin", puis en les compare avec les credentials stockés et hashés dans la table *serverKeys*. Si les crédentials sont corrects, la serverKey est déchiffrée. 
     Si la table *serverKeys* est vide, la méthode crée les crédentials *root/root*.
 
-    
+    *
     ```java
     public static ServerKey createServerKey(String login, String password, String keyServer, DataBaseConnection db) throws GeneralException ;
     ```
     > Créer une ServerKey dans la base de donnée en chiffrant la keyServer.
 
-    
+    *
     ```java
     public static void eraseServerKey(String login, String password, DataBaseConnection db) throws GeneralException ;
     ```
     > Efface des credentials de déploiement dans la base de donnée, uniquement si le password est correct. Throw une exception si c'est le dernier credential stocké dans la table.
     /!\ Attention, si tous les crédentials sont supprimés, la serverKey est perdue et il faut réinitialiser toutes les backUpKeys.
 
-    
+    *
     ```java
     private static String[] getLoginFileContent() throws GeneralException ;
     ```
     > Renvoie le contenu du fichier **serverLogin** sous la forme {login, password}.
 
-
+    *
     ```java
     private static void cleanLoginFileContent() throws GeneralException ;
     ```
     > Vide le contenu du fichier **serverLogin**
 
-
+    *
     ```java
     private String 	user, hashed_password, salt, keyServer;
     ```
