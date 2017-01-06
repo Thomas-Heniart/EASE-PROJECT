@@ -23,10 +23,10 @@ public class ServerKey {
 		KEYSERVER
 	}
 	
-	protected String 	user;
-	protected String	hashed_password;
-	protected String	salt;
-	protected String	keyServer;
+	private String 	user;
+	private String	hashed_password;
+	private String	salt;
+	private String	keyServer;
 	
 	public static ServerKey loadServerKey(DataBaseConnection db) throws GeneralException, SQLException {
 		ResultSet rs = db.get("SELECT login FROM serverKeys;");
