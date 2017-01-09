@@ -289,7 +289,7 @@ var Profile = function(rootEl){
 		$(this).addClass('choosen');
 		postHandler.post('EditProfileColor', {
 			color : color,
-			prifleId : self.id
+			profileId : self.id
 		}, function() {
 			easeLoadingIndicator.hide();
 		}, function(retMsg) {
