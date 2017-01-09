@@ -56,21 +56,24 @@ pageEncoding="UTF-8"%>
 					<h2 class="section-heading">
 						<fmt:message key="contactus.title" />
 					</h2>
+					<h3 class="section-subheading text-muted">
+						<fmt:message key="contactus.sub-title"/>
+					</h3>
 				</div>
 			</div>
 			<div class="row">
-			<div id="contactUsForm">
-				<form method="POST" action="ContactUs" class="contactForm">
-					<div class="formRaw">
-						<input type="email" name="email" placeholder="Email" />
-					</div>
-					<div class="formRaw">
-						<textarea name="message" placeholder="Your message..."></textarea>
-					</div>
-					<div class="formRaw">
-						<button class="btn submitButton" type="submit">Send !</button>
-					</div>
-				</form>
+				<div id="contactUsForm">
+					<form method="POST" action="contactUs" class="contactForm">
+						<div class="formRaw">
+							<input type="email" name="email" placeholder="Email" />
+						</div>
+						<div class="formRaw">
+							<textarea name="message" placeholder=<fmt:message key="contactus.textarea.placeholder"/> ></textarea>
+						</div>
+						<div class="formRaw">
+							<button class="btn submitButton" type="submit">Send !</button>
+						</div>
+					</form>
 				</div>
 			</div>
 		</section>
