@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,8 +26,8 @@ src="https://www.facebook.com/tr?id=1771793116375287&ev=PageView&noscript=1"
                       <meta name="twitter:card" content="summary_large_image">
             <meta name="twitter:site" content="@Ease_app">
             <meta name="twitter:title" content="Ease: We secure your web-life">
-            <meta name="twitter:description" content="Ease: We secure your web-life">
-            <meta name="twitter:image" content="https://d2zc23renulrga.cloudfront.net/assets/1320/8g6hpeszfluqm9l0fsb3/logo%20ease%20SMALL.jpg">
+            <meta name="twitter:description" content="">
+            <meta name="twitter:image" content="https://d2zc23renulrga.cloudfront.net/assets/1320/8g6hpeszfluqm9l0fsb3/logo%2520ease%2520SMALL.jpg">
 
           <meta content="website" property="og:type">
           <link rel='icon' type='image/png' href='https://d2zc23renulrga.cloudfront.net/assets/1327/5a6y14v473spqc665qgi/AAEAAQAAAAAAAAg1AAAAJGJhYTU5ODlkLTdhYmMtNGI0YS04YjI4LTc3MmM3NGU2YTFiMw.png'>   
@@ -92,6 +91,8 @@ src="https://www.facebook.com/tr?id=1771793116375287&ev=PageView&noscript=1"
 <!-- Bootstrap core CSS -->
 <link href="//d1y0v6ricksqp.cloudfront.net/css/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.1/animate.min.css" type="text/css" rel="stylesheet">
+
 <script type="text/javascript" src="//d1y0v6ricksqp.cloudfront.net/css/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 <script src="https://kickoffpages-kickofflabs.netdna-ssl.com/pages/1.9.0/kol_default_response.js"></script>
 <script src="https://kickoffpages-kickofflabs.netdna-ssl.com/pages/1.9.0/kol_external_2.js"></script>
@@ -148,7 +149,6 @@ body {
 .form-group {
   display: none;
 }
-
 .alignleft { float: left; }
 .alignright { float: right; }
 .aligncenter {
@@ -209,6 +209,7 @@ a:focus {
 }
 
 /* FORM CONFIGURATION */
+
 input.form-control,
 textarea.form-control,
 select.form-control {
@@ -251,7 +252,6 @@ label.checkbox {
 
 label.checkbox {
   display: inline-block;
-
 }
 
 /* BOOTSTRAP MODIFICATIONS */
@@ -381,7 +381,6 @@ label.checkbox {
 }
 
 
-
 /* YELLOW SECTION - TESTIMONIALS */
 #y {
 	padding-bottom: 100px;
@@ -444,7 +443,7 @@ label.checkbox {
         <div class="row">
           <div class="col-xs-12">
             <div data-mercury="froala" data-content-name="header_content">
-              <p style="margin: auto; text-align: center"><a href="/discover"><img class="fr-dii" src="https://d7zgbk06ve7c.cloudfront.net/assets/1320/ub3ubsndbon80s8txl5u/logo.png" style="width: 193px;"></a><br></p>
+              <p style="margin: auto; text-align: center"><a href="http://www.ease-app.co/en"><img class="fr-dii" src="https://d7zgbk06ve7c.cloudfront.net/assets/1320/ub3ubsndbon80s8txl5u/logo.png" style="width: 275px;"></a><br></p>
             </div>
           </div>
         </div>
@@ -459,7 +458,7 @@ label.checkbox {
 			<div class="row">
 				<div class="col-md-7">
 					<div data-mercury="froala" data-content-name="hero_content" class="animated fadeInLeft">
-					  <h4><span style="color: rgb(97, 189, 109);">Sécurité et confidentialité chez EASE.</span></h4><h4><span style="font-size: 14px;"><span style="color: rgb(102, 102, 102);">Ease vous permet de vous connecter sur les sites sur lesquels vous avez un compte, sans identifiants ni mots de passe, et cela depuis n’importe quel appareil.&nbsp;</span></span></h4><h4><span style="font-size: 14px;"><span style="color: rgb(102, 102, 102);"><strong>Pour ce faire, nous envoyons de manière sécurisée les données de connections nécessaires, directement aux sites internet.</strong></span></span></h4><p><br></p><h4 dir="ltr"><span style="font-size: 14px;"><span style="color: rgb(102, 102, 102);">Chaque personne utilisant notre service, attend de ses données qu'elles soient sécurisées et confidentielles.&nbsp;</span><span style="color: rgb(102, 102, 102);">Nous comprenons l’importance de la mission que vous nous confiez.&nbsp;</span></span></h4><h4 dir="ltr"><span style="font-size: 14px;"><span style="color: rgb(102, 102, 102);"><strong>C’est pour cela que nous voulons être transparent à propos de nos règles de sécurité et de confidentialité.</strong></span></span></h4>
+					  <h4><span style="color: rgb(97, 189, 109);"><strong>Security and confidentiality @EASE</strong></span></h4><h4><span style="color: rgb(102, 102, 102);"><span style="font-size: 14px;">Ease allows you to connect to websites where you have an account, without IDs and passwords, from any computer<strong>.</strong>&nbsp;</span><span style="font-size: 14px;">To do so, we send the necessary encrypted connection information directly to websites.</span><span style="font-weight: bold; font-size: 14px;"><br></span></span></h4><h4 dir="ltr"><span style="color: rgb(102, 102, 102);"><span><span><span style="font-size: 14px;">Each person using Ease expects his or her data to be secured and confidential. We understand the importance of the trust you are giving us.&nbsp;</span></span></span><span><span style="font-size: 14px;">This is why Ease wishes to be transparent on the subjects of security and confidentiality.</span></span></span></h4>
 					</div>
 				</div>
         
@@ -484,10 +483,10 @@ label.checkbox {
         <div class="col-md-6">
         
         
-                    <form data-page-id="93302" accept-charset="UTF-8" class="signup_form" data-remote="true" id="signup_form" method="post">
+                    <form data-page-id="129159" accept-charset="UTF-8" class="signup_form" data-remote="true" id="signup_form" method="post">
           
-         <div data-mercury="froala" data-content-name="cta_content">
-  					  <h4 style="text-align: left;"><span style="color: rgb(97, 189, 109);">Confidentialité @EASE</span></h4><h4 dir="ltr" style="text-align: left;"><span style="font-size: 14px;">Toutes les données personnelles de nos utilisateurs sont confidentielles.&nbsp;</span></h4><h4 dir="ltr" style="text-align: left;"><span style="font-size: 14px;"><strong>Aucune donnée personnelle ne peut être utilisée à des fins commerciales</strong></span></h4><h4 dir="ltr" style="text-align: left;"><span style="font-size: 14px;">Notre site internet est programmé d'une manière rendant impossible un accès direct aux données personnelles des utilisateurs par nos employés.</span></h4><h4 dir="ltr" style="text-align: left;"><span style="font-size: 14px;">Tout problème de cette nature est traité avec la plus grande attention et importance.&nbsp;</span></h4><h4 dir="ltr" style="text-align: left;"><span style="font-size: 14px;"><strong>C'est pour cela que chaque employé signe une charte de confidentialité à son arrivée chez Ease.&nbsp;</strong></span></h4>
+            <div data-mercury="froala" data-content-name="cta_content">
+  					  <h4 style="text-align: left;"><span style="color: rgb(97, 189, 109);"><strong>Confidentiality @EASE</strong></span></h4><h4 dir="ltr" style="text-align: left;"><span style="font-size: 14px;">All personal data are confidential, <strong>and any personal data will never be used for business purposes.</strong></span></h4><h4 dir="ltr" style="text-align: left;"><span style="font-size: 14px;">The computer programs that enable the Ease services are set up in a way that a direct access to <strong>personal</strong> information by our employees is impossible.&nbsp;</span></h4><h4 dir="ltr" style="text-align: left;"><span style="font-size: 14px;">Any issue of this nature is handled properly. This is why each employee signs a confidentiality agreement when entering Ease.</span></h4>
   					</div>
             
               <div class="form-group">
@@ -503,8 +502,8 @@ label.checkbox {
           </div>
           
             <div style="margin:0;padding:0;display:inline">
-              <input type="hidden" id="__page_id" name="__page_id" value="93302">
-              <input type="hidden" id="__version" name="__version" value="1323799">
+              <input type="hidden" id="__page_id" name="__page_id" value="129159">
+              <input type="hidden" id="__version" name="__version" value="1261420">
               <input type="hidden" id="__xuid" name="__xuid" value="63939">
               <input type="hidden" id="__kol_api_url" name="__kol_api_url" value="https://api.kickofflabs.com/v1/69174/subscribe">
             </div>
@@ -521,7 +520,7 @@ label.checkbox {
           </script>
 
         
-				</div>  
+				</div>
 			</div><!--/row -->
 		</div><!--/container -->
 	</div><!--/G -->
@@ -533,19 +532,19 @@ label.checkbox {
 		<div class="row">
       <div class="col-md-12">
   			<div data-mercury="froala" data-content-name="included_title" class="mb">
-  			  <h4 style="text-align: center;"><span style="font-size: 24px;"><span style="color: rgb(97, 189, 109);">Sécurité @EASE</span></span></h4>
+  			  <h2 class="centered">&nbsp;&nbsp;</h2>
   			</div>
       </div>
     </div>
     <div class="row">
 			<div class="col-md-6">
 				<div data-mercury="froala" data-content-name="included_content">
-				  <h4><strong><span style="font-size: 14px;"><span style="font-family: Lucida Sans;">Un travail de sécurité est réalisé sur l’intégralité de l’infrastructure supportant les services Ease. Un programme crypte les mots de passe et &nbsp;les autres informations personnelles d’un utilisateur lors de sa première inscription.&nbsp;</span></span></strong></h4><h4><strong><span style="font-size: 14px;"><strong><span style="font-family: Lucida Sans;"><strong>Ces données cryptées (illisibles) sont stockées sur des bases de données en Europe.&nbsp;</strong></span></strong></span></strong></h4><h4><strong><span style="font-size: 14px;"><span style="font-family: Lucida Sans;">Ce n’est que lorsqu’un utilisateur a besoin de se connecter à un site, via Ease, que nous envoyons de manière sécurisé, les données requises à son ordinateur.&nbsp;</span></span></strong></h4><h4><strong><span style="font-size: 14px;"><span style="font-family: Lucida Sans;">Pour accéder au dashboard Ease en tant qu’utilisateur, il est nécessaire de taper son mot de passe Ease.</span></span></strong></h4>
+				  <h4><span><span class="fr-just" style="color: rgb(97, 189, 109);"><strong>Security @EASE</strong></span></span></h4><h4><span><span><span class="fr-just" style="font-size: 14px;">Web security standards are implemented on the whole infrastructure that supports the EASE services. The Ease browser extension encrypts passwords and other personal data directly from your own computer.</span></span></span></h4><h4><span><span><span><span><span class="fr-just"><span style="font-size: 14px;">Those encrypted data (unreadable) are stored in&nbsp;</span><span style="font-size: 14px;">French</span><span style="font-size: 14px;">&nbsp;data centers and are rulled under the French law.</span></span></span></span></span></span></h4><h4><span><span><span class="fr-just" style="font-size: 14px;">It is only when a user needs to connect to a website, using EASE, that we securly send the required connection information to the user's computer.</span></span></span></h4><h4><span><span class="fr-just" style="font-size: 14px;">To access the Ease platform, a user has to type his or her EASE password. This password is <strong>the only</strong>&nbsp; variable that allows the decryption of connection informations.</span></span></h4>
 				</div>
 			</div><!--/col-md-5-->
 			
 			<div class="col-md-6">
-				<img src="https://d7zgbk06ve7c.cloudfront.net/assets/1320/tiqv1mceb0kxdo6yakoc/NV0eHnNkQDHA21GC3BAJ_Paris%20Louvr.jpg" class="img-responsive" alt="" data-mercury="kickimage" data-content-name="included_image">
+				<img src="https://d7zgbk06ve7c.cloudfront.net/assets/63939/9fr00repfo70crbvheqd/photo-1468034995131-d3f63c0cab1f-min-1-min-min.jpeg" class="img-responsive" alt="" data-mercury="kickimage" data-content-name="included_image">
 			</div>
 		</div><!--/row -->
 	</div><!--/container -->
@@ -559,21 +558,21 @@ label.checkbox {
 		<div class="row mtb">
       <div class="col-md-12">
   			<div data-mercury="froala" data-content-name="faqs_title">
-          <h4 style="text-align: center;"><span style="font-size: 30px;"><span style="color: rgb(97, 189, 109);">FAQ</span></span></h4><h4 style="text-align: center;"><br></h4><h4 style="text-align: center;"><span style="font-size: 24px;"><span style="color: rgb(49, 45, 128);">Comment se désinscrire du service EASE ?&nbsp;</span></span></h4><h4><br></h4><h3 style="text-align: left;"><span style="font-size: 18px;"><span style="color: rgb(102, 102, 102);"><span style="font-family: Lucida Sans;">Garder un utilisateur le plus longtemps possible, en empiétant sur la qualité de l'expérience client n'est pas notre vision, et ne s'inscrit pas dans nos valeurs. C'est pour cela que nous avons créé un processus de désinscription simple.&nbsp;</span></span></span></h3><h3 style="text-align: left;"><span style="font-size: 18px;"><span style="color: rgb(102, 102, 102);"><span style="font-family: Lucida Sans;">Dans votre menu général, allez dans option et sélectionnez "supprimer mon compte EASE". Entrez ensuite votre mot de passe EASE afin de confirmer votre identité.&nbsp;</span></span></span></h3><h3 style="text-align: left;"><span style="font-size: 18px;"><span style="color: rgb(102, 102, 102);"><span style="font-family: Lucida Sans;">Après cette étape, nous vous demanderons de répondre à 2 questions aléatoires sur notre service afin de pouvoir comprendre les raisons de votre départ. &nbsp;A la fin de ces 2 questions, votre compte sera supprimé.</span></span></span></h3><h4><br></h4><h4><br></h4><h4 style="text-align: center;"><span style="font-size: 24px;"><span style="color: rgb(49, 45, 128);">Comment intégrer à EASE<strong>&nbsp;</strong>les sites sur lesquels vous avez un compte ?</span></span></h4><h4 style="text-align: center;"><span style="font-size: 24px;"><span style="color: rgb(97, 189, 109);">&nbsp;</span></span></h4><h3><span style="font-size: 18px;"><span style="font-family: Lucida Sans;">Comme beaucoup de sites, nous faisons notre maximum pour rendre votre inscription simple et rapide. Construisez votre plateforme à votre rythme !&nbsp;</span></span></h3><h3><span style="font-size: 18px;"><span style="font-family: Lucida Sans;">Ease rassemble, organise et facilite votre web, mais vous n’êtes pas obligé de tout intégrer d’un coup ! Que vous ayez un ou plusieurs emails, que vous utilisiez le même mot de passe ou non, vous n’avez qu’à entrer chaque information une seule fois.&nbsp;</span></span></h3><h3><span style="font-size: 18px;"><span style="font-family: Lucida Sans;">Concrètement, vous choisissez un site, vous l’ajoutez à un de vos e-profils, vous sélectionnez ensuite votre type de compte (email, Facebook Connect, Sign-in avec Linkedin, etc.), pour finir, vous entrez vos informations personnelles si nécessaires.</span></span></h3><h3><br></h3>
+          <h3 style="text-align: center;"><span><span class="fr-just" style="color: rgb(97, 189, 109);"><span class="fr-just" style="color: rgb(97, 189, 109);"><span class="fr-just" style="color: rgb(97, 189, 109);"><span class="fr-just" style="font-size: 24px;"><span class="fr-just" style="font-size: 24px;"><span class="fr-just" style="font-size: 30px;">Frequently Asked Questions</span></span></span></span></span></span></span></h3><h3><br></h3>
         </div>
       </div>
       
       
 			<div class="col-md-6">
         <div data-mercury="froala" data-content-name="faqs_col_one">
-          <p><span style="color: rgb(49, 45, 128);"><span style="font-size: 18px;">Quel est le niveau de sécurité de mes données ?</span></span></p><p><span style="font-size: 14px;">Toutes les données sont chiffrées à l'aide de la technologie AES-256. <span style="color: rgb(97, 189, 109);"><a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard" target="_blank">Qu'est-ce que AES-256? (wikipedia)</a>.</span> Nos serveurs sont placés dans des centres de données hautement sécurisés.&nbsp;</span></p><p><br></p><p><span style="color: rgb(49, 45, 128);"><span style="font-size: 18px;">Où sont mes informations lorsque je m'inscris sur le web à l'aide de la plateforme Ease ?</span></span></p><p><span style="font-size: 14px;">Vos informations cryptées sont stockées dans des centres de données. Lorsque vous souhaitez vous connecter à un site, nous envoyons les informations requises pour votre connexion à l'ordinateur sur lequel vous êtes. Ensuite, le plug-in se charge de vous connecter automatiquement.</span></p><p><br></p><p><span style="color: rgb(49, 45, 128);"><span style="font-size: 18px;">Comment fonctionne le catalogue Ease ?&nbsp;</span></span></p><p><span style="font-size: 14px;">Nous avons référencé dans ce catalogue l'ensemble des sites que vous pouvez ajouter sur votre plateforme personnelle. Mais comme nous ne connaissons pas VOS sites du quotidien, vous avez la possibilité de nous demander automatiquement les sites que vous voulez rajouter. Le site sera intégré à Ease pour le lendemain. L'objectif est que c<span style="font-size: 14px;">e catalogue soit généré autant par vous que par nous !</span></span></p>
+          <h4><span style="color: rgb(49, 45, 128);">What is the level of security of my data ?</span></h4><p>We use AES-256 on all encrypted data: <a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard" target="_blank">What is AES-256? (wikipedia)</a>. Our servers are located in highly secured data centers. We also use the best solutions on all internal softwares and programs that we run in order to ease your web.</p><p><br></p><p><span style="font-size: 18px;"><span style="color: rgb(49, 45, 128);">My computer saves my passwords, so why should I use EASE ?</span></span></p><p>Most of the web browsers now save your passwords. EASE does not only remember passwords for you, it makes any of your web account accessible 1 click away the EASE platform, regardless of the web browser you are using. You do not need anymore to look for the connexion form in a website, EASE sends you directly to the website being connected.</p><h4><br></h4><h4><span style="color: rgb(49, 45, 128);">What is the encryption of data ?&nbsp;</span></h4><p>Encryption is basically a method for transferring information from point A to point B in a highly secured way. Encrypting a password will transform it into a long chain of unreadable characters, that will be sent to the website. A simple way to explain it would be<a href="http://www.hacker10.com/wp-content/uploads/2011/04/Symmetric-cryptography-key.jpg" target="_blank">&nbsp;this</a>.</p><h4><br></h4>
         </div>
 			</div><!--/col-md-5 -->
 			
       
 			<div class="col-md-6">
         <div data-mercury="froala" data-content-name="faqs_col_two">
-          <p><span style="color: rgb(49, 45, 128);"><span style="font-size: 18px;">Pourquoi ne puis-je pas enregistrer ma carte bancaire sur la plateforme Ease ? &nbsp;</span></span></p><p><span style="font-size: 14px;">Votre carte bancaire est probablement la donnée que vous souhaitez le plus protéger sur le web. Nous avons donc pris le partie de ne pas encore gérer les informations bancaires car elles ne sont pas une donnée obligatoire pour une connexion ou une inscription sur un site.</span></p><p><br></p><p><span style="color: rgb(49, 45, 128);"><span style="font-size: 18px;">Qu'est ce que le chiffrement de données ?</span></span></p><p><span style="font-size: 14px;">Le chiffrement de données est une méthode de sécurisation d'informations. Chiffrer un mot de passe le transforme en une longue chaine de caractères illisibles que nous envoyons à une entité réceptrice. Un autre moyen de l'expliquer serait&nbsp;</span><a href="http://www.hacker10.com/wp-content/uploads/2011/04/Symmetric-cryptography-key.jpg" style="font-size: 14px;" target="_blank">ceci</a><span style="font-size: 14px;">.</span></p><p><span style="font-size: 18px;"><br></span></p><p><span style="color: rgb(49, 45, 128);"><span style="font-size: 18px;">Pourquoi un système de profil ?</span></span></p><p><span style="font-size: 14px;">Nous pensons que les utilisateurs ont différentes activités en ligne. Vous pouvez être sur le web pour votre travail, acheter des articles, étudier, vous divertir, socialiser, jouer etc. Ease vous permet de créer des profils en fonction de vos usages.</span></p>
+          <h4><span style="color: rgb(49, 45, 128);">What is happening to my informations when I &nbsp;log in on a website with Ease ?&nbsp;</span></h4><p>When you type your "Ease password" it decrypts, on your own computer only, your personal information. When you click on a website in order to login, your computer sends the right information for the concerned website. The information are send through a channel SSL as we own a TSL certificate (well known as Https)</p><p><br></p><h4><span style="color: rgb(49, 45, 128);">How does the profile system works ?</span></h4><p>We believe you have different types of activities on the web. In fact you go there for school, work, to purchase various items, to study, to socialise, to play, etc. We allow you to create profiles regarding your web uses and manage your web accordingly.&nbsp;</p><p><br></p><p><br></p>
         </div>
 			</div><!--/col-md-5-->
       
@@ -601,7 +600,7 @@ label.checkbox {
 			<div class="row centered">
         <div class="col-md-12">
   				<div data-mercury="froala" data-content-name="the_footer_text">
-  				  <h6>Share it only if you love it - N'hésitez pas à nous contacter</h6><h6>Ease © 2016. Tous droits réservés.</h6>
+  				  <p>Share it only if you love it - Contact us when you want | 2016</p>
   				</div>
         </div>
 			</div>
@@ -616,10 +615,6 @@ label.checkbox {
             <i class="fa fa-twitter"></i>
           </a>
           
-          
-          <a class="pinterest" href="https://fr.pinterest.com/ease_app/" target="_blank">
-            <i class="fa fa-pinterest"></i>
-          </a>
           
           
           
@@ -638,7 +633,7 @@ label.checkbox {
         </div><!--/row-->
         
         <div class="row privacy text-center">
-          <a id="privacy_link" href="http://www.ease-app.co/privacy">Privacy @Ease</a>
+          <a id="privacy_link" href="http://www.ease-app.co/privacy">Privacy</a>
         </div>
         
 		</div><!--/container -->
@@ -659,7 +654,7 @@ label.checkbox {
           analytic_options = {
             stats_url: "//api.kickofflabs.com", 
             list_id: 69174, 
-            source: "page.93302", 
+            source: "page.129159", 
             debug: false, 
             custom: {page_theme: 'flatincentivesignup'}, 
             click_selector: "a.social_share_link"
@@ -683,33 +678,16 @@ label.checkbox {
 
                     $(document).ready(function(){
                         var email = getParameterByName('_email');
-                        if (email != "" && $('#email').length > 0){
+                        if (email != ""){
                             $('#email').val(email);
-                            var form = $('#email').first().parents('form')
-                            if ($(form).children('.required').length < 2){
-                              if ($(form).hasClass('kol-signup-form')){
-                                //use anyform for drag and drop forms
-                                window.anyform_93302.submit_form_data($(form));  
-                              }
-                              else { // It's an old style form
-                                 $('#signup_form').submit();
-                              }
-                          }
+                            if ($('.required').length < 2)
+                              {$('#signup_form').submit();}
                         }
                       });
               
              </script>
 
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-75916041-4', 'auto');
-  ga('send', 'pageview');
-
-</script>
 
 
 

@@ -13,6 +13,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 
+import com.Ease.Dashboard.User.User;
+
 public class Mail {
 
 	protected Properties props;
@@ -228,6 +230,39 @@ public class Mail {
 					+ "<p>Pour activer ton espace, clique sur le lien suivant et laisse toi guider: <a href='" + link
 					+ "'>https://ease.space/...</a></p>" + "<p></p>" + "<p>A bientôt !</p>" + "<p></p>"
 					+ "<p>La team Ease</p>", "text/html;charset=utf-8");
+			Transport.send(message);
+		} catch (AddressException | UnsupportedEncodingException e) {
+			throw new MessagingException();
+		}
+	}
+	
+	public void sendContactEmail(String email, User user, boolean isUser, String emailBy, String msg) throws MessagingException {
+		try {
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+			message.setSubject(MimeUtility.encodeText("Contact ease.space", "utf-8", null));
+			message.setContent("<p>Vous avez reçu un message depuis 'ContactUs': </p>"
+					+ "<p>Est un utilisateur: " + ((isUser) ? "OUI" : "NON") + "</p>"
+					+ "<p>Utilisateur connecté: " + ((user != null) ? user.getEmail() : "NON") + "</p>"
+					+ "<p>Email entré: " + emailBy + "</p>"
+					+ "<p></p>"
+					+ "<p>" + msg + "</p>"
+					, "text/html;charset=utf-8");
+			Transport.send(message);
+		} catch (AddressException | UnsupportedEncodingException e) {
+			throw new MessagingException();
+		}
+	}
+	
+	public void sendValidationContactEmail(String email, String msg) throws MessagingException {
+		try {
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+			message.setSubject(MimeUtility.encodeText("Message envoyé à l’équipe Ease", "utf-8", null));
+			message.setContent("<p>Bonjour,</p>" 
+					+ "<p>Merci pour votre message. Nous allons faire en sorte de revenir vers vous dans les meilleurs délais.</p>"
+					+ "<p>Voici une copie du message que vous nous avez fait parvenir:</p>"
+					+ "<p></p>"
+					+ "<p>" + msg + "</p>"
+					, "text/html;charset=utf-8");
 			Transport.send(message);
 		} catch (AddressException | UnsupportedEncodingException e) {
 			throw new MessagingException();

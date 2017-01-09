@@ -174,12 +174,12 @@ boolean knownUser = iden == 2 ? true : false;
 
 <div class="controls show">
 	<% if (knownUser) {%>
+	<a href="discover" target="_blank">New to Ease</a>
+	<i class="fa fa-circle" aria-hidden="true"></i>
 	<a id="changeAccount">Other account</a>
 	<i class="fa fa-circle" aria-hidden="true"></i>
 	<% } %>
 	<a id="passwordLost">Password lost</a>
-	<i class="fa fa-circle" aria-hidden="true"></i>
-	<a href="discover" target="_blank">Discover ease</a>
 </div>
 
 <p class="homepageOnoffContainer displayedByPlugin">
