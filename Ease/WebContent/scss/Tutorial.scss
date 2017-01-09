@@ -53,6 +53,15 @@
     right: 0;
 }
 
+.onoffswitch-label-readonly:before {
+  transition: none;
+  right: 0;
+}
+
+.onoffswitch-label-readonly {
+  background-color: $themeSilverColor;
+}
+
 #tutorial {
     #accountCredentials,
     #scrapingInfo,
@@ -193,6 +202,15 @@
             .info-text {
                 font-size: 1vw;
                 font-weight: 200;
+            }
+            
+            .imageHandler {
+                width: 5vw;
+                display: inline-block;
+
+                img {
+                    width: 100%;
+                }
             }
         }
     }

@@ -87,7 +87,6 @@ $('div#addAppTutorial form').submit(function (e) {
 		console.log(retMsg);
 	}, 'text');
 	if ($("div#addAppTutorial input#login").val() != "" && $("div#addAppTutorial input#password").val() != "" && $("div#addAppTutorial input#name").val() != "") {
-		addAppTutoCpt++;
 		goToNextStep();
 	}
 });

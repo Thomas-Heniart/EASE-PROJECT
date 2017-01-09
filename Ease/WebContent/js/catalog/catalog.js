@@ -283,6 +283,18 @@ var Catalog = function(rootEl){
 			elem.qRoot.height(width);
 		});
 	};
+	var lastScrollTop = 0;
+	$(".catalogContainer").scroll(function(event) {
+		console.log($(this).height());
+		var st = $(this).scrollTop();
+		console.log(st);
+		   if (st > lastScrollTop){
+		       console.log("scroll down");
+		   } else {
+		      // upscroll code
+		   }
+		   lastScrollTop = st;
+	});
 	this.onResize();
 	this.quitButton.click(function(){
 		leaveEditMode();

@@ -2,7 +2,7 @@
 <%@ page import="com.Ease.Context.Catalog.Catalog"%>
 
 <link rel="stylesheet" href="css/Tutorial.css" />
-
+<div id="ohehcool"></div>
 <div class="popupHandler myshow" id="tutorial">
 	<div class="easePopup show" id="importation">
 		<div class="title">
@@ -18,13 +18,26 @@
 						<p class="post-title" style="text-decoration:underline;">Import your accounts from :</p>
 					</div>
 					<div class="row">
+						
+						<c:forEach items='${user.getInfras()}' var="infra">
+							<div class="account">
+							<div class="logo">
+								<img src="${infra.getLogoPath()}"/>
+							</div>
+							<p class="name">${infra.getName()}</p>
+							<div class="onoffswitch">
+								<label class="onoffswitch-label onoffswitch-label-readonly"></label>
+							</div>
+						</div>	
+						</c:forEach>
+						
 						<div class="account">
 							<div class="logo">
 								<img src="resources/images/Chrome.png"/>
 							</div>
 							<p class="name">Google Chrome</p>
 							<div class="onoffswitch">
-								<input type="checkbox" name="Chrome" class="onoffswitch-checkbox" id="Chrome">
+								<input type="checkbox" name="Chrome" class="onoffswitch-checkbox" id="Chrome" checked>
 								<label class="onoffswitch-label" for="Chrome"></label>
 							</div>
 						</div>
@@ -34,7 +47,7 @@
 							</div>
 							<p class="name">LinkedIn</p>
 							<div class="onoffswitch">
-								<input type="checkbox" name="Linkedin" class="onoffswitch-checkbox" id="Linkedin" websiteId="${catalog.getWebsiteWithName("Linkedin").getSingleId()}">
+								<input type="checkbox" name="Linkedin" class="onoffswitch-checkbox" id="Linkedin" checked websiteId="${catalog.getWebsiteWithName("Linkedin").getSingleId()}">
 								<label class="onoffswitch-label" for="Linkedin"></label>
 							</div>
 						</div>
@@ -44,16 +57,16 @@
 							</div>
 							<p class="name">Facebook</p>
 							<div class="onoffswitch">
-								<input type="checkbox" name="Facebook" class="onoffswitch-checkbox" id="Facebook" websiteId="${catalog.getWebsiteWithName("Facebook").getSingleId()}">
+								<input type="checkbox" name="Facebook" class="onoffswitch-checkbox" id="Facebook" checked websiteId="${catalog.getWebsiteWithName("Facebook").getSingleId()}">
 								<label class="onoffswitch-label" for="Facebook"></label>
 							</div>
 						</div>
 					</div>
 					<div class="row text-center">
-						<button class="btn locked" type="submit">Go!</button>
+						<button class="btn" type="submit">Go!</button>
 					</div>
 					<div class="row text-center">
-						<a id="manualImportation">I prefere to import all my accounts 1 by 1</a>
+						<a id="manualImportation">I prefere to import my accounts 1 by 1</a>
 					</div>
 				</div>
 			</div>

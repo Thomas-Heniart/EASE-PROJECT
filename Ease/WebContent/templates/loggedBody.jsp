@@ -69,7 +69,7 @@ $(document).ready(function(){
 		<button id="enterEditMode" state="off" class="button"><img src="resources/icons/menu_icon.png"/>
 			<div class="openCatalogHelper"></div>
 		</div>
-		<%@ include file="extension.jsp" %>		
+		<!-- <%@ include file="extension.jsp" %>  -->		
 		<%@ include file="catalog/catalogView.jsp"%>
 		<c:if test='${user.appsImported() && (user.allTipsDone() eq false)}'>
 			<%@ include file="Tips.jsp" %>
@@ -88,7 +88,7 @@ $(document).ready(function(){
 <c:if test='${user.appsImported() eq false}'>
 	<%@ include file="TutorialView.jsp"%>
 </c:if>
-<!-- <%@ include file="new_extension.jsp" %> -->
+<%@ include file="new_extension.jsp" %>
 
 <script>
 
