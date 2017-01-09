@@ -3,7 +3,33 @@ $(document).ready(function(){
 	setTimeout(function(){
 		waitForExtension = false;
 	},800);
+	showExtensionPopup();
 });
+
+function showExtensionPopup(){
+	if (!($('#ease_extension').length)) {
+        if(!waitForExtension){
+        	$('#extension').addClass("myshow");
+            return true;
+        } else {
+        	setTimeout(function(){
+        		return showExtensionPopup();
+        	},200);
+        }
+    } else {
+    	if(getUserNavigator() == "Safari"){
+        	if(!$('#ease_extension').attr("safariversion") || $('#ease_extension').attr("safariversion") !="1.5"){
+        		$('#extension .title p').text("Update your extension");
+        		$('#extension #download #line1').text("A new version of the extension is now available.");
+        		$('#extension #download #line2').text("We added new features and made it faster !");
+        		$('#extension #download button').text("Update Ease Extension");
+        		$('#extension').addClass("myshow");
+        		return true;
+        	}
+        }
+    	return false;
+    }
+}
 
 function sendEvent(obj) {
 	if(testApp){
@@ -43,24 +69,9 @@ function sendEvent(obj) {
         
         //easeTracker.trackEvent("App clicks");
 
-        if (!($('#ease_extension').length)) {
-            if(!waitForExtension){
-            	checkForExtension();
-                return;
-            } else {
-            	setTimeout(function(){
-            		sendEvent(obj);
-            	},200);
-            }
-        }
-        
-        if(getUserNavigator() == "Safari"){
-        	if(!$('#ease_extension').attr("safariversion") || $('#ease_extension').attr("safariversion") !="1.5"){
-        		safariExtensionUpdate();
-        		return;
-        	}
-        }
-        
+        if(showExtensionPopup())
+        	return;
+        else {
         $(obj).addClass('waitingLinkImage');
         $(obj).addClass('scaleinAnimation');
         setTimeout(function() {
@@ -89,50 +100,18 @@ function sendEvent(obj) {
         		}
 
         		
-        		/*event = new CustomEvent("ScrapChrome", {detail:{login:"fel.richart@gmail.com", password:"XXXXXX"}});
-        		console.log("event sent");
-        		document.dispatchEvent(event);
-        		document.addEventListener("ScrapChromeResult", function(event){
-        			console.log(event.detail.msg);
-        			postHandler.post(
-        					"FilterScrap", 
-        					{
-        						scrapjson : JSON.stringify({Chrome:event.detail.msg})
-        					},
-        					function(){},
-        					function(res){
-        						res = JSON.parse(res);
-        						res = res.Chrome;
-        						for(var i in res){
-        							postHandler.post(
-        								"AddClassicApp",
-        								res[i],
-        								function(){},
-        								function(res){
-        									console.log(res);
-        								},
-        								function(res){
-        									console.log(res);
-        								},
-        								'text'
-        							);
-        						}
-        					},
-        					function(res){},
-        					'text'
-        			);
-        		}, false);*/
         		event = new CustomEvent(message, json);
         		document.dispatchEvent(event);
         	}, function(retMsg) {
         		//easeTracker.trackEvent("App fail clicks");
         		showAlertPopup(retMsg, true);
         	}, 'text');
-    }
+        }
+    	}
 	}
 }
 
-function checkForExtension() {
+/*function checkForExtension() {
     var ext = $('#ease_extension');
 
         $('#downloadExtension').css('display', 'block');
@@ -176,7 +155,7 @@ function safariExtensionUpdate(){
                  $('#downloadExtension').find('.popupContent').hide();
                  $('#downloadExtension').find('#afterdownload.safariHelper').show();
          });
-}
+}*/
 
 $(document).ready(function() {
 	 $('#homePageSwitch').change(function() {
