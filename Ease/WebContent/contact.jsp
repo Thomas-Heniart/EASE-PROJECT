@@ -60,7 +60,7 @@ pageEncoding="UTF-8"%>
 			</div>
 			<div class="row">
 			<div id="contactUsForm">
-				<form method="POST" action="contactUs" class="contactForm">
+				<form method="POST" action="ContactUs" class="contactForm">
 					<div class="formRaw">
 						<input type="email" name="email" placeholder="Email" />
 					</div>
