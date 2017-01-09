@@ -53,6 +53,7 @@
 				<p>To add apps, drag & drop them from the catalog.</p>
 				<button class="btn" type="submit">Got it!</button>
 			</div>
+			<img class="arrow-tip" src="resources/images/catalog_tip_arrow.png" />
 		</div>
 	</c:if>
 </div>
@@ -82,8 +83,8 @@
 		});
 		
 		$('#tipsHandler #4').css({
-			'left': '50%',
-			'top': '2%'
+			'left': '42%',
+			'top': '46%'
 		});
 		
 		<c:choose>
@@ -137,9 +138,12 @@
 		var clickOnCatalog = false;
 		$('#tipsHandler #3 button').click(function(){
 			$('#tipsHandler #4').css({
-				'left': '50%',
-				'top': '2%'
+				'left': '42%',
+				'top': '46%',
+				'overflow' : 'visible'
 			});
+			$('#tipsHandler #4 .arrow-tip').addClass("show");
+			$(".col-left, .header").addClass("darken");
 			if (!clickOnCatalog) {
 				clickOnCatalog = true;
 				catalog.open();
