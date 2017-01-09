@@ -28,6 +28,16 @@ $("div#simpleImportation div.appHandler").click(function() {
 	} else {
 		$(this).find("div.app").addClass("selected");	
 	}
+	if ($("#simpleImportation .app.selected").length >= 4){
+		$("#simpleImportation button[type='submit']").removeClass('locked');
+	} else {
+		$("#simpleImportation button[type='submit']").addClass('locked');		
+	}
+});
+
+$("#simpleImportation .showMoreHelper").click(function(){
+	$(this).css('display', 'none');
+	$("#simpleImportation .appHandler.hidden").removeClass('hidden');
 });
 
 function goToNextStep() {
