@@ -2,7 +2,7 @@
 <%@ page import="com.Ease.Context.Catalog.Catalog"%>
 
 <link rel="stylesheet" href="css/Tutorial.css" />
-
+<div id="ohehcool"></div>
 <div class="popupHandler myshow" id="tutorial">
 	<div class="easePopup show" id="importation">
 		<div class="title">

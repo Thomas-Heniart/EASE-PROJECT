@@ -203,6 +203,15 @@
                 font-size: 1vw;
                 font-weight: 200;
             }
+            
+            .imageHandler {
+                width: 5vw;
+                display: inline-block;
+
+                img {
+                    width: 100%;
+                }
+            }
         }
     }
 

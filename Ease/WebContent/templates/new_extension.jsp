@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<div class="popupHandler myshow" id="extension">
+<div class="popupHandler" id="extension">
 	<div class="easePopup show" id="step1">
 		<div class="title">
 			<p>Download our extension</p>
@@ -9,10 +9,10 @@
 			<div class="popupBody show" id="download">
 				<div class="handler">
 					<div class="row text-center">
-						<p style="font-size:1.5vw;">This computer doesn’t have the Ease Extension yet.</p>
+						<p style="font-size:1.5vw;" id="line1">This computer doesn’t have the Ease Extension yet.</p>
 					</div>
 					<div class="row text-center">
-						<p style="font-size:1.4vw">It needs to be installed on your browser in order for Ease to fully work.</p>
+						<p style="font-size:1.4vw" id="line2">It needs to be installed on your browser in order for Ease to fully work.</p>
 					</div>
 					<div class="row text-center">
 						<button class="btn" type="submit">Download Ease Extension</button>
@@ -35,7 +35,7 @@
 			<div class="popupBody" id="safari">
 				<div class="handler">
 					<div class="row">
-						<p style="width:10%;">1.</p><p style="width:78%;">Comlete the step above :)</p>
+						<p style="width:10%;">1.</p><p style="width:78%;">Complete the step above :)</p>
 					</div>
 					<div class="row">
 						<p style="width:10%;">2.</p><p style="width:78%;">Click "Trust" in the extension settings of Safari</p>
