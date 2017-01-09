@@ -104,6 +104,11 @@ public class Infrastructure {
 	public String getName() {
 		return this.name;
 	}
+	
+	public String getLogoPath() {
+		return "resources/images/" + this.name.replaceAll(" ", "_").toLowerCase() + ".png";
+	}
+	
 	public void setName(ServletManager sm) throws GeneralException {
 		
 	}
