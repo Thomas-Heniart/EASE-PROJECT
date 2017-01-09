@@ -240,7 +240,7 @@ function addTutoProfiles(i, profileId) {
 		if (i == 10 || i == 30) {
 			postHandler.post('AddProfile', {
 				"name" : "Choose name",
-				"color" : "#FF0000"
+				"color" : "#FF9D34"
 			}, function() {
 				//always
 			}, function(retMsg) {
