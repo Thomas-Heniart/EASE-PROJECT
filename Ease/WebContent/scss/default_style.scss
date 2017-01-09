@@ -960,7 +960,6 @@ p {
   text-shadow: 0 0 30px #000, 0 0 20px #000, 0 0 10px #000
 }
 
-
 /* password validation indicator */
 
 .passwordValidator {
@@ -979,4 +978,8 @@ p {
   .error {
     display: block;
   }
+}
+
+.darken {
+  background-color: rgba(0, 0, 0, 0.5);
 }

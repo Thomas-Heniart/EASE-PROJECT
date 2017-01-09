@@ -97,5 +97,16 @@
 				}
 			}
 		}
+		.arrow-tip {
+			position: absolute;
+    		bottom: -60%;
+    		left: -11vw;
+    		width: 27vw;
+    		transform: rotateZ(12deg);
+		}
+		.arrow-tip.show {
+			visibility: visible;
+		}
 	}
+
 }
