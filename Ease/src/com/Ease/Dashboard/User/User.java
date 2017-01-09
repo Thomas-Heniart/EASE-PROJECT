@@ -162,6 +162,8 @@ public class User {
 		}
 		UserEmail userEmail = UserEmail.createUserEmail(email, newUser, !groups.isEmpty(), sm);
 		newUser.getUserEmails().put(email, userEmail);
+		newUser.passStep("CGU", db);
+		newUser.passStep("first_connection", db);
 		db.commitTransaction(transaction);
 		return newUser;
 	}
