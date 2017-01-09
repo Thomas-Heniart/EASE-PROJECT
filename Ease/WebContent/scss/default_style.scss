@@ -26,6 +26,7 @@
 @import 'buttons';
 @import 'Extension';
 @import 'UIElements/Tips';
+@import 'LanguageChooser';
 
 .shake-ease {
   @include do-shake('shake-ease', 2px, 1px, 3, 1700ms, .05, $opacity: false);
@@ -38,6 +39,11 @@
   @include scalein-anim('scale-09', 1.2);
 }
 
+/* crisp chat button color */
+body .crisp-client .crisp-1 .crisp-11 {
+  background-color: $themeColor !important;
+}
+
 .input {
   .showPassDiv {
     position: absolute;
@@ -48,10 +54,34 @@
     height: 90%;
     top: 5%;
     color: $themeColor;
+    .fa-eye {
+      display: none;
+    }
+    .fa-eye-slash {
+      display: block;
+    }
+    &.show {
+      .fa-eye {
+        display: block;
+      }
+      .fa-eye-slash {
+        display: none;
+      }
+    }
   }
-  .showPassDiv.show {
-    color: white;
-    background-color: $themeColor;
+}
+
+/* general input styles */
+input, textarea {
+  outline: none;
+  transition: box-shadow .3s;
+  -webkit-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.5);
+  -moz-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.5);
+  box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.5);
+  &:focus {
+    -webkit-box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.5);
+    -moz-box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.5);
+    box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.5);
   }
 }
 
@@ -934,7 +964,7 @@ p {
 /* password validation indicator */
 
 .passwordValidator {
-  font-size: 2.35vw;
+  font-size: 1.5vw;
   &.valid {
     .success {
       display: block;

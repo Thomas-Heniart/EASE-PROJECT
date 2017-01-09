@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="language" value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}" scope="session" />
@@ -43,25 +42,25 @@ pageEncoding="UTF-8"%>
 <script type="text/javascript">$crisp=[];CRISP_WEBSITE_ID="6e9fe14b-66f7-487c-8ac9-5912461be78a";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.im/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
 <script src="js/tracker.js"></script>
 <script type="text/javascript">
-  (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script");r.type="text/javascript";
-  r.async=true;r.src="https://d24n15hnbwhuhn.cloudfront.net/libs/amplitude-3.0.1-min.gz.js";
-  r.onload=function(){e.amplitude.runQueuedFunctions()};var i=t.getElementsByTagName("script")[0];
-  i.parentNode.insertBefore(r,i);function s(e,t){e.prototype[t]=function(){this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));
-  return this}}var o=function(){this._q=[];return this};var a=["add","append","clearAll","prepend","set","setOnce","unset"];
-  for(var u=0;u<a.length;u++){s(o,a[u])}n.Identify=o;var c=function(){this._q=[];return this;
-  };var p=["setProductId","setQuantity","setPrice","setRevenueType","setEventProperties"];
-  for(var l=0;l<p.length;l++){s(c,p[l])}n.Revenue=c;var d=["init","logEvent","logRevenue","setUserId","setUserProperties","setOptOut","setVersionName","setDomain","setDeviceId","setGlobalUserProperties","identify","clearUserProperties","setGroup","logRevenueV2","regenerateDeviceId"];
-  function v(e){function t(t){e[t]=function(){e._q.push([t].concat(Array.prototype.slice.call(arguments,0)));
-  }}for(var n=0;n<d.length;n++){t(d[n])}}v(n);n.getInstance=function(e){e=(!e||e.length===0?"$default_instance":e).toLowerCase();
-  if(!n._iq.hasOwnProperty(e)){n._iq[e]={_q:[]};v(n._iq[e])}return n._iq[e]};e.amplitude=n;
-  })(window,document);
+	(function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script");r.type="text/javascript";
+		r.async=true;r.src="https://d24n15hnbwhuhn.cloudfront.net/libs/amplitude-3.0.1-min.gz.js";
+		r.onload=function(){e.amplitude.runQueuedFunctions()};var i=t.getElementsByTagName("script")[0];
+		i.parentNode.insertBefore(r,i);function s(e,t){e.prototype[t]=function(){this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));
+			return this}}var o=function(){this._q=[];return this};var a=["add","append","clearAll","prepend","set","setOnce","unset"];
+			for(var u=0;u<a.length;u++){s(o,a[u])}n.Identify=o;var c=function(){this._q=[];return this;
+			};var p=["setProductId","setQuantity","setPrice","setRevenueType","setEventProperties"];
+			for(var l=0;l<p.length;l++){s(c,p[l])}n.Revenue=c;var d=["init","logEvent","logRevenue","setUserId","setUserProperties","setOptOut","setVersionName","setDomain","setDeviceId","setGlobalUserProperties","identify","clearUserProperties","setGroup","logRevenueV2","regenerateDeviceId"];
+				function v(e){function t(t){e[t]=function(){e._q.push([t].concat(Array.prototype.slice.call(arguments,0)));
+				}}for(var n=0;n<d.length;n++){t(d[n])}}v(n);n.getInstance=function(e){e=(!e||e.length===0?"$default_instance":e).toLowerCase();
+				if(!n._iq.hasOwnProperty(e)){n._iq[e]={_q:[]};v(n._iq[e])}return n._iq[e]};e.amplitude=n;
+			})(window,document);
 
-  	/* Prod */
+			/* Prod */
 	//amplitude.getInstance().init("74f6ebfba0c7743a0c63012dc3a9fef0");
 
 	/* Test */
-  	amplitude.getInstance().init("73264447f97c4623fb38d92b9e7eaeea");
-  	easeTracker.trackEvent("VisitLandingPage");
+	amplitude.getInstance().init("73264447f97c4623fb38d92b9e7eaeea");
+	easeTracker.trackEvent("VisitLandingPage");
 </script>
 </head>
 
@@ -94,9 +93,12 @@ pageEncoding="UTF-8"%>
 						</a>
 					</li>
 					<li>
-						<a href="/" target="_blank">
+						<a href="/" id="connexionButton" target="_blank">
 							<fmt:message key="landing.header.connexion-link" />
 						</a>
+					</li>
+					<li>
+						<%@ include file="templates/LanguageChooser.jsp" %>
 					</li>
 				</ul>
 			</div>
@@ -366,7 +368,7 @@ pageEncoding="UTF-8"%>
 						</div>
 						<div class="message">
 							<p class="mess">
-							<fmt:message key="landing.section-feedbacks.text-3"/> 
+								<fmt:message key="landing.section-feedbacks.text-3"/> 
 							</p>
 							<a  target="_blank" href="https://fr.linkedin.com/in/clémentine-prud-homme-691945103">Clémentine Prud’homme</a>
 							<p class="position">Etudiante à l’EDHEC</p>
@@ -378,7 +380,7 @@ pageEncoding="UTF-8"%>
 						</div>
 						<div class="message">
 							<p class="mess">
-							<fmt:message key="landing.section-feedbacks.text-4"/>  
+								<fmt:message key="landing.section-feedbacks.text-4"/>  
 							</p>
 							<a target="_blank" href="https://uk.linkedin.com/in/rouxjeanbaptiste">Jean-Batiste Roux</a>
 							<p class="position">Account Manager à Barnebys</p>
@@ -427,13 +429,14 @@ pageEncoding="UTF-8"%>
 								</div>
 							</div>
 							<div class="row">
-								<input type="hidden" name="fname" value=<%=request.getParameter("name")%>/>
+								<input type="hidden" name="fname" value=<%=request.getParameter("name")%> />
 								<input type="hidden" name="email" value=<%= request.getParameter("email")%> />
 								<input type="hidden" name="invitationCode" value=<%= request.getParameter("invitationCode") %> />
 								<span class="input">
 									<input type="password" name="password" placeholder=<fmt:message key="landing.signup-popup.page-2.password-placeholder"/> />
 									<div class="showPassDiv">
 										<i class="fa fa-eye centeredItem" aria-hidden="true"></i>
+										<i class="fa fa-eye-slash centeredItem" aria-hidden="true"></i>
 									</div>
 									<div id="validatorPassword" class="passwordValidator" style="display:none">
 										<i class="fa fa-times error" aria-hidden="true" style="color:#d75a4a;"></i>
@@ -451,6 +454,7 @@ pageEncoding="UTF-8"%>
 									<input type="password" name="confirmPassword" placeholder=<fmt:message key="landing.signup-popup.page-2.password-confirm-placeholder"/> />
 									<div class="showPassDiv">
 										<i class="fa fa-eye centeredItem" aria-hidden="true"></i>
+										<i class="fa fa-eye-slash centeredItem" aria-hidden="true"></i>
 									</div>
 									<div id="validatorConfirmPass" class="passwordValidator" style="display:none">
 										<i class="fa fa-times error" aria-hidden="true" style="color:#d75a4a;"></i>
@@ -483,7 +487,6 @@ pageEncoding="UTF-8"%>
 							</div>
 							<div class="row terms">
 								<p><fmt:message key="landing.signup-popup.page-1.terms-accept"/> <a href="privacy.jsp" target="_blank"><fmt:message key="landing.signup-popup.page-1.terms"/></a></p>
-								<input type="checkbox" value="">
 							</div>
 							<div class="row text-center">
 								<img class="loading" src="resources/other/facebook-loading.svg"/>
@@ -517,11 +520,17 @@ pageEncoding="UTF-8"%>
 					self.handler.removeClass('myshow');
 					$('body').css('overflow', '');
 				};
+				this.reset = function(){
+					self.qRoot.find('input').val('').reset();
+					self.qRoot.find('#1').addClass('show');
+					self.qRoot.find('#2').removeClass('show');
+					self.qRoot.find('.alert-message').removeClass('show');
+					self.qRoot.find('button').removeClass('not-show');	
+				};
 				$(document).click(function(e){
 					if ($(e.target).hasClass('popupHandler')){
-						$(e.target).css('display', 'none');
-						$(e.target).removeClass('myshow');
-						$('body').css('overflow', '');
+						self.close();
+						self.reset();
 						setTimeout(function(){
 							$(e.target).css('display', '');
 						}, 100);
@@ -537,9 +546,6 @@ pageEncoding="UTF-8"%>
 
 					if (!emailVal.length)
 						return;
-					if (!($(this).find(".terms input[type='checkbox']").prop('checked'))){
-						return;
-					}
 
 					loading.addClass('show');
 					submitButton.addClass('not-show');
@@ -567,7 +573,7 @@ pageEncoding="UTF-8"%>
 						}
 					},
 					function(retMsg) {
-						alertMessage.text(retMsg.substring(2, retMsg.length));
+						alertMessage.text(retMsg);
 						alertMessage.css('color', '#ec555b')
 						alertMessage.addClass('show');
 						setTimeout(function(){

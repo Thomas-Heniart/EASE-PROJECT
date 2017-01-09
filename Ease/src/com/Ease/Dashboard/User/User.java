@@ -6,44 +6,35 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.websocket.Session;
 
 import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupManager;
+import com.Ease.Context.Group.Infrastructure;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.Account;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.AccountInformation;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.Profile.ProfilePermissions;
-import com.Ease.Dashboard.User.Keys.Data;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Invitation;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
-import com.Ease.Utils.Crypto.AES;
-import com.Ease.Utils.Crypto.Hashing;
 import com.Ease.websocket.WebsocketSession;
 
 public class User {
 	enum Data {
-		NOTHING,
-		ID,
-		FIRSTNAME,
-		LASTNAME,
-		EMAIL,
-		KEYSID,
-		OPTIONSID,
-		REGISTRATIONDATE,
-		STATUSID
+		NOTHING, ID, FIRSTNAME, LASTNAME, EMAIL, KEYSID, OPTIONSID, REGISTRATIONDATE, STATUSID
 	}
 
 	@SuppressWarnings("unchecked")
@@ -111,19 +102,21 @@ public class User {
 			Status status = Status.loadStatus(rs.getString(Data.STATUSID.ordinal()), db);
 			ResultSet adminRs = db.get("SELECT user_id FROM admins WHERE user_id = " + db_id + ";");
 			boolean isAdmin = adminRs.next();
-			ResultSet sawGroupProfileRs = db.get("SELECT saw_group FROM groupsAndUsersMap WHERE user_id = " + db_id + " LIMIT 1;");
+			ResultSet sawGroupProfileRs = db
+					.get("SELECT saw_group FROM groupsAndUsersMap WHERE user_id = " + db_id + " LIMIT 1;");
 			boolean sawGroupProfile = false;
 			if (sawGroupProfileRs.next())
 				sawGroupProfile = sawGroupProfileRs.getBoolean(1);
 			SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, sm);
-			User newUser =  new User(db_id, firstName, lastName, email, keys, options, isAdmin, sawGroupProfile, sessionSave, status);
+			User newUser = new User(db_id, firstName, lastName, email, keys, options, isAdmin, sawGroupProfile,
+					sessionSave, status);
 			newUser.loadProfiles(sm);
 			newUser.loadEmails(sm);
-			for (Map.Entry<String, WebsiteApp> entry : newUser.getWebsiteAppsDBmap().entrySet()){
+			for (Map.Entry<String, WebsiteApp> entry : newUser.getWebsiteAppsDBmap().entrySet()) {
 				if (entry.getValue().getType().equals("LogwithApp")) {
-					LogwithApp logwithApp = (LogwithApp)entry.getValue();
+					LogwithApp logwithApp = (LogwithApp) entry.getValue();
 					App app = newUser.getWebsiteAppsDBmap().get(logwithApp.getLogwithDBid());
-					logwithApp.rempLogwith((WebsiteApp)app);
+					logwithApp.rempLogwith((WebsiteApp) app);
 				}
 			}
 			ResultSet rs2 = db.get("SELECT group_id FROM groupsAndUsersMap WHERE user_id=" + newUser.getDBid() + ";");
@@ -134,7 +127,7 @@ public class User {
 					newUser.getGroups().add(userGroup);
 				}
 			}
-			((Map<String, User>)sm.getContextAttr("users")).put(email, newUser);
+			((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
 			return newUser;
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
@@ -143,23 +136,26 @@ public class User {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static User createUser(String email, String firstName, String lastName, String password, String code, ServletManager sm) throws GeneralException {
+	public static User createUser(String email, String firstName, String lastName, String password, String code,
+			ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		List<Group> groups = Invitation.verifyInvitation(email, code, sm);
 		Option opt = Option.createOption(sm);
-		//Status status = Status.createStatus(sm);
+		// Status status = Status.createStatus(sm);
 		Keys keys = Keys.createKeys(password, sm);
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = new Date();
 		String registrationDate = dateFormat.format(date);
 		Status status = Status.createStatus(db);
-		String db_id = db.set("INSERT INTO users VALUES(NULL, '" + firstName + "', '" + lastName + "', '" + email + "', " + keys.getDBid() + ", " + opt.getDb_id() + ", '" + registrationDate + "', " + status.getDbId() + ");").toString();
-		SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(),  db_id, sm);
+		String db_id = db.set("INSERT INTO users VALUES(NULL, '" + firstName + "', '" + lastName + "', '" + email
+				+ "', " + keys.getDBid() + ", " + opt.getDb_id() + ", '" + registrationDate + "', " + status.getDbId()
+				+ ");").toString();
+		SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, sm);
 		User newUser = new User(db_id, firstName, lastName, email, keys, opt, false, false, sessionSave, status);
 		newUser.getProfileColumns().get(0).add(Profile.createPersonnalProfile(newUser, 0, 0, "Side", "#000000", sm));
 		newUser.getProfileColumns().get(1).add(Profile.createPersonnalProfile(newUser, 1, 0, "Perso", "#000000", sm));
-		((Map<String, User>)sm.getContextAttr("users")).put(email, newUser);
+		((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
 		for (Group group : groups) {
 			group.addUser(email, sm);
 			newUser.getGroups().add(group);
@@ -170,17 +166,17 @@ public class User {
 		return newUser;
 	}
 
-	protected String	db_id;
-	protected String	first_name;
-	protected String	last_name;
-	protected String	email;
-	protected Keys		keys;
-	protected Option	opt;
+	protected String db_id;
+	protected String first_name;
+	protected String last_name;
+	protected String email;
+	protected Keys keys;
+	protected Option opt;
 	protected List<List<Profile>> profile_columns;
 	protected Map<String, App> appsDBmap;
 	protected Map<String, WebsiteApp> websiteAppsDBmap;
 	protected Map<Integer, App> appsIDmap;
-	protected int		max_single_id;
+	protected int max_single_id;
 	protected Map<String, UserEmail> emails;
 	protected Map<String, WebsocketSession> websockets;
 	protected List<Group> groups;
@@ -190,7 +186,8 @@ public class User {
 
 	protected SessionSave sessionSave;
 
-	public User(String db_id, String first_name, String last_name, String email, Keys keys, Option opt, boolean isAdmin, boolean sawGroupProfile, SessionSave sessionSave, Status status) {
+	public User(String db_id, String first_name, String last_name, String email, Keys keys, Option opt, boolean isAdmin,
+			boolean sawGroupProfile, SessionSave sessionSave, Status status) {
 		this.db_id = db_id;
 		this.first_name = first_name;
 		this.last_name = last_name;
@@ -200,7 +197,7 @@ public class User {
 		this.emails = new HashMap<String, UserEmail>();
 		this.profile_columns = new LinkedList<List<Profile>>();
 		for (int i = 0; i < 5; ++i) {
-			this.profile_columns.add(new LinkedList<Profile>()); 
+			this.profile_columns.add(new LinkedList<Profile>());
 		}
 		this.max_single_id = 0;
 		this.emails = new HashMap<String, UserEmail>();
@@ -226,13 +223,14 @@ public class User {
 	 * 
 	 */
 
-	public String getDBid(){
+	public String getDBid() {
 		return this.db_id;
 	}
 
 	public String getFirstName() {
 		return first_name;
 	}
+
 	public void setFirstName(String first_name, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		db.set("UPDATE users set firstName='" + first_name + "' WHERE id=" + this.db_id + ";");
@@ -242,6 +240,7 @@ public class User {
 	public String getLastName() {
 		return last_name;
 	}
+
 	public void setLastName(String last_name, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		db.set("UPDATE users set lastName='" + last_name + "' WHERE id=" + this.db_id + ";");
@@ -260,9 +259,9 @@ public class User {
 		return opt;
 	}
 
-	/*public Status getStatus() {
-		return status;
-	}*/
+	/*
+	 * public Status getStatus() { return status; }
+	 */
 
 	public Map<String, UserEmail> getUserEmails() {
 		return emails;
@@ -274,6 +273,14 @@ public class User {
 
 	public List<Group> getGroups() {
 		return groups;
+	}
+
+	public Set<Infrastructure> getInfras() {
+		Set<Infrastructure> infras = new HashSet<Infrastructure>();
+		this.groups.forEach((group) -> {
+			infras.add(group.getInfra());
+		});
+		return infras;
 	}
 
 	public SessionSave getSessionSave() {
@@ -323,7 +330,8 @@ public class User {
 					int transaction = db.startTransaction();
 					if (profile.getApps().size() > 0) {
 						if (password == null)
-							throw new GeneralException(ServletManager.Code.ClientWarning, "Password confirmation needed.");
+							throw new GeneralException(ServletManager.Code.ClientWarning,
+									"Password confirmation needed.");
 						this.keys.isGoodPassword(password);
 					}
 					profile.removeFromDB(sm);
@@ -354,8 +362,8 @@ public class User {
 	}
 
 	public Profile getProfile(int single_id) throws GeneralException {
-		for (List<Profile> column: this.profile_columns) {
-			for (Profile profile: column) {
+		for (List<Profile> column : this.profile_columns) {
+			for (Profile profile : column) {
 				if (profile.getSingleId() == single_id)
 					return profile;
 			}
@@ -365,9 +373,9 @@ public class User {
 
 	public List<Profile> getProfilesList() {
 		List<Profile> profiles = new LinkedList<Profile>();
-		for (int i = 1; i<this.profile_columns.size(); i++){
+		for (int i = 1; i < this.profile_columns.size(); i++) {
 			List<Profile> column = this.profile_columns.get(i);
-			for (Profile profile: column) {
+			for (Profile profile : column) {
 				if (profile != null)
 					profiles.add(profile);
 			}
@@ -376,9 +384,9 @@ public class User {
 	}
 
 	public App getApp(int single_id) throws GeneralException {
-		for (List<Profile> column: this.profile_columns) {
-			for (Profile profile: column) {
-				for (App app: profile.getApps()) {
+		for (List<Profile> column : this.profile_columns) {
+			for (Profile profile : column) {
+				for (App app : profile.getApps()) {
 					if (app.getSingleId() == single_id)
 						return app;
 				}
@@ -388,9 +396,9 @@ public class User {
 	}
 
 	public Profile getProfileFromApp(int single_id) throws GeneralException {
-		for (List<Profile> column: this.profile_columns) {
-			for (Profile profile: column) {
-				for (App app: profile.getApps()) {
+		for (List<Profile> column : this.profile_columns) {
+			for (Profile profile : column) {
+				for (App app : profile.getApps()) {
 					if (app.getSingleId() == single_id)
 						return profile;
 				}
@@ -399,14 +407,14 @@ public class User {
 		throw new GeneralException(ServletManager.Code.ClientError, "This app's single_id dosen't exist.");
 	}
 
-	public void replaceApp(App app) throws GeneralException{
-		app.getProfile().getApps().set(app.getPosition(), app);		
+	public void replaceApp(App app) throws GeneralException {
+		app.getProfile().getApps().set(app.getPosition(), app);
 	}
 
 	public App getAppWithDBid(String DBid) throws GeneralException {
-		for (List<Profile> column: this.profile_columns) {
-			for (Profile profile: column) {
-				for (App app: profile.getApps()) {
+		for (List<Profile> column : this.profile_columns) {
+			for (Profile profile : column) {
+				for (App app : profile.getApps()) {
 					if (app.getDBid() == DBid)
 						return app;
 				}
@@ -421,7 +429,7 @@ public class User {
 		for (Map.Entry<String, UserEmail> entry : emails.entrySet()) {
 			entry.getValue().removeFromDB(sm);
 		}
-		for (List<Profile> column: this.profile_columns) {
+		for (List<Profile> column : this.profile_columns) {
 			for (Profile profile : column) {
 				profile.removeFromDB(sm);
 			}
@@ -429,7 +437,7 @@ public class User {
 		this.removeFromDB(sm);
 		this.keys.removeFromDB(sm);
 		this.opt.removeFromDB(sm);
-		//this.status.removeFromDB(sm);
+		// this.status.removeFromDB(sm);
 		db.commitTransaction(transaction);
 	}
 
@@ -454,7 +462,7 @@ public class User {
 	}
 
 	public void addWebsocket(WebsocketSession wSession) throws GeneralException {
-		this.websockets.put(wSession.getSessionId() , wSession);
+		this.websockets.put(wSession.getSessionId(), wSession);
 	}
 
 	public int getMostEmptyProfileColumn() {
@@ -462,11 +470,11 @@ public class User {
 		int minSize = -1;
 		for (List<Profile> column : this.profile_columns) {
 			int colSize = 0;
-			if (this.profile_columns.indexOf(column) != 0){
-				for (Profile profile: column) {
+			if (this.profile_columns.indexOf(column) != 0) {
+				for (Profile profile : column) {
 					colSize += profile.getSize();
 				}
-				if (minSize == - 1 || colSize < minSize) {
+				if (minSize == -1 || colSize < minSize) {
 					minSize = colSize;
 					col = this.profile_columns.indexOf(column);
 				}
@@ -493,7 +501,7 @@ public class User {
 			if (rs.next()) {
 				return (rs.getString(1));
 			} else {
-				throw new GeneralException(ServletManager.Code.ClientError, "This user dosen't exist."); 
+				throw new GeneralException(ServletManager.Code.ClientError, "This user dosen't exist.");
 			}
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
@@ -514,7 +522,7 @@ public class User {
 			int col = 1;
 			int minSize = -1;
 			for (int i = 1; i < Profile.MAX_COLUMN; ++i) {
-				if (minSize == - 1 || columns[i] < minSize) {
+				if (minSize == -1 || columns[i] < minSize) {
 					minSize = columns[i];
 					col = i;
 				}
@@ -525,10 +533,12 @@ public class User {
 		}
 	}
 
-	public static int getColumnNextPositionForUnconnected(String db_id, int column_idx, ServletManager sm) throws GeneralException {
+	public static int getColumnNextPositionForUnconnected(String db_id, int column_idx, ServletManager sm)
+			throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		try {
-			ResultSet rs = db.get("SELECT count(*) FROM profiles WHERE user_id=" + db_id + " AND column_idx=" + column_idx + ";");
+			ResultSet rs = db.get(
+					"SELECT count(*) FROM profiles WHERE user_id=" + db_id + " AND column_idx=" + column_idx + ";");
 			if (rs.next()) {
 				return rs.getInt(1);
 			} else {
@@ -540,7 +550,7 @@ public class User {
 	}
 
 	public void removeEmailIfNeeded(String email, ServletManager sm) throws GeneralException {
-		if (this.emails.get(email)!=null && this.emails.get(email).removeIfNotUsed(sm))
+		if (this.emails.get(email) != null && this.emails.get(email).removeIfNotUsed(sm))
 			this.emails.remove(email);
 	}
 
@@ -548,8 +558,8 @@ public class User {
 		return this.emails;
 	}
 
-	public List<String> getEmailsString(){
-		List<String> emails = new LinkedList<String> ();
+	public List<String> getEmailsString() {
+		List<String> emails = new LinkedList<String>();
 		for (Map.Entry<String, UserEmail> entry : this.emails.entrySet()) {
 			emails.add(entry.getValue().getEmail());
 		}
@@ -557,7 +567,7 @@ public class User {
 	}
 
 	public List<String> getVerifiedEmails() {
-		List<String> verifiedEmails = new LinkedList<String> ();
+		List<String> verifiedEmails = new LinkedList<String>();
 		for (Map.Entry<String, UserEmail> entry : emails.entrySet()) {
 			if (entry.getValue().isVerified())
 				verifiedEmails.add(entry.getValue().getEmail());
@@ -566,7 +576,7 @@ public class User {
 	}
 
 	public List<String> getUnverifiedEmails() {
-		List<String> unverifiedEmails = new LinkedList<String> ();
+		List<String> unverifiedEmails = new LinkedList<String>();
 		for (Map.Entry<String, UserEmail> entry : emails.entrySet()) {
 			if (!entry.getValue().isVerified())
 				unverifiedEmails.add(entry.getValue().getEmail());
@@ -576,7 +586,8 @@ public class User {
 
 	public Profile addProfile(String name, String color, ServletManager sm) throws GeneralException {
 		int column = this.getMostEmptyProfileColumn();
-		Profile newProfile = Profile.createPersonnalProfile(this, column, this.getProfileColumns().get(column).size(), name, color, sm);
+		Profile newProfile = Profile.createPersonnalProfile(this, column, this.getProfileColumns().get(column).size(),
+				name, color, sm);
 		this.profile_columns.get(column).add(newProfile);
 		return newProfile;
 	}
@@ -590,10 +601,10 @@ public class User {
 		app.removeFromDB(sm);
 		profile.updateAppsIndex(sm);
 		if (app.getType().equals("ClassicApp")) {
-			for (AccountInformation info : ((ClassicApp)app).getAccount().getAccountInformations()) {
+			for (AccountInformation info : ((ClassicApp) app).getAccount().getAccountInformations()) {
 				if (Regex.isEmail(info.getInformationValue()) == true) {
 					String email = info.getInformationValue();
-					if (this.emails.get(email)!=null && this.emails.get(email).removeIfNotUsed(sm))
+					if (this.emails.get(email) != null && this.emails.get(email).removeIfNotUsed(sm))
 						this.emails.remove(email);
 				}
 			}
@@ -631,11 +642,16 @@ public class User {
 			profileDest.getApps().add(positionDest, app);
 			profileDest.updateAppsIndex(sm);
 		} else {
-			if (profileDest.getGroupProfile() != null && (profileDest.getGroupProfile().isCommon() == true || !profileDest.getGroupProfile().getPerms().havePermission(ProfilePermissions.Perm.ADDAPP.ordinal())))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "You don't have the permission to add app in this profile.");
+			if (profileDest.getGroupProfile() != null
+					&& (profileDest.getGroupProfile().isCommon() == true || !profileDest.getGroupProfile().getPerms()
+							.havePermission(ProfilePermissions.Perm.ADDAPP.ordinal())))
+				throw new GeneralException(ServletManager.Code.ClientWarning,
+						"You don't have the permission to add app in this profile.");
 			Profile profileSrc = app.getProfile();
-			if (profileSrc.getGroupProfile() != null && (profileSrc.getGroupProfile().isCommon() == false || !profileSrc.getGroupProfile().getPerms().havePermission(ProfilePermissions.Perm.MOVE_APP_OUTSIDE.ordinal())))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "You don't have the permission to move app out of this profile.");
+			if (profileSrc.getGroupProfile() != null && (profileSrc.getGroupProfile().isCommon() == false || !profileSrc
+					.getGroupProfile().getPerms().havePermission(ProfilePermissions.Perm.MOVE_APP_OUTSIDE.ordinal())))
+				throw new GeneralException(ServletManager.Code.ClientWarning,
+						"You don't have the permission to move app out of this profile.");
 			profileSrc.getApps().remove(app);
 			profileSrc.updateAppsIndex(sm);
 			profileDest.getApps().add(positionDest, app);
@@ -653,7 +669,7 @@ public class User {
 	}
 
 	public String toString() {
-		return ("User " + this.first_name); 
+		return ("User " + this.first_name);
 	}
 
 	public void removeWebsockets(Map<String, WebsocketSession> sessionWebsockets) throws GeneralException {
@@ -683,11 +699,10 @@ public class User {
 
 	public void passStep(String tutoStep, DataBaseConnection db) throws GeneralException {
 		if (tutoStep.equals("saw_group")) {
-			for(Group group : this.groups)
+			for (Group group : this.groups)
 				group.tutoStepDone(this.db_id, db);
 			this.sawGroupProfile = true;
-		}
-		else
+		} else
 			this.status.passStep(tutoStep, db);
 	}
 
@@ -723,7 +738,7 @@ public class User {
 		if (this.groups.isEmpty())
 			return true;
 		else
-			return this.sawGroupProfile();
+			return this.sawGroupProfile;
 	}
 
 	public void addEmailIfNeeded(String email, ServletManager sm) throws GeneralException {
@@ -734,15 +749,15 @@ public class User {
 		this.emails.put(email, userEmail);
 	}
 
-	public void rememberNotIntegratedApp(Object o){
+	public void rememberNotIntegratedApp(Object o) {
 
 	}
 
-	public void rememberNotIntegratedFacebookApp(Object o){
+	public void rememberNotIntegratedFacebookApp(Object o) {
 
 	}
 
-	public void rememberNotIntegratedLinkedinApp(Object o){
+	public void rememberNotIntegratedLinkedinApp(Object o) {
 
 	}
 }

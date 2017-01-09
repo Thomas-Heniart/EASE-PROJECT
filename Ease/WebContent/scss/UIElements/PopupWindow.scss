@@ -796,7 +796,7 @@
 			pointer-events: none;
 			z-index: -1;
 			position: absolute;
-//			height: 0;
+			//			height: 0;
 			overflow: hidden;
 			&.show {
 				transition: opacity .3s, visibility .3s;
@@ -805,7 +805,7 @@
 				pointer-events: auto;
 				z-index: 1;
 				position: relative;
-//				height: auto;
+				//				height: auto;
 				overflow: auto;
 			}
 		}
@@ -914,7 +914,7 @@
 						border-radius: 3px;
 
 						p {
-							font-size: 0.8vw;
+							font-size: 0.9vw;
 						}
 					}
 					&:last-child {

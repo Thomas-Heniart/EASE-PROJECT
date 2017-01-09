@@ -53,6 +53,15 @@
     right: 0;
 }
 
+.onoffswitch-label-readonly:before {
+  transition: none;
+  right: 0;
+}
+
+.onoffswitch-label-readonly {
+  background-color: $themeSilverColor;
+}
+
 #tutorial {
     #accountCredentials,
     #scrapingInfo,
@@ -352,7 +361,7 @@
                     }
 
                     .appsContainer {
-                        height: 15vw;
+                        height: 20vw;
                         overflow: auto;
 
                         .appHandler {

@@ -130,6 +130,7 @@ a.active, a:active, a:focus, a:hover {
 }
 @media (min-width:768px) {
     .navbar-custom {
+        height: 63px;
         background-color: transparent;
         padding: 25px 0;
         -webkit-transition: padding .3s;
@@ -702,7 +703,6 @@ header .intro-text .intro-heading {
                                      left: 12.1%;
                                      width: 76%;
                                      top: 5.5%;
-                                     height: 80.5%;
                                      box-shadow: 0 2px 4px -1px rgba(0,0,0,.14),0 4px 5px 0 rgba(0,0,0,.098),0 1px 10px 0 rgba(0,0,0,.084);
                                  }
                              }
@@ -1232,10 +1232,11 @@ header {
     padding-top: 10px;
     padding-bottom: 10px;
 }
-.navbar-nav > li:last-child > a {
+.navbar-nav #connexionButton {
         border: 1px solid;
-        border-radius: 5px;
+        border-radius: 5px;    
 }
+
 /* ease popups */
 .submitButton {
     transition: opacity 0.3s, visibility 0.3s;
@@ -1260,10 +1261,10 @@ header {
 
 .passwordValidator {
     position: absolute;
-    height: 68%;
     left: 100%;
     margin-left: 1%;
-    top: 11%;
+    top: 50%;
+    transform: translateY(-50%);
 }
 .alert-message, .loading {
     position: absolute;

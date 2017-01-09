@@ -188,7 +188,18 @@ pageEncoding="UTF-8"%>
 							<a>Barthelemy Leveque</a>
 						</div>
 						<div class="post">
-							<p>Data Science</p>
+							<p>Analyst</p>
+						</div>
+					</div>
+					<div class="memberDescription">
+						<div class="memberPhoto">
+							<img src="resources/team/Adrien.png"/>
+						</div>
+						<div class="name">
+							<a>Adrien Guillen</a>
+						</div>
+						<div class="post">
+							<p>Advisor</p>
 						</div>
 					</div>
 				</div>
