@@ -53,6 +53,15 @@
     right: 0;
 }
 
+.onoffswitch-label-readonly:before {
+  transition: none;
+  right: 0;
+}
+
+.onoffswitch-label-readonly {
+  background-color: $themeSilverColor;
+}
+
 #tutorial {
     #accountCredentials,
     #scrapingInfo,

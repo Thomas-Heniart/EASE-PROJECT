@@ -286,7 +286,7 @@ public class Profile {
 	public static int getSizeForUnconnected(String db_id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		try {
-			ResultSet rs = db.get("SELECT COUNT(*) apps WHERE profile_id=" + db_id + ";");
+			ResultSet rs = db.get("SELECT COUNT(*) FROM apps WHERE profile_id=" + db_id + ";");
 			if (rs.next()) {
 				int ret = rs.getInt(1);
 				if (ret < 4)

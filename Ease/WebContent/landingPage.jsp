@@ -427,7 +427,7 @@ pageEncoding="UTF-8"%>
 								</div>
 							</div>
 							<div class="row">
-								<input type="hidden" name="fname" value=<%=request.getParameter("name")%>/>
+								<input type="hidden" name="fname" value=<%=request.getParameter("name")%> />
 								<input type="hidden" name="email" value=<%= request.getParameter("email")%> />
 								<input type="hidden" name="invitationCode" value=<%= request.getParameter("invitationCode") %> />
 								<span class="input">

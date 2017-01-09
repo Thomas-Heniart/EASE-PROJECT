@@ -76,7 +76,7 @@ public class CheckInvitation extends HttpServlet {
 						throw new GeneralException(ServletManager.Code.ClientWarning, "You already have an account");
 					rs = db.get("SELECT group_id FROM invitationsAndGroupsMap JOIN invitations ON invitationsAndGroupsMap.invitation_id = invitations.id WHERE email='" + email + "';");
 					if (rs.next()) {
-						Invitation.sendInvitation(email, name, rs.getString(1), sm);
+						Invitation.sendInvitation(email, name, sm);
 						sm.setResponse(ServletManager.Code.Success, "1 You receveid an email");
 					} else {
 						sm.setResponse(ServletManager.Code.Success, "2 Go to registration");
