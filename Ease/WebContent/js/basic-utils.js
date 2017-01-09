@@ -122,6 +122,18 @@ function changeColor(color, ratio, darker) {
     });
 
 $(document).ready(function(){
+    var placeHolder = null;
+
+    $('input,textarea').focus(function(){
+        placeHolder = $(this).attr('placeholder');
+        $(this).attr('placeHolder', '');
+        $(this).one('blur', function(){
+            $(this).attr('placeholder', placeHolder);
+        });
+    });
+});
+
+$(document).ready(function(){
     $('.showPassDiv').click(function(){
         var input = $(this).parent().find('input');
         if ($(this).hasClass('show')){
