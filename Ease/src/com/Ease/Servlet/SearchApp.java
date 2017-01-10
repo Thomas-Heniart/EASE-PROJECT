@@ -49,7 +49,7 @@ public class SearchApp extends HttpServlet {
 			sm.needToBeConnected();
 			String search = sm.getServletParam("search", true);
 			String[] tags = sm.getServletParamArray("tags", true);
-			if (search == null || search.equals(""))
+			if (search == null)
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty search.");
 			if (tags == null)
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty tags.");
