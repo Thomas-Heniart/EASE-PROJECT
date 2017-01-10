@@ -63,10 +63,10 @@
 
 		$('#tipsHandler #0').css({
 			'left': $('.ProfileBox').offset().left + $('.ProfileBox').outerWidth(true) / 2,
-			'top': $('.ProfileBox').offset().top + $('.ProfileBox').height() - headerHeight + 5
+			'top': $('.ProfileBox').offset().top + $('.ProfileBox').height() - headerHeight + 20
 		});
 		$('#tipsHandler #1').css({
-			'left': $('.ProfileBox').offset().left - $('#tipsHandler #0').outerWidth(true) - 5,
+			'left': $('.ProfileBox').offset().left - $('#tipsHandler #0').outerWidth(true) - 20,
 			'top': $('.ProfileBox').offset().top - headerHeight
 		});
 		
@@ -78,8 +78,8 @@
 		}
 		
 		$('#tipsHandler #3').css({
-			'left': $('.MenuButtonSet').offset().left - $('#tipsHandler #3').outerWidth(true),
-			'top': $('.MenuButtonSet').offset().top - headerHeight
+			'left': $('.MenuButtonSet').offset().left - $('#tipsHandler #3').outerWidth(true) - 15,
+			'top': $('.MenuButtonSet').offset().top - headerHeight - 10
 		});
 		
 		$('#tipsHandler #4').css({
@@ -104,7 +104,7 @@
 		
 		$('#tipsHandler #0 button').click(function(){
 			$('#tipsHandler #1').css({
-				'left': $('.ProfileBox').offset().left - $('#tipsHandler #0').outerWidth(true) - 5,
+				'left': $('.ProfileBox').offset().left - $('#tipsHandler #0').outerWidth(true) - 20,
 				'top': $('.ProfileBox').offset().top - headerHeight
 			});
 			$('#tipsHandler #0').removeClass('show');
@@ -113,15 +113,15 @@
 		$('#tipsHandler #1 button').click(function(){
 			if ($(".ProfileBox[custom='true']").length == 0){
 				$('#tipsHandler #3').css({
-					'left': $('.MenuButtonSet').offset().left - $('#tipsHandler #3').outerWidth(true) - 5,
-					'top': $('.MenuButtonSet').offset().top - headerHeight
+					'left': $('.MenuButtonSet').offset().left - $('#tipsHandler #3').outerWidth(true) - 20,
+					'top': $('.MenuButtonSet').offset().top - headerHeight - 15
 				});
 				$('#tipsHandler #1').removeClass('show');
 				$('#tipsHandler #3').addClass('show');
 			} else{
 				$('#tipsHandler #2').css({
 					'left': $(".ProfileBox[custom='true']").offset().left - $('#tipsHandler #2').outerWidth(true),
-					'top': $(".ProfileBox[custom='true']").offset().top + $('#tipsHandler #2').height() - headerHeight + 5
+					'top': $(".ProfileBox[custom='true']").offset().top + $('#tipsHandler #2').height() - headerHeight + 20
 				});
 				$('#tipsHandler #1').removeClass('show');
 				$("#tipsHandler #2").addClass('show');	
@@ -129,8 +129,8 @@
 		});
 		$('#tipsHandler #2 button').click(function(){
 			$('#tipsHandler #3').css({
-				'left': $('.MenuButtonSet').offset().left - $('#tipsHandler #3').outerWidth(true),
-				'top': $('.MenuButtonSet').offset().top - headerHeight
+				'left': $('.MenuButtonSet').offset().left - $('#tipsHandler #3').outerWidth(true) - 20,
+				'top': $('.MenuButtonSet').offset().top - headerHeight - 15
 			});
 			$('#tipsHandler #2').removeClass('show');
 			$('#tipsHandler #3').addClass('show');		
