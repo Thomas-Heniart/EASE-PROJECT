@@ -1,0 +1,28 @@
+{
+	"name":"Quora",
+	"lastLogin":"",
+	"home":"https://www.quora.com/",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"input[name='email']"},
+			{"action":"fill", "what":"password", "search":"input[name='password']"},
+			{"action":"click", "search":"input[type='submit']"}
+			]
+	},
+	"logout":{
+		"todo":[
+			{"action":"clickona", "search":"a.logout"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":"div.header_nav"}
+	],
+	"checkChangeLogin":[
+		{"action":"click", "search":"#loginbutton"}
+	],
+    "Facebook":{
+    	"todo":[
+    		{"action":"clickona", "search":"a.facebook_button"}
+    	]	
+    }
+}
