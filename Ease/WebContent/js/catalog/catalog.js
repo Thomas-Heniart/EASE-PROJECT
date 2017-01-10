@@ -43,7 +43,7 @@ function refreshCatalogContent(data) {
 function updateCatalogWith(searchVal, tags) {
 	var ids = [];
 	tags.each(function(index, tag) {
-		ids.push(parseInt($(tag).attr("tagid")));
+		ids.push($(tag).attr("tagid"));
 	});
 	var json = JSON.stringify(ids);
 	postHandler.post('SearchApp', {
