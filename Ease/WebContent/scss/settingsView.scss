@@ -348,12 +348,13 @@
 					span.unverifiedEmail {
 						display: inline-block;
 						vertical-align: middle;
-    				border-radius: 4px;
-    				text-align: center;
+    					border-radius: 4px;
+    					text-align: center;
 						color: white;
 						border-color: orange;
 						cursor: pointer;
 						overflow: hidden;
+						font-size: 14px;
 						width: fit-content;
 						margin-top: 4px;
 						white-space: nowrap;
