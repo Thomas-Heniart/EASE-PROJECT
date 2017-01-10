@@ -103,7 +103,7 @@ public class ServletManager {
 	}
 	
 	public String[] getServletParamArray(String paramName, boolean saveInLogs) {
-		String param[] = request.getParameterValues(paramName);
+		String[] param = request.getParameterValues(paramName);
 		if (saveInLogs)
 			args.put(paramName, (param != null) ? param.toString() : null);
 		return param;
