@@ -16,8 +16,5 @@
     },
     "checkAlreadyLogged":[
         {"search":".basketBtn"}
-    ],
-    "checkChangeLogin":[
-        {"action":"click", "search":"#loginbutton"}
     ]
 }

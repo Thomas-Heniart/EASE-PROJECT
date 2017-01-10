@@ -45,8 +45,8 @@ function updateCatalogWith(searchVal, tags) {
 		ids.push(parseInt($(tag).attr("tagid")));
 	});
 	var json = JSON.stringify(ids);
-	postHandler.post('searchInCatalog', {
-		tagIds : json,
+	postHandler.post('SearchApp', {
+		tags : json,
 		search : searchVal
 	}, function() {
 		
