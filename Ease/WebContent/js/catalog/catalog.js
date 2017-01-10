@@ -25,6 +25,7 @@ function sortSites(sites) {
 }
 
 function refreshCatalogContent(data) {
+	
 	if (data[0] == '[') {
 		var json = JSON.parse(data);
 		$('.catalogApp').hide();
@@ -40,17 +41,20 @@ function refreshCatalogContent(data) {
 }
 
 function updateCatalogWith(searchVal, tags) {
+	
 	var ids = [];
 	tags.each(function(index, tag) {
-		ids.push(parseInt($(tag).attr("tagid")));
+		ids.push($(tag).attr("tagid"));
 	});
 	var json = JSON.stringify(ids);
-	postHandler.post('searchInCatalog', {
-		tagIds : json,
+	postHandler.post('SearchApp', {
+		tags : json,
 		search : searchVal
 	}, function() {
 		
 	}, function(retMsg) {
+		console.log(retMsg);
+		console.log(typeof retMsg);
 		refreshCatalogContent(retMsg);
 	}, function(retMsg) {
 	}, 'text');

@@ -1,0 +1,28 @@
+{
+    "name":"Trakt",
+    "lastLogin":"",
+    "home":"https://trakt.tv/",
+    "connect":{
+        "todo":[
+        	{"action":"goto", "url":"https://trakt.tv/auth/signin"},
+            {"action":"fill", "what":"login", "search":"input#user_login", "grave":true},
+            {"action":"fill", "what":"password", "search":"input#user_password"},
+            {"action":"click", "search":"input[type='submit']"}
+        ]
+    },
+    
+    "logout":{
+        "todo":[
+        	{"action":"aclick","search":"a[href='/logout']"}
+        ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"div#user-menu"}
+    ],
+    "Facebook": {
+    	"todo": [
+    		{"action":"goto", "url":"https://trakt.tv/auth/signin"},
+    		{"action":"aclick", "search":"a[href='/auth/auth/facebook']"}
+    	]
+    }
+}

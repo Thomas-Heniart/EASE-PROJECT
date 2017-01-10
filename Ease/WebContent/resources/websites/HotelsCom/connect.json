@@ -1,0 +1,32 @@
+{
+    "name":"Hotels.com",
+    "lastLogin":"",
+    "home":"https://hotels.com/",
+    "connect":{
+        "todo":[
+            {"action":"clickona", "search":"a[href*='signin']"},
+            {"action":"waitfor", "search":"#sign-in-email"},
+            {"action":"fill", "what":"login", "search":"#sign-in-email"},
+            {"action":"fill", "what":"password", "search":"#sign-in-password"},
+            {"action":"click", "search":"form.sica-form.sign-in button[type='submit']"}
+            ]
+    },
+    "Facebook":{
+      "todo":[
+        {"action":"goto", "url":"https://hotels.com/facebook/authenticate.html"}
+      ]
+    },
+    "Google":{
+      "todo":[
+        {"action":"goto", "url":"https://hotels.com/auth/gigya/googleplus"}
+      ]
+    },
+    "logout":{
+        "todo":[
+            {"action":"aclick", "search":"a[href*='signout']"}
+            ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a[href*='signout']"}
+    ]
+}

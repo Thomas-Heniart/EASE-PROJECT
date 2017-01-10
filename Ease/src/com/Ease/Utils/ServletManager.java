@@ -103,7 +103,7 @@ public class ServletManager {
 	}
 	
 	public String[] getServletParamArray(String paramName, boolean saveInLogs) {
-		String param[] = request.getParameterValues(paramName);
+		String[] param = request.getParameterValues(paramName);
 		if (saveInLogs)
 			args.put(paramName, (param != null) ? param.toString() : null);
 		return param;
@@ -180,12 +180,14 @@ public class ServletManager {
 				System.err.println("Logs not sended to database.");
 			}
 		}
-		if (this.retCode != Code.Success.getValue() && this.retCode != Code.UserMiss.getValue() /*&& this.retCode != Code.ClientWarning.getValue()*/) {
+		if (this.retCode != Code.Success.getValue() && this.retCode != Code.UserMiss.getValue() && this.retCode != Code.ClientWarning.getValue()) {
 			retMsg = "Sorry an internal problem occurred. We are solving it asap.";
-			try {
-				this.db.rollbackTransaction();
-			} catch (GeneralException e) {
-				System.err.println("Rollback transaction failed.");
+			if (this.retCode != Code.Success.getValue()) {
+				try {
+					this.db.rollbackTransaction();
+				} catch (GeneralException e) {
+					System.err.println("Rollback transaction failed.");
+				}
 			}
 		}
 		try {

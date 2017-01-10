@@ -1,0 +1,22 @@
+{
+    "name":"VenteDuDiable",
+    "lastLogin":"",
+    "home":"https://www.vente-du-diable.com/",
+    "connect":{
+        "todo":[
+            {"action":"click", "search":"#btn_connect"},
+            {"action":"fill", "what":"login", "search":"#userAuthenticationForm input[name='auth_usn']"},
+            {"action":"fill", "what":"password", "search":"#userAuthenticationForm input[name='auth_psw']"},
+            {"action":"click", "search":"#userAuthenticationForm input[name='submit']"}
+            ]
+    },
+    "logout":{
+        "todo":[
+            {"action":"click", "search":"#btDisconnect"},
+            {"action":"waitfor", "search":"#btn_connect"}
+            ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"#btDisconnect"}
+    ]
+}

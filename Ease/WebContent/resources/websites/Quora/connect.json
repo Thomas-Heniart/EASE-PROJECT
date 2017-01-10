@@ -4,14 +4,18 @@
 	"home":"https://www.quora.com/",
 	"connect":{
 		"todo":[
-			{"action":"fill", "what":"login", "search":"input[name='email']"},
-			{"action":"fill", "what":"password", "search":"input[name='password']"},
+			{"action":"clickona", "search":".profile a.remove"},
+			{"action":"waitfor", "search":".inline_login_form input[name='email']"},
+			{"action":"fill", "what":"login", "search":".inline_login_form input[name='email']"},
+			{"action":"fill", "what":"password", "search":".inline_login_form input[name='password']"},
 			{"action":"click", "search":"input[type='submit']"}
 			]
 	},
 	"logout":{
 		"todo":[
-			{"action":"clickona", "search":"a.logout"}
+			{"action":"clickona", "search":"form[action*='logout'] a.logout"},
+			{"action":"submit", "search":"form[action*='logout_POST']"}
+			{"action":"waitfor", "search":".inline_login_form"}
 		]
 	},
 	"checkAlreadyLogged":[
@@ -23,6 +27,6 @@
     "Facebook":{
     	"todo":[
     		{"action":"clickona", "search":"a.facebook_button"}
-    	]	
+    	]
     }
 }

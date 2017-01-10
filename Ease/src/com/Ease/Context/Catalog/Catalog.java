@@ -7,6 +7,9 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
@@ -92,23 +95,22 @@ public class Catalog {
 		return this.tags;
 	}
 
-	public String search(String search, String[] tags) throws GeneralException {
-		String result = "";
-		if (tags.length <= 0) {
+	public JSONArray search(String search, JSONArray tags) throws GeneralException {
+		JSONArray result = new JSONArray();
+		if (tags.size() <= 0) {
 			for (Website site : this.websites) {
-				if (site.getName().startsWith(search)) {
-					result += site.getSingleId();
-					result += " ";
+				if (site.getName().toUpperCase().startsWith(search.toUpperCase())) {
+					result.add(String.valueOf(site.getSingleId()));
 				}
 			}
 		} else {
 			Tag tag;
-			for (String tagName : tags) {
-				tag = this.tagIDmap.get(tagName);
+			for (Object tagName : tags) {
+				tag = this.tagIDmap.get(Integer.parseInt((String)tagName));
 				if (tag != null) {
-					result += tag.search(search);
+					tag.search(result, search);
 				} else {
-					throw new GeneralException(ServletManager.Code.ClientWarning, "This tag dosen't exist.");
+					throw new GeneralException(ServletManager.Code.ClientError, "This tag dosen't exist.");
 				}
 			}
 		}
