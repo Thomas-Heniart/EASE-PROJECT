@@ -1,0 +1,29 @@
+{
+	"name":"8tracks",
+	"lastLogin":"",
+	"home":"http://8tracks.com/",
+	"connect":{
+		"todo":[
+			{"action":"goto", "url":"https://8tracks.com/login"},
+			{"action":"fill", "what":"login", "search":"#login"},
+			{"action":"fill", "what":"password", "search":"#password", "grave":true},
+			{"action":"click", "search":"input[type='submit']"}
+			]
+	},
+	"logout":{
+		"todo":[
+			{"action":"goto", "url":"https://8tracks.com/logout"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":"#auth_nav.logged_in"}
+	],
+	"checkChangeLogin":[
+		{"action":"click", "search":"#loginbutton"}
+	],
+    "Facebook":{
+    	"todo":[
+    		{"action":"clickona", "search":"a.facebook_connect_button"}
+    	]	
+    }
+}
