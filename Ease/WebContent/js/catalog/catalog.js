@@ -41,6 +41,7 @@ function refreshCatalogContent(data) {
 }
 
 function updateCatalogWith(searchVal, tags) {
+	
 	var ids = [];
 	tags.each(function(index, tag) {
 		ids.push($(tag).attr("tagid"));
@@ -52,6 +53,8 @@ function updateCatalogWith(searchVal, tags) {
 	}, function() {
 		
 	}, function(retMsg) {
+		console.log(retMsg);
+		console.log(typeof retMsg);
 		refreshCatalogContent(retMsg);
 	}, function(retMsg) {
 	}, 'text');
