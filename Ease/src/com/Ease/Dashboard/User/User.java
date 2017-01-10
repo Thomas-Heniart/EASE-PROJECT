@@ -154,7 +154,7 @@ public class User {
 		SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, sm);
 		User newUser = new User(db_id, firstName, lastName, email, keys, opt, false, false, sessionSave, status);
 		newUser.getProfileColumns().get(0).add(Profile.createPersonnalProfile(newUser, 0, 0, "Side", "#000000", sm));
-		newUser.getProfileColumns().get(1).add(Profile.createPersonnalProfile(newUser, 1, 0, "Perso", "#000000", sm));
+		newUser.getProfileColumns().get(1).add(Profile.createPersonnalProfile(newUser, 1, 0, "Me", "#373B60", sm));
 		((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
 		for (Group group : groups) {
 			group.addUser(email, sm);

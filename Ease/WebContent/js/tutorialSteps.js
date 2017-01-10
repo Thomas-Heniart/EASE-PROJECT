@@ -157,11 +157,11 @@ function showSavingPopup(filterJson) {
 	$('div#saving').addClass("show");
 }
 
-function addTutoApps(logwithId, i) {
+/*function addTutoApps(logwithId, i) {
 	if (i >= appToAdd.length) {
-		/*loadingStep = 0;
+		loadingStep = 0;
 		currentStep = 0;
-		maxSteps = 0;*/
+		maxSteps = 0;
 		postHandler.post('TutoStep', {
 			"tutoStep" : "chrome_scrapping"
 		}, function() {
@@ -240,7 +240,7 @@ function addTutoProfiles(i, profileId) {
 		if (i == 10 || i == 30) {
 			postHandler.post('AddProfile', {
 				"name" : "Choose name",
-				"color" : "#FF0000"
+				"color" : "#FF9D34"
 			}, function() {
 				//always
 			}, function(retMsg) {
@@ -279,14 +279,42 @@ function goToNextLoadingStep() {
     if (nextPercent > 100)
     	nextPercent = 100;
     progressBar.width(nextPercent + "%");
-}
+}*/
 
 $('div#saving div#selectScraping button').click(function () {
-	loadingStep = calculStep();
-	$("#add_app_progress #maxStep").text(maxSteps);
+	//loadingStep = calculStep();
+	//$("#add_app_progress #maxStep").text(maxSteps);
 	$("#scrapping_done_submit").addClass("hide");
 	$("#add_app_progress").removeClass("hide");
-	addTutoProfiles(0, 0);
+	console.log(appToAdd);
+	var appToAddFilter = [];
+	for (var i = 0; i < appToAdd.length; ++i) {
+		if ($("div#saving div.scrapedAppsContainer div[index='" + i + "']").length == 0 || $("div#saving div.scrapedAppsContainer div[index='" + i + "']").hasClass("selected")) {
+			appToAddFilter.push(appToAdd[i]);
+		}
+	}
+	
+	postHandler.post('TutoAddApps', {
+		"scrapjson" : JSON.stringify(appToAddFilter)
+	}, function() {
+		//always
+	}, function(retMsg) {
+		//succes
+		easeTracker.trackEvent("TutoAddApp", appToAddFilter);
+		postHandler.post('TutoStep', {
+			"tutoStep" : "chrome_scrapping"
+		}, function() {
+			//always
+		}, function(retMsg) {
+			//succes
+			easeTracker.trackEvent("ScrappingDone");
+			location.reload();
+		}, function(retMsg) {
+			//error
+		}, 'text');
+	}, function(retMsg) {
+		//error
+	}, 'text');
 });
 
 function showAccountCredentials(retMsg) {

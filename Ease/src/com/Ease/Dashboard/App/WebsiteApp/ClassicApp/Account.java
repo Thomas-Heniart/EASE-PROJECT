@@ -45,10 +45,11 @@ public class Account {
 	public static Account createAccount(String password, boolean shared, Map<String, String> informations, User user, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		String db_id = db.set("INSERT INTO accounts values (null, '" + user.encrypt(password) + "', " + (shared ? 1 : 0) + ");").toString();
+		String crypted_password = user.encrypt(password);
+		String db_id = db.set("INSERT INTO accounts values (null, '" + crypted_password + "', " + (shared ? 1 : 0) + ");").toString();
 		List<AccountInformation> infos = AccountInformation.createAccountInformations(db_id, informations, sm);
 		db.commitTransaction(transaction);
-		return new Account(db_id, password, shared, infos);
+		return new Account(db_id, crypted_password, shared, infos);
 	}
 	
 	public static Account createGroupAccount(String password, boolean shared, Map<String, String> informations, Infrastructure infra, ServletManager sm) throws GeneralException {

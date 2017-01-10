@@ -1,0 +1,21 @@
+{
+    "name":"AlloCiné",
+    "lastLogin":"",
+    "home":"http://www.allocine.fr/",
+    "connect":{
+        "todo":[
+        	{"action":"aclick", "search":"a[href*='secure.allocine.fr/account/logon']"},
+        	{"action":"fill", "what":"login", "search":"input#Email", "grave":true},
+            {"action":"fill", "what":"password", "search":"input#Password"},
+            {"action":"click", "search":"button#btn-logon"}
+        ]
+    },
+    "logout":{
+        "todo":[
+            {"action":"aclick", "search":"a[href*='secure.allocine.fr/account/logoff']"}
+            ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a[href^='https://secure.allocine.fr/account/logoff']"}
+    ]
+}
