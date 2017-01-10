@@ -51,6 +51,8 @@ public class SearchApp extends HttpServlet {
 			String[] tags = sm.getServletParamArray("tags", true);
 			if (search == null || search.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty search.");
+			if (tags == null)
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty tags.");
 			String result = ((Catalog)sm.getContextAttr("catalog")).search(search, tags);
 			sm.setResponse(ServletManager.Code.Success, result);
 		} catch (GeneralException e) {
