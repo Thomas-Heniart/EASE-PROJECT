@@ -102,6 +102,7 @@
     		bottom: -60%;
     		left: -11vw;
     		width: 27vw;
+    		z-index: -1;
     		transform: rotateZ(12deg);
 		}
 		.arrow-tip.show {

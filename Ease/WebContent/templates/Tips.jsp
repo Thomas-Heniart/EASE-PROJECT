@@ -155,6 +155,7 @@
 		});
 		$('#tipsHandler #4 button').click(function(){
 			$('#tipsHandler #4').removeClass('show');
+			$(".col-left, .header").removeClass("darken");
 		});
 		
 		$("#tipsHandler .tip button").click(function(e) {

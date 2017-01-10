@@ -259,7 +259,7 @@ var Profile = function(rootEl){
 			easeLoadingIndicator.show();
 			postHandler.post('EditProfileName', {
 				name : name,
-				index : self.id
+				profileId : self.id
 			}, function() {
 				easeLoadingIndicator.hide();
 			}, function(retMsg) {
@@ -520,8 +520,11 @@ function enterEditModeTutorial() {
 }
 
 function leaveEditModeTutorial() {
-	if ($("#tipsHandler #4").length)
+	if ($("#tipsHandler #4").length) {
 		$('#tipsHandler #4').removeClass('show');
+		$(".col-left, .header").removeClass("darken");
+	}
+		
 }
 
 
