@@ -45,7 +45,6 @@ public class Catalog {
 		for (Tag tag : tags) {
 			tagDBmap.put(tag.getDbId(), tag);
 			tagIDmap.put(tag.getSingleId(), tag);
-			System.out.println(tag.getSingleId());
 		}
 	}
 	
@@ -96,22 +95,20 @@ public class Catalog {
 		return this.tags;
 	}
 
-	public String search(String search, JSONArray tags) throws GeneralException {
-		String result = "";
+	public JSONArray search(String search, JSONArray tags) throws GeneralException {
+		JSONArray result = new JSONArray();
 		if (tags.size() <= 0) {
 			for (Website site : this.websites) {
 				if (site.getName().toUpperCase().startsWith(search.toUpperCase())) {
-					result += site.getSingleId();
-					result += " ";
+					result.add(String.valueOf(site.getSingleId()));
 				}
 			}
 		} else {
 			Tag tag;
 			for (Object tagName : tags) {
-				System.out.println(tagName);
 				tag = this.tagIDmap.get(Integer.parseInt((String)tagName));
 				if (tag != null) {
-					result += tag.search(search);
+					tag.search(result, search);
 				} else {
 					throw new GeneralException(ServletManager.Code.ClientError, "This tag dosen't exist.");
 				}

@@ -8,6 +8,8 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import org.json.simple.JSONArray;
+
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
@@ -95,12 +97,10 @@ public class Tag {
 		return this.sites;
 	}
 	
-	public String search(String search) {
-		String result= "";
+	public JSONArray search(JSONArray result, String search) {
 		for (Website site : this.sites) {
-			if (site.getName().startsWith(search)) {
-				result += site.getSingleId();
-				result += " ";
+			if (site.getName().toUpperCase().startsWith(search.toUpperCase())) {
+				result.add(String.valueOf(site.getSingleId()));
 			}
 		}
 		return result;

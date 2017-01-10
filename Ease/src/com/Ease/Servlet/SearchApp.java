@@ -59,8 +59,8 @@ public class SearchApp extends HttpServlet {
 			JSONParser parser = new JSONParser();
 			Object array = parser.parse(tags);
 			JSONArray tagsArray = (JSONArray) array;
-			String result = ((Catalog)sm.getContextAttr("catalog")).search(search, tagsArray);
-			sm.setResponse(ServletManager.Code.Success, result);
+			JSONArray result = ((Catalog)sm.getContextAttr("catalog")).search(search, tagsArray);
+			sm.setResponse(ServletManager.Code.Success, result.toJSONString());
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		} catch (Exception e) {
