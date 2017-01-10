@@ -227,24 +227,6 @@ body {
     .controls.show {
       display: block;
     }
-    .controls {
-      display: none;
-      transition: bottom .3s;
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 1.2vw;
-      a {
-        color: black;
-        text-decoration: underline;
-        cursor: pointer;
-      }
-      i {
-        margin: 0px 10px;
-        font-size: 0.9vw;
-      }
-    }
     .ease-logo {
       width: 12vw;
       img {
@@ -301,6 +283,22 @@ body {
    transform: perspective(1000px) scaleX(1) translateZ(0px) rotateX(360deg);
  }
 }
+#loading {
+  position: relative;
+  display: none;
+  width: 10vw;
+  height: 10vw;
+  &.show {
+    display: block;
+  }
+  .sk-circle{
+    &:before {
+      background-color: #45c997;
+    }
+  }
+}
+
+
 .FormsContainer {
   display: -webkit-box;
   display: -webkit-flex;
@@ -329,221 +327,111 @@ body {
   height: 100%;
   background-color: transparent;
   overflow: auto;
-  .handler#passwordLost {
-    .form {
-      .buttonSet {
-        button {
-          transition: opacity .3s, visibility .3s;
-          opacity: 0;
-          position: relative;
-          visibility: hidden;
-          pointer-events: none;
-          z-index: -1;
-          text-align: center;
-          margin: auto;
-          &.show {
-            transition: opacity .3s, visibility .3s;
-            opacity: 1;
-            position: relative;
-            visibility: visible;
-            pointer-events: auto;
-            z-index: 1;
-            &:hover {
-              opacity: 0.7;
+
+  button {
+    width: 65%;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    padding-top: 7px;
+    border-radius: 7px;
+    font-size: 1.35vw;
+    background-color: #6aa84f;
+    border: none;
+    color: white;
+    outline: none;
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: 1vw;
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+}
+
+.floatRight {
+  float:right;
+}
+.floatLeft {
+  float: left;
+}
+
+#loginBody {
+  .popupHandler{
+    background-color: transparent;
+    .landingPopup {
+      border-radius: 20px;
+      border:1px solid #aaa;
+      width: 20vw;
+      color: black;
+      .title {
+        margin:1vw 0;
+        font-family: $defaultFont;
+        background-color: white;
+        line-height: 3vw;
+        border: none;
+        padding: 0;
+        p {
+          font-size: 2.2vw;
+        }
+      }
+      .bodysHandler .popupBody{
+        padding-bottom: 0.5vw;
+        .handler {
+          .alertDiv {
+            display: none;
+            &.show {
+              display: block;
+            }
+          }
+          .alertDiv {
+            p {
+              font-size: 1vw;
+            }
+          }
+          .row {
+            input, .input {
+              margin-bottom: 1.2vw;
+              font-size: 1vw;
+              border-radius: 10px;
+              padding: 0.4vw 5px;
+              &:last-child {
+                margin-bottom: 0;
+              }
+            }
+            button {
+              width: auto;
+              border-radius: 10px;
+              font-size: 1.3vw;
+              padding: 0.2vw 2vw;
+              background-color: #45c997;
+              &:hover {
+                opacity: 0.7;
+              }
+            }
+            .buttonLink {
+              text-decoration: underline;
+              font-size: 0.8vw;
+              color: black;
+              &:hover {
+                cursor:pointer;
+              }
+            }
+            .popupText {
+              font-size: 1.1vw;
             }
           }
         }
-        .sk-fading-circle {
-          transition: opacity .3s, visibility .3s;
-          opacity: 0;
-          position: absolute;
-          visibility: hidden;
-          pointer-events: none;
-          z-index: -1;
-          text-align: center;
-          margin: auto;
-          height: 2.5vw;
-          &.show {
-            transition: opacity .3s, visibility .3s;
-            opacity: 1;
-            position: absolute;
-            visibility: visible;
-            pointer-events: auto;
-            z-index: 1;
-          }
-        }
-      }
-      #goBack {
-        text-decoration: underline;
-        cursor: pointer;
-      }
-    }
-  }
-  .handler.show {
-    transition: visibility .3s, opacity .3s;
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-    z-index: 1;
-    position: relative;
-  }
-  .handler {
-    overflow: hidden;
-    margin: auto;
-    position: absolute;
-    transition: visibility .3s, opacity .3s;
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    z-index: -1;
-    .switch-account {
-      width: 25px;
-    }
-    div#back, div#changeAccount {
-      background-color: $themeLightGreyColor;
-      color: $themeColor;
-      border-radius: 4px;
-      cursor: pointer;
-      display: inline-block;
-      text-align: center;
-      position: absolute;
-      right: 0;
-      margin-top: 8%;
-      width: 100%;
-      padding: 3%;
-    }
-    .sk-fading-circle {
-      position: relative;
-      margin: 8% auto;
-      width: 100px;
-      height: 100px;
-      .sk-circle:before {
-        background-color: $themeColor;
-      }
-    }
-    .form.show {
-      transition: visibility .3s, opacity .3s, position .3s;
-      opacity: 1;
-      position: relative;
-      visibility: visible;
-    }
-    .form {
-      transition: visibility .3s, opacity .3s, position .3s;
-      position: absolute;
-      vertical-align: middle;
-      display: inline-block;
-      text-align: center;
-      min-width: 200px;
-      width: 20vw;
-      padding-left: 2%;
-      padding-right: 2%;
-      border-radius: 4px;
-      padding-bottom: 1%;
-      padding-top: 1%;
-      visibility: hidden;
-      opacity: 0;
-      top: 0;
-      left: 0;
-      .emoji {
-        img {
-          width: 20%;
-        }
-      }
-      .line .alertDiv, .alertDiv {
-        p {
-          font-size: 1vw;
-          color: $themeRedColor;
-        }
-      }
-      .title {
-        font-size: 3vw;
-        font-weight: normal;
-        margin-bottom: 1.6vw;
-      }
-      .line {
-        width: 100%;
-        position: relative;
-        margin-bottom: 1vw;
-        p {
-          font-size: 1.2vw;
-          margin-bottom: 0px;
-          color: $themeColor;
-        }
-        input {
-          width: 100%;
-          position: relative;
-          color: $themeColor;
-          padding-top: 5px;
-          padding-bottom: 4px;
-          border:2px solid #bfbfbf;
-          border-radius: 5px;
-          background-color: white;
-          font-size: 1.3vw;
-          text-align: center;
-        }
-        input:-webkit-autofill {
-         -webkit-box-shadow: 0 0 0px 1000px white inset;
-       }
-       input:-webkit-autofill:focus {
-         -webkit-box-shadow: 0 0 0px 1000px white inset;
-       }
-     }
-     .forget-password {
-       bottom: 1px;
-       right: 3px;
-       color: #373B60;
-     }
-     .new-to-ease {
-       bottom: 1px;
-       left: 3px;
-       color: #373B60;
-     }
-     button {
-      width: 65%;
-      margin-bottom: 15px;
-      padding-bottom: 5px;
-      padding-top: 7px;
-      border-radius: 7px;
-      font-size: 1.35vw;
-      background-color: #6aa84f;
-      border: none;
-      color: white;
-      outline: none;
-      position: relative;
-      display: inline-block;
-      vertical-align: middle;
-      margin-top: 1vw;
-      &:hover {
-        opacity: 0.7;
-      }
-    }
-    a.create-account {
-      bottom: 0;
-    }
-    a {
-      font-size: 12px;
-      display: block;
-      vertical-align: middle;
-      position: absolute;
-      bottom: 10px;
-      &:hover {
-        cursor: pointer;
       }
     }
   }
 }
-}
+
 @media screen and (max-width: 771px) {
   #loginBody {
     .logo {
      width: 100%;
      margin-top: 0px;
-   }
-   .form {
-     width: 98%;
-     margin-top: 20%;
-     margin-left: auto;
-     margin-right: auto;
    }
  }
 
@@ -592,13 +480,6 @@ body {
 .logoutButton img {
 	height: 100%;
 	color: red;
-}
-
-#loginBody form{
-  .alertDiv.show {
-    display: block;
-    color: $themeRedColor;
-  }
 }
 
 .la-animate {

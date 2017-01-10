@@ -58,128 +58,125 @@ response.sendRedirect("/index.jsp");
 }
 boolean knownUser = iden == 2 ? true : false;
 %>
-<div class="FormsContainer">
-	<div class="handler show" id="connection">
-		<% if (knownUser){ %>
-		<p id="userName" style="display:none;"><%= new String(Base64.getDecoder().decode(fname), StandardCharsets.UTF_8) %></p>
-		<div class="form show" id="knownUser">			
-			<div class="savedUser">
-				<div class="line emoji">
-					<img src="resources/emojis/wink.png" />
-				</div>
-				<h2 class="title">Hello <%= new String(Base64.getDecoder().decode(fname), StandardCharsets.UTF_8) %>,</h2>
-				<div class="line">
-					<p>Please type your password to access your space</p>
-				</div>
-				<div class="line">
-					<input id="password" name="password" type="password" id="input-8" placeholder="Password"/>
-				</div>
-				<div class="alertDiv">
-					<p>Incorrect password !</p>
-				</div> 
-				<button id="savedUserButton">Login</button>
-				<!-- <a class='create-account' href='/getEmailLink'>create an account</a> -->
-			</div>
-			<div class="sk-fading-circle" id="loadingKnownUser" style="display:none;">
-				<div class="sk-circle1 sk-circle"></div>
-				<div class="sk-circle2 sk-circle"></div>
-				<div class="sk-circle3 sk-circle"></div>
-				<div class="sk-circle4 sk-circle"></div>
-				<div class="sk-circle5 sk-circle"></div>
-				<div class="sk-circle6 sk-circle"></div>
-				<div class="sk-circle7 sk-circle"></div>
-				<div class="sk-circle8 sk-circle"></div>
-				<div class="sk-circle9 sk-circle"></div>
-				<div class="sk-circle10 sk-circle"></div>
-				<div class="sk-circle11 sk-circle"></div>
-				<div class="sk-circle12 sk-circle"></div>
-			</div>
-		</div>
-		<%}%>
-		<div class="form <% if (!knownUser){ %> show <% }%>" id="unknownUser" >
-			<!--			<img class='ease-logo' src='resources/icons/Ease_Logo_couleur.png'/>-->
-			<form action="connection" method="POST" id="loginForm" role="form">
-				<div class="line emoji">
-					<img src="resources/emojis/smile.png" />
-				</div>
-				<h2 class="title">Hello,</h2>
-				<div class="line">
-					<input id="email" name="email" type="email" id="input-8" placeholder="Email"/>
-				</div>
-				<div class="line">
-					<input id="password" name="password" type="password" id="input-8" placeholder="Password"/>
-				</div>
-				<div class="alertDiv">
-					<p>Incorrect password or email !</p>
-				</div>
-				<button id="helloButton">Login</button>
-				<!-- <a class='create-account' href='/getEmailLink'>create an account</a> -->
-			</form>
-			<div class="sk-fading-circle" id="loadingUnknownUser" style="display:none;">
-				<div class="sk-circle1 sk-circle"></div>
-				<div class="sk-circle2 sk-circle"></div>
-				<div class="sk-circle3 sk-circle"></div>
-				<div class="sk-circle4 sk-circle"></div>
-				<div class="sk-circle5 sk-circle"></div>
-				<div class="sk-circle6 sk-circle"></div>
-				<div class="sk-circle7 sk-circle"></div>
-				<div class="sk-circle8 sk-circle"></div>
-				<div class="sk-circle9 sk-circle"></div>
-				<div class="sk-circle10 sk-circle"></div>
-				<div class="sk-circle11 sk-circle"></div>
-				<div class="sk-circle12 sk-circle"></div>
-			</div>
-		</div>
+<div class="popupHandler myshow">
+	<div class="sk-fading-circle" id="loading">
+		<div class="sk-circle1 sk-circle"></div>
+		<div class="sk-circle2 sk-circle"></div>
+		<div class="sk-circle3 sk-circle"></div>
+		<div class="sk-circle4 sk-circle"></div>
+		<div class="sk-circle5 sk-circle"></div>
+		<div class="sk-circle6 sk-circle"></div>
+		<div class="sk-circle7 sk-circle"></div>
+		<div class="sk-circle8 sk-circle"></div>
+		<div class="sk-circle9 sk-circle"></div>
+		<div class="sk-circle10 sk-circle"></div>
+		<div class="sk-circle11 sk-circle"></div>
+		<div class="sk-circle12 sk-circle"></div>
 	</div>
-	<div class="handler" id="passwordLost">
-		<div class="form show">
-			<form action="PasswordLost" method="POST" id="passwordLost" role="form">
-				<div class="line emoji">
-					<img src="resources/emojis/wondering.png" />
-				</div>
-				<h2 class="title">Lost password ?</h2>
-				<div class="line">
-					<p>For security reasons, resetting your EASE password will delete all account passwords you added to the platform.</p>
-				</div>
-				<div class="line">
-					<input id="email" name="email" type="email" id="input-8" placeholder="Email"/>
-				</div>
-				<div class="alertDiv">
-					<p>Incorrect password !</p>
-				</div> 
-				<div class="line buttonSet">
-					<button id="lostPasswordButton" class="show">Reset password</button>
-					<div class="sk-fading-circle centeredItem">
-						<div class="sk-circle1 sk-circle"></div>
-						<div class="sk-circle2 sk-circle"></div>
-						<div class="sk-circle3 sk-circle"></div>
-						<div class="sk-circle4 sk-circle"></div>
-						<div class="sk-circle5 sk-circle"></div>
-						<div class="sk-circle6 sk-circle"></div>
-						<div class="sk-circle7 sk-circle"></div>
-						<div class="sk-circle8 sk-circle"></div>
-						<div class="sk-circle9 sk-circle"></div>
-						<div class="sk-circle10 sk-circle"></div>
-						<div class="sk-circle11 sk-circle"></div>
-						<div class="sk-circle12 sk-circle"></div>
-					</div>
-				</div>
-				<div class="line">
-					<p id="goBack">Go back</p>
-				</div>
-			</form>
-		</div>
-	</div>
-</div>
-
-<div class="controls show">
+	<!-- known user popup -->
 	<% if (knownUser) {%>
-	<a href="discover" target="_blank">New to Ease</a>
-	<i class="fa fa-circle" aria-hidden="true"></i>
-	<a id="changeAccount">Other account</a>
-	<i class="fa fa-circle" aria-hidden="true"></i>
-	<% } %>
-	<a id="passwordLost">Password lost</a>
+	<div class="easePopup landingPopup show" id="knownUser">
+		<div class="bodysHandler">
+			<div class="popupBody show">
+				<div class="handler">
+					<div class="row">
+						<div class="title">
+							<p>Hello<br><span><%= new String(Base64.getDecoder().decode(fname), StandardCharsets.UTF_8) %></span> !</p>
+						</div>
+					</div>
+					<form method="POST" action="connection" id="knownUserForm">
+						<div class="row text-center">
+							<p class="popupText">Please type your password to access your space</p>
+						</div>
+						<div class="row" style="margin-bottom:0.3vw">
+							<input type="hidden" name="email" placeholder="Email" value="<%= email %>"/>
+							<input type="password" name="password" placeholder="Password"/>
+						</div>
+						<div class="row">
+							<p class="buttonLink floatRight pwdLostButton">Password lost ?</p>
+						</div>
+						<div class="row alertDiv text-center">
+							<p></p>
+						</div>
+						<div class="row text-center">
+							<button class="btn" type="submit">Login</button>
+						</div>
+						<div class="row">
+							<p class="buttonLink floatLeft otherAccountButton">Other account</p>
+							<a class="buttonLink floatRight createAccount" href="/discover">Create an account</a>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<%}%>
+	<!-- unknown user popup -->
+	<div class="easePopup landingPopup <% if (!knownUser){ %> show <% }%>" id="unknownUser">
+		<div class="bodysHandler">
+			<div class="popupBody show">
+				<div class="handler">
+					<div class="row">
+						<div class="title">
+							<p>Hello</p>
+						</div>
+					</div>
+					<form method="POST" action="connection" id="unknownUserForm">
+						<div class="row" style="margin-bottom:0.3vw">
+							<input type="email" name="email" placeholder="Email"/>
+							<input type="password" name="password" placeholder="Password"/>
+						</div>
+						<div class="row">
+							<p class="buttonLink floatRight pwdLostButton">Password lost ?</p>
+						</div>
+						<div class="row alertDiv text-center">
+							<p></p>
+						</div>
+						<div class="row text-center">
+							<button class="btn" type="submit">Login</button>
+						</div>
+						<div class="row">
+							<% if(knownUser) {%>
+							<p class="buttonLink floatLeft knownAccountButton"><%= new String(Base64.getDecoder().decode(fname), StandardCharsets.UTF_8) %>'s account</p>
+							<%}%>
+							<a class="buttonLink floatRight createAccount" href="/discover">Create an account</a>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- password lost popup -->
+	<div class="easePopup landingPopup" id="passwordLost">
+		<div class="bodysHandler">
+			<div class="popupBody show">
+				<div class="handler">
+					<div class="row">
+						<div class="title">
+							<p>Lost password ?</p>
+						</div>
+					</div>
+					<form method="POST" action="PasswordLost" id="passwordLostForm">
+						<div class="row text-center">
+							<p class="popupText">For security reasons, resetting your EASE password will delete all account passwords you added to the platform.</p>
+						</div>
+						<div class="row">
+							<input type="email" name="email" placeholder="Email"/>
+						</div>
+						<div class="row alertDiv text-center">
+							<p></p>
+						</div>
+						<div class="row text-center">
+							<button class="btn" type="submit">Reset password</button>
+						</div>
+						<div class="row text-center">
+							<p class="buttonLink backButton">Go back</p>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <p class="homepageOnoffContainer displayedByPlugin">
