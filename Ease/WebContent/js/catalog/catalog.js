@@ -25,6 +25,7 @@ function sortSites(sites) {
 }
 
 function refreshCatalogContent(data) {
+	
 	if (data[0] == '[') {
 		var json = JSON.parse(data);
 		$('.catalogApp').hide();
