@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
@@ -48,12 +51,15 @@ public class SearchApp extends HttpServlet {
 		try {
 			sm.needToBeConnected();
 			String search = sm.getServletParam("search", true);
-			String[] tags = sm.getServletParamArray("tags", true);
+			String tags = sm.getServletParam("tags", true);
 			if (search == null)
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty search.");
 			if (tags == null)
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty tags.");
-			String result = ((Catalog)sm.getContextAttr("catalog")).search(search, tags);
+			JSONParser parser = new JSONParser();
+			Object array = parser.parse(tags);
+			JSONArray tagsArray = (JSONArray) array;
+			String result = ((Catalog)sm.getContextAttr("catalog")).search(search, tagsArray);
 			sm.setResponse(ServletManager.Code.Success, result);
 		} catch (GeneralException e) {
 			sm.setResponse(e);
