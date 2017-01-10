@@ -28,6 +28,16 @@ $("div#simpleImportation div.appHandler").click(function() {
 	} else {
 		$(this).find("div.app").addClass("selected");	
 	}
+	if ($("#simpleImportation .app.selected").length >= 4){
+		$("#simpleImportation button[type='submit']").removeClass('locked');
+	} else {
+		$("#simpleImportation button[type='submit']").addClass('locked');		
+	}
+});
+
+$("#simpleImportation .showMoreHelper").click(function(){
+	$(this).css('display', 'none');
+	$("#simpleImportation .appHandler.hidden").removeClass('hidden');
 });
 
 function goToNextStep() {
@@ -230,7 +240,7 @@ function addTutoProfiles(i, profileId) {
 		if (i == 10 || i == 30) {
 			postHandler.post('AddProfile', {
 				"name" : "Choose name",
-				"color" : "#FF0000"
+				"color" : "#FF9D34"
 			}, function() {
 				//always
 			}, function(retMsg) {

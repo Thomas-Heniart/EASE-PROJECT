@@ -267,10 +267,79 @@
 									<p class="name">Skype</p>
 								</div>
 							</div>
+							<div class="showMoreHelper">
+								<p class="showMoreButton">
+								Show few more
+								</p>
+							</div>
+							<div class="appHandler hidden">
+								<div class="app" id="${catalog.getWebsiteWithName('Vente Privee').getSingleId()}">
+									<div class="logo">
+										<img src="resources/websites/VentePrivee/logo.png">
+									</div>
+									<p class="name">Vente Privée</p>
+								</div>
+							</div>
+							<div class="appHandler hidden">
+								<div class="app" id="${catalog.getWebsiteWithName('Amazon').getSingleId()}">
+									<div class="logo">
+										<img src="resources/websites/Amazon/logo.png">
+									</div>
+									<p class="name">Amazon</p>
+								</div>
+							</div>
+							<div class="appHandler hidden">
+								<div class="app" id="${catalog.getWebsiteWithName('Dropbox').getSingleId()}">
+									<div class="logo">
+										<img src="resources/websites/Dropbox/logo.png">
+									</div>
+									<p class="name">Dropbox</p>
+								</div>
+							</div>
+							<div class="appHandler hidden">
+								<div class="app" id="${catalog.getWebsiteWithName('Deliveroo').getSingleId()}">
+									<div class="logo">
+										<img src="resources/websites/Deliveroo/logo.png">
+									</div>
+									<p class="name">Deliveroo</p>
+								</div>
+							</div>
+							<div class="appHandler hidden">
+								<div class="app" id="${catalog.getWebsiteWithName('LeBonCoin').getSingleId()}">
+									<div class="logo">
+										<img src="resources/websites/LeBonCoin/logo.png">
+									</div>
+									<p class="name">LeBonCoin</p>
+								</div>
+							</div>
+							<div class="appHandler hidden">
+								<div class="app" id="${catalog.getWebsiteWithName('Voyages SNCF').getSingleId()}">
+									<div class="logo">
+										<img src="resources/websites/VoyageSNCF/logo.png">
+									</div>
+									<p class="name">Voyages SNCF</p>
+								</div>
+							</div>
+							<div class="appHandler hidden">
+								<div class="app" id="${catalog.getWebsiteWithName('YahooMail').getSingleId()}">
+									<div class="logo">
+										<img src="resources/websites/YahooMail/logo.png">
+									</div>
+									<p class="name">YahooMail</p>
+								</div>
+							</div>
+							<div class="appHandler hidden">
+								<div class="app" id="${catalog.getWebsiteWithName('Paypal').getSingleId()}">
+									<div class="logo">
+										<img src="resources/websites/Paypal/logo.png">
+									</div>
+									<p class="name">Paypal</p>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="row text-center">
-						<button class="btn" type="submit">I am done!</button>
+						<button class="btn locked" type="submit">I am done!</button>
 					</div>
 					<div class="row text-center">
 						<a>If you have more than one account on a website, you’ll be able to add it later.</a>

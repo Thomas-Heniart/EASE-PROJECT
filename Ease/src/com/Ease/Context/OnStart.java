@@ -50,14 +50,14 @@ public class OnStart implements ServletContextListener{
 				context.setAttribute("groupManager", new GroupManager());
 
 				List<String> colors = new ArrayList<String>();
-				colors.add("#ffe74c");
-				colors.add("#35a7ff");
-				colors.add("#6bf178");
-				colors.add("#ec555b");
-				colors.add("#805b9b");
-				colors.add("#ff974f");
-				colors.add("#373b60");
-				colors.add("#ff618a");
+				colors.add("#373B60");
+				colors.add("#9B59B6");
+				colors.add("#3498DB");
+				colors.add("#5FD747");
+				colors.add("#F1C50F");
+				colors.add("#FF9D34");
+				colors.add("#E74C3C");
+				colors.add("#FF5E88");
 				context.setAttribute("colors", colors);
 
 				Infrastructure.loadInfrastructures(db, evt.getServletContext());
