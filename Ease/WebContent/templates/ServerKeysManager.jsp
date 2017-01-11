@@ -6,21 +6,28 @@
 		<i class="fa fa-times"></i>
 	</button>
 
-	<div class="requestedWebsitesView">
-		<div class="requestedWebsitesHeader">
-			<button id="sendAllMails">Send all emails</button>
-			<p>People asked if we could add these websites</p>
+	<form method="post" style="margin-top:5%;" action="addServerCredentials">
+		<p>CREATE NEW SERVER CREDENTIALS : </p>
+		<div>
+			<p>New server credentials :</p>
+			<input name="newLogin" type="text" placeholder="Login"></input>
+			<input name="newPassword" type="password" placeholder="Passwd"></input>
 		</div>
-	</div>
-</div>
-
-<div class="md-modal md-effect-15 popup" id="PopupSendEmailWebsite">
-	<div class="md-content">
-		<p class="title"></p>
-		<input></input>
-		<div class="buttonSet">
-    		<button type="button" id="accept" class="btn btn-default btn-primary btn-group btn-lg">Yes</button>
-    		<button type="button" id="close" class="btn btn-default btn-primary btn-group btn-lg">No</button>
-    	</div>
-	</div>
+		<div style="margin-top:1%;">
+			<p>An admin must validate this new key :</p>
+			<input name="login" type="text" placeholder="Login"></input>
+			<input name="password" type="password" placeholder="Passwd"></input>
+		</div>
+		<button type="submit">Submit</button>
+	</form>
+	
+	<form method="post" style="margin-top:5%;" action="removeServerCredentials">
+		<p>REMOVE SERVER CREDENTIALS: </p>
+		<div>
+			<p>Enter login and password to remove your credentials :</p>
+			<input name="login" type="text" placeholder="Login"></input>
+			<input name="password" type="password" placeholder="Passwd"></input>
+		</div>
+		<button type="submit">Submit</button>
+	</form>
 </div>
