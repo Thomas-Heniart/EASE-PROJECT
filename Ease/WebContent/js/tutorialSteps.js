@@ -247,7 +247,6 @@ function ScrapingInfoFinished() {
 			//always
 		}, function(retMsg) {
 			//succes
-			console.log(retMsg);
 			showSavingPopup(JSON.parse(retMsg));
 			
 		}, function(retMsg) {
