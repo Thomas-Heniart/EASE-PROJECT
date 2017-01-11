@@ -98,6 +98,7 @@ $(document).ready(function(){
 				loading.removeClass('show');
 				self.closest('.landingPopup').addClass('show');
 				errorDiv.find('p').text(data);
+				$("#knownUserForm, #unknownUserForm").find("input[name='password']").val("");
 				errorDiv.addClass('show');
 			},
 			'text'
