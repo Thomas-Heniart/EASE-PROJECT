@@ -23,7 +23,7 @@
 					onclick="showModifyAppPopup(this, event)">
 						<p>Modify</p>
 					</div>
-					<c:if test="${app.havePerm(com.Ease.Dashboard.App.AppPermissions.Perm.DELETE)}">
+					<c:if test="${app.havePerm((com.Ease.Dashboard.App.AppPermissions.Perm)com.Ease.Dashboard.App.AppPermissions.Perm.DELETE)}">
 						<div class="deleteAppButton menu-item" onclick="showConfirmDeleteAppPopup(this, event)">
 							<p>Delete</p>
 						</div>
@@ -40,7 +40,7 @@
 	 id="${app.getSingleId()}"
 	 move="true">
 	<div class="linkImage">
-	<c:if test="${app.havePerm(com.Ease.Dashboard.App.AppPermissions.Perm.DELETE)}">
+	<c:if test="${app.havePerm((com.Ease.Dashboard.App.AppPermissions.Perm)com.Ease.Dashboard.App.AppPermissions.Perm.DELETE)}">
 	<div class="showAppActionsButton">
 		<i class="fa fa-cog"></i>
 		<div class="appActionsPopup">
@@ -88,7 +88,7 @@
 				onclick="showModifyAppPopup(this, event)">
 				<p>Modify</p>
 			</div>
-			<c:if test="${app.havePerm(com.Ease.Dashboard.App.AppPermissions.Perm.DELETE)}">
+			<c:if test="${app.havePerm((com.Ease.Dashboard.App.AppPermissions.Perm)com.Ease.Dashboard.App.AppPermissions.Perm.DELETE)}">
 			<div class="deleteAppButton menu-item"
 			onclick="showConfirmDeleteAppPopup(this, event)">
 			<p>Delete</p>
