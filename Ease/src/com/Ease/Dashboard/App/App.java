@@ -190,7 +190,8 @@ public class App {
 		this.profile = profile;
 	}
 	
-	public boolean havePerm(AppPermissions.Perm perm) {
+	public boolean havePerm(String permName) {
+		AppPermissions.Perm perm = AppPermissions.Perm.valueOf(permName);
 		if (this.groupApp == null)
 			return true;
 		if (!this.groupApp.isCommon() && this.groupApp.getPerms().havePermission(perm.ordinal()))
