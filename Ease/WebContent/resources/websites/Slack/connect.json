@@ -4,7 +4,7 @@
     "home":{"http":"https://", "subdomain":"team", "domain":"slack.com"},
     "connect":{
         "todo":[
-        	{"action":"click", "search":"form[action*='no_sso'] input[type='submit']"},
+        	{"action":"click", "search":"form[action*='no_sso=1'] input[type='submit']"},
         	{"action":"waitfor", "search":"#email"},
             {"action":"fill", "what":"login", "search":"#email"},
             {"action":"fill", "what":"password", "search":"#password"},
@@ -18,6 +18,11 @@
             {"action":"aclick", "search":"a[href*='signout']"},
             {"action":"aclick", "search":"a[data-clog-params='click_target=signout_done_sign_back_in']"}
             ]
+    },
+    "Google":{
+    	"todo":[
+    		{"action":"aclick", "search":"a[href*='accounts.google.com']"}
+    	]
     },
     "checkAlreadyLogged":[
         {"search":"#team_menu"}
