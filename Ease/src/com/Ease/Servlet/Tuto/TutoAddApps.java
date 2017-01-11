@@ -84,12 +84,18 @@ public class TutoAddApps extends HttpServlet {
 			}
 			
 			i = 0;
-			Profile profile;
+			Profile profile = null;
 			App logwith = null;
 			Website site;
 			while (i < jsonArray.size()) {
 				JSONObject obj = (JSONObject)jsonArray.get(i);
-				profile = user.getProfile(Integer.parseInt(obj.get("profileId").toString()));
+				if (i < 10) {
+					if (obj.get("profileId") == null) {
+						profile = user.getProfilesList().get(0);
+					} else {
+						profile = user.getProfile(Integer.parseInt(obj.get("profileId").toString()));
+					}
+				}
 				site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(obj.get("websiteId").toString()));
 				if (i == 10) {
 					profile = user.addProfile("Choose name", "#ff9d34", sm);
@@ -114,7 +120,11 @@ public class TutoAddApps extends HttpServlet {
 						}
 					}
 					if (ret == false) {
-						logwith = profile.addClassicApp(obj.get("name").toString(), site, obj.get("password").toString(), infos, sm);
+						if (obj.get("password").toString().equals("")) {
+							profile.addEmptyApp(obj.get("name").toString(), site, sm);
+						} else {
+							logwith = profile.addClassicApp(obj.get("name").toString(), site, obj.get("password").toString(), infos, sm);
+						}
 					}
 				}
 				i++;
