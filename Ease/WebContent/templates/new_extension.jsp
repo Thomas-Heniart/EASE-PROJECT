@@ -110,7 +110,7 @@
 		} else if (NavigatorName == "Safari"){
 			$("#extension #step1 #download").removeClass('show');
 			$("#extension #step1 #safari").addClass('show');
-			window.location.replace("https://ease.space/safariExtension/EaseExtension.safariextz");
+			window.location.replace(location.protocol + '//' + location.hostname+"/safariExtension/EaseExtension.safariextz");
 		}
 	});
 </script>

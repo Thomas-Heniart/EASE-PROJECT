@@ -37,7 +37,7 @@ public class Website {
 		POSITION,
 		WEBSITE_ATTRIBUTES_ID
 	}
-	
+
 	public static Website getWebsite(int single_id, ServletManager sm) throws GeneralException {
 		@SuppressWarnings("unchecked")
 		Map<Integer, Website> websitesMap = (Map<Integer, Website>)sm.getContextAttr("websites");
@@ -46,7 +46,7 @@ public class Website {
 			throw new GeneralException(ServletManager.Code.InternError, "This website dosen't exist!");
 		return site;
 	}
-	
+
 	public static Website createWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, String[] haveLoginWith, Catalog catalog, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		ResultSet rs = db.get("SELECT * FROM websites WHERE folder = '"+ folder+"' OR website_name='"+name+"';");
@@ -56,23 +56,25 @@ public class Website {
 			}
 			int transaction  = db.startTransaction();
 			WebsiteAttributes attributes = WebsiteAttributes.createWebsiteAttributes(db);
-			
+
 			String db_id = db.set("INSERT INTO websites VALUES (null, '"+ url +"', '"+ name +"', '" + folder + "', NULL, 0, '"+ homePage +"', 0, 1, "+ attributes.getDbId() +");").toString();
 			WebsiteInformation loginInfo = WebsiteInformation.createInformation(db_id, "login", "text", db);
 			List<WebsiteInformation> infos = new LinkedList<WebsiteInformation>();
 			infos.add(loginInfo);
-			
+
 			if(haveLoginButton){
 				db.set("INSERT INTO loginWithWebsites VALUES (null, "+ db_id +");");
 			}
-			
+
 			List<Website> loginWithWebsites = new LinkedList<Website>();
-			for(int i=0;i<haveLoginWith.length;i++){
-				ResultSet rs2 = db.get("SELECT id FROM loginWithWebsites WHERE website_id = "+haveLoginWith[i]+";");
-				if(rs2.next()){
-					String id = db.set("INSERT INTO websitesLogWithMap VALUES (null, "+db_id+", "+rs2.getString(1)+");").toString();
+			if(haveLoginWith != null){
+				for(int i=0;i<haveLoginWith.length;i++){
+					ResultSet rs2 = db.get("SELECT id FROM loginWithWebsites WHERE website_id = "+haveLoginWith[i]+";");
+					if(rs2.next()){
+						String id = db.set("INSERT INTO websitesLogWithMap VALUES (null, "+db_id+", "+rs2.getString(1)+");").toString();
+					}
+					loginWithWebsites.add(catalog.getWebsiteWithDBid(haveLoginWith[i]));
 				}
-				loginWithWebsites.add(catalog.getWebsiteWithDBid(haveLoginWith[i]));
 			}
 			IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
 			db.commitTransaction(transaction);
@@ -81,8 +83,8 @@ public class Website {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
-	
-	
+
+
 	public static List<Website> loadWebsites(DataBaseConnection db, ServletContext context) throws GeneralException {
 		try {
 			List<Website> websites = new LinkedList<Website>();
@@ -110,9 +112,9 @@ public class Website {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
-	
+
 	///// Check if website exist when scrapp
-	
+
 	public static JSONArray existsInDb(String websiteHost, ServletManager sm) throws GeneralException{
 		DataBaseConnection db = sm.getDB();
 		Catalog catalog = (Catalog)sm.getContextAttr("catalog");
@@ -132,7 +134,7 @@ public class Website {
 		}
 		return result;
 	}
-	
+
 	public static String existsInDbFacebook(String appName, ServletManager sm) throws GeneralException{
 		DataBaseConnection db = sm.getDB();
 		Catalog catalog = (Catalog)sm.getContextAttr("catalog");
@@ -151,7 +153,7 @@ public class Website {
 		}
 		return null;
 	}
-	
+
 	public static String existsInDbLinkedin(String appName, ServletManager sm) throws GeneralException{
 		DataBaseConnection db = sm.getDB();
 		Catalog catalog = (Catalog)sm.getContextAttr("catalog");
@@ -170,9 +172,9 @@ public class Website {
 		}
 		return null;
 	}
-	
+
 	//// -------
-	
+
 	protected String db_id;
 	protected int single_id;
 	protected String name;
@@ -186,7 +188,7 @@ public class Website {
 	protected WebsiteAttributes websiteAttributes;
 	protected List<WebsiteInformation> website_informations;
 	protected List<Website> loginWithWebsites;
-	
+
 	public Website(String db_id, int single_id, String name, String loginUrl, String folder, int sso, boolean noLogin, String website_homepage, int ratio, int position, List<WebsiteInformation> website_informations, WebsiteAttributes websiteAttributes) {
 		this.db_id = db_id;
 		this.single_id = single_id;
@@ -202,7 +204,7 @@ public class Website {
 		this.loginWithWebsites = new LinkedList<Website>();
 		this.websiteAttributes = websiteAttributes;
 	}
-	
+
 	public Website(String db_id, int single_id, String name, String loginUrl, String folder, int sso, boolean noLogin, String website_homepage, int ratio, int position, List<WebsiteInformation> website_informations, WebsiteAttributes websiteAttributes, List<Website> loginWithWebsites) {
 		this.db_id = db_id;
 		this.single_id = single_id;
@@ -218,15 +220,15 @@ public class Website {
 		this.loginWithWebsites = loginWithWebsites;
 		this.websiteAttributes = websiteAttributes;
 	}
-	
+
 	public String getDb_id() {
 		return this.db_id;
 	}
-		
+
 	public List<WebsiteInformation> getInfos() {
 		return website_informations;
 	}
-	
+
 	public Map<String, String> getNeededInfos(ServletManager sm) throws GeneralException {
 		Map<String, String> infos = new HashMap<String, String>();
 		for (WebsiteInformation info : website_informations) {
@@ -238,7 +240,7 @@ public class Website {
 		}
 		return infos;
 	}
-	
+
 	public void loadLoginWithWebsites(DataBaseConnection db, Catalog catalog) throws GeneralException {
 		ResultSet rs = db.get("SELECT loginWithWebsites.website_id FROM loginWithWebsites JOIN websitesLogWithMap ON loginWithWebsites.id = website_logwith_id WHERE websitesLogWithMap.website_id=" + this.db_id + ";");
 		try {
@@ -253,27 +255,31 @@ public class Website {
 	public int getSingleId() {
 		return this.single_id;
 	}
-	
+
 	public int getSso() {
 		return this.sso;
 	}
-	
+
 	public String getName() {
 		return this.name;
 	}
-	
+
 	public String getFolder() {
 		return Variables.WEBSITES_PATH + this.folder +"/";
 	}
-	
+
+	public String getAbsolutePath(){
+		return Variables.PROJECT_PATH + this.getFolder();
+	}
+
 	public String getUrl() {
 		return this.loginUrl;
 	}
-	
+
 	public String getHomePageUrl() {
 		return this.website_homepage;
 	}
-	
+
 	public String getLoginWith() {
 		String res = "";
 		Iterator<Website> it = this.loginWithWebsites.iterator();
@@ -284,27 +290,27 @@ public class Website {
 		}
 		return res;
 	}
-	
+
 	public List<WebsiteInformation> getInformations() {
 		return this.website_informations;
 	}
-	
+
 	public boolean isInPublicCatalog() {
 		return this.websiteAttributes != null;
 	}
-	
+
 	public boolean noLogin() {
 		return this.noLogin;
 	}
-	
+
 	public boolean work() {
 		return this.websiteAttributes.isWorking();
 	}
-	
+
 	public boolean isNew() {
 		return this.websiteAttributes.isNew();
 	}
-	
+
 	public JSONObject getJSON(ServletManager sm) throws GeneralException{
 		JSONParser parser = new JSONParser();
 		try {
