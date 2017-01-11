@@ -50,5 +50,9 @@
   	$('.custom-sel a:not(:first)').addClass('hidden');
   });
 
+  if (!($('.custom-select-language .selection.hide').length)){
+    $('.custom-sel .selected').attr('data', 'en');
+    $(".custom-sel .selection[data='en']").addClass('hide');    
+  }
 });
 </script>

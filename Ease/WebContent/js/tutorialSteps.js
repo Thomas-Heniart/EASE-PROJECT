@@ -152,12 +152,16 @@ function showSavingPopup(filterJson) {
 			$(this).find("div.app").addClass("selected");
 		}
 	});
-	$('#accountCredentials').removeClass("show");
-	$('div#importation').removeClass("show");
-	$('div#saving').addClass("show");
+	if ($('div#saving div.scrapedAppsContainer div.appHandler').length == 0) {
+		sendTutoAddApp();
+	} else {
+		$('#accountCredentials').removeClass("show");
+		$('div#importation').removeClass("show");
+		$('div#saving').addClass("show");
+	}
 }
 
-$('div#saving div#selectScraping button').click(function () {
+function sendTutoAddApp() {
 	$("#scrapping_done_submit").addClass("hide");
 	$("#add_app_progress").removeClass("hide");
 	console.log(appToAdd);
@@ -189,6 +193,10 @@ $('div#saving div#selectScraping button').click(function () {
 	}, function(retMsg) {
 		//error
 	}, 'text');
+}
+
+$('div#saving div#selectScraping button').click(function () {
+	sendTutoAddApp();
 });
 
 function showAccountCredentials(retMsg) {

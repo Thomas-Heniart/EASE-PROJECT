@@ -361,9 +361,12 @@ body {
     background-color: transparent;
     .landingPopup {
       border-radius: 20px;
-      border:1px solid #aaa;
+      border: hidden;
       width: 20vw;
       color: black;
+      &.show {
+        border:1px solid #aaa;
+      }
       .title {
         margin:1vw 0;
         font-family: $defaultFont;
