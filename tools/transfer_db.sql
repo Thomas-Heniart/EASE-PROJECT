@@ -21,7 +21,7 @@ INSERT INTO ease.sso
 SELECT * FROM test.sso;
 
 INSERT INTO ease.websiteAttributes
-SELECT null, locked, null, 1, hidden FROM test.websites;
+SELECT null, locked, null, 1, (NOT hidden) FROM test.websites;
 
 SET @var = 0;
 
