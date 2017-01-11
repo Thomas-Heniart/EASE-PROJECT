@@ -191,11 +191,9 @@ public class App {
 	}
 	
 	public boolean havePerm(AppPermissions.Perm perm) {
-		if (this.groupApp == null)
-			return true;
-		if (!this.groupApp.isCommon() && this.groupApp.getPerms().havePermission(perm.ordinal()))
-			return true;
-		return false;
+		if (this.groupApp != null && (this.groupApp.isCommon() == true || !this.groupApp.getPerms().havePermission(perm.ordinal())))
+			return false;
+		return true;
 	}
 	
 	public boolean isClassicApp() {

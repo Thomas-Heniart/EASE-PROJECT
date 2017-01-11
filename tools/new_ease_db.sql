@@ -1,7 +1,6 @@
 CREATE TABLE serverKeys(
   login VARCHAR(255) NOT NULL,
-  password varchar(50) NOT NULL,
-  saltEase char(28) DEFAULT NULL,
+  password varchar(255) NOT NULL,
   saltPerso char(28) DEFAULT NULL,
   keyServer char(44) DEFAULT NULL,
   PRIMARY KEY (login)
@@ -9,10 +8,11 @@ CREATE TABLE serverKeys(
 
 CREATE TABLE userKeys (
   id int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  password varchar(50) NOT NULL,
+  password varchar(255) NOT NULL,
   saltEase char(28) DEFAULT NULL,
   saltPerso char(28) DEFAULT NULL,
   keyUser char(44) DEFAULT NULL,
+  backUpKey char(44) DEFAULT NULL,
   PRIMARY KEY (id)
 );
 
@@ -32,7 +32,6 @@ CREATE TABLE status (
   `click_on_app` tinyint(1) NOT NULL,
   `move_apps` tinyint(1) NOT NULL,
   `open_catalog` tinyint(1) NOT NULL,
-  `drag_and_drop` tinyint(1) NOT NULL,
   `add_an_app` tinyint(1) NOT NULL,
   `tuto_done` tinyint(1) NOT NULL,
   PRIMARY KEY (id)
@@ -360,8 +359,7 @@ CREATE TABLE `date_dimension` (
 CREATE TABLE `savedSessions` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `sessionId` char(56) NOT NULL,
-  `sessionToken` char(56) NOT NULL,
-  `saltToken` char(28) NOT NULL,
+  `sessionToken` varchar(255) NOT NULL,
   `keyUser` char(44) NOT NULL,
   `saltUser` char(28) NOT NULL,
   `user_id` int(10) unsigned NOT NULL,
@@ -602,8 +600,6 @@ CREATE TABLE `classicUpdates` (
   PRIMARY KEY (`id`),
   FOREIGN KEY (`update_id`) REFERENCES `updates` (`id`)
 );
-
-
 
 CREATE TABLE `removedUpdates` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
