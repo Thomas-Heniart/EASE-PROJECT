@@ -46,7 +46,7 @@ pageEncoding="UTF-8"%>
 		<img src="resources/images/Ease_Logo.png"/>
 	</div>
 	<div class=holder>
-		<h2 class="black-shadow">We are currently launching a new version of Ease.<br>The server will restart in a few seconds.</h2>
+		<h2 class="black-shadow">We are currently facing some issues. Everything will be back to normal in a few seconds.</h2>
 		<a class="black-shadow" href="/">Click here to reload the page</a>
 	</div>
 	<script>

@@ -32,6 +32,12 @@
 		</button>
 	</div>
 	<div>
+		<button id="testWebsites" state="off" class="button adminButton"
+			target="TestWebsitesTab">
+			<img src="resources/icons/robo_test.png" />
+		</button>
+	</div>
+	<div>
 		<button id="enterServerKeysManagerMode" state="off" class="button adminButton"
 			target="ServerKeysManagerTab">
 			<img src="resources/icons/earth-lock.png" />
@@ -72,3 +78,4 @@
 <%@ include file="TagsManager.jsp"%>
 <%@ include file="ChangeBackground.jsp"%>
 <%@ include file="ServerKeysManager.jsp"%>
+<%@ include file="TestWebsites.jsp"%>
