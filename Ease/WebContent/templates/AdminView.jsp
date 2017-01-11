@@ -71,3 +71,4 @@
 <%@ include file="MoveSites.jsp" %>
 <%@ include file="TagsManager.jsp"%>
 <%@ include file="ChangeBackground.jsp"%>
+<%@ include file="ServerKeysManager.jsp"%>

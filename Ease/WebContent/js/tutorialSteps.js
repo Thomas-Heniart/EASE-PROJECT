@@ -202,7 +202,10 @@ $('div#saving div#selectScraping button').click(function () {
 function showAccountCredentials(retMsg) {
 	$('#accountCredentials').addClass("show");
 	$('#accountCredentials p span').text(scrapping[0].name);
-	$('#accountCredentials img').attr("src", scrapping[0].img);
+	$('#accountCredentials div.logo img').attr("src", scrapping[0].img);
+	if (scrapping[0].name == "Google Chrome" && !!window.chrome && !!window.chrome.webstore) {
+		$("#accountCredentials #chromeUserEmailHelper").addClass("show");
+	}
 	if (retMsg == "") {
 		$("#accountCredentials input[name='email']").val("");
 		$("#accountCredentials input[name='email']").focus();
@@ -323,7 +326,7 @@ $('#accountCredentials a').click(function () {
 $('#accountCredentials button').click(function () {
 	scrapping[0].login = $("#accountCredentials input[name='email']").val();
 	scrapping[0].password = $("#accountCredentials input[name='password']").val();
-	
+	$("#accountCredentials #chromeUserEmailHelper").removeClass("show");
     $('#accountCredentials').removeClass("show");
 	showScrapingInfo();
 });
