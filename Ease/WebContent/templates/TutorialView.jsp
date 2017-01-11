@@ -105,8 +105,11 @@
 				</div>
 			</div>
 			<div id="chromeUserEmailHelper">
+				<div class="row text-center" style="margin-bottom: 0.5vw">
+					<i class="fa fa-chevron-up" aria-hidden="true"></i>
+				</div>
 				<div class="row text-center">
-					Click on your name to see your Chrome account email.
+					<p>Click on your name to see<br>your Chrome account email.</p>
 				</div>
 				<div class="row text-center">
 					<img src="/resources/icons/chromeEmailHelper.png"/>
