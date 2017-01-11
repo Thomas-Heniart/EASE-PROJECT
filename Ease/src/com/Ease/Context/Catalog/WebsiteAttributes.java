@@ -10,7 +10,7 @@ import com.Ease.Utils.ServletManager;
 public class WebsiteAttributes {
 	
 	public static WebsiteAttributes createWebsiteAttributes(DataBaseConnection db) throws GeneralException {
-		String db_id = db.set("INSERT INTO websiteAttributes values (null, 0, null, 1, 1").toString();
+		String db_id = db.set("INSERT INTO websiteAttributes values (null, 0, null, 1, 1);").toString();
 		return new WebsiteAttributes(db_id, false, true, true);
 	}
 	
@@ -43,5 +43,9 @@ public class WebsiteAttributes {
 	
 	public boolean isNew() {
 		return this.isNew;
+	}
+	
+	public String getDbId(){
+		return db_id;
 	}
 }

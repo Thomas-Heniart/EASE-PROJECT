@@ -11,7 +11,10 @@ stty $stty_orig     # restore terminal setting.
 echo
 rm -f ROOT.war
 rm -rf -f ROOT
-systemctl restart tomcat
+
 echo "$login" > serverLogin
 echo -n "$passwd" >> serverLogin
+chown tomcat:tomcat serverLogin
 cp $path ROOT.war
+
+systemctl start tomcat8

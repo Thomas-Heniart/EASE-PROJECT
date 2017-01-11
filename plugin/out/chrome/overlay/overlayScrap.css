@@ -47,6 +47,7 @@
     border-color: #373b60;
     border-radius : 5px;
     width : 370px;
+    height: 36px;
     text-align: center;
 }
 
@@ -60,8 +61,8 @@
 .containerScrap .websiteContainer span{
     display: inline;
     line-height: normal !important; 
-    margin-left : 10px;
-    font-size: 30px;
+    margin-left : 10px !important;
+    font-size: 28px !important;
     font-family: Arial !important;
 }
 

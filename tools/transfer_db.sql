@@ -21,12 +21,12 @@ INSERT INTO ease.sso
 SELECT * FROM test.sso;
 
 INSERT INTO ease.websiteAttributes
-SELECT null, locked, null, 1, hidden FROM test.websites;
+SELECT null, locked, null, 1, (NOT hidden) FROM test.websites;
 
 SET @var = 0;
 
 INSERT INTO ease.websites
-SELECT website_id, website_url, website_name, folder, sso, noLogin, website_homepage, ratio, position, (@var := @var + 1) FROM test.websites;
+SELECT website_id, website_url, website_name, SUBSTR(folder, 20, CHAR_LENGTH(folder) - 20), sso, noLogin, website_homepage, ratio, position, (@var := @var + 1) FROM test.websites;
 
 INSERT INTO ease.websitesInformations
 SELECT * FROM test.websitesInformations;
@@ -45,6 +45,9 @@ SELECT null, website_id, 2 FROM test.websites WHERE FIND_IN_SET('28', haveLoginW
 INSERT INTO ease.tags
 SELECT * FROM test.tags;
 
+INSERT INTO ease.tagsAndSitesMap
+SELECT * FROM test.tagAndSiteMap;
+
 /* date_dimension */
 
 INSERT INTO ease.date_dimension
@@ -53,15 +56,15 @@ SELECT * FROM test.date_dimension;
 /* Users */
 
 INSERT INTO ease.userKeys
-SELECT null, password, saltEase, saltPerso, keyUser FROM test.users;
+SELECT null, password, saltEase, saltPerso, keyUser, NULL FROM test.users;
 
 INSERT INTO ease.options
 SELECT null, bckgrndPic, 0 FROM test.users;
 
 INSERT INTO ease.status
-SELECT null, 1, 0, 0, 0, 0, 0, 0, 0, 0, tuto FROM test.users;
+SELECT null, 1, 0, 0, 0, 0, 0, 0, 0, tuto FROM test.users;
 
-UPDATE ease.status SET first_connection=1, CGU=1, chrome_scrapping=1, apps_manually_added=1, click_on_app=1, move_apps=1, open_catalog=1, drag_and_drop=1, add_an_app=1 WHERE tuto_done = 1;
+UPDATE ease.status SET first_connection=1, CGU=1, chrome_scrapping=1, apps_manually_added=1, click_on_app=1, move_apps=1, open_catalog=1, add_an_app=1 WHERE tuto_done = 1;
 
 SET @var = 0;
 
@@ -71,7 +74,7 @@ SELECT user_id, firstName, lastName, email, (@var := @var + 1), @var, CURRENT_TI
 /* savedSessions */
 
 INSERT INTO ease.savedSessions
-SELECT * FROM test.savedSessions;
+SELECT save_id, sessionId, sessionToken, keyUser, saltUser, user_id, datetime FROM test.savedSessions;
 
 /* profiles */
 

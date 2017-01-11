@@ -4,12 +4,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 public class WebsiteInformation {
+	
+	public static WebsiteInformation createInformation(String website_id, String name, String type, DataBaseConnection db) throws GeneralException {
+		db.set("INSERT INTO websitesInformations VALUES (null, "+website_id+", '"+ name +"', '"+ type +"');");
+		return new WebsiteInformation(name, type);
+	}
 	
 	public static List<WebsiteInformation> loadInformations(String website_id, DataBaseConnection db) throws GeneralException {
 		List<WebsiteInformation> website_informations = new LinkedList<WebsiteInformation>();
