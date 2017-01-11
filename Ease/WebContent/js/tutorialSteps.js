@@ -321,6 +321,7 @@ function checkInputs(contextElement) {
 
 $('#accountCredentials a').click(function () {
 	ScrapingInfoFinished();
+	$("#accountCredentials #chromeUserEmailHelper").removeClass("show");
 });
 
 $('#accountCredentials button').click(function () {
