@@ -21,7 +21,7 @@ INSERT INTO ease.sso
 SELECT * FROM test.sso;
 
 INSERT INTO ease.websiteAttributes
-SELECT null, locked, null, 1, (NOT hidden) FROM test.websites;
+SELECT null, locked, null, insertDate, ((insertDate + INTERVAL 7 DAY) > CURRENT_TIMESTAMP), (NOT hidden) FROM test.websites;
 
 SET @var = 0;
 
