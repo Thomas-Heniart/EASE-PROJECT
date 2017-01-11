@@ -17,6 +17,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import com.Ease.Context.Variables;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
@@ -44,6 +45,41 @@ public class Website {
 		if (site == null)
 			throw new GeneralException(ServletManager.Code.InternError, "This website dosen't exist!");
 		return site;
+	}
+	
+	public static Website createWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, String[] haveLoginWith, Catalog catalog, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		ResultSet rs = db.get("SELECT * FROM websites WHERE folder = '"+ folder+"' OR website_name='"+name+"';");
+		try {
+			if (rs.next()){
+				throw new GeneralException(ServletManager.Code.UserMiss, "This website already exists");
+			}
+			int transaction  = db.startTransaction();
+			WebsiteAttributes attributes = WebsiteAttributes.createWebsiteAttributes(db);
+			
+			String db_id = db.set("INSERT INTO websites VALUES (null, '"+ url +"', '"+ name +"', '" + folder + "', NULL, 0, '"+ homePage +"', 0, 1, "+ attributes.getDbId() +");").toString();
+			WebsiteInformation loginInfo = WebsiteInformation.createInformation(db_id, "login", "text", db);
+			List<WebsiteInformation> infos = new LinkedList<WebsiteInformation>();
+			infos.add(loginInfo);
+			
+			if(haveLoginButton){
+				db.set("INSERT INTO loginWithWebsites VALUES (null, "+ db_id +");");
+			}
+			
+			List<Website> loginWithWebsites = new LinkedList<Website>();
+			for(int i=0;i<haveLoginWith.length;i++){
+				ResultSet rs2 = db.get("SELECT id FROM loginWithWebsites WHERE website_id = "+haveLoginWith[i]+";");
+				if(rs2.next()){
+					String id = db.set("INSERT INTO websitesLogWithMap VALUES (null, "+db_id+", "+rs2.getString(1)+");").toString();
+				}
+				loginWithWebsites.add(catalog.getWebsiteWithDBid(haveLoginWith[i]));
+			}
+			IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
+			db.commitTransaction(transaction);
+			return new Website(db_id, idGenerator.getNextId(), name, url, folder, 0, false, homePage, 0, 1, infos, attributes, loginWithWebsites);
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
 	}
 	
 	
@@ -167,6 +203,22 @@ public class Website {
 		this.websiteAttributes = websiteAttributes;
 	}
 	
+	public Website(String db_id, int single_id, String name, String loginUrl, String folder, int sso, boolean noLogin, String website_homepage, int ratio, int position, List<WebsiteInformation> website_informations, WebsiteAttributes websiteAttributes, List<Website> loginWithWebsites) {
+		this.db_id = db_id;
+		this.single_id = single_id;
+		this.loginUrl = loginUrl;
+		this.folder = folder;
+		this.sso = sso;
+		this.noLogin = noLogin;
+		this.website_homepage = website_homepage;
+		this.ratio = ratio;
+		this.website_informations = website_informations;
+		this.name = name;
+		this.position = position;
+		this.loginWithWebsites = loginWithWebsites;
+		this.websiteAttributes = websiteAttributes;
+	}
+	
 	public String getDb_id() {
 		return this.db_id;
 	}
@@ -211,7 +263,7 @@ public class Website {
 	}
 	
 	public String getFolder() {
-		return this.folder;
+		return Variables.WEBSITES_PATH + this.folder +"/";
 	}
 	
 	public String getUrl() {
@@ -256,7 +308,7 @@ public class Website {
 	public JSONObject getJSON(ServletManager sm) throws GeneralException{
 		JSONParser parser = new JSONParser();
 		try {
-			JSONObject a = (JSONObject) parser.parse(new FileReader(sm.getRealPath(this.folder + "connect.json")));
+			JSONObject a = (JSONObject) parser.parse(new FileReader(sm.getRealPath(this.getFolder() + "connect.json")));
 			a.put("loginUrl",loginUrl);
 			a.put("website_name", this.name);
 			return a;

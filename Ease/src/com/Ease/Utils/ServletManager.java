@@ -180,16 +180,19 @@ public class ServletManager {
 				System.err.println("Logs not sended to database.");
 			}
 		}
+		
 		if (this.retCode != Code.Success.getValue() && this.retCode != Code.UserMiss.getValue() && this.retCode != Code.ClientWarning.getValue()) {
-			retMsg = "Sorry an internal problem occurred. We are solving it asap.";
-			if (this.retCode != Code.Success.getValue()) {
-				try {
-					this.db.rollbackTransaction();
-				} catch (GeneralException e) {
-					System.err.println("Rollback transaction failed.");
-				}
+			retMsg = "Sorry an internal problem occurred. We are solving it asap.";	
+		}
+		
+		if (this.retCode != Code.Success.getValue()) {
+			try {
+				this.db.rollbackTransaction();
+			} catch (GeneralException e) {
+				System.err.println("Rollback transaction failed.");
 			}
 		}
+		
 		try {
 			//System.out.println("wMessages loop start");
 			for (WebsocketMessage msg : this.messages) {
