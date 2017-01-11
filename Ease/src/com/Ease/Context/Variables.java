@@ -11,7 +11,6 @@ public class Variables {
 	*/
 	
 	//Préprod
-	
 	public static final String ENVIRONNEMENT = "Préprod";
 	public static final boolean LOCAL = false;
 	public static final String SERVER_LOGIN_PATH = "/opt/tomcat/webapps/serverLogin";
