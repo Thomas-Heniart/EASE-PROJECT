@@ -49,7 +49,6 @@ pageEncoding="UTF-8"%>
 	<script src="js/basic-utils.js" ></script>
 	<script src="js/jquery.mousewheel.min.js"></script>
 	<script src="js/footer.js"></script>
-	<script src="js/tutorial.js"></script>
 	<script src="js/catalog/catalogApp.js"></script>
 	<script src="js/catalog/updates/update.js"></script>
 	<script src="js/catalog/updates/updatesManager.js"></script>
