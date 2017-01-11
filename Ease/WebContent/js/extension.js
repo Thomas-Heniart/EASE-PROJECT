@@ -2,10 +2,12 @@ var waitForExtension = true;
 $(document).ready(function(){
 	setTimeout(function(){
 		waitForExtension = false;
+		showExtensionPopup();
+		if (!showExtensionPopup())
+			$("#tutorial").addClass("myshow");
 	},800);
-	showExtensionPopup();
-	if (!showExtensionPopup())
-		$("#tutorial").addClass("myshow");
+	
+	
 });
 
 function showExtensionPopup(){
