@@ -22,12 +22,29 @@ public class ServerKey {
 		SALT,
 		KEYSERVER
 	}
-	
+
 	private String 	user;
 	private String	hashed_password;
 	private String	salt;
 	private String	keyServer;
-	
+
+	private static ServerKey loadServerKey(String login, String password, DataBaseConnection db) throws GeneralException, SQLException {
+		ResultSet rs = db.get("SELECT * FROM serverKeys WHERE login='" + login + "';");
+		if (rs.next()) {
+			String hashed_password = rs.getString(Data.PASSWORD.ordinal());
+			String salt = rs.getString(Data.SALT.ordinal());
+			String crypted_keyUser = rs.getString(Data.KEYSERVER.ordinal());
+			if (!Hashing.compare(password, hashed_password)) {
+				throw new GeneralException(ServletManager.Code.UserMiss, "Wrong login or password (login : "+login+").");
+			} else {
+				String keyServer = AES.decryptUserKey(crypted_keyUser, password, salt);
+				return new ServerKey(login, hashed_password, salt, keyServer);
+			}
+		} else {
+			throw new GeneralException(ServletManager.Code.UserMiss, "Wrong login or password (login : "+login+").");
+		}
+	}
+
 	public static ServerKey loadServerKey(DataBaseConnection db) throws GeneralException, SQLException {
 		ResultSet rs = db.get("SELECT login FROM serverKeys;");
 		if(!rs.next()){ //S'il  n'y a pas encore de serverKey dans la BDD, on crée la première, qui a pour login/passwd : root/root
@@ -45,66 +62,66 @@ public class ServerKey {
 				password = loginFileContent[1];
 				cleanLoginFileContent();
 			}
-			rs = db.get("SELECT * FROM serverKeys WHERE login='" + login + "';");
-			if (rs.next()) {
-				String hashed_password = rs.getString(Data.PASSWORD.ordinal());
-				String salt = rs.getString(Data.SALT.ordinal());
-				String crypted_keyUser = rs.getString(Data.KEYSERVER.ordinal());
-				if (!Hashing.compare(password, hashed_password)) {
-					throw new GeneralException(ServletManager.Code.InternError, "Wrong login or password (login : "+login+").");
-				} else {
-					String keyServer = AES.decryptUserKey(crypted_keyUser, password, salt);
-					return new ServerKey(login, hashed_password, salt, keyServer);
-				}
-			} else {
-				throw new GeneralException(ServletManager.Code.InternError, "Wrong login or password (login : "+login+").");
-			}
+			return loadServerKey(login, password, db);
 		}
 	}
-	
-	public static ServerKey createServerKey(String login, String password, String keyServer, DataBaseConnection db) throws GeneralException{
+
+	private static ServerKey createServerKey(String login, String password, String keyServer, DataBaseConnection db) throws GeneralException{
 		String salt = AES.generateSalt();
 		String hashed_password = Hashing.hash(password);
 		db.set("INSERT INTO serverKeys VALUES ('"+login+"','"+ hashed_password +"', '"+salt+"', '"+AES.encryptUserKey(keyServer, password, salt)+"');");
 		return new ServerKey(login, hashed_password, salt, keyServer);
 	}
-	
+
+	public static ServerKey createServerKey(String newLogin, String newPassword, String login, String password, DataBaseConnection db) throws GeneralException{
+		try { 
+			ServerKey sK = loadServerKey(login, password, db);
+			String serverKey = sK.getKeyServer();
+			String salt = AES.generateSalt();
+			String hashed_password = Hashing.hash(newPassword);
+			db.set("INSERT INTO serverKeys VALUES ('"+newLogin+"','"+ hashed_password +"', '"+salt+"', '"+AES.encryptUserKey(serverKey, newPassword, salt)+"');");
+			return new ServerKey(newLogin, hashed_password, salt, serverKey);
+		} catch (SQLException e){
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+	}
+
 	public static void eraseServerKey(String login, String password, DataBaseConnection db) throws GeneralException{
 		ResultSet rs = db.get("SELECT * FROM serverKeys WHERE login='" + login + "';");
 		try {
 			if (rs.next()) {
 				String hashed_password = rs.getString(Data.PASSWORD.ordinal());
 				if (!Hashing.compare(password, hashed_password)) {
-					throw new GeneralException(ServletManager.Code.InternError, "Wrong login or password.");
+					throw new GeneralException(ServletManager.Code.UserMiss, "Wrong login or password.");
 				} else {
 					rs = db.get("SELECT * FROM serverKeys");
 					rs.next();
 					if(!rs.next()){
-						throw new GeneralException(ServletManager.Code.InternError, "Last admin. Don't erase it !");
+						throw new GeneralException(ServletManager.Code.UserMiss, "Last admin. Don't erase it !");
 					} else {
 						db.set("DELETE FROM serverKeys WHERE login='"+login+"';");
 					}
 				}
 			} else {
-				throw new GeneralException(ServletManager.Code.InternError, "Wrong login or password.");
+				throw new GeneralException(ServletManager.Code.UserMiss, "Wrong login or password.");
 			}
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
-		
+
 	}
-	
+
 	public ServerKey(String login, String hashed_pass, String salt, String keyServer){
 		this.user = login;
 		this.hashed_password = hashed_pass;
 		this.salt = salt;
 		this.keyServer = keyServer;
 	}
-	
+
 	public String getKeyServer() {
 		return keyServer;
 	}
-	
+
 	private static void cleanLoginFileContent() throws GeneralException{
 		try {
 			PrintWriter writer = new PrintWriter(Variables.SERVER_LOGIN_PATH);
@@ -113,9 +130,9 @@ public class ServerKey {
 		} catch (FileNotFoundException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
-		
+
 	}
-	
+
 	private static String[] getLoginFileContent() throws GeneralException {
 		String ligne ;
 		String[] res = {"",""};
