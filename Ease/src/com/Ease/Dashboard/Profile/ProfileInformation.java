@@ -81,6 +81,7 @@ public class ProfileInformation {
 	}
 	public void setName(String name, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
+		this.name = name;
 		db.set("UPDATE profileInfo SET name='" + name + "' WHERE id=" + this.db_id + ";");
 	}
 	public String getColor() {
@@ -88,6 +89,7 @@ public class ProfileInformation {
 	}
 	public void setColor(String color, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
+		this.color = color;
 		db.set("UPDATE profileInfo SET color='" + color + "' WHERE id=" + this.db_id + ";");
 	}
 }
