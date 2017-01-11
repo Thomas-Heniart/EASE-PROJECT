@@ -20,7 +20,7 @@ $(document).ready(function() {
 	$("#setTags").click(setTagsClick);
 	
 	$("#cleanSavedSessions").click(cleanSavedSessions);
-	
+	$("#buttonTestWebsites").click(testWebsites);
 	/* Move websites positions in catalog */
 	$(".goTop").click(function() {
 		changePositionForm.setPostName("goTop");
@@ -320,11 +320,29 @@ function deleteTag(tagId) {
 
 function cleanSavedSessions(){
 	postHandler.post(
-		"cleanSavedSessions",
+		"aspirateur",
 		{},
 		function(){},
 		function(retMsg){
 			console.log(retMsg);
+		},
+		function(retMsg){
+			console.log(retMsg);
+		},
+		'text'
+	);
+}
+
+function testWebsites(){
+	postHandler.post(
+		"testWebsites",
+		{},
+		function(){},
+		function(retMsg){
+			var json = {};
+			json.detail = JSON.parse(retMsg);
+			event = new CustomEvent("MultipleTests", json);
+    		document.dispatchEvent(event);
 		},
 		function(retMsg){
 			console.log(retMsg);
