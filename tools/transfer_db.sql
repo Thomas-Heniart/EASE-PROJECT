@@ -26,7 +26,7 @@ SELECT null, locked, null, 1, (NOT hidden) FROM test.websites;
 SET @var = 0;
 
 INSERT INTO ease.websites
-SELECT website_id, website_url, website_name, folder, sso, noLogin, website_homepage, ratio, position, (@var := @var + 1) FROM test.websites;
+SELECT website_id, website_url, website_name, SUBSTR(folder, 20, CHAR_LENGTH(folder) - 20), sso, noLogin, website_homepage, ratio, position, (@var := @var + 1) FROM test.websites;
 
 INSERT INTO ease.websitesInformations
 SELECT * FROM test.websitesInformations;
