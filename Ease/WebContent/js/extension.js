@@ -4,6 +4,8 @@ $(document).ready(function(){
 		waitForExtension = false;
 	},800);
 	showExtensionPopup();
+	if (!showExtensionPopup())
+		$("#tutorial").addClass("myshow");
 });
 
 function showExtensionPopup(){

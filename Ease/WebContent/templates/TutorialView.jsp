@@ -3,7 +3,7 @@
 
 <link rel="stylesheet" href="css/Tutorial.css" />
 <div id="ohehcool"></div>
-<div class="popupHandler myshow" id="tutorial">
+<div class="popupHandler" id="tutorial">
 	<div class="easePopup show" id="importation">
 		<div class="title">
 			<p>Accounts importation</p>
