@@ -10,7 +10,7 @@
       display: inline-block;
       margin-bottom: 3vw; }
       #teamBody #team #members .memberDescription .memberPhoto {
-        width: 60%;
+        width: 45%;
         margin: auto; }
         #teamBody #team #members .memberDescription .memberPhoto img {
           width: 100%;
@@ -36,8 +36,6 @@
 #contactBody #contact_us {
   background-color: #eee;
   margin-top: 62px; }
-  #contactBody #contact_us .section-heading {
-    margin-bottom: 40px; }
   #contactBody #contact_us #contactUsForm .contactForm {
     padding: 30px;
     width: 60%;
