@@ -69,7 +69,6 @@ $(document).ready(function(){
 		<button id="enterEditMode" state="off" class="button"><img src="resources/icons/menu_icon.png"/>
 			<div class="openCatalogHelper"></div>
 		</div>
-		<!-- <%@ include file="extension.jsp" %>  -->		
 		<%@ include file="catalog/catalogView.jsp"%>
 		<c:if test='${user.appsImported() && (user.allTipsDone() eq false)}'>
 			<%@ include file="Tips.jsp" %>

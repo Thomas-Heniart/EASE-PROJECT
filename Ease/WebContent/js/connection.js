@@ -88,7 +88,6 @@ $(document).ready(function(){
 				password: password
 			},
 			function(){
-				loading.removeClass('show');
 			},
 			function(data){
 				easeTracker.setUserId(email);
@@ -96,6 +95,7 @@ $(document).ready(function(){
 				window.location.reload();
 			},
 			function(data){
+				loading.removeClass('show');
 				self.closest('.landingPopup').addClass('show');
 				errorDiv.find('p').text(data);
 				errorDiv.addClass('show');
