@@ -24,9 +24,8 @@ public class Variables {
 	public static final boolean LOCAL = true;
 	public static final String SERVER_LOGIN_PATH = "";
 	public static final String KEYS_PATH = "C:/Users/FelixPro/Documents/EASE/Ease project/New/EASE-PROJECT/Ease/src/com/Ease/Utils/Crypto/privateKeys.txt";
-	public static final String WEBSITES_PATH = "C:/Users/FelixPro/Documents/EASE/Ease project/New/EASE-PROJECT/Ease/WebContent/resources/websites/";
+	public static final String WEBSITES_PATH = "/resources/websites/";
 	*/
-	
 	//Pierre
 	/*
 	public static final String ENVIRONNEMENT = "PC de Pedro";
