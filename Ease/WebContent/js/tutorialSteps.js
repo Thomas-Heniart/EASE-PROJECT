@@ -202,7 +202,7 @@ $('div#saving div#selectScraping button').click(function () {
 function showAccountCredentials(retMsg) {
 	$('#accountCredentials').addClass("show");
 	$('#accountCredentials p span').text(scrapping[0].name);
-	$('#accountCredentials img').attr("src", scrapping[0].img);
+	$('#accountCredentials div.logo img').attr("src", scrapping[0].img);
 	if (scrapping[0].name == "Google Chrome" && !!window.chrome && !!window.chrome.webstore) {
 		$("#accountCredentials #chromeUserEmailHelper").addClass("show");
 	}
@@ -321,6 +321,7 @@ function checkInputs(contextElement) {
 
 $('#accountCredentials a').click(function () {
 	ScrapingInfoFinished();
+	$("#accountCredentials #chromeUserEmailHelper").removeClass("show");
 });
 
 $('#accountCredentials button').click(function () {

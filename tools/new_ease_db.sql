@@ -176,6 +176,7 @@ CREATE TABLE websiteAttributes (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `locked` tinyint(1) unsigned DEFAULT '0',
   `lockedExpiration` datetime DEFAULT NULL,
+  `addedDate` datetime NOT NULL default CURRENT_TIMESTAMP,
   `new` tinyint(1) NOT NULL DEFAULT '1',
   `work` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`)
