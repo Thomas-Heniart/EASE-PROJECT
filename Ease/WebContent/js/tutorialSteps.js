@@ -203,12 +203,19 @@ function showAccountCredentials(retMsg) {
 	$('#accountCredentials').addClass("show");
 	$('#accountCredentials p span').text(scrapping[0].name);
 	$('#accountCredentials div.logo img').attr("src", scrapping[0].img);
-	if (scrapping[0].name == "Google Chrome" && !!window.chrome && !!window.chrome.webstore) {
-		$("#accountCredentials #chromeUserEmailHelper").addClass("show");
-	}
 	if (retMsg == "") {
-		$("#accountCredentials input[name='email']").val("");
-		$("#accountCredentials input[name='email']").focus();
+		if (scrapping[0].name == "Google Chrome" && !!window.chrome && !!window.chrome.webstore) {
+			$("#accountCredentials #chromeUserEmailHelper").addClass("show");
+			event = new CustomEvent("GetChromeUser", {});
+		    document.dispatchEvent(event);
+		    $(document).on("ChromeUserEmail", function (e) {
+		    	$("#accountCredentials input[name='email']").val(e.detail);
+		    	$("#accountCredentials input[name='password']").focus();
+		    });
+		} else {
+			$("#accountCredentials input[name='email']").val("");
+			$("#accountCredentials input[name='email']").focus();
+		}
 		$('#accountCredentials div.errorText').removeClass("show");
 	} else {
 		$('#accountCredentials div.errorText p').text(retMsg);
