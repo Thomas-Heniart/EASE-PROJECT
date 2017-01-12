@@ -95,6 +95,14 @@ public class ServletManager {
 		}
 	}
 	
+	public HttpServletRequest getRequest(){
+		return request;
+	}
+	
+	public HttpServletResponse getResponse(){
+		return response;
+	}
+	
 	public String getServletParam(String paramName, boolean saveInLogs) {
 		String param = request.getParameter(paramName);
 		if (saveInLogs)

@@ -4,7 +4,7 @@ extension.runtime.bckgrndOnMessage("GetChromeUser", function (msg, senderTab, se
     chrome.identity.getProfileUserInfo(function (userInfo) {
         sendResponse(userInfo.email);
     });
-})
+});
 
 function testOverlay() {
     extension.currentWindow(function (window) {
@@ -268,61 +268,66 @@ function logoutFromLnkdn(tab, callback) {
     extension.tabs.sendMessage(tab, "logoutFromLnkdn", {}, function (response2) {});
     extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
         extension.tabs.onMessageRemoveListener(tab);
-        extension.tabs.update(tab, "https://www.linkedin.com/psettings/third-party-applications", function (tab) {
-            extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
-                extension.tabs.onMessageRemoveListener(tab);
-                callback(tab);
-            });
-        });
+        callback(tab);
     });
 }
 
 function connectToLnkdn(tab, login, pass, callback) {
-    extension.tabs.sendMessage(tab, "connectToLnkdn", {
-        login: login,
-        pass: pass
-    }, function (response) {
-        var alreadyChecked = false;
-        setTimeout(function () {
-            if (!alreadyChecked) {
-                extension.tabs.sendMessage(tab, "checkLnkdnCo", {}, function (response) {
-                    if (response == false) {
-                        callback(false, "Wrong login or password. Please try again");
-                        extension.tabs.onClosedRemoveListener(tab);
-                        extension.tabs.onUpdatedRemoveListener(tab);
-                        setTimeout(function () {
-                            extension.tabs.close(tab);
-                        }, 500);
-                    }
-                });
-            }
-        }, 10000);
+    extension.tabs.update(tab, "https://www.linkedin.com/uas/login", function (tab) {
         extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
             extension.tabs.onMessageRemoveListener(tab);
-            alreadyChecked = true;
-            extension.tabs.sendMessage(tab, "checkLnkdnCo", {}, function (response) {
-                if (response == false) {
-                    callback(false, "Wrong login or password. Please try again");
-                    extension.tabs.onClosedRemoveListener(tab);
-                    extension.tabs.onUpdatedRemoveListener(tab);
-                    setTimeout(function () {
-                        extension.tabs.close(tab);
-                    }, 500);
-                } else {
-                    scrapLnkdn(tab, callback);
-                }
+            extension.tabs.sendMessage(tab, "connectToLnkdn", {
+                login: login,
+                pass: pass
+            }, function (response) {
+                var alreadyChecked = false;
+                setTimeout(function () {
+                    if (!alreadyChecked) {
+                        extension.tabs.sendMessage(tab, "checkLnkdnCo", {}, function (response) {
+                            if (response == false) {
+                                callback(false, "Wrong login or password. Please try again");
+                                extension.tabs.onClosedRemoveListener(tab);
+                                extension.tabs.onUpdatedRemoveListener(tab);
+                                setTimeout(function () {
+                                    extension.tabs.close(tab);
+                                }, 500);
+                            }
+                        });
+                    }
+                }, 10000);
+                extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
+                    extension.tabs.onMessageRemoveListener(tab);
+                    alreadyChecked = true;
+                    extension.tabs.sendMessage(tab, "checkLnkdnCo", {}, function (response) {
+                        if (response == false) {
+                            callback(false, "Wrong login or password. Please try again");
+                            extension.tabs.onClosedRemoveListener(tab);
+                            extension.tabs.onUpdatedRemoveListener(tab);
+                            setTimeout(function () {
+                                extension.tabs.close(tab);
+                            }, 500);
+                        } else {
+                            scrapLnkdn(tab, callback);
+                        }
+                    });
+                });
             });
         });
     });
 }
 
 function scrapLnkdn(tab, callback) {
-    extension.tabs.sendMessage(tab, "scrapLnkdn", {}, function (response) {
-        extension.tabs.onClosedRemoveListener(tab);
-        extension.tabs.onUpdatedRemoveListener(tab);
-        callback(true, response);
-        setTimeout(function () {
-            extension.tabs.close(tab);
-        }, 500);
+    extension.tabs.update(tab, "https://www.linkedin.com/psettings/third-party-applications", function (tab) {
+        extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
+            extension.tabs.onMessageRemoveListener(tab);
+            extension.tabs.sendMessage(tab, "scrapLnkdn", {}, function (response) {
+                extension.tabs.onClosedRemoveListener(tab);
+                extension.tabs.onUpdatedRemoveListener(tab);
+                callback(true, response);
+                setTimeout(function () {
+                    extension.tabs.close(tab);
+                }, 500);
+            });
+        });
     });
 }
