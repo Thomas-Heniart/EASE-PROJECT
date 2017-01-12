@@ -53,7 +53,7 @@
 				<p>To add apps, drag & drop them from the catalog.</p>
 				<button class="btn" type="submit">Got it!</button>
 			</div>
-			<img class="arrow-tip" src="resources/images/catalog_tip_arrow.png" />
+			<img class="arrow-tip" src="resources/images/catalog_tip_arrow2.png" />
 		</div>
 	</c:if>
 </div>

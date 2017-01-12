@@ -69,6 +69,11 @@ pageEncoding="UTF-8"%>
 	<script src="js/selectFx.js"></script>
 	<script src="js/websocket.js"></script>
 
+	<% User user = (User) (session.getAttribute("user"));
+	if (user != null) {%>
+	<link rel="stylesheet" type="text/css" href="css/BackgroundPick.css" />
+	<%}%>
+
 	<!-- Amplitude script -->
 
 	<script type="text/javascript">
@@ -96,7 +101,6 @@ pageEncoding="UTF-8"%>
 	<link rel="stylesheet" type="text/css" href="component.css" />
 
 	<%
-	User user = (User) (session.getAttribute("user"));
 	if (user != null){
 		SessionSave sessionSave = (SessionSave) (user.getSessionSave());
 		if (user.isAdmin()){%>

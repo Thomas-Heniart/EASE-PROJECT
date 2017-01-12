@@ -132,5 +132,4 @@ public class ChangeBackground extends HttpServlet {
 		}
 		sm.sendResponse();
 	}
-
 }
