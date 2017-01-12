@@ -42,7 +42,7 @@ public class App {
 		DataBaseConnection db = sm.getDB();
 		List<App> apps = new LinkedList<App>();
 		try {
-			ResultSet rs = db.get("SELECT * FROM apps WHERE profile_id=" + profile.getDBid() + ";");
+			ResultSet rs = db.get("SELECT * FROM apps WHERE profile_id=" + profile.getDBid() + " order by position;");
 			String db_id;
 			int position;
 			String insertDate;
