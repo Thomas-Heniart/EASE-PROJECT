@@ -215,6 +215,50 @@
         }
     }
 }
+#chromeUserEmailHelper {
+    transition: opacity .3s, visibility .3s;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: -1;
+    height: 0;
+    position: absolute;
+    overflow: hidden;
+    background-color: white;
+    width: 17vw;
+    padding: 1vw;
+    border-radius: 3px;
+    &.show {
+        transition: opacity .3s, visibility .3s;
+        height: auto;
+        opacity: 1;
+        right: 1vw;
+        top: 1vw;
+        visibility: visible;
+        pointer-events: auto;
+        z-index: 1;
+        position: fixed;
+        overflow: visible;
+    }
+    .row {
+        width: 100%;
+        margin-bottom: 1vw;
+        margin-top: 0;
+        &:last-child {
+            margin-bottom: 0;
+        }
+        img {
+            width: 80%;
+        }
+        i {
+            font-size: 1.5vw;
+            animation: moveUp 0.5s linear 0s infinite alternate;
+        }
+        p {
+            font-size: 1vw;
+        }
+    }
+}
 
 #saving {
     .popupBody {

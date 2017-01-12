@@ -51,6 +51,9 @@
 					<div class="row">
 						<p>Then double-click on EaseExtension.safariextz</p>
 					</div>
+					<div class="crt">
+						<i class="fa fa-chevron-up" aria-hidden="true"></i>
+					</div>
 				</div>
 			</div>
 		</div>

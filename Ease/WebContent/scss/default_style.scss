@@ -283,6 +283,14 @@ body {
    transform: perspective(1000px) scaleX(1) translateZ(0px) rotateX(360deg);
  }
 }
+@-webkit-keyframes moveUp {
+  0% {
+   transform: translateY(0);
+ }
+ 100% {
+   transform: translateY(-0.5vw);
+ }
+}
 #loading {
   position: relative;
   display: none;
