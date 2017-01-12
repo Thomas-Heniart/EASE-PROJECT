@@ -3,7 +3,7 @@
 <div class="popupHandler" id="extension">
 	<div class="easePopup show" id="step1">
 		<div class="title">
-			<p>Download our extension</p>
+			<p>Make Ease work ! <img src="/resources/emojis/lightning.png" /></p>
 		</div>
 		<div class="bodysHandler">
 			<div class="popupBody show" id="download">
@@ -50,6 +50,9 @@
 					</div>
 					<div class="row">
 						<p>Then double-click on EaseExtension.safariextz</p>
+					</div>
+					<div class="crt">
+						<i class="fa fa-chevron-up" aria-hidden="true"></i>
 					</div>
 				</div>
 			</div>
