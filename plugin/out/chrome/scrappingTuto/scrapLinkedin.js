@@ -7,12 +7,11 @@ extension.runtime.onMessage("checkLnkdnCo", function(msg, sendResponse){
 });
 
 extension.runtime.onMessage("logoutFromLnkdn", function(msg, sendResponse){
-    window.location.href = $(".account-submenu-split-link").attr("href");
+    window.location.href = $("a[href*='https://www.linkedin.com/uas/logout?session_full_logout=']").attr("href").replace("amp;","");
 });
 
 extension.runtime.onMessage("connectToLnkdn", function(msg, sendResponse){
     if($("#session_key-login").length==0){
-        alert("non");
         sendResponse(false);
     } else {
         $("#session_key-login").val(msg.login);
