@@ -131,7 +131,7 @@ public class LogwithApp extends WebsiteApp {
 	public JSONArray getJSON(ServletManager sm) throws GeneralException{
 		JSONArray infos = logwith.getJSON(sm);
 		JSONObject websiteInfos = (JSONObject) super.getJSON(sm).get(0);
-		websiteInfos.put("logwith", logwith.getName());
+		websiteInfos.put("logWith", logwith.getSite().getName());
 		infos.add(websiteInfos);
 		return infos;
 	}
