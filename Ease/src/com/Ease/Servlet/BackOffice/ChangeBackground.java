@@ -24,7 +24,7 @@ import com.Ease.Utils.ServletManager;
 /**
  * Servlet implementation class ChangeBackground
  */
-@WebServlet("/ChangeBackground")
+@WebServlet("/changeBackground")
 public class ChangeBackground extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
