@@ -14,7 +14,6 @@
 	%>
 	<script src="js/logout.js"></script>
 	<%@ include file="DropDownUserMenu.jsp"%>
-	<%@ include file="SearchBar.jsp"%>
 	<div class="logoutContainer">
 		<a id="logoutButton"><i class="fa fa-power-off" aria-hidden="true"></i></a>
 		<div class="logoutOptions">
