@@ -1,4 +1,4 @@
-package com.Ease.Servlet.Tuto;
+ package com.Ease.Servlet.Tuto;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -74,8 +74,9 @@ public class TutoAddApps extends HttpServlet {
 					JSONObject obj2 = (JSONObject)jsonArray.get(j);
 					if (obj1.containsKey("password") && obj2.containsKey("password")) {
 						if (obj1.get("websiteId").equals(obj2.get("websiteId")) && obj1.get("login").equals(obj2.get("login"))) {
-							jsonArray.remove(j);
-							j--;
+							jsonArray.remove(i);
+							j = jsonArray.size();
+							i--;
 						}
 					}
 					j++;
@@ -97,7 +98,7 @@ public class TutoAddApps extends HttpServlet {
 					}
 				}
 				site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(obj.get("websiteId").toString()));
-				if (i == 10) {
+				if (i % 10 == 0 && i != 0) {
 					profile = user.addProfile("Choose name", "#ff9d34", sm);
 				}
 				if (!obj.containsKey("password")) {
