@@ -24,13 +24,13 @@ import com.Ease.websocket.WebsocketSession;
 @WebServlet("/Logout")
 public class Logout extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public Logout() {
-        super();
-    }
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public Logout() {
+		super();
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -47,46 +47,44 @@ public class Logout extends HttpServlet {
 		HttpSession session = request.getSession();
 		User user = (User)session.getAttribute("user");
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
-		String retMsg;
-		
 		try {
-			sm.needToBeConnected();
-			user.getSessionSave().eraseFromDB(sm);
-			Cookie 	cookie = null;
-			Cookie 	cookies[] = request.getCookies();
-			if (cookies != null){
-				for (int i = 0;i < cookies.length ; i++) {
-					cookie = cookies[i];
-					if((cookie.getName()).compareTo("sId") == 0){
-						cookie.setValue("");
-						cookie.setMaxAge(0);
-						response.addCookie(cookie);
-					} else if((cookie.getName()).compareTo("sTk") == 0){
-						cookie.setValue("");
-						cookie.setMaxAge(0);
-						response.addCookie(cookie);
-					}
-				}
-			}
-			
-			System.out.println("User websockets size : " + user.getWebsockets().size());
-			@SuppressWarnings("unchecked")
-			Map<String, WebsocketSession> sessionWebsockets = (Map<String, WebsocketSession>) session.getAttribute("sessionWebsockets");
-			//System.out.println("Session websockets size : " + sessionWebsockets.size());
-			sm.addWebsockets(sessionWebsockets);
-			sm.addToSocket(WebsocketMessage.logoutMessage());
-			retMsg = "Logged out.";
-			sm.setResponse(ServletManager.Code.Success, retMsg);
-			System.out.println("Send response done");
-			user.removeWebsockets(sessionWebsockets);
-			user.deconnect(sm);
-			session.invalidate();
+			logoutUser(user, sm);
+			sm.setResponse(ServletManager.Code.Success, "Logged out.");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		} catch (Exception e) {
 			sm.setResponse(e);
 		}
 		sm.sendResponse();
+	}
+
+	public static void logoutUser(User user, ServletManager sm) throws GeneralException {
+		sm.needToBeConnected();
+		user.getSessionSave().eraseFromDB(sm);
+		Cookie 	cookie = null;
+		Cookie 	cookies[] = sm.getRequest().getCookies();
+		if (cookies != null){
+			for (int i = 0;i < cookies.length ; i++) {
+				cookie = cookies[i];
+				if((cookie.getName()).compareTo("sId") == 0){
+					cookie.setValue("");
+					cookie.setMaxAge(0);
+					sm.getResponse().addCookie(cookie);
+				} else if((cookie.getName()).compareTo("sTk") == 0){
+					cookie.setValue("");
+					cookie.setMaxAge(0);
+					sm.getResponse().addCookie(cookie);
+				}
+			}
+		}
+		HttpSession session = sm.getRequest().getSession();
+		@SuppressWarnings("unchecked")
+		Map<String, WebsocketSession> sessionWebsockets = (Map<String, WebsocketSession>) session.getAttribute("sessionWebsockets");
+		sm.addWebsockets(sessionWebsockets);
+		sm.addToSocket(WebsocketMessage.logoutMessage());
+		user.removeWebsockets(sessionWebsockets);
+		user.deconnect(sm);
+		session.invalidate();
 	}
 
 }
