@@ -317,6 +317,7 @@ public class Website {
 			JSONObject a = (JSONObject) parser.parse(new FileReader(sm.getRealPath(this.getFolder() + "connect.json")));
 			a.put("loginUrl",loginUrl);
 			a.put("website_name", this.name);
+			a.put("siteSrc", this.getFolder());
 			return a;
 		} catch (IOException | ParseException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);

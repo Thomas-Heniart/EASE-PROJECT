@@ -93,6 +93,7 @@
 					<span class="input">
 						<div class="showPassDiv">
 							<i class="fa fa-eye centeredItem" aria-hidden="true"></i>
+							<i class="fa fa-eye-slash centeredItem" aria-hidden="true"></i>
 						</div>
 						<input type="password" name="password" placeholder="Your password..." />
 					</span>
@@ -383,6 +384,7 @@
 						<span class="input">
 							<div class="showPassDiv">
 								<i class="fa fa-eye centeredItem" aria-hidden="true"></i>
+								<i class="fa fa-eye-slash centeredItem" aria-hidden="true"></i>
 							</div>
 							<input id="password" type="password" name="password" placeholder="Your password..." />
 						</span>
