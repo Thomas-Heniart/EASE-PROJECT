@@ -3,7 +3,7 @@
 <div class="popupHandler" id="extension">
 	<div class="easePopup show" id="step1">
 		<div class="title">
-			<p>Download our extension</p>
+			<p>Make Ease work ! <img src="/resources/emojis/lightning.png" /></p>
 		</div>
 		<div class="bodysHandler">
 			<div class="popupBody show" id="download">
