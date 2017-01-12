@@ -44,7 +44,7 @@ public class Mail {
 		try {
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
 			message.setSubject(MimeUtility.encodeText("Mot de passe perdu - Ease", "utf-8", null));
-			String link = "https://ease.space/newPassword?email=" + email + "&linkCode=" + code;
+			String link = "https://ease.space/newPassword.jsp?email=" + email + "&linkCode=" + code;
 			message.setContent(
 					"<p>*French Version Below*</p>" + "<p></p>" + "<p>Hello,</p>" + "<p></p>"
 							+ "<p>You have just asked for a password renewal. If you didn’t, you can ignore this email.</p>"
