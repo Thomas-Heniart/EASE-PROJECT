@@ -53,8 +53,9 @@ public class ResetPassword extends HttpServlet {
 		String confirmPassword = sm.getServletParam("confirmPassword", false);
 		try {
 			if (user != null) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "You are logged on Ease.");
-			} else if (email == null || email.equals("")) {
+				Logout.logoutUser(user, sm); //throw new GeneralException(ServletManager.Code.ClientWarning, "You are logged on Ease.");
+			}
+			if (email == null || email.equals("")) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email or password.");
 			} else if (code == null || code.equals("")) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong informations.");

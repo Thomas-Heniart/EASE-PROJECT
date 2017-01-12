@@ -76,7 +76,6 @@ public class ClassicApp extends WebsiteApp {
 		db.set("UPDATE websiteApps SET type='classicApp' WHERE id='"+ websiteAppDBid +"';");
 		Account account = Account.createAccount(password, false, infos, user, sm);
 		String classicDBid = db.set("INSERT INTO classicApps VALUES(NULL, " + websiteAppDBid + ", " + account.getDBid() + ", NULL);").toString();
-		db.commitTransaction(transaction);
 		ClassicApp newClassicApp = new ClassicApp(websiteApp.getDBid(),user.getProfileFromApp(websiteApp.getSingleId()), websiteApp.getPosition(),websiteApp.getAppInformation(), null, websiteApp.getInsertDate(), websiteApp.getSingleId(), websiteApp.getSite(), websiteAppDBid, account, classicDBid);
 		user.replaceApp(newClassicApp);
 		for (String info : infos.values()) {
@@ -84,6 +83,7 @@ public class ClassicApp extends WebsiteApp {
 				user.addEmailIfNeeded(info, sm);
 			}
 		}
+		db.commitTransaction(transaction);
 		return newClassicApp;
 	}
 	
