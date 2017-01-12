@@ -39,7 +39,6 @@ public class Registration extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		System.out.println("poeutte");
 		HttpSession session = request.getSession();
 		String invitationCode = request.getParameter("invitationCode");
 		String email = request.getParameter("email");
@@ -74,8 +73,8 @@ public class Registration extends HttpServlet {
 			String confirmPassword = sm.getServletParam("confirmPassword", false);
 
 			if (user != null)
-				throw new GeneralException(ServletManager.Code.ClientWarning, "You are logged on Ease.");
-			else if (fname == null || fname.length() < 2)
+				Logout.logoutUser(user, sm); //throw new GeneralException(ServletManager.Code.ClientWarning, "You are logged on Ease.");
+			if (fname == null || fname.length() < 2)
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Your name is too short.");
 			else if (email == null || Regex.isEmail(email) == false)
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Incorrect email format.");

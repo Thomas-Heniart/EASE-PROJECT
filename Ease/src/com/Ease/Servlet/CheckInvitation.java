@@ -64,8 +64,9 @@ public class CheckInvitation extends HttpServlet {
 
 		try {
 			if (user != null) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "You are logged on Ease.");
-			} else if (email == null || !Regex.isEmail(email)) {
+				Logout.logoutUser(user, sm); //throw new GeneralException(ServletManager.Code.ClientWarning, "You are logged on Ease.");
+			}
+			if (email == null || !Regex.isEmail(email)) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "This is not an email.");
 			} else if (name == null || name.length() < 2) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Name too short.");
