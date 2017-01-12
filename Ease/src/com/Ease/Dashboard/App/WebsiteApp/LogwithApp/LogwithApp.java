@@ -72,10 +72,10 @@ public class LogwithApp extends WebsiteApp {
 		String websiteAppDBid = websiteApp.getWebsiteAppDBid();
 		db.set("UPDATE websiteApps SET type='logwithApp' WHERE id='"+ websiteAppDBid +"';");
 		String logwithDBid = db.set("INSERT INTO logWithApps VALUES(NULL, " + websiteAppDBid + ", " + logwith.getWebsiteAppDBid() + ", NULL);").toString();
-		db.commitTransaction(transaction);
 		LogwithApp newLogwithApp = new LogwithApp(websiteApp.getDBid(), user.getProfileFromApp(websiteApp.getSingleId()), websiteApp.getPosition(), websiteApp.getAppInformation(),null, websiteApp.getInsertDate(), websiteApp.getSingleId(), websiteApp.getSite(), websiteAppDBid, logwith.getDBid(), logwithDBid);
 		newLogwithApp.rempLogwith(logwith);
 		user.replaceApp(newLogwithApp);
+		db.commitTransaction(transaction);
 		return newLogwithApp;
 	}
 	
