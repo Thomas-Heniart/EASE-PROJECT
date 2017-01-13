@@ -12,6 +12,14 @@ body {
 //    font-family: 'Raleway', 'Source Sans Pro', "Roboto Slab", "Helvetica Neue", Helvetica, Arial, sans-serif;
     webkit-tap-highlight-color: #fed136;
 }
+body#landingBody {
+    -webkit-user-select: auto;
+    -khtml-user-select: auto;
+    -moz-user-select: auto;
+    -ms-user-select: auto;
+    user-select: auto;
+}
+
 .btn-primary, .btn-xl, h1, h2, h3, h4, h5, h6 {
     font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
 //    font-family: 'Raleway', 'Source Sans Pro', Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;

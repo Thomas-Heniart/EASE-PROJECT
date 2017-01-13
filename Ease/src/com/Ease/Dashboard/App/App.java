@@ -71,6 +71,9 @@ public class App {
 					default:
 						throw new GeneralException(ServletManager.Code.InternError, "This app type dosen't exist.");
 				}
+				if (app.getPosition() != apps.size()) {
+					app.setPosition(apps.size(), sm);
+				}
 				apps.add(app);
 			}
 			
