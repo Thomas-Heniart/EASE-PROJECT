@@ -4,8 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
-
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.User.User;
@@ -23,9 +21,10 @@ public class UpdateNewAccount extends Update {
 		TYPE
 	}
 	
-	public static Update loadUpdateNewAccount(String update_id, User user, DataBaseConnection db, ServletContext context) throws GeneralException {
+	public static Update loadUpdateNewAccount(String update_id, User user, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
 		ResultSet rs = db.get("SELECT * FROM updateNewAccount WHERE update_id = " + update_id + ";");
-		Catalog catalog = (Catalog) context.getAttribute("catalog");
+		Catalog catalog = (Catalog) sm.getContextAttr("catalog");
 		try {
 			rs.next();
 			String db_id = rs.getString(Data.ID.ordinal());
@@ -33,10 +32,10 @@ public class UpdateNewAccount extends Update {
 			String type = rs.getString(Data.TYPE.ordinal());
 			switch(type) {
 			case "updateNewLogWithApp":
-				return UpdateNewLogWithApp.loadUpdateNewLogWithApp(update_id, db_id, user, website, db, context);
+				return UpdateNewLogWithApp.loadUpdateNewLogWithApp(update_id, db_id, user, website, sm);
 				
 			case "updateNewClassicApp":
-				return UpdateNewClassicApp.loadUpdateNewClassicApp(update_id, db_id, user, website, db, context);
+				return UpdateNewClassicApp.loadUpdateNewClassicApp(update_id, db_id, user, website, sm);
 				
 			default:
 				throw new GeneralException(ServletManager.Code.InternError, "No such type possible");

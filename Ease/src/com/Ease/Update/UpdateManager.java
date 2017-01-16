@@ -3,14 +3,12 @@ package com.Ease.Update;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSession;
+import org.json.simple.JSONObject;
 
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -20,10 +18,8 @@ public class UpdateManager {
 	protected Map<String, Update> updatesDBMap;
 	protected Map<Integer, Update> updatesIDMap;
 	
-	public UpdateManager(HttpSession session, DataBaseConnection db) throws GeneralException {
-		User user = (User) session.getAttribute("user");
-		ServletContext context = session.getServletContext();
-		updates = Update.loadUpdates(user, db, context);
+	public UpdateManager(ServletManager sm, User user) throws GeneralException {
+		updates = Update.loadUpdates(user, sm);
 		for (Update update : updates) {
 			this.addUpdateInMaps(update);
 		}
@@ -65,5 +61,15 @@ public class UpdateManager {
 	
 	public List<Update> getUpdates() {
 		return this.updates;
+	}
+
+	public void addUpdateFromJson(User user, JSONObject json, ServletManager sm) {
+		Update newUpdate = Update.createUpdateFromJSON(user, json, sm);
+		this.addUpdate(newUpdate);
+	}
+	
+	private void addUpdate(Update update) {
+		this.updates.add(update);
+		this.addUpdateInMaps(update);
 	}
 }

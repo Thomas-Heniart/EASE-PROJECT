@@ -2,10 +2,12 @@ package com.Ease.Update;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
-import javax.servlet.ServletContext;
+import org.json.simple.JSONObject;
 
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
@@ -21,7 +23,8 @@ public class Update {
 		TYPE
 	}
 	
-	public static List<Update> loadUpdates(User user, DataBaseConnection db, ServletContext context) throws GeneralException {
+	public static List<Update> loadUpdates(User user, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
 		List<Update> updates = new LinkedList<Update>();
 		try {
 			ResultSet rs = db.get("SELECT * FROM updates WHERE user_id = " + user.getDBid() + ";");
@@ -34,11 +37,11 @@ public class Update {
 					type = rs.getString(Data.TYPE.ordinal());
 					switch (type) {
 					case "updateNewPassword":
-						update = UpdateNewPassword.loadUpdateNewPassword(db_id, user, db, context);
+						update = UpdateNewPassword.loadUpdateNewPassword(db_id, user, sm);
 						break;
 					
 					case "updateNewAccount":
-						update = UpdateNewAccount.loadUpdateNewAccount(db_id, user, db, context);
+						update = UpdateNewAccount.loadUpdateNewAccount(db_id, user, sm);
 						break;
 					
 					default:
@@ -58,6 +61,25 @@ public class Update {
 	
 	public static String createUpdate(User user, String type, DataBaseConnection db) throws GeneralException {
 		return db.set("INSERT INTO updates values (null, " + user.getDBid() + ", '" + type + "');").toString();
+	}
+	
+	public static Update createUpdateFromJSON(User user, JSONObject json, ServletManager sm) throws GeneralException {
+		String type = (String) json.get("type");
+		switch(type) {
+			case "updateNewClassicApp":
+				break;
+				
+			case "updateNewLogWithApp":
+				
+				break;
+				
+			case "updateNewPassword":
+				
+				break;
+				
+			default:
+				throw new GeneralException(ServletManager.Code.ClientError, "Invalid json for update");
+		}
 	}
 	
 	protected String db_id;

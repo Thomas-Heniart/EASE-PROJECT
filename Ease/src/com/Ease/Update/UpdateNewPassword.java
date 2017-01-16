@@ -21,8 +21,9 @@ public class UpdateNewPassword extends Update {
 		NEW_PASSWORD
 	}
 
-	public static Update loadUpdateNewPassword(String update_id, User user, DataBaseConnection db, ServletContext context) throws GeneralException {
-		IdGenerator idGenerator = (IdGenerator) context.getAttribute("idGenerator");
+	public static Update loadUpdateNewPassword(String update_id, User user, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
 		ResultSet rs = db.get("SELECT * FROM updateNewPassword WHERE update_id = " + update_id + ";");
 		try {
 			rs.next();
