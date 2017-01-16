@@ -2,39 +2,24 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
   <display-name>HelloWorld</display-name>
   <listener>
-    <listener-class>
-       com.Ease.Context.OnStart
-    </listener-class>
+    <listener-class>com.Ease.Context.OnStart</listener-class>
+    <listener-class>com.Ease.Context.SessionListener</listener-class>
   </listener>
-
-  <!--  filter for prevent iframe use -->
   <filter>
-   <filter-name>IFrameBusterFilter</filter-name>
-   <filter-class>com.Ease.Utils.IFrameBusterFilter</filter-class>
-   <init-param>
-	  <param-name>test-param</param-name>
-	  <param-value>Initialization Paramter</param-value>
-   </init-param>
-</filter>
-<filter-mapping>
-   <filter-name>IFrameBusterFilter</filter-name>
-   <url-pattern>/*</url-pattern>
-</filter-mapping>
-
+    <filter-name>IFrameBusterFilter</filter-name>
+    <filter-class>com.Ease.Utils.IFrameBusterFilter</filter-class>
+    <init-param>
+      <param-name>test-param</param-name>
+      <param-value>Initialization Paramter</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>IFrameBusterFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
   <session-config>
     <session-timeout>240</session-timeout>
   </session-config>
-<!--
-  <security-constraint>
-    <web-resource-collection>
-       <web-resource-name>Viewpoint Secure URLs</web-resource-name>
-       <url-pattern>/*</url-pattern>
-    </web-resource-collection>
-    <user-data-constraint>
-       <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-  	</user-data-constraint>
-  </security-constraint>
--->
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
     <welcome-file>index.htm</welcome-file>

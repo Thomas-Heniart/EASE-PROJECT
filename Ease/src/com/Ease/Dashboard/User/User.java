@@ -129,6 +129,7 @@ public class User {
 				}
 			}
 			((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
+			((Map<String, User>)sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
 			return newUser;
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
@@ -771,5 +772,9 @@ public class User {
 	
 	public ExtensionKeys getExtensionKeys() {
 		return extensionKeys;
+	}
+	
+	public void createUpdates(String jsonUpdate) throws GeneralException {
+		
 	}
 }
