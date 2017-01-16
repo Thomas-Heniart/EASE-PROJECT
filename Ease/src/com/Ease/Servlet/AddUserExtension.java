@@ -47,7 +47,7 @@ public class AddUserExtension extends HttpServlet {
 		User user = (User) (session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 
-		String key = sm.getServletParam("key", true);
+		String key = sm.getServletParam("extensionId", true);
 		
 		try {
 			sm.needToBeConnected();
