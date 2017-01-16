@@ -44,6 +44,11 @@ body .crisp-client .crisp-1 .crisp-11 {
   background-color: $themeColor !important;
 }
 
+/* hide connexion popup when plugin log out from apps */
+.logout-overlay:not([style*='display:none;']) + .popupHandler {
+  display: none;
+}
+
 .input {
   .showPassDiv {
     position: absolute;
