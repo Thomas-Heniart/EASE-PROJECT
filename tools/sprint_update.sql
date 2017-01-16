@@ -1,11 +1,11 @@
-DROP TABLE IF EXISTS updates;
+DROP TABLE IF EXISTS usersPrivateExtensions, removedUpdates, logWithUpdates, classicUpdates, updateNewPassword, updateNewClassicApp, updateNewLogWithApp, updatesRemoved, updateNewAccount,updates;
 
 CREATE TABLE usersPrivateExtensions (
 	id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 	user_id INT(10) UNSIGNED NOT NULL,
 	extension_key VARCHAR(32) NOT NULL,
 	PRIMARY KEY (id),
-	FOREIGN KEY (user_id) REFERENCES user(id)
+	FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 CREATE TABLE `updates` (
@@ -23,7 +23,7 @@ CREATE TABLE  updateNewPassword (
 	new_password VARCHAR(255) NOT NULL,
 	PRIMARY KEY (id),
 	FOREIGN KEY (update_id) REFERENCES updates(id),
-	FOREIGN KEY (classic_app_id) REFERENCES classicApss(id)
+	FOREIGN KEY (classic_app_id) REFERENCES classicApps(id)
 );
 
 CREATE TABLE updateNewAccount (
@@ -59,5 +59,12 @@ CREATE TABLE classicUpdateInformations (
 	information_name VARCHAR(255),
 	information_value VARCHAR(255),
 	PRIMARY KEY (id),
-	FOREIGN KEY (update_new_account_id) REFERENCES updateNewClassicApp(id)
+	FOREIGN KEY (update_new_classic_app_id) REFERENCES updateNewClassicApp(id)
+);
+
+CREATE TABLE `updatesRemoved` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `update_id` INT(10) UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`update_id`) REFERENCES `updates` (`id`)
 );
