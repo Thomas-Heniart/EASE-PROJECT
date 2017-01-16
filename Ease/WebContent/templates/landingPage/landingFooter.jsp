@@ -14,7 +14,7 @@
 						<a href="#">
 							<fmt:message key="landing.footer.link.create-account"/>
 						</a>
-						<a href="https://ease.space">
+						<a href="/?skipLanding=true">
 							<fmt:message key="landing.header.connexion-link"/>
 						</a>
 						<a class="typeform-share" href="https://victor304.typeform.com/to/VtXcOm" data-mode="1" target="_blank">
