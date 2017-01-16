@@ -110,6 +110,7 @@ public class User {
 			SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, sm);
 			User newUser = new User(db_id, firstName, lastName, email, keys, options, isAdmin, sawGroupProfile,
 					sessionSave, status);
+			newUser.loadExtensionKeys(sm);
 			newUser.loadProfiles(sm);
 			newUser.loadEmails(sm);
 			for (Map.Entry<String, WebsiteApp> entry : newUser.getWebsiteAppsDBmap().entrySet()) {
@@ -185,6 +186,7 @@ public class User {
 	protected boolean isAdmin;
 	protected boolean sawGroupProfile;
 	protected Status status;
+	protected ExtensionKeys extensionKeys;
 
 	protected SessionSave sessionSave;
 
@@ -761,5 +763,13 @@ public class User {
 
 	public void rememberNotIntegratedLinkedinApp(Object o) {
 
+	}
+	
+	public void loadExtensionKeys(ServletManager sm) throws GeneralException {
+		extensionKeys = ExtensionKeys.loadExtensionKeys(this, sm);
+	}
+	
+	public ExtensionKeys getExtensionKeys() {
+		return extensionKeys;
 	}
 }
