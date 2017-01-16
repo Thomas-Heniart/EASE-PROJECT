@@ -45,6 +45,7 @@ public class Catalog {
 		for (Tag tag : tags) {
 			tagDBmap.put(tag.getDbId(), tag);
 			tagIDmap.put(tag.getSingleId(), tag);
+			tag.setSites(websiteDBmap, db);
 		}
 	}
 	
