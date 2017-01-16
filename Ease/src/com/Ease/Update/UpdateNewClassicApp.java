@@ -31,7 +31,7 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 			String db_id = rs.getString(Data.ID.ordinal());
 			String password = rs.getString(Data.PASSWORD.ordinal());
 			Map<String, String> updateInformations = ClassicUpdateInformation.loadClassicUpdateInformations(db_id, db);
-			return new UpdateNewClassicApp(update_id, website, password, updateInformations, idGenerator.getNextId());
+			return new UpdateNewClassicApp(update_id, update_new_account_id, website, password, updateInformations, idGenerator.getNextId());
 		} catch(SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
@@ -47,14 +47,14 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 		ClassicUpdateInformation.createInformations(updateNewClassicApp_id, updateInformations, db);
 		db.commitTransaction(transaction);
 		String update_id = (String) elevator.get("update_id");
-		return new UpdateNewClassicApp(update_id, website, password, updateInformations, idGenerator.getNextId());
+		return new UpdateNewClassicApp(update_id, updateNewAccount_id, website, password, updateInformations, idGenerator.getNextId());
 	}
 	
 	protected Map<String, String> updateInformations;
 	protected String password;
 	
-	public UpdateNewClassicApp(String db_id, Website website, String password, Map<String, String> updateInformations, int single_id) {
-		super(db_id, website, single_id);
+	public UpdateNewClassicApp(String db_id, String update_new_account_id, Website website, String password, Map<String, String> updateInformations, int single_id) {
+		super(db_id, update_new_account_id, website, single_id);
 		this.password = password;
 		this.updateInformations = updateInformations;
 	}
@@ -67,4 +67,11 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 		return this.password;
 	}
 
+	public void deleteFromDb(DataBaseConnection db) throws GeneralException {
+		int transaction = db.startTransaction();
+		ClassicUpdateInformation.deleteFromDb(this.db_id, db);
+		db.set("DELETE FROM updateNewClassicApp WHERE update_new_account_id = " + this.update_new_account_id + ";");
+		super.deleteFromDb(db);
+		db.commitTransaction(transaction);
+	}
 }

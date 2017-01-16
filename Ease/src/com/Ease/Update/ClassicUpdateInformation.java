@@ -43,5 +43,10 @@ public class ClassicUpdateInformation {
 		}
 		db.commitTransaction(transaction);
 	}
-	
+
+	public static void deleteFromDb(String db_id, DataBaseConnection db) throws GeneralException {
+		int transaction = db.startTransaction();
+		db.set("DELETE FROM classicUpdateInformations WHERE update_new_classic_app_id = " + db_id + ";");
+		db.commitTransaction(transaction);
+	}
 }

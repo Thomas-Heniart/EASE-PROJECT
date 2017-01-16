@@ -79,4 +79,8 @@ public class Update {
 	public Integer getSingledId() {
 		return this.single_id;
 	}
+	
+	public void deleteFromDb(DataBaseConnection db) throws GeneralException {
+		db.set("DELETE FROM updates WHERE id = " + this.db_id + ";");
+	}
 }

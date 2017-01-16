@@ -53,5 +53,12 @@ public class UpdateNewPassword extends Update {
 		this.newPassword = newPassword;
 
 	}
+	
+	public void deleteFromDb(DataBaseConnection db) throws GeneralException {
+		int transaction = db.startTransaction();
+		db.set("DELETE FROM updateNewPassword WHERE account_id = " + this.db_id + ";");
+		super.deleteFromDb(db);
+		db.commitTransaction(transaction);
+	}
 
 }

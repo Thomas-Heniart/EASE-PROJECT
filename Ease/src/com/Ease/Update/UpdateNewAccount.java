@@ -55,11 +55,19 @@ public class UpdateNewAccount extends Update {
 		return updateNewAccount_id;
 	}
 	
+	protected String update_new_account_id;
 	protected Website website;
 	
-	public UpdateNewAccount(String db_id, Website website, int single_id) {
+	public UpdateNewAccount(String db_id, String update_new_account_id, Website website, int single_id) {
 		super(db_id, single_id);
+		this.update_new_account_id = update_new_account_id;
 		this.website = website;
 	}
-
+	
+	public void deleteFromDb(DataBaseConnection db) throws GeneralException {
+		int transaction = db.startTransaction();
+		db.set("DELETE FROM updateNewAccount WHERE account_id = " + this.db_id + ";");
+		super.deleteFromDb(db);
+		db.commitTransaction(transaction);
+	}
 }
