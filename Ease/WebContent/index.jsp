@@ -108,6 +108,8 @@ pageEncoding="UTF-8"%>
 		Cookie 	cookies[] = request.getCookies();
 		String	sessionId = "";
 		String 	token = "";
+		String 	skipLanding = "";
+		String  email = "";
 		if (cookies != null){
 			for (int i = 0;i < cookies.length ; i++) {
 				cookie = cookies[i];
@@ -115,8 +117,18 @@ pageEncoding="UTF-8"%>
 					sessionId = cookie.getValue();
 				} else if((cookie.getName()).compareTo("sTk") == 0){
 					token = cookie.getValue();
+				} else if ((cookie.getName()).compareTo("skipLanding") == 0) {
+					skipLanding = cookie.getValue();
+				} else if ((cookie.getName()).compareTo("email") == 0){
+					email = cookie.getValue();
 				}
 			}
+		}
+		if (email.length() == 0 && skipLanding.length() == 0 && request.getParameter("skipLanding") == null){%>
+			<jsp:forward page="discover" />
+		<%}
+		if ((cookie.getName()).compareTo("email") == 0){
+			email = cookie.getValue();
 		}
 		if(sessionId.length() > 0 && token.length() > 0){ %>
 			<jsp:forward page="connectionWithCookies">

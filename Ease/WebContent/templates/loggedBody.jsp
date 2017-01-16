@@ -17,6 +17,7 @@ if (user != null) {
 	SessionSave sessionSave = user.getSessionSave();
 	Cookie sessionId = new Cookie("sId",sessionSave.getSessionId());
 	Cookie sessionToken = new Cookie("sTk",sessionSave.getToken());
+	Cookie skipLanding = new Cookie("skipLanding", "true");
 	DateFormat dateFormat = new SimpleDateFormat("HH");
 	Date date = new Date();
 	int duration = 29 - Integer.parseInt(dateFormat.format(date));
@@ -24,8 +25,10 @@ if (user != null) {
 	duration = (duration*60-30)*60;
 	sessionId.setMaxAge(duration);
 	sessionToken.setMaxAge(duration);
+	skipLanding.setMaxAge(60*60*24*14);
+	response.addCookie(skipLanding);
 	response.addCookie(sessionId);
-	response.addCookie(sessionToken);	
+	response.addCookie(sessionToken);
 }
 %>
 <%
