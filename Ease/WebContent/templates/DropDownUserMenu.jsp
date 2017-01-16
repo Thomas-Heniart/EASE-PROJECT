@@ -98,6 +98,8 @@ String UserName = ((User) (session.getAttribute("user"))).getFirstName();
 					},
 					'text'
 					);
+			} else {
+				$('#personalComputerSetup').closest('p').remove();
 			}
 		}, 1000);
 	});
