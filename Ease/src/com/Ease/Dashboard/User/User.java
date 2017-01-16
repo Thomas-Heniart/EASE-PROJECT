@@ -774,7 +774,7 @@ public class User {
 		return extensionKeys;
 	}
 	
-	public void createUpdates(String jsonUpdate, ServletManager sm) throws GeneralException {
+	public void createUpdate(String jsonUpdate, ServletManager sm) throws GeneralException {
 		
 	}
 }

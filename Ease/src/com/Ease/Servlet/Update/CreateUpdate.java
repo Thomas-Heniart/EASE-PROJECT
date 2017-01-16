@@ -56,7 +56,7 @@ public class CreateUpdate extends HttpServlet {
 			if ((user = sessionIdUserMap.get(sessionId)) == null) {
 				sm.setResponse(ServletManager.Code.Success, "1 Please stock updates.");
 			} else {
-				user.createUpdates(jsonUpdate, sm);
+				user.createUpdate(jsonUpdate, sm);
 				sm.setResponse(ServletManager.Code.Success, "2 Updates sended.");
 			}
 			sm.setResponse(ServletManager.Code.Success, "Email added");
