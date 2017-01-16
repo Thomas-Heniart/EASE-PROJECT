@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.User.User;
@@ -22,9 +24,8 @@ public class UpdateNewLogWithApp extends UpdateNewAccount {
 		LOGWITH_APP_ID
 	}
 	
-	public static Update loadUpdateNewLogWithApp(String update_id, String update_new_account_id, User user, Website website, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
+	public static Update loadUpdateNewLogWithApp(String update_id, String update_new_account_id, User user, Website website, DataBaseConnection db, ServletContext context) throws GeneralException {
+		IdGenerator idGenerator = (IdGenerator) context.getAttribute("idGenerator");
 		ResultSet rs = db.get("SELECT * FROM updateNewLogWithApp WHERE update_new_account_id = " + update_new_account_id + ";");
 		try {
 			rs.next();

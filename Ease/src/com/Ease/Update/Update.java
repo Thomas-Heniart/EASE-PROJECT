@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.servlet.ServletContext;
+
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
@@ -19,8 +21,7 @@ public class Update {
 		TYPE
 	}
 	
-	public static List<Update> loadUpdates(User user, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
+	public static List<Update> loadUpdates(User user, DataBaseConnection db, ServletContext context) throws GeneralException {
 		List<Update> updates = new LinkedList<Update>();
 		try {
 			ResultSet rs = db.get("SELECT * FROM updates WHERE user_id = " + user.getDBid() + ";");
@@ -33,11 +34,11 @@ public class Update {
 					type = rs.getString(Data.TYPE.ordinal());
 					switch (type) {
 					case "updateNewPassword":
-						update = UpdateNewPassword.loadUpdateNewPassword(db_id, user, sm);
+						update = UpdateNewPassword.loadUpdateNewPassword(db_id, user, db, context);
 						break;
 					
 					case "updateNewAccount":
-						update = UpdateNewAccount.loadUpdateNewAccount(db_id, user, sm);
+						update = UpdateNewAccount.loadUpdateNewAccount(db_id, user, db, context);
 						break;
 					
 					default:
@@ -69,5 +70,13 @@ public class Update {
 		//this.type = type;
 		this.single_id = single_id;
 		//this.user = user;
+	}
+	
+	public String getDbId() {
+		return this.db_id;
+	}
+	
+	public Integer getSingledId() {
+		return this.single_id;
 	}
 }
