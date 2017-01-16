@@ -17,6 +17,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.Ease.Dashboard.User.User;
 import com.Ease.websocket.WebsocketMessage;
@@ -284,5 +285,9 @@ public class ServletManager {
 		else if (msg == null)
 			throw new GeneralException(Code.ClientError, "msg is null");
 		messages.add(msg);
+	}
+	
+	public HttpSession getSession() {
+		return request.getSession();
 	}
 }
