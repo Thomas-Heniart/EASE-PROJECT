@@ -2,6 +2,7 @@ package com.Ease.Update;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.Ease.Context.Catalog.Website;
@@ -33,6 +34,19 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 		} catch(SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
+	}
+	
+	public static UpdateNewClassicApp createUpdateNewClassicApp(User user, Website website, Map<String, String> updateInformations, String password, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
+		Map<String, Object> elevator = new HashMap<String, Object>();
+		int transaction = db.startTransaction();
+		String updateNewAccount_id = UpdateNewAccount.createUpdateNewAccount(user, website, "updateNewClassicApp", elevator, db);
+		String updateNewClassicApp_id = db.set("INSERT INTO updateNewClassicApp values (null, " + updateNewAccount_id + ", '" + password + "');").toString();
+		ClassicUpdateInformation.createInformations(updateNewClassicApp_id, updateInformations, db);
+		db.commitTransaction(transaction);
+		String update_id = (String) elevator.get("update_id");
+		return new UpdateNewClassicApp(update_id, website, password, updateInformations, idGenerator.getNextId());
 	}
 	
 	protected Map<String, String> updateInformations;

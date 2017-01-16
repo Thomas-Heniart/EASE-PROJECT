@@ -2,6 +2,8 @@ package com.Ease.Update;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
@@ -42,6 +44,15 @@ public class UpdateNewAccount extends Update {
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
+	}
+	
+	public static String createUpdateNewAccount(User user, Website website, String type, Map<String, Object> elevator, DataBaseConnection db) throws GeneralException {
+		int transaction = db.startTransaction();
+		String update_id = Update.createUpdate(user, "updateNewAccount", db);
+		elevator.put("update_id", update_id);
+		String updateNewAccount_id = db.set("INSERT INTO updateNewAccount values (null, " + update_id + ", " + website.getDb_id() + ", '" + type + "'").toString();
+		db.commitTransaction(transaction);
+		return updateNewAccount_id;
 	}
 	
 	protected Website website;

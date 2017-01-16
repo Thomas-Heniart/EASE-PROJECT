@@ -2,6 +2,8 @@ package com.Ease.Update;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
@@ -33,6 +35,18 @@ public class UpdateNewLogWithApp extends UpdateNewAccount {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 		
+	}
+	
+	public static UpdateNewLogWithApp createUpdateNewLogWithApp(User user, Website website, LogwithApp logWithApp, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
+		Map<String, Object> elevator = new HashMap<String, Object>();
+		int transaction = db.startTransaction();
+		String updateNewAccount_id = UpdateNewAccount.createUpdateNewAccount(user, website, "updateNewLogWithApp", elevator, db);
+		db.set("INSERT INTO updateNewLogWithApp values (null, " + updateNewAccount_id + ", " + logWithApp.getDBid() + ");");
+		db.commitTransaction(transaction);
+		String update_id = (String) elevator.get("update_id");
+		return new UpdateNewLogWithApp(update_id, website, logWithApp, idGenerator.getNextId());
 	}
 	
 	protected LogwithApp logWithApp;

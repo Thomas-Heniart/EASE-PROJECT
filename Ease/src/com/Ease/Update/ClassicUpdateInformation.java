@@ -35,5 +35,13 @@ public class ClassicUpdateInformation {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
+
+	public static void createInformations(String updateNewClassicApp_id, Map<String, String> updateInformations, DataBaseConnection db) throws GeneralException {
+		int transaction = db.startTransaction();
+		for (Map.Entry<String, String> entry : updateInformations.entrySet()) {
+			db.set("INSERT INTO classicUpdateInformations values (null, " + updateNewClassicApp_id + ", '" + entry.getKey() + "', '" + entry.getValue() + "');");
+		}
+		db.commitTransaction(transaction);
+	}
 	
 }

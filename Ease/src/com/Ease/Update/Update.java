@@ -55,6 +55,10 @@ public class Update {
 		
 	}
 	
+	public static String createUpdate(User user, String type, DataBaseConnection db) throws GeneralException {
+		return db.set("INSERT INTO updates values (null, " + user.getDBid() + ", '" + type + "');").toString();
+	}
+	
 	protected String db_id;
 	protected String type;
 	protected int single_id;
