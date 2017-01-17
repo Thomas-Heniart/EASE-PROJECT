@@ -41,7 +41,7 @@ public class WebsiteApp extends App {
 		DataBaseConnection db = sm.getDB();
 		try {
 			ResultSet rs = db.get("SELECT * from websiteApps WHERE app_id=" + appDBid + ";");
-			System.out.println(appDBid);
+			//System.out.println(appDBid);
 			try {
 				if (rs.next()) {
 					String websiteAppDBid = rs.getString(Data.ID.ordinal());
