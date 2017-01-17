@@ -22,7 +22,7 @@ String UserName = ((User) (session.getAttribute("user"))).getFirstName();
 			for="backgroundSwitch"></label>
 		</span>
 	</p>
-	<p>
+	<p style="display:none;">
 		<span>Pers comp</span><span class="onoffswitch"> <input
 		type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
 		id=personalComputerSetup /> <label class="onoffswitch-label"
