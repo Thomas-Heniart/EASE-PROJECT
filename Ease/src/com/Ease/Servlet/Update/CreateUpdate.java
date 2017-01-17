@@ -49,7 +49,6 @@ public class CreateUpdate extends HttpServlet {
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 
 		String sessionId = sm.getServletParam("sessionId", true);
-		String extensionId = sm.getServletParam("extensionId", true);
 		String jsonUpdate = sm.getServletParam("updates", true);
 		
 		try {
@@ -57,12 +56,8 @@ public class CreateUpdate extends HttpServlet {
 			if ((user = sessionIdUserMap.get(sessionId)) == null) {
 				sm.setResponse(ServletManager.Code.Success, "1 Please stock update.");
 			} else {
-				if (user.getExtensionKeys().haveThisKey(extensionId)) {
-					user.createUpdate(jsonUpdate, sm);
-					sm.setResponse(ServletManager.Code.Success, "2 Update sended.");
-				} else {
-					sm.setResponse(ServletManager.Code.Success, "3 Don't stock update.");
-				}
+				user.createUpdate(jsonUpdate, sm);
+				sm.setResponse(ServletManager.Code.Success, "2 Update sended.");
 			}
 		} catch (GeneralException e) {
 			sm.setResponse(e);
