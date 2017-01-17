@@ -4,7 +4,7 @@
     "home":"http://www.lequipe.fr/",
     "connect":{
         "todo":[
-          {"action":"clickona", "search":"icon.icon--user.icon--black.js-account-user a"},
+          {"action":"clickona", "search":"a.icon.icon--user.icon--black.js-account-user"},
         	{"action":"waitfor", "search":".connexionV2"},
           	{"action":"fill", "what":"login", "search":".connexionV2 .signin input[name='username']", "grave":true},
             {"action":"fill", "what":"password", "search":".connexionV2 .signin input[name='password']"},
@@ -13,18 +13,23 @@
     },
     "Facebook":{
     	"todo":[
-        {"action":"clickona", "search":"icon.icon--user.icon--black.js-account-user a"},
-        {"action":"waitfor", "search":".connexionV2"},
-        {"action":"click", "search":".connexionV2 #fbloginBtn"}
+        {"action":"waitfor", "search":"#dfp_interstitiel[data-google-query-id]"},
+        {"action":"clickona", "search":"a.icon.icon--user.icon--black.js-account-user"},
+        {"action":"waitfor", "search":".connexionV2 .signin #fbloginBtn"},
+        {"action":"wait", "timeout":"1500"},
+        {"action":"click", "search":".connexionV2 .signin #fbloginBtn"},
+        {"action":"wait", "timeout":"2000"},
+        {"action":"click", "search":".connexionV2 .signin #fbloginBtn"}
     	]
     },
     "Google":{
       "todo":[
-        {"action":"clickona", "search":"icon.icon--user.icon--black.js-account-user a"},
+        {"action":"clickona", "search":"a.icon.icon--user.icon--black.js-account-user"},
         {"action":"waitfor", "search":".connexionV2"},
+        {"action":"click", "search":".connexionV2 #ggloginBtn"},
         {"action":"click", "search":".connexionV2 #ggloginBtn"}
       ]
-    }
+    },
     "logout":{
         "todo":[
             {"action":"clickona", "search":"icon.icon--user.icon--black.js-account-user.connected a"},
@@ -33,6 +38,6 @@
          ]
     },
     "checkAlreadyLogged":[
-        {"search":"icon.icon--user.icon--black.js-account-user.connected"}
+        {"search":"a.icon.icon--user.icon--black.js-account-user.connected"}
     ]
 }
