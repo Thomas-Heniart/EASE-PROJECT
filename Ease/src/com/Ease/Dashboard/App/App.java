@@ -205,4 +205,9 @@ public class App {
 	public JSONArray getJSON(ServletManager sm) throws GeneralException{
 		return new JSONArray();
 	}
+	
+	/* For sancho le robot */
+	public boolean isEmpty() {
+		return false;
+	}
 }
