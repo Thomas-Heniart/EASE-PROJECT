@@ -1,0 +1,38 @@
+{
+    "name":"LEquipe",
+    "lastLogin":"",
+    "home":"http://www.lequipe.fr/",
+    "connect":{
+        "todo":[
+          {"action":"clickona", "search":"icon.icon--user.icon--black.js-account-user a"},
+        	{"action":"waitfor", "search":".connexionV2"},
+          	{"action":"fill", "what":"login", "search":".connexionV2 .signin input[name='username']", "grave":true},
+            {"action":"fill", "what":"password", "search":".connexionV2 .signin input[name='password']"},
+            {"action":"clickona", "search":".connexionV2 .signin a.submit"}
+        ]
+    },
+    "Facebook":{
+    	"todo":[
+        {"action":"clickona", "search":"icon.icon--user.icon--black.js-account-user a"},
+        {"action":"waitfor", "search":".connexionV2"},
+        {"action":"click", "search":".connexionV2 #fbloginBtn"}
+    	]
+    },
+    "Google":{
+      "todo":[
+        {"action":"clickona", "search":"icon.icon--user.icon--black.js-account-user a"},
+        {"action":"waitfor", "search":".connexionV2"},
+        {"action":"click", "search":".connexionV2 #ggloginBtn"}
+      ]
+    }
+    "logout":{
+        "todo":[
+            {"action":"clickona", "search":"icon.icon--user.icon--black.js-account-user.connected a"},
+            {"action":"clickona", "search":".js-account-signout a"},
+            {"action":"waitload"}
+         ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"icon.icon--user.icon--black.js-account-user.connected"}
+    ]
+}
