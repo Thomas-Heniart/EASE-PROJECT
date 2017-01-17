@@ -39,7 +39,7 @@ public class TestWebsites extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("admin.jsp");
 		rd.forward(request, response);
 	}
 
@@ -50,21 +50,21 @@ public class TestWebsites extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		User user = (User) (session.getAttribute("User"));
+		User user = (User) (session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		try {
-			if (user == null) {
-			} else {
-				List<App> apps = user.getApps();
-				JSONArray responseJson = new JSONArray();
-				for (App app : apps) {
-					if (app.isEmpty() != true) {
-						responseJson.add(app.getJSON(sm));
-					}
+			sm.needToBeConnected();
+			List<App> apps = user.getApps();
+			JSONArray responseJson = new JSONArray();
+			for (App app : apps) {
+				if (app.isEmpty() != true) {
+					responseJson.add(app.getJSON(sm));
 				}
-				sm.setResponse(ServletManager.Code.Success, responseJson.toString());
 			}
+			sm.setResponse(ServletManager.Code.Success, responseJson.toString());
 		} catch (GeneralException e) {
+			sm.setResponse(e);
+		} catch (Exception e){
 			sm.setResponse(e);
 		}
 		sm.sendResponse();

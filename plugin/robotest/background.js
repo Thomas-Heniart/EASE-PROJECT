@@ -367,7 +367,7 @@ function sendResults(){
             var window = windows[i];
             for(var j in window.tabs){
                 var tab = window.tabs[j];
-                if(tab.url.indexOf("https://ease.space")==0){
+                if(tab.url.indexOf("https://ease.space")==0 || tab.url.indexOf("http://localhost:8080/")==0 || tab.url.indexOf("https://localhost:8443/")==0){
                      extension.tabs.sendMessage(tab, "printResults", results, function(){});
                 }
             }
