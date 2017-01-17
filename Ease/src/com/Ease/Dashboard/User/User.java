@@ -440,6 +440,20 @@ public class User {
 		throw new GeneralException(ServletManager.Code.ClientError, "This app's single_id dosen't exist.");
 	}
 
+	
+	/* For sancho le robot */
+	public List<App> getApps() {
+		List<App> res = new LinkedList<App>();
+		for (List<Profile> column : this.profile_columns) {
+			for (Profile profile : column) {
+				for (App app : profile.getApps()) {
+					res.add(app);
+				}
+			}
+		}
+		return res;
+	}
+	
 	public void removeDefinitly(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();

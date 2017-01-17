@@ -106,5 +106,9 @@ public class LinkApp extends App {
 		return result;
 	}
 	
+	/* For sancho le robot */
+	public boolean isEmpty() {
+		return true;
+	}
 }
 	
