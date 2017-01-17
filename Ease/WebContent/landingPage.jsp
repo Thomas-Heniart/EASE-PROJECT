@@ -93,7 +93,7 @@ pageEncoding="UTF-8"%>
 						</a>
 					</li>
 					<li>
-						<a href="/" id="connexionButton" target="_blank">
+						<a href="/?skipLanding=true" id="connexionButton" target="_blank">
 							<fmt:message key="landing.header.connexion-link" />
 						</a>
 					</li>

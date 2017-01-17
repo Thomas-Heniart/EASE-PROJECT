@@ -15,6 +15,10 @@ import java.util.Set;
 
 import javax.websocket.Session;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Context.Group.Infrastructure;
@@ -25,6 +29,7 @@ import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.Profile.ProfilePermissions;
+import com.Ease.Update.UpdateManager;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Invitation;
@@ -110,6 +115,7 @@ public class User {
 			SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, sm);
 			User newUser = new User(db_id, firstName, lastName, email, keys, options, isAdmin, sawGroupProfile,
 					sessionSave, status);
+			newUser.loadExtensionKeys(sm);
 			newUser.loadProfiles(sm);
 			newUser.loadEmails(sm);
 			for (Map.Entry<String, WebsiteApp> entry : newUser.getWebsiteAppsDBmap().entrySet()) {
@@ -128,6 +134,8 @@ public class User {
 				}
 			}
 			((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
+			((Map<String, User>)sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
+			newUser.initializeUpdateManager(sm);
 			return newUser;
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
@@ -164,6 +172,7 @@ public class User {
 		newUser.getUserEmails().put(email, userEmail);
 		newUser.passStep("CGU", db);
 		newUser.passStep("first_connection", db);
+		newUser.initializeUpdateManager(sm);
 		db.commitTransaction(transaction);
 		return newUser;
 	}
@@ -185,6 +194,8 @@ public class User {
 	protected boolean isAdmin;
 	protected boolean sawGroupProfile;
 	protected Status status;
+	protected ExtensionKeys extensionKeys;
+	protected UpdateManager updateManager;
 
 	protected SessionSave sessionSave;
 
@@ -218,7 +229,11 @@ public class User {
 		DataBaseConnection db = sm.getDB();
 		db.set("DELETE FROM users WHERE id=" + this.db_id + ";");
 	}
-
+	
+	public void initializeUpdateManager(ServletManager sm) throws GeneralException {
+		this.updateManager = new UpdateManager(sm, this);
+	}
+	
 	/*
 	 * 
 	 * Getter and Setter
@@ -761,5 +776,23 @@ public class User {
 
 	public void rememberNotIntegratedLinkedinApp(Object o) {
 
+	}
+	
+	public void loadExtensionKeys(ServletManager sm) throws GeneralException {
+		extensionKeys = ExtensionKeys.loadExtensionKeys(this, sm);
+	}
+	
+	public ExtensionKeys getExtensionKeys() {
+		return extensionKeys;
+	}
+	
+	public void createUpdate(String jsonUpdate, ServletManager sm) throws GeneralException {
+		JSONParser parser = new JSONParser();
+		try {
+			JSONObject json = (JSONObject) parser.parse(jsonUpdate);
+			this.updateManager.addUpdateFromJson(this, json, sm);
+		} catch (ParseException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
 	}
 }

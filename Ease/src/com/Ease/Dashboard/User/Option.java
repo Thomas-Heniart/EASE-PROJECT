@@ -65,7 +65,7 @@ public class Option {
 
 	public void setBackground_picked(boolean b, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE options SET background_picked = " + (b ? 1 : 0) + ";");
+		db.set("UPDATE options SET background_picked = " + (b ? 1 : 0) + " WHERE id = " + this.db_id + ";");
 		this.background_picked = b;
 	}
 
@@ -75,7 +75,7 @@ public class Option {
 
 	public void setInfinite_session(boolean b, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE options SET infinite_session = " + (b ? 1 : 0) + ";");
+		db.set("UPDATE options SET infinite_session = " + (b ? 1 : 0) + " WHERE id = " + this.db_id + ";");
 		this.infinite_session = b;
 	}
 }

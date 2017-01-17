@@ -15,7 +15,6 @@ import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.LinkApp.LinkApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.Profile.Profile;
-import com.Ease.Dashboard.Profile.ProfilePermissions;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;

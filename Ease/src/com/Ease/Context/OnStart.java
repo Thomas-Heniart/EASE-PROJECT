@@ -63,6 +63,8 @@ public class OnStart implements ServletContextListener{
 				Infrastructure.loadInfrastructures(db, evt.getServletContext());
 				Map<String, User> usersMap = new HashMap<String, User>();
 				context.setAttribute("users", usersMap);
+				Map<String, User> sessionIdUserMap = new HashMap<String, User>();
+				context.setAttribute("sessionIdUserMap", usersMap);
 				System.out.println("done.");
 			} catch (GeneralException e1) {
 				System.out.println("Start failed");
