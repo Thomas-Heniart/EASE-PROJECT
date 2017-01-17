@@ -1,20 +1,19 @@
 if(window === window.top){
 
 var allForms = [];
+var allButtonsLogWith = [];
+var handledLogWith = [{name:"facebook", short:"fb"}, {name:"linkedin", short:"lnkdn"}];
 listenToForms();
 checkForms();
 
 function checkForms(){
     setTimeout(function(){
-        if(!equalArrays(document.forms, allForms)){
-            listenToForms();
-        }
+        listenToForms();
         checkForms();
     },500);
 }
 
 function equalArrays (array1, array2) {
-    // compare lengths - can save a lot of time 
     if (array2.length != array1.length)
         return false;
 
@@ -35,65 +34,41 @@ function equalArrays (array1, array2) {
 
 function listenToForms (){
     for (var i = 0; i < document.forms.length; i++) {
-        var listen = true;
-        for (var j = 0; j < allForms.length; j++){
-            if(equalArrays(document.forms[i], allForms[j])){
-                listen = false;
-                break;
-            }
-        }
-        if(listen){
-            listenToSubmit(document.forms[i]);
-            listenToClick(document.forms[i]);
+        var id = document.forms[i].getAttribute("efi-attribute");
+        if(id == null){
+            document.forms[i].addEventListener("submit", function easeSubmitListener(res){
+                checkFields(res.target.getElementsByTagName("input"));
+            });
             allForms.push(document.forms[i]);
-        }
-        
-    }
-}
-
-function listenToSubmit(form){
-     form.addEventListener("submit", function easeSubmitListener(res){
-        var fields = res.target.getElementsByTagName("input");
-        checkFields(res.target.getElementsByTagName("input"));
-    });
-}
-
-function listenToClick(form){
-    var buttons = form.getElementsByTagName("button");
-    for (var i=0;i<buttons.length;i++){
-        buttons[i].addEventListener("click", function easeClickListener(res){
-            checkFields(form.getElementsByTagName("input"));
-        });
-    }
-    var inputs = form.getElementsByTagName("input");
-    var inputSubmit = [];
-    for (var j=0; j<inputs.length; j++){
-        if(inputs[j].type == "submit"){
-            inputSubmit.push(inputs[j]);
-        }
-    }
-    for (var k=0;k<inputSubmit.length;k++){
-        inputSubmit[k].addEventListener("click", function easeClickListener(res){
-            checkFields(form.getElementsByTagName("input"));
-        });
+            var att = document.createAttribute("efi-attribute");
+            att.value = "secured-form";
+            document.forms[i].setAttributeNode(att);         
+        }        
     }
 }
 
 function checkFields(fields){
     var hasPassword = false;
-    var hasEmail = false;
+    var hasLogin = false;
+    var passIdx = null;
     for (var j = 0; j<fields.length; j++){
-        if(validateEmail(fields[j].value)){
-            hasEmail = true;
-            var email = fields[j].value;
-         }
-         if(fields[j].type=="password"){
+        if(fields[j].type=="password"){
             hasPassword = true;
-             var password = fields[j].value;
+            var password = fields[j].value;
+            passIdx = j;
+            break;
+        } 
+    }
+    if(hasPassword){
+        for (var j = passIdx-1; j >= 0; j--) {
+            if((fields[j].type=="text" || fields[j].type=="email" || fields[j].type==null) && (validateEmail(fields[j].value) || isLoginField(fields[j].name))){
+                hasLogin = true;
+                var username = fields[j].value;
+                break;
+            }
         }
-        if(hasEmail && hasPassword){
-            extensionLight.runtime.sendMessage('newConnectionToRandomWebsite', {'website':window.location.host, 'username':email, 'password':password}, function(){});
-        break;
+        if(hasLogin){
+            extension.runtime.sendMessage('newConnectionToRandomWebsite', {'website':window.location.host, 'username':username, 'password':password}, function(){});
         }
     }
 }
@@ -101,6 +76,12 @@ function checkFields(fields){
 function validateEmail(email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
+}
+
+function isLoginField(name){
+    if(name.indexOf("login")==0 || name.indexOf("user")==0)
+        return true;
+    return false;
 }
     
 }

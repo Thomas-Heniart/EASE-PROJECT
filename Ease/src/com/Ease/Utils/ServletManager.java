@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.Ease.Context.Variables;
 import com.Ease.Dashboard.User.User;
 import com.Ease.websocket.WebsocketMessage;
 import com.Ease.websocket.WebsocketSession;
@@ -241,10 +242,6 @@ public class ServletManager {
 	
 	public User getUser(){
 		return user;
-	}
-	
-	public String getRealPath(String path){
-		return request.getServletContext().getRealPath(path);
 	}
 	
 	public void setSocketId(String socketId) throws GeneralException {

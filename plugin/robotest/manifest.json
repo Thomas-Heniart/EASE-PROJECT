@@ -16,7 +16,7 @@
       
 "content_scripts": [
     {
-      "matches": ["https://ease.space/*", "https://www.ease.space/*", "http://ease.space/*", "http://www.ease.space/*","http://localhost:8080/HelloWorld/*", "https://localhost:8443/HelloWorld/*", "http://localhost:8080/BackofficeUniv/*"],
+      "matches": ["https://ease.space/*", "https://www.ease.space/*", "http://ease.space/*", "http://www.ease.space/*","http://localhost:8080/*", "https://localhost:8443/*"],
       "js": ["jquery-3.1.0.js", "tools/extension.js", "easeListener.js"]
     }
   ],
