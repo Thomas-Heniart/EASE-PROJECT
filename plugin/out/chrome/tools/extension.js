@@ -28,7 +28,7 @@ var extension = {
     storage:{
 		get:function(key, callback){
 			chrome.storage.local.get(key, function(res){
-                if(res[key]== undefined) var ans = {};
+                if(res[key]== undefined) var ans = null;
                 else var ans = res[key];
                 callback(ans);
             });
