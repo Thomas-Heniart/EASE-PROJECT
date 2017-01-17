@@ -33,8 +33,44 @@ function getCurrentUser(){
 }
 
 extension.runtime.bckgrndOnMessage('newConnectionToRandomWebsite', function(msg, senderTab, sendResponse){
-    rememberConnection(msg.username, msg.password, msg.website, false);
+    sendClassicUpdate(msg);
 });
+
+//ùsg = {'website':siteHost, 'username':username, 'password':password}
+
+/*extension.runtime.bckgrndOnMessage('newFacebookUpdates', function(msg, senderTab, sendResponse){
+    sendUpdate(msg);
+}); //TODO
+
+extension.runtime.bckgrndOnMessage('newLinkedinUpdates', function(msg, senderTab, sendResponse){
+    sendUpdate(msg);
+});*/ //TODO
+
+function sendClassicUpdate(update){
+    var creation = new Date();
+    var easeUser = getCurrentUser();
+    var expiration = creation.getTime()+604800000; //expiration en 1 semaine
+    console.log("sendUpdate");
+    encryptPassword(update.password, function(passwordDatas){
+        var toSend = {type:"classic", website:update.website, username:update.username, password:passwordDatas.password, keyDate:passwordDatas.keyDate};
+        extension.storage.get("sessionId", function(sId){
+            if(sId!=""){
+                extension.storage.get("extensionId", function(eId){
+                    var xhr=new XMLHttpRequest();
+                    xhr.open("POST","https://ease.space/CreateUpdate",false);
+                    xhr.onreadystatechange = function (aEvt) {
+                        if (xhr.readyState == 4) {
+                            //if(xhr.status == 200){
+                                console.log(xhr);
+                            //}
+                        }
+                    };
+                    xhr.send("sessonId="+ sId +"&extensionId="+eId+"&updates="+JSON.stringify(toSend));
+                });
+            }
+        });
+    });
+}
 
 function printLastConnections(){
     extension.storage.get('lastConnections', function(res){

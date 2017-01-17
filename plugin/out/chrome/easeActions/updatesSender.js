@@ -10,14 +10,18 @@ document.addEventListener("askForExtensionId", function(event){
 });
 
 var cookies = document.cookie.split(';');
+var connected = false;
 for(var i=0; i<cookies.length;i++){
     if(cookies[i][0]=" "){
         cookies[i] = cookies[i].substring(1, cookies[i].length-1);
     }
     if(cookies[i].indexOf("sId")==0){
         extension.storage.set("sessionId", cookies[i].substring(cookies[i].indexOf("=")+1, cookies[i].length-1), function(){});
-        console.log(cookies[i].substring(cookies[i].indexOf("=")+1, cookies[i].length-1));
+        connected = true;
     }
+}
+if(!connected){
+    extension.storage.set("sessionId", "", function(){});
 }
 
 document.addEventListener("NewEaseUser", function(event){
