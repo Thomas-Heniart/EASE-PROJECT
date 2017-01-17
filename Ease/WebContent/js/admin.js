@@ -339,6 +339,7 @@ function testWebsites(){
 		{},
 		function(){},
 		function(retMsg){
+			console.log(retMsg);
 			var json = {};
 			json.detail = JSON.parse(retMsg);
 			event = new CustomEvent("MultipleTests", json);

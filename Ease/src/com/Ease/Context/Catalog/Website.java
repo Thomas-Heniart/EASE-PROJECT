@@ -314,7 +314,7 @@ public class Website {
 	public JSONObject getJSON(ServletManager sm) throws GeneralException{
 		JSONParser parser = new JSONParser();
 		try {
-			JSONObject a = (JSONObject) parser.parse(new FileReader(sm.getRealPath(this.getFolder() + "connect.json")));
+			JSONObject a = (JSONObject) parser.parse(new FileReader(this.getAbsolutePath() + "connect.json"));
 			a.put("loginUrl",loginUrl);
 			a.put("website_name", this.name);
 			a.put("siteSrc", this.getFolder());

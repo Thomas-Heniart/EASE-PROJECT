@@ -3,6 +3,27 @@ var user = "anonymous";
 var updatesToDelete = {};
 var directUpdateToDelete = {};
 
+document.addEventListener("askForExtensionId", function(event){
+    extension.storage.get("extensionId", function(extensionId){
+        document.dispatchEvent(new CustomEvent("extensionId", {id:extensionId}));
+    });
+});
+
+var cookies = document.cookie.split(';');
+var connected = false;
+for(var i=0; i<cookies.length;i++){
+    if(cookies[i][0]=" "){
+        cookies[i] = cookies[i].substring(1, cookies[i].length-1);
+    }
+    if(cookies[i].indexOf("sId")==0){
+        extension.storage.set("sessionId", cookies[i].substring(cookies[i].indexOf("=")+1, cookies[i].length-1), function(){});
+        connected = true;
+    }
+}
+if(!connected){
+    extension.storage.set("sessionId", "", function(){});
+}
+
 document.addEventListener("NewEaseUser", function(event){
     user = event.detail;
     if(user=="anonymous"){

@@ -37,25 +37,21 @@
 		.content {
 			width: 100%;
 			position: relative;
-			height: 12vh;
-			min-height: 90px;
-			max-height: 120px;
+			height: 6vw;
 			background-color: white;
 			border: 1px solid darken($borderFbColor, 10%);
-			border-radius: 4px;
+			border-radius: 5px;
 			white-space: nowrap;
 			margin: auto;
 			overflow-x: auto;
 			overflow-y: hidden;
 			::-webkit-scrollbar {
-  				width: 7px;
-   				position: absolute;
- 			}
+				width: 7px;
+				position: absolute;
+			}
 			.contentList {
 				position: absolute;
-				height: 10vh;
-				min-height: 80px;
-				max-height: 120px;
+				height: 5vw;
 				top: 50%;
 				transform: translateY(-50%);
 				padding: 2px;
@@ -64,72 +60,18 @@
 					display: inline-block;
 					height: 100%;
 					margin: 0 0vw;
-					border-radius: 10px;
-					background-color: #FFFFFF;
-					.updateApp {
-						position:relative;
-						width: 10vh;
-						min-width: 80px;
-						max-width: 120px;
-						height: 100%;
+					.logo {
 						display: inline-block;
-						div {
-							position:relative;
-							width: 100%;
-							height: 100%;
-							img {
-								position: absolute;
-								margin: auto;
-								top:0;
-								bottom:0;
-								left:0;
-								right:0;
-								width : 65%;
-								height : 65%;
-								border-radius: 5px;
-								border: 1px solid #cccccc;
-							}
-							.cancel {
-								position: absolute;
-								top: 10%;
-								right: 10%;
-								width: 20px;
-								height: 20px;
-								cursor: pointer;
-								background-color: #999999;
-								border: 1px solid #333333;
-								border-radius: 100px;
-								text-align: center;
-								i {
-									margin: 0 0;
-									padding: 0 0;
-									font-size: 18px;
-									line-height: 18px;
-									color: white;
-								}
-							}
-						}
-					}
-					.updateType {
-						position:relative;
-						display: inline-block;
-						font-size: 12px;
 						height: 100%;
 						vertical-align: top;
-						.updateInfo {
-							position: relative;
-							top: 50%;
-							transform: translateY(-50%);
-							p {
-								margin: 0 0;
-								padding: 0 0;
-							}
-							p.title {
-								margin: 0 0;
-								padding: 0 0;
-								font-weight: bold;
-							}
+						border-radius: 5px;
+						img {
+							border-radius: 5px;
+							height: 100%;
 						}
+					}
+					.infos {
+						display: inline-block;
 					}
 				}
 			}
@@ -148,7 +90,7 @@
 			display: inline-block;
 			position: absolute;
 			left: 5px;
-			top: 75%;
+			top: 78%;
 			transform: translateY(-50%);
 			font-weight: bold;
 		}
@@ -258,9 +200,6 @@
 		margin: 10px 0px;
 		padding: 0 0;
 		width: 100%;
-		i {
-			padding: 0 10px;
-		}
 		p {
 			display: inline-block;
 			font-weight: 600;
@@ -268,6 +207,14 @@
 			text-transform: uppercase;
 			letter-spacing: 1px;
 			font-size: 15px;
+		}
+		.icon {
+			.fa-stack-1x {
+				color: white;
+			}
+			.fa-stack-2x {
+				color: $themeColor;
+			}
 		}
 		span.integrated-emails-count {
 			position: absolute;
@@ -295,7 +242,7 @@
 				width: 90%;
 				left: 5%;
 				z-index: 1;
-				  @include box-shadow(inset 5px 5px 10px 0px #E7E7E7, inset -5px -5px 10px 0px #E7E7E7);
+				@include box-shadow(inset 5px 5px 10px 0px #E7E7E7, inset -5px -5px 10px 0px #E7E7E7);
 			}
 			.tag {
 				margin: 10px 0 10px 20px;
@@ -341,605 +288,605 @@
 				display: none;
 			}
 		}
-		}
 	}
-	.scaleContainerView {
+}
+.scaleContainerView {
+	height: 100%;
+	background-color: white;
+	width: 95%;
+	padding: 0px;
+	border: 1px solid darken($borderFbColor, 10%);
+	border-radius: 4px;
+	margin-left: auto;
+	margin-right: auto;
+	.catalogArea {
 		height: 100%;
-		background-color: white;
-		width: 95%;
+		width: 100%;
+		margin: 0px auto;
 		padding: 0px;
-		border: 1px solid darken($borderFbColor, 10%);
 		border-radius: 4px;
-		margin-left: auto;
-		margin-right: auto;
-		.catalogArea {
+		.scaleContainer {
 			height: 100%;
 			width: 100%;
-			margin: 0px auto;
-			padding: 0px;
-			border-radius: 4px;
-			.scaleContainer {
-				height: 100%;
+			position: relative;
+			margin: 0 auto;
+			.shadowHelper {
+				border-radius: 4px;
+			}
+			.catalogContainer {
+				position: absolute;
+				top: 0;
 				width: 100%;
-				position: relative;
-				margin: 0 auto;
-				.shadowHelper {
-					border-radius: 4px;
+				height: 100%;
+				overflow-y: auto;
+				overflow-x: hidden;
+				border-radius: 4px;
+				padding-top: 1%;
+				.search-result, .relatedApps {
+					display: none;
 				}
-				.catalogContainer {
+				h3 {
+					text-align: center;
+					font-size: 18px;
+					margin-top: 0px;
+					margin-bottom: 5px;
+					position: relative;
+					z-index: 1;
+
+					&:before {
+						border-top: 1px solid black;
+						content: "";
+						margin: 0 auto;
+						position: absolute;
+						top: 50%; left: 0; right: 0; bottom: 0;
+						width: 95%;
+						z-index: -1;
+					}
+
+					span {
+						background: white;
+						padding: 0 10px;
+					}
+				}
+				h4 {
+					text-align: center;
+					font-size: 14px;
+					margin-top: 0px;
+					margin-bottom: 5px;
+					position: relative;
+					z-index: 1;
+
+					&:before {
+						border-top: 1px solid black;
+						content: "";
+						margin: 0 auto;
+						position: absolute;
+						top: 50%; left: 0; right: 0; bottom: 0;
+						width: 95%;
+						z-index: -1;
+					}
+
+					span {
+						background: white;
+						padding: 0 10px;
+					}
+				}
+				.no-result-search {
+					display: none;
+					text-align: center;
+					h2 img {
+						width: 25px;
+						vertical-align: initial;
+					}
+					p {
+						font-size: 1.4em;
+					}
+					img {
+						width: 9%;
+					}
+				}
+				.catalogApp {
+					width: (100% / 6);
+					height: (100% / 4);
+					display: inline-block;
+					padding: 5px;
+					float:left;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					.catalogAppLogo {
+						width: 65%;
+						height: 65%;
+						margin-left: auto;
+						margin-right: auto;
+						padding-top: 3px;
+						position: relative;
+						&:hover {
+							cursor: pointer;
+							img {
+								box-shadow: 0px 0px 4px 0px #cccccc;
+							}
+							.siteUrl {
+								display: inline;
+							}
+						}
+						img {
+							width: 100%;
+							border-radius: 5px;
+							height: 100%;
+							border: 1px solid #cccccc;
+						}
+						.siteUrl {
+							text-decoration: none;
+							position: absolute;
+							bottom: -20%;
+							right: -20%;
+							display: none;
+							span.fa-stack {
+								width: 1.2em;
+								height: 1.2em;
+								line-height: 1.2em;
+								i.fa-circle {
+									font-size: 1.2em;
+									color: white;
+								}
+								i.fa-link {
+									color: $themeColor;
+									font-size: 0.6em;
+								}
+							}
+						}
+						.apps-integrated {
+							position: absolute;
+							display: none;
+							bottom: -2%;
+							left: 0;
+							color: white;
+							width: 1em;
+							height: 1em;
+							line-height: 1em;
+							i.fa-circle {
+								font-size: 1em;
+								color: $themeColor;
+							}
+							i.count {
+								font-size: 0.5em;
+								color: white;
+								font-style: normal;
+								text-align: center;
+								display: inline-block;
+								position: absolute;
+								width: 100%;
+								left: 0;
+							}
+						}
+						.apps-integrated.showCounter {
+							display: inline;
+						}
+						.newCatalogApp {
+							position: absolute;
+							right: -21%;
+							font-size: 10px;
+							text-align: center;
+							top: -4%;
+							background-color: #373b60;
+							color: white;
+							padding: 1px 5px;
+							border-radius: 8px;
+						}
+					}
+					.catalogAppName {
+						text-align: center;
+						padding-top: 3px;
+						font-size: 10px;
+						p{
+							overflow: hidden;
+							text-overflow: ellipsis;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+.ProfilesHandler.editMode {
+	.item {
+		.AddProfileView {
+			display: block;
+			&:hover {
+				cursor: pointer;
+				background-color: darken(white, 2%);
+			}
+		}
+	}
+}
+
+.ProfilesHandler{
+	.item {
+		.AddProfileView {
+			display: none;
+			background-color: white;
+			width: 50%;
+			margin-left: auto;
+			margin-right: auto;
+			margin-top: 50%;
+			border-radius: 5px;
+			border-left: 1px solid $borderFbColor;
+			border-right: 1px solid $borderFbColor;
+			border-bottom: 1px solid $borderFbColor;
+			&:hover {
+				cursor: pointer;
+				background-color: darken(white, 2%);
+			}
+			.MobilePreviewHeader {
+				height: 20px;
+				background-color: #35a7ff;
+				border-top-left-radius: 5px;
+				border-top-right-radius: 5px;
+			}
+			.scalerContainer {
+				position: relative;
+				.addHelper {
+					font-size: 50px;
+					color: $themeGreyColor;
+				}
+				p {
 					position: absolute;
 					top: 0;
 					width: 100%;
-					height: 100%;
-					overflow-y: auto;
-					overflow-x: hidden;
-					border-radius: 4px;
-					padding-top: 1%;
-					.search-result, .relatedApps {
-						display: none;
-					}
-					h3 {
-						text-align: center;
-						font-size: 18px;
-						margin-top: 0px;
-						margin-bottom: 5px;
-						position: relative;
-						z-index: 1;
-
-						&:before {
-							border-top: 1px solid black;
-							content: "";
-							margin: 0 auto;
-							position: absolute;
-							top: 50%; left: 0; right: 0; bottom: 0;
-							width: 95%;
-							z-index: -1;
-						}
-
-						span {
-							background: white;
-							padding: 0 10px;
-						}
-					}
-					h4 {
-						text-align: center;
-						font-size: 14px;
-						margin-top: 0px;
-						margin-bottom: 5px;
-						position: relative;
-						z-index: 1;
-
-						&:before {
-							border-top: 1px solid black;
-							content: "";
-							margin: 0 auto;
-							position: absolute;
-							top: 50%; left: 0; right: 0; bottom: 0;
-							width: 95%;
-							z-index: -1;
-						}
-
-						span {
-							background: white;
-							padding: 0 10px;
-						}
-					}
-					.no-result-search {
-						display: none;
-						text-align: center;
-						h2 img {
-							width: 25px;
-							vertical-align: initial;
-						}
-						p {
-							font-size: 1.4em;
-						}
-						img {
-							width: 9%;
-						}
-					}
-					.catalogApp {
-						width: (100% / 6);
-						height: (100% / 4);
-						display: inline-block;
-						padding: 5px;
-						float:left;
-						white-space: nowrap;
-						overflow: hidden;
-						text-overflow: ellipsis;
-						.catalogAppLogo {
-							width: 65%;
-							height: 65%;
-							margin-left: auto;
-							margin-right: auto;
-							padding-top: 3px;
-							position: relative;
-							&:hover {
-								cursor: pointer;
-								img {
-									box-shadow: 0px 0px 4px 0px #cccccc;
-									}
-								.siteUrl {
-									display: inline;
-								}
-							}
-							img {
-								width: 100%;
-								border-radius: 5px;
-								height: 100%;
-								border: 1px solid #cccccc;
-							}
-							.siteUrl {
-								text-decoration: none;
-								position: absolute;
-								bottom: -20%;
-								right: -20%;
-								display: none;
-								span.fa-stack {
-									width: 1.2em;
-									height: 1.2em;
-									line-height: 1.2em;
-									i.fa-circle {
-										font-size: 1.2em;
-										color: white;
-									}
-									i.fa-link {
-										color: $themeColor;
-										font-size: 0.6em;
-									}
-								}
-							}
-							.apps-integrated {
-								position: absolute;
-								display: none;
-								bottom: -2%;
-								left: 0;
-								color: white;
-								width: 1em;
-								height: 1em;
-								line-height: 1em;
-								i.fa-circle {
-									font-size: 1em;
-									color: $themeColor;
-								}
-								i.count {
-									font-size: 0.5em;
-									color: white;
-									font-style: normal;
-									text-align: center;
-									display: inline-block;
-							    position: absolute;
-							    width: 100%;
-							    left: 0;
-								}
-							}
-							.apps-integrated.showCounter {
-								display: inline;
-							}
-							.newCatalogApp {
-								position: absolute;
-								right: -21%;
-						    font-size: 10px;
-						    text-align: center;
-						    top: -4%;
-						    background-color: #373b60;
-						    color: white;
-						    padding: 1px 5px;
-						    border-radius: 8px;
-							}
-						}
-						.catalogAppName {
-							text-align: center;
-							padding-top: 3px;
-							font-size: 10px;
-							p{
-								overflow: hidden;
-								text-overflow: ellipsis;
-							}
-						}
-					}
+					text-align: center;
+					padding-top: 130%;
+					font-size: 10px;
 				}
 			}
 		}
 	}
-
-	.ProfilesHandler.editMode {
-		.item {
-			.AddProfileView {
-				display: block;
-				&:hover {
-					cursor: pointer;
-					background-color: darken(white, 2%);
-				}
-			}
+}
+.MobilePreview {
+	width: 100%;
+	border-radius: 5px;
+	background-color: white;
+	position: relative;
+	font-family: $defaultFont;
+	.MobilePreviewHeader {
+		background-color: #FFD00C;
+		padding: 5px;
+		border-top-left-radius: 5px;
+		border-top-right-radius: 5px;
+		p {
+			margin-bottom: 0px;
+			line-height: 12px;
+			color: white;
+			font-size: 12px;
+			color: white;
+			text-transform: uppercase;
+			letter-spacing: 1px;
+			font-weight: 600;
 		}
 	}
-
-	.ProfilesHandler{
-		.item {
-			.AddProfileView {
-				display: none;
-				background-color: white;
-				width: 50%;
-				margin-left: auto;
-				margin-right: auto;
-				margin-top: 50%;
-				border-radius: 5px;
-				border-left: 1px solid $borderFbColor;
-				border-right: 1px solid $borderFbColor;
-				border-bottom: 1px solid $borderFbColor;
-				&:hover {
-					cursor: pointer;
-					background-color: darken(white, 2%);
-				}
-				.MobilePreviewHeader {
-					height: 20px;
-					background-color: #35a7ff;
-					border-top-left-radius: 5px;
-					border-top-right-radius: 5px;
-				}
-				.scalerContainer {
-					position: relative;
-					.addHelper {
-						font-size: 50px;
-						color: $themeGreyColor;
-					}
-					p {
-						position: absolute;
-						top: 0;
-						width: 100%;
-						text-align: center;
-						padding-top: 130%;
-						font-size: 10px;
-					}
-				}
-			}
-		}
-	}
-	.MobilePreview {
-		width: 100%;
-		border-radius: 5px;
-		background-color: white;
+	.scalerContainer {
 		position: relative;
-		font-family: $defaultFont;
-		.MobilePreviewHeader {
-			background-color: #FFD00C;
-			padding: 5px;
-			border-top-left-radius: 5px;
-			border-top-right-radius: 5px;
-			p {
-				margin-bottom: 0px;
-				line-height: 12px;
-				color: white;
-				font-size: 12px;
-				color: white;
-				text-transform: uppercase;
-				letter-spacing: 1px;
-				font-weight: 600;
+		.AppTab {
+			width: 100%;
+			position: absolute;
+			top: 0;
+			height: 100%;
+			overflow-y: auto;
+			.addHelper {
+				font-size: 80px;
+				color: $themeGreyColor;
 			}
-		}
-		.scalerContainer {
-			position: relative;
-			.AppTab {
-				width: 100%;
-				position: absolute;
-				top: 0;
-				height: 100%;
-				overflow-y: auto;
-				.addHelper {
-					font-size: 80px;
-					color: $themeGreyColor;
-				}
-				.logoItem {
-					width: (100% / 3);
-					height: (100% / 6);
-					padding: 5%;
-					float: left;
-					position: relative;
-					.imageBox {
-						.deleteAppButton {
-							position: absolute;
-							z-index: 1;
-							width: 35%;
-							height: 35%;
-							border-radius: 100%;
-							background-color: white;
-							top: 0;
-							left: 0;
-							visibility: hidden;
-							transform: translateX(-50%) translateY(-50%);
-							&:hover {
-								cursor: pointer;
-							}
-							i {
-								color: black;
-								font-size: 100%;
-								position: absolute;
-								top: 50%;
-								left: 50%;
-								transform: translateX(-50%) translateY(-50%);
-							}
-						}
-						.modifyAppButton {
-							position: absolute;
-							z-index: 1;
-							width: 35%;
-							height: 35%;
-							border-radius: 100%;
-							background-color: white;
-							top: 100%;
-							left: 100%;
-							visibility: hidden;
-							transform: translateX(-50%) translateY(-50%);
-							&:hover {
-								cursor: pointer;
-							}
-							i {
-								color: black;
-								font-size: 100%;
-								position: absolute;
-								top: 50%;
-								left: 50%;
-								transform: translateX(-50%) translateY(-50%);
-							}
-						}
+			.logoItem {
+				width: (100% / 3);
+				height: (100% / 6);
+				padding: 5%;
+				float: left;
+				position: relative;
+				.imageBox {
+					.deleteAppButton {
+						position: absolute;
+						z-index: 1;
+						width: 35%;
+						height: 35%;
+						border-radius: 100%;
+						background-color: white;
+						top: 0;
+						left: 0;
+						visibility: hidden;
+						transform: translateX(-50%) translateY(-50%);
 						&:hover {
-							.deleteAppButton {
-								visibility: visible;
-							}
-							.modifyAppButton {
-								visibility:visible;
-							}
-						}
-						position: relative;
-						width: 100%;
-						height: 100%;
-						img {
-							border-radius: 3px;
-							width: 100%;
-							height: 100%;
-							border: 1px solid #efefef;
+							cursor: pointer;
 						}
 						i {
-							font-size: 70px;
+							color: black;
+							font-size: 100%;
 							position: absolute;
 							top: 50%;
 							left: 50%;
-							color: #32cd32;
-							-webkit-transform: translateX(-50%) translateY(-50%);
-							-moz-transform: translateX(-50%) translateY(-50%);
-							-ms-transform: translateX(-50%) translateY(-50%);
 							transform: translateX(-50%) translateY(-50%);
-							transform-origin: top left;
 						}
-						i.fa-spinner {
-							-webkit-animation: rotate 3s linear infinite;
-							animation: rotate 3s linear infinite;
+					}
+					.modifyAppButton {
+						position: absolute;
+						z-index: 1;
+						width: 35%;
+						height: 35%;
+						border-radius: 100%;
+						background-color: white;
+						top: 100%;
+						left: 100%;
+						visibility: hidden;
+						transform: translateX(-50%) translateY(-50%);
+						&:hover {
+							cursor: pointer;
 						}
+						i {
+							color: black;
+							font-size: 100%;
+							position: absolute;
+							top: 50%;
+							left: 50%;
+							transform: translateX(-50%) translateY(-50%);
+						}
+					}
+					&:hover {
+						.deleteAppButton {
+							visibility: visible;
+						}
+						.modifyAppButton {
+							visibility:visible;
+						}
+					}
+					position: relative;
+					width: 100%;
+					height: 100%;
+					img {
+						border-radius: 3px;
+						width: 100%;
+						height: 100%;
+						border: 1px solid #efefef;
+					}
+					i {
+						font-size: 70px;
+						position: absolute;
+						top: 50%;
+						left: 50%;
+						color: #32cd32;
+						-webkit-transform: translateX(-50%) translateY(-50%);
+						-moz-transform: translateX(-50%) translateY(-50%);
+						-ms-transform: translateX(-50%) translateY(-50%);
+						transform: translateX(-50%) translateY(-50%);
+						transform-origin: top left;
+					}
+					i.fa-spinner {
+						-webkit-animation: rotate 3s linear infinite;
+						animation: rotate 3s linear infinite;
 					}
 				}
 			}
 		}
 	}
+}
 
-	@-webkit-keyframes rotate {
-		from{
-			-webkit-transform: rotate(0deg) translate(-50%, -50%);
-		}
-		to{
-			-webkit-transform: rotate(360deg) translate(-50%, -50%);
-		}
+@-webkit-keyframes rotate {
+	from{
+		-webkit-transform: rotate(0deg) translate(-50%, -50%);
+	}
+	to{
+		-webkit-transform: rotate(360deg) translate(-50%, -50%);
+	}
+}
+
+@-webkit-keyframes easyScaling {
+	0% {
+		transform: scaleX(0.8) scaleY(0.8);
+	}
+	50% {
+		transform: scaleX(0.5) scaleY(0.5);
+	}
+	100% {
+		transform: scaleX(0.8) scaleY(0.8);
+
+	}
+}
+
+@-webkit-keyframes deletingApp {
+	0% {
+		transform: scaleX(1) scaleY(1);
+	}
+	100% {
+		transform: scaleX(0.2) scaleY(0.2);
+	}
+}
+
+@-webkit-keyframes scaleOut {
+	0% {
+
+		transform: scaleX(1) scaleY(1);
+	}
+	80% {
+		transform: scaleX(1.2) scaleY(1.2);
+	}
+	100% {
+		transform: scaleX(1) scaleY(1);
+	}
+}
+
+.scaleOutAnimation {
+	-webkit-animation: scaleOut .5s linear 1;
+	animation: scaleOut .5s linear 1;
+}
+
+.shakeAnimation {
+	animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both infinite;
+}
+@keyframes shake {
+	10%, 90% {
+		transform: translate3d(-1px, 1px, 0);
 	}
 
-	@-webkit-keyframes easyScaling {
-		0% {
-			transform: scaleX(0.8) scaleY(0.8);
-		}
-		50% {
-			transform: scaleX(0.5) scaleY(0.5);
-		}
-		100% {
-			transform: scaleX(0.8) scaleY(0.8);
-
-		}
+	20%, 80% {
+		transform: translate3d(1px, -1px, 0);
 	}
 
-	@-webkit-keyframes deletingApp {
-		0% {
-			transform: scaleX(1) scaleY(1);
-		}
-		100% {
-			transform: scaleX(0.2) scaleY(0.2);
-		}
+	30%, 50%, 70% {
+		transform: translate3d(-2px, 2px, 0);
 	}
 
-	@-webkit-keyframes scaleOut {
-		0% {
-
-			transform: scaleX(1) scaleY(1);
-		}
-		80% {
-			transform: scaleX(1.2) scaleY(1.2);
-		}
-		100% {
-			transform: scaleX(1) scaleY(1);
-		}
+	40%, 60% {
+		transform: translate3d(2px, -2px, 0);
 	}
-
-	.scaleOutAnimation {
-		-webkit-animation: scaleOut .5s linear 1;
-		animation: scaleOut .5s linear 1;
-	}
-
-	.shakeAnimation {
-		animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both infinite;
-	}
-	@keyframes shake {
-		10%, 90% {
-			transform: translate3d(-1px, 1px, 0);
-		}
-
-		20%, 80% {
-			transform: translate3d(1px, -1px, 0);
-		}
-
-		30%, 50%, 70% {
-			transform: translate3d(-2px, 2px, 0);
-		}
-
-		40%, 60% {
-			transform: translate3d(2px, -2px, 0);
-		}
-	}
+}
 
 
-	@-webkit-keyframes slideLeft {
-		0% {
-			transform: translateX(100%);
-			opacity: 0;
-		}
-		100% {
-			transform: translateX(0%);
-			opacity: 1;
-
-		}
-	}
-
-	.deletingApp {
-		-webkit-animation: deletingApp 0.5s linear infinite;
-		animation: deletingApp 0.5s linear infinite;
-	}
-
-	.deletingUpdate {
-		-webkit-animation: deletingUpdate 0.3s linear 1;
-		animation: deletingUpdate 0.3s linear 1;
-    	-webkit-animation-fill-mode: forwards;
-	}
-
-	.decaleUpdate {
-		-webkit-animation: decaleUpdate 0.3s linear 1;
-		animation: decaleUpdate 0.3s linear 1;
-    	-webkit-animation-fill-mode: forwards;
-	}
-
-	.easyScaling {
-		-webkit-animation: easyScaling .5s linear infinite;
-		animation: easyScaling .5s linear infinite;
-	}
-
-	.dragHelperLogo {
-		width: 50px;
-		height:50px;
-		z-index: 3;
-		img {
-		background-color: white;
-			border: 1px solid $borderFbColor;
-			border-radius: 5px;
-			width: 100%;
-		}
-	}
-
-	.ProfilesEditView.show {
-		display: block;
-		-webkit-animation: slideLeft 0.8s 1;
-		animation: slideLeft 0.8s 1;
-	}
-
-	.ProfilesEditView {
-		display: none;
-		width: 100%;
-		min-height: 100%;
-		position: relative;
-		.ProfilesEditTab {
-			width: 50%;
-			float: left;
-			padding: 3%;
-			padding-top: 4%;
-			position: absolute;
-		}
-	}
-	.CatalogViewTab.show {
-		height: 95%;
-		visibility: visible;
-		background-color: #E7E7E7;
-		left: 52.2%;
-		top: 3%;
-		opacity: 1;
-	}
-	.CatalogViewTab {
-		height: 95%;
+@-webkit-keyframes slideLeft {
+	0% {
+		transform: translateX(100%);
 		opacity: 0;
-		top: 0;
-		transition: visibility 0s ease .3s;
-		width: 46%;
-		float:left;
-		left: 100%;
-		visibility: hidden;
-		position: fixed;
+	}
+	100% {
+		transform: translateX(0%);
+		opacity: 1;
+
+	}
+}
+
+.deletingApp {
+	-webkit-animation: deletingApp 0.5s linear infinite;
+	animation: deletingApp 0.5s linear infinite;
+}
+
+.deletingUpdate {
+	-webkit-animation: deletingUpdate 0.3s linear 1;
+	animation: deletingUpdate 0.3s linear 1;
+	-webkit-animation-fill-mode: forwards;
+}
+
+.decaleUpdate {
+	-webkit-animation: decaleUpdate 0.3s linear 1;
+	animation: decaleUpdate 0.3s linear 1;
+	-webkit-animation-fill-mode: forwards;
+}
+
+.easyScaling {
+	-webkit-animation: easyScaling .5s linear infinite;
+	animation: easyScaling .5s linear infinite;
+}
+
+.dragHelperLogo {
+	width: 50px;
+	height:50px;
+	z-index: 3;
+	img {
 		background-color: white;
-		border-radius: 10px;
-		border: 1px solid #d0d1d5;
-		#quit {
-			position: absolute;
-			top: 0;
-			right: 2%;
-			background-color: $themeRedColor;
-			color: white;
-			border: none;
-			border-radius: 5px;
-			width: 25px;
-			height: 25px;
-			padding: 0px;
-			outline:none;
-		}
+		border: 1px solid $borderFbColor;
+		border-radius: 5px;
+		width: 100%;
 	}
+}
 
-	.centeredItem {
+.ProfilesEditView.show {
+	display: block;
+	-webkit-animation: slideLeft 0.8s 1;
+	animation: slideLeft 0.8s 1;
+}
+
+.ProfilesEditView {
+	display: none;
+	width: 100%;
+	min-height: 100%;
+	position: relative;
+	.ProfilesEditTab {
+		width: 50%;
+		float: left;
+		padding: 3%;
+		padding-top: 4%;
 		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translateX(-50%) translateY(-50%);
 	}
-
-	.borderedView {
-		border: 1px solid red !important;
+}
+.CatalogViewTab.show {
+	height: 95%;
+	visibility: visible;
+	background-color: #E7E7E7;
+	left: 52.2%;
+	top: 3%;
+	opacity: 1;
+}
+.CatalogViewTab {
+	height: 95%;
+	opacity: 0;
+	top: 0;
+	transition: visibility 0s ease .3s;
+	width: 46%;
+	float:left;
+	left: 100%;
+	visibility: hidden;
+	position: fixed;
+	background-color: white;
+	border-radius: 10px;
+	border: 1px solid #d0d1d5;
+	#quit {
+		position: absolute;
+		top: 0;
+		right: 2%;
+		background-color: $themeRedColor;
+		color: white;
+		border: none;
+		border-radius: 5px;
+		width: 25px;
+		height: 25px;
+		padding: 0px;
+		outline:none;
 	}
+}
 
-	@media screen and (min-width: 1500px) {
-		.CatalogViewTab {
-			.tag {
+.centeredItem {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translateX(-50%) translateY(-50%);
+}
+
+.borderedView {
+	border: 1px solid red !important;
+}
+
+@media screen and (min-width: 1500px) {
+	.CatalogViewTab {
+		.tag {
+			font-size: 1.4em;
+		}
+		#catalog {
+			p {
 				font-size: 1.4em;
 			}
-			#catalog {
-				p {
-					font-size: 1.4em;
-				}
-			}
 		}
-		.ProfilesHandler {
-			.ProfileContent{
-				p, i {
-					font-size: 1.4em;
-				}
+	}
+	.ProfilesHandler {
+		.ProfileContent{
+			p, i {
+				font-size: 1.4em;
 			}
 		}
 	}
+}
 
 
 .arrowDragDrop{
-    top: 0px;
-    left: 50%;
-    transform: translateX(-50%);
-    pointer-events: none;
-    min-width:150px;
+	top: 0px;
+	left: 50%;
+	transform: translateX(-50%);
+	pointer-events: none;
+	min-width:150px;
 	overflow: hidden;
 	max-width: 150px;
 	position: fixed;
 	z-index: 500;
-    opacity: 0;
-    -webkit-transition: opacity 0.5s;
-     -moz-transition: opacity 0.5s;
-    transition: opacity 0.5s;
+	opacity: 0;
+	-webkit-transition: opacity 0.5s;
+	-moz-transition: opacity 0.5s;
+	transition: opacity 0.5s;
 	.popupContent {
 		display: inline-block;
 		float: left;
@@ -951,8 +898,8 @@
 		border: 1px hidden;
 		text-align: center;
 		p {
-            text-shadow: white 0px 0px 20px, white 0px 0px 20px, white 0px 0px 20px;
+			text-shadow: white 0px 0px 20px, white 0px 0px 20px, white 0px 0px 20px;
 			margin: 0px;
 		}
-    }
+	}
 }

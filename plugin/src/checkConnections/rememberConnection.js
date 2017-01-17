@@ -25,16 +25,23 @@ extension.runtime.bckgrndOnMessage("GetLastEaseUser", function(message, sender, 
 });
 
 function getCurrentUser(){
-        if(extension.nbOfEaseTabs()==0){
-            return "anonymous";
-        } else {
-            return lastEaseUser;
-        }
-        
+    if(extension.nbOfEaseTabs()==0){
+        return "anonymous";
+    } else {
+        return lastEaseUser;
+    }    
 }
 
 extension.runtime.bckgrndOnMessage('newConnectionToRandomWebsite', function(msg, senderTab, sendResponse){
-    rememberConnection(msg.username, msg.password, msg.website, false);
+    sendUpdate(msg);
+});
+
+extension.runtime.bckgrndOnMessage('newFacebookUpdates', function(msg, senderTab, sendResponse){
+    sendUpdate(msg);
+});
+
+extension.runtime.bckgrndOnMessage('newLinkedinUpdates', function(msg, senderTab, sendResponse){
+    sendUpdate(msg);
 });
 
 function printLastConnections(){
@@ -165,34 +172,6 @@ function cleanEveryConnections(){
 extension.runtime.bckgrndOnMessage("fbDisconnected", function(){
      rememberConnection("disconnected", "", "www.facebook.com", true);
 });
-
-function matchFacebookUrl(url){
-    if(url.indexOf("www.facebook.com")!=-1 && url.indexOf("www.facebook.com")<10){
-        return true;
-    }
-    return false;
-}
-
-function matchFacebookConnectUrl(url){
-    if(url.indexOf("facebook")!=-1 && !matchFacebookUrl(url)) {
-        return true; 
-    }
-    return false;
-}
-
-function matchLinkedinUrl(url){
-    if(url.indexOf("www.linkedin.com")!=-1 && url.indexOf("www.linkedin.com")<10){
-        return true;
-    }
-    return false;
-}
-
-function matchLinkedinConnectUrl(url){
-    if(url.indexOf("linkedin")!=-1 && (url.indexOf("www.linkedin.com")>10 || url.indexOf("www.linkedin.com")<0)) {
-        return true;
-    }
-    return false;
-}
 
 function getHost(url){
     var getLocation = function(href) {
