@@ -15,6 +15,10 @@ import java.util.Set;
 
 import javax.websocket.Session;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Context.Group.Infrastructure;
@@ -25,6 +29,7 @@ import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.Profile.ProfilePermissions;
+import com.Ease.Update.UpdateManager;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Invitation;
@@ -130,6 +135,7 @@ public class User {
 			}
 			((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
 			((Map<String, User>)sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
+			newUser.initializeUpdateManager(sm);
 			return newUser;
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
@@ -166,6 +172,7 @@ public class User {
 		newUser.getUserEmails().put(email, userEmail);
 		newUser.passStep("CGU", db);
 		newUser.passStep("first_connection", db);
+		newUser.initializeUpdateManager(sm);
 		db.commitTransaction(transaction);
 		return newUser;
 	}
@@ -188,6 +195,7 @@ public class User {
 	protected boolean sawGroupProfile;
 	protected Status status;
 	protected ExtensionKeys extensionKeys;
+	protected UpdateManager updateManager;
 
 	protected SessionSave sessionSave;
 
@@ -221,7 +229,11 @@ public class User {
 		DataBaseConnection db = sm.getDB();
 		db.set("DELETE FROM users WHERE id=" + this.db_id + ";");
 	}
-
+	
+	public void initializeUpdateManager(ServletManager sm) throws GeneralException {
+		this.updateManager = new UpdateManager(sm, this);
+	}
+	
 	/*
 	 * 
 	 * Getter and Setter
@@ -428,6 +440,20 @@ public class User {
 		throw new GeneralException(ServletManager.Code.ClientError, "This app's single_id dosen't exist.");
 	}
 
+	
+	/* For sancho le robot */
+	public List<App> getApps() {
+		List<App> res = new LinkedList<App>();
+		for (List<Profile> column : this.profile_columns) {
+			for (Profile profile : column) {
+				for (App app : profile.getApps()) {
+					res.add(app);
+				}
+			}
+		}
+		return res;
+	}
+	
 	public void removeDefinitly(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
@@ -775,6 +801,12 @@ public class User {
 	}
 	
 	public void createUpdate(String jsonUpdate, ServletManager sm) throws GeneralException {
-		
+		JSONParser parser = new JSONParser();
+		try {
+			JSONObject json = (JSONObject) parser.parse(jsonUpdate);
+			this.updateManager.addUpdateFromJson(this, json, sm);
+		} catch (ParseException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
 	}
 }

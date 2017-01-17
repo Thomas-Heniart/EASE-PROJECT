@@ -2,6 +2,7 @@ package com.Ease.Update;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
 
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
@@ -44,11 +45,28 @@ public class UpdateNewAccount extends Update {
 		}
 	}
 	
+	public static String createUpdateNewAccount(User user, Website website, String type, Map<String, Object> elevator, DataBaseConnection db) throws GeneralException {
+		int transaction = db.startTransaction();
+		String update_id = Update.createUpdate(user, "updateNewAccount", db);
+		elevator.put("update_id", update_id);
+		String updateNewAccount_id = db.set("INSERT INTO updateNewAccount values (null, " + update_id + ", " + website.getDb_id() + ", '" + type + "'").toString();
+		db.commitTransaction(transaction);
+		return updateNewAccount_id;
+	}
+	
+	protected String update_new_account_id;
 	protected Website website;
 	
-	public UpdateNewAccount(String db_id, Website website, int single_id) {
+	public UpdateNewAccount(String db_id, String update_new_account_id, Website website, int single_id) {
 		super(db_id, single_id);
+		this.update_new_account_id = update_new_account_id;
 		this.website = website;
 	}
-
+	
+	public void deleteFromDb(DataBaseConnection db) throws GeneralException {
+		int transaction = db.startTransaction();
+		db.set("DELETE FROM updateNewAccount WHERE account_id = " + this.db_id + ";");
+		super.deleteFromDb(db);
+		db.commitTransaction(transaction);
+	}
 }

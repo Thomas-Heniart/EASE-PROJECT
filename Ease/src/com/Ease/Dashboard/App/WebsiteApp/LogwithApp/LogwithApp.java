@@ -147,4 +147,9 @@ public class LogwithApp extends WebsiteApp {
 		}
 		db.commitTransaction(transaction);
 	}
+	
+	/* For sancho le robot */
+	public boolean isEmpty() {
+		return false;
+	}
 }

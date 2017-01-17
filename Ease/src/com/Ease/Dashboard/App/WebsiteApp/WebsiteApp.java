@@ -162,4 +162,9 @@ public class WebsiteApp extends App {
 		infos.add(websiteInfos);
 		return infos;
 	}
+	
+	/* For sancho le robot */
+	public boolean isEmpty() {
+		return true;
+	}
 }

@@ -165,4 +165,8 @@ public class ClassicApp extends WebsiteApp {
 		return infos;
 	}
 	
+	/* For sancho le robot */
+	public boolean isEmpty() {
+		return false;
+	}
 }
