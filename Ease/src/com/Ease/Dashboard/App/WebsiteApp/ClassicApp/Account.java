@@ -139,4 +139,12 @@ public class Account {
 		}
 		db.commitTransaction(transaction);
 	}
+	
+	public String getInformationNamed(String info_name) {
+		for (AccountInformation info : this.infos) {
+			if (info.getInformationName().equals(info_name))
+				return info.getInformationValue();
+		}
+		return null;
+	}
 }

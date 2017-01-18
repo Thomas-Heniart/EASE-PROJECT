@@ -25,7 +25,7 @@ public class UpdateNewPassword extends Update {
 		ResultSet rs = db.get("SELECT * FROM updateNewPassword WHERE update_id = " + update_id + ";");
 		try {
 			rs.next();
-			ClassicApp classicApp = (ClassicApp) user.getAppWithDBid(rs.getString(Data.CLASSIC_APP_ID.ordinal()));
+			ClassicApp classicApp = (ClassicApp) user.getDashboardManager().getAppWithDBid(rs.getString(Data.CLASSIC_APP_ID.ordinal()));
 			String newPassword = rs.getString(Data.NEW_PASSWORD.ordinal());
 			return new UpdateNewPassword(update_id, classicApp, newPassword, idGenerator.getNextId());
 		} catch (SQLException e) {

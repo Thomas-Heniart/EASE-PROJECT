@@ -562,14 +562,4 @@ public class User {
 	public ExtensionKeys getExtensionKeys() {
 		return extensionKeys;
 	}
-	
-	public void createUpdate(String jsonUpdate, ServletManager sm) throws GeneralException {
-		JSONParser parser = new JSONParser();
-		try {
-			JSONObject json = (JSONObject) parser.parse(jsonUpdate);
-			this.updateManager.addUpdateFromJson(this, json, sm);
-		} catch (ParseException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
-	}
 }

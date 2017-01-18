@@ -6,9 +6,13 @@ import java.util.Map;
 import org.json.simple.JSONObject;
 
 import com.Ease.Context.Catalog.Catalog;
+import com.Ease.Context.Catalog.Website;
+import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.Crypto.RSA;
 
 public class UpdateManager {
 	
@@ -48,22 +52,68 @@ public class UpdateManager {
 		return this.updates;
 	}
 
-	public void addUpdateFromJson(JSONObject json, ServletManager sm) {
-		Update newUpdate = Update.createUpdateFromJSON(user, json, sm);
-		this.addUpdate(newUpdate);
+	public void addUpdateFromJson(JSONObject json, ServletManager sm) throws GeneralException {
+		String type = (String) json.get("type");
+		String urlOrName = (String) json.get("website");
+		Website website;
+		String login = (String) json.get("user");
+		switch(type) {
+		case "classic":
+			website = this.findWebsiteInCatalogWithLoginUrl(urlOrName, sm);
+			if (website == null)
+				return;
+			ClassicApp existingApp = this.findClassicAppWithLoginAndWebsite(login, website);
+			String password = (String) json.get("password");
+			String keyDate = (String) json.get("keyDate");
+			password = RSA.Decrypt(password, Integer.parseInt(keyDate));
+			password = this.user.encrypt(password);
+			if (existingApp == null)
+				this.addUpdate(UpdateNewClassicApp.createUpdateNewClassicApp(this.user, website, login, password, sm));
+			else
+				this.addUpdate(UpdateNewPassword.createUpdateNewPassword(this.user, existingApp, password, sm));
+			break;
+		
+		case"logwith":
+			String logWithAppName = (String) json.get("logwith");
+			Website logwithAppWebsite = this.findWebsiteInCatalogWithName(logWithAppName, sm);
+			website = this.findWebsiteInCatalogWithName(urlOrName, sm);
+			if (website == null)
+				return;
+			WebsiteApp logwithApp = (WebsiteApp) this.findClassicAppWithLoginAndWebsite(login, logwithAppWebsite);
+			this.addUpdate(UpdateNewLogWithApp.createUpdateNewLogWithApp(user, website, logwithApp, sm));
+			break;
+			
+		default:
+			throw new GeneralException(ServletManager.Code.ClientError, "This update type does not exist");
+		}
 	}
 	
+	private Website findWebsiteInCatalogWithLoginUrl(String url, ServletManager sm) {
+		Catalog catalog = (Catalog) sm.getContextAttr("catalog");
+		return catalog.getWebsiteWithLoginUrl(url);
+	}
+	
+	private Website findWebsiteInCatalogWithName(String websiteName, ServletManager sm) {
+		Catalog catalog = (Catalog) sm.getContextAttr("catalog");
+		return catalog.getWebsiteNamed(websiteName);
+	}
+
 	/*
 	 * Pour le moment websiteName en attendant de trouver un meilleur bail
 	 * 
 	*/
-	public boolean checkWebsiteInCatalog(String websiteName, ServletManager sm) {
+	private boolean checkWebsiteInCatalogWithName(String websiteName, ServletManager sm) {
 		Catalog catalog = (Catalog) sm.getContextAttr("catalog");
 		return catalog.haveWebsiteNamed(websiteName);
 	}
 	
-	public boolean findClassicAppWithLogin(String login) {
-		this.user.get
+	private boolean checkWebsiteInCatalogWithLoginUrl(String url, ServletManager sm) {
+		Catalog catalog = (Catalog) sm.getContextAttr("catalog");
+		return catalog.haveWebsiteWithLoginUrl(url);
+	}
+	
+	private ClassicApp findClassicAppWithLoginAndWebsite(String login, Website website) {
+		return this.user.getDashboardManager().findClassicAppWithLoginAndWebsite(login, website);
 	}
 	
 	private void addUpdate(Update update) {

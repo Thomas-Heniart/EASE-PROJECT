@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.AccountInformation;
@@ -283,5 +284,17 @@ public class DashboardManager {
 		if (app == null)
 			throw new GeneralException(ServletManager.Code.ClientError, "No such website_app");
 		return app;
+	}
+
+	public ClassicApp findClassicAppWithLoginAndWebsite(String login, Website website) {
+		for (App app : this.apps) {
+			if (app.getType() != "ClassicApp")
+				continue;
+			String appLogin = ((ClassicApp)app).getAccount().getInformationNamed("login");
+			if (appLogin.equals(login) && ((ClassicApp) app).getSite() == website)
+				return (ClassicApp) app;
+		}
+		return null;
+		
 	}
 }

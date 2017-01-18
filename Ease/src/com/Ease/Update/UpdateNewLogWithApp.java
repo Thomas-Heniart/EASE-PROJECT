@@ -5,9 +5,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
-
 import com.Ease.Context.Catalog.Website;
+import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
@@ -31,7 +30,7 @@ public class UpdateNewLogWithApp extends UpdateNewAccount {
 		try {
 			rs.next();
 			String logWithApp_id = rs.getString(Data.LOGWITH_APP_ID.ordinal());
-			LogwithApp logWithApp = (LogwithApp) user.getAppWithDBid(logWithApp_id);
+			WebsiteApp logWithApp = (WebsiteApp) user.getDashboardManager().getAppWithDBid(logWithApp_id);
 			return new UpdateNewLogWithApp(update_id, update_new_account_id, website, logWithApp, idGenerator.getNextId());
 		} catch(SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
@@ -39,7 +38,7 @@ public class UpdateNewLogWithApp extends UpdateNewAccount {
 		
 	}
 	
-	public static UpdateNewLogWithApp createUpdateNewLogWithApp(User user, Website website, LogwithApp logWithApp, ServletManager sm) throws GeneralException {
+	public static UpdateNewLogWithApp createUpdateNewLogWithApp(User user, Website website, WebsiteApp logWithApp, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
 		Map<String, Object> elevator = new HashMap<String, Object>();
@@ -51,9 +50,9 @@ public class UpdateNewLogWithApp extends UpdateNewAccount {
 		return new UpdateNewLogWithApp(update_id, updateNewAccount_id, website, logWithApp, idGenerator.getNextId());
 	}
 	
-	protected LogwithApp logWithApp;
+	protected WebsiteApp logWithApp;
 	
-	public UpdateNewLogWithApp(String db_id, String update_new_account_id, Website website, LogwithApp logWithApp, int single_id) {
+	public UpdateNewLogWithApp(String db_id, String update_new_account_id, Website website, WebsiteApp logWithApp, int single_id) {
 		super(db_id, update_new_account_id, website, single_id);
 		this.logWithApp = logWithApp;
 	}

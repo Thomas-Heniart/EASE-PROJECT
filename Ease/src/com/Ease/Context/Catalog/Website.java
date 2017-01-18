@@ -323,4 +323,10 @@ public class Website {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
+
+	public boolean loginUrlMatch(String url) {
+		String[] loginUrlSplitted = this.loginUrl.split("\\/*\\/");
+		System.out.println(loginUrlSplitted[0]);
+		return false;
+	}
 }
