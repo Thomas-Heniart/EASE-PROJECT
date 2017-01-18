@@ -15,7 +15,6 @@ import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 
 /**
