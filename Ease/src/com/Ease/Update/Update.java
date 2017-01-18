@@ -2,12 +2,8 @@ package com.Ease.Update;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-
-import org.json.simple.JSONObject;
 
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
@@ -61,25 +57,6 @@ public class Update {
 	
 	public static String createUpdate(User user, String type, DataBaseConnection db) throws GeneralException {
 		return db.set("INSERT INTO updates values (null, " + user.getDBid() + ", '" + type + "');").toString();
-	}
-	
-	public static Update createUpdateFromJSON(User user, JSONObject json, ServletManager sm) throws GeneralException {
-		String type = (String) json.get("type");
-		switch(type) {
-			case "updateNewClassicApp":
-				break;
-				
-			case "updateNewLogWithApp":
-				
-				break;
-				
-			case "updateNewPassword":
-				
-				break;
-				
-			default:
-				throw new GeneralException(ServletManager.Code.ClientError, "Invalid json for update");
-		}
 	}
 	
 	protected String db_id;

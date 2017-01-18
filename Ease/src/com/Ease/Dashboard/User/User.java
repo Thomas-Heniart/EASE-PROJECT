@@ -271,6 +271,10 @@ public class User {
 		return opt;
 	}
 
+	public UpdateManager getUpdateManager() {
+		return this.updateManager;
+	}
+	
 	public DashboardManager getDashboardManager() {
 		return this.dashboardManager;
 	}
