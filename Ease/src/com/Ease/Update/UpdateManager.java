@@ -5,9 +5,7 @@ import java.util.Map;
 
 import org.json.simple.JSONObject;
 
-import com.Ease.Context.Catalog.Website;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
-import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
+import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
@@ -17,27 +15,14 @@ public class UpdateManager {
 	protected List<Update> updates;
 	protected Map<String, Update> updatesDBMap;
 	protected Map<Integer, Update> updatesIDMap;
+	protected User user;
 	
 	public UpdateManager(ServletManager sm, User user) throws GeneralException {
 		updates = Update.loadUpdates(user, sm);
+		this.user = user;
 		for (Update update : updates) {
 			this.addUpdateInMaps(update);
 		}
-	}
-	
-	public void addUpdateNewPassword(User user, ClassicApp classicApp, String newPassword, ServletManager sm) throws GeneralException {
-		Update newUpdate = UpdateNewPassword.createUpdateNewPassword(user, classicApp, newPassword, sm);
-		this.addUpdateInMaps(newUpdate);
-	}
-	
-	public void addUpdateNewClassicApp(User user, Website website, Map<String, String> updateInformations, String password, ServletManager sm) throws GeneralException {
-		Update newUpdate = UpdateNewClassicApp.createUpdateNewClassicApp(user, website, updateInformations, password, sm);
-		this.addUpdateInMaps(newUpdate);
-	}
-	
-	public void addUpdateNewLogWithApp(User user, Website website, LogwithApp logWithApp, ServletManager sm) throws GeneralException {
-		Update newUpdate = UpdateNewLogWithApp.createUpdateNewLogWithApp(user, website, logWithApp, sm);
-		this.addUpdateInMaps(newUpdate);
 	}
 	
 	private void addUpdateInMaps(Update newUpdate) {
@@ -63,9 +48,22 @@ public class UpdateManager {
 		return this.updates;
 	}
 
-	public void addUpdateFromJson(User user, JSONObject json, ServletManager sm) {
+	public void addUpdateFromJson(JSONObject json, ServletManager sm) {
 		Update newUpdate = Update.createUpdateFromJSON(user, json, sm);
 		this.addUpdate(newUpdate);
+	}
+	
+	/*
+	 * Pour le moment websiteName en attendant de trouver un meilleur bail
+	 * 
+	*/
+	public boolean checkWebsiteInCatalog(String websiteName, ServletManager sm) {
+		Catalog catalog = (Catalog) sm.getContextAttr("catalog");
+		return catalog.haveWebsiteNamed(websiteName);
+	}
+	
+	public boolean findClassicAppWithLogin(String login) {
+		this.user.get
 	}
 	
 	private void addUpdate(Update update) {

@@ -132,4 +132,12 @@ public class Catalog {
 		}
 		return result;
 	}
+
+	public boolean haveWebsiteNamed(String websiteName) {
+		for (Website site : this.websites) {
+			if (site.getName().equals(websiteName))
+				return true;
+		}
+		return false;
+	}
 }

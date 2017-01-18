@@ -3,8 +3,6 @@ package com.Ease.Update;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.servlet.ServletContext;
-
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
