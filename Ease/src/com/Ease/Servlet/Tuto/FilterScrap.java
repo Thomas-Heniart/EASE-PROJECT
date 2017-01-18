@@ -21,7 +21,6 @@ import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
-import com.Ease.Utils.Crypto.RSA;
 
 /**
  * Servlet implementation class TutoStep
@@ -52,7 +51,7 @@ public class FilterScrap extends HttpServlet {
 		HttpSession session = request.getSession();
 		User user = (User) (session.getAttribute("user"));
 		Catalog catalog = (Catalog) (session.getAttribute("catalog"));
-		int firstProfileId = user.getProfilesList().get(0).getSingleId();
+		int firstProfileId = user.getDashboardManager().getProfilesList().get(0).getSingleId();
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		DataBaseConnection db = sm.getDB();
 		try {

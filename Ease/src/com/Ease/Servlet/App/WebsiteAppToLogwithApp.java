@@ -58,10 +58,10 @@ public class WebsiteAppToLogwithApp extends HttpServlet {
 			if (appId == null || appId.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Unknown app.");
 			try {
-				App app = user.getApp(Integer.parseInt(appId));
+				App app = user.getDashboardManager().getAppWithID(Integer.parseInt(appId));
 				if (!app.getType().equals("WebsiteApp"))
 					throw new GeneralException(ServletManager.Code.ClientError, "This is not a website app.");
-				App logwith = user.getApp(Integer.parseInt(logwithId));
+				App logwith = user.getDashboardManager().getAppWithID(Integer.parseInt(logwithId));
 				LogwithApp.createFromWebsiteApp((WebsiteApp)app, name, (WebsiteApp)logwith, sm, user);
 				sm.setResponse(ServletManager.Code.Success, "Logwith app  created instead of website app.");
 			} catch (NumberFormatException e) {

@@ -73,7 +73,7 @@ public class AddClassicApp extends HttpServlet {
 			}
 			//--------
 			try {
-				Profile profile = user.getProfile(Integer.parseInt(profileId));
+				Profile profile = user.getDashboardManager().getProfile(Integer.parseInt(profileId));
 				site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(websiteId));
 				infos = site.getNeededInfos(sm);
 				ClassicApp newApp = profile.addClassicApp(name, site, password, infos, sm);

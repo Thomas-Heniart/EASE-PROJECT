@@ -38,6 +38,16 @@ public class Profile {
 	 * 
 	 */
 	
+	public static List<List<Profile>> createPersonnalProfiles(User user, ServletManager sm) throws GeneralException {
+		List<List<Profile>> profilesColumn = new LinkedList<List<Profile>>();
+		for (int i = 0; i < MAX_COLUMN; ++i) {
+			profilesColumn.add(new LinkedList<Profile>());
+		}
+		profilesColumn.get(0).add(Profile.createPersonnalProfile(user, 0, 0, "Side", "#000000", sm));
+		profilesColumn.get(1).add(Profile.createPersonnalProfile(user, 1, 0, "Me", "#373B60", sm));
+		return profilesColumn;
+	}
+	
 	public static List<List<Profile>> loadProfiles(User user, ServletManager sm) throws GeneralException {
 		List<List<Profile>> profilesColumn = new LinkedList<List<Profile>>();
 		for (int i = 0; i < MAX_COLUMN; ++i) {
@@ -64,13 +74,6 @@ public class Profile {
 				Profile profile = new Profile(db_id, user, columnIdx, posIdx, groupProfile, infos, single_id);
 				apps = App.loadApps(profile, sm);
 				profile.setApps(apps);
-				for (App app : apps) {
-					user.getAppsDBmap().put(app.getDBid(), app);
-					user.getAppsIDmap().put(app.getSingleId(), app);
-					if (app.getType().equals("ClassicApp") || app.getType().equals("LogwithApp")) {
-						user.getWebsiteAppsDBmap().put(((WebsiteApp)app).getWebsiteAppDBid(), (WebsiteApp)app);
-					}
-				}
 				profilesColumn.get(columnIdx).add(profile);
 			}
 		} catch (SQLException e){
@@ -352,5 +355,23 @@ public class Profile {
 		this.apps.add(app);
 		db.commitTransaction(transaction);
 		return app;
+	}
+
+	public void removeWithPassword(String password, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		if (this.apps.size() > 0) {
+			if (password == null)
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Password confirmation needed.");
+			this.user.getKeys().isGoodPassword(password);
+		}
+		this.removeFromDB(sm);
+		db.commitTransaction(transaction);
+	}
+
+	public void removeApp(App app, ServletManager sm) throws GeneralException {
+		this.apps.remove(app);
+		app.removeFromDB(sm);
+		this.updateAppsIndex(sm);
 	}
 }

@@ -59,7 +59,7 @@ public class AddEmptyApp extends HttpServlet {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
 			//--------
 			try {
-				Profile profile = user.getProfile(Integer.parseInt(profileId));
+				Profile profile = user.getDashboardManager().getProfile(Integer.parseInt(profileId));
 				site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(websiteId));
 				WebsiteApp newApp = profile.addEmptyApp(name, site, sm);
 				sm.setResponse(ServletManager.Code.Success, String.valueOf(newApp.getSingleId()));

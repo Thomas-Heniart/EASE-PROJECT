@@ -91,14 +91,14 @@ public class TutoAddApps extends HttpServlet {
 				JSONObject obj = (JSONObject)jsonArray.get(i);
 				if (i < 10) {
 					if (obj.get("profileId") == null) {
-						profile = user.getProfilesList().get(0);
+						profile = user.getDashboardManager().getProfilesList().get(0);
 					} else {
-						profile = user.getProfile(Integer.parseInt(obj.get("profileId").toString()));
+						profile = user.getDashboardManager().getProfile(Integer.parseInt(obj.get("profileId").toString()));
 					}
 				}
 				site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(obj.get("websiteId").toString()));
 				if (i % 10 == 0 && i != 0) {
-					profile = user.addProfile("Choose name", "#ff9d34", sm);
+					profile = user.getDashboardManager().addProfile("Choose name", "#ff9d34", sm);
 				}
 				if (!obj.containsKey("password")) {
 					profile.addLogwithApp(obj.get("name").toString(), site, logwith, sm);
@@ -111,7 +111,7 @@ public class TutoAddApps extends HttpServlet {
 						infos.put("password", obj.get("password").toString());
 					}
 					boolean ret = false;
-					for (Profile p : user.getProfilesList()) {
+					for (Profile p : user.getDashboardManager().getProfilesList()) {
 						for (App app : p.getApps()) {
 							if (app.getClass().getName().equals("WebsiteApp") && ((WebsiteApp)app).getSite() == site) {
 								ClassicApp.createFromWebsiteApp((WebsiteApp)app, obj.get("name").toString(), obj.get("password").toString(), infos, sm, user);

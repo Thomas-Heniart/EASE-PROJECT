@@ -50,7 +50,7 @@ public class RemoveApp extends HttpServlet {
 			String appId = sm.getServletParam("appId", true);
 			if (appId == null || appId.isEmpty())
 				throw new GeneralException(ServletManager.Code.ClientError, "Wrong appId.");
-			user.removeApp(Integer.parseInt(appId), sm);
+			user.getDashboardManager().removeAppWithSingleId(Integer.parseInt(appId), sm);
 			sm.setResponse(ServletManager.Code.Success, "App removed.");
 		} catch (GeneralException e) {
 			sm.setResponse(e);

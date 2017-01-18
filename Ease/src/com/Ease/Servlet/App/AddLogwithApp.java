@@ -60,8 +60,8 @@ public class AddLogwithApp extends HttpServlet {
 			if (name == null || name.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
 			try {
-				Profile profile = user.getProfile(Integer.parseInt(profileId));
-				App logwith = user.getApp(Integer.parseInt(logwithId));
+				Profile profile = user.getDashboardManager().getProfile(Integer.parseInt(profileId));
+				App logwith = user.getDashboardManager().getAppWithID(Integer.parseInt(logwithId));
 				site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(websiteId));
 				LogwithApp newApp = profile.addLogwithApp(name, site, logwith, sm);
 				sm.setResponse(ServletManager.Code.Success,  String.valueOf(newApp.getSingleId()));
