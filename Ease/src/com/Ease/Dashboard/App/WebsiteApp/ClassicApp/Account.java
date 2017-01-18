@@ -105,10 +105,15 @@ public class Account {
 	}
 	
 	public void setPassword(String password, User user, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
 		String cryptedPassword = user.encrypt(password);
+		this.setEncryptedPassword(cryptedPassword, user, sm);
+	}
+	
+	public void setEncryptedPassword(String cryptedPassword, User user, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
 		this.crypted_password = cryptedPassword;
 		db.set("UPDATE accounts SET password='" + cryptedPassword + "' WHERE id=" + this.db_id + ";");
+		
 	}
 	
 	/*

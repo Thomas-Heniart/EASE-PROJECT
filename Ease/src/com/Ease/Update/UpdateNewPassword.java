@@ -50,7 +50,10 @@ public class UpdateNewPassword extends Update {
 		super(db_id, single_id);
 		this.classicApp = classicApp;
 		this.newPassword = newPassword;
-
+	}
+	
+	public void accept(ServletManager sm) throws GeneralException {
+		this.classicApp.getAccount().setEncryptedPassword(newPassword, user, sm);
 	}
 	
 	public void deleteFromDb(DataBaseConnection db) throws GeneralException {
