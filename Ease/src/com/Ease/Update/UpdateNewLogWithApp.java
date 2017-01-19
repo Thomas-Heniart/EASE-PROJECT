@@ -6,8 +6,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.Ease.Context.Catalog.Website;
+import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
+import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
@@ -62,5 +64,10 @@ public class UpdateNewLogWithApp extends UpdateNewAccount {
 		db.set("DELETE FROM updateNewLogWithApp WHERE update_new_account_id = " + this.update_new_account_id + ";");
 		super.deleteFromDb(db);
 		db.commitTransaction(transaction);
+	}
+	
+	public void accept(Profile profile, int position, ServletManager sm) throws GeneralException {
+		App newApp = LogwithApp.createLogwithApp(profile, position, this.website.getName(), this.website, this.logWithApp, sm);
+		this.user.getDashboardManager().addApp(newApp);
 	}
 }

@@ -97,6 +97,8 @@ public class UpdateManager {
 			if (website == null)
 				return;
 			WebsiteApp logwithApp = (WebsiteApp) this.findClassicAppWithLoginAndWebsite(login, logwithAppWebsite);
+			if (logwithApp == null)
+				return;
 			if (this.checkRemovedUpdates(website, logwithApp, login, sm))
 				return;
 			this.addUpdate(UpdateNewLogWithApp.createUpdateNewLogWithApp(user, website, logwithApp, sm));
@@ -183,5 +185,13 @@ public class UpdateManager {
 	private void addUpdate(Update update) {
 		this.updates.add(update);
 		this.addUpdateInMaps(update);
+	}
+	
+	public void rejectUpdateWithSingleId(int single_id, ServletManager sm) throws GeneralException {
+		Update update = this.getUpdateWithSingleId(single_id);
+		update.reject(sm);
+		this.updatesDBMap.remove(update.getDbId());
+		this.updatesIDMap.remove(single_id);
+		this.updates.remove(update);
 	}
 }

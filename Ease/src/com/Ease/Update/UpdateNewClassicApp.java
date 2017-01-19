@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.Ease.Context.Catalog.Website;
+import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
+import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
@@ -88,5 +91,10 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 		db.set("DELETE FROM updateNewClassicApp WHERE update_new_account_id = " + this.update_new_account_id + ";");
 		super.deleteFromDb(db);
 		db.commitTransaction(transaction);
+	}
+	
+	public void accept(Profile profile, int position, String name, ServletManager sm) throws GeneralException {
+		App newApp = ClassicApp.createClassicApp(profile, position, name, this.website, this.website.getName(), this.updateInformations, sm, this.user);
+		this.user.getDashboardManager().addApp(newApp);
 	}
 }

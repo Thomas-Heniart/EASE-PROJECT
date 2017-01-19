@@ -82,4 +82,9 @@ public class Update {
 	public void deleteFromDb(DataBaseConnection db) throws GeneralException {
 		db.set("DELETE FROM updates WHERE id = " + this.db_id + ";");
 	}
+	
+	public void reject(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		db.set("INSERT INTO updatesRemoved values (null, " + this.db_id + ");");
+	}
 }
