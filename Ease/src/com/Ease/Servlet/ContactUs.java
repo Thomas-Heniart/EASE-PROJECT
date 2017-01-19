@@ -72,7 +72,7 @@ public class ContactUs extends HttpServlet {
 					} 
 				}
 				mail.sendValidationContactEmail(email, msg);
-				mail.sendContactEmail("victor@ease-app.co", user, isUser, email, msg);
+				mail.sendContactEmail("victor@ease.space", user, isUser, email, msg);
 			} catch (MessagingException e) {
 				throw new GeneralException(ServletManager.Code.InternError, "Email not sended.");
 			}

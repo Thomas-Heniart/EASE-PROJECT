@@ -197,6 +197,9 @@ public class DashboardManager {
 	}
 	
 	public void replaceApp(App app) throws GeneralException {
+		this.apps.set(app.getPosition(), app);
+		this.appsDBMap.put(app.getDBid(), app);
+		this.appsIDMap.put(app.getSingleId(), app);
 		app.getProfile().getApps().set(app.getPosition(), app);
 	}
 	

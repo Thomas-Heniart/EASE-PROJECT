@@ -163,7 +163,7 @@ public class User {
 		SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, sm);
 		User newUser = new User(db_id, firstName, lastName, email, keys, opt, false, false, sessionSave, status);
 		Profile.createPersonnalProfiles(newUser, sm);
-		newUser.initializeUpdateManager(sm);
+		newUser.initializeDashboardManager(sm);
 		((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
 		for (Group group : groups) {
 			group.addUser(email, sm);

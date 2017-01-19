@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
+import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
@@ -76,7 +77,9 @@ public class AddClassicApp extends HttpServlet {
 				Profile profile = user.getDashboardManager().getProfile(Integer.parseInt(profileId));
 				site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(websiteId));
 				infos = site.getNeededInfos(sm);
-				ClassicApp newApp = profile.addClassicApp(name, site, password, infos, sm);
+				App newApp = ClassicApp.createClassicApp(profile, profile.getApps().size(), name, site, password, infos, sm, user);
+				user.getDashboardManager().addApp(newApp);
+				profile.addApp(newApp);
 				sm.setResponse(ServletManager.Code.Success, String.valueOf(newApp.getSingleId()));
 			} catch (NumberFormatException e) {
 				sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");

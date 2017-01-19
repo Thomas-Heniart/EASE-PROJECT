@@ -11,6 +11,8 @@ $("#manualImportation").click(function() {
 /////////
 
 var addAppTutoCpt = 0;
+var appsSeletecedFiled = 0;
+var appsSelectedSkiped = 0;
 
 function showAddAppTuto(i) {
 	$("div#addAppTutorial").addClass("show");
@@ -36,6 +38,7 @@ $("div#simpleImportation div.appHandler").click(function() {
 });
 
 $("#simpleImportation .showMoreHelper").click(function(){
+	easeTracker.trackEvent("");
 	$(this).css('display', 'none');
 	$("#simpleImportation .appHandler.hidden").removeClass('hidden');
 });
@@ -51,7 +54,10 @@ function goToNextStep() {
 			//always
 		}, function(retMsg) {
 			//success
-			easeTracker.trackEvent("AppsManuallyAdded");
+			easeTracker.trackEvent("TutoAppManoDone");
+			easeTracker.setUserProperty("TutoAppsSelectedMano", addAppTutoCpt);
+			easeTracker.setUserProperty("TutoAppsFilledMano", appsSeletecedFiled);
+			easeTracker.setUserProperty("TutoAppsSkipedMano", appsSelectedSkiped);
 			location.reload();
 		}, function(retMsg) {
 			//error
@@ -71,6 +77,7 @@ $("div#addAppTutorial #skipButton").click(function() {
 	}, function(retMsg) {
 		//success
 		easeTracker.trackEvent("AddApp", {"type":"EmptyApp", "appName":appName});
+		appsSelectedSkiped++;
 	}, function(retMsg) {
 		//error
 	}, 'text');
@@ -92,6 +99,7 @@ $('div#addAppTutorial form').submit(function (e) {
 		//succes
 		console.log(retMsg);
 		easeTracker.trackEvent("AddApp", {"type":"ClassicApp", "appName":appName});
+		appsSelectedFilled++;
 	}, function(retMsg) {
 		//error
 		console.log(retMsg);
@@ -120,6 +128,12 @@ var profileIds = [];
 var loadingStep = 0;
 var currentStep = 0;
 var maxSteps = 0;
+var chromeScrappingCount = 0;
+var facebookScrappingCount = 0;
+var linkedInScrappingCount = 0;
+var chromeSelectedCount = 0;
+var facebookSelectedCount = 0;
+var linkedInSelectedCount = 0;
 
 function displayTutoApps(apps, by) {
 	apps.forEach(function (element) {
@@ -136,7 +150,19 @@ function displayTutoApps(apps, by) {
 				"</div>");
 		by.profileId = element.profileId;
 		appToAdd.push(element);
+		if (by.img.indexOf("Chrome") !== - 1) {
+			chromeScrappingCount += 1;
+			chromeSelectedCount += 1;
+		} else if (by.img.indexOf("Facebook") !== -1) {
+			facebookScrappingCount += 1;
+			facebookSelectedCount += 1;
+		} else {
+			linkedInScrappingCount += 1;
+			linkedInSelectedCount += 1;
+		}
 	});
+	console.log(chromeScrappingCount);
+	console.log(chromeSelectedCount);
 }
 
 function showSavingPopup(filterJson) {
@@ -146,10 +172,26 @@ function showSavingPopup(filterJson) {
 		displayTutoApps(filterJson[element.id], element);
 	});
 	$('div#saving div.scrapedAppsContainer div.appHandler').click(function() {
-		if ($(this).find("div.app").hasClass("selected")) {
-			$(this).find("div.app").removeClass("selected");
+		var self = $(this).find("div.app");
+		var bySrc = self.find("img.by").attr("src");
+		if (self.hasClass("selected")) {
+			self.removeClass("selected");
+			if (bySrc.indexOf("Chrome") !== - 1) {
+				chromeSelectedCount -= 1;
+			} else if (bySrc.indexOf("Facebook") !== -1) {
+				facebookSelectedCount -= 1;
+			} else {
+				linkedInSelectedCount -= 1;
+			}
 		} else {
-			$(this).find("div.app").addClass("selected");
+			self.addClass("selected");
+			if (bySrc.indexOf("Chrome") !== - 1) {
+				chromeSelectedCount += 1;
+			} else if (bySrc.indexOf("Facebook") !== -1) {
+				facebookSelectedCount += 1;
+			} else {
+				linkedInSelectedCount += 1;
+			}
 		}
 	});
 	if ($('div#saving div.scrapedAppsContainer div.appHandler').length == 0) {
@@ -178,14 +220,33 @@ function sendTutoAddApp() {
 		//always
 	}, function(retMsg) {
 		//succes
-		easeTracker.trackEvent("TutoAddApp", appToAddFilter);
 		postHandler.post('TutoStep', {
 			"tutoStep" : "chrome_scrapping"
 		}, function() {
 			//always
 		}, function(retMsg) {
 			//succes
-			easeTracker.trackEvent("ScrappingDone");
+			easeTracker.trackEvent("TutoAppScrappDone");
+			if (chromeScrappingCount > 0 && chromeSelectedCount >= 0) {
+				easeTracker.trackEvent("TutoScrapChrome");
+				easeTracker.setUserProperty("TutoAppScrapChrome", chromeScrappingCount);
+				easeTracker.setUserProperty("TutoAppSelectedChrome", chromeSelectedCount);
+				easeTracker.increaseAppCounter(chromeSelectedCount);
+			}
+			if (facebookScrappingCount > 0 && facebookSelectedCount >= 0) {
+				easeTracker.trackEvent("TutoScrapFacebook");
+				easeTracker.setUserProperty("TutoAppScrapFacebook", facebookScrappingCount);
+				easeTracker.setUserProperty("TutoAppSelectedFacebook", facebookSelectedCount);
+				easeTracker.increaseAppCounter(facebookSelectedCount);
+			}
+			if (linkedInScrappingCount > 0 && linkedInSelectedCount >= 0) {
+				easeTracker.trackEvent("TutoScrapLinkedIn");
+				easeTracker.setUserProperty("TutoAppScrapLinkedIn", linkedInScrappingCount);
+				easeTracker.setUserProperty("TutoAppSelectedLinkedIn", linkedInSelectedCount);
+				easeTracker.increaseAppCounter(linkedInSelectedCount);
+			}
+			easeTracker.setUserProperty("TutoTotalAppsScrapped", (chromeScrappingCount + facebookScrappingCount + linkedInScrappingCount));
+			easeTracker.setUserProperty("TutoToalAppsSelected", (chromeSelectedCount + facebookSelectedCount + linkedInSelectedCount));
 			location.reload();
 		}, function(retMsg) {
 			//error

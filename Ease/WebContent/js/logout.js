@@ -14,6 +14,7 @@ $(document).ready(function(){
 			function(){},
 			function(retMsg){
 				easeTracker.trackEvent('EaseLogout');
+				easeTracker.logout();
 				location.href = "index.jsp";
 			},
 			function(retMsg){
@@ -31,6 +32,7 @@ $(document).ready(function(){
 			function(){},
 			function(retMsg){
 				easeTracker.trackEvent('AllAppsLogout');
+				easeTracker.logout();
 				location.href = "index.jsp";
 			},
 			function(retMsg){

@@ -374,4 +374,8 @@ public class Profile {
 		app.removeFromDB(sm);
 		this.updateAppsIndex(sm);
 	}
+
+	public void addApp(App newApp) {
+		this.apps.add(newApp);
+	}
 }
