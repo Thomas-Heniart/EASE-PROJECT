@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.Ease.Context.Catalog.Catalog;
@@ -57,10 +58,10 @@ public class GetCheckAlreadyLogged extends HttpServlet {
 			}
 			Website site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithHost(host);
 			if (site == null) {
-				sm.setResponse(ServletManager.Code.UserMiss, "No website founded.");
+				sm.setResponse(ServletManager.Code.UserMiss, "No website found.");
 			} else {
 				JSONObject json = site.getJSON(sm);
-				JSONObject checkAlreadyLogged = (JSONObject)json.get("checkAlreadyLogged");
+				JSONArray checkAlreadyLogged = (JSONArray)json.get("checkAlreadyLogged");
 				sm.setResponse(ServletManager.Code.Success, checkAlreadyLogged.toString());
 			}
 		} catch (GeneralException e) {

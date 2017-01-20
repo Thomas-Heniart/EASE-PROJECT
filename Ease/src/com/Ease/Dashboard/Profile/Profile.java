@@ -380,5 +380,6 @@ public class Profile {
 
 	public void addApp(App newApp) {
 		this.apps.add(newApp);
+		this.user.getDashboardManager().addApp(newApp);
 	}
 }

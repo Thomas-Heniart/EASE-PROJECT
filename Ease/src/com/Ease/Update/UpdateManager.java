@@ -67,12 +67,12 @@ public class UpdateManager {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 		String type = (String) json.get("type");
-		String urlOrName = (String) json.get("website");
+		String url = (String) json.get("website");
 		Website website;
 		String login = (String) json.get("user");
 		switch (type) {
 		case "classic":
-			website = this.findWebsiteInCatalogWithLoginUrl(urlOrName, sm);
+			website = this.findWebsiteInCatalogWithLoginUrl(url, sm);
 			if (website == null)
 				return;
 			ClassicApp existingApp = this.findClassicAppWithLoginAndWebsite(login, website);
@@ -94,7 +94,7 @@ public class UpdateManager {
 		case "logwith":
 			String logWithAppName = (String) json.get("logwith");
 			Website logwithAppWebsite = this.findWebsiteInCatalogWithName(logWithAppName, sm);
-			website = this.findWebsiteInCatalogWithName(urlOrName, sm);
+			website = this.findWebsiteInCatalogWithLoginUrl(url, sm);
 			if (website == null)
 				return;
 			WebsiteApp logwithApp = (WebsiteApp) this.findClassicAppWithLoginAndWebsite(login, logwithAppWebsite);
