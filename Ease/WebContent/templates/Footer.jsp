@@ -8,7 +8,7 @@
 
 	<div class="mediaTab">
 		<div class="link">
-		<a href="https://www.facebook.com/EasePlatform/"  target="_blank"><i class="fa fa-facebook"></i></a>
+		<a href="https://www.facebook.com/YourEaseSpace/"  target="_blank"><i class="fa fa-facebook"></i></a>
 		</div>
 		<div class="link">
 		<a href="https://twitter.com/Ease_app"  target="_blank"><i class="fa fa-twitter"></i></a>
@@ -17,13 +17,13 @@
 		<a href="https://www.linkedin.com/company/ease."  target="_blank"><i class="fa fa-linkedin"></i></a>
 		</div>
 		<div class="link">
-		<a href="https://www.instagram.com/ease_app/"  target="_blank"><i class="fa fa-instagram"></i></a>
+		<a href="https://www.instagram.com/ease.space/"  target="_blank"><i class="fa fa-instagram"></i></a>
 		</div>
 		<div class="link">
-		<a href="http://www.ease-app.co"  target="_blank"><i class="fa fa-globe" aria-hidden="true"></i></a>
+		<a href="/discover"  target="_blank"><i class="fa fa-globe" aria-hidden="true"></i></a>
 		</div>
 		<div class="link">
-		<a href="http://www.ease-app.co/security"  target="_blank"><i class="fa fa-lock" aria-hidden="true"></i></a>
+		<a href="/secure.jsp"  target="_blank"><i class="fa fa-lock" aria-hidden="true"></i></a>
 		</div>
 	</div>
 	<div class="credits">
