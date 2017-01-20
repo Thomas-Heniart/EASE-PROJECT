@@ -66,6 +66,10 @@ public class OnStart implements ServletContextListener{
 				Map<String, User> sessionIdUserMap = new HashMap<String, User>();
 				context.setAttribute("sessionIdUserMap", sessionIdUserMap);
 				System.out.println("done.");
+				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				Date mydate = new Date();
+				String date = dateFormat.format(mydate);
+				db.set("insert into logs values('Server Start', 200, NULL, '', 'Server started correctly', '" + date + "');");
 			} catch (GeneralException e1) {
 				System.out.println("Start failed");
 				String logResponse = URLEncoder.encode(e1.getMsg(), "UTF-8");

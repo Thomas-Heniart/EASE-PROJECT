@@ -103,6 +103,7 @@
 		</c:choose>
 		
 		$('#tipsHandler #0 button').click(function(){
+			easeTracker.trackEvent("Tip1");
 			$('#tipsHandler #1').css({
 				'left': $('.ProfileBox').offset().left - $('#tipsHandler #0').outerWidth(true) - 20,
 				'top': $('.ProfileBox').offset().top - headerHeight
@@ -111,6 +112,7 @@
 			$('#tipsHandler #1').addClass('show');
 		});
 		$('#tipsHandler #1 button').click(function(){
+			easeTracker.trackEvent("Tip2");
 			if ($(".ProfileBox[custom='true']").length == 0){
 				$('#tipsHandler #3').css({
 					'left': $('.MenuButtonSet').offset().left - $('#tipsHandler #3').outerWidth(true) - 20,
@@ -128,6 +130,7 @@
 			}
 		});
 		$('#tipsHandler #2 button').click(function(){
+			easeTracker.trackEvent("TipGroupProfile");
 			$('#tipsHandler #3').css({
 				'left': $('.MenuButtonSet').offset().left - $('#tipsHandler #3').outerWidth(true) - 20,
 				'top': $('.MenuButtonSet').offset().top - headerHeight - 15
@@ -137,6 +140,7 @@
 		});
 		var clickOnCatalog = false;
 		$('#tipsHandler #3 button').click(function(){
+			easeTracker.trackEvent("Tip3");
 			$('#tipsHandler #4').css({
 				'left': '42%',
 				'top': '46%',
@@ -154,6 +158,7 @@
 			$('#tipsHandler #4').addClass('show');
 		});
 		$('#tipsHandler #4 button').click(function(){
+			easeTracker.trackEvent("Tip4");
 			$('#tipsHandler #4').removeClass('show');
 			$(".col-left, .header").removeClass("darken");
 		});
@@ -167,11 +172,6 @@
 				//always
 			}, function(retMsg) {
 				//succes
-				var amplitudeStep = "";
-				step.split("_").forEach(function(element) {
-					amplitudeStep += (element.charAt(0).toUpperCase() + element.slice(1));
-				});
-				easeTracker.trackEvent(amplitudeStep);
 				self.remove();
 			}, function(retMsg) {
 				//error

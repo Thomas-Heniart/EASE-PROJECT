@@ -30,11 +30,11 @@ public class Mail {
 			props.put("mail.smtp.port", "465");
 			Session msession = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication("benjamin@ease-app.co", "bpease.P2211");
+					return new PasswordAuthentication("benjamin@ease.space", "bpease.P2211");
 				}
 			});
 			message = new MimeMessage(msession);
-			message.setFrom(new InternetAddress("benjamin@ease-app.co", "Ease Team"));
+			message.setFrom(new InternetAddress("benjamin@ease.space", "Ease Team"));
 		} catch (UnsupportedEncodingException e) {
 			throw new MessagingException();
 		}

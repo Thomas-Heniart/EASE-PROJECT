@@ -190,15 +190,15 @@ public class GroupProfile {
 	}
 	
 	public Profile loadContentForConnectedUser(User user, ServletManager sm) throws GeneralException {
-		int mostEmptyColumn = user.getMostEmptyProfileColumn();
-		Profile profile = Profile.createProfileWithGroup(user, mostEmptyColumn, user.getProfileColumns().get(mostEmptyColumn).size(), this, sm);
-		user.getProfileColumns().get(mostEmptyColumn).add(profile);
+		int mostEmptyColumn = user.getDashboardManager().getMostEmptyProfileColumn();
+		Profile profile = Profile.createProfileWithGroup(user, mostEmptyColumn, user.getDashboardManager().getProfiles().get(mostEmptyColumn).size(), this, sm);
+		user.getDashboardManager().getProfiles().get(mostEmptyColumn).add(profile);
 		return profile;
 
 	}
 	
 	public void removeContentForConnectedUser(User user, ServletManager sm) throws GeneralException {
-		Iterator<List<Profile>> it = user.getProfileColumns().iterator();
+		Iterator<List<Profile>> it = user.getDashboardManager().getProfiles().iterator();
 		while (it.hasNext()) {
 			Iterator<Profile> it2 = it.next().iterator();
 			while (it2.hasNext()) {

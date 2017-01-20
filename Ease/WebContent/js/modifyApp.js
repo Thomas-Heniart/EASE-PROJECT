@@ -90,7 +90,12 @@
 			popup.find('p.title').html('Finalize <span></span>.</br>Type your info for the last time');
 			
 			var loginChooser = $('#PopupModifyApp .loginWithChooser');
-			var abc = $(".catalogContainer .catalogApp[idx='" + $(app).attr('webid') + "']").attr('data-login').split(',');
+			var temp;
+			if((temp = $(".catalogContainer .catalogApp[idx='" + $(app).attr('webid') + "']").attr('data-login'))){
+				var abc = temp.split(',');
+			} else {
+				var abc = [];
+			}
 
 			loginChooser.addClass('hidden');
 			loginChooser.find('.loginWithButton').addClass('hidden');
@@ -121,7 +126,6 @@
 			});
 			
 			var loginChooser = $('#PopupModifyApp .loginWithChooser');
-			var abc = $(".catalogContainer .catalogApp[idx='" + $(app).attr('webid') + "']").attr('data-login').split(',');
 			
 			popup.find('p.title').html('Modify informations related to <span></span>');
 			if (app.attr('logwith') != 'false'){
@@ -149,7 +153,9 @@
 		
 		
 		
-		/*if ($(app).hasClass('emptyApp')){
+		/*
+		 * 
+		 * if ($(app).hasClass('emptyApp')){
 			popup.find('.disabledInput').each(function(){
 				enableDisabledInput($(this));
 			});
@@ -171,7 +177,13 @@
 		}
 		
 		var loginChooser = $('#PopupModifyApp .loginWithChooser');
-		var abc = $(".catalogContainer .catalogApp[idx='" + $(app).attr('webid') + "']").attr('data-login').split(',');
+		var temp;
+			if((temp = $(".catalogContainer .catalogApp[idx='" + $(app).attr('webid') + "']").attr('data-login'))){
+				var abc = temp.split(',');
+			} else {
+				var abc = [];
+			}
+			
 
 		loginChooser.addClass('hidden');
 		loginChooser.find('.loginWithButton').addClass('hidden');

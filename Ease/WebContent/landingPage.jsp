@@ -60,7 +60,7 @@ pageEncoding="UTF-8"%>
 
 	/* Test */
 	amplitude.getInstance().init("73264447f97c4623fb38d92b9e7eaeea");
-	easeTracker.trackEvent("VisitLandingPage");
+	easeTracker.trackEvent("HomePageVisit");
 </script>
 </head>
 
@@ -113,7 +113,7 @@ pageEncoding="UTF-8"%>
 				<div class="intro-lead-in">
 					<fmt:message key="landing.sub-title" />					
 				</div>
-				<a href="#services" class="btn btn-xl signUpButton">
+				<a href="#services" class="btn btn-xl signUpButton" trackEvent="HomeSignUpButton1">
 					<fmt:message key="landing.signup-button.text" />
 				</a>
 			</div>
@@ -184,7 +184,7 @@ pageEncoding="UTF-8"%>
 		<section class="vp" style="background-color:#eee;">
 			<div clas="container">
 				<div class="row">
-					<a href="#services" class="btn btn-xl signUpButton">
+					<a href="#services" class="btn btn-xl signUpButton" trackEvent="HomeSignUpButton2">
 						<fmt:message key="landing.signup-button.2nd-text"/>
 					</a>
 				</div>
@@ -392,7 +392,7 @@ pageEncoding="UTF-8"%>
 		<section class="vp" style="background-color:white;">
 			<div clas="container">
 				<div class="row">
-					<a href="#services" class="btn btn-xl signUpButton">
+					<a href="#services" class="btn btn-xl signUpButton" trackEvent="HomeSignUpButton3">
 						<fmt:message key="landing.signup-button.3rd-text"/>
 					</a>
 				</div>
@@ -538,6 +538,7 @@ pageEncoding="UTF-8"%>
 				});
 				this.qRoot.find('#1 form').submit(function(e){
 					e.preventDefault();
+					easeTracker.trackEvent("HomePageSignUp1");
 					var emailVal = $(this).find("input[name='email']").val();
 					var name = $(this).find("input[name='name']").val();
 					var loading = $(this).find('.loading');
@@ -619,7 +620,7 @@ pageEncoding="UTF-8"%>
 						alertMessage.css('color', '#24d666');
 						alertMessage.addClass('show');
 						easeTracker.setUserId(email);
-						easeTracker.trackEvent("LandingPageSignUp");
+						easeTracker.trackEvent("HomePageSignUp2");
 						easeTracker.trackEvent("Connect");
 						setTimeout(function() {
 							window.location = "index.jsp";
@@ -674,6 +675,7 @@ pageEncoding="UTF-8"%>
 			};
 			var easeSignUpPopup = new signUpPopup($('#signUpPopup'));
 			$('.signUpButton').click(function(){
+				easeTracker.trackEvent($(this).attr("trackEvent"));
 				easeSignUpPopup.open();
 			});
 		</script>
@@ -682,6 +684,9 @@ pageEncoding="UTF-8"%>
 				if ($('#2').find("input[name='email']").val() != 'null'){
 					easeSignUpPopup.openRegistration();
 				}
+				$("#connexionButton").click(function() {
+					easeTracker.trackEvent("HomePageLogin");
+				});
 			});
 		</script>
 	</body>

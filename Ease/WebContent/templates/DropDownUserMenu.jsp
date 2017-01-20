@@ -43,7 +43,7 @@ String UserName = ((User) (session.getAttribute("user"))).getFirstName();
 
 			if (extensionDiv.length){
 				extId = extensionDiv.attr('extensionId');
-				postHandler.post(
+				/*postHandler.post(
 					'isPrivateExtension',
 					{
 						extensionId : extId
@@ -97,7 +97,7 @@ String UserName = ((User) (session.getAttribute("user"))).getFirstName();
 						$('#personalComputerSetup').closest('p').remove();
 					},
 					'text'
-					);
+					);*/
 			} else {
 				$('#personalComputerSetup').closest('p').remove();
 			}

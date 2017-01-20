@@ -15,7 +15,6 @@ import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 
 /**
@@ -60,7 +59,7 @@ public class EditClassicApp extends HttpServlet {
 			if (appId == null || appId.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Unknown app.");
 			try {
-				App app = user.getApp(Integer.parseInt(appId));
+				App app = user.getDashboardManager().getAppWithID(Integer.parseInt(appId));
 				if (!app.getType().equals("ClassicApp"))
 					throw new GeneralException(ServletManager.Code.ClientError, "This is not a classic app.");
 				infos = ((ClassicApp)app).getSite().getNeededInfos(sm);

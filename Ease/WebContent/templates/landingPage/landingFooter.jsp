@@ -46,7 +46,7 @@
 				</div>
 				<div class="social_links">
 					<div class="link">
-						<a href="https://www.facebook.com/EasePlatform/"  target="_blank"><i class="fa fa-facebook"></i></a>
+						<a href="https://www.facebook.com/YourEaseSpace/"  target="_blank"><i class="fa fa-facebook"></i></a>
 					</div>
 					<div class="link">
 						<a href="https://twitter.com/Ease_app"  target="_blank"><i class="fa fa-twitter"></i></a>
@@ -55,7 +55,7 @@
 						<a href="https://www.linkedin.com/company/ease."  target="_blank"><i class="fa fa-linkedin"></i></a>
 					</div>
 					<div class="link">
-						<a href="https://www.instagram.com/ease_app/"  target="_blank"><i class="fa fa-instagram"></i></a>
+						<a href="https://www.instagram.com/ease.space/"  target="_blank"><i class="fa fa-instagram"></i></a>
 					</div>
 				</div>
 			</div>

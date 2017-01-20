@@ -141,4 +141,36 @@ public class Catalog {
 		}
 		return null;
 	}
+
+	public boolean haveWebsiteNamed(String websiteName) {
+		for (Website site : this.websites) {
+			if (site.getName().equals(websiteName))
+				return true;
+		}
+		return false;
+	}
+	
+	public Website getWebsiteNamed(String websiteName) {
+		for (Website site : this.websites) {
+			if (site.getName().equals(websiteName))
+				return site;
+		}
+		return null;
+	}
+
+	public boolean haveWebsiteWithLoginUrl(String url) {
+		for (Website site : this.websites) {
+			if (site.loginUrlMatch(url))
+				return true;
+		}
+		return false;
+	}
+
+	public Website getWebsiteWithLoginUrl(String url) {
+		for (Website site : this.websites) {
+			if (site.loginUrlMatch(url))
+				return site;
+		}
+		return null;
+	}
 }

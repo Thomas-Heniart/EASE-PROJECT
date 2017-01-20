@@ -3,8 +3,6 @@ package com.Ease.Update;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.servlet.ServletContext;
-
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
@@ -27,7 +25,7 @@ public class UpdateNewPassword extends Update {
 		ResultSet rs = db.get("SELECT * FROM updateNewPassword WHERE update_id = " + update_id + ";");
 		try {
 			rs.next();
-			ClassicApp classicApp = (ClassicApp) user.getAppWithDBid(rs.getString(Data.CLASSIC_APP_ID.ordinal()));
+			ClassicApp classicApp = (ClassicApp) user.getDashboardManager().getAppWithDBid(rs.getString(Data.CLASSIC_APP_ID.ordinal()));
 			String newPassword = rs.getString(Data.NEW_PASSWORD.ordinal());
 			return new UpdateNewPassword(update_id, classicApp, newPassword, idGenerator.getNextId());
 		} catch (SQLException e) {
@@ -52,7 +50,10 @@ public class UpdateNewPassword extends Update {
 		super(db_id, single_id);
 		this.classicApp = classicApp;
 		this.newPassword = newPassword;
-
+	}
+	
+	public void accept(ServletManager sm) throws GeneralException {
+		this.classicApp.getAccount().setEncryptedPassword(newPassword, user, sm);
 	}
 	
 	public void deleteFromDb(DataBaseConnection db) throws GeneralException {

@@ -102,7 +102,7 @@ public class UserEmail {
 		if (this.verified)
 			return false;
 		DataBaseConnection db = sm.getDB();
-		for(App app : this.user.getAppsIDmap().values()) {
+		for(App app : this.user.getDashboardManager().getApps()) {
 			if (app.isClassicApp()) {
 				List<AccountInformation> appInformations = ((ClassicApp) app).getAccount().getAccountInformations();
 				for (AccountInformation accountInformation : appInformations) {

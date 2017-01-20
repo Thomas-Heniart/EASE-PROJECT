@@ -15,7 +15,6 @@ import org.json.simple.JSONArray;
 
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -54,7 +53,7 @@ public class TestWebsites extends HttpServlet {
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		try {
 			sm.needToBeConnected();
-			List<App> apps = user.getApps();
+			List<App> apps = user.getDashboardManager().getApps();
 			JSONArray responseJson = new JSONArray();
 			for (App app : apps) {
 				if (app.isEmpty() != true) {

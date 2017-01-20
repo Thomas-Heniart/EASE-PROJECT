@@ -55,9 +55,7 @@ public class App {
 				infos = AppInformation.loadAppInformation(rs.getString(Data.APP_INFO_ID.ordinal()), db);
 				String groupAppId = rs.getString(Data.GROUP_APP_ID.ordinal());
 				if (groupAppId != null) {
-					System.out.println(groupAppId);
 					groupApp = GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupAppId);
-					System.out.println(groupApp == null);
 				}
 					
 				switch (rs.getString(Data.TYPE.ordinal())) {
@@ -74,6 +72,7 @@ public class App {
 					app.setPosition(apps.size(), sm);
 				}
 				apps.add(app);
+				groupApp = null;
 			}
 			
 			return apps;
