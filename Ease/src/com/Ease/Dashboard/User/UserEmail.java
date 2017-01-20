@@ -99,8 +99,12 @@ public class UserEmail {
 	 */
 	
 	public boolean removeIfNotUsed(ServletManager sm) throws GeneralException {
-		if (this.verified)
+		if (this.verified){
 			return false;
+		}
+		if(user.getEmail().equals(this.email)){
+			return false;
+		}
 		DataBaseConnection db = sm.getDB();
 		for(App app : this.user.getDashboardManager().getApps()) {
 			if (app.isClassicApp()) {
