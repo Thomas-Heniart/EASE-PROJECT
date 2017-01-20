@@ -22,13 +22,14 @@ extension.storage.get("sessionId", function (oldSessionId) {
                         if (xhr.readyState == 4) {
                             var res = xhr.response.split(" ");
                             if (res[0] == "200") {
-                                var indices = res[1].split(",");
+                                var indices = res;
+                                indices.splice(0,1);
                                 var toStore = [];
                                 for(var i=0;i<storedUpdates;i++){
                                     if(!indices.includes(i))
                                         toStore.push(storedUpdates[i]);
                                 }
-                                extension.storage.set("storedUpdates", toStore);
+                                extension.storage.set("storedUpdates", toStore, function(){});
                             }
                         }
                     };

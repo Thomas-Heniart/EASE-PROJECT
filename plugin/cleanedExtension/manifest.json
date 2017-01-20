@@ -1,0 +1,62 @@
+{
+    "manifest_version": 2,
+
+    "name": "Ease New Extension",
+    "version": "1.4.0",
+    "description": "Ease extension, log you in and out",
+
+    "icons": {
+        "128": "images/logo_128.png"
+    },
+
+    "browser_action": {
+        "default_popup": "functionnalities/popup.html",
+        "default_icon": "images/logo_296.png"
+    },
+
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["jquery-3.1.0.js", "tools/listenerFactory.js", "tools/extension_scripts.js"],
+            "run_at": "document_end",
+            "all_frames":true
+    },
+        {
+            "matches": ["<all_urls>"],
+            "exclude_matches": ["https://ease.space/*"],
+            "js": ["contentScript/messages.js"],
+            "run_at": "document_end",
+            "all_frames":true
+    }
+  ],
+
+    "background": {
+        "page": "background/background.html",
+        "persistent": false
+    },
+
+    "permissions": ["tabs", "\u003Call_urls\u003E", "http://*/*", "https://*/*", "webNavigation", "storage", "identity", "identity.email", "https://*/", "http://*/"],
+
+    "web_accessible_resources": ["scrappingTuto/logo.png", "scrappingTuto/facebook.png", "scrappingTuto/linkedin.png", "scrappingTuto/chrome.png"],
+
+    "chrome_url_overrides": {
+        "newtab": "functionnalities/homepage.html"
+    },
+
+    "commands": {
+        "open-ease": {
+            "suggested_key": {
+                "default": "Ctrl+Space",
+                "mac": "Ctrl+Space"
+            },
+            "description": "Open Ease in a new tab."
+        },
+        "logout-ease": {
+            "suggested_key": {
+                "default": "Ctrl+L",
+                "mac": "Ctrl+L"
+            },
+            "description": "Logout from ease and all connected websites."
+        }
+    }
+}
