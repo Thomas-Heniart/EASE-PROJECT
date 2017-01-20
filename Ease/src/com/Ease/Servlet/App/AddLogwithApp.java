@@ -65,7 +65,6 @@ public class AddLogwithApp extends HttpServlet {
 				WebsiteApp logwith = (WebsiteApp) user.getDashboardManager().getAppWithID(Integer.parseInt(logwithId));
 				site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(websiteId));
 				App newApp = LogwithApp.createLogwithApp(profile, profile.getApps().size(), name, site, logwith, sm);
-				user.getDashboardManager().addApp(newApp);
 				profile.addApp(newApp);
 				sm.setResponse(ServletManager.Code.Success,  String.valueOf(newApp.getSingleId()));
 			} catch (NumberFormatException e) {
