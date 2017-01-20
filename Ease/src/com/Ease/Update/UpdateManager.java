@@ -20,7 +20,7 @@ import com.Ease.Utils.ServletManager;
 import com.Ease.Utils.Crypto.RSA;
 
 public class UpdateManager {
-
+	
 	protected List<Update> updates;
 	protected Map<String, Update> updatesDBMap;
 	protected Map<Integer, Update> updatesIDMap;
@@ -32,6 +32,7 @@ public class UpdateManager {
 		for (Update update : updates) {
 			this.addUpdateInMaps(update);
 		}
+		this.user = user;
 	}
 
 	private void addUpdateInMaps(Update newUpdate) {
