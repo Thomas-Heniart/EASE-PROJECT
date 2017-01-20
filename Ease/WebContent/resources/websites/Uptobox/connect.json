@@ -16,6 +16,6 @@
     	]
     },
     "checkAlreadyLogged": [
-    	{"search":"a[href='http://uptobox.com/?op=logout']"}
+    	{"search":"a[href*='uptobox.com/?op=logout']"}
     ]
 }
