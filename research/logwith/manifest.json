@@ -1,0 +1,14 @@
+{
+"name" :"R&D logwith",
+"manifest_version": 2,
+"version" :"1.0",
+"description" :"Le truc du tutoriel",
+"browser_action" :
+	{
+		"popup" :"popup.html"
+	},
+"background": {
+    "scripts": ["jquery-3.1.0.js", "background.js"]
+  },
+"permissions": ["tabs","\u003Call_urls\u003E","http://*/*", "https://*/*","webNavigation","storage","webRequest"],
+}
