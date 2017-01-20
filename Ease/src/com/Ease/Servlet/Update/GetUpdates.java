@@ -11,23 +11,25 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
 import com.Ease.Dashboard.User.User;
-import com.Ease.Dashboard.User.UserEmail;
 import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class CreateUpdate
+ * Servlet implementation class GetUpdates
  */
-@WebServlet("/CreateUpdate")
-public class CreateUpdate extends HttpServlet {
+@WebServlet("/GetUpdates")
+public class GetUpdates extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public CreateUpdate() {
+    public GetUpdates() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -47,20 +49,15 @@ public class CreateUpdate extends HttpServlet {
 		HttpSession session = request.getSession();
 		User user = (User) (session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
-
-		String sessionId = sm.getServletParam("sessionId", true);
-		String jsonUpdate = sm.getServletParam("updates", true);
 		
 		try {
-			Map<String, User> sessionIdUserMap = (Map<String, User>) sm.getContextAttr("sessionIdUserMap");
-			if ((user = sessionIdUserMap.get(sessionId)) == null) {
-				sm.setResponse(ServletManager.Code.Success, "1 Please stock update.");
-			} else {
-				user.getUpdateManager().addUpdateFromJsonConnected(jsonUpdate, sm);
-				sm.setResponse(ServletManager.Code.Success, "2 Update sended.");
-			}
+			sm.needToBeConnected();
+			JSONArray resp = user.getUpdateManager().getUpdatesJson();
+			sm.setResponse(ServletManager.Code.Success, resp.toJSONString());
 		} catch (GeneralException e) {
 			sm.setResponse(e);
+		} catch (NumberFormatException e) {
+			sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");
 		} catch (Exception e) {
 			sm.setResponse(e);
 		}

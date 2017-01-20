@@ -458,6 +458,14 @@ public class User {
 		}
 		return unverifiedEmails;
 	}
+	
+	public boolean haveThisEmail(String email) {
+		for (Map.Entry<String, UserEmail> entry : emails.entrySet()) {
+			if (entry.getValue().getEmail() == email)
+				return true;
+		}
+		return false;
+	}
 
 	public void putAllSockets(Map<String, WebsocketSession> sessionWebsockets) throws GeneralException {
 		if (ServletManager.debug && sessionWebsockets == null)

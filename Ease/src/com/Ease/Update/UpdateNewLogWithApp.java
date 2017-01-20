@@ -5,9 +5,12 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.simple.JSONObject;
+
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
@@ -65,9 +68,20 @@ public class UpdateNewLogWithApp extends UpdateNewAccount {
 		super.deleteFromDb(db);
 		db.commitTransaction(transaction);
 	}
+		
+	public JSONObject getJson() throws GeneralException {
+		JSONObject json = new JSONObject();
+		json.put("type", "newLogWithApp");
+		json.put("singleId", this.single_id);
+		json.put("login", ((ClassicApp)this.logWithApp).getAccount().getInformationNamed("login"));
+		json.put("websiteImg", this.website.getFolder() + "logo.png");
+		json.put("logwithImg", logWithApp.getSite().getFolder() + "logo.png");
+		json.put("logWithName", logWithApp.getName());
+		json.put("websiteId", this.website.getSingleId());
+		return json;
+	}
 	
-	public void accept(Profile profile, int position, ServletManager sm) throws GeneralException {
-		App newApp = LogwithApp.createLogwithApp(profile, position, this.website.getName(), this.website, this.logWithApp, sm);
-		this.user.getDashboardManager().addApp(newApp);
+	public WebsiteApp getLogWithApp() {
+		return logWithApp;
 	}
 }

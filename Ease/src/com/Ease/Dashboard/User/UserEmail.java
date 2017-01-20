@@ -129,7 +129,11 @@ public class UserEmail {
 			DataBaseConnection db = sm.getDB();
 			int transaction = db.startTransaction();
 			db.set("INSERT INTO usersEmailsPending VALUES(NULL, " + this.db_id + ", '" + code + "')");
-			mailToSend.sendVerificationEmail(this.email, user.getFirstName(), code);
+			if (this.email.equals(user.getEmail())) {
+				mailToSend.sendVerificationMainEmail(this.email, code);
+			} else {
+				mailToSend.sendVerificationEmail(this.email, user.getFirstName(), code);
+			}
 			db.commitTransaction(transaction);
 		} catch (MessagingException e) {
 			throw new GeneralException(ServletManager.Code.InternError, "Email not sended.");
