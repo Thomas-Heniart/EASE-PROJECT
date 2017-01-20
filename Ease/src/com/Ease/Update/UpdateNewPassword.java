@@ -3,6 +3,8 @@ package com.Ease.Update;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.json.simple.JSONObject;
+
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
@@ -61,6 +63,16 @@ public class UpdateNewPassword extends Update {
 		db.set("DELETE FROM updateNewPassword WHERE account_id = " + this.db_id + ";");
 		super.deleteFromDb(db);
 		db.commitTransaction(transaction);
+	}
+	
+	public JSONObject getJson() throws GeneralException {
+		JSONObject json = new JSONObject();
+		json.put("type", "newPassword");
+		json.put("singleId", this.single_id);
+		json.put("login", classicApp.getAccount().getInformationNamed("login"));
+		json.put("passwordLength", newPassword.length());
+		json.put("websiteImg", classicApp.getSite().getFolder() + "logo.png");
+		return json;
 	}
 
 }

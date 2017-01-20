@@ -61,26 +61,6 @@ public class Update {
 		return db.set("INSERT INTO updates values (null, " + user.getDBid() + ", '" + type + "');").toString();
 	}
 	
-	public static Update createUpdateFromJSON(User user, JSONObject json, ServletManager sm) throws GeneralException {
-		String type = (String) json.get("type");
-		switch(type) {
-			case "updateNewClassicApp":
-				
-				break;
-				
-			case "updateNewLogWithApp":
-				
-				break;
-				
-			case "updateNewPassword":
-				
-				break;
-				
-			default:
-				throw new GeneralException(ServletManager.Code.ClientError, "Invalid json for update");
-		}
-	}
-	
 	protected String db_id;
 	protected String type;
 	protected int single_id;
@@ -108,5 +88,9 @@ public class Update {
 	public void reject(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		db.set("INSERT INTO updatesRemoved values (null, " + this.db_id + ");");
+	}
+	
+	public JSONObject getJson() throws GeneralException {
+		throw new GeneralException(ServletManager.Code.InternError, "GetJson on an update... dufuk?");
 	}
 }

@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -58,7 +59,7 @@ public class UpdateManager {
 		return this.updates;
 	}
 
-	public void addUpdateFromJson(String jsonString, ServletManager sm) throws GeneralException {
+	public boolean addUpdateFromJson(String jsonString, ServletManager sm) throws GeneralException {
 		JSONParser parser = new JSONParser();
 		JSONObject json;
 		try {
@@ -74,7 +75,7 @@ public class UpdateManager {
 		case "classic":
 			website = this.findWebsiteInCatalogWithLoginUrl(urlOrName, sm);
 			if (website == null)
-				return;
+				return false;
 			ClassicApp existingApp = this.findClassicAppWithLoginAndWebsite(login, website);
 			String password = (String) json.get("password");
 			String keyDate = (String) json.get("keyDate");
@@ -82,11 +83,11 @@ public class UpdateManager {
 			password = this.user.encrypt(password);
 			if (existingApp == null) {
 				if (this.checkRemovedUpdates(website, login, sm))
-					return;
+					return true;
 				this.addUpdate(UpdateNewClassicApp.createUpdateNewClassicApp(this.user, website, login, password, sm));
 			} else {
 				if (this.checkRemovedUpdates(existingApp, password, sm))
-					return;
+					return true;
 				this.addUpdate(UpdateNewPassword.createUpdateNewPassword(this.user, existingApp, password, sm));
 			}
 			break;
@@ -96,18 +97,19 @@ public class UpdateManager {
 			Website logwithAppWebsite = this.findWebsiteInCatalogWithName(logWithAppName, sm);
 			website = this.findWebsiteInCatalogWithName(urlOrName, sm);
 			if (website == null)
-				return;
+				return false;
 			WebsiteApp logwithApp = (WebsiteApp) this.findClassicAppWithLoginAndWebsite(login, logwithAppWebsite);
 			if (logwithApp == null)
-				return;
+				return false;
 			if (this.checkRemovedUpdates(website, logwithApp, login, sm))
-				return;
+				return true;
 			this.addUpdate(UpdateNewLogWithApp.createUpdateNewLogWithApp(user, website, logwithApp, sm));
 			break;
 
 		default:
 			throw new GeneralException(ServletManager.Code.ClientError, "This update type does not exist");
 		}
+		return true;
 	}
 
 	/* Logwith check */
@@ -194,5 +196,13 @@ public class UpdateManager {
 		this.updatesDBMap.remove(update.getDbId());
 		this.updatesIDMap.remove(single_id);
 		this.updates.remove(update);
+	}
+	
+	public JSONArray getUpdatesJson() throws GeneralException {
+		JSONArray array = new JSONArray();
+		for (Update update: updates) {
+			array.add(update.getJson());
+		}
+		return array;
 	}
 }
