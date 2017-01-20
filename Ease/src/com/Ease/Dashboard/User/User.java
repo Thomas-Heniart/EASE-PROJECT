@@ -22,6 +22,7 @@ import org.json.simple.parser.ParseException;
 import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Context.Group.Infrastructure;
+import com.Ease.Dashboard.DashboardManager;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.AccountInformation;
@@ -115,14 +116,14 @@ public class User {
 			SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, sm);
 			User newUser = new User(db_id, firstName, lastName, email, keys, options, isAdmin, sawGroupProfile,
 					sessionSave, status);
+			newUser.initializeDashboardManager(sm);
 			newUser.loadExtensionKeys(sm);
-			newUser.loadProfiles(sm);
 			newUser.loadEmails(sm);
-			for (Map.Entry<String, WebsiteApp> entry : newUser.getWebsiteAppsDBmap().entrySet()) {
-				if (entry.getValue().getType().equals("LogwithApp")) {
-					LogwithApp logwithApp = (LogwithApp) entry.getValue();
-					App app = newUser.getWebsiteAppsDBmap().get(logwithApp.getLogwithDBid());
-					logwithApp.rempLogwith((WebsiteApp) app);
+			for (App app : newUser.getDashboardManager().getApps()) {
+				if (app.getType().equals("LogwithApp")) {
+					LogwithApp logwithApp = (LogwithApp) app;
+					App websiteApp = newUser.getDashboardManager().getWebsiteAppWithDBid(logwithApp.getLogwithDBid());
+					logwithApp.rempLogwith((WebsiteApp) websiteApp);
 				}
 			}
 			ResultSet rs2 = db.get("SELECT group_id FROM groupsAndUsersMap WHERE user_id=" + newUser.getDBid() + ";");
@@ -161,8 +162,8 @@ public class User {
 				+ ");").toString();
 		SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, sm);
 		User newUser = new User(db_id, firstName, lastName, email, keys, opt, false, false, sessionSave, status);
-		newUser.getProfileColumns().get(0).add(Profile.createPersonnalProfile(newUser, 0, 0, "Side", "#000000", sm));
-		newUser.getProfileColumns().get(1).add(Profile.createPersonnalProfile(newUser, 1, 0, "Me", "#373B60", sm));
+		Profile.createPersonnalProfiles(newUser, sm);
+		newUser.initializeDashboardManager(sm);
 		((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
 		for (Group group : groups) {
 			group.addUser(email, sm);
@@ -183,10 +184,6 @@ public class User {
 	protected String email;
 	protected Keys keys;
 	protected Option opt;
-	protected List<List<Profile>> profile_columns;
-	protected Map<String, App> appsDBmap;
-	protected Map<String, WebsiteApp> websiteAppsDBmap;
-	protected Map<Integer, App> appsIDmap;
 	protected int max_single_id;
 	protected Map<String, UserEmail> emails;
 	protected Map<String, WebsocketSession> websockets;
@@ -198,6 +195,7 @@ public class User {
 	protected UpdateManager updateManager;
 
 	protected SessionSave sessionSave;
+	protected DashboardManager dashboardManager;
 
 	public User(String db_id, String first_name, String last_name, String email, Keys keys, Option opt, boolean isAdmin,
 			boolean sawGroupProfile, SessionSave sessionSave, Status status) {
@@ -208,19 +206,12 @@ public class User {
 		this.keys = keys;
 		this.opt = opt;
 		this.emails = new HashMap<String, UserEmail>();
-		this.profile_columns = new LinkedList<List<Profile>>();
-		for (int i = 0; i < 5; ++i) {
-			this.profile_columns.add(new LinkedList<Profile>());
-		}
 		this.max_single_id = 0;
 		this.emails = new HashMap<String, UserEmail>();
 		this.websockets = new HashMap<String, WebsocketSession>();
 		this.groups = new LinkedList<Group>();
 		this.isAdmin = isAdmin;
 		this.sessionSave = sessionSave;
-		this.appsDBmap = new HashMap<String, App>();
-		this.websiteAppsDBmap = new HashMap<String, WebsiteApp>();
-		this.appsIDmap = new HashMap<Integer, App>();
 		this.status = status;
 		this.sawGroupProfile = sawGroupProfile;
 	}
@@ -232,6 +223,10 @@ public class User {
 	
 	public void initializeUpdateManager(ServletManager sm) throws GeneralException {
 		this.updateManager = new UpdateManager(sm, this);
+	}
+	
+	public void initializeDashboardManager(ServletManager sm) throws GeneralException {
+		this.dashboardManager = new DashboardManager(this, sm);
 	}
 	
 	/*
@@ -276,16 +271,20 @@ public class User {
 		return opt;
 	}
 
+	public UpdateManager getUpdateManager() {
+		return this.updateManager;
+	}
+	
+	public DashboardManager getDashboardManager() {
+		return this.dashboardManager;
+	}
+	
 	/*
 	 * public Status getStatus() { return status; }
 	 */
 
 	public Map<String, UserEmail> getUserEmails() {
 		return emails;
-	}
-
-	public List<List<Profile>> getProfileColumns() {
-		return this.profile_columns;
 	}
 
 	public List<Group> getGroups() {
@@ -304,18 +303,6 @@ public class User {
 		return sessionSave;
 	}
 
-	public Map<String, App> getAppsDBmap() {
-		return appsDBmap;
-	}
-
-	public Map<String, WebsiteApp> getWebsiteAppsDBmap() {
-		return websiteAppsDBmap;
-	}
-
-	public Map<Integer, App> getAppsIDmap() {
-		return appsIDmap;
-	}
-
 	/*
 	 * 
 	 * Utils
@@ -327,144 +314,17 @@ public class User {
 		return max_single_id;
 	}
 
-	public void loadProfiles(ServletManager sm) throws GeneralException {
-		this.profile_columns = Profile.loadProfiles(this, sm);
-	}
-
 	public void removeEmail(UserEmail email) {
 		this.emails.remove(email);
 	}
 
-	public void removeProfile(int single_id, String password, ServletManager sm) throws GeneralException {
-		Iterator<List<Profile>> it = this.profile_columns.iterator();
-		while (it.hasNext()) {
-			List<Profile> column = it.next();
-			Iterator<Profile> it2 = column.iterator();
-			while (it2.hasNext()) {
-				Profile profile = it2.next();
-				if (profile.getSingleId() == single_id) {
-					DataBaseConnection db = sm.getDB();
-					int transaction = db.startTransaction();
-					if (profile.getApps().size() > 0) {
-						if (password == null)
-							throw new GeneralException(ServletManager.Code.ClientWarning,
-									"Password confirmation needed.");
-						this.keys.isGoodPassword(password);
-					}
-					profile.removeFromDB(sm);
-					column.remove(profile);
-					this.updateProfilesIndex(sm);
-					db.commitTransaction(transaction);
-					return;
-				}
-			}
-		}
-		throw new GeneralException(ServletManager.Code.InternError, "This profile dosen't exist.");
-	}
-
-	public void updateProfilesIndex(ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		int transaction = db.startTransaction();
-		for (int i = 0; i < profile_columns.size(); ++i) {
-			for (int j = 0; j < profile_columns.get(i).size(); ++j) {
-				if (profile_columns.get(i).get(j).getPositionIdx() != j) {
-					profile_columns.get(i).get(j).setPositionIdx(j, sm);
-				}
-				if (profile_columns.get(i).get(j).getColumnIdx() != i) {
-					profile_columns.get(i).get(j).setColumnIdx(i, sm);
-				}
-			}
-		}
-		db.commitTransaction(transaction);
-	}
-
-	public Profile getProfile(int single_id) throws GeneralException {
-		for (List<Profile> column : this.profile_columns) {
-			for (Profile profile : column) {
-				if (profile.getSingleId() == single_id)
-					return profile;
-			}
-		}
-		throw new GeneralException(ServletManager.Code.ClientError, "This profile's single_id dosen't exist.");
-	}
-
-	public List<Profile> getProfilesList() {
-		List<Profile> profiles = new LinkedList<Profile>();
-		for (int i = 1; i < this.profile_columns.size(); i++) {
-			List<Profile> column = this.profile_columns.get(i);
-			for (Profile profile : column) {
-				if (profile != null)
-					profiles.add(profile);
-			}
-		}
-		return profiles;
-	}
-
-	public App getApp(int single_id) throws GeneralException {
-		for (List<Profile> column : this.profile_columns) {
-			for (Profile profile : column) {
-				for (App app : profile.getApps()) {
-					if (app.getSingleId() == single_id)
-						return app;
-				}
-			}
-		}
-		throw new GeneralException(ServletManager.Code.ClientError, "This app's single_id dosen't exist.");
-	}
-
-	public Profile getProfileFromApp(int single_id) throws GeneralException {
-		for (List<Profile> column : this.profile_columns) {
-			for (Profile profile : column) {
-				for (App app : profile.getApps()) {
-					if (app.getSingleId() == single_id)
-						return profile;
-				}
-			}
-		}
-		throw new GeneralException(ServletManager.Code.ClientError, "This app's single_id dosen't exist.");
-	}
-
-	public void replaceApp(App app) throws GeneralException {
-		app.getProfile().getApps().set(app.getPosition(), app);
-	}
-
-	public App getAppWithDBid(String DBid) throws GeneralException {
-		for (List<Profile> column : this.profile_columns) {
-			for (Profile profile : column) {
-				for (App app : profile.getApps()) {
-					if (app.getDBid() == DBid)
-						return app;
-				}
-			}
-		}
-		throw new GeneralException(ServletManager.Code.ClientError, "This app's single_id dosen't exist.");
-	}
-
-	
-	/* For sancho le robot */
-	public List<App> getApps() {
-		List<App> res = new LinkedList<App>();
-		for (List<Profile> column : this.profile_columns) {
-			for (Profile profile : column) {
-				for (App app : profile.getApps()) {
-					res.add(app);
-				}
-			}
-		}
-		return res;
-	}
-	
 	public void removeDefinitly(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		for (Map.Entry<String, UserEmail> entry : emails.entrySet()) {
 			entry.getValue().removeFromDB(sm);
 		}
-		for (List<Profile> column : this.profile_columns) {
-			for (Profile profile : column) {
-				profile.removeFromDB(sm);
-			}
-		}
+		this.dashboardManager.removeFromDB(sm);
 		this.removeFromDB(sm);
 		this.keys.removeFromDB(sm);
 		this.opt.removeFromDB(sm);
@@ -496,23 +356,6 @@ public class User {
 		this.websockets.put(wSession.getSessionId(), wSession);
 	}
 
-	public int getMostEmptyProfileColumn() {
-		int col = 0;
-		int minSize = -1;
-		for (List<Profile> column : this.profile_columns) {
-			int colSize = 0;
-			if (this.profile_columns.indexOf(column) != 0) {
-				for (Profile profile : column) {
-					colSize += profile.getSize();
-				}
-				if (minSize == -1 || colSize < minSize) {
-					minSize = colSize;
-					col = this.profile_columns.indexOf(column);
-				}
-			}
-		}
-		return col;
-	}
 
 	public void deconnect(ServletManager sm) {
 		@SuppressWarnings("unchecked")
@@ -613,82 +456,6 @@ public class User {
 				unverifiedEmails.add(entry.getValue().getEmail());
 		}
 		return unverifiedEmails;
-	}
-
-	public Profile addProfile(String name, String color, ServletManager sm) throws GeneralException {
-		int column = this.getMostEmptyProfileColumn();
-		Profile newProfile = Profile.createPersonnalProfile(this, column, this.getProfileColumns().get(column).size(),
-				name, color, sm);
-		this.profile_columns.get(column).add(newProfile);
-		return newProfile;
-	}
-
-	public void removeApp(int single_id, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		int transaction = db.startTransaction();
-		App app = this.getApp(single_id);
-		Profile profile = app.getProfile();
-		profile.getApps().remove(app);
-		app.removeFromDB(sm);
-		profile.updateAppsIndex(sm);
-		if (app.getType().equals("ClassicApp")) {
-			for (AccountInformation info : ((ClassicApp) app).getAccount().getAccountInformations()) {
-				if (Regex.isEmail(info.getInformationValue()) == true) {
-					String email = info.getInformationValue();
-					if (this.emails.get(email) != null && this.emails.get(email).removeIfNotUsed(sm))
-						this.emails.remove(email);
-				}
-			}
-
-		}
-		db.commitTransaction(transaction);
-	}
-
-	public void moveProfile(int profileId, int columnIdx, int position, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		int transaction = db.startTransaction();
-		Profile profile = this.getProfile(profileId);
-		if (columnIdx < 1 || columnIdx >= Profile.MAX_COLUMN)
-			throw new GeneralException(ServletManager.Code.ClientError, "Wrong columnIdx.");
-		if (position < 0 || position > this.profile_columns.get(columnIdx).size())
-			throw new GeneralException(ServletManager.Code.ClientError, "Wrong position.");
-		if (columnIdx == profile.getColumnIdx() && position > profile.getPositionIdx()) {
-			position--;
-		}
-		this.profile_columns.get(profile.getColumnIdx()).remove(profile);
-		this.profile_columns.get(columnIdx).add(position, profile);
-		this.updateProfilesIndex(sm);
-		db.commitTransaction(transaction);
-	}
-
-	public void moveApp(int appId, int profileIdDest, int positionDest, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		int transaction = db.startTransaction();
-		App app = this.getApp(appId);
-		Profile profileDest = this.getProfile(profileIdDest);
-		if (positionDest < 0 || positionDest > profileDest.getApps().size())
-			throw new GeneralException(ServletManager.Code.ClientError, "PositionDest fucked.");
-		if (profileDest == app.getProfile()) {
-			profileDest.getApps().remove(app);
-			profileDest.getApps().add(positionDest, app);
-			profileDest.updateAppsIndex(sm);
-		} else {
-			if (profileDest.getGroupProfile() != null
-					&& (profileDest.getGroupProfile().isCommon() == true || !profileDest.getGroupProfile().getPerms()
-							.havePermission(ProfilePermissions.Perm.ADDAPP.ordinal())))
-				throw new GeneralException(ServletManager.Code.ClientWarning,
-						"You don't have the permission to add app in this profile.");
-			Profile profileSrc = app.getProfile();
-			if (profileSrc.getGroupProfile() != null && (profileSrc.getGroupProfile().isCommon() == false || !profileSrc
-					.getGroupProfile().getPerms().havePermission(ProfilePermissions.Perm.MOVE_APP_OUTSIDE.ordinal())))
-				throw new GeneralException(ServletManager.Code.ClientWarning,
-						"You don't have the permission to move app out of this profile.");
-			profileSrc.getApps().remove(app);
-			profileSrc.updateAppsIndex(sm);
-			profileDest.getApps().add(positionDest, app);
-			profileDest.updateAppsIndex(sm);
-		}
-		db.commitTransaction(transaction);
 	}
 
 	public void putAllSockets(Map<String, WebsocketSession> sessionWebsockets) throws GeneralException {
@@ -798,15 +565,5 @@ public class User {
 	
 	public ExtensionKeys getExtensionKeys() {
 		return extensionKeys;
-	}
-	
-	public void createUpdate(String jsonUpdate, ServletManager sm) throws GeneralException {
-		JSONParser parser = new JSONParser();
-		try {
-			JSONObject json = (JSONObject) parser.parse(jsonUpdate);
-			this.updateManager.addUpdateFromJson(this, json, sm);
-		} catch (ParseException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
 	}
 }

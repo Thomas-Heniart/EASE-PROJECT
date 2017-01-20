@@ -1,112 +1,50 @@
-var user = "anonymous";
-
-var updatesToDelete = {};
-var directUpdateToDelete = {};
-
-document.addEventListener("askForExtensionId", function(event){
-    extension.storage.get("extensionId", function(extensionId){
-        document.dispatchEvent(new CustomEvent("extensionId", {id:extensionId}));
-    });
-});
-
-var cookies = document.cookie.split(';');
-var connected = false;
-for(var i=0; i<cookies.length;i++){
-    if(cookies[i][0]=" "){
-        cookies[i] = cookies[i].substring(1, cookies[i].length-1);
+extension.storage.get("sessionId", function (oldSessionId) {
+    var newSessionId = "";
+    var cookies = document.cookie.split(';');
+    for (var i = 0; i < cookies.length; i++) {
+        if (cookies[i][0] = " ") {
+            cookies[i] = cookies[i].substring(1, cookies[i].length - 1);
+        }
+        if (cookies[i].indexOf("sId") == 0) {
+            newSessionId = cookies[i].substring(cookies[i].indexOf("=") + 1, cookies[i].length - 1);
+            break;
+        }
     }
-    if(cookies[i].indexOf("sId")==0){
-        extension.storage.set("sessionId", cookies[i].substring(cookies[i].indexOf("=")+1, cookies[i].length-1), function(){});
-        connected = true;
-    }
-}
-if(!connected){
-    extension.storage.set("sessionId", "", function(){});
-}
 
-document.addEventListener("NewEaseUser", function(event){
-    user = event.detail;
-    if(user=="anonymous"){
-        extension.runtime.sendMessage("Disconnected",{}, function(){});
-    }
-    extension.runtime.sendMessage("ChangeEaseUser",{user:event.detail},function(res){});
-}, false);
-
-document.addEventListener("GetUpdates", function(event){
-    var updatesToSend = [];
-    extension.storage.get("allConnections", function(res){
-        updatesToDelete["anonymous"]=[];
-        updatesToDelete[user]=[];
-        event.detail.forEach(function (email) {
-            if(res["anonymous"][email]){
-                for(var website in res["anonymous"][email]){
-                    if(res["anonymous"][email][website].logWith)
-                        var toSend = {user:email, website:website, logWith:res[email][website].logWith};
-                    else  
-                        var toSend = {user:email, website:website, password:res[email][website].password, keyDate:res[email][website].keyDate};
-                    updatesToSend.push(toSend);
-                    updatesToDelete["anonymous"].push(toSend);
-                }
+    extension.storage.set("sessionId", newSessionId, function () {});
+    if (newSessionId != "" && newSessionId == oldSessionId) {
+        extension.storage.get("storedUpdates", function (storedUpdates) {
+            if (storedUpdates != undefined && storedUpdates.length > 0) {
+                extension.storage.get("extensionId", function (eId) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "https://ease.space/FiterUpdates", false);
+                    xhr.onreadystatechange = function (aEvt) {
+                        if (xhr.readyState == 4) {
+                            var res = xhr.response.split(" ");
+                            if (res[0] == "200") {
+                                var indices = res[1].split(",");
+                                var toStore = [];
+                                for(var i=0;i<storedUpdates;i++){
+                                    if(!indices.includes(i))
+                                        toStore.push(storedUpdates[i]);
+                                }
+                                extension.storage.set("storedUpdates", toStore);
+                            }
+                        }
+                    };
+                    xhr.send("sessionId=" + newSessionId + "&extensionId=" + eId + "&updates=" + JSON.stringify(storedUpdates));
+                });
             }
         });
-        for(var email in res[user]){
-            for(var website in res[user][email]){
-                if(res[user][email][website].logWith)
-                    var toSend = {user:email, website:website, logWith:res[email][website].logWith};
-                else  
-                    var toSend = {user:email, website:website, password:res[email][website].password,  keyDate:res[email][website].keyDate};
-                updatesToSend.push(toSend);
-                updatesToDelete[user].push(toSend);
-            }
-        }
-        document.dispatchEvent(new CustomEvent("Updates", {"detail":updatesToSend}));
-    });
-});
-
-document.addEventListener("DeleteUpdates", function(event){
-    extension.storage.get("allConnections", function(res){
-        if(updatesToDelete["anonymous"]){
-            for(var update in updatesToDelete["anonymous"]){
-                if(res["anonymous"][update.user] && res["anonymous"][update.user][update.website]){
-                    delete res["anonymous"][update.user][update.website];
-                    if(jQuery.isEmptyObject(res["anonymous"][update.user])){
-                        delete res["anonymous"][update.user];
-                    }
-                }
-            }
-        }
-        if(user != "anonymous" && updatesToDelete[user]){
-            for(var update in updatesToDelete[user]){
-                if(res[user][update.user] && res[user][update.user][update.website]){
-                    delete res[user][update.user][update.website];
-                    if(jQuery.isEmptyObject(res[user][update.user])){
-                        delete res[user][update.user];
-                    }
-                }
-            }
-        }
-        extension.storage.set("allConnections", res, function(){});
-    });
+    }
 });
 
 
-extension.runtime.onMessage("SendUpdate", function logoutHandler(message, sendResponse){
-    directUpdateToDelete = message;
-    document.dispatchEvent(new CustomEvent("UserUpdate", {"detail":message}));
-});
 
-document.addEventListener("DeleteSingleUpdate", function(event){
-    extension.storage.get("allConnections", function(res){
-        if(user != "anonymous" && directUpdateToDelete[user]){
-            for(var update in directUpdateToDelete[user]){
-                if(res[user][update.user] && res[user][update.user][update.website]){
-                    delete res[user][update.user][update.website];
-                    if(jQuery.isEmptyObject(res[user][update.user])){
-                        delete res[user][update.user];
-                    }
-                }
-            }
-        }
-        extension.storage.set("allConnections", res, function(){});
+document.addEventListener("askForExtensionId", function (event) {
+    extension.storage.get("extensionId", function (extensionId) {
+        document.dispatchEvent(new CustomEvent("extensionId", {
+            id: extensionId
+        }));
     });
 });

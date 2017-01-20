@@ -62,7 +62,7 @@ pageEncoding="UTF-8"%>
 
 	/* Test */
 	amplitude.getInstance().init("73264447f97c4623fb38d92b9e7eaeea");
-	easeTracker.trackEvent("VisitTeamPage");
+	easeTracker.trackEvent("TeamPageVisit");
 </script>
 </head>
 

@@ -17,14 +17,23 @@ var tracker = function(){
 		var identify = new amplitude.Identify().set('dailyPhoto', checked);
 		 amplitude.getInstance().identify(identify);
 	}
-	this.increaseAppCounter = function () {
-		var identify = new amplitude.Identify().add('appCounter', 1);
+	this.increaseAppCounter = function (count) {
+		var identify = new amplitude.Identify().add('appCounter', (count == null ? 1 : count));
+		amplitude.getInstance().identify(identify);
+	}
+	this.decreaseAppCounter = function (count) {
+		var identify = new amplitude.Identify().add('appCounter', (count == null ? -1 : count));
 		amplitude.getInstance().identify(identify);
 	}
 	
-	this.decreaseAppCounter = function () {
-		var identify = new amplitude.Identify().add('appCounter', -1);
+	this.setUserProperty = function(property, value) {
+		var identify = new amplitude.Identify().add(property, value);
 		amplitude.getInstance().identify(identify);
+	}
+	
+	this.logout = function() {
+		amplitude.getInstance().setUserId(null);
+		//amplitude.getInstance().regenerateDeviceId();
 	}
 }
 

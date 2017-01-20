@@ -1,12 +1,12 @@
 {
     "name":"9gag",
     "lastLogin":"",
-    "home":"https://9gag.com/login",
+    "home":"https://9gag.com",
     "connect":{
         "todo":[
           	{"action":"fill", "what":"login", "search":"#jsid-login-email-name", "grave":true},
             {"action":"fill", "what":"password", "search":"#login-email-password", "grave":true},
-            {"action":"click", "search":"form#login-email input[onclick *='LoginEmail']"}
+            {"action":"submit", "search":"form#login-email"}
         ]
     },
     "Facebook":{
@@ -18,7 +18,7 @@
         "todo":[
             {"action":"goto", "url":"https://9gag.com/logout"},
             {"action":"waitfor", "search":"a[href*='login']"},
-            {"action":"goto", "url":"https://9gag.com/login"}
+            {"action":"goto", "url":"https://9gag.com/"}
          ]
     },
     "Google":{

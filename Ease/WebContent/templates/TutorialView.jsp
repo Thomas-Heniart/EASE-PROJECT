@@ -374,7 +374,7 @@
 				<form action="addClassicApp" method="POST">
 					<div class="row text-center">
 						<input id="name" type="text" name="name" placeholder="Name" />
-						<input id="profileId" type="hidden" name="profileId" value="${user.getProfilesList().get(0).getSingleId() }"/>
+						<input id="profileId" type="hidden" name="profileId" value="${dashboard.getProfilesList().get(0).getSingleId() }"/>
 					</div>
 					<div class="row text-center lineBehind">
 						<p class="post-title">How do you access your <span>Facebook</span> account ?</p>

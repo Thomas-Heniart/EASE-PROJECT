@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
@@ -60,10 +61,12 @@ public class AddLogwithApp extends HttpServlet {
 			if (name == null || name.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
 			try {
-				Profile profile = user.getProfile(Integer.parseInt(profileId));
-				App logwith = user.getApp(Integer.parseInt(logwithId));
+				Profile profile = user.getDashboardManager().getProfile(Integer.parseInt(profileId));
+				WebsiteApp logwith = (WebsiteApp) user.getDashboardManager().getAppWithID(Integer.parseInt(logwithId));
 				site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(websiteId));
-				LogwithApp newApp = profile.addLogwithApp(name, site, logwith, sm);
+				App newApp = LogwithApp.createLogwithApp(profile, profile.getApps().size(), name, site, logwith, sm);
+				user.getDashboardManager().addApp(newApp);
+				profile.addApp(newApp);
 				sm.setResponse(ServletManager.Code.Success,  String.valueOf(newApp.getSingleId()));
 			} catch (NumberFormatException e) {
 				sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");

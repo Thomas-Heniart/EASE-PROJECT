@@ -4,7 +4,7 @@
     "home":"https://www.glassdoor.com",
     "connect":{
         "todo":[
-          {"action":"click", "search":"span.signin"},
+          {"action":"clickona", "search":"a.sign-in"},
           {"action":"waitfor", "search":"#signInUsername"},
           {"action":"fill", "what":"login", "search":"#signInUsername"},
           {"action":"fill", "what":"password", "search":"#signInPassword"}
@@ -13,25 +13,25 @@
     },
     "Facebook":{
     	"todo":[
-        {"action":"click", "search":"span.signin"},
+        {"action":"clickona", "search":"a.sign-in"},
         {"action":"waitfor", "search":"#signInUsername"},
         {"action":"click", "search":"span.fbSigninBtnLink"},
     	]
     },
     "Google":{
     	"todo":[
-        {"action":"click", "search":"span.signin"},
+        {"action":"clickona", "search":"span.signin"},
         {"action":"waitfor", "search":"#signInUsername"},
         {"action":"click", "search":"#LoginModule-GPlusBtnSignIn"},
     	]
     },
-    
+
     "logout":{
         "todo":[
-            {"action":"aclick", "search":"a[href*='logout']"}
+            {"action":"submit", "search":"form[action*='logout']"}
           ]
     },
     "checkAlreadyLogged":[
-        {"search":"a[href*='logout']"}
+        {"search":"form[action*='logout']"}
     ]
 }

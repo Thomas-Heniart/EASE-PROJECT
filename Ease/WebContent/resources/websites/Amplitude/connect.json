@@ -1,0 +1,20 @@
+{
+    "name":"Amplitude",
+    "lastlogin":"",
+    "home":"https://analytics.amplitude.com/login",
+    "connect": {
+    	"todo": [
+    		{"action":"fill", "what":"login","search":"#login-email", "grave":"true"},
+    		{"action":"fill", "what":"password","search":"#login-password", "grave":"true"},
+    		{"action":"click", "search":"form.login-form button[type='submit']"}
+    	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"goto", "url":"https://analytics.amplitude.com/logout"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"div[class*='AccountMenuButton__container']"}
+    ]
+}

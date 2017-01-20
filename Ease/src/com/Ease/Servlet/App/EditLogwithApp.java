@@ -57,10 +57,10 @@ public class EditLogwithApp extends HttpServlet {
 			if (appId == null || appId.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Unknown app.");
 			try {
-				App app = user.getApp(Integer.parseInt(appId));
+				App app = user.getDashboardManager().getAppWithID(Integer.parseInt(appId));
 				if (!app.getType().equals("LogwithApp"))
 					throw new GeneralException(ServletManager.Code.ClientError, "This is not a empty app.");
-				App logwith = user.getApp(Integer.parseInt(logwithId));
+				App logwith = user.getDashboardManager().getAppWithID(Integer.parseInt(logwithId));
 				((LogwithApp)app).edit(name, logwith, sm);
 				sm.setResponse(ServletManager.Code.Success, "Logwith app edited.");
 			} catch (NumberFormatException e) {
