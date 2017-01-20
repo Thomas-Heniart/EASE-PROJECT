@@ -132,4 +132,13 @@ public class Catalog {
 		}
 		return result;
 	}
+	
+	public Website getWebsiteWithHost(String host) throws GeneralException {
+		for (Website site : websites) {
+			if (site.getUrl().contains(host)) {
+				return site;
+			}
+		}
+		return null;
+	}
 }

@@ -14,6 +14,7 @@ import com.Ease.Utils.ServletManager;
 
 public class UpdateManager {
 	
+	protected User			user;
 	protected List<Update> updates;
 	protected Map<String, Update> updatesDBMap;
 	protected Map<Integer, Update> updatesIDMap;
@@ -23,6 +24,7 @@ public class UpdateManager {
 		for (Update update : updates) {
 			this.addUpdateInMaps(update);
 		}
+		this.user = user;
 	}
 	
 	public void addUpdateNewPassword(User user, ClassicApp classicApp, String newPassword, ServletManager sm) throws GeneralException {
@@ -64,8 +66,7 @@ public class UpdateManager {
 	}
 
 	public void addUpdateFromJson(User user, JSONObject json, ServletManager sm) {
-		Update newUpdate = Update.createUpdateFromJSON(user, json, sm);
-		this.addUpdate(newUpdate);
+		
 	}
 	
 	private void addUpdate(Update update) {
