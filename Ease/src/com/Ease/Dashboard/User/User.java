@@ -174,6 +174,7 @@ public class User {
 		newUser.passStep("CGU", db);
 		newUser.passStep("first_connection", db);
 		newUser.initializeUpdateManager(sm);
+		newUser.sendVerificationEmail(email, sm);
 		db.commitTransaction(transaction);
 		return newUser;
 	}
