@@ -68,19 +68,20 @@ public class UpdateNewLogWithApp extends UpdateNewAccount {
 		super.deleteFromDb(db);
 		db.commitTransaction(transaction);
 	}
-	
-	public void accept(Profile profile, int position, ServletManager sm) throws GeneralException {
-		App newApp = LogwithApp.createLogwithApp(profile, position, this.website.getName(), this.website, this.logWithApp, sm);
-		this.user.getDashboardManager().addApp(newApp);
-	}
-	
+		
 	public JSONObject getJson() throws GeneralException {
 		JSONObject json = new JSONObject();
 		json.put("type", "newLogWithApp");
 		json.put("singleId", this.single_id);
 		json.put("login", ((ClassicApp)this.logWithApp).getAccount().getInformationNamed("login"));
-		json.put("logWith", ((ClassicApp)this.logWithApp).getSite().getName());
 		json.put("websiteImg", this.website.getFolder() + "logo.png");
+		json.put("logwithImg", logWithApp.getSite().getFolder() + "logo.png");
+		json.put("logWithName", logWithApp.getName());
+		json.put("websiteId", this.website.getSingleId());
 		return json;
+	}
+	
+	public WebsiteApp getLogWithApp() {
+		return logWithApp;
 	}
 }

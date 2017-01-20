@@ -7,6 +7,7 @@ import org.json.simple.JSONObject;
 
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.User.User;
+import com.Ease.Dashboard.User.UserEmail;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
@@ -29,33 +30,32 @@ public class UpdateNewPassword extends Update {
 			rs.next();
 			ClassicApp classicApp = (ClassicApp) user.getDashboardManager().getAppWithDBid(rs.getString(Data.CLASSIC_APP_ID.ordinal()));
 			String newPassword = rs.getString(Data.NEW_PASSWORD.ordinal());
-			return new UpdateNewPassword(update_id, classicApp, newPassword, idGenerator.getNextId());
+			UserEmail email = user.getEmails().get(classicApp.getAccount().getInformationNamed("login"));
+			return new UpdateNewPassword(update_id, classicApp, newPassword, idGenerator.getNextId(), email);
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
 	
-	public static UpdateNewPassword createUpdateNewPassword(User user, ClassicApp classicApp, String newPassword, ServletManager sm) throws GeneralException {
+	public static UpdateNewPassword createUpdateNewPassword(User user, ClassicApp classicApp, String newPassword, UserEmail email, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
 		int transaction = db.startTransaction();
 		String update_id = Update.createUpdate(user, "updateNewPassword", db);
 		db.set("INSERT INTO updateNewPassword values (null, " + update_id + ", " + classicApp.getDBid() + ", '" + newPassword + "');");
 		db.commitTransaction(transaction);
-		return new UpdateNewPassword(update_id, classicApp, newPassword, idGenerator.getNextId());
+		return new UpdateNewPassword(update_id, classicApp, newPassword, idGenerator.getNextId(), email);
 	}
 
 	protected String newPassword;
 	protected ClassicApp classicApp;
+	protected UserEmail email;
 
-	public UpdateNewPassword(String db_id, ClassicApp classicApp, String newPassword, int single_id) {
+	public UpdateNewPassword(String db_id, ClassicApp classicApp, String newPassword, int single_id, UserEmail email) {
 		super(db_id, single_id);
 		this.classicApp = classicApp;
 		this.newPassword = newPassword;
-	}
-	
-	public void accept(ServletManager sm) throws GeneralException {
-		this.classicApp.getAccount().setEncryptedPassword(newPassword, user, sm);
+		this.email = email;
 	}
 	
 	public void deleteFromDb(DataBaseConnection db) throws GeneralException {
@@ -68,11 +68,26 @@ public class UpdateNewPassword extends Update {
 	public JSONObject getJson() throws GeneralException {
 		JSONObject json = new JSONObject();
 		json.put("type", "newPassword");
+		json.put("email", ((email != null) ? ((email.isVerified()) ? "verified" : "unverified") : "no"));
+		json.put("appId", classicApp.getSingleId());
 		json.put("singleId", this.single_id);
 		json.put("login", classicApp.getAccount().getInformationNamed("login"));
 		json.put("passwordLength", newPassword.length());
 		json.put("websiteImg", classicApp.getSite().getFolder() + "logo.png");
+		json.put("websiteId", classicApp.getSite().getSingleId());		
 		return json;
+	}
+	
+	public String getPassword() {
+		return newPassword;
+	}
+	
+	public boolean haveVerifiedEmail() {
+		if (email != null) {
+			if (email.isVerified())
+				return true;
+		}
+		return false;
 	}
 
 }

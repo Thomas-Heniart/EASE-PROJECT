@@ -75,4 +75,8 @@ public class UpdateNewAccount extends Update {
 	public JSONObject getJson() throws GeneralException {
 		throw new GeneralException(ServletManager.Code.InternError, "GetJson on an updateNewAccount... dufuk?");
 	}
+	
+	public Website getSite() {
+		return website;
+	}
 }

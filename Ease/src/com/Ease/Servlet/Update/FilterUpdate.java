@@ -67,7 +67,7 @@ public class FilterUpdate extends HttpServlet {
 			String resp = "";
 			Integer i = 0;
 			for (Object obj : scrappedJson) {
-				if (user.getUpdateManager().addUpdateFromJson(((JSONObject)obj).toString(), sm)) {
+				if (user.getUpdateManager().addUpdateFromJsonDeconnected(((JSONObject)obj).toString(), sm)) {
 					resp += i.toString() + " ";
 				}
 				i++;

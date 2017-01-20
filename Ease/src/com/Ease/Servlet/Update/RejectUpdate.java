@@ -1,7 +1,6 @@
 package com.Ease.Servlet.Update;
 
 import java.io.IOException;
-import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,23 +10,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+
 import com.Ease.Dashboard.User.User;
-import com.Ease.Dashboard.User.UserEmail;
 import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class CreateUpdate
+ * Servlet implementation class RejectUpdate
  */
-@WebServlet("/CreateUpdate")
-public class CreateUpdate extends HttpServlet {
+@WebServlet("/RejectUpdate")
+public class RejectUpdate extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public CreateUpdate() {
+    public RejectUpdate() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -47,20 +45,16 @@ public class CreateUpdate extends HttpServlet {
 		HttpSession session = request.getSession();
 		User user = (User) (session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
-
-		String sessionId = sm.getServletParam("sessionId", true);
-		String jsonUpdate = sm.getServletParam("updates", true);
 		
 		try {
-			Map<String, User> sessionIdUserMap = (Map<String, User>) sm.getContextAttr("sessionIdUserMap");
-			if ((user = sessionIdUserMap.get(sessionId)) == null) {
-				sm.setResponse(ServletManager.Code.Success, "1 Please stock update.");
-			} else {
-				user.getUpdateManager().addUpdateFromJsonConnected(jsonUpdate, sm);
-				sm.setResponse(ServletManager.Code.Success, "2 Update sended.");
-			}
+			sm.needToBeConnected();
+			String updateId = sm.getServletParam("updateId", true);
+			user.getUpdateManager().rejectUpdateWithSingleId(Integer.parseInt(updateId), sm);
+			sm.setResponse(ServletManager.Code.Success, "Update rejected.");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
+		} catch (NumberFormatException e) {
+			sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");
 		} catch (Exception e) {
 			sm.setResponse(e);
 		}
