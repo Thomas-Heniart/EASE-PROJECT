@@ -1,4 +1,7 @@
-$('body').prepend('<div id="ease_extension" safariversion="2.0.1" style="dislay:none;">');
+extension.storage.get("extensionId", function (eId) {
+    $('body').prepend('<div id="ease_extension" extensionId="'+ eId +'" safariversion="2.0.1" style="dislay:none;">');
+});
+
 $(".displayedByPlugin").show();
 extension.runtime.sendMessage("getSettings", {}, function(response) {
     if(response.homepage){

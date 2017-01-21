@@ -27,7 +27,7 @@
     },
         {
             "matches": ["https://www.facebook.com/*"],
-            "js": ["tools/extension.js", "facebookCo/checkFacebookConnection.js", "checkConnections/updatesFacebook.js"],
+            "js": ["tools/extension.js", "facebookCo/checkFacebookConnection.js"],
             "run_at": "document_end"
     },
         {
@@ -39,11 +39,6 @@
             "matches": ["https://passwords.google.com/*", "https://accounts.google.com/*", "https://myaccount.google.com/*"],
             "js": ["jquery-3.1.0.js", "tools/extension.js", "overlay/injectOverlayScrap.js", "scrappingTuto/scrapChrome.js"],
             "css": ["overlay/overlayScrap.css"]
-    },
-        {
-            "matches": ["https://www.linkedin.com/*"],
-            "js": ["tools/extension.js", "checkConnections/updatesLinkedin.js"],
-            "run_at": "document_end"
     },
         {
             "matches": ["https://www.linkedin.com/*"],
