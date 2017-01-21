@@ -147,7 +147,6 @@
 				var loginChooser = $('#PopupModifyApp .loginWithChooser');
 			}
 			$("#PopupModifyApp .popupHeader .title span").text($(app).attr("name"));
-			modifyAppTutorial();
 		}
 		
 		

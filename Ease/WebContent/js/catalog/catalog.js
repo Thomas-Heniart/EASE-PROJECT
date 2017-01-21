@@ -43,8 +43,12 @@ function refreshCatalogContent(data) {
 function updateCatalogWith(searchVal, tags) {
 	
 	var ids = [];
+	var tagNames = ""
 	tags.each(function(index, tag) {
 		ids.push($(tag).attr("tagid"));
+		tagNames += $(tag).text();
+		if (index < tags.length)
+			tagNames += " ";
 	});
 	var json = JSON.stringify(ids);
 	postHandler.post('SearchApp', {
@@ -53,8 +57,9 @@ function updateCatalogWith(searchVal, tags) {
 	}, function() {
 		
 	}, function(retMsg) {
-		console.log(retMsg);
-		console.log(typeof retMsg);
+		//console.log(retMsg);
+		//console.log(typeof retMsg);
+		easeTracker.trackEvent("CatalogSearch", {"search":search, "activeTags": tagNames});
 		refreshCatalogContent(retMsg);
 	}, function(retMsg) {
 	}, 'text');
@@ -185,6 +190,8 @@ $(document).ready(function() {
 			$(event.target).toggleClass("hvr-grow");
 			updateCatalogFront($(event.target));
 		}
+		var tagName = $(event.target).text();
+		easeTracker.trackEvent("ClickOnTag", {"tagName": tagName});
 	});
 	
 	$("input[name='catalogSearch']").keydown(function(event) {
@@ -251,7 +258,7 @@ var Catalog = function(rootEl){
 	var self = this;
 	this.qRoot = rootEl;
 	this.isOpen = false;
-	this.oUpdate = new UpdateManager(this.qRoot.find('.catalogUpdates'), self)
+	this.oUpdate = new UpdateManager(this.qRoot.find('.catalogUpdates'));
 	this.quitButton = this.qRoot.find('#quit');
 	this.appsHolder = this.qRoot.find('.scaleContainerView');
 	this.searchBar = this.qRoot.find('.catalogSearchbar');
@@ -274,7 +281,8 @@ var Catalog = function(rootEl){
 	};
 	this.onResize = function(){
 		self.appsHolder.height(self.qRoot.outerHeight(true) 
-							- (((self.oUpdate.isOpen == true) ? self.oUpdate.qRoot.outerHeight(true) : 0)
+							- ((self.oUpdate.qRoot.length ? self.oUpdate.qRoot.outerHeight(true) : 0)
+							+ self.qRoot.find(".catalogHeader.title").outerHeight(true)
 							+ self.searchBar.outerHeight(true)
 							+ self.tagContainer.outerHeight(true)
 							+ (self.tagContainer.outerHeight(true) / 2)
