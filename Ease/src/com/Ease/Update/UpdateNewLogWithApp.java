@@ -60,6 +60,7 @@ public class UpdateNewLogWithApp extends UpdateNewAccount {
 	public UpdateNewLogWithApp(String db_id, String update_new_account_id, Website website, WebsiteApp logWithApp, int single_id, User user) {
 		super(db_id, update_new_account_id, website, single_id, user);
 		this.logWithApp = logWithApp;
+		this.type = "UpdateNewLogWithApp";
 	}
 	
 	public void deleteFromDb(DataBaseConnection db) throws GeneralException {

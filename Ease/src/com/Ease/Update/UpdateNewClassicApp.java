@@ -81,6 +81,7 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 		this.password = password;
 		this.email = email;
 		this.updateInformations = updateInformations;
+		this.type = "UpdateNewClassicApp";
 	}
 	
 	public String getInformation(String information_name) {

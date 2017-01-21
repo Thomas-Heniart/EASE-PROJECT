@@ -56,6 +56,7 @@ public class UpdateNewPassword extends Update {
 		this.classicApp = classicApp;
 		this.newPassword = newPassword;
 		this.email = email;
+		this.type = "UpdateNewPassword";
 	}
 	
 	public void deleteFromDb(DataBaseConnection db) throws GeneralException {

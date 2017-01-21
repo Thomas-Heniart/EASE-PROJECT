@@ -63,6 +63,7 @@ public class UpdateNewAccount extends Update {
 		super(db_id, single_id, user);
 		this.update_new_account_id = update_new_account_id;
 		this.website = website;
+		this.type = "UpdateNewAccount";
 	}
 	
 	public void deleteFromDb(DataBaseConnection db) throws GeneralException {
