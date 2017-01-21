@@ -30,7 +30,7 @@ extension.storage.get("sessionId", function (oldSessionId) {
             if (storedUpdates != undefined && storedUpdates.length > 0) {
                 extension.storage.get("extensionId", function (eId) {
 
-		    $.post("http://localhost:8080/CreateUpdate", { "sessionId":newSessionId, "updates":JSON.stringify(storedUpdate),"extensionId":eId }, function (resp) {
+		    $.post("http://localhost:8080/CreateUpdate", { "sessionId":newSessionId, "updates":JSON.stringify(storedUpdates),"extensionId":eId }, function (resp) {
 			var res = resp.split(" ");
                             if (res[0] == "200") {
                                 var indices = res;
