@@ -22,7 +22,7 @@ import com.Ease.Utils.ServletManager;
 /**
  * Servlet implementation class FilterUpdate
  */
-@WebServlet("/FilterUpdate")
+@WebServlet("/FilterUpdates")
 public class FilterUpdate extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

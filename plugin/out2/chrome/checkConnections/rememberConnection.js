@@ -159,25 +159,17 @@ function sendUpdate(update) {
         if (sId != "") {
 	    console.log("sessionId:");
 	    console.log(sId);
-	    $.post("http://localhost:8080/CreateUpdate", { "sessionId":sId, "update":JSON.stringify(update) });
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "http://localhost:8080/CreateUpdate", true);
-	    xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.onreadystatechange = function (aEvt) {
-                if (xhr.readyState == 4) {
-                    console.log(xhr.response);
-                    var res = xhr.response.split(" ");
-                    if (res[0] == "200") {
-                        if (res[1] == "1") {
-                            storeUpdate(update);
-                        } else {
-                            removeUpdate(update, function () {});
-                        }
-                    }
-                }
-            };
-	    console.log("sessionId=" + sId);
-            xhr.send("sessionId=" + sId + "&update=" + JSON.stringify(update));
+	    $.post("http://localhost:8080/CreateUpdate", { "sessionId":sId, "update":JSON.stringify(update) },
+		   function(resp){
+		       var res = resp.split(" ");
+                       if (res[0] == "200") {
+                           if (res[1] == "1") {
+                               storeUpdate(update);
+                           } else {
+                               removeUpdate(update, function () {});
+                           }
+                       }
+		   }) ;
         } else {
             storeUpdate(update);
         }
