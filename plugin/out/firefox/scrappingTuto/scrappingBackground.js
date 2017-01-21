@@ -168,7 +168,7 @@ function startScrapChrome(login, password, finalCallback) {
                             pass: password
                         }, function (response) {
                             if (response == false) {
-                                finalCallback(false, "Wrong login or password. Please try again");
+                                finalCallback(false, "Wrong login or password. Please try again1");
                                 extension.tabs.onClosedRemoveListener(tab);
                                 extension.tabs.onUpdatedRemoveListener(tab);
                                 setTimeout(function () {
@@ -179,7 +179,7 @@ function startScrapChrome(login, password, finalCallback) {
                                     extension.tabs.onMessageRemoveListener(tab);
                                     extension.tabs.sendMessage(tab, "checkChromeCo", {}, function (isConnected) {
                                         if (!isConnected) {
-                                            finalCallback(false, "Wrong login or password. Please try again");
+                                            finalCallback(false, "Wrong login or password. Please try again2");
                                             extension.tabs.onClosedRemoveListener(tab);
                                             extension.tabs.onUpdatedRemoveListener(tab);
                                             setTimeout(function () {
@@ -193,6 +193,7 @@ function startScrapChrome(login, password, finalCallback) {
                                                         waitRightPage(event.url, callback);
                                                     });
                                                 } else {
+                                                    console.log("my account ok. Next !");
                                                     callback();
                                                 }
                                             }
@@ -200,6 +201,7 @@ function startScrapChrome(login, password, finalCallback) {
                                             waitRightPage(event.url, function () {
                                                 extension.tabs.update(tab, "https://passwords.google.com/", function (tab) {
                                                     extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
+                                                        console.log("type psswrd again");
                                                         extension.tabs.onMessageRemoveListener(tab);
                                                         extension.tabs.sendMessage(tab, "typePasswordChrome", {
                                                             pass: password

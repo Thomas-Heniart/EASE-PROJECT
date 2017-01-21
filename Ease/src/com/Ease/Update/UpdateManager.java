@@ -72,11 +72,11 @@ public class UpdateManager {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 		String type = (String) json.get("type");
+		String url = (String) json.get("website");
 		if (type.equals("classic")) {
 			String login = (String) json.get("login");
 			UserEmail userEmail = user.getUserEmails().get(login);
-			String urlOrName = (String) json.get("website");
-			Website website = this.findWebsiteInCatalogWithLoginUrl(urlOrName, sm);
+			Website website = this.findWebsiteInCatalogWithLoginUrl(url, sm);
 			ClassicApp existingApp = this.findClassicAppWithLoginAndWebsite(login, website);
 			String password = (String) json.get("password");
 			String keyDate = (String) json.get("keyDate");
@@ -98,8 +98,7 @@ public class UpdateManager {
 			String login = (String) json.get("login");
 			String logWithAppName = (String) json.get("logwith");
 			Website logwithAppWebsite = this.findWebsiteInCatalogWithName(logWithAppName, sm);
-			String urlOrName = (String) json.get("website");
-			Website website = this.findWebsiteInCatalogWithName(urlOrName, sm);
+			Website website = this.findWebsiteInCatalogWithLoginUrl(url, sm);
 			WebsiteApp logwithApp = (WebsiteApp) this.findClassicAppWithLoginAndWebsite(login, logwithAppWebsite);
 			if (this.checkRemovedUpdates(website, logwithApp, login, sm))
 				return true;
@@ -170,11 +169,12 @@ public class UpdateManager {
 		}
 		String type = (String) json.get("type");
 		String urlOrName = (String) json.get("website");
+>>>>>>> 1e32a96e93abdd2da8150620f3493690b4c5fc42
 		Website website;
 		String login = (String) json.get("user");
 		switch (type) {
 		case "classic":
-			website = this.findWebsiteInCatalogWithLoginUrl(urlOrName, sm);
+			website = this.findWebsiteInCatalogWithLoginUrl(url, sm);
 			if (website == null)
 				return false;
 			ClassicApp existingApp = this.findClassicAppWithLoginAndWebsite(login, website);
@@ -197,7 +197,7 @@ public class UpdateManager {
 		case "logwith":
 			String logWithAppName = (String) json.get("logwith");
 			Website logwithAppWebsite = this.findWebsiteInCatalogWithName(logWithAppName, sm);
-			website = this.findWebsiteInCatalogWithName(urlOrName, sm);
+			website = this.findWebsiteInCatalogWithLoginUrl(url, sm);
 			if (website == null)
 				return false;
 			WebsiteApp logwithApp = (WebsiteApp) this.findClassicAppWithLoginAndWebsite(login, logwithAppWebsite);

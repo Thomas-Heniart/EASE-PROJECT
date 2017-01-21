@@ -40,6 +40,7 @@ function multipleTests(msg, tab, i){
     var websiteMsg = {};
     if(i<msg.detail.length){
         websiteMsg.detail = msg.detail[i];
+        websiteMsg.cancelled = false;
         var resultRow = websiteMsg.detail[websiteMsg.detail.length-1].website.name;
         if (typeof websiteMsg.detail[websiteMsg.detail.length-1].logWith === "undefined") {
             resultRow += "-login-"+websiteMsg.detail[websiteMsg.detail.length-1].user.login;
@@ -50,7 +51,8 @@ function multipleTests(msg, tab, i){
          results[resultRow]="> "+websiteMsg.detail[websiteMsg.detail.length-1].website.name+" : Initialize test";
         sendResults();
         connectTo(websiteMsg, tab, null, function(tab, status){
-            if(status!="end" && websiteMsg[status]!="success"){
+            if(status!="end" && websiteMsg[status]!="success" && !websiteMsg.cancelled){
+                websiteMsg.cancelled=true;
                 chrome.windows.get(tab.windowId, {}, function(window){
                     singleTest(websiteMsg, window)
                 });

@@ -43,8 +43,12 @@ function refreshCatalogContent(data) {
 function updateCatalogWith(searchVal, tags) {
 	
 	var ids = [];
+	var tagNames = ""
 	tags.each(function(index, tag) {
 		ids.push($(tag).attr("tagid"));
+		tagNames += $(tag).text();
+		if (index < tags.length)
+			tagNames += " ";
 	});
 	var json = JSON.stringify(ids);
 	postHandler.post('SearchApp', {
@@ -53,8 +57,9 @@ function updateCatalogWith(searchVal, tags) {
 	}, function() {
 		
 	}, function(retMsg) {
-		console.log(retMsg);
-		console.log(typeof retMsg);
+		//console.log(retMsg);
+		//console.log(typeof retMsg);
+		easeTracker.trackEvent("CatalogSearch", {"search":search, "activeTags": tagNames});
 		refreshCatalogContent(retMsg);
 	}, function(retMsg) {
 	}, 'text');
@@ -185,6 +190,8 @@ $(document).ready(function() {
 			$(event.target).toggleClass("hvr-grow");
 			updateCatalogFront($(event.target));
 		}
+		var tagName = $(event.target).text();
+		easeTracker.trackEvent("ClickOnTag", {"tagName": tagName});
 	});
 	
 	$("input[name='catalogSearch']").keydown(function(event) {
