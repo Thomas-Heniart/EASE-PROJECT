@@ -85,7 +85,8 @@ String UserName = ((User) (session.getAttribute("user"))).getFirstName();
 
 					},
 					function (msg){
-						$('#personalComputerSetup').prop('checked', msg);
+						msg == 'False' && $('#personalComputerSetup').prop('checked', false) ||
+						$('#personalComputerSetup').prop('checked', true);
 						$("#personalComputerSetup").change(function() {
 							var self = $(this);
 							var isChecked = $('#personalComputerSetup').prop('checked');

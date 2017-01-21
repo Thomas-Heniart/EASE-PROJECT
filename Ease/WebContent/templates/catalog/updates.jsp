@@ -14,69 +14,6 @@
 			<span class="loader loader-quart"></span>
 		</div>
 		<div class="contentList">
-			<div class="updateBox">
-				<div class="logo">
-					<img src="/resources/websites/Facebook/logo.png" />
-				</div>
-				<div class="infos">
-					<div class="title">
-						<p> New Account</p>
-					</div>
-					<div class="credentials">
-						<div class="logWithLogo">
-							<img src="/resources/websites/Facebook/logo.png" />
-						</div>
-						<div class="credentialsHandler">
-							<p class="login">Sign-in with <span>Facebook</span></p>
-							<p class="password">(<span>benjamin.prigent@ieseg.fr</span>)</p>
-						</div>
-					</div>
-					<div class="buttonsHandler">
-					<button class="acceptButton btn">Accept</button>
-					<button class="rejectButton btn">Reject</button>
-					</div>
-				</div>
-			</div>
-			<div class="updateBox">
-				<div class="logo">
-					<img src="/resources/websites/Facebook/logo.png" />
-				</div>
-				<div class="infos">
-					<div class="title">
-						<p> New Account</p>
-					</div>
-					<div class="credentials">
-						<div class="credentialsHandler">
-							<p class="login">benjamin.prigent@gmail.com</p>
-							<p class="password">•••••••••••••••••</p>
-						</div>
-					</div>
-					<div class="buttonsHandler">
-					<button class="acceptButton btn">Accept</button>
-					<button class="rejectButton btn">Reject</button>
-					</div>
-				</div>
-			</div>
-			<div class="updateBox">
-				<div class="logo">
-					<img src="/resources/websites/Facebook/logo.png" />
-				</div>
-				<div class="infos">
-					<div class="title">
-						<p> New Password</p>
-					</div>
-					<div class="credentials">
-						<div class="credentialsHandler">
-							<p class="login">benjamin.prigent@gmail.com</p>
-							<p class="password">•••••••••••••••••</p>
-						</div>
-					</div>
-					<div class="buttonsHandler">
-					<button class="acceptButton btn">Accept</button>
-					<button class="rejectButton btn">Reject</button>
-					</div>
-				</div>
-			</div>
 		</div>
 	</div>
 </div>

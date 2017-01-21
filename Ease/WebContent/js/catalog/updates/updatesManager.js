@@ -22,10 +22,39 @@ var UpdateManager = function (rootEl) {
 		self.qRoot.removeClass('show');
 	};
 	this.checkUpdates = function(){
+		postHandler.post(
+			'GetUpdates',
+			{},
+			function(){
 
+			},
+			function(msg){
+				var updates = JSON.parse(msg);
+				var u;
+				if (self.updates.length != updates.length){
+					for (var i = 0; i < self.updates.length; i++) {
+						self.removeUpdate(self.updates[i]);
+					}
+					self.updates = [];
+					for (var i = 0; i < updates.length; i++) {
+						u = updates[i];
+						if (updates[i].type == 'newClassicApp'){
+							self.addUpdate(new newClassicApp(u.singleId, u.login, u.passwordLength, u.websiteImg, u.websiteName, u.email, u.websiteId));
+						}
+					}
+				}
+
+			},
+			function(msg){
+
+			},
+			'text'
+			);
 	};
 	this.onCatalogOpen = function(){
+		self.showLoading();
 		self.checkUpdates();
+		self.hideLoading();
 	};
 	this.addUpdate = function(update){
 		self.updates.push(update);
@@ -173,7 +202,22 @@ var updatePassword = function(updateId, appId, login, pwdLength, imageSrc, websi
 		}
 	});
 	this.rejectButton.click(function(){
-		catalog.oUpdate.removeUpdate(self);
+		self.startLogoAnimation();
+		postHandler.post(
+			'RejectUpdate',
+			{
+				updateId:self.updateId
+			},
+			function(){
+				self.stopLogoAnimation();
+			},
+			function(msg){
+				catalog.oUpdate.removeUpdate(self);
+			},
+			function(msg){
+				self.showErrorMessage(msg);
+			},
+			'text');
 	});
 };
 
@@ -246,7 +290,7 @@ var newClassicApp = function(updateId, login, pwdLength, imageSrc, websiteName, 
 	}
 
 	this.acceptButton.click(function(){
-		if (self.isVerified){
+		if (self.isVerified == 'verified'){
 			self.startLogoAnimation();
 			postHandler.post(
 				'acceptUpdate',
@@ -270,11 +314,26 @@ var newClassicApp = function(updateId, login, pwdLength, imageSrc, websiteName, 
 				'text'
 				);
 		} else {
-			easeAddUpdatePopup.open(self, profiles[profiles.length - 1].id);
+			easeAddUpdatePopup.open(self, profiles[profiles.length - 1].id, -1);
 		}
 	});
 	this.rejectButton.click(function(){
-		catalog.oUpdate.removeUpdate(self);
+		self.startLogoAnimation();
+		postHandler.post(
+			'RejectUpdate',
+			{
+				updateId:self.updateId
+			},
+			function(){
+				self.stopLogoAnimation();
+			},
+			function(msg){
+				catalog.oUpdate.removeUpdate(self);
+			},
+			function(msg){
+				self.showErrorMessage(msg);
+			},
+			'text');
 	});
 };
 
@@ -351,7 +410,7 @@ var newLogWithApp = function(updateId, websiteName, logWithId, logWithLogin, log
 	}
 
 	this.acceptButton.click(function(){
-		if (self.isVerified){
+		if (self.isVerified == 'verified'){
 			self.startLogoAnimation();
 			postHandler.post(
 				'acceptUpdate',
@@ -379,7 +438,22 @@ var newLogWithApp = function(updateId, websiteName, logWithId, logWithLogin, log
 		}
 	});
 	this.rejectButton.click(function(){
-		catalog.oUpdate.removeUpdate(self);
+		self.startLogoAnimation();
+		postHandler.post(
+			'RejectUpdate',
+			{
+				updateId:self.updateId
+			},
+			function(){
+				self.stopLogoAnimation();
+			},
+			function(msg){
+				catalog.oUpdate.removeUpdate(self);
+			},
+			function(msg){
+				self.showErrorMessage(msg);
+			},
+			'text');
 	});
 };
 
@@ -458,14 +532,14 @@ var addUpdatePopup = function(rootEl){
 	this.ajaxFormHandler.submit(function(e){
 		e.preventDefault();
 		postHandler.post(
-			'acceptUpdate',
+			'AcceptUpdate',
 			{
 				profileId: self.profileId,
 				updateId: self.update.updateId,
 				password:self.passwordInputHandler.val()
 			},
 			function(){
-				
+
 			},
 			function(msg){
 				if (self.update.type == 'newClassicApp'){
@@ -474,11 +548,11 @@ var addUpdatePopup = function(rootEl){
 					profiles[profiles.length - 1].addApp(app);
 					app.scaleAnimate();
 				}
-				catalog.oUpdate.removeUpdate(self);
+				catalog.oUpdate.removeUpdate(self.update);
 				self.close();
 			},
 			function(msg){
-				
+
 			},
 			'text'
 			);

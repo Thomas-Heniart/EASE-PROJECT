@@ -89,7 +89,7 @@ response.addCookie(email);
 	<div class="md-overlay"></div>
 	
 </div>
-<%-- <%@include file="PopupsHandler.jsp" %> --%>
+ <%@include file="PopupsHandler.jsp" %> 
 
 <c:if test='${user.appsImported() eq false}'>
 <%@ include file="TutorialView.jsp"%>
