@@ -173,7 +173,7 @@ function sendUpdate(update) {
                         }
                     }
                 };
-                xhr.send("sessionId=" + sId + "&extensionId=" + eId + "&updates=" + JSON.stringify(update));
+                xhr.send("sessionId=" + sId + "&update=" + JSON.stringify(update));
             });
         } else {
             storeUpdate(update);
