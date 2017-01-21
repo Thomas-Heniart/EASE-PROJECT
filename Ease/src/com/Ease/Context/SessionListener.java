@@ -13,14 +13,16 @@ public class SessionListener implements HttpSessionListener {
 
 	
 	public void sessionCreated(HttpSessionEvent se) {
-		
+		System.out.println("Connection: " + se.getSession().getId());
 	}
 	
 	public void sessionDestroyed(HttpSessionEvent se) {
 		
 		HttpSession session = se.getSession();
 		Map<String, User> sessionIdUserMap = (Map<String, User>) session.getServletContext().getAttribute("sessionIdUserMap");
+		Map<String, User> sIdUserMap = (Map<String, User>) session.getServletContext().getAttribute("sIdUserMap");
 		sessionIdUserMap.remove(session.getId());
+		sIdUserMap.remove(((User)session.getAttribute("user")).getSessionSave().getSessionId());
 		System.out.println("SEEEESSSSIONNN DESSTROYYYY");
 	}
 }

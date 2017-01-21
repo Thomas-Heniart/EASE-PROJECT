@@ -2,6 +2,7 @@ package com.Ease.Update;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +34,8 @@ public class UpdateManager {
 
 	public UpdateManager(ServletManager sm, User user) throws GeneralException {
 		updates = Update.loadUpdates(user, sm);
+		updatesDBMap = new HashMap<String, Update>();
+		updatesIDMap = new HashMap<Integer, Update>();
 		this.user = user;
 		for (Update update : updates) {
 			this.addUpdateInMaps(update);
@@ -259,7 +262,7 @@ public class UpdateManager {
 		}
 	}
 
-	private Website findWebsiteInCatalogWithLoginUrl(String url, ServletManager sm) {
+	private Website findWebsiteInCatalogWithLoginUrl(String url, ServletManager sm) throws GeneralException {
 		Catalog catalog = (Catalog) sm.getContextAttr("catalog");
 		return catalog.getWebsiteWithLoginUrl(url);
 	}
@@ -373,4 +376,5 @@ public class UpdateManager {
 		}
 		return newAppSingleId;
 	}
+	
 }

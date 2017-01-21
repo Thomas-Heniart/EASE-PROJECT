@@ -51,9 +51,11 @@ public class CreateUpdate extends HttpServlet {
 		String sessionId = sm.getServletParam("sessionId", true);
 		String jsonUpdate = sm.getServletParam("update", true);
 		
+		System.out.println(request.getParameterMap().size());
+		
 		try {
-			Map<String, User> sessionIdUserMap = (Map<String, User>) sm.getContextAttr("sessionIdUserMap");
-			if ((user = sessionIdUserMap.get(sessionId)) == null) {
+			Map<String, User> sIdUserMap = (Map<String, User>) sm.getContextAttr("sIdUserMap");
+			if ((user = sIdUserMap.get(sessionId)) == null) {
 				sm.setResponse(ServletManager.Code.Success, "1 Please stock update.");
 			} else {
 				if (jsonUpdate == null) {

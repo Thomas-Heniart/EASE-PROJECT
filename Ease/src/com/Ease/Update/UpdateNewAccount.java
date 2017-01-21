@@ -51,7 +51,7 @@ public class UpdateNewAccount extends Update {
 		int transaction = db.startTransaction();
 		String update_id = Update.createUpdate(user, "updateNewAccount", db);
 		elevator.put("update_id", update_id);
-		String updateNewAccount_id = db.set("INSERT INTO updateNewAccount values (null, " + update_id + ", " + website.getDb_id() + ", '" + type + "'").toString();
+		String updateNewAccount_id = db.set("INSERT INTO updateNewAccount values (null, " + update_id + ", " + website.getDb_id() + ", '" + type + "');").toString();
 		db.commitTransaction(transaction);
 		return updateNewAccount_id;
 	}
