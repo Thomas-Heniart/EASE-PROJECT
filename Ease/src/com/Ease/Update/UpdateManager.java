@@ -123,7 +123,7 @@ public class UpdateManager {
 		}
 		String type = (String) json.get("type");
 		if (type.equals("classic")) {
-			String login = (String) json.get("login");
+			String login = (String) json.get("username");
 			UserEmail userEmail;
 			if ((userEmail = user.getUserEmails().get(login)) != null) {
 				String urlOrName = (String) json.get("website");
