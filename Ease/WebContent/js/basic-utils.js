@@ -105,45 +105,45 @@ function changeColor(color, ratio, darker) {
     }
 
     $(document).on('mouseover', '.showAppActionsButton', function(evt){
-            var subPopup = $(this).find('.appActionsPopup');
-            var profileParent = $(this).closest('.siteLinkBox').parent();
-            $(this).closest('.linkImage').addClass('settingsShow');
-            var str = '-';
-            var scrollDist =  $(profileParent).scrollTop() + $(this).height();
-            if ($(this).closest('.col-left'))
-                scrollDist += $(this).closest('.col-left').scrollTop();
-            str += scrollDist + 'px';
-            subPopup.css({
-                'margin-top':str
-            });
-    });
-    $(document).on('mouseleave', '.showAppActionsButton', function(evt){
-            $(this).closest('.linkImage').removeClass('settingsShow');
-    });
-
-$(document).ready(function(){
-    var placeHolder = null;
-
-    $('input,textarea').focus(function(){
-        placeHolder = $(this).attr('placeholder');
-        $(this).attr('placeHolder', '');
-        $(this).one('blur', function(){
-            $(this).attr('placeholder', placeHolder);
+        var subPopup = $(this).find('.appActionsPopup');
+        var profileParent = $(this).closest('.siteLinkBox').parent();
+        $(this).closest('.linkImage').addClass('settingsShow');
+        var str = '-';
+        var scrollDist =  $(profileParent).scrollTop() + $(this).height();
+        if ($(this).closest('.col-left'))
+            scrollDist += $(this).closest('.col-left').scrollTop();
+        str += scrollDist + 'px';
+        subPopup.css({
+            'margin-top':str
         });
     });
-});
-
-$(document).ready(function(){
-    $('.showPassDiv').click(function(){
-        var input = $(this).parent().find('input');
-        if ($(this).hasClass('show')){
-            input.attr('type', 'password');
-            input.focus();
-            $(this).removeClass('show');
-        }else {
-            input.attr('type', 'text');
-            input.focus();
-            $(this).addClass('show');
-        }
+    $(document).on('mouseleave', '.showAppActionsButton', function(evt){
+        $(this).closest('.linkImage').removeClass('settingsShow');
     });
-});
+
+    $(document).ready(function(){
+        var placeHolder = null;
+
+        $('input:not([readonly]),textarea').focus(function(){
+            placeHolder = $(this).attr('placeholder');
+            $(this).attr('placeHolder', '');
+            $(this).one('blur', function(){
+                $(this).attr('placeholder', placeHolder);
+            });
+        });
+    });
+
+    $(document).ready(function(){
+        $('.showPassDiv').click(function(){
+            var input = $(this).parent().find('input');
+            if ($(this).hasClass('show')){
+                input.attr('type', 'password');
+                input.focus();
+                $(this).removeClass('show');
+            }else {
+                input.attr('type', 'text');
+                input.focus();
+                $(this).addClass('show');
+            }
+        });
+    });

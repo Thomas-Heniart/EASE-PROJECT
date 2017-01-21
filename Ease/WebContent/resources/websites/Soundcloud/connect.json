@@ -4,10 +4,9 @@
     "home":"https://www.soundcloud.com/signin",
     "connect": {
     	"todo": [
-    		{"action":"fill", "what":"login","search":".signinForm input[name='username']", "grave":"true"},
-    		{"action":"submit", "search":"form.signinForm"},
+    		{"action":"fill", "what":"login","search":".signinInitialStep input[name='username']", "grave":"true"},
     		{"action":"fill", "what":"password","search":".signinWithPassword input[name='password']", "grave":"true"},
-    		{"action":"submit", "search":"form.signinForm"}
+    		{"action":"click", "search":".signinWithPassword button"}
        	]
     },
     "Facebook":{

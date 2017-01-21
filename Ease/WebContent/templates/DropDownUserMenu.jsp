@@ -77,7 +77,7 @@ String UserName = ((User) (session.getAttribute("user"))).getFirstName();
 			if (extensionDiv.length){
 				extId = extensionDiv.attr('extensionId');
 				postHandler.post(
-					'isPrivateExtension',
+					'IsPrivateExtension',
 					{
 						extensionId : extId
 					},
@@ -127,12 +127,12 @@ String UserName = ((User) (session.getAttribute("user"))).getFirstName();
 						});
 					},
 					function (msg){
-						$('#personalComputerSetup').closest('p').remove();
+						$('#personalComputerSetup').closest('.settingsRaw').remove();
 					},
 					'text'
 					);
 			} else {
-				$('#personalComputerSetup').closest('p').remove();
+				$('#personalComputerSetup').closest('.settingsRaw').remove();
 			}
 		}, 1000);
 	});
