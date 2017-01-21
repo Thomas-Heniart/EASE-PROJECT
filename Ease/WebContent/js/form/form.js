@@ -104,6 +104,7 @@ var Form = {
 		this.successCallback = function() {
 			showAlertPopup('Modifications successfully applied !', false);
 			$("#userSettingsButton span").html(self.oInputs[0].getVal());
+			easeTracker.trackEvent("EditUserName");
 			self.disable();
 		};
 		this.errorCallback = function(retMsg) {
@@ -114,6 +115,7 @@ var Form = {
 		constructorForm.apply(this, arguments);
 		var self = this;
 		this.successCallback = function (retMsg) {
+			easeTracker.trackEvent("EditUserPassword");
 			$("p.response", self.qRoot).removeClass("error");
 			$("p.response", self.qRoot).addClass("success");
 			$("p.response", self.qRoot).text(retMsg);
@@ -199,7 +201,6 @@ var Form = {
 			self.removeAddedFields();
 		}
 		this.successCallback = function(retMsg) {
-			console.log(self);
 			var x = parseInt($(".catalogApp[idx='" + self.site_id + "'] span.apps-integrated i.count").html());
 			$(".catalogApp[idx='" + self.site_id + "'] span.apps-integrated i.count").html(x+1);
 			$(".catalogApp[idx='" + self.site_id + "'] span.apps-integrated").addClass("showCounter");
@@ -216,7 +217,8 @@ var Form = {
 			self.newAppItem.attr('webId', self.helper.attr('idx'));
 			self.newAppItem.attr('logwith', (self.app_id == null) ? 'false'
 					: self.app_id);
-			self.newAppItem.find('.siteName p').text(self.oInputs[0].getVal());
+			var siteName = self.oInputs[0].getVal();
+			self.newAppItem.find('.siteName p').text(siteName);
 			self.newAppItem.attr('id', retMsg);
 			self.newAppItem.attr('ssoid', self.helper.attr('data-sso'));
 			for (var key in self.attributesToSet) {
@@ -224,6 +226,9 @@ var Form = {
 					continue;
 				self.newAppItem.attr(key, self.attributesToSet[key]);
 			}
+			var type = (self.postName == "AddClassicApp") ? "ClassicApp" : "LogWithApp";
+			easeTracker.trackEvent("AddApp", {"type": type, "appName": siteName});
+			easeTracker.increaseAppCounter();
 			self.reset();
 			self.appsContainer = null;
 			self.helper = null;
@@ -231,16 +236,11 @@ var Form = {
 			self.site_id = null;
 			self.profile_id = null;
 			self.app_id = null;
-			/* TODO : add json to give type, app name, website name etc... */
-			easeTracker.trackEvent(self.postName);
-			easeTracker.increaseAppCounter();
 			self.setPostName('AddClassicApp');
 			self.helper = null;
 			cleanEmails();
 		}
 		this.errorCallback = function(retMsg) {
-			//easeTracker.trackEvent("Add app failed");
-			//easeTracker.trackEvent($(".catalogApp[idx='" + self.site_id + "']").attr('name') + " add app failed");
 			self.newAppItem.remove();
 			self.reset();
 			$(parent).find('.alertDiv').addClass('show');
@@ -376,6 +376,7 @@ var Form = {
 						self.app.removeClass('emptyApp');
 						self.qRoot.find('.AccountApp.selected').removeClass("selected");
 						self.removeAddedFields();
+						easeTracker.trackEvent("EditApp");
 					}, function(){},
 					'text');
 			} else {
@@ -547,6 +548,7 @@ var Form = {
 			$(".wait", self.oParent.qRoot).addClass("show");
 		};
 		this.successCallback = function(retMsg) {
+			easeTracker.trackEvent("DeleteAccount");
 			setTimeout(function() {
 				window.location = "index.jsp";
 			}, 1000);

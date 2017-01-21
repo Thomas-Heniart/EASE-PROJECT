@@ -77,7 +77,7 @@ String UserName = ((User) (session.getAttribute("user"))).getFirstName();
 			if (extensionDiv.length){
 				extId = extensionDiv.attr('extensionId');
 				postHandler.post(
-					'IsPrivateExtension',
+					'isPrivateExtension',
 					{
 						extensionId : extId
 					},

@@ -87,7 +87,7 @@ $(document).ready(function(){
 	<div class="md-overlay"></div>
 	
 </div>
-	<%@ include file="PopupsHandler.jsp" %>
+	<%-- <%@include file="PopupsHandler.jsp" %> --%>
 
 <c:if test='${user.appsImported() eq false}'>
 	<%@ include file="TutorialView.jsp"%>
@@ -128,6 +128,7 @@ $(document).ready(function(){
 					inputEl.addEventListener( 'blur', onInputBlur );
 				} );
 			})();
+		easeTracker.setDailyPhoto($('#backgroundSwitch').is("checked"));
 		</script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

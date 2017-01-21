@@ -174,6 +174,7 @@ public class User {
 		newUser.passStep("CGU", db);
 		newUser.passStep("first_connection", db);
 		newUser.initializeUpdateManager(sm);
+		newUser.sendVerificationEmail(email, sm);
 		db.commitTransaction(transaction);
 		return newUser;
 	}
@@ -456,6 +457,14 @@ public class User {
 				unverifiedEmails.add(entry.getValue().getEmail());
 		}
 		return unverifiedEmails;
+	}
+	
+	public boolean haveThisEmail(String email) {
+		for (Map.Entry<String, UserEmail> entry : emails.entrySet()) {
+			if (entry.getValue().getEmail() == email)
+				return true;
+		}
+		return false;
 	}
 
 	public void putAllSockets(Map<String, WebsocketSession> sessionWebsockets) throws GeneralException {

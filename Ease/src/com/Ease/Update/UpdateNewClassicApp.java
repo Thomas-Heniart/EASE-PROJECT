@@ -5,11 +5,14 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.simple.JSONObject;
+
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
+import com.Ease.Dashboard.User.UserEmail;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
@@ -33,14 +36,14 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 			String db_id = rs.getString(Data.ID.ordinal());
 			String password = rs.getString(Data.PASSWORD.ordinal());
 			Map<String, String> updateInformations = ClassicUpdateInformation.loadClassicUpdateInformations(db_id, db);
-			boolean verifiedEmail = user.getEmails().get(updateInformations.get("login")).isVerified();
-			return new UpdateNewClassicApp(update_id, update_new_account_id, website, password, updateInformations, verifiedEmail,idGenerator.getNextId());
+			UserEmail email = user.getEmails().get(updateInformations.get("login"));
+			return new UpdateNewClassicApp(update_id, update_new_account_id, website, password, updateInformations, email,idGenerator.getNextId());
 		} catch(SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
 	
-	public static UpdateNewClassicApp createUpdateNewClassicApp(User user, Website website, Map<String, String> updateInformations, String password, ServletManager sm) throws GeneralException {
+	public static UpdateNewClassicApp createUpdateNewClassicApp(User user, Website website, Map<String, String> updateInformations, String password, UserEmail email, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
 		Map<String, Object> elevator = new HashMap<String, Object>();
@@ -48,14 +51,12 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 		String updateNewAccount_id = UpdateNewAccount.createUpdateNewAccount(user, website, "updateNewClassicApp", elevator, db);
 		String updateNewClassicApp_id = db.set("INSERT INTO updateNewClassicApp values (null, " + updateNewAccount_id + ", '" + password + "');").toString();
 		ClassicUpdateInformation.createInformations(updateNewClassicApp_id, updateInformations, db);
-		boolean verifiedEmail = user.getEmails().get(updateInformations.get("login")).isVerified();
 		db.commitTransaction(transaction);
 		String update_id = (String) elevator.get("update_id");
-		return new UpdateNewClassicApp(update_id, updateNewAccount_id, website, password, updateInformations, verifiedEmail,idGenerator.getNextId());
+		return new UpdateNewClassicApp(update_id, updateNewAccount_id, website, password, updateInformations, email, idGenerator.getNextId());
 	}
 	
-	public static Update createUpdateNewClassicApp(User user, Website website, String login, String password, ServletManager sm) throws GeneralException {
-		boolean verifiedEmail = user.getEmails().get(login).isVerified();
+	public static Update createUpdateNewClassicApp(User user, Website website, String login, String password, UserEmail email, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
 		Map<String, Object> elevator = new HashMap<String, Object>();
@@ -67,18 +68,18 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 		ClassicUpdateInformation.createInformations(updateNewClassicApp_id, updateInformations, db);
 		db.commitTransaction(transaction);
 		String update_id = (String) elevator.get("update_id");
-		return new UpdateNewClassicApp(update_id, updateNewAccount_id, website, password, updateInformations, verifiedEmail,idGenerator.getNextId());
+		return new UpdateNewClassicApp(update_id, updateNewAccount_id, website, password, updateInformations, email,idGenerator.getNextId());
 		
 	}
 	
 	protected Map<String, String> updateInformations;
 	protected String password;
-	protected boolean verifiedEmail;
+	protected UserEmail email;
 	
-	public UpdateNewClassicApp(String db_id, String update_new_account_id, Website website, String password, Map<String, String> updateInformations, boolean verifiedEmail, int single_id) {
+	public UpdateNewClassicApp(String db_id, String update_new_account_id, Website website, String password, Map<String, String> updateInformations, UserEmail email, int single_id) {
 		super(db_id, update_new_account_id, website, single_id);
 		this.password = password;
-		this.verifiedEmail = verifiedEmail;
+		this.email = email;
 		this.updateInformations = updateInformations;
 	}
 	
@@ -86,12 +87,12 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 		return this.updateInformations.get(information_name);
 	}
 	
-	public String getPassword() {
-		return this.password;
+	public Map<String, String> getInfos() {
+		return updateInformations;
 	}
 	
-	public boolean isVerifiedUpdate() {
-		return this.verifiedEmail;
+	public String getPassword() {
+		return this.password;
 	}
 
 	public void deleteFromDb(DataBaseConnection db) throws GeneralException {
@@ -102,8 +103,24 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 		db.commitTransaction(transaction);
 	}
 	
-	public void accept(Profile profile, int position, String name, ServletManager sm) throws GeneralException {
-		App newApp = ClassicApp.createClassicApp(profile, position, name, this.website, this.website.getName(), this.updateInformations, sm, this.user);
-		this.user.getDashboardManager().addApp(newApp);
+	public JSONObject getJson() throws GeneralException {
+		JSONObject json = new JSONObject();
+		json.put("type", "newClassicApp");
+		json.put("singleId", this.single_id);
+		json.put("login", this.updateInformations.get("login"));
+		json.put("passwordLength", password.length());
+		json.put("websiteImg", this.website.getFolder() + "logo.png");
+		json.put("websiteId", this.website.getSingleId());
+		json.put("email", ((email != null) ? ((email.isVerified()) ? "verified" : "unverified") : "no"));
+		
+		return json;
+	}
+	
+	public boolean haveVerifiedEmail() {
+		if (email != null) {
+			if (email.isVerified())
+				return true;
+		}
+		return false;
 	}
 }

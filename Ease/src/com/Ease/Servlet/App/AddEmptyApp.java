@@ -63,7 +63,6 @@ public class AddEmptyApp extends HttpServlet {
 				Profile profile = user.getDashboardManager().getProfile(Integer.parseInt(profileId));
 				site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(websiteId));
 				App app = WebsiteApp.createEmptyApp(profile, profile.getApps().size(), name, site, sm);
-				user.getDashboardManager().addApp(app);
 				profile.addApp(app);
 				sm.setResponse(ServletManager.Code.Success, String.valueOf(app.getSingleId()));
 			} catch (NumberFormatException e) {

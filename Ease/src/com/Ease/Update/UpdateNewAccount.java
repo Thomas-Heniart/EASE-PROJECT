@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 
+import org.json.simple.JSONObject;
+
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.User.User;
@@ -68,5 +70,13 @@ public class UpdateNewAccount extends Update {
 		db.set("DELETE FROM updateNewAccount WHERE account_id = " + this.db_id + ";");
 		super.deleteFromDb(db);
 		db.commitTransaction(transaction);
+	}
+	
+	public JSONObject getJson() throws GeneralException {
+		throw new GeneralException(ServletManager.Code.InternError, "GetJson on an updateNewAccount... dufuk?");
+	}
+	
+	public Website getSite() {
+		return website;
 	}
 }

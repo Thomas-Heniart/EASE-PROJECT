@@ -333,6 +333,7 @@ public class Profile {
 			if (Regex.isEmail(entry.getValue()) == true)
 				this.user.addEmailIfNeeded(entry.getValue(), sm);
 		}
+		this.user.getDashboardManager().addApp(app);
 		db.commitTransaction(transaction);
 		return app;
 	}
@@ -342,6 +343,7 @@ public class Profile {
 		if (logwith.getType().equals("LogwithApp") || logwith.getType().equals("ClassicApp")) {
 			LogwithApp app = LogwithApp.createLogwithApp(this, position, name, site, (WebsiteApp)logwith, sm);
 			this.apps.add(app);
+			this.user.getDashboardManager().addApp(app);
 			return app;
 		}
 		throw new GeneralException(ServletManager.Code.ClientError, "This app is not a Classic or Logwith app.");
@@ -353,6 +355,7 @@ public class Profile {
 		int position = this.apps.size();
 		WebsiteApp app = WebsiteApp.createEmptyApp(this, position, name, site, sm); 
 		this.apps.add(app);
+		this.user.getDashboardManager().addApp(app);
 		db.commitTransaction(transaction);
 		return app;
 	}
@@ -377,5 +380,6 @@ public class Profile {
 
 	public void addApp(App newApp) {
 		this.apps.add(newApp);
+		this.user.getDashboardManager().addApp(newApp);
 	}
 }

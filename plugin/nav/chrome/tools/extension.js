@@ -4,6 +4,9 @@ var listenersClose = [];
 var currentUser = "anonymous";
 
 var extension = {
+    getPath:function(){
+        return chrome.extension.getURL("");
+    },
 	nbOfEaseTabs:function(){
         var nb=0;
         for(var i in window.tabs) {
@@ -252,4 +255,8 @@ var extension = {
                
         }
     }
+}
+
+if (window.top === window) {
+    extension.runtime.sendMessage('reloadDone',{}, function(){});
 }

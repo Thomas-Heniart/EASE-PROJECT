@@ -5,22 +5,27 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
+import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
+import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
+import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
+import com.Ease.Dashboard.User.UserEmail;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 import com.Ease.Utils.Crypto.RSA;
 
 public class UpdateManager {
-
+	
 	protected List<Update> updates;
 	protected Map<String, Update> updatesDBMap;
 	protected Map<Integer, Update> updatesIDMap;
@@ -32,6 +37,7 @@ public class UpdateManager {
 		for (Update update : updates) {
 			this.addUpdateInMaps(update);
 		}
+		this.user = user;
 	}
 
 	private void addUpdateInMaps(Update newUpdate) {
@@ -57,7 +63,7 @@ public class UpdateManager {
 		return this.updates;
 	}
 
-	public void addUpdateFromJson(String jsonString, ServletManager sm) throws GeneralException {
+	public boolean addUpdateFromJsonConnected(String jsonString, ServletManager sm) throws GeneralException {
 		JSONParser parser = new JSONParser();
 		JSONObject json;
 		try {
@@ -66,14 +72,111 @@ public class UpdateManager {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 		String type = (String) json.get("type");
+		String url = (String) json.get("website");
+		if (type.equals("classic")) {
+			String login = (String) json.get("login");
+			UserEmail userEmail = user.getUserEmails().get(login);
+			Website website = this.findWebsiteInCatalogWithLoginUrl(url, sm);
+			ClassicApp existingApp = this.findClassicAppWithLoginAndWebsite(login, website);
+			String password = (String) json.get("password");
+			String keyDate = (String) json.get("keyDate");
+			password = RSA.Decrypt(password, Integer.parseInt(keyDate));
+			password = this.user.encrypt(password);
+			if (existingApp != null) {
+				if (this.checkRemovedUpdates(existingApp, password, sm))
+					return true;
+				this.addUpdate(UpdateNewPassword.createUpdateNewPassword(this.user, existingApp, password, userEmail, sm));
+				return true;
+			} else {
+				if (this.checkRemovedUpdates(website, login, sm))
+					return true;
+				this.addUpdate(UpdateNewClassicApp.createUpdateNewClassicApp(this.user, website, login, password, userEmail, sm));
+				return true;
+			}
+		} else if (type.equals("logwith")) {
+			
+			String login = (String) json.get("login");
+			String logWithAppName = (String) json.get("logwith");
+			Website logwithAppWebsite = this.findWebsiteInCatalogWithName(logWithAppName, sm);
+			Website website = this.findWebsiteInCatalogWithLoginUrl(url, sm);
+			WebsiteApp logwithApp = (WebsiteApp) this.findClassicAppWithLoginAndWebsite(login, logwithAppWebsite);
+			if (this.checkRemovedUpdates(website, logwithApp, login, sm))
+				return true;
+			this.addUpdate(UpdateNewLogWithApp.createUpdateNewLogWithApp(user, website, logwithApp, sm));
+			return true;
+			
+		} else {
+			throw new GeneralException(ServletManager.Code.ClientError, "Update type wtf...");
+		}
+	}
+	
+	public boolean addUpdateFromJsonDeconnected(String jsonString, ServletManager sm) throws GeneralException {
+		JSONParser parser = new JSONParser();
+		JSONObject json;
+		try {
+			json = (JSONObject) parser.parse(jsonString);
+		} catch (ParseException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+		String type = (String) json.get("type");
+		if (type.equals("classic")) {
+			String login = (String) json.get("login");
+			UserEmail userEmail;
+			if ((userEmail = user.getUserEmails().get(login)) != null) {
+				String urlOrName = (String) json.get("website");
+				Website website = this.findWebsiteInCatalogWithLoginUrl(urlOrName, sm);
+				ClassicApp existingApp = this.findClassicAppWithLoginAndWebsite(login, website);
+				String password = (String) json.get("password");
+				String keyDate = (String) json.get("keyDate");
+				password = RSA.Decrypt(password, Integer.parseInt(keyDate));
+				password = this.user.encrypt(password);
+				if (existingApp != null) {
+					if (this.checkRemovedUpdates(existingApp, password, sm))
+						return true;
+					this.addUpdate(UpdateNewPassword.createUpdateNewPassword(this.user, existingApp, password, userEmail, sm));
+					return true;
+				} else {
+					if (this.checkRemovedUpdates(website, login, sm))
+						return true;
+					this.addUpdate(UpdateNewClassicApp.createUpdateNewClassicApp(this.user, website, login, password, userEmail, sm));
+					return true;
+				}
+			} else {
+				return false;
+			}
+		} else if (type.equals("logwith")) {
+			
+			String login = (String) json.get("login");
+			String logWithAppName = (String) json.get("logwith");
+			Website logwithAppWebsite = this.findWebsiteInCatalogWithName(logWithAppName, sm);
+			String urlOrName = (String) json.get("website");
+			Website website = this.findWebsiteInCatalogWithName(urlOrName, sm);
+			WebsiteApp logwithApp = (WebsiteApp) this.findClassicAppWithLoginAndWebsite(login, logwithAppWebsite);
+			if (this.checkRemovedUpdates(website, logwithApp, login, sm))
+				return true;
+			this.addUpdate(UpdateNewLogWithApp.createUpdateNewLogWithApp(user, website, logwithApp, sm));
+			return true;
+			
+		} else {
+			throw new GeneralException(ServletManager.Code.ClientError, "Update type wtf...");
+		}
+		/*JSONParser parser = new JSONParser();
+		JSONObject json;
+		try {
+			json = (JSONObject) parser.parse(jsonString);
+		} catch (ParseException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+		String type = (String) json.get("type");
 		String urlOrName = (String) json.get("website");
+>>>>>>> 1e32a96e93abdd2da8150620f3493690b4c5fc42
 		Website website;
 		String login = (String) json.get("user");
 		switch (type) {
 		case "classic":
-			website = this.findWebsiteInCatalogWithLoginUrl(urlOrName, sm);
+			website = this.findWebsiteInCatalogWithLoginUrl(url, sm);
 			if (website == null)
-				return;
+				return false;
 			ClassicApp existingApp = this.findClassicAppWithLoginAndWebsite(login, website);
 			String password = (String) json.get("password");
 			String keyDate = (String) json.get("keyDate");
@@ -81,32 +184,34 @@ public class UpdateManager {
 			password = this.user.encrypt(password);
 			if (existingApp == null) {
 				if (this.checkRemovedUpdates(website, login, sm))
-					return;
+					return true;
 				this.addUpdate(UpdateNewClassicApp.createUpdateNewClassicApp(this.user, website, login, password, sm));
-			} else {
+			} else if (user.haveThisEmail((String)json.get("login"))){
 				if (this.checkRemovedUpdates(existingApp, password, sm))
-					return;
+					return true;
 				this.addUpdate(UpdateNewPassword.createUpdateNewPassword(this.user, existingApp, password, sm));
-			}
+			} else
+				return false;
 			break;
 
 		case "logwith":
 			String logWithAppName = (String) json.get("logwith");
 			Website logwithAppWebsite = this.findWebsiteInCatalogWithName(logWithAppName, sm);
-			website = this.findWebsiteInCatalogWithName(urlOrName, sm);
+			website = this.findWebsiteInCatalogWithLoginUrl(url, sm);
 			if (website == null)
-				return;
+				return false;
 			WebsiteApp logwithApp = (WebsiteApp) this.findClassicAppWithLoginAndWebsite(login, logwithAppWebsite);
 			if (logwithApp == null)
-				return;
+				return false;
 			if (this.checkRemovedUpdates(website, logwithApp, login, sm))
-				return;
+				return true;
 			this.addUpdate(UpdateNewLogWithApp.createUpdateNewLogWithApp(user, website, logwithApp, sm));
 			break;
 
 		default:
 			throw new GeneralException(ServletManager.Code.ClientError, "This update type does not exist");
 		}
+		return true;*/
 	}
 
 	/* Logwith check */
@@ -193,5 +298,65 @@ public class UpdateManager {
 		this.updatesDBMap.remove(update.getDbId());
 		this.updatesIDMap.remove(single_id);
 		this.updates.remove(update);
+	}
+	
+	public JSONArray getUpdatesJson() throws GeneralException {
+		JSONArray array = new JSONArray();
+		for (Update update: updates) {
+			array.add(update.getJson());
+		}
+		return array;
+	}
+	
+	public void acceptUpdate(int single_id, int profileId, String password, ServletManager sm) throws GeneralException {
+		Update update = this.getUpdateWithSingleId(single_id);
+		if (update == null) {
+			throw new GeneralException(ServletManager.Code.ClientError, "This update dosoen't exist.");
+		}
+		Profile profile;
+		if (update.getClass().getName().equals("UpdateNewClassicApp")) {
+			if ((profile = user.getDashboardManager().getProfile(profileId)) == null)
+				throw new GeneralException(ServletManager.Code.ClientWarning, "This profile dosoen't exist.");
+			
+			UpdateNewClassicApp updateClassicApp = (UpdateNewClassicApp) update;
+			if (updateClassicApp.haveVerifiedEmail()) {
+				password = updateClassicApp.getPassword();
+				password = this.user.decrypt(password);
+			}
+			Map<String, String> infos = updateClassicApp.getInfos();
+			App newApp = ClassicApp.createClassicApp(profile, profile.getApps().size(), updateClassicApp.getSite().getName(), updateClassicApp.getSite(), password, infos, sm, user);
+			profile.addApp(newApp);
+			
+			update.reject(sm);
+			this.updatesDBMap.remove(update.getDbId());
+			this.updatesIDMap.remove(single_id);
+			this.updates.remove(update);
+		} else if (update.getClass().getName().equals("UpdateNewLogWithApp")) {
+			if ((profile = user.getDashboardManager().getProfile(profileId)) == null)
+				throw new GeneralException(ServletManager.Code.ClientWarning, "This profile dosoen't exist.");
+			
+			UpdateNewLogWithApp updateLogWithApp = (UpdateNewLogWithApp) update;
+			App newApp = LogwithApp.createLogwithApp(profile, profile.getApps().size(), updateLogWithApp.getSite().getName(), updateLogWithApp.getSite(), updateLogWithApp.getLogWithApp(), sm);
+			profile.addApp(newApp);
+			
+			update.reject(sm);
+			this.updatesDBMap.remove(update.getDbId());
+			this.updatesIDMap.remove(single_id);
+			this.updates.remove(update);
+		} else if (update.getClass().getName().equals("UpdateNewPassword")) {
+			
+			UpdateNewPassword updatePassword = (UpdateNewPassword) update;
+			if (updatePassword.haveVerifiedEmail()) {
+				password = updatePassword.getPassword();
+				password = this.user.decrypt(password);
+			}
+			
+			update.reject(sm);
+			this.updatesDBMap.remove(update.getDbId());
+			this.updatesIDMap.remove(single_id);
+			this.updates.remove(update);
+		} else {
+			throw new GeneralException(ServletManager.Code.InternError, "Update type wtf...");
+		}
 	}
 }

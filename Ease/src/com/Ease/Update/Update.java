@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.json.simple.JSONObject;
+
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
@@ -86,5 +88,9 @@ public class Update {
 	public void reject(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		db.set("INSERT INTO updatesRemoved values (null, " + this.db_id + ");");
+	}
+	
+	public JSONObject getJson() throws GeneralException {
+		throw new GeneralException(ServletManager.Code.InternError, "GetJson on an update... dufuk?");
 	}
 }

@@ -104,17 +104,18 @@ public class TutoAddApps extends HttpServlet {
 					profile.addLogwithApp(obj.get("name").toString(), site, logwith, sm);
 				} else {
 					Map<String, String> infos = new HashMap<String, String>();
+					String password;
 					infos.put("login", obj.get("login").toString());
 					if (obj.get("keyDate") != null && !obj.get("keyDate").toString().equals("")) {
-						infos.put("password", RSA.Decrypt(obj.get("password").toString(), Integer.parseInt(obj.get("keyDate").toString())));
+						password = RSA.Decrypt(obj.get("password").toString(), Integer.parseInt(obj.get("keyDate").toString()));
 					} else {
-						infos.put("password", obj.get("password").toString());
+						password = obj.get("password").toString();
 					}
 					boolean ret = false;
 					for (Profile p : user.getDashboardManager().getProfilesList()) {
 						for (App app : p.getApps()) {
 							if (app.getClass().getName().equals("WebsiteApp") && ((WebsiteApp)app).getSite() == site) {
-								ClassicApp.createFromWebsiteApp((WebsiteApp)app, obj.get("name").toString(), obj.get("password").toString(), infos, sm, user);
+								ClassicApp.createFromWebsiteApp((WebsiteApp)app, obj.get("name").toString(), password, infos, sm, user);
 								ret = true;
 							}
 						}
@@ -123,7 +124,7 @@ public class TutoAddApps extends HttpServlet {
 						if (obj.get("password").toString().equals("")) {
 							profile.addEmptyApp(obj.get("name").toString(), site, sm);
 						} else {
-							logwith = profile.addClassicApp(obj.get("name").toString(), site, obj.get("password").toString(), infos, sm);
+							logwith = profile.addClassicApp(obj.get("name").toString(), site, password, infos, sm);
 						}
 					}
 				}
