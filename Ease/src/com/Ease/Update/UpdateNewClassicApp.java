@@ -37,7 +37,7 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 			String password = rs.getString(Data.PASSWORD.ordinal());
 			Map<String, String> updateInformations = ClassicUpdateInformation.loadClassicUpdateInformations(db_id, db);
 			UserEmail email = user.getEmails().get(updateInformations.get("login"));
-			return new UpdateNewClassicApp(update_id, update_new_account_id, website, password, updateInformations, email,idGenerator.getNextId());
+			return new UpdateNewClassicApp(update_id, update_new_account_id, website, password, updateInformations, email,idGenerator.getNextId(), user);
 		} catch(SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
@@ -53,7 +53,7 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 		ClassicUpdateInformation.createInformations(updateNewClassicApp_id, updateInformations, db);
 		db.commitTransaction(transaction);
 		String update_id = (String) elevator.get("update_id");
-		return new UpdateNewClassicApp(update_id, updateNewAccount_id, website, password, updateInformations, email, idGenerator.getNextId());
+		return new UpdateNewClassicApp(update_id, updateNewAccount_id, website, password, updateInformations, email, idGenerator.getNextId(), user);
 	}
 	
 	public static Update createUpdateNewClassicApp(User user, Website website, String login, String password, UserEmail email, ServletManager sm) throws GeneralException {
@@ -68,7 +68,7 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 		ClassicUpdateInformation.createInformations(updateNewClassicApp_id, updateInformations, db);
 		db.commitTransaction(transaction);
 		String update_id = (String) elevator.get("update_id");
-		return new UpdateNewClassicApp(update_id, updateNewAccount_id, website, password, updateInformations, email,idGenerator.getNextId());
+		return new UpdateNewClassicApp(update_id, updateNewAccount_id, website, password, updateInformations, email,idGenerator.getNextId(), user);
 		
 	}
 	
@@ -76,8 +76,8 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 	protected String password;
 	protected UserEmail email;
 	
-	public UpdateNewClassicApp(String db_id, String update_new_account_id, Website website, String password, Map<String, String> updateInformations, UserEmail email, int single_id) {
-		super(db_id, update_new_account_id, website, single_id);
+	public UpdateNewClassicApp(String db_id, String update_new_account_id, Website website, String password, Map<String, String> updateInformations, UserEmail email, int single_id, User user) {
+		super(db_id, update_new_account_id, website, single_id, user);
 		this.password = password;
 		this.email = email;
 		this.updateInformations = updateInformations;

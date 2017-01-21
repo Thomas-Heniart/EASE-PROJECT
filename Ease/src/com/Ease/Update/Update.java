@@ -66,9 +66,10 @@ public class Update {
 	protected int single_id;
 	protected User user;
 	
-	public Update(String db_id, int single_id) {
+	public Update(String db_id, int single_id, User user) {
 		this.db_id = db_id;
 		//this.type = type;
+		this.user = user;
 		this.single_id = single_id;
 		//this.user = user;
 	}
