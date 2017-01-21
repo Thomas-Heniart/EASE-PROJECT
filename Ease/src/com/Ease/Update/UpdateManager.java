@@ -318,7 +318,7 @@ public class UpdateManager {
 			throw new GeneralException(ServletManager.Code.ClientError, "This update dosoen't exist.");
 		}
 		Profile profile;
-		if (update.getClass().getName().equals("UpdateNewClassicApp")) {
+		if (update.getType().equals("UpdateNewClassicApp")) {
 			if ((profile = user.getDashboardManager().getProfile(profileId)) == null)
 				throw new GeneralException(ServletManager.Code.ClientWarning, "This profile dosoen't exist.");
 			

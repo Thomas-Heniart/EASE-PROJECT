@@ -77,6 +77,10 @@ public class Update {
 		return this.db_id;
 	}
 	
+	public String getType() {
+		return type;
+	}
+	
 	public Integer getSingledId() {
 		return this.single_id;
 	}
