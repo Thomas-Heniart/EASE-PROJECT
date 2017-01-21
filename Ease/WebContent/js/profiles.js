@@ -97,7 +97,7 @@ function leaveEditMode() {
 var profiles = [];
 
 $(document).ready(function(){
-	$('.ProfileBox').each(function(){
+	$('.ProfileBox:not(.helper)').each(function(){
 		var profile = new Profile($(this));
 		profiles.push(profile);
 	});
@@ -170,29 +170,9 @@ var Profile = function(rootEl){
 		});
 		(self.isSettingsOpen) ? self.hideSettings() : self.showSettings();
 	});
-	this.addApp = function(login, webid, name, id, ssoid, logwith, url) {
-		self.appContainer.append('<div class="siteLinkBox" login="' + login + '" webid="' + webid + '" name="' + name + '" id="' + id + '" ssoid="' + ssoid + '" move="true" logwith="' + logwith + '">' + 
-			'<div class="linkImage" onclick="sendEvent(this)">' +
-			'<div class="showAppActionsButton">' +
-			'<i class="fa fa-cog"></i>' +
-			'<div class="appActionsPopup">' +
-			'<div class="buttonsContainer">' +
-			'<div class="modifyAppButton menu-item" onclick="showModifyAppPopup(this, event)">' +
-			'<p>Modify</p>' +
-			'</div>' +
-			'<div class="deleteAppButton menu-item" onclick="showConfirmDeleteAppPopup(this, event)">' +
-			'<p>Delete</p>' +
-			'</div>' +
-			'</div>' +
-			'</div>' +
-			'</div>' +
-			'<img class="logo" src="' + url + '">' +
-			'</div>' +
-			'<div class="siteName">' +
-			'<p>' + name + '</p>' +
-			'</div>' +
-			'</div>');
-		ease.apps.push(new easeApp(self.appContainer.find("div.siteLinkBox[id=" + id + "]")));
+
+	this.addApp = function(app){
+		self.appContainer.append(app.qRoot);
 	}
 	
 	//catalog droppable
@@ -421,7 +401,7 @@ $(document)
 		.click(
 			function(event) {
 				if ($(".CatalogViewTab").hasClass("show") && !($(event.target).closest('.MenuButtonSet').length) && $('.md-show').length == 0) {
-					if (!($(event.target).closest('.profileAdder, .header, .dashboardColumn, .md-modal, .md-overlay, .CatalogViewTab, .AddProfileView, .updateButton, .hiddenProfile, #tipsHandler').length))
+					if (!($(event.target).closest('.profileAdder, .header, .dashboardColumn, .md-modal, .md-overlay, .CatalogViewTab, .AddProfileView, .updateButton, .hiddenProfile, #tipsHandler, .updateBox').length))
 						leaveEditMode();
 				}
 			});
@@ -524,7 +504,7 @@ function leaveEditModeTutorial() {
 		$('#tipsHandler #4').removeClass('show');
 		$(".col-left, .header").removeClass("darken");
 	}
-		
+
 }
 
 
