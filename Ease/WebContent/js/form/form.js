@@ -104,6 +104,7 @@ var Form = {
 		this.successCallback = function() {
 			showAlertPopup('Modifications successfully applied !', false);
 			$("#userSettingsButton span").html(self.oInputs[0].getVal());
+			easeTracker.trackEvent("EditUserName");
 			self.disable();
 		};
 		this.errorCallback = function(retMsg) {
@@ -114,6 +115,7 @@ var Form = {
 		constructorForm.apply(this, arguments);
 		var self = this;
 		this.successCallback = function (retMsg) {
+			easeTracker.trackEvent("EditUserPassword");
 			$("p.response", self.qRoot).removeClass("error");
 			$("p.response", self.qRoot).addClass("success");
 			$("p.response", self.qRoot).text(retMsg);
@@ -546,6 +548,7 @@ var Form = {
 			$(".wait", self.oParent.qRoot).addClass("show");
 		};
 		this.successCallback = function(retMsg) {
+			easeTracker.trackEvent("DeleteAccount");
 			setTimeout(function() {
 				window.location = "index.jsp";
 			}, 1000);
