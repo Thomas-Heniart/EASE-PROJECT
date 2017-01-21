@@ -320,6 +320,9 @@ public class UpdateManager {
 			
 			UpdateNewClassicApp updateClassicApp = (UpdateNewClassicApp) update;
 			if (updateClassicApp.haveVerifiedEmail()) {
+				if (password == null) {
+					throw new GeneralException(ServletManager.Code.ClientError, "Wrong password");
+				}
 				password = updateClassicApp.getPassword();
 				password = this.user.decrypt(password);
 			}
@@ -347,6 +350,9 @@ public class UpdateManager {
 			
 			UpdateNewPassword updatePassword = (UpdateNewPassword) update;
 			if (updatePassword.haveVerifiedEmail()) {
+				if (password == null) {
+					throw new GeneralException(ServletManager.Code.ClientError, "Wrong password");
+				}
 				password = updatePassword.getPassword();
 				password = this.user.decrypt(password);
 			}
