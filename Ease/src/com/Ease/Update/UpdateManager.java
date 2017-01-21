@@ -77,7 +77,7 @@ public class UpdateManager {
 		String type = (String) json.get("type");
 		String url = (String) json.get("website");
 		if (type.equals("classic")) {
-			String login = (String) json.get("login");
+			String login = (String) json.get("username");
 			UserEmail userEmail = user.getUserEmails().get(login);
 			Website website = this.findWebsiteInCatalogWithLoginUrl(url, sm);
 			ClassicApp existingApp = this.findClassicAppWithLoginAndWebsite(login, website);
@@ -98,7 +98,7 @@ public class UpdateManager {
 			}
 		} else if (type.equals("logwith")) {
 			
-			String login = (String) json.get("login");
+			String login = (String) json.get("username");
 			String logWithAppName = (String) json.get("logwith");
 			Website logwithAppWebsite = this.findWebsiteInCatalogWithName(logWithAppName, sm);
 			Website website = this.findWebsiteInCatalogWithLoginUrl(url, sm);
