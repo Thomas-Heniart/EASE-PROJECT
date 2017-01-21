@@ -165,6 +165,10 @@ public class ClassicApp extends WebsiteApp {
 		return infos;
 	}
 	
+	public void setPassword(String password, ServletManager sm) throws GeneralException {
+		this.account.setPassword(password, this.getProfile().getUser(), sm);
+	}
+	
 	/* For sancho le robot */
 	public boolean isEmpty() {
 		return false;

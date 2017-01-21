@@ -49,13 +49,16 @@ public class CreateUpdate extends HttpServlet {
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 
 		String sessionId = sm.getServletParam("sessionId", true);
-		String jsonUpdate = sm.getServletParam("updates", true);
+		String jsonUpdate = sm.getServletParam("update", true);
 		
 		try {
 			Map<String, User> sessionIdUserMap = (Map<String, User>) sm.getContextAttr("sessionIdUserMap");
 			if ((user = sessionIdUserMap.get(sessionId)) == null) {
 				sm.setResponse(ServletManager.Code.Success, "1 Please stock update.");
 			} else {
+				if (jsonUpdate == null) {
+					throw new GeneralException(ServletManager.Code.ClientError, "Empty scrap.");
+				}
 				user.getUpdateManager().addUpdateFromJsonConnected(jsonUpdate, sm);
 				sm.setResponse(ServletManager.Code.Success, "2 Update sended.");
 			}

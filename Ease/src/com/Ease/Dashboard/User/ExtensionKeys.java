@@ -69,7 +69,7 @@ public class ExtensionKeys {
 		try {
 			for (String key : keys) {
 				if (clientKey.equals(key)) {
-					db.set("REMOVE FROM usersPrivateExtensions WHERE user_id=" + user.getDBid() + " AND key='" + clientKey + "';");
+					db.set("REMOVE FROM usersPrivateExtensions WHERE user_id=" + user.getDBid() + " AND extension_key='" + clientKey + "';");
 					keys.remove(clientKey);
 					return ;
 				}

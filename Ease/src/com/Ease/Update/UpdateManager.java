@@ -308,7 +308,8 @@ public class UpdateManager {
 		return array;
 	}
 	
-	public void acceptUpdate(int single_id, int profileId, String password, ServletManager sm) throws GeneralException {
+	public String acceptUpdate(int single_id, int profileId, String password, ServletManager sm) throws GeneralException {
+		String newAppSingleId;
 		Update update = this.getUpdateWithSingleId(single_id);
 		if (update == null) {
 			throw new GeneralException(ServletManager.Code.ClientError, "This update dosoen't exist.");
@@ -329,6 +330,7 @@ public class UpdateManager {
 			Map<String, String> infos = updateClassicApp.getInfos();
 			App newApp = ClassicApp.createClassicApp(profile, profile.getApps().size(), updateClassicApp.getSite().getName(), updateClassicApp.getSite(), password, infos, sm, user);
 			profile.addApp(newApp);
+			newAppSingleId = Integer.toString(newApp.getSingleId());
 			
 			update.reject(sm);
 			this.updatesDBMap.remove(update.getDbId());
@@ -341,6 +343,7 @@ public class UpdateManager {
 			UpdateNewLogWithApp updateLogWithApp = (UpdateNewLogWithApp) update;
 			App newApp = LogwithApp.createLogwithApp(profile, profile.getApps().size(), updateLogWithApp.getSite().getName(), updateLogWithApp.getSite(), updateLogWithApp.getLogWithApp(), sm);
 			profile.addApp(newApp);
+			newAppSingleId = Integer.toString(newApp.getSingleId());
 			
 			update.reject(sm);
 			this.updatesDBMap.remove(update.getDbId());
@@ -357,6 +360,10 @@ public class UpdateManager {
 				password = this.user.decrypt(password);
 			}
 			
+			updatePassword.getApp().setPassword(password, sm);
+			
+			newAppSingleId = Integer.toString(updatePassword.getApp().getSingleId());
+			
 			update.reject(sm);
 			this.updatesDBMap.remove(update.getDbId());
 			this.updatesIDMap.remove(single_id);
@@ -364,5 +371,6 @@ public class UpdateManager {
 		} else {
 			throw new GeneralException(ServletManager.Code.InternError, "Update type wtf...");
 		}
+		return newAppSingleId;
 	}
 }

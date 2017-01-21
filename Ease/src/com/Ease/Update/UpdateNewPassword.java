@@ -89,5 +89,9 @@ public class UpdateNewPassword extends Update {
 		}
 		return false;
 	}
+	
+	public ClassicApp getApp() {
+		return classicApp;
+	}
 
 }
