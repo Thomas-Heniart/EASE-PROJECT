@@ -224,7 +224,9 @@ var Dashboard = function(rootEl){
 						profileId: item.attr('id')
 					},
 					function(){},
-					function(retMsg){},
+					function(retMsg){
+						easeTracker.trackEvent("MoveProfile");
+					},
 					function(retMsg){},
 					'text'
 					);

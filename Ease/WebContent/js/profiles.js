@@ -263,7 +263,7 @@ var Profile = function(rootEl){
 			}, function() {
 				easeLoadingIndicator.hide();
 			}, function(retMsg) {
-				easeTracker.trackEvent('EditProfileName');
+				easeTracker.trackEvent('EditProfileName', {"profileName" : name});
 				self.setName(name);
 				self.qRoot.find('#modifyNameForm input').val('');
 			}, function(retMsg) {
@@ -293,7 +293,7 @@ var Profile = function(rootEl){
 		}, function() {
 			easeLoadingIndicator.hide();
 		}, function(retMsg) {
-			easeTracker.trackEvent('EditProfileColor');
+			easeTracker.trackEvent('EditProfileColor', {"color": color});
 			self.setColor(color);
 		}, function(retMsg) {
 		}, 'text');
@@ -364,6 +364,7 @@ function setupSortableContainer(container) {
 					positionDest : item.index()
 				}, function() {
 				}, function(retMsg) {
+					easeTracker.trackEvent("MoveApp");
 				}, function(retMsg) {
 				}, 'text');
 			}
@@ -395,10 +396,11 @@ $(document).ready(function() {
 	});
 	$('.helpIntegrateApps #integrateAppForm #integrate').click(function() {
 		var form = $(this).closest('#integrateAppForm');
+		var url = $(form).find('#integrateApp').val();
 		postHandler.post(
 			'WebsiteRequest',
 			{
-				ask : $(form).find('#integrateApp').val()
+				ask : url
 			},
 			function() {
 				$(form).find('.inputs input').val('');
@@ -407,6 +409,7 @@ $(document).ready(function() {
 					$(form).find('.inputs').show();
 				});
 			}, function(retMsg) {
+				easeTracker.trackEvent("WebsiteRequest", {"url": url});
 			}, function(retMsg) {
 			}, 'text');
 	});
