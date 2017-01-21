@@ -126,7 +126,7 @@ function getDOM(url, callback) {
 
 function getCheckAlreadyLoggedCondition(host, callback) {
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "https://ease.space/GetCheckAlreadyLogged", true);
+    xhr.open("POST", "http://localhost:8080/GetCheckAlreadyLogged", true);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhr.onreadystatechange = function (aEvt) {
         if (xhr.readyState == 4) {
@@ -157,8 +157,12 @@ function isConnected(url, user) {
 function sendUpdate(update) {
     extension.storage.get("sessionId", function (sId) {
         if (sId != "") {
+	    console.log("sessionId:");
+	    console.log(sId);
+	    $.post("http://localhost:8080/CreateUpdate", { "sessionId":sId, "update":JSON.stringify(update) });
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "https://ease.space/CreateUpdate", false);
+            xhr.open("POST", "http://localhost:8080/CreateUpdate", true);
+	    xhr.setRequestHeader("Content-Type", "application/json");
             xhr.onreadystatechange = function (aEvt) {
                 if (xhr.readyState == 4) {
                     console.log(xhr.response);
@@ -172,6 +176,7 @@ function sendUpdate(update) {
                     }
                 }
             };
+	    console.log("sessionId=" + sId);
             xhr.send("sessionId=" + sId + "&update=" + JSON.stringify(update));
         } else {
             storeUpdate(update);
