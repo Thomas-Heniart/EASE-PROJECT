@@ -73,7 +73,7 @@ public class UpdateNewPassword extends Update {
 		json.put("appId", classicApp.getSingleId());
 		json.put("singleId", this.single_id);
 		json.put("login", classicApp.getAccount().getInformationNamed("login"));
-		json.put("passwordLength", user.decrypt(newPassword).length());
+		json.put("passwordLength", 16);
 		json.put("websiteImg", classicApp.getSite().getFolder() + "logo.png");
 		json.put("websiteId", classicApp.getSite().getSingleId());	
 		json.put("websiteName", classicApp.getSite().getName());
