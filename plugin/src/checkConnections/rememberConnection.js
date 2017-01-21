@@ -1,12 +1,23 @@
 cleanStoredUpdates();
+var senderTabs = [];
 
 extension.runtime.bckgrndOnMessage('newFormSubmitted', function (msg, senderTab, sendResponse) {
     msg.hostUrl = getHost(senderTab.url);
+    for (var i in senderTabs) {
+        if (senderTabs[i] == senderTab.id) {
+            console.log("tab already sent something");
+            extension.tabs.onMessageRemoveListener(senderTab);
+            senderTabs.splice(i, 1);
+            break;
+        }
+    }
+    senderTabs.push(senderTab.id);
     rememberConnection(msg.update.username, msg.hostUrl);
     extension.tabs.onMessage(senderTab, "reloadDone", function () {
         extension.tabs.onMessageRemoveListener(senderTab);
         checkSuccessfullConnexion(msg.hostUrl, senderTab, function () {
             encryptPassword(msg.update.password, function (passwordDatas) {
+                console.log("send update " + msg.hostUrl + " " + msg.update.username);
                 sendUpdate({
                     type: "classic",
                     website: msg.hostUrl,
