@@ -157,24 +157,22 @@ function isConnected(url, user) {
 function sendUpdate(update) {
     extension.storage.get("sessionId", function (sId) {
         if (sId != "") {
-            extension.storage.get("extensionId", function (eId) {
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "https://ease.space/CreateUpdate", false);
-                xhr.onreadystatechange = function (aEvt) {
-                    if (xhr.readyState == 4) {
-                        console.log(xhr.response);
-                        var res = xhr.response.split(" ");
-                        if (res[0] == "200") {
-                            if (res[1] == "1") {
-                                storeUpdate(update);
-                            } else {
-                                removeUpdate(update, function () {});
-                            }
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "https://ease.space/CreateUpdate", false);
+            xhr.onreadystatechange = function (aEvt) {
+                if (xhr.readyState == 4) {
+                    console.log(xhr.response);
+                    var res = xhr.response.split(" ");
+                    if (res[0] == "200") {
+                        if (res[1] == "1") {
+                            storeUpdate(update);
+                        } else {
+                            removeUpdate(update, function () {});
                         }
                     }
-                };
-                xhr.send("sessionId=" + sId + "&update=" + JSON.stringify(update));
-            });
+                }
+            };
+            xhr.send("sessionId=" + sId + "&update=" + JSON.stringify(update));
         } else {
             storeUpdate(update);
         }
