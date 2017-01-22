@@ -166,11 +166,11 @@ public class Catalog {
 		return false;
 	}
 
-	public Website getWebsiteWithLoginUrl(String url) {
+	public Website getWebsiteWithLoginUrl(String url) throws GeneralException{
 		for (Website site : this.websites) {
 			if (site.loginUrlMatch(url))
 				return site;
 		}
-		return null;
+		throw new GeneralException(ServletManager.Code.UserMiss, "This website is not in the catalog.");
 	}
 }

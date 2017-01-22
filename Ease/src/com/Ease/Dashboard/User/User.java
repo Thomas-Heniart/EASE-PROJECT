@@ -136,6 +136,8 @@ public class User {
 			}
 			((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
 			((Map<String, User>)sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
+			System.out.println(newUser.getSessionSave().getSessionId());
+			((Map<String, User>)sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);
 			newUser.initializeUpdateManager(sm);
 			return newUser;
 		} catch (SQLException e) {
@@ -175,6 +177,8 @@ public class User {
 		newUser.passStep("first_connection", db);
 		newUser.initializeUpdateManager(sm);
 		newUser.sendVerificationEmail(email, sm);
+		((Map<String, User>)sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
+		((Map<String, User>)sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);
 		db.commitTransaction(transaction);
 		return newUser;
 	}

@@ -49,7 +49,7 @@ public class AskVerificationEmail extends HttpServlet {
 		HttpSession session = request.getSession();
 		User user = (User) (session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
-		try {
+		try { 
 			sm.needToBeConnected();
 			String email = sm.getServletParam("email", true);
 			if (email == null || email.equals(""))

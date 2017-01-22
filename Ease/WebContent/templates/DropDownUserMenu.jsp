@@ -8,30 +8,63 @@ String UserName = ((User) (session.getAttribute("user"))).getFirstName();
 	<a id="userSettingsButton"><i class="fa fa-fw fa-user"></i> <span><%=UserName%></span></a>
 	<div class="userSettings">
 		<div class="directSettings">
-			<p class="displayedByPlugin">
-				<span>Homepage</span><span class="onoffswitch"> <input
-				type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
-				id="homePageSwitch" /> <label class="onoffswitch-label"
-				for="homePageSwitch"></label>
+			<p class="settingsHeader">
+				Quick setup
+			</p>
+			<div class="displayedByPlugin settingsRaw">
+				<span>Homepage</span>
+				<div class="infoCircle">
+					<i class="fa fa-info-circle"></i>
+					<div class="infoBubble">
+						Set up Ease as your browser homepage to access your web easily.
+						<div class="caretHelper"></div>
+					</div>
+				</div>
+				<span class="onoffswitch"> <input
+					type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
+					id="homePageSwitch" /> <label class="onoffswitch-label"
+					for="homePageSwitch"></label>
+				</span>
+			</div>
+			<div class="settingsRaw">
+				<span>Ease Photo</span>
+				<div class="infoCircle">
+					<i class="fa fa-info-circle"></i>
+					<div class="infoBubble">
+						Would you like a background photo on your space every day?
+						<div class="caretHelper"></div>
+					</div>
+				</div>
+				<span class="onoffswitch"> <input
+					type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
+					id=backgroundSwitch checked /> <label class="onoffswitch-label"
+					for="backgroundSwitch"></label>
+				</span>
+			</div>
+			<div class="settingsRaw">
+				<span>My Computer</span>
+				<div class="infoCircle">
+					<i class="fa fa-info-circle"></i>
+					<div class="infoBubble">
+						Get more web updates when you are on your personal computer!
+						<div class="caretHelper"></div>
+					</div>
+				</div>
+				<span class="onoffswitch"> <input
+					type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
+					id=personalComputerSetup /> <label class="onoffswitch-label"
+					for="personalComputerSetup"></label>
+				</span>
+			</div>
+		</div>
+		<a id="ModifyUserButton" class="dropDownButton">
+			<span class="fa-stack fa-lg icon">
+				<i class="fa fa-square fa-stack-2x"></i>
+				<i class="fa fa-sliders fa-stack-1x fa-rotate-90"></i>
 			</span>
-		</p>
-		<p>
-			<span>Daily photo</span><span class="onoffswitch"> <input
-			type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
-			id=backgroundSwitch checked /> <label class="onoffswitch-label"
-			for="backgroundSwitch"></label>
-		</span>
-	</p>
-	<p style="display:none;">
-		<span>Pers comp</span><span class="onoffswitch"> <input
-		type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
-		id=personalComputerSetup /> <label class="onoffswitch-label"
-		for="personalComputerSetup"></label>
-	</span>
-</p>
-</div>
-<a id="ModifyUserButton"><i class="fa fa-fw fa-cogs"></i> <span>Settings</span></a>
-</div>
+			<span>My settings</span>
+		</a>
+	</div>
 </div>
 
 <script type="text/javascript">
@@ -43,8 +76,8 @@ String UserName = ((User) (session.getAttribute("user"))).getFirstName();
 
 			if (extensionDiv.length){
 				extId = extensionDiv.attr('extensionId');
-				/*postHandler.post(
-					'isPrivateExtension',
+				postHandler.post(
+					'IsPrivateExtension',
 					{
 						extensionId : extId
 					},
@@ -52,7 +85,8 @@ String UserName = ((User) (session.getAttribute("user"))).getFirstName();
 
 					},
 					function (msg){
-						$('#personalComputerSetup').prop('checked', msg);
+						msg == 'False' && $('#personalComputerSetup').prop('checked', false) ||
+						$('#personalComputerSetup').prop('checked', true);
 						$("#personalComputerSetup").change(function() {
 							var self = $(this);
 							var isChecked = $('#personalComputerSetup').prop('checked');
@@ -94,12 +128,12 @@ String UserName = ((User) (session.getAttribute("user"))).getFirstName();
 						});
 					},
 					function (msg){
-						$('#personalComputerSetup').closest('p').remove();
+						$('#personalComputerSetup').closest('.settingsRaw').remove();
 					},
 					'text'
-					);*/
+					);
 			} else {
-				$('#personalComputerSetup').closest('p').remove();
+				$('#personalComputerSetup').closest('.settingsRaw').remove();
 			}
 		}, 1000);
 	});

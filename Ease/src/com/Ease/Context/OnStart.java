@@ -65,6 +65,8 @@ public class OnStart implements ServletContextListener{
 				context.setAttribute("users", usersMap);
 				Map<String, User> sessionIdUserMap = new HashMap<String, User>();
 				context.setAttribute("sessionIdUserMap", sessionIdUserMap);
+				Map<String, User> sIdUserMap = new HashMap<String, User>();
+				context.setAttribute("sIdUserMap", sIdUserMap);
 				System.out.println("done.");
 				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				Date mydate = new Date();

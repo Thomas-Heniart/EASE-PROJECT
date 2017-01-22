@@ -42,7 +42,7 @@
 </div>
 <div id="profileHelper" style="display: none">
 	<div class="item">
-		<div class="ProfileBox"
+		<div class="ProfileBox helper"
 		color="#35a7ff">
 		<div class="ProfileName" style="background-color: #35a7ff;">
 			<p>@Profile name</p>

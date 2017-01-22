@@ -22,7 +22,7 @@ import com.Ease.Utils.ServletManager;
 /**
  * Servlet implementation class FilterUpdate
  */
-@WebServlet("/FilterUpdate")
+@WebServlet("/FilterUpdates")
 public class FilterUpdate extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -54,7 +54,7 @@ public class FilterUpdate extends HttpServlet {
 			String sessionId = sm.getServletParam("sessionId", true);
 			String extensionId = sm.getServletParam("extensionId", true);
 			String scrap = sm.getServletParam("scrap", true);
-			if (sessionId == null || (user = ((Map<String, User>)sm.getContextAttr("sessionIdUserMap")).get(sessionId)) == null) {
+			if (sessionId == null || (user = ((Map<String, User>)sm.getContextAttr("sIdUserMap")).get(sessionId)) == null) {
 				throw new GeneralException(ServletManager.Code.ClientError, "You are not connected.");
 			} else if (extensionId == null || user.getExtensionKeys().haveThisKey(extensionId) == false) {
 				throw new GeneralException(ServletManager.Code.ClientError, "This is not a private extension.");

@@ -58,6 +58,15 @@
 			transform: scaleX(1) scaleY(1);
 		}
 	}
+
+	@-webkit-keyframes singleScaleOut {
+		0% {
+			transform: scaleX(1) scaleY(1);
+		}
+		100% {
+			transform: scaleX(1.1) scaleY(1.1);
+		}
+	}
 	
 	@keyframes shake {
 		10%, 90% {

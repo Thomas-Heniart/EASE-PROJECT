@@ -31,7 +31,7 @@ public class UpdateNewPassword extends Update {
 			ClassicApp classicApp = (ClassicApp) user.getDashboardManager().getAppWithDBid(rs.getString(Data.CLASSIC_APP_ID.ordinal()));
 			String newPassword = rs.getString(Data.NEW_PASSWORD.ordinal());
 			UserEmail email = user.getEmails().get(classicApp.getAccount().getInformationNamed("login"));
-			return new UpdateNewPassword(update_id, classicApp, newPassword, idGenerator.getNextId(), email);
+			return new UpdateNewPassword(update_id, classicApp, newPassword, idGenerator.getNextId(), email, user);
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
@@ -44,18 +44,19 @@ public class UpdateNewPassword extends Update {
 		String update_id = Update.createUpdate(user, "updateNewPassword", db);
 		db.set("INSERT INTO updateNewPassword values (null, " + update_id + ", " + classicApp.getDBid() + ", '" + newPassword + "');");
 		db.commitTransaction(transaction);
-		return new UpdateNewPassword(update_id, classicApp, newPassword, idGenerator.getNextId(), email);
+		return new UpdateNewPassword(update_id, classicApp, newPassword, idGenerator.getNextId(), email, user);
 	}
 
 	protected String newPassword;
 	protected ClassicApp classicApp;
 	protected UserEmail email;
 
-	public UpdateNewPassword(String db_id, ClassicApp classicApp, String newPassword, int single_id, UserEmail email) {
-		super(db_id, single_id);
+	public UpdateNewPassword(String db_id, ClassicApp classicApp, String newPassword, int single_id, UserEmail email, User user) {
+		super(db_id, single_id, user);
 		this.classicApp = classicApp;
 		this.newPassword = newPassword;
 		this.email = email;
+		this.type = "UpdateNewPassword";
 	}
 	
 	public void deleteFromDb(DataBaseConnection db) throws GeneralException {
@@ -72,9 +73,10 @@ public class UpdateNewPassword extends Update {
 		json.put("appId", classicApp.getSingleId());
 		json.put("singleId", this.single_id);
 		json.put("login", classicApp.getAccount().getInformationNamed("login"));
-		json.put("passwordLength", newPassword.length());
+		json.put("passwordLength", 16);
 		json.put("websiteImg", classicApp.getSite().getFolder() + "logo.png");
-		json.put("websiteId", classicApp.getSite().getSingleId());		
+		json.put("websiteId", classicApp.getSite().getSingleId());	
+		json.put("websiteName", classicApp.getSite().getName());
 		return json;
 	}
 	
@@ -88,6 +90,10 @@ public class UpdateNewPassword extends Update {
 				return true;
 		}
 		return false;
+	}
+	
+	public ClassicApp getApp() {
+		return classicApp;
 	}
 
 }

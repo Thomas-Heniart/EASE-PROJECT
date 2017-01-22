@@ -757,6 +757,7 @@
 }
 
 .popupHandler {
+	font-family: $defaultFont;
 	display: -webkit-box;
 	display: -webkit-flex;
 	display: -moz-box;
@@ -853,8 +854,8 @@
 		font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
 		background-color: #efefef;
 		text-align: center;
-		border-top-left-radius: 3px;
-		border-top-right-radius: 3px;
+		border-top-left-radius: 10px;
+		border-top-right-radius: 10px;
 		padding: 0.6vw 20px;
 		border-bottom: 1px solid #d0d1d5;
 		p {
@@ -886,8 +887,8 @@
 			}
 		}
 		.popupBody {
-			border-bottom-right-radius: 3px;
-			border-bottom-left-radius: 3px;
+			border-bottom-right-radius: 10px;
+			border-bottom-left-radius: 10px;
 			background-color: white;
 			padding: 1.5vw 8%;
 			position: absolute;
@@ -917,6 +918,32 @@
 						transform: scale(1.9);
 					}
 				}
+				.row.lineBehind {
+					&:before {
+						border-top: 2px solid $themeColor;
+						content: "";
+						margin: 0 auto;
+						position: absolute;
+						top: 50%;
+						left: 0;
+						right: 0;
+						bottom: 0;
+						width: 100%;
+						z-index: -1;
+					}
+				}
+				.errorText {
+					display: none;
+
+					&.show {
+						display: block;
+					}
+
+					p {
+						color: $themeRedColor;
+						font-size: 1vw;
+					}
+				}
 				.row {
 					.infoText {
 						padding: 1vw;
@@ -930,12 +957,36 @@
 					&:last-child {
 						margin-bottom: 0px;
 					}
+					.liteTextButton {
+						cursor:pointer;
+						font-size: 0.85vw;
+						text-decoration: underline;
+						color: $themeDarkGreyColor;
+						font-weight: bold;
+					}
+					.simpleText {
+						font-family: $defaultFont;
+						font-size: 1vw;
+					}
+					.post-title {
+						font-size: 1.3vw;
+						font-weight: 600;
+						background-color: white;
+						width: 80%;
+						margin: auto;
+					}
 					position:relative;
 					margin-left: 0px;
 					margin-right: 0px;
 					margin-bottom: 1.2vw;
 					.row-heading {
 						font-size: 1.4vw;
+					}
+					input, .input {
+						margin-bottom: 0.6vw;
+						&:last-child {
+							margin-bottom: 0;
+						}
 					}
 					.input {
 						font-weight: normal;
@@ -951,19 +1002,31 @@
 					input {
 						width: 100%;
 						font-size: 1.35vw;
-						border-radius: 3px;
+						border-radius: 8px;
 						border: 1px solid #aaa;
 						padding-left: 5px;
-						padding: 10px 5px;
+						padding: 7px 5px;
 					}
 					.btn {
 						color: white;
 						width: 80%;
 						font-size: 1.5vw;
 						margin: 0px auto;
-						background-color: #24d666;
+						background-color: $themeButtonGreenColor;
+						outline: none;
+						transition: opacity .3s, background-color .3s;
+						opacity: 1;
+						white-space: normal;
+						border-radius: 8px;
+						&.locked {
+					        background-color: $themeDarkGreyColor;
+					        pointer-events: none;
+					        &:hover, &:focus {
+								opacity:1;					        	
+					        }
+						}
 						&:hover, &:focus {
-							background-color:#28a956;
+							opacity: 0.7;
 						}
 					}
 				}
