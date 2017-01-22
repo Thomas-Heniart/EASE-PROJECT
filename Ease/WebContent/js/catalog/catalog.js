@@ -57,9 +57,7 @@ function updateCatalogWith(searchVal, tags) {
 	}, function() {
 		
 	}, function(retMsg) {
-		//console.log(retMsg);
-		//console.log(typeof retMsg);
-		easeTracker.trackEvent("CatalogSearch", {"search":search, "activeTags": tagNames});
+		easeTracker.trackEvent("CatalogSearch", {"SearchContent":search, "SelectedTags": tagNames});
 		refreshCatalogContent(retMsg);
 	}, function(retMsg) {
 	}, 'text');
@@ -191,7 +189,7 @@ $(document).ready(function() {
 			updateCatalogFront($(event.target));
 		}
 		var tagName = $(event.target).text();
-		easeTracker.trackEvent("ClickOnTag", {"tagName": tagName});
+		easeTracker.trackEvent("ClickOnTag", {"TagName": tagName});
 	});
 	
 	$("input[name='catalogSearch']").keydown(function(event) {

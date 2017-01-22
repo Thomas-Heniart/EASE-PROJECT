@@ -54,10 +54,10 @@ function goToNextStep() {
 			//always
 		}, function(retMsg) {
 			//success
-			easeTracker.trackEvent("TutoAppManoDone");
-			easeTracker.setUserProperty("TutoAppsSelectedMano", addAppTutoCpt);
-			easeTracker.setUserProperty("TutoAppsFilledMano", appsSeletecedFiled);
-			easeTracker.setUserProperty("TutoAppsSkipedMano", appsSelectedSkiped);
+			easeTracker.trackEvent("TutoManoDone");
+			easeTracker.setUserProperty("TutoManoSelected", addAppTutoCpt);
+			easeTracker.setUserProperty("TutoManoFilled", appsSeletecedFiled);
+			easeTracker.setUserProperty("TutoManoSkipped", appsSelectedSkiped);
 			location.reload();
 		}, function(retMsg) {
 			//error
@@ -226,27 +226,27 @@ function sendTutoAddApp() {
 			//always
 		}, function(retMsg) {
 			//succes
-			easeTracker.trackEvent("TutoAppScrappDone");
+			easeTracker.trackEvent("TutoScrappingDone");
 			if (chromeScrappingCount > 0 && chromeSelectedCount >= 0) {
 				easeTracker.trackEvent("TutoScrapChrome");
-				easeTracker.setUserProperty("TutoAppScrapChrome", chromeScrappingCount);
-				easeTracker.setUserProperty("TutoAppSelectedChrome", chromeSelectedCount);
+				easeTracker.setUserProperty("TutoScrapChromeCount", chromeScrappingCount);
+				easeTracker.setUserProperty("TutoScrapChromeSelected", chromeSelectedCount);
 				easeTracker.increaseAppCounter(chromeSelectedCount);
 			}
 			if (facebookScrappingCount > 0 && facebookSelectedCount >= 0) {
 				easeTracker.trackEvent("TutoScrapFacebook");
-				easeTracker.setUserProperty("TutoAppScrapFacebook", facebookScrappingCount);
-				easeTracker.setUserProperty("TutoAppSelectedFacebook", facebookSelectedCount);
+				easeTracker.setUserProperty("TutoScrapFacebookCount", facebookScrappingCount);
+				easeTracker.setUserProperty("TutoScrapFacebookSelected", facebookSelectedCount);
 				easeTracker.increaseAppCounter(facebookSelectedCount);
 			}
 			if (linkedInScrappingCount > 0 && linkedInSelectedCount >= 0) {
 				easeTracker.trackEvent("TutoScrapLinkedIn");
-				easeTracker.setUserProperty("TutoAppScrapLinkedIn", linkedInScrappingCount);
-				easeTracker.setUserProperty("TutoAppSelectedLinkedIn", linkedInSelectedCount);
+				easeTracker.setUserProperty("TutoScrapLinkedInCount", linkedInScrappingCount);
+				easeTracker.setUserProperty("TutoLinkedInSelected", linkedInSelectedCount);
 				easeTracker.increaseAppCounter(linkedInSelectedCount);
 			}
 			easeTracker.setUserProperty("TutoTotalAppsScrapped", (chromeScrappingCount + facebookScrappingCount + linkedInScrappingCount));
-			easeTracker.setUserProperty("TutoToalAppsSelected", (chromeSelectedCount + facebookSelectedCount + linkedInSelectedCount));
+			easeTracker.setUserProperty("TutoTotalAppsSelected", (chromeSelectedCount + facebookSelectedCount + linkedInSelectedCount));
 			location.reload();
 		}, function(retMsg) {
 			//error
