@@ -61,8 +61,11 @@ var UpdateManager = function (rootEl) {
 		self.updatesHandler.append(update.qRoot);
 	};
 	this.removeUpdate = function(update){
+		update.removeWithAnimation();
+		for (var i = self.updates.indexOf(update) + 1; i < self.updates.length; i++) {
+			self.updates[i].slideLeftAnimation();
+		}
 		self.updates.splice(self.updates.indexOf(update), 1);
-		update.remove();
 	};
 }
 
@@ -148,6 +151,7 @@ var updatePassword = function(updateId, appId, login, pwdLength, imageSrc, websi
 	this.imageHandler = this.qRoot.find('.logo');
 	this.errorMessageHandler = this.qRoot.find('.errorMessage');
 	this.infosHandler = this.qRoot.find('.infos .handler');
+	this.buttonsHandler = this.qRoot.find('.buttonsHandler');
 	this.acceptButton = this.qRoot.find('.acceptButton');
 	this.rejectButton = this.qRoot.find('.rejectButton');
 
@@ -167,14 +171,28 @@ var updatePassword = function(updateId, appId, login, pwdLength, imageSrc, websi
 		}, 2500);
 	}
 
+	this.removeWithAnimation = function(){
+		self.qRoot.addClass('deletingUpdate');
+		self.qRoot.one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e){
+			self.remove();
+		});
+	}
+	this.slideLeftAnimation = function(){
+		self.qRoot.addClass('decaleUpdate');
+		self.qRoot.one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e){
+			self.qRoot.removeClass('decaleUpdate');
+		});
+	}
 	this.remove = function(){
 		self.qRoot.remove();
 	}
 	this.startLogoAnimation = function() {
 		self.imageHandler.addClass('infiniteScaleAnimation');
+		self.buttonsHandler.css('pointer-events', 'none');
 	}
 	this.stopLogoAnimation = function() {
 		self.imageHandler.removeClass('infiniteScaleAnimation');
+		self.buttonsHandler.css('pointer-events','');
 	}
 
 	this.acceptButton.click(function(){
@@ -261,6 +279,7 @@ var newClassicApp = function(updateId, login, pwdLength, imageSrc, websiteName, 
 	this.imageHandler = this.qRoot.find('.logo');
 	this.errorMessageHandler = this.qRoot.find('.errorMessage');
 	this.infosHandler = this.qRoot.find('.infos .handler');
+	this.buttonsHandler = this.qRoot.find('.buttonsHandler');
 	this.acceptButton = this.qRoot.find('.acceptButton');
 	this.rejectButton = this.qRoot.find('.rejectButton');
 
@@ -279,14 +298,28 @@ var newClassicApp = function(updateId, login, pwdLength, imageSrc, websiteName, 
 			self.infosHandler.removeClass('hide');			
 		}, 2500);
 	}
+	this.removeWithAnimation = function(){
+		self.qRoot.addClass('deletingUpdate');
+		self.qRoot.one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e){
+			self.remove();
+		});
+	}
+	this.slideLeftAnimation = function(){
+		self.qRoot.addClass('decaleUpdate');
+		self.qRoot.one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e){
+			self.qRoot.removeClass('decaleUpdate');
+		});
+	}
 	this.remove = function(){
 		self.qRoot.remove();
 	}
 	this.startLogoAnimation = function() {
 		self.imageHandler.addClass('infiniteScaleAnimation');
+		self.buttonsHandler.css('pointer-events', 'none');
 	}
 	this.stopLogoAnimation = function() {
 		self.imageHandler.removeClass('infiniteScaleAnimation');
+		self.buttonsHandler.css('pointer-events', '');
 	}
 
 	this.acceptButton.click(function(){
@@ -381,6 +414,7 @@ var newLogWithApp = function(updateId, websiteName, logWithId, logWithLogin, log
 	this.imageHandler = this.qRoot.find('.logo');
 	this.errorMessageHandler = this.qRoot.find('.errorMessage');
 	this.infosHandler = this.qRoot.find('.infos .handler');
+	this.buttonsHandler = this.qRoot.find('.buttonsHandler');
 	this.acceptButton = this.qRoot.find('.acceptButton');
 	this.rejectButton = this.qRoot.find('.rejectButton');
 
@@ -399,14 +433,28 @@ var newLogWithApp = function(updateId, websiteName, logWithId, logWithLogin, log
 			self.infosHandler.removeClass('hide');			
 		}, 2500);
 	}
+	this.removeWithAnimation = function(){
+		self.qRoot.addClass('deletingUpdate');
+		self.qRoot.one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e){
+			self.remove();
+		});
+	}
+	this.slideLeftAnimation = function(){
+		self.qRoot.addClass('decaleUpdate');
+		self.qRoot.one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e){
+			self.qRoot.removeClass('decaleUpdate');
+		});
+	}
 	this.remove = function(){
 		self.qRoot.remove();
 	}
 	this.startLogoAnimation = function() {
 		self.imageHandler.addClass('infiniteScaleAnimation');
+		self.buttonsHandler.css('pointer-events', 'none');
 	}
 	this.stopLogoAnimation = function() {
 		self.imageHandler.removeClass('infiniteScaleAnimation');
+		self.buttonsHandler.css('pointer-events','');
 	}
 
 	this.acceptButton.click(function(){
