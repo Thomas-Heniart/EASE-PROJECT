@@ -149,6 +149,7 @@ String UserName = ((User) (session.getAttribute("user"))).getFirstName();
 				$(".userSettings").removeClass("show");
 		});
 		$('#ModifyUserButton').click(function() {
+			easeTracker.trackEvent("ClickSettingsFromDashboard");
 			$('.SettingsView').addClass('show');
 			$('.col-left').removeClass('show');
 			$('.MenuButtonSet').removeClass('show');

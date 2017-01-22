@@ -242,7 +242,7 @@ var Profile = function(rootEl){
 			}, function() {
 				easeLoadingIndicator.hide();
 			}, function(retMsg) {
-				easeTracker.trackEvent('EditProfileName', {"profileName" : name});
+				easeTracker.trackEvent('EditProfileName', {"newProfileName" : name});
 				self.setName(name);
 				self.qRoot.find('#modifyNameForm input').val('');
 			}, function(retMsg) {
@@ -272,7 +272,7 @@ var Profile = function(rootEl){
 		}, function() {
 			easeLoadingIndicator.hide();
 		}, function(retMsg) {
-			easeTracker.trackEvent('EditProfileColor', {"color": color});
+			easeTracker.trackEvent('EditProfileColor', {"newProfileColor": color});
 			self.setColor(color);
 		}, function(retMsg) {
 		}, 'text');
