@@ -20,7 +20,6 @@ function generateSteps(action, bigStep, callback) {
                 "type": overlay
             });
         }
-        console.log(steps);
         if (action == "checkAlreadyLogged") {
             if (Array.isArray(bigStep.website[action])) {
                 var createTodo = {
@@ -34,7 +33,7 @@ function generateSteps(action, bigStep, callback) {
             }
         }
         var todoList = bigStep.website[action].todo;
-
+        console.log(todoList.length+" steps to add.");
         function appendStep(i) {
             if (i >= todoList.length) {
                 callback(steps);
@@ -73,8 +72,6 @@ function generateSteps(action, bigStep, callback) {
                     appendStep(i);
                 });
             } else {
-                console.log("add action : ");
-                console.log(todoList[i]);
                 steps.push(todoList[i]);
                 i++;
                 appendStep(i);
@@ -87,7 +84,6 @@ function generateSteps(action, bigStep, callback) {
 function executeSteps(tab, actionSteps, successCallback, failCallback) {
     var step = 0;
     console.log(actionSteps);
-
     function sendActions(tab) {
         extension.tabs.sendMessage(tab, "executeActions", {
             "actions": actionSteps,
@@ -107,5 +103,6 @@ function executeSteps(tab, actionSteps, successCallback, failCallback) {
 
         });
     }
+    sendActions(tab);
     extension.tabs.onReloaded.addListener(tab, sendActions);
 }

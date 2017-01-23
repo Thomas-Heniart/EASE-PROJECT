@@ -393,7 +393,7 @@ function executeActions(msg, sendResponse) {
     actions[msg.actions[msg.step].action](msg, function (response) {
         if (response == "next") {
             msg.step++;
-            executeActions(msg, returnToBackground);
+            executeActions(msg, sendResponse);
         } else if (response == "waitload") {
             msg.step++;
             msg.status = "waitload";
@@ -404,7 +404,7 @@ function executeActions(msg, sendResponse) {
         } else if (response.indexOf("user") == 0) {
             msg.user = response.substring(response.indexOf(":") + 1, response.length);
             msg.step++;
-            executeActions(msg, returnToBackground);
+            executeActions(msg, sendResponse);
         } else if (response == "exitFrame") {
             msg.status = "next";
             sendResponse(msg);

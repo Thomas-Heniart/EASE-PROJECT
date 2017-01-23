@@ -53,9 +53,7 @@ function executeBigStep(tab, msg) {
 function startBigStep(tab, msg) {
     extension.tabs.onReloaded.addListener(tab, function reloadListener1(tab) {
         extension.tabs.onReloaded.removeListener(reloadListener1);
-        console.log("reloaded");
         generateSteps("checkAlreadyLogged", msg.detail[msg.bigStep], function (actionsCheckWhoIsConnected) {
-            console.log(actionsCheckWhoIsConnected);
             executeSteps(tab, actionsCheckWhoIsConnected, function (tab, response) {
                 var actionSteps = [];
                 extension.storage.get("lastConnections", function (lastConnections) {
@@ -69,7 +67,7 @@ function startBigStep(tab, msg) {
                         nextBigStep(tab, msg);
                     } else {
                         generateSteps("switchOrLogout", msg.detail[msg.bigStep], function (addedSteps) {
-                            actionSteps.concat(addedSteps);
+                            actionSteps = actionSteps.concat(addedSteps);
                             doConnect(tab, msg, actionSteps);
                         });
                     }
@@ -85,7 +83,7 @@ function startBigStep(tab, msg) {
                     var mainAction = "connect";
                 }
                 generateSteps(mainAction, msg.detail[msg.bigStep], function (addedSteps) {
-                    actionSteps.concat(addedSteps);
+                    actionSteps = actionSteps.concat(addedSteps);
                     executeSteps(tab, actionSteps, function (tab, response) {
                         nextBigStep(tab, msg);
                     }, function (tab, response) {
