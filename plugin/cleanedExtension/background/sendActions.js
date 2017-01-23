@@ -1,11 +1,12 @@
-function addSteps(action, bigStep, previousSteps, callback) {
+function generateSteps(action, bigStep, callback) {
+    console.log("start generation for "+ action);
     var steps = [];
     if (action == "switchOrLogout") {
         if (bigStep.website.switch) {
-            addSteps("switch", bigStep, previousSteps, callback);
+            generateSteps("switch", bigStep, callback);
             return;
         } else {
-            addSteps("logout", bigStep, previousSteps, callback);
+            generateSteps("logout", bigStep, callback);
             return;
         }
     } else {
@@ -19,6 +20,7 @@ function addSteps(action, bigStep, previousSteps, callback) {
                 "type": overlay
             });
         }
+        console.log(steps);
         if (action == "checkAlreadyLogged") {
             if (Array.isArray(bigStep.website[action])) {
                 var createTodo = {
@@ -31,10 +33,13 @@ function addSteps(action, bigStep, previousSteps, callback) {
                 bigStep.website[action] = createTodo;
             }
         }
-        console.log(action);
-        console.log(bigStep.website);
         var todoList = bigStep.website[action].todo;
-        for (var i in todoList) {
+
+        function appendStep(i) {
+            if (i >= todoList.length) {
+                callback(steps);
+                return;
+            }
             if (todoList[i].action == "fill") {
                 todoList[i].what = bigStep.user[todoList[i].what];
             }
@@ -61,16 +66,22 @@ function addSteps(action, bigStep, previousSteps, callback) {
                     "action": "exitFrame"
                 });
                 todoList.splice(j, 1);
-                todoList[i].todo = generateSteps("inFrame", bigStep);
+                generateSteps("inFrame", bigStep, function (stepsOfFrame) {
+                    todoList[i].todo = stepsOfFrame;
+                    steps.push(todoList[i]);
+                    i++;
+                    appendStep(i);
+                });
             } else {
-
+                console.log("add action : ");
+                console.log(todoList[i]);
+                steps.push(todoList[i]);
+                i++;
+                appendStep(i);
             }
-            steps.push(todoList[i]);
         }
-        previousSteps.concat(steps);
-        callback(previousSteps);
+        appendStep(0);
     }
-
 }
 
 function executeSteps(tab, actionSteps, successCallback, failCallback) {

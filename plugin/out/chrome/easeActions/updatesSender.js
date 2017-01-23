@@ -16,24 +16,23 @@ extension.storage.get("sessionId", function (oldSessionId) {
         extension.storage.get("storedUpdates", function (storedUpdates) {
             if (storedUpdates != undefined && storedUpdates.length > 0) {
                 extension.storage.get("extensionId", function (eId) {
-                    var xhr = new XMLHttpRequest();
-                    xhr.open("POST", "https://ease.space/FilterUpdates", false);
-                    xhr.onreadystatechange = function (aEvt) {
-                        if (xhr.readyState == 4) {
-                            var res = xhr.response.split(" ");
-                            if (res[0] == "200") {
-                                var indices = res;
-                                indices.splice(0,1);
-                                var toStore = [];
-                                for(var i=0;i<storedUpdates;i++){
-                                    if(!indices.includes(i))
-                                        toStore.push(storedUpdates[i]);
-                                }
-                                extension.storage.set("storedUpdates", toStore, function(){});
+                    $.post("http://localhost:8080/FilterUpdates", {
+                        "sessionId": newSessionId,
+                        "scrap": JSON.stringify(storedUpdates),
+                        "extensionId": eId
+                    }, function (resp) {
+                        var res = resp.split(" ");
+                        if (res[0] == "200") {
+                            var indices = res;
+                            indices.splice(0, 1);
+                            var toStore = [];
+                            for (var i = 0; i < storedUpdates; i++) {
+                                if (!indices.includes(i))
+                                    toStore.push(storedUpdates[i]);
                             }
+                            extension.storage.set("storedUpdates", toStore, function () {});
                         }
-                    };
-                    xhr.send("sessionId=" + newSessionId + "&extensionId=" + eId + "&updates=" + JSON.stringify(storedUpdates));
+                    });
                 });
             }
         });
