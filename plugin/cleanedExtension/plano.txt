@@ -4,14 +4,11 @@ Les json :
 à "checkAlreadyLogged":{"todo":[...]}
     -> todo :
         [action:"waitfor", search:"xxx"],
-        [check:"hasCookie", name:"cookiename"],
-        [check:"matchUrl", url:"http://aaaa.com/*"],
-        [check:"hasElement", search:"input.exemple"],
-        [check:"absentElement", search:"input.exemple"]
-* AJOUT de "checkUser":{"todo":[...]}
-   -> todo :
-        [action:"waitfor", search:"xxx"],
-        [get:attribute, search:"element"] (si attribute="text", prend le innerHtml)
+        [action:"check", type:"hasCookie", name:"cookiename"],
+        [action:"check", type:"matchUrl", url:"http://aaaa.com/*"],
+        [action:"check", type:"hasElement", search:"input.exemple"],
+        [action:"check", type:"absentElement", search:"input.exemple"]
+        [action:"get", var:"user", search:"element", attribute:"val"] (si attribute="text", prend le innerHtml, si attribute="val", prend la val)
 
 
 Background:
