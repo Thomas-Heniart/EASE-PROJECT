@@ -162,7 +162,7 @@ function sendUpdate(update) {
                     "update": JSON.stringify(update)
                 },
                 function (resp) {
-                    console.log(xhr.response);
+                    console.log(resp);
                     var res = resp.split(" ");
                     if (res[0] == "200") {
                         if (res[1] == "1") {
