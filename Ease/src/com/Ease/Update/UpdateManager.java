@@ -413,5 +413,20 @@ public class UpdateManager {
 		}
 		return newAppSingleId;
 	}
-	
+
+	public void removeAllUpdateWithThisApp(App app) throws GeneralException {
+		for (Update update : updates) {
+			if (update.getType().equals("UpdateNewPassword")) {
+				UpdateNewPassword uNp = (UpdateNewPassword)update;
+				if (uNp.getApp().getSingleId() == app.getSingleId()) {
+					
+				}
+			} else if (update.getType().equals("UpdateNewLogWithApp")) {
+				UpdateNewLogWithApp uNlw = (UpdateNewLogWithApp)update;
+				if (uNlw.getLogWithApp().getSingleId() == app.getSingleId()) {
+					
+				}
+			}
+		}
+	}
 }
