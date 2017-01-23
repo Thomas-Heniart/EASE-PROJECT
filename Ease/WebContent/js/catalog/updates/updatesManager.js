@@ -181,7 +181,7 @@ var updatePassword = function(updateId, appId, login, pwdLength, imageSrc, websi
 		if (self.isVerified == 'verified'){
 			self.startLogoAnimation();
 			postHandler.post(
-				'acceptUpdate',
+				'AcceptUpdate',
 				{
 					profileId: profiles[profiles.length - 1].id,
 					updateId: self.updateId
@@ -293,7 +293,7 @@ var newClassicApp = function(updateId, login, pwdLength, imageSrc, websiteName, 
 		if (self.isVerified == 'verified'){
 			self.startLogoAnimation();
 			postHandler.post(
-				'acceptUpdate',
+				'AcceptUpdate',
 				{
 					profileId: profiles[profiles.length - 1].id,
 					updateId: self.updateId
@@ -413,7 +413,7 @@ var newLogWithApp = function(updateId, websiteName, logWithId, logWithLogin, log
 		if (self.isVerified == 'verified'){
 			self.startLogoAnimation();
 			postHandler.post(
-				'acceptUpdate',
+				'AcceptUpdate',
 				{
 					profileId: profiles[profiles.length - 1].id,
 					updateId: self.updateId

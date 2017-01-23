@@ -57,7 +57,7 @@ function updateCatalogWith(searchVal, tags) {
 	}, function() {
 		
 	}, function(retMsg) {
-		easeTracker.trackEvent("CatalogSearch", {"SearchContent":search, "SelectedTags": tagNames});
+		easeTracker.trackEvent("CatalogSearch", {"SearchContent":searchVal, "SelectedTags": tagNames});
 		refreshCatalogContent(retMsg);
 	}, function(retMsg) {
 	}, 'text');

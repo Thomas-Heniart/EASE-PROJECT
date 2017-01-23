@@ -23,7 +23,7 @@ CREATE TABLE  updateNewPassword (
 	new_password VARCHAR(255) NOT NULL,
 	PRIMARY KEY (id),
 	FOREIGN KEY (update_id) REFERENCES updates(id),
-	FOREIGN KEY (classic_app_id) REFERENCES classicApps(id)
+	FOREIGN KEY (classic_app_id) REFERENCES apps(id)
 );
 
 CREATE TABLE updateNewAccount (
