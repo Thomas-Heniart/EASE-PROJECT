@@ -161,15 +161,15 @@ public class UpdateManager {
 				String password = (String) json.get("password");
 				String keyDate = (String) json.get("keyDate");
 				password = RSA.Decrypt(password, Integer.parseInt(keyDate));
-				password = this.user.encrypt(password);
+				String cryptedPassword = this.user.encrypt(password);
 				if (existingApp != null) {
 					System.out.println(password);
 					System.out.println(existingApp.getAccount().getCryptedPassword());
-					if (existingApp.getAccount().getCryptedPassword().equals(password))
+					if (existingApp.getAccount().getCryptedPassword().equals(cryptedPassword))
 						return true;
 					if (this.checkRemovedUpdates(existingApp, password, sm))
 						return true;
-					this.addUpdate(UpdateNewPassword.createUpdateNewPassword(this.user, existingApp, password, userEmail, sm));
+					this.addUpdate(UpdateNewPassword.createUpdateNewPassword(this.user, existingApp, cryptedPassword, userEmail, sm));
 					return true;
 				} else {
 					if (this.checkRemovedUpdates(website, login, sm))
