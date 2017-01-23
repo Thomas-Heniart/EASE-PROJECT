@@ -83,7 +83,6 @@ function enterEditMode() {
 	easeDashboard.enterEditMode();
 	catalog.open();
 	$('.MenuButtonSet').addClass('editMode');
-	$('.MenuButtonSet #updateCount').css('display', 'none');
 }
 
 function leaveEditMode() {
