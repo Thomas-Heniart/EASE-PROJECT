@@ -328,6 +328,13 @@ public class UpdateManager {
 		this.addUpdateInMaps(update);
 	}
 	
+	private void removeUpdateFromDb(Update update, DataBaseConnection db) throws GeneralException {
+		update.deleteFromDb(db);
+		this.updatesDBMap.remove(update.getDbId());
+		this.updatesIDMap.remove(update.getSingledId());
+		this.updates.remove(update);
+	}
+	
 	public void rejectUpdateWithSingleId(int single_id, ServletManager sm) throws GeneralException {
 		Update update = this.getUpdateWithSingleId(single_id);
 		update.reject(sm);
@@ -371,10 +378,7 @@ public class UpdateManager {
 			App newApp = ClassicApp.createClassicApp(profile, profile.getApps().size(), updateClassicApp.getSite().getName(), updateClassicApp.getSite(), password, infos, sm, user);
 			profile.addApp(newApp);
 			newAppSingleId = Integer.toString(newApp.getSingleId());
-			update.deleteFromDb(db);
-			this.updatesDBMap.remove(update.getDbId());
-			this.updatesIDMap.remove(single_id);
-			this.updates.remove(update);
+			this.removeUpdateFromDb(update, db);
 		} else if (update.getType().equals("UpdateNewLogWithApp")) {
 			if ((profile = user.getDashboardManager().getProfile(profileId)) == null)
 				throw new GeneralException(ServletManager.Code.ClientWarning, "This profile dosoen't exist.");
@@ -384,10 +388,7 @@ public class UpdateManager {
 			profile.addApp(newApp);
 			newAppSingleId = Integer.toString(newApp.getSingleId());
 			
-			update.deleteFromDb(db);
-			this.updatesDBMap.remove(update.getDbId());
-			this.updatesIDMap.remove(single_id);
-			this.updates.remove(update);
+			this.removeUpdateFromDb(update, db);
 		} else if (update.getType().equals("UpdateNewPassword")) {
 			UpdateNewPassword updatePassword = (UpdateNewPassword) update;
 			if (updatePassword.haveVerifiedEmail()) {
@@ -404,10 +405,7 @@ public class UpdateManager {
 			
 			newAppSingleId = Integer.toString(updatePassword.getApp().getSingleId());
 			
-			update.deleteFromDb(db);
-			this.updatesDBMap.remove(update.getDbId());
-			this.updatesIDMap.remove(single_id);
-			this.updates.remove(update);
+			this.removeUpdateFromDb(update, db);
 		} else {
 			throw new GeneralException(ServletManager.Code.InternError, "Update type wtf...");
 		}
