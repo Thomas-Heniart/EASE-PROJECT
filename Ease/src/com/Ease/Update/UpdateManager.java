@@ -328,6 +328,10 @@ public class UpdateManager {
 		this.addUpdateInMaps(update);
 	}
 	
+	public void removeUpdateFromDbWithSingleId(int single_id, DataBaseConnection db) throws GeneralException {
+		this.removeUpdateFromDb(this.updatesIDMap.get(single_id), db);
+	}
+	
 	private void removeUpdateFromDb(Update update, DataBaseConnection db) throws GeneralException {
 		update.deleteFromDb(db);
 		this.updatesDBMap.remove(update.getDbId());
