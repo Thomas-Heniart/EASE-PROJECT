@@ -8,9 +8,6 @@ import java.util.Map;
 import org.json.simple.JSONObject;
 
 import com.Ease.Context.Catalog.Website;
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
-import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Dashboard.User.UserEmail;
 import com.Ease.Utils.DataBaseConnection;
@@ -129,6 +126,7 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 	
 	public boolean matchJson(JSONObject json, User user) {
 		String login = (String) json.get("username");
-		return login.equals(this.email.getEmail()) && super.matchJson(json, user);
+		String thisLogin = this.getInformation("login");
+		return login.equals(thisLogin) && super.matchJson(json, user);
 	}
 }
