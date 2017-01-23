@@ -109,7 +109,8 @@ public class UpdateNewPassword extends Update {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 		password = user.encrypt(password);
-		return this.email.getEmail().equals(username) && this.newPassword.equals(password)
+		
+		return this.classicApp.getAccount().getInformationNamed("login").equals(username) && this.newPassword.equals(password)
 		&& this.classicApp.getSite().loginUrlMatch(websiteUrl);
 	}
 
