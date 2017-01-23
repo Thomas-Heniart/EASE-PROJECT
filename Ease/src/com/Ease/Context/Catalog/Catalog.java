@@ -152,7 +152,7 @@ public class Catalog {
 	
 	public Website getWebsiteNamed(String websiteName) {
 		for (Website site : this.websites) {
-			if (site.getName().equals(websiteName))
+			if (site.getName().toUpperCase().equals(websiteName.toUpperCase()))
 				return site;
 		}
 		return null;
