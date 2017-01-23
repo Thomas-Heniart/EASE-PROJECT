@@ -52,7 +52,7 @@ String UserName = ((User) (session.getAttribute("user"))).getFirstName();
 				</div>
 				<span class="onoffswitch"> <input
 					type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
-					id=personalComputerSetup /> <label class="onoffswitch-label"
+					id="personalComputerSetup" /> <label class="onoffswitch-label"
 					for="personalComputerSetup"></label>
 				</span>
 			</div>
@@ -89,8 +89,8 @@ String UserName = ((User) (session.getAttribute("user"))).getFirstName();
 						$('#personalComputerSetup').prop('checked', true);
 						$("#personalComputerSetup").change(function() {
 							var self = $(this);
-							var isChecked = $('#personalComputerSetup').prop('checked');
-							if (!isChecked) {
+							var isChecked = self.prop('checked');
+							if (isChecked) {
 								postHandler.post(
 									'AddUserExtension',
 									{
@@ -100,10 +100,9 @@ String UserName = ((User) (session.getAttribute("user"))).getFirstName();
 
 									},
 									function (msg){
-										self.prop('checked', true);
 									},
 									function (msg){
-
+										self.prop('checked', false);
 									},
 									'text'
 									);
@@ -117,10 +116,9 @@ String UserName = ((User) (session.getAttribute("user"))).getFirstName();
 
 									},
 									function (msg){
-										self.prop('checked', false);
 									},
 									function (msg){
-
+										self.prop('checked', true);
 									},
 									'text'
 									);					

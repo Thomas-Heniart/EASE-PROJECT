@@ -21,6 +21,9 @@ var UpdateManager = function (rootEl) {
 	this.hide = function(){
 		self.qRoot.removeClass('show');
 	};
+	this.updateTitle = function(){
+		self.titleHandler.text(self.updates.length + ' Update' + ((self.updates.length == 1) ? '' : 's') + ' available');
+	};
 	this.checkUpdates = function(){
 		postHandler.post(
 			'GetUpdates',
@@ -40,10 +43,14 @@ var UpdateManager = function (rootEl) {
 						u = updates[i];
 						if (updates[i].type == 'newClassicApp'){
 							self.addUpdate(new newClassicApp(u.singleId, u.login, u.passwordLength, u.websiteImg, u.websiteName, u.email, u.websiteId));
+						} else if (updates[i].type == 'newPassword'){
+							self.addUpdate(new updatePassword(u.singleId, u.appId, u.login, u.passwordLength, u.websiteImg, u.websiteName, u.email, u.websiteId));
+						} else if (updates[i].type == 'newLogWithApp'){
+							self.addUpdate(new logWithApp(u.singleId, u.websiteName, u.logWithId, u.login, u.logWithImg, u.logWithName, u.websiteImg, u.websiteId));
 						}
 					}
 				}
-
+				self.updateTitle();
 			},
 			function(msg){
 
@@ -61,8 +68,11 @@ var UpdateManager = function (rootEl) {
 		self.updatesHandler.append(update.qRoot);
 	};
 	this.removeUpdate = function(update){
+		update.removeWithAnimation();
+		for (var i = self.updates.indexOf(update) + 1; i < self.updates.length; i++) {
+			self.updates[i].slideLeftAnimation();
+		}
 		self.updates.splice(self.updates.indexOf(update), 1);
-		update.remove();
 	};
 }
 
@@ -148,6 +158,7 @@ var updatePassword = function(updateId, appId, login, pwdLength, imageSrc, websi
 	this.imageHandler = this.qRoot.find('.logo');
 	this.errorMessageHandler = this.qRoot.find('.errorMessage');
 	this.infosHandler = this.qRoot.find('.infos .handler');
+	this.buttonsHandler = this.qRoot.find('.buttonsHandler');
 	this.acceptButton = this.qRoot.find('.acceptButton');
 	this.rejectButton = this.qRoot.find('.rejectButton');
 
@@ -167,14 +178,28 @@ var updatePassword = function(updateId, appId, login, pwdLength, imageSrc, websi
 		}, 2500);
 	}
 
+	this.removeWithAnimation = function(){
+		self.qRoot.addClass('deletingUpdate');
+		self.qRoot.one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e){
+			self.remove();
+		});
+	}
+	this.slideLeftAnimation = function(){
+		self.qRoot.addClass('decaleUpdate');
+		self.qRoot.one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e){
+			self.qRoot.removeClass('decaleUpdate');
+		});
+	}
 	this.remove = function(){
 		self.qRoot.remove();
 	}
 	this.startLogoAnimation = function() {
 		self.imageHandler.addClass('infiniteScaleAnimation');
+		self.buttonsHandler.css('pointer-events', 'none');
 	}
 	this.stopLogoAnimation = function() {
 		self.imageHandler.removeClass('infiniteScaleAnimation');
+		self.buttonsHandler.css('pointer-events','');
 	}
 
 	this.acceptButton.click(function(){
@@ -261,6 +286,7 @@ var newClassicApp = function(updateId, login, pwdLength, imageSrc, websiteName, 
 	this.imageHandler = this.qRoot.find('.logo');
 	this.errorMessageHandler = this.qRoot.find('.errorMessage');
 	this.infosHandler = this.qRoot.find('.infos .handler');
+	this.buttonsHandler = this.qRoot.find('.buttonsHandler');
 	this.acceptButton = this.qRoot.find('.acceptButton');
 	this.rejectButton = this.qRoot.find('.rejectButton');
 
@@ -279,14 +305,28 @@ var newClassicApp = function(updateId, login, pwdLength, imageSrc, websiteName, 
 			self.infosHandler.removeClass('hide');			
 		}, 2500);
 	}
+	this.removeWithAnimation = function(){
+		self.qRoot.addClass('deletingUpdate');
+		self.qRoot.one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e){
+			self.remove();
+		});
+	}
+	this.slideLeftAnimation = function(){
+		self.qRoot.addClass('decaleUpdate');
+		self.qRoot.one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e){
+			self.qRoot.removeClass('decaleUpdate');
+		});
+	}
 	this.remove = function(){
 		self.qRoot.remove();
 	}
 	this.startLogoAnimation = function() {
 		self.imageHandler.addClass('infiniteScaleAnimation');
+		self.buttonsHandler.css('pointer-events', 'none');
 	}
 	this.stopLogoAnimation = function() {
 		self.imageHandler.removeClass('infiniteScaleAnimation');
+		self.buttonsHandler.css('pointer-events', '');
 	}
 
 	this.acceptButton.click(function(){
@@ -381,6 +421,7 @@ var newLogWithApp = function(updateId, websiteName, logWithId, logWithLogin, log
 	this.imageHandler = this.qRoot.find('.logo');
 	this.errorMessageHandler = this.qRoot.find('.errorMessage');
 	this.infosHandler = this.qRoot.find('.infos .handler');
+	this.buttonsHandler = this.qRoot.find('.buttonsHandler');
 	this.acceptButton = this.qRoot.find('.acceptButton');
 	this.rejectButton = this.qRoot.find('.rejectButton');
 
@@ -399,43 +440,53 @@ var newLogWithApp = function(updateId, websiteName, logWithId, logWithLogin, log
 			self.infosHandler.removeClass('hide');			
 		}, 2500);
 	}
+	this.removeWithAnimation = function(){
+		self.qRoot.addClass('deletingUpdate');
+		self.qRoot.one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e){
+			self.remove();
+		});
+	}
+	this.slideLeftAnimation = function(){
+		self.qRoot.addClass('decaleUpdate');
+		self.qRoot.one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e){
+			self.qRoot.removeClass('decaleUpdate');
+		});
+	}
 	this.remove = function(){
 		self.qRoot.remove();
 	}
 	this.startLogoAnimation = function() {
 		self.imageHandler.addClass('infiniteScaleAnimation');
+		self.buttonsHandler.css('pointer-events', 'none');
 	}
 	this.stopLogoAnimation = function() {
 		self.imageHandler.removeClass('infiniteScaleAnimation');
+		self.buttonsHandler.css('pointer-events','');
 	}
 
 	this.acceptButton.click(function(){
-		if (self.isVerified == 'verified'){
-			self.startLogoAnimation();
-			postHandler.post(
-				'AcceptUpdate',
-				{
-					profileId: profiles[profiles.length - 1].id,
-					updateId: self.updateId
-				},
-				function(){
-					self.stopLogoAnimation();
-				},
-				function(msg){
-					var app = new MyApp();
-					app.init(self.logWithId, null, self.catalogId, self.websiteName, msg, 0, true, self.imageSrc);
-					profiles[profiles.length - 1].addApp(app);
-					app.scaleAnimate();
-					catalog.oUpdate.removeUpdate(self);
-				},
-				function(msg){
-					self.showErrorMessage(msg);
-				},
-				'text'
-				);
-		} else {
-			easeAddUpdatePopup.open(self, profiles[profiles.length - 1].id);
-		}
+		self.startLogoAnimation();
+		postHandler.post(
+			'acceptUpdate',
+			{
+				profileId: profiles[profiles.length - 1].id,
+				updateId: self.updateId
+			},
+			function(){
+				self.stopLogoAnimation();
+			},
+			function(msg){
+				var app = new MyApp();
+				app.init(self.logWithId, null, self.catalogId, self.websiteName, msg, 0, true, self.imageSrc);
+				profiles[profiles.length - 1].addApp(app);
+				app.scaleAnimate();
+				catalog.oUpdate.removeUpdate(self);
+			},
+			function(msg){
+				self.showErrorMessage(msg);
+			},
+			'text'
+			);
 	});
 	this.rejectButton.click(function(){
 		self.startLogoAnimation();
