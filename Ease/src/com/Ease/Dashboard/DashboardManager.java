@@ -289,15 +289,14 @@ public class DashboardManager {
 		return app;
 	}
 
-	public ClassicApp findClassicAppWithLoginAndWebsite(String login, Website website) {
+	public ClassicApp findClassicAppWithLoginAndWebsite(String login, Website website) throws GeneralException {
 		for (App app : this.apps) {
 			if (!app.getType().equals("ClassicApp"))
 				continue;
 			String appLogin = ((ClassicApp)app).getAccount().getInformationNamed("login");
-			if (appLogin.equals(login) && ((ClassicApp) app).getSite() == website)
+			if (appLogin.equals(login) && ((WebsiteApp) app).getSite().getName().equals(website.getName()))
 				return (ClassicApp) app;
 		}
-		return null;
-		
+		throw new GeneralException(ServletManager.Code.ClientError, "This app does not exist");
 	}
 }

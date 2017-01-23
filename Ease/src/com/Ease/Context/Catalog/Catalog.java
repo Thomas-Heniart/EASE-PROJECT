@@ -150,12 +150,12 @@ public class Catalog {
 		return false;
 	}
 	
-	public Website getWebsiteNamed(String websiteName) {
+	public Website getWebsiteNamed(String websiteName) throws GeneralException {
 		for (Website site : this.websites) {
-			if (site.getName().equals(websiteName))
+			if (site.getName().toLowerCase().equals(websiteName.toLowerCase()))
 				return site;
 		}
-		return null;
+		throw new GeneralException(ServletManager.Code.ClientError, "We don't have this website");
 	}
 
 	public boolean haveWebsiteWithLoginUrl(String url) {
