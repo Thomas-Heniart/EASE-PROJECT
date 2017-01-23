@@ -1,20 +1,24 @@
-function generateSteps(action, bigStep) {
+function addSteps(action, bigStep, previousSteps, callback) {
     var steps = [];
     if (action == "switchOrLogout") {
         if (bigStep.website.switch) {
-            steps = generateSteps("switch", bigStep);
+            addSteps("switch", bigStep, previousSteps, callback);
+            return;
         } else {
-            steps = generateSteps("logout", bigStep);
+            addSteps("logout", bigStep, previousSteps, callback);
+            return;
         }
     } else {
-        var overlay = "connect";
-        if (action == "logout" || action == "switch" || action == "checkAlreadyLogged") {
-            overlay = action;
+        if (action != "doInFrame") {
+            var overlay = "connect";
+            if (action == "logout" || action == "switch" || action == "checkAlreadyLogged") {
+                overlay = action;
+            }
+            steps.push({
+                "action": "overlay",
+                "type": overlay
+            });
         }
-        steps.push({
-            "action": "overlay",
-            "type": overlay
-        });
         if (action == "checkAlreadyLogged") {
             if (Array.isArray(bigStep.website[action])) {
                 var createTodo = {
@@ -27,6 +31,8 @@ function generateSteps(action, bigStep) {
                 bigStep.website[action] = createTodo;
             }
         }
+        console.log(action);
+        console.log(bigStep.website);
         var todoList = bigStep.website[action].todo;
         for (var i in todoList) {
             if (todoList[i].action == "fill") {
@@ -44,39 +50,50 @@ function generateSteps(action, bigStep) {
             }
             if (todoList[i].action == "enterFrame") {
                 var j = i + 1;
-                todoList[i].todo = [];
-                while (todoList[j].action != "exitFrame" && j < todoList[i].length) {
-                    todoList[i].todo.push(todoList[j]);
-                    todoList.splice(j, 1);
+                bigStep.website.inFrame = {
+                    "todo": []
+                };
+                while (todoList[j].action != "exitFrame" && j < todoList.length) {
+                    bigStep.website.inFrame.todo.push(todoList[j]);
+                    j++;
                 }
-                todoList[i].todo.push({
+                bigStep.website.inFrame.todo.push({
                     "action": "exitFrame"
-                })
+                });
                 todoList.splice(j, 1);
+                todoList[i].todo = generateSteps("inFrame", bigStep);
+            } else {
+
             }
             steps.push(todoList[i]);
         }
+        previousSteps.concat(steps);
+        callback(previousSteps);
     }
-    return steps;
+
 }
 
 function executeSteps(tab, actionSteps, successCallback, failCallback) {
     var step = 0;
+    console.log(actionSteps);
 
     function sendActions(tab) {
         extension.tabs.sendMessage(tab, "executeActions", {
             "actions": actionSteps,
             "step": step
         }, function (response) {
-            if (response.status == "done") {
+            if (response) {
                 step = response.step;
-                if (step >= actionSteps.length) {
+                if (response.status.indexOf("error") == 0) {
+                    failCallback(tab, response);
+                } else if (step >= actionSteps.length) {
                     extension.tabs.onReloaded.removeListener(sendActions);
                     successCallback(tab, response);
                 }
             } else {
                 failCallback(tab, response);
             }
+
         });
     }
     extension.tabs.onReloaded.addListener(tab, sendActions);

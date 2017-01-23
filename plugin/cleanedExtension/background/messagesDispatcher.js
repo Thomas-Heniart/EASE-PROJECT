@@ -1,4 +1,4 @@
-extension.runtime.onMessage("NewConnection", function (msg, easeTab, sendResponse) {
+extension.runtime.onMessage.addListener("NewConnection", function (msg, easeTab, sendResponse) {
     extension.windows.getFromTab(easeTab, function (win) {
         extension.ease.getTabs(win, function (res) {
             if (res.length > 1) {
@@ -10,11 +10,11 @@ extension.runtime.onMessage("NewConnection", function (msg, easeTab, sendRespons
     });
 });
 
-extension.runtime.bckgrndOnMessage("Logout", function (msg, easeTab, sendResponse) {
+extension.runtime.onMessage.addListener("Logout", function (msg, easeTab, sendResponse) {
     globalLogout(easeTab);
 });
 
-extension.runtime.bckgrndOnMessage("NewLinkToOpen", function (msg, easeTab, sendResponse) {
+extension.runtime.onMessage.addListener("NewLinkToOpen", function (msg, easeTab, sendResponse) {
     extension.windows.getFromTab(easeTab, function (win) {
         extension.ease.getTabs(win, function (res) {
             if (res.length > 1) {
