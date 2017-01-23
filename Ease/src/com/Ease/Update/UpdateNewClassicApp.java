@@ -126,6 +126,7 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 	
 	public boolean matchJson(JSONObject json, User user) {
 		String login = (String) json.get("username");
-		return login.equals(this.email.getEmail()) && super.matchJson(json, user);
+		String thisLogin = this.getInformation("login");
+		return login.equals(thisLogin) && super.matchJson(json, user);
 	}
 }
