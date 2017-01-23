@@ -76,9 +76,9 @@ public class UpdateNewLogWithApp extends UpdateNewAccount {
 		json.put("singleId", this.single_id);
 		json.put("login", ((ClassicApp)this.logWithApp).getAccount().getInformationNamed("login"));
 		json.put("websiteImg", this.website.getFolder() + "logo.png");
-		json.put("logwithImg", logWithApp.getSite().getFolder() + "logo.png");
+		json.put("logWithImg", logWithApp.getSite().getFolder() + "logo.png");
 		json.put("logWithName", logWithApp.getName());
-		json.put("logWithid", logWithApp.getSingleId());
+		json.put("logWithId", logWithApp.getSingleId());
 		json.put("websiteId", this.website.getSingleId());
 		json.put("websiteName", this.website.getName());
 		return json;

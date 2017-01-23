@@ -65,15 +65,27 @@ public class UpdateManager {
 	public List<Update> getUpdates() {
 		return this.updates;
 	}
-
-	public boolean addUpdateFromJsonConnected(String jsonString, ServletManager sm) throws GeneralException {
+	
+	@SuppressWarnings("unchecked")
+	public void addUpdatesFromJsonConnected(String updates, ServletManager sm) throws GeneralException {
 		JSONParser parser = new JSONParser();
-		JSONObject json;
+		JSONArray jsonArray;
+		
 		try {
-			json = (JSONObject) parser.parse(jsonString);
+			jsonArray = (JSONArray) parser.parse(updates);
 		} catch (ParseException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
+		jsonArray.forEach((update) -> {
+			try {
+				addUpdateFromJsonConnected((JSONObject) update, sm);
+			} catch (GeneralException e) {
+				return;
+			}
+		});
+	}
+
+	public boolean addUpdateFromJsonConnected(JSONObject json, ServletManager sm) throws GeneralException {
 		String type = (String) json.get("type");
 		String url = (String) json.get("website");
 		if (type.equals("classic")) {
@@ -81,10 +93,10 @@ public class UpdateManager {
 			UserEmail userEmail = user.getUserEmails().get(login);
 			Website website = this.findWebsiteInCatalogWithLoginUrl(url, sm);
 			ClassicApp existingApp = this.findClassicAppWithLoginAndWebsite(login, website);
+			System.out.println("???");
 			String password = (String) json.get("password");
 			String keyDate = (String) json.get("keyDate");
 			password = RSA.Decrypt(password, Integer.parseInt(keyDate));
-			password = this.user.encrypt(password);
 			if (existingApp != null) {
 				if (this.checkRemovedUpdates(existingApp, password, sm))
 					return true;
@@ -314,32 +326,38 @@ public class UpdateManager {
 	public String acceptUpdate(int single_id, int profileId, String password, ServletManager sm) throws GeneralException {
 		String newAppSingleId;
 		Update update = this.getUpdateWithSingleId(single_id);
+		System.out.println("Update type : " + update.getType());
+		System.out.println("Update dbid : " + update.getDbId());
 		if (update == null) {
 			throw new GeneralException(ServletManager.Code.ClientError, "This update dosoen't exist.");
 		}
 		Profile profile;
+		System.out.println(update.getClass().getName());
 		if (update.getType().equals("UpdateNewClassicApp")) {
+			System.out.println("NewClassicAppUpdate if");
 			if ((profile = user.getDashboardManager().getProfile(profileId)) == null)
 				throw new GeneralException(ServletManager.Code.ClientWarning, "This profile dosoen't exist.");
 			
 			UpdateNewClassicApp updateClassicApp = (UpdateNewClassicApp) update;
 			if (updateClassicApp.haveVerifiedEmail()) {
-				if (password == null) {
+				/*if (password == null) {
 					throw new GeneralException(ServletManager.Code.ClientError, "Wrong password");
-				}
+				}*/
 				password = updateClassicApp.getPassword();
 				password = this.user.decrypt(password);
+			} else if (password == null) {
+				throw new GeneralException(ServletManager.Code.ClientError, "Wrong password");
 			}
 			Map<String, String> infos = updateClassicApp.getInfos();
 			App newApp = ClassicApp.createClassicApp(profile, profile.getApps().size(), updateClassicApp.getSite().getName(), updateClassicApp.getSite(), password, infos, sm, user);
 			profile.addApp(newApp);
 			newAppSingleId = Integer.toString(newApp.getSingleId());
-			
+			System.out.println("On est bien là ?");
 			update.reject(sm);
 			this.updatesDBMap.remove(update.getDbId());
 			this.updatesIDMap.remove(single_id);
 			this.updates.remove(update);
-		} else if (update.getClass().getName().equals("UpdateNewLogWithApp")) {
+		} else if (update.getType().equals("UpdateNewLogWithApp")) {
 			if ((profile = user.getDashboardManager().getProfile(profileId)) == null)
 				throw new GeneralException(ServletManager.Code.ClientWarning, "This profile dosoen't exist.");
 			
@@ -352,17 +370,18 @@ public class UpdateManager {
 			this.updatesDBMap.remove(update.getDbId());
 			this.updatesIDMap.remove(single_id);
 			this.updates.remove(update);
-		} else if (update.getClass().getName().equals("UpdateNewPassword")) {
-			
+		} else if (update.getType().equals("UpdateNewPassword")) {
 			UpdateNewPassword updatePassword = (UpdateNewPassword) update;
 			if (updatePassword.haveVerifiedEmail()) {
-				if (password == null) {
+				/*if (password == null) {
 					throw new GeneralException(ServletManager.Code.ClientError, "Wrong password");
-				}
+				}*/
 				password = updatePassword.getPassword();
 				password = this.user.decrypt(password);
+			} else {
+				if (password == null)
+					throw new GeneralException(ServletManager.Code.ClientError, "Wrong password");
 			}
-			
 			updatePassword.getApp().setPassword(password, sm);
 			
 			newAppSingleId = Integer.toString(updatePassword.getApp().getSingleId());

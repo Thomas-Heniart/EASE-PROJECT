@@ -46,7 +46,7 @@ var UpdateManager = function (rootEl) {
 						} else if (updates[i].type == 'newPassword'){
 							self.addUpdate(new updatePassword(u.singleId, u.appId, u.login, u.passwordLength, u.websiteImg, u.websiteName, u.email, u.websiteId));
 						} else if (updates[i].type == 'newLogWithApp'){
-							self.addUpdate(new logWithApp(u.singleId, u.websiteName, u.logWithId, u.login, u.logWithImg, u.logWithName, u.websiteImg, u.websiteId));
+							self.addUpdate(new newLogWithApp(u.singleId, u.websiteName, u.logWithId, u.login, u.logWithImg, u.logWithName, u.websiteImg, u.websiteId));
 						}
 					}
 				}
@@ -206,7 +206,7 @@ var updatePassword = function(updateId, appId, login, pwdLength, imageSrc, websi
 		if (self.isVerified == 'verified'){
 			self.startLogoAnimation();
 			postHandler.post(
-				'acceptUpdate',
+				'AcceptUpdate',
 				{
 					profileId: profiles[profiles.length - 1].id,
 					updateId: self.updateId
@@ -333,7 +333,7 @@ var newClassicApp = function(updateId, login, pwdLength, imageSrc, websiteName, 
 		if (self.isVerified == 'verified'){
 			self.startLogoAnimation();
 			postHandler.post(
-				'acceptUpdate',
+				'AcceptUpdate',
 				{
 					profileId: profiles[profiles.length - 1].id,
 					updateId: self.updateId
@@ -467,7 +467,7 @@ var newLogWithApp = function(updateId, websiteName, logWithId, logWithLogin, log
 	this.acceptButton.click(function(){
 		self.startLogoAnimation();
 		postHandler.post(
-			'acceptUpdate',
+			'AcceptUpdate',
 			{
 				profileId: profiles[profiles.length - 1].id,
 				updateId: self.updateId
@@ -477,7 +477,7 @@ var newLogWithApp = function(updateId, websiteName, logWithId, logWithLogin, log
 			},
 			function(msg){
 				var app = new MyApp();
-				app.init(self.logWithId, null, self.catalogId, self.websiteName, msg, 0, true, self.imageSrc);
+				app.init(self.logWithId, null, self.catalogId, self.websiteName, msg, 0, true, self.websiteImageSrc);
 				profiles[profiles.length - 1].addApp(app);
 				app.scaleAnimate();
 				catalog.oUpdate.removeUpdate(self);

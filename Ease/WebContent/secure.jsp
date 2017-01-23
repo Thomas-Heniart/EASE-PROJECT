@@ -450,7 +450,7 @@ label.checkbox {
 
 	/* Test */
 	amplitude.getInstance().init("73264447f97c4623fb38d92b9e7eaeea");
-	easeTracker.trackEvent("SecurityPageVisit");
+	easeTracker.trackEvent("HomepageSecurity");
 </script>
 </head>
 <body>

@@ -291,7 +291,7 @@ public class DashboardManager {
 
 	public ClassicApp findClassicAppWithLoginAndWebsite(String login, Website website) {
 		for (App app : this.apps) {
-			if (app.getType() != "ClassicApp")
+			if (!app.getType().equals("ClassicApp"))
 				continue;
 			String appLogin = ((ClassicApp)app).getAccount().getInformationNamed("login");
 			if (appLogin.equals(login) && ((ClassicApp) app).getSite() == website)

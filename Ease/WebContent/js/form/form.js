@@ -103,8 +103,10 @@ var Form = {
 		var self = this;
 		this.successCallback = function() {
 			showAlertPopup('Modifications successfully applied !', false);
-			$("#userSettingsButton span").html(self.oInputs[0].getVal());
-			easeTracker.trackEvent("EditUserName");
+			var newName = self.oInputs[0].getVal();
+			$("#userSettingsButton span").html(newName);
+			var namesCount = newName.split(" ").count();
+			easeTracker.trackEvent("SettingsEditUserName", {"UserNamesCount":namesCount});
 			self.disable();
 		};
 		this.errorCallback = function(retMsg) {
@@ -115,7 +117,7 @@ var Form = {
 		constructorForm.apply(this, arguments);
 		var self = this;
 		this.successCallback = function (retMsg) {
-			easeTracker.trackEvent("EditUserPassword");
+			easeTracker.trackEvent("SettingsEditUserPassword");
 			$("p.response", self.qRoot).removeClass("error");
 			$("p.response", self.qRoot).addClass("success");
 			$("p.response", self.qRoot).text(retMsg);
@@ -212,8 +214,6 @@ var Form = {
 			}, 1000);
 			self.newAppItem.find('.linkImage').attr('onclick',
 					"sendEvent(this)");
-			//easeTracker.trackEvent('App added');
-			//easeTracker.trackEvent($(".catalogApp[idx='" + self.site_id + "']").attr('name') + " app added");
 			self.newAppItem.attr('webId', self.helper.attr('idx'));
 			self.newAppItem.attr('logwith', (self.app_id == null) ? 'false'
 					: self.app_id);
@@ -227,7 +227,8 @@ var Form = {
 				self.newAppItem.attr(key, self.attributesToSet[key]);
 			}
 			var type = (self.postName == "AddClassicApp") ? "ClassicApp" : "LogWithApp";
-			easeTracker.trackEvent("AddApp", {"type": type, "appName": siteName});
+			var isNew = $(".catlogApp[name='" + siteName + "']").attr("newApp") != null;
+			easeTracker.trackEvent("AddApp", {"appType": type, "appName": siteName, "AppNewYN": isNew});
 			easeTracker.increaseAppCounter();
 			self.reset();
 			self.appsContainer = null;
@@ -343,8 +344,9 @@ var Form = {
 		};
 		this.submit = function(e) {
 			e.preventDefault();
+			var name = self.oInputs[0].getVal()
 			self.params = {
-				name : self.oInputs[0].getVal(),
+				name : name,
 				appId : self.appId,
 			};
 			var AppToLoginWith = self.qRoot.find('.AccountApp.selected');
@@ -375,8 +377,8 @@ var Form = {
 						self.app.find('.emptyAppIndicator').remove();
 						self.app.removeClass('emptyApp');
 						self.qRoot.find('.AccountApp.selected').removeClass("selected");
+						easeTracker.trackEvent("EditAppDone");
 						self.removeAddedFields();
-						easeTracker.trackEvent("EditApp");
 					}, function(){},
 					'text');
 			} else {
@@ -449,7 +451,8 @@ var Form = {
 			var webId = (self.oParent.app).attr("webid");
 			var x = parseInt($(".catalogApp[idx='" + webId + "'] span.apps-integrated i.count").html());
 			$(".catalogApp[idx='" + webId + "'] span.apps-integrated i.count").html(x-1);
-			easeTracker.trackEvent("DeleteApp");
+			var appName = $(self.oParent.app).attr("name");
+			easeTracker.trackEvent("DeleteApp", {"appName": appName});
 			easeTracker.decreaseAppCounter();
 			if (x == 1)
 				$(".catalogApp[idx='" + webId + "'] span.apps-integrated").removeClass("showCounter");
@@ -504,6 +507,8 @@ var Form = {
 			self.addEmail(self.oInputs[0].getVal());
 			$(".newEmail").addClass("show");
 			$(".newEmailInput").removeClass("show");
+			easeTracker.trackEvent("EmailAdded");
+			easeTracker.increaseEmailCount();
 			self.reset();
 		}
 	},
@@ -537,6 +542,9 @@ var Form = {
 				$(".emailLine").has("input[value='" + self.oInputs[0].getVal() + "']").find(".email-loading").removeClass("show");
 				$(".emailLine").has("input[value='" + self.oInputs[0].getVal() + "']").find(".email-sent").addClass("show");
 			}, 2000);
+		};
+		this.successCallback = function(retMsg) {
+			easeTracker.trackEvent("EmailVerificationSent");
 		}
 	},
 	DeleteAccountForm : function(rootEl) {
@@ -548,7 +556,7 @@ var Form = {
 			$(".wait", self.oParent.qRoot).addClass("show");
 		};
 		this.successCallback = function(retMsg) {
-			easeTracker.trackEvent("DeleteAccount");
+			easeTracker.trackEvent("SettingsEaseAccountDeleted");
 			setTimeout(function() {
 				window.location = "index.jsp";
 			}, 1000);
