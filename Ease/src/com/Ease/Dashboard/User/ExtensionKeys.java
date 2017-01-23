@@ -18,7 +18,7 @@ public class ExtensionKeys {
 			DataBaseConnection db = sm.getDB();
 			ResultSet rs = db.get("SELECT * FROM usersPrivateExtensions where user_id=" + user.getDBid() + ";");
 			while (rs.next()) {
-				keys.add(rs.getString(2));
+				keys.add(rs.getString(3));
 			}
 		} catch (GeneralException e) {
 			throw e;
@@ -69,7 +69,7 @@ public class ExtensionKeys {
 		try {
 			for (String key : keys) {
 				if (clientKey.equals(key)) {
-					db.set("REMOVE FROM usersPrivateExtensions WHERE user_id=" + user.getDBid() + " AND extension_key='" + clientKey + "';");
+					db.set("DELETE FROM usersPrivateExtensions WHERE user_id=" + user.getDBid() + " AND extension_key='" + clientKey + "';");
 					keys.remove(clientKey);
 					return ;
 				}
