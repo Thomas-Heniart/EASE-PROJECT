@@ -1,12 +1,12 @@
 var extension = {
-    onInstalled:{
-            addListener: function(fct){
-                listenerFactory.addListener(this, chrome.runtime.onInstalled, fct, fct);
-            },
-            removeListener: function(fct){
-                listenerFactory.removeListener(this, chrome.runtime.onInstalled, fct);
-            }
+    onInstalled: {
+        addListener: function (fct) {
+            listenerFactory.addListener(this, chrome.runtime.onInstalled, fct, fct);
         },
+        removeListener: function (fct) {
+            listenerFactory.removeListener(this, chrome.runtime.onInstalled, fct);
+        }
+    },
     windows: {
         getAll: function (callback) {
             chrome.windows.getAll({
@@ -16,6 +16,11 @@ var extension = {
         },
         getCurrent: function (callback) {
             chrome.windows.getCurrent({
+                "populate": true
+            }, callback)
+        },
+        getFromTab: function (tab, callback) {
+            chrome.windows.get(tab.windowId, {
                 "populate": true
             }, callback)
         },
@@ -37,19 +42,28 @@ var extension = {
         }
     },
     ease: {
-        getTabs: function (callback) {
-            extension.windows.getAll(function (windows) {
-                var result = [];
-                for (var j in windows) {
-                    var window = windows[j];
-                    for (var i in window.tabs) {
-                        if (window.tabs[i].url.indexOf("https://ease.space") == 0) {
-                            result.push(window.tabs[i]);
+        getTabs: function (currWindow, callback) {
+            var result = [];
+            if (currWindow == null) {
+                extension.windows.getAll(function (windows) {
+                    for (var j in windows) {
+                        var window = windows[j];
+                        for (var i in window.tabs) {
+                            if (window.tabs[i].url.indexOf("https://ease.space") == 0) {
+                                result.push(window.tabs[i]);
+                            }
                         }
+                    }
+                    callback(result);
+                });
+            } else {
+                for (var i in currWindow.tabs) {
+                    if (currWindow.tabs[i].url.indexOf("https://ease.space") == 0) {
+                        result.push(currWindow.tabs[i]);
                     }
                 }
                 callback(result);
-            });
+            }
         },
         reload: function (callback) {
             extension.ease.getTabs(function (tabs) {
