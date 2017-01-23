@@ -88,12 +88,13 @@ public class UpdateManager {
 	public boolean addUpdateFromJsonConnected(JSONObject json, ServletManager sm) throws GeneralException {
 		String type = (String) json.get("type");
 		String url = (String) json.get("website");
+		/*if (this.haveUpdate(json, sm))
+			return true;*/
 		if (type.equals("classic")) {
 			String login = (String) json.get("username");
 			UserEmail userEmail = user.getUserEmails().get(login);
 			Website website = this.findWebsiteInCatalogWithLoginUrl(url, sm);
 			ClassicApp existingApp = this.findClassicAppWithLoginAndWebsite(login, website);
-			System.out.println("???");
 			String password = (String) json.get("password");
 			String keyDate = (String) json.get("keyDate");
 			password = RSA.Decrypt(password, Integer.parseInt(keyDate));
@@ -125,6 +126,19 @@ public class UpdateManager {
 		}
 	}
 	
+	private boolean haveUpdate(JSONObject json, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		String type = (String) json.get("type");
+		String url = (String) json.get("website");
+		Website website;
+		if (type.equals("classic")) {
+			String login = (String) json.get("username");
+			UserEmail userEmail = user.getUserEmails().get(login);
+			website = this.findWebsiteInCatalogWithLoginUrl(url, sm);
+		}
+		return false;
+	}
+
 	public boolean addUpdateFromJsonDeconnected(String jsonString, ServletManager sm) throws GeneralException {
 		JSONParser parser = new JSONParser();
 		JSONObject json;
@@ -386,7 +400,8 @@ public class UpdateManager {
 			
 			newAppSingleId = Integer.toString(updatePassword.getApp().getSingleId());
 			
-			update.reject(sm);
+			DataBaseConnection db = sm.getDB();
+			update.deleteFromDb(db);
 			this.updatesDBMap.remove(update.getDbId());
 			this.updatesIDMap.remove(single_id);
 			this.updates.remove(update);
