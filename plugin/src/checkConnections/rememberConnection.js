@@ -155,6 +155,8 @@ function isConnected(url, user) {
 }
 
 function sendUpdate(update) {
+    console.log("send update");
+    console.log(update);
     extension.storage.get("sessionId", function (sId) {
         if (sId != "") {
             var xhr = new XMLHttpRequest();
@@ -201,12 +203,13 @@ function removeUpdate(update, callback) {
             for (var i = 0; i < storedUpdates.length; i++) {
                 var oldUpdate = storedUpdates[i];
                 if (oldUpdate.type == update.type && oldUpdate.website == update.website) {
-                    if (update.type == "logwith" && oldUpdate.logwith == update.logwith && oldUpdate.user == update.user) {
+                    if (update.type == "logwith" && oldUpdate.logwith == update.logwith && oldUpdate.username == update.username) {
                         toDelete = i;
                         break;
                     }
                     if (update.type == "classic" && oldUpdate.username == update.username) {
                         toDelete = i;
+                        console.log("delete update "+i);
                         break;
                     }
                 }

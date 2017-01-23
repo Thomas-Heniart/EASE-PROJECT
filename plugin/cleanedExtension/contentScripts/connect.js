@@ -1,12 +1,3 @@
-function getHost(url) {
-    var getLocation = function (href) {
-        var l = document.createElement("a");
-        l.href = href;
-        return l;
-    };
-    return getLocation(url).hostname;
-}
-
 function sendKey(input, key) {
     var e = input.ownerDocument.createEvent("KeyboardEvent");
     // FIREFOX : e.initKeyEvent("keydown", 1, 1, null, 0, 0, 0, 0, key, 0)
@@ -330,17 +321,28 @@ var actions = {
     }
 };
 
-function executeActions(msg, returnToBackground) {
+function executeActions(msg, sendResponse) {
     if (msg.step >= msg.actions) {
         msg.status = "done";
-        returnToBackground(msg);
+        sendResponse(msg);
         return;
     }
     console.log("-- Ease action : " + msg.actions[msg.step].action + " --");
     actions[msg.actions[msg.step].action](msg, function () {
         msg.step++;
-        executeActions(msg, returnToBackground);
+        executeActions(msg, sendResponse);
     }, function (status) {
-        returnToBackground(msg);
+        msg.status = status;
+        msg.step++;
+        sendResponse(msg);
     });
+}
+
+function getHost(url) {
+    var getLocation = function (href) {
+        var l = document.createElement("a");
+        l.href = href;
+        return l;
+    };
+    return getLocation(url).hostname;
 }

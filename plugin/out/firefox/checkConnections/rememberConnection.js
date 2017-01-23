@@ -155,6 +155,8 @@ function isConnected(url, user) {
 }
 
 function sendUpdate(update) {
+    console.log("send update");
+    console.log(update);
     extension.storage.get("sessionId", function (sId) {
         if (sId != "") {
             var xhr = new XMLHttpRequest();
