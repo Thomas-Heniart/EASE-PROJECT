@@ -57,21 +57,43 @@ function startBigStep(tab, msg) {
         actionsCheckWhoIsConnected.concat(generateSteps("checkAlreadyConnected", msg.detail[msg.bigStep]));
         executeSteps(tab, actionsCheckWhoIsConnected, function (tab, response) {
             var actionSteps = [];
-            if (response.user && response.user != msg.detail[0].user[login]) {
-                nextBigStep(tab, msg);
+            extension.storage.get("lastConnections", function (lastConnections) {
+                var user = "";
+                if(response.user){
+                    user = response.user;
+                } else if (lastConnections  && lastConnections[getHost(msg.detail[msg.bigStep].website.home)]){
+                    user = lastConnections[getHost(msg.detail[msg.bigStep].website.home)].user;
+                }
+                if(user == msg.detail[0].user[login]){
+                    
+                }
+            });
+            if (response.user) {
+                if (response.user == msg.detail[0].user[login]) {
+                    nextBigStep(tab, msg);
+                } else {
+                    actionSteps.concat(generateSteps("switchOfLogout", msg.detail[msg.bigStep]));
+                    doConnect(tab, msg, actionSteps);
+                }
             } else {
-                actionSteps.concat(generateSteps("switchOfLogout", msg.detail[msg.bigStep]));
+                extension.storage.get("lastConnections", function (lastConnections) {
+                    var user = "";
+                    if (lastConnections) {
+                        var lastConnected = lastConnections[getHost(msg.detail[msg.bigStep].website.home)];
+                        if (lastConnected && lastConnected.username == msg.detail[0].user[login]) {
+                            nextBigStep(tab, msg);
+                        } else {
+                            actionSteps.concat(generateSteps("switchOfLogout", msg.detail[msg.bigStep]));
+                            doConnect(tab, msg, actionSteps);
+                        }
+                    }
+                });
             }
-            if (msg.detail[msg.bigStep].logWith) {
-                actionSteps.concat(generateSteps(msg.detail[msg.bigStep].logWith, msg.detail[msg.bigStep]));
-            } else {
-                actionSteps.concat(generateSteps("connect", msg.detail[msg.bigStep]));
-            }
-            executeSteps(tab, actionSteps, function (tab, response) {
-                nextBigStep(tab, msg);
-            }, endConnection);
         }, function (tab, response) {
-            var actionSteps = [];
+            doConnect(tab, msg, [])
+        });
+
+        function doConnect(tab, msg, actionSteps) {
             if (msg.detail[msg.bigStep].logWith) {
                 actionSteps.concat(generateSteps(msg.detail[msg.bigStep].logWith, msg.detail[msg.bigStep]));
             } else {
@@ -80,7 +102,8 @@ function startBigStep(tab, msg) {
             executeSteps(tab, actionSteps, function (tab, response) {
                 nextBigStep(tab, msg);
             }, endConnection);
-        });
+        }
+
     });
 }
 
