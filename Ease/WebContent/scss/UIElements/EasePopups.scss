@@ -36,11 +36,17 @@
 						font-size: 1vw;
 					}
 					button {
-						transition: 5s;
+						transition: width .3s, height .3s;
 						font-size: 1vw;
 						width: 100%;
+						&:after {
+							content: "";
+							transition: .5s;
+							border-top-color: transparent;
+						}
 					}
 					button.loading {
+						pointer-events: none;
 						width: 3vw;
 						height: 3vw;
 						border-radius: 100%;
