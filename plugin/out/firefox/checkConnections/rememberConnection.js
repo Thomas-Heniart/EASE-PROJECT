@@ -155,12 +155,7 @@ function isConnected(url, user) {
 }
 
 function sendUpdate(update) {
-    console.log("send update");
-    console.log(update);
-    chrome.cookies.get({"url":"http://localhost:8080/", "name":"JSESSIONID"}, function (cookie){
-        console.log(cookie);
-        var sId = cookie.value;
-    //extension.storage.get("sessionId", function (sId) {
+    extension.storage.get("sessionId", function (sId) {
         if (sId != "") {
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "http://localhost:8080/CreateUpdate", false);
