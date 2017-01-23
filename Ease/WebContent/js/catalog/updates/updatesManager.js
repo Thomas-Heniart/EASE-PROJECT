@@ -6,6 +6,7 @@ var UpdateManager = function (rootEl) {
 	this.loading = this.qRoot.find('.updateLoadingHelper');
 	this.titleHandler = this.qRoot.find('.catalogHeader p');
 	this.updates = [];
+	this.isShown = false;
 
 	this.showLoading = function(){
 		self.updatesHandler.addClass('hide');
@@ -17,14 +18,34 @@ var UpdateManager = function (rootEl) {
 	};
 	this.show = function(){
 		self.qRoot.addClass('show');
+		self.isShown = true;
 	};
 	this.hide = function(){
 		self.qRoot.removeClass('show');
+		self.isShown = false;
+	};
+	this.hideWithAnimation = function(){
+		self.qRoot.height(self.qRoot.height());
+		self.qRoot.css({
+			'transition': 'height .3s, opacity .3s',
+			'height': self.qRoot.height(),
+			'opacity': '1'
+		});
+		self.qRoot.css({
+			'height': '0',
+			'opacity': '0'
+		});
+		self.qRoot.one('transitionend', function(){
+			self.hide();
+			self.qRoot.attr('style', '');
+			catalog.onResize();
+		});
 	};
 	this.updateTitle = function(){
 		self.titleHandler.text(self.updates.length + ' Update' + ((self.updates.length == 1) ? '' : 's') + ' available');
 	};
 	this.checkUpdates = function(){
+		self.showLoading();
 		postHandler.post(
 			'GetUpdates',
 			{},
@@ -51,17 +72,20 @@ var UpdateManager = function (rootEl) {
 					}
 				}
 				self.updateTitle();
+				self.hideLoading();
+				if (!self.updates.length){
+					self.hideWithAnimation();
+				}
 			},
 			function(msg){
-
+				self.hideLoading();
 			},
 			'text'
 			);
 	};
 	this.onCatalogOpen = function(){
-		self.showLoading();
+		self.show();
 		self.checkUpdates();
-		self.hideLoading();
 	};
 	this.addUpdate = function(update){
 		self.updates.push(update);
@@ -73,6 +97,10 @@ var UpdateManager = function (rootEl) {
 			self.updates[i].slideLeftAnimation();
 		}
 		self.updates.splice(self.updates.indexOf(update), 1);
+		self.updateTitle();
+		if (!self.updates.length){
+			self.hideWithAnimation();
+		}
 	};
 }
 

@@ -14,6 +14,7 @@
 				}
 				.emailSendingDiv {
 					display: none;
+					margin-bottom: 0.8vw;
 					&.show {
 						display: block;
 					}
@@ -35,8 +36,33 @@
 						font-size: 1vw;
 					}
 					button {
+						transition: 5s;
 						font-size: 1vw;
 						width: 100%;
+					}
+					button.loading {
+						width: 3vw;
+						height: 3vw;
+						border-radius: 100%;
+						font-size: 0;
+						background-color: white;
+						border: 6px solid rgba($themeButtonGreenColor, 0.4);
+						position: relative;
+						&:after {
+							content: '';
+							position: absolute;
+							top: -6px;
+							right: -6px;
+							bottom: -6px;
+							left: -6px;
+							border-radius: 50px;
+							border: 6px solid transparent;
+							border-top-color: $themeButtonGreenColor;
+							-o-animation: spin 1s linear infinite;
+							-moz-animation: spin 1s linear infinite;
+							-webkit-animation: spin 1s linear infinite;
+							animation: spin 1s linear infinite;
+						}
 					}
 					input, .input {
 						font-size: 0.9vw;
