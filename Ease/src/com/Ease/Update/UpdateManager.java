@@ -367,7 +367,9 @@ public class UpdateManager {
 			System.out.println("NewClassicAppUpdate if");
 			if ((profile = user.getDashboardManager().getProfile(profileId)) == null)
 				throw new GeneralException(ServletManager.Code.ClientWarning, "This profile dosoen't exist.");
-			
+			if (profile.getGroupProfile() != null) {
+				throw new GeneralException(ServletManager.Code.ClientWarning, "You can't add update in this profile.");
+			}
 			UpdateNewClassicApp updateClassicApp = (UpdateNewClassicApp) update;
 			if (updateClassicApp.haveVerifiedEmail()) {
 				/*if (password == null) {
@@ -386,7 +388,9 @@ public class UpdateManager {
 		} else if (update.getType().equals("UpdateNewLogWithApp")) {
 			if ((profile = user.getDashboardManager().getProfile(profileId)) == null)
 				throw new GeneralException(ServletManager.Code.ClientWarning, "This profile dosoen't exist.");
-			
+			if (profile.getGroupProfile() != null) {
+				throw new GeneralException(ServletManager.Code.ClientWarning, "You can't add update in this profile.");
+			}
 			UpdateNewLogWithApp updateLogWithApp = (UpdateNewLogWithApp) update;
 			App newApp = LogwithApp.createLogwithApp(profile, profile.getApps().size(), updateLogWithApp.getSite().getName(), updateLogWithApp.getSite(), updateLogWithApp.getLogWithApp(), sm);
 			profile.addApp(newApp);
