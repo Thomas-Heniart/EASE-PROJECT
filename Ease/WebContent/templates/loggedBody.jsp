@@ -69,7 +69,7 @@ response.addCookie(email);
 		<div class="col-left <c:if test='${settingsOpen eq null}'>show</c:if>" style="width: 100%; float:left">
 			<%@ include file="ProfileView.jsp"%>
 			<div class="MenuButtonSet">
-				<div id="updateCount">
+				<div id="updateCount" <c:out value="${user.getUpdateManager().getUpdates().size() > 0 ? '' : 'style=display:none'}"/>>
 					<c:out value="${user.getUpdateManager().getUpdates().size()}"/>
 				</div>
 			<button id="enterEditMode" state="off" class="button"><img src="resources/icons/menu_icon.png"/>
