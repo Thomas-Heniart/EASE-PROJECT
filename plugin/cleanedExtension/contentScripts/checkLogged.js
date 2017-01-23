@@ -1,51 +1,9 @@
-var checks = {
-    hasElement: function (checkStep, success, fail) {
-        if ($(checkStep.search).length > 0) {
-            success();
-        } else {
-            fail();
+function checkWhoIsConnected(todoList, sendResponse) {
+    executeActions(todoList, function(res){
+        if(res.status == "done"){
+            
         }
-    },
-    absentElement: function (checkStep, success, fail) {
-        if ($(checkStep.search).lenght > 0) {
-            fail();
-        } else {
-            success();
-        }
-    },
-    hasCookie: function (checkStep, success, fail) {
-        var cookies = document.cookie.split(";");
-        for (var i in cookies) {
-            if (cookies[i].indexOf(" ") == 0) {
-                cookies[i] = cookies[i].substring(1, cookies[i].length);
-            }
-            if (cookies[i].split("=")[0] == checkStep.name) {
-                success();
-                return;
-            }
-        }
-        fail();
-    },
-    matchUrl: function (checkStep, success, fail) {
-        var urlPattern = checkStep.url;
-        var regex = urlPattern.replace(/\*/g, "[^ ]*");
-        if(regex.test(location.href)){
-            success();
-        } else {
-            fail();
-        }
-    }
-}
-
-function checkWhoIsConnected(msg, sendResponse) {
-    var todoList = {};
-    todoList.step = 0;
-    if (msg.checkAlreadyLogged.todo) {
-        todoList.checks = msg.checkAlreadyLogged.todo;
-    } else { // POUR LES ANCIENS JSONS
-        todoList.checks = msg.checkAlreadyLogged;
-        todoList.checks[0].check = "hasElement";
-    }
+    });
     checkAlreadyLogged(todoList, function (result) {
         if (result.connected) {
             if (msg.checkUser.todo) {
@@ -76,12 +34,7 @@ function checkWhoIsConnected(msg, sendResponse) {
 }
 
 function checkAlreadyLogged(todoList, callback) {
-    if (todoList.step >= todoList.checks.length) {
-        callback({
-            connected: true
-        });
-    }
-    if (todoList.checks[todoList.step].action) {
+    executeActions(todoList) {
         actions[todoList.checks[todoList.step].action](todoList.checks[todoList.step], function () {
             todoList.step++;
             checkAlreadyLogged(todoList, callback);

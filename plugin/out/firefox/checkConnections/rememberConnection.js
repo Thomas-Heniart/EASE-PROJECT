@@ -155,10 +155,15 @@ function isConnected(url, user) {
 }
 
 function sendUpdate(update) {
-    extension.storage.get("sessionId", function (sId) {
+    console.log("send update");
+    console.log(update);
+    chrome.cookies.get({"url":"http://localhost:8080/", "name":"JSESSIONID"}, function (cookie){
+        console.log(cookie);
+        var sId = cookie.value;
+    //extension.storage.get("sessionId", function (sId) {
         if (sId != "") {
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "https://ease.space/CreateUpdate", false);
+            xhr.open("POST", "http://localhost:8080/CreateUpdate", false);
             xhr.onreadystatechange = function (aEvt) {
                 if (xhr.readyState == 4) {
                     console.log(xhr.response);
@@ -201,12 +206,13 @@ function removeUpdate(update, callback) {
             for (var i = 0; i < storedUpdates.length; i++) {
                 var oldUpdate = storedUpdates[i];
                 if (oldUpdate.type == update.type && oldUpdate.website == update.website) {
-                    if (update.type == "logwith" && oldUpdate.logwith == update.logwith && oldUpdate.user == update.user) {
+                    if (update.type == "logwith" && oldUpdate.logwith == update.logwith && oldUpdate.username == update.username) {
                         toDelete = i;
                         break;
                     }
                     if (update.type == "classic" && oldUpdate.username == update.username) {
                         toDelete = i;
+                        console.log("delete update "+i);
                         break;
                     }
                 }
