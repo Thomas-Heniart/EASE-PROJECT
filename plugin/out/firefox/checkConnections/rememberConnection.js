@@ -126,17 +126,15 @@ function getDOM(url, callback) {
 
 function getCheckAlreadyLoggedCondition(host, callback) {
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "https://ease.space/GetCheckAlreadyLogged", true);
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.onreadystatechange = function (aEvt) {
-        if (xhr.readyState == 4) {
-            if (xhr.response.indexOf("200 ") == 0) {
-                callback(xhr.response.substring(4, xhr.response.length));
+    $.post("https://ease.space/GetCheckAlreadyLogged", {
+            "host": host
+        },
+        function (resp) {
+            var res = resp.split(" ");
+            if (res[0] == "200") {
+                callback(resp.substring(4, xhr.response.length));
             }
-        }
-    };
-    var params = "host=" + host;
-    xhr.send(params);
+        });
 }
 
 function isConnected(url, user) {

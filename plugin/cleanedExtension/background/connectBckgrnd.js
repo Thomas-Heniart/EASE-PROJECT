@@ -54,7 +54,8 @@ function startBigStep(tab, msg) {
     extension.tabs.onReloaded.addListener(tab, function reloadListener1(tab) {
         extension.tabs.onReloaded.removeListener(reloadListener1);
         var actionsCheckWhoIsConnected = [];
-        actionsCheckWhoIsConnected.concat(generateSteps("checkAlreadyConnected", msg.detail[msg.bigStep]));
+        actionsCheckWhoIsConnected.concat(addSteps("checkAlreadyLogged", msg.detail[msg.bigStep]));
+        console.log(actionsCheckWhoIsConnected);
         executeSteps(tab, actionsCheckWhoIsConnected, function (tab, response) {
             var actionSteps = [];
             extension.storage.get("lastConnections", function (lastConnections) {
@@ -64,10 +65,10 @@ function startBigStep(tab, msg) {
                 } else if (lastConnections && lastConnections[getHost(msg.detail[msg.bigStep].website.home)]) {
                     user = lastConnections[getHost(msg.detail[msg.bigStep].website.home)].user;
                 }
-                if (user == msg.detail[0].user[login]) {
+                if (user == msg.detail[0].user.login) {
                     nextBigStep(tab, msg);
                 } else {
-                    actionSteps.concat(generateSteps("switchOfLogout", msg.detail[msg.bigStep]));
+                    actionSteps.concat(generateSteps("switchOrLogout", msg.detail[msg.bigStep]));
                     doConnect(tab, msg, actionSteps);
                 }
             });
@@ -83,7 +84,10 @@ function startBigStep(tab, msg) {
             }
             executeSteps(tab, actionSteps, function (tab, response) {
                 nextBigStep(tab, msg);
-            }, endConnection);
+            }, function (tab, response) {
+                console.log(response);
+                endConnection(tab);
+            });
         }
 
     });
@@ -104,7 +108,7 @@ function nextBigStep(tab, msg) {
 }
 
 function endConnection(tab) {
-    extension.tabs.sendMessage(tab, "removeOverlay", {}, function (reponse) {});
+    extension.tabs.sendMessage(tab, "removeOverlay", {}, function (res) {});
 }
 
 function rememberConnection(bigStep, callback) {

@@ -24,10 +24,15 @@
         {
             "matches": ["<all_urls>"],
             "exclude_matches": ["https://ease.space/*"],
-            "js": ["contentScript/messages.js"],
+            "js": ["contentScripts/messages.js", "contentScripts/actions.js"],
             "run_at": "document_end",
             "all_frames":true
-    }
+    },
+        {
+            "matches":["https://ease.space/*", "http://localhost:8080/*"],
+            "js":["easeActions/easeListener.js"],
+            "run_at":"document_end"
+        }
   ],
 
     "background": {
