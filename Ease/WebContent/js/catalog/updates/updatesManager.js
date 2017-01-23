@@ -556,6 +556,22 @@ var addUpdatePopup = function(rootEl){
 		self.logoImgHandler.attr('src', update.imageSrc);
 		if (update.isVerified == 'unverified'){
 			self.showEmailSendingArea();
+			self.sendEmailButtonHandler.one('click', function(){
+				postHandler.post(
+					'AskVerificationEmail',
+					{
+						email: self.update.login
+					},
+					function(){
+					},
+					function(msg){
+						self.showSentEmailFeedbackArea();
+					},
+					function(msg){
+
+					},'text'
+					);
+			});
 		}
 		self.parentHandler.addClass('myshow');
 		self.qRoot.addClass('show');
@@ -563,12 +579,13 @@ var addUpdatePopup = function(rootEl){
 	this.close = function(){
 		self.qRoot.removeClass('show');
 		self.parentHandler.removeClass('myshow');
+		self.sendEmailButtonHandler.off();
 		self.hideEmailSendingArea();
 	};
-	this.sendEmailButtonHandler.click(function(){
+	this.showSentEmailFeedbackArea = function(){
 		self.mainBody.removeClass('show');
 		self.sentEmailBody.addClass('show');
-	});
+	};
 	this.sentEmailOkButton.click(function(){
 		self.close();
 	});
