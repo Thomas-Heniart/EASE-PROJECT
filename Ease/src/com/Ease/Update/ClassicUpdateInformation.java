@@ -44,9 +44,9 @@ public class ClassicUpdateInformation {
 		db.commitTransaction(transaction);
 	}
 
-	public static void deleteFromDb(String db_id, DataBaseConnection db) throws GeneralException {
+	public static void deleteFromDb(String newAccountUpdateDbId, DataBaseConnection db) throws GeneralException {
 		int transaction = db.startTransaction();
-		db.set("DELETE FROM classicUpdateInformations WHERE update_new_classic_app_id = " + db_id + ";");
+		db.set("DELETE FROM classicUpdateInformations WHERE update_new_classic_app_id IN (SELECT id FROM updateNewClassicApp WHERE update_new_account_id = " + newAccountUpdateDbId + ");");
 		db.commitTransaction(transaction);
 	}
 }

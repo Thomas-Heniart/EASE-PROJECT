@@ -271,9 +271,8 @@ var Catalog = function(rootEl){
 		self.qRoot.addClass('show');
 		self.isOpen = true;
 		easeTracker.trackEvent('OpenCatalog');
-		self.onResize();
-		self.oUpdate.show();
 		self.oUpdate.onCatalogOpen();
+		self.onResize();
 	};
 	this.close = function(){
 		self.qRoot.removeClass('show');
@@ -282,7 +281,7 @@ var Catalog = function(rootEl){
 	};
 	this.onResize = function(){
 		self.appsHolder.height(self.qRoot.outerHeight(true) 
-							- ((self.oUpdate.qRoot.length ? self.oUpdate.qRoot.outerHeight(true) : 0)
+							- ((self.oUpdate.isShown ? self.oUpdate.qRoot.outerHeight(true) : 0)
 							+ self.qRoot.find(".catalogHeader.title").outerHeight(true)
 							+ self.searchBar.outerHeight(true)
 							+ self.tagContainer.outerHeight(true)

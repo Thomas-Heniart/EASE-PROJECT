@@ -88,17 +88,25 @@ public class UpdateManager {
 	public boolean addUpdateFromJsonConnected(JSONObject json, ServletManager sm) throws GeneralException {
 		String type = (String) json.get("type");
 		String url = (String) json.get("website");
+		if (this.haveUpdate(json, sm))
+			return true;
 		if (type.equals("classic")) {
 			String login = (String) json.get("username");
 			UserEmail userEmail = user.getUserEmails().get(login);
 			Website website = this.findWebsiteInCatalogWithLoginUrl(url, sm);
 			ClassicApp existingApp = this.findClassicAppWithLoginAndWebsite(login, website);
-			System.out.println("???");
 			String password = (String) json.get("password");
 			String keyDate = (String) json.get("keyDate");
 			password = RSA.Decrypt(password, Integer.parseInt(keyDate));
+			password = user.encrypt(password);
 			if (existingApp != null) {
+				System.out.println(password);
+				System.out.println(existingApp.getAccount().getCryptedPassword());
+				if (existingApp.getAccount().getCryptedPassword().equals(password))
+					return true;
 				if (this.checkRemovedUpdates(existingApp, password, sm))
+					return true;
+				if (existingApp.getAccount().getPassword().equals(user.encrypt(password)))
 					return true;
 				this.addUpdate(UpdateNewPassword.createUpdateNewPassword(this.user, existingApp, password, userEmail, sm));
 				return true;
@@ -125,6 +133,15 @@ public class UpdateManager {
 		}
 	}
 	
+	private boolean haveUpdate(JSONObject json, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		for (Update update : this.updates) {
+			if (update.matchJson(json))
+				return true;
+		}
+		return false;
+	}
+
 	public boolean addUpdateFromJsonDeconnected(String jsonString, ServletManager sm) throws GeneralException {
 		JSONParser parser = new JSONParser();
 		JSONObject json;
@@ -146,6 +163,10 @@ public class UpdateManager {
 				password = RSA.Decrypt(password, Integer.parseInt(keyDate));
 				password = this.user.encrypt(password);
 				if (existingApp != null) {
+					System.out.println(password);
+					System.out.println(existingApp.getAccount().getCryptedPassword());
+					if (existingApp.getAccount().getCryptedPassword().equals(password))
+						return true;
 					if (this.checkRemovedUpdates(existingApp, password, sm))
 						return true;
 					this.addUpdate(UpdateNewPassword.createUpdateNewPassword(this.user, existingApp, password, userEmail, sm));
@@ -307,6 +328,13 @@ public class UpdateManager {
 		this.addUpdateInMaps(update);
 	}
 	
+	private void removeUpdateFromDb(Update update, DataBaseConnection db) throws GeneralException {
+		update.deleteFromDb(db);
+		this.updatesDBMap.remove(update.getDbId());
+		this.updatesIDMap.remove(update.getSingledId());
+		this.updates.remove(update);
+	}
+	
 	public void rejectUpdateWithSingleId(int single_id, ServletManager sm) throws GeneralException {
 		Update update = this.getUpdateWithSingleId(single_id);
 		update.reject(sm);
@@ -326,13 +354,11 @@ public class UpdateManager {
 	public String acceptUpdate(int single_id, int profileId, String password, ServletManager sm) throws GeneralException {
 		String newAppSingleId;
 		Update update = this.getUpdateWithSingleId(single_id);
-		System.out.println("Update type : " + update.getType());
-		System.out.println("Update dbid : " + update.getDbId());
+		DataBaseConnection db = sm.getDB();
 		if (update == null) {
 			throw new GeneralException(ServletManager.Code.ClientError, "This update dosoen't exist.");
 		}
 		Profile profile;
-		System.out.println(update.getClass().getName());
 		if (update.getType().equals("UpdateNewClassicApp")) {
 			System.out.println("NewClassicAppUpdate if");
 			if ((profile = user.getDashboardManager().getProfile(profileId)) == null)
@@ -352,11 +378,7 @@ public class UpdateManager {
 			App newApp = ClassicApp.createClassicApp(profile, profile.getApps().size(), updateClassicApp.getSite().getName(), updateClassicApp.getSite(), password, infos, sm, user);
 			profile.addApp(newApp);
 			newAppSingleId = Integer.toString(newApp.getSingleId());
-			System.out.println("On est bien là ?");
-			update.reject(sm);
-			this.updatesDBMap.remove(update.getDbId());
-			this.updatesIDMap.remove(single_id);
-			this.updates.remove(update);
+			this.removeUpdateFromDb(update, db);
 		} else if (update.getType().equals("UpdateNewLogWithApp")) {
 			if ((profile = user.getDashboardManager().getProfile(profileId)) == null)
 				throw new GeneralException(ServletManager.Code.ClientWarning, "This profile dosoen't exist.");
@@ -366,10 +388,7 @@ public class UpdateManager {
 			profile.addApp(newApp);
 			newAppSingleId = Integer.toString(newApp.getSingleId());
 			
-			update.reject(sm);
-			this.updatesDBMap.remove(update.getDbId());
-			this.updatesIDMap.remove(single_id);
-			this.updates.remove(update);
+			this.removeUpdateFromDb(update, db);
 		} else if (update.getType().equals("UpdateNewPassword")) {
 			UpdateNewPassword updatePassword = (UpdateNewPassword) update;
 			if (updatePassword.haveVerifiedEmail()) {
@@ -386,10 +405,7 @@ public class UpdateManager {
 			
 			newAppSingleId = Integer.toString(updatePassword.getApp().getSingleId());
 			
-			update.reject(sm);
-			this.updatesDBMap.remove(update.getDbId());
-			this.updatesIDMap.remove(single_id);
-			this.updates.remove(update);
+			this.removeUpdateFromDb(update, db);
 		} else {
 			throw new GeneralException(ServletManager.Code.InternError, "Update type wtf...");
 		}

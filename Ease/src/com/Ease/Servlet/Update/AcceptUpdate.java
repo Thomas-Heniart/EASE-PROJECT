@@ -49,7 +49,7 @@ public class AcceptUpdate extends HttpServlet {
 			sm.needToBeConnected();
 			String updateId = sm.getServletParam("updateId", true);
 			String profileId = sm.getServletParam("profileId", true);
-			String password = sm.getServletParam("password", true);
+			String password = sm.getServletParam("password", false);
 			String newAppSingleId = user.getUpdateManager().acceptUpdate(Integer.parseInt(updateId), ((profileId == null ) ? -1 : Integer.parseInt(profileId)), password, sm);
 			sm.setResponse(ServletManager.Code.Success, newAppSingleId);
 		} catch (GeneralException e) {

@@ -116,6 +116,10 @@ public class Account {
 		
 	}
 	
+	public String getCryptedPassword() {
+		return crypted_password;
+	}
+	
 	/*
 	 * 
 	 * Utils
@@ -151,5 +155,9 @@ public class Account {
 				return info.getInformationValue();
 		}
 		return null;
+	}
+
+	public String getPassword() {
+		return this.crypted_password;
 	}
 }

@@ -61,6 +61,7 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 		IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
 		Map<String, Object> elevator = new HashMap<String, Object>();
 		int transaction = db.startTransaction();
+		password = user.encrypt(password);
 		String updateNewAccount_id = UpdateNewAccount.createUpdateNewAccount(user, website, "updateNewClassicApp", elevator, db);
 		String updateNewClassicApp_id = db.set("INSERT INTO updateNewClassicApp values (null, " + updateNewAccount_id + ", '" + password + "');").toString();
 		Map<String, String> updateInformations = new HashMap<String, String>();
@@ -98,7 +99,7 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 
 	public void deleteFromDb(DataBaseConnection db) throws GeneralException {
 		int transaction = db.startTransaction();
-		ClassicUpdateInformation.deleteFromDb(this.db_id, db);
+		ClassicUpdateInformation.deleteFromDb(this.update_new_account_id, db);
 		db.set("DELETE FROM updateNewClassicApp WHERE update_new_account_id = " + this.update_new_account_id + ";");
 		super.deleteFromDb(db);
 		db.commitTransaction(transaction);
@@ -124,5 +125,10 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 				return true;
 		}
 		return false;
+	}
+	
+	public boolean matchJson(JSONObject json) {
+		String login = (String) json.get("username");
+		return login.equals(this.email.getEmail()) && super.matchJson(json);
 	}
 }
