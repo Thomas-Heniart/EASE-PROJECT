@@ -377,9 +377,10 @@ public class UpdateManager {
 					throw new GeneralException(ServletManager.Code.ClientError, "Wrong password");
 				}*/
 				password = updatePassword.getPassword();
-				System.out.println(password);
 				password = this.user.decrypt(password);
-				System.out.println(password);
+			} else {
+				if (password == null)
+					throw new GeneralException(ServletManager.Code.ClientError, "Wrong password");
 			}
 			updatePassword.getApp().setPassword(password, sm);
 			
