@@ -35,7 +35,7 @@ function fire_onchange(a) {
 }
 
 var actions = {
-    enterFrame: function (actionStep, callback)  {
+    enterFrame: function (actionStep, callback) {
         var frame = $(actionStep.search).contentWindow;
     },
     fillThenSubmit: function (actionStep, callback) {
@@ -82,7 +82,7 @@ var actions = {
         callback("next");
 
     },
-    waitfor: function (actionStep,callback) {
+    waitfor: function (actionStep, callback) {
         var div = actionStep.search;
         var time = actionStep.time;
         if (!time) {
@@ -131,7 +131,7 @@ var actions = {
             callback("next");
         }
     },
-    simulateKeyPress: function (actionStep, callback,) {
+    simulateKeyPress: function (actionStep, callback, ) {
         var input = $(actionStep.search);
         if (input.length == 0) {
             if (actionStep.grave == true) {
@@ -324,18 +324,18 @@ var actions = {
                 }
             }
         }
-        checks[actionStep.type](actionStep, function(){
+        checks[actionStep.type](actionStep, function () {
             callback("next");
-        }, function() {
-            callback("error : check "+ actionStep.type +" failed");
+        }, function () {
+            callback("error : check " + actionStep.type + " failed");
         });
     },
     get: function (actionStep, callback) {
         if (infos.get == "text") {
-        callback($(infos.search).text());
-    } else {
-        callback($(infos.search).attr(infos.get));
-    }
+            callback($(infos.search).text());
+        } else {
+            callback($(infos.search).attr(infos.get));
+        }
     }
 };
 
@@ -347,18 +347,18 @@ function executeActions(msg, sendResponse) {
     }
     console.log("-- Ease action : " + msg.actions[msg.step].action + " --");
     actions[msg.actions[msg.step].action](msg, function (response) {
-        if(response == "next"){
+        if (response == "next") {
             msg.step++;
             executeActions(msg, returnToBackground);
-        } else if(response == "waitload"){
+        } else if (response == "waitload") {
             msg.step++;
             msg.status = "done";
             sendResponse(msg);
-        } else if(response.indexOf("error") == 0){
+        } else if (response.indexOf("error") == 0) {
             msg.status = response;
             sendResponse(msg);
-        } else if(response.indexOf("setValue")== 0){
-            
+        } else if (response.indexOf("setValue") == 0) {
+
         }
     });
 }
