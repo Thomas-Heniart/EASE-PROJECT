@@ -86,10 +86,10 @@ public class UpdateNewLogWithApp extends UpdateNewAccount {
 		return logWithApp;
 	}
 	
-	public boolean matchJson(JSONObject json) {
+	public boolean matchJson(JSONObject json, User user) {
 		String login = (String) json.get("username");
 		String website = (String) json.get("logwith");
 		ClassicApp app = (ClassicApp)this.logWithApp;
-		return this.logWithApp.getSite().getName().equals(website) && app.getAccount().getInformationNamed("login").equals(login) && super.matchJson(json);
+		return this.logWithApp.getSite().getName().equals(website) && app.getAccount().getInformationNamed("login").equals(login) && super.matchJson(json, user);
 	}
 }
