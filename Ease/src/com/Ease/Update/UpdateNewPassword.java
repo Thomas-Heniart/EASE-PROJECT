@@ -17,7 +17,8 @@ public class UpdateNewPassword extends Update {
 
 	public enum Data {
 		NOTHING, 
-		ID, 
+		ID,
+		UPDATE_ID,
 		CLASSIC_APP_ID, 
 		NEW_PASSWORD
 	}
@@ -42,7 +43,7 @@ public class UpdateNewPassword extends Update {
 		IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
 		int transaction = db.startTransaction();
 		String update_id = Update.createUpdate(user, "updateNewPassword", db);
-		db.set("INSERT INTO updateNewPassword values (null, " + update_id + ", " + classicApp.getDBid() + ", '" + newPassword + "');");
+		db.set("INSERT INTO updateNewPassword values (null, " + update_id + ", " + classicApp.getDBid() + ", '" + user.encrypt(newPassword) + "');");
 		db.commitTransaction(transaction);
 		return new UpdateNewPassword(update_id, classicApp, newPassword, idGenerator.getNextId(), email, user);
 	}

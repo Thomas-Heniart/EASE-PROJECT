@@ -467,7 +467,7 @@ var newLogWithApp = function(updateId, websiteName, logWithId, logWithLogin, log
 	this.acceptButton.click(function(){
 		self.startLogoAnimation();
 		postHandler.post(
-			'acceptUpdate',
+			'AcceptUpdate',
 			{
 				profileId: profiles[profiles.length - 1].id,
 				updateId: self.updateId

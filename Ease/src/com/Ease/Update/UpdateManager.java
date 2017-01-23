@@ -332,6 +332,7 @@ public class UpdateManager {
 			throw new GeneralException(ServletManager.Code.ClientError, "This update dosoen't exist.");
 		}
 		Profile profile;
+		System.out.println(update.getClass().getName());
 		if (update.getType().equals("UpdateNewClassicApp")) {
 			System.out.println("NewClassicAppUpdate if");
 			if ((profile = user.getDashboardManager().getProfile(profileId)) == null)
@@ -356,7 +357,7 @@ public class UpdateManager {
 			this.updatesDBMap.remove(update.getDbId());
 			this.updatesIDMap.remove(single_id);
 			this.updates.remove(update);
-		} else if (update.getClass().getName().equals("UpdateNewLogWithApp")) {
+		} else if (update.getType().equals("UpdateNewLogWithApp")) {
 			if ((profile = user.getDashboardManager().getProfile(profileId)) == null)
 				throw new GeneralException(ServletManager.Code.ClientWarning, "This profile dosoen't exist.");
 			
@@ -369,16 +370,17 @@ public class UpdateManager {
 			this.updatesDBMap.remove(update.getDbId());
 			this.updatesIDMap.remove(single_id);
 			this.updates.remove(update);
-		} else if (update.getClass().getName().equals("UpdateNewPassword")) {
+		} else if (update.getType().equals("UpdateNewPassword")) {
 			UpdateNewPassword updatePassword = (UpdateNewPassword) update;
 			if (updatePassword.haveVerifiedEmail()) {
-				if (password == null) {
+				/*if (password == null) {
 					throw new GeneralException(ServletManager.Code.ClientError, "Wrong password");
-				}
+				}*/
 				password = updatePassword.getPassword();
+				System.out.println(password);
 				password = this.user.decrypt(password);
+				System.out.println(password);
 			}
-			
 			updatePassword.getApp().setPassword(password, sm);
 			
 			newAppSingleId = Integer.toString(updatePassword.getApp().getSingleId());
