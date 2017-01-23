@@ -477,7 +477,7 @@ var newLogWithApp = function(updateId, websiteName, logWithId, logWithLogin, log
 			},
 			function(msg){
 				var app = new MyApp();
-				app.init(self.logWithId, null, self.catalogId, self.websiteName, msg, 0, true, self.imageSrc);
+				app.init(self.logWithId, null, self.catalogId, self.websiteName, msg, 0, true, self.websiteImageSrc);
 				profiles[profiles.length - 1].addApp(app);
 				app.scaleAnimate();
 				catalog.oUpdate.removeUpdate(self);
