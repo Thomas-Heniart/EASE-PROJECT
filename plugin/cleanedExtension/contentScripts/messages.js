@@ -1,12 +1,15 @@
 if (window.top === window) {
+    console.log("waiting for messages");
     extension.runtime.sendMessage('reloaded', {}, function () {});
     extension.runtime.onMessage.addListener('executeActions', function (msg, sendResponse) {
+        console.log(msg);
         if (msg.actions[msg.step].action != "overlay" && msg.step > 0) {
             for (var i = msg.step - 1; i >= 0; i--) {
                 if (msg.actions[i].action == "overlay") {
                     actions.overlay(msg.actions[i], function () {
                         executeActions(msg, sendResponse);
                     });
+                    break;
                 }
             }
         } else {

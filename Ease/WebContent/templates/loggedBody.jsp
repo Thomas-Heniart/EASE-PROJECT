@@ -95,7 +95,6 @@ response.addCookie(email);
 <%@ include file="TutorialView.jsp"%>
 </c:if>
 <%@ include file="new_extension.jsp" %>
-
 <script>
 
 	$(document).ready(function(){

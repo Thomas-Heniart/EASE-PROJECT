@@ -72,6 +72,7 @@ var UpdateManager = function (rootEl) {
 					}
 				}
 				self.updateTitle();
+				easeUpdateCount.setCount(self.updates.length);
 				self.hideLoading();
 				if (!self.updates.length){
 					self.hideWithAnimation();
@@ -84,6 +85,8 @@ var UpdateManager = function (rootEl) {
 			);
 	};
 	this.onCatalogOpen = function(){
+		if (easeUpdateCount.count == 0)
+			return;
 		self.show();
 		self.checkUpdates();
 	};
@@ -98,6 +101,7 @@ var UpdateManager = function (rootEl) {
 		}
 		self.updates.splice(self.updates.indexOf(update), 1);
 		self.updateTitle();
+		easeUpdateCount.setCount(self.updates.length);
 		if (!self.updates.length){
 			self.hideWithAnimation();
 		}
@@ -654,6 +658,22 @@ var addUpdatePopup = function(rootEl){
 			);
 	});
 };
+
+var updateCount = function(rootEl){
+	var self = this;
+	this.qRoot = $(rootEl);
+	this.count = parseInt(this.qRoot.text(), 10);
+
+	this.setCount = function(c){
+		self.qRoot.html(c);
+		self.count = c;
+	};
+};
+
+var easeUpdateCount;
+$(document).ready(function(){
+	easeUpdateCount = new updateCount('#updateCount');
+});
 
 $(document).ready(function(){
 	easeAddUpdatePopup = new addUpdatePopup($('#addUpdatePopup'));

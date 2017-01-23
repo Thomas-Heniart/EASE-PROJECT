@@ -98,8 +98,7 @@ public class Update {
 		throw new GeneralException(ServletManager.Code.InternError, "GetJson on an update... dufuk?");
 	}
 
-	public boolean matchJson(JSONObject json) {
-		String jType = (String) json.get("type");
-		return this.getType().equals(jType);
+	public boolean matchJson(JSONObject json, User user) throws GeneralException {
+		throw new GeneralException(ServletManager.Code.InternError, "You shouldn't be there");
 	}
 }

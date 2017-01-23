@@ -136,7 +136,7 @@ public class UpdateManager {
 	private boolean haveUpdate(JSONObject json, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		for (Update update : this.updates) {
-			if (update.matchJson(json))
+			if (update.matchJson(json, this.user))
 				return true;
 		}
 		return false;

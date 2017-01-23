@@ -12,6 +12,7 @@ import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.Crypto.RSA;
 
 public class UpdateNewPassword extends Update {
 
@@ -97,8 +98,19 @@ public class UpdateNewPassword extends Update {
 		return classicApp;
 	}
 	
-	public boolean matchJson(JSONObject json) {
-		return false;
+	public boolean matchJson(JSONObject json, User user) throws GeneralException {
+		String username = (String) json.get("username");
+		String password = (String) json.get("password");
+		String keyDate = (String) json.get("keyDate");
+		String websiteUrl = (String) json.get("website");
+		try {
+			password = RSA.Decrypt(password, Integer.parseInt(keyDate));
+		} catch (NumberFormatException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+		password = user.encrypt(password);
+		return this.email.getEmail().equals(username) && this.newPassword.equals(password)
+		&& this.classicApp.getSite().loginUrlMatch(websiteUrl);
 	}
 
 }

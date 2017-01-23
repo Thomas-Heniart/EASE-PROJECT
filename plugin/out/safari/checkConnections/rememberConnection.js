@@ -101,11 +101,15 @@ function checkSuccessfullConnexion(hostUrl, tab, callback) {
     var checkAlreadyLogged;
     getCheckAlreadyLoggedCondition(hostUrl, function (xhrRes) {
         checkAlreadyLogged = JSON.parse(xhrRes);
+        console.log("check if element is here :" +checkAlreadyLogged[0].search);
         extension.tabs.sendMessage(tab, "checkCo", {
-            elem: checkAlreadyLogged
+            elem: checkAlreadyLogged[0].search
         }, function (res) {
             if (res) {
+                console.log("connection success");
                 callback();
+            } else {
+                console.log("connection fail");
             }
         });
     });
@@ -131,7 +135,8 @@ function getCheckAlreadyLoggedCondition(host, callback) {
         function (resp) {
             var res = resp.split(" ");
             if (res[0] == "200") {
-                callback(resp.substring(4, xhr.response.length));
+                console.log(resp.substring(4, resp.length));
+                callback(resp.substring(4, resp.length));
             }
         });
 }
