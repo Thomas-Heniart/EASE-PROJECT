@@ -161,15 +161,15 @@ public class UpdateManager {
 				String password = (String) json.get("password");
 				String keyDate = (String) json.get("keyDate");
 				password = RSA.Decrypt(password, Integer.parseInt(keyDate));
-				password = this.user.encrypt(password);
+				String cryptedPassword = this.user.encrypt(password);
 				if (existingApp != null) {
 					System.out.println(password);
 					System.out.println(existingApp.getAccount().getCryptedPassword());
-					if (existingApp.getAccount().getCryptedPassword().equals(password))
+					if (existingApp.getAccount().getCryptedPassword().equals(cryptedPassword))
 						return true;
 					if (this.checkRemovedUpdates(existingApp, password, sm))
 						return true;
-					this.addUpdate(UpdateNewPassword.createUpdateNewPassword(this.user, existingApp, password, userEmail, sm));
+					this.addUpdate(UpdateNewPassword.createUpdateNewPassword(this.user, existingApp, cryptedPassword, userEmail, sm));
 					return true;
 				} else {
 					if (this.checkRemovedUpdates(website, login, sm))
@@ -328,7 +328,7 @@ public class UpdateManager {
 		this.addUpdateInMaps(update);
 	}
 	
-	public void removeUpdateFromDbWithSingleId(int single_id, DataBaseConnection db) throws GeneralException {
+	public void removeUpdateWithSingleId(int single_id, DataBaseConnection db) throws GeneralException {
 		this.removeUpdateFromDb(this.updatesIDMap.get(single_id), db);
 	}
 	
@@ -415,5 +415,20 @@ public class UpdateManager {
 		}
 		return newAppSingleId;
 	}
-	
+
+	public void removeAllUpdateWithThisApp(App app, ServletManager sm) throws GeneralException {
+		for (Update update : updates) {
+			if (update.getType().equals("UpdateNewPassword")) {
+				UpdateNewPassword uNp = (UpdateNewPassword)update;
+				if (uNp.getApp().getSingleId() == app.getSingleId()) {
+					this.removeUpdateWithSingleId(uNp.getSingledId(), sm.getDB());
+				}
+			} else if (update.getType().equals("UpdateNewLogWithApp")) {
+				UpdateNewLogWithApp uNlw = (UpdateNewLogWithApp)update;
+				if (uNlw.getLogWithApp().getSingleId() == app.getSingleId()) {
+					this.removeUpdateWithSingleId(uNlw.getSingledId(), sm.getDB());
+				}
+			}
+		}
+	}
 }
