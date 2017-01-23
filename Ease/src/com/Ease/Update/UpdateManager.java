@@ -99,6 +99,10 @@ public class UpdateManager {
 			String keyDate = (String) json.get("keyDate");
 			password = RSA.Decrypt(password, Integer.parseInt(keyDate));
 			if (existingApp != null) {
+				System.out.println(password);
+				System.out.println(existingApp.getAccount().getCryptedPassword());
+				if (existingApp.getAccount().getCryptedPassword().equals(password))
+					return true;
 				if (this.checkRemovedUpdates(existingApp, password, sm))
 					return true;
 				System.out.println(existingApp.getAccount().getPassword());
@@ -160,6 +164,10 @@ public class UpdateManager {
 				password = RSA.Decrypt(password, Integer.parseInt(keyDate));
 				password = this.user.encrypt(password);
 				if (existingApp != null) {
+					System.out.println(password);
+					System.out.println(existingApp.getAccount().getCryptedPassword());
+					if (existingApp.getAccount().getCryptedPassword().equals(password))
+						return true;
 					if (this.checkRemovedUpdates(existingApp, password, sm))
 						return true;
 					this.addUpdate(UpdateNewPassword.createUpdateNewPassword(this.user, existingApp, password, userEmail, sm));
@@ -401,7 +409,7 @@ public class UpdateManager {
 			newAppSingleId = Integer.toString(updatePassword.getApp().getSingleId());
 			
 			DataBaseConnection db = sm.getDB();
-			update.deleteFromDb(db);
+			updatePassword.deleteFromDb(db);
 			this.updatesDBMap.remove(update.getDbId());
 			this.updatesIDMap.remove(single_id);
 			this.updates.remove(update);

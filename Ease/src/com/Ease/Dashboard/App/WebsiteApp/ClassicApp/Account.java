@@ -116,6 +116,10 @@ public class Account {
 		
 	}
 	
+	public String getCryptedPassword() {
+		return crypted_password;
+	}
+	
 	/*
 	 * 
 	 * Utils
