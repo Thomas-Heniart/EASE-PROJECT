@@ -13,6 +13,7 @@ import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.Profile.ProfilePermissions;
 import com.Ease.Dashboard.User.User;
+import com.Ease.Update.Update;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Regex;
@@ -75,6 +76,7 @@ public class DashboardManager {
 	}
 	
 	private void removeApp(App app, ServletManager sm) throws GeneralException {
+		user.getUpdateManager().removeAllUpdateWithThisApp(app, sm);
 		Profile profile = app.getProfile();
 		this.apps.remove(app);
 		this.appsDBMap.remove(app.getDBid());
@@ -289,15 +291,14 @@ public class DashboardManager {
 		return app;
 	}
 
-	public ClassicApp findClassicAppWithLoginAndWebsite(String login, Website website) {
+	public ClassicApp findClassicAppWithLoginAndWebsite(String login, Website website) throws GeneralException {
 		for (App app : this.apps) {
 			if (!app.getType().equals("ClassicApp"))
 				continue;
 			String appLogin = ((ClassicApp)app).getAccount().getInformationNamed("login");
-			if (appLogin.equals(login) && ((ClassicApp) app).getSite() == website)
+			if (appLogin.equals(login) && ((WebsiteApp) app).getSite().getName().equals(website.getName()))
 				return (ClassicApp) app;
 		}
-		return null;
-		
+		throw new GeneralException(ServletManager.Code.ClientError, "This app does not exist");
 	}
 }

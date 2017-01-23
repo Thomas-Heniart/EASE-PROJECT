@@ -82,5 +82,4 @@ public class FilterUpdate extends HttpServlet {
 		}
 		sm.sendResponse();
 	}
-
 }
