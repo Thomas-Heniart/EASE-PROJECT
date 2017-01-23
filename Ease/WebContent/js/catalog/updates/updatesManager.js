@@ -21,6 +21,9 @@ var UpdateManager = function (rootEl) {
 	this.hide = function(){
 		self.qRoot.removeClass('show');
 	};
+	this.updateTitle = function(){
+		self.titleHandler.text(self.updates.length + ' Update' + ((self.updates.length == 1) ? '' : 's') + ' available');
+	};
 	this.checkUpdates = function(){
 		postHandler.post(
 			'GetUpdates',
@@ -43,7 +46,7 @@ var UpdateManager = function (rootEl) {
 						}
 					}
 				}
-
+				self.updateTitle();
 			},
 			function(msg){
 
