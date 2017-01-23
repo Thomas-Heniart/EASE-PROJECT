@@ -553,6 +553,7 @@ var addUpdatePopup = function(rootEl){
 	this.ajaxFormHandler = this.qRoot.find('form');
 	this.loginInputHandler = this.qRoot.find("input[name='login']");
 	this.passwordInputHandler = this.qRoot.find("input[name='password']");
+	this.errorMessageHandler = this.qRoot.find('.errorHandler');
 	this.submitButtonHandler = this.ajaxFormHandler.find("button[type='submit']");
 	this.goBackButtonHandler = this.qRoot.find("#goBack");
 
@@ -611,6 +612,7 @@ var addUpdatePopup = function(rootEl){
 	this.close = function(){
 		self.qRoot.removeClass('show');
 		self.parentHandler.removeClass('myshow');
+		self.errorMessageHandler.removeClass('show');
 		self.sendEmailButtonHandler.off();
 		self.hideEmailSendingArea();
 	};
@@ -631,6 +633,8 @@ var addUpdatePopup = function(rootEl){
 	});
 	this.ajaxFormHandler.submit(function(e){
 		e.preventDefault();
+		self.errorMessageHandler.removeClass('show');
+		self.submitButtonHandler.addClass('loading');
 		postHandler.post(
 			'AcceptUpdate',
 			{
@@ -639,7 +643,7 @@ var addUpdatePopup = function(rootEl){
 				password:self.passwordInputHandler.val()
 			},
 			function(){
-
+				self.submitButtonHandler.removeClass('loading');
 			},
 			function(msg){
 				if (self.update.type == 'newClassicApp'){
@@ -652,7 +656,8 @@ var addUpdatePopup = function(rootEl){
 				self.close();
 			},
 			function(msg){
-
+				self.errorMessageHandler.find('p').text(msg);
+				self.errorMessageHandler.addClass('show');
 			},
 			'text'
 			);
@@ -664,9 +669,11 @@ var updateCount = function(rootEl){
 	this.qRoot = $(rootEl);
 	this.count = parseInt(this.qRoot.text(), 10);
 
+	self.count && self.qRoot.css('display', 'block') || self.qRoot.css('display', 'none');
 	this.setCount = function(c){
 		self.qRoot.html(c);
 		self.count = c;
+		self.count && self.qRoot.css('display', 'block') || self.qRoot.css('display', 'none');
 	};
 };
 

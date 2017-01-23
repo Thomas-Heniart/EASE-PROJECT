@@ -43,6 +43,10 @@ pageEncoding="UTF-8"%>
 								<input id="password" type="password" name="password" placeholder="Password">
 							</span>
 						</div>
+						<div class="row text-center errorText errorHandler">
+							<p>
+							</p>
+						</div>
 						<div class="row text-center">
 							<button class="btn" type="submit">Add this app</button>
 						</div>
