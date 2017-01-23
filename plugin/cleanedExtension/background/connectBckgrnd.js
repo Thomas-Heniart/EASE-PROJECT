@@ -129,7 +129,7 @@ function rememberConnection(bigStep, callback) {
     /*if (website.lastLogin.logWith) {
         rememberDirectLogWithConnection(getHost(website.loginUrl), website.lastLogin);
     } else {
-        rememberConnection(website.lastLogin.user, null, getHost(website.loginUrl), true);
+        rememberConnection(website.lastLogin.user, getHost(website.loginUrl), true);
     }*/
     //REVOIR LA SAUVEGARDE DES CONNECTIONS
 

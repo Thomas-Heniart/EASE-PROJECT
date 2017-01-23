@@ -17,7 +17,6 @@ extension.runtime.bckgrndOnMessage('newFormSubmitted', function (msg, senderTab,
         extension.tabs.onMessageRemoveListener(senderTab);
         checkSuccessfullConnexion(msg.hostUrl, senderTab, function () {
             encryptPassword(msg.update.password, function (passwordDatas) {
-                console.log("send update " + msg.hostUrl + " " + msg.update.username);
                 sendUpdate({
                     type: "classic",
                     website: msg.hostUrl,
@@ -155,6 +154,8 @@ function isConnected(url, user) {
 function sendUpdate(update) {
     extension.storage.get("sessionId", function (sId) {
         if (sId != "") {
+            console.log("send update");
+            console.log(update);
             $.post("http://localhost:8080/CreateUpdate", {
                     "sessionId": sId,
                     "update": JSON.stringify(update)
