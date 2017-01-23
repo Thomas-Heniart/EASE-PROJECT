@@ -99,7 +99,7 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 
 	public void deleteFromDb(DataBaseConnection db) throws GeneralException {
 		int transaction = db.startTransaction();
-		ClassicUpdateInformation.deleteFromDb(this.db_id, db);
+		ClassicUpdateInformation.deleteFromDb(this.update_new_account_id, db);
 		db.set("DELETE FROM updateNewClassicApp WHERE update_new_account_id = " + this.update_new_account_id + ";");
 		super.deleteFromDb(db);
 		db.commitTransaction(transaction);

@@ -105,8 +105,6 @@ public class UpdateManager {
 					return true;
 				if (this.checkRemovedUpdates(existingApp, password, sm))
 					return true;
-				System.out.println(existingApp.getAccount().getPassword());
-				System.out.println(user.encrypt(password));
 				if (existingApp.getAccount().getPassword().equals(user.encrypt(password)))
 					return true;
 				this.addUpdate(UpdateNewPassword.createUpdateNewPassword(this.user, existingApp, password, userEmail, sm));
@@ -348,13 +346,11 @@ public class UpdateManager {
 	public String acceptUpdate(int single_id, int profileId, String password, ServletManager sm) throws GeneralException {
 		String newAppSingleId;
 		Update update = this.getUpdateWithSingleId(single_id);
-		System.out.println("Update type : " + update.getType());
-		System.out.println("Update dbid : " + update.getDbId());
+		DataBaseConnection db = sm.getDB();
 		if (update == null) {
 			throw new GeneralException(ServletManager.Code.ClientError, "This update dosoen't exist.");
 		}
 		Profile profile;
-		System.out.println(update.getClass().getName());
 		if (update.getType().equals("UpdateNewClassicApp")) {
 			System.out.println("NewClassicAppUpdate if");
 			if ((profile = user.getDashboardManager().getProfile(profileId)) == null)
@@ -374,8 +370,7 @@ public class UpdateManager {
 			App newApp = ClassicApp.createClassicApp(profile, profile.getApps().size(), updateClassicApp.getSite().getName(), updateClassicApp.getSite(), password, infos, sm, user);
 			profile.addApp(newApp);
 			newAppSingleId = Integer.toString(newApp.getSingleId());
-			System.out.println("On est bien là ?");
-			update.reject(sm);
+			update.deleteFromDb(db);
 			this.updatesDBMap.remove(update.getDbId());
 			this.updatesIDMap.remove(single_id);
 			this.updates.remove(update);
@@ -388,7 +383,7 @@ public class UpdateManager {
 			profile.addApp(newApp);
 			newAppSingleId = Integer.toString(newApp.getSingleId());
 			
-			update.reject(sm);
+			update.deleteFromDb(db);
 			this.updatesDBMap.remove(update.getDbId());
 			this.updatesIDMap.remove(single_id);
 			this.updates.remove(update);
@@ -408,8 +403,7 @@ public class UpdateManager {
 			
 			newAppSingleId = Integer.toString(updatePassword.getApp().getSingleId());
 			
-			DataBaseConnection db = sm.getDB();
-			updatePassword.deleteFromDb(db);
+			update.deleteFromDb(db);
 			this.updatesDBMap.remove(update.getDbId());
 			this.updatesIDMap.remove(single_id);
 			this.updates.remove(update);
