@@ -43,6 +43,10 @@ var UpdateManager = function (rootEl) {
 						u = updates[i];
 						if (updates[i].type == 'newClassicApp'){
 							self.addUpdate(new newClassicApp(u.singleId, u.login, u.passwordLength, u.websiteImg, u.websiteName, u.email, u.websiteId));
+						} else if (updates[i].type == 'newPassword'){
+							self.addUpdate(new updatePassword(u.singleId, u.appId, u.login, u.passwordLength, u.websiteImg, u.websiteName, u.email, u.websiteId));
+						} else if (updates[i].type == 'newLogWithApp'){
+							self.addUpdate(new logWithApp(u.singleId, u.websiteName, u.logWithId, u.login, u.logWithImg, u.logWithName, u.websiteImg, u.websiteId));
 						}
 					}
 				}
@@ -461,32 +465,28 @@ var newLogWithApp = function(updateId, websiteName, logWithId, logWithLogin, log
 	}
 
 	this.acceptButton.click(function(){
-		if (self.isVerified == 'verified'){
-			self.startLogoAnimation();
-			postHandler.post(
-				'acceptUpdate',
-				{
-					profileId: profiles[profiles.length - 1].id,
-					updateId: self.updateId
-				},
-				function(){
-					self.stopLogoAnimation();
-				},
-				function(msg){
-					var app = new MyApp();
-					app.init(self.logWithId, null, self.catalogId, self.websiteName, msg, 0, true, self.imageSrc);
-					profiles[profiles.length - 1].addApp(app);
-					app.scaleAnimate();
-					catalog.oUpdate.removeUpdate(self);
-				},
-				function(msg){
-					self.showErrorMessage(msg);
-				},
-				'text'
-				);
-		} else {
-			easeAddUpdatePopup.open(self, profiles[profiles.length - 1].id);
-		}
+		self.startLogoAnimation();
+		postHandler.post(
+			'acceptUpdate',
+			{
+				profileId: profiles[profiles.length - 1].id,
+				updateId: self.updateId
+			},
+			function(){
+				self.stopLogoAnimation();
+			},
+			function(msg){
+				var app = new MyApp();
+				app.init(self.logWithId, null, self.catalogId, self.websiteName, msg, 0, true, self.imageSrc);
+				profiles[profiles.length - 1].addApp(app);
+				app.scaleAnimate();
+				catalog.oUpdate.removeUpdate(self);
+			},
+			function(msg){
+				self.showErrorMessage(msg);
+			},
+			'text'
+			);
 	});
 	this.rejectButton.click(function(){
 		self.startLogoAnimation();
