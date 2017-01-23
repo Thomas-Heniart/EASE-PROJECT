@@ -590,12 +590,14 @@ var addUpdatePopup = function(rootEl){
 		if (update.isVerified == 'unverified'){
 			self.showEmailSendingArea();
 			self.sendEmailButtonHandler.one('click', function(){
+				self.sendEmailButtonHandler.addClass('loading');
 				postHandler.post(
 					'AskVerificationEmail',
 					{
 						email: self.update.login
 					},
 					function(){
+						self.sendEmailButtonHandler.removeClass('loading');
 					},
 					function(msg){
 						self.showSentEmailFeedbackArea();
