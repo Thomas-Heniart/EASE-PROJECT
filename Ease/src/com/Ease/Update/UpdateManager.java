@@ -66,25 +66,6 @@ public class UpdateManager {
 		return this.updates;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public void addUpdatesFromJsonConnected(String updates, ServletManager sm) throws GeneralException {
-		JSONParser parser = new JSONParser();
-		JSONArray jsonArray;
-		
-		try {
-			jsonArray = (JSONArray) parser.parse(updates);
-		} catch (ParseException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
-		jsonArray.forEach((update) -> {
-			try {
-				addUpdateFromJsonConnected((JSONObject) update, sm);
-			} catch (GeneralException e) {
-				return;
-			}
-		});
-	}
-
 	public boolean addUpdateFromJsonConnected(JSONObject json, ServletManager sm) throws GeneralException {
 		String type = (String) json.get("type");
 		String url = (String) json.get("website");
@@ -145,12 +126,15 @@ public class UpdateManager {
 	public boolean addUpdateFromJsonDeconnected(String jsonString, ServletManager sm) throws GeneralException {
 		JSONParser parser = new JSONParser();
 		JSONObject json;
+		System.out.println(jsonString);
 		try {
 			json = (JSONObject) parser.parse(jsonString);
 		} catch (ParseException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 		String type = (String) json.get("type");
+		if (this.haveUpdate(json, sm))
+			return true;
 		if (type.equals("classic")) {
 			String login = (String) json.get("username");
 			UserEmail userEmail;
@@ -163,8 +147,6 @@ public class UpdateManager {
 				password = RSA.Decrypt(password, Integer.parseInt(keyDate));
 				String cryptedPassword = this.user.encrypt(password);
 				if (existingApp != null) {
-					System.out.println(password);
-					System.out.println(existingApp.getAccount().getCryptedPassword());
 					if (existingApp.getAccount().getCryptedPassword().equals(cryptedPassword))
 						return true;
 					if (this.checkRemovedUpdates(existingApp, password, sm))
@@ -182,11 +164,11 @@ public class UpdateManager {
 			}
 		} else if (type.equals("logwith")) {
 			
-			String login = (String) json.get("login");
+			String login = (String) json.get("username");
 			String logWithAppName = (String) json.get("logwith");
 			Website logwithAppWebsite = this.findWebsiteInCatalogWithName(logWithAppName, sm);
 			String urlOrName = (String) json.get("website");
-			Website website = this.findWebsiteInCatalogWithName(urlOrName, sm);
+			Website website = this.findWebsiteInCatalogWithLoginUrl(urlOrName, sm);
 			WebsiteApp logwithApp = (WebsiteApp) this.findClassicAppWithLoginAndWebsite(login, logwithAppWebsite);
 			if (this.checkRemovedUpdates(website, logwithApp, login, sm))
 				return true;
@@ -300,7 +282,7 @@ public class UpdateManager {
 		return catalog.getWebsiteWithLoginUrl(url);
 	}
 
-	private Website findWebsiteInCatalogWithName(String websiteName, ServletManager sm) {
+	private Website findWebsiteInCatalogWithName(String websiteName, ServletManager sm) throws GeneralException {
 		Catalog catalog = (Catalog) sm.getContextAttr("catalog");
 		return catalog.getWebsiteNamed(websiteName);
 	}
@@ -319,7 +301,7 @@ public class UpdateManager {
 		return catalog.haveWebsiteWithLoginUrl(url);
 	}
 
-	private ClassicApp findClassicAppWithLoginAndWebsite(String login, Website website) {
+	private ClassicApp findClassicAppWithLoginAndWebsite(String login, Website website) throws GeneralException {
 		return this.user.getDashboardManager().findClassicAppWithLoginAndWebsite(login, website);
 	}
 
