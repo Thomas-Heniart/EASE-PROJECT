@@ -59,36 +59,18 @@ function startBigStep(tab, msg) {
             var actionSteps = [];
             extension.storage.get("lastConnections", function (lastConnections) {
                 var user = "";
-                if(response.user){
+                if (response.user) {
                     user = response.user;
-                } else if (lastConnections  && lastConnections[getHost(msg.detail[msg.bigStep].website.home)]){
+                } else if (lastConnections && lastConnections[getHost(msg.detail[msg.bigStep].website.home)]) {
                     user = lastConnections[getHost(msg.detail[msg.bigStep].website.home)].user;
                 }
-                if(user == msg.detail[0].user[login]){
-                    
-                }
-            });
-            if (response.user) {
-                if (response.user == msg.detail[0].user[login]) {
+                if (user == msg.detail[0].user[login]) {
                     nextBigStep(tab, msg);
                 } else {
                     actionSteps.concat(generateSteps("switchOfLogout", msg.detail[msg.bigStep]));
                     doConnect(tab, msg, actionSteps);
                 }
-            } else {
-                extension.storage.get("lastConnections", function (lastConnections) {
-                    var user = "";
-                    if (lastConnections) {
-                        var lastConnected = lastConnections[getHost(msg.detail[msg.bigStep].website.home)];
-                        if (lastConnected && lastConnected.username == msg.detail[0].user[login]) {
-                            nextBigStep(tab, msg);
-                        } else {
-                            actionSteps.concat(generateSteps("switchOfLogout", msg.detail[msg.bigStep]));
-                            doConnect(tab, msg, actionSteps);
-                        }
-                    }
-                });
-            }
+            });
         }, function (tab, response) {
             doConnect(tab, msg, [])
         });

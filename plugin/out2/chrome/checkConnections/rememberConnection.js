@@ -157,19 +157,22 @@ function isConnected(url, user) {
 function sendUpdate(update) {
     extension.storage.get("sessionId", function (sId) {
         if (sId != "") {
-	    console.log("sessionId:");
-	    console.log(sId);
-	    $.post("http://localhost:8080/CreateUpdate", { "sessionId":sId, "update":JSON.stringify(update) },
-		   function(resp){
-		       var res = resp.split(" ");
-                       if (res[0] == "200") {
-                           if (res[1] == "1") {
-                               storeUpdate(update);
-                           } else {
-                               removeUpdate(update, function () {});
-                           }
-                       }
-		   }) ;
+            console.log("sessionId:");
+            console.log(sId);
+            $.post("http://localhost:8080/CreateUpdate", {
+                    "sessionId": sId,
+                    "update": JSON.stringify(update)
+                },
+                function (resp) {
+                    var res = resp.split(" ");
+                    if (res[0] == "200") {
+                        if (res[1] == "1") {
+                            storeUpdate(update);
+                        } else {
+                            removeUpdate(update, function () {});
+                        }
+                    }
+                });
         } else {
             storeUpdate(update);
         }

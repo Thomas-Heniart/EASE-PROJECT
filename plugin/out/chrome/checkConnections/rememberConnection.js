@@ -156,15 +156,13 @@ function isConnected(url, user) {
 
 function sendUpdate(update) {
     extension.storage.get("sessionId", function (sId) {
-        console.log(sId);
         if (sId != "") {
-            console.log(sId);
             $.post("http://localhost:8080/CreateUpdate", {
                     "sessionId": sId,
                     "update": JSON.stringify(update)
                 },
                 function (resp) {
-                    console.log(xhr.response);
+                    console.log(resp);
                     var res = resp.split(" ");
                     if (res[0] == "200") {
                         if (res[1] == "1") {
