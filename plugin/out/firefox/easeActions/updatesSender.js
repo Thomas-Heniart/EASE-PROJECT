@@ -12,7 +12,7 @@ extension.storage.get("sessionId", function (oldSessionId) {
     }
 
     extension.storage.set("sessionId", newSessionId, function () {});
-    if (newSessionId != "" && newSessionId == oldSessionId) {
+    if (newSessionId != "" && newSessionId != oldSessionId) {
         extension.storage.get("storedUpdates", function (storedUpdates) {
             if (storedUpdates != undefined && storedUpdates.length > 0) {
                 extension.storage.get("extensionId", function (eId) {
