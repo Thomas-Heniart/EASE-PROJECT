@@ -106,7 +106,10 @@ function checkSuccessfullConnexion(hostUrl, tab, callback) {
             elem: checkAlreadyLogged[0].search
         }, function (res) {
             if (res) {
+                console.log("connection success");
                 callback();
+            } else {
+                console.log("connection fail");
             }
         });
     });
