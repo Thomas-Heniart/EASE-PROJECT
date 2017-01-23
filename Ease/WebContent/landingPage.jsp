@@ -60,7 +60,7 @@ pageEncoding="UTF-8"%>
 
 	/* Test */
 	amplitude.getInstance().init("73264447f97c4623fb38d92b9e7eaeea");
-	easeTracker.trackEvent("HomePageVisit");
+	easeTracker.trackEvent("HomepageVisit");
 </script>
 </head>
 
@@ -113,7 +113,7 @@ pageEncoding="UTF-8"%>
 				<div class="intro-lead-in">
 					<fmt:message key="landing.sub-title" />					
 				</div>
-				<a href="#services" class="btn btn-xl signUpButton" trackEvent="HomeSignUpButton1">
+				<a href="#services" class="btn btn-xl signUpButton" trackEvent="HomepageSignUpButton1">
 					<fmt:message key="landing.signup-button.text" />
 				</a>
 			</div>
@@ -184,7 +184,7 @@ pageEncoding="UTF-8"%>
 		<section class="vp" style="background-color:#eee;">
 			<div clas="container">
 				<div class="row">
-					<a href="#services" class="btn btn-xl signUpButton" trackEvent="HomeSignUpButton2">
+					<a href="#services" class="btn btn-xl signUpButton" trackEvent="HomepageSignUpButton2">
 						<fmt:message key="landing.signup-button.2nd-text"/>
 					</a>
 				</div>
@@ -538,7 +538,7 @@ pageEncoding="UTF-8"%>
 				});
 				this.qRoot.find('#1 form').submit(function(e){
 					e.preventDefault();
-					easeTracker.trackEvent("HomePageSignUp1");
+					easeTracker.trackEvent("HomepageSignUp1");
 					var emailVal = $(this).find("input[name='email']").val();
 					var name = $(this).find("input[name='name']").val();
 					var loading = $(this).find('.loading');
@@ -620,7 +620,7 @@ pageEncoding="UTF-8"%>
 						alertMessage.css('color', '#24d666');
 						alertMessage.addClass('show');
 						easeTracker.setUserId(email);
-						easeTracker.trackEvent("HomePageSignUp2");
+						easeTracker.trackEvent("HomepageSignUp2");
 						easeTracker.trackEvent("Connect");
 						setTimeout(function() {
 							window.location = "index.jsp";
@@ -685,7 +685,7 @@ pageEncoding="UTF-8"%>
 					easeSignUpPopup.openRegistration();
 				}
 				$("#connexionButton").click(function() {
-					easeTracker.trackEvent("HomePageLogin");
+					easeTracker.trackEvent("HomepageLogin");
 				});
 			});
 		</script>

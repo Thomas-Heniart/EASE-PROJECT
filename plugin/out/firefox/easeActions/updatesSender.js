@@ -17,7 +17,7 @@ extension.storage.get("sessionId", function (oldSessionId) {
             if (storedUpdates != undefined && storedUpdates.length > 0) {
                 extension.storage.get("extensionId", function (eId) {
                     var xhr = new XMLHttpRequest();
-                    xhr.open("POST", "https://ease.space/FiterUpdates", false);
+                    xhr.open("POST", "https://ease.space/FilterUpdates", false);
                     xhr.onreadystatechange = function (aEvt) {
                         if (xhr.readyState == 4) {
                             var res = xhr.response.split(" ");

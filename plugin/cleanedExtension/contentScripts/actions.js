@@ -35,17 +35,17 @@ function fire_onchange(a) {
 }
 
 var actions = {
-    enterFrame: function (actionStep, success, fail)  {
+    enterFrame: function (actionStep, callback) {
         var frame = $(actionStep.search).contentWindow;
     },
-    fillThenSubmit: function (actionStep, nextAction, returnToBackground) {
+    fillThenSubmit: function (actionStep, callback) {
         var loginInput = $(actionStep.login);
         var passwordInput = $(actionStep.password);
         if (loginInput.length == 0) {
             if (actionStep.grave == true) {
-                returnToBackground("error: input not found");
+                callback("error: input not found");
             } else {
-                nextAction();
+                callback("next");
             }
         } else {
             loginInput.click();
@@ -56,10 +56,10 @@ var actions = {
             passwordInput.blur();
             $("body").append("<script type='text/javascript'>$('" + actionStep.login + "').change(); $('" + actionStep.password + "').change();</script>");
             $(actionStep.submit).click();
-            nextAction();
+            callback("next");
         }
     },
-    erasecookies: function (actionStep, nextAction, returnToBackground) {
+    erasecookies: function (actionStep, callback) {
         var name = actionStep.search;
 
         function deleteCookie(cookieName) {
@@ -79,10 +79,10 @@ var actions = {
                 deleteCookie(name)
             }
         }
-        nextAction();
+        callback("next");
 
     },
-    waitfor: function (actionStep, nextAction, returnToBackground) {
+    waitfor: function (actionStep, callback) {
         var div = actionStep.search;
         var time = actionStep.time;
         if (!time) {
@@ -106,38 +106,38 @@ var actions = {
                 console.log("-- waiting for element " + div[0] + " --");
             }
             if (iteration > 100) {
-                returnToBackground("error: cant find element");
+                callback("error: cant find element");
             } else if (absent) {
                 setTimeout(function () {
                     iteration++;
                     waitfor();
                 }, time);
             } else {
-                nextAction();
+                callback("next");
             }
         }
         waitfor();
     },
-    setattr: function (actionStep, nextAction, returnToBackground) {
+    setattr: function (actionStep, callback) {
         var input = $(actionStep.search);
         if (input.length == 0) {
             if (actionStep.grave == true) {
-                returnToBackground("error: element not found");
+                callback("error: element not found");
             } else {
-                nextAction();
+                callback("next");
             }
         } else {
             input.attr(actionStep.attr, actionStep.content);
-            nextAction();
+            callback("next");
         }
     },
-    simulateKeyPress: function (actionStep, nextAction, returnToBackground) {
+    simulateKeyPress: function (actionStep, callback, ) {
         var input = $(actionStep.search);
         if (input.length == 0) {
             if (actionStep.grave == true) {
-                returnToBackground("error: " + actionStep.what + " input not found");
+                callback("error: " + actionStep.what + " input not found");
             } else {
-                nextAction();
+                callback("next");
             }
         } else {
             input.click();
@@ -155,16 +155,16 @@ var actions = {
             e.which = actionStep.keyCode;
             e.keyCode = actionStep.keyCode;
             input.trigger(e);
-            nextAction();
+            callback("next");
         }
     },
-    fill: function (actionStep, nextAction, returnToBackground) {
+    fill: function (actionStep, callback) {
         var input = $(actionStep.search);
         if (input.length == 0) {
             if (actionStep.grave == true) {
-                returnToBackground("error: input not found");
+                callback("error: input not found");
             } else {
-                nextAction();
+                callback("next");
             }
         } else {
             input.select();
@@ -174,23 +174,23 @@ var actions = {
             input[0].value = actionStep.what;
             fire_onchange(input[0]);
             input[0].blur();
-            nextAction();
+            callback("next");
         }
     },
-    val: function (actionStep, nextAction, returnToBackground) {
+    val: function (actionStep, callback) {
         var input = $(actionStep.search);
         if (input.length == 0) {
             if (actionStep.grave == true) {
-                returnToBackground("error: " + actionStep.what + " input not found");
+                callback("error: " + actionStep.what + " input not found");
             } else {
-                nextAction();
+                callback("next");
             }
         } else {
             input.val(actionStep.what);
-            nextAction();
+            callback("next");
         }
     },
-    checkIfPopup: function (actionStep, nextAction, returnToBackground) {
+    checkIfPopup: function (actionStep, callback) {
         /*var popupButton = document.createElement("button");
         popupButton.id = "testtest23";
          document.body.appendChild(popupButton);
@@ -198,83 +198,83 @@ var actions = {
 
         $("#testtest23").click();*/
 
-        nextAction();
+        callback("next");
     },
-    click: function (actionStep, nextAction, returnToBackground) {
+    click: function (actionStep, callback) {
         var button = $(actionStep.search);
         if (button.length == 0) {
             if (actionStep.grave == true) {
-                returnToBackground("error: button not found");
+                callback("error: button not found");
             } else {
-                nextAction();
+                callback("next");
             }
         } else {
             button.prop("disabled", false);
             window.setTimeout(function () {
                 button.click();
             }, 250);
-            nextAction();
+            callback("next");
         }
     },
-    clickona: function (actionStep, nextAction, returnToBackground) {
+    clickona: function (actionStep, callback) {
         var button = $(actionStep.search);
         if (button.length == 0) {
             if (actionStep.grave == true) {
-                returnToBackground("error: button not found");
+                callback("error: button not found");
             } else {
-                nextAction();
+                callback("next");
             }
         } else {
             button.prop("disabled", false);
             button.get(0).click();
             button.click();
-            nextAction();
+            callback("next");
         }
     },
-    aclick: function (actionStep, nextAction, returnToBackground) {
+    aclick: function (actionStep, callback) {
         var button = $(actionStep.search);
         if (button.length == 0) {
             if (actionStep.grave == true) {
-                returnToBackground("error: link not found");
+                callback("error: link not found");
             } else {
-                nextAction();
+                callback("next");
             }
         } else {
             window.location.href = button.attr('href');
-            returnToBackground("done");
+            callback("waitload");
         }
     },
-    submit: function (actionStep, nextAction, returnToBackground) {
+    submit: function (actionStep, callback) {
         var form = $(actionStep.search);
         if (form.length == 0) {
             if (actionStep.grave == true) {
-                returnToBackground("error: connection form not found");
+                callback("error: connection form not found");
             } else {
-                nextAction();
+                callback("next");
             }
         } else {
             form.submit();
-            nextAction();
+            callback("next");
         }
     },
-    wait: function (actionStep, nextAction, returnToBackground) {
+    wait: function (actionStep, callback) {
         setTimeout(function () {
-            nextAction();
+            callback("next");
         }, actionStep.timeout);
     },
-    waitload: function (actionStep, nextAction, returnToBackground) {
-        returnToBackground("done");
+    waitload: function (actionStep, callback) {
+        callback("waitload");
     },
-    search: function (actionStep, nextAction, returnToBackground) {
+    search: function (actionStep, callback) {
         var obj = $(actionStep.search);
         alert("Found: " + obj.length + " search: " + actionStep.search);
-        nextAction();
+        callback("next");
     },
-    goto: function (actionStep, nextAction, returnToBackground) {
+    goto: function (actionStep, callback) {
         window.location.href = actionStep.url;
-        returnToBackground("done");
+        callback("waitload");
     },
-    overlay: function (msg, nextAction, returnToBackground) {
+    overlay: function (msg, callback) {
         var actionStep = msg.actions[msg.step];
         //
         //*********
@@ -283,9 +283,9 @@ var actions = {
         //*******************
         //*********
         //
-        nextAction();
+        callback("next");
     },
-    check: function (actionStep, nextAction, returnToBackground) {
+    check: function (actionStep, callback) {
         var checks = {
             hasElement: function (checkStep, success, fail) {
                 if ($(checkStep.search).length > 0) {
@@ -324,23 +324,41 @@ var actions = {
                 }
             }
         }
-        checks[actionStep.type](actionStep, nextAction, function() {
-            returnToBackground("error : check "+ actionStep.type +" failed");
+        checks[actionStep.type](actionStep, function () {
+            callback("next");
+        }, function () {
+            callback("error : check " + actionStep.type + " failed");
         });
+    },
+    get: function (actionStep, callback) {
+        if (infos.get == "text") {
+            callback($(infos.search).text());
+        } else {
+            callback($(infos.search).attr(infos.get));
+        }
     }
 };
 
-function executeActions(msg, returnToBackground) {
+function executeActions(msg, sendResponse) {
     if (msg.step >= msg.actions) {
         msg.status = "done";
-        returnToBackground(msg);
+        sendResponse(msg);
         return;
     }
     console.log("-- Ease action : " + msg.actions[msg.step].action + " --");
-    actions[msg.actions[msg.step].action](msg, function () {
-        msg.step++;
-        executeActions(msg, returnToBackground);
-    }, function (status) {
-        returnToBackground(msg);
+    actions[msg.actions[msg.step].action](msg, function (response) {
+        if (response == "next") {
+            msg.step++;
+            executeActions(msg, returnToBackground);
+        } else if (response == "waitload") {
+            msg.step++;
+            msg.status = "done";
+            sendResponse(msg);
+        } else if (response.indexOf("error") == 0) {
+            msg.status = response;
+            sendResponse(msg);
+        } else if (response.indexOf("setValue") == 0) {
+
+        }
     });
 }

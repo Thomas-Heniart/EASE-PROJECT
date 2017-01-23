@@ -29,8 +29,7 @@ extension.storage.get("sessionId", function (oldSessionId) {
         extension.storage.get("storedUpdates", function (storedUpdates) {
             if (storedUpdates != undefined && storedUpdates.length > 0) {
                 extension.storage.get("extensionId", function (eId) {
-
-		    $.post("http://localhost:8080/CreateUpdate", { "sessionId":newSessionId, "updates":JSON.stringify(storedUpdates),"extensionId":eId }, function (resp) {
+		    $.post("http://localhost:8080/CreateUpdates", { "sessionId":newSessionId, "updates":JSON.stringify(storedUpdates),"extensionId":eId }, function (resp) {
 			var res = resp.split(" ");
                             if (res[0] == "200") {
                                 var indices = res;

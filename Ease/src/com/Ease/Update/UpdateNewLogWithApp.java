@@ -8,11 +8,9 @@ import java.util.Map;
 import org.json.simple.JSONObject;
 
 import com.Ease.Context.Catalog.Website;
-import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
-import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
@@ -76,9 +74,9 @@ public class UpdateNewLogWithApp extends UpdateNewAccount {
 		json.put("singleId", this.single_id);
 		json.put("login", ((ClassicApp)this.logWithApp).getAccount().getInformationNamed("login"));
 		json.put("websiteImg", this.website.getFolder() + "logo.png");
-		json.put("logwithImg", logWithApp.getSite().getFolder() + "logo.png");
+		json.put("logWithImg", logWithApp.getSite().getFolder() + "logo.png");
 		json.put("logWithName", logWithApp.getName());
-		json.put("logWithid", logWithApp.getSingleId());
+		json.put("logWithId", logWithApp.getSingleId());
 		json.put("websiteId", this.website.getSingleId());
 		json.put("websiteName", this.website.getName());
 		return json;
@@ -86,5 +84,12 @@ public class UpdateNewLogWithApp extends UpdateNewAccount {
 	
 	public WebsiteApp getLogWithApp() {
 		return logWithApp;
+	}
+	
+	public boolean matchJson(JSONObject json) {
+		String login = (String) json.get("username");
+		String website = (String) json.get("logwith");
+		ClassicApp app = (ClassicApp)this.logWithApp;
+		return this.logWithApp.getSite().getName().equals(website) && app.getAccount().getInformationNamed("login").equals(login) && super.matchJson(json);
 	}
 }

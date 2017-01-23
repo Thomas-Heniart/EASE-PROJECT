@@ -15,7 +15,7 @@ pageEncoding="UTF-8"%>
 		}, 500);
 
 	});
-	easeTracker.trackEvent("LoginPageVisit");
+	easeTracker.trackEvent("LoginpageVisit");
 </script>
 <div id="loginBody">
 	<div class="ease-logo">

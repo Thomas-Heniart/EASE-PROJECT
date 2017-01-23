@@ -103,7 +103,7 @@
 		</c:choose>
 		
 		$('#tipsHandler #0 button').click(function(){
-			easeTracker.trackEvent("Tip1");
+			easeTracker.trackEvent("TutoTip1");
 			$('#tipsHandler #1').css({
 				'left': $('.ProfileBox').offset().left - $('#tipsHandler #0').outerWidth(true) - 20,
 				'top': $('.ProfileBox').offset().top - headerHeight
@@ -112,7 +112,7 @@
 			$('#tipsHandler #1').addClass('show');
 		});
 		$('#tipsHandler #1 button').click(function(){
-			easeTracker.trackEvent("Tip2");
+			easeTracker.trackEvent("TutoTip2");
 			if ($(".ProfileBox[custom='true']").length == 0){
 				$('#tipsHandler #3').css({
 					'left': $('.MenuButtonSet').offset().left - $('#tipsHandler #3').outerWidth(true) - 20,
@@ -130,7 +130,7 @@
 			}
 		});
 		$('#tipsHandler #2 button').click(function(){
-			easeTracker.trackEvent("TipGroupProfile");
+			easeTracker.trackEvent("TutoTipGroupProfile");
 			$('#tipsHandler #3').css({
 				'left': $('.MenuButtonSet').offset().left - $('#tipsHandler #3').outerWidth(true) - 20,
 				'top': $('.MenuButtonSet').offset().top - headerHeight - 15
@@ -140,7 +140,7 @@
 		});
 		var clickOnCatalog = false;
 		$('#tipsHandler #3 button').click(function(){
-			easeTracker.trackEvent("Tip3");
+			easeTracker.trackEvent("TutoTip3");
 			$('#tipsHandler #4').css({
 				'left': '42%',
 				'top': '46%',
@@ -158,7 +158,7 @@
 			$('#tipsHandler #4').addClass('show');
 		});
 		$('#tipsHandler #4 button').click(function(){
-			easeTracker.trackEvent("Tip4");
+			easeTracker.trackEvent("TutoTip4");
 			$('#tipsHandler #4').removeClass('show');
 			$(".col-left, .header").removeClass("darken");
 		});
