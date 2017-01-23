@@ -80,4 +80,9 @@ public class UpdateNewAccount extends Update {
 	public Website getSite() {
 		return website;
 	}
+	
+	public boolean matchJson(JSONObject json) {
+		String websiteUrl = (String) json.get("website");
+		return this.website.loginUrlMatch(websiteUrl) && super.matchJson(json);
+	}
 }

@@ -61,6 +61,7 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 		IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
 		Map<String, Object> elevator = new HashMap<String, Object>();
 		int transaction = db.startTransaction();
+		password = user.encrypt(password);
 		String updateNewAccount_id = UpdateNewAccount.createUpdateNewAccount(user, website, "updateNewClassicApp", elevator, db);
 		String updateNewClassicApp_id = db.set("INSERT INTO updateNewClassicApp values (null, " + updateNewAccount_id + ", '" + password + "');").toString();
 		Map<String, String> updateInformations = new HashMap<String, String>();
@@ -123,6 +124,10 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 			if (email.isVerified())
 				return true;
 		}
+		return false;
+	}
+	
+	public boolean matchJson(JSONObject json) {
 		return false;
 	}
 }

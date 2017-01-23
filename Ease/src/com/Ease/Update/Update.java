@@ -97,4 +97,9 @@ public class Update {
 	public JSONObject getJson() throws GeneralException {
 		throw new GeneralException(ServletManager.Code.InternError, "GetJson on an update... dufuk?");
 	}
+
+	public boolean matchJson(JSONObject json) {
+		String jType = (String) json.get("type");
+		return this.getType().equals(jType);
+	}
 }

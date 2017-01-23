@@ -152,4 +152,8 @@ public class Account {
 		}
 		return null;
 	}
+
+	public String getPassword() {
+		return this.crypted_password;
+	}
 }

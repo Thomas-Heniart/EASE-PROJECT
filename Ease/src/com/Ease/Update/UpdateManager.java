@@ -88,8 +88,8 @@ public class UpdateManager {
 	public boolean addUpdateFromJsonConnected(JSONObject json, ServletManager sm) throws GeneralException {
 		String type = (String) json.get("type");
 		String url = (String) json.get("website");
-		/*if (this.haveUpdate(json, sm))
-			return true;*/
+		if (this.haveUpdate(json, sm))
+			return true;
 		if (type.equals("classic")) {
 			String login = (String) json.get("username");
 			UserEmail userEmail = user.getUserEmails().get(login);
@@ -100,6 +100,10 @@ public class UpdateManager {
 			password = RSA.Decrypt(password, Integer.parseInt(keyDate));
 			if (existingApp != null) {
 				if (this.checkRemovedUpdates(existingApp, password, sm))
+					return true;
+				System.out.println(existingApp.getAccount().getPassword());
+				System.out.println(user.encrypt(password));
+				if (existingApp.getAccount().getPassword().equals(user.encrypt(password)))
 					return true;
 				this.addUpdate(UpdateNewPassword.createUpdateNewPassword(this.user, existingApp, password, userEmail, sm));
 				return true;
@@ -128,13 +132,9 @@ public class UpdateManager {
 	
 	private boolean haveUpdate(JSONObject json, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		String type = (String) json.get("type");
-		String url = (String) json.get("website");
-		Website website;
-		if (type.equals("classic")) {
-			String login = (String) json.get("username");
-			UserEmail userEmail = user.getUserEmails().get(login);
-			website = this.findWebsiteInCatalogWithLoginUrl(url, sm);
+		for (Update update : this.updates) {
+			if (update.matchJson(json))
+				return true;
 		}
 		return false;
 	}
