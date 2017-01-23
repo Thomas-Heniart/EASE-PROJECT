@@ -53,39 +53,47 @@ function executeBigStep(tab, msg) {
 function startBigStep(tab, msg) {
     extension.tabs.onReloaded.addListener(tab, function reloadListener1(tab) {
         extension.tabs.onReloaded.removeListener(reloadListener1);
-        var actionsCheckWhoIsConnected = [];
-        actionsCheckWhoIsConnected.concat(generateSteps("checkAlreadyConnected", msg.detail[msg.bigStep]));
-        executeSteps(tab, actionsCheckWhoIsConnected, function (tab, response) {
-            var actionSteps = [];
-            extension.storage.get("lastConnections", function (lastConnections) {
-                var user = "";
-                if (response.user) {
-                    user = response.user;
-                } else if (lastConnections && lastConnections[getHost(msg.detail[msg.bigStep].website.home)]) {
-                    user = lastConnections[getHost(msg.detail[msg.bigStep].website.home)].user;
-                }
-                if (user == msg.detail[0].user[login]) {
-                    nextBigStep(tab, msg);
-                } else {
-                    actionSteps.concat(generateSteps("switchOfLogout", msg.detail[msg.bigStep]));
-                    doConnect(tab, msg, actionSteps);
-                }
+        generateSteps("checkAlreadyLogged", msg.detail[msg.bigStep], function (actionsCheckWhoIsConnected) {
+            executeSteps(tab, actionsCheckWhoIsConnected, function (tab, response) {
+                var actionSteps = [];
+                extension.storage.get("lastConnections", function (lastConnections) {
+                    var user = "";
+                    if (response.user) {
+                        user = response.user;
+                    } else if (lastConnections && lastConnections[getHost(msg.detail[msg.bigStep].website.home)]) {
+                        user = lastConnections[getHost(msg.detail[msg.bigStep].website.home)].user;
+                    }
+                    if (user == msg.detail[0].user.login) {
+                        nextBigStep(tab, msg);
+                    } else {
+                        generateSteps("switchOrLogout", msg.detail[msg.bigStep], function (addedSteps) {
+                            actionSteps = actionSteps.concat(addedSteps);
+                            doConnect(tab, msg, actionSteps);
+                        });
+                    }
+                });
+            }, function (tab, response) {
+                doConnect(tab, msg, [])
             });
-        }, function (tab, response) {
-            doConnect(tab, msg, [])
-        });
 
-        function doConnect(tab, msg, actionSteps) {
-            if (msg.detail[msg.bigStep].logWith) {
-                actionSteps.concat(generateSteps(msg.detail[msg.bigStep].logWith, msg.detail[msg.bigStep]));
-            } else {
-                actionSteps.concat(generateSteps("connect", msg.detail[msg.bigStep]));
+            function doConnect(tab, msg, actionSteps) {
+                if (msg.detail[msg.bigStep].logWith) {
+                    var mainAction = msg.detail[msg.bigStep].logWith;
+                } else {
+                    var mainAction = "connect";
+                }
+                generateSteps(mainAction, msg.detail[msg.bigStep], function (addedSteps) {
+                    actionSteps = actionSteps.concat(addedSteps);
+                    executeSteps(tab, actionSteps, function (tab, response) {
+                        nextBigStep(tab, msg);
+                    }, function (tab, response) {
+                        console.log(response);
+                        endConnection(tab);
+                    });
+                });
+
             }
-            executeSteps(tab, actionSteps, function (tab, response) {
-                nextBigStep(tab, msg);
-            }, endConnection);
-        }
-
+        });
     });
 }
 
@@ -104,7 +112,7 @@ function nextBigStep(tab, msg) {
 }
 
 function endConnection(tab) {
-    extension.tabs.sendMessage(tab, "removeOverlay", {}, function (reponse) {});
+    extension.tabs.sendMessage(tab, "removeOverlay", {}, function (res) {});
 }
 
 function rememberConnection(bigStep, callback) {
@@ -125,7 +133,7 @@ function rememberConnection(bigStep, callback) {
     /*if (website.lastLogin.logWith) {
         rememberDirectLogWithConnection(getHost(website.loginUrl), website.lastLogin);
     } else {
-        rememberConnection(website.lastLogin.user, null, getHost(website.loginUrl), true);
+        rememberConnection(website.lastLogin.user, getHost(website.loginUrl), true);
     }*/
     //REVOIR LA SAUVEGARDE DES CONNECTIONS
 

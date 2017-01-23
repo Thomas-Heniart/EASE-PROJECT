@@ -1,6 +1,6 @@
-extension.runtime.onUpdate(function(){
+extension.onInstalled.addListener(function(){
     
-    extension.reloadEaseTabs();
+    extension.ease.reload();
     
     extension.storage.get("extensionId", function(id){
         if(id == null){
@@ -9,28 +9,6 @@ extension.runtime.onUpdate(function(){
         }
     });
 });
-
-
-
-function reqFb(){
-    /*var req = new XMLHttpRequest();
-    req.open('GET', 'https://www.facebook.com/settings?tab=applications', false);
-    req.withCredentials = true;
-    extension.storage.get("FbCookies", function(res){
-        req.setRequestHeader('Cookie', res);
-        req.send(null);
-        console.log(req);
-    });*/
-    /*var req = new XMLHttpRequest();
-    req.open('POST', 'https://www.facebook.com/settings/applications/fetch_apps?tab=all&container_id=u_0_8&dpr=1', false);
-    req.withCredentials = true;
-    extension.storage.get("FbCookies", function(res){
-        req.setRequestHeader('Cookie', res);
-        req.setRequestHeader("Content-type", "application/x-javascript");
-        console.log(req);
-    });*/
-    
-}
 
 function generateId(len){
     var text = "";

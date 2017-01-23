@@ -17,7 +17,6 @@ extension.runtime.bckgrndOnMessage('newFormSubmitted', function (msg, senderTab,
         extension.tabs.onMessageRemoveListener(senderTab);
         checkSuccessfullConnexion(msg.hostUrl, senderTab, function () {
             encryptPassword(msg.update.password, function (passwordDatas) {
-                console.log("send update " + msg.hostUrl + " " + msg.update.username);
                 sendUpdate({
                     type: "classic",
                     website: msg.hostUrl,
@@ -102,11 +101,15 @@ function checkSuccessfullConnexion(hostUrl, tab, callback) {
     var checkAlreadyLogged;
     getCheckAlreadyLoggedCondition(hostUrl, function (xhrRes) {
         checkAlreadyLogged = JSON.parse(xhrRes);
+        console.log("check if element is here :" +checkAlreadyLogged[0].search);
         extension.tabs.sendMessage(tab, "checkCo", {
-            elem: checkAlreadyLogged
+            elem: checkAlreadyLogged[0].search
         }, function (res) {
             if (res) {
+                console.log("connection success");
                 callback();
+            } else {
+                console.log("connection fail");
             }
         });
     });
@@ -126,17 +129,16 @@ function getDOM(url, callback) {
 
 function getCheckAlreadyLoggedCondition(host, callback) {
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "https://ease.space/GetCheckAlreadyLogged", true);
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.onreadystatechange = function (aEvt) {
-        if (xhr.readyState == 4) {
-            if (xhr.response.indexOf("200 ") == 0) {
-                callback(xhr.response.substring(4, xhr.response.length));
+    $.post("https://ease.space/GetCheckAlreadyLogged", {
+            "host": host
+        },
+        function (resp) {
+            var res = resp.split(" ");
+            if (res[0] == "200") {
+                console.log(resp.substring(4, resp.length));
+                callback(resp.substring(4, resp.length));
             }
-        }
-    };
-    var params = "host=" + host;
-    xhr.send(params);
+        });
 }
 
 function isConnected(url, user) {
@@ -157,6 +159,8 @@ function isConnected(url, user) {
 function sendUpdate(update) {
     extension.storage.get("sessionId", function (sId) {
         if (sId != "") {
+            console.log("send update");
+            console.log(update);
             $.post("http://localhost:8080/CreateUpdate", {
                     "sessionId": sId,
                     "update": JSON.stringify(update)
