@@ -65,8 +65,8 @@ var extension = {
                 callback(result);
             }
         },
-        reload: function (callback) {
-            extension.ease.getTabs(function (tabs) {
+        reload: function () {
+            extension.ease.getTabs(null, function (tabs) {
                 for (var i in tabs) {
                     chrome.tabs.reload(tabs[i].id, {}, function () {});
                 }
@@ -152,7 +152,7 @@ var extension = {
                 listenerFactory.addListener(this, chrome.runtime.onMessage, fct, f);
             },
             removeListener: function (fct) {
-                listenerFactory.removeListener(this, chrome.tabs.onMessage, fct);
+                listenerFactory.removeListener(this, chrome.runtime.onMessage, fct);
             }
         },
         onClosed: {
@@ -166,7 +166,7 @@ var extension = {
                 listenerFactory.addListener(this, chrome.runtime.onRemoved, fct, f);
             },
             removeListener: function (fct) {
-                listenerFactory.removeListener(this, chrome.tabs.onRemoved, fct);
+                listenerFactory.removeListener(this, chrome.runtime.onRemoved, fct);
             }
         },
         sendMessage: function (tab, name, msg, callback) {

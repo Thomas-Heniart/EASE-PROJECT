@@ -8,7 +8,7 @@ Les json :
         [action:"check", type:"matchUrl", url:"http://aaaa.com/*"],
         [action:"check", type:"hasElement", search:"input.exemple"],
         [action:"check", type:"absentElement", search:"input.exemple"]
-        [action:"get", var:"user", search:"element", attribute:"val"] (si attribute="text", prend le innerHtml, si attribute="val", prend la val)
+        [action:"getUser", search:"element", attribute:"val"] (si attribute="text", prend le innerHtml, si attribute="val", prend la val)
 
 
 Background:

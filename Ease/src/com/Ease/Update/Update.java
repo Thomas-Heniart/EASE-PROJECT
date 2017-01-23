@@ -25,7 +25,7 @@ public class Update {
 		DataBaseConnection db = sm.getDB();
 		List<Update> updates = new LinkedList<Update>();
 		try {
-			ResultSet rs = db.get("SELECT * FROM updates WHERE user_id = " + user.getDBid() + ";");
+			ResultSet rs = db.get("SELECT * FROM updates WHERE user_id = " + user.getDBid() + " AND id NOT IN (SELECT update_id FROM updatesRemoved);");
 			try {
 				String db_id;
 				String type;

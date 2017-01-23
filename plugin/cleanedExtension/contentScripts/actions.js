@@ -1,3 +1,5 @@
+var wait = true;
+
 function getHost(url) {
     var getLocation = function (href) {
         var l = document.createElement("a");
@@ -37,6 +39,21 @@ function fire_onchange(a) {
 var actions = {
     enterFrame: function (actionStep, callback) {
         var frame = $(actionStep.search).contentWindow;
+        var msg = {};
+        msg.step = 0;
+        msg.actions = actionStep.todo;
+        frame.postMessage({
+            "name": "executeOnFrame",
+            "msg": msg
+        }, "Ease");
+        window.addEventListener("message", function (event) {
+            if (event.origin == "Ease" && event.data.name == "executeOnFrameResponse") {
+                callback(msg.status);
+            }
+        }, false);
+    },
+    exitFrame: function (actionStep, callback) {
+        callback("exitFrame");
     },
     fillThenSubmit: function (actionStep, callback) {
         var loginInput = $(actionStep.login);
@@ -131,7 +148,7 @@ var actions = {
             callback("next");
         }
     },
-    simulateKeyPress: function (actionStep, callback, ) {
+    simulateKeyPress: function (actionStep, callback) {
         var input = $(actionStep.search);
         if (input.length == 0) {
             if (actionStep.grave == true) {
@@ -167,14 +184,22 @@ var actions = {
                 callback("next");
             }
         } else {
-            input.select();
-            input.click();
-            input[0].focus();
-            fire_before_fill(input[0]);
-            input[0].value = actionStep.what;
-            fire_onchange(input[0]);
-            input[0].blur();
-            callback("next");
+            var t = 1;
+            if (wait) {
+                t = 250;
+            }
+            setTimeout(function () {
+                wait = false;
+                input.select();
+                input.click();
+                input[0].focus();
+                fire_before_fill(input[0]);
+                input[0].value = actionStep.what;
+                fire_onchange(input[0]);
+                input[0].blur();
+                callback("next");
+            }, t);
+
         }
     },
     val: function (actionStep, callback) {
@@ -186,8 +211,15 @@ var actions = {
                 callback("next");
             }
         } else {
-            input.val(actionStep.what);
-            callback("next");
+            var t = 1;
+            if (wait) {
+                t = 250;
+            }
+            setTimeout(function () {
+                wait = false;
+                input.val(actionStep.what);
+                callback("next");
+            }, t);
         }
     },
     checkIfPopup: function (actionStep, callback) {
@@ -240,7 +272,7 @@ var actions = {
                 callback("next");
             }
         } else {
-            window.location.href = button.attr('href');
+            window.top.location.href = button.attr('href');
             callback("waitload");
         }
     },
@@ -271,7 +303,7 @@ var actions = {
         callback("next");
     },
     goto: function (actionStep, callback) {
-        window.location.href = actionStep.url;
+        window.top.location.href = actionStep.url;
         callback("waitload");
     },
     overlay: function (msg, callback) {
@@ -330,11 +362,23 @@ var actions = {
             callback("error : check " + actionStep.type + " failed");
         });
     },
-    get: function (actionStep, callback) {
-        if (infos.get == "text") {
-            callback($(infos.search).text());
+    getUser: function (actionStep, callback) {
+        var element = $(actionStep.search);
+        if (element.length == 0) {
+            if (actionStep.grave == true) {
+                callback("error : element not found");
+            } else {
+                callback("next");
+            }
         } else {
-            callback($(infos.search).attr(infos.get));
+            if (actionStep.attribute == "text") {
+                var res = $(actionStep.search).text();
+            } else if (actionStep.attribute == "val") {
+                var res = $(actionStep.search).val();
+            } else {
+                var res = $(actionStep.search).attr(actionStep.attribute);
+            }
+            callback("user :" + res);
         }
     }
 };
@@ -352,13 +396,21 @@ function executeActions(msg, sendResponse) {
             executeActions(msg, returnToBackground);
         } else if (response == "waitload") {
             msg.step++;
-            msg.status = "done";
+            msg.status = "waitload";
             sendResponse(msg);
         } else if (response.indexOf("error") == 0) {
             msg.status = response;
             sendResponse(msg);
-        } else if (response.indexOf("setValue") == 0) {
-
+        } else if (response.indexOf("user") == 0) {
+            msg.user = response.substring(response.indexOf(":") + 1, response.length);
+            msg.step++;
+            executeActions(msg, returnToBackground);
+        } else if (response == "exitFrame") {
+            msg.status = "next";
+            sendResponse(msg);
+        } else {
+            msg.status = "error : wrong callback";
+            sendResponse(msg);
         }
     });
 }
