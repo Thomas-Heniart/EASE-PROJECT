@@ -2,6 +2,7 @@ package com.Ease.Update;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +34,8 @@ public class UpdateManager {
 
 	public UpdateManager(ServletManager sm, User user) throws GeneralException {
 		updates = Update.loadUpdates(user, sm);
+		updatesDBMap = new HashMap<String, Update>();
+		updatesIDMap = new HashMap<Integer, Update>();
 		this.user = user;
 		for (Update update : updates) {
 			this.addUpdateInMaps(update);
@@ -74,7 +77,7 @@ public class UpdateManager {
 		String type = (String) json.get("type");
 		String url = (String) json.get("website");
 		if (type.equals("classic")) {
-			String login = (String) json.get("login");
+			String login = (String) json.get("username");
 			UserEmail userEmail = user.getUserEmails().get(login);
 			Website website = this.findWebsiteInCatalogWithLoginUrl(url, sm);
 			ClassicApp existingApp = this.findClassicAppWithLoginAndWebsite(login, website);
@@ -95,7 +98,7 @@ public class UpdateManager {
 			}
 		} else if (type.equals("logwith")) {
 			
-			String login = (String) json.get("login");
+			String login = (String) json.get("username");
 			String logWithAppName = (String) json.get("logwith");
 			Website logwithAppWebsite = this.findWebsiteInCatalogWithName(logWithAppName, sm);
 			Website website = this.findWebsiteInCatalogWithLoginUrl(url, sm);
@@ -120,7 +123,7 @@ public class UpdateManager {
 		}
 		String type = (String) json.get("type");
 		if (type.equals("classic")) {
-			String login = (String) json.get("login");
+			String login = (String) json.get("username");
 			UserEmail userEmail;
 			if ((userEmail = user.getUserEmails().get(login)) != null) {
 				String urlOrName = (String) json.get("website");
@@ -259,7 +262,7 @@ public class UpdateManager {
 		}
 	}
 
-	private Website findWebsiteInCatalogWithLoginUrl(String url, ServletManager sm) {
+	private Website findWebsiteInCatalogWithLoginUrl(String url, ServletManager sm) throws GeneralException {
 		Catalog catalog = (Catalog) sm.getContextAttr("catalog");
 		return catalog.getWebsiteWithLoginUrl(url);
 	}
@@ -308,24 +311,29 @@ public class UpdateManager {
 		return array;
 	}
 	
-	public void acceptUpdate(int single_id, int profileId, String password, ServletManager sm) throws GeneralException {
+	public String acceptUpdate(int single_id, int profileId, String password, ServletManager sm) throws GeneralException {
+		String newAppSingleId;
 		Update update = this.getUpdateWithSingleId(single_id);
 		if (update == null) {
 			throw new GeneralException(ServletManager.Code.ClientError, "This update dosoen't exist.");
 		}
 		Profile profile;
-		if (update.getClass().getName().equals("UpdateNewClassicApp")) {
+		if (update.getType().equals("UpdateNewClassicApp")) {
 			if ((profile = user.getDashboardManager().getProfile(profileId)) == null)
 				throw new GeneralException(ServletManager.Code.ClientWarning, "This profile dosoen't exist.");
 			
 			UpdateNewClassicApp updateClassicApp = (UpdateNewClassicApp) update;
 			if (updateClassicApp.haveVerifiedEmail()) {
+				if (password == null) {
+					throw new GeneralException(ServletManager.Code.ClientError, "Wrong password");
+				}
 				password = updateClassicApp.getPassword();
 				password = this.user.decrypt(password);
 			}
 			Map<String, String> infos = updateClassicApp.getInfos();
 			App newApp = ClassicApp.createClassicApp(profile, profile.getApps().size(), updateClassicApp.getSite().getName(), updateClassicApp.getSite(), password, infos, sm, user);
 			profile.addApp(newApp);
+			newAppSingleId = Integer.toString(newApp.getSingleId());
 			
 			update.reject(sm);
 			this.updatesDBMap.remove(update.getDbId());
@@ -338,6 +346,7 @@ public class UpdateManager {
 			UpdateNewLogWithApp updateLogWithApp = (UpdateNewLogWithApp) update;
 			App newApp = LogwithApp.createLogwithApp(profile, profile.getApps().size(), updateLogWithApp.getSite().getName(), updateLogWithApp.getSite(), updateLogWithApp.getLogWithApp(), sm);
 			profile.addApp(newApp);
+			newAppSingleId = Integer.toString(newApp.getSingleId());
 			
 			update.reject(sm);
 			this.updatesDBMap.remove(update.getDbId());
@@ -347,9 +356,16 @@ public class UpdateManager {
 			
 			UpdateNewPassword updatePassword = (UpdateNewPassword) update;
 			if (updatePassword.haveVerifiedEmail()) {
+				if (password == null) {
+					throw new GeneralException(ServletManager.Code.ClientError, "Wrong password");
+				}
 				password = updatePassword.getPassword();
 				password = this.user.decrypt(password);
 			}
+			
+			updatePassword.getApp().setPassword(password, sm);
+			
+			newAppSingleId = Integer.toString(updatePassword.getApp().getSingleId());
 			
 			update.reject(sm);
 			this.updatesDBMap.remove(update.getDbId());
@@ -358,5 +374,7 @@ public class UpdateManager {
 		} else {
 			throw new GeneralException(ServletManager.Code.InternError, "Update type wtf...");
 		}
+		return newAppSingleId;
 	}
+	
 }

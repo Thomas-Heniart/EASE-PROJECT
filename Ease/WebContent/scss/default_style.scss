@@ -26,7 +26,9 @@
 @import 'buttons';
 @import 'Extension';
 @import 'UIElements/Tips';
+@import 'UIElements/EasePopups';
 @import 'LanguageChooser';
+@import 'mixins';
 
 .shake-ease {
   @include do-shake('shake-ease', 2px, 1px, 3, 1700ms, .05, $opacity: false);
@@ -37,6 +39,10 @@
 }
 .scaleOut12 {
   @include scalein-anim('scale-09', 1.2);
+}
+
+.infiniteScaleAnimation {
+  @include animation(singleScaleOut .5s linear infinite alternate);
 }
 
 /* crisp chat button color */
@@ -77,7 +83,7 @@ body .crisp-client .crisp-1 .crisp-11 {
 }
 
 /* general input styles */
-input, textarea {
+input:not([readonly]), textarea:not([readonly]) {
   outline: none;
   transition: box-shadow .3s;
   -webkit-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.5);
@@ -309,6 +315,35 @@ body {
   }
 }
 
+/* loading circle */
+.loader {
+  display: inline-block;
+  position: relative;
+  @include size(50px);
+  vertical-align: middle;
+}
+.loader-quart {
+  border-radius: 50px;
+  border: 6px solid rgba($themeColor,0.4);
+ &:after {
+    content: '';
+    @include absPosition(-6px, -6px, -6px, -6px);
+    border-radius: 50px;
+    border: 6px solid transparent;
+    border-top-color: $themeColor;
+    @include animation(spin 1s linear infinite);
+ }
+}
+@-webkit-keyframes spin {
+    0%{ -webkit-transform: rotate(0deg); tranform: rotate(0deg);}
+  100%{ -webkit-transform: rotate(360deg); tranform: rotate(360deg);}
+}
+
+@keyframes spin {
+    0%{ -webkit-transform: rotate(0deg); tranform: rotate(0deg);}
+  100%{ -webkit-transform: rotate(360deg); tranform: rotate(360deg);}
+}
+/* loading circle end */
 
 .FormsContainer {
   display: -webkit-box;

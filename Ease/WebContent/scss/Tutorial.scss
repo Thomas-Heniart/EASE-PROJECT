@@ -552,20 +552,6 @@
                 margin-top: 0;
             }
 
-            .row.lineBehind {
-                &:before {
-                    border-top: 2px solid $themeColor;
-                    content: "";
-                    margin: 0 auto;
-                    position: absolute;
-                    top: 50%;
-                    left: 0;
-                    right: 0;
-                    bottom: 0;
-                    width: 100%;
-                    z-index: -1;
-                }
-            }
 
             .row {
                 width: 80%;
@@ -591,13 +577,6 @@
                     max-width: 100%;
                 }
 
-                .post-title {
-                    font-size: 1.3vw;
-                    font-weight: 600;
-                    background-color: white;
-                    width: 80%;
-                    margin: auto;
-                }
 
                 input {
                     outline: none;

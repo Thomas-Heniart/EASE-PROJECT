@@ -1,12 +1,23 @@
 cleanStoredUpdates();
+var senderTabs = [];
 
 extension.runtime.bckgrndOnMessage('newFormSubmitted', function (msg, senderTab, sendResponse) {
     msg.hostUrl = getHost(senderTab.url);
+    for (var i in senderTabs) {
+        if (senderTabs[i] == senderTab.id) {
+            console.log("tab already sent something");
+            extension.tabs.onMessageRemoveListener(senderTab);
+            senderTabs.splice(i, 1);
+            break;
+        }
+    }
+    senderTabs.push(senderTab.id);
     rememberConnection(msg.update.username, msg.hostUrl);
     extension.tabs.onMessage(senderTab, "reloadDone", function () {
         extension.tabs.onMessageRemoveListener(senderTab);
         checkSuccessfullConnexion(msg.hostUrl, senderTab, function () {
             encryptPassword(msg.update.password, function (passwordDatas) {
+                console.log("send update " + msg.hostUrl + " " + msg.update.username);
                 sendUpdate({
                     type: "classic",
                     website: msg.hostUrl,
@@ -115,7 +126,7 @@ function getDOM(url, callback) {
 
 function getCheckAlreadyLoggedCondition(host, callback) {
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "https://ease.space/GetCheckAlreadyLogged", true);
+    xhr.open("POST", "http://localhost:8080/GetCheckAlreadyLogged", true);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhr.onreadystatechange = function (aEvt) {
         if (xhr.readyState == 4) {
@@ -146,24 +157,19 @@ function isConnected(url, user) {
 function sendUpdate(update) {
     extension.storage.get("sessionId", function (sId) {
         if (sId != "") {
-            extension.storage.get("extensionId", function (eId) {
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "https://ease.space/CreateUpdate", false);
-                xhr.onreadystatechange = function (aEvt) {
-                    if (xhr.readyState == 4) {
-                        console.log(xhr.response);
-                        var res = xhr.response.split(" ");
-                        if (res[0] == "200") {
-                            if (res[1] == "1") {
-                                storeUpdate(update);
-                            } else {
-                                removeUpdate(update, function () {});
-                            }
-                        }
-                    }
-                };
-                xhr.send("sessionId=" + sId + "&extensionId=" + eId + "&updates=" + JSON.stringify(update));
-            });
+	    console.log("sessionId:");
+	    console.log(sId);
+	    $.post("http://localhost:8080/CreateUpdate", { "sessionId":sId, "update":JSON.stringify(update) },
+		   function(resp){
+		       var res = resp.split(" ");
+                       if (res[0] == "200") {
+                           if (res[1] == "1") {
+                               storeUpdate(update);
+                           } else {
+                               removeUpdate(update, function () {});
+                           }
+                       }
+		   }) ;
         } else {
             storeUpdate(update);
         }

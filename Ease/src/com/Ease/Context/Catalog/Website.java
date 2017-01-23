@@ -326,7 +326,9 @@ public class Website {
 
 	public boolean loginUrlMatch(String url) {
 		String[] loginUrlSplitted = this.loginUrl.split("\\/*\\/");
-		System.out.println(loginUrlSplitted[0]);
+		if (url.contains(loginUrlSplitted[1])) {
+			return true;
+		}
 		return false;
 	}
 }

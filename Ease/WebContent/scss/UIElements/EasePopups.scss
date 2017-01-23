@@ -1,0 +1,48 @@
+#easePopupsHandler {
+	#addUpdatePopup {
+		width: 20vw;
+		.title p{
+			font-size: 1.3vw;
+		}
+		.bodysHandler .popupBody{
+			padding: 0.75vw 10%;
+			.handler {
+				.errorText {
+					p {
+						font-weight: bold;
+					}
+				}
+				.emailSendingDiv {
+					display: none;
+					&.show {
+						display: block;
+					}
+				}
+				.row {
+					margin-bottom: 0.8vw;
+					&:last-child {
+						margin-bottom:0;
+					}
+					.logo {
+						width: 5vw;
+						margin: auto;
+						img {
+							width: 100%;
+							border-radius: 5px;
+						}
+					}
+					.post-title {
+						font-size: 1vw;
+					}
+					button {
+						font-size: 1vw;
+						width: 100%;
+					}
+					input, .input {
+						font-size: 0.9vw;
+					}
+				}
+			}
+		}
+	}
+}

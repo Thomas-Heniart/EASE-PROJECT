@@ -49,7 +49,7 @@ public class IsPrivateExtension extends HttpServlet {
 		
 		try {
 			sm.needToBeConnected();
-			if (key.length() != 32) {
+			if (key == null || key.length() != 32) {
 				throw new GeneralException(ServletManager.Code.ClientError, "Wrong extension key.");
 			}
 			if (user.getExtensionKeys().haveThisKey(key))

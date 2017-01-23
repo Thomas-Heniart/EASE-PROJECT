@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+pageEncoding="UTF-8"%>
 
 <%@ page import="java.util.LinkedList"%>
 <%@ page import="com.Ease.Context.Catalog.Tag"%>
@@ -14,21 +14,21 @@
 <script src="js/checkConnection.js"></script>
 <%
 if (user != null) {
-	SessionSave sessionSave = user.getSessionSave();
-	Cookie sessionId = new Cookie("sId",sessionSave.getSessionId());
-	Cookie sessionToken = new Cookie("sTk",sessionSave.getToken());
-	Cookie skipLanding = new Cookie("skipLanding", "true");
-	DateFormat dateFormat = new SimpleDateFormat("HH");
-	Date date = new Date();
-	int duration = 29 - Integer.parseInt(dateFormat.format(date));
-	if(duration > 24) duration = duration - 24;
-	duration = (duration*60-30)*60;
-	sessionId.setMaxAge(duration);
-	sessionToken.setMaxAge(duration);
-	skipLanding.setMaxAge(60*60*24*14);
-	response.addCookie(skipLanding);
-	response.addCookie(sessionId);
-	response.addCookie(sessionToken);
+SessionSave sessionSave = user.getSessionSave();
+Cookie sessionId = new Cookie("sId",sessionSave.getSessionId());
+Cookie sessionToken = new Cookie("sTk",sessionSave.getToken());
+Cookie skipLanding = new Cookie("skipLanding", "true");
+DateFormat dateFormat = new SimpleDateFormat("HH");
+Date date = new Date();
+int duration = 29 - Integer.parseInt(dateFormat.format(date));
+if(duration > 24) duration = duration - 24;
+duration = (duration*60-30)*60;
+sessionId.setMaxAge(duration);
+sessionToken.setMaxAge(duration);
+skipLanding.setMaxAge(60*60*24*14);
+response.addCookie(skipLanding);
+response.addCookie(sessionId);
+response.addCookie(sessionToken);
 }
 %>
 <%
@@ -59,22 +59,24 @@ response.addCookie(email);
 <c:set var="tagAndSiteMapping"	scope="session" value='${servletContext.getAttribute("TagAndSiteMapping")}'/>
 <c:set var="settingsOpen" scope="session" value="${param.openSettings}"/>
 <script type="text/javascript">
-$(document).ready(function(){
-	setTimeout(function(){
-		var event = new CustomEvent("NewEaseUser", {"detail":$("#userEmail").data("content")});
-		document.dispatchEvent(event);
-	}, 500)});
-</script>
-
-<div id="loggedBody">
-    <div class="col-left <c:if test='${settingsOpen eq null}'>show</c:if>" style="width: 100%; float:left">
-		<%@ include file="ProfileView.jsp"%>
+	$(document).ready(function(){
+		setTimeout(function(){
+			var event = new CustomEvent("NewEaseUser", {"detail":$("#userEmail").data("content")});
+			document.dispatchEvent(event);
+		}, 500)});
+	</script>
+	<div id="loggedBody">
+		<div class="col-left <c:if test='${settingsOpen eq null}'>show</c:if>" style="width: 100%; float:left">
+			<%@ include file="ProfileView.jsp"%>
 			<div class="MenuButtonSet">
-		<button id="enterEditMode" state="off" class="button"><img src="resources/icons/menu_icon.png"/>
-			<div class="openCatalogHelper"></div>
-		</div>
-		<%@ include file="catalog/catalogView.jsp"%>
-		<c:if test='${user.appsImported() && (user.allTipsDone() eq false)}'>
+				<div id="updateCount">
+					<c:out value="${user.getUpdateManager().getUpdates().size()}"/>
+				</div>
+			<button id="enterEditMode" state="off" class="button"><img src="resources/icons/menu_icon.png"/>
+				<div class="openCatalogHelper"></div>
+			</div>
+			<%@ include file="catalog/catalogView.jsp"%>
+			<c:if test='${user.appsImported() && (user.allTipsDone() eq false)}'>
 			<%@ include file="Tips.jsp" %>
 		</c:if>
 	</div>
@@ -87,28 +89,28 @@ $(document).ready(function(){
 	<div class="md-overlay"></div>
 	
 </div>
-	<%-- <%@include file="PopupsHandler.jsp" %> --%>
+ <%@include file="PopupsHandler.jsp" %> 
 
 <c:if test='${user.appsImported() eq false}'>
-	<%@ include file="TutorialView.jsp"%>
+<%@ include file="TutorialView.jsp"%>
 </c:if>
 <%@ include file="new_extension.jsp" %>
 
 <script>
 
-$(document).ready(function(){
-	$('.md-overlay').click(function(){
-		closeAllPopups();
+	$(document).ready(function(){
+		$('.md-overlay').click(function(){
+			closeAllPopups();
+		});
 	});
-});
 </script>
-		<script>
-$(document).ready(function(){
-	$('.cookiesInfo').css('display', 'none');
-});
-		(function() {
-				if (!String.prototype.trim) {
-					(function() {
+<script>
+	$(document).ready(function(){
+		$('.cookiesInfo').css('display', 'none');
+	});
+	(function() {
+		if (!String.prototype.trim) {
+			(function() {
 						// Make sure we trim BOM and NBSP
 						var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
 						String.prototype.trim = function() {
@@ -128,14 +130,14 @@ $(document).ready(function(){
 					inputEl.addEventListener( 'blur', onInputBlur );
 				} );
 			})();
-		easeTracker.setDailyPhoto($('#backgroundSwitch').is("checked"));
+			easeTracker.setDailyPhoto($('#backgroundSwitch').is("checked"));
 		</script>
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+		<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+				(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+				m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-75916041-5', 'auto');
-  ga('send', 'pageview');
-</script>
+			ga('create', 'UA-75916041-5', 'auto');
+			ga('send', 'pageview');
+		</script>

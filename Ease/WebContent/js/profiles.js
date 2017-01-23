@@ -83,7 +83,7 @@ function enterEditMode() {
 	easeDashboard.enterEditMode();
 	catalog.open();
 	$('.MenuButtonSet').addClass('editMode');
-	enterEditModeTutorial();
+	$('.MenuButtonSet #updateCount').css('display', 'none');
 }
 
 function leaveEditMode() {
@@ -91,7 +91,6 @@ function leaveEditMode() {
 	catalog.close();
 	$('.scaleOutAnimation').removeClass('scaleOutAnimation');
 	$('.MenuButtonSet').removeClass('editMode');
-	leaveEditModeTutorial();
 }
 
 var profiles = [];
@@ -404,7 +403,7 @@ $(document)
 		.click(
 			function(event) {
 				if ($(".CatalogViewTab").hasClass("show") && !($(event.target).closest('.MenuButtonSet').length) && $('.md-show').length == 0) {
-					if (!($(event.target).closest('.profileAdder, .header, .dashboardColumn, .md-modal, .md-overlay, .CatalogViewTab, .AddProfileView, .updateButton, .hiddenProfile, #tipsHandler, .updateBox').length))
+					if (!($(event.target).closest('.profileAdder, .header, .dashboardColumn, .md-modal, .md-overlay, .CatalogViewTab, .AddProfileView, .updateButton, .hiddenProfile, #tipsHandler, .updateBox, .popupHandler').length))
 						leaveEditMode();
 				}
 			});

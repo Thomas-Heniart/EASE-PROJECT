@@ -274,10 +274,13 @@ var Catalog = function(rootEl){
 		self.isOpen = true;
 		easeTracker.trackEvent('OpenCatalog');
 		self.onResize();
+		self.oUpdate.show();
+		self.oUpdate.onCatalogOpen();
 	};
 	this.close = function(){
 		self.qRoot.removeClass('show');
 		self.isOpen = false;
+		self.oUpdate.hide();
 	};
 	this.onResize = function(){
 		self.appsHolder.height(self.qRoot.outerHeight(true) 
