@@ -46,7 +46,7 @@ var UpdateManager = function (rootEl) {
 						} else if (updates[i].type == 'newPassword'){
 							self.addUpdate(new updatePassword(u.singleId, u.appId, u.login, u.passwordLength, u.websiteImg, u.websiteName, u.email, u.websiteId));
 						} else if (updates[i].type == 'newLogWithApp'){
-							self.addUpdate(new logWithApp(u.singleId, u.websiteName, u.logWithId, u.login, u.logWithImg, u.logWithName, u.websiteImg, u.websiteId));
+							self.addUpdate(new newLogWithApp(u.singleId, u.websiteName, u.logWithId, u.login, u.logWithImg, u.logWithName, u.websiteImg, u.websiteId));
 						}
 					}
 				}
