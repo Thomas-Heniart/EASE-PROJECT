@@ -62,10 +62,10 @@ function executeSteps(tab, actionSteps, successCallback, failCallback) {
                 step = response.step;
                 if (step >= actionSteps.length) {
                     extension.tabs.onReloaded.removeListener(sendActions);
-                    successCallback(tab);
+                    successCallback(tab, response);
                 }
             } else {
-                failCallback(tab);
+                failCallback(tab, response);
             }
         });
     }

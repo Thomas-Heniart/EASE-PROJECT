@@ -53,29 +53,25 @@ function executeBigStep(tab, msg) {
 function startBigStep(tab, msg) {
     extension.tabs.onReloaded.addListener(tab, function reloadListener1(tab) {
         extension.tabs.onReloaded.removeListener(reloadListener1);
-        extension.tabs.sendMessage(tab, "checkWhoIsConnected", msg.detail[msg.bigStep].website, function (response) {
+        var actionsCheckWhoIsConnected = [];
+        actionsCheckWhoIsConnected.concat(generateSteps("checkAlreadyConnected", msg.detail[msg.bigStep]));
+        executeSteps(tab, actionsCheckWhoIsConnected, function (tab, response) {
             var actionSteps = [];
-            if (response.fail) {
-                endConnection(tab);
-                return;
+            if (response.user && response.user == msg.detail[0].user[login]) {
+                nextBigStep(tab, msg);
+            } else {
+                actionSteps.concat(generateSteps("switchOfLogout", msg.detail[msg.bigStep]));
             }
-            if (response.connected) {
-                if (response.user == msg.detail[0].user[login]) {
-                    nextBigStep(tab, msg);
-                } else {
-                    actionSteps.concat(generateSteps("switchOfLogout", msg.detail[msg.bigStep]));
-                }
-            }
+
             if (msg.detail[msg.bigStep].logWith) {
                 actionSteps.concat(generateSteps(msg.detail[msg.bigStep].logWith, msg.detail[msg.bigStep]));
             } else {
                 actionSteps.concat(generateSteps("connect", msg.detail[msg.bigStep]));
             }
-
-            executeSteps(tab, actionSteps, function (tab) {
+            executeSteps(tab, actionSteps, function (tab, response) {
                 nextBigStep(tab, msg);
             }, endConnection);
-        });
+        }, endConnection);
     });
 }
 
