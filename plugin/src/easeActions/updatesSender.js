@@ -3,10 +3,10 @@ extension.storage.get("sessionId", function (oldSessionId) {
     var cookies = document.cookie.split(';');
     for (var i = 0; i < cookies.length; i++) {
         if (cookies[i][0] = " ") {
-            cookies[i] = cookies[i].substring(1, cookies[i].length - 1);
+            cookies[i] = cookies[i].substring(1, cookies[i].length);
         }
         if (cookies[i].indexOf("sId") == 0) {
-            newSessionId = cookies[i].substring(cookies[i].indexOf("=") + 1, cookies[i].length - 1);
+            newSessionId = cookies[i].substring(cookies[i].indexOf("=") + 1, cookies[i].length);
             break;
         }
     }

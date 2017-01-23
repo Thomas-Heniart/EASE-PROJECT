@@ -155,19 +155,15 @@ function isConnected(url, user) {
 }
 
 function sendUpdate(update) {
-    console.log("send update");
-    console.log(update);
-    chrome.cookies.get({"url":"http://localhost:8080/", "name":"JSESSIONID"}, function (cookie){
-        console.log(cookie);
-        var sId = cookie.value;
-    //extension.storage.get("sessionId", function (sId) {
+    extension.storage.get("sessionId", function (sId) {
         if (sId != "") {
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "http://localhost:8080/CreateUpdate", false);
-            xhr.onreadystatechange = function (aEvt) {
-                if (xhr.readyState == 4) {
-                    console.log(xhr.response);
-                    var res = xhr.response.split(" ");
+            $.post("http://localhost:8080/CreateUpdate", {
+                    "sessionId": sId,
+                    "update": JSON.stringify(update)
+                },
+                function (resp) {
+                    console.log(resp);
+                    var res = resp.split(" ");
                     if (res[0] == "200") {
                         if (res[1] == "1") {
                             storeUpdate(update);
@@ -175,9 +171,7 @@ function sendUpdate(update) {
                             removeUpdate(update, function () {});
                         }
                     }
-                }
-            };
-            xhr.send("sessionId=" + sId + "&update=" + JSON.stringify(update));
+                });
         } else {
             storeUpdate(update);
         }
@@ -212,7 +206,7 @@ function removeUpdate(update, callback) {
                     }
                     if (update.type == "classic" && oldUpdate.username == update.username) {
                         toDelete = i;
-                        console.log("delete update "+i);
+                        console.log("delete update " + i);
                         break;
                     }
                 }
