@@ -64,6 +64,11 @@ var tracker = function(){
 		amplitude.getInstance().identify(identify);
 	}
 	
+	this.setOnce = function(property, value) {
+		var identify = new amplitude.Identify().setOnce(property, value);
+		amplitude.getInstance().identify(identify);
+	}
+	
 	this.logout = function() {
 		amplitude.getInstance().setUserId(null);
 		//amplitude.getInstance().regenerateDeviceId();
