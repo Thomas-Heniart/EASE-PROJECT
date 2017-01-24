@@ -68,7 +68,6 @@ public class AddTesterWithInfra extends HttpServlet {
 			String univName = sm.getServletParam("infra", true);
 			String name = sm.getServletParam("name", true);
 			String color = sm.getServletParam("profileColor", true);
-			color = "#373b60";
 			
 			if (email == null || !Regex.isEmail(email)) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email.");
