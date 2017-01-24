@@ -54,7 +54,6 @@ public class WebsiteRequest extends HttpServlet {
 					String name = rs2.getString(1);
 					String email = rs2.getString(2);
 					JSONObject tmpObject = new JSONObject();
-					System.out.println(rs.getString(rs.findColumn("site")));
 					tmpObject.put("site", rs.getString(rs.findColumn("site")));
 					tmpObject.put("userName", name);
 					tmpObject.put("email", email);

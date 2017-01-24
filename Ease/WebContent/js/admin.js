@@ -101,14 +101,12 @@ function sendInvitation(email, group_id, callback) {
 
 function getRequestedSites() {
 	$.get("WebsiteRequest").done(function(retMsg) {
-		console.log(retMsg);
 		printRequestedWebsites(retMsg.substring(4, retMsg.length));
 	});
 }
 
 function printRequestedWebsites(string) {
 	var json = JSON.parse(string);
-	console.log(json);
 	json.forEach(function(element) {
 		$('.requestedWebsitesView').append("<div class='requestedWebsite' website='" 
 				+ element.site 
