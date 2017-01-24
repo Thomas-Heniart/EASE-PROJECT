@@ -26,6 +26,6 @@
 		},
 		function(retMsg) {
 			
-		}):
+		});
 	});
 </script>

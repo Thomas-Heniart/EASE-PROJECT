@@ -15,7 +15,7 @@
 	</div>
 	<div>
 		<button id="enterAddTesterMode" state="off" class="button adminButton"
-			target="AddTesterWithInfra">
+			target="AddTesterTab">
 			<img src="resources/icons/vacuum-cleaner.png" />
 		</button>
 	</div>
@@ -85,4 +85,4 @@
 <%@ include file="ChangeBackground.jsp"%>
 <%@ include file="ServerKeysManager.jsp"%>
 <%@ include file="TestWebsites.jsp"%>
-<%@ include file="addTester.jsp %>
+<%@ include file="addTester.jsp" %>
