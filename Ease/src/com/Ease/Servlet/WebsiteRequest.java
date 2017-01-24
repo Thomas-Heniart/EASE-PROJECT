@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
@@ -35,7 +38,7 @@ public class WebsiteRequest extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		User user = (User)(session.getAttribute("User"));
+		User user = (User)(session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		DataBaseConnection db = sm.getDB();
 		try {
@@ -43,21 +46,25 @@ public class WebsiteRequest extends HttpServlet {
 			if (!user.isAdmin())
 				throw new GeneralException(ServletManager.Code.ClientError, "You are not admin");
 			ResultSet rs = db.get("SELECT * FROM requestedWebsites;");
-			String retMsg = "";
+			JSONArray res = new JSONArray();
 			try {
 				while(rs.next()) {
-					ResultSet rs2 = db.get("SELECT firstName FROM users WHERE id=" + rs.getString(rs.findColumn("user_id")) +";");
+					ResultSet rs2 = db.get("SELECT firstName, email FROM users WHERE id=" + rs.getString(rs.findColumn("user_id")) +";");
 					rs2.next();
-					String name = rs2.getString(1); 
-					retMsg += rs.getString(rs.findColumn("site")) + "-SENTBY-" + name + "-DATE-"+ rs.getString(rs.findColumn("date"));
-					if (rs.next())
-						retMsg += ";";
+					String name = rs2.getString(1);
+					String email = rs2.getString(2);
+					JSONObject tmpObject = new JSONObject();
+					System.out.println(rs.getString(rs.findColumn("site")));
+					tmpObject.put("site", rs.getString(rs.findColumn("site")));
+					tmpObject.put("userName", name);
+					tmpObject.put("email", email);
+					tmpObject.put("date", rs.getString(rs.findColumn("date")));
+					res.add(tmpObject);
 				}
-					
 			} catch (SQLException e) {
 				throw new GeneralException(ServletManager.Code.InternError, e);
 			}
-			sm.setResponse(ServletManager.Code.Success, retMsg);
+			sm.setResponse(ServletManager.Code.Success, res.toString());
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		} catch (Exception e) {
