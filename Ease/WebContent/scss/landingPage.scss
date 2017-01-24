@@ -985,6 +985,15 @@ header .intro-text .intro-heading {
     }
 }
 
+header {
+    .container {
+        .intro-text {
+            .schoolLogos {
+
+            }
+        }
+    }
+}
 @media screen and (max-width: 1200px) {
 	#avantages {
        .container {
@@ -1038,6 +1047,47 @@ header .intro-text .intro-heading {
 		}
 	}
 }
+}
+
+#landingBody.school {
+    .vp {
+        .section-subheading {
+            font-size: 24px;
+            font-family: Raleway;
+        }
+    }
+    header {
+        .container {
+            .intro-text {
+                padding-bottom: 4vw;
+            }
+            .intro-lead-in {
+                font-size: 1.2vw;
+                line-height: 1.5vw;
+                margin-bottom: 25px;
+            }
+            .intro-heading {
+                font-size: 3vw;
+                line-height: 4vw;
+                margin-bottom: 35px;
+            }
+            .signUpButton {
+                margin-bottom: 30px;
+            }
+            .schoolLogos {
+                width: 100%;
+                height: 5vw;
+                .logoHandler {
+                    height: 100%;
+                    margin-left: 2vw;
+                    display: inline-block;
+                    img {
+                        height: 100%;
+                    }
+                }
+            }            
+        }
+    }
 }
 
 @media screen and (min-width: 768px) {
