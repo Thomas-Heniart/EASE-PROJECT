@@ -110,5 +110,9 @@ public class LinkApp extends App {
 	public boolean isEmpty() {
 		return true;
 	}
+	
+	public LinkAppInformation getLinkAppInformations() {
+		return this.linkInfos;
+	}
 }
 	

@@ -55,7 +55,7 @@
 		</div>
 	</div>
 	</c:if>
-	<img class="logo" src="resources/websites/Calendrier/logo.png" />
+	<img class="logo" src="${app.getLinkAppInformations.getImgUrl()}" />
 	</div>
 </c:when>
 <c:otherwise>
