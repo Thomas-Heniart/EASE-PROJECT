@@ -100,29 +100,26 @@ function sendInvitation(email, group_id, callback) {
 /* Requested sites */
 
 function getRequestedSites() {
-	$.get('requestedWebsites', {socketId:socketId}, function() {
-	}, function(retMsg) {
-		printRequestedWebsites(retMsg);
-	}, function(retMsg) {
-	}, 'text');
+	$.get("WebsiteRequest").done(function(retMsg) {
+		printRequestedWebsites(retMsg.substring(4, retMsg.length));
+	});
 }
 
 function printRequestedWebsites(string) {
-	var requests = string.split(";");
-	for ( var i in requests) {
-			$('.requestedWebsitesView').append(
-					"<div class='requestedWebsite' website='"
-							+ requests[i].split("-SENTBY-")[0]
-							+ "' email='"
-							+ requests[i].split("-SENTBY-")[1].split("-DATE-")[0]
-							+"'><input type='checkbox' class='sendEmail'/><button class='quit'>X</button><p>"
-							+ requests[i].split("-SENTBY-")[0]
-							+ " ("
-							+ requests[i].split("-SENTBY-")[1].split("-DATE-")[0]
-							+ ", "
-							+ requests[i].split("-SENTBY-")[1].split("-DATE-")[1].substring(0,10)
-							+ ")</p></div>");
-	}
+	var json = JSON.parse(string);
+	json.forEach(function(element) {
+		$('.requestedWebsitesView').append("<div class='requestedWebsite' website='" 
+				+ element.site 
+				+ "' email='" 
+				+ element.email 
+				+ "'><input type='checkbox' class='sendEmail'/><button class='quit'>X</button><p>"
+				+ element.site
+				+ " ("
+				+ element.userName
+				+ ", "
+				+ element.date
+				+ ")</p></div>");
+	});
 	$('.requestedWebsite .quit').click(function(){
 		eraseWebsite($(this));
 	});

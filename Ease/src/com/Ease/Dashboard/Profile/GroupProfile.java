@@ -65,13 +65,13 @@ public class GroupProfile {
 		int transaction = db.startTransaction();
 		ProfilePermissions perms = ProfilePermissions.CreateProfilePermissions(permissions, group.getDBid(), sm);
 		ProfileInformation infos = ProfileInformation.createProfileInformation(name, color, sm);
-		String db_id = db.set("INSERT INTO groupProfile VALUES(NULL, " + group.getDBid() + ", " + perms.getDBid() + ", " + infos.getDBid() + ", " + ((common == true) ? 1 : 0) + ");").toString();
+		String db_id = db.set("INSERT INTO groupProfiles VALUES(NULL, " + group.getDBid() + ", " + perms.getDBid() + ", " + infos.getDBid() + ", " + ((common == true) ? 1 : 0) + ");").toString();
 		IdGenerator idGen = (IdGenerator) sm.getContextAttr("idGenerator");
 		int single_id = idGen.getNextId();
 		GroupProfile groupProfile = new GroupProfile(db_id, group, perms, infos, common, single_id);
 		GroupManager.getGroupManager(sm).add(groupProfile);
 		try {
-			ResultSet rs = db.get("SELECT email, user_id FROM groups JOIN users ON user_id = users.id WHERE group_id = " + group.getDBid() + ";");
+			ResultSet rs = db.get("SELECT email, user_id FROM groupsAndUsersMap JOIN users ON user_id = users.id WHERE group_id = " + group.getDBid() + ";");
 			@SuppressWarnings("unchecked")
 			Map<String, User> users = (Map<String, User>) sm.getContextAttr("users");
 			String user_email;

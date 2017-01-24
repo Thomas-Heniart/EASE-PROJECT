@@ -6,9 +6,8 @@
 	"folder":"GoogleDevelopers",
 	"connect":{
 		"todo":[
-			{"action":"waitfor", "search":["button[href*='https://accounts.google.com/ServiceLogin?']","div[aria-label='Google']", "paper-icon-button#button"]},
-			{"action":"click", "search":"button[href*='https://accounts.google.com/ServiceLogin?']"},
-			{"action":"click", "search":"paper-icon-button#button"},
+			{"action":"waitfor", "search":"a[href*='https://www.google.com/accounts/ServiceLogin']"},
+			{"action":"clickona", "search":"a[href*='https://www.google.com/accounts/ServiceLogin']"},
 			{"action":"waitload"},
 			{"action":"waitfor", "search":["#account-chooser-link","#account-chooser-add-account"]},
 			{"action":"aclick", "search":"#account-chooser-link"},
@@ -22,10 +21,10 @@
 	},
 	"logout":{
 		"todo":[
-			{"action":"clickona", "search":"#yt-masthead-account-picker", "grave":true},
-			{"action":"waitfor", "search":"a[href='/logout']"},
-			{"action":"clickona", "search":"a[href='/logout']", "grave":true},
-			{"action":"waitload"}	
+			{"action":"click", "search":"img.devsite-user-avatar", "grave":true},
+			{"action":"waitfor", "search":"a[href*='Logout']"},
+			{"action":"clickona", "search":"a[href*='Logout']", "grave":true},
+			{"action":"waitload"}
 		]
 	},
 	"switch":{
@@ -56,6 +55,6 @@
 		]
 	},
 	"checkAlreadyLogged":[
-		{"search":"#yt-masthead-account-picker"}
+		{"search":"img.devsite-user-avatar"}
 	]
 }

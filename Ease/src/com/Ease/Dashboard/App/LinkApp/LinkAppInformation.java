@@ -24,13 +24,13 @@ public class LinkAppInformation {
 	
 	public static LinkAppInformation createLinkAppInformation(String link, String imgUrl, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		int db_id = db.set("INSERT INTO linkAppInformations (null, " + link + "', '" + imgUrl + "');");
+		int db_id = db.set("INSERT INTO linkAppInformations values (NULL, '" + link + "', '" + imgUrl + "');");
 		return new LinkAppInformation(String.valueOf(db_id), link, imgUrl);
 	}
 
 	public static String createLinkAppInformationForUnconnected(String link, String imgUrl, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		int db_id = db.set("INSERT INTO linkAppInformations (null, " + link + "', '" + imgUrl + "');"); 
+		int db_id = db.set("INSERT INTO linkAppInformations values (NULL, '" + link + "', '" + imgUrl + "');"); 
 		return String.valueOf(db_id);
 	}
 	
