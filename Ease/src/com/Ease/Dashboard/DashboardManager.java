@@ -291,7 +291,7 @@ public class DashboardManager {
 		return app;
 	}
 
-	public ClassicApp findClassicAppWithLoginAndWebsite(String login, Website website) throws GeneralException {
+	public ClassicApp findClassicAppWithLoginAndWebsite(String login, Website website) {
 		for (App app : this.apps) {
 			if (!app.getType().equals("ClassicApp"))
 				continue;
@@ -299,6 +299,6 @@ public class DashboardManager {
 			if (appLogin.equals(login) && ((WebsiteApp) app).getSite().getName().equals(website.getName()))
 				return (ClassicApp) app;
 		}
-		throw new GeneralException(ServletManager.Code.ClientError, "This app does not exist");
+		return null;
 	}
 }

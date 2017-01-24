@@ -104,6 +104,8 @@ public class UpdateManager {
 			Website logwithAppWebsite = this.findWebsiteInCatalogWithName(logWithAppName, sm);
 			Website website = this.findWebsiteInCatalogWithLoginUrl(url, sm);
 			WebsiteApp logwithApp = (WebsiteApp) this.findClassicAppWithLoginAndWebsite(login, logwithAppWebsite);
+			if (logwithApp == null)
+				throw new GeneralException(ServletManager.Code.ClientError, "This app does not exist");
 			if (this.checkRemovedUpdates(website, logwithApp, login, sm))
 				return true;
 			this.addUpdate(UpdateNewLogWithApp.createUpdateNewLogWithApp(user, website, logwithApp, sm));
@@ -170,6 +172,8 @@ public class UpdateManager {
 			String urlOrName = (String) json.get("website");
 			Website website = this.findWebsiteInCatalogWithLoginUrl(urlOrName, sm);
 			WebsiteApp logwithApp = (WebsiteApp) this.findClassicAppWithLoginAndWebsite(login, logwithAppWebsite);
+			if (logwithApp == null)
+				throw new GeneralException(ServletManager.Code.ClientError, "This app does not exist");
 			if (this.checkRemovedUpdates(website, logwithApp, login, sm))
 				return true;
 			this.addUpdate(UpdateNewLogWithApp.createUpdateNewLogWithApp(user, website, logwithApp, sm));
@@ -301,7 +305,7 @@ public class UpdateManager {
 		return catalog.haveWebsiteWithLoginUrl(url);
 	}
 
-	private ClassicApp findClassicAppWithLoginAndWebsite(String login, Website website) throws GeneralException {
+	private ClassicApp findClassicAppWithLoginAndWebsite(String login, Website website) {
 		return this.user.getDashboardManager().findClassicAppWithLoginAndWebsite(login, website);
 	}
 
