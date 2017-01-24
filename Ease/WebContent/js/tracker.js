@@ -49,6 +49,21 @@ var tracker = function(){
 		amplitude.getInstance().identify(identify);
 	}
 	
+	this.increaseUpdateAcceptedCount = function() {
+		var identify = new amplitude.Identify().set("UpdateAcceptedCount", 1);
+		amplitude.getInstance().identify(identify);
+	}
+	
+	this.increaseUpdateRejectedCount = function() {
+		var identify = new amplitude.Identify().set("UpdateRejectedCount", 1);
+		amplitude.getInstance().identify(identify);
+	}
+	
+	this.increaseUpdateCount = function() {
+		var identify = new amplitude.Identify().set("UpdateCount", 1);
+		amplitude.getInstance().identify(identify);
+	}
+	
 	this.logout = function() {
 		amplitude.getInstance().setUserId(null);
 		//amplitude.getInstance().regenerateDeviceId();

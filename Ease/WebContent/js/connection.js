@@ -60,7 +60,7 @@ $(document).ready(function(){
 				self.closest('.landingPopup').addClass('show');
 			},
 			function(data){
-				easeTracker.trackEvent("PasswordLostSubmit");
+				easeTracker.trackEvent("LoginpageLostPasswordSent");
 				errorDiv.find('p').text(data);
 				errorDiv.addClass('show');
 			},
