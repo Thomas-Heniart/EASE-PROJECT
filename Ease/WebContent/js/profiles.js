@@ -372,7 +372,8 @@ $(document).ready(function() {
 		if (e.keyCode == 13)
 			$('.helpIntegrateApps #integrateAppForm #integrate').trigger("click");
 	});
-	$('.helpIntegrateApps #integrateAppForm #integrate').click(function() {
+	$('.helpIntegrateApps #integrateAppForm #integrate').click(function(e) {
+		e.preventDefault();
 		var form = $(this).closest('#integrateAppForm');
 		var url = $(form).find('#integrateApp').val();
 		postHandler.post(
