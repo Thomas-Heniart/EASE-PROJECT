@@ -143,7 +143,7 @@ public class GroupApp {
 	}
 
 	public void loadContentForConnectedUser(User user, ServletManager sm) throws GeneralException {
-		// TODO Auto-generated method stub
+		System.out.println("ICI?");
 		
 	}
 

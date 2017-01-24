@@ -9,10 +9,12 @@ import javax.servlet.ServletContext;
 
 import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupManager;
+import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.AppInformation;
 import com.Ease.Dashboard.App.AppPermissions;
 import com.Ease.Dashboard.App.GroupApp;
 import com.Ease.Dashboard.Profile.GroupProfile;
+import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
@@ -99,9 +101,16 @@ public class GroupLinkApp extends GroupApp {
 		
 	}
 
-	public void loadContentForConnectedUser(User user, ServletManager sm) {
-		// TODO Auto-generated method stub
-		
+	public void loadContentForConnectedUser(User user, ServletManager sm) throws GeneralException {
+		GroupProfile groupProfile = this.getGroupProfile();
+		for (Profile profile : user.getDashboardManager().getProfilesList()) {
+			if (profile.getGroupProfile() == groupProfile) {
+				App newApp = LinkApp.createLinkApp(profile, profile.getApps().size(), this.getAppInfo().getName(), this.getLinkAppInfo().getLink(), this.getLinkAppInfo().getImgUrl(), sm);
+				profile.addApp(newApp);
+				return ;
+			}
+		}
+		throw new GeneralException(ServletManager.Code.InternError, "This profile dosoen't exist");
 	}
 
 	public void loadContentForUnconnectedUser(String db_id2, ServletManager sm) {
