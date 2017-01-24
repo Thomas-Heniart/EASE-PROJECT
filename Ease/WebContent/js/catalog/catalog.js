@@ -295,6 +295,7 @@ var Catalog = function(rootEl){
 			elem.qRoot.height(width);
 		});
 	};
+	lastLineViewed = 0;
 	$(".catalogContainer").scroll(function(event) {
 		var appHeight = $(".catalogApp").height();
 		var st = $(this).scrollTop();
