@@ -387,7 +387,7 @@ $(document).ready(function() {
 					$(form).find('.inputs').show();
 				});
 			}, function(retMsg) {
-				easeTracker.trackEvent("WebsiteRequest", {"url": url});
+				easeTracker.trackEvent("RequestWebsite", {"AskedWebsiteName": url});
 			}, function(retMsg) {
 			}, 'text');
 	});

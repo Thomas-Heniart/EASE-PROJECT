@@ -94,15 +94,14 @@ function sendEvent(obj) {
         		if(json.detail[0] && json.detail[0].url){
         			json.detail = json.detail[0];
         			message = "NewLinkToOpen";
-        			//easeTracker.trackEvent("ClickOnLinkApp");
+        			
         			easeTracker.trackEvent("ClickOnApp", {"type":"LinkApp", "appName":json.detail.app_name});
         		} else {
         			var jsonDetail = json.detail[json.detail.length - 1];
         			easeTracker.trackEvent("ClickOnApp", {"type":jsonDetail.type, "appName":jsonDetail.app_name, "websiteName": jsonDetail.wbesite_name});
-        			//easeTracker.trackEvent(.website.name + " connections");
         		}
-
-        		
+        		var now = "" + new Date;
+        		easeTracker.setOnce("TutoDateFirstClickOnApp", now);
         		event = new CustomEvent(message, json);
         		document.dispatchEvent(event);
         	}, function(retMsg) {

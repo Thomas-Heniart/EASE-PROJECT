@@ -295,17 +295,14 @@ var Catalog = function(rootEl){
 			elem.qRoot.height(width);
 		});
 	};
-	var lastScrollTop = 0;
 	$(".catalogContainer").scroll(function(event) {
-		console.log($(this).height());
+		var appHeight = $(".catalogApp").height();
 		var st = $(this).scrollTop();
-		console.log(st);
-		   if (st > lastScrollTop){
-		       console.log("scroll down");
-		   } else {
-		      // upscroll code
-		   }
-		   lastScrollTop = st;
+		var newLastLine = Math.floor(st / appHeight);
+		if (newLastLine > lastLineViewed) {
+			lastLineViewed = newLastLine;
+			easeTracker.trackEvent("CatalogScroll", {"CatalogLinesViewed":lastLineViewed});
+		}
 	});
 	this.onResize();
 	this.quitButton.click(function(){

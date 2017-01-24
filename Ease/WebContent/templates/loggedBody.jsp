@@ -109,7 +109,11 @@ response.addCookie(email);
 		var appCount = $(".siteLinkBox").length;
 		var verifiedEmailCount = $(".verifiedEmail").length;
 		var unverifiedEmailCount = $(".unverifiedEmail").length;
+		var emailCount = verifiedEmailCount + unverifiedEmailCount;
 		easeTracker.setUserProperty("AppCount", appCount);
+		easeTracker.setUserProperty("EmailCount", emailCount);
+		easeTracker.setUserProperty("EmailVerifiedCount", verifiedEmailCount);
+		easeTracker.setUserProperty("EmailNonVerifiedCount", unverifiedEmailCount);
 		
 	});
 	(function() {

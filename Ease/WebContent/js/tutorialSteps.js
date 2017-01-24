@@ -68,15 +68,17 @@ function goToNextStep() {
 $("div#addAppTutorial #skipButton").click(function() {
 	
 	var appName = $("div#addAppTutorial input#name").val();
+	var websiteId =  $("div#simpleImportation div.appHandler div.app.selected:eq(" + addAppTutoCpt + ")").attr("id");
 	postHandler.post("AddEmptyApp", {
 		"name" : appName,
 		"profileId" : $("div#addAppTutorial input#profileId").val(),
-		"websiteId" : $("div#simpleImportation div.appHandler div.app.selected:eq(" + addAppTutoCpt + ")").attr("id")
+		"websiteId" : websiteId
 	}, function() {
 		//always
 	}, function(retMsg) {
 		//success
-		easeTracker.trackEvent("AddApp", {"type":"EmptyApp", "appName":appName});
+		var newWebsite = $(".catlogApp[idx='" + websiteId + "']").attr("newApp") != null;
+		easeTracker.trackEvent("AddApp", {"appType":"EmptyApp", "appName":appName, "AppNewYN": newWebsite});
 		appsSelectedSkiped++;
 	}, function(retMsg) {
 		//error
@@ -87,18 +89,20 @@ $("div#addAppTutorial #skipButton").click(function() {
 $('div#addAppTutorial form').submit(function (e) {
 	e.preventDefault();
 	var appName = $("div#addAppTutorial input#name").val();
+	var websiteId = $("div#simpleImportation div.appHandler div.app.selected:eq(" + addAppTutoCpt + ")").attr("id");
 	postHandler.post('AddClassicApp', {
 		"name" : appName,
 		"login" : $("div#addAppTutorial input#login").val(),
 		"profileId" : $("div#addAppTutorial input#profileId").val(),
 		"password" : $("div#addAppTutorial input#password").val(),
-		"websiteId" : $("div#simpleImportation div.appHandler div.app.selected:eq(" + addAppTutoCpt + ")").attr("id")
+		"websiteId" : websiteId
 	}, function() {
 		//always
 	}, function(retMsg) {
 		//succes
 		console.log(retMsg);
-		easeTracker.trackEvent("AddApp", {"type":"ClassicApp", "appName":appName});
+		var newWebsite = $(".catlogApp[idx='" + websiteId + "']").attr("newApp") != null;
+		easeTracker.trackEvent("AddApp", {"appType":"ClassicApp", "appName":appName, "AppNewYN": newWebsite});
 		appsSelectedFilled++;
 	}, function(retMsg) {
 		//error
