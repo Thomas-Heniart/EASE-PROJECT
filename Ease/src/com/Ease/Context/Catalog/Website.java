@@ -341,7 +341,7 @@ public class Website {
 		JSONArray logWithWebsites = new JSONArray();
 		for (Website logWithWebsite : this.loginWithWebsites)
 			logWithWebsites.add(logWithWebsite.getSingleId());
-		res.put("loginWtih", logWithWebsites);
+		res.put("loginWith", logWithWebsites);
 		if (this.sso != null)
 			res.put("ssoId", this.sso.getSingleId());
 		else
