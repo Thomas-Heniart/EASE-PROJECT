@@ -119,7 +119,6 @@
 				}
 			});
 			$("#PopupModifyApp .popupHeader .title span").text($(app).attr("name"));
-			modifyAppTutorial();
 		} else {
 			popup.find('.disabledInput').each(function(){
 				resetDisabledInput($(this));

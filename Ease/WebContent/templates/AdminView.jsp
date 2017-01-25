@@ -14,6 +14,12 @@
 		</button>
 	</div>
 	<div>
+		<button id="enterAddTesterMode" state="off" class="button adminButton"
+			target="AddTesterTab">
+			<img src="resources/icons/vacuum-cleaner.png" />
+		</button>
+	</div>
+	<div>
 		<button id="enterAddUsersMode" state="off" class="button adminButton"
 			target="AddUsersTab">
 			<img src="resources/icons/add_users_icon.png" />
@@ -79,3 +85,4 @@
 <%@ include file="ChangeBackground.jsp"%>
 <%@ include file="ServerKeysManager.jsp"%>
 <%@ include file="TestWebsites.jsp"%>
+<%@ include file="addTester.jsp" %>
