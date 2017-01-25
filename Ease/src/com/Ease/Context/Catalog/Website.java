@@ -342,10 +342,10 @@ public class Website {
 		for (Website logWithWebsite : this.loginWithWebsites)
 			logWithWebsites.add(logWithWebsite.getSingleId());
 		res.put("loginWtih", logWithWebsites);
-		/* if (this.sso != null)
-		 * 	res.put("ssoId", this.sso.getSingleId());
-		 * else
-		 * 	res.put("ssoId", -1); */
+		if (this.sso != null)
+			res.put("ssoId", this.sso.getSingleId());
+		else
+			res.put("ssoId", -1);
 		res.put("url", this.website_homepage);
 		JSONObject inputs = new JSONObject();
 		for (WebsiteInformation websiteInformation : this.website_informations)

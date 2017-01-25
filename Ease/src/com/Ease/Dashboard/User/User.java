@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -15,26 +14,19 @@ import java.util.Set;
 
 import javax.websocket.Session;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
+import com.Ease.Context.Catalog.Tag;
 import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Context.Group.Infrastructure;
 import com.Ease.Dashboard.DashboardManager;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.AccountInformation;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.Profile.Profile;
-import com.Ease.Dashboard.Profile.ProfilePermissions;
 import com.Ease.Update.UpdateManager;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Invitation;
-import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 import com.Ease.websocket.WebsocketSession;
 
@@ -580,5 +572,13 @@ public class User {
 	
 	public ExtensionKeys getExtensionKeys() {
 		return extensionKeys;
+	}
+	
+	public boolean canSeeTag(Tag tag) {
+		for(Group group : this.groups) {
+			if (tag.containsGroupId(group.getDBid()))
+				return true;
+		}
+		return tag.isPublic();
 	}
 }

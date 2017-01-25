@@ -44,9 +44,22 @@ public class Tag {
 				String name = rs.getString(Data.TAG_NAME.ordinal());
 				String color = rs.getString(Data.COLOR.ordinal());
 				int single_id = ((IdGenerator)context.getAttribute("idGenerator")).getNextId();
-				tags.add(new Tag(db_id, single_id, name, color));
+				Tag newTag = new Tag(db_id, single_id, name, color); 
+				newTag.loadGroupIds(db);
+				tags.add(newTag);
 			}
 			return tags;
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+	}
+	
+	public void loadGroupIds(DataBaseConnection db) throws GeneralException {
+		ResultSet rs = db.get("SELECT group_id FROM tagsAndGroupsMap WHERE tag_id = " + this.db_id + ";");
+		try {
+			while(rs.next()) {
+				this.groupIds.add(rs.getString(1));
+			}
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
@@ -57,6 +70,7 @@ public class Tag {
 	protected String name;
 	protected String color;
 	protected List<Website> sites;
+	protected List<String> groupIds;
 	
 	public Tag(String db_id, int single_id, String tagName, String tagColor) {
 		this.db_id = db_id;
@@ -64,6 +78,7 @@ public class Tag {
 		this.name = tagName;
 		this.color = tagColor;
 		this.sites = new LinkedList<Website> ();
+		this.groupIds = new LinkedList<String> ();
 	}
 	
 	public String getName() {
@@ -104,5 +119,13 @@ public class Tag {
 			}
 		}
 		return result;
+	}
+	
+	public boolean containsGroupId(String group_id) {
+		return this.groupIds.contains(group_id);
+	}
+	
+	public boolean isPublic() {
+		return this.groupIds.isEmpty();
 	}
 }
