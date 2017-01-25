@@ -311,6 +311,8 @@ public class Website {
 	}
 
 	public boolean isNew() {
+		if (this.websiteAttributes == null)
+			return false;
 		return this.websiteAttributes.isNew();
 	}
 
