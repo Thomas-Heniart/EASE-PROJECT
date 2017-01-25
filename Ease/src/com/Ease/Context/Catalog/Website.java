@@ -337,15 +337,15 @@ public class Website {
 		JSONObject res = new JSONObject();
 		res.put("name", this.name);
 		res.put("singleId", this.single_id);
-		res.put("logo", this.getAbsolutePath() + "logo.png");
+		res.put("logo", Variables.WEBSITES_PATH + "logo.png");
 		JSONArray logWithWebsites = new JSONArray();
 		for (Website logWithWebsite : this.loginWithWebsites)
 			logWithWebsites.add(logWithWebsite.getSingleId());
-		res.put("loginWtih", logWithWebsites);
-		/* if (this.sso != null)
-		 * 	res.put("ssoId", this.sso.getSingleId());
-		 * else
-		 * 	res.put("ssoId", -1); */
+		res.put("loginWith", logWithWebsites);
+		if (this.sso != null)
+			res.put("ssoId", this.sso.getSingleId());
+		else
+			res.put("ssoId", -1);
 		res.put("url", this.website_homepage);
 		JSONObject inputs = new JSONObject();
 		for (WebsiteInformation websiteInformation : this.website_informations)

@@ -37,9 +37,11 @@ pageEncoding="UTF-8"%>
 				<i class="fa fa-angle-left" aria-hidden="true"></i>
 				<span class="tags">
 					<c:forEach items='${catalog.getTags()}' var="item">
-					<a href="#" tagId="${item.getSingleId()}" class="tag btn btn-default ease-button hvr-grow" name="${item.getName()}"
-					style="background-color: ${colors.get(item.getColor() - 1)};">
-					${item.getName()}</a>
+						<c:if test="${user.canSeeTag(item)}">
+							<a href="#" tagId="${item.getSingleId()}" class="tag btn btn-default ease-button hvr-grow" name="${item.getName()}"
+							style="background-color: ${colors.get(item.getColor() - 1)};">
+							${item.getName()}</a>					
+						</c:if>
 				</c:forEach>
 			</span>
 			<i class="fa fa-angle-right" aria-hidden="true"></i>
