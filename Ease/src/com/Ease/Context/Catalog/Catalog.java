@@ -179,4 +179,12 @@ public class Catalog {
 		}
 		throw new GeneralException(ServletManager.Code.UserMiss, "This website is not in the catalog.");
 	}
+
+	@SuppressWarnings("unchecked")
+	public JSONArray getJson() {
+		JSONArray res = new JSONArray();
+		for (Website website : this.websites)
+			res.add(website.getJsonForCatalog());
+		return res;
+	}
 }
