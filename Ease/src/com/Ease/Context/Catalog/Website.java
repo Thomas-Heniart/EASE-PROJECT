@@ -359,4 +359,17 @@ public class Website {
 		res.put("position", this.position);
 		return res;
 	}
+	
+	public int getPosition() {
+		return this.position;
+	}
+	
+	public int compareTo(Website website) {
+		if (this.position > website.getPosition())
+			return 1;
+		else if (this.position == website.getPosition())
+			return 0;
+		else
+			return -1;
+	}
 }

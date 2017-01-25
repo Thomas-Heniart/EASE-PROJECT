@@ -226,7 +226,9 @@ public class Catalog {
 	@SuppressWarnings("unchecked")
 	public JSONArray getJson() {
 		JSONArray res = new JSONArray();
-		for (Website website : this.websites)
+		List<Website> tmpSites = this.websites;
+		tmpSites.sort((website1, website2) -> website1.compareTo(website2));
+		for (Website website : tmpSites)
 			res.add(website.getJsonForCatalog());
 		return res;
 	}
