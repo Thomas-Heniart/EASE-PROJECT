@@ -48,7 +48,7 @@ public class Sso {
 	
 	public Sso(String db_id, String name, int single_id) {
 		this.name = name;
-		this.websites = null;
+		this.websites = new LinkedList<Website>();
 		this.websitesDBmap = new HashMap<String, Website>();
 		this.websitesIDmap = new HashMap<Integer, Website>();
 		this.single_id = single_id;

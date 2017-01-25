@@ -32,6 +32,8 @@ public class Catalog {
 	public Catalog(DataBaseConnection db, ServletContext context) throws GeneralException {
 		
 		ssos = Sso.loadSsos(db, context);
+		ssoDBmap = new HashMap<String, Sso>();
+		ssoIDmap = new HashMap<Integer, Sso>();
 		for (Sso sso : ssos) {
 			ssoDBmap.put(sso.getDbid(), sso);
 			ssoIDmap.put(sso.getSingleId(), sso);

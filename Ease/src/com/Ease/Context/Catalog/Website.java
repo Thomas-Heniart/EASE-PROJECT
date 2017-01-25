@@ -107,7 +107,8 @@ public class Website {
 				int single_id = ((IdGenerator)context.getAttribute("idGenerator")).getNextId();
 				Website site = new Website(db_id, single_id, name, loginUrl, folder, sso, noLogin, website_homepage, ratio, position, website_informations, websiteAttributes);
 				websites.add(site);
-				sso.addWebsite(site);
+				if (sso != null)
+					sso.addWebsite(site);
 			}
 			return websites;
 		} catch (SQLException e) {
