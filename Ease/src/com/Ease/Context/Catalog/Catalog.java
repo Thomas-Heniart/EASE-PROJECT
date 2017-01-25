@@ -8,7 +8,6 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
@@ -172,5 +171,13 @@ public class Catalog {
 				return site;
 		}
 		throw new GeneralException(ServletManager.Code.UserMiss, "This website is not in the catalog.");
+	}
+
+	@SuppressWarnings("unchecked")
+	public JSONArray getJson() {
+		JSONArray res = new JSONArray();
+		for (Website website : this.websites)
+			res.add(website.getJsonForCatalog());
+		return res;
 	}
 }
