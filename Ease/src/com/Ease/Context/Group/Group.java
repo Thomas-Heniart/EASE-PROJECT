@@ -16,6 +16,7 @@ import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
+import com.Ease.Utils.Invitation;
 import com.Ease.Utils.ServletManager;
 
 public class Group {
@@ -138,10 +139,10 @@ public class Group {
 	public void setChildrens(List<Group> children) {
 		this.children = children;
 	}
-	private void setGroupProfiles(List<GroupProfile> groupProfiles) {
+	public void setGroupProfiles(List<GroupProfile> groupProfiles) {
 		this.groupProfiles = groupProfiles;
 	}
-	private void setGroupApps(List<GroupApp> groupApps) {
+	public void setGroupApps(List<GroupApp> groupApps) {
 		this.groupApps = groupApps;
 	}
 	public List<Group> getChildren() {
@@ -220,6 +221,7 @@ public class Group {
 			groupProfile.loadContentForConnectedUser(user, sm);
 		}
 		for (GroupApp groupApp: this.groupApps) {
+			System.out.println("une app");
 			groupApp.loadContentForConnectedUser(user, sm);
 		}
 	}
@@ -260,23 +262,35 @@ public class Group {
 		this.loadContentForConnectedUser(user, sm);
 	}
 	
-	public void addUser(String email, ServletManager sm) throws GeneralException {
+	public void addUser(String email, String name, ServletManager sm) throws GeneralException {
 		@SuppressWarnings("unchecked")
 		Map<String, User> users = (Map<String, User>) sm.getContextAttr("users");
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		String db_id = User.findDBid(email, sm);
+		String userDBid = null;
+		try {
+			userDBid = User.findDBid(email, sm);
+		}
+		catch (GeneralException e) {
+			if (e.getCode() == ServletManager.Code.ClientError) {
+				Invitation.sendInvitation(email, name, this, sm);
+				db.commitTransaction(transaction);
+				return;
+			} else {
+				throw new GeneralException(ServletManager.Code.InternError, e);
+			}
+		}
 		User user;
-		if ((user = users.get(email)) == null) {
+		if ((user = users.get(email)) != null) {
 			this.loadAllContentConnected(user, sm);
 		} else {
-			this.loadAllContentUnconnected(db_id, sm);
+			this.loadAllContentUnconnected(userDBid, sm);
 		}
-		db.set("INSERT INTO groupsAndUsersMap VALUES(NULL, " + this.db_id + ", " + db_id + ", " + (user.tutoDone() ? "1" : "0") + ");");
+		db.set("INSERT INTO groupsAndUsersMap VALUES(NULL, " + this.db_id + ", " + userDBid + ", " + (user.tutoDone() ? "1" : "0") + ");");
 		db.commitTransaction(transaction);
 	}
 
 	public void tutoStepDone(String user_id, DataBaseConnection db) throws GeneralException {
-		db.set("UPDATA groupsAndUsersMap SET saw_group = 1 WHERE group_id=" + this.db_id + " AND user_id = " + user_id + ");");
+		db.set("UPDATE groupsAndUsersMap SET saw_group = 1 WHERE group_id=" + this.db_id + " AND user_id = " + user_id + ");");
 	}
 }

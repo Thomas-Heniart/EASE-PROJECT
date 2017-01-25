@@ -19,8 +19,7 @@ public class Infrastructure {
 	public enum Data {
 		NOTHING,
 		ID,
-		NAME,
-		KEY
+		NAME
 	}
 	/*
 	 * 
@@ -41,9 +40,8 @@ public class Infrastructure {
 			while (rs.next()) {
 				db_id = rs.getString(Data.ID.ordinal());
 				name = rs.getString(Data.NAME.ordinal());
-				key = rs.getString(Data.KEY.ordinal());
 				single_id = idGenerator.getNextId();
-				infra = new Infrastructure(db_id, name, key, single_id);
+				infra = new Infrastructure(db_id, name, single_id);
 				GroupManager.getGroupManager(context).add(infra);
 				groups = Group.loadGroups(db, infra, context);
 				infra.setGroups(groups);
@@ -51,6 +49,13 @@ public class Infrastructure {
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
+	}
+	
+	public static Infrastructure createInfrastructure(String name, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		String db_id = db.set("INSERT INTO infrastructures values(NULL, '" + name + "');").toString();
+		IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
+		return new Infrastructure(db_id, name, idGenerator.getNextId());
 	}
 	
 	/*
@@ -63,13 +68,11 @@ public class Infrastructure {
 	protected String 	name;
 	protected List<Group>		groups;
 	protected int 		single_id;
-	protected String	crypted_keyInfra;
 	
-	public Infrastructure(String db_id, String name, String crypted_key_infra, int single_id) {
+	public Infrastructure(String db_id, String name, int single_id) {
 		this.db_id = db_id;
 		this.name = name;
 		this.groups = null;
-		this.crypted_keyInfra = crypted_key_infra;
 		this.single_id = single_id;
 	}
 	
@@ -135,16 +138,5 @@ public class Infrastructure {
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
-	}
-	
-	public String encrypt(String data, ServletManager sm) throws GeneralException {
-		ServerKey sk = (ServerKey)sm.getContextAttr("serverKey");
-		String keyInfra = AES.decrypt(this.crypted_keyInfra, sk.getKeyServer());
-		return AES.encrypt(data, keyInfra);
-	}
-	public String decrypt(String data, ServletManager sm) throws GeneralException {
-		ServerKey sk = (ServerKey)sm.getContextAttr("serverKey");
-		String keyInfra = AES.decrypt(this.crypted_keyInfra, sk.getKeyServer());
-		return AES.decrypt(data, keyInfra);
 	}
 }
