@@ -307,6 +307,8 @@ public class Website {
 	}
 
 	public boolean work() {
+		if (this.websiteAttributes == null)
+			return true;
 		return this.websiteAttributes.isWorking();
 	}
 
@@ -354,6 +356,7 @@ public class Website {
 			inputs.put(websiteInformation.getInformationName(), websiteInformation.getInformationValue());
 		res.put("inputs", inputs);
 		res.put("isNew", this.isNew());
+		res.put("position", this.position);
 		return res;
 	}
 }
