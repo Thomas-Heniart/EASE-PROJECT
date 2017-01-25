@@ -339,7 +339,7 @@ public class Website {
 		JSONObject res = new JSONObject();
 		res.put("name", this.name);
 		res.put("singleId", this.single_id);
-		res.put("logo", Variables.WEBSITES_PATH +"/" + this.folder + "/" + "logo.png");
+		res.put("logo", Variables.WEBSITES_PATH + this.folder + "/" + "logo.png");
 		JSONArray logWithWebsites = new JSONArray();
 		for (Website logWithWebsite : this.loginWithWebsites)
 			logWithWebsites.add(logWithWebsite.getSingleId());
