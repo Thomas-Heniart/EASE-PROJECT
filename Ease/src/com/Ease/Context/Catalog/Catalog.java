@@ -8,7 +8,6 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
@@ -20,7 +19,9 @@ public class Catalog {
 	 * Constructor
 	 * 
 	 */
-	
+	protected Map<String, Sso> ssoDBmap;
+	protected Map<Integer, Sso> ssoIDmap;
+	protected List<Sso> ssos;
 	protected Map<String, Website> websiteDBmap;
 	protected Map<Integer, Website> websiteIDmap;
 	protected List<Website> websites;
@@ -30,7 +31,12 @@ public class Catalog {
 	
 	public Catalog(DataBaseConnection db, ServletContext context) throws GeneralException {
 		
-		websites = Website.loadWebsites(db, context);
+		ssos = Sso.loadSsos(db, context);
+		for (Sso sso : ssos) {
+			ssoDBmap.put(sso.getDbid(), sso);
+			ssoIDmap.put(sso.getSingleId(), sso);
+		}
+		websites = Website.loadWebsites(db, ssoDBmap, context);
 		websiteDBmap = new HashMap<String, Website>();
 		websiteIDmap = new HashMap<Integer, Website>();
 		for (Website site : websites) {
