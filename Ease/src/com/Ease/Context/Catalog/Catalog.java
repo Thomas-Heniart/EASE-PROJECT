@@ -1,5 +1,6 @@
 package com.Ease.Context.Catalog;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -226,10 +227,9 @@ public class Catalog {
 	@SuppressWarnings("unchecked")
 	public JSONArray getJson() {
 		JSONArray res = new JSONArray();
-		List<Website> tmpSites = this.websites;
-		tmpSites.sort((website1, website2) -> website1.compareTo(website2));
-		for (Website website : tmpSites)
+		for (Website website : this.websites)
 			res.add(website.getJsonForCatalog());
+		Collections.reverse(res);
 		return res;
 	}
 }
