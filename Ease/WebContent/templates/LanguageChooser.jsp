@@ -1,5 +1,5 @@
 <div class="custom-select-language">
-	<form style="display:none;">
+	<form id="languageSelectFrom" style="display:none;">
 		<select id="language" name="language" onchange="submit()">
 			<option value="en" ${language == 'en' ? 'selected' : ''}>English</option>
 			<option value="fr" ${language == 'fr' ? 'selected' : ''}>Français</option>

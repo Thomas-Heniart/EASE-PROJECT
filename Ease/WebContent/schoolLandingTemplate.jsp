@@ -111,6 +111,10 @@ pageEncoding="UTF-8"%>
 					<fmt:message key="landing.title" />
 				</div>
 				<a href="#services" class="btn btn-xl signUpButton" trackEvent="HomepageSignUpButton1">
+					<c:if test="${param.name != null}">
+						<c:out value="${param.name}" />,
+						<br>
+					</c:if>
 					<fmt:message key="schoolLanding.signup-button.text" />
 				</a>
 				<div class="intro-lead-in">
@@ -223,6 +227,24 @@ pageEncoding="UTF-8"%>
 			</div>
 		</div>
 	</section>
+	<section class="vp" style="background-color:#eee;">
+		<div clas="container">
+			<div class="row">
+				<div class="col-lg-12 text-center">
+					<h3 class="section-subheading">
+						<fmt:message key="schoolLanding.2ndvp.title1"/>
+						<c:out value="${param.schoolName}"/>
+						<fmt:message key="schoolLanding.2ndvp.title2"/>
+					</h3>
+				</div>
+			</div>
+			<div class="row">
+				<a href="#services" class="btn btn-xl signUpButton" trackEvent="HomeSignUpButton3">
+					<fmt:message key="landing.signup-button.3rd-text"/>
+				</a>
+			</div>
+		</div>
+	</section>
 	<section id="userFeedbacks">
 		<div class="container">
 			<div class="row">
@@ -284,24 +306,6 @@ pageEncoding="UTF-8"%>
 						<p class="position">Account Manager à Barnebys</p>
 					</div>
 				</div>
-			</div>
-		</div>
-	</section>
-	<section class="vp" style="background-color:white;">
-		<div clas="container">
-			<div class="row">
-				<div class="col-lg-12 text-center">
-					<h3 class="section-subheading">
-						<fmt:message key="schoolLanding.2ndvp.title1"/>
-						<c:out value="${param.schoolName}"/>
-						<fmt:message key="schoolLanding.2ndvp.title2"/>
-					</h3>
-				</div>
-			</div>
-			<div class="row">
-				<a href="#services" class="btn btn-xl signUpButton" trackEvent="HomeSignUpButton3">
-					<fmt:message key="landing.signup-button.3rd-text"/>
-				</a>
 			</div>
 		</div>
 	</section>

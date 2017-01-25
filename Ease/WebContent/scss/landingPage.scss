@@ -1056,6 +1056,17 @@ header {
             font-family: Raleway;
         }
     }
+    #userFeedbacks {
+        padding-bottom: 75px;
+    }
+    #features {
+        padding-bottom: 0px;
+    }
+    #productPresentation {
+        &:before {
+            display:none;
+        }
+    }
     header {
         .container {
             .intro-text {
@@ -1348,6 +1359,9 @@ header {
     .popupBody {
         .handler {
             .row {
+                input {
+                    margin-bottom: 0;
+                }
                 .progress {
                     height: 0.25vw;
                     margin-top: 0.15vw;
