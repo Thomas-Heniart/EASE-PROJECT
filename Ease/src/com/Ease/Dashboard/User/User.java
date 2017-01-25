@@ -176,7 +176,9 @@ public class User {
 		newUser.passStep("CGU", db);
 		newUser.passStep("first_connection", db);
 		newUser.initializeUpdateManager(sm);
-		newUser.sendVerificationEmail(email, sm);
+		if (groups.size() > 0) {
+			newUser.sendVerificationEmail(email, sm);
+		}
 		((Map<String, User>)sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
 		((Map<String, User>)sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);
 		db.commitTransaction(transaction);
