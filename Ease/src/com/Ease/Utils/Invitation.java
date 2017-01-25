@@ -41,12 +41,13 @@ public class Invitation {
 
 	public static void sendInvitation(String email, String name, Group group, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		String invitationCode = CodeGenerator.generateNewCode();
 		try {
+			String invitationCode;
 			ResultSet rs = db.get("SELECT * FROM invitations WHERE email='" + email + "';");
 			if (rs.next()) {
-				db.set("UPDATE invitations SET linkCode='" + invitationCode + "' where email='" + email + "';");
+				invitationCode = rs.getString(3);
 			} else {
+				invitationCode = CodeGenerator.generateNewCode();
 				String db_id = db.set("INSERT INTO invitations values(NULL, '" + email + "', '" + invitationCode + "');").toString();
 				if (group != null)
 					db.set("INSERT INTO invitationsAndGroupsMap values(NULL, " + db_id + ", " + group.getDBid() + ");");

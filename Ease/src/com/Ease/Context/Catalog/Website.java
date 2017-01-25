@@ -78,14 +78,14 @@ public class Website {
 			}
 			IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
 			db.commitTransaction(transaction);
-			return new Website(db_id, idGenerator.getNextId(), name, url, folder, 0, false, homePage, 0, 1, infos, attributes, loginWithWebsites);
+			return new Website(db_id, idGenerator.getNextId(), name, url, folder, null, false, homePage, 0, 1, infos, attributes, loginWithWebsites);
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
 
 
-	public static List<Website> loadWebsites(DataBaseConnection db, ServletContext context) throws GeneralException {
+	public static List<Website> loadWebsites(DataBaseConnection db, Map<String, Sso> ssoDbIdMap, ServletContext context) throws GeneralException {
 		try {
 			List<Website> websites = new LinkedList<Website>();
 			ResultSet rs = db.get("SELECT * FROM websites");
@@ -95,7 +95,7 @@ public class Website {
 				String loginUrl = rs.getString(WebsiteData.LOGIN_URL.ordinal());
 				String name = rs.getString(WebsiteData.NAME.ordinal());
 				String folder = rs.getString(WebsiteData.FOLDER.ordinal());
-				int sso = rs.getInt(WebsiteData.SSO.ordinal());
+				Sso sso = ssoDbIdMap.get(rs.getString(WebsiteData.SSO.ordinal()));
 				boolean noLogin = rs.getBoolean(WebsiteData.NO_LOGIN.ordinal());
 				String website_homepage = rs.getString(WebsiteData.WEBSITE_HOMEPAGE.ordinal());
 				int ratio = rs.getInt(WebsiteData.RATIO.ordinal());
@@ -105,7 +105,10 @@ public class Website {
 				if (websiteAttributesId != null)
 					websiteAttributes = WebsiteAttributes.loadWebsiteAttributes(websiteAttributesId, db);
 				int single_id = ((IdGenerator)context.getAttribute("idGenerator")).getNextId();
-				websites.add(new Website(db_id, single_id, name, loginUrl, folder, sso, noLogin, website_homepage, ratio, position, website_informations, websiteAttributes));
+				Website site = new Website(db_id, single_id, name, loginUrl, folder, sso, noLogin, website_homepage, ratio, position, website_informations, websiteAttributes);
+				websites.add(site);
+				if (sso != null)
+					sso.addWebsite(site);
 			}
 			return websites;
 		} catch (SQLException e) {
@@ -181,7 +184,7 @@ public class Website {
 	protected String loginUrl;
 	protected String folder;
 	protected int position;
-	protected int sso;
+	protected Sso sso;
 	protected boolean noLogin;
 	protected String website_homepage;
 	protected int ratio;
@@ -189,7 +192,7 @@ public class Website {
 	protected List<WebsiteInformation> website_informations;
 	protected List<Website> loginWithWebsites;
 
-	public Website(String db_id, int single_id, String name, String loginUrl, String folder, int sso, boolean noLogin, String website_homepage, int ratio, int position, List<WebsiteInformation> website_informations, WebsiteAttributes websiteAttributes) {
+	public Website(String db_id, int single_id, String name, String loginUrl, String folder, Sso sso, boolean noLogin, String website_homepage, int ratio, int position, List<WebsiteInformation> website_informations, WebsiteAttributes websiteAttributes) {
 		this.db_id = db_id;
 		this.single_id = single_id;
 		this.loginUrl = loginUrl;
@@ -205,7 +208,7 @@ public class Website {
 		this.websiteAttributes = websiteAttributes;
 	}
 
-	public Website(String db_id, int single_id, String name, String loginUrl, String folder, int sso, boolean noLogin, String website_homepage, int ratio, int position, List<WebsiteInformation> website_informations, WebsiteAttributes websiteAttributes, List<Website> loginWithWebsites) {
+	public Website(String db_id, int single_id, String name, String loginUrl, String folder, Sso sso, boolean noLogin, String website_homepage, int ratio, int position, List<WebsiteInformation> website_informations, WebsiteAttributes websiteAttributes, List<Website> loginWithWebsites) {
 		this.db_id = db_id;
 		this.single_id = single_id;
 		this.loginUrl = loginUrl;
@@ -256,7 +259,7 @@ public class Website {
 		return this.single_id;
 	}
 
-	public int getSso() {
+	public Sso getSso() {
 		return this.sso;
 	}
 
@@ -327,5 +330,28 @@ public class Website {
 	public boolean loginUrlMatch(String url) {
 		String[] loginUrlSplitted = this.loginUrl.split("\\/*\\/");
 		return url.contains(loginUrlSplitted[1]);
+	}
+
+	@SuppressWarnings("unchecked")
+	public JSONObject getJsonForCatalog() {
+		JSONObject res = new JSONObject();
+		res.put("name", this.name);
+		res.put("singleId", this.single_id);
+		res.put("logo", this.getAbsolutePath() + "logo.png");
+		JSONArray logWithWebsites = new JSONArray();
+		for (Website logWithWebsite : this.loginWithWebsites)
+			logWithWebsites.add(logWithWebsite.getSingleId());
+		res.put("loginWtih", logWithWebsites);
+		/* if (this.sso != null)
+		 * 	res.put("ssoId", this.sso.getSingleId());
+		 * else
+		 * 	res.put("ssoId", -1); */
+		res.put("url", this.website_homepage);
+		JSONObject inputs = new JSONObject();
+		for (WebsiteInformation websiteInformation : this.website_informations)
+			inputs.put(websiteInformation.getInformationName(), websiteInformation.getInformationValue());
+		res.put("inputs", inputs);
+		res.put("isNew", this.isNew());
+		return res;
 	}
 }
