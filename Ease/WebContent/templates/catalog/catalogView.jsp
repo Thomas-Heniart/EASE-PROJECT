@@ -57,7 +57,7 @@ pageEncoding="UTF-8"%>
 					<div class="search-result"></div>
 					<h4 class="relatedApps"><span>Related apps</span></h4>
 					<div class="relatedApps"></div>
-					<c:forEach items="${catalog.getNewWebsitesForGroups(user.getGroups())}" var="item" varStatus="loop">
+<!--					<c:forEach items="${catalog.getNewWebsitesForGroups(user.getGroups())}" var="item" varStatus="loop">
 					<c:if test="${item.work()}">
 					<catalog:catalogApp site="${item}" newApp="${item.isNew()}"/>
 				</c:if>
@@ -66,8 +66,7 @@ pageEncoding="UTF-8"%>
 			<c:if test="${item.work()}">
 			<catalog:catalogApp site="${item}" newApp="${item.isNew()}"/>
 		</c:if>
-	</c:forEach>
-
+	</c:forEach>-->
 	<div class="no-result-search">
 		<h2>No results yet...<img alt="no-result" src="resources/images/umbrella.png"/></h2>
 		<p>Fine ! Take a look there</p>
