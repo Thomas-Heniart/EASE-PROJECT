@@ -3,7 +3,6 @@
   <display-name>HelloWorld</display-name>
   <listener>
     <listener-class>com.Ease.Context.OnStart</listener-class>
-    <listener-class>com.Ease.Context.SessionListener</listener-class>
   </listener>
   <filter>
     <filter-name>IFrameBusterFilter</filter-name>
@@ -36,4 +35,45 @@
     <error-code>500</error-code>
     <location>/500page.jsp</location>
   </error-page>
+  <servlet>
+    <servlet-name>secure.jsp</servlet-name>
+    <jsp-file>/secure.jsp</jsp-file>
+</servlet>
+<servlet-mapping>
+    <servlet-name>secure.jsp</servlet-name>
+    <url-pattern>/secure/*</url-pattern>
+</servlet-mapping>
+<servlet>
+    <servlet-name>contact.jsp</servlet-name>
+    <jsp-file>/contact.jsp</jsp-file>
+</servlet>
+<servlet-mapping>
+    <servlet-name>contact.jsp</servlet-name>
+    <url-pattern>/contact/*</url-pattern>
+</servlet-mapping>
+<servlet>
+    <servlet-name>equipe.jsp</servlet-name>
+    <jsp-file>/equipe.jsp</jsp-file>
+</servlet>
+<servlet-mapping>
+    <servlet-name>equipe.jsp</servlet-name>
+    <url-pattern>/equipe/*</url-pattern>
+</servlet-mapping>
+<servlet>
+    <servlet-name>privacy.jsp</servlet-name>
+    <jsp-file>/privacy.jsp</jsp-file>
+</servlet>
+<servlet-mapping>
+    <servlet-name>privacy.jsp</servlet-name>
+    <url-pattern>/privacy/*</url-pattern>
+</servlet-mapping>
+<security-constraint> 
+    <web-resource-collection> 
+       <web-resource-name>Viewpoint Secure URLs</web-resource-name> 
+       <url-pattern>/*</url-pattern> 
+    </web-resource-collection> 
+    <user-data-constraint> 
+       <transport-guarantee>CONFIDENTIAL</transport-guarantee> 
+    </user-data-constraint> 
+  </security-constraint>
 </web-app>

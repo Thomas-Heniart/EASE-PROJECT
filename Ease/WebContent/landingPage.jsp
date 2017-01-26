@@ -78,17 +78,17 @@ pageEncoding="UTF-8"%>
 						<a href="#page-top"></a>
 					</li>
 					<li>
-						<a href="secure.jsp" target="_blank">
+						<a href="secure" target="_blank">
 							<fmt:message key="landing.header.security-link" />
 						</a>
 					</li>
 					<li>
-						<a href="equipe.jsp">
+						<a href="equipe">
 							<fmt:message key="landing.header.team-link" />
 						</a>
 					</li>
 					<li>
-						<a href="contact.jsp">
+						<a href="contact">
 							<fmt:message key="landing.header.contact-link" />
 						</a>
 					</li>
@@ -486,7 +486,7 @@ pageEncoding="UTF-8"%>
 								<input type="email" name="email" placeholder="@something..." />
 							</div>
 							<div class="row terms">
-								<p><fmt:message key="landing.signup-popup.page-1.terms-accept"/> <a href="privacy.jsp" target="_blank"><fmt:message key="landing.signup-popup.page-1.terms"/></a></p>
+								<p><fmt:message key="landing.signup-popup.page-1.terms-accept"/> <a href="privacy" target="_blank"><fmt:message key="landing.signup-popup.page-1.terms"/></a></p>
 							</div>
 							<div class="row text-center">
 								<img class="loading" src="resources/other/facebook-loading.svg"/>

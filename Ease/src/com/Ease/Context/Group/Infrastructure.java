@@ -6,6 +6,9 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import com.Ease.Context.ServerKey;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
@@ -19,7 +22,8 @@ public class Infrastructure {
 	public enum Data {
 		NOTHING,
 		ID,
-		NAME
+		NAME,
+		IMG
 	}
 	/*
 	 * 
@@ -34,14 +38,15 @@ public class Infrastructure {
 			Infrastructure infra;
 			String db_id;
 			String name;
-			String key;
+			String img_path;
 			List<Group> groups;
 			int single_id;
 			while (rs.next()) {
 				db_id = rs.getString(Data.ID.ordinal());
 				name = rs.getString(Data.NAME.ordinal());
+				img_path = rs.getString(Data.IMG.ordinal());
 				single_id = idGenerator.getNextId();
-				infra = new Infrastructure(db_id, name, single_id);
+				infra = new Infrastructure(db_id, name, img_path, single_id);
 				GroupManager.getGroupManager(context).add(infra);
 				groups = Group.loadGroups(db, infra, context);
 				infra.setGroups(groups);
@@ -51,11 +56,13 @@ public class Infrastructure {
 		}
 	}
 	
-	public static Infrastructure createInfrastructure(String name, ServletManager sm) throws GeneralException {
+	public static Infrastructure createInfrastructure(String name, String img_path, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		String db_id = db.set("INSERT INTO infrastructures values(NULL, '" + name + "');").toString();
 		IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
-		return new Infrastructure(db_id, name, idGenerator.getNextId());
+		Infrastructure infra = new Infrastructure(db_id, name, img_path, idGenerator.getNextId());
+		GroupManager.getGroupManager(sm).add(infra);
+		return infra;
 	}
 	
 	/*
@@ -66,14 +73,16 @@ public class Infrastructure {
 	
 	protected String	db_id;
 	protected String 	name;
+	protected String	img_path;
 	protected List<Group>		groups;
 	protected int 		single_id;
 	
-	public Infrastructure(String db_id, String name, int single_id) {
+	public Infrastructure(String db_id, String name, String img_path, int single_id) {
 		this.db_id = db_id;
 		this.name = name;
 		this.groups = null;
 		this.single_id = single_id;
+		this.img_path = img_path;
 	}
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
@@ -109,11 +118,23 @@ public class Infrastructure {
 	}
 	
 	public String getLogoPath() {
-		return "resources/images/" + this.name.replaceAll(" ", "_").toLowerCase() + ".png";
+		return "resources/images/infras/" + this.img_path;
 	}
 	
-	public void setName(ServletManager sm) throws GeneralException {
-		
+	public void setName(String name, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		db.set("UPDATE infrastructures set name='" + name + "' WHERE id=" + this.db_id + ";");
+		this.name = name;
+		db.commitTransaction(transaction);
+	}
+	
+	public void setImgPath(String img_path, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		db.set("UPDATE infrastructures set img_path='" + img_path + "' WHERE id=" + this.db_id + ";");
+		this.img_path = img_path;
+		db.commitTransaction(transaction);
 	}
 	
 	public String getDBid() {
@@ -138,5 +159,17 @@ public class Infrastructure {
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
+	}
+	
+	public JSONObject getJson() {
+		JSONObject json = new JSONObject();
+		json.put("name", this.name);
+		json.put("imgPath", this.img_path);
+		JSONArray array = new JSONArray();
+		for (Group group : this.groups) {
+			array.add(group.getJson());
+		}
+		json.put("groups", array);
+		return json;
 	}
 }
