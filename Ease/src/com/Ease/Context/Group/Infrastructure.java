@@ -2,6 +2,7 @@ package com.Ease.Context.Group;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -81,6 +82,7 @@ public class Infrastructure {
 		this.groups = null;
 		this.single_id = single_id;
 		this.img_path = img_path;
+		this.groups = new LinkedList<Group> ();
 	}
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
