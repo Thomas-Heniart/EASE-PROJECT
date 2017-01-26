@@ -43,7 +43,8 @@ public class Group {
 		IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
 		int db_id = db.set("INSERT INTO groups values (null, '" + name + "', " + parent_id + ", " + infra_id + ");");
 		Group group = new Group(String.valueOf(db_id), name, parent, infra, idGenerator.getNextId());
-		parent.getChildren().add(group);
+		if (parent != null)
+			parent.getChildren().add(group);
 		GroupManager.getGroupManager(sm).add(group);
 		return group;
 	}

@@ -1,6 +1,8 @@
 package com.Ease.Servlet.BackOffice;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,27 +12,27 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.Ease.Context.Group.GroupManager;
-import com.Ease.Context.Group.Infrastructure;
 import com.Ease.Dashboard.User.User;
+import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class GetInfraGroups
+ * Servlet implementation class GetGroupUsers
  */
-@WebServlet("/GetInfraGroups")
-public class GetInfraGroups extends HttpServlet {
+@WebServlet("/GetGroupUsers")
+public class GetGroupUsers extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GetInfraGroups() {
+    public GetGroupUsers() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -44,25 +46,39 @@ public class GetInfraGroups extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@SuppressWarnings("unchecked")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		User user = (User) (session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+		DataBaseConnection db = sm.getDB();
+
 		try {
 			sm.needToBeConnected();
 			if (user.isAdmin() == false) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "You need to be admin to do that.");
 			}
-			String infraId = sm.getServletParam("infraId", true);
-			Infrastructure infra;
-			if (infraId == null || (infra = GroupManager.getGroupManager(sm).getInfraFromSingleID(Integer.parseInt(infraId))) == null) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong infra id");
+			String paramGroupId = sm.getServletParam("groupId", true);
+			if (paramGroupId == null)
+				throw new GeneralException(ServletManager.Code.ClientWarning, "groupId is null");
+			int groupSingleId = Integer.parseInt(paramGroupId);
+			GroupManager groupManager = (GroupManager) sm.getContextAttr("groupManager");
+			System.out.println(groupManager.getGroupFromSingleID(groupSingleId).getDBid());
+			String group_id = groupManager.getGroupFromSingleID(groupSingleId).getDBid();
+			JSONArray res = new JSONArray();
+			ResultSet rs = db.get("SELECT firstName, email FROM users WHERE id IN (SELECT user_id from groupsAndUsersMap WHERE group_id = " + group_id + ")");
+			try {
+				while (rs.next()) {
+					JSONObject tmp = new JSONObject();
+					tmp.put("name", rs.getString(1));
+					tmp.put("email", rs.getString(2));
+					res.add(tmp);
+				}
+				sm.setResponse(ServletManager.Code.Success, res.toString());
+			} catch (SQLException e) {
+				throw new GeneralException(ServletManager.Code.InternError, e);
 			}
-			JSONObject json = infra.getJson();
-			sm.setResponse(ServletManager.Code.Success, json.toString());
-		} catch (GeneralException e) {
-			sm.setResponse(e);
-		} catch (Exception e) {
+		} catch(GeneralException e) {
 			sm.setResponse(e);
 		}
 		sm.sendResponse();

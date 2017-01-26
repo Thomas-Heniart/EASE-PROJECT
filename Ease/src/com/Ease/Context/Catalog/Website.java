@@ -262,6 +262,13 @@ public class Website {
 	public Sso getSso() {
 		return this.sso;
 	}
+	
+	public int getSsoId() {
+		if (this.sso == null)
+			return -1;
+		else
+			return this.sso.getSingleId();
+	}
 
 	public String getName() {
 		return this.name;

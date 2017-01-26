@@ -49,23 +49,25 @@
 			infra.groups.forEach(function(group) {
 				displayGroup(group, $(".groupList"));
 			});
-		}, function(data) {
-			
-		});
-	});
-	
-	$(".group").click(function() {
-		var self = $(this);
-		var groupId = self.attr("groupId");
-		postHandler.post("GetGroupUsers", {
-			groupId : groupId
-		}, function() {
-			
-		}, function(data) {
-			var users = JSON.parse(data);
-			$(".userList .user").remove();
-			users.forEach(function(user) {
-				displayUser(user);	
+			$(".groupList").append(addGroupForm(null));
+			$(".addGroup").click(addGroup);
+			$(".group").click(function(e) {
+				e.stopPropagation();
+				var self = $(this);
+				var groupId = self.attr("groupId");
+				postHandler.post("GetGroupUsers", {
+					groupId : groupId
+				}, function() {
+					
+				}, function(data) {
+					var users = JSON.parse(data);
+					$(".userList .user").remove();
+					users.forEach(function(user) {
+						displayUser(user);	
+					});
+				}, function(data) {
+					
+				});
 			});
 		}, function(data) {
 			
@@ -78,6 +80,36 @@
 	});
 	
 	
+	function addGroup() {
+		var input = $(this).parent().find("input");
+		var parentId = input.attr("parentId");
+		var groupName = input.val();
+		var infraId = $(".infraSelected").attr("infraId");
+		if (parentId == "undefined")
+			postHandler.post("CreateGroup", {
+				infraId : infraId,
+				groupName : groupName
+			}, function() {
+				
+			}, function(data) {
+				$(".infraSelected").click();
+			}, function(date) {
+				
+			});
+		else
+			postHandler.post("CreateGroup", {
+				parentId : parentId,
+				infraId : infraId,
+				groupName : groupName
+			}, function() {
+			
+			}, function(data) {
+				$(".infraSelected").click();
+			}, function(date) {
+			
+			});
+	}
+	
 	function displayGroup(groupJson, parent) {
 		var groupId = groupJson.groupId;
 		parent.append(newGroupToDisplay(groupJson.name, groupId));
@@ -87,10 +119,19 @@
 			return;			
 		}
 		else {
-			children.forEach(function(child) {
-				displayGroup(child, $("> .groupChildren", parentGroup));
+			children.forEach(function(child, index) {
+				var elemWhereAppend = $("> .groupChildren", parentGroup)
+				displayGroup(child, elemWhereAppend);
+				if (index == children.length - 1)
+					elemWhereAppend.append(addGroupForm(parentGroup.groupId));
 			});
+			
 		}
+	}
+	
+	function addGroupForm(parentId) {
+		return ("<input placeholder='Add a group' parentId='" + parentId + "'/>"
+				+ "<button class='addGroup'>Add</button>");
 	}
 	
 	function displayUser(user) {
