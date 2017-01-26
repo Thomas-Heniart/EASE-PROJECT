@@ -1,6 +1,8 @@
 package com.Ease.Context.Group;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -20,6 +22,8 @@ public class GroupManager {
 		return ((GroupManager)sm.getContextAttr("groupManager"));
 	}
 	
+	protected List<Infrastructure> infras;
+	
 	protected Map<String, Group> DBmapGroup;
 	protected Map<Integer, Group> IDmapGroup;
 	
@@ -33,6 +37,8 @@ public class GroupManager {
 	protected Map<Integer, GroupApp> IDmapGroupApp;
 	
 	public GroupManager() {
+		this.infras = new LinkedList<Infrastructure>();
+		
 		this.DBmapGroup = new HashMap<String, Group>();
 		this.IDmapGroup = new HashMap<Integer, Group>();
 		
@@ -53,6 +59,7 @@ public class GroupManager {
 	public void add(Infrastructure infra) {
 		DBmapInfra.put(infra.getDBid(), infra);
 		IDmapInfra.put(infra.getSingleId(), infra);
+		infras.add(infra);
 	}
 	public void add(GroupProfile groupProfile) {
 		DBmapGroupProfile.put(groupProfile.getDBid(), groupProfile);
@@ -68,6 +75,7 @@ public class GroupManager {
 		IDmapGroup.remove(group.getSingleId());
 	}
 	public void remove(Infrastructure infra) {
+		infras.remove(infra);
 		DBmapInfra.remove(infra.getDBid());
 		IDmapInfra.remove(infra.getSingleId());
 	}
@@ -130,5 +138,9 @@ public class GroupManager {
 		if ((groupApp = IDmapGroupApp.get(single_id)) == null)
 			throw new GeneralException(ServletManager.Code.InternError, "This groupApp dosen't exist.");
 		return groupApp;
+	}
+	
+	public List<Infrastructure> getInfras() {
+		return infras;
 	}
 }

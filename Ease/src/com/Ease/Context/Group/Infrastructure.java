@@ -55,7 +55,9 @@ public class Infrastructure {
 		DataBaseConnection db = sm.getDB();
 		String db_id = db.set("INSERT INTO infrastructures values(NULL, '" + name + "');").toString();
 		IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
-		return new Infrastructure(db_id, name, idGenerator.getNextId());
+		Infrastructure infra = new Infrastructure(db_id, name, idGenerator.getNextId());
+		GroupManager.getGroupManager(sm).add(infra);
+		return infra;
 	}
 	
 	/*
@@ -112,8 +114,12 @@ public class Infrastructure {
 		return "resources/images/" + this.name.replaceAll(" ", "_").toLowerCase() + ".png";
 	}
 	
-	public void setName(ServletManager sm) throws GeneralException {
-		
+	public void setName(String name, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		db.set("UPDATE infrastructures set name='" + name + "' WHERE id=" + this.db_id + ";");
+		this.name = name;
+		db.commitTransaction(transaction);
 	}
 	
 	public String getDBid() {
