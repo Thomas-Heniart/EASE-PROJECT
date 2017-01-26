@@ -66,7 +66,6 @@ public class Group {
 			List<GroupApp> groupApps;
 			while (rs.next()) {
 				db_id = rs.getString(Data.ID.ordinal());
-				System.out.println(db_id);
 				name = rs.getString(Data.NAME.ordinal());
 				single_id = idGenerator.getNextId();
 				Group child = new Group(db_id, name, parent, infra, single_id);
