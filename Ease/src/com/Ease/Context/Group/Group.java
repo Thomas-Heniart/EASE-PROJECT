@@ -86,6 +86,7 @@ public class Group {
 		ResultSet rs = db.get("SELECT website_id FROM websitesAndGroupsMap WHERE group_id = " + this.db_id + ";");
 		try {
 			while (rs.next()) {
+				System.out.println("Catalog websites size : " + catalog.getWebsites().size());
 				this.groupWebsites.add(catalog.getWebsiteWithDBid(rs.getString(1)));
 			}
 		} catch (SQLException e) {
@@ -292,5 +293,11 @@ public class Group {
 
 	public void tutoStepDone(String user_id, DataBaseConnection db) throws GeneralException {
 		db.set("UPDATE groupsAndUsersMap SET saw_group = 1 WHERE group_id=" + this.db_id + " AND user_id = " + user_id + ");");
+	}
+	
+	public boolean containsWebsite(Website website) {
+		if (this.parent == null)
+			return this.groupWebsites.contains(website);
+		return this.groupWebsites.contains(website) || this.parent.containsWebsite(website);
 	}
 }

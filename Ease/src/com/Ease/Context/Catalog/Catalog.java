@@ -1,5 +1,6 @@
 package com.Ease.Context.Catalog;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,6 +10,7 @@ import javax.servlet.ServletContext;
 
 import org.json.simple.JSONArray;
 
+import com.Ease.Context.Group.Group;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
@@ -106,6 +108,46 @@ public class Catalog {
 		return res;
 	}
 	
+	public List<Website> getPublicWebsitesForGroups(List<Group> groups) {
+		List<Website> res = new LinkedList<Website> ();
+		boolean containsWebsite = false;
+		for (Website website : websites) {
+			containsWebsite = false;
+			for (Group group : groups) {
+				if (group.containsWebsite(website) && !website.isNew()) {
+					res.add(website);
+					containsWebsite = true;
+					break;
+				}
+			}
+			if (containsWebsite)
+				continue;
+			if (website.isInPublicCatalog() && !website.isNew())
+				res.add(website);
+		}
+		return res;
+	}
+	
+	public List<Website> getNewWebsitesForGroups(List<Group> groups) {
+		List<Website> res = new LinkedList<Website> ();
+		boolean containsWebsite = false;
+		for (Website website : websites) {
+			containsWebsite = false;
+			for (Group group : groups) {
+				if (group.containsWebsite(website) && website.isNew()) {
+					res.add(website);
+					containsWebsite = true;
+					break;
+				}
+			}
+			if (containsWebsite)
+				continue;
+			if (website.isInPublicCatalog() && website.isNew())
+				res.add(website);
+		}
+		return res;
+	}
+	
 	public List<Website> getNewWebsites() {
 		List<Website> res = new LinkedList<Website> ();
 		this.websites.forEach((website) -> {
@@ -187,6 +229,7 @@ public class Catalog {
 		JSONArray res = new JSONArray();
 		for (Website website : this.websites)
 			res.add(website.getJsonForCatalog());
+		Collections.reverse(res);
 		return res;
 	}
 }
