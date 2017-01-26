@@ -7,7 +7,25 @@ pageEncoding="UTF-8"%>
 <fmt:setBundle basename="com.Ease.Languages.text" />
 <html lang="${language}">
 <head>
-	<title>Discover Ease !</title>
+
+	<title> Ease.space | The easiest way to connect to your professional and personal web.</title>
+	<!-- Description shown in Google -->
+	<meta name="description" content="Ease is an intuitive password manager working as a browser homepage.">
+	<!-- Facebook metadata -->
+	<meta property="og:url" content="https://www.ease.space/">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="Ease.space | The easiest way to connect to your professional and personal web.">
+	<meta property="og:description" content="Ease is an intuitive password manager working as a browser homepage.">
+	<meta property="og:image" content="https://ease.space/resources/images/fbmeta-en.png">
+	
+	<!-- Twitter metadata -->
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:site" content="@Ease_app">
+	<meta name="twitter:creator" content="@Ease_app">
+	<meta name="twitter:title" content="Ease.space | The easiest way to connect to your professional and personal web.">
+	<meta name="twitter:description" content="Ease is an intuitive password manager working as a browser homepage.">
+	<meta name="twitter:image" content="https://ease.space/resources/images/fbmeta-en.png">
+
 	<meta http-equiv="Content-Type" contentType="text/html; charset=UTF-8" />
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1" />
 	<meta property="og:image"
@@ -78,17 +96,17 @@ pageEncoding="UTF-8"%>
 						<a href="#page-top"></a>
 					</li>
 					<li>
-						<a href="secure.jsp" target="_blank">
+						<a href="secure" target="_blank">
 							<fmt:message key="landing.header.security-link" />
 						</a>
 					</li>
 					<li>
-						<a href="equipe.jsp">
+						<a href="equipe">
 							<fmt:message key="landing.header.team-link" />
 						</a>
 					</li>
 					<li>
-						<a href="contact.jsp">
+						<a href="contact">
 							<fmt:message key="landing.header.contact-link" />
 						</a>
 					</li>
@@ -486,7 +504,7 @@ pageEncoding="UTF-8"%>
 								<input type="email" name="email" placeholder="@something..." />
 							</div>
 							<div class="row terms">
-								<p><fmt:message key="landing.signup-popup.page-1.terms-accept"/> <a href="privacy.jsp" target="_blank"><fmt:message key="landing.signup-popup.page-1.terms"/></a></p>
+								<p><fmt:message key="landing.signup-popup.page-1.terms-accept"/> <a href="privacy" target="_blank"><fmt:message key="landing.signup-popup.page-1.terms"/></a></p>
 							</div>
 							<div class="row text-center">
 								<img class="loading" src="resources/other/facebook-loading.svg"/>

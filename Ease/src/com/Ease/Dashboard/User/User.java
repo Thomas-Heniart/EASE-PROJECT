@@ -581,4 +581,8 @@ public class User {
 		}
 		return tag.isPublic();
 	}
+	
+	public Status getStatus() {
+		return this.status;
+	}
 }

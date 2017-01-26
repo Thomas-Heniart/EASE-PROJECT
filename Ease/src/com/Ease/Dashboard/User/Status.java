@@ -12,12 +12,12 @@ import com.Ease.Utils.ServletManager;
 public class Status {
 
 	public enum Data {
-		NOTHING, ID, FIRST_CONNECTION, CGU, CHROME_SCRAPPING, APPS_MANUALLY_ADDED, CLICK_ON_APP, MOVE_APPS, OPEN_CATALOG, ADD_AN_APP, TUTO_DONE
+		NOTHING, ID, FIRST_CONNECTION, CGU, CHROME_SCRAPPING, APPS_MANUALLY_ADDED, CLICK_ON_APP, MOVE_APPS, OPEN_CATALOG, ADD_AN_APP, TUTO_DONE, INVITE_SENDED
 	}
 
 	public static Status createStatus(DataBaseConnection db) throws GeneralException {
-		String db_id = db.set("INSERT INTO status values (null, 0, 0, 0, 0, 0, 0, 0, 0, 0);").toString();
-		return new Status(db_id, false, false, false, false, false, false, false, false, false);
+		String db_id = db.set("INSERT INTO status values (null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);").toString();
+		return new Status(db_id, false, false, false, false, false, false, false, false, false, false);
 	}
 
 	public static Status loadStatus(String db_id, DataBaseConnection db) throws GeneralException {
@@ -33,8 +33,9 @@ public class Status {
 			boolean open_catalog = rs.getBoolean(Data.OPEN_CATALOG.ordinal());
 			boolean add_an_app = rs.getBoolean(Data.ADD_AN_APP.ordinal());
 			boolean tuto_done = rs.getBoolean(Data.TUTO_DONE.ordinal());
+			boolean invite_sended = rs.getBoolean(Data.INVITE_SENDED.ordinal());
 			return new Status(db_id, first_connection, CGU, chrome_scrapping, apps_manually_added, click_on_app,
-					move_apps, open_catalog, add_an_app, tuto_done);
+					move_apps, open_catalog, add_an_app, tuto_done, invite_sended);
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
@@ -51,10 +52,11 @@ public class Status {
 	protected boolean open_catalog;
 	protected boolean tuto_done;
 	private boolean add_an_app;
+	private boolean invite_sended;
 
 	public Status(String db_id, boolean first_connection, boolean CGU, boolean chrome_scrapping,
 			boolean apps_manually_added, boolean click_on_app, boolean move_apps, boolean open_catalog,
-			boolean add_an_app, boolean tuto_done) {
+			boolean add_an_app, boolean tuto_done, boolean invite_sended) {
 		this.db_id = db_id;
 		this.first_connection = first_connection;
 		this.CGU = CGU;
@@ -65,6 +67,7 @@ public class Status {
 		this.open_catalog = open_catalog;
 		this.add_an_app = add_an_app;
 		this.tuto_done = tuto_done;
+		this.invite_sended = invite_sended;
 	}
 
 	public String getDbId() {
@@ -151,5 +154,13 @@ public class Status {
 
 	public boolean addAnAppDone() {
 		return this.add_an_app;
+	}
+	
+	public void set_invite_sended(Boolean invite_sended) {
+		this.invite_sended = invite_sended;
+	}
+	
+	public boolean invite_sended() {
+		return this.invite_sended;
 	}
 }
