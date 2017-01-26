@@ -22,11 +22,14 @@
 		var name = $("#addTester #name");
 		var infra = $("#addTester #infra");
 		var profileColor = $("#addTester #profileColor");
-		postHandler.post(self.attr("action"), function() {
+		postHandler.post(self.attr("action"), {
 			email: email,
 			name: name,
 			infra: infra,
 			profileColor: profileColor
+		},
+		function() {
+			
 		},
 		function(retMsg) {
 			self.find("input").val("");

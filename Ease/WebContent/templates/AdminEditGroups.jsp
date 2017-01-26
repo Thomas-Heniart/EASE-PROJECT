@@ -11,28 +11,29 @@
 			<button class="infraButton" infraId="${infra.getSingleId()}">${infra.getName()}</button>
 		</c:forEach>
 		<div class="addNewInfra">
-			<button class="show" id="showNewInfraForm">Add new infra</button>
-			<form method="POST" enctype="multipart/form-data">
-				<input type="text" placeholder="Infra name" name="infraName"/>
-				<label for="infraImage">Infra image (png and 175 * 175)</label>	
-				<input id="infraImage" type="file" accept=".png" name="infraImage" />
-			</form>
-		</div>
+		<button class="show" id="showNewInfraForm">Add new infra</button>
+		<form id="addNewInfraForm" method="POST" enctype="multipart/form-data">
+			<input type="text" placeholder="Infra name" name="infraName"/>
+			<label for="infraImage">Infra image (png and 175 * 175)</label>	
+			<input id="infraImage" type="file" accept=".png" name="infraImage" />
+		</form>
 	</div>
+	</div>
+	
 	<div class="groupList">
 		<div class="group">
-			<span>Group1</span>
+			<span class="groupName">Group1</span>
 			<div class="groupChildren">
 				<div class="group">
-					<span>Group1 child 1</span>
+					<span class="groupName">Group1 child 1</span>
 					<div class="groupChildren">
 						<div class="group">
-							<span>Group1 child 1 child</span>
+							<span class="groupName">Group1 child 1 child</span>
 						</div>
 					</div>
 				</div>
 				<div class="group">
-					<span>Group1 child 2</span>
+					<span class="groupName">Group1 child 2</span>
 				</div>
 			</div>
 		</div>
@@ -56,8 +57,8 @@
 	});
 	
 	$(".addNewInfra #showNewInfraForm").click(function() {
-		$(".addNewInfra form").addClass("show");
 		$(this).removeClass("show");
+		$(".addNewInfra form").addClass("show");
 	});
 	
 	function displayGroup(groupaJson) {

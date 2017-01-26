@@ -312,3 +312,53 @@
 		cursor: pointer;
 	}
 }
+#EditGroupsTab {
+	.infraList {
+		display: flex;
+		align-items: flex-start;
+		.infraButton {
+			margin-right: 1vw;
+		}
+		.addNewInfra {
+			display: inline-block;
+			button#showNewInfraForm, form#addNewInfraForm {
+				visibility: hidden;
+				overflow: hidden;
+				height: 0;
+				opacity: 0;
+				transition: visibility 0.3s ease, opacity 0.3s ease;
+			}
+			button#showNewInfraForm.show, form#addNewInfraForm.show {
+				visibility: visible;
+				height: auto;
+				opacity: 1;
+				transition: visibility 0.3s ease, opacity 0.3s ease;
+			}
+			button#showNewInfraForm {
+				padding: 0;
+				border: 0;
+			}
+			button#showNewInfraForm.show {
+				padding: 2px;
+				border-radius: 5px;
+				background-color: $themeColor;
+				color: white;
+			}
+		}
+	}
+	
+	.groupList {
+		.group {
+			.groupName {
+				font-weight: bold;
+				&:hover {
+					text-decoration: underline;
+					cursor: pointer;
+				}
+			}
+			.groupChildren {
+				margin-left: 3vw;
+			}	
+		}
+	}
+}
