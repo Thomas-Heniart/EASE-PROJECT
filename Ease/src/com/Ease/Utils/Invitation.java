@@ -9,6 +9,7 @@ import javax.mail.MessagingException;
 
 import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupManager;
+import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.Crypto.CodeGenerator;
 
 public class Invitation {
@@ -17,8 +18,6 @@ public class Invitation {
 		DataBaseConnection db = sm.getDB();
 		List<Group> groups = new LinkedList<Group>();
 		GroupManager groupManager = (GroupManager) sm.getContextAttr("groupManager");
-		System.out.println(invitationCode);
-		System.out.println(email);
 		ResultSet rs = db.get("SELECT id FROM invitations WHERE email='" + email + "' AND linkCode='" + invitationCode + "';");
 		try {
 			if (rs.next()) {
@@ -55,6 +54,27 @@ public class Invitation {
 			Mail mailToSend;
 			mailToSend = new Mail();
 			mailToSend.sendInvitationEmail(email, name, invitationCode);
+		} catch (MessagingException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+	}
+
+	public static void sendFriendInvitation(String email, String friendName, User user, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		try {
+			String invitationCode;
+			ResultSet rs = db.get("SELECT * FROM invitations WHERE email='" + email + "';");
+			if (rs.next()) {
+				invitationCode = rs.getString(3);
+			} else {
+				invitationCode = CodeGenerator.generateNewCode();
+				String db_id = db.set("INSERT INTO invitations values(NULL, '" + email + "', '" + invitationCode + "');").toString();
+			}
+			Mail mailToSend;
+			mailToSend = new Mail();
+			mailToSend.sendFriendInvitationEmail(email, friendName, user, invitationCode);
 		} catch (MessagingException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		} catch (SQLException e) {
