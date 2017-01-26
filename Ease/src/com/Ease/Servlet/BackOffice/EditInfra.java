@@ -56,14 +56,20 @@ public class EditInfra extends HttpServlet {
 			}
 			String infraId = sm.getServletParam("infraId", true);
 			String infraName = sm.getServletParam("infraName", true);
+			String img_path = sm.getServletParam("imgPath", true);
 			if (infraName == null || infraName.length() > 25) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong infrastructure name");
+			} else if (img_path == null) {
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong image path.");
 			}
 			Infrastructure infra;
 			if (infraId == null || (infra = GroupManager.getGroupManager(sm).getInfraFromSingleID(Integer.parseInt(infraId))) == null) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong infrastructure id");
 			}
+			int transaction = db.startTransaction();
 			infra.setName(infraName, sm);
+			infra.setImgPath(img_path, sm);
+			db.commitTransaction(transaction);
 			sm.setResponse(ServletManager.Code.Success, "Infrastructure edited.");
 		} catch (GeneralException e) {
 			sm.setResponse(e);

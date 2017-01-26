@@ -68,6 +68,7 @@ public class AddTesterWithInfra extends HttpServlet {
 			String univName = sm.getServletParam("infra", true);
 			String name = sm.getServletParam("name", true);
 			String color = sm.getServletParam("profileColor", true);
+			String img_path = sm.getServletParam("imgPath", true);
 			
 			if (email == null || !Regex.isEmail(email)) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email.");
@@ -77,9 +78,11 @@ public class AddTesterWithInfra extends HttpServlet {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong user name.");
 			} else if (color == null || !Regex.isColor(color)) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong profile color.");
+			} else if (img_path == null) {
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong image path.");
 			}
 			
-			Infrastructure infra = Infrastructure.createInfrastructure(univName, sm);
+			Infrastructure infra = Infrastructure.createInfrastructure(univName, img_path, sm);
 			
 			int transaction = db.startTransaction();
 			Group groupTester = Group.createGroup("Tester", null, infra, sm);

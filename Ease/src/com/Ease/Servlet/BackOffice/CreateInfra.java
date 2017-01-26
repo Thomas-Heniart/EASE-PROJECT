@@ -63,10 +63,13 @@ public class CreateInfra extends HttpServlet {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "You need to be admin to do that.");
 			}
 			String infraName = sm.getServletParam("infraName", true);
+			String img_path = sm.getServletParam("imgPath", true);
 			if (infraName == null || infraName.length() > 25) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong infrastructure name");
+			} else if (img_path == null) {
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong image path.");
 			}
-			Infrastructure infra = Infrastructure.createInfrastructure(infraName, sm);
+			Infrastructure infra = Infrastructure.createInfrastructure(infraName, img_path, sm);
 			sm.setResponse(ServletManager.Code.Success, Integer.toString(infra.getSingleId()));
 		} catch (GeneralException e) {
 			sm.setResponse(e);
