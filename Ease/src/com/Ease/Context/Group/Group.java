@@ -8,6 +8,9 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.GroupApp;
@@ -40,6 +43,7 @@ public class Group {
 		IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
 		int db_id = db.set("INSERT INTO groups values (null, '" + name + "', " + parent_id + ", " + infra_id + ");");
 		Group group = new Group(String.valueOf(db_id), name, parent, infra, idGenerator.getNextId());
+		parent.getChildren().add(group);
 		GroupManager.getGroupManager(sm).add(group);
 		return group;
 	}
@@ -299,5 +303,16 @@ public class Group {
 		if (this.parent == null)
 			return this.groupWebsites.contains(website);
 		return this.groupWebsites.contains(website) || this.parent.containsWebsite(website);
+	}
+	
+	public JSONObject getJson() {
+		JSONObject json = new JSONObject();
+		json.put("name", this.name);
+		JSONArray array = new JSONArray();
+		for (Group child : children) {
+			array.add(child.getJson());
+		}
+		json.put("children", array);
+		return json;
 	}
 }
