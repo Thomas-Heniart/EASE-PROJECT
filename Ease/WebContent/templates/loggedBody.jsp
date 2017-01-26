@@ -51,6 +51,7 @@ response.addCookie(email);
 <c:set var="servletContext" scope="session" value="${session.getServletContext()}"/>
 <c:set var="user"			scope="session" value='${session.getAttribute("user")}'/>
 <c:set var="colors"			scope="session" value='${servletContext.getAttribute("Colors")}'/>
+<c:set var="groupManager"	scope="session" value='${servletContext.getAttribute("groupManager")}' />
 <c:set var="dashboard" scope="session" value='${user.getDashboardManager()}' />
 <c:set var="dashboardColumns" scope="session" value="${dashboard.getProfiles()}"/>
 <c:set var="catalog"	scope="session" value='${servletContext.getAttribute("catalog")}'/>

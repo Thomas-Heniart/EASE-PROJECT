@@ -16,7 +16,13 @@
 	<div>
 		<button id="enterAddTesterMode" state="off" class="button adminButton"
 			target="AddTesterTab">
-			<img src="resources/icons/vacuum-cleaner.png" />
+			<img src="resources/icons/commercial-buldings.png" />
+		</button>
+	</div>
+	<div>
+		<button id="enterEditGroupsMode" state="off" class="button adminButton"
+			target="EditGroupsTab">
+			<img src="resources/icons/group.png" />
 		</button>
 	</div>
 	<div>
@@ -86,3 +92,4 @@
 <%@ include file="ServerKeysManager.jsp"%>
 <%@ include file="TestWebsites.jsp"%>
 <%@ include file="addTester.jsp" %>
+<%@ include file="AdminEditGroups.jsp" %>
