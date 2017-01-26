@@ -67,7 +67,7 @@
 	 webId="${app.getSite().getSingleId()}"
 	 name="${app.getName()}"
 	 id="${app.getSingleId()}"
-	 ssoId="${app.getSite().getSso()}"
+	 ssoId="${app.getSite().getSso().getSingledId()}"
 	 move="true"
 	 logwith="false">
 </c:if>
