@@ -259,14 +259,33 @@ var Catalog = function(rootEl){
 	this.oUpdate = new UpdateManager(this.qRoot.find('.catalogUpdates'));
 	this.quitButton = this.qRoot.find('#quit');
 	this.appsHolder = this.qRoot.find('.scaleContainerView');
+	this.appsArea = this.qRoot.find('#catalog');
 	this.searchBar = this.qRoot.find('.catalogSearchbar');
 	this.tagContainer = this.qRoot.find('.tagContainer');
 	this.integrateAppArea = this.qRoot.find('.helpIntegrateApps');
 	this.apps = [];
-	this.qRoot.find('.catalogApp').each(function(index, elem) {
-		self.apps.push(new CatalogApp($(elem)));
-	});
 
+	postHandler.post(
+		'GetCatalogApps',
+		{},
+		function(){
+		},
+		function(msg){
+			var apps = JSON.parse(msg);
+			var app;
+			for (var i = 0; i < apps.length; i++) {
+				app = apps[i];
+				self.addApp(new catalogApp(app.name, app.singleId, app.logo, app.loginWith, app.ssoId, app.url, app.inputs, app.isNew));
+			}
+		},
+		function(msg){
+		},
+		'text'
+	);
+	this.addApp = function(app){
+		self.apps.push(app);
+		self.appsArea.append(app.qRoot);
+	};
 	this.open = function(){
 		self.qRoot.addClass('show');
 		self.isOpen = true;

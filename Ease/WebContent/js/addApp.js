@@ -68,7 +68,6 @@ function showAddAppPopup(container, helper) {
 
 	var loginChooser = $('#PopupAddApp .loginWithChooser');
 	var loginWith = $(helper).attr('data-login').split(',');
-
 	loginChooser.addClass('hidden');
 	loginChooser.find('.loginWithButton').addClass('hidden');
 	if ($(helper).attr('data-login') != "") {

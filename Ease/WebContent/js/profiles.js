@@ -185,11 +185,8 @@ var Profile = function(rootEl){
 			setTimeout(function(){
 				self.parentItem.css('transform', '');
 			}, 300);
-			if (ui.helper.attr('type') == "update") {
-				popupAddUpdate.open(self, $(ui.helper));
-			} else if (ui.helper.attr('type') == "catalog") {
-				showAddAppPopup($(this), $(ui.helper));	
-			}
+			console.log(currentDraggedApp.id);
+			showAddAppPopup($(this), ui.helper);	
 			easeHiddenProfile.rootEl.off('mouseenter');
 		},
 		over: function(event, ui){
@@ -433,49 +430,6 @@ function showConfirmDeleteAppPopup(elem, event) {
 	}
 }
 
-$(document).ready(function() {
-	$('.catalogApp').click(function(){
-		if ($('#tutorialView').length)
-			return;
-		$(".arrowDragDrop").css("opacity",1);
-		setTimeout(function(){
-			$(".arrowDragDrop").css("opacity",0);
-		},1000);
-	});
-	$('.catalogApp').draggable({
-		cursor : 'move',
-		cursorAt : {
-			left : 25,
-			top : 25
-		},
-		appendTo: "body",
-		helper : function(e, ui) {
-			easeHiddenProfile.rootEl.on('mouseenter', function(){
-				easeHiddenProfile.show();
-			});
-			var ret;
-			ret = $('<div class="dragHelperLogo" style="position: fixed; z-index: 3;pointer-events:none;"/>');
-			var attrs = $(this).attr();
-			for (var key in attrs) {
-				if (!attrs.hasOwnProperty(key))
-					continue;
-				switch (key) {
-					case "class":
-					break;
-					case "style":
-					break;
-					default:
-					ret.attr(key, attrs[key]);
-					break;
-				}
-			}
-			ret.attr("type", "catalog");
-			ret.append($('<img />'));
-			ret.find('img').attr("src", $(this).find('img').attr("src"));
-			return ret;
-		}
-	});
-});
 
 (function(old) {
 	$.fn.attr = function() {
@@ -492,22 +446,3 @@ $(document).ready(function() {
 		return old.apply(this, arguments);
 	};
 })($.fn.attr);
-
-function enterEditModeTutorial() {
-	if ($("#tipsHandler #3").length) {
-		$("#tipsHandler #3 button").click();
-	} else if ($("#tipsHandler #4").length) {
-		$('#tipsHandler #4').addClass('show');
-	}
-}
-
-function leaveEditModeTutorial() {
-	if ($("#tipsHandler #4").length) {
-		$('#tipsHandler #4').removeClass('show');
-		$(".col-left, .header").removeClass("darken");
-	}
-
-}
-
-
-
