@@ -12,45 +12,61 @@
 		</c:forEach>
 		<div class="addNewInfra">
 		<button class="show" id="showNewInfraForm">Add new infra</button>
-		<form id="addNewInfraForm" method="POST" enctype="multipart/form-data">
+		<form action="CreateInfra" id="addNewInfraForm" method="POST" enctype="multipart/form-data">
 			<input type="text" placeholder="Infra name" name="infraName"/>
 			<label for="infraImage">Infra image (png and 175 * 175)</label>	
 			<input id="infraImage" type="file" accept=".png" name="infraImage" />
+			<button type="submit">Submit</button>
 		</form>
 	</div>
 	</div>
 	
 	<div class="groupList">
-		<div class="group">
-			<span class="groupName">Group1</span>
-			<div class="groupChildren">
-				<div class="group">
-					<span class="groupName">Group1 child 1</span>
-					<div class="groupChildren">
-						<div class="group">
-							<span class="groupName">Group1 child 1 child</span>
-						</div>
-					</div>
-				</div>
-				<div class="group">
-					<span class="groupName">Group1 child 2</span>
-				</div>
-			</div>
-		</div>
+		
+	</div>
+	<div class="userList">
+		<!-- <button class="show" id="showAddUserInGroup">Add a user</button>
+		<form id="formAddUserInGroup" action="AddUserInGroup" method="POST">
+			<input type="email" name="email" placeholder="Email" />
+			<input type="text" name="name" placeholder="Name" />
+			<button type="submit">Invite user</button>
+		</form>  -->
 	</div>
 </div>
 
 <script>
 	$(".infraButton").click(function() {
-		$(this).addClass("selected");
+		$(".infraButton").removeClass("infraSelected");
+		$(this).addClass("infraSelected");
 		var infraId = $(this).attr("infraId");
 		postHandler.post("GetInfraGroups", {
 			infraId : infraId
 		}, function() {
 			
 		}, function(data) {
-			var groups = JSON.parse(data);
-			groups.forEach(displayGroup);
+			var infra = JSON.parse(data);
+			$(".groupList .group").remove();
+			infra.groups.forEach(function(group) {
+				displayGroup(group, $(".groupList"));
+			});
+		}, function(data) {
+			
+		});
+	});
+	
+	$(".group").click(function() {
+		var self = $(this);
+		var groupId = self.attr("groupId");
+		postHandler.post("GetGroupUsers", {
+			groupId : groupId
+		}, function() {
+			
+		}, function(data) {
+			var users = JSON.parse(data);
+			$(".userList .user").remove();
+			users.forEach(function(user) {
+				displayUser(user);	
+			});
 		}, function(data) {
 			
 		});
@@ -61,10 +77,35 @@
 		$(".addNewInfra form").addClass("show");
 	});
 	
-	function displayGroup(groupaJson) {
-		$(".groupList").append()
+	
+	function displayGroup(groupJson, parent) {
+		var groupId = groupJson.groupId;
+		parent.append(newGroupToDisplay(groupJson.name, groupId));
+		var parentGroup = $(".group[groupId='" + groupId + "']");
 		var children = groupJson.children;
-		if (children == null)
-			return;
+		if (children.length == 0) {
+			return;			
+		}
+		else {
+			children.forEach(function(child) {
+				displayGroup(child, $("> .groupChildren", parentGroup));
+			});
+		}
+	}
+	
+	function displayUser(user) {
+		$(".userList").append("<div class='user'>"
+				+ "Name : "
+				+user.name
+				+ " email : "
+				+ user.email
+				+ "</div>");
+	}
+	
+	function newGroupToDisplay(name, groupId) {
+		return "<div class='group' groupId='" + groupId + "'>"
+		+ "<span class='groupName'>" + name + "</span>"
+		+ "<div class='groupChildren'></div>"
+		+ "</div>";
 	}
 </script>

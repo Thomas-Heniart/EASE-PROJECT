@@ -318,6 +318,28 @@
 		align-items: flex-start;
 		.infraButton {
 			margin-right: 1vw;
+    		padding: 2px 9px;
+    		border-radius: 10px;
+    		border: none;
+    		min-width: 6vw;
+    		width: fit-content;
+    		background-color: lightgray;
+    		color: black;
+    		transition: all 0.3s ease;
+    		-webkit-transition: all 0.3s ease;
+    		outline: none;
+    		&:hover {
+    			background-color: black;
+				color: lightgray;
+				transition: all 0.3s ease;
+				-webkit-transition: all 0.3s ease;
+    		}
+		}
+		.infraButton.infraSelected {
+			background-color: black;
+			color: lightgray;
+			transition: all 0.3s ease;
+			-webkit-transition: all 0.3s ease;
 		}
 		.addNewInfra {
 			display: inline-block;
@@ -327,20 +349,25 @@
 				height: 0;
 				opacity: 0;
 				transition: visibility 0.3s ease, opacity 0.3s ease;
+				-webkit-transition: visibility 0.3s ease, opacity 0.3s ease;
 			}
 			button#showNewInfraForm.show, form#addNewInfraForm.show {
 				visibility: visible;
 				height: auto;
 				opacity: 1;
 				transition: visibility 0.3s ease, opacity 0.3s ease;
+				-webkit-transition: visibility 0.3s ease, opacity 0.3s ease;
 			}
 			button#showNewInfraForm {
 				padding: 0;
 				border: 0;
 			}
 			button#showNewInfraForm.show {
-				padding: 2px;
-				border-radius: 5px;
+				padding: 2px 9px;
+    			border-radius: 10px;
+    			border: none;
+    			min-width: 6vw;
+    			width: fit-content;
 				background-color: $themeColor;
 				color: white;
 			}
@@ -348,6 +375,9 @@
 	}
 	
 	.groupList {
+		display: inline-block;
+    	width: fit-content;
+    	margin: 8vh 0;
 		.group {
 			.groupName {
 				font-weight: bold;

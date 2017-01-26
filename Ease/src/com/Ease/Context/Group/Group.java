@@ -307,6 +307,7 @@ public class Group {
 	public JSONObject getJson() {
 		JSONObject json = new JSONObject();
 		json.put("name", this.name);
+		json.put("groupId", this.single_id);
 		JSONArray array = new JSONArray();
 		for (Group child : children) {
 			array.add(child.getJson());

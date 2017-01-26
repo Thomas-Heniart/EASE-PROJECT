@@ -9,13 +9,11 @@ import javax.servlet.ServletContext;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import com.Ease.Context.ServerKey;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
-import com.Ease.Utils.Crypto.AES;
 
 public class Infrastructure {
 	
@@ -58,7 +56,7 @@ public class Infrastructure {
 	
 	public static Infrastructure createInfrastructure(String name, String img_path, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		String db_id = db.set("INSERT INTO infrastructures values(NULL, '" + name + "');").toString();
+		String db_id = db.set("INSERT INTO infrastructures values(NULL, '" + name + "', '" + img_path + "');").toString();
 		IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
 		Infrastructure infra = new Infrastructure(db_id, name, img_path, idGenerator.getNextId());
 		GroupManager.getGroupManager(sm).add(infra);
