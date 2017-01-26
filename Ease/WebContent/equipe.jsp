@@ -8,7 +8,11 @@ pageEncoding="UTF-8"%>
 <fmt:setBundle basename="com.Ease.Languages.text" />
 <html lang="${language}">
 <head>
-	<title>Discover Ease !</title>
+	<title> Ease.space | Team</title>
+	<!-- Description shown in Google -->
+	<meta name="description" content="The Ease Team works to ease your web life experience and fulfil your expectations.">
+	
+	
 	<meta http-equiv="Content-Type" contentType="text/html; charset=UTF-8" />
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1" />
 	<meta property="og:image"

@@ -3,7 +3,9 @@ pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-  <title></title>
+  <title> Ease.space | The easiest way to connect to your professional and personal web.</title>
+	<!-- Description shown in Google -->
+	<meta name="description" content="Ease is an intuitive password manager working as a browser homepage.">
   <style>
     #header{margin-top:100px;} 
     .logo a:visited, 

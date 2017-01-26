@@ -8,9 +8,25 @@ pageEncoding="UTF-8"%>
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 	<meta http-equiv="Content-Type" contentType="text/html; charset=UTF-8" />
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1" />
-	<meta name="description"
-	content="The platform Ease allows you to gather all your university web services and your favorites websites (social networks, medias, tools, streaming etc.) in order to connect to them in 1 click, without using neither ids nor passwords! (only one remains: your Ease password)." />
-	<title>Ease</title>
+	
+	<title> Ease.space | The easiest way to connect to your professional and personal web.</title>
+	<!-- Description shown in Google -->
+	<meta name="description" content="Ease is an intuitive password manager working as a browser homepage.">
+	<!-- Facebook metadata -->
+	<meta property="og:url" content="https://www.ease.space/">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="Ease.space | The easiest way to connect to your professional and personal web.">
+	<meta property="og:description" content="Ease is an intuitive password manager working as a browser homepage.">
+	<meta property="og:image" content="https://ease.space/resources/images/fbmeta-en.png">
+	
+	<!-- Twitter metadata -->
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:site" content="@Ease_app">
+	<meta name="twitter:creator" content="@Ease_app">
+	<meta name="twitter:title" content="Ease.space | The easiest way to connect to your professional and personal web.">
+	<meta name="twitter:description" content="Ease is an intuitive password manager working as a browser homepage.">
+	<meta name="twitter:image" content="https://ease.space/resources/images/fbmeta-en.png">
+	
 	<link rel="chrome-webstore-item"
 	href="https://chrome.google.com/webstore/detail/echjdhmhmgildgidlcdlepfkaledeokm">
 	<link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />

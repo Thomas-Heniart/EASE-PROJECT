@@ -57,6 +57,7 @@ public class AddBookMark extends HttpServlet {
 			String name = sm.getServletParam("name", true);
 			String websiteId = sm.getServletParam("websiteId", true);
 			String profileId = sm.getServletParam("profileId", true);
+			String link = sm.getServletParam("link", true);
 			
 			Website site = null;
 			if (name == null || name.equals(""))
@@ -64,7 +65,7 @@ public class AddBookMark extends HttpServlet {
 			try {
 				Profile profile = user.getDashboardManager().getProfile(Integer.parseInt(profileId));
 				site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(websiteId));
-				LinkApp linkApp = LinkApp.createLinkApp(profile, profile.getApps().size(), name, site.getHomePageUrl(), site.getFolder() + "logo.png", sm);
+				LinkApp linkApp = LinkApp.createLinkApp(profile, profile.getApps().size(), name, link, site.getFolder() + "logo.png", sm);
 				profile.addApp(linkApp);
 				sm.setResponse(ServletManager.Code.Success, String.valueOf(linkApp.getSingleId()));
 			} catch (NumberFormatException e) {

@@ -39,7 +39,11 @@ src="https://www.facebook.com/tr?id=1771793116375287&ev=PageView&noscript=1"
 	/* Test */
   amplitude.getInstance().init("73264447f97c4623fb38d92b9e7eaeea");
 </script>
-          <title>Ease: We secure your web-life</title>
+        <title> Ease.space | The easiest way to connect to your professional and personal web.</title>
+		<!-- Description shown in Google -->
+		<meta name="description" content="Ease is an intuitive password manager working as a browser homepage.">
+	
+	
           <meta content="Ease: We secure your web-life" property="og:title">
           
           <meta content='https://d2zc23renulrga.cloudfront.net/assets/1320/8g6hpeszfluqm9l0fsb3/logo%20ease%20SMALL.jpg' property='og:image'>
