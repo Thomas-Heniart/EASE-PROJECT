@@ -1,6 +1,7 @@
 extension.runtime.onMessage.addListener("ScrapLinkedin", function (msg, senderTab, sendResponse) {
     startScrapLinkedin(msg.login, msg.password, function (success, response) {
         linkedinScrap.user = {};
+        console.log(response);
         if (success && response.length == 0) {
             success = false;
             response = "You did not connect to any website with this Linkedin account. Try it with another account."
@@ -21,7 +22,7 @@ var linkedinScrap = {
             "todo": [
                 {
                     "action": "check",
-                    "type": "hasElement",
+                    "type": "absentElement",
                     "search": "input[type='password']"
                 }
             ]
@@ -33,9 +34,7 @@ var linkedinScrap = {
                     "url": "https://www.linkedin.com/uas/login"
                 },
                 {
-                    "action": "check",
-                    "type": "hasElement",
-                    "search": "#session_key-login]"
+                    "action": "waitDocumentReady"
                 },
                 {
                     "action": "fill",
@@ -51,6 +50,7 @@ var linkedinScrap = {
                     "action": "click",
                     "search": "#btn-primary"
                 }
+
             ]
         },
         "logout": {
@@ -81,12 +81,14 @@ function startScrapLinkedin(login, password, finalCallback) {
                 extension.tabs.onReloaded.removeListener(checkIfConnected);
                 generateSteps("checkAlreadyLogged", "scrapLinkedin", linkedinScrap, function (stepsCheckLogged) {
                     executeSteps(tab, stepsCheckLogged, function (tab, response) {
+                        console.log("connected");
                         var actionSteps = [];
                         generateSteps("logout", "scrapLinkedin", linkedinScrap, function (addedSteps) {
                             actionSteps = actionSteps.concat(addedSteps);
                             doConnect(tab, actionSteps);
                         });
                     }, function (tab, response) {
+                        console.log("connected NOT");
                         doConnect(tab, [])
                     });
                 });
@@ -104,6 +106,10 @@ function startScrapLinkedin(login, password, finalCallback) {
                         extension.tabs.onReloaded.addListener(tab, checkIfConnected2);
                     }, function (tab, response) {
                         finalCallback(false, "Error. Please try again.");
+                        extension.tabs.onClosed.removeListener(onclose);
+                        setTimeout(function () {
+                           // extension.tabs.close(tab);
+                        }, 500);
                     });
                 });
             }
@@ -120,17 +126,22 @@ function startScrapLinkedin(login, password, finalCallback) {
                         });
                     }, function (tab, response) {
                         finalCallback(false, "Wrong login or password. Please try again.");
+                        extension.tabs.onClosed.removeListener(onclose);
+                        setTimeout(function () {
+                           // extension.tabs.close(tab);
+                        }, 500);
                     });
                 });
             }
 
             function scrapLnkdn(tab) {
-                extension.tabs.onReloaded.removeListener(scrapFb);
+                extension.tabs.onReloaded.removeListener(scrapLnkdn);
                 extension.tabs.sendMessage(tab, "scrapLnkdn", {}, function (response) {
+                    console.log(response);
                     finalCallback(true, response);
                     extension.tabs.onClosed.removeListener(onclose);
                     setTimeout(function () {
-                        extension.tabs.close(tab);
+                        //extension.tabs.close(tab);
                     }, 500);
                 });
             }

@@ -1,10 +1,14 @@
 //LE GLOBAL LOGOUT COMMENCE ICI
 //Fait le logout de chaque site et clear le storage des websites à logout.
 function globalLogout(easeTab) {
-    /*extension.tabs.onReloaded.addListener(easeTab, function onLogout(msg, tab, sendResponse) {
+    var toSend = [];
+    for(var i=0;i<storage.websitesToLogout.length;i++){
+        toSend.push(storage.websitesToLogout.get(i).website);
+    }
+    extension.tabs.onReloaded.addListener(easeTab, function onLogout(msg, tab, sendResponse) {
         extension.tabs.onReloaded.removeListener(onLogout);
-        extension.tabs.sendMessage(easeTab, "logoutFrom", websitesToLogout, function () {});
-    });*/
+        extension.tabs.sendMessage(easeTab, "logoutFrom", toSend, function () {});
+    });
     //SEND CORRECT DATAS FOR LOGOUT OVERLAY
     for (var i = 0; i < storage.websitesToLogout.length; i++) {
         logOutFrom(storage.websitesToLogout.get(i), easeTab);
@@ -37,9 +41,8 @@ function logOutFrom(bigStepToLogout, easeTab) {
 }
 
 function endLogout(tab) {
-    //extension.tabs.sendMessage(easeTab, "logoutDone", {"siteId":website.siteId}, function (){});
-    //SEND CORRECT DATAS FOR LOGOUT OVERLAY
     setTimeout(function(){
+        extension.tabs.sendMessage(easeTab, "logoutDone", {"siteSrc":website.siteSrc}, function (){});
         extension.tabs.close(tab);
     },1000)
 }

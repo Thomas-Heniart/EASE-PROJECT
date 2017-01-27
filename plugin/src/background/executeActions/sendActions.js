@@ -58,7 +58,7 @@ function generateSteps(action, overlay, bigStep, callback) {
                     "action": "exitFrame"
                 });
                 todoList.splice(j, 1);
-                generateSteps("inFrame", bigStep, function (stepsOfFrame) {
+                generateSteps("inFrame", false, bigStep, function (stepsOfFrame) {
                     todoList[i].todo = stepsOfFrame;
                     steps.push(todoList[i]);
                     i++;
@@ -88,7 +88,7 @@ function generateOverlay(action, overlay) {
         return {
             "action": "overlay",
             "type": "scrap",
-            "info": overlay.substring(5, action.length)
+            "info": overlay.substring(5, overlay.length)
         };
     } else {
         return {
@@ -101,27 +101,22 @@ function generateOverlay(action, overlay) {
 
 //EXECUTE LES STEPS
 function executeSteps(tab, actionSteps, successCallback, failCallback) {
-    var step = 0;
-
+    var toSend = {
+        "actions":actionSteps,
+        "step":0
+    };
     function sendActions(tab) {
-        extension.tabs.sendMessage(tab, "executeActions", {
-            "actions": actionSteps,
-            "step": step
-        }, function (response) {
+        extension.tabs.sendMessage(tab, "executeActions", toSend, function (response) {
             if (response) {
-                step = response.step;
+                toSend.step = response.step;
                 if (response.status.indexOf("error") == 0) {
                     extension.tabs.onReloaded.removeListener(sendActions);
                     failCallback(tab, response);
-                } else if (step >= actionSteps.length) {
+                } else if (toSend.step >= actionSteps.length) {
                     extension.tabs.onReloaded.removeListener(sendActions);
                     successCallback(tab, response);
                 }
-            } else {
-                extension.tabs.onReloaded.removeListener(sendActions);
-                failCallback(tab, response);
             }
-
         });
     }
     sendActions(tab);

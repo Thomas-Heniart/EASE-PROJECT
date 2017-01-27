@@ -1,5 +1,4 @@
 var timeout = 10000;
-var results = {};
 
 extension.runtime.onMessage.addListener("TestConnection", function (msg, senderTab, sendResponse) {
     extension.windows.getFromTab(senderTab, function (win) {
@@ -15,7 +14,7 @@ function singleTest(msg, window) {
         resultRow += "-loginwth-" + msg.detail[msg.detail.length - 1].logWith;
     }
     msg.resultRow = resultRow;
-    results[msg.resultRow] = "> " + msg.detail[msg.detail.length - 1].website.name + " : Initialize test";
+    storage.testResults.set(msg.resultRow, "> " + msg.detail[msg.detail.length - 1].website.name + " : Initialize test");
     sendTestResults();
     startTest(msg, window, function (tab) {
         extension.tabs.close(tab);
@@ -41,7 +40,7 @@ function multipleTests(msg, window, i) {
             resultRow += "-loginwth-" + websiteMsg.detail[websiteMsg.detail.length - 1].logWith;
         }
         websiteMsg.resultRow = resultRow;
-        results[resultRow] = "> " + websiteMsg.detail[websiteMsg.detail.length - 1].website.name + " : Initialize test";
+        storage.testResults.set(websiteMsg.resultRow, "> " + websiteMsg.detail[websiteMsg.detail.length - 1].website.name + " : Initialize test");
         sendTestResults();
         console.log("test start : "+ websiteMsg.detail[websiteMsg.detail.length-1].website.home)
         startTest(websiteMsg, window, function (tab) {
@@ -65,7 +64,7 @@ function startBigStepTest(tab, window, msg, callback) {
         msg.detail[msg.bigStep].website.home = home.http + msg.detail[0].user[home.subdomain] + "." + home.domain;
     }
     if (tab == null) {
-        extension.tabs.create(window, msg.detail[msg.bigStep].website.home, msg.highlight, function (tab) {
+        extension.tabs.create(window, msg.detail[msg.bigStep].website.home, false, function (tab) {
             executeBigStepTest(tab, msg, callback);
         });
     } else {
@@ -101,12 +100,9 @@ function doTest(tab, msg, actionSteps, callback) {
     generateSteps(mainAction, "connect", msg.detail[msg.bigStep], function (connectSteps) {
         actionSteps = actionSteps.concat(connectSteps);
         executeSteps(tab, actionSteps, function (tab, response) {
-            console.log("connnection done");
             if (msg.bigStep + 1 < msg.detail.length) {
-                console.log("next big step");
                 nextBigStepTest(tab, msg, callback);
             } else {
-                console.log("test all");
                 setTimeout(function () {
                     afterFirstCo();
                 }, timeout);
@@ -122,7 +118,6 @@ function doTest(tab, msg, actionSteps, callback) {
                             actionSteps = actionSteps.concat(switchOrLogoutSteps);
                             actionSteps = actionSteps.concat(connectSteps);
                             executeSteps(tab, actionSteps, function (tab, response) {
-                                console.log("first steps done");
                                 setTimeout(function () {
                                     afterSecondCo();
                                 }, timeout);
@@ -136,7 +131,6 @@ function doTest(tab, msg, actionSteps, callback) {
                                         actionSteps = actionSteps.concat(checkCoSteps);
                                         actionSteps = actionSteps.concat(logoutSteps);
                                         executeSteps(tab, actionSteps, function (tab, response) {
-                                            console.log("second steps done");
                                             setTimeout(function () {
                                                 afterLogout();
                                             }, timeout);
@@ -150,7 +144,6 @@ function doTest(tab, msg, actionSteps, callback) {
                                                 executeSteps(tab, actionSteps, function (tab, response) {
                                                     endTest(tab, false, "logout", msg, callback);
                                                 }, function (tab, response) {
-                                                    console.log("last steps done");
                                                     endTest(tab, true, "", msg, callback);
                                                 });
                                             }
@@ -184,7 +177,7 @@ function sendTestResults() {
     extension.ease.getTabs(null, function (tabs) {
         for (var j in tabs) {
             var tab = tabs[j];
-            extension.tabs.sendMessage(tab, "printResults", results, function () {});
+            extension.tabs.sendMessage(tab, "printResults", storage.testResults.getDatas(), function () {});
         }
     });
 }
@@ -197,12 +190,12 @@ function addTestResult(success, type, msg){
         var connectionType = "connection with "+ msg.detail[msg.detail.length-1].logWith;
     }
     if(success){
-        results[msg.resultRow]="> "+website + " : SUCCESS connection, logout and reconnection for "+connectionType;
+         storage.testResults.set(msg.resultRow, "> "+website + " : SUCCESS connection, logout and reconnection for "+connectionType);
     } else {
         if(type != "logout")
-            results[msg.resultRow]="> "+website + " : FAIL "+type+" for "+connectionType ;
+           storage.testResults.set(msg.resultRow, "> "+website + " : FAIL "+type+" for "+connectionType);
         else
-            results[msg.resultRow]="> "+website + " : FAIL "+type;
+            storage.testResults.set(msg.resultRow, "> "+website + " : FAIL "+type);
     }
     sendTestResults();
 }

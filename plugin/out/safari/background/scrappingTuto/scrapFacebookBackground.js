@@ -101,6 +101,10 @@ function startScrapFacebook(login, password, finalCallback) {
                         extension.tabs.onReloaded.addListener(tab, checkIfConnected2);
                     }, function (tab, response) {
                         finalCallback(false, "Error. Please try again.");
+                        extension.tabs.onClosed.removeListener(onclose);
+                        setTimeout(function () {
+                            extension.tabs.close(tab);
+                        }, 500);
                     });
                 });
             }
@@ -114,6 +118,10 @@ function startScrapFacebook(login, password, finalCallback) {
                         });
                     }, function (tab, response) {
                         finalCallback(false, "Wrong login or password. Please try again.");
+                        extension.tabs.onClosed.removeListener(onclose);
+                        setTimeout(function () {
+                            extension.tabs.close(tab);
+                        }, 500);
                     });
                 });
             }

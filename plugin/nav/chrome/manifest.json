@@ -1,0 +1,78 @@
+{
+    "manifest_version": 2,
+
+    "name": "Ease New Extension",
+    "version": "1.4.0",
+    "description": "Ease extension, log you in and out",
+
+    "icons": {
+        "128": "ressources/logo_128.png"
+    },
+
+    "browser_action": {
+        "default_popup": "functionnalities/popup.html",
+        "default_icon": "ressources/logo_296.png"
+    },
+
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": [
+                "utilities/jquery-3.1.0.js",
+                "utilities/utils.js",
+                "navigatorDiff/extension_injectedScripts.js",
+                "injectedScripts/easeActions/insertDiv.js"
+            ],
+            "run_at": "document_start",
+            "all_frames": true
+        },
+        {
+            "matches": ["<all_urls>"],
+            "js": [
+                "injectedScripts/reloaded.js",
+                "injectedScripts/executeActions/messages.js",
+                "injectedScripts/executeActions/actions.js",
+                "injectedScripts/executeActions/overlay.js",
+                "injectedScripts/scrappingUpdates/connectionListener.js",
+                "injectedScripts/scrappingUpdates/checkFacebookConnection.js",
+                "injectedScripts/easeActions/easeListener.js",
+                "injectedScripts/easeActions/updatesSender.js",
+                "injectedScripts/easeActions/scrapping.js",
+                "injectedScripts/easeActions/testMessages.js",
+                "injectedScripts/scrappingTuto/scrapFacebook.js",
+                "injectedScripts/scrappingTuto/scrapChrome.js",
+                "injectedScripts/scrappingTuto/scrapLinkedin.js",
+                "injectedScripts/scrappingTuto/scrapOverlay.js"
+            ],
+            "css": [
+                "injectedScripts/executeActions/overlay.css",
+                "injectedScripts/scrappingTuto/scrapOverlay.css"
+            ],
+            "run_at": "document_end",
+            "all_frames": true
+        }
+    ],
+
+    "background": {
+        "page": "background/background.html",
+        "persistent": false
+    },
+
+    "permissions": ["tabs", "\u003Call_urls\u003E", "http://*/*", "https://*/*", "webNavigation", "storage", "identity", "identity.email", "https://*/", "http://*/"],
+
+    "web_accessible_resources": ["ressources/logo.png", "ressources/facebook.png", "ressources/linkedin.png", "ressources/chrome.png"],
+
+    "chrome_url_overrides": {
+        "newtab": "functionnalities/homepage.html"
+    },
+
+    "commands": {
+        "open-ease": {
+            "suggested_key": {
+                "default": "Ctrl+Space",
+                "mac": "Ctrl+Space"
+            },
+            "description": "Open Ease in a new tab."
+        }
+    }
+}

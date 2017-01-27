@@ -1,0 +1,1 @@
+extension.sendMessage('reloaded', {}, function () {});

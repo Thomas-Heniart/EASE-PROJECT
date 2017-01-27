@@ -5,6 +5,7 @@
 	"connect":{
 		
 		"todo":[
+			{"action":"waitfor", "search":"#txtUserName"},
 			{"action":"fill", "what":"login", "search":"#txtUserName", "grave":true},
 			{"action":"fill", "what":"password", "search":"#txtPassword", "grave":true},
 			{"action":"click", "search":"#SubmitButton"}
@@ -12,7 +13,8 @@
 	},
 	"logout":{
 		"todo":[
-			{"action":"goto", "url":"https://srvadfs.ieseg.fr/adfs/ls/?wa=wsignout1.0&wreply=https://unify.ieseg.fr/"}
+			{"action":"goto", "url":"https://srvadfs.ieseg.fr/adfs/ls/?wa=wsignout1.0&wreply=https://unify.ieseg.fr/"},
+			{"action":"waitload"}
 			]
 	},
 	"checkAlreadyLogged":[

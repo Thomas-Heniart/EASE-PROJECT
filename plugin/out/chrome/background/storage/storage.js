@@ -4,7 +4,8 @@ var storage = {
     websitesToLogout: {},
     storedUpdates: {},
     settings: {},
-    lastConnections: {}
+    lastConnections: {},
+    testResults: {}
 }
 
 createDatasValue("sessionId", function (res) {
@@ -45,6 +46,10 @@ createDatasObject("settings", function (res) {
 
 createDatasObject("lastConnections", function (res) {
     storage.lastConnections = res;
+});
+
+createDatasObject("testResults", function (res) {
+    storage.testResults = res;
 });
 
 

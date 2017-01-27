@@ -64,7 +64,7 @@ function startBigStepTest(tab, window, msg, callback) {
         msg.detail[msg.bigStep].website.home = home.http + msg.detail[0].user[home.subdomain] + "." + home.domain;
     }
     if (tab == null) {
-        extension.tabs.create(window, msg.detail[msg.bigStep].website.home, msg.highlight, function (tab) {
+        extension.tabs.create(window, msg.detail[msg.bigStep].website.home, false, function (tab) {
             executeBigStepTest(tab, msg, callback);
         });
     } else {
@@ -100,12 +100,9 @@ function doTest(tab, msg, actionSteps, callback) {
     generateSteps(mainAction, "connect", msg.detail[msg.bigStep], function (connectSteps) {
         actionSteps = actionSteps.concat(connectSteps);
         executeSteps(tab, actionSteps, function (tab, response) {
-            console.log("connnection done");
             if (msg.bigStep + 1 < msg.detail.length) {
-                console.log("next big step");
                 nextBigStepTest(tab, msg, callback);
             } else {
-                console.log("test all");
                 setTimeout(function () {
                     afterFirstCo();
                 }, timeout);
@@ -121,7 +118,6 @@ function doTest(tab, msg, actionSteps, callback) {
                             actionSteps = actionSteps.concat(switchOrLogoutSteps);
                             actionSteps = actionSteps.concat(connectSteps);
                             executeSteps(tab, actionSteps, function (tab, response) {
-                                console.log("first steps done");
                                 setTimeout(function () {
                                     afterSecondCo();
                                 }, timeout);
@@ -135,7 +131,6 @@ function doTest(tab, msg, actionSteps, callback) {
                                         actionSteps = actionSteps.concat(checkCoSteps);
                                         actionSteps = actionSteps.concat(logoutSteps);
                                         executeSteps(tab, actionSteps, function (tab, response) {
-                                            console.log("second steps done");
                                             setTimeout(function () {
                                                 afterLogout();
                                             }, timeout);
@@ -149,7 +144,6 @@ function doTest(tab, msg, actionSteps, callback) {
                                                 executeSteps(tab, actionSteps, function (tab, response) {
                                                     endTest(tab, false, "logout", msg, callback);
                                                 }, function (tab, response) {
-                                                    console.log("last steps done");
                                                     endTest(tab, true, "", msg, callback);
                                                 });
                                             }

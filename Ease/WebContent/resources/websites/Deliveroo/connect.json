@@ -13,13 +13,13 @@
 	},
 	"logout":{
 		"todo":[
-			{"action":"click", "search":".page-header--logout button"}
+			{"action":"click", "search":".page-header--logout button"},
+			{"action":"goto", "url":"https://deliveroo.fr"}
 			]
 	},
-	"checkAlreadyLogged":[
-		{"search":".page-header--invite-link"}
-	],
-	"checkChangeLogin":[
-		{"action":"click", "search":"#loginbutton"}
-	]
+	"checkAlreadyLogged":{
+		"todo":[
+			{"action":"check", "type":"hasElement", "search":".page-header--invite-link"}
+		]
+	}
 }

@@ -1,9 +1,10 @@
 {
     "name":"Canva",
     "lastlogin":"",
-    "home":"https://www.canva.com/login",
+    "home":"https://www.canva.com/",
     "connect": {
     	"todo": [
+    		{"action":"goto", "url":"https://www.canva.com/login"},
     		{"action":"waitfor", "search":"#email"},
     		{"action":"fill", "what":"login", "search":"#email"},
     		{"action":"fill", "what":"password", "search":"#password"},
@@ -22,7 +23,8 @@
     ],
     "Facebook": {
     	"todo": [
-    		{"action":"waitfor", "search":"#email"},
+            {"action":"waitDocumentReady"},
+    		{"action":"waitfor", "search":".fb_reset"},
     		{"action":"click", "search":".buttonFacebook"}
     	]
     }

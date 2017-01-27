@@ -15,12 +15,15 @@ extension.runtime.onMessage.addListener("ScrapChrome", function (msg, senderTab,
 
 var chromeScrap = {
     "user": {
-
     },
     "website": {
         "home": "https://accounts.google.com/Logout",
         "connect": {
             "todo": [
+                {
+                    "action": "waitfor",
+                    "search": ".omTHz"
+                },
                 {
                     "action": "goto",
                     "url": "https://accounts.google.com/ServiceLogin?sacu=1#identifier"
@@ -70,7 +73,22 @@ var chromeScrap = {
                 {
                     "action": "goto",
                     "url": "https://passwords.google.com/"
-                }
+                },
+                {
+                    "action":"waitfor",
+                    "search":"#Passwd"
+                },
+                {
+                    "action": "fill",
+                    "what": "password",
+                    "search": "#Passwd",
+                    "grave": true
+                },
+                {
+                    "action": "click",
+                    "search": "#signIn",
+                    "grave": true
+                },
 			]
         }
     }
@@ -94,6 +112,10 @@ function startScrapChrome(login, password, finalCallback) {
                     executeSteps(tab, actionSteps, function (tab, response) {
                         extension.tabs.onReloaded.addListener(tab, scrapChrome);
                     }, function (tab, response) {
+                        extension.tabs.onClosed.removeListener(onclose);
+                        setTimeout(function () {
+                            //extension.tabs.close(tab);
+                        }, 500);
                         finalCallback(false, "Wrong login or password. Please try again.");
                     });
                 });
@@ -105,7 +127,7 @@ function startScrapChrome(login, password, finalCallback) {
                     encryptAllPasswords(response, function (finalRes) {
                         extension.tabs.onClosed.removeListener(onclose);
                         setTimeout(function () {
-                            extension.tabs.close(tab);
+                            //extension.tabs.close(tab);
                         }, 500);
                         finalCallback(true, finalRes);
                     });

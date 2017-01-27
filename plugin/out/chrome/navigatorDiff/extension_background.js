@@ -215,10 +215,10 @@ var extension = {
                         return true;
                     }
                 };
-                listenerFactory.addListener(this, chrome.runtime.onRemoved, fct, f);
+                listenerFactory.addListener(this, chrome.tabs.onRemoved, fct, f);
             },
             removeListener: function (fct) {
-                listenerFactory.removeListener(this, chrome.runtime.onRemoved, fct);
+                listenerFactory.removeListener(this, chrome.tabs.onRemoved, fct);
             }
         },
         sendMessage: function (tab, name, msg, callback) {
