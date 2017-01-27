@@ -13,22 +13,22 @@ import javax.servlet.http.HttpSession;
 import org.json.simple.JSONArray;
 
 import com.Ease.Context.Catalog.Catalog;
-import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class GetCatalogApps
+ * Servlet implementation class GetSso
  */
-@WebServlet("/GetCatalogApps")
-public class GetCatalogApps extends HttpServlet {
+@WebServlet("/GetSso")
+public class GetSso extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GetCatalogApps() {
+    public GetSso() {
         super();
+        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -49,7 +49,7 @@ public class GetCatalogApps extends HttpServlet {
 			sm.needToBeConnected();
 			JSONArray res;
 			Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-			res = catalog.getWebsitesJson();
+			res = catalog.getSsoJson();
 			sm.setResponse(ServletManager.Code.Success, res.toString());
 		} catch (GeneralException e) {
 			sm.setResponse(e);
