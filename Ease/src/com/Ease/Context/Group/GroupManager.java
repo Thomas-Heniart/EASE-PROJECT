@@ -55,7 +55,8 @@ public class GroupManager {
 	public void add(Group group) {
 		DBmapGroup.put(group.getDBid(), group);
 		IDmapGroup.put(group.getSingleId(), group);
-		group.getInfra().addGroup(group);
+		if (group.getParent() == null)
+			group.getInfra().addGroup(group);
 	}
 	public void add(Infrastructure infra) {
 		DBmapInfra.put(infra.getDBid(), infra);
