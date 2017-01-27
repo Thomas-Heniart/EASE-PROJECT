@@ -1,6 +1,7 @@
 package com.Ease.Context;
 
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -19,10 +20,20 @@ public class SessionListener implements HttpSessionListener {
 	public void sessionDestroyed(HttpSessionEvent se) {
 		
 		HttpSession session = se.getSession();
+		Map<String, User> users = (Map<String, User>) session.getServletContext().getAttribute("users");
+		@SuppressWarnings("unchecked")
 		Map<String, User> sessionIdUserMap = (Map<String, User>) session.getServletContext().getAttribute("sessionIdUserMap");
 		Map<String, User> sIdUserMap = (Map<String, User>) session.getServletContext().getAttribute("sIdUserMap");
+		
+		User user = sessionIdUserMap.get(session.getId());
 		sessionIdUserMap.remove(session.getId());
-		sIdUserMap.remove(((User)session.getAttribute("user")).getSessionSave().getSessionId());
-		System.out.println("SEEEESSSSIONNN DESSTROYYYY");
+		sIdUserMap.remove(user.getSessionSave().getSessionId());
+		for (Map.Entry<String, User> entry : sessionIdUserMap.entrySet())
+		{
+			if (entry.getValue() == user) {
+				return ;
+			}
+		}
+		users.remove(user.getEmail());
 	}
 }
