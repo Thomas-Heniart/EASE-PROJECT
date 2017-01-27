@@ -107,7 +107,7 @@ response.addCookie(email);
 <script>
 	$(document).ready(function(){
 		$('.cookiesInfo').css('display', 'none');
-		var appCount = $(".siteLinkBox").length;
+		var appCount = $(".SitesContainer .siteLinkBox").length;
 		var verifiedEmailCount = $(".verifiedEmail").length;
 		var unverifiedEmailCount = $(".unverifiedEmail").length;
 		var emailCount = verifiedEmailCount + unverifiedEmailCount;
