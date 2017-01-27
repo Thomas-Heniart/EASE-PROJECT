@@ -63,7 +63,6 @@ public class GetGroupUsers extends HttpServlet {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "groupId is null");
 			int groupSingleId = Integer.parseInt(paramGroupId);
 			GroupManager groupManager = (GroupManager) sm.getContextAttr("groupManager");
-			System.out.println(groupManager.getGroupFromSingleID(groupSingleId).getDBid());
 			String group_id = groupManager.getGroupFromSingleID(groupSingleId).getDBid();
 			JSONArray res = new JSONArray();
 			ResultSet rs = db.get("SELECT firstName, email FROM users WHERE id IN (SELECT user_id from groupsAndUsersMap WHERE group_id = " + group_id + ")");

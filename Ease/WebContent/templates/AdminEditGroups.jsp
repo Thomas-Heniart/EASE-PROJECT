@@ -81,9 +81,10 @@
 	
 	
 	function addGroup() {
-		var input = $(this).parent().find("input");
+		var input = $(this).parent().find("> input");
 		var parentId = input.attr("parentId");
 		var groupName = input.val();
+		console.log(input);
 		var infraId = $(".infraSelected").attr("infraId");
 		if (parentId == "undefined")
 			postHandler.post("CreateGroup", {
@@ -130,7 +131,8 @@
 	}
 	
 	function addGroupForm(parentId) {
-		return ("<input placeholder='Add a group' parentId='" + parentId + "'/>"
+		
+		return ("<input placeholder='Add a group' " + ((parentId == null) ? "" : " parentId='" + parentId) + "'/>"
 				+ "<button class='addGroup'>Add</button>");
 	}
 	

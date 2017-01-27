@@ -118,7 +118,7 @@ public class Group {
 	public Group(String db_id, String name, Group parent, Infrastructure infra, int single_id) {
 		this.db_id = db_id;
 		this.name = name;
-		this.children = null;
+		this.children = new LinkedList<Group>();
 		this.parent = parent;
 		this.infra = infra;
 		this.single_id = single_id;

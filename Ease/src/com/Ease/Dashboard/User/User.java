@@ -39,7 +39,7 @@ public class User {
 	public static User loadUser(String email, String password, ServletManager sm) throws GeneralException {
 		Map<String, User> usersMap = (Map<String, User>) sm.getContextAttr("users");
 		User connectedUser = usersMap.get(email);
-		if (connectedUser != null)
+		if (connectedUser != null && (connectedUser.getKeys().isGoodPassword(password)))
 			return connectedUser;
 		try {
 			DataBaseConnection db = sm.getDB();

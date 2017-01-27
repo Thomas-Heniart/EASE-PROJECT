@@ -172,4 +172,8 @@ public class Infrastructure {
 		json.put("groups", array);
 		return json;
 	}
+
+	public void addGroup(Group group) {
+		this.groups.add(group);
+	}
 }
