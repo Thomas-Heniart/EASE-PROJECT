@@ -3,6 +3,9 @@ package com.Ease.Dashboard.App;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.json.simple.JSONObject;
+
+import com.Ease.Dashboard.Profile.ProfilePermissions.Perm;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
@@ -112,5 +115,14 @@ public class AppPermissions{
 			return true;
 		}
 		return false;
+	}
+
+	public JSONObject getJson() {
+		JSONObject json = new JSONObject();
+		json.put("rename", this.havePermission(Perm.RENAME.ordinal()));
+		json.put("delete", this.havePermission(Perm.DELETE.ordinal()));
+		json.put("showInfo", this.havePermission(Perm.SHOWINFO.ordinal()));
+		json.put("edit", this.havePermission(Perm.EDIT.ordinal()));
+		return json;
 	}
 }

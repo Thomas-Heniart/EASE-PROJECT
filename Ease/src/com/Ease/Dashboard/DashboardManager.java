@@ -5,6 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
@@ -300,5 +303,17 @@ public class DashboardManager {
 				return (ClassicApp) app;
 		}
 		return null;
+	}
+	
+	public JSONArray getJson() {
+		JSONArray json = new JSONArray();
+		for (List<Profile> column : this.profiles) {
+			JSONArray columnJson = new JSONArray();
+			for (Profile profile : column) {
+				columnJson.add(profile.getJSON());
+			}
+			json.add(columnJson);
+		}
+		return json;
 	}
 }

@@ -9,6 +9,8 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import org.json.simple.JSONObject;
+
 import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.User.User;
@@ -222,5 +224,16 @@ public class GroupProfile {
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
+	}
+
+	public JSONObject getJson() {
+		JSONObject json = new JSONObject();
+		json.put("perms", this.perm.getJson());
+		json.put("common", this.common);
+		json.put("groupName", this.group.getName());
+		json.put("groupId", this.group.getSingleId());
+		json.put("infraName", this.group.getInfra().getName());
+		json.put("infraId", this.group.getInfra().getSingleId());
+		return json;
 	}
 }

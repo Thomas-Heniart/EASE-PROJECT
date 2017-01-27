@@ -3,6 +3,8 @@ package com.Ease.Dashboard.Profile;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.json.simple.JSONObject;
+
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
@@ -116,5 +118,14 @@ public class ProfilePermissions{
 			return true;
 		}
 		return false;
+	}
+	public Object getJson() {
+		JSONObject json = new JSONObject();
+		json.put("rename", this.havePermission(Perm.RENAME.ordinal()));
+		json.put("color", this.havePermission(Perm.COLOR.ordinal()));
+		json.put("delete", this.havePermission(Perm.DELETE.ordinal()));
+		json.put("moveOutSide", this.havePermission(Perm.MOVE_APP_OUTSIDE.ordinal()));
+		json.put("addApp", this.havePermission(Perm.ADDAPP.ordinal()));
+		return json;
 	}
 }
