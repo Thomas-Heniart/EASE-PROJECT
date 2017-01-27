@@ -5,12 +5,14 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.ServletContext;
 
 import org.json.simple.JSONArray;
 
 import com.Ease.Context.Group.Group;
+import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
@@ -225,11 +227,20 @@ public class Catalog {
 	}
 
 	@SuppressWarnings("unchecked")
-	public JSONArray getJson() {
+	public JSONArray getWebsitesJson() {
 		JSONArray res = new JSONArray();
 		for (Website website : this.websites)
 			res.add(website.getJsonForCatalog());
 		Collections.reverse(res);
+		return res;
+	}
+	
+	public JSONArray getSsoJson() {
+		JSONArray res = new JSONArray();
+		for (Map.Entry<Integer, Sso> entry : this.ssoIDmap.entrySet())
+		{
+			res.add(entry.getValue().getJson());
+		}
 		return res;
 	}
 }
