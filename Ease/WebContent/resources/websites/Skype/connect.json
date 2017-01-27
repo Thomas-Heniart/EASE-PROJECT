@@ -30,9 +30,15 @@
             {"action":"aclick", "search":"a[data-link-type='logout']"}
             ]
     },
-    "checkAlreadyLogged":[
-        {"search":"li.account.authenticated.username"}
-    ],
+    "checkAlreadyLogged":{
+       	"todo":[
+       		{"action":"waitDocumentReady"},
+       		{"action":"waitfor", "search":"#redirectForm"},
+       		{"action":"waitload"},
+       		{"action":"search", "search":"li.account.authenticated.username"},
+       		{"action":"check", "type":"hasElement", "search":"li.account.authenticated.username"}
+       	]
+    },
     "checkChangeLogin":[
         {"action":"click", "search":"#loginbutton"}
     ]
