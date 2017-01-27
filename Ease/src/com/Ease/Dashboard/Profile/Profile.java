@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.Ease.Context.Catalog.Website;
@@ -274,16 +275,22 @@ public class Profile {
 	@SuppressWarnings("unchecked")
 	public JSONObject getJSON() {
 		JSONObject res = new JSONObject();
-		res.put("id", this.db_id);
-		res.put("user_id", this.user.getDBid());
+		res.put("singleId", this.single_id);
+		res.put("color", this.infos.getColor());
+		res.put("name", this.infos.getName());
 		res.put("column", this.columnIdx);
-		res.put("position", this.posIdx);
-		res.put("group_profile_id", (this.groupProfile == null) ? "null" : this.groupProfile.getDBid());
+		res.put("index", this.posIdx);
+		if (this.groupProfile != null) {
+			res.put("groupProfile", this.groupProfile.getJson());
+		}
+		JSONArray array = new JSONArray();
+		for (App app : this.apps) {
+			JSONObject jsonApp = new JSONObject();
+			app.fillJson(jsonApp);
+			array.add(jsonApp);
+		}
+		res.put("apps", array);
 		return res;
-	}
-	
-	public String getJSONString() {
-		return this.getJSON().toString();
 	}
 	
 	public static int getSizeForUnconnected(String db_id, ServletManager sm) throws GeneralException {

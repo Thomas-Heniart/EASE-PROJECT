@@ -105,6 +105,14 @@ public class LinkApp extends App {
 		result.add(link);
 		return result;
 	}
+
+	
+	public void fillJson(JSONObject json){
+		super.fillJson(json);
+		json.put("url", this.linkInfos.getLink());
+		json.put("imgSrc", this.linkInfos.getImgUrl());
+		json.put("type", "linkApp");
+	}
 	
 	/* For sancho le robot */
 	public boolean isEmpty() {

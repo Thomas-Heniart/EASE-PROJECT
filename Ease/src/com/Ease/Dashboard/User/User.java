@@ -126,7 +126,7 @@ public class User {
 					newUser.getGroups().add(userGroup);
 				}
 			}
-			((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
+			((Map<String, User>)sm.getContextAttr("users")).put(email, newUser);
 			((Map<String, User>)sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
 			System.out.println(newUser.getSessionSave().getSessionId());
 			((Map<String, User>)sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);

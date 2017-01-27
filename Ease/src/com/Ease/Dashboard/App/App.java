@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.LinkApp.LinkApp;
@@ -208,5 +209,16 @@ public class App {
 	/* For sancho le robot */
 	public boolean isEmpty() {
 		return false;
+	}
+	
+	public void fillJson(JSONObject json){
+		json.put("position", this.position);
+		json.put("name", this.informations.getName());
+		json.put("singleId", this.single_id);
+		if (this.groupApp != null) {
+			JSONObject groupJson = new JSONObject();
+			this.groupApp.fillJson(groupJson);
+			json.put("groupApp", groupJson);
+		}
 	}
 }

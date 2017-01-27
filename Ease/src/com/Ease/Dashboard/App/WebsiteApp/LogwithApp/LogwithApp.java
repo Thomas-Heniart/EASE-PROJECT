@@ -128,6 +128,12 @@ public class LogwithApp extends WebsiteApp {
 		this.logwithDBid = logwith.getDBid();
 	}
 
+	public void fillJson(JSONObject json){
+		super.fillJson(json);
+		json.put("logWithAppId", this.logwith.getSingleId());
+		json.put("type", "logWithApp");
+	}
+	
 	public JSONArray getJSON(ServletManager sm) throws GeneralException{
 		JSONArray infos = logwith.getJSON(sm);
 		JSONObject websiteInfos = (JSONObject) super.getJSON(sm).get(0);
@@ -135,6 +141,7 @@ public class LogwithApp extends WebsiteApp {
 		infos.add(websiteInfos);
 		return infos;
 	}
+
 
 	public void edit(String name, App logwith, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();

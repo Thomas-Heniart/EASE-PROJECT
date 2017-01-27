@@ -8,6 +8,8 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import org.json.simple.JSONObject;
+
 import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.LinkApp.GroupLinkApp;
@@ -160,5 +162,14 @@ public class GroupApp {
 	public void removeContentForUnconnectedUser(String db_id2, ServletManager sm) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public void fillJson(JSONObject json) {
+		json.put("perms", this.permissions.getJson());
+		json.put("common", this.common);
+		json.put("groupName", this.group.getName());
+		json.put("groupId", this.group.getSingleId());
+		json.put("infraName", this.group.getInfra().getName());
+		json.put("infraId", this.group.getInfra().getSingleId());
 	}
 }
