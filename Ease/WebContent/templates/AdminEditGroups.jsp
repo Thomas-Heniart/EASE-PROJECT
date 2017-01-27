@@ -32,9 +32,31 @@
 			<button type="submit">Invite user</button>
 		</form>  -->
 	</div>
+	<form style="display: none;" id="CreateGroup" action="CreateGroup" method="POST">
+		<input type="text" placeholder="Parent id" id="parentId" />
+		<input type="text" placeholder="Group name" id="groupName" />
+		<button type="submit">Add group</button>
+	</form>
 </div>
 
 <script>
+	$("#CreateGroup").submit(function(e) {
+		e.preventDefault();
+		var parentId = $("#parentId", $(this)).val();
+		var groupName = $("#groupName", $(this)).val();
+		var infraId = $(".infraSelected").attr("infraId");
+		var params = { groupName: groupName, infraId: infraId };
+		if (parentId != "" && parentId != null)
+			params.parentId = parentId;
+		postHandler.post($(this).attr("action"), params,
+		function() {
+			
+		}, function(data) {
+			$(".infraSelected").click();
+		}, function(data) {
+			
+		});
+	});
 	$(".infraButton").click(function() {
 		$(".infraButton").removeClass("infraSelected");
 		$(this).addClass("infraSelected");
@@ -49,8 +71,8 @@
 			infra.groups.forEach(function(group) {
 				displayGroup(group, $(".groupList"));
 			});
-			$(".groupList").append(addGroupForm(null));
 			$(".addGroup").click(addGroup);
+			$("#CreateGroup").show();
 			$(".group").click(function(e) {
 				e.stopPropagation();
 				var self = $(this);
@@ -84,7 +106,6 @@
 		var input = $(this).parent().find("> input");
 		var parentId = input.attr("parentId");
 		var groupName = input.val();
-		console.log(input);
 		var infraId = $(".infraSelected").attr("infraId");
 		if (parentId == "undefined")
 			postHandler.post("CreateGroup", {
@@ -123,17 +144,9 @@
 			children.forEach(function(child, index) {
 				var elemWhereAppend = $("> .groupChildren", parentGroup)
 				displayGroup(child, elemWhereAppend);
-				if (index == children.length - 1)
-					elemWhereAppend.append(addGroupForm(parentGroup.groupId));
 			});
 			
 		}
-	}
-	
-	function addGroupForm(parentId) {
-		
-		return ("<input placeholder='Add a group' " + ((parentId == null) ? "" : " parentId='" + parentId) + "'/>"
-				+ "<button class='addGroup'>Add</button>");
 	}
 	
 	function displayUser(user) {
@@ -147,7 +160,7 @@
 	
 	function newGroupToDisplay(name, groupId) {
 		return "<div class='group' groupId='" + groupId + "'>"
-		+ "<span class='groupName'>" + name + "</span>"
+		+ "<span class='groupName'>" + name + " => GroupId : " + groupId + "</span>"
 		+ "<div class='groupChildren'></div>"
 		+ "</div>";
 	}

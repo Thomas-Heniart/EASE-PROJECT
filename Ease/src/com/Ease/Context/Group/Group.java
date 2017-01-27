@@ -316,4 +316,8 @@ public class Group {
 		json.put("children", array);
 		return json;
 	}
+
+	public Group getParent() {
+		return this.parent;
+	}
 }
