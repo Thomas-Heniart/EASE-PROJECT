@@ -36,42 +36,329 @@
 						font-size: 1vw;
 					}
 					button {
-						transition: width .3s, height .3s;
 						font-size: 1vw;
 						width: 100%;
-						&:after {
-							content: "";
-							transition: .5s;
-							border-top-color: transparent;
-						}
-					}
-					button.loading {
-						pointer-events: none;
-						width: 3vw;
-						height: 3vw;
-						border-radius: 100%;
-						font-size: 0;
-						background-color: white;
-						border: 6px solid rgba($themeButtonGreenColor, 0.4);
-						position: relative;
-						&:after {
-							content: '';
-							position: absolute;
-							top: -6px;
-							right: -6px;
-							bottom: -6px;
-							left: -6px;
-							border-radius: 50px;
-							border: 6px solid transparent;
-							border-top-color: $themeButtonGreenColor;
-							-o-animation: spin 1s linear infinite;
-							-moz-animation: spin 1s linear infinite;
-							-webkit-animation: spin 1s linear infinite;
-							animation: spin 1s linear infinite;
+						&.loading {
+							font-size: 0;
+							width: 3vw;
+							height: 3vw;
 						}
 					}
 					input, .input {
 						font-size: 0.9vw;
+					}
+				}
+			}
+		}
+	}
+	#addAppPopup {
+		width: 24vw;
+		.title p{
+			font-size: 1.3vw;
+		}
+		.bodysHandler .popupBody{
+			padding: 0.75vw 10%;
+			.handler {
+				.errorText {
+					p {
+						font-weight: bold;
+					}
+				}
+				.titleRow{
+					text-align: left;
+					color: black;
+					border-bottom: 1px solid black;
+					padding-bottom: 2px;
+					font-size: 1vw;
+					font-weight: bold;
+				}
+				.row {
+					margin-bottom: 0.6vw;
+					&:last-child {
+						margin-bottom:0;
+					}
+					.horizontalSelectDiv {
+						.afterRowTitle {
+							font-size: 1vw;
+							color: black;
+							font-weight: bold;
+							text-align: center;
+							margin-bottom: 0.6vw;
+						}
+						.selectHandler {
+							white-space: nowrap;
+							overflow: auto;
+							.appHandler.checked {
+								.appLogo {
+									&:before {
+										content: "";
+										position: absolute;
+										width: 100%;
+										height: 100%;
+										z-index: 1;
+										background-color: rgba(0, 0, 0, 0.15);
+										border-radius: 0.5vw;
+									}
+									&:after {
+										content: "\f00c";
+										position: absolute;
+										left: 50%;
+										top: 50%;
+										color: white;
+										z-index: 2;
+										transform: translate3d(-50%, -50%, 0);
+										font-family: FontAwesome;
+										font-size: 2.7vw;
+									}
+								}
+							}
+							.appHandler {
+								width: 32%;
+								display: inline-block;
+								position: relative;
+								overflow: hidden;
+								.appLogo {
+									position: relative;
+									width: 65%;
+									margin: auto;
+									cursor: pointer;
+									img {
+										width: 100%;
+										border-radius: 0.5vw;
+									}
+								}
+								.appName {
+									text-align: center;
+									font-size: 0.9vw;
+									color: black;
+									white-space: nowrap;
+									padding: 0 2%;
+									p {
+										text-overflow: ellipsis;
+										overflow: hidden;
+									}
+								}
+							}
+						}
+					}
+					.accountNameHandler {
+						.backButton {
+							cursor: pointer;
+							display: flex;
+							float: right;
+							.fa-stack {
+								font-size: 0.75vw;
+								.fa-stack-1x {
+									color: white;
+								}
+							}
+						}
+						.accountLine {
+							.accountLogo, .accountName {
+								display: inline-block;
+							}
+							.accountLogo {
+								display: inline-block;
+								width: 1.1vw;
+								height: 1.1vw;
+								img {
+									width: 100%;
+									height: 100%;
+									border-radius: 3px;
+								}
+							}
+							.accountName {
+								color: black;
+								font-size: 0.9vw;
+							}
+						}
+					}
+					.ssoSelectArea {
+						.accountsHolder {
+							.accountLine {
+								&:hover {
+									.accountName {
+										text-decoration: underline;
+									}
+								}
+								.accountLogo {
+									display: inline-block;
+									width: 1.1vw;
+									height: 1.1vw;
+									margin-right: 5px;
+									img {
+										width: 100%;
+										height: 100%;
+										border-radius: 3px;
+									}
+								}
+							}
+						}
+					}
+					.selectionArea {
+						.afterRowTitle {
+							overflow: hidden;
+							font-weight: bold;
+							margin-bottom: 0.6vw;
+							p {
+								display: inline-block;
+								font-size: 1vw;
+								color: black;
+							}
+							.buttonBack {
+								display: flex;
+								float: right;
+								cursor: pointer;
+								.fa-stack {
+									font-size: 0.75vw;
+									.fa-stack-1x {
+										color: white;
+									}
+								}
+							}
+						}
+						.accounts {
+							position: relative;
+							&:before {
+								content: "";
+								position: absolute;
+								z-index: 1;
+								height: 100%;
+								width: 100%;
+								top: 0;
+								left: 0;
+								pointer-events: none;
+								@include simple-box-shadow(0vw -1.5vw 2.5vw -1vw white inset);
+							}
+							.accountsHolder {
+								height: 4.5vw;
+								overflow: auto;
+								position: relative;
+								.accountLine {
+									height: 1.5vw;
+									cursor: pointer;
+									&.selected {
+										.checkBoxInput {
+											.fa-stack-1x {
+												color: black;
+											}
+										}
+									}
+									.fa-stack {
+										font-size: 0.65vw;
+										width: 1.1vw;
+										height: 1.1vw;
+									}
+									.checkBoxInput, p {
+										display: inline-block;
+									}
+									.checkBoxInput {
+										margin-right: 5px;
+									}
+									p {
+										font-size: 0.9vw;
+										color: black;
+									}
+								}
+							}
+						}
+					}
+					.ssoSelectArea {
+						.accountsHolder {
+							.newAccountAdder {
+								.fa-stack {
+									font-size: 0.65vw;
+									width: 1.1vw;
+								}
+							}
+						}
+					}
+					.logo {
+						width: 5vw;
+						margin: auto;
+						img {
+							width: 100%;
+							border-radius: 5px;
+						}
+					}
+					.post-title {
+						font-size: 1vw;
+						color: black;
+						line-height: 1vw;
+					}
+					button {
+						font-size: 1vw;
+						width: 100%;
+						&.loading {
+							font-size: 0;
+							width: 3vw;
+							height: 3vw;
+						}
+					}
+					#shortcutLink {
+						background-color: $themeColor;
+					}
+					.signInButton{
+						margin-top: 0.5vw;
+						display: none;
+						&.show {
+							display: block;
+						}
+						&:first-child {
+							margin-top: 0;
+						}
+						i {
+							position: absolute;
+							left: 4%;
+							top: 50%;
+							transform: translateY(-50%);
+						}
+						&.facebook {
+							background-color: #3b5998;
+						}
+						&.linkedIn {
+							background-color: #0e76a8;
+						}
+					}
+					input, .input {
+						font-size: 0.9vw;
+						color: black;
+					}
+					.input.appName {
+						margin: auto;
+						width: 70%;
+						input {
+							text-align: center;
+							margin-bottom: 0;
+						}
+						input:focus + .placeholderIcon {
+							display: none;
+						}
+						.placeholderIcon {
+							position: absolute;
+							right: 4%;
+							font-size: 1vw;
+							top: 50%;
+							transform: translateY(-50%);
+							color: #777;
+							pointer-events: none;
+						}
+					}
+					.placeholderIcon {
+						font-size: 1vw;
+					}
+					.input.login, .input.password {
+						input {
+							padding-left: 1.8vw;
+						}
+						.placeholderIcon {
+							position: absolute;
+							left: 4%;
+							top: 50%;
+							font-size: 1vw;
+							transform: translateY(-50%);
+							color: #777;
+						}
 					}
 				}
 			}

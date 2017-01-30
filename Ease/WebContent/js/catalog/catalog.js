@@ -36,7 +36,7 @@ function refreshCatalogContent(data) {
 			});
 			appsToShow.show();
 		} else
-			$('.catalogContainer .no-result-search').show();
+		$('.catalogContainer .no-result-search').show();
 	}
 }
 
@@ -65,8 +65,8 @@ function updateCatalogWith(searchVal, tags) {
 
 function newButtonGroup(tagId) {
 	$(".selectedTagsContainer").append(
-			"<div tagid='" + tagId
-					+ "' class='btn-group btn-group-xs tags-group'></div>");
+		"<div tagid='" + tagId
+		+ "' class='btn-group btn-group-xs tags-group'></div>");
 	return $("div[tagid='" + tagId + "'].tags-group");
 }
 
@@ -77,7 +77,7 @@ function newCrossButton(tagId) {
 function setNewCrossCss(tagId) {
 	var tag = $("a[tagid='" + tagId + "'].tag")
 	$("a[tagid='" + tagId + "'].delete-tag").css("background-color",
-			lighterColor(tag.css("background-color"), 0.3));
+		lighterColor(tag.css("background-color"), 0.3));
 	$("a[tagid='" + tagId + "'].delete-tag").css("color", tag.css("color"));
 }
 
@@ -94,7 +94,7 @@ function addActionOnCrossButton(tagId) {
 function updateTagsInSearchBar() {
 	var fullWidth = 0.;
 	var searchIconWidth = parseInt($(".catalogSearchbar i.fa-search").css(
-			"width"));
+		"width"));
 	$(".tags-group").each(function(index, grp) {
 		fullWidth += parseInt($(grp).css("width"));
 	});
@@ -123,7 +123,7 @@ function updateCatalogFront(tagButton) {
 	}
 	updateTagsInSearchBar();
 	updateCatalogWith($(".catalogSearchbar input").val(),
-			$(".selectedTagsContainer .tag"));
+		$(".selectedTagsContainer .tag"));
 	var appsShow = $('.catalogApp').filter(function() {
 		return this.style.display != "none";
 	});
@@ -171,7 +171,7 @@ function updateVerfiedEmailsCount() {
 }
 
 $(document).ready(function() {
-		
+
 	$("#catalog-quit").click(function(event) {
 		event.stopPropagation();
 		leaveEditMode();
@@ -199,7 +199,7 @@ $(document).ready(function() {
 			updateCatalogWith($(event.target).val(),$(".selectedTagsContainer .tag"));
 		}
 	});
-		
+
 	$("input[name='catalogSearch']").keyup(function(event) {
 		if (event.keyCode == 8) {
 			event.preventDefault();
@@ -208,9 +208,9 @@ $(document).ready(function() {
 		if (event.keyCode == 32 || event.keyCode == 13)
 			addTagIfExists($(event.target));
 		updateCatalogWith($(event.target).val(),
-		$(".selectedTagsContainer .tag"));
+			$(".selectedTagsContainer .tag"));
 	});
-		
+
 	$('.tagContainer i.fa-angle-right').click(function() {
 		amount = '+='+ $('.tagContainer .tags').css('width');
 		scroll();
@@ -281,7 +281,27 @@ var Catalog = function(rootEl){
 		function(msg){
 		},
 		'text'
-	);
+		);
+	this.getAppByName = function(name){
+		for (var i = 0; i < self.apps.length; i++) {
+			if (self.apps[i].name == name)
+				return self.apps[i];
+		}
+	}
+	this.getAppById = function(id){
+		for (var i = 0; i < self.apps.length; i++) {
+			if (self.apps[i].id == id)
+				return self.apps[i];
+		}		
+	}
+	this.getAppsBySsoId = function(ssoId){
+		var retVal = [];
+		for (var i = 0; i < self.apps.length; i++) {
+			if (self.apps[i].ssoId == ssoId)
+				retVal.push(self.apps[i]);
+		}
+		return retVal;
+	}
 	this.addApp = function(app){
 		self.apps.push(app);
 		self.appsArea.append(app.qRoot);
@@ -300,12 +320,12 @@ var Catalog = function(rootEl){
 	};
 	this.onResize = function(){
 		self.appsHolder.height(self.qRoot.outerHeight(true) 
-							- ((self.oUpdate.isShown ? self.oUpdate.qRoot.outerHeight(true) : 0)
-							+ self.qRoot.find(".catalogHeader.title").outerHeight(true)
-							+ self.searchBar.outerHeight(true)
-							+ self.tagContainer.outerHeight(true)
-							+ (self.tagContainer.outerHeight(true) / 2)
-							+ self.integrateAppArea.outerHeight(true)));
+			- ((self.oUpdate.isShown ? self.oUpdate.qRoot.outerHeight(true) : 0)
+				+ self.qRoot.find(".catalogHeader.title").outerHeight(true)
+				+ self.searchBar.outerHeight(true)
+				+ self.tagContainer.outerHeight(true)
+				+ (self.tagContainer.outerHeight(true) / 2)
+				+ self.integrateAppArea.outerHeight(true)));
 		//self.isOpen && $('.openCatalogHelper').height(self.qRoot.height());
 		var width = 0;
 		self.apps.forEach(function(elem) {

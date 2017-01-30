@@ -133,6 +133,15 @@ function changeColor(color, ratio, darker) {
         });
     });
 
+    /* js for checkable elements (search for .checkable) */
+    $(document).click(function(e){
+        var target = $(e.target).closest('.checkable');
+
+        if (target.length){
+            target.hasClass('checked') && target.removeClass('checked') || target.addClass('checked'); 
+        }
+    });
+
     $(document).ready(function(){
         $('.showPassDiv').click(function(){
             var input = $(this).parent().find('input');
