@@ -332,7 +332,7 @@ addAppPopup = function(rootEl){
 		var password = self.passwordInput.val();
 
 		var logwithApp = self.signInAccountSelectRow.find('.selected');
-		var logwithId = logwithApp.length ? $(logwithApp[0]).attr('appid') : "";
+		var logwithId = logwithApp.length ? $(logwithApp[0]).attr('appid') : null;
 
 		var websiteId = [];
 		var sameApp = easeAppsManager.getAppByLoginAndSsoId(login, self.currentApp.ssoId);
@@ -349,7 +349,7 @@ addAppPopup = function(rootEl){
 		if (self.choosenSsoAccountLogin != null) {
 			submitUrl = "AddClassicAppSameAs";
 		}
-		websiteId = JSON.stringify(websiteId);
+		var websiteIdJson = JSON.stringify(websiteId);
 		postHandler.post(
 			submitUrl,
 			{
@@ -357,7 +357,7 @@ addAppPopup = function(rootEl){
 				'login' : login,
 				'password' : password,
 				'profileId' : profileId,
-				'websiteIds' : websiteId,
+				'websiteIds' : websiteIdJson,
 				'logwithId' : logwithId,
 				'appId' : appId
 			},
@@ -365,7 +365,16 @@ addAppPopup = function(rootEl){
 				self.submitButton.removeClass('loading');
 			},
 			function(msg){
-
+				var ids = JSON.parse(msg);
+				var catalogApp;
+				for (var i = ids.length - 1; i >= 0; i--) {
+					catalogApp = catalog.getAppById(websiteId[i]);
+					var app = new MyApp();
+					app.init(logwithId, login, catalogApp.id, i == 0 ? name : catalogApp.name, ids[i], catalogApp.ssoId, true, catalogApp.imgSrc);
+					profiles[profiles.length - 1].addApp(app);
+					app.scaleAnimate();
+				}
+				self.close();
 			},
 			function (msg){
 				self.errorRowHandler.find('p').text(msg);
