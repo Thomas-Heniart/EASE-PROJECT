@@ -251,6 +251,13 @@ function scroll() {
 	}, 200, 'linear');
 }
 
+var ssoObject = function(name, id, imgSrc){
+	var self = this;
+	this.name = name;
+	this.id = id;
+	this.imgSrc = imgSrc;
+};
+
 var catalog;
 var Catalog = function(rootEl){
 	var self = this;
@@ -264,6 +271,7 @@ var Catalog = function(rootEl){
 	this.tagContainer = this.qRoot.find('.tagContainer');
 	this.integrateAppArea = this.qRoot.find('.helpIntegrateApps');
 	this.apps = [];
+	this.ssos = [];
 
 	postHandler.post(
 		'GetCatalogApps',
@@ -282,6 +290,29 @@ var Catalog = function(rootEl){
 		},
 		'text'
 		);
+	postHandler.post(
+		'GetSso',
+		{},
+		function(){},
+		function(msg){
+			var ssos = JSON.parse(msg);
+			console.log(msg);
+			for (var i = 0; i < ssos.length; i++) {
+				self.ssos.push(new ssoObject(ssos[i].name, ssos[i].singleId, ssos[i].imgSrc));
+			}
+		},
+		function(msg){
+
+		},
+		'text'
+	);
+	this.getSsoById = function(id){
+		for (var i = 0; i < self.ssos.length; i++) {
+			if (self.ssos[i].id == id)
+				return self.ssos[i];
+		}
+		return null;
+	}
 	this.getAppByName = function(name){
 		for (var i = 0; i < self.apps.length; i++) {
 			if (self.apps[i].name == name)
