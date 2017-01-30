@@ -337,10 +337,10 @@ addAppPopup = function(rootEl){
 		var websiteId = [];
 		var sameApp = easeAppsManager.getAppByLoginAndSsoId(login, self.currentApp.ssoId);
 		var appId = sameApp != null ? sameApp.id : "";
-		websiteId.push(self.currentApp.id);
+		websiteId.push(self.currentApp.id.toString());
 		for (var i = 0; i < self.sameAccountsVar.length; i++) {
 			if (self.sameAccountsVar[i].qRoot.hasClass('checkable') && self.sameAccountsVar[i].qRoot.hasClass('checked'))
-				websiteId.push(self.sameAccountsVar[i].websiteId);
+				websiteId.push(self.sameAccountsVar[i].websiteId.toString());
 		}
 		var submitUrl = "AddClassicApp";
 		if (logwithId.length){
