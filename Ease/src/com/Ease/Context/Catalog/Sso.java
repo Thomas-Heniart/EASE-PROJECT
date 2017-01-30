@@ -81,6 +81,7 @@ public class Sso {
 		JSONObject json = new JSONObject();
 		json.put("name", this.name);
 		json.put("imgSrc", this.img_path);
+		json.put("singleId", this.single_id);
 		return json;
 	}
 }
