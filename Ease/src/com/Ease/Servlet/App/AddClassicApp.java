@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.App;
@@ -49,36 +52,53 @@ public class AddClassicApp extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
+	@SuppressWarnings("unchecked")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		User user = (User) (session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+		Catalog catalog = (Catalog) sm.getContextAttr("catalog");
 		try {
 			sm.needToBeConnected();
 			String name = sm.getServletParam("name", true);
-			String websiteId = sm.getServletParam("websiteId", true);
+			String websiteIdsParam = sm.getServletParam("websiteIds", true);
+			//String websiteId = sm.getServletParam("websiteId", true);
 			String profileId = sm.getServletParam("profileId", true);
 			String password = sm.getServletParam("password", false);
 			
-			Website site = null;
-			Map<String, String> infos = null;
+			
 			if (name == null || name.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
 			else if (password == null)
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty password.");
+			else if (websiteIdsParam == null)
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty websites");
+			
 			//Mettre un param keyDate dans le post si besoin de decrypter en RSA. Correspond à la private key RSA, 
 			String keyDate = sm.getServletParam("keyDate", true);
 			if (keyDate != null && !keyDate.equals("")) {
 				password = RSA.Decrypt(password, Integer.parseInt(keyDate));
 			}
+			
+			JSONParser parser = new JSONParser();
+			JSONArray websiteIds = null;
+			websiteIds = (JSONArray) parser.parse(websiteIdsParam);
+			
 			//--------
 			try {
+				JSONArray res = new JSONArray();
 				Profile profile = user.getDashboardManager().getProfile(Integer.parseInt(profileId));
-				site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(websiteId));
-				infos = site.getNeededInfos(sm);
-				App newApp = ClassicApp.createClassicApp(profile, profile.getApps().size(), name, site, password, infos, sm, user);
-				profile.addApp(newApp);
-				sm.setResponse(ServletManager.Code.Success, String.valueOf(newApp.getSingleId()));
+				for(Object websiteId : websiteIds) {
+					Website site = catalog.getWebsiteWithSingleId(Integer.parseInt((String)websiteId));
+					if (site == null)
+						throw new GeneralException(ServletManager.Code.ClientError, "This website does not exist");
+					Map<String, String> infos = site.getNeededInfos(sm);
+					App newApp = ClassicApp.createClassicApp(profile, profile.getApps().size(), name, site, password, infos, sm, user);
+					profile.addApp(newApp);
+					res.add(newApp.getSingleId());
+				}
+				
+				sm.setResponse(ServletManager.Code.Success, res.toString());
 			} catch (NumberFormatException e) {
 				sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");
 			}
