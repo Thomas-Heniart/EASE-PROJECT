@@ -41,7 +41,6 @@ public class WebsiteApp extends App {
 		DataBaseConnection db = sm.getDB();
 		try {
 			ResultSet rs = db.get("SELECT * from websiteApps WHERE app_id=" + appDBid + ";");
-			//System.out.println(appDBid);
 			try {
 				if (rs.next()) {
 					String websiteAppDBid = rs.getString(Data.ID.ordinal());
@@ -74,6 +73,7 @@ public class WebsiteApp extends App {
 		int transaction = db.startTransaction();
 		String appDBid = App.createApp(profile, position, name, "websiteApp", elevator, sm);
 		String websiteAppDBid = db.set("INSERT INTO websiteApps VALUES(NULL, " + site.getDb_id() + ", " + appDBid + ", NULL, '" + type + "');").toString();
+		site.incrementRatio(db);
 		elevator.put("appDBid", appDBid);
 		db.commitTransaction(transaction);
 		return websiteAppDBid;

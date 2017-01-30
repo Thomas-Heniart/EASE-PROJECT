@@ -366,5 +366,15 @@ public class Website {
 		res.put("position", this.position);
 		return res;
 	}
+
+	public void incrementRatio(DataBaseConnection db) throws GeneralException {
+		this.ratio++;
+		db.set("UPDATE websites SET ratio = ratio + 1 WHERE id = " + this.db_id + ";");
+	}
+	
+	public void decrementRatio(DataBaseConnection db) throws GeneralException {
+		this.ratio--;
+		db.set("UPDATE websites SET ratio = ratio - 1 WHERE id = " + this.db_id + ";");
+	}
 	
 }
