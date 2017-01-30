@@ -4,7 +4,7 @@ if (window.location.href.indexOf("https://ease.space") == 0 || window.location.h
     extension.getStorage("extensionId", function (eId) {
         extensionId = eId;
         $(document).ready(function () {
-            $('body').prepend('<div id="ease_extension" extensionId="' + eId + '" safariversion="2.0.1" style="dislay:none;">');
+            $('body').prepend('<div id="ease_extension" extensionId="' + eId + '" safariversion="2.1.3" style="dislay:none;">');
         });
     });
 

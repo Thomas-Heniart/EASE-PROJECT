@@ -1,5 +1,4 @@
 if (window.location.href.indexOf("https://www.facebook.com") == 0) {
-
     extension.onMessage.addListener("scrapFb", function (msg, sendResponse) {
         function waitload(callback) {
             if ($("._ikh._4na3").length == 0) {

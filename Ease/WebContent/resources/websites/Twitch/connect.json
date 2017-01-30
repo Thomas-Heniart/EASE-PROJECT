@@ -4,15 +4,24 @@
     "home":"https://www.twitch.tv",
     "connect":{
         "todo":[
-        	{"action":"goto", "url":"https://www.twitch.tv/login"},
+        	{"action":"clickona", "search":"#header_login"},
+        	{"action":"waitload"},
+        	{"action":"waitfor", "search":"#passport_iframe_container iframe[src*='authentications']"},
+        	{"action":"enterFrame", "search":"#passport_iframe_container iframe[src*='authentications']"},
         	{"action":"fill", "what":"login", "search":"#username", "grave":true},
             {"action":"fill", "what":"password", "search":"input[name='password']"},
-            {"action":"click", "search":"button.primary.button.js-login-button"}
+            {"action":"click", "search":"button.primary.button.js-login-button"},
+            {"action":"exitFrame"}
         ]
     },
     "Facebook":{
     	"todo":[
-    		{"action":"click", "search":".fb_button.button"}
+    		{"action":"clickona", "search":"#header_login"},
+        	{"action":"waitload"},
+        	{"action":"waitfor", "search":"#passport_iframe_container iframe[src*='authentications']"},
+        	{"action":"enterFrame", "search":"#passport_iframe_container iframe[src*='authentications']"},
+    		{"action":"click", "search":".fb_button"},
+    		{"action":"exitFrame"}
     	]
     },
     "logout":{
@@ -22,7 +31,9 @@
             {"action":"waitload"}
             ]
     },
-    "checkAlreadyLogged":[
-        {"search":"#user_display_name"}
-    ]
+    "checkAlreadyLogged":{
+    	"todo":[
+    		{"action":"check", "type":"hasElement", "search":"#user_display_name"}
+    	]
+    }
 }

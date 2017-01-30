@@ -114,7 +114,7 @@ function startScrapChrome(login, password, finalCallback) {
                     }, function (tab, response) {
                         extension.tabs.onClosed.removeListener(onclose);
                         setTimeout(function () {
-                            //extension.tabs.close(tab);
+                            extension.tabs.close(tab);
                         }, 500);
                         finalCallback(false, "Wrong login or password. Please try again.");
                     });
@@ -127,7 +127,7 @@ function startScrapChrome(login, password, finalCallback) {
                     encryptAllPasswords(response, function (finalRes) {
                         extension.tabs.onClosed.removeListener(onclose);
                         setTimeout(function () {
-                            //extension.tabs.close(tab);
+                            extension.tabs.close(tab);
                         }, 500);
                         finalCallback(true, finalRes);
                     });
