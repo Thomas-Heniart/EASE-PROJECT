@@ -364,6 +364,7 @@ addAppPopup = function(rootEl){
 				self.submitButton.removeClass('loading');
 			},
 			function(msg){
+
 			},
 			function (msg){
 				self.errorRowHandler.find('p').text(msg);
