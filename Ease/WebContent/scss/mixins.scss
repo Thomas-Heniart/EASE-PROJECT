@@ -5,6 +5,13 @@
           box-shadow: $param1, $param2;
 }
 
+@mixin simple-box-shadow($param1) {
+  -webkit-box-shadow: $param1;
+     -moz-box-shadow: $param1;
+     -o-box-shadow: $param1;
+          box-shadow: $param1;
+}
+
 @mixin size($width , $height: $width ) {
   width: $width;
   height: $height;

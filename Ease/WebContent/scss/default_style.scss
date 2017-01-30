@@ -55,6 +55,9 @@ body .crisp-client .crisp-1 .crisp-11 {
   display: none;
 }
 
+.text-underlined {
+  text-decoration: underline;
+}
 .input {
   .showPassDiv {
     position: absolute;
@@ -82,8 +85,15 @@ body .crisp-client .crisp-1 .crisp-11 {
   }
 }
 
+/* fa-stack for font awesome */
+.fa-stack {
+  .fa-stack-1x {
+    color: white;
+  }
+}
+
 /* general input styles */
-input:not([readonly]), textarea:not([readonly]) {
+input[type='text']:not([readonly]),input[type='email']:not([readonly]),input[type='password']:not([readonly]), textarea:not([readonly]) {
   outline: none;
   transition: box-shadow .3s;
   -webkit-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.5);

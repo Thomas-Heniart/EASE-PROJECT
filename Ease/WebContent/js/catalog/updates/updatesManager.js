@@ -112,47 +112,6 @@ var UpdateManager = function (rootEl) {
 	};
 }
 
-
-var MyApp = function(){
-	var self = this;
-	this.qRoot = $($('#boxHelper').html());
-	this.logoHandler = this.qRoot.find('img.logo');
-	this.appNameHandler = this.qRoot.find('.siteName p');
-	this.modifyAppButton = this.qRoot.find('.modifyAppButton');
-	this.deleteAppButton = this.qRoot.find('.deleteAppButton');
-	this.imageArea = this.qRoot.find('.linkImage');
-
-	this.init = function(logWith, login, catalogId, name, id, ssoId, canMove, imageSrc){
-		this.qRoot.attr('logwith', logWith);
-		this.qRoot.attr('login', login);
-		this.qRoot.attr('webid', catalogId);
-		this.qRoot.attr('id', id);
-		this.qRoot.attr('ssoid', ssoId);
-		this.qRoot.attr('move', canMove);
-		this.qRoot.attr('name', name);
-		this.logoHandler.attr('src', imageSrc);
-		this.appNameHandler.text(name);
-		this.imageArea.click(function(){
-			sendEvent(this);
-		});
-		this.modifyAppButton.click(function(e){
-			showModifyAppPopup(this, e);
-		});
-		this.deleteAppButton.click(function(e){
-			showConfirmDeleteAppPopup(this, e);
-		});
-	};
-	this.remove = function(){
-		self.qRoot.remove();
-	};
-	this.scaleAnimate = function(){
-		self.imageArea.addClass('scaleinAnimation');
-		self.imageArea.one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e){
-			self.imageArea.removeClass('scaleinAnimation');
-		});
-	};
-};
-
 var updatePassword = function(updateId, appId, login, pwdLength, imageSrc, websiteName, isVerified, catalogId) {
 	var self = this;
 	this.qRoot = $(

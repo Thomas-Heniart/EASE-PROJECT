@@ -185,9 +185,8 @@ var Profile = function(rootEl){
 			setTimeout(function(){
 				self.parentItem.css('transform', '');
 			}, 300);
-			console.log(currentDraggedApp.id);
-			showAddAppPopup($(this), ui.helper);	
-			easeHiddenProfile.rootEl.off('mouseenter');
+			easeAddAppPopup.open(currentDraggedApp, self);
+//			showAddAppPopup($(this), ui.helper);	
 		},
 		over: function(event, ui){
 			event.preventDefault();
@@ -290,14 +289,6 @@ $(document).click(function (e){
 	});
 }); 
 
-
-/*$(document).on("contextmenu", ".linkImage", function(e) {
-	e.preventDefault();
-	$(this).trigger('mouseover');
-	$(this).find('.showAppActionsButton').trigger('mouseover');
-	return false;
-});*/
-
 // var for started dragging app's parent Id
 //Cause bug in lib where (evt.to == evt.from) in onEnd callback;
 var appDragCurrentIdHelper = 0;
@@ -399,7 +390,7 @@ $(document)
 		$(document)
 		.click(
 			function(event) {
-				if ($(".CatalogViewTab").hasClass("show") && !($(event.target).closest('.MenuButtonSet').length) && $('.md-show').length == 0) {
+				if ($(".CatalogViewTab").hasClass("show") && !($(event.target).closest('.MenuButtonSet').length) && $('.md-show, .popupHandler.myshow').length == 0) {
 					if (!($(event.target).closest('.profileAdder, .header, .dashboardColumn, .md-modal, .md-overlay, .CatalogViewTab, .AddProfileView, .updateButton, .hiddenProfile, #tipsHandler, .updateBox, .popupHandler').length))
 						leaveEditMode();
 				}
