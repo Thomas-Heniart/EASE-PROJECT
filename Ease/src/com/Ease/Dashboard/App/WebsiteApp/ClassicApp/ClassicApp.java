@@ -110,6 +110,7 @@ public class ClassicApp extends WebsiteApp {
 		if (this.groupApp == null || this.groupApp.isCommon() == false)
 			account.removeFromDB(sm);
 		super.removeFromDB(sm);
+		this.website.decrementRatio(db);
 		db.commitTransaction(transaction);
 	}
 	

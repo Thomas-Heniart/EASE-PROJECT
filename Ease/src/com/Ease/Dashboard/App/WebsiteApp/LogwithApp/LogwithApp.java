@@ -13,10 +13,7 @@ import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.AppInformation;
 import com.Ease.Dashboard.App.AppPermissions;
 import com.Ease.Dashboard.App.GroupApp;
-import com.Ease.Dashboard.App.WebsiteApp.GroupWebsiteApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.Account;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
@@ -100,6 +97,7 @@ public class LogwithApp extends WebsiteApp {
 		int transaction = db.startTransaction();
 		db.set("DELETE FROM logWithApps WHERE id=" + logwithAppDBid + ";");
 		super.removeFromDB(sm);
+		this.website.decrementRatio(db);
 		db.commitTransaction(transaction);
 	}
 	
