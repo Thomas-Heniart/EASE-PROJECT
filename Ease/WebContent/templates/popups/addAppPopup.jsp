@@ -52,33 +52,9 @@ pageEncoding="UTF-8"%>
 						</div>
 						<div class="accounts">
 							<div class="accountsHolder selectable">
-								<div class="accountLine">
-									<div class="checkBoxInput">
-										<span class="fa-stack">
-											<i class="fa fa-square-o fa-stack-2x"></i>
-											<i class="fa fa-check fa-stack-1x"></i>
-										</span>
-									</div>
-									<p class="accountName">sergisergio@gmail.com</p>
-								</div>
-								<div class="accountLine">
-									<div class="checkBoxInput">
-										<span class="fa-stack">
-											<i class="fa fa-square-o fa-stack-2x"></i>
-											<i class="fa fa-check fa-stack-1x"></i>
-										</span>
-									</div>
-									<p class="accountName">sergisergio@gmail.com</p>
-								</div>
-								<div class="accountLine">
-									<div class="checkBoxInput">
-										<span class="fa-stack">
-											<i class="fa fa-square-o fa-stack-2x"></i>
-											<i class="fa fa-check fa-stack-1x"></i>
-										</span>
-									</div>
-									<p class="accountName">sergisergio@gmail.com</p>
-								</div>
+							<div class="errorHandler">
+								No <span></span> accounts detected !
+							</div>
 							</div>
 						</div>
 					</div>
