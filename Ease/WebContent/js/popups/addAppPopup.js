@@ -349,6 +349,7 @@ addAppPopup = function(rootEl){
 		if (self.choosenSsoAccountLogin != null) {
 			submitUrl = "AddClassicAppSameAs";
 		}
+		websiteId = JSON.stringify(websiteId);
 		postHandler.post(
 			submitUrl,
 			{
@@ -356,7 +357,7 @@ addAppPopup = function(rootEl){
 				'login' : login,
 				'password' : password,
 				'profileId' : profileId,
-				'websiteId' : websiteId,
+				'websiteIds' : websiteId,
 				'logwithId' : logwithId,
 				'appId' : appId
 			},
