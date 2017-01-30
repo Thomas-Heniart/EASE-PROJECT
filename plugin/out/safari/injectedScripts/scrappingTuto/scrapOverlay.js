@@ -26,7 +26,7 @@ if (window.location.href.indexOf("https://passwords.google.com/") == 0 || window
             }
         },
         create: function (site) {
-            /*this.elements.main = document.createElement('div');
+            this.elements.main = document.createElement('div');
             this.elements.main.id = "ease_overlay_scrap";
             document.body.appendChild(this.elements.main);
 
@@ -106,10 +106,10 @@ if (window.location.href.indexOf("https://passwords.google.com/") == 0 || window
             var info2 = document.createElement('p');
             info2.textContent = "keep right after this.";
             infoContainer.append(info2);
-            this.elements.info2 = info2;*/
+            this.elements.info2 = info2;
         },
         remove: function (type) {
-            //this.elements.main.style = "display: none";
+            this.elements.main.style = "display: none";
         }
     }
 }

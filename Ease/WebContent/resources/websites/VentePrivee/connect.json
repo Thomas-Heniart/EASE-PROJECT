@@ -20,9 +20,8 @@
     	"todo":[
     		{"action":"waitDocumentReady"},
     		{"action":"waitload"},
-    		{"action":"waitload"},
-    		{"action":"check", "type": "absentElement", "search":"#authenticationForm"},
-    		{"action":"check", "type": "hasElement", "search":".icon-deconnexion"}
+    		{"action":"check", "type": "hasElement", "search":".icon-deconnexion"},
+    		{"action":"check", "type": "absentElement", "search":"#authenticationForm"}
     	]
     }
 }

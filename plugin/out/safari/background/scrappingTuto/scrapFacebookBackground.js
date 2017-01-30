@@ -23,7 +23,7 @@ var facebookScrap = {
             "todo": [
                 {
                     "action": "check",
-                    "type": "hasElement",
+                    "type": "absentElement",
                     "search": "input[type='password']"
                 }
             ]
@@ -103,7 +103,7 @@ function startScrapFacebook(login, password, finalCallback) {
                         finalCallback(false, "Error. Please try again.");
                         extension.tabs.onClosed.removeListener(onclose);
                         setTimeout(function () {
-                            extension.tabs.close(tab);
+                            //extension.tabs.close(tab);
                         }, 500);
                     });
                 });
@@ -120,7 +120,7 @@ function startScrapFacebook(login, password, finalCallback) {
                         finalCallback(false, "Wrong login or password. Please try again.");
                         extension.tabs.onClosed.removeListener(onclose);
                         setTimeout(function () {
-                            extension.tabs.close(tab);
+                            //extension.tabs.close(tab);
                         }, 500);
                     });
                 });

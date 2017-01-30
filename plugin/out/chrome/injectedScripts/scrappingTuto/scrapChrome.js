@@ -3,13 +3,10 @@ if (window.location.href.indexOf("https://passwords.google.com/") == 0 || window
     extension.onMessage.addListener("scrapChrome", function (msg, sendResponse) {
         function waitload(callback) {
             if ($(".z-Of.cba.z-op").length != 0) {
-                console.log("start scrap");
                 callback();
             } else if ($(".gga").length != 0) {
-                console.log("no pass");
                 sendResponse([]);
             } else {
-                console.log("wait pass");
                 setTimeout(function () {
                     waitload(callback);
                 }, 100);
@@ -19,13 +16,9 @@ if (window.location.href.indexOf("https://passwords.google.com/") == 0 || window
         waitload(function () {
             var loadingString = "";
             var waitingTime = 5;
-            console.log($(".z-Of.cba.z-op").length);
             var nbOfPass = $(".z-Of.cba.z-op").length;
             var results = [];
-            console.log(nbOfPass);
-
             function getPass(index) {
-                console.log(index);
                 var element = $(".z-Of.cba.z-op").get(index);
                 var field = $(element).find(".bba.EW.a-Fa");
 
