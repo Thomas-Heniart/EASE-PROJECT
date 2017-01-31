@@ -210,6 +210,8 @@
 			display: inline-block;
 			position: absolute;
 			left: 20px;
+			top: 50%;
+			transform: translateY(-50%);
 			.tags-group:first-child {
 				.tag{
 					margin-left: 2px;

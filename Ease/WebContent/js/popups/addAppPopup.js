@@ -20,6 +20,8 @@ addAppPopup = function(rootEl){
 
 	this.signInChooseRow = this.qRoot.find('.signInChooseRow');
 	this.signInAccountSelectRow = this.qRoot.find('.signInAccountSelectRow');
+	this.signInDetectionErrorHandler = this.signInAccountSelectRow.find('.errorHandler');
+
 	this.signInAccountSelectButtonBack = this.signInAccountSelectRow.find('.buttonBack');
 
 	this.sameSsoAppsRow = this.qRoot.find('.sameSsoAppsRow');
@@ -34,6 +36,20 @@ addAppPopup = function(rootEl){
 	this.currentProfile = null;
 	this.currentApp = null;
 
+	this.loginInput.on('input', function(){
+		if (self.loginInput.val().length && self.passwordInput.val().length){
+			self.submitButton.removeClass('locked');
+		} else {
+			self.submitButton.addClass('locked');			
+		}
+	});
+	this.passwordInput.on('input', function(){
+		if (self.loginInput.val().length && self.passwordInput.val().length){
+			self.submitButton.removeClass('locked');
+		} else {
+			self.submitButton.addClass('locked');			
+		}
+	});
 	/* Sign in interactions */
 	this.signInAccountSelectRow.find('.selectable').selectable({
 		classes: {
@@ -42,14 +58,20 @@ addAppPopup = function(rootEl){
 	});
 
 	this.signInAccountSelectButtonBack.click(function(){
+		self.resetSignInAccounts();
+		self.resetSimpleInputs();
+		self.submitButton.addClass('locked');
 		self.signInAccountSelectRow.addClass('hide');
 		for (var i = 0; i < self.activeSections.length; i++) {
 			self.activeSections[i].removeClass('hide');
 		}
 	});
 
+	this.choosenSignInName = "";
 	this.signInChooseRow.find('.signInButton').click(function(){
 		var catalogApp = catalog.getAppByName($(this).attr('data'));
+		self.choosenSignInName = $(this).attr('data');
+		self.signInDetectionErrorHandler.find('span').text(self.choosenSignInName);
 		self.showSignInAccounts(catalogApp.id);
 	});
 
@@ -85,9 +107,18 @@ addAppPopup = function(rootEl){
 		var accountLine;
 		for (var i = 0; i < apps.length; i++) {
 			accountLine = self.createSignInSelectorDiv(apps[i]);
-			if (!i)
+			if (!i){
 				accountLine.addClass('selected');
+				accountLine.addClass('ui-selected');
+				accountLine.addClass('ui-selectee');
+			}
 			accountsHolder.append(accountLine);
+		}
+		if (apps.length)
+			self.submitButton.removeClass('locked');
+		else{
+			self.submitButton.addClass('locked');
+			self.signInDetectionErrorHandler.addClass('show');
 		}
 		self.signInAccountSelectRow.removeClass('hide');
 	}
@@ -97,13 +128,15 @@ addAppPopup = function(rootEl){
 
 	/* sso interactions */
 	this.accountNameHelperBackButton.click(function(){
+		self.resetSameAccountsRow();
+		self.resetSimpleInputs();
+		self.submitButton.addClass('locked');
 		self.accountNameHelper.addClass('hide');
 		self.sameSsoAppsRow.addClass('hide');
 		self.ssoSelectAccountRow.removeClass('hide');
 	});
 
-	this.createSsoAccountSelectDiv = function(ssoId, login){
-		var imgSrc = '/resources/sso/1.png';
+	this.createSsoAccountSelectDiv = function(ssoId, login, imgSrc){
 		var ret = $(
 			'<div class="accountLine">'
 			+'<div class="accountLogo">'
@@ -131,14 +164,26 @@ addAppPopup = function(rootEl){
 			);
 		return ret;
 	}
-	this.setupSameAccountsDiv = function(ssoId, login){
-		var apps = catalog.getAppsBySsoId(ssoId);
-		var obj;
-		var toPut = self.sameSsoAppsRow.find('.selectHandler');
+
+	this.resetSameAccountsRow = function(){
 		for (var i = 0; i < self.sameAccountsVar.length; i++) {
 			self.sameAccountsVar[i].qRoot.remove();
 		}
-		this.sameAccountsVar = [];
+		this.sameAccountsVar = [];		
+	}
+	this.resetSimpleInputs = function(){
+		self.loginInput.val('');
+		self.passwordInput.val('');
+	}
+	this.resetSignInAccounts = function(){
+		self.signInAccountSelectRow.find('.accountLine').remove();
+		self.signInDetectionErrorHandler.removeClass('show');
+	}
+	this.setupSameAccountsDiv = function(ssoId, login){
+		var apps = catalog.getAppsBySsoId(ssoId);
+		var obj;
+		self.resetSameAccountsRow();
+		var toPut = self.sameSsoAppsRow.find('.selectHandler');
 		toPut.find('.appHandler').remove();
 		for (var i = apps.length - 1; i >= 0; i--) {
 			if (apps[i].id != self.currentApp.id){
@@ -185,9 +230,12 @@ addAppPopup = function(rootEl){
 		var lastButton = accountHandler.find('.newAccountAdder');
 		accountHandler.find('.accountLine:not(.newAccountAdder)').remove();
 		var loginList = self.getLoginList(easeAppsManager.getAppsBySsoId(app.ssoId));
+		var ssoAcc = catalog.getSsoById(self.currentApp.ssoId);
 		var createdDiv;
+		console.log(self.currentApp.ssoId);
+		console.log(ssoAcc);
 		for (var i = 0; i < loginList.length; i++) {
-			createdDiv = self.createSsoAccountSelectDiv(app.ssoId, loginList[i]);
+			createdDiv = self.createSsoAccountSelectDiv(app.ssoId, loginList[i], ssoAcc != null ? ssoAcc.imgSrc : "");
 			createdDiv.click(function(){
 				self.choosenSsoAccountLogin = $(this).find('.accountName').text();
 				self.accountNameHelperName.text(self.choosenSsoAccountLogin);
@@ -197,6 +245,7 @@ addAppPopup = function(rootEl){
 				self.selectExistingSsoAccounts();
 				self.sameSsoAppsRow.removeClass('hide');
 				self.ssoSelectAccountRow.addClass('hide');
+				self.submitButton.removeClass('locked');
 			});
 			lastButton.before(createdDiv);
 		}
@@ -212,8 +261,6 @@ addAppPopup = function(rootEl){
 		}
 		return loginList;
 	}
-
-	this.submitUrl = "";
 
 	this.open = function(app, profile){
 		self.reset();
@@ -256,6 +303,11 @@ addAppPopup = function(rootEl){
 		self.currentProfile = null;
 		self.currentApp = null;
 		self.activeSections = [];
+		self.resetSimpleInputs();
+		self.resetSameAccountsRow();
+		self.resetSignInAccounts();
+		self.submitButton.addClass('locked');
+		self.errorRowHandler.removeClass('show');
 		self.loginPasswordRow.addClass('hide');
 		self.signInChooseRow.addClass('hide');
 		self.signInAccountSelectRow.addClass('hide');
@@ -285,10 +337,10 @@ addAppPopup = function(rootEl){
 		var websiteId = [];
 		var sameApp = easeAppsManager.getAppByLoginAndSsoId(login, self.currentApp.ssoId);
 		var appId = sameApp != null ? sameApp.id : "";
-		websiteId.push(self.currentApp.id);
+		websiteId.push(self.currentApp.id.toString());
 		for (var i = 0; i < self.sameAccountsVar.length; i++) {
 			if (self.sameAccountsVar[i].qRoot.hasClass('checkable') && self.sameAccountsVar[i].qRoot.hasClass('checked'))
-				websiteId.push(self.sameAccountsVar[i].websiteId);
+				websiteId.push(self.sameAccountsVar[i].websiteId.toString());
 		}
 		var submitUrl = "AddClassicApp";
 		if (logwithId.length){
@@ -297,6 +349,7 @@ addAppPopup = function(rootEl){
 		if (self.choosenSsoAccountLogin != null) {
 			submitUrl = "AddClassicAppSameAs";
 		}
+		websiteId = JSON.stringify(websiteId);
 		postHandler.post(
 			submitUrl,
 			{
@@ -304,7 +357,7 @@ addAppPopup = function(rootEl){
 				'login' : login,
 				'password' : password,
 				'profileId' : profileId,
-				'websiteId' : websiteId,
+				'websiteIds' : websiteId,
 				'logwithId' : logwithId,
 				'appId' : appId
 			},
@@ -318,7 +371,7 @@ addAppPopup = function(rootEl){
 				self.errorRowHandler.addClass('show');
 			},
 			'text'
-		);
+			);
 	});
 
 	this.goBackButtonHandler.click(function(){

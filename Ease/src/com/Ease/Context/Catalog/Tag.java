@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
@@ -127,5 +128,31 @@ public class Tag {
 	
 	public boolean isPublic() {
 		return this.groupIds.isEmpty();
+	}
+
+	@SuppressWarnings("unchecked")
+	public JSONObject getJSON(List<String> colors) {
+		JSONObject res = new JSONObject();
+		res.put("name", this.name);
+		res.put("singleId", this.single_id);
+		res.put("color", colors.get(Integer.parseInt(this.color) - 1));
+		return res;
+	}
+
+	public void addWebsite(Website website, ServletManager sm) throws GeneralException {
+		if (this.sites.contains(website))
+			throw new GeneralException(ServletManager.Code.ClientWarning, "Tag already set");
+		DataBaseConnection db = sm.getDB();
+		db.set("INSERT INTO tagsAndSitesMap VALUES (" + this.db_id + ", " + website.getDb_id() + ");");
+		this.sites.add(website);
+		
+	}
+	
+	public void removeWebsite(Website website, ServletManager sm) throws GeneralException {
+		if (!this.sites.contains(website))
+			throw new GeneralException(ServletManager.Code.ClientWarning, "No such tag for this site");
+		DataBaseConnection db = sm.getDB();
+		db.set("DELETE FROM tagsAndSitesMap WHERE tag_id = " + this.db_id + " AND website_id = " + website.getDb_id() + ";");
+		this.sites.remove(website);
 	}
 }

@@ -88,7 +88,7 @@ public class Website {
 	public static List<Website> loadWebsites(DataBaseConnection db, Map<String, Sso> ssoDbIdMap, ServletContext context) throws GeneralException {
 		try {
 			List<Website> websites = new LinkedList<Website>();
-			ResultSet rs = db.get("SELECT * FROM websites ORDER BY position DESC, ratio DESC");
+			ResultSet rs = db.get("SELECT * FROM websites ORDER BY position DESC");
 			while (rs.next()) {
 				String db_id = rs.getString(WebsiteData.ID.ordinal());
 				List<WebsiteInformation> website_informations = WebsiteInformation.loadInformations(db_id, db);
@@ -365,6 +365,16 @@ public class Website {
 		res.put("isNew", this.isNew());
 		res.put("position", this.position);
 		return res;
+	}
+
+	public void incrementRatio(DataBaseConnection db) throws GeneralException {
+		this.ratio++;
+		db.set("UPDATE websites SET ratio = ratio + 1 WHERE id = " + this.db_id + ";");
+	}
+	
+	public void decrementRatio(DataBaseConnection db) throws GeneralException {
+		this.ratio--;
+		db.set("UPDATE websites SET ratio = ratio - 1 WHERE id = " + this.db_id + ";");
 	}
 	
 }

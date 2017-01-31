@@ -5,14 +5,12 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.servlet.ServletContext;
 
 import org.json.simple.JSONArray;
 
 import com.Ease.Context.Group.Group;
-import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
@@ -242,5 +240,43 @@ public class Catalog {
 			res.add(entry.getValue().getJson());
 		}
 		return res;
+	}
+
+	public List<Tag> getTagsForWebsiteId(int websiteId) {
+		Website website = this.websiteIDmap.get(websiteId);
+		List<Tag> res = new LinkedList<Tag>();
+		for (Tag tag : this.tags) {
+			if (tag.getWebsites().contains(website))
+				res.add(tag);
+		}
+		return res;
+	}
+
+	public void addWebsiteTag(int websiteId, int tagId, ServletManager sm) throws GeneralException {
+		Website website = this.websiteIDmap.get(websiteId);
+		Tag tag = this.tagIDmap.get(tagId);
+		if (website == null)
+			throw new GeneralException(ServletManager.Code.ClientError, "This website does not exist");
+		if (tag == null)
+			throw new GeneralException(ServletManager.Code.ClientError, "This tag does not exist");
+		tag.addWebsite(website, sm);
+		
+	}
+	
+	public void removeWebsiteTag(int websiteId, int tagId, ServletManager sm) throws GeneralException {
+		Website website = this.websiteIDmap.get(websiteId);
+		Tag tag = this.tagIDmap.get(tagId);
+		if (website == null)
+			throw new GeneralException(ServletManager.Code.ClientError, "This website does not exist");
+		if (tag == null)
+			throw new GeneralException(ServletManager.Code.ClientError, "This tag does not exist");
+		tag.removeWebsite(website, sm);
+		
+	}
+
+	public void addTag(Tag tag) {
+		this.tags.add(tag);
+		this.tagDBmap.put(tag.getDbId(), tag);
+		this.tagIDmap.put(tag.getSingleId(), tag);
 	}
 }
