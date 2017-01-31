@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.parser.JSONParser;
+
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.App;
@@ -73,6 +75,8 @@ public class AddClassicApp extends HttpServlet {
 			}
 			//--------
 			try {
+				JSONParser parser = new JSONParser();
+				System.out.println(websiteId);
 				Profile profile = user.getDashboardManager().getProfile(Integer.parseInt(profileId));
 				site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(websiteId));
 				infos = site.getNeededInfos(sm);
