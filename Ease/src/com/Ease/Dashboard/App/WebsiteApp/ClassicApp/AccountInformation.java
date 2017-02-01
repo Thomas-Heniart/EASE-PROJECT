@@ -6,8 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-
-import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
@@ -27,6 +25,13 @@ public class AccountInformation {
 		for (Map.Entry<String, String> entry : account_informations.entrySet()) {
 			informations.add(createAccountInformation(account_id, entry.getKey(), entry.getValue(), sm));
 		}
+		return informations;
+	}
+	
+	public static List<AccountInformation> createAccountInformationFromAccountInformations(String account_id, List<AccountInformation> accountInformations, ServletManager sm) throws GeneralException {
+		List<AccountInformation> informations = new LinkedList<AccountInformation> ();
+		for (AccountInformation info : accountInformations)
+			informations.add(createAccountInformation(account_id, info.getInformationName(), info.getInformationValue(), sm));
 		return informations;
 	}
 	
@@ -83,6 +88,4 @@ public class AccountInformation {
 		DataBaseConnection db = sm.getDB();
 		db.set("DELETE FROM accountsInformations WHERE id=" + this.db_id + ";");
 	}
-	
-	
 }

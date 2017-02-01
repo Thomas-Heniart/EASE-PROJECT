@@ -1,0 +1,26 @@
+{
+    "name":"Bitbucket",
+    "lastlogin":"",
+    "home":"https://bitbucket.org/account/signin/",
+    "connect": {
+    	"todo": [
+    		{"action":"fill", "what":"login","search":"#js-email-field", "grave":"true"},
+    		{"action":"fill", "what":"password","search":"#js-password-field", "grave":"true"},
+    		{"action":"click", "search":".selenium-login-submit", "grave":"true"}
+    	]
+    },
+    "Google": {
+    	"todo": [
+    		{"action":"click", "search":".login-with-google"}
+    	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"aclick", "search":"#log-out-link"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"#log-out-link"}
+    ]
+    
+}

@@ -1,0 +1,36 @@
+{
+    "name":"Typeform",
+    "lastlogin":"",
+    "home":"https://admin.typeform.com/login/",
+    "connect": {
+    	"todo": [
+    		{"action":"fill", "what":"login","search":"#_username", "grave":"true"},
+    		{"action":"fill", "what":"password","search":"#_password", "grave":"true"},
+    		{"action":"click", "search":"#btnlogin", "grave":"true"}
+    	]
+    },
+    "Facebook": {
+    	"todo": [
+    		{"action":"clickona", "search":"#signup-fb"}
+    	]
+    },
+    "Google": {
+    	"todo": [
+    		{"action":"clickona", "search":"#signup-gp"}
+    	]
+    },
+    "Linkedin": {
+    	"todo": [
+    		{"action":"clickona", "search":"#signup-li"}
+    	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"aclick", "search":"#menu-logout"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"#menu-logout"}
+    ]
+    
+}
