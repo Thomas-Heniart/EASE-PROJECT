@@ -86,6 +86,7 @@ public class AddClassicApp extends HttpServlet {
 			
 			//--------
 			try {
+
 				JSONArray res = new JSONArray();
 				Profile profile = user.getDashboardManager().getProfile(Integer.parseInt(profileId));
 				for(Object websiteId : websiteIds) {
