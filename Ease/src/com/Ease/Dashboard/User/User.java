@@ -578,4 +578,8 @@ public class User {
 	public Status getStatus() {
 		return this.status;
 	}
+
+	public boolean isInGroup() {
+		return !this.groups.isEmpty();
+	}
 }
