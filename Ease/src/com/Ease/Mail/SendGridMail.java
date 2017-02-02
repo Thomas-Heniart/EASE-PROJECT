@@ -276,12 +276,6 @@ public class SendGridMail {
 		personalization.addBcc(recipient);
 	}
 
-	public void setupWelcomeEmail(String userName, String userEmail) {
-		mail.setTemplateId("14d671a6-9a3e-482b-8dc1-39cac80b7bd8");
-		this.addTo(userName, userEmail);
-		personalization.addSubstitution("#Name", userName);
-	}
-
 	public void enableMailSettings() {
 		mail.setIpPoolId("23");
 		MailSettings mailSettings = new MailSettings();
@@ -348,17 +342,35 @@ public class SendGridMail {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
-
-	public static void main(String[] args) throws IOException {
-	    SendGridMail mail = new SendGridMail("Viccus", "thomas@ease.space");
-	    mail.setupWelcomeEmail("Toto", "heniart.thomas@gmail.com");
-	    //mail.enableMailSettings();
-	    //mail.enableMailTracking();
-	    try {
-			mail.sendEmail();
-		} catch (GeneralException e) {
-			e.printStackTrace();
-		}
-	  }
+	
+	public void sendWelcomeEmail(String userName, String userEmail) throws GeneralException {
+		mail.setTemplateId("14d671a6-9a3e-482b-8dc1-39cac80b7bd8");
+		this.addTo(userName, userEmail);
+		personalization.addSubstitution("#Name", userName);
+		this.sendEmail();
+	}
+	
+	public void sendAppArrivedEmail(String userName, String userEmail, String appName) throws GeneralException {
+		mail.setTemplateId("cfe20be6-31c1-427f-b94c-02aacedd2619");
+		this.addTo(userName, userEmail);
+		personalization.addSubstitution("#Name", userName);
+		personalization.addSubstitution("#appName", appName);
+		this.sendEmail();
+	}
+	
+	public void sendAwesomeUserEmail(String userName, String userEmail, String appName) throws GeneralException {
+		mail.setTemplateId("2f8b2828-6e6f-42bd-a568-3da1b83ed835");
+		this.addTo(userName, userEmail);
+		personalization.addSubstitution("#Username", userName);
+		personalization.addSubstitution("#appname", appName);
+		this.sendEmail();
+	}
+	
+	public void sendReminderThreeDays(String userName, String userEmail) throws GeneralException {
+		mail.setTemplateId("2c03ac41-648f-49c4-95dc-7057a09de38b");
+		this.addTo(userName, userEmail);
+		personalization.addSubstitution("#Username", userName);
+		this.sendEmail();
+	}
 
 }

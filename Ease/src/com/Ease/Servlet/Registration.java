@@ -88,8 +88,7 @@ public class Registration extends HttpServlet {
 				session.setAttribute("user", newUser);
 				if (!newUser.isInGroup()) {
 					SendGridMail welcomeEmail = new SendGridMail("Agathe @Ease", "contact@ease.space");
-					welcomeEmail.setupWelcomeEmail(newUser.getFirstName(), newUser.getEmail());
-					welcomeEmail.sendEmail();
+					welcomeEmail.sendWelcomeEmail(newUser.getFirstName(), newUser.getEmail());
 				}
 				sm.setResponse(ServletManager.Code.Success, "Registered successfully");
 			}
