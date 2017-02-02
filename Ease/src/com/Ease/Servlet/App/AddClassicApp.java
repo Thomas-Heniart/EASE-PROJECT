@@ -94,7 +94,7 @@ public class AddClassicApp extends HttpServlet {
 					if (site == null)
 						throw new GeneralException(ServletManager.Code.ClientError, "This website does not exist");
 					Map<String, String> infos = site.getNeededInfos(sm);
-					App newApp = ClassicApp.createClassicApp(profile, profile.getApps().size(), name, site, password, infos, sm, user);
+					App newApp = ClassicApp.createClassicApp(profile, profile.getApps().size(), (res.size() == 0) ? name : site.getName(), site, password, infos, sm, user);
 					profile.addApp(newApp);
 					res.add(newApp.getSingleId());
 				}
