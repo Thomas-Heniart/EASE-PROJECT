@@ -20,7 +20,7 @@ addAppPopup = function(rootEl){
 
 	this.signInChooseRow = this.qRoot.find('.signInChooseRow');
 	this.signInAccountSelectRow = this.qRoot.find('.signInAccountSelectRow');
-	this.signInDetectionErrorHandler = this.signInAccountSelectRow.find('.errorHandler');
+	this.signInDetectionErrorHandler = this.signInAccountSelectRow.find('.SignInErrorHandler');
 
 	this.signInAccountSelectButtonBack = this.signInAccountSelectRow.find('.buttonBack');
 
@@ -327,12 +327,12 @@ addAppPopup = function(rootEl){
 		self.submitButton.addClass('loading');
 
 		var name = self.appNameHolder.val();
-		var profileId = profiles.indexOf(self.currentProfile);
+		var profileId = self.currentProfile.id;
 		var login = self.loginInput.val();
 		var password = self.passwordInput.val();
 
 		var logwithApp = self.signInAccountSelectRow.find('.selected');
-		var logwithId = logwithApp.length ? $(logwithApp[0]).attr('appid') : null;
+		var logwithId = logwithApp.length ? $(logwithApp[0]).attr('appid') : "";
 
 		var websiteId = [];
 		var sameApp = easeAppsManager.getAppByLoginAndSsoId(login, self.currentApp.ssoId);
@@ -344,7 +344,7 @@ addAppPopup = function(rootEl){
 		}
 		var submitUrl = "AddClassicApp";
 		if (logwithId.length){
-			submitUrl = "AddLogWithApp";
+			submitUrl = "AddLogwithApp";
 		}
 		if (self.choosenSsoAccountLogin != null) {
 			submitUrl = "AddClassicAppSameAs";
@@ -371,7 +371,7 @@ addAppPopup = function(rootEl){
 					catalogApp = catalog.getAppById(websiteId[i]);
 					var app = new MyApp();
 					app.init(logwithId, login, catalogApp.id, i == 0 ? name : catalogApp.name, ids[i], catalogApp.ssoId, true, catalogApp.imgSrc);
-					profiles[profiles.length - 1].addApp(app);
+					self.currentProfile.addApp(app);
 					app.scaleAnimate();
 				}
 				self.close();

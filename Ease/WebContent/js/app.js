@@ -91,6 +91,9 @@ var appsManager = function(){
 	this.removeApp = function(app){
 		easeApps.splice(easeApps.indexOf(app), 1);
 	}
+	this.addApp = function(app){
+		easeApps.push(app);
+	}
 };
 
 $(document).ready(function(){
