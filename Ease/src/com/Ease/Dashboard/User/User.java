@@ -183,7 +183,6 @@ public class User {
 	protected String email;
 	protected Keys keys;
 	protected Option opt;
-	protected int max_single_id;
 	protected Map<String, UserEmail> emails;
 	protected Map<String, WebsocketSession> websockets;
 	protected List<Group> groups;
@@ -205,7 +204,6 @@ public class User {
 		this.keys = keys;
 		this.opt = opt;
 		this.emails = new HashMap<String, UserEmail>();
-		this.max_single_id = 0;
 		this.emails = new HashMap<String, UserEmail>();
 		this.websockets = new HashMap<String, WebsocketSession>();
 		this.groups = new LinkedList<Group>();
@@ -307,11 +305,6 @@ public class User {
 	 * Utils
 	 * 
 	 */
-
-	public int getNextSingleId() {
-		this.max_single_id++;
-		return max_single_id;
-	}
 
 	public void removeEmail(UserEmail email) {
 		this.emails.remove(email);
