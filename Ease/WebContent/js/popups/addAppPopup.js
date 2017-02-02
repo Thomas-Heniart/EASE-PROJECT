@@ -327,7 +327,7 @@ addAppPopup = function(rootEl){
 		self.submitButton.addClass('loading');
 
 		var name = self.appNameHolder.val();
-		var profileId = profiles.indexOf(self.currentProfile);
+		var profileId = self.currentProfile.id;
 		var login = self.loginInput.val();
 		var password = self.passwordInput.val();
 
