@@ -127,14 +127,6 @@ addAppPopup = function(rootEl){
 	this.activeSections = [];
 
 	/* sso interactions */
-	this.accountNameHelperBackButton.click(function(){
-		self.resetSameAccountsRow();
-		self.resetSimpleInputs();
-		self.submitButton.addClass('locked');
-		self.accountNameHelper.addClass('hide');
-		self.sameSsoAppsRow.addClass('hide');
-		self.ssoSelectAccountRow.removeClass('hide');
-	});
 
 	this.createSsoAccountSelectDiv = function(ssoId, login, imgSrc){
 		var ret = $(
@@ -179,7 +171,7 @@ addAppPopup = function(rootEl){
 		self.signInAccountSelectRow.find('.accountLine').remove();
 		self.signInDetectionErrorHandler.removeClass('show');
 	}
-	this.setupSameAccountsDiv = function(ssoId, login){
+	this.setupSameAccountsDiv = function(ssoId){
 		var apps = catalog.getAppsBySsoId(ssoId);
 		var obj;
 		self.resetSameAccountsRow();
@@ -211,11 +203,21 @@ addAppPopup = function(rootEl){
 				if (self.sameAccountsVar[i].websiteId == apps[j].websiteId){
 					self.sameAccountsVar[i].qRoot.addClass('checked');
 					self.sameAccountsVar[i].qRoot.removeClass('checkable');
+					break;
 				}
 			}
 		}
 	}
 
+	this.accountNameHelperBackButton.click(function(){
+//		self.resetSameAccountsRow();
+		self.resetSimpleInputs();
+		self.choosenSsoAccountLogin = null;
+		self.submitButton.addClass('locked');
+		self.accountNameHelper.addClass('hide');
+		self.sameSsoAppsRow.addClass('hide');
+		self.ssoSelectAccountRow.removeClass('hide');
+	});
 	this.ssoNewAccountButton.click(function(){
 		self.ssoSelectAccountRow.addClass('hide');
 		self.loginPasswordRow.removeClass('hide');
@@ -242,6 +244,7 @@ addAppPopup = function(rootEl){
 				self.loginInput.val(self.choosenSsoAccountLogin);
 				self.accountNameHelperImg.attr('src', $(this).find('.accountLogo img').attr('src'));
 				self.accountNameHelper.removeClass('hide');
+				self.setupSameAccountsDiv(app.ssoId);
 				self.selectExistingSsoAccounts();
 				self.sameSsoAppsRow.removeClass('hide');
 				self.ssoSelectAccountRow.addClass('hide');
@@ -283,6 +286,7 @@ addAppPopup = function(rootEl){
 			self.setupSameAccountsDiv(app.ssoId);
 			if (!(easeAppsManager.getAppsBySsoId(app.ssoId).length)){
 				self.loginPasswordRow.removeClass('hide');
+				self.sameSsoAppsRow.removeClass('hide');
 				self.activeSections.push(self.loginPasswordRow);
 			} else {
 				self.setupSsoAccountChooseRow(app);
@@ -303,6 +307,7 @@ addAppPopup = function(rootEl){
 		self.currentProfile = null;
 		self.currentApp = null;
 		self.activeSections = [];
+		self.choosenSsoAccountLogin = null;
 		self.resetSimpleInputs();
 		self.resetSameAccountsRow();
 		self.resetSignInAccounts();
@@ -367,7 +372,7 @@ addAppPopup = function(rootEl){
 			function(msg){
 				var ids = JSON.parse(msg);
 				var catalogApp;
-				for (var i = ids.length - 1; i >= 0; i--) {
+				for (var i = 0; i < ids.length; ++i) {
 					catalogApp = catalog.getAppById(websiteId[i]);
 					var app = new MyApp();
 					app.init(logwithId, login, catalogApp.id, i == 0 ? name : catalogApp.name, ids[i], catalogApp.ssoId, true, catalogApp.imgSrc);

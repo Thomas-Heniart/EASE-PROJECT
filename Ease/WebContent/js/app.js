@@ -120,7 +120,7 @@ var MyApp = function(){
 
 	this.init = function(logWith, login, catalogId, name, id, ssoId, canMove, imageSrc){
 		self.qRoot = $($('#boxHelper').html());
-		self.qRoot.attr('logwith', logWith);
+		self.qRoot.attr('logwith', logWith.length ? logWith : "false");
 		self.qRoot.attr('login', login);
 		self.qRoot.attr('webid', catalogId);
 		self.qRoot.attr('id', id);
