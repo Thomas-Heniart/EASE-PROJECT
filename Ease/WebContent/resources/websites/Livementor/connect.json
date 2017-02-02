@@ -4,11 +4,11 @@
 	"home":"https://www.livementor.com/",
 	"connect":{
 		"todo":[
-            {"action":"clickona", "search":"a[href*='#login-box-modal'"},
+            {"action":"goto", "url":"https://www.livementor.com/connexion"},
 			{"action":"waitfor", "search":"form#new_user"},
 			{"action":"fill", "what":"login", "search":"#user_email"},
 			{"action":"fill", "what":"password", "search":"#user_password"},
-			{"action":"click", "search":"input.mail_connect"}
+			{"action":"click", "search":".submit-login input[type='submit']"}
 			]
 	},
 	"logout":{
