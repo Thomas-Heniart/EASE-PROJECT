@@ -20,7 +20,7 @@ addAppPopup = function(rootEl){
 
 	this.signInChooseRow = this.qRoot.find('.signInChooseRow');
 	this.signInAccountSelectRow = this.qRoot.find('.signInAccountSelectRow');
-	this.signInDetectionErrorHandler = this.signInAccountSelectRow.find('.errorHandler');
+	this.signInDetectionErrorHandler = this.signInAccountSelectRow.find('.SignInErrorHandler');
 
 	this.signInAccountSelectButtonBack = this.signInAccountSelectRow.find('.buttonBack');
 
@@ -344,12 +344,12 @@ addAppPopup = function(rootEl){
 		}
 		var submitUrl = "AddClassicApp";
 		if (logwithId.length){
-			submitUrl = "AddLogWithApp";
+			submitUrl = "AddLogwithApp";
 		}
 		if (self.choosenSsoAccountLogin != null) {
 			submitUrl = "AddClassicAppSameAs";
 		}
-		websiteId = JSON.stringify(websiteId);
+		var websiteIdJson = JSON.stringify(websiteId);
 		postHandler.post(
 			submitUrl,
 			{
@@ -357,7 +357,7 @@ addAppPopup = function(rootEl){
 				'login' : login,
 				'password' : password,
 				'profileId' : profileId,
-				'websiteIds' : websiteId,
+				'websiteIds' : websiteIdJson,
 				'logwithId' : logwithId,
 				'appId' : appId
 			},
@@ -365,6 +365,16 @@ addAppPopup = function(rootEl){
 				self.submitButton.removeClass('loading');
 			},
 			function(msg){
+				var ids = JSON.parse(msg);
+				var catalogApp;
+				for (var i = ids.length - 1; i >= 0; i--) {
+					catalogApp = catalog.getAppById(websiteId[i]);
+					var app = new MyApp();
+					app.init(logwithId, login, catalogApp.id, i == 0 ? name : catalogApp.name, ids[i], catalogApp.ssoId, true, catalogApp.imgSrc);
+					self.currentProfile.addApp(app);
+					app.scaleAnimate();
+				}
+				self.close();
 			},
 			function (msg){
 				self.errorRowHandler.find('p').text(msg);

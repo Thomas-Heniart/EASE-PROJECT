@@ -19,6 +19,7 @@ import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 
@@ -71,7 +72,8 @@ public class Profile {
 				String groupProfileId = rs.getString(Data.GROUP_PROFILE_ID.ordinal());
 				groupProfile = (groupProfileId == null) ? null : GroupManager.getGroupManager(sm).getGroupProfileFromDBid(groupProfileId);
 				infos = ProfileInformation.loadProfileInformation(rs.getString(Data.PROFILE_INFO_ID.ordinal()), db);
-				single_id = user.getNextSingleId();
+				IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
+				single_id = idGenerator.getNextId();
 				Profile profile = new Profile(db_id, user, columnIdx, posIdx, groupProfile, infos, single_id);
 				apps = App.loadApps(profile, sm);
 				profile.setApps(apps);
@@ -101,7 +103,8 @@ public class Profile {
 			info = ProfileInformation.createProfileInformation(groupProfile.getName(), groupProfile.getColor(), sm);
 		}
 		String db_id = db.set("INSERT INTO profiles VALUES(NULL, " + user.getDBid() + ", " + columnIdx + ", " + posIdx + ", " + groupProfile.getDBid() + ", " + info.getDBid() + ");").toString();
-		int single_id = user.getNextSingleId();
+		IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
+		int single_id = idGenerator.getNextId();
 		Profile profile = new Profile(db_id, user, columnIdx, posIdx, groupProfile, info, single_id);
 		db.commitTransaction(transaction);
 		return profile;
@@ -126,7 +129,8 @@ public class Profile {
 		int transaction = db.startTransaction();
 		ProfileInformation info = ProfileInformation.createProfileInformation(name, color, sm);
 		String db_id = db.set("INSERT INTO profiles VALUES(NULL, " + user.getDBid() + ", " + columnIdx + ", " + posIdx + ", NULL, " + info.getDBid() + ");").toString();
-		int single_id = user.getNextSingleId();
+		IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
+		int single_id = idGenerator.getNextId();
 		Profile profile = new Profile(db_id, user, columnIdx, posIdx, null, info, single_id);
 		db.commitTransaction(transaction);
 		return profile;

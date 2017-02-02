@@ -52,9 +52,9 @@ pageEncoding="UTF-8"%>
 						</div>
 						<div class="accounts">
 							<div class="accountsHolder selectable">
-							<div class="errorHandler">
-								No <span></span> accounts detected !
 							</div>
+							<div class="SignInErrorHandler">
+								No <span></span> accounts detected !
 							</div>
 						</div>
 					</div>

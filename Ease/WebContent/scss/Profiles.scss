@@ -4,18 +4,15 @@
 
 .ProfileBox {
 	width: 90%;
-	border-radius: 5px;
-	background-color: rgba(white, 0.7);
 	overflow: hidden;
 	display: inline-block;
 	height: auto;
-	border-bottom: 1px solid $borderFbColor;
 	.ProfileName {
 		text-align: left;
 		background-color: #FFD00C;
 		padding: 0px 0px 0px 5px;
 		//		padding-left: 5px;
-		border-radius: 5px 5px 0px 0px;
+		border-radius: 5px 5px 5px 5px;
 		position: relative;
 		p {
 			transition: font-size .3s, line-height .3s;
@@ -25,10 +22,10 @@
 			display: inline-block;
 			font-family: $defaultFont;
 			color: $profilesNameFontColor;
-			font-family: 'Source Sans Pro', sans-serif;
-			font-size: 15px;
+			font-family: $themeColor;
+			font-size: 1vw;
 			margin-bottom: 0px;
-			line-height: 25px;
+			line-height: 2.1vw;
 			vertical-align: middle;
 			height: 100%;
 			max-width: 80%;
@@ -41,7 +38,7 @@
 			overflow: hidden;
 			display: inline-block;
 			float: right;
-			font-size: 20px;
+			font-size: 1vw;
 			vertical-align: middle;
 			color: white;
 			right: 0;
@@ -49,7 +46,7 @@
 			transition: transform 0.3s;
 			i {
 				transition: transform 0.3s, font-size .3s, line-height .3s;
-				line-height: 25px;
+				line-height: 2.1vw;
 				&:hover {
 					transition: transform 0.3s;
 					transform: rotateZ(-90deg);
@@ -59,12 +56,16 @@
 	}
 	.ProfileContent {
 		position: relative;
+		margin-top: 5px;
+		border-radius: 5px;
 		.content {
 			position: relative;
 			top: 0;
 			width: 100%;
 			min-height: 125%;
 			max-height: 300%;
+			border-radius: 5px;
+			background-color: rgba(white, 0.7);
 			.ProfileControlPanel {
 				transition: max-height .3s;
 				width: 100%;
@@ -72,17 +73,16 @@
 				font-family: $defaultFont;
 				overflow: hidden;
 				white-space: nowrap;
+				border-radius: 5px 5px 0 0;
 				.profileSettingsTab {
 					padding: 5px 10%;
 					position: relative;
 					top:0;
 					left: 0;
 					width: 100%;
-					background-color: white;
 					z-index: 2;
 					transition: all .3s;
 					overflow: hidden;
-					background-color: #F5F5F5;
 					border-bottom: 2px solid $themeColor;
 					#contentColor {
 						border-bottom: 2px solid $themeColor;
@@ -100,7 +100,8 @@
 							input {
 								display: inline-block;
 								border:none;
-								border-radius: 3px;
+								background-color: #eee;
+								border-radius: 5px;
 								padding:0px 5px 0px 5px;
 								width: 75%;
 							}
@@ -158,14 +159,14 @@
 			}
 			.SitesContainer {
 				transition: min-height .3s;
-				border-left:1px solid $borderFbColor;
-				border-right: 1px solid $borderFbColor;
 				position: relative;
 				height: 100%;
 				width: 100%;
 				min-height: 13.6vw;
 				overflow-y: overlay;
 				overflow-x: hidden;
+				padding-top: 0.5vw;
+				border-radius: 5px;
 				padding-bottom: 17%;
 				.siteLinkBox {
 					border-radius: 5px;

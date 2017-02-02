@@ -171,6 +171,7 @@ var Profile = function(rootEl){
 
 	this.addApp = function(app){
 		self.appContainer.append(app.qRoot);
+		easeAppsManager.addApp(app);
 	}
 	
 	//catalog droppable

@@ -1,4 +1,57 @@
 #easePopupsHandler {
+	#addBookmarkPopup {
+		width: 24vw;
+		.title p{
+			font-size: 1.3vw;
+		}
+		.bodysHandler .popupBody{
+			padding: 0.75vw 10%;
+			.handler {
+				.errorText {
+					p {
+						font-weight: bold;
+					}
+				}
+				.titleRow{
+					text-align: left;
+					color: black;
+					border-bottom: 1px solid black;
+					padding-bottom: 2px;
+					font-size: 1vw;
+					font-weight: bold;
+				}
+				.row {
+					margin-bottom: 0.6vw;
+					&:last-child {
+						margin-bottom:0;
+					}
+					.input.appName {
+						margin: auto;
+						width: 70%;
+						input {
+							text-align: center;
+							margin-bottom: 0;
+						}
+						input:focus + .placeholderIcon {
+							display: none;
+						}
+						.placeholderIcon {
+							position: absolute;
+							right: 4%;
+							font-size: 1vw;
+							top: 50%;
+							transform: translateY(-50%);
+							color: #777;
+							pointer-events: none;
+						}
+					}
+					.placeholderIcon {
+						font-size: 1vw;
+					}
+				}
+			}
+		}	
+	}
 	#addUpdatePopup {
 		width: 20vw;
 		.title p{
@@ -196,7 +249,7 @@
 						}
 					}
 					.accountSelectArea {
-						.errorHandler {
+						.SignInErrorHandler {
 							display: none;
 							width: 100%;
 							text-align: center;

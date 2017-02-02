@@ -296,7 +296,6 @@ var Catalog = function(rootEl){
 		function(){},
 		function(msg){
 			var ssos = JSON.parse(msg);
-			console.log(msg);
 			for (var i = 0; i < ssos.length; i++) {
 				self.ssos.push(new ssoObject(ssos[i].name, ssos[i].singleId, ssos[i].imgSrc));
 			}
