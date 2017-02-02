@@ -1,0 +1,32 @@
+{
+    "name":"MakeSense",
+    "lastlogin":"",
+    "home":"https://www.makesense.org/",
+    "connect": {
+    	"todo": [
+    		{"action":"goto", "url":"https://www.makesense.org/login"},
+    		{"action":"fill", "what":"login","search":"#user_email", "grave":"true"},
+    		{"action":"fill", "what":"password","search":"#user_password", "grave":"true"},
+    		{"action":"click", "search":"#new_user input[type='submit']", "grave":"true"}
+    	]
+    },
+    "Facebook": {
+    	"todo": [
+    		{"action":"aclick", "search":".social-login .facebook a"}
+    	]
+    },
+    "Twitter": {
+    	"todo": [
+    		{"action":"aclick", "search":".social-login .twitter a"}
+    	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"aclick", "search":"a[href*='signout']"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"a[href*='signout']"}
+    ]
+    
+}

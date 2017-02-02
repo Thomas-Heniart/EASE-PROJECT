@@ -9,6 +9,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.Ease.Context.Catalog.Website;
+import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.AppInformation;
 import com.Ease.Dashboard.App.AppPermissions;
 import com.Ease.Dashboard.App.GroupApp;
@@ -63,6 +64,24 @@ public class ClassicApp extends WebsiteApp {
 		for (String info : infos.values()) {
 			if (Regex.isEmail(info) == true) {
 				user.addEmailIfNeeded(info, sm);
+			}
+		}
+		db.commitTransaction(transaction);
+		return new ClassicApp((String)elevator.get("appDBid"), profile, position, (AppInformation)elevator.get("appInfos"), null, (String)elevator.get("registrationDate"), ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, account, classicDBid);
+	}
+	
+	public static App createClassicAppSameAs(Profile profile, int position, String name, Website site, ClassicApp sameApp, ServletManager sm, User user) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		Map<String, Object> elevator = new HashMap<String, Object>();
+		String websiteAppDBid = WebsiteApp.createWebsiteApp(profile, position, name, "classicApp", site, elevator, sm);
+		Account account = Account.createAccountSameAs(sameApp.getAccount(), false, user, sm);
+		String classicDBid = db.set("INSERT INTO classicApps VALUES(NULL, " + websiteAppDBid + ", " + account.getDBid() + ", NULL);").toString();
+		for (AccountInformation info : account.getAccountInformations()) {
+			if (info.getInformationName().equals("login")) {
+				String infoValue = info.getInformationValue(); 
+				if (Regex.isEmail(infoValue) == true)
+					user.addEmailIfNeeded(infoValue, sm);
 			}
 		}
 		db.commitTransaction(transaction);
@@ -180,4 +199,6 @@ public class ClassicApp extends WebsiteApp {
 	public boolean isEmpty() {
 		return false;
 	}
+
+	
 }

@@ -1,0 +1,25 @@
+{
+    "name":"Rebump",
+    "lastlogin":"",
+    "home":"https://www.rebump.cc/",
+    "connect": {
+    	"todo": [
+    		{"action":"waitfor", "search":"a[href*='login']"},
+    		{"action":"aclick", "search":"a[href*='login']"},
+    		{"action":"waitfor", "search":"#Email"}
+    		{"action":"fill", "what":"login","search":"#Email", "grave":"true"},
+    		{"action":"click", "search":"#next"},
+    		{"action":"fill", "what":"password","search":"#Passwd", "grave":"true"},
+    		{"action":"click", "search":"#signIn"}
+    	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"aclick", "search":"a[href*='doLogout']"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"a[href*='doLogout']"}
+    ]
+    
+}

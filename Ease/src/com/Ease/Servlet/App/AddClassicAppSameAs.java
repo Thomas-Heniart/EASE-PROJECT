@@ -1,7 +1,6 @@
 package com.Ease.Servlet.App;
 
 import java.io.IOException;
-import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -22,37 +21,32 @@ import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
-import com.Ease.Utils.Crypto.RSA;
 
 /**
- * Servlet implementation class AddClassicApp
+ * Servlet implementation class AddClassicAppSameAs
  */
-@WebServlet("/AddClassicApp")
-public class AddClassicApp extends HttpServlet {
+@WebServlet("/AddClassicAppSameAs")
+public class AddClassicAppSameAs extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public AddClassicAppSameAs() {
+        super();
+    }
 
 	/**
-	 * @see HttpServlet#HttpServlet()
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	public AddClassicApp() {
-		super();
-	}
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
 		rd.forward(request, response);
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	@SuppressWarnings("unchecked")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		User user = (User) (session.getAttribute("user"));
@@ -62,23 +56,17 @@ public class AddClassicApp extends HttpServlet {
 			sm.needToBeConnected();
 			String name = sm.getServletParam("name", true);
 			String websiteIdsParam = sm.getServletParam("websiteIds", true);
-			//String websiteId = sm.getServletParam("websiteId", true);
 			String profileId = sm.getServletParam("profileId", true);
-			String password = sm.getServletParam("password", false);
-			
+			String appId = sm.getServletParam("appId", true);
 			
 			if (name == null || name.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
-			else if (password == null)
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty password.");
+			else if (appId == null)
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Null appId.");
 			else if (websiteIdsParam == null)
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty websites");
 			
 			//Mettre un param keyDate dans le post si besoin de decrypter en RSA. Correspond à la private key RSA, 
-			String keyDate = sm.getServletParam("keyDate", true);
-			if (keyDate != null && !keyDate.equals("")) {
-				password = RSA.Decrypt(password, Integer.parseInt(keyDate));
-			}
 			
 			JSONParser parser = new JSONParser();
 			JSONArray websiteIds = null;
@@ -86,15 +74,14 @@ public class AddClassicApp extends HttpServlet {
 			
 			//--------
 			try {
-
 				JSONArray res = new JSONArray();
 				Profile profile = user.getDashboardManager().getProfile(Integer.parseInt(profileId));
+				ClassicApp sameApp = (ClassicApp) user.getDashboardManager().getAppWithID(Integer.parseInt(appId));
 				for(Object websiteId : websiteIds) {
 					Website site = catalog.getWebsiteWithSingleId(Integer.parseInt((String)websiteId));
 					if (site == null)
 						throw new GeneralException(ServletManager.Code.ClientError, "This website does not exist");
-					Map<String, String> infos = site.getNeededInfos(sm);
-					App newApp = ClassicApp.createClassicApp(profile, profile.getApps().size(), name, site, password, infos, sm, user);
+					App newApp = ClassicApp.createClassicAppSameAs(profile, profile.getApps().size(), name, site, sameApp, sm, user);
 					profile.addApp(newApp);
 					res.add(newApp.getSingleId());
 				}

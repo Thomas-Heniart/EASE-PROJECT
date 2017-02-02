@@ -52,6 +52,16 @@ public class Account {
 		return new Account(db_id, crypted_password, shared, infos);
 	}
 	
+	public static Account createAccountSameAs(Account sameAccount, boolean shared, User user, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		String cryptedPassword = sameAccount.getCryptedPassword();
+		String db_id = db.set("INSERT INTO accounts values (null, '" + cryptedPassword + "', " + (shared ? 1 : 0) + ");").toString();
+		List<AccountInformation> infos = AccountInformation.createAccountInformationFromAccountInformations(db_id, sameAccount.getAccountInformations(), sm);
+		db.commitTransaction(transaction);
+		return new Account(db_id, cryptedPassword, shared, infos);
+	}
+	
 	public static Account createGroupAccount(String password, boolean shared, Map<String, String> informations, Infrastructure infra, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();

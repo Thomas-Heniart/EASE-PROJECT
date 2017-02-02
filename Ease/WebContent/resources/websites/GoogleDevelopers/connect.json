@@ -49,7 +49,7 @@
 	},
 	"checkAlreadyConnected":{
 		"todo":[
-			{"action":"waitfor", "search":"#masthead-search-term"},
+			{"action":"waitfor", "search":"devsite-user-dropdown"},
 			{"check":"present", "search":"#yt-masthead-account-picker"},
 			{"who":"onPage", "search":"a.yt-masthead-picker-active-account", "attribute":"text"}
 		]
