@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.Ease.Dashboard.User.User;
+import com.Ease.Mail.SendGridMail;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
@@ -85,7 +86,10 @@ public class Registration extends HttpServlet {
 			else {
 				User newUser = User.createUser(email, fname, "", confirmPassword, invitationCode, sm);
 				session.setAttribute("user", newUser);
-				//sm.setRedirectUrl("index.jsp");
+				if (!newUser.isInGroup()) {
+					SendGridMail welcomeEmail = new SendGridMail("Agathe @Ease", "contact@ease.space");
+					welcomeEmail.sendWelcomeEmail(newUser.getFirstName(), newUser.getEmail());
+				}
 				sm.setResponse(ServletManager.Code.Success, "Registered successfully");
 			}
 		} catch (GeneralException e) {
