@@ -16,6 +16,7 @@ import com.Ease.Dashboard.App.GroupApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.Profile.Profile;
+import com.Ease.Mail.SendGridMail;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
@@ -74,6 +75,10 @@ public class WebsiteApp extends App {
 		String appDBid = App.createApp(profile, position, name, "websiteApp", elevator, sm);
 		String websiteAppDBid = db.set("INSERT INTO websiteApps VALUES(NULL, " + site.getDb_id() + ", " + appDBid + ", NULL, '" + type + "');").toString();
 		site.incrementRatio(db);
+		if (site.getRatio() == 100) {
+			SendGridMail mail = new SendGridMail("Agathe @Ease", "contact@ease.space");
+			mail.sendAwesomeUserEmail(site, sm);
+		}
 		elevator.put("appDBid", appDBid);
 		db.commitTransaction(transaction);
 		return websiteAppDBid;
