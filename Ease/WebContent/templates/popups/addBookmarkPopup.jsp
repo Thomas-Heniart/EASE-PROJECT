@@ -19,7 +19,15 @@ pageEncoding="UTF-8"%>
 						<i class="fa fa-pencil placeholderIcon" aria-hidden="true"></i>
 					</div>
 				</div>
-				<div class="row text-center orDelimiter">
+				<div class="row infoRow">
+				<p class="simpleText">
+					We are currently working on <span>fully integrating</span> this app.	
+				</p>
+				<p class="simpleText">
+					Add it as a bookmark and we will integrate it <span>faster</span> !
+				</p>
+				</div>
+				<div class="row text-center orDelimiter lineBehind">
 					<p class="post-title text-underlined">URL</p>
 				</div>
 				<div class="row">
@@ -30,7 +38,7 @@ pageEncoding="UTF-8"%>
 					</p>
 				</div>
 				<div class="row text-center">
-					<button class="btn" type="submit">Add account</button>
+					<button class="btn" type="submit">Add as shortcut</button>
 				</div>
 				<div class="row text-center">
 					<a id="goBack" class="liteTextButton">Go back</a>

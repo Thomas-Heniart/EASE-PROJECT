@@ -1,3 +1,5 @@
+@import '../variables';
+
 #easePopupsHandler {
 	#addBookmarkPopup {
 		width: 24vw;
@@ -24,6 +26,43 @@
 					margin-bottom: 0.6vw;
 					&:last-child {
 						margin-bottom:0;
+					}
+					input, .input {
+						font-size: 0.9vw;
+						color: black;
+					}
+					button {
+						font-size: 1vw;
+						width: 100%;
+						&.loading {
+							font-size: 0;
+							width: 3vw;
+							height: 3vw;
+						}
+					}
+					.simpleText {
+						margin-bottom: 0.6vw;
+						color: black;
+						letter-spacing: 1px;
+						&:last-child {
+							margin-bottom: 0;
+						}
+					}
+					.logo {
+						width: 5vw;
+						margin: auto;
+						img {
+							width: 100%;
+							border-radius: 5px;
+						}
+					}
+					.post-title {
+						font-size: 1vw;
+						color: black;
+						line-height: 1vw;
+						display: inline-block;
+						width: auto;
+						padding: 0 0.5vw;
 					}
 					.input.appName {
 						margin: auto;
