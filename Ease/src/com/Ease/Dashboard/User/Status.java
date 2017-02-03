@@ -12,11 +12,22 @@ import com.Ease.Utils.ServletManager;
 public class Status {
 
 	public enum Data {
-		NOTHING, ID, FIRST_CONNECTION, CGU, CHROME_SCRAPPING, APPS_MANUALLY_ADDED, CLICK_ON_APP, MOVE_APPS, OPEN_CATALOG, ADD_AN_APP, TUTO_DONE, INVITE_SENDED
+		NOTHING, 
+		ID, 
+		FIRST_CONNECTION, 
+		CGU, 
+		CHROME_SCRAPPING, 
+		APPS_MANUALLY_ADDED, 
+		CLICK_ON_APP, 
+		MOVE_APPS, 
+		OPEN_CATALOG, 
+		ADD_AN_APP, 
+		TUTO_DONE, 
+		INVITE_SENDED
 	}
 
 	public static Status createStatus(DataBaseConnection db) throws GeneralException {
-		String db_id = db.set("INSERT INTO status values (null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);").toString();
+		String db_id = db.set("INSERT INTO status values (null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, default);").toString();
 		return new Status(db_id, false, false, false, false, false, false, false, false, false, false);
 	}
 
@@ -34,8 +45,11 @@ public class Status {
 			boolean add_an_app = rs.getBoolean(Data.ADD_AN_APP.ordinal());
 			boolean tuto_done = rs.getBoolean(Data.TUTO_DONE.ordinal());
 			boolean invite_sended = rs.getBoolean(Data.INVITE_SENDED.ordinal());
-			return new Status(db_id, first_connection, CGU, chrome_scrapping, apps_manually_added, click_on_app,
+			
+			Status loadedStatus =  new Status(db_id, first_connection, CGU, chrome_scrapping, apps_manually_added, click_on_app,
 					move_apps, open_catalog, add_an_app, tuto_done, invite_sended);
+			loadedStatus.updateLastConnection(db);
+			return loadedStatus;
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
@@ -162,5 +176,9 @@ public class Status {
 	
 	public boolean invite_sended() {
 		return this.invite_sended;
+	}
+	
+	public void updateLastConnection(DataBaseConnection db) throws GeneralException {
+		db.set("UPDATE status SET last_connection = CURDATE() WHERE id = " + this.db_id + ";");
 	}
 }
