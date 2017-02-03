@@ -970,6 +970,9 @@
 					.simpleText {
 						font-family: $defaultFont;
 						font-size: 1vw;
+						span {
+							font-weight: bold;
+						}
 					}
 					.post-title {
 						font-size: 1.3vw;

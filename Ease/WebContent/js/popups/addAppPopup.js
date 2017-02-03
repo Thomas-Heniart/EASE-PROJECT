@@ -6,6 +6,7 @@ addAppPopup = function(rootEl){
 
 	this.goBackButtonHandler = this.qRoot.find("#goBack");
 	this.submitButton = this.qRoot.find("button[type='submit']");
+	this.shortcutLinkButton = this.qRoot.find('#shortcutLink');
 
 	this.appNameHolder = this.qRoot.find('input#appName');
 	this.appNameInTitle = this.qRoot.find('.titleRow p span');
@@ -36,6 +37,15 @@ addAppPopup = function(rootEl){
 	this.currentProfile = null;
 	this.currentApp = null;
 
+
+	this.shortcutLinkButton.click(function(){
+		self.close();
+		easeAddBookmarkPopup.open(self.currentApp, self.currentProfile, self.appNameHolder.val());
+		easeAddBookmarkPopup.goBackButtonHandler.one('click',function(){
+			self.parentHandler.addClass('myshow');
+			self.qRoot.addClass('show');
+		});
+	});
 	this.loginInput.on('input', function(){
 		if (self.loginInput.val().length && self.passwordInput.val().length){
 			self.submitButton.removeClass('locked');
