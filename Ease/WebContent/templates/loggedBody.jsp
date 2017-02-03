@@ -73,7 +73,7 @@ response.addCookie(email);
 				<div id="updateCount" <c:out value="${user.getUpdateManager().getUpdates().size() > 0 ? '' : 'style=display:none'}"/>>
 					<c:out value="${user.getUpdateManager().getUpdates().size()}"/>
 				</div>
-			<button id="enterEditMode" state="off" class="button"><img src="resources/icons/menu_icon.png"/>
+			<button id="enterEditMode" state="off" class="button <c:if test="${param.catalogOpen}">editMode</c:if>"><img src="resources/icons/menu_icon.png"/>
 				<div class="openCatalogHelper"></div>
 			</div>
 			<%@ include file="catalog/catalogView.jsp"%>

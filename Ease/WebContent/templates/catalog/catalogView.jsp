@@ -11,7 +11,7 @@ pageEncoding="UTF-8"%>
 		<p>Drag and drop</br>to add the app !</p>
 	</div>
 </div>
-<div class="CatalogViewTab">
+<div class="CatalogViewTab <c:if test="${param.catalogOpen}">show</c:if>">
 	<div class="catalogView">
 		<div id="catalog-quit"> 
 			<i class="fa fa-times" aria-hidden="true"></i>

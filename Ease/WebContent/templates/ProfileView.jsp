@@ -4,7 +4,7 @@ pageEncoding="UTF-8"%>
 
 
 <div class="ProfilesView show">
-	<div class="ProfilesHandler">
+	<div class="ProfilesHandler <c:if test="${param.catalogOpen}">editMode</c:if>">
 		<c:forEach items='${dashboardColumns}' var='column' varStatus="loop">
 		<c:if test="${loop.index != 0}">
 		<div class="dashboardColumn" style="${column.size() == 0 ? 'width:0;': ''}">

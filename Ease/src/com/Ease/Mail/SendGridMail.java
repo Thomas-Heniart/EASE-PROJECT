@@ -1,7 +1,13 @@
 package com.Ease.Mail;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
 
+import com.Ease.Context.Catalog.Website;
+import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 import com.sendgrid.ASM;
@@ -237,7 +243,7 @@ public class SendGridMail {
 	protected Response response;
 	protected Email fromEmail;
 	protected Mail mail;
-	protected Personalization personalization;
+	protected List<Personalization> personalizations;
 
 	public SendGridMail(String senderName, String senderEmail) {
 		sg = new SendGrid(API_KEY);
@@ -249,29 +255,35 @@ public class SendGridMail {
 		fromEmail.setName(senderName);
 		fromEmail.setEmail(senderEmail);
 		mail.setFrom(fromEmail);
-		personalization = new Personalization();
-		personalization.addHeader("X-Mock", "true");
+		personalizations = new LinkedList<Personalization>();
 		//mail.addPersonalization(personalization);
 	}
+	
+	private Personalization createNewPersonalization() {
+		Personalization personalization = new Personalization();
+		personalization.addHeader("X-Mock", "true");
+		this.personalizations.add(personalization);
+		return personalization;
+	}
 
-	public Email createEmail(String name, String email) {
+	private Email createEmail(String name, String email) {
 		Email newEmail = new Email();
 		newEmail.setName(name);
 		newEmail.setEmail(email);
 		return newEmail;
 	}
 
-	public void addTo(String name, String email) {
+	private void addTo(Personalization personalization, String name, String email) {
 		Email recipient = createEmail(name, email);
 		personalization.addTo(recipient);
 	}
 
-	public void addCc(String name, String email) {
+	private void addCc(Personalization personalization, String name, String email) {
 		Email recipient = createEmail(name, email);
 		personalization.addCc(recipient);
 	}
 
-	public void addBcc(String name, String email) {
+	private void addBcc(Personalization personalization, String name, String email) {
 		Email recipient = createEmail(name, email);
 		personalization.addBcc(recipient);
 	}
@@ -329,7 +341,8 @@ public class SendGridMail {
 		if (request.body == null && mail.getTemplateId() == null)
 			throw new GeneralException(ServletManager.Code.InternError, "Empty email");
 		try {
-			mail.addPersonalization(personalization);
+			for (Personalization personalization : this.personalizations)
+				this.mail.addPersonalization(personalization);
 			request.method = Method.POST;
 			request.endpoint = "mail/send";
 			if (mail.getTemplateId() != null)
@@ -345,32 +358,53 @@ public class SendGridMail {
 	
 	public void sendWelcomeEmail(String userName, String userEmail) throws GeneralException {
 		mail.setTemplateId("14d671a6-9a3e-482b-8dc1-39cac80b7bd8");
-		this.addTo(userName, userEmail);
-		personalization.addSubstitution("#Name", userName);
+		Personalization personalization = this.createNewPersonalization();
+		this.addTo(personalization, userName, userEmail);
+		personalization.addSubstitution("#sername", userName);
 		this.sendEmail();
 	}
 	
 	public void sendAppArrivedEmail(String userName, String userEmail, String appName) throws GeneralException {
 		mail.setTemplateId("cfe20be6-31c1-427f-b94c-02aacedd2619");
-		this.addTo(userName, userEmail);
-		personalization.addSubstitution("#Name", userName);
+		Personalization personalization = this.createNewPersonalization();
+		this.addTo(personalization, userName, userEmail);
+		personalization.addSubstitution("#username", userName);
 		personalization.addSubstitution("#appName", appName);
 		this.sendEmail();
 	}
 	
-	public void sendAwesomeUserEmail(String userName, String userEmail, String appName) throws GeneralException {
-		mail.setTemplateId("2f8b2828-6e6f-42bd-a568-3da1b83ed835");
-		this.addTo(userName, userEmail);
-		personalization.addSubstitution("#Username", userName);
-		personalization.addSubstitution("#appname", appName);
+	public void sendAppsArrivedEmail(String userName, String userEmail, List<Website> integratedWebsites) throws GeneralException {
+		mail.setTemplateId("cfe20be6-31c1-427f-b94c-02aacedd2619");
+		Personalization personalization = this.createNewPersonalization();
+		this.addTo(personalization, userName, userEmail);
+		personalization.addSubstitution("#username", userName);
+		String integratedWebsitesString = "";
+		for (Website website : integratedWebsites) {
+			integratedWebsitesString += website.getName();
+			if (integratedWebsites.indexOf(website) == integratedWebsites.size())
+				integratedWebsitesString += "---&---";
+		}
+		personalization.addSubstitution("#appName", integratedWebsitesString);
 		this.sendEmail();
 	}
 	
-	public void sendReminderThreeDays(String userName, String userEmail) throws GeneralException {
-		mail.setTemplateId("2c03ac41-648f-49c4-95dc-7057a09de38b");
-		this.addTo(userName, userEmail);
-		personalization.addSubstitution("#Username", userName);
+	public void sendAwesomeUserEmail(Website site, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		ResultSet rs = db.get("SELECT firstName, email FROM users WHERE id IN (SELECT user_id FROM integrateWebsitesAndUsersMap WHERE website_id = " + site.getDb_id() + ");");
+		try {
+			while (rs.next()) {
+				Personalization personalization = this.createNewPersonalization();
+				String username = rs.getString(1);
+				String userEmail = rs.getString(2);
+				this.addTo(personalization, username, userEmail);
+				personalization.addSubstitution("username", username);
+				personalization.addSubstitution("appName", site.getName());
+			}
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+		mail.setTemplateId("2f8b2828-6e6f-42bd-a568-3da1b83ed835");
 		this.sendEmail();
+		db.set("DELETE FROM integrateWebsitesAndUsersMap WHERE website_id = " + site.getDb_id() + ";");
 	}
-
 }

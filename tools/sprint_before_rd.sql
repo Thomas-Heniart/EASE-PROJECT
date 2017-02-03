@@ -1,0 +1,10 @@
+ALTER TABLE status ADD last_connection DATETIME DEFAULT CURRENT_TIMESTAMP;
+
+CREATE TABLE integrateWebsitesAndUsersMap (
+	id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+	website_id INT(10) UNSIGNED NOT NULL,
+	user_id INT(10) UNSIGNED NOT NULL,
+	PRIMARY KEY (id),
+	FOREIGN KEY (website_id) REFERENCES websites(id),
+	FOREIGN KEY (user_id) REFERENCES users(id)
+);

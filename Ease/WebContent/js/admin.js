@@ -185,14 +185,10 @@ function sendEmailsWebsiteIntegrated(){
 	}
 	
 	function sendEmails(email, values, initialValues){
-		var valuesToSend="";
-		for(var i in values){
-			valuesToSend += values[i]+"---&---";
-		}
-		valuesToSend=valuesToSend.substring(0,valuesToSend.length-7);
+		var valuesToSend=JSON.stringify(values);
 		postHandler.post(
-				"sendWebsitesIntegrated",
-				{email:email, websites:valuesToSend},
+				"SendWebsitesIntegrated",
+				{email:email, websites:values},
 				function(){},
 				function(retMsg){
 					$(".requestedWebsite").each(function(){

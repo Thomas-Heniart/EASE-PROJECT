@@ -376,5 +376,9 @@ public class Website {
 		this.ratio--;
 		db.set("UPDATE websites SET ratio = ratio - 1 WHERE id = " + this.db_id + ";");
 	}
+
+	public int getRatio() {
+		return this.ratio;
+	}
 	
 }
