@@ -364,15 +364,6 @@ public class SendGridMail {
 		this.sendEmail();
 	}
 	
-	public void sendAppArrivedEmail(String userName, String userEmail, String appName) throws GeneralException {
-		mail.setTemplateId("cfe20be6-31c1-427f-b94c-02aacedd2619");
-		Personalization personalization = this.createNewPersonalization();
-		this.addTo(personalization, userName, userEmail);
-		personalization.addSubstitution("#username", userName);
-		personalization.addSubstitution("#appName", appName);
-		this.sendEmail();
-	}
-	
 	public void sendAppsArrivedEmail(String userName, String userEmail, List<Website> integratedWebsites) throws GeneralException {
 		mail.setTemplateId("cfe20be6-31c1-427f-b94c-02aacedd2619");
 		Personalization personalization = this.createNewPersonalization();
