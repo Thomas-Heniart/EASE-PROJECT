@@ -81,6 +81,7 @@ addAppPopup = function(rootEl){
 	this.signInChooseRow.find('.signInButton').click(function(){
 		var catalogApp = catalog.getAppByName($(this).attr('data'));
 		self.choosenSignInName = $(this).attr('data');
+		self.signInDetectionErrorHandler.removeClass('show');
 		self.signInDetectionErrorHandler.find('span').text(self.choosenSignInName);
 		self.showSignInAccounts(catalogApp.id);
 	});
@@ -394,6 +395,9 @@ addAppPopup = function(rootEl){
 			function (msg){
 				self.errorRowHandler.find('p').text(msg);
 				self.errorRowHandler.addClass('show');
+				setTimeout(function(){
+					self.errorRowHandler.removeClass('show');
+				}, 3000);
 			},
 			'text'
 			);

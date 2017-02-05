@@ -97,9 +97,9 @@ var appsManager = function(){
 };
 
 $(document).ready(function(){
-	$("#onComputer .SitesContainer .siteLinkBox").each(function (index, elem) {
+/*	$("#onComputer .SitesContainer .siteLinkBox").each(function (index, elem) {
 		easeApps.push(new MyApp().initWithQRoot(elem));
-	});
+	});*/
 	easeAppsManager = new appsManager();
 });
 
@@ -117,6 +117,7 @@ var MyApp = function(){
 	this.name;
 	this.websiteId;
 	this.logWith;
+	this.currentProfile = null;
 
 	this.init = function(logWith, login, catalogId, name, id, ssoId, canMove, imageSrc){
 		self.qRoot = $($('#boxHelper').html());

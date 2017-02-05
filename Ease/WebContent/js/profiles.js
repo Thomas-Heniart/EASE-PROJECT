@@ -106,7 +106,7 @@ $(document).ready(function(){
 
 var Profile = function(rootEl){
 	var self = this;
-	this.qRoot = rootEl;
+	this.qRoot = $(rootEl);
 	this.parentItem = this.qRoot.closest('.item');
 	this.profileHeader = this.qRoot.find('.ProfileName');
 	this.SettingsButton = this.qRoot.find('.ProfileSettingsButton');
@@ -114,11 +114,29 @@ var Profile = function(rootEl){
 	this.appContainer = this.qRoot.find('.SitesContainer');
 	this.isSettingsOpen = false;
 	this.id = this.parentItem.attr('id');
+	this.apps = [];
 
 	this.profileHeader.on('contextmenu', function(e){
 		e.preventDefault();
 		e.stopPropagation();
 		self.showSettings();
+	});
+	this.addApp = function(app){
+		self.apps.push(app);
+		self.appContainer.append(app.qRoot);
+		easeAppsManager.addApp(app);
+	}
+	this.removeApp = function(app){
+		self.apps.splice(self.apps.indexOf(app), 1);
+		easeAppsManager.removeApp(app);
+	}
+	this.removeAllApps = function(){
+		while (self.apps.length){
+			self.removeApp(self.apps[0]);
+		}
+	}
+	this.qRoot.find('.siteLinkBox').each(function(index, elem){
+		self.addApp(new MyApp().initWithQRoot(elem));
 	});
 	this.setId = function(tId){
 		self.id = tId;
@@ -127,6 +145,7 @@ var Profile = function(rootEl){
 	};
 	this.remove = function(){
 		profiles.splice(profiles.indexOf(self), 1);
+		self.removeAllApps();
 		self.parentItem.animate({
 			height: '0',
 			'margin-bottom': '0'
@@ -169,11 +188,6 @@ var Profile = function(rootEl){
 		(self.isSettingsOpen) ? self.hideSettings() : self.showSettings();
 	});
 
-	this.addApp = function(app){
-		self.appContainer.append(app.qRoot);
-		easeAppsManager.addApp(app);
-	}
-	
 	//catalog droppable
 	self.appContainer.droppable({
 		accept: ".catalogApp,.updateBox",
@@ -214,7 +228,7 @@ var Profile = function(rootEl){
 	//delete profile
 	this.qRoot.find('#deleteProfileForm #validate').click(function() {
 		if (self.appContainer.find('.siteLinkBox').length > 0)
-			deleteProfilePopup.open(self);
+			easeDeleteProfilePopup.open(self);
 		else {
 			postHandler.post('RemoveProfile', {
 				profileId : self.id
@@ -224,7 +238,7 @@ var Profile = function(rootEl){
 				easeTracker.trackEvent('DeleteProfile');
 				self.remove();
 			}, function(retMsg) {
-			}, 'text');			
+			}, 'text');
 		}
 	});
 	//edit name
