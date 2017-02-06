@@ -62,7 +62,6 @@ public class AddClassicApp extends HttpServlet {
 			sm.needToBeConnected();
 			String name = sm.getServletParam("name", true);
 			String websiteIdsParam = sm.getServletParam("websiteIds", true);
-			//String websiteId = sm.getServletParam("websiteId", true);
 			String profileId = sm.getServletParam("profileId", true);
 			String password = sm.getServletParam("password", false);
 			

@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.App;
@@ -54,19 +57,26 @@ public class AddLogwithApp extends HttpServlet {
 		try {
 			sm.needToBeConnected();
 			String name = sm.getServletParam("name", true);
-			String websiteId = sm.getServletParam("websiteId", true);
+			String websiteIdsParam = sm.getServletParam("websiteIds", true);
 			String profileId = sm.getServletParam("profileId", true);
 			String logwithId = sm.getServletParam("logwithId", true);
 			Website site = null;
 			if (name == null || name.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
+			JSONParser parser = new JSONParser();
+			JSONArray websiteIds = null;
+			websiteIds = (JSONArray) parser.parse(websiteIdsParam);
 			try {
+				JSONArray res = new JSONArray();
 				Profile profile = user.getDashboardManager().getProfile(Integer.parseInt(profileId));
 				WebsiteApp logwith = (WebsiteApp) user.getDashboardManager().getAppWithID(Integer.parseInt(logwithId));
-				site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(websiteId));
-				App newApp = LogwithApp.createLogwithApp(profile, profile.getApps().size(), name, site, logwith, sm);
-				profile.addApp(newApp);
-				sm.setResponse(ServletManager.Code.Success,  String.valueOf(newApp.getSingleId()));
+				for(Object websiteId : websiteIds) {
+					site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt((String)websiteId));
+					App newApp = LogwithApp.createLogwithApp(profile, profile.getApps().size(), (res.size() == 0) ? name : site.getName(), site, logwith, sm);
+					profile.addApp(newApp);
+					res.add(newApp.getSingleId());
+				}
+				sm.setResponse(ServletManager.Code.Success, res.toString());
 			} catch (NumberFormatException e) {
 				sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");
 			}
