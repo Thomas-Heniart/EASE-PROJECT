@@ -8,3 +8,5 @@ CREATE TABLE integrateWebsitesAndUsersMap (
 	FOREIGN KEY (website_id) REFERENCES websites(id),
 	FOREIGN KEY (user_id) REFERENCES users(id)
 );
+
+ALTER TABLE passwordLost ADD dateOfRequest DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;

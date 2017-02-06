@@ -54,7 +54,7 @@
 		<div id="goBack">
   				<i class="fa fa-chevron-left" aria-hidden="true"></i> Go back
 		</div>
-		<form action="PasswordLost" id="lostPasswordForm" style="text-align: center;">
+		<form action="passwordLost" id="lostPasswordForm" style="text-align: center;">
 			<div id="security" class="show">
 				<p>For security reasons, resetting your EASE password will delete all accounts password you added to the platform.</p>
 			</div>

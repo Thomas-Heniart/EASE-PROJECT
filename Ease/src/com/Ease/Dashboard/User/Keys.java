@@ -3,15 +3,13 @@ package com.Ease.Dashboard.User;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.mail.MessagingException;
-
 import com.Ease.Context.ServerKey;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.Profile.Profile;
+import com.Ease.Mail.SendGridMail;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Mail;
 import com.Ease.Utils.ServletManager;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.CodeGenerator;
@@ -156,16 +154,20 @@ public class Keys {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		try {
-			Mail mailToSend = new Mail();
 			String code = CodeGenerator.generateNewCode();
+			String fName = null;
 			ResultSet rs = db.get("SELECT * FROM passwordLost WHERE user_id=" + userId + ";");
-			if (rs.next()) {
-				db.set("DELETE FROM passwordLost WHERE user_id=" + userId + ";");
-			}
-			db.set("INSERT INTO passwordLost VALUE(" + userId +", '" + code + "');");
-			mailToSend.sendPasswordLostMail(email, code);
-		} catch (MessagingException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+			if (rs.next())
+				db.set("UPDATE passwordLost SET linkCode = '" + code + "', dateOfRequest = NOW() WHERE user_id=" + userId + ";");
+			else
+				db.set("INSERT INTO passwordLost values (" + userId + ", '" + code + "', default);");
+			rs = db.get("SELECT firstName FROM users WHERE id = " + userId + ";");
+			if (rs.next())
+				fName = rs.getString(1);
+			else
+				throw new GeneralException(ServletManager.Code.ClientWarning, "This user does not exist");
+			SendGridMail passwordLostEmail = new SendGridMail("Agathe @Ease", "contact@ease.space");
+			passwordLostEmail.sendPasswordLostEmail(email, fName, code);
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
@@ -202,5 +204,15 @@ public class Keys {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 		db.commitTransaction(transaction);
+	}
+
+	public static boolean checkCodeValidity(String userId, String code, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		ResultSet rs = db.get("SELECT * FROM passwordLost WHERE user_id = " + userId + " AND linkCode = '" + code + "' AND NOW() <= DATE_ADD(dateOfRequest, INTERVAL 2 HOUR)");
+		try {
+			return rs.next();
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
 	}
 }

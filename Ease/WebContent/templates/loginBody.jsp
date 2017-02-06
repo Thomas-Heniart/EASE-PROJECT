@@ -76,7 +76,7 @@ boolean knownUser = iden == 2 ? true : false;
 	</div>
 	<!-- known user popup -->
 	<% if (knownUser) {%>
-	<div class="easePopup landingPopup show" id="knownUser">
+	<div class="easePopup landingPopup <c:if test='${empty param.codeExpiration}'>show</c:if>" id="knownUser">
 		<div class="bodysHandler">
 			<div class="popupBody show">
 				<div class="handler">
@@ -113,7 +113,7 @@ boolean knownUser = iden == 2 ? true : false;
 	</div>
 	<%}%>
 	<!-- unknown user popup -->
-	<div class="easePopup landingPopup <% if (!knownUser){ %> show <% }%>" id="unknownUser">
+	<div class="easePopup landingPopup <% if (!knownUser){ %><c:if test='${empty param.codeExpiration}'>show</c:if><% }%>" id="unknownUser">
 		<div class="bodysHandler">
 			<div class="popupBody show">
 				<div class="handler">
@@ -148,7 +148,7 @@ boolean knownUser = iden == 2 ? true : false;
 		</div>
 	</div>
 	<!-- password lost popup -->
-	<div class="easePopup landingPopup" id="passwordLost">
+	<div class="easePopup landingPopup <c:if test='${not empty param.codeExpiration}'>show</c:if>" id="passwordLost">
 		<div class="bodysHandler">
 			<div class="popupBody show">
 				<div class="handler">
@@ -157,15 +157,15 @@ boolean knownUser = iden == 2 ? true : false;
 							<p>Lost password ?</p>
 						</div>
 					</div>
-					<form method="POST" action="PasswordLost" id="passwordLostForm">
+					<form method="POST" action="passwordLost" id="passwordLostForm">
 						<div class="row text-center">
 							<p class="popupText">For security reasons, resetting your EASE password will delete all account passwords you added to the platform.</p>
 						</div>
 						<div class="row">
 							<input type="email" name="email" placeholder="Email"/>
 						</div>
-						<div class="row alertDiv text-center">
-							<p></p>
+						<div class="row alertDiv text-center <c:if test='${not empty param.codeExpiration}'>show</c:if>">
+							<p><c:if test='${not empty param.codeExpiration}'>The link is not valid anymore, please type your email again.</c:if></p>
 						</div>
 						<div class="row text-center">
 							<button class="btn" type="submit">Reset password</button>

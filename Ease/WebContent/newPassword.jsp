@@ -55,7 +55,7 @@
 		<div id="security" style="text-align: center;" class="show">
 			<p>Set you new password carefully</p>
 		</div>
-		<form action="ResetPassword" id="lostPasswordForm" style="text-align: center;" autocomplete="off">
+		<form action="resetPassword" id="lostPasswordForm" style="text-align: center;" autocomplete="off">
 			<span class="input input--minoru show">
 				<input required style="text-align: center;" class="input__field input__field--minoru" name="password" type="password" id="input-8" placeholder="New password" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');"/>
 				<label class="input__label input__label--minoru" for="input-8">

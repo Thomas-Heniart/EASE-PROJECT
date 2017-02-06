@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.Ease.Context.Variables;
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
@@ -360,7 +361,7 @@ public class SendGridMail {
 		mail.setTemplateId("14d671a6-9a3e-482b-8dc1-39cac80b7bd8");
 		Personalization personalization = this.createNewPersonalization();
 		this.addTo(personalization, userName, userEmail);
-		personalization.addSubstitution("#sername", userName);
+		personalization.addSubstitution("#username", userName);
 		this.sendEmail();
 	}
 	
@@ -373,13 +374,15 @@ public class SendGridMail {
 		for (Website website : integratedWebsites) {
 			integratedWebsitesString += website.getName();
 			if (integratedWebsites.indexOf(website) == integratedWebsites.size())
-				integratedWebsitesString += "---&---";
+				integratedWebsitesString += ", ";
 		}
 		personalization.addSubstitution("#appName", integratedWebsitesString);
+		personalization.addSubstitution("#linkUrl", Variables.URL_PATH + "?catalogOpen=true");
 		this.sendEmail();
 	}
 	
 	public void sendAwesomeUserEmail(Website site, ServletManager sm) throws GeneralException {
+		mail.setTemplateId("2f8b2828-6e6f-42bd-a568-3da1b83ed835");
 		DataBaseConnection db = sm.getDB();
 		ResultSet rs = db.get("SELECT firstName, email FROM users WHERE id IN (SELECT user_id FROM integrateWebsitesAndUsersMap WHERE website_id = " + site.getDb_id() + ");");
 		try {
@@ -388,14 +391,21 @@ public class SendGridMail {
 				String username = rs.getString(1);
 				String userEmail = rs.getString(2);
 				this.addTo(personalization, username, userEmail);
-				personalization.addSubstitution("username", username);
-				personalization.addSubstitution("appName", site.getName());
+				personalization.addSubstitution("#username", username);
+				personalization.addSubstitution("#appName", site.getName());
 			}
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
-		mail.setTemplateId("2f8b2828-6e6f-42bd-a568-3da1b83ed835");
 		this.sendEmail();
 		db.set("DELETE FROM integrateWebsitesAndUsersMap WHERE website_id = " + site.getDb_id() + ";");
+	}
+	
+	public void sendPasswordLostEmail(String userEmail, String username, String code) throws GeneralException {
+		mail.setTemplateId("815afa39-6d33-4dfc-a95b-e931007f6d98");
+		Personalization personalization = this.createNewPersonalization();
+		this.addTo(personalization, username, userEmail);
+		personalization.addSubstitution("#linkUrl", Variables.URL_PATH + "resetPassword?email=" + userEmail + "&code=" + code);
+		this.sendEmail();
 	}
 }
