@@ -26,7 +26,6 @@ public class VerifieEmail extends HttpServlet {
      */
     public VerifieEmail() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -45,7 +44,8 @@ public class VerifieEmail extends HttpServlet {
 			if (code == null || code.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientError, "Empty verification code.");
 			user.verifieEmail(email, code, sm);
-			sm.setResponse(ServletManager.Code.Success, "Verification email sended.");
+			//sm.setResponse(ServletManager.Code.Success, "Verification email sended.");
+			sm.setRedirectUrl("index.jsp");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		} catch (Exception e) {

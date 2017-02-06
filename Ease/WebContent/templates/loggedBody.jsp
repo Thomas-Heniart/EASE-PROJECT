@@ -92,9 +92,11 @@ response.addCookie(email);
 </div>
  <%@include file="PopupsHandler.jsp" %> 
 
-<c:if test='${user.appsImported() eq false}'>
-<%@ include file="TutorialView.jsp"%>
+<c:if test='${(user.appsImported() eq false) || (param.importAccounts)}'>
+	<%@ include file="TutorialView.jsp"%>
 </c:if>
+
+
 <%@ include file="new_extension.jsp" %>
 <script>
 

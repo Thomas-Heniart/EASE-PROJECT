@@ -357,14 +357,21 @@ public class SendGridMail {
 		}
 	}
 	
-	public void sendWelcomeEmail(String userName, String userEmail) throws GeneralException {
+	public void sendWelcomeEmail(String userName, String userEmail, String code) throws GeneralException {
 		mail.setTemplateId("14d671a6-9a3e-482b-8dc1-39cac80b7bd8");
 		Personalization personalization = this.createNewPersonalization();
 		this.addTo(personalization, userName, userEmail);
 		personalization.addSubstitution("#username", userName);
+		personalization.addSubstitution("#linkUrl", Variables.URL_PATH + "VerifieEmail?email=" + userEmail + "&code=" + code);
+		this.setReplyTo("Victor", "victor@ease.space");
 		this.sendEmail();
 	}
 	
+	private void setReplyTo(String userName, String userEmail) {
+		Email replyEmail = this.createEmail(userName, userEmail);
+		this.mail.setReplyTo(replyEmail);
+	}
+
 	public void sendAppsArrivedEmail(String userName, String userEmail, List<Website> integratedWebsites) throws GeneralException {
 		mail.setTemplateId("cfe20be6-31c1-427f-b94c-02aacedd2619");
 		Personalization personalization = this.createNewPersonalization();

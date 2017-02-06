@@ -169,7 +169,7 @@ public class User {
 		newUser.passStep("first_connection", db);
 		newUser.initializeUpdateManager(sm);
 		if (groups.size() > 0) {
-			newUser.sendVerificationEmail(email, sm);
+			newUser.sendVerificationEmail(email, true, sm);
 		}
 		((Map<String, User>)sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
 		((Map<String, User>)sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);
@@ -479,9 +479,9 @@ public class User {
 			this.websockets.remove(entry.getKey());
 	}
 
-	public void sendVerificationEmail(String email, ServletManager sm) throws GeneralException {
+	public void sendVerificationEmail(String email, boolean newUser, ServletManager sm) throws GeneralException {
 		if (this.emails.get(email) != null) {
-			this.emails.get(email).askForVerification(this, sm);
+			this.emails.get(email).askForVerification(this, newUser, sm);
 		} else {
 			throw new GeneralException(ServletManager.Code.ClientError, "This email dosen't exist.");
 		}
