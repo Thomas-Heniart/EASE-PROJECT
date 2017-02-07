@@ -7,7 +7,7 @@ function sendEmail() {
 	--url https://api.sendgrid.com/v3/mail/send \
 	--header 'authorization: Bearer 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' \
 	--header 'Content-Type: application/json' \
-	--data '{"personalizations": [{"to": [{"email":"'$email'", "name":"'$name'"}], "substitutions": {"#username": "'$name'", "#linkUrl": "http://localhost:8080/index.jsp?importAccounts=true"}}], "from": {"email":"sergii@ease.space", "name":"Sergii"}, "template_id": "1a65dae4-89a1-454a-9604-3d3730d8237f", "reply_to": {"email":"contact@ease.space", "name":"Agathe @Ease"}}'
+	--data '{"personalizations": [{"to": [{"email":"'$email'", "name":"'$name'"}], "substitutions": {"#username": "'$name'", "#linkUrl": "http://localhost:8080/index.jsp?importAccounts=true"}}], "from": {"email":"benjamin@ease.space", "name":"Benjamin"}, "template_id": "c3653947-71f3-447f-9674-469022880e85"}'
 }
 
 #Parenthesis to cast this list of words to array
