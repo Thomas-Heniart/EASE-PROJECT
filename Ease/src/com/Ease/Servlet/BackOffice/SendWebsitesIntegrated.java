@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,12 +26,23 @@ import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
-public class SendWebsitesIntegrated {
-	
-	public SendWebsitesIntegrated() {
-		
-	}
-	
+/**
+ * Servlet implementation class SendWebsitesIntegrated
+ */
+@WebServlet("/SendWebsitesIntegrated")
+public class SendWebsitesIntegrated extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public SendWebsitesIntegrated() {
+        super();
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher rd = request.getRequestDispatcher("admin.jsp");
 		rd.forward(request, response);
@@ -85,4 +97,5 @@ public class SendWebsitesIntegrated {
 		}
 		sm.sendResponse();
 	}
+
 }

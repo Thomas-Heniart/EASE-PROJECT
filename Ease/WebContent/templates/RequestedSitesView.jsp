@@ -10,6 +10,7 @@
 		<div class="requestedWebsitesHeader">
 			<button id="sendAllMails">Send all emails</button>
 			<p>People asked if we could add these websites</p>
+			<p>Click on an url to replace it with the one in database</p>
 		</div>
 	</div>
 </div>

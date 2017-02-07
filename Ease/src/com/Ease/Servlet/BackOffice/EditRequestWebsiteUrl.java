@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
@@ -45,6 +46,7 @@ public class EditRequestWebsiteUrl extends HttpServlet {
 		User user = (User)(session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		DataBaseConnection db = sm.getDB();
+		Catalog catalog = (Catalog)sm.getContextAttr("catalog");
 		try {
 			sm.needToBeConnected();
 			if (!user.isAdmin())
@@ -56,7 +58,8 @@ public class EditRequestWebsiteUrl extends HttpServlet {
 			if (oldUrl == null || oldUrl.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty url");
 			db.set("UPDATE requestedWebsites SET site = '" + newUrl + "' WHERE site='" + oldUrl + "'");
-			sm.setResponse(ServletManager.Code.Success, "RequestedWebsites updated");
+			String retMsg = (catalog.getWebsiteWithHost(newUrl) != null) ? "integrated" : "pending";
+			sm.setResponse(ServletManager.Code.Success, retMsg);
 		} catch(GeneralException e) {
 			sm.setResponse(e);
 		}
