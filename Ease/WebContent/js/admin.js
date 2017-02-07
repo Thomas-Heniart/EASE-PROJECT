@@ -112,16 +112,38 @@ function printRequestedWebsites(string) {
 				+ element.site 
 				+ "' email='" 
 				+ element.email 
-				+ "'><input type='checkbox' class='sendEmail'/><button class='quit'>X</button><p>"
+				+ "'><input type='checkbox' class='sendEmail'/><button class='quit'>X</button><p><span class='websiteUrl'>"
 				+ element.site
-				+ " ("
+				+ "</span> <span>("
 				+ element.userName
 				+ ", "
 				+ element.date
-				+ ")</p></div>");
+				+ ")</span> <input style='display: none' class='editRequestUrl' type='text' placeholder='Set url' /></p></div>");
 	});
 	$('.requestedWebsite .quit').click(function(){
 		eraseWebsite($(this));
+	});
+	$(".requestedWebsite .websiteUrl").click(function(){
+		$(".editRequestUrl", $(this).parent()).show();
+	});
+	$(".editRequestUrl").keypress(function(e) {
+		if (e.which == 13) {
+			var newUrl = $(this).val();
+			console.log(newUrl);
+			var oldUrl = $(this).parent().parent().attr("website");
+			console.log(oldUrl);
+			postHandler.post("EditRequestWebsiteUrl", {
+				newUrl: newUrl,
+				oldUrl: oldUrl
+			}, function() {
+				
+			}, function(retMsg) {
+				$(".requestedWebsite[website='" + oldUrl + "']").attr("website", newUrl);
+				$(".requestedWebsite[website='" + newUrl + "'] .websiteUrl").text(newUrl);
+			}, function(retMsg) {
+				
+			});
+		}
 	});
 }
 
