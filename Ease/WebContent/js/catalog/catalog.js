@@ -322,7 +322,7 @@ var Catalog = function(rootEl){
 		for (var i = 0; i < self.apps.length; i++) {
 			if (self.apps[i].id == id)
 				return self.apps[i];
-		}		
+		}
 	}
 	this.getAppsBySsoId = function(ssoId){
 		var retVal = [];
