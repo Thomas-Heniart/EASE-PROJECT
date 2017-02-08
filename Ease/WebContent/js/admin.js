@@ -108,20 +108,50 @@ function getRequestedSites() {
 function printRequestedWebsites(string) {
 	var json = JSON.parse(string);
 	json.forEach(function(element) {
+		var websiteIntegrated = element.alreadyIntegrated ? "integrated" : "pending";
 		$('.requestedWebsitesView').append("<div class='requestedWebsite' website='" 
 				+ element.site 
 				+ "' email='" 
 				+ element.email 
-				+ "'><input type='checkbox' class='sendEmail'/><button class='quit'>X</button><p>"
+				+ "'><input type='checkbox' class='sendEmail'/><button class='quit'>X</button><p class='"
+				+ websiteIntegrated
+				+ "'><span class='websiteUrl'>"
 				+ element.site
-				+ " ("
+				+ "</span> <span>("
 				+ element.userName
 				+ ", "
 				+ element.date
-				+ ")</p></div>");
+				+ ")</span> <input style='display: none' class='editRequestUrl' type='text' placeholder='Set url' /></p></div>");
 	});
 	$('.requestedWebsite .quit').click(function(){
 		eraseWebsite($(this));
+	});
+	$(".requestedWebsite .pending .websiteUrl").click(function(){
+		$(".editRequestUrl", $(this).parent()).show();
+	});
+	$(".editRequestUrl").keypress(function(e) {
+		if (e.which == 13) {
+			var newUrl = $(this).val();
+			var self = $(this);
+			console.log(newUrl);
+			var oldUrl = $(this).parent().parent().attr("website");
+			console.log(oldUrl);
+			postHandler.post("EditRequestWebsiteUrl", {
+				newUrl: newUrl,
+				oldUrl: oldUrl
+			}, function() {
+				
+			}, function(retMsg) {
+				$(".requestedWebsite[website='" + oldUrl + "']").attr("website", newUrl);
+				$(".requestedWebsite[website='" + newUrl + "'] .websiteUrl").text(newUrl);
+				$(".requestedWebsite[website='" + newUrl + "'] p").removeClass("pending");
+				$(".requestedWebsite[website='" + newUrl + "'] p").addClass(retMsg);
+				self.val("");
+				self.hide();
+			}, function(retMsg) {
+				
+			});
+		}
 	});
 }
 
@@ -188,7 +218,10 @@ function sendEmailsWebsiteIntegrated(){
 		var valuesToSend=JSON.stringify(values);
 		postHandler.post(
 				"SendWebsitesIntegrated",
-				{email:email, websites:values},
+				{
+					email:email, 
+					websites:valuesToSend
+				},
 				function(){},
 				function(retMsg){
 					$(".requestedWebsite").each(function(){
@@ -344,7 +377,6 @@ function testWebsites(){
 		{},
 		function(){},
 		function(retMsg){
-			console.log(retMsg);
 			var json = {};
 			json.detail = JSON.parse(retMsg);
 			event = new CustomEvent("MultipleTests", json);
