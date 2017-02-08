@@ -122,6 +122,7 @@ var Profile = function(rootEl){
 		self.showSettings();
 	});
 	this.addApp = function(app){
+		app.currentProfile = self;
 		self.apps.push(app);
 		self.appContainer.append(app.qRoot);
 		easeAppsManager.addApp(app);
@@ -129,6 +130,7 @@ var Profile = function(rootEl){
 	this.removeApp = function(app){
 		self.apps.splice(self.apps.indexOf(app), 1);
 		easeAppsManager.removeApp(app);
+		self.apps = [];
 	}
 	this.removeAllApps = function(){
 		while (self.apps.length){

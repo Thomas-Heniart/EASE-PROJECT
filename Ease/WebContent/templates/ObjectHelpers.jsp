@@ -3,9 +3,9 @@
 		<div class="linkImage">
 			<div class="showAppActionsButton">
 				<i class="fa fa-cog"></i>
-				<div class="appActionsPopup">
+<!--				<div class="appActionsPopup"> -->
 					<!--<div class="caretHelper"><i class="fa fa-caret-up" aria-hidden="true"></i></div>-->
-					<div class="buttonsContainer">
+<!--					<div class="buttonsContainer">
 						<div class="modifyAppButton menu-item"
 						onclick="showModifyAppPopup(this, event)">
 						<p>Modify</p>
@@ -15,7 +15,7 @@
 					<p>Delete</p>
 				</div>
 			</div>
-		</div>
+		</div>-->
 	</div>
 	<img class="logo" src="">
 </div>
