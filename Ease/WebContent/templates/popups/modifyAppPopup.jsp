@@ -32,11 +32,11 @@ pageEncoding="UTF-8"%>
 						</div>
 						<!-- sign in choose -->
 						<div class="row signInChooseRow">
-							<button class="btn signInButton facebook" data="Facebook">
+							<button class="btn signInButton facebook unselected" data="Facebook">
 								<i class="fa fa-facebook" aria-hidden="true"></i>
 								Sign in with Facebook
 							</button>
-							<button class="btn signInButton linkedIn" data="Linkedin">
+							<button class="btn signInButton linkedIn unselected" data="Linkedin">
 								<i class="fa fa-linkedin" aria-hidden="true"></i>
 								Sign in with LinkedIn
 							</button>

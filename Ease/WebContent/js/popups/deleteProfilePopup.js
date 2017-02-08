@@ -54,6 +54,7 @@ deleteProfilePopup = function(rootEl){
 		self.errorRowHandler.removeClass('show');
 	}
 	this.open = function(profile){
+		currentEasePopup = self;
 		self.reset();
 		self.currentProfile = profile;
 		self.parentHandler.addClass('myshow');

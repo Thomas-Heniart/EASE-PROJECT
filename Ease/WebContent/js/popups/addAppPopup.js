@@ -79,6 +79,12 @@ addAppPopup = function(rootEl){
 
 	this.choosenSignInName = "";
 	this.signInChooseRow.find('.signInButton').click(function(){
+		if ($(this).hasClass('selected'))
+			return;
+		else {
+			self.signInChooseRow.find('.selected').removeClass('selected');
+			$(this).addClass('selected');
+		}
 		var catalogApp = catalog.getAppByName($(this).attr('data'));
 		self.choosenSignInName = $(this).attr('data');
 		self.signInDetectionErrorHandler.removeClass('show');
@@ -222,13 +228,13 @@ addAppPopup = function(rootEl){
 
 	this.accountNameHelperBackButton.click(function(){
 //		self.resetSameAccountsRow();
-		self.resetSimpleInputs();
-		self.choosenSsoAccountLogin = null;
-		self.submitButton.addClass('locked');
-		self.accountNameHelper.addClass('hide');
-		self.sameSsoAppsRow.addClass('hide');
-		self.ssoSelectAccountRow.removeClass('hide');
-	});
+self.resetSimpleInputs();
+self.choosenSsoAccountLogin = null;
+self.submitButton.addClass('locked');
+self.accountNameHelper.addClass('hide');
+self.sameSsoAppsRow.addClass('hide');
+self.ssoSelectAccountRow.removeClass('hide');
+});
 	this.ssoNewAccountButton.click(function(){
 		self.ssoSelectAccountRow.addClass('hide');
 		self.loginPasswordRow.removeClass('hide');
@@ -277,6 +283,7 @@ addAppPopup = function(rootEl){
 	}
 
 	this.open = function(app, profile){
+		currentEasePopup = self;
 		self.reset();
 		self.currentApp = app;
 		self.currentProfile = profile;
