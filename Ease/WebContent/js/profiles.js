@@ -23,12 +23,12 @@ var easeRoot = function(rootEl){
 	});
 };
 
-var easeHiddenProfile;
+//var easeHiddenProfile;
 $(document).ready(function(){
-	easeHiddenProfile = new hiddenProfile($('.hiddenProfile'));
+//	easeHiddenProfile = new hiddenProfile($('.hiddenProfile'));
 	ease = new easeRoot($('#onComputer'));
 });
-
+/*
 var hiddenProfile = function(rootEl){
 	var self = this;
 	this.rootEl = rootEl;
@@ -78,7 +78,7 @@ this.appContainer.droppable({
 });
 setupSortableContainer(this.appContainer);
 };
-
+*/
 function enterEditMode() {
 	easeDashboard.enterEditMode();
 	catalog.open();
@@ -139,7 +139,7 @@ var Profile = function(rootEl){
 		return null;
 	}
 	this.simpleAddApp = function(app){
-		self.apps = self.apps.splice(self.apps.indexOf(app), 1);
+		app.currentProfile.simpleRemoveApp(app);
 		app.currentProfile = self;
 		self.apps.push(app);
 	}
@@ -250,7 +250,6 @@ var Profile = function(rootEl){
 		}
 	});
 	//apps move
-	this.movedAppHelper = null;
 	this.appContainer.sortable({
 		animation : 300,
 		group : "sites",
@@ -262,7 +261,6 @@ var Profile = function(rootEl){
 		onStart : function(evt) {
 			var item = $(evt.item);
 			appDragCurrentIdHelper = item.parent().attr('id');
-			self.movedAppHelper = self.getAppById(item.attr('id'));
 			item.css({
 				'pointer-events' : 'none',
 				'opacity' : '0'
@@ -277,8 +275,7 @@ var Profile = function(rootEl){
 				'opacity' : ''
 			});
 			if (appDragCurrentIdHelper != item.parent().attr('id') || evt.oldIndex != evt.newIndex) {
-				self.movedAppHelper.currentProfile.simpleRemoveApp(self.movedAppHelper);
-				easeProfileManager.getProfileById(item.parent().attr('id')).simpleAddApp(self.movedAppHelper);
+				easeProfileManager.getProfileById(item.parent().attr('id')).simpleAddApp(self.getAppById(item.attr('id')));
 				postHandler.post("MoveApp", {
 					appId : item.attr('id'),
 					profileIdDest : item.parent().attr('id'),
@@ -382,7 +379,7 @@ $(document).click(function (e){
 var appDragCurrentIdHelper = 0;
 
 //drag and drop initializing function on a container 
-function setupSortableContainer(container) {
+/*function setupSortableContainer(container) {
 	$(container).sortable({
 		animation : 300,
 		group : "sites",
@@ -429,7 +426,7 @@ function setupSortableContainer(container) {
 			}
 		}
 	});
-}
+}*/
 
 /* Next lines come from ProfileEditView.jsp */
 
