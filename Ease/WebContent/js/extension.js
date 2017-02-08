@@ -165,8 +165,6 @@ $(document).ready(function() {
 		easeTracker.setHomepage(homepageState);
 		easeTracker.trackEvent("HomepageSwitch");
 		var stateString = homepageState.toString();
-		console.log(homepageState);
-		console.log(stateString);
 		postHandler.post("HomepageSwitch", {
 			homepageState: stateString
 		}, function() {
