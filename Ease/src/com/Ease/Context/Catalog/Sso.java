@@ -69,6 +69,10 @@ public class Sso {
 		return single_id;
 	}
 	
+	public void setSingleId(int singleId) {
+		this.single_id = singleId;
+	}
+	
 	public String getDbid() {
 		return this.db_id;
 	}

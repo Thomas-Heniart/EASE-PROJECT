@@ -54,7 +54,7 @@ public class Aspirateur extends HttpServlet {
 		User user = (User) (session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		DataBaseConnection db = sm.getDB();
-
+		Catalog oldCatalog = (Catalog)sm.getContextAttr("catalog");
 		try {
 			sm.needToBeConnected();
 			if (!user.isAdmin()) {
@@ -62,7 +62,7 @@ public class Aspirateur extends HttpServlet {
 			} else {
 				db.set("DELETE FROM savedSessions WHERE datetime < SUBTIME(CURRENT_TIMESTAMP, '2 0:0:0.0');");	
 				ServletContext context = session.getServletContext();
-				context.setAttribute("catalog", new Catalog(db, context));
+				context.setAttribute("catalog", Catalog.updateCatalog(db, context, oldCatalog));
 				sm.setResponse(ServletManager.Code.Success,"SavedSessions cleaned and Catalog refreshed.");
 			}
 		} catch (GeneralException e) {

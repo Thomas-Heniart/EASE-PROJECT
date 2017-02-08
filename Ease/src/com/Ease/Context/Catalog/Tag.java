@@ -90,6 +90,10 @@ public class Tag {
 		return this.single_id;
 	}
 	
+	public void setSingleId(int singleId) {
+		this.single_id = singleId;		
+	}
+	
 	public String getDbId() {
 		return this.db_id;
 	}
