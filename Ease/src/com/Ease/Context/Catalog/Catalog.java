@@ -31,6 +31,30 @@ public class Catalog {
 	protected Map<Integer, Tag> tagIDmap;
 	protected List<Tag> tags;
 	
+	public static Catalog updateCatalog(DataBaseConnection db, ServletContext context, Catalog oldCatalog) throws GeneralException {
+		Catalog newCatalog = new Catalog(db, context);
+		newCatalog.updateSingleIdsWith(oldCatalog);
+		return newCatalog;
+	}
+	
+	private void updateSingleIdsWith(Catalog oldCatalog) {
+		for (Website oldWebsite : oldCatalog.getWebsites()) {
+			Website newWebsite = this.websiteDBmap.get(oldWebsite.getDb_id());
+			if (newWebsite != null)
+				newWebsite.setSingleId(oldWebsite.getSingleId());
+		}
+		for (Tag oldTag : oldCatalog.getTags()) {
+			Tag newTag = this.tagDBmap.get(oldTag.getDbId());
+			if (newTag != null)
+				newTag.setSingleId(oldTag.getSingleId());
+		}
+		for (Sso oldSso : oldCatalog.getSsos()) {
+			Sso newSso = this.ssoDBmap.get(oldSso.getDbid());
+			if (newSso != null)
+				newSso.setSingleId(oldSso.getSingleId());
+		}
+	}
+
 	public Catalog(DataBaseConnection db, ServletContext context) throws GeneralException {
 		
 		ssos = Sso.loadSsos(db, context);
@@ -231,6 +255,10 @@ public class Catalog {
 			res.add(website.getJsonForCatalog());
 		Collections.reverse(res);
 		return res;
+	}
+	
+	private List<Sso> getSsos() {
+		return this.ssos;
 	}
 	
 	public JSONArray getSsoJson() {
