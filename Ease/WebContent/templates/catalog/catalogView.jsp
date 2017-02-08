@@ -98,3 +98,11 @@ pageEncoding="UTF-8"%>
 </div>
 </div>
 </div>
+
+<c:if test="${param.catalogOpen}">
+<script>
+	$(document).ready(function() {
+		catalog.open();
+	});
+</script>
+</c:if>

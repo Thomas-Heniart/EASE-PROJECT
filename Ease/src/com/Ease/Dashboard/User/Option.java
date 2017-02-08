@@ -12,12 +12,13 @@ public class Option {
 		NOTHING,
 		ID,
 		BACKGROUND_PICKED,
-		INFINITE_SESSION
+		INFINITE_SESSION,
+		HOMEPAGE_STATE
 	}
 	
 	public static Option createOption(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		int db_id = db.set("INSERT INTO options values (null, 1, 0);");
+		int db_id = db.set("INSERT INTO options values (null, 1, 0, 0);");
 		return new Option(String.valueOf(db_id), true, false);
 	}
 
@@ -77,5 +78,10 @@ public class Option {
 		DataBaseConnection db = sm.getDB();
 		db.set("UPDATE options SET infinite_session = " + (b ? 1 : 0) + " WHERE id = " + this.db_id + ";");
 		this.infinite_session = b;
+	}
+
+	public void setHomepageState(boolean state, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		db.set("UPDATE options SET homepage_state = " + (state ? "1" : "0") + " WHERE id = " + this.db_id + ";");
 	}
 }

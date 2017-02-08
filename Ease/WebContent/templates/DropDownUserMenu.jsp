@@ -6,7 +6,7 @@ String UserName = ((User) (session.getAttribute("user"))).getFirstName();
 %>
 <div class='userSettingsContainer'>
 	<a id="userSettingsButton"><i class="fa fa-fw fa-user"></i> <span><%=UserName%></span></a>
-	<div class="userSettings">
+	<div class="userSettings <c:if test='${param.showSettings}'>show</c:if>">
 		<div class="directSettings">
 			<p class="settingsHeader">
 				Quick setup

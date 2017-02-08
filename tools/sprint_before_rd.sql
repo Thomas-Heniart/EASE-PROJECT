@@ -10,3 +10,11 @@ CREATE TABLE integrateWebsitesAndUsersMap (
 );
 
 ALTER TABLE passwordLost ADD dateOfRequest DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+ALTER TABLE options ADD homepage_state TINYINT(1) NOT NULL;
+
+UPDATE options SET homepage_state = 1;
+
+ALTER TABLE status ADD homepage_email_sent TINYINT(1) NOT NULL;
+
+UPDATE status SET homepage_email_sent = 0;
