@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.User.User;
@@ -29,7 +32,6 @@ public class EditClassicApp extends HttpServlet {
      */
     public EditClassicApp() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -50,20 +52,30 @@ public class EditClassicApp extends HttpServlet {
 		
 		try {
 			sm.needToBeConnected();
-			String appId = sm.getServletParam("appId", true);
+			String appIdsString = sm.getServletParam("appIds", true);
 			String name = sm.getServletParam("name", true);
 			String password = sm.getServletParam("password", false);
 			Map<String, String> infos = null;
 			if (name == null || name.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
-			if (appId == null || appId.equals(""))
+			if (appIdsString == null || appIdsString.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Unknown app.");
 			try {
-				App app = user.getDashboardManager().getAppWithID(Integer.parseInt(appId));
-				if (!app.getType().equals("ClassicApp"))
-					throw new GeneralException(ServletManager.Code.ClientError, "This is not a classic app.");
-				infos = ((ClassicApp)app).getSite().getNeededInfos(sm);
-				((ClassicApp)app).edit(name, infos, password, sm);
+				JSONParser parser = new JSONParser();
+				JSONArray appIds = null;
+				appIds = (JSONArray)parser.parse(appIdsString);
+				for (Object appId : appIds) {
+					App app = user.getDashboardManager().getAppWithID(Integer.parseInt((String)appId));
+					if (!app.getType().equals("ClassicApp"))
+						throw new GeneralException(ServletManager.Code.ClientError, "This is not a classic app.");
+					infos = ((ClassicApp)app).getSite().getNeededInfos(sm);
+					if (appIds.indexOf(appId) == 0)
+						((ClassicApp)app).edit(name, infos, password, sm);
+					else {
+						String appName = app.getName();
+						((ClassicApp)app).edit(appName, infos, password, sm);
+					}
+				}
 				sm.setResponse(ServletManager.Code.Success, "Classic app edited.");
 			} catch (NumberFormatException e) {
 				sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");
