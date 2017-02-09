@@ -1,6 +1,20 @@
 /* For new things */
 
+ALTER TABLE infrastructures DROP group_key;
+
+UPDATE websites SET sso = 1 WHERE login_url LIKE "%accounts.google%";
+
+ALTER TABLE sso ADD img_path VARCHAR(255) NOT NULL;
+
+/* INSERT INTO groupsAndUsersMap values (SELECT null, group_id, user_id FROM test.GroupAndUserMap WHERE user_id IN (SELECT id FROM users));
+*/
 ALTER TABLE status ADD last_connection DATETIME DEFAULT CURRENT_TIMESTAMP;
+
+ALTER TABLE infrastructures ADD img_path VARCHAR(255) NOT NULL;
+
+ALTER TABLE status ADD invite_sended TINYINT(1) NOT NULL;
+
+DROP TABLE IF EXISTS integrateWebsitesAndUsersMap;
 
 CREATE TABLE integrateWebsitesAndUsersMap (
 	id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -68,3 +82,12 @@ DELETE FROM loginWithWebsites WHERE id >= 4;
 UPDATE websites SET website_homepage = 'http://www.adecco.fr' WHERE id = 104;
 UPDATE websites SET website_homepage = 'http://www.koudetatondemand.co', login_url = 'http://www.koudetatondemand.co' WHERE id = 99;
 UPDATE websites SET website_homepage = 'https://www.edx.org/' WHERE id = 146;
+INSERT INTO websitesLogWithMap values(null, 130, 1);
+INSERT INTO websitesLogWithMap values(null, 92, 1);
+INSERT INTO websitesLogWithMap values(null, 124, 1);
+INSERT INTO websitesLogWithMap values(null, 145, 1);
+INSERT INTO websitesLogWithMap values(null, 228, 1);
+
+
+/* profilePermissions all permissions */
+UPDATE profilePermissions SET permission = b'11111111111111111111';
