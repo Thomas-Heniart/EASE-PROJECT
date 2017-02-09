@@ -56,10 +56,25 @@ public class Tag {
 	}
 	
 	public void loadGroupIds(DataBaseConnection db) throws GeneralException {
-		ResultSet rs = db.get("SELECT group_id FROM tagsAndGroupsMap WHERE tag_id = " + this.db_id + ";");
+		ResultSet rs = db.get("SELECT group_id FROM tagsAndGroupsMap JOIN groups ON (tagsAndGroupsMap.group_id = groups.id) WHERE tag_id = " + this.db_id + ";");
 		try {
 			while(rs.next()) {
-				this.groupIds.add(rs.getString(1));
+				String parent_id = rs.getString(1);
+				this.groupIds.add(parent_id);
+				this.loadSubGroupIds(parent_id, db);
+			}
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+	}
+	
+	public void loadSubGroupIds(String parent_id, DataBaseConnection db) throws GeneralException {
+		ResultSet rs = db.get("SELECT id FROM groups WHERE parent = " + parent_id + ";");
+		try {
+			while(rs.next()) {
+				String newParent_id = rs.getString(1);
+				this.groupIds.add(newParent_id);
+				this.loadSubGroupIds(newParent_id, db);
 			}
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
