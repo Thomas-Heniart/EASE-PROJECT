@@ -24,59 +24,60 @@ var Dashboard = function(rootEl){
 		this.adder.qRoot.css('display', 'none');
 	}
 	//profileAdder click event
-
-	this.adder.submitButton.on('click', function(){
-		if (self.adder.isValid()){
-			var profile = $($('#profileHelper').html());
-			var a = 1000;
-			var columnIdx = 0;
-			for (var i = 0; i < self.columns.length; i++) {
-				var tmp = 0;			
-				$(self.columns[i]).find('.item').each(function(){
-					var appsNb = $(this).find('.siteLinkBox').length;
-					tmp += (appsNb < 7) ? 2 : (appsNb + 2) / 3;
-				});
-				if (tmp < a){
-					a = tmp;
-					columnIdx = i;
+	if (this.adder.qRoot){
+		this.adder.submitButton.on('click', function(){
+			if (self.adder.isValid()){
+				var profile = $($('#profileHelper').html());
+				var a = 1000;
+				var columnIdx = 0;
+				for (var i = 0; i < self.columns.length; i++) {
+					var tmp = 0;			
+					$(self.columns[i]).find('.item').each(function(){
+						var appsNb = $(this).find('.siteLinkBox').length;
+						tmp += (appsNb < 7) ? 2 : (appsNb + 2) / 3;
+					});
+					if (tmp < a){
+						a = tmp;
+						columnIdx = i;
+					}
 				}
+				$(profile).addClass('scaleOut12');
+				setTimeout(function(){
+					$(profile).removeClass('scaleOut12');
+				}, 500);
+				if ((profiles.length + 1) >= 15){
+					self.adder.qRoot.css('display', 'none');
+				}
+				var Name = self.adder.getName();
+				var Color = self.adder.choosenColor;
+				var newProfile = new Profile($(profile).find('.ProfileBox'));
+				newProfile.setName(Name);
+				newProfile.setColor(Color);
+				profiles.push(newProfile);	
+				$(self.columns[columnIdx]).css('width', '');
+				$(self.columns[columnIdx]).append($(profile));
+				self.adder.close();
+				postHandler.post(
+					'AddProfile', 
+					{
+						name : Name,
+						color : Color
+					},
+					function(){},
+					function(retMsg){
+						newProfile.setId(retMsg);
+						easeTracker.trackEvent('AddProfile', {"profieName":Name, "profileColor":Color});
+					},
+					function(retMsg){
+						newProfile.remove();
+						delete newProfile;
+						self.adder.rootEl.css('display', '');
+					},
+					'text'
+					);
 			}
-			$(profile).addClass('scaleOut12');
-			setTimeout(function(){
-				$(profile).removeClass('scaleOut12');
-			}, 500);
-			if ((profiles.length + 1) >= 15){
-				self.adder.qRoot.css('display', 'none');
-			}
-			var Name = self.adder.getName();
-			var Color = self.adder.choosenColor;
-			var newProfile = new Profile($(profile).find('.ProfileBox'));
-			newProfile.setName(Name);
-			newProfile.setColor(Color);
-			profiles.push(newProfile);	
-			$(self.columns[columnIdx]).css('width', '');
-			$(self.columns[columnIdx]).append($(profile));
-			self.adder.close();
-			postHandler.post(
-				'AddProfile', 
-				{
-					name : Name,
-					color : Color
-				},
-				function(){},
-				function(retMsg){
-					newProfile.setId(retMsg);
-					easeTracker.trackEvent('AddProfile', {"profieName":Name, "profileColor":Color});
-				},
-				function(retMsg){
-					newProfile.remove();
-					delete newProfile;
-					self.adder.rootEl.css('display', '');
-				},
-				'text'
-				);
-		}
-	});
+		});
+	}
 	//drag and drop initialization
 	this.columns.each(function(){
 		if (!($(this).find('.item').length)){
@@ -153,7 +154,10 @@ var profileAdder = function(elem){
 	this.closeButton=  this.qRoot.find('.closer');
 	this.adderBody = this.qRoot.find('.adder');
 	this.submitButton = this.qRoot.find("button[type='submit']");
-
+	if (!elem.length){
+		this.qRoot == null;
+		return;
+	}
 	/* ------COLOR CHOOSE------- */
 	this.colors = [];/* obj.color obj.qRoot */
 	this.choosenColor = null;
