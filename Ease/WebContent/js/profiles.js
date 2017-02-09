@@ -181,7 +181,7 @@ var Profile = function(rootEl){
 			self.parentItem.remove();
 		}, 300);
 		if (profiles.length <= 15)
-			easeDashboard.adder.rootEl.css('display', '');
+			easeDashboard.adder.qRoot.css('display', '');
 		if (self.parentItem.parent().find('.item').length == 1)
 			self.parentItem.parent().width('0px');
 	}
@@ -476,7 +476,7 @@ $(document)
 		.click(
 			function(event) {
 				if ($(".CatalogViewTab").hasClass("show") && !($(event.target).closest('.MenuButtonSet').length) && $('.md-show, .popupHandler.myshow').length == 0) {
-					if (!($(event.target).closest('.profileAdder, .header, .dashboardColumn, .md-modal, .md-overlay, .CatalogViewTab, .AddProfileView, .updateButton, .hiddenProfile, #tipsHandler, .updateBox, .popupHandler').length))
+					if (!($(event.target).closest('#profileAdder, .header, .dashboardColumn, .md-modal, .md-overlay, .CatalogViewTab, .AddProfileView, .updateButton, .hiddenProfile, #tipsHandler, .updateBox, .popupHandler').length))
 						leaveEditMode();
 				}
 			});

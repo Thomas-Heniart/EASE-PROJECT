@@ -12,6 +12,32 @@
           box-shadow: $param1;
 }
 
+@mixin placeholder-color($color, $size:"") {
+  &::-webkit-input-placeholder {
+    color: $color;
+    @if $size != "" {
+      font-size: $size;
+    }
+  }
+  &:-moz-placeholder {
+    color: $color;
+    @if $size != "" {
+      font-size: $size;
+    }
+  }
+  &::-moz-placeholder {
+    color: $color;
+    @if $size != "" {
+      font-size: $size;
+    }
+  }
+  &:-ms-input-placeholder {
+    color: $color;
+    @if $size != "" {
+      font-size: $size;
+    }
+  }
+}
 @mixin size($width , $height: $width ) {
   width: $width;
   height: $height;

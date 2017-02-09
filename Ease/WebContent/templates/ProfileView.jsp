@@ -11,33 +11,47 @@ pageEncoding="UTF-8"%>
 			<c:forEach items='${column}' var="profile">
 			<dashboard:profile profile="${profile}"/>
 		</c:forEach>
+
 	</div>
 </c:if>
 </c:forEach>
-<div class="profileAdder">
+<div id="profileAdder">
 	<span class="opener fa-stack fa-lg">
 		<i class="fa fa-circle fa-stack-1x" aria-hidden="true"></i>
 		<i class="fa fa-plus-circle fa-stack-1x" aria-hidden="true"></i>
 	</span>
-	<div class="colorChooser">
-		<c:forEach items="${colors}" var="color" varStatus="loop">
-			<c:if test="${loop.index < 8}">
-				<div class="colorHolder">
-					<div class="color" color="${color}" style="background-color: ${color}">
-					</div>
+	<div class="adder">
+		<div class="row inputRow">
+			<div class="input">
+				<span class="closer fa-stack fa-lg">
+					<i class="fa fa-circle fa-stack-1x" aria-hidden="true"></i>
+					<i class="fa fa-plus-circle fa-stack-1x" aria-hidden="true"></i>
+				</span>			
+				<input type="text" name="name" placeholder="New category" />
+			</div>
+			<button class="btn" type="submit">Ok</button>
+		</div>
+		<div class="handler">
+			<div class="row suggestionsRow">
+				<p class="sectionName">Suggestions</p>
+				<div class="suggestions">
 				</div>
-			</c:if>
-		</c:forEach>
-	</div>
-	<div class="profileHeaderPreview">
-		<div class="nameInput">
-			<p>@</p>
-			<input type="text" placeholder="Profile name..." maxlength="20" />
+			</div>
+			<div class="row colorChooseRow">
+				<p class="sectionName">Change color to :</p>
+				<div class="colors">
+					<c:forEach items="${colors}" var="color" varStatus="loop">
+					<c:if test="${loop.index < 8}">
+					<div class="colorHolder">
+						<div class="color" color="${color}" style="background-color: ${color}">
+						</div>
+					</div>
+				</c:if>
+			</c:forEach>
 		</div>
-		<div class="confirm">
-			Go
-		</div>
 	</div>
+</div>
+</div>
 </div>
 </div>
 <%@ include file="ObjectHelpers.jsp"%>
