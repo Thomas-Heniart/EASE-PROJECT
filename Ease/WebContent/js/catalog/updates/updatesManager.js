@@ -555,6 +555,7 @@ var addUpdatePopup = function(rootEl){
 		self.mainBody.addClass('show');
 	};
 	this.open = function(update, profileId, appIdx){
+		currentEasePopup = self;
 		self.reset();
 		self.update = update;
 		self.appIdx = appIdx;

@@ -142,6 +142,11 @@
 					.signInButton{
 						margin-top: 0.5vw;
 						display: none;
+						transition: transform .3s;
+						transform: scale(1);
+						&.selected {
+							transform: scale(1.05);
+						}
 						&.show {
 							display: block;
 						}
@@ -253,6 +258,7 @@
 						.selectHandler {
 							white-space: nowrap;
 							overflow: auto;
+							text-align: center;
 							.appHandler.checked {
 								.appLogo {
 									&:before {
@@ -771,6 +777,11 @@
 					.signInButton{
 						margin-top: 0.5vw;
 						display: none;
+						transition: transform .3s;
+						transform: scale(1);
+						&.selected {
+							transform: scale(1.05);
+						}
 						&.show {
 							display: block;
 						}

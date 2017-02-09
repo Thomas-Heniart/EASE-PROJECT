@@ -596,6 +596,8 @@
 						p{
 							overflow: hidden;
 							text-overflow: ellipsis;
+							font-family: $defaultFont;
+							letter-spacing: 0.5px;
 						}
 					}
 				}

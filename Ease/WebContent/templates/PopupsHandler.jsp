@@ -8,3 +8,10 @@ pageEncoding="UTF-8"%>
 	<%@ include file="popups/deleteProfilePopup.jsp" %>
 	<%@ include file="popups/modifyAppPopup.jsp" %>
 </div>
+<script type="text/javascript">
+	var currentEasePopup = null;
+	$("#easePopupsHandler").click(function(e){
+		if ($(e.target).attr('id') == 'easePopupsHandler')
+			currentEasePopup.close();
+	});
+</script>

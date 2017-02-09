@@ -31,6 +31,12 @@ modifyAppPopup = function(rootEl){
 			"ui-selected": "selected"
 		}
 	});
+	this.signInChooseRow.selectable({
+		classes: {
+			"ui-selected": "selected"
+		},
+		filter: "button"
+	});	
 	this.signInButtons = [];
 	this.choosenSignInName = "";
 	this.basicSignInName = "";
@@ -40,6 +46,12 @@ modifyAppPopup = function(rootEl){
 		tmp.name = $(elem).attr('data');
 		tmp.qRoot = $(elem);
 		tmp.qRoot.click(function(){
+			if ($(this).hasClass('selected'))
+				return;
+			else {
+				self.signInChooseRow.find('.selected').removeClass('selected');
+				$(this).addClass('selected');
+			}
 			var catalogApp = catalog.getAppByName($(this).attr('data'));
 			self.choosenSignInName = $(this).attr('data');
 			self.signInDetectionErrorHandler.removeClass('show');
@@ -204,18 +216,23 @@ modifyAppPopup = function(rootEl){
 				'login': login,
 				'password': password,
 				'logwithId': logwithId,
-				'appId': appsIdJson
+				'appIds': appsIdJson
 			},
 			function(){
 				self.tabInfoSubmitButton.removeClass('loading');
 			},
 			function(msg){
 				self.currentApp.changeName(name);
+				if (login != self.currentApp.login || password.length){
+					for (var i = 0; i < self.sameSsoAccountsVar.length; i++) {
+						self.sameSsoAccountsVar[i].app.login = login;
+						self.sameSsoAccountsVar[i].app.scaleAnimate();
+					}
+				}
 				self.currentApp.login = login;
 				self.currentApp.logWith = logwithId;
-				for (var i = 0; i < self.sameSsoAccountsVar.length; i++) {
-					self.sameSsoAccountsVar[i].app.login = login;
-				}
+				self.currentApp.scaleAnimate();
+				self.close();
 			},
 			function(msg){
 				self.tabInfoErrorRowHandler.find('p').text(msg);
@@ -225,7 +242,7 @@ modifyAppPopup = function(rootEl){
 				}, 3000);
 			},
 			'text'
-		);
+			);
 	});
 	this.reset = function(){
 		this.currentApp = null;
@@ -241,6 +258,7 @@ modifyAppPopup = function(rootEl){
 		self.sameSsoAppsRow.addClass('hide');
 	}
 	this.open = function(app){
+		currentEasePopup = self;
 		self.reset();
 		this.currentApp = app;
 		self.appNameHolder.val(app.name);

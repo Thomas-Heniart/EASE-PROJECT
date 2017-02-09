@@ -184,6 +184,8 @@
 							text-overflow: ellipsis;
 							overflow: hidden;
 							line-height: 1.5;
+							font-family: $defaultFont;
+							letter-spacing: 0.5px;
 						}
 					}
 					.linkImage.settingsShow {

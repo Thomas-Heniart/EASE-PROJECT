@@ -122,7 +122,7 @@ var MyApp = function(){
 	this.currentProfile = null;
 
 	this.changeName = function(name){
-		self.appNameHandler.val(name);
+		self.appNameHandler.text(name);
 		self.name = name;
 	}
 	this.init = function(logWith, login, catalogId, name, id, ssoId, canMove, imgSrc){

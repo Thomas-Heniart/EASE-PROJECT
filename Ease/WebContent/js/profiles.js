@@ -23,12 +23,12 @@ var easeRoot = function(rootEl){
 	});
 };
 
-var easeHiddenProfile;
+//var easeHiddenProfile;
 $(document).ready(function(){
-	easeHiddenProfile = new hiddenProfile($('.hiddenProfile'));
+//	easeHiddenProfile = new hiddenProfile($('.hiddenProfile'));
 	ease = new easeRoot($('#onComputer'));
 });
-
+/*
 var hiddenProfile = function(rootEl){
 	var self = this;
 	this.rootEl = rootEl;
@@ -78,7 +78,7 @@ this.appContainer.droppable({
 });
 setupSortableContainer(this.appContainer);
 };
-
+*/
 function enterEditMode() {
 	easeDashboard.enterEditMode();
 	catalog.open();
@@ -92,14 +92,24 @@ function leaveEditMode() {
 	$('.MenuButtonSet').removeClass('editMode');
 }
 
+var profileManager = function(){
+	this.getProfileById = function(id){
+		for (var i = 0; i < profiles.length; i++) {
+			if (profiles[i].id == id)
+				return profiles[i];
+		}
+		return null;
+	}
+}
 var profiles = [];
+var easeProfileManager;
 
 $(document).ready(function(){
 	$('.ProfileBox:not(.helper)').each(function(){
 		var profile = new Profile($(this));
 		profiles.push(profile);
 	});
-	
+	easeProfileManager = new profileManager();	
 	$("#enterEditMode").click(enterEditMode);
 	
 });
@@ -121,6 +131,21 @@ var Profile = function(rootEl){
 		e.stopPropagation();
 		self.showSettings();
 	});
+	this.getAppById = function(id){
+		for (var i = 0; i < self.apps.length; i++) {
+			if (self.apps[i].id == id)
+				return self.apps[i];
+		}
+		return null;
+	}
+	this.simpleAddApp = function(app){
+		app.currentProfile.simpleRemoveApp(app);
+		app.currentProfile = self;
+		self.apps.push(app);
+	}
+	this.simpleRemoveApp = function(app){
+		self.apps.splice(self.apps.indexOf(app), 1);		
+	}
 	this.addApp = function(app){
 		app.currentProfile = self;
 		self.apps.push(app);
@@ -130,12 +155,12 @@ var Profile = function(rootEl){
 	this.removeApp = function(app){
 		self.apps.splice(self.apps.indexOf(app), 1);
 		easeAppsManager.removeApp(app);
-		self.apps = [];
 	}
 	this.removeAllApps = function(){
 		while (self.apps.length){
 			self.removeApp(self.apps[0]);
 		}
+		self.apps = [];
 	}
 	this.qRoot.find('.siteLinkBox').each(function(index, elem){
 		self.addApp(new MyApp().initWithQRoot(elem));
@@ -225,7 +250,50 @@ var Profile = function(rootEl){
 		}
 	});
 	//apps move
-	setupSortableContainer(this.appContainer);
+	this.appContainer.sortable({
+		animation : 300,
+		group : "sites",
+		forceFallback : true,
+		filter : ".siteLinkBox[move='false']",
+		handle : ".logo, .emptyAppIndicator",
+		fallbackTolerance : 1,
+		fallbackOnBody: true,
+		onStart : function(evt) {
+			var item = $(evt.item);
+			appDragCurrentIdHelper = item.parent().attr('id');
+			item.css({
+				'pointer-events' : 'none',
+				'opacity' : '0'
+			});
+			$('body').css('cursor', 'move');
+		},
+		onEnd : function(evt) {
+			var item = $(evt.item);
+			$('body').css('cursor', '');
+			item.css({
+				'pointer-events' : '',
+				'opacity' : ''
+			});
+			if (appDragCurrentIdHelper != item.parent().attr('id') || evt.oldIndex != evt.newIndex) {
+				easeProfileManager.getProfileById(item.parent().attr('id')).simpleAddApp(self.getAppById(item.attr('id')));
+				postHandler.post("MoveApp", {
+					appId : item.attr('id'),
+					profileIdDest : item.parent().attr('id'),
+					positionDest : item.index()
+				}, function() {
+				}, function(retMsg) {
+					easeTracker.trackEvent("MoveApp");
+				}, function(retMsg) {
+				}, 'text');
+			}
+		},
+		onMove : function(evt) {
+			if ($(evt.dragged).attr('move') == 'false') {
+				return false;
+			}
+		}
+	});
+//	setupSortableContainer(this.appContainer);
 	//settings
 	//delete profile
 	this.qRoot.find('#deleteProfileForm #validate').click(function() {
@@ -311,7 +379,7 @@ $(document).click(function (e){
 var appDragCurrentIdHelper = 0;
 
 //drag and drop initializing function on a container 
-function setupSortableContainer(container) {
+/*function setupSortableContainer(container) {
 	$(container).sortable({
 		animation : 300,
 		group : "sites",
@@ -358,7 +426,7 @@ function setupSortableContainer(container) {
 			}
 		}
 	});
-}
+}*/
 
 /* Next lines come from ProfileEditView.jsp */
 

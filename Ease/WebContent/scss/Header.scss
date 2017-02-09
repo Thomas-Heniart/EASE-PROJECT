@@ -81,6 +81,9 @@
 			text-decoration: none;
 			border-radius: 4px;
 			cursor: pointer;
+			font-family: $defaultFont;
+			font-weight: bold;
+			letter-spacing: 1px;
 			span {
 				text-decoration: none;
 				display: inline-block;
