@@ -239,6 +239,9 @@ public class Website {
 			if (value == null || value.isEmpty()) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong info: " + info.getInformationName() + ".");
 			}
+			if (info.getInformationValue().equals("password")) {
+				value = sm.getUser().encrypt(value);
+			}
 			infos.put(info.getInformationName(), value);
 		}
 		return infos;
