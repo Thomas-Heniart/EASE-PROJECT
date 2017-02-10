@@ -1,4 +1,4 @@
-package com.Ease.Servlet.App;
+ package com.Ease.Servlet.App;
 
 import java.io.IOException;
 import java.util.Map;
@@ -61,6 +61,12 @@ public class AddBookMark extends HttpServlet {
 			
 			Website site = null;
 			if (name == null || name.equals(""))
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
+			if (websiteId == null || websiteId.equals(""))
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
+			if (profileId == null || profileId.equals(""))
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
+			if (link == null || link.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
 			try {
 				Profile profile = user.getDashboardManager().getProfile(Integer.parseInt(profileId));
