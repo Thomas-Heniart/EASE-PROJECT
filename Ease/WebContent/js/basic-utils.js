@@ -156,3 +156,23 @@ function changeColor(color, ratio, darker) {
             }
         });
     });
+
+    var Animations = function(){
+        this.animateOnce = function(elem, animationClass){
+            $(elem).addClass(animationClass);
+
+            $(elem).one('webkitAnimationEnd oanimationend msAnimationEnd animationend',
+                function(e) {
+                    $(elem).removeClass(animationClass);
+                });
+        }
+        this.shake_anim = function(elem){
+            $(elem).addClass('shake-anim');
+
+            $(elem).one('webkitAnimationEnd oanimationend msAnimationEnd animationend',   
+                function(e) {
+                    $(elem).removeClass('shake-anim');
+                });
+        }
+    }
+    var easeAnimations = new Animations();
