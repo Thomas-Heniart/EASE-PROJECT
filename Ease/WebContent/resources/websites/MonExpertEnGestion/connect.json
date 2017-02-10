@@ -1,0 +1,21 @@
+{
+    "name":"MonExpertEnGestion",
+    "lastlogin":"",
+    "home":"https://mon-expert-en-gestion.fr/",
+    "connect": {
+    	"todo": [
+    		{"action":"waitfor", "search":"#username"},
+    		{"action":"fill", "what":"login", "search":"#username"},
+    		{"action":"fill", "what":"password", "search":"#password"},
+    		{"action":"click", "search":"#fm1 input[type='submit']"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"clickona", "search":"a[ng-click*='Logout']"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"a[ng-click*='Logout']"}
+    ]
+}

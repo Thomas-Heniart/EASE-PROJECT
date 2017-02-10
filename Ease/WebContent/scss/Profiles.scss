@@ -184,6 +184,8 @@
 							text-overflow: ellipsis;
 							overflow: hidden;
 							line-height: 1.5;
+							font-family: $defaultFont;
+							letter-spacing: 0.5px;
 						}
 					}
 					.linkImage.settingsShow {
@@ -253,6 +255,9 @@
 		transition: margin .3s, width .3s;
 		width: 50%;
 		margin-left:0px;
+		#profileAdder {
+			display: block;
+		}
 		.profileAdder {
 			transition: opacity .3s;
 			opacity: 1;
@@ -291,157 +296,170 @@
 		margin-left: 10%;
 		position: relative;
 		text-align: center;
-		.profileAdder {
-			transition: opacity .3s;
-			position: fixed;
-			color: $themeColor;
-			left: 47%;
-			bottom: 10%;
-			opacity: 0;
-			visibility: hidden;
-			.opener.show {
-				transform: rotate(45deg);
-			}
+		#profileAdder {
+			display: none;
+		}
+		#profileAdder {
+			width: 60%;
+			margin: auto;
+			margin-top: 15px;
+			font-family: $defaultFont;
+			position: relative;
 			.opener {
-				transition: transform .3s;
-				transform: rotate(0deg);
-				font-size: 4vw;
+				transition: opacity .3s;
+				opacity: 1;
+				z-index: 1;
+				pointer-events: auto;
+				cursor: pointer;
+				&.hide {
+					opacity: 0;
+					z-index: -1;
+					pointer-events: none;
+				}
+				font-size: 5vw;
 				width: 1em;
 				height: 1em;
 				line-height: 1em;
-				.fa-circle {
-					transition: color .3s;
-					color: $themeColor;
-				}
-				.fa-plus-circle {
-					transition: color .3s;
-					color: white;
-				}
-				&:hover {
-					cursor: pointer;
-					.fa-circle {
-						color: white;
-					}
-					.fa-plus-circle {
-						color: $themeColor;
-					}
-				}
-			}
-			.profileHeaderPreview.show {
-				opacity: 1;
-				transform: scale(1);
-				visibility: visible;
-				pointer-events: auto;
-			}
-			.profileHeaderPreview {
-				transition: opacity .3s, visibility .3s, transform .3s cubic-bezier(.62,-0.66,.27,1.63);
-				opacity: 0;
-				transform: scale(0.2);
-				visibility: hidden;
-				pointer-events: none;
 				position: absolute;
-				bottom: calc(50% + 0.5vw);
-				right: calc(100% + 2vw);
-				width: 16vw;
-				height: 2vw;
-				.nameInput {
-					background-color: black;
-					border: 1px solid $borderFbColor;
-					width: 70%;
-					height: 100%;
-					left:0;
-					top:0;
-					padding: 0.1vw;
-					border-radius: 5px;
-					color: white;
-//					text-shadow: 0px 0px 1px $themeColor,;
-					p {
-						position: absolute;
-						font-size: 1.3vw;
-						line-height: 2vw;
-						top:0;
-						font-weight: 600;
-					}
-					input {
-						outline: none;
-//						text-shadow: 0px 0px 1px $themeColor,0px 0px 1px $themeColor,0px 0px 1px $themeColor;
-						width: 100%;
-						height: 100%;
-						padding-left: 1.35vw;
-						font-size: 1vw;
-						font-weight: 600;
-						background-color: rgba(255,255,255, 0);
-						border: none;
-						text-transform: uppercase;
-					}
-				}
-				.confirm {
-					transition: background-color .3s, color .3s, border .3s;
-					width: 25%;
-					height: 100%;
-					right: 0;
-					top:0;
-					position: absolute;
-					background-color: $themeColor;
-					border: 1px solid white;
-					color: white;
-					border-radius: 5px;
-					font-size: 1.3vw;
-					&:hover{
-						cursor: pointer;
-						background-color: white;
-						color: $themeColor;
-						border: 1px solid $themeColor;
-					}
+				z-index: 1;
+				top: 40%;
+				left: 50%;
+				transform: translate3d(-50%, -50%, 0);
+				i:nth-child(2) {
+					color: $themeButtonGreenColor;
 				}
 			}
-			.colorChooser.show {
-				opacity: 1;
-				visibility: visible;
-				pointer-events: auto;
+			.row {
+				margin: auto;
 			}
-			.colorChooser {
-				transition: opacity .3s, visibility .3s;
-				opacity: 0;
-				visibility: hidden;
+			.adder {
+				text-align: left;
+				transition: opacity .3s;
 				pointer-events: none;
-				width: 20vw;
-				height: 2vw;
-				position: absolute;
-				top: 50%;
-				right: 100%;
-				font-size: 0px;
-				.colorHolder {
-					transition: right .3s;
-					position: absolute;
-					width: 2.5vw;
-					height: 2vw;
-					padding: 0.1vw 0.35vw;
-					display: inline-block;
-					right: 0;
-					.color.choosen {
-						border: 2px solid white;
-						&:before {
-							content: "\f0d0";
+				opacity: 0;
+				z-index: -1;
+				&.show {
+					opacity: 1;
+					z-index: 1;
+					pointer-events: auto;
+				}
+				.inputRow {
+					text-align: center;
+					.input {
+						position: relative;
+						vertical-align: middle;
+						display: inline-block;
+						.closer {
 							position: absolute;
-							top: 50%;
-							left:50%;
-							transform: translateX(-50%) translateY(-50%);
+							font-size: 1.5vw;
+							width: 1em;
+							height: 1em;
+							line-height: 1em;
+							position: absolute;
+							z-index: 1;
+							top: 0;
+							left: 0;
+							transform: translate3d(-50%, -50%, 0) rotateZ(45deg);
+							cursor: pointer;
+							i:nth-child(2) {
+								color: $themeRedColor;
+							}
+						}
+						input {
+							font-size: 1vw;
+							font-weight: bold;
+							padding: 0.25vw;
+							padding-left: 0.8vw;
+							background: #373B60;
 							color: white;
-							text-shadow: 0px 0px 1px $themeColor,0px 0px 1px $themeColor,0px 0px 1px $themeColor;
+							border-radius: 5px;
+							border: none;
+							margin-right: 1vw;
+							@include placeholder-color(#eee);
 						}
 					}
-					.color {
-						font: normal normal normal 14px/1 FontAwesome;
-						font-size: 1.5vw;
-						text-rendering: auto;
-						-webkit-font-smoothing: antialiased;
-						position: relative;
-						width: 100%;
-						height: 100%;
+					button {
+						font-size: 1vw;
+						font-weight: bold;
+						line-height: 1.3vw;
+						padding: 0.25vw;
+						color: white;
+						background-color: $themeColor;
 						border-radius: 5px;
-						&:hover {
-							cursor:pointer;
+						outline: none;
+					}
+				}
+				.handler {
+					padding: 0.9vw 1vw 1vw 1vw;
+					background-color: rgba(white, 0.7);
+					border-radius: 10px;
+					margin-top:0.5vw;
+					.suggestionsRow {
+						.sectionName{
+							font-style: italic;
+							font-size: 0.8vw;
+							line-height: 1vw;
+							margin-bottom: 0.2vw;
+						}
+						.suggestions {
+							.suggestion {
+								width: 22.75%;
+								float: left;
+								margin-right: 3%;
+								margin-bottom: 10px;
+								transition: transform .3s;
+								transform: scale(1);
+								&:nth-child(4n){
+									margin-right: 0;
+								}
+								&:hover {
+									transform:scale(1.1);
+								}
+								.name {
+									width: 100%;
+									background-color: $themeColor;
+									border-radius: 5px;
+									color: white;
+									cursor: pointer;
+									padding: 0.25vw;
+									font-size: 1vw;
+									font-weight: bold;
+								}
+							}
+						}
+					}
+					.colorChooseRow {
+						text-align: left;
+						.sectionName, .colors {
+							display: inline-block;
+							vertical-align: middle;
+						}
+						.sectionName {
+							margin-right: 1vw;
+							font-size: 1vw;
+
+							font-weight: bold;
+						}
+						.colors {
+							.colorHolder {
+								transition: transform .3s;
+								transform: scale(1);
+								&:hover {
+									transform:scale(1.1);
+								}
+								&:last-child {
+									margin-right:0;
+								}
+								display: inline-block;
+								float: left;
+								margin-right: 1vw;
+								.color {
+									height: 1.5vw;
+									width: 1.5vw;
+									border-radius: 5px;
+									cursor: pointer;
+								}
+							}
 						}
 					}
 				}

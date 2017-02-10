@@ -17,7 +17,7 @@
 		</div>
 		<div class="showAppActionsButton" >
 			<i class="fa fa-cog"></i>
-			<div class="appActionsPopup">
+<!--			<div class="appActionsPopup">
 				<div class="buttonsContainer">
 					<div class="modifyAppButton menu-item"
 					onclick="showModifyAppPopup(this, event)">
@@ -29,7 +29,7 @@
 						</div>
 					</c:if>
 				</div>
-			</div>
+			</div>-->
 		</div>
 		<img class="logo" src="<c:out value='${app.getSite().getFolder()}logo.png'/>" />
 	</div>
@@ -43,7 +43,7 @@
 	<c:if test='${app.havePerm("DELETE")}'>
 	<div class="showAppActionsButton">
 		<i class="fa fa-cog"></i>
-		<div class="appActionsPopup">
+<!--		<div class="appActionsPopup">
 			<div class="buttonsContainer">
 			
 				<div class="deleteAppButton menu-item"
@@ -52,7 +52,7 @@
 				</div>
 			
 			</div>
-		</div>
+		</div>-->
 	</div>
 	</c:if>
 	<img class="logo" src="${app.getLinkAppInformations().getImgUrl()}" />
@@ -69,20 +69,21 @@
 	 id="${app.getSingleId()}"
 	 ssoId="${app.getSite().getSsoId()}"
 	 move="true"
-	 logwith="false">
+	 logwith="">
 </c:if>
 <c:if test="${app.getType() eq 'LogwithApp'}">
 <div class="siteLinkBox"
 	 webId="${app.getSite().getSingleId()}"
 	 name="${app.getName()}"
 	 id="${app.getSingleId()}"
+	 ssoId="${app.getSite().getSsoId()}"
 	 move="true"
 	 logwith="${app.getLogwith().getSingleId()}">
 </c:if>
 <div class="linkImage">
 	<div class="showAppActionsButton">
 		<i class="fa fa-cog"></i>
-		<div class="appActionsPopup">
+<!--		<div class="appActionsPopup">
 			<div class="buttonsContainer">
 				<div class="modifyAppButton menu-item"
 				onclick="showModifyAppPopup(this, event)">
@@ -95,7 +96,7 @@
 		</div>
 	</c:if>
 </div>
-</div>
+</div>-->
 </div>
 <img class="logo" src="<c:out value='${app.getSite().getFolder()}logo.png'/>" />
 </div>

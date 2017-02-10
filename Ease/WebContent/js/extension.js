@@ -161,8 +161,19 @@ function safariExtensionUpdate(){
 
 $(document).ready(function() {
 	 $('#homePageSwitch').change(function() {
-		easeTracker.setHomepage($(this).is("checked"));
+		var homepageState = $(this).is(":checked");
+		easeTracker.setHomepage(homepageState);
 		easeTracker.trackEvent("HomepageSwitch");
+		var stateString = homepageState.toString();
+		postHandler.post("HomepageSwitch", {
+			homepageState: stateString
+		}, function() {
+			
+		}, function(data) {
+			
+		}, function(date) {
+			
+		});
 	 });
 	 
 });

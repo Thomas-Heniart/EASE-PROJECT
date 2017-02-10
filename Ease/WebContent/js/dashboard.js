@@ -1,116 +1,9 @@
-function addProfileToDashboard(name, color, profile_id) {
-	columns = $('.dashboardColumn');
-	var profile = $($('#profileHelper').html());
-	var a = 1000;
-	var columnIdx = 0;
-	for (var i = 0; i < columns.length; i++) {
-		var tmp = 0;			
-		$(columns[i]).find('.item').each(function(){
-			var appsNb = $(this).find('.siteLinkBox').length;
-			tmp += (appsNb < 7) ? 2 : (appsNb + 2) / 3;
-		});
-		if (tmp < a){
-			a = tmp;
-			columnIdx = i;
-		}
-	}
-	if ((profiles.length + 1) >= 15){
-		self.adder.rootEl.css('display', 'none');
-	}
-	var newProfile = new Profile($(profile).find('.ProfileBox'));
-	newProfile.setName(name);
-	newProfile.setColor(color);
-	profiles.push(newProfile);	
-	$(columns[columnIdx]).css('width', '');
-	$(columns[columnIdx]).append($(profile));
-	newProfile.setId(profile_id);
-}
-
-var profileAdder = function(rootEl){
-	var self = this;
-	this.rootEl = rootEl;
-	this.isOpen = false;
-	this.colorList = [];
-	this.colorChoosen = null;
-	this.colorChooser = this.rootEl.find('.colorChooser');
-	this.colorHolders = this.rootEl.find('.colorHolder');
-	this.colorButtons = this.colorChooser.find('.colorHolder .color');
-	this.headerPreview = this.rootEl.find('.profileHeaderPreview');
-	this.profileNameInputDiv = this.headerPreview.find('.nameInput');
-	this.nameInput = this.profileNameInputDiv.find('input');
-	this.confirmButton = this.headerPreview.find('.confirm');
-	this.triggerButton = this.rootEl.find('.opener');
-
-	this.colorButtons.each(function(){
-		var color = $(this).attr('color');
-		$(this).attr('color', '');
-		$(this).click(function(){
-			self.colorChoosen = color;
-			self.profileNameInputDiv.css('background-color', color);
-			self.headerPreview.addClass('show');
-			self.colorChooser.find('.choosen').removeClass('choosen');
-			$(this).addClass('choosen');
-			setTimeout(function(){self.nameInput.focus();}, 100);
-		});
-	});
-	this.getName = function(){
-		return self.nameInput.val();
-	};
-	this.isValid = function(){
-		if (this.colorChoosen != null && this.getName().length)
-			return true;
-		self.profileNameInputDiv.addClass('shake-anim');
-  
-    self.profileNameInputDiv.one('webkitAnimationEnd oanimationend msAnimationEnd animationend',   
-    	function(e) {
-	    self.profileNameInputDiv.removeClass('shake-anim');
-	    });
-    self.nameInput.focus();
-		return false;
-	};
-	this.open = function(){
-		this.isOpen = true;
-		this.colorChoosen = null;
-		this.nameInput.val('');
-		this.triggerButton.addClass('show');
-		this.colorChooser.addClass('show');
-		self.colorHolders.each(function(){
-			$(this).css('right', ((7 - $(this).index()) * 2.5) + "vw");
-		});
-		return true;
-	}
-	this.close = function(){
-		this.isOpen = false;
-		this.colorChoosen = null;
-		this.nameInput.val('');
-		this.colorChooser.removeClass('show');
-		this.triggerButton.removeClass('show');
-		this.headerPreview.removeClass('show');
-		this.colorChooser.find('.choosen').removeClass('choosen');
-		self.colorHolders.each(function(){
-			$(this).css('right', '');
-		});
-		return true;
-	}
-	$(document).click(function(event){
-		self.isOpen && !($(event.target).closest('.profileAdder').length) && self.close();
-	});
-	this.profileNameInputDiv.find('input').on('keyup', function(e){
-		if (e.which == 13) {
-			self.confirmButton.click();
-		}
-	});
-	this.triggerButton.click(function(){
-		self.isOpen && self.close() || self.open();
-	});
-};
-
 var Dashboard = function(rootEl){
 	var self = this;
 	this.rootEl = rootEl;
 	this.columns = this.rootEl.find('.dashboardColumn');
 	this.isEditMode = false;
-	this.adder = new profileAdder(this.rootEl.find('.profileAdder'));
+	this.adder = new profileAdder(this.rootEl.find('#profileAdder'));
 
 	this.enterEditMode = function(){
 		self.rootEl.addClass('editMode');
@@ -118,6 +11,7 @@ var Dashboard = function(rootEl){
 	}
 	this.leaveEditMode = function(){
 		self.rootEl.removeClass('editMode');
+		self.adder.close();
 		self.isEditMode = false;
 	}
 	this.reinitColumns = function(){
@@ -127,62 +21,63 @@ var Dashboard = function(rootEl){
 		});
 	}
 	if ($('.ProfilesHandler .item').length >= 15){
-		this.adder.rootEl.css('display', 'none');
+		this.adder.qRoot.css('display', 'none');
 	}
 	//profileAdder click event
-
-	this.adder.confirmButton.on('click', function(){
-		if (self.adder.isValid()){
-			var profile = $($('#profileHelper').html());
-			var a = 1000;
-			var columnIdx = 0;
-			for (var i = 0; i < self.columns.length; i++) {
-				var tmp = 0;			
-				$(self.columns[i]).find('.item').each(function(){
-					var appsNb = $(this).find('.siteLinkBox').length;
-					tmp += (appsNb < 7) ? 2 : (appsNb + 2) / 3;
-				});
-				if (tmp < a){
-					a = tmp;
-					columnIdx = i;
+	if (this.adder.qRoot){
+		this.adder.submitButton.on('click', function(){
+			if (self.adder.isValid()){
+				var profile = $($('#profileHelper').html());
+				var a = 1000;
+				var columnIdx = 0;
+				for (var i = 0; i < self.columns.length; i++) {
+					var tmp = 0;			
+					$(self.columns[i]).find('.item').each(function(){
+						var appsNb = $(this).find('.siteLinkBox').length;
+						tmp += (appsNb < 7) ? 2 : (appsNb + 2) / 3;
+					});
+					if (tmp < a){
+						a = tmp;
+						columnIdx = i;
+					}
 				}
+				$(profile).addClass('scaleOut12');
+				setTimeout(function(){
+					$(profile).removeClass('scaleOut12');
+				}, 500);
+				if ((profiles.length + 1) >= 15){
+					self.adder.qRoot.css('display', 'none');
+				}
+				var Name = self.adder.getName();
+				var Color = self.adder.choosenColor;
+				var newProfile = new Profile($(profile).find('.ProfileBox'));
+				newProfile.setName(Name);
+				newProfile.setColor(Color);
+				profiles.push(newProfile);	
+				$(self.columns[columnIdx]).css('width', '');
+				$(self.columns[columnIdx]).append($(profile));
+				self.adder.close();
+				postHandler.post(
+					'AddProfile', 
+					{
+						name : Name,
+						color : Color
+					},
+					function(){},
+					function(retMsg){
+						newProfile.setId(retMsg);
+						easeTracker.trackEvent('AddProfile', {"profieName":Name, "profileColor":Color});
+					},
+					function(retMsg){
+						newProfile.remove();
+						delete newProfile;
+						self.adder.rootEl.css('display', '');
+					},
+					'text'
+					);
 			}
-			$(profile).addClass('scaleOut12');
-			setTimeout(function(){
-				$(profile).removeClass('scaleOut12');
-			}, 500);
-			if ((profiles.length + 1) >= 15){
-				self.adder.rootEl.css('display', 'none');
-			}
-			var Name = self.adder.getName();
-			var Color = self.adder.colorChoosen;
-			var newProfile = new Profile($(profile).find('.ProfileBox'));
-			newProfile.setName(Name);
-			newProfile.setColor(Color);
-			profiles.push(newProfile);	
-			$(self.columns[columnIdx]).css('width', '');
-			$(self.columns[columnIdx]).append($(profile));
-			self.adder.close();
-			postHandler.post(
-				'AddProfile', 
-				{
-					name : Name,
-					color : Color
-				},
-				function(){},
-				function(retMsg){
-					newProfile.setId(retMsg);
-					easeTracker.trackEvent('AddProfile', {"profieName":Name, "profileColor":Color});
-				},
-				function(retMsg){
-					newProfile.remove();
-					delete newProfile;
-					self.adder.rootEl.css('display', '');
-				},
-				'text'
-				);
-		}
-	});
+		});
+	}
 	//drag and drop initialization
 	this.columns.each(function(){
 		if (!($(this).find('.item').length)){
@@ -247,3 +142,119 @@ $(document).ready(function(){
 		}
 	}
 });
+
+
+var profileAdder = function(elem){
+	var self = this;
+	this.qRoot = $(elem);
+
+	this.inputNameHandler = this.qRoot.find("input[name='name']");
+	this.inputNameDiv = this.qRoot.find('.input');
+	this.openButton = this.qRoot.find('.opener');
+	this.closeButton=  this.qRoot.find('.closer');
+	this.adderBody = this.qRoot.find('.adder');
+	this.submitButton = this.qRoot.find("button[type='submit']");
+	if (!elem.length){
+		this.qRoot == null;
+		return;
+	}
+	/* ------COLOR CHOOSE------- */
+	this.colors = [];/* obj.color obj.qRoot */
+	this.choosenColor = null;
+	this.inputNameHandler.keyup(function(e){
+		if (e.which == 13){
+			self.submitButton.click();
+		}
+	});
+	this.qRoot.find('.colorHolder').each(function(index, elem){
+		var tmp = new Object();
+		tmp.color = $(elem).find('.color').attr('color');
+		tmp.qRoot = $(elem);
+		tmp.qRoot.click(function(){
+			self.scaleInInput();
+			self.setColor(tmp.color);
+		});
+		self.colors.push(tmp);
+	});
+	this.setColor = function(color){
+		self.choosenColor = color;
+		self.inputNameHandler.css('background-color', color);
+	}
+	/* ------COLOR CHOOSE END----- */
+	/* ------SUGGESTIONS----- */
+	this.suggestionsDivHandler = this.qRoot.find('.suggestionsRow .suggestions');
+	this.greyColors = ["#E2E2E2", "#D5D5D5", "#D4D0D0"];
+	this.suggestions = [
+	"Me",
+	"Work",
+	"Internship",
+	"School",
+	"Shopping",
+	"Team work",
+	"Freelance",
+	"Love it",
+	"Travel",
+	"Discover",
+	"Learning",
+	"Tools"];
+	this.suggestionsDiv = [];
+	this.createSuggestionDiv = function(name, color){
+		var div = $(
+			'<div class="suggestion">'
+			+'<p class="name" style="background-color:'+color+';">'+name+'</p>'
+			+'</div>'
+			);
+		div.find('p').click(function(){
+			self.inputNameHandler.focus();
+			self.inputNameHandler.val(name);
+			self.scaleInInput();
+			self.setColor(color);
+		});
+		return div;
+	}
+	for (var i = 0; i < self.suggestions.length; i++) {
+		var tmp = self.createSuggestionDiv(self.suggestions[i], self.colors[i % self.colors.length].color);
+		this.suggestionsDiv.push(tmp);
+		self.suggestionsDivHandler.append(tmp);		
+	}
+	/* ------SUGGESTIONS END----- */
+
+	this.isValid = function(){
+		if (self.inputNameHandler.val().length && self.choosenColor)
+			return true;
+		easeAnimations.animateOnce(self.inputNameDiv, 'shake-anim');
+		return	false;
+	}
+	this.scaleInInput = function(){
+		easeAnimations.animateOnce(self.inputNameDiv, 'scaleinAnimation');
+	}
+	this.getName = function(){
+		return self.inputNameHandler.val();
+	}
+	this.getColor = function(){
+		return self.choosenColor;
+	}
+	this.reset = function(){
+		self.inputNameHandler.val('');
+		self.choosenColor = "#373B60";
+		self.inputNameHandler.css('background-color','');
+	}
+	this.open = function(){
+		self.reset();
+		self.openButton.addClass('hide');
+		self.adderBody.addClass('show');
+		$('.col-left').stop().animate({
+			scrollTop: $('.col-left')[0].scrollHeight
+		}, 800);
+	}
+	this.close = function(){
+		self.openButton.removeClass('hide');
+		self.adderBody.removeClass('show');
+	}
+	self.openButton.click(function(){
+		self.open();
+	});
+	self.closeButton.click(function(){
+		self.close();
+	});
+}

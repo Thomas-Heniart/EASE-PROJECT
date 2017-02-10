@@ -47,7 +47,7 @@ public class Invitation {
 				invitationCode = rs.getString(3);
 			} else {
 				invitationCode = CodeGenerator.generateNewCode();
-				String db_id = db.set("INSERT INTO invitations values(NULL, '" + email + "', '" + invitationCode + "');").toString();
+				String db_id = db.set("INSERT INTO invitations values(NULL, '" + name + "', '" + email + "', '" + invitationCode + "');").toString();
 				if (group != null)
 					db.set("INSERT INTO invitationsAndGroupsMap values(NULL, " + db_id + ", " + group.getDBid() + ");");
 			}

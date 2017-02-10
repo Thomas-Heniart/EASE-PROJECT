@@ -1,0 +1,40 @@
+{
+    "name":"ThingLink",
+    "lastlogin":"",
+    "home":"https://www.thinglink.com/",
+    "connect": {
+    	"todo": [
+    		{"action":"aclick", "search":"a[href*='login']"},
+    		{"action":"waitfor", "search":"#pageInner form[action*='login'] #emailLoginForm .login-email"},
+    		{"action":"fill", "what":"login", "search":"#pageInner form[action*='login'] #emailLoginForm .login-email"},
+    		{"action":"fill", "what":"password", "search":"#pageInner form[action*='login'] #emailLoginForm .login-password"},
+    		{"action":"click", "search":"#pageInner form[action*='login'] #emailLoginForm button[name='login']"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"aclick", "search":"#headerLogout"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"#headerLogout"}
+    ],
+    "Facebook": {
+    	"todo": [
+    		{"action":"aclick", "search":"a[href*='login']"},
+    		{"action":"aclick", "search":"a.facebookLogin"}
+    	]
+    },
+    "Google": {
+    	"todo": [
+    		{"action":"aclick", "search":"a[href*='login']"},
+    		{"action":"clickona", "search":"a.googleLogin"}
+    	]
+    },
+    "Twitter": {
+    	"todo": [
+    		{"action":"aclick", "search":"a[href*='login']"},
+    		{"action":"aclick", "search":"a.twitterLogin"}
+    	]
+    }
+}

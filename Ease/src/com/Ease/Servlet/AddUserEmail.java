@@ -59,7 +59,7 @@ public class AddUserEmail extends HttpServlet {
 				throw new GeneralException(ServletManager.Code.ClientError, "You already have this email.");
 			UserEmail newEmail =  UserEmail.createUserEmail(email, user, false, sm);
 			user.getEmails().put(email, newEmail);
-			newEmail.askForVerification(user, sm);
+			newEmail.askForVerification(user, false, sm);
 			sm.setResponse(ServletManager.Code.Success, "Email added");
 		} catch (GeneralException e) {
 			sm.setResponse(e);

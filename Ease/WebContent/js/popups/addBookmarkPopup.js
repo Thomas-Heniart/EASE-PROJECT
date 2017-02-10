@@ -32,6 +32,7 @@ addBookmarkPopup = function(rootEl){
 		this.currentProfile = null;
 	}
 	this.open = function(app, profile, appName){
+		currentEasePopup = self;
 		self.reset();
 		self.currentApp = app;
 		self.currentProfile = profile;

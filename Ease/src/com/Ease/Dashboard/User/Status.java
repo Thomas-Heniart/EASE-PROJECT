@@ -23,11 +23,13 @@ public class Status {
 		OPEN_CATALOG, 
 		ADD_AN_APP, 
 		TUTO_DONE, 
-		INVITE_SENDED
+		INVITE_SENDED,
+		LAST_CONNECTION,
+		HOMEPAGE_EMAIL_SENT
 	}
 
 	public static Status createStatus(DataBaseConnection db) throws GeneralException {
-		String db_id = db.set("INSERT INTO status values (null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, default);").toString();
+		String db_id = db.set("INSERT INTO status values (null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, default, 0);").toString();
 		return new Status(db_id, false, false, false, false, false, false, false, false, false, false);
 	}
 

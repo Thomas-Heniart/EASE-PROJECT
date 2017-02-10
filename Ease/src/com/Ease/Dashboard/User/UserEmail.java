@@ -12,6 +12,7 @@ import javax.mail.MessagingException;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.AccountInformation;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
+import com.Ease.Mail.SendGridMail;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Mail;
@@ -122,15 +123,29 @@ public class UserEmail {
 		return true;
 	}
 	
-	public void askForVerification(User user, ServletManager sm) throws GeneralException{
+	public void askForVerification(User user, boolean newUser, ServletManager sm) throws GeneralException{
 		try {
 			Mail mailToSend = new Mail();
 			String code = CodeGenerator.generateNewCode();
 			DataBaseConnection db = sm.getDB();
 			int transaction = db.startTransaction();
-			db.set("INSERT INTO usersEmailsPending VALUES(NULL, " + this.db_id + ", '" + code + "')");
+			ResultSet rs = db.get("SELECT * FROM usersEmailsPending WHERE id = " + this.db_id + "");
+			try {
+				if (rs.next()) {
+					db.set("UPDATE usersEmailsPending SET verificationCode = '" + code + "' WHERE userEmail_id = " + this.db_id + ";");
+				} else {
+					db.set("INSERT INTO usersEmailsPending VALUES(NULL, " + this.db_id + ", '" + code + "')");
+				}
+			} catch (SQLException e) {
+				throw new GeneralException(ServletManager.Code.InternError, e);
+			}
 			if (this.email.equals(user.getEmail())) {
-				mailToSend.sendVerificationMainEmail(this.email, code);
+				if (newUser) {
+					SendGridMail welcomeEmail = new SendGridMail("Agathe @Ease", "contact@ease.space");
+					welcomeEmail.sendWelcomeEmail(user.getFirstName(), email, code);
+				} else {
+					mailToSend.sendVerificationMainEmail(this.email, code);
+				}
 			} else {
 				mailToSend.sendVerificationEmail(this.email, user.getFirstName(), code);
 			}

@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
@@ -40,6 +41,7 @@ public class WebsiteRequest extends HttpServlet {
 		HttpSession session = request.getSession();
 		User user = (User)(session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+		Catalog catalog = (Catalog)sm.getContextAttr("catalog");
 		DataBaseConnection db = sm.getDB();
 		try {
 			sm.needToBeConnected();
@@ -53,11 +55,14 @@ public class WebsiteRequest extends HttpServlet {
 					rs2.next();
 					String name = rs2.getString(1);
 					String email = rs2.getString(2);
+					String site = rs.getString(rs.findColumn("site"));
 					JSONObject tmpObject = new JSONObject();
-					tmpObject.put("site", rs.getString(rs.findColumn("site")));
+					tmpObject.put("site", site);
 					tmpObject.put("userName", name);
 					tmpObject.put("email", email);
 					tmpObject.put("date", rs.getString(rs.findColumn("date")));
+					boolean alreadyIntegrated = catalog.getWebsiteWithHost(site) != null;
+					tmpObject.put("alreadyIntegrated", alreadyIntegrated);
 					res.add(tmpObject);
 				}
 			} catch (SQLException e) {

@@ -261,6 +261,10 @@ public class Website {
 	public int getSingleId() {
 		return this.single_id;
 	}
+	
+	public void setSingleId(int singleId) {
+		this.single_id = singleId;
+	}
 
 	public Sso getSso() {
 		return this.sso;
@@ -383,5 +387,4 @@ public class Website {
 	public int getRatio() {
 		return this.ratio;
 	}
-	
 }
