@@ -1,0 +1,73 @@
+#overlay-holder {
+	height: 100vh;
+	width: 100vw;
+	position: fixed;
+	top: 0;
+	left: 0;
+	background-color: #eee;
+	#ease-overlay {
+		width: 300px;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate3d(-50%, -50%,0);
+		border-radius: 20px;
+		background-color: white;
+		.header {
+			height: 60px;
+			.logoImg {
+				height: 100%;
+				float: left;
+				img {
+					height: 100%;
+				}
+			}
+			.status {
+				float: right;
+				margin-right: 15px;
+				line-height: 60px;
+				font-family: Raleway;
+				letter-spacing: 1px;
+			}
+		}
+		.overlay-body {
+			position: relative;
+			height: 240px;
+			width: 300px;
+			.loaderHelper {
+				position: absolute;
+				width: 80%;
+				height: 100%;
+				top: -5%;
+				left: 10%;
+				background-image: url('/resources/icons/rocket-icon.png');
+				background-size: 45px 45px;
+				background-repeat: no-repeat !important;
+				background-position: 0 100px !important;
+				animation: rotateAnimation 1.5s ease-in-out infinite;
+			}
+			.websiteImgHandler {
+				border-radius: 10px;
+				overflow: hidden;
+				width: 87px;
+				height: 87px;
+				position: absolute;
+				left: 50%;
+				top: 45%;
+				transform: translate3d(-50%, -50%, 0);
+				img {
+					width: 100%;
+				}
+			}
+		}
+	}
+}
+
+@-webkit-keyframes rotateAnimation {
+	0% {
+		transform: rotateZ(0deg);
+	}
+	100% {
+		transform: rotateZ(360deg);
+	}
+}
