@@ -7,6 +7,9 @@ modifyAppPopup = function(rootEl){
 	this.appNameHolder = this.qRoot.find('input#appName');
 	this.appLogoHandler = this.qRoot.find('#appLogo img');
 
+	this.urlInputHandler = this.qRoot.find("input[name='url']");
+	this.urlRow = this.qRoot.find('.urlRowHandler');
+
 
 	/*----------- tab info vars -----------*/
 	this.tabInfo = this.qRoot.find('#tabInfo');
@@ -195,6 +198,7 @@ modifyAppPopup = function(rootEl){
 		var name = self.appNameHolder.val();
 		var login = self.loginInput.val();
 		var password = self.passwordInput.val();
+		var linkUrl = self.urlInputHandler.val();
 
 		var logwithApp = self.signInAccountSelectRow.find('.selected');
 		var logwithId = logwithApp.length ? $(logwithApp[0]).attr('appid') : "";
@@ -207,6 +211,8 @@ modifyAppPopup = function(rootEl){
 		var submitUrl = "EditClassicApp";
 		if (self.currentApp.logWith.length){
 			submitUrl = "EditLogwithApp";
+		} else if (self.currentApp.url.length){
+			submitUrl = "EditBookMark";
 		}
 		var appsIdJson = JSON.stringify(appsId);
 		postHandler.post(
@@ -216,6 +222,7 @@ modifyAppPopup = function(rootEl){
 				'login': login,
 				'password': password,
 				'logwithId': logwithId,
+				'link': linkUrl, 
 				'appIds': appsIdJson
 			},
 			function(){
@@ -223,6 +230,7 @@ modifyAppPopup = function(rootEl){
 			},
 			function(msg){
 				self.currentApp.changeName(name);
+				self.currentApp.url = linkUrl;
 				if (login != self.currentApp.login || password.length){
 					for (var i = 0; i < self.sameSsoAccountsVar.length; i++) {
 						self.sameSsoAccountsVar[i].app.login = login;
@@ -253,6 +261,8 @@ modifyAppPopup = function(rootEl){
 		self.tabDeleteErrorRowHandler.removeClass('show');
 		self.tabInfoErrorRowHandler.removeClass('show');
 		self.signInChooseRow.addClass('hide');
+		self.urlRow.addClass('hide');
+		self.urlInputHandler.val('');
 		self.signInAccountSelectRow.addClass('hide');
 		self.loginPasswordRow.addClass('hide');
 		self.sameSsoAppsRow.addClass('hide');
@@ -264,7 +274,11 @@ modifyAppPopup = function(rootEl){
 		self.appNameHolder.val(app.name);
 		self.relatedCatalogApp = catalog.getAppById(app.websiteId);
 
-		if (app.logWith.length){
+		if (app.url.length){
+			self.urlInputHandler.val(app.url);
+			self.urlRow.removeClass('hide');
+		}
+		else if (app.logWith.length){
 			self.showSignInButtons(self.relatedCatalogApp.canLoginWith);
 			self.signInChooseRow.removeClass('hide');
 			self.basicSignInName = catalog.getAppById(easeAppsManager.getAppById(app.logWith).websiteId).name;
@@ -279,7 +293,7 @@ modifyAppPopup = function(rootEl){
 			self.loginPasswordRow.removeClass('hide');
 			self.loginInput.val(app.login);
 		}
-		if (app.ssoId != -1){
+		if (!app.url.length && app.ssoId != -1){
 			self.setupSameSsoAccountsDiv();
 			if (self.sameSsoAccountsVar.length)
 				self.sameSsoAppsRow.removeClass('hide');

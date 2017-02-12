@@ -86,6 +86,9 @@ pageEncoding="UTF-8"%>
 								</div>
 							</div>
 						</div>
+						<div class="row urlRowHandler">
+							<input type="text" name="url" placeholder="Your url..." />	
+						</div>
 						<div class="row text-center errorText errorHandler">
 							<p>
 							</p>
