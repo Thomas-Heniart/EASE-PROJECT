@@ -36,7 +36,7 @@ pageEncoding="UTF-8"%>
 								<i class="fa fa-facebook" aria-hidden="true"></i>
 								Sign in with Facebook
 							</button>
-							<button class="btn signInButton linkedIn unselected" data="Linkedin">
+							<button class="btn signInButton linkedIn unselected" data="LinkedIn">
 								<i class="fa fa-linkedin" aria-hidden="true"></i>
 								Sign in with LinkedIn
 							</button>
