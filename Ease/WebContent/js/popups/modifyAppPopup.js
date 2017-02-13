@@ -87,7 +87,7 @@ modifyAppPopup = function(rootEl){
 		var accountsHolder = self.signInAccountSelectRow.find('.accountsHolder');
 
 		accountsHolder.find('.accountLine').remove();
-		var apps = easeAppsManager.getAppsByWebsiteId(websiteId);
+		var apps = easeAppsManager.getAppsByWebsiteIdNoEmpty(websiteId);
 		var accountLine;
 		for (var i = 0; i < apps.length; i++) {
 			accountLine = self.createSignInSelectorDiv(apps[i]);
@@ -217,6 +217,12 @@ modifyAppPopup = function(rootEl){
 		} else if (self.currentApp.url.length){
 			submitUrl = "EditBookMark";
 		}
+		if (self.currentApp.isEmpty){
+			if (logwithId.length)
+				submitUrl = "WebsiteAppToLogwithApp";
+			else
+				submitUrl = "WebsiteAppToClassicApp";
+		}
 		var appsIdJson = JSON.stringify(appsId);
 		postHandler.post(
 			submitUrl,
@@ -234,6 +240,8 @@ modifyAppPopup = function(rootEl){
 			function(msg){
 				self.currentApp.changeName(name);
 				self.currentApp.url = linkUrl;
+				if (self.currentApp.isEmpty)
+					self.currentApp.qRoot.find('.emptyAppIndicator').remove();
 				if (login != self.currentApp.login || password.length){
 					for (var i = 0; i < self.sameSsoAccountsVar.length; i++) {
 						self.sameSsoAccountsVar[i].app.login = login;
@@ -279,7 +287,14 @@ modifyAppPopup = function(rootEl){
 		self.appNameHolder.val(app.name);
 		self.relatedCatalogApp = catalog.getAppById(app.websiteId);
 
-		if (app.url.length){
+		if (app.isEmpty){
+			if (self.relatedCatalogApp.canLoginWith.length){
+				self.showSignInButtons(self.relatedCatalogApp.canLoginWith);
+				self.signInChooseRow.removeClass('hide');
+			}
+			self.loginPasswordRow.removeClass('hide');
+		}
+		else if (app.url.length){
 			self.urlInputHandler.val(app.url);
 			self.urlRow.removeClass('hide');
 		}
@@ -298,7 +313,7 @@ modifyAppPopup = function(rootEl){
 			self.loginPasswordRow.removeClass('hide');
 			self.loginInput.val(app.login);
 		}
-		if (!app.url.length && app.ssoId != -1){
+		if (!app.isEmpty && !app.url.length && app.ssoId != -1){
 			self.setupSameSsoAccountsDiv();
 			if (self.sameSsoAccountsVar.length)
 				self.sameSsoAppsRow.removeClass('hide');

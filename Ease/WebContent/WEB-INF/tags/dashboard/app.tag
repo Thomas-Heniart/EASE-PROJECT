@@ -10,9 +10,11 @@
 	webId="${app.getSite().getSingleId()}"
 	name="${app.getName()}"
 	move="true"	
-	id="${app.getSingleId()}">
+	id="${app.getSingleId()}"
+	ssoId="${app.getSite().getSsoId()}"
+	logwith="">
 	<div class="linkImage">
-		<div class="emptyAppIndicator" onclick="showModifyAppPopup(this, event)">
+		<div class="emptyAppIndicator">
 			<img src="resources/other/raise-your-hand-to-ask.svg" />
 		</div>
 		<div class="showAppActionsButton" >
