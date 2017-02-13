@@ -63,11 +63,11 @@ public class AddBookMark extends HttpServlet {
 			if (name == null || name.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
 			if (websiteId == null || websiteId.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty websiteId.");
 			if (profileId == null || profileId.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty profileId.");
 			if (link == null || link.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty link.");
 			try {
 				Profile profile = user.getDashboardManager().getProfile(Integer.parseInt(profileId));
 				site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(websiteId));
