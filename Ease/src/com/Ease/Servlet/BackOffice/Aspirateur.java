@@ -3,8 +3,8 @@ package com.Ease.Servlet.BackOffice;
 import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,8 +15,6 @@ import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
-
-import javax.servlet.annotation.WebServlet;
 
 
 /**
@@ -54,15 +52,14 @@ public class Aspirateur extends HttpServlet {
 		User user = (User) (session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		DataBaseConnection db = sm.getDB();
-		Catalog oldCatalog = (Catalog)sm.getContextAttr("catalog");
+		Catalog catalog = (Catalog)sm.getContextAttr("catalog");
 		try {
 			sm.needToBeConnected();
 			if (!user.isAdmin()) {
 				sm.setResponse(ServletManager.Code.ClientWarning, "You are not admin.");
 			} else {
 				db.set("DELETE FROM savedSessions WHERE datetime < SUBTIME(CURRENT_TIMESTAMP, '2 0:0:0.0');");	
-				ServletContext context = session.getServletContext();
-				context.setAttribute("catalog", Catalog.updateCatalog(db, context, oldCatalog));
+				catalog.refresh(sm);
 				sm.setResponse(ServletManager.Code.Success,"SavedSessions cleaned and Catalog refreshed.");
 			}
 		} catch (GeneralException e) {

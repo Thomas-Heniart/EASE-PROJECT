@@ -48,4 +48,19 @@ public class WebsiteAttributes {
 	public String getDbId(){
 		return db_id;
 	}
+
+	public void refresh(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		ResultSet rs = db.get("SELECT * FROM websiteAttributes WHERE id = " + this.db_id + ";");
+		try {
+			if (!rs.next())
+				throw new GeneralException(ServletManager.Code.InternError, "Those attributes does not exist");
+			this.locked = rs.getBoolean(rs.findColumn("locked"));
+			this.isNew = rs.getBoolean(rs.findColumn("new"));
+			this.work = rs.getBoolean(rs.findColumn("work"));
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+		
+	}
 }

@@ -387,4 +387,24 @@ public class Website {
 	public int getRatio() {
 		return this.ratio;
 	}
+
+	public void refresh(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		ResultSet rs = db.get("SELECT * FROM websites WHERE id = " + this.db_id  + ";");
+		try {
+			rs.next();
+			this.loginUrl = rs.getString(WebsiteData.LOGIN_URL.ordinal());
+			this.name = rs.getString(WebsiteData.NAME.ordinal());
+			this.folder = rs.getString(WebsiteData.FOLDER.ordinal());
+			this.noLogin = rs.getBoolean(WebsiteData.NO_LOGIN.ordinal());
+			this.website_homepage = rs.getString(WebsiteData.WEBSITE_HOMEPAGE.ordinal());
+			this.ratio = rs.getInt(WebsiteData.RATIO.ordinal());
+			this.position = rs.getInt(WebsiteData.POSITION.ordinal());
+			for (WebsiteInformation info : this.website_informations)
+				info.refresh(sm);
+			this.websiteAttributes.refresh(sm);
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+	}
 }
