@@ -11,7 +11,7 @@ $("#manualImportation").click(function() {
 /////////
 
 var addAppTutoCpt = 0;
-var appsSeletecedFiled = 0;
+var appsSelectedFilled = 0;
 var appsSelectedSkiped = 0;
 
 function showAddAppTuto(i) {
@@ -38,7 +38,7 @@ $("div#simpleImportation div.appHandler").click(function() {
 });
 
 $("#simpleImportation .showMoreHelper").click(function(){
-	easeTracker.trackEvent("");
+	//easeTracker.trackEvent("");
 	$(this).css('display', 'none');
 	$("#simpleImportation .appHandler.hidden").removeClass('hidden');
 });
@@ -56,7 +56,7 @@ function goToNextStep() {
 			//success
 			easeTracker.trackEvent("TutoManoDone");
 			easeTracker.setUserProperty("TutoManoSelected", addAppTutoCpt);
-			easeTracker.setUserProperty("TutoManoFilled", appsSeletecedFiled);
+			easeTracker.setUserProperty("TutoManoFilled", appsSelectedFilled);
 			easeTracker.setUserProperty("TutoManoSkipped", appsSelectedSkiped);
 			easeTracker.increaseAppCounter(addAppTutoCpt);
 			location.reload();
@@ -90,13 +90,16 @@ $("div#addAppTutorial #skipButton").click(function() {
 $('div#addAppTutorial form').submit(function (e) {
 	e.preventDefault();
 	var appName = $("div#addAppTutorial input#name").val();
+	var websiteIds = [];
 	var websiteId = $("div#simpleImportation div.appHandler div.app.selected:eq(" + addAppTutoCpt + ")").attr("id");
+	websiteIds.push(websiteId);
+	console.log(websiteIds);
 	postHandler.post('AddClassicApp', {
 		"name" : appName,
 		"login" : $("div#addAppTutorial input#login").val(),
 		"profileId" : $("div#addAppTutorial input#profileId").val(),
 		"password" : $("div#addAppTutorial input#password").val(),
-		"websiteId" : websiteId
+		"websiteIds" : (JSON.stringify(websiteIds))
 	}, function() {
 		//always
 	}, function(retMsg) {
