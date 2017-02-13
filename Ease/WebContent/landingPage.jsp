@@ -539,7 +539,7 @@ pageEncoding="UTF-8"%>
 					$('body').css('overflow', '');
 				};
 				this.reset = function(){
-					self.qRoot.find('input').val('').reset();
+					self.qRoot.find('input').val('');
 					self.qRoot.find('#1').addClass('show');
 					self.qRoot.find('#2').removeClass('show');
 					self.qRoot.find('.alert-message').removeClass('show');
@@ -616,8 +616,10 @@ pageEncoding="UTF-8"%>
 					var submitButton = $(this).find(".submitButton");
 					var alertMessage = $(this).find(".alert-message");
 
-					if (!name.length || !email.length || !code.length || !(password == confirmPassword))
+					if (!name.length || !email.length || !code.length || !(password == confirmPassword)){
+						console.log('lala');
 						return;
+					}
 
 					loading.addClass('show');
 					submitButton.addClass('not-show');
@@ -699,7 +701,8 @@ pageEncoding="UTF-8"%>
 		</script>
 		<script type="text/javascript">
 			$(document).ready(function(){
-				if ($('#2').find("input[name='email']").val() != 'null'){
+				if ($('#2').find("input[name='email']").val() != 'null' 
+					&& $('#2').find("input[name='email']").val().length){
 					easeSignUpPopup.openRegistration();
 				}
 				$("#connexionButton").click(function() {
