@@ -307,4 +307,13 @@ public class Catalog {
 		this.tagDBmap.put(tag.getDbId(), tag);
 		this.tagIDmap.put(tag.getSingleId(), tag);
 	}
+	
+	public void refresh(ServletManager sm) throws GeneralException {
+		for (Website website : this.websites)
+			website.refresh(sm);
+		for (Tag tag : this.tags)
+			tag.refresh(sm);
+		for (Sso sso : this.ssos)
+			sso.refresh(sm);
+	}
 }

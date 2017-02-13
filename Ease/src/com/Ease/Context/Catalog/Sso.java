@@ -88,4 +88,17 @@ public class Sso {
 		json.put("singleId", this.single_id);
 		return json;
 	}
+
+	public void refresh(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		ResultSet rs = db.get("SELECT * FROM sso WHERE id = " + this.db_id + ";");
+		try {
+			if (! rs.next())
+				throw new GeneralException(ServletManager.Code.InternError, "This sso does not exist");
+			this.name = rs.getString(Data.NAME.ordinal());
+			this.img_path = rs.getString(Data.IMG.ordinal());
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+	}
 }

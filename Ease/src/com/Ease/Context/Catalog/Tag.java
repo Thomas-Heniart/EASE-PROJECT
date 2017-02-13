@@ -174,4 +174,18 @@ public class Tag {
 		db.set("DELETE FROM tagsAndSitesMap WHERE tag_id = " + this.db_id + " AND website_id = " + website.getDb_id() + ";");
 		this.sites.remove(website);
 	}
+
+	public void refresh(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		ResultSet rs = db.get("SELECT * FROM tags WHERE id = " + this.db_id + ";");
+		try {
+			if (!rs.next())
+				throw new GeneralException(ServletManager.Code.InternError, "This tag does not exist");
+			this.name = rs.getString(Data.TAG_NAME.ordinal());
+			this.color = rs.getString(Data.COLOR.ordinal());
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+		
+	}
 }
