@@ -129,11 +129,10 @@ public class UserEmail {
 			String code = CodeGenerator.generateNewCode();
 			DataBaseConnection db = sm.getDB();
 			int transaction = db.startTransaction();
-			ResultSet rs = db.get("SELECT * FROM usersEmailsPending WHERE id = " + this.db_id + "");
+			ResultSet rs = db.get("SELECT * FROM usersEmailsPending WHERE userEmail_id = " + this.db_id + "");
 			try {
-				rs.next();
-				if (rs.isAfterLast()) {
-					db.set("UPDATE usersEmailsPending SET verificationCode = '" + code + "' WHERE userEmail_id = " + this.db_id + ";");
+				if (rs.next()) {
+					code = rs.getString(3);
 				} else {
 					db.set("INSERT INTO usersEmailsPending VALUES(NULL, " + this.db_id + ", '" + code + "')");
 				}
