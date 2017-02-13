@@ -60,6 +60,7 @@ CREATE TABLE invitationsAndGroupsMap (
 UPDATE websites SET website_name = 'L\'équipe' WHERE id = 237;
 UPDATE websites SET website_name = 'Auchan Direct' WHERE id = 236;
 UPDATE websites SET website_name = 'Atelier des Chefs' WHERE id = 232;
+
 UPDATE websites SET website_name = 'AlloCiné' WHERE id = 228;
 UPDATE websites SET website_name = 'Bazar Chic' WHERE id = 223;
 UPDATE websites SET website_name = 'Vente Du Diable' WHERE id = 222;
@@ -119,3 +120,6 @@ DELETE FROM admins WHERE user_id = 33;
 /* Changer folder name de sites qui bug */
 UPDATE websites set folder='PremierLeague' where website_name='PremierLeague';
 UPDATE websites set folder='Trainline' where website_name='Trainline';
+
+/* Mettre img google sso  */
+UPDATE sso set img_path='google.png' where name='Google';

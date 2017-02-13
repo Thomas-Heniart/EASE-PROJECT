@@ -11,6 +11,7 @@ import javax.servlet.ServletContext;
 
 import org.json.simple.JSONObject;
 
+import com.Ease.Context.Variables;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
@@ -78,13 +79,13 @@ public class Sso {
 	}
 	
 	public String getImgPath() {
-		return img_path;
+		return Variables.PROJECT_PATH + "/resources/sso/" + img_path;
 	}
 	
 	public JSONObject getJson() {
 		JSONObject json = new JSONObject();
 		json.put("name", this.name);
-		json.put("imgSrc", this.img_path);
+		json.put("imgSrc", this.getImgPath());
 		json.put("singleId", this.single_id);
 		return json;
 	}
