@@ -37,7 +37,43 @@ public class Website {
 		POSITION,
 		WEBSITE_ATTRIBUTES_ID
 	}
+	
+	private static String last_db_id = "0";
 
+	public static List<Website> loadNewWebsites(Map<String, Sso> ssoDbIdMap, ServletManager sm) throws GeneralException {
+		List<Website> newWebsites = new LinkedList<Website>();
+		DataBaseConnection db = sm.getDB();
+		ResultSet rs = db.get("SELECT * FROM websites WHERE id > " + last_db_id + ";");
+		try {
+			while (rs.next()) {
+					String db_id = rs.getString(WebsiteData.ID.ordinal());
+					if (Integer.parseInt(db_id) > Integer.parseInt(last_db_id))
+						last_db_id = db_id;
+					List<WebsiteInformation> website_informations = WebsiteInformation.loadInformations(db_id, db);
+					String loginUrl = rs.getString(WebsiteData.LOGIN_URL.ordinal());
+					String name = rs.getString(WebsiteData.NAME.ordinal());
+					String folder = rs.getString(WebsiteData.FOLDER.ordinal());
+					Sso sso = ssoDbIdMap.get(rs.getString(WebsiteData.SSO.ordinal()));
+					boolean noLogin = rs.getBoolean(WebsiteData.NO_LOGIN.ordinal());
+					String website_homepage = rs.getString(WebsiteData.WEBSITE_HOMEPAGE.ordinal());
+					int ratio = rs.getInt(WebsiteData.RATIO.ordinal());
+					int position = rs.getInt(WebsiteData.POSITION.ordinal());
+					String websiteAttributesId = rs.getString(WebsiteData.WEBSITE_ATTRIBUTES_ID.ordinal());
+					WebsiteAttributes websiteAttributes = null;
+					if (websiteAttributesId != null)
+						websiteAttributes = WebsiteAttributes.loadWebsiteAttributes(websiteAttributesId, db);
+					int single_id = ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId();
+					Website site = new Website(db_id, single_id, name, loginUrl, folder, sso, noLogin, website_homepage, ratio, position, website_informations, websiteAttributes);
+					newWebsites.add(site);
+					if (sso != null)
+						sso.addWebsite(site);
+			}
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+		return newWebsites;
+	}
+	
 	public static Website getWebsite(int single_id, ServletManager sm) throws GeneralException {
 		@SuppressWarnings("unchecked")
 		Map<Integer, Website> websitesMap = (Map<Integer, Website>)sm.getContextAttr("websites");
@@ -58,6 +94,7 @@ public class Website {
 			WebsiteAttributes attributes = WebsiteAttributes.createWebsiteAttributes(db);
 
 			String db_id = db.set("INSERT INTO websites VALUES (null, '"+ url +"', '"+ name +"', '" + folder + "', NULL, 0, '"+ homePage +"', 0, 1, "+ attributes.getDbId() +");").toString();
+			last_db_id = db_id;
 			WebsiteInformation loginInfo = WebsiteInformation.createInformation(db_id, "login", "text", db);
 			List<WebsiteInformation> infos = new LinkedList<WebsiteInformation>();
 			infos.add(loginInfo);
@@ -91,6 +128,8 @@ public class Website {
 			ResultSet rs = db.get("SELECT * FROM websites ORDER BY position DESC");
 			while (rs.next()) {
 				String db_id = rs.getString(WebsiteData.ID.ordinal());
+				if (Integer.parseInt(db_id) > Integer.parseInt(last_db_id))
+					last_db_id = db_id;
 				List<WebsiteInformation> website_informations = WebsiteInformation.loadInformations(db_id, db);
 				String loginUrl = rs.getString(WebsiteData.LOGIN_URL.ordinal());
 				String name = rs.getString(WebsiteData.NAME.ordinal());

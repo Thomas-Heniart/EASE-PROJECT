@@ -315,5 +315,12 @@ public class Catalog {
 			tag.refresh(sm);
 		for (Sso sso : this.ssos)
 			sso.refresh(sm);
+		List<Website> newWebsites = Website.loadNewWebsites(ssoDBmap, sm);
+		for (Website website : newWebsites) {
+			this.websites.add(website);
+			this.websiteIDmap.put(website.getSingleId(), website);
+			this.websiteDBmap.put(website.getDb_id(), website);
+		}
+		
 	}
 }
