@@ -131,7 +131,8 @@ public class UserEmail {
 			int transaction = db.startTransaction();
 			ResultSet rs = db.get("SELECT * FROM usersEmailsPending WHERE id = " + this.db_id + "");
 			try {
-				if (rs.next()) {
+				rs.next();
+				if (rs.isAfterLast()) {
 					db.set("UPDATE usersEmailsPending SET verificationCode = '" + code + "' WHERE userEmail_id = " + this.db_id + ";");
 				} else {
 					db.set("INSERT INTO usersEmailsPending VALUES(NULL, " + this.db_id + ", '" + code + "')");
