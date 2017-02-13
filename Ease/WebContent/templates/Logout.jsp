@@ -11,8 +11,9 @@
 		    		$(".logos-logout-container").append(divLogo);
 		    	}
 		    	$(".logout-overlay").show();
+		    	$(".logout-overlay").removeClass('hide');
 		    	setTimeout(function(){
-    				$(".logout-overlay").css("opacity", 0);
+    				$(".logout-overlay").addClass('hide');
     				setTimeout(function(){
     					$(".logout-overlay").hide();
     				}, 800);
@@ -25,7 +26,7 @@
 		    			setTimeout(function(){
 		    				$('.logos-logout-container img[idx="'+ event2.detail.siteId +'"]').hide();
 		    				if(nb == 0) {
-		    					$(".logout-overlay").css("opacity", 0);
+		    					$(".logout-overlay").addClass('hide');
 		    					setTimeout(function(){
 		    						$(".logout-overlay").hide();
 		    					}, 800);
@@ -37,7 +38,7 @@
 		}, false);
 	});
 	</script>
-	<div class='logout-overlay' style="display:none;">
+	<div class='logout-overlay hide' style="display:none;">
 		<h3>We are logging you out from your websites</h3>
 		<div class="sk-fading-circle">
 			<div class="sk-circle1 sk-circle"></div>
