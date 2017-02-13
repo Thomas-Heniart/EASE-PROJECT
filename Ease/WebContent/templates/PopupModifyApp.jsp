@@ -27,8 +27,8 @@
 				<div class="loginWithButton facebook hidden" name="Facebook">
 					<p>Facebook</p>
 				</div>
-				<div class="loginWithButton linkedin hidden" name="Linkedin">
-					<p>Linkedin</p>
+				<div class="loginWithButton linkedin hidden" name="LinkedIn">
+					<p>LinkedIn</p>
 				</div>
 				<div class="linedSeparator or">
 					<div class="backgroundLine"></div>
