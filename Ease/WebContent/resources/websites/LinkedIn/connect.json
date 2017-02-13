@@ -6,7 +6,7 @@
 		"url":"https://www.linkedin.com/",
 		"todo":[
 			{"action":"goto", "url":"https://www.linkedin.com/"},
-			{"action":"fill", "what":"login", "search":"#login-email", "grave":true},
+			{"action":"fill", "what":"login", "search":"#login-email"},
 			{"action":"fill", "what":"password", "search":"#login-password"},
 			{"action":"click", "search":".login-form #login-submit"},
 			{"action":"waitload"}

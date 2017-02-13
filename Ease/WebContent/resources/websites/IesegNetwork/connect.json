@@ -25,12 +25,12 @@
     ],
     "Facebook":{
     	"todo":[
-    		{"action":"clickona", "search":"a.button-social__facebook"}
+    		{"action":"clickona", "search":"a.social-button__facebook"}
     	]	
     },
     "Linkedin": {
     	"todo": [
-    		{"action":"clickona", "search":"a.button-social__linkedin"}
+    		{"action":"clickona", "search":"a.social-button__linkedin"}
     	]
     }
 }
