@@ -11,6 +11,13 @@ body {
   font-family: 'Raleway', Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
   webkit-tap-highlight-color: #fed136; }
 
+body#landingBody {
+  -webkit-user-select: auto;
+  -khtml-user-select: auto;
+  -moz-user-select: auto;
+  -ms-user-select: auto;
+  user-select: auto; }
+
 .btn-primary, .btn-xl, h1, h2, h3, h4, h5, h6 {
   font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif; }
 
@@ -691,6 +698,8 @@ img::-moz-selection {
     #avantages .container .row.showcase .fa-stack {
       font-size: 40px;
       vertical-align: top; }
+      #avantages .container .row.showcase .fa-stack .fa-stack-1x {
+        color: black; }
     #avantages .container .row.showcase p {
       position: absolute;
       top: 50%;
@@ -910,6 +919,37 @@ section.vp {
     height: 6vw; }
   #userFeedbacks .container .row .comment .message p, #userFeedbacks .container .row .comment .message a {
     font-size: 1vw; } }
+#landingBody.school .vp .section-subheading {
+  font-size: 24px;
+  font-family: Raleway; }
+#landingBody.school #userFeedbacks {
+  padding-bottom: 75px; }
+#landingBody.school #features {
+  padding-bottom: 0px; }
+#landingBody.school #productPresentation:before {
+  display: none; }
+#landingBody.school header .container .intro-text {
+  padding-bottom: 4vw; }
+#landingBody.school header .container .intro-lead-in {
+  font-size: 1.2vw;
+  line-height: 1.5vw;
+  margin-bottom: 25px; }
+#landingBody.school header .container .intro-heading {
+  font-size: 3vw;
+  line-height: 4vw;
+  margin-bottom: 35px; }
+#landingBody.school header .container .signUpButton {
+  margin-bottom: 30px; }
+#landingBody.school header .container .schoolLogos {
+  width: 100%;
+  height: 5vw; }
+  #landingBody.school header .container .schoolLogos .logoHandler {
+    height: 100%;
+    margin-left: 2vw;
+    display: inline-block; }
+    #landingBody.school header .container .schoolLogos .logoHandler img {
+      height: 100%; }
+
 @media screen and (min-width: 768px) {
   section {
     padding: 75px 0px; }
@@ -1058,6 +1098,8 @@ section.vp {
     z-index: 1;
     pointer-events: auto; }
 
+#signUpPopup .popupBody .handler .row input {
+  margin-bottom: 0; }
 #signUpPopup .popupBody .handler .row .progress {
   height: 0.25vw;
   margin-top: 0.15vw;

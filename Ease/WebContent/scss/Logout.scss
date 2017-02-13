@@ -1,4 +1,7 @@
 div.logout-overlay {
+  &.hide {
+    opacity: 0;
+  }
 	z-index: 100000;
     position: absolute;
     top: calc(50% - 130px);
