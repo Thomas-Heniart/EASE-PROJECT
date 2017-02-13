@@ -129,7 +129,7 @@ addAppPopup = function(rootEl){
 		}
 		var accountsHolder = self.signInAccountSelectRow.find('.accountsHolder');
 		accountsHolder.find('.accountLine').remove();
-		var apps = easeAppsManager.getAppsByWebsiteIdNoEmpty(websiteId);
+		var apps = easeAppsManager.getAppsByWebsiteIdNotEmpty(websiteId);
 		var accountLine;
 		for (var i = 0; i < apps.length; i++) {
 			accountLine = self.createSignInSelectorDiv(apps[i]);
