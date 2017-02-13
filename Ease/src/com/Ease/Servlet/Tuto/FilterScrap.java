@@ -57,7 +57,7 @@ public class FilterScrap extends HttpServlet {
 		try {
 			sm.needToBeConnected();
 			String scrappedAppsString = sm.getServletParam("scrapjson", false);
-			if (scrappedAppsString == null)
+			if (scrappedAppsString == null || scrappedAppsString.equals("") == true)
 				throw new GeneralException(ServletManager.Code.ClientError, "Scrap Json empty");
 			JSONParser parser = new JSONParser();
 			Object temp = parser.parse(scrappedAppsString);
@@ -84,7 +84,7 @@ public class FilterScrap extends HttpServlet {
 				}
 			}
 			
-			JSONArray linkedinApps = (JSONArray)scrappedAppsJson.get("Linkedin");
+			JSONArray linkedinApps = (JSONArray)scrappedAppsJson.get("LinkedIn");
 			JSONArray linkedinAppsToKeep = new JSONArray();
 			if(linkedinApps != null){
 				for(Object appNoType : linkedinApps){
@@ -134,7 +134,7 @@ public class FilterScrap extends HttpServlet {
 			
 			JSONObject result = new JSONObject();
 			result.put("Facebook", facebookAppsToKeep);
-			result.put("Linkedin", linkedinAppsToKeep);
+			result.put("LinkedIn", linkedinAppsToKeep);
 			result.put("Chrome", chromeAppsToKeep);
 			String resultString = result.toString();
 			sm.setLogResponse("App scrapped filtered.");
