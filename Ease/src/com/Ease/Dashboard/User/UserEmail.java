@@ -132,7 +132,7 @@ public class UserEmail {
 			ResultSet rs = db.get("SELECT * FROM usersEmailsPending WHERE userEmail_id = " + this.db_id + "");
 			try {
 				if (rs.next()) {
-					db.set("UPDATE usersEmailsPending SET verificationCode = '" + code + "' WHERE userEmail_id = " + this.db_id + ";");
+					code = rs.getString(3);
 				} else {
 					db.set("INSERT INTO usersEmailsPending VALUES(NULL, " + this.db_id + ", '" + code + "')");
 				}
