@@ -21,6 +21,10 @@ addBookmarkPopup = function(rootEl){
 	this.goBackButtonHandler.click(function(){
 		self.close();
 	});
+	this.qRoot.find('input').keyup(function(e){
+		if (e.which == 13)
+			self.submitButton.click();
+	});
 	this.submitButton.click(function(){
 		var url = self.urlInputHandler.val();
 		var websiteId = self.currentApp.id;

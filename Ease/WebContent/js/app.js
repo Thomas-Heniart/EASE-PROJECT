@@ -97,9 +97,6 @@ var appsManager = function(){
 };
 
 $(document).ready(function(){
-/*	$("#onComputer .SitesContainer .siteLinkBox").each(function (index, elem) {
-		easeApps.push(new MyApp().initWithQRoot(elem));
-	});*/
 	easeAppsManager = new appsManager();
 });
 
@@ -119,7 +116,7 @@ var MyApp = function(){
 	this.name;
 	this.websiteId;
 	this.logWith;
-	this.url;
+	this.url = "";
 	this.currentProfile = null;
 
 	this.changeName = function(name){
@@ -147,8 +144,6 @@ var MyApp = function(){
 		self.url = url;
 		self.appNameHandler = self.qRoot.find('.siteName p');
 		self.settingsButton = self.qRoot.find('.showAppActionsButton');
-/*		self.modifyAppButton = self.qRoot.find('.modifyAppButton');
-		self.deleteAppButton = self.qRoot.find('.deleteAppButton');*/
 		self.imageArea = self.qRoot.find('.linkImage');
 		self.appNameHandler.text(name);
 		self.imageArea.click(function(){
@@ -159,12 +154,6 @@ var MyApp = function(){
 			e.stopPropagation();
 			easeModifyAppPopup.open(self);
 		});
-/*		self.modifyAppButton.click(function(e){
-			showModifyAppPopup(this, e);
-		});
-		self.deleteAppButton.click(function(e){
-			showConfirmDeleteAppPopup(this, e);
-		});*/
 		return self;
 	};
 	this.initWithQRoot = function(rootEl){
@@ -177,12 +166,12 @@ var MyApp = function(){
 		self.logWith = self.qRoot.attr('logwith');
 		self.logoHandler = self.qRoot.find('img.logo');
 		self.imgSrc = self.logoHandler.attr('src');
-		self.url = self.qRoot.attr('url');
-		self.qRoot.attr('url', '');
+		if (self.qRoot.attr('url')){
+			self.url = self.qRoot.attr('url');
+			self.qRoot.attr('url', '');
+		}
 		self.appNameHandler = self.qRoot.find('.siteName p');
 		self.settingsButton = self.qRoot.find('.showAppActionsButton');
-/*		self.modifyAppButton = self.qRoot.find('.modifyAppButton');
-		self.deleteAppButton = self.qRoot.find('.deleteAppButton');*/
 		self.imageArea = self.qRoot.find('.linkImage');
 		self.imageArea.click(function(){
 			sendEvent(this);
@@ -192,12 +181,6 @@ var MyApp = function(){
 			e.stopPropagation();
 			easeModifyAppPopup.open(self);
 		});
-/*		self.modifyAppButton.click(function(e){
-			showModifyAppPopup(this, e);
-		});
-		self.deleteAppButton.click(function(e){
-			showConfirmDeleteAppPopup(this, e);
-		});*/
 		return self;
 	}
 
