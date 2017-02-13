@@ -13,6 +13,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 
+import com.Ease.Context.Variables;
 import com.Ease.Dashboard.User.User;
 
 public class Mail {
@@ -158,7 +159,7 @@ public class Mail {
 	
 	public void sendVerificationEmail(String newEmail, String userName, String code) throws MessagingException {
 		try {
-			String link = "https://ease.space/VerifieEmail?email=" + newEmail + "&code=" + code;
+			String link = Variables.URL_PATH + "VerifieEmail?email=" + newEmail + "&code=" + code;
 
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(newEmail));
 			message.setSubject(MimeUtility.encodeText("Validation email !", "utf-8", null));
