@@ -11,7 +11,7 @@
     },
     "Facebook":{
     	"todo":[
-    		{"action":"click", "search":".btn.fb-login-form-btn.btn-submit"}
+    		{"action":"click", "search":".fb-login"}
     	]
     },
     "logout":{

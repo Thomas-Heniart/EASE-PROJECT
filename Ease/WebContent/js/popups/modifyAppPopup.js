@@ -34,16 +34,14 @@ modifyAppPopup = function(rootEl){
 			"ui-selected": "selected"
 		}
 	});
-	this.signInChooseRow.selectable({
-		classes: {
-			"ui-selected": "selected"
-		},
-		filter: "button"
-	});	
 	this.signInButtons = [];
 	this.choosenSignInName = "";
 	this.basicSignInName = "";
 
+	this.qRoot.find('input').keyup(function(e){
+		if (e.which == 13)
+			self.tabInfoSubmitButton.click();
+	});
 	this.signInChooseRow.find('.signInButton').each(function(index, elem){
 		var tmp = new Object();
 		tmp.name = $(elem).attr('data');
@@ -187,9 +185,14 @@ modifyAppPopup = function(rootEl){
 		self.loginInput.val('');
 		self.passwordInput.val('');
 	}
+	this.resetPasswordShows = function(){
+		self.qRoot.find("input[name='password']").attr('type', 'password');
+		self.qRoot.find('.showPassDiv.show').removeClass('show');
+	}
 	this.resetSignInAccounts = function(){
 		self.signInAccountSelectRow.find('.accountLine').remove();
 		self.signInDetectionErrorHandler.removeClass('show');
+		self.signInChooseRow.find('.selected').removeClass('selected');
 	}
 	this.tabInfoSubmitButton.click(function(){
 		self.tabInfoErrorRowHandler.removeClass('show');
@@ -258,6 +261,8 @@ modifyAppPopup = function(rootEl){
 		self.resetSimpleInputs();
 		self.resetSameAccountsRow();
 		this.resetSignInAccounts();
+		self.resetPasswordShows();
+		this.qRoot.find(".row.fragmentsRow").tabs("option", "active", 0);
 		self.tabDeleteErrorRowHandler.removeClass('show');
 		self.tabInfoErrorRowHandler.removeClass('show');
 		self.signInChooseRow.addClass('hide');

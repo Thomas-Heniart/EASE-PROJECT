@@ -11,6 +11,11 @@ deleteProfilePopup = function(rootEl){
 	this.submitButton = this.qRoot.find("button[type='submit']");
 	this.goBackButtonHandler = this.qRoot.find("#goBack");
 
+	this.passwordInputHander.keyup(function(e){
+		if (e.which == 13){
+			self.submitButton.click();
+		}
+	});
 	this.goBackButtonHandler.click(function(){
 		self.close();
 	});
@@ -45,11 +50,16 @@ deleteProfilePopup = function(rootEl){
 				self.errorRowHandler.addClass('show');
 			},
 			'text'
-		);
+			);
 	});
 	this.currentProfile = null;
+	this.resetPasswordShows = function(){
+		self.qRoot.find("input[name='password']").attr('type', 'password');
+		self.qRoot.find('.showPassDiv.show').removeClass('show');
+	}
 	this.reset = function(){
 		self.passwordInputHander.val('');
+		self.resetPasswordShows();
 		self.submitButton.addClass('locked');
 		self.errorRowHandler.removeClass('show');
 	}

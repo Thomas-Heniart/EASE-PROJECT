@@ -4,26 +4,22 @@
 	"home":"http://www.sushiboutik.com/",
 	"connect":{
 		"todo":[
-			{"action":"waitDocumentReady"},
 			{"action":"clickona", "search":"a[href*='box-connexion_favoris.html']"},
-			{"action":"waitload"},
-			{"action":"waitfor", "search":"#cboxLoadedContent"},
+			{"action":"waitfor", "search":"iframe.cboxIframe,input[name='valider']"},
 			{"action":"enterFrame", "search":"iframe.cboxIframe"},
-      		{"action":"fill", "what":"login", "search":"#log"},
+			{"action":"fill", "what":"login", "search":"#log"},
 			{"action":"fill", "what":"password", "search":"#pwd"},
-			{"action":"submit", "search":"form[name='connexion']"},
+			{"action":"click", "search":"input[name='valider']"},
 			{"action":"exitFrame"}
-			]
+		]
 	},
 	"logout":{
 		"todo":[
-		{"action":"goto", "url":"http://www.sushiboutik.com/deconnexion.html"}
-			]
-	},
-	"checkAlreadyLogged":{
-		"todo":[
-			{"action":"waitDocumentReady"},
-			{"action":"check", "type":"hasElement", "search":"a[href='/espace-client.html']"}
+			{"action":"aclick", "search":"a[href='/deconnexion.html']"},
+			{"action":"waitload"}
 		]
-	}
+	},
+	"checkAlreadyLogged":[
+		{"search":"a[href='/deconnexion.html']"}
+	]
 }

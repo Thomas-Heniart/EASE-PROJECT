@@ -1,9 +1,8 @@
 {
-	"name":"UnifyIeseg",
+	"name":"Ieseg Unify",
 	"lastLogin":"",
 	"home":"https://unify.ieseg.fr/",
 	"connect":{
-		
 		"todo":[
 			{"action":"waitfor", "search":"#txtUserName"},
 			{"action":"fill", "what":"login", "search":"#txtUserName", "grave":true},
@@ -13,8 +12,7 @@
 	},
 	"logout":{
 		"todo":[
-			{"action":"goto", "url":"https://srvadfs.ieseg.fr/adfs/ls/?wa=wsignout1.0&wreply=https://unify.ieseg.fr/"},
-			{"action":"waitload"}
+			{"action":"goto", "url":"https://srvadfs.ieseg.fr/adfs/ls/?wa=wsignout1.0&wreply=https://unify.ieseg.fr/"}
 			]
 	},
 	"checkAlreadyLogged":[

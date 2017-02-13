@@ -46,6 +46,15 @@ addAppPopup = function(rootEl){
 			self.qRoot.addClass('show');
 		});
 	});
+
+	this.loginInput.keyup(function(e){
+		if (e.which == 13)
+			self.submitButton.click();
+	});
+	this.passwordInput.keyup(function(e){
+		if (e.which == 13)
+			self.submitButton.click();
+	});
 	this.loginInput.on('input', function(){
 		if (self.loginInput.val().length && self.passwordInput.val().length){
 			self.submitButton.removeClass('locked');
@@ -187,6 +196,11 @@ addAppPopup = function(rootEl){
 	this.resetSignInAccounts = function(){
 		self.signInAccountSelectRow.find('.accountLine').remove();
 		self.signInDetectionErrorHandler.removeClass('show');
+		self.signInChooseRow.find('.selected').removeClass('selected');
+	}
+	this.resetPasswordShows = function(){
+		self.qRoot.find("input[name='password']").attr('type', 'password');
+		self.qRoot.find('.showPassDiv.show').removeClass('show');
 	}
 	this.setupSameAccountsDiv = function(ssoId){
 		var apps = catalog.getAppsBySsoId(ssoId);
@@ -227,14 +241,13 @@ addAppPopup = function(rootEl){
 	}
 
 	this.accountNameHelperBackButton.click(function(){
-//		self.resetSameAccountsRow();
-self.resetSimpleInputs();
-self.choosenSsoAccountLogin = null;
-self.submitButton.addClass('locked');
-self.accountNameHelper.addClass('hide');
-self.sameSsoAppsRow.addClass('hide');
-self.ssoSelectAccountRow.removeClass('hide');
-});
+		self.resetSimpleInputs();
+		self.choosenSsoAccountLogin = null;
+		self.submitButton.addClass('locked');
+		self.accountNameHelper.addClass('hide');
+		self.sameSsoAppsRow.addClass('hide');
+		self.ssoSelectAccountRow.removeClass('hide');
+	});
 	this.ssoNewAccountButton.click(function(){
 		self.ssoSelectAccountRow.addClass('hide');
 		self.loginPasswordRow.removeClass('hide');
@@ -329,6 +342,7 @@ self.ssoSelectAccountRow.removeClass('hide');
 		self.resetSimpleInputs();
 		self.resetSameAccountsRow();
 		self.resetSignInAccounts();
+		self.resetPasswordShows();
 		self.submitButton.addClass('locked');
 		self.errorRowHandler.removeClass('show');
 		self.loginPasswordRow.addClass('hide');
@@ -347,12 +361,11 @@ self.ssoSelectAccountRow.removeClass('hide');
 
 	this.submitButton.click(function(){
 		self.errorRowHandler.removeClass('show');
-		self.submitButton.addClass('loading');
-
 		var name = self.appNameHolder.val();
 		var profileId = self.currentProfile.id;
 		var login = self.loginInput.val();
 		var password = self.passwordInput.val();
+
 
 		var logwithApp = self.signInAccountSelectRow.find('.selected');
 		var logwithId = logwithApp.length ? $(logwithApp[0]).attr('appid') : "";
@@ -372,6 +385,9 @@ self.ssoSelectAccountRow.removeClass('hide');
 		if (self.choosenSsoAccountLogin != null) {
 			submitUrl = "AddClassicAppSameAs";
 		}
+		if (submitUrl == "AddClassicApp" && (!login.length || !password.length))
+			return;
+		self.submitButton.addClass('loading');
 		var websiteIdJson = JSON.stringify(websiteId);
 		postHandler.post(
 			submitUrl,

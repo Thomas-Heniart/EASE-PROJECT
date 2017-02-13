@@ -21,7 +21,6 @@
 			]
 	},
 	"checkAlreadyLogged":[
-		{"action":"waitPage", "url":"https://outlook.office.com/", "but":"#login_workload_logo_image"},
 		{"action":"search", "search":"#O365_MainLink_Logo"}
 	]
 }

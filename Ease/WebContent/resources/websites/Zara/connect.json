@@ -15,10 +15,11 @@
     },
     "logout": {
     	"todo": [
-    		{"action":"clickona", "search":"._accountLink._logout"}
+    		{"action":"clickona", "search":"._accountLink._logout a"}
     	]
     },
     "checkAlreadyLogged": [
+    	{"action":"waitfor", "search":"._userName,._login"},
     	{"search":"._accountLink._logout"}
     ]
 }

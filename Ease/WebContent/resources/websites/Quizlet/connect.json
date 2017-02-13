@@ -5,10 +5,10 @@
     "connect": {
     	"todo": [
     		{"action":"click", "search":".SiteHeader-signIn button.UILink"},
-    		{"action":"waitfor", "search":"#LoginPromptModal-loginForm"},
-    		{"action":"fill", "what":"login", "search":"#LoginPromptModal-loginForm input[name='username']"},
-    		{"action":"fill", "what":"password", "search":"#LoginPromptModal-loginForm input[name='password']"},
-    		{"action":"click", "search":"#LoginPromptModal-loginForm button[type='submit']"}
+    		{"action":"waitfor", "search":".LoginPromptModal-form"},
+    		{"action":"fill", "what":"login", "search":".LoginPromptModal-form input[name='username']"},
+    		{"action":"fill", "what":"password", "search":".LoginPromptModal-form input[name='password']"},
+    		{"action":"click", "search":".LoginPromptModal-form button[type='submit']"}
        	]
     },
     "logout": {
@@ -25,8 +25,15 @@
     "Facebook": {
     	"todo": [
     		{"action":"click", "search":".SiteHeader-signIn button.UILink"},
-    		{"action":"waitfor", "search":"#LoginPromptModal-loginForm"},
-    		{"action":"aclick", "search":"a[href*='fb-oauth-redirector']"}
+    		{"action":"waitfor", "search":".LoginPromptModal-form"},
+    		{"action":"clickona", "search":".UIButton--social[href*='facebook']"}
+    	]
+    },
+    "Google": {
+    	"todo": [
+    		{"action":"click", "search":".SiteHeader-signIn button.UILink"},
+    		{"action":"waitfor", "search":".LoginPromptModal-form"},
+    		{"action":"clickona", "search":".UIButton--social[href*='google']"}
     	]
     }
 }

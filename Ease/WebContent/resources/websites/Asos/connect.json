@@ -1,30 +1,40 @@
 {
     "name":"Asos",
     "lastlogin":"",
-    "home":"https://my.asos.com/",
+    "home":"https://www.asos.fr/pgecustlogin.aspx",
     "connect": {
     	"todo": [
-    		{"action":"goto", "url":"https://www.asos.com/pgecustlogin.aspx"},
-    		{"action":"aclick", "search":".qa-different-account"},
-    		{"action":"fill", "what":"login","search":"input[name='Username']", "grave":"true"},
-    		{"action":"fill", "what":"password","search":"input[name='Password']", "grave":"true"},
+    		{"action":"fill", "what":"login","search":"#EmailAddress", "grave":"true"},
+    		{"action":"fill", "what":"password","search":"#Password", "grave":"true"},
     		{"action":"click", "search":"#signin", "grave":"true"}
+    	]
+    },
+    "Google": {
+    	"todo": [
+    		{"action":"clickona", "search":"#signup-google"}
+    	]
+    },
+    "Facebook": {
+    	"todo": [
+    		{"action":"clickona", "search":"#signup-facebook"}
+    	]
+    },
+    "Twitter": {
+    	"todo": [
+    		{"action":"clickona", "search":"#signup-twitter"}
     	]
     },
     "logout": {
     	"todo": [
-    		{"action":"goto", "url":"https://www.asos.com/pgecustlogout.aspx"}
+    		{"action":"clickona", "search":"#_ctl0_ContentBody_ctlSecureNav_lnkSignOut"},
+    		{"action":"waitload"},
+    		{"action":"waitload"},
+    		{"action":"waitload"},
+    		{"action":"waitload"}
     	]
     },
     "checkAlreadyLogged": [
-    	{"search":"a.sign-out"}
-    ],
-    "Facebook": {
-    	"todo": [
-    		{"action":"goto", "url":"https://www.asos.com/pgecustlogin.aspx"},
-    		{"action":"aclick", "search":".qa-different-account"},
-    		{"action":"waitfor", "search":"#signup-facebook"},
-    		{"action":"clickona", "search":"#signup-facebook"}
-    	]
-    }
+    	{"search":"#_ctl0_ContentBody_ctlSecureNav_lnkSignOut"}
+    ]
+    
 }

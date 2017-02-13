@@ -17,9 +17,7 @@
 			{"action":"goto", "url":"https://deliveroo.fr"}
 			]
 	},
-	"checkAlreadyLogged":{
-		"todo":[
-			{"action":"check", "type":"hasElement", "search":".page-header--invite-link"}
-		]
-	}
+	"checkAlreadyLogged": [
+			{"search":".page-header--invite-link"}
+	]
 }

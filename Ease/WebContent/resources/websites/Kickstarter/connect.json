@@ -1,5 +1,5 @@
 {
-    "name":"Skype",
+    "name":"Kickstarter",
     "lastLogin":"",
     "home":"https://www.kickstarter.com",
     "connect":{
@@ -7,7 +7,7 @@
             {"action":"goto", "url":"https://www.kickstarter.com/login"},
             {"action":"fill", "what":"login", "search":"#user_session_email"},
             {"action":"fill", "what":"password", "search":"#user_session_password"},
-            {"action":"click", "search":"input[type='submit']"}
+            {"action":"click", "search":"input[type='submit']:eq(0)"}
             ]
     },
     "Facebook":{
@@ -23,8 +23,5 @@
     },
     "checkAlreadyLogged":[
         {"search":"#js-user_nav_select"}
-    ],
-    "checkChangeLogin":[
-        {"action":"click", "search":"#loginbutton"}
     ]
 }

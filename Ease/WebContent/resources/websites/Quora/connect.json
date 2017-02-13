@@ -14,15 +14,12 @@
 	"logout":{
 		"todo":[
 			{"action":"clickona", "search":"form[action*='logout'] a.logout"},
-			{"action":"submit", "search":"form[action*='logout_POST']"}
+			{"action":"submit", "search":"form[action*='logout_POST']"},
 			{"action":"waitfor", "search":".inline_login_form"}
 		]
 	},
 	"checkAlreadyLogged":[
 		{"search":"div.header_nav"}
-	],
-	"checkChangeLogin":[
-		{"action":"click", "search":"#loginbutton"}
 	],
     "Facebook":{
     	"todo":[

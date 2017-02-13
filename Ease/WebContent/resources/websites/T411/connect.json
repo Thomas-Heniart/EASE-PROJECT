@@ -1,20 +1,20 @@
 {
     "name":"T411",
     "lastLogin":"",
-    "home":"https://www.t411.ch",
+    "home":"https://www.t411.li",
     "connect":{
         "todo":[
         	{"action":"aclick", "search":"a[href*='login']"},
         	{"action":"waitfor", "search":"#login"},
-            {"action":"fill", "what":"login", "search":"#login", "grave":true},
-            {"action":"fill", "what":"password", "search":"#password"},
-            {"action":"click", "search":"input.loginbtn"}
+            {"action":"fill", "what":"login", "search":"#lgn", "grave":true},
+            {"action":"fill", "what":"password", "search":"#pass"},
+            {"action":"click", "search":"input[type='submit']"}
         ]
     },
     
     "logout":{
         "todo":[
-        	{"action":"goto","url":"https://www.t411.ch/users/logout"}
+        	{"action":"goto","url":"https://www.t411.li/users/logout"}
         ]
     },
     "checkAlreadyLogged":[

@@ -115,3 +115,7 @@ UPDATE appPermissions SET permission = b'11111111111111111111';
 
 /* Remove féfé from admins */
 DELETE FROM admins WHERE user_id = 33;
+
+/* Changer folder name de sites qui bug */
+UPDATE websites set folder='PremierLeague' where website_name='PremierLeague';
+UPDATE websites set folder='Trainline' where website_name='Trainline';
