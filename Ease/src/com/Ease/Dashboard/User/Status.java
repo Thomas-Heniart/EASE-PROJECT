@@ -29,7 +29,7 @@ public class Status {
 	}
 
 	public static Status createStatus(DataBaseConnection db) throws GeneralException {
-		String db_id = db.set("INSERT INTO status values (null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, default, 0);").toString();
+		String db_id = db.set("INSERT INTO status values (null, 0, 0, 0, 0, 0, 0, 0, 0, 0, default, 0, 0);").toString();
 		return new Status(db_id, false, false, false, false, false, false, false, false, false, false);
 	}
 
