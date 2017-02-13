@@ -66,6 +66,14 @@ var appsManager = function(){
 		}
 		return retVal;
 	}
+	this.getAppsByWebsiteIdNotEmpty = function(val){
+		var retVal = [];
+		for (var i = 0; i < easeApps.length; i++) {
+			if (easeApps[i].websiteId == val && !(easeApps[i].isEmpty))
+				retVal.push(easeApps[i]);
+		}
+		return retVal;
+	}
 	this.getAppById = function(val){
 		for (var i = 0; i < easeApps.length; i++) {
 			if (easeApps[i].id == val)
