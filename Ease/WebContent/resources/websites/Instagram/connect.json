@@ -6,10 +6,8 @@
         "todo":[
             {"action":"waitfor", "search":["a._niffh","a._fcn8k"]},
             {"action":"clickona", "search":"a._fcn8k"},
-    		{"action":"clickona", "search":"a._fcn8k"},
-    		{"action":"clickona", "search":"a._fcn8k"},
     		{"action":"clickona", "search":"a._niffh"},
-            {"action":"fill", "what":"login", "search":"input[name='username']", "grave":true},
+    		{"action":"fill", "what":"login", "search":"input[name='username']", "grave":true},
             {"action":"fill", "what":"password", "search":"input[name='password']", "grave":true},
             {"action":"click", "search":"form button"}
         ]
@@ -17,23 +15,15 @@
     "Facebook":{
     	"todo":[
     		{"action":"waitfor", "search":["a._niffh","a._fcn8k"]},
-    		{"action":"clickona", "search":"a._fcn8k"},
-    		{"action":"clickona", "search":"a._fcn8k"},
-    		{"action":"clickona", "search":"a._niffh"},
-    		{"action":"clickona", "search":"a._fcn8k"},
-            {"action":"click", "search":"._aj7mu._taytv._ki5uo._o0442"}
+    		{"action":"click", "search":"._ah57t"}
     	]
     },
     "logout":{
         "todo":[
-            {"action":"goto", "url":"https://www.instagram.com/accounts/logout/"},
-            {"action":"goto","url":"https://www.instagram.com/accounts/login"}
-            ]
+            {"action":"goto", "url":"https://www.instagram.com/accounts/logout/"}
+       	]
     },
     "checkAlreadyLogged":[
         {"search":"a._soakw._vbtk2.coreSpriteDesktopNavProfile"}
-    ],
-    "checkChangeLogin":[
-        {"action":"click", "search":"#loginbutton"}
     ]
 }

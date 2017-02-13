@@ -14,6 +14,11 @@
     		{"action":"goto", "url":"https://my.lmde.fr/c/portal/logout"}
     	]
     },
+    "Facebook": {
+    	"todo": [
+    		{"action":"click", "search":"form#_facebook_fm #button-authentification"}
+       	]
+    },
     "checkAlreadyLogged": [
     	{"search":"li.myaccount"}
     ]

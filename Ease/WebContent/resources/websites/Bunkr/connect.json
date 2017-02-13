@@ -4,10 +4,10 @@
 	"home":"https://bunkrapp.com/",
 	"connect":{
 		"todo":[
-			{"action":"goto", "url":"https://bunkrapp.com/signup/"},
-			{"action":"fill", "what":"login", "search":"#bkr-signup-mail", "grave":true},
-			{"action":"fill", "what":"password", "search":"#bkr-signup-password"},
-			{"action":"click", "search":"#bkr-btn-submit-signup", "grave":true}
+			{"action":"goto", "url":"https://bunkrapp.com/signin/"},
+			{"action":"fill", "what":"login", "search":"#bkr-signin-mail", "grave":true},
+			{"action":"fill", "what":"password", "search":"#bkr-signin-password"},
+			{"action":"click", "search":"#bkr-btn-submit-signin", "grave":true}
 			]
 	},
 	"Facebook":{

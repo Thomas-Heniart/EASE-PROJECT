@@ -13,10 +13,10 @@
     
     "logout":{
         "todo":[
-        	{"action":"aclick","search":"a#logoutLink"}
+        	{"action":"aclick","search":"a[href='/logout/']"}
         ]
     },
     "checkAlreadyLogged":[
-        {"search":"a#logoutLink"}
+        {"search":"a[href='/logout/']"}
     ]
 }

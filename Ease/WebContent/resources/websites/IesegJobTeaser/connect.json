@@ -3,7 +3,6 @@
     "lastLogin":"",
     "home":"https://ieseg.jobteaser.com/",
     "connect":{
-        "url":"https://ieseg.jobteaser.com/",
         "todo":[
             {"action":"fill", "what":"login", "search":"input[name='txtUserName']"},
             {"action":"fill", "what":"password", "search":"input[name='txtPassword']"},
@@ -11,15 +10,12 @@
             ]
     },
     "logout":{
-        "url":"https://ieseg.jobteaser.com/",
         "todo":[
-            {"action":"click", "search":"div#login div ul.dropdown-menu li:nth-child(4) a.oooooooo", "grave":true}
+            {"action":"aclick", "search":"a[href='/fr/users/sign_out']", "grave":true},
+            {"action":"goto", "url":"https://ieseg.jobteaser.com/"}
          ]
     },
     "checkAlreadyLogged":[
         {"search":"div#login"}
-    ],
-    "checkChangeLogin":[
-        {"action":"click", "search":"#loginbutton"}
     ]
 }

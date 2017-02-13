@@ -22,7 +22,11 @@
     ],
      "Facebook": {
     	"todo": [
-    		{"action":"click", "search":"button.unAuthFacebookConnect"}
+    		{"action":"goto", "url":"https://pinterest.com/login"},
+    		{"action":"waitfor", "search":"input[type='email']"},
+    		{"action":"enterFrame", "search":"iframe[title='fb:login_button Facebook Social Plugin']"},
+    		{"action":"click", "search":"#u_0_2"},
+    		{"action":"exitFrame"}
     	]
     }
 }

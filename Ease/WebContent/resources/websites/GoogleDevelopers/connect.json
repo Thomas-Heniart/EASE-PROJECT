@@ -21,40 +21,12 @@
 	},
 	"logout":{
 		"todo":[
-			{"action":"click", "search":"img.devsite-user-avatar", "grave":true},
-			{"action":"waitfor", "search":"a[href*='Logout']"},
-			{"action":"clickona", "search":"a[href*='Logout']", "grave":true},
-			{"action":"waitload"}
-		]
-	},
-	"switch":{
-		"todo":[
-			{"action":"clickona", "search":"#yt-masthead-account-picker", "grave":true},
-			{"action":"waitfor", "search":"a[href='/logout']"},
-			{"action":"clickona", "search":"yt-masthead-picker-footer a:first-child"},
-			{"action":"waitload"},
-			{"action":"waitfor", "search":["button[href*='https://accounts.google.com/ServiceLogin?']","div[aria-label='Google']", "paper-icon-button#button"]},
-			{"action":"click", "search":"button[href*='https://accounts.google.com/ServiceLogin?']"},
-			{"action":"click", "search":"paper-icon-button#button"},
-			{"action":"waitload"},
-			{"action":"waitfor", "search":["#account-chooser-link","#account-chooser-add-account"]},
-			{"action":"aclick", "search":"#account-chooser-link"},
-			{"action":"aclick", "search":"#account-chooser-add-account"},
-			{"action":"fill", "what":"login", "search":"#Email", "grave":true},
-			{"action":"click", "search":"#next", "grave":true},
-			{"action":"waitfor", "time":10, "search":"#Passwd"},
-			{"action":"fill", "what":"password", "search":"#Passwd", "grave":true},
-			{"action":"submit", "search":"#gaia_loginform", "grave":true}
-		]
-	},
-	"checkAlreadyConnected":{
-		"todo":[
-			{"action":"waitfor", "search":"devsite-user-dropdown"},
-			{"check":"present", "search":"#yt-masthead-account-picker"},
-			{"who":"onPage", "search":"a.yt-masthead-picker-active-account", "attribute":"text"}
+			{"action":"clickona", "search":"a[href*='https://accounts.google.com/SignOutOptions?']", "grave":true},
+			{"action":"waitfor", "search":"a[href*='https://www.google.com/accounts/Logout?']"},
+			{"action":"aclick", "search":"a[href*='https://www.google.com/accounts/Logout?']", "grave":true}
 		]
 	},
 	"checkAlreadyLogged":[
-		{"search":"img.devsite-user-avatar"}
+		{"search":"a[href*='https://accounts.google.com/SignOutOptions?']"}
 	]
 }

@@ -15,6 +15,18 @@
             {"action":"aclick", "search":"a[href*='secure.allocine.fr/account/logoff']"}
             ]
     },
+    "Facebook":{
+        "todo":[
+        	{"action":"aclick", "search":"a[href*='secure.allocine.fr/account/logon']"},
+        	{"action":"clickona", "search":"a#FaceBookConnect"}
+        ]
+    },
+    "Google":{
+        "todo":[
+        	{"action":"aclick", "search":"a[href*='secure.allocine.fr/account/logon']"},
+        	{"action":"clickona", "search":"a#GoogleConnect"}
+        ]
+    },
     "checkAlreadyLogged":[
         {"search":"a[href^='https://secure.allocine.fr/account/logoff']"}
     ]

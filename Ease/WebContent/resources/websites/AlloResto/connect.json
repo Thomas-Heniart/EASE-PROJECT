@@ -20,7 +20,12 @@
     ],
     "Facebook": {
     	"todo": [
-    		{"action":"click", "search":".facebookLogin"}
+    		{"action":"clickona", "search":".facebook:eq(0)"}
+    	]
+    },
+    "Google": {
+    	"todo": [
+    		{"action":"clickona", "search":".google-plus:eq(0)"}
     	]
     }
 }

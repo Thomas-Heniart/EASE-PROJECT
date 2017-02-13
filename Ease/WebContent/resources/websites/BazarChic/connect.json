@@ -7,12 +7,17 @@
             {"action":"fill", "what":"login", "search":"#userEmail"},
             {"action":"fill", "what":"password", "search":"#userPassword"},
             {"action":"click", "search":"#userBtn"}
-            ]
+        ]
     },
     "logout":{
         "todo":[
             {"action":"goto", "url":"https://www.bazarchic.com/login/disconnect/"}
-            ]
+        ]
+    },
+    "Facebook":{
+        "todo":[
+            {"action":"clickona", "search":".connecteFbk"}
+        ]
     },
     "checkAlreadyLogged":[
         {"search":"a[href*='disconnect']"}
