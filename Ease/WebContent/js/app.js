@@ -119,13 +119,14 @@ var MyApp = function(){
 	this.name;
 	this.websiteId;
 	this.logWith;
+	this.url;
 	this.currentProfile = null;
 
 	this.changeName = function(name){
 		self.appNameHandler.text(name);
 		self.name = name;
 	}
-	this.init = function(logWith, login, catalogId, name, id, ssoId, canMove, imgSrc){
+	this.init = function(logWith, login, catalogId, name, id, ssoId, canMove, imgSrc, url){
 		self.qRoot = $($('#boxHelper').html());
 		self.qRoot.attr('logwith', logWith.length ? logWith : "false");
 		self.qRoot.attr('login', login);
@@ -143,6 +144,7 @@ var MyApp = function(){
 		self.logoHandler = self.qRoot.find('img.logo');
 		self.logoHandler.attr('src', imgSrc);
 		self.imgSrc = imgSrc;
+		self.url = url;
 		self.appNameHandler = self.qRoot.find('.siteName p');
 		self.settingsButton = self.qRoot.find('.showAppActionsButton');
 /*		self.modifyAppButton = self.qRoot.find('.modifyAppButton');
@@ -175,6 +177,8 @@ var MyApp = function(){
 		self.logWith = self.qRoot.attr('logwith');
 		self.logoHandler = self.qRoot.find('img.logo');
 		self.imgSrc = self.logoHandler.attr('src');
+		self.url = self.qRoot.attr('url');
+		self.qRoot.attr('url', '');
 		self.appNameHandler = self.qRoot.find('.siteName p');
 		self.settingsButton = self.qRoot.find('.showAppActionsButton');
 /*		self.modifyAppButton = self.qRoot.find('.modifyAppButton');

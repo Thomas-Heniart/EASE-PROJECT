@@ -393,7 +393,7 @@ self.ssoSelectAccountRow.removeClass('hide');
 				for (var i = 0; i < ids.length; ++i) {
 					catalogApp = catalog.getAppById(websiteId[i]);
 					var app = new MyApp();
-					app.init(logwithId, login, catalogApp.id, i == 0 ? name : catalogApp.name, ids[i], catalogApp.ssoId, true, catalogApp.imgSrc);
+					app.init(logwithId, login, catalogApp.id, i == 0 ? name : catalogApp.name, ids[i], catalogApp.ssoId, true, catalogApp.imgSrc, '');
 					self.currentProfile.addApp(app);
 					app.scaleAnimate();
 				}

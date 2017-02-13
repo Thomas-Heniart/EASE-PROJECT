@@ -732,6 +732,9 @@ header .intro-text .intro-heading {
                                  .fa-stack {
                                     font-size: 40px;
                                     vertical-align: top;
+                                    .fa-stack-1x {
+                                        color: black;
+                                    }
                                 }
                                 p {
                                     position: absolute;

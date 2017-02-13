@@ -38,6 +38,7 @@
 	<div class="siteLinkBox"
 	 name="${app.getName()}"
 	 id="${app.getSingleId()}"
+	 url="${app.getLinkAppInformations().getLink()}"
 	 move="true">
 	<div class="linkImage">
 	<c:if test='${app.havePerm("DELETE")}'>

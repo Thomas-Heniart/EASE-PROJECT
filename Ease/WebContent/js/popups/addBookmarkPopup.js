@@ -22,12 +22,41 @@ addBookmarkPopup = function(rootEl){
 		self.close();
 	});
 	this.submitButton.click(function(){
-
+		var url = self.urlInputHandler.val();
+		var websiteId = self.currentApp.id;
+		var profileId = self.currentProfile.id;
+		var name = self.appNameInputHandler.val();
+		self.submitButton.addClass('loading');
+		self.errorRowHandler.removeClass('show');
+		postHandler.post(
+			'AddBookMark',
+			{
+				'link': url,
+				'websiteId': websiteId,
+				'profileId': profileId,
+				'name': name
+			},
+			function(){
+				self.submitButton.removeClass('loading');
+			},
+			function(msg){
+				var app = new MyApp();
+				app.init('', '', self.currentApp.id, name, msg, self.currentApp.ssoId, true, self.currentApp.imgSrc, url);
+				self.currentProfile.addApp(app);
+				app.scaleAnimate();
+				self.close();
+			},
+			function(msg){
+				self.errorRowHandler.find('p').text(msg);
+				self.errorRowHandler.addClass('show');
+			}
+			);
 	});
 	this.reset = function(){
 		self.infoRow.addClass('hide');
 		self.appNameInputHandler.val('');
 		self.urlInputHandler.val('');
+		self.errorRowHandler.removeClass('show');
 		this.currentApp = null;
 		this.currentProfile = null;
 	}
