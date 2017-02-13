@@ -93,7 +93,6 @@ $('div#addAppTutorial form').submit(function (e) {
 	var websiteIds = [];
 	var websiteId = $("div#simpleImportation div.appHandler div.app.selected:eq(" + addAppTutoCpt + ")").attr("id");
 	websiteIds.push(websiteId);
-	console.log(websiteIds);
 	postHandler.post('AddClassicApp', {
 		"name" : appName,
 		"login" : $("div#addAppTutorial input#login").val(),
@@ -104,13 +103,11 @@ $('div#addAppTutorial form').submit(function (e) {
 		//always
 	}, function(retMsg) {
 		//succes
-		console.log(retMsg);
 		var newWebsite = $(".catlogApp[idx='" + websiteId + "']").attr("newApp") != null;
 		easeTracker.trackEvent("AddApp", {"appType":"ClassicApp", "appName":appName, "AppNewYN": newWebsite});
 		appsSelectedFilled++;
 	}, function(retMsg) {
 		//error
-		console.log(retMsg);
 	}, 'text');
 	if ($("div#addAppTutorial input#login").val() != "" && $("div#addAppTutorial input#password").val() != "" && $("div#addAppTutorial input#name").val() != "") {
 		goToNextStep();
@@ -169,8 +166,6 @@ function displayTutoApps(apps, by) {
 			linkedInSelectedCount += 1;
 		}
 	});
-	console.log(chromeScrappingCount);
-	console.log(chromeSelectedCount);
 }
 
 function showSavingPopup(filterJson) {
@@ -214,7 +209,6 @@ function showSavingPopup(filterJson) {
 function sendTutoAddApp() {
 	$("#scrapping_done_submit").addClass("hide");
 	$("#add_app_progress").removeClass("hide");
-	console.log(appToAdd);
 	var appToAddFilter = [];
 	for (var i = 0; i < appToAdd.length; ++i) {
 		if ($("div#saving div.scrapedAppsContainer div[index='" + i + "']").length == 0 || $("div#saving div.scrapedAppsContainer div[index='" + i + "']").hasClass("selected")) {
