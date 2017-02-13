@@ -5,7 +5,7 @@
     "connect":{
         "todo":[
         	{"action":"goto", "url":"https://bitly.com/a/sign_in"},
-            {"action":"fill", "what":"login", "search":"input[name='username']"},
+            {"action":"val", "what":"login", "search":"input[name='username']"},
             {"action":"val", "what":"password", "search":"input[name='password']"},
             {"action":"click", "search":"form#sign-in input[type='submit'].button.button-primary.sign-up-in"}
         ]
@@ -15,6 +15,18 @@
         	{"action":"goto", "url":"https://bitly.com/a/sign_out"},
             {"action":"goto", "url":"https://bitly.com/a/sign_in"}
             ]
+    },
+    "Facebook":{
+        "todo":[
+        	{"action":"goto", "url":"https://bitly.com/a/sign_in"},
+            {"action":"clickona", "search":"a.facebook-social-btn"}
+        ]
+    },
+    "Twitter":{
+        "todo":[
+        	{"action":"goto", "url":"https://bitly.com/a/sign_in"},
+            {"action":"clickona", "search":"a.twitter-social-btn"}
+        ]
     },
     "checkAlreadyLogged":[
         {"search":"a[title='Settings']"}

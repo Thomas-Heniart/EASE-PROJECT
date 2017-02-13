@@ -6,7 +6,7 @@
         "todo":[
           {"action":"goto", "url":"https://login.bloomberg.com/"},
           {"action":"fill", "what":"login", "search":"input.login-register__email"},
-          {"action":"fill", "what":"password", "search":"input.login-register__password"}
+          {"action":"fill", "what":"password", "search":"input.login-register__password"},
           {"action":"click", "search":"button.login-register__submit"},
           {"action":"waitfor", "search":".side-nav__item--sign-out"},
           {"action":"goto", "url":"https://www.bloomberg.com/"}
@@ -31,8 +31,8 @@
     "logout":{
         "todo":[
             {"action":"clickona", "search":".side-nav__item--sign-out a"},
-            {"action":"waitfor", "search":"a[href*='login']"},
-          ]
+            {"action":"waitfor", "search":"a[href*='login']"}
+    	]
     },
     "checkAlreadyLogged":[
         {"search":".side-nav__item--sign-out"}

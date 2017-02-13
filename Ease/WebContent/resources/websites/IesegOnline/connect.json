@@ -14,13 +14,10 @@
 	"logout":{
 		"todo":[
 			{"action":"goto", "url":"http://www.ieseg-online.com/login/logout.php"},
-			{"action":"submit", "search":"form[action='http://www.ieseg-online.com/login/logout.php']"}			
+			{"action":"click", "search":"form[action='http://www.ieseg-online.com/login/logout.php'] input[type='submit']"}
 			]
 	},
 	"checkAlreadyLogged":[
 		{"search":"#usermenu"}
-	],
-	"checkChangeLogin":[
-		{"action":"click", "search":"#loginbutton"}
 	]
 }

@@ -16,7 +16,8 @@
     	]
     },
     "checkAlreadyLogged": [
-    	{"search":"a.user.connected[style='display: inline-block;']"}
+    	{"action":"waitfor", "search":"iframe.aamIframeLoaded"},
+    	{"search":"#connected[style='display: inline-block;']"}
     ],
     "Facebook": {
     	"todo": [

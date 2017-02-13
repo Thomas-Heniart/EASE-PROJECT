@@ -23,8 +23,7 @@
     ],
     "Facebook": {
     	"todo": [
-            {"action":"waitDocumentReady"},
-    		{"action":"waitfor", "search":".fb_reset"},
+            {"action":"waitfor", "search":".fb_reset"},
     		{"action":"click", "search":".buttonFacebook"}
     	]
     }

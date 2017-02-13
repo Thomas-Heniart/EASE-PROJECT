@@ -4,8 +4,8 @@
     "home":"https://www.atelierdeschefs.fr/",
     "connect": {
     	"todo": [
-        {"action":"clickona", "search":"a[href*='/login.php']"},
-        {"action":"waitfor", "search": "#form_se_connecter"},
+        	{"action":"clickona", "search":"a[href*='/login.php']"},
+        	{"action":"waitfor", "search": "#form_se_connecter"},
     		{"action":"fill", "what":"login", "search":"#form_se_connecter .form1 #email"},
     		{"action":"fill", "what":"password", "search":"#form_se_connecter .form1 #password"},
     		{"action":"click", "search":"#form_se_connecter .form1 #input2"}
@@ -21,16 +21,18 @@
     ],
     "Facebook": {
     	"todo": [
-        {"action":"clickona", "search":"a[href*='/login.php']"},
-        {"action":"waitfor", "search": "#form_se_connecter"},
-        {"action":"click", "search":".fb-login-button"}
+        	{"action":"clickona", "search":"a[href*='/login.php']"},
+        	{"action":"waitfor", "search": "iframe[title='fb:login_button Facebook Social Plugin']"},
+        	{"action":"enterFrame", "search":"iframe[title='fb:login_button Facebook Social Plugin']"},
+        	{"action":"click", "search":"span._4z_f.fwb"},
+        	{"action":"exitFrame"}
     	]
     },
     "Google":{
-      "todo":[
-        {"action":"clickona", "search":"a[href*='/login.php']"},
-        {"action":"waitfor", "search": "#form_se_connecter"},
-        {"action":"clickona", "search":"a.startFlowA"}
-      ]
+      	"todo":[
+        	{"action":"clickona", "search":"a[href*='/login.php']"},
+        	{"action":"waitfor", "search": "a.startFlowA"},
+        	{"action":"clickona", "search":"a.startFlowA"}
+      	]
     }
 }

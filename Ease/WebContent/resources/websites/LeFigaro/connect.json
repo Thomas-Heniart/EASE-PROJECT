@@ -25,7 +25,7 @@
     },
     "Linkedin": {
     	"todo": [
-    		{"action":"click", "search":"fp-social-auth-linkedin"}
+    		{"action":"click", "search":".fp-social-auth-linkedin"}
     	]
     }
 }

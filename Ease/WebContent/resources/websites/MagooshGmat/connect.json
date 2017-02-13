@@ -1,9 +1,10 @@
 {
 	"name":"MagooshGmat",
 	"lastLogin":"",
-	"home":"https://gmat.magoosh.com/login",
+	"home":"https://gmat.magoosh.com",
 	"connect":{
 		"todo":[
+			{"action":"goto", "url":"http://gmat.magoosh.com/login"},
 			{"action":"fill", "what":"login", "search":"#session_login", "grave":true},
 			{"action":"fill", "what":"password", "search":"#session_password"},
 			{"action":"click", "search":"#session_submit_action", "grave":true}

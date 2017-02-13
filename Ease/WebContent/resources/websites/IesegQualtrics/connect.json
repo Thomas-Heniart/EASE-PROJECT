@@ -7,25 +7,14 @@
 			{"action":"fill", "what":"login", "search":"input#UserName"},
 			{"action":"fill", "what":"password", "search":"input#UserPassword"},
 			{"action":"click", "search":"div#loginButton input", "grave":true}
-			]
+		]
 	},
 	"logout":{
 		"todo":[
-			{"action":"waitfor", "search":".account-menu-button"},
-			{"action":"click", "search":".account-menu-button", "grave":true},
-			{"action":"wait", "timeout":1500},
-			{"action":"clickona", "search":".account-menu-button", "grave":true},
-			{"action":"wait", "timeout":1500},
-			{"action":"click", "search":".icon-user-framed", "grave":true},
-			{"action":"wait", "timeout":1500},
-			{"action":"click", "search":".icon-angle-down-sm", "grave":true},
-			{"action":"wait", "timeout":1500},
-			{"action":"clickona", "search":".icon-user-framed", "grave":true},
-			{"action":"wait", "timeout":1500},
-			{"action":"clickona", "search":".icon-angle-down-sm", "grave":true},
-			{"action":"waitfor", "time":100, "search":"div.qmenu.dropdown-menu ul.menu-items li.hoverable a"},
-			{"action":"clickona", "search":"div.qmenu.dropdown-menu ul.menu-items li.hoverable a"}
-			]
+			{"action":"clickona", "search":".account-menu-button"},
+			{"action":"waitfor", "search":".menu-items li:eq(4) a"},
+			{"action":"clickona", "search":".menu-items li:eq(4) a", "grave":true}
+		]
 	},
 	"checkAlreadyLogged":[
 		{"search":".icon.icon-user-framed"}

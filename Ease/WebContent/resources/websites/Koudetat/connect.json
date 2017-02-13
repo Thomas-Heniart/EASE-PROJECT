@@ -11,10 +11,7 @@
     },
     "Facebook": {
     	"todo": [
-    		{"action":"waitDocumentReady"},
-    		{"action":"waitfor", "search":"#fb-root"},
     		{"action":"waitfor", "search":"button.facebook-btn.login-btn"},
-    		{"action":"wait", "timeout":"5000"},
     		{"action":"click", "search":"button.facebook-btn.login-btn"}
     	]
     },

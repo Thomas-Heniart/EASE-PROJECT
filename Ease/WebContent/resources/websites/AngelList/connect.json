@@ -15,6 +15,24 @@
             {"action":"goto", "url":"https://angel.co/logout"}
          ]
     },
+    "Facebook":{
+        "todo":[
+        	{"action":"goto", "url":"https://angel.co/login"},
+        	{"action":"click", "search":".facebook:eq(0)"}
+        ]
+    },
+    "Twitter":{
+        "todo":[
+        	{"action":"goto", "url":"https://angel.co/login"},
+            {"action":"click", "search":".twitter:eq(0)"}
+        ]
+    },
+    "Linkedin":{
+        "todo":[
+        	{"action":"goto", "url":"https://angel.co/login"},
+            {"action":"click", "search":".linkedin:eq(0)"}
+        ]
+    },
     "checkAlreadyLogged":[
         {"search":"div.userPhoto"}
     ]

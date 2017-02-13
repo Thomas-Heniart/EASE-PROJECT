@@ -3,7 +3,6 @@
 	"lastLogin":"",
 	"home":"http://www.deezer.com/login/email",
 	"connect":{
-		"url":"http://www.deezer.com/login/email",
 		"todo":[
 			{"action":"fill", "what":"login", "search":"#login_mail"},
 			{"action":"fill", "search":"#login_password", "what":"password"},
@@ -13,9 +12,8 @@
 			]
 	},
 	"logout":{
-		"url":"http://www.deezer.com/",
 		"todo":[
-			{"action":"click", "search":"li.profile span"},
+			{"action":"click", "search":"button.profile-settings"},
 			{"action":"waitfor", "time":100, "search":"button[data-type='log_out']"},
 			{"action":"click", "search":"button[data-type='log_out']"},
 			{"action":"waitload"},

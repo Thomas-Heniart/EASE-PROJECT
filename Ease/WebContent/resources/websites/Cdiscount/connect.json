@@ -14,6 +14,11 @@
     		{"action":"clickona", "search":"#cphLeftArea_LeftArea_hlLogOff"}
     	]
     },
+    "Facebook": {
+    	"todo": [
+    		{"action":"click", "search":"#headerLogin.fb"}
+       	]
+    },
     "checkAlreadyLogged": [
     	{"search":"#cphLeftArea_LeftArea_hlLogOff"}
     ]

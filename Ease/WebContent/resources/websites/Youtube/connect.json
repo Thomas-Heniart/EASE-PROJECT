@@ -25,6 +25,7 @@
 			{"action":"clickona", "search":"#yt-masthead-account-picker", "grave":true},
 			{"action":"waitfor", "search":"a[href='/logout']"},
 			{"action":"clickona", "search":"a[href='/logout']", "grave":true},
+			{"action":"waitload"},
 			{"action":"waitload"}	
 		]
 	},

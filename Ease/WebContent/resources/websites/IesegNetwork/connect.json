@@ -16,6 +16,7 @@
         	{"action":"waitfor", "search":"a[href='/sign-out']"},
         	{"action":"clickona", "search":"a[href='/sign-out']"},
 			{"action":"waitload"},
+			{"action":"waitfor", "search":".btn__connect--white"},
 			{"action":"goto", "url":"https://ieseg-network.hivebrite.com/networks/ieseg-network/login"}
         ]
     },

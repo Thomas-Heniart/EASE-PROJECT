@@ -18,6 +18,13 @@
 			{"action":"goto", "url":"https://www.lafourchette.com/logout"}
         ]
 	},
+	"Facebook":{
+		"todo":[
+			{"action":"clickona", "search":"#header-login"},
+			{"action":"waitfor", "time":100, "search":"#inputEmail"},
+			{"action":"click", "search":".connectionFacebook-loginButton span"}
+		]
+	},
 	"checkAlreadyLogged":[
 		{"search":".header-menuTitle.header-menuTitle--myAccount"}
 	]

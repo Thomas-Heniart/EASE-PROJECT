@@ -15,10 +15,11 @@
             {"action":"waitfor", "search":".sidebar #applicant-settings-sb a"},
 	   		{"action":"clickona", "search":".sidebar #applicant-settings-sb a"},
             {"action":"waitfor", "search":"#disconnect"},
-    		{"action":"clickona", "search":"#disconnect"}    		
+    		{"action":"clickona", "search":"a[href='/signout']"}    		
 		]
 	},
 	"checkAlreadyLogged":[
-		{"search":".sidebar"}
+		{"action":"waitfor", "search":"body[style='background: rgb(255, 255, 255);']"},
+		{"search":"a[href='/user-profile']"}
 	]
 }
