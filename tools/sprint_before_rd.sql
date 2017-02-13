@@ -6,8 +6,8 @@ UPDATE websites SET sso = 1 WHERE login_url LIKE "%accounts.google%";
 
 ALTER TABLE sso ADD img_path VARCHAR(255) NOT NULL;
 
-/* INSERT INTO groupsAndUsersMap values (SELECT null, group_id, user_id FROM test.GroupAndUserMap WHERE user_id IN (SELECT id FROM users));
-*/
+INSERT INTO groupsAndUsersMap (SELECT null, group_id, user_id, 1 FROM test.GroupAndUserMap WHERE user_id IN (SELECT id FROM users));
+
 ALTER TABLE status ADD last_connection DATETIME DEFAULT CURRENT_TIMESTAMP;
 
 ALTER TABLE infrastructures ADD img_path VARCHAR(255) NOT NULL;
@@ -34,6 +34,26 @@ UPDATE options SET homepage_state = 1;
 ALTER TABLE status ADD homepage_email_sent TINYINT(1) NOT NULL;
 
 UPDATE status SET homepage_email_sent = 0;
+
+DROP TABLE IF EXISTS invitationsAndGroupsMap;
+DROP TABLE IF EXISTS invitations;
+
+CREATE TABLE invitations (
+	id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+	name VARCHAR(255) NOT NULL,
+	email VARCHAR(255) NOT NULL,
+	linkCode VARCHAR(255) NOT NULL,
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE invitationsAndGroupsMap (
+	id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+	invitation_id INT(10) UNSIGNED NOT NULL,
+	group_id INT(10) UNSIGNED NOT NULL,
+	PRIMARY KEY (id),
+	FOREIGN KEY (invitation_id) REFERENCES invitations(id),
+	FOREIGN KEY (group_id) REFERENCES groups(id)
+);
 
 /* To fix websites */
 
@@ -89,5 +109,13 @@ INSERT INTO websitesLogWithMap values(null, 145, 1);
 INSERT INTO websitesLogWithMap values(null, 228, 1);
 
 
-/* profilePermissions all permissions */
+/* profilePermissions and appPermissions all permissions */
 UPDATE profilePermissions SET permission = b'11111111111111111111';
+UPDATE appPermissions SET permission = b'11111111111111111111';
+
+/* Remove féfé from admins */
+DELETE FROM admins WHERE user_id = 33;
+
+/* Changer folder name de sites qui bug */
+UPDATE websites set folder='PremierLeague' where website_name='PremierLeague';
+UPDATE websites set folder='Trainline' where website_name='Trainline';

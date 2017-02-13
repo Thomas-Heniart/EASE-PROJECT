@@ -8,7 +8,7 @@
 						<fmt:message key="landing.footer.section-product.title"/>
 					</h3>
 					<div class="links">
-						<a href="secure.jsp" target="_blank">
+						<a href="secure" target="_blank">
 							<fmt:message key="landing.header.security-link"/>
 						</a>
 						<a href="#">
@@ -28,13 +28,13 @@
 						<fmt:message key="landing.footer.section-product.company"/>
 					</h3>
 					<div class="links">
-						<a href="equipe.jsp">
+						<a href="equipe">
 							<fmt:message key="landing.header.team-link"/>
 						</a>
-						<a href="privacy.jsp" target="_blank">
+						<a href="privacy" target="_blank">
 							<fmt:message key="landing.footer.link.terms"/>
 						</a>
-						<a href="contact.jsp">
+						<a href="contact">
 							<fmt:message key="landing.header.contact-link"/>
 						</a>
 					</div>

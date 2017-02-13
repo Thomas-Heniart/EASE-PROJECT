@@ -84,9 +84,9 @@ public class LinkApp extends App {
 	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
+		db.set("DELETE FROM linkApps WHERE id=" + linkAppDBid + ";");
 		if (this.groupApp == null || this.groupApp.isCommon() == false)
 			linkInfos.removeFromDb(sm);
-		db.set("DELETE FROM linkApps WHERE id=" + linkAppDBid + ";");
 		super.removeFromDB(sm);
 		db.commitTransaction(transaction);
 	}

@@ -43,12 +43,12 @@
 					</div>
 					<div class="account">
 						<div class="logo">
-							<img src="resources/websites/Linkedin/logo.png"/>
+							<img src="resources/websites/LinkedIn/logo.png"/>
 						</div>
 						<p class="name">LinkedIn</p>
 						<div class="onoffswitch">
-							<input type="checkbox" name="Linkedin" class="onoffswitch-checkbox" id="Linkedin" checked websiteId="${catalog.getWebsiteWithName("Linkedin").getSingleId()}">
-							<label class="onoffswitch-label" for="Linkedin"></label>
+							<input type="checkbox" name="LinkedIn" class="onoffswitch-checkbox" id="LinkedIn" checked websiteId="${catalog.getWebsiteWithName("LinkedIn").getSingleId()}">
+							<label class="onoffswitch-label" for="LinkedIn"></label>
 						</div>
 					</div>
 					<div class="account">
@@ -191,11 +191,11 @@
 							</div>
 						</div>
 						<div class="appHandler">
-							<div class="app" id="${catalog.getWebsiteWithName('Linkedin').getSingleId()}">
+							<div class="app" id="${catalog.getWebsiteWithName('LinkedIn').getSingleId()}">
 								<div class="logo">
-									<img src="resources/websites/Linkedin/logo.png">
+									<img src="resources/websites/LinkedIn/logo.png">
 								</div>
-								<p class="name">Linkedin</p>
+								<p class="name">LinkedIn</p>
 							</div>
 						</div>
 						<div class="appHandler">
@@ -284,7 +284,7 @@
 							</p>
 						</div>
 						<div class="appHandler hidden">
-							<div class="app" id="${catalog.getWebsiteWithName('Vente Privee').getSingleId()}">
+							<div class="app" id="${catalog.getWebsiteWithName('Vente-privée').getSingleId()}">
 								<div class="logo">
 									<img src="resources/websites/VentePrivee/logo.png">
 								</div>
@@ -316,11 +316,11 @@
 							</div>
 						</div>
 						<div class="appHandler hidden">
-							<div class="app" id="${catalog.getWebsiteWithName('LeBonCoin').getSingleId()}">
+							<div class="app" id="${catalog.getWebsiteWithName('Leboncoin').getSingleId()}">
 								<div class="logo">
-									<img src="resources/websites/LeBonCoin/logo.png">
+									<img src="resources/websites/Leboncoin/logo.png">
 								</div>
-								<p class="name">LeBonCoin</p>
+								<p class="name">Leboncoin</p>
 							</div>
 						</div>
 						<div class="appHandler hidden">
@@ -332,19 +332,19 @@
 							</div>
 						</div>
 						<div class="appHandler hidden">
-							<div class="app" id="${catalog.getWebsiteWithName('YahooMail').getSingleId()}">
+							<div class="app" id="${catalog.getWebsiteWithName('Yahoo Mail').getSingleId()}">
 								<div class="logo">
 									<img src="resources/websites/YahooMail/logo.png">
 								</div>
-								<p class="name">YahooMail</p>
+								<p class="name">Yahoo Mail</p>
 							</div>
 						</div>
 						<div class="appHandler hidden">
-							<div class="app" id="${catalog.getWebsiteWithName('Paypal').getSingleId()}">
+							<div class="app" id="${catalog.getWebsiteWithName('PayPal').getSingleId()}">
 								<div class="logo">
-									<img src="resources/websites/Paypal/logo.png">
+									<img src="resources/websites/PayPal/logo.png">
 								</div>
-								<p class="name">Paypal</p>
+								<p class="name">PayPal</p>
 							</div>
 						</div>
 					</div>
