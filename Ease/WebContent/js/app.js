@@ -109,15 +109,16 @@ var MyApp = function(){
 	this.modifyAppButton;
 	this.deleteAppButton;
 	this.imageArea;
-	this.imgSrc;
-	this.login;
-	this.id;
-	this.ssoId;
+	this.imgSrc = '';
+	this.login= '';
+	this.id = '';
+	this.ssoId = -1;
 	this.name;
 	this.websiteId;
-	this.logWith;
+	this.logWith = '';
 	this.url = "";
 	this.currentProfile = null;
+	this.isEmpty = false;
 
 	this.changeName = function(name){
 		self.appNameHandler.text(name);
@@ -169,6 +170,14 @@ var MyApp = function(){
 		if (self.qRoot.attr('url')){
 			self.url = self.qRoot.attr('url');
 			self.qRoot.attr('url', '');
+		}
+		if (self.qRoot.hasClass('emptyApp')){
+			self.isEmpty = true;
+			self.qRoot.find('.emptyAppIndicator').click(function(e){
+				e.preventDefault();
+				e.stopPropagation();
+				easeModifyAppPopup.open(self);
+			});
 		}
 		self.appNameHandler = self.qRoot.find('.siteName p');
 		self.settingsButton = self.qRoot.find('.showAppActionsButton');
