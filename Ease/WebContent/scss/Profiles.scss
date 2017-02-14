@@ -93,6 +93,9 @@
 					.sectionContent {
 						display: block;
 						margin-bottom: 5px;
+						&:last-child {
+							margin-bottom: 0;
+						}
 						i, p , div, input {
 							font-size: 1vw;
 						}

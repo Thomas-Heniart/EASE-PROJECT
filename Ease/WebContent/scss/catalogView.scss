@@ -205,6 +205,8 @@
 			position: absolute;
 			left: 5px;
 			font-weight: bold;
+			top: 50%;
+			transform: translateY(-50%);
 		}
 		.selectedTagsContainer {
 			display: inline-block;

@@ -46,6 +46,22 @@
       margin-bottom: 0.6vw; }
       #easePopupsHandler #modifyAppPopup .bodysHandler .popupBody .handler .row:last-child {
         margin-bottom: 0; }
+      #easePopupsHandler #modifyAppPopup .bodysHandler .popupBody .handler .row .input.password .inputUnlocker {
+        display: none;
+        position: absolute;
+        width: 2vw;
+        right: 2px;
+        font-size: 1.3vw;
+        height: 90%;
+        top: 5%; }
+        #easePopupsHandler #modifyAppPopup .bodysHandler .popupBody .handler .row .input.password .inputUnlocker i {
+          cursor: pointer; }
+      #easePopupsHandler #modifyAppPopup .bodysHandler .popupBody .handler .row .input.password.locked .inputUnlocker {
+        display: block; }
+      #easePopupsHandler #modifyAppPopup .bodysHandler .popupBody .handler .row .input.password.locked .showPassDiv {
+        display: none; }
+      #easePopupsHandler #modifyAppPopup .bodysHandler .popupBody .handler .row .input.password.locked input {
+        pointer-events: none; }
       #easePopupsHandler #modifyAppPopup .bodysHandler .popupBody .handler .row .input.login input, #easePopupsHandler #modifyAppPopup .bodysHandler .popupBody .handler .row .input.password input {
         padding-left: 1.8vw; }
       #easePopupsHandler #modifyAppPopup .bodysHandler .popupBody .handler .row .input.login .placeholderIcon, #easePopupsHandler #modifyAppPopup .bodysHandler .popupBody .handler .row .input.password .placeholderIcon {
