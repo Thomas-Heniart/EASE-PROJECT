@@ -1,6 +1,7 @@
 package com.Ease.Context.Catalog;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -322,6 +323,24 @@ public class Catalog {
 			this.websiteIDmap.put(website.getSingleId(), website);
 			this.websiteDBmap.put(website.getDb_id(), website);
 		}
-		
+		List<Website> allNewWebsites = this.getNewWebsites();
+		List<Website> oldWebsites = new LinkedList<Website>();
+		this.websites.forEach((Website website) -> {
+			if (!website.isNew())
+				oldWebsites.add(website);
+		});
+		Collections.sort(oldWebsites, new Comparator<Website>() {
+	         @Override
+	         public int compare(Website o1, Website o2) {
+	             if (o1.position < o2.position)
+	            	 return 1;
+	             else if (o1.position == o2.position)
+	            	 return 0;
+	             else 
+	            	 return -1;
+	         }
+	     });
+		oldWebsites.addAll(allNewWebsites);
+		this.websites = oldWebsites;
 	}
 }
