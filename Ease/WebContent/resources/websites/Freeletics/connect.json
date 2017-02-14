@@ -1,0 +1,28 @@
+{
+    "name":"Freeletics",
+    "lastlogin":"",
+    "home":"https://www.freeletics.com/",
+    "connect": {
+    	"todo": [
+            {"action": "goto", "url":"https://www.freeletics.com/login"},
+    		{"action":"fill", "what":"login", "search":"input[type='email']"},
+    		{"action":"fill", "what":"password", "search":"input[type='password']"},
+    		{"action":"click", "search":"button[type='submit']"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"clickona", "search":"a[translate='LABEL_SIGN_OUT']"},
+            {"action": "goto", "url":"https://www.freeletics.com/login"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":".user-name"}
+    ],
+    "Facebook": {
+    	"todo": [
+            {"action": "goto", "url":"https://www.freeletics.com/login"},
+    		{"action":"click", "search":"button.btn-facebook"}
+    	]
+    }
+}

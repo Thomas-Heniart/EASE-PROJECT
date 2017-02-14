@@ -1,0 +1,21 @@
+{
+	"name":"YCombinator News",
+	"lastLogin":"",
+	"home":"https://news.ycombinator.com/",
+	"connect":{
+		"todo":[
+			{"action":"goto", "url":"https://news.ycombinator.com/login?goto=news"},
+			{"action":"fill", "what":"login", "search":"form[action='login'] input[type='text']"},
+			{"action":"fill", "what":"password", "search":"form[action='login'] input[type='password']"},
+			{"action":"click", "search":"form[action='login'] input[type='submit']"}
+			]
+	},
+	"logout":{
+		"todo":[
+			{"action":"aclick", "search":"a[href*='logout']"}
+        ]
+	},
+	"checkAlreadyLogged":[
+		{"search":"a[href*='logout']"}
+	]
+}
