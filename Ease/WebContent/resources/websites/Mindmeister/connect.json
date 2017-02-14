@@ -34,7 +34,7 @@
     		{"action":"aclick", "search":"a[href*='login_twitter']"}
     	]
     },
-    "Microsof": {
+    "Microsoft": {
     	"todo": [
     		{"action":"aclick", "search":"a[href*='login_office']"}
     	]

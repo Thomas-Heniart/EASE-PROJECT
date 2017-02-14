@@ -1,0 +1,24 @@
+{
+    "name":"Steam",
+    "lastLogin":"",
+    "home":"https://store.steampowered.com/login",
+    "connect":{
+        "todo":[
+            {"action":"fill", "what":"login", "search":"#input_username", "grave":true},
+            {"action":"fill", "what":"password", "search":"#input_password"},
+            {"action":"click", "search":"#login_btn_signin button"}
+        ]
+    },
+    
+    "logout":{
+        "todo":[
+        	{"action":"clickona","search":"#account_dropdown div a"},
+        	{"action":"waitload"},
+        	{"action":"waitload"},
+        	{"action":"goto", "url":"https://store.steampowered.com/login"}
+        ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"#account_pulldown"}
+    ]
+}

@@ -11,9 +11,9 @@ pageEncoding="UTF-8"%>
 	
 	<title> Ease.space | The easiest way to connect to your professional and personal web.</title>
 	<!-- Description shown in Google -->
-	<meta name="description" content="Ease is an intuitive password manager working as a browser homepage.">
 	<!-- Facebook metadata -->
-	<meta property="og:url" content="https://www.ease.space/">
+	<meta name="description" content="Ease is an intuitive password manager working as a browser homepage.">
+	<meta property="og:url" content="http://51.254.207.91/">
 	<meta property="og:type" content="website">
 	<meta property="og:title" content="Ease.space | The easiest way to connect to your professional and personal web.">
 	<meta property="og:description" content="Ease is an intuitive password manager working as a browser homepage.">

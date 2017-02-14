@@ -1,0 +1,23 @@
+{
+    "name":"TicketSwap",
+    "lastlogin":"",
+    "home":"https://www.ticketswap.com/",
+    "connect": {
+    	"todo": [
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"aclick", "search":"a[href*='/logout']"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"li.user"}
+    ],
+    "Facebook": {
+    	"todo": [
+    		{"action":"goto", "url":"https://www.ticketswap.com/login"},
+            {"action": "clickona", "search": "a.btn--facebook"}
+    	]
+    }
+}

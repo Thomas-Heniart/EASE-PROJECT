@@ -1,0 +1,28 @@
+{
+    "name":"Battle.net",
+    "lastLogin":"",
+    "home":"https://eu.battle.net/login/fr/?ref=http://eu.battle.net/fr/&app=com-root",
+    "connect":{
+        "todo":[
+            {"action":"fill", "what":"login", "search":"#accountName", "grave":true},
+            {"action":"fill", "what":"password", "search":"#password"},
+            {"action":"click", "search":"#submit"}
+        ]
+    },
+    
+    "logout":{
+        "todo":[
+        	{"action":"clickona","search":"a[href='?logout']"},
+        	{"action":"waitload"},
+        	{"action":"goto", "url":"https://eu.battle.net/login/fr/?ref=http://eu.battle.net/fr/&app=com-root"}
+        ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"#username"}
+    ],
+    "Facebook": {
+    	"todo": [
+    		{"action":"click", "search":"#facebook"}
+    	]
+    }
+}

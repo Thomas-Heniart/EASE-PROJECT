@@ -1,0 +1,23 @@
+{
+    "name":"Mega",
+    "lastlogin":"",
+    "home":"https://mega.nz/",
+    "connect": {
+    	"todo": [
+    		{"action":"goto", "url":"https://mega.nz/login"},
+    		{"action":"waitfor", "search":".user-name"},
+    		{"action":"fill", "what":"login", "search":"#login-name2"},
+    		{"action":"fill", "what":"password", "search":"#login-password2"},
+    		{"action":"click", "search":".register-st2-button"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"click", "search":".top-menu-item.logout"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"action":"waitfor", "search":".user-name"},
+    	{"search":".user-name[style='display: block;']"}
+    ]
+}

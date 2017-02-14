@@ -1,0 +1,30 @@
+{
+    "name":"Google AdWords",
+    "lastLogin":"",
+    "sso": "Google",
+    "home":"https://adwords.google.com",
+    "connect":{
+        "todo":[
+        	{"action":"aclick", "search":"a.cta-signin[href*='signin']"},
+        	{"action":"aclick", "search":"#account-chooser-link"},
+        	{"action":"aclick", "search":"#account-chooser-add-account"},
+            {"action":"fill", "what":"login", "search":"#Email", "grave":"true"},
+            {"action":"click", "search":"#next", "grave":"true"},
+            {"action":"waitfor", "search":"#Passwd", "grave":"true"},
+            {"action":"fill", "what":"password", "search":"#Passwd", "grave":"true"},
+            {"action":"click", "search":"#signIn"},
+            {"action":"waitload"},
+            {"action":"goto", "url":"https://adwords.google.com"}
+            ]
+    },
+    "logout":{
+        "todo":[
+        	{"action":"goto", "url":"https://accounts.google.com/Logout?hl=fr&continue=https://adwords.google.com"},
+        	{"action":"waitfor", "search":"#account-chooser-add-account"}
+         ]
+    },
+    "checkAlreadyLogged":[
+    	{"action":"waitfor", "search":"#gwt-debug-header, #account-chooser-add-account, a.cta-signin[href*='signin']"},
+        {"search":"#gwt-debug-account-info-external-user-login"}
+    ]
+}

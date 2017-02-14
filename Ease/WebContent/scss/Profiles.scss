@@ -93,6 +93,9 @@
 					.sectionContent {
 						display: block;
 						margin-bottom: 5px;
+						&:last-child {
+							margin-bottom: 0;
+						}
 						i, p , div, input {
 							font-size: 1vw;
 						}
@@ -452,7 +455,7 @@
 								}
 								display: inline-block;
 								float: left;
-								margin-right: 1vw;
+								margin-right: 0.75vw;
 								.color {
 									height: 1.5vw;
 									width: 1.5vw;

@@ -1,0 +1,22 @@
+{
+    "name":"Base CRM",
+    "lastLogin":"",
+    "home":"https://app.futuresimple.com/",
+    "connect":{
+        "todo":[
+            {"action":"fill", "what":"login", "search":"#user_email"},
+            {"action":"fill", "what":"password", "search":"#user_password"},
+            {"action":"click", "search":"#user_new .controls button:first-child()"}
+            ]
+    },
+    "logout":{
+        "todo":[
+        	{"action":"waitfor", "search":"a[href*='logout']"},
+        	{"action":"clickona", "search":"a[href*='logout']"},
+        	{"action":"waitload"}
+         ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"#user-dd"}
+    ]
+}
