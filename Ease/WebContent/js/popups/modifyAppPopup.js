@@ -19,6 +19,8 @@ modifyAppPopup = function(rootEl){
 	this.loginPasswordRow = this.tabInfo.find('.loginPasswordRow');
 	this.loginInput = this.loginPasswordRow.find("input[name='login']");
 	this.passwordInput = this.loginPasswordRow.find("input[name='password']");
+	this.passwordInputDiv = this.loginPasswordRow.find('.input.password');
+
 
 	this.qRoot.find(".row.fragmentsRow").tabs();
 
@@ -38,6 +40,17 @@ modifyAppPopup = function(rootEl){
 	this.choosenSignInName = "";
 	this.basicSignInName = "";
 
+	this.lockPasswordInput = function(obj){
+		obj.addClass('locked');
+		obj.find('input').attr('placeholder', 'click the wheel to update');
+	}
+	this.unlockPasswordInput = function(obj){
+		obj.removeClass('locked');
+		obj.find('input').attr('placeholder', 'Password');
+	}
+	this.passwordInputDiv.find('.inputUnlocker').click(function(){
+		self.unlockPasswordInput(self.passwordInputDiv);
+	});
 	this.qRoot.find('input').keyup(function(e){
 		if (e.which == 13)
 			self.tabInfoSubmitButton.click();
@@ -270,6 +283,7 @@ modifyAppPopup = function(rootEl){
 		self.resetSameAccountsRow();
 		this.resetSignInAccounts();
 		self.resetPasswordShows();
+		self.lockPasswordInput(self.passwordInputDiv);
 		this.qRoot.find(".row.fragmentsRow").tabs("option", "active", 0);
 		self.tabDeleteErrorRowHandler.removeClass('show');
 		self.tabInfoErrorRowHandler.removeClass('show');
@@ -288,6 +302,7 @@ modifyAppPopup = function(rootEl){
 		self.relatedCatalogApp = catalog.getAppById(app.websiteId);
 
 		if (app.isEmpty){
+			self.unlockPasswordInput(self.passwordInputDiv);
 			if (self.relatedCatalogApp.canLoginWith.length){
 				self.showSignInButtons(self.relatedCatalogApp.canLoginWith);
 				self.signInChooseRow.removeClass('hide');

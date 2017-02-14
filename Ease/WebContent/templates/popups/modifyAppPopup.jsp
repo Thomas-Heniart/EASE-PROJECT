@@ -74,6 +74,9 @@ pageEncoding="UTF-8"%>
 									<i class="fa fa-eye centeredItem" aria-hidden="true"></i>
 									<i class="fa fa-eye-slash centeredItem" aria-hidden="true"></i>
 								</div>
+								<div class="inputUnlocker">
+									<i class="fa fa-cog centeredItem" aria-hidden="true"></i>
+								</div>
 								<input id="password" type="password" name="password" placeholder="Password"/>
 							</span>
 						</div>
