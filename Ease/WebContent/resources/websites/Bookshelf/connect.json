@@ -1,0 +1,27 @@
+{
+    "name":"Bookshelf",
+    "lastlogin":"",
+    "home":"https://bookshelf.vitalsource.com/",
+    "connect": {
+    	"todo": [
+            {"action": "waitfor", "search": "input#email-field"},
+    		{"action":"fill", "what":"login", "search":"input#email-field"},
+    		{"action":"fill", "what":"password", "search":"input#password-field"},
+    		{"action":"click", "search":"input[type='submit']"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"click", "search":"#user-dropdown-dom-1 button"},
+    		{"action":"waitfor", "search":"li.account-sign-out a span"},
+    		{"action":"click", "search":"li.account-sign-out a span"},
+    		{"action":"waitfor", "search":"body.signin-body"},
+    		{"action":"goto", "url":"https://bookshelf.vitalsource.com"}
+    	]
+    },
+    "checkAlreadyLogged": [
+        {"action": "waitfor", "search": "li.account-sign-out, input#email-field"},
+    	{"search":"li.account-sign-out"}
+        
+    ]
+}

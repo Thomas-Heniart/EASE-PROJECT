@@ -168,7 +168,8 @@ public class User {
 		newUser.passStep("CGU", db);
 		newUser.passStep("first_connection", db);
 		newUser.initializeUpdateManager(sm);
-		if (groups.size() > 0) {
+		System.out.println("Groups size" + groups.size());
+		if (groups.isEmpty()) {
 			newUser.sendVerificationEmail(email, true, sm);
 		}
 		((Map<String, User>)sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
