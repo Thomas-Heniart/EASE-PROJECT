@@ -314,14 +314,14 @@ pageEncoding="UTF-8"%>
 				</div>
 				<div class="comment">
 					<div class="photo">
-						<img src="resources/landing/JBroux.png"/>
+						<img src="resources/landing/TDesmarets.png"/>
 					</div>
 					<div class="message">
 						<p class="mess">
 							<fmt:message key="landing.section-feedbacks.text-4"/>  
 						</p>
-						<a target="_blank" href="https://uk.linkedin.com/in/rouxjeanbaptiste">Jean-Batiste Roux</a>
-						<p class="position">Account Manager à Barnebys</p>
+						<a target="_blank" href="https://fr.linkedin.com/in/thibaut-desmarets-13a390139">Thibaut Desmarets</a>
+						<p class="position">Président du BDE de l'ESPAS</p>
 					</div>
 				</div>
 			</div>
