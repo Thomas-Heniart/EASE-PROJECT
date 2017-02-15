@@ -233,11 +233,25 @@ public class DashboardManager {
 	}
 
 	public void removeFromDB(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		List<App> apps = new LinkedList<App>();
+		for (App app : this.getApps()) {
+			if (app.getType().equals("LogwithApp")) {
+				app.getProfile().removeApp(app, sm);
+			} else {
+				apps.add(app);
+			}
+		}
+		for (App app : apps) {
+			app.getProfile().removeApp(app, sm);
+		}
 		for (List<Profile> column : this.profiles) {
 			for (Profile profile : column) {
 				profile.removeFromDB(sm);
 			}
 		}
+		db.commitTransaction(transaction);
 	}
 	
 	public void moveProfile(int profileId, int columnIdx, int position, ServletManager sm) throws GeneralException {
