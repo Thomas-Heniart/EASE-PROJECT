@@ -214,11 +214,6 @@ public class User {
 		this.sawGroupProfile = sawGroupProfile;
 	}
 
-	public void removeFromDB(ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		db.set("DELETE FROM users WHERE id=" + this.db_id + ";");
-	}
-	
 	public void initializeUpdateManager(ServletManager sm) throws GeneralException {
 		this.updateManager = new UpdateManager(sm, this);
 	}
@@ -309,20 +304,6 @@ public class User {
 
 	public void removeEmail(UserEmail email) {
 		this.emails.remove(email);
-	}
-
-	public void removeDefinitly(ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		int transaction = db.startTransaction();
-		for (Map.Entry<String, UserEmail> entry : emails.entrySet()) {
-			entry.getValue().removeFromDB(sm);
-		}
-		this.dashboardManager.removeFromDB(sm);
-		this.removeFromDB(sm);
-		this.keys.removeFromDB(sm);
-		this.opt.removeFromDB(sm);
-		// this.status.removeFromDB(sm);
-		db.commitTransaction(transaction);
 	}
 
 	public String encrypt(String password) throws GeneralException {
@@ -582,5 +563,25 @@ public class User {
 
 	public boolean isInGroup() {
 		return !this.groups.isEmpty();
+	}
+	
+	public void deleteFromDb(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		this.dashboardManager.removeFromDB(sm);
+		for (UserEmail email : this.emails.values())
+			email.removeFromDB(sm);
+		this.sessionSave.eraseFromDB(sm);
+		db.set("DELETE FROM admins WHERE user_id = " + this.db_id + ";");
+		db.set("DELETE FROM groupsAndUsersMap WHERE user_id = " + this.db_id + ";");
+		db.set("DELETE FROM infrastructuresAdminsMap WHERE user_id = " + this.db_id + ";");
+		db.set("DELETE FROM integrateWebsitesAndUsersMap WHERE user_id = " + this.db_id + ";");
+		db.set("DELETE FROM passwordLost WHERE user_id = " + this.db_id + ";");
+		db.set("DELETE FROM requestedWebsites WHERE user_id = " + this.db_id + ";");
+		db.set("DELETE FROM requestedWebsites WHERE user_id = " + this.db_id + ";");
+		db.set("DELETE FROM users WHERE id= " + this.db_id + ";");
+		this.keys.removeFromDB(sm);
+		this.opt.removeFromDB(sm);
+		db.commitTransaction(transaction);
 	}
 }

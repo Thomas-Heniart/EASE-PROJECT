@@ -131,8 +131,10 @@ public class Keys {
 	 */
 	
 	public boolean isGoodPassword(String password) throws GeneralException {
-		String hashedPass = Hashing.hash(password);
-		return hashedPass.equals(hashed_password);
+		if (Hashing.compare(password, hashed_password))
+			return true;
+		else
+			throw new GeneralException(ServletManager.Code.ClientWarning, "Password don't match");
 	}
 	
 	public void changePassword(String new_password, ServletManager sm) throws GeneralException {

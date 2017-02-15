@@ -419,8 +419,10 @@ public class Website {
 	}
 	
 	public void decrementRatio(DataBaseConnection db) throws GeneralException {
-		this.ratio--;
-		db.set("UPDATE websites SET ratio = ratio - 1 WHERE id = " + this.db_id + ";");
+		if (this.ratio > 0 ) {
+			this.ratio--;
+			db.set("UPDATE websites SET ratio = ratio - 1 WHERE id = " + this.db_id + ";");
+		}
 	}
 
 	public int getRatio() {

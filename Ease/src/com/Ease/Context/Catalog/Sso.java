@@ -79,7 +79,7 @@ public class Sso {
 	}
 	
 	public String getImgPath() {
-		return Variables.PROJECT_PATH + "/resources/sso/" + img_path;
+		return "/resources/sso/" + img_path;
 	}
 	
 	public JSONObject getJson() {
