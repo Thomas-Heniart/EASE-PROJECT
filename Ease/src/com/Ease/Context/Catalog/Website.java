@@ -125,7 +125,7 @@ public class Website {
 	public static List<Website> loadWebsites(DataBaseConnection db, Map<String, Sso> ssoDbIdMap, ServletContext context) throws GeneralException {
 		try {
 			List<Website> websites = new LinkedList<Website>();
-			ResultSet rs = db.get("SELECT * FROM websites ORDER BY position DESC");
+			ResultSet rs = db.get("SELECT websites.* FROM websites LEFT JOIN websiteAttributes ON (website_attributes_id = websiteAttributes.id) ORDER BY new, ratio");
 			while (rs.next()) {
 				String db_id = rs.getString(WebsiteData.ID.ordinal());
 				if (Integer.parseInt(db_id) > Integer.parseInt(last_db_id))

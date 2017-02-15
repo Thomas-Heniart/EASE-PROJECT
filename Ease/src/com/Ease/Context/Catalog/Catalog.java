@@ -131,6 +131,7 @@ public class Catalog {
 			if (website.isInPublicCatalog() && !website.isNew())
 				res.add(website);
 		});
+		res.addAll(getNewWebsites());
 		return res;
 	}
 	
@@ -253,7 +254,7 @@ public class Catalog {
 	@SuppressWarnings("unchecked")
 	public JSONArray getWebsitesJson() {
 		JSONArray res = new JSONArray();
-		for (Website website : this.websites)
+		for (Website website : this.getPublicWebsites())
 			res.add(website.getJsonForCatalog());
 		Collections.reverse(res);
 		return res;
