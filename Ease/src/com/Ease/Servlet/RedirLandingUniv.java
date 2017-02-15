@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class RedirLandingUniv
  */
-@WebServlet({"/estice_espas_icm"})
+@WebServlet({"/espas-estice-icm"})
 public class RedirLandingUniv extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
