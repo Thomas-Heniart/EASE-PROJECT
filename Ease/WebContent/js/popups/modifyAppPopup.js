@@ -73,6 +73,7 @@ modifyAppPopup = function(rootEl){
 				self.signInChooseRow.find('.selected').removeClass('selected');
 				$(this).addClass('selected');
 			}
+			self.loginPasswordRow.addClass('hide');
 			var catalogApp = catalog.getAppByName($(this).attr('data'));
 			self.choosenSignInName = $(this).attr('data');
 			self.signInDetectionErrorHandler.removeClass('show');
