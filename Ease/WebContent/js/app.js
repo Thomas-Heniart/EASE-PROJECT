@@ -45,7 +45,7 @@ var appsManager = function(){
 	this.getAppsBySsoId = function(val){
 		var retVal = [];
 		for (var i = 0; i < easeApps.length; i++) {
-			if (easeApps[i].ssoId == val)
+			if (easeApps[i].ssoId == val && !(easeApps[i].isEmpty))
 				retVal.push(easeApps[i]);
 		}
 		return retVal;
