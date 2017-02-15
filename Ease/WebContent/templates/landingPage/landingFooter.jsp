@@ -11,7 +11,7 @@
 						<a href="secure" target="_blank">
 							<fmt:message key="landing.header.security-link"/>
 						</a>
-						<a href="#">
+						<a href="/discover">
 							<fmt:message key="landing.footer.link.create-account"/>
 						</a>
 						<a href="/?skipLanding=true">
