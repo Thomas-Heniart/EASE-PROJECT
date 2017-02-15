@@ -140,7 +140,13 @@ public class Account {
 		JSONObject obj = new JSONObject();
 		obj.put("password", sm.getUser().decrypt(this.crypted_password));
 		for(AccountInformation info : this.infos){
-			obj.put(info.getInformationName(), info.getInformationValue());
+			String value;
+			if (info.getInformationName().equals("password")) {
+				value = sm.getUser().decrypt(info.getInformationValue());
+			} else {
+				value = info.getInformationValue();
+			}
+			obj.put(info.getInformationName(), value);
 		}
 		return obj;
 	}

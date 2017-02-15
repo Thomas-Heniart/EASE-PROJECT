@@ -578,7 +578,6 @@ public class User {
 		db.set("DELETE FROM integrateWebsitesAndUsersMap WHERE user_id = " + this.db_id + ";");
 		db.set("DELETE FROM passwordLost WHERE user_id = " + this.db_id + ";");
 		db.set("DELETE FROM requestedWebsites WHERE user_id = " + this.db_id + ";");
-		db.set("DELETE FROM requestedWebsites WHERE user_id = " + this.db_id + ";");
 		db.set("DELETE FROM users WHERE id= " + this.db_id + ";");
 		this.keys.removeFromDB(sm);
 		this.opt.removeFromDB(sm);
