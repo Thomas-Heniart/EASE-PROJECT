@@ -325,7 +325,7 @@ public class Website {
 	}
 
 	public String getAbsolutePath(){
-		return Variables.PROJECT_PATH + this.getFolder();
+		return Variables.PROJECT_PATH  + this.getFolder();
 	}
 
 	public String getUrl() {
