@@ -81,13 +81,6 @@ response.addCookie(email);
 			<%@ include file="Tips.jsp" %>
 		</c:if>
 	</div>
-	<dashboard:hiddenProfile profile="${dashboardColumns.get(0).get(0)}"/>
-	<%@ include file="SettingsView.jsp" %>
-	<%@ include file="PopupDeleteProfile.jsp" %>
-	<%@ include file="PopupDeleteApp.jsp" %>
-	<%@ include file="PopupAddApp.jsp" %>	
-	<%@ include file="PopupModifyApp.jsp" %>
-	<div class="md-overlay"></div>
 	
 </div>
  <%@include file="PopupsHandler.jsp" %> 
