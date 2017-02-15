@@ -1,9 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+pageEncoding="UTF-8"%>
 <div class="SettingsView <c:if test='${settingsOpen ne null}'>show</c:if>">
 	<div class="settingsWindow">
 		<div class="quit">
-			<i class="fa fa-times" aria-hidden="true"></i>
+			<span class="fa-stack fa-lg">
+				<i class="fa fa-circle fa-stack-1x" aria-hidden="true"></i>
+				<i class="fa fa-times fa-stack-1x" aria-hidden="true"></i>
+			</span>
 		</div>
 		<div class="title">
 			<i class="fa fa-fw fa-cogs"></i>

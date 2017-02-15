@@ -13,10 +13,10 @@
 	display: none;
 	min-height: 100%;
 	overflow: auto;
-    height: 100%;
-    .alertDiv {
-    	color: red;
-    }
+	height: 100%;
+	.alertDiv {
+		color: red;
+	}
 	.settingsWindow {
 		margin-top: 50px;
 		margin-bottom: 50px;
@@ -30,12 +30,25 @@
 		padding-bottom: 2%;
 		border-radius: 5px;
 		.quit {
-			font-size: 20px;
+			.fa-stack {
+				font-size: 1.5vw;
+				width: 1em;
+				height: 1em;
+				line-height: 1em;
+				.fa:first-child {
+					color:$themeRedColor;
+				}
+				.fa:nth-child(2){
+					color: white;
+					font-size: 1.1vw;
+				}
+			}
 			cursor: pointer;
 			color: red;
 			position: absolute;
-			right: 2%;
-			top: 2%;
+			transform: translate3d(-50%, -50%, 0);
+			left: 0;
+			top: 0;
 		}
 		.title {
 			color: $themeColor;
@@ -84,7 +97,7 @@
 					overflow: hidden;
 					transition: all 0.3s ease;
 					-webkit-transition: all 0.3s ease;
-	  			position: relative;
+					position: relative;
 				}
 				.email-sent {
 					i {
@@ -101,11 +114,11 @@
 				.sk-fading-circle {
 					position: relative;
 					width: 75px;
-	  			height: 75px;
+					height: 75px;
 					margin: auto;
 					.sk-circle {
 						&:before {
-						  background-color: $themeColor;
+							background-color: $themeColor;
 						}
 					}
 
@@ -210,9 +223,9 @@
 						input {
 							display: block;
 							margin: auto;
-					    width: 40%;
-					    color: $themeColor;
-					    margin-bottom: 3%;
+							width: 40%;
+							color: $themeColor;
+							margin-bottom: 3%;
 						}
 						div {
 							margin: auto;
@@ -251,8 +264,8 @@
 					}
 					.sk-fading-circle {
 						width: 100px;
-				    height: 100px;
-				    position: relative;
+						height: 100px;
+						position: relative;
 						margin: 30px auto;
 						&:before {
 							background-color: white;
@@ -268,9 +281,9 @@
 				#deleteAccountButton {
 					border: 1px solid #373B60;
 					background-color: #373B60;
-			    color: white;
-			    border-radius: 6px;
-			    margin-left: 10px;
+					color: white;
+					border-radius: 6px;
+					margin-left: 10px;
 				}
 			}
 			.setting {
@@ -318,7 +331,7 @@
 						-webkit-transition: all 0.3s ease;
 					}
 				}
-			 	.emailLine {
+				.emailLine {
 					input {
 						cursor: default;
 					}
@@ -348,8 +361,8 @@
 					span.unverifiedEmail {
 						display: inline-block;
 						vertical-align: middle;
-    					border-radius: 4px;
-    					text-align: center;
+						border-radius: 4px;
+						text-align: center;
 						color: white;
 						border-color: orange;
 						cursor: pointer;
@@ -462,10 +475,10 @@
 						display: inline-block !important;
 					}
 					.sk-fading-circle {
-		  			margin: 100px auto;
-		  			width: 40px;
-		  			height: 40px;
-		  			position: relative;
+						margin: 100px auto;
+						width: 40px;
+						height: 40px;
+						position: relative;
 						span {
 							width: 100px;
 							position: absolute;
@@ -475,7 +488,7 @@
 							margin-top: 10px;
 							margin-left: 95px;
 							&:before {
-							  background-color: #333;
+								background-color: #333;
 							}
 						}
 					}
@@ -533,8 +546,8 @@
 					-webkit-transition: all 0.3s ease;
 					transition: all 0.3s ease;
 					-ms-transform: rotate(90deg); /* IE 9 */
-    			-webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
-    			transform: rotate(90deg);
+					-webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+					transform: rotate(90deg);
 				}
 			}
 			.sectionContent {
@@ -546,43 +559,43 @@
 	}
 }
 
-					.checkBox {
- 						display: none;
- 					}
- 					.slider {
-  						display: inline-block;
-  						width:30px;
- 							height: 17px;
-  						position: absolute;
-  						cursor: pointer;
-  						border-radius: 17px;
-   						background-color: #ccc;
-   						-webkit-transition: .4s;
-   						transition: .4s;
-   					}
-   					.slider:before {
-   						position: absolute;
-   						border-radius: 50%;
-   						content: "";
-   						height: 13px;
-   						width: 13px;
-   						left: 2px;
-   						bottom: 2px;
-   						background-color: white;
-   						-webkit-transition: .4s;
-   						transition: .4s;
-					}
-					.checkBox:checked + .slider {
-						background-color: $themeColor;
-					}
-					.checkBox:focus + .slider {
-						box-shadow: 0 0 1px $themeColor;
-					}
-					.checkBox:checked + .slider:before {
-						-webkit-transform: translateX(13px);
-						-ms-transform: translateX(13px);
-						transform: translateX(13px);
-					}
+.checkBox {
+	display: none;
+}
+.slider {
+	display: inline-block;
+	width:30px;
+	height: 17px;
+	position: absolute;
+	cursor: pointer;
+	border-radius: 17px;
+	background-color: #ccc;
+	-webkit-transition: .4s;
+	transition: .4s;
+}
+.slider:before {
+	position: absolute;
+	border-radius: 50%;
+	content: "";
+	height: 13px;
+	width: 13px;
+	left: 2px;
+	bottom: 2px;
+	background-color: white;
+	-webkit-transition: .4s;
+	transition: .4s;
+}
+.checkBox:checked + .slider {
+	background-color: $themeColor;
+}
+.checkBox:focus + .slider {
+	box-shadow: 0 0 1px $themeColor;
+}
+.checkBox:checked + .slider:before {
+	-webkit-transform: translateX(13px);
+	-ms-transform: translateX(13px);
+	transform: translateX(13px);
+}
 
 @media screen and (max-width: 771px) {
 	.SettingsView {
