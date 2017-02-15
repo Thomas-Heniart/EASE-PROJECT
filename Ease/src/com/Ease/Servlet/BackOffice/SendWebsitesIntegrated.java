@@ -68,10 +68,11 @@ public class SendWebsitesIntegrated extends HttpServlet {
 			sm.needToBeConnected();
 			if (!user.isAdmin())
 				throw new GeneralException(ServletManager.Code.ClientError, "Not an admin");
-			ResultSet rs = db.get("SELECT firstName FROM users WHERE email = '" + email + "'");
+			ResultSet rs = db.get("SELECT id, firstName FROM users WHERE email = '" + email + "'");
 			try {
 				if (rs.next()) {
-					String firstName = rs.getString(1);
+					String user_id = rs.getString(1);
+					String firstName = rs.getString(2);
 					JSONArray websitesUrls = new JSONArray();
 					List<Website> integratedWebsites = new LinkedList<Website>();
 					try {
@@ -86,6 +87,8 @@ public class SendWebsitesIntegrated extends HttpServlet {
 					}
 					SendGridMail mail = new SendGridMail("Agathe @Ease", "contact@ease.space");
 					mail.sendAppsArrivedEmail(firstName, email, integratedWebsites);
+					for (Website website : integratedWebsites)
+						db.set("INSERT INTO integrateWebsitesAndUsersMap values (null, " + website.getDb_id() + ", " + user_id + ");");
 				} else
 					throw new GeneralException(ServletManager.Code.ClientError, "This user does not exist");
 			} catch (SQLException e) {
