@@ -1,3 +1,40 @@
+#easePopupsHandler #deleteAccountPopup {
+  width: 24vw; }
+  #easePopupsHandler #deleteAccountPopup .title p {
+    font-size: 1.3vw; }
+  #easePopupsHandler #deleteAccountPopup .bodysHandler .popupBody {
+    padding: 0.75vw 10%; }
+    #easePopupsHandler #deleteAccountPopup .bodysHandler .popupBody .handler .errorText p {
+      font-weight: bold; }
+    #easePopupsHandler #deleteAccountPopup .bodysHandler .popupBody .handler .row {
+      margin-bottom: 0.6vw; }
+      #easePopupsHandler #deleteAccountPopup .bodysHandler .popupBody .handler .row:last-child {
+        margin-bottom: 0; }
+      #easePopupsHandler #deleteAccountPopup .bodysHandler .popupBody .handler .row .simpleText {
+        margin-bottom: 0.6vw;
+        color: black;
+        letter-spacing: 1px; }
+        #easePopupsHandler #deleteAccountPopup .bodysHandler .popupBody .handler .row .simpleText:last-child {
+          margin-bottom: 0; }
+      #easePopupsHandler #deleteAccountPopup .bodysHandler .popupBody .handler .row input, #easePopupsHandler #deleteAccountPopup .bodysHandler .popupBody .handler .row .input {
+        font-size: 0.9vw;
+        color: black; }
+      #easePopupsHandler #deleteAccountPopup .bodysHandler .popupBody .handler .row button {
+        font-size: 1vw;
+        width: 100%; }
+        #easePopupsHandler #deleteAccountPopup .bodysHandler .popupBody .handler .row button.loading {
+          font-size: 0;
+          width: 3vw;
+          height: 3vw; }
+      #easePopupsHandler #deleteAccountPopup .bodysHandler .popupBody .handler .row .input.login input, #easePopupsHandler #deleteAccountPopup .bodysHandler .popupBody .handler .row .input.password input {
+        padding-left: 1.8vw; }
+      #easePopupsHandler #deleteAccountPopup .bodysHandler .popupBody .handler .row .input.login .placeholderIcon, #easePopupsHandler #deleteAccountPopup .bodysHandler .popupBody .handler .row .input.password .placeholderIcon {
+        position: absolute;
+        left: 4%;
+        top: 50%;
+        font-size: 1vw;
+        transform: translateY(-50%);
+        color: #777; }
 #easePopupsHandler #modifyAppPopup {
   width: 24vw; }
   #easePopupsHandler #modifyAppPopup .title p {

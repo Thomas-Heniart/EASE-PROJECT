@@ -42,17 +42,17 @@
 	</div>
 </div>
 <script>
-	var deleteAccountPopup = new Popup["PopupDeleteAccount"]($("#PopupDeleteAccount"));
+//	var deleteAccountPopup = new Popup["PopupDeleteAccount"]($("#PopupDeleteAccount"));
 	$("#deleteAccountButton").click(function(e) {
 		e.stopPropagation();
-		deleteAccountPopup.open();
-	})
-	$("#PopupDeleteAccount #confirmDeleteAccount").click(function() {
+		easeDeleteAccountPopup.open();
+	});
+/*	$("#PopupDeleteAccount #confirmDeleteAccount").click(function() {
 		$(".delete-advertising").removeClass("show");
 		$("#DeleteAccountForm").addClass("show");
 	});
 	$(document).click(function(e) {
 		if (!$(e.target).closest('#PopupDeleteAccount .md-content, #deleteAccountButton').length)
 			deleteAccountPopup.close();
-	});
+	});*/
 </script>

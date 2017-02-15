@@ -7,6 +7,7 @@ pageEncoding="UTF-8"%>
 	<%@ include file="popups/addBookmarkPopup.jsp" %>
 	<%@ include file="popups/deleteProfilePopup.jsp" %>
 	<%@ include file="popups/modifyAppPopup.jsp" %>
+	<%@ include file="popups/deleteAccountPopup.jsp"%>
 </div>
 <script type="text/javascript">
 	var currentEasePopup = null;

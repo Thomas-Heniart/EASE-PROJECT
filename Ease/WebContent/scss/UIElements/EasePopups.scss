@@ -1,6 +1,62 @@
 @import '../variables';
 
 #easePopupsHandler {
+		#deleteAccountPopup {
+		width: 24vw;
+		.title p{
+			font-size: 1.3vw;
+		}
+		.bodysHandler .popupBody{
+			padding: 0.75vw 10%;
+			.handler {
+				.errorText {
+					p {
+						font-weight: bold;
+					}
+				}
+				.row {
+					margin-bottom: 0.6vw;
+					&:last-child {
+						margin-bottom:0;
+					}
+					.simpleText {
+						margin-bottom: 0.6vw;
+						color: black;
+						letter-spacing: 1px;
+						&:last-child {
+							margin-bottom: 0;
+						}
+					}					
+					input, .input {
+						font-size: 0.9vw;
+						color: black;
+					}
+					button {
+						font-size: 1vw;
+						width: 100%;
+						&.loading {
+							font-size: 0;
+							width: 3vw;
+							height: 3vw;
+						}
+					}
+					.input.login, .input.password {
+						input {
+							padding-left: 1.8vw;
+						}
+						.placeholderIcon {
+							position: absolute;
+							left: 4%;
+							top: 50%;
+							font-size: 1vw;
+							transform: translateY(-50%);
+							color: #777;
+						}
+					}
+				}
+			}
+		}
+	}
 	#modifyAppPopup {
 		width: 24vw;
 		.title p{
