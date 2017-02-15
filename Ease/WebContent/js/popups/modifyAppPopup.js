@@ -22,7 +22,9 @@ modifyAppPopup = function(rootEl){
 	this.passwordInputDiv = this.loginPasswordRow.find('.input.password');
 
 
-	this.qRoot.find(".row.fragmentsRow").tabs();
+	this.qRoot.find(".row.fragmentsRow").tabs({
+		show: { effect: "fadeIn", duration: 300 }
+	});
 
 	this.signInChooseRow = this.tabInfo.find('.signInChooseRow');
 	this.signInAccountSelectRow = this.tabInfo.find('.signInAccountSelectRow');
@@ -73,6 +75,7 @@ modifyAppPopup = function(rootEl){
 				self.signInChooseRow.find('.selected').removeClass('selected');
 				$(this).addClass('selected');
 			}
+			self.loginPasswordRow.addClass('hide');
 			var catalogApp = catalog.getAppByName($(this).attr('data'));
 			self.choosenSignInName = $(this).attr('data');
 			self.signInDetectionErrorHandler.removeClass('show');
