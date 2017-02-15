@@ -24,18 +24,18 @@
     background-color: white;
     transition: opacity .3s;
     opacity: 0; }
-    #ease-overlay-holder #ease-overlay:hover #ease-closer {
-      background-color: #ec555b; }
     #ease-overlay-holder #ease-overlay #ease-closer {
       position: absolute;
-      width: 30px;
-      height: 30px;
+      width: 25px;
+      height: 25px;
       border-radius: 100%;
-      left: -15px;
-      top: -15px;
+      left: -10px;
+      top: -10px;
       transition: background-color .3s;
       background-color: #eee;
       cursor: pointer; }
+      #ease-overlay-holder #ease-overlay #ease-closer:hover {
+        background-color: #ec555b; }
       #ease-overlay-holder #ease-overlay #ease-closer img {
         position: absolute;
         width: 55%;
@@ -46,7 +46,7 @@
     #ease-overlay-holder #ease-overlay .header {
       height: 60px; }
       #ease-overlay-holder #ease-overlay .header .logoImg {
-        height: 100%;
+        height: 90%;
         float: left; }
         #ease-overlay-holder #ease-overlay .header .logoImg img {
           height: 100%; }
@@ -67,7 +67,7 @@
         top: -10%;
         left: 15%;
         background-image: url("/resources/icons/rocket-icon.png");
-        background-size: 45px 45px;
+        background-size: 35px 35px;
         background-repeat: no-repeat !important;
         background-position: 0 100px !important;
         animation: rotateAnimation 1.5s ease-in-out infinite; }
