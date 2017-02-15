@@ -55,6 +55,13 @@ modifyAppPopup = function(rootEl){
 		if (e.which == 13)
 			self.tabInfoSubmitButton.click();
 	});
+	this.loginInput.on('input', function(){
+		if (self.loginInput.val().length){
+			self.tabInfoSubmitButton.removeClass('locked');
+		} else {
+			self.tabInfoSubmitButton.addClass('locked');			
+		}
+	});
 	this.signInChooseRow.find('.signInButton').each(function(index, elem){
 		var tmp = new Object();
 		tmp.name = $(elem).attr('data');
@@ -66,6 +73,7 @@ modifyAppPopup = function(rootEl){
 				self.signInChooseRow.find('.selected').removeClass('selected');
 				$(this).addClass('selected');
 			}
+			self.loginPasswordRow.addClass('hide');
 			var catalogApp = catalog.getAppByName($(this).attr('data'));
 			self.choosenSignInName = $(this).attr('data');
 			self.signInDetectionErrorHandler.removeClass('show');
@@ -253,8 +261,11 @@ modifyAppPopup = function(rootEl){
 			function(msg){
 				self.currentApp.changeName(name);
 				self.currentApp.url = linkUrl;
-				if (self.currentApp.isEmpty)
+				if (self.currentApp.isEmpty){
 					self.currentApp.qRoot.find('.emptyAppIndicator').remove();
+					self.currentApp.qRoot.removeClass('emptyApp');
+					self.currentApp.isEmpty = false;
+				}
 				if (login != self.currentApp.login || password.length){
 					for (var i = 0; i < self.sameSsoAccountsVar.length; i++) {
 						self.sameSsoAccountsVar[i].app.login = login;
