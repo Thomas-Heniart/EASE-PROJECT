@@ -81,6 +81,7 @@ response.addCookie(email);
 			<%@ include file="Tips.jsp" %>
 		</c:if>
 	</div>
+	<%@ include file="SettingsView.jsp" %>
 	
 </div>
  <%@include file="PopupsHandler.jsp" %> 
