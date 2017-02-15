@@ -1,10 +1,21 @@
-#overlay-holder {
+#ease-overlay-holder {
 	height: 100vh;
 	width: 100vw;
 	position: fixed;
 	top: 0;
 	left: 0;
 	background-color: #eee;
+	z-index: -1;
+	opacity: 0;
+	pointer-events: none;
+	&.show {
+		z-index: 1000000;
+		opacity: 1;
+		pointer-events: auto;
+		#ease-overlay {
+			opacity: 1;
+		}
+	}
 	#ease-overlay {
 		width: 300px;
 		position: absolute;
@@ -13,6 +24,8 @@
 		transform: translate3d(-50%, -50%,0);
 		border-radius: 20px;
 		background-color: white;
+		transition: opacity .3s;
+		opacity: 0;
 		.header {
 			height: 60px;
 			.logoImg {
@@ -36,15 +49,31 @@
 			width: 300px;
 			.loaderHelper {
 				position: absolute;
-				width: 80%;
-				height: 100%;
-				top: -5%;
-				left: 10%;
-				background-image: url('/resources/icons/rocket-icon.png');
-				background-size: 45px 45px;
-				background-repeat: no-repeat !important;
-				background-position: 0 100px !important;
-				animation: rotateAnimation 1.5s ease-in-out infinite;
+				z-index: 2;
+				width: 60px;
+				height: 60px;
+				border-radius: 100%;
+				border: 6px solid #aaa;
+				top: 45%;
+				left: 50%;
+				//				background-image: url('/resources/icons/rocket-icon.png');
+				//				background-size: 45px 45px;
+				transform: translate3d(-50%, -50%, 0);
+				//				background-repeat: no-repeat !important;
+				//				background-position: 0 100px !important;
+				&:before {
+					content: "";
+					position: absolute;
+					top: -6px;
+					right: -6px;
+					bottom: -6px;
+					left: -6px;
+					border-radius: 60px;
+					border: 6px solid transparent;
+					border-top-color: white;
+					border-radius: 100%;
+					animation: rotateAnimation 1s linear infinite;
+				}
 			}
 			.websiteImgHandler {
 				border-radius: 10px;
