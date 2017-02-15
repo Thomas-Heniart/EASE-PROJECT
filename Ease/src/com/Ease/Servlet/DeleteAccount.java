@@ -47,9 +47,10 @@ public class DeleteAccount extends HttpServlet {
 		try {
 			sm.needToBeConnected();
 			String password = sm.getServletParam("password", false);
-			if (password == null || password.equals("") || (user.getKeys().isGoodPassword(password) == false))
+			if (password == null || password.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Password does not match");
-			user.removeFromDB(sm);
+			user.getKeys().isGoodPassword(password);
+			user.deleteFromDb(sm);
 			user.deconnect(sm);
 			session.invalidate();
 			sm.setResponse(ServletManager.Code.Success, "Account deleted");
