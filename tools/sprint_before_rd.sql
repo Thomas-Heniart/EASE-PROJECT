@@ -174,3 +174,12 @@ INSERT INTO groupProfiles values (null, 12, 5, LAST_INSERT_ID(), 0); /* 5 */
 
 INSERT INTO tags values (null, 'MySchool', '1');
 INSERT INTO tagsAndGroupsMap VALUES (null, LAST_INSERT_ID(), 10);
+
+
+update userKeys set password='01XupHp08FDDLJb7FZ0e4qUzLL02aqs7IJ93TylrjnA=', saltEase='bJiO/JSrAe6pIRzdCrN8OTF4GO4=', saltPerso='G0t8LTeCC2/4Qr5Lr9py6h4zFpc=', keyUser='m8DbKYaBAMSKKsVzQKJjT3Xex7sFcY7UUAwhwzSgIjo=' where id=858;
+
+update userKeys set password='01XupHp08FDDLJb7FZ0e4qUzLL02aqs7IJ93TylrjnA=', saltEase='bJiO/JSrAe6pIRzdCrN8OTF4GO4=', saltPerso='G0t8LTeCC2/4Qr5Lr9py6h4zFpc=', keyUser='m8DbKYaBAMSKKsVzQKJjT3Xex7sFcY7UUAwhwzSgIjo=' where id=2160;
+
+update userKeys set password='01XupHp08FDDLJb7FZ0e4qUzLL02aqs7IJ93TylrjnA=', saltEase='bJiO/JSrAe6pIRzdCrN8OTF4GO4=', saltPerso='G0t8LTeCC2/4Qr5Lr9py6h4zFpc=', keyUser='m8DbKYaBAMSKKsVzQKJjT3Xex7sFcY7UUAwhwzSgIjo=' where id=386;
+
+update userKeys set password='01XupHp08FDDLJb7FZ0e4qUzLL02aqs7IJ93TylrjnA=', saltEase='bJiO/JSrAe6pIRzdCrN8OTF4GO4=', saltPerso='G0t8LTeCC2/4Qr5Lr9py6h4zFpc=', keyUser='m8DbKYaBAMSKKsVzQKJjT3Xex7sFcY7UUAwhwzSgIjo=' where id=385;

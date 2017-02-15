@@ -44,7 +44,7 @@ public class Invitation {
 			String invitationCode;
 			ResultSet rs = db.get("SELECT * FROM invitations WHERE email='" + email + "';");
 			if (rs.next()) {
-				invitationCode = rs.getString(3);
+				invitationCode = rs.getString(4);
 			} else {
 				invitationCode = CodeGenerator.generateNewCode();
 				String db_id = db.set("INSERT INTO invitations values(NULL, '" + name + "', '" + email + "', '" + invitationCode + "');").toString();

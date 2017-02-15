@@ -12,20 +12,20 @@ pageEncoding="UTF-8"%>
 	<title> Ease.space | The easiest way to connect to your professional and personal web.</title>
 	<!-- Description shown in Google -->
 	<!-- Facebook metadata -->
-	<meta name="description" content="Ease is an intuitive password manager working as a browser homepage.">
-	<meta property="og:url" content="http://51.254.207.91/">
+	<meta name="description" content="Ease is an intuitive password manager working as a browser homepage."/>
+	<meta property="og:url" content="http://ease.space/">
 	<meta property="og:type" content="website">
-	<meta property="og:title" content="Ease.space | The easiest way to connect to your professional and personal web.">
-	<meta property="og:description" content="Ease is an intuitive password manager working as a browser homepage.">
-	<meta property="og:image" content="https://ease.space/resources/images/fbmeta-en.png">
+	<meta property="og:title" content="Ease.space | The easiest way to connect to your professional and personal web."/>
+	<meta property="og:description" content="Ease is an intuitive password manager working as a browser homepage."/>
+	<meta property="og:image" content="https://ease.space/resources/images/fbmeta-en.png"/>
 	
 	<!-- Twitter metadata -->
-	<meta name="twitter:card" content="summary_large_image">
-	<meta name="twitter:site" content="@Ease_app">
-	<meta name="twitter:creator" content="@Ease_app">
-	<meta name="twitter:title" content="Ease.space | The easiest way to connect to your professional and personal web.">
-	<meta name="twitter:description" content="Ease is an intuitive password manager working as a browser homepage.">
-	<meta name="twitter:image" content="https://ease.space/resources/images/fbmeta-en.png">
+	<meta name="twitter:card" content="summary_large_image"/>
+	<meta name="twitter:site" content="@Ease_app"/>
+	<meta name="twitter:creator" content="@Ease_app"/>
+	<meta name="twitter:title" content="Ease.space | The easiest way to connect to your professional and personal web."/>
+	<meta name="twitter:description" content="Ease is an intuitive password manager working as a browser homepage."/>
+	<meta name="twitter:image" content="https://ease.space/resources/images/fbmeta-en.png"/>
 	
 	<link rel="chrome-webstore-item"
 	href="https://chrome.google.com/webstore/detail/echjdhmhmgildgidlcdlepfkaledeokm">

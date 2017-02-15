@@ -1,4 +1,5 @@
-package com.Ease.Servlet;
+package com.Ease.Servlet.BackOffice;
+
 
 import java.io.IOException;
 
@@ -13,18 +14,19 @@ import javax.servlet.http.HttpSession;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.XLSXParser;
 
 /**
- * Servlet implementation class DeleteAccount
+ * Servlet implementation class EsticeDbServlet
  */
-@WebServlet("/DeleteAccount")
-public class DeleteAccount extends HttpServlet {
+@WebServlet("/EsticeDbServlet")
+public class EsticeDbServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public DeleteAccount() {
+    public EsticeDbServlet() {
         super();
     }
 
@@ -32,7 +34,7 @@ public class DeleteAccount extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("admin.jsp");
 		rd.forward(request, response);
 	}
 
@@ -41,22 +43,17 @@ public class DeleteAccount extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		User user = (User) (session.getAttribute("user"));
+		User user = (User)(session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
-		
 		try {
 			sm.needToBeConnected();
-			String password = sm.getServletParam("password", false);
-			if (password == null || password.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Password does not match");
-			user.getKeys().isGoodPassword(password);
-			user.deleteFromDb(sm);
-			user.deconnect(sm);
-			session.invalidate();
-			sm.setResponse(ServletManager.Code.Success, "Account deleted");
+			if (!user.isAdmin())
+				throw new GeneralException(ServletManager.Code.ClientError, "You ain't an admin bro");
+			
+			XLSXParser parser = new XLSXParser("4", "/Users/thomas/Downloads/esticeBDD.xlsx");
+			parser.parseFile(sm.getDB());
+			sm.setResponse(ServletManager.Code.Success, "Database imported");
 		} catch(GeneralException e) {
-			sm.setResponse(e);
-		} catch(Exception e) {
 			sm.setResponse(e);
 		}
 		sm.sendResponse();
