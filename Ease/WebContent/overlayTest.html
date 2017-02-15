@@ -1,13 +1,107 @@
 <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
-<link rel="stylesheet" href="scss/overlay.css" />
+<style>
+#ease-overlay-holder {
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(238, 238, 238, 0.7);
+  z-index: -1;
+  opacity: 0;
+  pointer-events: none; }
+  #ease-overlay-holder.show {
+    z-index: 1000000;
+    opacity: 1;
+    pointer-events: auto; }
+    #ease-overlay-holder.show #ease-overlay {
+      opacity: 1; }
+  #ease-overlay-holder #ease-overlay {
+    width: 300px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate3d(-50%, -50%, 0);
+    border-radius: 20px;
+    background-color: white;
+    transition: opacity .3s;
+    opacity: 0; }
+    #ease-overlay-holder #ease-overlay #ease-closer {
+      position: absolute;
+      width: 25px;
+      height: 25px;
+      border-radius: 100%;
+      left: -10px;
+      top: -10px;
+      transition: background-color .3s;
+      background-color: #eee;
+      cursor: pointer; }
+      #ease-overlay-holder #ease-overlay #ease-closer:hover {
+        background-color: #ec555b; }
+      #ease-overlay-holder #ease-overlay #ease-closer img {
+        position: absolute;
+        width: 55%;
+        height: 55%;
+        top: 50%;
+        left: 50%;
+        transform: translate3d(-50%, -50%, 0); }
+    #ease-overlay-holder #ease-overlay .header {
+      height: 60px; }
+      #ease-overlay-holder #ease-overlay .header .logoImg {
+        height: 90%;
+        float: left; }
+        #ease-overlay-holder #ease-overlay .header .logoImg img {
+          height: 100%; }
+      #ease-overlay-holder #ease-overlay .header .status {
+        float: right;
+        margin-right: 15px;
+        line-height: 60px;
+        font-family: Raleway;
+        letter-spacing: 1px; }
+    #ease-overlay-holder #ease-overlay .overlay-body {
+      position: relative;
+      height: 240px;
+      width: 300px; }
+      #ease-overlay-holder #ease-overlay .overlay-body .loaderHelper {
+        position: absolute;
+        width: 70%;
+        height: 100%;
+        top: -10%;
+        left: 15%;
+        background-image: url("/resources/icons/rocket-icon.png");
+        background-size: 35px 35px;
+        background-repeat: no-repeat !important;
+        background-position: 0 100px !important;
+        animation: rotateAnimation 1.5s ease-in-out infinite; }
+      #ease-overlay-holder #ease-overlay .overlay-body .websiteImgHandler {
+        border-radius: 10px;
+        overflow: hidden;
+        width: 87px;
+        height: 87px;
+        position: absolute;
+        left: 50%;
+        top: 40%;
+        transform: translate3d(-50%, -50%, 0); }
+        #ease-overlay-holder #ease-overlay .overlay-body .websiteImgHandler img {
+          width: 100%; }
 
-<div id="overlay-holder">
+@-webkit-keyframes rotateAnimation {
+  0% {
+    transform: rotateZ(0deg); }
+  100% {
+    transform: rotateZ(360deg); } }
+</style>
+
+<div id="ease-overlay-holder">
 	<div id="ease-overlay">
+		<div id="ease-closer">
+			<img src="/resources/icons/cancel.png"/>
+		</div>
 		<div class="header">
 			<div class="logoImg">
-			<img src="/resources/icons/Ease_logo_blue.png"/>
+				<img src="/resources/icons/Ease_logo_blue.png"/>
 			</div>
-			<div class="status">
+			<div class="status" id="ease-overlay-status-text">
 				Loading
 			</div>
 		</div>
@@ -16,8 +110,38 @@
 
 			</div>
 			<div class="websiteImgHandler">
-				<img src="/resources/websites/Facebook/logo.png"/>
+				<img id="ease-overlay-image" src="/resources/websites/Facebook/logo.png"/>
 			</div>
 		</div>
 	</div>
 </div>
+
+<script type="text/javascript">
+	var Overlay = function(elem){
+		var self = this;
+		this.qRoot = document.getElementById('ease-overlay');
+		this.parent = document.getElementById('ease-overlay-holder');
+
+		this.infoTextHolder = document.getElementById('ease-overlay-status-text');
+		this.imgHandler = document.getElementById('ease-overlay-image');
+
+		this.closer = document.getElementById('ease-closer');
+
+		this.closer.onclick = function (){
+			self.hide();
+		}
+		this.setImage = function(src){
+			self.imgHandler.setAttribute('src', src);
+		}
+		this.setInfoText = function(str){
+			self.infoTextHolder.innerHTML = str;
+		}
+		this.show = function(){
+			self.parent.classList.add('show');
+		}
+		this.hide = function(){
+			self.parent.classList.remove('show');
+		}
+	}
+	var easeOverlay = new Overlay();
+</script>
