@@ -13,8 +13,8 @@ pageEncoding="UTF-8"%>
 	<!-- Description shown in Google -->
 	<!-- Facebook metadata -->
 	<meta name="description" content="Ease is an intuitive password manager working as a browser homepage."/>
-	<meta property="og:url" content="http://ease.space/">
-	<meta property="og:type" content="website">
+	<meta property="og:url" content="http://ease.space/" />
+	<meta property="og:type" content="website" />
 	<meta property="og:title" content="Ease.space | The easiest way to connect to your professional and personal web."/>
 	<meta property="og:description" content="Ease is an intuitive password manager working as a browser homepage."/>
 	<meta property="og:image" content="https://ease.space/resources/images/fbmeta-en.png"/>
@@ -28,7 +28,7 @@ pageEncoding="UTF-8"%>
 	<meta name="twitter:image" content="https://ease.space/resources/images/fbmeta-en.png"/>
 	
 	<link rel="chrome-webstore-item"
-	href="https://chrome.google.com/webstore/detail/echjdhmhmgildgidlcdlepfkaledeokm">
+	href="https://chrome.google.com/webstore/detail/echjdhmhmgildgidlcdlepfkaledeokm" />
 	<link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 	<script src="js/jquery1.12.4.js"></script>
 	<script src="js/jquery-ui-1.12.0.js"></script>

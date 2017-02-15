@@ -39,9 +39,15 @@ public class User {
 	public static User loadUser(String email, String password, ServletManager sm) throws GeneralException {
 		Map<String, User> usersMap = (Map<String, User>) sm.getContextAttr("users");
 		User connectedUser = usersMap.get(email);
-		if (connectedUser != null && (connectedUser.getKeys().isGoodPassword(password)))
-			return connectedUser;
 		try {
+			if (connectedUser != null) {
+				try {
+					connectedUser.getKeys().isGoodPassword(password);
+				} catch (GeneralException e) {
+					throw new GeneralException(ServletManager.Code.UserMiss, "Wrong email or password.");
+				}
+				return connectedUser;
+			}
 			DataBaseConnection db = sm.getDB();
 			ResultSet rs = db.get("SELECT * FROM users where email='" + email + "';");
 			int transaction = db.startTransaction();
