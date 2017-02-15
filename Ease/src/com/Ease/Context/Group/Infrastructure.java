@@ -118,7 +118,7 @@ public class Infrastructure {
 	}
 	
 	public String getLogoPath() {
-		return "/resources/images/infras/" + this.img_path;
+		return "/resources/infras/" + this.img_path;
 	}
 	
 	public void setName(String name, ServletManager sm) throws GeneralException {
