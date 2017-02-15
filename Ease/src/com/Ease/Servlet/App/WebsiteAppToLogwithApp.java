@@ -15,6 +15,7 @@ import org.json.simple.parser.JSONParser;
 
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
@@ -33,7 +34,6 @@ public class WebsiteAppToLogwithApp extends HttpServlet {
      */
     public WebsiteAppToLogwithApp() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -71,7 +71,7 @@ public class WebsiteAppToLogwithApp extends HttpServlet {
 				int transaction = db.startTransaction();
 				for (Object appId : appIds) {
 					App app = user.getDashboardManager().getAppWithID(Integer.parseInt((String)appId));
-					if (!app.getType().equals("ClassicApp"))
+					if (!((ClassicApp)app).getType().equals("ClassicApp"))
 						throw new GeneralException(ServletManager.Code.ClientError, "This is not a classic app.");
 					App logwith = user.getDashboardManager().getAppWithID(Integer.parseInt(logwithId));
 					LogwithApp.createFromWebsiteApp((WebsiteApp)app, name, (WebsiteApp)logwith, sm, user);
