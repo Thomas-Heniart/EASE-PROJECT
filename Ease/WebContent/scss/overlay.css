@@ -4,7 +4,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  background-color: #eee;
+  background-color: rgba(238, 238, 238, 0.7);
   z-index: -1;
   opacity: 0;
   pointer-events: none; }
@@ -24,6 +24,25 @@
     background-color: white;
     transition: opacity .3s;
     opacity: 0; }
+    #ease-overlay-holder #ease-overlay:hover #ease-closer {
+      background-color: #ec555b; }
+    #ease-overlay-holder #ease-overlay #ease-closer {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      border-radius: 100%;
+      left: -15px;
+      top: -15px;
+      transition: background-color .3s;
+      background-color: #eee;
+      cursor: pointer; }
+      #ease-overlay-holder #ease-overlay #ease-closer img {
+        position: absolute;
+        width: 55%;
+        height: 55%;
+        top: 50%;
+        left: 50%;
+        transform: translate3d(-50%, -50%, 0); }
     #ease-overlay-holder #ease-overlay .header {
       height: 60px; }
       #ease-overlay-holder #ease-overlay .header .logoImg {
@@ -43,26 +62,15 @@
       width: 300px; }
       #ease-overlay-holder #ease-overlay .overlay-body .loaderHelper {
         position: absolute;
-        z-index: 2;
-        width: 60px;
-        height: 60px;
-        border-radius: 100%;
-        border: 6px solid #aaa;
-        top: 45%;
-        left: 50%;
-        transform: translate3d(-50%, -50%, 0); }
-        #ease-overlay-holder #ease-overlay .overlay-body .loaderHelper:before {
-          content: "";
-          position: absolute;
-          top: -6px;
-          right: -6px;
-          bottom: -6px;
-          left: -6px;
-          border-radius: 60px;
-          border: 6px solid transparent;
-          border-top-color: white;
-          border-radius: 100%;
-          animation: rotateAnimation 1s linear infinite; }
+        width: 70%;
+        height: 100%;
+        top: -10%;
+        left: 15%;
+        background-image: url("/resources/icons/rocket-icon.png");
+        background-size: 45px 45px;
+        background-repeat: no-repeat !important;
+        background-position: 0 100px !important;
+        animation: rotateAnimation 1.5s ease-in-out infinite; }
       #ease-overlay-holder #ease-overlay .overlay-body .websiteImgHandler {
         border-radius: 10px;
         overflow: hidden;
@@ -70,7 +78,7 @@
         height: 87px;
         position: absolute;
         left: 50%;
-        top: 45%;
+        top: 40%;
         transform: translate3d(-50%, -50%, 0); }
         #ease-overlay-holder #ease-overlay .overlay-body .websiteImgHandler img {
           width: 100%; }
