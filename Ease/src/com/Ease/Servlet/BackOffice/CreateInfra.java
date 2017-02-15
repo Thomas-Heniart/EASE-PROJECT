@@ -116,7 +116,7 @@ public class CreateInfra extends HttpServlet {
 									storeFile.renameTo(new File(uploadPath + File.separator + "old_"+ infraName + ".png"));
 								item.write(storeFile);
 							}
-							Infrastructure infra = Infrastructure.createInfrastructure(infraName, filePath, sm);
+							Infrastructure infra = Infrastructure.createInfrastructure(infraName, infraName + ".png", sm);
 							sm.setResponse(ServletManager.Code.Success, Integer.toString(infra.getSingleId()));
 						}
 					}

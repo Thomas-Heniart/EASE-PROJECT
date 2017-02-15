@@ -123,3 +123,54 @@ UPDATE websites set folder='Trainline' where website_name='Trainline';
 
 /* Mettre img google sso  */
 UPDATE sso set img_path='google.png' where name='Google';
+
+/* IESEG websites */
+UPDATE websites SET website_attributes_id = NULL WHERE id = 5;
+DELETE FROM websiteAttributes WHERE id = 1;
+UPDATE websites SET website_attributes_id = NULL WHERE id = 49;
+DELETE FROM websiteAttributes WHERE id = 7;
+UPDATE websites SET website_attributes_id = NULL WHERE id = 50;
+DELETE FROM websiteAttributes WHERE id = 8;
+UPDATE websites SET website_attributes_id = NULL WHERE id = 52;
+DELETE FROM websiteAttributes WHERE id = 10;
+UPDATE websites SET website_attributes_id = NULL WHERE id = 53;
+DELETE FROM websiteAttributes WHERE id = 11;
+UPDATE websites SET website_attributes_id = NULL WHERE id = 55;
+DELETE FROM websiteAttributes WHERE id = 13;
+UPDATE websites SET website_attributes_id = NULL WHERE id = 58;
+DELETE FROM websiteAttributes WHERE id = 16;
+UPDATE websites SET website_attributes_id = NULL WHERE id = 59;
+DELETE FROM websiteAttributes WHERE id = 17;
+UPDATE websites SET website_attributes_id = NULL WHERE id = 60;
+DELETE FROM websiteAttributes WHERE id = 18;
+UPDATE websites SET website_attributes_id = NULL WHERE id = 71;
+DELETE FROM websiteAttributes WHERE id = 29;
+UPDATE websites SET website_attributes_id = NULL WHERE id = 97;
+DELETE FROM websiteAttributes WHERE id = 44;
+UPDATE websites SET website_attributes_id = NULL WHERE id = 98;
+DELETE FROM websiteAttributes WHERE id = 45;
+UPDATE websites SET website_attributes_id = NULL WHERE id = 132;
+DELETE FROM websiteAttributes WHERE id = 67;
+UPDATE websites SET website_attributes_id = NULL WHERE id = 154;
+DELETE FROM websiteAttributes WHERE id = 83;
+
+/* Estice */
+
+INSERT INTO infrastructures values (null, "Estice-Espas-ICM", "estice.png");
+
+INSERT INTO groups values (null, "Estice", null, 4);
+INSERT INTO groups values (null, "Administratif", 10, 4);
+INSERT INTO groups values (null, "Etudiant", 10, 4);
+
+INSERT INTO profilePermissions values (null, 11, default); /* 4 */
+INSERT INTO profilePermissions values (null, 12, default); /* 5 */
+
+INSERT INTO profileInfo values (null, 'MySchool', '#373B60');
+INSERT INTO groupProfiles values (null, 11, 4, LAST_INSERT_ID(), 0); /* 4 */
+
+INSERT INTO profileInfo values (null, 'MySchool', '#373B60');
+INSERT INTO groupProfiles values (null, 12, 5, LAST_INSERT_ID(), 0); /* 5 */
+
+
+INSERT INTO tags values (null, 'MySchool', '1');
+INSERT INTO tagsAndGroupsMap VALUES (null, LAST_INSERT_ID(), 10);
