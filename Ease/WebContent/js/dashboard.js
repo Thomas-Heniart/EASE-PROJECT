@@ -213,7 +213,7 @@ var profileAdder = function(elem){
 		return div;
 	}
 	for (var i = 0; i < self.suggestions.length; i++) {
-		var tmp = self.createSuggestionDiv(self.suggestions[i], self.colors[i % self.colors.length].color);
+		var tmp = self.createSuggestionDiv(self.suggestions[i], self.colors[i % (self.colors.length - 1)].color);
 		this.suggestionsDiv.push(tmp);
 		self.suggestionsDivHandler.append(tmp);		
 	}

@@ -45,7 +45,7 @@ public class Mail {
 		try {
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
 			message.setSubject(MimeUtility.encodeText("Mot de passe perdu - Ease", "utf-8", null));
-			String link = "https://ease.space/newPassword.jsp?email=" + email + "&linkCode=" + code;
+			String link = Variables.URL_PATH + "newPassword.jsp?email=" + email + "&linkCode=" + code;
 			message.setContent(
 					"<p>*French Version Below*</p>" + "<p></p>" + "<p>Hello,</p>" + "<p></p>"
 							+ "<p>You have just asked for a password renewal. If you didn’t, you can ignore this email.</p>"
@@ -106,7 +106,7 @@ public class Mail {
 		try {
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
 			message.setSubject(MimeUtility.encodeText("Active ton compte Ease !", "utf-8", null));
-			String link = "https://ease.space/thefamily?email=" + email + "&invitationCode=" + invitationCode;
+			String link = Variables.URL_PATH + "thefamily?email=" + email + "&invitationCode=" + invitationCode;
 			//String link = "http://localhost:8080/thefamily?email=" + email + "&invitationCode=" + invitationCode;
 			message.setContent("<p>*French version below*</p>" + "<p></p>" + "<p>Hello & welcome to Ease !</p>"
 					+ "<p></p>"
@@ -134,7 +134,7 @@ public class Mail {
 		try {
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
 			message.setSubject(MimeUtility.encodeText("Confirm your email address", "utf-8", null));
-			String link = "https://ease.space/VerifieEmail?email=" + email + "&code=" + code;
+			String link = Variables.URL_PATH + "VerifieEmail?email=" + email + "&code=" + code;
 			message.setContent("<p>*French version below*</p>" + "<p></p>" + "<p>Hello & welcome to Ease !</p>"
 					+ "<p></p>"
 					+ "<p>Ease.space gathers the websites on which you have an account and allows you to login & logout to them in 1 click. All this from a secured personal homepage on your browser. For now, it works on Chrome and Safari.</p>"
@@ -179,7 +179,7 @@ public class Mail {
 		try {
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
 			message.setSubject(MimeUtility.encodeText("We added what you asked for !", "utf-8", null));
-			String link = "https://ease.space/index.jsp?openCatalog=true";
+			String link = Variables.URL_PATH + "index.jsp?openCatalog=true";
 			boolean multiple = websites.length>1;
 			String wholeMessage = "<p>Hello"+ ((userName!=null)? " "+userName : "") +", we hope everything is going smoothly on your Ease platform !</p>" + "<p></p>"
 					+ "<p>You recently asked us to integrate ";
@@ -214,7 +214,7 @@ public class Mail {
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
 			message.setSubject(MimeUtility.encodeText("Active ton compte Ease !", "utf-8", null));
 			//String link = "https://ease.space/discover?email=" + email + "&name=" + name + "&invitationCode=" + invitationCode;
-			String link = "http://localhost:8080/discover?email=" + email + "&name=" + name + "&invitationCode=" + invitationCode;
+			String link = Variables.URL_PATH + "discover?email=" + email + "&name=" + name + "&invitationCode=" + invitationCode;
 			message.setContent("<p>*French version below*</p>" + "<p></p>" + "<p>Hello & welcome to Ease !</p>"
 					+ "<p></p>"
 					+ "<p>Ease.space gathers the websites on which you have an account and allows you to login & logout to them in 1 click. All this from a secured personal homepage on your browser. For now, it works on Chrome and Safari.</p>"
@@ -275,7 +275,7 @@ public class Mail {
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
 			message.setSubject(MimeUtility.encodeText("Active ton compte Ease !", "utf-8", null));
 			//String link = "https://ease.space/discover?email=" + email + "&name=" + name + "&invitationCode=" + invitationCode;
-			String link = "http://localhost:8080/discover?email=" + email + "&name=" + friendName + "&invitationCode=" + invitationCode;
+			String link = Variables.URL_PATH + "discover?email=" + email + "&name=" + friendName + "&invitationCode=" + invitationCode;
 			message.setContent("<p>*French version below*</p>" + "<p></p>" + "<p>Hello & welcome to Ease !</p>"
 					+ "<p></p>"
 					+ "<p>Ease.space gathers the websites on which you have an account and allows you to login & logout to them in 1 click. All this from a secured personal homepage on your browser. For now, it works on Chrome and Safari.</p>"
