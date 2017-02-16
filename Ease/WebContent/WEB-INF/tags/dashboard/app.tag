@@ -41,7 +41,8 @@
 	 name="${app.getName()}"
 	 id="${app.getSingleId()}"
 	 url="${app.getLinkAppInformations().getLink()}"
-	 move="true">
+	 move="true"
+	 logwith="">
 	<div class="linkImage">
 	<c:if test='${app.havePerm("DELETE")}'>
 	<div class="showAppActionsButton">
