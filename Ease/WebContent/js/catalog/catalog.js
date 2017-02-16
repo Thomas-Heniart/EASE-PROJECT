@@ -263,7 +263,7 @@ var Catalog = function(rootEl){
 	var self = this;
 	this.qRoot = rootEl;
 	this.isOpen = false;
-	this.oUpdate = new UpdateManager(this.qRoot.find('.catalogUpdates'));
+//	this.oUpdate = new UpdateManager(this.qRoot.find('.catalogUpdates'));
 	this.quitButton = this.qRoot.find('#quit');
 	this.appsHolder = this.qRoot.find('.scaleContainerView');
 	this.appsArea = this.qRoot.find('#catalog');
@@ -340,18 +340,18 @@ var Catalog = function(rootEl){
 		self.qRoot.addClass('show');
 		self.isOpen = true;
 		easeTracker.trackEvent('OpenCatalog');
-		self.oUpdate.onCatalogOpen();
+//		self.oUpdate.onCatalogOpen();
 		self.onResize();
 	};
 	this.close = function(){
 		self.qRoot.removeClass('show');
 		self.isOpen = false;
-		self.oUpdate.hide();
+//		self.oUpdate.hide();
 	};
 	this.onResize = function(){
 		self.appsHolder.height(self.qRoot.outerHeight(true) 
-			- ((self.oUpdate.isShown ? self.oUpdate.qRoot.outerHeight(true) : 0)
-				+ self.qRoot.find(".catalogHeader.title").outerHeight(true)
+			- (/*(self.oUpdate.isShown ? self.oUpdate.qRoot.outerHeight(true) : 0)
+				+ */self.qRoot.find(".catalogHeader.title").outerHeight(true)
 				+ self.searchBar.outerHeight(true)
 				+ self.tagContainer.outerHeight(true)
 				+ (self.tagContainer.outerHeight(true) / 2)
