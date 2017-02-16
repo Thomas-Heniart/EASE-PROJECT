@@ -7,7 +7,7 @@
           {"action":"clickona", "search":"a[href*='login']"},
           {"action":"waitfor", "search":"#login-email"},
           {"action":"fill", "what":"login", "search":"#login-email"},
-          {"action":"fill", "what":"password", "search":"#login-password"}
+          {"action":"fill", "what":"password", "search":"#login-password"},
           {"action":"click", "search":"#authentication-container form input[type='submit']"}
         ]
     },
