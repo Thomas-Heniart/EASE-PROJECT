@@ -1,0 +1,39 @@
+{
+    "name":"Quizlet",
+    "lastlogin":"",
+    "home":"https://quizlet.com/",
+    "connect": {
+    	"todo": [
+    		{"action":"click", "search":".SiteHeader-signIn button.UILink"},
+    		{"action":"waitfor", "search":".LoginPromptModal-form"},
+    		{"action":"fill", "what":"login", "search":".LoginPromptModal-form input[name='username']"},
+    		{"action":"fill", "what":"password", "search":".LoginPromptModal-form input[name='password']"},
+    		{"action":"click", "search":".LoginPromptModal-form button[type='submit']"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"click", "search":".SiteHeader-userInfo"},
+    		{"action":"waitfor", "search":".SiteHeader-logoutLink button"},
+    		{"action":"click", "search":".SiteHeader-logoutLink button"},
+    		{"action":"waitfor", "search":".SiteHeader-signIn button.UILink"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"span.SiteHeader-username"}
+    ],
+    "Facebook": {
+    	"todo": [
+    		{"action":"click", "search":".SiteHeader-signIn button.UILink"},
+    		{"action":"waitfor", "search":".LoginPromptModal-form"},
+    		{"action":"clickona", "search":".UIButton--social[href*='facebook']"}
+    	]
+    },
+    "Google": {
+    	"todo": [
+    		{"action":"click", "search":".SiteHeader-signIn button.UILink"},
+    		{"action":"waitfor", "search":".LoginPromptModal-form"},
+    		{"action":"clickona", "search":".UIButton--social[href*='google']"}
+    	]
+    }
+}
