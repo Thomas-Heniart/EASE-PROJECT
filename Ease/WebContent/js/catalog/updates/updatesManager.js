@@ -657,7 +657,7 @@ var updateCount = function(rootEl){
 
 var easeUpdateCount;
 $(document).ready(function(){
-	easeUpdateCount = new updateCount('#updateCount');
+//	easeUpdateCount = new updateCount('#updateCount');
 });
 
 $(document).ready(function(){
