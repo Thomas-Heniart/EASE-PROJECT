@@ -1022,11 +1022,11 @@
 						padding: 7px 5px;
 					}
 					button {
-						transition: opacity .3s, background-color .3s, width .3s, height .3s;
+						transition: opacity .1s, background-color .1s, width .1s, height .1s;
 						position: relative;
 						&:after {
 							content: "";
-							transition: .5s;
+							transition: .1s;
 							border-top-color: transparent;
 						}
 					}
@@ -1041,6 +1041,7 @@
 						position: relative;
 						&:after {
 							content: '';
+							transition: .1s .1s;
 							position: absolute;
 							top: -6px;
 							right: -6px;
