@@ -64,7 +64,7 @@ public class PasswordLost extends HttpServlet {
 					throw new GeneralException(ServletManager.Code.UserMiss, "Email sent.");
 				} else {
 					throw new GeneralException(ServletManager.Code.InternError, e);
-				}
+				} 
 			}
 		} catch (GeneralException e) {
 			sm.setResponse(e);
