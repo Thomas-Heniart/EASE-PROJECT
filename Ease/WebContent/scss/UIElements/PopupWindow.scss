@@ -773,11 +773,9 @@
 	-moz-box-pack: center;
 	-ms-flex-pack: center;
 	justify-content: center;
-	height: 100%;
 	min-height: 100vh;
-	width: 100%;
 	min-width: 100vw;
-	transition: background-color .3s;
+	transition: background-color .3s, z-index 0s .3s, visibility 0s .3s;
 	visibility: hidden;
 	z-index: -1;
 	pointer-events: none;
@@ -790,18 +788,22 @@
 	overflow: auto;
 	&.myshow {
 		z-index: 10000;
+		transition: background-color .3s, z-index 0s 0s, visibility 0s 0s;
+		background-color: rgba(0,0,0, 0.5);
+		visibility: visible;
+		pointer-events: auto;
 		.easePopup {
-			transition: opacity .3s, visibility .3s;
+			transition: opacity .3s, overflow 0s .3s, visibility 0s .3s, position 0s .3s;
 			margin: auto;
 			opacity: 0;
 			visibility: hidden;
 			pointer-events: none;
 			z-index: -1;
-			height: 0;
+			height: auto;
 			position: absolute;
 			overflow: hidden;
 			&.show {
-				transition: opacity .3s, visibility .3s;
+				transition: opacity .3s, overflow 0s 0s, visibility 0s 0s, position 0s 0s;
 				height: auto;
 				opacity: 1;
 				visibility: visible;
@@ -814,24 +816,16 @@
 	}
 }
 .easePopup {
-	transition: opacity .3s, visibility .3s;
+	transition: opacity .3s, overflow 0s .3s, visibility 0s .3s;
 	margin: auto;
 	opacity: 0;
 	visibility: hidden;
 	pointer-events: none;
 	z-index: -1;
-	height: 0;
+	height: auto;
 	position: absolute;
 	overflow: hidden;
 }
-
-.popupHandler.myshow {
-	transition: background-color .3s;
-	background-color: rgba(0,0,0, 0.5);
-	visibility: visible;
-	pointer-events: auto;
-}
-
 .easePopup {
 	display: block;
 	width: 40vw;
@@ -1067,11 +1061,11 @@
 						white-space: normal;
 						border-radius: 8px;
 						&.locked {
-					        background-color: $themeDarkGreyColor;
-					        pointer-events: none;
-					        &:hover {
+							background-color: $themeDarkGreyColor;
+							pointer-events: none;
+							&:hover {
 								opacity:1;					        	
-					        }
+							}
 						}
 						&:hover {
 							opacity: 0.7;

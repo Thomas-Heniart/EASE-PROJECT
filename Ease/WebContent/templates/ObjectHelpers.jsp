@@ -66,14 +66,14 @@
 						</div>
 						<div class="sectionContent" id="contentColor">
 							<div id="modifyColorForm">
-								<div class="color" color="#ffe74c" style="background-color: #ffe74c"></div>
-								<div class="color" color="#35a7ff" style="background-color: #35a7ff"></div>
-								<div class="color" color="#6bf178" style="background-color: #6bf178"></div>
-								<div class="color" color="#ec555b" style="background-color: #ec555b"></div>
-								<div class="color" color="#805b9b" style="background-color: #805b9b"></div>
-								<div class="color" color="#ff974f" style="background-color: #ff974f"></div>
-								<div class="color" color="#373b60" style="background-color: #373b60"></div>
-								<div class="color" color="#ff618a" style="background-color: #ff618a"></div>
+								<div class="color" color="#373B60" style="background-color: #373B60"></div>
+								<div class="color" color="#9B59B6" style="background-color: #9B59B6"></div>
+								<div class="color" color="#3498DB" style="background-color: #3498DB"></div>
+								<div class="color" color="#5FD747" style="background-color: #5FD747"></div>
+								<div class="color" color="#F1C50F" style="background-color: #F1C50F"></div>
+								<div class="color" color="#FF9D34" style="background-color: #FF9D34"></div>
+								<div class="color" color="#E74C3C" style="background-color: #E74C3C"></div>
+								<div class="color" color="#FF5E88" style="background-color: #FF5E88"></div>
 							</div>
 						</div>
 						<div class="sectionContent" id="contentDeleteProfil">
