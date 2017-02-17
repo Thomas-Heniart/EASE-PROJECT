@@ -194,7 +194,7 @@ modifyAppPopup = function(rootEl){
 				self.close();
 			},
 			function(msg){
-				self.tabDeleteErrorRowHandler.find('p').text('msg');
+				self.tabDeleteErrorRowHandler.find('p').text(msg);
 				self.tabDeleteErrorRowHandler.addClass('show');
 			},
 			'text'
