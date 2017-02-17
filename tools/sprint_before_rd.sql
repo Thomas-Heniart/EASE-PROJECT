@@ -165,14 +165,23 @@ INSERT INTO groups values (null, "Etudiant", 10, 4);
 INSERT INTO profilePermissions values (null, 11, default); /* 4 */
 INSERT INTO profilePermissions values (null, 12, default); /* 5 */
 
-INSERT INTO profileInfo values (null, 'MySchool', '#373B60');
+INSERT INTO profileInfo values (null, 'ESPAS - ESTICE - ICM', '#373B60');
 INSERT INTO groupProfiles values (null, 11, 4, LAST_INSERT_ID(), 0); /* 4 */
 
-INSERT INTO profileInfo values (null, 'MySchool', '#373B60');
+INSERT INTO profileInfo values (null, 'ESPAS - ESTICE - ICM', '#373B60');
 INSERT INTO groupProfiles values (null, 12, 5, LAST_INSERT_ID(), 0); /* 5 */
 
 
 INSERT INTO tags values (null, 'MySchool', '1');
+DROP TABLE if EXISTS tagsAndGroupsMap; 
+CREATE TABLE tagsAndGroupsMap( 
+  id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT, 
+  tag_id INT(10) UNSIGNED NOT NULL, 
+  group_id INT(10) UNSIGNED NOT NULL, 
+  PRIMARY KEY (id), 
+  FOREIGN KEY (tag_id) REFERENCES tags(id), 
+  FOREIGN KEY (group_id) REFERENCES groups(id) 
+);
 INSERT INTO tagsAndGroupsMap VALUES (null, LAST_INSERT_ID(), 10);
 
 

@@ -50,7 +50,7 @@ public class EsticeDbServlet extends HttpServlet {
 			if (!user.isAdmin())
 				throw new GeneralException(ServletManager.Code.ClientError, "You ain't an admin bro");
 			
-			XLSXParser parser = new XLSXParser("4", "/Users/thomas/Downloads/esticeBDD.xlsx");
+			XLSXParser parser = new XLSXParser("4", "/home/users/thomas/esticeBDD.xlsx");
 			parser.parseFile(sm.getDB());
 			sm.setResponse(ServletManager.Code.Success, "Database imported");
 		} catch(GeneralException e) {

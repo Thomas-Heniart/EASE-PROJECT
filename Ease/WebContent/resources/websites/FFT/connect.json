@@ -7,7 +7,7 @@
           {"action":"clickona", "search":"#user-anonymous"},
           {"action":"waitfor", "search":"#edit-name--2"},
           {"action":"fill", "what":"login", "search":"#edit-name--2"},
-          {"action":"fill", "what":"password", "search":"#edit-pass--2"}
+          {"action":"fill", "what":"password", "search":"#edit-pass--2"},
           {"action":"click", "search":"#edit-submit--2"}
         ]
     },

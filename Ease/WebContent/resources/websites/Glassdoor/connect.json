@@ -7,7 +7,7 @@
           {"action":"clickona", "search":"a.sign-in"},
           {"action":"waitfor", "search":"#signInUsername"},
           {"action":"fill", "what":"login", "search":"#signInUsername"},
-          {"action":"fill", "what":"password", "search":"#signInPassword"}
+          {"action":"fill", "what":"password", "search":"#signInPassword"},
           {"action":"click", "search":"#signInBtn"}
         ]
     },
@@ -15,14 +15,14 @@
     	"todo":[
         {"action":"clickona", "search":"a.sign-in"},
         {"action":"waitfor", "search":"#signInUsername"},
-        {"action":"click", "search":"span.fbSigninBtnLink"},
+        {"action":"click", "search":"span.fbSigninBtnLink"}
     	]
     },
     "Google":{
     	"todo":[
         {"action":"clickona", "search":"span.signin"},
         {"action":"waitfor", "search":"#signInUsername"},
-        {"action":"click", "search":"#LoginModule-GPlusBtnSignIn"},
+        {"action":"click", "search":"#LoginModule-GPlusBtnSignIn"}
     	]
     },
 
