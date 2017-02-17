@@ -378,6 +378,7 @@ public class Website {
 			a.put("loginUrl",loginUrl);
 			a.put("website_name", this.name);
 			a.put("siteSrc", this.getFolder());
+			a.put("img", Variables.URL_PATH + this.getFolder() + "logo.png");
 			return a;
 		} catch (IOException | ParseException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
