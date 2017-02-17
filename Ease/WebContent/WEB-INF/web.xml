@@ -4,6 +4,9 @@
   <listener>
     <listener-class>com.Ease.Context.OnStart</listener-class>
   </listener>
+  <listener>
+    <listener-class>com.Ease.Context.SessionListener</listener-class>
+  </listener>
   <filter>
     <filter-name>IFrameBusterFilter</filter-name>
     <filter-class>com.Ease.Utils.IFrameBusterFilter</filter-class>

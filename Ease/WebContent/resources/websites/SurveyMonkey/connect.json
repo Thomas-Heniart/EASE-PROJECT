@@ -12,7 +12,7 @@
 	"logout":{
 		"todo":[
             {"action":"goto", "url":"https://fr.surveymonkey.com/user/sign-out/"},
-            {"action":"goto", "url":"https://fr.surveymonkey.com/user/sign-in/"},
+            {"action":"goto", "url":"https://fr.surveymonkey.com/user/sign-in/"}
         ]
 	},
 	"checkAlreadyLogged":[

@@ -23,7 +23,7 @@
     	"todo": [
             {"action":"clickona", "search": "a[id$='login']"},
             {"action":"waitfor", "search": ".Common-Authentication-LoginForm"},
-            {"action":"click", "search":".facebookOuter .socialButtonText"},
+            {"action":"click", "search":".facebookOuter .socialButtonText"}
     	]
     }
 }

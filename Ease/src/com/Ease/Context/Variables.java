@@ -24,7 +24,7 @@ public class Variables {
 	*/
 	
 	//Pierre
-	
+	/*
 	public static final String ENVIRONNEMENT = "PC de Pedro";
 	public static final boolean LOCAL = true;
 	public static final String PROJECT_PATH = "/home/debruy_p/projects/EASE-PROJECT/Ease/WebContent/";
@@ -32,8 +32,7 @@ public class Variables {
 	public static final String KEYS_PATH = "/home/debruy_p/projects/EASE-PROJECT/Ease/src/com/Ease/Utils/Crypto/privateKeys.txt";
 	public static final String WEBSITES_PATH = "/resources/websites/";
 	public static final String URL_PATH = "http://localhost:8080/";
-	
-	
+	*/
 	
 	//Fifi
 	/*
@@ -44,7 +43,6 @@ public class Variables {
 	*/
 	
 	//Toto
-	/*
 	public static final String ENVIRONNEMENT = "PC de Toto";
 	public static final boolean LOCAL = true;
 	public static final String PROJECT_PATH = "/Users/thomas/EASE-PROJECT/Ease/WebContent";
@@ -52,5 +50,4 @@ public class Variables {
 	public static final String KEYS_PATH = "/Users/thomas/EASE-PROJECT/Ease/src/com/Ease/Utils/Crypto/privateKeys.txt";
 	public static final String WEBSITES_PATH = "/resources/websites/";
 	public static final String URL_PATH = "http://localhost:8080/";
-	*/
 }
