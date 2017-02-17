@@ -165,10 +165,10 @@ INSERT INTO groups values (null, "Etudiant", 10, 4);
 INSERT INTO profilePermissions values (null, 11, default); /* 4 */
 INSERT INTO profilePermissions values (null, 12, default); /* 5 */
 
-INSERT INTO profileInfo values (null, 'MySchool', '#373B60');
+INSERT INTO profileInfo values (null, 'ESPAS - ESTICE - ICM', '#373B60');
 INSERT INTO groupProfiles values (null, 11, 4, LAST_INSERT_ID(), 0); /* 4 */
 
-INSERT INTO profileInfo values (null, 'MySchool', '#373B60');
+INSERT INTO profileInfo values (null, 'ESPAS - ESTICE - ICM', '#373B60');
 INSERT INTO groupProfiles values (null, 12, 5, LAST_INSERT_ID(), 0); /* 5 */
 
 
