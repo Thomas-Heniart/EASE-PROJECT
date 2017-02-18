@@ -9,7 +9,7 @@ pageEncoding="UTF-8"%>
 	<meta http-equiv="Content-Type" contentType="text/html; charset=UTF-8" />
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1" />
 	
-	<title> Ease.space | The easiest way to connect to your professional and personal web.</title>
+	<title> Ease.space</title>
 	<!-- Description shown in Google -->
 	<!-- Facebook metadata -->
 	<meta name="description" content="Ease is an intuitive password manager working as a browser homepage."/>
