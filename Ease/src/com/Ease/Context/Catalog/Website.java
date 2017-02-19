@@ -18,6 +18,8 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import com.Ease.Context.Variables;
+import com.Ease.Context.Group.Group;
+import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
@@ -67,6 +69,7 @@ public class Website {
 					newWebsites.add(site);
 					if (sso != null)
 						sso.addWebsite(site);
+					site.loadGroupIds(db);
 			}
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
@@ -148,6 +151,7 @@ public class Website {
 				websites.add(site);
 				if (sso != null)
 					sso.addWebsite(site);
+				site.loadGroupIds(db);
 			}
 			return websites;
 		} catch (SQLException e) {
@@ -230,6 +234,7 @@ public class Website {
 	protected WebsiteAttributes websiteAttributes;
 	protected List<WebsiteInformation> website_informations;
 	protected List<Website> loginWithWebsites;
+	protected List<String> groupIds;
 
 	public Website(String db_id, int single_id, String name, String loginUrl, String folder, Sso sso, boolean noLogin, String website_homepage, int ratio, int position, List<WebsiteInformation> website_informations, WebsiteAttributes websiteAttributes) {
 		this.db_id = db_id;
@@ -245,6 +250,7 @@ public class Website {
 		this.position = position;
 		this.loginWithWebsites = new LinkedList<Website>();
 		this.websiteAttributes = websiteAttributes;
+		this.groupIds = new LinkedList<String>();
 	}
 
 	public Website(String db_id, int single_id, String name, String loginUrl, String folder, Sso sso, boolean noLogin, String website_homepage, int ratio, int position, List<WebsiteInformation> website_informations, WebsiteAttributes websiteAttributes, List<Website> loginWithWebsites) {
@@ -261,6 +267,33 @@ public class Website {
 		this.position = position;
 		this.loginWithWebsites = loginWithWebsites;
 		this.websiteAttributes = websiteAttributes;
+		this.groupIds = new LinkedList<String>();
+	}
+	
+	public void loadGroupIds(DataBaseConnection db) throws GeneralException {
+		ResultSet rs = db.get("SELECT group_id FROM websitesAndGroupsMap JOIN groups ON (websitesAndGroupsMap.group_id = groups.id) WHERE website_id = " + this.db_id + ";");
+		try {
+			while(rs.next()) {
+				String parent_id = rs.getString(1);
+				this.groupIds.add(parent_id);
+				this.loadSubGroupIds(parent_id, db);
+			}
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+	}
+	
+	public void loadSubGroupIds(String parent_id, DataBaseConnection db) throws GeneralException {
+		ResultSet rs = db.get("SELECT id FROM groups WHERE parent = " + parent_id + ";");
+		try {
+			while(rs.next()) {
+				String newParent_id = rs.getString(1);
+				this.groupIds.add(newParent_id);
+				this.loadSubGroupIds(newParent_id, db);
+			}
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
 	}
 
 	public String getDb_id() {
@@ -448,5 +481,13 @@ public class Website {
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
+	}
+
+	public boolean isInPublicCatalogForUser(User user) {
+		for (Group group : user.getGroups()) {
+			if (this.groupIds.contains(group.getDBid()))
+				return true;
+		}
+		return this.groupIds.isEmpty();
 	}
 }
