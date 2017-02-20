@@ -24,9 +24,9 @@ public class SessionListener implements HttpSessionListener {
 		Map<String, User> sessionIdUserMap = (Map<String, User>) session.getServletContext().getAttribute("sessionIdUserMap");
 		Map<String, User> sIdUserMap = (Map<String, User>) session.getServletContext().getAttribute("sIdUserMap");
 		
+		System.out.println("destroy");
 		User user = sessionIdUserMap.get(session.getId());
 		if (user != null) {
-			System.out.println("There is a user : " + user.getFirstName());
 			sessionIdUserMap.remove(session.getId());
 			sIdUserMap.remove(user.getSessionSave().getSessionId());
 			for (Map.Entry<String, User> entry : sessionIdUserMap.entrySet())

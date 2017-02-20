@@ -11,15 +11,15 @@
 	},
 	"logout":{
 		"todo":[
-			{"action": "goto", "url": "https://www.linkedin.com/logout"}
+			{"action":"click", "search":"#nav-settings__dropdown-trigger"},
+			{"action":"waitfor", "search":"a[href*='logout']"},
+			{"action":"aclick", "search":"a[href*='logout']"},
+			{"action":"waitfor", "search":"#login-email"}
 			]
 	},
 	"checkAlreadyLogged":[
-		{"action": "waitfor", "search": "#profile-nav-item, #login-email"},
+		{"action": "waitfor", "search":"#profile-nav-item, #login-email"},
 		{"search":"#profile-nav-item"}
-		
-	],
-	"checkChangeLogin":[
 		
 	]
 }
