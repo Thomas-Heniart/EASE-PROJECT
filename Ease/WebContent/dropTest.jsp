@@ -12,6 +12,26 @@
 <script>
 </script>
 <BODY>
+<style type="text/css">
+	.lala img{
+		background-color: #eee;
+		border-radius: 10px;
+	}
+</style>
+<div class="lala" style="width:400px;height:400px;">
+	<img  style="width:100%; height:100%;"/>
+</div>
+<script type="text/javascript">
 
-<iframe src="/"></iframe>
+	$('img').each(function(idx, elem){
+		console.log('lala');
+		var tmpImg = $('<img>');
+		var self = $(elem);
+		tmpImg.load(function(){
+			console.log('qsd');
+			self.attr('src', $(this).attr('src'));
+		});
+		tmpImg.attr('src', '/resources/backgrounds/photo.jpg');
+	});
+</script>
 </BODY>
