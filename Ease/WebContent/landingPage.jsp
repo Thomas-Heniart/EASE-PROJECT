@@ -9,19 +9,19 @@ pageEncoding="UTF-8"%>
 <head>
 	<title> Ease.space | The easiest way to connect to your professional and personal web.</title>
 	<!-- Description shown in Google -->
-	<meta name="description" content="Ease is an intuitive password manager working as a browser homepage." />
+	<meta name="description" content="Ease est la homepage qui vous débarrasse des mots de passe. En 1 clic, soyez connecté à vos sites web automatiquement." />
 	<!-- Facebook metadata -->
 	<meta property="og:url" content="https://ease.space/" />
-	<meta property="og:title" content="Ease.space | The best way to connect to your websites." />
-	<meta property="og:description" content="Ease is an intuitive password manager working as a browser homepage. In 1 click be connected to your websites automatically." />
-	<meta property="og:image" content="https://ease.space/resources/images/fbmeta-en.png" />
+	<meta property="og:title" content="Ease.space | Le meilleur moyen de se connecter à ses sites préférés." />
+	<meta property="og:description" content="Ease est la homepage qui vous débarrasse des mots de passe. En 1 clic, soyez connecté à vos sites web automatiquement." />
+	<meta property="og:image" content="https://ease.space/resources/images/fbmeta-fr.png" />
 	<meta property="og:type" content="website" />
 	<!-- Twitter metadata -->
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:site" content="@Ease_app" />
 	<meta name="twitter:creator" content="@Ease_app" />
-	<meta name="twitter:title" content="Ease.space | The easiest way to connect to your professional and personal web." />
-	<meta name="twitter:description" content="Ease is an intuitive password manager working as a browser homepage." />
+	<meta name="twitter:title" content="Ease.space | Le meilleur moyen de se connecter à ses sites préférés." />
+	<meta name="twitter:description" content="Ease est la homepage qui vous débarrasse des mots de passe. En 1 clic, soyez connecté à vos sites web automatiquement." />
 	<meta name="twitter:image" content="https://ease.space/resources/images/fbmeta-en.png" />
 	<meta http-equiv="Content-Type" contentType="text/html; charset=UTF-8" />
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1" />

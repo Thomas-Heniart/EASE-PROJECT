@@ -278,7 +278,7 @@ public class Group {
 		}
 		catch (GeneralException e) {
 			if (e.getCode() == ServletManager.Code.ClientError) {
-				Invitation.sendInvitation(email, name, this, sm);
+				//Invitation.sendInvitation(email, name, this, sm);
 				db.commitTransaction(transaction);
 				return;
 			} else {

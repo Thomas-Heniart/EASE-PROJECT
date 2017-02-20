@@ -18,7 +18,7 @@ public class Option {
 	
 	public static Option createOption(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		int db_id = db.set("INSERT INTO options values (null, 1, 0, 0);");
+		int db_id = db.set("INSERT INTO options values (null, 0, 0, 0);");
 		return new Option(String.valueOf(db_id), true, false);
 	}
 

@@ -11,18 +11,18 @@ pageEncoding="UTF-8"%>
 	<title> Ease.space</title>
 	<!-- Description shown in Google -->
 	<!-- Facebook metadata -->
-	<meta name="description" content="Ease is an intuitive password manager working as a browser homepage." />
+	<meta name="description" content="Ease est la homepage qui vous débarrasse des mots de passe. En 1 clic, soyez connecté à vos sites web automatiquement." />
 	<meta property="og:url" content="https://ease.space/" />
 	<meta property="og:type" content="website" />
 	<meta property="og:title" content="Ease.space" />
-	<meta property="og:description" content="Ease is an intuitive password manager working as a browser homepage. In 1 click be connected to your websites automatically." />
-	<meta property="og:image" content="https://ease.space/resources/images/fbmeta-en.png" />
+	<meta property="og:description" content="Ease est la homepage qui vous débarrasse des mots de passe. En 1 clic, soyez connecté à vos sites web automatiquement." />
+	<meta property="og:image" content="https://ease.space/resources/images/fbmeta-fr.png" />
 	<!-- Twitter metadata -->
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:site" content="@Ease_app" />
 	<meta name="twitter:creator" content="@Ease_app" />
 	<meta name="twitter:title" content="Ease.space" />
-	<meta name="twitter:description" content="Ease is an intuitive password manager working as a browser homepage." />
+	<meta name="twitter:description" content="Ease est la homepage qui vous débarrasse des mots de passe. En 1 clic, soyez connecté à vos sites web automatiquement." />
 	<meta name="twitter:image" content="https://ease.space/resources/images/fbmeta-en.png" />
 	
 	<link rel="chrome-webstore-item"
