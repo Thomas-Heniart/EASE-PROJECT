@@ -12,6 +12,7 @@ import javax.servlet.ServletContext;
 import org.json.simple.JSONArray;
 
 import com.Ease.Context.Group.Group;
+import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
@@ -129,6 +130,16 @@ public class Catalog {
 		List<Website> res = new LinkedList<Website> ();
 		this.websites.forEach((website) -> {
 			if (website.isInPublicCatalog() && !website.isNew())
+				res.add(website);
+		});
+		res.addAll(getNewWebsites());
+		return res;
+	}
+	
+	public List<Website> getPublicWebsitesForUser(User user) {
+		List<Website> res = new LinkedList<Website> ();
+		this.websites.forEach((website) -> {
+			if (website.isInPublicCatalogForUser(user) && !website.isNew())
 				res.add(website);
 		});
 		res.addAll(getNewWebsites());
@@ -255,6 +266,14 @@ public class Catalog {
 	public JSONArray getWebsitesJson() {
 		JSONArray res = new JSONArray();
 		for (Website website : this.getPublicWebsites())
+			res.add(website.getJsonForCatalog());
+		Collections.reverse(res);
+		return res;
+	}
+	
+	public JSONArray getWebsitesJsonForUser(User user) {
+		JSONArray res = new JSONArray();
+		for (Website website : this.getPublicWebsitesForUser(user))
 			res.add(website.getJsonForCatalog());
 		Collections.reverse(res);
 		return res;

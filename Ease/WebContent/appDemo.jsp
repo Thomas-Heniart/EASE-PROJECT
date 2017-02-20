@@ -10,7 +10,7 @@
 <meta name="viewport" content="initial-scale=1, maximum-scale=1" />
 <meta name="description"
 	content="The platform Ease allows you to gather all your university web services and your favorites websites (social networks, medias, tools, streaming etc.) in order to connect to them in 1 click, without using neither ids nor passwords! (only one remains: your Ease password)." />
-<title>Ease</title>
+<title>Ease.space</title>
 <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/echjdhmhmgildgidlcdlepfkaledeokm" />
 <link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
