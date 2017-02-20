@@ -130,23 +130,23 @@ pageEncoding="UTF-8"%>
 				</div>
 				<a href="#services" class="btn btn-xl signUpButton" trackEvent="HomepageSignUpButton1">
 					<c:if test="${param.name != null}">
-						<c:out value="${param.name}" />,
-						<br>
-					</c:if>
-					<fmt:message key="schoolLanding.signup-button.text" />
-				</a>
-				<div class="intro-lead-in">
-					<fmt:message key="schoolLanding.sub-title" />
-				</div>
-				<div class="schoolLogos">
-					<c:forTokens items="${param.schoolImageSrcs}" delims="," var="name">
-					<div class="logoHandler">
-						<img src=<c:out value="${name}"/> />
-					</div>
-				</c:forTokens>
+					<c:out value="${param.name}" />,
+					<br>
+				</c:if>
+				<fmt:message key="schoolLanding.signup-button.text" />
+			</a>
+			<div class="intro-lead-in">
+				<fmt:message key="schoolLanding.sub-title" />
 			</div>
+			<div class="schoolLogos">
+				<c:forTokens items="${param.schoolImageSrcs}" delims="," var="name">
+				<div class="logoHandler">
+					<img src=<c:out value="${name}"/> />
+				</div>
+			</c:forTokens>
 		</div>
 	</div>
+</div>
 </header>
 <section id="productPresentation">
 	<div class="container">
@@ -473,6 +473,11 @@ pageEncoding="UTF-8"%>
 					var loading = $(this).find('.loading');
 					var submitButton = $(this).find(".submitButton");
 					var alertMessage = $(this).find(".alert-message");
+					if (self.qRoot.find("#2 input[name='invitationCode']").val().length){
+						self.qRoot.find("#2 input[name='fname']").val(name);
+						self.qRoot.find("#2 input[name='email']").val(emailVal);
+						self.openRegistration();
+					}
 
 					if (!emailVal.length)
 						return;
@@ -516,7 +521,6 @@ pageEncoding="UTF-8"%>
 				});
 				this.qRoot.find('#2 form').submit(function(e){
 					e.preventDefault();
-					var self = $(this);
 					var name = $(this).find("input[name='fname']").val();
 					var email = $(this).find("input[name='email']").val();
 					var code = $(this).find("input[name='invitationCode']").val();
@@ -611,7 +615,9 @@ pageEncoding="UTF-8"%>
 		<script type="text/javascript">
 			$(document).ready(function(){
 				if ($('#2').find("input[name='email']").val() != 'null'){
-					easeSignUpPopup.openRegistration();
+					$("#1 input[name='email']").val($('#2').find("input[name='email']").val());
+					$("#1 input[name='name']").val($('#2').find("input[name='fname']").val());
+					//easeSignUpPopup.openRegistration();
 				}
 				$("#connexionButton").click(function() {
 					easeTracker.trackEvent("HomepageLogin");
