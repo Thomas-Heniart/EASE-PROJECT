@@ -19,6 +19,7 @@ public class SessionListener implements HttpSessionListener {
 	public void sessionDestroyed(HttpSessionEvent se) {
 		
 		HttpSession session = se.getSession();
+		System.out.println("Session destroy : " + session.getId());
 		Map<String, User> users = (Map<String, User>) session.getServletContext().getAttribute("users");
 		Map<String, User> sessionIdUserMap = (Map<String, User>) session.getServletContext().getAttribute("sessionIdUserMap");
 		Map<String, User> sIdUserMap = (Map<String, User>) session.getServletContext().getAttribute("sIdUserMap");
@@ -26,7 +27,6 @@ public class SessionListener implements HttpSessionListener {
 		System.out.println("destroy");
 		User user = sessionIdUserMap.get(session.getId());
 		if (user != null) {
-			System.out.println("destroy: " + session.getId());
 			sessionIdUserMap.remove(session.getId());
 			sIdUserMap.remove(user.getSessionSave().getSessionId());
 			for (Map.Entry<String, User> entry : sessionIdUserMap.entrySet())

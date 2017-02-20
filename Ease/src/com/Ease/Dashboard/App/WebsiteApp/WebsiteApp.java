@@ -100,12 +100,13 @@ public class WebsiteApp extends App {
 		try {
 			ResultSet rs = db.get("SELECT * FROM websiteApps WHERE app_id=" + appId + ";");
 			rs.next();
+			String website_app_id = rs.getString(Data.ID.ordinal());
 			switch (rs.getString(Data.TYPE.ordinal())) {
 				case ("classicApp"):
-					//remove classic app for unconnected user;
+					db.set("DELETE FROM classicApps WHERE website_app_id = " + website_app_id + ";");
 				break;
 				case ("logwithApp"):
-					//remove logwith app for unconnected user;
+					db.set("DELETE FROM logWithApps WHERE website_app_id = " + website_app_id + ";");
 				break;
 			}
 			db.set("UPDATE websiteApps SET type='websiteApp' WHERE app_id=" + appId + ";");
