@@ -101,7 +101,6 @@ function sendEvent(obj) {
         		var now = "" + new Date;
         		easeTracker.setOnce("TutoDateFirstClickOnApp", now);
                 json.detail.highlight = !ctrlDown;
-                console.log(json.detail.highlight);
         		event = new CustomEvent(message, json);
         		document.dispatchEvent(event);
         	}, function(retMsg) {
