@@ -450,7 +450,7 @@ pageEncoding="UTF-8"%>
 					$('body').css('overflow', '');
 				};
 				this.reset = function(){
-					self.qRoot.find('input').val('').reset();
+					self.qRoot.find('input').val('');
 					self.qRoot.find('#1').addClass('show');
 					self.qRoot.find('#2').removeClass('show');
 					self.qRoot.find('.alert-message').removeClass('show');
