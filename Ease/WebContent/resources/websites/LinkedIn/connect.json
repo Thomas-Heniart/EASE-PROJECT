@@ -3,23 +3,21 @@
 	"lastLogin":"",
 	"home":"https://www.linkedin.com/",
 	"connect":{
-		"url":"https://www.linkedin.com/",
 		"todo":[
-			{"action":"goto", "url":"https://www.linkedin.com/"},
 			{"action":"fill", "what":"login", "search":"#login-email"},
 			{"action":"fill", "what":"password", "search":"#login-password"},
-			{"action":"click", "search":".login-form #login-submit"},
-			{"action":"waitload"}
+			{"action":"click", "search":".login-form #login-submit"}
 			]
 	},
 	"logout":{
-		"url":"https://www.linkedin.com/",
 		"todo":[
-			{"action":"aclick", "search":".account-settings-link .act-set-row .act-set-action .account-submenu-split-link"}
+			{"action": "goto", "url": "https://www.linkedin.com/logout"}
 			]
 	},
 	"checkAlreadyLogged":[
-		{"search":".member"}
+		{"action": "waitfor", "search": "#profile-nav-item, #login-email"},
+		{"search":"#profile-nav-item"}
+		
 	],
 	"checkChangeLogin":[
 		
