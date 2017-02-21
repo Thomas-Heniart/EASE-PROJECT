@@ -1,0 +1,24 @@
+{
+	"name":"GetResponse",
+	"lastLogin":"",
+	"home":"https://app.getresponse.com/main.html",
+	"connect":{
+		"todo":[
+			{"action":"aclick", "search":".rheader-login-a"},
+			{"action":"fill", "what":"login", "search":"#login"},
+			{"action":"fill", "what":"password", "search":"#passwdInp2"},
+			{"action":"click", "search":"input[type='submit']"}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"clickona", "search":".logout a"},
+			{"action":"waitload"},
+			{"action":"waitload"},
+			{"action":"goto", "url":"https://app.getresponse.com/main.html"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":".logout a"}
+	]
+}
