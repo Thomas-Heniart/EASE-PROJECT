@@ -1,0 +1,20 @@
+{
+    "name":"Cushion App",
+    "lastLogin":"",
+    "home":"https://my.cushionapp.com",
+    "connect":{
+        "todo":[
+            {"action":"fill", "what":"login", "search":"form.signin-form input#email"},
+            {"action":"fill", "what":"password", "search":"form.signin-form input#password"},
+            {"action":"click", "search":"form.signin-form button#submit"},
+            ]
+    },
+    "logout":{
+        "todo":[
+            {"action":"aclick", "search":"a[href*='logout']"}
+            ]
+    },
+    "checkAlreadyLogged":[
+        {"search":".cu-account-dropdown__button-title"}
+    ]
+}

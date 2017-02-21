@@ -1,0 +1,23 @@
+{
+	"name":"Azendoo",
+	"lastLogin":"",
+	"home":"https://app.azendoo.com/",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#email"},
+			{"action":"fill", "what":"password", "search":"#password"},
+			{"action":"click", "search":"button[type='submit']"}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"clickona", "search":"#topmenu-user-menu"},
+			{"action":"waitfor", "search":"a[href='/logout']"},
+			{"action":"clickona", "search":"a[href='/logout']"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"action": "waitfor", "search":"#topmenu-user-menu, #email"},
+		{"search":"#topmenu-user-menu"}
+	]
+}
