@@ -1,0 +1,40 @@
+{
+    "name":"Zoho Mail",
+    "lastLogin":"",
+    "home":"https://mail.zoho.com/",
+    "connect":{
+        "todo":[
+            {"action":"goto", "url": "https://www.zoho.com/mail/login.html"},
+            {"action":"enterFrame", "search":"iframe#zohoiam"},
+            {"action":"fill", "what":"login", "search":"form#login input#lid"},
+            {"action":"fill", "what":"password", "search":"form#login input#pwd"},
+            {"action":"click", "search":"form#login button#submit_but"},
+            {"action":"exitFrame"}
+            ]
+    },
+    "logout":{
+        "todo":[
+            {"action":"goto", "url":"https://www.zoho.com/mail/biz/logout"}
+            ]
+    },
+    "checkAlreadyLogged":[
+        {"action":"waitfor", "search": "#ztb-profile-header, iframe#zohoiam"},
+        {"search":"#ztb-profile-header"}
+    ],
+    "Facebook":{
+        "todo":[
+            {"action":"goto", "url": "https://www.zoho.com/mail/login.html"},
+            {"action":"enterFrame", "search":"iframe#zohoiam"},
+            {"action":"click", "search":"span#fb_open"},
+            {"action":"exitFrame"}
+        ]   
+    },
+    "LinkedIn": {
+        "todo": [
+            {"action":"goto", "url": "https://www.zoho.com/mail/login.html"},
+            {"action":"enterFrame", "search":"iframe#zohoiam"},
+            {"action":"click", "search":"span#linkedin_open"},
+            {"action":"exitFrame"}
+        ]
+    }
+}
