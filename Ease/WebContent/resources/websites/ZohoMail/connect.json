@@ -14,12 +14,13 @@
     },
     "logout":{
         "todo":[
-            {"action":"goto", "url":"https://www.zoho.com/mail/biz/logout"}
+            {"action":"clickona", "search":"#ztb-signout"},
+            {"action":"waitfor", "search":"a.signin"}
             ]
     },
     "checkAlreadyLogged":[
-        {"action":"waitfor", "search": "#ztb-profile-header, iframe#zohoiam"},
-        {"search":"#ztb-profile-header"}
+        {"action":"waitfor", "search": "#ztb-signout, a.signin"},
+        {"search":"#ztb-signout"}
     ],
     "Facebook":{
         "todo":[
