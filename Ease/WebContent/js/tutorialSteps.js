@@ -291,6 +291,7 @@ function showScrapingInfo() {
 	$('#scrapingInfo').addClass("show");
 	$('#scrapingInfo p span').text(scrapping[0].name);
 	$('#scrapingInfo div.logo img').attr("src", scrapping[0].img);
+	console.log("Scrap" + scrapping[0].id);
 	event = new CustomEvent("Scrap" + scrapping[0].id, {"detail": {"login" : scrapping[0].login, "password" : scrapping[0].password}});
 	var receive = false;
     document.dispatchEvent(event);
