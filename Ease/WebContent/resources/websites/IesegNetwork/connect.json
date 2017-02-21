@@ -28,7 +28,7 @@
     		{"action":"clickona", "search":"a.social-button__facebook"}
     	]	
     },
-    "Linkedin": {
+    "LinkedIn": {
     	"todo": [
     		{"action":"clickona", "search":"a.social-button__linkedin"}
     	]
