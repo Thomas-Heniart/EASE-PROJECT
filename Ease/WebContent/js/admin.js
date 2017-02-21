@@ -124,7 +124,7 @@ function printRequestedWebsites(string) {
 				+ ")</span> <input style='display: none' class='editRequestUrl' type='text' placeholder='Set url' /></p></div>");
 	});
 	$('.requestedWebsite .quit').click(function(){
-		eraseWebsite($(this));
+		eraseWebsite($(this).parent());
 	});
 	$(".requestedWebsite .pending .websiteUrl").click(function(){
 		$(".editRequestUrl", $(this).parent()).show();
@@ -158,12 +158,13 @@ function printRequestedWebsites(string) {
 function eraseWebsite(div) {
 	var toErase = div.attr('website');
 	var email = div.attr("email");
-	postHandler.post('eraseRequestedWebsite', {
+	console.log(div)
+	postHandler.post('EraseRequestedWebsite', {
 		email: email,
-		toErase : toErase
+		websiteUrl : toErase
 	}, function() {
 	}, function(retMsg) {
-		div.remove();
+		$(".requestedWebsite[website='" + toErase + "'][email='" + email + "']").remove();
 	}, function(retMsg) {
 	}, 'text');
 }

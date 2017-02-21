@@ -7,7 +7,7 @@ pageEncoding="UTF-8"%>
 <fmt:setBundle basename="com.Ease.Languages.text" />
 <html lang="${language}">
 <head>
-	<title> Ease.space | The easiest way to connect to your professional and personal web.</title>
+	<title> Ease.space | Le meilleur moyen de se connecter à ses sites préférés.</title>
 	<!-- Description shown in Google -->
 	<meta name="description" content="Ease est la homepage qui vous débarrasse des mots de passe. En 1 clic, soyez connecté à vos sites web automatiquement." />
 	<!-- Facebook metadata -->

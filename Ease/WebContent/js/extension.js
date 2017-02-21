@@ -88,8 +88,6 @@ function sendEvent(obj) {
         	}, function(retMsg) {
         		json.detail = JSON.parse(retMsg);
         		var message = "NewConnection";
-        		json.detail.highlight = true;
-        		if (ctrlDown) json.detail.highlight = false;
         		//easeTracker.trackEvent("ClickOnApp");
         		if(json.detail[0] && json.detail[0].url){
         			json.detail = json.detail[0];
@@ -102,6 +100,7 @@ function sendEvent(obj) {
         		}
         		var now = "" + new Date;
         		easeTracker.setOnce("TutoDateFirstClickOnApp", now);
+                json.detail.highlight = !ctrlDown;
         		event = new CustomEvent(message, json);
         		document.dispatchEvent(event);
         	}, function(retMsg) {

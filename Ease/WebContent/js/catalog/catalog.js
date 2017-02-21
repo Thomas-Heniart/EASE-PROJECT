@@ -170,6 +170,12 @@ function updateVerfiedEmailsCount() {
 		$(".integrated-emails-count span").html(x + " validated email");
 }
 
+function removeActiveTagFromFront(activeTag) {
+	var btnGroup = activeTag.parent();
+	$(".tagContainer .tags").prepend(activeTag);
+	btnGroup.remove();
+}
+
 $(document).ready(function() {
 
 	$("#catalog-quit").click(function(event) {
@@ -179,15 +185,17 @@ $(document).ready(function() {
 	
 	$(".tag").click(function(event) {
 		event.stopPropagation();
-		var activeTag = $(".tag-active");
-		activeTag.toggleClass("hvr-grow");
+		var activeTag = $(".selectedTagsContainer .tag-active");
+		if (activeTag.length)
+			removeActiveTagFromFront(activeTag);
+		/*activeTag.toggleClass("hvr-grow");
 		activeTag.toggleClass("tag-active");
-		updateCatalogFront(activeTag);
+		updateCatalogFront(activeTag);*/
 		if(!$(event.target).hasClass("tag-active")){
 			$(event.target).toggleClass("tag-active");
 			$(event.target).toggleClass("hvr-grow");
-			updateCatalogFront($(event.target));
 		}
+		updateCatalogFront($(event.target));
 		var tagName = $(event.target).text();
 		easeTracker.trackEvent("ClickOnTag", {"TagName": tagName});
 	});
