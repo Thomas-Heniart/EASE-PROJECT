@@ -172,7 +172,6 @@ function updateVerfiedEmailsCount() {
 
 function removeActiveTagFromFront(activeTag) {
 	var btnGroup = activeTag.parent();
-	console.log(btnGroup);
 	$(".tagContainer .tags").prepend(activeTag);
 	btnGroup.remove();
 }
