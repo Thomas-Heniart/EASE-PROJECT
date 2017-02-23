@@ -473,6 +473,7 @@ pageEncoding="UTF-8"%>
 						self.qRoot.find("#2 input[name='fname']").val(name);
 						self.qRoot.find("#2 input[name='email']").val(emailVal);
 						self.openRegistration();
+						return;
 					}
 
 					if (!emailVal.length)
