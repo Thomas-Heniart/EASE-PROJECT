@@ -198,6 +198,16 @@ public class Catalog {
 	public List<Tag> getTags() {
 		return this.tags;
 	}
+	
+	public List<Tag> getTagsAlphabetically() {
+		List<Tag> res = this.tags;
+		Collections.sort(res, new Comparator<Tag>() {
+			public int compare(Tag t1, Tag t2) {
+				return t1.getName().compareToIgnoreCase(t2.getName());
+			}
+		});
+		return res;
+	}
 
 	public JSONArray search(String search, JSONArray tags) throws GeneralException {
 		JSONArray result = new JSONArray();
