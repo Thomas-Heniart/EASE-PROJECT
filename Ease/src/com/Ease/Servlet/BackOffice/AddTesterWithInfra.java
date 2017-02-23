@@ -1,8 +1,6 @@
 package com.Ease.Servlet.BackOffice;
 
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,7 +37,6 @@ public class AddTesterWithInfra extends HttpServlet {
      */
     public AddTesterWithInfra() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -58,7 +55,6 @@ public class AddTesterWithInfra extends HttpServlet {
 		User user = (User) (session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		DataBaseConnection db = sm.getDB();
-
 		try {
 			sm.needToBeConnected();
 			if (user.isAdmin() == false) {
@@ -68,8 +64,8 @@ public class AddTesterWithInfra extends HttpServlet {
 			String univName = sm.getServletParam("infra", true);
 			String name = sm.getServletParam("name", true);
 			String color = sm.getServletParam("profileColor", true);
-			String img_path = sm.getServletParam("imgPath", true);
-			
+			//String img_path = sm.getServletParam("imgPath", true);
+			System.out.println(email + " " + name + " " + univName + " " + color);
 			if (email == null || !Regex.isEmail(email)) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email.");
 			} else if (univName == null) {
@@ -78,11 +74,11 @@ public class AddTesterWithInfra extends HttpServlet {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong user name.");
 			} else if (color == null || !Regex.isColor(color)) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong profile color.");
-			} else if (img_path == null) {
+			} /*else if (img_path == null) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong image path.");
-			}
+			}*/
 			
-			Infrastructure infra = Infrastructure.createInfrastructure(univName, img_path, sm);
+			Infrastructure infra = Infrastructure.createInfrastructure(univName, "estice.png", sm);
 			
 			int transaction = db.startTransaction();
 			Group groupTester = Group.createGroup("Tester", null, infra, sm);
@@ -119,7 +115,7 @@ public class AddTesterWithInfra extends HttpServlet {
 			
 			groupTester.setGroupApps(groupApps);
 			
-			groupTester.addUser(email, name, sm);
+			groupTester.addUser(email, name, true, sm);
 			db.commitTransaction(transaction);
 			sm.setResponse(ServletManager.Code.Success, "Success.");
 			

@@ -51,7 +51,7 @@
 					class="form-control"
 					style="margin-left: 25%; margin-top: 1%; width: 50%; position: relative;">
 					<option value=0>-- Select Tag --</option>
-					<c:forEach items="${catalog.getTagsAlphabetically()}" var="item">
+					<c:forEach items="${catalog.getTags()}" var="item">
 						<option value="${item.getSingleId()}" tag-color="${colors.get(item.getColor() - 1)}">${item.getName()}</option>
 					</c:forEach>
 				</select>

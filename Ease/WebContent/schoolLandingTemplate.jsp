@@ -75,7 +75,8 @@ pageEncoding="UTF-8"%>
 
 	/* Test */
 	amplitude.getInstance().init("73264447f97c4623fb38d92b9e7eaeea");
-	easeTracker.trackEvent("HomepageVisit");
+	var schoolToTrack = '${param.schoolName}';
+	easeTracker.trackEvent("HomepageVisit", {"SchoolName": schoolToTrack});
 </script>
 </head>
 
@@ -463,7 +464,7 @@ pageEncoding="UTF-8"%>
 				});
 				this.qRoot.find('#1 form').submit(function(e){
 					e.preventDefault();
-					easeTracker.trackEvent("HomepageSignUp1");
+					easeTracker.trackEvent("HomepageSignUp1", {"SchoolName": schoolToTrack});
 					var emailVal = $(this).find("input[name='email']").val();
 					var name = $(this).find("input[name='name']").val();
 					var loading = $(this).find('.loading');
@@ -549,7 +550,7 @@ pageEncoding="UTF-8"%>
 						alertMessage.css('color', '#24d666');
 						alertMessage.addClass('show');
 						easeTracker.setUserId(email);
-						easeTracker.trackEvent("HomepageSignUp2");
+						easeTracker.trackEvent("HomepageSignUp2", {"SchoolName": schoolToTrack});
 						easeTracker.trackEvent("Connect");
 						setTimeout(function() {
 							window.location = "index.jsp";
@@ -604,7 +605,7 @@ pageEncoding="UTF-8"%>
 			};
 			var easeSignUpPopup = new signUpPopup($('#signUpPopup'));
 			$('.signUpButton').click(function(){
-				easeTracker.trackEvent($(this).attr("trackEvent"));
+				easeTracker.trackEvent($(this).attr("trackEvent"), {"SchoolName": schoolToTrack});
 				easeSignUpPopup.open();
 			});
 		</script>
@@ -616,7 +617,7 @@ pageEncoding="UTF-8"%>
 					//easeSignUpPopup.openRegistration();
 				}
 				$("#connexionButton").click(function() {
-					easeTracker.trackEvent("HomepageLogin");
+					easeTracker.trackEvent("HomepageLogin", {"SchoolName": schoolToTrack});
 				});
 			});
 		</script>

@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.Ease.Context.Variables;
 import com.Ease.Dashboard.User.User;
 import com.Ease.websocket.WebsocketMessage;
 import com.Ease.websocket.WebsocketSession;
@@ -74,12 +73,7 @@ public class ServletManager {
 		try {
 			this.db = new DataBaseConnection(DataBase.getConnection());
 		} catch (SQLException e) {
-			try {
-				response.getWriter().print("1 Sorry an internal problem occurred. We are solving it asap.");
-			} catch (IOException e1) {
-				e1.printStackTrace();
-				System.err.println("Send response failed.");
-			}
+			/* Do nothing */
 		}
 	}
 	

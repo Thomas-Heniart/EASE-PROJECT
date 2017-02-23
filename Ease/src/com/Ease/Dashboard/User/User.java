@@ -166,7 +166,7 @@ public class User {
 		newUser.initializeDashboardManager(sm);
 		((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
 		for (Group group : groups) {
-			group.addUser(email, firstName, sm);
+			group.addUser(email, firstName, false, sm);
 			newUser.getGroups().add(group);
 		}
 		UserEmail userEmail = UserEmail.createUserEmail(email, newUser, !groups.isEmpty(), sm);

@@ -85,9 +85,6 @@ public class Registration extends HttpServlet {
 			else {
 				User newUser = User.createUser(email, fname, "", confirmPassword, invitationCode, sm);
 				session.setAttribute("user", newUser);
-				if (!newUser.isInGroup()) {
-					newUser.sendVerificationEmail(email, true, sm);
-				}
 				sm.setResponse(ServletManager.Code.Success, "Registered successfully");
 			}
 		} catch (GeneralException e) {

@@ -134,7 +134,7 @@ public class Tag {
 	
 	public JSONArray search(JSONArray result, String search) {
 		for (Website site : this.sites) {
-			if (site.getName().toUpperCase().startsWith(search.toUpperCase())) {
+			if (site.getName().toUpperCase().startsWith(search.toUpperCase()) && site.work()) {
 				result.add(String.valueOf(site.getSingleId()));
 			}
 		}

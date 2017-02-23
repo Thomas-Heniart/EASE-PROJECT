@@ -118,6 +118,16 @@ public class Catalog {
 		return this.websites;
 	}
 	
+	/*public List<Website> getWebsitesAlphabetically() {
+		List<Website> res = this.websites;
+		Collections.sort(res, new Comparator<Website>() {
+			public int compare(Website w1, Website w2) {
+				return w1.getName().compareToIgnoreCase(w2.getName());
+			}
+		});
+		return res;
+	}*/
+	
 	public Website getWebsiteWithName(String name) throws GeneralException {
 		for (Website site : this.websites) {
 			if (site.getName().equals(name))
@@ -199,7 +209,7 @@ public class Catalog {
 		return this.tags;
 	}
 	
-	public List<Tag> getTagsAlphabetically() {
+	/*public List<Tag> getTagsAlphabetically() {
 		List<Tag> res = this.tags;
 		Collections.sort(res, new Comparator<Tag>() {
 			public int compare(Tag t1, Tag t2) {
@@ -207,13 +217,13 @@ public class Catalog {
 			}
 		});
 		return res;
-	}
+	}*/
 
 	public JSONArray search(String search, JSONArray tags) throws GeneralException {
 		JSONArray result = new JSONArray();
 		if (tags.size() <= 0) {
 			for (Website site : this.websites) {
-				if (site.getName().toUpperCase().startsWith(search.toUpperCase())) {
+				if (site.getName().toUpperCase().startsWith(search.toUpperCase()) && site.work()) {
 					result.add(String.valueOf(site.getSingleId()));
 				}
 			}
