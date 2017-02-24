@@ -1,0 +1,23 @@
+{
+   "background": {
+      "page": "background.html",
+      "persistent": false
+   },
+   "browser_action": {
+      "default_icon": "images/logo_296.png",
+      "default_popup": "functionnalities/popup.html"
+   },
+   "content_scripts": [{
+      "js": [ "jquery-3.1.0.js", "extension/extension.js", "extension/extensionContent.js", "detectAction.js"],
+      "matches": [ "<all_urls>" ],
+      "all_frames": true
+   }],
+   "description": "Ease extension POC",
+   "icons": {
+      "128": "images/logo_128.png"
+   },
+   "manifest_version": 2,
+   "name": "POC",
+   "permissions": [ "tabs", "<all_urls>", "http://*/*", "https://*/*", "webNavigation", "storage", "identity", "identity.email" ],
+   "version": "0.0.1"
+}
