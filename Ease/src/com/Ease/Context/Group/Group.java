@@ -226,7 +226,6 @@ public class Group {
 			groupProfile.loadContentForConnectedUser(user, sm);
 		}
 		for (GroupApp groupApp: this.groupApps) {
-			System.out.println("une app");
 			groupApp.loadContentForConnectedUser(user, sm);
 		}
 	}

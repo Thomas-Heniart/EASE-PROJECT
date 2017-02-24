@@ -339,7 +339,7 @@ pageEncoding="UTF-8"%>
 			</div>
 			<div class="bodysHandler">
 				<div class="popupBody" id="2">
-					<form class="handler" action="register">
+					<form class="handler" action="${param.formAction}">
 <!--							<div class="row">
 								<p class="row-heading">
 									How would you like us to call you ?
