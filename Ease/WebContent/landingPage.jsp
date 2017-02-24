@@ -77,7 +77,6 @@ pageEncoding="UTF-8"%>
 	amplitude.getInstance().init("73264447f97c4623fb38d92b9e7eaeea");
 	easeTracker.trackEvent("HomepageVisit");
 </script>
-<script type="text/javascript" src="//try.abtasty.com/3c64b81938b0440922c7dd8c1a37b052.js"></script>
 </head>
 
 <body id="landingBody">
