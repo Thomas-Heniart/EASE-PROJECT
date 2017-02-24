@@ -7,7 +7,7 @@ public class Regex {
 	public static final Pattern VALID_EMAIL_ADDRESS_REGEX = 
 		    Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 	public static final Pattern VALID_EASE_PASSWORD_REGEX = 
-		    Pattern.compile("^[-A-Za-z0-9$@$!%.*#?&'()\\[\\]{}_<>=+\\/:;,]{8,}$");
+		    Pattern.compile("^[-A-Za-z0-9$@$!%.*#?£§éèç\"à&'()\\[\\]{}_<>=+\\/:;,]{8,}$");
 	public static final Pattern VALID_COLOR_REGEX = 
 		    Pattern.compile("^#[0-9a-fA-F]{6}$");
 	public static final Pattern VALID_URL_REGEX = 
