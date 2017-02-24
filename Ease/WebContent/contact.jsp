@@ -95,6 +95,9 @@ pageEncoding="UTF-8"%>
 						<div class="formRaw">
 							<textarea name="message" placeholder=<fmt:message key="contactus.textarea.placeholder"/> ></textarea>
 						</div>
+						<div class="formRaw errorMessage">
+							<p></p>
+						</div>
 						<div class="formRaw">
 							<button class="btn submitButton" type="submit">Send !</button>
 						</div>
@@ -104,9 +107,10 @@ pageEncoding="UTF-8"%>
 		</section>
 		<script type="text/javascript">
 			$('form.contactForm').submit(function(e){
-				
 				var self = $(this);
 				e.preventDefault();
+				self.find('.formRaw.errorMessage').removeClass('show');
+				self.find(".formRaw button[type='submit']").addClass('waiting');
 				postHandler.post(
 					self.attr('action'),
 					{
@@ -114,13 +118,17 @@ pageEncoding="UTF-8"%>
 						message: self.find("textarea[name='message']").val()
 					},
 					function(){
-
+						self.find(".formRaw button[type='submit']").removeClass('waiting');
 					},
 					function(msg){
+						self.find("textarea[name='message']").val('');
+						self.find('.formRaw.errorMessage p').text(msg);
+						self.find('.formRaw.errorMessage').addClass('show');
 						easeTracker.trackEvent("HomepageContactSubmit");
 					},
 					function(msg){
-
+						self.find('.formRaw.errorMessage p').text(msg);
+						self.find('.formRaw.errorMessage').addClass('show');
 					},
 					'text');
 			});
