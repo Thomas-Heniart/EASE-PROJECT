@@ -470,14 +470,14 @@ pageEncoding="UTF-8"%>
 					var loading = $(this).find('.loading');
 					var submitButton = $(this).find(".submitButton");
 					var alertMessage = $(this).find(".alert-message");
-					if (self.qRoot.find("#2 input[name='invitationCode']").val().length){
+					if (self.qRoot.find("#2 input[name='invitationCode']").val() != 'null'){
 						self.qRoot.find("#2 input[name='fname']").val(name);
 						self.qRoot.find("#2 input[name='email']").val(emailVal);
 						self.openRegistration();
 						return;
 					}
 
-					if (!emailVal.length)
+					if (!emailVal.length || !name.length)
 						return;
 
 					loading.addClass('show');

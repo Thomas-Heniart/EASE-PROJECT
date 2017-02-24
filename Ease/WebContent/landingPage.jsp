@@ -536,7 +536,6 @@ pageEncoding="UTF-8"%>
 					$('body').css('overflow', '');
 				};
 				this.reset = function(){
-					self.qRoot.find('input').val('');
 					self.qRoot.find('#1').addClass('show');
 					self.qRoot.find('#2').removeClass('show');
 					self.qRoot.find('.alert-message').removeClass('show');
@@ -560,7 +559,7 @@ pageEncoding="UTF-8"%>
 					var submitButton = $(this).find(".submitButton");
 					var alertMessage = $(this).find(".alert-message");
 
-					if (!emailVal.length)
+					if (!emailVal.length || !name.length)
 						return;
 
 					loading.addClass('show');
@@ -613,10 +612,8 @@ pageEncoding="UTF-8"%>
 					var submitButton = $(this).find(".submitButton");
 					var alertMessage = $(this).find(".alert-message");
 
-					if (!name.length || !email.length || !code.length || !(password == confirmPassword)){
-						console.log('lala');
+					if (!name.length || !email.length || !code.length || !(password == confirmPassword))
 						return;
-					}
 
 					loading.addClass('show');
 					submitButton.addClass('not-show');
