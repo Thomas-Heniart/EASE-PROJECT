@@ -164,7 +164,7 @@ public class Website {
 	public static JSONArray existsInDb(String websiteHost, ServletManager sm) throws GeneralException{
 		DataBaseConnection db = sm.getDB();
 		Catalog catalog = (Catalog)sm.getContextAttr("catalog");
-		ResultSet rs = db.get("select * from websites where noLogin=0;");
+		ResultSet rs = db.get("select * from websites where noLogin=0 AND website_name NOT IN ('Google AdWords', 'Google Analytics', 'Google Play');");
 		JSONArray result = new JSONArray();
 		try {
 			while(rs.next()){
