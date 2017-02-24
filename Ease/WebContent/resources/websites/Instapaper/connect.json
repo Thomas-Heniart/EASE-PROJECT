@@ -1,0 +1,21 @@
+{
+    "name":"Instapaper",
+    "lastLogin":"",
+    "home":"https://www.instapaper.com",
+    "connect":{
+        "todo":[
+            {"action": "goto", "url":"https://www.instapaper.com/user/login"},
+            {"action":"fill", "what":"login", "search":"form.simple_form input#username"},
+            {"action":"fill", "what":"password", "search":"form.simple_form input#password"},
+            {"action":"click", "search":"form.simple_form button#log_in"},
+            ]
+    },
+    "logout":{
+        "todo":[
+            {"action":"aclick", "search":"a[href*='logout']"}
+            ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a.settings"}
+    ]
+}

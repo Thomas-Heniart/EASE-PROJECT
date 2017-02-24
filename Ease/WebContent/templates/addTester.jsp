@@ -6,7 +6,7 @@
 		<i class="fa fa-times"></i>
 	</button>
 	
-	<form id="addTester" method="POST" action="AddTesterWithInfra">
+	<form id="addTester" action="AddTesterWithInfra">
 		<input type="text" id="email" placeholder="email" name="email" />
 		<input type="text" id="name" placeholder="name" name="name" />
 		<input type="text" id="infra" placeholder="infra" name="infra" />
@@ -15,27 +15,27 @@
 	</form>
 </div>
 <script>
-	$("#addTester").submit(function(e) {
-		e.preventDefault();
-		var self = $(this);
-		var email = $("#addTester #email");
-		var name = $("#addTester #name");
-		var infra = $("#addTester #infra");
-		var profileColor = $("#addTester #profileColor");
-		postHandler.post(self.attr("action"), {
-			email: email,
-			name: name,
-			infra: infra,
-			profileColor: profileColor
+$("#addTester").submit(function(e) {
+	e.preventDefault();
+	var self = $(this);
+	var email = $("#email", self).val();
+	var name = $("#name", self).val();
+	var infra = $("#infra", self).val();
+	var profileColor = $("#profileColor", self).val();
+	console.log("ici");
+	var action = self.attr("action");
+	console.log(email + " " + name + " " + infra + " " + profileColor);
+	postHandler.post("AddTesterWithInfra", {
+		email: email,
+		name: name,
+		infra: infra,
+		profileColor: profileColor
 		},
-		function() {
-			
-		},
+		function() {},
 		function(retMsg) {
-			self.find("input").val("");
+			$("input", self).val("");
 		},
-		function(retMsg) {
-			
-		});
-	});
+		function(retMsg) {}, 'text');
+	console.log("ici2");
+});
 </script>

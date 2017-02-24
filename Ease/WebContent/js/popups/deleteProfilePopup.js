@@ -11,11 +11,6 @@ deleteProfilePopup = function(rootEl){
 	this.submitButton = this.qRoot.find("button[type='submit']");
 	this.goBackButtonHandler = this.qRoot.find("#goBack");
 
-	this.passwordInputHander.keyup(function(e){
-		if (e.which == 13){
-			self.submitButton.click();
-		}
-	});
 	this.goBackButtonHandler.click(function(){
 		self.close();
 	});

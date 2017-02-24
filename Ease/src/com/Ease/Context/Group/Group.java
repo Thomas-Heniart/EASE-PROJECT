@@ -267,7 +267,7 @@ public class Group {
 		this.loadContentForConnectedUser(user, sm);
 	}
 	
-	public void addUser(String email, String name, ServletManager sm) throws GeneralException {
+	public void addUser(String email, String name, boolean testUser,ServletManager sm) throws GeneralException {
 		@SuppressWarnings("unchecked")
 		Map<String, User> users = (Map<String, User>) sm.getContextAttr("users");
 		DataBaseConnection db = sm.getDB();
@@ -278,7 +278,8 @@ public class Group {
 		}
 		catch (GeneralException e) {
 			if (e.getCode() == ServletManager.Code.ClientError) {
-				//Invitation.sendInvitation(email, name, this, sm);
+				if (testUser)
+					Invitation.sendInvitation(email, name, this, sm);
 				db.commitTransaction(transaction);
 				return;
 			} else {

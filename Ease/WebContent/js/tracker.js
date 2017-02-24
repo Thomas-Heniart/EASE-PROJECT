@@ -2,9 +2,12 @@ var tracker = function(){
 	this.setUserId = function (email) {
 		amplitude.getInstance().setUserId(email);
 	}
-	this.trackEvent = function(eventName){
+	this.trackEvent = function(eventName, properties){
 		//if (window.location.href.indexOf("ease.space") > -1)
-	       amplitude.getInstance().logEvent(eventName);
+		if(properties == undefined)
+			amplitude.getInstance().logEvent(eventName);
+		else
+			amplitude.getInstance().logEvent(eventName, properties);
 	}
 	this.resetUserId = function () {
 		amplitude.getInstance().setUserId(null);
