@@ -35,7 +35,7 @@ var MsgManager = function() {
 			self.listeners[name] = new EaseListener(name, fCallback, count);
 		}
 	}
-	easeExtension.background.onMessage(function(msg, fResponse) {
+	easeExtension.onMessage(function(msg, fResponse) {
 		if (self.listeners[msg.name]) {
 			self.listeners[msg.name].exec(msg.msg, fResponse);
 		}
