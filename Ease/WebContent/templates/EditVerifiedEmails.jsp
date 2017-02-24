@@ -62,9 +62,6 @@
 					class="info">Verifying an email enables updates for that
 						email, as well as increases security.</span>
 				</i>
-				<c:if test="${item ne user.getEmail()}">
-					<i class="fa fa-trash removeEmail" aria-hidden="true"></i>
-				</c:if>
 			</div>
 		</c:forEach>
 		<c:forEach items="<%=unverifiedEmails%>" var="item" varStatus="loop">
