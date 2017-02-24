@@ -134,8 +134,8 @@ public class User {
 			}
 			((Map<String, User>)sm.getContextAttr("users")).put(email, newUser);
 			((Map<String, User>)sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
-			System.out.println(newUser.getSessionSave().getSessionId());
 			((Map<String, User>)sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);
+			System.out.println("New session with connection: " + sm.getSession().getId());
 			newUser.initializeUpdateManager(sm);
 			return newUser;
 		} catch (SQLException e) {

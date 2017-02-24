@@ -72,13 +72,13 @@ public class AddTesterWithInfra extends HttpServlet {
 			
 			if (email == null || !Regex.isEmail(email)) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email.");
-			} else if (univName == null) {
+			} else if (univName == null || univName.equals("") == true) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong infrastructure name.");
-			} else if (name == null) {
+			} else if (name == null || name.equals("") == true) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong user name.");
 			} else if (color == null || !Regex.isColor(color)) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong profile color.");
-			} else if (img_path == null) {
+			} else if (img_path == null || img_path.equals("") == true) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong image path.");
 			}
 			
