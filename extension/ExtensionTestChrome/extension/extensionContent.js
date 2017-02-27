@@ -28,7 +28,7 @@ var EaseMsgManager = function () {
 	var self = this;
 	this.listeners = {};
 	this.sendMessage = function(name, msg, fResponse) {
-		easeExtension.sendMessage({"name":name, "msg":msg}, fResponse);
+		easeExtension.background.sendMessage({"name":name, "msg":msg}, fResponse);
 	}
 	this.onMessage = function(name, fCallback, count) {
 		var listener = self.listeners[name];
