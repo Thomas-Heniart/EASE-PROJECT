@@ -1,6 +1,7 @@
 package com.Ease.Servlet.BackOffice;
 
 import java.io.IOException;
+import java.util.Map.Entry;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -8,9 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -47,21 +46,25 @@ public class WebsitesVisited extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
-		Catalog catalog = (Catalog) (session.getAttribute("catalog"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+		Catalog catalog = (Catalog) sm.getContextAttr("catalog");
 		DataBaseConnection db = sm.getDB();
 		try {
 			WebsitesVisitedManager websitesVisitedManager = (WebsitesVisitedManager) sm.getContextAttr("websitesVisitedManager");
 			String jsonString = sm.getServletParam("websitesVisited", true);
+			if (jsonString == null || jsonString.equals(""))
+				throw new GeneralException(ServletManager.Code.ClientError, "websitesVisited is null");
 			JSONParser parser = new JSONParser();
 			try {
-				JSONArray websitesVisited = (JSONArray) parser.parse(jsonString);
-				for (Object websiteVisited : websitesVisited) {
-					JSONObject tmp = (JSONObject) websiteVisited;
-					websitesVisitedManager.addWebsiteRequest((String) tmp.get("url"), Integer.valueOf((String) tmp.get("count")), db, catalog);
+				System.out.println(jsonString);
+				JSONObject websitesVisited = (JSONObject)parser.parse(jsonString);
+				for (Object obj : websitesVisited.entrySet()) {
+					Entry<Object, Object> entry = (Entry<Object, Object>) obj;
+					String url = (String)entry.getKey();
+					String count = (String)entry.getValue();
+					websitesVisitedManager.addWebsiteRequest(url, Integer.valueOf(count), db, catalog);
+					sm.setResponse(ServletManager.Code.Success, "Websites visited added");
 				}
-					
 			} catch (ParseException e) {
 				throw new GeneralException(ServletManager.Code.InternError, e);
 			}

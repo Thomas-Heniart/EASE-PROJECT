@@ -9,12 +9,14 @@ var globalCount = 0;
 
 msgManager.onMessage("websiteVisited", function(msg, fResponse, c) {
 	globalCount++;
-	var count = parseInt(websitesVisited[msg.url]);
-	if (count == undefined)
+	var stringCount = websitesVisited[msg.url];
+	if (stringCount == undefined)
 		websitesVisited[msg.url] = "1";
-	else
+	else {
+		var count = parseInt(stringCount);
 		websitesVisited[msg.url] = (count + 1).toString();
-	fResponse({"websitesVisites": websitesVisited, "globalCount": globalCount});
+	}
+	fResponse({"websitesVisited": websitesVisited, "globalCount": globalCount});
 });
 
 msgManager.onMessage("resetWebsitesVisited", function(msg, fResponse, count) {
