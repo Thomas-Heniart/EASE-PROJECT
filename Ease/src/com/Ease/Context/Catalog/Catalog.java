@@ -273,6 +273,14 @@ public class Catalog {
 		}
 		return false;
 	}
+	
+	public boolean haveWebsiteWithHostUrl(String url) {
+		for (Website site : this.websites) {
+			if (site.homepageUrlMatch(url))
+				return true;
+		}
+		return false;
+	}
 
 	public Website getWebsiteWithLoginUrl(String url) throws GeneralException{
 		for (Website site : this.websites) {

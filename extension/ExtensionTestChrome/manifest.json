@@ -8,7 +8,7 @@
       "default_popup": "functionnalities/popup.html"
    },
    "content_scripts": [{
-      "js": [ "jquery-3.1.0.js", "extension/extension.js", "extension/extensionContent.js", "detectAction.js"],
+      "js": [ "jquery-3.1.0.js", "extension/extension.js", "extension/extensionContent.js", "detectAction.js", "extension/websiteVisit.js"],
       "matches": [ "<all_urls>" ],
       "all_frames": true
    }],

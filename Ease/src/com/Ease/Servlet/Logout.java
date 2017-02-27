@@ -49,6 +49,7 @@ public class Logout extends HttpServlet {
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		try {
 			logoutUser(user, sm);
+			session.invalidate();
 			sm.setResponse(ServletManager.Code.Success, "Logged out.");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
@@ -84,7 +85,7 @@ public class Logout extends HttpServlet {
 		sm.addToSocket(WebsocketMessage.logoutMessage());
 		user.removeWebsockets(sessionWebsockets);
 		user.deconnect(sm);
-		session.invalidate();
+		//session.invalidate();
 	}
 
 }

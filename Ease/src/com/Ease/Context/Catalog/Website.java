@@ -422,6 +422,11 @@ public class Website {
 		String[] loginUrlSplitted = this.loginUrl.split("\\/*\\/");
 		return url.contains(loginUrlSplitted[1]);
 	}
+	
+	public boolean homepageUrlMatch(String url) {
+		String[] homepageUrlSplitted = this.website_homepage.split("\\/*\\/");
+		return url.contains(homepageUrlSplitted[1]);
+	}
 
 	@SuppressWarnings("unchecked")
 	public JSONObject getJsonForCatalog() {
