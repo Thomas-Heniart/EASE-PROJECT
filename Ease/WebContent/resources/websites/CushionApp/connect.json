@@ -6,7 +6,7 @@
         "todo":[
             {"action":"fill", "what":"login", "search":"form.signin-form input#email"},
             {"action":"fill", "what":"password", "search":"form.signin-form input#password"},
-            {"action":"click", "search":"form.signin-form button#submit"},
+            {"action":"click", "search":"form.signin-form button#submit"}
             ]
     },
     "logout":{
