@@ -62,4 +62,12 @@ public class WebsitesVisitedManager {
 		});
 		return l;
 	}
+
+	public void deleteWebsiteVisited(String url, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		if (this.websitesRequestsMap.get(url) == null)
+			throw new GeneralException(ServletManager.Code.ClientError, "This url does not exist");
+		this.websitesRequestsMap.remove(url);
+		db.set("DELETE FROM websitesVisited WHERE url = '" + url + "'");
+	}
 }

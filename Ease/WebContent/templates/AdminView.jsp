@@ -40,7 +40,7 @@
 	<div>
 		<button id="enterWebsitesVisitedMode" state="off" class="button adminButton"
 			target="WebsitesVisitedTab">
-			<img src="resources/icons/requested_websites.png" />
+			<img src="resources/icons/internet.png" />
 		</button>
 	</div>
 	<div>
