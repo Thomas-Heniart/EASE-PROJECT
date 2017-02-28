@@ -38,6 +38,12 @@
 		</button>
 	</div>
 	<div>
+		<button id="enterWebsitesVisitedMode" state="off" class="button adminButton"
+			target="WebsitesVisitedTab">
+			<img src="resources/icons/requested_websites.png" />
+		</button>
+	</div>
+	<div>
 		<button id="enterAddSiteMode" state="off" class="button adminButton"
 			target="AddSiteTab">
 			<img src="resources/icons/add_website_icon.png" />
@@ -93,3 +99,4 @@
 <%@ include file="TestWebsites.jsp"%>
 <%@ include file="addTester.jsp" %>
 <%@ include file="AdminEditGroups.jsp" %>
+<%@ include file="backofficeAdmin/WebsitesVisitedBackOffice.jsp" %>

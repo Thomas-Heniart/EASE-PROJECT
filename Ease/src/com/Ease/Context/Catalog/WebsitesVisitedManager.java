@@ -50,7 +50,7 @@ public class WebsitesVisitedManager {
 		return this.websitesRequestsMap.get(url);
 	}
 	
-	public List<Entry<String, Integer>> getWeightedWebsiteRequests() {
+	public List<Entry<String, Integer>> getWeightedWebsitesVisited() {
 		List<Entry<String, Integer>> l = new LinkedList<Entry<String, Integer>>();
 		for(Entry<String, Integer> entry : this.websitesRequestsMap.entrySet())
 			l.add(entry);
