@@ -296,7 +296,7 @@ public class Group {
 	}
 
 	public void tutoStepDone(String user_id, DataBaseConnection db) throws GeneralException {
-		db.set("UPDATE groupsAndUsersMap SET saw_group = 1 WHERE group_id=" + this.db_id + " AND user_id = " + user_id + ");");
+		db.set("UPDATE groupsAndUsersMap SET saw_group = 1 WHERE group_id=" + this.db_id + " AND user_id = " + user_id + ";");
 	}
 	
 	public boolean containsWebsite(Website website) {
