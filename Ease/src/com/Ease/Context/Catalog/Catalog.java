@@ -118,15 +118,16 @@ public class Catalog {
 		return this.websites;
 	}
 	
-	/*public List<Website> getWebsitesAlphabetically() {
-		List<Website> res = this.websites;
+	public List<Website> getWebsitesAlphabetically() {
+		List<Website> res = new LinkedList<Website>();
+		res.addAll(this.websites);
 		Collections.sort(res, new Comparator<Website>() {
 			public int compare(Website w1, Website w2) {
 				return w1.getName().compareToIgnoreCase(w2.getName());
 			}
 		});
 		return res;
-	}*/
+	}
 	
 	public Website getWebsiteWithName(String name) throws GeneralException {
 		for (Website site : this.websites) {
