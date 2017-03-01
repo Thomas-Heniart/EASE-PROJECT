@@ -50,16 +50,24 @@ public class WebsitesVisitedManager {
 		return this.websitesRequestsMap.get(url);
 	}
 	
-	public List<Entry<String, Integer>> getWeightedWebsiteRequests() {
+	public List<Entry<String, Integer>> getWeightedWebsitesVisited() {
 		List<Entry<String, Integer>> l = new LinkedList<Entry<String, Integer>>();
 		for(Entry<String, Integer> entry : this.websitesRequestsMap.entrySet())
 			l.add(entry);
 		Collections.sort(l, new Comparator<Entry<String, Integer>>(){
 			@Override
 			public int compare(Entry<String, Integer> e1, Entry<String, Integer> e2) {
-				return e1.getValue().compareTo(e2.getValue());
+				return -(e1.getValue().compareTo(e2.getValue()));
 			}
 		});
 		return l;
+	}
+
+	public void deleteWebsiteVisited(String url, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		if (this.websitesRequestsMap.get(url) == null)
+			throw new GeneralException(ServletManager.Code.ClientError, "This url does not exist");
+		this.websitesRequestsMap.remove(url);
+		db.set("DELETE FROM websitesVisited WHERE url = '" + url + "'");
 	}
 }

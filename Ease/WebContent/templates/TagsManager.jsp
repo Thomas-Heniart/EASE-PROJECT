@@ -39,7 +39,7 @@
 				onChange="showFormTags()" class="form-control"
 				style="margin-left: 25%; margin-top: 1%; width: 50%; position: relative;">
 				<option value="0">-- Website --</option>
-				<c:forEach items="${catalog.getWebsites()}" var="item">
+				<c:forEach items="${catalog.getWebsitesAlphabetically()}" var="item">
 					<option value="${item.getSingleId()}">${item.getName()}</option>
 				</c:forEach>
 			</select>

@@ -1,0 +1,22 @@
+{
+	"name":"Udemy",
+	"lastLogin":"",
+	"home":"https://www.udemy.com/",
+	"connect":{
+		"todo":[
+			{"action":"clickona", "search":".dropdown--login a"},
+			{"action": "waitfor", "search":"#login-form"},
+			{"action":"fill", "what":"login", "search":"#login-form #id_email"},
+			{"action":"fill", "what":"password", "search":"#login-form #id_password"},
+			{"action":"click", "search":"#login-form #submit-id-submit"}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"aclick", "search":"a[href*='logout']"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":"a[href*='logout']"}
+	]
+}
