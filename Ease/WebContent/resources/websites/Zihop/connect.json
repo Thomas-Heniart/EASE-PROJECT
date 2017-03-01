@@ -1,0 +1,27 @@
+{
+    "name":"Zihop",
+    "lastlogin":"",
+    "home":"http://zihop.fr/app/",
+    "connect": {
+    	"todo": [
+    		{"action":"goto", "url":"http://zihop.fr/app/#/login"},
+    		{"action":"waitfor", "search":"#input-form-connection"},
+    		{"action":"fill", "what":"login", "search":"#input-form-connection input:first-child()"},
+    		{"action":"fill", "what":"password", "search":"#input-form-connection input:last-child()"},
+    		{"action":"search", "search":"#submit-connection"},
+    		{"action":"click", "search":"#submit-connection"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"click", "search":"#reglages-img"},
+    		{"action":"waitfor", "search":"#deconnexion"},
+    		{"action":"click", "search":"#deconnexion"},
+    		{"action":"waitfor", "search":"#bulle-slide-1"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"action":"waitfor", "search":"#reglages-img, #bulle-slide-1"},
+    	{"search":"#reglages-img"}
+    ]
+}

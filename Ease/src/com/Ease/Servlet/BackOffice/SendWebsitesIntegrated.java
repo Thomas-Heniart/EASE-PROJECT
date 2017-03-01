@@ -83,7 +83,10 @@ public class SendWebsitesIntegrated extends HttpServlet {
 					if (websitesUrls.isEmpty())
 						throw new GeneralException(ServletManager.Code.ClientError, "Empty websites");
 					for (Object websiteUrl : websitesUrls) {
-						integratedWebsites.add(catalog.getWebsiteWithHost((String)websiteUrl));
+						Website tmp = catalog.getWebsiteWithHost((String)websiteUrl);
+						if (tmp == null)
+							throw new GeneralException(ServletManager.Code.ClientError, "We don't have this website");
+						integratedWebsites.add(tmp);
 					}
 					SendGridMail mail = new SendGridMail("Agathe @Ease", "contact@ease.space");
 					mail.sendAppsArrivedEmail(firstName, email, integratedWebsites);

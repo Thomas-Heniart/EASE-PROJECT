@@ -27,24 +27,25 @@
 		<dict>
 			<key>End</key>
 			<array>
-				
+				<string>safari-2/extension/EventManager.js</string>
+				<string>safari-2/extension/content/MessageManager.js</string>
+				<string>safari-2/extension/content/Context.js</string>
+				<string>safari-2/content.js</string>
 			</array>
 			<key>Start</key>
 			<array>
 				<string>safari-2/jquery-3.1.0.js</string>
-				
-				<string>safari-2/tools/extension.js</string>
+				<string>safari-2/extension/tool.js</string>
+				<string>safari-2/extension/config.js</string>
 			</array>
 		</dict>
 		<key>Stylesheets</key>
-		<array>
-			
-		</array>
+		<array/>
 	</dict>
 	<key>Description</key>
 	<string>Awesome tool to log you on your favorite websites ;)</string>
 	<key>DeveloperIdentifier</key>
-	<string>0000000000</string>
+	<string>45P859NKD6</string>
 	<key>ExtensionInfoDictionaryVersion</key>
 	<string>1.0</string>
 	<key>Permissions</key>

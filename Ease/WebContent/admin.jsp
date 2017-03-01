@@ -73,6 +73,7 @@
 		if (session.getAttribute("user") != null && ((User)session.getAttribute("user")).isAdmin()) {
 	%>
 	<c:set var="groupManager"	scope="session" value='${servletContext.getAttribute("groupManager")}' />
+	<c:set var="websitesVisitedManager" scope="session" value='${servletContext.getAttribute("websitesVisitedManager")}' />
 	<%@ include file="templates/Header.jsp"%>
 	<div id="loggedBody">
 		<div class="col-left show" style="width: 100%; float: left">

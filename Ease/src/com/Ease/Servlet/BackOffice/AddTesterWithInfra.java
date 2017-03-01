@@ -92,25 +92,25 @@ public class AddTesterWithInfra extends HttpServlet {
 			groupTester.setGroupProfiles(groupProfiles);
 			
 			List<GroupApp> groupApps = new LinkedList<GroupApp>();
-			GroupApp intranet = GroupLinkApp.createGroupLinkApp(groupProfile, groupTester, AppPermissions.Perm.ALL.getValue(), "Intranet", false, "https://ease.space/addDemo.jsp", "/resources/images/linkApp/books.png", sm);
+			GroupApp intranet = GroupLinkApp.createGroupLinkApp(groupProfile, groupTester, AppPermissions.Perm.ALL.getValue(), "Intranet", false, "https://ease.space/appDemo.jsp", "/resources/images/linkApp/books.png", sm);
 			groupApps.add(intranet);
 			
-			GroupApp mail = GroupLinkApp.createGroupLinkApp(groupProfile, groupTester, AppPermissions.Perm.ALL.getValue(), "Mail", false, "https://ease.space/addDemo.jsp", "/resources/images/linkApp/mail.png", sm);
+			GroupApp mail = GroupLinkApp.createGroupLinkApp(groupProfile, groupTester, AppPermissions.Perm.ALL.getValue(), "Mail", false, "https://ease.space/appDemo.jsp", "/resources/images/linkApp/mail.png", sm);
 			groupApps.add(mail);
 			
-			GroupApp alumni = GroupLinkApp.createGroupLinkApp(groupProfile, groupTester, AppPermissions.Perm.ALL.getValue(), "Alumni", false, "https://ease.space/addDemo.jsp", "/resources/images/linkApp/alumni.png", sm);
+			GroupApp alumni = GroupLinkApp.createGroupLinkApp(groupProfile, groupTester, AppPermissions.Perm.ALL.getValue(), "Alumni", false, "https://ease.space/appDemo.jsp", "/resources/images/linkApp/alumni.png", sm);
 			groupApps.add(alumni);
 			
-			GroupApp calendar = GroupLinkApp.createGroupLinkApp(groupProfile, groupTester, AppPermissions.Perm.ALL.getValue(), "Calendar", false, "https://ease.space/addDemo.jsp", "/resources/images/linkApp/calendar.png", sm);
+			GroupApp calendar = GroupLinkApp.createGroupLinkApp(groupProfile, groupTester, AppPermissions.Perm.ALL.getValue(), "Calendar", false, "https://ease.space/appDemo.jsp", "/resources/images/linkApp/calendar.png", sm);
 			groupApps.add(calendar);
 			
-			GroupApp elearning1 = GroupLinkApp.createGroupLinkApp(groupProfile, groupTester, AppPermissions.Perm.ALL.getValue(), "E-learning1", false, "https://ease.space/addDemo.jsp", "/resources/images/linkApp/elearning.png", sm);
+			GroupApp elearning1 = GroupLinkApp.createGroupLinkApp(groupProfile, groupTester, AppPermissions.Perm.ALL.getValue(), "E-learning1", false, "https://ease.space/appDemo.jsp", "/resources/images/linkApp/elearning.png", sm);
 			groupApps.add(elearning1);
 			
-			GroupApp elearning2 = GroupLinkApp.createGroupLinkApp(groupProfile, groupTester, AppPermissions.Perm.ALL.getValue(), "E-learning2", false, "https://ease.space/addDemo.jsp", "/resources/images/linkApp/web.png", sm);
+			GroupApp elearning2 = GroupLinkApp.createGroupLinkApp(groupProfile, groupTester, AppPermissions.Perm.ALL.getValue(), "E-learning2", false, "https://ease.space/appDemo.jsp", "/resources/images/linkApp/web.png", sm);
 			groupApps.add(elearning2);
 			
-			GroupApp others = GroupLinkApp.createGroupLinkApp(groupProfile, groupTester, AppPermissions.Perm.ALL.getValue(), "Others", false, "https://ease.space/addDemo.jsp", "/resources/images/linkApp/plus.png", sm);
+			GroupApp others = GroupLinkApp.createGroupLinkApp(groupProfile, groupTester, AppPermissions.Perm.ALL.getValue(), "Others", false, "https://ease.space/appDemo.jsp", "/resources/images/linkApp/plus.png", sm);
 			groupApps.add(others);
 			
 			groupTester.setGroupApps(groupApps);

@@ -393,4 +393,8 @@ public class Profile {
 		this.apps.add(newApp);
 		this.user.getDashboardManager().addApp(newApp);
 	}
+	
+	public boolean isGroupProfile() {
+		return this.groupProfile != null;
+	}
 }

@@ -1,0 +1,21 @@
+{
+    "name":"Instagress",
+    "lastLogin":"",
+    "home":"https://instagress.com/",
+    "connect":{
+        "todo":[
+            {"action": "goto", "url": "https://instagress.com/account/login"},
+    		{"action":"fill", "what":"login", "search":"#account-login-form #inpAccountLoginEmail", "grave":true},
+            {"action":"fill", "what":"password", "search":"#account-login-form #inpAccountLoginPassword", "grave":true},
+            {"action":"click", "search":"button[type='submit']"}
+        ]
+    },
+    "logout":{
+        "todo":[
+            {"action":"clickona", "search":"a[onclick*='#form-logout']"}
+       	]
+    },
+    "checkAlreadyLogged":[
+        {"search":"#form-logout"}
+    ]
+}

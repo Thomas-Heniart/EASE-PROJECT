@@ -19,7 +19,7 @@ public class Option {
 	public static Option createOption(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int db_id = db.set("INSERT INTO options values (null, 0, 0, 0);");
-		return new Option(String.valueOf(db_id), true, false);
+		return new Option(String.valueOf(db_id), false, false);
 	}
 
 	public static Option loadOption(String db_id, ServletManager sm) throws GeneralException {

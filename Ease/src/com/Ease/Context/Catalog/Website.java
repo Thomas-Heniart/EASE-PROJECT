@@ -164,7 +164,7 @@ public class Website {
 	public static JSONArray existsInDb(String websiteHost, ServletManager sm) throws GeneralException{
 		DataBaseConnection db = sm.getDB();
 		Catalog catalog = (Catalog)sm.getContextAttr("catalog");
-		ResultSet rs = db.get("select * from websites where noLogin=0;");
+		ResultSet rs = db.get("select * from websites where noLogin=0 AND website_name NOT IN ('Google AdWords', 'Google Analytics', 'Google Play');");
 		JSONArray result = new JSONArray();
 		try {
 			while(rs.next()){
@@ -421,6 +421,11 @@ public class Website {
 	public boolean loginUrlMatch(String url) {
 		String[] loginUrlSplitted = this.loginUrl.split("\\/*\\/");
 		return url.contains(loginUrlSplitted[1]);
+	}
+	
+	public boolean homepageUrlMatch(String url) {
+		String[] homepageUrlSplitted = this.website_homepage.split("\\/*\\/");
+		return url.contains(homepageUrlSplitted[1]);
 	}
 
 	@SuppressWarnings("unchecked")

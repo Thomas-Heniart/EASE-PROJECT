@@ -1,0 +1,20 @@
+{
+    "name":"Plany",
+    "lastLogin":"",
+    "home":"https://app.plany.io/login",
+    "connect":{
+        "todo":[
+    		{"action":"fill", "what":"login", "search":".formLogin #inputEmail", "grave":true},
+            {"action":"fill", "what":"password", "search": ".formLogin #inputPassword", "grave":true},
+            {"action":"click", "search":".formLogin button[type='submit']"}
+        ]
+    },
+    "logout":{
+        "todo":[
+            {"action":"clickona", "search":"a[href*='logout']"}
+       	]
+    },
+    "checkAlreadyLogged":[
+        {"search":"#site-navbar-collapse"}
+    ]
+}
