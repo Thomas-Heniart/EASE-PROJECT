@@ -25,6 +25,7 @@
          ]
     },
     "checkAlreadyLogged":[
+    	{"action": "waitfor", "search": ".app-header__login.app-header__login--connected, #form-registration"},
         {"search":".app-header__login.app-header__login--connected"}
     ]
 }

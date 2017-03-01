@@ -7,7 +7,7 @@
             {"action": "goto", "url":"https://www.instapaper.com/user/login"},
             {"action":"fill", "what":"login", "search":"form.simple_form input#username"},
             {"action":"fill", "what":"password", "search":"form.simple_form input#password"},
-            {"action":"click", "search":"form.simple_form button#log_in"},
+            {"action":"click", "search":"form.simple_form button#log_in"}
             ]
     },
     "logout":{

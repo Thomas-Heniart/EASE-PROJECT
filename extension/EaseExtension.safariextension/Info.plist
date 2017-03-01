@@ -26,12 +26,17 @@
 		<key>Scripts</key>
 		<dict>
 			<key>End</key>
-			<array/>
+			<array>
+				<string>safari-2/extension/EventManager.js</string>
+				<string>safari-2/extension/content/MessageManager.js</string>
+				<string>safari-2/extension/content/Context.js</string>
+				<string>safari-2/content.js</string>
+			</array>
 			<key>Start</key>
 			<array>
 				<string>safari-2/jquery-3.1.0.js</string>
+				<string>safari-2/extension/tool.js</string>
 				<string>safari-2/extension/config.js</string>
-				<string>safari-2/extension/MsgManagerContent.js</string>
 			</array>
 		</dict>
 		<key>Stylesheets</key>

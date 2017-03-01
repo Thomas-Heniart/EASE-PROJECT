@@ -113,7 +113,9 @@ function printRequestedWebsites(string) {
 				+ element.site 
 				+ "' email='" 
 				+ element.email 
-				+ "'><input type='checkbox' class='sendEmail'/><button class='quit'>X</button><p class='"
+				+ "'>" 
+				+ (element.alreadyIntegrated ? "<input type='checkbox' class='sendEmail'/>" : "")
+				+ "<button class='quit'>X</button><p class='"
 				+ websiteIntegrated
 				+ "'><span class='websiteUrl'>"
 				+ element.site
@@ -145,6 +147,9 @@ function printRequestedWebsites(string) {
 				$(".requestedWebsite[website='" + oldUrl + "']").attr("website", newUrl);
 				$(".requestedWebsite[website='" + newUrl + "'] .websiteUrl").text(newUrl);
 				$(".requestedWebsite[website='" + newUrl + "'] p").removeClass("pending");
+				if (retMsg == "integrated" && ! $(".requestedWebsite[website='" + newUrl + "'] p").hasClass("integrated")) {
+					$(".requestedWebsite[website='" + newUrl + "']").prepend("<input type='checkbox' class='sendEmail'/>");
+				}
 				$(".requestedWebsite[website='" + newUrl + "'] p").addClass(retMsg);
 				self.val("");
 				self.hide();
