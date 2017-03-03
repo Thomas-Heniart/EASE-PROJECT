@@ -1,0 +1,37 @@
+{
+	"name":"Code Combat",
+	"lastLogin":"",
+	"home":"https://codecombat.com/",
+	"connect":{
+		"todo":[
+			{"action":"clickona", "search":"a#login-link", "grave":true},
+			{"action":"waitfor", "search":"#username-or-email-input"},
+			{"action":"fill", "what":"login", "search":"#username-or-email-input", "grave":true},
+			{"action":"fill", "what":"password", "search":"#password-input", "grave":true},
+			{"action":"click", "search":"input#login-btn", "grave":true}
+			]
+	},
+	"logout":{
+		"todo":[
+			{"action":"clickona", "search":"a#logout-button", "grave":true},
+			{"action":"waitload"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":"a#logout-button"}
+	],
+	"Facebook":{
+		"todo":[
+			{"action":"clickona", "search":"a#login-link", "grave":true},
+			{"action":"waitfor", "search":"#username-or-email-input"},
+			{"action":"click", "search":"button#facebook-login-btn", "grave":true}
+			]
+	},
+	"Google":{
+		"todo":[
+			{"action":"clickona", "search":"a#login-link", "grave":true},
+			{"action":"waitfor", "search":"#username-or-email-input"},
+			{"action":"click", "search":"button#gplus-login-btn", "grave":true}
+			]
+	}
+}
