@@ -334,11 +334,11 @@ public class Profile {
 		return false;
 	}
 	
-	public ClassicApp addClassicApp(String name, Website site, String password, Map<String, String> infos, ServletManager sm) throws GeneralException {
+	public ClassicApp addClassicApp(String name, Website site, Map<String, String> infos, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		int position = this.apps.size();
-		ClassicApp app = ClassicApp.createClassicApp(this, position, name, site, password, infos, sm, user);
+		ClassicApp app = ClassicApp.createClassicApp(this, position, name, site, infos, sm, user);
 		this.apps.add(app);
 		for (Map.Entry<String, String> entry : infos.entrySet()) {
 			if (Regex.isEmail(entry.getValue()) == true)

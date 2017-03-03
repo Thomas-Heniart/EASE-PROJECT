@@ -52,7 +52,6 @@ public class DeleteAccount extends HttpServlet {
 			user.getKeys().isGoodPassword(password);
 			user.deleteFromDb(sm);
 			user.deconnect(sm);
-			session.invalidate();
 			sm.setResponse(ServletManager.Code.Success, "Account deleted");
 		} catch(GeneralException e) {
 			sm.setResponse(e);
@@ -60,6 +59,7 @@ public class DeleteAccount extends HttpServlet {
 			sm.setResponse(e);
 		}
 		sm.sendResponse();
+		session.invalidate();
 	}
 
 }

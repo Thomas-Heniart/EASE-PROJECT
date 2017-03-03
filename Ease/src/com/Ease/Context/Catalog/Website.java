@@ -24,6 +24,7 @@ import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.Crypto.RSA;
 
 public class Website {
 	public enum WebsiteData {
@@ -307,15 +308,46 @@ public class Website {
 	public Map<String, String> getNeededInfos(ServletManager sm) throws GeneralException {
 		Map<String, String> infos = new HashMap<String, String>();
 		for (WebsiteInformation info : website_informations) {
-			String value = sm.getServletParam(info.getInformationName(), true);
+			String info_name = info.getInformationName();
+			String value = sm.getServletParam(info_name, false);
 			if (value == null || value.isEmpty()) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong info: " + info.getInformationName() + ".");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong info: " + info_name + ".");
 			}
-			if (info.getInformationValue().equals("password")) {
+			if (info_name.equals("password")) {
+				//Mettre un param keyDate dans le post si besoin de decrypter en RSA. Correspond à la private key RSA, 
+				String keyDate = sm.getServletParam("keyDate", true);
+				if (keyDate != null && !keyDate.equals("")) {
+					value = RSA.Decrypt(value, Integer.parseInt(keyDate));
+				}
 				value = sm.getUser().encrypt(value);
 			}
-			infos.put(info.getInformationName(), value);
+			infos.put(info_name, value);
 		}
+		return infos;
+	}
+	
+	public Map<String, String> getNeededInfosForEdition(ServletManager sm) throws GeneralException {
+		Map<String, String> infos = new HashMap<String, String>();
+		for (WebsiteInformation info : website_informations) {
+			String info_name = info.getInformationName();
+			String value = sm.getServletParam(info_name, false);
+			if (value == null || value.equals("")) {
+				if (info_name.equals("password"))
+					continue;
+				else
+					throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong info: " + info_name + ".");
+			}
+			if (info_name.equals("password")) {
+				//Mettre un param keyDate dans le post si besoin de decrypter en RSA. Correspond à la private key RSA, 
+				String keyDate = sm.getServletParam("keyDate", true);
+				if (keyDate != null && !keyDate.equals("")) {
+					value = RSA.Decrypt(value, Integer.parseInt(keyDate));
+				}
+				value = sm.getUser().encrypt(value);
+			}
+			infos.put(info_name, value);
+		}
+		System.out.println(infos.size());
 		return infos;
 	}
 

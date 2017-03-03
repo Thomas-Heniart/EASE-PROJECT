@@ -54,7 +54,7 @@ public class EditClassicApp extends HttpServlet {
 			sm.needToBeConnected();
 			String appIdsString = sm.getServletParam("appIds", true);
 			String name = sm.getServletParam("name", true);
-			String password = sm.getServletParam("password", false);
+			//String password = sm.getServletParam("password", false);
 			Map<String, String> infos = null;
 			if (name == null || name.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
@@ -68,12 +68,12 @@ public class EditClassicApp extends HttpServlet {
 					App app = user.getDashboardManager().getAppWithID(Integer.parseInt((String)appId));
 					if (!app.getType().equals("ClassicApp"))
 						throw new GeneralException(ServletManager.Code.ClientError, "This is not a classic app.");
-					infos = ((ClassicApp)app).getSite().getNeededInfos(sm);
+					infos = ((ClassicApp)app).getSite().getNeededInfosForEdition(sm);
 					if (appIds.indexOf(appId) == 0)
-						((ClassicApp)app).edit(name, infos, password, sm);
+						((ClassicApp)app).edit(name, infos, sm);
 					else {
 						String appName = app.getName();
-						((ClassicApp)app).edit(appName, infos, password, sm);
+						((ClassicApp)app).edit(appName, infos, sm);
 					}
 				}
 				sm.setResponse(ServletManager.Code.Success, "Classic app edited.");

@@ -17,7 +17,6 @@ public class Account {
 	public enum Data {
 		NOTHING,
 		ID,
-		PASSWORD,
 		SHARED
 	}
 	
@@ -31,10 +30,9 @@ public class Account {
 		ResultSet rs = db.get("SELECT * FROM accounts WHERE id = " + db_id + ";");
 		try {
 			if (rs.next()) {
-				String password = rs.getString(Data.PASSWORD.ordinal());
 				List<AccountInformation> infos = AccountInformation.loadInformations(db_id, db);
 				boolean shared = rs.getBoolean(Data.SHARED.ordinal());
-				return new Account(db_id, password, shared, infos);
+				return new Account(db_id, shared, infos);
 			}
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
@@ -42,24 +40,22 @@ public class Account {
 		throw new GeneralException(ServletManager.Code.InternError, "This account doesn't exist.");
 	}
 	
-	public static Account createAccount(String password, boolean shared, Map<String, String> informations, User user, ServletManager sm) throws GeneralException {
+	public static Account createAccount(boolean shared, Map<String, String> informations, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		String crypted_password = user.encrypt(password);
-		String db_id = db.set("INSERT INTO accounts values (null, '" + crypted_password + "', " + (shared ? 1 : 0) + ");").toString();
+		String db_id = db.set("INSERT INTO accounts values (null, " + (shared ? 1 : 0) + ");").toString();
 		List<AccountInformation> infos = AccountInformation.createAccountInformations(db_id, informations, sm);
 		db.commitTransaction(transaction);
-		return new Account(db_id, crypted_password, shared, infos);
+		return new Account(db_id, shared, infos);
 	}
 	
 	public static Account createAccountSameAs(Account sameAccount, boolean shared, User user, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		String cryptedPassword = sameAccount.getCryptedPassword();
-		String db_id = db.set("INSERT INTO accounts values (null, '" + cryptedPassword + "', " + (shared ? 1 : 0) + ");").toString();
+		String db_id = db.set("INSERT INTO accounts values (null, " + (shared ? 1 : 0) + ");").toString();
 		List<AccountInformation> infos = AccountInformation.createAccountInformationFromAccountInformations(db_id, sameAccount.getAccountInformations(), sm);
 		db.commitTransaction(transaction);
-		return new Account(db_id, cryptedPassword, shared, infos);
+		return new Account(db_id, shared, infos);
 	}
 	
 	public static Account createGroupAccount(String password, boolean shared, Map<String, String> informations, Infrastructure infra, ServletManager sm) throws GeneralException {
@@ -79,13 +75,11 @@ public class Account {
 	 */
 	
 	protected String 				db_id;
-	protected String 				crypted_password;
 	protected boolean 				shared;
 	protected List<AccountInformation>	infos;
 	
-	public Account(String db_id, String crypted_password, boolean shared, List<AccountInformation> infos) {
+	public Account(String db_id, boolean shared, List<AccountInformation> infos) {
 		this.db_id = db_id;
-		this.crypted_password = crypted_password;
 		this.shared = shared;
 		this.infos = infos;
 	}
@@ -138,7 +132,7 @@ public class Account {
 	
 	public JSONObject getJSON(ServletManager sm) throws GeneralException{
 		JSONObject obj = new JSONObject();
-		obj.put("password", sm.getUser().decrypt(this.crypted_password));
+		//obj.put("password", sm.getUser().decrypt(this.crypted_password));
 		for(AccountInformation info : this.infos){
 			String value;
 			if (info.getInformationName().equals("password")) {
@@ -158,8 +152,6 @@ public class Account {
 		for (AccountInformation info : this.infos) {
 			if ((value = infos.get(info.getInformationName())) != null) {
 				 info.setInformation_value(value, sm);
-			} else {
-				throw new GeneralException(ServletManager.Code.ClientError, "Wrong information name : "+ info.getInformationName() +".");
 			}
 		}
 		db.commitTransaction(transaction);

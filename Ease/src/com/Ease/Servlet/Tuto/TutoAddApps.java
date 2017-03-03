@@ -60,7 +60,6 @@ public class TutoAddApps extends HttpServlet {
 		try {
 			sm.needToBeConnected();
 			String scrappedAppsString = sm.getServletParam("scrapjson", false);
-			System.out.println(scrappedAppsString);
 			JSONParser parser = new JSONParser();
 			Object array = parser.parse(scrappedAppsString);
 			JSONArray jsonArray = (JSONArray) array;
@@ -111,11 +110,12 @@ public class TutoAddApps extends HttpServlet {
 					} else {
 						password = obj.get("password").toString();
 					}
+					infos.put("password", password);
 					boolean ret = false;
 					for (Profile p : user.getDashboardManager().getProfilesList()) {
 						for (App app : p.getApps()) {
 							if (app.getClass().getName().equals("WebsiteApp") && ((WebsiteApp)app).getSite() == site) {
-								ClassicApp.createFromWebsiteApp((WebsiteApp)app, obj.get("name").toString(), password, infos, sm, user);
+								ClassicApp.createFromWebsiteApp((WebsiteApp)app, obj.get("name").toString(), infos, sm, user);
 								ret = true;
 							}
 						}
@@ -124,7 +124,7 @@ public class TutoAddApps extends HttpServlet {
 						if (obj.get("password").toString().equals("")) {
 							profile.addEmptyApp(obj.get("name").toString(), site, sm);
 						} else {
-							logwith = profile.addClassicApp(obj.get("name").toString(), site, password, infos, sm);
+							logwith = profile.addClassicApp(obj.get("name").toString(), site, infos, sm);
 						}
 					}
 				}

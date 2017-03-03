@@ -18,7 +18,7 @@ public class WebsiteInformation {
 	
 	public static List<WebsiteInformation> loadInformations(String website_id, DataBaseConnection db) throws GeneralException {
 		List<WebsiteInformation> website_informations = new LinkedList<WebsiteInformation>();
-		ResultSet rs = db.get("SELECT id, information_name, information_type FROM websitesInformations WHERE website_id=" + website_id + ";");
+		ResultSet rs = db.get("SELECT id, information_name, information_type FROM websitesInformations WHERE website_id=" + website_id + " ORDER BY priority;");
 		try {
 			while (rs.next()) {
 				website_informations.add(new WebsiteInformation(rs.getString(1), rs.getString(2), rs.getString(3)));
