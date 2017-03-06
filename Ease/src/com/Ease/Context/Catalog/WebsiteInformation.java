@@ -91,7 +91,7 @@ public class WebsiteInformation {
 		res.put("name", this.information_name);
 		res.put("type", this.information_type);
 		res.put("placeholder", this.placeholder);
-		res.put("placeholder_icon", this.placeholder_icon);
+		res.put("placeholderIcon", this.placeholder_icon);
 		return res;
 	}
 }

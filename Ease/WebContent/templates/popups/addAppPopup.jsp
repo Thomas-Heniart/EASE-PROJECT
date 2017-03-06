@@ -94,7 +94,7 @@ pageEncoding="UTF-8"%>
 					</div>
 				</div>
 				<div class="row loginPasswordRow">
-					<span class="input login">
+					<!--<span class="input login">
 						<i class="fa fa-user-o placeholderIcon" aria-hidden="true"></i>
 						<input type="text" name="login" id="login" placeholder="Login"/>
 					</span>
@@ -105,7 +105,7 @@ pageEncoding="UTF-8"%>
 							<i class="fa fa-eye-slash centeredItem" aria-hidden="true"></i>
 						</div>
 						<input id="password" type="password" name="password" placeholder="Password">
-					</span>
+					</span> -->
 				</div>
 				<div class="row sameSsoAppsRow">
 					<div class="horizontalSelectDiv">

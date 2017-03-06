@@ -87,7 +87,7 @@ public class Website {
 		return site;
 	}
 
-	public static Website createWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, String[] haveLoginWith, Catalog catalog, ServletManager sm) throws GeneralException {
+	public static Website createWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, boolean noLogin, String[] haveLoginWith, String[] infoNames, String[] infoTypes, String[] placeholders, String[] placeholderIcons, Catalog catalog, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		ResultSet rs = db.get("SELECT * FROM websites WHERE folder = '"+ folder+"' OR website_name='"+name+"';");
 		try {
@@ -97,12 +97,13 @@ public class Website {
 			int transaction  = db.startTransaction();
 			WebsiteAttributes attributes = WebsiteAttributes.createWebsiteAttributes(db);
 
-			String db_id = db.set("INSERT INTO websites VALUES (null, '"+ url +"', '"+ name +"', '" + folder + "', NULL, 0, '"+ homePage +"', 0, 1, "+ attributes.getDbId() +");").toString();
+			String db_id = db.set("INSERT INTO websites VALUES (null, '"+ url +"', '"+ name +"', '" + folder + "', NULL, " + (noLogin ? "1" : "0") + ", '"+ homePage +"', 0, 1, "+ attributes.getDbId() +");").toString();
 			last_db_id = db_id;
-			WebsiteInformation loginInfo = WebsiteInformation.createInformation(db_id, "login", "text", "1", "Login", "fa-user-o", db);
-			WebsiteInformation passwordInfo = WebsiteInformation.createInformation(db_id, "password", "password", "2", "Password", "fa-lock", db);
+
 			List<WebsiteInformation> infos = new LinkedList<WebsiteInformation>();
-			infos.add(loginInfo);
+			for(int i=0; i < infoNames.length; i++) {
+				infos.add(WebsiteInformation.createInformation(db_id, infoNames[i], infoTypes[i], String.valueOf(i), placeholders[i], placeholderIcons[i], db));
+			}
 
 			if(haveLoginButton){
 				db.set("INSERT INTO loginWithWebsites VALUES (null, "+ db_id +");");

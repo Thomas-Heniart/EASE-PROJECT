@@ -27,10 +27,6 @@ $(document).ready(function() {
 		emailConfirmationForm.setEmail(emailToVerify);
 		$("#SendVerificationEmail button[type='submit']").click();
 	});
-	$(document).click(function(e) {
-		if (!$(e.target).closest("#DeleteEmailPopup .md-content, .removeEmail").length)
-			deleteEmailPopup.close();
-	});
 });
 
 $(function() {
