@@ -110,18 +110,19 @@ public class Account {
 	
 	public void setPassword(String password, User user, ServletManager sm) throws GeneralException {
 		String cryptedPassword = user.encrypt(password);
-		this.setEncryptedPassword(cryptedPassword, user, sm);
+		if (this.getInformationNamed("password") == null)
+			throw new GeneralException(ServletManager.Code.ClientError, "This account does not have password field");
+		for (AccountInformation info : this.infos) {
+			if (info.getInformationName().equals("password"))
+				info.setInformation_value(cryptedPassword, sm);
+		}
 	}
 	
-	public void setEncryptedPassword(String cryptedPassword, User user, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		this.crypted_password = cryptedPassword;
-		db.set("UPDATE accounts SET password='" + cryptedPassword + "' WHERE id=" + this.db_id + ";");
-		
-	}
-	
-	public String getCryptedPassword() {
-		return crypted_password;
+	public String getCryptedPassword() throws GeneralException {
+		String password = this.getInformationNamed("password");
+		if (password == null)
+			throw new GeneralException(ServletManager.Code.ClientError, "This account does not have password field");
+		return password;
 	}
 	
 	/*
