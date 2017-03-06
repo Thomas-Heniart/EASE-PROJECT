@@ -1,3 +1,27 @@
+var Input = function(rootEl, name, type, placeholder, placeholderIcon) {
+	var self = this;
+	this.qRoot = $(rootEl);
+	this.qRoot.append('<span class="input">'
+						+ '<i class="fa ' + placeholderIcon + ' placeholderIcon" aria-hidden="true"></i>'
+						+ '<input type="' + type + '" name="' + name + '" id="' + name + '" placeholder="' + placeholder + '"/>'
+					+ '</span>');
+	this.inputField = $("#" + name, this.qRoot);
+	this.inputField.keyup(function(e){
+		if (e.which == 13)
+			self.submitButton.click();
+	});
+	this.isValid = false;
+	this.inputField.on('input', function(){
+		if (self.inputField.val().length)
+			self.isValid = true;
+		else
+			self.isValid = false;			
+	});
+	this.val = function() {
+		return self.inputField.val();
+	}
+}
+
 addAppPopup = function(rootEl){
 	var self = this;
 	this.qRoot = $(rootEl);
@@ -312,6 +336,7 @@ addAppPopup = function(rootEl){
 		}
 		if (app.ssoId == -1){
 			self.loginPasswordRow.removeClass('hide');
+			self.initializeInputsRow();
 			self.activeSections.push(self.loginPasswordRow);
 		}else {
 			self.setupSameAccountsDiv(app.ssoId);
@@ -328,7 +353,24 @@ addAppPopup = function(rootEl){
 		self.parentHandler.addClass('myshow');
 		self.qRoot.addClass('show');
 	}
-
+	this.currentInputs = [];
+	this.initializeInputsRow = function() {
+		self.loginPasswordRow.removeClass('hide');
+		console.log(self.currentApp.inputs);
+		for (var name in self.currentApp.inputs) {
+		  if (self.currentApp.inputs.hasOwnProperty(name)) {
+			var type = self.currentApp.inputs[name];
+			this.currentInputs.push(new Input(self.loginPasswordRow, name, type, 'placeholder', 'bla'));
+		  }
+		}
+		/*self.currentApp.inputs.forEach(function(input) {
+			this.currentInputs.push(new Input(self.loginPasswordRow, ))
+		})*/
+	}
+	this.resetInputsRow = function() {
+		$(".input", self.loginPasswordRow).remove();
+		self.currentInputs = [];
+	}
 	this.close = function(){
 		self.qRoot.removeClass('show');
 		self.parentHandler.removeClass('myshow');
