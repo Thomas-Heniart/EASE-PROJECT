@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.Ease.Context.Group.Infrastructure;
@@ -168,5 +169,18 @@ public class Account {
 
 	public String getPassword() {
 		return this.crypted_password;
+	}
+
+	public JSONArray getInformationsJSON() {
+		JSONArray res = new JSONArray();
+		for(AccountInformation info : this.infos) {
+			if (info.getInformationName().equals("password"))
+				continue;
+			JSONObject tmp = new JSONObject();
+			tmp.put("name", info.getInformationName());
+			tmp.put("value", info.getInformationValue());
+			res.add(tmp);
+		}
+		return res;
 	}
 }

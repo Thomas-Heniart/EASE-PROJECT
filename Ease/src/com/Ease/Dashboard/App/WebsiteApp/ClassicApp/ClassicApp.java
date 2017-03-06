@@ -200,5 +200,8 @@ public class ClassicApp extends WebsiteApp {
 		return false;
 	}
 
+	public JSONArray getAccoutInformationsJson() {
+		return this.account.getInformationsJSON();
+	}
 	
 }
