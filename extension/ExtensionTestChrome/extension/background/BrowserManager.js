@@ -63,12 +63,6 @@ var Content = function(singleId, type, target) {
 	this.dispatchResponse = function(event) {
 		msgManager.dispatchResponse(event);
 	}
-
-	if (self.type === "tab") {
-		self.close = function() {
-
-		}
-	}
 }
 
 var Window = function(target) {
@@ -83,10 +77,10 @@ var Window = function(target) {
 	this.tabs = {};
 
 	this.close = function() {
-		self.target.close();
+
 	}
 	this.newTab = function () {
-		self.target.openTab();
+
 	}
 
 	this.addEventListener = function(eventName, fCallback, count) {
