@@ -1,0 +1,30 @@
+{
+    "name":"Wunderlist",
+    "lastLogin":"",
+    "home":"https://www.wunderlist.com/login?redirect_url=/webapp",
+    "connect":{
+        "todo":[
+            {"action": "goto", "url":"https://www.wunderlist.com/login?redirect_url=/webapp"},
+            {"action":"fill", "what":"login", "search":".auth-form input[name=email]"},
+            {"action":"fill", "what":"password", "search":".auth-form input[name=password]"},
+            {"action":"click", "search":"input[type=submit]"}
+        ]
+    },
+    "logout":{
+        "todo":[
+            {"action": "waitfor", "search": "a.user"},
+        	{"action":"clickona", "search":"a.user"},
+            {"action": "waitfor", "search": "a.logout"},
+            {"action": "clickona", "search": "a.logout"}
+            ]
+    },
+    "checkAlreadyLogged":[
+        {"action": "waitfor", "search": ".auth-form, a.user"},
+        {"search": "a.user"}
+    ],
+    "Facebook":{
+        "todo":[
+            {"action":"clickona", "search":".external-auth.facebook a"}
+        ]
+    }
+}

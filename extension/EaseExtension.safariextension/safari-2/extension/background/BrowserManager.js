@@ -1,3 +1,4 @@
+
 var Tab = function (singleId, target) {
 	var self = this;
 	var base = new Base(); //config.js ---> This is to define API identity
@@ -9,6 +10,8 @@ var Tab = function (singleId, target) {
 	this.target = target;
 	var eventManager = new EventManager();
 	var msgManager = new MsgManager(self);
+	this.iFrames = {};
+	this.popups = {};
 	
 	//
 	///	Using EventManager
@@ -57,9 +60,6 @@ var Tab = function (singleId, target) {
 	this.dispatchResponse = function(event) {
 		msgManager.dispatchResponse(event);
 	}
-
-
-
 }
 
 var BrowserManager = function () {
@@ -72,6 +72,8 @@ var BrowserManager = function () {
 	this.tabs = {};
 	var eventManager = new EventManager();
 	var msgManager = new MsgManager();
+
+	var tabToRemove = {};
 
 	this.openTab = function() {
 		safari.application.activeBrowserWindow.openTab();
@@ -136,6 +138,7 @@ var BrowserManager = function () {
 			if (self.tabs[attr].target == target) {
 				singleId = attr;
 				self.tabs[attr].dispatchEvent("reload");
+				self.tabs[attr].iFrames = {};
 				self.dispatchEvent("tabReload", self.tabs[attr]);
 			}
 		});
@@ -147,13 +150,59 @@ var BrowserManager = function () {
 		}
 		return singleId;
 	}
+	
+	function addIFrame(singleId, parentIds, target) {
+		function addIframeRec(currentTab, singleId, parentIds, target, i) {
+			if (parentIds.length > i) {
+				addIframeRec(currentTab.iFrames[parentIds[i]], singleId, parentIds, target, i + 1);
+			} else {
+				currentTab.iFrames[singleId] = new Tab(singleId, target);
+			}
+		}
+		addIframeRec(self.tabs[parentIds[0]], singleId, parentIds, target, 1);
+	}
+	function iFrameGetParent(parentIds) {
+		if (parentIds.length == 0) {
+			return undefined;
+		}
+		function iFrameGetParentRec(currentTab, parentIds, i) {
+			if (parentIds.length > i) {
+				return iFrameGetParentRec(currentTab.iFrames[parentIds[i]], parentIds, i + 1);
+			} else {
+				return currentTab;
+			}
+		}
+		return iFrameGetParentRec(self.tabs[parentIds[0]], parentIds, 1);
+	}
 
 	safari.application.addEventListener("message", function(event) {
 		if (event.message.magic === base.magic) {
 			if (event.name === "tabInit") {
 				if (event.target.page) {
 					var singleId = addTab(event.target);
-					event.target.page.dispatchMessage("initResponse",{'magic':base.magic, 'singleId':singleId});
+					event.target.page.dispatchMessage("tabInit",{'magic':base.magic, 'singleId':singleId});
+				}
+			} else if (event.name === "iFrameInit") {
+				if (event.target.page) {
+					event.target.page.dispatchMessage("checkChildIFrame", {'magic':base.magic, 'singleId':event.message.singleId});
+				}
+			} else if (event.name === "iFrameFinded") {
+				if (event.target.page) {
+					var parent = iFrameGetParent(event.message.parentIds);
+					if (tabToRemove[event.message.singleId] == undefined) {
+						parent.iFrames[event.message.singleId] = new Tab(event.message.singleId, event.target);
+					} else {
+						delete tabToRemove[event.message.singleId];
+					}
+				}
+			} else if (event.name === "closeIFrame") {
+				if (event.target.page) {
+					var parent = iFrameGetParent(event.message.parentIds);
+					if (parent && parent.iFrames[event.message.singleId]) {
+						delete parent.iFrames[event.message.singleId];
+					} else {
+						tabToRemove[event.message.singleId] = "iframe";
+					}
 				}
 			} else if (event.name === "existingTab") {
 				if (event.target.page) {
@@ -197,7 +246,9 @@ var BrowserManager = function () {
 
 	safari.application.browserWindows.forEach(function(wins) {
 		wins.tabs.forEach(function(tab) {
-			tab.page.dispatchMessage("checkExistingTabs", {'magic':base.magic});
+			if (tab.page) {
+				tab.page.dispatchMessage("checkExistingTabs", {'magic':base.magic});
+			}
 		});
 	});
 }
