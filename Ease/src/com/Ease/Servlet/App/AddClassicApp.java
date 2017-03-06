@@ -68,16 +68,17 @@ public class AddClassicApp extends HttpServlet {
 			
 			if (name == null || name.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
-			else if (password == null)
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty password.");
-			else if (websiteIdsParam == null)
+			if (websiteIdsParam == null)
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty websites");
 			
+			/*else if (password == null)
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty password.");*/
+			
 			//Mettre un param keyDate dans le post si besoin de decrypter en RSA. Correspond à la private key RSA, 
-			String keyDate = sm.getServletParam("keyDate", true);
+			/*String keyDate = sm.getServletParam("keyDate", true);
 			if (keyDate != null && !keyDate.equals("")) {
 				password = RSA.Decrypt(password, Integer.parseInt(keyDate));
-			}
+			}*/
 			
 			JSONParser parser = new JSONParser();
 			JSONArray websiteIds = null;
@@ -93,7 +94,7 @@ public class AddClassicApp extends HttpServlet {
 					if (site == null)
 						throw new GeneralException(ServletManager.Code.ClientError, "This website does not exist");
 					Map<String, String> infos = site.getNeededInfos(sm);
-					App newApp = ClassicApp.createClassicApp(profile, profile.getApps().size(), (res.size() == 0) ? name : site.getName(), site, password, infos, sm, user);
+					App newApp = ClassicApp.createClassicApp(profile, profile.getApps().size(), (res.size() == 0) ? name : site.getName(), site, infos, sm, user);
 					profile.addApp(newApp);
 					res.add(newApp.getSingleId());
 				}

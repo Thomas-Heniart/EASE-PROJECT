@@ -103,6 +103,8 @@ public class WebsiteApp extends App {
 			String website_app_id = rs.getString(Data.ID.ordinal());
 			switch (rs.getString(Data.TYPE.ordinal())) {
 				case ("classicApp"):
+					db.set("DELETE FROM accountsInformations WHERE account_id IN (SELECT account_id FROM classicApps WHERE website_app_id = " + website_app_id + ");");
+					db.set("DELETE FROM accounts WHERE id IN (SELECT account_id FROM classicApps WHERE website_app_id = " + website_app_id + ");");
 					db.set("DELETE FROM classicApps WHERE website_app_id = " + website_app_id + ";");
 				break;
 				case ("logwithApp"):

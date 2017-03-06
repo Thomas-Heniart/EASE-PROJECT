@@ -80,7 +80,7 @@ public class WebsiteAppToClassicApp extends HttpServlet {
 					if (!app.getType().equals("WebsiteApp"))
 						throw new GeneralException(ServletManager.Code.ClientError, "This is not an empty app.");
 					infos = ((WebsiteApp)app).getSite().getNeededInfos(sm);
-					ClassicApp.createFromWebsiteApp((WebsiteApp)app, name, password, infos, sm, user);
+					ClassicApp.createFromWebsiteApp((WebsiteApp)app, name, infos, sm, user);
 				}
 				db.commitTransaction(transaction);
 				sm.setResponse(ServletManager.Code.Success, "Classic app created instead of website app.");

@@ -70,11 +70,10 @@ response.addCookie(email);
 		<div class="col-left <c:if test='${settingsOpen eq null}'>show</c:if>" style="width: 100%; float:left">
 			<%@ include file="ProfileView.jsp"%>
 			<div class="MenuButtonSet">
-<!--				<div id="updateCount" <c:out value="${user.getUpdateManager().getUpdates().size() > 0 ? '' : 'style=display:none'}"/>>
-					<c:out value="${user.getUpdateManager().getUpdates().size()}"/>
-				</div>-->
-			<button id="enterEditMode" state="off" class="button <c:if test="${param.catalogOpen}">editMode</c:if>"><img src="resources/icons/menu_icon.png"/>
-				<div class="openCatalogHelper"></div>
+				<button id="enterEditMode" state="off" class="button<c:if test="${param.catalogOpen}"> editMode</c:if>">
+					<img src="resources/icons/menu_icon.png"/>
+					<div class="openCatalogHelper"></div>
+				</button>
 			</div>
 			<%@ include file="catalog/catalogView.jsp"%>
 			<c:if test='${user.appsImported() && (user.allTipsDone() eq false)}'>

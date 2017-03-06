@@ -123,6 +123,19 @@
 		width: 50%;
 		margin-left: 25%;
 	}
+	#websiteInformations {
+		.websiteInfo {
+			padding: 5px;
+			border: solid 1px lightgray;
+			border-radius: 10px;
+			margin-top: 5px;
+			input {
+				width: 40%;
+				margin: 2px;
+				display: inline-block;
+			}
+		}
+	}
 }
 
 #changeBackForm {

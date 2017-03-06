@@ -21,6 +21,11 @@ $(document).ready(function() {
 	
 	$("#cleanSavedSessions").click(cleanSavedSessions);
 	$("#buttonTestWebsites").click(testWebsites);
+	
+	/* Site integration */
+	$("#AddSiteTab #addSiteForm #addInfo").click(addWebsiteInfo);
+	
+	
 	/* Move websites positions in catalog */
 	$(".goTop").click(function() {
 		changePositionForm.setPostName("goTop");
@@ -393,4 +398,13 @@ function testWebsites(){
 		},
 		'text'
 	);
+}
+
+function addWebsiteInfo() {
+	$("#AddSiteTab #addSiteForm #websiteInformations").append("<div class='websiteInfo'>"
+						+ "<input name='infoName' type='text' class='form-control' placeholder='Info name'/>"
+						+ "<input name='infoType' type='text' class='form-control' placeholder='Info type'/>"
+						+ "<input name='infoPlaceholder' type='text' class='form-control' placeholder='Placeholder'/>"
+						+ "<input name='infoPlaceholderIcon' type='text' class='form-control' placeholder='FA icon'/>"
+					+ "</div>");
 }

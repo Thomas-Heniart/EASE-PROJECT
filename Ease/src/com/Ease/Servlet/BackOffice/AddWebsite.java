@@ -1,25 +1,23 @@
 package com.Ease.Servlet.BackOffice;
 
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.Ease.Context.Catalog.Catalog;
+import com.Ease.Context.Catalog.WebsiteInformation;
 import com.Ease.Dashboard.User.User;
-import com.Ease.Dashboard.User.UserEmail;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
-
-import javax.servlet.annotation.WebServlet;
 
 
 /**
@@ -65,25 +63,38 @@ public class AddWebsite extends HttpServlet {
 		String homePage = sm.getServletParam("homePage", false);
 		String folder = sm.getServletParam("siteFolder", false);
 		String haveLoginButtonString = sm.getServletParam("haveLoginButton", false);
-		boolean haveLoginButton;
-		if(haveLoginButtonString == "0"){
+		String noLoginString = sm.getServletParam("noLogin", false);
+		System.out.println(noLoginString);
+		boolean noLogin = true;
+		boolean haveLoginButton = true;
+		if(haveLoginButtonString == null)
 			haveLoginButton = false;
-		} else {
-			haveLoginButton = true;
-		}
+		if(noLoginString == null)
+			noLogin = false;
+		
 		String[] haveLoginWith = sm.getServletParamArray("haveLoginWith", false);
+		String[] infoNames = sm.getServletParamArray("infoName", false);
+		String[] infoTypes = sm.getServletParamArray("infoType", false);
+		String[] placeholders = sm.getServletParamArray("infoPlaceholder", false);
+		String[] placeholderIcons = sm.getServletParamArray("infoPlaceholderIcon", false);
 		// --
 		
-		DataBaseConnection db = sm.getDB();
-
 		try {
 			sm.needToBeConnected();
-			if (!user.isAdmin()) {
-				sm.setResponse(ServletManager.Code.ClientWarning, "You are not admin.");
-			} else {
-				catalog.addWebsite(url, name, homePage, folder, haveLoginButton, haveLoginWith, sm);
-				sm.setResponse(ServletManager.Code.Success, "Success");
-			}
+			if (!user.isAdmin())
+				throw new GeneralException(ServletManager.Code.ClientWarning, "You ain't admin");
+			if (url == null || url.equals(""))
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty url");
+			if (homePage == null || homePage.equals(""))
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty homepage");
+			if (name == null || name.equals(""))
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name");
+			if (folder == null || folder.equals(""))
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty folder");
+			if ((infoNames.length - infoTypes.length) != (placeholders.length - placeholderIcons.length))
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Missing informations");
+			catalog.addWebsite(url, name, homePage, folder, haveLoginButton, noLogin, haveLoginWith, infoNames, infoTypes, placeholders, placeholderIcons, sm);
+			sm.setResponse(ServletManager.Code.Success, "Success");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		} catch (Exception e) {
