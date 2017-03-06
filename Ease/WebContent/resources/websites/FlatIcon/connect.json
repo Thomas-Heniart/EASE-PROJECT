@@ -1,0 +1,40 @@
+{ 
+    "name":"FlatIcon", 
+    "lastLogin":"", 
+    "home":"http://www.flaticon.com/", 
+    "connect":{ 
+        "todo":[ 
+        	{"action":"goto", "url":"https://profile.flaticon.com/login"},
+            {"action":"fill", "what":"login", "search":"#gr_login_username"}, 
+            {"action":"fill", "what":"password", "search":"#gr_login_password"}, 
+            {"action":"click", "search":"#signin_button"} 
+        ] 
+    },
+    "Facebook":{ 
+        "todo":[ 
+        	{"action":"goto", "url":"https://profile.flaticon.com/login"},
+            {"action":"click", "search":"#login-facebook"} 
+        ] 
+    },
+    "Google":{ 
+        "todo":[ 
+        	{"action":"goto", "url":"https://profile.flaticon.com/login"},
+            {"action":"click", "search":"#login-google"} 
+        ] 
+    },
+    "Twitter":{ 
+        "todo":[ 
+        	{"action":"goto", "url":"https://profile.flaticon.com/login"},
+            {"action":"click", "search":"#login-twitter"} 
+        ] 
+    },
+    "logout":{ 
+        "todo":[ 
+          {"action":"clickona", "search":"#logout_link"},
+          {"action":"waitload"} 
+        ] 
+    }, 
+    "checkAlreadyLogged":[ 
+        {"search":"#logout_link"} 
+    ] 
+}

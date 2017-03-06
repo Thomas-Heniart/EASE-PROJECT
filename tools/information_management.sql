@@ -1,6 +1,7 @@
 ALTER TABLE websitesInformations
 ADD priority TINYINT NOT NULL;
 
+
 ALTER TABLE websitesInformations
 ADD placeholder VARCHAR(25) NOT NULL;
 
