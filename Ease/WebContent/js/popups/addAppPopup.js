@@ -1,26 +1,38 @@
-var Input = function(rootEl, name, type, placeholder, placeholderIcon) {
+var Input = function(rootEl, parent, name, type, placeholder, placeholderIcon) {
 	var self = this;
 	this.qRoot = $(rootEl);
-	this.qRoot.append('<span class="input">'
+	this.name = name;
+	this.qRoot.append('<span class="input ' + name + '">'
 						+ '<i class="fa ' + placeholderIcon + ' placeholderIcon" aria-hidden="true"></i>'
-						+ '<input type="' + type + '" name="' + name + '" id="' + name + '" placeholder="' + placeholder + '"/>'
 					+ '</span>');
+	if (type === 'password') {
+		$("span.input." + name, this.qRoot).append('<div class="showPassDiv">'
+				+ '<i class="fa fa-eye centeredItem" aria-hidden="true"></i>'
+				+ '<i class="fa fa-eye-slash centeredItem" aria-hidden="true"></i>'
+			+ '</div>');
+	}
+	$("span.input." + name, this.qRoot).append('<input type="' + type + '" name="' + name + '" id="' + name + '" placeholder="' + placeholder + '"/>');
+	$('.showPassDiv', this.qRoot).click(function(){
+        var input = $(this).parent().find('input');
+        if ($(this).hasClass('show')){
+            input.attr('type', 'password');
+            input.focus();
+            $(this).removeClass('show');
+        } else {
+            input.attr('type', 'text');
+            input.focus();
+            $(this).addClass('show');
+        }
+    });
 	this.inputField = $("#" + name, this.qRoot);
 	this.inputField.keyup(function(e){
 		if (e.which == 13)
-			self.submitButton.click();
-	});
-	this.isValid = false;
-	this.inputField.on('input', function(){
-		if (self.inputField.val().length)
-			self.isValid = true;
-		else
-			self.isValid = false;			
+			parent.submitButton.click();
 	});
 	this.val = function() {
 		return self.inputField.val();
 	}
-}
+}	
 
 addAppPopup = function(rootEl){
 	var self = this;
@@ -71,15 +83,15 @@ addAppPopup = function(rootEl){
 		});
 	});
 
-	this.loginInput.keyup(function(e){
+	/*this.loginInput.keyup(function(e){
 		if (e.which == 13)
 			self.submitButton.click();
 	});
 	this.passwordInput.keyup(function(e){
 		if (e.which == 13)
 			self.submitButton.click();
-	});
-	this.loginInput.on('input', function(){
+	})*/;
+	/*this.loginInput.on('input', function(){
 		if (self.loginInput.val().length && self.passwordInput.val().length){
 			self.submitButton.removeClass('locked');
 		} else {
@@ -92,7 +104,7 @@ addAppPopup = function(rootEl){
 		} else {
 			self.submitButton.addClass('locked');			
 		}
-	});
+	});*/
 	/* Sign in interactions */
 	this.signInAccountSelectRow.find('.selectable').selectable({
 		classes: {
@@ -357,19 +369,26 @@ addAppPopup = function(rootEl){
 	this.initializeInputsRow = function() {
 		self.loginPasswordRow.removeClass('hide');
 		console.log(self.currentApp.inputs);
-		for (var name in self.currentApp.inputs) {
-		  if (self.currentApp.inputs.hasOwnProperty(name)) {
-			var type = self.currentApp.inputs[name];
-			this.currentInputs.push(new Input(self.loginPasswordRow, name, type, 'placeholder', 'bla'));
-		  }
-		}
-		/*self.currentApp.inputs.forEach(function(input) {
-			this.currentInputs.push(new Input(self.loginPasswordRow, ))
-		})*/
+		self.currentApp.inputs.forEach(function(input) {
+			self.currentInputs.push(new Input(self.loginPasswordRow, self, input.name, input.type, input.placeholder, input.placeholderIcon));
+		});
+		$("input", self.loginPasswordRow).on('input', function() {
+			if (self.checkInputsRow())
+				self.submitButton.removeClass('locked');
+			else
+				self.submitButton.addClass('locked');
+		});
 	}
 	this.resetInputsRow = function() {
 		$(".input", self.loginPasswordRow).remove();
 		self.currentInputs = [];
+	}
+	this.checkInputsRow = function() {
+		for (var i=0; i < self.currentInputs.length; i++) {
+			if (!self.currentInputs[i].val().length)
+				return false;
+		}
+		return true;
 	}
 	this.close = function(){
 		self.qRoot.removeClass('show');
@@ -394,6 +413,7 @@ addAppPopup = function(rootEl){
 		self.ssoSelectAccountRow.addClass('hide');
 		self.orDelimiter.addClass('hide');
 		self.accountNameHelper.addClass('hide');
+		self.resetInputsRow();
 	}
 
 	this.setName = function(name){
@@ -427,21 +447,23 @@ addAppPopup = function(rootEl){
 		if (self.choosenSsoAccountLogin != null) {
 			submitUrl = "AddClassicAppSameAs";
 		}
-		if (submitUrl == "AddClassicApp" && (!login.length || !password.length))
+		if (submitUrl == "AddClassicApp" && (!self.checkInputsRow()))
 			return;
 		self.submitButton.addClass('loading');
 		var websiteIdJson = JSON.stringify(websiteId);
-		postHandler.post(
-			submitUrl,
-			{
+		var parameters = {
 				'name' : name,
-				'login' : login,
-				'password' : password,
 				'profileId' : profileId,
 				'websiteIds' : websiteIdJson,
 				'logwithId' : logwithId,
 				'appId' : appId
-			},
+			};
+		self.currentInputs.forEach(function(input) {
+			parameters[input.name] = input.val();
+		});
+		postHandler.post(
+			submitUrl,
+			parameters,
 			function(){
 				self.submitButton.removeClass('loading');
 			},

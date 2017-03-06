@@ -99,7 +99,8 @@ public class Website {
 
 			String db_id = db.set("INSERT INTO websites VALUES (null, '"+ url +"', '"+ name +"', '" + folder + "', NULL, 0, '"+ homePage +"', 0, 1, "+ attributes.getDbId() +");").toString();
 			last_db_id = db_id;
-			WebsiteInformation loginInfo = WebsiteInformation.createInformation(db_id, "login", "text", db);
+			WebsiteInformation loginInfo = WebsiteInformation.createInformation(db_id, "login", "text", "1", "Login", "fa-user-o", db);
+			WebsiteInformation passwordInfo = WebsiteInformation.createInformation(db_id, "password", "password", "2", "Password", "fa-lock", db);
 			List<WebsiteInformation> infos = new LinkedList<WebsiteInformation>();
 			infos.add(loginInfo);
 
@@ -475,9 +476,10 @@ public class Website {
 		else
 			res.put("ssoId", -1);
 		res.put("url", this.website_homepage);
-		JSONObject inputs = new JSONObject();
-		for (WebsiteInformation websiteInformation : this.website_informations)
-			inputs.put(websiteInformation.getInformationName(), websiteInformation.getInformationValue());
+		JSONArray inputs = new JSONArray();
+		for (WebsiteInformation websiteInformation : this.website_informations) {
+			inputs.add(websiteInformation.getJson());
+		}
 		res.put("inputs", inputs);
 		res.put("isNew", this.isNew());
 		res.put("position", this.position);
