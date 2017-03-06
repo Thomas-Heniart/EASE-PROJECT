@@ -40,6 +40,9 @@
 					<input
 						style="width: 20px; height: 20px; padding: 0; margin: 0; vertical-align: bottom; position: relative;"
 						type="checkbox" name="haveLoginButton" />Have loginWith button
+					<input
+						style="width: 20px; height: 20px; padding: 0; margin: 0; vertical-align: bottom; position: relative;"
+						type="checkbox" name="noLogin" />noLogin
 				</div>
 				<div class="form-control"
 					style="margin-left: 25%; margin-top: 1%; width: 50%; position: relative;">
@@ -49,6 +52,22 @@
 						style="width: 20px; height: 20px; padding: 0; margin: 0; vertical-align: bottom; position: relative;"
 						type="checkbox" name="haveLoginWith" value="28" />Linkedin
 				</div>
+				<div id="websiteInformations"
+					style="margin-left: 25%; margin-top: 1%; width: 50%; position: relative;">
+					<div class='websiteInfo'>
+						<input name='infoName' type='text' class='form-control' value='login' placeholder='Info name'/>
+						<input name='infoType' type='text' class='form-control' value='text' placeholder='Info type'/>
+						<input name='infoPlaceholder' type='text' class='form-control' value='Login' placeholder='Placeholder'/>
+						<input name='infoPlaceholderIcon' type='text' class='form-control' value='fa-user-o' placeholder='FA icon'/>
+					</div>
+					<div class='websiteInfo'>
+						<input name='infoName' type='text' class='form-control' value='password' placeholder='Info name'/>
+						<input name='infoType' type='text' class='form-control' value='password' placeholder='Info type'/>
+						<input name='infoPlaceholder' type='text' class='form-control' value='Password' placeholder='Placeholder'/>
+						<input name='infoPlaceholderIcon' type='text' class='form-control' value='fa-lock' placeholder='FA icon'/>
+					</div>
+				</div>
+				<button type="button" class='btn btn-default form-control' id="addInfo" style="margin-left: 25%; margin-top: 1%; width: 50%; position: relative;">Add information</button>
 				<input type="submit" class="btn btn-default btn-primary"
 					value="Send to database" />
 			</form>

@@ -24,6 +24,7 @@ import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.Crypto.RSA;
 
 public class Website {
 	public enum WebsiteData {
@@ -86,7 +87,7 @@ public class Website {
 		return site;
 	}
 
-	public static Website createWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, String[] haveLoginWith, Catalog catalog, ServletManager sm) throws GeneralException {
+	public static Website createWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, boolean noLogin, String[] haveLoginWith, String[] infoNames, String[] infoTypes, String[] placeholders, String[] placeholderIcons, Catalog catalog, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		ResultSet rs = db.get("SELECT * FROM websites WHERE folder = '"+ folder+"' OR website_name='"+name+"';");
 		try {
@@ -96,11 +97,13 @@ public class Website {
 			int transaction  = db.startTransaction();
 			WebsiteAttributes attributes = WebsiteAttributes.createWebsiteAttributes(db);
 
-			String db_id = db.set("INSERT INTO websites VALUES (null, '"+ url +"', '"+ name +"', '" + folder + "', NULL, 0, '"+ homePage +"', 0, 1, "+ attributes.getDbId() +");").toString();
+			String db_id = db.set("INSERT INTO websites VALUES (null, '"+ url +"', '"+ name +"', '" + folder + "', NULL, " + (noLogin ? "1" : "0") + ", '"+ homePage +"', 0, 1, "+ attributes.getDbId() +");").toString();
 			last_db_id = db_id;
-			WebsiteInformation loginInfo = WebsiteInformation.createInformation(db_id, "login", "text", db);
+
 			List<WebsiteInformation> infos = new LinkedList<WebsiteInformation>();
-			infos.add(loginInfo);
+			for(int i=0; i < infoNames.length; i++) {
+				infos.add(WebsiteInformation.createInformation(db_id, infoNames[i], infoTypes[i], String.valueOf(i), placeholders[i], placeholderIcons[i], db));
+			}
 
 			if(haveLoginButton){
 				db.set("INSERT INTO loginWithWebsites VALUES (null, "+ db_id +");");
@@ -307,15 +310,46 @@ public class Website {
 	public Map<String, String> getNeededInfos(ServletManager sm) throws GeneralException {
 		Map<String, String> infos = new HashMap<String, String>();
 		for (WebsiteInformation info : website_informations) {
-			String value = sm.getServletParam(info.getInformationName(), true);
+			String info_name = info.getInformationName();
+			String value = sm.getServletParam(info_name, false);
 			if (value == null || value.isEmpty()) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong info: " + info.getInformationName() + ".");
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong info: " + info_name + ".");
 			}
-			if (info.getInformationValue().equals("password")) {
+			if (info_name.equals("password")) {
+				//Mettre un param keyDate dans le post si besoin de decrypter en RSA. Correspond à la private key RSA, 
+				String keyDate = sm.getServletParam("keyDate", true);
+				if (keyDate != null && !keyDate.equals("")) {
+					value = RSA.Decrypt(value, Integer.parseInt(keyDate));
+				}
 				value = sm.getUser().encrypt(value);
 			}
-			infos.put(info.getInformationName(), value);
+			infos.put(info_name, value);
 		}
+		return infos;
+	}
+	
+	public Map<String, String> getNeededInfosForEdition(ServletManager sm) throws GeneralException {
+		Map<String, String> infos = new HashMap<String, String>();
+		for (WebsiteInformation info : website_informations) {
+			String info_name = info.getInformationName();
+			String value = sm.getServletParam(info_name, false);
+			if (value == null || value.equals("")) {
+				if (info_name.equals("password"))
+					continue;
+				else
+					throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong info: " + info_name + ".");
+			}
+			if (info_name.equals("password")) {
+				//Mettre un param keyDate dans le post si besoin de decrypter en RSA. Correspond à la private key RSA, 
+				String keyDate = sm.getServletParam("keyDate", true);
+				if (keyDate != null && !keyDate.equals("")) {
+					value = RSA.Decrypt(value, Integer.parseInt(keyDate));
+				}
+				value = sm.getUser().encrypt(value);
+			}
+			infos.put(info_name, value);
+		}
+		System.out.println(infos.size());
 		return infos;
 	}
 
@@ -443,9 +477,10 @@ public class Website {
 		else
 			res.put("ssoId", -1);
 		res.put("url", this.website_homepage);
-		JSONObject inputs = new JSONObject();
-		for (WebsiteInformation websiteInformation : this.website_informations)
-			inputs.put(websiteInformation.getInformationName(), websiteInformation.getInformationValue());
+		JSONArray inputs = new JSONArray();
+		for (WebsiteInformation websiteInformation : this.website_informations) {
+			inputs.add(websiteInformation.getJson());
+		}
 		res.put("inputs", inputs);
 		res.put("isNew", this.isNew());
 		res.put("position", this.position);

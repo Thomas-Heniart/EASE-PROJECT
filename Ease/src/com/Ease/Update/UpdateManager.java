@@ -367,7 +367,9 @@ public class UpdateManager {
 				throw new GeneralException(ServletManager.Code.ClientError, "Wrong password");
 			}
 			Map<String, String> infos = updateClassicApp.getInfos();
-			App newApp = ClassicApp.createClassicApp(profile, profile.getApps().size(), updateClassicApp.getSite().getName(), updateClassicApp.getSite(), password, infos, sm, user);
+			/* To verify when back on updates */
+			infos.put("password", password);
+			App newApp = ClassicApp.createClassicApp(profile, profile.getApps().size(), updateClassicApp.getSite().getName(), updateClassicApp.getSite(), infos, sm, user);
 			profile.addApp(newApp);
 			newAppSingleId = Integer.toString(newApp.getSingleId());
 			this.removeUpdateFromDb(update, db);

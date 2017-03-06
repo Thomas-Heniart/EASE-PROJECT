@@ -1,3 +1,39 @@
+var Input = function(rootEl, parent, name, type, placeholder, placeholderIcon) {
+	var self = this;
+	this.qRoot = $(rootEl);
+	this.name = name;
+	this.qRoot.append('<span class="input ' + name + '">'
+						+ '<i class="fa ' + placeholderIcon + ' placeholderIcon" aria-hidden="true"></i>'
+					+ '</span>');
+	if (type === 'password') {
+		$("span.input." + name, this.qRoot).append('<div class="showPassDiv">'
+				+ '<i class="fa fa-eye centeredItem" aria-hidden="true"></i>'
+				+ '<i class="fa fa-eye-slash centeredItem" aria-hidden="true"></i>'
+			+ '</div>');
+	}
+	$("span.input." + name, this.qRoot).append('<input type="' + type + '" name="' + name + '" id="' + name + '" placeholder="' + placeholder + '"/>');
+	$('.showPassDiv', this.qRoot).click(function(){
+        var input = $(this).parent().find('input');
+        if ($(this).hasClass('show')){
+            input.attr('type', 'password');
+            input.focus();
+            $(this).removeClass('show');
+        } else {
+            input.attr('type', 'text');
+            input.focus();
+            $(this).addClass('show');
+        }
+    });
+	this.inputField = $("#" + name, this.qRoot);
+	this.inputField.keyup(function(e){
+		if (e.which == 13)
+			parent.submitButton.click();
+	});
+	this.val = function() {
+		return self.inputField.val();
+	}
+}	
+
 addAppPopup = function(rootEl){
 	var self = this;
 	this.qRoot = $(rootEl);
@@ -47,15 +83,15 @@ addAppPopup = function(rootEl){
 		});
 	});
 
-	this.loginInput.keyup(function(e){
+	/*this.loginInput.keyup(function(e){
 		if (e.which == 13)
 			self.submitButton.click();
 	});
 	this.passwordInput.keyup(function(e){
 		if (e.which == 13)
 			self.submitButton.click();
-	});
-	this.loginInput.on('input', function(){
+	})*/;
+	/*this.loginInput.on('input', function(){
 		if (self.loginInput.val().length && self.passwordInput.val().length){
 			self.submitButton.removeClass('locked');
 		} else {
@@ -68,7 +104,7 @@ addAppPopup = function(rootEl){
 		} else {
 			self.submitButton.addClass('locked');			
 		}
-	});
+	});*/
 	/* Sign in interactions */
 	this.signInAccountSelectRow.find('.selectable').selectable({
 		classes: {
@@ -312,6 +348,7 @@ addAppPopup = function(rootEl){
 		}
 		if (app.ssoId == -1){
 			self.loginPasswordRow.removeClass('hide');
+			self.initializeInputsRow();
 			self.activeSections.push(self.loginPasswordRow);
 		}else {
 			self.setupSameAccountsDiv(app.ssoId);
@@ -328,7 +365,31 @@ addAppPopup = function(rootEl){
 		self.parentHandler.addClass('myshow');
 		self.qRoot.addClass('show');
 	}
-
+	this.currentInputs = [];
+	this.initializeInputsRow = function() {
+		self.loginPasswordRow.removeClass('hide');
+		console.log(self.currentApp.inputs);
+		self.currentApp.inputs.forEach(function(input) {
+			self.currentInputs.push(new Input(self.loginPasswordRow, self, input.name, input.type, input.placeholder, input.placeholderIcon));
+		});
+		$("input", self.loginPasswordRow).on('input', function() {
+			if (self.checkInputsRow())
+				self.submitButton.removeClass('locked');
+			else
+				self.submitButton.addClass('locked');
+		});
+	}
+	this.resetInputsRow = function() {
+		$(".input", self.loginPasswordRow).remove();
+		self.currentInputs = [];
+	}
+	this.checkInputsRow = function() {
+		for (var i=0; i < self.currentInputs.length; i++) {
+			if (!self.currentInputs[i].val().length)
+				return false;
+		}
+		return true;
+	}
 	this.close = function(){
 		self.qRoot.removeClass('show');
 		self.parentHandler.removeClass('myshow');
@@ -352,6 +413,7 @@ addAppPopup = function(rootEl){
 		self.ssoSelectAccountRow.addClass('hide');
 		self.orDelimiter.addClass('hide');
 		self.accountNameHelper.addClass('hide');
+		self.resetInputsRow();
 	}
 
 	this.setName = function(name){
@@ -385,21 +447,23 @@ addAppPopup = function(rootEl){
 		if (self.choosenSsoAccountLogin != null) {
 			submitUrl = "AddClassicAppSameAs";
 		}
-		if (submitUrl == "AddClassicApp" && (!login.length || !password.length))
+		if (submitUrl == "AddClassicApp" && (!self.checkInputsRow()))
 			return;
 		self.submitButton.addClass('loading');
 		var websiteIdJson = JSON.stringify(websiteId);
-		postHandler.post(
-			submitUrl,
-			{
+		var parameters = {
 				'name' : name,
-				'login' : login,
-				'password' : password,
 				'profileId' : profileId,
 				'websiteIds' : websiteIdJson,
 				'logwithId' : logwithId,
 				'appId' : appId
-			},
+			};
+		self.currentInputs.forEach(function(input) {
+			parameters[input.name] = input.val();
+		});
+		postHandler.post(
+			submitUrl,
+			parameters,
 			function(){
 				self.submitButton.removeClass('loading');
 			},

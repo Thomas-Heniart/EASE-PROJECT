@@ -40,9 +40,11 @@
 							height: 3vw;
 						}
 					}
-					.input.login, .input.password {
-						input {
-							padding-left: 1.8vw;
+					.loginPasswordRow {
+						.input {
+							input {
+								padding-left: 1.8vw;
+							}
 						}
 						.placeholderIcon {
 							position: absolute;
@@ -616,6 +618,21 @@
 					font-size: 1vw;
 					font-weight: bold;
 				}
+				.loginPasswordRow {
+						.input {
+							input {
+								padding-left: 1.8vw;
+							}
+						}
+						.placeholderIcon {
+							position: absolute;
+							left: 4%;
+							top: 50%;
+							font-size: 1vw;
+							transform: translateY(-50%);
+							color: #777;
+						}
+				}
 				.row {
 					margin-bottom: 0.6vw;
 					&:last-child {
@@ -908,19 +925,6 @@
 					}
 					.placeholderIcon {
 						font-size: 1vw;
-					}
-					.input.login, .input.password {
-						input {
-							padding-left: 1.8vw;
-						}
-						.placeholderIcon {
-							position: absolute;
-							left: 4%;
-							top: 50%;
-							font-size: 1vw;
-							transform: translateY(-50%);
-							color: #777;
-						}
 					}
 				}
 			}

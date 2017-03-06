@@ -52,6 +52,7 @@ public class GetCatalogApps extends HttpServlet {
 			Catalog catalog = (Catalog) sm.getContextAttr("catalog");
 			res = catalog.getWebsitesJsonForUser(user);
 			sm.setResponse(ServletManager.Code.Success, res.toString());
+			sm.setLogResponse("Get catalog apps done");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		}
