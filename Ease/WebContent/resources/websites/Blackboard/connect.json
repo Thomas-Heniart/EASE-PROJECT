@@ -1,0 +1,20 @@
+{
+	"name":"Blackboard",
+	"lastLogin":"",
+	"home":"http://www.netedhec.com/",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#user_id"},
+			{"action":"fill", "what":"password", "search":"#password"},
+			{"action":"click", "search":"form[name='login'] input[type='submit']"}
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":"a[href*='logout']"}
+	],
+    "logout":{
+        "todo":[
+            {"action":"aclick", "search":"a[href*='logout']"}
+        ]
+    }
+}

@@ -1,0 +1,22 @@
+{
+	"name":"Carreer center",
+	"lastLogin":"",
+	"home":"https://edhec.jobteaser.com/fr/",
+	"connect":{
+		"todo":[
+			{"action":"goto", "url":"https://edhec.jobteaser.com"},
+			{"action":"fill", "what":"login", "search":"#username"},
+			{"action":"fill", "what":"password", "search":"#password"},
+			{"action":"click", "search":"input[name='submit']"}
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":"a[href*='sign_out']"}
+	],
+    "logout":{
+        "todo":[
+            {"action":"clickona", "search":"a[href*='sign_out']"},
+            {"action":"waitload"}
+        ]
+    }
+}
