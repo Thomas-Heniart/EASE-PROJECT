@@ -373,7 +373,6 @@ modifyAppPopup = function(rootEl){
 		this.currentApp = app;
 		self.appNameHolder.val(app.name);
 		self.relatedCatalogApp = catalog.getAppById(app.websiteId);
-		console.log(self.relatedCatalogApp);
 		if (self.relatedCatalogApp != undefined)
 			self.initializeCurrentInputs();
 		if (app.isEmpty){
