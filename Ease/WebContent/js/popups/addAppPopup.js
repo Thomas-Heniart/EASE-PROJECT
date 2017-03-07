@@ -436,8 +436,15 @@ addAppPopup = function(rootEl){
 				'logwithId' : logwithId,
 				'appId' : appId
 			};
+		var parametersToKeep = [];
 		self.currentInputs.forEach(function(input) {
 			parameters[input.name] = input.val();
+			if (input.name != "password") {
+				var obj = {};
+				obj.name = input.name;
+				obj.value = input.val();
+				parametersToKeep.push(obj);
+			}
 		});
 		postHandler.post(
 			submitUrl,
@@ -451,7 +458,8 @@ addAppPopup = function(rootEl){
 				for (var i = 0; i < ids.length; ++i) {
 					catalogApp = catalog.getAppById(websiteId[i]);
 					var app = new MyApp();
-					app.init(logwithId, login, catalogApp.id, i == 0 ? name : catalogApp.name, ids[i], catalogApp.ssoId, true, catalogApp.imgSrc, '');
+					var accountInformations = [];
+					app.init(logwithId, parametersToKeep, catalogApp.id, i == 0 ? name : catalogApp.name, ids[i], catalogApp.ssoId, true, catalogApp.imgSrc, '');
 					self.currentProfile.addApp(app);
 					app.scaleAnimate();
 				}

@@ -285,9 +285,16 @@ modifyAppPopup = function(rootEl){
 				'link': linkUrl, 
 				'appIds': appsIdJson
 		};
+		var parametersToKeep = [];
 		for(var i=0; i < self.currentInputs.length; i++) {
 			var input = self.currentInputs[i]
 			parameters[input.name] = input.val();
+			if (input.name != "password") {
+				var obj = {};
+				obj.name = input.name;
+				obj.value = input.val();
+				parametersToKeep.push(obj);
+			}
 		}
 		postHandler.post(
 			submitUrl,
@@ -309,7 +316,8 @@ modifyAppPopup = function(rootEl){
 						self.sameSsoAccountsVar[i].app.scaleAnimate();
 					}
 				}
-				self.currentApp.setAccountInformationValue("login", parameters.login);
+				//self.currentApp.setAccountInformationValue("login", parameters.login);
+				self.currentApp.accountInformations = parametersToKeep;
 				self.currentApp.logWith = logwithId;
 				self.currentApp.scaleAnimate();
 				self.close();

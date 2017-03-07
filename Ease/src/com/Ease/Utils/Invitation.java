@@ -60,6 +60,15 @@ public class Invitation {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
+	
+	public static boolean checkEmail(String email, String name, ServletManager sm) throws GeneralException {
+		if (!email.endsWith("@ieseg.fr"))
+			return false;
+		GroupManager groupManager = (GroupManager) sm.getContextAttr("groupManager");
+		Group iesegStudentGroup = groupManager.getGroupFromDBid("4");
+		sendInvitation(email, name, iesegStudentGroup, sm);
+		return true;
+	}
 
 	public static void sendFriendInvitation(String email, String friendName, User user, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();

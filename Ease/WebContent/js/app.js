@@ -133,16 +133,15 @@ var MyApp = function(){
 		self.appNameHandler.text(name);
 		self.name = name;
 	}
-	this.init = function(logWith, login, catalogId, name, id, ssoId, canMove, imgSrc, url){
+	this.init = function(logWith, accountInformations, catalogId, name, id, ssoId, canMove, imgSrc, url){
 		self.qRoot = $($('#boxHelper').html());
 		self.qRoot.attr('logwith', logWith.length ? logWith : "false");
-		self.qRoot.attr('login', login);
 		self.qRoot.attr('webid', catalogId);
 		self.qRoot.attr('id', id);
 		self.qRoot.attr('ssoid', ssoId);
 		self.qRoot.attr('move', canMove);
 		self.qRoot.attr('name', name);
-		self.login = login;
+		self.accountInformations = accountInformations;
 		self.id = id;
 		self.ssoId = ssoId;
 		self.name = name;
