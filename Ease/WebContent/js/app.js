@@ -120,6 +120,7 @@ var MyApp = function(){
 	this.imgSrc = '';
 	this.login= '';
 	this.id = '';
+	this.accountInformations = [];
 	this.ssoId = -1;
 	this.name;
 	this.websiteId;
@@ -165,16 +166,44 @@ var MyApp = function(){
 		});
 		return self;
 	};
+	this.initAccountInformations = function() {
+		postHandler.post("GetAccountInformations", {
+			appId: self.id
+		}, function() {
+			
+		}, function(data) {
+			self.accountInformations = JSON.parse(data);
+		}, function(data) {
+			
+		});
+	};
+	this.getAccountInformationValue = function(name) {
+		for(var i=0; i<self.accountInformations.length; i++) {
+			var info = self.accountInformations[i];
+			if (info.name === name)
+				return info.value;
+		}
+		return "";
+	}
+	this.setAccountInformationValue = function(name, value) {
+		for(var i=0; i<self.accountInformations.length; i++) {
+			var info = self.accountInformations[i];
+			if (info.name === name) {
+				info.value = value;
+				return;
+			}
+		}
+	}
 	this.initWithQRoot = function(rootEl){
 		self.qRoot = $(rootEl);
 		self.name = self.qRoot.attr('name');
 		self.id = self.qRoot.attr('id');
 		self.websiteId = self.qRoot.attr('webid');
-		self.login = self.qRoot.attr('login');
 		self.ssoId = self.qRoot.attr('ssoid');
 		self.logWith = self.qRoot.attr('logwith');
 		self.logoHandler = self.qRoot.find('img.logo');
 		self.imgSrc = self.logoHandler.attr('src');
+		self.initAccountInformations();
 		if (self.qRoot.attr('url')){
 			self.url = self.qRoot.attr('url');
 			self.qRoot.attr('url', '');

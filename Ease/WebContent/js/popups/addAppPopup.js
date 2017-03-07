@@ -83,28 +83,6 @@ addAppPopup = function(rootEl){
 		});
 	});
 
-	/*this.loginInput.keyup(function(e){
-		if (e.which == 13)
-			self.submitButton.click();
-	});
-	this.passwordInput.keyup(function(e){
-		if (e.which == 13)
-			self.submitButton.click();
-	})*/;
-	/*this.loginInput.on('input', function(){
-		if (self.loginInput.val().length && self.passwordInput.val().length){
-			self.submitButton.removeClass('locked');
-		} else {
-			self.submitButton.addClass('locked');			
-		}
-	});
-	this.passwordInput.on('input', function(){
-		if (self.loginInput.val().length && self.passwordInput.val().length){
-			self.submitButton.removeClass('locked');
-		} else {
-			self.submitButton.addClass('locked');			
-		}
-	});*/
 	/* Sign in interactions */
 	this.signInAccountSelectRow.find('.selectable').selectable({
 		classes: {

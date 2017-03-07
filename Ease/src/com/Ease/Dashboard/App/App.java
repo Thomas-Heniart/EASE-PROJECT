@@ -221,4 +221,8 @@ public class App {
 			json.put("groupApp", groupJson);
 		}
 	}
+
+	public JSONArray getAccoutInformationsJson() {
+		return new JSONArray();
+	}
 }

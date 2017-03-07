@@ -1,3 +1,53 @@
+var EditInput = function(rootEl, parent, name, type, value, placeholder, placeholderIcon) {
+	var self = this;
+	this.qRoot = $(rootEl);
+	this.name = name;
+	this.value = value;
+	this.qRoot.append('<span class="input ' + name + '">'
+						+ '<i class="fa ' + placeholderIcon + ' placeholderIcon" aria-hidden="true"></i>'
+					+ '</span>');
+	if (type === 'password') {
+		$("span.input." + name, this.qRoot).append('<div class="showPassDiv">'
+				+ '<i class="fa fa-eye centeredItem" aria-hidden="true"></i>'
+				+ '<i class="fa fa-eye-slash centeredItem" aria-hidden="true"></i>'
+				+ '</div>'
+				+ '<div class="inputUnlocker">'
+				+ '<i class="fa fa-cog centeredItem" aria-hidden="true"></i>'
+			+ '</div>');
+	}
+	$("span.input." + name, this.qRoot).append('<input type="' + type + '" name="' + name + '" id="' + name + '" value="' + value + '" placeholder="' + placeholder + '"/>');
+	
+	if (type === 'password') {
+		var passwordDiv = $("span.input." + name, this.qRoot);
+		$("input", passwordDiv).attr("placeholder", "click the wheel to update");
+		$('.inputUnlocker', passwordDiv).click(function(){
+			parent.unlockPasswordInput(passwordDiv);
+		});
+		passwordDiv.addClass("locked");
+	}
+	
+	$('.showPassDiv', this.qRoot).click(function(){
+        var input = $(this).parent().find('input');
+        if ($(this).hasClass('show')){
+            input.attr('type', 'password');
+            input.focus();
+            $(this).removeClass('show');
+        } else {
+            input.attr('type', 'text');
+            input.focus();
+            $(this).addClass('show');
+        }
+    });
+	this.inputField = $("#" + name, this.qRoot);
+	this.inputField.keyup(function(e){
+		if (e.which == 13)
+			parent.tabInfoSubmitButton.click();
+	});
+	this.val = function() {
+		return self.inputField.val();
+	}
+}
+
 modifyAppPopup = function(rootEl){
 	var self = this;
 	this.qRoot = $(rootEl);
@@ -17,11 +67,7 @@ modifyAppPopup = function(rootEl){
 	this.tabInfoSubmitButton = this.tabInfo.find("button[type='submit']");
 
 	this.loginPasswordRow = this.tabInfo.find('.loginPasswordRow');
-	this.loginInput = this.loginPasswordRow.find("input[name='login']");
-	this.passwordInput = this.loginPasswordRow.find("input[name='password']");
-	this.passwordInputDiv = this.loginPasswordRow.find('.input.password');
-
-
+	
 	this.qRoot.find(".row.fragmentsRow").tabs({
 		show: { effect: "fadeIn", duration: 300 }
 	});
@@ -43,27 +89,14 @@ modifyAppPopup = function(rootEl){
 	this.basicSignInName = "";
 
 	this.lockPasswordInput = function(obj){
-		obj.addClass('locked');
-		obj.find('input').attr('placeholder', 'click the wheel to update');
+		//obj.addClass('locked');
+		//obj.find('input').attr('placeholder', 'click the wheel to update');
 	}
 	this.unlockPasswordInput = function(obj){
 		obj.removeClass('locked');
 		obj.find('input').attr('placeholder', 'Password');
+		self.tabInfoSubmitButton.addClass('locked');
 	}
-	this.passwordInputDiv.find('.inputUnlocker').click(function(){
-		self.unlockPasswordInput(self.passwordInputDiv);
-	});
-	this.qRoot.find('input').keyup(function(e){
-		if (e.which == 13)
-			self.tabInfoSubmitButton.click();
-	});
-	this.loginInput.on('input', function(){
-		if (self.loginInput.val().length){
-			self.tabInfoSubmitButton.removeClass('locked');
-		} else {
-			self.tabInfoSubmitButton.addClass('locked');			
-		}
-	});
 	this.signInChooseRow.find('.signInButton').each(function(index, elem){
 		var tmp = new Object();
 		tmp.name = $(elem).attr('data');
@@ -203,10 +236,11 @@ modifyAppPopup = function(rootEl){
 
 	this.currentApp = null;
 	this.relatedCatalogApp = null;
+	this.currentInputs = [];
 
 	this.resetSimpleInputs = function(){
-		self.loginInput.val('');
-		self.passwordInput.val('');
+		//self.loginInput.val('');
+		//self.passwordInput.val('');
 	}
 	this.resetPasswordShows = function(){
 		self.qRoot.find("input[name='password']").attr('type', 'password');
@@ -222,8 +256,6 @@ modifyAppPopup = function(rootEl){
 		self.tabInfoSubmitButton.addClass('loading');
 
 		var name = self.appNameHolder.val();
-		var login = self.loginInput.val();
-		var password = self.passwordInput.val();
 		var linkUrl = self.urlInputHandler.val();
 
 		var logwithApp = self.signInAccountSelectRow.find('.selected');
@@ -247,16 +279,19 @@ modifyAppPopup = function(rootEl){
 				submitUrl = "WebsiteAppToClassicApp";
 		}
 		var appsIdJson = JSON.stringify(appsId);
-		postHandler.post(
-			submitUrl,
-			{
+		var parameters = {
 				'name': name,
-				'login': login,
-				'password': password,
 				'logwithId': logwithId,
 				'link': linkUrl, 
 				'appIds': appsIdJson
-			},
+		};
+		for(var i=0; i < self.currentInputs.length; i++) {
+			var input = self.currentInputs[i]
+			parameters[input.name] = input.val();
+		}
+		postHandler.post(
+			submitUrl,
+			parameters,
 			function(){
 				self.tabInfoSubmitButton.removeClass('loading');
 			},
@@ -268,13 +303,13 @@ modifyAppPopup = function(rootEl){
 					self.currentApp.qRoot.removeClass('emptyApp');
 					self.currentApp.isEmpty = false;
 				}
-				if (login != self.currentApp.login || password.length){
+				if (parameters.login != self.currentApp.getAccountInformationValue('login') || parameters.password.length){
 					for (var i = 0; i < self.sameSsoAccountsVar.length; i++) {
-						self.sameSsoAccountsVar[i].app.login = login;
+						self.sameSsoAccountsVar[i].app.setAccountInformationValue("login", parameters.login);
 						self.sameSsoAccountsVar[i].app.scaleAnimate();
 					}
 				}
-				self.currentApp.login = login;
+				self.currentApp.setAccountInformationValue("login", parameters.login);
 				self.currentApp.logWith = logwithId;
 				self.currentApp.scaleAnimate();
 				self.close();
@@ -306,6 +341,31 @@ modifyAppPopup = function(rootEl){
 		self.signInAccountSelectRow.addClass('hide');
 		self.loginPasswordRow.addClass('hide');
 		self.sameSsoAppsRow.addClass('hide');
+		self.resetInputs();
+	}
+	this.initializeCurrentInputs = function() {
+		for (var i=0; i < self.relatedCatalogApp.inputs.length; i++) {
+			var input = self.relatedCatalogApp.inputs[i];
+			var inputValue = self.currentApp.getAccountInformationValue(input.name);
+			self.currentInputs.push(new EditInput(self.loginPasswordRow, self, input.name, input.type, inputValue, input.placeholder, input.placeholderIcon));
+		}
+		$("input", self.loginPasswordRow).on('input', self.checkInputs);
+	}
+	this.checkInputs = function() {
+		for(var i=0; i< self.currentInputs.length; i++) {
+			var input = self.currentInputs[i];
+			if (!input.inputField.parent().hasClass("locked")) {
+				if (!input.val().length) {
+					self.tabInfoSubmitButton.addClass('locked');
+					return;
+				}
+			}
+		}
+		self.tabInfoSubmitButton.removeClass('locked');
+	}
+	this.resetInputs = function() {
+		$(".input", self.loginPasswordRow).remove();
+		self.currentInputs = [];
 	}
 	this.open = function(app){
 		currentEasePopup = self;
@@ -313,9 +373,10 @@ modifyAppPopup = function(rootEl){
 		this.currentApp = app;
 		self.appNameHolder.val(app.name);
 		self.relatedCatalogApp = catalog.getAppById(app.websiteId);
-
+		if (self.relatedCatalogApp != undefined)
+			self.initializeCurrentInputs();
 		if (app.isEmpty){
-			self.unlockPasswordInput(self.passwordInputDiv);
+			self.unlockPasswordInput($("span.input.password"));
 			if (self.relatedCatalogApp.canLoginWith.length){
 				self.showSignInButtons(self.relatedCatalogApp.canLoginWith);
 				self.signInChooseRow.removeClass('hide');
@@ -337,9 +398,9 @@ modifyAppPopup = function(rootEl){
 				}
 			}
 		}
-		else if (app.login.length){
+		else if (self.currentInputs.length){
 			self.loginPasswordRow.removeClass('hide');
-			self.loginInput.val(app.login);
+			//self.loginInput.val(app.login);
 		}
 		if (!app.isEmpty && !app.url.length && app.ssoId != -1){
 			self.setupSameSsoAccountsDiv();
