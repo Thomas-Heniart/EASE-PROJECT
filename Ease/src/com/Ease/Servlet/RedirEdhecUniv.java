@@ -10,16 +10,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class RedirLandingUniv
+ * Servlet implementation class RedirEdhecUniv
  */
-@WebServlet({"/espas-estice-icm"})
-public class RedirLandingUniv extends HttpServlet {
+@WebServlet("/edhec")
+public class RedirEdhecUniv extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public RedirLandingUniv() {
+    public RedirEdhecUniv() {
         super();
     }
 
@@ -27,7 +27,7 @@ public class RedirLandingUniv extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher rd = request.getRequestDispatcher("schoolLandingTemplate.jsp?schoolImageSrcs=/resources/landing/school/Espas.png,/resources/landing/school/Estice.png,/resources/landing/school/ICM.jpg&schoolName=ESPAS,%20ESTICE%20et%20ICM&formAction=RegistrationEstice&commentFile=esticeComments.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("schoolLandingTemplate.jsp?schoolImageSrcs=/resources/landing/school/edhec.png&schoolName=EDHEC&formAction=Registration&commentFile=edhecComments.jsp");
 		rd.forward(request, response);
 	}
 

@@ -89,7 +89,7 @@ public class Website {
 
 	public static Website createWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, boolean noLogin, String[] haveLoginWith, String[] infoNames, String[] infoTypes, String[] placeholders, String[] placeholderIcons, Catalog catalog, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		ResultSet rs = db.get("SELECT * FROM websites WHERE folder = '"+ folder+"' OR website_name='"+name+"';");
+		ResultSet rs = db.get("SELECT * FROM websites WHERE folder = '"+ folder+"' AND website_name='"+name+"';");
 		try {
 			if (rs.next()){
 				throw new GeneralException(ServletManager.Code.UserMiss, "This website already exists");
@@ -419,7 +419,7 @@ public class Website {
 	}
 
 	public boolean isInPublicCatalog() {
-		return this.websiteAttributes != null;
+		return this.websiteAttributes != null && this.groupIds.isEmpty();
 	}
 
 	public boolean noLogin() {

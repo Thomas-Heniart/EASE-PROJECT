@@ -85,11 +85,12 @@ public class Catalog {
 		}
 	}
 	
-	public void addWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, boolean noLogin, String[] haveLoginWith, String[] infoNames, String[] infoTypes, String[] placeholders, String[] placeholderIcons, ServletManager sm) throws GeneralException {
+	public Website addWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, boolean noLogin, String[] haveLoginWith, String[] infoNames, String[] infoTypes, String[] placeholders, String[] placeholderIcons, ServletManager sm) throws GeneralException {
 		Website site = Website.createWebsite(url, name, homePage, folder, haveLoginButton, noLogin, haveLoginWith, infoNames, infoTypes, placeholders, placeholderIcons, this, sm);
 		websites.add(site);
 		websiteDBmap.put(site.getDb_id(), site);
 		websiteIDmap.put(site.getSingleId(), site);
+		return site;
 	}
 	
 	/*
@@ -150,7 +151,7 @@ public class Catalog {
 	public List<Website> getPublicWebsitesForUser(User user) {
 		List<Website> res = new LinkedList<Website> ();
 		this.websites.forEach((website) -> {
-			if (website.isInPublicCatalogForUser(user) && !website.isNew())
+			if (website.isInPublicCatalogForUser(user))
 				res.add(website);
 		});
 		res.addAll(getNewWebsites());
