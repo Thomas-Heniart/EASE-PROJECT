@@ -19,7 +19,8 @@
 	},
 	"logout":{
 		"todo":[
-			{"action":"goto", "url":"https://unsplash.com/logout"}
+			{"action":"goto", "url":"https://unsplash.com/logout"},
+			{"action":"waitload"}
 			]
 	},
 	"checkAlreadyLogged":[
