@@ -5,9 +5,9 @@
     "connect": {
     	"todo": [
     		{"action":"goto", "url":"https://sendgrid.com/login"},
-    		{"action":"fill", "what":"login","search":"#login_username", "grave":"true"},
-    		{"action":"fill", "what":"password","search":"#login_password", "grave":"true"},
-    		{"action":"click", "search":".login-btn input", "grave":"true"}
+    		{"action":"fill", "what":"login","search":"#usernameContainer-input-id", "grave":"true"},
+    		{"action":"fill", "what":"password","search":"#passwordContainer-input-id", "grave":"true"},
+    		{"action":"click", "search":"button[type='submit']", "grave":"true"}
     	]
     },
     "logout": {
