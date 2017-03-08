@@ -1,8 +1,6 @@
 package com.Ease.Servlet.BackOffice;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,9 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.Ease.Context.Catalog.Catalog;
-import com.Ease.Context.Catalog.WebsiteInformation;
+import com.Ease.Context.Catalog.Website;
+import com.Ease.Dashboard.App.AppPermissions;
+import com.Ease.Dashboard.App.GroupApp;
+import com.Ease.Dashboard.App.WebsiteApp.GroupWebsiteApp;
 import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -32,7 +32,6 @@ public class AddWebsite extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final String UPLOAD_DIRECTORY = "resources/websites/";
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -64,7 +63,6 @@ public class AddWebsite extends HttpServlet {
 		String folder = sm.getServletParam("siteFolder", false);
 		String haveLoginButtonString = sm.getServletParam("haveLoginButton", false);
 		String noLoginString = sm.getServletParam("noLogin", false);
-		System.out.println(noLoginString);
 		boolean noLogin = true;
 		boolean haveLoginButton = true;
 		if(haveLoginButtonString == null)
@@ -93,7 +91,8 @@ public class AddWebsite extends HttpServlet {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty folder");
 			if ((infoNames.length - infoTypes.length) != (placeholders.length - placeholderIcons.length))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Missing informations");
-			catalog.addWebsite(url, name, homePage, folder, haveLoginButton, noLogin, haveLoginWith, infoNames, infoTypes, placeholders, placeholderIcons, sm);
+			Website website = catalog.addWebsite(url, name, homePage, folder, haveLoginButton, noLogin, haveLoginWith, infoNames, infoTypes, placeholders, placeholderIcons, sm);
+			//GroupApp groupApp = GroupWebsiteApp.createGroupEmptyApp(groupProfile, group, AppPermissions.Perm.ALL.getValue(), name, false, website, sm)
 			sm.setResponse(ServletManager.Code.Success, "Success");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
