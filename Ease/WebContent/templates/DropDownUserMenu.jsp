@@ -41,7 +41,7 @@ String UserName = ((User) (session.getAttribute("user"))).getFirstName();
 					for="backgroundSwitch"></label>
 				</span>
 			</div>
-			<div class="settingsRaw">
+			<!-- <div class="settingsRaw">
 				<span>My Computer</span>
 				<div class="infoCircle">
 					<i class="fa fa-info-circle"></i>
@@ -55,7 +55,7 @@ String UserName = ((User) (session.getAttribute("user"))).getFirstName();
 					id="personalComputerSetup" /> <label class="onoffswitch-label"
 					for="personalComputerSetup"></label>
 				</span>
-			</div>
+			</div> -->
 		</div>
 		<a id="ModifyUserButton" class="dropDownButton">
 			<span class="fa-stack fa-lg icon">
@@ -71,7 +71,7 @@ String UserName = ((User) (session.getAttribute("user"))).getFirstName();
 	$(document).ready(function(){
 		extId = null;
 		extensionDiv = null;
-		setTimeout(function(){
+		/*setTimeout(function(){
 			extensionDiv = $('#ease_extension');
 
 			if (extensionDiv.length){
@@ -133,7 +133,7 @@ String UserName = ((User) (session.getAttribute("user"))).getFirstName();
 			} else {
 				$('#personalComputerSetup').closest('.settingsRaw').remove();
 			}
-		}, 1000);
+		}, 1000);*/
 	});
 </script>
 <script>

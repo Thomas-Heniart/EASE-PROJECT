@@ -27,7 +27,7 @@ public class RedirLandingUniv extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher rd = request.getRequestDispatcher("schoolLandingTemplate.jsp?schoolImageSrcs=/resources/landing/school/Espas.png,/resources/landing/school/Estice.png,/resources/landing/school/ICM.jpg&schoolName=ESPAS,%20ESTICE%20et%20ICM&formAction=RegistrationEstice&commentFile=esticeComments.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("schoolLandingTemplate.jsp?schoolImageSrcs=/resources/landing/school/Espas.png,/resources/landing/school/Estice.png,/resources/landing/school/ICM.jpg&schoolName=ESPAS,%20ESTICE%20et%20ICM&formAction=RegistrationEstice&commentFile=esticeComments.jsp&emailPlaceholder=something");
 		rd.forward(request, response);
 	}
 

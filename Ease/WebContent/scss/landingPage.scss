@@ -1098,6 +1098,9 @@ header {
                     img {
                         height: 100%;
                     }
+                    &:first-child {
+                    	margin-left: 0;
+                    }
                 }
             }            
         }

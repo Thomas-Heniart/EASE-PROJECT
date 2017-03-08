@@ -165,7 +165,7 @@ pageEncoding="UTF-8"%>
 		</div>
 		<div class="mockupPresentation">
 			<video width="100%" height="auto" controls="noshow">
-				<source src="resources/videos/video7.mp4" type="video/mp4">
+				<source src="resources/videos/video8.mp4" type="video/mp4">
 					Your browser does not support the video tag.
 				</video>
 			</div>
@@ -350,7 +350,7 @@ pageEncoding="UTF-8"%>
 								<p class="row-heading">
 									<fmt:message key="landing.signup-popup.email-title"/>
 								</p>
-								<input type="email" name="email" placeholder="@something..." />
+								<input type="email" name="email" placeholder="@${param.emailPlaceholder}" />
 							</div>
 							<div class="row terms">
 								<p><fmt:message key="landing.signup-popup.page-1.terms-accept"/> <a href="privacy.jsp" target="_blank"><fmt:message key="landing.signup-popup.page-1.terms"/></a></p>
