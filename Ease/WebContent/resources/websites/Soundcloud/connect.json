@@ -18,6 +18,7 @@
     "logout": {
     	"todo": [
     		{"action":"goto", "url":"http://www.soundcloud.com/logout"},
+    		{"action":"waitload"},
     		{"action":"goto", "url":"http://www.soundcloud.com/signin"}
     	]
     },
