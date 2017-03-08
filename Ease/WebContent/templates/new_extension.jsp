@@ -29,6 +29,7 @@
 					</div>
 					<div class="row text-center">
 						<button class="btn" type="submit">Then click here!</button>
+						<p id="store_download">If nothing happens, <a target="_blank" href="https://chrome.google.com/webstore/detail/echjdhmhmgildgidlcdlepfkaledeokm">click here</a> to add the extension through the web store</p>
 					</div>
 				</div>
 			</div>

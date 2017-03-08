@@ -525,7 +525,7 @@ public class Website {
 
 	public boolean isInPublicCatalogForUser(User user) {
 		for (Group group : user.getGroups()) {
-			if (this.groupIds.contains(group.getDBid()))
+			if (this.groupIds.contains(group.getDBid()) && !this.isNew())
 				return true;
 		}
 		return this.groupIds.isEmpty();

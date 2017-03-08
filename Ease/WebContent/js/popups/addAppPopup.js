@@ -123,7 +123,7 @@ addAppPopup = function(rootEl){
 			+'<i class="fa fa-check fa-stack-1x"></i>'
 			+'</span>'
 			+'</div>'
-			+'<p class="accountName">' + app.login + '</p>'
+			+'<p class="accountName">' + app.getAccountInformationValue("login") + '</p>'
 			+'</div>');
 		return ret;
 	}
