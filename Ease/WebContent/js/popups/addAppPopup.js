@@ -264,7 +264,9 @@ addAppPopup = function(rootEl){
 	});
 	this.ssoNewAccountButton.click(function(){
 		self.ssoSelectAccountRow.addClass('hide');
-		self.loginPasswordRow.removeClass('hide');
+		self.initializeInputsRow();
+		//self.loginPasswordRow.removeClass('hide');
+		
 		for (var i = 0; i < self.sameAccountsVar.length; i++) {
 			self.sameAccountsVar[i].qRoot.addClass('checkable');
 			self.sameAccountsVar[i].qRoot.removeClass('checked');
@@ -284,8 +286,9 @@ addAppPopup = function(rootEl){
 			createdDiv = self.createSsoAccountSelectDiv(app.ssoId, loginList[i], ssoAcc != null ? ssoAcc.imgSrc : "");
 			createdDiv.click(function(){
 				self.choosenSsoAccountLogin = $(this).find('.accountName').text();
-				self.accountNameHelperName.text(self.choosenSsoAccountLogin);
-				self.loginInput.val(self.choosenSsoAccountLogin);
+				self.accountNameHelperName.text(self.choosenSsoAccountLogin).val(self.choosenSsoAccountLogin);
+				self.loginPasswordRow.find("input[name='login']");
+				//self.loginInput.val(self.choosenSsoAccountLogin);
 				self.accountNameHelperImg.attr('src', $(this).find('.accountLogo img').attr('src'));
 				self.accountNameHelper.removeClass('hide');
 				self.setupSameAccountsDiv(app.ssoId);
@@ -302,8 +305,8 @@ addAppPopup = function(rootEl){
 	this.getLoginList = function(appList){
 		var loginList = [];
 		for (var i = 0; i < appList.length; i++) {
-			if (loginList.indexOf(appList[i].login) == -1){
-				loginList.push(appList[i].login);
+			if (loginList.indexOf(appList[i].getAccountInformationValue("login")) == -1){
+				loginList.push(appList[i].getAccountInformationValue("login"));
 			}
 		}
 		return loginList;
@@ -346,7 +349,6 @@ addAppPopup = function(rootEl){
 	this.currentInputs = [];
 	this.initializeInputsRow = function() {
 		self.loginPasswordRow.removeClass('hide');
-		console.log(self.currentApp.inputs);
 		self.currentApp.inputs.forEach(function(input) {
 			self.currentInputs.push(new Input(self.loginPasswordRow, self, input.name, input.type, input.placeholder, input.placeholderIcon));
 		});

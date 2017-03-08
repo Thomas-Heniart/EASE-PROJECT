@@ -134,7 +134,7 @@ public class Keys {
 		if (Hashing.compare(password, hashed_password))
 			return true;
 		else
-			throw new GeneralException(ServletManager.Code.ClientWarning, "Password don't match");
+			throw new GeneralException(ServletManager.Code.ClientWarning, "Password does not match");
 	}
 	
 	public void changePassword(String new_password, ServletManager sm) throws GeneralException {

@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.Ease.Dashboard.User.User;
-import com.Ease.Dashboard.User.UserEmail;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Mail;
 import com.Ease.Utils.Regex;
@@ -30,7 +29,6 @@ public class ContactUs extends HttpServlet {
      */
     public ContactUs() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -72,11 +70,11 @@ public class ContactUs extends HttpServlet {
 					} 
 				}
 				mail.sendValidationContactEmail(email, msg);
-				mail.sendContactEmail("victor@ease.space", user, isUser, email, msg);
+				mail.sendContactEmail("contact@ease.space", user, isUser, email, msg);
 			} catch (MessagingException e) {
 				throw new GeneralException(ServletManager.Code.InternError, "Email not sended.");
 			}
-			sm.setResponse(ServletManager.Code.Success, "Email sended.");
+			sm.setResponse(ServletManager.Code.Success, "Email sent.");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		} catch (Exception e) {

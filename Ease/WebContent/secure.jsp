@@ -486,7 +486,7 @@ label.checkbox {
         <div class="row">
           <div class="col-xs-12">
             <div data-mercury="froala" data-content-name="header_content">
-              <p style="margin: auto; text-align: center"><a href="http://www.ease-app.co/en"><img class="fr-dii" src="https://d7zgbk06ve7c.cloudfront.net/assets/1320/ub3ubsndbon80s8txl5u/logo.png" style="width: 275px;"></a><br></p>
+              <p style="margin: auto; text-align: center"><a href="https://ease.space/"><img class="fr-dii" src="https://d7zgbk06ve7c.cloudfront.net/assets/1320/ub3ubsndbon80s8txl5u/logo.png" style="width: 275px;"></a><br></p>
             </div>
           </div>
         </div>
@@ -649,12 +649,12 @@ label.checkbox {
 			</div>
 			<div class="row social-buttons centered">
           
-          <a class="facebook" href="https://www.facebook.com/EasePlatform" target="_blank">
+          <a class="facebook" href="https://www.facebook.com/YourEaseSpace/" target="_blank">
             <i class="fa fa-facebook"></i>
           </a>
           
           
-          <a class="twitter" href="https://twitter.com/Ease_app" target="_blank">
+          <a class="twitter" href="https://twitter.com/ease_space" target="_blank">
             <i class="fa fa-twitter"></i>
           </a>
           
@@ -662,7 +662,7 @@ label.checkbox {
           
           
           
-          <a class="linkedin" href="https://www.linkedin.com/company/10558166?trk=tyah&trkInfo=clickedVertical%3Acompany%2CclickedEntityId%3A10558166%2Cidx%3A2-1-2%2CtarId%3A1460722131642%2Ctas%3Aease." target="_blank">
+          <a class="linkedin" href="https://www.linkedin.com/company/ease.space" target="_blank">
             <i class="fa fa-linkedin"></i>
           </a>
           
@@ -676,7 +676,7 @@ label.checkbox {
         </div><!--/row-->
         
         <div class="row privacy text-center">
-          <a id="privacy_link" href="http://www.ease-app.co/privacy">Privacy</a>
+          <a id="privacy_link" href="http://ease.space/privacy">Privacy</a>
         </div>
         
 		</div><!--/container -->
