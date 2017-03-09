@@ -165,7 +165,7 @@ pageEncoding="UTF-8"%>
 		</div>
 		<div class="mockupPresentation">
 			<video width="100%" height="auto" controls="noshow">
-				<source src="resources/videos/video8.mp4" type="video/mp4">
+				<source src="resources/videos/${param.video}" type="video/mp4">
 					Your browser does not support the video tag.
 				</video>
 			</div>

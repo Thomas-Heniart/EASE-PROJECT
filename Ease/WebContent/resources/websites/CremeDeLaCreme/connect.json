@@ -1,10 +1,10 @@
 {
     "name":"CremeDeLaCreme",
     "lastlogin":"",
-    "home":"https://www.cremedelacreme.io/platform#/objects",
+    "home":"https://cremedelacreme.io/platform#/objects",
     "connect": {
     	"todo": [
-    		{"action":"goto", "url":"https://www.cremedelacreme.io/login"},
+    		{"action":"goto", "url":"https://cremedelacreme.io/login"},
     		{"action":"fillThenSubmit", "login":"#mail", "password":"#password", "submit":"input[ng-click='login(user)']"}
        	]
     },
