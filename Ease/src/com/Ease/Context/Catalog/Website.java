@@ -101,8 +101,10 @@ public class Website {
 			last_db_id = db_id;
 
 			List<WebsiteInformation> infos = new LinkedList<WebsiteInformation>();
-			for(int i=0; i < infoNames.length; i++) {
-				infos.add(WebsiteInformation.createInformation(db_id, infoNames[i], infoTypes[i], String.valueOf(i), placeholders[i], placeholderIcons[i], db));
+			if (!noLogin) {
+				for(int i=0; i < infoNames.length; i++) {
+					infos.add(WebsiteInformation.createInformation(db_id, infoNames[i], infoTypes[i], String.valueOf(i), placeholders[i], placeholderIcons[i], db));
+				}
 			}
 
 			if(haveLoginButton){
@@ -121,7 +123,7 @@ public class Website {
 			}
 			IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
 			db.commitTransaction(transaction);
-			return new Website(db_id, idGenerator.getNextId(), name, url, folder, null, false, homePage, 0, 1, infos, attributes, loginWithWebsites);
+			return new Website(db_id, idGenerator.getNextId(), name, url, folder, null, noLogin, homePage, 0, 1, infos, attributes, loginWithWebsites);
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}

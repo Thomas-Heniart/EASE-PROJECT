@@ -118,8 +118,10 @@ public class ConnectionServlet extends HttpServlet {
 			ResultSet rs = db.get("SELECT * FROM askingIps WHERE ip='" + client_ip + "';");
 			if (rs.next())
 				return;
+			int transaction = db.startTransaction();
 			db.set("INSERT INTO askingIps values (NULL, '" + client_ip + "', 0, '" + getCurrentTime() + "', '"
 					+ getExpirationTime() + "');");
+			db.commitTransaction(transaction);
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}

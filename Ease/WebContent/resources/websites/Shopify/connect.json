@@ -1,0 +1,24 @@
+{
+    "name":"Shopify",
+    "lastlogin":"",
+    "home":{"http":"https://", "subdomain":"storeName", "domain":"myshopify.com/admin"},
+    "connect": {
+    	"todo": [
+    		{"action":"goto", "url":"https://fr.shopify.com/connexion"},
+    		{"action":"click", "search":"p.show-subdomain button"},
+    		{"action":"waitfor", "search":"#_subdomain"},
+    		{"action":"fill", "what":"storeName", "search":"#_subdomain"},
+    		{"action":"fill", "what":"login", "search":"#_email"},
+    		{"action":"fill", "what":"password", "search":"#_password"},
+    		{"action":"click", "search":"button[type='submit']"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"aclick", "search":"a[href*='logout']"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"a[href*='logout']"}
+    ]
+}

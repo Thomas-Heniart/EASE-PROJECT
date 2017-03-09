@@ -24,7 +24,8 @@
     ],
     "Facebook":{
         "todo":[
-            {"action":"clickona", "search":".external-auth.facebook a"}
+        	{"action": "goto", "url":"https://www.wunderlist.com/login?redirect_url=/webapp"},
+            {"action":"aclick", "search":".external-auth.facebook a"}
         ]
     }
 }

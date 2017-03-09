@@ -1,0 +1,22 @@
+{
+    "name":"GameFaqs",
+    "lastlogin":"",
+    "home":"https://www.gamefaqs.com/",
+    "connect": {
+    	"todo": [
+    		{"action":"clickona", "search":"a[href*='login']"},
+    		{"action":"waitfor", "search":"#login_email"},
+    		{"action":"fill", "what":"login", "search":"#login_email"},
+    		{"action":"fill", "what":"password", "search":"#login_password"},
+    		{"action":"click", "search":"#login_submit"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"aclick", "search":"a[href*='logout']"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"a[href*='logout']"}
+    ]
+}

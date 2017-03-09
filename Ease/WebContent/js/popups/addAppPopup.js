@@ -335,6 +335,7 @@ addAppPopup = function(rootEl){
 			self.setupSameAccountsDiv(app.ssoId);
 			if (!(easeAppsManager.getAppsBySsoId(app.ssoId).length)){
 				self.loginPasswordRow.removeClass('hide');
+				self.initializeInputsRow();
 				self.sameSsoAppsRow.removeClass('hide');
 				self.activeSections.push(self.loginPasswordRow);
 			} else {

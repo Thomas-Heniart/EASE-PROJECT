@@ -96,11 +96,11 @@ public class WebsiteApp extends App {
 	
 	public static void Empty(String appId, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		int transaction = db.startTransaction();
 		try {
 			ResultSet rs = db.get("SELECT * FROM websiteApps WHERE app_id=" + appId + ";");
 			rs.next();
 			String website_app_id = rs.getString(Data.ID.ordinal());
+			int transaction = db.startTransaction();
 			switch (rs.getString(Data.TYPE.ordinal())) {
 				case ("classicApp"):
 					db.set("DELETE FROM accountsInformations WHERE account_id IN (SELECT account_id FROM classicApps WHERE website_app_id = " + website_app_id + ");");
@@ -112,10 +112,10 @@ public class WebsiteApp extends App {
 				break;
 			}
 			db.set("UPDATE websiteApps SET type='websiteApp' WHERE app_id=" + appId + ";");
+			db.commitTransaction(transaction);
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
-		db.commitTransaction(transaction);
 	}
 	
 	/*

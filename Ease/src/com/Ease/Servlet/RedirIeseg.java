@@ -10,16 +10,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class Discover
+ * Servlet implementation class RedirIeseg
  */
-@WebServlet("/discover")
-public class Discover extends HttpServlet {
+@WebServlet("/ieseg")
+public class RedirIeseg extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Discover() {
+    public RedirIeseg() {
         super();
     }
 
@@ -27,7 +27,7 @@ public class Discover extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher rd = request.getRequestDispatcher("landingPage.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("schoolLandingTemplate.jsp?schoolImageSrcs=/resources/landing/school/ieseg.png&schoolName=IÉSEG&formAction=register&commentFile=iesegComments.jsp&emailPlaceholder=ieseg.fr");
 		rd.forward(request, response);
 	}
 
