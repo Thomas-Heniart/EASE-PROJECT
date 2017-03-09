@@ -16,8 +16,7 @@
     ],
     "Facebook": {
     	"todo": [
-    		{"action":"goto", "url":"https://www.ticketswap.com/login"},
-            {"action": "clickona", "search": "a.btn--facebook"}
+    		{"action":"clickona", "search":"a[href*='login']"}
     	]
     }
 }

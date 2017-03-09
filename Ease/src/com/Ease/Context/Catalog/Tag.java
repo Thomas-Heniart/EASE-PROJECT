@@ -21,15 +21,16 @@ public class Tag {
 	public enum Data {
 		NOTHING,
 		ID,
-		TAG_NAME,
-		COLOR
+		TAG_NAME,	
+		COLOR,
+		PRIORITY
 	}
 	
 	public static Tag createTag(String tagName, String tagColor, List<Website> tagSites, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int single_id = ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId();
 		int transaction = db.startTransaction();
-		int db_id = db.set("INSERT INTO tags VALUES (null, '" + tagName + "', '" + tagColor + "');");
+		int db_id = db.set("INSERT INTO tags VALUES (null, '" + tagName + "', '" + tagColor + "', 2);");
 		for (Website site : tagSites)
 			db.set("INSERT INTO tagsAndSitesMap values(null, " + db_id + ", " + site.getDb_id() + ");");
 		db.commitTransaction(transaction);
@@ -38,7 +39,7 @@ public class Tag {
 	
 	public static List<Tag> loadTags(DataBaseConnection db, ServletContext context) throws GeneralException {
 		List<Tag> tags = new LinkedList<Tag>();
-		ResultSet rs = db.get("SELECT * FROM tags");
+		ResultSet rs = db.get("SELECT * FROM tags ORDER BY priority");
 		try {
 			while (rs.next()) {
 				String db_id = rs.getString(Data.ID.ordinal());
