@@ -1,7 +1,7 @@
 {
     "name":"Amplitude",
     "lastlogin":"",
-    "home":"https://analytics.amplitude.com/login",
+    "home":"https://analytics.amplitude.com/",
     "connect": {
     	"todo": [
     		{"action":"fill", "what":"login","search":"#login-email", "grave":"true"},
@@ -15,6 +15,7 @@
     	]
     },
     "checkAlreadyLogged": [
+    	{"action":"waitfor", "search":"div[class*='AccountMenuButton__container'], form.login-form"},
     	{"search":"div[class*='AccountMenuButton__container']"}
     ]
 }
