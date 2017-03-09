@@ -291,7 +291,7 @@ var Catalog = function(rootEl){
 			var app;
 			for (var i = 0; i < apps.length; i++) {
 				app = apps[i];
-				self.addApp(new catalogApp(app.name, app.singleId, app.logo, app.loginWith, app.ssoId, app.url, app.inputs, app.isNew));
+				self.addApp(new catalogApp(app.name, app.singleId, app.logo, app.loginWith, app.ssoId, app.url, app.inputs, app.isNew, app.count));
 			}
 		},
 		function(msg){

@@ -292,19 +292,10 @@ public class Catalog {
 		throw new GeneralException(ServletManager.Code.UserMiss, "This website is not in the catalog.");
 	}
 
-	@SuppressWarnings("unchecked")
-	public JSONArray getWebsitesJson() {
-		JSONArray res = new JSONArray();
-		for (Website website : this.getPublicWebsites())
-			res.add(website.getJsonForCatalog());
-		Collections.reverse(res);
-		return res;
-	}
-	
 	public JSONArray getWebsitesJsonForUser(User user) {
 		JSONArray res = new JSONArray();
 		for (Website website : this.getPublicWebsitesForUser(user))
-			res.add(website.getJsonForCatalog());
+			res.add(website.getJsonForCatalog(user));
 		Collections.reverse(res);
 		return res;
 	}

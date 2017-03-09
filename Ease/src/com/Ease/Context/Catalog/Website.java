@@ -465,7 +465,7 @@ public class Website {
 	}
 
 	@SuppressWarnings("unchecked")
-	public JSONObject getJsonForCatalog() {
+	public JSONObject getJsonForCatalog(User user) {
 		JSONObject res = new JSONObject();
 		res.put("name", this.name);
 		res.put("singleId", this.single_id);
@@ -486,6 +486,7 @@ public class Website {
 		res.put("inputs", inputs);
 		res.put("isNew", this.isNew());
 		res.put("position", this.position);
+		res.put("count", user.getWebsiteCount(this));
 		return res;
 	}
 

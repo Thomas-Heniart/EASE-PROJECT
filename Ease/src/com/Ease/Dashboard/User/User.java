@@ -15,6 +15,7 @@ import java.util.Set;
 import javax.websocket.Session;
 
 import com.Ease.Context.Catalog.Tag;
+import com.Ease.Context.Catalog.Website;
 import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Context.Group.Infrastructure;
@@ -588,5 +589,14 @@ public class User {
 		this.keys.removeFromDB(sm);
 		this.opt.removeFromDB(sm);
 		db.commitTransaction(transaction);
+	}
+
+	public int getWebsiteCount(Website website) {
+		int res = 0;
+		for(WebsiteApp app : this.dashboardManager.getWebsiteApps()) {
+			if (app.getSite().equals(website))
+				res++;
+		}
+		return res;
 	}
 }

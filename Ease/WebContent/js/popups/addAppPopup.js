@@ -463,6 +463,7 @@ addAppPopup = function(rootEl){
 					var app = new MyApp();
 					var accountInformations = [];
 					app.init(logwithId, parametersToKeep, catalogApp.id, i == 0 ? name : catalogApp.name, ids[i], catalogApp.ssoId, true, catalogApp.imgSrc, '');
+					catalogApp.increaseCount();
 					self.currentProfile.addApp(app);
 					app.scaleAnimate();
 				}

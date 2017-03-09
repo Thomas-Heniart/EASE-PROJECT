@@ -330,4 +330,8 @@ public class DashboardManager {
 		}
 		return json;
 	}
+
+	public List<WebsiteApp> getWebsiteApps() {
+		return new LinkedList<WebsiteApp>(this.websiteAppsDBMap.values());
+	}
 }

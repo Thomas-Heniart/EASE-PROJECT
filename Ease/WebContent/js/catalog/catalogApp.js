@@ -9,7 +9,7 @@
 }*/
 
 var currentDraggedApp;
-var catalogApp = function(name, id, imgSrc, canLoginWith, ssoId, url, inputs, isNew){
+var catalogApp = function(name, id, imgSrc, canLoginWith, ssoId, url, inputs, isNew, count){
 	var self = this;
 
 	this.qRoot = $(
@@ -22,9 +22,9 @@ var catalogApp = function(name, id, imgSrc, canLoginWith, ssoId, url, inputs, is
 		+ '<i class="fa fa-stack-1x fa-link fa-rotate-90"></i>'
 		+ '</span>'
 		+ '</a>'
-		+ '<span class="fa-stack fa-lg apps-integrated">'
+		+ '<span class="fa-stack fa-lg apps-integrated' + (count > 0 ? ' show' : '') +  ' ">'
 		+ '<i class="fa fa-circle fa-stack-2x"></i>'
-		+ '<i class="count"></i>'
+		+ '<i class="count">' + count + '</i>'
 		+ '</span>'
 		+ '<span class="newCatalogApp">New!</span>'
 		+ '</div>'
@@ -41,7 +41,7 @@ var catalogApp = function(name, id, imgSrc, canLoginWith, ssoId, url, inputs, is
 	this.url = url;
 	this.inputs = inputs;
 	this.isNew = isNew;
-
+	this.count = count;
 	this.nameHandler = this.qRoot.find('.catalogAppName p');
 	this.imageHandler = this.qRoot.find('.catalogAppLogo img');
 	this.urlHandler = this.qRoot.find('.siteUrl');
@@ -90,6 +90,18 @@ var catalogApp = function(name, id, imgSrc, canLoginWith, ssoId, url, inputs, is
 			return ret;
 		}
 	});
+	
+	this.increaseCount = function() {
+		self.count = self.count + 1;
+		$(".apps-integrated .count", self.qRoot).text(self.count);
+		$(".apps-integrated", self.qRoot).addClass("show");
+	}
+	this.decreaseCount = function() {
+		self.count = self.count - 1;
+		$(".apps-integrated .count", self.qRoot).text(self.count);
+		if (self.count <= 0)
+			$(".apps-integrated", self.qRoot).removeClass("show");
+	}
 };
 /*
 $(document).ready(function() {

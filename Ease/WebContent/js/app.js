@@ -91,7 +91,7 @@ var appsManager = function(){
 	this.getAppsByLoginAndSsoId = function(login, ssoId){
 		var retVal = [];
 		for (var i = 0; i < easeApps.length; i++) {
-			if (easeApps[i].ssoId == ssoId && easeApps[i].login == login)
+			if (easeApps[i].ssoId == ssoId && easeApps[i].getAccountInformationValue("login") == login)
 				retVal.push(easeApps[i]);
 		}
 		return retVal;		

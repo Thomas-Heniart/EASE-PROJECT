@@ -189,7 +189,7 @@ modifyAppPopup = function(rootEl){
 
 	this.setupSameSsoAccountsDiv = function(){
 		var tmpObject;
-		var ssoApps = easeAppsManager.getAppsByLoginAndSsoId(self.currentApp.login, self.currentApp.ssoId);
+		var ssoApps = easeAppsManager.getAppsByLoginAndSsoId(self.currentApp.getAccountInformationValue("login"), self.currentApp.ssoId);
 		ssoApps.splice(ssoApps.indexOf(self.currentApp), 1);
 		for (var i = 0; i < ssoApps.length; i++) {
 			tmpObject = new Object();
@@ -224,6 +224,7 @@ modifyAppPopup = function(rootEl){
 			},
 			function(msg){
 				self.currentApp.currentProfile.removeApp(self.currentApp);
+				self.relatedCatalogApp.decreaseCount();
 				self.currentApp.remove();
 				self.close();
 			},
