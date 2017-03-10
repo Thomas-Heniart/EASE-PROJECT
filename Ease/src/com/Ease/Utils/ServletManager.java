@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import com.Ease.Dashboard.User.User;
 import com.Ease.websocket.WebsocketMessage;
 import com.Ease.websocket.WebsocketSession;
@@ -100,7 +102,7 @@ public class ServletManager {
 	}
 	
 	public String getServletParam(String paramName, boolean saveInLogs) {
-		String param = request.getParameter(paramName);
+		String param = StringEscapeUtils.escapeHtml4(request.getParameter(paramName));
 		if (saveInLogs)
 			args.put(paramName, param);
 		return param;
@@ -108,6 +110,8 @@ public class ServletManager {
 	
 	public String[] getServletParamArray(String paramName, boolean saveInLogs) {
 		String[] param = request.getParameterValues(paramName);
+		for(int i=0; i<param.length; i++)
+			param[i] = StringEscapeUtils.escapeHtml4(param[i]);
 		if (saveInLogs)
 			args.put(paramName, (param != null) ? param.toString() : null);
 		return param;
@@ -115,6 +119,10 @@ public class ServletManager {
 	
 	public Map<String, String[]> getServletParametersMap(boolean saveInLogs) {
 		Map<String, String[]> params = request.getParameterMap();
+		for(Map.Entry<String, String[]> entry : params.entrySet()) {
+			for(int i=0; i < entry.getValue().length; entry.getValue())
+				entry.getValue()[i] = StringEscapeUtils.escapeHtml4(entry.getValue()[i]);
+		}
 		if (saveInLogs)
 			args.put("parameters map", (params != null) ? params.toString() : null);
 		return params;

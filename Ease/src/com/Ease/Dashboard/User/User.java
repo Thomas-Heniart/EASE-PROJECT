@@ -26,6 +26,7 @@ import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Update.UpdateManager;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Invitation;
 import com.Ease.Utils.ServletManager;
@@ -158,9 +159,16 @@ public class User {
 		Date date = new Date();
 		String registrationDate = dateFormat.format(date);
 		Status status = Status.createStatus(db);
-		String db_id = db.set("INSERT INTO users VALUES(NULL, '" + firstName + "', '" + lastName + "', '" + email
-				+ "', " + keys.getDBid() + ", " + opt.getDb_id() + ", '" + registrationDate + "', " + status.getDbId()
-				+ ");").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+		request.setNull();
+		request.setString(firstName);
+		request.setString(lastName);
+		request.setString(email);
+		request.setInt(keys.getDBid());
+		request.setInt(opt.getDb_id());
+		request.setString(registrationDate);
+		request.setInt(status.getDbId());
+		String db_id = request.set().toString();
 		SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, sm);
 		User newUser = new User(db_id, firstName, lastName, email, keys, opt, false, false, sessionSave, status);
 		Profile.createPersonnalProfiles(newUser, sm);
