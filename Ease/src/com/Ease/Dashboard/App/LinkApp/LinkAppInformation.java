@@ -1,9 +1,8 @@
 package com.Ease.Dashboard.App.LinkApp;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -35,13 +34,11 @@ public class LinkAppInformation {
 	}
 	
 	public static LinkAppInformation loadLinkAppInformation(String db_id, DataBaseConnection db) throws GeneralException {
-		ResultSet rs = db.get("SELECT * FROM linkAppInformations WHERE id = " + db_id + ";");
-		try {
-			rs.next();
-			return new LinkAppInformation(db_id, rs.getString(LoadData.LINK.ordinal()), rs.getString(LoadData.IMG_URL.ordinal()));
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM linkAppInformations WHERE id = ?;");
+		request.setInt(db_id);
+		DatabaseResult rs = request.get();
+		rs.next();
+		return new LinkAppInformation(db_id, rs.getString(LoadData.LINK.ordinal()), rs.getString(LoadData.IMG_URL.ordinal()));
 	}
 
 	/*

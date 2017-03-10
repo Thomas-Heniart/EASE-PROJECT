@@ -1,12 +1,12 @@
 package com.Ease.Dashboard.User;
 
 import java.security.SecureRandom;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 import com.Ease.Utils.Crypto.AES;
@@ -26,29 +26,25 @@ public class SessionSave {
 	
 	public static SessionSave loadSessionSave(String sessionId, String token, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		try {
-			ResultSet rs = db.get("select * from savedSessions where sessionId = '" + sessionId + "';");
-			if (rs.next()){
-				String hashedToken = rs.getString(SessionSaveData.TOKEN.ordinal());			
-				String saltKeyUser = rs.getString(SessionSaveData.SALTUSER.ordinal());
-				String cryptedKeyUser = rs.getString(SessionSaveData.KEYUSER.ordinal());			
-				String userId = rs.getString(SessionSaveData.USER.ordinal());
-				String keyUser;
-				if (!Hashing.compare(token,hashedToken)) {
-					throw new GeneralException(ServletManager.Code.ClientError, "Wrong token.");
-				} else if((keyUser = AES.decryptUserKey(cryptedKeyUser, token, saltKeyUser)) == null){
-					throw new GeneralException(ServletManager.Code.InternError, "Can't decrypt key user.");
-				}
-				
-				SessionSave sessionSave = new SessionSave(saltKeyUser, token, sessionId, keyUser, userId);
-				return sessionSave;
-			} else {
-				throw new GeneralException(ServletManager.Code.ClientError, "Wrong session id.");
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM savedSessions WHERE sessionId = ?;");
+		request.setString(sessionId);
+		DatabaseResult rs = request.get();
+		if (rs.next()){
+			String hashedToken = rs.getString(SessionSaveData.TOKEN.ordinal());			
+			String saltKeyUser = rs.getString(SessionSaveData.SALTUSER.ordinal());
+			String cryptedKeyUser = rs.getString(SessionSaveData.KEYUSER.ordinal());			
+			String userId = rs.getString(SessionSaveData.USER.ordinal());
+			String keyUser;
+			if (!Hashing.compare(token,hashedToken)) {
+				throw new GeneralException(ServletManager.Code.ClientError, "Wrong token.");
+			} else if((keyUser = AES.decryptUserKey(cryptedKeyUser, token, saltKeyUser)) == null){
+				throw new GeneralException(ServletManager.Code.InternError, "Can't decrypt key user.");
 			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+			SessionSave sessionSave = new SessionSave(saltKeyUser, token, sessionId, keyUser, userId);
+			return sessionSave;
+		} else {
+			throw new GeneralException(ServletManager.Code.ClientError, "Wrong session id.");
 		}
-
 	}
 	
 	public static SessionSave createSessionSave(String keyUser, String userId, ServletManager sm) throws GeneralException {

@@ -1,7 +1,5 @@
 package com.Ease.Context.Catalog;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -11,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -20,15 +19,11 @@ public class WebsitesVisitedManager {
 	
 	public WebsitesVisitedManager(DataBaseConnection db) throws GeneralException {
 		this.websitesRequestsMap = new HashMap<String, Integer>();
-		ResultSet rs = db.get("SELECT url, count FROM websitesVisited");
-		try {
-			while(rs.next()) {
-				String url = rs.getString(1);
-				Integer count = rs.getInt(2);
-				this.websitesRequestsMap.put(url, count);
-			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DatabaseResult rs = db.prepareRequest("SELECT url, count FROM websitesVisited").get();
+		while(rs.next()) {
+			String url = rs.getString(1);
+			Integer count = rs.getInt(2);
+			this.websitesRequestsMap.put(url, count);
 		}
 	}
 	

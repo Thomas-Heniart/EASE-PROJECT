@@ -1,6 +1,7 @@
-package com.Ease.Servlet;
+package com.Ease.Servlet.BackOffice;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,28 +11,28 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONArray;
+
+import com.Ease.Context.Group.Group;
+import com.Ease.Context.Group.GroupManager;
+import com.Ease.Dashboard.App.GroupApp;
+import com.Ease.Dashboard.Profile.GroupProfile;
 import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Invitation;
-import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class InviteFriend
+ * Servlet implementation class GetGrouApps
  */
-@WebServlet("/InviteFriend")
-public class InviteFriend extends HttpServlet {
+@WebServlet("/GetGrouApps")
+public class GetGrouApps extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public InviteFriend() {
+    public GetGrouApps() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -49,30 +50,23 @@ public class InviteFriend extends HttpServlet {
 		HttpSession session = request.getSession();
 		User user = (User) (session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
-		DataBaseConnection db = sm.getDB();
-
-		String email = sm.getServletParam("email", true);
-		String name = sm.getServletParam("name", true);
-
 		try {
 			sm.needToBeConnected();
-			if (email == null || !Regex.isEmail(email)) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "This is not an email.");
-			} else if (name == null || name.length() < 2) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Name too short.");
-			} else {
-				DatabaseRequest db_request = db.prepareRequest("SELECT id FROM users WHERE email = ?;");
-				db_request.setString(email);
-				DatabaseResult rs = db_request.get();
-				if (rs.next())
-					throw new GeneralException(ServletManager.Code.ClientWarning, "Your friend already have an account");
-				Invitation.sendFriendInvitation(email, name, user, sm);
-				user.getStatus().passStep("inviteSended", sm.getDB());
-				sm.setResponse(ServletManager.Code.Success, "Invitation sended.");
+			if (user.isAdmin() == false) {
+				throw new GeneralException(ServletManager.Code.ClientWarning, "You need to be admin to do that.");
 			}
-		} catch (GeneralException e) {
-			sm.setResponse(e);
-		} catch (Exception e) {
+			String paramGroupId = sm.getServletParam("groupId", true);
+			if (paramGroupId == null)
+				throw new GeneralException(ServletManager.Code.ClientWarning, "groupId is null");
+			int groupSingleId = Integer.parseInt(paramGroupId);
+			GroupManager groupManager = (GroupManager) sm.getContextAttr("groupManager");
+			Group group = groupManager.getGroupFromSingleID(groupSingleId);
+			List<GroupApp> groupApps = group.getGroupApps();
+			JSONArray res = new JSONArray();
+			for(GroupApp groupApp : groupApps)
+				res.add(groupApp.getJson());
+			sm.setResponse(ServletManager.Code.Success, res.toString());
+		} catch(GeneralException e) {
 			sm.setResponse(e);
 		}
 		sm.sendResponse();

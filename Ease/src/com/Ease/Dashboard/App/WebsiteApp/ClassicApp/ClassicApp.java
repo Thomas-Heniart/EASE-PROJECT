@@ -1,7 +1,5 @@
 package com.Ease.Dashboard.App.WebsiteApp.ClassicApp;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +15,8 @@ import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.Regex;
@@ -40,18 +40,16 @@ public class ClassicApp extends WebsiteApp {
 	
 	public static ClassicApp loadClassicApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, String websiteAppDBid, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		try {
-			ResultSet rs = db.get("SELECT * from classicApps WHERE website_app_id=" + websiteAppDBid + ";");
-			if (rs.next()) {
-				Account account = Account.loadAccount(rs.getString(Data.ACCOUNT_ID.ordinal()), db);
-				String classicDBid = rs.getString(Data.ID.ordinal());
-				IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
-				return new ClassicApp(db_id, profile, position, infos, groupApp, insertDate, idGenerator.getNextId(), site, websiteAppDBid, account, classicDBid);
-			} 
-			throw new GeneralException(ServletManager.Code.InternError, "Classic app not complete in db.");
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
+		DatabaseRequest request = db.prepareRequest("SELECT * from classicApps WHERE website_app_id= ?;");
+		request.setInt(websiteAppDBid);
+		DatabaseResult rs = request.get();
+		if (rs.next()) {
+			Account account = Account.loadAccount(rs.getString(Data.ACCOUNT_ID.ordinal()), db);
+			String classicDBid = rs.getString(Data.ID.ordinal());
+			IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
+			return new ClassicApp(db_id, profile, position, infos, groupApp, insertDate, idGenerator.getNextId(), site, websiteAppDBid, account, classicDBid);
+		} 
+		throw new GeneralException(ServletManager.Code.InternError, "Classic app not complete in db.");
 	}
 	
 	public static ClassicApp createClassicApp(Profile profile, int position, String name, Website site, Map<String, String> infos, ServletManager sm, User user) throws GeneralException {

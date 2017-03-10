@@ -1,7 +1,5 @@
 package com.Ease.Update;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +19,8 @@ import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Dashboard.User.UserEmail;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 import com.Ease.Utils.Crypto.RSA;
@@ -240,45 +240,39 @@ public class UpdateManager {
 	private boolean checkRemovedUpdates(Website website, WebsiteApp logwithApp, String login, ServletManager sm)
 			throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		ResultSet rs = db.get("SELECT * FROM updatesRemoved WHERE update_id IN (SELECT id FROM updates WHERE user_id = "
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM updatesRemoved WHERE update_id IN (SELECT id FROM updates WHERE user_id = "
 				+ this.user.getDBid() + " AND id IN (SELECT update_id FROM updateNewAccount WHERE website_id = "
 				+ website.getDb_id()
 				+ " AND id IN (SELECT update_new_account_id FROM updateNewLogWithApp WHERE logWith_app_id = "
 				+ logwithApp.getDBid() + ")));");
-		try {
-			return rs.next();
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
+		request.setInt(this.user.getDBid());
+		request.setInt(website.getDb_id());
+		request.setInt(logwithApp.getDBid());
+		DatabaseResult rs = request.get();
+		return rs.next();
 	}
 
 	/* New password check */
 	private boolean checkRemovedUpdates(ClassicApp existingApp, String password, ServletManager sm)
 			throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		ResultSet rs = db.get("SELECT * FROM updatesRemoved WHERE update_id IN (SELECT id FROM updates WHERE user_id = "
-				+ this.user.getDBid() + " AND id IN (SELECT update_id FROM updateNewPassword WHERE classic_app_id = "
-				+ existingApp.getDBid() + " AND new_password = '" + password + "'));");
-		try {
-			return rs.next();
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM updatesRemoved WHERE update_id IN (SELECT id FROM updates WHERE user_id = ? AND id IN (SELECT update_id FROM updateNewPassword WHERE classic_app_id = ? AND new_password = ?));");
+		request.setInt(this.user.getDBid());
+		request.setInt(existingApp.getDBid());
+		request.setString(password);
+		DatabaseResult rs = request.get();
+		return rs.next();
 	}
 
 	/* New classic */
 	private boolean checkRemovedUpdates(Website website, String login, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		ResultSet rs = db.get("SELECT * FROM updatesRemoved WHERE update_id IN (SELECT id FROM updates WHERE user_id = "
-				+ this.user.getDBid() + " AND id IN (SELECT update_id FROM updateNewAccount WHERE website_id = "
-				+ website.getDb_id()
-				+ " AND id IN (SELECT update_new_account_id FROM updateNewClassicApp WHERE id IN (SELECT update_new_classic_app_id FROM classicUpdateInformations WHERE information_name = 'login' AND information_value = '"
-				+ login + "'))));");
-		try {
-			return rs.next();
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM updatesRemoved WHERE update_id IN (SELECT id FROM updates WHERE user_id = ? AND id IN (SELECT update_id FROM updateNewAccount WHERE website_id = ? AND id IN (SELECT update_new_account_id FROM updateNewClassicApp WHERE id IN (SELECT update_new_classic_app_id FROM classicUpdateInformations WHERE information_name = 'login' AND information_value = ?))));");
+		request.setInt(this.user.getDBid());
+		request.setInt(website.getDb_id());
+		request.setString(login);
+		DatabaseResult rs = request.get();
+		return rs.next();
 	}
 
 	private Website findWebsiteInCatalogWithLoginUrl(String url, ServletManager sm) throws GeneralException {

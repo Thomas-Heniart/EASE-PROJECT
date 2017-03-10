@@ -1,7 +1,5 @@
 package com.Ease.Dashboard.App;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +15,8 @@ import com.Ease.Dashboard.App.WebsiteApp.GroupWebsiteApp;
 import com.Ease.Dashboard.Profile.GroupProfile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
@@ -39,38 +39,36 @@ public class GroupApp {
 	 */
 	
 	public static List<GroupApp> loadGroupApps(Group group, DataBaseConnection db, ServletContext context) throws GeneralException {
-		try {
-			IdGenerator idGenerator = (IdGenerator)context.getAttribute("idGenerator");
-			List<GroupApp> groupApps = new LinkedList<GroupApp>();
-			ResultSet rs = db.get("SELECT * FROM groupApps WHERE group_id=" + group.getDBid() + ";");
-			String db_id;
-			GroupProfile groupProfile;
-			AppPermissions perms;
-			AppInformation appInfo;
-			boolean common;
-			int single_id;
-			while (rs.next()) {
-				db_id = rs.getString(Data.ID.ordinal());
-				groupProfile = GroupManager.getGroupManager(context).getGroupProfileFromDBid(rs.getString(Data.GROUP_PROFILE_ID.ordinal()));
-				perms = AppPermissions.loadAppPermissions(rs.getString(Data.PERMISSION_ID.ordinal()), db);
-				appInfo = AppInformation.loadAppInformation(rs.getString(Data.APP_INFO_ID.ordinal()), db);
-				common = rs.getBoolean(Data.COMMON.ordinal());
-				single_id = idGenerator.getNextId();
-				switch (rs.getString(Data.TYPE.ordinal())) {
-					case "groupLinkApp":
-						groupApps.add(GroupLinkApp.loadGroupLinkApp(db_id, group, groupProfile, perms, appInfo, common, single_id, db, context));
-					break;
-					case "groupWebsiteApp":
-						groupApps.add(GroupWebsiteApp.loadGroupWebsiteApp(db_id, group, groupProfile, perms, appInfo, common, single_id, db, context));
-					break;
-					default:
-						throw new GeneralException(ServletManager.Code.InternError, "This GroupApp type dosen't exist.");
-				}
+		IdGenerator idGenerator = (IdGenerator)context.getAttribute("idGenerator");
+		List<GroupApp> groupApps = new LinkedList<GroupApp>();
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM groupApps WHERE group_id= ?;");
+		request.setInt(group.getDBid());
+		DatabaseResult rs = request.get();
+		String db_id;
+		GroupProfile groupProfile;
+		AppPermissions perms;
+		AppInformation appInfo;
+		boolean common;
+		int single_id;
+		while (rs.next()) {
+			db_id = rs.getString(Data.ID.ordinal());
+			groupProfile = GroupManager.getGroupManager(context).getGroupProfileFromDBid(rs.getString(Data.GROUP_PROFILE_ID.ordinal()));
+			perms = AppPermissions.loadAppPermissions(rs.getString(Data.PERMISSION_ID.ordinal()), db);
+			appInfo = AppInformation.loadAppInformation(rs.getString(Data.APP_INFO_ID.ordinal()), db);
+			common = rs.getBoolean(Data.COMMON.ordinal());
+			single_id = idGenerator.getNextId();
+			switch (rs.getString(Data.TYPE.ordinal())) {
+				case "groupLinkApp":
+					groupApps.add(GroupLinkApp.loadGroupLinkApp(db_id, group, groupProfile, perms, appInfo, common, single_id, db, context));
+				break;
+				case "groupWebsiteApp":
+					groupApps.add(GroupWebsiteApp.loadGroupWebsiteApp(db_id, group, groupProfile, perms, appInfo, common, single_id, db, context));
+				break;
+				default:
+					throw new GeneralException(ServletManager.Code.InternError, "This GroupApp type dosen't exist.");
 			}
-			return groupApps;
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
+		return groupApps;
 	}
 	
 	public static String createGroupApp(GroupProfile groupProfile, Group group, int perms, String name, boolean common, String type, Map<String, Object> elevator, ServletManager sm) throws GeneralException {
@@ -97,7 +95,7 @@ public class GroupApp {
 	protected AppPermissions permissions;
 	protected AppInformation app_informations;
 	protected boolean common;
-	int				single_id;
+	protected int single_id;
 	
 	public GroupApp(String db_id, GroupProfile groupProfile, Group group, AppPermissions permissions, AppInformation app_informations, boolean common, int single_id) {
 		this.db_id = db_id;
@@ -171,5 +169,11 @@ public class GroupApp {
 		json.put("groupId", this.group.getSingleId());
 		json.put("infraName", this.group.getInfra().getName());
 		json.put("infraId", this.group.getInfra().getSingleId());
+	}
+
+	public JSONObject getJson() {
+		JSONObject res = new JSONObject();
+		res.put("infos", this.app_informations.getJson());
+		return res;
 	}
 }

@@ -1,9 +1,10 @@
 package com.Ease.Dashboard.Profile;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.json.simple.JSONObject;
 
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -34,14 +35,11 @@ public class ProfileInformation {
 	}
 	
 	public static ProfileInformation loadProfileInformation(String db_id, DataBaseConnection db) throws GeneralException {
-		ResultSet rs = db.get("SELECT * FROM profileInfo WHERE id=" + db_id + ";");
-		try {
-			if (rs.next())
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM profileInfo WHERE id= ?;");
+		request.setInt(db_id);
+		DatabaseResult rs = request.get();
+		if (rs.next())
 				return new ProfileInformation(db_id, rs.getString(InfoData.NAME.ordinal()), rs.getString(InfoData.COLOR.ordinal()));
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
 		return null;
 	}
 	
@@ -91,5 +89,12 @@ public class ProfileInformation {
 		DataBaseConnection db = sm.getDB();
 		this.color = color;
 		db.set("UPDATE profileInfo SET color='" + color + "' WHERE id=" + this.db_id + ";");
+	}
+
+	public JSONObject getJson() {
+		JSONObject res = new JSONObject();
+		res.put("name", this.name);
+		res.put("color", this.color);
+		return res;
 	}
 }

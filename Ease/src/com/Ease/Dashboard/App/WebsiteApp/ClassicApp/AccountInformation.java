@@ -1,12 +1,12 @@
 package com.Ease.Dashboard.App.WebsiteApp.ClassicApp;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -43,17 +43,14 @@ public class AccountInformation {
 	
 	public static List<AccountInformation> loadInformations(String account_id, DataBaseConnection db) throws GeneralException {
 		List<AccountInformation> account_informations = new LinkedList<AccountInformation>();
-		ResultSet rs = db.get("SELECT * FROM accountsInformations WHERE account_id=" + account_id + ";");
-		try {
-			while (rs.next()) {
-				String db_id = rs.getString(AccountInformationData.ID.ordinal());
-				String information_name = rs.getString(AccountInformationData.INFORMATION_NAME.ordinal());
-				String information_value = rs.getString(AccountInformationData.INFORMATION_VALUE.ordinal());
-				account_informations.add(new AccountInformation(db_id, account_id, information_name, information_value));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM accountsInformations WHERE account_id= ?;");
+		request.setInt(account_id);
+		DatabaseResult rs = request.get();
+		while (rs.next()) {
+			String db_id = rs.getString(AccountInformationData.ID.ordinal());
+			String information_name = rs.getString(AccountInformationData.INFORMATION_NAME.ordinal());
+			String information_value = rs.getString(AccountInformationData.INFORMATION_VALUE.ordinal());
+			account_informations.add(new AccountInformation(db_id, account_id, information_name, information_value));
 		}
 		return account_informations;
 	}

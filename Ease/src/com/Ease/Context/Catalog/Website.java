@@ -2,8 +2,6 @@ package com.Ease.Context.Catalog;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -21,6 +19,8 @@ import com.Ease.Context.Variables;
 import com.Ease.Context.Group.Group;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
@@ -46,95 +46,10 @@ public class Website {
 	public static List<Website> loadNewWebsites(Map<String, Sso> ssoDbIdMap, ServletManager sm) throws GeneralException {
 		List<Website> newWebsites = new LinkedList<Website>();
 		DataBaseConnection db = sm.getDB();
-		ResultSet rs = db.get("SELECT * FROM websites WHERE id > " + last_db_id + ";");
-		try {
-			while (rs.next()) {
-					String db_id = rs.getString(WebsiteData.ID.ordinal());
-					if (Integer.parseInt(db_id) > Integer.parseInt(last_db_id))
-						last_db_id = db_id;
-					List<WebsiteInformation> website_informations = WebsiteInformation.loadInformations(db_id, db);
-					String loginUrl = rs.getString(WebsiteData.LOGIN_URL.ordinal());
-					String name = rs.getString(WebsiteData.NAME.ordinal());
-					String folder = rs.getString(WebsiteData.FOLDER.ordinal());
-					Sso sso = ssoDbIdMap.get(rs.getString(WebsiteData.SSO.ordinal()));
-					boolean noLogin = rs.getBoolean(WebsiteData.NO_LOGIN.ordinal());
-					String website_homepage = rs.getString(WebsiteData.WEBSITE_HOMEPAGE.ordinal());
-					int ratio = rs.getInt(WebsiteData.RATIO.ordinal());
-					int position = rs.getInt(WebsiteData.POSITION.ordinal());
-					String websiteAttributesId = rs.getString(WebsiteData.WEBSITE_ATTRIBUTES_ID.ordinal());
-					WebsiteAttributes websiteAttributes = null;
-					if (websiteAttributesId != null)
-						websiteAttributes = WebsiteAttributes.loadWebsiteAttributes(websiteAttributesId, db);
-					int single_id = ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId();
-					Website site = new Website(db_id, single_id, name, loginUrl, folder, sso, noLogin, website_homepage, ratio, position, website_informations, websiteAttributes);
-					newWebsites.add(site);
-					if (sso != null)
-						sso.addWebsite(site);
-					site.loadGroupIds(db);
-			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
-		return newWebsites;
-	}
-	
-	public static Website getWebsite(int single_id, ServletManager sm) throws GeneralException {
-		@SuppressWarnings("unchecked")
-		Map<Integer, Website> websitesMap = (Map<Integer, Website>)sm.getContextAttr("websites");
-		Website site = websitesMap.get(single_id);
-		if (site == null)
-			throw new GeneralException(ServletManager.Code.InternError, "This website dosen't exist!");
-		return site;
-	}
-
-	public static Website createWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, boolean noLogin, String[] haveLoginWith, String[] infoNames, String[] infoTypes, String[] placeholders, String[] placeholderIcons, Catalog catalog, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		ResultSet rs = db.get("SELECT * FROM websites WHERE folder = '"+ folder+"' AND website_name='"+name+"';");
-		try {
-			if (rs.next()){
-				throw new GeneralException(ServletManager.Code.UserMiss, "This website already exists");
-			}
-			int transaction  = db.startTransaction();
-			WebsiteAttributes attributes = WebsiteAttributes.createWebsiteAttributes(db);
-
-			String db_id = db.set("INSERT INTO websites VALUES (null, '"+ url +"', '"+ name +"', '" + folder + "', NULL, " + (noLogin ? "1" : "0") + ", '"+ homePage +"', 0, 1, "+ attributes.getDbId() +");").toString();
-			last_db_id = db_id;
-
-			List<WebsiteInformation> infos = new LinkedList<WebsiteInformation>();
-			if (!noLogin) {
-				for(int i=0; i < infoNames.length; i++) {
-					infos.add(WebsiteInformation.createInformation(db_id, infoNames[i], infoTypes[i], String.valueOf(i), placeholders[i], placeholderIcons[i], db));
-				}
-			}
-
-			if(haveLoginButton){
-				db.set("INSERT INTO loginWithWebsites VALUES (null, "+ db_id +");");
-			}
-
-			List<Website> loginWithWebsites = new LinkedList<Website>();
-			if(haveLoginWith != null){
-				for(int i=0;i<haveLoginWith.length;i++){
-					ResultSet rs2 = db.get("SELECT id FROM loginWithWebsites WHERE website_id = "+haveLoginWith[i]+";");
-					if(rs2.next()){
-						String id = db.set("INSERT INTO websitesLogWithMap VALUES (null, "+db_id+", "+rs2.getString(1)+");").toString();
-					}
-					loginWithWebsites.add(catalog.getWebsiteWithDBid(haveLoginWith[i]));
-				}
-			}
-			IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
-			db.commitTransaction(transaction);
-			return new Website(db_id, idGenerator.getNextId(), name, url, folder, null, noLogin, homePage, 0, 1, infos, attributes, loginWithWebsites);
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
-	}
-
-
-	public static List<Website> loadWebsites(DataBaseConnection db, Map<String, Sso> ssoDbIdMap, ServletContext context) throws GeneralException {
-		try {
-			List<Website> websites = new LinkedList<Website>();
-			ResultSet rs = db.get("SELECT websites.* FROM websites LEFT JOIN websiteAttributes ON (website_attributes_id = websiteAttributes.id) ORDER BY new, ratio");
-			while (rs.next()) {
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM websites WHERE id > ?;");
+		request.setInt(last_db_id);
+		DatabaseResult rs = request.get();
+		while (rs.next()) {
 				String db_id = rs.getString(WebsiteData.ID.ordinal());
 				if (Integer.parseInt(db_id) > Integer.parseInt(last_db_id))
 					last_db_id = db_id;
@@ -151,17 +66,97 @@ public class Website {
 				WebsiteAttributes websiteAttributes = null;
 				if (websiteAttributesId != null)
 					websiteAttributes = WebsiteAttributes.loadWebsiteAttributes(websiteAttributesId, db);
-				int single_id = ((IdGenerator)context.getAttribute("idGenerator")).getNextId();
+				int single_id = ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId();
 				Website site = new Website(db_id, single_id, name, loginUrl, folder, sso, noLogin, website_homepage, ratio, position, website_informations, websiteAttributes);
-				websites.add(site);
+				newWebsites.add(site);
 				if (sso != null)
 					sso.addWebsite(site);
 				site.loadGroupIds(db);
-			}
-			return websites;
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
+		return newWebsites;
+	}
+	
+	public static Website getWebsite(int single_id, ServletManager sm) throws GeneralException {
+		@SuppressWarnings("unchecked")
+		Map<Integer, Website> websitesMap = (Map<Integer, Website>)sm.getContextAttr("websites");
+		Website site = websitesMap.get(single_id);
+		if (site == null)
+			throw new GeneralException(ServletManager.Code.InternError, "This website dosen't exist!");
+		return site;
+	}
+
+	public static Website createWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, boolean noLogin, String[] haveLoginWith, String[] infoNames, String[] infoTypes, String[] placeholders, String[] placeholderIcons, Catalog catalog, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM websites WHERE folder = ? AND website_name = ?;");
+		request.setString(folder);
+		request.setString(name);
+		DatabaseResult rs = request.get();
+		if (rs.next()){
+			throw new GeneralException(ServletManager.Code.UserMiss, "This website already exists");
+		}
+		int transaction  = db.startTransaction();
+		WebsiteAttributes attributes = WebsiteAttributes.createWebsiteAttributes(db);
+
+		String db_id = db.set("INSERT INTO websites VALUES (null, '"+ url +"', '"+ name +"', '" + folder + "', NULL, " + (noLogin ? "1" : "0") + ", '"+ homePage +"', 0, 1, "+ attributes.getDbId() +");").toString();
+		last_db_id = db_id;
+
+		List<WebsiteInformation> infos = new LinkedList<WebsiteInformation>();
+		if (!noLogin) {
+			for(int i=0; i < infoNames.length; i++) {
+				infos.add(WebsiteInformation.createInformation(db_id, infoNames[i], infoTypes[i], String.valueOf(i), placeholders[i], placeholderIcons[i], db));
+			}
+		}
+
+		if(haveLoginButton){
+			db.set("INSERT INTO loginWithWebsites VALUES (null, "+ db_id +");");
+		}
+
+		List<Website> loginWithWebsites = new LinkedList<Website>();
+		if(haveLoginWith != null){
+			for(int i=0;i<haveLoginWith.length;i++){
+				DatabaseRequest request2 = db.prepareRequest("SELECT id FROM loginWithWebsites WHERE website_id = ?;");
+				request2.setInt(haveLoginWith[i]);
+				DatabaseResult rs2 = request2.get();
+				if(rs2.next()){
+					String id = db.set("INSERT INTO websitesLogWithMap VALUES (null, "+db_id+", "+rs2.getString(1)+");").toString();
+				}
+				loginWithWebsites.add(catalog.getWebsiteWithDBid(haveLoginWith[i]));
+			}
+		}
+		IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
+		db.commitTransaction(transaction);
+		return new Website(db_id, idGenerator.getNextId(), name, url, folder, null, noLogin, homePage, 0, 1, infos, attributes, loginWithWebsites);
+	}
+
+
+	public static List<Website> loadWebsites(DataBaseConnection db, Map<String, Sso> ssoDbIdMap, ServletContext context) throws GeneralException {
+		List<Website> websites = new LinkedList<Website>();
+		DatabaseResult rs = db.prepareRequest("SELECT websites.* FROM websites LEFT JOIN websiteAttributes ON (website_attributes_id = websiteAttributes.id) ORDER BY new, ratio").get();
+		while (rs.next()) {
+			String db_id = rs.getString(WebsiteData.ID.ordinal());
+			if (Integer.parseInt(db_id) > Integer.parseInt(last_db_id))
+				last_db_id = db_id;
+			List<WebsiteInformation> website_informations = WebsiteInformation.loadInformations(db_id, db);
+			String loginUrl = rs.getString(WebsiteData.LOGIN_URL.ordinal());
+			String name = rs.getString(WebsiteData.NAME.ordinal());
+			String folder = rs.getString(WebsiteData.FOLDER.ordinal());
+			Sso sso = ssoDbIdMap.get(rs.getString(WebsiteData.SSO.ordinal()));
+			boolean noLogin = rs.getBoolean(WebsiteData.NO_LOGIN.ordinal());
+			String website_homepage = rs.getString(WebsiteData.WEBSITE_HOMEPAGE.ordinal());
+			int ratio = rs.getInt(WebsiteData.RATIO.ordinal());
+			int position = rs.getInt(WebsiteData.POSITION.ordinal());
+			String websiteAttributesId = rs.getString(WebsiteData.WEBSITE_ATTRIBUTES_ID.ordinal());
+			WebsiteAttributes websiteAttributes = null;
+			if (websiteAttributesId != null)
+				websiteAttributes = WebsiteAttributes.loadWebsiteAttributes(websiteAttributesId, db);
+			int single_id = ((IdGenerator)context.getAttribute("idGenerator")).getNextId();
+			Website site = new Website(db_id, single_id, name, loginUrl, folder, sso, noLogin, website_homepage, ratio, position, website_informations, websiteAttributes);
+			websites.add(site);
+			if (sso != null)
+				sso.addWebsite(site);
+			site.loadGroupIds(db);
+		}
+		return websites;
 	}
 
 	///// Check if website exist when scrapp
@@ -169,19 +164,15 @@ public class Website {
 	public static JSONArray existsInDb(String websiteHost, ServletManager sm) throws GeneralException{
 		DataBaseConnection db = sm.getDB();
 		Catalog catalog = (Catalog)sm.getContextAttr("catalog");
-		ResultSet rs = db.get("select * from websites where noLogin=0 AND website_name NOT IN ('Google AdWords', 'Google Analytics', 'Google Play');");
+		DatabaseResult rs = db.prepareRequest("select * from websites where noLogin=0 AND website_name NOT IN ('Google AdWords', 'Google Analytics', 'Google Play');").get();
 		JSONArray result = new JSONArray();
-		try {
-			while(rs.next()){
-				String loginUrl = rs.getString(WebsiteData.LOGIN_URL.ordinal());
-				websiteHost = websiteHost.toLowerCase();
-				loginUrl = loginUrl.toLowerCase();
-				if(loginUrl.contains(websiteHost)){
-					result.add(String.valueOf((catalog.getWebsiteWithDBid(rs.getString(WebsiteData.ID.ordinal())).getSingleId())));
-				}
+		while(rs.next()){
+			String loginUrl = rs.getString(WebsiteData.LOGIN_URL.ordinal());
+			websiteHost = websiteHost.toLowerCase();
+			loginUrl = loginUrl.toLowerCase();
+			if(loginUrl.contains(websiteHost)){
+				result.add(String.valueOf((catalog.getWebsiteWithDBid(rs.getString(WebsiteData.ID.ordinal())).getSingleId())));
 			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 		return result;
 	}
@@ -189,18 +180,14 @@ public class Website {
 	public static String existsInDbFacebook(String appName, ServletManager sm) throws GeneralException{
 		DataBaseConnection db = sm.getDB();
 		Catalog catalog = (Catalog)sm.getContextAttr("catalog");
-		ResultSet rs = db.get("select * from websites where id in (select website_id from websitesLogWithMap where website_logwith_id in (select id from loginWithWebsites where website_id in (select id from websites where website_name='Facebook')));");
-		try {
-			while(rs.next()){
-				String name = rs.getString(WebsiteData.NAME.ordinal());
-				appName = appName.toLowerCase();
-				name = name.toLowerCase();
-				if(appName.contains(name)){
-					return String.valueOf((catalog.getWebsiteWithDBid(rs.getString(WebsiteData.ID.ordinal())).getSingleId()));
-				}
+		DatabaseResult rs = db.prepareRequest("select * from websites where id in (select website_id from websitesLogWithMap where website_logwith_id in (select id from loginWithWebsites where website_id in (select id from websites where website_name='Facebook')));").get();
+		while(rs.next()){
+			String name = rs.getString(WebsiteData.NAME.ordinal());
+			appName = appName.toLowerCase();
+			name = name.toLowerCase();
+			if(appName.contains(name)){
+				return String.valueOf((catalog.getWebsiteWithDBid(rs.getString(WebsiteData.ID.ordinal())).getSingleId()));
 			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 		return null;
 	}
@@ -208,18 +195,14 @@ public class Website {
 	public static String existsInDbLinkedin(String appName, ServletManager sm) throws GeneralException{
 		DataBaseConnection db = sm.getDB();
 		Catalog catalog = (Catalog)sm.getContextAttr("catalog");
-		ResultSet rs = db.get("select * from websites where id in (select website_id from websitesLogWithMap where website_logwith_id in (select id from loginWithWebsites where website_id in (select id from websites where website_name='Linkedin')));");
-		try {
-			while(rs.next()){
-				String name = rs.getString(WebsiteData.NAME.ordinal());
-				appName = appName.toLowerCase();
-				name = name.toLowerCase();
-				if(appName.contains(name)){
-					return String.valueOf((catalog.getWebsiteWithDBid(rs.getString(WebsiteData.ID.ordinal())).getSingleId()));
-				}
+		DatabaseResult rs = db.prepareRequest("select * from websites where id in (select website_id from websitesLogWithMap where website_logwith_id in (select id from loginWithWebsites where website_id in (select id from websites where website_name='Linkedin')));").get();
+		while(rs.next()){
+			String name = rs.getString(WebsiteData.NAME.ordinal());
+			appName = appName.toLowerCase();
+			name = name.toLowerCase();
+			if(appName.contains(name)){
+				return String.valueOf((catalog.getWebsiteWithDBid(rs.getString(WebsiteData.ID.ordinal())).getSingleId()));
 			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 		return null;
 	}
@@ -276,28 +259,24 @@ public class Website {
 	}
 	
 	public void loadGroupIds(DataBaseConnection db) throws GeneralException {
-		ResultSet rs = db.get("SELECT group_id FROM websitesAndGroupsMap JOIN groups ON (websitesAndGroupsMap.group_id = groups.id) WHERE website_id = " + this.db_id + ";");
-		try {
-			while(rs.next()) {
-				String parent_id = rs.getString(1);
-				this.groupIds.add(parent_id);
-				this.loadSubGroupIds(parent_id, db);
-			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DatabaseRequest request = db.prepareRequest("SELECT group_id FROM websitesAndGroupsMap JOIN groups ON (websitesAndGroupsMap.group_id = groups.id) WHERE website_id = ?;");
+		request.setInt(this.db_id);
+		DatabaseResult rs = request.get();
+		while(rs.next()) {
+			String parent_id = rs.getString(1);
+			this.groupIds.add(parent_id);
+			this.loadSubGroupIds(parent_id, db);
 		}
 	}
 	
 	public void loadSubGroupIds(String parent_id, DataBaseConnection db) throws GeneralException {
-		ResultSet rs = db.get("SELECT id FROM groups WHERE parent = " + parent_id + ";");
-		try {
-			while(rs.next()) {
-				String newParent_id = rs.getString(1);
-				this.groupIds.add(newParent_id);
-				this.loadSubGroupIds(newParent_id, db);
-			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DatabaseRequest request = db.prepareRequest("SELECT id FROM groups WHERE parent = ?;");
+		request.setInt(parent_id);
+		DatabaseResult rs = request.get();
+		while(rs.next()) {
+			String newParent_id = rs.getString(1);
+			this.groupIds.add(newParent_id);
+			this.loadSubGroupIds(newParent_id, db);
 		}
 	}
 
@@ -356,13 +335,11 @@ public class Website {
 	}
 
 	public void loadLoginWithWebsites(DataBaseConnection db, Catalog catalog) throws GeneralException {
-		ResultSet rs = db.get("SELECT loginWithWebsites.website_id FROM loginWithWebsites JOIN websitesLogWithMap ON loginWithWebsites.id = website_logwith_id WHERE websitesLogWithMap.website_id=" + this.db_id + ";");
-		try {
-			while (rs.next()) {
-				this.loginWithWebsites.add(catalog.getWebsiteWithDBid(rs.getString(1)));
-			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DatabaseRequest request = db.prepareRequest("SELECT loginWithWebsites.website_id FROM loginWithWebsites JOIN websitesLogWithMap ON loginWithWebsites.id = website_logwith_id WHERE websitesLogWithMap.website_id = ?;");
+		request.setInt(this.db_id);
+		DatabaseResult rs = request.get();
+		while (rs.next()) {
+			this.loginWithWebsites.add(catalog.getWebsiteWithDBid(rs.getString(1)));
 		}
 	}
 
@@ -508,22 +485,20 @@ public class Website {
 
 	public void refresh(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		ResultSet rs = db.get("SELECT * FROM websites WHERE id = " + this.db_id  + ";");
-		try {
-			rs.next();
-			this.loginUrl = rs.getString(WebsiteData.LOGIN_URL.ordinal());
-			this.name = rs.getString(WebsiteData.NAME.ordinal());
-			this.folder = rs.getString(WebsiteData.FOLDER.ordinal());
-			this.noLogin = rs.getBoolean(WebsiteData.NO_LOGIN.ordinal());
-			this.website_homepage = rs.getString(WebsiteData.WEBSITE_HOMEPAGE.ordinal());
-			this.ratio = rs.getInt(WebsiteData.RATIO.ordinal());
-			this.position = rs.getInt(WebsiteData.POSITION.ordinal());
-			for (WebsiteInformation info : this.website_informations)
-				info.refresh(sm);
-			this.websiteAttributes.refresh(sm);
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM websites WHERE id = ?;");
+		request.setInt(this.db_id);
+		DatabaseResult rs = request.get();
+		rs.next();
+		this.loginUrl = rs.getString(WebsiteData.LOGIN_URL.ordinal());
+		this.name = rs.getString(WebsiteData.NAME.ordinal());
+		this.folder = rs.getString(WebsiteData.FOLDER.ordinal());
+		this.noLogin = rs.getBoolean(WebsiteData.NO_LOGIN.ordinal());
+		this.website_homepage = rs.getString(WebsiteData.WEBSITE_HOMEPAGE.ordinal());
+		this.ratio = rs.getInt(WebsiteData.RATIO.ordinal());
+		this.position = rs.getInt(WebsiteData.POSITION.ordinal());
+		for (WebsiteInformation info : this.website_informations)
+			info.refresh(sm);
+		this.websiteAttributes.refresh(sm);
 	}
 
 	public boolean isInPublicCatalogForUser(User user) {

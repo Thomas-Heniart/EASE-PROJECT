@@ -53,4 +53,28 @@ public class DatabaseResult {
 	public String getString(String columnName) throws GeneralException {
 		return (String)this.getObject(columnName);
 	}
+	
+	public Integer getInt(int columnIndex) throws GeneralException {
+		try {
+			return this.rs.getInt(columnIndex);
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+	}
+	
+	public Boolean getBoolean(int columnIndex) throws GeneralException {
+		try {
+			return this.rs.getBoolean(columnIndex);
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+	}
+	
+	public boolean getBoolean(String columnName) throws GeneralException {
+		try {
+			return this.rs.getBoolean(columnName);
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+	}
 }

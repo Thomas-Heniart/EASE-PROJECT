@@ -1,9 +1,10 @@
 package com.Ease.Dashboard.App;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.json.simple.JSONObject;
 
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -28,18 +29,15 @@ public class AppInformation {
 	}
 	
 	public static AppInformation loadAppInformation(String db_id, DataBaseConnection db) throws GeneralException {
-		ResultSet rs = db.get("SELECT * FROM appsInformations WHERE id = " + db_id + " ;");
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM appsInformations WHERE id = ? ;");
+		request.setInt(db_id);
+		DatabaseResult rs = request.get();
 		String name;
-		try {
-			if (rs.next()) {
-				name = rs.getString(Data.NAME.ordinal());
-				return new AppInformation(db_id, name);
-			} else
-				throw new GeneralException(ServletManager.Code.InternError, "No app information");
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
-		
+		if (rs.next()) {
+			name = rs.getString(Data.NAME.ordinal());
+			return new AppInformation(db_id, name);
+		} else
+			throw new GeneralException(ServletManager.Code.InternError, "No app information");
 	}
 	
 	protected String db_id;
@@ -67,5 +65,11 @@ public class AppInformation {
 	public void removeFromDb(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		db.set("DELETE FROM appsInformations WHERE id=" + this.db_id + ";");
+	}
+
+	public JSONObject getJson() {
+		JSONObject res = new JSONObject();
+		res.put("name", this.name);
+		return res;
 	}
 }

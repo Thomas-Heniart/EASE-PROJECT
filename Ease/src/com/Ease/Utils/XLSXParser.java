@@ -1,15 +1,14 @@
 package com.Ease.Utils; 
  
-import java.io.File; 
-import java.io.FileInputStream; 
-import java.sql.ResultSet; 
-import java.sql.SQLException; 
-import java.util.Iterator; 
-import org.apache.poi.ss.usermodel.Cell; 
-import org.apache.poi.ss.usermodel.Row; 
-import org.apache.poi.xssf.usermodel.XSSFSheet; 
-import org.apache.poi.xssf.usermodel.XSSFWorkbook; 
- 
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.Iterator;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import com.Ease.Utils.Crypto.CodeGenerator; 
  
 public class XLSXParser { 
@@ -62,29 +61,20 @@ public class XLSXParser {
               groupName = "Etudiant"; 
               break; 
             } 
-            ResultSet groupRs = db.get("SELECT id FROM groups WHERE infrastructure_id = " + infra_id 
-                + " AND name = '" + groupName + "'"); 
-            try { 
-              groupRs.next(); 
-              groupId = groupRs.getString(1); 
-            } catch (SQLException e) { 
-              throw new GeneralException(ServletManager.Code.InternError, e); 
-            } 
+            DatabaseRequest request = db.prepareRequest("SELECT id FROM groups WHERE infrastructure_id = ? AND name = ?;");
+            request.setInt(this.infra_id);
+            request.setString(name);
+            DatabaseResult groupRs = request.get(); 
+            groupRs.next(); 
+            groupId = groupRs.getString(1); 
           } else if (i % 4 == 2 && i > 3) { 
             name = cell.getStringCellValue(); 
           } 
           else if (i % 4 == 3 && i > 3) { 
             email = cell.getStringCellValue(); 
-            String linkCode = CodeGenerator.generateNewCode(); 
-            ResultSet uRs = db.get("SELECT * FROM users WHERE email = '" + email + "';"); 
-            try { 
-              if (!uRs.next()) { 
-                String invitation_id = db.set("INSERT INTO invitations values (null, '" + name + "', '" + email + "', '" + linkCode + "')").toString(); 
-                db.set("INSERT INTO invitationsAndGroupsMap VALUES (null, " + invitation_id + ", " + groupId + ");"); 
-              } 
-            } catch (SQLException e) { 
-              throw new GeneralException(ServletManager.Code.InternError, e); 
-            } 
+            String linkCode = CodeGenerator.generateNewCode();  
+            String invitation_id = db.set("INSERT INTO invitations values (null, '" + name + "', '" + email + "', '" + linkCode + "')").toString(); 
+            db.set("INSERT INTO invitationsAndGroupsMap VALUES (null, " + invitation_id + ", " + groupId + ");"); 
           } 
           i++; 
           break; 

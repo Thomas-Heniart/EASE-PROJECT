@@ -1,7 +1,5 @@
 package com.Ease.Dashboard.Profile;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,6 +16,8 @@ import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.Regex;
@@ -56,31 +56,29 @@ public class Profile {
 			profilesColumn.add(new LinkedList<Profile>());
 		}
 		DataBaseConnection db = sm.getDB();
-		try {
-			ResultSet rs = db.get("SELECT * FROM profiles WHERE user_id=" + user.getDBid() + ";");
-			String db_id;
-			int	columnIdx;
-			int	posIdx;
-			GroupProfile groupProfile;
-			ProfileInformation infos;
-			int single_id;
-			List<App> apps;
-			while (rs.next()) {
-				db_id = rs.getString(Data.ID.ordinal());
-				columnIdx = rs.getInt(Data.COLUMN_IDX.ordinal());
-				posIdx = rs.getInt(Data.POSITION_IDX.ordinal());
-				String groupProfileId = rs.getString(Data.GROUP_PROFILE_ID.ordinal());
-				groupProfile = (groupProfileId == null) ? null : GroupManager.getGroupManager(sm).getGroupProfileFromDBid(groupProfileId);
-				infos = ProfileInformation.loadProfileInformation(rs.getString(Data.PROFILE_INFO_ID.ordinal()), db);
-				IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
-				single_id = idGenerator.getNextId();
-				Profile profile = new Profile(db_id, user, columnIdx, posIdx, groupProfile, infos, single_id);
-				apps = App.loadApps(profile, sm);
-				profile.setApps(apps);
-				profilesColumn.get(columnIdx).add(profile);
-			}
-		} catch (SQLException e){
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM profiles WHERE user_id= ?;");
+		request.setInt(user.getDBid());
+		DatabaseResult rs = request.get();
+		String db_id;
+		int	columnIdx;
+		int	posIdx;
+		GroupProfile groupProfile;
+		ProfileInformation infos;
+		int single_id;
+		List<App> apps;
+		while (rs.next()) {
+			db_id = rs.getString(Data.ID.ordinal());
+			columnIdx = rs.getInt(Data.COLUMN_IDX.ordinal());
+			posIdx = rs.getInt(Data.POSITION_IDX.ordinal());
+			String groupProfileId = rs.getString(Data.GROUP_PROFILE_ID.ordinal());
+			groupProfile = (groupProfileId == null) ? null : GroupManager.getGroupManager(sm).getGroupProfileFromDBid(groupProfileId);
+			infos = ProfileInformation.loadProfileInformation(rs.getString(Data.PROFILE_INFO_ID.ordinal()), db);
+			IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
+			single_id = idGenerator.getNextId();
+			Profile profile = new Profile(db_id, user, columnIdx, posIdx, groupProfile, infos, single_id);
+			apps = App.loadApps(profile, sm);
+			profile.setApps(apps);
+			profilesColumn.get(columnIdx).add(profile);
 		}
 		for (List<Profile> column : profilesColumn) {
 			column.sort(new Comparator<Profile>() {
@@ -299,18 +297,16 @@ public class Profile {
 	
 	public static int getSizeForUnconnected(String db_id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		try {
-			ResultSet rs = db.get("SELECT COUNT(*) FROM apps WHERE profile_id=" + db_id + ";");
-			if (rs.next()) {
-				int ret = rs.getInt(1);
-				if (ret < 4)
-					return 2;
-				return (ret + 2) / 3;
-			} else {
-				throw new GeneralException(ServletManager.Code.InternError, "Bizare.");
-			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DatabaseRequest request = db.prepareRequest("SELECT COUNT(*) FROM apps WHERE profile_id= ?;");
+		request.setInt(db_id);
+		DatabaseResult rs = request.get();
+		if (rs.next()) {
+			int ret = rs.getInt(1);
+			if (ret < 4)
+				return 2;
+			return (ret + 2) / 3;
+		} else {
+			throw new GeneralException(ServletManager.Code.InternError, "Bizare.");
 		}
 	}
 	

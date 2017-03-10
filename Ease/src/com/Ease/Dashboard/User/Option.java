@@ -1,9 +1,8 @@
 package com.Ease.Dashboard.User;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -24,14 +23,11 @@ public class Option {
 
 	public static Option loadOption(String db_id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		ResultSet rs = db.get("SELECT * FROM options WHERE id=" + db_id + ";");
-		try {
-			if (rs.next())
-				return new Option(db_id, rs.getBoolean(OptionData.BACKGROUND_PICKED.ordinal()), rs.getBoolean(OptionData.INFINITE_SESSION.ordinal()));
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new GeneralException(ServletManager.Code.InternError, e);	
-		}
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM options WHERE id= ?;");
+		request.setInt(db_id);
+		DatabaseResult rs = request.get();
+		if (rs.next())
+			return new Option(db_id, rs.getBoolean(OptionData.BACKGROUND_PICKED.ordinal()), rs.getBoolean(OptionData.INFINITE_SESSION.ordinal()));
 		return null;
 	}
 	

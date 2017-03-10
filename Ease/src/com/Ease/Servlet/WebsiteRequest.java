@@ -1,8 +1,6 @@
 package com.Ease.Servlet;
 
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,6 +15,8 @@ import org.json.simple.JSONObject;
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -47,26 +47,24 @@ public class WebsiteRequest extends HttpServlet {
 			sm.needToBeConnected();
 			if (!user.isAdmin())
 				throw new GeneralException(ServletManager.Code.ClientError, "You are not admin");
-			ResultSet rs = db.get("SELECT * FROM requestedWebsites;");
+			DatabaseResult rs = db.prepareRequest("SELECT * FROM requestedWebsites;").get();
 			JSONArray res = new JSONArray();
-			try {
-				while(rs.next()) {
-					ResultSet rs2 = db.get("SELECT firstName, email FROM users WHERE id=" + rs.getString(rs.findColumn("user_id")) +";");
-					rs2.next();
-					String name = rs2.getString(1);
-					String email = rs2.getString(2);
-					String site = rs.getString(rs.findColumn("site"));
-					JSONObject tmpObject = new JSONObject();
-					tmpObject.put("site", site);
-					tmpObject.put("userName", name);
-					tmpObject.put("email", email);
-					tmpObject.put("date", rs.getString(rs.findColumn("date")));
-					boolean alreadyIntegrated = catalog.getWebsiteWithHost(site) != null;
-					tmpObject.put("alreadyIntegrated", alreadyIntegrated);
-					res.add(tmpObject);
-				}
-			} catch (SQLException e) {
-				throw new GeneralException(ServletManager.Code.InternError, e);
+			while(rs.next()) {
+				DatabaseRequest db_request = db.prepareRequest("SELECT firstName, email FROM users WHERE id= ?;");
+				db_request.setInt(rs.getString("user_id"));
+				DatabaseResult rs2 = db_request.get();
+				rs2.next();
+				String name = rs2.getString(1);
+				String email = rs2.getString(2);
+				String site = rs.getString("site");
+				JSONObject tmpObject = new JSONObject();
+				tmpObject.put("site", site);
+				tmpObject.put("userName", name);
+				tmpObject.put("email", email);
+				tmpObject.put("date", rs.getString("date"));
+				boolean alreadyIntegrated = catalog.getWebsiteWithHost(site) != null;
+				tmpObject.put("alreadyIntegrated", alreadyIntegrated);
+				res.add(tmpObject);
 			}
 			sm.setResponse(ServletManager.Code.Success, res.toString());
 		} catch (GeneralException e) {

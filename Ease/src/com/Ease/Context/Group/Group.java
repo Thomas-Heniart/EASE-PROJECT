@@ -1,7 +1,5 @@
 package com.Ease.Context.Group;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +15,8 @@ import com.Ease.Dashboard.App.GroupApp;
 import com.Ease.Dashboard.Profile.GroupProfile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.Invitation;
@@ -55,46 +55,42 @@ public class Group {
 	
 	@SuppressWarnings("unchecked")
 	public static List<Group> loadGroup(DataBaseConnection db, Group parent, Infrastructure infra, ServletContext context) throws GeneralException {
-		try {
-			IdGenerator idGenerator = (IdGenerator)context.getAttribute("idGenerator");
-			Catalog catalog = (Catalog) context.getAttribute("catalog");
-			List<Group> groups = new LinkedList<Group>();
-			ResultSet rs = db.get("SELECT * FROM groups WHERE parent " + ((parent == null) ? " IS NULL" : ("="+parent.getDBid())) + " AND infrastructure_id=" + infra.getDBid() + ";");
-			String db_id;
-			String name;
-			int single_id;
-			List<GroupProfile> groupProfiles;
-			List<GroupApp> groupApps;
-			while (rs.next()) {
-				db_id = rs.getString(Data.ID.ordinal());
-				name = rs.getString(Data.NAME.ordinal());
-				single_id = idGenerator.getNextId();
-				Group child = new Group(db_id, name, parent, infra, single_id);
-				child.setChildrens(loadGroup(db, child, infra, context));
-				groupProfiles = GroupProfile.loadGroupProfiles(child, db, context);
-				child.setGroupProfiles(groupProfiles);	
-				groupApps = GroupApp.loadGroupApps(child, db, context);
-				child.setGroupApps(groupApps);
-				groups.add(child);
-				child.loadWebsites(db, catalog);
-				GroupManager.getGroupManager(context).add(child);
-			}
-			return groups;
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		IdGenerator idGenerator = (IdGenerator)context.getAttribute("idGenerator");
+		Catalog catalog = (Catalog) context.getAttribute("catalog");
+		List<Group> groups = new LinkedList<Group>();
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM groups WHERE parent " + ((parent == null) ? " IS NULL" : ("="+parent.getDBid())) + " AND infrastructure_id= ?;");
+		request.setInt(infra.getDBid());
+		DatabaseResult rs = request.get();
+		String db_id;
+		String name;
+		int single_id;
+		List<GroupProfile> groupProfiles;
+		List<GroupApp> groupApps;
+		while (rs.next()) {
+			db_id = rs.getString(Data.ID.ordinal());
+			name = rs.getString(Data.NAME.ordinal());
+			single_id = idGenerator.getNextId();
+			Group child = new Group(db_id, name, parent, infra, single_id);
+			child.setChildrens(loadGroup(db, child, infra, context));
+			groupProfiles = GroupProfile.loadGroupProfiles(child, db, context);
+			child.setGroupProfiles(groupProfiles);	
+			groupApps = GroupApp.loadGroupApps(child, db, context);
+			child.setGroupApps(groupApps);
+			groups.add(child);
+			child.loadWebsites(db, catalog);
+			GroupManager.getGroupManager(context).add(child);
 		}
+		return groups;
 	}
 	
 	
 	private void loadWebsites(DataBaseConnection db, Catalog catalog) throws GeneralException {
-		ResultSet rs = db.get("SELECT website_id FROM websitesAndGroupsMap WHERE group_id = " + this.db_id + ";");
-		try {
-			while (rs.next()) {
-				System.out.println("Catalog websites size : " + catalog.getWebsites().size());
-				this.groupWebsites.add(catalog.getWebsiteWithDBid(rs.getString(1)));
-			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DatabaseRequest request = db.prepareRequest("SELECT website_id FROM websitesAndGroupsMap WHERE group_id = ?;");
+		request.setInt(this.db_id);
+		DatabaseResult rs = request.get();
+		while (rs.next()) {
+			System.out.println("Catalog websites size : " + catalog.getWebsites().size());
+			this.groupWebsites.add(catalog.getWebsiteWithDBid(rs.getString(1)));
 		}
 	}
 
@@ -186,39 +182,39 @@ public class Group {
 		for (Group group : children) {
 			group.removeFromDb(sm);
 		}
-		try {	
-			Map<String, User> users = (Map<String, User>) sm.getContextAttr("users");
-			ResultSet rs = db.get("SELECT email, user_id FROM groupsAndUsersMap JOIN users ON user_id = users.id WHERE group_id=" + this.db_id + ";");
-			while (rs.next()) {
-				String email  = rs.getString(1);
-				String user_id = rs.getString(2);
-				User user;
-				if ((user = users.get(email)) != null) {
-					this.removeContentForConnectedUser(user, sm);
-				} else {
-					this.removeContentForUnconnectedUser(user_id, sm);
-				}
+		Map<String, User> users = (Map<String, User>) sm.getContextAttr("users");
+		DatabaseRequest request = db.prepareRequest("SELECT email, user_id FROM groupsAndUsersMap JOIN users ON user_id = users.id WHERE group_id= ?;");
+		request.setInt(this.db_id);
+		DatabaseResult rs = request.get();
+		while (rs.next()) {
+			String email  = rs.getString(1);
+			String user_id = rs.getString(2);
+			User user;
+			if ((user = users.get(email)) != null) {
+				this.removeContentForConnectedUser(user, sm);
+			} else {
+				this.removeContentForUnconnectedUser(user_id, sm);
 			}
-			rs = db.get("SELECT user_id FROM groupsAndUsersMap WHERE group_id = " + this.db_id + ";");
-			while (rs.next()) {
-				if (this.parent != null) {
-					db.set("UPDATE groupsAndUsersMap SET group_id=" + this.parent.db_id + " WHERE group_id=" + this.db_id + " AND user_id = " + rs.getString(1) + ";");
-				} else {
-					db.set("DELETE FROM groupsAndUsersMap WHERE group_id=" + this.db_id + " AND user_id = " + rs.getString(1) + ";");
-				}
-			}
-			for (GroupProfile groupProfile : this.groupProfiles) {
-				groupProfile.removeFromDb(sm);
-			}
-			for (GroupApp groupApp : this.groupApps) {
-				groupApp.removeFromDb(sm);
-			}
-			GroupManager.getGroupManager(sm).remove(this);
-			db.set("DELETE FROM groups WHERE id=" + this.db_id + ";");
-			db.commitTransaction(transaction);
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
+		request = db.prepareRequest("SELECT user_id FROM groupsAndUsersMap WHERE group_id = ?;");
+		request.setInt(this.db_id);
+		rs = request.get();
+		while (rs.next()) {
+			if (this.parent != null) {
+				db.set("UPDATE groupsAndUsersMap SET group_id=" + this.parent.db_id + " WHERE group_id=" + this.db_id + " AND user_id = " + rs.getString(1) + ";");
+			} else {
+				db.set("DELETE FROM groupsAndUsersMap WHERE group_id=" + this.db_id + " AND user_id = " + rs.getString(1) + ";");
+			}
+		}
+		for (GroupProfile groupProfile : this.groupProfiles) {
+			groupProfile.removeFromDb(sm);
+		}
+		for (GroupApp groupApp : this.groupApps) {
+			groupApp.removeFromDb(sm);
+		}
+		GroupManager.getGroupManager(sm).remove(this);
+		db.set("DELETE FROM groups WHERE id=" + this.db_id + ";");
+		db.commitTransaction(transaction);
 	}
 	
 	private void loadContentForConnectedUser(User user, ServletManager sm) throws GeneralException {
@@ -319,5 +315,13 @@ public class Group {
 
 	public Group getParent() {
 		return this.parent;
+	}
+	
+	public void addGroupProfile(GroupProfile groupProfile) {
+		this.groupProfiles.add(groupProfile);
+	}
+	
+	public void addGroupApp(GroupApp groupApp) {
+		this.groupApps.add(groupApp);
 	}
 }

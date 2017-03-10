@@ -1,19 +1,18 @@
 package com.Ease.Dashboard.App.LinkApp;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.AppInformation;
 import com.Ease.Dashboard.App.GroupApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
@@ -36,21 +35,19 @@ public class LinkApp extends App {
 	
 	public static LinkApp loadLinkApp(String appDBid, Profile profile, int position, String insertDate, AppInformation appInfos, GroupApp groupApp, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		try {
-			ResultSet rs = db.get("SELECT * from linkApps WHERE app_id=" + appDBid + ";");
-			if (rs.next()) {
-				LinkAppInformation linkInfos = LinkAppInformation.loadLinkAppInformation(rs.getString(Data.LINK_APP_INFO_ID.ordinal()), db);
-				/*GroupLinkApp groupLinkApp = null;
-				String groupLinkId = rs.getString(Data.GROUP_LINK_APP_ID.ordinal());
-				if (groupLinkId != null)
-					groupLinkApp  = (GroupLinkApp) GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupLinkId);*/
-				IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
-				return new LinkApp(appDBid, profile, position, appInfos, groupApp, insertDate, idGenerator.getNextId(), linkInfos, rs.getString(Data.ID.ordinal()));
-			}
-			throw new GeneralException(ServletManager.Code.InternError, "Link app not complete in db.");
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DatabaseRequest request = db.prepareRequest("SELECT * from linkApps WHERE app_id= ?;");
+		request.setInt(appDBid);
+		DatabaseResult rs = request.get();
+		if (rs.next()) {
+			LinkAppInformation linkInfos = LinkAppInformation.loadLinkAppInformation(rs.getString(Data.LINK_APP_INFO_ID.ordinal()), db);
+			/*GroupLinkApp groupLinkApp = null;
+			String groupLinkId = rs.getString(Data.GROUP_LINK_APP_ID.ordinal());
+			if (groupLinkId != null)
+				groupLinkApp  = (GroupLinkApp) GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupLinkId);*/
+			IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
+			return new LinkApp(appDBid, profile, position, appInfos, groupApp, insertDate, idGenerator.getNextId(), linkInfos, rs.getString(Data.ID.ordinal()));
 		}
+		throw new GeneralException(ServletManager.Code.InternError, "Link app not complete in db.");
 	}
 	
 	public static LinkApp createLinkApp(Profile profile, int position, String name, String url, String imgUrl, ServletManager sm) throws GeneralException {

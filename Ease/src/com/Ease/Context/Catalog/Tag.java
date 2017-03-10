@@ -1,7 +1,5 @@
 package com.Ease.Context.Catalog;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +10,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
@@ -39,46 +39,38 @@ public class Tag {
 	
 	public static List<Tag> loadTags(DataBaseConnection db, ServletContext context) throws GeneralException {
 		List<Tag> tags = new LinkedList<Tag>();
-		ResultSet rs = db.get("SELECT * FROM tags ORDER BY priority");
-		try {
-			while (rs.next()) {
-				String db_id = rs.getString(Data.ID.ordinal());
-				String name = rs.getString(Data.TAG_NAME.ordinal());
-				String color = rs.getString(Data.COLOR.ordinal());
-				int single_id = ((IdGenerator)context.getAttribute("idGenerator")).getNextId();
-				Tag newTag = new Tag(db_id, single_id, name, color); 
-				newTag.loadGroupIds(db);
-				tags.add(newTag);
-			}
-			return tags;
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DatabaseResult rs = db.prepareRequest("SELECT * FROM tags ORDER BY priority").get();
+		while (rs.next()) {
+			String db_id = rs.getString(Data.ID.ordinal());
+			String name = rs.getString(Data.TAG_NAME.ordinal());
+			String color = rs.getString(Data.COLOR.ordinal());
+			int single_id = ((IdGenerator)context.getAttribute("idGenerator")).getNextId();
+			Tag newTag = new Tag(db_id, single_id, name, color); 
+			newTag.loadGroupIds(db);
+			tags.add(newTag);
 		}
+		return tags;
 	}
 	
 	public void loadGroupIds(DataBaseConnection db) throws GeneralException {
-		ResultSet rs = db.get("SELECT group_id FROM tagsAndGroupsMap JOIN groups ON (tagsAndGroupsMap.group_id = groups.id) WHERE tag_id = " + this.db_id + ";");
-		try {
-			while(rs.next()) {
-				String parent_id = rs.getString(1);
-				this.groupIds.add(parent_id);
-				this.loadSubGroupIds(parent_id, db);
-			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DatabaseRequest request = db.prepareRequest("SELECT group_id FROM tagsAndGroupsMap JOIN groups ON (tagsAndGroupsMap.group_id = groups.id) WHERE tag_id = ?;");
+		request.setInt(this.db_id);
+		DatabaseResult rs = request.get();
+		while(rs.next()) {
+			String parent_id = rs.getString(1);
+			this.groupIds.add(parent_id);
+			this.loadSubGroupIds(parent_id, db);
 		}
 	}
 	
 	public void loadSubGroupIds(String parent_id, DataBaseConnection db) throws GeneralException {
-		ResultSet rs = db.get("SELECT id FROM groups WHERE parent = " + parent_id + ";");
-		try {
-			while(rs.next()) {
-				String newParent_id = rs.getString(1);
-				this.groupIds.add(newParent_id);
-				this.loadSubGroupIds(newParent_id, db);
-			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DatabaseRequest request = db.prepareRequest("SELECT id FROM groups WHERE parent = ?;");
+		request.setInt(parent_id);
+		DatabaseResult rs = request.get();
+		while(rs.next()) {
+			String newParent_id = rs.getString(1);
+			this.groupIds.add(newParent_id);
+			this.loadSubGroupIds(newParent_id, db);
 		}
 	}
 	
@@ -119,14 +111,11 @@ public class Tag {
 	}
 	
 	public void setSites(Map<String, Website> sitesDBmap, DataBaseConnection db) throws GeneralException {
-		try {
-			ResultSet rs = db.get("SELECT website_id FROM tagsAndSitesMap WHERE tag_id=" + this.db_id + ";");
-			while (rs.next()) {
-				this.sites.add(sitesDBmap.get(rs.getString(1)));
-			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, "rs fail...");
-		}
+		DatabaseRequest request = db.prepareRequest("SELECT website_id FROM tagsAndSitesMap WHERE tag_id= ?;");
+		request.setInt(this.db_id);
+		DatabaseResult rs = request.get();
+		while (rs.next())
+			this.sites.add(sitesDBmap.get(rs.getString(1)));
 	}
 	
 	public List<Website> getWebsites() {
@@ -178,15 +167,12 @@ public class Tag {
 
 	public void refresh(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		ResultSet rs = db.get("SELECT * FROM tags WHERE id = " + this.db_id + ";");
-		try {
-			if (!rs.next())
-				throw new GeneralException(ServletManager.Code.InternError, "This tag does not exist");
-			this.name = rs.getString(Data.TAG_NAME.ordinal());
-			this.color = rs.getString(Data.COLOR.ordinal());
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
-		
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM tags WHERE id = ?;");
+		request.setInt(this.db_id);
+		DatabaseResult rs = request.get();
+		if (!rs.next())
+			throw new GeneralException(ServletManager.Code.InternError, "This tag does not exist");
+		this.name = rs.getString(Data.TAG_NAME.ordinal());
+		this.color = rs.getString(Data.COLOR.ordinal());
 	}
 }

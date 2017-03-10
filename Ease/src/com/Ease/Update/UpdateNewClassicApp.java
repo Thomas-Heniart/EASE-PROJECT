@@ -1,7 +1,5 @@
 package com.Ease.Update;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +9,8 @@ import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Dashboard.User.UserEmail;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
@@ -27,17 +27,15 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 	public static Update loadUpdateNewClassicApp(String update_id, String update_new_account_id, User user, Website website, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
-		ResultSet rs = db.get("SELECT * FROM updateNewClassicApp WHERE update_new_account_id = " + update_new_account_id + ";");
-		try {
-			rs.next();
-			String db_id = rs.getString(Data.ID.ordinal());
-			String password = rs.getString(Data.PASSWORD.ordinal());
-			Map<String, String> updateInformations = ClassicUpdateInformation.loadClassicUpdateInformations(db_id, db);
-			UserEmail email = user.getEmails().get(updateInformations.get("login"));
-			return new UpdateNewClassicApp(update_id, update_new_account_id, website, password, updateInformations, email,idGenerator.getNextId(), user);
-		} catch(SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM updateNewClassicApp WHERE update_new_account_id = ?;");
+		request.setInt(update_new_account_id);
+		DatabaseResult rs = request.get();
+		rs.next();
+		String db_id = rs.getString(Data.ID.ordinal());
+		String password = rs.getString(Data.PASSWORD.ordinal());
+		Map<String, String> updateInformations = ClassicUpdateInformation.loadClassicUpdateInformations(db_id, db);
+		UserEmail email = user.getEmails().get(updateInformations.get("login"));
+		return new UpdateNewClassicApp(update_id, update_new_account_id, website, password, updateInformations, email,idGenerator.getNextId(), user);
 	}
 	
 	public static UpdateNewClassicApp createUpdateNewClassicApp(User user, Website website, Map<String, String> updateInformations, String password, UserEmail email, ServletManager sm) throws GeneralException {

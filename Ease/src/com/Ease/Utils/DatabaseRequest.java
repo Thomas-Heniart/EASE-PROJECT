@@ -75,8 +75,6 @@ public class DatabaseRequest {
 	
 	public Integer set() throws GeneralException {
 		try {
-			//ResultSet rs = this.statement.executeQuery();
-			//statement.executeUpdate(this.request, PreparedStatement.RETURN_GENERATED_KEYS);
 			statement.executeUpdate();
 			ResultSet rs = statement.getGeneratedKeys();
 			Integer id_row = null;
@@ -86,6 +84,8 @@ public class DatabaseRequest {
 	        	} catch (NumberFormatException e) {
 	        	}
 	        }
+			rs.close();
+			statement.close();
 			return id_row;
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);

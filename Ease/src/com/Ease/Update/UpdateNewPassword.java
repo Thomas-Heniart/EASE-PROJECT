@@ -1,14 +1,13 @@
 package com.Ease.Update;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.json.simple.JSONObject;
 
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Dashboard.User.UserEmail;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
@@ -27,16 +26,14 @@ public class UpdateNewPassword extends Update {
 	public static Update loadUpdateNewPassword(String update_id, User user, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
-		ResultSet rs = db.get("SELECT * FROM updateNewPassword WHERE update_id = " + update_id + ";");
-		try {
-			rs.next();
-			ClassicApp classicApp = (ClassicApp) user.getDashboardManager().getAppWithDBid(rs.getString(Data.CLASSIC_APP_ID.ordinal()));
-			String newPassword = rs.getString(Data.NEW_PASSWORD.ordinal());
-			UserEmail email = user.getEmails().get(classicApp.getAccount().getInformationNamed("login"));
-			return new UpdateNewPassword(update_id, classicApp, newPassword, idGenerator.getNextId(), email, user);
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM updateNewPassword WHERE update_id = ?;");
+		request.setInt(update_id);
+		DatabaseResult rs = request.get();
+		rs.next();
+		ClassicApp classicApp = (ClassicApp) user.getDashboardManager().getAppWithDBid(rs.getString(Data.CLASSIC_APP_ID.ordinal()));
+		String newPassword = rs.getString(Data.NEW_PASSWORD.ordinal());
+		UserEmail email = user.getEmails().get(classicApp.getAccount().getInformationNamed("login"));
+		return new UpdateNewPassword(update_id, classicApp, newPassword, idGenerator.getNextId(), email, user);
 	}
 	
 	public static UpdateNewPassword createUpdateNewPassword(User user, ClassicApp classicApp, String newPassword, UserEmail email, ServletManager sm) throws GeneralException {

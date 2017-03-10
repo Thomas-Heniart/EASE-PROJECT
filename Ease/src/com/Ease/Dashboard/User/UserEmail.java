@@ -1,7 +1,5 @@
 package com.Ease.Dashboard.User;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,6 +12,8 @@ import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.AccountInformation;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Mail.SendGridMail;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Mail;
 import com.Ease.Utils.ServletManager;
@@ -32,17 +32,14 @@ public class UserEmail {
 	public static Map<String, UserEmail> loadEmails(String user_id, User user, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		Map<String, UserEmail> emails = new HashMap<String, UserEmail>();
-		ResultSet rs = db.get("SELECT * FROM usersEmails WHERE user_id=" + user_id + ";");
-		try {
-			while(rs.next()) {
-				String db_id = rs.getString(UserEmailData.ID.ordinal());
-				String email = rs.getString(UserEmailData.EMAIL.ordinal());
-				boolean verified = rs.getBoolean(UserEmailData.VERIFIED.ordinal());
-				emails.put(email, new UserEmail(db_id, email, verified, user));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM usersEmails WHERE user_id= ?;");
+		request.setInt(user_id);
+		DatabaseResult rs = request.get();
+		while(rs.next()) {
+			String db_id = rs.getString(UserEmailData.ID.ordinal());
+			String email = rs.getString(UserEmailData.EMAIL.ordinal());
+			boolean verified = rs.getBoolean(UserEmailData.VERIFIED.ordinal());
+			emails.put(email, new UserEmail(db_id, email, verified, user));
 		}
 		return emails;
 	}
@@ -129,16 +126,13 @@ public class UserEmail {
 			String code = CodeGenerator.generateNewCode();
 			DataBaseConnection db = sm.getDB();
 			int transaction = db.startTransaction();
-			ResultSet rs = db.get("SELECT * FROM usersEmailsPending WHERE userEmail_id = " + this.db_id + "");
-			try {
-				if (rs.next()) {
-					code = rs.getString(3);
-				} else {
-					db.set("INSERT INTO usersEmailsPending VALUES(NULL, " + this.db_id + ", '" + code + "')");
-				}
-			} catch (SQLException e) {
-				throw new GeneralException(ServletManager.Code.InternError, e);
-			}
+			DatabaseRequest request = db.prepareRequest("SELECT * FROM usersEmailsPending WHERE userEmail_id = ?;");
+			request.setInt(this.db_id);
+			DatabaseResult rs = request.get();
+			if (rs.next())
+				code = rs.getString(3);
+			else
+				db.set("INSERT INTO usersEmailsPending VALUES(NULL, " + this.db_id + ", '" + code + "')");
 			if (this.email.equals(user.getEmail())) {
 				if (newUser) {
 					SendGridMail welcomeEmail = new SendGridMail("Agathe @Ease", "contact@ease.space");
@@ -157,24 +151,22 @@ public class UserEmail {
 	
 	public void verifie(String code, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		try {
-			ResultSet rs = db.get("SELECT * FROM usersEmailsPending WHERE userEmail_id=" + this.db_id + ";");
-			if (rs.next()) {
-				String verificationCode = rs.getString(3);
-				if (verificationCode.equals(code)) {
-					int transaction = db.startTransaction();
-					db.set("DELETE FROM usersEmailsPending WHERE userEmail_id=" + this.db_id + ";");
-					this.beVerified(sm);
-					db.commitTransaction(transaction);
-				}
-				else {
-					throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong verification code.");
-				}
-			} else {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "This email doesn't need to be verified.");
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM usersEmailsPending WHERE userEmail_id= ?;");
+		request.setInt(this.db_id);
+		DatabaseResult rs = request.get();
+		if (rs.next()) {
+			String verificationCode = rs.getString(3);
+			if (verificationCode.equals(code)) {
+				int transaction = db.startTransaction();
+				db.set("DELETE FROM usersEmailsPending WHERE userEmail_id=" + this.db_id + ";");
+				this.beVerified(sm);
+				db.commitTransaction(transaction);
 			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+			else {
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong verification code.");
+			}
+		} else {
+			throw new GeneralException(ServletManager.Code.ClientWarning, "This email doesn't need to be verified.");
 		}
 	}
 	

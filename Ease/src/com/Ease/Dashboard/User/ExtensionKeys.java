@@ -1,11 +1,11 @@
 package com.Ease.Dashboard.User;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -14,16 +14,12 @@ public class ExtensionKeys {
 	
 	public static ExtensionKeys loadExtensionKeys(User user, ServletManager sm) throws GeneralException {
 		List<String> keys = new LinkedList<String>();
-		try {
-			DataBaseConnection db = sm.getDB();
-			ResultSet rs = db.get("SELECT * FROM usersPrivateExtensions where user_id=" + user.getDBid() + ";");
-			while (rs.next()) {
-				keys.add(rs.getString(3));
-			}
-		} catch (GeneralException e) {
-			throw e;
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DataBaseConnection db = sm.getDB();
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM usersPrivateExtensions where user_id= ?;");
+		request.setInt(user.getDBid());
+		DatabaseResult rs = request.get();
+		while (rs.next()) {
+			keys.add(rs.getString(3));
 		}
 		return (new ExtensionKeys(keys, user));
 	}

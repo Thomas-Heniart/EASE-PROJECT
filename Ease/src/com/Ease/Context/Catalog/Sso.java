@@ -1,7 +1,5 @@
 package com.Ease.Context.Catalog;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,8 +9,9 @@ import javax.servlet.ServletContext;
 
 import org.json.simple.JSONObject;
 
-import com.Ease.Context.Variables;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
@@ -28,16 +27,12 @@ public class Sso {
 	
 	public static List<Sso> loadSsos(DataBaseConnection db, ServletContext context) throws GeneralException {
 		List<Sso> ssos = new LinkedList<Sso>();
-		try {
-			ResultSet rs = db.get("SELECT * FROM sso;");
-			Sso sso;
-			while (rs.next()) {
-				int single_id = ((IdGenerator)context.getAttribute("idGenerator")).getNextId();
-				sso = new Sso(rs.getString(Data.ID.ordinal()), rs.getString(Data.NAME.ordinal()), rs.getString(Data.IMG.ordinal()), single_id);
-				ssos.add(sso);
-			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DatabaseResult rs = db.prepareRequest("SELECT * FROM sso").get();
+		Sso sso;
+		while (rs.next()) {
+			int single_id = ((IdGenerator)context.getAttribute("idGenerator")).getNextId();
+			sso = new Sso(rs.getString(Data.ID.ordinal()), rs.getString(Data.NAME.ordinal()), rs.getString(Data.IMG.ordinal()), single_id);
+			ssos.add(sso);
 		}
 		return ssos;
 	}
@@ -92,14 +87,12 @@ public class Sso {
 
 	public void refresh(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		ResultSet rs = db.get("SELECT * FROM sso WHERE id = " + this.db_id + ";");
-		try {
-			if (! rs.next())
-				throw new GeneralException(ServletManager.Code.InternError, "This sso does not exist");
-			this.name = rs.getString(Data.NAME.ordinal());
-			this.img_path = rs.getString(Data.IMG.ordinal());
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM sso where id = ?");
+		request.setInt(this.db_id);
+		DatabaseResult rs = request.get();
+		if (! rs.next())
+			throw new GeneralException(ServletManager.Code.InternError, "This sso does not exist");
+		this.name = rs.getString(Data.NAME.ordinal());
+		this.img_path = rs.getString(Data.IMG.ordinal());
 	}
 }

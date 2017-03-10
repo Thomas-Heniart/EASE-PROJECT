@@ -1,7 +1,5 @@
 package com.Ease.Context.Group;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,6 +10,8 @@ import org.json.simple.JSONObject;
 
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
@@ -31,27 +31,23 @@ public class Infrastructure {
 	 */
 	
 	public static void loadInfrastructures(DataBaseConnection db, ServletContext context) throws GeneralException {
-		try {
-			IdGenerator idGenerator = (IdGenerator)context.getAttribute("idGenerator");
-			ResultSet rs = db.get("SELECT * FROM infrastructures;");
-			Infrastructure infra;
-			String db_id;
-			String name;
-			String img_path;
-			List<Group> groups;
-			int single_id;
-			while (rs.next()) {
-				db_id = rs.getString(Data.ID.ordinal());
-				name = rs.getString(Data.NAME.ordinal());
-				img_path = rs.getString(Data.IMG.ordinal());
-				single_id = idGenerator.getNextId();
-				infra = new Infrastructure(db_id, name, img_path, single_id);
-				GroupManager.getGroupManager(context).add(infra);
-				groups = Group.loadGroups(db, infra, context);
-				infra.setGroups(groups);
-			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		IdGenerator idGenerator = (IdGenerator)context.getAttribute("idGenerator");
+		DatabaseResult rs = db.prepareRequest("SELECT * FROM infrastructures;").get();
+		Infrastructure infra;
+		String db_id;
+		String name;
+		String img_path;
+		List<Group> groups;
+		int single_id;
+		while (rs.next()) {
+			db_id = rs.getString(Data.ID.ordinal());
+			name = rs.getString(Data.NAME.ordinal());
+			img_path = rs.getString(Data.IMG.ordinal());
+			single_id = idGenerator.getNextId();
+			infra = new Infrastructure(db_id, name, img_path, single_id);
+			GroupManager.getGroupManager(context).add(infra);
+			groups = Group.loadGroups(db, infra, context);
+			infra.setGroups(groups);
 		}
 	}
 	
@@ -148,16 +144,15 @@ public class Infrastructure {
 	 */
 	
 	public boolean isAdmin(User user, ServletManager sm) throws GeneralException {
-		try {
-			DataBaseConnection db = sm.getDB();
-			ResultSet rs = db.get("SELECT * FROM infrastructuresAdminsMap WHERE infrastructure_id=" + this.db_id + " AND user_id=" + user.getDBid() + ";");
-			if (rs.next()) {
-				return true;
-			} else {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permissions to do that.");
-			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DataBaseConnection db = sm.getDB();
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM infrastructuresAdminsMap WHERE infrastructure_id= ? AND user_id= ?;");
+		request.setInt(this.db_id);
+		request.setInt(user.getDBid());
+		DatabaseResult rs = request.get();
+		if (rs.next()) {
+			return true;
+		} else {
+			throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permissions to do that.");
 		}
 	}
 	

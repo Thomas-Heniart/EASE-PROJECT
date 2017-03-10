@@ -1,7 +1,5 @@
 package com.Ease.Dashboard.App.WebsiteApp.ClassicApp;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +14,8 @@ import com.Ease.Dashboard.App.WebsiteApp.GroupWebsiteApp;
 import com.Ease.Dashboard.Profile.GroupProfile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
@@ -35,19 +35,17 @@ public class GroupClassicApp extends GroupWebsiteApp{
 	 */
 	
 	public static GroupClassicApp loadGroupClassicApp(String db_id, GroupProfile groupProfile, Group group, AppPermissions perms, AppInformation info, boolean common, int single_id, Website site, String db_id2, DataBaseConnection db, ServletContext context) throws GeneralException {
-		try {
-			ResultSet rs = db.get("SELECT * FROM groupLogWithApps WHERE group_website_app_id=" + db_id + ";");
-			if (rs.next()) {
-				String db_id3 = rs.getString(Data.ID.ordinal());
-				Account account = Account.loadAccount(rs.getString(Data.ACCOUNT_ID.ordinal()), db);
-				GroupClassicApp groupClassicApp = new GroupClassicApp(db_id, groupProfile, group, perms, info, common, single_id, site, db_id2, account, db_id3);
-				GroupManager.getGroupManager(context).add(groupClassicApp);
-				return groupClassicApp;
-			} else {
-				throw new GeneralException(ServletManager.Code.InternError, "This GroupWebsiteApp dosen't exist.");
-			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM groupLogWithApps WHERE group_website_app_id= ?;");
+		request.setInt(db_id);
+		DatabaseResult rs = request.get();
+		if (rs.next()) {
+			String db_id3 = rs.getString(Data.ID.ordinal());
+			Account account = Account.loadAccount(rs.getString(Data.ACCOUNT_ID.ordinal()), db);
+			GroupClassicApp groupClassicApp = new GroupClassicApp(db_id, groupProfile, group, perms, info, common, single_id, site, db_id2, account, db_id3);
+			GroupManager.getGroupManager(context).add(groupClassicApp);
+			return groupClassicApp;
+		} else {
+			throw new GeneralException(ServletManager.Code.InternError, "This GroupWebsiteApp dosen't exist.");
 		}
 	}
 	

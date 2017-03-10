@@ -1,7 +1,5 @@
 package com.Ease.Dashboard.App.WebsiteApp.LogwithApp;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +15,8 @@ import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
@@ -37,18 +37,16 @@ public class LogwithApp extends WebsiteApp {
 	
 	public static LogwithApp loadLogwithApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, String websiteAppDBid, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		try {
-			ResultSet rs = db.get("SELECT * from logWithApps WHERE website_app_id=" + websiteAppDBid + ";");
-			if (rs.next()) {
-				String logwith = rs.getString(Data.LOGWITH_APP_ID.ordinal());
-				String logwithDBid = rs.getString(Data.ID.ordinal());
-				IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
-				return new LogwithApp(db_id, profile, position, infos, groupApp, insertDate, idGenerator.getNextId(), site, websiteAppDBid, logwith, logwithDBid);
-			} 
-			throw new GeneralException(ServletManager.Code.InternError, "Logwith app not complete in db.");
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
+		DatabaseRequest request = db.prepareRequest("SELECT * from logWithApps WHERE website_app_id= ?;");
+		request.setInt(websiteAppDBid);
+		DatabaseResult rs = request.get();
+		if (rs.next()) {
+			String logwith = rs.getString(Data.LOGWITH_APP_ID.ordinal());
+			String logwithDBid = rs.getString(Data.ID.ordinal());
+			IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
+			return new LogwithApp(db_id, profile, position, infos, groupApp, insertDate, idGenerator.getNextId(), site, websiteAppDBid, logwith, logwithDBid);
+		} 
+		throw new GeneralException(ServletManager.Code.InternError, "Logwith app not complete in db.");
 	}
 	
 	public static LogwithApp createLogwithApp(Profile profile, int position, String name, Website site, WebsiteApp logwith, ServletManager sm) throws GeneralException {

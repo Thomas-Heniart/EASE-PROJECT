@@ -1,7 +1,5 @@
 package com.Ease.Dashboard.App.WebsiteApp;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +16,8 @@ import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Mail.SendGridMail;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
@@ -40,33 +40,27 @@ public class WebsiteApp extends App {
 	
 	public static WebsiteApp loadWebsiteApp(String appDBid, Profile profile, int position, String insertDate, AppInformation appInfos, GroupApp groupApp, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		try {
-			ResultSet rs = db.get("SELECT * from websiteApps WHERE app_id=" + appDBid + ";");
-			try {
-				if (rs.next()) {
-					String websiteAppDBid = rs.getString(Data.ID.ordinal());
-					Website website = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithDBid(rs.getString(Data.WEBSITE_ID.ordinal()));
-					/*GroupWebsiteApp groupWebsiteApp = null;
-					String groupWebsiteId = rs.getString(Data.GROUP_WEBSITE_ID.ordinal());
-					if (groupWebsiteId != null)
-						groupWebsiteApp = (GroupWebsiteApp) GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupWebsiteId);*/
-					IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
-					switch (rs.getString(Data.TYPE.ordinal())) {
-					case "websiteApp" :
-						return new WebsiteApp(appDBid, profile, position, appInfos, groupApp, insertDate, idGenerator.getNextId(), website, websiteAppDBid);
-					case "logwithApp" :
-						return LogwithApp.loadLogwithApp(appDBid, profile, position, appInfos, groupApp, insertDate, website, websiteAppDBid, sm);
-					case "classicApp" :
-						return ClassicApp.loadClassicApp(appDBid, profile, position, appInfos, groupApp, insertDate, website, websiteAppDBid, sm);
-					}
-				} 
-				throw new GeneralException(ServletManager.Code.InternError, "Website app not complete in db.");
-			} catch (SQLException e) {
-				throw new GeneralException(ServletManager.Code.InternError, e);
+		DatabaseRequest request = db.prepareRequest("SELECT * from websiteApps WHERE app_id= ?;");
+		request.setInt(appDBid);
+		DatabaseResult rs = request.get();
+		if (rs.next()) {
+			String websiteAppDBid = rs.getString(Data.ID.ordinal());
+			Website website = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithDBid(rs.getString(Data.WEBSITE_ID.ordinal()));
+			/*GroupWebsiteApp groupWebsiteApp = null;
+			String groupWebsiteId = rs.getString(Data.GROUP_WEBSITE_ID.ordinal());
+			if (groupWebsiteId != null)
+				groupWebsiteApp = (GroupWebsiteApp) GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupWebsiteId);*/
+			IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
+			switch (rs.getString(Data.TYPE.ordinal())) {
+			case "websiteApp" :
+				return new WebsiteApp(appDBid, profile, position, appInfos, groupApp, insertDate, idGenerator.getNextId(), website, websiteAppDBid);
+			case "logwithApp" :
+				return LogwithApp.loadLogwithApp(appDBid, profile, position, appInfos, groupApp, insertDate, website, websiteAppDBid, sm);
+			case "classicApp" :
+				return ClassicApp.loadClassicApp(appDBid, profile, position, appInfos, groupApp, insertDate, website, websiteAppDBid, sm);
 			}
-		} catch (GeneralException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
+		} 
+		throw new GeneralException(ServletManager.Code.InternError, "Website app not complete in db.");
 	}
 	
 	public static String createWebsiteApp(Profile profile, int position, String name, String type, Website site, Map<String, Object>elevator, ServletManager sm) throws GeneralException {
@@ -96,26 +90,24 @@ public class WebsiteApp extends App {
 	
 	public static void Empty(String appId, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		try {
-			ResultSet rs = db.get("SELECT * FROM websiteApps WHERE app_id=" + appId + ";");
-			rs.next();
-			String website_app_id = rs.getString(Data.ID.ordinal());
-			int transaction = db.startTransaction();
-			switch (rs.getString(Data.TYPE.ordinal())) {
-				case ("classicApp"):
-					db.set("DELETE FROM accountsInformations WHERE account_id IN (SELECT account_id FROM classicApps WHERE website_app_id = " + website_app_id + ");");
-					db.set("DELETE FROM accounts WHERE id IN (SELECT account_id FROM classicApps WHERE website_app_id = " + website_app_id + ");");
-					db.set("DELETE FROM classicApps WHERE website_app_id = " + website_app_id + ";");
-				break;
-				case ("logwithApp"):
-					db.set("DELETE FROM logWithApps WHERE website_app_id = " + website_app_id + ";");
-				break;
-			}
-			db.set("UPDATE websiteApps SET type='websiteApp' WHERE app_id=" + appId + ";");
-			db.commitTransaction(transaction);
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM websiteApps WHERE app_id= ?;");
+		request.setInt(appId);
+		DatabaseResult rs = request.get();
+		rs.next();
+		String website_app_id = rs.getString(Data.ID.ordinal());
+		int transaction = db.startTransaction();
+		switch (rs.getString(Data.TYPE.ordinal())) {
+			case ("classicApp"):
+				db.set("DELETE FROM accountsInformations WHERE account_id IN (SELECT account_id FROM classicApps WHERE website_app_id = " + website_app_id + ");");
+				db.set("DELETE FROM accounts WHERE id IN (SELECT account_id FROM classicApps WHERE website_app_id = " + website_app_id + ");");
+				db.set("DELETE FROM classicApps WHERE website_app_id = " + website_app_id + ";");
+			break;
+			case ("logwithApp"):
+				db.set("DELETE FROM logWithApps WHERE website_app_id = " + website_app_id + ";");
+			break;
 		}
+		db.set("UPDATE websiteApps SET type='websiteApp' WHERE app_id=" + appId + ";");
+		db.commitTransaction(transaction);
 	}
 	
 	/*
