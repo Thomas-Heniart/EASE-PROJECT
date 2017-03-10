@@ -65,9 +65,9 @@ public class DatabaseRequest {
 		this.setObject(null);
 	}
 	
-	public ResultSet get() throws GeneralException {
+	public DatabaseResult get() throws GeneralException {
 		try {
-			return this.statement.executeQuery();
+			return new DatabaseResult(this.statement.executeQuery());
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}

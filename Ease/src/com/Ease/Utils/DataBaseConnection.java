@@ -23,7 +23,7 @@ public class DataBaseConnection {
 		return this.request;
 	}
 	
-	public ResultSet get() throws GeneralException {
+	public DatabaseResult get() throws GeneralException {
 		return this.request.get();
 	}
 	
