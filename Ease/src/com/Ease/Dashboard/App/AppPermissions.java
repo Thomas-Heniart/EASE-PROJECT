@@ -1,12 +1,10 @@
 package com.Ease.Dashboard.App;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.json.simple.JSONObject;
 
-import com.Ease.Dashboard.Profile.ProfilePermissions.Perm;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -43,16 +41,14 @@ public class AppPermissions{
 	 */
 	
 	public static AppPermissions loadAppPermissions(String id, DataBaseConnection db) throws GeneralException {
-		try {
-			ResultSet rs = db.get("SELECT * FROM appPermissions WHERE id=" + id + ";");
-			rs.next();
-			int perms = Integer.parseInt(rs.getString(Data.PERMS.ordinal()));
-			String group_id = rs.getString(Data.GROUP_ID.ordinal());
-			String db_id = rs.getString(Data.ID.ordinal());
-			return new AppPermissions(db_id, group_id, perms);
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM appPermissions WHERE id= ?;");
+		request.setInt(id);
+		DatabaseResult rs = request.get();
+		rs.next();
+		int perms = Integer.parseInt(rs.getString(Data.PERMS.ordinal()));
+		String group_id = rs.getString(Data.GROUP_ID.ordinal());
+		String db_id = rs.getString(Data.ID.ordinal());
+		return new AppPermissions(db_id, group_id, perms);
 	}
 
 	public static AppPermissions loadPersonnalAppPermissions(ServletManager sm) throws GeneralException {
@@ -65,7 +61,10 @@ public class AppPermissions{
 	
 	public static AppPermissions CreateAppPermissions(int perms, String group_id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		String db_id = db.set("INSERT INTO appPermissions VALUES(NULL, " + group_id + ", " + perms + ");").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO appPermissions VALUES(NULL, ?, ?);");
+		request.setInt(group_id);
+		request.setInt(perms);
+		String db_id = request.set().toString();
 		return new AppPermissions(db_id, group_id, perms);
 	}
 	
@@ -106,8 +105,9 @@ public class AppPermissions{
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		if (this.db_id != null)
-			db.set("REMOVE FROM appPermissions WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM appPermissions WHERE id = ?;");
+		request.setInt(db_id);
+		request.set();
 	}
 	
 	public boolean havePermission(int perm) {

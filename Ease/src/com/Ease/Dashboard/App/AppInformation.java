@@ -1,9 +1,10 @@
 package com.Ease.Dashboard.App;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.json.simple.JSONObject;
 
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -17,29 +18,28 @@ public class AppInformation {
 	
 	public static AppInformation createAppInformation(String name, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		int db_id = db.set("INSERT INTO appsInformations values (null, '" + name + "');");
-		return new AppInformation(String.valueOf(db_id), name);
+		DatabaseRequest request = db.prepareRequest("INSERT INTO appsInformations values (null, ?);");
+		request.setString(name);
+		return new AppInformation(request.set().toString(), name);
 	}
 	
 	public static String createAppInformationForUnconnected(String name, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		int db_id = db.set("INSERT INTO appInformations values (null, '" + name + "');");
-		return String.valueOf(db_id);
+		DatabaseRequest request = db.prepareRequest("INSERT INTO appsInformations values (null, ?);");
+		request.setString(name);
+		return request.set().toString();
 	}
 	
 	public static AppInformation loadAppInformation(String db_id, DataBaseConnection db) throws GeneralException {
-		ResultSet rs = db.get("SELECT * FROM appsInformations WHERE id = " + db_id + " ;");
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM appsInformations WHERE id = ? ;");
+		request.setInt(db_id);
+		DatabaseResult rs = request.get();
 		String name;
-		try {
-			if (rs.next()) {
-				name = rs.getString(Data.NAME.ordinal());
-				return new AppInformation(db_id, name);
-			} else
-				throw new GeneralException(ServletManager.Code.InternError, "No app information");
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
-		
+		if (rs.next()) {
+			name = rs.getString(Data.NAME.ordinal());
+			return new AppInformation(db_id, name);
+		} else
+			throw new GeneralException(ServletManager.Code.InternError, "No app information");
 	}
 	
 	protected String db_id;
@@ -60,12 +60,23 @@ public class AppInformation {
 	
 	public void setName(String name, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE appsInformations SET name='" + name + "' WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE appsInformations SET name = ? WHERE id = ?;");
+		request.setString(name);
+		request.setInt(db_id);
+		request.set();
 		this.name = name;
 	}
 	
 	public void removeFromDb(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("DELETE FROM appsInformations WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM appsInformations WHERE id = ?;");
+		request.setInt(db_id);
+		request.set();
+	}
+
+	public JSONObject getJson() {
+		JSONObject res = new JSONObject();
+		res.put("name", this.name);
+		return res;
 	}
 }

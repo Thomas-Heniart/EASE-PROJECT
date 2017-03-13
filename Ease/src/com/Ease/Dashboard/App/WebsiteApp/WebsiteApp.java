@@ -1,7 +1,5 @@
 package com.Ease.Dashboard.App.WebsiteApp;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +16,8 @@ import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Mail.SendGridMail;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
@@ -40,40 +40,38 @@ public class WebsiteApp extends App {
 	
 	public static WebsiteApp loadWebsiteApp(String appDBid, Profile profile, int position, String insertDate, AppInformation appInfos, GroupApp groupApp, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		try {
-			ResultSet rs = db.get("SELECT * from websiteApps WHERE app_id=" + appDBid + ";");
-			try {
-				if (rs.next()) {
-					String websiteAppDBid = rs.getString(Data.ID.ordinal());
-					Website website = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithDBid(rs.getString(Data.WEBSITE_ID.ordinal()));
-					/*GroupWebsiteApp groupWebsiteApp = null;
-					String groupWebsiteId = rs.getString(Data.GROUP_WEBSITE_ID.ordinal());
-					if (groupWebsiteId != null)
-						groupWebsiteApp = (GroupWebsiteApp) GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupWebsiteId);*/
-					IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
-					switch (rs.getString(Data.TYPE.ordinal())) {
-					case "websiteApp" :
-						return new WebsiteApp(appDBid, profile, position, appInfos, groupApp, insertDate, idGenerator.getNextId(), website, websiteAppDBid);
-					case "logwithApp" :
-						return LogwithApp.loadLogwithApp(appDBid, profile, position, appInfos, groupApp, insertDate, website, websiteAppDBid, sm);
-					case "classicApp" :
-						return ClassicApp.loadClassicApp(appDBid, profile, position, appInfos, groupApp, insertDate, website, websiteAppDBid, sm);
-					}
-				} 
-				throw new GeneralException(ServletManager.Code.InternError, "Website app not complete in db.");
-			} catch (SQLException e) {
-				throw new GeneralException(ServletManager.Code.InternError, e);
+		DatabaseRequest request = db.prepareRequest("SELECT * from websiteApps WHERE app_id= ?;");
+		request.setInt(appDBid);
+		DatabaseResult rs = request.get();
+		if (rs.next()) {
+			String websiteAppDBid = rs.getString(Data.ID.ordinal());
+			Website website = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithDBid(rs.getString(Data.WEBSITE_ID.ordinal()));
+			/*GroupWebsiteApp groupWebsiteApp = null;
+			String groupWebsiteId = rs.getString(Data.GROUP_WEBSITE_ID.ordinal());
+			if (groupWebsiteId != null)
+				groupWebsiteApp = (GroupWebsiteApp) GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupWebsiteId);*/
+			IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
+			switch (rs.getString(Data.TYPE.ordinal())) {
+			case "websiteApp" :
+				return new WebsiteApp(appDBid, profile, position, appInfos, groupApp, insertDate, idGenerator.getNextId(), website, websiteAppDBid);
+			case "logwithApp" :
+				return LogwithApp.loadLogwithApp(appDBid, profile, position, appInfos, groupApp, insertDate, website, websiteAppDBid, sm);
+			case "classicApp" :
+				return ClassicApp.loadClassicApp(appDBid, profile, position, appInfos, groupApp, insertDate, website, websiteAppDBid, sm);
 			}
-		} catch (GeneralException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
+		} 
+		throw new GeneralException(ServletManager.Code.InternError, "Website app not complete in db.");
 	}
 	
 	public static String createWebsiteApp(Profile profile, int position, String name, String type, Website site, Map<String, Object>elevator, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		String appDBid = App.createApp(profile, position, name, "websiteApp", elevator, sm);
-		String websiteAppDBid = db.set("INSERT INTO websiteApps VALUES(NULL, " + site.getDb_id() + ", " + appDBid + ", NULL, '" + type + "');").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, ?);");
+		request.setInt(site.getDb_id());
+		request.setInt(appDBid);
+		request.setString(type);
+		String websiteAppDBid = request.set().toString();
 		site.incrementRatio(db);
 		if (site.getRatio() == 100) {
 			SendGridMail mail = new SendGridMail("Agathe @Ease", "contact@ease.space");
@@ -89,33 +87,47 @@ public class WebsiteApp extends App {
 		int transaction = db.startTransaction();
 		Map<String, Object> elevator = new HashMap<String, Object>();
 		String appDBid = App.createApp(profile, position, name, "websiteApp", elevator, sm);
-		String websiteAppDBid = db.set("INSERT INTO websiteApps VALUES(NULL, " + site.getDb_id() + ", " + appDBid + ", NULL, 'websiteApp');").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, 'websiteApp');");
+		request.setInt(site.getDb_id());
+		request.setInt(appDBid);
+		String websiteAppDBid = request.set().toString();
 		db.commitTransaction(transaction);
 		return new WebsiteApp(appDBid, profile, position, (AppInformation)elevator.get("appInfos"), null, (String)elevator.get("registrationDate"), ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid);
 	}
 	
 	public static void Empty(String appId, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		try {
-			ResultSet rs = db.get("SELECT * FROM websiteApps WHERE app_id=" + appId + ";");
-			rs.next();
-			String website_app_id = rs.getString(Data.ID.ordinal());
-			int transaction = db.startTransaction();
-			switch (rs.getString(Data.TYPE.ordinal())) {
-				case ("classicApp"):
-					db.set("DELETE FROM accountsInformations WHERE account_id IN (SELECT account_id FROM classicApps WHERE website_app_id = " + website_app_id + ");");
-					db.set("DELETE FROM accounts WHERE id IN (SELECT account_id FROM classicApps WHERE website_app_id = " + website_app_id + ");");
-					db.set("DELETE FROM classicApps WHERE website_app_id = " + website_app_id + ";");
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM websiteApps WHERE app_id= ?;");
+		request.setInt(appId);
+		DatabaseResult rs = request.get();
+		if (!rs.next())
+			throw new GeneralException(ServletManager.Code.ClientError, "This app does not exist");
+		String website_app_id = rs.getString(Data.ID.ordinal());
+		int transaction = db.startTransaction();
+		switch (rs.getString(Data.TYPE.ordinal())) {
+			case ("classicApp"):
+				request = db.prepareRequest("DELETE FROM accountsInformations WHERE account_id IN (SELECT account_id FROM classicApps WHERE website_app_id = ?);");
+				request.setInt(website_app_id);
+				request.set();
+				request = db.prepareRequest("DELETE FROM accounts WHERE id IN (SELECT account_id FROM classicApps WHERE website_app_id = ?);");
+				request.setInt(website_app_id);
+				request.set();
+				request = db.prepareRequest("DELETE FROM classicApps WHERE website_app_id = ?;");
+				request.setInt(website_app_id);
+				request.set();
 				break;
-				case ("logwithApp"):
-					db.set("DELETE FROM logWithApps WHERE website_app_id = " + website_app_id + ";");
+			case ("logwithApp"):
+				request = db.prepareRequest("DELETE FROM logWithApps WHERE website_app_id = ?;");
+				request.setInt(website_app_id);
+				request.set();
 				break;
-			}
-			db.set("UPDATE websiteApps SET type='websiteApp' WHERE app_id=" + appId + ";");
-			db.commitTransaction(transaction);
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+			default:
+				break;
 		}
+		request = db.prepareRequest("UPDATE websiteApps SET type='websiteApp' WHERE app_id = ?;");
+		request.setInt(appId);
+		request.set();
+		db.commitTransaction(transaction);
 	}
 	
 	/*
@@ -138,7 +150,9 @@ public class WebsiteApp extends App {
 	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		db.set("DELETE FROM websiteApps WHERE id=" + websiteAppDBid + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM websiteApps WHERE id = ?;");
+		request.setInt(websiteAppDBid);
+		request.set();
 		super.removeFromDB(sm);
 		db.commitTransaction(transaction);
 	}

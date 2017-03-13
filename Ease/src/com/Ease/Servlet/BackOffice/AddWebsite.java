@@ -12,9 +12,6 @@ import javax.servlet.http.HttpSession;
 
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
-import com.Ease.Dashboard.App.AppPermissions;
-import com.Ease.Dashboard.App.GroupApp;
-import com.Ease.Dashboard.App.WebsiteApp.GroupWebsiteApp;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;

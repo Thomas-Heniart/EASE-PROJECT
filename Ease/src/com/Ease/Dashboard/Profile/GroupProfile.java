@@ -1,7 +1,5 @@
 package com.Ease.Dashboard.Profile;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,6 +13,8 @@ import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
@@ -38,28 +38,26 @@ public class GroupProfile {
 	public static List<GroupProfile> loadGroupProfiles(Group group, DataBaseConnection db, ServletContext context) throws GeneralException {
 		List<GroupProfile> profiles = new LinkedList<GroupProfile>();
 		IdGenerator idGenerator = (IdGenerator)context.getAttribute("idGenerator");
-		try {
-			ResultSet rs = db.get("SELECT * FROM groupProfiles WHERE group_id=" + group.getDBid() + ";");
-			String db_id;
-			ProfilePermissions perms;
-			ProfileInformation infos;
-			Boolean common;
-			int single_id;
-			GroupProfile groupProfile;
-			while (rs.next()) {
-				db_id = rs.getString(Data.ID.ordinal());
-				perms = ProfilePermissions.loadProfilePermissions(rs.getString(Data.PERM_ID.ordinal()), db);
-				infos = ProfileInformation.loadProfileInformation(rs.getString(Data.INFO_ID.ordinal()), db);
-				common = rs.getBoolean(Data.COMMON.ordinal());
-				single_id = idGenerator.getNextId();
-				groupProfile = new GroupProfile(db_id, group, perms, infos, common, single_id);
-				GroupManager.getGroupManager(context).add(groupProfile);
-				profiles.add(groupProfile);
-			}
-			return profiles;
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM groupProfiles WHERE group_id= ?;");
+		request.setInt(group.getDBid());
+		DatabaseResult rs = request.get();
+		String db_id;
+		ProfilePermissions perms;
+		ProfileInformation infos;
+		Boolean common;
+		int single_id;
+		GroupProfile groupProfile;
+		while (rs.next()) {
+			db_id = rs.getString(Data.ID.ordinal());
+			perms = ProfilePermissions.loadProfilePermissions(rs.getString(Data.PERM_ID.ordinal()), db);
+			infos = ProfileInformation.loadProfileInformation(rs.getString(Data.INFO_ID.ordinal()), db);
+			common = rs.getBoolean(Data.COMMON.ordinal());
+			single_id = idGenerator.getNextId();
+			groupProfile = new GroupProfile(db_id, group, perms, infos, common, single_id);
+			GroupManager.getGroupManager(context).add(groupProfile);
+			profiles.add(groupProfile);
 		}
+		return profiles;
 	}
 	
 	public static GroupProfile createGroupProfile(Group group, int permissions, String name, String color, Boolean common, ServletManager sm) throws GeneralException {
@@ -67,27 +65,29 @@ public class GroupProfile {
 		int transaction = db.startTransaction();
 		ProfilePermissions perms = ProfilePermissions.CreateProfilePermissions(permissions, group.getDBid(), sm);
 		ProfileInformation infos = ProfileInformation.createProfileInformation(name, color, sm);
-		String db_id = db.set("INSERT INTO groupProfiles VALUES(NULL, " + group.getDBid() + ", " + perms.getDBid() + ", " + infos.getDBid() + ", " + ((common == true) ? 1 : 0) + ");").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO groupProfiles VALUES(NULL, ?, ?, ?, ?);");
+		request.setInt(group.getDBid());
+		request.setInt(perms.getDBid());
+		request.setInt(infos.getDBid());
+		request.setBoolean(common);
+		String db_id = request.set().toString();
 		IdGenerator idGen = (IdGenerator) sm.getContextAttr("idGenerator");
 		int single_id = idGen.getNextId();
 		GroupProfile groupProfile = new GroupProfile(db_id, group, perms, infos, common, single_id);
 		GroupManager.getGroupManager(sm).add(groupProfile);
-		try {
-			ResultSet rs = db.get("SELECT email, user_id FROM groupsAndUsersMap JOIN users ON user_id = users.id WHERE group_id = " + group.getDBid() + ";");
-			@SuppressWarnings("unchecked")
-			Map<String, User> users = (Map<String, User>) sm.getContextAttr("users");
-			String user_email;
-			User user;
-			while (rs.next()) {
-				user_email = rs.getString(1);
-				if ((user = users.get(user_email)) != null) {
-					groupProfile.loadContentForConnectedUser(user, sm);
-				} else {
-					groupProfile.loadContentForUnconnectedUser(rs.getString(2), sm);
-				}
-			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		request = db.prepareRequest("SELECT email, user_id FROM groupsAndUsersMap JOIN users ON user_id = users.id WHERE group_id = ?;");
+		request.setInt(group.getDBid());
+		DatabaseResult rs = request.get();
+		@SuppressWarnings("unchecked")
+		Map<String, User> users = (Map<String, User>) sm.getContextAttr("users");
+		String user_email;
+		User user;
+		while (rs.next()) {
+			user_email = rs.getString(1);
+			if ((user = users.get(user_email)) != null)
+				groupProfile.loadContentForConnectedUser(user, sm);
+			else
+				groupProfile.loadContentForUnconnectedUser(rs.getString(2), sm);
 		}
 		db.commitTransaction(transaction);
 		return groupProfile;
@@ -168,21 +168,20 @@ public class GroupProfile {
 		DataBaseConnection db = sm.getDB();
 		@SuppressWarnings("unchecked")
 		Map<String, User> users = (Map<String, User>)sm.getContextAttr("users");
-		ResultSet rs = db.get("SELECT email, user_id, profile_id FROM profiles JOIN users ON user_id = users.id WHERE group_profile_id = " + this.db_id + ";");
-		try {
-			while (rs.next()) {
-				String email = rs.getString(1);
-				String user_id = rs.getString(2);
-				if (users.containsKey(email))
-					this.removeContentForConnectedUser(users.get(email), sm);
-				else
-					this.removeContentForUnconnectedUser(user_id, sm);
-			}
-			db.set("DELETE FROM groupProfiles WHERE id=" + this.db_id + ";");
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DatabaseRequest request = db.prepareRequest("SELECT email, user_id, profile_id FROM profiles JOIN users ON user_id = users.id WHERE group_profile_id = ?;");
+		request.setInt(this.db_id);
+		DatabaseResult rs = request.get();
+		while (rs.next()) {
+			String email = rs.getString(1);
+			String user_id = rs.getString(2);
+			if (users.containsKey(email))
+				this.removeContentForConnectedUser(users.get(email), sm);
+			else
+				this.removeContentForUnconnectedUser(user_id, sm);
 		}
-		
+		request = db.prepareRequest("DELETE FROM groupProfiles WHERE id = ?;");
+		request.setInt(this.db_id);
+		request.set();
 	}
 	
 	public String loadContentForUnconnectedUser(String db_id, ServletManager sm) throws GeneralException {
@@ -217,23 +216,23 @@ public class GroupProfile {
 	
 	public void removeContentForUnconnectedUser(String user_id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		ResultSet rs = db.get("SELECT id, profile_info_id FROM profiles WHERE user_id = " + user_id + ";");
-		try {
-			while (rs.next())
-				Profile.removeProfileForUnconnected(rs.getString(1), rs.getString(2), sm);
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
+		DatabaseRequest request = db.prepareRequest("SELECT id, profile_info_id FROM profiles WHERE user_id = ?;");
+		request.setInt(user_id);
+		DatabaseResult rs = request.get();
+		while (rs.next())
+			Profile.removeProfileForUnconnected(rs.getString(1), rs.getString(2), sm);
 	}
 
 	public JSONObject getJson() {
 		JSONObject json = new JSONObject();
 		json.put("perms", this.perm.getJson());
 		json.put("common", this.common);
+		json.put("infos", infos.getJson());
 		json.put("groupName", this.group.getName());
 		json.put("groupId", this.group.getSingleId());
 		json.put("infraName", this.group.getInfra().getName());
 		json.put("infraId", this.group.getInfra().getSingleId());
+		json.put("singleId", this.single_id);
 		return json;
 	}
 }

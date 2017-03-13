@@ -1,7 +1,5 @@
 package com.Ease.Dashboard.Profile;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,6 +16,8 @@ import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.Regex;
@@ -56,31 +56,29 @@ public class Profile {
 			profilesColumn.add(new LinkedList<Profile>());
 		}
 		DataBaseConnection db = sm.getDB();
-		try {
-			ResultSet rs = db.get("SELECT * FROM profiles WHERE user_id=" + user.getDBid() + ";");
-			String db_id;
-			int	columnIdx;
-			int	posIdx;
-			GroupProfile groupProfile;
-			ProfileInformation infos;
-			int single_id;
-			List<App> apps;
-			while (rs.next()) {
-				db_id = rs.getString(Data.ID.ordinal());
-				columnIdx = rs.getInt(Data.COLUMN_IDX.ordinal());
-				posIdx = rs.getInt(Data.POSITION_IDX.ordinal());
-				String groupProfileId = rs.getString(Data.GROUP_PROFILE_ID.ordinal());
-				groupProfile = (groupProfileId == null) ? null : GroupManager.getGroupManager(sm).getGroupProfileFromDBid(groupProfileId);
-				infos = ProfileInformation.loadProfileInformation(rs.getString(Data.PROFILE_INFO_ID.ordinal()), db);
-				IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
-				single_id = idGenerator.getNextId();
-				Profile profile = new Profile(db_id, user, columnIdx, posIdx, groupProfile, infos, single_id);
-				apps = App.loadApps(profile, sm);
-				profile.setApps(apps);
-				profilesColumn.get(columnIdx).add(profile);
-			}
-		} catch (SQLException e){
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM profiles WHERE user_id= ?;");
+		request.setInt(user.getDBid());
+		DatabaseResult rs = request.get();
+		String db_id;
+		int	columnIdx;
+		int	posIdx;
+		GroupProfile groupProfile;
+		ProfileInformation infos;
+		int single_id;
+		List<App> apps;
+		while (rs.next()) {
+			db_id = rs.getString(Data.ID.ordinal());
+			columnIdx = rs.getInt(Data.COLUMN_IDX.ordinal());
+			posIdx = rs.getInt(Data.POSITION_IDX.ordinal());
+			String groupProfileId = rs.getString(Data.GROUP_PROFILE_ID.ordinal());
+			groupProfile = (groupProfileId == null) ? null : GroupManager.getGroupManager(sm).getGroupProfileFromDBid(groupProfileId);
+			infos = ProfileInformation.loadProfileInformation(rs.getString(Data.PROFILE_INFO_ID.ordinal()), db);
+			IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
+			single_id = idGenerator.getNextId();
+			Profile profile = new Profile(db_id, user, columnIdx, posIdx, groupProfile, infos, single_id);
+			apps = App.loadApps(profile, sm);
+			profile.setApps(apps);
+			profilesColumn.get(columnIdx).add(profile);
 		}
 		for (List<Profile> column : profilesColumn) {
 			column.sort(new Comparator<Profile>() {
@@ -93,6 +91,19 @@ public class Profile {
 		return profilesColumn;
 	}
 	
+	private static String createProfileInDb(DataBaseConnection db, String userId, int columnIdx, int posIdx, String groupProfileId, String infoId) throws GeneralException {
+		DatabaseRequest request = db.prepareRequest("INSERT INTO profiles VALUES(NULL, ?, ?, ?, ?, ?);");
+		request.setInt(userId);
+		request.setInt(columnIdx);
+		request.setInt(posIdx);
+		if (groupProfileId == null)
+			request.setNull();
+		else
+			request.setInt(groupProfileId);
+		request.setInt(infoId);
+		return request.set().toString();
+	}
+	
 	public static Profile createProfileWithGroup(User user, int columnIdx, int posIdx, GroupProfile groupProfile, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
@@ -102,7 +113,7 @@ public class Profile {
 		} else {
 			info = ProfileInformation.createProfileInformation(groupProfile.getName(), groupProfile.getColor(), sm);
 		}
-		String db_id = db.set("INSERT INTO profiles VALUES(NULL, " + user.getDBid() + ", " + columnIdx + ", " + posIdx + ", " + groupProfile.getDBid() + ", " + info.getDBid() + ");").toString();
+		String db_id = createProfileInDb(db, user.getDBid(), columnIdx, posIdx, groupProfile.getDBid(), info.getDBid());
 		IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
 		int single_id = idGenerator.getNextId();
 		Profile profile = new Profile(db_id, user, columnIdx, posIdx, groupProfile, info, single_id);
@@ -119,7 +130,7 @@ public class Profile {
 		} else {
 			info_id = ProfileInformation.createProfileInformationForUnconnected(groupProfile.getName(), groupProfile.getColor(), sm);
 		}
-		String id = db.set("INSERT INTO profiles VALUES(NULL, " + db_id + ", " + columnIdx + ", " + posIdx + ", " + groupProfile.getDBid() + ", " + info_id + ");").toString();
+		String id = createProfileInDb(db, db_id, columnIdx, posIdx, groupProfile.getDBid(), info_id);
 		db.commitTransaction(transaction);
 		return id;
 	}
@@ -128,7 +139,7 @@ public class Profile {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		ProfileInformation info = ProfileInformation.createProfileInformation(name, color, sm);
-		String db_id = db.set("INSERT INTO profiles VALUES(NULL, " + user.getDBid() + ", " + columnIdx + ", " + posIdx + ", NULL, " + info.getDBid() + ");").toString();
+		String db_id = createProfileInDb(db, user.getDBid(), columnIdx, posIdx, null, info.getDBid());
 		IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
 		int single_id = idGenerator.getNextId();
 		Profile profile = new Profile(db_id, user, columnIdx, posIdx, null, info, single_id);
@@ -140,7 +151,7 @@ public class Profile {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		String info_id = ProfileInformation.createProfileInformationForUnconnected(name, color, sm);
-		String id = db.set("INSERT INTO profiles VALUES(NULL, " + db_id + ", " + columnIdx + ", " + posIdx + ", NULL, " + info_id + ");").toString();
+		String id = createProfileInDb(db, db_id, columnIdx, posIdx, null, info_id);
 		db.commitTransaction(transaction);
 		return id;
 	}
@@ -148,9 +159,13 @@ public class Profile {
 	public static void removeProfileForUnconnected(String db_id, String info_id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		db.set("DELETE FROM profiles WHERE id=" + db_id + "");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM profiles WHERE id = ?;");
+		request.setInt(db_id);
+		request.set();
 		if (info_id != null) {
-			db.set("DELETE FROM profilesInformations WHERE id=" + info_id + ";");
+			request = db.prepareRequest("DELETE FROM profilesInformations WHERE id = ?;");
+			request.setInt(info_id);
+			request.set();
 		}
 		db.commitTransaction(transaction);
 	}
@@ -191,7 +206,9 @@ public class Profile {
 		for (App app : apps) {
 			app.removeFromDB(sm);
 		}
-		db.set("DELETE FROM profiles WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM profiles WHERE id = ?;");
+		request.setInt(db_id);
+		request.set();
 		if (this.groupProfile == null || this.groupProfile.isCommon() == false)
 			this.infos.removeFromDB(sm);
 		db.commitTransaction(transaction);
@@ -214,7 +231,10 @@ public class Profile {
 	}
 	public void setColumnIdx(int idx, ServletManager sm) throws GeneralException{
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE profiles SET column_idx=" + idx + " WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE profiles SET column_idx = ? WHERE id = ?;");
+		request.setInt(idx);
+		request.setInt(db_id);
+		request.set();
 		this.columnIdx = idx;
 	}
 	
@@ -223,7 +243,10 @@ public class Profile {
 	}
 	public void setPositionIdx(int idx, ServletManager sm) throws GeneralException{
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE profiles SET position_idx=" + idx + " WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE profiles SET position_idx = ? WHERE id = ?;");
+		request.setInt(idx);
+		request.setInt(db_id);
+		request.set();
 		this.posIdx = idx;
 	}
 	
@@ -299,18 +322,16 @@ public class Profile {
 	
 	public static int getSizeForUnconnected(String db_id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		try {
-			ResultSet rs = db.get("SELECT COUNT(*) FROM apps WHERE profile_id=" + db_id + ";");
-			if (rs.next()) {
-				int ret = rs.getInt(1);
-				if (ret < 4)
-					return 2;
-				return (ret + 2) / 3;
-			} else {
-				throw new GeneralException(ServletManager.Code.InternError, "Bizare.");
-			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DatabaseRequest request = db.prepareRequest("SELECT COUNT(*) FROM apps WHERE profile_id= ?;");
+		request.setInt(db_id);
+		DatabaseResult rs = request.get();
+		if (rs.next()) {
+			int ret = rs.getInt(1);
+			if (ret < 4)
+				return 2;
+			return (ret + 2) / 3;
+		} else {
+			throw new GeneralException(ServletManager.Code.InternError, "Bizare.");
 		}
 	}
 	

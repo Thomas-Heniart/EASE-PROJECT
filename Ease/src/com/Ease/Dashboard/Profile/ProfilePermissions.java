@@ -1,11 +1,10 @@
 package com.Ease.Dashboard.Profile;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.json.simple.JSONObject;
 
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -42,16 +41,14 @@ public class ProfilePermissions{
 	 */
 	
 	public static ProfilePermissions loadProfilePermissions(String id, DataBaseConnection db) throws GeneralException {
-		try {
-			ResultSet rs = db.get("SELECT * FROM profilePermissions WHERE id=" + id + ";");
-			rs.next();
-			int perms = Integer.parseInt(rs.getString(Data.PERMS.ordinal()));
-			String group_id = rs.getString(Data.GROUP_ID.ordinal());
-			String db_id = rs.getString(Data.ID.ordinal());
-			return new ProfilePermissions(db_id, group_id, perms);
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM profilePermissions WHERE id= ?;");
+		request.setInt(id);
+		DatabaseResult rs = request.get();
+		rs.next();
+		int perms = Integer.parseInt(rs.getString(Data.PERMS.ordinal()));
+		String group_id = rs.getString(Data.GROUP_ID.ordinal());
+		String db_id = rs.getString(Data.ID.ordinal());
+		return new ProfilePermissions(db_id, group_id, perms);
 	}
 	public static ProfilePermissions loadPersonnalProfilePermissions(ServletManager sm) throws GeneralException {
 		return new ProfilePermissions(null, null, Perm.ALL.getValue());
@@ -63,7 +60,10 @@ public class ProfilePermissions{
 	
 	public static ProfilePermissions CreateProfilePermissions(int perms, String group_id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		String db_id = db.set("INSERT INTO profilePermissions VALUES(NULL, " + group_id + ", " + perms + ");").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO profilePermissions VALUES(NULL, ?, ?);");
+		request.setInt(group_id);
+		request.setInt(perms);
+		String db_id = request.set().toString();
 		return new ProfilePermissions(db_id, group_id, perms);
 	}
 	
@@ -98,7 +98,10 @@ public class ProfilePermissions{
 	
 	public void setPerms(int permissions, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE profilePermissions SET permission=" + permissions + " WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE profilePermissions SET permission= ? WHERE id = ?;");
+		request.setInt(permissions);
+		request.setInt(db_id);
+		request.set();
 	}
 	
 	/*
@@ -109,8 +112,9 @@ public class ProfilePermissions{
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		if (this.db_id != null)
-			db.set("REMOVE FROM profilePermissions WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM profilePermissions WHERE id = ?;");
+		request.setInt(db_id);
+		request.set();
 	}
 	
 	public boolean havePermission(int perm) {

@@ -1,7 +1,5 @@
 package com.Ease.Update;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Map;
 
 import org.json.simple.JSONObject;
@@ -10,6 +8,8 @@ import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -25,25 +25,23 @@ public class UpdateNewAccount extends Update {
 	
 	public static Update loadUpdateNewAccount(String update_id, User user, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		ResultSet rs = db.get("SELECT * FROM updateNewAccount WHERE update_id = " + update_id + ";");
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM updateNewAccount WHERE update_id = ?;");
+		request.setInt(update_id);
+		DatabaseResult rs = request.get();
 		Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-		try {
-			rs.next();
-			String db_id = rs.getString(Data.ID.ordinal());
-			Website website = catalog.getWebsiteWithDBid(rs.getString(Data.WEBSITE_ID.ordinal()));
-			String type = rs.getString(Data.TYPE.ordinal());
-			switch(type) {
-			case "updateNewLogWithApp":
-				return UpdateNewLogWithApp.loadUpdateNewLogWithApp(update_id, db_id, user, website, sm);
-				
-			case "updateNewClassicApp":
-				return UpdateNewClassicApp.loadUpdateNewClassicApp(update_id, db_id, user, website, sm);
-				
-			default:
-				throw new GeneralException(ServletManager.Code.InternError, "No such type possible");
-			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		rs.next();
+		String db_id = rs.getString(Data.ID.ordinal());
+		Website website = catalog.getWebsiteWithDBid(rs.getString(Data.WEBSITE_ID.ordinal()));
+		String type = rs.getString(Data.TYPE.ordinal());
+		switch(type) {
+		case "updateNewLogWithApp":
+			return UpdateNewLogWithApp.loadUpdateNewLogWithApp(update_id, db_id, user, website, sm);
+
+		case "updateNewClassicApp":
+			return UpdateNewClassicApp.loadUpdateNewClassicApp(update_id, db_id, user, website, sm);
+
+		default:
+			throw new GeneralException(ServletManager.Code.InternError, "No such type possible");
 		}
 	}
 	
@@ -51,7 +49,11 @@ public class UpdateNewAccount extends Update {
 		int transaction = db.startTransaction();
 		String update_id = Update.createUpdate(user, "updateNewAccount", db);
 		elevator.put("update_id", update_id);
-		String updateNewAccount_id = db.set("INSERT INTO updateNewAccount values (null, " + update_id + ", " + website.getDb_id() + ", '" + type + "');").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO updateNewAccount values (null, ?, ?, ?);");
+		request.setInt(update_id);
+		request.setInt(website.getDb_id());
+		request.setString(type);
+		String updateNewAccount_id = request.set().toString();
 		db.commitTransaction(transaction);
 		return updateNewAccount_id;
 	}
@@ -68,7 +70,9 @@ public class UpdateNewAccount extends Update {
 	
 	public void deleteFromDb(DataBaseConnection db) throws GeneralException {
 		int transaction = db.startTransaction();
-		db.set("DELETE FROM updateNewAccount WHERE update_id = " + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM updateNewAccount WHERE update_id = ?;");
+		request.setInt(db_id);
+		request.set();
 		super.deleteFromDb(db);
 		db.commitTransaction(transaction);
 	}

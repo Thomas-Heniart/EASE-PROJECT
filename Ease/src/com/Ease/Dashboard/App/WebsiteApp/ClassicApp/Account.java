@@ -1,6 +1,5 @@
 package com.Ease.Dashboard.App.WebsiteApp.ClassicApp;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +10,8 @@ import org.json.simple.JSONObject;
 import com.Ease.Context.Group.Infrastructure;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -28,15 +29,13 @@ public class Account {
 	 */
 	
 	public static Account loadAccount(String db_id, DataBaseConnection db) throws GeneralException {
-		ResultSet rs = db.get("SELECT * FROM accounts WHERE id = " + db_id + ";");
-		try {
-			if (rs.next()) {
-				List<AccountInformation> infos = AccountInformation.loadInformations(db_id, db);
-				boolean shared = rs.getBoolean(Data.SHARED.ordinal());
-				return new Account(db_id, shared, infos);
-			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM accounts WHERE id = ?;");
+		request.setInt(db_id);
+		DatabaseResult rs = request.get();
+		if (rs.next()) {
+			List<AccountInformation> infos = AccountInformation.loadInformations(db_id, db);
+			boolean shared = rs.getBoolean(Data.SHARED.ordinal());
+			return new Account(db_id, shared, infos);
 		}
 		throw new GeneralException(ServletManager.Code.InternError, "This account doesn't exist.");
 	}
@@ -44,7 +43,9 @@ public class Account {
 	public static Account createAccount(boolean shared, Map<String, String> informations, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		String db_id = db.set("INSERT INTO accounts values (null, " + (shared ? 1 : 0) + ");").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, ?);");
+		request.setBoolean(shared);
+		String db_id = request.set().toString();
 		List<AccountInformation> infos = AccountInformation.createAccountInformations(db_id, informations, sm);
 		db.commitTransaction(transaction);
 		return new Account(db_id, shared, infos);
@@ -53,7 +54,9 @@ public class Account {
 	public static Account createAccountSameAs(Account sameAccount, boolean shared, User user, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		String db_id = db.set("INSERT INTO accounts values (null, " + (shared ? 1 : 0) + ");").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, ?);");
+		request.setBoolean(shared);
+		String db_id = request.set().toString();
 		List<AccountInformation> infos = AccountInformation.createAccountInformationFromAccountInformations(db_id, sameAccount.getAccountInformations(), sm);
 		db.commitTransaction(transaction);
 		return new Account(db_id, shared, infos);
@@ -63,10 +66,12 @@ public class Account {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		String crypted_password = infra.encrypt(password, sm);
-		String db_id = db.set("INSERT INTO accounts values (null, '" + crypted_password + "', " + (shared ? 1 : 0) + ");").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, ?);");
+		request.setBoolean(shared);
+		String db_id = request.set().toString();
 		List<AccountInformation> infos = AccountInformation.createAccountInformations(db_id, informations, sm);
 		db.commitTransaction(transaction);
-		return new Account(db_id, crypted_password, shared, infos);
+		return new Account(db_id, shared, infos);
 	}
 	
 	/*
@@ -91,7 +96,9 @@ public class Account {
 		for (AccountInformation info : infos) {
 			info.removeFromDb(sm);
 		}
-		db.set("DELETE FROM accounts WHERE id=" + db_id + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM accounts WHERE id = ?;");
+		request.setInt(db_id);
+		request.set();
 		db.commitTransaction(transaction);
 	}
 	
@@ -165,10 +172,6 @@ public class Account {
 				return info.getInformationValue();
 		}
 		return null;
-	}
-
-	public String getPassword() {
-		return this.crypted_password;
 	}
 
 	public JSONArray getInformationsJSON() {

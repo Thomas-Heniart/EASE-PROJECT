@@ -2,10 +2,10 @@ package com.Ease.Dashboard.User;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -29,33 +29,29 @@ public class Status {
 	}
 
 	public static Status createStatus(DataBaseConnection db) throws GeneralException {
-		String db_id = db.set("INSERT INTO status values (null, 0, 0, 0, 0, 0, 0, 0, 0, 0, default, 0, 0);").toString();
+		String db_id = db.prepareRequest("INSERT INTO status values (null, 0, 0, 0, 0, 0, 0, 0, 0, 0, default, 0, 0);").set().toString();
 		return new Status(db_id, false, false, false, false, false, false, false, false, false, false);
 	}
 
 	public static Status loadStatus(String db_id, DataBaseConnection db) throws GeneralException {
-		ResultSet rs = db.get("SELECT * FROM status WHERE id=" + db_id + ";");
-		try {
-			rs.next();
-			boolean first_connection = rs.getBoolean(Data.FIRST_CONNECTION.ordinal());
-			boolean CGU = rs.getBoolean(Data.CGU.ordinal());
-			boolean chrome_scrapping = rs.getBoolean(Data.CHROME_SCRAPPING.ordinal());
-			boolean apps_manually_added = rs.getBoolean(Data.APPS_MANUALLY_ADDED.ordinal());
-			boolean click_on_app = rs.getBoolean(Data.CLICK_ON_APP.ordinal());
-			boolean move_apps = rs.getBoolean(Data.MOVE_APPS.ordinal());
-			boolean open_catalog = rs.getBoolean(Data.OPEN_CATALOG.ordinal());
-			boolean add_an_app = rs.getBoolean(Data.ADD_AN_APP.ordinal());
-			boolean tuto_done = rs.getBoolean(Data.TUTO_DONE.ordinal());
-			boolean invite_sended = rs.getBoolean(Data.INVITE_SENDED.ordinal());
-			
-			Status loadedStatus =  new Status(db_id, first_connection, CGU, chrome_scrapping, apps_manually_added, click_on_app,
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM status WHERE id= ?;");
+		request.setInt(db_id);
+		DatabaseResult rs = request.get();
+		rs.next();
+		boolean first_connection = rs.getBoolean(Data.FIRST_CONNECTION.ordinal());
+		boolean CGU = rs.getBoolean(Data.CGU.ordinal());
+		boolean chrome_scrapping = rs.getBoolean(Data.CHROME_SCRAPPING.ordinal());
+		boolean apps_manually_added = rs.getBoolean(Data.APPS_MANUALLY_ADDED.ordinal());
+		boolean click_on_app = rs.getBoolean(Data.CLICK_ON_APP.ordinal());
+		boolean move_apps = rs.getBoolean(Data.MOVE_APPS.ordinal());
+		boolean open_catalog = rs.getBoolean(Data.OPEN_CATALOG.ordinal());
+		boolean add_an_app = rs.getBoolean(Data.ADD_AN_APP.ordinal());
+		boolean tuto_done = rs.getBoolean(Data.TUTO_DONE.ordinal());
+		boolean invite_sended = rs.getBoolean(Data.INVITE_SENDED.ordinal());
+		Status loadedStatus =  new Status(db_id, first_connection, CGU, chrome_scrapping, apps_manually_added, click_on_app,
 					move_apps, open_catalog, add_an_app, tuto_done, invite_sended);
-			loadedStatus.updateLastConnection(db);
-			return loadedStatus;
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
-
+		loadedStatus.updateLastConnection(db);
+		return loadedStatus;
 	}
 
 	protected String db_id;
@@ -94,7 +90,9 @@ public class Status {
 		try {
 			Method method = this.getClass().getMethod("set_" + tutoStep, Boolean.class);
 			method.invoke(this, true);
-			db.set("UPDATE status SET " + tutoStep + "=1 WHERE id=" + this.db_id + ";");
+			DatabaseRequest request = db.prepareRequest("UPDATE status SET " + tutoStep + " = 1 WHERE id = ?;");
+			request.setInt(db_id);
+			request.set();
 			validateTuto(db);
 		} catch (SecurityException | IllegalArgumentException | NoSuchMethodException | IllegalAccessException
 				| InvocationTargetException e) {
@@ -181,6 +179,8 @@ public class Status {
 	}
 	
 	public void updateLastConnection(DataBaseConnection db) throws GeneralException {
-		db.set("UPDATE status SET last_connection = CURDATE() WHERE id = " + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE status SET last_connection = CURDATE() WHERE id = ?;");
+		request.setInt(db_id);
+		request.set();
 	}
 }

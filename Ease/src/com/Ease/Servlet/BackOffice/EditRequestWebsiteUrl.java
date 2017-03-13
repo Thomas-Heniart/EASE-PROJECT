@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -57,7 +58,9 @@ public class EditRequestWebsiteUrl extends HttpServlet {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Input is empty");
 			if (oldUrl == null || oldUrl.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty url");
-			db.set("UPDATE requestedWebsites SET site = '" + newUrl + "' WHERE site='" + oldUrl + "'");
+			DatabaseRequest db_request = db.prepareRequest("UPDATE requestedWebsites SET site = ? WHERE site = ?;");
+			db_request.setString(newUrl);
+			db_request.setString(oldUrl);
 			String retMsg = (catalog.getWebsiteWithHost(newUrl) != null) ? "integrated" : "pending";
 			sm.setResponse(ServletManager.Code.Success, retMsg);
 		} catch(GeneralException e) {

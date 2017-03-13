@@ -1,6 +1,7 @@
 package com.Ease.Utils;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -9,16 +10,33 @@ public class DataBaseConnection {
 
 	protected Connection	con;
 	protected int			transaction;
+	protected PreparedStatement statement;
+	protected DatabaseRequest request;
 	
 	public DataBaseConnection(Connection con) {
 		this.con = con;
 		this.transaction = 0;
 	}
 	
+	public DatabaseRequest prepareRequest(String request) throws GeneralException {
+		this.request = new DatabaseRequest(con, request);
+		return this.request;
+	}
+	
+	public DatabaseResult get() throws GeneralException {
+		return this.request.get();
+	}
+	
+	public Integer set() throws GeneralException {
+		return this.request.set();
+	}
+	
 	public ResultSet get(String request) throws GeneralException {
 		
 		ResultSet rs;
 		try {
+			
+			//rs = statement.executeQuery();
 			rs = con.createStatement().executeQuery(request);
 			return rs;
 		} catch (SQLException e) {

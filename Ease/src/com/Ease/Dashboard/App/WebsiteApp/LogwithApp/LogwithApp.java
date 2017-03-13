@@ -1,7 +1,5 @@
 package com.Ease.Dashboard.App.WebsiteApp.LogwithApp;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +15,8 @@ import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
@@ -37,18 +37,16 @@ public class LogwithApp extends WebsiteApp {
 	
 	public static LogwithApp loadLogwithApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, String websiteAppDBid, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		try {
-			ResultSet rs = db.get("SELECT * from logWithApps WHERE website_app_id=" + websiteAppDBid + ";");
-			if (rs.next()) {
-				String logwith = rs.getString(Data.LOGWITH_APP_ID.ordinal());
-				String logwithDBid = rs.getString(Data.ID.ordinal());
-				IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
-				return new LogwithApp(db_id, profile, position, infos, groupApp, insertDate, idGenerator.getNextId(), site, websiteAppDBid, logwith, logwithDBid);
-			} 
-			throw new GeneralException(ServletManager.Code.InternError, "Logwith app not complete in db.");
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
+		DatabaseRequest request = db.prepareRequest("SELECT * from logWithApps WHERE website_app_id= ?;");
+		request.setInt(websiteAppDBid);
+		DatabaseResult rs = request.get();
+		if (rs.next()) {
+			String logwith = rs.getString(Data.LOGWITH_APP_ID.ordinal());
+			String logwithDBid = rs.getString(Data.ID.ordinal());
+			IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
+			return new LogwithApp(db_id, profile, position, infos, groupApp, insertDate, idGenerator.getNextId(), site, websiteAppDBid, logwith, logwithDBid);
+		} 
+		throw new GeneralException(ServletManager.Code.InternError, "Logwith app not complete in db.");
 	}
 	
 	public static LogwithApp createLogwithApp(Profile profile, int position, String name, Website site, WebsiteApp logwith, ServletManager sm) throws GeneralException {
@@ -56,7 +54,10 @@ public class LogwithApp extends WebsiteApp {
 		int transaction = db.startTransaction();
 		Map<String, Object> elevator = new HashMap<String, Object>();
 		String websiteAppDBid = WebsiteApp.createWebsiteApp(profile, position, name, "logwithApp", site, elevator, sm);
-		String logwithDBid = db.set("INSERT INTO logWithApps VALUES(NULL, " + websiteAppDBid + ", " + logwith.getWebsiteAppDBid() + ", NULL);").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO logWithApps VALUES(NULL, ?, ?, NULL);");
+		request.setInt(websiteAppDBid);
+		request.setInt(logwith.getWebsiteAppDBid());
+		String logwithDBid = request.set().toString();
 		db.commitTransaction(transaction);
 		LogwithApp app = new LogwithApp((String)elevator.get("appDBid"), profile, position, (AppInformation)elevator.get("appInfos"), null, (String)elevator.get("registrationDate"), ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, logwith.getDBid(), logwithDBid);
 		app.rempLogwith(logwith);
@@ -67,8 +68,13 @@ public class LogwithApp extends WebsiteApp {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		String websiteAppDBid = websiteApp.getWebsiteAppDBid();
-		db.set("UPDATE websiteApps SET type='logwithApp' WHERE id='"+ websiteAppDBid +"';");
-		String logwithDBid = db.set("INSERT INTO logWithApps VALUES(NULL, " + websiteAppDBid + ", " + logwith.getWebsiteAppDBid() + ", NULL);").toString();
+		DatabaseRequest request = db.prepareRequest("UPDATE websiteApps SET type='logwithApp' WHERE id = ?;");
+		request.setInt(websiteAppDBid);
+		request.set();
+		request = db.prepareRequest("INSERT INTO logWithApps VALUES(NULL, ?, ?, NULL);");
+		request.setInt(websiteAppDBid);
+		request.setInt(logwith.getWebsiteAppDBid());
+		String logwithDBid = request.set().toString();
 		LogwithApp newLogwithApp = new LogwithApp(websiteApp.getDBid(), user.getDashboardManager().getProfileFromApp(websiteApp.getSingleId()), websiteApp.getPosition(), websiteApp.getAppInformation(),null, websiteApp.getInsertDate(), websiteApp.getSingleId(), websiteApp.getSite(), websiteAppDBid, logwith.getDBid(), logwithDBid);
 		newLogwithApp.rempLogwith(logwith);
 		user.getDashboardManager().replaceApp(newLogwithApp);
@@ -95,7 +101,9 @@ public class LogwithApp extends WebsiteApp {
 	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		db.set("DELETE FROM logWithApps WHERE id=" + logwithAppDBid + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM logWithApps WHERE id = ?;");
+		request.setInt(logwithAppDBid);
+		request.set();
 		super.removeFromDB(sm);
 		this.website.decrementRatio(db);
 		db.commitTransaction(transaction);
@@ -121,7 +129,10 @@ public class LogwithApp extends WebsiteApp {
 	
 	public void setLogwith(WebsiteApp logwith, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE logWithApps SET logwith_website_app_id=" + logwith.getDBid() + " WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE logWithApps SET logwith_website_app_id= ? WHERE id = ?;");
+		request.setInt(logwith.getDBid());
+		request.setInt(db_id);
+		request.set();
 		this.logwith = logwith;
 		this.logwithDBid = logwith.getDBid();
 	}

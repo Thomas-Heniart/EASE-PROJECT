@@ -1,33 +1,37 @@
 package com.Ease.Context.Catalog;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.json.simple.JSONObject;
 
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 public class WebsiteInformation {
 	
 	public static WebsiteInformation createInformation(String website_id, String name, String type, String priority, String placeholder, String placeholder_icon, DataBaseConnection db) throws GeneralException {
-		String db_id = db.set("INSERT INTO websitesInformations VALUES (null, "+website_id+", '"+ name +"', '"+ type +"', " + priority + ", '" + placeholder + "', '" + placeholder_icon + "');").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO websitesInformations VALUES (null, ?, ?, ?, ?, ?, ?);");
+		request.setInt(website_id);
+		request.setString(name);
+		request.setString(type);
+		request.setInt(priority);
+		request.setString(placeholder);
+		request.setString(placeholder_icon);
+		String db_id = request.set().toString();
 		return new WebsiteInformation(db_id, name, type, placeholder, placeholder_icon);
 	}
 	
 	public static List<WebsiteInformation> loadInformations(String website_id, DataBaseConnection db) throws GeneralException {
 		List<WebsiteInformation> website_informations = new LinkedList<WebsiteInformation>();
-		ResultSet rs = db.get("SELECT id, information_name, information_type, placeholder, placeholder_icon FROM websitesInformations WHERE website_id=" + website_id + " ORDER BY priority;");
-		try {
-			while (rs.next()) {
-				website_informations.add(new WebsiteInformation(rs.getString(rs.findColumn("id")), rs.getString(rs.findColumn("information_name")), rs.getString(rs.findColumn("information_type")), rs.getString(rs.findColumn("placeholder")), rs.getString(rs.findColumn("placeholder_icon"))));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DatabaseRequest request = db.prepareRequest("SELECT id, information_name, information_type, placeholder, placeholder_icon FROM websitesInformations WHERE website_id= ? ORDER BY priority;");
+		request.setInt(website_id);
+		DatabaseResult rs = request.get();
+		while (rs.next()) {
+			website_informations.add(new WebsiteInformation(rs.getString("id"), rs.getString("information_name"), rs.getString("information_type"), rs.getString("placeholder"), rs.getString("placeholder_icon")));
 		}
 		return website_informations;
 	}
@@ -72,17 +76,15 @@ public class WebsiteInformation {
 
 	public void refresh(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		ResultSet rs = db.get("SELECT information_name, information_type, placeholder, placeholder_icon FROM websitesInformations WHERE id = " + this.db_id + ";");
-		try {
-			if (!rs.next())
+		DatabaseRequest request = db.prepareRequest("SELECT information_name, information_type, placeholder, placeholder_icon FROM websitesInformations WHERE id = ?;");
+		request.setInt(this.db_id);
+		DatabaseResult rs = request.get();
+		if (!rs.next())
 				throw new GeneralException(ServletManager.Code.InternError, "This information does not exist");
-			this.information_name = rs.getString(1);
-			this.information_type = rs.getString(2);
-			this.placeholder = rs.getString(3);
-			this.placeholder_icon = rs.getString(4);
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
+		this.information_name = rs.getString(1);
+		this.information_type = rs.getString(2);
+		this.placeholder = rs.getString(3);
+		this.placeholder_icon = rs.getString(4);
 		
 	}
 

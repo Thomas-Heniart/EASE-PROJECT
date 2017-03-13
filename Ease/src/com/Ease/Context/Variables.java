@@ -22,7 +22,6 @@ public class Variables {
 	public static final String WEBSITES_PATH = "/resources/websites/";
 	public static final String URL_PATH = "http://51.254.207.91/";
 	*/
-	
 	//Pierre
 	/*
 	public static final String ENVIRONNEMENT = "PC de Pedro";

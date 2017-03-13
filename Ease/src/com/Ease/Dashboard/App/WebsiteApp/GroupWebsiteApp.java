@@ -1,7 +1,5 @@
 package com.Ease.Dashboard.App.WebsiteApp;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,13 +13,14 @@ import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.AppInformation;
 import com.Ease.Dashboard.App.AppPermissions;
 import com.Ease.Dashboard.App.GroupApp;
-import com.Ease.Dashboard.App.LinkApp.LinkApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.GroupClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.GroupLogwithApp;
 import com.Ease.Dashboard.Profile.GroupProfile;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
@@ -42,28 +41,26 @@ public enum Data {
 	 */
 	
 	public static GroupWebsiteApp loadGroupWebsiteApp(String db_id, Group group, GroupProfile groupProfile, AppPermissions perms, AppInformation info, boolean common, int single_id, DataBaseConnection db, ServletContext context) throws GeneralException {
-		try {
-			ResultSet rs = db.get("SELECT * FROM groupWebsiteApps WHERE group_app_id=" + db_id + ";");
-			if (rs.next()) {
-				Website website = ((Catalog)context.getAttribute("catalog")).getWebsiteWithDBid(rs.getString(Data.WEBSITE_ID.ordinal()));
-				String db_id2 = rs.getString(Data.ID.ordinal());
-				switch (rs.getString(Data.TYPE.ordinal())) {
-					case "groupEmptyApp":
-						GroupWebsiteApp groupWebsiteApp = new GroupWebsiteApp(db_id, groupProfile, group, perms, info, common, single_id, website, db_id2);
-						GroupManager.getGroupManager(context).add(groupWebsiteApp);
-						return groupWebsiteApp;
-					case "groupClassicApp":
-						return GroupClassicApp.loadGroupClassicApp(db_id, groupProfile, group, perms, info, common, single_id, website, db_id2, db, context);
-					case "groupLogwithApp":
-						return GroupLogwithApp.loadGroupLogwithApp(db_id, groupProfile, group, perms, info, common, single_id, website, db_id2, db, context);
-					default:
-						throw new GeneralException(ServletManager.Code.InternError, "This GroupWebsiteApp type dosen't exist.");
-				}
-			} else {
-				throw new GeneralException(ServletManager.Code.InternError, "This GroupWebsiteApp dosen't exist.");
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM groupWebsiteApps WHERE group_app_id= ?;");
+		request.setInt(db_id);
+		DatabaseResult rs = request.get();
+		if (rs.next()) {
+			Website website = ((Catalog)context.getAttribute("catalog")).getWebsiteWithDBid(rs.getString(Data.WEBSITE_ID.ordinal()));
+			String db_id2 = rs.getString(Data.ID.ordinal());
+			switch (rs.getString(Data.TYPE.ordinal())) {
+				case "groupEmptyApp":
+					GroupWebsiteApp groupWebsiteApp = new GroupWebsiteApp(db_id, groupProfile, group, perms, info, common, single_id, website, db_id2);
+					GroupManager.getGroupManager(context).add(groupWebsiteApp);
+					return groupWebsiteApp;
+				case "groupClassicApp":
+					return GroupClassicApp.loadGroupClassicApp(db_id, groupProfile, group, perms, info, common, single_id, website, db_id2, db, context);
+				case "groupLogwithApp":
+					return GroupLogwithApp.loadGroupLogwithApp(db_id, groupProfile, group, perms, info, common, single_id, website, db_id2, db, context);
+				default:
+					throw new GeneralException(ServletManager.Code.InternError, "This GroupWebsiteApp type dosen't exist.");
 			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		} else {
+			throw new GeneralException(ServletManager.Code.InternError, "This GroupWebsiteApp dosen't exist.");
 		}
 	}
 	
@@ -74,7 +71,10 @@ public enum Data {
 		String appDBid = GroupApp.createGroupApp(groupProfile, group, perms, name, common, "groupWebsiteApp", elevator, sm);
 		AppPermissions permissions = (AppPermissions) elevator.get("perms");
 		AppInformation appInfos = (AppInformation) elevator.get("appInfos");
-		String db_id = db.set("INSERT INTO groupWebsiteApps VALUES(NULL, " + appDBid + ", " + site.getDb_id() + ");").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO groupWebsiteApps VALUES(NULL, ?, ?);");
+		request.setInt(appDBid);
+		request.setInt(site.getDb_id());
+		String db_id = request.set().toString();
 		int single_id = ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId();
 		GroupWebsiteApp groupWebsiteApp = new GroupWebsiteApp(appDBid, groupProfile, group, permissions, appInfos, common, single_id, site, db_id);
 		GroupManager.getGroupManager(sm).add(groupWebsiteApp);
@@ -87,7 +87,10 @@ public enum Data {
 		int transaction = db.startTransaction();
 		String appDBid = GroupApp.createGroupApp(groupProfile, group, perms, name, common, "groupWebsiteApp", elevator, sm);
 		elevator.put("appDBid", appDBid);
-		String db_id = db.set("INSERT INTO groupWebsiteApps VALUES(NULL, " + appDBid + ", " + site.getDb_id() + ");").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO groupWebsiteApps VALUES(NULL, ?, ?);");
+		request.setInt(appDBid);
+		request.setInt(site.getDb_id());
+		String db_id = request.set().toString();
 		db.commitTransaction(transaction);
 		return db_id;
 	}

@@ -1,8 +1,6 @@
 package com.Ease.Servlet.BackOffice;
 
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,6 +21,8 @@ import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Mail.SendGridMail;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -68,35 +68,37 @@ public class SendWebsitesIntegrated extends HttpServlet {
 			sm.needToBeConnected();
 			if (!user.isAdmin())
 				throw new GeneralException(ServletManager.Code.ClientError, "Not an admin");
-			ResultSet rs = db.get("SELECT id, firstName FROM users WHERE email = '" + email + "'");
-			try {
-				if (rs.next()) {
-					String user_id = rs.getString(1);
-					String firstName = rs.getString(2);
-					JSONArray websitesUrls = new JSONArray();
-					List<Website> integratedWebsites = new LinkedList<Website>();
-					try {
-						websitesUrls = (JSONArray)parser.parse(websitesUrlsString);
-					} catch (ParseException e) {
-						throw new GeneralException(ServletManager.Code.ClientError, e);
-					}
-					if (websitesUrls.isEmpty())
-						throw new GeneralException(ServletManager.Code.ClientError, "Empty websites");
-					for (Object websiteUrl : websitesUrls) {
-						Website tmp = catalog.getWebsiteWithHost((String)websiteUrl);
-						if (tmp == null)
-							throw new GeneralException(ServletManager.Code.ClientError, "We don't have this website");
-						integratedWebsites.add(tmp);
-					}
-					SendGridMail mail = new SendGridMail("Agathe @Ease", "contact@ease.space");
-					mail.sendAppsArrivedEmail(firstName, email, integratedWebsites);
-					for (Website website : integratedWebsites)
-						db.set("INSERT INTO integrateWebsitesAndUsersMap values (null, " + website.getDb_id() + ", " + user_id + ");");
-				} else
-					throw new GeneralException(ServletManager.Code.ClientError, "This user does not exist");
-			} catch (SQLException e) {
-				throw new GeneralException(ServletManager.Code.InternError, e);
-			}
+			DatabaseRequest db_request = db.prepareRequest("SELECT id, firstName FROM users WHERE email = ?;");
+			db_request.setString(email);
+			DatabaseResult rs = db_request.get();
+			if (rs.next()) {
+				String user_id = rs.getString(1);
+				String firstName = rs.getString(2);
+				JSONArray websitesUrls = new JSONArray();
+				List<Website> integratedWebsites = new LinkedList<Website>();
+				try {
+					websitesUrls = (JSONArray)parser.parse(websitesUrlsString);
+				} catch (ParseException e) {
+					throw new GeneralException(ServletManager.Code.ClientError, e);
+				}
+				if (websitesUrls.isEmpty())
+					throw new GeneralException(ServletManager.Code.ClientError, "Empty websites");
+				for (Object websiteUrl : websitesUrls) {
+					Website tmp = catalog.getWebsiteWithHost((String)websiteUrl);
+					if (tmp == null)
+						throw new GeneralException(ServletManager.Code.ClientError, "We don't have this website");
+					integratedWebsites.add(tmp);
+				}
+				SendGridMail mail = new SendGridMail("Agathe @Ease", "contact@ease.space");
+				mail.sendAppsArrivedEmail(firstName, email, integratedWebsites);
+				for (Website website : integratedWebsites) {
+					db_request = db.prepareRequest("INSERT INTO integrateWebsitesAndUsersMap values (null, ?, ?);");
+					db_request.setInt(website.getDb_id());
+					db_request.setInt(user_id);
+					db_request.set();
+				}
+			} else
+				throw new GeneralException(ServletManager.Code.ClientError, "This user does not exist");
 			sm.setResponse(ServletManager.Code.Success, "");
 		} catch (GeneralException e) {
 			sm.setResponse(e);

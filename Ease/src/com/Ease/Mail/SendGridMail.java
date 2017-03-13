@@ -1,14 +1,14 @@
 package com.Ease.Mail;
 
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.Ease.Context.Variables;
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 import com.sendgrid.ASM;
@@ -391,21 +391,21 @@ public class SendGridMail {
 	public void sendAwesomeUserEmail(Website site, ServletManager sm) throws GeneralException {
 		mail.setTemplateId("2f8b2828-6e6f-42bd-a568-3da1b83ed835");
 		DataBaseConnection db = sm.getDB();
-		ResultSet rs = db.get("SELECT firstName, email FROM users WHERE id IN (SELECT user_id FROM integrateWebsitesAndUsersMap WHERE website_id = " + site.getDb_id() + ");");
-		try {
-			while (rs.next()) {
-				Personalization personalization = this.createNewPersonalization();
-				String username = rs.getString(1);
-				String userEmail = rs.getString(2);
-				this.addTo(personalization, username, userEmail);
-				personalization.addSubstitution("#username", username);
-				personalization.addSubstitution("#appName", site.getName());
-			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DatabaseRequest request = db.prepareRequest("SELECT firstName, email FROM users WHERE id IN (SELECT user_id FROM integrateWebsitesAndUsersMap WHERE website_id = ?);");
+		request.setInt(site.getDb_id());
+		DatabaseResult rs = request.get();
+		while (rs.next()) {
+			Personalization personalization = this.createNewPersonalization();
+			String username = rs.getString(1);
+			String userEmail = rs.getString(2);
+			this.addTo(personalization, username, userEmail);
+			personalization.addSubstitution("#username", username);
+			personalization.addSubstitution("#appName", site.getName());
 		}
 		this.sendEmail();
-		db.set("DELETE FROM integrateWebsitesAndUsersMap WHERE website_id = " + site.getDb_id() + ";");
+		request = db.prepareRequest("DELETE FROM integrateWebsitesAndUsersMap WHERE website_id = ?;");
+		request.setInt(site.getDb_id());
+		request.set();
 	}
 	
 	public void sendPasswordLostEmail(String userEmail, String username, String code) throws GeneralException {
