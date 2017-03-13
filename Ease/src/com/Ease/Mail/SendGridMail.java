@@ -403,7 +403,9 @@ public class SendGridMail {
 			personalization.addSubstitution("#appName", site.getName());
 		}
 		this.sendEmail();
-		db.set("DELETE FROM integrateWebsitesAndUsersMap WHERE website_id = " + site.getDb_id() + ";");
+		request = db.prepareRequest("DELETE FROM integrateWebsitesAndUsersMap WHERE website_id = ?;");
+		request.setInt(site.getDb_id());
+		request.set();
 	}
 	
 	public void sendPasswordLostEmail(String userEmail, String username, String code) throws GeneralException {

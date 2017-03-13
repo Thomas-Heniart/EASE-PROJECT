@@ -46,7 +46,11 @@ public class UserEmail {
 	
 	public static UserEmail createUserEmail(String email, User user, boolean verified, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		String db_id = db.set("INSERT INTO usersEmails VALUES(NULL, " + user.getDBid() + ", '" + email + "', " + (verified ? 1 : 0) + ");").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO usersEmails VALUES(NULL, ?, ?, ?);");
+		request.setInt(user.getDBid());
+		request.setString(email);
+		request.setBoolean(verified);
+		String db_id = request.set().toString();
 		return new UserEmail(db_id, email, verified, user);
 	}
 	
@@ -67,8 +71,12 @@ public class UserEmail {
 	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		db.set("DELETE FROM usersEmailsPending WHERE userEmail_id=" + this.db_id + ";");
-		db.set("DELETE FROM usersEmails where id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM usersEmailsPending WHERE userEmail_id = ?;");
+		request.setInt(db_id);
+		request.set();
+		request = db.prepareRequest("DELETE FROM usersEmails where id = ?;");
+		request.setInt(db_id);
+		request.set();
 		db.commitTransaction(transaction);
 	}
 	
@@ -116,7 +124,9 @@ public class UserEmail {
 			}
 				
 		}
-		db.set("DELETE FROM usersEmails WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM usersEmails WHERE id = ?;");
+		request.setInt(db_id);
+		request.set();
 		return true;
 	}
 	
@@ -131,8 +141,12 @@ public class UserEmail {
 			DatabaseResult rs = request.get();
 			if (rs.next())
 				code = rs.getString(3);
-			else
-				db.set("INSERT INTO usersEmailsPending VALUES(NULL, " + this.db_id + ", '" + code + "')");
+			else {
+				request = db.prepareRequest("INSERT INTO usersEmailsPending VALUES(NULL, ?, ?)");
+				request.setInt(db_id);
+				request.setString(code);
+				request.set();
+			}
 			if (this.email.equals(user.getEmail())) {
 				if (newUser) {
 					SendGridMail welcomeEmail = new SendGridMail("Agathe @Ease", "contact@ease.space");
@@ -158,7 +172,9 @@ public class UserEmail {
 			String verificationCode = rs.getString(3);
 			if (verificationCode.equals(code)) {
 				int transaction = db.startTransaction();
-				db.set("DELETE FROM usersEmailsPending WHERE userEmail_id=" + this.db_id + ";");
+				request = db.prepareRequest("DELETE FROM usersEmailsPending WHERE userEmail_id = ?;");
+				request.setInt(db_id);
+				request.set();
 				this.beVerified(sm);
 				db.commitTransaction(transaction);
 			}
@@ -172,7 +188,9 @@ public class UserEmail {
 	
 	public void beVerified(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE usersEmails SET verified=1 WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE usersEmails SET verified = 1 WHERE id = ?;");
+		request.setString(db_id);
+		request.set();
 		this.verified = true;
 	}
 }

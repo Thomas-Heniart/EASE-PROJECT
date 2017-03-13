@@ -56,7 +56,10 @@ public class Update {
 	}
 	
 	public static String createUpdate(User user, String type, DataBaseConnection db) throws GeneralException {
-		return db.set("INSERT INTO updates values (null, " + user.getDBid() + ", '" + type + "');").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO updates values (null, ?, ?);");
+		request.setInt(user.getDBid());
+		request.setString(type);
+		return request.set().toString();
 	}
 	
 	protected String db_id;
@@ -84,12 +87,16 @@ public class Update {
 	}
 	
 	public void deleteFromDb(DataBaseConnection db) throws GeneralException {
-		db.set("DELETE FROM updates WHERE id = " + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM updates WHERE id = ?;");
+		request.setInt(db_id);
+		request.set();
 	}
 	
 	public void reject(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("INSERT INTO updatesRemoved values (null, " + this.db_id + ");");
+		DatabaseRequest request = db.prepareRequest("INSERT INTO updatesRemoved values (null, ?);");
+		request.setInt(db_id);
+		request.set();
 	}
 	
 	public JSONObject getJson() throws GeneralException {

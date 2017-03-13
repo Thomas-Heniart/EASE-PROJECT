@@ -18,14 +18,16 @@ public class AppInformation {
 	
 	public static AppInformation createAppInformation(String name, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		int db_id = db.set("INSERT INTO appsInformations values (null, '" + name + "');");
-		return new AppInformation(String.valueOf(db_id), name);
+		DatabaseRequest request = db.prepareRequest("INSERT INTO appsInformations values (null, ?);");
+		request.setString(name);
+		return new AppInformation(request.set().toString(), name);
 	}
 	
 	public static String createAppInformationForUnconnected(String name, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		int db_id = db.set("INSERT INTO appInformations values (null, '" + name + "');");
-		return String.valueOf(db_id);
+		DatabaseRequest request = db.prepareRequest("INSERT INTO appsInformations values (null, ?);");
+		request.setString(name);
+		return request.set().toString();
 	}
 	
 	public static AppInformation loadAppInformation(String db_id, DataBaseConnection db) throws GeneralException {
@@ -58,13 +60,18 @@ public class AppInformation {
 	
 	public void setName(String name, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE appsInformations SET name='" + name + "' WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE appsInformations SET name = ? WHERE id = ?;");
+		request.setString(name);
+		request.setInt(db_id);
+		request.set();
 		this.name = name;
 	}
 	
 	public void removeFromDb(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("DELETE FROM appsInformations WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM appsInformations WHERE id = ?;");
+		request.setInt(db_id);
+		request.set();
 	}
 
 	public JSONObject getJson() {

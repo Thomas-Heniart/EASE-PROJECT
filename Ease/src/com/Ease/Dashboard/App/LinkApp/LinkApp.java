@@ -56,7 +56,10 @@ public class LinkApp extends App {
 		Map<String, Object> elevator = new HashMap<String, Object>();
 		String appDBid = App.createApp(profile, position, name, "linkApp", elevator, sm);
 		LinkAppInformation infos = LinkAppInformation.createLinkAppInformation(url, imgUrl, sm);
-		String linkDBid = db.set("INSERT INTO linkApps values(NULL, " + appDBid + ", " + infos.getDb_id() + ", NULL);").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO linkApps values(NULL, ?, ?, NULL);");
+		request.setInt(appDBid);
+		request.setInt(infos.getDb_id());
+		String linkDBid = request.set().toString();
 		db.commitTransaction(transaction);
 		return new LinkApp(appDBid, profile, position, (AppInformation)elevator.get("appInfos"), null, (String)elevator.get("registrationDate"), ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId(), infos, linkDBid);
 	}
@@ -81,7 +84,9 @@ public class LinkApp extends App {
 	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		db.set("DELETE FROM linkApps WHERE id=" + linkAppDBid + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM linkApps WHERE id= ?;");
+		request.setInt(linkAppDBid);
+		request.set();
 		if (this.groupApp == null || this.groupApp.isCommon() == false)
 			linkInfos.removeFromDb(sm);
 		super.removeFromDB(sm);

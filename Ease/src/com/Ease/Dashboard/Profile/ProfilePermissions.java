@@ -60,7 +60,10 @@ public class ProfilePermissions{
 	
 	public static ProfilePermissions CreateProfilePermissions(int perms, String group_id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		String db_id = db.set("INSERT INTO profilePermissions VALUES(NULL, " + group_id + ", " + perms + ");").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO profilePermissions VALUES(NULL, ?, ?);");
+		request.setInt(group_id);
+		request.setInt(perms);
+		String db_id = request.set().toString();
 		return new ProfilePermissions(db_id, group_id, perms);
 	}
 	
@@ -95,7 +98,10 @@ public class ProfilePermissions{
 	
 	public void setPerms(int permissions, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE profilePermissions SET permission=" + permissions + " WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE profilePermissions SET permission= ? WHERE id = ?;");
+		request.setInt(permissions);
+		request.setInt(db_id);
+		request.set();
 	}
 	
 	/*
@@ -106,8 +112,9 @@ public class ProfilePermissions{
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		if (this.db_id != null)
-			db.set("REMOVE FROM profilePermissions WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM profilePermissions WHERE id = ?;");
+		request.setInt(db_id);
+		request.set();
 	}
 	
 	public boolean havePermission(int perm) {

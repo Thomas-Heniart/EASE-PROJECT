@@ -86,7 +86,13 @@ public class App {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = new Date();
 		String registrationDate = dateFormat.format(date);
-		String appDBid = db.set("INSERT INTO apps VALUES (NULL, " + profile.getDBid() + ", " + position + ", '" + registrationDate + "', '" + type + "', " + infos.getDb_id() + ", NULL);").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO apps VALUES (NULL, ?, ?, ?, ?, ?, NULL);");
+		request.setInt(profile.getDBid());
+		request.setInt(position);
+		request.setString(registrationDate);
+		request.setString(type);
+		request.setInt(infos.getDb_id());
+		String appDBid = request.set().toString();
 		elevator.put("appInfos", infos);
 		elevator.put("insertDate", registrationDate);
 		db.commitTransaction(transaction);
@@ -123,7 +129,9 @@ public class App {
 		if (this.groupApp != null && (this.groupApp.isCommon() == true || !this.groupApp.getPerms().havePermission(AppPermissions.Perm.DELETE.ordinal())))
 			throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permission to remove this app.");
 		int transaction = db.startTransaction();
-		db.set("DELETE FROM apps WHERE id=" + db_id + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM apps WHERE id = ?;");
+		request.setInt(db_id);
+		request.set();
 		if (this.groupApp == null || this.groupApp.isCommon() == false)
 			informations.removeFromDb(sm);
 		db.commitTransaction(transaction);
@@ -179,13 +187,19 @@ public class App {
 	
 	public void setPosition(int pos, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE apps SET position=" + pos + " WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE apps SET position = ? WHERE id = ?;");
+		request.setInt(pos);
+		request.setInt(db_id);
+		request.set();
 		this.position = pos;
 	}
 	
 	public void setProfile(Profile profile, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE apps SET profile_id=" + profile.getDBid() + " WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE apps SET profile_id = ? WHERE id = ?;");
+		request.setInt(profile.getDBid());
+		request.setInt(db_id);
+		request.set();
 		this.profile = profile;
 	}
 	

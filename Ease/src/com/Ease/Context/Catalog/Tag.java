@@ -30,9 +30,16 @@ public class Tag {
 		DataBaseConnection db = sm.getDB();
 		int single_id = ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId();
 		int transaction = db.startTransaction();
-		int db_id = db.set("INSERT INTO tags VALUES (null, '" + tagName + "', '" + tagColor + "', 2);");
-		for (Website site : tagSites)
-			db.set("INSERT INTO tagsAndSitesMap values(null, " + db_id + ", " + site.getDb_id() + ");");
+		DatabaseRequest request = db.prepareRequest("INSERT INTO tags VALUES (null, ?, ?, 2);");
+		request.setString(tagName);
+		request.setString(tagColor);
+		int db_id = request.set();
+		for (Website site : tagSites) {
+			request = db.prepareRequest("INSERT INTO tagsAndSitesMap values(null, ?, ?);");
+			request.setInt(db_id);
+			request.setInt(site.getDb_id());
+			request.set();
+		}
 		db.commitTransaction(transaction);
 		return new Tag(String.valueOf(db_id), single_id, tagName, tagColor);
 	}
@@ -152,7 +159,10 @@ public class Tag {
 		if (this.sites.contains(website))
 			throw new GeneralException(ServletManager.Code.ClientWarning, "Tag already set");
 		DataBaseConnection db = sm.getDB();
-		db.set("INSERT INTO tagsAndSitesMap VALUES (" + this.db_id + ", " + website.getDb_id() + ");");
+		DatabaseRequest request = db.prepareRequest("INSERT INTO tagsAndSitesMap VALUES (?, ?);");
+		request.setInt(db_id);
+		request.setInt(website.getDb_id());
+		request.set();
 		this.sites.add(website);
 		
 	}
@@ -161,7 +171,10 @@ public class Tag {
 		if (!this.sites.contains(website))
 			throw new GeneralException(ServletManager.Code.ClientWarning, "No such tag for this site");
 		DataBaseConnection db = sm.getDB();
-		db.set("DELETE FROM tagsAndSitesMap WHERE tag_id = " + this.db_id + " AND website_id = " + website.getDb_id() + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM tagsAndSitesMap WHERE tag_id = ? AND website_id = ?;");
+		request.setInt(db_id);
+		request.setInt(website.getDb_id());
+		request.set();
 		this.sites.remove(website);
 	}
 

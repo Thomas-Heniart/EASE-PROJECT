@@ -53,7 +53,10 @@ public class ExtensionKeys {
 					throw new GeneralException(ServletManager.Code.ClientError, "This extension key already exist.");
 				}
 			}
-			db.set("INSERT INTO usersPrivateExtensions VALUES(NULL, " + user.getDBid() + ", '" + clientKey + "');");
+			DatabaseRequest request = db.prepareRequest("INSERT INTO usersPrivateExtensions VALUES(NULL, ?, ?);");
+			request.setInt(user.getDBid());
+			request.setString(clientKey);
+			request.set();
 			keys.add(clientKey);
 		} catch (GeneralException e) {
 			throw e;
@@ -65,7 +68,10 @@ public class ExtensionKeys {
 		try {
 			for (String key : keys) {
 				if (clientKey.equals(key)) {
-					db.set("DELETE FROM usersPrivateExtensions WHERE user_id=" + user.getDBid() + " AND extension_key='" + clientKey + "';");
+					DatabaseRequest request = db.prepareRequest("DELETE FROM usersPrivateExtensions WHERE user_id = ? AND extension_key = ?;");
+					request.setInt(user.getDBid());
+					request.setString(clientKey);
+					request.set();
 					keys.remove(clientKey);
 					return ;
 				}

@@ -9,7 +9,7 @@ import com.Ease.Utils.ServletManager;
 public class WebsiteAttributes {
 	
 	public static WebsiteAttributes createWebsiteAttributes(DataBaseConnection db) throws GeneralException {
-		String db_id = db.set("INSERT INTO websiteAttributes values (null, 0, null, default, 1, 1);").toString();
+		String db_id = db.prepareRequest("INSERT INTO websiteAttributes values (null, 0, null, default, 1, 1);").set().toString();
 		return new WebsiteAttributes(db_id, false, true, true);
 	}
 	

@@ -30,7 +30,8 @@ public class Keys {
 		DatabaseRequest request = db.prepareRequest("SELECT * FROM userKeys WHERE id= ?;");
 		request.setInt(id);
 		DatabaseResult rs = request.get();
-		rs.next();
+		if (!rs.next())
+			throw new GeneralException(ServletManager.Code.ClientError, "This key does not exist");;
 		String db_id = rs.getString(Data.ID.ordinal());
 		String hashed_password = rs.getString(Data.PASSWORD.ordinal());
 		String saltEase = rs.getString(Data.SALTEASE.ordinal());
@@ -52,7 +53,13 @@ public class Keys {
 			saltPerso = newSalt;
 			ServerKey serverKey = (ServerKey) sm.getContextAttr("serverKey");
 			String backUpKey = AES.encrypt(keyUser, serverKey.getKeyServer());
-			db.set("UPDATE userKeys SET password='"+hashed_password+"', saltEase=null, saltPerso='"+newSalt+"', keyUser='"+crypted_keyUser+"', backUpKey='"+backUpKey+"' WHERE id="+id+";");
+			request = db.prepareRequest("UPDATE userKeys SET password = ?, saltEase = null, saltPerso = ?, keyUser = ?, backUpKey = ? WHERE id = ?;");
+			request.setString(hashed_password);
+			request.setString(newSalt);
+			request.setString(crypted_keyUser);
+			request.setString(backUpKey);
+			request.setInt(id);
+			request.set();
 		} else {
 		//-- Ne garder que le else quand tout le monde sera à jour
 			if(!Hashing.compare(password, hashed_password)){
@@ -83,7 +90,12 @@ public class Keys {
 		String hashed_password = Hashing.hash(password);
 		ServerKey serverKey = (ServerKey) sm.getContextAttr("serverKey");
 		String backUpKey = AES.encrypt(keyUser, serverKey.getKeyServer());
-		String db_id = db.set("INSERT INTO userKeys VALUES(NULL, '" + hashed_password + "', null, '" + saltPerso + "', '" + crypted_keyUser + "', '"+backUpKey+"');").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO userKeys VALUES(NULL, ?, null, ?, ?, ?);");
+		request.setString(hashed_password);
+		request.setString(saltPerso);
+		request.setString(crypted_keyUser);
+		request.setString(backUpKey);
+		String db_id = request.set().toString();
 		return new Keys(db_id, hashed_password, saltPerso, keyUser);
 	}
 	
@@ -101,7 +113,9 @@ public class Keys {
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("DELETE FROM userKeys WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM userKeys WHERE id = ?;");
+		request.setInt(this.db_id);
+		request.set();
 	}
 	
 	/*
@@ -135,7 +149,12 @@ public class Keys {
 		DataBaseConnection db = sm.getDB();
 		String new_hashed_password = Hashing.hash(new_password);
 		String new_crypted_keyUser = AES.encryptUserKey(keyUser, new_password, saltPerso);
-		db.set("UPDATE userKeys SET password='" + new_hashed_password + "', saltEase=null, saltPerso='" + saltPerso + "', keyUser='" + new_crypted_keyUser + "' WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE userKeys SET password = ?, saltEase=null, saltPerso = ?, keyUser = ? WHERE id = ?;");
+		request.setString(new_hashed_password);
+		request.setString(saltPerso);
+		request.setString(new_crypted_keyUser);
+		request.setInt(this.db_id);
+		request.set();
 		this.hashed_password = new_hashed_password;
 	}
 	
@@ -154,10 +173,17 @@ public class Keys {
 		DatabaseRequest request = db.prepareRequest("SELECT * FROM passwordLost WHERE user_id= ?;");
 		request.setInt(userId);
 		DatabaseResult rs = request.get();
-		if (rs.next())
-			db.set("UPDATE passwordLost SET linkCode = '" + code + "', dateOfRequest = NOW() WHERE user_id=" + userId + ";");
-		else
-			db.set("INSERT INTO passwordLost values (" + userId + ", '" + code + "', default);");
+		if (rs.next()) {
+			request = db.prepareRequest("UPDATE passwordLost SET linkCode = ?, dateOfRequest = NOW() WHERE user_id = ?;");
+			request.setString(code);
+			request.setInt(userId);
+		}
+		else {
+			request = db.prepareRequest("INSERT INTO passwordLost values (?, ?, default);");
+			request.setInt(userId);
+			request.setString(code);
+		}
+		request.set();
 		request = db.prepareRequest("SELECT firstName FROM users WHERE id = ?;");
 		request.setInt(userId);
 		rs = request.get();
@@ -200,8 +226,15 @@ public class Keys {
 			String keyUser = AES.keyGenerator();
 			String crypted_keyUser = AES.encryptUserKey(keyUser, newPassword, saltPerso);
 			String hashed_password = Hashing.hash(newPassword);
-			db.set("UPDATE userKeys SET password='" + hashed_password + "', saltEase=null, saltPerso='" + saltPerso + "', keyUser='" + crypted_keyUser + "' WHERE id=" + rs.getString(1) + ";");
-			db.set("DELETE FROM passwordLost WHERE user_id=" + userId + ";");
+			DatabaseRequest request3 = db.prepareRequest("UPDATE userKeys SET password = ?, saltEase=null, saltPerso = ?, keyUser = ? WHERE id = ?;");
+			request3.setString(hashed_password);
+			request3.setString(saltPerso);
+			request3.setString(crypted_keyUser);
+			request3.setInt(rs.getString(1));
+			request3.set();
+			request3 = db.prepareRequest("DELETE FROM passwordLost WHERE user_id = ?;");
+			request3.setInt(userId);
+			request3.set();
 		} else {
 			throw new GeneralException(ServletManager.Code.ClientWarning, "You did not ask for password resetting.");
 		}

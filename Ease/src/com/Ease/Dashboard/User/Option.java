@@ -17,7 +17,7 @@ public class Option {
 	
 	public static Option createOption(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		int db_id = db.set("INSERT INTO options values (null, 0, 0, 0);");
+		int db_id = db.prepareRequest("INSERT INTO options values (null, 0, 0, 0);").set();
 		return new Option(String.valueOf(db_id), false, false);
 	}
 
@@ -43,7 +43,9 @@ public class Option {
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("DELETE FROM options where id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM options where id = ?;");
+		request.setInt(db_id);
+		request.set();
 	}
 
 	/*
@@ -62,7 +64,10 @@ public class Option {
 
 	public void setBackground_picked(boolean b, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE options SET background_picked = " + (b ? 1 : 0) + " WHERE id = " + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE options SET background_picked = ? WHERE id = ?;");
+		request.setBoolean(b);
+		request.setInt(db_id);
+		request.set();
 		this.background_picked = b;
 	}
 
@@ -72,12 +77,18 @@ public class Option {
 
 	public void setInfinite_session(boolean b, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE options SET infinite_session = " + (b ? 1 : 0) + " WHERE id = " + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE options SET infinite_session = ? WHERE id = ?;");
+		request.setBoolean(b);
+		request.setInt(db_id);
+		request.set();
 		this.infinite_session = b;
 	}
 
 	public void setHomepageState(boolean state, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE options SET homepage_state = " + (state ? "1" : "0") + " WHERE id = " + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE options SET homepage_state = ? WHERE id = ?;");
+		request.setBoolean(state);
+		request.setInt(db_id);
+		request.set();
 	}
 }

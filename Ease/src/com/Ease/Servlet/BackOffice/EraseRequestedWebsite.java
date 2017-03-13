@@ -59,7 +59,9 @@ public class EraseRequestedWebsite extends HttpServlet {
 			if (!userIdRs.next())
 				throw new GeneralException(ServletManager.Code.ClientError, "This user does not exist");
 			String userId = userIdRs.getString(1);
-			db.set("DELETE FROM requestedWebsites WHERE user_id = " + userId + " AND site = '" + websiteUrl + "';");
+			db_request = db.prepareRequest("DELETE FROM requestedWebsites WHERE user_id = ? AND site = ?;");
+			db_request.setInt(userId);
+			db_request.setString(websiteUrl);
 			sm.setResponse(ServletManager.Code.Success, "Deleted");
 		} catch(GeneralException e) {
 			sm.setResponse(e);

@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.Ease.Utils.DataBaseConnection;
@@ -73,7 +72,12 @@ public class ServerKey {
 	private static ServerKey createServerKey(String login, String password, String keyServer, DataBaseConnection db) throws GeneralException{
 		String salt = AES.generateSalt();
 		String hashed_password = Hashing.hash(password);
-		db.set("INSERT INTO serverKeys VALUES ('"+login+"','"+ hashed_password +"', '"+salt+"', '"+AES.encryptUserKey(keyServer, password, salt)+"');");
+		DatabaseRequest request = db.prepareRequest("INSERT INTO serverKeys VALUES (?, ?, ?, ?);");
+		request.setString(login);
+		request.setString(hashed_password);
+		request.setString(salt);
+		request.setString(AES.encryptUserKey(keyServer, password, salt));
+		request.set();
 		return new ServerKey(login, hashed_password, salt, keyServer);
 	}
 
@@ -82,7 +86,12 @@ public class ServerKey {
 		String serverKey = sK.getKeyServer();
 		String salt = AES.generateSalt();
 		String hashed_password = Hashing.hash(newPassword);
-		db.set("INSERT INTO serverKeys VALUES ('"+newLogin+"','"+ hashed_password +"', '"+salt+"', '"+AES.encryptUserKey(serverKey, newPassword, salt)+"');");
+		DatabaseRequest request = db.prepareRequest("INSERT INTO serverKeys VALUES (?, ?, ?, ?);");
+		request.setString(newLogin);
+		request.setString(hashed_password);
+		request.setString(salt);
+		request.setString(AES.encryptUserKey(serverKey, newPassword, salt));
+		request.set();
 		return new ServerKey(newLogin, hashed_password, salt, serverKey);
 	}
 
@@ -100,7 +109,9 @@ public class ServerKey {
 				if(!rs.next()){
 					throw new GeneralException(ServletManager.Code.UserMiss, "Last admin. Don't erase it !");
 				} else {
-					db.set("DELETE FROM serverKeys WHERE login='"+login+"';");
+					request = db.prepareRequest("DELETE FROM serverKeys WHERE login = ?;");
+					request.setString(login);
+					request.set();
 				}
 			}
 		} else {

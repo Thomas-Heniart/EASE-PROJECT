@@ -72,9 +72,16 @@ public class XLSXParser {
           } 
           else if (i % 4 == 3 && i > 3) { 
             email = cell.getStringCellValue(); 
-            String linkCode = CodeGenerator.generateNewCode();  
-            String invitation_id = db.set("INSERT INTO invitations values (null, '" + name + "', '" + email + "', '" + linkCode + "')").toString(); 
-            db.set("INSERT INTO invitationsAndGroupsMap VALUES (null, " + invitation_id + ", " + groupId + ");"); 
+            String linkCode = CodeGenerator.generateNewCode();
+            DatabaseRequest request = db.prepareRequest("INSERT INTO invitations values (null, ?, ?, ?)");
+            request.setString(name);
+            request.setString(email);
+            request.setString(linkCode);
+            String invitation_id = request.set().toString();
+            request = db.prepareRequest("INSERT INTO invitationsAndGroupsMap VALUES (null, ?, ?);");
+            request.setInt(invitation_id);
+            request.setInt(groupId);
+            request.set();
           } 
           i++; 
           break; 

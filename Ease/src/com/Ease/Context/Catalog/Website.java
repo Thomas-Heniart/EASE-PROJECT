@@ -96,8 +96,14 @@ public class Website {
 		}
 		int transaction  = db.startTransaction();
 		WebsiteAttributes attributes = WebsiteAttributes.createWebsiteAttributes(db);
-
-		String db_id = db.set("INSERT INTO websites VALUES (null, '"+ url +"', '"+ name +"', '" + folder + "', NULL, " + (noLogin ? "1" : "0") + ", '"+ homePage +"', 0, 1, "+ attributes.getDbId() +");").toString();
+		request = db.prepareRequest("INSERT INTO websites VALUES (null, ?, ?, ?, NULL, ?, ?, 0, 1, ?);");
+		request.setString(url);
+		request.setString(name);
+		request.setString(folder);
+		request.setBoolean(noLogin);
+		request.setString(homePage);
+		request.setInt(attributes.getDbId());
+		String db_id = request.set().toString();
 		last_db_id = db_id;
 
 		List<WebsiteInformation> infos = new LinkedList<WebsiteInformation>();
@@ -108,7 +114,9 @@ public class Website {
 		}
 
 		if(haveLoginButton){
-			db.set("INSERT INTO loginWithWebsites VALUES (null, "+ db_id +");");
+			request = db.prepareRequest("INSERT INTO loginWithWebsites VALUES (null, ?);");
+			request.setInt(db_id);
+			request.set();
 		}
 
 		List<Website> loginWithWebsites = new LinkedList<Website>();
@@ -118,7 +126,10 @@ public class Website {
 				request2.setInt(haveLoginWith[i]);
 				DatabaseResult rs2 = request2.get();
 				if(rs2.next()){
-					String id = db.set("INSERT INTO websitesLogWithMap VALUES (null, "+db_id+", "+rs2.getString(1)+");").toString();
+					request = db.prepareRequest("INSERT INTO websitesLogWithMap VALUES (null, ?, ?);");
+					request.setInt(db_id);
+					request.setInt(rs2.getString(1));
+					request.set();
 				}
 				loginWithWebsites.add(catalog.getWebsiteWithDBid(haveLoginWith[i]));
 			}
@@ -469,13 +480,17 @@ public class Website {
 
 	public void incrementRatio(DataBaseConnection db) throws GeneralException {
 		this.ratio++;
-		db.set("UPDATE websites SET ratio = ratio + 1 WHERE id = " + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE websites SET ratio = ratio + 1 WHERE id = ?;");
+		request.setInt(db_id);
+		request.set();
 	}
 	
 	public void decrementRatio(DataBaseConnection db) throws GeneralException {
 		if (this.ratio > 0 ) {
 			this.ratio--;
-			db.set("UPDATE websites SET ratio = ratio - 1 WHERE id = " + this.db_id + ";");
+			DatabaseRequest request = db.prepareRequest("UPDATE websites SET ratio = ratio - 1 WHERE id = ?;");
+			request.setInt(db_id);
+			request.set();
 		}
 	}
 

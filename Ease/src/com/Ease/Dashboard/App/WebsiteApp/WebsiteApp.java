@@ -67,7 +67,11 @@ public class WebsiteApp extends App {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		String appDBid = App.createApp(profile, position, name, "websiteApp", elevator, sm);
-		String websiteAppDBid = db.set("INSERT INTO websiteApps VALUES(NULL, " + site.getDb_id() + ", " + appDBid + ", NULL, '" + type + "');").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, ?);");
+		request.setInt(site.getDb_id());
+		request.setInt(appDBid);
+		request.setString(type);
+		String websiteAppDBid = request.set().toString();
 		site.incrementRatio(db);
 		if (site.getRatio() == 100) {
 			SendGridMail mail = new SendGridMail("Agathe @Ease", "contact@ease.space");
@@ -83,7 +87,10 @@ public class WebsiteApp extends App {
 		int transaction = db.startTransaction();
 		Map<String, Object> elevator = new HashMap<String, Object>();
 		String appDBid = App.createApp(profile, position, name, "websiteApp", elevator, sm);
-		String websiteAppDBid = db.set("INSERT INTO websiteApps VALUES(NULL, " + site.getDb_id() + ", " + appDBid + ", NULL, 'websiteApp');").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, 'websiteApp');");
+		request.setInt(site.getDb_id());
+		request.setInt(appDBid);
+		String websiteAppDBid = request.set().toString();
 		db.commitTransaction(transaction);
 		return new WebsiteApp(appDBid, profile, position, (AppInformation)elevator.get("appInfos"), null, (String)elevator.get("registrationDate"), ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid);
 	}
@@ -93,20 +100,33 @@ public class WebsiteApp extends App {
 		DatabaseRequest request = db.prepareRequest("SELECT * FROM websiteApps WHERE app_id= ?;");
 		request.setInt(appId);
 		DatabaseResult rs = request.get();
-		rs.next();
+		if (!rs.next())
+			throw new GeneralException(ServletManager.Code.ClientError, "This app does not exist");
 		String website_app_id = rs.getString(Data.ID.ordinal());
 		int transaction = db.startTransaction();
 		switch (rs.getString(Data.TYPE.ordinal())) {
 			case ("classicApp"):
-				db.set("DELETE FROM accountsInformations WHERE account_id IN (SELECT account_id FROM classicApps WHERE website_app_id = " + website_app_id + ");");
-				db.set("DELETE FROM accounts WHERE id IN (SELECT account_id FROM classicApps WHERE website_app_id = " + website_app_id + ");");
-				db.set("DELETE FROM classicApps WHERE website_app_id = " + website_app_id + ";");
-			break;
+				request = db.prepareRequest("DELETE FROM accountsInformations WHERE account_id IN (SELECT account_id FROM classicApps WHERE website_app_id = ?);");
+				request.setInt(website_app_id);
+				request.set();
+				request = db.prepareRequest("DELETE FROM accounts WHERE id IN (SELECT account_id FROM classicApps WHERE website_app_id = ?);");
+				request.setInt(website_app_id);
+				request.set();
+				request = db.prepareRequest("DELETE FROM classicApps WHERE website_app_id = ?;");
+				request.setInt(website_app_id);
+				request.set();
+				break;
 			case ("logwithApp"):
-				db.set("DELETE FROM logWithApps WHERE website_app_id = " + website_app_id + ";");
-			break;
+				request = db.prepareRequest("DELETE FROM logWithApps WHERE website_app_id = ?;");
+				request.setInt(website_app_id);
+				request.set();
+				break;
+			default:
+				break;
 		}
-		db.set("UPDATE websiteApps SET type='websiteApp' WHERE app_id=" + appId + ";");
+		request = db.prepareRequest("UPDATE websiteApps SET type='websiteApp' WHERE app_id = ?;");
+		request.setInt(appId);
+		request.set();
 		db.commitTransaction(transaction);
 	}
 	
@@ -130,7 +150,9 @@ public class WebsiteApp extends App {
 	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		db.set("DELETE FROM websiteApps WHERE id=" + websiteAppDBid + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM websiteApps WHERE id = ?;");
+		request.setInt(websiteAppDBid);
+		request.set();
 		super.removeFromDB(sm);
 		db.commitTransaction(transaction);
 	}

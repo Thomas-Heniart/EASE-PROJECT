@@ -61,7 +61,10 @@ public class AppPermissions{
 	
 	public static AppPermissions CreateAppPermissions(int perms, String group_id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		String db_id = db.set("INSERT INTO appPermissions VALUES(NULL, " + group_id + ", " + perms + ");").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO appPermissions VALUES(NULL, ?, ?);");
+		request.setInt(group_id);
+		request.setInt(perms);
+		String db_id = request.set().toString();
 		return new AppPermissions(db_id, group_id, perms);
 	}
 	
@@ -102,8 +105,9 @@ public class AppPermissions{
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		if (this.db_id != null)
-			db.set("REMOVE FROM appPermissions WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM appPermissions WHERE id = ?;");
+		request.setInt(db_id);
+		request.set();
 	}
 	
 	public boolean havePermission(int perm) {

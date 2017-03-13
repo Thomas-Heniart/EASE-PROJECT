@@ -29,7 +29,7 @@ public class Status {
 	}
 
 	public static Status createStatus(DataBaseConnection db) throws GeneralException {
-		String db_id = db.set("INSERT INTO status values (null, 0, 0, 0, 0, 0, 0, 0, 0, 0, default, 0, 0);").toString();
+		String db_id = db.prepareRequest("INSERT INTO status values (null, 0, 0, 0, 0, 0, 0, 0, 0, 0, default, 0, 0);").set().toString();
 		return new Status(db_id, false, false, false, false, false, false, false, false, false, false);
 	}
 
@@ -90,7 +90,9 @@ public class Status {
 		try {
 			Method method = this.getClass().getMethod("set_" + tutoStep, Boolean.class);
 			method.invoke(this, true);
-			db.set("UPDATE status SET " + tutoStep + "=1 WHERE id=" + this.db_id + ";");
+			DatabaseRequest request = db.prepareRequest("UPDATE status SET " + tutoStep + " = 1 WHERE id = ?;");
+			request.setInt(db_id);
+			request.set();
 			validateTuto(db);
 		} catch (SecurityException | IllegalArgumentException | NoSuchMethodException | IllegalAccessException
 				| InvocationTargetException e) {
@@ -177,6 +179,8 @@ public class Status {
 	}
 	
 	public void updateLastConnection(DataBaseConnection db) throws GeneralException {
-		db.set("UPDATE status SET last_connection = CURDATE() WHERE id = " + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE status SET last_connection = CURDATE() WHERE id = ?;");
+		request.setInt(db_id);
+		request.set();
 	}
 }

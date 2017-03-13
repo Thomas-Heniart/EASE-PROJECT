@@ -76,7 +76,14 @@ public class GroupApp {
 		int transaction = db.startTransaction();
 		AppPermissions permissions = AppPermissions.CreateAppPermissions(perms, group.getDBid(), sm);
 		AppInformation infos = AppInformation.createAppInformation(name, sm);
-		String db_id = db.set("INSERT INTO groupApps VALUES(NULL, " + groupProfile.getDBid() + ", " + group.getDBid() + ", " + permissions.getDBid() + ", '" + type + "', " + infos.getDb_id() + ", " + ((common) ? "1" : "0") + ");").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO groupApps VALUES(NULL, ?, ?, ?, ?, ?, ?);");
+		request.setInt(groupProfile.getDBid());
+		request.setInt(group.getDBid());
+		request.setInt(permissions.getDBid());
+		request.setString(type);
+		request.setInt(infos.getDb_id());
+		request.setBoolean(common);
+		String db_id = request.set().toString();
 		elevator.put("perms", permissions);
 		elevator.put("appInfos", infos);
 		db.commitTransaction(transaction);

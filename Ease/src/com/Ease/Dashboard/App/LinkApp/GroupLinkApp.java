@@ -55,7 +55,10 @@ public class GroupLinkApp extends GroupApp {
 		AppPermissions permissions = (AppPermissions) elevator.get("perms");
 		AppInformation appInfos = (AppInformation) elevator.get("appInfos");
 		LinkAppInformation infos = LinkAppInformation.createLinkAppInformation(url, img_url, sm);
-		String db_id = db.set("INSERT INTO groupLinkApps VALUES(NULL, " + infos.getDb_id() + ", " + appDBid + ");").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO groupLinkApps VALUES(NULL, ?, ?);");
+		request.setInt(infos.getDb_id());
+		request.setInt(appDBid);
+		String db_id = request.set().toString();
 		int single_id = ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId();
 		GroupLinkApp groupLinkApp = new GroupLinkApp(appDBid, groupProfile, group, permissions, appInfos, infos, common, single_id, db_id);
 		GroupManager.getGroupManager(sm).add(groupLinkApp);

@@ -105,7 +105,7 @@ public class ServletManager {
 		String param = StringEscapeUtils.escapeHtml4(request.getParameter(paramName));
 		if (saveInLogs)
 			args.put(paramName, param);
-		return param;
+		return StringEscapeUtils.unescapeHtml4(param);
 	}
 	
 	public String[] getServletParamArray(String paramName, boolean saveInLogs) {
@@ -174,7 +174,18 @@ public class ServletManager {
 			this.logResponse = URLEncoder.encode(this.logResponse, "UTF-8");
 			argsString = URLEncoder.encode(argsString, "UTF-8");
 			System.err.println("insert into logs values('" + this.servletName + "', " + this.retCode + ", " + ((this.user != null) ? this.user.getDBid() : "NULL") + ", '" + argsString + "', '" + this.logResponse + "', '" + this.date + "');");
-			db.set("insert into logs values('" + this.servletName + "', " + this.retCode + ", " + ((this.user != null) ? this.user.getDBid() : "NULL") + ", '" + argsString + "', '" + this.logResponse + "', '" + this.date + "');");
+			DatabaseRequest request = db.prepareRequest("INSERT INTO logs values(?, ?, ?, ?, ?, ?);");
+			request.setString(this.servletName);
+			request.setInt(this.retCode);
+			if (this.user == null)
+				request.setNull();
+			else
+				request.setInt(this.user.getDBid());
+			
+			request.setString(argsString);
+			request.setString(this.logResponse);
+			request.setString(this.date);
+			request.set();
 		} catch (UnsupportedEncodingException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}

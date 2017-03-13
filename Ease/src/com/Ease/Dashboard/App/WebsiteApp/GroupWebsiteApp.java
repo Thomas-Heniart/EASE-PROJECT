@@ -71,7 +71,10 @@ public enum Data {
 		String appDBid = GroupApp.createGroupApp(groupProfile, group, perms, name, common, "groupWebsiteApp", elevator, sm);
 		AppPermissions permissions = (AppPermissions) elevator.get("perms");
 		AppInformation appInfos = (AppInformation) elevator.get("appInfos");
-		String db_id = db.set("INSERT INTO groupWebsiteApps VALUES(NULL, " + appDBid + ", " + site.getDb_id() + ");").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO groupWebsiteApps VALUES(NULL, ?, ?);");
+		request.setInt(appDBid);
+		request.setInt(site.getDb_id());
+		String db_id = request.set().toString();
 		int single_id = ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId();
 		GroupWebsiteApp groupWebsiteApp = new GroupWebsiteApp(appDBid, groupProfile, group, permissions, appInfos, common, single_id, site, db_id);
 		GroupManager.getGroupManager(sm).add(groupWebsiteApp);
@@ -84,7 +87,10 @@ public enum Data {
 		int transaction = db.startTransaction();
 		String appDBid = GroupApp.createGroupApp(groupProfile, group, perms, name, common, "groupWebsiteApp", elevator, sm);
 		elevator.put("appDBid", appDBid);
-		String db_id = db.set("INSERT INTO groupWebsiteApps VALUES(NULL, " + appDBid + ", " + site.getDb_id() + ");").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO groupWebsiteApps VALUES(NULL, ?, ?);");
+		request.setInt(appDBid);
+		request.setInt(site.getDb_id());
+		String db_id = request.set().toString();
 		db.commitTransaction(transaction);
 		return db_id;
 	}

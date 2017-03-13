@@ -20,6 +20,7 @@ import com.Ease.Context.Group.Infrastructure;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBase;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 
@@ -42,6 +43,7 @@ public class OnStart implements ServletContextListener{
 			return;
 		}
 		try {
+			DatabaseRequest request;
 			try {
 				System.out.println("ServletContextListener starting on \""+ Variables.ENVIRONNEMENT +"\" ...");
 				context.setAttribute("serverKey", ServerKey.loadServerKey(db));
@@ -72,16 +74,19 @@ public class OnStart implements ServletContextListener{
 				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				Date mydate = new Date();
 				String date = dateFormat.format(mydate);
-				db.set("insert into logs values('Server Start', 200, NULL, '', 'Server started correctly', '" + date + "');");
+				request = db.prepareRequest("INSERT INTO logs values('Server Start', 200, NULL, '', 'Server started correctly', ?);");
+				request.setString(date);
 			} catch (GeneralException e1) {
 				System.out.println("Start failed");
 				String logResponse = URLEncoder.encode(e1.getMsg(), "UTF-8");
-				//String logResponse = e1.getMsg();
 				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				Date mydate = new Date();
 				String date = dateFormat.format(mydate);
-				db.set("insert into logs values('Server Start', 1, NULL, '', '" + logResponse + "', '" + date + "');");
+				request = db.prepareRequest("INSERT INTO logs values('Server Start', 1, NULL, '', ?, ?);");
+				request.setString(logResponse);
+				request.setString(date);
 			} 
+			request.set();
 		} catch (Exception e2){
 			e2.printStackTrace();
 			return;

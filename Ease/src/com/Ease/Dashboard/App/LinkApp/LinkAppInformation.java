@@ -23,13 +23,19 @@ public class LinkAppInformation {
 	
 	public static LinkAppInformation createLinkAppInformation(String link, String imgUrl, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		int db_id = db.set("INSERT INTO linkAppInformations values (NULL, '" + link + "', '" + imgUrl + "');");
+		DatabaseRequest request = db.prepareRequest("INSERT INTO linkAppInformations values (NULL, ?, ?);");
+		request.setString(link);
+		request.setString(imgUrl);
+		int db_id = request.set();
 		return new LinkAppInformation(String.valueOf(db_id), link, imgUrl);
 	}
 
 	public static String createLinkAppInformationForUnconnected(String link, String imgUrl, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		int db_id = db.set("INSERT INTO linkAppInformations values (NULL, '" + link + "', '" + imgUrl + "');"); 
+		DatabaseRequest request = db.prepareRequest("INSERT INTO linkAppInformations values (NULL, ?, ?);");
+		request.setString(link);
+		request.setString(imgUrl);
+		int db_id = request.set(); 
 		return String.valueOf(db_id);
 	}
 	
@@ -59,7 +65,9 @@ public class LinkAppInformation {
 	
 	public void removeFromDb(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("DELETE FROM linkAppInformations WHERE id = " + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM linkAppInformations WHERE id = ?;");
+		request.setInt(db_id);
+		request.set();
 	}
 	
 	/*
@@ -78,7 +86,10 @@ public class LinkAppInformation {
 	
 	public void setLink(String link, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE linkAppInformations SET url='" + link + "' WHERE id = " + this.db_id + "");
+		DatabaseRequest request = db.prepareRequest("UPDATE linkAppInformations SET url = ? WHERE id = ?;");
+		request.setString(link);
+		request.setInt(db_id);
+		request.set();
 		this.link = link;
 	}
 	
@@ -88,7 +99,10 @@ public class LinkAppInformation {
 	
 	public void setImgUrl(String imgUrl, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE linkAppInformations SET img_url='" + imgUrl + "' WHERE id = " + this.db_id + "");
+		DatabaseRequest request = db.prepareRequest("UPDATE linkAppInformations SET img_url = ? WHERE id = ?;");
+		request.setString(imgUrl);
+		request.setInt(db_id);
+		request.set();
 		this.imgUrl = imgUrl;
 	}
 }

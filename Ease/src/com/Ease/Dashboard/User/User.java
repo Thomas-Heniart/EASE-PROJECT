@@ -247,7 +247,10 @@ public class User {
 
 	public void setFirstName(String first_name, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE users set firstName='" + first_name + "' WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE users set firstName = ? WHERE id = ?;");
+		request.setString(first_name);
+		request.setInt(db_id);
+		request.set();
 		this.first_name = first_name;
 	}
 
@@ -257,7 +260,10 @@ public class User {
 
 	public void setLastName(String last_name, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE users set lastName='" + last_name + "' WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE users set lastName = ? WHERE id = ?;");
+		request.setString(last_name);
+		request.setInt(db_id);
+		request.set();
 		this.last_name = last_name;
 	}
 
@@ -571,13 +577,33 @@ public class User {
 		for (UserEmail email : this.emails.values())
 			email.removeFromDB(sm);
 		this.sessionSave.eraseFromDB(sm);
-		db.set("DELETE FROM admins WHERE user_id = " + this.db_id + ";");
-		db.set("DELETE FROM groupsAndUsersMap WHERE user_id = " + this.db_id + ";");
-		db.set("DELETE FROM infrastructuresAdminsMap WHERE user_id = " + this.db_id + ";");
-		db.set("DELETE FROM integrateWebsitesAndUsersMap WHERE user_id = " + this.db_id + ";");
-		db.set("DELETE FROM passwordLost WHERE user_id = " + this.db_id + ";");
-		db.set("DELETE FROM requestedWebsites WHERE user_id = " + this.db_id + ";");
-		db.set("DELETE FROM users WHERE id= " + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM admins WHERE user_id = ?;");
+		request.setInt(db_id);
+		request.set();
+		request = db.prepareRequest("DELETE FROM groupsAndUsersMap WHERE user_id = ?;");
+		request.setInt(db_id);
+		request.set();
+		request = db.prepareRequest("DELETE FROM infrastructuresAdminsMap WHERE user_id = ?;");
+		request.setInt(db_id);
+		request.set();
+		request = db.prepareRequest("DELETE FROM integrateWebsitesAndUsersMap WHERE user_id = ?;");
+		request.setInt(db_id);
+		request.set();
+		request = db.prepareRequest("DELETE FROM passwordLost WHERE user_id = ?;");
+		request.setInt(db_id);
+		request.set();
+		request = db.prepareRequest("DELETE FROM requestedWebsites WHERE user_id = ?;");
+		request.setInt(db_id);
+		request.set();
+		request = db.prepareRequest("DELETE FROM savedSessions WHERE user_id = ?;");
+		request.setInt(db_id);
+		request.set();
+		request = db.prepareRequest("DELETE FROM usersPrivateExtensions WHERE user_id = ?;");
+		request.setInt(db_id);
+		request.set();
+		request = db.prepareRequest("DELETE FROM users WHERE id= ?;");
+		request.setInt(db_id);
+		request.set();
 		this.keys.removeFromDB(sm);
 		this.opt.removeFromDB(sm);
 		db.commitTransaction(transaction);

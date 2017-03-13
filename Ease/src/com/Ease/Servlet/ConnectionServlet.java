@@ -120,8 +120,11 @@ public class ConnectionServlet extends HttpServlet {
 		if (rs.next())
 			return;
 		int transaction = db.startTransaction();
-		db.set("INSERT INTO askingIps values (NULL, '" + client_ip + "', 0, '" + getCurrentTime() + "', '"
-				+ getExpirationTime() + "');");
+		request = db.prepareRequest("INSERT INTO askingIps values (NULL, ?, 0, ?, ?);");
+		request.setString(client_ip);
+		request.setString(getCurrentTime());
+		request.setString(getExpirationTime());
+		request.set();
 		db.commitTransaction(transaction);
 	}
 
@@ -138,14 +141,18 @@ public class ConnectionServlet extends HttpServlet {
 	}
 
 	public void removeIpFromDataBase(String client_ip, DataBaseConnection db) throws GeneralException {
-		db.set("DELETE FROM askingIps WHERE ip = '" + client_ip + "';");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM askingIps WHERE ip = ?;");
+		request.setString(client_ip);
+		request.set();
 	}
 
 	public int incrementAttempts(String client_ip, DataBaseConnection db) throws GeneralException {
-		System.out.println(getExpirationTime());
-		db.set("UPDATE askingIps SET attempts = attempts + 1, attemptDate = '" + getCurrentTime()
-				+ "', expirationDate = '" + getExpirationTime() + "' WHERE ip = '" + client_ip + "';");
-		DatabaseRequest request = db.prepareRequest("select attempts from askingIps where ip= ?;");
+		DatabaseRequest request = db.prepareRequest("UPDATE askingIps SET attempts = attempts + 1, attemptDate = ?, expirationDate = ? WHERE ip = ?;");
+		request.setString(getCurrentTime());
+		request.setString(getExpirationTime());
+		request.setString(client_ip);
+		request.set();
+		request = db.prepareRequest("select attempts from askingIps where ip= ?;");
 		request.setString(client_ip);
 		DatabaseResult rs = request.get();
 		rs.next();

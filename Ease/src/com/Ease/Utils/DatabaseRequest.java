@@ -57,6 +57,10 @@ public class DatabaseRequest {
 		this.setObject(value, type);
 	}
 	
+	public void setBoolean(boolean bool) throws GeneralException {
+		this.setObject(bool);
+	}
+	
 	public void setString(String value) throws GeneralException {
 		this.setObject(StringEscapeUtils.escapeHtml4(value));
 	}

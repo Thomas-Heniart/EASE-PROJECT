@@ -49,7 +49,11 @@ public class UpdateNewAccount extends Update {
 		int transaction = db.startTransaction();
 		String update_id = Update.createUpdate(user, "updateNewAccount", db);
 		elevator.put("update_id", update_id);
-		String updateNewAccount_id = db.set("INSERT INTO updateNewAccount values (null, " + update_id + ", " + website.getDb_id() + ", '" + type + "');").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO updateNewAccount values (null, ?, ?, ?);");
+		request.setInt(update_id);
+		request.setInt(website.getDb_id());
+		request.setString(type);
+		String updateNewAccount_id = request.set().toString();
 		db.commitTransaction(transaction);
 		return updateNewAccount_id;
 	}
@@ -66,7 +70,9 @@ public class UpdateNewAccount extends Update {
 	
 	public void deleteFromDb(DataBaseConnection db) throws GeneralException {
 		int transaction = db.startTransaction();
-		db.set("DELETE FROM updateNewAccount WHERE update_id = " + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM updateNewAccount WHERE update_id = ?;");
+		request.setInt(db_id);
+		request.set();
 		super.deleteFromDb(db);
 		db.commitTransaction(transaction);
 	}

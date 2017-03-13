@@ -35,15 +35,22 @@ public class ClassicUpdateInformation {
 
 	public static void createInformations(String updateNewClassicApp_id, Map<String, String> updateInformations, DataBaseConnection db) throws GeneralException {
 		int transaction = db.startTransaction();
+		DatabaseRequest request;
 		for (Map.Entry<String, String> entry : updateInformations.entrySet()) {
-			db.set("INSERT INTO classicUpdateInformations values (null, " + updateNewClassicApp_id + ", '" + entry.getKey() + "', '" + entry.getValue() + "');");
+			request = db.prepareRequest("INSERT INTO classicUpdateInformations values (null, ?, ?, ?);");
+			request.setInt(updateNewClassicApp_id);
+			request.setString(entry.getKey());
+			request.setString(entry.getValue());
+			request.set();
 		}
 		db.commitTransaction(transaction);
 	}
 
 	public static void deleteFromDb(String newAccountUpdateDbId, DataBaseConnection db) throws GeneralException {
 		int transaction = db.startTransaction();
-		db.set("DELETE FROM classicUpdateInformations WHERE update_new_classic_app_id IN (SELECT id FROM updateNewClassicApp WHERE update_new_account_id = " + newAccountUpdateDbId + ");");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM classicUpdateInformations WHERE update_new_classic_app_id IN (SELECT id FROM updateNewClassicApp WHERE update_new_account_id = ?);");
+		request.setInt(newAccountUpdateDbId);
+		request.set();
 		db.commitTransaction(transaction);
 	}
 }

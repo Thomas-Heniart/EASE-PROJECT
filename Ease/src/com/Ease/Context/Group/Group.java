@@ -41,7 +41,11 @@ public class Group {
 		String parent_id = (parent == null) ? "null" : parent.getDBid();
 		String infra_id = (infra == null) ? "null" : infra.getDBid();
 		IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
-		int db_id = db.set("INSERT INTO groups values (null, '" + name + "', " + parent_id + ", " + infra_id + ");");
+		DatabaseRequest request = db.prepareRequest("INSERT INTO groups values (null, ?, ?, ?);");
+		request.setString(name);
+		request.setInt(parent_id);
+		request.setInt(infra_id);
+		int db_id = request.set();
 		Group group = new Group(String.valueOf(db_id), name, parent, infra, idGenerator.getNextId());
 		if (parent != null)
 			parent.getChildren().add(group);
@@ -162,7 +166,10 @@ public class Group {
 	
 	public void setName(String name, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE groups SET name='" + name + "' WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE groups SET name = ? WHERE id = ?;");
+		request.setString(name);
+		request.setInt(db_id);
+		request.set();
 		this.name = name;
 	}
 	
@@ -199,12 +206,19 @@ public class Group {
 		request = db.prepareRequest("SELECT user_id FROM groupsAndUsersMap WHERE group_id = ?;");
 		request.setInt(this.db_id);
 		rs = request.get();
+		DatabaseRequest request2;
 		while (rs.next()) {
 			if (this.parent != null) {
-				db.set("UPDATE groupsAndUsersMap SET group_id=" + this.parent.db_id + " WHERE group_id=" + this.db_id + " AND user_id = " + rs.getString(1) + ";");
+				request2 = db.prepareRequest("UPDATE groupsAndUsersMap SET group_id = ? WHERE group_id = ? AND user_id = ?;");
+				request2.setInt(this.parent.db_id);
+				request2.setInt(db_id);
+				request2.setInt(rs.getString(1));
 			} else {
-				db.set("DELETE FROM groupsAndUsersMap WHERE group_id=" + this.db_id + " AND user_id = " + rs.getString(1) + ";");
+				request2 = db.prepareRequest("DELETE FROM groupsAndUsersMap WHERE group_id = ? AND user_id = ?;");
+				request2.setInt(db_id);
+				request2.setInt(rs.getString(1));
 			}
+			request2.set();
 		}
 		for (GroupProfile groupProfile : this.groupProfiles) {
 			groupProfile.removeFromDb(sm);
@@ -213,7 +227,9 @@ public class Group {
 			groupApp.removeFromDb(sm);
 		}
 		GroupManager.getGroupManager(sm).remove(this);
-		db.set("DELETE FROM groups WHERE id=" + this.db_id + ";");
+		request = db.prepareRequest("DELETE FROM groups WHERE id = ?;");
+		request.setInt(db_id);
+		request.set();
 		db.commitTransaction(transaction);
 	}
 	
@@ -287,12 +303,19 @@ public class Group {
 		} else {
 			this.loadAllContentUnconnected(userDBid, sm);
 		}
-		db.set("INSERT INTO groupsAndUsersMap VALUES(NULL, " + this.db_id + ", " + userDBid + ", " + (user.tutoDone() ? "1" : "0") + ");");
+		DatabaseRequest request = db.prepareRequest("INSERT INTO groupsAndUsersMap VALUES(NULL, ?, ?, ?);");
+		request.setInt(db_id);
+		request.setInt(userDBid);
+		request.setBoolean(user.tutoDone());
+		request.set();
 		db.commitTransaction(transaction);
 	}
 
 	public void tutoStepDone(String user_id, DataBaseConnection db) throws GeneralException {
-		db.set("UPDATE groupsAndUsersMap SET saw_group = 1 WHERE group_id=" + this.db_id + " AND user_id = " + user_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE groupsAndUsersMap SET saw_group = 1 WHERE group_id = ? AND user_id = ?;");
+		request.setInt(db_id);
+		request.setInt(user_id);
+		request.set();
 	}
 	
 	public boolean containsWebsite(Website website) {

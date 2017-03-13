@@ -14,7 +14,14 @@ import com.Ease.Utils.ServletManager;
 public class WebsiteInformation {
 	
 	public static WebsiteInformation createInformation(String website_id, String name, String type, String priority, String placeholder, String placeholder_icon, DataBaseConnection db) throws GeneralException {
-		String db_id = db.set("INSERT INTO websitesInformations VALUES (null, "+website_id+", '"+ name +"', '"+ type +"', " + priority + ", '" + placeholder + "', '" + placeholder_icon + "');").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO websitesInformations VALUES (null, ?, ?, ?, ?, ?, ?);");
+		request.setInt(website_id);
+		request.setString(name);
+		request.setString(type);
+		request.setInt(priority);
+		request.setString(placeholder);
+		request.setString(placeholder_icon);
+		String db_id = request.set().toString();
 		return new WebsiteInformation(db_id, name, type, placeholder, placeholder_icon);
 	}
 	

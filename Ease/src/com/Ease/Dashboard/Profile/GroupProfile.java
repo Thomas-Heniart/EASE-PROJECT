@@ -65,12 +65,17 @@ public class GroupProfile {
 		int transaction = db.startTransaction();
 		ProfilePermissions perms = ProfilePermissions.CreateProfilePermissions(permissions, group.getDBid(), sm);
 		ProfileInformation infos = ProfileInformation.createProfileInformation(name, color, sm);
-		String db_id = db.set("INSERT INTO groupProfiles VALUES(NULL, " + group.getDBid() + ", " + perms.getDBid() + ", " + infos.getDBid() + ", " + ((common == true) ? 1 : 0) + ");").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO groupProfiles VALUES(NULL, ?, ?, ?, ?);");
+		request.setInt(group.getDBid());
+		request.setInt(perms.getDBid());
+		request.setInt(infos.getDBid());
+		request.setBoolean(common);
+		String db_id = request.set().toString();
 		IdGenerator idGen = (IdGenerator) sm.getContextAttr("idGenerator");
 		int single_id = idGen.getNextId();
 		GroupProfile groupProfile = new GroupProfile(db_id, group, perms, infos, common, single_id);
 		GroupManager.getGroupManager(sm).add(groupProfile);
-		DatabaseRequest request = db.prepareRequest("SELECT email, user_id FROM groupsAndUsersMap JOIN users ON user_id = users.id WHERE group_id = ?;");
+		request = db.prepareRequest("SELECT email, user_id FROM groupsAndUsersMap JOIN users ON user_id = users.id WHERE group_id = ?;");
 		request.setInt(group.getDBid());
 		DatabaseResult rs = request.get();
 		@SuppressWarnings("unchecked")
@@ -174,7 +179,9 @@ public class GroupProfile {
 			else
 				this.removeContentForUnconnectedUser(user_id, sm);
 		}
-		db.set("DELETE FROM groupProfiles WHERE id=" + this.db_id + ";");
+		request = db.prepareRequest("DELETE FROM groupProfiles WHERE id = ?;");
+		request.setInt(this.db_id);
+		request.set();
 	}
 	
 	public String loadContentForUnconnectedUser(String db_id, ServletManager sm) throws GeneralException {

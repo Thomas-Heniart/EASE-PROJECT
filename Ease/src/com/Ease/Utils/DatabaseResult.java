@@ -51,7 +51,11 @@ public class DatabaseResult {
 	}
 	
 	public String getString(String columnName) throws GeneralException {
-		return (String)this.getObject(columnName);
+		try {
+			return this.rs.getString(columnName);
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
 	}
 	
 	public Integer getInt(int columnIndex) throws GeneralException {

@@ -61,7 +61,13 @@ public class SessionSave {
 		} else if ((hashedToken = Hashing.hash(token)) == null) {
 			throw new GeneralException(ServletManager.Code.InternError, "Can't hash token.");
 		}
-		db.set("INSERT INTO savedSessions VALUES (NULL, '" + sessionId + "', '" + hashedToken + "', '" + cryptedKeyUser + "', '" + saltKeyUser + "', '" + userId + "', DEFAULT);");
+		DatabaseRequest request = db.prepareRequest("INSERT INTO savedSessions VALUES (NULL, ?, ?, ?, ?, ?, DEFAULT);");
+		request.setString(sessionId);
+		request.setString(hashedToken);
+		request.setString(cryptedKeyUser);
+		request.setString(saltKeyUser);
+		request.setInt(userId);
+		request.set();
 		SessionSave sessionSave = new SessionSave(saltKeyUser, token, sessionId, keyUser, userId);
 		return sessionSave;
 	}
@@ -99,7 +105,9 @@ public class SessionSave {
 
 	public void eraseFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("DELETE FROM savedSessions WHERE sessionId = '"+ sessionId +"';");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM savedSessions WHERE sessionId = ?;");
+		request.setString(sessionId);
+		request.set();
 	}
 
 	public static String tokenGenerator(){

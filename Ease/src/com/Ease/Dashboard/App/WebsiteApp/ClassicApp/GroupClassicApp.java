@@ -58,7 +58,10 @@ public class GroupClassicApp extends GroupWebsiteApp{
 		AppInformation appInfos = (AppInformation) elevator.get("appInfos");
 		String appId = (String) elevator.get("appId");
 		Account account = Account.createGroupAccount(password, false, accInfos, group.getInfra(), sm);
-		String db_id = db.set("INSERT INTO groupClassicApps VALUES(NULL, " + websiteAppId + ", " + account.getDBid() + ");").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO groupClassicApps VALUES(NULL, ?, ?);");
+		request.setInt(websiteAppId);
+		request.setInt(account.getDBid());
+		String db_id = request.set().toString();
 		int single_id = ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId();
 		GroupClassicApp groupClassicApp = new GroupClassicApp(appId, groupProfile, group, permissions, appInfos, common, single_id, site, websiteAppId, account, db_id);
 		GroupManager.getGroupManager(sm).add(groupClassicApp);

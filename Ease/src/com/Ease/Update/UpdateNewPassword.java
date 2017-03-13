@@ -41,7 +41,11 @@ public class UpdateNewPassword extends Update {
 		IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
 		int transaction = db.startTransaction();
 		String update_id = Update.createUpdate(user, "updateNewPassword", db);
-		db.set("INSERT INTO updateNewPassword values (null, " + update_id + ", " + classicApp.getDBid() + ", '" + user.encrypt(newPassword) + "');");
+		DatabaseRequest request = db.prepareRequest("INSERT INTO updateNewPassword values (null, ?, ?, ?);");
+		request.setInt(update_id);
+		request.setInt(classicApp.getDBid());
+		request.setString(user.encrypt(newPassword));
+		request.set();
 		db.commitTransaction(transaction);
 		return new UpdateNewPassword(update_id, classicApp, newPassword, idGenerator.getNextId(), email, user);
 	}
@@ -60,7 +64,9 @@ public class UpdateNewPassword extends Update {
 	
 	public void deleteFromDb(DataBaseConnection db) throws GeneralException {
 		int transaction = db.startTransaction();
-		db.set("DELETE FROM updateNewPassword WHERE update_id = " + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM updateNewPassword WHERE update_id = ?;");
+		request.setInt(db_id);
+		request.set();
 		super.deleteFromDb(db);
 		db.commitTransaction(transaction);
 	}

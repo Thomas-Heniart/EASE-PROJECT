@@ -43,7 +43,10 @@ public class UpdateNewLogWithApp extends UpdateNewAccount {
 		Map<String, Object> elevator = new HashMap<String, Object>();
 		int transaction = db.startTransaction();
 		String updateNewAccount_id = UpdateNewAccount.createUpdateNewAccount(user, website, "updateNewLogWithApp", elevator, db);
-		db.set("INSERT INTO updateNewLogWithApp values (null, " + updateNewAccount_id + ", " + logWithApp.getDBid() + ");");
+		DatabaseRequest request = db.prepareRequest("INSERT INTO updateNewLogWithApp values (null, ?, ?);");
+		request.setInt(updateNewAccount_id);
+		request.setInt(logWithApp.getDBid());
+		request.set();
 		db.commitTransaction(transaction);
 		String update_id = (String) elevator.get("update_id");
 		return new UpdateNewLogWithApp(update_id, updateNewAccount_id, website, logWithApp, idGenerator.getNextId(), user);
@@ -59,7 +62,9 @@ public class UpdateNewLogWithApp extends UpdateNewAccount {
 	
 	public void deleteFromDb(DataBaseConnection db) throws GeneralException {
 		int transaction = db.startTransaction();
-		db.set("DELETE FROM updateNewLogWithApp WHERE update_new_account_id = " + this.update_new_account_id + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM updateNewLogWithApp WHERE update_new_account_id = ?;");
+		request.setInt(this.update_new_account_id);
+		request.set();
 		super.deleteFromDb(db);
 		db.commitTransaction(transaction);
 	}

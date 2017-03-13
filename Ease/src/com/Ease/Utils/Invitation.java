@@ -29,8 +29,12 @@ public class Invitation {
 				groups.add(groupManager.getGroupFromDBid(rs.getString(1)));
 			}
 			int transaction = db.startTransaction();
-			db.set("DELETE FROM invitationsAndGroupsMap WHERE invitation_id=" + id + ";");
-			db.set("DELETE FROM invitations WHERE id=" + id + ";");
+			request = db.prepareRequest("DELETE FROM invitationsAndGroupsMap WHERE invitation_id = ?;");
+			request.setInt(id);
+			request.set();
+			request = db.prepareRequest("DELETE FROM invitations WHERE id = ?;");
+			request.setInt(id);
+			request.set();
 			db.commitTransaction(transaction);
 		}
 		System.out.println("NBR GROUP: " + groups.size());
@@ -47,9 +51,18 @@ public class Invitation {
 			invitationCode = rs.getString(4);
 		else {
 			invitationCode = CodeGenerator.generateNewCode();
-			String db_id = db.set("INSERT INTO invitations values(NULL, '" + name + "', '" + email + "', '" + invitationCode + "');").toString();
-			if (group != null)
-				db.set("INSERT INTO invitationsAndGroupsMap values(NULL, " + db_id + ", " + group.getDBid() + ");");
+			request = db.prepareRequest("INSERT INTO invitations values(NULL, ?, ?, ?);");
+			request.setString(name);
+			request.setString(email);
+			request.setString(invitationCode);
+			
+			String db_id = request.set().toString();
+			if (group != null) {
+				request = db.prepareRequest("INSERT INTO invitationsAndGroupsMap values(NULL, ?, ?);");
+				request.setInt(db_id);
+				request.setInt(group.getDBid());
+				request.set();
+			}
 		}
 		try {
 			Mail mailToSend;
@@ -87,7 +100,10 @@ public class Invitation {
 				invitationCode = rs.getString(3);
 			else {
 				invitationCode = CodeGenerator.generateNewCode();
-				String db_id = db.set("INSERT INTO invitations values(NULL, '" + email + "', '" + invitationCode + "');").toString();
+				request = db.prepareRequest("INSERT INTO invitations values(NULL, ?, ?);");
+				request.setString(email);
+				request.setString(invitationCode);
+				String db_id = request.set().toString();
 			}
 			Mail mailToSend;
 			mailToSend = new Mail();

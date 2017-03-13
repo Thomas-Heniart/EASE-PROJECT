@@ -44,7 +44,10 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 		Map<String, Object> elevator = new HashMap<String, Object>();
 		int transaction = db.startTransaction();
 		String updateNewAccount_id = UpdateNewAccount.createUpdateNewAccount(user, website, "updateNewClassicApp", elevator, db);
-		String updateNewClassicApp_id = db.set("INSERT INTO updateNewClassicApp values (null, " + updateNewAccount_id + ", '" + password + "');").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO updateNewClassicApp values (null, ?, ?);");
+		request.setInt(updateNewAccount_id);
+		request.setString(password);
+		String updateNewClassicApp_id = request.set().toString();
 		ClassicUpdateInformation.createInformations(updateNewClassicApp_id, updateInformations, db);
 		db.commitTransaction(transaction);
 		String update_id = (String) elevator.get("update_id");
@@ -58,7 +61,10 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 		int transaction = db.startTransaction();
 		password = user.encrypt(password);
 		String updateNewAccount_id = UpdateNewAccount.createUpdateNewAccount(user, website, "updateNewClassicApp", elevator, db);
-		String updateNewClassicApp_id = db.set("INSERT INTO updateNewClassicApp values (null, " + updateNewAccount_id + ", '" + password + "');").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO updateNewClassicApp values (null, ?, ?);");
+		request.setInt(updateNewAccount_id);
+		request.setString(password);
+		String updateNewClassicApp_id = request.set().toString();
 		Map<String, String> updateInformations = new HashMap<String, String>();
 		updateInformations.put("login", login);
 		ClassicUpdateInformation.createInformations(updateNewClassicApp_id, updateInformations, db);
@@ -95,7 +101,9 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 	public void deleteFromDb(DataBaseConnection db) throws GeneralException {
 		int transaction = db.startTransaction();
 		ClassicUpdateInformation.deleteFromDb(this.update_new_account_id, db);
-		db.set("DELETE FROM updateNewClassicApp WHERE update_new_account_id = " + this.update_new_account_id + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM updateNewClassicApp WHERE update_new_account_id = ?;");
+		request.setInt(this.update_new_account_id);
+		request.set();
 		super.deleteFromDb(db);
 		db.commitTransaction(transaction);
 	}

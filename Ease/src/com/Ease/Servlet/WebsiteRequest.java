@@ -86,7 +86,10 @@ public class WebsiteRequest extends HttpServlet {
 		try {
 			sm.needToBeConnected();
 			String site = sm.getServletParam("ask", true);
-			db.set("INSERT INTO requestedWebsites values (null, " + user.getDBid() + ", '" + site + "', default);");
+			DatabaseRequest db_request = db.prepareRequest("INSERT INTO requestedWebsites values (null, ?, ?, default);");
+			db_request.setInt(user.getDBid());
+			db_request.setString(site);
+			db_request.set();
 			sm.setResponse(ServletManager.Code.Success, "Request sent");
 		} catch (GeneralException e) {
 			sm.setResponse(e);

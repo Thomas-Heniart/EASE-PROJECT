@@ -53,7 +53,10 @@ public class Infrastructure {
 	
 	public static Infrastructure createInfrastructure(String name, String img_path, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		String db_id = db.set("INSERT INTO infrastructures values(NULL, '" + name + "', '" + img_path + "');").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO infrastructures values(NULL, ?, ?);");
+		request.setString(name);
+		request.setString(img_path);
+		String db_id = request.set().toString();
 		IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
 		Infrastructure infra = new Infrastructure(db_id, name, img_path, idGenerator.getNextId());
 		GroupManager.getGroupManager(sm).add(infra);
@@ -120,7 +123,10 @@ public class Infrastructure {
 	public void setName(String name, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		db.set("UPDATE infrastructures set name='" + name + "' WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE infrastructures set name= ? WHERE id= ?;");
+		request.setString(name);
+		request.setInt(db_id);
+		request.set();
 		this.name = name;
 		db.commitTransaction(transaction);
 	}
@@ -128,7 +134,10 @@ public class Infrastructure {
 	public void setImgPath(String img_path, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		db.set("UPDATE infrastructures set img_path='" + img_path + "' WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE infrastructures set img_path= ? WHERE id= ?;");
+		request.setString(img_path);
+		request.setInt(db_id);
+		request.set();
 		this.img_path = img_path;
 		db.commitTransaction(transaction);
 	}

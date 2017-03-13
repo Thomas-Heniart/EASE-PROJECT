@@ -91,8 +91,12 @@ public class SendWebsitesIntegrated extends HttpServlet {
 				}
 				SendGridMail mail = new SendGridMail("Agathe @Ease", "contact@ease.space");
 				mail.sendAppsArrivedEmail(firstName, email, integratedWebsites);
-				for (Website website : integratedWebsites)
-					db.set("INSERT INTO integrateWebsitesAndUsersMap values (null, " + website.getDb_id() + ", " + user_id + ");");
+				for (Website website : integratedWebsites) {
+					db_request = db.prepareRequest("INSERT INTO integrateWebsitesAndUsersMap values (null, ?, ?);");
+					db_request.setInt(website.getDb_id());
+					db_request.setInt(user_id);
+					db_request.set();
+				}
 			} else
 				throw new GeneralException(ServletManager.Code.ClientError, "This user does not exist");
 			sm.setResponse(ServletManager.Code.Success, "");

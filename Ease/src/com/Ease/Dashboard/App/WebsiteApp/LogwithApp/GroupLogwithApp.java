@@ -57,7 +57,10 @@ public class GroupLogwithApp extends GroupWebsiteApp {
 		AppPermissions permissions = (AppPermissions) elevator.get("perms");
 		AppInformation appInfos = (AppInformation) elevator.get("appInfos");
 		String appId = (String) elevator.get("appId");
-		String db_id = db.set("INSERT INTO groupLogWithApps VALUES(NULL, " + websiteAppId + ", " + logwith.getDBid() + ");").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO groupLogWithApps VALUES(NULL, ?, ?);");
+		request.setInt(websiteAppId);
+		request.setInt(logwith.getDBid());
+		String db_id = request.set().toString();
 		int single_id = ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId();
 		GroupLogwithApp groupLogwithApp = new GroupLogwithApp(appId, groupProfile, group, permissions, appInfos, common, single_id, site, websiteAppId, logwith, db_id);
 		GroupManager.getGroupManager(sm).add(groupLogwithApp);

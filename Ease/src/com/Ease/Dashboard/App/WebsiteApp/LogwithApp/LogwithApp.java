@@ -54,7 +54,10 @@ public class LogwithApp extends WebsiteApp {
 		int transaction = db.startTransaction();
 		Map<String, Object> elevator = new HashMap<String, Object>();
 		String websiteAppDBid = WebsiteApp.createWebsiteApp(profile, position, name, "logwithApp", site, elevator, sm);
-		String logwithDBid = db.set("INSERT INTO logWithApps VALUES(NULL, " + websiteAppDBid + ", " + logwith.getWebsiteAppDBid() + ", NULL);").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO logWithApps VALUES(NULL, ?, ?, NULL);");
+		request.setInt(websiteAppDBid);
+		request.setInt(logwith.getWebsiteAppDBid());
+		String logwithDBid = request.set().toString();
 		db.commitTransaction(transaction);
 		LogwithApp app = new LogwithApp((String)elevator.get("appDBid"), profile, position, (AppInformation)elevator.get("appInfos"), null, (String)elevator.get("registrationDate"), ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, logwith.getDBid(), logwithDBid);
 		app.rempLogwith(logwith);
@@ -65,8 +68,13 @@ public class LogwithApp extends WebsiteApp {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		String websiteAppDBid = websiteApp.getWebsiteAppDBid();
-		db.set("UPDATE websiteApps SET type='logwithApp' WHERE id='"+ websiteAppDBid +"';");
-		String logwithDBid = db.set("INSERT INTO logWithApps VALUES(NULL, " + websiteAppDBid + ", " + logwith.getWebsiteAppDBid() + ", NULL);").toString();
+		DatabaseRequest request = db.prepareRequest("UPDATE websiteApps SET type='logwithApp' WHERE id = ?;");
+		request.setInt(websiteAppDBid);
+		request.set();
+		request = db.prepareRequest("INSERT INTO logWithApps VALUES(NULL, ?, ?, NULL);");
+		request.setInt(websiteAppDBid);
+		request.setInt(logwith.getWebsiteAppDBid());
+		String logwithDBid = request.set().toString();
 		LogwithApp newLogwithApp = new LogwithApp(websiteApp.getDBid(), user.getDashboardManager().getProfileFromApp(websiteApp.getSingleId()), websiteApp.getPosition(), websiteApp.getAppInformation(),null, websiteApp.getInsertDate(), websiteApp.getSingleId(), websiteApp.getSite(), websiteAppDBid, logwith.getDBid(), logwithDBid);
 		newLogwithApp.rempLogwith(logwith);
 		user.getDashboardManager().replaceApp(newLogwithApp);
@@ -93,7 +101,9 @@ public class LogwithApp extends WebsiteApp {
 	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		db.set("DELETE FROM logWithApps WHERE id=" + logwithAppDBid + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM logWithApps WHERE id = ?;");
+		request.setInt(logwithAppDBid);
+		request.set();
 		super.removeFromDB(sm);
 		this.website.decrementRatio(db);
 		db.commitTransaction(transaction);
@@ -119,7 +129,10 @@ public class LogwithApp extends WebsiteApp {
 	
 	public void setLogwith(WebsiteApp logwith, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE logWithApps SET logwith_website_app_id=" + logwith.getDBid() + " WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE logWithApps SET logwith_website_app_id= ? WHERE id = ?;");
+		request.setInt(logwith.getDBid());
+		request.setInt(db_id);
+		request.set();
 		this.logwith = logwith;
 		this.logwithDBid = logwith.getDBid();
 	}

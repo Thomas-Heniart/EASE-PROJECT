@@ -37,7 +37,11 @@ public class AccountInformation {
 	
 	public static AccountInformation createAccountInformation(String account_id, String information_name, String information_value, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		int db_id = db.set("INSERT INTO accountsInformations values (null, " + account_id + ", '" + information_name + "', '" + information_value + "');");
+		DatabaseRequest request = db.prepareRequest("INSERT INTO accountsInformations values (null, ?, ?, ?);");
+		request.setInt(account_id);
+		request.setString(information_name);
+		request.setString(information_value);
+		int db_id = request.set();
 		return new AccountInformation(String.valueOf(db_id), account_id, information_name, information_value);
 	}
 	
@@ -77,12 +81,17 @@ public class AccountInformation {
 	
 	public void setInformation_value(String information_value, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE accountsInformations SET information_value='" + information_value + "' WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE accountsInformations SET information_value = ? WHERE id = ?;");
+		request.setString(information_value);
+		request.setInt(this.db_id);
+		request.set();
 		this.information_value = information_value;
 	}
 	
 	public void removeFromDb(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("DELETE FROM accountsInformations WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM accountsInformations WHERE id = ?;");
+		request.setInt(db_id);
+		request.set();
 	}
 }
