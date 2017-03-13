@@ -41,13 +41,13 @@
 							<label class="onoffswitch-label" for="Chrome"></label>
 						</div>
 					</div>
-					<div class="account">
+					<div class="account" style='display: none'>
 						<div class="logo">
 							<img src="resources/websites/LinkedIn/logo.png"/>
 						</div>
 						<p class="name">LinkedIn</p>
 						<div class="onoffswitch">
-							<input type="checkbox" name="LinkedIn" class="onoffswitch-checkbox" id="LinkedIn" checked websiteId="${catalog.getWebsiteWithName("LinkedIn").getSingleId()}">
+							<input type="checkbox" name="LinkedIn" class="onoffswitch-checkbox" id="LinkedIn" websiteId="${catalog.getWebsiteWithName("LinkedIn").getSingleId()}">
 							<label class="onoffswitch-label" for="LinkedIn"></label>
 						</div>
 					</div>
