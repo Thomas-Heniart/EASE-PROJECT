@@ -1,7 +1,5 @@
 package com.Ease.Dashboard.App;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,6 +15,8 @@ import com.Ease.Dashboard.App.LinkApp.LinkApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -41,45 +41,42 @@ public class App {
 	public static List<App> loadApps(Profile profile, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		List<App> apps = new LinkedList<App>();
-		try {
-			ResultSet rs = db.get("SELECT * FROM apps WHERE profile_id=" + profile.getDBid() + " order by position;");
-			String db_id;
-			int position;
-			String insertDate;
-			AppInformation infos;
-			GroupApp groupApp = null;
-			App app = null;
-			while (rs.next()) {
-				db_id = rs.getString(Data.ID.ordinal());
-				position = rs.getInt(Data.POSITION.ordinal());
-				insertDate = rs.getString(Data.INSERT_DATE.ordinal());
-				infos = AppInformation.loadAppInformation(rs.getString(Data.APP_INFO_ID.ordinal()), db);
-				String groupAppId = rs.getString(Data.GROUP_APP_ID.ordinal());
-				if (groupAppId != null) {
-					groupApp = GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupAppId);
-				}
-					
-				switch (rs.getString(Data.TYPE.ordinal())) {
-					case "linkApp":
-						app = LinkApp.loadLinkApp(db_id, profile, position, insertDate, infos, groupApp, sm);
-					break;
-					case "websiteApp":
-						app = WebsiteApp.loadWebsiteApp(db_id, profile, position, insertDate, infos, groupApp, sm);
-					break;
-					default:
-						throw new GeneralException(ServletManager.Code.InternError, "This app type dosen't exist.");
-				}
-				if (app.getPosition() != apps.size()) {
-					app.setPosition(apps.size(), sm);
-				}
-				apps.add(app);
-				groupApp = null;
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM apps WHERE profile_id= ? order by position;");
+		request.setInt(profile.getDBid());
+		DatabaseResult rs = request.get();
+		String db_id;
+		int position;
+		String insertDate;
+		AppInformation infos;
+		GroupApp groupApp = null;
+		App app = null;
+		while (rs.next()) {
+			db_id = rs.getString(Data.ID.ordinal());
+			position = rs.getInt(Data.POSITION.ordinal());
+			insertDate = rs.getString(Data.INSERT_DATE.ordinal());
+			infos = AppInformation.loadAppInformation(rs.getString(Data.APP_INFO_ID.ordinal()), db);
+			String groupAppId = rs.getString(Data.GROUP_APP_ID.ordinal());
+			if (groupAppId != null) {
+				groupApp = GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupAppId);
 			}
-			
-			return apps;
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+
+			switch (rs.getString(Data.TYPE.ordinal())) {
+				case "linkApp":
+					app = LinkApp.loadLinkApp(db_id, profile, position, insertDate, infos, groupApp, sm);
+				break;
+				case "websiteApp":
+					app = WebsiteApp.loadWebsiteApp(db_id, profile, position, insertDate, infos, groupApp, sm);
+				break;
+				default:
+					throw new GeneralException(ServletManager.Code.InternError, "This app type dosen't exist.");
+			}
+			if (app.getPosition() != apps.size()) {
+				app.setPosition(apps.size(), sm);
+			}
+			apps.add(app);
+			groupApp = null;
 		}
+		return apps;
 	}
 	
 	public static String createApp(Profile profile, int position, String name, String type, Map<String, Object>elevator, ServletManager sm) throws GeneralException {
@@ -89,7 +86,13 @@ public class App {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = new Date();
 		String registrationDate = dateFormat.format(date);
-		String appDBid = db.set("INSERT INTO apps VALUES (NULL, " + profile.getDBid() + ", " + position + ", '" + registrationDate + "', '" + type + "', " + infos.getDb_id() + ", NULL);").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO apps VALUES (NULL, ?, ?, ?, ?, ?, NULL);");
+		request.setInt(profile.getDBid());
+		request.setInt(position);
+		request.setString(registrationDate);
+		request.setString(type);
+		request.setInt(infos.getDb_id());
+		String appDBid = request.set().toString();
 		elevator.put("appInfos", infos);
 		elevator.put("insertDate", registrationDate);
 		db.commitTransaction(transaction);
@@ -126,7 +129,9 @@ public class App {
 		if (this.groupApp != null && (this.groupApp.isCommon() == true || !this.groupApp.getPerms().havePermission(AppPermissions.Perm.DELETE.ordinal())))
 			throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permission to remove this app.");
 		int transaction = db.startTransaction();
-		db.set("DELETE FROM apps WHERE id=" + db_id + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM apps WHERE id = ?;");
+		request.setInt(db_id);
+		request.set();
 		if (this.groupApp == null || this.groupApp.isCommon() == false)
 			informations.removeFromDb(sm);
 		db.commitTransaction(transaction);
@@ -182,13 +187,19 @@ public class App {
 	
 	public void setPosition(int pos, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE apps SET position=" + pos + " WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE apps SET position = ? WHERE id = ?;");
+		request.setInt(pos);
+		request.setInt(db_id);
+		request.set();
 		this.position = pos;
 	}
 	
 	public void setProfile(Profile profile, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE apps SET profile_id=" + profile.getDBid() + " WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE apps SET profile_id = ? WHERE id = ?;");
+		request.setInt(profile.getDBid());
+		request.setInt(db_id);
+		request.set();
 		this.profile = profile;
 	}
 	

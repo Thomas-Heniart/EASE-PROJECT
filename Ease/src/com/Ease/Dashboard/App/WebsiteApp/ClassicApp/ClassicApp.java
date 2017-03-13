@@ -1,7 +1,5 @@
 package com.Ease.Dashboard.App.WebsiteApp.ClassicApp;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +15,8 @@ import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.Regex;
@@ -40,18 +40,16 @@ public class ClassicApp extends WebsiteApp {
 	
 	public static ClassicApp loadClassicApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, String websiteAppDBid, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		try {
-			ResultSet rs = db.get("SELECT * from classicApps WHERE website_app_id=" + websiteAppDBid + ";");
-			if (rs.next()) {
-				Account account = Account.loadAccount(rs.getString(Data.ACCOUNT_ID.ordinal()), db);
-				String classicDBid = rs.getString(Data.ID.ordinal());
-				IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
-				return new ClassicApp(db_id, profile, position, infos, groupApp, insertDate, idGenerator.getNextId(), site, websiteAppDBid, account, classicDBid);
-			} 
-			throw new GeneralException(ServletManager.Code.InternError, "Classic app not complete in db.");
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
+		DatabaseRequest request = db.prepareRequest("SELECT * from classicApps WHERE website_app_id= ?;");
+		request.setInt(websiteAppDBid);
+		DatabaseResult rs = request.get();
+		if (rs.next()) {
+			Account account = Account.loadAccount(rs.getString(Data.ACCOUNT_ID.ordinal()), db);
+			String classicDBid = rs.getString(Data.ID.ordinal());
+			IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
+			return new ClassicApp(db_id, profile, position, infos, groupApp, insertDate, idGenerator.getNextId(), site, websiteAppDBid, account, classicDBid);
+		} 
+		throw new GeneralException(ServletManager.Code.InternError, "Classic app not complete in db.");
 	}
 	
 	public static ClassicApp createClassicApp(Profile profile, int position, String name, Website site, Map<String, String> infos, ServletManager sm, User user) throws GeneralException {
@@ -60,7 +58,10 @@ public class ClassicApp extends WebsiteApp {
 		Map<String, Object> elevator = new HashMap<String, Object>();
 		String websiteAppDBid = WebsiteApp.createWebsiteApp(profile, position, name, "classicApp", site, elevator, sm);
 		Account account = Account.createAccount(false, infos, sm);
-		String classicDBid = db.set("INSERT INTO classicApps VALUES(NULL, " + websiteAppDBid + ", " + account.getDBid() + ", NULL);").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
+		request.setInt(websiteAppDBid);
+		request.setInt(account.getDBid());
+		String classicDBid = request.set().toString();
 		for (String info : infos.values()) {
 			if (Regex.isEmail(info) == true) {
 				user.addEmailIfNeeded(info, sm);
@@ -76,7 +77,10 @@ public class ClassicApp extends WebsiteApp {
 		Map<String, Object> elevator = new HashMap<String, Object>();
 		String websiteAppDBid = WebsiteApp.createWebsiteApp(profile, position, name, "classicApp", site, elevator, sm);
 		Account account = Account.createAccountSameAs(sameApp.getAccount(), false, user, sm);
-		String classicDBid = db.set("INSERT INTO classicApps VALUES(NULL, " + websiteAppDBid + ", " + account.getDBid() + ", NULL);").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
+		request.setInt(websiteAppDBid);
+		request.setInt(account.getDBid());
+		String classicDBid = request.set().toString();
 		for (AccountInformation info : account.getAccountInformations()) {
 			if (info.getInformationName().equals("login")) {
 				String infoValue = info.getInformationValue(); 
@@ -92,9 +96,14 @@ public class ClassicApp extends WebsiteApp {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		String websiteAppDBid = websiteApp.getWebsiteAppDBid();
-		db.set("UPDATE websiteApps SET type='classicApp' WHERE id='"+ websiteAppDBid +"';");
+		DatabaseRequest request = db.prepareRequest("UPDATE websiteApps SET type='classicApp' WHERE id= ?;");
+		request.setInt(websiteAppDBid);
+		request.set();
 		Account account = Account.createAccount(false, infos, sm);
-		String classicDBid = db.set("INSERT INTO classicApps VALUES(NULL, " + websiteAppDBid + ", " + account.getDBid() + ", NULL);").toString();
+		request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
+		request.setInt(websiteAppDBid);
+		request.setInt(account.getDBid());
+		String classicDBid = request.set().toString();
 		ClassicApp newClassicApp = new ClassicApp(websiteApp.getDBid(),user.getDashboardManager().getProfileFromApp(websiteApp.getSingleId()), websiteApp.getPosition(),websiteApp.getAppInformation(), null, websiteApp.getInsertDate(), websiteApp.getSingleId(), websiteApp.getSite(), websiteAppDBid, account, classicDBid);
 		user.getDashboardManager().replaceApp(newClassicApp);
 		for (String info : infos.values()) {
@@ -125,7 +134,9 @@ public class ClassicApp extends WebsiteApp {
 	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-		db.set("DELETE FROM classicApps WHERE id=" + classicDBid + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM classicApps WHERE id = ?;");
+		request.setInt(classicDBid);
+		request.set();
 		if (this.groupApp == null || this.groupApp.isCommon() == false)
 			account.removeFromDB(sm);
 		super.removeFromDB(sm);

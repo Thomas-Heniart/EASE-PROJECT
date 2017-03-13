@@ -1,12 +1,12 @@
 package com.Ease.Dashboard.App.WebsiteApp.ClassicApp;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -37,23 +37,24 @@ public class AccountInformation {
 	
 	public static AccountInformation createAccountInformation(String account_id, String information_name, String information_value, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		int db_id = db.set("INSERT INTO accountsInformations values (null, " + account_id + ", '" + information_name + "', '" + information_value + "');");
+		DatabaseRequest request = db.prepareRequest("INSERT INTO accountsInformations values (null, ?, ?, ?);");
+		request.setInt(account_id);
+		request.setString(information_name);
+		request.setString(information_value);
+		int db_id = request.set();
 		return new AccountInformation(String.valueOf(db_id), account_id, information_name, information_value);
 	}
 	
 	public static List<AccountInformation> loadInformations(String account_id, DataBaseConnection db) throws GeneralException {
 		List<AccountInformation> account_informations = new LinkedList<AccountInformation>();
-		ResultSet rs = db.get("SELECT * FROM accountsInformations WHERE account_id=" + account_id + ";");
-		try {
-			while (rs.next()) {
-				String db_id = rs.getString(AccountInformationData.ID.ordinal());
-				String information_name = rs.getString(AccountInformationData.INFORMATION_NAME.ordinal());
-				String information_value = rs.getString(AccountInformationData.INFORMATION_VALUE.ordinal());
-				account_informations.add(new AccountInformation(db_id, account_id, information_name, information_value));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM accountsInformations WHERE account_id= ?;");
+		request.setInt(account_id);
+		DatabaseResult rs = request.get();
+		while (rs.next()) {
+			String db_id = rs.getString(AccountInformationData.ID.ordinal());
+			String information_name = rs.getString(AccountInformationData.INFORMATION_NAME.ordinal());
+			String information_value = rs.getString(AccountInformationData.INFORMATION_VALUE.ordinal());
+			account_informations.add(new AccountInformation(db_id, account_id, information_name, information_value));
 		}
 		return account_informations;
 	}
@@ -80,12 +81,17 @@ public class AccountInformation {
 	
 	public void setInformation_value(String information_value, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE accountsInformations SET information_value='" + information_value + "' WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE accountsInformations SET information_value = ? WHERE id = ?;");
+		request.setString(information_value);
+		request.setInt(this.db_id);
+		request.set();
 		this.information_value = information_value;
 	}
 	
 	public void removeFromDb(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("DELETE FROM accountsInformations WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM accountsInformations WHERE id = ?;");
+		request.setInt(db_id);
+		request.set();
 	}
 }

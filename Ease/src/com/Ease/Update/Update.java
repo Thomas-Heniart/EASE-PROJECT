@@ -1,7 +1,5 @@
 package com.Ease.Update;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,6 +7,8 @@ import org.json.simple.JSONObject;
 
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -25,30 +25,28 @@ public class Update {
 		DataBaseConnection db = sm.getDB();
 		List<Update> updates = new LinkedList<Update>();
 		try {
-			ResultSet rs = db.get("SELECT * FROM updates WHERE user_id = " + user.getDBid() + " AND id NOT IN (SELECT update_id FROM updatesRemoved);");
-			try {
-				String db_id;
-				String type;
-				Update update;
-				while (rs.next()) {
-					db_id = rs.getString(Data.ID.ordinal());
-					type = rs.getString(Data.TYPE.ordinal());
-					switch (type) {
-					case "updateNewPassword":
-						update = UpdateNewPassword.loadUpdateNewPassword(db_id, user, sm);
-						break;
-					
-					case "updateNewAccount":
-						update = UpdateNewAccount.loadUpdateNewAccount(db_id, user, sm);
-						break;
-					
-					default:
-						throw new GeneralException(ServletManager.Code.InternError, "No such type");
-					}
-					updates.add(update);
+			DatabaseRequest request = db.prepareRequest("SELECT * FROM updates WHERE user_id = ? AND id NOT IN (SELECT update_id FROM updatesRemoved);");
+			request.setInt(user.getDBid());
+			DatabaseResult rs = request.get();
+			String db_id;
+			String type;
+			Update update;
+			while (rs.next()) {
+				db_id = rs.getString(Data.ID.ordinal());
+				type = rs.getString(Data.TYPE.ordinal());
+				switch (type) {
+				case "updateNewPassword":
+					update = UpdateNewPassword.loadUpdateNewPassword(db_id, user, sm);
+					break;
+
+				case "updateNewAccount":
+					update = UpdateNewAccount.loadUpdateNewAccount(db_id, user, sm);
+					break;
+
+				default:
+					throw new GeneralException(ServletManager.Code.InternError, "No such type");
 				}
-			} catch (SQLException e) {
-				throw new GeneralException(ServletManager.Code.InternError, e);
+				updates.add(update);
 			}
 			return updates;
 		} catch(GeneralException e) {
@@ -58,7 +56,10 @@ public class Update {
 	}
 	
 	public static String createUpdate(User user, String type, DataBaseConnection db) throws GeneralException {
-		return db.set("INSERT INTO updates values (null, " + user.getDBid() + ", '" + type + "');").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO updates values (null, ?, ?);");
+		request.setInt(user.getDBid());
+		request.setString(type);
+		return request.set().toString();
 	}
 	
 	protected String db_id;
@@ -86,12 +87,16 @@ public class Update {
 	}
 	
 	public void deleteFromDb(DataBaseConnection db) throws GeneralException {
-		db.set("DELETE FROM updates WHERE id = " + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM updates WHERE id = ?;");
+		request.setInt(db_id);
+		request.set();
 	}
 	
 	public void reject(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("INSERT INTO updatesRemoved values (null, " + this.db_id + ");");
+		DatabaseRequest request = db.prepareRequest("INSERT INTO updatesRemoved values (null, ?);");
+		request.setInt(db_id);
+		request.set();
 	}
 	
 	public JSONObject getJson() throws GeneralException {

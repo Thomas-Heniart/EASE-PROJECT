@@ -1,7 +1,5 @@
 package com.Ease.Dashboard.User;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,6 +24,8 @@ import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Update.UpdateManager;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Invitation;
 import com.Ease.Utils.ServletManager;
@@ -40,28 +40,26 @@ public class User {
 	public static User loadUser(String email, String password, ServletManager sm) throws GeneralException {
 		Map<String, User> usersMap = (Map<String, User>) sm.getContextAttr("users");
 		User connectedUser = usersMap.get(email);
-		try {
-			if (connectedUser != null) {
-				try {
-					connectedUser.getKeys().isGoodPassword(password);
-				} catch (GeneralException e) {
-					throw new GeneralException(ServletManager.Code.UserMiss, "Wrong email or password.");
-				}
-				return connectedUser;
-			}
-			DataBaseConnection db = sm.getDB();
-			ResultSet rs = db.get("SELECT * FROM users where email='" + email + "';");
-			int transaction = db.startTransaction();
-			if (rs.next()) {
-				Keys keys = Keys.loadKeys(rs.getString(Data.KEYSID.ordinal()), password, sm);
-				User newUser = loadUserWithKeys(rs, keys, sm);
-				db.commitTransaction(transaction);
-				return newUser;
-			} else {
+		if (connectedUser != null) {
+			try {
+				connectedUser.getKeys().isGoodPassword(password);
+			} catch (GeneralException e) {
 				throw new GeneralException(ServletManager.Code.UserMiss, "Wrong email or password.");
 			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+			return connectedUser;
+		}
+		DataBaseConnection db = sm.getDB();
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM users WHERE email = ?");
+		request.setString(email);
+		DatabaseResult rs = request.get();
+		int transaction = db.startTransaction();
+		if (rs.next()) {
+			Keys keys = Keys.loadKeys(rs.getString("key_id"), password, sm);
+			User newUser = loadUserWithKeys(rs, keys, sm);
+			db.commitTransaction(transaction);
+			return newUser;
+		} else {
+			throw new GeneralException(ServletManager.Code.UserMiss, "Wrong email or password.");
 		}
 	}
 
@@ -74,75 +72,73 @@ public class User {
 		String db_id = sessionSave.getUserId();
 		String keyUser = sessionSave.getKeyUser();
 		sessionSave.eraseFromDB(sm);
-		try {
-			DataBaseConnection db = sm.getDB();
-			ResultSet rs = db.get("SELECT * FROM users where id='" + db_id + "';");
-			int transaction = db.startTransaction();
-			if (rs.next()) {
-				String email = rs.getString(Data.EMAIL.ordinal());
-				Map<String, User> usersMap = (Map<String, User>) sm.getContextAttr("users");
-				User connectedUser = usersMap.get(email);
-				if (connectedUser != null)
-					return connectedUser;
-				Keys keys = Keys.loadKeysWithoutPassword(rs.getString(Data.KEYSID.ordinal()), keyUser, sm);
-				User newUser = loadUserWithKeys(rs, keys, sm);
-				db.commitTransaction(transaction);
-				return newUser;
-			} else {
-				throw new GeneralException(ServletManager.Code.UserMiss, "Wrong email or password.");
-			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DataBaseConnection db = sm.getDB();
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM users WHERE id = ?");
+		request.setInt(db_id);
+		DatabaseResult rs = request.get();
+		int transaction = db.startTransaction();
+		if (rs.next()) {
+			String email = rs.getString(Data.EMAIL.ordinal());
+			Map<String, User> usersMap = (Map<String, User>) sm.getContextAttr("users");
+			User connectedUser = usersMap.get(email);
+			if (connectedUser != null)
+				return connectedUser;
+			Keys keys = Keys.loadKeysWithoutPassword(rs.getString(Data.KEYSID.ordinal()), keyUser, sm);
+			User newUser = loadUserWithKeys(rs, keys, sm);
+			db.commitTransaction(transaction);
+			return newUser;
+		} else {
+			throw new GeneralException(ServletManager.Code.UserMiss, "Wrong email or password.");
 		}
+		
 	}
 
-	private static User loadUserWithKeys(ResultSet rs, Keys keys, ServletManager sm) throws GeneralException {
-		try {
-			DataBaseConnection db = sm.getDB();
-			String db_id = rs.getString(Data.ID.ordinal());
-			String email = rs.getString(Data.EMAIL.ordinal());
-			String firstName = rs.getString(Data.FIRSTNAME.ordinal());
-			String lastName = rs.getString(Data.LASTNAME.ordinal());
-			Option options = Option.loadOption(rs.getString(Data.OPTIONSID.ordinal()), sm);
-			Status status = Status.loadStatus(rs.getString(Data.STATUSID.ordinal()), db);
-			ResultSet adminRs = db.get("SELECT user_id FROM admins WHERE user_id = " + db_id + ";");
-			boolean isAdmin = adminRs.next();
-			ResultSet sawGroupProfileRs = db
-					.get("SELECT saw_group FROM groupsAndUsersMap WHERE user_id = " + db_id + " LIMIT 1;");
-			boolean sawGroupProfile = false;
-			if (sawGroupProfileRs.next())
-				sawGroupProfile = sawGroupProfileRs.getBoolean(1);
-			SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, sm);
-			User newUser = new User(db_id, firstName, lastName, email, keys, options, isAdmin, sawGroupProfile,
-					sessionSave, status);
-			newUser.initializeDashboardManager(sm);
-			newUser.loadExtensionKeys(sm);
-			newUser.loadEmails(sm);
-			for (App app : newUser.getDashboardManager().getApps()) {
-				if (app.getType().equals("LogwithApp")) {
-					LogwithApp logwithApp = (LogwithApp) app;
-					App websiteApp = newUser.getDashboardManager().getWebsiteAppWithDBid(logwithApp.getLogwithDBid());
-					logwithApp.rempLogwith((WebsiteApp) websiteApp);
-				}
+	private static User loadUserWithKeys(DatabaseResult rs, Keys keys, ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		String db_id = rs.getString(Data.ID.ordinal());
+		String email = rs.getString(Data.EMAIL.ordinal());
+		String firstName = rs.getString(Data.FIRSTNAME.ordinal());
+		String lastName = rs.getString(Data.LASTNAME.ordinal());
+		Option options = Option.loadOption(rs.getString(Data.OPTIONSID.ordinal()), sm);
+		Status status = Status.loadStatus(rs.getString(Data.STATUSID.ordinal()), db);
+		DatabaseRequest request = db.prepareRequest("SELECT user_id FROM admins WHERE user_id = ?;");
+		request.setInt(db_id);
+		DatabaseResult rs2 = request.get();
+		boolean isAdmin = rs2.next();
+		request = db.prepareRequest("SELECT saw_group FROM groupsAndUsersMap WHERE user_id = ? LIMIT 1;");
+		request.setInt(db_id);
+		rs2 = request.get();
+		boolean sawGroupProfile = false;
+		if (rs2.next())
+			sawGroupProfile = rs2.getBoolean(1);
+		SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, sm);
+		User newUser = new User(db_id, firstName, lastName, email, keys, options, isAdmin, sawGroupProfile,
+				sessionSave, status);
+		newUser.initializeDashboardManager(sm);
+		newUser.loadExtensionKeys(sm);
+		newUser.loadEmails(sm);
+		for (App app : newUser.getDashboardManager().getApps()) {
+			if (app.getType().equals("LogwithApp")) {
+				LogwithApp logwithApp = (LogwithApp) app;
+				App websiteApp = newUser.getDashboardManager().getWebsiteAppWithDBid(logwithApp.getLogwithDBid());
+				logwithApp.rempLogwith((WebsiteApp) websiteApp);
 			}
-			ResultSet rs2 = db.get("SELECT group_id FROM groupsAndUsersMap WHERE user_id=" + newUser.getDBid() + ";");
-			Group userGroup;
-			while (rs2.next()) {
-				userGroup = GroupManager.getGroupManager(sm).getGroupFromDBid(rs2.getString(1));
-				if (userGroup != null) {
-					newUser.getGroups().add(userGroup);
-				}
-			}
-			((Map<String, User>)sm.getContextAttr("users")).put(email, newUser);
-			((Map<String, User>)sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
-			((Map<String, User>)sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);
-			System.out.println("New session with connection: " + sm.getSession().getId());
-			newUser.initializeUpdateManager(sm);
-			return newUser;
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
-
+		request = db.prepareRequest("SELECT group_id FROM groupsAndUsersMap WHERE user_id= ?;");
+		request.setInt(newUser.getDBid());
+		rs2 = request.get();
+		Group userGroup;
+		while (rs2.next()) {
+			userGroup = GroupManager.getGroupManager(sm).getGroupFromDBid(rs2.getString(1));
+			if (userGroup != null)
+				newUser.getGroups().add(userGroup);
+		}
+		((Map<String, User>)sm.getContextAttr("users")).put(email, newUser);
+		((Map<String, User>)sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
+		((Map<String, User>)sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);
+		System.out.println("New session with connection: " + sm.getSession().getId());
+		newUser.initializeUpdateManager(sm);
+		return newUser;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -152,15 +148,21 @@ public class User {
 		int transaction = db.startTransaction();
 		List<Group> groups = Invitation.verifyInvitation(email, code, sm);
 		Option opt = Option.createOption(sm);
-		// Status status = Status.createStatus(sm);
 		Keys keys = Keys.createKeys(password, sm);
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = new Date();
 		String registrationDate = dateFormat.format(date);
 		Status status = Status.createStatus(db);
-		String db_id = db.set("INSERT INTO users VALUES(NULL, '" + firstName + "', '" + lastName + "', '" + email
-				+ "', " + keys.getDBid() + ", " + opt.getDb_id() + ", '" + registrationDate + "', " + status.getDbId()
-				+ ");").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+		request.setNull();
+		request.setString(firstName);
+		request.setString(lastName);
+		request.setString(email);
+		request.setInt(keys.getDBid());
+		request.setInt(opt.getDb_id());
+		request.setString(registrationDate);
+		request.setInt(status.getDbId());
+		String db_id = request.set().toString();
 		SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, sm);
 		User newUser = new User(db_id, firstName, lastName, email, keys, opt, false, false, sessionSave, status);
 		Profile.createPersonnalProfiles(newUser, sm);
@@ -245,7 +247,10 @@ public class User {
 
 	public void setFirstName(String first_name, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE users set firstName='" + first_name + "' WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE users set firstName = ? WHERE id = ?;");
+		request.setString(first_name);
+		request.setInt(db_id);
+		request.set();
 		this.first_name = first_name;
 	}
 
@@ -255,7 +260,10 @@ public class User {
 
 	public void setLastName(String last_name, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("UPDATE users set lastName='" + last_name + "' WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("UPDATE users set lastName = ? WHERE id = ?;");
+		request.setString(last_name);
+		request.setInt(db_id);
+		request.set();
 		this.last_name = last_name;
 	}
 
@@ -351,57 +359,47 @@ public class User {
 
 	public static String findDBid(String email, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		try {
-			ResultSet rs = db.get("SELECT id FROM users WHERE email='" + email + "';");
-			if (rs.next()) {
-				return (rs.getString(1));
-			} else {
-				throw new GeneralException(ServletManager.Code.ClientError, "This user dosen't exist.");
-			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
+		DatabaseRequest request = db.prepareRequest("SELECT id FROM users WHERE email= ?;");
+		request.setString(email);
+		DatabaseResult rs = request.get();
+		if (rs.next())
+			return (rs.getString(1));
+		else
+			throw new GeneralException(ServletManager.Code.ClientError, "This user dosen't exist.");
 	}
 
 	public static int getMostEmptyProfileColumnForUnconnected(String db_id, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		try {
-			Integer[] columns = new Integer[5];
-			for (int i = 0; i < Profile.MAX_COLUMN; ++i) {
-				columns[i] = 0;
+		Integer[] columns = new Integer[5];
+		for (int i = 0; i < Profile.MAX_COLUMN; ++i)
+			columns[i] = 0;
+		DatabaseRequest request = db.prepareRequest("SELECT id, column_idx FROM profiles WHERE user_id= ?;");
+		request.setInt(db_id);
+		DatabaseResult rs = request.get();
+		while (rs.next())
+			columns[rs.getInt(2)] += Profile.getSizeForUnconnected(rs.getString(1), sm);
+		int col = 1;
+		int minSize = -1;
+		for (int i = 1; i < Profile.MAX_COLUMN; ++i) {
+			if (minSize == -1 || columns[i] < minSize) {
+				minSize = columns[i];
+				col = i;
 			}
-			ResultSet rs = db.get("SELECT id, column_idx FROM profiles WHERE user_id=" + db_id + ";");
-			while (rs.next()) {
-				columns[rs.getInt(2)] += Profile.getSizeForUnconnected(rs.getString(1), sm);
-			}
-			int col = 1;
-			int minSize = -1;
-			for (int i = 1; i < Profile.MAX_COLUMN; ++i) {
-				if (minSize == -1 || columns[i] < minSize) {
-					minSize = columns[i];
-					col = i;
-				}
-			}
-			return col;
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
+		return col;
 	}
 
 	public static int getColumnNextPositionForUnconnected(String db_id, int column_idx, ServletManager sm)
 			throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		try {
-			ResultSet rs = db.get(
-					"SELECT count(*) FROM profiles WHERE user_id=" + db_id + " AND column_idx=" + column_idx + ";");
-			if (rs.next()) {
-				return rs.getInt(1);
-			} else {
-				throw new GeneralException(ServletManager.Code.InternError, "Bizare.");
-			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
+		DatabaseRequest request = db.prepareRequest("SELECT count(*) FROM profiles WHERE user_id= ? AND column_idx= ?;");
+		request.setInt(db_id);
+		request.setInt(column_idx);
+		DatabaseResult rs = request.get();
+		if (rs.next())
+			return rs.getInt(1);
+		else
+			throw new GeneralException(ServletManager.Code.InternError, "Bizare.");
 	}
 
 	public void removeEmailIfNeeded(String email, ServletManager sm) throws GeneralException {
@@ -579,13 +577,33 @@ public class User {
 		for (UserEmail email : this.emails.values())
 			email.removeFromDB(sm);
 		this.sessionSave.eraseFromDB(sm);
-		db.set("DELETE FROM admins WHERE user_id = " + this.db_id + ";");
-		db.set("DELETE FROM groupsAndUsersMap WHERE user_id = " + this.db_id + ";");
-		db.set("DELETE FROM infrastructuresAdminsMap WHERE user_id = " + this.db_id + ";");
-		db.set("DELETE FROM integrateWebsitesAndUsersMap WHERE user_id = " + this.db_id + ";");
-		db.set("DELETE FROM passwordLost WHERE user_id = " + this.db_id + ";");
-		db.set("DELETE FROM requestedWebsites WHERE user_id = " + this.db_id + ";");
-		db.set("DELETE FROM users WHERE id= " + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM admins WHERE user_id = ?;");
+		request.setInt(db_id);
+		request.set();
+		request = db.prepareRequest("DELETE FROM groupsAndUsersMap WHERE user_id = ?;");
+		request.setInt(db_id);
+		request.set();
+		request = db.prepareRequest("DELETE FROM infrastructuresAdminsMap WHERE user_id = ?;");
+		request.setInt(db_id);
+		request.set();
+		request = db.prepareRequest("DELETE FROM integrateWebsitesAndUsersMap WHERE user_id = ?;");
+		request.setInt(db_id);
+		request.set();
+		request = db.prepareRequest("DELETE FROM passwordLost WHERE user_id = ?;");
+		request.setInt(db_id);
+		request.set();
+		request = db.prepareRequest("DELETE FROM requestedWebsites WHERE user_id = ?;");
+		request.setInt(db_id);
+		request.set();
+		request = db.prepareRequest("DELETE FROM savedSessions WHERE user_id = ?;");
+		request.setInt(db_id);
+		request.set();
+		request = db.prepareRequest("DELETE FROM usersPrivateExtensions WHERE user_id = ?;");
+		request.setInt(db_id);
+		request.set();
+		request = db.prepareRequest("DELETE FROM users WHERE id= ?;");
+		request.setInt(db_id);
+		request.set();
 		this.keys.removeFromDB(sm);
 		this.opt.removeFromDB(sm);
 		db.commitTransaction(transaction);

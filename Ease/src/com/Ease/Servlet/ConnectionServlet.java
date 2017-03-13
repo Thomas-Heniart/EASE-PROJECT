@@ -1,8 +1,6 @@
 package com.Ease.Servlet;
 
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,6 +16,8 @@ import javax.servlet.http.HttpSession;
 
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
@@ -114,17 +114,18 @@ public class ConnectionServlet extends HttpServlet {
 	}
 
 	public void addIpInDataBase(String client_ip, DataBaseConnection db) throws GeneralException {
-		try {
-			ResultSet rs = db.get("SELECT * FROM askingIps WHERE ip='" + client_ip + "';");
-			if (rs.next())
-				return;
-			int transaction = db.startTransaction();
-			db.set("INSERT INTO askingIps values (NULL, '" + client_ip + "', 0, '" + getCurrentTime() + "', '"
-					+ getExpirationTime() + "');");
-			db.commitTransaction(transaction);
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM askingIps WHERE ip= ?;");
+		request.setString(client_ip);
+		DatabaseResult rs = request.get();
+		if (rs.next())
+			return;
+		int transaction = db.startTransaction();
+		request = db.prepareRequest("INSERT INTO askingIps values (NULL, ?, 0, ?, ?);");
+		request.setString(client_ip);
+		request.setString(getCurrentTime());
+		request.setString(getExpirationTime());
+		request.set();
+		db.commitTransaction(transaction);
 	}
 
 	public String getCurrentTime() {
@@ -140,25 +141,32 @@ public class ConnectionServlet extends HttpServlet {
 	}
 
 	public void removeIpFromDataBase(String client_ip, DataBaseConnection db) throws GeneralException {
-		db.set("DELETE FROM askingIps WHERE ip = '" + client_ip + "';");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM askingIps WHERE ip = ?;");
+		request.setString(client_ip);
+		request.set();
 	}
 
 	public int incrementAttempts(String client_ip, DataBaseConnection db) throws GeneralException {
-		System.out.println(getExpirationTime());
-		db.set("UPDATE askingIps SET attempts = attempts + 1, attemptDate = '" + getCurrentTime()
-				+ "', expirationDate = '" + getExpirationTime() + "' WHERE ip = '" + client_ip + "';");
-		ResultSet rs = db.get("select attempts from askingIps where ip='" + client_ip + "';");
+		DatabaseRequest request = db.prepareRequest("UPDATE askingIps SET attempts = attempts + 1, attemptDate = ?, expirationDate = ? WHERE ip = ?;");
+		request.setString(getCurrentTime());
+		request.setString(getExpirationTime());
+		request.setString(client_ip);
+		request.set();
+		request = db.prepareRequest("select attempts from askingIps where ip= ?;");
+		request.setString(client_ip);
+		DatabaseResult rs = request.get();
+		rs.next();
 		try {
-			rs.next();
 			return Integer.parseInt(rs.getString(1));
-		} catch (NumberFormatException | SQLException e) {
-			e.printStackTrace();
+		} catch (NumberFormatException e) {
 			return 0;
 		}
 	}
 
 	public boolean canConnect(String client_ip, DataBaseConnection db) throws GeneralException {
-		ResultSet rs = db.get("SELECT attempts, expirationDate FROM askingIps WHERE ip='" + client_ip + "';");
+		DatabaseRequest request = db.prepareRequest("SELECT attempts, expirationDate FROM askingIps WHERE ip= ?;");
+		request.setString(client_ip);
+		DatabaseResult rs = request.get();
 		int attempts = 0;
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date expirationDate = new Date();

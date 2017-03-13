@@ -1,7 +1,5 @@
 package com.Ease.Utils;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,45 +16,59 @@ public class Invitation {
 		DataBaseConnection db = sm.getDB();
 		List<Group> groups = new LinkedList<Group>();
 		GroupManager groupManager = (GroupManager) sm.getContextAttr("groupManager");
-		ResultSet rs = db.get("SELECT id FROM invitations WHERE email='" + email + "' AND linkCode='" + invitationCode + "';");
-		try {
-			if (rs.next()) {
-				String id = rs.getString(1);
-				ResultSet rs2 = db.get("SELECT group_id FROM invitationsAndGroupsMap WHERE invitation_id=" + id + ";");
-				while (rs2.next()) {
-					groups.add(groupManager.getGroupFromDBid(rs2.getString(1)));
-				}
-				int transaction = db.startTransaction();
-				db.set("DELETE FROM invitationsAndGroupsMap WHERE invitation_id=" + id + ";");
-				db.set("DELETE FROM invitations WHERE id=" + id + ";");
-				db.commitTransaction(transaction);
+		DatabaseRequest request = db.prepareRequest("SELECT id FROM invitations WHERE email= ? AND linkCode= ?;");
+		request.setString(email);
+		request.setString(invitationCode);
+		DatabaseResult rs = request.get();
+		if (rs.next()) {
+			String id = rs.getString(1);
+			request = db.prepareRequest("SELECT group_id FROM invitationsAndGroupsMap WHERE invitation_id= ?;");
+			request.setInt(id);
+			rs = request.get();
+			while (rs.next()) {
+				groups.add(groupManager.getGroupFromDBid(rs.getString(1)));
 			}
-			System.out.println("NBR GROUP: " + groups.size());
-			return groups;
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+			int transaction = db.startTransaction();
+			request = db.prepareRequest("DELETE FROM invitationsAndGroupsMap WHERE invitation_id = ?;");
+			request.setInt(id);
+			request.set();
+			request = db.prepareRequest("DELETE FROM invitations WHERE id = ?;");
+			request.setInt(id);
+			request.set();
+			db.commitTransaction(transaction);
 		}
+		System.out.println("NBR GROUP: " + groups.size());
+		return groups;
 	}
 
 	public static void sendInvitation(String email, String name, Group group, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		try {
-			String invitationCode;
-			ResultSet rs = db.get("SELECT * FROM invitations WHERE email='" + email + "';");
-			if (rs.next()) {
-				invitationCode = rs.getString(4);
-			} else {
-				invitationCode = CodeGenerator.generateNewCode();
-				String db_id = db.set("INSERT INTO invitations values(NULL, '" + name + "', '" + email + "', '" + invitationCode + "');").toString();
-				if (group != null)
-					db.set("INSERT INTO invitationsAndGroupsMap values(NULL, " + db_id + ", " + group.getDBid() + ");");
+		String invitationCode;
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM invitations WHERE email= ?;");
+		request.setString(email);
+		DatabaseResult rs = request.get();
+		if (rs.next())
+			invitationCode = rs.getString(4);
+		else {
+			invitationCode = CodeGenerator.generateNewCode();
+			request = db.prepareRequest("INSERT INTO invitations values(NULL, ?, ?, ?);");
+			request.setString(name);
+			request.setString(email);
+			request.setString(invitationCode);
+			
+			String db_id = request.set().toString();
+			if (group != null) {
+				request = db.prepareRequest("INSERT INTO invitationsAndGroupsMap values(NULL, ?, ?);");
+				request.setInt(db_id);
+				request.setInt(group.getDBid());
+				request.set();
 			}
+		}
+		try {
 			Mail mailToSend;
 			mailToSend = new Mail();
 			mailToSend.sendInvitationEmail(email, name, invitationCode);
 		} catch (MessagingException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
@@ -81,19 +93,22 @@ public class Invitation {
 		DataBaseConnection db = sm.getDB();
 		try {
 			String invitationCode;
-			ResultSet rs = db.get("SELECT * FROM invitations WHERE email='" + email + "';");
-			if (rs.next()) {
+			DatabaseRequest request = db.prepareRequest("SELECT * FROM invitations WHERE email= ?;");
+			request.setString(email);
+			DatabaseResult rs = request.get();
+			if (rs.next())
 				invitationCode = rs.getString(3);
-			} else {
+			else {
 				invitationCode = CodeGenerator.generateNewCode();
-				String db_id = db.set("INSERT INTO invitations values(NULL, '" + email + "', '" + invitationCode + "');").toString();
+				request = db.prepareRequest("INSERT INTO invitations values(NULL, ?, ?);");
+				request.setString(email);
+				request.setString(invitationCode);
+				String db_id = request.set().toString();
 			}
 			Mail mailToSend;
 			mailToSend = new Mail();
 			mailToSend.sendFriendInvitationEmail(email, friendName, user, invitationCode);
 		} catch (MessagingException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}

@@ -58,7 +58,7 @@ public class Aspirateur extends HttpServlet {
 			if (!user.isAdmin()) {
 				sm.setResponse(ServletManager.Code.ClientWarning, "You are not admin.");
 			} else {
-				db.set("DELETE FROM savedSessions WHERE datetime < SUBTIME(CURRENT_TIMESTAMP, '2 0:0:0.0');");	
+				db.prepareRequest("DELETE FROM savedSessions WHERE datetime < SUBTIME(CURRENT_TIMESTAMP, '2 0:0:0.0');").set();
 				catalog.refresh(sm);
 				sm.setResponse(ServletManager.Code.Success,"SavedSessions cleaned and Catalog refreshed.");
 			}

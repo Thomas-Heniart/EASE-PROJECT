@@ -1,9 +1,10 @@
 package com.Ease.Dashboard.Profile;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.json.simple.JSONObject;
 
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -23,25 +24,28 @@ public class ProfileInformation {
 	
 	public static ProfileInformation createProfileInformation(String name, String color, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		int db_id = db.set("INSERT INTO profileInfo values (null, '" + name + "', '" + color + "');");
+		DatabaseRequest request = db.prepareRequest("INSERT INTO profileInfo values (null, ?, ?);");
+		request.setString(name);
+		request.setString(color);
+		int db_id = request.set();
 		return new ProfileInformation(String.valueOf(db_id), name, color);
 	}
 	
 	public static String createProfileInformationForUnconnected(String name, String color, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		String db_id = db.set("INSERT INTO profileInfo values (null, '" + name + "', '" + color + "');").toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO profileInfo values (null, ?, ?);");
+		request.setString(name);
+		request.setString(color);
+		String db_id = request.set().toString();
 		return db_id;
 	}
 	
 	public static ProfileInformation loadProfileInformation(String db_id, DataBaseConnection db) throws GeneralException {
-		ResultSet rs = db.get("SELECT * FROM profileInfo WHERE id=" + db_id + ";");
-		try {
-			if (rs.next())
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM profileInfo WHERE id= ?;");
+		request.setInt(db_id);
+		DatabaseResult rs = request.get();
+		if (rs.next())
 				return new ProfileInformation(db_id, rs.getString(InfoData.NAME.ordinal()), rs.getString(InfoData.COLOR.ordinal()));
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
 		return null;
 	}
 	
@@ -63,7 +67,9 @@ public class ProfileInformation {
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		db.set("DELETE FROM profileInfo WHERE id=" + this.db_id + ";");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM profileInfo WHERE id = ?;");
+		request.setInt(db_id);
+		request.set();
 	}
 	
 	/*
@@ -81,15 +87,28 @@ public class ProfileInformation {
 	}
 	public void setName(String name, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
+		DatabaseRequest request = db.prepareRequest("UPDATE profileInfo SET name = ? WHERE id = ?;");
+		request.setString(name);
+		request.setInt(db_id);
+		request.set();
 		this.name = name;
-		db.set("UPDATE profileInfo SET name='" + name + "' WHERE id=" + this.db_id + ";");
 	}
 	public String getColor() {
 		return color;
 	}
 	public void setColor(String color, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
+		DatabaseRequest request = db.prepareRequest("UPDATE profileInfo SET color = ? WHERE id = ?;");
+		request.setString(color);
+		request.setInt(db_id);
+		request.set();
 		this.color = color;
-		db.set("UPDATE profileInfo SET color='" + color + "' WHERE id=" + this.db_id + ";");
+	}
+
+	public JSONObject getJson() {
+		JSONObject res = new JSONObject();
+		res.put("name", this.name);
+		res.put("color", this.color);
+		return res;
 	}
 }

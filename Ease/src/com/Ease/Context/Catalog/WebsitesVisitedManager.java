@@ -1,7 +1,5 @@
 package com.Ease.Context.Catalog;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -11,6 +9,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -20,15 +20,11 @@ public class WebsitesVisitedManager {
 	
 	public WebsitesVisitedManager(DataBaseConnection db) throws GeneralException {
 		this.websitesRequestsMap = new HashMap<String, Integer>();
-		ResultSet rs = db.get("SELECT url, count FROM websitesVisited");
-		try {
-			while(rs.next()) {
-				String url = rs.getString(1);
-				Integer count = rs.getInt(2);
-				this.websitesRequestsMap.put(url, count);
-			}
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DatabaseResult rs = db.prepareRequest("SELECT url, count FROM websitesVisited").get();
+		while(rs.next()) {
+			String url = rs.getString(1);
+			Integer count = rs.getInt(2);
+			this.websitesRequestsMap.put(url, count);
 		}
 	}
 	
@@ -36,14 +32,20 @@ public class WebsitesVisitedManager {
 		if (catalog.haveWebsiteWithLoginUrl(url) || catalog.haveWebsiteWithHostUrl(url))
 			return;
 		Integer old_count = this.websitesRequestsMap.get(url);
+		DatabaseRequest request;
 		if (old_count != null) {
 			this.websitesRequestsMap.put(url, old_count + count);
-			db.set("UPDATE websitesVisited SET count = " + (old_count + count) +" WHERE url = '" + url + "'");
+			request = db.prepareRequest("UPDATE websitesVisited SET count = ? WHERE url = ?");
+			request.setInt(old_count + count);
+			request.setString(url);
 		}
 		else {
 			this.websitesRequestsMap.put(url, count);
-			db.set("INSERT INTO websitesVisited values (null, '" + url + "', " + count + ")");
+			request = db.prepareRequest("INSERT INTO websitesVisited values (null, ?, ?);");
+			request.setString(url);
+			request.setInt(count);
 		}
+		request.set();
 	}
 	
 	public Integer getWebsiteRequestCount(String url) {
@@ -68,6 +70,8 @@ public class WebsitesVisitedManager {
 		if (this.websitesRequestsMap.get(url) == null)
 			throw new GeneralException(ServletManager.Code.ClientError, "This url does not exist");
 		this.websitesRequestsMap.remove(url);
-		db.set("DELETE FROM websitesVisited WHERE url = '" + url + "'");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM websitesVisited WHERE url = ?");
+		request.setString(url);
+		request.set();
 	}
 }

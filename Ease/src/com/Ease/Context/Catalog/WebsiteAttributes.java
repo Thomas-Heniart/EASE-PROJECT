@@ -1,28 +1,24 @@
 package com.Ease.Context.Catalog;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 public class WebsiteAttributes {
 	
 	public static WebsiteAttributes createWebsiteAttributes(DataBaseConnection db) throws GeneralException {
-		String db_id = db.set("INSERT INTO websiteAttributes values (null, 0, null, default, 1, 1);").toString();
+		String db_id = db.prepareRequest("INSERT INTO websiteAttributes values (null, 0, null, default, 1, 1);").set().toString();
 		return new WebsiteAttributes(db_id, false, true, true);
 	}
 	
 	public static WebsiteAttributes loadWebsiteAttributes(String db_id, DataBaseConnection db) throws GeneralException {
-		try {
-			ResultSet rs = db.get("SELECT * FROM websiteAttributes WHERE id=" + db_id + ";");
-			rs.next();
-			return new WebsiteAttributes(db_id, rs.getBoolean(rs.findColumn("locked")), rs.getBoolean(rs.findColumn("new")), rs.getBoolean(rs.findColumn("work")));
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
-		
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM websiteAttributes WHERE id= ?;");
+		request.setInt(db_id);
+		DatabaseResult rs = request.get();
+		rs.next();
+		return new WebsiteAttributes(db_id, rs.getBoolean("locked"), rs.getBoolean("new"), rs.getBoolean("work"));
 	}
 	
 	protected String db_id;
@@ -51,16 +47,13 @@ public class WebsiteAttributes {
 
 	public void refresh(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		ResultSet rs = db.get("SELECT * FROM websiteAttributes WHERE id = " + this.db_id + ";");
-		try {
-			if (!rs.next())
-				throw new GeneralException(ServletManager.Code.InternError, "Those attributes does not exist");
-			this.locked = rs.getBoolean(rs.findColumn("locked"));
-			this.isNew = rs.getBoolean(rs.findColumn("new"));
-			this.work = rs.getBoolean(rs.findColumn("work"));
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
-		
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM websiteAttributes WHERE id = ?;");
+		request.setInt(this.db_id);
+		DatabaseResult rs = request.get();
+		if (!rs.next())
+			throw new GeneralException(ServletManager.Code.InternError, "Those attributes does not exist");
+		this.locked = rs.getBoolean("locked");
+		this.isNew = rs.getBoolean("new");
+		this.work = rs.getBoolean("work");
 	}
 }

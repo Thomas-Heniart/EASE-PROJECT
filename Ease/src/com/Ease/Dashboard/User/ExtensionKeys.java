@@ -1,11 +1,11 @@
 package com.Ease.Dashboard.User;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -14,16 +14,12 @@ public class ExtensionKeys {
 	
 	public static ExtensionKeys loadExtensionKeys(User user, ServletManager sm) throws GeneralException {
 		List<String> keys = new LinkedList<String>();
-		try {
-			DataBaseConnection db = sm.getDB();
-			ResultSet rs = db.get("SELECT * FROM usersPrivateExtensions where user_id=" + user.getDBid() + ";");
-			while (rs.next()) {
-				keys.add(rs.getString(3));
-			}
-		} catch (GeneralException e) {
-			throw e;
-		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+		DataBaseConnection db = sm.getDB();
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM usersPrivateExtensions where user_id= ?;");
+		request.setInt(user.getDBid());
+		DatabaseResult rs = request.get();
+		while (rs.next()) {
+			keys.add(rs.getString(3));
 		}
 		return (new ExtensionKeys(keys, user));
 	}
@@ -57,7 +53,10 @@ public class ExtensionKeys {
 					throw new GeneralException(ServletManager.Code.ClientError, "This extension key already exist.");
 				}
 			}
-			db.set("INSERT INTO usersPrivateExtensions VALUES(NULL, " + user.getDBid() + ", '" + clientKey + "');");
+			DatabaseRequest request = db.prepareRequest("INSERT INTO usersPrivateExtensions VALUES(NULL, ?, ?);");
+			request.setInt(user.getDBid());
+			request.setString(clientKey);
+			request.set();
 			keys.add(clientKey);
 		} catch (GeneralException e) {
 			throw e;
@@ -69,7 +68,10 @@ public class ExtensionKeys {
 		try {
 			for (String key : keys) {
 				if (clientKey.equals(key)) {
-					db.set("DELETE FROM usersPrivateExtensions WHERE user_id=" + user.getDBid() + " AND extension_key='" + clientKey + "';");
+					DatabaseRequest request = db.prepareRequest("DELETE FROM usersPrivateExtensions WHERE user_id = ? AND extension_key = ?;");
+					request.setInt(user.getDBid());
+					request.setString(clientKey);
+					request.set();
 					keys.remove(clientKey);
 					return ;
 				}
