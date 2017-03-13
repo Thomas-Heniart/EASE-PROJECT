@@ -1,18 +1,25 @@
 #extension {
+	.easePopup {
+		.title {
+			p {
+				font-size: 2vw;
+			}
+		}
+	}
 	#step1 {
 		width: 30vw;
-		#chrome, #safari {
+		#chrome, #safari, #other {
 			p {
 				font-size: 1.5vw;
+			}
+			a {
+				color: #373B60;
+				font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
+				font-weight: bold;
 			}
 			#store_download {
 				padding: 1vw;
 				font-size: 1.3vw;
-				a {
-					color: #373B60;
-    				font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
-    				font-weight: bold;
-				}
 			}
 		}
 		#safari {
@@ -45,7 +52,7 @@
 					right: 1vw;
 					top: 30%;
 					font-size: 2vw;
-		            animation: moveUp 0.5s linear 0s infinite alternate;
+					animation: moveUp 0.5s linear 0s infinite alternate;
 				}
 			}
 		}

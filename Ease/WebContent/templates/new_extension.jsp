@@ -3,7 +3,7 @@
 <div class="popupHandler" id="extension">
 	<div class="easePopup show" id="step1">
 		<div class="title">
-			<p>Make Ease work ! <img src="/resources/emojis/lightning.png" /></p>
+			<p>Make Ease.space work ! <img src="/resources/emojis/lightning.png" /></p>
 		</div>
 		<div class="bodysHandler">
 			<div class="popupBody show" id="download">
@@ -57,26 +57,36 @@
 					</div>
 				</div>
 			</div>
+			<div class="popupBody" id="other">
+				<div class="handler">
+					<div class="row">
+						<p>Ease.space works on Chrome and Safari for now.</p>
+					</div>
+					<div class="row">
+						<p>We are working on bringing it to all browsers soon !</p>
+					</div>
+					<div class="row">
+						<p>To continue using Ease.space, you can download <a href="#">Chrome</a> or use Safari now.</p>
+					</div>
+				</div>
+			</div>			
 		</div>
 	</div>
 	<div class="easePopup" id="extensionInfo">
 		<div class="title">
-			<p>Our Extension</p>
+			<p>Our Extension <img src="/resources/emojis/loupe.png" /></p>
 		</div>
 		<div class="bodysHandler">
 			<div class="popupBody show">
 				<div class="handler">
 					<div class="row">
-						<p>Ease uses an <span>extension</span>. It will <span>log you</span> on <span>your favorite websites.</span></p>
+						<p>An extension is a small piece of software that you add to your browser in order to customize it's capabilities.</p>
 					</div>
 					<div class="row">
-						<p>It is a <span>small piece</span> of software that you add to your browser in order to <span>customize its capabilities.</span></p>
+						<p>The Ease extension allows us to log you in and out of your favorite website.</p>
 					</div>
 					<div class="row">
-						<p>Without it, Ease cannot <span>fill the blanks</span> and log you in to your websites.</p>
-					</div>
-					<div class="row">
-						<p>Downloading the extension is a <span>1 click process</span> directly from Ease.</p>
+						<p>It also keeps your personnal information secured. Downloading it takes about 5 seconds.</p>
 					</div>
 					<div class="row text-center">
 						<button class="btn" type="submit">Got it !</button>
@@ -100,21 +110,22 @@
 		$('#extension #step1').addClass('show');
 	});
 	$("#extension #download button[type='submit']").click(function(){
+		$("#extension #step1 #download").removeClass('show');
 		if (NavigatorName == "Chrome"){
-			$("#extension #step1 #download").removeClass('show');
 			$("#extension #step1 #chrome").addClass('show');
 			chrome.webstore.install(
 				'https://chrome.google.com/webstore/detail/echjdhmhmgildgidlcdlepfkaledeokm',
 				function() {
-//					window.location.replace("index.jsp");
+					//do nothing
 				},
 				function() {
-//					window.location.replace("index.jsp");
+					//do nothing
 				});
 		} else if (NavigatorName == "Safari"){
-			$("#extension #step1 #download").removeClass('show');
 			$("#extension #step1 #safari").addClass('show');
 			window.location.replace(location.protocol + '//' + location.hostname+"/safariExtension/EaseExtension.safariextz");
+		} else {
+			$("#extension #step1 #other").addClass('show');
 		}
 	});
 </script>
