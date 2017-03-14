@@ -1,0 +1,20 @@
+{
+	"name":"Avocode",
+	"lastLogin":"",
+	"home":"https://manager.avocode.com/",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#email"},
+			{"action":"fill", "what":"password", "search":"#password"},
+			{"action":"click", "search":"button[type='submit']"}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"clickona", "search":"a[ng-click*='logout']"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":"a[ng-click*='logout']"}
+	]
+}

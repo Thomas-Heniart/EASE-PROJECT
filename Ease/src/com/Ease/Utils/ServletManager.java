@@ -110,10 +110,16 @@ public class ServletManager {
 	
 	public String[] getServletParamArray(String paramName, boolean saveInLogs) {
 		String[] param = request.getParameterValues(paramName);
-		for(int i=0; i<param.length; i++)
-			param[i] = StringEscapeUtils.escapeHtml4(param[i]);
+		if (param != null) {
+			for(int i=0; i<param.length; i++)
+				param[i] = StringEscapeUtils.escapeHtml4(param[i]);
+		}
 		if (saveInLogs)
 			args.put(paramName, (param != null) ? param.toString() : null);
+		if (param != null) {
+			for(int i=0; i<param.length; i++)
+				param[i] = StringEscapeUtils.unescapeHtml4(param[i]);
+		}
 		return param;
 	}
 	
