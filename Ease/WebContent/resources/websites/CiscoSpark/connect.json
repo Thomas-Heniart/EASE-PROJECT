@@ -1,0 +1,26 @@
+{
+    "name":"Cisco Spark",
+    "lastLogin":"",
+    "home":"https://web.ciscospark.com/",
+    "connect":{
+        "todo":[
+            {"action":"fill", "what":"login", "search":"input[type='text']"},
+            {"action":"click", "search":"button.onboarding-button", "grave": true},
+            {"action":"waitfor", "search":"#IDToken2", "grave": true},
+            {"action":"fill", "what":"password", "search":"#IDToken2", "grave": true},
+            {"action":"click", "search":"#Button1"}
+        ]
+    },
+    "logout":{
+        "todo":[
+        	{"action":"click", "search":".navigation-menu-item--settings"},
+        	{"action":"waitfor", "search":".icon-cisco-sign-out"},
+        	{"action":"click", "search":".icon-cisco-sign-out"},
+        	{"action":"waitload"}
+ 		]
+    },
+    "checkAlreadyLogged":[
+    	{"action":"waitfor", "search":".navigation-menu-item--settings, button.onboarding-button"},
+        {"search":".navigation-menu-item--settings"}
+    ]
+}
