@@ -1,0 +1,21 @@
+{
+	"name":"Xero",
+	"lastLogin":"",
+	"home":"https://login.xero.com/",
+	"connect":{
+		"todo":[
+			{"action": "goto", "url": "https://login.xero.com/"},
+			{"action":"fill", "what":"login", "search":"#LoginForm input#email"},
+			{"action":"fill", "what":"password", "search":"#LoginForm input#password"},
+			{"action":"click", "search":"#LoginForm #submitButton"}
+			]
+	},
+	"logout":{
+		"todo":[
+			{"action":"clickona", "search":"li.logout a"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":".username"}
+	]
+}

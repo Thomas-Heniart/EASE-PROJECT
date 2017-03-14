@@ -1,0 +1,28 @@
+{
+	"name":"Dribbble",
+	"lastLogin":"",
+	"home":"https://dribbble.com/",
+	"connect":{
+		"todo":[
+			{"action": "goto", "url": "https://dribbble.com/session/new"},
+			{"action":"fill", "what":"login", "search":"#form-oldschool input#login"},
+			{"action":"fill", "what":"password", "search":"#form-oldschool input#password"},
+			{"action":"click", "search":"#form-oldschool input[type=submit]"}
+			]
+	},
+	"logout":{
+		"todo":[
+			{"action":"clickona", "search":"a[data-method=delete"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"action": "waitfor", "search": "li#t-profile, li#t-signin"},
+		{"search":"li#t-profile"}
+	],
+    "Twitter":{ 
+        "todo":[ 
+			{"action": "goto", "url": "https://dribbble.com/session/new"},
+            {"action":"aclick", "search":"a.auth-twitter"} 
+        ] 
+    }
+}
