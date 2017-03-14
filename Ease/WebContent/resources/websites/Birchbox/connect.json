@@ -1,0 +1,29 @@
+{
+    "name":"Birchbox",
+    "lastLogin":"",
+    "home":"https://birchbox.fr/",
+    "connect":{
+        "todo":[
+        	{"action":"clickona", "search":"#header-login"},
+        	{"action":"waitfor", "search":"#login-email"},
+            {"action":"fill", "what":"login", "search":"#login-email"},
+            {"action":"fill", "what":"password", "search":"#login-password"},
+            {"action":"click", "search":"#LoginSubmit"}
+        ]
+    },
+    "Facebook": {
+    	"todo":[
+    		{"action":"clickona", "search":"#header-login"},
+        	{"action":"waitfor", "search":".login-facebook-button"},
+        	{"action":"clickona", "search":".login-facebook-button"}
+    	]
+    },
+    "logout":{
+        "todo":[
+        	{"action":"aclick", "search":"a[href*='logout']"}
+ 		]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a[href*='logout']"}
+    ]
+}
