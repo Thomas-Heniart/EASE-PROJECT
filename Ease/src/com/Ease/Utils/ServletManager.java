@@ -105,7 +105,7 @@ public class ServletManager {
 		String param = StringEscapeUtils.escapeHtml4(request.getParameter(paramName));
 		if (saveInLogs)
 			args.put(paramName, param);
-		return StringEscapeUtils.unescapeHtml4(param);
+		return param;
 	}
 	
 	public String[] getServletParamArray(String paramName, boolean saveInLogs) {

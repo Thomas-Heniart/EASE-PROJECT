@@ -16,7 +16,7 @@ public class DatabaseRequest {
 	public DatabaseRequest(Connection con, String request) throws GeneralException {
 		try {
 			this.request = request;
-			this.statement = con.prepareStatement(StringEscapeUtils.escapeHtml4(request), PreparedStatement.RETURN_GENERATED_KEYS);
+			this.statement = con.prepareStatement(request, PreparedStatement.RETURN_GENERATED_KEYS);
 			this.parameterCount = 0;
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
