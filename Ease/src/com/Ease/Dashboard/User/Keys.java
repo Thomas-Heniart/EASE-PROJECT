@@ -243,7 +243,7 @@ public class Keys {
 
 	public static boolean checkCodeValidity(String userId, String code, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		DatabaseRequest request = db.prepareRequest("SELECT * FROM passwordLost WHERE user_id = ? AND linkCode = ? AND NOW() <= DATE_ADD(dateOfRequest, INTERVAL 2 HOUR)");
+		DatabaseRequest request = db.prepareRequest("SELECT * FROM passwordLost WHERE (NOW() <= DATE_ADD(dateOfRequest, INTERVAL 2 HOUR)) AND user_id = ? AND linkCode = ?;");
 		request.setInt(userId);
 		request.setString(code);
 		DatabaseResult rs = request.get();
