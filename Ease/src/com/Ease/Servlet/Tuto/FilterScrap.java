@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -18,7 +19,6 @@ import org.json.simple.parser.ParseException;
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -53,14 +53,13 @@ public class FilterScrap extends HttpServlet {
 		Catalog catalog = (Catalog) (session.getAttribute("catalog"));
 		int firstProfileId = user.getDashboardManager().getProfilesList().get(0).getSingleId();
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
-		DataBaseConnection db = sm.getDB();
 		try {
 			sm.needToBeConnected();
 			String scrappedAppsString = sm.getServletParam("scrapjson", false);
 			if (scrappedAppsString == null || scrappedAppsString.equals("") == true)
 				throw new GeneralException(ServletManager.Code.ClientError, "Scrap Json empty");
 			JSONParser parser = new JSONParser();
-			Object temp = parser.parse(scrappedAppsString);
+			Object temp = parser.parse(StringEscapeUtils.unescapeHtml4(scrappedAppsString));
 			JSONObject scrappedAppsJson = (JSONObject) temp;
 			
 			JSONArray facebookApps = (JSONArray)scrappedAppsJson.get("Facebook");

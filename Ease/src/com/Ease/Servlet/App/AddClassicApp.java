@@ -22,7 +22,6 @@ import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
-import com.Ease.Utils.Crypto.RSA;
 
 /**
  * Servlet implementation class AddClassicApp

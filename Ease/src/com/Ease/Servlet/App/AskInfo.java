@@ -27,7 +27,6 @@ public class AskInfo extends HttpServlet {
 	 */
 	public AskInfo() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

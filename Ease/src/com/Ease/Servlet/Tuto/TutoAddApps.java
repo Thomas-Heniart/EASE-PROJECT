@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -61,7 +62,7 @@ public class TutoAddApps extends HttpServlet {
 			sm.needToBeConnected();
 			String scrappedAppsString = sm.getServletParam("scrapjson", false);
 			JSONParser parser = new JSONParser();
-			Object array = parser.parse(scrappedAppsString);
+			Object array = parser.parse(StringEscapeUtils.unescapeHtml4(scrappedAppsString));
 			JSONArray jsonArray = (JSONArray) array;
 			int i = 0;
 			int j = 0;
@@ -110,7 +111,7 @@ public class TutoAddApps extends HttpServlet {
 					} else {
 						password = obj.get("password").toString();
 					}
-					infos.put("password", password);
+					infos.put("password", user.encrypt(password));
 					boolean ret = false;
 					for (Profile p : user.getDashboardManager().getProfilesList()) {
 						for (App app : p.getApps()) {
