@@ -235,7 +235,7 @@
 			right: 15px;
 			border: 1px solid #CCCCCC;
 			border-radius: 20px;
-			transition: all 0.15s ease-in 0s;
+			transition: all 0.15s cubic-bezier(0.33, 1.6, 0.66, 1) 0s;
 		}
 		.onoffswitch-checkbox:checked + .onoffswitch-label:before {
 			right: 0px;
