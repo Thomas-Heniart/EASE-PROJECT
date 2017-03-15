@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 
@@ -62,8 +63,6 @@ public class AddClassicApp extends HttpServlet {
 			String name = sm.getServletParam("name", true);
 			String websiteIdsParam = sm.getServletParam("websiteIds", true);
 			String profileId = sm.getServletParam("profileId", true);
-			String password = sm.getServletParam("password", false);
-			
 			
 			if (name == null || name.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
@@ -81,7 +80,7 @@ public class AddClassicApp extends HttpServlet {
 			
 			JSONParser parser = new JSONParser();
 			JSONArray websiteIds = null;
-			websiteIds = (JSONArray) parser.parse(websiteIdsParam);
+			websiteIds = (JSONArray) parser.parse(StringEscapeUtils.unescapeHtml4(websiteIdsParam));
 			
 			//--------
 			try {

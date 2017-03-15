@@ -1,7 +1,6 @@
  package com.Ease.Servlet.App;
 
 import java.io.IOException;
-import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,14 +12,11 @@ import javax.servlet.http.HttpSession;
 
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
-import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.LinkApp.LinkApp;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
-import com.Ease.Utils.Crypto.RSA;
 
 /**
  * Servlet implementation class AddBookMark
@@ -34,7 +30,6 @@ public class AddBookMark extends HttpServlet {
      */
     public AddBookMark() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**

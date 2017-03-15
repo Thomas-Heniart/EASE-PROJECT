@@ -8,13 +8,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 
 import com.Ease.Context.Catalog.Catalog;
-import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -30,7 +29,6 @@ public class SearchApp extends HttpServlet {
      */
     public SearchApp() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -45,8 +43,6 @@ public class SearchApp extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
-		User user = (User) (session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		try {
 			sm.needToBeConnected();
@@ -57,7 +53,7 @@ public class SearchApp extends HttpServlet {
 			if (tags == null)
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty tags.");
 			JSONParser parser = new JSONParser();
-			Object array = parser.parse(tags);
+			Object array = parser.parse(StringEscapeUtils.unescapeHtml4(tags));
 			JSONArray tagsArray = (JSONArray) array;
 			JSONArray result = ((Catalog)sm.getContextAttr("catalog")).search(search, tagsArray);
 			sm.setResponse(ServletManager.Code.Success, result.toJSONString());

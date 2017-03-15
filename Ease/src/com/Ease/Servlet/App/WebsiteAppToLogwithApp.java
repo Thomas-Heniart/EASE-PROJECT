@@ -10,12 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
@@ -65,7 +65,7 @@ public class WebsiteAppToLogwithApp extends HttpServlet {
 			try {
 				JSONParser parser = new JSONParser();
 				JSONArray appIds = null;
-				appIds = (JSONArray)parser.parse(appIdsString);
+				appIds = (JSONArray)parser.parse(StringEscapeUtils.unescapeHtml4(appIdsString));
 				App logwith = user.getDashboardManager().getAppWithID(Integer.parseInt((String)logwithId));
 				if (!(logwith).getType().equals("ClassicApp"))
 					throw new GeneralException(ServletManager.Code.ClientError, "This is not a classic app.");

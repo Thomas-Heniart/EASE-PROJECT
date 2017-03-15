@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -77,7 +78,7 @@ public class SendWebsitesIntegrated extends HttpServlet {
 				JSONArray websitesUrls = new JSONArray();
 				List<Website> integratedWebsites = new LinkedList<Website>();
 				try {
-					websitesUrls = (JSONArray)parser.parse(websitesUrlsString);
+					websitesUrls = (JSONArray)parser.parse(StringEscapeUtils.unescapeHtml4(websitesUrlsString));
 				} catch (ParseException e) {
 					throw new GeneralException(ServletManager.Code.ClientError, e);
 				}

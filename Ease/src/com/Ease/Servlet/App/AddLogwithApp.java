@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 
@@ -35,7 +36,6 @@ public class AddLogwithApp extends HttpServlet {
      */
     public AddLogwithApp() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -65,7 +65,7 @@ public class AddLogwithApp extends HttpServlet {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
 			JSONParser parser = new JSONParser();
 			JSONArray websiteIds = null;
-			websiteIds = (JSONArray) parser.parse(websiteIdsParam);
+			websiteIds = (JSONArray) parser.parse(StringEscapeUtils.unescapeHtml4(websiteIdsParam));
 			try {
 				JSONArray res = new JSONArray();
 				Profile profile = user.getDashboardManager().getProfile(Integer.parseInt(profileId));

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -57,7 +58,7 @@ public class WebsitesVisited extends HttpServlet {
 			JSONParser parser = new JSONParser();
 			try {
 				System.out.println(jsonString);
-				JSONObject websitesVisited = (JSONObject)parser.parse(jsonString);
+				JSONObject websitesVisited = (JSONObject)parser.parse(StringEscapeUtils.unescapeHtml4(jsonString));
 				for (Object obj : websitesVisited.entrySet()) {
 					Entry<Object, Object> entry = (Entry<Object, Object>) obj;
 					String url = (String)entry.getKey();

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 
@@ -61,7 +62,7 @@ public class EditLogwithApp extends HttpServlet {
 			try {
 				JSONParser parser = new JSONParser();
 				JSONArray appIds = null;
-				appIds = (JSONArray)parser.parse(appIdsString);
+				appIds = (JSONArray)parser.parse(StringEscapeUtils.unescapeHtml4(appIdsString));
 				for (Object appId : appIds) {
 					App app = user.getDashboardManager().getAppWithID(Integer.parseInt((String)appId));
 					if (!app.getType().equals("LogwithApp"))

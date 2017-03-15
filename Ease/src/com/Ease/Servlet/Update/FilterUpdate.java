@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -62,7 +63,7 @@ public class FilterUpdate extends HttpServlet {
 				throw new GeneralException(ServletManager.Code.ClientError, "Wrong scrap.");
 			}
 			JSONParser parser = new JSONParser();
-			Object temp = parser.parse(scrap);
+			Object temp = parser.parse(StringEscapeUtils.unescapeHtml4(scrap));
 			JSONArray scrappedJson = (JSONArray) temp;
 			String resp = "";
 			Integer i = 0;

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -62,7 +63,7 @@ public class CreateUpdate extends HttpServlet {
 				}
 				JSONObject update;
 				JSONParser parser = new JSONParser();
-				update = (JSONObject) parser.parse(jsonUpdate);
+				update = (JSONObject) parser.parse(StringEscapeUtils.unescapeHtml4(jsonUpdate));
 				user.getUpdateManager().addUpdateFromJsonConnected(update, sm);
 				sm.setResponse(ServletManager.Code.Success, "2 Update sended.");
 			}
