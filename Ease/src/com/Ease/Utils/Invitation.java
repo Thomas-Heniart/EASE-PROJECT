@@ -8,6 +8,7 @@ import javax.mail.MessagingException;
 import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.User.User;
+import com.Ease.Mail.SendGridMail;
 import com.Ease.Utils.Crypto.CodeGenerator;
 
 public class Invitation {
@@ -64,13 +65,12 @@ public class Invitation {
 				request.set();
 			}
 		}
-		try {
-			Mail mailToSend;
-			mailToSend = new Mail();
-			mailToSend.sendInvitationEmail(email, name, invitationCode);
-		} catch (MessagingException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
+		SendGridMail mailToSend;
+		if (email.endsWith("ieseg.fr"))
+			mailToSend = new SendGridMail("Ease Team", "benjamin.prigent@ieseg.fr");
+		else
+			mailToSend = new SendGridMail("Ease Team", "benjamin@ease.space");
+		mailToSend.sendInvitationEmail(name, email, invitationCode);
 	}
 	
 	public static boolean checkEmail(String email, String name, ServletManager sm) throws GeneralException {
