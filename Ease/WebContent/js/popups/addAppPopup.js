@@ -280,15 +280,11 @@ addAppPopup = function(rootEl){
 		var loginList = self.getLoginList(easeAppsManager.getAppsBySsoId(app.ssoId));
 		var ssoAcc = catalog.getSsoById(self.currentApp.ssoId);
 		var createdDiv;
-		console.log(self.currentApp.ssoId);
-		console.log(ssoAcc);
 		for (var i = 0; i < loginList.length; i++) {
 			createdDiv = self.createSsoAccountSelectDiv(app.ssoId, loginList[i], ssoAcc != null ? ssoAcc.imgSrc : "");
 			createdDiv.click(function(){
 				self.choosenSsoAccountLogin = $(this).find('.accountName').text();
 				self.accountNameHelperName.text(self.choosenSsoAccountLogin).val(self.choosenSsoAccountLogin);
-				self.loginPasswordRow.find("input[name='login']");
-				//self.loginInput.val(self.choosenSsoAccountLogin);
 				self.accountNameHelperImg.attr('src', $(this).find('.accountLogo img').attr('src'));
 				self.accountNameHelper.removeClass('hide');
 				self.setupSameAccountsDiv(app.ssoId);
@@ -406,15 +402,15 @@ addAppPopup = function(rootEl){
 		self.errorRowHandler.removeClass('show');
 		var name = self.appNameHolder.val();
 		var profileId = self.currentProfile.id;
-		var login = self.loginInput.val();
-		var password = self.passwordInput.val();
-
 
 		var logwithApp = self.signInAccountSelectRow.find('.selected');
 		var logwithId = logwithApp.length ? $(logwithApp[0]).attr('appid') : "";
 
 		var websiteId = [];
-		var sameApp = easeAppsManager.getAppByLoginAndSsoId(login, self.currentApp.ssoId);
+		var parametersToKeep = [];
+		var sameApp = easeAppsManager.getAppByLoginAndSsoId(self.choosenSsoAccountLogin, self.currentApp.ssoId);
+		if (sameApp != null)
+			parametersToKeep.push({"name" : "login", "value" : self.choosenSsoAccountLogin});
 		var appId = sameApp != null ? sameApp.id : "";
 		websiteId.push(self.currentApp.id.toString());
 		for (var i = 0; i < self.sameAccountsVar.length; i++) {
@@ -439,7 +435,6 @@ addAppPopup = function(rootEl){
 				'logwithId' : logwithId,
 				'appId' : appId
 			};
-		var parametersToKeep = [];
 		self.currentInputs.forEach(function(input) {
 			parameters[input.name] = input.val();
 			if (input.name != "password") {

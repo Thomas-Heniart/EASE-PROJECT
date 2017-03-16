@@ -62,9 +62,9 @@ public class AddClassicAppSameAs extends HttpServlet {
 			
 			if (name == null || name.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
-			else if (appId == null)
+			else if (appId == null || appId.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Null appId.");
-			else if (websiteIdsParam == null)
+			else if (websiteIdsParam == null || websiteIdsParam.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty websites");
 			
 			//Mettre un param keyDate dans le post si besoin de decrypter en RSA. Correspond à la private key RSA, 
