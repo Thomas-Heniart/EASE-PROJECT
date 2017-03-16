@@ -7,10 +7,6 @@ pageEncoding="UTF-8"%>
 	<c:set var="language" value="en" scope="session"/>
 </c:if>
 <fmt:setLocale value="${language}" />
-<script type="text/javascript">
-	console.log("${language}");
-	console.log("${pageContext.request.locale}");
-</script>
 <fmt:setBundle basename="com.Ease.Languages.text" />
 <html lang="${language}">
 <head>

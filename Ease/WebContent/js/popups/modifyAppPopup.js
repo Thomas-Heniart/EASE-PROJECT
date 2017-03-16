@@ -118,7 +118,6 @@ modifyAppPopup = function(rootEl){
 		self.signInButtons.push(tmp);
 	});
 	this.createSignInSelectorDiv = function(app){
-		console.log(app.getAccountInformationValue("login"));
 		var ret = $('<div class="accountLine" appId=' + app.id +'>'
 			+'<div class="checkBoxInput">'
 			+'<span class="fa-stack">'
