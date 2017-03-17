@@ -30,7 +30,7 @@ public class Mail {
 			props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 			props.put("mail.smtp.auth", "true");
 			props.put("mail.smtp.port", "465");
-			msession = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+			msession = Session.getInstance(props, new javax.mail.Authenticator() {
 				protected PasswordAuthentication getPasswordAuthentication() {
 					return new PasswordAuthentication("benjamin@ease.space", "bpease.P2211");
 				}
@@ -42,6 +42,28 @@ public class Mail {
 		}
 	}
 	
+	public Mail(String sender, String password) throws GeneralException {
+		try {
+			props = new Properties();
+			props.put("mail.smtp.host", "smtp.gmail.com");
+			props.put("mail.smtp.socketFactory.port", "465");
+			props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+			props.put("mail.smtp.auth", "true");
+			props.put("mail.smtp.port", "465");
+			msession = Session.getInstance(props, new javax.mail.Authenticator() {
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(sender, password);
+				}
+			});
+			message = new MimeMessage(msession);
+			InternetAddress address = new InternetAddress(sender);
+			message.setSender(address);
+			message.setFrom(address);
+		} catch (MessagingException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+	}
+	
 	public Mail(String sender, String password, String who) throws GeneralException {
 		try {
 			props = new Properties();
@@ -50,41 +72,54 @@ public class Mail {
 			props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 			props.put("mail.smtp.auth", "true");
 			props.put("mail.smtp.port", "465");
-			msession = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
-				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication(sender, password);
-				}
+			props.put("mail.transport.protocol", "smtp");
+
+			final PasswordAuthentication auth = new PasswordAuthentication(sender, password);
+			msession = Session.getInstance(props, new javax.mail.Authenticator() {
+				@Override
+				protected PasswordAuthentication getPasswordAuthentication() { return auth; }
 			});
 			message = new MimeMessage(msession);
-			message.setFrom(new InternetAddress(sender, who));
+			InternetAddress address = new InternetAddress(sender, who);
+			message.setSender(address);
+			message.setFrom(address);
+		} catch (MessagingException | UnsupportedEncodingException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+	}
+	
+	public void sendTestEmail(String email) throws GeneralException {
+		try {
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+			message.setSubject(MimeUtility.encodeText("Keep it good !!!!!!!!!", "utf-8", null));
+			message.setContent("!!!! Just a simple hello to keep contact !!!!", "text/html;charset=utf-8");
+			Transport.send(message);
 		} catch (UnsupportedEncodingException | MessagingException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
 	}
 	
-	/*public void testEmail(String email) throws GeneralException {
+	public void sendGrowthHackingDoneEmail() throws GeneralException {
 		try {
-			InternetAddress[] emails = InternetAddress.parse(email);
-			for(int i=0; i < emails.length; i++) {
-				try {
-					emails[i].validate();
-				} catch()
-				
-			}
-			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
-			message.setSubject(MimeUtility.encodeText("Test", "utf-8", null));
-			message.setContent(
-					"<p>Test email</p>",
-					"text/html;charset=utf-8");
-			
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("benjamin@ease.space, thomas@ease.space, victor@ease.space"));
+			message.setSubject(MimeUtility.encodeText("Mail list clean done", "utf-8", null));
+			message.setContent("Mail list clean done goto <a href='" + Variables.URL_PATH + "/admin.jsp?verifyEmails=true' >admin</a>", "text/html;charset=utf-8");
 			Transport.send(message);
-		} catch (AddressException | UnsupportedEncodingException e) {
-			e.printStackTrace();
-			throw new GeneralException(ServletManager.Code.ClientError, e);
-		} catch (MessagingException e) {
-			throw new GeneralException(ServletManager.Code.ClientError, e);
+		} catch (UnsupportedEncodingException | MessagingException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
-	}*/
+	}
+	
+	public void sendGrowthHackingFailEmail(String lastEmail) throws GeneralException {
+		try {
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("benjamin@ease.space, thomas@ease.space, victor@ease.space"));
+			message.setSubject(MimeUtility.encodeText("Mail list cleaner fails", "utf-8", null));
+			message.setContent("Mail list clean failed at : " + lastEmail, "text/html;charset=utf-8");
+			Transport.send(message);
+		} catch (UnsupportedEncodingException | MessagingException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+	}
 	
 	public void sendPasswordLostMail(String email, String code) throws MessagingException {
 		try {

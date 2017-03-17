@@ -8,6 +8,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <div class="admin-menu">
 	<div>
+		<button id="enterGrowthHackingMode" class="button adminButton"
+			target="GrowthHackingTab">
+			<img src="resources/icons/opened-email-envelope.png" />
+		</button>
+	</div>
+	<div>
 		<button id="enterChangeBackMode" class="button adminButton"
 			target="ChangeBackTab">
 			<img src="resources/icons/upload_back.png" />
@@ -100,3 +106,4 @@
 <%@ include file="addTester.jsp" %>
 <%@ include file="AdminEditGroups.jsp" %>
 <%@ include file="backofficeAdmin/WebsitesVisitedBackOffice.jsp" %>
+<%@ include file="backofficeAdmin/GrowthHacking.jsp" %>
