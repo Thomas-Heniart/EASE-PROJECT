@@ -104,7 +104,6 @@
 				}
 				function updateSigninStatus(isSignedIn) {
 					if (isSignedIn) {
-						loading.addClass("show");
 						signoutButton.style.display = 'block';
 						makeApiCall();
 					} else {
@@ -156,11 +155,9 @@
 									serverEmails.splice(index, 1);
 							});
 							gapi.auth2.getAuthInstance().signOut();
-							authorizeButton.style.display = 'block';
 							serverEmails.forEach(function(email) {
 								$("#results").append("<div>" + email + "</div>");
 							})
-							loading.removeClass("show");
 						}, 200);
 					});
 				}
