@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.App;
@@ -16,7 +15,6 @@ import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.Profile.ProfilePermissions;
 import com.Ease.Dashboard.User.User;
-import com.Ease.Update.Update;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Regex;

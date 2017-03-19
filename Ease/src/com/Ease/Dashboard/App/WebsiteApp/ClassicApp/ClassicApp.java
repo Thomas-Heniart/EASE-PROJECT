@@ -198,6 +198,7 @@ public class ClassicApp extends WebsiteApp {
 	
 	public void fillJson(JSONObject json){
 		super.fillJson(json);
+		json.put("accountInformations", this.account.getJSON());
 		json.put("login", this.account.getInformationNamed("login"));
 		json.put("type", "classicApp");
 	}
