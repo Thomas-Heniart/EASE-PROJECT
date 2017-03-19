@@ -101,7 +101,6 @@ public class MailListCleaner extends HttpServlet {
 			List<String> GMailEmails = new LinkedList<String>();
 			List<String> GMailPasswords = new LinkedList<String>();
 			int length = 0;
-			int threshold = 0;
 			String email;
 			List<String> emails = new LinkedList<String>();
 			if (formItems != null && formItems.size() > 0) {
@@ -109,9 +108,6 @@ public class MailListCleaner extends HttpServlet {
 				for (FileItem item : formItems) {
 					if (item.isFormField()) {
 						if (item.getFieldName().equals("email")) {
-							DatabaseRequest db_request = db.prepareRequest("INSERT INTO growthHackingSenders values (null, ?);");
-							db_request.setString(item.getString());
-							db_request.set();
 							if (!(item.getString() == null || item.getString().equals("")))
 								GMailEmails.add(item.getString());
 						}
@@ -147,15 +143,9 @@ public class MailListCleaner extends HttpServlet {
 					throw new GeneralException(ServletManager.Code.ClientError, "Missing emails or passwords");
 				if (length >= GMailEmails.size() * 500)
 					throw new GeneralException(ServletManager.Code.ClientError, "Too much adresses");
-				int j = 0;
-				threshold = length / GMailEmails.size();
-				if (threshold == 0)
-					threshold = length;
-				if (length == 0 || threshold == 0)
+				if (length == 0)
 					throw new GeneralException(ServletManager.Code.ClientError, "No emails");
-				int k = threshold;
-				int r = length - (threshold * GMailEmails.size());
-				Thread t = new Thread(new GrowthHackingSender(GMailEmails, GMailPasswords, emails, j, k, length, threshold, r));
+				Thread t = new Thread(new GrowthHackingSender(GMailEmails, GMailPasswords, emails,length));
 				t.start();
 				sm.setRedirectUrl("admin.jsp?verifyEmails=true");
 			}

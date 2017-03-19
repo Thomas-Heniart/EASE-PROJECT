@@ -15,15 +15,16 @@ public class GrowthHackingSender implements Runnable {
 	protected int r;
 	protected DataBaseConnection db;
 	
-	public GrowthHackingSender(List<String> GMailEmails, List<String> GMailPasswords, List<String> emails, int j, int k, int length, int threshold, int r) {
+	public GrowthHackingSender(List<String> GMailEmails, List<String> GMailPasswords, List<String> emails,int length) {
 		this.GMailEmails = GMailEmails;
 		this.GMailPasswords = GMailPasswords;
 		this.emails = emails;
-		this.j = j;
-		this.k = k;
-		this.length = length;
-		this.threshold = threshold;
-		this.r = r;
+		this.j = 0;
+		this.threshold = length / GMailEmails.size();
+		if (threshold == 0)
+			threshold = length;
+		this.k = threshold;
+		this.r = length - (threshold * GMailEmails.size());
 		try {
 			this.db = new DataBaseConnection(DataBase.getConnection());
 		} catch (SQLException e) {
