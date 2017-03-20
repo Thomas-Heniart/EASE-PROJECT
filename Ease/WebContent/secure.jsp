@@ -55,7 +55,7 @@ src="https://www.facebook.com/tr?id=1771793116375287&ev=PageView&noscript=1"
             <meta name="twitter:image" content="https://d2zc23renulrga.cloudfront.net/assets/1320/8g6hpeszfluqm9l0fsb3/logo%2520ease%2520SMALL.jpg">
 
           <meta content="website" property="og:type">
-          <link rel='icon' type='image/png' href='https://d2zc23renulrga.cloudfront.net/assets/1327/5a6y14v473spqc665qgi/AAEAAQAAAAAAAAg1AAAAJGJhYTU5ODlkLTdhYmMtNGI0YS04YjI4LTc3MmM3NGU2YTFiMw.png'>   
+          <link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />   
                  
                                 <style>
             img {
@@ -486,7 +486,7 @@ label.checkbox {
         <div class="row">
           <div class="col-xs-12">
             <div data-mercury="froala" data-content-name="header_content">
-              <p style="margin: auto; text-align: center"><a href="https://ease.space/"><img class="fr-dii" src="https://d7zgbk06ve7c.cloudfront.net/assets/1320/ub3ubsndbon80s8txl5u/logo.png" style="width: 275px;"></a><br></p>
+              <p style="margin: auto; text-align: center"><a href="https://ease.space/"><img class="fr-dii" src="/resources/icons/Ease_logo_blue.png" style="width: 275px;"></a><br></p>
             </div>
           </div>
         </div>
@@ -628,7 +628,7 @@ label.checkbox {
   <div class="container">
     <div class="row mt">
       <div class="col-md-12">
-        <img class="img-responsive aligncenter" src="https://s3.amazonaws.com/static.kickoffpages.com/images/placeholders/flatincentive/items.png" alt="" data-content-name="bottom_image" data-mercury="kickimage">
+        <img class="img-responsive aligncenter" src="/resources/landing/secure-3.png" alt="" data-content-name="bottom_image" data-mercury="kickimage">
       </div>		
     </div><!--/row -->
   </div>
