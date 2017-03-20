@@ -9,9 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.DatabaseRequest;
@@ -20,16 +17,16 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class GetUnregisteredEmails
+ * Servlet implementation class PendingRegistrationTransfert
  */
-@WebServlet("/GetUnregisteredEmails")
-public class GetUnregisteredEmails extends HttpServlet {
+@WebServlet("/PendingRegistrationTransfert")
+public class PendingRegistrationTransfert extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GetUnregisteredEmails() {
+    public PendingRegistrationTransfert() {
         super();
     }
 
@@ -51,23 +48,30 @@ public class GetUnregisteredEmails extends HttpServlet {
 		try {
 			if (!user.isAdmin())
 				throw new GeneralException(ServletManager.Code.ClientError, "You ain't admin dude");
-			JSONArray res = new JSONArray();
-			DatabaseRequest db_request = db.prepareRequest("SELECT email, DATE(date) FROM pendingRegistrations ORDER BY date DESC;");
+			DatabaseRequest db_request = db.prepareRequest("SELECT args, date FROM logs WHERE code = ? AND servlet_name LIKE ? ORDER BY date;");
 			DatabaseRequest db_request2;
+			db_request.setInt(200);
+			db_request.setString("%CheckInvitation");
 			DatabaseResult rs = db_request.get();
-			while(rs.next()) {
-				String email = rs.getString(1);
+			while (rs.next()) {
+				String arg = rs.getString(1);
+				arg = arg.replace("%40", "@");
+				arg = arg.replace("%3E", "");
+				arg = arg.replace("%3C", "");
+				arg = arg.replace("%3A", " ");
+				String[] split = arg.split(" ");
+				arg = split[split.length - 1];
 				db_request2 = db.prepareRequest("SELECT id FROM users WHERE email = ?;");
-				db_request2.setString(email);
+				db_request2.setString(arg);
 				if (db_request2.get().next())
 					continue;
-				JSONObject tmp = new JSONObject();
-				tmp.put("email", email);
-				tmp.put("date", rs.getString(2));
-				res.add(tmp);
+				db_request2 = db.prepareRequest("INSERT INTO pendingRegistrations values(?, ?, ?);");
+				db_request2.setNull();
+				db_request2.setString(arg);
+				db_request2.setString(rs.getString(2));
+				db_request2.set();
 			}
-			sm.setResponse(ServletManager.Code.Success, res.toString());
-			sm.setLogResponse("Get unregistred emails done");
+			sm.setResponse(ServletManager.Code.Success, "Transfert done.");
 		} catch(GeneralException e) {
 			sm.setResponse(e);
 		}

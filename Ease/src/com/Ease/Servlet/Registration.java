@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.Ease.Dashboard.User.User;
+import com.Ease.Utils.DatabaseRequest;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
@@ -87,6 +88,9 @@ public class Registration extends HttpServlet {
 				session.setAttribute("user", newUser);
 				sm.setResponse(ServletManager.Code.Success, "Registered successfully");
 			}
+			DatabaseRequest db_request = sm.getDB().prepareRequest("DELETE FROM pendingRegistrations WHERE email = ?;");
+			db_request.setString(email);
+			db_request.set();
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		} catch (Exception e) {

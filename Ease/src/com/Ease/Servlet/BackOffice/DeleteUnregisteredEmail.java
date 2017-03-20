@@ -9,27 +9,23 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class GetUnregisteredEmails
+ * Servlet implementation class DeleteUnregisteredEmail
  */
-@WebServlet("/GetUnregisteredEmails")
-public class GetUnregisteredEmails extends HttpServlet {
+@WebServlet("/DeleteUnregisteredEmail")
+public class DeleteUnregisteredEmail extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GetUnregisteredEmails() {
+    public DeleteUnregisteredEmail() {
         super();
     }
 
@@ -51,23 +47,13 @@ public class GetUnregisteredEmails extends HttpServlet {
 		try {
 			if (!user.isAdmin())
 				throw new GeneralException(ServletManager.Code.ClientError, "You ain't admin dude");
-			JSONArray res = new JSONArray();
-			DatabaseRequest db_request = db.prepareRequest("SELECT email, DATE(date) FROM pendingRegistrations ORDER BY date DESC;");
-			DatabaseRequest db_request2;
-			DatabaseResult rs = db_request.get();
-			while(rs.next()) {
-				String email = rs.getString(1);
-				db_request2 = db.prepareRequest("SELECT id FROM users WHERE email = ?;");
-				db_request2.setString(email);
-				if (db_request2.get().next())
-					continue;
-				JSONObject tmp = new JSONObject();
-				tmp.put("email", email);
-				tmp.put("date", rs.getString(2));
-				res.add(tmp);
-			}
-			sm.setResponse(ServletManager.Code.Success, res.toString());
-			sm.setLogResponse("Get unregistred emails done");
+			String email = sm.getServletParam("email", true);
+			if (email == null || email.equals(""))
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty email");
+			DatabaseRequest db_request = db.prepareRequest("DELETE FROM pendingRegistrations WHERE email = ?");
+			db_request.setString(email);
+			db_request.set();
+			sm.setResponse(ServletManager.Code.Success, "Email deleted");
 		} catch(GeneralException e) {
 			sm.setResponse(e);
 		}

@@ -21,15 +21,33 @@
 			});
 		
 		function printEmailsFromJson(data) {
-			console.log(data);
 			var json = JSON.parse(data);
 			json.forEach(function(elem) {
-				$("#UnregisteredUsersTab #results").append("<div>"
+				$("#UnregisteredUsersTab #results").append("<div email='"
+				+ elem.email
+				+ "'>"
+				+ "<i class='fa fa-times delete-unregistered-email'></i>"
 				+ elem.date
 				+ " "
 				+ elem.email
 				+ "</div>");
 			});
 		}
+
+		$(document).on('click', function(e) {
+			var target = $(e.target);
+			if (target.hasClass('delete-unregistered-email')) {
+				var email = target.parent().attr("email");
+				postHandler.post("DeleteUnregisteredEmail", {
+					email: email
+				}, function() {
+					
+				},
+				function(data) {
+					target.parent().remove();
+				},
+				function(data){});	
+			}
+		});
 	</script>
 </div>

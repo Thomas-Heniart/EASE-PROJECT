@@ -479,5 +479,14 @@
 		border-radius: 5px;
 		overflow: scroll;
 		padding: 10px;
+
+		.delete-unregistered-email {
+			color: white;
+			background-color: red;
+			margin-right: 1vw;
+			padding: 1px;
+			border-radius: 5px;
+			cursor: pointer;
+		}
 	}
 }
