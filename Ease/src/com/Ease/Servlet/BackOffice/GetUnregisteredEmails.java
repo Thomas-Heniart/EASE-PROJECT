@@ -51,17 +51,11 @@ public class GetUnregisteredEmails extends HttpServlet {
 		try {
 			if (!user.isAdmin())
 				throw new GeneralException(ServletManager.Code.ClientError, "You ain't admin dude");
-			/*String date = sm.getServletParam("date", true);
-			if (date == null || date.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Choose a date");
-			*/
 			JSONArray res = new JSONArray();
-			DatabaseRequest db_request = db.prepareRequest("SELECT args, DATE(date) FROM logs WHERE servlet_name LIKE ? AND code = ? AND date >= ?");
-			DatabaseRequest db_request2 = db.prepareRequest("SELECT id FROM users WHERE email = ?");
+			DatabaseRequest db_request = db.prepareRequest("SELECT args, DATE(date) FROM logs WHERE servlet_name LIKE ? AND code = ? ORDER BY date DESC;");
+			DatabaseRequest db_request2;
 			db_request.setString("%CheckInvitation");
 			db_request.setInt(200);
-			//db_request.setString(date);
-			db_request.setString("2017-03-19");
 			DatabaseResult rs = db_request.get();
 			while(rs.next()) {
 				String arg = rs.getString(1);
@@ -69,7 +63,9 @@ public class GetUnregisteredEmails extends HttpServlet {
 				arg = arg.replace("%3E", "");
 				arg = arg.replace("%3C", "");
 				arg = arg.replace("%3A", " ");
-				arg = arg.split(" ")[2];
+				String[] split = arg.split(" ");
+				arg = split[split.length - 1];
+				db_request2 = db.prepareRequest("SELECT id FROM users WHERE email = ?;");
 				db_request2.setString(arg);
 				if (db_request2.get().next())
 					continue;
