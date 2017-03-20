@@ -16,7 +16,7 @@
 	<div>
 		<button class="button adminButton"
 			target="UnregisteredUsersTab">
-			<img src="resources/icons/opened-email-envelope.png" />
+			<img src="resources/icons/lost.png" />
 		</button>
 	</div>
 	<div>
