@@ -180,7 +180,7 @@ public class WebsiteApp extends App {
 	public void fillJson(JSONObject json){
 		super.fillJson(json);
 		json.put("websiteId", website.getSingleId());
-		json.put("ssoId", (website.getSso() == null) ? -1 : website.getSso());
+		json.put("ssoId", (website.getSso() == null) ? -1 : website.getSso().getSingleId());
 		json.put("imgSrc", this.website.getFolder() + "logo.png");
 		json.put("type", "emptyApp");
 	}

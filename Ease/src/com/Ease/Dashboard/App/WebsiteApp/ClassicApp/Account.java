@@ -154,6 +154,19 @@ public class Account {
 		return obj;
 	}
 	
+	public JSONArray getJSON() {
+		JSONArray res = new JSONArray();
+		JSONObject tmp;
+		for(AccountInformation info : this.infos) {
+			if (info.getInformationName().equals("password"))
+				continue;
+			tmp = new JSONObject();
+			tmp.put(info.getInformationName(), info.getInformationValue());
+			res.add(tmp);
+		}
+		return res;
+	}
+	
 	public void editInfos(Map<String, String> infos, ServletManager sm) throws GeneralException {
 		String value;
 		DataBaseConnection db = sm.getDB();

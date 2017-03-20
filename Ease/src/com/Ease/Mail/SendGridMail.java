@@ -361,7 +361,7 @@ public class SendGridMail {
 		mail.setTemplateId("ea9b5440-35b2-48e1-9366-f5fd48f61937");
 		Personalization personalization = this.createNewPersonalization();
 		this.addTo(personalization, userName, userEmail);
-		personalization.addSubstitution("#link", Variables.URL_PATH + "discover?email=" + userName + "&name=" + userEmail + "&invitationCode=" + code);
+		personalization.addSubstitution("#link", Variables.URL_PATH + "discover?email=" + userEmail + "&name=" + userName + "&invitationCode=" + code);
 		this.setReplyTo("Victor", "victor@ease.space");
 		this.sendEmail();
 	}
