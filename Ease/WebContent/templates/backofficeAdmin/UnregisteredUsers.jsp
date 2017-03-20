@@ -34,20 +34,18 @@
 			});
 		}
 
-		$(document).on('click', function(e) {
-			var target = $(e.target);
-			if (target.hasClass('delete-unregistered-email')) {
-				var email = target.parent().attr("email");
-				postHandler.post("DeleteUnregisteredEmail", {
-					email: email
-				}, function() {
-					
-				},
-				function(data) {
-					target.parent().remove();
-				},
-				function(data){});	
-			}
+		$("#UnregisteredUsersTab #results").on("click", ".delete-unregistered-email", function(e) {
+			var self = $(this);
+			var email = self.parent().attr("email");
+			postHandler.post("DeleteUnregisteredEmail", {
+				email: email
+			}, function() {
+				
+			},
+			function(data) {
+				self.parent().remove();
+			},
+			function(data){});	
 		});
 	</script>
 </div>
