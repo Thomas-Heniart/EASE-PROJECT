@@ -9,11 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
+import com.Ease.Context.Catalog.WebsitesVisitedManager;
 import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -49,22 +46,8 @@ public class GetWebsitesVisited extends HttpServlet {
 			sm.needToBeConnected();
 			if (!user.isAdmin())
 				throw new GeneralException(ServletManager.Code.ClientWarning, "You ain't admin");
-			DatabaseResult rs = sm.getDB().prepareRequest("SELECT * FROM websitesVisited ORDER BY count").get();
-			//WebsitesVisitedManager websitesVisitedManager = (WebsitesVisitedManager) sm.getContextAttr("websitesVisitedManager");
-			JSONArray res = new JSONArray();
-			while(rs.next()) {
-				JSONObject tmp = new JSONObject();
-				tmp.put("url", rs.getString(2));
-				tmp.put("count", rs.getString(3));
-				res.add(tmp);
-			}
-			/*for (Entry<String, Integer> urlAndCount : websitesVisitedManager.getWeightedWebsitesVisited()) {
-				JSONObject tmp = new JSONObject();
-				tmp.put("url", urlAndCount.getKey());
-				tmp.put("count", urlAndCount.getValue());
-				res.add(tmp);
-			}*/
-			sm.setResponse(ServletManager.Code.Success, res.toString());
+			WebsitesVisitedManager websitesVisitedManager = (WebsitesVisitedManager) sm.getContextAttr("websitesVisitedManager");
+			sm.setResponse(ServletManager.Code.Success, websitesVisitedManager.getWebsitesVisitedJson().toString());
 			sm.setLogResponse("GetWebsitesVisited done");
 		} catch(GeneralException e) {
 			sm.setResponse(e);

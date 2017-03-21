@@ -15,16 +15,16 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class BlacklistWebsite
+ * Servlet implementation class GetBlacklistedWebsites
  */
-@WebServlet("/BlacklistWebsite")
-public class BlacklistWebsite extends HttpServlet {
+@WebServlet("/GetBlacklistedWebsites")
+public class GetBlacklistedWebsites extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public BlacklistWebsite() {
+    public GetBlacklistedWebsites() {
         super();
     }
 
@@ -46,12 +46,9 @@ public class BlacklistWebsite extends HttpServlet {
 			sm.needToBeConnected();
 			if (!user.isAdmin())
 				throw new GeneralException(ServletManager.Code.ClientError, "You ain't admin");
-			String single_id = sm.getServletParam("single_id", true);
-			if (single_id == null || single_id.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty single_id");
 			WebsitesVisitedManager websitesVisitedManager = (WebsitesVisitedManager) sm.getContextAttr("websitesVisitedManager");
-			websitesVisitedManager.sendWebsiteVisitedToBlacklistWithSingleId(Integer.parseInt(single_id), sm);
-			sm.setResponse(ServletManager.Code.Success, "Website added to blacklist");
+			sm.setResponse(ServletManager.Code.Success, websitesVisitedManager.getBlacklistedWebsitesJson().toString());
+			sm.setLogResponse("Get blacklisted websites done");
 		} catch(GeneralException e) {
 			sm.setResponse(e);
 		}

@@ -2,12 +2,17 @@ package com.Ease.Context.Catalog;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.servlet.ServletContext;
+
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -20,11 +25,15 @@ public class WebsitesVisitedManager {
 	protected Map<String, BlacklistedWebsite> blacklistedWebsitesDbMap;
 	protected Map<Integer, BlacklistedWebsite> blacklistedWebsitesIdMap;
 	
-	public WebsitesVisitedManager(ServletManager sm) throws GeneralException {
-		this.websitesVisited = WebsiteVisited.loadWebsitesVisited(sm);
+	public WebsitesVisitedManager(DataBaseConnection db, ServletContext context) throws GeneralException {
+		this.websitesVisitedDbMap = new HashMap<String, WebsiteVisited>();
+		this.websitesVisitedIdMap = new HashMap<Integer, WebsiteVisited>();
+		this.blacklistedWebsitesDbMap = new HashMap<String, BlacklistedWebsite>();
+		this.blacklistedWebsitesIdMap = new HashMap<Integer, BlacklistedWebsite>();
+		this.websitesVisited = WebsiteVisited.loadWebsitesVisited(db, context);
 		for(WebsiteVisited websiteVisited : websitesVisited)
 			this.addWebsiteVisitedInMaps(websiteVisited);
-		this.blacklistedWebsites = BlacklistedWebsite.loadBlacklistedWebsites(sm);
+		this.blacklistedWebsites = BlacklistedWebsite.loadBlacklistedWebsites(db, context);
 		for (BlacklistedWebsite blacklistedWebsite : blacklistedWebsites)
 			this.addBlacklistedWebsiteInMaps(blacklistedWebsite);
 	}
@@ -35,10 +44,11 @@ public class WebsitesVisitedManager {
 	 * @param String url
 	 * @param int count
 	 * @param ServletManager sm
+	 * @param boolean skipCheck
 	 * @throws GeneralException when insertion statement fail
 	 */
-	public void addWebsiteVisited(String url, int count, ServletManager sm) throws GeneralException {
-		if (this.isWebsiteBlacklisted(url))
+	public void addWebsiteVisited(String url, int count, ServletManager sm, boolean skipCheck) throws GeneralException {
+		if (!skipCheck && this.isWebsiteBlacklisted(url))
 			return;
 		WebsiteVisited existingWebsiteVisited = this.findWebsiteVisitedWithUrl(url);
 		if (existingWebsiteVisited == null)
@@ -50,6 +60,19 @@ public class WebsitesVisitedManager {
 				return w1.compareTo(w2);
 			}
 		});
+	}
+	
+	/**
+	 * Create or update a WebsiteVisited instance and put it in list and maps
+	 * This method skip the check step
+	 * Then sort the websitesVisited list
+	 * @param String url
+	 * @param int count
+	 * @param ServletManager sm
+	 * @throws GeneralException when insertion statement fail
+	 */
+	public void addWebsiteVisited(String url, int count, ServletManager sm) throws GeneralException {
+		this.addWebsiteVisited(url, count, sm, false);
 	}
 	
 	/**
@@ -68,6 +91,16 @@ public class WebsitesVisitedManager {
 	private void addWebsiteVisitedInMaps(WebsiteVisited websiteVisited) {
 		this.websitesVisitedDbMap.put(websiteVisited.getDb_id(), websiteVisited);
 		this.websitesVisitedIdMap.put(websiteVisited.getSingle_id(), websiteVisited);
+	}
+	
+	/**
+	 * Create a new WebsiteVisited instance from a BlacklistedWebsite instance
+	 * @param BlacklistedWebsite blacklistedWebsite
+	 * @param ServletManager sm
+	 * @throws GeneralException when insertion statement fail
+	 */
+	public void addWebsiteVisitedFromBlacklistedWebsite(BlacklistedWebsite blacklistedWebsite, ServletManager sm) throws GeneralException {
+		this.addWebsiteVisited(blacklistedWebsite.getUrl(), blacklistedWebsite.getCount(), sm, true);
 	}
 	
 	/**
@@ -151,7 +184,19 @@ public class WebsitesVisitedManager {
 	 * @throws GeneralException when database insert fail
 	 */
 	public void addBlackListedWebsite(String url, ServletManager sm) throws GeneralException {
-		this.addBlacklistedWebsite(BlacklistedWebsite.createBlacklistedWebsite(url, sm));
+		this.addBlacklistedWebsite(BlacklistedWebsite.createBlacklistedWebsite(url, 0,sm));
+		this.sortBlacklistedWebsites();
+	}
+	
+	/**
+	 * Create a BlacklistedWebsite instance and call put it in list and maps
+	 * @param WebsiteVisited websiteVisited
+	 * @param ServletManager sm
+	 * @throws GeneralException when database insert fail
+	 */
+	public void addBlacklistedWebsiteFromWebsiteVisited(WebsiteVisited websiteVisited, ServletManager sm) throws GeneralException {
+		this.addBlacklistedWebsite(BlacklistedWebsite.createBlackListedWebsiteFromWebsiteVisited(websiteVisited, sm));
+		this.sortBlacklistedWebsites();
 	}
 	
 	/**
@@ -233,7 +278,7 @@ public class WebsitesVisitedManager {
 		return blacklistedWebsite;
 	}
 	
-	/* Utils */
+	/*========== Utils ==========*/
 
 	/**
 	 * Check if given url is in blacklist
@@ -271,7 +316,7 @@ public class WebsitesVisitedManager {
 	 * @throws GeneralException when insert or delete statement fail
 	 */
 	public void sendWebsiteVistedToBlacklist(WebsiteVisited websiteVisited, ServletManager sm) throws GeneralException {
-		this.addBlackListedWebsite(websiteVisited.getUrl(), sm);
+		this.addBlacklistedWebsiteFromWebsiteVisited(websiteVisited, sm);
 		this.removeWebsiteVisited(websiteVisited, sm);
 	}
 	
@@ -295,5 +340,73 @@ public class WebsitesVisitedManager {
 	public void sendWebsiteVisitedToBlacklistWithDbId(String db_id, ServletManager sm) throws GeneralException {
 		WebsiteVisited websiteVisited = this.getWebsiteVisitedWithDbId(db_id);
 		this.sendWebsiteVistedToBlacklist(websiteVisited, sm);
+	}
+	
+	/**
+	 * Send a BlacklistedWebsite instance to websitesVisited and delete it
+	 * @param BlacklistedWebsite blacklistedWebsite
+	 * @param ServletManager sm
+	 * @throws GeneralException when insert or delete statement fail
+	 */
+	public void sendBlacklistedWebsiteToWebsitesVisited(BlacklistedWebsite blacklistedWebsite, ServletManager sm) throws GeneralException {
+		this.addWebsiteVisitedFromBlacklistedWebsite(blacklistedWebsite, sm);
+		this.removeBlacklistedWebsite(blacklistedWebsite, sm);
+	}
+	
+	/**
+	 * Send a BlacklistedWebsite instance to websitesVisited and delete it
+	 * @param int single_id
+	 * @param ServletManager sm
+	 * @throws GeneralException when single_id is not a correct key and when delete or insert statement fail
+	 */
+	public void sendBlacklistedWebsiteToWebsitesVisitedWithSingleId(int single_id, ServletManager sm) throws GeneralException {
+		BlacklistedWebsite blacklistedWebsite = this.getBlacklistedeWebsiteWithSingleId(single_id);
+		this.sendBlacklistedWebsiteToWebsitesVisited(blacklistedWebsite, sm);
+	}
+
+	/**
+	 * Return an array of WebsiteVisited instances 
+	 * @return JSONArray ex: [{"url":"www.test.com", "count": 47, "single_id": 12}, ...]
+	 */
+	@SuppressWarnings("unchecked")
+	public JSONArray getWebsitesVisitedJson() {
+		JSONArray res = new JSONArray();
+		for(WebsiteVisited websiteVisited : this.websitesVisited) {
+			JSONObject tmp = new JSONObject();
+			tmp.put("url", websiteVisited.getUrl());
+			tmp.put("count", websiteVisited.getCount());
+			tmp.put("single_id", websiteVisited.getSingle_id());
+			res.add(tmp);
+		}
+		return res;
+	}
+
+	/**
+	 * Return an array of BlacklistedWebsite instances 
+	 * @return JSONArray ex: [{"url":"www.test.com", "count": 47, "single_id": 12}, ...]
+	 */
+	@SuppressWarnings("unchecked")
+	public JSONArray getBlacklistedWebsitesJson() {
+		JSONArray res = new JSONArray();
+		for(BlacklistedWebsite blacklistedWebsite : this.blacklistedWebsites) {
+			JSONObject tmp = new JSONObject();
+			tmp.put("url", blacklistedWebsite.getUrl());
+			tmp.put("count", blacklistedWebsite.getCount());
+			tmp.put("single_id", blacklistedWebsite.getSingle_id());
+			res.add(tmp);
+		}
+		return res;
+		
+	}
+	
+	/**
+	 * This method sort blacklistedWebsites by count
+	 */
+	private void sortBlacklistedWebsites() {
+		Collections.sort(this.blacklistedWebsites, new Comparator<BlacklistedWebsite>() {
+			public int compare(BlacklistedWebsite w1, BlacklistedWebsite w2) {
+				return w1.compareTo(w2);
+			}
+		});
 	}
 }

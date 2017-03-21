@@ -3,24 +3,31 @@ package com.Ease.Context.Catalog;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.servlet.ServletContext;
+
+import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.DatabaseRequest;
 import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
 
 public class WebsiteVisited {
 
 	/**
 	 * Load all WebsiteVisited instance from database order by count desc
-	 * @param ServletManager sm
+	 * @param DataBaseConnection db
+	 * @param ServletContext context
 	 * @return List<WebsiteVisited>
 	 * @throws GeneralException when select statement fail
 	 */
-	public static List<WebsiteVisited> loadWebsitesVisited(ServletManager sm) throws GeneralException {
-		DatabaseResult rs = sm.getDB().prepareRequest("SELECT * FROM websitesVisited ORDER BY count DESC;").get();
+	public static List<WebsiteVisited> loadWebsitesVisited(DataBaseConnection db, ServletContext context) throws GeneralException {
+		DatabaseResult rs = db.prepareRequest("SELECT * FROM websitesVisited ORDER BY count DESC;").get();
 		List<WebsiteVisited> res = new LinkedList<WebsiteVisited>();
-		while(rs.next())
-			res.add(new WebsiteVisited(rs.getString(1), sm.getNextSingle_id(), rs.getString(2), rs.getInt(3)));
+		while(rs.next()) {
+			int single_id = ((IdGenerator)context.getAttribute("idGenerator")).getNextId();
+			res.add(new WebsiteVisited(rs.getString(1), single_id, rs.getString(2), rs.getInt(3)));
+		}
 		return res;
 	}
 	
@@ -90,7 +97,7 @@ public class WebsiteVisited {
 	 * @throws GeneralException when delete statement fail
 	 */
 	public void removeFromDb(ServletManager sm) throws GeneralException {
-		DatabaseRequest request = sm.getDB().prepareRequest("DELETE FROM websiteVisited WHERE id = ?;");
+		DatabaseRequest request = sm.getDB().prepareRequest("DELETE FROM websitesVisited WHERE id = ?;");
 		request.setInt(db_id);
 		request.set();
 	}
@@ -98,10 +105,10 @@ public class WebsiteVisited {
 	/**
 	 * Use this method to compare this instance count with an other WebsiteVisited instance
 	 * @param WebsiteVisited w2
-	 * @return 1 if this count is greater than w2 count, 0 if equals and -1 else
+	 * @return -1 if this count is greater than w2 count, 0 if equals and 1 else
 	 */
 	public int compareTo(WebsiteVisited w2) {
-		if (count > w2.getCount())
+		if (count < w2.getCount())
 			return 1;
 		else if (count == w2.getCount())
 			return 0;
