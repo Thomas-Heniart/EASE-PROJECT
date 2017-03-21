@@ -521,7 +521,7 @@ label.checkbox {
 			<div class="row centered">
         
 				<div class="col-md-6">
-					<img src="https://d7zgbk06ve7c.cloudfront.net/assets/1320/42cu9vc658h2gzui33yv/contract-3.png" alt="" data-mercury="kickimage" data-content-name="cta_image">
+					<img src="/resources/landing/secure-1.png" alt="" data-mercury="kickimage" data-content-name="cta_image">
 				</div>
         <div class="col-md-6">
         
@@ -587,7 +587,7 @@ label.checkbox {
 			</div><!--/col-md-5-->
 			
 			<div class="col-md-6">
-				<img src="https://d7zgbk06ve7c.cloudfront.net/assets/63939/9fr00repfo70crbvheqd/photo-1468034995131-d3f63c0cab1f-min-1-min-min.jpeg" class="img-responsive" alt="" data-mercury="kickimage" data-content-name="included_image">
+				<img src="/resources/landing/secure-2.png" class="img-responsive" alt="" data-mercury="kickimage" data-content-name="included_image">
 			</div>
 		</div><!--/row -->
 	</div><!--/container -->
@@ -608,7 +608,7 @@ label.checkbox {
       
 			<div class="col-md-6">
         <div data-mercury="froala" data-content-name="faqs_col_one">
-          <h4><span style="color: rgb(49, 45, 128);">What is the level of security of my data ?</span></h4><p>We use AES-256 on all encrypted data: <a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard" target="_blank">What is AES-256? (wikipedia)</a>. Our servers are located in highly secured data centers. We also use the best solutions on all internal softwares and programs that we run in order to ease your web.</p><p><br></p><p><span style="font-size: 18px;"><span style="color: rgb(49, 45, 128);">My computer saves my passwords, so why should I use EASE ?</span></span></p><p>Most of the web browsers now save your passwords. EASE does not only remember passwords for you, it makes any of your web account accessible 1 click away the EASE platform, regardless of the web browser you are using. You do not need anymore to look for the connexion form in a website, EASE sends you directly to the website being connected.</p><h4><br></h4><h4><span style="color: rgb(49, 45, 128);">What is the encryption of data ?&nbsp;</span></h4><p>Encryption is basically a method for transferring information from point A to point B in a highly secured way. Encrypting a password will transform it into a long chain of unreadable characters, that will be sent to the website. A simple way to explain it would be<a href="http://www.hacker10.com/wp-content/uploads/2011/04/Symmetric-cryptography-key.jpg" target="_blank">&nbsp;this</a>.</p><h4><br></h4>
+          <h4><span style="color: rgb(49, 45, 128);">What is the level of security of my data ?</span></h4><p>We use AES-128 on all encrypted data: <a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard" target="_blank">What is AES-128? (wikipedia)</a>. Our servers are located in highly secured data centers. We also use the best solutions on all internal softwares and programs that we run in order to ease your web.</p><p><br></p><p><span style="font-size: 18px;"><span style="color: rgb(49, 45, 128);">My computer saves my passwords, so why should I use EASE ?</span></span></p><p>Most of the web browsers now save your passwords. EASE does not only remember passwords for you, it makes any of your web accounts accessible 1 click away the EASE platform, regardless of the web browser you are using. You do not need anymore to look for the connexion form in a website, EASE sends you directly to the website being connected.</p><h4><br></h4><h4><span style="color: rgb(49, 45, 128);">What is the encryption of data ?&nbsp;</span></h4><p>Encryption is basically a method for transferring information from point A to point B in a highly secured way. Encrypting a password will transform it into a long chain of unreadable characters, that will be sent to the website. A simple way to explain it would be<a href="http://www.hacker10.com/wp-content/uploads/2011/04/Symmetric-cryptography-key.jpg" target="_blank">&nbsp;this</a>.</p><h4><br></h4>
         </div>
 			</div><!--/col-md-5 -->
 			
