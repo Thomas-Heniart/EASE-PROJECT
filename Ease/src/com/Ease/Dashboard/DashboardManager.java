@@ -62,7 +62,7 @@ public class DashboardManager {
 		return newProfile;
 	}
 	
-	private void addProfileToMaps(Profile profile) {
+	public void addProfileToMaps(Profile profile) {
 		this.profileDBMap.put(profile.getDBid(), profile);
 		this.profileIDMap.put(profile.getSingleId(), profile);
 	}

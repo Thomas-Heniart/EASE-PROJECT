@@ -194,6 +194,7 @@ public class GroupProfile {
 		int mostEmptyColumn = user.getDashboardManager().getMostEmptyProfileColumn();
 		Profile profile = Profile.createProfileWithGroup(user, mostEmptyColumn, user.getDashboardManager().getProfiles().get(mostEmptyColumn).size(), this, sm);
 		user.getDashboardManager().getProfiles().get(mostEmptyColumn).add(profile);
+		user.getDashboardManager().addProfileToMaps(profile);
 		return profile;
 
 	}
