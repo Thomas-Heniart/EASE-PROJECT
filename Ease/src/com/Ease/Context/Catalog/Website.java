@@ -523,4 +523,8 @@ public class Website {
 		}
 		return this.groupIds.isEmpty();
 	}
+
+	public String getHostname() {
+		return this.website_homepage.split("/")[2];
+	}
 }

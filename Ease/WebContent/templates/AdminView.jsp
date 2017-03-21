@@ -4,6 +4,7 @@
 
 <%@ page import="java.util.List"%>
 <script src="js/postHandler.js"></script>
+<script src="js/backOffice/websitesVisited.js"></script>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <div class="admin-menu">

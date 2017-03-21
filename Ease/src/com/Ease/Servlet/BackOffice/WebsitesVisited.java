@@ -1,7 +1,6 @@
 package com.Ease.Servlet.BackOffice;
 
 import java.io.IOException;
-import java.util.Map.Entry;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,9 +14,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.WebsitesVisitedManager;
-import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -48,8 +45,6 @@ public class WebsitesVisited extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
-		Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-		DataBaseConnection db = sm.getDB();
 		try {
 			WebsitesVisitedManager websitesVisitedManager = (WebsitesVisitedManager) sm.getContextAttr("websitesVisitedManager");
 			String jsonString = sm.getServletParam("websitesVisited", true);
@@ -59,13 +54,7 @@ public class WebsitesVisited extends HttpServlet {
 			try {
 				System.out.println(jsonString);
 				JSONObject websitesVisited = (JSONObject)parser.parse(StringEscapeUtils.unescapeHtml4(jsonString));
-				for (Object obj : websitesVisited.entrySet()) {
-					Entry<Object, Object> entry = (Entry<Object, Object>) obj;
-					String url = (String)entry.getKey();
-					String count = (String)entry.getValue();
-					websitesVisitedManager.addWebsiteRequest(url, Integer.valueOf(count), db, catalog);
-					sm.setResponse(ServletManager.Code.Success, "Websites visited added");
-				}
+				websitesVisitedManager.addWebsitesVisitedFromJson(websitesVisited, sm);
 			} catch (ParseException e) {
 				throw new GeneralException(ServletManager.Code.InternError, e);
 			}
