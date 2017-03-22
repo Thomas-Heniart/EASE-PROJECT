@@ -14,7 +14,7 @@ import org.jsoup.select.Elements;
 public class DOMDescriber {
 	private Map<String, Map<String, List<Element>>> myMap = null;
 	private Element									dom = null;
-		
+
 	public DOMDescriber(Element elem){
 		this.initWith(elem);
 	}
@@ -73,6 +73,29 @@ public class DOMDescriber {
 		return false;
 	}
 	
+	public boolean isElementPresentInMap(Element elem){
+		Map<String, List<Element>> tmpList = null;
+		
+		tmpList = this.myMap.get("tagName");
+		if (tmpList.get(elem.tagName()) == null)
+			return false;
+		tmpList = this.myMap.get("class");
+		if (tmpList == null && elem.classNames().size() > 0)
+			return false;
+		for (String str: elem.classNames()){
+			if (tmpList.get(str) == null)
+				return false;
+		}
+		for (Attribute attr : elem.attributes()){
+			if (!attr.getKey().equals("class") && attr.getValue() != null && !attr.getValue().equals("")){
+				tmpList = this.myMap.get(attr.getKey());
+				if (tmpList == null || tmpList.get(attr.getValue()) == null)
+					return false;
+			}
+		}
+		return true;
+	}
+	
 	public Map<String, Map<String, List<Element>>> getMap(){
 		return myMap;
 	}
@@ -87,7 +110,7 @@ public class DOMDescriber {
 		}
 		return null;
 	}
-	// private
+	// private helper functions
 	private void initMap(Element elem){
 		this.addToTheMap(elem, "tagName", elem.tagName());
 		for (String className: elem.classNames())
@@ -105,6 +128,7 @@ public class DOMDescriber {
 		Set<Map.Entry<String, List<Element>>> set1 = m1.entrySet();
 		Set<Map.Entry<String, List<Element>>> set2 = m2.entrySet();
 		boolean								  found = false;
+
 		for (Map.Entry<String, List<Element>> me1 : set1){
 			found = false;
 			for (Map.Entry<String, List<Element>> me2 : set2){
@@ -136,8 +160,8 @@ public class DOMDescriber {
 	}	
 
 	private void addToTheMap(Element elem, String key, String value){
-		Map<String, List<Element>> 	tmp;
-		List<Element>				tmpList;
+		Map<String, List<Element>> 	tmp = null;
+		List<Element>				tmpList = null;
 		tmp = myMap.get(key);
 		if (tmp == null){
 			myMap.put(key, new HashMap<String, List<Element>>());
