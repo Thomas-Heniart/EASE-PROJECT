@@ -301,11 +301,16 @@ public class WebsitesVisitedManager {
 	 */
 	@SuppressWarnings("unchecked")
 	public void addWebsitesVisitedFromJson(JSONObject websitesVisited, ServletManager sm) throws GeneralException {
+		Catalog catalog = (Catalog) sm.getContextAttr("catalog");
 		for (Object obj : websitesVisited.entrySet()) {
 			Entry<Object, Object> entry = (Entry<Object, Object>) obj;
 			String url = (String)entry.getKey();
 			int count = Integer.parseInt((String)entry.getValue());
-			this.addWebsiteVisited(url, count, sm);
+			Website website = catalog.getWebsiteWithHost(url);
+			if (website == null)
+				this.addWebsiteVisited(url, count, sm);
+			else
+				website.increaseVisits(count, sm);
 		}
 	}
 	

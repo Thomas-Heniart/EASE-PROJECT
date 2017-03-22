@@ -551,4 +551,8 @@ public class Website {
 		else
 			return -1;
 	}
+
+	public void increaseVisits(int count, ServletManager sm) throws GeneralException {
+		this.websiteAttributes.increaseVisits(count, sm);
+	}
 }

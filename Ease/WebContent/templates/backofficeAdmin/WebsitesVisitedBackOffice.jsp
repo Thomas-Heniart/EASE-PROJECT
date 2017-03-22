@@ -10,7 +10,7 @@
 	</div>
 	<div class="flex-row">
 		<div class="centered-row">
-			<h3 class="module-presentation">Websites blaclisted</h3>
+			<h3 class="module-presentation">Websites blacklisted</h3>
 			<div id="blacklist"></div>
 		</div>
 		<div class="centered-row">
