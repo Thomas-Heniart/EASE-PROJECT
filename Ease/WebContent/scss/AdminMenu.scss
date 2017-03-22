@@ -5,216 +5,158 @@
 	position: absolute;
 	top: 0;
 	left: 1%;
-    margin-bottom: 75px;
-		div {
+	margin-bottom: 75px;
+
+	div {
 		width: fit-content;
 		height: 75px;
 		position: relative;
 		margin-top: 10px;
+
 		.adminButton {
 			max-width: 75px;
-			min-width: 0px;
+			min-width: 0;
 			width: 75px;
 			height: 75px;
 			background-color: #373b60;
 			border-radius: 10px;
 			padding: 7px;
-			margin: 0px;
+			margin: 0;
 			transition: background-color 0.3s;
+
 			&:hover {
 				cursor: pointer;
 			}
+
 			img {
 				width: 100%;
 				height: 100%;
 			}
 		}
+
 		.adminButton.on {
 			background-color: #42b72a;
 		}
 	}
 }
 
-
 .RightSideViewTab.show {
-		transition: opacity 0.6s ease;
-		height: auto;
-		opacity: 1;
-		padding: 5px;
-	}
+	transition: opacity 0.6s ease;
+	height: auto;
+	opacity: 1;
+	padding: 5px;
+}
 
 .RightSideViewTab {
-		height: 0;
-		opacity: 0;
-		top: 0;
-		transition: opacity 0.6s ease;
-		width: 90%;
-		float:left;
-		left: 10%;
-		overflow: hidden;
-		position: relative;
-		background-color: white;
-		#quit {
-			position: fixed;
-			top: 1%;
-			right: 1%;
-			background-color: $themeRedColor;
-			color: white;
-			border: none;
-	    	border-radius: 5px;
-	   	 	width: 25px;
-   			height: 25px;
-   			padding: 0px;
-   			outline:none;
-		}
-		.presentation {
-			text-align: center;
-			margin-bottom: 30px;
+	user-select: initial;
+	height: 0;
+	opacity: 0;
+	top: 0;
+	transition: opacity 0.6s ease;
+	width: 90%;
+	float: left;
+	left: 10%;
+	overflow: hidden;
+	position: relative;
+	background-color: white;
 
-		}
-		.flex-row {
-			display: flex;
-		}
-		.centered-row {
-			margin-left: auto;
-			margin-right: auto;
-		}
-		
+	#quit {
+		position: fixed;
+		top: 1%;
+		right: 1%;
+		background-color: $themeRedColor;
+		color: white;
+		border: none;
+		border-radius: 5px;
+		width: 25px;
+		height: 25px;
+		padding: 0;
+		outline: none;
 	}
 
-#GrowthHackingTab {
-	#results {
-		user-select: initial;
+	.presentation {
+		text-align: center;
+		margin-bottom: 30px;
+	}
+
+	.flex-row {
+		display: flex;
+	}
+
+	.centered-row {
+		margin-left: auto;
+		margin-right: auto;
 	}
 }
 
 .addUsersView {
 	width: 100%;
 	font-family: $defaultFont;
-    .addUsersProgress.hidden {
-        display: none;
-    }
-    .addUsersProgress {
-		padding:10px;
-		padding-top: 20px;
+
+	.addUsersProgress.hidden {
+		display: none;
+	}
+
+	.addUsersProgress {
+		padding: 20px 10px 10px;
 		text-align: center;
 		width: 90%;
-		margin: 0px auto;
+		margin: 0 auto;
+
 		.DivHeader {
 			font-size: 12px;
 		}
-		#progressStatus{
+
+		#progressStatus {
 			i {
 				font-size: 25px;
 				vertical-align: center;
 				color: $themeColor;
 			}
+
 			.progress {
 				width: 80%;
-                height: 100%;
-                margin-left: 10%;
-                vertical-align: middle;
-				font-size: 12px;
-                line-height: 100%;
-				p {
-					background-color: #ececec;
-				}
-			}
-			.buttonSet {
-				display: inline-block;
-				i {
-					display: inline-block;
-					color: #32c75a;
-					padding: 1px 6px;
-				}
-				i.hidden {
-					display: none;
-				}
-				button.hidden {
-					display: none;
-				}
-				button {
-					outline: none;
-					border: none;
-					background-color:white;
-					i {
-						padding: 0px;
-						color: black;
-					}
-					&:hover {
-						i {
-							padding: 0px;
-							color: $themeColor;
-						}
-					}
-				}
-			}
-		}
-    }
-    .addUsers.hidden {
-        display: none;
-    }
-	.addUsers {
-		padding:10px;
-		padding-top: 20px;
-		text-align: center;
-		width: 90%;
-		margin: 0px auto;
-		.DivHeader {
-			font-size: 12px;
-		}
-		#addUsersForm{
-			i {
-				font-size: 25px;
+				height: 100%;
+				margin-left: 10%;
 				vertical-align: middle;
-				color: $themeColor;
-			}
-			.inputs {
-				width: 100%;
-				position: relative;
 				font-size: 12px;
-				textarea.hidden {
-					display: none;
-				}
-				textarea {
-					vertical-align: middle;
-					padding-left: 3px;
-					border-radius: 3px;
-				    border: none;
-    				background-color: #ececec;
-				}
-				p.hidden {
-					display: none;
-				}
+				line-height: 100%;
+
 				p {
-					border-radius: 3px;
 					background-color: #ececec;
 				}
 			}
+
 			.buttonSet {
 				display: inline-block;
+
 				i {
 					display: inline-block;
 					color: #32c75a;
 					padding: 1px 6px;
 				}
+
 				i.hidden {
 					display: none;
 				}
+
 				button.hidden {
 					display: none;
 				}
+
 				button {
 					outline: none;
 					border: none;
-					background-color:white;
+					background-color: white;
+
 					i {
-						padding: 0px;
+						padding: 0;
 						color: black;
 					}
+
 					&:hover {
 						i {
-							padding: 0px;
+							padding: 0;
 							color: $themeColor;
 						}
 					}
@@ -222,15 +164,102 @@
 			}
 		}
 	}
+
+	.addUsers.hidden {
+		display: none;
+	}
+
+	.addUsers {
+		padding: 20px 10px 10px;
+		text-align: center;
+		width: 90%;
+		margin: 0 auto;
+
+		.DivHeader {
+			font-size: 12px;
+		}
+
+		#addUsersForm {
+			i {
+				font-size: 25px;
+				vertical-align: middle;
+				color: $themeColor;
+			}
+
+			.inputs {
+				width: 100%;
+				position: relative;
+				font-size: 12px;
+
+				textarea.hidden {
+					display: none;
+				}
+
+				textarea {
+					vertical-align: middle;
+					padding-left: 3px;
+					border-radius: 3px;
+					border: none;
+					background-color: #ececec;
+				}
+
+				p.hidden {
+					display: none;
+				}
+
+				p {
+					border-radius: 3px;
+					background-color: #ececec;
+				}
+			}
+
+			.buttonSet {
+				display: inline-block;
+
+				i {
+					display: inline-block;
+					color: #32c75a;
+					padding: 1px 6px;
+				}
+
+				i.hidden {
+					display: none;
+				}
+
+				button.hidden {
+					display: none;
+				}
+
+				button {
+					outline: none;
+					border: none;
+					background-color: white;
+
+					i {
+						padding: 0;
+						color: black;
+					}
+
+					&:hover {
+						i {
+							padding: 0;
+							color: $themeColor;
+						}
+					}
+				}
+			}
+		}
+	}
+
 	.addUsersHeader {
 		padding: 5px;
 		width: 60%;
 		text-align: center;
 		color: $themeColor;
-		margin: 0px auto;
-		margin-top: 2%;
+		margin: 2% auto 0;
 		border-bottom: 1px solid $themeColor;
 		padding-bottom: 2%;
+
 		p {
 			font-weight: 600;
 			color: $themeColor;
@@ -238,72 +267,76 @@
 			letter-spacing: 1px;
 			font-size: 15px;
 			width: 70%;
-		    margin-left: auto;
-    		margin-right: auto;
-    		margin-bottom: 0px;
-    		line-height: 30px;
-    		border-radius: 10px;
+			margin-left: auto;
+			margin-right: auto;
+			margin-bottom: 0;
+			line-height: 30px;
+			border-radius: 10px;
 		}
 	}
 }
 
-
 .requestedWebsitesView {
 	width: 100%;
 	font-family: $defaultFont;
-    line-height: 100%;
-    .requestedWebsite {
-		padding:10px;
-		padding-top: 10px;
+	line-height: 100%;
+
+	.requestedWebsite {
+		padding: 10px;
 		text-align: left;
 		width: 70%;
-		margin: 0px auto;
-        p {
-            display: inline;
-            background-color: #ececec;
-        }
-        .quit {
+		margin: 0 auto;
+
+		p {
+			display: inline;
+			background-color: #ececec;
+		}
+
+		.quit {
 			display: inline;
 			left: 5%;
 			background-color: $themeRedColor;
 			color: white;
 			border: none;
-	    	border-radius: 5px;
-	   	 	width: 15px;
-   			height: 15px;
-   			padding: 0px;
-            margin-right: 15px;
-   			outline:none;
+			border-radius: 5px;
+			width: 15px;
+			height: 15px;
+			padding: 0;
+			margin-right: 15px;
+			outline: none;
 		}
+
 		.sendEmail {
 			display: inline;
 			left: 5%;
 			background-color: $themeColor;
 			color: white;
 			border: none;
-	    	border-radius: 5px;
-	   	 	width: 15px;
-   			height: 15px;
-   			padding: 0px;
-            margin-right: 15px;
-   			outline:none;
+			border-radius: 5px;
+			width: 15px;
+			height: 15px;
+			padding: 0;
+			margin-right: 15px;
+			outline: none;
 		}
-    }
+	}
+
 	.requestedWebsitesHeader {
 		padding: 5px;
 		width: 60%;
 		text-align: center;
 		color: $themeColor;
-		margin: 0px auto;
-		margin-top: 2%;
+		margin: 2% auto 0;
 		border-bottom: 1px solid $themeColor;
 		padding-bottom: 2%;
+
 		#sendAllMails {
-			display:inline;
-			float:left;
+			display: inline;
+			float: left;
 			border-radius: 5px;
 		}
-		p {	
+
+		p {
 			display: inline;
 			font-weight: 600;
 			color: $themeColor;
@@ -311,58 +344,69 @@
 			letter-spacing: 1px;
 			font-size: 15px;
 			width: 70%;
-		    margin-left: auto;
-    		margin-right: auto;
-    		margin-bottom: 0px;
-    		line-height: 30px;
-    		border-radius: 10px;
+			margin-left: auto;
+			margin-right: auto;
+			margin-bottom: 0;
+			line-height: 30px;
+			border-radius: 10px;
 		}
 	}
 }
+
 .movable-websites {
-	i.goTop, i.goDown, i.top, i.down {
+	i.down,
+	i.goDown,
+	i.goTop,
+	i.top {
 		font-weight: bold;
-    font-size: 1.3em;
-    background-color: $themeColor;
+		font-size: 1.3em;
+		background-color: $themeColor;
 		color: white;
-    border-radius: 1.3em;
+		border-radius: 1.3em;
 		margin: 0 1px;
 		padding: 3px 6px;
 		cursor: pointer;
 	}
 }
+
 #EditGroupsTab {
 	.infraList {
 		display: flex;
 		align-items: flex-start;
+
 		.infraButton {
 			margin-right: 1vw;
-    		padding: 2px 9px;
-    		border-radius: 10px;
-    		border: none;
-    		min-width: 6vw;
-    		width: fit-content;
-    		background-color: lightgray;
-    		color: black;
-    		transition: all 0.3s ease;
-    		-webkit-transition: all 0.3s ease;
-    		outline: none;
-    		&:hover {
-    			background-color: black;
+			padding: 2px 9px;
+			border-radius: 10px;
+			border: none;
+			min-width: 6vw;
+			width: fit-content;
+			background-color: lightgray;
+			color: black;
+			transition: all 0.3s ease;
+			-webkit-transition: all 0.3s ease;
+			outline: none;
+
+			&:hover {
+				background-color: black;
 				color: lightgray;
 				transition: all 0.3s ease;
 				-webkit-transition: all 0.3s ease;
-    		}
+			}
 		}
+
 		.infraButton.infraSelected {
 			background-color: black;
 			color: lightgray;
 			transition: all 0.3s ease;
 			-webkit-transition: all 0.3s ease;
 		}
+
 		.addNewInfra {
 			display: inline-block;
-			button#showNewInfraForm, form#addNewInfraForm {
+
+			button#showNewInfraForm,
+			form#addNewInfraForm {
 				visibility: hidden;
 				overflow: hidden;
 				height: 0;
@@ -370,47 +414,114 @@
 				transition: visibility 0.3s ease, opacity 0.3s ease;
 				-webkit-transition: visibility 0.3s ease, opacity 0.3s ease;
 			}
-			button#showNewInfraForm.show, form#addNewInfraForm.show {
+
+			button#showNewInfraForm.show,
+			form#addNewInfraForm.show {
 				visibility: visible;
 				height: auto;
 				opacity: 1;
 				transition: visibility 0.3s ease, opacity 0.3s ease;
 				-webkit-transition: visibility 0.3s ease, opacity 0.3s ease;
 			}
+
 			button#showNewInfraForm {
 				padding: 0;
 				border: 0;
 			}
+
 			button#showNewInfraForm.show {
 				padding: 2px 9px;
-    			border-radius: 10px;
-    			border: none;
-    			min-width: 6vw;
-    			width: fit-content;
+				border-radius: 10px;
+				border: none;
+				min-width: 6vw;
+				width: fit-content;
 				background-color: $themeColor;
 				color: white;
 			}
 		}
 	}
+
 	.results {
 		display: flex;
 		align-items: flex-start;
 		margin-top: 10vh;
-		.groupList, .userList, .groupProfiles, .groupApps {
+
+		.groupApps,
+		.groupList,
+		.groupProfiles,
+		.userList {
 			padding: 1vw;
 		}
+
 		.groupList {
 			.group {
 				.groupName {
 					font-weight: bold;
+
 					&:hover {
 						text-decoration: underline;
 						cursor: pointer;
 					}
 				}
+
 				.groupChildren {
 					margin-left: 3vw;
-				}	
+				}
+			}
+		}
+	}
+}
+
+#UnregisteredUsersTab {
+	#results {
+		height: 60vh;
+		border: 1px solid;
+		border-radius: 5px;
+		overflow: scroll;
+		padding: 10px;
+
+		.delete-unregistered-email {
+			color: white;
+			background-color: red;
+			margin-right: 1vw;
+			padding: 1px;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+	}
+}
+
+#WebsitesVisitedTab {
+	#results,
+	#websitesDone,
+	#blacklist {
+		max-height: 70vh;
+		border: 1px solid;
+		border-radius: 5px;
+		overflow: scroll;
+		padding: 10px;
+
+		div {
+			padding: 3px;
+
+			button {
+				color: white;
+				background-color: $themeColor;
+				border: 1px solid $themeColor;
+				padding: 2px;
+				margin-right: 1vw;
+				margin-left: 1vw;
+				outline: none;
+				border-radius: 5px;
+				transition: all 0.3s ease;
+				-webkit-transiton: all 0.3s ease;
+
+				&:hover {
+					transition: all 0.3s ease;
+					-webkit-transiton: all 0.3s ease;
+					background-color: white;
+					color: $themeColor;
+				}
 			}
 		}
 	}

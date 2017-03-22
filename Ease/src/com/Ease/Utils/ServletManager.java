@@ -306,4 +306,12 @@ public class ServletManager {
 	public HttpSession getSession() {
 		return request.getSession();
 	}
+	
+	/**
+	 * Return the next unique single_id for a context object
+	 * @return int
+	 */
+	public int getNextSingle_id() {
+		return ((IdGenerator)this.getContextAttr("idGenerator")).getNextId();
+	}
 }

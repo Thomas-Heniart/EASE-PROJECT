@@ -1,7 +1,6 @@
 package com.Ease.Servlet.BackOffice;
 
 import java.io.IOException;
-import java.util.Map.Entry;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,10 +8,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import com.Ease.Context.Catalog.WebsitesVisitedManager;
 import com.Ease.Dashboard.User.User;
@@ -37,7 +32,7 @@ public class GetWebsitesVisited extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("admin.jsp");
 		rd.forward(request, response);
 	}
 
@@ -46,21 +41,14 @@ public class GetWebsitesVisited extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
-		HttpSession session = request.getSession();
-		User user = (User)session.getAttribute("user");
+		User user = sm.getUser();
 		try {
 			sm.needToBeConnected();
 			if (!user.isAdmin())
 				throw new GeneralException(ServletManager.Code.ClientWarning, "You ain't admin");
 			WebsitesVisitedManager websitesVisitedManager = (WebsitesVisitedManager) sm.getContextAttr("websitesVisitedManager");
-			JSONArray res = new JSONArray();
-			for (Entry<String, Integer> urlAndCount : websitesVisitedManager.getWeightedWebsitesVisited()) {
-				JSONObject tmp = new JSONObject();
-				tmp.put("url", urlAndCount.getKey());
-				tmp.put("count", urlAndCount.getValue());
-				res.add(tmp);
-			}
-			sm.setResponse(ServletManager.Code.Success, res.toString());
+			sm.setResponse(ServletManager.Code.Success, websitesVisitedManager.getWebsitesVisitedJson().toString());
+			sm.setLogResponse("GetWebsitesVisited done");
 		} catch(GeneralException e) {
 			sm.setResponse(e);
 		}

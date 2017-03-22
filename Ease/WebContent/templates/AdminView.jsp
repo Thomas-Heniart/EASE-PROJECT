@@ -4,13 +4,20 @@
 
 <%@ page import="java.util.List"%>
 <script src="js/postHandler.js"></script>
+<script src="js/backOffice/websitesVisited.js"></script>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <div class="admin-menu">
 	<div>
-		<button id="enterGrowthHackingMode" class="button adminButton"
+		<button class="button adminButton"
 			target="GrowthHackingTab">
 			<img src="resources/icons/opened-email-envelope.png" />
+		</button>
+	</div>
+	<div>
+		<button class="button adminButton"
+			target="UnregisteredUsersTab">
+			<img src="resources/icons/lost.png" />
 		</button>
 	</div>
 	<div>
@@ -79,12 +86,12 @@
 			<img src="resources/icons/tags_icon.png" />
 		</button>
 	</div>
-	<div>
+	<!-- <div>
 		<button id="enterStatisticsMode" state="off"
 			class="button adminButton" target="StatisticsTab">
 			<img src="resources/icons/ascendant-bars-graphic.png" />
 		</button>
-	</div>
+	</div>  -->
 	<div>
 		<button id="cleanSavedSessions" state="off"
 			class="button adminButton">
@@ -94,7 +101,6 @@
 	
 </div>
 
-<%@ include file="Statistics.jsp"%>
 <%@ include file="AddUsers.jsp"%>
 <%@ include file="RequestedSitesView.jsp"%>
 <%@ include file="UploadWebsite.jsp"%>
@@ -107,3 +113,4 @@
 <%@ include file="AdminEditGroups.jsp" %>
 <%@ include file="backofficeAdmin/WebsitesVisitedBackOffice.jsp" %>
 <%@ include file="backofficeAdmin/GrowthHacking.jsp" %>
+<%@ include file="backofficeAdmin/UnregisteredUsers.jsp" %>
