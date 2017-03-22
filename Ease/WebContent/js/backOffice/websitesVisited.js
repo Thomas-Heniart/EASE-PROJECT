@@ -50,7 +50,7 @@ var WebsiteBroken = function(rootEl, url, count, single_id) {
 	this.single_id = single_id;
 	this.printOnDocument = function() {
 		self.elem = $("<div>"
-			+ "<button>TurnOn</button>"
+			+ "<button>Repaired</button>"
 			+ self.url
 			+ ((count == null && count) > 0 ? "" : (" (" + self.count + ")"))
 			+ "</div>").prependTo(self.rootEl);
@@ -86,7 +86,7 @@ var WebsiteDone = function(rootEl, url, count, single_id) {
 	this.elem = null;
 	this.printOnDocument = function() {
 		self.elem = $("<div>"
-			+ "<button>TurnOff</button>"
+			+ "<button>Broken</button>"
 			+ self.url
 			+ ((count == null && count) > 0 ? "" : (" (" + self.count + ")"))
 			+ "</div>").appendTo(self.rootEl);
@@ -122,7 +122,7 @@ var BlacklistedWebsite = function(rootEl, url, count, single_id) {
 	this.elem = null;
 	this.printOnDocument = function() {
 		self.elem = $("<div>"
-			+ "<button>Remove from blacklist</button>"
+			+ "<button>Whitelist</button>"
 			+ self.url
 			+ ((count == null && count) > 0 ? "" : (" (" + self.count + ")"))
 			+ "</div>").appendTo(self.rootEl);

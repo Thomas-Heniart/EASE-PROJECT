@@ -9,8 +9,17 @@
 		<h1>Websites visited and done</h1>
 	</div>
 	<div class="flex-row">
-		<div class="centered-row" id="blacklist"></div>
-		<div class="centered-row" id="results"></div>
-		<div class="centered-row" id="websitesDone"></div>
+		<div class="centered-row">
+			<h3 class="module-presentation">Websites blaclisted</h3>
+			<div id="blacklist"></div>
+		</div>
+		<div class="centered-row">
+			<h3 class="module-presentation">Websites waiting</h3>
+			<div id="results"></div>
+		</div>
+		<div class="centered-row">
+			<h3 class="module-presentation">Websites integrated</h3>
+			<div id="websitesDone"></div>
+		</div>
 	</div>
 </div>
