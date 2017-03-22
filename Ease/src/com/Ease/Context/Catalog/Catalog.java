@@ -384,4 +384,40 @@ public class Catalog {
 		oldWebsites.addAll(allNewWebsites);
 		this.websites = oldWebsites;
 	}
+
+	public void turnOffWebsite(int single_id, ServletManager sm) throws GeneralException {
+		this.getWebsiteWithSingleId(single_id).turnOff(sm);
+	}
+	
+	public void turnOnWebsite(int single_id, ServletManager sm) throws GeneralException {
+		this.getWebsiteWithSingleId(single_id).turnOn(sm);
+	}
+
+	public List<Website> getWorkingWebsites() {
+		List<Website> res = new LinkedList<Website>();
+		this.websites.forEach((website) -> {
+			if (website.work())
+				res.add(website);
+		});
+		Collections.sort(res, new Comparator<Website>() {
+			public int compare(Website w1, Website w2) {
+				return w1.compareToWithVisits(w2);
+			}
+		});
+		return res;
+	}
+
+	public List<Website> getBrokenWebsites() {
+		List<Website> res = new LinkedList<Website>();
+		this.websites.forEach((website) -> {
+			if (!website.work())
+				res.add(website);
+		});
+		Collections.sort(res, new Comparator<Website>() {
+			public int compare(Website w1, Website w2) {
+				return -w1.compareToWithVisits(w2);
+			}
+		});
+		return res;
+	}
 }

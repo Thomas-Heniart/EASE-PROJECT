@@ -20,16 +20,16 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class GetWebsitesDone
+ * Servlet implementation class GetWebsitesBroken
  */
-@WebServlet("/GetWebsitesDone")
-public class GetWebsitesDone extends HttpServlet {
+@WebServlet("/GetWebsitesBroken")
+public class GetWebsitesBroken extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GetWebsitesDone() {
+    public GetWebsitesBroken() {
         super();
     }
 
@@ -52,17 +52,17 @@ public class GetWebsitesDone extends HttpServlet {
 			if (!user.isAdmin())
 				throw new GeneralException(ServletManager.Code.ClientWarning, "You ain't admin");
 			Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-			List<Website> websitesDone = catalog.getWorkingWebsites();
+			List<Website> websitesBroken = catalog.getBrokenWebsites();
 			JSONArray res = new JSONArray();
-			for (Website websiteDone : websitesDone) {
+			for (Website websiteBroken : websitesBroken) {
 				JSONObject tmp = new JSONObject();
-				tmp.put("url", websiteDone.getHostname());
-				tmp.put("single_id", websiteDone.getSingleId());
-				tmp.put("count", websiteDone.getVisits());
+				tmp.put("url", websiteBroken.getHostname());
+				tmp.put("single_id", websiteBroken.getSingleId());
+				tmp.put("count", websiteBroken.getVisits());
 				res.add(tmp);
 			}
 			sm.setResponse(ServletManager.Code.Success, res.toString());
-			sm.setLogResponse("GetWebsitesVisited done");
+			sm.setLogResponse("GetWebsitesBroken done");
 		} catch(GeneralException e) {
 			sm.setResponse(e);
 		}

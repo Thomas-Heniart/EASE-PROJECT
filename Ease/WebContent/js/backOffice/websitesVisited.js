@@ -1,4 +1,5 @@
 var websitesVisited = [];
+var websitesBroken = [];
 var websitesDone = [];
 var blacklistedWebsites = [];
 var resultsRow;
@@ -19,9 +20,6 @@ var WebsiteVisited = function(rootEl, url, count, single_id) {
 				+ ((count == null && count) > 0 ? "" : (" (" + self.count + ")"))
 				+ "</div>").appendTo(self.rootEl);
 			$("button", self.elem).click(self.remove);
-		}
-		this.initWithElem = function(elem) {
-			self.elem = elem.appendTo(self.rootEl);
 		}
 		this.remove = function() {
 			postHandler.post("BlacklistWebsite", {
@@ -44,23 +42,71 @@ var WebsiteVisited = function(rootEl, url, count, single_id) {
 		}
 }
 
-var WebsiteDone = function(rootEl, url) {
+var WebsiteBroken = function(rootEl, url, count, single_id) {
 	var self = this;
 	this.rootEl = rootEl;
 	this.url = url;
+	this.count = count;
+	this.single_id = single_id;
+	this.printOnDocument = function() {
+		self.elem = $("<div>"
+			+ "<button>TurnOn</button>"
+			+ self.url
+			+ ((count == null && count) > 0 ? "" : (" (" + self.count + ")"))
+			+ "</div>").prependTo(self.rootEl);
+		$("button", self.elem).click(self.remove);
+	}
+	this.remove = function() {
+		postHandler.post("TurnOnWebsite", {
+			single_id: self.single_id
+		}, function() {
+			
+		}, function(data) {
+			var index = websitesBroken.indexOf(self);
+			if (index == -1)
+				return;
+			self.removeFromDocument();
+			websitesBroken.splice(index, 1);
+			loadWebsitesDone();
+		}, function(data) {
+			
+		});
+	}
+	this.removeFromDocument = function() {
+		self.elem.remove();
+	}
+}
+
+var WebsiteDone = function(rootEl, url, count, single_id) {
+	var self = this;
+	this.rootEl = rootEl;
+	this.url = url;
+	this.count = count;
+	this.single_id = single_id;
 	this.elem = null;
 	this.printOnDocument = function() {
 		self.elem = $("<div>"
-			+ "<i class='fa fa-times'></i>"
+			+ "<button>TurnOff</button>"
 			+ self.url
+			+ ((count == null && count) > 0 ? "" : (" (" + self.count + ")"))
 			+ "</div>").appendTo(self.rootEl);
-		$("i", self.elem).click(self.remove);
-	}
-	this.initWithElem = function(elem) {
-		self.elem = elem.appendTo(self.rootEl);
+		$("button", self.elem).click(self.remove);
 	}
 	this.remove = function() {
-		self.removeFromDocument();
+		postHandler.post("TurnOffWebsite", {
+			single_id: single_id
+		}, function() {
+			
+		}, function(data) {
+			var index = websitesDone.indexOf(self);
+			if (index == -1)
+				return;
+			self.removeFromDocument();
+			websitesDone.splice(index, 1);
+			loadWebsitesBroken();
+		}, function(data) {
+			
+		});
 	}
 	this.removeFromDocument = function() {
 		self.elem.remove();
@@ -103,6 +149,26 @@ var BlacklistedWebsite = function(rootEl, url, count, single_id) {
 	}
 }
 
+function loadWebsitesBroken() {
+	postHandler.post("GetWebsitesBroken", {
+		
+	}, function() {
+		websitesBroken.forEach(function(websiteBroken) {
+			websiteBroken.removeFromDocument();
+		});
+	}, function(data) {
+		var json = JSON.parse(data);
+		json.forEach(function(websiteBroken) {
+			console.log(websiteBroken);
+			var tmp = new WebsiteBroken(resultsRow, websiteBroken.url, websiteBroken.count, websiteBroken.single_id);
+			websitesBroken.push(tmp);
+			tmp.printOnDocument();
+		});
+	}, function(data) {
+		
+	});
+}
+
 function loadWebsitesVisited() {
 	postHandler.post("GetWebsitesVisited", {
 		
@@ -132,7 +198,7 @@ postHandler.post("GetWebsitesDone", {
 	}, function(data) {
 		var json = JSON.parse(data);
 		json.forEach(function(websiteDone) {
-			var tmp = new WebsiteDone(websitesDoneRow, websiteDone.url);
+			var tmp = new WebsiteDone(websitesDoneRow, websiteDone.url, websiteDone.count, websiteDone.single_id);
 			websitesDone.push(tmp);
 			tmp.printOnDocument();
 		});
@@ -167,6 +233,7 @@ $(document).ready(function() {
 	$(".adminButton[target='WebsitesVisitedTab']").click(function() {
 		loadWebsitesVisited();
 		loadWebsitesDone();
+		loadWebsitesBroken();
 		loadBlacklistedWebsites();
 	});
 });

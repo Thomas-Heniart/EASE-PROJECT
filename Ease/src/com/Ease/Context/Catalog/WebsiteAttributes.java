@@ -9,8 +9,8 @@ import com.Ease.Utils.ServletManager;
 public class WebsiteAttributes {
 	
 	public static WebsiteAttributes createWebsiteAttributes(DataBaseConnection db) throws GeneralException {
-		String db_id = db.prepareRequest("INSERT INTO websiteAttributes values (null, 0, null, default, 1, 1);").set().toString();
-		return new WebsiteAttributes(db_id, false, true, true);
+		String db_id = db.prepareRequest("INSERT INTO websiteAttributes values (null, 0, null, default, 1, 1, default);").set().toString();
+		return new WebsiteAttributes(db_id, false, true, true, 0);
 	}
 	
 	public static WebsiteAttributes loadWebsiteAttributes(String db_id, DataBaseConnection db) throws GeneralException {
@@ -18,15 +18,16 @@ public class WebsiteAttributes {
 		request.setInt(db_id);
 		DatabaseResult rs = request.get();
 		rs.next();
-		return new WebsiteAttributes(db_id, rs.getBoolean("locked"), rs.getBoolean("new"), rs.getBoolean("work"));
+		return new WebsiteAttributes(db_id, rs.getBoolean("locked"), rs.getBoolean("new"), rs.getBoolean("work"), rs.getInt("visits"));
 	}
 	
 	protected String db_id;
 	protected boolean locked;
 	protected boolean isNew;
 	protected boolean work;
+	protected int visits;
 	
-	public WebsiteAttributes(String db_id, boolean locked, boolean isNew, boolean work) {
+	public WebsiteAttributes(String db_id, boolean locked, boolean isNew, boolean work, int visits) {
 		this.db_id = db_id;
 		this.locked = locked;
 		this.isNew = isNew;
@@ -45,6 +46,43 @@ public class WebsiteAttributes {
 		return db_id;
 	}
 
+	public int getVisits() {
+		return visits;
+	}
+	
+	public void increaseVisits(int count, ServletManager sm) throws GeneralException {
+		DatabaseRequest request = sm.getDB().prepareRequest("UPDATE websiteAttributes SET visits = ? WHERE id = ?;");
+		request.setInt(visits + count);
+		request.setInt(db_id);
+		request.set();
+		this.visits += count;
+	}
+	
+	public void setVisits(int visits, ServletManager sm) throws GeneralException {
+		DatabaseRequest request = sm.getDB().prepareRequest("UPDATE websiteAttributes SET visits = ? WHERE id = ?;");
+		request.setInt(visits);
+		request.setInt(db_id);
+		request.set();
+		this.visits = visits;
+		
+	}
+	
+	public void turnOff(ServletManager sm) throws GeneralException {
+		DatabaseRequest request = sm.getDB().prepareRequest("UPDATE websiteAttributes SET work = ? WHERE id = ?");
+		request.setBoolean(false);
+		request.setInt(db_id);
+		request.set();
+		this.work = false;
+	}
+	
+	public void turnOn(ServletManager sm) throws GeneralException {
+		DatabaseRequest request = sm.getDB().prepareRequest("UPDATE websiteAttributes SET work = ? WHERE id = ?");
+		request.setBoolean(true);
+		request.setInt(db_id);
+		request.set();
+		this.work = true;
+	}
+	
 	public void refresh(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		DatabaseRequest request = db.prepareRequest("SELECT * FROM websiteAttributes WHERE id = ?;");
@@ -55,5 +93,6 @@ public class WebsiteAttributes {
 		this.locked = rs.getBoolean("locked");
 		this.isNew = rs.getBoolean("new");
 		this.work = rs.getBoolean("work");
+		this.visits = rs.getInt("visits");
 	}
 }

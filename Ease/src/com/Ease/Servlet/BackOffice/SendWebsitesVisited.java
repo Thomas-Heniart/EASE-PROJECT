@@ -21,14 +21,14 @@ import com.Ease.Utils.ServletManager;
 /**
  * Servlet implementation class WebsitesVisited
  */
-@WebServlet("/WebsitesVisited")
-public class WebsitesVisited extends HttpServlet {
+@WebServlet("/SendWebsitesVisited")
+public class SendWebsitesVisited extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public WebsitesVisited() {
+    public SendWebsitesVisited() {
         super();
     }
 

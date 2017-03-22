@@ -66,6 +66,14 @@ public class DatabaseResult {
 		}
 	}
 	
+	public Integer getInt(String columnName) throws GeneralException {
+		try {
+			return this.rs.getInt(columnName);
+		} catch (SQLException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+	}
+	
 	public Boolean getBoolean(int columnIndex) throws GeneralException {
 		try {
 			return this.rs.getBoolean(columnIndex);

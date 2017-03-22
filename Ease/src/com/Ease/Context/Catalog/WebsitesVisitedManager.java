@@ -409,4 +409,19 @@ public class WebsitesVisitedManager {
 			}
 		});
 	}
+
+	/**
+	 * Call when a website is integrated to remove it from websitesVisited
+	 * @param String url
+	 * @param ServletManager sm
+	 * @return int, the number of visits
+	 * @throws GeneralException when delete statement fail
+	 */
+	public int websiteDone(String url, ServletManager sm) throws GeneralException {
+		WebsiteVisited websiteVisited = this.findWebsiteVisitedWithUrl(url);
+		if (websiteVisited == null)
+			return 0;
+		websiteVisited.removeFromDb(sm);
+		return websiteVisited.getCount();
+	}
 }

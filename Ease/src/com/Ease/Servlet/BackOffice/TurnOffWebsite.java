@@ -1,7 +1,6 @@
 package com.Ease.Servlet.BackOffice;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,26 +9,22 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 import com.Ease.Context.Catalog.Catalog;
-import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class GetWebsitesDone
+ * Servlet implementation class TurnOffWebsite
  */
-@WebServlet("/GetWebsitesDone")
-public class GetWebsitesDone extends HttpServlet {
+@WebServlet("/TurnOffWebsite")
+public class TurnOffWebsite extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GetWebsitesDone() {
+    public TurnOffWebsite() {
         super();
     }
 
@@ -50,19 +45,18 @@ public class GetWebsitesDone extends HttpServlet {
 		try {
 			sm.needToBeConnected();
 			if (!user.isAdmin())
-				throw new GeneralException(ServletManager.Code.ClientWarning, "You ain't admin");
-			Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-			List<Website> websitesDone = catalog.getWorkingWebsites();
-			JSONArray res = new JSONArray();
-			for (Website websiteDone : websitesDone) {
-				JSONObject tmp = new JSONObject();
-				tmp.put("url", websiteDone.getHostname());
-				tmp.put("single_id", websiteDone.getSingleId());
-				tmp.put("count", websiteDone.getVisits());
-				res.add(tmp);
+				throw new GeneralException(ServletManager.Code.ClientError, "You ain't admin");
+			String single_id = sm.getServletParam("single_id", true);
+			if (single_id == null || single_id.equals(""))
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty single_id");
+			try {
+				int id = Integer.parseInt(single_id);
+				Catalog catalog = (Catalog) sm.getContextAttr("catalog");
+				catalog.turnOffWebsite(id, sm);
+				sm.setResponse(ServletManager.Code.Success, "Website turned off");
+			} catch (NumberFormatException e) {
+				throw new GeneralException(ServletManager.Code.ClientError, e);
 			}
-			sm.setResponse(ServletManager.Code.Success, res.toString());
-			sm.setLogResponse("GetWebsitesVisited done");
 		} catch(GeneralException e) {
 			sm.setResponse(e);
 		}

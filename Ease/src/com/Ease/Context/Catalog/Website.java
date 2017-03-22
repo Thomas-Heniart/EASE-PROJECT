@@ -91,9 +91,8 @@ public class Website {
 		request.setString(folder);
 		request.setString(name);
 		DatabaseResult rs = request.get();
-		if (rs.next()){
+		if (rs.next())
 			throw new GeneralException(ServletManager.Code.UserMiss, "This website already exists");
-		}
 		int transaction  = db.startTransaction();
 		WebsiteAttributes attributes = WebsiteAttributes.createWebsiteAttributes(db);
 		request = db.prepareRequest("INSERT INTO websites VALUES (null, ?, ?, ?, NULL, ?, ?, 0, 1, ?);");
@@ -136,7 +135,11 @@ public class Website {
 		}
 		IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
 		db.commitTransaction(transaction);
-		return new Website(db_id, idGenerator.getNextId(), name, url, folder, null, noLogin, homePage, 0, 1, infos, attributes, loginWithWebsites);
+		Website newWebsite = new Website(db_id, idGenerator.getNextId(), name, url, folder, null, noLogin, homePage, 0, 1, infos, attributes, loginWithWebsites);
+		WebsitesVisitedManager websitesVisitedManager = (WebsitesVisitedManager) sm.getContextAttr("websitesVisitedManager");
+		int visits = websitesVisitedManager.websiteDone(newWebsite.getHostname(), sm);
+		attributes.setVisits(visits, sm);
+		return newWebsite;
 	}
 
 
@@ -497,6 +500,10 @@ public class Website {
 	public int getRatio() {
 		return this.ratio;
 	}
+	
+	public int getVisits() {
+		return this.websiteAttributes.getVisits();
+	}
 
 	public void refresh(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
@@ -526,5 +533,22 @@ public class Website {
 
 	public String getHostname() {
 		return this.website_homepage.split("/")[2];
+	}
+	
+	public void turnOff(ServletManager sm) throws GeneralException {
+		this.websiteAttributes.turnOff(sm);
+	}
+	
+	public void turnOn(ServletManager sm) throws GeneralException {
+		this.websiteAttributes.turnOn(sm);
+	}
+
+	public int compareToWithVisits (Website w2) {
+		if (this.getVisits() < w2.getVisits())
+			return 1;
+		else if (this.getVisits() == w2.getVisits())
+			return 0;
+		else
+			return -1;
 	}
 }
