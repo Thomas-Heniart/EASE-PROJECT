@@ -949,6 +949,8 @@ section.vp {
     display: inline-block; }
     #landingBody.school header .container .schoolLogos .logoHandler img {
       height: 100%; }
+    #landingBody.school header .container .schoolLogos .logoHandler:first-child {
+      margin-left: 0; }
 
 @media screen and (min-width: 768px) {
   section {

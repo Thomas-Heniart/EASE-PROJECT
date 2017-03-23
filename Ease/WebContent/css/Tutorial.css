@@ -32,7 +32,7 @@
   height: 1.7vw;
   border: 1px solid #CCCCCC;
   border-radius: 1.7vw;
-  transition: all 0.3s ease-in 0s; }
+  transition: all 0.3s cubic-bezier(0.33, 1.6, 0.66, 1) 0s; }
 
 .onoffswitch-checkbox:checked + .onoffswitch-label {
   background-color: #49E845; }
