@@ -223,7 +223,7 @@ modifyAppPopup = function(rootEl){
 			},
 			function(msg){
 				self.currentApp.currentProfile.removeApp(self.currentApp);
-				self.relatedCatalogApp.decreaseCount();
+				self.relatedCatalogApp && self.relatedCatalogApp.decreaseCount();
 				self.currentApp.remove();
 				self.close();
 			},
