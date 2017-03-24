@@ -178,11 +178,13 @@ public class User {
 		newUser.passStep("first_connection", db);
 		newUser.initializeUpdateManager(sm);
 		System.out.println("Groups size" + groups.size());
-		if (groups.isEmpty()) {
+		if (groups.isEmpty())
 			newUser.sendVerificationEmail(email, true, sm);
-		}
 		((Map<String, User>)sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
 		((Map<String, User>)sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);
+		request = db.prepareRequest("DELETE FROM pendingRegistrations WHERE email = ?;");
+		request.setString(email);
+		request.set();
 		db.commitTransaction(transaction);
 		return newUser;
 	}

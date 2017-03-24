@@ -48,7 +48,9 @@ public class PendingRegistrationTransfert extends HttpServlet {
 		try {
 			if (!user.isAdmin())
 				throw new GeneralException(ServletManager.Code.ClientError, "You ain't admin dude");
-			DatabaseRequest db_request = db.prepareRequest("SELECT args, date FROM logs WHERE code = ? AND servlet_name LIKE ? ORDER BY date;");
+			DatabaseRequest db_request = db.prepareRequest("DELETE FROM pendingRegistrations");
+			db_request.set();
+			db_request = db.prepareRequest("SELECT args, date FROM logs WHERE code = ? AND servlet_name LIKE ? ORDER BY date;");
 			DatabaseRequest db_request2;
 			db_request.setInt(200);
 			db_request.setString("%CheckInvitation");
@@ -65,10 +67,19 @@ public class PendingRegistrationTransfert extends HttpServlet {
 				db_request2.setString(arg);
 				if (db_request2.get().next())
 					continue;
-				db_request2 = db.prepareRequest("INSERT INTO pendingRegistrations values(?, ?, ?);");
-				db_request2.setNull();
+				db_request2 = db.prepareRequest("SELECT id FROM pendingRegistrations WHERE email = ?;");
 				db_request2.setString(arg);
-				db_request2.setString(rs.getString(2));
+				DatabaseResult rs2 = db_request2.get();
+				if (rs2.next()) {
+					db_request2 = db.prepareRequest("UPDATE pendingRegistrations SET date = ? WHERE id = ?;");
+					db_request2.setString(rs.getString(2));
+					db_request2.setInt(rs2.getInt(1));
+				} else {
+					db_request2 = db.prepareRequest("INSERT INTO pendingRegistrations values(?, ?, ?);");
+					db_request2.setNull();
+					db_request2.setString(arg);
+					db_request2.setString(rs.getString(2));
+				}
 				db_request2.set();
 			}
 			sm.setResponse(ServletManager.Code.Success, "Transfert done.");

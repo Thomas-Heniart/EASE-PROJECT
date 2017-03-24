@@ -88,10 +88,19 @@ public class CheckInvitation extends HttpServlet {
 					else
 						sm.setResponse(ServletManager.Code.Success, "2 Go to registration");
 				}
-				db_request = db.prepareRequest("INSERT INTO pendingRegistrations values(?, ?, default);");
-				db_request.setNull();
+				db_request = db.prepareRequest("SELECT id FROM pendingRegistrations WHERE email = ?;");
 				db_request.setString(email);
-				db_request.set();
+				DatabaseResult rs2 = db_request.get();
+				if (rs2.next()) {
+					db_request = db.prepareRequest("UPDATE pendingRegistrations SET date = NOW() WHERE id = ?");
+					db_request.setInt(rs2.getInt(1));
+					db_request.set();
+				} else {
+					db_request = db.prepareRequest("INSERT INTO pendingRegistrations values(?, ?, default);");
+					db_request.setNull();
+					db_request.setString(email);
+					db_request.set();
+				}
 			}
 		} catch (GeneralException e) {
 			sm.setResponse(e);
