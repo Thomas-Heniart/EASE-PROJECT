@@ -65,7 +65,7 @@
 <c:otherwise>
 <c:if test="${app.getType() eq 'ClassicApp'}">
 <div class="siteLinkBox"
-	<c:forEach items="${app.getAccount().getAccountInformations()}" var="entry">
+	<c:forEach items="${app.getAccount().getAccountInformationsWithoutPassword()}" var="entry">
 		${entry.getInformationName()}="${entry.getInformationValue()}"
 	</c:forEach>
 	 webId="${app.getSite().getSingleId()}"

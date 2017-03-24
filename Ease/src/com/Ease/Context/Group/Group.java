@@ -38,12 +38,14 @@ public class Group {
 	
 	public static Group createGroup(String name, Group parent, Infrastructure infra, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
-		String parent_id = (parent == null) ? "null" : parent.getDBid();
 		String infra_id = (infra == null) ? "null" : infra.getDBid();
 		IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
 		DatabaseRequest request = db.prepareRequest("INSERT INTO groups values (null, ?, ?, ?);");
 		request.setString(name);
-		request.setInt(parent_id);
+		if (parent == null)
+			request.setNull();
+		else
+			request.setInt(parent.getDBid());
 		request.setInt(infra_id);
 		int db_id = request.set();
 		Group group = new Group(String.valueOf(db_id), name, parent, infra, idGenerator.getNextId());

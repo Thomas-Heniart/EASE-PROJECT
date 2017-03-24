@@ -132,6 +132,15 @@ var Dashboard = function(rootEl){
 
 var easeDashboard;
 $(document).ready(function(){
+	/*postHandler.post("GetDashboard",
+			{},
+			function() {},
+			function(data) {
+				console.log(JSON.parse(data));
+			},
+			function(data) {
+				
+			});*/
 	easeDashboard = new Dashboard($('.ProfilesHandler'));
 	var urlParams = window.location.search.substring(1,window.location.search.length).split("&");
 	for(var i in urlParams){

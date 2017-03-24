@@ -44,10 +44,6 @@
 <script src="js/form/emailSuggestions.js"></script>
 <script src="js/admin.js"></script>
 <script src="js/statistics.js"></script>
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
-	
-</script>
 <script src="js/websocket.js"></script>
 
 <script src="js/jquery.mousewheel.min.js"></script>
@@ -60,7 +56,9 @@
 <script src="js/modalEffects.js"></script>
 <script src="js/selectFx.js"></script>
 <link rel="stylesheet" type="text/css" href="component.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
+<link rel="stylesheet" href="css/hover.css">
+<script src="js/backOffice/websitesVisited.js"></script>
+<script src="js/backOffice/tags.js"></script>
 <%com.Ease.Dashboard.User.User user = (com.Ease.Dashboard.User.User) (session.getAttribute("user"));%>
 </head>
 

@@ -1,6 +1,6 @@
 package com.Ease.Dashboard.App.WebsiteApp.ClassicApp;
 
-import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -116,6 +116,16 @@ public class Account {
 		return infos;
 	}
 	
+	public List<AccountInformation> getAccountInformationsWithoutPassword() {
+		List<AccountInformation> res = new LinkedList<AccountInformation>();
+		for (AccountInformation info : this.infos) {
+			if (info.getInformationName().equals("password"))
+				continue;
+			res.add(info);
+		}
+		return res;
+	}
+	
 	public void setPassword(String password, User user, ServletManager sm) throws GeneralException {
 		String cryptedPassword = user.encrypt(password);
 		if (this.getInformationNamed("password") == null)
@@ -190,12 +200,12 @@ public class Account {
 	public JSONArray getInformationsJSON() {
 		JSONArray res = new JSONArray();
 		for(AccountInformation info : this.infos) {
-			if (info.getInformationName().equals("password"))
-				continue;
-			JSONObject tmp = new JSONObject();
-			tmp.put("name", info.getInformationName());
-			tmp.put("value", info.getInformationValue());
-			res.add(tmp);
+			if (!info.getInformationName().equals("password")) {
+				JSONObject tmp = new JSONObject();
+				tmp.put("name", info.getInformationName());
+				tmp.put("value", info.getInformationValue());
+				res.add(tmp);
+			}
 		}
 		return res;
 	}

@@ -492,9 +492,9 @@
 }
 
 #WebsitesVisitedTab {
+	#blacklist,
 	#results,
-	#websitesDone,
-	#blacklist {
+	#websitesDone {
 		max-height: 70vh;
 		border: 1px solid;
 		border-radius: 5px;
@@ -523,6 +523,159 @@
 					color: $themeColor;
 				}
 			}
+		}
+	}
+}
+
+#TagsManagerTab {
+	#tags {
+		.tag {
+			margin: 5px;
+			border-radius: 5px;
+			color: white;
+			user-select: none;
+
+			span {
+				padding: 4px 6px;
+
+				&:last-child {
+					border-left: 1px solid;
+				}
+			}
+		}
+	}
+
+	.tag-websites {
+		width: 75%;
+
+		#catalogWebsites,
+		#tag-websiteList {
+			opacity: 1;
+			overflow: auto;
+			transition: opacity 0.3s ease;
+			-webkit-transition: opacity 0.3s ease;
+
+			.website {
+				width: 7%;
+				border-radius: 5px;
+				margin: 1%;
+				display: inline-block;
+				position: relative;
+				vertical-align: top;
+
+				img {
+					width: 100%;
+					border-radius: 5px;
+					cursor: pointer;
+				}
+
+				.tick {
+					visibility: hidden;
+					position: absolute;
+					right: 0;
+					top: 0;
+					background-color: rgba(0, 0, 0, 0.3);
+					transition: visibility 0.3s ease;
+					-webkit-transition: visibility 0.3s ease;
+				}
+
+				p {
+					font-size: smaller;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					letter-spacing: 0.5px;
+					white-space: nowrap;
+				}
+			}
+
+			.website.selected {
+				.tick {
+					visibility: visible;
+					transition: visibility 0.3s ease;
+					-webkit-transition: visibility 0.3s ease;
+				}
+			}
+		}
+
+		#tag-websiteList {
+			#addTagWebsite {
+				background-color: $themeColor;
+				cursor: pointer;
+			}
+		}
+
+		#catalogWebsites.hidden,
+		#tag-websiteList.hidden {
+			display: block !important;
+			opacity: 0;
+			transition: opacity 0.3s ease;
+			-webkit-transition: opacity 0.3s ease;
+			overflow: hidden;
+		}
+	}
+
+	#tag-settings {
+		position: relative;
+
+		.tag-settings-color,
+		.tag-settings-color-selected {
+			color: white;
+			text-align: center;
+			cursor: pointer;
+		}
+
+		.tag-settings-color-selected {
+			margin: 2vh 0;
+		}
+
+		.tag-settings-colors {
+			max-height: 0;
+			overflow: hidden;
+			transition: max-height 0.3s ease;
+			-webkit-transition: max-height 0.3s ease;
+		}
+
+		.tag-settings-colors.show {
+			max-height: 40vh;
+			overflow: auto;
+			margin-bottom: 2vh;
+			transition: max-height 0.3s ease;
+			-webkit-transition: max-height 0.3s ease;
+		}
+
+		.settings-button {
+			position: relative;
+			outline: none;
+			border: 1px solid $themeColor;
+			color: white;
+			border-radius: 5px;
+			background-color: $themeColor;
+			transition: all 0.3s ease;
+			-webkit-transition: all 0.3s ease;
+
+			&:hover {
+				background-color: white;
+				color: $themeColor;
+				transition: all 0.3s ease;
+				-webkit-transition: all 0.3s ease;
+			}
+		}
+
+		#tag-delete.settings-button {
+			position: absolute;
+			right: 0;
+			overflow: auto;
+			visibility: visible;
+			opacity: 1;
+			transition: opacity 0.3s ease;
+		}
+
+		#tag-delete.settings-button.hide {
+			position: absolute;
+			border: none;
+			visibility: hidden;
+			opacity: 0;
+			overflow: hidden;
 		}
 	}
 }

@@ -57,3 +57,11 @@ UPDATE websites SET website_attributes_id = LAST_INSERT_ID() WHERE id = 259;
 
 INSERT INTO websiteAttributes values(null, default, null, '2017-01-01 00:00:00', 0, 1);
 UPDATE websites SET website_attributes_id = LAST_INSERT_ID() WHERE id = 260;
+
+ALTER TABLE websiteAttributes
+ADD visits INT(10) UNSIGNED NOT NULL default 0;
+
+ALTER TABLE usersEmails MODIFY COLUMN email VARCHAR(100) BINARY NOT NULL;
+
+
+UPDATE tags SET color = color - 1 WHERE color > 0;
