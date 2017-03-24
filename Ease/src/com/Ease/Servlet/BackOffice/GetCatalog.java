@@ -57,7 +57,7 @@ public class GetCatalog extends HttpServlet {
 				throw new GeneralException(ServletManager.Code.ClientError, "You are not an admin");
 			Catalog catalog = (Catalog) sm.getContextAttr("catalog");
 			JSONArray res = new JSONArray();
-			for(Website website : catalog.getWebsites()) {
+			for(Website website : catalog.getWebsitesAlphabetically()) {
 				JSONObject tmp = new JSONObject();
 				tmp.put("single_id", website.getSingleId());
 				tmp.put("imgSrc", Variables.URL_PATH + website.getFolder() + "logo.png");

@@ -125,10 +125,9 @@ var TagManager = function(rootEl) {
 			return;
 		self.currentTag.remove();
 		self.tags.splice(index, 1);
-		self.tagWebsites.forEach(function(tagWebsite) {
-			tagWebsite.removeFromDocument();
-		});
-		self.tagWebsites = [];
+		self.emptyTagWebsites();
+		self.emptySelectedWebsites();
+		self.currentTag = null;
 	});
 	$(".tag-settings-color", self.tagColorsRow).click(function() {
 		self.selectedColor.css('background-color', $(this).css('background-color'));
