@@ -134,8 +134,7 @@ public class Tag {
 	}
 	
 	private void editWebsites(List<Website> newWebsites, DataBaseConnection db) throws GeneralException {
-		int transaction = db.startTransaction();
-		DatabaseRequest request = db.prepareRequest("DELETE FROM tagsAndSitesMap WHERE tag_id = ?");
+		DatabaseRequest request = db.prepareRequest("DELETE FROM tagsAndSitesMap WHERE tag_id = ?;");
 		request.setInt(db_id);
 		request.set();
 		for(Website website : newWebsites) {
@@ -144,7 +143,6 @@ public class Tag {
 			request.setInt(website.getDb_id());
 			request.set();
 		}
-		db.commitTransaction(transaction);
 		this.sites = newWebsites;
 	}
 	
@@ -204,11 +202,8 @@ public class Tag {
 	}
 
 	public void edit(String name, int color_id, List<Website> newWebsites,ServletManager sm) throws GeneralException {
-		if (name.equals(this.name) && color_id == this.color_id)
-			return;
 		DataBaseConnection db = sm.getDB();
 		DatabaseRequest request;
-		int transaction = db.startTransaction();
 		if (this.color_id == color_id) {
 			request = db.prepareRequest("UPDATE tags SET tag_name = ? WHERE id = ?;");
 			request.setString(name);
@@ -223,7 +218,6 @@ public class Tag {
 		request.setInt(db_id);
 		request.set();
 		this.editWebsites(newWebsites, db);
-		db.commitTransaction(transaction);
 		this.name = name;
 		this.color_id = color_id;
 	}

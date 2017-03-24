@@ -5,6 +5,7 @@ var TagManager = function(rootEl) {
 	this.rootEl = rootEl;
 	this.tags = [];
 	this.tagWebsites = [];
+	this.selectedWebsites = [];
 	this.catalogWebsites = [];
 	this.currentTag = null;
 	this.current
@@ -35,6 +36,14 @@ var TagManager = function(rootEl) {
 		var tmp = new CatalogWebsite(self.catalogWebsitesRow, website.name, website.imgSrc, website.single_id);
 		self.catalogWebsites.push(tmp);
 		tmp.printOnDocument();
+		tmp.onClick(function() {
+			var index = self.selectedWebsites.indexOf(tmp);
+			if (index == -1)
+				self.selectedWebsites.push(tmp);
+			else
+				self.selectedWebsites.splice(index, 1);
+			tmp.toggleSelect();
+		});
 	}
 	this.loadCatalogWebsites = function() {
 		postHandler.post("GetCatalog", {
@@ -71,11 +80,14 @@ var TagManager = function(rootEl) {
 		}, self.emptyTagWebsites
 		, function(data) {
 			var json = JSON.parse(data);
+			self.emptySelectedWebsites();
 			json.forEach(function(tagWebsite) {
 				self.addTagWebsite(tagWebsite);
-				self.catalogWebsites.find(function(catalogWebsite) {
+				var selectedWebsite = self.catalogWebsites.find(function(catalogWebsite) {
 					return catalogWebsite.single_id == tagWebsite.single_id;
-				}).select();
+				});
+				selectedWebsite.select();
+				self.selectedWebsites.push(selectedWebsite);
 			});
 			setTimeout(function() {
 				self.tagWebsitesRow.removeClass("hidden");
@@ -89,6 +101,12 @@ var TagManager = function(rootEl) {
 			websiteTag.removeFromDocument();
 		});
 		self.tagWebsites = [];
+	}
+	this.emptySelectedWebsites = function() {
+		self.selectedWebsites.forEach(function(catalogWebsite) {
+			catalogWebsite.unselect();
+		});
+		self.selectedWebsites = [];
 	}
 	this.addTagWebsite = function(tagWebsite) {
 		var tmp = new TagWebsite(self.tagWebsitesRow, tagWebsite.single_id, tagWebsite.name, tagWebsite.imgSrc);
@@ -120,15 +138,10 @@ var TagManager = function(rootEl) {
 	});
 	$("#tag-settings-submit", self.tagSettingsRow).click(function() {
 		var name = $("#tag-settings-editName", self.tagSettingsRow).val();
-		var colorId = self.selectedColor.attr("index");
-		var websitesSelected = self.catalogWebsites.filter(function(catalogWebsite) {
-			return catalogWebsite.selected;
-		}); 
-		var websiteIds = websitesSelected.map(function(catalogWebsite) {
-			console.log(catalogWebsite);
+		var colorId = self.selectedColor.attr("index"); 
+		var websiteIds = self.selectedWebsites.map(function(catalogWebsite) {
 			return catalogWebsite.single_id.toString();
 		});
-		console.log(websiteIds);
 		var websiteIdsString = JSON.stringify(websiteIds);
 		if (self.currentTag != null) {
 			postHandler.post("EditTag", {
@@ -252,10 +265,9 @@ var CatalogWebsite = function(rootEl, name, imgSrc, single_id) {
 			+ self.name
 			+ "</p>"
 			+ "</div>").appendTo(self.rootEl);
-		self.elem.click(function() {
-			self.elem.toggleClass("selected");
-			self.selected = !self.selected;
-		})
+	}
+	this.onClick = function(f) {
+		self.elem.click(f);
 	}
 	this.select = function() {
 		self.elem.addClass("selected");
@@ -264,6 +276,10 @@ var CatalogWebsite = function(rootEl, name, imgSrc, single_id) {
 	this.unselect = function() {
 		self.elem.removeClass("selected");
 		self.selected = false;
+	}
+	this.toggleSelect = function() {
+		self.selected = !self.selected;
+		self.elem.toggleClass("selected");
 	}
 }
 
