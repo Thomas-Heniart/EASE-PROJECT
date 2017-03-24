@@ -641,6 +641,9 @@ var addUpdatePopup = function(rootEl){
 			);
 	});
 };
+$(document).ready(function(){
+	easeAddUpdatePopup = new addUpdatePopup($('#addUpdatePopup'));
+});
 
 var updateCount = function(rootEl){
 	var self = this;
@@ -660,6 +663,3 @@ $(document).ready(function(){
 //	easeUpdateCount = new updateCount('#updateCount');
 });
 
-$(document).ready(function(){
-	easeAddUpdatePopup = new addUpdatePopup($('#addUpdatePopup'));
-});

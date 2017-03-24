@@ -5,13 +5,13 @@ pageEncoding="UTF-8"%>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib tagdir="/WEB-INF/tags/catalog" prefix="catalog" %>
-<div class="arrowDragDrop">
-	<img src="resources/other/arrow2.png" style="width:100%"/>
-	<div class="popupContent" style="background-color: transparent; color: #373b60;width:100%;">
-		<p>Drag and drop</br>to add the app !</p>
-	</div>
-</div>
-<div class="CatalogViewTab <c:if test="${param.catalogOpen}">show</c:if>">
+
+<c:set var="user"			scope="session" value='${session.getAttribute("user")}'/>
+<c:set var="catalog"	scope="session" value='${servletContext.getAttribute("catalog")}'/>
+<c:set var="siteList"		scope="session" value='${catalog.getWebsites()}'/>
+<c:set var="tags"			scope="session"	value='${servletContext.getAttribute("Tags")}'/>
+<c:set var="tagAndSiteMapping"	scope="session" value='${servletContext.getAttribute("TagAndSiteMapping")}'/>
+
 	<div class="catalogView">
 		<div id="catalog-quit"> 
 			<i class="fa fa-times" aria-hidden="true"></i>
@@ -57,16 +57,6 @@ pageEncoding="UTF-8"%>
 					<div class="search-result"></div>
 					<h4 class="relatedApps"><span>Related apps</span></h4>
 					<div class="relatedApps"></div>
-<!--					<c:forEach items="${catalog.getNewWebsitesForGroups(user.getGroups())}" var="item" varStatus="loop">
-					<c:if test="${item.work()}">
-					<catalog:catalogApp site="${item}" newApp="${item.isNew()}"/>
-				</c:if>
-			</c:forEach>
-			<c:forEach items="${catalog.getPublicWebsitesForGroups(user.getGroups())}" var="item" varStatus="loop">
-			<c:if test="${item.work()}">
-			<catalog:catalogApp site="${item}" newApp="${item.isNew()}"/>
-		</c:if>
-	</c:forEach>-->
 	<div class="no-result-search">
 		<h2>No results yet...<img alt="no-result" src="resources/images/umbrella.png"/></h2>
 		<p>Fine ! Take a look there</p>
@@ -97,12 +87,8 @@ pageEncoding="UTF-8"%>
 	</div>
 </div>
 </div>
-</div>
+	<script src="js/catalog/catalogApp.js"></script>
+	<script src="js/catalog/updates/update.js"></script>
+	<script src="js/catalog/updates/updatesManager.js"></script>
+	<script src="js/catalog/catalog.js"></script>
 
-<c:if test="${param.catalogOpen}">
-<script>
-	$(document).ready(function() {
-		catalog.open();
-	});
-</script>
-</c:if>

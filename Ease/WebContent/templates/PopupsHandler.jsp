@@ -2,14 +2,30 @@
 pageEncoding="UTF-8"%>
 
 <div class="popupHandler" id="easePopupsHandler">
-	<%@ include file="popups/addUpdatePopup.jsp" %>
-	<%@ include file="popups/addAppPopup.jsp" %>
-	<%@ include file="popups/addBookmarkPopup.jsp" %>
-	<%@ include file="popups/deleteProfilePopup.jsp" %>
-	<%@ include file="popups/modifyAppPopup.jsp" %>
-	<%@ include file="popups/deleteAccountPopup.jsp"%>
 </div>
 <script type="text/javascript">
+	$(document).ready(function(){
+		$.get('/templates/popups/addAppPopup.jsp').success(function(data)
+		{
+			$('#easePopupsHandler').append(data);
+		});
+		$.get('/templates/popups/addBookmarkPopup.jsp').success(function(data)
+		{
+			$('#easePopupsHandler').append(data);
+		});
+		$.get('/templates/popups/modifyAppPopup.jsp').success(function(data)
+		{
+			$('#easePopupsHandler').append(data);
+		});
+		$.get('/templates/popups/deleteProfilePopup.jsp').success(function(data)
+		{
+			$('#easePopupsHandler').append(data);
+		});
+		$.get('/templates/popups/deleteAccountPopup.jsp').success(function(data)
+		{
+			$('#easePopupsHandler').append(data);
+		});		
+	});
 	var currentEasePopup = null;
 	$("#easePopupsHandler").click(function(e){
 		if ($(e.target).attr('id') == 'easePopupsHandler')

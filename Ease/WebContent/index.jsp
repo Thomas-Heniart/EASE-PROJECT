@@ -28,32 +28,22 @@ pageEncoding="UTF-8"%>
 	<link rel="chrome-webstore-item"
 	href="https://chrome.google.com/webstore/detail/echjdhmhmgildgidlcdlepfkaledeokm" />
 	<link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
-	<script src="js/jquery1.12.4.js"></script>
-	<script src="js/jquery-ui-1.12.0.js"></script>
-	<link rel="stylesheet" href="css/default_style.css" />
+
 	<link href='https://fonts.googleapis.comcss?family=Source+Sans+Pro'
 	rel='stylesheet' type='textcss' />
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
-	<link rel="stylesheet" href="css/bootstrap.css" />
-	<link rel="stylesheet" href="css/owl.carousel.css" />
-	<link rel="stylesheet" href="css/owl.theme.css" />
-	<link rel="stylesheet" href="css/owl.transitions.css" />
 
-	<link rel="stylesheet" href="css/lib/vicons-font/vicons-font.css">
-	<link rel="stylesheet" href="css/lib/vicons-font/buttons.css">
-	<link rel="stylesheet" href="css/lib/borderLoading/component.css">
+	<link rel="stylesheet" href="css/bootstrap.css" />
+	<link rel="stylesheet" href="css/default_style.css" />
 	<link rel="stylesheet" href="css/lib/niftyPopupWindow/component.css">
-	<link rel="stylesheet" href="css/lib/ColorSelect/cs-select.css">
-	<link rel="stylesheet" href="css/lib/ColorSelect/cs-skin-boxes.css">
-	<link rel="stylesheet" href="css/hover.css">
+	<link rel="stylesheet" type="text/css" href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
+
 	<link rel="manifest" href="manifest.json">
 
+	<script src="js/jquery1.12.4.js"></script>
+	<script src="js/jquery-ui-1.12.0.js"></script>
+
 	<script src="js/postHandler.js"></script>
-	<script src="js/form/form.js"></script>
-	<script src="js/form/errorMsg.js"></script>
-	<script src="js/form/input.js"></script>
-	<script src="js/form/popup.js"></script>
-	<script src="js/form/emailSuggestions.js"></script>
 
 	<script src="js/classie.js"></script>
 	<script src="js/Sortable.js"></script>
@@ -61,10 +51,6 @@ pageEncoding="UTF-8"%>
 	<script src="js/owl.carousel.js"></script>
 	<script src="js/basic-utils.js" ></script>
 	<script src="js/jquery.mousewheel.min.js"></script>
-	<script src="js/footer.js"></script>
-	<script src="js/catalog/catalogApp.js"></script>
-	<script src="js/catalog/updates/update.js"></script>
-	<script src="js/catalog/updates/updatesManager.js"></script>
 	<script src="js/extension.js" ></script>
 	<script src="js/alertPopup.js"></script>
 	<script src="js/loading.js"></script>
@@ -74,8 +60,6 @@ pageEncoding="UTF-8"%>
 	<script src="js/shortcut.js"></script>
 	<script src="js/dashboard.js"></script>
 	<script src="js/tracker.js"></script>
-	<link rel="stylesheet" type="text/css" href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
-	<link rel="stylesheet" type="text/css" href="css/lib/dropDownMenu/dropdown.css" />
 	<script src="js/snap.svg-min.js"></script>
 	<script src="js/modalEffects.js"></script>
 	<script src="js/selectFx.js"></script>
@@ -99,23 +83,16 @@ pageEncoding="UTF-8"%>
   if(!n._iq.hasOwnProperty(e)){n._iq[e]={_q:[]};v(n._iq[e])}return n._iq[e]};e.amplitude=n;
   })(window,document);
 
-  /* Prod */
-	//amplitude.getInstance().init("74f6ebfba0c7743a0c63012dc3a9fef0");
-
-	/* Test */
   amplitude.getInstance().init("73264447f97c4623fb38d92b9e7eaeea");
 </script>
 
 	<!-- Amplitude script -->
-	<link rel="stylesheet" type="text/css" href="component.css" />
-
 	<%
 	if (user != null){
 		SessionSave sessionSave = (SessionSave) (user.getSessionSave());
 		if (user.isAdmin()){%>
 			<script src="js/robotest.js"></script>
 		<%}%>
-		<script src="js/catalog/catalog.js"></script>
 	<%} else {
 		Cookie 	cookie = null;
 		Cookie 	cookies[] = request.getCookies();
@@ -153,12 +130,6 @@ pageEncoding="UTF-8"%>
 	<script src="js/isMobile.js"></script>
 	<script src="js/getNavigator.js"></script>
 	<script type="text/javascript">$crisp=[];CRISP_WEBSITE_ID="6e9fe14b-66f7-487c-8ac9-5912461be78a";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.im/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
-
-	<!-- start Mixpanel --><script type="text/javascript">(function(e,a){if(!a.__SV){var b=window;try{var c,l,i,j=b.location,g=j.hash;c=function(a,b){return(l=a.match(RegExp(b+"=([^&]*)")))?l[1]:null};g&&c(g,"state")&&(i=JSON.parse(decodeURIComponent(c(g,"state"))),"mpeditor"===i.action&&(b.sessionStorage.setItem("_mpcehash",g),history.replaceState(i.desiredHash||"",e.title,j.pathname+j.search)))}catch(m){}var k,h;window.mixpanel=a;a._i=[];a.init=function(b,c,f){function e(b,a){var c=a.split(".");2==c.length&&(b=b[c[0]],a=c[1]);b[a]=function(){b.push([a].concat(Array.prototype.slice.call(arguments,
-0)))}}var d=a;"undefined"!==typeof f?d=a[f]=[]:f="mixpanel";d.people=d.people||[];d.toString=function(b){var a="mixpanel";"mixpanel"!==f&&(a+="."+f);b||(a+=" (stub)");return a};d.people.toString=function(){return d.toString(1)+".people (stub)"};k="disable time_event track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config reset people.set people.set_once people.increment people.append people.union people.track_charge people.clear_charges people.delete_user".split(" ");
-for(h=0;h<k.length;h++)e(d,k[h]);a._i.push([b,c,f])};a.__SV=1.2;b=e.createElement("script");b.type="text/javascript";b.async=!0;b.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===e.location.protocol&&"//cdn .mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";c=e.getElementsByTagName("script")[0];c.parentNode.insertBefore(b,c)}})(document,window.mixpanel||[]);
-mixpanel.init("e87ca36e156107ebbd9a672735e6612c");</script><!-- end Mixpanel -->
-
 </head>
 
 <body role="document" class=<%= ((user != null && user.getOptions().isBackground_picked()) ? "'mainBody picBckgrnd'" : "'mainBody logoBckgrnd'") %>>
@@ -180,9 +151,18 @@ mixpanel.init("e87ca36e156107ebbd9a672735e6612c");</script><!-- end Mixpanel -->
 		<% if (user == null){ %>
 			<%@ include file="templates/loginBody.jsp"%>
 		<%} else {%>
-			<%@ include file="templates/Header.jsp"%>
+			<div class="header">
+				<%@ include file="templates/Header.jsp"%>
+			</div>
 			<%@ include file="templates/loggedBody.jsp"%>
-			<%@ include file="templates/Footer.jsp" %>
+			<script type="text/javascript">
+	$(document).ready(function(){
+		$.get('/templates/Footer.jsp').success(function(data)
+		{
+			$('#onComputer').append(data);
+		});
+		});				
+			</script>
 		<%}%>
 	</div>
 

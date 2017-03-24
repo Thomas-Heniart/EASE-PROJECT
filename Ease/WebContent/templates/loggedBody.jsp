@@ -10,7 +10,6 @@ pageEncoding="UTF-8"%>
 <%@ page import="java.text.DateFormat"%>
 <%@ page import="java.text.SimpleDateFormat"%>
 <%@ page import="java.util.Date"%>
-<script src="js/SettingsView.js"></script>
 <script src="js/checkConnection.js"></script>
 <%
 if (user != null) {
@@ -75,30 +74,41 @@ response.addCookie(email);
 					<div class="openCatalogHelper"></div>
 				</button>
 			</div>
-			<%@ include file="catalog/catalogView.jsp"%>
+			<div class="CatalogViewTab <c:if test="${param.catalogOpen}">show</c:if>">
+
+			</div>
+			<script type="text/javascript">
+				$(document).ready(function(){
+					$.get('/templates/catalog/catalogView.jsp').success(function(data)
+					{
+						$('.col-left .CatalogViewTab').append(data);
+					});
+				});
+			</script>
 			<c:if test='${user.appsImported() && (user.allTipsDone() eq false)}'>
 			<%@ include file="Tips.jsp" %>
 		</c:if>
 	</div>
-	<%@ include file="SettingsView.jsp" %>
+	<div class="SettingsView <c:if test='${settingsOpen ne null}'>show</c:if>">
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$.get('/templates/SettingsView.jsp').success(function(data)
+			{
+				$('#loggedBody .SettingsView').append(data);
+			});
+		});
+	</script>
 	
 </div>
- <%@include file="PopupsHandler.jsp" %> 
+<%@include file="PopupsHandler.jsp" %> 
 
 <c:if test='${(user.appsImported() eq false) || (param.importAccounts)}'>
-	<%@ include file="TutorialView.jsp"%>
+<%@ include file="TutorialView.jsp"%>
 </c:if>
 
 
 <%@ include file="new_extension.jsp" %>
-<script>
-
-	$(document).ready(function(){
-		$('.md-overlay').click(function(){
-			closeAllPopups();
-		});
-	});
-</script>
 <script>
 	$(document).ready(function(){
 		$('.cookiesInfo').css('display', 'none');
@@ -112,36 +122,14 @@ response.addCookie(email);
 		easeTracker.setUserProperty("EmailNonVerifiedCount", unverifiedEmailCount);
 		
 	});
-	(function() {
-		if (!String.prototype.trim) {
-			(function() {
-						// Make sure we trim BOM and NBSP
-						var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
-						String.prototype.trim = function() {
-							return this.replace(rtrim, '');
-						};
-					})();
-				}
+	easeTracker.setDailyPhoto($('#backgroundSwitch').is("checked"));
+</script>
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-				[].slice.call( document.querySelectorAll( 'input.input__field' ) ).forEach( function( inputEl ) {
-					// in case the input is already filled..
-					if( inputEl.value.trim() !== '' ) {
-						classie.add( inputEl.parentNode, 'input--filled' );
-					}
-
-					// events:
-					inputEl.addEventListener( 'focus', onInputFocus );
-					inputEl.addEventListener( 'blur', onInputBlur );
-				} );
-			})();
-			easeTracker.setDailyPhoto($('#backgroundSwitch').is("checked"));
-		</script>
-		<script>
-			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-				(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-				m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-			})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-			ga('create', 'UA-75916041-5', 'auto');
-			ga('send', 'pageview');
-		</script>
+	ga('create', 'UA-75916041-5', 'auto');
+	ga('send', 'pageview');
+</script>

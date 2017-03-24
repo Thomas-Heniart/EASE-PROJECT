@@ -31,3 +31,4 @@
 		<p>Icons : <a target="_blank" href="http://fontawesome.io/">fontawesome.io</a></p>
 	</div>
 </div>
+<script src="js/footer.js"></script>

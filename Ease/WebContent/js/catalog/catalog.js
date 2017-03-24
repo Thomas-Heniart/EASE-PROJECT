@@ -402,4 +402,6 @@ var Catalog = function(rootEl){
 
 $(document).ready(function(){
 	catalog = new Catalog($('.CatalogViewTab'));
+	if (catalog.qRoot.hasClass('show'))
+		catalog.open();
 });
