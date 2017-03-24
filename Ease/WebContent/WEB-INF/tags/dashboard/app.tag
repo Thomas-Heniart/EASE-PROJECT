@@ -19,19 +19,6 @@
 		</div>
 		<div class="showAppActionsButton" >
 			<i class="fa fa-cog"></i>
-<!--			<div class="appActionsPopup">
-				<div class="buttonsContainer">
-					<div class="modifyAppButton menu-item"
-					onclick="showModifyAppPopup(this, event)">
-						<p>Modify</p>
-					</div>
-					<c:if test='${app.havePerm("DELETE")}'>
-						<div class="deleteAppButton menu-item" onclick="showConfirmDeleteAppPopup(this, event)">
-							<p>Delete</p>
-						</div>
-					</c:if>
-				</div>
-			</div>-->
 		</div>
 		<img class="logo" src="<c:out value='${app.getSite().getFolder()}logo.png'/>" />
 	</div>
@@ -47,16 +34,6 @@
 	<c:if test='${app.havePerm("DELETE")}'>
 	<div class="showAppActionsButton">
 		<i class="fa fa-cog"></i>
-<!--		<div class="appActionsPopup">
-			<div class="buttonsContainer">
-			
-				<div class="deleteAppButton menu-item"
-					onclick="showConfirmDeleteAppPopup(this, event)">
-					<p>Delete</p>
-				</div>
-			
-			</div>
-		</div>-->
 	</div>
 	</c:if>
 	<img class="logo" src="${app.getLinkAppInformations().getImgUrl()}" />
@@ -87,20 +64,6 @@
 <div class="linkImage">
 	<div class="showAppActionsButton">
 		<i class="fa fa-cog"></i>
-<!--		<div class="appActionsPopup">
-			<div class="buttonsContainer">
-				<div class="modifyAppButton menu-item"
-				onclick="showModifyAppPopup(this, event)">
-				<p>Modify</p>
-			</div>
-			<c:if test='${app.havePerm("DELETE")}'>
-			<div class="deleteAppButton menu-item"
-			onclick="showConfirmDeleteAppPopup(this, event)">
-			<p>Delete</p>
-		</div>
-	</c:if>
-</div>
-</div>-->
 </div>
 <img class="logo" src="<c:out value='${app.getSite().getFolder()}logo.png'/>" />
 </div>
