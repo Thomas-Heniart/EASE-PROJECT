@@ -15,9 +15,6 @@ $(document).ready(function() {
 	$("#sendAllMails").click(function(){
 		sendEmailsWebsiteIntegrated();
 	});
-
-	/* Tags manager behavior */
-	$("#setTags").click(setTagsClick);
 	
 	$("#cleanSavedSessions").click(cleanSavedSessions);
 	$("#buttonTestWebsites").click(testWebsites);
@@ -246,125 +243,6 @@ function sendEmailsWebsiteIntegrated(){
 				'text'
 		);
 	}
-}
-
-/* Tags functions */
-
-function setTagsClick() {
-	var tags = $('#tagsContainer div').map(function() {
-		return $(this).attr("tagId");
-	}).get();
-	tags = JSON.stringify(tags);
-	var websiteId = $("#websiteSelector").val();
-	postHandler.post("SetWebsiteTags", {
-		websiteId : websiteId,
-		tagsId : tags
-	}, function() {
-	}, function(retMsg) {
-		$('#setTags').val("Success");
-		$('#setTags').prop('disabled', true);
-		setTimeout(function() {
-			$('#setTags').val("Validate");
-			$('#setTags').prop('disabled', false);
-		}, 1000);
-	}, function(retMsg) {
-		$('#setTags').val(retMsg);
-		$('#setTags').prop('disabled', true);
-		setTimeout(function() {
-			$('#setTags').val("Validate");
-			$('#setTags').prop('disabled', false);
-		}, 1000);
-	}, 'text');
-}
-
-function showFormTags() {
-
-	var websiteId = $("#websiteSelector").val();
-	$('#tagsContainer').empty();
-
-	if (websiteId == 0) {
-		$('#completeForm').attr("style", "display:none");
-
-	} else {
-		postHandler
-				.post(
-						"GetWebsiteTags",
-						{
-							websiteId : websiteId
-						},
-						function() {
-							$('#completeForm').attr("style", "display:visible");
-						},
-						function(retMsg) {
-							var tags = JSON.parse(retMsg);
-							tags.forEach(function(tag) {
-								$("#tagsContainer")
-								.append(
-										'<div tagId="'
-												+ tag.singleId
-												+ '" class="btn-group tags-group" style="margin-left: 1px; margin-top: 3px;">'
-												+ '<a href="#" class="tag btn btn-default"'
-												+ 'style="background-color: '
-												+ tag.color
-												+ '; border-color: '
-												+ tag.color
-												+ '; color: white;">'
-												+ tag.name
-												+ '</a>'
-												+ '<a href="#" onClick="deleteTag('
-												+ tag.singleId
-												+ ')" class="btn btn-default delete-tag">X</a>'
-												+ '</div>');
-							});
-						}, function(retMsg) {
-						}, 'text');
-	}
-}
-
-function addTag() {
-	var websiteId = $("#websiteSelector").val();
-	var tagId = $("#tagSelector").val()
-	postHandler.post("AddWebsiteTag", {
-		websiteId: websiteId,
-		tagId: tagId
-	}, function() {
-		
-	}, function(data) {
-		var color = $("#tagSelector option[value=" + tagId + "]").attr("tag-color");
-		var name = $("#tagSelector option[value=" + tagId + "]").text();
-		$("#tagsContainer").append(
-				'<div tagId="'
-				+ tagId
-				+ '" class="btn-group tags-group" style="margin-left: 1px; margin-top: 3px;">'
-				+ '<a href="#" class="tag btn btn-default"'
-				+ 'style="background-color: '
-				+ color
-				+ '; border-color: '
-				+ color
-				+ '; color: white;">'
-				+ name
-				+ '</a>'
-				+ '<a href="#" onClick="deleteTag('
-				+ tagId
-				+ ')" class="btn btn-default delete-tag">X</a>'
-				+ '</div>');
-	}, function(data) {
-		
-	});
-}
-
-function deleteTag(tagId) {
-	var websiteId = $("#websiteSelector").val();
-	postHandler.post("RemoveWebsiteTag", {
-		tagId: tagId,
-		websiteId: websiteId
-	}, function() {
-		
-	}, function(data) {
-		$("#completeForm div div[tagId=" + tagId + "]").remove();
-	}, function(data) {
-		
-	});
 }
 
 function cleanSavedSessions(){

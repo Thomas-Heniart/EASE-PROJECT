@@ -18,6 +18,8 @@ import com.Ease.Utils.ServletManager;
 
 public class Tag {
 	
+	public static final String[] colors = {"#373B60", "#9B59B6", "#3498DB", "#5FD747", "#F1C50F", "#FF9D34", "#E74C3C", "#FF5E88"}; 
+	
 	public enum Data {
 		NOTHING,
 		ID,
@@ -26,13 +28,15 @@ public class Tag {
 		PRIORITY
 	}
 	
-	public static Tag createTag(String tagName, String tagColor, List<Website> tagSites, ServletManager sm) throws GeneralException {
+	public static Tag createTag(String tagName, int tagColor, List<Website> tagSites, ServletManager sm) throws GeneralException {
+		if (tagColor >= colors.length || tagColor < 0)
+			throw new GeneralException(ServletManager.Code.ClientError, "This color does not exist");
 		DataBaseConnection db = sm.getDB();
 		int single_id = ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId();
 		int transaction = db.startTransaction();
 		DatabaseRequest request = db.prepareRequest("INSERT INTO tags VALUES (null, ?, ?, 2);");
 		request.setString(tagName);
-		request.setString(tagColor);
+		request.setInt(tagColor);
 		int db_id = request.set();
 		for (Website site : tagSites) {
 			request = db.prepareRequest("INSERT INTO tagsAndSitesMap values(null, ?, ?);");
@@ -50,9 +54,9 @@ public class Tag {
 		while (rs.next()) {
 			String db_id = rs.getString(Data.ID.ordinal());
 			String name = rs.getString(Data.TAG_NAME.ordinal());
-			String color = rs.getString(Data.COLOR.ordinal());
+			int color_id = rs.getInt(Data.COLOR.ordinal());
 			int single_id = ((IdGenerator)context.getAttribute("idGenerator")).getNextId();
-			Tag newTag = new Tag(db_id, single_id, name, color); 
+			Tag newTag = new Tag(db_id, single_id, name, color_id); 
 			newTag.loadGroupIds(db);
 			tags.add(newTag);
 		}
@@ -84,15 +88,15 @@ public class Tag {
 	protected String db_id;
 	protected int single_id;
 	protected String name;
-	protected String color;
+	protected int color_id;
 	protected List<Website> sites;
 	protected List<String> groupIds;
 	
-	public Tag(String db_id, int single_id, String tagName, String tagColor) {
+	public Tag(String db_id, int single_id, String tagName, int color_id) {
 		this.db_id = db_id;
 		this.single_id = single_id;
 		this.name = tagName;
-		this.color = tagColor;
+		this.color_id = color_id;
 		this.sites = new LinkedList<Website> ();
 		this.groupIds = new LinkedList<String> ();
 	}
@@ -113,8 +117,12 @@ public class Tag {
 		return this.db_id;
 	}
 	
-	public String getColor() {
-		return this.color;
+	public int getColorId() {
+		return this.color_id;
+	}
+	
+	public String getHexaColor() {
+		return colors[this.color_id];
 	}
 	
 	public void setSites(Map<String, Website> sitesDBmap, DataBaseConnection db) throws GeneralException {
@@ -123,6 +131,19 @@ public class Tag {
 		DatabaseResult rs = request.get();
 		while (rs.next())
 			this.sites.add(sitesDBmap.get(rs.getString(1)));
+	}
+	
+	private void editWebsites(List<Website> newWebsites, DataBaseConnection db) throws GeneralException {
+		DatabaseRequest request = db.prepareRequest("DELETE FROM tagsAndSitesMap WHERE tag_id = ?;");
+		request.setInt(db_id);
+		request.set();
+		for(Website website : newWebsites) {
+			request = db.prepareRequest("INSERT INTO tagsAndSitesMap values (?, ?);");
+			request.setInt(db_id);
+			request.setInt(website.getDb_id());
+			request.set();
+		}
+		this.sites = newWebsites;
 	}
 	
 	public List<Website> getWebsites() {
@@ -144,15 +165,6 @@ public class Tag {
 	
 	public boolean isPublic() {
 		return this.groupIds.isEmpty();
-	}
-
-	@SuppressWarnings("unchecked")
-	public JSONObject getJSON(List<String> colors) {
-		JSONObject res = new JSONObject();
-		res.put("name", this.name);
-		res.put("singleId", this.single_id);
-		res.put("color", colors.get(Integer.parseInt(this.color) - 1));
-		return res;
 	}
 
 	public void addWebsite(Website website, ServletManager sm) throws GeneralException {
@@ -186,6 +198,51 @@ public class Tag {
 		if (!rs.next())
 			throw new GeneralException(ServletManager.Code.InternError, "This tag does not exist");
 		this.name = rs.getString(Data.TAG_NAME.ordinal());
-		this.color = rs.getString(Data.COLOR.ordinal());
+		this.color_id = rs.getInt(Data.COLOR.ordinal());
+	}
+
+	public void edit(String name, int color_id, List<Website> newWebsites,ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		DatabaseRequest request;
+		if (this.color_id == color_id) {
+			request = db.prepareRequest("UPDATE tags SET tag_name = ? WHERE id = ?;");
+			request.setString(name);
+		} else if (this.name.equals(name)) {
+			request = db.prepareRequest("UPDATE tags SET color = ? WHERE id = ?;");
+			request.setInt(color_id);
+		} else {
+			request = db.prepareRequest("UPDATE tags SET tag_name = ?, color = ? WHERE id = ?;");
+			request.setString(name);
+			request.setInt(color_id);
+		}
+		request.setInt(db_id);
+		request.set();
+		this.editWebsites(newWebsites, db);
+		this.name = name;
+		this.color_id = color_id;
+	}
+
+	public JSONObject getJSON() {
+		JSONObject res = new JSONObject();
+		res.put("name", this.name);
+		res.put("color", this.getHexaColor());
+		res.put("colorId", this.color_id);
+		res.put("single_id", this.single_id);
+		return res;
+	}
+
+	public void removeFromDb(ServletManager sm) throws GeneralException {
+		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
+		DatabaseRequest request = db.prepareRequest("DELETE FROM tagsAndSitesMap WHERE tag_id = ?;");
+		request.setInt(db_id);
+		request.set();
+		request = db.prepareRequest("DELETE FROM tagsAndGroupsMap WHERE tag_id = ?;");
+		request.setInt(db_id);
+		request.set();
+		request = db.prepareRequest("DELETE FROM tags WHERE id = ?;");
+		request.setInt(db_id);
+		request.set();
+		db.commitTransaction(transaction);
 	}
 }

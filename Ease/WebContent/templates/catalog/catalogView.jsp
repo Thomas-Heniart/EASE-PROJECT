@@ -39,7 +39,7 @@ pageEncoding="UTF-8"%>
 					<c:forEach items='${catalog.getTags()}' var="item">
 						<c:if test="${user.canSeeTag(item)}">
 							<a href="#" tagId="${item.getSingleId()}" class="tag btn btn-default ease-button hvr-grow" name="${item.getName()}"
-							style="background-color: ${colors.get(item.getColor() - 1)};">
+							style="background-color: ${item.getHexaColor()};">
 							${item.getName()}</a>					
 						</c:if>
 				</c:forEach>

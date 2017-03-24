@@ -3,8 +3,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <%@ page import="java.util.List"%>
-<script src="js/postHandler.js"></script>
-<script src="js/backOffice/websitesVisited.js"></script>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <div class="admin-menu">
@@ -81,8 +79,8 @@
 		</button>
 	</div>
 	<div>
-		<button id="enterTagsManagerMode" state="off"
-			class="button adminButton" target="TagsManagerTab">
+		<button class="button adminButton" 
+			target="TagsManagerTab">
 			<img src="resources/icons/tags_icon.png" />
 		</button>
 	</div>
@@ -105,7 +103,7 @@
 <%@ include file="RequestedSitesView.jsp"%>
 <%@ include file="UploadWebsite.jsp"%>
 <%@ include file="MoveSites.jsp" %>
-<%@ include file="TagsManager.jsp"%>
+<%@ include file="backofficeAdmin/TagsManager.jsp"%>
 <%@ include file="ChangeBackground.jsp"%>
 <%@ include file="ServerKeysManager.jsp"%>
 <%@ include file="TestWebsites.jsp"%>

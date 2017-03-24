@@ -419,4 +419,23 @@ public class Catalog {
 		});
 		return res;
 	}
+
+	public Tag getTagWithSingleId(int id) throws GeneralException {
+		Tag tag = this.tagIDmap.get(id);
+		if (tag == null)
+			throw new GeneralException(ServletManager.Code.ClientError, "Wrong single_id");
+		return tag;
+	}
+
+	public void removeTag(Tag tag, ServletManager sm) throws GeneralException {
+		tag.removeFromDb(sm);
+		this.tags.remove(tag);
+		this.tagDBmap.remove(tag.getDbId());
+		this.tagIDmap.remove(tag.getSingleId());
+	}
+	
+	public void removeTagWithSinlge(int single_id, ServletManager sm) throws GeneralException {
+		Tag tag = this.getTagWithSingleId(single_id);
+		this.removeTag(tag, sm);
+	}
 }
