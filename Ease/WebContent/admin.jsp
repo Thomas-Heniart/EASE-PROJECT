@@ -1,10 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page import="com.Ease.Dashboard.User.User" %>	
+<%@ page import="java.util.Base64"%>
+<%@ page import="java.util.Base64.Encoder"%>
+<%@ page import="java.nio.charset.StandardCharsets"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/xhtml1-transitional.dtd">
 <html xmlns="http://w3.org/1999/xhtml">
 <head>
+<% 	User user = (User) (session.getAttribute("user")); %>
+<%
+	if (session.getAttribute("user") == null || !((User)session.getAttribute("user")).isAdmin()) {
+%>
+<script>
+		window.location.replace("index.jsp");
+</script>
+<% } %>
 <meta http-equiv="Content-Type" contentType="text/html; charset=UTF-8" />
 <meta name="viewport" content="initial-scale=1, maximum-scale=1" />
 <title>EASE.space</title>
@@ -59,37 +71,18 @@
 <link rel="stylesheet" href="css/hover.css">
 <script src="js/backOffice/websitesVisited.js"></script>
 <script src="js/backOffice/tags.js"></script>
-<%com.Ease.Dashboard.User.User user = (com.Ease.Dashboard.User.User) (session.getAttribute("user"));%>
 </head>
 
 
 <body role="document" class="mainBody">
-	<%@ page import="java.util.Base64"%>
-	<%@ page import="java.util.Base64.Encoder"%>
-	<%@ page import="java.nio.charset.StandardCharsets"%>
-	<%
-		if (session.getAttribute("user") != null && ((User)session.getAttribute("user")).isAdmin()) {
-	%>
 	<c:set var="groupManager"	scope="session" value='${servletContext.getAttribute("groupManager")}' />
 	<c:set var="websitesVisitedManager" scope="session" value='${servletContext.getAttribute("websitesVisitedManager")}' />
-	<%@ include file="templates/Header.jsp"%>
 	<div id="loggedBody">
 		<div class="col-left show" style="width: 100%; float: left">
 			<%@ include file="templates/AdminView.jsp"%>
 		</div>
-		<%@ include file="templates/SettingsView.jsp"%>
 		<div class="md-overlay"></div>
 	</div>
-	<%
-		} else {
-	%>
-	<script>
-		window.location.replace("index.jsp");
-	</script>
-	<%
-		}
-	%>
-
 	<%@ include file="templates/Footer.jsp"%>
 	<div class="la-anim-10" id="loading"></div>
 	<%@ include file="templates/ChatButton.jsp" %>

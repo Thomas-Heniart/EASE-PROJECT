@@ -59,12 +59,16 @@ public class GetUnregisteredEmails extends HttpServlet {
 				String email = rs.getString(1);
 				db_request2 = db.prepareRequest("SELECT id FROM users WHERE email = ?;");
 				db_request2.setString(email);
-				if (db_request2.get().next())
-					continue;
-				JSONObject tmp = new JSONObject();
-				tmp.put("email", email);
-				tmp.put("date", rs.getString(2));
-				res.add(tmp);
+				if (db_request2.get().next()) {
+					db_request2 = db.prepareRequest("DELETE FROM pendingRegistrations WHERE email = ?;");
+					db_request2.setString(email);
+					db_request2.set();
+				} else {
+					JSONObject tmp = new JSONObject();
+					tmp.put("email", email);
+					tmp.put("date", rs.getString(2));
+					res.add(tmp);
+				}
 			}
 			sm.setResponse(ServletManager.Code.Success, res.toString());
 			sm.setLogResponse("Get unregistred emails done");

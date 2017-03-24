@@ -563,20 +563,25 @@
 				position: relative;
 				vertical-align: top;
 
-				img {
-					width: 100%;
-					border-radius: 5px;
-					cursor: pointer;
-				}
+				.logo {
+					position: relative;
 
-				.tick {
-					visibility: hidden;
-					position: absolute;
-					right: 0;
-					top: 0;
-					background-color: rgba(0, 0, 0, 0.3);
-					transition: visibility 0.3s ease;
-					-webkit-transition: visibility 0.3s ease;
+					img {
+						width: 100%;
+						border-radius: 5px;
+						cursor: pointer;
+					}
+
+					.tick {
+						visibility: hidden;
+						position: absolute;
+						right: 0;
+						top: 0;
+						opacity: 0;
+						background-color: rgba(0, 0, 0, 0.3);
+						transition: visibility 0.3s ease, opacity 0.3s ease;
+						-webkit-transition: visibility 0.3s ease, opacity 0.3s ease;
+					}
 				}
 
 				p {
@@ -591,8 +596,21 @@
 			.website.selected {
 				.tick {
 					visibility: visible;
-					transition: visibility 0.3s ease;
-					-webkit-transition: visibility 0.3s ease;
+					opacity: 1;
+					transition: visibility 0.3s ease, opacity 0.3s ease;
+					-webkit-transition: visibility 0.3s ease, opacity 0.3s ease;
+				}
+			}
+
+			.website.untagged {
+				.untagged {
+					position: absolute;
+					right: 0;
+					width: 25%;
+					background-color: $themeRedColor;
+					height: 25%;
+					border-radius: 100%;
+					box-shadow: 0 0 0 3px #656565;
 				}
 			}
 		}
@@ -622,6 +640,11 @@
 			color: white;
 			text-align: center;
 			cursor: pointer;
+		}
+
+		#AddTagMode {
+			display: block;
+    	margin-bottom: 1vh;
 		}
 
 		.tag-settings-color-selected {
@@ -659,6 +682,11 @@
 				transition: all 0.3s ease;
 				-webkit-transition: all 0.3s ease;
 			}
+		}
+
+		.settings-button.active {
+			background-color: white;
+			color: $themeColor;
 		}
 
 		#tag-delete.settings-button {

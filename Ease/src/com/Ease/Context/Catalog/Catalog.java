@@ -312,14 +312,27 @@ public class Catalog {
 		return res;
 	}
 
-	public List<Tag> getTagsForWebsiteId(int websiteId) {
-		Website website = this.websiteIDmap.get(websiteId);
+	public List<Tag> getTagsForWebsiteId(int websiteId) throws GeneralException {
+		Website website = this.getWebsiteWithSingleId(websiteId);
 		List<Tag> res = new LinkedList<Tag>();
 		for (Tag tag : this.tags) {
 			if (tag.getWebsites().contains(website))
 				res.add(tag);
 		}
 		return res;
+	}
+	
+	public boolean isWebsiteTaggedWithSingleId(int websiteId) throws GeneralException {
+		Website website = this.getWebsiteWithSingleId(websiteId);
+		return this.isWebsiteTagged(website);
+	}
+
+	public boolean isWebsiteTagged(Website website) {
+		for (Tag tag : this.tags) {
+			if (tag.getWebsites().contains(website))
+				return true;
+		}
+		return false;
 	}
 
 	public void addWebsiteTag(int websiteId, int tagId, ServletManager sm) throws GeneralException {

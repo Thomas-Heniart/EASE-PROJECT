@@ -62,6 +62,7 @@ public class GetCatalog extends HttpServlet {
 				tmp.put("single_id", website.getSingleId());
 				tmp.put("imgSrc", Variables.URL_PATH + website.getFolder() + "logo.png");
 				tmp.put("name", website.getName());
+				tmp.put("isTagged", catalog.isWebsiteTagged(website));
 				res.add(tmp);
 			}
 			sm.setResponse(ServletManager.Code.Success, res.toString());
