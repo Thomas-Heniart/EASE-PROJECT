@@ -12,18 +12,6 @@ var Input = function(rootEl, parent, name, type, placeholder, placeholderIcon) {
 			+ '</div>');
 	}
 	$("span.input." + name, this.qRoot).append('<input type="' + type + '" name="' + name + '" id="' + name + '" placeholder="' + placeholder + '"/>');
-	$('.showPassDiv', this.qRoot).click(function(){
-        var input = $(this).parent().find('input');
-        if ($(this).hasClass('show')){
-            input.attr('type', 'password');
-            input.focus();
-            $(this).removeClass('show');
-        } else {
-            input.attr('type', 'text');
-            input.focus();
-            $(this).addClass('show');
-        }
-    });
 	this.inputField = $("#" + name, this.qRoot);
 	this.inputField.keyup(function(e){
 		if (e.which == 13)

@@ -143,7 +143,7 @@ function changeColor(color, ratio, darker) {
     });
 
     $(document).ready(function(){
-        $('.showPassDiv').click(function(){
+        $(document).on('click', ".showPassDiv", function(){
             var input = $(this).parent().find('input');
             if ($(this).hasClass('show')){
                 input.attr('type', 'password');
@@ -154,8 +154,9 @@ function changeColor(color, ratio, darker) {
                 input.focus();
                 $(this).addClass('show');
             }
-        });
+        });        
     });
+
 
     var Animations = function(){
         this.animateOnce = function(elem, animationClass){

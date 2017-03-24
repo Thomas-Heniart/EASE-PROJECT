@@ -1007,6 +1007,19 @@
 						width: 1vw;
 						height: 1vw;
 					}
+					.input.password {
+						& > .fa {
+							position: absolute;
+							left: 4%;
+							top: 50%;
+							font-size: 1vw;
+							transform: translateY(-50%);
+							color: #777;
+						}
+						input {
+							padding-left: 1.8vw;
+						}
+					}
 					input {
 						width: 100%;
 						font-size: 1.35vw;

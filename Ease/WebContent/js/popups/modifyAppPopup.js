@@ -26,18 +26,6 @@ var EditInput = function(rootEl, parent, name, type, value, placeholder, placeho
 		passwordDiv.addClass("locked");
 	}
 	
-	$('.showPassDiv', this.qRoot).click(function(){
-        var input = $(this).parent().find('input');
-        if ($(this).hasClass('show')){
-            input.attr('type', 'password');
-            input.focus();
-            $(this).removeClass('show');
-        } else {
-            input.attr('type', 'text');
-            input.focus();
-            $(this).addClass('show');
-        }
-    });
 	this.inputField = $("#" + name, this.qRoot);
 	this.inputField.keyup(function(e){
 		if (e.which == 13)

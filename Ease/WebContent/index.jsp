@@ -136,7 +136,6 @@ pageEncoding="UTF-8"%>
 	<%@ page import="java.util.Base64" %>
 	<%@ page import="java.util.Base64.Encoder" %>
 	<%@ page import="java.nio.charset.StandardCharsets" %>
-
 	<div id="userEmail" data-content=<%= (user != null) ? user.getEmail() : null %>></div>
 
 	<div id="onMobile" style="display:none;">
