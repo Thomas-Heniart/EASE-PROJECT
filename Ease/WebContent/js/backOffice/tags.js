@@ -8,7 +8,6 @@ var TagManager = function(rootEl) {
 	this.selectedWebsites = [];
 	this.catalogWebsites = [];
 	this.currentTag = null;
-	this.current
 	this.tagsRow = $("#tags", self.rootEl);
 	this.tagWebsitesRow = $("#tag-websiteList", self.rootEl);
 	this.tagSettingsRow = $("#tag-settings", self.rootEl);
@@ -33,7 +32,7 @@ var TagManager = function(rootEl) {
 		});
 	}
 	this.addCatalogWebsite = function(website) {
-		var tmp = new CatalogWebsite(self.catalogWebsitesRow, website.name, website.imgSrc, website.single_id);
+		var tmp = new CatalogWebsite(self.catalogWebsitesRow, website.name, website.imgSrc, website.isTagged, website.single_id);
 		self.catalogWebsites.push(tmp);
 		tmp.printOnDocument();
 		tmp.onClick(function() {
@@ -66,12 +65,14 @@ var TagManager = function(rootEl) {
 		tmp.onClick(function() {
 			self.currentTag = tmp;
 			self.loadTagWebsites();
+			$("#AddTagMode", self.tagSettingsRow).removeClass("active");
 			$("#tag-settings-editName", self.tagSettingsRow).val(tag.name);
 			self.selectedColor.css('background-color', tag.color);
 			self.selectedColor.attr("index", tag.colorId);
 			self.selectedColor.text(tag.color);
 			$("#tag-delete", self.tagSettingsRow).removeClass("hide");
 		});
+		return tmp;
 	}
 	this.loadTagWebsites = function() {
 		self.tagWebsitesRow.addClass("hidden");
@@ -113,12 +114,24 @@ var TagManager = function(rootEl) {
 		self.tagWebsites.push(tmp);
 		tmp.printOnDocument();
 	}
+	this.updateCatalogWebsites = function() {
+		self.tags.forEach()
+	}
 	self.selectedColor.click(function() {
 		self.tagColorsRow.toggleClass("show");
 	});
-	$("#addTagWebsite").click(function() {
+	$("#addTagWebsite", self.rootEl).click(function() {
 		self.catalogWebsitesRow.toggleClass("hidden");
 	});
+	$("#AddTagMode", self.tagSettingsRow).click(function() {
+		$(this).addClass("active");
+		$("#tag-delete", self.tagSettingsRow).addClass("hide");
+		$("#tag-settings-editName", self.tagSettingsRow).val("");
+		self.catalogWebsitesRow.removeClass("hidden");
+		self.tagColorsRow.toggleClass("show");
+		self.currentTag = null;
+		
+	})
 	$("#tag-delete", self.tagSettingsRow).click(function() {
 		var index = self.tags.indexOf(self.currentTag);
 		if (index == -1)
@@ -126,8 +139,8 @@ var TagManager = function(rootEl) {
 		self.currentTag.remove();
 		self.tags.splice(index, 1);
 		self.emptyTagWebsites();
-		self.emptySelectedWebsites();
 		self.currentTag = null;
+		$(this).addClass("hide");
 	});
 	$(".tag-settings-color", self.tagColorsRow).click(function() {
 		self.selectedColor.css('background-color', $(this).css('background-color'));
@@ -160,13 +173,15 @@ var TagManager = function(rootEl) {
 		} else {
 			postHandler.post("AddTag", {
 				name: name,
-				colorId: colorId
+				colorId: colorId,
+				websiteIds: websiteIdsString
 			}, function() {
 				
 			}, function(data) {
 				var jsonTag = JSON.parse(data);
-				self.addTag(jsonTag);
-				self.currentTag = null;
+				self.currentTag = self.addTag(jsonTag);
+				$("#tag-delete", self.tagSettingsRow).removeClass("hide");
+				self.loadTagWebsites();
 			}, function(data) {
 				
 			});
@@ -183,7 +198,7 @@ var Tag = function(rootEl, name, color, colorId, single_id) {
 	this.colorId = colorId;
 	this.single_id = single_id;
 	this.elem = null;
-	this.websiteTagRow = $("#TagsManagerTab #tag-websiteList");
+	this.websites = [];
 	this.printOnDocument = function() {
 		self.elem = $("<span class='tag ease-button hvr-grow' style='background-color: "
 						+ self.color
@@ -230,9 +245,11 @@ var TagWebsite = function(rootEl, single_id, name, imgSrc) {
 	this.elem = null;
 	this.printOnDocument = function() {
 		self.elem = $("<div class='website'>"
+						+ "<div class='logo'>"
 						+ "<img src='"
 						+ self.imgSrc
 						+ "' />"
+						+ "</div>"
 						+ "<p>"
 						+ self.name
 						+ "</p>"
@@ -246,7 +263,7 @@ var TagWebsite = function(rootEl, single_id, name, imgSrc) {
 	}
 }
 
-var CatalogWebsite = function(rootEl, name, imgSrc, single_id) {
+var CatalogWebsite = function(rootEl, name, imgSrc, isTagged, single_id) {
 	var self = this;
 	this.rootEl = rootEl;
 	this.name = name;
@@ -254,12 +271,18 @@ var CatalogWebsite = function(rootEl, name, imgSrc, single_id) {
 	this.imgSrc = imgSrc;
 	this.single_id = single_id;
 	this.selected = false;
+	this.isTagged = isTagged;
 	this.printOnDocument = function() {
-		self.elem = $("<div class='website'>"
+		self.elem = $("<div class='website"
+			+ (self.isTagged ? "" : " untagged")
+			+ "'>"
+			+ "<div class='logo'>"
 			+ "<img class='websiteImg' src='"
 			+ self.imgSrc
 			+ "' />"
 			+ "<img class='tick' src='resources/icons/checked.png' />"
+			+ "<span class='untagged'></span>"
+			+ "</div>"
 			+ "<p>"
 			+ self.name
 			+ "</p>"
@@ -279,6 +302,14 @@ var CatalogWebsite = function(rootEl, name, imgSrc, single_id) {
 	this.toggleSelect = function() {
 		self.selected = !self.selected;
 		self.elem.toggleClass("selected");
+	}
+	this.beUntagged = function() {
+		self.isTagged = false;
+		self.elem.removeClass("tagged");
+	}
+	this.beTagged = function() {
+		self.isTagged = true;
+		self.elem.addClass("tagged");
 	}
 }
 

@@ -37,15 +37,11 @@ public class Tag {
 		DatabaseRequest request = db.prepareRequest("INSERT INTO tags VALUES (null, ?, ?, 2);");
 		request.setString(tagName);
 		request.setInt(tagColor);
-		int db_id = request.set();
-		for (Website site : tagSites) {
-			request = db.prepareRequest("INSERT INTO tagsAndSitesMap values(null, ?, ?);");
-			request.setInt(db_id);
-			request.setInt(site.getDb_id());
-			request.set();
-		}
+		String db_id = request.set().toString();
+		Tag newTag = new Tag(db_id, single_id, tagName, tagColor);
+		newTag.setSites(tagSites, db);
 		db.commitTransaction(transaction);
-		return new Tag(String.valueOf(db_id), single_id, tagName, tagColor);
+		return newTag;
 	}
 	
 	public static List<Tag> loadTags(DataBaseConnection db, ServletContext context) throws GeneralException {
@@ -137,13 +133,18 @@ public class Tag {
 		DatabaseRequest request = db.prepareRequest("DELETE FROM tagsAndSitesMap WHERE tag_id = ?;");
 		request.setInt(db_id);
 		request.set();
-		for(Website website : newWebsites) {
+		this.setSites(newWebsites, db);
+	}
+	
+	public void setSites(List<Website> websites, DataBaseConnection db) throws GeneralException {
+		DatabaseRequest request;
+		for(Website website : websites) {
 			request = db.prepareRequest("INSERT INTO tagsAndSitesMap values (?, ?);");
 			request.setInt(db_id);
 			request.setInt(website.getDb_id());
 			request.set();
 		}
-		this.sites = newWebsites;
+		this.sites = websites;
 	}
 	
 	public List<Website> getWebsites() {

@@ -18,13 +18,16 @@
 		<div class="tag-websites">
 			<div id="tag-websiteList" class="hidden">
 				<div class="website">
-					<img id="addTagWebsite" src="resources/icons/plus-black-symbol.png" />
+					<div class="logo">
+						<img id="addTagWebsite" src="resources/icons/plus-black-symbol.png" />					
+					</div>
 					<p>Add website</p>
 				</div>
 			</div>
 			<div id="catalogWebsites" class="hidden"></div>
 		</div>
 		<div id="tag-settings">
+			<button id="AddTagMode" class="settings-button">Add tag</button>
 			<input type="text" placeholder="Edit name" id="tag-settings-editName"/>
 			<% 
 				for(int i=0; i < Tag.colors.length; i++) {
