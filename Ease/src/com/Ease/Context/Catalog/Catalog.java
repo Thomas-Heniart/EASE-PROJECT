@@ -427,7 +427,7 @@ public class Catalog {
 		});
 		Collections.sort(res, new Comparator<Website>() {
 			public int compare(Website w1, Website w2) {
-				return -w1.compareToWithVisits(w2);
+				return w1.compareToWithVisits(w2);
 			}
 		});
 		return res;
@@ -450,5 +450,23 @@ public class Catalog {
 	public void removeTagWithSinlge(int single_id, ServletManager sm) throws GeneralException {
 		Tag tag = this.getTagWithSingleId(single_id);
 		this.removeTag(tag, sm);
+	}
+
+	public void blacklistWebsite(Website website, ServletManager sm) throws GeneralException {
+		website.blacklist(sm);
+	}
+	
+	public void blacklistWebsiteWithSingleId(int single_id, ServletManager sm) throws GeneralException {
+		Website website = this.getWebsiteWithSingleId(single_id);
+		this.blacklistWebsite(website, sm);
+	}
+
+	private void whitelistWebsite(Website website, ServletManager sm) throws GeneralException {
+		website.whitelist(sm);
+	}
+	
+	public void whitelistWebsiteWithSingleId(int single_id, ServletManager sm) throws GeneralException {
+		Website website = this.getWebsiteWithSingleId(single_id);
+		this.whitelistWebsite(website, sm);
 	}
 }

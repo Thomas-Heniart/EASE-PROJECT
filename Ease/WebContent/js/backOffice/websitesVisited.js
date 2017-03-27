@@ -4,6 +4,7 @@ var websitesDone = [];
 var blacklistedWebsites = [];
 var resultsRow;
 var websitesDoneRow;
+var websitesBrokenRow;
 var blacklistRow;
 
 var WebsiteVisited = function(rootEl, url, count, single_id) {
@@ -23,7 +24,8 @@ var WebsiteVisited = function(rootEl, url, count, single_id) {
 		}
 		this.remove = function() {
 			postHandler.post("BlacklistWebsite", {
-				single_id: self.single_id
+				single_id: self.single_id,
+				isInCatalog: "false"
 			}, function() {
 				
 			}, function(data) {
@@ -42,19 +44,28 @@ var WebsiteVisited = function(rootEl, url, count, single_id) {
 		}
 }
 
-var WebsiteBroken = function(rootEl, url, count, single_id) {
+var WebsiteBroken = function(rootEl, url, count, isBlacklisted, single_id) {
 	var self = this;
 	this.rootEl = rootEl;
 	this.url = url;
 	this.count = count;
+	this.isBlacklisted = isBlacklisted;
 	this.single_id = single_id;
 	this.printOnDocument = function() {
 		self.elem = $("<div>"
-			+ "<button>Repaired</button>"
+			+ "<button class= '"
+			+ (self.isBlacklisted ? "blacklisted" : "whitelisted")
+			+ "'>"
+			+ (self.isBlacklisted ? "Whitelist" : "Blacklist")
+			+ "</button>"
+			+ "<button class='repair'>Repaired</button>"
 			+ self.url
 			+ ((count == null && count) > 0 ? "" : (" (" + self.count + ")"))
 			+ "</div>").prependTo(self.rootEl);
-		$("button", self.elem).click(self.remove);
+		
+		$(".repair", self.elem).click(self.remove);
+		self.elem.on("click", ".blacklisted", self.whitelist);
+		self.elem.on("click", ".whitelisted", self.blacklist);
 	}
 	this.remove = function() {
 		postHandler.post("TurnOnWebsite", {
@@ -74,6 +85,32 @@ var WebsiteBroken = function(rootEl, url, count, single_id) {
 	}
 	this.removeFromDocument = function() {
 		self.elem.remove();
+	}
+	this.blacklist = function() {
+		postHandler.post("BlacklistWebsite", {
+			single_id: self.single_id,
+			isInCatalog: "true"
+		}, function() {
+		}, function(data) {
+			var btn = $(".whitelisted", self.elem);
+			btn.removeClass("whitelisted");
+			btn.addClass("blacklisted");
+			btn.text("Whitelist");
+		}, function(data) {
+		});
+	}
+	this.whitelist = function() {
+		postHandler.post("WhitelistWebsite", {
+			single_id: self.single_id,
+			isInCatalog: "true"
+		}, function() {
+		}, function(data) {
+			var btn = $(".blacklisted", self.elem);
+			btn.removeClass("blacklisted");
+			btn.addClass("whitelisted");
+			btn.text("Blacklist");
+		}, function(data) {
+		})
 	}
 }
 
@@ -129,8 +166,9 @@ var BlacklistedWebsite = function(rootEl, url, count, single_id) {
 		$("button", self.elem).click(self.remove);
 	}
 	this.remove = function() {
-		postHandler.post("RemoveFromBlackList", {
-			single_id: self.single_id
+		postHandler.post("WhitelistWebsite", {
+			single_id: self.single_id,
+			isInCatalog: "false"
 		}, function() {
 			
 		}, function(data) {
@@ -160,7 +198,7 @@ function loadWebsitesBroken() {
 		var json = JSON.parse(data);
 		json.forEach(function(websiteBroken) {
 			console.log(websiteBroken);
-			var tmp = new WebsiteBroken(resultsRow, websiteBroken.url, websiteBroken.count, websiteBroken.single_id);
+			var tmp = new WebsiteBroken(websitesBrokenRow, websiteBroken.url, websiteBroken.count, websiteBroken.isBlacklisted, websiteBroken.single_id);
 			websitesBroken.push(tmp);
 			tmp.printOnDocument();
 		});
@@ -230,6 +268,7 @@ $(document).ready(function() {
 	websitesDoneRow = $("#WebsitesVisitedTab #websitesDone");
 	resultsRow = $("#WebsitesVisitedTab #results");
 	blacklistRow = $("#WebsitesVisitedTab #blacklist");
+	websitesBrokenRow = $("#WebsitesVisitedTab #websitesBroken");
 	$(".adminButton[target='WebsitesVisitedTab']").click(function() {
 		loadWebsitesVisited();
 		loadWebsitesDone();

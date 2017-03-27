@@ -9,22 +9,23 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.WebsitesVisitedManager;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class RemoveFromBlackList
+ * Servlet implementation class WhitelistWebsite
  */
-@WebServlet("/RemoveFromBlackList")
-public class RemoveFromBlackList extends HttpServlet {
+@WebServlet("/WhitelistWebsite")
+public class WhitelistWebsite extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public RemoveFromBlackList() {
+    public WhitelistWebsite() {
         super();
     }
 
@@ -47,10 +48,19 @@ public class RemoveFromBlackList extends HttpServlet {
 			if (!user.isAdmin())
 				throw new GeneralException(ServletManager.Code.ClientError, "You ain't admin");
 			String single_id = sm.getServletParam("single_id", true);
+			String websiteDone = sm.getServletParam("isInCatalog", true);
 			if (single_id == null || single_id.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty single_id");
-			WebsitesVisitedManager websitesVisitedManager = (WebsitesVisitedManager) sm.getContextAttr("websitesVisitedManager");
-			websitesVisitedManager.sendBlacklistedWebsiteToWebsitesVisitedWithSingleId(Integer.parseInt(single_id), sm);
+			if (websiteDone == null || websiteDone.equals(""))
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty isDone");
+			boolean isInCatalog = Boolean.parseBoolean(websiteDone);
+			if (!isInCatalog) {
+				WebsitesVisitedManager websitesVisitedManager = (WebsitesVisitedManager) sm.getContextAttr("websitesVisitedManager");
+				websitesVisitedManager.sendBlacklistedWebsiteToWebsitesVisitedWithSingleId(Integer.parseInt(single_id), sm);
+			} else {
+				Catalog catalog = (Catalog) sm.getContextAttr("catalog");
+				catalog.whitelistWebsiteWithSingleId(Integer.parseInt(single_id), sm);
+			}
 			sm.setResponse(ServletManager.Code.Success, "Website added to websites visited");
 		} catch(GeneralException e) {
 			sm.setResponse(e);

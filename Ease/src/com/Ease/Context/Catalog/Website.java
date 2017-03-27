@@ -555,4 +555,16 @@ public class Website {
 	public void increaseVisits(int count, ServletManager sm) throws GeneralException {
 		this.websiteAttributes.increaseVisits(count, sm);
 	}
+
+	public void blacklist(ServletManager sm) throws GeneralException {
+		this.websiteAttributes.blacklist(sm);
+	}
+
+	public void whitelist(ServletManager sm) throws GeneralException {
+		this.websiteAttributes.whitelist(sm);
+	}
+
+	public Boolean isBlacklisted() {
+		return this.websiteAttributes.isBlacklisted();
+	}
 }

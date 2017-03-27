@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.WebsitesVisitedManager;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
@@ -47,10 +48,20 @@ public class BlacklistWebsite extends HttpServlet {
 			if (!user.isAdmin())
 				throw new GeneralException(ServletManager.Code.ClientError, "You ain't admin");
 			String single_id = sm.getServletParam("single_id", true);
+			String websiteDone = sm.getServletParam("isInCatalog", true);
 			if (single_id == null || single_id.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty single_id");
-			WebsitesVisitedManager websitesVisitedManager = (WebsitesVisitedManager) sm.getContextAttr("websitesVisitedManager");
-			websitesVisitedManager.sendWebsiteVisitedToBlacklistWithSingleId(Integer.parseInt(single_id), sm);
+			if (websiteDone == null || websiteDone.equals(""))
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty isDone");
+			boolean isInCatalog = Boolean.parseBoolean(websiteDone);
+			if (!isInCatalog) {
+				WebsitesVisitedManager websitesVisitedManager = (WebsitesVisitedManager) sm.getContextAttr("websitesVisitedManager");
+				websitesVisitedManager.sendWebsiteVisitedToBlacklistWithSingleId(Integer.parseInt(single_id), sm);
+			}
+			else {
+				Catalog catalog = (Catalog) sm.getContextAttr("catalog");
+				catalog.blacklistWebsiteWithSingleId(Integer.parseInt(single_id), sm);
+			}
 			sm.setResponse(ServletManager.Code.Success, "Website added to blacklist");
 		} catch(GeneralException e) {
 			sm.setResponse(e);

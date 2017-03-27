@@ -9,8 +9,8 @@ import com.Ease.Utils.ServletManager;
 public class WebsiteAttributes {
 	
 	public static WebsiteAttributes createWebsiteAttributes(DataBaseConnection db) throws GeneralException {
-		String db_id = db.prepareRequest("INSERT INTO websiteAttributes values (null, 0, null, default, 1, 1, default);").set().toString();
-		return new WebsiteAttributes(db_id, false, true, true, 0);
+		String db_id = db.prepareRequest("INSERT INTO websiteAttributes values (null, 0, null, default, 1, 1, default, 0);").set().toString();
+		return new WebsiteAttributes(db_id, false, true, true, 0, false);
 	}
 	
 	public static WebsiteAttributes loadWebsiteAttributes(String db_id, DataBaseConnection db) throws GeneralException {
@@ -18,7 +18,7 @@ public class WebsiteAttributes {
 		request.setInt(db_id);
 		DatabaseResult rs = request.get();
 		rs.next();
-		return new WebsiteAttributes(db_id, rs.getBoolean("locked"), rs.getBoolean("new"), rs.getBoolean("work"), rs.getInt("visits"));
+		return new WebsiteAttributes(db_id, rs.getBoolean("locked"), rs.getBoolean("new"), rs.getBoolean("work"), rs.getInt("visits"), rs.getBoolean("blacklisted"));
 	}
 	
 	protected String db_id;
@@ -26,12 +26,14 @@ public class WebsiteAttributes {
 	protected boolean isNew;
 	protected boolean work;
 	protected int visits;
+	protected boolean blacklisted;
 	
-	public WebsiteAttributes(String db_id, boolean locked, boolean isNew, boolean work, int visits) {
+	public WebsiteAttributes(String db_id, boolean locked, boolean isNew, boolean work, int visits, boolean blacklisted) {
 		this.db_id = db_id;
 		this.locked = locked;
 		this.isNew = isNew;
 		this.work = work;
+		this.blacklisted = blacklisted;
 	}
 
 	public boolean isWorking() {
@@ -51,6 +53,8 @@ public class WebsiteAttributes {
 	}
 	
 	public void increaseVisits(int count, ServletManager sm) throws GeneralException {
+		if (this.blacklisted)
+			return;
 		DatabaseRequest request = sm.getDB().prepareRequest("UPDATE websiteAttributes SET visits = ? WHERE id = ?;");
 		request.setInt(visits + count);
 		request.setInt(db_id);
@@ -94,5 +98,25 @@ public class WebsiteAttributes {
 		this.isNew = rs.getBoolean("new");
 		this.work = rs.getBoolean("work");
 		this.visits = rs.getInt("visits");
+	}
+
+	public void blacklist(ServletManager sm) throws GeneralException {
+		DatabaseRequest request = sm.getDB().prepareRequest("UPDATE websiteAttributes SET blacklisted = ? WHERE id = ?;");
+		request.setBoolean(true);
+		request.setInt(db_id);
+		request.set();
+		this.blacklisted = true;
+	}
+
+	public void whitelist(ServletManager sm) throws GeneralException {
+		DatabaseRequest request = sm.getDB().prepareRequest("UPDATE websiteAttributes SET blacklisted = ? WHERE id = ?;");
+		request.setBoolean(false);
+		request.setInt(db_id);
+		request.set();
+		this.blacklisted = false;
+	}
+
+	public Boolean isBlacklisted() {
+		return this.blacklisted;
 	}
 }
