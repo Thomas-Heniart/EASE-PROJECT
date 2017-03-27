@@ -10,7 +10,6 @@ pageEncoding="UTF-8"%>
 <%@ page import="java.text.DateFormat"%>
 <%@ page import="java.text.SimpleDateFormat"%>
 <%@ page import="java.util.Date"%>
-<script src="js/checkConnection.js"></script>
 <%
 if (user != null) {
 SessionSave sessionSave = user.getSessionSave();
@@ -68,6 +67,16 @@ response.addCookie(email);
 	<div id="loggedBody">
 		<div class="col-left <c:if test='${settingsOpen eq null}'>show</c:if>" style="width: 100%; float:left">
 			<%@ include file="ProfileView.jsp"%>
+			<script>
+				$('img[lazy-src]').each(function(index){
+					var self = $(this);
+					var myImage = new Image();
+					myImage.onload = function(){
+						self.attr('src', myImage.src);
+					};
+					myImage.src = self.attr('lazy-src');
+				});
+			</script>
 			<div class="MenuButtonSet">
 				<button id="enterEditMode" state="off" class="button<c:if test="${param.catalogOpen}"> editMode</c:if>">
 					<img src="resources/icons/menu_icon.png"/>
@@ -79,9 +88,16 @@ response.addCookie(email);
 			</div>
 			<script type="text/javascript">
 				$(document).ready(function(){
-					$.get('/templates/catalog/catalogView.jsp').success(function(data)
-					{
-						$('.col-left .CatalogViewTab').append(data);
+					asyncLoading.loadHtml({
+						urls: ['/templates/catalog/catalogView.jsp'],
+						appendTo: '.col-left .CatalogViewTab'
+					});
+					asyncLoading.loadScripts({
+						urls: ["js/catalog/catalogApp.js",
+						"js/catalog/catalog.js",
+						"js/catalog/updates/update.js",
+						"js/catalog/updates/updatesManager.js"],
+						async : true
 					});
 				});
 			</script>
@@ -93,9 +109,9 @@ response.addCookie(email);
 	</div>
 	<script type="text/javascript">
 		$(document).ready(function(){
-			$.get('/templates/SettingsView.jsp').success(function(data)
-			{
-				$('#loggedBody .SettingsView').append(data);
+			asyncLoading.loadHtml({
+				urls: ['/templates/SettingsView.jsp'],
+				appendTo: '#loggedBody .SettingsView'
 			});
 		});
 	</script>

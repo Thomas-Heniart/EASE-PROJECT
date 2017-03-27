@@ -5,30 +5,26 @@ pageEncoding="UTF-8"%>
 </div>
 <script type="text/javascript">
 	$(document).ready(function(){
-		$.get('/templates/popups/addAppPopup.jsp').success(function(data)
-		{
-			$('#easePopupsHandler').append(data);
+		asyncLoading.loadHtml({
+			urls: ['/templates/popups/modifyAppPopup.html',
+			'/templates/popups/addBookmarkPopup.html',
+			'/templates/popups/addAppPopup.html',
+			'/templates/popups/deleteProfilePopup.html',
+			'/templates/popups/deleteAccountPopup.html'],
+			appendTo: '#easePopupsHandler'
 		});
-		$.get('/templates/popups/addBookmarkPopup.jsp').success(function(data)
-		{
-			$('#easePopupsHandler').append(data);
+		asyncLoading.loadScripts({
+			urls: ['/js/popups/modifyAppPopup.js',
+			'js/popups/addAppPopup.js',
+			"js/popups/deleteAccountPopup.js",
+			"js/popups/deleteProfilePopup.js",
+			"js/popups/addBookmarkPopup.js"],
+			async: true
 		});
-		$.get('/templates/popups/modifyAppPopup.jsp').success(function(data)
-		{
-			$('#easePopupsHandler').append(data);
+		var currentEasePopup = null;
+		$("#easePopupsHandler").click(function(e){
+			if ($(e.target).attr('id') == 'easePopupsHandler')
+				currentEasePopup.close();
 		});
-		$.get('/templates/popups/deleteProfilePopup.jsp').success(function(data)
-		{
-			$('#easePopupsHandler').append(data);
-		});
-		$.get('/templates/popups/deleteAccountPopup.jsp').success(function(data)
-		{
-			$('#easePopupsHandler').append(data);
-		});		
-	});
-	var currentEasePopup = null;
-	$("#easePopupsHandler").click(function(e){
-		if ($(e.target).attr('id') == 'easePopupsHandler')
-			currentEasePopup.close();
 	});
 </script>

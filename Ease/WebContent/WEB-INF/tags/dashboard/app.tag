@@ -20,7 +20,7 @@
 		<div class="showAppActionsButton" >
 			<i class="fa fa-cog"></i>
 		</div>
-		<img class="logo" src="<c:out value='${app.getSite().getFolder()}logo.png'/>" />
+		<img class="logo" src="/resources/helpers/1x1_grey_square.jpg" lazy-src="<c:out value='${app.getSite().getFolder()}logo.png'/>" />
 	</div>
 </c:when>
 <c:when test="${app.getType() eq 'LinkApp'}">
@@ -36,7 +36,7 @@
 		<i class="fa fa-cog"></i>
 	</div>
 	</c:if>
-	<img class="logo" src="${app.getLinkAppInformations().getImgUrl()}" />
+	<img class="logo" src="/resources/helpers/1x1_grey_square.jpg" lazy-src="${app.getLinkAppInformations().getImgUrl()}" />
 	</div>
 </c:when>
 <c:otherwise>
@@ -65,7 +65,7 @@
 	<div class="showAppActionsButton">
 		<i class="fa fa-cog"></i>
 </div>
-<img class="logo" src="<c:out value='${app.getSite().getFolder()}logo.png'/>" />
+<img class="logo" src="/resources/helpers/1x1_grey_square.jpg" lazy-src="<c:out value='${app.getSite().getFolder()}logo.png'/>" />
 </div>
 </c:otherwise>
 </c:choose>

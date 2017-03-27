@@ -112,52 +112,6 @@ function sendEvent(obj) {
 	}
 }
 
-/*function checkForExtension() {
-    var ext = $('#ease_extension');
-
-        $('#downloadExtension').css('display', 'block');
-    	$('#downloadExtension').find(".classicContent").css('display', 'block');
-    	$('#downloadExtension').find('.install-button').css('display', 'inline-block');
-       	$('#downloadExtension').find(".safariUpdate").css('display', 'none');
-        if(getUserNavigator() == "Safari"){$('#safariInfoButton').css('display', 'block');}
-        $('#downloadExtension').find('.install-button').click(
-            function() {
-                var NavigatorName = getUserNavigator();
-                if (NavigatorName == "Chrome") {
-                    chrome.webstore
-                    .install(
-                        'https://chrome.google.com/webstore/detail/echjdhmhmgildgidlcdlepfkaledeokm',
-                        function() {
-                            window.location
-                            .replace("index.jsp");
-                        },
-                        function() {
-                            window.location
-                            .replace("index.jsp");
-                        })
-                }
-                else if (NavigatorName == "Safari"){
-                    window.location.replace("https://ease.space/safariExtension/EaseExtension.safariextz");
-                    $('#downloadExtension').find('.popupContent').hide();
-                    $('#downloadExtension').find('#afterdownload.safariHelper').show();
-                }
-            });
-}
-
-function safariExtensionUpdate(){
-	 $('#downloadExtension').css('display', 'block');
-     $('#downloadExtension').find(".safariUpdate").css('display', 'block');
-     $('#downloadExtension').find('.install-button').css('display', 'inline-block');
-     $('#downloadExtension').find(".classicContent").css('display', 'none');
-     $('#safariInfoButton').css('display', 'block');
-     $('#downloadExtension').find('.install-button').click(
-         function() {
-                 window.location.replace("https://ease.space/safariExtension/EaseExtension.safariextz");
-                 $('#downloadExtension').find('.popupContent').hide();
-                 $('#downloadExtension').find('#afterdownload.safariHelper').show();
-         });
-}*/
-
 $(document).ready(function() {
 	 $('#homePageSwitch').change(function() {
 		var homepageState = $(this).is(":checked");

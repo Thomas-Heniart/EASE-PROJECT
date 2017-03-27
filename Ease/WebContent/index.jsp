@@ -43,27 +43,21 @@ pageEncoding="UTF-8"%>
 	<script src="js/jquery1.12.4.js"></script>
 	<script src="js/jquery-ui-1.12.0.js"></script>
 
-	<script src="js/postHandler.js"></script>
+	<script src="/js/asyncContentLoading.js"></script>
+	<script src="js/postHandler.js" ></script>
 
-	<script src="js/classie.js"></script>
-	<script src="js/Sortable.js"></script>
-	<script src="js/jquery.binding.js"></script>
-	<script src="js/owl.carousel.js"></script>
-	<script src="js/basic-utils.js" ></script>
-	<script src="js/jquery.mousewheel.min.js"></script>
-	<script src="js/extension.js" ></script>
-	<script src="js/alertPopup.js"></script>
-	<script src="js/loading.js"></script>
-	<script src="js/header.js"></script>
-	<script src="js/app.js"></script>
-	<script src="js/profiles.js"></script>
-	<script src="js/shortcut.js"></script>
-	<script src="js/dashboard.js"></script>
 	<script src="js/tracker.js"></script>
-	<script src="js/snap.svg-min.js"></script>
-	<script src="js/modalEffects.js"></script>
-	<script src="js/selectFx.js"></script>
-	<script src="js/websocket.js"></script>
+	<script src="js/Sortable.js" defer></script>
+	<script src="js/jquery.binding.js" defer></script>
+	<script src="js/basic-utils.js" defer></script>
+	<script src="js/extension.js" defer></script>
+	<script src="js/header.js" defer></script>
+	<script src="js/app.js" defer></script>
+	<script src="js/profiles.js" defer></script>
+	<script src="js/shortcut.js" defer></script>
+	<script src="js/dashboard.js" defer></script>
+	<script src="js/selectFx.js" defer></script>
+	<script src="js/websocket.js" defer></script>
 
 	<% User user = (User) (session.getAttribute("user"));%>
 
@@ -136,6 +130,11 @@ pageEncoding="UTF-8"%>
 	<%@ page import="java.util.Base64" %>
 	<%@ page import="java.util.Base64.Encoder" %>
 	<%@ page import="java.nio.charset.StandardCharsets" %>
+	<script>
+		$.ajaxSetup({
+  			cache: true
+		});
+	</script>
 	<div id="userEmail" data-content=<%= (user != null) ? user.getEmail() : null %>></div>
 
 	<div id="onMobile" style="display:none;">
@@ -154,16 +153,14 @@ pageEncoding="UTF-8"%>
 				<%@ include file="templates/Header.jsp"%>
 			</div>
 			<%@ include file="templates/loggedBody.jsp"%>
-			<script type="text/javascript">
-	$(document).ready(function(){
-		$.get('/templates/Footer.jsp').success(function(data)
-		{
-			$('#onComputer').append(data);
-		});
-		});				
+			<script src="js/checkConnection.js" async></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				asyncLoading.loadHtml({urls:['/templates/Footer.jsp'], appendTo : '#onComputer'});
+				asyncLoading.loadScripts({urls: ['/js/footer.js'], async: true});
+			});
 			</script>
 		<%}%>
 	</div>
-
 </body>
 </html>

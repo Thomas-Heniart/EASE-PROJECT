@@ -1,25 +1,19 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-pageEncoding="UTF-8"%>
-
-<div class="easePopup" id="deleteAccountPopup">
+<div class="easePopup" id="deleteProfilePopup">
 	<div class="title">
-		<p>Delete Ease account</p>
+		<p>Delete profile</p>
 	</div>
 	<div class="bodysHandler">
-		<div class="popupBody show" id="deleteAccount">
+		<div class="popupBody show" id="deleteProfile">
 			<div class="handler">
 				<div class="row infoRow">
 					<p class="simpleText">
-						You are about to delete your Ease account. <span>We are sorry to see you leave.</span>
-					</p>
-					<p class="simpleText">
-						This action will permanently delete all your data on Ease. You will not be able to retrieve it.
+						By deleting your profile, you will lose all related information and associated accounts.
 					</p>
 					<p class="simpleText">
 						Confirm by entering your Ease password.
 					</p>
 				</div>
-				<form class="row" method="POST" id="deleteAccountForm">
+				<form class="row" method="POST" id="deleteProfileForm">
 					<div class="row">
 						<span class="input password">
 							<i class="fa fa-lock placeholderIcon" aria-hidden="true"></i>
@@ -45,5 +39,3 @@ pageEncoding="UTF-8"%>
 		</div>
 	</div>
 </div>
-
-<script src="js/popups/deleteAccountPopup.js"></script>
