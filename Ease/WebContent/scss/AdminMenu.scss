@@ -287,23 +287,57 @@
 		width: 70%;
 		margin: 0 auto;
 
+		a {
+			text-decoration: none;
+			margin: 2px;
+			padding: 3px;
+			border: 1px solid;
+			user-select: none;
+			outline: none;
+			border-radius: 5px;
+			color: white;
+			display: inline-block;
+			transition: background-color 0.3s ease;
+			-webkit-transition: background-color 0.3s ease;
+
+			&:hover {
+				transition: background-color 0.3s ease;
+				-webkit-transition: background-color 0.3s ease;
+				background-color: white !important;
+			}
+		}
+
+		a.done {
+			background-color: $themeButtonGreenColor;
+			border-color: $themeButtonGreenColor;
+
+			&:hover {
+				color: $themeButtonGreenColor;
+			}
+		}
+
+		a.fail {
+			background-color: $themeRedColor;
+			border-color: $themeRedColor;
+
+			&:hover {
+				color: $themeRedColor;
+			}
+		}
+
 		p {
-			display: inline;
-			background-color: #ececec;
+			margin: 0;
 		}
 
 		.quit {
-			display: inline;
-			left: 5%;
 			background-color: $themeRedColor;
 			color: white;
-			border: none;
-			border-radius: 5px;
-			width: 15px;
-			height: 15px;
-			padding: 0;
+			border-radius: 100%;
+			padding: 1px 5px;
 			margin-right: 15px;
 			outline: none;
+			user-select: none;
+			cursor: pointer;
 		}
 
 		.sendEmail {
@@ -494,6 +528,7 @@
 #WebsitesVisitedTab {
 	#blacklist,
 	#results,
+	#websitesBroken,
 	#websitesDone {
 		max-height: 70vh;
 		border: 1px solid;
@@ -644,7 +679,7 @@
 
 		#AddTagMode {
 			display: block;
-    	margin-bottom: 1vh;
+			margin-bottom: 1vh;
 		}
 
 		.tag-settings-color-selected {

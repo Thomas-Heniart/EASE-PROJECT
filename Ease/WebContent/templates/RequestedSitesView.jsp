@@ -8,20 +8,7 @@
 
 	<div class="requestedWebsitesView">
 		<div class="requestedWebsitesHeader">
-			<button id="sendAllMails">Send all emails</button>
 			<p>People asked if we could add these websites</p>
-			<p>Click on an url to replace it with the one in database</p>
 		</div>
-	</div>
-</div>
-
-<div class="md-modal md-effect-15 popup" id="PopupSendEmailWebsite">
-	<div class="md-content">
-		<p class="title"></p>
-		<input></input>
-		<div class="buttonSet">
-    		<button type="button" id="accept" class="btn btn-default btn-primary btn-group btn-lg">Yes</button>
-    		<button type="button" id="close" class="btn btn-default btn-primary btn-group btn-lg">No</button>
-    	</div>
 	</div>
 </div>

@@ -38,35 +38,36 @@ public class WebsiteRequest extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
-		User user = (User)(session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+		User user = sm.getUser();
 		Catalog catalog = (Catalog)sm.getContextAttr("catalog");
 		DataBaseConnection db = sm.getDB();
 		try {
 			sm.needToBeConnected();
 			if (!user.isAdmin())
 				throw new GeneralException(ServletManager.Code.ClientError, "You are not admin");
-			DatabaseResult rs = db.prepareRequest("SELECT * FROM requestedWebsites;").get();
+			DatabaseResult rs = db.prepareRequest("SELECT id, user_id, site, DATE(date) AS date FROM requestedWebsites;").get();
 			JSONArray res = new JSONArray();
 			while(rs.next()) {
 				DatabaseRequest db_request = db.prepareRequest("SELECT firstName, email FROM users WHERE id= ?;");
 				db_request.setInt(rs.getString("user_id"));
 				DatabaseResult rs2 = db_request.get();
-				rs2.next();
+				if (!rs2.next())
+					continue;
 				String name = rs2.getString(1);
 				String email = rs2.getString(2);
 				String site = rs.getString("site");
 				JSONObject tmpObject = new JSONObject();
-				tmpObject.put("site", site);
+				tmpObject.put("db_id", rs.getString(1));
+				tmpObject.put("url", site);
 				tmpObject.put("userName", name);
-				tmpObject.put("email", email);
+				tmpObject.put("userEmail", email);
 				tmpObject.put("date", rs.getString("date"));
-				boolean alreadyIntegrated = catalog.getWebsiteWithHost(site) != null;
-				tmpObject.put("alreadyIntegrated", alreadyIntegrated);
+				tmpObject.put("alreadyIntegrated", catalog.matchUrl(site));
 				res.add(tmpObject);
 			}
 			sm.setResponse(ServletManager.Code.Success, res.toString());
+			sm.setLogResponse("WebsiteRequest get done");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		} catch (Exception e) {

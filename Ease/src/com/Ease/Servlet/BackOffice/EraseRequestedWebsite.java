@@ -13,7 +13,6 @@ import javax.servlet.http.HttpSession;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -51,17 +50,12 @@ public class EraseRequestedWebsite extends HttpServlet {
 			if (!user.isAdmin())
 				throw new GeneralException(ServletManager.Code.ClientError, "Not an admin");
 			DataBaseConnection db = sm.getDB();
-			String websiteUrl = sm.getServletParam("websiteUrl", true);
-			String email = sm.getServletParam("email", true);
-			DatabaseRequest db_request = db.prepareRequest("SELECT id FROM users WHERE email = ?;");
-			db_request.setString(email);
-			DatabaseResult userIdRs = db_request.get();
-			if (!userIdRs.next())
-				throw new GeneralException(ServletManager.Code.ClientError, "This user does not exist");
-			String userId = userIdRs.getString(1);
-			db_request = db.prepareRequest("DELETE FROM requestedWebsites WHERE user_id = ? AND site = ?;");
-			db_request.setInt(userId);
-			db_request.setString(websiteUrl);
+			String db_id = sm.getServletParam("db_id", true);
+			if (db_id == null || db_id.equals(""))
+				throw new GeneralException(ServletManager.Code.ClientError, "Empty db_id");
+			DatabaseRequest db_request = db.prepareRequest("DELETE FROM requestedWebsites WHERE id = ?;");
+			db_request.setInt(db_id);
+			db_request.set();
 			sm.setResponse(ServletManager.Code.Success, "Deleted");
 		} catch(GeneralException e) {
 			sm.setResponse(e);

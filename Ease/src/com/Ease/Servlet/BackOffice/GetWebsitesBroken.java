@@ -59,6 +59,7 @@ public class GetWebsitesBroken extends HttpServlet {
 				tmp.put("url", websiteBroken.getHostname());
 				tmp.put("single_id", websiteBroken.getSingleId());
 				tmp.put("count", websiteBroken.getVisits());
+				tmp.put("isBlacklisted", websiteBroken.isBlacklisted());
 				res.add(tmp);
 			}
 			sm.setResponse(ServletManager.Code.Success, res.toString());

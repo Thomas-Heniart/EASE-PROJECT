@@ -52,7 +52,6 @@ public class SendWebsitesVisited extends HttpServlet {
 				throw new GeneralException(ServletManager.Code.ClientError, "websitesVisited is null");
 			JSONParser parser = new JSONParser();
 			try {
-				System.out.println(jsonString);
 				JSONObject websitesVisited = (JSONObject)parser.parse(StringEscapeUtils.unescapeHtml4(jsonString));
 				websitesVisitedManager.addWebsitesVisitedFromJson(websitesVisited, sm);
 			} catch (ParseException e) {

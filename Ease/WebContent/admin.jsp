@@ -71,6 +71,8 @@
 <link rel="stylesheet" href="css/hover.css">
 <script src="js/backOffice/websitesVisited.js"></script>
 <script src="js/backOffice/tags.js"></script>
+<script src="js/backOffice/unregisteredEmails.js"></script>
+<script src="js/backOffice/websitesRequests.js"></script>
 </head>
 
 

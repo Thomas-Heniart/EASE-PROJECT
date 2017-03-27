@@ -10,15 +10,21 @@
 	</div>
 	<div class="flex-row">
 		<div class="centered-row">
-			<h3 class="module-presentation">Websites blacklisted</h3>
+			<h3 class="module-presentation">Blacklist</h3>
 			<div id="blacklist"></div>
 		</div>
 		<div class="centered-row">
-			<h3 class="module-presentation">Websites waiting</h3>
+			<h3 class="module-presentation">Waiting</h3>
 			<div id="results"></div>
 		</div>
+	</div>
+	<div class="flex-row">
 		<div class="centered-row">
-			<h3 class="module-presentation">Websites integrated</h3>
+			<h3 class="module-presentation">Broken</h3>
+			<div id="websitesBroken"></div>
+		</div>
+		<div class="centered-row">
+			<h3 class="module-presentation">Integrated</h3>
 			<div id="websitesDone"></div>
 		</div>
 	</div>
