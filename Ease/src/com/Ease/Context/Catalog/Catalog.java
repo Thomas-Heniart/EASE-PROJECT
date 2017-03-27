@@ -259,6 +259,10 @@ public class Catalog {
 		return false;
 	}
 	
+	public boolean matchUrl(String url) {
+		return this.haveWebsiteWithHostUrl(url) || this.haveWebsiteNamed(url) || this.haveWebsiteWithLoginUrl(url);
+	}
+	
 	public Website getWebsiteNamed(String websiteName) throws GeneralException {
 		for (Website site : this.websites) {
 			if (site.getName().toUpperCase().equals(websiteName.toUpperCase()))
