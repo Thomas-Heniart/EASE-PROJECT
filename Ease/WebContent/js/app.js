@@ -201,7 +201,7 @@ var MyApp = function(){
 		self.ssoId = self.qRoot.attr('ssoid');
 		self.logWith = self.qRoot.attr('logwith');
 		self.logoHandler = self.qRoot.find('img.logo');
-		self.imgSrc = self.logoHandler.attr('src');
+		self.imgSrc = self.logoHandler.attr('lazy-src');
 		self.initAccountInformations();
 		if (self.qRoot.attr('url')){
 			self.url = self.qRoot.attr('url');

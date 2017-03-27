@@ -19,7 +19,7 @@ asyncLoading = {
 			if (param.onload)
 				script.onload = param.onload;
 			if (param.appendTo)
-				param.appendTo.appendChild(script)
+				param.appendTo.appendChild(script);
 			else
 				document.head.appendChild(script);
 			script.src = scripts[i];

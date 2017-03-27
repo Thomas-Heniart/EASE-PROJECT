@@ -18,13 +18,9 @@ pageEncoding="UTF-8"%>
 			'js/popups/addAppPopup.js',
 			"js/popups/deleteAccountPopup.js",
 			"js/popups/deleteProfilePopup.js",
-			"js/popups/addBookmarkPopup.js"],
+			"js/popups/addBookmarkPopup.js",
+			"js/popups/popupHandler.js"],
 			async: true
-		});
-		var currentEasePopup = null;
-		$("#easePopupsHandler").click(function(e){
-			if ($(e.target).attr('id') == 'easePopupsHandler')
-				currentEasePopup.close();
 		});
 	});
 </script>
