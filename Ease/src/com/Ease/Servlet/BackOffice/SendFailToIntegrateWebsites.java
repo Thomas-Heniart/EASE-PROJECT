@@ -28,35 +28,31 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 /**
- * Servlet implementation class SendWebsitesIntegrated
+ * Servlet implementation class SendFailToIntegrateWebsites
  */
-@WebServlet("/SendWebsitesIntegrated")
-public class SendWebsitesIntegrated extends HttpServlet {
+@WebServlet("/SendFailToIntegrateWebsites")
+public class SendFailToIntegrateWebsites extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public SendFailToIntegrateWebsites() {
+        super();
+    }
 
 	/**
-	 * @see HttpServlet#HttpServlet()
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	public SendWebsitesIntegrated() {
-		super();
-	}
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher rd = request.getRequestDispatcher("admin.jsp");
 		rd.forward(request, response);
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		JSONParser parser = new JSONParser();
 		User user = sm.getUser();
@@ -73,7 +69,6 @@ public class SendWebsitesIntegrated extends HttpServlet {
 				throw new GeneralException(ServletManager.Code.ClientError, "Empty websites");
 			Map<Entry<String, String>, List<String>> userAndUrlsMap = new HashMap<Entry<String, String>, List<String>>();
 			List<String> dbIds = new LinkedList<String>();
-			List<String> urlsIntegrated = new LinkedList<String>();
 			for (Object websiteRequest : websiteRequests) {
 				String db_id = (String) ((JSONObject) websiteRequest).get("db_id");
 				dbIds.add(db_id);
@@ -85,15 +80,12 @@ public class SendWebsitesIntegrated extends HttpServlet {
 					urls = new LinkedList<String>();
 					userAndUrlsMap.put(entry, urls);
 				}
-				if (!urls.contains(url)) {
+				if (!urls.contains(url))
 					urls.add(url);
-					if (!urlsIntegrated.contains(url))
-						urlsIntegrated.add(url);
-				}
 			}
 			for (Entry<Entry<String, String>, List<String>> entry : userAndUrlsMap.entrySet()) {
 				SendGridMail mail = new SendGridMail("Agathe @Ease", "contact@ease.space");
-				mail.sendAppsArrivedEmail(entry.getKey().getValue(), entry.getKey().getKey(), entry.getValue());
+				mail.sendFailToIntegrateWebsitesEmail(entry.getKey().getValue(), entry.getKey().getKey(), entry.getValue());
 			}
 			DataBaseConnection db = sm.getDB();
 			DatabaseRequest db_request;

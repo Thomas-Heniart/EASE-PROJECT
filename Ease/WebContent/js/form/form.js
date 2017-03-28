@@ -102,10 +102,9 @@ var Form = {
 		constructorForm.apply(this, arguments);
 		var self = this;
 		this.successCallback = function() {
-			showAlertPopup('Modifications successfully applied !', false);
 			var newName = self.oInputs[0].getVal();
 			$("#userSettingsButton span").html(newName);
-			var namesCount = newName.split(" ").count();
+			var namesCount = newName.split(" ").length;
 			easeTracker.trackEvent("SettingsEditUserName", {"UserNamesCount":namesCount});
 			self.disable();
 		};

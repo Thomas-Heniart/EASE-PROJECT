@@ -285,85 +285,81 @@
 	font-family: $defaultFont;
 	line-height: 100%;
 
+	.requests {
+		max-height: 75vh;
+		overflow: auto;
+		width: fit-content;
+		margin: auto;
+		border: 1px solid $themeColor;
+		border-radius: 5px;
+		padding: 0;
+		margin-top: 10px;
 
-	.requestedWebsite.selected {
-		background-color: $themeGreyColor;
-		transition: background-color 0.3s ease;
-		-webkit-transition: background-color 0.3s ease;
-	}
-	.requestedWebsite {
-		padding: 10px;
-		text-align: left;
-		width: 70%;
-		margin: 0 auto;
-		transition: background-color 0.3s ease;
-		-webkit-transition: background-color 0.3s ease;
+		.requestedWebsite.selected {
+			background-color: $themeGreyColor;
+			transition: background-color 0.3s ease;
+			-webkit-transition: background-color 0.3s ease;
+		}
 
-		a {
-			text-decoration: none;
-			margin: 2px;
-			padding: 3px;
-			border: 1px solid;
-			user-select: none;
-			outline: none;
-			border-radius: 5px;
-			color: white;
-			display: inline-block;
+		.requestedWebsite {
+			padding: 10px;
+			text-align: left;
+			margin: 0;
 			transition: background-color 0.3s ease;
 			-webkit-transition: background-color 0.3s ease;
 
-			&:hover {
+			a {
+				text-decoration: none;
+				margin: 2px;
+				padding: 3px;
+				border: 1px solid;
+				user-select: none;
+				outline: none;
+				border-radius: 5px;
+				color: white;
+				display: inline-block;
 				transition: background-color 0.3s ease;
 				-webkit-transition: background-color 0.3s ease;
-				background-color: white !important;
+
+				&:hover {
+					transition: background-color 0.3s ease;
+					-webkit-transition: background-color 0.3s ease;
+					background-color: white !important;
+				}
 			}
-		}
 
-		a.done {
-			background-color: $themeButtonGreenColor;
-			border-color: $themeButtonGreenColor;
+			a.done {
+				background-color: $themeButtonGreenColor;
+				border-color: $themeButtonGreenColor;
 
-			&:hover {
-				color: $themeButtonGreenColor;
+				&:hover {
+					color: $themeButtonGreenColor;
+				}
 			}
-		}
 
-		a.fail {
-			background-color: $themeRedColor;
-			border-color: $themeRedColor;
+			a.fail {
+				background-color: $themeRedColor;
+				border-color: $themeRedColor;
 
-			&:hover {
-				color: $themeRedColor;
+				&:hover {
+					color: $themeRedColor;
+				}
 			}
-		}
 
-		p {
-			margin: 0;
-		}
+			p {
+				margin: 0;
+			}
 
-		.quit {
-			background-color: $themeRedColor;
-			color: white;
-			border-radius: 100%;
-			padding: 1px 5px;
-			margin-right: 15px;
-			outline: none;
-			user-select: none;
-			cursor: pointer;
-		}
-
-		.sendEmail {
-			display: inline;
-			left: 5%;
-			background-color: $themeColor;
-			color: white;
-			border: none;
-			border-radius: 5px;
-			width: 15px;
-			height: 15px;
-			padding: 0;
-			margin-right: 15px;
-			outline: none;
+			.quit {
+				background-color: $themeRedColor;
+				color: white;
+				border-radius: 100%;
+				padding: 1px 5px;
+				margin-right: 15px;
+				outline: none;
+				user-select: none;
+				cursor: pointer;
+			}
 		}
 	}
 

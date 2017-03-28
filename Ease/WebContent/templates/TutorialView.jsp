@@ -318,7 +318,7 @@
 						<div class="appHandler hidden">
 							<div class="app" id="${catalog.getWebsiteWithName('Leboncoin').getSingleId()}">
 								<div class="logo">
-									<img src="resources/websites/Leboncoin/logo.png">
+									<img src="resources/websites/LeBonCoin/logo.png">
 								</div>
 								<p class="name">Leboncoin</p>
 							</div>
@@ -342,7 +342,7 @@
 						<div class="appHandler hidden">
 							<div class="app" id="${catalog.getWebsiteWithName('PayPal').getSingleId()}">
 								<div class="logo">
-									<img src="resources/websites/PayPal/logo.png">
+									<img src="resources/websites/Paypal/logo.png">
 								</div>
 								<p class="name">PayPal</p>
 							</div>

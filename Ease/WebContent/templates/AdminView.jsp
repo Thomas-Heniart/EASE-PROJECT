@@ -109,7 +109,6 @@
 					<div class="row text-center">
 						<div class="input">
 							<input id="websiteUrl" type="text" placeholder="Set website name" />
-							<i class="fa fa-pencil placeholderIcon" aria-hidden="true"></i>
 						</div>
 						<div class="hidden" id="emailsToSend"></div>
 					</div>
