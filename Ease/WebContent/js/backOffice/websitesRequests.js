@@ -11,10 +11,9 @@ var EditRequestUrlPopup = function(rootEl) {
 	this.errorRowHandler = $('.errorHandler', this.rootEl);
 	this.goBackButtonHandler = $("#goBack", this.rootEl);
 	this.urlInput = $("#websiteUrl", this.rootEl);
-	this.submitButton = $("button[type='submit']", this.rootEl);
+	this.submitButton = $("#nextStep", this.rootEl);
 	this.emailSenderRow = $("#emailsToSend", this.rootEl);
 	this.selectedRequest = null;
-	this.submitButton.click(self.nextStep);
 	var i = 0;
 	this.urlInput.on("input", function() {
 		if (self.urlInput.val() == null || self.urlInput.val() === "")
@@ -25,28 +24,22 @@ var EditRequestUrlPopup = function(rootEl) {
 	this.open = function() {
 		if (websitesSelected.length == 0)
 			return;
+		i = 0;
 		currentAdminPopup = self;
 		self.goToNextStep();
+		self.submitButton.on("click", self.nextStep);
 		self.submitButton.removeClass("locked");
 		self.parentHandler.addClass('myshow');
 		self.rootEl.addClass('show');
 	}
 	this.nextStep = function() {
-		console.log("haha");
 		var editedUrl = self.urlInput.val();
-		postHandler.post("EditRequestWebsiteUrl", {
-			"db_id": self.selectedRequest.db_id,
-			"url": editedUrl
-		}, function() {
-			
-		}, function(data) {
-			self.selectedRequest.setUrl(editedUrl);
-			i++
-			if (i < websitesSelected.length)
-				self.goToNextStep();
-			else
-				self.goToSubmit();
-		});
+		self.selectedRequest.setUrl(editedUrl);
+		i++;
+		if (i < websitesSelected.length)
+			self.goToNextStep();
+		else
+			self.goToSubmit();
 	}
 	this.goToNextStep = function() {
 		self.selectedRequest = websitesSelected[i];
@@ -55,30 +48,38 @@ var EditRequestUrlPopup = function(rootEl) {
 	this.goToSubmit = function() {
 		self.printEmails();
 		self.submitButton.text("Send emails");
+		self.submitButton.off("click", self.nextStep);
+		self.submitButton.on("click", self.submit);
 	}
 	this.printEmails = function() {
 		self.urlInput.parent().addClass("hidden");
 		self.emailSenderRow.removeClass("hidden");
-		self.websitesSelected.forEach(function(websiteRequest) {
+		websitesSelected.forEach(function(websiteRequest) {
 			self.emailSenderRow.append("<div class='request'>"
 											+ websiteRequest.url
-											+ " "
+											+ " : "
 											+ websiteRequest.userEmail);
 		});
 	}
 	this.submit = function() {
 		if (self.submitButton.hasClass("locked"))
 			return;
-		var editedUrl = self.urlInput.val();
-		postHandler.post("SendWebsiteIntegratedEmail", {
-			db_id: self.selectedRequest.db_id,
-			website: editedUrl,
-			name: self.selectedRequest.userName,
-			email: self.selectedRequest.userEmail
+		var requests = [];
+		websitesSelected.forEach(function(websiteRequest) {
+			var tmp = {};
+			tmp.url = websiteRequest.url;
+			tmp.db_id = websiteRequest.db_id;
+			tmp.user = {"email" : websiteRequest.userEmail, "name": websiteRequest.userName};
+			requests.push(tmp);
+		});
+		var websitesSelectedString = JSON.stringify(requests);
+		postHandler.post("SendWebsitesIntegrated", {
+			"websiteRequests": websitesSelectedString
 		}, function() {
 		}, function(data) {
-			self.selectedRequest.remove();
-			self.reset();
+			websitesSelected.forEach(function(websiteRequest) {
+				websiteRequest.removeFromDocument();
+			});
 			self.close();
 		}, function(data) {
 			$("p", self.errorRowHandler).text(data);
@@ -88,8 +89,11 @@ var EditRequestUrlPopup = function(rootEl) {
 		self.selectedRequest = null;
 		self.urlInput.val("");
 		self.submitButton.addClass("locked");
+		self.submitButton.off("click", self.nextStep);
+		self.submitButton.off("click", self.submit);
 	}
 	this.close = function() {
+		self.reset();
 		self.rootEl.removeClass("show");
 		self.parentHandler.removeClass("myshow");
 	}

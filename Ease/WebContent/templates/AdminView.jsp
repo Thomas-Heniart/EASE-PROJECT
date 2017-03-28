@@ -117,7 +117,7 @@
 						<p></p>
 					</div>
 					<div class="row text-center">
-						<button class="btn locked" type="submit">Next</button>
+						<button class="btn locked" id="nextStep">Next</button>
 					</div>
 					<div class="row text-center">
 						<a id="goBack" class="liteTextButton">Go back</a>

@@ -1,8 +1,12 @@
 package com.Ease.Servlet.BackOffice;
 
 import java.io.IOException;
+import java.util.AbstractMap;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,20 +14,15 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
-import com.Ease.Context.Catalog.Catalog;
-import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Mail.SendGridMail;
 import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -33,27 +32,30 @@ import com.Ease.Utils.ServletManager;
 @WebServlet("/SendWebsitesIntegrated")
 public class SendWebsitesIntegrated extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public SendWebsitesIntegrated() {
-        super();
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public SendWebsitesIntegrated() {
+		super();
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		RequestDispatcher rd = request.getRequestDispatcher("admin.jsp");
 		rd.forward(request, response);
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		DataBaseConnection db = sm.getDB();
 		JSONParser parser = new JSONParser();
@@ -62,45 +64,45 @@ public class SendWebsitesIntegrated extends HttpServlet {
 			sm.needToBeConnected();
 			if (!user.isAdmin())
 				throw new GeneralException(ServletManager.Code.ClientError, "Not an admin");
-			String email = sm.getServletParam("email", true);
-			String name = sm.getServletParam("name", true);
-			String db_id = sm.getServletParam("db_id", true);
-			String website = sm.getServletParam("website", true);
-			if (email == null || email.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientError, "Empty email");
-			if (name == null || name.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientError, "Empty name");
-			if (db_id == null || db_id.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientError, "Empty db_id");
-			if (website == null || website.equals(""))
+			String websiteRequestString = sm.getServletParam("websiteRequests", true);
+			if (websiteRequestString == null || websiteRequestString.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientError, "Empty website");
-			Catalog catalog = (Catalog)sm.getContextAttr("catalog");
-			
-				JSONArray websitesUrls = new JSONArray();
-				List<Website> integratedWebsites = new LinkedList<Website>();
-				try {
-					websitesUrls = (JSONArray)parser.parse(StringEscapeUtils.unescapeHtml4(websitesUrlsString));
-				} catch (ParseException e) {
-					throw new GeneralException(ServletManager.Code.ClientError, e);
+			JSONArray websiteRequests = new JSONArray();
+			websiteRequests = (JSONArray) parser.parse(StringEscapeUtils.unescapeHtml4(websiteRequestString));
+			if (websiteRequests.isEmpty())
+				throw new GeneralException(ServletManager.Code.ClientError, "Empty websites");
+			Map<Entry<String, String>, List<String>> userAndUrlsMap = new HashMap<Entry<String, String>, List<String>>();
+			List<String> dbIds = new LinkedList<String>();
+			for (Object websiteRequest : websiteRequests) {
+				String db_id = (String) ((JSONObject) websiteRequest).get("db_id");
+				dbIds.add(db_id);
+				String url = (String) ((JSONObject) websiteRequest).get("url");
+				JSONObject userObj = (JSONObject) ((JSONObject) websiteRequest).get("user");
+				Map.Entry<String, String> entry  = new AbstractMap.SimpleEntry<String, String>((String)userObj.get("email"), (String)userObj.get("name"));
+				List<String> urls = userAndUrlsMap.get(entry);
+				if (urls == null) {
+					urls = new LinkedList<String>();
+					userAndUrlsMap.put(entry, urls);
 				}
-				if (websitesUrls.isEmpty())
-					throw new GeneralException(ServletManager.Code.ClientError, "Empty websites");
-				for (Object websiteUrl : websitesUrls) {
-					Website tmp = catalog.getWebsiteWithHost((String)websiteUrl);
-					if (tmp == null)
-						throw new GeneralException(ServletManager.Code.ClientError, "We don't have this website");
-					integratedWebsites.add(tmp);
-				}
+				if (!urls.contains(url))
+					urls.add(url);
+			}
+			for (Entry<Entry<String, String>, List<String>> entry : userAndUrlsMap.entrySet()) {
 				SendGridMail mail = new SendGridMail("Agathe @Ease", "contact@ease.space");
-				mail.sendAppsArrivedEmail(name, email, website);
-				for (Website website : integratedWebsites) {
-					db_request = db.prepareRequest("INSERT INTO integrateWebsitesAndUsersMap values (null, ?, ?);");
-					db_request.setInt(website.getDb_id());
-					db_request.setInt(user_id);
-					db_request.set();
-				}
+				mail.sendAppsArrivedEmail(entry.getKey().getValue(), entry.getKey().getKey(), entry.getValue());
+			}
+			/*
+			 * SendGridMail mail = new SendGridMail("Agathe @Ease",
+			 * "contact@ease.space"); ; for (Website website : integratedWebsites) { db_request
+			 * = db.
+			 * prepareRequest("INSERT INTO integrateWebsitesAndUsersMap values (null, ?, ?);"
+			 * ); db_request.setInt(website.getDb_id());
+			 * db_request.setInt(user_id); db_request.set(); }
+			 */
 			sm.setResponse(ServletManager.Code.Success, "");
 		} catch (GeneralException e) {
+			sm.setResponse(e);
+		} catch (Exception e) {
 			sm.setResponse(e);
 		}
 		sm.sendResponse();
