@@ -302,8 +302,8 @@ var Profile = function(rootEl){
 		else {
 			postHandler.post('RemoveProfile', {
 				profileId : self.id
-			}, function() {
-				easeLoadingIndicator.hide();
+			}, function() {	
+
 			}, function(retMsg) {
 				easeTracker.trackEvent('DeleteProfile');
 				self.remove();
@@ -320,7 +320,6 @@ var Profile = function(rootEl){
 				name : name,
 				profileId : self.id
 			}, function() {
-				easeLoadingIndicator.hide();
 			}, function(retMsg) {
 				easeTracker.trackEvent('EditProfileName', {"newProfileName" : name});
 				self.setName(name);
@@ -343,14 +342,12 @@ var Profile = function(rootEl){
 	//edit color section
 	this.qRoot.find('#modifyColorForm .color').click(function(){
 		var color = $(this).attr('color');
-		easeLoadingIndicator.show();
 		self.qRoot.find('#modifyColorForm .color.choosen').removeClass('choosen');
 		$(this).addClass('choosen');
 		postHandler.post('EditProfileColor', {
 			color : color,
 			profileId : self.id
 		}, function() {
-			easeLoadingIndicator.hide();
 		}, function(retMsg) {
 			easeTracker.trackEvent('EditProfileColor', {"newProfileColor": color});
 			self.setColor(color);
