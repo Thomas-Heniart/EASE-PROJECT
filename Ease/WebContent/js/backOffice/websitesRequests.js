@@ -13,6 +13,7 @@ var EditRequestUrlPopup = function(rootEl) {
 	this.urlInput = $("#websiteUrl", this.rootEl);
 	this.submitButton = $("#nextStep", this.rootEl);
 	this.emailSenderRow = $("#emailsToSend", this.rootEl);
+	this.backButton = $("#goBack", this.rootEl);
 	this.selectedRequest = null;
 	var i = 0;
 	this.urlInput.on("input", function() {
@@ -21,13 +22,15 @@ var EditRequestUrlPopup = function(rootEl) {
 		else
 			self.submitButton.removeClass("locked");
 	})
-	this.open = function() {
+	this.open = function(successEmail) {
 		if (websitesSelected.length == 0)
 			return;
 		i = 0;
+		self.successEmail = successEmail;
 		currentAdminPopup = self;
 		self.goToNextStep();
 		self.submitButton.on("click", self.nextStep);
+		self.backButton.on("click", self.goBack);
 		self.submitButton.removeClass("locked");
 		self.parentHandler.addClass('myshow');
 		self.rootEl.addClass('show');
@@ -40,6 +43,14 @@ var EditRequestUrlPopup = function(rootEl) {
 			self.goToNextStep();
 		else
 			self.goToSubmit();
+	}
+	this.goBack = function() {
+		if (i == 0)
+			self.close();
+		else {
+			i--
+			self.goToNextStep();
+		}
 	}
 	this.goToNextStep = function() {
 		self.selectedRequest = websitesSelected[i];
@@ -73,7 +84,9 @@ var EditRequestUrlPopup = function(rootEl) {
 			requests.push(tmp);
 		});
 		var websitesSelectedString = JSON.stringify(requests);
-		postHandler.post("SendWebsitesIntegrated", {
+		var action = self.successEmail ? "SendWebsitesIntegrated" : "SendFailToIntegrateWebsites";
+		 
+		postHandler.post(action, {
 			"websiteRequests": websitesSelectedString
 		}, function() {
 		}, function(data) {
@@ -189,10 +202,13 @@ function printRequestedWebsites(string) {
 }
 
 $(document).ready(function() {
-	websitesRequestsRow = $(".requestedWebsitesView");
+	websitesRequestsRow = $(".requestedWebsitesView .requests");
 	loadRequestedWebsites();
 	editRequestUrlPopup = new EditRequestUrlPopup($("#editRequestedWebsitePopup"));
 	$("#done").click(function() {
-		editRequestUrlPopup.open();
+		editRequestUrlPopup.open(true);
+	})
+	$("#fail").click(function() {
+		editRequestUrlPopup.open(false);
 	})
 })

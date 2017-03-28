@@ -397,6 +397,22 @@ public class SendGridMail {
 		this.sendEmail();
 	}
 	
+	public void sendFailToIntegrateWebsitesEmail(String userName, String userEmail, List<String> websiteNames) throws GeneralException {
+		mail.setTemplateId("2616932d-5d41-49df-9897-62d9aaeb9501");
+		Personalization personalization = this.createNewPersonalization();
+		this.addTo(personalization, userName, userEmail);
+		personalization.addSubstitution("#username", userName);
+		String integratedWebsitesString = "";
+		for (String websiteName : websiteNames) {
+			integratedWebsitesString += websiteName;
+			if (websiteNames.indexOf(websiteName) != (websiteNames.size() - 1))
+				integratedWebsitesString += ", ";
+		}
+		personalization.addSubstitution("#appName", integratedWebsitesString);
+		personalization.addSubstitution("#linkUrl", Variables.URL_PATH + "?catalogOpen=true");
+		this.sendEmail();
+	}
+	
 	public void sendAwesomeUserEmail(Website site, ServletManager sm) throws GeneralException {
 		mail.setTemplateId("2f8b2828-6e6f-42bd-a568-3da1b83ed835");
 		DataBaseConnection db = sm.getDB();
