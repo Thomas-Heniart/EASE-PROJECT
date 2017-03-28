@@ -1,4 +1,12 @@
+currentAdminPopup = null;
+
 $(document).ready(function() {
+	
+	$("#easePopupsHandler").click(function(e){
+		if ($(e.target).attr('id') == 'easePopupsHandler')
+			currentAdminPopup.close();
+	});
+	
 	/* Buttons behavior */
 	$(".admin-menu button").click(openSideViewTab);
 	$(".RightSideViewTab button .fa.fa-times").click(closeSideViewTab);

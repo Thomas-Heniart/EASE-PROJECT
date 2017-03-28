@@ -52,18 +52,20 @@ public class EditRequestWebsiteUrl extends HttpServlet {
 			sm.needToBeConnected();
 			if (!user.isAdmin())
 				throw new GeneralException(ServletManager.Code.ClientError, "Not an admin");
-			String newUrl = sm.getServletParam("newUrl", true);
-			String oldUrl = sm.getServletParam("oldUrl", true);
-			if (newUrl == null || newUrl.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Input is empty");
-			if (oldUrl == null || oldUrl.equals(""))
+			String db_id = sm.getServletParam("db_id", true);
+			String url = sm.getServletParam("url", true);
+			if (db_id == null || db_id.equals(""))
+				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty db_id");
+			if (url == null || url.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty url");
-			DatabaseRequest db_request = db.prepareRequest("UPDATE requestedWebsites SET site = ? WHERE site = ?;");
-			db_request.setString(newUrl);
-			db_request.setString(oldUrl);
-			String retMsg = (catalog.getWebsiteWithHost(newUrl) != null) ? "integrated" : "pending";
+			DatabaseRequest db_request = db.prepareRequest("UPDATE requestedWebsites SET site = ? WHERE id = ?;");
+			db_request.setString(url);
+			db_request.setInt(db_id);
+			String retMsg = (catalog.getWebsiteWithHost(url) != null) ? "integrated" : "pending";
 			sm.setResponse(ServletManager.Code.Success, retMsg);
 		} catch(GeneralException e) {
+			sm.setResponse(e);
+		} catch(Exception e) {
 			sm.setResponse(e);
 		}
 		sm.sendResponse();

@@ -54,27 +54,28 @@ public class SendWebsitesIntegrated extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		User user = (User)(session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		DataBaseConnection db = sm.getDB();
-		Catalog catalog = (Catalog)sm.getContextAttr("catalog");
 		JSONParser parser = new JSONParser();
+		User user = sm.getUser();
 		try {
-			String email = sm.getServletParam("email", true);
-			String websitesUrlsString = sm.getServletParam("websites", true);
-			if (email == null || email.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientError, "Empty email");
-			if (websitesUrlsString == null || websitesUrlsString.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientError, "Empty websites");
 			sm.needToBeConnected();
 			if (!user.isAdmin())
 				throw new GeneralException(ServletManager.Code.ClientError, "Not an admin");
-			DatabaseRequest db_request = db.prepareRequest("SELECT id, firstName FROM users WHERE email = ?;");
-			db_request.setString(email);
-			DatabaseResult rs = db_request.get();
-			if (rs.next()) {
-				String user_id = rs.getString(1);
-				String firstName = rs.getString(2);
+			String email = sm.getServletParam("email", true);
+			String name = sm.getServletParam("name", true);
+			String db_id = sm.getServletParam("db_id", true);
+			String website = sm.getServletParam("website", true);
+			if (email == null || email.equals(""))
+				throw new GeneralException(ServletManager.Code.ClientError, "Empty email");
+			if (name == null || name.equals(""))
+				throw new GeneralException(ServletManager.Code.ClientError, "Empty name");
+			if (db_id == null || db_id.equals(""))
+				throw new GeneralException(ServletManager.Code.ClientError, "Empty db_id");
+			if (website == null || website.equals(""))
+				throw new GeneralException(ServletManager.Code.ClientError, "Empty website");
+			Catalog catalog = (Catalog)sm.getContextAttr("catalog");
+			
 				JSONArray websitesUrls = new JSONArray();
 				List<Website> integratedWebsites = new LinkedList<Website>();
 				try {
@@ -91,15 +92,13 @@ public class SendWebsitesIntegrated extends HttpServlet {
 					integratedWebsites.add(tmp);
 				}
 				SendGridMail mail = new SendGridMail("Agathe @Ease", "contact@ease.space");
-				mail.sendAppsArrivedEmail(firstName, email, integratedWebsites);
+				mail.sendAppsArrivedEmail(name, email, website);
 				for (Website website : integratedWebsites) {
 					db_request = db.prepareRequest("INSERT INTO integrateWebsitesAndUsersMap values (null, ?, ?);");
 					db_request.setInt(website.getDb_id());
 					db_request.setInt(user_id);
 					db_request.set();
 				}
-			} else
-				throw new GeneralException(ServletManager.Code.ClientError, "This user does not exist");
 			sm.setResponse(ServletManager.Code.Success, "");
 		} catch (GeneralException e) {
 			sm.setResponse(e);

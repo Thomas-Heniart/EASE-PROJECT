@@ -1,6 +1,10 @@
 @import 'variables';
 @import 'mixins';
 
+#logged-body {
+	top: 0;
+}
+
 .admin-menu {
 	position: absolute;
 	top: 0;
@@ -281,11 +285,19 @@
 	font-family: $defaultFont;
 	line-height: 100%;
 
+
+	.requestedWebsite.selected {
+		background-color: $themeGreyColor;
+		transition: background-color 0.3s ease;
+		-webkit-transition: background-color 0.3s ease;
+	}
 	.requestedWebsite {
 		padding: 10px;
 		text-align: left;
 		width: 70%;
 		margin: 0 auto;
+		transition: background-color 0.3s ease;
+		-webkit-transition: background-color 0.3s ease;
 
 		a {
 			text-decoration: none;

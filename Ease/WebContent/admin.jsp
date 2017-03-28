@@ -32,17 +32,7 @@
 	rel='stylesheet' type='textcss' />
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
-<link rel="stylesheet" href="css/owl.carousel.css" />
-<link rel="stylesheet" href="css/owl.theme.css" />
-<link rel="stylesheet" href="css/owl.transitions.css" />
-
-<link rel="stylesheet" href="css/lib/vicons-font/vicons-font.css">
-<link rel="stylesheet" href="css/lib/vicons-font/buttons.css">
-<link rel="stylesheet" href="css/lib/textInputs/set1.css">
-<link rel="stylesheet" href="css/lib/borderLoading/component.css">
 <link rel="stylesheet" href="css/lib/niftyPopupWindow/component.css">
-<link rel="stylesheet" href="css/lib/ColorSelect/cs-select.css">
-<link rel="stylesheet" href="css/lib/ColorSelect/cs-skin-boxes.css">
 <link rel="manifest" href="manifest.json">
 
 <script src="js/classie.js"></script>
