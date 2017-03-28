@@ -1,0 +1,23 @@
+{
+	"name":"Alumni BBA",
+	"lastLogin":"",
+	"home":"http://www.edhecbbaalumni.com/",
+	"connect":{
+		"todo":[
+			{"action":"waitfor", "search":"form[name='formulaire_login3']"},
+			{"action":"fill", "what":"login", "search":"form[name='formulaire_login3'] input[name='login_s']"},
+			{"action":"fill", "what":"password", "search":"form[name='formulaire_login3'] input[name='pswd_s']"},
+			{"action":"click", "search":"form[name='formulaire_login3'] input[type='submit']"}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"clickona", "search":"a[href*='deconecter']"},
+			{"action":"waitload"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"action":"waitfor", "search":"form[name='formulaire_login3'], a[href*='deconecter']"},
+		{"search":"a[href*='deconecter']"}
+	]
+}
