@@ -123,7 +123,7 @@ response.addCookie(email);
 </c:if>
 
 
-<%@ include file="new_extension.jsp" %>
+<%@ include file="new_extension.html" %>
 <script>
 	$(document).ready(function(){
 		$('.cookiesInfo').css('display', 'none');

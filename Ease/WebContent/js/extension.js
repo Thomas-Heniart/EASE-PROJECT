@@ -128,5 +128,37 @@ $(document).ready(function() {
 			
 		});
 	 });
-	 
+	
+    // init extension popup 
+    var NavigatorName = getUserNavigator();
+    $("#chrome button[type='submit'], #safari button[type='submit']").click(function(){
+        window.location.replace("index.jsp");
+    });
+    $("#extension #download #showExtensionInfo").click(function(){
+        $('#extension #step1').removeClass('show');
+        $('#extension #extensionInfo').addClass('show');
+    });
+    $("#extension #extensionInfo button").click(function(){
+        $('#extension #extensionInfo').removeClass('show');     
+        $('#extension #step1').addClass('show');
+    });
+    $("#extension #download button[type='submit']").click(function(){
+        $("#extension #step1 #download").removeClass('show');
+        if (NavigatorName == "Chrome"){
+            $("#extension #step1 #chrome").addClass('show');
+            chrome.webstore.install(
+                'https://chrome.google.com/webstore/detail/echjdhmhmgildgidlcdlepfkaledeokm',
+                function() {
+                    //do nothing
+                },
+                function() {
+                    //do nothing
+                });
+        } else if (NavigatorName == "Safari"){
+            $("#extension #step1 #safari").addClass('show');
+            window.location.replace(location.protocol + '//' + location.hostname+"/safariExtension/EaseExtension.safariextz");
+        } else {
+            $("#extension #step1 #other").addClass('show');
+        }
+    });
 });

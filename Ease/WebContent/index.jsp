@@ -59,7 +59,6 @@ pageEncoding="UTF-8"%>
 	<script src="js/websocket.js" defer></script>
 
 	<script src="js/isMobile.js" async></script>
-	<script src="js/getNavigator.js" async></script>
 	<script src="js/shortcut.js" async></script>
 
 	<% User user = (User) (session.getAttribute("user"));%>
