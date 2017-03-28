@@ -315,7 +315,6 @@ var Profile = function(rootEl){
 	this.qRoot.find('#modifyNameForm #validate').click(function(){
 		var name = $(this).parent().find('input').val();
 		if (name.length){
-			easeLoadingIndicator.show();
 			postHandler.post('EditProfileName', {
 				name : name,
 				profileId : self.id
