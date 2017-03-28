@@ -33,8 +33,8 @@ pageEncoding="UTF-8"%>
 	rel='stylesheet' type='textcss' />
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
 
-	<link rel="stylesheet" href="css/bootstrap.css" />
 	<link rel="stylesheet" href="css/default_style.css" />
+	<link rel="stylesheet" href="css/bootstrap.css" />
 	<link rel="stylesheet" href="css/lib/niftyPopupWindow/component.css">
 	<link rel="stylesheet" type="text/css" href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
 
@@ -54,10 +54,13 @@ pageEncoding="UTF-8"%>
 	<script src="js/header.js" defer></script>
 	<script src="js/app.js" defer></script>
 	<script src="js/profiles.js" defer></script>
-	<script src="js/shortcut.js" defer></script>
 	<script src="js/dashboard.js" defer></script>
 	<script src="js/selectFx.js" defer></script>
 	<script src="js/websocket.js" defer></script>
+
+	<script src="js/isMobile.js" async></script>
+	<script src="js/getNavigator.js" async></script>
+	<script src="js/shortcut.js" async></script>
 
 	<% User user = (User) (session.getAttribute("user"));%>
 
@@ -85,7 +88,7 @@ pageEncoding="UTF-8"%>
 	if (user != null){
 		SessionSave sessionSave = (SessionSave) (user.getSessionSave());
 		if (user.isAdmin()){%>
-			<script src="js/robotest.js"></script>
+			<script src="js/robotest.js" async></script>
 		<%}%>
 	<%} else {
 		Cookie 	cookie = null;
@@ -121,8 +124,6 @@ pageEncoding="UTF-8"%>
 			</jsp:forward>
 		<%}
 	}%>
-	<script src="js/isMobile.js"></script>
-	<script src="js/getNavigator.js"></script>
 	<script type="text/javascript">$crisp=[];CRISP_WEBSITE_ID="6e9fe14b-66f7-487c-8ac9-5912461be78a";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.im/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
 </head>
 
@@ -131,9 +132,7 @@ pageEncoding="UTF-8"%>
 	<%@ page import="java.util.Base64.Encoder" %>
 	<%@ page import="java.nio.charset.StandardCharsets" %>
 	<script>
-		$.ajaxSetup({
-  			cache: true
-		});
+		$.ajaxSetup({cache: true});
 	</script>
 	<div id="userEmail" data-content=<%= (user != null) ? user.getEmail() : null %>></div>
 

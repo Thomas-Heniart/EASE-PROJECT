@@ -84,7 +84,6 @@ response.addCookie(email);
 				</button>
 			</div>
 			<div class="CatalogViewTab <c:if test="${param.catalogOpen}">show</c:if>">
-
 			</div>
 			<script type="text/javascript">
 				$(document).ready(function(){
