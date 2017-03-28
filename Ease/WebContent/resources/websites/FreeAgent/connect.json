@@ -1,7 +1,7 @@
 {
     "name":"FreeAgent",
     "lastLogin":"",
-    "home":"https://easespace.freeagent.com",
+    "home":"https://freeagent.com/",
     "connect":{
         "todo":[
             {"action":"fill", "what":"login", "search":"#login_email"},

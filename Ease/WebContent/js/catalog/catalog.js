@@ -404,4 +404,28 @@ $(document).ready(function(){
 	catalog = new Catalog($('.CatalogViewTab'));
 	if (catalog.qRoot.hasClass('show'))
 		catalog.open();
+	$('.helpIntegrateApps #integrateAppForm #integrateApp').keyup(function(e) {
+		if (e.keyCode == 13)
+			$('.helpIntegrateApps #integrateAppForm #integrate').trigger("click");
+	});
+	$('.helpIntegrateApps #integrateAppForm #integrate').click(function(e) {
+		e.preventDefault();
+		var form = $(this).closest('#integrateAppForm');
+		var url = $(form).find('#integrateApp').val();
+		postHandler.post(
+			'WebsiteRequest',
+			{
+				ask : url
+			},
+			function() {
+				$(form).find('.inputs input').val('');
+				$(form).find('.inputs').hide();
+				$(form).find('.confirmation').show().delay(1000).fadeOut(function() {
+					$(form).find('.inputs').show();
+				});
+			}, function(retMsg) {
+				easeTracker.trackEvent("RequestWebsite", {"AskedWebsiteName": url});
+			}, function(retMsg) {
+			}, 'text');
+	});
 });

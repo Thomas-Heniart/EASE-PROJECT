@@ -381,15 +381,15 @@ public class SendGridMail {
 		this.mail.setReplyTo(replyEmail);
 	}
 
-	public void sendAppsArrivedEmail(String userName, String userEmail, List<Website> integratedWebsites) throws GeneralException {
+	public void sendAppsArrivedEmail(String userName, String userEmail, List<String> websiteNames) throws GeneralException {
 		mail.setTemplateId("cfe20be6-31c1-427f-b94c-02aacedd2619");
 		Personalization personalization = this.createNewPersonalization();
 		this.addTo(personalization, userName, userEmail);
 		personalization.addSubstitution("#username", userName);
 		String integratedWebsitesString = "";
-		for (Website website : integratedWebsites) {
-			integratedWebsitesString += website.getName();
-			if (integratedWebsites.indexOf(website) == integratedWebsites.size())
+		for (String websiteName : websiteNames) {
+			integratedWebsitesString += websiteName;
+			if (websiteNames.indexOf(websiteName) != (websiteNames.size() - 1))
 				integratedWebsitesString += ", ";
 		}
 		personalization.addSubstitution("#appName", integratedWebsitesString);

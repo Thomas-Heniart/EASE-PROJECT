@@ -150,11 +150,16 @@ public class Catalog {
 	
 	public List<Website> getPublicWebsitesForUser(User user) {
 		List<Website> res = new LinkedList<Website> ();
+		List<Website> newWebsites = new LinkedList<Website> ();
 		this.websites.forEach((website) -> {
-			if (website.isInPublicCatalogForUser(user) && !website.isNew())
-				res.add(website);
+			if (website.isInPublicCatalogForUser(user)) {
+				if (website.isNew())
+					newWebsites.add(website);
+				else
+					res.add(website);
+			}
 		});
-		res.addAll(getNewWebsites());
+		res.addAll(newWebsites);
 		return res;
 	}
 	

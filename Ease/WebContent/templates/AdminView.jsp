@@ -98,7 +98,35 @@
 	</div>
 	
 </div>
-
+<div class="popupHandler" id="easePopupsHandler">
+	<div class="easePopup show" id="editRequestedWebsitePopup">
+		<div class="title">
+			<p>Edit requested website</p>
+		</div>
+		<div class="bodysHandler">
+			<div class="popupBody show" id="editRequestedWebsite">
+				<div class='handler'>
+					<div class="row text-center">
+						<div class="input">
+							<input id="websiteUrl" type="text" placeholder="Set website name" />
+							<i class="fa fa-pencil placeholderIcon" aria-hidden="true"></i>
+						</div>
+						<div class="hidden" id="emailsToSend"></div>
+					</div>
+					<div class="row text-center errorText errorHandler">
+						<p></p>
+					</div>
+					<div class="row text-center">
+						<button class="btn locked" id="nextStep">Next</button>
+					</div>
+					<div class="row text-center">
+						<a id="goBack" class="liteTextButton">Go back</a>
+					</div>				
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 <%@ include file="AddUsers.jsp"%>
 <%@ include file="RequestedSitesView.jsp"%>
 <%@ include file="UploadWebsite.jsp"%>

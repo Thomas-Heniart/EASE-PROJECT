@@ -1,5 +1,104 @@
 var websitesRequestsRow;
 var websitesRequests = [];
+var editRequestUrlPopup;
+var websitesSelected = [];
+var editedUrls = [];
+
+var EditRequestUrlPopup = function(rootEl) {
+	var self = this;
+	this.rootEl = rootEl;
+	this.parentHandler = this.rootEl.closest('#easePopupsHandler');
+	this.errorRowHandler = $('.errorHandler', this.rootEl);
+	this.goBackButtonHandler = $("#goBack", this.rootEl);
+	this.urlInput = $("#websiteUrl", this.rootEl);
+	this.submitButton = $("#nextStep", this.rootEl);
+	this.emailSenderRow = $("#emailsToSend", this.rootEl);
+	this.selectedRequest = null;
+	var i = 0;
+	this.urlInput.on("input", function() {
+		if (self.urlInput.val() == null || self.urlInput.val() === "")
+			self.submitButton.addClass("locked");
+		else
+			self.submitButton.removeClass("locked");
+	})
+	this.open = function() {
+		if (websitesSelected.length == 0)
+			return;
+		i = 0;
+		currentAdminPopup = self;
+		self.goToNextStep();
+		self.submitButton.on("click", self.nextStep);
+		self.submitButton.removeClass("locked");
+		self.parentHandler.addClass('myshow');
+		self.rootEl.addClass('show');
+	}
+	this.nextStep = function() {
+		var editedUrl = self.urlInput.val();
+		self.selectedRequest.setUrl(editedUrl);
+		i++;
+		if (i < websitesSelected.length)
+			self.goToNextStep();
+		else
+			self.goToSubmit();
+	}
+	this.goToNextStep = function() {
+		self.selectedRequest = websitesSelected[i];
+		self.urlInput.val(self.selectedRequest.url);
+	}
+	this.goToSubmit = function() {
+		self.printEmails();
+		self.submitButton.text("Send emails");
+		self.submitButton.off("click", self.nextStep);
+		self.submitButton.on("click", self.submit);
+	}
+	this.printEmails = function() {
+		self.urlInput.parent().addClass("hidden");
+		self.emailSenderRow.removeClass("hidden");
+		websitesSelected.forEach(function(websiteRequest) {
+			self.emailSenderRow.append("<div class='request'>"
+											+ websiteRequest.url
+											+ " : "
+											+ websiteRequest.userEmail);
+		});
+	}
+	this.submit = function() {
+		if (self.submitButton.hasClass("locked"))
+			return;
+		var requests = [];
+		websitesSelected.forEach(function(websiteRequest) {
+			var tmp = {};
+			tmp.url = websiteRequest.url;
+			tmp.db_id = websiteRequest.db_id;
+			tmp.user = {"email" : websiteRequest.userEmail, "name": websiteRequest.userName};
+			requests.push(tmp);
+		});
+		var websitesSelectedString = JSON.stringify(requests);
+		postHandler.post("SendWebsitesIntegrated", {
+			"websiteRequests": websitesSelectedString
+		}, function() {
+		}, function(data) {
+			websitesSelected.forEach(function(websiteRequest) {
+				websiteRequest.removeFromDocument();
+			});
+			self.close();
+		}, function(data) {
+			$("p", self.errorRowHandler).text(data);
+		});
+	}
+	this.reset = function() {
+		self.selectedRequest = null;
+		self.urlInput.val("");
+		self.submitButton.addClass("locked");
+		self.submitButton.off("click", self.nextStep);
+		self.submitButton.off("click", self.submit);
+	}
+	this.close = function() {
+		self.reset();
+		self.rootEl.removeClass("show");
+		self.parentHandler.removeClass("myshow");
+	}
+}
+
 var WebsiteRequest = function(rootEl, url, date, userName, userEmail, db_id) {
 	var self = this;
 	this.rootEl = rootEl;
@@ -9,6 +108,7 @@ var WebsiteRequest = function(rootEl, url, date, userName, userEmail, db_id) {
 	this.userEmail = userEmail;
 	this.db_id = db_id;
 	this.elem = null;
+	this.selected = false;
 	this.printOnDocument = function() {
 		self.elem = $("<div class='requestedWebsite'>"
 						+ "<p>"
@@ -19,24 +119,36 @@ var WebsiteRequest = function(rootEl, url, date, userName, userEmail, db_id) {
 						+ " ("
 						+ self.date
 						+ ")"
-						+ "<a href='#' class='done'>Done</a>"
-						+ "<a href='#' class='fail'>Fail</a>"
 						+ "</p>"
 						+ "</div>").appendTo(self.rootEl);
-		self.elem.on("click", ".done", self.doneEmail);
-		self.elem.on("click", ".fail", self.failEmail);
 		self.elem.on("click", ".quit", self.remove);
+		self.elem.on("click", self.select);
 	}
 	this.removeFromDocument = function() {
 		self.elem.remove();
 	}
-	this.remove = function() {
+	this.select = function() {
+		self.elem.toggleClass("selected");
+		self.selected = !self.selected;
+		if (self.selected)
+			websitesSelected.push(self);
+		else {
+			var index = websitesSelected.indexOf(self);
+			if (index == - 1)
+				return;
+			websitesSelected.splice(index, 1);
+		}
+	}
+	this.remove = function(e) {
+		e.stopPropagation();
 		postHandler.post("EraseRequestedWebsite", {
 			db_id: self.db_id
 		}, function() {
-			
 		}, function(data) {
-			var index = websitesRequests.indexOf(self);
+			var index = websitesSelected.indexOf(self);
+			if (index > - 1)
+				websitesSelected.splice(index, 1);
+			index = websitesRequests.indexOf(self);
 			if (index == -1)
 				return;
 			websitesRequests.splice(index, 1);
@@ -45,11 +157,13 @@ var WebsiteRequest = function(rootEl, url, date, userName, userEmail, db_id) {
 			
 		});
 	}
+	this.setUrl = function(url) {
+		self.url = url;
+		//Front modifications TODO
+	}
 	this.doneEmail = function(e) {
 		e.preventDefault();
-		var subject = "";
-		var emailBody = "";
-		window.location = "mailto:" + self.userEmail + "?subject=" + subject + "&body=" + emailBody;
+		editRequestUrlPopup.open(self);
 	}
 	this.failEmail = function(e) {
 		e.preventDefault();
@@ -65,11 +179,6 @@ function loadRequestedWebsites() {
 	});
 }
 
-$(document).ready(function() {
-	websitesRequestsRow = $(".requestedWebsitesView");
-	loadRequestedWebsites();
-})
-
 function printRequestedWebsites(string) {
 	var json = JSON.parse(string);
 	json.forEach(function(element) {
@@ -78,3 +187,12 @@ function printRequestedWebsites(string) {
 		websitesRequests.push(tmp);
 	});
 }
+
+$(document).ready(function() {
+	websitesRequestsRow = $(".requestedWebsitesView");
+	loadRequestedWebsites();
+	editRequestUrlPopup = new EditRequestUrlPopup($("#editRequestedWebsitePopup"));
+	$("#done").click(function() {
+		editRequestUrlPopup.open();
+	})
+})

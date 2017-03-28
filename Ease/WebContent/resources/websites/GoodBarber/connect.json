@@ -1,0 +1,20 @@
+{
+    "name":"GoodBarber",
+    "lastLogin":"",
+    "home":"https://goodbarber.com/launchpad/",
+    "connect":{
+        "todo":[
+            {"action":"fill", "what":"login", "search":"#exist_email"},
+            {"action":"fill", "what":"password", "search":"#exist_pass_safe"},
+            {"action":"clickona", "search":"#connect"}
+        ]
+    },
+    "logout":{
+        "todo":[
+        	{"action":"aclick", "search":"a[href*='logout']"}
+ 		]
+    },
+    "checkAlreadyLogged":[
+        {"search": "a[href*='logout']"}
+    ]
+}

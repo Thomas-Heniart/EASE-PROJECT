@@ -9,6 +9,8 @@
 	<div class="requestedWebsitesView">
 		<div class="requestedWebsitesHeader">
 			<p>People asked if we could add these websites</p>
+			<button id='done'>Send success email</button>
+			<button id='fail'>Send fail email</button>
 		</div>
 	</div>
 </div>
