@@ -379,4 +379,25 @@ public class Mail {
 		}
 		
 	}
+
+	public void sendPricingContact(String email, String name, String phoneNumber, String jobPosition, String company,
+			int collaborators, String needs) throws GeneralException {
+		try {
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("victor@ease.space"));
+			message.setSubject(MimeUtility.encodeText("Nouvelle demande de client", "utf-8", null));
+			InternetAddress[] myCcList = InternetAddress.parse("benjamin@ease.space, thomas@ease.space");
+			message.setRecipients(Message.RecipientType.CC, myCcList);
+			message.setContent("<p>Email: " + email + "</p>"
+					+ "<p>Nom: " + name + "</p>"
+					+ "<p>Numéro de téléphone: " + phoneNumber + "</p>"
+					+ "<p>Entreprise: " + company + "</p>"
+					+ "<p>Position dans l'entreprise: " + jobPosition + "</p>"
+					+ "<p> Nombre de collaborateur: " + collaborators + "</p>"
+					+ "<p>Besoins spécifiques: " + needs + "</p>", "text/html;charset=utf-8");
+			Transport.send(message);
+		} catch (MessagingException | UnsupportedEncodingException e) {
+			throw new GeneralException(ServletManager.Code.InternError, e);
+		}
+		
+	}
 }

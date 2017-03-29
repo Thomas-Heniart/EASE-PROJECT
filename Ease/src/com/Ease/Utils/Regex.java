@@ -12,6 +12,8 @@ public class Regex {
 		    Pattern.compile("^#[0-9a-fA-F]{6}$");
 	public static final Pattern VALID_URL_REGEX = 
 		    Pattern.compile("^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]", Pattern.CASE_INSENSITIVE);
+	public static final Pattern VALID_PHONE_NUMBER =
+			Pattern.compile("^\\+(?:[0-9] ?){6,14}[0-9]$", Pattern.CASE_INSENSITIVE);
 	
 	public static boolean isEmail(String emailStr) {
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(emailStr);
@@ -30,5 +32,10 @@ public class Regex {
 	public static boolean isUrl(String urlStr) {
 		 Matcher matcher = VALID_URL_REGEX .matcher(urlStr);
 	        return matcher.find();
+	}
+	
+	public static boolean isPhoneNumber(String phoneNumber) {
+		Matcher matcher = VALID_PHONE_NUMBER.matcher(phoneNumber);
+		return matcher.find();
 	}
 }
