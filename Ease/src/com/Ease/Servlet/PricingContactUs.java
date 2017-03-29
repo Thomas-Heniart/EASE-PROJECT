@@ -45,10 +45,10 @@ public class PricingContactUs extends HttpServlet {
 		try {
 			String email = sm.getServletParam("email", true);
 			String name = sm.getServletParam("name", true);
-			String phoneNumber = sm.getServletParam("phoneNumber", true);
+			String phoneNumber = sm.getServletParam("phone", true);
 			String jobPosition = sm.getServletParam("jobPosition", true);
 			String company = sm.getServletParam("company", true);
-			String collaboratorNumber = sm.getServletParam("collaborators", true);
+			String collaboratorNumber = sm.getServletParam("teamSize", true);
 			String needs = sm.getServletParam("needs", true);
 			if (email == null || email.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty email");
