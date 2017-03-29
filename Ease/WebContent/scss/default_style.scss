@@ -113,7 +113,7 @@ body .crisp-client .crisp-1 .crisp-11 {
 }
 
 /* general input styles */
-input[type='text']:not([readonly]),input[type='email']:not([readonly]),input[type='password']:not([readonly]), textarea:not([readonly]) {
+input[type]:not([readonly]), textarea:not([readonly]) {
   outline: none;
   transition: box-shadow .3s;
   -webkit-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.5);

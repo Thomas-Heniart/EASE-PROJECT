@@ -374,56 +374,6 @@ $(document).click(function (e){
 //Cause bug in lib where (evt.to == evt.from) in onEnd callback;
 var appDragCurrentIdHelper = 0;
 
-//drag and drop initializing function on a container 
-/*function setupSortableContainer(container) {
-	$(container).sortable({
-		animation : 300,
-		group : "sites",
-		forceFallback : true,
-		filter : ".siteLinkBox[move='false']",
-		handle : ".logo, .emptyAppIndicator",
-		fallbackTolerance : 1,
-		fallbackOnBody: true,
-		onStart : function(evt) {
-			var item = $(evt.item);
-			appDragCurrentIdHelper = item.parent().attr('id');
-			item.css({
-				'pointer-events' : 'none',
-				'opacity' : '0'
-			});
-			$('body').css('cursor', 'move');
-			easeHiddenProfile.rootEl.on('mouseenter', function(){
-				easeHiddenProfile.show();
-			});
-		},
-		onEnd : function(evt) {
-			easeHiddenProfile.rootEl.off('mouseenter');
-			var item = $(evt.item);
-			$('body').css('cursor', '');
-			item.css({
-				'pointer-events' : '',
-				'opacity' : ''
-			});
-			if (appDragCurrentIdHelper != item.parent().attr('id') || evt.oldIndex != evt.newIndex) {
-				postHandler.post("MoveApp", {
-					appId : item.attr('id'),
-					profileIdDest : item.parent().attr('id'),
-					positionDest : item.index()
-				}, function() {
-				}, function(retMsg) {
-					easeTracker.trackEvent("MoveApp");
-				}, function(retMsg) {
-				}, 'text');
-			}
-		},
-		onMove : function(evt) {
-			if ($(evt.dragged).attr('move') == 'false') {
-				return false;
-			}
-		}
-	});
-}*/
-
 /* Next lines come from ProfileEditView.jsp */
 
 $(document).ready(function() {
