@@ -754,3 +754,40 @@
 		}
 	}
 }
+
+#GrowthHackingTab {
+	.input {
+		outline: none;
+		border: none;
+		border-radius: 8px;
+		border: 1px solid #aaa;
+		padding: 7px 5px;
+		margin: 2px;
+	}
+
+	input[type='submit'] {
+		border: 1px solid $themeButtonGreenColor;
+		outline: none;
+		color: white;
+		background-color: $themeButtonGreenColor;
+		padding: 4px 8px;
+		border-radius: 5px;
+		transition: background-color 0.3s ease, color 0.3s ease;
+		-webkit-transition: background-color 0.3s ease, color 0.3s ease;
+
+		&:hover {
+			color: $themeButtonGreenColor;
+			background-color: white;
+			transition: background-color 0.3s ease, color 0.3s ease;
+			-webkit-transition: background-color 0.3s ease, color 0.3s ease;
+		}
+	}
+
+	#results {
+		border: 1px solid;
+		padding: 5px;
+		max-height: 70vh;
+		overflow: auto;
+		border-radius: 5px;
+	}
+}
