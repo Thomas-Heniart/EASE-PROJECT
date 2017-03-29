@@ -16,8 +16,8 @@
 					</a>
 				</li>
 				<li>
-					<a href="equipe.jsp">
-						<fmt:message key="landing.header.team-link" />
+					<a href="pricing">
+						<fmt:message key="landing.header.price-link" />
 					</a>
 				</li>
 				<li>

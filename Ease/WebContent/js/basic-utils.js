@@ -151,7 +151,7 @@ function changeColor(color, ratio, darker) {
         $(this).closest('.linkImage').removeClass('settingsShow');
     });
 
-    $(document).ready(function(){
+/*    $(document).ready(function(){
         var placeHolder = null;
 
         $('input:not([readonly]),textarea').focus(function(){
@@ -161,7 +161,7 @@ function changeColor(color, ratio, darker) {
                 $(this).attr('placeholder', placeHolder);
             });
         });
-    });
+    });*/
 
     /* js for checkable elements (search for .checkable) */
     $(document).click(function(e){

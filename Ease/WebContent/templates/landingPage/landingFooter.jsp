@@ -11,6 +11,9 @@
 						<a href="secure" target="_blank">
 							<fmt:message key="landing.header.security-link"/>
 						</a>
+						<a href="pricing" target="_blank">
+							<fmt:message key="landing.header.price-link"/>
+						</a>
 						<a href="#services" class="signUpButton" trackEvent="HomepageSignUpButtonFooter">
 							<fmt:message key="landing.footer.link.create-account"/>
 						</a>

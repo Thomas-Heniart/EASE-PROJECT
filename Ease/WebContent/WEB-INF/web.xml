@@ -70,6 +70,24 @@
     <servlet-name>privacy.jsp</servlet-name>
     <url-pattern>/privacy/*</url-pattern>
 </servlet-mapping>
+<servlet>
+    <servlet-name>pricing.jsp</servlet-name>
+    <jsp-file>/pricing.jsp</jsp-file>
+</servlet>
+<servlet-mapping>
+    <servlet-name>pricing.jsp</servlet-name>
+    <url-pattern>/pricing/*</url-pattern>
+</servlet-mapping>
+<servlet>
+    <servlet-name>enterpriseContact.jsp</servlet-name>
+    <jsp-file>/enterpriseContact.jsp</jsp-file>
+</servlet>
+<servlet-mapping>
+    <servlet-name>enterpriseContact.jsp</servlet-name>
+    <url-pattern>/companyContact/*</url-pattern>
+</servlet-mapping>
+
+<!-- 
 <security-constraint> 
     <web-resource-collection> 
        <web-resource-name>Viewpoint Secure URLs</web-resource-name> 
@@ -78,5 +96,5 @@
     <user-data-constraint> 
        <transport-guarantee>CONFIDENTIAL</transport-guarantee> 
     </user-data-constraint> 
-  </security-constraint>
+  </security-constraint>  -->
 </web-app>

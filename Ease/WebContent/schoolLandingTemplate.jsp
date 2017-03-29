@@ -4,7 +4,7 @@ pageEncoding="UTF-8"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="language" value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}" scope="session" />
 <c:if test="${language ne 'en' and language ne 'fr_FR'}">
-	<c:set var="language" value="en" scope="session"/>
+<c:set var="language" value="en" scope="session"/>
 </c:if>
 <fmt:setLocale value="${language}" />
 <fmt:setBundle basename="com.Ease.Languages.text" />
@@ -102,8 +102,8 @@ pageEncoding="UTF-8"%>
 						</a>
 					</li>
 					<li>
-						<a href="equipe.jsp">
-							<fmt:message key="landing.header.team-link" />
+						<a href="/pricing">
+							<fmt:message key="landing.header.price-link" />
 						</a>
 					</li>
 					<li>
@@ -269,292 +269,17 @@ pageEncoding="UTF-8"%>
 	<script src="js/landingPage.js"></script>
 	<script src="js/bootstrapjq.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
-	<div class="popupHandler">
-		<div class="overlay"></div>
-		<div class="easePopup show" id="signUpPopup">
-			<div class="title">
-				<p>
-					<fmt:message key="landing.signup-popup.title"/>
-				</p>
-			</div>
-			<div class="bodysHandler">
-				<div class="popupBody" id="2">
-					<form class="handler" action="${param.formAction}">
-<!--							<div class="row">
-								<p class="row-heading">
-									How would you like us to call you ?
-								</p>
-							</div>-->
-							<div class="row">
-								<p class="row-heading">
-									<fmt:message key="landing.signup-popup.page-2.password-title"/>
-								</p>
-								<div class="infoText">
-									<p>
-										<span>Info:</span> <fmt:message key="landing.signup-popup.page-2.password-info"/>
-									</p>
-								</div>
-							</div>
-							<div class="row">
-								<input type="hidden" name="fname" value=<%=request.getParameter("name")%> />
-								<input type="hidden" name="email" value=<%= request.getParameter("email")%> />
-								<input type="hidden" name="invitationCode" value=<%= request.getParameter("invitationCode") %> />
-								<span class="input">
-									<input type="password" name="password" placeholder=<fmt:message key="landing.signup-popup.page-2.password-placeholder"/> />
-									<div class="showPassDiv">
-										<i class="fa fa-eye centeredItem" aria-hidden="true"></i>
-										<i class="fa fa-eye-slash centeredItem" aria-hidden="true"></i>
-									</div>
-									<div id="validatorPassword" class="passwordValidator" style="display:none">
-										<i class="fa fa-times error" aria-hidden="true" style="color:#d75a4a;"></i>
-										<i class="fa fa-check success" aria-hidden="true" style="color:#24d666;"></i>
-									</div>
-									<img src="./resources/icons/error.png" id="validatorPassword" style="display:none;"/>
-								</span>
-								<div class="progress">
-									<div class="progress-bar">										
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<span class="input">
-									<input type="password" name="confirmPassword" placeholder=<fmt:message key="landing.signup-popup.page-2.password-confirm-placeholder"/> />
-									<div class="showPassDiv">
-										<i class="fa fa-eye centeredItem" aria-hidden="true"></i>
-										<i class="fa fa-eye-slash centeredItem" aria-hidden="true"></i>
-									</div>
-									<div id="validatorConfirmPass" class="passwordValidator" style="display:none">
-										<i class="fa fa-times error" aria-hidden="true" style="color:#d75a4a;"></i>
-										<i class="fa fa-check success" aria-hidden="true" style="color:#24d666;"></i>
-									</div>
-								</span>
-							</div>
-							<div class="row text-center">
-								<img class="loading" src="resources/other/facebook-loading.svg"/>
-								<button class="btn submitButton" type="submit">
-									<fmt:message key="landing.signup-popup.page-2.button"/>
-								</button>
-								<p class="alert-message"></p>
-							</div>
-						</form>
-					</div>
-					<div class="popupBody show" id="1">
-						<form class="handler" action="checkInvitation">
-							<div class="row">
-								<p class="row-heading">
-									<fmt:message key="landing.signup-popup.page-2.name-title"/>
-								</p>
-								<input type="text" name="name" placeholder="Name..." />
-							</div>
-							<div class="row">
-								<p class="row-heading">
-									<fmt:message key="landing.signup-popup.email-title"/>
-								</p>
-								<input type="email" name="email" placeholder="@${param.emailPlaceholder}" />
-							</div>
-							<div class="row terms">
-								<p><fmt:message key="landing.signup-popup.page-1.terms-accept"/> <a href="privacy.jsp" target="_blank"><fmt:message key="landing.signup-popup.page-1.terms"/></a></p>
-							</div>
-							<div class="row text-center">
-								<img class="loading" src="resources/other/facebook-loading.svg"/>
-								<button class="btn submitButton" type="submit">
-									<fmt:message key="landing.signup-popup.page-1.button"/>
-								</button>
-								<p class="alert-message"></p>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-		<script type="text/javascript">
-			var signUpPopup = function(elem){
-				var self = this;
-				this.handler = $(elem).closest('.popupHandler');
-				this.qRoot = $(elem);
-
-				this.openRegistration = function(){
-					self.qRoot.find('#2').addClass('show');
-					self.qRoot.find('#1').removeClass('show');					
-					self.handler.addClass('myshow');
-					$('body').css('overflow', 'hidden');
-				};
-				this.open = function(){
-					self.handler.addClass('myshow');
-					$('body').css('overflow', 'hidden');
-				};
-				this.close = function(){
-					self.handler.removeClass('myshow');
-					$('body').css('overflow', '');
-				};
-				this.reset = function(){
-					self.qRoot.find('#1').addClass('show');
-					self.qRoot.find('#2').removeClass('show');
-					self.qRoot.find('.alert-message').removeClass('show');
-					self.qRoot.find('button').removeClass('not-show');	
-				};
-				$(document).click(function(e){
-					if ($(e.target).hasClass('popupHandler')){
-						self.close();
-						self.reset();
-						setTimeout(function(){
-							$(e.target).css('display', '');
-						}, 100);
-					}
-				});
-				this.qRoot.find('#1 form').submit(function(e){
-					e.preventDefault();
-					easeTracker.trackEvent("HomepageSignUp1", {"SchoolName": schoolToTrack});
-					var emailVal = $(this).find("input[name='email']").val();
-					var name = $(this).find("input[name='name']").val();
-					var loading = $(this).find('.loading');
-					var submitButton = $(this).find(".submitButton");
-					var alertMessage = $(this).find(".alert-message");
-					if (self.qRoot.find("#2 input[name='invitationCode']").val() != 'null'){
-						self.qRoot.find("#2 input[name='fname']").val(name);
-						self.qRoot.find("#2 input[name='email']").val(emailVal);
-						self.openRegistration();
-						return;
-					}
-
-					if (!emailVal.length || !name.length)
-						return;
-
-					loading.addClass('show');
-					submitButton.addClass('not-show');
-					postHandler.post($(this).attr('action'),
-					{
-						email : emailVal,
-						name : name
-					},
-					function(){
-						loading.removeClass('show');
-					},
-					function(retMsg) {
-						alertMessage.text(retMsg.substring(2, retMsg.length));
-						alertMessage.css('color', '#24d666');
-						alertMessage.addClass('show');
-						if (retMsg[0] == '1'){
-							setTimeout(function(){
-								alertMessage.removeClass('show');
-								submitButton.removeClass('not-show');
-							}, 7000);
-						} else if (retMsg[0] == '2'){
-							self.qRoot.find("#2 input[name='fname']").val(name);
-							self.qRoot.find("#2 input[name='email']").val(emailVal);
-							self.openRegistration();
-						}
-					},
-					function(retMsg) {
-						alertMessage.text(retMsg);
-						alertMessage.css('color', '#ec555b')
-						alertMessage.addClass('show');
-						setTimeout(function(){
-							alertMessage.removeClass('show');
-							submitButton.removeClass('not-show');
-						}, 3000);
-					},
-					'text'
-					);
-				});
-				this.qRoot.find('#2 form').submit(function(e){
-					e.preventDefault();
-					var name = $(this).find("input[name='fname']").val();
-					var email = $(this).find("input[name='email']").val();
-					var code = $(this).find("input[name='invitationCode']").val();
-					var password = $(this).find("input[name='password']").val();
-					var confirmPassword = $(this).find("input[name='confirmPassword']").val();
-
-					var loading = $(this).find('.loading');
-					var submitButton = $(this).find(".submitButton");
-					var alertMessage = $(this).find(".alert-message");
-
-					if (!name.length || !email.length || !code.length || !(password == confirmPassword))
-						return;
-
-					loading.addClass('show');
-					submitButton.addClass('not-show');
-					postHandler.post($(this).attr('action'),
-					{
-						email : email,
-						fname : name,
-						invitationCode : code,
-						password : password,
-						confirmPassword : confirmPassword,
-						lname : "unknown"
-					},
-					function(){
-						loading.removeClass('show');
-					},
-					function(retMsg) {
-						alertMessage.text(retMsg);
-						alertMessage.css('color', '#24d666');
-						alertMessage.addClass('show');
-						easeTracker.setUserId(email);
-						easeTracker.trackEvent("HomepageSignUp2", {"SchoolName": schoolToTrack});
-						easeTracker.trackEvent("Connect");
-						setTimeout(function() {
-							window.location = "index.jsp";
-						}, 750);
-					}, 
-					function(retMsg) {
-						alertMessage.text(retMsg);
-						alertMessage.css('color', '#ec555b')
-						alertMessage.addClass('show');
-						setTimeout(function(){
-							alertMessage.removeClass('show');
-							submitButton.removeClass('not-show');
-						}, 3000);
-					},
-					'text'
-					);
-				});
-				$("input[name='password']").keyup(function(e){
-					$("#validatorPassword").css("display","inline-block");
-					if($("input[name='password']").val().length < 8) 
-						$("#validatorPassword").removeClass('valid');
-					else
-						$("#validatorPassword").addClass('valid');
-					if($("input[name='password']").val().length < 8 || $("input[name='confirmPassword']").val() != $("input[name='password']").val())
-						$("#validatorConfirmPass").removeClass('valid');
-					else
-						$("#validatorConfirmPass").addClass('valid');
-				});
-				$("input[name='confirmPassword']").keyup(function(e){
-					$("#validatorConfirmPass").css("display","inline-block");
-					if($("input[name='password']").val().length < 8 || $("input[name='confirmPassword']").val() != $("input[name='password']").val())
-						$("#validatorConfirmPass").removeClass('valid');
-					else
-						$("#validatorConfirmPass").addClass('valid');
-				});
-				$("#2 input[name='password']").complexify({
-					strengthScaleFactor: 0.7
-				}, function(valid, complexity){
-					$(".progress .progress-bar").css('width', complexity + "%");
-					if (complexity < 20){
-						$(".progress .progress-bar").css('background-color', '#e4543b');				
-					} else if (complexity < 40){
-						$(".progress .progress-bar").css('background-color', '#e07333');
-					}else if (complexity < 60){
-						$(".progress .progress-bar").css('background-color', '#ead94a');
-					}else if (complexity < 80){
-						$(".progress .progress-bar").css('background-color', '#ddf159');
-					}else {
-						$(".progress .progress-bar").css('background-color', '#b0df33');
-					}
-				});
-			};
-			var easeSignUpPopup = new signUpPopup($('#signUpPopup'));
+	<%@ include file="templates/landingPage/registrationPopup.jsp" %>
+	<script src="/js/popups/registrationPopup.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
 			$('.signUpButton').click(function(){
 				easeTracker.trackEvent($(this).attr("trackEvent"), {"SchoolName": schoolToTrack});
 				easeSignUpPopup.open();
 			});
-		</script>
-		<script type="text/javascript">
-			$(document).ready(function(){
-				if ($('#2').find("input[name='email']").val() != 'null'){
-					$("#1 input[name='email']").val($('#2').find("input[name='email']").val());
-					$("#1 input[name='name']").val($('#2').find("input[name='fname']").val());
+			if ($('#2').find("input[name='email']").val() != 'null'){
+				$("#1 input[name='email']").val($('#2').find("input[name='email']").val());
+				$("#1 input[name='name']").val($('#2').find("input[name='fname']").val());
 					//easeSignUpPopup.openRegistration();
 				}
 				$("#connexionButton").click(function() {
