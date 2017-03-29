@@ -52,18 +52,20 @@ public class PricingContactUs extends HttpServlet {
 			String needs = sm.getServletParam("needs", true);
 			if (email == null || email.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty email");
+			if (!Regex.isEmail(email))
+				throw new GeneralException(ServletManager.Code.ClientWarning, "This is not an email");
 			if (name == null || name.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name");
 			if (phoneNumber == null || phoneNumber.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty phone number");
-			if (!Regex.isPhoneNumber(phoneNumber))
+				phoneNumber = "";
+			if (phoneNumber != "" && !Regex.isPhoneNumber(phoneNumber))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Incorrect phone number");
 			if (jobPosition == null || jobPosition.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty job position");
+				jobPosition = "";
 			if (company == null || company.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty company name");
 			if (collaboratorNumber == null || collaboratorNumber.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty collaborator number");
+				collaboratorNumber = "0";
 			if (needs == null || needs.equals(""))
 				needs = "";
 			try {
