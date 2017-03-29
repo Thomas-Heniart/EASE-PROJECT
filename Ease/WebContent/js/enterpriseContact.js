@@ -15,6 +15,10 @@ $('#enterpriseContactForm').submit(function(e){
 		function(data){
 			errorHandler.css('color', '#45C997');
 			errorHandler.find('p').text(data);
+			var teamSize = $("#enterpriseContactForm input[name='teamSize']").val();
+			if (teamSize == null || teamSize === "")
+				teamSize = "0";
+			easeTracker.trackEvent("PricingContactSubmit", {"teamSize": teamSize});
 		},
 		function(data){
 			errorHandler.css('color', '#ec555b');
