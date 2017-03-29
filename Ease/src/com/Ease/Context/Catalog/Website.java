@@ -567,4 +567,8 @@ public class Website {
 	public Boolean isBlacklisted() {
 		return this.websiteAttributes.isBlacklisted();
 	}
+
+	public List<String> getGroupIds() {
+		return this.groupIds;
+	}
 }

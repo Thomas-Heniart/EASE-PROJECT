@@ -1,6 +1,8 @@
 package com.Ease.Servlet.BackOffice;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,6 +17,7 @@ import org.json.simple.JSONObject;
 import com.Ease.Context.Variables;
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
+import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
@@ -47,6 +50,7 @@ public class GetCatalog extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
+	@SuppressWarnings("unchecked")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
@@ -56,12 +60,31 @@ public class GetCatalog extends HttpServlet {
 			if (!user.isAdmin())
 				throw new GeneralException(ServletManager.Code.ClientError, "You are not an admin");
 			Catalog catalog = (Catalog) sm.getContextAttr("catalog");
+			GroupManager groupManager = (GroupManager) sm.getContextAttr("groupManager");
 			JSONArray res = new JSONArray();
 			for(Website website : catalog.getWebsitesAlphabetically()) {
 				JSONObject tmp = new JSONObject();
 				tmp.put("single_id", website.getSingleId());
 				tmp.put("imgSrc", Variables.URL_PATH + website.getFolder() + "logo.png");
-				tmp.put("name", website.getName());
+				String name = website.getName();
+				List<String> infraNames = new LinkedList<String>();
+				for (String groupId : website.getGroupIds()) {
+					String infraName = groupManager.getGroupFromDBid(groupId).getInfra().getName();
+					if (infraNames.contains(infraName))
+						continue;
+					infraNames.add(infraName);
+				}
+				for (String infraName : infraNames) {
+					int idx = infraNames.indexOf(infraName);
+					if (idx == 0)
+						name += " (";
+					name += infraName;
+					if (idx != infraNames.size() - 1)
+						name += ", ";
+					else
+						name += ")";
+				}
+				tmp.put("name", name);
 				tmp.put("isTagged", catalog.isWebsiteTagged(website));
 				res.add(tmp);
 			}

@@ -633,6 +633,10 @@
 					text-overflow: ellipsis;
 					letter-spacing: 0.5px;
 					white-space: nowrap;
+
+					&:hover {
+						white-space: pre-line;
+					}
 				}
 			}
 
