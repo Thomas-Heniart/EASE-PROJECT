@@ -8,51 +8,70 @@
 	</button>
 	<div class="presentation">
 		<h1>How to use the module</h1>
-		<p>First, you must fill <strong>email</strong> and <strong>password</strong> fields (max 5 accounts)</p>
-		<p>Then upload your csv file with email list which needs to be clean and click on upload (You can't upload more than 250 emails to test per GMail address)</p>
+		<p>First, you must fill <strong>email</strong> and <strong>password</strong> (Number of emails to test / 5)</p>
+		<p>Then upload your csv file with email list which needs to be clean and click on upload (You can't upload more than 58 emails to test per GMail address)</p>
 		<p>Once the page reloads, wait to receive an email which say the list is ready to be clean</p>
 		<p>To finish, on right side, you must enter emails you used to send emails one by one</p>
 		<p>Finally copy the list of emails</p>
 	</div>
 	<div class="flex-row">
 		<form class="centered-row" method="post" id="uploadEmailList" action="MailListCleaner" enctype="multipart/form-data">
-				<h2>Upload en send emails</h2>
-				<div>
-					<input type="email" name="email" placeholder="Email"/>
-					<input type="password" name="password" placeholder="Password" />
+				<h2>Upload and send emails</h2>
+				<div class='email-inputs'>
+					<div>
+						<input type="email" name="email" class="input" placeholder="Email" />
+						<input type="password" name="password" class="input" placeholder="Password" />
+					</div>
+					<div>
+						<input type="email" name="email" class="input" placeholder="Email" />
+						<input type="password" name="password" class="input" placeholder="Password" />
+					</div>
+					<div>
+						<input type="email" name="email" class="input" placeholder="Email" />
+						<input type="password" name="password" class="input" placeholder="Password" />
+					</div>
+					<div>
+						<input type="email" name="email" class="input" placeholder="Email" />
+						<input type="password" name="password" class="input" placeholder="Password" />
+					</div>
+					<div>
+						<input type="email" name="email" class="input" placeholder="Email" />
+						<input type="password" name="password" class="input" placeholder="Password" />
+					</div>
 				</div>
 				<div>
-					<input type="email" name="email" placeholder="Email"/>
-					<input type="password" name="password" placeholder="Password" />
+					<a href="#" id="addEmail">+ Add email</a>				
 				</div>
-				<div>
-					<input type="email" name="email" placeholder="Email"/>
-					<input type="password" name="password" placeholder="Password" />
-				</div>
-				<div>
-					<input type="email" name="email" placeholder="Email"/>
-					<input type="password" name="password" placeholder="Password" />
-				</div>
-				<div>
-					<input type="email" name="email" placeholder="Email"/>
-					<input type="password" name="password" placeholder="Password" />
-				</div>
-				<label for="csvFile">Email list</label> <input id="csvFile" type="file" accept=".csv" name="uploadFile" />
-				<input type="submit" class="btn btn-default btn-primary" value="Upload" />
+				<input type="submit" value="Upload" />
 		</form>
 		<div class="centered-row">
 			<div id="loading"></div>
 			<h2>Clean emails</h2>
 			<form id="verifyEmailForm">
-				<input type="email" id="emailToVerify" placeholder="example@gmail.com" />
+				<input type="email" id="emailToVerify" class="input" placeholder="example@gmail.com" />
 				<input type="submit" value="Verify" /> 
 			</form>
 			<button id="signout-button" style="display: none;">Sign Out</button>
-			<p id="senders"></p>
+			<p id="email-count" class="hidden">
+				<span id="currentNumber"></span>/<span id="totalNumber"></span>
+			</p>
 			<div id="results"></div>
 			<script type="text/javascript">
 				$.get("MailListCleaner").success(function(data) {
-					serverEmails = JSON.parse(data.substring(4));
+					serverEmails = []
+					JSON.parse(data.substring(4)).forEach(function(email) {
+						if (email.charCodeAt(email.length - 1) == 13)
+							email = email.slice(0, -1);
+						serverEmails.push(email);
+					});
+					$("#totalNumber").text(serverEmails.length);
+				});
+				$("#GrowthHackingTab #addEmail").click(function(e) {
+					e.preventDefault();
+					$("#GrowthHackingTab .email-inputs").append("<div>"
+							+ "<input type='email' name='email' class='input' placeholder='Email' />"
+							+ "<input type='password' name='password' class='input' placeholder='Password' />"
+							+ "</div>");
 				});
 				// Enter an API key from the Google API Console:
 				//   https://console.developers.google.com/apis/credentials
@@ -125,39 +144,45 @@
 						q : query
 					}).then(function(resp) {
 						var threads = JSON.parse(resp.body).threads;
-						console.log(resp);
 						if (threads == undefined)
 							return;
+						
 						threads.forEach(function(thread) {
 							var snippet = thread.snippet;
-							var atIndex = snippet.indexOf("@");
-							var email = "@";
-							var i;
+							if (!(snippet.indexOf("blocked") > -1 || snippet.indexOf("bloqué") > -1)) {
+								var atIndex = snippet.indexOf("@");
+								var email = "@";
+								var i;
 
-							for (var i = atIndex - 1; snippet[i] != " " && i >= 0; i--)
-									email = snippet[i] + email;
+								for (var i = atIndex - 1; snippet[i] != " " && i >= 0; i--)
+										email = snippet[i] + email;
 
-							for (i = atIndex + 1; snippet[i] != "." && i < snippet.length; i++)
-								email = email + snippet[i];
-							email = email + ".";
-							
-							if (email[email.length - 1] == ".") {
-								for (i = i + 1; snippet[i] != " " && snippet[i] != "." && snippet[i] != "!" && snippet[i] != ","; i++)
+								for (i = atIndex + 1; snippet[i] != "." && i < snippet.length; i++)
 									email = email + snippet[i];
-								emails.push(email);
+								email = email + ".";
+							
+								if (email[email.length - 1] == ".") {
+									for (i = i + 1; snippet[i] != " " && snippet[i] != "." && snippet[i] != "!" && snippet[i] != ","; i++)
+										email = email + snippet[i];
+									emails.push(email);
+								}
 							}
 						});
 						setTimeout(function() {
-							$("#results div").remove();
+							$("#GrowthHackingTab #results div").remove();
 							emails.forEach(function(email) {
+								if (email.charCodeAt(email.length - 1) == 13)
+									email = email.slice(0, -1);
 								var index = serverEmails.indexOf(email);
-								if (index > -1)
+								if (index > - 1)
 									serverEmails.splice(index, 1);
 							});
+							$("#currentNumber").text(serverEmails.length);
+							$("#email-count").removeClass("hidden");
 							gapi.auth2.getAuthInstance().signOut();
 							serverEmails.forEach(function(email) {
-								$("#results").append("<div>" + email + "</div>");
-							})
+								$("#GrowthHackingTab #results").append("<div>" + email + "</div>");
+							});
 						}, 200);
 					});
 				}
