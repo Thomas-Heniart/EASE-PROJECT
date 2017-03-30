@@ -5,11 +5,10 @@
     "connect":{
         "url":"http://www.voyages-sncf.com/",
         "todo":[
-        	{"action":"click", "search":"#ccl-label"},
-            {"action":"fill", "what":"login", "search":"input#ccl-email"},
-            {"action":"fill", "what":"password", "search":"input#ccl-password"},
-            {"action":"click", "search":"input#edit-connect"},
-            {"action":"click", "search":".vsc__header-menu"}
+        	{"action":"clickona", "search":"#ccl-not-connected-link"},
+            {"action":"fill", "what":"login", "search":"#vsc-menu-ccl-login-form input#ccl-email"},
+            {"action":"fill", "what":"password", "search":"#vsc-menu-ccl-login-form input#ccl-password"},
+            {"action":"click", "search":"#vsc-menu-ccl-login-form button#edit-connect"}
         ]
     },
     "logout":{
@@ -20,8 +19,5 @@
     },
     "checkAlreadyLogged":[
         {"search":"#vsc-menu-ccl-step-connected[style*='display: block']"}
-    ],
-    "checkChangeLogin":[
-        {"action":"click", "search":"#loginbutton"}
     ]
 }
