@@ -41,7 +41,7 @@
 			</div>
 			<div class="easeExplore right">
 				<div class="logo">
-					<img src="resources/icons/Ease_logo_blue.png"/>
+					<img src="resources/icons/Ease_logo_blue.svg"/>
 				</div>
 				<div class="social_links">
 					<div class="link">

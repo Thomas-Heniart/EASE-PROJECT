@@ -2,7 +2,7 @@
 <nav id="mainNav" class="navbar navbar-default navbar-custom navbar-fixed-top affix">
 	<div class="container">
 		<div class="navbar-header page-scroll">
-			<a class="navbar-brand page-scroll" href="discover"><img src="resources/landing/ease-white-logo.png" /></a>
+			<a class="navbar-brand page-scroll" href="discover"><img src="resources/landing/ease-white-logo.svg" /></a>
 		</div>
 
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">

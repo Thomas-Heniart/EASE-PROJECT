@@ -103,7 +103,6 @@ a.active, a:active, a:focus, a:hover {
     color: #fec503;
 }
 .navbar-custom .nav li a, .navbar-custom .navbar-toggle {
-    font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: #fff;
     text-transform: uppercase;
 }
@@ -119,7 +118,7 @@ a.active, a:active, a:focus, a:hover {
     background-color: #fed136;
 }
 .navbar-custom .nav li a {
-    font-weight: 400;
+    font-weight: bold;
     letter-spacing: 1px;
     text-shadow: 0px 0px 1px black;
 }

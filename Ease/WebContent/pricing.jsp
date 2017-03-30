@@ -31,11 +31,9 @@ pageEncoding="UTF-8"%>
 	<meta property="og:image"
 	content="https://ease.space/resources/other/fb_letsgo_icon.jpg" />
 	<link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
-	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Droid+Serif" />
-	<link href='https://fonts.googleapis.comcss?family=Source+Sans+Pro' rel='stylesheet' type='textcss' />
 
 	<link rel="stylesheet" href="css/default_style.css" />
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="css/bootstrap.css" />
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
 	<link rel="stylesheet" href="css/landingPage.css" />
 	<link rel="stylesheet" type="text/css" href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
@@ -73,7 +71,7 @@ pageEncoding="UTF-8"%>
 					</div>
 					<div class="row text-center priceRow">
 						<div class="price">
-							<img src="/resources/images/0e.png" class="priceImage center-block"/>
+							<img src="/resources/images/0e.svg" class="priceImage center-block"/>
 						</div>
 					</div>
 					<div class="row text-center offerTip">
@@ -140,7 +138,7 @@ pageEncoding="UTF-8"%>
 					</div>
 					<div class="row text-center priceRow">
 						<div class="price">
-							<img src="/resources/images/5,99e.png" class="priceImage center-block"/>
+							<img src="/resources/images/5_99e.svg" class="priceImage center-block"/>
 						</div>
 					</div>
 					<div class="row text-center offerTip">
