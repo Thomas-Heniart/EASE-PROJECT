@@ -19,6 +19,49 @@
     <filter-name>IFrameBusterFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+
+  <!-- filter for static html cache -->
+<!--  <filter>
+    <filter-name>StaticExpiresFilter</filter-name>
+    <filter-class>org.apache.catalina.filters.ExpiresFilter</filter-class>
+    <init-param>
+      <param-name>ExpiresByType text/html</param-name>
+      <param-value>access plus 10 days</param-value>
+    </init-param>
+  </filter>
+    <filter-mapping>
+    <filter-name>StaticExpiresFilter</filter-name>
+    <url-pattern>*.html</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+  </filter-mapping>-->
+  <!-- filter for cache control -->
+  <filter>
+    <filter-name>ExpiresFilter</filter-name>
+    <filter-class>org.apache.catalina.filters.ExpiresFilter</filter-class>
+    <init-param>
+      <param-name>ExpiresByType image</param-name>
+      <param-value>access plus 31 days</param-value>
+    </init-param>
+    <init-param>
+      <param-name>ExpiresByType text/css</param-name>
+      <param-value>access plus 10 hours</param-value>
+    </init-param>
+    <init-param>
+      <param-name>ExpiresByType application/javascript</param-name>
+      <param-value>access plus 30 minutes</param-value>
+    </init-param>
+    <!-- Let everything else expire immediately -->
+    <init-param>
+      <param-name>ExpiresDefault</param-name>
+      <param-value>access plus 0 seconds</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>ExpiresFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+  </filter-mapping>
+
   <session-config>
     <session-timeout>240</session-timeout>
   </session-config>
@@ -41,51 +84,51 @@
   <servlet>
     <servlet-name>secure.jsp</servlet-name>
     <jsp-file>/secure.jsp</jsp-file>
-</servlet>
-<servlet-mapping>
+  </servlet>
+  <servlet-mapping>
     <servlet-name>secure.jsp</servlet-name>
     <url-pattern>/secure/*</url-pattern>
-</servlet-mapping>
-<servlet>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>contact.jsp</servlet-name>
     <jsp-file>/contact.jsp</jsp-file>
-</servlet>
-<servlet-mapping>
+  </servlet>
+  <servlet-mapping>
     <servlet-name>contact.jsp</servlet-name>
     <url-pattern>/contact/*</url-pattern>
-</servlet-mapping>
-<servlet>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>equipe.jsp</servlet-name>
     <jsp-file>/equipe.jsp</jsp-file>
-</servlet>
-<servlet-mapping>
+  </servlet>
+  <servlet-mapping>
     <servlet-name>equipe.jsp</servlet-name>
     <url-pattern>/equipe/*</url-pattern>
-</servlet-mapping>
-<servlet>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>privacy.jsp</servlet-name>
     <jsp-file>/privacy.jsp</jsp-file>
-</servlet>
-<servlet-mapping>
+  </servlet>
+  <servlet-mapping>
     <servlet-name>privacy.jsp</servlet-name>
     <url-pattern>/privacy/*</url-pattern>
-</servlet-mapping>
-<servlet>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>pricing.jsp</servlet-name>
     <jsp-file>/pricing.jsp</jsp-file>
-</servlet>
-<servlet-mapping>
+  </servlet>
+  <servlet-mapping>
     <servlet-name>pricing.jsp</servlet-name>
     <url-pattern>/pricing/*</url-pattern>
-</servlet-mapping>
-<servlet>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>enterpriseContact.jsp</servlet-name>
     <jsp-file>/enterpriseContact.jsp</jsp-file>
-</servlet>
-<servlet-mapping>
+  </servlet>
+  <servlet-mapping>
     <servlet-name>enterpriseContact.jsp</servlet-name>
     <url-pattern>/companyContact/*</url-pattern>
-</servlet-mapping>
+  </servlet-mapping>
 
 <!-- 
 <security-constraint> 
