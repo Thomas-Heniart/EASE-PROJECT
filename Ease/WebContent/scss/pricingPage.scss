@@ -75,6 +75,17 @@ section#pricing {
 					-webkit-padding-start: 20px;
 					li {
 						margin-top: 15px;
+						.commingSoon {
+							font-style: italic;
+							color: #9a9a9a;
+							white-space: nowrap;
+							span {
+								font-size: inherit;
+								i {
+									color: inherit;
+								}
+							}
+						}
 						p {
 							font-size: 16px;
 							margin-bottom: 0px;

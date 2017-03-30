@@ -128,9 +128,39 @@ pageEncoding="UTF-8"%>
 								<li><p><fmt:message key="pricing.free.features.3"/></p></li>
 								<li><p><fmt:message key="pricing.free.features.4"/></p></li>
 								<li><p><fmt:message key="pricing.free.features.5"/></p></li>
-								<li><p><fmt:message key="pricing.free.features.6"/></p></li>
-								<li><p><fmt:message key="pricing.free.features.7"/></p></li>
-								<li><p><fmt:message key="pricing.free.features.8"/></p></li>
+								<li>
+									<p><fmt:message key="pricing.free.features.6"/>
+										<small class="commingSoon">
+											<span class="fa-stack fa-lg">
+												<i class="fa fa-circle-thin fa-stack-2x"></i>
+												<i class="fa fa-bolt fa-stack-1x"></i>
+											</span>
+											Coming soon
+										</small>
+									</p>
+								</li>
+								<li>
+									<p><fmt:message key="pricing.free.features.7"/>
+										<small class="commingSoon">
+											<span class="fa-stack fa-lg">
+												<i class="fa fa-circle-thin fa-stack-2x"></i>
+												<i class="fa fa-bolt fa-stack-1x"></i>
+											</span>
+											Coming soon
+										</small>
+									</p>
+								</li>
+								<li>
+									<p><fmt:message key="pricing.free.features.8"/>
+										<small class="commingSoon">
+											<span class="fa-stack fa-lg">
+												<i class="fa fa-circle-thin fa-stack-2x"></i>
+												<i class="fa fa-bolt fa-stack-1x"></i>
+											</span>
+											Coming soon
+										</small>
+									</p>
+								</li>
 							</ul>
 						</div>
 					</div>
