@@ -28,57 +28,7 @@ $(document).ready(function(){
 //	easeHiddenProfile = new hiddenProfile($('.hiddenProfile'));
 	ease = new easeRoot($('#onComputer'));
 });
-/*
-var hiddenProfile = function(rootEl){
-	var self = this;
-	this.rootEl = rootEl;
-	this.appContainer = this.rootEl.find('.hiddenProfileContainer');
-	this.openHelper = this.rootEl.find('.hiddenProfileHelper');
 
-	this.onResize = function(){
-//		this.appContainer.find('.siteLinkBox').height(this.appContainer.find('.siteLinkBox').width());
-}
-
-this.onResize();
-$(window).resize(function(){
-	self.onResize();
-});
-this.show = function(){
-	self.rootEl.addClass('show');
-}
-this.hide = function(){
-	self.rootEl.removeClass('show');
-}
-this.openHelper.on('click', function(){
-	self.show();
-});
-this.rootEl.on('mouseleave', function(){
-	self.hide();
-});
-this.appContainer.droppable({
-	accept: ".catalogApp",
-	drop: function(event, ui){
-		event.preventDefault();
-		event.stopPropagation();
-		$(this).css('border', '');
-		showAddAppPopup($(this), $(ui.helper));
-		console.log($(ui.helper));
-		popupAddApp.oForm.profile_id = 0;
-	},
-	over: function(event, ui){
-		event.preventDefault();
-		event.stopPropagation();
-		$(this).css('border', '1px solid red');
-	},
-	out: function(event, ui){
-		event.preventDefault();
-		event.stopPropagation();
-		$(this).css('border', '');
-	}
-});
-setupSortableContainer(this.appContainer);
-};
-*/
 function enterEditMode() {
 	easeDashboard.enterEditMode();
 	catalog.open();

@@ -54,6 +54,7 @@ pageEncoding="UTF-8"%>
 	<script src="js/basic-utils.js" async></script>
 	<script src="js/postHandler.js" async></script>
 	<script src="js/websocket.js" async></script>
+	<script src="js/languageChooser.js" async></script>
 
 	<script type="text/javascript">$crisp=[];CRISP_WEBSITE_ID="6e9fe14b-66f7-487c-8ac9-5912461be78a";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.im/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
 	<script src="js/tracker.js"></script>

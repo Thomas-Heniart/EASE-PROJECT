@@ -34,6 +34,7 @@ pageEncoding="UTF-8"%>
 	<script src="js/basic-utils.js"></script>
 	<script src="js/postHandler.js"></script>
 	<script src="js/websocket.js"></script>
+	<script src="js/languageChooser.js"></script>
 	<script src="js/checkForInvitation.js"></script>
 	<script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
