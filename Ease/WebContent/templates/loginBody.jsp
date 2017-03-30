@@ -53,7 +53,7 @@ cookies[i].setValue(null);
 response.addCookie(cookies[i]);
 }
 fname = "";
-response.sendRedirect("/index.jsp");
+response.sendRedirect("/");
 }
 }
 }

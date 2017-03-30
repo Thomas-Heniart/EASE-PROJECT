@@ -45,7 +45,7 @@ public class VerifieEmail extends HttpServlet {
 				throw new GeneralException(ServletManager.Code.ClientError, "Empty verification code.");
 			user.verifieEmail(email, code, sm);
 			//sm.setResponse(ServletManager.Code.Success, "Verification email sended.");
-			sm.setRedirectUrl("index.jsp");
+			sm.setRedirectUrl("/");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		} catch (Exception e) {

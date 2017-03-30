@@ -82,7 +82,7 @@ public class PricingContactUs extends HttpServlet {
 				db_request.setInt(collaborators);
 				db_request.setString(needs);
 				db_request.set();
-				sm.setResponse(ServletManager.Code.Success, "PricingContactUs done");
+				sm.setResponse(ServletManager.Code.Success, "Sent! We’ll get back to you as soon as possible.");
 			} catch(NumberFormatException e) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Collaborators must be a number");
 			}

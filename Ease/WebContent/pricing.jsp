@@ -10,7 +10,7 @@ pageEncoding="UTF-8"%>
 <fmt:setBundle basename="com.Ease.Languages.text" />
 <html lang="${language}">
 <head>
-	<title> Ease.space | Le meilleur moyen de se connecter à ses sites préférés.</title>
+	<title> Ease.space | Pricing</title>
 	<!-- Description shown in Google -->
 	<meta name="description" content="Ease est la homepage qui vous débarrasse des mots de passe. En 1 clic, soyez connecté à vos sites web automatiquement." />
 	<!-- Facebook metadata -->
@@ -73,7 +73,7 @@ pageEncoding="UTF-8"%>
 
 	/* Test */
 	amplitude.getInstance().init("73264447f97c4623fb38d92b9e7eaeea");
-	easeTracker.trackEvent("HomepageVisit");
+	easeTracker.trackEvent("PricingPageVisit");
 </script>
 </head>
 

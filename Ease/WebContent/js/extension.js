@@ -132,7 +132,7 @@ $(document).ready(function() {
     // init extension popup 
     var NavigatorName = getUserNavigator();
     $("#chrome button[type='submit'], #safari button[type='submit']").click(function(){
-        window.location.replace("index.jsp");
+        window.location = "/";
     });
     $("#extension #download #showExtensionInfo").click(function(){
         $('#extension #step1').removeClass('show');

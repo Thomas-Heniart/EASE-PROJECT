@@ -51,7 +51,7 @@ pageEncoding="UTF-8"%>
 	</div>
 	<script>
 		setTimeout(function(){
-			window.location.replace("index.jsp");
+			window.location = "/";
 		},10*1000)
 	</script>
 </body>

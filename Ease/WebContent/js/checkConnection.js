@@ -6,7 +6,7 @@ function refresh() {
 				//console.log(retMsg);
 			}, 
 			function(retMsg) {
-				window.location.replace("index.jsp");
+				window.location = ("/");
 			},
 			'text'
 		);

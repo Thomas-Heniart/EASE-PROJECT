@@ -51,7 +51,7 @@ public class MailListCleaner extends HttpServlet {
 		try {
 			if (!user.isAdmin())
 				throw new GeneralException(ServletManager.Code.ClientError, "You ain't admin dude");
-			DatabaseRequest db_request = db.prepareRequest("SELECT email FROM testingEmails");
+			DatabaseRequest db_request = db.prepareRequest("SELECT email FROM testingEmails;");
 			DatabaseResult rs = db_request.get();
 			JSONArray emails = new JSONArray();
 			while (rs.next())
@@ -69,7 +69,6 @@ public class MailListCleaner extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
-		DataBaseConnection db = sm.getDB();
 		User user = sm.getUser();
 		try {
 			if (!user.isAdmin())
@@ -141,10 +140,11 @@ public class MailListCleaner extends HttpServlet {
 				}
 				if (GMailEmails.size() != GMailPasswords.size())
 					throw new GeneralException(ServletManager.Code.ClientError, "Missing emails or passwords");
-				if (length >= GMailEmails.size() * 500)
+				if (length > GMailEmails.size() * 100)
 					throw new GeneralException(ServletManager.Code.ClientError, "Too much adresses");
 				if (length == 0)
 					throw new GeneralException(ServletManager.Code.ClientError, "No emails");
+				sm.getDB().prepareRequest("DELETE FROM testingEmails;").set();
 				Thread t = new Thread(new GrowthHackingSender(GMailEmails, GMailPasswords, emails,length));
 				t.start();
 				sm.setRedirectUrl("admin.jsp?verifyEmails=true");

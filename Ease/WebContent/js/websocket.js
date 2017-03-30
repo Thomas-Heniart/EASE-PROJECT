@@ -10,13 +10,13 @@ function onMessage(event) {
     var action = response.action;
     var data = response.data;
     if (action === "connect") {
-    	location.href = "index.jsp";
+    	window.location = "/";
     } else if (action === "setSocketId") {
     	socketId = data.socketId;
     } else if (action === "addProfile") {
     	addProfileToDashboard(data.name, data.color, data.profile_id);
     } else if (action === "logout") {
-    	location.href = "index.jsp";
+    	window.location = "/";
     } else if (action === "ping") {
     	console.log("ping");
     	pingServer();

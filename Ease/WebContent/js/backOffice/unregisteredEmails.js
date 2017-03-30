@@ -22,7 +22,6 @@ function printEmailsFromJson(data) {
 	var json = JSON.parse(data);
 	json
 			.forEach(function(elem) {
-				console.log(elem);
 				$("#UnregisteredUsersTab #results")
 						.append(
 								"<div email='"

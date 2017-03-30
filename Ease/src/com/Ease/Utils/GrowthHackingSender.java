@@ -37,29 +37,20 @@ public class GrowthHackingSender implements Runnable {
 		String email = null;
 		try {
 			System.out.println("Start to send emails");
-			for (String GMailEmail : GMailEmails) {
-				String pass = GMailPasswords.get(GMailEmails.indexOf(GMailEmail));
-				Mail testMail = new Mail(GMailEmail, pass);
-				for (j = j; j < k && j < emails.size() ; j++) {
+			while (j < emails.size()) {
+				for (String GMailEmail : GMailEmails) {
+					String pass = GMailPasswords.get(GMailEmails.indexOf(GMailEmail));
+					Mail testMail = new Mail(GMailEmail, pass);
 					email = emails.get(j);
 					DatabaseRequest db_request = db.prepareRequest("INSERT INTO testingEmails values(null, ?);");
 					db_request.setString(email);
 					db_request.set();
 					testMail.sendTestEmail(email);
 					System.out.println("Email " + (j+1) + "/" + emails.size() + " sent from: " + GMailEmail + " to: " + email);
+					j++;
+					if (j == emails.size())
+						return;
 				}
-				if (k >= length - r) {
-					for (j=j; j < length; j++) {
-						email = emails.get(j);
-						DatabaseRequest db_request = db.prepareRequest("INSERT INTO testingEmails values(null, ?);");
-						db_request.setString(email);
-						db_request.set();
-						testMail.sendTestEmail(email);
-						System.out.println("Email " + (j+1) + "/" + emails.size() + " sent from: " + GMailEmail + " to: " + email);					}
-					break;
-				}
-					
-				k = k + threshold;
 			}
 			System.out.println("Emails sent");
 			Mail doneMail = new Mail("thomas@ease.space", "azeqsdwxc1008!!//", "Thomas @Ease");
