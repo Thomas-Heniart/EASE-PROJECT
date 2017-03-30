@@ -22,7 +22,7 @@ $(document).ready( function() {
 			function(){$('#loading').removeClass("la-animate");},
 	        function(retMsg) {
 					easeTracker.trackEvent("DeleteProfile");
-                  	window.location.replace("index.jsp");
+                  	window.location = ("/");
 			},
 			function(retMsg){
 				$(parent).find('.alertDiv').addClass('show');

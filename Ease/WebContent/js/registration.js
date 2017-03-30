@@ -37,7 +37,7 @@ $(document).ready(function(){
 						},
 						function(){
 							easeTracker.trackEvent("Connect");
-							window.location.replace("index.jsp");
+							window.location = "/";
 						},
 						function(retMsg){},
 						function(retMsg){},

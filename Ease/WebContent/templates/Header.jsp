@@ -5,7 +5,7 @@ pageEncoding="UTF-8"%>
 <%@ page import="java.util.List"%>
 
 
-<a href="index.jsp"><img class="logoImg"
+<a href="/"><img class="logoImg"
 	src="resources/images/logo.png"></a>
 
 	<script src="js/logout.js"></script>

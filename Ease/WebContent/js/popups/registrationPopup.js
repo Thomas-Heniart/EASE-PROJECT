@@ -119,7 +119,7 @@ var signUpPopup = function(elem){
 			easeTracker.trackEvent("HomepageSignUp2");
 			easeTracker.trackEvent("Connect");
 			setTimeout(function() {
-				window.location = "index.jsp";
+				window.location = "/";
 			}, 750);
 		}, 
 		function(retMsg) {

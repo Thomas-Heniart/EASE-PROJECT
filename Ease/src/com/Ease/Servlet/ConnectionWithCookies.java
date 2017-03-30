@@ -3,7 +3,6 @@ package com.Ease.Servlet;
 import java.io.IOException;
 import java.util.Map;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -38,7 +37,7 @@ public class ConnectionWithCookies extends HttpServlet {
 		HttpSession session = request.getSession();
 		User user = (User) (session.getAttribute("user"));
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
-		sm.setRedirectUrl("index.jsp");
+		sm.setRedirectUrl("/");
 		
 		String sessionId = sm.getServletParam("sessionId", false);
 		String token = sm.getServletParam("token",false);

@@ -1,6 +1,6 @@
 $(document).ready(function(){
 		$("#goBack").click(function() {
-			window.location = 'index.jsp';
+			window.location = '/';
 		});
 		
 		$('#lostPasswordForm').submit(function(e){
@@ -27,7 +27,7 @@ $(document).ready(function(){
 					button.addClass('success');
 					easeTracker.trackEvent("LoginpageNewPasswordSetup");
 					setTimeout(function(){
-						window.location = "index.jsp";
+						window.location = "/";
 					}, 3000);
 				},
 				function(retMsg){

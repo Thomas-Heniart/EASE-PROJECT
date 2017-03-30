@@ -7,7 +7,8 @@ $(document).ready(function(){
 		if(!$(e.target).closest(".logoutOptions, #logoutButton").length)
 			$(".logoutOptions").removeClass("show");
 	});
-	$('#easeLogoutButton').click(function(){
+	$('#easeLogoutButton').click(function(e){
+		e.preventDefault();
 		postHandler.post(
 			'Logout',
 			{},
@@ -15,7 +16,7 @@ $(document).ready(function(){
 			function(retMsg){
 				easeTracker.trackEvent('EaseLogout');
 				easeTracker.logout();
-				location.href = "index.jsp";
+				window.location = "/";
 			},
 			function(retMsg){
 				console.log(retMsg);
@@ -33,7 +34,7 @@ $(document).ready(function(){
 			function(retMsg){
 				easeTracker.trackEvent('AllAppsLogout');
 				easeTracker.logout();
-				location.href = "index.jsp";
+				window.location = "/";
 			},
 			function(retMsg){
 				console.log(retMsg);
