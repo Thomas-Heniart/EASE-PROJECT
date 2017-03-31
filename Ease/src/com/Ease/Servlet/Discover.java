@@ -27,7 +27,7 @@ public class Discover extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher rd = request.getRequestDispatcher("landingPage.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("landingPage.jsp?formAction=register");
 		rd.forward(request, response);
 	}
 

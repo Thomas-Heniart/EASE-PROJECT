@@ -24,7 +24,6 @@ var postHandler = {
 		
 		post:function(name, parameters, alwaysDo, successCallback, errorCallback, type){
 			if(this.isCorrectUser(this.email)){
-				parameters.socketId = socketId;
 				$.post(
 					name,
 					parameters,
