@@ -1,0 +1,1 @@
+var Header=function(e){this.rootEl=e},easeHeader;$(document).ready(function(){easeHeader=new Header($(".header"))});

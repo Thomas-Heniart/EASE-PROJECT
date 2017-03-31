@@ -1,0 +1,268 @@
+#registrationBody {
+  background: url(https://d7zgbk06ve7c.cloudfront.net/assets/63939/cuf4uxd6krflz4sctrn1/7a1f1c2c3b97461eae39f9a4e889b25c_24_1600.jpg) no-repeat center top;
+  background-attachment: fixed;
+  background-position: center center;
+  background-size: cover; }
+  #registrationBody .input.password .showPassDiv {
+    top: 5%;
+    right: 1px; }
+    #registrationBody .input.password .showPassDiv i {
+      font-size: 15px; }
+  #registrationBody .input.password .showPassDiv.show {
+    color: white;
+    background-color: #373b60; }
+  #registrationBody .invitation-header {
+    position: absolute;
+    height: 45%;
+    width: 100%; }
+    #registrationBody .invitation-header .image-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      padding-top: 1.125rem;
+      opacity: 0.6;
+      background-color: #4a4b66; }
+    #registrationBody .invitation-header img {
+      position: absolute;
+      width: 10%;
+      left: 0;
+      top: 0; }
+    #registrationBody .invitation-header .header-links {
+      position: absolute;
+      width: fit-content;
+      right: 1%;
+      top: 4%; }
+    #registrationBody .invitation-header .header-content {
+      position: absolute;
+      width: 60%;
+      text-align: center;
+      left: 20%;
+      color: #F9F7F7;
+      bottom: 10%; }
+      #registrationBody .invitation-header .header-content h2 {
+        font-size: 2.2em;
+        margin-bottom: 30px; }
+      #registrationBody .invitation-header .header-content p {
+        width: 49%;
+        margin: 10px auto; }
+      #registrationBody .invitation-header .header-content #registrationForm {
+        width: 70%;
+        margin: auto; }
+        #registrationBody .invitation-header .header-content #registrationForm input {
+          border: none;
+          width: 35%;
+          height: 32px;
+          border-radius: 5px;
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+          padding-left: 3px;
+          color: black; }
+        #registrationBody .invitation-header .header-content #registrationForm .input.password input {
+          padding-right: 27px; }
+        #registrationBody .invitation-header .header-content #registrationForm button {
+          border-radius: 5px;
+          height: 32px;
+          line-height: 29px;
+          vertical-align: bottom;
+          background-color: #373b60;
+          color: #F9F7F7;
+          border: 0px solid;
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0; }
+  #registrationBody .invitation-content {
+    position: absolute;
+    width: 100%;
+    top: 45%;
+    background-color: #F9F7F7; }
+    #registrationBody .invitation-content div {
+      position: relative;
+      width: 90%;
+      margin: auto; }
+      #registrationBody .invitation-content div img {
+        width: 50%;
+        padding: 3% 6%; }
+      #registrationBody .invitation-content div div {
+        display: inline-block;
+        position: relative;
+        width: 45%; }
+        #registrationBody .invitation-content div div p {
+          width: 70%;
+          text-align: center;
+          margin: auto;
+          font-size: 1.25em; }
+  #registrationBody .logo {
+    width: 20%; }
+    #registrationBody .logo img {
+      width: 100%; }
+  #registrationBody h1 {
+    color: white;
+    margin: 0px auto 30px auto;
+    text-align: center;
+    font-size: 50px; }
+  #registrationBody p {
+    margin-bottom: 3px; }
+  #registrationBody .registrationBlock#checkInvitation {
+    padding-bottom: 50px;
+    padding-top: 40px; }
+    #registrationBody .registrationBlock#checkInvitation .confirmBox {
+      text-align: center;
+      max-width: 60%;
+      margin: 0px auto;
+      margin-top: 20px;
+      border: 2px solid #a1c986;
+      color: #a1c986;
+      padding: 2px;
+      border-radius: 5px; }
+    #registrationBody .registrationBlock#checkInvitation .custom-info {
+      text-align: center; }
+  #registrationBody .title {
+    min-width: 250px;
+    max-width: 30%;
+    margin: 10px auto;
+    font-size: 50px;
+    color: #FFFFFF;
+    text-align: center; }
+  #registrationBody .registrationBlock {
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px hidden;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 30px;
+    min-width: 270px;
+    max-width: 420px;
+    background-color: rgba(255, 255, 255, 0.9); }
+    #registrationBody .registrationBlock .advice {
+      width: 100%;
+      border: 2px solid #373b60;
+      border-radius: 5px;
+      margin-bottom: 10px; }
+    #registrationBody .registrationBlock .term .check {
+      display: inline-block;
+      height: 20px;
+      width: 20px;
+      margin: 5px 5px;
+      vertical-align: bottom; }
+      #registrationBody .registrationBlock .term .check:hover {
+        cursor: pointer; }
+    #registrationBody .registrationBlock .term p {
+      display: inline-block; }
+    #registrationBody .registrationBlock .alertDiv {
+      width: 90%;
+      text-align: center;
+      margin: 0px auto; }
+    #registrationBody .registrationBlock #registrationForm {
+      width: 90%;
+      margin: 0px auto; }
+      #registrationBody .registrationBlock #registrationForm .doubleInput {
+        width: 100; }
+        #registrationBody .registrationBlock #registrationForm .doubleInput .input {
+          width: 48%; }
+          #registrationBody .registrationBlock #registrationForm .doubleInput .input:nth-child(1) {
+            float: left; }
+          #registrationBody .registrationBlock #registrationForm .doubleInput .input:nth-child(2) {
+            float: right; }
+      #registrationBody .registrationBlock #registrationForm .input.password input {
+        padding-right: 27px; }
+      #registrationBody .registrationBlock #registrationForm .input {
+        margin: 0px;
+        margin-bottom: 10px;
+        width: 100%;
+        max-width: 100%; }
+        #registrationBody .registrationBlock #registrationForm .input input {
+          color: #373b60;
+          background-color: #efefef;
+          border-radius: 5px;
+          border: 1px hidden;
+          width: 100%;
+          padding: 2px;
+          line-height: 1.5; }
+        #registrationBody .registrationBlock #registrationForm .input img {
+          position: absolute;
+          left: 102%;
+          top: 5px; }
+    #registrationBody .registrationBlock .custom-button {
+      width: 50%;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 25px;
+      text-align: center;
+      position: relative; }
+      #registrationBody .registrationBlock .custom-button button {
+        width: 100%;
+        height: 100%;
+        border: 1px solid #373b60;
+        padding-bottom: 5px;
+        padding-top: 7px;
+        border-radius: 7px;
+        font-size: 14px;
+        background-color: #373b60;
+        transition: all .3s;
+        color: white;
+        outline: none;
+        position: relative;
+        display: inline-block;
+        vertical-align: middle;
+        overflow: hidden;
+        white-space: nowrap; }
+        #registrationBody .registrationBlock .custom-button button:hover {
+          transition: all .3s;
+          border: 1px solid #373b60;
+          background-color: white;
+          color: #373b60; }
+      #registrationBody .registrationBlock .custom-button .loadHelper {
+        transition: all .3s;
+        width: 100%;
+        height: 100%;
+        visibility: hidden;
+        opacity: 0;
+        border-radius: 7px;
+        position: absolute;
+        border: 3px solid #373b60; }
+      #registrationBody .registrationBlock .custom-button .successHelper {
+        width: 100%;
+        height: auto;
+        border: 3px solid green;
+        padding-bottom: 5px;
+        padding-top: 7px;
+        border-radius: 7px;
+        font-size: 14px;
+        background-color: white;
+        transition: all .3s;
+        color: green;
+        opacity: 0;
+        visibility: hidden;
+        outline: none;
+        display: inline-block;
+        vertical-align: middle; }
+    #registrationBody .registrationBlock .custom-button.loading button {
+      transition: all .3s;
+      border-radius: 100px;
+      width: 35px;
+      opacity: 0; }
+      #registrationBody .registrationBlock .custom-button.loading button span {
+        opacity: 0; }
+    #registrationBody .registrationBlock .custom-button.loading .loadHelper {
+      transition: all .3s;
+      width: 35px;
+      height: 100%;
+      border-radius: 100px;
+      border: none;
+      opacity: 1;
+      visibility: visible; }
+    #registrationBody .registrationBlock .custom-button.success .loadHelper {
+      visibility: hidden;
+      opacity: 0; }
+    #registrationBody .registrationBlock .custom-button.success .successHelper {
+      visibility: visible;
+      opacity: 1; }
+  #registrationBody .sk-fading-circle {
+    width: 100%;
+    height: 100%;
+    position: relative; }
+    #registrationBody .sk-fading-circle .sk-circle:before {
+      background-color: #373b60; }
+
+/*# sourceMappingURL=InvitationPage.css.map */

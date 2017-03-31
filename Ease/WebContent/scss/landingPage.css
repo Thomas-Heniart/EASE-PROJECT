@@ -11,9 +11,15 @@ body {
   font-family: 'Raleway', Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
   webkit-tap-highlight-color: #fed136; }
 
+body#landingBody {
+  -webkit-user-select: auto;
+  -khtml-user-select: auto;
+  -moz-user-select: auto;
+  -ms-user-select: auto;
+  user-select: auto; }
+
 .btn-primary, .btn-xl, h1, h2, h3, h4, h5, h6 {
-  font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  text-transform: uppercase; }
+  font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif; }
 
 .text-muted {
   color: #777; }
@@ -92,7 +98,6 @@ a.active, a:active, a:focus, a:hover {
   color: #fec503; }
 
 .navbar-custom .nav li a, .navbar-custom .navbar-toggle {
-  font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #fff;
   text-transform: uppercase; }
 
@@ -108,7 +113,7 @@ a.active, a:active, a:focus, a:hover {
   background-color: #fed136; }
 
 .navbar-custom .nav li a {
-  font-weight: 400;
+  font-weight: bold;
   letter-spacing: 1px;
   text-shadow: 0px 0px 1px black; }
 
@@ -127,6 +132,7 @@ a.active, a:active, a:focus, a:hover {
 
 @media (min-width: 768px) {
   .navbar-custom {
+    height: 63px;
     background-color: transparent;
     padding: 25px 0;
     -webkit-transition: padding .3s;
@@ -162,7 +168,7 @@ header {
     top: 0;
     left: 0;
     z-index: -1;
-    background-image: url(../resources/landing/background-1.jpg);
+    background-image: url(../resources/landing/background-header.jpg);
     background-repeat: no-repeat;
     background-attachment: scroll;
     background-position: center center;
@@ -177,14 +183,12 @@ header .intro-text {
 
 header .intro-text .intro-lead-in {
   font-family: "Raleway", "Droid Serif", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-style: italic;
   font-size: 22px;
   line-height: 22px;
   margin-bottom: 25px; }
 
 header .intro-text .intro-heading {
   font-family: "Raleway", Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  text-transform: uppercase;
   font-size: 50px;
   line-height: 50px;
   margin-bottom: 25px; }
@@ -196,27 +200,24 @@ header .intro-text .intro-heading {
 
   header .intro-text .intro-lead-in {
     font-family: "Raleway", "Droid Serif", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-style: italic;
     font-size: 40px;
     line-height: 40px;
     margin-bottom: 50px; }
 
   header .intro-text .intro-heading {
     font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
-    text-transform: uppercase;
     font-size: 75px;
     line-height: 75px;
     margin-bottom: 25px; } }
 #portfolio .portfolio-item .portfolio-caption p, section h3.section-subheading {
-  font-family: "Droid Serif", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-style: italic; }
+  font-family: "Droid Serif", "Helvetica Neue", Helvetica, Arial, sans-serif; }
 
 section {
   padding: 100px 0; }
 
 section h2.section-heading {
   color: #373B60;
-  font-size: 40px;
+  font-size: 2vw;
   margin-top: 0;
   margin-bottom: 15px; }
 
@@ -680,7 +681,6 @@ img::-moz-selection {
       left: 12.1%;
       width: 76%;
       top: 5.5%;
-      height: 80.5%;
       box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.14), 0 4px 5px 0 rgba(0, 0, 0, 0.098), 0 1px 10px 0 rgba(0, 0, 0, 0.084); }
 
 #avantages {
@@ -697,6 +697,8 @@ img::-moz-selection {
     #avantages .container .row.showcase .fa-stack {
       font-size: 40px;
       vertical-align: top; }
+      #avantages .container .row.showcase .fa-stack .fa-stack-1x {
+        color: black; }
     #avantages .container .row.showcase p {
       position: absolute;
       top: 50%;
@@ -829,7 +831,8 @@ section.vp {
       margin-left: 3px; }
     #footer .container .row .left-part .menu-column {
       margin-left: 20px;
-      display: inline-block; }
+      display: inline-block;
+      vertical-align: top; }
       #footer .container .row .left-part .menu-column h3 {
         font-size: 18px; }
       #footer .container .row .left-part .menu-column .links a {
@@ -915,6 +918,39 @@ section.vp {
     height: 6vw; }
   #userFeedbacks .container .row .comment .message p, #userFeedbacks .container .row .comment .message a {
     font-size: 1vw; } }
+#landingBody.school .vp .section-subheading {
+  font-size: 24px;
+  font-family: Raleway; }
+#landingBody.school #userFeedbacks {
+  padding-bottom: 75px; }
+#landingBody.school #features {
+  padding-bottom: 0px; }
+#landingBody.school #productPresentation:before {
+  display: none; }
+#landingBody.school header .container .intro-text {
+  padding-bottom: 4vw; }
+#landingBody.school header .container .intro-lead-in {
+  font-size: 1.2vw;
+  line-height: 1.5vw;
+  margin-bottom: 25px; }
+#landingBody.school header .container .intro-heading {
+  font-size: 3vw;
+  line-height: 4vw;
+  margin-bottom: 35px; }
+#landingBody.school header .container .signUpButton {
+  margin-bottom: 30px; }
+#landingBody.school header .container .schoolLogos {
+  width: 100%;
+  height: 5vw; }
+  #landingBody.school header .container .schoolLogos .logoHandler {
+    height: 100%;
+    margin-left: 2vw;
+    display: inline-block; }
+    #landingBody.school header .container .schoolLogos .logoHandler img {
+      height: 100%; }
+    #landingBody.school header .container .schoolLogos .logoHandler:first-child {
+      margin-left: 0; }
+
 @media screen and (min-width: 768px) {
   section {
     padding: 75px 0px; }
@@ -923,11 +959,11 @@ section.vp {
     padding-top: 14vw;
     padding-bottom: 10vw; }
     header .container .intro-text .intro-lead-in {
-      font-size: 2vw;
-      line-height: 2vw; }
+      font-size: 1.2vw;
+      line-height: 1.5vw; }
     header .container .intro-text .intro-heading {
       font-size: 3vw;
-      line-height: 3vw; }
+      line-height: 4vw; }
 
   #userFeedbacks .container .row .comment:last-child, #userFeedbacks .container .row .comment:nth-child(3) {
     margin-bottom: 0px; } }
@@ -1015,7 +1051,7 @@ section.vp {
   padding-top: 10px;
   padding-bottom: 10px; }
 
-.navbar-nav > li:last-child > a {
+.navbar-nav #connexionButton {
   border: 1px solid;
   border-radius: 5px; }
 
@@ -1038,12 +1074,12 @@ section.vp {
   font-size: 1.3vw;
   font-weight: 600; }
 
-#validatorPassword, #validatorConfirmPass {
+.passwordValidator {
   position: absolute;
-  height: 68%;
   left: 100%;
-  margin-left: 2%;
-  top: 11%; }
+  margin-left: 1%;
+  top: 50%;
+  transform: translateY(-50%); }
 
 .alert-message, .loading {
   position: absolute;
@@ -1063,6 +1099,8 @@ section.vp {
     z-index: 1;
     pointer-events: auto; }
 
+#signUpPopup .popupBody .handler .row input {
+  margin-bottom: 0; }
 #signUpPopup .popupBody .handler .row .progress {
   height: 0.25vw;
   margin-top: 0.15vw;

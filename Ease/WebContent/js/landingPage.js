@@ -44,17 +44,3 @@ $(document).ready(function() {
             }
             $(document).on('scroll', checkMedia);
         });
-/*$(document).ready(function(){
-    var videoTag = $('video').get(0);
-    videoTag.addEventListener("loadedmetadata", function(event) {
-     videoRatio = videoTag.videoWidth / videoTag.videoHeight;
-     targetRatio = $(videoTag).width() / $(videoTag).height();
-     if (videoRatio < targetRatio) {
-      $(videoTag).css("transform", "scaleX(" + (targetRatio / videoRatio) + ")");
-  } else if (targetRatio < videoRatio) {
-      $(videoTag).css("transform", "scaleY(" + (videoRatio / targetRatio) + ")");
-  } else {
-      $(videoTag).css("transform", "");
-  }
-});
-});*/

@@ -6,9 +6,9 @@ Error: File to import not found or unreadable: variables.
 1: @import 'variables';
 2: 
 3: #tutorialView {
-4: 	text-align: center;
-5: 	width: 60%;
-6: 	position: fixed;
+4: 	.step4 {
+5: 		top: 0px;
+6: 		left: 50%;
 
 Backtrace:
 /home/nicetwice/EASE-PROJECT/Ease/WebContent/scss/UIElements/Tutorial.scss:1
@@ -49,4 +49,4 @@ Backtrace:
 body:before {
   white-space: pre;
   font-family: monospace;
-  content: "Error: File to import not found or unreadable: variables.\A        Load path: /home/nicetwice/EASE-PROJECT/Ease/WebContent/scss/UIElements\A         on line 1 of /home/nicetwice/EASE-PROJECT/Ease/WebContent/scss/UIElements/Tutorial.scss\A \A 1: @import 'variables';\A 2: \A 3: #tutorialView {\A 4: 	text-align: center;\A 5: 	width: 60%;\A 6: 	position: fixed;"; }
+  content: "Error: File to import not found or unreadable: variables.\A        Load path: /home/nicetwice/EASE-PROJECT/Ease/WebContent/scss/UIElements\A         on line 1 of /home/nicetwice/EASE-PROJECT/Ease/WebContent/scss/UIElements/Tutorial.scss\A \A 1: @import 'variables';\A 2: \A 3: #tutorialView {\A 4: 	.step4 {\A 5: 		top: 0px;\A 6: 		left: 50%;"; }

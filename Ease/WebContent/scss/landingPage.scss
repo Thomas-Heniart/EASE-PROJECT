@@ -3,6 +3,8 @@
  * Copyright 2013-2016 Start Bootstrap
  * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
  */
+ @import 'variables';
+
  .btn-primary.active, .btn-primary:active, .btn-xl.active, .btn-xl:active, .open .dropdown-toggle.btn-primary, .open .dropdown-toggle.btn-xl {
     background-image: none;
 }
@@ -173,7 +175,7 @@ header {
         top:0;
         left: 0;
         z-index: -1;
-        background-image: url(../resources/landing/background-1.jpg);
+        background-image: url(../resources/landing/background-header.jpg);
         background-repeat: no-repeat;
         background-attachment: scroll;
         background-position: center center;
@@ -240,7 +242,8 @@ header .intro-text .intro-heading {
     section h3.section-subheading {
         font-size: 16px;
         text-transform: none;
-        font-weight: 400;
+        font-weight: bold;
+        font-family: $defaultFont;
         margin-bottom: 35px;
     }
     @media (min-width:768px) {

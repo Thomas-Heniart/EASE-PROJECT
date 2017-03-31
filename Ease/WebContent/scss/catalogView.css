@@ -1,19 +1,21 @@
 /*
 Error: Undefined variable: "$defaultFont".
-        on line 4 of /home/nicetwice/EASE-PROJECT/Ease/WebContent/scss/catalogView.scss
+        on line 7 of /home/nicetwice/EASE-PROJECT/Ease/WebContent/scss/catalogView.scss
 
-1: 
-2: .catalogView {
-3: 	width: 100%;
-4: 	font-family: $defaultFont;
-5: 	.helpIntegrateApps {
-6: 		padding:10px;
-7: 		padding-top: 20px;
-8: 		text-align: center;
-9: 		width: 60%;
+2: 	height: 100%;
+3: 	overflow: hidden;
+4: 	width: 95%;
+5: 	margin:auto;
+6: 	border-radius: 10px;
+7: 	font-family: $defaultFont;
+8: 	.tag {
+9: 		color: white;
+10: 		font-size: 12px;
+11: 		padding: 4px 6px;
+12: 		&:hover {
 
 Backtrace:
-/home/nicetwice/EASE-PROJECT/Ease/WebContent/scss/catalogView.scss:4
+/home/nicetwice/EASE-PROJECT/Ease/WebContent/scss/catalogView.scss:7
 /usr/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/script/tree/variable.rb:49:in `_perform'
 /usr/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/script/tree/node.rb:58:in `perform'
 /usr/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:397:in `visit_prop'
@@ -60,4 +62,4 @@ Backtrace:
 body:before {
   white-space: pre;
   font-family: monospace;
-  content: "Error: Undefined variable: \"$defaultFont\".\A         on line 4 of /home/nicetwice/EASE-PROJECT/Ease/WebContent/scss/catalogView.scss\A \A 1: \A 2: .catalogView {\A 3: 	width: 100%;\A 4: 	font-family: $defaultFont;\A 5: 	.helpIntegrateApps {\A 6: 		padding:10px;\A 7: 		padding-top: 20px;\A 8: 		text-align: center;\A 9: 		width: 60%;"; }
+  content: "Error: Undefined variable: \"$defaultFont\".\A         on line 7 of /home/nicetwice/EASE-PROJECT/Ease/WebContent/scss/catalogView.scss\A \A 2: 	height: 100%;\A 3: 	overflow: hidden;\A 4: 	width: 95%;\A 5: 	margin:auto;\A 6: 	border-radius: 10px;\A 7: 	font-family: $defaultFont;\A 8: 	.tag {\A 9: 		color: white;\A 10: 		font-size: 12px;\A 11: 		padding: 4px 6px;\A 12: 		&:hover {"; }

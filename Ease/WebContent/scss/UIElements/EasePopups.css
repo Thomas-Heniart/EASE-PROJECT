@@ -26,9 +26,9 @@
           font-size: 0;
           width: 3vw;
           height: 3vw; }
-      #easePopupsHandler #deleteAccountPopup .bodysHandler .popupBody .handler .row .input.login input, #easePopupsHandler #deleteAccountPopup .bodysHandler .popupBody .handler .row .input.password input {
+      #easePopupsHandler #deleteAccountPopup .bodysHandler .popupBody .handler .row .loginPasswordRow .input input {
         padding-left: 1.8vw; }
-      #easePopupsHandler #deleteAccountPopup .bodysHandler .popupBody .handler .row .input.login .placeholderIcon, #easePopupsHandler #deleteAccountPopup .bodysHandler .popupBody .handler .row .input.password .placeholderIcon {
+      #easePopupsHandler #deleteAccountPopup .bodysHandler .popupBody .handler .row .loginPasswordRow .placeholderIcon {
         position: absolute;
         left: 4%;
         top: 50%;
@@ -79,6 +79,20 @@
           display: block;
           width: 100%;
           color: black; }
+    #easePopupsHandler #modifyAppPopup .bodysHandler .popupBody .handler .loginPasswordRow .input {
+      font-size: 0.9vw;
+      color: black; }
+      #easePopupsHandler #modifyAppPopup .bodysHandler .popupBody .handler .loginPasswordRow .input input {
+        font-size: 0.9vw;
+        color: black;
+        padding-left: 1.8vw; }
+      #easePopupsHandler #modifyAppPopup .bodysHandler .popupBody .handler .loginPasswordRow .input .placeholderIcon {
+        position: absolute;
+        left: 4%;
+        top: 50%;
+        font-size: 1vw;
+        transform: translateY(-50%);
+        color: #777; }
     #easePopupsHandler #modifyAppPopup .bodysHandler .popupBody .handler .row {
       margin-bottom: 0.6vw; }
       #easePopupsHandler #modifyAppPopup .bodysHandler .popupBody .handler .row:last-child {
@@ -434,6 +448,15 @@
       padding-bottom: 2px;
       font-size: 1vw;
       font-weight: bold; }
+    #easePopupsHandler #addAppPopup .bodysHandler .popupBody .handler .loginPasswordRow .input input {
+      padding-left: 1.8vw; }
+    #easePopupsHandler #addAppPopup .bodysHandler .popupBody .handler .loginPasswordRow .placeholderIcon {
+      position: absolute;
+      left: 4%;
+      top: 50%;
+      font-size: 1vw;
+      transform: translateY(-50%);
+      color: #777; }
     #easePopupsHandler #addAppPopup .bodysHandler .popupBody .handler .row {
       margin-bottom: 0.6vw; }
       #easePopupsHandler #addAppPopup .bodysHandler .popupBody .handler .row:last-child {
@@ -638,14 +661,5 @@
           pointer-events: none; }
       #easePopupsHandler #addAppPopup .bodysHandler .popupBody .handler .row .placeholderIcon {
         font-size: 1vw; }
-      #easePopupsHandler #addAppPopup .bodysHandler .popupBody .handler .row .input.login input, #easePopupsHandler #addAppPopup .bodysHandler .popupBody .handler .row .input.password input {
-        padding-left: 1.8vw; }
-      #easePopupsHandler #addAppPopup .bodysHandler .popupBody .handler .row .input.login .placeholderIcon, #easePopupsHandler #addAppPopup .bodysHandler .popupBody .handler .row .input.password .placeholderIcon {
-        position: absolute;
-        left: 4%;
-        top: 50%;
-        font-size: 1vw;
-        transform: translateY(-50%);
-        color: #777; }
 
 /*# sourceMappingURL=EasePopups.css.map */

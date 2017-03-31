@@ -1,0 +1,483 @@
+.SettingsView.show {
+  display: block;
+  -webkit-animation: slideLeft 0.8s 1;
+  animation: slideLeft 0.8s 1; }
+
+.SettingsView {
+  width: 100%;
+  float: left;
+  display: none;
+  min-height: 100%;
+  overflow: auto;
+  height: 100%; }
+  .SettingsView .alertDiv {
+    color: red; }
+  .SettingsView .settingsWindow {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    position: relative;
+    width: 40%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #efefef;
+    padding: 3%;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    border-radius: 5px; }
+    .SettingsView .settingsWindow .quit {
+      cursor: pointer;
+      color: red;
+      position: absolute;
+      transform: translate3d(-50%, -50%, 0);
+      left: 0;
+      top: 0; }
+      .SettingsView .settingsWindow .quit .fa-stack {
+        font-size: 1.5vw;
+        width: 1em;
+        height: 1em;
+        line-height: 1em; }
+        .SettingsView .settingsWindow .quit .fa-stack .fa:first-child {
+          color: #ec555b; }
+        .SettingsView .settingsWindow .quit .fa-stack .fa:nth-child(2) {
+          color: white;
+          font-size: 1.1vw; }
+    .SettingsView .settingsWindow .title {
+      color: #373b60;
+      font-family: "Raleway", "Source Sans Pro", sans-serif;
+      font-weight: 600;
+      font-size: 18px;
+      text-align: center;
+      margin-bottom: 5px; }
+      .SettingsView .settingsWindow .title p, .SettingsView .settingsWindow .title i {
+        display: inline-block; }
+    .SettingsView .settingsWindow #settingsTab {
+      color: #373b60; }
+      .SettingsView .settingsWindow #settingsTab #SendVerificationEmail {
+        display: none; }
+        .SettingsView .settingsWindow #settingsTab #SendVerificationEmail button[type="submit"] {
+          display: none; }
+      .SettingsView .settingsWindow #settingsTab #AddEmailPopup .md-content, .SettingsView .settingsWindow #settingsTab #DeleteAccountWait .md-content {
+        background-color: rgba(255, 255, 255, 0.8) !important;
+        color: #373b60;
+        width: fit-content; }
+      .SettingsView .settingsWindow #settingsTab #AddEmailPopup h2, .SettingsView .settingsWindow #settingsTab #DeleteAccountWait h2 {
+        text-align: center; }
+      .SettingsView .settingsWindow #settingsTab #AddEmailPopup .waiting.show, .SettingsView .settingsWindow #settingsTab #AddEmailPopup .email-sent.show, .SettingsView .settingsWindow #settingsTab #AddEmailPopup .error.show, .SettingsView .settingsWindow #settingsTab #DeleteAccountWait .waiting.show, .SettingsView .settingsWindow #settingsTab #DeleteAccountWait .email-sent.show, .SettingsView .settingsWindow #settingsTab #DeleteAccountWait .error.show {
+        height: auto;
+        width: auto;
+        margin: auto !important;
+        padding: 10px;
+        opacity: 1;
+        visibility: visible;
+        transition: all 0.3s ease;
+        -webkit-transition: all 0.3s ease; }
+      .SettingsView .settingsWindow #settingsTab #AddEmailPopup .email-sent, .SettingsView .settingsWindow #settingsTab #AddEmailPopup .error, .SettingsView .settingsWindow #settingsTab #AddEmailPopup .waiting, .SettingsView .settingsWindow #settingsTab #DeleteAccountWait .email-sent, .SettingsView .settingsWindow #settingsTab #DeleteAccountWait .error, .SettingsView .settingsWindow #settingsTab #DeleteAccountWait .waiting {
+        width: 0;
+        padding: 0;
+        height: 0;
+        opacity: 0;
+        visibility: hidden;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        -webkit-transition: all 0.3s ease;
+        position: relative; }
+      .SettingsView .settingsWindow #settingsTab #AddEmailPopup .email-sent i, .SettingsView .settingsWindow #settingsTab #DeleteAccountWait .email-sent i {
+        display: block;
+        width: fit-content;
+        padding: 5px;
+        border-radius: 25px;
+        background-color: #f7f7f7;
+        margin: auto;
+        color: green;
+        font-size: 25px; }
+      .SettingsView .settingsWindow #settingsTab #AddEmailPopup .sk-fading-circle, .SettingsView .settingsWindow #settingsTab #DeleteAccountWait .sk-fading-circle {
+        position: relative;
+        width: 75px;
+        height: 75px;
+        margin: auto; }
+        .SettingsView .settingsWindow #settingsTab #AddEmailPopup .sk-fading-circle .sk-circle:before, .SettingsView .settingsWindow #settingsTab #DeleteAccountWait .sk-fading-circle .sk-circle:before {
+          background-color: #373b60; }
+      .SettingsView .settingsWindow #settingsTab #ModifyNameForm p.errorMessage {
+        margin-left: 10px;
+        margin-top: 5px;
+        display: none;
+        color: #ec555b; }
+      .SettingsView .settingsWindow #settingsTab #ModifyNameForm p.errorMessage.show {
+        display: block; }
+      .SettingsView .settingsWindow #settingsTab #ModifyPasswordForm p.response {
+        display: none; }
+      .SettingsView .settingsWindow #settingsTab #ModifyPasswordForm p.success {
+        display: block;
+        color: green; }
+      .SettingsView .settingsWindow #settingsTab #ModifyPasswordForm p.error {
+        display: block;
+        color: #ec555b; }
+      .SettingsView .settingsWindow #settingsTab #DeleteEmailPopup h2 {
+        text-align: center;
+        font-size: 20px; }
+      .SettingsView .settingsWindow #settingsTab #DeleteEmailPopup button {
+        width: 30%;
+        height: 30px;
+        border: 1px solid transparent;
+        border-radius: 5px;
+        color: white;
+        display: inline-block;
+        margin-top: 0; }
+      .SettingsView .settingsWindow #settingsTab #DeleteEmailPopup button[type='submit'] {
+        background-color: #ec555b;
+        margin-left: 20%; }
+        .SettingsView .settingsWindow #settingsTab #DeleteEmailPopup button[type='submit']:hover {
+          background-color: #ea474e; }
+      .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount {
+        width: 40%; }
+        .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount .delete-advertising {
+          display: none; }
+        .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount .delete-advertising.show {
+          display: block;
+          position: relative;
+          text-align: center; }
+          .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount .delete-advertising.show p {
+            width: 75%;
+            margin: auto; }
+          .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount .delete-advertising.show button {
+            display: inline-block;
+            border-radius: 5px;
+            border: 1px solid transparent;
+            padding: 5px 45px;
+            font-size: 1em; }
+          .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount .delete-advertising.show button#confirmDeleteAccount {
+            color: white;
+            background-color: #ec555b; }
+            .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount .delete-advertising.show button#confirmDeleteAccount:hover {
+              background-color: #ea474e; }
+          .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount .delete-advertising.show button[oClass="CloseButton"] {
+            color: black;
+            background-color: #f7f7f7; }
+            .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount .delete-advertising.show button[oClass="CloseButton"]:hover {
+              background-color: #efefef; }
+        .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount #DeleteAccountForm {
+          display: none; }
+          .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount #DeleteAccountForm p {
+            text-align: center;
+            padding: 20px; }
+          .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount #DeleteAccountForm .errorMessage {
+            color: #ec555b;
+            display: none;
+            padding: 0; }
+          .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount #DeleteAccountForm .errorMessage.show {
+            display: block; }
+          .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount #DeleteAccountForm input {
+            display: block;
+            margin: auto;
+            width: 40%;
+            color: #373b60;
+            margin-bottom: 3%; }
+          .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount #DeleteAccountForm div {
+            margin: auto;
+            width: 77%; }
+            .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount #DeleteAccountForm div button {
+              display: inline-block;
+              width: 43%;
+              font-size: 1em;
+              border-radius: 4px;
+              border: 1px solid transparent;
+              line-height: 20px;
+              vertical-align: middle;
+              margin: 2%; }
+            .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount #DeleteAccountForm div button[type='submit'] {
+              background-color: #ec555b;
+              color: white;
+              opacity: 0.6; }
+            .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount #DeleteAccountForm div button[type='submit'].Active {
+              opacity: 1; }
+            .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount #DeleteAccountForm div button[oClass="CloseButton"] {
+              color: black; }
+        .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount #DeleteAccountForm.show {
+          display: block; }
+        .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount .wait {
+          display: none; }
+        .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount .wait.show {
+          display: block; }
+        .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount .sk-fading-circle {
+          width: 100px;
+          height: 100px;
+          position: relative;
+          margin: 30px auto; }
+          .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount .sk-fading-circle:before {
+            background-color: white; }
+          .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount .sk-fading-circle .sk-circle {
+            margin: 0; }
+            .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount .sk-fading-circle .sk-circle:before {
+              background-color: white; }
+      .SettingsView .settingsWindow #settingsTab .setting #deleteAccountButton {
+        border: 1px solid #373B60;
+        background-color: #373B60;
+        color: white;
+        border-radius: 6px;
+        margin-left: 10px; }
+      .SettingsView .settingsWindow #settingsTab .setting {
+        transition: height 0.3s ease;
+        -webkit-transition: height 0.3s ease;
+        position: relative;
+        height: 0;
+        overflow: hidden; }
+        .SettingsView .settingsWindow #settingsTab .setting input {
+          outline: none;
+          border-radius: 2px;
+          border: 1px hidden;
+          height: 28px;
+          line-height: 28px;
+          vertical-align: middle;
+          padding-left: 3px;
+          width: 50%;
+          margin-top: 4px;
+          margin-left: 10px; }
+        .SettingsView .settingsWindow #settingsTab .setting button[type='submit'], .SettingsView .settingsWindow #settingsTab .setting span.verifiedEmail {
+          width: 80px;
+          text-align: center;
+          margin-top: 4px;
+          padding: 3px;
+          line-height: 20px;
+          vertical-align: middle;
+          border: 1px solid white;
+          color: #373b60;
+          border-radius: 4px;
+          background-color: white;
+          transition: all 0.3s ease;
+          -webkit-transition: all 0.3s ease; }
+        .SettingsView .settingsWindow #settingsTab .setting button[type='submit'].Active {
+          color: white;
+          background-color: #373b60;
+          border-color: #373b60;
+          transition: all 0.3s ease;
+          -webkit-transition: all 0.3s ease; }
+          .SettingsView .settingsWindow #settingsTab .setting button[type='submit'].Active:hover {
+            background-color: white;
+            color: #373b60;
+            transition: all 0.3s ease;
+            -webkit-transition: all 0.3s ease; }
+        .SettingsView .settingsWindow #settingsTab .setting .emailLine input {
+          cursor: default; }
+        .SettingsView .settingsWindow #settingsTab .setting .emailLine span.verifiedEmail, .SettingsView .settingsWindow #settingsTab .setting .emailLine span.unverifiedEmail {
+          display: inline-block;
+          cursor: pointer;
+          color: white; }
+        .SettingsView .settingsWindow #settingsTab .setting .emailLine span.verifiedEmail {
+          background-color: green;
+          border-color: green; }
+        .SettingsView .settingsWindow #settingsTab .setting .emailLine span.unverifiedEmail.wait .verify, .SettingsView .settingsWindow #settingsTab .setting .emailLine span.unverifiedEmail.wait .sendVerificationEmail {
+          width: 0;
+          padding: 3px 0;
+          transition: width 0.3s ease;
+          -webkit-transition: width 0.3s ease; }
+          .SettingsView .settingsWindow #settingsTab .setting .emailLine span.unverifiedEmail.wait .verify:hover, .SettingsView .settingsWindow #settingsTab .setting .emailLine span.unverifiedEmail.wait .sendVerificationEmail:hover {
+            width: 0;
+            padding: 3px 0;
+            transition: width 0.3s ease;
+            -webkit-transition: width 0.3s ease; }
+        .SettingsView .settingsWindow #settingsTab .setting .emailLine span.unverifiedEmail {
+          display: inline-block;
+          vertical-align: middle;
+          border-radius: 4px;
+          text-align: center;
+          color: white;
+          border-color: orange;
+          cursor: pointer;
+          overflow: hidden;
+          font-size: 14px;
+          width: fit-content;
+          margin-top: 4px;
+          white-space: nowrap; }
+          .SettingsView .settingsWindow #settingsTab .setting .emailLine span.unverifiedEmail .verify {
+            display: inline-block;
+            height: 28px;
+            max-height: 28px;
+            width: 80px;
+            background-color: orange;
+            padding: 3px;
+            overflow: hidden;
+            transition: width 0.3s ease; }
+          .SettingsView .settingsWindow #settingsTab .setting .emailLine span.unverifiedEmail .sendVerificationEmail {
+            display: inline-block;
+            height: 28px;
+            max-height: 28px;
+            background-color: #373b60;
+            padding: 3px 0;
+            width: 0;
+            overflow: hidden;
+            transition: width 0.3s ease; }
+          .SettingsView .settingsWindow #settingsTab .setting .emailLine span.unverifiedEmail:hover .verify {
+            width: 0;
+            padding: 3px 0;
+            transition: width 0.3s ease; }
+          .SettingsView .settingsWindow #settingsTab .setting .emailLine span.unverifiedEmail:hover .sendVerificationEmail {
+            width: 150px;
+            padding: 3px;
+            transition: width 0.3s ease; }
+        .SettingsView .settingsWindow #settingsTab .setting .emailLine .removeEmail, .SettingsView .settingsWindow #settingsTab .setting .emailLine .emailInfo {
+          margin-top: 4px;
+          font-size: 18px;
+          visibility: hidden;
+          line-height: 20px;
+          vertical-align: middle;
+          opacity: 0;
+          overflow: hidden;
+          -webkit-transition: opacity 0.2s ease, visibility 0.2s ease;
+          transition: opacity 0.2s ease, visibility 0.2s ease; }
+          .SettingsView .settingsWindow #settingsTab .setting .emailLine .removeEmail .info, .SettingsView .settingsWindow #settingsTab .setting .emailLine .emailInfo .info {
+            opacity: 0;
+            visibility: hidden;
+            overflow: hidden;
+            display: block;
+            width: auto;
+            max-width: 140px;
+            height: auto;
+            max-height: 70px;
+            position: fixed;
+            margin-top: -90px;
+            margin-left: 10px;
+            border-radius: 5px;
+            transition: opacity 0.3s;
+            transform: scale(0.2);
+            font-family: "Raleway", "Source Sans Pro", sans-serif;
+            background-color: white;
+            color: #373b60;
+            padding: 5px;
+            font-size: 11px; }
+          .SettingsView .settingsWindow #settingsTab .setting .emailLine .removeEmail:hover, .SettingsView .settingsWindow #settingsTab .setting .emailLine .emailInfo:hover {
+            cursor: pointer; }
+            .SettingsView .settingsWindow #settingsTab .setting .emailLine .removeEmail:hover .info, .SettingsView .settingsWindow #settingsTab .setting .emailLine .emailInfo:hover .info {
+              transition: opacity 0.3s, transform 0.5s cubic-bezier(0.62, -0.66, 0.27, 1.63);
+              transform: scale(1);
+              visibility: visible;
+              opacity: 1; }
+        .SettingsView .settingsWindow #settingsTab .setting .emailLine:hover .removeEmail, .SettingsView .settingsWindow #settingsTab .setting .emailLine:hover .emailInfo {
+          visibility: visible;
+          opacity: 1;
+          -webkit-transition: opacity 0.2s ease, visibility 0.2s ease;
+          transition: opacity 0.2s ease, visibility 0.2s ease; }
+        .SettingsView .settingsWindow #settingsTab .setting .emailLine .email-loading {
+          display: none; }
+        .SettingsView .settingsWindow #settingsTab .setting .emailLine .email-loading.show {
+          display: inline-block !important;
+          font-size: 12px;
+          margin: 0;
+          width: 20px;
+          height: 20px; }
+        .SettingsView .settingsWindow #settingsTab .setting .emailLine .email-sent {
+          display: none;
+          font-size: 10px;
+          margin: 0; }
+          .SettingsView .settingsWindow #settingsTab .setting .emailLine .email-sent i {
+            color: green; }
+        .SettingsView .settingsWindow #settingsTab .setting .emailLine .email-sent.show {
+          display: inline-block !important; }
+        .SettingsView .settingsWindow #settingsTab .setting .emailLine .sk-fading-circle {
+          margin: 100px auto;
+          width: 40px;
+          height: 40px;
+          position: relative; }
+          .SettingsView .settingsWindow #settingsTab .setting .emailLine .sk-fading-circle span {
+            width: 100px;
+            position: absolute;
+            margin-top: 4px; }
+          .SettingsView .settingsWindow #settingsTab .setting .emailLine .sk-fading-circle .sk-circle {
+            margin-top: 10px;
+            margin-left: 95px; }
+            .SettingsView .settingsWindow #settingsTab .setting .emailLine .sk-fading-circle .sk-circle:before {
+              background-color: #333; }
+        .SettingsView .settingsWindow #settingsTab .setting .newEmailInput, .SettingsView .settingsWindow #settingsTab .setting .newEmail {
+          visibility: hidden;
+          cursor: pointer;
+          overflow: hidden;
+          height: 0;
+          opacity: 0;
+          transition: opacity 0.3s ease, visibility 0.3s ease; }
+        .SettingsView .settingsWindow #settingsTab .setting .newEmail {
+          margin-left: 10px;
+          width: fit-content; }
+        .SettingsView .settingsWindow #settingsTab .setting .newEmailInput.show, .SettingsView .settingsWindow #settingsTab .setting .newEmail.show {
+          visibility: visible;
+          height: auto;
+          opacity: 1;
+          transition: opacity 0.3s ease, visibility 0.3s ease; }
+      .SettingsView .settingsWindow #settingsTab .setting.show {
+        transition: height 0.3s ease;
+        -webkit-transition: height 0.3s ease;
+        height: auto; }
+      .SettingsView .settingsWindow #settingsTab .sectionHeader {
+        outline: none;
+        padding-top: 1%;
+        padding-bottom: 1%; }
+        .SettingsView .settingsWindow #settingsTab .sectionHeader .smallDescription {
+          display: inline-block;
+          font-size: smaller;
+          font-weight: 200;
+          margin-bottom: 0px; }
+        .SettingsView .settingsWindow #settingsTab .sectionHeader p.smallDescription {
+          margin-left: 10px; }
+        .SettingsView .settingsWindow #settingsTab .sectionHeader p.sectionDescription {
+          display: inline-block;
+          cursor: pointer;
+          margin-left: 5px;
+          font-weight: 600;
+          margin-bottom: 0; }
+        .SettingsView .settingsWindow #settingsTab .sectionHeader i.fa-caret-right {
+          cursor: pointer;
+          -webkit-transition: all 0.3s ease;
+          transition: all 0.3s ease; }
+        .SettingsView .settingsWindow #settingsTab .sectionHeader i.fa-caret-right.down {
+          -webkit-transition: all 0.3s ease;
+          transition: all 0.3s ease;
+          -ms-transform: rotate(90deg);
+          /* IE 9 */
+          -webkit-transform: rotate(90deg);
+          /* Chrome, Safari, Opera */
+          transform: rotate(90deg); }
+      .SettingsView .settingsWindow #settingsTab .sectionContent {
+        padding-left: 2%;
+        padding-right: 2%;
+        overflow: hidden; }
+
+.checkBox {
+  display: none; }
+
+.slider {
+  display: inline-block;
+  width: 30px;
+  height: 17px;
+  position: absolute;
+  cursor: pointer;
+  border-radius: 17px;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s; }
+
+.slider:before {
+  position: absolute;
+  border-radius: 50%;
+  content: "";
+  height: 13px;
+  width: 13px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s; }
+
+.checkBox:checked + .slider {
+  background-color: #373b60; }
+
+.checkBox:focus + .slider {
+  box-shadow: 0 0 1px #373b60; }
+
+.checkBox:checked + .slider:before {
+  -webkit-transform: translateX(13px);
+  -ms-transform: translateX(13px);
+  transform: translateX(13px); }
+
+@media screen and (max-width: 771px) {
+  .SettingsView .settingsWindow {
+    width: 90%; } }
+
+/*# sourceMappingURL=settingsView.css.map */

@@ -7,8 +7,8 @@ Error: File to import not found or unreadable: variables.
 2: 
 3: #downloadExtension {
 4: 	text-align: center;
-5: 	width: 80%;
-6: 	.title {
+5: 	width: 500px;
+6: 	max-width: 45%;
 
 Backtrace:
 /home/nicetwice/EASE-PROJECT/Ease/WebContent/scss/UIElements/downloadExtension.scss:1
@@ -49,4 +49,4 @@ Backtrace:
 body:before {
   white-space: pre;
   font-family: monospace;
-  content: "Error: File to import not found or unreadable: variables.\A        Load path: /home/nicetwice/EASE-PROJECT/Ease/WebContent/scss/UIElements\A         on line 1 of /home/nicetwice/EASE-PROJECT/Ease/WebContent/scss/UIElements/downloadExtension.scss\A \A 1: @import 'variables';\A 2: \A 3: #downloadExtension {\A 4: 	text-align: center;\A 5: 	width: 80%;\A 6: 	.title {"; }
+  content: "Error: File to import not found or unreadable: variables.\A        Load path: /home/nicetwice/EASE-PROJECT/Ease/WebContent/scss/UIElements\A         on line 1 of /home/nicetwice/EASE-PROJECT/Ease/WebContent/scss/UIElements/downloadExtension.scss\A \A 1: @import 'variables';\A 2: \A 3: #downloadExtension {\A 4: 	text-align: center;\A 5: 	width: 500px;\A 6: 	max-width: 45%;"; }
