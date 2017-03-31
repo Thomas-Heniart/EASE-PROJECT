@@ -3,7 +3,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/xhtml1-transitional.dtd">
-<html xmlns="http://w3.org/1999/xhtml" xmlns:og="http://ogp.me/ns#	">
+<html xmlns="http://w3.org/1999/xhtml" xmlns:og="http://ogp.me/ns#">
 <head>
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 	<meta http-equiv="Content-Type" contentType="text/html; charset=UTF-8" />
@@ -154,7 +154,7 @@ pageEncoding="UTF-8"%>
 			<script src="js/checkConnection.js" async></script>
 		<script type="text/javascript">
 			$(document).ready(function(){
-				asyncLoading.loadHtml({urls:['/templates/Footer.jsp'], appendTo : '#onComputer'});
+				asyncLoading.loadHtml({urls:['/templates/Footer.html'], appendTo : '#onComputer'});
 				asyncLoading.loadScripts({urls: ['/js/footer.js'], async: true});
 			});
 			</script>

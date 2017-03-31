@@ -41,7 +41,7 @@ pageEncoding="UTF-8"%>
 	<nav id="mainNav" class="navbar navbar-default navbar-custom navbar-fixed-top">
 		<div class="container">
 			<div class="navbar-header page-scroll">
-				<a class="navbar-brand page-scroll" href="header"><img src="resources/landing/ease-white-logo.png" /></a>
+				<a class="navbar-brand page-scroll" href="header"><img src="resources/landing/ease-white-logo.svg" /></a>
 			</div>
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -373,12 +373,26 @@ pageEncoding="UTF-8"%>
 		<%@ include file="templates/landingPage/landingFooter.jsp" %>
 		<%@ include file="templates/landingPage/registrationPopup.jsp" %>	
 	</body>
-	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
-	<link rel="stylesheet" href="css/default_style.css" />
-	<link rel="stylesheet" href="css/bootstrap.css" />
-	<link rel="stylesheet" href="css/landingPage.css" />
-	<link rel="stylesheet" type="text/css" href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
-
+	<noscript id="deferred-styles">
+		<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
+		<link rel="stylesheet" href="css/default_style.css" />
+		<link rel="stylesheet" href="css/bootstrap.css" />
+		<link rel="stylesheet" href="css/landingPage.css" />
+		<link rel="stylesheet" type="text/css" href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
+	</noscript>
+	<script>
+		var loadDeferredStyles = function() {
+			var addStylesNode = document.getElementById("deferred-styles");
+			var replacement = document.createElement("div");
+			replacement.innerHTML = addStylesNode.textContent;
+			document.body.appendChild(replacement)
+			addStylesNode.parentElement.removeChild(addStylesNode);
+		};
+		var raf = requestAnimationFrame || mozRequestAnimationFrame ||
+		webkitRequestAnimationFrame || msRequestAnimationFrame;
+		if (raf) raf(function() { window.setTimeout(loadDeferredStyles, 0); });
+		else window.addEventListener('load', loadDeferredStyles);
+	</script>
 	<script src="/js/thirdParty/jquery1.12.4.js"></script>
 	<script src="/js/thirdParty/bootstrap.js"></script>
 	<script src="/jsMinified.v00000/basic-utils.js"></script>
