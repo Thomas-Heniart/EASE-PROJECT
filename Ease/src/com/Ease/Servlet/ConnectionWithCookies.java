@@ -1,7 +1,6 @@
 package com.Ease.Servlet;
 
 import java.io.IOException;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,7 +15,6 @@ import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 import com.Ease.websocket.WebsocketMessage;
-import com.Ease.websocket.WebsocketSession;
 /**
  * Servlet implementation class ConnectionServlet
  */
@@ -41,10 +39,7 @@ public class ConnectionWithCookies extends HttpServlet {
 		
 		String sessionId = sm.getServletParam("sessionId", false);
 		String token = sm.getServletParam("token",false);
-		String socketId = sm.getServletParam("socketId", true);
 		// --
-		@SuppressWarnings("unchecked")
-		Map<String, WebsocketSession> sessionWebsockets = (Map<String, WebsocketSession>)session.getAttribute("sessionWebsockets");
 		boolean success = false;
 		try{
 			if(user != null){
@@ -57,9 +52,6 @@ public class ConnectionWithCookies extends HttpServlet {
 				SessionSave sessionSave = SessionSave.loadSessionSave(sessionId, token, sm);
 				user = User.loadUserFromCookies(sessionSave, sm);
 				session.setAttribute("user", user);
-				sm.setSocketId(socketId);
-				sm.addWebsockets(sessionWebsockets);
-				user.putAllSockets(sessionWebsockets);
 				sm.addToSocket(WebsocketMessage.connectionMessage());
 				success = true;
 				sm.setResponse(ServletManager.Code.Success,"Connected with cookies.");

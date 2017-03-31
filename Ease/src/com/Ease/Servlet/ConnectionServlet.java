@@ -57,7 +57,6 @@ public class ConnectionServlet extends HttpServlet {
 		// Get Parameters
 		String email = sm.getServletParam("email", true);
 		String password = sm.getServletParam("password", false);
-		String socketId = sm.getServletParam("socketId", true);
 		// --
 		Map<String, WebsocketSession> sessionWebsockets = (Map<String, WebsocketSession>)session.getAttribute("sessionWebsockets");
 		String client_ip = getIpAddr(request);
@@ -70,15 +69,12 @@ public class ConnectionServlet extends HttpServlet {
 					sm.setResponse(ServletManager.Code.ClientWarning, "Wrong email or password.");
 				else if (password == null || password.isEmpty())
 					sm.setResponse(ServletManager.Code.ClientWarning, "Wrong email or password.");
-				else if (ServletManager.debug == false && (socketId == null || socketId.isEmpty()))
-					sm.setResponse(ServletManager.Code.ClientWarning, "Connection failed. Please try again.");
 				else {
 					user = User.loadUser(email, password, sm);
 					session.setAttribute("user", user);
 					removeIpFromDataBase(client_ip,db);
 					sm.setResponse(ServletManager.Code.Success, "Successfully connected.");
 					user.putAllSockets(sessionWebsockets);
-					sm.setSocketId(socketId);
 					sm.addWebsockets(sessionWebsockets);
 					sm.addToSocket(WebsocketMessage.connectionMessage());
 				}

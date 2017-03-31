@@ -224,7 +224,7 @@ public class ServletManager {
 		
 		try {
 			//System.out.println("wMessages loop start");
-			for (WebsocketMessage msg : this.messages) {
+			/*for (WebsocketMessage msg : this.messages) {
 				websockets.forEach((key, socket) -> {
 					System.out.println( (user == null ? "No user" : user.getFirstName()) + " client socketId : " + key + ", sm socketId : " + socketId);
 					if (msg.getWho() == WebsocketMessage.Who.ALLTABS ||
@@ -239,7 +239,7 @@ public class ServletManager {
 							}
 						}
 				});
-			}
+			}*/
 			//System.out.println("wMessages loop done");
 			if (this.redirectUrl != null) {
 				System.out.println("redirect to "+this.redirectUrl);

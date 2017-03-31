@@ -10,7 +10,7 @@
 		</div>
 		<div class="bodysHandler">
 			<div class="popupBody" id="2">
-				<form class="handler" action="register">
+				<form class="handler" action="${param.formAction}">
 					<div class="row">
 						<p class="row-heading">
 							<fmt:message key="landing.signup-popup.page-2.password-title"/>

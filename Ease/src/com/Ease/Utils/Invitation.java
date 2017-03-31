@@ -80,12 +80,12 @@ public class Invitation {
 			sendInvitation(email, name, iesegStudentGroup, sm);
 			return true;
 		}
-		if (email.endsWith("@edhec.com")) {
+		/*if (email.endsWith("@edhec.com")) {
 			GroupManager groupManager = (GroupManager) sm.getContextAttr("groupManager");
 			Group edhecStudentGroup = groupManager.getGroupFromDBid("22");
 			sendInvitation(email, name, edhecStudentGroup, sm);
 			return true;
-		}
+		}*/
 			return false;
 	}
 
