@@ -34,7 +34,7 @@ pageEncoding="UTF-8"%>
 
 	<link rel="manifest" href="manifest.json">
 
-	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
+	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
 	<link rel="stylesheet" href="css/default_style.css" />
 	<link rel="stylesheet" href="css/bootstrap.css" />
 	<link rel="stylesheet" href="css/landingPage.css" />
