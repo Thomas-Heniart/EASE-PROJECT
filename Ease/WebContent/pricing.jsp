@@ -177,7 +177,7 @@ pageEncoding="UTF-8"%>
 	<%@ include file="templates/landingPage/landingFooter.jsp" %>
 	<%@ include file="templates/landingPage/registrationPopup.jsp" %>
 	<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	src="/js/jquery1.12.4.js"></script>
 	<script src="js/languageChooser.js"></script>
 	<script src="js/basic-utils.js"></script>
 	<script src="js/postHandler.js"></script>

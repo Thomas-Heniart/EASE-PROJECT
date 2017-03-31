@@ -36,6 +36,11 @@ pageEncoding="UTF-8"%>
 
 	<link rel="manifest" href="manifest.json">
 
+	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
+	<link rel="stylesheet" href="css/default_style.css" />
+	<link rel="stylesheet" href="css/bootstrap.css" />
+	<link rel="stylesheet" href="css/landingPage.css" />
+	<link rel="stylesheet" type="text/css" href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
 </head>
 
 <body id="landingBody" class="school">
@@ -223,12 +228,6 @@ pageEncoding="UTF-8"%>
 	<%@ include file="templates/landingPage/landingFooter.jsp" %>
 	<%@ include file="templates/landingPage/registrationPopup.jsp" %>
 </body>
-<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-<link rel="stylesheet" href="css/default_style.css" />
-<link rel="stylesheet" href="css/bootstrap.css" />
-<link rel="stylesheet" href="css/landingPage.css" />
-<link rel="stylesheet" type="text/css" href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
-
 <script src="/js/thirdParty/jquery1.12.4.js"></script>
 <script src="/js/thirdParty/bootstrap.js"></script>
 <script src="/jsMinified.v00000/basic-utils.js"></script>

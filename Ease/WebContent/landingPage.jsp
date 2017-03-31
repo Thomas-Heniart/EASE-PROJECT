@@ -34,6 +34,11 @@ pageEncoding="UTF-8"%>
 
 	<link rel="manifest" href="manifest.json">
 
+	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
+	<link rel="stylesheet" href="css/default_style.css" />
+	<link rel="stylesheet" href="css/bootstrap.css" />
+	<link rel="stylesheet" href="css/landingPage.css" />
+	<link rel="stylesheet" type="text/css" href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
 </head>
 
 <body id="landingBody">
@@ -372,75 +377,54 @@ pageEncoding="UTF-8"%>
 		</section>
 		<%@ include file="templates/landingPage/landingFooter.jsp" %>
 		<%@ include file="templates/landingPage/registrationPopup.jsp" %>	
-	</body>
-	<noscript id="deferred-styles">
-		<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
-		<link rel="stylesheet" href="css/default_style.css" />
-		<link rel="stylesheet" href="css/bootstrap.css" />
-		<link rel="stylesheet" href="css/landingPage.css" />
-		<link rel="stylesheet" type="text/css" href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
-	</noscript>
-	<script>
-		var loadDeferredStyles = function() {
-			var addStylesNode = document.getElementById("deferred-styles");
-			var replacement = document.createElement("div");
-			replacement.innerHTML = addStylesNode.textContent;
-			document.body.appendChild(replacement)
-			addStylesNode.parentElement.removeChild(addStylesNode);
-		};
-		var raf = requestAnimationFrame || mozRequestAnimationFrame ||
-		webkitRequestAnimationFrame || msRequestAnimationFrame;
-		if (raf) raf(function() { window.setTimeout(loadDeferredStyles, 0); });
-		else window.addEventListener('load', loadDeferredStyles);
+		<script src="/js/thirdParty/jquery1.12.4.js"></script>
+		<script src="/js/thirdParty/bootstrap.js"></script>
+		<script src="/js/jquery.complexify.min.js" defer></script>
+		<script src="/js/popups/registrationPopup.js" defer></script>
+		<script src="/js/landingPage.js" async></script>
+		<script src="/jsMinified.v00000/basic-utils.js" async></script>
+		<script src="/js/postHandler.js" async></script>
+		<script src="/js/languageChooser.js" async></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				if ($('#2').find("input[name='email']").val() != 'null' 
+					&& $('#2').find("input[name='email']").val().length){
+					easeSignUpPopup.openRegistration();
+			}
+			$("#connexionButton").click(function() {
+				easeTracker.trackEvent("HomepageLogin");
+			});
+			$('.signUpButton').click(function(){
+				easeTracker.trackEvent($(this).attr("trackEvent"));
+				easeSignUpPopup.open();
+			});
+		});
 	</script>
-	<script src="/js/thirdParty/jquery1.12.4.js"></script>
-	<script src="/js/thirdParty/bootstrap.js"></script>
-	<script src="/jsMinified.v00000/basic-utils.js"></script>
-	<script src="/js/postHandler.js"></script>
-	<script src="/js/websocket.js"></script>
-	<script src="/js/languageChooser.js"></script>
-	<script src="/js/jquery.complexify.min.js"></script>
-	<script src="/js/popups/registrationPopup.js"></script>
-	<script src="/js/landingPage.js"></script>
 	<script src="/js/tracker.js"></script>
 	<script type="text/javascript">
-		$(document).ready(function(){
-			if ($('#2').find("input[name='email']").val() != 'null' 
-				&& $('#2').find("input[name='email']").val().length){
-				easeSignUpPopup.openRegistration();
-		}
-		$("#connexionButton").click(function() {
-			easeTracker.trackEvent("HomepageLogin");
-		});
-		$('.signUpButton').click(function(){
-			easeTracker.trackEvent($(this).attr("trackEvent"));
-			easeSignUpPopup.open();
-		});
-	});
-</script>
-<script type="text/javascript">
-	$crisp=[];CRISP_WEBSITE_ID="6e9fe14b-66f7-487c-8ac9-5912461be78a";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.im/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
-</script>
-<script type="text/javascript">
-	(function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script");r.type="text/javascript";
-		r.async=true;r.src="https://d24n15hnbwhuhn.cloudfront.net/libs/amplitude-3.0.1-min.gz.js";
-		r.onload=function(){e.amplitude.runQueuedFunctions()};var i=t.getElementsByTagName("script")[0];
-		i.parentNode.insertBefore(r,i);function s(e,t){e.prototype[t]=function(){this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));
-			return this}}var o=function(){this._q=[];return this};var a=["add","append","clearAll","prepend","set","setOnce","unset"];
-			for(var u=0;u<a.length;u++){s(o,a[u])}n.Identify=o;var c=function(){this._q=[];return this;
-			};var p=["setProductId","setQuantity","setPrice","setRevenueType","setEventProperties"];
-			for(var l=0;l<p.length;l++){s(c,p[l])}n.Revenue=c;var d=["init","logEvent","logRevenue","setUserId","setUserProperties","setOptOut","setVersionName","setDomain","setDeviceId","setGlobalUserProperties","identify","clearUserProperties","setGroup","logRevenueV2","regenerateDeviceId"];
-				function v(e){function t(t){e[t]=function(){e._q.push([t].concat(Array.prototype.slice.call(arguments,0)));
-				}}for(var n=0;n<d.length;n++){t(d[n])}}v(n);n.getInstance=function(e){e=(!e||e.length===0?"$default_instance":e).toLowerCase();
-				if(!n._iq.hasOwnProperty(e)){n._iq[e]={_q:[]};v(n._iq[e])}return n._iq[e]};e.amplitude=n;
-			})(window,document);
+		$crisp=[];CRISP_WEBSITE_ID="6e9fe14b-66f7-487c-8ac9-5912461be78a";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.im/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+	</script>
+	<script type="text/javascript">
+		(function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script");r.type="text/javascript";
+			r.async=true;r.src="https://d24n15hnbwhuhn.cloudfront.net/libs/amplitude-3.0.1-min.gz.js";
+			r.onload=function(){e.amplitude.runQueuedFunctions()};var i=t.getElementsByTagName("script")[0];
+			i.parentNode.insertBefore(r,i);function s(e,t){e.prototype[t]=function(){this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));
+				return this}}var o=function(){this._q=[];return this};var a=["add","append","clearAll","prepend","set","setOnce","unset"];
+				for(var u=0;u<a.length;u++){s(o,a[u])}n.Identify=o;var c=function(){this._q=[];return this;
+				};var p=["setProductId","setQuantity","setPrice","setRevenueType","setEventProperties"];
+				for(var l=0;l<p.length;l++){s(c,p[l])}n.Revenue=c;var d=["init","logEvent","logRevenue","setUserId","setUserProperties","setOptOut","setVersionName","setDomain","setDeviceId","setGlobalUserProperties","identify","clearUserProperties","setGroup","logRevenueV2","regenerateDeviceId"];
+					function v(e){function t(t){e[t]=function(){e._q.push([t].concat(Array.prototype.slice.call(arguments,0)));
+					}}for(var n=0;n<d.length;n++){t(d[n])}}v(n);n.getInstance=function(e){e=(!e||e.length===0?"$default_instance":e).toLowerCase();
+					if(!n._iq.hasOwnProperty(e)){n._iq[e]={_q:[]};v(n._iq[e])}return n._iq[e]};e.amplitude=n;
+				})(window,document);
 
-			/* Prod */
+				/* Prod */
 						//amplitude.getInstance().init("74f6ebfba0c7743a0c63012dc3a9fef0");
 
 						/* Test */
 						amplitude.getInstance().init("73264447f97c4623fb38d92b9e7eaeea");
 						easeTracker.trackEvent("HomepageVisit");
 					</script>
+				</body>
 
-					</html>
+				</html>
