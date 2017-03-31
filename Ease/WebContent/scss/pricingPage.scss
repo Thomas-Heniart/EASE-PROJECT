@@ -21,7 +21,14 @@ section#pricing {
 		#free {
 			.offerType, .priceRow, .offerTip {
 				border-right: 1px solid #ccc;
-			}			
+			}
+			.cta {
+				.floatingTip {
+					color: inherit;
+					font-weight: normal;
+					font-size: 14px;
+				}
+			}
 		}
 		.row {
 			h4 {
@@ -45,6 +52,10 @@ section#pricing {
 			.offerTip {
 				p {
 					line-height: inherit;
+					margin-bottom: 20px;
+					&:last-child {
+						margin-bottom: 0px;
+					}
 				}
 			}
 			.cta {

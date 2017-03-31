@@ -229,14 +229,13 @@ pageEncoding="UTF-8"%>
 	<%@ include file="templates/landingPage/registrationPopup.jsp" %>
 </body>
 <script src="/js/thirdParty/jquery1.12.4.js"></script>
-<script src="/js/thirdParty/bootstrap.js"></script>
-<script src="/jsMinified.v00000/basic-utils.js"></script>
-<script src="/js/postHandler.js"></script>
-<script src="/js/websocket.js"></script>
-<script src="/js/languageChooser.js"></script>
-<script src="/js/jquery.complexify.min.js"></script>
-<script src="/js/popups/registrationPopup.js"></script>
-<script src="/js/landingPage.js"></script>
+<script src="/js/thirdParty/bootstrap.js" defer></script>
+<script src="/js/jquery.complexify.min.js" defer></script>
+<script src="/js/popups/registrationPopup.js" defer></script>
+<script src="/js/landingPage.js" defer></script>
+<script src="/jsMinified.v00000/basic-utils.js" async></script>
+<script src="/js/postHandler.js" async></script>
+<script src="/js/languageChooser.js" async></script>
 <script src="/js/tracker.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){

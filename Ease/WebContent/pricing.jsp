@@ -11,6 +11,7 @@ pageEncoding="UTF-8"%>
 <html lang="${language}">
 <head>
 	<title> Ease.space | Pricing</title>
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1" />
 	<!-- Description shown in Google -->
 	<meta name="description" content="Ease est la homepage qui vous débarrasse des mots de passe. En 1 clic, soyez connecté à vos sites web automatiquement." />
 	<!-- Facebook metadata -->
@@ -75,10 +76,14 @@ pageEncoding="UTF-8"%>
 						</div>
 					</div>
 					<div class="row text-center offerTip">
-						<fmt:message key="pricing.free.sub-tip"/>
+						<p><fmt:message key="pricing.free.sub-tip"/></p>
+						<p>9,99€ <fmt:message key="pricing.free.sub-tip-2"/></p>
 					</div>
 					<div class="row text-center cta">
 						<div class="col-lg-8 col-lg-offset-2">
+							<p class="floatingTip">
+								<fmt:message key="pricing.free.sub-tip-3"/>
+							</p>
 							<button type="submit" class="btn btn-block btn-lg btn-success">
 								<fmt:message key="pricing.free.button-text"/>
 							</button>
@@ -142,12 +147,13 @@ pageEncoding="UTF-8"%>
 						</div>
 					</div>
 					<div class="row text-center offerTip">
-						<fmt:message key="pricing.pro.sub-tip"/>
+						<p><fmt:message key="pricing.pro.sub-tip"/></p>
+						<p>14,99€ <fmt:message key="pricing.pro.sub-tip-2"/></p>
 					</div>
 					<div class="row text-center cta">
 						<div class="col-lg-8 col-lg-offset-2">
 							<p class="floatingTip">
-								<fmt:message key="pricing.pro.sub-tip-2"/>
+								<fmt:message key="pricing.pro.sub-tip-3"/>
 							</p>
 							<a href="/companyContact" type="submit" class="btn btn-block btn-lg btn-success">
 								<fmt:message key="pricing.pro.button-text"/>
@@ -167,6 +173,8 @@ pageEncoding="UTF-8"%>
 								<li><p><fmt:message key="pricing.pro.features.4"/></p></li>
 								<li><p><fmt:message key="pricing.pro.features.5"/></p></li>
 								<li><p><fmt:message key="pricing.pro.features.6"/></p></li>
+								<li><p><fmt:message key="pricing.pro.features.7"/></p></li>
+								<li><p><fmt:message key="pricing.pro.features.8"/></p></li>
 							</ul>
 						</div>
 					</div>
@@ -190,7 +198,7 @@ pageEncoding="UTF-8"%>
 		});
 	</script>
 	<script type="text/javascript">
-	$crisp=[];CRISP_WEBSITE_ID="6e9fe14b-66f7-487c-8ac9-5912461be78a";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.im/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+		$crisp=[];CRISP_WEBSITE_ID="6e9fe14b-66f7-487c-8ac9-5912461be78a";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.im/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
 	</script>
 	<script src="js/tracker.js"></script>
 	<script type="text/javascript">
