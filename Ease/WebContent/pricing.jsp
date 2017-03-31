@@ -72,7 +72,7 @@ pageEncoding="UTF-8"%>
 					</div>
 					<div class="row text-center priceRow">
 						<div class="price">
-							<img src="/resources/images/0e.svg" class="priceImage center-block"/>
+							<img src="/resources/images/8_32e.svg" class="priceImage center-block"/>
 						</div>
 					</div>
 					<div class="row text-center offerTip">
@@ -143,7 +143,7 @@ pageEncoding="UTF-8"%>
 					</div>
 					<div class="row text-center priceRow">
 						<div class="price">
-							<img src="/resources/images/5_99e.svg" class="priceImage center-block"/>
+							<img src="/resources/images/12_49e.svg" class="priceImage center-block"/>
 						</div>
 					</div>
 					<div class="row text-center offerTip">

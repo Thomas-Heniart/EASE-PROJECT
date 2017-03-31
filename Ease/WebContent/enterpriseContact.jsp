@@ -88,7 +88,7 @@ pageEncoding="UTF-8"%>
 			<div class="row">
 				<div class="col-lg-12 text-center">
 					<h1>
-						Ease Pro
+						<fmt:message key="companyContact.title" />
 					</h1>
 				</div>
 			</div>
