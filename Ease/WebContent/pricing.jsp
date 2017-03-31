@@ -187,7 +187,7 @@ pageEncoding="UTF-8"%>
 	<script
 	src="/js/jquery1.12.4.js"></script>
 	<script src="js/languageChooser.js"></script>
-	<script src="js/basic-utils.js"></script>
+	<script src="/jsMinified.v00000/basic-utils.js" async></script>
 	<script src="js/postHandler.js"></script>
 	<script src="js/websocket.js"></script>
 	<script src="js/jquery.complexify.min.js"></script>
