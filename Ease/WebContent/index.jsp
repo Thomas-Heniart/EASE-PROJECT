@@ -15,6 +15,7 @@ pageEncoding="UTF-8"%>
 	<meta property="og:url" content="https://ease.space/" />
 	<meta property="og:type" content="website" />
 	<meta property="og:title" content="Ease.space" />
+	<meta property="og:logo" content="ease.space/resources/icons/APPEASE.png" />
 	<meta property="og:description" content="Ease est la homepage qui vous débarrasse des mots de passe. En 1 clic, soyez connecté à vos sites web automatiquement." />
 	<meta property="og:image" content="https://ease.space/resources/images/fbmeta-fr.png" />
 	<!-- Twitter metadata -->
