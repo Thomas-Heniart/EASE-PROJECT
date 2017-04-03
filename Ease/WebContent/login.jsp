@@ -240,7 +240,7 @@ response.sendRedirect("/");
 	<div id="onMobile" style="display:none;">
 		<%@ include file="templates/Mobile.html" %>
 	</div>
-	<script src="js/jquery1.12.4.js" async></script>
+	<script src="js/jquery1.12.4.js"></script>
 	<script src="js/postHandler.js" async></script>
 	<script src="js/basic-utils.js" async></script>
 	<script src="js/isMobile.js" async></script>
