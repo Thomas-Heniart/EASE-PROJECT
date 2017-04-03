@@ -58,7 +58,7 @@
 	</c:if>
 </div>
 <script type="text/javascript">
-	$(document).ready(function(){
+	window.addEventListener('load',function(){
 		var headerHeight = $('.header').height();
 
 		$('#tipsHandler #0').css({
