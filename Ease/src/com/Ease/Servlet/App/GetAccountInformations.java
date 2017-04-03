@@ -50,7 +50,7 @@ public class GetAccountInformations extends HttpServlet {
 			if (appId == null || appId.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientError, "This app does not exist");
 			App app = user.getDashboardManager().getAppWithID(Integer.parseInt(appId));
-			sm.setResponse(ServletManager.Code.Success, app.getAccoutInformationsJson().toString());
+			sm.setResponse(ServletManager.Code.Success, app.getAccountInformationsJson().toString());
 		} catch(GeneralException e) {
 			sm.setResponse(e);
 		}

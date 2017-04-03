@@ -233,7 +233,7 @@ public class App {
 		}
 	}
 
-	public JSONArray getAccoutInformationsJson() {
+	public JSONArray getAccountInformationsJson() {
 		return new JSONArray();
 	}
 }
