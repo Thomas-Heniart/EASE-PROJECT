@@ -75,7 +75,7 @@
 		</div>
 		<div class="md-overlay"></div>
 	</div>
-	<%@ include file="templates/Footer.jsp"%>
+	<%@ include file="templates/Footer.html"%>
 	<div class="la-anim-10" id="loading"></div>
 	<%@ include file="templates/ChatButton.jsp" %>
 </body>

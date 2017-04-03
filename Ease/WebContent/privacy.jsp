@@ -6,23 +6,1489 @@ pageEncoding="UTF-8"%>
   <title> Ease.space | The easiest way to connect to your professional and personal web.</title>
 	<!-- Description shown in Google -->
 	<meta name="description" content="Ease is an intuitive password manager working as a browser homepage.">
-  <style>
-    #header{margin-top:100px;} 
-    .logo a:visited, 
-    .logo a
-    {
-      color:black;
-    }
+  <style type="text/css">
+        @import url('https://themes.googleusercontent.com/fonts/css?kit=fpjTOVmNbO4Lz34iLyptLUXza5VhXqVC6o75Eld_V98');
+        body {
+        	text-align: center;
+        }
+        body p {
+        	width: 100%;
+        }
+        .lst-kix_list_4-1>li {
+            counter-increment: lst-ctn-kix_list_4-1
+        }
 
-    body {
-      max-width: 800px;
-      margin: 50px auto;
-    }
-  </style>
+        .lst-kix_list_2-1>li {
+            counter-increment: lst-ctn-kix_list_2-1
+        }
+
+        ul.lst-kix_list_1-0 {
+            list-style-type: none
+        }
+
+        .lst-kix_list_6-1>li {
+            counter-increment: lst-ctn-kix_list_6-1
+        }
+
+        ol.lst-kix_list_3-1.start {
+            counter-reset: lst-ctn-kix_list_3-1 0
+        }
+
+        ol.lst-kix_list_6-6.start {
+            counter-reset: lst-ctn-kix_list_6-6 0
+        }
+
+        .lst-kix_list_5-0>li {
+            counter-increment: lst-ctn-kix_list_5-0
+        }
+
+        ol.lst-kix_list_2-3.start {
+            counter-reset: lst-ctn-kix_list_2-3 0
+        }
+
+        ul.lst-kix_list_1-3 {
+            list-style-type: none
+        }
+
+        ul.lst-kix_list_1-4 {
+            list-style-type: none
+        }
+
+        ul.lst-kix_list_1-1 {
+            list-style-type: none
+        }
+
+        ul.lst-kix_list_1-2 {
+            list-style-type: none
+        }
+
+        ul.lst-kix_list_1-7 {
+            list-style-type: none
+        }
+
+        ul.lst-kix_list_1-8 {
+            list-style-type: none
+        }
+
+        ul.lst-kix_list_1-5 {
+            list-style-type: none
+        }
+
+        ul.lst-kix_list_1-6 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_list_5-3.start {
+            counter-reset: lst-ctn-kix_list_5-3 0
+        }
+
+        .lst-kix_list_2-3>li {
+            counter-increment: lst-ctn-kix_list_2-3
+        }
+
+        .lst-kix_list_4-3>li {
+            counter-increment: lst-ctn-kix_list_4-3
+        }
+
+        ol.lst-kix_list_4-5.start {
+            counter-reset: lst-ctn-kix_list_4-5 0
+        }
+
+        ol.lst-kix_list_3-7.start {
+            counter-reset: lst-ctn-kix_list_3-7 0
+        }
+
+        .lst-kix_list_5-2>li {
+            counter-increment: lst-ctn-kix_list_5-2
+        }
+
+        .lst-kix_list_3-2>li {
+            counter-increment: lst-ctn-kix_list_3-2
+        }
+
+        .lst-kix_list_5-0>li:before {
+            content: "" counter(lst-ctn-kix_list_5-0, decimal) ". "
+        }
+
+        ol.lst-kix_list_6-0 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_list_6-1 {
+            list-style-type: none
+        }
+
+        .lst-kix_list_5-4>li {
+            counter-increment: lst-ctn-kix_list_5-4
+        }
+
+        .lst-kix_list_5-3>li:before {
+            content: "" counter(lst-ctn-kix_list_5-3, decimal) ". "
+        }
+
+        .lst-kix_list_5-2>li:before {
+            content: "" counter(lst-ctn-kix_list_5-2, lower-roman) ". "
+        }
+
+        .lst-kix_list_5-1>li:before {
+            content: "" counter(lst-ctn-kix_list_5-1, lower-latin) ". "
+        }
+
+        .lst-kix_list_5-7>li:before {
+            content: "" counter(lst-ctn-kix_list_5-7, lower-latin) ". "
+        }
+
+        .lst-kix_list_5-6>li:before {
+            content: "" counter(lst-ctn-kix_list_5-6, decimal) ". "
+        }
+
+        .lst-kix_list_5-8>li:before {
+            content: "" counter(lst-ctn-kix_list_5-8, lower-roman) ". "
+        }
+
+        ol.lst-kix_list_6-6 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_list_6-7 {
+            list-style-type: none
+        }
+
+        .lst-kix_list_5-4>li:before {
+            content: "" counter(lst-ctn-kix_list_5-4, lower-latin) ". "
+        }
+
+        ol.lst-kix_list_6-8 {
+            list-style-type: none
+        }
+
+        .lst-kix_list_5-5>li:before {
+            content: "" counter(lst-ctn-kix_list_5-5, lower-roman) ". "
+        }
+
+        ol.lst-kix_list_6-2 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_list_6-3 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_list_6-4 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_list_6-5 {
+            list-style-type: none
+        }
+
+        .lst-kix_list_6-1>li:before {
+            content: "" counter(lst-ctn-kix_list_6-1, lower-latin) ". "
+        }
+
+        .lst-kix_list_6-3>li:before {
+            content: "" counter(lst-ctn-kix_list_6-3, decimal) ". "
+        }
+
+        .lst-kix_list_6-5>li {
+            counter-increment: lst-ctn-kix_list_6-5
+        }
+
+        .lst-kix_list_6-8>li {
+            counter-increment: lst-ctn-kix_list_6-8
+        }
+
+        .lst-kix_list_6-0>li:before {
+            content: "" counter(lst-ctn-kix_list_6-0, decimal) ". "
+        }
+
+        .lst-kix_list_6-4>li:before {
+            content: "" counter(lst-ctn-kix_list_6-4, lower-latin) ". "
+        }
+
+        .lst-kix_list_3-0>li {
+            counter-increment: lst-ctn-kix_list_3-0
+        }
+
+        ol.lst-kix_list_4-0.start {
+            counter-reset: lst-ctn-kix_list_4-0 0
+        }
+
+        .lst-kix_list_3-6>li {
+            counter-increment: lst-ctn-kix_list_3-6
+        }
+
+        .lst-kix_list_6-2>li:before {
+            content: "" counter(lst-ctn-kix_list_6-2, lower-roman) ". "
+        }
+
+        .lst-kix_list_2-5>li {
+            counter-increment: lst-ctn-kix_list_2-5
+        }
+
+        .lst-kix_list_2-8>li {
+            counter-increment: lst-ctn-kix_list_2-8
+        }
+
+        ol.lst-kix_list_3-2.start {
+            counter-reset: lst-ctn-kix_list_3-2 0
+        }
+
+        .lst-kix_list_6-8>li:before {
+            content: "" counter(lst-ctn-kix_list_6-8, lower-roman) ". "
+        }
+
+        .lst-kix_list_6-5>li:before {
+            content: "" counter(lst-ctn-kix_list_6-5, lower-roman) ". "
+        }
+
+        .lst-kix_list_6-7>li:before {
+            content: "" counter(lst-ctn-kix_list_6-7, lower-latin) ". "
+        }
+
+        ol.lst-kix_list_2-4.start {
+            counter-reset: lst-ctn-kix_list_2-4 0
+        }
+
+        .lst-kix_list_6-6>li:before {
+            content: "" counter(lst-ctn-kix_list_6-6, decimal) ". "
+        }
+
+        .lst-kix_list_2-7>li:before {
+            content: " "
+        }
+
+        .lst-kix_list_2-7>li {
+            counter-increment: lst-ctn-kix_list_2-7
+        }
+
+        .lst-kix_list_2-5>li:before {
+            content: " "
+        }
+
+        ol.lst-kix_list_6-2.start {
+            counter-reset: lst-ctn-kix_list_6-2 0
+        }
+
+        ol.lst-kix_list_4-6.start {
+            counter-reset: lst-ctn-kix_list_4-6 0
+        }
+
+        ol.lst-kix_list_3-0.start {
+            counter-reset: lst-ctn-kix_list_3-0 0
+        }
+
+        .lst-kix_list_5-7>li {
+            counter-increment: lst-ctn-kix_list_5-7
+        }
+
+        ol.lst-kix_list_4-3.start {
+            counter-reset: lst-ctn-kix_list_4-3 0
+        }
+
+        .lst-kix_list_4-7>li {
+            counter-increment: lst-ctn-kix_list_4-7
+        }
+
+        ol.lst-kix_list_2-5.start {
+            counter-reset: lst-ctn-kix_list_2-5 0
+        }
+
+        .lst-kix_list_2-6>li {
+            counter-increment: lst-ctn-kix_list_2-6
+        }
+
+        .lst-kix_list_4-1>li:before {
+            content: "" counter(lst-ctn-kix_list_4-1, lower-latin) ". "
+        }
+
+        .lst-kix_list_4-3>li:before {
+            content: "" counter(lst-ctn-kix_list_4-3, decimal) ". "
+        }
+
+        .lst-kix_list_4-5>li:before {
+            content: "" counter(lst-ctn-kix_list_4-5, lower-roman) ". "
+        }
+
+        ol.lst-kix_list_5-7.start {
+            counter-reset: lst-ctn-kix_list_5-7 0
+        }
+
+        .lst-kix_list_5-5>li {
+            counter-increment: lst-ctn-kix_list_5-5
+        }
+
+        .lst-kix_list_3-5>li {
+            counter-increment: lst-ctn-kix_list_3-5
+        }
+
+        .lst-kix_list_3-4>li {
+            counter-increment: lst-ctn-kix_list_3-4
+        }
+
+        ol.lst-kix_list_4-4.start {
+            counter-reset: lst-ctn-kix_list_4-4 0
+        }
+
+        .lst-kix_list_6-4>li {
+            counter-increment: lst-ctn-kix_list_6-4
+        }
+
+        .lst-kix_list_6-3>li {
+            counter-increment: lst-ctn-kix_list_6-3
+        }
+
+        ol.lst-kix_list_2-8.start {
+            counter-reset: lst-ctn-kix_list_2-8 0
+        }
+
+        ol.lst-kix_list_6-1.start {
+            counter-reset: lst-ctn-kix_list_6-1 0
+        }
+
+        ul.lst-kix_list_2-0 {
+            list-style-type: none
+        }
+
+        .lst-kix_list_1-1>li:before {
+            content: "o  "
+        }
+
+        .lst-kix_list_1-3>li:before {
+            content: "\0025cf  "
+        }
+
+        .lst-kix_list_4-8>li {
+            counter-increment: lst-ctn-kix_list_4-8
+        }
+
+        .lst-kix_list_1-7>li:before {
+            content: "o  "
+        }
+
+        ol.lst-kix_list_5-8.start {
+            counter-reset: lst-ctn-kix_list_5-8 0
+        }
+
+        ol.lst-kix_list_2-7.start {
+            counter-reset: lst-ctn-kix_list_2-7 0
+        }
+
+        .lst-kix_list_1-5>li:before {
+            content: "\0025aa  "
+        }
+
+        .lst-kix_list_5-6>li {
+            counter-increment: lst-ctn-kix_list_5-6
+        }
+
+        .lst-kix_list_2-1>li:before {
+            content: " "
+        }
+
+        ol.lst-kix_list_6-0.start {
+            counter-reset: lst-ctn-kix_list_6-0 0
+        }
+
+        .lst-kix_list_2-3>li:before {
+            content: " "
+        }
+
+        .lst-kix_list_4-2>li {
+            counter-increment: lst-ctn-kix_list_4-2
+        }
+
+        ol.lst-kix_list_3-1 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_list_3-2 {
+            list-style-type: none
+        }
+
+        .lst-kix_list_3-1>li {
+            counter-increment: lst-ctn-kix_list_3-1
+        }
+
+        ol.lst-kix_list_3-3 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_list_3-4.start {
+            counter-reset: lst-ctn-kix_list_3-4 0
+        }
+
+        .lst-kix_list_5-1>li {
+            counter-increment: lst-ctn-kix_list_5-1
+        }
+
+        ol.lst-kix_list_3-4 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_list_3-0 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_list_2-6.start {
+            counter-reset: lst-ctn-kix_list_2-6 0
+        }
+
+        .lst-kix_list_3-0>li:before {
+            content: "" counter(lst-ctn-kix_list_3-0, decimal) ". "
+        }
+
+        .lst-kix_list_3-1>li:before {
+            content: "" counter(lst-ctn-kix_list_3-1, lower-latin) ". "
+        }
+
+        .lst-kix_list_3-2>li:before {
+            content: "" counter(lst-ctn-kix_list_3-2, lower-roman) ". "
+        }
+
+        .lst-kix_list_4-0>li {
+            counter-increment: lst-ctn-kix_list_4-0
+        }
+
+        .lst-kix_list_6-0>li {
+            counter-increment: lst-ctn-kix_list_6-0
+        }
+
+        .lst-kix_list_3-5>li:before {
+            content: "" counter(lst-ctn-kix_list_3-5, lower-roman) ". "
+        }
+
+        .lst-kix_list_3-4>li:before {
+            content: "" counter(lst-ctn-kix_list_3-4, lower-latin) ". "
+        }
+
+        .lst-kix_list_3-3>li:before {
+            content: "" counter(lst-ctn-kix_list_3-3, decimal) ". "
+        }
+
+        ol.lst-kix_list_3-5 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_list_3-6 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_list_3-7 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_list_3-8 {
+            list-style-type: none
+        }
+
+        .lst-kix_list_3-8>li:before {
+            content: "" counter(lst-ctn-kix_list_3-8, lower-roman) ". "
+        }
+
+        .lst-kix_list_3-6>li:before {
+            content: "" counter(lst-ctn-kix_list_3-6, decimal) ". "
+        }
+
+        .lst-kix_list_3-7>li:before {
+            content: "" counter(lst-ctn-kix_list_3-7, lower-latin) ". "
+        }
+
+        ol.lst-kix_list_5-0.start {
+            counter-reset: lst-ctn-kix_list_5-0 0
+        }
+
+        ol.lst-kix_list_4-2.start {
+            counter-reset: lst-ctn-kix_list_4-2 0
+        }
+
+        ol.lst-kix_list_2-2 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_list_2-3 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_list_2-4 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_list_2-5 {
+            list-style-type: none
+        }
+
+        .lst-kix_list_4-4>li {
+            counter-increment: lst-ctn-kix_list_4-4
+        }
+
+        ol.lst-kix_list_2-1 {
+            list-style-type: none
+        }
+
+        .lst-kix_list_4-8>li:before {
+            content: "" counter(lst-ctn-kix_list_4-8, lower-roman) ". "
+        }
+
+        ol.lst-kix_list_6-4.start {
+            counter-reset: lst-ctn-kix_list_6-4 0
+        }
+
+        .lst-kix_list_4-7>li:before {
+            content: "" counter(lst-ctn-kix_list_4-7, lower-latin) ". "
+        }
+
+        ol.lst-kix_list_5-6.start {
+            counter-reset: lst-ctn-kix_list_5-6 0
+        }
+
+        ol.lst-kix_list_4-1.start {
+            counter-reset: lst-ctn-kix_list_4-1 0
+        }
+
+        ol.lst-kix_list_4-8.start {
+            counter-reset: lst-ctn-kix_list_4-8 0
+        }
+
+        ol.lst-kix_list_3-3.start {
+            counter-reset: lst-ctn-kix_list_3-3 0
+        }
+
+        ol.lst-kix_list_2-6 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_list_2-7 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_list_2-8 {
+            list-style-type: none
+        }
+
+        .lst-kix_list_3-3>li {
+            counter-increment: lst-ctn-kix_list_3-3
+        }
+
+        ol.lst-kix_list_6-3.start {
+            counter-reset: lst-ctn-kix_list_6-3 0
+        }
+
+        ol.lst-kix_list_5-5.start {
+            counter-reset: lst-ctn-kix_list_5-5 0
+        }
+
+        .lst-kix_list_2-2>li {
+            counter-increment: lst-ctn-kix_list_2-2
+        }
+
+        ol.lst-kix_list_4-7.start {
+            counter-reset: lst-ctn-kix_list_4-7 0
+        }
+
+        .lst-kix_list_6-2>li {
+            counter-increment: lst-ctn-kix_list_6-2
+        }
+
+        ol.lst-kix_list_5-0 {
+            list-style-type: none
+        }
+
+        .lst-kix_list_2-6>li:before {
+            content: " "
+        }
+
+        .lst-kix_list_3-7>li {
+            counter-increment: lst-ctn-kix_list_3-7
+        }
+
+        ol.lst-kix_list_5-1 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_list_5-2 {
+            list-style-type: none
+        }
+
+        .lst-kix_list_2-4>li:before {
+            content: " "
+        }
+
+        .lst-kix_list_2-8>li:before {
+            content: " "
+        }
+
+        .lst-kix_list_6-6>li {
+            counter-increment: lst-ctn-kix_list_6-6
+        }
+
+        ol.lst-kix_list_5-4.start {
+            counter-reset: lst-ctn-kix_list_5-4 0
+        }
+
+        ol.lst-kix_list_5-1.start {
+            counter-reset: lst-ctn-kix_list_5-1 0
+        }
+
+        ol.lst-kix_list_5-7 {
+            list-style-type: none
+        }
+
+        .lst-kix_list_6-7>li {
+            counter-increment: lst-ctn-kix_list_6-7
+        }
+
+        ol.lst-kix_list_5-8 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_list_5-3 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_list_5-4 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_list_3-8.start {
+            counter-reset: lst-ctn-kix_list_3-8 0
+        }
+
+        ol.lst-kix_list_5-5 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_list_5-6 {
+            list-style-type: none
+        }
+
+        .lst-kix_list_5-8>li {
+            counter-increment: lst-ctn-kix_list_5-8
+        }
+
+        .lst-kix_list_4-0>li:before {
+            content: "" counter(lst-ctn-kix_list_4-0, decimal) ". "
+        }
+
+        .lst-kix_list_3-8>li {
+            counter-increment: lst-ctn-kix_list_3-8
+        }
+
+        ol.lst-kix_list_6-8.start {
+            counter-reset: lst-ctn-kix_list_6-8 0
+        }
+
+        .lst-kix_list_4-6>li {
+            counter-increment: lst-ctn-kix_list_4-6
+        }
+
+        .lst-kix_list_4-4>li:before {
+            content: "" counter(lst-ctn-kix_list_4-4, lower-latin) ". "
+        }
+
+        ol.lst-kix_list_2-2.start {
+            counter-reset: lst-ctn-kix_list_2-2 0
+        }
+
+        ol.lst-kix_list_6-5.start {
+            counter-reset: lst-ctn-kix_list_6-5 0
+        }
+
+        .lst-kix_list_4-2>li:before {
+            content: "" counter(lst-ctn-kix_list_4-2, lower-roman) ". "
+        }
+
+        .lst-kix_list_4-6>li:before {
+            content: "" counter(lst-ctn-kix_list_4-6, decimal) ". "
+        }
+
+        ol.lst-kix_list_4-0 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_list_4-1 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_list_4-2 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_list_4-3 {
+            list-style-type: none
+        }
+
+        .lst-kix_list_2-4>li {
+            counter-increment: lst-ctn-kix_list_2-4
+        }
+
+        ol.lst-kix_list_6-7.start {
+            counter-reset: lst-ctn-kix_list_6-7 0
+        }
+
+        ol.lst-kix_list_3-6.start {
+            counter-reset: lst-ctn-kix_list_3-6 0
+        }
+
+        .lst-kix_list_5-3>li {
+            counter-increment: lst-ctn-kix_list_5-3
+        }
+
+        ol.lst-kix_list_4-8 {
+            list-style-type: none
+        }
+
+        .lst-kix_list_1-0>li:before {
+            content: "\002022  "
+        }
+
+        ol.lst-kix_list_4-4 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_list_4-5 {
+            list-style-type: none
+        }
+
+        .lst-kix_list_1-2>li:before {
+            content: "\0025aa  "
+        }
+
+        ol.lst-kix_list_4-6 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_list_4-7 {
+            list-style-type: none
+        }
+
+        .lst-kix_list_1-4>li:before {
+            content: "o  "
+        }
+
+        ol.lst-kix_list_3-5.start {
+            counter-reset: lst-ctn-kix_list_3-5 0
+        }
+
+        .lst-kix_list_1-6>li:before {
+            content: "\0025cf  "
+        }
+
+        .lst-kix_list_2-0>li:before {
+            content: "  "
+        }
+
+        ol.lst-kix_list_2-1.start {
+            counter-reset: lst-ctn-kix_list_2-1 0
+        }
+
+        .lst-kix_list_4-5>li {
+            counter-increment: lst-ctn-kix_list_4-5
+        }
+
+        .lst-kix_list_1-8>li:before {
+            content: "\0025aa  "
+        }
+
+        .lst-kix_list_2-2>li:before {
+            content: " "
+        }
+
+        ol.lst-kix_list_5-2.start {
+            counter-reset: lst-ctn-kix_list_5-2 0
+        }
+
+        ol {
+            margin: 0;
+            padding: 0
+        }
+
+        table td,
+        table th {
+            padding: 0
+        }
+
+        .c13 {
+            background-color: #ffffff;
+            color: #000000;
+            font-weight: 400;
+            text-decoration: none;
+            vertical-align: baseline;
+            font-size: 12pt;
+            font-family: "Calibri";
+            font-style: italic
+        }
+
+        .c1 {
+            background-color: #ffffff;
+            color: #000000;
+            font-weight: 400;
+            text-decoration: none;
+            vertical-align: baseline;
+            font-size: 12pt;
+            font-family: "Calibri";
+            font-style: normal
+        }
+
+        .c0 {
+            color: #000000;
+            font-weight: 700;
+            text-decoration: underline;
+            vertical-align: baseline;
+            font-size: 12pt;
+            font-family: "Calibri";
+            font-style: normal
+        }
+
+        .c17 {
+            color: #000000;
+            font-weight: 400;
+            text-decoration: none;
+            vertical-align: baseline;
+            font-size: 12pt;
+            font-family: "Times New Roman";
+            font-style: normal
+        }
+
+        .c2 {
+            color: #000000;
+            font-weight: 400;
+            text-decoration: none;
+            vertical-align: baseline;
+            font-size: 12pt;
+            font-family: "Calibri";
+            font-style: normal
+        }
+
+        .c7 {
+            color: #000000;
+            font-weight: 700;
+            text-decoration: none;
+            vertical-align: baseline;
+            font-size: 12pt;
+            font-family: "Calibri";
+            font-style: normal
+        }
+
+        .c18 {
+            color: #000000;
+            font-weight: 400;
+            text-decoration: none;
+            vertical-align: baseline;
+            font-size: 11pt;
+            font-family: "Calibri";
+            font-style: normal
+        }
+
+        .c20 {
+            color: #000000;
+            font-weight: 700;
+            text-decoration: none;
+            vertical-align: baseline;
+            font-size: 12pt;
+            font-family: "Calibri";
+            font-style: italic
+        }
+
+        .c11 {
+            color: #323744;
+            font-weight: 400;
+            text-decoration: none;
+            vertical-align: baseline;
+            font-size: 12pt;
+            font-family: "Calibri";
+            font-style: normal
+        }
+
+        .c19 {
+            color: #000000;
+            font-weight: 400;
+            text-decoration: none;
+            vertical-align: baseline;
+            font-size: 12pt;
+            font-family: "Calibri";
+            font-style: italic
+        }
+
+        .c4 {
+            color: #000000;
+            font-weight: 400;
+            text-decoration: underline;
+            vertical-align: baseline;
+            font-size: 12pt;
+            font-family: "Calibri";
+            font-style: normal
+        }
+
+        .c3 {
+            margin-left: 36pt;
+            padding-top: 0pt;
+            padding-left: 0pt;
+            padding-bottom: 0pt;
+            line-height: 1.0;
+            text-align: justify
+        }
+
+        .c36 {
+            padding-top: 14.8pt;
+            padding-bottom: 0pt;
+            line-height: 1.1083333333333334;
+            text-align: justify;
+            margin-right: -7.1pt
+        }
+
+        .c28 {
+            color: #0b1843;
+            vertical-align: baseline;
+            font-size: 12pt;
+            font-style: normal
+        }
+
+        .c31 {
+            padding-top: 0pt;
+            padding-bottom: 0pt;
+            line-height: 1.0;
+            text-align: center
+        }
+
+        .c14 {
+            color: #262626;
+            vertical-align: baseline;
+            font-size: 12pt;
+            font-style: normal
+        }
+
+        .c38 {
+            padding-top: 0pt;
+            padding-bottom: 45.4pt;
+            line-height: 1.1500000000000001;
+            text-align: left
+        }
+
+        .c22 {
+            font-size: 13.5pt;
+            font-family: "Calibri";
+            color: #000000;
+            font-weight: 700
+        }
+
+        .c33 {
+            padding-top: 0pt;
+            padding-bottom: 10pt;
+            line-height: 1.1500000000000001;
+            text-align: center
+        }
+
+        .c15 {
+            padding-top: 0pt;
+            padding-bottom: 0pt;
+            line-height: 1.0;
+            text-align: left
+        }
+
+        .c6 {
+            padding-top: 0pt;
+            padding-bottom: 0pt;
+            line-height: 1.0;
+            text-align: justify
+        }
+
+        .c21 {
+            padding-top: 14pt;
+            padding-bottom: 14pt;
+            line-height: 1.0;
+            text-align: justify
+        }
+
+        .c8 {
+            padding-top: 0pt;
+            padding-bottom: 11pt;
+            line-height: 1.0;
+            text-align: left
+        }
+
+        .c39 {
+            background-color: #ffffff;
+            max-width: 453.6pt;
+            padding: 70.8pt 70.8pt 70.8pt 70.8pt;
+            margin: auto;
+        }
+
+        .c12 {
+            font-family: "Calibri";
+            font-weight: 700;
+            text-decoration: underline
+        }
+
+        .c34 {
+            vertical-align: baseline;
+            font-size: 12pt;
+            font-style: normal
+        }
+
+        .c30 {
+            margin-left: 0pt;
+            list-style-position: inside;
+            text-indent: 45pt
+        }
+
+        .c16 {
+            font-family: "Calibri";
+            color: #262626;
+            font-weight: 400
+        }
+
+        .c23 {
+            font-weight: 400;
+            font-family: "Calibri"
+        }
+
+        .c5 {
+            padding: 0;
+            margin: 0
+        }
+
+        .c37 {
+            font-style: italic;
+            color: #ff0000
+        }
+
+        .c40 {
+            font-weight: 700;
+            font-family: "Calibri"
+        }
+
+        .c35 {
+            margin-left: 36pt
+        }
+
+        .c9 {
+            margin-left: 28.4pt
+        }
+
+        .c29 {
+            padding-left: 0pt
+        }
+
+        .c32 {
+            color: #2f2e31
+        }
+
+        .c27 {
+            margin-left: 72pt
+        }
+
+        .c10 {
+            height: 12pt
+        }
+
+        .c24 {
+            margin-left: 18pt
+        }
+
+        .c26 {
+            background-color: #ffff00
+        }
+
+        .c25 {
+            text-decoration: none
+        }
+
+        .title {
+            padding-top: 24pt;
+            color: #000000;
+            font-weight: 700;
+            font-size: 36pt;
+            padding-bottom: 6pt;
+            font-family: "Times New Roman";
+            line-height: 1.0;
+            page-break-after: avoid;
+            text-align: left
+        }
+
+        .subtitle {
+            padding-top: 18pt;
+            color: #666666;
+            font-size: 24pt;
+            padding-bottom: 4pt;
+            font-family: "Georgia";
+            line-height: 1.0;
+            page-break-after: avoid;
+            font-style: italic;
+            text-align: left
+        }
+
+        li {
+            color: #000000;
+            font-size: 12pt;
+            font-family: "Times New Roman"
+        }
+
+        p {
+            margin: 0;
+            color: #000000;
+            font-size: 12pt;
+            font-family: "Times New Roman"
+        }
+
+        h1 {
+            padding-top: 24pt;
+            color: #000000;
+            font-weight: 700;
+            font-size: 24pt;
+            padding-bottom: 6pt;
+            font-family: "Times New Roman";
+            line-height: 1.0;
+            page-break-after: avoid;
+            text-align: left
+        }
+
+        h2 {
+            padding-top: 18pt;
+            color: #000000;
+            font-weight: 700;
+            font-size: 18pt;
+            padding-bottom: 4pt;
+            font-family: "Times New Roman";
+            line-height: 1.0;
+            page-break-after: avoid;
+            text-align: left
+        }
+
+        h3 {
+            padding-top: 14pt;
+            color: #000000;
+            font-weight: 700;
+            font-size: 14pt;
+            padding-bottom: 4pt;
+            font-family: "Times New Roman";
+            line-height: 1.0;
+            page-break-after: avoid;
+            text-align: left
+        }
+
+        h4 {
+            padding-top: 12pt;
+            color: #000000;
+            font-weight: 700;
+            font-size: 12pt;
+            padding-bottom: 2pt;
+            font-family: "Times New Roman";
+            line-height: 1.0;
+            page-break-after: avoid;
+            text-align: left
+        }
+
+        h5 {
+            padding-top: 11pt;
+            color: #000000;
+            font-weight: 700;
+            font-size: 11pt;
+            padding-bottom: 2pt;
+            font-family: "Times New Roman";
+            line-height: 1.0;
+            page-break-after: avoid;
+            text-align: left
+        }
+
+        h6 {
+            padding-top: 10pt;
+            color: #000000;
+            font-weight: 700;
+            font-size: 10pt;
+            padding-bottom: 2pt;
+            font-family: "Times New Roman";
+            line-height: 1.0;
+            page-break-after: avoid;
+            text-align: left
+        }
+    </style>
 </head>
-<body>
- <div>
-  <p align="center"><strong>&nbsp;</strong></p><p align="center"><strong>CONDITIONS GENERALES D’UTILISATION</strong></p><p align="center"><strong>DE HTTPS://EASE.SPACE</strong></p><p align="center"><strong>&nbsp;</strong></p><h2>Objet</h2><p>Les présentes conditions générales ont pour objet de définir les modalités et conditions d’utilisation des services proposés sur le site (ci-après : les « Services<strong>&nbsp;</strong>»), ainsi que de définir les droits et obligations des parties dans ce cadre.</p><p>Elles sont notamment accessibles et imprimables à tout moment par un lien direct en bas de la page d’accueil du site.</p><p>Elles peuvent être complétées, le cas échéant, par des conditions d’utilisation particulières à certains Services. En cas de contradiction, les conditions particulières prévalent sur ces conditions générales.</p><h2>Exploitant des Services</h2><p>Les Services sont exploités par la société EASE SPACE SAS au capital social de 965 euros, en cours d’immatriculation au RCS de Lille, dont le siège social est situé 104 rue solférino, 59800 Lille (ci-après : « EASE SPACE »).</p><p>EASE SPACE peut être contactée aux coordonnées suivantes :</p><p>Adresse postale : 9 rue Solférino, 59800 Lille</p><p>Adresse électronique : contact@ease-app.co</p><h2>Accès au site et aux Services</h2><p>Les Services sont accessibles, sous réserve des restrictions prévues sur le site :</p><p>à toute personne physique disposant de la pleine capacité juridique pour s’engager au titre des présentes conditions générales. La personne physique qui ne dispose pas de la pleine capacité juridique ne peut accéder au Site et aux Services qu’avec l’accord de son représentant légal ;</p><p>à toute personne morale agissant par l’intermédiaire d’une personne physique disposant de la capacité juridique pour contracter au nom et pour le compte de la personne morale.</p><h2>Acceptation des conditions générales</h2><p>L’acceptation des présentes conditions générales est matérialisée par une case à cocher dans le formulaire d’inscription. Cette acceptation ne peut être que pleine et entière. Toute adhésion sous réserve est considérée comme nulle et non avenue. L’Utilisateur qui n’accepte pas d’être lié par les présentes conditions générales ne doit pas utiliser les Services.</p><h2>Inscription sur le site</h2><p>L’utilisation des Services nécessite que l’Utilisateur s’inscrive sur le site, en remplissant le formulaire prévu à cet effet. L’Utilisateur doit fournir l’ensemble des informations marquées comme obligatoires. Toute inscription incomplète ne sera pas validée.</p><p><strong>&nbsp;</strong></p><p>L’inscription entraîne automatiquement l’ouverture d’un compte au nom de l’Utilisateur (ci-après : le « Compte »), lui donnant accès à un espace personnel (ci-après : l’« Espace Personnel ») qui lui permet de gérer son utilisation des Services sous une forme et selon les moyens techniques que EASE SPACE juge les plus appropriés pour rendre lesdits Services.</p><p>L’Utilisateur garantit que toutes les informations qu’il donne dans le formulaire d’inscription sont exactes, à jour et sincères et ne sont entachées d’aucun caractère trompeur.</p><p>Il s’engage à mettre à jour ces informations dans son Espace Personnel en cas de modifications, afin qu’elles correspondent toujours aux critères susvisés.</p><p>L’Utilisateur est informé et accepte que les informations saisies aux fins de création ou de mise à jour de son Compte vaillent preuve de son identité. Les informations saisies par l’Utilisateur l’engagent dès leur validation.</p><p>L’Utilisateur peut accéder à tout moment à son Espace Personnel après s’être identifié à l’aide de son identifiant de connexion ainsi que de son mot de passe.</p><p>L’Utilisateur s’engage à utiliser personnellement les Services et à ne permettre à aucun tiers de les utiliser à sa place ou pour son compte, sauf à en supporter l’entière responsabilité.</p><p>Il est pareillement responsable du maintien de la confidentialité de son identifiant et de son mot de passe. Il doit immédiatement contacter EASE SPACE aux coordonnées mentionnées à l’article 2 des présentes s’il remarque que son Compte a été utilisé à son insu. Il reconnaît à EASE SPACE le droit de prendre toutes mesures appropriées en pareil cas.</p><h2>Description des Services</h2><p>L’Utilisateur a accès aux Services décrits sur le site, sous une forme et selon les fonctionnalités et moyens techniques que EASE SPACE juge les plus appropriés.</p><h2>Services gratuits</h2><p>Les Services sont fournis à titre gratuit.</p><h2>Données</h2><p>L’Utilisateur reconnaît et accepte expressément :</p><p>que les données recueillies sur le site et sur les équipements informatiques de EASE SPACE font foi de la réalité des opérations intervenues dans le cadre des présentes ;</p><p>que ces données constituent le seul mode de preuve admis entre les parties, notamment pour le calcul des sommes dues à EASE SPACE.</p><p>L’Utilisateur peut accéder à ces données dans son Espace Personnel.</p><h2>Obligations de l’Utilisateur</h2><p>Sans préjudice des autres obligations prévues aux présentes, l’Utilisateur s’engage à respecter les obligations qui suivent :</p><p>L’Utilisateur s’engage, dans son usage des Services, à respecter les lois et règlements en vigueur et à ne pas porter atteinte aux droits de tiers ou à l’ordre public.</p><p>Il est notamment seul responsable du bon accomplissement de toutes les formalités notamment administratives, fiscales et/ ou sociales et de tous les paiements de cotisations, taxes ou impôts de toutes natures qui lui incombent, le cas échéant, en relation avec son utilisation des Services. La responsabilité de EASE SPACE ne pourra en aucun cas être engagée à ce titre.</p><p>L’Utilisateur reconnaît avoir pris connaissance sur le site des caractéristiques et contraintes, notamment techniques, de l’ensemble des Services. Il est seul responsable de son utilisation des Services.</p><p>L’Utilisateur est informé et accepte que la mise en œuvre des Services nécessite qu’il soit connecté à internet et que la qualité des Services dépend directement de cette connexion, dont il est seul responsable.</p><p>L’Utilisateur est également seul responsable des relations qu’il pourra nouer avec les autres Utilisateurs et des informations qu’il leur communique dans le cadre des Services. Il lui appartient d’exercer la prudence et le discernement appropriés dans ces relations et communications. L’Utilisateur s’engage en outre, dans ses échanges avec les autres Utilisateurs, à respecter les règles usuelles de politesse et de courtoisie.</p><p>L’Utilisateur s’engage à faire un usage strictement personnel des Services. Il s’interdit en conséquence de céder, concéder ou transférer tout ou partie de ses droits ou obligations au titre des présentes à un tiers, de quelque manière que ce soit.</p><p>L’Utilisateur s’engage à fournir à EASE SPACE toutes les informations nécessaires à la bonne exécution des Services. Plus généralement, l’Utilisateur s’engage à coopérer activement avec EASE SPACE en vue de la bonne exécution des présentes.</p><p>L’Utilisateur est seul responsable des contenus de toute nature (rédactionnels, graphiques, audiovisuels ou autres, en ce compris la dénomination et/ou l’image éventuellement choisies par l’Utilisateur pour l’identifier sur le site) qu’il diffuse dans le cadre des Services (ci-après désignés : les « Contenus »).</p><p>Il garantit à EASE SPACE qu’il dispose de tous les droits et autorisations nécessaires à la diffusion de ces Contenus.</p><p>Il s’engage à ce que lesdits Contenus soient licites, ne portent pas atteinte à l’ordre public, aux bonnes mœurs ou aux droits de tiers, n’enfreignent aucune disposition législative ou règlementaire et plus généralement, ne soient aucunement susceptibles de mettre en jeu la responsabilité civile ou pénale de EASE SPACE.</p><p>L’Utilisateur s’interdit ainsi de diffuser, notamment et sans que cette liste soit exhaustive :</p><p>des Contenus pornographiques, obscènes, indécents, choquants ou inadaptés à un public familial, diffamatoires, injurieux, violents, racistes, xénophobes ou révisionnistes,</p><p>des Contenus contrefaisants,</p><p>des Contenus attentatoires à l’image d’un tiers,</p><p>des Contenus mensongers, trompeurs ou proposant ou promouvant des activités illicites, frauduleuses ou trompeuses,</p><p>des Contenus nuisibles aux systèmes informatiques de tiers (tels que virus, vers, chevaux de Troie, etc.),</p><p>et plus généralement des Contenus susceptibles de porter atteinte aux droits de tiers ou d’être préjudiciables à des tiers, de quelque manière et sous quelque forme que ce soit.</p><p>L’Utilisateur reconnaît que les Services lui offrent une solution supplémentaire mais non alternative des moyens qu’il utilise déjà par ailleurs pour atteindre le même objectif et que cette solution ne saurait se substituer à ces autres moyens.</p><p>L’Utilisateur doit prendre les mesures nécessaires pour sauvegarder par ses propres moyens les informations de son Espace Personnel qu’il juge nécessaires, dont aucune copie ne lui sera fournie.</p><p>L’Utilisateur est informé et accepte que la mise en œuvre des Services nécessite qu’il soit connecté à internet et que la qualité des Services dépend directement de cette connexion, dont il est seul responsable.</p><h2>Garantie de l’Utilisateur</h2><p>L’Utilisateur garantit EASE SPACE contre toutes plaintes, réclamations, actions et/ou revendications quelconques que EASE SPACE pourrait subir du fait de la violation, par l’Utilisateur de l’une quelconque de ses obligations ou garanties aux termes des présentes conditions générales.</p><p>Il s’engage à indemniser EASE SPACE de tout préjudice qu’elle subirait et à lui payer tous les frais, charges et/ou condamnations qu’elle pourrait avoir à supporter de ce fait.</p><h2>Comportements prohibés</h2><p><strong>&nbsp;</strong></p><p>Il est strictement interdit d’utiliser les Services aux fins suivantes :</p><p>l’exercice d’activités illégales, frauduleuses ou portant atteinte aux droits ou à la sécurité des tiers,</p><p>l’atteinte à l’ordre public ou la violation des lois et règlements en vigueur,</p><p>l’intrusion dans le système informatique d’un tiers ou toute activité de nature à nuire, contrôler, interférer, ou intercepter tout ou partie du système informatique d’un tiers, en violer l’intégrité ou la sécurité,</p><p>l’envoi d’emails non sollicités et/ou de prospection ou sollicitation commerciale,</p><p>les manipulations destinées à améliorer le référencement d’un site tiers,</p><p>l’aide ou l’incitation, sous quelque forme et de quelque manière que ce soit, à un ou plusieurs des actes et activités décrits ci-dessus,</p><p>et plus généralement toute pratique détournant les Services à des fins autres que celles pour lesquelles ils ont été conçus.</p><p>Il est strictement interdit aux Utilisateurs de copier et/ou de détourner à leurs fins ou à celles de tiers le concept, les technologies ou tout autre élément du site de EASE SPACE.</p><p>Sont également strictement interdits : (i) tous comportements de nature à interrompre, suspendre, ralentir ou empêcher la continuité des Services, (ii) toutes intrusions ou tentatives d’intrusions dans les systèmes de EASE SPACE, (iii) tous détournements des ressources système du site, (iv) toutes actions de nature à imposer une charge disproportionnée sur les infrastructures de ce dernier, (v) toutes atteintes aux mesures de sécurité et d’authentification, (vi) tous actes de nature à porter atteinte aux droits et intérêts financiers, commerciaux ou moraux de EASE SPACE ou des usagers de son site, et enfin plus généralement (vii) tout manquement aux présentes conditions générales.</p><p>Il est strictement interdit de monnayer, vendre ou concéder tout ou partie de l’accès aux Services ou au site, ainsi qu’aux informations qui y sont hébergées et/ou partagées.</p><h2>Sanctions des manquements</h2><p>En cas de manquement à l’une quelconque des dispositions des présentes conditions générales ou plus généralement, d’infraction aux lois et règlements en vigueur par un Utilisateur, EASE SPACE se réserve le droit de prendre toute mesure appropriée et notamment de :</p><p>suspendre ou résilier l’accès aux Services de l’Utilisateur, auteur du manquement ou de l’infraction, ou y ayant participé,</p><p>supprimer tout contenu mis en ligne sur le site,</p><p>publier sur le site tout message d’information que EASE SPACE jugera utile,</p><p>avertir toute autorité concernée,</p><p>engager toute action judiciaire.</p><p><em>&nbsp;</em></p><h2>Responsabilité et garantie de EASE SPACE</h2><p>EASE SPACE<strong>&nbsp;</strong>s’engage à fournir les Services avec diligence et selon les règles de l’art, étant précisé qu’il pèse sur elle une obligation de moyens, à l’exclusion de toute obligation de résultat, ce que les Utilisateurs reconnaissent et acceptent expressément.</p><p>EASE SPACE n’a pas connaissance des Contenus mis en ligne par les Utilisateurs dans le cadre des Services, sur lesquels elle n’effectue aucune modération, sélection, vérification ou contrôle d’aucune sorte et à l’égard desquels elle n’intervient qu’en tant que prestataire d’hébergement.</p><p>En conséquence, EASE SPACE ne peut être tenue pour responsable des Contenus, dont les auteurs sont des tiers, toute réclamation éventuelle devant être dirigée en premier lieu vers l’auteur des Contenus en question.</p><p>Les Contenus préjudiciables à un tiers peuvent faire l’objet d’une notification à EASE SPACE selon les modalités prévues par l’article 6 I 5 de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique, EASE SPACE se réservant de prendre les mesures décrites à l’article 12.</p><p>EASE SPACE décline toute responsabilité en cas de perte éventuelle des informations accessibles dans l’Espace Personnel de l’Utilisateur, celui-ci devant en sauvegarder une copie et ne pouvant prétendre à aucun dédommagement à ce titre.</p><p>EASE SPACE s’engage à procéder régulièrement à des contrôles afin de vérifier le fonctionnement et l’accessibilité du site. A ce titre, EASE SPACE se réserve la faculté d’interrompre momentanément l’accès au site pour des raisons de maintenance. De même, EASE SPACE ne saurait être tenue responsable des difficultés ou impossibilités momentanées d’accès au site qui auraient pour origine des circonstances qui lui sont extérieures, la force majeure, ou encore qui seraient dues à des perturbations des réseaux de télécommunication.</p><p>EASE SPACE ne garantit pas aux Utilisateurs (i) que les Services, soumis à une recherche constante pour en améliorer notamment la performance et le progrès, seront totalement exempts d’erreurs, de vices ou défauts, (ii) que les Services, étant standard et nullement proposés à la seule intention d’un Utilisateur donné en fonction de ses propres contraintes personnelles, répondront spécifiquement à ses besoins et attentes.</p><p>En tout état de cause, la responsabilité susceptible d’être encourue par EASE SPACE au titre des présentes est expressément limitée aux seuls dommages directs avérés subis par l’Utilisateur.</p><h2>Propriété intellectuelle</h2><p>Les systèmes, logiciels, structures, infrastructures, bases de données et contenus de toute nature (textes, images, visuels, musiques, logos, marques, base de données, etc …) exploités par EASE SPACE au sein du site sont protégés par tous droits de propriété intellectuelle ou droits des producteurs de bases de données en vigueur. Tous désassemblages, décompilations, décryptages, extractions, réutilisations, copies et plus généralement, tous actes de reproduction, représentation, diffusion et utilisation de l’un quelconque de ces éléments, en tout ou partie, sans l’autorisation de EASE SPACE sont strictement interdits et pourront faire l’objet de poursuites judiciaires.</p><h2>Données à caractère personnel</h2><p>EASE SPACE pratique une politique de protection des données personnelles dont les caractéristiques sont explicitées dans le document intitulé <em>« <u>Charte de &nbsp;confidentialité »</u>,</em> dont l’Utilisateur est expressément invité à prendre connaissance sur le site.</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</p><h2>Publicité</h2><p>EASE SPACE se réserve la faculté d’insérer sur toute page du site et dans toute communication aux Utilisateurs tous messages publicitaires ou promotionnels sous une forme et dans des conditions dont EASE SPACE sera seule juge.</p><h2>Liens et sites tiers</h2><p>EASE SPACE ne pourra en aucun cas être tenue pour responsable de la disponibilité technique de sites internet ou d’applications mobiles exploités par des tiers (y compris ses éventuels partenaires) auxquels l’Utilisateur accéderait par l'intermédiaire du site.</p><p>EASE SPACE n'endosse aucune responsabilité au titre des contenus, publicités, produits et/ou services disponibles sur de tels sites et applications mobiles tiers dont il est rappelé qu’ils sont régis par leurs propres conditions d’utilisation.</p><p>EASE SPACE n'est pas non plus responsable des transactions intervenues entre l’Utilisateur et un quelconque annonceur, professionnel ou commerçant (y compris ses éventuels partenaires) vers lequel l’Utilisateur serait orienté par l'intermédiaire du site et ne saurait en aucun cas être partie à quelques litiges éventuels que ce soit avec ces tiers concernant notamment la livraison de produits et/ou services, les garanties, déclarations et autres obligations quelconques auxquelles ces tiers sont tenus.</p><h2>Durée des Services, désinscription</h2><p>Les Services sont souscrits pour une durée indéterminée.</p><p>L’Utilisateur peut se désinscrire des Services à tout moment, en adressant une demande à cet effet à EASE SPACE par email, aux coordonnées mentionnées à l’article 2.</p><p>La désinscription est effective immédiatement. Elle entraîne la suppression automatique du Compte de l’Utilisateur.</p><h2>Modifications</h2><p>EASE SPACE se réserve la faculté de modifier à tout moment les présentes conditions générales.</p><p>L’Utilisateur sera informé de ces modifications par tout moyen utile.</p><p>L’Utilisateur qui n’accepte pas les conditions générales modifiées doit se désinscrire des Services selon les modalités prévues à l’article 18.</p><p>Tout Utilisateur qui a recours aux Services postérieurement à l’entrée en vigueur des conditions générales modifiées est réputé avoir accepté ces modifications.</p><h2>Langue</h2><p>Dans l’hypothèse d’une traduction des présentes conditions générales dans une ou plusieurs langues, la langue d’interprétation sera la langue française en cas de contradiction ou de contestation sur la signification d’un terme ou d’une disposition.</p><h2>Loi applicable et juridiction</h2><p>Les présentes conditions générales sont régies par la loi française.</p><p>En cas de contestation sur la validité, l’interprétation et/ou l’exécution des présentes conditions générales, les parties conviennent que les tribunaux de Paris seront exclusivement compétents pour en juger, sauf règles de procédure impératives contraires.</p><h2>Entrée en vigueur</h2><p>Les présentes conditions générales sont entrées en vigueur le 15 Septembre 2016.</p><p><br></p><p><br></p><p align="center"><strong>CHARTE &nbsp;DE CONFIDENTIALITE</strong></p><p align="center"><strong>HTTPS://EASE.SPACE</strong></p><p><strong>&nbsp;</strong></p><p><strong>&nbsp;</strong></p><p><strong>&nbsp;</strong></p><p><strong>&nbsp;</strong></p><h2>Définition et nature des données à caractère personnel</h2><p>Lors de votre utilisation de notre site, nous pouvons être amenés à vous demander de nous communiquer des données à caractère personnel vous concernant.</p><p>Le terme « données à caractère personnel » désigne toutes les données qui permettent d’identifier un individu, ce qui correspond notamment à vos nom, prénoms, pseudonyme, photographie, adresses postale et de courrier électronique, numéros de téléphone, date de naissance, données relatives à vos transactions sur le site, détails de vos achats et abonnements, numéros de carte bancaire, ainsi qu’à tout autre renseignement que vous choisirez de nous communiquer à votre sujet.</p><h2>Objet de la présente charte</h2><p>La présente charte a pour objet de vous informer sur les moyens que nous mettons en œuvre pour collecter vos données à caractère personnel, dans le respect le plus strict de vos droits.</p><p>Nous vous indiquons à ce sujet que nous nous conformons, dans la collecte et la gestion de vos données à caractère personnel, à la loi n° 78-17 du 6 janvier 1978 relative à l'informatique, aux fichiers et aux libertés, dans sa version actuelle.</p><h2>Identité du responsable de la collecte de données</h2><p>Le responsable de la collecte de vos données à caractère personnel est la société EASE SPACE, SAS en cours d’immatriculation au Registre du Commerce et des Sociétés de Lille, ayant son siège social 104 rue solférino, 59000, Lille.</p><h2>Collecte des données à caractère personnel</h2><p>Vos données à caractère personnel sont collectées pour répondre à une ou plusieurs des finalités suivantes :</p><p>Gérer votre accès à certains services accessibles sur le site et leur utilisation,</p><p>Effectuer les opérations relatives à la gestion des clients concernant les contrats, commandes, livraisons, factures, programmes de fidélité, suivis de la relation avec les clients,</p><p>Constituer un fichier de membres inscrits, d’utilisateurs, de clients et prospects,</p><p>Adresser des newsletters, sollicitations et messages promotionnels. Dans le cas où vous ne le souhaiteriez pas, nous vous donnons la faculté d’exprimer votre refus à ce sujet lors de la collecte de vos données;</p><p>Élaborer des statistiques commerciales et de fréquentation de nos services,</p><p>Organiser des jeux concours, loteries et toutes opérations promotionnelles à l’exclusion des jeux d’argent et de hasard en ligne soumis à l’agrément de l’Autorité de Régulation des Jeux en ligne,</p><p>Gérer la gestion des avis des personnes sur des produits, services ou contenus,</p><p>Gérer les impayés et les contentieux éventuels quant à l’utilisation de nos produits et services,</p><p>Respecter nos obligations légales et réglementaires.</p><p>Nous vous informons, lors de la collecte de vos données personnelles, si certaines données doivent être obligatoirement renseignées ou si elles sont facultatives. Nous vous indiquons également quelles sont les conséquences éventuelles d’un défaut de réponse.</p><h2>Destinataires des données collectées</h2><p>Le personnel de notre société, les services chargés du contrôle (commissaire aux comptes notamment) et nos sous-traitants auront accès à vos données à caractère personnel.</p><p>Peuvent également être destinataires de vos données à caractère personnel les organismes publics, exclusivement pour répondre à nos obligations légales, les auxiliaires de justice, les officiers ministériels et les organismes chargés d’effectuer le recouvrement de créances.</p><h2>Cession des données à caractère personnel</h2><p>Vos données à caractère personnel ne feront pas l’objet de cessions, locations ou échanges au bénéfice de tiers.</p><h2>Durée de conservation des données à caractère personnel</h2><p>Concernant les données relatives à la gestion de clients et prospects :</p><p>Vos données à caractère personnel ne seront pas conservées au-delà de la durée strictement nécessaire à la gestion de notre relation commerciale avec vous. Toutefois, les données permettant d’établir la preuve d’un droit ou d’un contrat, devant être conservées au titre du respect d’une obligation légale, le seront pendant la durée prévue par la loi en vigueur.</p><p>Concernant d’éventuelles opérations de prospection à destination des clients, leurs données pourront être conservées pendant un délai de trois ans à compter de la fin de la relation commerciale.</p><p>Les données à caractère personnel relatives à un prospect, non client, pourront être conservées pendant un délai de trois ans à compter de leur collecte ou du dernier contact émanant du prospect.</p><p>Au terme de ce délai de trois ans, nous pourrons reprendre contact avec vous pour savoir si vous souhaitez continuer à recevoir des sollicitations commerciales.</p><p>Concernant les pièces d’identité :</p><p>En cas d’exercice du droit d’accès ou de rectification, les données relatives aux pièces d’identité pourront être conservées pendant le délai prévu à l’article 9 du code de procédure pénale, soit un an. En cas d’exercice du droit d’opposition, ces données peuvent être archivées pendant le délai de prescription prévu par l’article 8 du code de procédure pénale, soit trois ans.</p><p>Concernant les données relatives aux cartes bancaires :</p><p>Les transactions financières relatives au paiement des achats et des frais via le site, sont confiées à un prestataire de services de paiement qui en assure le bon déroulement et la sécurité.</p><p>Pour les besoins des services, ce prestataire de services de paiement peut être amené à être destinataire de vos données à caractère personnel relatives à vos numéros de cartes bancaires, qu’il recueille et conserve en notre nom et pour notre compte.</p><p>Nous n’avons pas accès à ces données.</p><p>Pour vous permettre de réaliser régulièrement des achats ou de régler les frais afférents sur le site, vos données relatives à vos cartes bancaires sont conservées pendant le temps de votre inscription sur le site et à tout le moins, jusqu’au moment où vous réalisez votre dernière transaction.</p><p>En ayant coché sur le site la case expressément prévue à cet effet, vous nous donnez votre consentement exprès pour cette conservation.</p><p>Les données relatives au cryptogramme visuel ou CVV2, inscrit sur votre carte bancaire, ne sont pas stockées.</p><p>Si vous refusez que vos données à caractère personnel relatives à vos numéros de cartes bancaires soient conservées dans les conditions précisées ci-dessus, nous ne conserverons pas ces données au-delà du temps nécessaire pour permettre la réalisation de la transaction.</p><p>En tout état de cause, les données relatives à celles-ci pourront être conservées, pour une finalité de preuve en cas d’éventuelle contestation de la transaction, en archives intermédiaires, pour la durée prévue par l’article L 133-24 du Code monétaire et financier, en l’occurrence 13 mois suivant la date de débit. Ce délai peut être étendu à 15 mois afin de prendre en compte la possibilité d’utilisation des cartes de paiement à débit différé.</p><p>Concernant la gestion des listes d’opposition à recevoir de la prospection :</p><p>Les informations permettant de prendre en compte votre droit d’opposition sont conservées au minimum trois ans à compter de l’exercice du droit d’opposition.</p><p>Concernant les statistiques de mesure d’audience :</p><p>Les informations stockées dans le terminal des utilisateurs ou tout autre élément utilisé pour identifier les utilisateurs et permettant leur traçabilité ou fréquentation ne seront pas conservées au-delà de 6 mois.</p><h2>Sécurité</h2><p>Nous vous informons prendre toutes précautions utiles, mesures organisationnelles et techniques appropriées pour préserver la sécurité, l’intégrité et la confidentialité de vos données à caractère personnel et notamment, empêcher qu’elles soient déformées, endommagées ou que des tiers non autorisés y aient accès. Nous recourrons ou pouvons recourir également à des systèmes de paiement sécurisé conformes à l’état de l’art et à la réglementation applicable.</p><h2>Cookies</h2><p>Les cookies sont des fichiers textes, souvent cryptés, stockés dans votre navigateur. Ils sont créés lorsque le navigateur d’un utilisateur charge un site internet donné : le site envoie des informations au navigateur, qui créé alors un fichier texte. Chaque fois que l’utilisateur revient sur le même site, le navigateur récupère ce fichier et l’envoie au serveur du site internet.</p><p>On peut distinguer deux types de cookies, qui n’ont pas les mêmes finalités : les cookies techniques et les cookies publicitaires :</p><p>Les cookies techniques sont utilisés tout au long de votre navigation, afin de la faciliter et d’exécuter certaines fonctions. Un cookie technique peut par exemple être utilisé pour mémoriser les réponses renseignées dans un formulaire ou encore les préférences de l’utilisateur s’agissant de la langue ou de la présentation d’un site internet, lorsque de telles options sont disponibles.</p><p>Les cookies publicitaires peuvent être créés non seulement par le site internet sur lequel l’utilisateur navigue, mais également par d’autres sites internet diffusant des publicités, annonces, widgets ou autres éléments sur la page affichée. Ces cookies peuvent notamment être utilisés pour effectuer de la publicité ciblée, c’est-à-dire de la publicité déterminée en fonction de la navigation de l’utilisateur.</p><p>Nous utilisons des cookies techniques. Ceux-ci sont stockés dans votre navigateur pour une période qui ne peut excéder six mois.</p><p>Nous n’utilisons pas de cookies publicitaires. Toutefois, si nous devions en utiliser à l’avenir, nous vous en informerions au préalable et vous auriez la possibilité le cas échéant de désactiver ces cookies.</p><p>Nous utilisons ou pouvons utiliser Google Analytics qui est un outil statistique d’analyse d’audience qui génère un cookie permettant de mesurer le nombre de visites sur le site, le nombre de pages vues et l’activité des visiteurs. Votre adresse IP est également collectée pour déterminer la ville depuis laquelle vous vous connectez. La durée de conservation de ce cookie est mentionnée à l’article 7 (v) de la présente charte.</p><p>Nous vous rappelons à toutes fins utiles qu’il vous est possible de vous opposer au dépôt de cookies en configurant votre navigateur. Un tel refus pourrait toutefois empêcher le bon fonctionnement du site.</p><h2>Consentement</h2><p>Lorsque vous choisissez de communiquer vos données à caractère personnel, vous donnez expressément votre consentement pour la collecte et l’utilisation de celles-ci conformément à ce qui est énoncé à la présente charte et à la législation en vigueur.</p><h2>Accès à vos données à caractère personnel</h2><p>Conformément à la loi n° 78-17 du 6 janvier 1978 relative à l'informatique, aux fichiers et aux libertés, vous disposez du droit d’obtenir la communication et, le cas échéant, la rectification ou la suppression des données vous concernant, à travers un accès en ligne à votre dossier. Vous pouvez également vous adresser à :</p><p>adresse de courrier électronique : contact@ease-app.co</p><p>adresse de courrier postal : 104 rue solférino, 59000, Lille.</p><p>Il est rappelé que toute personne peut, pour des motifs légitimes, s'opposer au traitement des données la concernant.</p><h2>Modifications</h2><p>Nous nous réservons le droit, à notre seule discrétion, de modifier à tout moment la présente charte, en totalité ou en partie. Ces modifications entreront en vigueur à compter de la publication de la nouvelle charte. Votre utilisation du site suite à l’entrée en vigueur de ces modifications vaudra reconnaissance et acceptation de la nouvelle charte. A défaut et si cette nouvelle charte ne vous convient pas, vous ne devrez plus accéder au site.</p><h2>Entrée en vigueur</h2><p>La présente charte est entrée en vigueur le 15 septembre 2016.</p><p><br></p><p><br></p><p>Numéro de déclaration CNIL : <strong>2003775</strong></p><p><br></p>
-</div>
+<body class="c39">
+    <p class="c31"><span class="c7">MENTIONS LEGALES</span></p>
+    <p class="c6 c10"><span class="c19"></span></p>
+    <p class="c6"><span class="c4">Identification de l&rsquo;&eacute;diteur :</span></p>
+    <p class="c6"><span class="c2">EASE.SPACE, (104 rue Solf&eacute;rino, 59000 LILLE), soci&eacute;t&eacute; par actions simplifi&eacute;e au capital social de 965 euros, dont le si&egrave;ge se situe au 104 rue Solf&eacute;rino, 59000 LILLE.</span></p>
+    <p class="c6 c10"><span class="c4"></span></p>
+    <p class="c6"><span class="c4">Directeur de la publication :</span></p>
+    <p class="c6"><span class="c2">Au sens de l&rsquo;article 93-2 de la loi n&deg; 82-652 du 29 juillet 1982.</span></p>
+    <p class="c6"><span class="c2">M. PRIGENT, Pr&eacute;sident de la soci&eacute;t&eacute; EAES.SPACE est le directeur de la publication.</span></p>
+    <p class="c6 c10"><span class="c2"></span></p>
+    <p class="c6"><span class="c4">Contacts:</span></p>
+    <p class="c6"><span class="c2">Postal : 104 rue Solf&eacute;rino, 59000 LILLE</span></p>
+    <p class="c6"><span class="c2">E-mail : contact@ease.space</span></p>
+    <p class="c6"><span class="c2">T&eacute;l&eacute;phone: 0626978897</span></p>
+    <p class="c6 c10"><span class="c2"></span></p>
+    <p class="c6"><span class="c4">Prestataire d&rsquo;h&eacute;bergement : </span></p>
+    <p class="c6"><span class="c2">EASE.SPACE societe au capital social de 965 euros, immatricul&eacute;e au Registre de Commerce et des Soci&eacute;t&eacute;s de Lille et ayant son si&egrave;ge social au 104 rue Solf&eacute;rino, 59000 LILLE.</span></p>
+    <p class="c6 c10"><span class="c2"></span></p>
+    <p class="c6 c10"><span class="c11"></span></p>
+    <p class="c31"><span class="c7">PREAMBULE</span></p>
+    <p class="c6 c10"><span class="c2"></span></p>
+    <p class="c15"><span class="c23">La soci&eacute;t&eacute; EASE.SPACE </span><span class="c2">a con&ccedil;u et exploite une plateforme intitul&eacute;e &laquo;&nbsp;EASE.SPACE&nbsp;&raquo; destin&eacute;e &agrave; faciliter l&rsquo;authentification sur les sites web. Elle permet &agrave; ses utilisateurs enregistr&eacute;s de se connecter automatiquement sur le ou les sites de leur choix, sans plus avoir &agrave; taper leur identifiant ou mot de passe &agrave; chaque fois (ci-apr&egrave;s &laquo;&nbsp;la Plateforme&nbsp;&raquo;). </span></p>
+    <p
+        class="c6 c10"><span class="c0"></span></p>
+        <p class="c6"><span class="c14 c12">ARTICLE 1- DEFINITIONS</span></p>
+        <p class="c6"><span class="c14 c23 c25">Au sein des pr&eacute;sentes, les mots ou expressions commen&ccedil;ant avec une majuscule auront la signification suivante :</span></p>
+        <p class="c6"><span class="c14 c23 c25">Plateforme : application &quot;EASE.SPACE&quot; &eacute;dit&eacute;e par la soci&eacute;t&eacute; EASE.SPACE disponible sur le site internet &laquo;&nbsp;www.ease.space&nbsp;&raquo;</span></p>
+        <p class="c6"><span class="c14 c23 c25">Utilisateur : d&eacute;signe toute personne physique ayant acc&egrave;s &agrave; la Plateforme, quel que soit le lieu o&ugrave; elle se trouve et les modalit&eacute;s de sa connexion &agrave; la Plateforme.</span></p>
+        <p
+            class="c6"><span class="c14 c12">ARTICLE 2- OBJET</span></p>
+            <p class="c6"><span class="c2">Les pr&eacute;sentes Conditions G&eacute;n&eacute;rales d&rsquo;Utilisation (ci-apr&egrave;s &quot;CGU&quot;) ont pour objet de d&eacute;terminer les caract&eacute;ristiques, modalit&eacute;s et conditions d&rsquo;utilisation de la Plateforme, ainsi que de d&eacute;finir les droits et obligations de tout Utilisateur de la Plateforme.</span></p>
+            <p
+                class="c6"><span class="c2">Les pr&eacute;sentes CGU sont applicables aux relations entre EASE.SPACE et l&#39;Utilisateur &agrave; l&rsquo;exclusion de toutes autres conditions, et notamment celles de l&rsquo;Utilisateur. </span></p>
+                <p class="c6 c10"><span class="c2"></span></p>
+                <p class="c6"><span class="c14 c12">ARTICLE 3- CONSENTEMENT</span></p>
+                <p class="c6"><span class="c2">Toute utilisation de la Plateforme n&eacute;cessite obligatoirement au pr&eacute;alable que l&rsquo;Utilisateur prenne connaissance et accepte les pr&eacute;sentes CGU.</span></p>
+                <hr style="page-break-before:always;display:none;">
+                <p class="c6 c10"><span class="c2"></span></p>
+                <p class="c6"><span class="c2">L&rsquo;acceptation par l&rsquo;Utilisateur des pr&eacute;sentes CGU se fait selon un processus permettant d&rsquo;assurer l&rsquo;int&eacute;grit&eacute; de son consentement. L&rsquo;Utilisateur est tout d&rsquo;abord, lors de l&#39;acc&egrave;s &agrave; la Plateforme, invit&eacute; &agrave; lire les pr&eacute;sentes CGU. Ensuite, son acceptation des pr&eacute;sentes CGU est mat&eacute;rialis&eacute;e par une action de sa part selon la technique dite du &laquo; clic&nbsp;&raquo;. En cliquant sur la case &laquo; j&rsquo;ai int&eacute;gralement lu et j&rsquo;accepte sans r&eacute;serve les CGU &raquo;, l&rsquo;Utilisateur d&eacute;clare accepter l&rsquo;ensemble des dispositions des pr&eacute;sentes CGU qui lui sont opposables d&egrave;s cet instant.</span></p>
+                <p
+                    class="c6"><span class="c2">En toute hypoth&egrave;se, toute utilisation de la Plateforme par l&rsquo;Utilisateur emporte acceptation sans r&eacute;serve des CGU en vigueur au moment de cette utilisation.</span></p>
+                    <p class="c6"><span class="c2">Par cette acceptation, l&#39;Utilisateur d&eacute;clare &ecirc;tre en pleine capacit&eacute; juridique n&eacute;cessaire pour cela, et notamment avoir plus de 18 ans, ou &agrave; d&eacute;faut avoir pr&eacute;alablement et express&eacute;ment recueilli l&#39;autorisation de son repr&eacute;sentant l&eacute;gal, qui s&rsquo;engage &agrave; fournir &agrave; EASE.SPACE &agrave; premi&egrave;re demande.</span></p>
+                    <p
+                        class="c6"><span class="c14 c12">ARTICLE 4- MODIFICATIONS</span></p>
+                        <p class="c6"><span class="c16">EASE.SPACE se r&eacute;serve la facult&eacute; de modifier les pr&eacute;sentes CGU de la Plateforme &agrave; tout moment et sans notification pr&eacute;alable de l&#39;Utilisateur. </span></p>
+                        <p class="c6"><span class="c2">Les Utilisateurs sont invit&eacute;s &agrave; consulter r&eacute;guli&egrave;rement les pr&eacute;sentes CGU afin de prendre connaissance de changements &eacute;ventuels effectu&eacute;s. </span></p>
+                        <p class="c6"><span class="c2">Toute utilisation de la Plateforme par l&rsquo;Utilisateur suivant une modification des CGU vaudra acceptation des nouvelles CGU de la part de l&rsquo;Utilisateur.</span></p>
+                        <p class="c6"><span class="c14 c12">ARTICLE 5- ACCES AUX SERVICES</span></p>
+                        <p class="c6"><span class="c2">Pour acc&eacute;der &agrave; la Plateforme, l&#39;Utilisateur doit, selon les modalit&eacute;s sus d&eacute;crites :</span></p>
+                        <ol class="c5 lst-kix_list_6-0 start" start="1">
+                            <li class="c3"><span class="c18">Cr&eacute;e son compte EASE</span></li>
+                            <li class="c3"><span class="c18">T&eacute;l&eacute;charger et installer l&rsquo;extension EASE</span></li>
+                            <li class="c3"><span class="c18">Se connecter &agrave; la Plateforme</span></li>
+                        </ol>
+                        <p class="c6 c10 c24"><span class="c2"></span></p>
+                        <p class="c6"><span class="c14 c25 c40">Attention&nbsp;: l&rsquo;Utilisateur est inform&eacute; que la Plateforme n&rsquo;est pour l&rsquo;heure accessible qu&rsquo;aux navigateurs Google Chrome et Safari. Il n&rsquo;est pas possible de b&eacute;n&eacute;ficier de la Plateforme avec un autre navigateur.</span></p>
+                        <p
+                            class="c6"><span class="c20">5.1 Cr&eacute;er son compte EASE</span></p>
+                            <p class="c6 c10"><span class="c2"></span></p>
+                            <p class="c6"><span class="c2">Pour acc&eacute;der &agrave; la Plateforme l&#39;Utilisateur doit avoir pr&eacute;alablement cr&eacute;&eacute; son compte personnel EASE.SPACE. Pour cela l&rsquo;Utilisateur doit&nbsp;:</span></p>
+                            <p class="c6 c10"><span class="c2"></span></p>
+                            <ol class="c5 lst-kix_list_5-0 start" start="1">
+                                <li class="c3"><span class="c2">Se rendre sur le site www.ease.space (ci-apr&egrave;s &quot;le Site&quot;) au moyen de son propre navigateur dont les modalit&eacute;s et conditions d&rsquo;utilisation sont propre &agrave; chaque navigateur et n&rsquo;engage aucune responsabilit&eacute; de EASE.SPACE.</span></li>
+                            </ol>
+                            <p class="c6 c10 c24"><span class="c2"></span></p>
+                            <ol class="c5 lst-kix_list_5-0" start="2">
+                                <li class="c3"><span class="c2">Cliquer sur l&rsquo;onglet &laquo;&nbsp;Cr&eacute;er mon compte&nbsp;&raquo; </span></li>
+                            </ol>
+                            <p class="c6 c10"><span class="c2"></span></p>
+                            <ol class="c5 lst-kix_list_5-0" start="3">
+                                <li class="c3"><span class="c2">Remplir les champs obligatoires y figurant notamment renseigner son nom, et son adresse email.</span></li>
+                            </ol>
+                            <p class="c6 c10"><span class="c2"></span></p>
+                            <ol class="c5 lst-kix_list_5-0" start="4">
+                                <li class="c3"><span class="c2">Choisir un identifiant et mot de passe d&rsquo;acc&egrave;s &agrave; la Plateforme selon les prescriptions techniques indiqu&eacute;es (notamment relative aux types et nombres de caract&egrave;res n&eacute;cessaires). Ces codes sont strictement personnels et confidentiels. L&rsquo;Utilisateur est seul et enti&egrave;rement responsable de tout usage qui pourrait en &ecirc;tre fait par lui-m&ecirc;me ou par des tiers auxquels il aurait communiqu&eacute; ces codes (ci-apr&egrave;s &laquo;&nbsp;les Codes EASE&nbsp;&raquo;).</span></li>
+                            </ol>
+                            <p class="c6 c10"><span class="c2"></span></p>
+                            <ol class="c5 lst-kix_list_5-0" start="5">
+                                <li class="c3"><span class="c2">Choisir les sites internet qu&rsquo;il souhaite int&eacute;grer &agrave; son compte EASE. L&rsquo;Utilisateur est inform&eacute; que le nombre ou le type de sites qu&rsquo;il peut int&eacute;grer dans son compte sont limit&eacute;s </span></li>
+                            </ol>
+                            <p class="c6 c10"><span class="c2"></span></p>
+                            <ol class="c5 lst-kix_list_5-1 start" start="1">
+                                <li class="c6 c27 c29"><span class="c2">D&rsquo;une part, aux seuls sites internet licites et l&rsquo;exclusion notamment de tout site visant l&#39;apologie des crimes contre l&#39;humanit&eacute;, la provocation &agrave; la commission d&#39;actes de terrorisme et de leur apologie, l&#39;incitation &agrave; la haine raciale, &agrave; la haine &agrave; l&#39;&eacute;gard de personnes &agrave; raison de leur sexe, de leur orientation ou identit&eacute; sexuelle ou de leur handicap ainsi que la pornographie enfantine, l&#39;incitation &agrave; la violence, notamment l&#39;incitation aux violences faites aux femmes, ainsi les atteintes &agrave; la dignit&eacute; humaine&nbsp;;</span></li>
+                                <li
+                                    class="c6 c29 c27"><span class="c2">D&rsquo;autre part, aux sites de libre acc&egrave;s &agrave; l&rsquo;exclusion des sites crypt&eacute;s ou relevant de certificats d&rsquo;acc&egrave;s s&eacute;curis&eacute;s. </span></li>
+                            </ol>
+                            <p class="c6 c10 c27"><span class="c2"></span></p>
+                            <ol class="c5 lst-kix_list_5-0" start="6">
+                                <li class="c3"><span class="c2">Renseigner ses identifiants et mots de passe personnels pour chacun de ces sites. L&rsquo;Utilisateur est seul et enti&egrave;rement responsable de la justesse de ces renseignements. Il est explicitement inform&eacute; que s&rsquo;il renseigne des codes erron&eacute;s la Plateforme ne fonctionnera pas pour les sites concern&eacute;s par cette erreur. Il en porte l&rsquo;enti&egrave;re responsabilit&eacute;.</span></li>
+                            </ol>
+                            <p class="c6 c10 c24"><span class="c2"></span></p>
+                            <p class="c6"><span class="c20">5.2 T&eacute;l&eacute;chargement et installation de la Plateforme </span></p>
+                            <p class="c6 c10"><span class="c7"></span></p>
+                            <p class="c6"><span class="c2">Pour acc&eacute;der &agrave; la Plateforme l&#39;Utilisateur doit </span></p>
+                            <p class="c6 c10"><span class="c2"></span></p>
+                            <ol class="c5 lst-kix_list_4-0 start" start="1">
+                                <li class="c3"><span class="c2">Se rendre sur le site www.ease.space (ci-apr&egrave;s &quot;le Site&quot;) au moyen de son propre navigateur dont les modalit&eacute;s et conditions d&rsquo;utilisation sont propre &agrave; chaque navigateur et n&rsquo;engage aucune responsabilit&eacute; de EASE.SPACE.</span></li>
+                                <li
+                                    class="c3"><span class="c2">Cliquer sur l&rsquo;onglet &laquo;&nbsp;Cr&eacute;er mon compte&nbsp;&raquo; et finaliser la cr&eacute;ation de son compte selon les modalit&eacute;s d&eacute;crites ci-dessus</span></li>
+                                    <li class="c3"><span class="c2">T&eacute;l&eacute;charger et installer sur son ordinateur l&rsquo;extension de navigateur propos&eacute;e par EASE.SPACE au terme de son inscription. Il est rappel&eacute; que la Plateforme n&rsquo;est pour l&rsquo;heure accessible qu&rsquo;aux navigateurs Google Chrome et Safari. Il n&rsquo;est pas possible de b&eacute;n&eacute;ficier de la Plateforme avec un autre navigateur.</span></li>
+                            </ol>
+                            <p class="c6 c10"><span class="c2"></span></p>
+                            <p class="c6"><span class="c20">5.3 Connexion &agrave; la Plateforme</span></p>
+                            <p class="c6 c10"><span class="c2"></span></p>
+                            <p class="c6"><span class="c2">L&#39;acc&egrave;s &agrave; la Plateforme est r&eacute;serv&eacute; aux utilisateurs ayant finalis&eacute; la cr&eacute;ation de leur compte EASE selon les modalit&eacute;s ci-dessus. </span></p>
+                            <p class="c6"><span class="c23">Pour se connecter &agrave; la Plateforme, l&rsquo;Utilisateur doit renseigner ses Codes EASE valid&eacute;s lors de la cr&eacute;ation de son compte.</span></p>
+                            <p class="c6"><span class="c2">Si les codes renseign&eacute;s ne correspondent pas &agrave; ceux du compte EASE de l&rsquo;Utilisateur, l&#39;acc&egrave;s &agrave; la Plateforme ne sera pas possible. </span></p>
+                            <p class="c6"><span class="c12">ARTICLE 6- DESCRIPTION DE LA PLATEFORME</span></p>
+                            <p class="c6"><span class="c2">La Plateforme propose gratuitement un outil permettant l&rsquo;Utilisateur titulaire d&rsquo;un compte EASE d&rsquo;acc&eacute;der directement &agrave; plusieurs sites web de son choix via la Plateforme sans plus avoir &agrave; renseigner ses identifiants et mots de passe propres &agrave; ces sites.</span></p>
+                            <p
+                                class="c6"><span class="c12">ARTICLE 7- PROPRIETE INTELLECTUELLE </span></p>
+                                <p class="c21"><span class="c7">Propri&eacute;t&eacute;</span></p>
+                                <p class="c6"><span class="c23">La Plateforme et tous ses contenus (structure, logiciel, bases de donn&eacute;es, graphismes, marques, etc.), sont la propri&eacute;t&eacute; exclusive de EASE.SPACE. </span><span class="c23 c37">&nbsp;</span></p>
+                                <p
+                                    class="c36"><span class="c2">L&#39;Utilisateur n&#39;est pas autoris&eacute; &agrave; faire quelconque usage de ces &eacute;l&eacute;ments sans y &ecirc;tre pr&eacute;alablement autoris&eacute; par EASE.SPACE par &eacute;crit.</span></p>
+                                    <p
+                                        class="c6"><span class="c2">L&#39;Utilisateur s&#39;interdit de d&eacute;poser ou d&#39;utiliser quelconque titre de propri&eacute;t&eacute; intellectuelle ou industrielle, d&eacute;nomination, nom commercial, nom de domaine, enseigne, ni aucun autre signe similaire aux attributs de propri&eacute;t&eacute; intellectuelle ou industrielle de EASE.SPACE et/ou susceptible de les d&eacute;valoriser et/ou leurs nuire.</span></p>
+                                        <p
+                                            class="c6"><span class="c2">L&#39;acceptation des pr&eacute;sentes ou l&#39;utilisation de la Plateforme n&rsquo;entra&icirc;ne aucun transfert de propri&eacute;t&eacute; intellectuelle ou industrielle de EASE.SPACE &agrave; l&#39;Utilisateur ou quelconque tiers.</span></p>
+                                            <p
+                                                class="c6"><span class="c7">Licence </span></p>
+                                                <p class="c6"><span class="c2">Pour les besoins de l&#39;ex&eacute;cution de la Plateforme, EASE.SPACE conc&egrave;de &agrave; l&rsquo;Utilisateur, &agrave; titre non exclusif, une licence d&rsquo;utilisateur final portant sur la Plateforme. La licence est consentie pour le monde entier et pour toutes les langues. La licence porte uniquement sur le droit de reproduction de la Plateforme, aux seules fins de t&eacute;l&eacute;chargement de la Plateforme et de son ex&eacute;cution et utilisation conforme aux pr&eacute;sentes, &agrave; l&rsquo;exclusion expr&egrave;s de :</span></p>
+                                                <p
+                                                    class="c6 c10"><span class="c2"></span></p>
+                                                    <ul class="c5 lst-kix_list_1-0 start">
+                                                        <li class="c3"><span class="c2">toute reproduction en vue de la commercialisation, de la mise en circulation, de la rediffusion, de la distribution, de la publication de la Plateforme ou de l&rsquo;installation de la Plateforme sur un autre poste que ceux de l&rsquo;Utilisateur ;</span></li>
+                                                    </ul>
+                                                    <p class="c6 c10 c24"><span class="c2"></span></p>
+                                                    <ul class="c5 lst-kix_list_1-0">
+                                                        <li class="c3"><span class="c2">toute repr&eacute;sentation, m&ecirc;me partielle, de la Plateforme, notamment par voie de communications au public en ligne ou de projections publiques ;</span></li>
+                                                    </ul>
+                                                    <p class="c6 c10 c24"><span class="c2"></span></p>
+                                                    <ul class="c5 lst-kix_list_1-0">
+                                                        <li class="c3"><span class="c2">toute traduction, adaptation, d&rsquo;arrangement ou de modification de la Plateforme, ainsi que tout export ou fusion de ce dernier avec d&rsquo;autres applications informatiques;</span></li>
+                                                    </ul>
+                                                    <p class="c6 c10 c24"><span class="c2"></span></p>
+                                                    <ul class="c5 lst-kix_list_1-0">
+                                                        <li class="c3"><span class="c2">toute compilation, d&eacute;compilation, d&eacute;sassemblage, traduction, analyse, reverse engineering de la Plateforme.</span></li>
+                                                    </ul>
+                                                    <p class="c6 c10 c24"><span class="c2"></span></p>
+                                                    <p class="c6"><span class="c2">Les droits d&rsquo;utilisation de la Plateforme sont personnels et non cessibles. Les droits accord&eacute;s &agrave; l&rsquo;Utilisateur le sont exclusivement pour un Utilisateur unique, pour ses besoins propres, &agrave; l&rsquo;exclusion de toute forme de fourniture &agrave; des tiers. L&rsquo;Utilisateur ne pourra pas c&eacute;der tout ou partie des droits et obligations r&eacute;sultant du pr&eacute;sent contrat.</span></p>
+                                                    <p
+                                                        class="c6 c10"><span class="c2"></span></p>
+                                                        <p class="c6 c10"><span class="c0"></span></p>
+                                                        <p class="c6"><span class="c12">ARTICLE 8- </span><span class="c12 c14">DISPONIBILIT&Eacute; DE LA PLATEFORME</span></p>
+                                                        <p class="c6"><span class="c14 c23 c25">EASE.SPACE s&#39;engage &agrave; faire ses meilleurs efforts pour s&eacute;curiser l&#39;acc&egrave;s, la consultation et l&#39;utilisation de la Plateforme. Cette derni&egrave;re est accessible 24 heures sur 24, 7 jours sur 7 sauf en cas de force majeure ou de survenance d&#39;un &eacute;v&egrave;nement hors du contr&ocirc;le de EASE.SPACE et sous r&eacute;serve des &eacute;ventuelles pannes et interventions de maintenance n&eacute;cessaires au bon fonctionnement de la Plateforme. Les interventions de maintenance pourront &ecirc;tre effectu&eacute;es sans que les Utilisateurs aient &eacute;t&eacute; pr&eacute;alablement avertis.</span></p>
+                                                        <p
+                                                            class="c6"><span class="c14 c23 c25">L&#39;Utilisateur d&eacute;clare accepter les caract&eacute;ristiques et les limites intrins&egrave;ques aux applications mobiles et syst&egrave;mes d&#39;exploitation des Applications, et en particulier reconna&icirc;tre que :</span></p>
+                                                            <ul
+                                                                class="c5 lst-kix_list_1-0">
+                                                                <li class="c3"><span class="c2">son utilisation de la Plateforme se fait &agrave; ses risques et p&eacute;rils ; </span></li>
+                                                                </ul>
+                                                                <p class="c6 c10 c24"><span class="c2"></span></p>
+                                                                <ul class="c5 lst-kix_list_1-0">
+                                                                    <li class="c3"><span class="c2">la Plateforme lui est accessible &quot;en &eacute;tat&quot; et en fonction de sa disponibilit&eacute; ;</span></li>
+                                                                </ul>
+                                                                <p class="c6 c10 c24"><span class="c2"></span></p>
+                                                                <ul class="c5 lst-kix_list_1-0">
+                                                                    <li class="c3"><span class="c2">la protection de ses propres donn&eacute;es et/ou logiciels lui incombe et il lui appartient de</span></li>
+                                                                </ul>
+                                                                <p class="c6 c24"><span class="c2">prendre toutes les mesures appropri&eacute;es de fa&ccedil;on &agrave; les prot&eacute;ger.</span></p>
+                                                                <p class="c6 c10"><span class="c34 c23 c32 c25"></span></p>
+                                                                <p class="c6"><span class="c14 c12">ARTICLE 9- RESPONSABILIT&Eacute;</span></p>
+                                                                <p class="c6"><span class="c2">Dans le cadre de l&rsquo;ex&eacute;cution des pr&eacute;sentes CGU, EASE.SPACE est tenue d&rsquo;une obligation de moyens.</span></p>
+                                                                <p class="c6"><span class="c2">EASE.SPACE ainsi que ses h&eacute;bergeurs et fournisseurs de technologies ne pourront jamais &ecirc;tre tenus responsables de quelconque dommage r&eacute;sultant :</span></p>
+                                                                <p
+                                                                    class="c6 c9"><span class="c2">- d&#39;une utilisation de la Plateforme non conforme aux CGU;</span></p>
+                                                                    <p class="c6 c9"><span class="c2">- ou plus g&eacute;n&eacute;ralement d&rsquo;une quelconque faute de l&rsquo;Utilisateur.</span></p>
+                                                                    <p class="c6"><span class="c2">Au sens des pr&eacute;sentes Conditions g&eacute;n&eacute;rales, sera consid&eacute;r&eacute; comme une faute de l&rsquo;Utilisateur opposable &agrave; ce dernier toute mauvaise utilisation de la Plateforme, faute, n&eacute;gligence, omission ou d&eacute;faillance de sa part ou de celle de ses pr&eacute;pos&eacute;s, non-respect des conseils donn&eacute;s par EASE.SPACE, toute divulgation ou utilisation illicite du mot de passe, des codes et r&eacute;f&eacute;rences de l&rsquo;Utilisateur, ainsi que le renseignement d&rsquo;informations erron&eacute;es ou l&rsquo;absence de mise &agrave; jour de telles informations. Sera &eacute;galement consid&eacute;r&eacute;e comme une faute de l&rsquo;Utilisateur la mise en &oelig;uvre de tout proc&eacute;d&eacute; technique, tels que des robots, ou des requ&ecirc;tes automatiques, dont la mise en &oelig;uvre contreviendrait &agrave; la lettre ou &agrave; l&rsquo;esprit des pr&eacute;sentes CGU.</span></p>
+                                                                    <p
+                                                                        class="c6 c10"><span class="c2"></span></p>
+                                                                        <p class="c6"><span class="c2">En outre, EASE.SPACE ou, le cas &eacute;ch&eacute;ant, ses h&eacute;bergeurs et fournisseurs de technologies, ne pourront &ecirc;tre tenus responsables en cas de dommage r&eacute;sultant :</span></p>
+                                                                        <p
+                                                                            class="c6"><span class="c2">- de l&rsquo;inad&eacute;quation de la Plateforme &agrave; un usage particulier ou aux attentes et besoins de l&rsquo;Utilisateur, la Plateforme EASE.SPACE &eacute;tant propos&eacute;e en l&rsquo;&eacute;tat ;</span></p>
+                                                                            <p
+                                                                                class="c6"><span class="c2">- de l&rsquo;usage que l&rsquo;Utilisateur fait des informations ou des services mis &agrave; sa disposition dans la Plateforme, l&rsquo;Utilisateur &eacute;tant et demeurant seul responsable des d&eacute;cisions qu&rsquo;il prend et des choix qu&rsquo;il fait ;</span></p>
+                                                                                <p
+                                                                                    class="c6"><span class="c2">- d&rsquo;une indisponibilit&eacute; temporaire ou totale de tout ou partie de l&rsquo;acc&egrave;s &agrave; la Plateforme, d&rsquo;une difficult&eacute; li&eacute;e au temps de r&eacute;ponse, et d&rsquo;une mani&egrave;re g&eacute;n&eacute;rale, d&rsquo;un d&eacute;faut de performance ;</span></p>
+                                                                                    <p
+                                                                                        class="c6"><span class="c2">- d&#39;un cas de force majeure telle que d&eacute;finit par la jurisprudence.</span></p>
+                                                                                        <p class="c6 c10"><span class="c2"></span></p>
+                                                                                        <p class="c6"><span class="c2">En toute hypoth&egrave;se, la responsabilit&eacute; de EASE.SPACE sera limit&eacute;e aux seuls dommages directs, &agrave; l&rsquo;exclusion des dommages indirects, subis par l&rsquo;Utilisateur et sera limit&eacute;e aux montants encaiss&eacute;s par EASE.SPACE lors des 12 derniers mois ou, &agrave; d&eacute;faut, &agrave; 100 (cent) euros, tous faits g&eacute;n&eacute;rateurs et dommages confondus. L&rsquo;Utilisateur devra initier toute proc&eacute;dure dans un d&eacute;lai de 12 mois &agrave; compter du fait g&eacute;n&eacute;rateur.</span></p>
+                                                                                        <p
+                                                                                            class="c6 c10"><span class="c2"></span></p>
+                                                                                            <p class="c6"><span class="c0">ARTICLE 11- LUTTE CONTRE LES INFRACTIONS SPECIALES</span></p>
+                                                                                            <p class="c6 c10"><span class="c0"></span></p>
+                                                                                            <p class="c6"><span class="c2">11.1 Afin de lutter contre l&#39;apologie des crimes contre l&#39;humanit&eacute;, la provocation &agrave; la commission d&#39;actes de terrorisme et de leur apologie, l&#39;incitation &agrave; la haine raciale, &agrave; la haine &agrave; l&#39;&eacute;gard de personnes &agrave; raison de leur sexe, de leur orientation ou identit&eacute; sexuelle ou de leur handicap ainsi qu&#39;&agrave; la pornographie enfantine, l&#39;incitation &agrave; la violence, notamment l&#39;incitation aux violences faites aux femmes, ainsi qu&#39;aux atteintes &agrave; la dignit&eacute; humaine, tout usage ill&eacute;gal ou de mani&egrave;re g&eacute;n&eacute;rale non autoris&eacute; de la Plateforme entra&icirc;nera la suppression imm&eacute;diate du compte EASE de l&rsquo;Utilisateur, nonobstant pour EASE.SPACE toute possibilit&eacute; d&rsquo;action en justice, notamment demande de dommages et int&eacute;r&ecirc;ts. </span></p>
+                                                                                            <ul
+                                                                                                class="c5 lst-kix_list_2-0 start">
+                                                                                                <li class="c6 c10 c30"><span class="c2"></span></li>
+                                                                                                </ul>
+                                                                                                <p class="c6 c10"><span class="c2"></span></p>
+                                                                                                <p class="c6 c10"><span class="c2"></span></p>
+                                                                                                <p class="c6"><span class="c2">11.2. Compte tenu de l&#39;int&eacute;r&ecirc;t g&eacute;n&eacute;ral attach&eacute; &agrave; la r&eacute;pression des activit&eacute;s ill&eacute;gales de jeux d&#39;argent, EASE.SPACE informe ses Utilisateurs que tout jeux d&#39;argent ou pari est strictement interdit sur ou avec l&rsquo;aide de ses services. </span></p>
+                                                                                                <p
+                                                                                                    class="c6 c10"><span class="c2"></span></p>
+                                                                                                    <p class="c6" id="h.gjdgxs"><span class="c2">Tout Utilisateur qui contreviendrait &agrave; cette interdiction en portera l&#39;enti&egrave;re et unique responsabilit&eacute; sans que EASE.SPACE ne puisse &ecirc;tre tenu responsable d&#39;aucune mani&egrave;re des cons&eacute;quences de quelconques jeux d&#39;argent.</span></p>
+                                                                                                    <p
+                                                                                                        class="c6 c10"><span class="c2"></span></p>
+                                                                                                        <p class="c6"><span class="c23">Plus g&eacute;n&eacute;ralement EASE.SPACE informe ses Utilisateurs que pour se pr&eacute;munir d&rsquo;une quelconque fraude, vous devez jouer sur un site agr&eacute;&eacute; par l&rsquo;ARJEL Ces sites de jeux sont contr&ocirc;l&eacute;s par l&rsquo;ARJEL et vous permettent de jouer et parier sur des sites s&eacute;curis&eacute;s respectant de nombreuses contraintes. Ils sont reconnaissables gr&acirc;ce au label de l&rsquo;ARJEL :</span></p>
+                                                                                                        <p
+                                                                                                            class="c15"><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 90.67px; height: 62.67px;"><img alt="" src="/resources/landing/logo-arjel.png" style="width: 70.67px; height: 62.67px; margin-left: -0.00px; margin-top: -0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p>
+                                                                                                            <p
+                                                                                                                class="c6 c10"><span class="c2"></span></p>
+                                                                                                                <p class="c6"><span class="c2">L&rsquo;une des missions prioritaires de l&rsquo;ARJEL est de prot&eacute;ger les publics et notamment les populations vuln&eacute;rables&nbsp;: les mineurs, les joueurs excessifs et pathologiques.</span></p>
+                                                                                                                <p
+                                                                                                                    class="c6"><span class="c2">En cas de besoin, un num&eacute;ro d&rsquo;appel anonyme &laquo;&nbsp;joueur &eacute;coute info service &nbsp;&raquo; est accessible au 09 74 75 13 13 (prix d&rsquo;un appel non surtax&eacute;) de 8 heures &agrave; 2 heures, 7 jours sur 7. </span></p>
+                                                                                                                    <p
+                                                                                                                        class="c6 c10"><span class="c2"></span></p>
+                                                                                                                        <p class="c6"><span class="c14 c12">ARTICLE 12- GARANTIES</span></p>
+                                                                                                                        <p class="c6"><span class="c2">L&rsquo;Utilisateur s&#39;engage &agrave; n&#39;utiliser la Plateforme que pour ses besoins propres et pour les seules finalit&eacute;s vis&eacute;es aux pr&eacute;sentes CGU. </span></p>
+                                                                                                                        <p
+                                                                                                                            class="c6 c10"><span class="c2"></span></p>
+                                                                                                                            <p class="c6"><span class="c2">L&rsquo;Utilisateur s&#39;engage ne pas utiliser la Plateforme pour quelconque activit&eacute; illicite. L&rsquo;Utilisateur s&rsquo;engage notamment express&eacute;ment &agrave; n&rsquo;int&eacute;grer &agrave; son compte EASE et/ou sur la Plateforme aucun site internet illicite et notamment ayant trait &agrave; l&#39;apologie des crimes contre l&#39;humanit&eacute;, la provocation &agrave; la commission d&#39;actes de terrorisme et de leur apologie, l&#39;incitation &agrave; la haine raciale, &agrave; la haine &agrave; l&#39;&eacute;gard de personnes &agrave; raison de leur sexe, de leur orientation ou identit&eacute; sexuelle ou de leur handicap ainsi qu&#39;&agrave; la pornographie enfantine, l&#39;incitation &agrave; la violence, notamment l&#39;incitation aux violences faites aux femmes, ainsi qu&#39;aux atteintes &agrave; la dignit&eacute; humaine. &nbsp;</span></p>
+                                                                                                                            <p
+                                                                                                                                class="c6 c10"><span class="c2"></span></p>
+                                                                                                                                <p class="c6"><span class="c2">Tout usage ill&eacute;gal ou de mani&egrave;re g&eacute;n&eacute;rale non autoris&eacute; de la Plateforme entra&icirc;nera la suppression imm&eacute;diate du compte de l&rsquo;Utilisateur, nonobstant pour EASE.SPACE toute possibilit&eacute; d&rsquo;action en justice, notamment demande de dommages et int&eacute;r&ecirc;ts. </span></p>
+                                                                                                                                <p
+                                                                                                                                    class="c6 c10"><span class="c2"></span></p>
+                                                                                                                                    <p class="c6"><span class="c2">L&rsquo;Utilisateur s&#39;engage &eacute;galement &agrave; ne pas entraver ou perturber la Plateforme et &agrave; se conformer aux conditions requises, aux proc&eacute;dures, aux r&egrave;gles g&eacute;n&eacute;rales qui lui sont communiqu&eacute;es par EASE.SPACE pour la bonne mise en &oelig;uvre de la Plateforme. </span></p>
+                                                                                                                                    <p
+                                                                                                                                        class="c6 c10"><span class="c2"></span></p>
+                                                                                                                                        <p class="c6"><span class="c2">L&rsquo;Utilisateur garantit express&eacute;ment EASE.SPACE contre tout dommage susceptible de lui &ecirc;tre caus&eacute; du fait de la violation de quelconque de ses engagements susvis&eacute;s et plus g&eacute;n&eacute;ralement du fait de son utilisation de la Plateforme, en ce compris les &eacute;ventuels frais d&rsquo;avocat et de proc&eacute;dure, et s&rsquo;engage &agrave; ce titre &agrave; intervenir &agrave; toute instance judiciaire engag&eacute;e &agrave; son encontre du fait de son utilisation de la Plateforme.</span></p>
+                                                                                                                                        <hr
+                                                                                                                                            style="page-break-before:always;display:none;">
+                                                                                                                                            <p class="c6 c10"><span class="c0"></span></p>
+                                                                                                                                            <p class="c6"><span class="c0">ARTCILE 13- DONNEES PERSONNELLES</span></p>
+                                                                                                                                            <p class="c6 c10"><span class="c2"></span></p>
+                                                                                                                                            <p class="c6"><span class="c7">13.1 D&eacute;claration CNIL - Responsable du traitement</span></p>
+                                                                                                                                            <p class="c6 c10"><span class="c7"></span></p>
+                                                                                                                                            <p class="c15"><span class="c23">Les donn&eacute;es personnelles des Utilisateurs collect&eacute;es par EASE.SPACE font l&#39;objet d&#39;une d&eacute;claration aupr&egrave;s de la CNIL enregistr&eacute;e sous le n&deg; </span>
+                                                                                                                                                <span
+                                                                                                                                                    class="c22">2003775</span>
+                                                                                                                                            </p>
+                                                                                                                                            <p class="c6 c10"><span class="c2"></span></p>
+                                                                                                                                            <p class="c6 c10"><span class="c2"></span></p>
+                                                                                                                                            <p class="c6"><span class="c2">EASE.SPACE </span><span class="c1">collecte des donn&eacute;es personnelles de l&#39;Utilisateur, notamment ses noms, pr&eacute;noms, adresses emails, num&eacute;ros de t&eacute;l&eacute;phone, IP, logs etc en conformit&eacute; avec les dispositions l&eacute;gales en vigueur. </span></p>
+                                                                                                                                            <p
+                                                                                                                                                class="c6 c10"><span class="c2"></span></p>
+                                                                                                                                                <p class="c6"><span class="c7">13.2 Finalit&eacute; de la collecte </span></p>
+                                                                                                                                                <p class="c6 c10"><span class="c7"></span></p>
+                                                                                                                                                <p class="c6"><span class="c2">Les donn&eacute;es personnelles collect&eacute;es font l&#39;objet d&#39;un traitement informatique. Elles sont n&eacute;cessaires &agrave; la bonne administration de la Plateforme, ainsi qu&#39;au respect de ses obligations contractuelles par EASE.SPACE. </span></p>
+                                                                                                                                                <p
+                                                                                                                                                    class="c6 c10"><span class="c7"></span></p>
+                                                                                                                                                    <p class="c6"><span class="c7">13.3 Conservation</span></p>
+                                                                                                                                                    <p class="c6 c10"><span class="c2"></span></p>
+                                                                                                                                                    <p class="c6"><span class="c2">Les donn&eacute;es personnelles des Utilisateurs sont sauvegard&eacute;es pour une dur&eacute;e de 5 ans, dur&eacute;e raisonnable n&eacute;cessaire &agrave; la bonne administration de la Plateforme et &agrave; une utilisation normale des donn&eacute;es. Ces donn&eacute;es sont conserv&eacute;es dans des conditions s&eacute;curis&eacute;es, selon les moyens actuels de la technique, dans le respect des dispositions de la Loi Informatique et Libert&eacute;s du 6 janvier 1978. </span></p>
+                                                                                                                                                    <p
+                                                                                                                                                        class="c6 c10"><span class="c2"></span></p>
+                                                                                                                                                        <p class="c6"><span class="c7">13.4 Droit d&#39;acc&egrave;s, de rectification et d&#39;opposition pour motifs l&eacute;gitimes</span></p>
+                                                                                                                                                        <p
+                                                                                                                                                            class="c6 c10"><span class="c2"></span></p>
+                                                                                                                                                            <p class="c6"><span class="c2">Conform&eacute;ment &agrave; la loi Informatique et Libert&eacute; Utilisateurs disposent d&#39;un d&#39;acc&egrave;s et de rectification de leurs donn&eacute;es ainsi que d&rsquo;un droit d&rsquo;opposition pour motif l&eacute;gitime. </span></p>
+                                                                                                                                                            <p
+                                                                                                                                                                class="c6 c10"><span class="c2"></span></p>
+                                                                                                                                                                <p class="c6"><span class="c2">Pour exercer ses droits l&rsquo;Utilisateur doit adresser une demande &eacute;crite assortie d&rsquo;une copie de sa carte d&rsquo;identit&eacute; en vigueur &agrave; EASE.SPACE &agrave; l&#39;adresse &eacute;lectronique suivante contact@ease.space ou par courrier postal &agrave; l&#39;adresse mentionn&eacute;e en ent&ecirc;te des pr&eacute;sentes.</span></p>
+                                                                                                                                                                <p
+                                                                                                                                                                    class="c6 c10"><span class="c2"></span></p>
+                                                                                                                                                                    <p class="c6"><span class="c7">13.5 Destinataires et Transferts</span></p>
+                                                                                                                                                                    <p class="c6 c10"><span class="c7"></span></p>
+                                                                                                                                                                    <p class="c8"><span class="c2">Les donn&eacute;es collect&eacute;es sont utilis&eacute;es par EASE.SPACE seulement et ne font l&rsquo;objet d&rsquo;aucun transfert ni commercial ni gratuit.</span></p>
+                                                                                                                                                                    <p
+                                                                                                                                                                        class="c6 c10"><span class="c0"></span></p>
+                                                                                                                                                                        <p class="c6"><span class="c12 c32">ARTICLE 14- </span><span class="c0">CESSION</span></p>
+                                                                                                                                                                        <p class="c6"><span class="c2">Les CGU peuvent faire l&rsquo;objet d&rsquo;une cession totale ou partielle, &agrave; titre on&eacute;reux ou gracieux, par EASE.SPACE, sans l&rsquo;accord de l&rsquo;Utilisateur, d&egrave;s lors que cette cession n&rsquo;engendre pas une diminution des droits de ce dernier au titre des pr&eacute;sentes.</span></p>
+                                                                                                                                                                        <p
+                                                                                                                                                                            class="c6"><span class="c12 c34 c32">ARTICLE 15 - DIVERS</span></p>
+                                                                                                                                                                            <p class="c6"><span class="c2">La nullit&eacute; d&#39;une des clauses des pr&eacute;sentes CGU n&#39;entra&icirc;nera pas la nullit&eacute; des autres clauses du contrat ou du contrat dans sa globalit&eacute;, qui garderont leur plein effet et port&eacute;e.</span></p>
+                                                                                                                                                                            <p
+                                                                                                                                                                                class="c6 c10"><span class="c2"></span></p>
+                                                                                                                                                                                <p class="c6"><span class="c2">L&#39;absence d&#39;exercice par EASE.SPACE des droits qui lui sont reconnus par les pr&eacute;sentes ne pourra en aucun cas &ecirc;tre interpr&eacute;t&eacute;e comme une renonciation &agrave; faire valoir lesdits droits.</span></p>
+                                                                                                                                                                                <p
+                                                                                                                                                                                    class="c6 c10"><span class="c2"></span></p>
+                                                                                                                                                                                    <p class="c6"><span class="c12 c32 c34">ARTICLE 16 - DROIT ET LITIGE</span></p>
+                                                                                                                                                                                    <p class="c6"><span class="c2">Les CGU sont soumises &agrave; la Plateforme du droit fran&ccedil;ais. </span></p>
+                                                                                                                                                                                    <p
+                                                                                                                                                                                        class="c6 c10"><span class="c2"></span></p>
+                                                                                                                                                                                        <p class="c6"><span class="c2">Les CGU et tous les points d&eacute;coulant de ou relatifs aux pr&eacute;sentes CGU et &agrave; leur application, y compris leur contenu, sont r&eacute;gis par le droit fran&ccedil;ais, peu importe le(s) lieu(x) d&rsquo;ex&eacute;cution des obligations substantielles ou accessoires.</span></p>
+                                                                                                                                                                                        <p
+                                                                                                                                                                                            class="c6"><span class="c2">Pour le r&egrave;glement de toute contestation ou de tout litige avec des non-consommateurs pr&eacute;alablement non r&eacute;solu &agrave; l&rsquo;amiable, il est fait exclusivement attribution de comp&eacute;tence aux tribunaux fran&ccedil;ais du lieu o&ugrave; est situ&eacute; le si&egrave;ge social de EASE.SPACE.</span></p>
+                                                                                                                                                                                            <p
+                                                                                                                                                                                                class="c15 c10"><span class="c17"></span></p>
+                                                                                                                                                                                                <div>
+                                                                                                                                                                                                    <p class="c10 c33"><span class="c18"></span></p>
+                                                                                                                                                                                                    <p class="c10 c38"><span class="c18"></span></p>
+                                                                                                                                                                                                </div>
 </body>
 </html>
