@@ -379,8 +379,8 @@ pageEncoding="UTF-8"%>
 		<%@ include file="templates/landingPage/landingFooter.jsp" %>
 		<%@ include file="templates/landingPage/registrationPopup.jsp" %>	
 		<script src="/js/thirdParty/jquery1.12.4.js" ></script>
+		<script src="/js/jquery.complexify.min.js"></script>
 		<script src="/js/thirdParty/bootstrap.js" async></script>
-		<script src="/js/jquery.complexify.min.js" async></script>
 		<script src="/js/popups/registrationPopup.js" async></script>
 		<script src="/js/landingPage.js" async></script>
 		<script src="/jsMinified.v00000/basic-utils.js" async></script>
@@ -393,10 +393,7 @@ pageEncoding="UTF-8"%>
 					&& $('#2').find("input[name='email']").val().length){
 					easeSignUpPopup.openRegistration();
 			}
-			window.addEventListener('load',function(){
-				easeTracker.trackEvent("HomepageLogin");
-			});
-			window.addEventListener('load',function(){
+			$('.signUpButton').click(function(){
 				easeTracker.trackEvent($(this).attr("trackEvent"));
 				easeSignUpPopup.open();
 			});
@@ -431,5 +428,4 @@ pageEncoding="UTF-8"%>
 					});
 				</script>
 			</body>
-
 			</html>

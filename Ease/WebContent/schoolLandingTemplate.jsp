@@ -229,8 +229,8 @@ pageEncoding="UTF-8"%>
 	<%@ include file="templates/landingPage/registrationPopup.jsp" %>
 </body>
 <script src="/js/thirdParty/jquery1.12.4.js"></script>
+<script src="/js/jquery.complexify.min.js" ></script>
 <script src="/js/thirdParty/bootstrap.js" async></script>
-<script src="/js/jquery.complexify.min.js" async></script>
 <script src="/js/popups/registrationPopup.js" async></script>
 <script src="/js/landingPage.js" async></script>
 <script src="/jsMinified.v00000/basic-utils.js" async></script>
