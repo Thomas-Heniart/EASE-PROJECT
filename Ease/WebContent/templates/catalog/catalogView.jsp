@@ -87,3 +87,7 @@ pageEncoding="UTF-8"%>
 	</div>
 </div>
 </div>
+<script src="js/catalog/catalogApp.js" async></script>
+<script src="js/catalog/catalog.js" async></script>
+<script src="js/catalog/updates/update.js" async></script>
+<script src="js/catalog/updates/updatesManager.js" async></script>

@@ -195,21 +195,8 @@ response.addCookie(email);
 	});
 	window.addEventListener('load',function(){
 		asyncLoading.loadHtml({
-			urls: ['/templates/popups/modifyAppPopup.html',
-			'/templates/popups/addBookmarkPopup.html',
-			'/templates/popups/addAppPopup.html',
-			'/templates/popups/deleteProfilePopup.html',
-			'/templates/popups/deleteAccountPopup.html'],
+			urls: ['/templates/PopupsHandler.jsp'],
 			appendTo: '#easePopupsHandler'
-		});
-		asyncLoading.loadScripts({
-			urls: ['/js/popups/modifyAppPopup.js',
-			'js/popups/addAppPopup.js',
-			"js/popups/deleteAccountPopup.js",
-			"js/popups/deleteProfilePopup.js",
-			"js/popups/addBookmarkPopup.js",
-			"js/popups/popupHandler.js"],
-			async: true
 		});
 		asyncLoading.loadHtml({
 			urls: ['/templates/SettingsView.jsp'],
@@ -219,15 +206,7 @@ response.addCookie(email);
 			urls: ['/templates/catalog/catalogView.jsp'],
 			appendTo: '.col-left .CatalogViewTab'
 		});
-		asyncLoading.loadScripts({
-			urls: ["js/catalog/catalogApp.js",
-			"js/catalog/catalog.js",
-			"js/catalog/updates/update.js",
-			"js/catalog/updates/updatesManager.js"],
-			async : true
-		});
 		asyncLoading.loadHtml({urls:['/templates/Footer.html'], appendTo : '#onComputer'});
-		asyncLoading.loadScripts({urls: ['/js/footer.js'], async: true});
 	});
 </script>
 <script src="js/logout.js" async></script>
