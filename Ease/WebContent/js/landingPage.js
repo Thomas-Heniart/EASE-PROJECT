@@ -3,6 +3,7 @@
  * Copyright 2013-2016 Start Bootstrap
  * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
  */
+window.addEventListener('load',function(){
  ! function(t) {
     "use strict";
     t("a.page-scroll").bind("click", function(a) {
@@ -18,6 +19,7 @@
         }
     })
 }(jQuery);
+});
 
 $(document).ready(function() {
             // Get media - with autoplay disabled (audio or video)

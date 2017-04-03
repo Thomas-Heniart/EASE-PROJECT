@@ -35,6 +35,7 @@ function getCookie(cname) {
     return "";
 }
 
+var NavigatorName = getUserNavigator();
 function getUserNavigator() {
     var ua = navigator.userAgent;
     var x = ua.indexOf("MSIE");
@@ -148,7 +149,7 @@ function changeColor(color, ratio, darker) {
     function darkerColor(color, ratio) {
         return changeColor(color, ratio, true);
     }
-
+window.addEventListener('load',function(){
     $(document).on('mouseover', '.showAppActionsButton', function(evt){
         var subPopup = $(this).find('.appActionsPopup');
         var profileParent = $(this).closest('.siteLinkBox').parent();
@@ -187,7 +188,6 @@ function changeColor(color, ratio, darker) {
         }
     });
 
-    $(document).ready(function(){
         $(document).on('click', ".showPassDiv", function(){
             var input = $(this).parent().find('input');
             if ($(this).hasClass('show')){
@@ -200,8 +200,7 @@ function changeColor(color, ratio, darker) {
                 $(this).addClass('show');
             }
         });        
-    });
-
+});
 
     var Animations = function(){
         this.animateOnce = function(elem, animationClass){

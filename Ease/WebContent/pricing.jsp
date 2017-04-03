@@ -184,24 +184,27 @@ pageEncoding="UTF-8"%>
 	</section>
 	<%@ include file="templates/landingPage/landingFooter.jsp" %>
 	<%@ include file="templates/landingPage/registrationPopup.jsp" %>
-	<script
-	src="/js/jquery1.12.4.js"></script>
-	<script src="js/languageChooser.js"></script>
+	<script	src="/js/jquery1.12.4.js"></script>
+	<script src="js/languageChooser.js" async></script>
 	<script src="/jsMinified.v00000/basic-utils.js" async></script>
-	<script src="js/postHandler.js"></script>
-	<script src="js/websocket.js"></script>
-	<script src="js/jquery.complexify.min.js"></script>
-	<script src="/js/popups/registrationPopup.js"></script>
+	<script src="js/postHandler.js" async></script>
+	<script src="js/jquery.complexify.min.js" async></script>
+	<script src="/js/popups/registrationPopup.js" async></script>
+	<script src="js/tracker.js" async></script>
 	<script type="text/javascript">
+	window.addEventListener('load',function(){
 		$('#free button[type=submit]').click(function(){
 			easeSignUpPopup.open();
 		});
+	});
 	</script>
 	<script type="text/javascript">
+		window.addEventListener('load',function(){
 		$crisp=[];CRISP_WEBSITE_ID="6e9fe14b-66f7-487c-8ac9-5912461be78a";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.im/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+	});
 	</script>
-	<script src="js/tracker.js"></script>
 	<script type="text/javascript">
+		window.addEventListener('load',function(){
 		(function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script");r.type="text/javascript";
 			r.async=true;r.src="https://d24n15hnbwhuhn.cloudfront.net/libs/amplitude-3.0.1-min.gz.js";
 			r.onload=function(){e.amplitude.runQueuedFunctions()};var i=t.getElementsByTagName("script")[0];
@@ -221,6 +224,7 @@ pageEncoding="UTF-8"%>
 	/* Test */
 	amplitude.getInstance().init("73264447f97c4623fb38d92b9e7eaeea");
 	easeTracker.trackEvent("PricingPageVisit");
+});
 </script>
 </body>
 </html>

@@ -130,7 +130,6 @@ $(document).ready(function() {
 	 });
 	
     // init extension popup 
-    var NavigatorName = getUserNavigator();
     $("#chrome button[type='submit'], #safari button[type='submit']").click(function(){
         window.location = "/";
     });
