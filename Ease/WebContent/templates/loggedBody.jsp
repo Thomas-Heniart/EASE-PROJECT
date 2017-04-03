@@ -30,8 +30,6 @@ response.addCookie(sessionToken);
 }
 %>
 <%
-pageContext.setAttribute("selectedTags", new LinkedList<Tag>());
-
 Cookie fname = new Cookie("fname",
 	Base64.getEncoder().encodeToString(user.getFirstName().getBytes(StandardCharsets.UTF_8)));
 Cookie lname = new Cookie("lname",
@@ -126,7 +124,6 @@ response.addCookie(email);
 <%@ include file="new_extension.html" %>
 <script>
 	$(document).ready(function(){
-		$('.cookiesInfo').css('display', 'none');
 		var appCount = $(".SitesContainer .siteLinkBox").length;
 		var verifiedEmailCount = $(".verifiedEmail").length;
 		var unverifiedEmailCount = $(".unverifiedEmail").length;
@@ -138,13 +135,4 @@ response.addCookie(email);
 		
 	});
 	easeTracker.setDailyPhoto($('#backgroundSwitch').is("checked"));
-</script>
-<script>
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-	ga('create', 'UA-75916041-5', 'auto');
-	ga('send', 'pageview');
 </script>

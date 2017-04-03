@@ -42,28 +42,6 @@ function leaveEditMode() {
 	$('.MenuButtonSet').removeClass('editMode');
 }
 
-var profileManager = function(){
-	this.getProfileById = function(id){
-		for (var i = 0; i < profiles.length; i++) {
-			if (profiles[i].id == id)
-				return profiles[i];
-		}
-		return null;
-	}
-}
-var profiles = [];
-var easeProfileManager;
-
-$(document).ready(function(){
-	$('.ProfileBox:not(.helper)').each(function(){
-		var profile = new Profile($(this));
-		profiles.push(profile);
-	});
-	easeProfileManager = new profileManager();	
-	$("#enterEditMode").click(enterEditMode);
-	
-});
-
 var Profile = function(rootEl){
 	var self = this;
 	this.qRoot = $(rootEl);
@@ -305,6 +283,29 @@ var Profile = function(rootEl){
 	});
 //	setupProfileSettings(self.qRoot);
 };
+
+var profileManager = function(){
+	this.getProfileById = function(id){
+		for (var i = 0; i < profiles.length; i++) {
+			if (profiles[i].id == id)
+				return profiles[i];
+		}
+		return null;
+	}
+}
+var profiles = [];
+var easeProfileManager;
+
+$(document).ready(function(){
+	$('.ProfileBox:not(.helper)').each(function(){
+		var profile = new Profile($(this));
+		profiles.push(profile);
+	});
+	easeProfileManager = new profileManager();	
+	$("#enterEditMode").click(enterEditMode);
+	
+});
+
 $(document).click(function (e){
 	var profile = $(e.target).closest('.ProfileControlPanel');
 	var settingsButton = null;

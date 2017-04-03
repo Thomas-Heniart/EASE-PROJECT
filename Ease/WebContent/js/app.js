@@ -202,7 +202,11 @@ var MyApp = function(){
 		self.logWith = self.qRoot.attr('logwith');
 		self.logoHandler = self.qRoot.find('img.logo');
 		self.imgSrc = self.logoHandler.attr('lazy-src');
-		self.initAccountInformations();
+		var accountInf = self.qRoot.attr('account');
+		if (accountInf){
+			self.accountInformations = JSON.parse(accountInf);
+			self.qRoot.attr('account', '');
+		}
 		if (self.qRoot.attr('url')){
 			self.url = self.qRoot.attr('url');
 			self.qRoot.attr('url', '');

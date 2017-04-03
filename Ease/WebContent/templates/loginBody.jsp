@@ -5,24 +5,9 @@ pageEncoding="UTF-8"%>
 <%@ page import="java.nio.charset.StandardCharsets" %>
 
 <script src="js/connection.js"></script>
+<script src="js/generalLogout.js"></script>
 <script src="js/rAF.js"></script>
 
-<script>
-	$(document).ready(function(){
-		setTimeout(function(){
-			var event = new CustomEvent("NewEaseUser", {"detail":"anonymous"});
-			document.dispatchEvent(event);
-		}, 500);
-
-	});
-	easeTracker.trackEvent("LoginpageVisit");
-</script>
-<div id="loginBody">
-	<div class="ease-logo">
-		<img src="resources/icons/Ease_logo_blue.png" />
-	</div>
-
-	<%@ include file="Logout.jsp" %>
 	<% 
 	Cookie 	cookie = null;
 	Cookie 	cookies[] = request.getCookies();
@@ -59,6 +44,22 @@ response.sendRedirect("/");
 }
 boolean knownUser = iden == 2 ? true : false;
 %>
+<script>
+	$(document).ready(function(){
+		setTimeout(function(){
+			var event = new CustomEvent("NewEaseUser", {"detail":"anonymous"});
+			document.dispatchEvent(event);
+		}, 500);
+
+	});
+	easeTracker.trackEvent("LoginpageVisit");
+</script>
+<div id="loginBody">
+	<div class="ease-logo">
+		<img src="resources/icons/Ease_logo_blue.svg" />
+	</div>
+
+	<%@ include file="Logout.html" %>
 <div class="popupHandler myshow">
 	<div class="sk-fading-circle" id="loading">
 		<div class="sk-circle1 sk-circle"></div>
@@ -127,7 +128,7 @@ boolean knownUser = iden == 2 ? true : false;
 							<input type="email" name="email" placeholder="Email"/>
 							<input type="password" name="password" placeholder="Password"/>
 						</div>
-						<div class="row">
+						<div claslogins="row">
 							<p class="buttonLink floatRight pwdLostButton">Password lost ?</p>
 						</div>
 						<div class="row alertDiv text-center">

@@ -50,7 +50,8 @@
 	 id="${app.getSingleId()}"
 	 ssoId="${app.getSite().getSsoId()}"
 	 move="true"
-	 logwith="">
+	 logwith=""
+	 account='${app.getAccountInformationsJson()}'>
 </c:if>
 <c:if test="${app.getType() eq 'LogwithApp'}">
 <div class="siteLinkBox"
