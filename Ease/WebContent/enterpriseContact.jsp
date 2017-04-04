@@ -34,17 +34,13 @@ pageEncoding="UTF-8"%>
 	<meta name="viewport" content="width=device-width, user-scalable=no" />
 
 	<link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
-	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Droid+Serif" />
-	<link href='https://fonts.googleapis.comcss?family=Source+Sans+Pro' rel='stylesheet' type='textcss' />
 
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-	<link rel="stylesheet" href="css/default_style.css" />
-	<link rel="stylesheet" href="css/bootstrap.css" />
-	<link rel="stylesheet" href="css/landingPage.css" />
-	<link rel="stylesheet" type="text/css" href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
-	<link rel="stylesheet" href="css/enterpriseContact.css" />
-
-
+	<link rel="stylesheet" href="/cssMinified.v00000/default_style.css" />
+	<link rel="stylesheet" href="/cssMinified.v00000/bootstrap.css" />
+	<link rel="stylesheet" href="/cssMinified.v00000/landingPage.css" />
+	<link rel="stylesheet" href="/cssMinified.v00000/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="/cssMinified.v00000/enterpriseContact.css" />
 
 	<link rel="manifest" href="manifest.json">
 
@@ -140,12 +136,12 @@ pageEncoding="UTF-8"%>
 		</div>
 	</section>
 	<%@ include file="templates/landingPage/landingFooter.jsp" %>
-	<script src="/js/thirdParty/jquery1.12.4.js"></script>
-	<script src="/js/enterpriseContact.js" defer></script>
-	<script src="js/basic-utils.js" async></script>
-	<script src="js/postHandler.js" async></script>
-	<script src="js/languageChooser.js" async></script>
-	<script src="js/tracker.js" async></script>
+	<script src="/jsMinified.v00000/jquery1.12.4.js"></script>
+	<script src="/jsMinified.v00000/enterpriseContact.js" defer></script>
+	<script src="/jsMinified.v00000/basic-utils.js" async></script>
+	<script src="/jsMinified.v00000/postHandler.js" async></script>
+	<script src="/jsMinified.v00000/languageChooser.js" async></script>
+	<script src="/jsMinified.v00000/tracker.js" async></script>
 
 	<script type="text/javascript">
 		window.addEventListener('load',function(){

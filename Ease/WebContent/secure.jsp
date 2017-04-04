@@ -18,7 +18,7 @@ src="https://www.facebook.com/tr?id=1771793116375287&ev=PageView&noscript=1"
 
 
 <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
-<script src="js/tracker.js"></script>
+<script src="/jsMinified.v00000/tracker.js"></script>
 <script type="text/javascript">
   (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script");r.type="text/javascript";
   r.async=true;r.src="https://d24n15hnbwhuhn.cloudfront.net/libs/amplitude-3.0.1-min.gz.js";

@@ -94,9 +94,9 @@ response.addCookie(email);
 
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
 
-	<link rel="stylesheet" href="css/default_style.css" />
-	<link rel="stylesheet" href="css/bootstrap.css" />
-	<link rel="stylesheet" type="text/css" href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="/cssMinified.v00000/default_style.css" />
+	<link rel="stylesheet" href="/cssMinified.v00000/bootstrap.css" />
+	<link rel="stylesheet" href="/cssMinified.v00000/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
 
 	<link rel="manifest" href="manifest.json">
 
@@ -138,23 +138,25 @@ response.addCookie(email);
 <%@ include file="templates/new_extension.html" %>
 </div>
 <noscript id="deferred-styles">
-	<link rel="stylesheet" href="css/lib/niftyPopupWindow/component.css">
+	<link rel="stylesheet" href="/cssMinified.v00000/lib/niftyPopupWindow/component.css">
 </noscript>
-<script src="js/jquery1.12.4.js" ></script>
-<script src="js/jquery-ui-1.12.0.js" defer></script>
-<script src="js/app.js" defer></script>
-<script src="js/profiles.js" defer></script>
-<script src="js/dashboard.js" defer></script>
-<script src="js/tracker.js" async></script>
-<script src="/js/asyncContentLoading.js" async></script>
-<script src="js/postHandler.js" async></script>
-<script src="js/Sortable.js" async></script>
-<script src="js/basic-utils.js" async></script>
-<script src="js/extension.js" async></script>
-<script src="js/header.js" async></script>
-<script src="js/selectFx.js" async></script>
-<script src="js/isMobile.js" async></script>
-<script src="js/shortcut.js" async></script>
+<script src="/jsMinified.v00000/jquery1.12.4.js" ></script>
+<script src="/jsMinified.v00000/jquery-ui-1.12.0.js" defer></script>
+<script src="/jsMinified.v00000/app.js" defer></script>
+<script src="/jsMinified.v00000/profiles.js" defer></script>
+<script src="/jsMinified.v00000/dashboard.js" defer></script>
+<script src="/jsMinified.v00000/tracker.js" async></script>
+<script src="/jsMinified.v00000/asyncContentLoading.js" async></script>
+<script src="/jsMinified.v00000/postHandler.js" async></script>
+<script src="/jsMinified.v00000/Sortable.js" async></script>
+<script src="/jsMinified.v00000/basic-utils.js" async></script>
+<script src="/jsMinified.v00000/extension.js" async></script>
+<script src="/jsMinified.v00000/header.js" async></script>
+<script src="/jsMinified.v00000/selectFx.js" async></script>
+<script src="/jsMinified.v00000/isMobile.js" async></script>
+<script src="/jsMinified.v00000/shortcut.js" async></script>
+<script src="/jsMinified.v00000/logout.js" async></script>
+<script src="/jsMinified.v00000/checkConnection.js" async></script>
 <script>
 	var images = document.getElementsByClassName('logo');
 	Array.prototype.forEach.call(images, function(element){
@@ -201,8 +203,6 @@ response.addCookie(email);
 		asyncLoading.loadHtml({urls:['/templates/Footer.html'], appendTo : '#onComputer'});
 	});
 </script>
-<script src="js/logout.js" async></script>
-<script src="js/checkConnection.js" async></script>
 <script type="text/javascript">
 	window.addEventListener('load',function(){
 		(function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script");r.type="text/javascript";
