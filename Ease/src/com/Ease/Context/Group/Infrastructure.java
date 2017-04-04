@@ -8,7 +8,6 @@ import javax.servlet.ServletContext;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.DatabaseRequest;
 import com.Ease.Utils.DatabaseResult;
@@ -49,7 +48,7 @@ public class Infrastructure {
 			DatabaseResult rs2 = request.get();
 			List<String> adminIds = new LinkedList<String>();
 			while (rs2.next())
-				adminIds.add(rs.getString(1));
+				adminIds.add(rs2.getString(1));
 			infra = new Infrastructure(db_id, name, img_path, adminIds, single_id);
 			GroupManager.getGroupManager(context).add(infra);
 			groups = Group.loadGroups(db, infra, context);
@@ -141,6 +140,27 @@ public class Infrastructure {
 		return "/resources/infras/" + this.img_path;
 	}
 	
+	public List<String> getAdminIds() {
+		return this.adminIds;
+	}
+	
+	public void addAdmin(String id, ServletManager sm) throws GeneralException {
+		if (this.adminIds.contains(id))
+			throw new GeneralException(ServletManager.Code.ClientWarning, "This user is already an admin");
+		DataBaseConnection db = sm.getDB();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO infrastructuresAdminsMap values(?, ?, ?);");
+		request.setNull();
+		request.setInt(id);
+		request.setInt(db_id);
+		request.set();
+		this.adminIds.add(id);
+	}
+	
+	public void addAdmins(List<String> adminIds, ServletManager sm) throws GeneralException {
+		for (String id : adminIds)
+			this.addAdmin(id, sm);
+	}
+	
 	public void setName(String name, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
@@ -173,19 +193,6 @@ public class Infrastructure {
 	 * 
 	 */
 	
-	public boolean isAdmin(User user, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		DatabaseRequest request = db.prepareRequest("SELECT * FROM infrastructuresAdminsMap WHERE infrastructure_id= ? AND user_id= ?;");
-		request.setInt(this.db_id);
-		request.setInt(user.getDBid());
-		DatabaseResult rs = request.get();
-		if (rs.next()) {
-			return true;
-		} else {
-			throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permissions to do that.");
-		}
-	}
-	
 	public JSONObject getJson() {
 		JSONObject json = new JSONObject();
 		json.put("name", this.name);
@@ -200,5 +207,9 @@ public class Infrastructure {
 
 	public void addGroup(Group group) {
 		this.groups.add(group);
+	}
+
+	public boolean isAdmin(String user_id) {
+		return this.adminIds.contains(user_id);
 	}
 }

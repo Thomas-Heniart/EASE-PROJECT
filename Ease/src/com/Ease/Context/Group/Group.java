@@ -37,7 +37,12 @@ public class Group {
 	 */
 	
 	public static Group createGroup(String name, Group parent, Infrastructure infra, ServletManager sm) throws GeneralException {
+		return createGroup(name, parent, infra, new LinkedList<String>(), sm);
+	}
+	
+	public static Group createGroup(String name, Group parent, Infrastructure infra, List<String> adminIds, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
 		String infra_id = (infra == null) ? "null" : infra.getDBid();
 		IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
 		DatabaseRequest request = db.prepareRequest("INSERT INTO groups values (null, ?, ?, ?);");
@@ -48,7 +53,15 @@ public class Group {
 			request.setInt(parent.getDBid());
 		request.setInt(infra_id);
 		int db_id = request.set();
-		Group group = new Group(String.valueOf(db_id), name, parent, infra, idGenerator.getNextId());
+		for (String id : adminIds) {
+			request = db.prepareRequest("INSERT INTO groupAdminsMap values(?, ?, ?);");
+			request.setNull();
+			request.setInt(db_id);
+			request.setInt(id);
+			request.set();
+		}
+		db.commitTransaction(transaction);
+		Group group = new Group(String.valueOf(db_id), name, parent, infra, adminIds, idGenerator.getNextId());
 		if (parent != null)
 			parent.getChildren().add(group);
 		GroupManager.getGroupManager(sm).add(group);
@@ -76,7 +89,13 @@ public class Group {
 			db_id = rs.getString(Data.ID.ordinal());
 			name = rs.getString(Data.NAME.ordinal());
 			single_id = idGenerator.getNextId();
-			Group child = new Group(db_id, name, parent, infra, single_id);
+			List<String> adminIds = new LinkedList<String> ();
+			request = db.prepareRequest("SELECT user_id FROM groupAdminsMap WHERE group_id = ?;");
+			request.setInt(db_id);
+			DatabaseResult rs2 = request.get();
+			while (rs2.next())
+				adminIds.add(rs2.getString(1));
+			Group child = new Group(db_id, name, parent, infra, adminIds,single_id);
 			child.setChildrens(loadGroup(db, child, infra, context));
 			groupProfiles = GroupProfile.loadGroupProfiles(child, db, context);
 			child.setGroupProfiles(groupProfiles);	
@@ -116,8 +135,9 @@ public class Group {
 	protected Infrastructure infra;
 	protected int	single_id;
 	protected List<Website> groupWebsites;
+	protected List<String> adminIds;
 	
-	public Group(String db_id, String name, Group parent, Infrastructure infra, int single_id) {
+	public Group(String db_id, String name, Group parent, Infrastructure infra, List<String> adminIds,int single_id) {
 		this.db_id = db_id;
 		this.name = name;
 		this.children = new LinkedList<Group>();
@@ -127,6 +147,7 @@ public class Group {
 		this.groupProfiles = null;
 		this.groupApps = null;
 		this.groupWebsites = new LinkedList<Website>();
+		this.adminIds = adminIds;
 	}
 	
 	/*
@@ -348,5 +369,9 @@ public class Group {
 	
 	public void addGroupApp(GroupApp groupApp) {
 		this.groupApps.add(groupApp);
+	}
+
+	public boolean isAdmin(String user_id) {
+		return this.infra.isAdmin(user_id) || this.adminIds.contains(user_id);
 	}
 }

@@ -619,4 +619,12 @@ public class User {
 		}
 		return res;
 	}
+	
+	public boolean isGroupAdmin(Group group) {
+		int idx = this.groups.indexOf(group);
+		if (idx == -1)
+			return false;
+		Group tmp = this.groups.get(idx);
+		return tmp.isAdmin(this.db_id);
+	}
 }
