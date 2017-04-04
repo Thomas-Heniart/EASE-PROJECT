@@ -193,6 +193,7 @@ public class ClassicApp extends WebsiteApp {
 		websiteInfos.put("user", this.account.getJSON(sm));
 		websiteInfos.put("type", "ClassicApp");
 		websiteInfos.put("app_name", this.informations.getName());
+		websiteInfos.put("website_name", this.website.getName());
 		return infos;
 	}
 	
@@ -201,6 +202,7 @@ public class ClassicApp extends WebsiteApp {
 		json.put("accountInformations", this.account.getJSON());
 		json.put("login", this.account.getInformationNamed("login"));
 		json.put("type", "classicApp");
+		json.put("website_name", this.website.getName());
 	}
 	
 	public void setPassword(String password, ServletManager sm) throws GeneralException {

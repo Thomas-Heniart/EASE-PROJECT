@@ -141,6 +141,7 @@ public class LogwithApp extends WebsiteApp {
 		super.fillJson(json);
 		json.put("logWithAppId", this.logwith.getSingleId());
 		json.put("type", "logWithApp");
+		json.put("website_name", this.website.getName());
 	}
 	
 	public JSONArray getJSON(ServletManager sm) throws GeneralException{
