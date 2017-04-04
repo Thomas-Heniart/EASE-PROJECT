@@ -46,7 +46,6 @@
 <script src="js/form/emailSuggestions.js"></script>
 <script src="js/admin.js"></script>
 <script src="js/statistics.js"></script>
-<script src="js/websocket.js"></script>
 
 <script src="js/jquery.mousewheel.min.js"></script>
 
