@@ -142,13 +142,13 @@ response.addCookie(email);
 </noscript>
 <script src="/jsMinified.v00000/jquery1.12.4.js" ></script>
 <script src="/jsMinified.v00000/jquery-ui-1.12.0.js" defer></script>
+<script src="/jsMinified.v00000/Sortable.js" defer></script>
 <script src="/jsMinified.v00000/app.js" defer></script>
 <script src="/jsMinified.v00000/profiles.js" defer></script>
 <script src="/jsMinified.v00000/dashboard.js" defer></script>
 <script src="/jsMinified.v00000/tracker.js" async></script>
 <script src="/jsMinified.v00000/asyncContentLoading.js" async></script>
 <script src="/jsMinified.v00000/postHandler.js" async></script>
-<script src="/jsMinified.v00000/Sortable.js" async></script>
 <script src="/jsMinified.v00000/basic-utils.js" async></script>
 <script src="/jsMinified.v00000/extension.js" async></script>
 <script src="/jsMinified.v00000/header.js" async></script>
