@@ -44,7 +44,13 @@ public class Infrastructure {
 			name = rs.getString(Data.NAME.ordinal());
 			img_path = rs.getString(Data.IMG.ordinal());
 			single_id = idGenerator.getNextId();
-			infra = new Infrastructure(db_id, name, img_path, single_id);
+			DatabaseRequest request = db.prepareRequest("SELECT user_id FROM infrastructuresAdminsMap WHERE infrastructure_id = ?;");
+			request.setInt(db_id);
+			DatabaseResult rs2 = request.get();
+			List<String> adminIds = new LinkedList<String>();
+			while (rs2.next())
+				adminIds.add(rs.getString(1));
+			infra = new Infrastructure(db_id, name, img_path, adminIds, single_id);
 			GroupManager.getGroupManager(context).add(infra);
 			groups = Group.loadGroups(db, infra, context);
 			infra.setGroups(groups);
@@ -52,13 +58,26 @@ public class Infrastructure {
 	}
 	
 	public static Infrastructure createInfrastructure(String name, String img_path, ServletManager sm) throws GeneralException {
+		return createInfrastructure(name, img_path, new LinkedList<String>(), sm);
+	}
+	
+	public static Infrastructure createInfrastructure(String name, String img_path, List<String> adminIds, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
+		int transaction = db.startTransaction();
 		DatabaseRequest request = db.prepareRequest("INSERT INTO infrastructures values(NULL, ?, ?);");
 		request.setString(name);
 		request.setString(img_path);
 		String db_id = request.set().toString();
+		for (String id : adminIds) {
+			request = db.prepareRequest("INSERT INTO infrastructuresAdminsMap values(?, ?, ?)");
+			request.setNull();
+			request.setInt(id);
+			request.setInt(db_id);
+			request.set();
+		}
+		db.commitTransaction(transaction);
 		IdGenerator idGenerator = (IdGenerator)sm.getContextAttr("idGenerator");
-		Infrastructure infra = new Infrastructure(db_id, name, img_path, idGenerator.getNextId());
+		Infrastructure infra = new Infrastructure(db_id, name, img_path, adminIds, idGenerator.getNextId());
 		GroupManager.getGroupManager(sm).add(infra);
 		return infra;
 	}
@@ -73,15 +92,17 @@ public class Infrastructure {
 	protected String 	name;
 	protected String	img_path;
 	protected List<Group>		groups;
+	protected List<String> adminIds;
 	protected int 		single_id;
 	
-	public Infrastructure(String db_id, String name, String img_path, int single_id) {
+	public Infrastructure(String db_id, String name, String img_path, List<String> adminIds, int single_id) {
 		this.db_id = db_id;
 		this.name = name;
 		this.groups = null;
 		this.single_id = single_id;
 		this.img_path = img_path;
 		this.groups = new LinkedList<Group> ();
+		this.adminIds = adminIds;
 	}
 	
 	public void removeFromDB(ServletManager sm) throws GeneralException {
