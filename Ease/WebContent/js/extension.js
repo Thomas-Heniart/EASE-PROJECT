@@ -96,7 +96,7 @@ function sendEvent(obj) {
         			easeTracker.trackEvent("ClickOnApp", {"type":"LinkApp", "appName":json.detail.app_name});
         		} else {
         			var jsonDetail = json.detail[json.detail.length - 1];
-        			easeTracker.trackEvent("ClickOnApp", {"type":jsonDetail.type, "appName":jsonDetail.app_name, "websiteName": jsonDetail.wbesite_name});
+        			easeTracker.trackEvent("ClickOnApp", {"type":jsonDetail.type, "appName":jsonDetail.app_name, "websiteName": jsonDetail.website_name});
         		}
         		var now = "" + new Date;
         		easeTracker.setOnce("TutoDateFirstClickOnApp", now);
