@@ -24,9 +24,6 @@
 	href="https://chrome.google.com/webstore/detail/echjdhmhmgildgidlcdlepfkaledeokm">
 
 <link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
 <link rel="stylesheet" href="css/default_style.css" />
 <link href='https://fonts.googleapis.comcss?family=Source+Sans+Pro'
 	rel='stylesheet' type='textcss' />
@@ -35,6 +32,9 @@
 <link rel="stylesheet" href="css/lib/niftyPopupWindow/component.css">
 <link rel="manifest" href="manifest.json">
 
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
 <script src="js/classie.js"></script>
 <script src="js/owl.carousel.js"></script>
 <script src="js/basic-utils.js"></script>
@@ -50,19 +50,19 @@
 
 <script src="js/jquery.mousewheel.min.js"></script>
 
-<link rel="stylesheet" type="text/css"
-	href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
-<link rel="stylesheet" type="text/css"
-	href="css/lib/dropDownMenu/dropdown.css" />
 <script src="js/snap.svg-min.js"></script>
 <script src="js/modalEffects.js"></script>
 <script src="js/selectFx.js"></script>
-<link rel="stylesheet" type="text/css" href="component.css" />
-<link rel="stylesheet" href="css/hover.css">
 <script src="js/backOffice/websitesVisited.js"></script>
 <script src="js/backOffice/tags.js"></script>
 <script src="js/backOffice/unregisteredEmails.js"></script>
 <script src="js/backOffice/websitesRequests.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css"
+	href="css/lib/dropDownMenu/dropdown.css" />
+<link rel="stylesheet" type="text/css" href="component.css" />
+<link rel="stylesheet" href="css/hover.css">
 </head>
 
 

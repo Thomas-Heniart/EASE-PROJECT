@@ -87,7 +87,7 @@ pageEncoding="UTF-8"%>
 	</div>
 </div>
 </div>
-<script src="js/catalog/catalogApp.js" async></script>
-<script src="js/catalog/catalog.js" async></script>
-<script src="js/catalog/updates/update.js" async></script>
-<script src="js/catalog/updates/updatesManager.js" async></script>
+<script src="/jsMinified.v00000/catalogApp.js" async></script>
+<script src="/jsMinified.v00000/catalog.js" async></script>
+<script src="/jsMinified.v00000/update.js" async></script>
+<script src="/jsMinified.v00000/updatesManager.js" async></script>

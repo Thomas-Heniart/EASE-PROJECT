@@ -36,10 +36,10 @@ pageEncoding="UTF-8"%>
 	<link rel="manifest" href="manifest.json">
 
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-	<link rel="stylesheet" href="css/default_style.css" />
-	<link rel="stylesheet" href="css/bootstrap.css" />
-	<link rel="stylesheet" href="css/landingPage.css" />
-	<link rel="stylesheet" type="text/css" href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="/cssMinified.v00000/default_style.css" />
+	<link rel="stylesheet" href="/cssMinified.v00000/bootstrap.css" />
+	<link rel="stylesheet" href="/cssMinified.v00000/landingPage.css" />
+	<link rel="stylesheet" type="text/css" href="/cssMinified.v00000/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
 </head>
 
 <body id="landingBody">
@@ -378,15 +378,15 @@ pageEncoding="UTF-8"%>
 		</section>
 		<%@ include file="templates/landingPage/landingFooter.jsp" %>
 		<%@ include file="templates/landingPage/registrationPopup.jsp" %>	
-		<script src="/js/thirdParty/jquery1.12.4.js" ></script>
-		<script src="/js/jquery.complexify.min.js"></script>
-		<script src="/js/thirdParty/bootstrap.js" async></script>
-		<script src="/js/popups/registrationPopup.js" async></script>
-		<script src="/js/landingPage.js" async></script>
+		<script src="/jsMinified.v00000/jquery1.12.4.js" ></script>
+		<script src="/jsMinified.v00000/jquery.complexify.js"></script>
+		<script src="/jsMinified.v00000/bootstrap.js" async></script>
+		<script src="/jsMinified.v00000/registrationPopup.js" async></script>
+		<script src="/jsMinified.v00000/landingPage.js" async></script>
 		<script src="/jsMinified.v00000/basic-utils.js" async></script>
-		<script src="/js/postHandler.js" async></script>
-		<script src="/js/languageChooser.js" async></script>
-		<script src="/js/tracker.js" async></script>
+		<script src="/jsMinified.v00000/postHandler.js" async></script>
+		<script src="/jsMinified.v00000/languageChooser.js" async></script>
+		<script src="/jsMinified.v00000/tracker.js" async></script>
 		<script type="text/javascript">
 			window.addEventListener('load',function(){
 				if ($('#2').find("input[name='email']").val() != 'null' 

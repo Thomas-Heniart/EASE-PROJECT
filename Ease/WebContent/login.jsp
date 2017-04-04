@@ -93,8 +93,8 @@ response.sendRedirect("/");
 
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
 
-	<link rel="stylesheet" href="css/default_style.css" />
-	<link rel="stylesheet" href="css/bootstrap.css" />
+	<link rel="stylesheet" href="/cssMinified.v00000/default_style.css" />
+	<link rel="stylesheet" href="/cssMinified.v00000/bootstrap.css" />
 	<link rel="manifest" href="manifest.json">
 </head>
 
@@ -240,18 +240,18 @@ response.sendRedirect("/");
 	<div id="onMobile" style="display:none;">
 		<%@ include file="templates/Mobile.html" %>
 	</div>
-	<script src="js/jquery1.12.4.js"></script>
-	<script src="js/postHandler.js" async></script>
-	<script src="js/basic-utils.js" async></script>
-	<script src="js/isMobile.js" async></script>
-	<script src="js/connection.js" async></script>
-	<script src="js/generalLogout.js" async></script>
+	<script src="/jsMinified.v00000/jquery1.12.4.js"></script>
+	<script src="/jsMinified.v00000/postHandler.js" async></script>
+	<script src="/jsMinified.v00000/basic-utils.js" async></script>
+	<script src="/jsMinified.v00000/isMobile.js" async></script>
+	<script src="/jsMinified.v00000/connection.js" async></script>
+	<script src="/jsMinified.v00000/generalLogout.js" async></script>
+	<script src="/jsMinified.v00000/tracker.js" async></script>
 	<script>
 		window.addEventListener('load',function(){
 			$.ajaxSetup({cache: true});
 		});
 	</script>
-	<script src="js/tracker.js" async></script>
 	<script>
 		window.addEventListener('load',function(){
 			setTimeout(function(){
