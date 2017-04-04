@@ -451,8 +451,13 @@ public class Website {
 	}
 	
 	public boolean homepageUrlMatch(String url) {
-		String[] homepageUrlSplitted = this.website_homepage.split("\\/*\\/");
-		return url.contains(homepageUrlSplitted[1]);
+		if (this.website_homepage.startsWith("http")) {
+			String[] homepageUrlSplitted = this.website_homepage.split("\\/*\\/");
+			return url.contains(homepageUrlSplitted[1]);
+		}
+		if (url.length() > this.website_homepage.length())
+			return url.contains(this.website_homepage);
+		return this.website_homepage.contains(url);
 	}
 
 	@SuppressWarnings("unchecked")
