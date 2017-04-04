@@ -148,6 +148,9 @@ public class LogwithApp extends WebsiteApp {
 		JSONArray infos = logwith.getJSON(sm);
 		JSONObject websiteInfos = (JSONObject) super.getJSON(sm).get(0);
 		websiteInfos.put("logWith", logwith.getSite().getName());
+		websiteInfos.put("app_name", this.informations.getName());
+		websiteInfos.put("website_name", this.website.getName());
+		websiteInfos.put("type", "logWithApp");
 		infos.add(websiteInfos);
 		return infos;
 	}
