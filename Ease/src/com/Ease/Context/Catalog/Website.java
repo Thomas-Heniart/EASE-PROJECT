@@ -446,8 +446,14 @@ public class Website {
 	}
 
 	public boolean loginUrlMatch(String url) {
-		String[] loginUrlSplitted = this.loginUrl.split("\\/*\\/");
-		return url.contains(loginUrlSplitted[1]);
+		if (this.loginUrl.startsWith("http")) {
+			String[] loginUrlSplitted = this.loginUrl.split("\\/*\\/");
+			return url.contains(loginUrlSplitted[1]);
+		}
+		if (url.length() > this.loginUrl.length())
+			return url.contains(this.loginUrl);
+		return this.loginUrl.contains(url);
+			
 	}
 	
 	public boolean homepageUrlMatch(String url) {
