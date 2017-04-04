@@ -1,4 +1,4 @@
-var Input = function(rootEl, parent, name, type, placeholder, placeholderIcon) {
+var addInput = function(rootEl, parent, name, type, placeholder, placeholderIcon) {
 	var self = this;
 	this.qRoot = $(rootEl);
 	this.name = name;
@@ -20,7 +20,7 @@ var Input = function(rootEl, parent, name, type, placeholder, placeholderIcon) {
 	this.val = function() {
 		return self.inputField.val();
 	}
-}	
+};	
 
 addAppPopup = function(rootEl){
 	var self = this;
@@ -335,7 +335,7 @@ addAppPopup = function(rootEl){
 	this.initializeInputsRow = function() {
 		self.loginPasswordRow.removeClass('hide');
 		self.currentApp.inputs.forEach(function(input) {
-			self.currentInputs.push(new Input(self.loginPasswordRow, self, input.name, input.type, input.placeholder, input.placeholderIcon));
+			self.currentInputs.push(new addInput(self.loginPasswordRow, self, input.name, input.type, input.placeholder, input.placeholderIcon));
 		});
 		$("input", self.loginPasswordRow).on('input', function() {
 			if (self.checkInputsRow())
@@ -466,7 +466,7 @@ addAppPopup = function(rootEl){
 	this.goBackButtonHandler.click(function(){
 		self.close();
 	});
-}
+};
 
 var easeAddAppPopup;
 $(document).ready(function(){
