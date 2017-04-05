@@ -189,8 +189,25 @@ response.addCookie(email);
 		}, 500)});
 	window.addEventListener('load',function(){
 		asyncLoading.loadHtml({
-			urls: ['/templates/PopupsHandler.jsp'],
-			appendTo: '#easePopupsHandler'
+			urls: ["/templates/popups/modifyAppPopup.html",
+			"/templates/popups/addBookmarkPopup.html",
+			"/templates/popups/addAppPopup.html",
+			"/templates/popups/deleteProfilePopup.html",
+			"/templates/popups/deleteAccountPopup.html"
+			],
+			appendTo: '#easePopupsHandler',
+			callback: function(){
+				asyncLoading.loadScriptsOneByOne(
+					[
+					"/jsMinified.v00001/modifyAppPopup.js",
+					"/jsMinified.v00001/addAppPopup.js",
+					"/jsMinified.v00001/deleteAccountPopup.js",
+					"/jsMinified.v00001/deleteProfilePopup.js",
+					"/jsMinified.v00001/addBookmarkPopup.js",
+					"/jsMinified.v00001/popupHandler.js"
+					]
+				);
+			}
 		});
 		asyncLoading.loadHtml({
 			urls: ['/templates/SettingsView.jsp'],
@@ -211,7 +228,13 @@ response.addCookie(email);
 					});
 			}
 		});
-		asyncLoading.loadHtml({urls:['/templates/Footer.html'], appendTo : '#onComputer'});
+		asyncLoading.loadHtml({
+			urls:['/templates/Footer.html'],
+			appendTo : '#onComputer',
+			callback : function(){
+				asyncLoading.loadSingleScript("/jsMinified.v00001/footer.js");
+			}
+		});
 	});
 </script>
 <script type="text/javascript">
