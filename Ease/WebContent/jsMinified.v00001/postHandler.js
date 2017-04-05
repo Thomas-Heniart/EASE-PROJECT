@@ -1,0 +1,1 @@
+var postHandler={post:function(n,o,t,a,i,e){$.post(n,o,function(n){t();var o=n.split(" ")[0],e=n.substring(n.indexOf(" ")+1,n.length);/^\d+$/.test(o)||(e="Sorry, you're facing of a unknown bug. We'll fix it asap !"),"200"==o?a(e):"0"==o||"5"==o?document.location.reload(!0):i(e,!0)},e)}};

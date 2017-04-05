@@ -67,6 +67,12 @@
 	position: fixed;
 	top: 40%;
 	right: 2%;
+	&.waiting-load {
+		#enterEditMode {
+			opacity: 0.7;			
+		}
+		pointer-events: none;
+	}
 	#updateCount {
 		position: absolute;
 		z-index: 2;
