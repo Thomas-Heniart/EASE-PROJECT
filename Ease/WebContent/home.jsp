@@ -94,9 +94,9 @@ response.addCookie(email);
 
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
 
-	<link rel="stylesheet" href="/cssMinified.v00000/default_style.css" />
-	<link rel="stylesheet" href="/cssMinified.v00000/bootstrap.css" />
-	<link rel="stylesheet" href="/cssMinified.v00000/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="/cssMinified.v00001/default_style.css" />
+	<link rel="stylesheet" href="/cssMinified.v00001/bootstrap.css" />
+	<link rel="stylesheet" href="/cssMinified.v00001/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
 
 	<link rel="manifest" href="manifest.json">
 
@@ -115,7 +115,7 @@ response.addCookie(email);
 		<div id="loggedBody">
 			<div class="col-left <c:if test='${settingsOpen eq null}'>show</c:if>" style="width: 100%; float:left">
 				<%@ include file="/templates/ProfileView.jsp"%>
-				<div class="MenuButtonSet">
+				<div class="MenuButtonSet waiting-load">
 					<button id="enterEditMode" state="off" class="button<c:if test="${param.catalogOpen}"> editMode</c:if>">
 						<img src="resources/icons/menu_icon.png"/>
 						<div class="openCatalogHelper"></div>
@@ -138,25 +138,25 @@ response.addCookie(email);
 <%@ include file="templates/new_extension.html" %>
 </div>
 <noscript id="deferred-styles">
-	<link rel="stylesheet" href="/cssMinified.v00000/lib/niftyPopupWindow/component.css">
+	<link rel="stylesheet" href="/cssMinified.v00001/lib/niftyPopupWindow/component.css">
 </noscript>
-<script src="/jsMinified.v00000/jquery1.12.4.js" ></script>
-<script src="/jsMinified.v00000/jquery-ui-1.12.0.js" defer></script>
-<script src="/jsMinified.v00000/Sortable.js" defer></script>
-<script src="/jsMinified.v00000/app.js" defer></script>
-<script src="/jsMinified.v00000/profiles.js" defer></script>
-<script src="/jsMinified.v00000/dashboard.js" defer></script>
-<script src="/jsMinified.v00000/tracker.js" async></script>
-<script src="/jsMinified.v00000/asyncContentLoading.js" async></script>
-<script src="/jsMinified.v00000/postHandler.js" async></script>
-<script src="/jsMinified.v00000/basic-utils.js" async></script>
-<script src="/jsMinified.v00000/extension.js" async></script>
-<script src="/jsMinified.v00000/header.js" async></script>
-<script src="/jsMinified.v00000/selectFx.js" async></script>
-<script src="/jsMinified.v00000/isMobile.js" async></script>
-<script src="/jsMinified.v00000/shortcut.js" async></script>
-<script src="/jsMinified.v00000/logout.js" async></script>
-<script src="/jsMinified.v00000/checkConnection.js" async></script>
+<script src="/jsMinified.v00001/jquery1.12.4.js" ></script>
+<script src="/jsMinified.v00001/jquery-ui-1.12.0.js" defer></script>
+<script src="/jsMinified.v00001/Sortable.js" defer></script>
+<script src="/jsMinified.v00001/app.js" defer></script>
+<script src="/jsMinified.v00001/profiles.js" defer></script>
+<script src="/jsMinified.v00001/dashboard.js" defer></script>
+<script src="/jsMinified.v00001/tracker.js" async></script>
+<script src="/jsMinified.v00001/asyncContentLoading.js" async></script>
+<script src="/jsMinified.v00001/postHandler.js" async></script>
+<script src="/jsMinified.v00001/basic-utils.js" async></script>
+<script src="/jsMinified.v00001/extension.js" async></script>
+<script src="/jsMinified.v00001/header.js" async></script>
+<script src="/jsMinified.v00001/selectFx.js" async></script>
+<script src="/jsMinified.v00001/isMobile.js" async></script>
+<script src="/jsMinified.v00001/shortcut.js" async></script>
+<script src="/jsMinified.v00001/logout.js" async></script>
+<script src="/jsMinified.v00001/checkConnection.js" async></script>
 <script>
 	var images = document.getElementsByClassName('logo');
 	Array.prototype.forEach.call(images, function(element){
@@ -198,7 +198,18 @@ response.addCookie(email);
 		});
 		asyncLoading.loadHtml({
 			urls: ['/templates/catalog/catalogView.jsp'],
-			appendTo: '.col-left .CatalogViewTab'
+			appendTo: '.col-left .CatalogViewTab',
+			callback: function(){
+				asyncLoading.loadScriptsOneByOne(
+					['/jsMinified.v00001/catalogApp.js',
+					'/jsMinified.v00001/catalog.js',
+					'/jsMinified.v00001/update.js',
+					'/jsMinified.v00001/updatesManager.js'
+					],
+					function(){
+						$('.MenuButtonSet.waiting-load').removeClass('waiting-load');
+					});
+			}
 		});
 		asyncLoading.loadHtml({urls:['/templates/Footer.html'], appendTo : '#onComputer'});
 	});

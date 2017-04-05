@@ -65,6 +65,23 @@
   @include animation(singleScaleOut .5s linear infinite alternate);
 }
 
+.waiting-load {
+  &:after {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    margin: 0 auto;
+    top: 50%;
+    left: 50%;
+    border: 5px solid #6A6A6A;
+    border-radius: 50%;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    @include animation(spin-centered 650ms infinite cubic-bezier(.17,.67,.83,.67));
+  }
+}
+
 /* crisp chat button color */
 body .crisp-client .crisp-1 .crisp-11 {
   background-color: $themeColor !important;
@@ -380,6 +397,16 @@ body {
 @keyframes spin {
   0%{ -webkit-transform: rotate(0deg); tranform: rotate(0deg);}
   100%{ -webkit-transform: rotate(360deg); tranform: rotate(360deg);}
+}
+
+@-webkit-keyframes spin-centered {
+  0%{ -webkit-transform: translate3d(-50%, -50%, 0) rotate(0deg); tranform:translate3d(-50%, -50%, 0) rotate(0deg);}
+  100%{ -webkit-transform:translate3d(-50%, -50%, 0) rotate(360deg); tranform:translate3d(-50%, -50%, 0) rotate(360deg);}
+}
+
+@keyframes spin-centered {
+  0%{ -webkit-transform:translate3d(-50%, -50%, 0) rotate(0deg); tranform:translate3d(-50%, -50%, 0) rotate(0deg);}
+  100%{ -webkit-transform:translate3d(-50%, -50%, 0) rotate(360deg); tranform:translate3d(-50%, -50%, 0) rotate(360deg);}
 }
 /* loading circle end */
 

@@ -22,18 +22,18 @@ pageEncoding="UTF-8"%>
 
 	<link rel="manifest" href="manifest.json">
 
-	<script src="/jsMinified.v00000/jquery1.12.4.js"></script>
-	<script src="/jsMinified.v00000/bootstrap.js"></script>
-	<script src="/jsMinified.v00000/basic-utils.js"></script>
-	<script src="/jsMinified.v00000/postHandler.js"></script>
-	<script src="/jsMinified.v00000/languageChooser.js"></script>
-	<script src="/jsMinified.v00000/tracker.js"></script>
+	<script src="/jsMinified.v00001/jquery1.12.4.js"></script>
+	<script src="/jsMinified.v00001/bootstrap.js"></script>
+	<script src="/jsMinified.v00001/basic-utils.js"></script>
+	<script src="/jsMinified.v00001/postHandler.js"></script>
+	<script src="/jsMinified.v00001/languageChooser.js"></script>
+	<script src="/jsMinified.v00001/tracker.js"></script>
 
-	<link rel="stylesheet" href="/cssMinified.v00000/default_style.css" />
-	<link rel="stylesheet" href="/cssMinified.v00000/bootstrap.css" />
-	<link rel="stylesheet" href="/cssMinified.v00000/landingPage.css" />
-	<link rel="stylesheet" href="/cssMinified.v00000/teamBody.css" />
-	<link rel="stylesheet" href="/cssMinified.v00000/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="/cssMinified.v00001/default_style.css" />
+	<link rel="stylesheet" href="/cssMinified.v00001/bootstrap.css" />
+	<link rel="stylesheet" href="/cssMinified.v00001/landingPage.css" />
+	<link rel="stylesheet" href="/cssMinified.v00001/teamBody.css" />
+	<link rel="stylesheet" href="/cssMinified.v00001/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
 	<script type="text/javascript">$crisp=[];CRISP_WEBSITE_ID="6e9fe14b-66f7-487c-8ac9-5912461be78a";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.im/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
 	<script type="text/javascript">
 		(function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script");r.type="text/javascript";

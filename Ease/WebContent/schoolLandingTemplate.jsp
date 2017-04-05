@@ -37,10 +37,10 @@ pageEncoding="UTF-8"%>
 	<link rel="manifest" href="manifest.json">
 
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-	<link rel="stylesheet" href="/cssMinified.v00000/default_style.css" />
-	<link rel="stylesheet" href="/cssMinified.v00000/bootstrap.css" />
-	<link rel="stylesheet" href="/cssMinified.v00000/landingPage.css" />
-	<link rel="stylesheet" type="text/css" href="/cssMinified.v00000/css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="/cssMinified.v00001/default_style.css" />
+	<link rel="stylesheet" href="/cssMinified.v00001/bootstrap.css" />
+	<link rel="stylesheet" href="/cssMinified.v00001/landingPage.css" />
+	<link rel="stylesheet" type="text/css" href="/cssMinified.v00001/css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
 </head>
 
 <body id="landingBody" class="school">
@@ -228,15 +228,15 @@ pageEncoding="UTF-8"%>
 	<%@ include file="templates/landingPage/landingFooter.jsp" %>
 	<%@ include file="templates/landingPage/registrationPopup.jsp" %>
 </body>
-<script src="/jsMinified.v00000/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00000/jquery.complexify.js" ></script>
-<script src="/jsMinified.v00000/bootstrap.js" async></script>
-<script src="/jsMinified.v00000/registrationPopup.js" async></script>
-<script src="/jsMinified.v00000/landingPage.js" async></script>
-<script src="/jsMinified.v00000/basic-utils.js" async></script>
-<script src="/jsMinified.v00000/postHandler.js" async></script>
-<script src="/jsMinified.v00000/languageChooser.js" async></script>
-<script src="/jsMinified.v00000/tracker.js" async></script>
+<script src="/jsMinified.v00001/jquery1.12.4.js"></script>
+<script src="/jsMinified.v00001/jquery.complexify.js" ></script>
+<script src="/jsMinified.v00001/bootstrap.js" async></script>
+<script src="/jsMinified.v00001/registrationPopup.js" async></script>
+<script src="/jsMinified.v00001/landingPage.js" async></script>
+<script src="/jsMinified.v00001/basic-utils.js" async></script>
+<script src="/jsMinified.v00001/postHandler.js" async></script>
+<script src="/jsMinified.v00001/languageChooser.js" async></script>
+<script src="/jsMinified.v00001/tracker.js" async></script>
 <script type="text/javascript">
 	window.addEventListener('load',function(){
 		$crisp=[];CRISP_WEBSITE_ID="6e9fe14b-66f7-487c-8ac9-5912461be78a";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.im/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
