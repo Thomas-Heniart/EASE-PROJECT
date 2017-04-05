@@ -1,0 +1,23 @@
+{
+	"name":"Krosmaga",
+	"lastLogin":"",
+	"home":"http://www.krosmaga.com/",
+	"connect":{
+		"todo":[
+			{"action":"aclick", "search":".ak-site-access"},
+			{"action":"fill", "what":"login", "search":"#userlogin"},
+			{"action":"fill", "what":"password", "search":"#userpass"},
+			{"action":"click", "search":"#login_sub"}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"clickona", "search":"a[href*='logout']"},
+			{"action":"waitload"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"action":"waitfor", "search": ".ak-site-access, #userlogin, a[href*='logout']"},
+		{"search":"a[href*='logout']"}
+	]
+}

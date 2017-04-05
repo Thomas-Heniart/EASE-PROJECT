@@ -1,0 +1,35 @@
+{
+	"name":"Ankama Support",
+	"lastLogin":"",
+	"home":"https://support.ankama.com/",
+	"connect":{
+		"todo":[
+			{"action":"clickona", "search":"a.login"},
+			{"action":"enterFrame", "search":"iframe[src*='login']"},
+			{"action":"waitfor", "search":"#login-form #user_email"},
+			{"action":"fill", "what":"login", "search":"#login-form #user_email"},
+			{"action":"fill", "what":"password", "search":"#login-form #user_password"},
+			{"action":"click", "search":"#login-form input[name='commit']"},
+			{"action":"exitFrame"}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"clickona", "search":"a[href*='logout']"},
+			{"action":"waitload"}
+		]
+	},
+	"Facebook": {
+		"todo":[
+			{"action":"clickona", "search":"a.login"},
+			{"action":"enterFrame", "search":"iframe[src*='login']"},
+			{"action":"waitfor", "search":"#zd_facebook_login_link"},
+			{"action":"clickona", "search":"#zd_facebook_login_link"},
+			{"action":"exitFrame"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"action":"waitfor", "search": "a.login, a[href*='logout']"},
+		{"search":"a[href*='logout']"}
+	]
+}
