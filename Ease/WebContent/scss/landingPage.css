@@ -224,7 +224,8 @@ section h2.section-heading {
 section h3.section-subheading {
   font-size: 16px;
   text-transform: none;
-  font-weight: 400;
+  font-weight: bold;
+  font-family: "Raleway", "Source Sans Pro", sans-serif;
   margin-bottom: 35px; }
 
 @media (min-width: 768px) {
