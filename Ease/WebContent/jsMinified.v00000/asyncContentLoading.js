@@ -1,1 +1,0 @@
-asyncLoading={loadHtml:function(n){for(var a=n.urls,o=n.appendTo,d=0;d<a.length;d++)$.get(a[d]).done(function(n){$(o).append(n)})},loadScripts:function(n){for(var a=n.urls,o=0;o<a.length;o++){var d=document.createElement("script");n.async&&(d.async=n.async),n.onload&&(d.onload=n.onload),n.appendTo?n.appendTo.appendChild(d):document.head.appendChild(d),d.src=a[o]}}};
