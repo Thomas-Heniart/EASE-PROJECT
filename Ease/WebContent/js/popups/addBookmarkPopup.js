@@ -45,7 +45,7 @@ addBookmarkPopup = function(rootEl){
 			},
 			function(msg){
 				var app = new MyApp();
-				app.init('', '', self.currentApp.id, name, msg, self.currentApp.ssoId, true, self.currentApp.imgSrc, url);
+				app.init('', '', self.currentApp.id, name, msg, self.currentApp.ssoId, true, self.currentApp.imgSrc, url, 'LinkApp');
 				self.currentProfile.addApp(app);
 				app.scaleAnimate();
 				self.close();

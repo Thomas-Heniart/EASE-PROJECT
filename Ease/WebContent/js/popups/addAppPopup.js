@@ -406,8 +406,10 @@ addAppPopup = function(rootEl){
 				websiteId.push(self.sameAccountsVar[i].websiteId.toString());
 		}
 		var submitUrl = "AddClassicApp";
+		var appType = "ClassicApp";
 		if (logwithId.length){
 			submitUrl = "AddLogwithApp";
+			appType = "LogwithApp";
 		}
 		if (self.choosenSsoAccountLogin != null) {
 			submitUrl = "AddClassicAppSameAs";
@@ -445,7 +447,7 @@ addAppPopup = function(rootEl){
 					catalogApp = catalog.getAppById(websiteId[i]);
 					var app = new MyApp();
 					var accountInformations = [];
-					app.init(logwithId, parametersToKeep, catalogApp.id, i == 0 ? name : catalogApp.name, ids[i], catalogApp.ssoId, true, catalogApp.imgSrc, '');
+					app.init(logwithId, parametersToKeep, catalogApp.id, i == 0 ? name : catalogApp.name, ids[i], catalogApp.ssoId, true, catalogApp.imgSrc, '', appType);
 					catalogApp.increaseCount();
 					self.currentProfile.addApp(app);
 					app.scaleAnimate();

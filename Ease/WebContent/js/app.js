@@ -1,42 +1,3 @@
-var easeApp = function(rootEl){
-	var self = this;
-	this.rootEl = rootEl;
-	this.image = this.rootEl.find('.linkImage');
-	this.nameArea = this.rootEl.find('.siteName p');
-	this.name = this.rootEl.attr('name');
-	this.id = this.rootEl.attr('id');
-	this.webId = this.rootEl.attr('webid');
-	this.login = this.rootEl.attr('login');
-	this.increaseCatalagAppCount = function() {
-		var x = parseInt($(".catalogApp[idx='" + self.webId + "'] span.apps-integrated i.count").html());
-		$(".catalogApp[idx='" + self.webId + "'] span.apps-integrated i.count").html(x+1);
-		$(".catalogApp[idx='" + self.webId + "'] span.apps-integrated").addClass("showCounter");
-	};
-	self.increaseCatalagAppCount();
-	this.setName = function(name){
-		self.name = name;
-		self.nameArea.text(name);
-		self.rootEl.attr('name', name);
-	};
-	this.setId = function(id){
-		self.id = id;
-		self.rootEl.attr('id', id);
-	};
-	this.remove = function(){
-		easeApps.splice(apps.indexOf(self), 1);
-		self.rootEl.remove();
-	};
-	this.image.on('click', function(){
-		sendEvent(this);
-	});
-	this.rootEl.find('.modifyAppButton').length && this.rootEl.find('.modifyAppButton').on('click', function(e){
-		showModifyAppPopup(this, e);
-	});
-	this.rootEl.find('.deleteAppButton').length && this.rootEl.find('.deleteAppButton').on('click', function(e){
-		showConfirmDeleteAppPopup(this, e);
-	});
-}
-
 var easeApps = [];
 var easeAppsManager;
 
@@ -108,6 +69,14 @@ $(document).ready(function(){
 	easeAppsManager = new appsManager();
 });
 
+AppTypeMap = {
+	LinkApp : '<i class="fa fa-star appTypeIndicator"></i>',
+	LogwithApp: {
+		Facebook : '<i class="fa fa-facebook appTypeIndicator"></i>',
+		LinkedIn : '<i class="fa fa-linkedin appTypeIndicator"></i>'
+	}
+}
+
 var MyApp = function(){
 	var self = this;
 	this.qRoot = null;
@@ -125,15 +94,17 @@ var MyApp = function(){
 	this.name;
 	this.websiteId;
 	this.logWith = '';
+	this.logWithName = '';
 	this.url = "";
 	this.currentProfile = null;
 	this.isEmpty = false;
+	this.type = null;
 
 	this.changeName = function(name){
 		self.appNameHandler.text(name);
 		self.name = name;
 	}
-	this.init = function(logWith, accountInformations, catalogId, name, id, ssoId, canMove, imgSrc, url){
+	this.init = function(logWith, accountInformations, catalogId, name, id, ssoId, canMove, imgSrc, url, type){
 		self.qRoot = $($('#boxHelper').html());
 		self.qRoot.attr('logwith', logWith.length ? logWith : "false");
 		self.qRoot.attr('webid', catalogId);
@@ -143,10 +114,13 @@ var MyApp = function(){
 		self.qRoot.attr('name', name);
 		self.accountInformations = accountInformations;
 		self.id = id;
+		self.type = type;
 		self.ssoId = ssoId;
 		self.name = name;
 		self.websiteId = catalogId;
 		self.logWith = logWith;
+		if (logWith.length)
+			self.logWithName = catalog.getAppById(easeAppsManager.getAppById(logWith).websiteId).name;
 		self.logoHandler = self.qRoot.find('img.logo');
 		self.logoHandler.attr('src', imgSrc);
 		self.imgSrc = imgSrc;
@@ -155,6 +129,7 @@ var MyApp = function(){
 		self.settingsButton = self.qRoot.find('.showAppActionsButton');
 		self.imageArea = self.qRoot.find('.linkImage');
 		self.appNameHandler.text(name);
+		self.setupAppTypeIndicator();
 		self.imageArea.click(function(){
 			sendEvent(this);
 		});
@@ -197,9 +172,11 @@ var MyApp = function(){
 		self.qRoot = $(rootEl);
 		self.name = self.qRoot.attr('name');
 		self.id = self.qRoot.attr('id');
+		self.type = self.qRoot.attr('data-type');
 		self.websiteId = self.qRoot.attr('webid');
 		self.ssoId = self.qRoot.attr('ssoid');
 		self.logWith = self.qRoot.attr('logwith');
+		self.logWithName = self.qRoot.attr('logwithname');
 		self.logoHandler = self.qRoot.find('img.logo');
 		self.imgSrc = self.logoHandler.attr('lazy-src');
 		var accountInf = self.qRoot.attr('account');
@@ -222,6 +199,8 @@ var MyApp = function(){
 		self.appNameHandler = self.qRoot.find('.siteName p');
 		self.settingsButton = self.qRoot.find('.showAppActionsButton');
 		self.imageArea = self.qRoot.find('.linkImage');
+//		self.imageArea.append('<i class="fa fa-star appTypeIndicator" style="color:#2bcfff;"></i>');
+		self.setupAppTypeIndicator();
 		self.imageArea.click(function(){
 			sendEvent(this);
 		});
@@ -236,10 +215,28 @@ var MyApp = function(){
 	this.remove = function(){
 		self.qRoot.remove();
 	};
+
+	this.setupAppTypeIndicator = function(){
+		self.imageArea.find('.appTypeIndicator').remove();
+		if (self.type == 'LogwithApp'){
+			if (AppTypeMap['LogwithApp'][self.logWithName])
+				self.imageArea.append(AppTypeMap['LogwithApp'][self.logWithName]);
+			return;
+		}
+		if (AppTypeMap[self.type])
+			self.imageArea.append(AppTypeMap[self.type]);
+	};
 	this.scaleAnimate = function(){
 		self.imageArea.addClass('scaleinAnimation');
 		self.imageArea.one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e){
 			self.imageArea.removeClass('scaleinAnimation');
 		});
 	};
+	this.hideWithAnimation = function(){
+		self.qRoot.one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e){
+			self.qRoot.addClass('hide');
+			self.qRoot.removeClass('flip-out-ver-left');
+		});
+		self.qRoot.addClass('flip-out-ver-left');
+	}
 };

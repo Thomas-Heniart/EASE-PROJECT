@@ -255,6 +255,7 @@ modifyAppPopup = function(rootEl){
 		for (var i = 0; i < self.sameSsoAccountsVar.length; i++) {
 			appsId.push(self.sameSsoAccountsVar[i].app.id.toString());
 		}
+		var appType = null;
 		var submitUrl = "EditClassicApp";
 		if (self.currentApp.logWith.length){
 			submitUrl = "EditLogwithApp";
@@ -262,10 +263,14 @@ modifyAppPopup = function(rootEl){
 			submitUrl = "EditBookMark";
 		}
 		if (self.currentApp.isEmpty){
-			if (logwithId.length)
+			if (logwithId.length){
 				submitUrl = "WebsiteAppToLogwithApp";
-			else
+				appType = "LogwithApp";
+			}
+			else{
 				submitUrl = "WebsiteAppToClassicApp";
+				appType = "ClassicApp";
+			}
 		}
 		var appsIdJson = JSON.stringify(appsId);
 		var parameters = {
@@ -305,9 +310,14 @@ modifyAppPopup = function(rootEl){
 						self.sameSsoAccountsVar[i].app.scaleAnimate();
 					}
 				}
-				//self.currentApp.setAccountInformationValue("login", parameters.login);
 				self.currentApp.accountInformations = parametersToKeep;
 				self.currentApp.logWith = logwithId;
+				if (appType){
+					self.currentApp.type = appType;
+					if (appType === "LogwithApp")
+						self.currentApp.logWithName = catalog.getAppById(easeAppsManager.getAppById(logwithId).websiteId).name;
+					self.currentApp.setupAppTypeIndicator();
+				}
 				self.currentApp.scaleAnimate();
 				self.close();
 			},
