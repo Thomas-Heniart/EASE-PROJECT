@@ -209,7 +209,14 @@
 							box-shadow: inset 0px 0px 0px 0px $themeColor;
 							pointer-events: none;
 						}
-
+						.appTypeIndicator {
+							position: absolute;
+							color: $themeColor;
+							font-size: 0.8vw;
+							left: 7%;
+							bottom: 7%;
+							text-shadow: 1px 1px 0px #fff,1px -1px 0px #fff,-1px 1px 0px #fff,-1px -1px 0px #fff,-1px 0px 0px #fff,0px -1px 0px #fff,1px 0px 0px #fff,0px 1px 0px #fff;
+						}
 						&:hover {
 							opacity: 1;
 						}
@@ -794,6 +801,14 @@
 		opacity: 1 !important;
 		.showAppActionsButton, .emptyAppIndicator {
 			display: none;
+		}
+		.appTypeIndicator {
+			position: absolute;
+			color: $themeColor;
+			font-size: 0.8vw;
+			left: 7%;
+			bottom: 4%;
+			text-shadow: 1px 1px 0px #fff,1px -1px 0px #fff,-1px 1px 0px #fff,-1px -1px 0px #fff,-1px 0px 0px #fff,0px -1px 0px #fff,1px 0px 0px #fff,0px 1px 0px #fff;
 		}
 	}
 	.siteName {

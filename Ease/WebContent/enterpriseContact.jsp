@@ -36,11 +36,11 @@ pageEncoding="UTF-8"%>
 	<link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-	<link rel="stylesheet" href="/cssMinified.v00001/default_style.css" />
-	<link rel="stylesheet" href="/cssMinified.v00001/bootstrap.css" />
-	<link rel="stylesheet" href="/cssMinified.v00001/landingPage.css" />
-	<link rel="stylesheet" href="/cssMinified.v00001/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
-	<link rel="stylesheet" href="/cssMinified.v00001/enterpriseContact.css" />
+	<link rel="stylesheet" href="/cssMinified.v00002/default_style.css" />
+	<link rel="stylesheet" href="/cssMinified.v00002/bootstrap.css" />
+	<link rel="stylesheet" href="/cssMinified.v00002/landingPage.css" />
+	<link rel="stylesheet" href="/cssMinified.v00002/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="/cssMinified.v00002/enterpriseContact.css" />
 
 	<link rel="manifest" href="manifest.json">
 
@@ -136,12 +136,12 @@ pageEncoding="UTF-8"%>
 		</div>
 	</section>
 	<%@ include file="templates/landingPage/landingFooter.jsp" %>
-	<script src="/jsMinified.v00001/jquery1.12.4.js"></script>
-	<script src="/jsMinified.v00001/enterpriseContact.js" defer></script>
-	<script src="/jsMinified.v00001/basic-utils.js" async></script>
-	<script src="/jsMinified.v00001/postHandler.js" async></script>
-	<script src="/jsMinified.v00001/languageChooser.js" async></script>
-	<script src="/jsMinified.v00001/tracker.js" async></script>
+	<script src="/jsMinified.v00002/jquery1.12.4.js"></script>
+	<script src="/jsMinified.v00002/enterpriseContact.js" defer></script>
+	<script src="/jsMinified.v00002/basic-utils.js" async></script>
+	<script src="/jsMinified.v00002/postHandler.js" async></script>
+	<script src="/jsMinified.v00002/languageChooser.js" async></script>
+	<script src="/jsMinified.v00002/tracker.js" async></script>
 
 	<script type="text/javascript">
 		window.addEventListener('load',function(){
