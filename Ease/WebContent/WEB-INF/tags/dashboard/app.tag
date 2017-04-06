@@ -12,7 +12,8 @@
 	move="true"	
 	id="${app.getSingleId()}"
 	ssoId="${app.getSite().getSsoId()}"
-	logwith="">
+	logwith=""
+	data-type="${app.getType()}">
 	<div class="linkImage">
 		<div class="emptyAppIndicator">
 			<img src="resources/other/raise-your-hand-to-ask.svg" />
@@ -29,7 +30,8 @@
 	 id="${app.getSingleId()}"
 	 url="${app.getLinkAppInformations().getLink()}"
 	 move="true"
-	 logwith="">
+	 logwith=""
+	 data-type="${app.getType()}">
 	<div class="linkImage">
 	<c:if test='${app.havePerm("DELETE")}'>
 	<div class="showAppActionsButton">
@@ -51,7 +53,8 @@
 	 ssoId="${app.getSite().getSsoId()}"
 	 move="true"
 	 logwith=""
-	 account='${app.getAccountInformationsJson()}'>
+	 account='${app.getAccountInformationsJson()}'
+	 data-type="${app.getType()}">
 </c:if>
 <c:if test="${app.getType() eq 'LogwithApp'}">
 <div class="siteLinkBox"
@@ -60,7 +63,9 @@
 	 id="${app.getSingleId()}"
 	 ssoId="${app.getSite().getSsoId()}"
 	 move="true"
-	 logwith="${app.getLogwith().getSingleId()}">
+	 logwith="${app.getLogwith().getSingleId()}"
+	 data-type="${app.getType()}"
+	 logwithname="${app.getLogwith().getSite().getName()}">
 </c:if>
 <div class="linkImage">
 	<div class="showAppActionsButton">
