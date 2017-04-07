@@ -94,9 +94,9 @@ response.addCookie(email);
 
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
 
-	<link rel="stylesheet" href="/cssMinified.v00003/default_style.css" />
-	<link rel="stylesheet" href="/cssMinified.v00003/bootstrap.css" />
-	<link rel="stylesheet" href="/cssMinified.v00003/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="/cssMinified.v00004/default_style.css" />
+	<link rel="stylesheet" href="/cssMinified.v00004/bootstrap.css" />
+	<link rel="stylesheet" href="/cssMinified.v00004/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
 
 	<link rel="manifest" href="manifest.json">
 
@@ -138,25 +138,25 @@ response.addCookie(email);
 <%@ include file="templates/new_extension.html" %>
 </div>
 <noscript id="deferred-styles">
-	<link rel="stylesheet" href="/cssMinified.v00003/lib/niftyPopupWindow/component.css">
+	<link rel="stylesheet" href="/cssMinified.v00004/lib/niftyPopupWindow/component.css">
 </noscript>
-<script src="/jsMinified.v00003/jquery1.12.4.js" ></script>
-<script src="/jsMinified.v00003/jquery-ui-1.12.0.js" defer></script>
-<script src="/jsMinified.v00003/Sortable.js" defer></script>
-<script src="/jsMinified.v00003/app.js" defer></script>
-<script src="/jsMinified.v00003/profiles.js" defer></script>
-<script src="/jsMinified.v00003/dashboard.js" defer></script>
-<script src="/jsMinified.v00003/tracker.js" async></script>
-<script src="/jsMinified.v00003/asyncContentLoading.js" async></script>
-<script src="/jsMinified.v00003/postHandler.js" async></script>
-<script src="/jsMinified.v00003/basic-utils.js" async></script>
-<script src="/jsMinified.v00003/extension.js" async></script>
-<script src="/jsMinified.v00003/header.js" async></script>
-<script src="/jsMinified.v00003/selectFx.js" async></script>
-<script src="/jsMinified.v00003/isMobile.js" async></script>
-<script src="/jsMinified.v00003/shortcut.js" async></script>
-<script src="/jsMinified.v00003/logout.js" async></script>
-<script src="/jsMinified.v00003/checkConnection.js" async></script>
+<script src="/jsMinified.v00004/jquery1.12.4.js" ></script>
+<script src="/jsMinified.v00004/jquery-ui-1.12.0.js" defer></script>
+<script src="/jsMinified.v00004/Sortable.js" defer></script>
+<script src="/jsMinified.v00004/app.js" defer></script>
+<script src="/jsMinified.v00004/profiles.js" defer></script>
+<script src="/jsMinified.v00004/dashboard.js" defer></script>
+<script src="/jsMinified.v00004/tracker.js" async></script>
+<script src="/jsMinified.v00004/asyncContentLoading.js" async></script>
+<script src="/jsMinified.v00004/postHandler.js" async></script>
+<script src="/jsMinified.v00004/basic-utils.js" async></script>
+<script src="/jsMinified.v00004/extension.js" async></script>
+<script src="/jsMinified.v00004/header.js" async></script>
+<script src="/jsMinified.v00004/selectFx.js" async></script>
+<script src="/jsMinified.v00004/isMobile.js" async></script>
+<script src="/jsMinified.v00004/shortcut.js" async></script>
+<script src="/jsMinified.v00004/logout.js" async></script>
+<script src="/jsMinified.v00004/checkConnection.js" async></script>
 <script>
 	var images = document.getElementsByClassName('logo');
 	Array.prototype.forEach.call(images, function(element){
@@ -199,12 +199,12 @@ response.addCookie(email);
 			callback: function(){
 				asyncLoading.loadScriptsOneByOne(
 					[
-					"/jsMinified.v00003/modifyAppPopup.js",
-					"/jsMinified.v00003/addAppPopup.js",
-					"/jsMinified.v00003/deleteAccountPopup.js",
-					"/jsMinified.v00003/deleteProfilePopup.js",
-					"/jsMinified.v00003/addBookmarkPopup.js",
-					"/jsMinified.v00003/popupHandler.js"
+					"/jsMinified.v00004/modifyAppPopup.js",
+					"/jsMinified.v00004/addAppPopup.js",
+					"/jsMinified.v00004/deleteAccountPopup.js",
+					"/jsMinified.v00004/deleteProfilePopup.js",
+					"/jsMinified.v00004/addBookmarkPopup.js",
+					"/jsMinified.v00004/popupHandler.js"
 					]
 				);
 			}
@@ -218,10 +218,10 @@ response.addCookie(email);
 			appendTo: '.col-left .CatalogViewTab',
 			callback: function(){
 				asyncLoading.loadScriptsOneByOne(
-					['/jsMinified.v00003/catalogApp.js',
-					'/jsMinified.v00003/catalog.js',
-					'/jsMinified.v00003/update.js',
-					'/jsMinified.v00003/updatesManager.js'
+					['/jsMinified.v00004/catalogApp.js',
+					'/jsMinified.v00004/catalog.js',
+					'/jsMinified.v00004/update.js',
+					'/jsMinified.v00004/updatesManager.js'
 					],
 					function(){
 						$('.MenuButtonSet.waiting-load').removeClass('waiting-load');
@@ -232,7 +232,7 @@ response.addCookie(email);
 			urls:['/templates/Footer.html'],
 			appendTo : '#onComputer',
 			callback : function(){
-				asyncLoading.loadSingleScript("/jsMinified.v00003/footer.js");
+				asyncLoading.loadSingleScript("/jsMinified.v00004/footer.js");
 			}
 		});
 	});
@@ -240,7 +240,7 @@ response.addCookie(email);
 <script type="text/javascript">
 	window.addEventListener('load',function(){
 		(function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script");r.type="text/javascript";
-			r.async=true;r.src="/jsMinified.v00003/amplitude-analytics.js";
+			r.async=true;r.src="/jsMinified.v00004/amplitude-analytics.js";
 			r.onload=function(){e.amplitude.runQueuedFunctions()};var i=t.getElementsByTagName("script")[0];
 			i.parentNode.insertBefore(r,i);function s(e,t){e.prototype[t]=function(){this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));
 				return this}}var o=function(){this._q=[];return this};var a=["add","append","clearAll","prepend","set","setOnce","unset"];
@@ -269,7 +269,7 @@ response.addCookie(email);
 		<!-- Amplitude script -->
 		<script type="text/javascript">
 			window.addEventListener('load',function(){
-				$crisp=[];CRISP_WEBSITE_ID="6e9fe14b-66f7-487c-8ac9-5912461be78a";(function(){d=document;s=d.createElement("script");s.src="/jsMinified.v00003/crisp.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+				$crisp=[];CRISP_WEBSITE_ID="6e9fe14b-66f7-487c-8ac9-5912461be78a";(function(){d=document;s=d.createElement("script");s.src="/jsMinified.v00004/crisp.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
 			});
 		</script>
 	</body>

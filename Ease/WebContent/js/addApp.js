@@ -1,7 +1,7 @@
 $(document).ready(function() {
-	$('#PopupAddApp .loginWithButton').click(function() {
+	$('#PopupAddApp').find('.loginWithButton').click(function() {
 		$(".loginAppChooser p").text("Select your account");
-		var parent = $(this).closest('.md-content');
+		var parent = $(this).closest(".md-content");
 		var AppChooser = $(this).closest('.md-content').find('.loginAppChooser .ChooserContent');
 		var webid = $(".catalogApp[name='"+$(this).attr('name')+"']").attr("idx");
 		var AppHelper = $("<div class='AccountApp'><div class='imageHandler'><img src='' /></div><p></p></div>");
@@ -81,7 +81,7 @@ function showAddAppPopup(container, helper) {
 	var SsoChooserContent = $('.loginSsoChooser .ChooserContent');
 	var SsoHelper = $("<div class='AccountApp'><div class='imageHandler'><img src='' /></div><p></p></div>");
 
-	var ssoChooser = $('#PopupAddApp .loginSsoChooser');
+	var ssoChooser = $('#PopupAddApp').find('.loginSsoChooser');
 	var ssoId = $(helper).attr('data-sso');
 
 	if (ssoId != "" && ssoId != "0") {

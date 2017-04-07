@@ -212,7 +212,7 @@ addAppPopup = function(rootEl){
 		toPut.find('.appHandler').remove();
 		for (var i = apps.length - 1; i >= 0; i--) {
 			if (apps[i].id != self.currentApp.id){
-				obj = new Object();
+				obj = {};
 				obj.name = apps[i].name;
 				obj.ssoId = apps[i].ssoId;
 				obj.imgSrc = apps[i].imgSrc;
