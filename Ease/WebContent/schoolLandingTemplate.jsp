@@ -87,7 +87,7 @@ pageEncoding="UTF-8"%>
 		<div class="container">
 			<div class="intro-text">
 				<div class="intro-heading">
-					<fmt:message key="landing.title" />
+					<fmt:message key="landing.school.title" />
 				</div>
 				<a href="#services" class="btn btn-xl signUpButton" trackEvent="HomepageSignUpButton1">
 					<c:if test="${param.name != null}">
