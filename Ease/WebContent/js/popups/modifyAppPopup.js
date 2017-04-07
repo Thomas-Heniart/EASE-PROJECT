@@ -259,6 +259,7 @@ modifyAppPopup = function(rootEl){
 		var submitUrl = "EditClassicApp";
 		if (self.currentApp.logWith.length){
 			submitUrl = "EditLogwithApp";
+			appType = "LogwithApp";
 		} else if (self.currentApp.url.length){
 			submitUrl = "EditBookMark";
 		}
