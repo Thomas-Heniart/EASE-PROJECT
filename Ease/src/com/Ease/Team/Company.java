@@ -1,8 +1,6 @@
 package com.Ease.Team;
 
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -13,20 +11,28 @@ import java.util.List;
 public class Company {
 
     public static Company createCompany(String companyName, String adminEmail, String adminFirstName, String adminLastName, ServletManager sm) throws GeneralException {
-        /* Cretate the company */
-        DatabaseRequest request = sm.getDB().prepareRequest("INSERT INTO companies values(?, ?);");
+
+        DataBaseConnection db = sm.getDB();
+        int transaction = db.startTransaction();
+
+        /* Create company, admin and general team */
+        DatabaseRequest request = db.prepareRequest("INSERT INTO companies values(?, ?);");
         request.setNull();
         request.setString(companyName);
         String db_id = request.set().toString();
+        TeamUser admin = TeamUser.createAdminTeamUser(adminEmail, db_id, adminFirstName, adminLastName, sm);
+        Team generalTeam = Team.createTeam("general", db_id, sm);
+
         int single_id = sm.getNextSingle_id();
 
         /* Create the first team user(admin) */
-        TeamUser admin = TeamUser.createAdminTeamUser(adminEmail, db_id, adminFirstName, adminLastName, sm);
+
         List<TeamUser> users = new LinkedList<TeamUser>();
         users.add(admin);
 
         /* Create the first team */
         List<Team> teams = new LinkedList<Team>();
+        teams.add(generalTeam);
 
         return new Company(db_id, single_id, companyName, users, teams);
     }
