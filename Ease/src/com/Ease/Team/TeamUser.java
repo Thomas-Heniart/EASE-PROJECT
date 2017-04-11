@@ -3,8 +3,10 @@ package com.Ease.Team;
 import com.Ease.Utils.*;
 
 import javax.servlet.Servlet;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by thomas on 10/04/2017.
@@ -62,17 +64,18 @@ public class TeamUser {
         return new TeamUser(user_id, db_id, single_id, email, firstName, lastName, permissions);
     }
 
-    public static List<TeamUser> loadTeamUsers(String company_id, ServletManager sm) throws GeneralException {
+    public static Map<String, TeamUser> loadTeamUsers(String company_id, ServletManager sm) throws GeneralException {
         DatabaseRequest request = sm.getDB().prepareRequest("SELECT id FROM teamUsers WHERE company_id = ?;");
         request.setInt(company_id);
         DatabaseResult rs = request.get();
         if (!rs.next())
             throw new GeneralException(ServletManager.Code.ClientError, "No teamUsers for this company");
-        List<TeamUser> teamUsers = new LinkedList<TeamUser>();
+        Map<String, TeamUser> teamUsersMap = new HashMap<String, TeamUser>();
         do {
-            teamUsers.add(loadTeamUser(rs.getString(1), sm));
+            TeamUser tmp = loadTeamUser(rs.getString(1), sm);
+            teamUsersMap.put(tmp.getDb_id(), tmp);
         } while(rs.next());
-        return teamUsers;
+        return teamUsersMap;
     }
 
     protected String user_id;
@@ -165,5 +168,20 @@ public class TeamUser {
         request.setInt(db_id);
         request.set();
         this.permissions = permissions;
+    }
+
+    public void deleteFromDatabase(ServletManager sm) throws GeneralException {
+        DataBaseConnection db = sm.getDB();
+        int transaction = db.startTransaction();
+        DatabaseRequest request = db.prepareRequest("DELETE FROM teamsAndTeamUsersMap WHERE team_user_id = ?;");
+        request.setInt(this.db_id);
+        request.set();
+        request = db.prepareRequest("DELETE FROM companiesAndTeamUsersMap WHERE team_user_id = ?;");
+        request.setInt(this.db_id);
+        request.set();
+        request = db.prepareRequest("DELETE FROM teamUsers WHERE id = ?");
+        request.setInt(this.db_id);
+        request.set();
+        db.commitTransaction(transaction);
     }
 }
