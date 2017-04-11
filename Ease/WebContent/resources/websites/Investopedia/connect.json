@@ -1,0 +1,51 @@
+{
+  "name": "Investopedia",
+  "lastLogin": "",
+  "home": "http://www.investopedia.com/accounts/login.aspx",
+  "connect": {
+    "todo": [
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#edit-email"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#edit-password"
+      },
+      {
+        "action": "click",
+        "search": "#edit-submit"
+      }
+    ]
+  },
+  "Facebook": {
+    "todo": [
+      {
+        "action": "aclick",
+        "search": "a[href*='facebook']"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "clickona",
+        "search": "a[href*='logout']"
+      },
+      {
+        "action": "waitload"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "a[href*='logout'], #edit-email"
+    },
+    {
+      "search": "a[href*='logout']"
+    }
+  ]
+}

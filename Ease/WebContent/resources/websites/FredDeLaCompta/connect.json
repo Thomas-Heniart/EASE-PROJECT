@@ -1,0 +1,24 @@
+{
+  "name":"Fred de la compta",
+  "lastLogin":"",
+  "home":"https://home.freddelacompta.com/login",
+  "connect":{
+    "todo":[
+      {"action":"search", "what":"#username"},
+      {"action":"fill", "what":"login", "search":"#username"},
+      {"action":"fill", "what":"password", "search":"#password"},
+      {"action":"click", "search":".btn-submit"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"clickona", "search":"a[href*='dashboard-ae/profile']"},
+      {"action":"waitfor", "search":".profile__sidebar__links button"},
+      {"action":"click", "search":".profile__sidebar__links button"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='dashboard-ae/profile'], #username"},
+    {"search": "a[href*='dashboard-ae/profile']"}
+  ]
+}
