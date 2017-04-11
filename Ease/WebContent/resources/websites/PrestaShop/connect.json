@@ -1,0 +1,20 @@
+{
+  "name":"PrestaShop",
+  "lastLogin":"",
+  "home":"https://www.prestashop.com",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"#header_ips_username"},
+      {"action":"fill", "what":"password", "search":"#header_ips_password"},
+      {"action":"click", "search":"button.submit-form-signin"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"clickona", "search":".form-signin a[href*=logout]"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"search":".form-signin.connected"}
+  ]
+}
