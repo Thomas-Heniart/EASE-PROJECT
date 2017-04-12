@@ -1,6 +1,7 @@
 package com.Ease.Team;
 
 import com.Ease.Utils.*;
+import org.json.simple.JSONObject;
 
 import javax.servlet.Servlet;
 import java.util.HashMap;
@@ -13,11 +14,11 @@ import java.util.Map;
  */
 public class TeamUser {
 
-    public static TeamUser createTeamUser(String email, String company_id, String firstName, String lastName, TeamUserPermissions permissions, ServletManager sm) throws GeneralException {
+    public static TeamUser createTeamUser(String email, Company company, String firstName, String lastName, TeamUserPermissions permissions, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         DatabaseRequest request = db.prepareRequest("SELECT id FROM teamUsers WHERE email = ? AND company_id = ?;");
         request.setString(email);
-        request.setInt(company_id);
+        request.setInt(company.getDb_id());
         DatabaseResult rs = request.get();
         if (rs.next())
             throw new GeneralException(ServletManager.Code.ClientWarning, "This team user already exists");
@@ -33,22 +34,22 @@ public class TeamUser {
             request.setNull();
         else
             request.setInt(user_id);
-        request.setInt(company_id);
+        request.setInt(company.getDb_id());
         request.setString(firstName);
         request.setString(lastName);
         request.setString(email);
         request.setInt(permissions.getDb_id());
         String db_id = request.set().toString();
         int single_id = sm.getNextSingle_id();
-        return new TeamUser(user_id, db_id, single_id, email, firstName, lastName, permissions);
+        return new TeamUser(company, user_id, db_id, single_id, email, firstName, lastName, permissions);
     }
 
-    public static TeamUser createAdminTeamUser(String adminEmail, String company_id, String adminFirstName, String adminLastName, ServletManager sm) throws GeneralException {
+    public static TeamUser createAdminTeamUser(String adminEmail, Company company, String adminFirstName, String adminLastName, ServletManager sm) throws GeneralException {
         TeamUserPermissions adminPermissions = TeamUserPermissions.createAdminPermissions(sm);
-        return createTeamUser(adminEmail, company_id, adminFirstName, adminLastName, adminPermissions, sm);
+        return createTeamUser(adminEmail, company, adminFirstName, adminLastName, adminPermissions, sm);
     }
 
-    public static TeamUser loadTeamUser(String db_id, ServletManager sm) throws GeneralException {
+    public static TeamUser loadTeamUser(String db_id, Company company, ServletManager sm) throws GeneralException {
         DatabaseRequest request = sm.getDB().prepareRequest("SELECT * FROM teamUsers WHERE id = ?");
         request.setInt(db_id);
         DatabaseResult rs = request.get();
@@ -61,23 +62,38 @@ public class TeamUser {
         String email = rs.getString("email");
         int single_id = sm.getNextSingle_id();
         TeamUserPermissions permissions = TeamUserPermissions.loadTeamUserPermissions(rs.getString("permissions_id"), sm);
-        return new TeamUser(user_id, db_id, single_id, email, firstName, lastName, permissions);
+        return new TeamUser(company, user_id, db_id, single_id, email, firstName, lastName, permissions);
     }
 
-    public static Map<String, TeamUser> loadTeamUsers(String company_id, ServletManager sm) throws GeneralException {
+    public static TeamUser loadTeamUser(String user_id, ServletManager sm) throws GeneralException {
+        DatabaseRequest request = sm.getDB().prepareRequest("SELECT * FROM teamUsers WHERE user_id = ?");
+        request.setInt(user_id);
+        DatabaseResult rs = request.get();
+        if (!rs.next())
+            return null;
+        String company_id = rs.getString(3);
+        Map<String, Company> companyMap = (Map<String, Company>) sm.getContextAttr("companyMap");
+        Company company = companyMap.get(company_id);
+        if (company == null)
+            company = Company.loadCompany(company_id, sm);
+        return company.getTeamUserWithDbId(rs.getString(1));
+    }
+
+    public static Map<String, TeamUser> loadTeamUsers(Company company, ServletManager sm) throws GeneralException {
         DatabaseRequest request = sm.getDB().prepareRequest("SELECT id FROM teamUsers WHERE company_id = ?;");
-        request.setInt(company_id);
+        request.setInt(company.getDb_id());
         DatabaseResult rs = request.get();
         if (!rs.next())
             throw new GeneralException(ServletManager.Code.ClientError, "No teamUsers for this company");
         Map<String, TeamUser> teamUsersMap = new HashMap<String, TeamUser>();
         do {
-            TeamUser tmp = loadTeamUser(rs.getString(1), sm);
+            TeamUser tmp = loadTeamUser(rs.getString(1), company, sm);
             teamUsersMap.put(tmp.getDb_id(), tmp);
-        } while(rs.next());
+        } while (rs.next());
         return teamUsersMap;
     }
 
+    protected Company company;
     protected String user_id;
     protected String db_id;
     protected int single_id;
@@ -87,7 +103,8 @@ public class TeamUser {
 
     protected TeamUserPermissions permissions;
 
-    public TeamUser(String user_id, String db_id, int single_id, String email, String firstName, String lastName, TeamUserPermissions permissions) {
+    public TeamUser(Company company, String user_id, String db_id, int single_id, String email, String firstName, String lastName, TeamUserPermissions permissions) {
+        this.company = company;
         this.user_id = user_id;
         this.db_id = db_id;
         this.single_id = single_id;
@@ -123,8 +140,8 @@ public class TeamUser {
     }
 
     public void setFirstName(String firstName, ServletManager sm) throws GeneralException {
-        DataBaseConnection db  = sm.getDB();
-        DatabaseRequest request =  db.prepareRequest("UPDATE teamUsers SET firstName = ? WHERE id = ?;");
+        DataBaseConnection db = sm.getDB();
+        DatabaseRequest request = db.prepareRequest("UPDATE teamUsers SET firstName = ? WHERE id = ?;");
         request.setString(firstName);
         request.setInt(db_id);
         request.set();
@@ -136,8 +153,8 @@ public class TeamUser {
     }
 
     public void setLastName(String lastName, ServletManager sm) throws GeneralException {
-        DataBaseConnection db  = sm.getDB();
-        DatabaseRequest request =  db.prepareRequest("UPDATE teamUsers SET lastName = ? WHERE id = ?;");
+        DataBaseConnection db = sm.getDB();
+        DatabaseRequest request = db.prepareRequest("UPDATE teamUsers SET lastName = ? WHERE id = ?;");
         request.setString(lastName);
         request.setInt(db_id);
         request.set();
@@ -149,8 +166,8 @@ public class TeamUser {
     }
 
     public void setEmail(String email, ServletManager sm) throws GeneralException {
-        DataBaseConnection db  = sm.getDB();
-        DatabaseRequest request =  db.prepareRequest("UPDATE teamUsers SET email = ? WHERE id = ?;");
+        DataBaseConnection db = sm.getDB();
+        DatabaseRequest request = db.prepareRequest("UPDATE teamUsers SET email = ? WHERE id = ?;");
         request.setString(email);
         request.setInt(db_id);
         request.set();
@@ -163,11 +180,15 @@ public class TeamUser {
 
     public void setPermissions(TeamUserPermissions permissions, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
-        DatabaseRequest request =  db.prepareRequest("UPDATE teamUsers SET permissions_id = ? WHERE id = ?;");
+        DatabaseRequest request = db.prepareRequest("UPDATE teamUsers SET permissions_id = ? WHERE id = ?;");
         request.setString(permissions.getDb_id());
         request.setInt(db_id);
         request.set();
         this.permissions = permissions;
+    }
+
+    public Company getCompany() {
+        return company;
     }
 
     public void deleteFromDatabase(ServletManager sm) throws GeneralException {
@@ -183,5 +204,18 @@ public class TeamUser {
         request.setInt(this.db_id);
         request.set();
         db.commitTransaction(transaction);
+    }
+
+    public boolean hasPermission(TeamUserPermissions.Perm perm) {
+        return this.permissions.havePermission(perm.getValue());
+    }
+
+    public JSONObject getJson() {
+        JSONObject res = new JSONObject();
+        res.put("firstName", this.firstName);
+        res.put("lastName", this.lastName);
+        res.put("email", this.email);
+        res.put("single_id", this.single_id);
+        return res;
     }
 }

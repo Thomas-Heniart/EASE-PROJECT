@@ -1,6 +1,8 @@
 package com.Ease.Team;
 
 import com.Ease.Utils.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -118,5 +120,16 @@ public class Team {
 
     public String getTeamName() {
         return this.teamName;
+    }
+
+    public JSONObject getJson() {
+        JSONObject res = new JSONObject();
+        res.put("single_id", this.single_id);
+        res.put("teamName", this.teamName);
+        JSONArray teamUsers = new JSONArray();
+        for (TeamUser teamUser : this.teamUsers)
+            teamUsers.add(teamUser.getJson());
+        res.put("teamUsers", teamUsers);
+        return res;
     }
 }

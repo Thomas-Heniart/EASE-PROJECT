@@ -14,7 +14,7 @@ public class TeamUserPermissions extends Permissions {
         NONE(1),
         MANAGE_USERS(2),
         MANAGE_APPS(4),
-        ALL(8);
+        ALL(255);
 
         private int value;
 
@@ -28,9 +28,8 @@ public class TeamUserPermissions extends Permissions {
     }
 
     public static TeamUserPermissions createTeamUserPermissions(int permissions, ServletManager sm) throws GeneralException {
-        DatabaseRequest request = sm.getDB().prepareRequest("INSERT INTO teamUserPermssions values(?, ?);");
+        DatabaseRequest request = sm.getDB().prepareRequest("INSERT INTO teamUserPermissions values(?, b'" + Integer.toBinaryString(permissions) + "');");
         request.setNull();
-        request.setInt(permissions);
         String db_id = request.set().toString();
         return new TeamUserPermissions(db_id, permissions);
     }
@@ -40,7 +39,7 @@ public class TeamUserPermissions extends Permissions {
     }
 
     public static TeamUserPermissions loadTeamUserPermissions(String permissions_id, ServletManager sm) throws GeneralException {
-        DatabaseRequest request = sm.getDB().prepareRequest("SELECT permissions FROM teamUserPermissions WHERE id = ?;");
+        DatabaseRequest request = sm.getDB().prepareRequest("SELECT permissions+0 FROM teamUserPermissions WHERE id = ?;");
         request.setInt(permissions_id);
         DatabaseResult rs = request.get();
         if (!rs.next())

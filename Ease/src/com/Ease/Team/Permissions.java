@@ -15,6 +15,7 @@ public abstract class Permissions {
     }
 
     public boolean havePermission(int permissions) {
+        System.out.println("User perm: " + this.permissions + " & perm asked: " + permissions);
         return (this.permissions >> permissions) % 2 == 1;
     }
 
