@@ -1,7 +1,7 @@
-package com.Ease.Servlet.Company;
+package com.Ease.Servlet.Team;
 
 import com.Ease.Dashboard.User.User;
-import com.Ease.Team.Company;
+import com.Ease.Team.Team;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -17,13 +17,8 @@ import java.util.Map;
 /**
  * Created by thomas on 12/04/2017.
  */
-@WebServlet("/CreateCompany")
-public class CreateCompany extends HttpServlet {
-
-    public CreateCompany() {
-        super();
-    }
-
+@WebServlet("/CreateTeam")
+public class CreateTeam extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
@@ -31,15 +26,15 @@ public class CreateCompany extends HttpServlet {
             User user = sm.getUser();
             if (!user.isAdmin())
                 throw new GeneralException(ServletManager.Code.ClientError, "You ain't admin dude");
-            String companyName = sm.getServletParam("companyName", true);
+            String teamName = sm.getServletParam("teamName", true);
             String firstName = sm.getServletParam("firstName", true);
             String lastName = sm.getServletParam("lastName", true);
             String email = sm.getServletParam("email", true);
-            Company company = Company.createCompany(companyName, email, firstName, lastName, sm);
-            Map<String, Company> companyMap = (Map<String, Company>) sm.getContextAttr("companyMap");
-            companyMap.put(company.getDb_id(), company);
-            sm.setResponse(ServletManager.Code.Success, company.getJson().toString());
-            sm.setLogResponse("Company created");
+            Team team = Team.createTeam(teamName, email, firstName, lastName, sm);
+            Map<String, Team> teamMap = (Map<String, Team>) sm.getContextAttr("teamMap");
+            teamMap.put(team.getDb_id(), team);
+            sm.setResponse(ServletManager.Code.Success, team.getJson().toString());
+            sm.setLogResponse("Team created");
         } catch (GeneralException e) {
             sm.setResponse(e);
         } catch (Exception e) {

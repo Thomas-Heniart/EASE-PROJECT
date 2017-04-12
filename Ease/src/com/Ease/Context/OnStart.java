@@ -19,7 +19,8 @@ import com.Ease.Context.Catalog.WebsitesVisitedManager;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Context.Group.Infrastructure;
 import com.Ease.Dashboard.User.User;
-import com.Ease.Team.Company;
+import com.Ease.Team.Team;
+import com.Ease.Team.TeamUserPermissions;
 import com.Ease.Utils.DataBase;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.DatabaseRequest;
@@ -53,7 +54,7 @@ public class OnStart implements ServletContextListener{
 				context.setAttribute("catalog", new Catalog(db, context));
 				context.setAttribute("groupManager", new GroupManager());
 				context.setAttribute("websitesVisitedManager", new WebsitesVisitedManager(db, context));
-				context.setAttribute("companyMap", Company.loadCompanies(db));
+				context.setAttribute("teamMap", Team.loadTeams(db));
 				
 				List<String> colors = new ArrayList<String>();
 				colors.add("#373B60");
