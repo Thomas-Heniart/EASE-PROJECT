@@ -131,7 +131,8 @@ var WebsiteRequest = function(rootEl, url, date, userName, userEmail, db_id) {
 						+ self.userName
 						+ " ("
 						+ self.date
-						+ ")"
+						+ ") - "
+						+ self.userEmail
 						+ "</p>"
 						+ "</div>").appendTo(self.rootEl);
 		self.elem.on("click", ".quit", self.remove);
