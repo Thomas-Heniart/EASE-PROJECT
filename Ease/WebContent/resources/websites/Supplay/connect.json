@@ -1,0 +1,22 @@
+{
+  "name":"Supplay",
+  "lastLogin":"",
+  "home":"https://www.supplay.fr/supplay-espace-interimaire-candidats-connexion",
+  "connect":{
+    "todo":[
+      {"action": "goto", "url" : "https://www.supplay.fr/supplay-espace-interimaire-candidats-connexion"},
+      {"action":"fill", "what":"login", "search":"#formIdentSupp #adressemail"},
+      {"action":"fill", "what":"password", "search":"#formIdentSupp #motdepasseSupplay"},
+      {"action":"clickona", "search":"#formIdentSupp a.btn"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"clickona", "search":"a[href=supplay-deconnexion]"},
+      {"action": "waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"search":"a[href=supplay-deconnexion]"}
+  ]
+}

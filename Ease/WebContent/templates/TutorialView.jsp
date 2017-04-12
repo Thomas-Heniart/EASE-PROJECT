@@ -89,13 +89,13 @@
 					<p class="post-title">Type the info you use for this account</p>
 				</div>
 				<div class="row">
-					<input type="text" name="email" placeholder="Email"/>
+					<input autocomplete="new-password" type="text" name="email" placeholder="Email"/>
 					<span class="input">
 						<div class="showPassDiv">
 							<i class="fa fa-eye centeredItem" aria-hidden="true"></i>
 							<i class="fa fa-eye-slash centeredItem" aria-hidden="true"></i>
 						</div>
-						<input type="password" name="password" placeholder="Your password..." />
+						<input autocomplete="new-password" type="password" name="password" placeholder="Your password..." />
 					</span>
 				</div>
 				<div class="row text-center">
@@ -380,13 +380,13 @@
 						<p class="post-title">How do you access your <span>Facebook</span> account ?</p>
 					</div>
 					<div class="row">
-						<input type="text" name="login" id="login" placeholder="Login" />
+						<input autocomplete="new-password" type="text" name="login" id="login" placeholder="Login" />
 						<span class="input">
 							<div class="showPassDiv">
 								<i class="fa fa-eye centeredItem" aria-hidden="true"></i>
 								<i class="fa fa-eye-slash centeredItem" aria-hidden="true"></i>
 							</div>
-							<input id="password" type="password" name="password" placeholder="Your password..." />
+							<input autocomplete="new-password" id="password" type="password" name="password" placeholder="Your password..." />
 						</span>
 					</div>
 					<div class="row text-center">

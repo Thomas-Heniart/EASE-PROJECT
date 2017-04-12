@@ -146,6 +146,7 @@ response.addCookie(email);
 <script src="/jsMinified.v00004/app.js" defer></script>
 <script src="/jsMinified.v00004/profiles.js" defer></script>
 <script src="/jsMinified.v00004/dashboard.js" defer></script>
+<script src="/jsMinified.v00004/websocket.js" async></script>
 <script src="/jsMinified.v00004/tracker.js" async></script>
 <script src="/jsMinified.v00004/asyncContentLoading.js" async></script>
 <script src="/jsMinified.v00004/postHandler.js" async></script>
@@ -158,7 +159,7 @@ response.addCookie(email);
 <script src="/jsMinified.v00004/logout.js" async></script>
 <script src="/jsMinified.v00004/checkConnection.js" async></script>
 <script>
-	var images = document.getElementsByClassName('logo');
+		var images = document.getElementsByClassName('logo');
 	Array.prototype.forEach.call(images, function(element){
 		if (element.hasAttribute('lazy-src')){
 			var src = element.getAttribute('lazy-src');

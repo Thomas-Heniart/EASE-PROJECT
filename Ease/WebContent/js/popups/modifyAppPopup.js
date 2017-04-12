@@ -15,7 +15,7 @@ var EditInput = function(rootEl, parent, name, type, value, placeholder, placeho
 				+ '<i class="fa fa-cog centeredItem" aria-hidden="true"></i>'
 			+ '</div>');
 	}
-	$("span.input." + name, this.qRoot).append('<input type="' + type + '" name="' + name + '" id="' + name + '" value="' + value + '" placeholder="' + placeholder + '"/>');
+	$("span.input." + name, this.qRoot).append('<input autocomplete="new-password" type="' + type + '" name="' + name + '" id="' + name + '" value="' + value + '" placeholder="' + placeholder + '"/>');
 	
 	if (type === 'password') {
 		var passwordDiv = $("span.input." + name, this.qRoot);

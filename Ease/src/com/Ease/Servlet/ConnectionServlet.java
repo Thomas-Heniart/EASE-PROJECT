@@ -77,8 +77,6 @@ public class ConnectionServlet extends HttpServlet {
                     session.setAttribute("user", user);
                     session.setAttribute("teamUser", teamUser);
                     removeIpFromDataBase(client_ip, db);
-                    sm.setResponse(ServletManager.Code.Success, "Successfully connected.");
-                    user.putAllSockets(sessionWebsockets);
                     sm.addWebsockets(sessionWebsockets);
                     sm.addToSocket(WebsocketMessage.connectionMessage());
                 }
@@ -94,6 +92,8 @@ public class ConnectionServlet extends HttpServlet {
         sm.sendResponse();
         System.out.println("Connection done");
     }
+                    sm.setResponse(ServletManager.Code.Success, "Successfully connected.");
+                    user.putAllSockets(sessionWebsockets);
 
     public String getIpAddr(HttpServletRequest request) {
         String ip = request.getHeader("X-Real-IP");
