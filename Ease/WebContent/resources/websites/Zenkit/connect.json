@@ -1,0 +1,30 @@
+{
+  "name":"Zenkit",
+  "lastLogin":"",
+  "home":"https://zenkit.com/",
+  "connect":{
+    "todo":[
+      {"action":"goto", "url":"https://zenkit.com/login"},
+      {"action":"fill", "what":"login", "search":"#username_field"},
+      {"action":"fill", "what":"password", "search":"#password_field"},
+      {"action":"click", "search":".zenkit-button-login"}
+    ]
+  },
+  "Facebook": {
+    "todo": [
+      {"action":"goto", "url":"https://zenkit.com/login"},
+      {"action":"waitfor", "search":".zenkit-third-party-button.facebook"},
+      {"action":"click", "search":".zenkit-third-party-button.facebook"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"clickona", "search":"a[href*='logout']"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='logout'], a[href*='login']"},
+    {"search": "a[href*='logout']"}
+  ]
+}

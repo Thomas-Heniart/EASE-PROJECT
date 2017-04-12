@@ -65,7 +65,7 @@ public class Account {
 	public static Account createGroupAccount(String password, boolean shared, Map<String, String> informations, Infrastructure infra, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
-//		String crypted_password = infra.encrypt(password, sm);
+		//String crypted_password = infra.encrypt(password, sm);
 		DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, ?);");
 		request.setBoolean(shared);
 		String db_id = request.set().toString();
