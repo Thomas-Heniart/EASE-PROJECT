@@ -58,7 +58,7 @@ public class ConnectionServlet extends HttpServlet {
 		String email = sm.getServletParam("email", true);
 		String password = sm.getServletParam("password", false);
 		// --
-		Map<String, WebsocketSession> sessionWebsockets = (Map<String, WebsocketSession>)session.getAttribute("sessionWebsockets");
+//		Map<String, WebsocketSession> sessionWebsockets = (Map<String, WebsocketSession>)session.getAttribute("sessionWebsockets");
 		String client_ip = getIpAddr(request);
 		User user = null;
 		// Put current ip in db
@@ -74,8 +74,8 @@ public class ConnectionServlet extends HttpServlet {
 					session.setAttribute("user", user);
 					removeIpFromDataBase(client_ip,db);
 					sm.setResponse(ServletManager.Code.Success, "Successfully connected.");
-					user.putAllSockets(sessionWebsockets);
-					sm.addWebsockets(sessionWebsockets);
+//					user.putAllSockets(sessionWebsockets);
+//					sm.addWebsockets(sessionWebsockets);
 					sm.addToSocket(WebsocketMessage.connectionMessage());
 				}
 			} else {

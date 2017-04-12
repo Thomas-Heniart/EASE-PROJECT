@@ -11,7 +11,7 @@ var addInput = function(rootEl, parent, name, type, placeholder, placeholderIcon
 				+ '<i class="fa fa-eye-slash centeredItem" aria-hidden="true"></i>'
 			+ '</div>');
 	}
-	$("span.input." + name, this.qRoot).append('<input type="' + type + '" name="' + name + '" id="' + name + '" placeholder="' + placeholder + '"/>');
+	$("span.input." + name, this.qRoot).append('<input autocomplete="new-password" type="' + type + '" name="' + name + '" id="' + name + '" placeholder="' + placeholder + '"/>');
 	this.inputField = $("#" + name, this.qRoot);
 	this.inputField.keyup(function(e){
 		if (e.which == 13)

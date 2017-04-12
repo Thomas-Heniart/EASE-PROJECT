@@ -3,7 +3,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@page import="com.Ease.Dashboard.User.*"%>
+<%@	page import="com.Ease.Dashboard.User.*"%>
 <%@ page import="java.util.Base64" %>
 <%@ page import="java.util.Base64.Encoder" %>
 <%@ page import="java.nio.charset.StandardCharsets" %>
@@ -15,54 +15,58 @@ pageEncoding="UTF-8"%>
 <%}%>
 <!-- Amplitude script -->
 <%
-Cookie 	cookie = null;
-Cookie 	cookies[] = request.getCookies();
-String	sessionId = "";
-String 	token = "";
-String 	skipLanding = "";
-String  email = "";
-String	fname = "";
+	Cookie cookie = null;
+	Cookie cookies[] = request.getCookies();
+	String sessionId = "";
+	String token = "";
+	String skipLanding = "";
+	String email = "";
+	String fname = "";
 
-if (cookies != null){
-for (int i = 0;i < cookies.length ; i++) {
-cookie = cookies[i];
-if((cookie.getName()).compareTo("sId") == 0){
-sessionId = cookie.getValue();
-} else if((cookie.getName()).compareTo("sTk") == 0){
-token = cookie.getValue();
-} else if ((cookie.getName()).compareTo("skipLanding") == 0) {
-skipLanding = cookie.getValue();
-} else if ((cookie.getName()).compareTo("email") == 0){
-email = cookie.getValue();
-} else if ((cookie.getName()).compareTo("fname") == 0){
-fname = cookie.getValue();
-}
-}
-}
-if (email.length() == 0 && skipLanding.length() == 0 && request.getParameter("skipLanding") == null){%>
-<jsp:forward page="/discover" />
-<%}
-if(sessionId.length() > 0 && token.length() > 0){ %>
+	if (cookies != null) {
+		for (int i = 0; i < cookies.length; i++) {
+			cookie = cookies[i];
+			if ((cookie.getName()).compareTo("sId") == 0) {
+				sessionId = cookie.getValue();
+			} else if ((cookie.getName()).compareTo("sTk") == 0) {
+				token = cookie.getValue();
+			} else if ((cookie.getName()).compareTo("skipLanding") == 0) {
+				skipLanding = cookie.getValue();
+			} else if ((cookie.getName()).compareTo("email") == 0) {
+				email = cookie.getValue();
+			} else if ((cookie.getName()).compareTo("fname") == 0) {
+				fname = cookie.getValue();
+			}
+		}
+	}
+	if (email.length() == 0 && skipLanding.length() == 0 && request.getParameter("skipLanding") == null) {%>
+		<jsp:forward page="/discover"/>
+<%
+	}
+	if (sessionId.length() > 0 && token.length() > 0) {
+%>
 <jsp:forward page="connectionWithCookies">
-<jsp:param name="sessionId" value="<%=sessionId%>" />
-<jsp:param name="token" value="<%=token%>" />
+	<jsp:param name="sessionId" value="<%=sessionId%>"/>
+	<jsp:param name="token" value="<%=token%>"/>
 </jsp:forward>
 <%}%>
 
-<%boolean knownUser = (email.length() > 0 && fname.length() > 0) ? true : false;
-if (knownUser){
-try {
-new String(Base64.getDecoder().decode(fname), StandardCharsets.UTF_8);
-} catch (IllegalArgumentException e){
-for (int i = 0;i < cookies.length ; i++) {
-cookies[i].setMaxAge(-1);
-cookies[i].setValue(null);
-response.addCookie(cookies[i]);
-}
-fname = "";
-response.sendRedirect("/");
-}
-}%>
+<%
+	boolean knownUser = (email.length() > 0 && fname.length() > 0) ? true : false;
+	if (knownUser) {
+		try {
+			new String(Base64.getDecoder().decode(fname), StandardCharsets.UTF_8);
+		} catch (IllegalArgumentException e) {
+			for (int i = 0; i < cookies.length; i++) {
+				cookies[i].setMaxAge(-1);
+				cookies[i].setValue(null);
+				response.addCookie(cookies[i]);
+			}
+			fname = "";
+			response.sendRedirect("/");
+		}
+	}
+%>
 <!-- =================== DOCUMENT START ==================== -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/xhtml1-transitional.dtd">
 <html xmlns="http://w3.org/1999/xhtml" xmlns:og="http://ogp.me/ns#">

@@ -30,7 +30,7 @@
 	<script src="js/classie.js"></script>
 	<script src="js/owl.carousel.js"></script>
 	<script src="js/basic-utils.js" ></script>
-	<script src="js/websocket.js"></script>
+	<script src="js/websocket/websocket.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"> </script>
 	<script src="js/jquery.mousewheel.min.js"></script>
 	<link rel="stylesheet" href="css/default_style.css" />
@@ -119,6 +119,5 @@
 			<div class="successHelper centeredItem"><p>Your new password has been set</p></div>
 		</div>
 	</div>
-	<%@ include file="templates/ChatButton.jsp" %>
 </body>
 </html>

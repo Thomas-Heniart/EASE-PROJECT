@@ -30,6 +30,8 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Invitation;
 import com.Ease.Utils.ServletManager;
 import com.Ease.websocket.WebsocketSession;
+import com.Ease.websocketV1.WebSocketManager;
+import com.Ease.websocketV1.WebSocketSession;
 
 public class User {
 	enum Data {
@@ -196,7 +198,9 @@ public class User {
 	protected Keys keys;
 	protected Option opt;
 	protected Map<String, UserEmail> emails;
-	protected Map<String, WebsocketSession> websockets;
+//	protected Map<String, WebsocketSession> websockets;
+	protected List<WebSocketSession> webSocketSessions;
+    protected WebSocketManager webSocketManager;
 	protected List<Group> groups;
 	protected boolean isAdmin;
 	protected boolean sawGroupProfile;
@@ -217,7 +221,8 @@ public class User {
 		this.opt = opt;
 		this.emails = new HashMap<String, UserEmail>();
 		this.emails = new HashMap<String, UserEmail>();
-		this.websockets = new HashMap<String, WebsocketSession>();
+//		this.websockets = new HashMap<String, WebsocketSession>();
+        this.webSocketManager = new WebSocketManager();
 		this.groups = new LinkedList<Group>();
 		this.isAdmin = isAdmin;
 		this.sessionSave = sessionSave;
@@ -331,28 +336,18 @@ public class User {
 		return this.keys.decrypt(password);
 	}
 
-	public Map<String, WebsocketSession> getWebsockets() {
-		return this.websockets;
-	}
+	// WebSockets implementation
 
-	public void removeWebsocket(Session session) {
-		this.websockets.remove(session.getId());
-	}
-
-	public void removeWebsocket(WebsocketSession session) {
-		this.websockets.remove(session.getSessionId());
-	}
-
-	public void addWebsocket(WebsocketSession wSession) throws GeneralException {
-		this.websockets.put(wSession.getSessionId(), wSession);
-	}
-
+    public WebSocketManager getWebSocketManager(){
+        return this.webSocketManager;
+    }
+	// WebSocket implementation end
 
 	public void deconnect(ServletManager sm) {
 		@SuppressWarnings("unchecked")
 		Map<String, User> users = (Map<String, User>) sm.getContextAttr("users");
-		if (this.websockets.isEmpty())
-			users.remove(this.email);
+//		if (this.websockets.isEmpty())
+		users.remove(this.email);
 	}
 
 	public boolean isAdmin() {
@@ -447,7 +442,11 @@ public class User {
 		return false;
 	}
 
-	public void putAllSockets(Map<String, WebsocketSession> sessionWebsockets) throws GeneralException {
+	public String toString() {
+		return ("User " + this.first_name);
+	}
+
+/*	public void putAllSockets(Map<String, WebsocketSession> sessionWebsockets) throws GeneralException {
 		if (ServletManager.debug && sessionWebsockets == null)
 			return;
 		else if (sessionWebsockets == null)
@@ -455,9 +454,6 @@ public class User {
 		this.websockets.putAll(sessionWebsockets);
 	}
 
-	public String toString() {
-		return ("User " + this.first_name);
-	}
 
 	public void removeWebsockets(Map<String, WebsocketSession> sessionWebsockets) throws GeneralException {
 		if (ServletManager.debug && sessionWebsockets == null)
@@ -466,7 +462,7 @@ public class User {
 			throw new GeneralException(ServletManager.Code.ClientError, "Browser websockets is null");
 		for (Map.Entry<String, WebsocketSession> entry : sessionWebsockets.entrySet())
 			this.websockets.remove(entry.getKey());
-	}
+	}*/
 
 	public void sendVerificationEmail(String email, boolean newUser, ServletManager sm) throws GeneralException {
 		if (this.emails.get(email) != null) {

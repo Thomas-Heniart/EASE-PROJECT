@@ -57,8 +57,8 @@ public class AddProfile extends HttpServlet {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong color.");
 			Profile newProfile = user.getDashboardManager().addProfile(name, color, sm);
 			sm.setResponse(ServletManager.Code.Success, Integer.toString(newProfile.getSingleId()));
-			sm.addWebsockets(user.getWebsockets());
-			sm.addToSocket(WebsocketMessage.addProfileMessage(newProfile));
+//			sm.addWebsockets(user.getWebsockets());
+//			sm.addToSocket(WebsocketMessage.addProfileMessage(newProfile));
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		} catch (Exception e) {

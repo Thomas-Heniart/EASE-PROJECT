@@ -25,21 +25,6 @@
 </div>
 </div>
 
-<div id="addProfileHelper" style="display: none;">
-	<div class="item">
-		<div class="AddProfileView">
-			<div class="MobilePreviewHeader">
-				<p></p>
-			</div>
-			<div class="scalerContainer">
-				<img class="Scaler" src="resources/other/placeholder-36.png"
-				style="width: 100%; height: auto; visibility: hidden;" /> <i
-				class="fa fa-plus-circle centeredItem addHelper" aria-hidden="true"></i>
-				<p>Drop an app (or click) to create new profile</p>
-			</div>
-		</div>
-	</div>
-</div>
 <div id="profileHelper" style="display: none">
 	<div class="item">
 		<div class="ProfileBox helper"

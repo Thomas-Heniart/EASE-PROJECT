@@ -54,8 +54,8 @@ public class RemoveProfile extends HttpServlet {
 				throw new GeneralException(ServletManager.Code.ClientError, "Unknown profile.");
 			user.getDashboardManager().removeProfileWithPassword(Integer.parseInt(profileId), password, sm);
 			sm.setResponse(ServletManager.Code.Success, "Profile removed.");
-			sm.addWebsockets(user.getWebsockets());
-			sm.addToSocket(WebsocketMessage.removeProfileMessage(profileId));
+//			sm.addWebsockets(user.getWebsockets());
+//			sm.addToSocket(WebsocketMessage.removeProfileMessage(profileId));
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		} catch (NumberFormatException e) {

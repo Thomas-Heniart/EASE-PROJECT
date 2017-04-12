@@ -59,8 +59,8 @@ public class MoveProfile extends HttpServlet {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong position.");
 			user.getDashboardManager().moveProfile(Integer.parseInt(profileId), Integer.parseInt(columnIdx), Integer.parseInt(position), sm);
 			sm.setResponse(ServletManager.Code.Success, "Profile moved.");
-			sm.addWebsockets(user.getWebsockets());
-			sm.addToSocket(WebsocketMessage.moveProfileMessage(profileId, position, columnIdx));
+//			sm.addWebsockets(user.getWebsockets());
+//			sm.addToSocket(WebsocketMessage.moveProfileMessage(profileId, position, columnIdx));
 		} catch (GeneralException e) {
 			sm.setResponse(e);
 		} catch (NumberFormatException e) {

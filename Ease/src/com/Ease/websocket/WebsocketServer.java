@@ -29,7 +29,7 @@ public class WebsocketServer {
 	public void open(Session session, EndpointConfig config) throws GeneralException{
 		this.config = config;
 		HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
-		User user = null; 
+		User user = null;
 		user = (User) httpSession.getAttribute("user");
 		WebsocketSession wSession = new WebsocketSession(session);
 		Map<String, WebsocketSession> sessionWebsockets = null;
@@ -41,8 +41,8 @@ public class WebsocketServer {
 		//throw new NullPointerException("Open websocket " + (user == null ? "no user" : user.getFirstName()) + " socketId : " + wSession.getSessionId());
 		System.out.println("Open websocket " + (user == null ? "no user" : user.getFirstName()) + " socketId : " + wSession.getSessionId());
 		sessionWebsockets.put(wSession.getSessionId(), wSession);
-		if (user != null)
-			user.addWebsocket(wSession);
+//		if (user != null)
+//			user.addWebsocket(wSession);
 		try {
 			wSession.sendMessage(WebsocketMessage.assignIdMessage(wSession.getSessionId()));
 		} catch (IOException e) {
@@ -60,8 +60,8 @@ public class WebsocketServer {
 			@SuppressWarnings("unchecked")
 			Map<String, WebsocketSession> sessionWebsockets = (Map<String, WebsocketSession>) httpSession.getAttribute("sessionWebsockets");
 			sessionWebsockets.remove(session.getId());
-			if (user != null)
-				user.removeWebsocket(session);
+//			if (user != null)
+//				user.removeWebsocket(session);
 		} catch (IllegalStateException ise) {
 			//httpSession invalid
 		}

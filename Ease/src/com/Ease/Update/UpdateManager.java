@@ -87,8 +87,8 @@ public class UpdateManager {
 					return true;
 				if (this.checkRemovedUpdates(existingApp, password, sm))
 					return true;
-				if (existingApp.getAccount().getPassword().equals(user.encrypt(password)))
-					return true;
+//				if (existingApp.getAccount().getPassword().equals(user.encrypt(password)))
+//					return true;
 				this.addUpdate(UpdateNewPassword.createUpdateNewPassword(this.user, existingApp, password, userEmail, sm));
 				return true;
 			} else {
