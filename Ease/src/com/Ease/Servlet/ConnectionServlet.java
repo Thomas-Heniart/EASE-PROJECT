@@ -77,8 +77,10 @@ public class ConnectionServlet extends HttpServlet {
                     session.setAttribute("user", user);
                     session.setAttribute("teamUser", teamUser);
                     removeIpFromDataBase(client_ip, db);
-                    sm.addWebsockets(sessionWebsockets);
-                    sm.addToSocket(WebsocketMessage.connectionMessage());
+                    sm.setResponse(ServletManager.Code.Success, "Successfully connected.");
+                    //sm.addWebsockets(sessionWebsockets);
+                    //sm.addToSocket(WebsocketMessage.connectionMessage());
+                    user.putAllSockets(sessionWebsockets);
                 }
             } else {
                 throw new GeneralException(ServletManager.Code.UserMiss, "Too much attempts to connect. Please retry in 5 minutes.");
@@ -92,8 +94,6 @@ public class ConnectionServlet extends HttpServlet {
         sm.sendResponse();
         System.out.println("Connection done");
     }
-                    sm.setResponse(ServletManager.Code.Success, "Successfully connected.");
-                    user.putAllSockets(sessionWebsockets);
 
     public String getIpAddr(HttpServletRequest request) {
         String ip = request.getHeader("X-Real-IP");
