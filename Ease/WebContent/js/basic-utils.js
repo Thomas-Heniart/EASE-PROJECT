@@ -199,7 +199,7 @@ window.addEventListener('load',function(){
                 input.focus();
                 $(this).addClass('show');
             }
-        });        
+        });
 });
 
     var Animations = function(){
