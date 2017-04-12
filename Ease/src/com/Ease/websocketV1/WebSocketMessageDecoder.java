@@ -24,7 +24,7 @@ public class WebSocketMessageDecoder implements Decoder.Text<WebSocketMessage>{
 
     @Override
     public boolean willDecode(String s) {
-        return s != null;
+        return s != null && s.length() > 0;
     }
 
     @Override
