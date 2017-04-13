@@ -1,0 +1,26 @@
+{
+	"version":"0.0.5",
+	"magic":"4577LaMenuiserieMec!",
+	"background":"background.js",
+	"content":"content.js",
+	"actions": {
+		"background": {
+			"default":"background/default.js",
+			"theFamScrapping":"background/theFamScrapping.js",
+			"addWebsite":"background/addWebsite.js",
+			"websiteConnect":"background/websiteConnect.js",
+			"websiteConnectRetro":"background/websiteConnectRetro.js"
+		},
+		"content": {
+			"default":"content/default.js",
+			"theFamScrapping":"content/theFamScrapping.js",
+			"addWebsite":"content/addWebsite.js",
+			"websiteConnect":"content/websiteConnect.js",
+			"websiteConnectRetro":"content/websiteConnectRetro.js"
+		}
+	},
+	"files":{
+		"GoToHomePagePopupJS":"GoToHomePagePopup.js",
+		"test":"test.js"
+	}
+}

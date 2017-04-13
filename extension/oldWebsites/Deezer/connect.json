@@ -1,0 +1,31 @@
+{
+	"name":"deezer",
+	"lastLogin":"",
+	"home":"http://www.deezer.com/login/email",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#login_mail"},
+			{"action":"fill", "search":"#login_password", "what":"password"},
+			{"action":"click", "search":"#login_form_submit"},
+			{"action":"fill", "search":"#login_password", "what":"password"},
+			{"action":"click", "search":"#login_form_submit"}
+			]
+	},
+	"logout":{
+		"todo":[
+			{"action":"click", "search":"button.profile-settings"},
+			{"action":"waitfor", "time":100, "search":"button[data-type='log_out']"},
+			{"action":"click", "search":"button[data-type='log_out']"},
+			{"action":"waitload"},
+			{"action":"goto", "url":"http://www.deezer.com/login/email"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":"#naboo_menu_collection_avatar"}
+	],
+	"Facebook":{
+		"todo":[
+			{"action":"click", "search":"#home_account_fb"}
+			]
+	}
+}

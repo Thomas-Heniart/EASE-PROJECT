@@ -1,0 +1,32 @@
+{
+	"name":"Google Developers",
+	"lastLogin":"",
+	"sso":"Google",
+	"home":"https://developers.google.com",
+	"folder":"GoogleDevelopers",
+	"connect":{
+		"todo":[
+			{"action":"waitfor", "search":"a[href*='https://www.google.com/accounts/ServiceLogin']"},
+			{"action":"clickona", "search":"a[href*='https://www.google.com/accounts/ServiceLogin']"},
+			{"action":"waitload"},
+			{"action":"waitfor", "search":["#account-chooser-link","#account-chooser-add-account"]},
+			{"action":"aclick", "search":"#account-chooser-link"},
+			{"action":"aclick", "search":"#account-chooser-add-account"},
+			{"action":"fill", "what":"login", "search":"#Email", "grave":true},
+			{"action":"click", "search":"#next", "grave":true},
+			{"action":"waitfor", "time":10, "search":"#Passwd"},
+			{"action":"fill", "what":"password", "search":"#Passwd", "grave":true},
+			{"action":"submit", "search":"#gaia_loginform", "grave":true}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"clickona", "search":"a[href*='https://accounts.google.com/SignOutOptions?']", "grave":true},
+			{"action":"waitfor", "search":"a[href*='https://www.google.com/accounts/Logout?']"},
+			{"action":"aclick", "search":"a[href*='https://www.google.com/accounts/Logout?']", "grave":true}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":"a[href*='https://accounts.google.com/SignOutOptions?']"}
+	]
+}

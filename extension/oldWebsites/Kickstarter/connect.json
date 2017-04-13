@@ -1,0 +1,27 @@
+{
+    "name":"Kickstarter",
+    "lastLogin":"",
+    "home":"https://www.kickstarter.com",
+    "connect":{
+        "todo":[
+            {"action":"goto", "url":"https://www.kickstarter.com/login"},
+            {"action":"fill", "what":"login", "search":"#user_session_email"},
+            {"action":"fill", "what":"password", "search":"#user_session_password"},
+            {"action":"click", "search":"input[type='submit']:eq(0)"}
+            ]
+    },
+    "Facebook":{
+    	"todo":[
+    		{"action":"goto", "url":"https://www.kickstarter.com/login"},
+    		{"action":"clickona", "search":"a.js-facebook-login.btn.btn--facebook"}
+    	]	
+    },
+    "logout":{
+        "todo":[
+            {"action":"goto", "url":"https://www.kickstarter.com/logout?ref=user_menu"}
+            ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"#js-user_nav_select"}
+    ]
+}

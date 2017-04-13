@@ -1,0 +1,23 @@
+{
+	"name":"iesegOnline",
+	"lastLogin":"",
+	"home":"http://www.ieseg-online.com/",
+	"connect":{
+		"todo":[
+			{"action":"goto", "url":"https://www.ieseg-online.com/login/index.php"},
+			{"action":"waitfor", "search":"#username"},
+			{"action":"fill", "what":"login", "search":"#username"},
+			{"action":"fill", "what":"password", "search":"#password", "grave":true},
+			{"action":"click", "search":"#loginbtn"}
+			]
+	},
+	"logout":{
+		"todo":[
+			{"action":"goto", "url":"http://www.ieseg-online.com/login/logout.php"},
+			{"action":"click", "search":"form[action='http://www.ieseg-online.com/login/logout.php'] input[type='submit']"}
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":"#usermenu"}
+	]
+}

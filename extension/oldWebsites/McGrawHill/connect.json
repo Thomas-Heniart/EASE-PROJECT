@@ -1,0 +1,21 @@
+{
+	"name":"McGrawHill",
+	"lastLogin":"",
+	"home":"http://www.mheducation.com/",
+	"connect":{
+		"todo":[
+			{"action":"goto", "url":"https://shop.mheducation.com/store/services/loginview"},
+			{"action":"fill", "what":"login", "search":"#sign-in-email", "grave":true},
+			{"action":"fill", "what":"password", "search":"#sign-in-password", "grave":true},
+			{"action":"submit", "search":"#sign-in-form", "grave":true}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"goto", "url":"https://shop.mheducation.com/store/services/logout"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":"#accountMenu"}
+	]
+}

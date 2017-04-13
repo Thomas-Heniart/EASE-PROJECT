@@ -1,0 +1,23 @@
+{
+    "name":"T411",
+    "lastLogin":"",
+    "home":"https://www.t411.li",
+    "connect":{
+        "todo":[
+        	{"action":"aclick", "search":"a[href*='login']"},
+        	{"action":"waitfor", "search":"#login"},
+            {"action":"fill", "what":"login", "search":"#lgn", "grave":true},
+            {"action":"fill", "what":"password", "search":"#pass"},
+            {"action":"click", "search":"input[type='submit']"}
+        ]
+    },
+    
+    "logout":{
+        "todo":[
+        	{"action":"goto","url":"https://www.t411.li/users/logout"}
+        ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a[href*='logout']"}
+    ]
+}

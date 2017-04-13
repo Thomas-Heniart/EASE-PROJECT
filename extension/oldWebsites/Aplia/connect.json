@@ -1,0 +1,20 @@
+{
+	"name":"Aplia",
+	"lastLogin":"",
+	"home":"http://aplia.com/",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#txtEmail", "grave":true},
+			{"action":"fill", "what":"password", "search":"#txtPassword", "grave":true},
+			{"action":"click", "search":"#signin button[type='submit']", "grave":true}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"goto", "url":"https://courses.aplia.com/af/servlet/logoff"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":"a[href='https://courses.aplia.com/af/servlet/logoff']"}
+	]
+}

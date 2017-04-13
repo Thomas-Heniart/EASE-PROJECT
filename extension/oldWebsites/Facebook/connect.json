@@ -1,0 +1,25 @@
+{
+	"name":"Facebook",
+	"lastLogin":"",
+	"home":"http://www.facebook.com",
+	"folder":"Facebook",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#email", "grave":true},
+			{"action":"fill", "what":"password", "search":"#pass", "grave":true},
+			{"action":"click", "search":"#loginbutton", "grave":true}
+			]
+	},
+	"logout":{
+		"todo":[
+			{"action":"erasecookies", "name":"c_user"},
+			{"action":"goto", "url":"http://www.facebook.com"}
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":"body.home"}
+	],
+	"checkChangeLogin":[
+		{"action":"click", "search":"#loginbutton"}
+	]
+}

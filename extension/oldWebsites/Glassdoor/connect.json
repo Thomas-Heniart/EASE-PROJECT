@@ -1,0 +1,37 @@
+{
+    "name":"Glassdoor",
+    "lastLogin":"",
+    "home":"https://www.glassdoor.com",
+    "connect":{
+        "todo":[
+          {"action":"clickona", "search":"a.sign-in"},
+          {"action":"waitfor", "search":"#signInUsername"},
+          {"action":"fill", "what":"login", "search":"#signInUsername"},
+          {"action":"fill", "what":"password", "search":"#signInPassword"}
+          {"action":"click", "search":"#signInBtn"}
+        ]
+    },
+    "Facebook":{
+    	"todo":[
+        {"action":"clickona", "search":"a.sign-in"},
+        {"action":"waitfor", "search":"#signInUsername"},
+        {"action":"click", "search":"span.fbSigninBtnLink"},
+    	]
+    },
+    "Google":{
+    	"todo":[
+        {"action":"clickona", "search":"span.signin"},
+        {"action":"waitfor", "search":"#signInUsername"},
+        {"action":"click", "search":"#LoginModule-GPlusBtnSignIn"},
+    	]
+    },
+
+    "logout":{
+        "todo":[
+            {"action":"submit", "search":"form[action*='logout']"}
+          ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"form[action*='logout']"}
+    ]
+}

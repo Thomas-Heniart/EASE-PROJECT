@@ -1,0 +1,30 @@
+{
+    "name":"6Play",
+    "lastLogin":"",
+    "home":"http://www.6play.fr/",
+    "connect":{
+        "todo":[
+          {"action":"goto", "url":"http://www.6play.fr/connexion"},
+        	{"action":"waitfor", "search":"#form-login"},
+          	{"action":"fill", "what":"login", "search":"#form-login input[name='email']", "grave":true},
+            {"action":"fill", "what":"password", "search":"#form-login input[name='password']"},
+            {"action":"click", "search":"#form-login button[type='submit']"}
+        ]
+    },
+    "Facebook":{
+    	"todo":[
+        {"action":"goto", "url":"http://www.6play.fr/connexion"},
+    		{"action":"waitfor", "search":"button.auth-content__fb-button"},
+            {"action":"click", "search":"button.auth-content__fb-button"}
+    	]
+    },
+    "logout":{
+        "todo":[
+            {"action":"clickona", "search":"ul.top-menu li:nth-child(9) a"},
+            {"action":"goto", "url":"http://www.6play.fr/"}
+         ]
+    },
+    "checkAlreadyLogged":[
+        {"search":".app-header__login.app-header__login--connected"}
+    ]
+}

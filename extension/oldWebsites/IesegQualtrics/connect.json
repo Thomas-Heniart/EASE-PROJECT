@@ -1,0 +1,22 @@
+{
+	"name":"IesegQualtrics",
+	"lastLogin":"",
+	"home":"https://az1.qualtrics.com/ControlPanel/",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"input#UserName"},
+			{"action":"fill", "what":"password", "search":"input#UserPassword"},
+			{"action":"click", "search":"div#loginButton input", "grave":true}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"clickona", "search":".account-menu-button"},
+			{"action":"waitfor", "search":".menu-items li:eq(4) a"},
+			{"action":"clickona", "search":".menu-items li:eq(4) a", "grave":true}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":".icon.icon-user-framed"}
+	]
+}

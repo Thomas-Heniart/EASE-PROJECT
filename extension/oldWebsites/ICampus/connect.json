@@ -1,0 +1,21 @@
+{
+    "name":"ICampus",
+    "lastlogin":"",
+    "home":"http://icampus.univ-catholille.fr/",
+    "connect": {
+    	"todo": [
+    		{"action":"fill", "what":"login", "search":"#login_username"},
+    		{"action":"fill", "what":"password", "search":"#login_password"},
+    		{"action":"submit", "search":"form#login"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"clickona", "search":".navbar-right li a"},
+    		{"action":"clickona", "search":"a[href*='logout']"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"a[href*='logout']"}
+    ]
+}

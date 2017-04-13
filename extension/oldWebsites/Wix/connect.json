@@ -1,0 +1,27 @@
+{
+    "name":"Wix",
+    "lastlogin":"",
+    "home":"https://www.wix.com",
+    "connect": {
+    	"todo": [
+    		{"action":"goto", "url":"https://fr.wix.com/signin?loginDialogContext=login&referralInfo=HEADER&postLogin=https://fr.wix.com/my-account/sites/&postSignUp=https://fr.wix.com/new/vertical?referralAdditionalInfo=header&originUrl=http%3A%2F%2Ffr.wix.com%2F"},
+    		{"action":"waitfor", "search":"#input_0"},
+    		{"action":"fillThenSubmit", "login":"#input_0", "password":"#input_1", "submit":"button.login-btn"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"goto", "url":"https://www.wix.com/signout"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":".user-profile-picture"}
+    ],
+    "Facebook": {
+    	"todo": [
+    		{"action":"goto", "url":"https://fr.wix.com/signin?loginDialogContext=login&referralInfo=HEADER&postLogin=https://fr.wix.com/my-account/sites/&postSignUp=https://fr.wix.com/new/vertical?referralAdditionalInfo=header&originUrl=http%3A%2F%2Ffr.wix.com%2F"},
+    		{"action":"waitfor", "search":"#input_0"},
+    		{"action":"click", "search":".signin-sozial-fazebook"}
+    	]
+    }
+}

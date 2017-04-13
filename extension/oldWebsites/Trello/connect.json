@@ -1,0 +1,24 @@
+{
+    "name":"Trello",
+    "lastLogin":"",
+    "home":"https://trello.com/login/",
+    "connect":{
+        "todo":[
+            {"action":"fill", "what":"login", "search":"input#user"},
+            {"action":"val", "what":"password", "search":"input[name='password']#password"},
+            {"action":"click", "search":"input#login"}
+        ]
+    },
+    "logout":{
+        "todo":[
+            {"action":"clickona", "search":"a.header-btn.header-member.js-open-header-member-menu"},
+            {"action":"waitfor", "search":"a.js-logout"},
+            {"action":"clickona", "search":"a.js-logout"},
+            {"action":"waitload"},
+            {"action":"goto", "url":"https://trello.com/login/"}
+            ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a.header-btn.js-open-header-info-menu"}
+    ]
+}

@@ -1,0 +1,28 @@
+{
+	"name":"BrandAlley",
+	"lastLogin":"",
+	"home":"https://www.brandalley.fr/se-connecter",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"form.form_login #username"},
+			{"action":"fill", "what":"password", "search":"form.form_login #password"},
+			{"action":"click", "search":"form.form_login button.btn_connect"}
+			]
+	},
+	"logout":{
+		"todo":[
+			{"action":"goto", "url":"https://www.brandalley.fr/se-deconnecter"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":"#account"}
+	],
+	"checkChangeLogin":[
+		{"action":"click", "search":"#loginbutton"}
+	],
+    "Facebook":{
+    	"todo":[
+    		{"action":"clickona", "search":"a.oauth-login-facebook"}
+    	]	
+    }
+}

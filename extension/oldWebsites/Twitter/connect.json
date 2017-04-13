@@ -1,0 +1,22 @@
+{
+	"name":"twitter",
+	"lastLogin":"",
+	"home":"https://twitter.com/login",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"input.js-username-field.email-input.js-initial-focus"},
+			{"action":"fill", "what":"password", "search":"input.js-password-field"},
+			{"action":"click", "search":".signin-wrapper .submit.btn.primary-btn"}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"click", "search":"#signout-button"},
+			{"action":"waitload"},
+			{"action":"goto", "url":"https://twitter.com/login"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":"#user-dropdown-toggle"}
+	]
+}

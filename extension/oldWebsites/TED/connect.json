@@ -1,0 +1,27 @@
+{
+    "name":"Ted",
+    "lastLogin":"",
+    "home":"https://www.ted.com/",
+    "connect":{
+        "todo":[
+        	{"action":"goto", "url":"https://auth.ted.com/session/new"},
+            {"action":"fill", "what":"login", "search":"#user_email", "grave":true},
+            {"action":"fill", "what":"password", "search":"#user_password"},
+            {"action":"click", "search":"input[type='submit']"}
+        ]
+    },
+    
+    "logout":{
+        "todo":[
+        	{"action":"goto","url":"https://auth.ted.com/session/logout?referer=http://www.ted.com/session/logout"}
+        ]
+    },
+    "checkAlreadyLogged":[
+        {"search":".Main-nav__account-button__avatar[style*='background-image']"}
+    ],
+    "Facebook": {
+    	"todo": [
+    		{"action":"goto", "url":"https://auth.ted.com/account/auth/facebook"}
+    	]
+    }
+}

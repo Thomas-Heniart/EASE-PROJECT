@@ -1,0 +1,27 @@
+{
+	"name":"linkedin",
+	"lastLogin":"",
+	"home":"https://www.linkedin.com/",
+	"connect":{
+		"url":"https://www.linkedin.com/",
+		"todo":[
+			{"action":"goto", "url":"https://www.linkedin.com/"},
+			{"action":"fill", "what":"login", "search":"#login-email", "grave":true},
+			{"action":"fill", "what":"password", "search":"#login-password"},
+			{"action":"click", "search":".login-form #login-submit"},
+			{"action":"waitload"}
+			]
+	},
+	"logout":{
+		"url":"https://www.linkedin.com/",
+		"todo":[
+			{"action":"aclick", "search":".account-settings-link .act-set-row .act-set-action .account-submenu-split-link"}
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":".member"}
+	],
+	"checkChangeLogin":[
+		
+	]
+}

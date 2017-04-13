@@ -1,0 +1,28 @@
+{
+	"name":"Unsplash",
+	"lastLogin":"",
+	"home":"https://unsplash.com",
+	"connect":{
+		
+		"todo":[
+			{"action":"goto", "url":"https://unsplash.com/login"},
+			{"action":"fill", "what":"login", "search":"#user_email", "grave":true},
+			{"action":"fill", "what":"password", "search":"#user_password", "grave":true},
+			{"action":"click", "search":"input[name='commit']"}
+			]
+	},
+	"Facebook":{
+		"todo":[
+			{"action":"goto", "url":"https://unsplash.com/login"},
+			{"action":"aclick" , "search":"a[href*='facebook']"}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"goto", "url":"https://unsplash.com/logout"}
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":"a[href*='/likes']"}
+	]
+}

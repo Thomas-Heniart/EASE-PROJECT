@@ -1,0 +1,21 @@
+{
+    "name":"Smeno",
+    "lastlogin":"",
+    "home":"https://espace-perso.smeno.com/",
+    "connect": {
+    	"todo": [
+    		{"action":"fill", "what":"login","search":"#login", "grave":"true"},
+    		{"action":"fill", "what":"password","search":"#password", "grave":"true"},
+    		{"action":"click", "search":"#submit", "grave":"true"}
+    	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"goto", "url":"https://espace-perso.smeno.com/?logintype=logout"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"a[href='/?logintype=logout']"}
+    ]
+    
+}
