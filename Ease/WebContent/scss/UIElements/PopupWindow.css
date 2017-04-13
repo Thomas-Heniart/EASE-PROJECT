@@ -72,11 +72,11 @@
   opacity: 1;
   font-weight: normal; }
 .popup button#accept.Active {
-  background-color: #20895e;
-  border: 1px solid #20895e; }
+  background-color: #31aa7c;
+  border: 1px solid #31aa7c; }
   .popup button#accept.Active:hover {
-    background-color: #2AB27B;
-    border-color: #2AB27B; }
+    background-color: #45C997;
+    border-color: #45C997; }
 .popup button#close {
   background-color: #808080;
   color: white;

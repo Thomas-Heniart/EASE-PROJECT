@@ -7,12 +7,12 @@ pageEncoding="UTF-8"%>
 <c:set var="session"		scope="session" value="${pageContext.getSession()}"/>
 <c:set var="user"			scope="session" value='${session.getAttribute("user")}'/>
 
-<script src="/jsMinified.v00006/SettingsView.js"></script>
-<script src="/jsMinified.v00006/errorMsg.js"></script>
-<script src="/jsMinified.v00006/input.js"></script>
-<script src="/jsMinified.v00006/form.js"></script>
-<script src="/jsMinified.v00006/popup.js"></script>
-<script src="/jsMinified.v00006/emailSuggestions.js"></script>
+<script src="/jsMinified.v00007/SettingsView.js"></script>
+<script src="/jsMinified.v00007/errorMsg.js"></script>
+<script src="/jsMinified.v00007/input.js"></script>
+<script src="/jsMinified.v00007/form.js"></script>
+<script src="/jsMinified.v00007/popup.js"></script>
+<script src="/jsMinified.v00007/emailSuggestions.js"></script>
 
 <div class="settingsWindow">
 	<div class="quit">

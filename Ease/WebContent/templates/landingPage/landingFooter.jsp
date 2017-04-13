@@ -8,7 +8,7 @@
 						<fmt:message key="landing.footer.section-product.title"/>
 					</h3>
 					<div class="links">
-						<a href="secure" target="_blank">
+						<a href="security">
 							<fmt:message key="landing.header.security-link"/>
 						</a>
 						<a href="pricing">

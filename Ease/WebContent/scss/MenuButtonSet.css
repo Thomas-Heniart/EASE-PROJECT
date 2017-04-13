@@ -53,6 +53,10 @@
   position: fixed;
   top: 40%;
   right: 2%; }
+  .MenuButtonSet.waiting-load {
+    pointer-events: none; }
+    .MenuButtonSet.waiting-load #enterEditMode {
+      opacity: 0.7; }
   .MenuButtonSet #updateCount {
     position: absolute;
     z-index: 2;

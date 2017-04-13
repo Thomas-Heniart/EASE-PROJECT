@@ -11,17 +11,17 @@
 					<a href="#page-top"></a>
 				</li>
 				<li>
-					<a href="secure.jsp" target="_blank">
+					<a href="/security">
 						<fmt:message key="landing.header.security-link" />
 					</a>
 				</li>
 				<li>
-					<a href="pricing">
+					<a href="/pricing">
 						<fmt:message key="landing.header.price-link" />
 					</a>
 				</li>
 				<li>
-					<a href="contact.jsp">
+					<a href="/contact">
 						<fmt:message key="landing.header.contact-link" />
 					</a>
 				</li>

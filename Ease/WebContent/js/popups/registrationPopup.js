@@ -124,7 +124,7 @@ var signUpPopup = function(elem){
 		}, 
 		function(retMsg) {
 			alertMessage.text(retMsg);
-			alertMessage.css('color', '#ec555b')
+			alertMessage.css('color', '#ec555b');
 			alertMessage.addClass('show');
 			setTimeout(function(){
 				alertMessage.removeClass('show');

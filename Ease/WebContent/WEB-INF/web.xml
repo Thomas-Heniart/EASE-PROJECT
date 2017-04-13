@@ -20,20 +20,6 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
-  <!-- filter for static html cache -->
-<!--  <filter>
-    <filter-name>StaticExpiresFilter</filter-name>
-    <filter-class>org.apache.catalina.filters.ExpiresFilter</filter-class>
-    <init-param>
-      <param-name>ExpiresByType text/html</param-name>
-      <param-value>access plus 10 days</param-value>
-    </init-param>
-  </filter>
-    <filter-mapping>
-    <filter-name>StaticExpiresFilter</filter-name>
-    <url-pattern>*.html</url-pattern>
-    <dispatcher>REQUEST</dispatcher>
-  </filter-mapping>-->
   <!-- filter for cache control -->
   <filter>
     <filter-name>ExpiresFilter</filter-name>
@@ -82,12 +68,12 @@
     <location>/500page.jsp</location>
   </error-page>
   <servlet>
-    <servlet-name>secure.jsp</servlet-name>
-    <jsp-file>/secure.jsp</jsp-file>
+    <servlet-name>security.jsp</servlet-name>
+    <jsp-file>/security.jsp</jsp-file>
   </servlet>
   <servlet-mapping>
-    <servlet-name>secure.jsp</servlet-name>
-    <url-pattern>/secure/*</url-pattern>
+    <servlet-name>security.jsp</servlet-name>
+    <url-pattern>/security/*</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>contact.jsp</servlet-name>
@@ -145,12 +131,10 @@
     <servlet-name>home.jsp</servlet-name>
     <url-pattern>/home/*</url-pattern>
   </servlet-mapping>
-
-<!-- 
-<security-constraint> 
+<security-constraint>
     <web-resource-collection> 
        <web-resource-name>Viewpoint Secure URLs</web-resource-name> 
        <url-pattern>/*</url-pattern> 
-    </web-resource-collection> 
-  </security-constraint>  -->
+    </web-resource-collection>
+  </security-constraint>
 </web-app>
