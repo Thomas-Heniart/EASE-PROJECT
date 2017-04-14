@@ -123,11 +123,19 @@ var Content = function() {
 				styles[i].parentNode.removeChild(styles[i]);
 			};
 
-			$('*').each(function(elem) {
-				if(elem.nodeType === Node.COMMENT_NODE) {
-					elem.parentNode.removeChild(elem);
+			
+			function removeComments(node) {
+				var children = elem.childNodes;
+
+				for (var i=0, len=children.length; i<len; i++) {
+					if (children[i].nodeType == Node.COMMENT_NODE) {
+						children[i].parentNode.removeChild(children[i]);
+					} else {
+						removeComments(children[i]);
+					}
 				}
-			});
+			}
+			removeComments(dom);
 		}
 
 		var firstDom = document.getElementsByTagName('body')[0].cloneNode(true);
