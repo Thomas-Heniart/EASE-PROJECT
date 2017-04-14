@@ -50,8 +50,8 @@ var Content = function() {
 			}
 
 			function isConnected(check) {
-				
-				return $(check).length > 0 || $(I.memory.json.checkUnconnected).length < 1
+				console.log("isConnected: check: " + check + ": " + $(check).length);
+				return $(check).length > 0;
 			}
 
 			function waitfor(target, callback) {

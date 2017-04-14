@@ -8,7 +8,7 @@ var Content = function() {
 			var count = 1;
 			var sibling = node.previousSibling
 			do {
-				if(sibling.nodeType == 1 && sibling.nodeName == node.nodeName) {count++;}
+				if(sibling.nodeType == 1 && sibling.nodeName == node.nodeName && sibling.id == node.id && sibling.className == node.className) {count++;}
 				sibling = sibling.previousSibling;
 			} while(sibling);
 			if(count == 1) {count = null;}
@@ -26,9 +26,21 @@ var Content = function() {
 		}
 
 		if(node.nodeType == 1) {
-			path += node.nodeName.toLowerCase() + (node.id ? "[id='"+node.id+"']" : count > 0 ? ":eq("+(count - 1)+")" : '');
+			path += node.nodeName.toLowerCase() + (node.type ? "[type='"+node.type+"']" : "") + (node.id ? "[id='"+node.id+"']" : "") + (node.className ? "[class*='" + node.className + "']" : "");
 		}
-		if(node.parentNode && (node.nodeName.toLowerCase() === "li" || node.nodeName.toLowerCase() === "ul" || node.nodeName.toLowerCase() === "a" || node.nodeName.toLowerCase() === "span" || $(path).length > 1)) {
+		console.log("length: " + $(path).length);
+		if ($(path).length > 1) {
+
+			var cpt;
+			$(path).each(function(index, elem) {
+				if (elem === node) {
+					cpt = index;
+				}
+			});
+			path += ":eq("+ cpt +")";
+		}
+		console.log(path);
+		if(node.parentNode && path != " button[id='done']" && (node.nodeName.toLowerCase() === "li" || node.nodeName.toLowerCase() === "ul" || node.nodeName.toLowerCase() === "a" || node.nodeName.toLowerCase() === "span" || path === " div:eq("+(count - 1)+")"  || path === " div" || $(path).length > 1)) {
 			path = I.getXPath(node.parentNode) + path;
 		}
 		return path;
