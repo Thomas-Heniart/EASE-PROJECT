@@ -122,6 +122,12 @@ var Content = function() {
 			for (var i = (styles.length - 1); i >= 0; i--) {
 				styles[i].parentNode.removeChild(styles[i]);
 			};
+
+			$('*').contents().each(function() {
+				if(this.nodeType === Node.COMMENT_NODE) {
+					$(this).remove();
+				}
+			});
 		}
 
 		var firstDom = document.getElementsByTagName('body')[0].cloneNode(true);
