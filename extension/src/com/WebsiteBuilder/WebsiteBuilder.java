@@ -101,7 +101,10 @@ public class WebsiteBuilder {
                 ret += ",";
             }
             for (String value : entry.getValue()) {
-                ret += "[" + entry.getKey() + "='" + value + "']";
+                if (entry.getKey().equals("src")) {
+                    value = value.split("\\?")[0];
+                }
+                ret += "[" + entry.getKey() + "=\"" + value + "\"]";
             }
             cpt++;
         }
