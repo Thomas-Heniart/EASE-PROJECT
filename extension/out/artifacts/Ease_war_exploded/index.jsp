@@ -8,7 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
   <head>
-    <title>Futur Ease.space</title>
+    <title>Ease.space</title>
   </head>
   <body>
     Il n'y a rien ici, c'est juste pour faire du back

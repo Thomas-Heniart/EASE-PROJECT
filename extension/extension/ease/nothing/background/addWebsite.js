@@ -18,5 +18,9 @@ var Background = function() {
 		I.sendMessageToServer("loggedOutDom", {'dom': msg});
 	});
 
+	I.onMessage("actionFromFrame", function(msg) {
+		console.log("lalala");
+		I.sendMessage("actionFromFrame", msg);
+	});
 	
 }

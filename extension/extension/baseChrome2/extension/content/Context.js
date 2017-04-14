@@ -108,10 +108,11 @@ I.Context = function () {
 		var parentIn = parentIn;
 		var I = {};
 		var self;
+		var thisAction = this;
 
 
 		I.onMessage = function(callback) {
-			this.onMessage = callback;
+			thisAction.onMessage = callback;
 		}
 
 		I.sendMessage = function(msgName, msg, onResponse) {
@@ -153,6 +154,7 @@ I.Context = function () {
 
 	if (window.self !== window.top) {
 		I.type = "iframe";
+		console.log("This is an Iframe!!");
 		I.parent = window.parent;
 
 	} else if (window.opener != undefined) {
@@ -161,7 +163,6 @@ I.Context = function () {
 
 	} else {
 		I.type = "tab";
-		I.actions = [];
 	}
 	this.getType = function() {
 		return I.type;
@@ -217,12 +218,18 @@ I.Context = function () {
 			});
 		},
 		launchAction : function(msg){
-			I.actions[msg.actionName] = new I.ActionManager(msg.request.actionName, I, msg.request.memory);
+			I.actions[msg.request.actionName] = new I.ActionManager(msg.request.actionName, I, msg.request.memory);
 		},
 		message : function(msg) {
+			console.log(msg.request);
+			console.log(I.actions);
+			console.log(context.getType());
 			if (I.actions[msg.request.actionName]) {
-				if (I.actions[msg.request.actionName].onMessage)
+				console.log(I.actions[msg.request.actionName].onMessage);
+				if (I.actions[msg.request.actionName].onMessage != undefined) {
+					console.log("hey");
 					I.actions[msg.request.actionName].onMessage(msg.request.msgName, msg.request.msg);
+				}
 			}
 		}
 	}
