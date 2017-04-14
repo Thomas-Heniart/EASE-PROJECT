@@ -2,7 +2,7 @@ var Background = function() {
 
 	console.log("creation background");
 	global.launchAddWebsite = function() {
-		browserManager.getWindows()[1].openTab("https://google.com/", function(tab) {
+		browserManager.getWindows()[0].openTab("https://google.com/", function(tab) {
 			console.log("ahahahahah");
 			tab.launchAction("addWebsite");
 		});
@@ -14,11 +14,11 @@ var Background = function() {
 			console.log("JSON RECU:");
 				console.log(data);
 			if (order === "connectJSON") {
-				browserManager.getWindows()[1].openTab(data.json.homePage, function(tab) {
+				browserManager.getWindows()[0].openTab(data.json.homePage, function(tab) {
 					tab.launchAction("websiteConnect", data);
 				});
 			} else if (order === "connectJSONRetro") {
-				browserManager.getWindows()[1].openTab(data.json.home, function(tab) {
+				browserManager.getWindows()[0].openTab(data.json.home, function(tab) {
 					tab.launchAction("websiteConnectRetro", data);
 				});
 			}
@@ -31,7 +31,7 @@ var Background = function() {
 			if (order === "connectJSON") {
 				console.log("JSON RECU:");
 				console.log(data);
-				browserManager.getWindows()[1].openTab(data.json.homePage, function(tab) {
+				browserManager.getWindows()[0].openTab(data.json.homePage, function(tab) {
 					tab.launchAction("websiteLogout", data);
 				});
 			}

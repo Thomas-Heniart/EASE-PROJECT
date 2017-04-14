@@ -1,0 +1,9 @@
+{
+	"logout":[
+		{"action":"click","target":" div[class*='_3oo9']"},
+		{"action":"click","target":" div[class*='_3oo9']"},
+		{"action":"click","target":" div[class*='clearfix _38xv'] a[class*='bizOK rfloat _ohf'] span[class*='_1d9q']"},
+		{"action":"click","target":" div[class*='clearfix _38xv'] a[class*='bizOK rfloat _ohf'] span[class*='_1d9q']"}
+	],
+	"checkConnected":"body.home",
+	"checkUnconnected":"","login":[{"action":"click","target":" input[id='email'][class*='inputtext']"},{"action":"val","target":" input[id='email'][class*='inputtext']"},{"action":"click","target":" input[id='pass'][class*='inputtext']"},{"action":"val","target":" input[id='pass'][class*='inputtext']"},{"action":"click","target":" input[id='u_0_3'], input[id='u_0_0']"}],"homePage":"https:\/\/business.facebook.com\/"}
