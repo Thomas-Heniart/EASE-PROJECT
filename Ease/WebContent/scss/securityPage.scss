@@ -120,9 +120,14 @@ section#security {
         margin-top: 20px;
         h4 {
           color: $themeColor;
-          font-weight:bold;
+          font-weight: bold;
           margin: 0 0 10px 0;
         }
+      }
+    }
+    #contact {
+      div {
+        padding: 0;
       }
     }
   }
@@ -177,6 +182,12 @@ section#security {
         }
         .row {
           margin-top: 30px;
+          padding-left: 15px;
+          padding-right: 15px;
+        }
+      }
+      #contact {
+        .row div {
           padding-left: 15px;
           padding-right: 15px;
         }

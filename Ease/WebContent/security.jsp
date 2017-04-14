@@ -231,7 +231,7 @@
                 </p>
             </div>
         </div>
-        <div class="row" style="margin-top: 40px;">
+        <div class="row" style="margin-top: 40px;" id="contact">
             <div class="row">
                 <div class="col-lg-12">
                 <p>
