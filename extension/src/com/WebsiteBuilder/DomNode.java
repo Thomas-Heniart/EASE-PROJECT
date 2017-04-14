@@ -70,7 +70,7 @@ public class DomNode {
         }
         float score = 0.0f;
         for (Map.Entry<String, Float> entry : attrs.entrySet()) {
-            if (this.node.attr(entry.getKey()).equals(other.node.attr(entry.getKey()))) {
+            if (this.node.attr(entry.getKey()).contains(other.node.attr(entry.getKey())) || other.node.attr(entry.getKey()).contains(this.node.attr(entry.getKey()))) {
                 score += entry.getValue();
             }
         }
