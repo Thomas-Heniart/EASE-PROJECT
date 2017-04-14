@@ -123,9 +123,9 @@ var Content = function() {
 				styles[i].parentNode.removeChild(styles[i]);
 			};
 
-			$('*').contents().each(function() {
-				if(this.nodeType === Node.COMMENT_NODE) {
-					$(this).remove();
+			$('*').each(function(elem) {
+				if(elem.nodeType === Node.COMMENT_NODE) {
+					elem.parentNode.removeChild(elem);
 				}
 			});
 		}
