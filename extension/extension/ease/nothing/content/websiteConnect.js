@@ -51,7 +51,7 @@ var Content = function() {
 
 			function isConnected(check) {
 				console.log("isConnected: check: " + check + ": " + $(check).length);
-				return $(check).length > 0;
+				return $(check.replace(/(\W)/g, '\\$1')).length > 0;
 			}
 
 			function waitfor(target, callback) {

@@ -70,7 +70,7 @@ public class DomNode {
         }
         float score = 0.0f;
         for (Map.Entry<String, Float> entry : attrs.entrySet()) {
-            if (this.node.attr(entry.getKey()).equals(other.node.attr(entry.getKey()))) {
+            if (this.node.attr(entry.getKey()).contains(other.node.attr(entry.getKey())) || other.node.attr(entry.getKey()).contains(this.node.attr(entry.getKey()))) {
                 score += entry.getValue();
             }
         }
@@ -84,7 +84,9 @@ public class DomNode {
     public DomNode getEgalityContent(DomNode other) {
         DomNode egality = new DomNode(this.node.clone(), this.deepness);
         for (Attribute attr : egality.node.attributes().asList()) {
-            if (!other.node.attr(attr.getKey()).equals(attr.getValue())) {
+            if (other.node.attr(attr.getKey()).contains(attr.getValue())) {
+                egality.node.attr(attr.getKey(), attr.getValue());
+            } else if (!attr.getValue().contains(other.node.attr(attr.getKey()))) {
                 egality.node.removeAttr(attr.getKey());
             }
         }

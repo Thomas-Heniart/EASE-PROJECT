@@ -29,6 +29,10 @@ var Content = function() {
 			path += node.nodeName.toLowerCase() + (node.id ? "[id='"+node.id+"']" : "") + (node.className ? "[class*='" + node.className + "']" : "");
 		}
 		console.log("length: " + $(path).length);
+		console.log(path);
+		if(node.parentNode && path != " button[id='done']" && (node.nodeName.toLowerCase() === "li" || node.nodeName.toLowerCase() === "ul" || node.nodeName.toLowerCase() === "a" || node.nodeName.toLowerCase() === "span" || path === " div:eq("+(count - 1)+")"  || path === " div" || $(path).length > 1)) {
+			path = I.getXPath(node.parentNode) + path;
+		}
 		if ($(path).length > 1 && path != " button[id='done']") {
 
 			var cpt;
@@ -38,10 +42,6 @@ var Content = function() {
 				}
 			});
 			path += ":eq("+ cpt +")";
-		}
-		console.log(path);
-		if(node.parentNode && path != " button[id='done']" && (node.nodeName.toLowerCase() === "li" || node.nodeName.toLowerCase() === "ul" || node.nodeName.toLowerCase() === "a" || node.nodeName.toLowerCase() === "span" || path === " div:eq("+(count - 1)+")"  || path === " div" || $(path).length > 1)) {
-			path = I.getXPath(node.parentNode) + path;
 		}
 		return path;
 	};
@@ -122,6 +122,20 @@ var Content = function() {
 			for (var i = (styles.length - 1); i >= 0; i--) {
 				styles[i].parentNode.removeChild(styles[i]);
 			};
+
+			
+			function removeComments(node) {
+				var children = elem.childNodes;
+
+				for (var i=0, len=children.length; i<len; i++) {
+					if (children[i].nodeType == Node.COMMENT_NODE) {
+						children[i].parentNode.removeChild(children[i]);
+					} else {
+						removeComments(children[i]);
+					}
+				}
+			}
+			removeComments(dom);
 		}
 
 		var firstDom = document.getElementsByTagName('body')[0].cloneNode(true);
