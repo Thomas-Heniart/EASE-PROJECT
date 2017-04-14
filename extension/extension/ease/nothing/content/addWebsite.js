@@ -26,10 +26,10 @@ var Content = function() {
 		}
 
 		if(node.nodeType == 1) {
-			path += node.nodeName.toLowerCase() + (node.type ? "[type='"+node.type+"']" : "") + (node.id ? "[id='"+node.id+"']" : "") + (node.className ? "[class*='" + node.className + "']" : "");
+			path += node.nodeName.toLowerCase() + (node.id ? "[id='"+node.id+"']" : "") + (node.className ? "[class*='" + node.className + "']" : "");
 		}
 		console.log("length: " + $(path).length);
-		if ($(path).length > 1) {
+		if ($(path).length > 1 && path != " button[id='done']") {
 
 			var cpt;
 			$(path).each(function(index, elem) {
