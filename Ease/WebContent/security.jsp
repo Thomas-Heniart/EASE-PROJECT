@@ -246,12 +246,24 @@
 </section>
 
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
+<%@ include file="templates/landingPage/registrationPopup.jsp" %>
 
 <script	src="/jsMinified.v00007/jquery1.12.4.js"></script>
+<script src="/jsMinified.v00007/jquery.complexify.js"></script>
+<script src="/jsMinified.v00007/bootstrap.js" async></script>
+<script src="/jsMinified.v00007/registrationPopup.js" async></script>
 <script src="/jsMinified.v00007/languageChooser.js" async></script>
 <script src="/jsMinified.v00007/basic-utils.js" async></script>
 <script src="/jsMinified.v00007/postHandler.js" async></script>
 <script src="/jsMinified.v00007/tracker.js" async></script>
+<script type="text/javascript">
+    window.addEventListener('load',function(){
+        $('.signUpButton').click(function(){
+            easeTracker.trackEvent($(this).attr("trackEvent"));
+            easeSignUpPopup.open();
+        });
+    });
+</script>
 <script type="text/javascript">
     window.addEventListener('load',function(){
         $crisp=[];CRISP_WEBSITE_ID="6e9fe14b-66f7-487c-8ac9-5912461be78a";(function(){d=document;s=d.createElement("script");s.src="/jsMinified.v00007/crisp.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();

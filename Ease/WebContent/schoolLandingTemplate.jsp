@@ -268,8 +268,7 @@ pageEncoding="UTF-8"%>
 					easeTracker.trackEvent($(this).attr("trackEvent"), {"SchoolName": schoolToTrack});
 					easeSignUpPopup.open();
 				});
-				if ($('#2').find("input[name='email']").val() != 'null'
-				&& $('#2').find("input[name='email']").val().length){
+				if ($('#2').find("input[name='email']").val().length){
 					$("#1 input[name='email']").val($('#2').find("input[name='email']").val());
 					$("#1 input[name='name']").val($('#2').find("input[name='fname']").val());
 				}
