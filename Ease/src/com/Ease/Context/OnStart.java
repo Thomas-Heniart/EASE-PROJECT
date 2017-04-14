@@ -54,7 +54,7 @@ public class OnStart implements ServletContextListener{
 				context.setAttribute("catalog", new Catalog(db, context));
 				context.setAttribute("groupManager", new GroupManager());
 				context.setAttribute("websitesVisitedManager", new WebsitesVisitedManager(db, context));
-				context.setAttribute("teamMap", Team.loadTeams(db));
+				//context.setAttribute("teamMap", Team.loadTeams(db));
 				
 				List<String> colors = new ArrayList<String>();
 				colors.add("#373B60");

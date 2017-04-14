@@ -73,9 +73,9 @@ public class ConnectionServlet extends HttpServlet {
                     sm.setResponse(ServletManager.Code.ClientWarning, "Wrong email or password.");
                 else {
                     user = User.loadUser(email, password, sm);
-                    teamUser = TeamUser.loadTeamUser(user.getDBid(), sm);
+                    //teamUser = TeamUser.loadTeamUser(user.getDBid(), sm);
                     session.setAttribute("user", user);
-                    session.setAttribute("teamUser", teamUser);
+                    //session.setAttribute("teamUser", teamUser);
                     removeIpFromDataBase(client_ip, db);
                     sm.setResponse(ServletManager.Code.Success, "Successfully connected.");
                     //sm.addWebsockets(sessionWebsockets);

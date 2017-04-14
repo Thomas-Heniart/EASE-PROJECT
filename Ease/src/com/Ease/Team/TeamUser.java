@@ -77,7 +77,7 @@ public class TeamUser {
     }
 
     public static Map<String, TeamUser> loadTeamUsers(Team team, ServletManager sm) throws GeneralException {
-        DatabaseRequest request = sm.getDB().prepareRequest("SELECT id FROM teamUsers WHERE company_id = ?;");
+        DatabaseRequest request = sm.getDB().prepareRequest("SELECT id FROM teamUsers WHERE team_id = ?;");
         request.setInt(team.getDb_id());
         DatabaseResult rs = request.get();
         if (!rs.next())

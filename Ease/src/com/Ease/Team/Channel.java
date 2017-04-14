@@ -25,7 +25,7 @@ public class Channel {
 
     public static List<Channel> loadChannels(String company_id, Map<String, TeamUser> teamUserMap, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
-        DatabaseRequest request = db.prepareRequest("SELECT id FROM channels WHERE company_id = ?;");
+        DatabaseRequest request = db.prepareRequest("SELECT id FROM channels WHERE team_id = ?;");
         request.setInt(company_id);
         DatabaseResult rs = request.get();
         List<Channel> channels = new LinkedList<Channel>();
@@ -42,7 +42,7 @@ public class Channel {
         if (!rs.next())
             throw new GeneralException(ServletManager.Code.ClientError, "This channel does not exist");
         String channelname = rs.getString(3);
-        request = db.prepareRequest("SELECT * FROM channelsAndTeamUsersMap WHERE team_id = ?;");
+        request = db.prepareRequest("SELECT * FROM channelsAndTeamUsersMap WHERE channel_id = ?;");
         request.setInt(db_id);
         rs = request.get();
         List<TeamUser> teamUsers = new LinkedList<TeamUser>();
