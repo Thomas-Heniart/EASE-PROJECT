@@ -125,7 +125,7 @@ var Content = function() {
 
 			
 			function removeComments(node) {
-				var children = elem.childNodes;
+				var children = node.childNodes;
 
 				for (var i=0, len=children.length; i<len; i++) {
 					if (children[i].nodeType == Node.COMMENT_NODE) {
