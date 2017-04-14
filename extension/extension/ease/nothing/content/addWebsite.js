@@ -1,40 +1,78 @@
 var Content = function() {
 	console.log("addWebsiteAction");
 	
+	I.getXPath = function(node) {
+		var path = " ";
+
+		if(node.previousSibling) {
+			var count = 1;
+			var sibling = node.previousSibling
+			do {
+				if(sibling.nodeType == 1 && sibling.nodeName == node.nodeName) {count++;}
+				sibling = sibling.previousSibling;
+			} while(sibling);
+			if(count == 1) {count = null;}
+		} else if(node.nextSibling) {
+			var sibling = node.nextSibling;
+			do {
+				if(sibling.nodeType == 1 && sibling.nodeName == node.nodeName) {
+					var count = 1;
+					sibling = null;
+				} else {
+					var count = null;
+					sibling = sibling.previousSibling;
+				}
+			} while(sibling);
+		}
+
+		if(node.nodeType == 1) {
+			path += node.nodeName.toLowerCase() + (node.id ? "[id='"+node.id+"']" : count > 0 ? ":eq("+(count - 1)+")" : '');
+		}
+		if(node.parentNode && (node.nodeName.toLowerCase() === "li" || node.nodeName.toLowerCase() === "ul" || node.nodeName.toLowerCase() === "a" || node.nodeName.toLowerCase() === "span" || $(path).length > 1)) {
+			path = I.getXPath(node.parentNode) + path;
+		}
+		return path;
+	};
+
+	if (context.getType() !== "tab") {
+
+		var actionsMem = [];
+
+		I.listenAction = function() {
+			$(document).ready(function() {
+				listenAction = true;
+				document.body.addEventListener('click', function(event) {
+					var target = I.getXPath(event.target);
+					if (target !== " button[id='done']") {
+						var action = {"action":"click", "target":target};
+						console.log(action);
+						I.sendMessage("actionFromFrame", action);
+					}
+				}, true);
+				document.body.addEventListener('keyup', function(event) {
+					var action = {"action":"val", "target":I.getXPath(event.target)};
+					console.log(action);
+					if (action.target !== " button[id='done']" && (actionsMem.length < 1 || !(actionsMem[actionsMem.length - 1].action === action.action && actionsMem[actionsMem.length - 1].target === action.target))) {
+						actionsMem.push(action);
+						I.sendMessage("actionFromFrame", action);
+					}
+				}, true);
+			});
+		}
+		I.listenAction();
+	}
+
 	if (context.getType() === 'tab') {
 
-		I.getXPath = function(node) {
-			var path = " ";
-
-			if(node.previousSibling) {
-				var count = 1;
-				var sibling = node.previousSibling
-				do {
-					if(sibling.nodeType == 1 && sibling.nodeName == node.nodeName) {count++;}
-					sibling = sibling.previousSibling;
-				} while(sibling);
-				if(count == 1) {count = null;}
-			} else if(node.nextSibling) {
-				var sibling = node.nextSibling;
-				do {
-					if(sibling.nodeType == 1 && sibling.nodeName == node.nodeName) {
-						var count = 1;
-						sibling = null;
-					} else {
-						var count = null;
-						sibling = sibling.previousSibling;
-					}
-				} while(sibling);
+		I.onMessage(function(msgName, msg) {
+			if (msgName == "actionFromFrame") {
+				console.log("ohooh");
+				console.log(msg);
+				msg.inFrame = true;
+				I.memory.actions.push(msg);
+				I.pushMemory();
 			}
-
-			if(node.nodeType == 1) {
-				path += node.nodeName.toLowerCase() + (node.id ? "[id='"+node.id+"']" : count > 0 ? ":eq("+(count - 1)+")" : '');
-			}
-			if(node.parentNode && (node.nodeName.toLowerCase() === "li" || node.nodeName.toLowerCase() === "ul" || $(path).length > 1)) {
-				path = I.getXPath(node.parentNode) + path;
-			}
-			return path;
-		};
+		});
 
 		I.listenAction = function() {
 			$(document).ready(function() {

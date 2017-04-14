@@ -284,6 +284,10 @@ I.BrowserManager = function () {
 						} else {
 							new I.ContentManager(content.singleId, I, content.type, tab);
 							console.log("new " + content.type);
+							Object.keys(parentIn.actions).forEach(function(attr) {
+								//parentIn.actions[attr].action.reload();
+								chrome.tabs.sendMessage(parentIn.browserTab.id, {"magic":IDENTITY.getMagic(), "singleId":content.singleId, "type":"launchAction", "actionName":attr, "memory":parentIn.actions[attr].memory});
+							});
 							I[content.type + "s"][content.singleId].fromParent.addContent(pathTab);
 						}
 					}
@@ -344,7 +348,7 @@ I.BrowserManager = function () {
 			var self;
 
 			I.sendMessage = function(msgName, msg, onResponse) {
-				parentIn.sendMessage({"magic":IDENTITY.getMagic(), "msgName":msgName, "msg":msg, "actionName": actionName}, onResponse);
+				parentIn.sendMessage({"magic":IDENTITY.getMagic(), "msgName":msgName, 'type':"message", "msg":msg, "actionName": actionName}, onResponse);
 			}
 
 			I.onMessage = function(msgName, callback) {
@@ -411,7 +415,7 @@ I.BrowserManager = function () {
 				} else {
 					new I.ContentManager(content.singleId, I, content.type, this);
 					Object.keys(I.actions).forEach(function(attr) {
-						I.actions[attr].action.reload();
+						//I.actions[attr].action.reload();
 						chrome.tabs.sendMessage(I.browserTab.id, {"magic":IDENTITY.getMagic(), "type":"launchAction", "actionName":attr, "memory":I.actions[attr].memory});
 					});
 					console.log("new content");
