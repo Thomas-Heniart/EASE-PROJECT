@@ -1,0 +1,25 @@
+{
+	"name":"sushiboutik",
+	"lastLogin":"",
+	"home":"http://www.sushiboutik.com/",
+	"connect":{
+		"todo":[
+			{"action":"clickona", "search":"a[href*='box-connexion_favoris.html']"},
+			{"action":"waitfor", "search":"iframe.cboxIframe,input[name='valider']"},
+			{"action":"enterFrame", "search":"iframe.cboxIframe"},
+			{"action":"fill", "what":"login", "search":"#log"},
+			{"action":"fill", "what":"password", "search":"#pwd"},
+			{"action":"click", "search":"input[name='valider']"},
+			{"action":"exitFrame"}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"aclick", "search":"a[href='/deconnexion.html']"},
+			{"action":"waitload"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":"a[href='/deconnexion.html']"}
+	]
+}

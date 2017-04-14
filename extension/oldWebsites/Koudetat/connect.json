@@ -1,0 +1,29 @@
+{
+    "name":"Koudetat",
+    "lastlogin":"",
+    "home":"http://www.koudetatondemand.co/",
+    "connect": {
+    	"todo": [
+    		{"action":"fill", "what":"login","search":"#login-by-email-form input[type='email']#login-email", "grave":"true"},
+    		{"action":"fill", "what":"password","search":"#login-by-email-form input[type='password']", "grave":"true"},
+    		{"action":"click", "search":".email-btn.login-btn", "grave":"true"}
+    	]
+    },
+    "Facebook": {
+    	"todo": [
+    		{"action":"waitfor", "search":"button.facebook-btn.login-btn"},
+    		{"action":"click", "search":"button.facebook-btn.login-btn"}
+    	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"clickona", "search":".dropdown-toggle"},
+    		{"action":"waitfor", "search":"a[onclick='App.logout();']"},
+    		{"action":"clickona", "search":"a[onclick='App.logout();']"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"a[onclick='App.logout();']"}
+    ]
+    
+}

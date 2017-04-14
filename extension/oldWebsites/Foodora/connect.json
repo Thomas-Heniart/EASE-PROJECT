@@ -1,0 +1,31 @@
+{
+    "name":"Foodora",
+    "lastLogin":"",
+    "home":"https://www.foodora.fr/",
+    "connect":{
+        "todo":[
+        	{"action":"waitfor", "search":".header__account a.show-login-modal.header__account__login-text"},
+        	{"action":"clickona", "search":".header__account a.show-login-modal.header__account__login-text"},
+        	{"action":"waitfor", "search":"#login-form #username"},
+            {"action":"fill", "what":"login", "search":"#username"},
+            {"action":"fill", "what":"password", "search":"#password"},
+            {"action":"click", "search":"#login-form button[type='submit']"}
+        ]
+    },
+    "logout":{
+        "todo":[
+            {"action":"aclick", "search":"a[href*='logout']"}
+        ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a[href*='logout']"}
+    ],
+    "Facebook":{
+    	"todo": [
+    		{"action":"waitfor", "search":".header__account a.show-login-modal.header__account__login-text"},
+    		{"action":"clickona", "search":".header__account a.show-login-modal.header__account__login-text"},
+    		{"action":"waitfor", "search":"#spinner-wrapper button.facebook-button"},
+    		{"action":"click", "search":"#spinner-wrapper button.facebook-button"}
+    	]
+    }
+}

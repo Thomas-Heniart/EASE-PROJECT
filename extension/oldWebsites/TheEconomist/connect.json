@@ -1,0 +1,22 @@
+{
+	"name":"The Economist",
+	"lastLogin":"",
+	"home":"https://www.economist.com/",
+	"connect":{
+		"todo":[
+			{"action":"aclick", "search":"a[href*='/user/login']", "grave":true},
+			{"action":"fill", "what":"login", "search":"#edit-name", "grave":true},
+			{"action":"fill", "what":"password", "search":"#edit-pass"},
+			{"action":"click", "search":"#edit-submit", "grave":true}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"goto", "url":"https://www.economist.com/logout"},
+			{"action":"goto", "url":"https://www.economist.com/"}
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":"a[href*='/logout']"}
+	]
+}

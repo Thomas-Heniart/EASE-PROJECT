@@ -1,0 +1,22 @@
+{
+    "name":"LeMonde",
+    "lastlogin":"",
+    "home":"https://lemonde.fr/",
+    "connect": {
+    	"todo": [
+    		{"action":"goto", "url":"https://secure.lemonde.fr/sfuser/connexion"},
+    		{"action":"fill", "what":"login","search":"#connection_mail", "grave":"true"},
+    		{"action":"fill", "what":"password","search":"#connection_password", "grave":"true"},
+    		{"action":"click", "search":"#connection_save"}
+    	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"goto", "url":"http://www.lemonde.fr/sfuser/deconnexion"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":".menu-compte-inscrit"}
+    ]
+    
+}

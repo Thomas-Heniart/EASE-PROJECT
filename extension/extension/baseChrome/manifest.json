@@ -1,0 +1,24 @@
+{
+   "background": {
+      "page": "background.html",
+      "persistent": true
+   },
+   "browser_action": {
+      "default_icon": "images/logo_296.png",
+      "default_popup": "functionnalities/popup.html"
+   },
+   "content_scripts": [{
+      "js": [ "jquery-3.1.0.js", "jquery-ui.js", "extension/tool.js", "extension/config.js", "extension/EventManager.js", "extension/content/MessageManager.js", "extension/content/Context.js"],
+      "matches": [ "<all_urls>" ],
+      "all_frames": true
+   }],
+   "description": "POC extension",
+   "icons": {
+      "128": "images/logo_128.png"
+   },
+   "manifest_version": 2,
+   "name": "POC",
+   "permissions": [ "tabs", "http://localhost:8080/", "webNavigation", "storage", "identity", "identity.email", "webRequest" ],
+   "content_security_policy": "script-src 'self' 'unsafe-eval' https://ease.space; object-src 'self'",
+   "version": "0.0.1"
+}

@@ -1,0 +1,25 @@
+{
+	"name":"Side",
+	"lastLogin":"",
+	"home":"https://siders.side.co/",
+	"connect":{
+		"todo":[
+    		{"action":"goto", "url":"https://siders.side.co/signin"},
+			{"action":"fill", "what":"login", "search":"#loginForm input[name='email']", "grave":true},
+			{"action":"fill", "what":"password", "search":"#loginForm input[name='password']", "grave":true},
+			{"action":"click", "search":"#login-button[type='submit']", "grave":true}
+		]
+	},
+	"logout":{
+		"todo":[
+            {"action":"waitfor", "search":".sidebar #applicant-settings-sb a"},
+	   		{"action":"clickona", "search":".sidebar #applicant-settings-sb a"},
+            {"action":"waitfor", "search":"#disconnect"},
+    		{"action":"clickona", "search":"a[href='/signout']"}    		
+		]
+	},
+	"checkAlreadyLogged":[
+		{"action":"waitfor", "search":"body[style='background: rgb(255, 255, 255);']"},
+		{"search":"a[href='/user-profile']"}
+	]
+}

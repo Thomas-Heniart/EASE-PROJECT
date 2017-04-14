@@ -1,0 +1,28 @@
+{
+	"name":"GoogleAnalytics",
+	"lastLogin":"",
+	"sso":"Google",
+	"home":"https://analytics.google.com",
+	"connect":{
+		"todo":[
+		    {"action":"waitfor", "search":"div[aria-label='Google']"},
+			{"action":"aclick", "search":"#account-chooser-link"},
+			{"action":"clickona", "search":"#account-chooser-add-account"},
+			{"action":"waitfor", "search":"#Email"},
+			{"action":"fill", "what":"login", "search":"#Email", "grave":true},
+			{"action":"click", "search":"#next", "grave":true},
+			{"action":"waitfor", "time":10, "search":"#Passwd"},
+			{"action":"fill", "what":"password", "search":"#Passwd"},
+			{"action":"submit", "search":"#gaia_loginform", "grave":true}
+			]
+	},
+	"logout":{
+		"todo":[
+			{"action":"goto", "url":"https://accounts.google.com/Logout?service=analytics"},
+			{"action":"goto", "url":"https://analytics.google.com"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":"#ID-footerPanel"}
+	]
+}

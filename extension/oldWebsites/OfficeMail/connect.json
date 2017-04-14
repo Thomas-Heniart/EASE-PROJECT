@@ -1,0 +1,26 @@
+{
+	"name":"office365mail",
+	"lastLogin":"",
+	"home":"https://outlook.office365.com/",
+	"connect":{
+		"todo":[
+			{"action":"clickona", "search":"#use_another_account_link"},
+			{"action":"waitfor", "search":"#credentials,#loginForm"},
+			{"action":"fill", "what":"login", "search":"#cred_userid_inputtext,#userNameInput", "grave":true},
+			{"action":"fill", "what":"password", "search":"#cred_password_inputtext,#passwordInput", "grave":true},
+			{"action":"submit", "search":"#credentials,#loginForm", "grave":true}
+			]
+	},
+	"logout":{
+		"todo":[
+			{"action":"waitfor", "search":"button[role=menuitem]"},
+			{"action":"goto", "url":"https://www.office.com/estslogout?"},
+			{"action":"erasecookies"},
+			{"action":"waitload"},
+			{"action":"goto", "url":"https://outlook.office365.com/"}
+			]
+	},
+	"checkAlreadyLogged":[
+		{"action":"search", "search":"#O365_MainLink_Logo"}
+	]
+}

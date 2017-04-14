@@ -1,0 +1,36 @@
+{
+    "name":"Ieseg Network",
+    "lastLogin":"",
+    "home":"https://ieseg-network.hivebrite.com/networks/ieseg-network/login",
+    "connect":{
+        "todo":[
+            {"action":"fill", "what":"login", "search":"input#user_email"},
+            {"action":"fill", "what":"password", "search":"input#user_password"},
+            {"action":"submit", "search":"form#new_user"}
+            ]
+    },
+    "logout":{
+        "todo":[
+        	{"action":"waitfor", "search":"#user-dropdown"},
+        	{"action":"clickona", "search":"#user-dropdown"},
+        	{"action":"waitfor", "search":"a[href='/sign-out']"},
+        	{"action":"clickona", "search":"a[href='/sign-out']"},
+			{"action":"waitload"},
+			{"action":"waitfor", "search":".btn__connect--white"},
+			{"action":"goto", "url":"https://ieseg-network.hivebrite.com/networks/ieseg-network/login"}
+        ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"div#wrapper,#user-dropdown"}
+    ],
+    "Facebook":{
+    	"todo":[
+    		{"action":"clickona", "search":"a.button-social__facebook"}
+    	]	
+    },
+    "Linkedin": {
+    	"todo": [
+    		{"action":"clickona", "search":"a.button-social__linkedin"}
+    	]
+    }
+}

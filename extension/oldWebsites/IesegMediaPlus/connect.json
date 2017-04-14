@@ -1,0 +1,25 @@
+{
+	"name":"IesegMediaPlus",
+	"lastLogin":"",
+	"home":"http://www.mediapluspro.com/mediaplus69/client_net/login.aspx?cfgsite=html5&cfgbdd=ieseg-67",
+	"connect":{
+		"url":"http://www.mediapluspro.com/mediaplus69/client_net/login.aspx?cfgsite=html5&cfgbdd=ieseg-67",
+		"todo":[
+			{"action":"fill", "what":"login", "search":"input#Login"},
+			{"action":"fill", "what":"password", "search":"input#Password"},
+			{"action":"click", "search":"input#btnLogin"}
+			]
+	},
+	"logout":{
+		"url":"http://www.mediapluspro.com/mediaplus69/client_net/login.aspx?cfgsite=html5&cfgbdd=ieseg-67",
+		"todo":[
+			{"action":"aclick", "search":"#Header .Menu a#usrHeader_btnLogout"}
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":"#Header .Menu a#usrHeader_btnLogout"}
+	],
+	"checkChangeLogin":[
+		{"action":"click", "search":"#loginbutton"}
+	]
+}

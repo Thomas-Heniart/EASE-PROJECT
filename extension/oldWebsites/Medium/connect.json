@@ -1,0 +1,40 @@
+{
+	"name":"Medium",
+	"lastLogin":"",
+	"home":"https://medium.com/",
+	"Facebook":{
+		"todo":[
+			{"action":"clickona", "search":"a[href*='signin']"},
+			{"action":"waitfor", "search":".overlay-dialog--signin"},
+			{"action":"click", "search":".button--facebook"}
+		]
+	},
+	"Twitter":{
+		"todo":[
+			{"action":"clickona", "search":"a[href*='signin']"},
+			{"action":"waitfor", "search":".overlay-dialog--signin"},
+			{"action":"click", "search":".button--twitter"}
+		]
+	},
+	"Google":{
+		"todo":[
+			{"action":"clickona", "search":"a[href*='signin']"},
+			{"action":"waitfor", "search":".overlay-dialog--signin"},
+			{"action":"click", "search":".button--google"}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"click","search":".js-userActions"},
+			{"action":"waitfor", "search":"a[href*='signout']"},
+			{"action":"aclick", "search":"a[href*='signout']"}
+        ]
+	},
+	"checkAlreadyLogged":[
+		{"search":".js-userActions"}
+	],
+	"connect": {
+		"todo": [
+		]
+	}
+}

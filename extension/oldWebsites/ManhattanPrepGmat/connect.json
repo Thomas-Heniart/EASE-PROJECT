@@ -1,0 +1,21 @@
+{
+	"name":"ManhattanPrepGmat",
+	"lastLogin":"",
+	"home":"https://manhattanprep.com/gmat/studentcenter",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#inputEmail", "grave":true},
+			{"action":"fill", "what":"password", "search":"#inputPassword"},
+			{"action":"submit", "search":"form.login-form.validate-form", "grave":true}
+			]
+	},
+	"logout":{
+		"todo":[
+			{"action":"goto", "url":"https://www.manhattanprep.com/gmat/account/logout"},
+			{"action":"goto", "url":"https://manhattanprep.com/gmat/studentcenter"}
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":"a[href='/gmat/account/logout/']"}
+	]
+}

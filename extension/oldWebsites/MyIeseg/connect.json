@@ -1,0 +1,22 @@
+{
+    "name":"MyIeseg",
+    "lastlogin":"",
+    "home":"http://myieseg.com/mon-compte/",
+    "connect": {
+    	"todo": [
+    		{"action":"fill", "what":"login","search":"#username", "grave":"true"},
+    		{"action":"fill", "what":"password","search":"#password", "grave":"true"},
+    		{"action":"click", "search":"form.login input[type='submit']", "grave":"true"},
+    		{"action":"waitload"},
+    		{"action":"goto", "url":"http://myieseg.com"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"a[href='http://myieseg.com/mon-compte/']"}
+    ],
+    "logout": {
+    	"todo": [
+    		{"action":"goto", "url":"http://myieseg.com/mon-compte/customer-logout/"}
+    	]
+    }
+}

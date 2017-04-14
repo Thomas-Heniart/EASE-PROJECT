@@ -1,0 +1,115 @@
+{
+    "website":"google drive",
+    
+    "urls":{
+        "login":"https://accounts.google.com/ServiceLogin?sacu=1&continue=http%3A%2F%2Fdrive.google.com%2F%3Futm_source%3Dfr%26utm_medium%3Dbutton%26utm_campaign%3Dweb%26utm_content%3Dgotodrive%26usp%3Dgtd%26ltmpl%3Ddrive&service=wise#identifier",
+        "home":"https://drive.google.com/drive/my-drive"
+    },
+    
+    "elements":{
+        
+        "userField":{
+            "id":"Email"
+        },
+        "passField":{
+            "id":"Passwd"
+        },
+        "buttonFirstPage":{
+            "id":"next"
+        },
+        "buttonLogIn":{
+            "id":"signIn"
+        },
+        "chooseAccount":{
+            "id":"account-chooser-link"
+        },
+        "addAccount":{
+            "id":"account-chooser-add-account"
+        }
+        
+    },
+    
+    "connectionSteps":[
+        {
+            "action":"goTo",
+            "url":"login"
+        },
+        
+        {
+                "action":"catchFail",
+                "if":"missingElement",
+                "elementName":"buttonFirstPage",
+                "actionsIfFail":[
+                    {
+                        "action":"do",
+                        "elements":[{"name":"chooseAccount","action":"click"}]
+                    },
+                    {
+                        "action":"nextPage"
+                    },
+                    {
+                        "action":"do",
+                        "elements":[{"name":"addAccount","action":"click"}]
+                    },
+                    {
+                        "action":"nextPage"
+                    }
+                ],
+                "send":"alreadyConnected"
+        },
+        
+        {
+            "action":"do",
+            "elements":[
+                {
+                    "name":"userField",
+                    "action":"fill",
+                    "value":"user"
+                },
+                {
+                    "name":"buttonFirstPage",
+                    "action":"click"
+                }
+            ]
+        },
+        
+        {
+            "action":"nextPage"
+        },
+        
+        {
+            "action":"do",
+            "elements":[
+                {
+                    "name":"passField",
+                    "action":"fill",
+                    "value":"pass"
+                },
+                {
+                    "name":"buttonLogIn",
+                    "action":"click"
+                }
+            ]
+        },
+        
+        {
+            "action":"nextPage",
+            "lastPage":true
+        },
+        {
+            "action":"catchFail",
+            "if":"existingElement",
+            "elementName":"userField",
+            "actionsIfFail":[{"action":"end"}],
+            "send":"wrongPassword"
+        },
+        
+        {
+            "action":"catchFail",
+            "if":"existingElement",
+            "elementName":"passField",
+            "actionsIfFail":[{"action":"end"}],
+            "send":"wrongPassword"
+        }
+    ]
+}

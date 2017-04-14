@@ -1,0 +1,22 @@
+{
+    "name":"Zalando",
+    "lastLogin":"",
+    "home":"https://www.zalando.com/",
+    "connect":{
+        "todo":[
+        	{"action":"goto", "url":"https://www.zalando.com/login/"},
+            {"action":"fill", "what":"login", "search":"#loginEmail", "grave":true},
+            {"action":"fill", "what":"password", "search":"#loginPassword"},
+            {"action":"click", "search":"#login"}
+        ]
+    },
+    
+    "logout":{
+        "todo":[
+        	{"action":"aclick","search":"a[href='/logout/']"}
+        ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a[href='/logout/']"}
+    ]
+}

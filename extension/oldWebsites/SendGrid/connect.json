@@ -1,0 +1,22 @@
+{
+    "name":"SendGrid",
+    "lastlogin":"",
+    "home":"https://app.sendgrid.com/",
+    "connect": {
+    	"todo": [
+    		{"action":"goto", "url":"https://sendgrid.com/login"},
+    		{"action":"fill", "what":"login","search":"#login_username", "grave":"true"},
+    		{"action":"fill", "what":"password","search":"#login_password", "grave":"true"},
+    		{"action":"click", "search":".login-btn input", "grave":"true"}
+    	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"clickona", "search":"li[data-logout='logout'] a"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"li[data-logout='logout'] a"}
+    ]
+    
+}

@@ -1,0 +1,21 @@
+{
+    "name":"EA Sports",
+    "lastLogin":"",
+    "home":"https://www.easports.com/",
+    "connect":{
+        "todo":[
+        	{"action":"aclick", "search":"a[href^='//www.easports.com/signin']"},
+            {"action":"fill", "what":"login", "search":"input#email", "grave":true},
+            {"action":"fill", "what":"password", "search":"input#password"},
+            {"action":"clickona", "search":"a#btnLogin"}
+        ]
+    },
+    "logout":{
+        "todo":[
+        	{"action":"aclick","search":"a[href^='//www.easports.com/signout']"}
+        ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a[href^='//www.easports.com/signout']"}
+    ]
+}

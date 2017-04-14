@@ -1,0 +1,19 @@
+{
+	"logout":[
+		{"action":"click","target":" a:eq(0) span"},
+		{"action":"click","target":" a:eq(0) span"},
+		{"action":"click","target":" div[id='navbar-collapse'] ul:eq(2) li ul li:eq(6) a[id='logout-button']"},
+		{"action":"click","target":" div[id='navbar-collapse'] ul:eq(2) li ul li:eq(6) a[id='logout-button']"}
+	],
+	"checkConnected":"[data-event-action='Homepage Campaign Continue Playing CTA'],[aria-haspopup='true']",
+	"checkUnconnected":"[data-event-action='Homepage Click Teacher Button CTA']",
+	"login":[
+		{"action":"click","target":" a[id='login-link']"},
+		{"action":"click","target":" input[id='username-or-email-input']"},
+		{"action":"val","target":" input[id='username-or-email-input']"},
+		{"action":"click","target":" input[id='password-input']"},
+		{"action":"val","target":" input[id='password-input']"},
+		{"action":"click","target":" input[id='login-btn']"}
+	],
+	"homePage":"https:\/\/codecombat.com\/"
+}
