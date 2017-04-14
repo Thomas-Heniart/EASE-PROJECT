@@ -94,7 +94,7 @@ var signUpPopup = function(elem){
 		var submitButton = $(this).find(".submitButton");
 		var alertMessage = $(this).find(".alert-message");
 
-		if (!name.length || !email.length || !code.length || !(password == confirmPassword))
+		if (!name.length || !email.length ||  !(password == confirmPassword))
 			return;
 
 		loading.addClass('show');

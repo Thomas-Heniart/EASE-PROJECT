@@ -10,7 +10,7 @@
         </div>
         <div class="bodysHandler">
             <div class="popupBody" id="2">
-                <form class="handler" action='<c:choose><c:when test="${empty param.formAction}">register</c:when><c:otherwise>${param.formAction}</c:otherwise></c:choose>'>
+                <form class="handler" action='${param.formAction == null ? '/register' : param.formAction}'>
                     <div class="row">
                         <p class="row-heading">
                             <fmt:message key="landing.signup-popup.page-2.password-title"/>
@@ -22,9 +22,9 @@
                         </div>
                     </div>
                     <div class="row">
-                        <input type="hidden" name="fname" value=<%=request.getParameter("name")%>/>
-                        <input type="hidden" name="email" value=<%= request.getParameter("email")%>/>
-                        <input type="hidden" name="invitationCode" value=<%= request.getParameter("invitationCode") %>/>
+                        <input type="hidden" name="fname" value='${param.name}'/>
+                        <input type="hidden" name="email" value='${param.email}'/>
+                        <input type="hidden" name="invitationCode" value='${param.invitationCode}'/>
                         <span class="input">
 							<input type="password" name="password" placeholder=
                             <fmt:message key="landing.signup-popup.page-2.password-placeholder"/>/>
@@ -67,7 +67,7 @@
                 </form>
             </div>
             <div class="popupBody show" id="1">
-                <form class="handler" action="checkInvitation">
+                <form class="handler" action="/checkInvitation">
                     <div class="row">
                         <p class="row-heading">
                             <fmt:message key="landing.signup-popup.page-2.name-title"/>

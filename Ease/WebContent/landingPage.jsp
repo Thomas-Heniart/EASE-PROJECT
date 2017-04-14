@@ -389,8 +389,7 @@ pageEncoding="UTF-8"%>
 		<script src="/jsMinified.v00007/tracker.js" async></script>
 		<script type="text/javascript">
 			window.addEventListener('load',function(){
-				if ($('#2').find("input[name='email']").val() != 'null' 
-					&& $('#2').find("input[name='email']").val().length){
+				if ($('#2').find("input[name='email']").val().length){
 					easeSignUpPopup.openRegistration();
 			}
 			$('.signUpButton').click(function(){
