@@ -21,11 +21,16 @@ import com.Ease.Context.Group.Infrastructure;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUserPermissions;
+import com.Ease.Team.Teams;
 import com.Ease.Utils.DataBase;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.DatabaseRequest;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
 
 public class OnStart implements ServletContextListener{
 
@@ -54,8 +59,41 @@ public class OnStart implements ServletContextListener{
 				context.setAttribute("catalog", new Catalog(db, context));
 				context.setAttribute("groupManager", new GroupManager());
 				context.setAttribute("websitesVisitedManager", new WebsitesVisitedManager(db, context));
-				//context.setAttribute("teamMap", Team.loadTeams(db));
-				
+				context.setAttribute("teamMap", Team.loadTeams(db));
+
+				Configuration config = new Configuration();
+				config.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+                config.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
+                config.setProperty("hibernate.connection.url", "jdbc:mysql://localhost/ease");
+                config.setProperty("hibernate.connection.username", "client");
+                config.setProperty("hibernate.connection.password", "P6au23q7");
+                config.setProperty("dialect", "org.hibernate.dialect.MySQLDialect");
+                config.setProperty("show_sql", "true");
+                config.addClass(com.Ease.Team.Teams.class);
+
+                /* Hibernate test */
+                SessionFactory sessionFactory = config.buildSessionFactory();
+                Session session = sessionFactory.openSession();
+
+                Transaction tx = null;
+                try {
+                    tx = session.beginTransaction();
+                    Teams team = new Teams("Hibernate");
+                    session.save(team);
+                    session.flush();
+                    tx.commit();
+                } catch (Exception e) {
+                    if (tx != null) {
+                        tx.rollback();
+                    }
+                    throw e;
+                } finally {
+                    session.close();
+                }
+
+                sessionFactory.close();
+
+
 				List<String> colors = new ArrayList<String>();
 				colors.add("#373B60");
 				colors.add("#9B59B6");
