@@ -22,11 +22,8 @@ import com.Ease.Dashboard.User.User;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUserPermissions;
 import com.Ease.Team.Teams;
-import com.Ease.Utils.DataBase;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.IdGenerator;
+import com.Ease.Utils.*;
+import com.fasterxml.classmate.AnnotationConfiguration;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -61,7 +58,16 @@ public class OnStart implements ServletContextListener{
 				context.setAttribute("websitesVisitedManager", new WebsitesVisitedManager(db, context));
 				context.setAttribute("teamMap", Team.loadTeams(db));
 
-				Configuration config = new Configuration();
+                SessionFactory sessFact = HibernateUtil.getSessionFactory();
+                Session session = sessFact.getCurrentSession();
+
+                Transaction tr = session.beginTransaction();
+                Teams team = new Teams("Hibernate");
+                session.save(team);
+                tr.commit();
+                sessFact.close();
+
+				/* Configuration config = new Configuration();
 				config.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
                 config.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
                 config.setProperty("hibernate.connection.url", "jdbc:mysql://localhost/ease");
@@ -69,16 +75,17 @@ public class OnStart implements ServletContextListener{
                 config.setProperty("hibernate.connection.password", "P6au23q7");
                 config.setProperty("dialect", "org.hibernate.dialect.MySQLDialect");
                 config.setProperty("show_sql", "true");
-                config.addClass(com.Ease.Team.Teams.class);
+                config.addClass(com.Ease.Team.Teams.class); */
 
                 /* Hibernate test */
-                SessionFactory sessionFactory = config.buildSessionFactory();
+                /* SessionFactory sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
+                new AnnotationConfiguration.StdConfiguration()
                 Session session = sessionFactory.openSession();
 
                 Transaction tx = null;
                 try {
                     tx = session.beginTransaction();
-                    Teams team = new Teams("Hibernate");
+                    Teams team =  new Teams("Hibernate");
                     session.save(team);
                     session.flush();
                     tx.commit();
@@ -91,7 +98,7 @@ public class OnStart implements ServletContextListener{
                     session.close();
                 }
 
-                sessionFactory.close();
+                sessionFactory.close(); */
 
 
 				List<String> colors = new ArrayList<String>();

@@ -1,0 +1,24 @@
+{
+  "name":"Facebook Business",
+  "lastlogin":"",
+  "home":"https://business.facebook.com/",
+  "connect": {
+    "todo": [
+      {"action":"fill", "what":"login","search":"#email", "grave":"true"},
+      {"action":"fill", "what":"password","search":"#pass"},
+      {"action":"click", "search":"#loginbutton input"}
+    ]
+  },
+  "checkAlreadyLogged": [
+    {"action":"waitfor", "search":"div[data-testid='persona-selector'], #loginbutton input"},
+    {"search":"div[data-testid='persona-selector']"}
+  ],
+  "logout": {
+    "todo": [
+      {"action":"click", "search":"div[data-testid='persona-selector']"},
+      {"action":"waitfor", "search":"a[href*='logout']"},
+      {"action":"clickona", "search":"a[href*='logout']"},
+      {"action":"waitload"}
+    ]
+  }
+}

@@ -1,10 +1,20 @@
 package com.Ease.Team;
 
+
+import javax.persistence.*;
+
 /**
  * Created by thomas on 19/04/2017.
  */
+@Entity
+@Table(name = "Teams")
 public class Teams {
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
     protected Integer db_id;
+
+    @Column(name = "name")
     protected String name;
 
     public Teams(String name) {
@@ -13,7 +23,7 @@ public class Teams {
     }
 
     public Teams() {
-        
+
     }
 
     public String getName() {

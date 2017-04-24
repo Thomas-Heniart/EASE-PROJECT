@@ -1,0 +1,21 @@
+{
+  "name":"Inpi",
+  "lastlogin":"",
+  "home":"http://inpi.fr/",
+  "connect": {
+    "todo": [
+      {"action":"aclick", "search":"a[href*='feuille-de-route']"},
+      {"action":"fill", "what":"login","search":"#IDToken1"},
+      {"action":"fill", "what":"password","search":"#IDToken2"},
+      {"action":"click", "search":"input[type='submit']"}
+    ]
+  },
+  "checkAlreadyLogged": [
+    {"search":"a[href*='logout']"}
+  ],
+  "logout": {
+    "todo": [
+      {"action":"goto", "url":"http://inpi.fr/secure/logout"}
+    ]
+  }
+}
