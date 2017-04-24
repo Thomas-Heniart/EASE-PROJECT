@@ -65,6 +65,10 @@
   @include animation(singleScaleOut .5s linear infinite alternate);
 }
 
+html {
+  font-size: 18px !important;
+}
+
 .waiting-load {
   &:after {
     content: '';
@@ -95,6 +99,24 @@ body .crisp-client .crisp-1 .crisp-11 {
 .text-underlined {
   text-decoration: underline;
 }
+button.button-unstyle {
+  background: inherit;
+  border: none;
+  outline: none;
+  padding: 0;
+}
+
+.overflow-ellipsis {
+  display: block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.display-flex {
+  @include display-flex();
+}
+
 .input {
   .showPassDiv {
     position: absolute;

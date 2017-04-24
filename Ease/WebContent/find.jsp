@@ -5,7 +5,7 @@
 <head>
 	<meta http-equiv="Content-Type" contentType="text/html; charset=UTF-8"/>
 	<title>Welcome on ease !</title>
-	<script src="/jsMinified.v00007/jquery1.12.4.js"></script>
+	<script src="/jsMinified.v00008/jquery1.12.4.js"></script>
 	<script src="/js/postHandler.js"></script>
 	<link rel="icon" type="image/png" href="resources/icons/account.png" />
 	<%@ taglib tagdir="/WEB-INF/tags" prefix="tags" %>

@@ -1,3 +1,55 @@
+//flex mixins
+@mixin display-flex(){
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+@mixin flex-direction($param){
+  -ms-flex-direction: $param;
+  -moz-flex-direction: $param;
+  -webkit-flex-direction: $param;
+  flex-direction: $param;
+}
+
+@mixin flex-basis($param) {
+  -webkit-flex-basis: $param;
+  -moz-flex-basis: $param;
+  -ms-flex-preferred-size: $param;
+  flex-basis: $param;
+}
+
+@mixin align-items($param){
+  -ms-flex-align: $param;
+  -webkit-align-items: $param;
+  -webkit-box-align: $param;
+  -moz-align-items: $param;
+  align-items: $param;
+}
+
+@mixin flex-grow($param){
+  -webkit-flex-grow: $param;
+  -moz-flex-grow: $param;
+  -ms-flex-positive: $param;
+  flex-grow: $param;
+}
+
+@mixin flex-shrink($param){
+  -webkit-flex-shrink: $param;
+  -moz-flex-shrink: $param;
+  -ms-flex-negative: $param;
+  flex-shrink: $param;
+}
+
+@mixin flex($param){
+  -ms-flex: $param;
+  -webkit-flex: $param;
+  flex: $param;
+}
+//flex mixins end
+
 @mixin box-shadow($param1, $param2) {
   -webkit-box-shadow: $param1, $param2;
      -moz-box-shadow: $param1, $param2;
@@ -11,6 +63,7 @@
      -o-box-shadow: $param1;
           box-shadow: $param1;
 }
+
 
 @mixin placeholder-color($color, $size:"") {
   &::-webkit-input-placeholder {

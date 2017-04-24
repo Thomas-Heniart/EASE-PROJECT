@@ -1,0 +1,252 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<div class="team_view">
+<div class="client_channels_container">
+    <div id="team_menu">
+        <div class="team_name_container">
+            <span id="team_name">
+                Facebook
+            </span>
+        </div>
+        <div class="team_client_user">
+            <i class="fa fa-square" id="team_client_user_presence" aria-hidden="true"></i>
+            <span id="team_client_user_name">
+                sergii
+            </span>
+        </div>
+    </div>
+    <div id="col_channels">
+        <div id="col_channels_scroller">
+        <div class="section-holder" id="team_channels">
+            <button class="heading-button button-unstyle" id="new_channel_button">
+                <i class="fa fa-plus-square-o"  aria-hidden="true"></i>
+            </button>
+            <div class="section-header">
+                <span>
+                    Teams
+                </span>
+                <span class="header-count">(<span id="channel_header_count">22</span>)</span>
+            </div>
+            <div class="section-list">
+                <li class="section-list-item channel">
+                    <div class="primary_action channel_name">
+                        <i class="fa fa-users prefix" aria-hidden="true"></i>
+                        <span class="overflow-ellipsis">channel one</span>
+                    </div>
+                </li>
+                <li class="section-list-item channel">
+                    <div class="primary_action channel_name">
+                        <i class="fa fa-users prefix" aria-hidden="true"></i>
+                        <span class="overflow-ellipsis">channel two</span>
+                    </div>
+                </li>
+                <li class="section-list-item channel">
+                    <div class="primary_action channel_name">
+                        <i class="fa fa-users prefix" aria-hidden="true"></i>
+                        <span class="overflow-ellipsis">channel three</span>
+                    </div>
+                </li>
+                <li class="section-list-item channel">
+                    <div class="primary_action channel_name">
+                        <i class="fa fa-users prefix" aria-hidden="true"></i>
+                        <span class="overflow-ellipsis">channel four</span>
+                    </div>
+                </li>
+            </div>
+        </div>
+        <div class="section-holder" id="team_members">
+            <button class="heading-button button-unstyle" id="new_member_button">
+                <i class="fa fa-plus-square-o"  aria-hidden="true"></i>
+            </button>
+            <div class="section-header">
+                <span>
+                    Members
+                </span>
+                <span class="header-count">(<span id="members_header_count">48</span>)</span>
+            </div>
+            <div class="section-list">
+                <li class="section-list-item member active">
+                    <div class="primary_action member_name">
+                        <i class="fa fa-user prefix" aria-hidden="true"></i>
+                        <span>Victor</span>
+                    </div>
+                </li>
+                <li class="section-list-item member">
+                    <div class="primary_action member_name">
+                        <i class="fa fa-user prefix" aria-hidden="true"></i>
+                        <span>Sergii</span>
+                    </div>
+                </li>
+                <li class="section-list-item member">
+                    <div class="primary_action member_name">
+                        <i class="fa fa-user prefix" aria-hidden="true"></i>
+                        <span>Thomas</span>
+                    </div>
+                </li>
+                <li class="section-list-item member">
+                    <div class="primary_action member_name">
+                        <i class="fa fa-user prefix" aria-hidden="true"></i>
+                        <span>Benjamin</span>
+                    </div>
+                </li>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+<div class="client_main_container">
+    <header id="client_header">
+        <div class="channel_header">
+            <div class="tab_header">
+                <div class="channel_title">
+                    <div id="channel_name_container" class="channel_name_container">
+                        <span id="channel_name" class="channel_name">
+                             <i class="fa fa-user" aria-hidden="true"></i>
+                            Victor
+                        </span>
+                    </div>
+                    <div class="channel_header_info">
+<!--                        <div class="channel_header_info_item">
+                            <button class="button-unstyle">
+                                <i class="fa fa-user-o" aria-hidden="true"></i>
+                                <span>5</span>
+                            </button>
+                        </div>-->
+                        <div class="channel_header_info_item">
+                            <button class="button-unstyle">
+                                <i class="fa fa-share-alt-square" aria-hidden="true"></i>
+                                <span>5</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="channel_title_info">
+                    <button class="button-unstyle">
+                        <i class="fa fa-cog" aria-hidden="true"></i>
+                    </button>
+                    <button class="button-unstyle active">
+                        <i class="fa fa-heart-o" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="flex_header">
+                <div class="search_container">
+                    <form role="search" method="get" action="/search" id="teams_header_search_form" class="search_form">
+                        <div class="search_icon_wrapper">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </div>
+                        <div class="search_input_wrapper">
+                            <input type="text" name="q" id="searh_input" placeholder="Search"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="team_client_body">
+        <div id="col_main">
+            <div class="apps_container" id="team_apps_container">
+                <div class="apps_scroller_div">
+                    <div class="team_app_holder">
+                        <div class="team_app_sender_info">
+                            <span>
+                                <span class="team_app_sender_type_icon">
+                                    <i class="fa fa-user" aria-hidden="true"></i>
+                                </span>
+                                <span class="team_app_sender_name">
+                                    Victor
+                                </span>
+                            </span>
+                             shared on
+                            <span class="team_app_send_date">
+                                April 3rd, 10:32 AM
+                            </span>
+                        </div>
+                        <div class="team_app">
+                            <div class="team_app_name_holder">
+                                <span class="team_app_name">
+                                    Mailchimp
+                                </span>
+                            </div>
+                            <div class="team_app_info_holder">
+                                <div class="team_app_info">
+                                    <div class="team_app_logo_holder">
+                                        <img src="/resources/websites/Mailchimp/logo.png"/>
+                                    </div>
+                                    <div class="team_app_credentials_holder">
+                                        <div class="team_app_credentials">
+                                            <div class="team_app_credentials_line" data-type="email">
+                                                <div class="credentials_type_icon">
+                                                    <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                                </div>
+                                                <div class="credentials_value_holder">
+                                                    <span class="credentials_value">
+                                                        victor@ease.space
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="team_app_credentials_line" data-type="email">
+                                                <div class="credentials_type_icon">
+                                                    <i class="fa fa-lock" aria-hidden="true"></i>
+                                                </div>
+                                                <div class="credentials_value_holder">
+                                                    <span class="credentials_value">
+                                                        ••••••••
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="password_change_remind">
+                                            <div class="password_change_icon">
+                                                <i class="fa fa-refresh" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="password_change_info">
+                                                    <span>
+                                                        Password change modification required:
+                                                        <span class="password_change_value">
+                                                            never
+                                                        </span>
+                                                    </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="team_app_sharing_info">
+
+                                </div>
+                            </div>
+                            <div class="team_app_comment_holder">
+                                <div class="team_app_comment_icon">
+                                    <i class="fa fa-comment-o" aria-hidden="true"></i>
+                                </div>
+                                <div class="team_app_comment">
+                                    <span>
+                                        Pour ce qui ont besoin d'utiliser mon compte pour envoyer des emails marketing à nos abonnés, ca se passe sur Mailchimp !
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="col_flex">
+            <div id="flex_contents">
+                <div class="flex_contents_panel" id="team_tab">
+                </div>
+                <div class="flex_contents_panel" id="team_member_tab">
+                    <div class="heading">
+                        <div class="heading_row">
+                            <span class="heading_text">
+                                About <span class="channel_name">Victor</span>
+                            </span>
+                            <button class="button-unstyle button_close_flexpanel">
+                                <i class="fa fa-times" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

@@ -53,5 +53,29 @@
   100% {
     transform: translateX(0%);
     opacity: 1; } }
+.flip-out-ver-left {
+  -o-animation: flip-out-ver-left 0.45s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
+  -moz-animation: flip-out-ver-left 0.45s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
+  -webkit-animation: flip-out-ver-left 0.45s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
+  animation: flip-out-ver-left 0.45s cubic-bezier(0.55, 0.085, 0.68, 0.53) both; }
+
+@-webkit-keyframes flip-out-ver-left {
+  0% {
+    -webkit-transform: rotateY(0);
+    transform: rotateY(0);
+    opacity: 1; }
+  100% {
+    -webkit-transform: rotateY(-70deg);
+    transform: rotateY(-70deg);
+    opacity: 0; } }
+@keyframes flip-out-ver-left {
+  0% {
+    -webkit-transform: rotateY(0);
+    transform: rotateY(0);
+    opacity: 1; }
+  100% {
+    -webkit-transform: rotateY(-70deg);
+    transform: rotateY(-70deg);
+    opacity: 0; } }
 
 /*# sourceMappingURL=animation.css.map */
