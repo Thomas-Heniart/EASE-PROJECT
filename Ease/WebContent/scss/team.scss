@@ -1,0 +1,402 @@
+@import 'variables';
+@import 'mixins';
+
+#teamsHandler {
+
+  .team_view {
+    font-family: $defaultFont;
+    border: 1px solid #E6E6E6;
+    font-size: 18px;
+    @include display-flex();
+    @include flex-grow(1);
+    overflow: hidden;
+
+    ::-webkit-scrollbar-track {
+      -webkit-border-radius: 3px;
+      border-radius: 10px;
+      background-color: rgba(0,0,0,0.1);
+      position: absolute;
+    }
+    ::-webkit-scrollbar-thumb {
+      -webkit-border-radius: 3px;
+      -webkit-box-shadow: none;
+      border-radius: 10px;
+      background: rgba(#E6E6E6, 0.7);
+    }
+    ::-webkit-scrollbar-thumb:window-inactive {
+      background: rgba(#E6E6E6, 0.7);
+    }
+    .client_channels_container {
+      position: relative;
+      @include display-flex();
+      @include flex-direction(column);
+      @include flex-basis(220px);
+      @include flex-shrink(0);
+      background-color: $themeGreenColor;
+      color: #2F4F4F;
+      #team_menu {
+        position: relative;
+        @include flex-basis(60px);
+        @include flex-shrink(0);
+        padding: 0 1em;
+        &:hover {
+          cursor: pointer;
+          color: black;
+          background-color: rgba(255, 255, 255, 0.2);
+        }
+        .team_name_container {
+          @include display-flex();
+          font-size: 1em;
+          font-weight:700;
+          margin-top: .5625em;
+          line-height: 1.075em;
+          color: black;
+        }
+        .team_client_user{
+          position: relative;
+          margin-top: 2px;
+          font-size: 0.875em;
+          line-height: 1.5;
+          i {
+            font-size: 0.875em;
+          }
+        }
+      }
+      #col_channels {
+        position: relative;
+        @include display-flex();
+        @include flex-grow(1);
+        padding-bottom: .5em;
+        &:hover {
+          #col_channels_scroller {
+            overflow-y: auto;
+          }
+        }
+        #col_channels_scroller {
+          @include flex-grow(1);
+          overflow-x:hidden;
+          overflow-y: hidden;
+          padding-bottom: 5em;
+          border-right: 0.25em solid transparent;
+          #team_channels {
+            margin: 5px 0 2em;
+          }
+          .section-holder {
+            position: relative;
+            width: 205px;
+            .heading-button {
+              position: absolute;
+              left: 180px;
+              top: 0;
+              padding: 3px;
+              &:hover {
+                color: black;
+              }
+            }
+            .section-header {
+              font-size: .8em;
+              line-height: 1.7em;
+              padding-left: 1em;
+              font-weight: bold;
+              span {
+                text-transform: uppercase;
+              }
+              .header-count {
+                font-weight: normal;
+              }
+            }
+            .section-list {
+              .section-list-item {
+                list-style-type: none;
+                font-size: .8em;
+                line-height: 1.5em;
+                &.active {
+                  .primary_action {
+                    background-color: $themeColor;
+                    color: white;
+                    &:hover {
+                      background-color: $themeColor;
+                    }
+                  }
+                }
+                .primary_action {
+                  @include display-flex();
+                  @include align-items(center);
+                  padding: 0 2px 0 1.4em;
+                  border-bottom-right-radius: .25em;
+                  border-top-right-radius: .25em;
+                  &:hover {
+                    cursor: pointer;
+                    background-color: rgba(255,255,255, 0.2);
+                  }
+                  i, span {
+                    vertical-align: middle;
+                  }
+                  .prefix {
+                    margin-right: 5px;
+                    font-size: .7em;
+                    opacity: .8;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    .client_main_container {
+      position: relative;
+      @include display-flex();
+      @include flex-direction(column);
+      @include flex-grow(1);
+      #client_header {
+        @include flex-basis(60px);
+        border-bottom:1px solid #E6E6E6;
+        .channel_header {
+          @include display-flex();
+          height: 100%;
+          padding-top: 8px;
+          padding-bottom: 8px;
+          .tab_header {
+            @include display-flex();
+            @include flex(1);
+            .channel_title {
+              @include flex(1);
+              .channel_name_container {
+                @include display-flex();
+                .channel_name {
+                  padding: 0 .1rem 0 1.3rem;
+                  font-weight: bold;
+                  i {
+                    font-size: .9em;
+                  }
+                }
+              }
+              .channel_header_info {
+                @include display-flex();
+                padding-left: 1.3rem;
+                line-height: 1;
+                margin-top: 5px;
+                font-size: 0.7em;
+                color: #717274;
+                .channel_header_info_item {
+                  &:first-child {
+                    border-left: none;
+                    padding-left: 0;
+                  }
+                  &:hover {
+                    color: black;
+                  }
+                  border-left: 1px solid rgba(113,114,116,.5);
+                  padding-left: .5em;
+                  margin-right: .5em;
+                  i {
+                    line-height: .9;
+                  }
+                }
+              }
+            }
+            .channel_title_info {
+              @include display-flex();
+              @include align-items(center);
+              margin: 0 8px 0 0;
+              button {
+                width: 32px;
+                height: 32px;
+                margin-left: 1px;
+                color: #717274;
+                outline: none;
+                border-radius: 5px;
+                &.active {
+                  background-color: #f2f2f5;
+                  &:hover {
+                    background-color: #E8E8E8;
+                  }
+                }
+                &:hover {
+                  color: black;
+                }
+              }
+            }
+          }
+          .flex_header {
+            width: 315px;
+            @include display-flex();
+            @include align-items(center);
+            height: 100%;
+            padding-right: 10px;
+            color: #717274;
+            .search_container {
+              @include flex(1);
+              position: relative;
+              #teams_header_search_form {
+                @include display-flex();
+                @include align-items(center);
+                height:34px;
+                padding: 2px 0;
+                border:1px solid #717274;
+                border-radius: 5px;
+                &.focused {
+                  border: 1px solid black;
+                  color: black;
+                }
+                .search_input_wrapper {
+                  @include display-flex();
+                  @include flex(1);
+                  input {
+                    @include flex(1);
+                    border: none;
+                    color: black;
+                    margin: 0;
+                    padding: 0 8px 0 0;
+                    &:focus {
+                      @include simple-box-shadow(none);
+                    }
+                  }
+                }
+                .search_icon_wrapper {
+                  i {
+                    margin: 0 8px;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      .team_client_body {
+        @include display-flex();
+        @include flex(1);
+        #col_main {
+          position: relative;
+          @include display-flex();
+          @include flex(1);
+          .apps_container {
+            @include display-flex();
+            @include flex(1);
+            .apps_scroller_div {
+              @include flex(1);
+              overflow: hidden;
+              overflow-y: auto;
+              border-right: 0.25em solid transparent;
+              padding-left: 0.6rem;
+              padding-right: .35rem;
+              .team_app_holder {
+                margin-top: .6rem;
+                .team_app_sender_info {
+                  font-size:0.8rem;
+                  color: #717274;
+                  .team_app_sender_type_icon, .team_app_sender_name {
+                    color: black;
+                  }
+                }
+                .team_app {
+                  background-color: #e0e0e0;
+                  border-radius: 5px;
+                  padding: .6rem;
+                  .team_app_name_holder {
+                    margin-bottom: .4rem;
+                    font-size: .9rem;
+                    font-weight:700;
+                  }
+                  .team_app_info_holder {
+                    @include display-flex();
+                    margin-bottom: .4rem;
+                    .team_app_info {
+                      @include display-flex();
+                      @include align-items(center);
+                      padding-right: .6rem;
+                      .team_app_logo_holder {
+                        height: 75px;
+                        border-radius: 5px;
+                        overflow: hidden;
+                        img {
+                          height: 100%;
+                        }
+                      }
+                      .team_app_credentials_holder {
+                        font-size: .8rem;
+                        padding-left: .6rem;
+                        .team_app_credentials {
+                          .team_app_credentials_line {
+                            @include display-flex();
+                            @include align-items(center);
+                            .credentials_type_icon {
+                              width:20px;
+                              text-align: center;
+                              margin-right: .3rem;
+                            }
+                          }
+                        }
+                        .password_change_remind {
+                          @include display-flex();
+                          @include align-items(center);
+                          .password_change_icon {
+                            width:20px;
+                            text-align: center;
+                            margin-right: .3rem;
+                          }
+                          .password_change_value {
+                            color: #45C997;
+                          }
+                        }
+                      }
+                    }
+                    .team_app_sharing_info {
+                      @include flex(1);
+                      padding-left: .6rem;
+                      border-left: 1px solid #717274;
+                    }
+                  }
+                  .team_app_comment_holder {
+                    @include display-flex();
+                    @include align-items(center);
+                    .team_app_comment_icon {
+
+                    }
+                    .team_app_comment {
+                      font-size: .7rem;
+                      line-height: 1.1;
+                      padding-left: .6rem;
+                      font-style: italic;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        #col_flex {
+          position: relative;
+          @include display-flex();
+          @include flex-basis(315px);
+          border-left:1px solid #E8E8E8;
+          #flex_contents {
+            width: 100%;
+            overflow: hidden;
+            .flex_contents_panel {
+              .heading {
+                background-color: #F7F7F7;
+                padding: 12px 12px;
+                border-bottom: 1px solid #E8E8E8;
+                .heading_row{
+                  @include display-flex();
+                  .heading_text {
+                    @include flex(1);
+                    font-weight: 700;
+                  }
+                  .button_close_flexpanel {
+                    color: #717274;
+                    &:hover {
+                      color: black;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

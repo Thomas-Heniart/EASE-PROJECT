@@ -20,9 +20,6 @@ var EditInput = function(rootEl, parent, name, type, value, placeholder, placeho
 	if (type === 'password') {
 		var passwordDiv = $("span.input." + name, this.qRoot);
 		$("input", passwordDiv).attr("placeholder", "click the wheel to update");
-		$("input", passwordDiv).one('focus', function () {
-			$(this).prop("readonly", false);
-		});
 		$('.inputUnlocker', passwordDiv).click(function(){
 			parent.unlockPasswordInput(passwordDiv);
 		});
@@ -30,6 +27,9 @@ var EditInput = function(rootEl, parent, name, type, value, placeholder, placeho
 	}
 	
 	this.inputField = $("#" + name, this.qRoot);
+	this.inputField.one('focus', function () {
+		$(this).prop("readonly", false);
+	});
 	this.inputField.keyup(function(e){
 		if (e.which == 13)
 			parent.tabInfoSubmitButton.click();
