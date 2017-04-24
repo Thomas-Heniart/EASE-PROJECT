@@ -19,21 +19,20 @@ import com.Ease.Context.Catalog.WebsitesVisitedManager;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Context.Group.Infrastructure;
 import com.Ease.Dashboard.User.User;
+import com.Ease.Hibernate.HibernateDatabase;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamUserPermissions;
 import com.Ease.Team.Teams;
 import com.Ease.Utils.*;
-import com.fasterxml.classmate.AnnotationConfiguration;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
 
 public class OnStart implements ServletContextListener{
 
 	@Override
 	public void contextDestroyed(ServletContextEvent evt) {
 		System.out.println("ServletContextListener destroyed");
+		HibernateDatabase.getSessionFactory().close();
 	}
 
 	// Run this before web application is started
@@ -58,49 +57,6 @@ public class OnStart implements ServletContextListener{
 				context.setAttribute("websitesVisitedManager", new WebsitesVisitedManager(db, context));
 				context.setAttribute("teamMap", Team.loadTeams(db));
 
-                SessionFactory sessFact = HibernateUtil.getSessionFactory();
-                Session session = sessFact.getCurrentSession();
-
-                Transaction tr = session.beginTransaction();
-                Teams team = new Teams("Hibernate");
-                session.save(team);
-                tr.commit();
-                sessFact.close();
-
-				/* Configuration config = new Configuration();
-				config.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-                config.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
-                config.setProperty("hibernate.connection.url", "jdbc:mysql://localhost/ease");
-                config.setProperty("hibernate.connection.username", "client");
-                config.setProperty("hibernate.connection.password", "P6au23q7");
-                config.setProperty("dialect", "org.hibernate.dialect.MySQLDialect");
-                config.setProperty("show_sql", "true");
-                config.addClass(com.Ease.Team.Teams.class); */
-
-                /* Hibernate test */
-                /* SessionFactory sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
-                new AnnotationConfiguration.StdConfiguration()
-                Session session = sessionFactory.openSession();
-
-                Transaction tx = null;
-                try {
-                    tx = session.beginTransaction();
-                    Teams team =  new Teams("Hibernate");
-                    session.save(team);
-                    session.flush();
-                    tx.commit();
-                } catch (Exception e) {
-                    if (tx != null) {
-                        tx.rollback();
-                    }
-                    throw e;
-                } finally {
-                    session.close();
-                }
-
-                sessionFactory.close(); */
-
-
 				List<String> colors = new ArrayList<String>();
 				colors.add("#373B60");
 				colors.add("#9B59B6");
@@ -115,6 +71,8 @@ public class OnStart implements ServletContextListener{
 				Infrastructure.loadInfrastructures(db, evt.getServletContext());
 				Map<String, User> usersMap = new HashMap<String, User>();
 				context.setAttribute("users", usersMap);
+				Map<String, com.Ease.NewDashboard.User.User> userMap = new HashMap<String, com.Ease.NewDashboard.User.User>();
+				context.setAttribute("userMap", userMap);
 				Map<String, User> sessionIdUserMap = new HashMap<String, User>();
 				context.setAttribute("sessionIdUserMap", sessionIdUserMap);
 				Map<String, User> sIdUserMap = new HashMap<String, User>();

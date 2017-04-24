@@ -1,5 +1,6 @@
-package com.Ease.Utils;
+package com.Ease.Hibernate;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
@@ -8,9 +9,9 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.service.ServiceRegistry;
 
 /**
- * Created by thomas on 19/04/2017.
+ * Created by thomas on 20/04/2017.
  */
-public class HibernateUtil {
+public class HibernateDatabase {
     private static final SessionFactory sessionFactory;
 
     private static ServiceRegistry serviceRegistry;
@@ -29,8 +30,10 @@ public class HibernateUtil {
     }
 
     public static SessionFactory getSessionFactory() {
-
         return sessionFactory;
+    }
 
+    public static void close() {
+        sessionFactory.close();
     }
 }
