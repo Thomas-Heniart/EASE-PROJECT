@@ -88,7 +88,29 @@ public class Keys {
         this.keyUser = keyUser;
     }
 
-    public boolean isGoodPassword(String password) throws GeneralException {
+    public boolean isGoodPassword(String password, ServletManagerHibernate sm) throws GeneralException {
+        if (saltEase != null) {
+            System.out.println("reset keys");
+            String hashedPass = Hashing.SHA(password, saltEase);
+            if (hashedPass.equals(this.password) == false) {
+                throw new GeneralException(ServletManager.Code.UserMiss, "Wrong email or password.");
+            }
+            this.decipheredKeyUser = AES.oldDecryptUserKey(this.keyUser, password, saltPerso);
+            String newSalt = AES.generateSalt();
+            this.keyUser = AES.encryptUserKey(this.decipheredKeyUser, password, newSalt);
+            this.password = Hashing.hash(password);
+            this.saltEase = null;
+            this.saltPerso = newSalt;
+            ServerKey serverKey = (ServerKey) sm.getContextAttr("serverKey");
+            String backUpKey = AES.encrypt(this.decipheredKeyUser, serverKey.getKeyServer());
+            DatabaseRequest request = sm.getDB().prepareRequest("UPDATE userKeys SET password = ?, saltEase = null, saltPerso = ?, keyUser = ?, backUpKey = ? WHERE id = ?;");
+            request.setString(this.password);
+            request.setString(newSalt);
+            request.setString(this.keyUser);
+            request.setString(backUpKey);
+            request.setInt(this.db_id);
+            request.set();
+        }
         if (Hashing.compare(password, this.password))
             return true;
         else
@@ -103,11 +125,11 @@ public class Keys {
     }
 
     public String encrypt(String data) throws GeneralException {
-        return AES.encrypt(data, this.keyUser);
+        return AES.encrypt(data, this.decipheredKeyUser);
     }
 
     public String decrypt(String data) throws GeneralException {
-        return AES.decrypt(data, this.keyUser);
+        return AES.decrypt(data, this.decipheredKeyUser);
     }
 
     public static Keys createKeys(String password, ServletManagerHibernate sm) throws GeneralException {

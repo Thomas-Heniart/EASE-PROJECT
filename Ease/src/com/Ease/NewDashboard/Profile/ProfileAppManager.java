@@ -19,6 +19,7 @@ public class ProfileAppManager {
 
     public void populate(Profile profile) {
         HibernateQuery query = new HibernateQuery();
+        System.out.println("Profile id: " + profile.getDb_id());
         query.queryString("SELECT p FROM ProfileApp p WHERE p.profile.db_id = :id ORDER BY p.position ASC");
         query.setParameter("id", profile.getDb_id());
         profileApps = query.list();
@@ -40,11 +41,9 @@ public class ProfileAppManager {
         this.profileAppIdMap.put(profileApp.getDb_id(), profileApp);
     }
 
-    public void addApp(App app, Profile profile) {
-        HibernateQuery query = new HibernateQuery();
+    public ProfileApp addApp(App app, Profile profile) {
         ProfileApp profileApp = new ProfileApp(profile, app, this.profileApps.size());
-        query.saveOrUpdateObject(profileApp);
-        query.commit();
         this.addProfileApp(profileApp);
+        return profileApp;
     }
 }

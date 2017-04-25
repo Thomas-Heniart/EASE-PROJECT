@@ -54,7 +54,7 @@ public class ServletConnection extends HttpServlet {
                     User connectedUser = usersMap.get(email);
                     if (connectedUser != null) {
                         try {
-                            connectedUser.getKeys().isGoodPassword(password);
+                            connectedUser.getKeys().isGoodPassword(password, sm);
                             connectedUser.getKeys().decryptUserKey(password);
                             connectedUser.populateProfileManager();
                         } catch (GeneralException e) {
@@ -66,7 +66,7 @@ public class ServletConnection extends HttpServlet {
                         query.queryString("SELECT u FROM User u WHERE email = :email");
                         query.setParameter("email", email);
                         user = (User) query.getSingleResult();
-                        if (user == null || !user.getKeys().isGoodPassword(password))
+                        if (user == null || !user.getKeys().isGoodPassword(password, sm))
                             throw new GeneralException(ServletManager.Code.UserMiss, "Wrong email or password.");
                         query.commit();
                         user.getKeys().decryptUserKey(password);

@@ -1,6 +1,14 @@
 package com.Ease.Website;
 
+import com.Ease.Utils.Crypto.RSA;
+import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.ServletManagerHibernate;
+
 import javax.persistence.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by thomas on 24/04/2017.
@@ -41,6 +49,10 @@ public class Website {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "website_attributes_id")
     protected WebsiteAttributes websiteAttributes;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "website_id")
+    protected List<WebsiteInformation> websiteInformationList;
 
     public Website(String loginUrl, String websiteName, String folder, Sso sso, Boolean noLogin, String website_homepage, Integer ratio, Integer position, WebsiteAttributes websiteAttributes) {
         this.loginUrl = loginUrl;
@@ -136,5 +148,34 @@ public class Website {
 
     public void setWebsiteAttributes(WebsiteAttributes websiteAttributes) {
         this.websiteAttributes = websiteAttributes;
+    }
+
+    public List<WebsiteInformation> getWebsiteInformationList() {
+        return websiteInformationList;
+    }
+
+    public void setWebsiteInformationList(List<WebsiteInformation> websiteInformationList) {
+        this.websiteInformationList = websiteInformationList;
+    }
+
+    public Map<String, String> getNeededInformation(ServletManagerHibernate sm) throws GeneralException {
+        Map<String, String> infos = new HashMap<String, String>();
+        for (WebsiteInformation info : this.websiteInformationList) {
+            String info_name = info.getInformation_name();
+            String value = sm.getServletParam(info_name, false);
+            if (value == null || value.isEmpty()) {
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong info: " + info_name + ".");
+            }
+            if (info_name.equals("password")) {
+                //Mettre un param keyDate dans le post si besoin de decrypter en RSA. Correspond à la private key RSA,
+                String keyDate = sm.getServletParam("keyDate", true);
+                if (keyDate != null && !keyDate.equals("")) {
+                    value = RSA.Decrypt(value, Integer.parseInt(keyDate));
+                }
+                value = sm.getUser().getKeys().encrypt(value);
+            }
+            infos.put(info_name, value);
+        }
+        return infos;
     }
 }

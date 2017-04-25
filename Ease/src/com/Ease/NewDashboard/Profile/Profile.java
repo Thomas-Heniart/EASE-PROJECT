@@ -1,7 +1,6 @@
 package com.Ease.NewDashboard.Profile;
 
 import com.Ease.NewDashboard.App.App;
-import com.Ease.NewDashboard.App.LinkApp.LinkApp;
 
 import javax.persistence.*;
 
@@ -80,7 +79,7 @@ public class Profile {
         this.profileAppManager.populate(this);
     }
 
-    public void addApp(App app) {
-        this.profileAppManager.addApp(app, this);
+    public ProfileApp addApp(App app) {
+        return this.profileAppManager.addApp(app, this);
     }
 }

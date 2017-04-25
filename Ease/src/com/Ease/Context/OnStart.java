@@ -56,6 +56,9 @@ public class OnStart implements ServletContextListener{
 				context.setAttribute("groupManager", new GroupManager());
 				context.setAttribute("websitesVisitedManager", new WebsitesVisitedManager(db, context));
 				context.setAttribute("teamMap", Team.loadTeams(db));
+				com.Ease.Website.Catalog catalog = new com.Ease.Website.Catalog();
+				context.setAttribute("catalog_hibernate", catalog);
+				catalog.populate();
 
 				List<String> colors = new ArrayList<String>();
 				colors.add("#373B60");

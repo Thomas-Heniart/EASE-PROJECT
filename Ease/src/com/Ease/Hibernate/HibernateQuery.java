@@ -27,8 +27,16 @@ public class HibernateQuery {
         this.query = this.session.createQuery(query);
     }
 
+    public void querySQLString(String query) {
+        this.query = this.session.createNativeQuery(query);
+    }
+
     public void setParameter(String parameter, Object value) {
         this.query.setParameter(parameter, value);
+    }
+
+    public void setParameter(int i, Object value) {
+        this.query.setParameter(i, value);
     }
 
     public List list() {
