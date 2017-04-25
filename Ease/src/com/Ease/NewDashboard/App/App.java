@@ -1,7 +1,10 @@
 package com.Ease.NewDashboard.App;
 
+import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.ServletManagerHibernate;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
+import org.json.simple.JSONObject;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -72,5 +75,12 @@ public class App {
     @Override
     public String toString() {
         return "Type: " + this.type + ", ";
+    }
+
+    public void edit(JSONObject editJson, ServletManagerHibernate sm) throws GeneralException {
+        String name = (String) editJson.get("name");
+        if (name == null)
+            return;
+        this.appInformation.setName(name);
     }
 }

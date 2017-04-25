@@ -1,5 +1,8 @@
 package com.Ease.NewDashboard.App.WebsiteApp.ClassicApp;
 
+import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.ServletManagerHibernate;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -39,5 +42,16 @@ public class Account {
 
     public void setAccountInformationList(List<AccountInformation> accountInformationList) {
         this.accountInformationList = accountInformationList;
+    }
+
+    public void editInformation(String info_name, String info_value, ServletManagerHibernate sm) throws GeneralException {
+        for (AccountInformation accountInformation : this.getAccountInformationList()) {
+            if (accountInformation.getInformation_name().equals(info_name)) {
+                if (info_name.equals("password"))
+                    accountInformation.setInformation_value(sm.getUser().getKeys().encrypt(info_value));
+                else
+                    accountInformation.setInformation_value(info_value);
+            }
+        }
     }
 }

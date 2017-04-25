@@ -1,6 +1,8 @@
 package com.Ease.NewDashboard.Profile;
 
 import com.Ease.NewDashboard.App.App;
+import com.Ease.NewDashboard.App.WebsiteApp.WebsiteApp;
+import com.Ease.Utils.GeneralException;
 
 import javax.persistence.*;
 
@@ -81,5 +83,9 @@ public class Profile {
 
     public ProfileApp addApp(App app) {
         return this.profileAppManager.addApp(app, this);
+    }
+
+    public App getAppWithId(Integer app_id) throws GeneralException {
+        return this.profileAppManager.getAppWithId(app_id);
     }
 }

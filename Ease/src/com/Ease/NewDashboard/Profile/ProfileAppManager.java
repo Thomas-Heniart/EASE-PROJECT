@@ -2,6 +2,8 @@ package com.Ease.NewDashboard.Profile;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.App.App;
+import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.ServletManager;
 
 import java.util.*;
 
@@ -45,5 +47,13 @@ public class ProfileAppManager {
         ProfileApp profileApp = new ProfileApp(profile, app, this.profileApps.size());
         this.addProfileApp(profileApp);
         return profileApp;
+    }
+
+    public App getAppWithId(Integer app_id) throws GeneralException {
+        for (ProfileApp profileApp : this.profileApps) {
+            if (profileApp.getApp().getDb_id() == app_id)
+                return profileApp.getApp();
+        }
+        throw new GeneralException(ServletManager.Code.ClientError, "This app does not exist.");
     }
 }

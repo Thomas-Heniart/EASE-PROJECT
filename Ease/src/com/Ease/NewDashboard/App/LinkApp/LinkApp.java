@@ -2,6 +2,9 @@ package com.Ease.NewDashboard.App.LinkApp;
 
 import com.Ease.NewDashboard.App.App;
 import com.Ease.NewDashboard.App.AppInformation;
+import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.ServletManagerHibernate;
+import org.json.simple.JSONObject;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -38,5 +41,14 @@ public class LinkApp extends App {
     @Override
     public String toString() {
         return super.toString() + this.linkAppInformation.toString();
+    }
+
+    @Override
+    public void edit(JSONObject editJson, ServletManagerHibernate sm) throws GeneralException {
+        super.edit(editJson, sm);
+        String url = (String) editJson.get("url");
+        if (url == null)
+            return;
+        this.linkAppInformation.setUrl(url);
     }
 }

@@ -7,6 +7,7 @@ import com.Ease.Utils.ServletManagerHibernate;
 
 import javax.persistence.*;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -177,5 +178,12 @@ public class Website {
             infos.put(info_name, value);
         }
         return infos;
+    }
+
+    public List<String> getWebsiteInformationNames() {
+        List<String> websiteInformationNames = new LinkedList<String>();
+        for (WebsiteInformation websiteInformation : this.getWebsiteInformationList())
+            websiteInformationNames.add(websiteInformation.getInformation_name());
+        return websiteInformationNames;
     }
 }
