@@ -1,20 +1,23 @@
 {
     "name":"GoodBarber",
     "lastLogin":"",
-    "home":"https://goodbarber.com/launchpad/",
+    "home":"https://goodbarber.com/launchpad",
     "connect":{
         "todo":[
-            {"action":"fill", "what":"login", "search":"#exist_email"},
-            {"action":"fill", "what":"password", "search":"#exist_pass_safe"},
-            {"action":"clickona", "search":"#connect"}
+          {"action":"aclick", "search":"a#login"},
+          {"action":"fill", "what":"login", "search":"input#login"},
+          {"action":"fill", "what":"password", "search":"#password"},
+          {"action":"clickona", "search":"input[type='submit']"}
         ]
     },
     "logout":{
         "todo":[
-        	{"action":"aclick", "search":"a[href*='logout']"}
+          {"action":"clickona", "search":"a#avatar"},
+          {"action":"waitload"}
  		]
     },
     "checkAlreadyLogged":[
-        {"search": "a[href*='logout']"}
+      {"action":"waitfor", "search":"a#avatar, input#login"},
+      {"search": "a#avatar"}
     ]
 }
