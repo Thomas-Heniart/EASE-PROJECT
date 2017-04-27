@@ -1,12 +1,16 @@
 package com.Ease.NewDashboard.User;
 
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManagerHibernate;
+import com.Ease.Website.Tag;
 
 import javax.annotation.Resource;
 import javax.persistence.*;
 import javax.servlet.http.Cookie;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by thomas on 21/04/2017.
@@ -43,8 +47,42 @@ public class User {
     @JoinColumn(name = "status_id")
     protected Status status;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    protected List<SessionSave> sessionSaveList;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    protected List<UserEmail> userEmails;
+
+    @Transient
+    protected SessionSave currentSessionSave;
+
     @Transient
     protected ProfileManager profileManager;
+
+    public User(String firstName, String lastName, String email, Date registrationDate, Keys keys, Options options, Status status, List<SessionSave> sessionSaveList, List<UserEmail> userEmails) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.registrationDate = registrationDate;
+        this.keys = keys;
+        this.options = options;
+        this.status = status;
+        this.sessionSaveList = sessionSaveList;
+        this.userEmails = userEmails;
+    }
+
+    public User(String firstName, String lastName, String email, Date registrationDate, Keys keys, Options options, Status status, List<SessionSave> sessionSaveList) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.registrationDate = registrationDate;
+        this.keys = keys;
+        this.options = options;
+        this.status = status;
+        this.sessionSaveList = sessionSaveList;
+    }
 
     public User(String firstName, String lastName, String email, Date registrationDate, Keys keys, Options options, Status status) {
         this.firstName = firstName;
@@ -128,6 +166,36 @@ public class User {
         return profileManager;
     }
 
+    public List<SessionSave> getSessionSaveList() {
+        return sessionSaveList;
+    }
+
+    public void setSessionSaveList(List<SessionSave> sessionSaveList) {
+        this.sessionSaveList = sessionSaveList;
+    }
+
+    public List<UserEmail> getUserEmails() {
+        return userEmails;
+    }
+
+    public void setUserEmails(List<UserEmail> userEmails) {
+        this.userEmails = userEmails;
+    }
+
+    public SessionSave getCurrentSessionSave() {
+        if (this.currentSessionSave != null)
+            return this.currentSessionSave;
+        HibernateQuery query = new HibernateQuery();
+        this.currentSessionSave = new SessionSave(this.getKeys().getDecipheredKeyUser(), this);
+        query.saveOrUpdateObject(this.currentSessionSave);
+        query.commit();
+        return this.currentSessionSave;
+    }
+
+    public void setCurrentSessionSave(SessionSave currentSessionSave) {
+        this.currentSessionSave = currentSessionSave;
+    }
+
     public void populateProfileManager() {
         this.profileManager = new ProfileManager();
         this.profileManager.populate(this.db_id);
@@ -155,5 +223,43 @@ public class User {
                 }
             }
         }
+    }
+
+    /* Status utils */
+    public boolean appsImported() {
+        return this.status.appsImported();
+    }
+
+    public boolean allTipsDone() {
+        return this.status.allTipsDone();
+    }
+
+    public List<String> getUnverifiedEmails() {
+        List<String> res = new LinkedList<String>();
+        for (UserEmail userEmail : this.getUserEmails()) {
+            if (userEmail.getVerified())
+                res.add(userEmail.getEmail());
+        }
+        return res;
+    }
+
+    public List<String> getVerifiedEmails() {
+        List<String> res = new LinkedList<String>();
+        for (UserEmail userEmail : this.getUserEmails()) {
+            if (!userEmail.getVerified())
+                res.add(userEmail.getEmail());
+        }
+        return res;
+    }
+
+    public boolean canSeeTag (Tag tag) {
+        return true;
+    }
+
+    public void lazyLoadUserEmails() {
+        HibernateQuery query = new HibernateQuery();
+        this.getUserEmails();
+        query.commit();
+        System.out.println("UserEmails size: " + this.userEmails.size());
     }
 }

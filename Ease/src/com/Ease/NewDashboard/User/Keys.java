@@ -142,7 +142,15 @@ public class Keys {
         return new Keys(hashed_password, null, saltPerso, crypted_keyUser, backUpKey);
     }
 
+    public void setDecipheredKeyUser(String decipheredKeyUser) {
+        this.decipheredKeyUser = decipheredKeyUser;
+    }
+
     public void decryptUserKey(String password) throws GeneralException {
         this.decipheredKeyUser = AES.decryptUserKey(this.keyUser, password, this.saltPerso);
+    }
+
+    public String getDecipheredKeyUser() {
+        return this.decipheredKeyUser;
     }
 }

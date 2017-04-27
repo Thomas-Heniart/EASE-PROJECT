@@ -14,6 +14,7 @@
         <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="hibernate.current_session_context_class">thread</property>
         <property name="hibernate.id.new_generator_mappings">false</property>
+        <property name="hibernate.enable_lazy_load_no_trans">true</property>
         <mapping class="com.Ease.Team.Teams"/>
         <mapping class="com.Ease.NewDashboard.App.App"/>
         <mapping class="com.Ease.NewDashboard.App.AppInformation"/>
@@ -32,6 +33,8 @@
         <mapping class="com.Ease.NewDashboard.User.Keys"/>
         <mapping class="com.Ease.NewDashboard.User.Options"/>
         <mapping class="com.Ease.NewDashboard.User.Status"/>
+        <mapping class="com.Ease.NewDashboard.User.SessionSave"/>
+        <mapping class="com.Ease.NewDashboard.User.UserEmail"/>
         <mapping class="com.Ease.Website.Website"/>
         <mapping class="com.Ease.Website.WebsiteAttributes"/>
         <mapping class="com.Ease.Website.WebsiteInformation"/>

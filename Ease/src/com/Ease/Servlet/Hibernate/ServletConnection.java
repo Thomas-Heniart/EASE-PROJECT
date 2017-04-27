@@ -71,6 +71,7 @@ public class ServletConnection extends HttpServlet {
                         query.commit();
                         user.getKeys().decryptUserKey(password);
                         user.populateProfileManager();
+                        user.lazyLoadUserEmails();
                         session.setAttribute("user", user);
                     }
                     //teamUser = TeamUser.loadTeamUser(user.getDBid(), sm);

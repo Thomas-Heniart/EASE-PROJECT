@@ -174,6 +174,14 @@ public class Status {
         this.homepage_email_sent = homepage_email_sent;
     }
 
+    public boolean appsImported() {
+        return this.chrome_scrapping || this.apps_manually_added;
+    }
+
+    public boolean allTipsDone() {
+        return this.click_on_app && this.open_catalog && this.move_apps && this.add_an_app;
+    }
+
     public static Status createDefaultStatus() {
         return new Status(false, false, false, false, false, false, false, false, false, new Date(), false, false);
     }

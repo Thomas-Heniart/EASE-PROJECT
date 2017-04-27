@@ -17,8 +17,10 @@ public class ProfileManager {
 
     List<List<Profile>> profileList;
     Map<Integer, Profile> profileMap;
+    List<Profile> profiles;
 
     public ProfileManager() {
+        profiles = new LinkedList<Profile>();
         profileList = new LinkedList<List<Profile>>();
         profileMap = new HashMap<Integer, Profile>();
         for (int i = 0; i < MAX_COLUMN; ++i) {
@@ -83,5 +85,9 @@ public class ProfileManager {
         if (profile == null)
             throw new GeneralException(ServletManager.Code.ClientError, "This profile does not exist.");
         return profile;
+    }
+
+    public List<Profile> getProfiles() {
+        return profiles;
     }
 }
