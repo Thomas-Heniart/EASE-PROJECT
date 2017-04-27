@@ -33,11 +33,11 @@
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" href="/cssMinified.v00007/default_style.css" />
-    <link rel="stylesheet" href="/cssMinified.v00007/bootstrap.css" />
-    <link rel="stylesheet" href="/cssMinified.v00007/landingPage.css" />
-    <link rel="stylesheet" href="/cssMinified.v00007/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/cssMinified.v00007/securityPage.css" />
+    <link rel="stylesheet" href="/cssMinified.v00008/default_style.css" />
+    <link rel="stylesheet" href="/cssMinified.v00008/bootstrap.css" />
+    <link rel="stylesheet" href="/cssMinified.v00008/landingPage.css" />
+    <link rel="stylesheet" href="/cssMinified.v00008/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/cssMinified.v00008/securityPage.css" />
 
     <link rel="manifest" href="manifest.json">
 </head>
@@ -248,14 +248,14 @@
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
 <%@ include file="templates/landingPage/registrationPopup.jsp" %>
 
-<script	src="/jsMinified.v00008/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00008/jquery.complexify.js"></script>
-<script src="/jsMinified.v00008/bootstrap.js" async></script>
-<script src="/jsMinified.v00008/registrationPopup.js" async></script>
-<script src="/jsMinified.v00008/languageChooser.js" async></script>
-<script src="/jsMinified.v00008/basic-utils.js" async></script>
-<script src="/jsMinified.v00008/postHandler.js" async></script>
-<script src="/jsMinified.v00008/tracker.js" async></script>
+<script	src="/jsMinified.v00009/jquery1.12.4.js"></script>
+<script src="/jsMinified.v00009/jquery.complexify.js"></script>
+<script src="/jsMinified.v00009/bootstrap.js" async></script>
+<script src="/jsMinified.v00009/registrationPopup.js" async></script>
+<script src="/jsMinified.v00009/languageChooser.js" async></script>
+<script src="/jsMinified.v00009/basic-utils.js" async></script>
+<script src="/jsMinified.v00009/postHandler.js" async></script>
+<script src="/jsMinified.v00009/tracker.js" async></script>
 <script type="text/javascript">
     window.addEventListener('load',function(){
         $('.signUpButton').click(function(){
@@ -266,13 +266,13 @@
 </script>
 <script type="text/javascript">
     window.addEventListener('load',function(){
-        $crisp=[];CRISP_WEBSITE_ID="6e9fe14b-66f7-487c-8ac9-5912461be78a";(function(){d=document;s=d.createElement("script");s.src="/jsMinified.v00008/thirdParty/crisp.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+        $crisp=[];CRISP_WEBSITE_ID="6e9fe14b-66f7-487c-8ac9-5912461be78a";(function(){d=document;s=d.createElement("script");s.src="/jsMinified.v00009/thirdParty/crisp.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
     });
 </script>
 <script type="text/javascript">
     window.addEventListener('load',function(){
         (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script");r.type="text/javascript";
-            r.async=true;r.src="/jsMinified.v00008/amplitude-analytics.js";
+            r.async=true;r.src="/jsMinified.v00009/amplitude-analytics.js";
             r.onload=function(){e.amplitude.runQueuedFunctions()};var i=t.getElementsByTagName("script")[0];
             i.parentNode.insertBefore(r,i);function s(e,t){e.prototype[t]=function(){this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));
                 return this}}var o=function(){this._q=[];return this};var a=["add","append","clearAll","prepend","set","setOnce","unset"];

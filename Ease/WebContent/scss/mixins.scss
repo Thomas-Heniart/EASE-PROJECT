@@ -7,6 +7,14 @@
   display: flex;
 }
 
+@mixin display-inline-flex(){
+  display: -webkit-box;
+  display: -webkit-inline-flex;
+  display: -moz-inline-flex;
+  display: -ms-inline-flex;
+  display: inline-flex;
+}
+
 @mixin flex-direction($param){
   -ms-flex-direction: $param;
   -moz-flex-direction: $param;
