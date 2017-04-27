@@ -22,7 +22,7 @@ function showExtensionPopup(){
         }
     } else {
     	if(getUserNavigator() == "Safari"){
-        	if(!$('#ease_extension').attr("safariversion") || $('#ease_extension').attr("safariversion") !="2.2.3"){
+        	if(!$('#ease_extension').attr("safariversion") || $('#ease_extension').attr("safariversion") !="2.2.4"){
         		$('#extension .title p').text("Update your extension");
         		$('#extension #download #line1').text("A new version of the extension is now available.");
         		$('#extension #download #line2').text("We added new features and made it faster !");

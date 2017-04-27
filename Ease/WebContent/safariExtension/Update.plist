@@ -10,9 +10,9 @@
        <key>Developer Identifier</key>
        <string>45P859NKD6</string>
        <key>CFBundleVersion</key>
-       <string>218</string>
+       <string>224</string>
        <key>CFBundleShortVersionString</key>
-       <string>2.1.8</string>
+       <string>2.2.4</string>
        <key>URL</key>
 	<string>https://ease.space/safariExtension/EaseExtension.safariextz</string>
 	<key>Update From Gallery</key>
