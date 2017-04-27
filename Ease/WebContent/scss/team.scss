@@ -2,9 +2,9 @@
 @import 'mixins';
 
 #teamsHandler {
+  font-family: $defaultFont;
 
   .team_view {
-    font-family: $defaultFont;
     border: 1px solid #E6E6E6;
     font-size: 18px;
     @include display-flex();
@@ -12,19 +12,23 @@
     overflow: hidden;
 
     ::-webkit-scrollbar-track {
-      -webkit-border-radius: 3px;
-      border-radius: 10px;
+      border-radius: 3px;
       background-color: rgba(0,0,0,0.1);
       position: absolute;
     }
     ::-webkit-scrollbar-thumb {
-      -webkit-border-radius: 3px;
-      -webkit-box-shadow: none;
-      border-radius: 10px;
+      box-shadow: none;
+      border-radius: 3px;
       background: rgba(#E6E6E6, 0.7);
     }
     ::-webkit-scrollbar-thumb:window-inactive {
       background: rgba(#E6E6E6, 0.7);
+    }
+    input,textarea {
+      @include simple-box-shadow(none);
+      &:hover {
+        @include simple-box-shadow(none);
+      }
     }
     .client_channels_container {
       position: relative;
@@ -112,10 +116,10 @@
                 line-height: 1.5em;
                 &.active {
                   .primary_action {
-                    background-color: $themeColor;
+                    background-color: $themeBlueColor;
                     color: white;
                     &:hover {
-                      background-color: $themeColor;
+                      background-color: $themeBlueColor;
                     }
                   }
                 }
@@ -149,6 +153,19 @@
       @include display-flex();
       @include flex-direction(column);
       @include flex-grow(1);
+      ::-webkit-scrollbar-track {
+        border-radius: 3px;
+        background-color: #f3f3f3;
+        position: absolute;
+      }
+      ::-webkit-scrollbar-thumb {
+        box-shadow: none;
+        border-radius: 3px;
+        background: #d9d9de;
+      }
+      ::-webkit-scrollbar-thumb:window-inactive {
+        background: #d9d9de;
+      }
       #client_header {
         @include flex-basis(60px);
         border-bottom:1px solid #E6E6E6;
@@ -271,27 +288,125 @@
           position: relative;
           @include display-flex();
           @include flex(1);
+          @include flex-direction(column);
           .apps_container {
             @include display-flex();
             @include flex(1);
+            padding-top: .25em;
+            padding-bottom: .25em;
             .apps_scroller_div {
               @include flex(1);
               overflow: hidden;
               overflow-y: auto;
               border-right: 0.25em solid transparent;
-              padding-left: 0.6rem;
-              padding-right: .35rem;
               .team_app_holder {
-                margin-top: .6rem;
+                padding-top: .6rem;
+                padding-left: .6rem;
+                padding-right: .35rem;
+                position: relative;
+                &:first-child {
+                  padding-top: 0;
+                }
+                &:hover {
+                  background-color: #f9f9f9;
+                  .team_app_actions_holder{
+                    @include display-flex();
+                  }
+                }
+                &.active {
+                  &:hover {
+                    .team_app_actions_holder{
+                      display: none;
+                    }
+                  }
+                  background-color: #f9f9f9;
+                  .team_app_edit_actions {
+                    @include display-flex();
+                  }
+                  .value {
+                    display: none;
+                  }
+                  .value_input {
+                    display: block;
+                  }
+                }
+                .value_input {
+                  display: none;
+                }
+                .team_app_name_input {
+                  position: relative;
+                  background: none;
+                  outline: none;
+                  padding: 0;
+                  border:none;
+                  border-bottom: 1px inset #717274;
+                  line-height: 1.3;
+                  min-width: 300px;
+                }
+                .credentials_value_input {
+                  position: relative;
+                  background: none;
+                  padding: 0;
+                  border:none;
+                  border-bottom: 1px inset #717274;
+                  line-height: 1.3;
+                  min-width: 200px;
+                }
+                .team_app_actions_holder.edit_actions{
+                  display: none;
+                }
+                .team_app_edit_actions {
+                  .cancel {
+                    &:hover {
+                      color: $themeRedColor;
+                    }
+                  }
+                }
+                .team_app_actions_holder, .team_app_edit_actions {
+                  display: none;
+                  border: 1px solid rgba(0,0,0,0.15);
+                  background-color: white;
+                  overflow: hidden;
+                  border-radius: 5px;
+                  position: absolute;
+                  top:.6rem;
+                  right: .6rem;
+                  color: #2C2D30;
+                  font-size: .7rem;
+                  transition: all 50ms ease-in;
+                  &:hover {
+                    @include simple-box-shadow(0 1px 1px rgba(0,0,0,.1));
+                    border-color: rgba(0,0,0,0.3);
+                  }
+                  button {
+                    width: 32px;
+                    height: 25px;
+                    border-right: 1px solid rgba(0,0,0,0.15);
+                    &:last-child {
+                      border-right: none;
+                    }
+                    &:hover {
+                      color: #45C997;
+                    }
+                  }
+                  .team_app_delete {
+                    &:hover {
+                      color: $themeRedColor;
+                    }
+                  }
+                }
                 .team_app_sender_info {
                   font-size:0.8rem;
                   color: #717274;
+                  display: inline-block;
+                  background-color: #f9f9f9;
+                  padding: 2px 5px;
+                  border-radius: 5px;
                   .team_app_sender_type_icon, .team_app_sender_name {
                     color: black;
                   }
                 }
                 .team_app {
-                  background-color: #e0e0e0;
                   border-radius: 5px;
                   padding: .6rem;
                   .team_app_name_holder {
@@ -304,10 +419,12 @@
                     margin-bottom: .4rem;
                     .team_app_info {
                       @include display-flex();
+                      @include flex-basis(350px);
                       @include align-items(center);
+                      padding-left: 2rem;
                       padding-right: .6rem;
                       .team_app_logo_holder {
-                        height: 75px;
+                        height: 50px;
                         border-radius: 5px;
                         overflow: hidden;
                         img {
@@ -321,23 +438,28 @@
                           .team_app_credentials_line {
                             @include display-flex();
                             @include align-items(center);
+                            line-height: 1.3;
+                            padding: 5px 0;
                             .credentials_type_icon {
                               width:20px;
                               text-align: center;
-                              margin-right: .3rem;
+                              margin-right: .7rem;
                             }
                           }
                         }
                         .password_change_remind {
                           @include display-flex();
                           @include align-items(center);
+                          padding: 5px 0;
                           .password_change_icon {
                             width:20px;
                             text-align: center;
-                            margin-right: .3rem;
+                            margin-right: .7rem;
                           }
-                          .password_change_value {
-                            color: #45C997;
+                          .password_change_input {
+                            outline: none;
+                            background: none;
+                            border-radius: 5px;
                           }
                         }
                       }
@@ -346,22 +468,83 @@
                       @include flex(1);
                       padding-left: .6rem;
                       border-left: 1px solid #717274;
+                      .team_user_receiver {
+                        @include display-inline-flex();
+                        @include align-items(center);
+                        float: left;
+                        margin: 2px 4px 2px 0;
+                        padding: 2px 8px;
+                        border-radius: 5px;
+                        background-color: $themeBlueColor;
+                        color: white;
+                        font-size: .7rem;
+                        &.accepted {
+                          background-color: $themeGreenColor;
+                        }
+                        .view_password_perm, .password_modification_counter {
+                          padding-left: 4px;
+                        }
+                        .team_app_receiver_name {
+                          max-width: 110px;
+                          display: block;
+                          text-overflow: ellipsis;
+                          overflow: hidden;
+                          white-space: nowrap;
+                        }
+                      }
                     }
                   }
                   .team_app_comment_holder {
                     @include display-flex();
                     @include align-items(center);
-                    .team_app_comment_icon {
-
-                    }
                     .team_app_comment {
+                      @include flex-grow(1);
                       font-size: .7rem;
                       line-height: 1.1;
                       padding-left: .6rem;
                       font-style: italic;
+                      .comment_input {
+                        background: none;
+                        border-radius: 5px;
+                        resize: vertical;
+                        width: 100%;
+                        padding: 3px 5px;
+                      }
                     }
                   }
                 }
+              }
+            }
+          }
+          .add_actions_container {
+            @include display-flex();
+            @include flex-basis(75px);
+            @include flex-shrink(0);
+            border-top: 1px solid #E6E6E6;
+            button {
+              @include flex-basis(150px);
+              position: relative;
+              color: #717274;
+              &:before {
+                content: "";
+                position: absolute;
+                right: 0;
+                width: 1px;
+                height: 70%;
+                top:15%;
+                border-right: 1px solid #e6e6e6;
+              }
+              &:hover {
+                background-color: #f9f9f9;
+                color: black;
+              }
+              .icon_holder {
+                font-size: 1.3rem;
+                margin-bottom: 5px;
+              }
+              .title {
+                font-size: .7rem;
+                line-height: 1;
               }
             }
           }
@@ -371,15 +554,26 @@
           @include display-flex();
           @include flex-basis(315px);
           border-left:1px solid #E8E8E8;
+          h2 {
+            font-size: 1rem;
+            margin: 0 0;
+          }
           #flex_contents {
-            width: 100%;
+            @include display-flex();
+            @include flex(1);
             overflow: hidden;
             .flex_contents_panel {
-              .heading {
+              display: none;
+              width: 100%;
+              @include flex-direction(column);
+              &.active {
+                @include display-flex();
+              }
+              .tab_heading {
                 background-color: #F7F7F7;
                 padding: 12px 12px;
                 border-bottom: 1px solid #E8E8E8;
-                .heading_row{
+                .heading_row {
                   @include display-flex();
                   .heading_text {
                     @include flex(1);
@@ -392,6 +586,117 @@
                     }
                   }
                 }
+              }
+              .tab_content_body {
+                @include flex(1);
+                overflow: auto;
+                font-size: .8rem;
+                padding-left: 12px;
+                border-top: .25rem solid transparent;
+                border-right: .25rem solid transparent;
+                border-bottom: .25rem solid transparent;
+              }
+            }
+            #team_tab {
+              .members_holder {
+                .member_name_holder {
+                  display: block;
+                  padding-left: 10px;
+                }
+              }
+              .tab_content_row {
+                margin-bottom: 10px;
+              }
+            }
+            #team_member_tab {
+              .tab_content_row {
+                .teams_holder {
+                  .team_name_holder {
+                    display: block;
+                    padding-left: 10px;
+                  }
+                }
+                .email_holder, .role_holder, .leave_date_holder, .teams_holder, .using_apps_holder {
+                  display: block;
+                  margin-bottom: 10px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .menu {
+    min-width: 240px;
+    position: absolute;
+    border: 1px solid rgba(#000, .15);
+    border-radius: 5px;
+    overflow: hidden;
+    @include simple-box-shadow(0 5px 10px rgba(0,0,0,.12));
+    ::-webkit-scrollbar {
+      width: 13px;
+    }
+    ::-webkit-scrollbar-track, ::-webkit-scrollbar-thumb {
+      background-clip: padding-box!important;
+      border-radius: 5px;
+      border-right: 3px solid #fff;
+      border-left: 3px solid #fff;
+      box-shadow: inset 0 -3px 0 #fff, inset 0 3px 0 #fff;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f3f3f3;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(#E6E6E6, 0.7);
+    }
+    ::-webkit-scrollbar-thumb:window-inactive {
+      background: rgba(#E6E6E6, 0.7);
+    }
+    .menu_content {
+      background-color: white;
+      .menu_items_scroller {
+        max-width: 300px;
+        overflow-y: auto;
+      }
+    }
+  }
+  .profile_chooser_wrapper{
+    min-width: 196px;
+    max-width: 240px;
+    .menu_content {
+      .menu_items_scroller {
+        max-height: 200px;
+        .menu_body {
+          padding: 15px 0;
+          header {
+            line-height: 1;
+            margin-bottom: 15px;
+            padding-left: 15px;
+            font-weight: 700;
+          }
+          .main_body {
+            .profile_name_holder {
+              @include display-flex();
+              @include align-items(center);
+              padding-left: 15px;
+              &:hover {
+                background-color: #f9f9f9;
+                cursor: pointer;
+              }
+              &.selected {
+                background-color: $themeBlueColor;
+                color: white;
+                .icon_wrapper {
+                  color: rgba(white, .7);
+                }
+                &:hover {
+                  background-color: $themeBlueColor;
+                }
+              }
+              .icon_wrapper{
+                margin-right: 5px;
+                color: #717274;
               }
             }
           }

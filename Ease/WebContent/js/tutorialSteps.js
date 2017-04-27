@@ -400,3 +400,4 @@ $('#accountCredentials button').click(function () {
     $('#accountCredentials').removeClass("show");
 	showScrapingInfo();
 });
+

@@ -36,7 +36,7 @@ asyncLoading = {
 		sc.onload = function(){
 			if (callback)
 				callback();
-		}
+		};
 		sc.src = url;
 		(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(sc);
 	},
