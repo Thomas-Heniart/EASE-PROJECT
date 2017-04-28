@@ -14,7 +14,7 @@ import java.security.SecureRandom;
  * Created by thomas on 26/04/2017.
  */
 @Entity
-@Table(name = "SavedSessions")
+@Table(name = "savedSessions")
 public class SessionSave {
     @Id
     @GeneratedValue

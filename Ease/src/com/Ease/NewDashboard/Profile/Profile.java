@@ -5,13 +5,14 @@ import com.Ease.NewDashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Utils.GeneralException;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by thomas on 20/04/2017.
  */
 
 @Entity
-@Table(name = "Profiles")
+@Table(name = "profiles")
 public class Profile {
     @Id
     @GeneratedValue
@@ -76,9 +77,9 @@ public class Profile {
         this.profileAppManager = new ProfileAppManager();
     }
 
-    public void populateProfileAppManager() {
+    public List<ProfileApp> populateProfileAppManager() {
         this.profileAppManager = new ProfileAppManager();
-        this.profileAppManager.populate(this);
+        return this.profileAppManager.populate(this);
     }
 
     public ProfileApp addApp(App app) {
@@ -87,5 +88,9 @@ public class Profile {
 
     public App getAppWithId(Integer app_id) throws GeneralException {
         return this.profileAppManager.getAppWithId(app_id);
+    }
+
+    public List<ProfileApp> getProfileApps() {
+        return this.profileAppManager.getProfileApps();
     }
 }

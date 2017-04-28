@@ -2,6 +2,7 @@ package com.Ease.NewDashboard.User;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.Profile.Profile;
+import com.Ease.NewDashboard.Profile.ProfileApp;
 import com.Ease.NewDashboard.Profile.ProfileInformation;
 import com.Ease.NewDashboard.UserProfile;
 import com.Ease.Utils.GeneralException;
@@ -18,13 +19,17 @@ public class ProfileManager {
     List<List<Profile>> profileList;
     Map<Integer, Profile> profileMap;
     List<Profile> profiles;
+    List<ProfileApp> profileApps;
+    Map<Integer, ProfileApp> profileAppMap;
 
     public ProfileManager() {
-        profiles = new LinkedList<Profile>();
-        profileList = new LinkedList<List<Profile>>();
-        profileMap = new HashMap<Integer, Profile>();
+        profiles = new LinkedList<>();
+        profileList = new LinkedList<>();
+        profileMap = new HashMap<>();
+        profileApps = new LinkedList<>();
+        profileAppMap = new HashMap<>();
         for (int i = 0; i < MAX_COLUMN; ++i) {
-            profileList.add(new LinkedList<Profile>());
+            profileList.add(new LinkedList<>());
         }
     }
 
@@ -58,7 +63,7 @@ public class ProfileManager {
         /* Put all profiles */
         for(Profile profile : profiles) {
             this.addProfile(profile);
-            profile.populateProfileAppManager();
+            this.profileApps.addAll(profile.populateProfileAppManager());
         }
 
         /* Sort profiles */
@@ -79,7 +84,6 @@ public class ProfileManager {
         profileMap.put(profile.getDb_id(), profile);
     }
 
-
     public Profile getProfileWithId(Integer profile_id) throws GeneralException {
         Profile profile = this.profileMap.get(profile_id);
         if (profile == null)
@@ -89,5 +93,13 @@ public class ProfileManager {
 
     public List<Profile> getProfiles() {
         return profiles;
+    }
+
+    public void moveApp(Integer profileAppId, Integer profileIdDest, Integer positionDest) throws GeneralException {
+        ProfileApp profileApp = this.profileAppMap.get(profileAppId);
+        Profile profileDest = this.getProfileWithId(profileIdDest);
+        if (positionDest < 0 || positionDest > profileDest.getProfileApps().size())
+            throw new GeneralException(ServletManager.Code.ClientError, "PositionDest fucked.");
+
     }
 }

@@ -14,7 +14,7 @@ import java.util.Date;
  * Created by thomas on 25/04/2017.
  */
 @Entity
-@Table(name = "LogwithApps")
+@Table(name = "logWithApps")
 @PrimaryKeyJoinColumn(name = "id")
 public class LogwithApp extends WebsiteApp {
     @OneToOne

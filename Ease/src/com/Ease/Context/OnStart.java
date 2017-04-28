@@ -21,11 +21,8 @@ import com.Ease.Context.Group.Infrastructure;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateDatabase;
 import com.Ease.Team.Team;
-import com.Ease.Team.Teams;
+import com.Ease.Team.TeamManager;
 import com.Ease.Utils.*;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 
 public class OnStart implements ServletContextListener{
 
@@ -55,10 +52,11 @@ public class OnStart implements ServletContextListener{
 				context.setAttribute("catalog", new Catalog(db, context));
 				context.setAttribute("groupManager", new GroupManager());
 				context.setAttribute("websitesVisitedManager", new WebsitesVisitedManager(db, context));
-				context.setAttribute("teamMap", Team.loadTeams(db));
-				com.Ease.Website.Catalog catalog = new com.Ease.Website.Catalog();
-				context.setAttribute("catalog_hibernate", catalog);
-				catalog.populate();
+				context.setAttribute("teamManager", new TeamManager());
+
+				//com.Ease.Website.Catalog catalog = new com.Ease.Website.Catalog();
+				//context.setAttribute("catalog_hibernate", catalog);
+				//catalog.populate();
 
 				List<String> colors = new ArrayList<String>();
 				colors.add("#373B60");

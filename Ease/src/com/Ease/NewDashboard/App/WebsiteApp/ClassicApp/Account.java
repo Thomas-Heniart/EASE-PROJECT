@@ -10,7 +10,7 @@ import java.util.List;
  * Created by thomas on 25/04/2017.
  */
 @Entity
-@Table(name = "Accounts")
+@Table(name = "accounts")
 public class Account {
     @Id
     @GeneratedValue

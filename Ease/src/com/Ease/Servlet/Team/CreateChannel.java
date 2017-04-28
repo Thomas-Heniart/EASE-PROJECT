@@ -26,13 +26,13 @@ public class CreateChannel extends HttpServlet {
             sm.needToBeTeamUser();
             TeamUser teamUser = sm.getTeamUser();
             Team team = teamUser.getTeam();
-            if (!teamUser.hasPermission(TeamUserPermissions.Perm.ALL))
+            /* if (!teamUser.hasPermission(TeamUserPermissions.Perm.ALL))
                 throw new GeneralException(ServletManager.Code.ClientWarning, "You don't have this permission");
             String channelName = sm.getServletParam("channelName", true);
             Channel newChannel = team.createChannel(channelName, sm);
             newChannel.addTeamUser(teamUser, sm);
             sm.setResponse(ServletManager.Code.Success, newChannel.getJson().toString());
-            sm.setLogResponse("Channel successfully created");
+            sm.setLogResponse("Channel successfully created");*/
         } catch (GeneralException e) {
             sm.setResponse(e);
         } catch (Exception e) {
