@@ -4,6 +4,7 @@
     "home":"https://app.crisp.im/",
     "connect": {
     	"todo": [
+            {"action":"waitfor", "search":".cdc-initiate-form"},
     		{"action":"fill", "what":"login","search":".cdc-initiate-form input[type='email']", "grave":"true"},
     		{"action":"fill", "what":"password","search":".cdc-initiate-form input[type='password']", "grave":"true"},
     		{"action":"click", "search":".cdc-initiate-form button[type='submit']", "grave":"true"}
@@ -11,12 +12,14 @@
     },
     "logout": {
     	"todo": [
-    		{"action":"waitfor", "search":"a[href*='settings/websites']"},
-    		{"action":"goto", "url":"https://app.crisp.im/initiate/logout"}
+    		{"action":"waitfor", "search":".cdc-initiate-form, li[data-action='logout']"},
+    		{"action":"clickona", "search":"li[data-action='logout'] a"},
+			{"action":"waitload"}
     	]
     },
     "checkAlreadyLogged": [
-    	{"search":"div[class='cdc-load-wrapper']"}
+		{"action":"waitfor", "search":".cdc-initiate-form, li[data-action='logout']"},
+    	{"search":"li[data-action='logout']"}
     ]
     
 }

@@ -1,6 +1,6 @@
 if(window.location.href.indexOf("https://ease.space")==0 || window.location.href.indexOf("http://51.254.207.91")==0){
 
-$('body').prepend('<div id="ease_extension" safariVersion="2.2.3" style="dislay:none;">');
+$('body').prepend('<div id="ease_extension" safariVersion="2.2.4" style="dislay:none;">');
 $(".displayedByPlugin").show();
 extension.runtime.sendMessage("getSettings", {}, function(response) {
     if(response.homepage){

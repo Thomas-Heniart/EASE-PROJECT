@@ -5,8 +5,10 @@
 	"connect":{
 		"todo":[
 			{"action":"fill", "what":"login", "search":"#username", "grave":true},
+			{"action":"click", "search":"#loginButton", "grave":true},
+            {"action":"waitfor", "search":"#passwordRow.PulledIntoViewWithoutDelay"},
 			{"action":"fill", "what":"password", "search":"#password"},
-			{"action":"click", "search":"#login", "grave":true}
+			{"action":"click", "search":"#loginButton", "grave":true}
 			]
 	},
 	"logout":{
@@ -19,6 +21,7 @@
         ]
 	},
 	"checkAlreadyLogged":[
+        {"action":"waitfor", "search":"#gwt-debug-AccountMenu-avatar, input#username"},
 		{"search":"#gwt-debug-AccountMenu-avatar"}
 	],
     "Google":{

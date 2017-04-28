@@ -6,7 +6,7 @@
 <hibernate-configuration>
     <session-factory>
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/ease</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/ease2</property>
         <property name="hibernate.connection.username">client</property>
         <property name="hibernate.connection.password">P6au23q7</property>
         <property name="hibernate.connection.pool_size">10</property>
@@ -14,7 +14,31 @@
         <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="hibernate.current_session_context_class">thread</property>
         <property name="hibernate.id.new_generator_mappings">false</property>
+        <property name="hibernate.enable_lazy_load_no_trans">true</property>
         <mapping class="com.Ease.Team.Teams"/>
-
+        <mapping class="com.Ease.NewDashboard.App.App"/>
+        <mapping class="com.Ease.NewDashboard.App.AppInformation"/>
+        <mapping class="com.Ease.NewDashboard.Profile.ProfileApp"/>
+        <mapping class="com.Ease.NewDashboard.Profile.Profile"/>
+        <mapping class="com.Ease.NewDashboard.Profile.ProfileInformation"/>
+        <mapping class="com.Ease.NewDashboard.App.LinkApp.LinkApp"/>
+        <mapping class="com.Ease.NewDashboard.App.LinkApp.LinkAppInformation"/>
+        <mapping class="com.Ease.NewDashboard.App.WebsiteApp.WebsiteApp"/>
+        <mapping class="com.Ease.NewDashboard.App.WebsiteApp.ClassicApp.ClassicApp"/>
+        <mapping class="com.Ease.NewDashboard.App.WebsiteApp.ClassicApp.Account"/>
+        <mapping class="com.Ease.NewDashboard.App.WebsiteApp.ClassicApp.AccountInformation"/>
+        <mapping class="com.Ease.NewDashboard.App.WebsiteApp.LogwithApp.LogwithApp"/>
+        <mapping class="com.Ease.NewDashboard.UserProfile"/>
+        <mapping class="com.Ease.NewDashboard.User.User"/>
+        <mapping class="com.Ease.NewDashboard.User.Keys"/>
+        <mapping class="com.Ease.NewDashboard.User.Options"/>
+        <mapping class="com.Ease.NewDashboard.User.Status"/>
+        <mapping class="com.Ease.NewDashboard.User.SessionSave"/>
+        <mapping class="com.Ease.NewDashboard.User.UserEmail"/>
+        <mapping class="com.Ease.Website.Website"/>
+        <mapping class="com.Ease.Website.WebsiteAttributes"/>
+        <mapping class="com.Ease.Website.WebsiteInformation"/>
+        <mapping class="com.Ease.Website.Sso"/>
+        <mapping class="com.Ease.Website.Tag"/>
     </session-factory>
 </hibernate-configuration>
