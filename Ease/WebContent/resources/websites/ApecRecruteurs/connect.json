@@ -1,0 +1,22 @@
+{
+  "name":"Apec",
+  "lastLogin":"",
+  "home":"https://recruteurs.apec.fr/",
+  "connect":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='identification']"},
+      {"action":"fill", "what":"login", "search":"input#username"},
+      {"action":"fill", "what":"password", "search":"input#password"},
+      {"action":"click", "search":"button[id='login.submit.label']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"clickona", "search":"a[href*='LogOut']"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"search":"a[href*='LogOut']"}
+  ]
+}

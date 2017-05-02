@@ -1,0 +1,24 @@
+{
+  "name":"Cadremploi Candidats",
+  "lastLogin":"",
+  "home":"https://www.cadremploi.fr/emploi/home#",
+  "connect":{
+    "todo":[
+      {"action":"clickona", "search":"a.acces-espace-candidat"},
+      {"action":"waitfor", "search":"#emailGlobalMenu"},
+      {"action":"fill", "what":"login", "search":"#emailGlobalMenu"},
+      {"action":"fill", "what":"password", "search":"#passwordGlobalMenu"},
+      {"action":"click", "search":"button[name='bouton_global_menu_login']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"clickona", "search":"a.trigger-deconnexion"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a.trigger-deconnexion, a.acces-espace-candidat"},
+    {"search":"a.trigger-deconnexion"}
+  ]
+}
