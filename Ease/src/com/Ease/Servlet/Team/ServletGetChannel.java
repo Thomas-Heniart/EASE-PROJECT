@@ -2,9 +2,7 @@ package com.Ease.Servlet.Team;
 
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamUser;
-import com.Ease.Team.TeamUserPermissions;
-import com.Ease.Utils.GeneralException;
+import com.Ease.Team.TeamManager;
 import com.Ease.Utils.ServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -16,26 +14,20 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by thomas on 12/04/2017.
+ * Created by thomas on 02/05/2017.
  */
-@WebServlet("/CreateChannel")
-public class CreateChannel extends HttpServlet {
+@WebServlet("/ServletGetChannel")
+public class ServletGetChannel extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
-            sm.needToBeTeamUser();
-            TeamUser teamUser = sm.getTeamUser();
-            Team team = teamUser.getTeam();
-
-            /* if (!teamUser.hasPermission(TeamUserPermissions.Perm.ALL))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "You don't have this permission");
-            String channelName = sm.getServletParam("channelName", true);
-            Channel newChannel = team.createChannel(channelName, sm);
-            newChannel.addTeamUser(teamUser, sm);
-            sm.setResponse(ServletManager.Code.Success, newChannel.getJson().toString());
-            sm.setLogResponse("Channel successfully created");*/
-        } catch (GeneralException e) {
-            sm.setResponse(e);
+            String team_id = sm.getServletParam("team_id", true);
+            String channel_id = sm.getServletParam("channel_id", true);
+            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
+            Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
+            Channel channel = team.getChannelWithId(Integer.parseInt(channel_id));
+            sm.setResponse(ServletManager.Code.Success, channel.getJson().toString());
+            sm.setLogResponse("GetChannel done");
         } catch (Exception e) {
             sm.setResponse(e);
         }

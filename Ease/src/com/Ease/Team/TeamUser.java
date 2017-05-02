@@ -45,7 +45,7 @@ public class TeamUser {
     @Column(name = "username")
     protected String username;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "channelAndTeamUserMap", joinColumns = { @JoinColumn(name = "team_user_id") }, inverseJoinColumns = { @JoinColumn(name = "channel_id") })
     protected List<Channel> channels = new LinkedList<>();
 
@@ -169,5 +169,17 @@ public class TeamUser {
         res.put("email", this.email);
         res.put("username", this.username);
         return res;
+    }
+
+    public void edit(JSONObject editJson) {
+        String firstName = (String) editJson.get("firstName");
+        String lastName = (String) editJson.get("lastName");
+        String username = (String) editJson.get("username");
+        if (lastName != null)
+            this.lastName = lastName;
+        if (firstName != null)
+            this.firstName = firstName;
+        if (username != null)
+            this.username = username;
     }
 }

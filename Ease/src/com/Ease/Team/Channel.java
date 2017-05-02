@@ -85,6 +85,10 @@ public class Channel {
         this.teamUsers.add(teamUser);
     }
 
+    public void removeTeamUser(TeamUser teamUser) {
+        this.teamUsers.remove(teamUser);
+    }
+
     public JSONObject getJson() {
         JSONObject res = new JSONObject();
         res.put("id", this.db_id);

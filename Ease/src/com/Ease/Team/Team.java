@@ -115,6 +115,8 @@ public class Team {
     }
 
     public TeamUser getTeamUserWithId(Integer teamUser_id) throws GeneralException {
+        for (Integer i : this.teamUserIdMap.keySet())
+            System.out.println("Integer key: " + i);
         TeamUser teamUser = this.teamUserIdMap.get(teamUser_id);
         if (teamUser == null)
             throw new GeneralException(ServletManager.Code.ClientError, "This teamUser does not exist");
@@ -135,7 +137,40 @@ public class Team {
         JSONObject res = new JSONObject();
         res.put("name", this.name);
         res.put("id", this.db_id);
-        /* Channels and TeamUsers JSON */
+        JSONArray channels = new JSONArray();
+        for (Channel channel : this.getChannels())
+            channels.add(channel.getJson());
+        res.put("channels", channels);
+        JSONArray teamUsers = new JSONArray();
+        for (TeamUser teamUser : this.getTeamUsers())
+            teamUsers.add(teamUser.getJson());
+        res.put("teamUsers", teamUsers);
         return res;
+    }
+
+    public Channel getGeneralChannel() throws GeneralException {
+        for (Channel channel : this.getChannels()) {
+            if (channel.getName().equals("General"))
+                return channel;
+        }
+        throw new GeneralException(ServletManager.Code.ClientError, "No general channel");
+    }
+
+    public void removeTeamUser(TeamUser teamUser) {
+        for(Channel channel : this.getChannels())
+            channel.removeTeamUser(teamUser);
+        this.teamUserIdMap.remove(teamUser.getDb_id());
+        this.teamUsers.remove(teamUser);
+    }
+
+    public void removeChannel(Channel channel) {
+        this.channelIdMap.remove(channel.getDb_id());
+        this.channels.remove(channel);
+    }
+
+    public void edit(JSONObject editJson) {
+        String name = (String) editJson.get("name");
+        if (name != null)
+            this.name = name;
     }
 }
