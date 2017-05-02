@@ -98,4 +98,10 @@ public class Channel {
             teamUsers.add(teamUser.getJson());
         return res;
     }
+
+    public void edit(JSONObject editJson) {
+        String name = (String) editJson.get("name");
+        if (name != null)
+            this.name = name;
+    }
 }

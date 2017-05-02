@@ -21,8 +21,8 @@ import java.util.Map;
 /**
  * Created by thomas on 12/04/2017.
  */
-@WebServlet("/CreateTeam")
-public class CreateTeam extends HttpServlet {
+@WebServlet("/ServletCreateTeam")
+public class ServletCreateTeam extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
@@ -36,6 +36,16 @@ public class CreateTeam extends HttpServlet {
             String lastName = sm.getServletParam("lastName", true);
             String email = sm.getServletParam("email", true);
             String username = sm.getServletParam("username", true);
+            if (teamName == null || teamName.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "teamName is needed.");
+            if (firstName == null || firstName.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "firstName is needed.");
+            if (lastName == null || lastName.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "lastName is needed.");
+            if (email == null || email.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "email is needed.");
+            if (username == null || username.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "username is needed.");
             HibernateQuery query = new HibernateQuery();
             Team team = new Team(teamName);
             TeamUser admin = TeamUser.createAdminUser(firstName, lastName, email, username, team);

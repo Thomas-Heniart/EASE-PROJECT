@@ -2,6 +2,7 @@ package com.Ease.Servlet.Team;
 
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
+import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -26,6 +27,8 @@ public class ServletGetTeam extends HttpServlet {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
             String team_id = sm.getServletParam("team_id", true);
+            if (team_id == null || team_id.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "team_id is needed.");
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
             sm.setResponse(ServletManager.Code.Success, team.getJson().toString());

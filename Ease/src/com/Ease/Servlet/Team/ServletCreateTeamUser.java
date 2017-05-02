@@ -5,6 +5,7 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Team.TeamUserPermissions;
+import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -29,6 +30,16 @@ public class ServletCreateTeamUser extends HttpServlet {
             String email = sm.getServletParam("email", true);
             String username = sm.getServletParam("username", true);
             String team_id = sm.getServletParam("team_id", true);
+            if (firstName == null || firstName.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "channel_id is needed.");
+            if (lastName == null || lastName.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "lastName is needed.");
+            if (username == null || username.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "username is needed.");
+            if (email == null || email.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "email is needed.");
+            if (team_id == null || team_id.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "team_id is needed.");
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
             TeamUser teamUser = new TeamUser(firstName, lastName, email, username, team, new TeamUserPermissions(TeamUserPermissions.Role.MEMBER.getValue()));

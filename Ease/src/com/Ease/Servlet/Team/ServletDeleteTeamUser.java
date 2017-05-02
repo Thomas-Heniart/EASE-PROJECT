@@ -4,6 +4,7 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
+import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -25,6 +26,10 @@ public class ServletDeleteTeamUser extends HttpServlet {
             HibernateQuery query = new HibernateQuery();
             String team_id = sm.getServletParam("team_id", true);
             String teamUser_id = sm.getServletParam("teamUser_id", true);
+            if (teamUser_id == null || teamUser_id.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "teamUser_id is needed.");
+            if (team_id == null || team_id.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "team_id is needed.");
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
             TeamUser teamUser = team.getTeamUserWithId(Integer.parseInt(teamUser_id));

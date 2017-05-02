@@ -2,6 +2,7 @@ package com.Ease.Servlet.Team;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.*;
+import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -24,6 +25,12 @@ public class ServletAddTeamUserToChannel extends HttpServlet {
             String team_id = sm.getServletParam("team_id", true);
             String channel_id = sm.getServletParam("channel_id", true);
             String teamUser_id = sm.getServletParam("teamUser_id", true);
+            if (channel_id == null || channel_id.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "channel_id is needed.");
+            if (teamUser_id == null || teamUser_id.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "teamUser_id is needed.");
+            if (team_id == null || team_id.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "team_id is needed.");
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
             Channel channel = team.getChannelWithId(Integer.parseInt(channel_id));

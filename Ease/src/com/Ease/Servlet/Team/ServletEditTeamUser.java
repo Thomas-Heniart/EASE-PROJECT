@@ -4,6 +4,7 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
+import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -28,6 +29,12 @@ public class ServletEditTeamUser extends HttpServlet {
             String team_id = sm.getServletParam("team_id", true);
             String teamUser_id = sm.getServletParam("teamUser_id", true);
             String editJsonString = sm.getServletParam("editJson", true);
+            if (teamUser_id == null || teamUser_id.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "channel_id is needed.");
+            if (editJsonString == null || editJsonString.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "channel_id is needed.");
+            if (team_id == null || team_id.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "team_id is needed.");
             JSONParser parser = new JSONParser();
             JSONObject editJson = (JSONObject) parser.parse(editJsonString);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");

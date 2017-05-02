@@ -5,6 +5,7 @@ import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
+import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 import com.Ease.Utils.ServletManagerHibernate;
 
@@ -25,6 +26,8 @@ public class ServletDeleteTeam extends HttpServlet {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
             String team_id = sm.getServletParam("team_id", true);
+            if (team_id == null || team_id.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "team_id is needed.");
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
             HibernateQuery query = new HibernateQuery();
