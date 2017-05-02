@@ -27,7 +27,7 @@ public class Channel {
     @Column(name = "name")
     protected String name;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "channelAndTeamUserMap", joinColumns = { @JoinColumn(name = "channel_id") }, inverseJoinColumns = { @JoinColumn(name = "team_user_id") })
     protected List<TeamUser> teamUsers = new LinkedList<>();
 
@@ -81,7 +81,17 @@ public class Channel {
         this.teamUsers = teamUsers;
     }
 
-    public void addTeamuser(TeamUser teamUser) {
+    public void addTeamUser(TeamUser teamUser) {
         this.teamUsers.add(teamUser);
+    }
+
+    public JSONObject getJson() {
+        JSONObject res = new JSONObject();
+        res.put("id", this.db_id);
+        res.put("name", this.name);
+        JSONArray teamUsers = new JSONArray();
+        for (TeamUser teamUser : this.getTeamUsers())
+            teamUsers.add(teamUser.getJson());
+        return res;
     }
 }

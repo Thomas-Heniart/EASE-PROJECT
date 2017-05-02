@@ -20,7 +20,6 @@ import com.Ease.Context.Group.GroupManager;
 import com.Ease.Context.Group.Infrastructure;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateDatabase;
-import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.*;
 
@@ -53,7 +52,6 @@ public class OnStart implements ServletContextListener{
 				context.setAttribute("groupManager", new GroupManager());
 				context.setAttribute("websitesVisitedManager", new WebsitesVisitedManager(db, context));
 				context.setAttribute("teamManager", new TeamManager());
-
 				//com.Ease.Website.Catalog catalog = new com.Ease.Website.Catalog();
 				//context.setAttribute("catalog_hibernate", catalog);
 				//catalog.populate();

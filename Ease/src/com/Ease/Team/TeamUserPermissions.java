@@ -16,8 +16,8 @@ public class TeamUserPermissions {
 
     public enum Role {
         MEMBER(1),
-        MODERATOR(2),
-        ADMINISTRATOR(4);
+        MODERATOR(3),
+        ADMINISTRATOR(7);
 
         private int value;
 

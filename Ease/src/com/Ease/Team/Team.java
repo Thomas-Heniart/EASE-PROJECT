@@ -38,12 +38,10 @@ public class Team {
     @Column(name = "name")
     protected String name;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id")
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     protected List<TeamUser> teamUsers = new LinkedList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id")
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     protected List<Channel> channels = new LinkedList<>();
 
     @Transient
@@ -100,8 +98,13 @@ public class Team {
     public void lazyInitialize() {
         for (Channel channel : this.getChannels())
             this.channelIdMap.put(channel.getDb_id(), channel);
-        for (TeamUser teamUser : this.teamUsers)
+        for (TeamUser teamUser : this.teamUsers) {
             this.teamUserIdMap.put(teamUser.getDb_id(), teamUser);
+            System.out.println("Permissions member: " + teamUser.getTeamUserPermissions().haveRole(TeamUserPermissions.Role.MEMBER));
+            System.out.println("Permissions moderator: " + teamUser.getTeamUserPermissions().haveRole(TeamUserPermissions.Role.MODERATOR));
+            System.out.println("Permissions admin: " + teamUser.getTeamUserPermissions().haveRole(TeamUserPermissions.Role.ADMINISTRATOR));
+        }
+
     }
 
     public Channel getChannelWithId(Integer channel_id) throws GeneralException {

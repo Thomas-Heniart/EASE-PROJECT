@@ -1,8 +1,10 @@
 package com.Ease.Servlet.Team;
 
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
+import com.Ease.Team.TeamUser;
 import com.Ease.Utils.ServletManager;
 import com.Ease.Utils.ServletManagerHibernate;
 

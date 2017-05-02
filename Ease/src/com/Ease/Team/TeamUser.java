@@ -160,4 +160,14 @@ public class TeamUser {
         TeamUserPermissions permissions = new TeamUserPermissions(TeamUserPermissions.Role.ADMINISTRATOR.getValue());
         return new TeamUser(firstName, lastName, email, username, team, permissions);
     }
+
+    public JSONObject getJson() {
+        JSONObject res = new JSONObject();
+        res.put("id", this.db_id);
+        res.put("firstName", this.firstName);
+        res.put("lastName", this.lastName);
+        res.put("email", this.email);
+        res.put("username", this.username);
+        return res;
+    }
 }

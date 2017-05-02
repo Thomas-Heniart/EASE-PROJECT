@@ -42,7 +42,7 @@ public class CreateTeam extends HttpServlet {
             team.addTeamUser(admin);
             Channel channel = new Channel(team, "General");
             team.addChannel(channel);
-            channel.addTeamuser(admin);
+            channel.addTeamUser(admin);
             query.saveOrUpdateObject(team);
             query.commit();
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
