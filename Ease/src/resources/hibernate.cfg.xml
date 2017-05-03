@@ -6,7 +6,7 @@
 <hibernate-configuration>
     <session-factory>
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/ease2</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/ease</property>
         <property name="hibernate.connection.username">client</property>
         <property name="hibernate.connection.password">P6au23q7</property>
         <property name="hibernate.connection.pool_size">10</property>
