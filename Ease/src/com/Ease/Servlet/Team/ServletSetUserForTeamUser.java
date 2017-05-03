@@ -19,8 +19,8 @@ import java.util.Map;
 /**
  * Created by thomas on 03/05/2017.
  */
-@WebServlet("/ServletSetUserToTeamUser")
-public class ServletSetUserToTeamUser extends HttpServlet {
+@WebServlet("/ServletSetUserForTeamUser")
+public class ServletSetUserForTeamUser extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
