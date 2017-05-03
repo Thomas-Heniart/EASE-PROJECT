@@ -13,7 +13,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "teamUserPermissions")
 public class TeamUserPermissions {
-
     public enum Role {
         MEMBER(1),
         MODERATOR(3),
@@ -64,5 +63,9 @@ public class TeamUserPermissions {
 
     public boolean  haveRole(Role role) {
         return (this.permissions & role.getValue()) >= this.permissions;
+    }
+
+    public boolean hasAdminPermissions() {
+        return this.haveRole(Role.ADMINISTRATOR);
     }
 }

@@ -193,4 +193,8 @@ public class TeamUser {
         if (username != null)
             this.username = username;
     }
+
+    public boolean isTeamAdmin() {
+        return this.getTeamUserPermissions().hasAdminPermissions();
+    }
 }

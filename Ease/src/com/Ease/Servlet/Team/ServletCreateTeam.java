@@ -26,6 +26,7 @@ public class ServletCreateTeam extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
+            sm.needToBeConnected();
             String code = sm.getServletParam("code", false);
             String teamName = sm.getServletParam("teamName", true);
             String firstName = sm.getServletParam("firstName", true);
@@ -42,7 +43,15 @@ public class ServletCreateTeam extends HttpServlet {
                 throw new GeneralException(ServletManager.Code.ClientWarning, "email is needed.");
             if (username == null || username.equals(""))
                 throw new GeneralException(ServletManager.Code.ClientWarning, "username is needed.");
+            if (code == null || code.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "code not provided.");
             HibernateQuery query = new HibernateQuery();
+            query.querySQLString("SELECT id FROM createTeamInvitations WHERE email = ? AND code = ?");
+            query.setParameter(1, email);
+            query.setParameter(2, code);
+            Object id = query.getSingleResult();
+            if (id == null)
+                throw new GeneralException(ServletManager.Code.ClientWarning, "You cannot create a team.");
             Team team = new Team(teamName);
             TeamUser admin = TeamUser.createAdminUser(firstName, lastName, email, username, team);
             team.addTeamUser(admin);
@@ -50,7 +59,12 @@ public class ServletCreateTeam extends HttpServlet {
             team.addChannel(channel);
             channel.addTeamUser(admin);
             query.saveOrUpdateObject(team);
+            query.querySQLString("DELETE FROM createTeamInvitations WHERE email = ? AND code = ?");
+            query.setParameter(1, email);
+            query.setParameter(2, code);
+            query.executeUpdate();
             query.commit();
+            sm.getUser().setTeamUser(admin, sm);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             teamManager.addTeam(team);
             sm.setResponse(ServletManager.Code.Success, team.getJson().toString());
