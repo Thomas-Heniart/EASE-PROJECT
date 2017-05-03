@@ -25,6 +25,9 @@ public class TeamUser {
     @JoinColumn(name = "user_id")
     protected User user;
 
+    @Transient
+    protected com.Ease.Dashboard.User.User dashboard_user;
+
     @Column(name = "firstName")
     protected String firstName;
 
@@ -98,6 +101,14 @@ public class TeamUser {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public com.Ease.Dashboard.User.User getDashboard_user() {
+        return dashboard_user;
+    }
+
+    public void setDashboard_user(com.Ease.Dashboard.User.User dashboard_user) {
+        this.dashboard_user = dashboard_user;
     }
 
     public String getFirstName() {
