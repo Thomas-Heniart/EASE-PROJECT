@@ -394,9 +394,9 @@ public class Catalog {
 		Collections.sort(oldWebsites, new Comparator<Website>() {
 	         @Override
 	         public int compare(Website o1, Website o2) {
-	             if (o1.position < o2.position)
+	             if (o1.ratio > o2.ratio)
 	            	 return 1;
-	             else if (o1.position == o2.position)
+	             else if (o1.ratio == o2.ratio)
 	            	 return 0;
 	             else 
 	            	 return -1;
