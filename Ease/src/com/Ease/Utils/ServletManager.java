@@ -92,7 +92,7 @@ public class ServletManager {
         if (user == null) {
             throw new GeneralException(Code.ClientWarning, "You need to be connected to do that.");
         } else {
-			/*socketId = request.getParameter("socketId");
+            /*socketId = request.getParameter("socketId");
 			if (!debug && socketId == null) {
 				throw new GeneralException(Code.ClientError, "No socketId.");
 			} else if (user.getWebsockets().containsKey(socketId) == false) {
@@ -164,12 +164,16 @@ public class ServletManager {
     }
 
     public void setResponse(Exception e) {
-        this.retCode = Code.InternError.getValue();
-        this.retMsg = e.toString() + ".\nStackTrace :";
-        for (int i = 0; i < e.getStackTrace().length; i++) {
-            this.retMsg += "\n" + e.getStackTrace()[i];
+        try {
+            this.setResponse((GeneralException) e);
+        } catch (ClassCastException e1) {
+            this.retCode = Code.InternError.getValue();
+            this.retMsg = e.toString() + ".\nStackTrace :";
+            for (int i = 0; i < e.getStackTrace().length; i++) {
+                this.retMsg += "\n" + e.getStackTrace()[i];
+            }
+            e.printStackTrace();
         }
-        e.printStackTrace();
     }
 
     public void setRedirectUrl(String url) {

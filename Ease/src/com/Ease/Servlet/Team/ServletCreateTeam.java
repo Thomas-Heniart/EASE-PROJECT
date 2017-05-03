@@ -26,11 +26,7 @@ public class ServletCreateTeam extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
-            /* sm.needToBeConnected();
-            User user = sm.getUser();
-            if (!user.isAdmin())
-                throw new GeneralException(ServletManager.Code.ClientError, "You ain't admin dude");
-            */
+            String code = sm.getServletParam("code", false);
             String teamName = sm.getServletParam("teamName", true);
             String firstName = sm.getServletParam("firstName", true);
             String lastName = sm.getServletParam("lastName", true);

@@ -635,8 +635,14 @@ public class User {
         return teamUser;
     }
 
-    public void setTeamUser(TeamUser teamUser) {
+    public void setTeamUser(TeamUser teamUser, ServletManager sm) throws GeneralException {
+	    DataBaseConnection db = sm.getDB();
+	    DatabaseRequest request = db.prepareRequest("UPDATE teamUsers SET user_id = ? WHERE id = ?;");
+	    request.setInt(this.db_id);
+	    request.setInt(teamUser.getDb_id());
+	    request.set();
         this.teamUser = teamUser;
+        teamUser.setDashboard_user(this);
     }
 
     public void loadTeamUser(ServletManager sm) throws GeneralException {

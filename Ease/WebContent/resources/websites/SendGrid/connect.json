@@ -3,20 +3,21 @@
     "lastlogin":"",
     "home":"https://app.sendgrid.com/",
     "connect": {
-    	"todo": [
-    		{"action":"goto", "url":"https://sendgrid.com/login"},
-    		{"action":"fill", "what":"login","search":"#usernameContainer-input-id", "grave":"true"},
-    		{"action":"fill", "what":"password","search":"#passwordContainer-input-id", "grave":"true"},
-    		{"action":"click", "search":"button[type='submit']", "grave":"true"}
-    	]
+      "todo": [
+        {"action":"fill", "what":"login","search":"#usernameContainer-input-id", "grave":"true"},
+        {"action":"fill", "what":"password","search":"#passwordContainer-input-id", "grave":"true"},
+        {"action":"click", "search":"button[type='submit']", "grave":"true"}
+      ]
     },
     "logout": {
-    	"todo": [
-    		{"action":"clickona", "search":"li[data-logout='logout'] a"}
-    	]
+      "todo": [
+        {"action":"clickona", "search":"li[data-logout='logout'] a"},
+        {"action":"waitload"}
+      ]
     },
     "checkAlreadyLogged": [
-    	{"search":"li[data-logout='logout'] a"}
+      {"action":"waitfor", "search":"#usernameContainer-input-id, li[data-logout='logout'] a"},
+      {"search":"li[data-logout='logout'] a"}
     ]
     
 }
