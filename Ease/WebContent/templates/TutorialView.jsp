@@ -31,14 +31,13 @@
 						</div>	
 					</c:forEach>
 
-					<div class="account">
+					<div class="account account-unavailable">
 						<div class="logo">
 							<img src="resources/images/Chrome.png"/>
 						</div>
-						<p class="name">Google Chrome</p>
+						<p class="name">Google Chrome (Currently unavailable)</p>
 						<div class="onoffswitch">
-							<input type="checkbox" name="Chrome" class="onoffswitch-checkbox" id="Chrome" checked>
-							<label class="onoffswitch-label" for="Chrome"></label>
+							<label class="onoffswitch-label onoffswitch-label-readonly-disable"></label>
 						</div>
 					</div>
 					<div class="account" style='display: none'>

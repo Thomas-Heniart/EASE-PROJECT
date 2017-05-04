@@ -330,18 +330,18 @@ function ScrapingInfoFinished() {
 }
 
 $('div#importation div#selectScraping input:checkbox').click(function() {
-	
-	if ($('div#importation div#selectScraping input:checkbox:checked').length == 0) {
+	/* if ($('div#importation div#selectScraping input:checkbox:checked').length == 0) {
 		$('div#importation div#selectScraping button').addClass("locked");
 	} else {
 		$('div#importation div#selectScraping button').removeClass("locked");
-	}
+	} */
 });
 
 $('div#importation div#selectScraping button').click(function () {
 	$('div.account').each(function (index) {
 		if ($(this).find("input:checkbox").is(":checked")) {
-			scrapping.push({"name" : $(this).find("p.name").text(), "websiteId" : $(this).find("input:checkbox").attr("websiteId") ,"id" : $(this).find("input:checkbox").attr("id"), "img" : $(this).find("img").attr("src"), "login" : "", "password" : ""});
+			if ($(this).find("p.name").text != "Google Chrome")
+				scrapping.push({"name" : $(this).find("p.name").text(), "websiteId" : $(this).find("input:checkbox").attr("websiteId") ,"id" : $(this).find("input:checkbox").attr("id"), "img" : $(this).find("img").attr("src"), "login" : "", "password" : ""});
 		}
 	});
 	if (scrapping.length > 0) {
