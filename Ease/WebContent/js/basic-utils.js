@@ -1,29 +1,29 @@
 // load css dynamycally
 /*!function(){
-    var loadDeferredStyles = function() {
-        var addStylesNode = document.getElementById("deferred-styles");
-        var replacement = document.createElement("div");
-        replacement.innerHTML = addStylesNode.textContent;
-        document.body.appendChild(replacement)
-        addStylesNode.parentElement.removeChild(addStylesNode);
-    };
-    var raf = requestAnimationFrame || mozRequestAnimationFrame ||
-    webkitRequestAnimationFrame || msRequestAnimationFrame;
-    if (raf) raf(function() { window.setTimeout(loadDeferredStyles, 0); });
-    else window.addEventListener('load', loadDeferredStyles);
-}();*/
+ var loadDeferredStyles = function() {
+ var addStylesNode = document.getElementById("deferred-styles");
+ var replacement = document.createElement("div");
+ replacement.innerHTML = addStylesNode.textContent;
+ document.body.appendChild(replacement)
+ addStylesNode.parentElement.removeChild(addStylesNode);
+ };
+ var raf = requestAnimationFrame || mozRequestAnimationFrame ||
+ webkitRequestAnimationFrame || msRequestAnimationFrame;
+ if (raf) raf(function() { window.setTimeout(loadDeferredStyles, 0); });
+ else window.addEventListener('load', loadDeferredStyles);
+ }();*/
 
 function setCookie(cname, cvalue, exdays) {
     var d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    var expires = "expires="+d.toUTCString();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires=" + d.toUTCString();
     document.cookie = cname + "=" + cvalue + "; " + expires;
 }
 
 function getCookie(cname) {
     var name = cname + "=";
     var ca = document.cookie.split(';');
-    for(var i = 0; i < ca.length; i++) {
+    for (var i = 0; i < ca.length; i++) {
         var c = ca[i];
         while (c.charAt(0) == ' ') {
             c = c.substring(1);
@@ -84,7 +84,7 @@ function changeColor(color, ratio, darker) {
     color = color.replace(
         /^#?([a-f0-9])([a-f0-9])([a-f0-9])$/i,
         '#$1$1$2$2$3$3'
-        );
+    );
 
     // Calculate ratio
     var difference = Math.round(ratio * 256) * (darker ? -1 : 1),
@@ -102,134 +102,134 @@ function changeColor(color, ratio, darker) {
         alpha = !!rgb && rgb[4] != null ? rgb[4] : null,
 
         // Convert hex to decimal
-        decimal = !!rgb? [rgb[1], rgb[2], rgb[3]] : color.replace(
-            /^#?([a-f0-9][a-f0-9])([a-f0-9][a-f0-9])([a-f0-9][a-f0-9])/i,
-            function() {
-                return parseInt(arguments[1], 16) + ',' +
-                parseInt(arguments[2], 16) + ',' +
-                parseInt(arguments[3], 16);
-            }
+        decimal = !!rgb ? [rgb[1], rgb[2], rgb[3]] : color.replace(
+                /^#?([a-f0-9][a-f0-9])([a-f0-9][a-f0-9])([a-f0-9][a-f0-9])/i,
+                function () {
+                    return parseInt(arguments[1], 16) + ',' +
+                        parseInt(arguments[2], 16) + ',' +
+                        parseInt(arguments[3], 16);
+                }
             ).split(/,/),
         returnValue;
 
     // Return RGB(A)
     return !!rgb ?
-    'rgb' + (alpha !== null ? 'a' : '') + '(' +
-    Math[darker ? 'max' : 'min'](
-        parseInt(decimal[0], 10) + difference, darker ? 0 : 255
+        'rgb' + (alpha !== null ? 'a' : '') + '(' +
+        Math[darker ? 'max' : 'min'](
+            parseInt(decimal[0], 10) + difference, darker ? 0 : 255
         ) + ', ' +
-    Math[darker ? 'max' : 'min'](
-        parseInt(decimal[1], 10) + difference, darker ? 0 : 255
+        Math[darker ? 'max' : 'min'](
+            parseInt(decimal[1], 10) + difference, darker ? 0 : 255
         ) + ', ' +
-    Math[darker ? 'max' : 'min'](
-        parseInt(decimal[2], 10) + difference, darker ? 0 : 255
+        Math[darker ? 'max' : 'min'](
+            parseInt(decimal[2], 10) + difference, darker ? 0 : 255
         ) +
-    (alpha !== null ? ', ' + alpha : '') +
-    ')' :
+        (alpha !== null ? ', ' + alpha : '') +
+        ')' :
         // Return hex
         [
-        '#',
-        pad(Math[darker ? 'max' : 'min'](
-            parseInt(decimal[0], 10) + difference, darker ? 0 : 255
+            '#',
+            pad(Math[darker ? 'max' : 'min'](
+                parseInt(decimal[0], 10) + difference, darker ? 0 : 255
             ).toString(16), 2),
-        pad(Math[darker ? 'max' : 'min'](
-            parseInt(decimal[1], 10) + difference, darker ? 0 : 255
+            pad(Math[darker ? 'max' : 'min'](
+                parseInt(decimal[1], 10) + difference, darker ? 0 : 255
             ).toString(16), 2),
-        pad(Math[darker ? 'max' : 'min'](
-            parseInt(decimal[2], 10) + difference, darker ? 0 : 255
+            pad(Math[darker ? 'max' : 'min'](
+                parseInt(decimal[2], 10) + difference, darker ? 0 : 255
             ).toString(16), 2)
         ].join('');
-    }
+}
 
-    function lighterColor(color, ratio) {
-        return changeColor(color, ratio, false);
-    }
+function lighterColor(color, ratio) {
+    return changeColor(color, ratio, false);
+}
 
 
-    function darkerColor(color, ratio) {
-        return changeColor(color, ratio, true);
-    }
-window.addEventListener('load',function(){
-    $(document).on('mouseover', '.showAppActionsButton', function(evt){
+function darkerColor(color, ratio) {
+    return changeColor(color, ratio, true);
+}
+window.addEventListener('load', function () {
+    $(document).on('mouseover', '.showAppActionsButton', function (evt) {
         var subPopup = $(this).find('.appActionsPopup');
         var profileParent = $(this).closest('.siteLinkBox').parent();
         $(this).closest('.linkImage').addClass('settingsShow');
         var str = '-';
-        var scrollDist =  $(profileParent).scrollTop() + $(this).height();
+        var scrollDist = $(profileParent).scrollTop() + $(this).height();
         if ($(this).closest('.col-left'))
             scrollDist += $(this).closest('.col-left').scrollTop();
         str += scrollDist + 'px';
         subPopup.css({
-            'margin-top':str
+            'margin-top': str
         });
     });
-    $(document).on('mouseleave', '.showAppActionsButton', function(evt){
+    $(document).on('mouseleave', '.showAppActionsButton', function (evt) {
         $(this).closest('.linkImage').removeClass('settingsShow');
     });
 
-/*    $(document).ready(function(){
-        var placeHolder = null;
+    /*    $(document).ready(function(){
+     var placeHolder = null;
 
-        $('input:not([readonly]),textarea').focus(function(){
-            placeHolder = $(this).attr('placeholder');
-            $(this).attr('placeHolder', '');
-            $(this).one('blur', function(){
-                $(this).attr('placeholder', placeHolder);
-            });
-        });
-    });*/
+     $('input:not([readonly]),textarea').focus(function(){
+     placeHolder = $(this).attr('placeholder');
+     $(this).attr('placeHolder', '');
+     $(this).one('blur', function(){
+     $(this).attr('placeholder', placeHolder);
+     });
+     });
+     });*/
 
     /* js for checkable elements (search for .checkable) */
-    $(document).click(function(e){
+    $(document).click(function (e) {
         var target = $(e.target).closest('.checkable');
 
-        if (target.length){
-            target.hasClass('checked') && target.removeClass('checked') || target.addClass('checked'); 
+        if (target.length) {
+            target.hasClass('checked') && target.removeClass('checked') || target.addClass('checked');
         }
     });
 
-        $(document).on('click', ".showPassDiv", function(){
-            var input = $(this).parent().find('input');
-            if ($(this).hasClass('show')){
-                input.attr('type', 'password');
-                input.focus();
-                $(this).removeClass('show');
-            }else {
-                input.attr('type', 'text');
-                input.focus();
-                $(this).addClass('show');
-            }
-        });
+    $(document).on('click', ".showPassDiv", function () {
+        var input = $(this).parent().find('input');
+        if ($(this).hasClass('show')) {
+            input.attr('type', 'password');
+            input.focus();
+            $(this).removeClass('show');
+        } else {
+            input.attr('type', 'text');
+            input.focus();
+            $(this).addClass('show');
+        }
+    });
 });
 
-    var Animations = function(){
-        this.animateOnce = function(elem, animationClass){
-            $(elem).addClass(animationClass);
+var Animations = function () {
+    this.animateOnce = function (elem, animationClass) {
+        $(elem).addClass(animationClass);
 
-            $(elem).one('webkitAnimationEnd oanimationend msAnimationEnd animationend',
-                function(e) {
-                    $(elem).removeClass(animationClass);
-                });
-        }
-        this.shake_anim = function(elem){
-            $(elem).addClass('shake-anim');
-
-            $(elem).one('webkitAnimationEnd oanimationend msAnimationEnd animationend',   
-                function(e) {
-                    $(elem).removeClass('shake-anim');
-                });
-        }
+        $(elem).one('webkitAnimationEnd oanimationend msAnimationEnd animationend',
+            function (e) {
+                $(elem).removeClass(animationClass);
+            });
     }
-    var easeAnimations = new Animations();
+    this.shake_anim = function (elem) {
+        $(elem).addClass('shake-anim');
+
+        $(elem).one('webkitAnimationEnd oanimationend msAnimationEnd animationend',
+            function (e) {
+                $(elem).removeClass('shake-anim');
+            });
+    }
+}
+var easeAnimations = new Animations();
 
 /*if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/sw.js').then(function(registration) {
-      // Registration was successful
-      console.log('ServiceWorker registration successful with scope: ', registration.scope);
-    }).catch(function(err) {
-      // registration failed :(
-      console.log('ServiceWorker registration failed: ', err);
-    });
-  });
-}*/
+ window.addEventListener('load', function() {
+ navigator.serviceWorker.register('/sw.js').then(function(registration) {
+ // Registration was successful
+ console.log('ServiceWorker registration successful with scope: ', registration.scope);
+ }).catch(function(err) {
+ // registration failed :(
+ console.log('ServiceWorker registration failed: ', err);
+ });
+ });
+ }*/

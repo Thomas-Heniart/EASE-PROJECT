@@ -162,6 +162,10 @@
               filter: grayscale(75%);
               -webkit-filter: grayscale(75%);
             }
+
+            p.name {
+              color: grey;
+            }
           }
 
           span.input {
