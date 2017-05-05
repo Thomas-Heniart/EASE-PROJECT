@@ -1,4 +1,4 @@
-package com.Ease.Servlet.Team;
+package com.Ease.API.V1.Teams;
 
 import com.Ease.Dashboard.User.User;
 import com.Ease.Team.Team;
@@ -19,29 +19,30 @@ import java.io.IOException;
 /**
  * Created by thomas on 02/05/2017.
  */
-@WebServlet("/ServletGetTeam")
+@WebServlet("/api/v1/teams/GetTeam")
 public class ServletGetTeam extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-        rd.forward(request, response);
-    }
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            /* TODO */
-            /* team_id param and then get teamUser */
-            TeamUser currentTeamUser = sm.getUser().getTeamUsers().get(1);
-            if (currentTeamUser == null)
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Your are not in team");
-            JSONObject res = currentTeamUser.getTeam().getJson();
-            res.put("myTeamUserId", currentTeamUser.getDb_id());
+            sm.needToBeTeamUser();
+            String team_id = sm.getServletParam("team_id", true);
+            if (team_id == null || team_id.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "team_id is empty.");
+            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
+            TeamUser teamUser = sm.getTeamUserForTeam(teamManager.getTeamWithId(Integer.parseInt(team_id)));
+            JSONObject res = teamUser.getTeam().getJson();
+            res.put("myTeamUserId", teamUser.getDb_id());
             sm.setResponse(ServletManager.Code.Success, res.toString());
             sm.setLogResponse("GetTeam done");
         } catch (Exception e) {
             sm.setResponse(e);
         }
         sm.sendResponse();
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+        rd.forward(request, response);
     }
 }
