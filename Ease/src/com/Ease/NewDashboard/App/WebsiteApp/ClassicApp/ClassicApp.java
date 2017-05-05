@@ -15,7 +15,7 @@ import java.util.List;
  * Created by thomas on 25/04/2017.
  */
 @Entity
-@Table(name = "ClassicApps")
+@Table(name = "classicApps")
 @PrimaryKeyJoinColumn(name = "id")
 public class ClassicApp extends WebsiteApp {
     @OneToOne(cascade = CascadeType.ALL)

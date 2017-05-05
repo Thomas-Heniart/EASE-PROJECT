@@ -19,7 +19,7 @@ public class ProfileAppManager {
         this.profileAppIdMap = new HashMap<Integer, ProfileApp>();
     }
 
-    public void populate(Profile profile) {
+    public List<ProfileApp> populate(Profile profile) {
         HibernateQuery query = new HibernateQuery();
         System.out.println("Profile id: " + profile.getDb_id());
         query.queryString("SELECT p FROM ProfileApp p WHERE p.profile.db_id = :id ORDER BY p.position ASC");
@@ -36,6 +36,7 @@ public class ProfileAppManager {
         for (ProfileApp profileApp : this.profileApps) {
             System.out.println(profileApp.toString());
         }
+        return this.profileApps;
     }
 
     private void addProfileApp(ProfileApp profileApp) {
@@ -55,5 +56,17 @@ public class ProfileAppManager {
                 return profileApp.getApp();
         }
         throw new GeneralException(ServletManager.Code.ClientError, "This app does not exist.");
+    }
+
+    public void updateAppsIndex() throws GeneralException {
+        for (int i = 0; i < this.profileApps.size(); ++i) {
+            if (this.profileApps.get(i).getPosition() != i) {
+                this.profileApps.get(i).setPosition(i);
+            }
+        }
+    }
+
+    public List<ProfileApp> getProfileApps() {
+        return profileApps;
     }
 }

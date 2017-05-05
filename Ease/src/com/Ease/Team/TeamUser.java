@@ -1,147 +1,121 @@
 package com.Ease.Team;
 
+import com.Ease.NewDashboard.User.User;
 import com.Ease.Utils.*;
 import org.json.simple.JSONObject;
 
+import javax.persistence.*;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Created by thomas on 10/04/2017.
  */
+@Entity
+@Table(name = "teamUsers")
 public class TeamUser {
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
+    protected Integer db_id;
 
-    public static TeamUser createTeamUser(String email, Team team, String firstName, String lastName, TeamUserPermissions permissions, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
-        DatabaseRequest request = db.prepareRequest("SELECT id FROM teamUsers WHERE email = ? AND team_id = ?;");
-        request.setString(email);
-        request.setInt(team.getDb_id());
-        DatabaseResult rs = request.get();
-        if (rs.next())
-            throw new GeneralException(ServletManager.Code.ClientWarning, "This team user already exists");
-        request = db.prepareRequest("SELECT id FROM users WHERE email = ?;");
-        request.setString(email);
-        rs = request.get();
-        String user_id = null;
-        if (rs.next())
-            user_id = rs.getString(1);
-        request = db.prepareRequest("INSERT INTO teamUsers values(?, ?, ?, ?, ?, ?, ?);");
-        request.setNull();
-        if (user_id == null)
-            request.setNull();
-        else
-            request.setInt(user_id);
-        request.setInt(team.getDb_id());
-        request.setString(firstName);
-        request.setString(lastName);
-        request.setString(email);
-        request.setInt(permissions.getDb_id());
-        String db_id = request.set().toString();
-        int single_id = sm.getNextSingle_id();
-        return new TeamUser(team, user_id, db_id, single_id, email, firstName, lastName, permissions);
-    }
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    protected User user;
 
-    public static TeamUser createAdminTeamUser(String adminEmail, Team team, String adminFirstName, String adminLastName, ServletManager sm) throws GeneralException {
-        TeamUserPermissions adminPermissions = TeamUserPermissions.createAdminPermissions(sm);
-        return createTeamUser(adminEmail, team, adminFirstName, adminLastName, adminPermissions, sm);
-    }
+    @Transient
+    protected com.Ease.Dashboard.User.User dashboard_user;
 
-    public static TeamUser loadTeamUser(String db_id, Team team, ServletManager sm) throws GeneralException {
-        DatabaseRequest request = sm.getDB().prepareRequest("SELECT * FROM teamUsers WHERE id = ?");
-        request.setInt(db_id);
-        DatabaseResult rs = request.get();
-        if (!rs.next())
-            throw new GeneralException(ServletManager.Code.ClientError, "This teamUser does not exist");
-        String user_id = rs.getString("user_id");
-        String permissions_id = rs.getString("permissions_id");
-        String firstName = rs.getString("firstName");
-        String lastName = rs.getString("lastName");
-        String email = rs.getString("email");
-        int single_id = sm.getNextSingle_id();
-        TeamUserPermissions permissions = TeamUserPermissions.loadTeamUserPermissions(rs.getString("permissions_id"), sm);
-        return new TeamUser(team, user_id, db_id, single_id, email, firstName, lastName, permissions);
-    }
-
-    public static TeamUser loadTeamUser(String user_id, ServletManager sm) throws GeneralException {
-        DatabaseRequest request = sm.getDB().prepareRequest("SELECT * FROM teamUsers WHERE user_id = ?");
-        request.setInt(user_id);
-        DatabaseResult rs = request.get();
-        if (!rs.next())
-            return null;
-        String team_id = rs.getString(3);
-        Map<String, Team> teamMap = (Map<String, Team>) sm.getContextAttr("teamMap");
-        Team team = teamMap.get(team_id);
-        if (team == null)
-            team = Team.loadTeam(team_id, sm);
-        return team.getTeamUserWithDbId(rs.getString(1));
-    }
-
-    public static Map<String, TeamUser> loadTeamUsers(Team team, ServletManager sm) throws GeneralException {
-        DatabaseRequest request = sm.getDB().prepareRequest("SELECT id FROM teamUsers WHERE team_id = ?;");
-        request.setInt(team.getDb_id());
-        DatabaseResult rs = request.get();
-        if (!rs.next())
-            throw new GeneralException(ServletManager.Code.ClientError, "No teamUsers for this team");
-        Map<String, TeamUser> teamUsersMap = new HashMap<String, TeamUser>();
-        do {
-            TeamUser tmp = loadTeamUser(rs.getString(1), team, sm);
-            teamUsersMap.put(tmp.getDb_id(), tmp);
-        } while (rs.next());
-        return teamUsersMap;
-    }
-
-    protected Team team;
-    protected String user_id;
-    protected String db_id;
-    protected int single_id;
+    @Column(name = "firstName")
     protected String firstName;
+
+    @Column(name = "lastName")
     protected String lastName;
+
+    @Column(name = "email")
     protected String email;
 
-    protected TeamUserPermissions permissions;
+    @ManyToOne
+    @JoinColumn(name = "team_id", nullable = false)
+    protected Team team;
 
-    public TeamUser(Team team, String user_id, String db_id, int single_id, String email, String firstName, String lastName, TeamUserPermissions permissions) {
-        this.team = team;
-        this.user_id = user_id;
-        this.db_id = db_id;
-        this.single_id = single_id;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "permissions_id")
+    protected TeamUserPermissions teamUserPermissions;
+
+    @Column(name = "username")
+    protected String username;
+
+    @ManyToMany
+    @JoinTable(name = "channelAndTeamUserMap", joinColumns = { @JoinColumn(name = "team_user_id") }, inverseJoinColumns = { @JoinColumn(name = "channel_id") })
+    protected List<Channel> channels = new LinkedList<>();
+
+
+
+    public TeamUser(User user, String firstName, String lastName, String email, String username, Team team, TeamUserPermissions teamUserPermissions, List<Channel> channels) {
+        this.user = user;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.permissions = permissions;
+        this.username = username;
+        this.team = team;
+        this.teamUserPermissions = teamUserPermissions;
+        this.channels = channels;
     }
 
-    public String getDb_id() {
+    public TeamUser(User user, String firstName, String lastName, String email, String username, Team team, TeamUserPermissions teamUserPermissions) {
+        this.user = user;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.username = username;
+        this.team = team;
+        this.teamUserPermissions = teamUserPermissions;
+    }
+
+    public TeamUser(String firstName, String lastName, String email, String username, Team team, TeamUserPermissions teamUserPermissions) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.username = username;
+        this.team = team;
+        this.teamUserPermissions = teamUserPermissions;
+    }
+
+    public TeamUser() {
+    }
+
+    public Integer getDb_id() {
         return db_id;
     }
 
-    public String getUser_id() {
-        return user_id;
+    public void setDb_id(Integer db_id) {
+        this.db_id = db_id;
     }
 
-    public void setUser_id(String user_id, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
-        DatabaseRequest request = db.prepareRequest("UPDATE teamUsers SET user_id = ? WHERE id = ?");
-        request.setInt(user_id);
-        request.setInt(db_id);
-        request.set();
-        this.user_id = user_id;
+    public User getUser() {
+        return user;
     }
 
-    public int getSingle_id() {
-        return single_id;
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public com.Ease.Dashboard.User.User getDashboard_user() {
+        return dashboard_user;
+    }
+
+    public void setDashboard_user(com.Ease.Dashboard.User.User dashboard_user) {
+        this.dashboard_user = dashboard_user;
     }
 
     public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
-        DatabaseRequest request = db.prepareRequest("UPDATE teamUsers SET firstName = ? WHERE id = ?;");
-        request.setString(firstName);
-        request.setInt(db_id);
-        request.set();
+    public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
@@ -149,12 +123,7 @@ public class TeamUser {
         return lastName;
     }
 
-    public void setLastName(String lastName, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
-        DatabaseRequest request = db.prepareRequest("UPDATE teamUsers SET lastName = ? WHERE id = ?;");
-        request.setString(lastName);
-        request.setInt(db_id);
-        request.set();
+    public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
@@ -162,57 +131,71 @@ public class TeamUser {
         return email;
     }
 
-    public void setEmail(String email, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
-        DatabaseRequest request = db.prepareRequest("UPDATE teamUsers SET email = ? WHERE id = ?;");
-        request.setString(email);
-        request.setInt(db_id);
-        request.set();
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    public TeamUserPermissions getPermissions() {
-        return permissions;
+    public String getUsername() {
+        return username;
     }
 
-    public void setPermissions(TeamUserPermissions permissions, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
-        DatabaseRequest request = db.prepareRequest("UPDATE teamUsers SET permissions_id = ? WHERE id = ?;");
-        request.setString(permissions.getDb_id());
-        request.setInt(db_id);
-        request.set();
-        this.permissions = permissions;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Team getTeam() {
         return team;
     }
 
-    public void deleteFromDatabase(ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
-        int transaction = db.startTransaction();
-        DatabaseRequest request = db.prepareRequest("DELETE FROM teamsAndTeamUsersMap WHERE team_user_id = ?;");
-        request.setInt(this.db_id);
-        request.set();
-        request = db.prepareRequest("DELETE FROM teamsAndTeamUsersMap WHERE team_user_id = ?;");
-        request.setInt(this.db_id);
-        request.set();
-        request = db.prepareRequest("DELETE FROM teamUsers WHERE id = ?");
-        request.setInt(this.db_id);
-        request.set();
-        db.commitTransaction(transaction);
+    public void setTeam(Team team) {
+        this.team = team;
     }
 
-    public boolean hasPermission(TeamUserPermissions.Perm perm) {
-        return this.permissions.havePermission(perm.getValue());
+    public TeamUserPermissions getTeamUserPermissions() {
+        return teamUserPermissions;
+    }
+
+    public void setTeamUserPermissions(TeamUserPermissions teamUserPermissions) {
+        this.teamUserPermissions = teamUserPermissions;
+    }
+
+    public List<Channel> getChannels() {
+        return channels;
+    }
+
+    public void setChannels(List<Channel> channels) {
+        this.channels = channels;
+    }
+
+    public static TeamUser createAdminUser(String firstName, String lastName, String email, String username, Team team) {
+        TeamUserPermissions permissions = new TeamUserPermissions(TeamUserPermissions.Role.ADMINISTRATOR.getValue());
+        return new TeamUser(firstName, lastName, email, username, team, permissions);
     }
 
     public JSONObject getJson() {
         JSONObject res = new JSONObject();
+        res.put("id", this.db_id);
         res.put("firstName", this.firstName);
         res.put("lastName", this.lastName);
         res.put("email", this.email);
-        res.put("single_id", this.single_id);
+        res.put("username", this.username);
+        res.put("role", this.teamUserPermissions.getRole());
         return res;
+    }
+
+    public void edit(JSONObject editJson) {
+        String firstName = (String) editJson.get("firstName");
+        String lastName = (String) editJson.get("lastName");
+        String username = (String) editJson.get("username");
+        if (lastName != null)
+            this.lastName = lastName;
+        if (firstName != null)
+            this.firstName = firstName;
+        if (username != null)
+            this.username = username;
+    }
+
+    public boolean isTeamAdmin() {
+        return this.getTeamUserPermissions().hasAdminPermissions();
     }
 }

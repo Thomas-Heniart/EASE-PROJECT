@@ -5,59 +5,81 @@ import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
+import javax.persistence.*;
+
 /**
  * Created by thomas on 10/04/2017.
  */
-public class TeamUserPermissions extends Permissions {
-
-    public static enum Perm {
-        NONE(1),
-        MANAGE_USERS(2),
-        MANAGE_APPS(4),
-        ALL(255);
+@Entity
+@Table(name = "teamUserPermissions")
+public class TeamUserPermissions {
+    public enum Role {
+        MEMBER(1),
+        MODERATOR(3),
+        ADMINISTRATOR(7);
 
         private int value;
 
-        private Perm(int value) {
+        private Role(int value) {
             this.value = value;
         }
 
         public int getValue() {
             return value;
         }
+
+        public static String getRoleNameByValue(int value) {
+            for(Role role : Role.values()){
+                if(value == role.getValue()) return role.name();
+            }
+            return null;
+        }
     }
 
-    public static TeamUserPermissions createTeamUserPermissions(int permissions, ServletManager sm) throws GeneralException {
-        DatabaseRequest request = sm.getDB().prepareRequest("INSERT INTO teamUserPermissions values(?, b'" + Integer.toBinaryString(permissions) + "');");
-        request.setNull();
-        String db_id = request.set().toString();
-        return new TeamUserPermissions(db_id, permissions);
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
+    protected Integer db_id;
+
+    @Column(name = "permissions")
+    protected Integer permissions;
+
+    @Transient
+    protected Role role;
+
+    public TeamUserPermissions(Integer permissions) {
+        this.permissions = permissions;
     }
 
-    public static TeamUserPermissions createAdminPermissions(ServletManager sm) throws GeneralException {
-        return createTeamUserPermissions(Perm.ALL.getValue(), sm);
+    public TeamUserPermissions() {
     }
 
-    public static TeamUserPermissions loadTeamUserPermissions(String permissions_id, ServletManager sm) throws GeneralException {
-        DatabaseRequest request = sm.getDB().prepareRequest("SELECT permissions+0 FROM teamUserPermissions WHERE id = ?;");
-        request.setInt(permissions_id);
-        DatabaseResult rs = request.get();
-        if (!rs.next())
-            throw new GeneralException(ServletManager.Code.ClientError, "These permissions do not exist");
-        return new TeamUserPermissions(permissions_id, rs.getInt(1));
+    public Integer getDb_id() {
+        return db_id;
     }
 
-    public TeamUserPermissions(String db_id, int permissions) {
+    public void setDb_id(Integer db_id) {
         this.db_id = db_id;
+    }
+
+    public Integer getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(Integer permissions) {
+        System.out.println("Permissions value: " + permissions);
         this.permissions = permissions;
     }
 
-    @Override
-    public void setPermissions(int permissions, ServletManager sm) throws GeneralException {
-        DatabaseRequest request = sm.getDB().prepareRequest("UPDATE teamUsersPermissions SET permissions = ? WHERE id ?;");
-        request.setInt(permissions);
-        request.setInt(this.db_id);
-        request.set();
-        this.permissions = permissions;
+    public boolean  haveRole(Role role) {
+        return (this.permissions & role.getValue()) >= this.permissions;
+    }
+
+    public boolean hasAdminPermissions() {
+        return this.haveRole(Role.ADMINISTRATOR);
+    }
+
+    public String getRole() {
+        return Role.getRoleNameByValue(this.permissions);
     }
 }

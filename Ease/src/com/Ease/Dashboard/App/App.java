@@ -21,121 +21,128 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 public class App {
-	public enum Data {
-		NOTHING,
-		ID,
-		PROFILE_ID,
-		POSITION,
-		INSERT_DATE,
-		TYPE,
-		APP_INFO_ID,
-		GROUP_APP_ID
-	}
-	
+    public enum Data {
+        NOTHING,
+        ID,
+        INSERT_DATE,
+        TYPE,
+        APP_INFO_ID,
+        GROUP_APP_ID,
+        POSITION
+    }
+
 	/*
 	 * 
 	 * Loader And Creator
 	 * 
 	 */
-	
-	public static List<App> loadApps(Profile profile, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		List<App> apps = new LinkedList<App>();
-		DatabaseRequest request = db.prepareRequest("SELECT * FROM apps WHERE profile_id= ? order by position;");
-		request.setInt(profile.getDBid());
-		DatabaseResult rs = request.get();
-		String db_id;
-		int position;
-		String insertDate;
-		AppInformation infos;
-		GroupApp groupApp = null;
-		App app = null;
-		while (rs.next()) {
-			db_id = rs.getString(Data.ID.ordinal());
-			position = rs.getInt(Data.POSITION.ordinal());
-			insertDate = rs.getString(Data.INSERT_DATE.ordinal());
-			infos = AppInformation.loadAppInformation(rs.getString(Data.APP_INFO_ID.ordinal()), db);
-			String groupAppId = rs.getString(Data.GROUP_APP_ID.ordinal());
-			if (groupAppId != null) {
-				groupApp = GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupAppId);
-			}
 
-			switch (rs.getString(Data.TYPE.ordinal())) {
-				case "linkApp":
-					app = LinkApp.loadLinkApp(db_id, profile, position, insertDate, infos, groupApp, sm);
-				break;
-				case "websiteApp":
-					app = WebsiteApp.loadWebsiteApp(db_id, profile, position, insertDate, infos, groupApp, sm);
-				break;
-				default:
-					throw new GeneralException(ServletManager.Code.InternError, "This app type dosen't exist.");
-			}
-			if (app.getPosition() != apps.size()) {
-				app.setPosition(apps.size(), sm);
-			}
-			apps.add(app);
-			groupApp = null;
-		}
-		return apps;
-	}
-	
-	public static String createApp(Profile profile, int position, String name, String type, Map<String, Object>elevator, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		int transaction = db.startTransaction();
-		AppInformation infos = AppInformation.createAppInformation(name, sm);
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date = new Date();
-		String registrationDate = dateFormat.format(date);
-		DatabaseRequest request = db.prepareRequest("INSERT INTO apps VALUES (NULL, ?, ?, ?, ?, ?, NULL);");
-		request.setInt(profile.getDBid());
-		request.setInt(position);
-		request.setString(registrationDate);
-		request.setString(type);
-		request.setInt(infos.getDb_id());
-		String appDBid = request.set().toString();
-		elevator.put("appInfos", infos);
-		elevator.put("insertDate", registrationDate);
-		db.commitTransaction(transaction);
-		return appDBid;
-		
-	}
+    public static List<App> loadApps(Profile profile, ServletManager sm) throws GeneralException {
+        DataBaseConnection db = sm.getDB();
+        List<App> apps = new LinkedList<App>();
+        DatabaseRequest request = db.prepareRequest("SELECT apps.*, position FROM apps JOIN profileAndAppMap ON apps.id = profileAndAppMap.app_id AND profileAndAppMap.profile_id = ? ORDER BY position;");
+        request.setInt(profile.getDBid());
+        DatabaseResult rs = request.get();
+        String db_id;
+        int position;
+        String insertDate;
+        AppInformation infos;
+        GroupApp groupApp = null;
+        App app = null;
+        while (rs.next()) {
+            db_id = rs.getString(Data.ID.ordinal());
+            position = rs.getInt(Data.POSITION.ordinal());
+            insertDate = rs.getString(Data.INSERT_DATE.ordinal());
+            infos = AppInformation.loadAppInformation(rs.getString(Data.APP_INFO_ID.ordinal()), db);
+            String groupAppId = rs.getString(Data.GROUP_APP_ID.ordinal());
+            if (groupAppId != null) {
+                groupApp = GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupAppId);
+            }
+
+            switch (rs.getString(Data.TYPE.ordinal())) {
+                case "linkApp":
+                    app = LinkApp.loadLinkApp(db_id, profile, position, insertDate, infos, groupApp, sm);
+                    break;
+                case "websiteApp":
+                    app = WebsiteApp.loadWebsiteApp(db_id, profile, position, insertDate, infos, groupApp, sm);
+                    break;
+                default:
+                    throw new GeneralException(ServletManager.Code.InternError, "This app type dosen't exist.");
+            }
+            if (app.getPosition() != apps.size()) {
+                app.setPosition(apps.size(), sm);
+            }
+            apps.add(app);
+            groupApp = null;
+        }
+        return apps;
+    }
+
+    public static String createApp(Profile profile, int position, String name, String type, Map<String, Object> elevator, ServletManager sm) throws GeneralException {
+        DataBaseConnection db = sm.getDB();
+        int transaction = db.startTransaction();
+        AppInformation infos = AppInformation.createAppInformation(name, sm);
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
+        String registrationDate = dateFormat.format(date);
+        DatabaseRequest request = db.prepareRequest("INSERT INTO apps VALUES (NULL, ?, ?, ?, NULL);");
+        //request.setInt(profile.getDBid());
+        //request.setInt(position);
+        request.setString(registrationDate);
+        request.setString(type);
+        request.setInt(infos.getDb_id());
+        String appDBid = request.set().toString();
+        request = db.prepareRequest("INSERT INTO profileAndAppMap values (NULL, ?, ?, ?)");
+        request.setInt(profile.getDBid());
+        request.setInt(appDBid);
+        request.setInt(position);
+        request.set();
+        elevator.put("appInfos", infos);
+        elevator.put("insertDate", registrationDate);
+        db.commitTransaction(transaction);
+        return appDBid;
+
+    }
 	
 	/*
 	 * 
 	 * Constructor
 	 * 
 	 */
-	
-	protected String db_id;
-	protected Profile profile;
-	protected int position;
-	protected AppInformation informations;
-	protected GroupApp groupApp;
-	protected String insertDate;
-	protected int single_id;
-	
-	public App(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id) {
-		this.db_id = db_id;
-		this.profile = profile;
-		this.position = position;
-		this.informations = infos;
-		this.groupApp = groupApp;
-		this.insertDate = insertDate;
-		this.single_id = single_id;
-	}
-	
-	public void removeFromDB(ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		if (this.groupApp != null && (this.groupApp.isCommon() == true || !this.groupApp.getPerms().havePermission(AppPermissions.Perm.DELETE.ordinal())))
-			throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permission to remove this app.");
-		int transaction = db.startTransaction();
-		DatabaseRequest request = db.prepareRequest("DELETE FROM apps WHERE id = ?;");
-		request.setInt(db_id);
-		request.set();
-		if (this.groupApp == null || this.groupApp.isCommon() == false)
-			informations.removeFromDb(sm);
-		db.commitTransaction(transaction);
-	}
+
+    protected String db_id;
+    protected Profile profile;
+    protected int position;
+    protected AppInformation informations;
+    protected GroupApp groupApp;
+    protected String insertDate;
+    protected int single_id;
+
+    public App(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id) {
+        this.db_id = db_id;
+        this.profile = profile;
+        this.position = position;
+        this.informations = infos;
+        this.groupApp = groupApp;
+        this.insertDate = insertDate;
+        this.single_id = single_id;
+    }
+
+    public void removeFromDB(ServletManager sm) throws GeneralException {
+        DataBaseConnection db = sm.getDB();
+        if (this.groupApp != null && (this.groupApp.isCommon() == true || !this.groupApp.getPerms().havePermission(AppPermissions.Perm.DELETE.ordinal())))
+            throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permission to remove this app.");
+        int transaction = db.startTransaction();
+        DatabaseRequest request = db.prepareRequest("DELETE FROM profileAndAppMap WHERE app_id = ?;");
+        request.setInt(db_id);
+        request.set();
+        request = db.prepareRequest("DELETE FROM apps WHERE id = ?;");
+        request.setInt(db_id);
+        request.set();
+        if (this.groupApp == null || this.groupApp.isCommon() == false)
+            informations.removeFromDb(sm);
+        db.commitTransaction(transaction);
+    }
 	
 	/*
 	 * 
@@ -143,97 +150,97 @@ public class App {
 	 * 
 	 */
 
-	public String getDBid() {
-		return db_id;
-	}
-	
-	public int getSingleId() {
-		return single_id;
-	}
-	
-	public String getName() {
-		return this.informations.getName();
-	}
-	
-	public void setName(String name, ServletManager sm) throws GeneralException {
-		if (this.groupApp == null || (!this.groupApp.isCommon() && this.groupApp.getPerms().havePermission(AppPermissions.Perm.RENAME.ordinal()))) {
-			this.informations.setName(name, sm);
-		} else {
-			throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permission to change this app's name.");
-		}
-	}
-	
-	public Profile getProfile() {
-		return profile;
-	}
-	
-	public int getPosition() {
-		return position;
-	}
-	
-	public String getInsertDate(){
-		return insertDate;
-	}
-	
-	public AppInformation getAppInformation(){
-		return informations;
-	}
-	
-	public String getType() {
-		String name;
-		name = this.getClass().getName().substring(this.getClass().getName().lastIndexOf(".")+1);
-		return name;
-	}
-	
-	public void setPosition(int pos, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		DatabaseRequest request = db.prepareRequest("UPDATE apps SET position = ? WHERE id = ?;");
-		request.setInt(pos);
-		request.setInt(db_id);
-		request.set();
-		this.position = pos;
-	}
-	
-	public void setProfile(Profile profile, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		DatabaseRequest request = db.prepareRequest("UPDATE apps SET profile_id = ? WHERE id = ?;");
-		request.setInt(profile.getDBid());
-		request.setInt(db_id);
-		request.set();
-		this.profile = profile;
-	}
-	
-	public boolean havePerm(AppPermissions.Perm perm) {
-		if (this.groupApp != null && (this.groupApp.isCommon() == true || !this.groupApp.getPerms().havePermission(perm.ordinal())))
-			return false;
-		return true;
-	}
-	
-	public boolean isClassicApp() {
-		return false;
-	}
-	
-	public JSONArray getJSON(ServletManager sm) throws GeneralException{
-		return new JSONArray();
-	}
-	
-	/* For sancho le robot */
-	public boolean isEmpty() {
-		return false;
-	}
-	
-	public void fillJson(JSONObject json){
-		json.put("position", this.position);
-		json.put("name", this.informations.getName());
-		json.put("singleId", this.single_id);
-		if (this.groupApp != null) {
-			JSONObject groupJson = new JSONObject();
-			this.groupApp.fillJson(groupJson);
-			json.put("groupApp", groupJson);
-		}
-	}
+    public String getDBid() {
+        return db_id;
+    }
 
-	public JSONArray getAccountInformationsJson() {
-		return new JSONArray();
-	}
+    public int getSingleId() {
+        return single_id;
+    }
+
+    public String getName() {
+        return this.informations.getName();
+    }
+
+    public void setName(String name, ServletManager sm) throws GeneralException {
+        if (this.groupApp == null || (!this.groupApp.isCommon() && this.groupApp.getPerms().havePermission(AppPermissions.Perm.RENAME.ordinal()))) {
+            this.informations.setName(name, sm);
+        } else {
+            throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permission to change this app's name.");
+        }
+    }
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public String getInsertDate() {
+        return insertDate;
+    }
+
+    public AppInformation getAppInformation() {
+        return informations;
+    }
+
+    public String getType() {
+        String name;
+        name = this.getClass().getName().substring(this.getClass().getName().lastIndexOf(".") + 1);
+        return name;
+    }
+
+    public void setPosition(int pos, ServletManager sm) throws GeneralException {
+        DataBaseConnection db = sm.getDB();
+        DatabaseRequest request = db.prepareRequest("UPDATE profileAndAppMap SET position = ? WHERE app_id = ?;");
+        request.setInt(pos);
+        request.setInt(db_id);
+        request.set();
+        this.position = pos;
+    }
+
+    public void setProfile(Profile profile, ServletManager sm) throws GeneralException {
+        DataBaseConnection db = sm.getDB();
+        DatabaseRequest request = db.prepareRequest("UPDATE profileAndAppMap SET profile_id = ? WHERE app_id = ?;");
+        request.setInt(profile.getDBid());
+        request.setInt(db_id);
+        request.set();
+        this.profile = profile;
+    }
+
+    public boolean havePerm(AppPermissions.Perm perm) {
+        if (this.groupApp != null && (this.groupApp.isCommon() == true || !this.groupApp.getPerms().havePermission(perm.ordinal())))
+            return false;
+        return true;
+    }
+
+    public boolean isClassicApp() {
+        return false;
+    }
+
+    public JSONArray getJSON(ServletManager sm) throws GeneralException {
+        return new JSONArray();
+    }
+
+    /* For sancho le robot */
+    public boolean isEmpty() {
+        return false;
+    }
+
+    public void fillJson(JSONObject json) {
+        json.put("position", this.position);
+        json.put("name", this.informations.getName());
+        json.put("singleId", this.single_id);
+        if (this.groupApp != null) {
+            JSONObject groupJson = new JSONObject();
+            this.groupApp.fillJson(groupJson);
+            json.put("groupApp", groupJson);
+        }
+    }
+
+    public JSONArray getAccountInformationsJson() {
+        return new JSONArray();
+    }
 }

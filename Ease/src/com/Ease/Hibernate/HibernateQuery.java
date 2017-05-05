@@ -75,4 +75,8 @@ public class HibernateQuery {
             return null;
         }
     }
+
+    public int executeUpdate() {
+        return this.query.executeUpdate();
+    }
 }

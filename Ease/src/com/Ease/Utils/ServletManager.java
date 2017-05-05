@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -92,7 +93,7 @@ public class ServletManager {
         if (user == null) {
             throw new GeneralException(Code.ClientWarning, "You need to be connected to do that.");
         } else {
-			/*socketId = request.getParameter("socketId");
+            /*socketId = request.getParameter("socketId");
 			if (!debug && socketId == null) {
 				throw new GeneralException(Code.ClientError, "No socketId.");
 			} else if (user.getWebsockets().containsKey(socketId) == false) {
@@ -103,7 +104,7 @@ public class ServletManager {
     }
 
     public void needToBeTeamUser() throws GeneralException {
-        if (teamUser == null)
+        if (this.getUser().getTeamUsers().isEmpty())
             throw new GeneralException(Code.ClientWarning, "Access denied");
     }
 
@@ -164,12 +165,16 @@ public class ServletManager {
     }
 
     public void setResponse(Exception e) {
-        this.retCode = Code.InternError.getValue();
-        this.retMsg = e.toString() + ".\nStackTrace :";
-        for (int i = 0; i < e.getStackTrace().length; i++) {
-            this.retMsg += "\n" + e.getStackTrace()[i];
+        try {
+            this.setResponse((GeneralException) e);
+        } catch (ClassCastException e1) {
+            this.retCode = Code.InternError.getValue();
+            this.retMsg = e.toString() + ".\nStackTrace :";
+            for (int i = 0; i < e.getStackTrace().length; i++) {
+                this.retMsg += "\n" + e.getStackTrace()[i];
+            }
+            e.printStackTrace();
         }
-        e.printStackTrace();
     }
 
     public void setRedirectUrl(String url) {
@@ -332,5 +337,17 @@ public class ServletManager {
      */
     public int getNextSingle_id() {
         return ((IdGenerator) this.getContextAttr("idGenerator")).getNextId();
+    }
+
+    public List<TeamUser> getTeamUsers() {
+        return this.getUser().getTeamUsers();
+    }
+
+    public TeamUser getTeamUserForTeam(Team team) throws GeneralException {
+        for (TeamUser teamUser : this.getTeamUsers()) {
+            if (teamUser.getTeam() == team)
+                return teamUser;
+        }
+        throw new GeneralException(Code.ClientError, "Current user not in this team");
     }
 }

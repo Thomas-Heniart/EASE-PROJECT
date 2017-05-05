@@ -3,6 +3,7 @@ package com.Ease.Mail;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.Ease.Context.Variables;
 import com.Ease.Context.Catalog.Website;
@@ -54,7 +55,6 @@ public class SendGridMail {
 		fromEmail.setEmail(senderEmail);
 		mail.setFrom(fromEmail);
 		personalizations = new LinkedList<Personalization>();
-		//mail.addPersonalization(personalization);
 	}
 	
 	private Personalization createNewPersonalization() {
@@ -254,6 +254,53 @@ public class SendGridMail {
         this.addTo(personalization, username, userEmail);
         personalization.addSubstitution("#linkUrl", Variables.URL_PATH + "VerifieEmail?email=" + userEmail + "&code=" + code);
         personalization.addSubstitution("#username", username);
+        this.sendEmail();
+    }
+
+    public void sendCreateTeamEmail(String firstName, String email, String code) throws GeneralException {
+		mail.setTemplateId("8ee79c52-b2bc-422e-b401-54a89de8f37b");
+		Personalization personalization = this.createNewPersonalization();
+		this.addTo(personalization, firstName, email);
+		personalization.addSubstitution("#link", Variables.URL_PATH + "CreateTeam?email=" + email + "&code=" + code);
+		personalization.addSubstitution("#firstName", firstName);
+		this.sendEmail();
+	}
+
+	public void sendInvitationToJoinTeamEmail(String teamName, String adminName, String firstName, String email, String code) throws GeneralException {
+        mail.setTemplateId("04a2b7b7-87db-4b12-8a2c-792359585c1b");
+        Personalization personalization = this.createNewPersonalization();
+        this.addTo(personalization, firstName, email);
+        personalization.addSubstitution("#link", Variables.URL_PATH + "CreateTeamUser?email=" + email + "&code=" + code);
+        personalization.addSubstitution("#adminName", adminName);
+        personalization.addSubstitution("#teamName", teamName);
+        personalization.addSubstitution("#firstName", firstName);
+        this.sendEmail();
+    }
+
+    public void sendJoinChannelEmail(String teamName, String channelName, Map<String, String> administratorsUsernameAndEmail, String username, String email, String code) throws GeneralException {
+		mail.setTemplateId("6edb3495-0d9e-4e35-a3d6-a8c3d2c1c222");
+		for (Map.Entry<String, String> entry : administratorsUsernameAndEmail.entrySet()) {
+			Personalization personalization = this.createNewPersonalization();
+			this.addTo(personalization, entry.getKey(), entry.getValue());
+			personalization.addSubstitution("#link", Variables.URL_PATH + "ConfirmJoinChannel?email=" + email + "&code=" + code);
+			personalization.addSubstitution("#adminName", entry.getKey());
+			personalization.addSubstitution("#teamName", teamName);
+            personalization.addSubstitution("#channelName", channelName);
+			personalization.addSubstitution("#username", username);
+		}
+		this.sendEmail();
+    }
+
+    public void sendJoinTeamEmail(String teamName, Map<String, String> administratorsUsernameAndEmail, String username, String email, String code) throws GeneralException {
+        mail.setTemplateId("e501354e-3321-48c9-9e5a-bebb7ce59df6");
+        for (Map.Entry<String, String> entry : administratorsUsernameAndEmail.entrySet()) {
+            Personalization personalization = this.createNewPersonalization();
+            this.addTo(personalization, entry.getKey(), entry.getValue());
+            personalization.addSubstitution("#link", Variables.URL_PATH + "ConfirmJoinTeam?email=" + email + "&code=" + code);
+            personalization.addSubstitution("#adminName", entry.getKey());
+            personalization.addSubstitution("#teamName", teamName);
+            personalization.addSubstitution("#username", username);
+        }
         this.sendEmail();
     }
 }

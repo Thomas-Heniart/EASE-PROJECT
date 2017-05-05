@@ -11,7 +11,7 @@ import java.util.Date;
  * Created by thomas on 24/04/2017.
  */
 @Entity
-@Table(name = "WebsiteApps")
+@Table(name = "websiteApps")
 @PrimaryKeyJoinColumn(name = "id")
 public class WebsiteApp extends App {
     @OneToOne

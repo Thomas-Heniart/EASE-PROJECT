@@ -6,7 +6,7 @@ import javax.persistence.*;
  * Created by thomas on 26/04/2017.
  */
 @Entity
-@Table(name = "UsersEmails")
+@Table(name = "usersEmails")
 public class UserEmail {
     @Id
     @GeneratedValue

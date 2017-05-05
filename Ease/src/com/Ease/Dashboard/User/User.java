@@ -22,6 +22,10 @@ import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.Profile.Profile;
+import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Team.Team;
+import com.Ease.Team.TeamManager;
+import com.Ease.Team.TeamUser;
 import com.Ease.Update.UpdateManager;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.DatabaseRequest;
@@ -34,7 +38,8 @@ import com.Ease.websocketV1.WebSocketManager;
 import com.Ease.websocketV1.WebSocketSession;
 
 public class User {
-	enum Data {
+
+    enum Data {
 		NOTHING, ID, FIRSTNAME, LASTNAME, EMAIL, KEYSID, OPTIONSID, REGISTRATIONDATE, STATUSID
 	}
 
@@ -119,6 +124,7 @@ public class User {
 		newUser.initializeDashboardManager(sm);
 		newUser.loadExtensionKeys(sm);
 		newUser.loadEmails(sm);
+		newUser.loadTeamUsers(sm);
 		for (App app : newUser.getDashboardManager().getApps()) {
 			if (app.getType().equals("LogwithApp")) {
 				LogwithApp logwithApp = (LogwithApp) app;
@@ -143,7 +149,7 @@ public class User {
 		return newUser;
 	}
 
-	@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
 	public static User createUser(String email, String firstName, String lastName, String password, String code,
 			ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
@@ -210,6 +216,7 @@ public class User {
 
 	protected SessionSave sessionSave;
 	protected DashboardManager dashboardManager;
+    protected List<TeamUser> teamUsers = new LinkedList<>();
 
 	public User(String db_id, String first_name, String last_name, String email, Keys keys, Option opt, boolean isAdmin,
 			boolean sawGroupProfile, SessionSave sessionSave, Status status) {
@@ -623,4 +630,35 @@ public class User {
 		Group tmp = this.groups.get(idx);
 		return tmp.isAdmin(this.db_id);
 	}
+
+    public List<TeamUser> getTeamUsers() {
+        return teamUsers;
+    }
+
+    public void addTeamUser(TeamUser teamUser, ServletManager sm) throws GeneralException {
+	    DataBaseConnection db = sm.getDB();
+	    DatabaseRequest request = db.prepareRequest("UPDATE teamUsers SET user_id = ? WHERE id = ?;");
+	    request.setInt(this.db_id);
+	    request.setInt(teamUser.getDb_id());
+	    request.set();
+        this.teamUsers.add(teamUser);
+        teamUser.setDashboard_user(this);
+    }
+
+    public void loadTeamUsers(ServletManager sm) throws GeneralException {
+        HibernateQuery query = new HibernateQuery();
+        query.querySQLString("SELECT id, team_id FROM teamUsers WHERE user_id = ?");
+        query.setParameter(1, Integer.parseInt(this.db_id));
+        List<Object[]> teamUsers = query.list();
+        for (Object[] teamUserIdAndTeamId : teamUsers) {
+			Integer teamUser_id = (Integer) teamUserIdAndTeamId[0];
+			Integer team_id = (Integer) teamUserIdAndTeamId[1];
+			TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
+			Team team = teamManager.getTeamWithId(team_id);
+			TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
+			this.teamUsers.add(teamUser);
+			teamUser.setDashboard_user(this);
+		}
+        query.commit();
+    }
 }

@@ -13,7 +13,7 @@ import java.util.Date;
  * Created by thomas on 20/04/2017.
  */
 @Entity
-@Table(name = "Apps")
+@Table(name = "apps")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class App {
     @Id
