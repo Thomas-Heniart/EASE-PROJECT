@@ -21,7 +21,7 @@ import java.io.IOException;
  */
 @WebServlet("/api/v1/teams/GetTeam")
 public class ServletGetTeam extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
@@ -41,7 +41,7 @@ public class ServletGetTeam extends HttpServlet {
         sm.sendResponse();
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
         rd.forward(request, response);
     }
