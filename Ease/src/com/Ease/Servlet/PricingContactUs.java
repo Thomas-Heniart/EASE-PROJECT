@@ -70,7 +70,7 @@ public class PricingContactUs extends HttpServlet {
 				needs = "";
 			try {
 				int collaborators = Integer.parseInt(collaboratorNumber);
-				Mail mail = new Mail("contact@ease.space", "Fdb00.6Y6.space", "Agathe the money");
+				Mail mail = new Mail("contact@ease.space", "e.BVST.1008.google2", "Agathe the money");
 				mail.sendPricingContact(email, name, phoneNumber, jobPosition, company, collaborators, needs);
 				DatabaseRequest db_request = sm.getDB().prepareRequest("INSERT INTO pricingContacts values(?, ?, ?, ?, ?, ?, ?, ?, default)");
 				db_request.setNull();
