@@ -1,10 +1,12 @@
 package com.Ease.Team;
 
+import com.Ease.Dashboard.App.App;
 import com.Ease.Utils.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +32,12 @@ public class Channel {
     @ManyToMany
     @JoinTable(name = "channelAndTeamUserMap", joinColumns = { @JoinColumn(name = "channel_id") }, inverseJoinColumns = { @JoinColumn(name = "team_user_id") })
     protected List<TeamUser> teamUsers = new LinkedList<>();
+
+    @Transient
+    protected List<App> apps = new LinkedList<>();
+
+    @Transient
+    protected Map<String, App> appIdMap = new HashMap<>();
 
     public Channel(Team team, String name, List<TeamUser> teamUsers) {
         this.team = team;
@@ -87,6 +95,36 @@ public class Channel {
 
     public void removeTeamUser(TeamUser teamUser) {
         this.teamUsers.remove(teamUser);
+    }
+
+    public List<App> getApps() {
+        return apps;
+    }
+
+    public void setApps(List<App> apps) {
+        this.apps = apps;
+    }
+
+    public void addApp(App app) {
+        this.apps.add(app);
+        this.appIdMap.put(app.getDBid(), app);
+    }
+
+    public void removeApp(App app) {
+        this.apps.remove(app);
+        this.appIdMap.remove(app.getDBid());
+    }
+
+    public void removeAppWithId(String app_id) throws GeneralException {
+        App app = this.getAppWithId(app_id);
+        this.removeApp(app);
+    }
+
+    public App getAppWithId(String app_id) throws GeneralException {
+        App app = this.appIdMap.get(app_id);
+        if (app == null)
+            throw new GeneralException(ServletManager.Code.ClientError, "No such app in this channel");
+        return app;
     }
 
     public JSONObject getJson() {

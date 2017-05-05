@@ -44,11 +44,17 @@ public class Team {
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     protected List<Channel> channels = new LinkedList<>();
 
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    protected List<TeamUserChannel> teamUserChannels = new LinkedList<>();
+
     @Transient
     protected Map<Integer, Channel> channelIdMap = new HashMap<>();
 
     @Transient
     protected Map<Integer, TeamUser> teamUserIdMap = new HashMap<>();
+
+    @Transient
+    protected Map<Integer, TeamUserChannel> teamUserChannelIdMap = new HashMap<>();
 
     public Team(String name, List<TeamUser> teamUsers, List<Channel> channels) {
         this.name = name;
@@ -95,6 +101,10 @@ public class Team {
         this.channels = channels;
     }
 
+    public List<TeamUserChannel> getTeamUserChannels() {
+        return teamUserChannels;
+    }
+
     public void lazyInitialize() {
         for (Channel channel : this.getChannels())
             this.channelIdMap.put(channel.getDb_id(), channel);
@@ -133,21 +143,6 @@ public class Team {
         this.channelIdMap.put(channel.getDb_id(), channel);
     }
 
-    public JSONObject getJson() {
-        JSONObject res = new JSONObject();
-        res.put("name", this.name);
-        res.put("id", this.db_id);
-        JSONArray channels = new JSONArray();
-        for (Channel channel : this.getChannels())
-            channels.add(channel.getJson());
-        res.put("channels", channels);
-        JSONArray teamUsers = new JSONArray();
-        for (TeamUser teamUser : this.getTeamUsers())
-            teamUsers.add(teamUser.getJson());
-        res.put("teamUsers", teamUsers);
-        return res;
-    }
-
     public Channel getGeneralChannel() throws GeneralException {
         for (Channel channel : this.getChannels()) {
             if (channel.getName().equals("General"))
@@ -172,5 +167,48 @@ public class Team {
         String name = (String) editJson.get("name");
         if (name != null)
             this.name = name;
+    }
+
+    public TeamUserChannel createTeamUserChannel(TeamUser teamUser, TeamUser teamUser_tenant) {
+        TeamUserChannel teamUserChannel = new TeamUserChannel(this, teamUser, teamUser_tenant);
+        this.teamUserChannels.add(teamUserChannel);
+        this.teamUserChannelIdMap.put(teamUserChannel.getDb_id(), teamUserChannel);
+        return teamUserChannel;
+    }
+
+    public TeamUserChannel getTeamUserChannel(Integer teamUserChannel_id) throws GeneralException {
+        TeamUserChannel teamUserChannel = this.teamUserChannelIdMap.get(teamUserChannel_id);
+        if (teamUserChannel == null)
+            throw new GeneralException(ServletManager.Code.ClientError, "No such teamUserChannel");
+        return teamUserChannel;
+    }
+
+    public void removeTeamUserChannel(Integer teamUserChannel_id) throws GeneralException {
+        TeamUserChannel teamUserChannel = this.getTeamUserChannel(teamUserChannel_id);
+        this.removeTeamUserChannel(teamUserChannel);
+    }
+
+    public void removeTeamUserChannel(TeamUserChannel teamUserChannel) {
+        this.teamUserChannels.remove(teamUserChannel);
+        this.teamUserChannelIdMap.remove(teamUserChannel.getDb_id());
+    }
+
+    public JSONObject getJson() {
+        JSONObject res = new JSONObject();
+        res.put("name", this.name);
+        res.put("id", this.db_id);
+        JSONArray channels = new JSONArray();
+        for (Channel channel : this.getChannels())
+            channels.add(channel.getJson());
+        res.put("channels", channels);
+        JSONArray teamUsers = new JSONArray();
+        for (TeamUser teamUser : this.getTeamUsers())
+            teamUsers.add(teamUser.getJson());
+        res.put("teamUsers", teamUsers);
+        JSONArray teamUserChannels = new JSONArray();
+        for (TeamUserChannel teamUserChannel : this.getTeamUserChannels())
+            teamUserChannels.add(teamUserChannel.getJson());
+        res.put("teamUserChannels", teamUserChannels);
+        return res;
     }
 }

@@ -1,9 +1,12 @@
 package com.Ease.Servlet.Team;
 
+import com.Ease.Dashboard.User.User;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
+import com.Ease.Team.TeamUser;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -26,12 +29,13 @@ public class ServletGetTeam extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
-            String team_id = sm.getServletParam("team_id", true);
-            if (team_id == null || team_id.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "team_id is needed.");
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
-            sm.setResponse(ServletManager.Code.Success, team.getJson().toString());
+            sm.needToBeConnected();
+            TeamUser currentTeamUser = sm.getUser().getTeamUser();
+            if (currentTeamUser == null)
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Your are not in team");
+            JSONObject res = currentTeamUser.getTeam().getJson();
+            res.put("myTeamUserId", currentTeamUser.getDb_id());
+            sm.setResponse(ServletManager.Code.Success, res.toString());
             sm.setLogResponse("GetTeam done");
         } catch (Exception e) {
             sm.setResponse(e);
