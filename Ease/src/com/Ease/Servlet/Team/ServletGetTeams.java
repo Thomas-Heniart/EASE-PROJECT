@@ -26,7 +26,7 @@ public class ServletGetTeams extends HttpServlet {
             List<TeamUser> teamUserList = sm.getTeamUsers();
             JSONArray res = new JSONArray();
             for (TeamUser teamUser : teamUserList)
-                res.add(teamUser.getTeam().getJson());
+                res.add(teamUser.getTeam().getSimpleJson());
             sm.setResponse(ServletManager.Code.Success, res.toString());
             sm.setLogResponse("GetTeams done");
         } catch (Exception e) {
