@@ -1,4 +1,4 @@
-package com.Ease.Servlet.Team;
+package com.Ease.API.V1.Teams;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Channel;
@@ -18,7 +18,7 @@ import java.io.IOException;
 /**
  * Created by thomas on 02/05/2017.
  */
-@WebServlet("/ServletAddChannel")
+@WebServlet("/api/v1/teams/AddChannel")
 public class ServletAddChannel extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);

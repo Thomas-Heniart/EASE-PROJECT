@@ -1,4 +1,4 @@
-package com.Ease.Servlet.Team;
+package com.Ease.API.V1.Teams;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.SendGridMail;
@@ -21,17 +21,17 @@ import java.io.IOException;
 /**
  * Created by thomas on 05/05/2017.
  */
-@WebServlet("/ServletAskJoinTeam")
+@WebServlet("/api/v1/teams/AskJoinTeam")
 public class ServletAskJoinTeam extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            String team_id = sm.getServletParam("team_id", true);
-            if (team_id == null || team_id.equals(""))
+            String team_name = sm.getServletParam("team_name", true);
+            if (team_name == null || team_name.equals(""))
                 throw new GeneralException(ServletManager.Code.ClientError, "Empty team_id");
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
+            Team team = teamManager.getTeamWithName(team_name);
             String code;
             HibernateQuery query = new HibernateQuery();
             query.querySQLString("SELECT code FROM pendingJoinTeamRequests WHERE user_id = ? AND team_id = ?;");

@@ -1,4 +1,4 @@
-package com.Ease.Servlet.Team;
+package com.Ease.API.V1.Teams;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.SendGridMail;
@@ -22,7 +22,7 @@ import java.io.StreamCorruptedException;
 /**
  * Created by thomas on 05/05/2017.
  */
-@WebServlet("/ServletAskJoinChannel")
+@WebServlet("/api/v1/teams/AskJoinChannel")
 public class ServletAskJoinChannel extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);

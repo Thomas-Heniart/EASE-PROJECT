@@ -48,4 +48,12 @@ public class TeamManager {
         Team team = this.getTeamWithId(team_id);
         this.removeTeam(team);
     }
+
+    public Team getTeamWithName(String team_name) throws GeneralException {
+        for (Team team : this.getTeams()) {
+            if (team.getName().equals(team_name))
+                return team;
+        }
+        throw new GeneralException(ServletManager.Code.ClientWarning, "No team with this name");
+    }
 }
