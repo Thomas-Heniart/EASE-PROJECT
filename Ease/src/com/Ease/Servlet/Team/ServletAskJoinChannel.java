@@ -21,7 +21,7 @@ public class ServletAskJoinChannel extends HttpServlet {
         try {
             sm.needToBeConnected();
             String team_id = sm.getServletParam("team_id", true);
-            sm.getTeamUserForTeam();
+            //sm.getTeamUserForTeam();
         } catch (Exception e) {
             sm.setResponse(e);
         }
