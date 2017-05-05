@@ -1,4 +1,4 @@
-package com.Ease.Servlet.Team;
+package com.Ease.API.V1.Teams;
 
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.ServletManager;
@@ -16,9 +16,14 @@ import java.util.List;
 /**
  * Created by thomas on 05/05/2017.
  */
-@WebServlet("/ServletGetTeams")
+@WebServlet("/api/v1/teams/GetTeams")
 public class ServletGetTeams extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+        rd.forward(request, response);
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
@@ -33,10 +38,5 @@ public class ServletGetTeams extends HttpServlet {
             sm.setResponse(e);
         }
         sm.sendResponse();
-    }
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-        rd.forward(request, response);
     }
 }
