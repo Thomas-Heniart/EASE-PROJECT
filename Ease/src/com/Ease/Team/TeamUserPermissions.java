@@ -27,6 +27,13 @@ public class TeamUserPermissions {
         public int getValue() {
             return value;
         }
+
+        public static String getRoleNameByValue(int value) {
+            for(Role role : Role.values()){
+                if(value == role.getValue()) return role.name();
+            }
+            return null;
+        }
     }
 
     @Id
@@ -36,6 +43,9 @@ public class TeamUserPermissions {
 
     @Column(name = "permissions")
     protected Integer permissions;
+
+    @Transient
+    protected Role role;
 
     public TeamUserPermissions(Integer permissions) {
         this.permissions = permissions;
@@ -67,5 +77,9 @@ public class TeamUserPermissions {
 
     public boolean hasAdminPermissions() {
         return this.haveRole(Role.ADMINISTRATOR);
+    }
+
+    public String getRole() {
+        return Role.getRoleNameByValue(this.permissions);
     }
 }

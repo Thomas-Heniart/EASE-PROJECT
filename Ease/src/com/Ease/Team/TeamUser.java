@@ -21,7 +21,7 @@ public class TeamUser {
     @Column(name = "id")
     protected Integer db_id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     protected User user;
 
@@ -179,6 +179,7 @@ public class TeamUser {
         res.put("lastName", this.lastName);
         res.put("email", this.email);
         res.put("username", this.username);
+        res.put("role", this.teamUserPermissions.getRole());
         return res;
     }
 

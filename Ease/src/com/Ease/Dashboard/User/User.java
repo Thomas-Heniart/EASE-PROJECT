@@ -124,7 +124,7 @@ public class User {
 		newUser.initializeDashboardManager(sm);
 		newUser.loadExtensionKeys(sm);
 		newUser.loadEmails(sm);
-		newUser.loadTeamUser(sm);
+		newUser.loadTeamUsers(sm);
 		for (App app : newUser.getDashboardManager().getApps()) {
 			if (app.getType().equals("LogwithApp")) {
 				LogwithApp logwithApp = (LogwithApp) app;
@@ -216,7 +216,7 @@ public class User {
 
 	protected SessionSave sessionSave;
 	protected DashboardManager dashboardManager;
-    protected TeamUser teamUser;
+    protected List<TeamUser> teamUsers = new LinkedList<>();
 
 	public User(String db_id, String first_name, String last_name, String email, Keys keys, Option opt, boolean isAdmin,
 			boolean sawGroupProfile, SessionSave sessionSave, Status status) {
@@ -631,35 +631,34 @@ public class User {
 		return tmp.isAdmin(this.db_id);
 	}
 
-    public TeamUser getTeamUser() {
-        return teamUser;
+    public List<TeamUser> getTeamUsers() {
+        return teamUsers;
     }
 
-    public void setTeamUser(TeamUser teamUser, ServletManager sm) throws GeneralException {
+    public void addTeamUser(TeamUser teamUser, ServletManager sm) throws GeneralException {
 	    DataBaseConnection db = sm.getDB();
 	    DatabaseRequest request = db.prepareRequest("UPDATE teamUsers SET user_id = ? WHERE id = ?;");
 	    request.setInt(this.db_id);
 	    request.setInt(teamUser.getDb_id());
 	    request.set();
-        this.teamUser = teamUser;
+        this.teamUsers.add(teamUser);
         teamUser.setDashboard_user(this);
     }
 
-    public void loadTeamUser(ServletManager sm) throws GeneralException {
+    public void loadTeamUsers(ServletManager sm) throws GeneralException {
         HibernateQuery query = new HibernateQuery();
         query.querySQLString("SELECT id, team_id FROM teamUsers WHERE user_id = ?");
         query.setParameter(1, Integer.parseInt(this.db_id));
-        Object[] rs = (Object[]) query.getSingleResult();
-        if (rs == null)
-            return;
-        Integer teamUser_id = (Integer) rs[0];
-        Integer team_id = (Integer) rs[1];
-        System.out.println("TeamUser id: " + teamUser_id);
-        System.out.println("Team id: " + team_id);
-        TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-        Team team = teamManager.getTeamWithId(team_id);
-        this.teamUser = team.getTeamUserWithId(teamUser_id);
-        this.teamUser.setDashboard_user(this);
+        List<Object[]> teamUsers = query.list();
+        for (Object[] teamUserIdAndTeamId : teamUsers) {
+			Integer teamUser_id = (Integer) teamUserIdAndTeamId[0];
+			Integer team_id = (Integer) teamUserIdAndTeamId[1];
+			TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
+			Team team = teamManager.getTeamWithId(team_id);
+			TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
+			this.teamUsers.add(teamUser);
+			teamUser.setDashboard_user(this);
+		}
         query.commit();
     }
 }
