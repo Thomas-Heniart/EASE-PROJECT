@@ -1,0 +1,22 @@
+{
+  "name":"Hubspot",
+  "lastLogin":"",
+  "home":"https://app.hubspot.com/",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"input#username"},
+      {"action":"fill", "what":"password", "search":"input#password"},
+      {"action":"click", "search":"#loginBtn"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"clickona", "search":"a.sign-out"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"section.dashboard, input#username"},
+    {"search":"a.sign-out"}
+  ]
+}

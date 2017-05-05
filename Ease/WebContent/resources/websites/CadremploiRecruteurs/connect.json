@@ -1,0 +1,24 @@
+{
+  "name":"Cadremploi Recruteurs",
+  "lastLogin":"",
+  "home":"https://espace-recruteurs.cadremploi.fr/#/",
+  "connect":{
+    "todo":[
+      {"action":"clickona", "search":"a#btnConnexion"},
+      {"action":"waitfor", "search":"#connexion-popup input#identifiant"},
+      {"action":"fill", "what":"login", "search":"#connexion-popup input#identifiant"},
+      {"action":"fill", "what":"password", "search":"#connexion-popup input#motdepasse"},
+      {"action":"click", "search":"#connexion-popup #bouton_login"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"clickona", "search":"a#btnDeconnexion"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"#btnConnexion.ng-hide, #btnUserMenu.ng-hide"},
+    {"search":"#btnConnexion.ng-hide"}
+  ]
+}

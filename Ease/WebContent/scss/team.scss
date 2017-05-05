@@ -329,6 +329,12 @@
                   .value_input {
                     display: block;
                   }
+                  .user_adding_container {
+                    display: inherit;
+                  }
+                }
+                .user_adding_container {
+                  display: none;
                 }
                 .value_input {
                   display: none;
@@ -465,31 +471,32 @@
                       }
                     }
                     .team_app_sharing_info {
-                      @include flex(1);
                       padding-left: .6rem;
                       border-left: 1px solid #717274;
-                      .team_user_receiver {
-                        @include display-inline-flex();
-                        @include align-items(center);
-                        float: left;
-                        margin: 2px 4px 2px 0;
-                        padding: 2px 8px;
-                        border-radius: 5px;
-                        background-color: $themeBlueColor;
-                        color: white;
-                        font-size: .7rem;
-                        &.accepted {
-                          background-color: $themeGreenColor;
-                        }
-                        .view_password_perm, .password_modification_counter {
-                          padding-left: 4px;
-                        }
-                        .team_app_receiver_name {
-                          max-width: 110px;
-                          display: block;
-                          text-overflow: ellipsis;
-                          overflow: hidden;
-                          white-space: nowrap;
+                      .receivers_wrapper {
+                        .team_user_receiver {
+                          @include display-inline-flex();
+                          @include align-items(center);
+                          float: left;
+                          margin: 2px 4px 2px 0;
+                          padding: 2px 8px;
+                          border-radius: 5px;
+                          background-color: $themeBlueColor;
+                          color: white;
+                          font-size: .7rem;
+                          &.accepted {
+                            background-color: $themeGreenColor;
+                          }
+                          .view_password_perm, .password_modification_counter {
+                            padding-left: 4px;
+                          }
+                          .team_app_receiver_name {
+                            max-width: 110px;
+                            display: block;
+                            text-overflow: ellipsis;
+                            overflow: hidden;
+                            white-space: nowrap;
+                          }
                         }
                       }
                     }
@@ -701,6 +708,100 @@
             }
           }
         }
+      }
+    }
+  }
+  .user_token {
+    @include display-flex();
+    @include align-items(center);
+    background-color: $themeBlueColor;
+    border-radius: 5px;
+    padding:0 5px;
+    max-width: 150px;
+    color: white;
+    .name_holder {
+
+    }
+    .delete_button {
+      display: block;
+      margin-left: 5px;
+    }
+  }
+  .user_adding_container {
+    display: flex;
+    border-top: 1px solid #717274;
+    border-bottom: 1px solid #717274;
+    padding: 5px 8px;
+    & > .icon_wrapper {
+      padding: 3px 8px 0 0;
+      color: #717274;
+    }
+    .add_container {
+      @include flex-wrap(wrap);
+      padding-bottom: 3px;
+      font-size: .7rem;
+      .user_token {
+        margin-top: 3px;
+        margin-right: 5px;
+      }
+      .true_input {
+        min-width: 140px;
+        margin-top: 3px;
+        margin-right: 5px;
+      }
+    }
+    .accept_button {
+      background-color: $themeGreenColor;
+      margin-top: 3px;
+      padding: 0 5px;
+      border-radius: 5px;
+      color: white;
+      font-weight: 700;
+    }
+  }
+  .item_select_box {
+    position: absolute;
+    @include display-flex();
+    @include flex-direction(column);
+    background-color: white;
+    border: 1px solid rgba(#000, .15);
+    border-radius: 5px;
+    overflow: auto;
+    padding: 10px 0;
+    min-width: 240px;
+    max-height: 130px;
+    @include simple-box-shadow(0 5px 10px rgba(0,0,0,.12));
+    &::-webkit-scrollbar {
+      width: 13px;
+    }
+    &::-webkit-scrollbar-track, &::-webkit-scrollbar-thumb {
+      background-clip: padding-box!important;
+      border-radius: 5px;
+      border-right: 3px solid #fff;
+      border-left: 3px solid #fff;
+      box-shadow: inset 0 -3px 0 #fff, inset 0 3px 0 #fff;
+    }
+    &::-webkit-scrollbar-track {
+      background: #f3f3f3;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: rgba(#E6E6E6, 0.7);
+    }
+    &::-webkit-scrollbar-thumb:window-inactive {
+      background: rgba(#E6E6E6, 0.7);
+    }
+    .item {
+      @include display-flex();
+      @include align-items(center);
+      @include flex-shrink(0);
+      padding: 1px 10px;
+      &:hover {
+        background-color: #f9f9f9;
+        cursor: pointer;
+      }
+      .icon_wrapper {
+        color: #717274;
+        margin-right: 5px;
       }
     }
   }

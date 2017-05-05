@@ -4,9 +4,11 @@
     "home":"https://trello.com/login/",
     "connect":{
         "todo":[
-            {"action":"fill", "what":"login", "search":"input#user"},
-            {"action":"val", "what":"password", "search":"input[name='password']#password"},
-            {"action":"click", "search":"input#login"}
+            {"action":"fill", "what":"login", "search":"#login-identifier, #user"},
+            {"action":"click", "search":".js-login-button"},
+            {"action":"waitfor", "search":"input#password"},
+            {"action":"fill", "what":"password", "search":"input#password"},
+            {"action":"click", "search":".js-password-button, input#login"}
         ]
     },
     "logout":{
@@ -15,7 +17,7 @@
             {"action":"waitfor", "search":"a.js-logout"},
             {"action":"clickona", "search":"a.js-logout"},
             {"action":"waitload"},
-            {"action":"goto", "url":"https://trello.com/login/"}
+            {"action":"aclick", "search":"a[href*='login']"}
             ]
     },
     "checkAlreadyLogged":[

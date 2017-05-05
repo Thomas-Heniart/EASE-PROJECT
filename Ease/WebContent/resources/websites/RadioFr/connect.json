@@ -1,0 +1,37 @@
+{
+  "name":"Radio.fr",
+  "lastLogin":"",
+  "home":"http://www.radio.fr/",
+  "connect":{
+    "todo":[
+      {"action":"clickona", "search":".profile-dropdown-login-link"},
+      {"action":"waitfor", "search":".login-modal"},
+      {"action":"fill", "what":"login", "search":".login-form #loginInput"},
+      {"action":"fill", "what":"password", "search":".login-form #passwordInput"},
+      {"action":"click", "search":".login-form button.btn"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"clickona", "search":".profile-dropdown-logout-link a"},
+      {"action": "goto", "url": "http://www.radio.fr/"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"search":".profile-dropdown-toggle"}
+  ],
+  "Facebook":{
+    "todo":[
+      {"action":"clickona", "search":".profile-dropdown-login-link"},
+      {"action":"waitfor", "search":".login-modal"},
+      {"action":"click", "search": ".login-buttons .btn-facebook"}
+    ]
+  },
+  "Google":{
+    "todo":[
+      {"action":"clickona", "search":".profile-dropdown-login-link"},
+      {"action":"waitfor", "search":".login-modal"},
+      {"action":"click", "search": ".login-buttons .btn-googleplus"}
+    ]
+  }
+}
