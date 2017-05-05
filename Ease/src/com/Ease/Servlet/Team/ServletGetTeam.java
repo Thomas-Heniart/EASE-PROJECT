@@ -30,7 +30,9 @@ public class ServletGetTeam extends HttpServlet {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            TeamUser currentTeamUser = sm.getUser().getTeamUser();
+            /* TODO */
+            /* team_id param and then get teamUser */
+            TeamUser currentTeamUser = sm.getUser().getTeamUsers().get(1);
             if (currentTeamUser == null)
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Your are not in team");
             JSONObject res = currentTeamUser.getTeam().getJson();

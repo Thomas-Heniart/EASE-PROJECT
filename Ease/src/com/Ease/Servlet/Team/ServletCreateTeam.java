@@ -64,7 +64,9 @@ public class ServletCreateTeam extends HttpServlet {
             query.setParameter(2, code);
             query.executeUpdate();
             query.commit();
-            sm.getUser().setTeamUser(admin, sm);
+            /* TODO */
+            /* team_id param and then get teamUser */
+            //sm.getUser().setTeamUser(admin, sm);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             teamManager.addTeam(team);
             sm.setResponse(ServletManager.Code.Success, team.getJson().toString());

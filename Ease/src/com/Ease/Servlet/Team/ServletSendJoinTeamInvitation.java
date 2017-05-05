@@ -28,7 +28,9 @@ public class ServletSendJoinTeamInvitation extends HttpServlet {
         try {
             sm.needToBeConnected();
             User user = sm.getUser();
-            TeamUser adminTeamUser = user.getTeamUser();
+            /* TODO */
+            /* team_id param and then get teamUser */
+            TeamUser adminTeamUser = user.getTeamUsers().get(1);
             if (adminTeamUser == null || !adminTeamUser.isTeamAdmin() || !user.isAdmin())
                 throw new GeneralException(ServletManager.Code.ClientError, "Not allowed to do this");
             Team team = adminTeamUser.getTeam();
