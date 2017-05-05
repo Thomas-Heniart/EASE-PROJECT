@@ -220,4 +220,11 @@ public class Team {
         }
         return res;
     }
+
+    public JSONObject getSimpleJson() {
+        JSONObject res = new JSONObject();
+        res.put("id", this.db_id);
+        res.put("name", this.name);
+        return res;
+    }
 }
