@@ -51,9 +51,7 @@ public class ServletSetUserForTeamUser extends HttpServlet {
             } else {
                 if (!connected_user.getKeys().isGoodPassword(password))
                     throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email or password");
-                /* TODO */
-                /* team_id param and then get teamUser */
-                //connected_user.setTeamUser(teamUser, sm);
+                connected_user.addTeamUser(teamUser, sm);
             }
             sm.setResponse(ServletManager.Code.Success, "TeamUser setup");
         } catch (Exception e) {

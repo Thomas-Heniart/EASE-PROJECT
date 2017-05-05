@@ -26,6 +26,7 @@ public class ServletCreateTeamUser extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
+            sm.needToBeConnected();
             User user = sm.getUser();
             HibernateQuery query = new HibernateQuery();
             String firstName = sm.getServletParam("firstName", true);
@@ -33,7 +34,6 @@ public class ServletCreateTeamUser extends HttpServlet {
             String email = sm.getServletParam("email", true);
             String username = sm.getServletParam("username", true);
             String code = sm.getServletParam("code", true);
-            //String team_id = sm.getServletParam("team_id", true);
             if (firstName == null || firstName.equals(""))
                 throw new GeneralException(ServletManager.Code.ClientWarning, "channel_id is needed.");
             if (lastName == null || lastName.equals(""))
@@ -69,8 +69,7 @@ public class ServletCreateTeamUser extends HttpServlet {
             query.setParameter(1, invitation_id);
             query.executeUpdate();
             query.commit();
-            if (user != null)
-                user.addTeamUser(teamUser, sm);
+            user.addTeamUser(teamUser, sm);
             sm.setResponse(ServletManager.Code.Success, teamUser.getJson().toString());
             sm.setLogResponse("TeamUser created");
         } catch(Exception e) {

@@ -211,4 +211,13 @@ public class Team {
         res.put("teamUserChannels", teamUserChannels);
         return res;
     }
+
+    public Map<String, String> getAdministratorsUsernameAndEmail() {
+        Map<String, String> res = new HashMap<>();
+        for (TeamUser teamUser : this.getTeamUsers()) {
+            if (teamUser.isTeamAdmin())
+                res.put(teamUser.getUsername(), teamUser.getEmail());
+        }
+        return res;
+    }
 }

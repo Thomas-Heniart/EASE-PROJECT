@@ -3,6 +3,7 @@ package com.Ease.Mail;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.Ease.Context.Variables;
 import com.Ease.Context.Catalog.Website;
@@ -273,6 +274,33 @@ public class SendGridMail {
         personalization.addSubstitution("#adminName", adminName);
         personalization.addSubstitution("#teamName", teamName);
         personalization.addSubstitution("#firstName", firstName);
+        this.sendEmail();
+    }
+
+    public void sendJoinChannelEmail(String teamName, String channelName, Map<String, String> administratorsUsernameAndEmail, String username, String email, String code) throws GeneralException {
+		mail.setTemplateId("6edb3495-0d9e-4e35-a3d6-a8c3d2c1c222");
+		for (Map.Entry<String, String> entry : administratorsUsernameAndEmail.entrySet()) {
+			Personalization personalization = this.createNewPersonalization();
+			this.addTo(personalization, entry.getKey(), entry.getValue());
+			personalization.addSubstitution("#link", Variables.URL_PATH + "ConfirmJoinChannel?email=" + email + "&code=" + code);
+			personalization.addSubstitution("#adminName", entry.getKey());
+			personalization.addSubstitution("#teamName", teamName);
+            personalization.addSubstitution("#channelName", channelName);
+			personalization.addSubstitution("#username", username);
+		}
+		this.sendEmail();
+    }
+
+    public void sendJoinTeamEmail(String teamName, Map<String, String> administratorsUsernameAndEmail, String username, String email, String code) throws GeneralException {
+        mail.setTemplateId("e501354e-3321-48c9-9e5a-bebb7ce59df6");
+        for (Map.Entry<String, String> entry : administratorsUsernameAndEmail.entrySet()) {
+            Personalization personalization = this.createNewPersonalization();
+            this.addTo(personalization, entry.getKey(), entry.getValue());
+            personalization.addSubstitution("#link", Variables.URL_PATH + "ConfirmJoinTeam?email=" + email + "&code=" + code);
+            personalization.addSubstitution("#adminName", entry.getKey());
+            personalization.addSubstitution("#teamName", teamName);
+            personalization.addSubstitution("#username", username);
+        }
         this.sendEmail();
     }
 }

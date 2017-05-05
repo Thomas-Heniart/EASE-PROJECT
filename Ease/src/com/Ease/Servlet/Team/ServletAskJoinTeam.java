@@ -1,14 +1,13 @@
 package com.Ease.Servlet.Team;
 
-import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.SendGridMail;
+import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Crypto.CodeGenerator;
 import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -20,47 +19,38 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by thomas on 03/05/2017.
+ * Created by thomas on 05/05/2017.
  */
-@WebServlet("/ServletSendJoinTeamInvitation")
-public class ServletSendJoinTeamInvitation extends HttpServlet {
+@WebServlet("/ServletAskJoinTeam")
+public class ServletAskJoinTeam extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            User user = sm.getUser();
             String team_id = sm.getServletParam("team_id", true);
             if (team_id == null || team_id.equals(""))
                 throw new GeneralException(ServletManager.Code.ClientError, "Empty team_id");
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
-            TeamUser adminTeamUser = sm.getTeamUserForTeam(team);
-            if (adminTeamUser == null || !adminTeamUser.isTeamAdmin() || !user.isAdmin())
-                throw new GeneralException(ServletManager.Code.ClientError, "Not allowed to do this");
-            String email = sm.getServletParam("email", true);
-            String firstName = sm.getServletParam("firstName", true);
-            if (email == null || email.equals("") || !Regex.isEmail(email))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Invalid email field.");
-            if (firstName == null || firstName.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Empty first name.");
             String code;
             HibernateQuery query = new HibernateQuery();
-            query.querySQLString("SELECT code FROM pendingTeamInvitations WHERE email = ?");
-            query.setParameter(1, email);
-            Object id = query.getSingleResult();
-            if (id == null) {
+            query.querySQLString("SELECT code FROM pendingJoinTeamRequests WHERE user_id = ? AND team_id = ?;");
+            query.setParameter(1, team.getDb_id());
+            query.setParameter(2, sm.getUser().getDBid());
+            Object rs_id = query.getSingleResult();
+            if (rs_id != null)
+                code = (String) rs_id;
+            else {
                 code = CodeGenerator.generateNewCode();
-                query.querySQLString("INSERT INTO pendingTeamInvitations values(NULL, ?, ?, ?);");
-                query.setParameter(1, email);
-                query.setParameter(2, code);
-                query.setParameter(3, team.getDb_id());
+                query.querySQLString("INSERT INTO pendingJoinTeamRequests values (null, ?, ?);");
+                query.setParameter(1, team.getDb_id());
+                query.setParameter(2, sm.getUser().getDBid());
                 query.executeUpdate();
-            } else
-                code = (String) id;
+            }
             query.commit();
-            SendGridMail sendGridMail = new SendGridMail("Thomas @EaseSpace", "thomas@ease.space");
-            sendGridMail.sendInvitationToJoinTeamEmail(team.getName(), adminTeamUser.getFirstName(), firstName, email, code);
-            sm.setResponse(ServletManager.Code.Success, "Invitation to join a team sent");
+            SendGridMail mail = new SendGridMail("Agathe @Ease", "contact@ease.space");
+            mail.sendJoinTeamEmail(team.getName(), team.getAdministratorsUsernameAndEmail(), sm.getUser().getFirstName(), sm.getUser().getEmail(), code);
+            sm.setResponse(ServletManager.Code.Success, "You request has been sent");
         } catch (Exception e) {
             sm.setResponse(e);
         }
