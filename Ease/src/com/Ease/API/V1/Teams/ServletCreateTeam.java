@@ -55,7 +55,7 @@ public class ServletCreateTeam extends HttpServlet {
             Team team = new Team(teamName);
             TeamUser admin = TeamUser.createAdminUser(firstName, lastName, email, username, team);
             team.addTeamUser(admin);
-            Channel channel = new Channel(team, "General");
+            Channel channel = new Channel(team, "General", "Aaaaaaaaaaaaaaaaaaa");
             team.addChannel(channel);
             channel.addTeamUser(admin);
             query.saveOrUpdateObject(team);

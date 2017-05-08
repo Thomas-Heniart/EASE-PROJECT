@@ -26,13 +26,14 @@ public class ServletAddChannel extends HttpServlet {
             HibernateQuery query = new HibernateQuery();
             String team_id = sm.getServletParam("team_id", true);
             String channel_name = sm.getServletParam("channel_name", true);
+            String purpose = sm.getServletParam("purpose", true);
             if (channel_name == null || channel_name.equals(""))
                 throw new GeneralException(ServletManager.Code.ClientWarning, "channel_id is needed.");
             if (team_id == null || team_id.equals(""))
                 throw new GeneralException(ServletManager.Code.ClientWarning, "team_id is needed.");
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
-            Channel channel = new Channel(team, channel_name);
+            Channel channel = new Channel(team, channel_name, purpose);
             query.saveOrUpdateObject(channel);
             team.addChannel(channel);
             query.commit();

@@ -29,6 +29,9 @@ public class Channel {
     @Column(name = "name")
     protected String name;
 
+    @Column(name = "purpose")
+    protected String purpose;
+
     @ManyToMany
     @JoinTable(name = "channelAndTeamUserMap", joinColumns = { @JoinColumn(name = "channel_id") }, inverseJoinColumns = { @JoinColumn(name = "team_user_id") })
     protected List<TeamUser> teamUsers = new LinkedList<>();
@@ -39,19 +42,22 @@ public class Channel {
     @Transient
     protected Map<String, App> appIdMap = new HashMap<>();
 
-    public Channel(Team team, String name, List<TeamUser> teamUsers) {
+    public Channel(Team team, String name, String purpose, List<TeamUser> teamUsers) {
         this.team = team;
         this.name = name;
         this.teamUsers = teamUsers;
+        this.purpose = purpose;
     }
 
-    public Channel(Team team, String name) {
+    public Channel(Team team, String name, String purpose) {
         this.team = team;
         this.name = name;
+        this.purpose = purpose;
     }
 
-    public Channel(String name) {
+    public Channel(String name, String purpose) {
         this.name = name;
+        this.purpose = purpose;
     }
 
     public Channel() {
@@ -133,8 +139,8 @@ public class Channel {
         res.put("name", this.name);
         JSONArray teamUsers = new JSONArray();
         for (TeamUser teamUser : this.getTeamUsers())
-            teamUsers.add(teamUser.getJson());
-        //for (App app : this.apps)
+            teamUsers.add(teamUser.getSimpleJson());
+        res.put("purpose", this.purpose);
         return res;
     }
 

@@ -195,6 +195,12 @@ public class TeamUser {
         return res;
     }
 
+    public JSONObject getSimpleJson() {
+        JSONObject res = new JSONObject();
+        res.put("id", this.db_id);
+        return res;
+    }
+
     public void edit(JSONObject editJson) {
         String firstName = (String) editJson.get("firstName");
         String lastName = (String) editJson.get("lastName");
