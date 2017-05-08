@@ -80,7 +80,7 @@ public class App {
     public static List<SharedApp> loadSharedApps(Integer teamUser_tenant_id, ServletManager sm) throws GeneralException {
         List<SharedApp> sharedApps = new LinkedList<>();
         DataBaseConnection db = sm.getDB();
-        DatabaseRequest request = db.prepareRequest("SELECT apps.* FROM apps JOIN appAndSharedAppMap ON apps.id = appAndSharedAppMap.app_id AND appAndSharedAppMap.team_user_tenant_id = ?;");
+        DatabaseRequest request = db.prepareRequest("SELECT apps.* FROM apps JOIN appAndSharedAppMap ON apps.id = appAndSharedAppMap.shared_app_id AND appAndSharedAppMap.team_user_tenant_id = ?;");
         request.setInt(teamUser_tenant_id);
         DatabaseResult rs = request.get();
         String db_id;
@@ -112,6 +112,43 @@ public class App {
             groupApp = null;
         }
         return sharedApps;
+    }
+
+    public static List<ShareableApp> loadShareableApps(Integer teamUser_tenant_id, ServletManager sm) throws GeneralException {
+        List<ShareableApp> shareableApps = new LinkedList<>();
+        DataBaseConnection db = sm.getDB();
+        DatabaseRequest request = db.prepareRequest("SELECT apps.* FROM apps JOIN appAndSharedAppMap ON apps.id = appAndSharedAppMap.app_id AND appAndSharedAppMap.team_user_tenant_id = ?;");
+        request.setInt(teamUser_tenant_id);
+        DatabaseResult rs = request.get();
+        String db_id;
+        int position;
+        String insertDate;
+        AppInformation infos;
+        GroupApp groupApp = null;
+        ShareableApp app = null;
+        while (rs.next()) {
+            db_id = rs.getString(Data.ID.ordinal());
+            insertDate = rs.getString(Data.INSERT_DATE.ordinal());
+            infos = AppInformation.loadAppInformation(rs.getString(Data.APP_INFO_ID.ordinal()), db);
+            String groupAppId = rs.getString(Data.GROUP_APP_ID.ordinal());
+            if (groupAppId != null) {
+                groupApp = GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupAppId);
+            }
+
+            switch (rs.getString(Data.TYPE.ordinal())) {
+                case "linkApp":
+                    app = LinkApp.loadLinkApp(db_id, null, null, insertDate, infos, groupApp, sm);
+                    break;
+                case "websiteApp":
+                    app = WebsiteApp.loadWebsiteApp(db_id, null, null, insertDate, infos, groupApp, sm);
+                    break;
+                default:
+                    throw new GeneralException(ServletManager.Code.InternError, "This app type dosen't exist.");
+            }
+            shareableApps.add(app);
+            groupApp = null;
+        }
+        return shareableApps;
     }
 
     public static String createApp(Profile profile, int position, String name, String type, Map<String, Object> elevator, ServletManager sm) throws GeneralException {

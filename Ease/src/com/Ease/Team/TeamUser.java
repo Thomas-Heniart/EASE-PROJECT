@@ -1,6 +1,7 @@
 package com.Ease.Team;
 
 import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.User.User;
@@ -61,6 +62,9 @@ public class TeamUser {
      */
     @Transient
     protected List<SharedApp> sharedApps = new LinkedList<>();
+
+    @Transient
+    private List<ShareableApp> shareableApps = new LinkedList<>();
 
     public TeamUser(User user, String firstName, String lastName, String email, String username, Team team, TeamUserPermissions teamUserPermissions, List<Channel> channels) {
         this.user = user;
@@ -209,5 +213,9 @@ public class TeamUser {
 
     public void loadSharedApps(ServletManager sm) throws GeneralException {
         this.sharedApps = App.loadSharedApps(this.db_id, sm);
+    }
+
+    public void loadShareableApps(ServletManager sm) throws GeneralException {
+        this.shareableApps = App.loadShareableApps(this.db_id, sm);
     }
 }
