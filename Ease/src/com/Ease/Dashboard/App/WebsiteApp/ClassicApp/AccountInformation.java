@@ -11,8 +11,7 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 public class AccountInformation {
-	
-	public enum AccountInformationData {
+    public enum AccountInformationData {
 		NOTHING,
 		ID,
 		ACCOUNT_ID,
@@ -87,7 +86,7 @@ public class AccountInformation {
 		request.set();
 		this.information_value = information_value;
 	}
-	
+
 	public void removeFromDb(ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
 		DatabaseRequest request = db.prepareRequest("DELETE FROM accountsInformations WHERE id = ?;");

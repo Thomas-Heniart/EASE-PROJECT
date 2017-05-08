@@ -20,6 +20,8 @@ import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
+import javax.servlet.Servlet;
+
 public class Account {
     public enum Data {
         NOTHING,
@@ -225,6 +227,15 @@ public class Account {
             }
         }
         db.commitTransaction(transaction);
+    }
+
+    public void edit(JSONObject editJson, ServletManager sm) throws GeneralException {
+        for (AccountInformation accountInformation : this.getAccountInformations()) {
+            String new_info_value = (String) editJson.get(accountInformation.getInformationName());
+            if (new_info_value == null)
+                continue;
+            accountInformation.setInformation_value(new_info_value, sm);
+        }
     }
 
     public String getInformationNamed(String info_name) {

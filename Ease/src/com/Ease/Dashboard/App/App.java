@@ -2,11 +2,9 @@ package com.Ease.Dashboard.App;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.Ease.Context.Catalog.Website;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -21,6 +19,7 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
 public class App {
+
     public enum Data {
         NOTHING,
         ID,
@@ -79,18 +78,23 @@ public class App {
     }
 
     public static String createApp(Profile profile, int position, String name, String type, Map<String, Object> elevator, ServletManager sm) throws GeneralException {
+        return createApp(profile, position, name, type, elevator, true, false, sm);
+
+    }
+
+    public static String createApp(Profile profile, int position, String name, String type, Map<String, Object> elevator, boolean shareable, boolean shared, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         AppInformation infos = AppInformation.createAppInformation(name, sm);
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
         String registrationDate = dateFormat.format(date);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO apps VALUES (NULL, ?, ?, ?, NULL);");
-        //request.setInt(profile.getDBid());
-        //request.setInt(position);
+        DatabaseRequest request = db.prepareRequest("INSERT INTO apps VALUES (NULL, ?, ?, ?, NULL, ?, ?);");
         request.setString(registrationDate);
         request.setString(type);
         request.setInt(infos.getDb_id());
+        request.setBoolean(shareable);
+        request.setBoolean(shared);
         String appDBid = request.set().toString();
         request = db.prepareRequest("INSERT INTO profileAndAppMap values (NULL, ?, ?, ?)");
         request.setInt(profile.getDBid());
@@ -103,7 +107,39 @@ public class App {
         return appDBid;
 
     }
-	
+
+    public static String createSharedApp(Profile profile, Integer position, String name, String type, Map<String, Object> elevator, boolean shareable, boolean shared, Integer team_user_owner_id, Integer team_user_tenant_id, App holder, ServletManager sm) throws GeneralException {
+        DataBaseConnection db = sm.getDB();
+        int transaction = db.startTransaction();
+        AppInformation infos = AppInformation.createAppInformation(name, sm);
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
+        String registrationDate = dateFormat.format(date);
+        DatabaseRequest request = db.prepareRequest("INSERT INTO apps VALUES (NULL, ?, ?, ?, NULL, ?, ?);");
+        request.setString(registrationDate);
+        request.setString(type);
+        request.setInt(infos.getDb_id());
+        request.setBoolean(shareable);
+        request.setBoolean(shared);
+        String appDBid = request.set().toString();
+        if (profile != null && position != null) {
+            request = db.prepareRequest("INSERT INTO profileAndAppMap values (NULL, ?, ?, ?)");
+            request.setInt(profile.getDBid());
+            request.setInt(appDBid);
+            request.setInt(position);
+            request.set();
+            elevator.put("appInfos", infos);
+            elevator.put("insertDate", registrationDate);
+        }
+        request = db.prepareRequest("INSERT INTO profileAndAppMap values (NULL, ?, ?, ?, ?)");
+        request.setInt(team_user_owner_id);
+        request.setInt(team_user_tenant_id);
+        request.setInt(appDBid);
+        request.setInt(holder.getDBid());
+        db.commitTransaction(transaction);
+        return appDBid;
+    }
+
 	/*
 	 * 
 	 * Constructor
@@ -117,6 +153,11 @@ public class App {
     protected GroupApp groupApp;
     protected String insertDate;
     protected int single_id;
+    protected boolean shared;
+    protected boolean shareable;
+    protected ShareableApp holder;
+    protected List<SharedApp> sharedApps = new LinkedList<>();
+    protected HashMap<Integer, SharedApp> sharedAppIdMap = new HashMap<>();
 
     public App(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id) {
         this.db_id = db_id;
@@ -126,6 +167,37 @@ public class App {
         this.groupApp = groupApp;
         this.insertDate = insertDate;
         this.single_id = single_id;
+        this.shareable = true;
+        this.shared = false;
+    }
+
+    public App(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, boolean shared, boolean shareable) {
+        this.db_id = db_id;
+        this.profile = profile;
+        this.position = position;
+        this.informations = infos;
+        this.groupApp = groupApp;
+        this.insertDate = insertDate;
+        this.single_id = single_id;
+        this.shareable = true;
+        this.shared = false;
+        this.shared = shared;
+        this.shareable = shareable;
+    }
+
+    public App(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, boolean shareable, boolean shared, ShareableApp holder) {
+        this.db_id = db_id;
+        this.profile = profile;
+        this.position = position;
+        this.informations = infos;
+        this.groupApp = groupApp;
+        this.insertDate = insertDate;
+        this.single_id = single_id;
+        this.shareable = true;
+        this.shared = false;
+        this.shared = shared;
+        this.shareable = shareable;
+        this.holder = holder;
     }
 
     public void removeFromDB(ServletManager sm) throws GeneralException {
@@ -242,5 +314,13 @@ public class App {
 
     public JSONArray getAccountInformationsJson() {
         return new JSONArray();
+    }
+
+    public boolean isShared() {
+        return this.shared;
+    }
+
+    public boolean isShareable() {
+        return this.shareable;
     }
 }

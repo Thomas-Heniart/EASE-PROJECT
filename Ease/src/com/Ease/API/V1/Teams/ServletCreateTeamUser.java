@@ -1,4 +1,4 @@
-package com.Ease.Servlet.Team;
+package com.Ease.API.V1.Teams;
 
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
@@ -21,7 +21,7 @@ import java.io.IOException;
 /**
  * Created by thomas on 02/05/2017.
  */
-@WebServlet("/ServletCreateTeamUser")
+@WebServlet("/api/v1/teams/CreateTeamUser")
 public class ServletCreateTeamUser extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);

@@ -1,5 +1,6 @@
 package com.Ease.Team;
 
+import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.NewDashboard.User.User;
 import com.Ease.Utils.*;
 import org.json.simple.JSONObject;
@@ -53,6 +54,11 @@ public class TeamUser {
     protected List<Channel> channels = new LinkedList<>();
 
 
+    /**
+     * TODO Use hibernate for apps then update code avout sharedApps
+     */
+    @Transient
+    protected List<SharedApp> sharedApps = new LinkedList<>();
 
     public TeamUser(User user, String firstName, String lastName, String email, String username, Team team, TeamUserPermissions teamUserPermissions, List<Channel> channels) {
         this.user = user;
@@ -197,5 +203,9 @@ public class TeamUser {
 
     public boolean isTeamAdmin() {
         return this.getTeamUserPermissions().hasAdminPermissions();
+    }
+
+    public void loadSharedApps() {
+
     }
 }
