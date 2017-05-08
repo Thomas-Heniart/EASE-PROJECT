@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.Ease.Dashboard.App.*;
+import com.Ease.Team.Channel;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -80,7 +81,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         return websiteAppDBid;
     }
 
-    public static WebsiteApp createEmptyApp(Profile profile, int position, String name, Website site, ServletManager sm) throws GeneralException {
+    public static WebsiteApp createEmptyApp(Profile profile, Integer position, String name, Website site, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<String, Object>();
@@ -286,6 +287,11 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         if (!this.isShareable())
             throw new GeneralException(ServletManager.Code.ClientError, "You can't share this app");
         return createEmptySharedApp(sm, team_user_owner_id, team_user_tenant_id, this);
+    }
+
+    @Override
+    public SharedApp share(Channel channel, ServletManager sm) {
+        return null;
     }
 
     @Override

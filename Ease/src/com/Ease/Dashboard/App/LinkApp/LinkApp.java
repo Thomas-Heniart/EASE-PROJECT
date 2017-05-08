@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.Ease.Dashboard.App.*;
+import com.Ease.Team.Channel;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -140,6 +141,11 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
 
     @Override
     public SharedApp share(Integer team_user_owner_id, Integer team_user_tenant_id, ServletManager sm) throws GeneralException {
+        return null;
+    }
+
+    @Override
+    public SharedApp share(Channel channel, ServletManager sm) {
         return null;
     }
 
