@@ -56,8 +56,9 @@ public class User {
 			return connectedUser;
 		}
 		DataBaseConnection db = sm.getDB();
-		DatabaseRequest request = db.prepareRequest("SELECT * FROM users WHERE email = ?");
+		DatabaseRequest request = db.prepareRequest("SELECT users.* FROM users LEFT JOIN teamUsers ON users.id = teamUsers.user_id WHERE users.email = ? OR teamUsers.email = ?");
 		request.setString(email);
+        request.setString(email);
 		DatabaseResult rs = request.get();
 		int transaction = db.startTransaction();
 		if (rs.next()) {
@@ -161,7 +162,10 @@ public class User {
 		Date date = new Date();
 		String registrationDate = dateFormat.format(date);
 		Status status = Status.createStatus(db);
-		DatabaseRequest request = db.prepareRequest("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        DatabaseRequest request = db.prepareRequest("SELECT * FROM users LEFT JOIN teamUsers ON users.id = teamUsers.user_id WHERE users.email = ? OR teamUser.email = ?;");
+        if (request.get().next())
+            throw new GeneralException(ServletManager.Code.ClientWarning, "Email already taken.");
+		request = db.prepareRequest("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 		request.setNull();
 		request.setString(firstName);
 		request.setString(lastName);

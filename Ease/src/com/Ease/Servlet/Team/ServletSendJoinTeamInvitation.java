@@ -45,6 +45,11 @@ public class ServletSendJoinTeamInvitation extends HttpServlet {
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Empty first name.");
             String code;
             HibernateQuery query = new HibernateQuery();
+            query.querySQLString("SELECT * FROM users LEFT JOIN teamUsers ON users.id = teamUsers.user_id WHERE users.email = ? OR teamUsers.email = ?;");
+            query.setParameter(1, email);
+            query.setParameter(2, email);
+            if (query.getSingleResult() != null)
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Email already taken");
             query.querySQLString("SELECT code FROM pendingTeamInvitations WHERE email = ?");
             query.setParameter(1, email);
             Object id = query.getSingleResult();
