@@ -134,6 +134,7 @@ public class Channel {
         JSONArray teamUsers = new JSONArray();
         for (TeamUser teamUser : this.getTeamUsers())
             teamUsers.add(teamUser.getJson());
+        //for (App app : this.apps)
         return res;
     }
 
