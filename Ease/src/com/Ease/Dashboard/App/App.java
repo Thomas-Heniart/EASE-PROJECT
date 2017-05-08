@@ -31,7 +31,7 @@ public class App {
     }
 
 	/*
-	 * 
+     *
 	 * Loader And Creator
 	 * 
 	 */
@@ -156,7 +156,7 @@ public class App {
 
     }
 
-    public static String createApp(Profile profile, int position, String name, String type, Map<String, Object> elevator, boolean shareable, boolean shared, ServletManager sm) throws GeneralException {
+    public static String createApp(Profile profile, Integer position, String name, String type, Map<String, Object> elevator, boolean shareable, boolean shared, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         AppInformation infos = AppInformation.createAppInformation(name, sm);
@@ -170,11 +170,13 @@ public class App {
         request.setBoolean(shareable);
         request.setBoolean(shared);
         String appDBid = request.set().toString();
-        request = db.prepareRequest("INSERT INTO profileAndAppMap values (NULL, ?, ?, ?)");
-        request.setInt(profile.getDBid());
-        request.setInt(appDBid);
-        request.setInt(position);
-        request.set();
+        if (profile != null && position != null) {
+            request = db.prepareRequest("INSERT INTO profileAndAppMap values (NULL, ?, ?, ?)");
+            request.setInt(profile.getDBid());
+            request.setInt(appDBid);
+            request.setInt(position);
+            request.set();
+        }
         elevator.put("appInfos", infos);
         elevator.put("insertDate", registrationDate);
         db.commitTransaction(transaction);

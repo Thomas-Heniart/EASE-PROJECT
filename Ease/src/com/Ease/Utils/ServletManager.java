@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.Ease.Team.Team;
+import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -344,6 +345,16 @@ public class ServletManager {
     }
 
     public TeamUser getTeamUserForTeam(Team team) throws GeneralException {
+        for (TeamUser teamUser : this.getTeamUsers()) {
+            if (teamUser.getTeam() == team)
+                return teamUser;
+        }
+        throw new GeneralException(Code.ClientError, "Current user not in this team");
+    }
+
+    public TeamUser getTeamUserForTeamId(Integer team_id) throws GeneralException {
+        TeamManager teamManager = (TeamManager) this.getContextAttr("teamManager");
+        Team team = teamManager.getTeamWithId(team_id);
         for (TeamUser teamUser : this.getTeamUsers()) {
             if (teamUser.getTeam() == team)
                 return teamUser;
