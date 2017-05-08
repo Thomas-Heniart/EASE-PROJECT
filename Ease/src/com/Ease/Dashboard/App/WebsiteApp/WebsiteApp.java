@@ -253,6 +253,13 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         return infos;
     }
 
+    public JSONObject getJSON() {
+        JSONObject jsonObject = super.getJSON();
+        jsonObject.put("website_id", this.website.getSingleId());
+        jsonObject.put("isEmpty", this.isEmpty());
+        return jsonObject;
+    }
+
     /* For sancho le robot */
     public boolean isEmpty() {
         return true;

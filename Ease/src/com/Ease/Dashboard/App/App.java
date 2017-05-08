@@ -386,6 +386,18 @@ public class App {
         }
     }
 
+    public JSONObject getJSON() {
+        JSONObject jsonObject = new JSONObject();
+        if (position != null)
+            jsonObject.put("position", position);
+        jsonObject.put("name", this.getAppInformation().getName());
+        jsonObject.put("singleId", this.single_id);
+        jsonObject.put("type", this.getType());
+        jsonObject.put("isShared", this.shared);
+        jsonObject.put("isShareable", this.shareable);
+        return jsonObject;
+    }
+
     public JSONArray getAccountInformationsJson() {
         return new JSONArray();
     }

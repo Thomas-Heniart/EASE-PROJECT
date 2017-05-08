@@ -4,7 +4,6 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
-import com.Ease.Team.TeamUserChannel;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -35,12 +34,6 @@ public class ServletDeleteTeamUser extends HttpServlet {
             Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
             TeamUser teamUser = team.getTeamUserWithId(Integer.parseInt(teamUser_id));
             team.removeTeamUser(teamUser);
-            for (TeamUserChannel teamUserChannel : team.getTeamUserChannels()) {
-                if (teamUserChannel.getTeamUser_owner() == teamUser || teamUserChannel.getTeamUser_tenant() == teamUser) {
-                    team.removeTeamUserChannel(teamUserChannel);
-                    query.deleteObject(teamUserChannel);
-                }
-            }
             query.deleteObject(teamUser);
             query.commit();
             sm.setResponse(ServletManager.Code.Success, "teamUser deleted");

@@ -58,9 +58,6 @@ public class ServletCreateTeamUser extends HttpServlet {
             TeamUser teamUser = new TeamUser(firstName, lastName, email, username, team, new TeamUserPermissions(TeamUserPermissions.Role.MEMBER.getValue()));
             team.addTeamUser(teamUser);
             team.getGeneralChannel().addTeamUser(teamUser);
-            for (TeamUser teamUser_tenant : team.getTeamUsers()) {
-                query.saveOrUpdateObject(team.createTeamUserChannel(teamUser, teamUser_tenant));
-            }
             query.saveOrUpdateObject(teamUser);
             query.saveOrUpdateObject(team);
             query.querySQLString("DELETE FROM pendingTeamInvitations WHERE id = ?");

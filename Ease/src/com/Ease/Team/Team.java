@@ -44,17 +44,11 @@ public class Team {
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     protected List<Channel> channels = new LinkedList<>();
 
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    protected List<TeamUserChannel> teamUserChannels = new LinkedList<>();
-
     @Transient
     protected Map<Integer, Channel> channelIdMap = new HashMap<>();
 
     @Transient
     protected Map<Integer, TeamUser> teamUserIdMap = new HashMap<>();
-
-    @Transient
-    protected Map<Integer, TeamUserChannel> teamUserChannelIdMap = new HashMap<>();
 
     public Team(String name, List<TeamUser> teamUsers, List<Channel> channels) {
         this.name = name;
@@ -101,9 +95,6 @@ public class Team {
         this.channels = channels;
     }
 
-    public List<TeamUserChannel> getTeamUserChannels() {
-        return teamUserChannels;
-    }
 
     public void lazyInitialize() {
         for (Channel channel : this.getChannels())
@@ -169,30 +160,6 @@ public class Team {
             this.name = name;
     }
 
-    public TeamUserChannel createTeamUserChannel(TeamUser teamUser, TeamUser teamUser_tenant) {
-        TeamUserChannel teamUserChannel = new TeamUserChannel(this, teamUser, teamUser_tenant);
-        this.teamUserChannels.add(teamUserChannel);
-        this.teamUserChannelIdMap.put(teamUserChannel.getDb_id(), teamUserChannel);
-        return teamUserChannel;
-    }
-
-    public TeamUserChannel getTeamUserChannel(Integer teamUserChannel_id) throws GeneralException {
-        TeamUserChannel teamUserChannel = this.teamUserChannelIdMap.get(teamUserChannel_id);
-        if (teamUserChannel == null)
-            throw new GeneralException(ServletManager.Code.ClientError, "No such teamUserChannel");
-        return teamUserChannel;
-    }
-
-    public void removeTeamUserChannel(Integer teamUserChannel_id) throws GeneralException {
-        TeamUserChannel teamUserChannel = this.getTeamUserChannel(teamUserChannel_id);
-        this.removeTeamUserChannel(teamUserChannel);
-    }
-
-    public void removeTeamUserChannel(TeamUserChannel teamUserChannel) {
-        this.teamUserChannels.remove(teamUserChannel);
-        this.teamUserChannelIdMap.remove(teamUserChannel.getDb_id());
-    }
-
     public JSONObject getJson() {
         JSONObject res = new JSONObject();
         res.put("name", this.name);
@@ -206,9 +173,6 @@ public class Team {
             teamUsers.add(teamUser.getJson());
         res.put("teamUsers", teamUsers);
         JSONArray teamUserChannels = new JSONArray();
-        for (TeamUserChannel teamUserChannel : this.getTeamUserChannels())
-            teamUserChannels.add(teamUserChannel.getJson());
-        res.put("teamUserChannels", teamUserChannels);
         return res;
     }
 
