@@ -71,7 +71,9 @@ public class DatabaseRequest {
 	
 	public DatabaseResult get() throws GeneralException {
 		try {
-			return new DatabaseResult(this.statement.executeQuery());
+		    ResultSet rs = this.statement.executeQuery();
+		    System.out.println(this.statement.toString());
+			return new DatabaseResult(rs);
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
 		}
@@ -81,11 +83,13 @@ public class DatabaseRequest {
 		try {
 			statement.executeUpdate();
 			ResultSet rs = statement.getGeneratedKeys();
+			System.out.println(statement.toString());
 			Integer id_row = null;
 			if (rs.next()){
 	        	try {
 	        		id_row = Integer.parseInt(rs.getString(1));
 	        	} catch (NumberFormatException e) {
+                    throw new GeneralException(ServletManager.Code.InternError, e);
 	        	}
 	        }
 			rs.close();

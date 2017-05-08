@@ -1,6 +1,8 @@
 package com.Ease.Team;
 
+import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.SharedApp;
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.User.User;
 import com.Ease.Utils.*;
 import org.json.simple.JSONObject;
@@ -205,7 +207,7 @@ public class TeamUser {
         return this.getTeamUserPermissions().hasAdminPermissions();
     }
 
-    public void loadSharedApps() {
-
+    public void loadSharedApps(ServletManager sm) throws GeneralException {
+        this.sharedApps = App.loadSharedApps(this.db_id, sm);
     }
 }

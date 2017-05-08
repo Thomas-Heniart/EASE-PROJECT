@@ -36,7 +36,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
 	 * 
 	 */
 
-    public static WebsiteApp loadWebsiteApp(String appDBid, Profile profile, int position, String insertDate, AppInformation appInfos, GroupApp groupApp, ServletManager sm) throws GeneralException {
+    public static WebsiteApp loadWebsiteApp(String appDBid, Profile profile, Integer position, String insertDate, AppInformation appInfos, GroupApp groupApp, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         DatabaseRequest request = db.prepareRequest("SELECT * from websiteApps WHERE app_id= ?;");
         request.setInt(appDBid);

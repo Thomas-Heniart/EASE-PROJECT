@@ -77,6 +77,43 @@ public class App {
         return apps;
     }
 
+    public static List<SharedApp> loadSharedApps(Integer teamUser_tenant_id, ServletManager sm) throws GeneralException {
+        List<SharedApp> sharedApps = new LinkedList<>();
+        DataBaseConnection db = sm.getDB();
+        DatabaseRequest request = db.prepareRequest("SELECT apps.* FROM apps JOIN appAndSharedAppMap ON apps.id = appAndSharedAppMap.app_id AND appAndSharedAppMap.team_user_tenant_id = ?;");
+        request.setInt(teamUser_tenant_id);
+        DatabaseResult rs = request.get();
+        String db_id;
+        int position;
+        String insertDate;
+        AppInformation infos;
+        GroupApp groupApp = null;
+        SharedApp app = null;
+        while (rs.next()) {
+            db_id = rs.getString(Data.ID.ordinal());
+            insertDate = rs.getString(Data.INSERT_DATE.ordinal());
+            infos = AppInformation.loadAppInformation(rs.getString(Data.APP_INFO_ID.ordinal()), db);
+            String groupAppId = rs.getString(Data.GROUP_APP_ID.ordinal());
+            if (groupAppId != null) {
+                groupApp = GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupAppId);
+            }
+
+            switch (rs.getString(Data.TYPE.ordinal())) {
+                case "linkApp":
+                    app = LinkApp.loadLinkApp(db_id, null, null, insertDate, infos, groupApp, sm);
+                    break;
+                case "websiteApp":
+                    app = WebsiteApp.loadWebsiteApp(db_id, null, null, insertDate, infos, groupApp, sm);
+                    break;
+                default:
+                    throw new GeneralException(ServletManager.Code.InternError, "This app type dosen't exist.");
+            }
+            sharedApps.add(app);
+            groupApp = null;
+        }
+        return sharedApps;
+    }
+
     public static String createApp(Profile profile, int position, String name, String type, Map<String, Object> elevator, ServletManager sm) throws GeneralException {
         return createApp(profile, position, name, type, elevator, true, false, sm);
 
@@ -148,7 +185,7 @@ public class App {
 
     protected String db_id;
     protected Profile profile;
-    protected int position;
+    protected Integer position;
     protected AppInformation informations;
     protected GroupApp groupApp;
     protected String insertDate;
@@ -159,7 +196,7 @@ public class App {
     protected List<SharedApp> sharedApps = new LinkedList<>();
     protected HashMap<Integer, SharedApp> sharedAppIdMap = new HashMap<>();
 
-    public App(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id) {
+    public App(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id) {
         this.db_id = db_id;
         this.profile = profile;
         this.position = position;
