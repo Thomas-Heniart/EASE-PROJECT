@@ -26,11 +26,11 @@
 	},
 	"logout":{
       "todo":[
-        {"action":"aclick", "search":"a[href*='https://accounts.google.com/Logout?'], a.go-to-drive, #account-chooser-link, #identifierLink, #account-chooser-add-account, #identifierNext, #next, #profileIdentifier + div div[role='button']"}
+        {"action":"aclick", "search":"a[href*='https://accounts.google.com/Logout?']"}
       ]
 	},
 	"checkAlreadyLogged":[
-      {"action":"waitfor", "search":"a[href*='Logout']"},
+      {"action":"waitfor", "search":"a[href*='Logout'], #identifierLink, #identifierId, div[aria-label='Google'], #profileIdentifier + div div[role='button'], a.go-to-drive"},
       {"search":"a[title='Drive']"}
 	]
 }
