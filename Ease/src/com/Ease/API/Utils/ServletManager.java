@@ -256,7 +256,7 @@ public class ServletManager {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("code", this.retCode);
                 if (retMsg != null)
-                    jsonObject.put("msg", retMsg);
+                    jsonObject.put("data", retMsg);
                 response.getWriter().print(jsonObject.toString());
             }
         } catch (IOException e) {

@@ -257,12 +257,11 @@ public class SendGridMail {
         this.sendEmail();
     }
 
-    public void sendCreateTeamEmail(String firstName, String email, String code) throws GeneralException {
+    public void sendCreateTeamEmail(String email, String digits) throws GeneralException {
 		mail.setTemplateId("8ee79c52-b2bc-422e-b401-54a89de8f37b");
 		Personalization personalization = this.createNewPersonalization();
-		this.addTo(personalization, firstName, email);
-		personalization.addSubstitution("#link", Variables.URL_PATH + "CreateTeam?email=" + email + "&code=" + code);
-		personalization.addSubstitution("#firstName", firstName);
+		this.addTo(personalization, email, email);
+		personalization.addSubstitution("#digits", digits);
 		this.sendEmail();
 	}
 
