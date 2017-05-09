@@ -6,6 +6,7 @@ import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.User.User;
 import com.Ease.Utils.*;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
@@ -226,6 +227,14 @@ public class TeamUser {
         res.put("arrivalDate", this.arrivalDate.toString());
         if (departureDate != null)
             res.put("departureDate", this.departureDate);
+        JSONArray sharedApps = new JSONArray();
+        for (SharedApp app : this.sharedApps) {
+            sharedApps.add(((App)app).getJSON());
+        }
+        res.put("sharedApps", sharedApps);
+        JSONArray shareableApps = new JSONArray();
+        for (ShareableApp app : this.shareableApps)
+            shareableApps.add(((App)app).getJSON());
         return res;
     }
 

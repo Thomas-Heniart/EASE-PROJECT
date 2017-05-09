@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.Ease.Context.Catalog.Website;
+import com.Ease.Team.TeamUser;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -231,9 +232,16 @@ public class App {
     protected int single_id;
     protected boolean shared;
     protected boolean shareable;
-    protected ShareableApp holder;
+
+    /* Interface ShareableApp */
     protected List<SharedApp> sharedApps = new LinkedList<>();
     protected HashMap<Integer, SharedApp> sharedAppIdMap = new HashMap<>();
+    protected List<TeamUser> tenant_teamUsers = new LinkedList<>();
+    protected Map<TeamUser, SharedApp> teamUserSharedAppMap = new HashMap<>();
+
+    /* Interface SharedApp */
+    protected ShareableApp holder;
+
 
     public App(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id) {
         this.db_id = db_id;
