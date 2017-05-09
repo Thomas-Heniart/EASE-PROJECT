@@ -85,7 +85,7 @@ public class Website {
         return site;
     }
 
-    public static Website createWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, boolean noLogin, String[] haveLoginWith, String[] infoNames, String[] infoTypes, String[] placeholders, String[] placeholderIcons, Catalog catalog, ServletManager sm) throws GeneralException {
+    public static Website createWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, boolean noLogin, boolean noScrap, String[] haveLoginWith, String[] infoNames, String[] infoTypes, String[] placeholders, String[] placeholderIcons, Catalog catalog, String ssoId, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         DatabaseRequest request = db.prepareRequest("SELECT * FROM websites WHERE folder = ? AND website_name = ?;");
         request.setString(folder);
@@ -94,11 +94,16 @@ public class Website {
         if (rs.next())
             throw new GeneralException(ServletManager.Code.UserMiss, "This website already exists");
         int transaction = db.startTransaction();
-        WebsiteAttributes attributes = WebsiteAttributes.createWebsiteAttributes(db);
-        request = db.prepareRequest("INSERT INTO websites VALUES (null, ?, ?, ?, NULL, ?, ?, 0, 1, ?);");
+        WebsiteAttributes attributes = WebsiteAttributes.createWebsiteAttributes(noScrap, db);
+        request = db.prepareRequest("INSERT INTO websites VALUES (null, ?, ?, ?, ?, ?, ?, 0, 1, ?);");
         request.setString(url);
         request.setString(name);
         request.setString(folder);
+        System.out.println(ssoId == null || ssoId.equals(""));
+        if (ssoId == null || ssoId.equals(""))
+            request.setNull();
+        else
+            request.setInt(ssoId);
         request.setBoolean(noLogin);
         request.setString(homePage);
         request.setInt(attributes.getDbId());
@@ -139,6 +144,11 @@ public class Website {
         WebsitesVisitedManager websitesVisitedManager = (WebsitesVisitedManager) sm.getContextAttr("websitesVisitedManager");
         int visits = websitesVisitedManager.websiteDone(newWebsite.getHostname(), sm);
         attributes.setVisits(visits, sm);
+        if (ssoId != null && !ssoId.equals("")) {
+            Sso sso = catalog.getSsoWithDbId(ssoId);
+            sso.addWebsite(newWebsite);
+            newWebsite.setSso(sso);
+        }
         return newWebsite;
     }
 
@@ -178,7 +188,7 @@ public class Website {
     public static JSONArray existsInDb(String websiteHost, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-        DatabaseResult rs = db.prepareRequest("select * from websites where noLogin=0 AND website_name NOT IN ('Google AdWords', 'Google Analytics', 'Google Play');").get();
+        DatabaseResult rs = db.prepareRequest("select websites.* from websites JOIN websiteAttributes ON websites.website_attributes_id = websiteAttributes.id where noLogin=0 AND noScrap = 0;").get();
         JSONArray result = new JSONArray();
         while (rs.next()) {
             String loginUrl = rs.getString(WebsiteData.LOGIN_URL.ordinal());
@@ -367,6 +377,10 @@ public class Website {
 
     public Sso getSso() {
         return this.sso;
+    }
+
+    public void setSso(Sso sso) {
+        this.sso = sso;
     }
 
     public int getSsoId() {

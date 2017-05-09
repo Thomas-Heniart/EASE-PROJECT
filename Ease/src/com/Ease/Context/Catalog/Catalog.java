@@ -85,8 +85,8 @@ public class Catalog {
 		}
 	}
 	
-	public Website addWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, boolean noLogin, String[] haveLoginWith, String[] infoNames, String[] infoTypes, String[] placeholders, String[] placeholderIcons, ServletManager sm) throws GeneralException {
-		Website site = Website.createWebsite(url, name, homePage, folder, haveLoginButton, noLogin, haveLoginWith, infoNames, infoTypes, placeholders, placeholderIcons, this, sm);
+	public Website addWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, boolean noLogin, boolean noScrap, String[] haveLoginWith, String[] infoNames, String[] infoTypes, String[] placeholders, String[] placeholderIcons, String ssoId, ServletManager sm) throws GeneralException {
+		Website site = Website.createWebsite(url, name, homePage, folder, haveLoginButton, noLogin, noScrap, haveLoginWith, infoNames, infoTypes, placeholders, placeholderIcons, this, ssoId, sm);
 		websites.add(site);
 		websiteDBmap.put(site.getDb_id(), site);
 		websiteIDmap.put(site.getSingleId(), site);
@@ -308,7 +308,7 @@ public class Catalog {
 		return res;
 	}
 	
-	private List<Sso> getSsos() {
+	public List<Sso> getSsos() {
 		return this.ssos;
 	}
 	
@@ -477,5 +477,12 @@ public class Catalog {
 	public void whitelistWebsiteWithSingleId(int single_id, ServletManager sm) throws GeneralException {
 		Website website = this.getWebsiteWithSingleId(single_id);
 		this.whitelistWebsite(website, sm);
+	}
+
+	public Sso getSsoWithDbId(String ssoId) throws GeneralException {
+		Sso sso = this.ssoDBmap.get(ssoId);
+		if (sso == null)
+			throw new GeneralException(ServletManager.Code.ClientError, "Sso is null");
+		return sso;
 	}
 }
