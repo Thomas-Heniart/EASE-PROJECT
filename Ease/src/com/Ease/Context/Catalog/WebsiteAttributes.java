@@ -9,7 +9,9 @@ import com.Ease.Utils.ServletManager;
 public class WebsiteAttributes {
 	
 	public static WebsiteAttributes createWebsiteAttributes(boolean noScrap, DataBaseConnection db) throws GeneralException {
-		String db_id = db.prepareRequest("INSERT INTO websiteAttributes values (null, 0, null, default, 1, 1, default, 0);").set().toString();
+		DatabaseRequest request = db.prepareRequest("INSERT INTO websiteAttributes values (null, 0, null, default, 1, 1, default, 0, ?);");
+		request.setBoolean(noScrap);
+		String db_id = request.set().toString();
 		return new WebsiteAttributes(db_id, false, true, true, 0, false, noScrap);
 	}
 	
