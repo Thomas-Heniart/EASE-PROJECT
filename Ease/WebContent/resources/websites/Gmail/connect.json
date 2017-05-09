@@ -4,26 +4,33 @@
 	"sso":"Google",
 	"home":"https://gmail.com",
 	"connect":{
-		"todo":[
-            {"action":"waitfor", "search":"div[aria-label='Google']"},
-			{"action":"aclick", "search":"#account-chooser-link"},
-			{"action":"clickona", "search":"#account-chooser-add-account"},
-			{"action":"waitfor", "search":"#Email"},
-			{"action":"fill", "what":"login", "search":"#Email", "grave":true},
-			{"action":"click", "search":"#next", "grave":true},
-			{"action":"waitfor", "time":10, "search":"#Passwd"},
-			{"action":"fill", "what":"password", "search":"#Passwd"},
-			{"action":"submit", "search":"#gaia_loginform", "grave":true}
-			]
+      "todo":[
+        {"action":"waitfor", "search":"#identifierId, div[aria-label='Google'], #identifierLink, #profileIdentifier + div div[role='button']"},
+        {"action":"aclick", "search":"#account-chooser-link"},
+        {"action":"waitfor", "search":"#identifierLink, #account-chooser-add-account, #identifierNext, #next, #profileIdentifier + div div[role='button']"},
+        {"action":"click", "search":"#profileIdentifier + div div[role='button']"},
+        {"action":"waitfor", "search":"#identifierLink, #account-chooser-add-account, #identifierNext, #next"},
+        {"action":"click", "search":"#identifierLink"},
+        {"action":"clickona", "search":"#account-chooser-add-account"},
+        {"action":"waitfor", "search":"#Email, #identifierId"},
+        {"action":"waitfor", "search":"#next, #identifierNext"},
+        {"action":"fill", "what":"login", "search":"#Email, #identifierId", "grave":true},
+        {"action":"click", "search":"#next"},
+        {"action":"click", "search":"#identifierNext"},
+        {"action":"waitfor", "search":"#Passwd, #password input[type='password']"},
+        {"action":"waitfor", "search":"#passwordNext, #gaia_loginform"},
+        {"action":"fill", "what":"password", "search":"#Passwd, #password input[type='password']"},
+        {"action":"click", "search":"#passwordNext"},
+        {"action":"submit", "search":"#gaia_loginform"}
+      ]
 	},
 	"logout":{
-		"todo":[
-			{"action":"click", "search":"a[href*='https://accounts.google.com/SignOutOptions?']", "grave":true},
-			{"action":"waitfor", "search":"a[href*='https://accounts.google.com/Logout?']"},
-			{"action":"aclick", "search":"a[href*='https://accounts.google.com/Logout?']", "grave":true}
-		]
+      "todo":[
+        {"action":"aclick", "search":"a[href*='Logout']"}
+      ]
 	},
 	"checkAlreadyLogged":[
-		{"search":"a[href*='https://accounts.google.com/SignOutOptions?']"}
+      {"action": "waitfor", "search":"a[href*='Logout'], #identifierLink, #identifierId, div[aria-label='Google'], #profileIdentifier + div div[role='button']"},
+      {"search":"a[href*='Logout']"}
 	]
 }
