@@ -9,10 +9,7 @@ import com.Ease.Utils.*;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by thomas on 10/04/2017.
@@ -52,6 +49,12 @@ public class TeamUser {
     @Column(name = "username")
     protected String username;
 
+    @Column(name = "arrivalDate")
+    protected Date arrivalDate;
+
+    @Column(name = "departureDate")
+    protected Date departureDate;
+
     @ManyToMany
     @JoinTable(name = "channelAndTeamUserMap", joinColumns = { @JoinColumn(name = "team_user_id") }, inverseJoinColumns = { @JoinColumn(name = "channel_id") })
     protected List<Channel> channels = new LinkedList<>();
@@ -65,6 +68,18 @@ public class TeamUser {
 
     @Transient
     private List<ShareableApp> shareableApps = new LinkedList<>();
+
+    public TeamUser(User user, String firstName, String lastName, String email, String username, Date departureDate, Team team, TeamUserPermissions teamUserPermissions, List<Channel> channels) {
+        this.user = user;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.username = username;
+        this.departureDate = departureDate;
+        this.team = team;
+        this.teamUserPermissions = teamUserPermissions;
+        this.channels = channels;
+    }
 
     public TeamUser(User user, String firstName, String lastName, String email, String username, Team team, TeamUserPermissions teamUserPermissions, List<Channel> channels) {
         this.user = user;
@@ -153,6 +168,22 @@ public class TeamUser {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public Date getArrivalDate() {
+        return arrivalDate;
+    }
+
+    public void setArrivalDate(Date arrivalDate) {
+        this.arrivalDate = arrivalDate;
+    }
+
+    public Date getDepartureDate() {
+        return departureDate;
+    }
+
+    public void setDepartureDate(Date departureDate) {
+        this.departureDate = departureDate;
     }
 
     public Team getTeam() {
