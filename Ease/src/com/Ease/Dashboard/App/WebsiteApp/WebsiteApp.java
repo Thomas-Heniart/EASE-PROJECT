@@ -257,6 +257,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
     public JSONObject getJSON() {
         JSONObject jsonObject = super.getJSON();
         jsonObject.put("website_id", this.website.getSingleId());
+        jsonObject.put("type", this.getType());
         jsonObject.put("isEmpty", this.isEmpty());
         return jsonObject;
     }

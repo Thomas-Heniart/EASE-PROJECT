@@ -139,8 +139,13 @@ public class Channel {
         res.put("name", this.name);
         JSONArray teamUsers = new JSONArray();
         for (TeamUser teamUser : this.getTeamUsers())
-            teamUsers.add(teamUser.getSimpleJson());
-        res.put("purpose", this.purpose);
+            teamUsers.add(teamUser.getDb_id());
+        res.put("userIds", teamUsers);
+        JSONArray apps = new JSONArray();
+        for (App app : this.getApps())
+            apps.add(app.getJSON());
+        res.put("apps", apps);
+        res.put("desc", this.purpose);
         return res;
     }
 

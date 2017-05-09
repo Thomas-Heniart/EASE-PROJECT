@@ -222,6 +222,12 @@ public class ClassicApp extends WebsiteApp {
         return infos;
     }
 
+    public JSONObject getJSON() {
+        JSONObject res = super.getJSON();
+        res.put("account_information", this.account.getJSON());
+        return res;
+    }
+
     public void fillJson(JSONObject json) {
         super.fillJson(json);
         json.put("accountInformations", this.account.getJSON());
