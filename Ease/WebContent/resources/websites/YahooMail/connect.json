@@ -1,26 +1,26 @@
 {
     "name":"YahooMail",
     "lastLogin":"",
-    "home":"https://login.yahoo.com/config/mail",
+    "home":"https://mail.yahoo.com/",
     "connect":{
-        "todo":[
-            {"action":"fill", "what":"login", "search":"#login-username", "grave":true},
-            {"action":"click", "search":"#login-signin"},
-            {"action":"waitfor", "search":"#login-passwd"},
-            {"action":"fill", "what":"password", "search":"#login-passwd"},
-            {"action":"submit", "search":"#mbr-login-form"},
-            {"action":"waitload"},
-            {"action":"goto", "url":"https://mail.yahoo.com/"}
-        ]
+      "todo":[
+        {"action":"fill", "what":"login", "search":"input#login-username"},
+        {"action":"click", "search":"#login-signin"},
+        {"action":"waitfor", "search":"input#login-passwd"},
+        {"action":"fill", "what":"password", "search":"input#login-passwd"},
+        {"action":"submit", "search":"#mbr-login-form"}
+      ]
     },
     
     "logout":{
-        "todo":[
-        	{"action":"aclick","search":"#yucs-signout"},
-        	{"action":"goto","url":"https://login.yahoo.com/config/mail"}
-        ]
+      "todo":[
+        {"action":"aclick","search":"#yucs-signout"},
+        {"action":"waitfor", "search":"#uh-mail-link"},
+        {"action":"aclick", "search":"#uh-mail-link"}
+      ]
     },
     "checkAlreadyLogged":[
-        {"search":"#yucs-signout"}
+      {"action":"waitfor", "search":"input#login-username, #yucs-signout"},
+      {"search":"#yucs-signout"}
     ]
 }

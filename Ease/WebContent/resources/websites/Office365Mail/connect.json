@@ -3,21 +3,23 @@
 	"lastLogin":"",
 	"home":"https://outlook.office365.com/",
 	"connect":{
-		"todo":[
-			{"action":"waitfor", "search":"#use_another_account_link, #credentials, #loginForm"},
-			{"action":"clickona", "search":"#use_another_account_link"},
-			{"action":"waitfor", "search":"#credentials, #loginForm"},
-			{"action":"fill", "what":"login", "search":"#cred_userid_inputtext,#userNameInput", "grave":true},
-			{"action":"fill", "what":"password", "search":"#cred_password_inputtext,#passwordInput", "grave":true},
-			{"action":"submit", "search":"#credentials,#loginForm", "grave":true}
-			]
+      "todo":[
+        {"action":"waitfor", "search":"#use_another_account_link, #credentials, #loginForm"},
+        {"action":"clickona", "search":"#use_another_account_link"},
+        {"action":"waitfor", "search":"#credentials, #loginForm"},
+        {"action":"fill", "what":"login", "search":"#cred_userid_inputtext,#userNameInput", "grave":true},
+        {"action":"fill", "what":"password", "search":"#cred_password_inputtext,#passwordInput", "grave":true},
+        {"action":"submit", "search":"#credentials,#loginForm", "grave":true}
+      ]
 	},
 	"logout":{
-		"todo":[
-			{"action":"goto", "url":"https://outlook.office.com/owa/logoff.owa"}
-		]
+      "todo":[
+        {"action":"goto", "url":"https://outlook.office.com/owa/logoff.owa"},
+        {"action":"waitfor", "search":"#use_another_account_link, #credentials, #loginForm, #O365_MeFlexPane_ButtonID"}
+      ]
 	},
 	"checkAlreadyLogged":[
-		{"search":"div[role='banner']"}
+      {"action":"waitfor", "search":"#use_another_account_link, #credentials, #loginForm, #O365_MeFlexPane_ButtonID"},
+      {"search":"#O365_MeFlexPane_ButtonID"}
 	]
 }

@@ -220,7 +220,9 @@ public class Account {
         for (AccountInformation info : this.infos) {
             if ((value = infos.get(info.getInformationName())) != null) {
                 if (info.getInformationName().equals("password")) {
-                    db.prepareRequest("UPDATE accounts SET lastUpdateDate = NOW() WHERE id = ?;").set();
+                    DatabaseRequest request = db.prepareRequest("UPDATE accounts SET lastUpdateDate = NOW() WHERE id = ?;");
+                    request.setInt(this.db_id);
+                    request.set();
                     this.passwordMustBeUpdated = false;
                 }
                 info.setInformation_value(value, sm);
