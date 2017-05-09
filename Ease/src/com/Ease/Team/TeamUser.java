@@ -223,12 +223,9 @@ public class TeamUser {
         res.put("email", this.email);
         res.put("username", this.username);
         res.put("role", this.teamUserPermissions.getRole());
-        return res;
-    }
-
-    public JSONObject getSimpleJson() {
-        JSONObject res = new JSONObject();
-        res.put("id", this.db_id);
+        res.put("arrivalDate", this.arrivalDate.toString());
+        if (departureDate != null)
+            res.put("departureDate", this.departureDate);
         return res;
     }
 
