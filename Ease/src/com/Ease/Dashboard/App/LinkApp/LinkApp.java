@@ -73,7 +73,7 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
     protected GroupLinkApp groupLinkApp;
     protected String linkAppDBid;
 
-    public LinkApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, LinkAppInformation linkInfos, String linkAppDBid) {
+    public LinkApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, LinkAppInformation linkInfos, String linkAppDBid) {
         super(db_id, profile, position, infos, groupApp, insertDate, single_id);
         this.linkInfos = linkInfos;
         this.groupLinkApp = (GroupLinkApp) groupApp;
@@ -144,11 +144,6 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
     @Override
     public void deleteShared(ServletManager sm) throws GeneralException {
 
-    }
-
-    @Override
-    public SharedApp share(Integer team_user_owner_id, Integer team_user_tenant_id, ServletManager sm) throws GeneralException {
-        return null;
     }
 
     @Override

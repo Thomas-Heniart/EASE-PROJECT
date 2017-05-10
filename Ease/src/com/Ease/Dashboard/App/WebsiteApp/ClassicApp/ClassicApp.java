@@ -35,7 +35,7 @@ public class ClassicApp extends WebsiteApp {
 	 * 
 	 */
 
-    public static ClassicApp loadClassicApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, String websiteAppDBid, ServletManager sm) throws GeneralException {
+    public static ClassicApp loadClassicApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, String websiteAppDBid, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         DatabaseRequest request = db.prepareRequest("SELECT * from classicApps WHERE website_app_id= ?;");
         request.setInt(websiteAppDBid);
@@ -150,7 +150,7 @@ public class ClassicApp extends WebsiteApp {
     protected Account account;
     protected String classicDBid;
 
-    public ClassicApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid, Account account, String classicDBid) {
+    public ClassicApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid, Account account, String classicDBid) {
         super(db_id, profile, position, infos, groupApp, insertDate, single_id, site, websiteAppDBid);
         this.account = account;
         this.classicDBid = classicDBid;
@@ -262,13 +262,6 @@ public class ClassicApp extends WebsiteApp {
     @Override
     public void deleteShared(ServletManager sm) throws GeneralException {
         this.removeFromDB(sm);
-    }
-
-    @Override
-    public SharedApp share(Integer team_user_owner_id, Integer team_user_tenant_id, ServletManager sm) throws GeneralException {
-        if (!this.isShareable())
-            throw new GeneralException(ServletManager.Code.ClientError, "You can't share this app");
-        return createSharedClassicApp(sm, team_user_owner_id, team_user_tenant_id, this);
     }
 
     @Override

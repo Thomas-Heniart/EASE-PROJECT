@@ -1,6 +1,7 @@
 package com.Ease.Team;
 
 import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Utils.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -37,10 +38,10 @@ public class Channel {
     protected List<TeamUser> teamUsers = new LinkedList<>();
 
     @Transient
-    protected List<App> apps = new LinkedList<>();
+    protected List<SharedApp> sharedApps = new LinkedList<>();
 
     @Transient
-    protected Map<String, App> appIdMap = new HashMap<>();
+    protected Map<String, SharedApp> sharedAppIdMap = new HashMap<>();
 
     public Channel(Team team, String name, String purpose, List<TeamUser> teamUsers) {
         this.team = team;
@@ -103,34 +104,12 @@ public class Channel {
         this.teamUsers.remove(teamUser);
     }
 
-    public List<App> getApps() {
-        return apps;
+    public List<SharedApp> getSharedApps() {
+        return sharedApps;
     }
 
-    public void setApps(List<App> apps) {
-        this.apps = apps;
-    }
-
-    public void addApp(App app) {
-        this.apps.add(app);
-        this.appIdMap.put(app.getDBid(), app);
-    }
-
-    public void removeApp(App app) {
-        this.apps.remove(app);
-        this.appIdMap.remove(app.getDBid());
-    }
-
-    public void removeAppWithId(String app_id) throws GeneralException {
-        App app = this.getAppWithId(app_id);
-        this.removeApp(app);
-    }
-
-    public App getAppWithId(String app_id) throws GeneralException {
-        App app = this.appIdMap.get(app_id);
-        if (app == null)
-            throw new GeneralException(ServletManager.Code.ClientError, "No such app in this channel");
-        return app;
+    public void setSharedApps(List<SharedApp> sharedApps) {
+        this.sharedApps = sharedApps;
     }
 
     public JSONObject getJson() {
@@ -142,8 +121,8 @@ public class Channel {
             teamUsers.add(teamUser.getDb_id());
         res.put("userIds", teamUsers);
         JSONArray apps = new JSONArray();
-        for (App app : this.getApps())
-            apps.add(app.getJSON());
+        for (SharedApp sharedApp : this.getSharedApps())
+            apps.add(sharedApp.getSharedJSON());
         res.put("apps", apps);
         res.put("desc", this.purpose);
         return res;
@@ -153,5 +132,9 @@ public class Channel {
         String name = (String) editJson.get("name");
         if (name != null)
             this.name = name;
+    }
+
+    public void addSharedApp(App app) {
+        this.sharedApps.add(app);
     }
 }

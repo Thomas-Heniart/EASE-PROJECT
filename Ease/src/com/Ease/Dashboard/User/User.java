@@ -660,8 +660,6 @@ public class User {
 			TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
 			Team team = teamManager.getTeamWithId(team_id);
 			TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
-			teamUser.loadSharedApps(sm);
-			teamUser.loadShareableApps(sm);
 			this.teamUsers.add(teamUser);
 			teamUser.setDashboard_user(this);
 		}

@@ -187,21 +187,21 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
     protected String websiteAppDBid;
     protected GroupWebsiteApp groupWebsiteApp;
 
-    public WebsiteApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid) {
+    public WebsiteApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid) {
         super(db_id, profile, position, infos, groupApp, insertDate, single_id);
         this.website = site;
         this.websiteAppDBid = websiteAppDBid;
         this.groupWebsiteApp = (GroupWebsiteApp) groupApp;
     }
 
-    public WebsiteApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid, boolean shareable, boolean shared) {
+    public WebsiteApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid, boolean shareable, boolean shared) {
         super(db_id, profile, position, infos, groupApp, insertDate, single_id, shareable, shared);
         this.website = site;
         this.websiteAppDBid = websiteAppDBid;
         this.groupWebsiteApp = (GroupWebsiteApp) groupApp;
     }
 
-    public WebsiteApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid, boolean shareable, boolean shared, ShareableApp holder) {
+    public WebsiteApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid, boolean shareable, boolean shared, ShareableApp holder) {
         super(db_id, profile, position, infos, groupApp, insertDate, single_id, shareable, shared, holder);
         this.website = site;
         this.websiteAppDBid = websiteAppDBid;
@@ -281,13 +281,6 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
     public void deleteShared(ServletManager sm) throws GeneralException {
         //this.holder.deleteShareable(sm, this);
         this.removeFromDB(sm);
-    }
-
-    @Override
-    public SharedApp share(Integer team_user_owner_id, Integer team_user_tenant_id, ServletManager sm) throws GeneralException {
-        if (!this.isShareable())
-            throw new GeneralException(ServletManager.Code.ClientError, "You can't share this app");
-        return createEmptySharedApp(sm, team_user_owner_id, team_user_tenant_id, this);
     }
 
     @Override

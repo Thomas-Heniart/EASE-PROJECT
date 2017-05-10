@@ -225,16 +225,18 @@ public class TeamUser {
         res.put("username", this.username);
         res.put("role", this.teamUserPermissions.getRole());
         res.put("arrivalDate", this.arrivalDate.toString());
+        res.put("departureDate", "null");
         if (departureDate != null)
             res.put("departureDate", this.departureDate);
         JSONArray sharedApps = new JSONArray();
-        for (SharedApp app : this.sharedApps) {
-            sharedApps.add(((App)app).getJSON());
+        for (SharedApp sharedApp : this.sharedApps) {
+            sharedApps.add(sharedApp.getSharedJSON());
         }
         res.put("sharedApps", sharedApps);
         JSONArray shareableApps = new JSONArray();
-        for (ShareableApp app : this.shareableApps)
-            shareableApps.add(((App)app).getJSON());
+        for (ShareableApp shareableApp : this.shareableApps)
+            shareableApps.add(shareableApp.getShareableJson());
+        res.put("shareableApps", shareableApps);
         return res;
     }
 
@@ -254,11 +256,11 @@ public class TeamUser {
         return this.getTeamUserPermissions().hasAdminPermissions();
     }
 
-    public void loadSharedApps(ServletManager sm) throws GeneralException {
-        this.sharedApps = App.loadSharedApps(this.db_id, sm);
+    public void addSharedApp(SharedApp app) {
+        this.sharedApps.add(app);
     }
 
-    public void loadShareableApps(ServletManager sm) throws GeneralException {
-        this.shareableApps = App.loadShareableApps(this.db_id, sm);
+    public void addShareableApp(ShareableApp app) {
+        this.shareableApps.add(app);
     }
 }

@@ -1,5 +1,6 @@
 package com.Ease.Dashboard.App;
 
+import com.Ease.Team.TeamUser;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 import org.json.simple.JSONObject;
@@ -10,5 +11,9 @@ import org.json.simple.JSONObject;
 public interface SharedApp {
     public void modifyShared(ServletManager sm, JSONObject editJson) throws GeneralException;
     public ShareableApp getHolder();
+    public void setHolder(ShareableApp shareableApp);
     public void deleteShared(ServletManager sm) throws GeneralException;
+    public void setTeamUser_tenant(TeamUser teamUserWithId);
+    public TeamUser getTeamUser_tenant();
+    public JSONObject getSharedJSON();
 }

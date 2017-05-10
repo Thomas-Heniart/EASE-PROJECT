@@ -1,5 +1,8 @@
 package com.Ease.Team;
 
+import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.App.ShareableApp;
+import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Utils.*;
 import com.google.common.primitives.UnsignedInts;
@@ -49,6 +52,9 @@ public class Team {
 
     @Transient
     protected Map<Integer, TeamUser> teamUserIdMap = new HashMap<>();
+
+    @Transient
+    protected List<ShareableApp> shareableApps = new LinkedList<>();
 
     public Team(String name, List<TeamUser> teamUsers, List<Channel> channels) {
         this.name = name;
@@ -172,7 +178,10 @@ public class Team {
         for (TeamUser teamUser : this.getTeamUsers())
             teamUsers.add(teamUser.getJson());
         res.put("teamUsers", teamUsers);
-        JSONArray teamUserChannels = new JSONArray();
+        JSONArray shareableApps = new JSONArray();
+        for (ShareableApp shareableApp : this.shareableApps)
+            shareableApps.add(shareableApp.getShareableJson());
+        res.put("shareableApps", shareableApps);
         return res;
     }
 
@@ -190,5 +199,15 @@ public class Team {
         res.put("id", this.db_id);
         res.put("name", this.name);
         return res;
+    }
+
+    public void loadApps(ServletManager sm) throws GeneralException {
+        this.shareableApps = App.loadShareableAppsForTeam(this.db_id, sm);
+        for (ShareableApp shareableApp : this.shareableApps) {
+            shareableApp.setSharedApps(App.loadSharedAppsForShareableApp(shareableApp, sm));
+            if (shareableApp.getChannel() != null) {
+                shareableApp.getChannel().setSharedApps(shareableApp.getSharedApps());
+            }
+        }
     }
 }

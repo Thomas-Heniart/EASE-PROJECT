@@ -51,8 +51,10 @@ public class ServletShareEmptyApp extends HttpServlet {
             if (teamUser_ids_string != null) {
                 JSONParser parser = new JSONParser();
                 JSONArray teamUser_ids = (JSONArray) parser.parse(teamUser_ids_string);
-                for (Object teamUser_id : teamUser_ids)
-                    emptyApp.share(teamUser.getDb_id(), Integer.parseInt((String)teamUser_id), sm);
+                for (Object teamUser_id : teamUser_ids) {
+
+                }
+                    //emptyApp.share(teamUser.getDb_id(), Integer.parseInt((String)teamUser_id), sm);
             }
             if (channel_id != null) {
                 Channel channel = team.getChannelWithId(Integer.parseInt(channel_id));

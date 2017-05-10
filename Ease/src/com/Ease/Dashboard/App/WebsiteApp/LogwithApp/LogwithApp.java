@@ -35,7 +35,7 @@ public class LogwithApp extends WebsiteApp {
 	 * 
 	 */
 
-    public static LogwithApp loadLogwithApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, String websiteAppDBid, ServletManager sm) throws GeneralException {
+    public static LogwithApp loadLogwithApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, String websiteAppDBid, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         DatabaseRequest request = db.prepareRequest("SELECT * from logWithApps WHERE website_app_id= ?;");
         request.setInt(websiteAppDBid);
@@ -92,7 +92,7 @@ public class LogwithApp extends WebsiteApp {
     protected String logwithDBid;
     protected WebsiteApp logwith;
 
-    public LogwithApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid, String logwith, String logwithDBid) {
+    public LogwithApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid, String logwith, String logwithDBid) {
         super(db_id, profile, position, infos, groupApp, insertDate, single_id, site, websiteAppDBid);
         this.logwithDBid = logwith;
         this.logwithAppDBid = logwithDBid;
