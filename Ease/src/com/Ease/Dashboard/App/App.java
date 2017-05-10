@@ -23,6 +23,8 @@ import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
+import javax.servlet.ServletContext;
+
 public class App implements ShareableApp, SharedApp{
 
     public enum Data {
@@ -65,10 +67,10 @@ public class App implements ShareableApp, SharedApp{
 
             switch (rs.getString(Data.TYPE.ordinal())) {
                 case "linkApp":
-                    app = LinkApp.loadLinkApp(db_id, profile, position, insertDate, infos, groupApp, sm);
+                    app = LinkApp.loadLinkApp(db_id, profile, position, insertDate, infos, groupApp, sm.getServletContext(), db);
                     break;
                 case "websiteApp":
-                    app = WebsiteApp.loadWebsiteApp(db_id, profile, position, insertDate, infos, groupApp, sm);
+                    app = WebsiteApp.loadWebsiteApp(db_id, profile, position, insertDate, infos, groupApp, sm.getServletContext(), db);
                     break;
                 default:
                     throw new GeneralException(ServletManager.Code.InternError, "This app type dosen't exist.");
@@ -82,28 +84,25 @@ public class App implements ShareableApp, SharedApp{
         return apps;
     }
 
-    public static List<ShareableApp> loadShareableAppsForTeam(Integer team_id, ServletManager sm) throws GeneralException {
+    public static List<ShareableApp> loadShareableAppsForTeam(Team team, ServletContext context, DataBaseConnection db) throws GeneralException {
         List<ShareableApp> shareableApps = new LinkedList<>();
-        DataBaseConnection db = sm.getDB();
         DatabaseRequest request = db.prepareRequest("SELECT * FROM apps JOIN shareableApps ON apps.id = shareableApps.id WHERE team_id = ?;");
-        request.setInt(team_id);
+        request.setInt(team.getDb_id());
         DatabaseResult rs = request.get();
         String db_id;
         String insertDate;
         AppInformation infos;
         ShareableApp shareableApp = null;
-        TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-        Team team = teamManager.getTeamWithId(team_id);
         while (rs.next()) {
             db_id = rs.getString("apps.id");
             insertDate = rs.getString("insert_date");
             infos = AppInformation.loadAppInformation(rs.getString("app_info_id"), db);
             switch (rs.getString("type")) {
                 case "linkApp":
-                    shareableApp = LinkApp.loadLinkApp(db_id, null, null, insertDate, infos, null, sm);
+                    shareableApp = LinkApp.loadLinkApp(db_id, null, null, insertDate, infos, null, context, db);
                     break;
                 case "websiteApp":
-                    shareableApp = WebsiteApp.loadWebsiteApp(db_id, null, null, insertDate, infos, null, sm);
+                    shareableApp = WebsiteApp.loadWebsiteApp(db_id, null, null, insertDate, infos, null, context, db);
                     break;
                 default:
                     throw new GeneralException(ServletManager.Code.InternError, "This app type dosen't exist.");
@@ -120,9 +119,8 @@ public class App implements ShareableApp, SharedApp{
         return shareableApps;
     }
 
-    public static List<SharedApp> loadSharedAppsForShareableApp(ShareableApp shareableApp, ServletManager sm) throws GeneralException {
+    public static List<SharedApp> loadSharedAppsForShareableApp(ShareableApp shareableApp, ServletContext context, DataBaseConnection db) throws GeneralException {
         List<SharedApp> sharedApps = new LinkedList<>();
-        DataBaseConnection db = sm.getDB();
         DatabaseRequest request = db.prepareRequest("SELECT * FROM apps JOIN sharedApps ON sharedApps.id = apps.id AND sharedApps.shareable_app_id = ?;");
         request.setInt(((App)shareableApp).getDBid());
         DatabaseResult rs = request.get();
@@ -136,10 +134,10 @@ public class App implements ShareableApp, SharedApp{
             infos = AppInformation.loadAppInformation(rs.getString("app_info_id"), db);
             switch (rs.getString("type")) {
                 case "linkApp":
-                    sharedApp = LinkApp.loadLinkApp(db_id, null, null, insertDate, infos, null, sm);
+                    sharedApp = LinkApp.loadLinkApp(db_id, null, null, insertDate, infos, null, context, db);
                     break;
                 case "websiteApp":
-                    sharedApp = WebsiteApp.loadWebsiteApp(db_id, null, null, insertDate, infos, null, sm);
+                    sharedApp = WebsiteApp.loadWebsiteApp(db_id, null, null, insertDate, infos, null, context, db);
                     break;
                 default:
                     throw new GeneralException(ServletManager.Code.InternError, "This app type dosen't exist.");

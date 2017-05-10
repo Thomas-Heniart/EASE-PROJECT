@@ -16,6 +16,8 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
 
+import javax.servlet.ServletContext;
+
 public class LinkApp extends App implements SharedApp, ShareableApp {
 
     public enum Data {
@@ -32,8 +34,7 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
 	 * 
 	 */
 
-    public static LinkApp loadLinkApp(String appDBid, Profile profile, Integer position, String insertDate, AppInformation appInfos, GroupApp groupApp, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public static LinkApp loadLinkApp(String appDBid, Profile profile, Integer position, String insertDate, AppInformation appInfos, GroupApp groupApp, ServletContext context, DataBaseConnection db) throws GeneralException {
         DatabaseRequest request = db.prepareRequest("SELECT * from linkApps WHERE app_id= ?;");
         request.setInt(appDBid);
         DatabaseResult rs = request.get();
@@ -43,7 +44,7 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
 			String groupLinkId = rs.getString(Data.GROUP_LINK_APP_ID.ordinal());
 			if (groupLinkId != null)
 				groupLinkApp  = (GroupLinkApp) GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupLinkId);*/
-            IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
+            IdGenerator idGenerator = (IdGenerator) context.getAttribute("idGenerator");
             return new LinkApp(appDBid, profile, position, appInfos, groupApp, insertDate, idGenerator.getNextId(), linkInfos, rs.getString(Data.ID.ordinal()));
         }
         throw new GeneralException(ServletManager.Code.InternError, "Link app not complete in db.");

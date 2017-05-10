@@ -21,6 +21,8 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
 
+import javax.servlet.ServletContext;
+
 public class LogwithApp extends WebsiteApp {
     public enum Data {
         NOTHING,
@@ -35,15 +37,14 @@ public class LogwithApp extends WebsiteApp {
 	 * 
 	 */
 
-    public static LogwithApp loadLogwithApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, String websiteAppDBid, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public static LogwithApp loadLogwithApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, String websiteAppDBid, ServletContext context, DataBaseConnection db) throws GeneralException {
         DatabaseRequest request = db.prepareRequest("SELECT * from logWithApps WHERE website_app_id= ?;");
         request.setInt(websiteAppDBid);
         DatabaseResult rs = request.get();
         if (rs.next()) {
             String logwith = rs.getString(Data.LOGWITH_APP_ID.ordinal());
             String logwithDBid = rs.getString(Data.ID.ordinal());
-            IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
+            IdGenerator idGenerator = (IdGenerator) context.getAttribute("idGenerator");
             return new LogwithApp(db_id, profile, position, infos, groupApp, insertDate, idGenerator.getNextId(), site, websiteAppDBid, logwith, logwithDBid);
         }
         throw new GeneralException(ServletManager.Code.InternError, "Logwith app not complete in db.");

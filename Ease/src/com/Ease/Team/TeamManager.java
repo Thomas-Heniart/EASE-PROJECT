@@ -1,8 +1,10 @@
 package com.Ease.Team;
 
+import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
+import javax.servlet.ServletContext;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,8 +17,8 @@ public class TeamManager {
     protected List<Team> teams;
     protected HashMap<Integer, Team> teamIdMap;
 
-    public TeamManager() {
-        this.teams = Team.loadTeams();
+    public TeamManager(ServletContext context, DataBaseConnection db) throws GeneralException {
+        this.teams = Team.loadTeams(context, db);
         this.teamIdMap = new HashMap<>();
         for (Team team : this.teams)
             this.teamIdMap.put(team.getDb_id(), team);

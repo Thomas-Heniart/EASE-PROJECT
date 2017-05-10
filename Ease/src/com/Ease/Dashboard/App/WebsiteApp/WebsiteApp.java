@@ -21,6 +21,8 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
 
+import javax.servlet.ServletContext;
+
 public class WebsiteApp extends App implements SharedApp, ShareableApp {
     public enum Data {
         NOTHING,
@@ -37,26 +39,25 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
 	 * 
 	 */
 
-    public static WebsiteApp loadWebsiteApp(String appDBid, Profile profile, Integer position, String insertDate, AppInformation appInfos, GroupApp groupApp, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public static WebsiteApp loadWebsiteApp(String appDBid, Profile profile, Integer position, String insertDate, AppInformation appInfos, GroupApp groupApp, ServletContext context, DataBaseConnection db) throws GeneralException {
         DatabaseRequest request = db.prepareRequest("SELECT * from websiteApps WHERE app_id= ?;");
         request.setInt(appDBid);
         DatabaseResult rs = request.get();
         if (rs.next()) {
             String websiteAppDBid = rs.getString(Data.ID.ordinal());
-            Website website = ((Catalog) sm.getContextAttr("catalog")).getWebsiteWithDBid(rs.getString(Data.WEBSITE_ID.ordinal()));
+            Website website = ((Catalog) context.getAttribute("catalog")).getWebsiteWithDBid(rs.getString(Data.WEBSITE_ID.ordinal()));
 			/*GroupWebsiteApp groupWebsiteApp = null;
 			String groupWebsiteId = rs.getString(Data.GROUP_WEBSITE_ID.ordinal());
 			if (groupWebsiteId != null)
 				groupWebsiteApp = (GroupWebsiteApp) GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupWebsiteId);*/
-            IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
+            IdGenerator idGenerator = (IdGenerator) context.getAttribute("idGenerator");
             switch (rs.getString(Data.TYPE.ordinal())) {
                 case "websiteApp":
                     return new WebsiteApp(appDBid, profile, position, appInfos, groupApp, insertDate, idGenerator.getNextId(), website, websiteAppDBid);
                 case "logwithApp":
-                    return LogwithApp.loadLogwithApp(appDBid, profile, position, appInfos, groupApp, insertDate, website, websiteAppDBid, sm);
+                    return LogwithApp.loadLogwithApp(appDBid, profile, position, appInfos, groupApp, insertDate, website, websiteAppDBid, context, db);
                 case "classicApp":
-                    return ClassicApp.loadClassicApp(appDBid, profile, position, appInfos, groupApp, insertDate, website, websiteAppDBid, sm);
+                    return ClassicApp.loadClassicApp(appDBid, profile, position, appInfos, groupApp, insertDate, website, websiteAppDBid, context, db);
             }
         }
         throw new GeneralException(ServletManager.Code.InternError, "Website app not complete in db.");

@@ -19,6 +19,8 @@ import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 
+import javax.servlet.ServletContext;
+
 public class ClassicApp extends WebsiteApp {
 
     public enum Data {
@@ -35,15 +37,14 @@ public class ClassicApp extends WebsiteApp {
 	 * 
 	 */
 
-    public static ClassicApp loadClassicApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, String websiteAppDBid, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public static ClassicApp loadClassicApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, String websiteAppDBid, ServletContext context, DataBaseConnection db) throws GeneralException {
         DatabaseRequest request = db.prepareRequest("SELECT * from classicApps WHERE website_app_id= ?;");
         request.setInt(websiteAppDBid);
         DatabaseResult rs = request.get();
         if (rs.next()) {
             Account account = Account.loadAccount(rs.getString(Data.ACCOUNT_ID.ordinal()), db);
             String classicDBid = rs.getString(Data.ID.ordinal());
-            IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
+            IdGenerator idGenerator = (IdGenerator) context.getAttribute("idGenerator");
             return new ClassicApp(db_id, profile, position, infos, groupApp, insertDate, idGenerator.getNextId(), site, websiteAppDBid, account, classicDBid);
         }
         throw new GeneralException(ServletManager.Code.InternError, "Classic app not complete in db.");

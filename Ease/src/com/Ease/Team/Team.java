@@ -10,6 +10,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
+import javax.servlet.ServletContext;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,13 +23,22 @@ import java.util.Map;
 @Table(name = "teams")
 public class Team {
 
-    public static List<Team> loadTeams() {
+    public static List<Team> loadTeams(ServletContext context, DataBaseConnection db) throws GeneralException {
         List<Team> teams = new LinkedList<>();
         HibernateQuery query = new HibernateQuery();
         query.queryString("SELECT t FROM Team t");
         teams = query.list();
-        for (Team team : teams)
+        for (Team team : teams) {
             team.lazyInitialize();
+            team.setShareableApps(App.loadShareableAppsForTeam(team, context, db));
+            for (ShareableApp shareableApp : team.getShareableApps()) {
+                shareableApp.setSharedApps(App.loadSharedAppsForShareableApp(shareableApp, context, db));
+                if (shareableApp.getChannel() != null) {
+                    shareableApp.getChannel().setSharedApps(shareableApp.getSharedApps());
+                }
+            }
+        }
+
         query.commit();
         return teams;
     }
@@ -101,6 +111,13 @@ public class Team {
         this.channels = channels;
     }
 
+    public List<ShareableApp> getShareableApps() {
+        return shareableApps;
+    }
+
+    public void setShareableApps(List<ShareableApp> shareableApps) {
+        this.shareableApps = shareableApps;
+    }
 
     public void lazyInitialize() {
         for (Channel channel : this.getChannels())
@@ -199,15 +216,5 @@ public class Team {
         res.put("id", this.db_id);
         res.put("name", this.name);
         return res;
-    }
-
-    public void loadApps(ServletManager sm) throws GeneralException {
-        this.shareableApps = App.loadShareableAppsForTeam(this.db_id, sm);
-        for (ShareableApp shareableApp : this.shareableApps) {
-            shareableApp.setSharedApps(App.loadSharedAppsForShareableApp(shareableApp, sm));
-            if (shareableApp.getChannel() != null) {
-                shareableApp.getChannel().setSharedApps(shareableApp.getSharedApps());
-            }
-        }
     }
 }
