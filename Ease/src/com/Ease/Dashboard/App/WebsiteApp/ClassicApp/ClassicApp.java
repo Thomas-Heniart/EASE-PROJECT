@@ -237,11 +237,6 @@ public class ClassicApp extends WebsiteApp {
     }
 
     @Override
-    public ShareableApp getHolder() {
-        return this.holder;
-    }
-
-    @Override
     public void deleteShared(ServletManager sm) throws GeneralException {
         this.removeFromDB(sm);
     }

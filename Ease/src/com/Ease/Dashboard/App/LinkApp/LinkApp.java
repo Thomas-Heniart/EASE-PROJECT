@@ -4,7 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.Ease.Dashboard.App.*;
+import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Team.Channel;
+import com.Ease.Team.Team;
+import com.Ease.Team.TeamUser;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -81,6 +84,13 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         this.linkAppDBid = linkAppDBid;
     }
 
+    public LinkApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, LinkAppInformation linkInfos, String linkAppDBid, boolean shareable, boolean shared, ShareableApp holder) {
+        super(db_id, profile, position, infos, groupApp, insertDate, single_id, shareable, shared, holder);
+        this.linkInfos = linkInfos;
+        this.groupLinkApp = (GroupLinkApp) groupApp;
+        this.linkAppDBid = linkAppDBid;
+    }
+
     public void removeFromDB(ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
@@ -138,18 +148,8 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
     }
 
     @Override
-    public ShareableApp getHolder() {
-        return this.holder;
-    }
-
-    @Override
     public void deleteShared(ServletManager sm) throws GeneralException {
 
-    }
-
-    @Override
-    public SharedApp share(Channel channel, ServletManager sm) {
-        return null;
     }
 
     @Override
@@ -160,6 +160,20 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
     @Override
     public void deleteShareable(ServletManager sm, SharedApp sharedApp) throws GeneralException {
 
+    }
+
+    @Override
+    public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, ServletManager sm) throws GeneralException {
+        DataBaseConnection db = sm.getDB();
+        int transaction = db.startTransaction();
+        Map<String, Object> elevator = new HashMap<>();
+        String appDBid = App.createSharedApp(this.getProfile(), this.getPosition(), this.getName(), "linkApp", elevator, false, true, team.getDb_id(), (channel == null) ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), this, sm);
+        DatabaseRequest request = db.prepareRequest("INSERT INTO linkApps values(NULL, ?, ?, NULL);");
+        request.setInt(appDBid);
+        request.setInt(this.linkInfos.getDb_id());
+        String linkDBid = request.set().toString();
+        db.commitTransaction(transaction);
+        return new LinkApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), linkInfos, linkDBid, false, true, this);
     }
 }
 	

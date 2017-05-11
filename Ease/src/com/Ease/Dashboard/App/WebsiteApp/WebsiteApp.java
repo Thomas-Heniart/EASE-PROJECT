@@ -245,11 +245,6 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
     }
 
     @Override
-    public ShareableApp getHolder() {
-        return this.holder;
-    }
-
-    @Override
     public void deleteShared(ServletManager sm) throws GeneralException {
         //this.holder.deleteShareable(sm, this);
         this.removeFromDB(sm);
