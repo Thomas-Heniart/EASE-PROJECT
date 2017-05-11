@@ -173,7 +173,7 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         request.setInt(this.linkInfos.getDb_id());
         String linkDBid = request.set().toString();
         db.commitTransaction(transaction);
-        return new LinkApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), linkInfos, linkDBid, false, true, this);
+        return new LinkApp(appDBid, null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), linkInfos, linkDBid, false, true, this);
     }
 }
 	
