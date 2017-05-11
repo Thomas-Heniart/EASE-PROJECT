@@ -5,6 +5,8 @@ import java.util.Map;
 
 import com.Ease.Dashboard.App.*;
 import com.Ease.Team.Channel;
+import com.Ease.Team.Team;
+import com.Ease.Team.TeamUser;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -95,42 +97,11 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         return new WebsiteApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid);
     }
 
-    private SharedApp createEmptySharedApp(ServletManager sm, Integer team_user_owner_id, Integer team_user_tenant_id, WebsiteApp websiteApp) throws GeneralException {
+    public static String createSharedWebsiteApp(WebsiteApp websiteApp, Map<String, Object> elevator, Integer team_id, Integer channel_id, Integer team_user_tenant_id, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
-        Map<String, Object> elevator = new HashMap<>();
-        String appDBid = App.createSharedApp(websiteApp.getProfile(), websiteApp.getPosition(), websiteApp.getName(), "websiteApp", elevator, false, true, team_user_owner_id, team_user_tenant_id, websiteApp, sm);
-        DatabaseRequest request = db.prepareRequest("SELECT app_id FROM websiteApps WHERE id = ?;");
-        request.setInt(websiteApp.getDBid());
-        DatabaseResult rs = request.get();
-        if (!rs.next())
-            throw new GeneralException(ServletManager.Code.ClientError, "This websiteApp fucked up");
-        request = db.prepareRequest("INSERT INTO appAndSharedAppMap VALUES(NULL, ?, ?);");
-        request.setInt(rs.getInt(1));
-        request.setInt(appDBid);
-        request.set();
-        request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, 'websiteApp');");
-        request.setInt(websiteApp.getSite().getDb_id());
-        request.setInt(appDBid);
-        String websiteAppDBid = request.set().toString();
-        db.commitTransaction(transaction);
-        return new WebsiteApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), websiteApp.getSite(), websiteAppDBid, false, true, websiteApp);
-    }
-
-    public static String createSharedWebsiteApp(WebsiteApp websiteApp, Map<String, Object> elevator, Integer team_user_owner_id, Integer team_user_tenant_id, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
-        int transaction = db.startTransaction();
-        String appDBid = App.createSharedApp(websiteApp.getProfile(), websiteApp.getPosition(), websiteApp.getName(), "websiteApp", elevator, false, true, team_user_owner_id, team_user_tenant_id, websiteApp, sm);
-        DatabaseRequest request = db.prepareRequest("SELECT app_id FROM websiteApps WHERE id = ?;");
-        request.setInt(websiteApp.getDBid());
-        DatabaseResult rs = request.get();
-        if (!rs.next())
-            throw new GeneralException(ServletManager.Code.ClientError, "This websiteApp fucked up");
-        request = db.prepareRequest("INSERT INTO appAndSharedAppMap VALUES(NULL, ?, ?);");
-        request.setInt(rs.getInt(1));
-        request.setInt(appDBid);
-        request.set();
-        request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, 'websiteApp');");
+        String appDBid = App.createSharedApp(websiteApp.getProfile(), websiteApp.getPosition(), websiteApp.getName(), "websiteApp", elevator, false, true, team_id, channel_id == null ? null : channel_id, team_user_tenant_id, websiteApp, sm);
+        DatabaseRequest request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, 'websiteApp');");
         request.setInt(websiteApp.getSite().getDb_id());
         request.setInt(appDBid);
         String websiteAppDBid = request.set().toString();
@@ -285,11 +256,6 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
     }
 
     @Override
-    public SharedApp share(Channel channel, ServletManager sm) {
-        return null;
-    }
-
-    @Override
     public void modifyShareable(ServletManager sm, JSONObject editJson, SharedApp sharedApp) throws GeneralException {
         //Shouldn't be executed
         throw new GeneralException(ServletManager.Code.ClientError, "Go fuck yourself");
@@ -300,5 +266,19 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         for (SharedApp sharedApp1 : this.sharedApps)
             sharedApp1.deleteShared(sm);
         this.removeFromDB(sm);
+    }
+
+    @Override
+    public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, ServletManager sm) throws GeneralException {
+        DataBaseConnection db = sm.getDB();
+        int transaction = db.startTransaction();
+        Map<String, Object> elevator = new HashMap<>();
+        String appDBid = App.createSharedApp(this.getProfile(), this.getPosition(), this.getName(), "websiteApp", elevator, false, true, team.getDb_id(), (channel == null) ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), this, sm);
+        DatabaseRequest request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, 'websiteApp');");
+        request.setInt(this.getSite().getDb_id());
+        request.setInt(appDBid);
+        String websiteAppDBid = request.set().toString();
+        db.commitTransaction(transaction);
+        return new WebsiteApp(appDBid, this.getProfile(), this.getPosition(), (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), this.getSite(), websiteAppDBid, false, true, this);
     }
 }

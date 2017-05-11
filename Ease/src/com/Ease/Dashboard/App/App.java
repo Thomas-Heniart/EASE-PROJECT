@@ -185,7 +185,7 @@ public class App implements ShareableApp, SharedApp{
 
     }
 
-    public static String createSharedApp(Profile profile, Integer position, String name, String type, Map<String, Object> elevator, boolean shareable, boolean shared, Integer team_user_owner_id, Integer team_user_tenant_id, App holder, ServletManager sm) throws GeneralException {
+    public static String createSharedApp(Profile profile, Integer position, String name, String type, Map<String, Object> elevator, boolean shareable, boolean shared, Integer team_id, Integer channel_id, Integer team_user_tenant_id, App holder, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         AppInformation infos = AppInformation.createAppInformation(name, sm);
@@ -208,11 +208,15 @@ public class App implements ShareableApp, SharedApp{
             elevator.put("appInfos", infos);
             elevator.put("insertDate", registrationDate);
         }
-        request = db.prepareRequest("INSERT INTO profileAndAppMap values (NULL, ?, ?, ?, ?)");
-        request.setInt(team_user_owner_id);
-        request.setInt(team_user_tenant_id);
+        request = db.prepareRequest("INSERT INTO sharedApps values (?, ?, ?, ?, ?);");
         request.setInt(appDBid);
+        request.setInt(team_id);
+        request.setInt(team_user_tenant_id);
         request.setInt(holder.getDBid());
+        if (channel_id == null)
+            request.setNull();
+        else
+            request.setInt(channel_id);
         db.commitTransaction(transaction);
         return appDBid;
     }
@@ -330,7 +334,7 @@ public class App implements ShareableApp, SharedApp{
         return profile;
     }
 
-    public int getPosition() {
+    public Integer getPosition() {
         return position;
     }
 
@@ -466,11 +470,19 @@ public class App implements ShareableApp, SharedApp{
     /* Interface ShareableApp */
     @Override
     public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, ServletManager sm) throws GeneralException {
-        return null;
-    }
-
-    @Override
-    public SharedApp share(Channel channel, ServletManager sm) {
+        DataBaseConnection db = sm.getDB();
+        int transaction = db.startTransaction();
+        SharedApp sharedApp = null;
+        DatabaseRequest request = db.prepareRequest("INSERT INTO sharedApps values (?, ?, ?, ?, ?);");
+        request.setInt(((App)sharedApp).getDBid());
+        request.setInt(team.getDb_id());
+        request.setInt(teamUser_tenant.getDb_id());
+        request.setInt(this.getDBid());
+        if (channel == null)
+            request.setNull();
+        else
+            request.setInt(channel.getDb_id());
+        db.commitTransaction(transaction);
         return null;
     }
 
@@ -481,7 +493,7 @@ public class App implements ShareableApp, SharedApp{
 
     @Override
     public void deleteShareable(ServletManager sm, SharedApp sharedApp) throws GeneralException {
-
+        this.removeFromDB(sm);
     }
 
     @Override

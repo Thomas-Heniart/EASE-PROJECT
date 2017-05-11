@@ -14,7 +14,6 @@ import java.util.List;
  */
 public interface ShareableApp {
     public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, ServletManager sm) throws GeneralException;
-    public SharedApp share(Channel channel, ServletManager sm);
     public void modifyShareable(ServletManager sm, JSONObject editJson, SharedApp sharedApp) throws GeneralException;
     public void deleteShareable(ServletManager sm, SharedApp sharedApp) throws GeneralException;
     public TeamUser getTeamUser_owner();
