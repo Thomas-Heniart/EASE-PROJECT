@@ -253,17 +253,25 @@ public class ClassicApp extends WebsiteApp {
         this.removeFromDB(sm);
     }
 
-    public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, ServletManager sm) throws GeneralException {
+    public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<>();
         String websiteAppId = WebsiteApp.createSharedWebsiteApp(this, elevator, team.getDb_id(), channel == null ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), sm);
         DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
         request.setInt(websiteAppId);
-        request.setInt(this.getAccount().getDBid());
+        JSONArray account_information = (JSONArray) params.get("account_information");
+        Account account = null;
+        if (account_information == null)
+            request.setInt(this.getAccount().getDBid());
+        else {
+            account = Account.createAccountFromJson(account_information, sm);
+            request.setInt(account.getDBid());
+        }
         String classicDBid = request.set().toString();
+
         db.commitTransaction(transaction);
-        return new ClassicApp((String) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), this.getSite(), websiteAppId, account, classicDBid, false, true, this);
+        return new ClassicApp((String) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), this.getSite(), websiteAppId, account == null ? this.account : account, classicDBid, false, true, this);
     }
 
 }
