@@ -469,21 +469,8 @@ public class App implements ShareableApp, SharedApp{
 
     /* Interface ShareableApp */
     @Override
-    public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
-        int transaction = db.startTransaction();
-        SharedApp sharedApp = null;
-        DatabaseRequest request = db.prepareRequest("INSERT INTO sharedApps values (?, ?, ?, ?, ?);");
-        request.setInt(((App)sharedApp).getDBid());
-        request.setInt(team.getDb_id());
-        request.setInt(teamUser_tenant.getDb_id());
-        request.setInt(this.getDBid());
-        if (channel == null)
-            request.setNull();
-        else
-            request.setInt(channel.getDb_id());
-        db.commitTransaction(transaction);
-        return null;
+    public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, ServletManager sm) throws GeneralException {
+        throw new GeneralException(ServletManager.Code.ClientError, "You shouldn't be there");
     }
 
     @Override

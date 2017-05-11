@@ -3,14 +3,14 @@ package com.Ease.Dashboard.App.WebsiteApp.LogwithApp;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.Ease.Dashboard.App.*;
+import com.Ease.Team.Channel;
+import com.Ease.Team.Team;
+import com.Ease.Team.TeamUser;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.Ease.Context.Catalog.Website;
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.AppInformation;
-import com.Ease.Dashboard.App.AppPermissions;
-import com.Ease.Dashboard.App.GroupApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
@@ -177,5 +177,10 @@ public class LogwithApp extends WebsiteApp {
     /* For sancho le robot */
     public boolean isEmpty() {
         return false;
+    }
+
+    @Override
+    public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, ServletManager sm) throws GeneralException {
+        throw new GeneralException(ServletManager.Code.ClientError, "You shouldn't be there");
     }
 }

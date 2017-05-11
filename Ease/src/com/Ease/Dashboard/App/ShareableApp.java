@@ -13,7 +13,7 @@ import java.util.List;
  * Created by thomas on 03/05/2017.
  */
 public interface ShareableApp {
-    public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, ServletManager sm) throws GeneralException;
+    public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, ServletManager sm) throws GeneralException;
     public void modifyShareable(ServletManager sm, JSONObject editJson, SharedApp sharedApp) throws GeneralException;
     public void deleteShareable(ServletManager sm, SharedApp sharedApp) throws GeneralException;
     public TeamUser getTeamUser_owner();
