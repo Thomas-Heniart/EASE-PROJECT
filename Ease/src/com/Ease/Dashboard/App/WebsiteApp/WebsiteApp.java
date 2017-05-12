@@ -241,18 +241,16 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
 
     @Override
     public void modifyShared(ServletManager sm, JSONObject editJson) throws GeneralException {
-        //this.holder.modifyShareable(sm, editJson, this);
+        throw new GeneralException(ServletManager.Code.ClientError, "Go fuck yourself");
     }
 
     @Override
     public void deleteShared(ServletManager sm) throws GeneralException {
-        //this.holder.deleteShareable(sm, this);
         this.removeFromDB(sm);
     }
 
     @Override
     public void modifyShareable(ServletManager sm, JSONObject editJson, SharedApp sharedApp) throws GeneralException {
-        //Shouldn't be executed
         throw new GeneralException(ServletManager.Code.ClientError, "Go fuck yourself");
     }
 

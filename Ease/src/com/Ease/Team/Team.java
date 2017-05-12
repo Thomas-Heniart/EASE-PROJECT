@@ -157,6 +157,10 @@ public class Team {
         this.channelIdMap.put(channel.getDb_id(), channel);
     }
 
+    public void addShareableApp(ShareableApp shareableApp) {
+        this.shareableApps.add(shareableApp);
+    }
+
     public Channel getGeneralChannel() throws GeneralException {
         for (Channel channel : this.getChannels()) {
             if (channel.getName().equals("General"))

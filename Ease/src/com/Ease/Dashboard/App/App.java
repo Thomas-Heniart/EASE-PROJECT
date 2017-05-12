@@ -5,11 +5,13 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.Ease.Context.Catalog.Website;
+import com.Ease.Dashboard.DashboardManager;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.sun.deploy.ui.AppInfo;
+import org.hibernate.boot.model.relational.Database;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -553,5 +555,19 @@ public class App implements ShareableApp, SharedApp{
         }
         res.put("sharedApps", sharedApps);
         return res;
+    }
+
+    public void pinToDashboard(DashboardManager dashboardManager, Profile profile, Integer position, ServletManager sm) throws GeneralException {
+        DataBaseConnection db = sm.getDB();
+        int transaction = db.startTransaction();
+        DatabaseRequest request = db.prepareRequest("INSERT INTO profileAndAppMap values (null, ?, ?, ?);");
+        request.setInt(profile.getDBid());
+        request.setInt(this.db_id);
+        request.setInt(position);
+        db.commitTransaction(transaction);
+        this.profile = profile;
+        this.position = position;
+        profile.addApp(this);
+        profile.updateAppsIndex(sm);
     }
 }

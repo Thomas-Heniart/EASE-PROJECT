@@ -134,7 +134,7 @@ public class Channel {
             this.name = name;
     }
 
-    public void addSharedApp(App app) {
-        this.sharedApps.add(app);
+    public void addSharedApp(SharedApp sharedApp) {
+        this.sharedApps.add(sharedApp);
     }
 }
