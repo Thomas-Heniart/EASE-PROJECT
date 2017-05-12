@@ -427,7 +427,9 @@ public class App implements ShareableApp, SharedApp{
     /* Interface SharedApp */
     @Override
     public void modifyShared(ServletManager sm, JSONObject editJson) throws GeneralException {
-
+        String name = (String) editJson.get("name");
+        if (name != null && !name.equals(""))
+            this.getAppInformation().setName(name, sm);
     }
 
     @Override
@@ -442,7 +444,7 @@ public class App implements ShareableApp, SharedApp{
 
     @Override
     public void deleteShared(ServletManager sm) throws GeneralException {
-
+        this.removeFromDB(sm);
     }
 
     @Override
@@ -475,7 +477,9 @@ public class App implements ShareableApp, SharedApp{
 
     @Override
     public void modifyShareable(ServletManager sm, JSONObject editJson, SharedApp sharedApp) throws GeneralException {
-
+        String name = (String) editJson.get("name");
+        if (name != null && !name.equals(""))
+            this.getAppInformation().setName(name, sm);
     }
 
     @Override

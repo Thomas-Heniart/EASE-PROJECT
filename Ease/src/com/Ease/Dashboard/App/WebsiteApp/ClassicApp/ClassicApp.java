@@ -144,7 +144,7 @@ public class ClassicApp extends WebsiteApp {
         DatabaseRequest request = db.prepareRequest("DELETE FROM classicApps WHERE id = ?;");
         request.setInt(classicDBid);
         request.set();
-        if (this.groupApp == null || this.groupApp.isCommon() == false)
+        if ((this.groupApp == null || this.groupApp.isCommon() == false) && (this.getHolder() == null || this.getAccount() != ((ClassicApp)this.getHolder()).getAccount()))
             account.removeFromDB(sm);
         super.removeFromDB(sm);
         this.website.decrementRatio(db);
@@ -233,11 +233,16 @@ public class ClassicApp extends WebsiteApp {
 
     @Override
     public void modifyShared(ServletManager sm, JSONObject editJson) throws GeneralException {
-        this.holder.modifyShareable(sm, editJson, this);
+        if (this.getAccount() == ((ClassicApp)this.getHolder()).getAccount())
+            this.holder.modifyShareable(sm, editJson, this);
+        else
+            this.getAccount().edit(editJson, sm);
     }
 
     @Override
     public void deleteShared(ServletManager sm) throws GeneralException {
+        if (((ClassicApp)this.getHolder()).getAccount() == this.getAccount())
+            throw new GeneralException(ServletManager.Code.ClientError, "You can't delete this app.");
         this.removeFromDB(sm);
     }
 

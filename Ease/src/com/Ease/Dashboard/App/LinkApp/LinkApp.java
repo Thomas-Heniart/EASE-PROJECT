@@ -32,7 +32,7 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
     }
 
 	/*
-	 * 
+     *
 	 * Loader And Creator
 	 * 
 	 */
@@ -97,7 +97,7 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         DatabaseRequest request = db.prepareRequest("DELETE FROM linkApps WHERE id= ?;");
         request.setInt(linkAppDBid);
         request.set();
-        if (this.groupApp == null || this.groupApp.isCommon() == false)
+        if ((this.groupApp == null || this.groupApp.isCommon() == false) && this.getHolder() == null)
             linkInfos.removeFromDb(sm);
         super.removeFromDB(sm);
         db.commitTransaction(transaction);
@@ -144,22 +144,22 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
 
     @Override
     public void modifyShared(ServletManager sm, JSONObject editJson) throws GeneralException {
-
+        this.getHolder().modifyShareable(sm, editJson, this);
     }
 
     @Override
     public void deleteShared(ServletManager sm) throws GeneralException {
-
+        throw new GeneralException(ServletManager.Code.ClientError, "You can't delete this app");
     }
 
     @Override
     public void modifyShareable(ServletManager sm, JSONObject editJson, SharedApp sharedApp) throws GeneralException {
-
+        this.getLinkAppInformations().edit(editJson, sm);
     }
 
     @Override
     public void deleteShareable(ServletManager sm, SharedApp sharedApp) throws GeneralException {
-
+        this.removeFromDB(sm);
     }
 
     @Override
