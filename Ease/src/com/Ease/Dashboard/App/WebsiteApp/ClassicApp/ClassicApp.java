@@ -35,7 +35,7 @@ public class ClassicApp extends WebsiteApp {
     }
 
 	/*
-	 *
+     *
 	 * Loader And Creator
 	 * 
 	 */
@@ -53,7 +53,7 @@ public class ClassicApp extends WebsiteApp {
         throw new GeneralException(ServletManager.Code.InternError, "Classic app not complete in db.");
     }
 
-    public static ClassicApp createClassicApp(Profile profile, int position, String name, Website site, Map<String, String> infos, ServletManager sm, User user) throws GeneralException {
+    public static ClassicApp createClassicApp(Profile profile, Integer position, String name, Website site, Map<String, String> infos, ServletManager sm, User user) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<String, Object>();
@@ -63,9 +63,11 @@ public class ClassicApp extends WebsiteApp {
         request.setInt(websiteAppDBid);
         request.setInt(account.getDBid());
         String classicDBid = request.set().toString();
-        for (String info : infos.values()) {
-            if (Regex.isEmail(info) == true) {
-                user.addEmailIfNeeded(info, sm);
+        if (user != null) {
+            for (String info : infos.values()) {
+                if (Regex.isEmail(info) == true) {
+                    user.addEmailIfNeeded(info, sm);
+                }
             }
         }
         db.commitTransaction(transaction);
@@ -115,7 +117,7 @@ public class ClassicApp extends WebsiteApp {
         db.commitTransaction(transaction);
         return newClassicApp;
     }
-	
+
 	
 	/*
 	 * 
@@ -144,7 +146,7 @@ public class ClassicApp extends WebsiteApp {
         DatabaseRequest request = db.prepareRequest("DELETE FROM classicApps WHERE id = ?;");
         request.setInt(classicDBid);
         request.set();
-        if ((this.groupApp == null || this.groupApp.isCommon() == false) && (this.getHolder() == null || this.getAccount() != ((ClassicApp)this.getHolder()).getAccount()))
+        if ((this.groupApp == null || this.groupApp.isCommon() == false) && (this.getHolder() == null || this.getAccount() != ((ClassicApp) this.getHolder()).getAccount()))
             account.removeFromDB(sm);
         super.removeFromDB(sm);
         this.website.decrementRatio(db);
@@ -233,7 +235,7 @@ public class ClassicApp extends WebsiteApp {
 
     @Override
     public void modifyShared(ServletManager sm, JSONObject editJson) throws GeneralException {
-        if (this.getAccount() == ((ClassicApp)this.getHolder()).getAccount())
+        if (this.getAccount() == ((ClassicApp) this.getHolder()).getAccount())
             this.holder.modifyShareable(sm, editJson, this);
         else
             this.getAccount().edit(editJson, sm);
@@ -241,7 +243,7 @@ public class ClassicApp extends WebsiteApp {
 
     @Override
     public void deleteShared(ServletManager sm) throws GeneralException {
-        if (((ClassicApp)this.getHolder()).getAccount() == this.getAccount())
+        if (((ClassicApp) this.getHolder()).getAccount() == this.getAccount())
             throw new GeneralException(ServletManager.Code.ClientError, "You can't delete this app.");
         this.removeFromDB(sm);
     }
@@ -266,18 +268,10 @@ public class ClassicApp extends WebsiteApp {
         String websiteAppId = WebsiteApp.createSharedWebsiteApp(this, elevator, team.getDb_id(), channel == null ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), sm);
         DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
         request.setInt(websiteAppId);
-        JSONArray account_information = (JSONArray) params.get("account_information");
-        Account account = null;
-        if (account_information == null)
-            request.setInt(this.getAccount().getDBid());
-        else {
-            account = Account.createAccountFromJson(account_information, sm);
-            request.setInt(account.getDBid());
-        }
+        request.setInt(this.getAccount().getDBid());
         String classicDBid = request.set().toString();
-
         db.commitTransaction(transaction);
-        return new ClassicApp((String) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), this.getSite(), websiteAppId, account == null ? this.account : account, classicDBid, false, true, this);
+        return new ClassicApp((String) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), this.getSite(), websiteAppId, this.account, classicDBid, false, true, this);
     }
 
 }
