@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -87,7 +88,7 @@ public class Website {
         return site;
     }
 
-    public static Website createWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, boolean noLogin, boolean noScrap, String[] haveLoginWith, String[] infoNames, String[] infoTypes, String[] placeholders, String[] placeholderIcons, Catalog catalog, String ssoId, ServletManager sm) throws GeneralException {
+    public static Website createWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, boolean noLogin, boolean noScrap, String[] haveLoginWith, String[] infoNames, String[] infoTypes, String[] placeholders, String[] placeholderIcons, Catalog catalog, String ssoId, String team_id, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         DatabaseRequest request = db.prepareRequest("SELECT * FROM websites WHERE folder = ? AND website_name = ?;");
         request.setString(folder);
@@ -151,9 +152,14 @@ public class Website {
             sso.addWebsite(newWebsite);
             newWebsite.setSso(sso);
         }
+        if (team_id != null && !team_id.equals("")) {
+            request = db.prepareRequest("INSERT INTO teamAndWebsiteMap values (null, ?, ?);");
+            request.setInt(team_id);
+            request.setInt(newWebsite.getDb_id());
+            newWebsite.addTeamId(team_id);
+        }
         return newWebsite;
     }
-
 
     public static List<Website> loadWebsites(DataBaseConnection db, Map<String, Sso> ssoDbIdMap, ServletContext context) throws GeneralException {
         List<Website> websites = new LinkedList<Website>();
@@ -584,7 +590,7 @@ public class Website {
             if (this.teamIds.contains(teamUser.getTeam().getDb_id()))
                 return true;
         }
-        return this.groupIds.isEmpty() && this.teamIds.isEmpty();
+        return user.isAdmin() || (this.groupIds.isEmpty() && this.teamIds.isEmpty());
     }
 
     public boolean isInCatalogForTeam(String team_id) {
@@ -638,5 +644,9 @@ public class Website {
         jsonObject.put("homepage_url", this.getHomePageUrl());
         jsonObject.put("single_id", this.getSingleId());
         return jsonObject;
+    }
+
+    private void addTeamId(String team_id) {
+        this.teamIds.add(team_id);
     }
 }

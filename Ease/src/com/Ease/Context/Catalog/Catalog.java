@@ -85,8 +85,8 @@ public class Catalog {
 		}
 	}
 	
-	public Website addWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, boolean noLogin, boolean noScrap, String[] haveLoginWith, String[] infoNames, String[] infoTypes, String[] placeholders, String[] placeholderIcons, String ssoId, ServletManager sm) throws GeneralException {
-		Website site = Website.createWebsite(url, name, homePage, folder, haveLoginButton, noLogin, noScrap, haveLoginWith, infoNames, infoTypes, placeholders, placeholderIcons, this, ssoId, sm);
+	public Website addWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, boolean noLogin, boolean noScrap, String[] haveLoginWith, String[] infoNames, String[] infoTypes, String[] placeholders, String[] placeholderIcons, String ssoId, String team_id, ServletManager sm) throws GeneralException {
+		Website site = Website.createWebsite(url, name, homePage, folder, haveLoginButton, noLogin, noScrap, haveLoginWith, infoNames, infoTypes, placeholders, placeholderIcons, this, ssoId, team_id, sm);
 		websites.add(site);
 		websiteDBmap.put(site.getDb_id(), site);
 		websiteIDmap.put(site.getSingleId(), site);

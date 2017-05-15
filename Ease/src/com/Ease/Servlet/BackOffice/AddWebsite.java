@@ -62,7 +62,7 @@ public class AddWebsite extends HttpServlet {
 		String noLoginString = sm.getServletParam("noLogin", false);
 		String noScrapString = sm.getServletParam("noScrap", false);
 		String ssoId = sm.getServletParam("sso", true);
-		System.out.println("Sso: " + ssoId);
+		String team_id = sm.getServletParam("team_id", true);
 		boolean noLogin = true;
 		boolean haveLoginButton = true;
 		boolean noScrap = true;
@@ -94,7 +94,7 @@ public class AddWebsite extends HttpServlet {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty folder");
 			if ((infoNames.length - infoTypes.length) != (placeholders.length - placeholderIcons.length))
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Missing informations");
-			Website website = catalog.addWebsite(url, name, homePage, folder, haveLoginButton, noLogin, noScrap, haveLoginWith, infoNames, infoTypes, placeholders, placeholderIcons, ssoId, sm);
+			Website website = catalog.addWebsite(url, name, homePage, folder, haveLoginButton, noLogin, noScrap, haveLoginWith, infoNames, infoTypes, placeholders, placeholderIcons, ssoId, team_id, sm);
 			//GroupApp groupApp = GroupWebsiteApp.createGroupEmptyApp(groupProfile, group, AppPermissions.Perm.ALL.getValue(), name, false, website, sm)
 			sm.setResponse(ServletManager.Code.Success, "Success");
 		} catch (GeneralException e) {
