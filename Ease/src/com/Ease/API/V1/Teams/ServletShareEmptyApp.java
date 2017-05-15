@@ -56,15 +56,20 @@ public class ServletShareEmptyApp extends HttpServlet {
             team.addShareableApp(emptyApp);
             teamUser_owner.addShareableApp(emptyApp);
             DataBaseConnection db = sm.getDB();
+            Channel channel = null;
+            if (channel_id != null)
+                channel = team.getChannelWithId(Integer.parseInt(channel_id));
             int transaction = db.startTransaction();
             DatabaseRequest databaseRequest = db.prepareRequest("INSERT INTO shareableApps values (?, ?, ?, ?);");
             databaseRequest.setInt(emptyApp.getDBid());
             databaseRequest.setInt(team.getDb_id());
             databaseRequest.setInt(teamUser_owner.getDb_id());
-            db.commitTransaction(transaction);
-            Channel channel = null;
-            if (channel_id != null)
-                channel = team.getChannelWithId(Integer.parseInt(channel_id));
+            databaseRequest.set();
+            if (channel == null)
+                databaseRequest.setNull();
+            else
+                databaseRequest.setInt(channel.getDb_id());
+            databaseRequest.set();
             JSONParser parser = new JSONParser();
             JSONArray teamUser_ids = (JSONArray) parser.parse(teamUser_ids_string);
             if (teamUser_ids_string != null) {
@@ -85,6 +90,7 @@ public class ServletShareEmptyApp extends HttpServlet {
                     channel.addSharedApp(sharedApp);
                 }
             }
+            db.commitTransaction(transaction);
             sm.setLogResponse("EmptyApp shared");
         } catch (Exception e) {
             sm.setResponse(e);

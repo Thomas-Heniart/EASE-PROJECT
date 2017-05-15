@@ -4,7 +4,6 @@ import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
-import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
@@ -14,7 +13,6 @@ import com.Ease.Utils.DatabaseRequest;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -62,6 +60,8 @@ public class ServletShareClassicApp extends HttpServlet {
                 channel = team.getChannelWithId(Integer.parseInt(channel_id));
             JSONParser parser = new JSONParser();
             JSONArray accountAndTeamUserIds = (JSONArray) parser.parse(StringEscapeUtils.unescapeHtml4(accountAndTeamUserIds_string));
+            DataBaseConnection db = sm.getDB();
+            int transaction = db.startTransaction();
             for (Object accountAndTeamUserIdObj :  accountAndTeamUserIds) {
                 JSONObject accountAndTeamUserId = (JSONObject) accountAndTeamUserIdObj;
                 JSONArray teamUser_tenant_ids = (JSONArray) accountAndTeamUserId.get("teamUser_ids");
@@ -77,18 +77,16 @@ public class ServletShareClassicApp extends HttpServlet {
                 ClassicApp shareableApp = ClassicApp.createClassicApp(null, null, app_name, website, accountInformationMap, sm, null);
                 teamUser_owner.addShareableApp(shareableApp);
                 team.addShareableApp(shareableApp);
-                DataBaseConnection db = sm.getDB();
-                int transaction = db.startTransaction();
                 DatabaseRequest databaseRequest = db.prepareRequest("INSERT INTO shareableApps values (?, ?, ?, ?);");
                 databaseRequest.setInt(shareableApp.getDBid());
                 databaseRequest.setInt(team.getDb_id());
                 databaseRequest.setInt(teamUser_owner.getDb_id());
+                databaseRequest.set();
                 if (channel == null)
                     databaseRequest.setNull();
                 else
                     databaseRequest.setInt(channel.getDb_id());
                 databaseRequest.set();
-                db.commitTransaction(transaction);
                 for (Object teamUser_tenant_id : teamUser_tenant_ids) {
                     TeamUser teamUser_tenant = team.getTeamUserWithId(Integer.parseInt((String)teamUser_tenant_id));
                     SharedApp sharedApp = shareableApp.share(teamUser_owner, teamUser_tenant, channel, team, new JSONObject(), sm);
@@ -97,6 +95,7 @@ public class ServletShareClassicApp extends HttpServlet {
                         channel.addSharedApp(sharedApp);
                 }
             }
+            db.commitTransaction(transaction);
             sm.setLogResponse("EmptyApp shared");
         } catch (Exception e) {
             sm.setResponse(e);
