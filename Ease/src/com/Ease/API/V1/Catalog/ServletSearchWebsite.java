@@ -2,6 +2,7 @@ package com.Ease.API.V1.Catalog;
 
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
+import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 import org.json.simple.JSONArray;
 
@@ -21,12 +22,16 @@ public class ServletSearchWebsite extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
-            Catalog catalog = (Catalog) sm.getContextAttr("catalog");
+            sm.needToBeConnected();
+            String team_id = sm.getServletParam("team_id", true);
             String search = sm.getServletParam("search", true);
+            if (team_id == null || team_id.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientError, "Team is null.");
+            Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             JSONArray jsonArray = new JSONArray();
             if (search != null && !search.equals("")) {
                 for (Website website : catalog.getWebsites()) {
-                    if (website.getName().toLowerCase().startsWith(search.toLowerCase()))
+                    if (website.isInCatalogForTeam(team_id) && website.getName().toLowerCase().startsWith(search.toLowerCase()) && website.work())
                         jsonArray.add(website.getJSON());
                 }
             }

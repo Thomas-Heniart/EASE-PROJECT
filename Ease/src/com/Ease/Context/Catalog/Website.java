@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import com.Ease.Team.TeamUser;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -72,6 +73,7 @@ public class Website {
             if (sso != null)
                 sso.addWebsite(site);
             site.loadGroupIds(db);
+            site.loadTeamIds(db);
         }
         return newWebsites;
     }
@@ -179,6 +181,7 @@ public class Website {
             if (sso != null)
                 sso.addWebsite(site);
             site.loadGroupIds(db);
+            site.loadTeamIds(db);
         }
         return websites;
     }
@@ -247,6 +250,7 @@ public class Website {
     protected List<WebsiteInformation> website_informations;
     protected List<Website> loginWithWebsites;
     protected List<String> groupIds;
+    protected List<String> teamIds = new LinkedList<>();
 
     public Website(String db_id, int single_id, String name, String loginUrl, String folder, Sso sso, boolean noLogin, String website_homepage, int ratio, int position, List<WebsiteInformation> website_informations, WebsiteAttributes websiteAttributes) {
         this.db_id = db_id;
@@ -302,6 +306,14 @@ public class Website {
             this.groupIds.add(newParent_id);
             this.loadSubGroupIds(newParent_id, db);
         }
+    }
+
+    public void loadTeamIds(DataBaseConnection db) throws GeneralException {
+        DatabaseRequest request = db.prepareRequest("SELECT team_id FROM teamAndWebsiteMap WHERE website_id = ?;");
+        request.setInt(this.getDb_id());
+        DatabaseResult rs = request.get();
+        while (rs.next())
+            this.teamIds.add(rs.getString(1));
     }
 
     public String getDb_id() {
@@ -568,7 +580,15 @@ public class Website {
             if (this.groupIds.contains(group.getDBid()))
                 return true;
         }
-        return this.groupIds.isEmpty();
+        for (TeamUser teamUser : user.getTeamUsers()) {
+            if (this.teamIds.contains(teamUser.getTeam().getDb_id()))
+                return true;
+        }
+        return this.groupIds.isEmpty() && this.teamIds.isEmpty();
+    }
+
+    public boolean isInCatalogForTeam(String team_id) {
+        return this.teamIds.isEmpty() || this.teamIds.contains(team_id);
     }
 
     public String getHostname() {
