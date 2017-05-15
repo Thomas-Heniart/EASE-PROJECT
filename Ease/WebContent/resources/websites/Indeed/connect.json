@@ -1,0 +1,28 @@
+{
+  "name":"Indeed",
+  "lastLogin":"",
+  "home":"https://www.indeed.fr/",
+  "connect":{
+    "todo":[
+      {"action":"aclick", "search":"a#userOptionsLabel"},
+      {"action":"fill", "what":"login", "search":"#signin_email"},
+      {"action":"fill", "what":"password", "search":"#signin_password"},
+      {"action":"click", "search":"button[type='submit']"}
+    ]
+  },
+  "Facebook": {
+    "todo":[
+      {"action":"aclick", "search":"a#userOptionsLabel"},
+      {"action":"click", "search":"#oauth_task .btn-facebook"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='logout']"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='logout'], a#userOptionsLabel"},
+    {"search":"a[href*='logout']"}
+  ]
+}
