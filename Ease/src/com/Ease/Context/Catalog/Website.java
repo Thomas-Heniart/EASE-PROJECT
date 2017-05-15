@@ -527,6 +527,10 @@ public class Website {
             res.put("ssoId", this.sso.getSingleId());
         else
             res.put("ssoId", -1);
+        JSONArray team_ids = new JSONArray();
+        for (String team_id : this.teamIds)
+            team_ids.add(team_id);
+        res.put("team_ids", team_ids);
         res.put("url", this.website_homepage);
         JSONArray inputs = new JSONArray();
         for (WebsiteInformation websiteInformation : this.website_informations) {
@@ -582,6 +586,8 @@ public class Website {
     }
 
     public boolean isInPublicCatalogForUser(User user) {
+        if (user.isAdmin())
+            return true;
         for (Group group : user.getGroups()) {
             if (this.groupIds.contains(group.getDBid()))
                 return true;
@@ -590,7 +596,7 @@ public class Website {
             if (this.teamIds.contains(teamUser.getTeam().getDb_id()))
                 return true;
         }
-        return user.isAdmin() || (this.groupIds.isEmpty() && this.teamIds.isEmpty());
+        return (this.groupIds.isEmpty() && this.teamIds.isEmpty());
     }
 
     public boolean isInCatalogForTeam(String team_id) {
