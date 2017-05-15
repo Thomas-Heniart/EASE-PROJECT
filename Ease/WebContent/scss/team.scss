@@ -1,9 +1,195 @@
 @import 'variables';
 @import 'mixins';
 
-#teamsHandler {
-  font-family: $defaultFont;
+.ease_modal {
+  display: none;
+  position: fixed;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  background-color: white;
+  font-size: 1rem;
+  &.active {
+    display: block;
+  }
+  ::-webkit-scrollbar {
+    width: 13px;
+  }
+  ::-webkit-scrollbar-track, ::-webkit-scrollbar-thumb {
+    background-clip: padding-box!important;
+    border-radius: 5px;
+    border-right: 3px solid #fff;
+    border-left: 3px solid #fff;
+    box-shadow: inset 0 -3px 0 #fff, inset 0 3px 0 #fff;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f3f3f3;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(#E6E6E6, 1);
+  }
+  ::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(#E6E6E6, 1);
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 700;
+    margin-top: 0;
+  }
+  .content_row {
+    @include display-flex();
+    padding: 5px 0;
+    .signed_input {
+      @include flex-grow(1);
+      margin-right: 15px;
+      &:last-child {
+        margin-right: 0;
+      }
+      &:first-child {
+        @include flex-basis(250px);
+        @include flex-grow(0);
+        @include flex-shrink(0);
+      }
+    }
+  }
+  .modal_contents_container {
+    @include display-flex();
+    @include align-items(flex-start);
+    @include justify-content(center);
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    padding: 15vh 2rem 2rem;
+    .contents {
+      &.active {
+        display: block;
+      }
+      display: none;
+      width: 640px;
+      max-width: 100%;
+    }
+  }
+}
+#app_choose_step {
+  max-height: 100%;
+  width: 800px;
+  &.active {
+    @include display-flex();
+    @include flex-direction(column);
+  }
+  & > .content_row {
+    @include flex-shrink(0);
+  }
+  .content_row {
+    .select_all_button_container {
+      font-size: .6rem;
+    }
+    .validate_button {
+      padding: 3px 25px;
+    }
+  }
+  .scroller_div {
+    @include flex-shrink(1);
+    overflow: auto;
+    .delimiter {
+      padding-left: 60px;
+      & > span {
+        width: 100%;
+        border: 1px solid #717274;
+        border-radius: 5px;
+        padding: 5px 5px;
+      }
+    }
+    .content_row {
+      @include align-items(center);
+      @include flex-shrink(0);
+      .checkbox_container {
+        flex-basis: 60px;
+        flex-shrink: 0;
+        text-align: center;
+      }
+    }
+  }
+  .app_container {
+    .team_app {
+      background-color: #f9f9f9;
+    }
+  }
+}
+#add_user_modal {
+  .buttons_row  {
+    display: block;
+    overflow: hidden;
+    margin-top: 5px;
+    .buttons_wrapper {
+      float: right;
+    }
+  }
+  .signed_input {
+    span {
+      font-weight: 700;
+    }
+    input, select {
+      border-radius: 5px;
+      border: 1px solid #717274;
+    }
+    select {
+      padding: .75rem;
+    }
+  }
+  .signed_input input {
+    padding: .75rem;
+  }
+  .input_for_tags {
+    border-radius: 5px;
+    border: 1px solid #717274;
+    padding: .75rem;
+  }
+  .buttons_wrapper {
+    .cancel_button {
+      margin-right: .5rem;
+    }
+    button {
+      color: white;
+      padding: .75rem 25px;
+      border-radius: 5px;
+      font-weight: 700;
+      min-width: 130px;
+    }
+  }
+}
 
+.marked_input {
+  span {
+    display: block;
+    font-weight:700;
+  }
+}
+
+#teamsHandler {
+  font-family: Museo;
+  width: 100%;
+  height:100%;
+  padding-top: 43px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  transform: translateY(0);
+  @include display-flex();
+  @include flex(1);
+  overflow: hidden;
+  input,textarea {
+    @include simple-box-shadow(none);
+    &:hover {
+      @include simple-box-shadow(none);
+    }
+  }
   .team_view {
     border: 1px solid #E6E6E6;
     font-size: 18px;
@@ -23,12 +209,6 @@
     }
     ::-webkit-scrollbar-thumb:window-inactive {
       background: rgba(#E6E6E6, 0.7);
-    }
-    input,textarea {
-      @include simple-box-shadow(none);
-      &:hover {
-        @include simple-box-shadow(none);
-      }
     }
     .client_channels_container {
       position: relative;
@@ -182,8 +362,13 @@
               .channel_name_container {
                 @include display-flex();
                 .channel_name {
+                  @include display-flex();
+                  @include align-items(center);
                   padding: 0 .1rem 0 1.3rem;
                   font-weight: bold;
+                  .icon_wrapper {
+                    margin-right: 5px;
+                  }
                   i {
                     font-size: .9em;
                   }
@@ -197,6 +382,10 @@
                 font-size: 0.7em;
                 color: #717274;
                 .channel_header_info_item {
+                  display: none;
+                  &.active {
+                    display: block;
+                  }
                   &:first-child {
                     border-left: none;
                     padding-left: 0;
@@ -339,7 +528,7 @@
                 .value_input {
                   display: none;
                 }
-                .team_app_name_input {
+                .name_input {
                   position: relative;
                   background: none;
                   outline: none;
@@ -348,15 +537,6 @@
                   border-bottom: 1px inset #717274;
                   line-height: 1.3;
                   min-width: 300px;
-                }
-                .credentials_value_input {
-                  position: relative;
-                  background: none;
-                  padding: 0;
-                  border:none;
-                  border-bottom: 1px inset #717274;
-                  line-height: 1.3;
-                  min-width: 200px;
                 }
                 .team_app_actions_holder.edit_actions{
                   display: none;
@@ -412,146 +592,73 @@
                     color: black;
                   }
                 }
-                .team_app {
-                  border-radius: 5px;
-                  padding: .6rem;
-                  .team_app_name_holder {
-                    margin-bottom: .4rem;
-                    font-size: .9rem;
-                    font-weight:700;
-                  }
-                  .team_app_info_holder {
-                    @include display-flex();
-                    margin-bottom: .4rem;
-                    .team_app_info {
-                      @include display-flex();
-                      @include flex-basis(350px);
-                      @include align-items(center);
-                      padding-left: 2rem;
-                      padding-right: .6rem;
-                      .team_app_logo_holder {
-                        height: 50px;
-                        border-radius: 5px;
-                        overflow: hidden;
-                        img {
-                          height: 100%;
-                        }
-                      }
-                      .team_app_credentials_holder {
-                        font-size: .8rem;
-                        padding-left: .6rem;
-                        .team_app_credentials {
-                          .team_app_credentials_line {
-                            @include display-flex();
-                            @include align-items(center);
-                            line-height: 1.3;
-                            padding: 5px 0;
-                            .credentials_type_icon {
-                              width:20px;
-                              text-align: center;
-                              margin-right: .7rem;
-                            }
-                          }
-                        }
-                        .password_change_remind {
-                          @include display-flex();
-                          @include align-items(center);
-                          padding: 5px 0;
-                          .password_change_icon {
-                            width:20px;
-                            text-align: center;
-                            margin-right: .7rem;
-                          }
-                          .password_change_input {
-                            outline: none;
-                            background: none;
-                            border-radius: 5px;
-                          }
-                        }
-                      }
-                    }
-                    .team_app_sharing_info {
-                      padding-left: .6rem;
-                      border-left: 1px solid #717274;
-                      .receivers_wrapper {
-                        .team_user_receiver {
-                          @include display-inline-flex();
-                          @include align-items(center);
-                          float: left;
-                          margin: 2px 4px 2px 0;
-                          padding: 2px 8px;
-                          border-radius: 5px;
-                          background-color: $themeBlueColor;
-                          color: white;
-                          font-size: .7rem;
-                          &.accepted {
-                            background-color: $themeGreenColor;
-                          }
-                          .view_password_perm, .password_modification_counter {
-                            padding-left: 4px;
-                          }
-                          .team_app_receiver_name {
-                            max-width: 110px;
-                            display: block;
-                            text-overflow: ellipsis;
-                            overflow: hidden;
-                            white-space: nowrap;
-                          }
-                        }
-                      }
-                    }
-                  }
-                  .team_app_comment_holder {
-                    @include display-flex();
-                    @include align-items(center);
-                    .team_app_comment {
-                      @include flex-grow(1);
-                      font-size: .7rem;
-                      line-height: 1.1;
-                      padding-left: .6rem;
-                      font-style: italic;
-                      .comment_input {
-                        background: none;
-                        border-radius: 5px;
-                        resize: vertical;
-                        width: 100%;
-                        padding: 3px 5px;
-                      }
-                    }
-                  }
-                }
               }
             }
           }
           .add_actions_container {
             @include display-flex();
-            @include flex-basis(75px);
             @include flex-shrink(0);
-            border-top: 1px solid #E6E6E6;
-            button {
-              @include flex-basis(150px);
-              position: relative;
-              color: #717274;
-              &:before {
-                content: "";
-                position: absolute;
-                right: 0;
-                width: 1px;
-                height: 70%;
-                top:15%;
-                border-right: 1px solid #e6e6e6;
+            @include flex-direction(column);
+            border-bottom: 1px solid #E6E6E6;
+            &.active {
+              .add_buttons_wrapper {
+                display: none;
               }
-              &:hover {
-                background-color: #f9f9f9;
-                color: black;
+              .add_ui_holder {
+                display: block;
               }
-              .icon_holder {
-                font-size: 1.3rem;
-                margin-bottom: 5px;
+            }
+            .add_buttons_wrapper {
+              @include display-flex();
+              @include flex(1);
+              @include flex-basis(75px);
+              button {
+                @include flex-basis(150px);
+                position: relative;
+                color: #717274;
+                &:before {
+                  content: "";
+                  position: absolute;
+                  right: 0;
+                  width: 1px;
+                  height: 70%;
+                  top: 15%;
+                  border-right: 1px solid #e6e6e6;
+                }
+                &:hover {
+                  background-color: #f9f9f9;
+                  color: black;
+                }
+                .icon_holder {
+                  font-size: 1.3rem;
+                  margin-bottom: 5px;
+                }
+                .title {
+                  font-size: .7rem;
+                  line-height: 1;
+                }
               }
-              .title {
-                font-size: .7rem;
-                line-height: 1;
+            }
+            .add_ui_holder {
+              display: none;
+              padding: 5px;
+              background-color: #f9f9f9;
+              .app_name_input_handler{
+                @include align-items(center);
+                .icon_holder {
+                  padding: 0;
+                }
+                .app_name_input_wrapper {
+                  border:1px solid #717274;
+                  border-radius: 5px;
+                  margin-left: .6rem;
+                  input {
+                    padding: 3px 3px 3px 5px;
+                  }
+                }
+                i {
+                  padding: 0 5px;
+                }
               }
             }
           }
@@ -559,7 +666,7 @@
         #col_flex {
           position: relative;
           @include display-flex();
-          @include flex-basis(315px);
+          max-width: 315px;
           border-left:1px solid #E8E8E8;
           h2 {
             font-size: 1rem;
@@ -575,6 +682,7 @@
               @include flex-direction(column);
               &.active {
                 @include display-flex();
+                width: 315px;
               }
               .tab_heading {
                 background-color: #F7F7F7;
@@ -609,6 +717,9 @@
                 .member_name_holder {
                   display: block;
                   padding-left: 10px;
+                  .icon_wrapper {
+                    margin-right: 5px;
+                  }
                 }
               }
               .tab_content_row {
@@ -632,6 +743,381 @@
           }
         }
       }
+    }
+  }
+  .team_app {
+    border-radius: 5px;
+    padding: .6rem;
+    .name_holder {
+      margin-bottom: .4rem;
+      font-size: .9rem;
+      font-weight:700;
+    }
+    .info_holder {
+      @include display-flex();
+      margin-bottom: .4rem;
+      .info {
+        @include display-flex();
+        @include align-items(center);
+        padding-left: 2rem;
+        padding-right: .6rem;
+        .logo_holder {
+          @include flex-shrink(0);
+          height: 50px;
+          border-radius: 5px;
+          overflow: hidden;
+          img {
+            height: 100%;
+          }
+        }
+        .credentials_holder {
+          font-size: .8rem;
+          padding-left: .6rem;
+          .credentials {
+            max-height: 100px;
+            overflow: auto;
+            .credentials_line {
+              @include display-flex();
+              @include align-items(center);
+              line-height: 1.3;
+              padding: 5px 0;
+              .value_input {
+                @include flex(1);
+                position: relative;
+                background: none;
+                padding: 0;
+                border:none;
+                border-bottom: 1px inset #717274;
+                line-height: 1.3;
+                min-width: 200px;
+              }
+              .credentials_type_icon {
+                @include flex-shrink(0);
+                width:20px;
+                text-align: center;
+                margin-right: .7rem;
+              }
+            }
+          }
+          .password_change_remind {
+            @include display-flex();
+            @include align-items(center);
+            padding: 5px 0;
+            font-size: .8rem;
+            .password_change_icon {
+              @include flex-shrink(0);
+              width:20px;
+              text-align: center;
+              margin-right: .7rem;
+            }
+            .password_change_input {
+              outline: none;
+              background: none;
+              border-radius: 5px;
+            }
+          }
+        }
+      }
+      .sharing_info {
+        padding-left: .6rem;
+        border-left: 1px solid #717274;
+        .receivers_wrapper {
+          .receiver {
+            @include display-inline-flex();
+            @include align-items(center);
+            float: left;
+            margin: 2px 4px 2px 0;
+            padding: 2px 8px;
+            border-radius: 5px;
+            background-color: $themeBlueColor;
+            color: white;
+            font-size: .7rem;
+            &.accepted {
+              background-color: $themeGreenColor;
+            }
+            .view_password_perm, .password_modification_counter {
+              padding-left: 4px;
+            }
+            .receiver_name {
+              max-width: 110px;
+              display: block;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              white-space: nowrap;
+            }
+          }
+        }
+      }
+    }
+    .comment_holder {
+      @include display-flex();
+      @include align-items(center);
+      .comment {
+        @include flex-grow(1);
+        font-size: .7rem;
+        line-height: 1.1;
+        padding-left: .6rem;
+        font-style: italic;
+        .comment_input {
+          background: none;
+          border-radius: 5px;
+          resize: vertical;
+          width: 100%;
+          padding: 9px 8px;
+        }
+      }
+    }
+  }
+  .team_app.multiple_accounts_app {
+    .icon_wrapper {
+      padding: 0 5px;
+    }
+    .value_input {
+      border-bottom: 1px solid #717274;
+    }
+    .user_name_input {
+      border: 1px solid #717274;
+      border-radius: 5px;
+      padding:0 5px;
+    }
+    .user_adding_container {
+      @include display-flex();
+      @include flex-direction(column);
+      @include align-items(baseline);
+      padding-left: 0;
+      padding-right: 0;
+      .add_field_button {
+        font-size: .7rem;
+        text-decoration: underline;
+      }
+      .receiver_wrapper {
+        padding: 5px 0;
+        &.locked {
+          .user_name_input {
+            display: none;
+          }
+        }
+        .receiver {
+          display: none;
+        }
+      }
+    }
+    .receivers_wrapper {
+      .receiver_wrapper {
+        @include display-flex();
+        @include align-items(center);
+        font-size: .8rem;
+        .credentials {
+          @include display-flex();
+          .credential_container {
+            @include display-flex();
+            @include align-items(center);
+            margin-left: 10px;
+          }
+        }
+      }
+    }
+  }
+  #empty_app_adder  {
+    .value {
+      font-size: .7rem;
+    }
+  }
+  .team_app {
+    .user_selectors {
+      display: none;
+      max-height: 85px;
+      overflow: auto;
+      position: absolute;
+      padding: 5px;
+      margin-top: 5px;
+      width: 100%;
+      background-color: white;
+      border-radius: 5px;
+      border: 1px solid $themeGreyLightColor;
+      top: 100%;
+      left: 0;
+      @include simple-box-shadow(0 5px 10px rgba(0,0,0,.12));
+      .user_selector {
+        padding: 3px;
+        cursor: pointer;
+        border-radius: 5px;
+        &.selected {
+          cursor: auto;
+          .username {
+            color: $themeBlueColor;
+          }
+        }
+        &:hover {
+          background-color: #edf7fd;
+        }
+        .fname,.lname {
+          color: #949eb7;
+        }
+      }
+    }
+  }
+  #simple_app_adder {
+    .user_selectors {
+      font-size: .8rem;
+    }
+    .user_adding_container {
+      position: relative;
+      &.list_visible {
+        .user_selectors {
+          display: block;
+        }
+      }
+    }
+  }
+  #multiple_app_adder {
+    ::-webkit-scrollbar {
+      width: 13px;
+    }
+    ::-webkit-scrollbar-track, ::-webkit-scrollbar-thumb {
+      background-clip: padding-box!important;
+      border-radius: 5px;
+      border-right: 3px solid #fff;
+      border-left: 3px solid #fff;
+      box-shadow: inset 0 -3px 0 #fff, inset 0 3px 0 #fff;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f3f3f3;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(#E6E6E6, 0.7);
+    }
+    ::-webkit-scrollbar-thumb:window-inactive {
+      background: rgba(#E6E6E6, 0.7);
+    }
+    .user_choose {
+      max-width: 300px;
+      position: relative;
+      outline: none;
+      border: 1px solid #717274;
+      border-radius: 5px;
+      padding: 5px 5px;
+      margin: 5px 0;
+      input {
+        width: 100%;
+      }
+      &.list_visible {
+        .user_selectors {
+          display: block;
+        }
+      }
+    }
+    .info_holder {
+      .info {
+        @include flex-basis(initial);
+      }
+      .inputs_wrapper {
+        @include display-flex();
+        .choosen_user {
+          overflow: hidden;
+           @include display-flex();
+           margin-right: 10px;
+           width: 150px;
+           background: $themeBlueColor;
+           color: white;
+           border-radius: 5px;
+            .value {
+              @include flex(1);
+              padding-left:5px;
+            }
+          .button_delete {
+            padding: 0 5px;
+          }
+          }
+        }
+      }
+    .credentials_line {
+      &:first-child {
+        .delete_button {
+          display: none;
+        }
+      }
+      .value_input {
+        min-width: 150px;
+        margin-right: 10px;
+      }
+    }
+    .add_credential_button_wrapper {
+      font-size: .7rem;
+      padding-left: calc(20px + .7rem);
+    }
+  }
+  .add_content_container {
+    position: relative;
+    .add_actions_holder{
+      position: absolute;
+      right: .6rem;
+      top: .6rem;
+      font-size: .8rem;
+    }
+    .info_holder {
+      margin-bottom: 10px;
+    }
+    .app_name_input_handler {
+      margin-bottom: 10px;
+      .app_name_input_wrapper {
+        @include display-flex();
+      }
+      &.locked {
+        .action_button {
+          display: block;
+        }
+      }
+      .action_button {
+        display: none;
+      }
+    }
+  }
+  .add_content_container {
+    display: none;
+    &.active {
+      display: block;
+    }
+    .text_helper  {
+      margin-right: 5px;
+    }
+    .sharing_info {
+      .user_token {
+        .action_button {
+          color: #f9f9f9;
+          &:hover {
+            color: white;
+          }
+        }
+      }
+      .user_adding_container {
+        border: 1px solid #717274;
+        border-radius: 5px;
+      }
+    }
+  }
+  .action_text_button {
+    border-radius: 5px;
+    padding: 0 5px;
+    color: #f9f9f9;
+    &:hover {
+      opacity: .7;
+    }
+  }
+
+  .alert_background {
+    background-color: $themeRedColor;
+  }
+  .positive_background {
+    background-color: $themeGreenColor;
+  }
+  .neutral_background {
+    background-color: #717274;
+  }
+  .action_button {
+    color: #717274;
+    &:hover {
+      color: black;
     }
   }
   .menu {
@@ -719,10 +1205,7 @@
     padding:0 5px;
     max-width: 150px;
     color: white;
-    .name_holder {
-
-    }
-    .delete_button {
+    .button_delete {
       display: block;
       margin-left: 5px;
     }

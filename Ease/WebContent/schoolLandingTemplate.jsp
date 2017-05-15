@@ -37,6 +37,7 @@ pageEncoding="UTF-8"%>
 	<link rel="manifest" href="manifest.json">
 
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
+	<link rel="stylesheet" type="text/css" href="/cssMinified.v00009/lib/fonts/museo-font.css" />
 	<link rel="stylesheet" href="/cssMinified.v00009/default_style.css" />
 	<link rel="stylesheet" href="/cssMinified.v00009/bootstrap.css" />
 	<link rel="stylesheet" href="/cssMinified.v00009/landingPage.css" />

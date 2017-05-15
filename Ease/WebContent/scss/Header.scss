@@ -1,5 +1,148 @@
 @import 'variables';
+@import 'mixins';
 
+#main_header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	padding-right: 5px;
+	height: 43px;
+	z-index: 1;
+	nav {
+		position: relative;
+		float: right;
+		margin-top:4.5px;
+		border: 1px solid $themeGreyDarkColor;
+		border-radius: 5px;
+		button {
+			border-right: 1px solid $themeGreyDarkColor;
+			position: relative;
+			&:first-child {
+				border-top-left-radius: 5px;
+				border-bottom-left-radius: 5px;
+			}
+			&:last-child {
+				border-right: none;
+				border-top-right-radius: 5px;
+				border-bottom-right-radius: 5px;
+			}
+			&:hover {
+				background-color: $themeGreyLightColor;
+			}
+			&.active {
+				background-color: $themeGreyLightColor;
+				.menu {
+					display: block;
+				}
+			}
+			.menu {
+				display: none;
+				width: 170px;
+				min-width: 170px;
+				overflow: inherit;
+				background-color: white;
+				top:100%;
+				font-size: .7rem;
+				font-weight: bold;
+				right: 0;
+				margin-top: 10px;
+				box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
+				border:none;
+				.menu_row {
+					padding: 5px 10px;
+					border-bottom: 1px solid $themeGreyDarkColor;
+					&:last-child {
+						border-bottom: none;
+					}
+				}
+			}
+		}
+		#catalog_button {
+			background-color: #4FCB6C;
+			&:hover {
+				background-color: #3FA056;
+			}
+		}
+		#settings_button {
+			padding: 0 10px;
+		}
+	}
+}
+
+#main_header {
+	.logoImg {
+		height: 100%;
+		margin: 0;
+	}
+}
+
+#team_button {
+	.icon {
+		margin-right: 5px;
+	}
+	.menu_row.teams_container {
+		padding: 0 !important;
+	}
+	.team_select {
+		border-bottom: none;
+	}
+	.team_select {
+		@include display-flex();
+		@include align-items(center);
+	}
+	.team_select, #team_adder {
+		&:hover {
+			background-color: $themeGreyLightColor;
+		}
+	}
+}
+#logout_button, #notification_button, #team_button {
+	.menu_arrow:before {
+		right: 12px;
+	}
+	&:focus {
+		background-color: $themeGreyLightColor;
+		.menu {
+			display: block;
+		}
+	}
+}
+.menu_arrow {
+	&:before {
+		content: "";
+		position: absolute;
+		top:-9px;
+		width: 0;
+		height: 0;
+		border-left: 10px solid transparent;
+		border-right: 10px solid transparent;
+		border-bottom: 10px solid white;
+	}
+}
+#logout_button {
+	.menu_row {
+		text-align: right;
+		color: $themeRedLightColor;
+		&:hover {
+			cursor: pointer;
+			background-color: $themeGreyLightColor;
+		}
+	}
+}
+#notification_button {
+	&.notify {
+		&:before {
+			content: "\f111";
+			font-family: FontAwesome;
+			position: absolute;
+			color: $themeRedLightColor;
+			font-size: 11px;
+			top:12px;
+			left:15px;
+		}
+	}
+}
 .header {
 	&:before {
 		content: "";

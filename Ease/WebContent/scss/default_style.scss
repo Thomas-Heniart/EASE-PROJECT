@@ -99,6 +99,11 @@ body .crisp-client .crisp-1 .crisp-11 {
 .text-underlined {
   text-decoration: underline;
 }
+
+.text_strong {
+  font-weight: bold;
+}
+
 button.button-unstyle {
   background: inherit;
   border: none;
@@ -112,6 +117,17 @@ button.button-unstyle {
   border: none;
   padding: 0;
 }
+.select_unstyle {
+  background: none;
+  outline: none;
+}
+
+.block {
+  display: block !important;
+}
+.full_width {
+  width: 100%;
+}
 .overflow-ellipsis {
   display: block;
   text-overflow: ellipsis;
@@ -121,6 +137,14 @@ button.button-unstyle {
 
 .display-flex {
   @include display-flex();
+}
+
+.flex_column {
+  @include flex-direction(column);
+}
+
+.align_items_center {
+  @include align-items(center);
 }
 
 .input {

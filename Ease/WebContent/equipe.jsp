@@ -19,6 +19,7 @@ pageEncoding="UTF-8"%>
 	content="https://ease.space/resources/other/fb_letsgo_icon.jpg" />
 	<link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
+	<link rel="stylesheet" type="text/css" href="/cssMinified.v00009/lib/fonts/museo-font.css" />
 
 
 
