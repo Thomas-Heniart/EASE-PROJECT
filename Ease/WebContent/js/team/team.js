@@ -301,32 +301,31 @@ function simple_app_add_interface(root){
 
     this.users = [];
 
-    this.setup_user_selectors = function(){
-        var user;
-        var tmp;
-        for (var i = 0; i < team_view.active_element.users.length; i++){
-            user = team_view.active_element.users[i];
-            tmp = {};
-            tmp.selector = self.create_user_selector(user.id, user.username, user.first_name, user.last_name);
-            tmp.isSelected = false;
-            tmp.credentials = null;
-            tmp.selector.click(function(e){
-                if (tmp.isSelected)
-                    return;
-                tmp.isSelected = true;
-                tmp.selector.addClass('selected');
-                tmp.credentials = self.create_user_tag(user.username);
-                $('.button_delete', tmp.credentials).one('click', function (e) {
-                    tmp.selector.removeClass('selected');
-                    tmp.isSelected = false;
-                    tmp.credentials.remove();
-                    tmp.credentials = null;
-                });
-                tmp.credentials.insertBefore(self.tags_container_input);
-//                self.credentials.append(tmp.credentials);
+    this.setup_user_selector = function (user) {
+        var tmp = {};
+        tmp.selector = self.create_user_selector(user.id, user.username, user.first_name, user.last_name);
+        tmp.isSelected = false;
+        tmp.credentials = null;
+        tmp.selector.click(function(e){
+            if (tmp.isSelected)
+                return;
+            tmp.isSelected = true;
+            tmp.selector.addClass('selected');
+            tmp.credentials = self.create_user_tag(user.username);
+            $('.button_delete', tmp.credentials).one('click', function (e) {
+                tmp.selector.removeClass('selected');
+                tmp.isSelected = false;
+                tmp.credentials.remove();
+                tmp.credentials = null;
             });
-            self.user_selectors.append(tmp.selector);
-            self.users.push(tmp);
+            tmp.credentials.insertBefore(self.tags_container_input);
+        });
+        self.user_selectors.append(tmp.selector);
+        self.users.push(tmp);
+    };
+    this.setup_user_selectors = function(){
+        for (var i = 0; i < team_view.active_element.users.length; i++){
+            self.setup_user_selector(team_view.active_element.users[i]);
         }
     };
 }
@@ -415,31 +414,32 @@ function multiple_app_add_interface(root){
         self.reset();
         self.root.removeClass('active');
     };
-    this.setup_user_selectors = function(){
-        var user;
-        var tmp;
-        for (var i = 0; i < team_view.active_element.users.length; i++){
-            user = team_view.active_element.users[i];
-            tmp = {};
-            tmp.selector = self.create_user_selector(user.id, user.username, user.first_name, user.last_name);
-            tmp.isSelected = false;
-            tmp.credentials = null;
-            tmp.selector.click(function(e){
-                if (tmp.isSelected)
-                    return;
-                tmp.isSelected = true;
-                tmp.selector.addClass('selected');
-                tmp.credentials = self.create_credential_line(user.username);
-                $('.button_delete', tmp.credentials).one('click', function (e) {
-                    tmp.selector.removeClass('selected');
-                    tmp.isSelected = false;
-                    tmp.credentials.remove();
-                    tmp.credentials = null;
-                });
-                self.credentials.append(tmp.credentials);
+    this.setup_user_selector = function (user) {
+        var tmp = {};
+        tmp.selector = self.create_user_selector(user.id, user.username, user.first_name, user.last_name);
+        tmp.isSelected = false;
+        tmp.credentials = null;
+        tmp.selector.click(function(e){
+            if (tmp.isSelected)
+                return;
+            tmp.isSelected = true;
+            tmp.selector.addClass('selected');
+            tmp.credentials = self.create_credential_line(user.username);
+            $('.button_delete', tmp.credentials).one('click', function (e) {
+                tmp.selector.removeClass('selected');
+                tmp.isSelected = false;
+                tmp.credentials.remove();
+                tmp.credentials = null;
             });
-            self.user_selectors.append(tmp.selector);
-            self.users.push(tmp);
+            self.credentials.append(tmp.credentials);
+        });
+        self.user_selectors.append(tmp.selector);
+        self.users.push(tmp);
+    };
+
+    this.setup_user_selectors = function(){
+        for (var i = 0; i < team_view.active_element.users.length; i++){
+            self.setup_user_selector(team_view.active_element.users[i]);
         }
     };
 }
