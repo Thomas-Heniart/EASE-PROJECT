@@ -1,4 +1,4 @@
-package com.Ease.API.V1.Websites;
+package com.Ease.API.V1.Catalog;
 
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
@@ -16,7 +16,7 @@ import java.io.IOException;
 /**
  * Created by thomas on 15/05/2017.
  */
-@WebServlet("/ServletSearchWebsite")
+@WebServlet("/api/v1/catalog/searchWebsite")
 public class ServletSearchWebsite extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
@@ -26,7 +26,7 @@ public class ServletSearchWebsite extends HttpServlet {
             JSONArray jsonArray = new JSONArray();
             if (search != null && !search.equals("")) {
                 for (Website website : catalog.getWebsites()) {
-                    if (website.getName().startsWith(search))
+                    if (website.getName().toLowerCase().startsWith(search.toLowerCase()))
                         jsonArray.add(website.getJSON());
                 }
             }
@@ -39,7 +39,6 @@ public class ServletSearchWebsite extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-        rd.forward(request, response);
+        this.doPost(request, response);
     }
 }

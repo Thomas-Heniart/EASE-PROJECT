@@ -469,6 +469,8 @@ public class Website {
         for (WebsiteInformation websiteInformation1 : this.website_informations)
             websiteInformation.add(websiteInformation1.getJson());
         jsonObject.put("websiteInformation", websiteInformation);
+        jsonObject.put("single_id", this.getSingleId());
+        jsonObject.put("db_id", this.getDb_id());
         return jsonObject;
     }
 
@@ -608,5 +610,13 @@ public class Website {
 
     public List<String> getGroupIds() {
         return this.groupIds;
+    }
+
+    public JSONObject getSimpleJson() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("name", this.name);
+        jsonObject.put("homepage_url", this.getHomePageUrl());
+        jsonObject.put("single_id", this.getSingleId());
+        return jsonObject;
     }
 }
