@@ -118,6 +118,7 @@ public class AppPermissions{
 
 	public JSONObject getJson() {
 		JSONObject json = new JSONObject();
+		json.put("perms", this.perms);
 		json.put("rename", this.havePermission(Perm.RENAME.ordinal()));
 		json.put("delete", this.havePermission(Perm.DELETE.ordinal()));
 		json.put("showInfo", this.havePermission(Perm.SHOWINFO.ordinal()));
