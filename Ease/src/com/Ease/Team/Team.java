@@ -1,5 +1,8 @@
 package com.Ease.Team;
 
+import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.App.ShareableApp;
+import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Utils.*;
 import com.google.common.primitives.UnsignedInts;
@@ -7,6 +10,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
+import javax.servlet.ServletContext;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,13 +23,22 @@ import java.util.Map;
 @Table(name = "teams")
 public class Team {
 
-    public static List<Team> loadTeams() {
+    public static List<Team> loadTeams(ServletContext context, DataBaseConnection db) throws GeneralException {
         List<Team> teams = new LinkedList<>();
         HibernateQuery query = new HibernateQuery();
         query.queryString("SELECT t FROM Team t");
         teams = query.list();
-        for (Team team : teams)
+        for (Team team : teams) {
             team.lazyInitialize();
+            team.setShareableApps(App.loadShareableAppsForTeam(team, context, db));
+            for (ShareableApp shareableApp : team.getShareableApps()) {
+                shareableApp.setSharedApps(App.loadSharedAppsForShareableApp(shareableApp, context, db));
+                if (shareableApp.getChannel() != null) {
+                    shareableApp.getChannel().setSharedApps(shareableApp.getSharedApps());
+                }
+            }
+        }
+
         query.commit();
         return teams;
     }
@@ -49,6 +62,9 @@ public class Team {
 
     @Transient
     protected Map<Integer, TeamUser> teamUserIdMap = new HashMap<>();
+
+    @Transient
+    protected List<ShareableApp> shareableApps = new LinkedList<>();
 
     public Team(String name, List<TeamUser> teamUsers, List<Channel> channels) {
         this.name = name;
@@ -95,6 +111,13 @@ public class Team {
         this.channels = channels;
     }
 
+    public List<ShareableApp> getShareableApps() {
+        return shareableApps;
+    }
+
+    public void setShareableApps(List<ShareableApp> shareableApps) {
+        this.shareableApps = shareableApps;
+    }
 
     public void lazyInitialize() {
         for (Channel channel : this.getChannels())
@@ -132,6 +155,10 @@ public class Team {
     public void addChannel(Channel channel) {
         this.channels.add(channel);
         this.channelIdMap.put(channel.getDb_id(), channel);
+    }
+
+    public void addShareableApp(ShareableApp shareableApp) {
+        this.shareableApps.add(shareableApp);
     }
 
     public Channel getGeneralChannel() throws GeneralException {
@@ -172,7 +199,10 @@ public class Team {
         for (TeamUser teamUser : this.getTeamUsers())
             teamUsers.add(teamUser.getJson());
         res.put("teamUsers", teamUsers);
-        JSONArray teamUserChannels = new JSONArray();
+        JSONArray shareableApps = new JSONArray();
+        for (ShareableApp shareableApp : this.shareableApps)
+            shareableApps.add(shareableApp.getShareableJson());
+        res.put("shareableApps", shareableApps);
         return res;
     }
 

@@ -10,6 +10,8 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import com.Ease.Team.TeamManager;
+import com.Ease.Team.TeamUser;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -72,6 +74,7 @@ public class Website {
             if (sso != null)
                 sso.addWebsite(site);
             site.loadGroupIds(db);
+            site.loadTeamIds(db);
         }
         return newWebsites;
     }
@@ -85,7 +88,7 @@ public class Website {
         return site;
     }
 
-    public static Website createWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, boolean noLogin, boolean noScrap, String[] haveLoginWith, String[] infoNames, String[] infoTypes, String[] placeholders, String[] placeholderIcons, Catalog catalog, String ssoId, ServletManager sm) throws GeneralException {
+    public static Website createWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, boolean noLogin, boolean noScrap, String[] haveLoginWith, String[] infoNames, String[] infoTypes, String[] placeholders, String[] placeholderIcons, Catalog catalog, String ssoId, String team_id, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         DatabaseRequest request = db.prepareRequest("SELECT * FROM websites WHERE folder = ? AND website_name = ?;");
         request.setString(folder);
@@ -149,9 +152,14 @@ public class Website {
             sso.addWebsite(newWebsite);
             newWebsite.setSso(sso);
         }
+        if (team_id != null && !team_id.equals("")) {
+            request = db.prepareRequest("INSERT INTO teamAndWebsiteMap values (null, ?, ?);");
+            request.setInt(team_id);
+            request.setInt(newWebsite.getDb_id());
+            newWebsite.addTeamId(team_id);
+        }
         return newWebsite;
     }
-
 
     public static List<Website> loadWebsites(DataBaseConnection db, Map<String, Sso> ssoDbIdMap, ServletContext context) throws GeneralException {
         List<Website> websites = new LinkedList<Website>();
@@ -179,6 +187,7 @@ public class Website {
             if (sso != null)
                 sso.addWebsite(site);
             site.loadGroupIds(db);
+            site.loadTeamIds(db);
         }
         return websites;
     }
@@ -247,6 +256,7 @@ public class Website {
     protected List<WebsiteInformation> website_informations;
     protected List<Website> loginWithWebsites;
     protected List<String> groupIds;
+    protected List<String> teamIds = new LinkedList<>();
 
     public Website(String db_id, int single_id, String name, String loginUrl, String folder, Sso sso, boolean noLogin, String website_homepage, int ratio, int position, List<WebsiteInformation> website_informations, WebsiteAttributes websiteAttributes) {
         this.db_id = db_id;
@@ -302,6 +312,14 @@ public class Website {
             this.groupIds.add(newParent_id);
             this.loadSubGroupIds(newParent_id, db);
         }
+    }
+
+    public void loadTeamIds(DataBaseConnection db) throws GeneralException {
+        DatabaseRequest request = db.prepareRequest("SELECT team_id FROM teamAndWebsiteMap WHERE website_id = ?;");
+        request.setInt(this.getDb_id());
+        DatabaseResult rs = request.get();
+        while (rs.next())
+            this.teamIds.add(rs.getString(1));
     }
 
     public String getDb_id() {
@@ -469,6 +487,8 @@ public class Website {
         for (WebsiteInformation websiteInformation1 : this.website_informations)
             websiteInformation.add(websiteInformation1.getJson());
         jsonObject.put("websiteInformation", websiteInformation);
+        jsonObject.put("single_id", this.getSingleId());
+        jsonObject.put("db_id", this.getDb_id());
         return jsonObject;
     }
 
@@ -507,6 +527,10 @@ public class Website {
             res.put("ssoId", this.sso.getSingleId());
         else
             res.put("ssoId", -1);
+        JSONArray team_ids = new JSONArray();
+        for (String team_id : this.teamIds)
+            team_ids.add(team_id);
+        res.put("team_ids", team_ids);
         res.put("url", this.website_homepage);
         JSONArray inputs = new JSONArray();
         for (WebsiteInformation websiteInformation : this.website_informations) {
@@ -562,11 +586,21 @@ public class Website {
     }
 
     public boolean isInPublicCatalogForUser(User user) {
+        if (user.isAdmin())
+            return true;
         for (Group group : user.getGroups()) {
             if (this.groupIds.contains(group.getDBid()))
                 return true;
         }
-        return this.groupIds.isEmpty();
+        for (TeamUser teamUser : user.getTeamUsers()) {
+            if (this.teamIds.contains(teamUser.getTeam().getDb_id()))
+                return true;
+        }
+        return (this.groupIds.isEmpty() && this.teamIds.isEmpty());
+    }
+
+    public boolean isInCatalogForTeam(String team_id) {
+        return this.teamIds.isEmpty() || this.teamIds.contains(team_id);
     }
 
     public String getHostname() {
@@ -608,5 +642,17 @@ public class Website {
 
     public List<String> getGroupIds() {
         return this.groupIds;
+    }
+
+    public JSONObject getSimpleJson() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("name", this.name);
+        jsonObject.put("homepage_url", this.getHomePageUrl());
+        jsonObject.put("single_id", this.getSingleId());
+        return jsonObject;
+    }
+
+    private void addTeamId(String team_id) {
+        this.teamIds.add(team_id);
     }
 }

@@ -61,6 +61,16 @@
                     </select>
                 </div>
                 <div class="form-control"
+                     style="margin-left: 25%; margin-top: 1%; width: 50%; text-align: center; position: relative;">
+                    <label for="team">Team: </label>
+                    <select size="1" name="team_id" id="team">
+                        <option value=""></option>
+                        <c:forEach items='${servletContext.getAttribute("teamManager").getTeams()}' var="team">
+                            <option value="${team.getDb_id()}">${team.getName()}</option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <div class="form-control"
                      style="margin-left: 25%; margin-top: 1%; width: 50%; position: relative;">
                     Have login button : <input
                         style="width: 20px; height: 20px; padding: 0; margin: 0; vertical-align: bottom; position: relative;"

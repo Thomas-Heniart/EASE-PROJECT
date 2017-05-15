@@ -1,0 +1,28 @@
+{
+  "name":"Loisirs Enchères",
+  "lastlogin":"",
+  "home":"https://www.loisirsencheres.com/",
+  "connect": {
+    "todo": [
+      {"action":"clickona", "search":"a[data-target='#loginModal']"},
+      {"action":"fill", "what":"login", "search":"#loginModal #email_form_login"},
+      {"action":"fill", "what":"password", "search":"#loginModal #password"},
+      {"action":"click", "search":"#loginModal button[type='submit']"}
+    ]
+  },
+  "logout": {
+    "todo": [
+      {"action":"aclick", "search":"a[href*='logout']"}
+    ]
+  },
+  "Facebook": {
+    "todo": [
+      {"action":"clickona", "search":"a[data-target='#loginModal']"},
+      {"action":"click", "search":"#loginModal .connectfacebook"}
+    ]
+  },
+  "checkAlreadyLogged": [
+    {"action":"waitfor", "search":"a[href*='logout'], #email_form_login"},
+    {"search":"a[href*='logout']"}
+  ]
+}

@@ -3,14 +3,14 @@ package com.Ease.Dashboard.App.WebsiteApp.LogwithApp;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.Ease.Dashboard.App.*;
+import com.Ease.Team.Channel;
+import com.Ease.Team.Team;
+import com.Ease.Team.TeamUser;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.Ease.Context.Catalog.Website;
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.AppInformation;
-import com.Ease.Dashboard.App.AppPermissions;
-import com.Ease.Dashboard.App.GroupApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
@@ -20,6 +20,8 @@ import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.IdGenerator;
 import com.Ease.Utils.ServletManager;
+
+import javax.servlet.ServletContext;
 
 public class LogwithApp extends WebsiteApp {
     public enum Data {
@@ -35,15 +37,14 @@ public class LogwithApp extends WebsiteApp {
 	 * 
 	 */
 
-    public static LogwithApp loadLogwithApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, String websiteAppDBid, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public static LogwithApp loadLogwithApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, String websiteAppDBid, ServletContext context, DataBaseConnection db) throws GeneralException {
         DatabaseRequest request = db.prepareRequest("SELECT * from logWithApps WHERE website_app_id= ?;");
         request.setInt(websiteAppDBid);
         DatabaseResult rs = request.get();
         if (rs.next()) {
             String logwith = rs.getString(Data.LOGWITH_APP_ID.ordinal());
             String logwithDBid = rs.getString(Data.ID.ordinal());
-            IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
+            IdGenerator idGenerator = (IdGenerator) context.getAttribute("idGenerator");
             return new LogwithApp(db_id, profile, position, infos, groupApp, insertDate, idGenerator.getNextId(), site, websiteAppDBid, logwith, logwithDBid);
         }
         throw new GeneralException(ServletManager.Code.InternError, "Logwith app not complete in db.");
@@ -92,7 +93,7 @@ public class LogwithApp extends WebsiteApp {
     protected String logwithDBid;
     protected WebsiteApp logwith;
 
-    public LogwithApp(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid, String logwith, String logwithDBid) {
+    public LogwithApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid, String logwith, String logwithDBid) {
         super(db_id, profile, position, infos, groupApp, insertDate, single_id, site, websiteAppDBid);
         this.logwithDBid = logwith;
         this.logwithAppDBid = logwithDBid;
@@ -176,5 +177,10 @@ public class LogwithApp extends WebsiteApp {
     /* For sancho le robot */
     public boolean isEmpty() {
         return false;
+    }
+
+    @Override
+    public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, ServletManager sm) throws GeneralException {
+        throw new GeneralException(ServletManager.Code.ClientError, "You shouldn't be there");
     }
 }

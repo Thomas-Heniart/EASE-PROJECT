@@ -1,0 +1,21 @@
+{
+  "name":"Algolia",
+  "lastLogin":"",
+  "home":"https://www.algolia.com/dashboard",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"#user_email"},
+      {"action":"fill", "what":"password", "search":"#user_password"},
+      {"action":"click", "search":"#new_user input.btn-signin"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='sign_out']"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='sign_out'], #user_email"},
+    {"search":"a[href*='sign_out']"}
+  ]
+}

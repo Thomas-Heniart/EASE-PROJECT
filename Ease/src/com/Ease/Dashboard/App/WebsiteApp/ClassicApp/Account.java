@@ -3,10 +3,7 @@ package com.Ease.Dashboard.App.WebsiteApp.ClassicApp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.hibernate.boot.model.relational.Database;
 import org.json.simple.JSONArray;
@@ -23,6 +20,7 @@ import com.Ease.Utils.ServletManager;
 import javax.servlet.Servlet;
 
 public class Account {
+
     public enum Data {
         NOTHING,
         ID,
@@ -76,6 +74,25 @@ public class Account {
         List<AccountInformation> infos = AccountInformation.createAccountInformations(db_id, informations, sm);
         db.commitTransaction(transaction);
         return new Account(db_id, shared, infos);
+    }
+
+    public static Account createAccountFromJson(JSONArray account_information, ServletManager sm) throws GeneralException {
+        Map<String, String> accountInformation = new HashMap<>();
+        for (Object obj : account_information) {
+            JSONObject objJson = (JSONObject) obj;
+            String info_name = (String)objJson.get("info_name");
+            String info_value = (String)objJson.get("info_value");
+            /* Crypto for password */
+            accountInformation.put(info_name, info_value);
+        }
+        DataBaseConnection db = sm.getDB();
+        int transaction = db.startTransaction();
+        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, ?, default, null, null);");
+        request.setBoolean(false);
+        String db_id = request.set().toString();
+        List<AccountInformation> infos = AccountInformation.createAccountInformations(db_id, accountInformation, sm);
+        db.commitTransaction(transaction);
+        return new Account(db_id, false, infos);
     }
 
     public static Account createAccountSameAs(Account sameAccount, boolean shared, User user, ServletManager sm) throws GeneralException {

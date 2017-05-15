@@ -5,6 +5,13 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.Ease.Context.Catalog.Website;
+import com.Ease.Dashboard.DashboardManager;
+import com.Ease.Team.Channel;
+import com.Ease.Team.Team;
+import com.Ease.Team.TeamManager;
+import com.Ease.Team.TeamUser;
+import com.sun.deploy.ui.AppInfo;
+import org.hibernate.boot.model.relational.Database;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -18,7 +25,9 @@ import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
-public class App {
+import javax.servlet.ServletContext;
+
+public class App implements ShareableApp, SharedApp{
 
     public enum Data {
         NOTHING,
@@ -60,10 +69,10 @@ public class App {
 
             switch (rs.getString(Data.TYPE.ordinal())) {
                 case "linkApp":
-                    app = LinkApp.loadLinkApp(db_id, profile, position, insertDate, infos, groupApp, sm);
+                    app = LinkApp.loadLinkApp(db_id, profile, position, insertDate, infos, groupApp, sm.getServletContext(), db);
                     break;
                 case "websiteApp":
-                    app = WebsiteApp.loadWebsiteApp(db_id, profile, position, insertDate, infos, groupApp, sm);
+                    app = WebsiteApp.loadWebsiteApp(db_id, profile, position, insertDate, infos, groupApp, sm.getServletContext(), db);
                     break;
                 default:
                     throw new GeneralException(ServletManager.Code.InternError, "This app type dosen't exist.");
@@ -77,78 +86,72 @@ public class App {
         return apps;
     }
 
-    public static List<SharedApp> loadSharedApps(Integer teamUser_tenant_id, ServletManager sm) throws GeneralException {
-        List<SharedApp> sharedApps = new LinkedList<>();
-        DataBaseConnection db = sm.getDB();
-        DatabaseRequest request = db.prepareRequest("SELECT apps.* FROM apps JOIN appAndSharedAppMap ON apps.id = appAndSharedAppMap.shared_app_id AND appAndSharedAppMap.team_user_tenant_id = ?;");
-        request.setInt(teamUser_tenant_id);
-        DatabaseResult rs = request.get();
-        String db_id;
-        int position;
-        String insertDate;
-        AppInformation infos;
-        GroupApp groupApp = null;
-        SharedApp app = null;
-        while (rs.next()) {
-            db_id = rs.getString(Data.ID.ordinal());
-            insertDate = rs.getString(Data.INSERT_DATE.ordinal());
-            infos = AppInformation.loadAppInformation(rs.getString(Data.APP_INFO_ID.ordinal()), db);
-            String groupAppId = rs.getString(Data.GROUP_APP_ID.ordinal());
-            if (groupAppId != null) {
-                groupApp = GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupAppId);
-            }
-
-            switch (rs.getString(Data.TYPE.ordinal())) {
-                case "linkApp":
-                    app = LinkApp.loadLinkApp(db_id, null, null, insertDate, infos, groupApp, sm);
-                    break;
-                case "websiteApp":
-                    app = WebsiteApp.loadWebsiteApp(db_id, null, null, insertDate, infos, groupApp, sm);
-                    break;
-                default:
-                    throw new GeneralException(ServletManager.Code.InternError, "This app type dosen't exist.");
-            }
-            sharedApps.add(app);
-            groupApp = null;
-        }
-        return sharedApps;
-    }
-
-    public static List<ShareableApp> loadShareableApps(Integer teamUser_tenant_id, ServletManager sm) throws GeneralException {
+    public static List<ShareableApp> loadShareableAppsForTeam(Team team, ServletContext context, DataBaseConnection db) throws GeneralException {
         List<ShareableApp> shareableApps = new LinkedList<>();
-        DataBaseConnection db = sm.getDB();
-        DatabaseRequest request = db.prepareRequest("SELECT apps.* FROM apps JOIN appAndSharedAppMap ON apps.id = appAndSharedAppMap.app_id AND appAndSharedAppMap.team_user_tenant_id = ?;");
-        request.setInt(teamUser_tenant_id);
+        DatabaseRequest request = db.prepareRequest("SELECT * FROM apps JOIN shareableApps ON apps.id = shareableApps.id WHERE team_id = ?;");
+        request.setInt(team.getDb_id());
         DatabaseResult rs = request.get();
         String db_id;
-        int position;
         String insertDate;
         AppInformation infos;
-        GroupApp groupApp = null;
-        ShareableApp app = null;
+        ShareableApp shareableApp = null;
         while (rs.next()) {
-            db_id = rs.getString(Data.ID.ordinal());
-            insertDate = rs.getString(Data.INSERT_DATE.ordinal());
-            infos = AppInformation.loadAppInformation(rs.getString(Data.APP_INFO_ID.ordinal()), db);
-            String groupAppId = rs.getString(Data.GROUP_APP_ID.ordinal());
-            if (groupAppId != null) {
-                groupApp = GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupAppId);
-            }
-
-            switch (rs.getString(Data.TYPE.ordinal())) {
+            db_id = rs.getString("apps.id");
+            insertDate = rs.getString("insert_date");
+            infos = AppInformation.loadAppInformation(rs.getString("app_info_id"), db);
+            switch (rs.getString("type")) {
                 case "linkApp":
-                    app = LinkApp.loadLinkApp(db_id, null, null, insertDate, infos, groupApp, sm);
+                    shareableApp = LinkApp.loadLinkApp(db_id, null, null, insertDate, infos, null, context, db);
                     break;
                 case "websiteApp":
-                    app = WebsiteApp.loadWebsiteApp(db_id, null, null, insertDate, infos, groupApp, sm);
+                    shareableApp = WebsiteApp.loadWebsiteApp(db_id, null, null, insertDate, infos, null, context, db);
                     break;
                 default:
                     throw new GeneralException(ServletManager.Code.InternError, "This app type dosen't exist.");
             }
-            shareableApps.add(app);
-            groupApp = null;
+            TeamUser teamUser_owner = team.getTeamUserWithId(rs.getInt("teamUser_owner_id"));
+            Integer channel_id = rs.getInt("channel_id");
+            Channel channel = null;
+            if (channel_id != null)
+                channel = team.getChannelWithId(channel_id);
+            shareableApp.setTeamUser_owner(teamUser_owner);
+            shareableApp.setChannel(channel);
+            shareableApps.add(shareableApp);
         }
         return shareableApps;
+    }
+
+    public static List<SharedApp> loadSharedAppsForShareableApp(ShareableApp shareableApp, ServletContext context, DataBaseConnection db) throws GeneralException {
+        List<SharedApp> sharedApps = new LinkedList<>();
+        DatabaseRequest request = db.prepareRequest("SELECT * FROM apps JOIN sharedApps ON sharedApps.id = apps.id AND sharedApps.shareable_app_id = ?;");
+        request.setInt(((App)shareableApp).getDBid());
+        DatabaseResult rs = request.get();
+        String db_id;
+        String insertDate;
+        AppInformation infos;
+        SharedApp sharedApp = null;
+        while (rs.next()) {
+            db_id = rs.getString("apps.id");
+            insertDate = rs.getString("insert_date");
+            infos = AppInformation.loadAppInformation(rs.getString("app_info_id"), db);
+            switch (rs.getString("type")) {
+                case "linkApp":
+                    sharedApp = LinkApp.loadLinkApp(db_id, null, null, insertDate, infos, null, context, db);
+                    break;
+                case "websiteApp":
+                    sharedApp = WebsiteApp.loadWebsiteApp(db_id, null, null, insertDate, infos, null, context, db);
+                    break;
+                default:
+                    throw new GeneralException(ServletManager.Code.InternError, "This app type dosen't exist.");
+            }
+            Integer teamUser_tenant_id = rs.getInt("teamUser_tenant_id");
+            System.out.println("Owner: " + shareableApp.getTeamUser_owner().getFirstName());
+            System.out.println("Tenant: " + shareableApp.getTeamUser_owner().getTeam().getTeamUserWithId(teamUser_tenant_id).getFirstName());
+            sharedApp.setTeamUser_tenant(shareableApp.getTeamUser_owner().getTeam().getTeamUserWithId(teamUser_tenant_id));
+            sharedApp.setHolder(shareableApp);
+            sharedApps.add(sharedApp);
+        }
+        return sharedApps;
     }
 
     public static String createApp(Profile profile, int position, String name, String type, Map<String, Object> elevator, ServletManager sm) throws GeneralException {
@@ -184,7 +187,7 @@ public class App {
 
     }
 
-    public static String createSharedApp(Profile profile, Integer position, String name, String type, Map<String, Object> elevator, boolean shareable, boolean shared, Integer team_user_owner_id, Integer team_user_tenant_id, App holder, ServletManager sm) throws GeneralException {
+    public static String createSharedApp(Profile profile, Integer position, String name, String type, Map<String, Object> elevator, boolean shareable, boolean shared, Integer team_id, Integer channel_id, Integer team_user_tenant_id, App holder, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         AppInformation infos = AppInformation.createAppInformation(name, sm);
@@ -207,11 +210,15 @@ public class App {
             elevator.put("appInfos", infos);
             elevator.put("insertDate", registrationDate);
         }
-        request = db.prepareRequest("INSERT INTO profileAndAppMap values (NULL, ?, ?, ?, ?)");
-        request.setInt(team_user_owner_id);
-        request.setInt(team_user_tenant_id);
+        request = db.prepareRequest("INSERT INTO sharedApps values (?, ?, ?, ?, ?);");
         request.setInt(appDBid);
+        request.setInt(team_id);
+        request.setInt(team_user_tenant_id);
         request.setInt(holder.getDBid());
+        if (channel_id == null)
+            request.setNull();
+        else
+            request.setInt(channel_id);
         db.commitTransaction(transaction);
         return appDBid;
     }
@@ -231,9 +238,18 @@ public class App {
     protected int single_id;
     protected boolean shared;
     protected boolean shareable;
-    protected ShareableApp holder;
+
+    /* Interface ShareableApp */
     protected List<SharedApp> sharedApps = new LinkedList<>();
     protected HashMap<Integer, SharedApp> sharedAppIdMap = new HashMap<>();
+    protected TeamUser teamUser_owner;
+    protected List<TeamUser> tenant_teamUsers = new LinkedList<>();
+    protected Channel channel;
+
+    /* Interface SharedApp */
+    protected ShareableApp holder;
+    protected TeamUser teamUser_tenant;
+
 
     public App(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id) {
         this.db_id = db_id;
@@ -255,8 +271,6 @@ public class App {
         this.groupApp = groupApp;
         this.insertDate = insertDate;
         this.single_id = single_id;
-        this.shareable = true;
-        this.shared = false;
         this.shared = shared;
         this.shareable = shareable;
     }
@@ -322,7 +336,7 @@ public class App {
         return profile;
     }
 
-    public int getPosition() {
+    public Integer getPosition() {
         return position;
     }
 
@@ -410,5 +424,150 @@ public class App {
 
     public boolean isShareable() {
         return this.shareable;
+    }
+
+    /* Interface SharedApp */
+    @Override
+    public void modifyShared(ServletManager sm, JSONObject editJson) throws GeneralException {
+        String name = (String) editJson.get("name");
+        if (name != null && !name.equals(""))
+            this.getAppInformation().setName(name, sm);
+    }
+
+    @Override
+    public ShareableApp getHolder() {
+        return this.holder;
+    }
+
+    @Override
+    public void setHolder(ShareableApp shareableApp) {
+        this.holder = shareableApp;
+    }
+
+    @Override
+    public void deleteShared(ServletManager sm) throws GeneralException {
+        this.removeFromDB(sm);
+    }
+
+    @Override
+    public void setTeamUser_tenant(TeamUser teamUser) {
+        teamUser.addSharedApp(this);
+        this.teamUser_tenant = teamUser;
+    }
+
+    @Override
+    public TeamUser getTeamUser_tenant() {
+        return this.teamUser_tenant;
+    }
+
+    @Override
+    public JSONObject getSharedJSON() {
+        JSONObject res = new JSONObject();
+        res.put("db_id", this.getDBid());
+        res.put("single_id", this.getSingleId());
+        res.put("teamUser_tenant_id", this.getTeamUser_tenant().getDb_id());
+        res.put("shareableApp_db_id", ((App)this.getHolder()).getDBid());
+        res.put("shareableApp_single_id", ((App)this.getHolder()).getSingleId());
+        return res;
+    }
+
+    /* Interface ShareableApp */
+    @Override
+    public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, ServletManager sm) throws GeneralException {
+        throw new GeneralException(ServletManager.Code.ClientError, "You shouldn't be there");
+    }
+
+    @Override
+    public void modifyShareable(ServletManager sm, JSONObject editJson, SharedApp sharedApp) throws GeneralException {
+        String name = (String) editJson.get("name");
+        if (name != null && !name.equals(""))
+            this.getAppInformation().setName(name, sm);
+    }
+
+    @Override
+    public void deleteShareable(ServletManager sm, SharedApp sharedApp) throws GeneralException {
+        this.removeFromDB(sm);
+    }
+
+    @Override
+    public TeamUser getTeamUser_owner() {
+        return this.teamUser_owner;
+    }
+
+    @Override
+    public List<TeamUser> getTeamUser_tenants() {
+        return this.tenant_teamUsers;
+    }
+
+    @Override
+    public List<SharedApp> getSharedApps() {
+        return this.sharedApps;
+    }
+
+    @Override
+    public void setSharedApps(List<SharedApp> sharedApps) {
+        System.out.println("Shared apps size: " + sharedApps.size());
+        for (SharedApp sharedApp : sharedApps)
+            this.addSharedApp(sharedApp);
+    }
+
+    @Override
+    public void addSharedApp(SharedApp sharedApp) {
+        if (!this.tenant_teamUsers.contains(sharedApp.getTeamUser_tenant()))
+            this.tenant_teamUsers.add(sharedApp.getTeamUser_tenant());
+        this.sharedAppIdMap.put(((App)sharedApp).getSingleId(), sharedApp);
+        this.sharedApps.add(sharedApp);
+    }
+
+    @Override
+    public void setTeamUser_owner(TeamUser teamUser_owner) {
+        teamUser_owner.addShareableApp(this);
+        this.teamUser_owner = teamUser_owner;
+    }
+
+    @Override
+    public Channel getChannel() {
+        return this.channel;
+    }
+
+    @Override
+    public void setChannel(Channel channel) {
+        channel.addSharedApp(this);
+        this.channel = channel;
+    }
+
+    @Override
+    public JSONObject getShareableJson() {
+        JSONObject res = new JSONObject();
+        res.put("db_id", this.getDBid());
+        res.put("single_id", this.getSingleId());
+        res.put("channel_id", "null");
+        if (this.getChannel() != null)
+            res.put("channel_id", this.getChannel().getDb_id());
+        res.put("teamUser_owner_id", this.getTeamUser_owner().getDb_id());
+        JSONArray sharedApps = new JSONArray();
+        for (SharedApp sharedApp : this.getSharedApps()) {
+            JSONObject tmp = new JSONObject();
+            tmp.put("db_id", ((App)sharedApp).getDBid());
+            tmp.put("single_id", ((App)sharedApp).getSingleId());
+            tmp.put("teamUser_tenant_id", sharedApp.getTeamUser_tenant().getDb_id());
+            sharedApps.add(tmp);
+        }
+        res.put("sharedApps", sharedApps);
+        return res;
+    }
+
+    public void pinToDashboard(DashboardManager dashboardManager, Profile profile, Integer position, ServletManager sm) throws GeneralException {
+        DataBaseConnection db = sm.getDB();
+        int transaction = db.startTransaction();
+        DatabaseRequest request = db.prepareRequest("INSERT INTO profileAndAppMap values (null, ?, ?, ?);");
+        request.setInt(profile.getDBid());
+        request.setInt(this.db_id);
+        request.setInt(position);
+        db.commitTransaction(transaction);
+        this.profile = profile;
+        this.position = position;
+        profile.addApp(this);
+        profile.updateAppsIndex(sm);
     }
 }

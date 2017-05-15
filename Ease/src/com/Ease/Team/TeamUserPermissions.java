@@ -29,8 +29,8 @@ public class TeamUserPermissions {
         }
 
         public static String getRoleNameByValue(int value) {
-            for(Role role : Role.values()){
-                if(value == role.getValue()) return role.name();
+            for (Role role : Role.values()) {
+                if (value == role.getValue()) return role.name();
             }
             return null;
         }
@@ -71,8 +71,8 @@ public class TeamUserPermissions {
         this.permissions = permissions;
     }
 
-    public boolean  haveRole(Role role) {
-        return (this.permissions & role.getValue()) >= this.permissions;
+    public boolean haveRole(Role role) {
+        return (this.permissions & role.getValue()) >= role.getValue();
     }
 
     public boolean hasAdminPermissions() {

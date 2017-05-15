@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -277,6 +278,10 @@ public class ServletManager {
 
     public Object getContextAttr(String attr) {
         return request.getServletContext().getAttribute(attr);
+    }
+
+    public ServletContext getServletContext() {
+        return request.getServletContext();
     }
 
     public User getUser() {

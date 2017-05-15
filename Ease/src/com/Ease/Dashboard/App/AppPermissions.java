@@ -20,6 +20,8 @@ public class AppPermissions{
 		EDIT(2),
 		SHOWINFO(4),
 		DELETE(8),
+        SHOW_PASSWORD(16),
+
 		ALL(1048575);
 		
 		private int value;    
@@ -111,14 +113,12 @@ public class AppPermissions{
 	}
 	
 	public boolean havePermission(int perm) {
-		if ((perms >> perm) % 2 == 1){
-			return true;
-		}
-		return false;
+		return (perms & perm) == perm;
 	}
 
 	public JSONObject getJson() {
 		JSONObject json = new JSONObject();
+		json.put("perms", this.perms);
 		json.put("rename", this.havePermission(Perm.RENAME.ordinal()));
 		json.put("delete", this.havePermission(Perm.DELETE.ordinal()));
 		json.put("showInfo", this.havePermission(Perm.SHOWINFO.ordinal()));
