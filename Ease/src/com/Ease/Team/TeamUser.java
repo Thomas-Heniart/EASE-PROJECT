@@ -5,6 +5,10 @@ import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.NewDashboard.User.User;
+import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.ServletManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -273,6 +277,22 @@ public class TeamUser {
                 continue;
             ClassicApp sharedClassicApp = (ClassicApp)sharedApp;
             //sharedClassicApp.getAccount()
+        }
+    }
+
+    public void check_sharedApps_ciphering(ServletManager sm) throws GeneralException {
+        for (SharedApp sharedApp : this.sharedApps) {
+            App app = (App)sharedApp;
+            if(app.isReceived())
+                continue;
+            if (!app.isClassicApp())
+                continue;
+            ClassicApp classicApp = (ClassicApp)app;
+            DataBaseConnection db = sm.getDB();
+            int transaction = db.startTransaction();
+            classicApp.getAccount().update_shared_app_ciphering(this.getDashboard_user(), sm);
+            classicApp.beReceived(sm.getDB());
+            db.commitTransaction(transaction);
         }
     }
 }

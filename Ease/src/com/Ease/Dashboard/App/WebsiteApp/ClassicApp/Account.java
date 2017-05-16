@@ -326,4 +326,13 @@ public class Account {
         db.commitTransaction(transaction);
 
     }
+
+    public void update_shared_app_ciphering(User user, ServletManager sm) throws GeneralException {
+        for (AccountInformation accountInformation : this.getAccountInformations()) {
+            String info_value = RSA.Decrypt(accountInformation.getInformationValue(), user.getKeys().getPublicKey());
+            accountInformation.setInformation_value(RSA.Encrypt(info_value, this.publicKey), sm);
+            accountInformation.decipher(this.privateKey);
+        }
+    }
+
 }

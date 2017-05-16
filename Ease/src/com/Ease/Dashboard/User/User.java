@@ -664,6 +664,7 @@ public class User {
 			TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
 			this.teamUsers.add(teamUser);
 			teamUser.setDashboard_user(this);
+            teamUser.check_sharedApps_ciphering(sm);
 		}
         query.commit();
     }

@@ -136,6 +136,8 @@ public class App implements ShareableApp, SharedApp{
                     break;
                 case "websiteApp":
                     sharedApp = WebsiteApp.loadWebsiteApp(db_id, null, null, insertDate, infos, null, context, db);
+                    if (((App)sharedApp).isClassicApp())
+                        ((App)sharedApp).setReceived(rs.getBoolean("received"));
                     break;
                 default:
                     throw new GeneralException(ServletManager.Code.InternError, "This app type dosen't exist.");
@@ -183,7 +185,7 @@ public class App implements ShareableApp, SharedApp{
 
     }
 
-    public static String createSharedApp(Profile profile, Integer position, String name, String type, Map<String, Object> elevator, boolean shareable, boolean shared, Integer team_id, Integer channel_id, Integer team_user_tenant_id, App holder, ServletManager sm) throws GeneralException {
+    public static String createSharedApp(Profile profile, Integer position, String name, String type, Map<String, Object> elevator, boolean shareable, boolean shared, Integer team_id, Integer channel_id, Integer team_user_tenant_id, App holder, boolean received, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         AppInformation infos = AppInformation.createAppInformation(name, sm);
@@ -206,7 +208,7 @@ public class App implements ShareableApp, SharedApp{
             elevator.put("appInfos", infos);
             elevator.put("insertDate", registrationDate);
         }
-        request = db.prepareRequest("INSERT INTO sharedApps values (?, ?, ?, ?, ?);");
+        request = db.prepareRequest("INSERT INTO sharedApps values (?, ?, ?, ?, ?, ?);");
         request.setInt(appDBid);
         request.setInt(team_id);
         request.setInt(team_user_tenant_id);
@@ -215,6 +217,8 @@ public class App implements ShareableApp, SharedApp{
             request.setNull();
         else
             request.setInt(channel_id);
+        request.setBoolean(received);
+        request.set();
         db.commitTransaction(transaction);
         return appDBid;
     }
@@ -234,6 +238,7 @@ public class App implements ShareableApp, SharedApp{
     protected int single_id;
     protected boolean shared;
     protected boolean shareable;
+    protected boolean received = true;
 
     /* Interface ShareableApp */
     protected List<SharedApp> sharedApps = new LinkedList<>();
@@ -366,6 +371,21 @@ public class App implements ShareableApp, SharedApp{
         request.setInt(db_id);
         request.set();
         this.profile = profile;
+    }
+
+    public boolean isReceived() {
+        return this.received;
+    }
+
+    public void setReceived(boolean received) {
+        this.received = received;
+    }
+
+    public void beReceived(DataBaseConnection db) throws GeneralException {
+        this.received = true;
+        DatabaseRequest request = db.prepareRequest("UPDATE sharedApps SET received = 1 WHERE id = ?;");
+        request.setInt(this.db_id);
+        request.set();
     }
 
     public boolean havePerm(AppPermissions.Perm perm) {

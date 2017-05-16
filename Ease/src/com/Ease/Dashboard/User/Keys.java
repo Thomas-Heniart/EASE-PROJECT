@@ -127,10 +127,14 @@ public class Keys {
         return new Keys(db_id, hashed_password, saltPerso, keyUser, publicKey, privateKey);
     }
 
-    public static String getPublicKey(String id, ServletManager sm) throws GeneralException {
+    public String getPublicKey() {
+        return this.publicKey;
+    }
+
+    public static String getPublicKeyForUser(String user_id, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
-        DatabaseRequest request = db.prepareRequest("SELECT publicKey FROM userKeys WHERE id= ?;");
-        request.setInt(id);
+        DatabaseRequest request = db.prepareRequest("SELECT publicKey FROM userKeys JOIN users ON users.keys_id = userKeys.id WHERE users.id = ?;");
+        request.setInt(user_id);
         DatabaseResult rs = request.get();
         if (!rs.next())
             throw new GeneralException(ServletManager.Code.ClientError, "No keys");
