@@ -18,7 +18,7 @@ import java.io.IOException;
 /**
  * Created by thomas on 15/05/2017.
  */
-@WebServlet("/api/v1/catalog/searchWebsite")
+@WebServlet("/api/v1/catalog/SearchWebsite")
 public class ServletSearchWebsite extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
