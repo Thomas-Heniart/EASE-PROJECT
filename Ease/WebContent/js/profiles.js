@@ -61,31 +61,31 @@ var Profile = function(rootEl){
 				return self.apps[i];
 		}
 		return null;
-	}
+	};
 	this.simpleAddApp = function(app){
 		app.currentProfile.simpleRemoveApp(app);
 		app.currentProfile = self;
 		self.apps.push(app);
-	}
+	};
 	this.simpleRemoveApp = function(app){
 		self.apps.splice(self.apps.indexOf(app), 1);		
-	}
+	};
 	this.addApp = function(app){
 		app.currentProfile = self;
 		self.apps.push(app);
 		self.appContainer.append(app.qRoot);
 		easeAppsManager.addApp(app);
-	}
+	};
 	this.removeApp = function(app){
 		self.apps.splice(self.apps.indexOf(app), 1);
 		easeAppsManager.removeApp(app);
-	}
+	};
 	this.removeAllApps = function(){
 		while (self.apps.length){
 			self.removeApp(self.apps[0]);
 		}
 		self.apps = [];
-	}
+	};
 	this.qRoot.find('.siteLinkBox').each(function(index, elem){
 		self.addApp(new MyApp().initWithQRoot(elem));
 	});

@@ -41,14 +41,14 @@ var appsManager = function(){
 				return easeApps[i];
 		}
 		return null;
-	}
+	};
 	this.getAppByLoginAndSsoId = function(login, ssoId){
 		for (var i = 0; i < easeApps.length; i++) {
 			if (easeApps[i].ssoId == ssoId && easeApps[i].getAccountInformationValue("login") == login)
 				return easeApps[i];
 		}
 		return null;
-	}
+	};
 	this.getAppsByLoginAndSsoId = function(login, ssoId){
 		var retVal = [];
 		for (var i = 0; i < easeApps.length; i++) {
@@ -56,10 +56,10 @@ var appsManager = function(){
 				retVal.push(easeApps[i]);
 		}
 		return retVal;		
-	}
+	};
 	this.removeApp = function(app){
 		easeApps.splice(easeApps.indexOf(app), 1);
-	}
+	};
 	this.addApp = function(app){
 		easeApps.push(app);
 	}
@@ -210,7 +210,7 @@ var MyApp = function(){
 			easeModifyAppPopup.open(self);
 		});
 		return self;
-	}
+	};
 
 	this.remove = function(){
 		self.qRoot.remove();

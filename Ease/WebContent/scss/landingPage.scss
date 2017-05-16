@@ -10,7 +10,7 @@
 }
 body {
     overflow-x: hidden;
-    font-family: 'Raleway', Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: 'Museo', 'Raleway', Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
 //    font-family: 'Raleway', 'Source Sans Pro', "Roboto Slab", "Helvetica Neue", Helvetica, Arial, sans-serif;
     webkit-tap-highlight-color: #fed136;
 }
@@ -212,7 +212,7 @@ header .intro-text .intro-heading {
         padding-bottom: 200px;
     }
     header .intro-text .intro-lead-in {
-        font-family: "Raleway", "Droid Serif", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-family: 'Museo', "Raleway", "Droid Serif", "Helvetica Neue", Helvetica, Arial, sans-serif;
 //       font-style: italic;
         font-size: 40px;
         line-height: 40px;
@@ -413,7 +413,7 @@ header .intro-text .intro-heading {
                 margin-bottom: 0;
             }
             @media (min-width:768px) {
-                .timeline: before {
+                .timeline:before {
                     left: 50%}
                     .timeline>li {
                         margin-bottom: 100px;
@@ -497,7 +497,6 @@ header .intro-text .intro-heading {
                             }
                             section#contact {
                                 background-color: #222;
-                                background-image: url(../img/map-image.png);
                                 background-position: center;
                                 background-repeat: no-repeat;
                             }

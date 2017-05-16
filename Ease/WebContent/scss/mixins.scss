@@ -15,6 +15,12 @@
   display: inline-flex;
 }
 
+@mixin justify-content($param){
+  -webkit-justify-content: $param;
+  -moz-justify-content: $param;
+  justify-content: $param;
+}
+
 @mixin flex-direction($param){
   -ms-flex-direction: $param;
   -moz-flex-direction: $param;
