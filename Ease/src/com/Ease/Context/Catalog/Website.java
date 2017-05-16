@@ -29,6 +29,7 @@ import com.Ease.Utils.ServletManager;
 import com.Ease.Utils.Crypto.RSA;
 
 public class Website {
+
     public enum WebsiteData {
         NOTHING,
         ID,
@@ -647,12 +648,19 @@ public class Website {
     public JSONObject getSimpleJson() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("name", this.name);
-        jsonObject.put("homepage_url", this.getHomePageUrl());
+        jsonObject.put("logo", Variables.WEBSITES_PATH + this.folder + "/" + "logo.png");
         jsonObject.put("single_id", this.getSingleId());
         return jsonObject;
     }
 
     private void addTeamId(String team_id) {
         this.teamIds.add(team_id);
+    }
+
+    public JSONArray getInformationJson() {
+        JSONArray res = new JSONArray();
+        for (WebsiteInformation websiteInformation : this.website_informations)
+            res.add(websiteInformation.getJson());
+        return res;
     }
 }

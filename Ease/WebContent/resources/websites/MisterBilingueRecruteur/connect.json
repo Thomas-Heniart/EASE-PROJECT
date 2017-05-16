@@ -1,0 +1,22 @@
+{
+  "name":"Mister Bilingue Recruteur",
+  "lastLogin":"",
+  "home":"https://www.misterbilingue.com/",
+  "connect":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='recruteur']"},
+      {"action":"fill", "what":"login", "search":"#form-login input[name='email']"},
+      {"action":"fill", "what":"password", "search":"#form-login input[type='password']"},
+      {"action":"click", "search":"#form-login button[type='submit']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"goto", "url":"https://www.misterbilingue.com/en/register/logout"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='logout'], a[data-target='#modal-user-register']"},
+    {"search":"a[href*='logout']"}
+  ]
+}

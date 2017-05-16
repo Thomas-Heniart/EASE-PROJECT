@@ -110,6 +110,15 @@ public class ServletManager {
             throw new GeneralException(Code.ClientWarning, "Access denied");
     }
 
+    public void needToBeTeamUserOfTeam(String team_id) throws GeneralException {
+        this.needToBeTeamUser();
+        for (TeamUser teamUser : this.getUser().getTeamUsers()) {
+            if (teamUser.getTeam().getDb_id() == Integer.parseInt(team_id))
+                return;
+        }
+        throw new GeneralException(Code.ClientWarning, "Access denied");
+    }
+
     public HttpServletRequest getRequest() {
         return request;
     }

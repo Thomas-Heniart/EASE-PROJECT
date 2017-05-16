@@ -4,8 +4,6 @@ import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,29 +16,19 @@ import java.io.IOException;
 /**
  * Created by thomas on 15/05/2017.
  */
-@WebServlet("/api/v1/catalog/searchWebsite")
-public class ServletSearchWebsite extends HttpServlet {
+@WebServlet("/api/v1/catalog/GetWebsiteInformation")
+public class ServletGetWebsiteInformation extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            String team_id = sm.getServletParam("team_id", true);
-            String search = sm.getServletParam("search", true);
-            if (team_id == null || team_id.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientError, "Team is null.");
-            sm.needToBeTeamUserOfTeam(team_id);
+            String website_id = sm.getServletParam("website_id", true);
+            if (website_id == null || website_id.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientError, "Website is null");
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            JSONArray jsonArray = new JSONArray();
-            if (search != null && !search.equals("")) {
-                for (Website website : catalog.getWebsites()) {
-                    if (website.isInCatalogForTeam(team_id) && website.getName().toLowerCase().startsWith(search.toLowerCase()) && website.work()) {
-                        JSONObject tmp = new JSONObject();
-                        jsonArray.add(website.getSimpleJson());
-                    }
-                }
-            }
-            sm.setResponse(ServletManager.Code.Success, jsonArray.toString());
-            sm.setLogResponse("Search done");
+            Website website = catalog.getWebsiteWithSingleId(Integer.parseInt(website_id));
+            sm.setResponse(ServletManager.Code.Success, website.getInformationJson().toString());
+            sm.setLogResponse("GetWebsiteInformation done.");
         } catch (Exception e) {
             sm.setResponse(e);
         }
