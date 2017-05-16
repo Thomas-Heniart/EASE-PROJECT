@@ -65,6 +65,7 @@ public class ServletCreateTeamUser extends HttpServlet {
             query.executeUpdate();
             query.commit();
             user.addTeamUser(teamUser, sm);
+            team.askVerificationForTeamUser(teamUser);
             sm.setResponse(ServletManager.Code.Success, teamUser.getJson().toString());
             sm.setLogResponse("TeamUser created");
         } catch(Exception e) {

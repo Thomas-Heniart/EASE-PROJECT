@@ -79,7 +79,7 @@ public class ClassicApp extends WebsiteApp {
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<String, Object>();
         String websiteAppDBid = WebsiteApp.createWebsiteApp(profile, position, name, "classicApp", site, elevator, sm);
-        Account account = Account.createAccountSameAs(sameApp.getAccount(), false, user, sm);
+        Account account = Account.createAccountSameAs(sameApp.getAccount(), false, sm);
         DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
         request.setInt(websiteAppDBid);
         request.setInt(account.getDBid());

@@ -16,6 +16,7 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,7 +51,7 @@ public class RSA {
             Map<String, String> publicAndPrivateKeys = new HashMap<>();
             KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
             kpg.initialize(1024);
-            for (int i=0; i < length; i++) {
+            for (int i = 0; i < length; i++) {
                 KeyPair kp = kpg.genKeyPair();
                 PublicKey publicKey = kp.getPublic();
                 PrivateKey privateKey = kp.getPrivate();
@@ -63,6 +64,21 @@ public class RSA {
             throw new GeneralException(ServletManager.Code.InternError, e);
         }
 
+    }
+
+    public static Map.Entry<String, String> generateKeys() throws GeneralException {
+        try {
+            KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
+            kpg.initialize(1024);
+            KeyPair kp = kpg.genKeyPair();
+            PublicKey publicKey = kp.getPublic();
+            PrivateKey privateKey = kp.getPrivate();
+            System.out.println(new Base64().encodeToString(publicKey.getEncoded()));
+            System.out.println(new Base64().encodeToString(privateKey.getEncoded()));
+            return new AbstractMap.SimpleEntry<>(new Base64().encodeToString(publicKey.getEncoded()), new Base64().encodeToString(privateKey.getEncoded()));
+        } catch (NoSuchAlgorithmException e) {
+            throw new GeneralException(ServletManager.Code.InternError, e);
+        }
     }
 
     public static String Decrypt(String cypher, int keyDate) throws GeneralException {
@@ -128,7 +144,7 @@ public class RSA {
     }
 
 	/*public static void main(String[] args){		
-		
+
 		FileReader fr;
 		try {
 			fr = new FileReader("C:/Users/FelixPro/Documents/privateKeys.txt");

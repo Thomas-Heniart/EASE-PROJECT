@@ -96,7 +96,7 @@ public class ServletManager {
             throw new GeneralException(Code.ClientWarning, "You need to be connected to do that.");
         } else {
             /*socketId = request.getParameter("socketId");
-			if (!debug && socketId == null) {
+            if (!debug && socketId == null) {
 				throw new GeneralException(Code.ClientError, "No socketId.");
 			} else if (user.getWebsockets().containsKey(socketId) == false) {
 				System.out.println(user.getWebsockets().size());
@@ -295,6 +295,11 @@ public class ServletManager {
 
     public User getUser() {
         return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+        this.getSession().setAttribute("user", user);
     }
 
     public TeamUser getTeamUser() {

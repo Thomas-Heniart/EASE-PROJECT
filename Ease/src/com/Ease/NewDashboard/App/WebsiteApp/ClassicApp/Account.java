@@ -54,4 +54,7 @@ public class Account {
             }
         }
     }
+
+    public void reencrypt() {
+    }
 }

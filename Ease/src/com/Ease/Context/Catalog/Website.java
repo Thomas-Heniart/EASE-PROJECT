@@ -345,7 +345,7 @@ public class Website {
                 if (keyDate != null && !keyDate.equals("")) {
                     value = RSA.Decrypt(value, Integer.parseInt(keyDate));
                 }
-                value = sm.getUser().encrypt(value);
+                //value = sm.getUser().encrypt(value);
             }
             infos.put(info_name, value);
         }

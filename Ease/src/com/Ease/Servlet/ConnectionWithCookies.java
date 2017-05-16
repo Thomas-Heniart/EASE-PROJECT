@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.User.SessionSave;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Team.TeamUser;
@@ -53,9 +55,12 @@ public class ConnectionWithCookies extends HttpServlet {
             } else {
                 SessionSave sessionSave = SessionSave.loadSessionSave(sessionId, token, sm);
                 user = User.loadUserFromCookies(sessionSave, sm);
-                session.setAttribute("user", user);
-                //TeamUser teamUser = TeamUser.loadTeamUser(user.getDBid(), sm);
-                //session.setAttribute("teamUser", teamUser);
+                sm.setUser(user);
+                for (App app : user.getDashboardManager().getApps()) {
+                    if (!app.isClassicApp())
+                        continue;
+                    ((ClassicApp) app).getAccount().update_ciphering_if_needed(sm);
+                }
                 //sm.addToSocket(WebsocketMessage.connectionMessage());
                 success = true;
                 sm.setResponse(ServletManager.Code.Success, "Connected with cookies.");

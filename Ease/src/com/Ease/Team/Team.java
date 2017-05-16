@@ -221,4 +221,16 @@ public class Team {
         res.put("name", this.name);
         return res;
     }
+
+    public void askVerificationForTeamUser(TeamUser teamUser) {
+        for (Map.Entry<String,String> usernameAndEmail : this.getAdministratorsUsernameAndEmail().entrySet()) {
+            String username = usernameAndEmail.getKey();
+            String email = usernameAndEmail.getValue();
+
+        }
+    }
+
+    public void confirmTeamUser(TeamUser teamUser) {
+        teamUser.validateRegistration();
+    }
 }
