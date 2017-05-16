@@ -16,7 +16,10 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.apache.commons.collections4.keyvalue.AbstractMapEntry;
 import org.apache.tomcat.util.codec.binary.Base64;
 
 import com.Ease.Context.OnStart;
@@ -31,79 +34,99 @@ import javax.crypto.NoSuchPaddingException;
 
 public class RSA {
 
-	public static void GenerateKey() throws NoSuchAlgorithmException{
-		KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
-		kpg.initialize(1024);
-		KeyPair kp = kpg.genKeyPair();
-		PublicKey publicKey = kp.getPublic();
-		PrivateKey privateKey = kp.getPrivate();
-		System.out.println(new Base64().encodeToString(publicKey.getEncoded()));
-		System.out.println(new Base64().encodeToString(privateKey.getEncoded()));
+    public static void GenerateKey() throws NoSuchAlgorithmException {
+        KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
+        kpg.initialize(1024);
+        KeyPair kp = kpg.genKeyPair();
+        PublicKey publicKey = kp.getPublic();
+        PrivateKey privateKey = kp.getPrivate();
+        System.out.println(new Base64().encodeToString(publicKey.getEncoded()));
+        System.out.println(new Base64().encodeToString(privateKey.getEncoded()));
 
-	}
-	
-	public static String Decrypt(String cypher, int keyDate) throws GeneralException {
-		String key = getPrivateKey(keyDate);
-		return Decrypt(cypher, key);
-	}
-	
-	private static String getPrivateKey(int date) throws GeneralException {
-		String ligne ;
-		String key = null;
-		try {
-			BufferedReader fichier = new BufferedReader(new FileReader(Variables.KEYS_PATH));
-			while ((ligne = fichier.readLine()) != null) {
-				String[] keyDatas = ligne.split(":");
-				if(Integer.parseInt(keyDatas[0].trim()) == date){
-					key=keyDatas[1];
-				}
-			}
-			fichier.close();
-		} catch (NumberFormatException | IOException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
-		return key;
-	}
+    }
 
-	public static String Encrypt(String plain, String publicK) throws GeneralException {      
+    public static Map<String, String> generateKeys(int length) throws GeneralException {
+        try {
+            Map<String, String> publicAndPrivateKeys = new HashMap<>();
+            KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
+            kpg.initialize(1024);
+            for (int i=0; i < length; i++) {
+                KeyPair kp = kpg.genKeyPair();
+                PublicKey publicKey = kp.getPublic();
+                PrivateKey privateKey = kp.getPrivate();
+                System.out.println(new Base64().encodeToString(publicKey.getEncoded()));
+                System.out.println(new Base64().encodeToString(privateKey.getEncoded()));
+                publicAndPrivateKeys.put(new Base64().encodeToString(publicKey.getEncoded()), new Base64().encodeToString(privateKey.getEncoded()));
+            }
+            return publicAndPrivateKeys;
+        } catch (NoSuchAlgorithmException e) {
+            throw new GeneralException(ServletManager.Code.InternError, e);
+        }
 
-		byte[] byteKeyPublic = new Base64().decode(publicK);
-		try {
-			KeyFactory kf;
-			kf = KeyFactory.getInstance("RSA");
-			PublicKey publicKey = null;
-			publicKey = kf.generatePublic(new X509EncodedKeySpec(byteKeyPublic));		
-			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-			return Base64.encodeBase64String(cipher.doFinal(plain.getBytes("UTF-8")));
-		} catch (InvalidKeySpecException | NoSuchAlgorithmException | IllegalBlockSizeException | BadPaddingException | UnsupportedEncodingException | InvalidKeyException | NoSuchPaddingException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
+    }
 
-	}
+    public static String Decrypt(String cypher, int keyDate) throws GeneralException {
+        String key = getPrivateKey(keyDate);
+        return Decrypt(cypher, key);
+    }
 
-	public static String Decrypt(String cypher, String privateK) throws GeneralException {
-		try {
-			byte[] byteKeyPrivate = new Base64().decode(privateK);
-			KeyFactory kf = KeyFactory.getInstance("RSA");
-			PrivateKey privateKey = null;
-			privateKey = kf.generatePrivate(new PKCS8EncodedKeySpec(byteKeyPrivate));
-			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-			cipher.init(Cipher.DECRYPT_MODE, privateKey);
-			return new String(cipher.doFinal(new Base64().decode(cypher)),"UTF-8");
-		} catch (InvalidKeySpecException | NoSuchAlgorithmException | IllegalBlockSizeException | BadPaddingException | UnsupportedEncodingException | InvalidKeyException | NoSuchPaddingException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
-		}
+    private static String getPrivateKey(int date) throws GeneralException {
+        String ligne;
+        String key = null;
+        try {
+            BufferedReader fichier = new BufferedReader(new FileReader(Variables.KEYS_PATH));
+            while ((ligne = fichier.readLine()) != null) {
+                String[] keyDatas = ligne.split(":");
+                if (Integer.parseInt(keyDatas[0].trim()) == date) {
+                    key = keyDatas[1];
+                }
+            }
+            fichier.close();
+        } catch (NumberFormatException | IOException e) {
+            throw new GeneralException(ServletManager.Code.InternError, e);
+        }
+        return key;
+    }
 
-	}
-	
-	public static void printBytes(byte[] toPrint){
-		for(int i = 0; i<toPrint.length;i++){
-			System.out.print(toPrint[i] + "/");
-		}
-		System.out.println();
-	}
-	
+    public static String Encrypt(String plain, String publicK) throws GeneralException {
+
+        byte[] byteKeyPublic = new Base64().decode(publicK);
+        try {
+            KeyFactory kf;
+            kf = KeyFactory.getInstance("RSA");
+            PublicKey publicKey = null;
+            publicKey = kf.generatePublic(new X509EncodedKeySpec(byteKeyPublic));
+            Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+            return Base64.encodeBase64String(cipher.doFinal(plain.getBytes("UTF-8")));
+        } catch (InvalidKeySpecException | NoSuchAlgorithmException | IllegalBlockSizeException | BadPaddingException | UnsupportedEncodingException | InvalidKeyException | NoSuchPaddingException e) {
+            throw new GeneralException(ServletManager.Code.InternError, e);
+        }
+
+    }
+
+    public static String Decrypt(String cypher, String privateK) throws GeneralException {
+        try {
+            byte[] byteKeyPrivate = new Base64().decode(privateK);
+            KeyFactory kf = KeyFactory.getInstance("RSA");
+            PrivateKey privateKey = null;
+            privateKey = kf.generatePrivate(new PKCS8EncodedKeySpec(byteKeyPrivate));
+            Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+            cipher.init(Cipher.DECRYPT_MODE, privateKey);
+            return new String(cipher.doFinal(new Base64().decode(cypher)), "UTF-8");
+        } catch (InvalidKeySpecException | NoSuchAlgorithmException | IllegalBlockSizeException | BadPaddingException | UnsupportedEncodingException | InvalidKeyException | NoSuchPaddingException e) {
+            throw new GeneralException(ServletManager.Code.InternError, e);
+        }
+
+    }
+
+    public static void printBytes(byte[] toPrint) {
+        for (int i = 0; i < toPrint.length; i++) {
+            System.out.print(toPrint[i] + "/");
+        }
+        System.out.println();
+    }
+
 	/*public static void main(String[] args){		
 		
 		FileReader fr;

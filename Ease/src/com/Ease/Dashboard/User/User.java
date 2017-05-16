@@ -162,7 +162,9 @@ public class User {
 		Date date = new Date();
 		String registrationDate = dateFormat.format(date);
 		Status status = Status.createStatus(db);
-        DatabaseRequest request = db.prepareRequest("SELECT * FROM users LEFT JOIN teamUsers ON users.id = teamUsers.user_id WHERE users.email = ? OR teamUser.email = ?;");
+        DatabaseRequest request = db.prepareRequest("SELECT * FROM users LEFT JOIN teamUsers ON users.id = teamUsers.user_id WHERE users.email = ? OR teamUsers.email = ?;");
+        request.setString(email);
+        request.setString(email);
         if (request.get().next())
             throw new GeneralException(ServletManager.Code.ClientWarning, "Email already taken.");
 		request = db.prepareRequest("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
