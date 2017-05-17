@@ -81,7 +81,7 @@ public class Account {
         String db_id = request.set().toString();
         List<AccountInformation> infos = AccountInformation.createAccountInformations(db_id, informations, publicKey, sm);
         db.commitTransaction(transaction);
-        Account account =  new Account(db_id, shared, publicKey, ciphered_key, infos);
+        Account account = new Account(db_id, shared, publicKey, ciphered_key, infos);
         account.setPrivateKey(privateKey);
         return account;
     }
@@ -119,11 +119,11 @@ public class Account {
         String db_id = request.set().toString();
         List<AccountInformation> infos = AccountInformation.createAccountInformationFromAccountInformations(db_id, sameAccount.getAccountInformations(), publicKey, sm);
         db.commitTransaction(transaction);
-        Account account =  new Account(db_id, shared, publicKey, ciphered_key, infos);
+        Account account = new Account(db_id, shared, publicKey, ciphered_key, infos);
         account.setPrivateKey(privateKey);
         return account;
     }
-	
+
 	/*
 	 * 
 	 * Constuctor
@@ -329,10 +329,27 @@ public class Account {
 
     public void update_shared_app_ciphering(User user, ServletManager sm) throws GeneralException {
         for (AccountInformation accountInformation : this.getAccountInformations()) {
-            String info_value = RSA.Decrypt(accountInformation.getInformationValue(), user.getKeys().getPublicKey());
+            String info_value = RSA.Decrypt(accountInformation.getInformationValue(), user.getKeys().getPrivateKey());
             accountInformation.setInformation_value(RSA.Encrypt(info_value, this.publicKey), sm);
             accountInformation.decipher(this.privateKey);
         }
+    }
+
+    public void decipherAndCipher(String deciphered_teamPrivateKey, ServletManager sm) throws GeneralException {
+        Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
+        this.publicKey = publicAndPrivateKey.getKey();
+        this.privateKey = publicAndPrivateKey.getValue();
+        this.ciphered_key = sm.getUser().encrypt(this.privateKey);
+        DataBaseConnection db = sm.getDB();
+        int transaction = db.startTransaction();
+        DatabaseRequest request = db.prepareRequest("UPDATE accounts SET publicKey = ?, privateKey = ? WHERE id = ?;");
+        request.setString(this.publicKey);
+        request.setString(this.ciphered_key);
+        request.setInt(this.db_id);
+        request.set();
+        for (AccountInformation accountInformation : this.getAccountInformations())
+            accountInformation.decipherAndCipher(deciphered_teamPrivateKey, publicKey, sm);
+        db.commitTransaction(transaction);
     }
 
 }

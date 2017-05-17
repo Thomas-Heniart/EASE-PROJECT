@@ -55,7 +55,8 @@ public class ServletCreateTeamUser extends HttpServlet {
             Integer team_id = (Integer) rs[1];
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
-            TeamUser teamUser = new TeamUser(firstName, lastName, email, username, team, new TeamUserPermissions(TeamUserPermissions.Role.MEMBER.getValue()));
+            String teamPrivateKey = user.encrypt(team.getDeciphered_privateKey());
+            TeamUser teamUser = new TeamUser(firstName, lastName, email, username, teamPrivateKey, false, team, new TeamUserPermissions(TeamUserPermissions.Role.MEMBER.getValue()));
             team.addTeamUser(teamUser);
             team.getGeneralChannel().addTeamUser(teamUser);
             query.saveOrUpdateObject(teamUser);

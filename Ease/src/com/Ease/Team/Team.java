@@ -54,6 +54,9 @@ public class Team {
     @Column(name = "publicKey")
     protected String publicKey;
 
+    @Transient
+    protected String deciphered_privateKey;
+
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     protected List<TeamUser> teamUsers = new LinkedList<>();
 
@@ -109,6 +112,14 @@ public class Team {
 
     public void setPublicKey(String publicKey) {
         this.publicKey = publicKey;
+    }
+
+    public String getDeciphered_privateKey() {
+        return deciphered_privateKey;
+    }
+
+    public void setDeciphered_privateKey(String deciphered_privateKey) {
+        this.deciphered_privateKey = deciphered_privateKey;
     }
 
     public List<TeamUser> getTeamUsers() {
@@ -188,7 +199,7 @@ public class Team {
     }
 
     public void removeTeamUser(TeamUser teamUser) {
-        for(Channel channel : this.getChannels())
+        for (Channel channel : this.getChannels())
             channel.removeTeamUser(teamUser);
         this.teamUserIdMap.remove(teamUser.getDb_id());
         this.teamUsers.remove(teamUser);
@@ -241,14 +252,14 @@ public class Team {
     }
 
     public void askVerificationForTeamUser(TeamUser teamUser) {
-        for (Map.Entry<String,String> usernameAndEmail : this.getAdministratorsUsernameAndEmail().entrySet()) {
+        for (Map.Entry<String, String> usernameAndEmail : this.getAdministratorsUsernameAndEmail().entrySet()) {
             String username = usernameAndEmail.getKey();
             String email = usernameAndEmail.getValue();
 
         }
     }
 
-    public void confirmTeamUser(TeamUser teamUser) {
-        teamUser.validateRegistration();
+    public void confirmTeamUserRegistration(TeamUser teamUser, ServletManager sm) throws GeneralException {
+        teamUser.validateRegistration(sm);
     }
 }

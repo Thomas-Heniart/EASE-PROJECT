@@ -109,4 +109,12 @@ public class AccountInformation {
         request.setString(this.db_id);
         request.set();
     }
+
+    public void decipherAndCipher(String deciphered_teamPrivateKey, String publicKey, ServletManager sm) throws GeneralException {
+        this.information_value = RSA.Decrypt(this.information_value, deciphered_teamPrivateKey);
+        DatabaseRequest request = sm.getDB().prepareRequest("UPDATE accountsInformations SET information_value = ? WHERE id = ?;");
+        request.setString(RSA.Encrypt(this.information_value, publicKey));
+        request.setString(this.db_id);
+        request.set();
+    }
 }

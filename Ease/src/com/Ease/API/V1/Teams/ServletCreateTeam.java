@@ -60,6 +60,7 @@ public class ServletCreateTeam extends HttpServlet {
             String privateKey = user.encrypt(deciphered_privateKey);
             TeamUser admin = TeamUser.createAdminUser(firstName, lastName, email, username, privateKey, team);
             admin.setDeciphered_teamPrivateKey(deciphered_privateKey);
+            team.setDeciphered_privateKey(deciphered_privateKey);
             team.addTeamUser(admin);
             Channel channel = new Channel(team, "General", "This is the general channel");
             team.addChannel(channel);

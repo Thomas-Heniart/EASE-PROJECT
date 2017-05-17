@@ -18,6 +18,7 @@ import com.Ease.Utils.Crypto.Hashing;
 import java.util.Map;
 
 public class Keys {
+
     enum Data {
         NOTHING,
         ID,
@@ -201,7 +202,7 @@ public class Keys {
     }
 
 	/*
-	 * 
+     *
 	 * Getter and Setter
 	 * 
 	 */
@@ -213,7 +214,11 @@ public class Keys {
     public String getKeyUser() {
         return keyUser;
     }
-	
+
+    public String getPrivateKey() {
+        return privateKey;
+    }
+
 	/*
 	 * 
 	 * Utils

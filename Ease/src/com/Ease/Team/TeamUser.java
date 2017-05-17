@@ -9,7 +9,6 @@ import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.DatabaseRequest;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -308,12 +307,16 @@ public class TeamUser {
         this.shareableApps.add(app);
     }
 
-    public void validateRegistration() {
+    public void validateRegistration(ServletManager sm) throws GeneralException {
+        if (this.deciphered_teamPrivateKey == null)
+            this.decipher_teamPrivateKey();
         for (SharedApp sharedApp : this.getSharedApps()) {
             if (!((App)sharedApp).isClassicApp())
                 continue;
             ClassicApp sharedClassicApp = (ClassicApp)sharedApp;
+            sharedClassicApp.getAccount().decipherAndCipher(deciphered_teamPrivateKey, sm);
             //sharedClassicApp.getAccount()
+
         }
     }
 
