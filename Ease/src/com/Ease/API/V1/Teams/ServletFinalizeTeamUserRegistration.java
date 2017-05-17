@@ -23,7 +23,7 @@ import java.io.IOException;
  * Created by thomas on 02/05/2017.
  */
 @WebServlet("/finalizeRegistration")
-public class ServletStartFinalizeTeamUserRegistration extends HttpServlet {
+public class ServletFinalizeTeamUserRegistration extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
