@@ -73,7 +73,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             query.executeUpdate();
             query.commit();
             SendGridMail sendGridMail = new SendGridMail("Thomas @EaseSpace", "thomas@ease.space");
-            sendGridMail.sendInvitationToJoinTeamEmail(team.getName(), adminTeamUser.getFirstName(), firstName, email, username, email, code);
+            sendGridMail.sendInvitationToJoinTeamEmail(team.getName(), adminTeamUser.getFirstName(), email, code);
             /* Send an email */
             sm.setResponse(ServletManager.Code.Success, teamUser.getJson().toString());
             sm.setLogResponse("TeamUser created");

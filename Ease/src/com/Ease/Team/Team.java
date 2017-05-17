@@ -259,7 +259,7 @@ public class Team {
             String username = usernameAndEmail.getKey();
             String email = usernameAndEmail.getValue();
             SendGridMail sendGridMail = new SendGridMail("Benjamin @Ease", "benjamin@ease.space");
-            sendGridMail.sendTeamUserVerificationEmail(username, email, teamUser.getEmail(), teamUser.getUsername(), code);
+            sendGridMail.sendTeamUserVerificationEmail(username, email, teamUser.getUsername(), code);
         }
     }
 
