@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
@@ -34,7 +35,7 @@ public class ServletConfirmTeamUserRegistration extends HttpServlet {
             Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
             sm.needToBeAdminOfTeam(team);
             TeamUser teamUser = team.getTeamUserWithId(Integer.parseInt(teamUser_id));
-            team.vaidateTeamUserRegistration(teamUser, sm);
+            team.validateTeamUserRegistration(teamUser, sm);
         } catch (Exception e) {
             sm.setResponse(e);
         }

@@ -58,6 +58,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Email already taken");
             TeamUser teamUser = new TeamUser(firstName, lastName, email, username, null, false, team, new TeamUserPermissions(TeamUserPermissions.Role.MEMBER.getValue()));
             team.addTeamUser(teamUser);
+            team.getGeneralChannel().addTeamUser(teamUser);
             query.saveOrUpdateObject(teamUser);
             query.saveOrUpdateObject(team);
             String code = CodeGenerator.generateNewCode();

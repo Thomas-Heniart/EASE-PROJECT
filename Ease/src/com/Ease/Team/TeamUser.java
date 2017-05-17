@@ -280,6 +280,7 @@ public class TeamUser {
         for (ShareableApp shareableApp : this.shareableApps)
             shareableApps.add(shareableApp.getShareableJson());
         res.put("shareableApps", shareableApps);
+        res.put("verified", this.verified);
         return res;
     }
 
