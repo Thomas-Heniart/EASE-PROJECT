@@ -4,6 +4,7 @@ import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Mail.SendGridMail;
 import com.Ease.Utils.*;
 import com.google.common.primitives.UnsignedInts;
 import org.json.simple.JSONArray;
@@ -257,7 +258,8 @@ public class Team {
         for (Map.Entry<String, String> usernameAndEmail : this.getAdministratorsUsernameAndEmail().entrySet()) {
             String username = usernameAndEmail.getKey();
             String email = usernameAndEmail.getValue();
-
+            SendGridMail sendGridMail = new SendGridMail("Benjamin @Ease", "benjamin@ease.space");
+            sendGridMail.sendTeamUserVerificationEmail(username, email, teamUser.getEmail(), teamUser.getFirstName(), code)
         }
     }
 

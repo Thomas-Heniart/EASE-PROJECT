@@ -60,7 +60,11 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             team.getGeneralChannel().addTeamUser(teamUser);
             query.saveOrUpdateObject(teamUser);
             query.saveOrUpdateObject(team);
-            String code = CodeGenerator.generateNewCode();
+            String code;
+            do {
+                code = CodeGenerator.generateNewCode();
+                query.querySQLString("SELECT * FROM pendingTeamInvitations WHERE code = ?");
+            } while (query.getSingleResult() != null);
             query.querySQLString("INSERT INTO pendingTeamInvitations values(NULL, ?, ?, ?);");
             query.setParameter(1, teamUser.getDb_id());
             query.setParameter(2, code);

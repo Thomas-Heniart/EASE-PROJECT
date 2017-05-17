@@ -269,7 +269,7 @@ public class SendGridMail {
         mail.setTemplateId("04a2b7b7-87db-4b12-8a2c-792359585c1b");
         Personalization personalization = this.createNewPersonalization();
         this.addTo(personalization, email, email);
-        personalization.addSubstitution("#link", Variables.URL_PATH + "/finalizeRegistration?email=" + email + "&code=" + code + "&username=" + username + (firstName == null ? "" : "&firstName" + firstName) + (lastName == null ? "" : "&lastName" + lastName));
+        personalization.addSubstitution("#link", Variables.URL_PATH + "/finalizeRegistration?code=" + code);
         personalization.addSubstitution("#adminName", adminName);
         personalization.addSubstitution("#teamName", teamName);
         this.sendEmail();
