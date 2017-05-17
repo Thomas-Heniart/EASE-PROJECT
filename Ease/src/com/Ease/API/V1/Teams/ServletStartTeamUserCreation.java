@@ -56,27 +56,19 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             query.setParameter(2, email);
             if (query.getSingleResult() != null)
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Email already taken");
-            query.querySQLString("SELECT code FROM pendingTeamInvitations WHERE email = ?");
-            query.setParameter(1, email);
-            Object id = query.getSingleResult();
-            String code;
-            if (id == null) {
-                code = CodeGenerator.generateNewCode();
-                query.querySQLString("INSERT INTO pendingTeamInvitations values(NULL, ?, ?, ?);");
-                query.setParameter(1, email);
-                query.setParameter(2, code);
-                query.setParameter(3, team.getDb_id());
-                query.executeUpdate();
-            } else
-                code = (String) id;
             TeamUser teamUser = new TeamUser(firstName, lastName, email, username, null, false, team, new TeamUserPermissions(TeamUserPermissions.Role.MEMBER.getValue()));
             team.addTeamUser(teamUser);
-            team.getGeneralChannel().addTeamUser(teamUser);
             query.saveOrUpdateObject(teamUser);
             query.saveOrUpdateObject(team);
+            String code = CodeGenerator.generateNewCode();
+            query.querySQLString("INSERT INTO pendingTeamInvitations values(NULL, ?, ?, ?);");
+            query.setParameter(1, teamUser.getDb_id());
+            query.setParameter(2, code);
+            query.setParameter(3, team.getDb_id());
+            query.executeUpdate();
             query.commit();
             SendGridMail sendGridMail = new SendGridMail("Thomas @EaseSpace", "thomas@ease.space");
-            sendGridMail.sendInvitationToJoinTeamEmail(team.getName(), adminTeamUser.getFirstName(), email, code);
+            sendGridMail.sendInvitationToJoinTeamEmail(team.getName(), adminTeamUser.getFirstName(), firstName, email, username, email, code);
             /* Send an email */
             sm.setResponse(ServletManager.Code.Success, teamUser.getJson().toString());
             sm.setLogResponse("TeamUser created");
