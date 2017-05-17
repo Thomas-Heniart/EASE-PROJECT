@@ -6,6 +6,7 @@ import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
+import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -26,6 +27,7 @@ public class ServletCreateTeam extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
+            sm.needToBeConnected();
             User user = sm.getUser();
             String digits = sm.getServletParam("digits", false);
             String teamName = sm.getServletParam("teamName", true);
@@ -52,8 +54,12 @@ public class ServletCreateTeam extends HttpServlet {
             Object id = query.getSingleResult();
             if (id == null)
                 throw new GeneralException(ServletManager.Code.ClientWarning, "You cannot create a team.");
-            Team team = new Team(teamName);
-            TeamUser admin = TeamUser.createAdminUser(firstName, lastName, email, username, team);
+            Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
+            Team team = new Team(teamName, publicAndPrivateKey.getKey());
+            String deciphered_privateKey = publicAndPrivateKey.getValue();
+            String privateKey = user.encrypt(deciphered_privateKey);
+            TeamUser admin = TeamUser.createAdminUser(firstName, lastName, email, username, privateKey, team);
+            admin.setDeciphered_teamPrivateKey(deciphered_privateKey);
             team.addTeamUser(admin);
             Channel channel = new Channel(team, "General", "This is the general channel");
             team.addChannel(channel);
@@ -63,6 +69,7 @@ public class ServletCreateTeam extends HttpServlet {
             query.setParameter(1, (String) id);
             query.executeUpdate();
             query.commit();
+            admin.setDashboard_user(user, sm.getDB());
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             teamManager.addTeam(team);
             sm.setResponse(ServletManager.Code.Success, team.getJson().toString());

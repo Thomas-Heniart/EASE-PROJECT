@@ -9,6 +9,7 @@ import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.DatabaseRequest;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -42,6 +43,15 @@ public class TeamUser {
     @Column(name = "email")
     protected String email;
 
+    @Column(name = "teamPrivateKey")
+    private String teamPrivateKey;
+
+    @Column(name = "verified")
+    protected boolean verified;
+
+    @Transient
+    protected String deciphered_teamPrivateKey;
+
     @ManyToOne
     @JoinColumn(name = "team_id", nullable = false)
     protected Team team;
@@ -73,44 +83,52 @@ public class TeamUser {
     @Transient
     private List<ShareableApp> shareableApps = new LinkedList<>();
 
-    public TeamUser(User user, String firstName, String lastName, String email, String username, Date departureDate, Team team, TeamUserPermissions teamUserPermissions, List<Channel> channels) {
+    public TeamUser(User user, String firstName, String lastName, String email, String username, String teamPrivateKey, Boolean verified, Date departureDate, Team team, TeamUserPermissions teamUserPermissions, List<Channel> channels) {
         this.user = user;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.username = username;
+        this.teamPrivateKey = teamPrivateKey;
+        this.verified = verified;
         this.departureDate = departureDate;
         this.team = team;
         this.teamUserPermissions = teamUserPermissions;
         this.channels = channels;
     }
 
-    public TeamUser(User user, String firstName, String lastName, String email, String username, Team team, TeamUserPermissions teamUserPermissions, List<Channel> channels) {
+    public TeamUser(User user, String firstName, String lastName, String email, String username, String teamPrivateKey, Boolean verified, Team team, TeamUserPermissions teamUserPermissions, List<Channel> channels) {
         this.user = user;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.username = username;
+        this.teamPrivateKey = teamPrivateKey;
+        this.verified = verified;
         this.team = team;
         this.teamUserPermissions = teamUserPermissions;
         this.channels = channels;
     }
 
-    public TeamUser(User user, String firstName, String lastName, String email, String username, Team team, TeamUserPermissions teamUserPermissions) {
+    public TeamUser(User user, String firstName, String lastName, String email, String username, String teamPrivateKey, Boolean verified, Team team, TeamUserPermissions teamUserPermissions) {
         this.user = user;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.username = username;
+        this.teamPrivateKey = teamPrivateKey;
+        this.verified = verified;
         this.team = team;
         this.teamUserPermissions = teamUserPermissions;
     }
 
-    public TeamUser(String firstName, String lastName, String email, String username, Team team, TeamUserPermissions teamUserPermissions) {
+    public TeamUser(String firstName, String lastName, String email, String username, String teamPrivateKey, Boolean verified, Team team, TeamUserPermissions teamUserPermissions) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.username = username;
+        this.teamPrivateKey = teamPrivateKey;
+        this.verified = verified;
         this.team = team;
         this.teamUserPermissions = teamUserPermissions;
     }
@@ -140,6 +158,13 @@ public class TeamUser {
 
     public void setDashboard_user(com.Ease.Dashboard.User.User dashboard_user) {
         this.dashboard_user = dashboard_user;
+    }
+
+    public void setDashboard_user(com.Ease.Dashboard.User.User user, DataBaseConnection db) throws GeneralException {
+        DatabaseRequest request = db.prepareRequest("UPDATE teamUsers SET user_id = ? WHERE id = ?");
+        request.setInt(user.getDBid());
+        request.setInt(this.db_id);
+        this.dashboard_user = user;
     }
 
     public String getFirstName() {
@@ -172,6 +197,18 @@ public class TeamUser {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getDeciphered_teamPrivateKey() {
+        return deciphered_teamPrivateKey;
+    }
+
+    public void setDeciphered_teamPrivateKey(String deciphered_teamPrivateKey) {
+        this.deciphered_teamPrivateKey = deciphered_teamPrivateKey;
+    }
+
+    public void setTeamPrivateKey(String teamPrivateKey) {
+        this.teamPrivateKey = teamPrivateKey;
     }
 
     public Date getArrivalDate() {
@@ -214,9 +251,9 @@ public class TeamUser {
         this.channels = channels;
     }
 
-    public static TeamUser createAdminUser(String firstName, String lastName, String email, String username, Team team) {
+    public static TeamUser createAdminUser(String firstName, String lastName, String email, String username, String teamPrivateKey, Team team) {
         TeamUserPermissions permissions = new TeamUserPermissions(TeamUserPermissions.Role.ADMINISTRATOR.getValue());
-        return new TeamUser(firstName, lastName, email, username, team, permissions);
+        return new TeamUser(firstName, lastName, email, username, teamPrivateKey, true, team, permissions);
     }
 
     public List<SharedApp> getSharedApps() {
@@ -294,5 +331,13 @@ public class TeamUser {
             classicApp.beReceived(sm.getDB());
             db.commitTransaction(transaction);
         }
+    }
+
+    public void decipher_teamPrivateKey() throws GeneralException {
+        this.deciphered_teamPrivateKey = this.dashboard_user.decrypt(this.teamPrivateKey);
+    }
+
+    public boolean isVerified() {
+        return this.verified;
     }
 }

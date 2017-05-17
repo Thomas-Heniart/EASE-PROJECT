@@ -51,6 +51,9 @@ public class Team {
     @Column(name = "name")
     protected String name;
 
+    @Column(name = "publicKey")
+    protected String publicKey;
+
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     protected List<TeamUser> teamUsers = new LinkedList<>();
 
@@ -64,16 +67,21 @@ public class Team {
     protected Map<Integer, TeamUser> teamUserIdMap = new HashMap<>();
 
     @Transient
+    protected List<TeamUser> teamUsersWaitingForVerification = new LinkedList<>();
+
+    @Transient
     protected List<ShareableApp> shareableApps = new LinkedList<>();
 
-    public Team(String name, List<TeamUser> teamUsers, List<Channel> channels) {
+    public Team(String name, String publicKey, List<TeamUser> teamUsers, List<Channel> channels) {
         this.name = name;
+        this.publicKey = publicKey;
         this.teamUsers = teamUsers;
         this.channels = channels;
     }
 
-    public Team(String name) {
+    public Team(String name, String publicKey) {
         this.name = name;
+        this.publicKey = publicKey;
     }
 
     public Team() {
@@ -93,6 +101,14 @@ public class Team {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPublicKey() {
+        return publicKey;
+    }
+
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
     }
 
     public List<TeamUser> getTeamUsers() {
@@ -127,6 +143,8 @@ public class Team {
             System.out.println("Permissions member: " + teamUser.getTeamUserPermissions().haveRole(TeamUserPermissions.Role.MEMBER));
             System.out.println("Permissions moderator: " + teamUser.getTeamUserPermissions().haveRole(TeamUserPermissions.Role.MODERATOR));
             System.out.println("Permissions admin: " + teamUser.getTeamUserPermissions().haveRole(TeamUserPermissions.Role.ADMINISTRATOR));
+            if (!teamUser.isVerified())
+                this.teamUsersWaitingForVerification.add(teamUser);
         }
 
     }
