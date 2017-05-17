@@ -1,6 +1,5 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.SendGridMail;
 import com.Ease.Team.Team;
