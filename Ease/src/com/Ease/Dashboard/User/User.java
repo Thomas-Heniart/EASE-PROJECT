@@ -669,4 +669,12 @@ public class User {
 		}
         query.commit();
     }
+
+    public TeamUser getTeamUserForTeam(Team team) throws GeneralException {
+	    for(TeamUser teamUser : this.getTeamUsers()) {
+	        if (teamUser.getTeam() == team)
+	            return teamUser;
+        }
+        throw new GeneralException(ServletManager.Code.ClientError, "Internal problem");
+    }
 }

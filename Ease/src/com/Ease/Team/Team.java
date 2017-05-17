@@ -179,6 +179,8 @@ public class Team {
     public void addTeamUser(TeamUser teamUser) {
         this.teamUsers.add(teamUser);
         this.teamUserIdMap.put(teamUser.getDb_id(), teamUser);
+        if (!teamUser.isVerified())
+            this.teamUsersWaitingForVerification.add(teamUser);
     }
 
     public void addChannel(Channel channel) {
