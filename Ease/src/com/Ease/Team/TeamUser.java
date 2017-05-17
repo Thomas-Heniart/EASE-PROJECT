@@ -308,6 +308,8 @@ public class TeamUser {
     }
 
     public void validateRegistration(ServletManager sm) throws GeneralException {
+        if (this.isVerified())
+            throw new GeneralException(ServletManager.Code.ClientError, "TeamUser already registered");
         if (this.deciphered_teamPrivateKey == null)
             this.decipher_teamPrivateKey();
         for (SharedApp sharedApp : this.getSharedApps()) {
@@ -315,9 +317,11 @@ public class TeamUser {
                 continue;
             ClassicApp sharedClassicApp = (ClassicApp)sharedApp;
             sharedClassicApp.getAccount().decipherAndCipher(deciphered_teamPrivateKey, sm);
-            //sharedClassicApp.getAccount()
-
         }
+        DatabaseRequest request = sm.getDB().prepareRequest("UDPATE teamUsers SET verified = 1 WHERE id = ?;");
+        request.setInt(this.db_id);
+        request.set();
+        this.verified = true;
     }
 
     public void check_sharedApps_ciphering(ServletManager sm) throws GeneralException {

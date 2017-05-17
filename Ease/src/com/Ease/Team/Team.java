@@ -262,4 +262,11 @@ public class Team {
     public void confirmTeamUserRegistration(TeamUser teamUser, ServletManager sm) throws GeneralException {
         teamUser.validateRegistration(sm);
     }
+
+    public void vaidateTeamUserRegistration(TeamUser teamUser, ServletManager sm) throws GeneralException {
+        if (!this.teamUsersWaitingForVerification.contains(teamUser))
+            throw new GeneralException(ServletManager.Code.ClientError, "teamUser already validated");
+        teamUser.validateRegistration(sm);
+        this.teamUsersWaitingForVerification.remove(teamUser);
+    }
 }
