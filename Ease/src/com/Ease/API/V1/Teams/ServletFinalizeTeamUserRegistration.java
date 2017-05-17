@@ -62,9 +62,19 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             query.querySQLString("DELETE FROM pendingTeamInvitations WHERE id = ?");
             query.setParameter(1, (String)id);
             query.executeUpdate();
+            String verificationCode;
+            do {
+                verificationCode = CodeGenerator.generateNewCode();
+                query.querySQLString("SELECT * FROM pendingTeamUserVerifications WHERE code = ?");
+                query.setParameter(1, verificationCode);
+            } while (query.getSingleResult() != null);
+            query.querySQLString("INSERT INTO pendingTeamUserVerifications values(NULL, ?, ?);");
+            query.setParameter(1, teamUser.getDb_id());
+            query.setParameter(2, code);
+            query.executeUpdate();
             query.commit();
             teamUser.setDashboard_user(sm.getUser(), sm.getDB());
-            team.askVerificationForTeamUser(teamUser);
+            team.askVerificationForTeamUser(teamUser, verificationCode);
             sm.setResponse(ServletManager.Code.Success, "Wait for admin validation");
         } catch(Exception e) {
             sm.setResponse(e);

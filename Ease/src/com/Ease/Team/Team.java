@@ -254,12 +254,12 @@ public class Team {
         return res;
     }
 
-    public void askVerificationForTeamUser(TeamUser teamUser) {
+    public void askVerificationForTeamUser(TeamUser teamUser, String code) {
         for (Map.Entry<String, String> usernameAndEmail : this.getAdministratorsUsernameAndEmail().entrySet()) {
             String username = usernameAndEmail.getKey();
             String email = usernameAndEmail.getValue();
             SendGridMail sendGridMail = new SendGridMail("Benjamin @Ease", "benjamin@ease.space");
-            sendGridMail.sendTeamUserVerificationEmail(username, email, teamUser.getEmail(), teamUser.getFirstName(), code)
+            sendGridMail.sendTeamUserVerificationEmail(username, email, teamUser.getEmail(), teamUser.getUsername(), code);
         }
     }
 

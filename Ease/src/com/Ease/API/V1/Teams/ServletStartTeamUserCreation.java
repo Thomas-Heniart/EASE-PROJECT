@@ -64,6 +64,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             do {
                 code = CodeGenerator.generateNewCode();
                 query.querySQLString("SELECT * FROM pendingTeamInvitations WHERE code = ?");
+                query.setParameter(1, code);
             } while (query.getSingleResult() != null);
             query.querySQLString("INSERT INTO pendingTeamInvitations values(NULL, ?, ?, ?);");
             query.setParameter(1, teamUser.getDb_id());
