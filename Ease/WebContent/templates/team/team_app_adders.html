@@ -12,30 +12,23 @@
             <i class="fa fa-search icon_holder" aria-hidden="true"></i>
             <div class="app_name_input_wrapper">
                 <input placeholder="App name..." name="app_name" class="true_input input_unstyle"/>
+                <div class="floating_dropdown app_selectors">
+                    <div class="dropdown_content">
+
+                    </div>
+                </div>
             </div>
             <button class="button-unstyle action_button modify_app_button">
                 <i class="fa fa-times" aria-hidden="true"></i>
             </button>
         </div>
-        <div class="info_holder">
+        <div class="info_holder hide">
             <div class="info">
                 <div class="logo_holder">
                     <img src="/resources/icons/app_icon.svg">
                 </div>
                 <div class="credentials_holder">
                     <div class="credentials">
-                        <div class="credentials_line" data-type="email">
-                            <i class="fa fa-user icon_handler credentials_type_icon" aria-hidden="true"></i>
-                            <input placeholder="Email" autocomplete="off"
-                                   class="credentials_value_input value_input" type="email"
-                                   name="email"/>
-                        </div>
-                        <div class="credentials_line" data-type="email">
-                            <i class="fa fa-lock icon_handler credentials_type_icon" aria-hidden="true"></i>
-                            <input placeholder="Password" autocomplete="off"
-                                   class="credentials_value_input value_input" type="email"
-                                   name="email"/>
-                        </div>
                     </div>
                     <div class="password_change_remind">
                         <div class="password_change_icon">
@@ -63,12 +56,12 @@
                     <div class="add_container full_flex display_flex">
                         <input class="true_input input_unstyle full_flex" type="text"/>
                     </div>
-                    <div class="user_selectors">
+                    <div class="floating_dropdown user_selectors">
                     </div>
                 </div>
             </div>
         </div>
-        <div class="comment_holder">
+        <div class="comment_holder hide">
             <div class="comment_icon">
                 <i class="fa fa-sticky-note-o" aria-hidden="true"></i>
             </div>
@@ -91,6 +84,11 @@
             <i class="fa fa-search icon_holder" aria-hidden="true"></i>
             <div class="app_name_input_wrapper">
                 <input placeholder="Search for app..." type="text" name="app_name" class="true_input input_unstyle"/>
+                <div class="floating_dropdown app_selectors">
+                    <div class="dropdown_content">
+
+                    </div>
+                </div>
             </div>
             <button class="button-unstyle action_button modify_app_button">
                 <i class="fa fa-times" aria-hidden="true"></i>
@@ -106,7 +104,7 @@
                     </div>
                     <div class="user_choose">
                         <input type="text" class="input_unstyle" placeholder="Search for people...">
-                        <div class="user_selectors">
+                        <div class="floating_dropdown user_selectors">
                         </div>
                     </div>
                     <div class="password_change_remind">
@@ -166,6 +164,18 @@
                                    class="credentials_value_input value_input" type="text"
                                    name="url"/>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sharing_info full_flex">
+                <div class="user_adding_container">
+                    <div class="icon_wrapper">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                    </div>
+                    <div class="add_container full_flex display_flex">
+                        <input class="true_input input_unstyle full_flex" type="text"/>
+                    </div>
+                    <div class="floating_dropdown user_selectors">
                     </div>
                 </div>
             </div>

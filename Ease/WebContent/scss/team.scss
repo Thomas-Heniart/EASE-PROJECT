@@ -649,6 +649,7 @@
                   padding: 0;
                 }
                 .app_name_input_wrapper {
+                  position: relative;
                   border:1px solid #717274;
                   border-radius: 5px;
                   margin-left: .6rem;
@@ -923,21 +924,48 @@
       font-size: .7rem;
     }
   }
+  .floating_dropdown {
+    display: none;
+    z-index: 10;
+    max-height: 85px;
+    overflow: auto;
+    position: absolute;
+    padding: 5px;
+    margin-top: 5px;
+    width: 100%;
+    background-color: white;
+    border-radius: 5px;
+    border: 1px solid $themeGreyLightColor;
+    top: 100%;
+    left: 0;
+    @include simple-box-shadow(0 5px 10px rgba(0,0,0,.12));
+    &.show {
+      display: block;
+    }
+  }
+  .app_selectors {
+    height: 150px;
+    max-height: 150px;
+    .app_selector {
+      @include display-flex();
+      @include align-items(center);
+      padding: 3px;
+      &:hover {
+        cursor: pointer;
+        background-color: $themeGreyLightColor;
+      }
+      .logo {
+        width: 32px;
+        height: 32px;
+        border-radius: 3px;
+      }
+      .app_name {
+        margin-left: 5px;
+      }
+    }
+  }
   .team_app {
     .user_selectors {
-      display: none;
-      max-height: 85px;
-      overflow: auto;
-      position: absolute;
-      padding: 5px;
-      margin-top: 5px;
-      width: 100%;
-      background-color: white;
-      border-radius: 5px;
-      border: 1px solid $themeGreyLightColor;
-      top: 100%;
-      left: 0;
-      @include simple-box-shadow(0 5px 10px rgba(0,0,0,.12));
       .user_selector {
         padding: 3px;
         cursor: pointer;
@@ -957,7 +985,7 @@
       }
     }
   }
-  #simple_app_adder {
+  #simple_app_adder, #link_app_adder {
     .user_selectors {
       font-size: .8rem;
     }
@@ -971,25 +999,6 @@
     }
   }
   #multiple_app_adder {
-    ::-webkit-scrollbar {
-      width: 13px;
-    }
-    ::-webkit-scrollbar-track, ::-webkit-scrollbar-thumb {
-      background-clip: padding-box!important;
-      border-radius: 5px;
-      border-right: 3px solid #fff;
-      border-left: 3px solid #fff;
-      box-shadow: inset 0 -3px 0 #fff, inset 0 3px 0 #fff;
-    }
-    ::-webkit-scrollbar-track {
-      background: #f3f3f3;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(#E6E6E6, 0.7);
-    }
-    ::-webkit-scrollbar-thumb:window-inactive {
-      background: rgba(#E6E6E6, 0.7);
-    }
     .user_choose {
       max-width: 300px;
       position: relative;
@@ -1049,6 +1058,25 @@
   }
   .add_content_container {
     position: relative;
+    ::-webkit-scrollbar {
+      width: 13px;
+    }
+    ::-webkit-scrollbar-track, ::-webkit-scrollbar-thumb {
+      background-clip: padding-box !important;
+      border-radius: 5px !important;
+      border-right: 3px solid #fff;
+      border-left: 3px solid #fff;
+      box-shadow: inset 0 -3px 0 #fff, inset 0 3px 0 #fff !important;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f3f3f3;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(#E6E6E6, 0.7);
+    }
+    ::-webkit-scrollbar-thumb:window-inactive {
+      background: rgba(#E6E6E6, 0.7);
+    }
     .add_actions_holder{
       position: absolute;
       right: .6rem;
@@ -1056,10 +1084,9 @@
       font-size: .8rem;
     }
     .info_holder {
-      margin-bottom: 10px;
+      margin: 10px 0;
     }
     .app_name_input_handler {
-      margin-bottom: 10px;
       .app_name_input_wrapper {
         @include display-flex();
       }
