@@ -50,8 +50,8 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             HibernateQuery query = new HibernateQuery();
             query.querySQLString("SELECT id FROM pendingTeamInvitations WHERE teamUser_id = ? AND team_id = ? AND code = ?");
             query.setParameter(1, teamUser_id);
-            query.setParameter(2, code);
-            query.setParameter(3, team_id);
+            query.setParameter(2, team_id);
+            query.setParameter(3, code);
             Object id = query.getSingleResult();
             if (id == null)
                 throw new GeneralException(ServletManager.Code.ClientWarning, "You cannot create an account for this team");
@@ -60,7 +60,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             teamUser.setUsername(username);
             query.saveOrUpdateObject(teamUser);
             query.querySQLString("DELETE FROM pendingTeamInvitations WHERE id = ?");
-            query.setParameter(1, (String)id);
+            query.setParameter(1, id);
             query.executeUpdate();
             String verificationCode;
             do {
