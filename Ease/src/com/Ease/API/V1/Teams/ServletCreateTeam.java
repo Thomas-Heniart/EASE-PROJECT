@@ -67,10 +67,11 @@ public class ServletCreateTeam extends HttpServlet {
             channel.addTeamUser(admin);
             query.saveOrUpdateObject(team);
             query.querySQLString("DELETE FROM createTeamInvitations WHERE id = ?");
-            query.setParameter(1, (String) id);
+            query.setParameter(1, id);
             query.executeUpdate();
             query.commit();
             admin.setDashboard_user(user, sm.getDB());
+            user.addTeamUser(admin);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             teamManager.addTeam(team);
             sm.setResponse(ServletManager.Code.Success, team.getJson().toString());

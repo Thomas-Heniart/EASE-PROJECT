@@ -10,6 +10,7 @@ import com.Ease.Utils.Crypto.CodeGenerator;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -31,7 +32,6 @@ public class ServletStartTeamUserCreations extends HttpServlet {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            HibernateQuery query = new HibernateQuery();
             String teamUsersString = sm.getServletParam("teamUsersToCreate", true);
             String team_id = sm.getServletParam("team_id", true);
             JSONObject res = new JSONObject();
@@ -46,9 +46,10 @@ public class ServletStartTeamUserCreations extends HttpServlet {
             sm.needToBeAdminOfTeam(team);
             TeamUser adminTeamUser = sm.getTeamUserForTeam(team);
             JSONParser parser = new JSONParser();
-            JSONArray teamUsersToCreate = (JSONArray) parser.parse(teamUsersString);
+            JSONArray teamUsersToCreate = (JSONArray) parser.parse(StringEscapeUtils.unescapeHtml4(teamUsersString));
             if (teamUsersToCreate.isEmpty())
                 throw new GeneralException(ServletManager.Code.ClientError, "Empty teamusers.");
+            HibernateQuery query = new HibernateQuery();
             for (Object teamUserToCreateObj : teamUsersToCreate) {
                 JSONObject teamUserToCreate = (JSONObject) teamUserToCreateObj;
                 String email = (String) teamUserToCreate.get("email");
@@ -60,7 +61,7 @@ public class ServletStartTeamUserCreations extends HttpServlet {
                 query.querySQLString("SELECT id FROM teamUsers WHERE email = ? AND team_id = ? AND verified = 1;");
                 query.setParameter(1, email);
                 query.setParameter(2, team_id);
-                if (query.getSingleResult() != null) {
+                if (!query.list().isEmpty()) {
                     JSONObject tmp = new JSONObject();
                     tmp.put("email", email);
                     tmp.put("cause", "This person is already on your team.");
@@ -70,17 +71,17 @@ public class ServletStartTeamUserCreations extends HttpServlet {
                 query.querySQLString("SELECT id FROM teamUsers WHERE email = ? AND team_id = ? AND verified = 0;");
                 query.setParameter(1, email);
                 query.setParameter(2, team_id);
-                if (query.getSingleResult() != null) {
+                if (!query.list().isEmpty()) {
                     JSONObject tmp = new JSONObject();
                     tmp.put("email", email);
                     tmp.put("cause", "This person has already been invited to your team.");
                     failInvitations.add(tmp);
                     continue;
                 }
-                query.querySQLString("SELECT * FROM users LEFT JOIN teamUsers ON users.id = teamUsers.user_id WHERE users.email = ? OR teamUsers.email = ?;");
+                query.querySQLString("SELECT users.id FROM users LEFT JOIN teamUsers ON users.id = teamUsers.user_id WHERE users.email = ? OR teamUsers.email = ?;");
                 query.setParameter(1, email);
                 query.setParameter(2, email);
-                if (query.getSingleResult() != null) {
+                if (!query.list().isEmpty()) {
                     JSONObject tmp = new JSONObject();
                     tmp.put("email", email);
                     tmp.put("cause", "This email has already been taken");
@@ -96,7 +97,7 @@ public class ServletStartTeamUserCreations extends HttpServlet {
                     code = CodeGenerator.generateNewCode();
                     query.querySQLString("SELECT * FROM pendingTeamInvitations WHERE code = ?");
                     query.setParameter(1, code);
-                } while (query.getSingleResult() != null);
+                } while (!query.list().isEmpty());
                 query.querySQLString("INSERT INTO pendingTeamInvitations values(NULL, ?, ?, ?);");
                 query.setParameter(1, teamUser.getDb_id());
                 query.setParameter(2, code);

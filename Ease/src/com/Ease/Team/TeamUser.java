@@ -94,6 +94,7 @@ public class TeamUser {
         this.team = team;
         this.teamUserPermissions = teamUserPermissions;
         this.channels = channels;
+        this.arrivalDate = new Date();
     }
 
     public TeamUser(User user, String firstName, String lastName, String email, String username, String teamPrivateKey, Boolean verified, Team team, TeamUserPermissions teamUserPermissions, List<Channel> channels) {
@@ -107,6 +108,7 @@ public class TeamUser {
         this.team = team;
         this.teamUserPermissions = teamUserPermissions;
         this.channels = channels;
+        this.arrivalDate = new Date();
     }
 
     public TeamUser(User user, String firstName, String lastName, String email, String username, String teamPrivateKey, Boolean verified, Team team, TeamUserPermissions teamUserPermissions) {
@@ -119,6 +121,7 @@ public class TeamUser {
         this.verified = verified;
         this.team = team;
         this.teamUserPermissions = teamUserPermissions;
+        this.arrivalDate = new Date();
     }
 
     public TeamUser(String firstName, String lastName, String email, String username, String teamPrivateKey, Boolean verified, Team team, TeamUserPermissions teamUserPermissions) {
@@ -130,6 +133,7 @@ public class TeamUser {
         this.verified = verified;
         this.team = team;
         this.teamUserPermissions = teamUserPermissions;
+        this.arrivalDate = new Date();
     }
 
     public TeamUser() {
@@ -163,6 +167,7 @@ public class TeamUser {
         DatabaseRequest request = db.prepareRequest("UPDATE teamUsers SET user_id = ? WHERE id = ?");
         request.setInt(user.getDBid());
         request.setInt(this.db_id);
+        request.set();
         this.dashboard_user = user;
     }
 

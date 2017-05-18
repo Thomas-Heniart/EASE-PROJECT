@@ -106,8 +106,10 @@ public class ServletManager {
     }
 
     public void needToBeTeamUser() throws GeneralException {
-        if (this.getUser().getTeamUsers().isEmpty())
+        if (this.getUser().getTeamUsers().isEmpty()) {
             throw new GeneralException(Code.ClientWarning, "Access denied");
+        }
+
     }
 
     public void needToBeTeamUserOfTeam(String team_id) throws GeneralException {

@@ -12,10 +12,10 @@ public class CodeGenerator {
 	}
 
 	public static String generateDigits(int length) {
-		String digits = "";
+		String digitsGenerated = "";
 		for (int i=0; i < length; i++)
-			digits += digits.charAt(r.nextInt(digits.length()));
-		return digits;
+			digitsGenerated += digits.charAt(r.nextInt(digits.length()));
+		return digitsGenerated;
 	}
 
 	private final static Random r = new Random();

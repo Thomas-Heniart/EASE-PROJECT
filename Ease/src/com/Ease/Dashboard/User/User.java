@@ -651,6 +651,11 @@ public class User {
         teamUser.setDashboard_user(this);
     }
 
+    public void addTeamUser(TeamUser teamUser) {
+	    if (!this.teamUsers.contains(teamUser))
+	        this.teamUsers.add(teamUser);
+    }
+
     public void loadTeamUsers(ServletManager sm) throws GeneralException {
         HibernateQuery query = new HibernateQuery();
         query.querySQLString("SELECT id, team_id FROM teamUsers WHERE user_id = ?");
@@ -667,6 +672,7 @@ public class User {
 			teamUser.decipher_teamPrivateKey();
             teamUser.check_sharedApps_ciphering(sm);
 		}
+		System.out.println("teamUsers: " + this.teamUsers.size());
         query.commit();
     }
 

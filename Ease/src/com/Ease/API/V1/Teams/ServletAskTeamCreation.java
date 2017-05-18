@@ -1,6 +1,5 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.API.Utils.ServletManager;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Mail.SendGridMail;
 import com.Ease.Utils.*;
@@ -23,14 +22,15 @@ public class ServletAskTeamCreation extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
-            HttpSession session = request.getSession();
-            User user = (User) session.getAttribute("user");
+            sm.needToBeConnected();
+            User user = sm.getUser();
+            /* Check if this user already payed */
             String email = sm.getServletParam("email", true);
             if (email == null || email.equals("") || !Regex.isEmail(email))
                 throw new GeneralException(com.Ease.Utils.ServletManager.Code.ClientWarning, "Invalid email.");
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
-            DatabaseRequest databaseRequest = db.prepareRequest("SELECT * FROM users FULL OUTER JOIN teamUsers ON users.id = teamUsers.user_id WHERE users.email = ? OR teamUsers.email = ?;");
+            DatabaseRequest databaseRequest = db.prepareRequest("SELECT * FROM users LEFT JOIN teamUsers ON users.id = teamUsers.user_id WHERE (users.email <> teamUsers.email) AND (users.email = ? OR teamUsers.email = ?);");
             databaseRequest.setString(email);
             databaseRequest.setString(email);
             DatabaseResult rs = databaseRequest.get();
