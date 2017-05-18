@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.DataBaseConnection;
@@ -22,7 +24,6 @@ import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
-import com.Ease.websocket.WebsocketMessage;
 import com.Ease.websocket.WebsocketSession;
 
 /**
@@ -73,9 +74,12 @@ public class ConnectionServlet extends HttpServlet {
                     sm.setResponse(ServletManager.Code.ClientWarning, "Wrong email or password.");
                 else {
                     user = User.loadUser(email, password, sm);
-                    //teamUser = TeamUser.loadTeamUser(user.getDBid(), sm);
-                    session.setAttribute("user", user);
-                    //session.setAttribute("teamUser", teamUser);
+                    sm.setUser(user);
+                    for (App app : user.getDashboardManager().getApps()) {
+                        if (!app.isClassicApp())
+                            continue;
+                        ((ClassicApp) app).getAccount().update_ciphering_if_needed(sm);
+                    }
                     removeIpFromDataBase(client_ip, db);
                     sm.setResponse(ServletManager.Code.Success, "Successfully connected.");
                     //sm.addWebsockets(sessionWebsockets);

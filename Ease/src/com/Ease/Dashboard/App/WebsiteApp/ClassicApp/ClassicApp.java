@@ -79,7 +79,7 @@ public class ClassicApp extends WebsiteApp {
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<String, Object>();
         String websiteAppDBid = WebsiteApp.createWebsiteApp(profile, position, name, "classicApp", site, elevator, sm);
-        Account account = Account.createAccountSameAs(sameApp.getAccount(), false, user, sm);
+        Account account = Account.createAccountSameAs(sameApp.getAccount(), false, sm);
         DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
         request.setInt(websiteAppDBid);
         request.setInt(account.getDBid());
@@ -271,7 +271,9 @@ public class ClassicApp extends WebsiteApp {
         request.setInt(this.getAccount().getDBid());
         String classicDBid = request.set().toString();
         db.commitTransaction(transaction);
-        return new ClassicApp((String) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), this.getSite(), websiteAppId, this.account, classicDBid, false, true, this);
+        App sharedApp = new ClassicApp((String) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), this.getSite(), websiteAppId, this.account, classicDBid, false, true, this);
+        sharedApp.setReceived(false);
+        return sharedApp;
     }
 
 }

@@ -72,7 +72,7 @@ public class DatabaseRequest {
 	public DatabaseResult get() throws GeneralException {
 		try {
 		    ResultSet rs = this.statement.executeQuery();
-		    System.out.println(this.statement.toString());
+		    //System.out.println(this.statement.toString());
 			return new DatabaseResult(rs);
 		} catch (SQLException e) {
 			throw new GeneralException(ServletManager.Code.InternError, e);
@@ -83,7 +83,7 @@ public class DatabaseRequest {
 		try {
 			statement.executeUpdate();
 			ResultSet rs = statement.getGeneratedKeys();
-			System.out.println(statement.toString());
+			//System.out.println(statement.toString());
 			Integer id_row = null;
 			if (rs.next()){
 	        	try {

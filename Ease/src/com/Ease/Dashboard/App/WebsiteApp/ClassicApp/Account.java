@@ -5,7 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import org.hibernate.boot.model.relational.Database;
+import com.Ease.Utils.Crypto.RSA;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -31,7 +31,7 @@ public class Account {
     }
 
 	/*
-	 * 
+     *
 	 * Loader And creator
 	 * 
 	 */
@@ -42,12 +42,14 @@ public class Account {
         DatabaseResult rs = request.get();
         if (!rs.next())
             throw new GeneralException(ServletManager.Code.InternError, "This account doesn't exist.");
-        List<AccountInformation> infos = AccountInformation.loadInformations(db_id, db);
         boolean shared = rs.getBoolean(Data.SHARED.ordinal());
+        String publicKey = rs.getString("publicKey");
+        String ciphered_privateKey = rs.getString("privateKey");
+        List<AccountInformation> infos = AccountInformation.loadInformations(db_id, db);
         String reminderValue = rs.getString(Data.REMINDER_VALUE.ordinal());
         String reminderType = rs.getString(Data.REMINDER_TYPE.ordinal());
         if (reminderType == null || reminderType.equals(""))
-            return new Account(db_id, shared, infos);
+            return new Account(db_id, shared, publicKey, ciphered_privateKey, infos);
         request = db.prepareRequest("SELECT lastUpdateDate + INTERVAL ? " + reminderType + " FROM accounts WHERE id = ?;");
         request.setInt(reminderValue);
         request.setInt(db_id);
@@ -58,7 +60,7 @@ public class Account {
         try {
             Date deadLine = dateFormat.parse(rs.getString(1));
             Date now = new Date();
-            return new Account(db_id, shared, infos, (now.compareTo(deadLine) >= 0));
+            return new Account(db_id, shared, publicKey, ciphered_privateKey, infos, (now.compareTo(deadLine) >= 0));
         } catch (ParseException e) {
             throw new GeneralException(ServletManager.Code.InternError, "Parse error");
         }
@@ -68,21 +70,29 @@ public class Account {
     public static Account createAccount(boolean shared, Map<String, String> informations, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
-        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, ?, default, null, null);");
+        Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
+        String publicKey = publicAndPrivateKey.getKey();
+        String privateKey = publicAndPrivateKey.getValue();
+        String ciphered_key = sm.getUser().encrypt(privateKey);
+        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, ?, default, null, null, ?, ?);");
         request.setBoolean(shared);
+        request.setString(publicKey);
+        request.setString(ciphered_key);
         String db_id = request.set().toString();
-        List<AccountInformation> infos = AccountInformation.createAccountInformations(db_id, informations, sm);
+        List<AccountInformation> infos = AccountInformation.createAccountInformations(db_id, informations, publicKey, sm);
         db.commitTransaction(transaction);
-        return new Account(db_id, shared, infos);
+        Account account =  new Account(db_id, shared, publicKey, ciphered_key, infos);
+        account.setPrivateKey(privateKey);
+        return account;
     }
 
-    public static Account createAccountFromJson(JSONArray account_information, ServletManager sm) throws GeneralException {
+    /* public static Account createAccountFromJson(JSONArray account_information, ServletManager sm) throws GeneralException {
         Map<String, String> accountInformation = new HashMap<>();
         for (Object obj : account_information) {
             JSONObject objJson = (JSONObject) obj;
-            String info_name = (String)objJson.get("info_name");
-            String info_value = (String)objJson.get("info_value");
-            /* Crypto for password */
+            String info_name = (String) objJson.get("info_name");
+            String info_value = (String) objJson.get("info_value");
+            Crypto for password
             accountInformation.put(info_name, info_value);
         }
         DataBaseConnection db = sm.getDB();
@@ -90,32 +100,28 @@ public class Account {
         DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, ?, default, null, null);");
         request.setBoolean(false);
         String db_id = request.set().toString();
-        List<AccountInformation> infos = AccountInformation.createAccountInformations(db_id, accountInformation, sm);
+        List<AccountInformation> infos = AccountInformation.createAccountInformations(db_id, accountInformation, null, sm);
         db.commitTransaction(transaction);
         return new Account(db_id, false, infos);
-    }
+    } */
 
-    public static Account createAccountSameAs(Account sameAccount, boolean shared, User user, ServletManager sm) throws GeneralException {
+    public static Account createAccountSameAs(Account sameAccount, boolean shared, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
-        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, ?, default, null, null);");
+        Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
+        String publicKey = publicAndPrivateKey.getKey();
+        String privateKey = publicAndPrivateKey.getValue();
+        String ciphered_key = sm.getUser().encrypt(privateKey);
+        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, ?, default, null, null, ?, ?);");
         request.setBoolean(shared);
+        request.setString(publicKey);
+        request.setString(ciphered_key);
         String db_id = request.set().toString();
-        List<AccountInformation> infos = AccountInformation.createAccountInformationFromAccountInformations(db_id, sameAccount.getAccountInformations(), sm);
+        List<AccountInformation> infos = AccountInformation.createAccountInformationFromAccountInformations(db_id, sameAccount.getAccountInformations(), publicKey, sm);
         db.commitTransaction(transaction);
-        return new Account(db_id, shared, infos);
-    }
-
-    public static Account createGroupAccount(String password, boolean shared, Map<String, String> informations, Infrastructure infra, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
-        int transaction = db.startTransaction();
-        //String crypted_password = infra.encrypt(password, sm);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, ?);");
-        request.setBoolean(shared);
-        String db_id = request.set().toString();
-        List<AccountInformation> infos = AccountInformation.createAccountInformations(db_id, informations, sm);
-        db.commitTransaction(transaction);
-        return new Account(db_id, shared, infos);
+        Account account =  new Account(db_id, shared, publicKey, ciphered_key, infos);
+        account.setPrivateKey(privateKey);
+        return account;
     }
 	
 	/*
@@ -128,19 +134,28 @@ public class Account {
     protected boolean shared;
     protected List<AccountInformation> infos;
     protected boolean passwordMustBeUpdated;
+    protected String publicKey;
+    protected String ciphered_key;
+    protected String privateKey;
 
-    public Account(String db_id, boolean shared, List<AccountInformation> infos) {
+    public Account(String db_id, boolean shared, String publicKey, String ciphered_key, List<AccountInformation> infos) {
         this.db_id = db_id;
         this.shared = shared;
         this.infos = infos;
+        this.publicKey = publicKey;
+        this.ciphered_key = ciphered_key;
         this.passwordMustBeUpdated = false;
+        this.privateKey = null;
     }
 
-    public Account(String db_id, boolean shared, List<AccountInformation> infos, boolean b) {
+    public Account(String db_id, boolean shared, String publicKey, String ciphered_key, List<AccountInformation> infos, boolean b) {
         this.db_id = db_id;
         this.shared = shared;
         this.infos = infos;
+        this.publicKey = publicKey;
+        this.ciphered_key = ciphered_key;
         this.passwordMustBeUpdated = b;
+        this.privateKey = null;
     }
 
     public void removeFromDB(ServletManager sm) throws GeneralException {
@@ -163,6 +178,22 @@ public class Account {
 
     public String getDBid() {
         return db_id;
+    }
+
+    public String getPublicKey() {
+        return publicKey;
+    }
+
+    public void setPrivateKey(String privateKey) {
+        this.privateKey = privateKey;
+    }
+
+    public void decipher(User user) throws GeneralException {
+        if (this.privateKey != null)
+            return;
+        this.privateKey = user.decrypt(this.ciphered_key);
+        for (AccountInformation accountInformation : this.getAccountInformations())
+            accountInformation.decipher(this.privateKey);
     }
 
     public List<AccountInformation> getAccountInformations() {
@@ -203,17 +234,11 @@ public class Account {
 	 */
 
     public JSONObject getJSON(ServletManager sm) throws GeneralException {
+        this.update_ciphering_if_needed(sm);
+        this.decipher(sm.getUser());
         JSONObject obj = new JSONObject();
-        //obj.put("password", sm.getUser().decrypt(this.crypted_password));
-        for (AccountInformation info : this.infos) {
-            String value;
-            if (info.getInformationName().equals("password")) {
-                value = sm.getUser().decrypt(info.getInformationValue());
-            } else {
-                value = info.getInformationValue();
-            }
-            obj.put(info.getInformationName(), value);
-        }
+        for (AccountInformation info : this.infos)
+            obj.put(info.getInformationName(), info.getInformationValue());
         return obj;
     }
 
@@ -281,4 +306,33 @@ public class Account {
     public boolean mustUpdatePassword() {
         return this.passwordMustBeUpdated;
     }
+
+    public void update_ciphering_if_needed(ServletManager sm) throws GeneralException {
+        if (this.publicKey != null && this.ciphered_key != null)
+            return;
+        Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
+        this.publicKey = publicAndPrivateKey.getKey();
+        this.privateKey = publicAndPrivateKey.getValue();
+        this.ciphered_key = sm.getUser().encrypt(this.privateKey);
+        DataBaseConnection db = sm.getDB();
+        int transaction = db.startTransaction();
+        DatabaseRequest request = db.prepareRequest("UPDATE accounts SET publicKey = ?, privateKey = ? WHERE id = ?;");
+        request.setString(this.publicKey);
+        request.setString(this.ciphered_key);
+        request.setInt(this.db_id);
+        request.set();
+        for (AccountInformation accountInformation : this.getAccountInformations())
+            accountInformation.update_ciphering(this.publicKey, sm);
+        db.commitTransaction(transaction);
+
+    }
+
+    public void update_shared_app_ciphering(User user, ServletManager sm) throws GeneralException {
+        for (AccountInformation accountInformation : this.getAccountInformations()) {
+            String info_value = RSA.Decrypt(accountInformation.getInformationValue(), user.getKeys().getPublicKey());
+            accountInformation.setInformation_value(RSA.Encrypt(info_value, this.publicKey), sm);
+            accountInformation.decipher(this.privateKey);
+        }
+    }
+
 }

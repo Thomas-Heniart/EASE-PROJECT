@@ -5,6 +5,7 @@ import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Mail.SendGridMail;
+import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.DatabaseRequest;
 import com.Ease.Utils.DatabaseResult;
@@ -13,6 +14,8 @@ import com.Ease.Utils.ServletManager;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.CodeGenerator;
 import com.Ease.Utils.Crypto.Hashing;
+
+import java.util.Map;
 
 public class Keys {
     enum Data {
@@ -38,6 +41,9 @@ public class Keys {
         String saltEase = rs.getString(Data.SALTEASE.ordinal());
         String saltPerso = rs.getString(Data.SALTPERSO.ordinal());
         String crypted_keyUser = rs.getString(Data.KEYUSER.ordinal());
+        String publicKey = rs.getString("publicKey");
+        String ciphered_privateKey = rs.getString("privateKey");
+        String privateKey = null;
         String keyUser;
         //-- Pour mettre à jour la crypto (nouveau hashage et nouveau salage.
         if (saltEase != null) {
@@ -68,7 +74,26 @@ public class Keys {
             }
             keyUser = AES.decryptUserKey(crypted_keyUser, password, saltPerso);
         }
-        return new Keys(db_id, hashed_password, saltPerso, keyUser);
+        System.out.println("publicKey: " + publicKey == null ? "null" : publicKey);
+        if (publicKey == null || publicKey.equals("") || publicKey.equals("NULL")) {
+            Map<String, String> publicAndPrivateKeys = RSA.generateKeys(1);
+            for (Map.Entry<String, String> publicAndPrivateKey : publicAndPrivateKeys.entrySet()) {
+                publicKey = publicAndPrivateKey.getKey();
+                privateKey = publicAndPrivateKey.getValue();
+            }
+            ciphered_privateKey = AES.encrypt(privateKey, keyUser);
+            request = db.prepareRequest("UPDATE userKeys SET publicKey = ?, privateKey = ? WHERE id = ?;");
+            request.setString(publicKey);
+            request.setString(ciphered_privateKey);
+            request.setInt(id);
+            request.set();
+        } else {
+            if (!Hashing.compare(password, hashed_password)) {
+                throw new GeneralException(ServletManager.Code.UserMiss, "Wrong email or password.");
+            }
+            privateKey = AES.decrypt(ciphered_privateKey, keyUser);
+        }
+        return new Keys(db_id, hashed_password, saltPerso, keyUser, publicKey, privateKey);
     }
 
     public static Keys loadKeysWithoutPassword(String id, String keyUser, ServletManager sm) throws GeneralException {
@@ -80,7 +105,40 @@ public class Keys {
         String db_id = rs.getString(Data.ID.ordinal());
         String hashed_password = rs.getString(Data.PASSWORD.ordinal());
         String saltPerso = rs.getString(Data.SALTPERSO.ordinal());
-        return new Keys(db_id, hashed_password, saltPerso, keyUser);
+        String publicKey = rs.getString("publicKey");
+        System.out.println("publicKey: " + publicKey == null ? "null" : publicKey);
+        String ciphered_privateKey = rs.getString("privateKey");
+        String privateKey = null;
+        if (publicKey == null || publicKey.equals("") || publicKey.equals("NULL")) {
+            Map<String, String> publicAndPrivateKeys = RSA.generateKeys(1);
+            for (Map.Entry<String, String> publicAndPrivateKey : publicAndPrivateKeys.entrySet()) {
+                publicKey = publicAndPrivateKey.getKey();
+                privateKey = publicAndPrivateKey.getValue();
+            }
+            ciphered_privateKey = AES.encrypt(privateKey, keyUser);
+            request = db.prepareRequest("UPDATE userKeys SET publicKey = ?, privateKey = ? WHERE id = ?;");
+            request.setString(publicKey);
+            request.setString(ciphered_privateKey);
+            request.setInt(id);
+            request.set();
+        } else {
+            privateKey = AES.decrypt(ciphered_privateKey, keyUser);
+        }
+        return new Keys(db_id, hashed_password, saltPerso, keyUser, publicKey, privateKey);
+    }
+
+    public String getPublicKey() {
+        return this.publicKey;
+    }
+
+    public static String getPublicKeyForUser(String user_id, ServletManager sm) throws GeneralException {
+        DataBaseConnection db = sm.getDB();
+        DatabaseRequest request = db.prepareRequest("SELECT publicKey FROM userKeys JOIN users ON users.keys_id = userKeys.id WHERE users.id = ?;");
+        request.setInt(user_id);
+        DatabaseResult rs = request.get();
+        if (!rs.next())
+            throw new GeneralException(ServletManager.Code.ClientError, "No keys");
+        return rs.getString(1);
     }
 
     public static Keys createKeys(String password, ServletManager sm) throws GeneralException {
@@ -91,25 +149,48 @@ public class Keys {
         String hashed_password = Hashing.hash(password);
         ServerKey serverKey = (ServerKey) sm.getContextAttr("serverKey");
         String backUpKey = AES.encrypt(keyUser, serverKey.getKeyServer());
-        DatabaseRequest request = db.prepareRequest("INSERT INTO userKeys VALUES(NULL, ?, null, ?, ?, ?);");
+        Map<String, String> publicAndPrivateKeys = RSA.generateKeys(1);
+        String publicKey = null;
+        String privateKey = null;
+        for (Map.Entry<String, String> publicAndPrivateKey : publicAndPrivateKeys.entrySet()) {
+            publicKey = publicAndPrivateKey.getKey();
+            privateKey = publicAndPrivateKey.getValue();
+        }
+        String privateKey_ciphered = AES.encrypt(privateKey, keyUser);
+        System.out.println("PrivateKey length: " + privateKey.length() + " & ciphered length: " + privateKey_ciphered.length());
+        DatabaseRequest request = db.prepareRequest("INSERT INTO userKeys VALUES(NULL, ?, null, ?, ?, ?, ?, ?);");
         request.setString(hashed_password);
         request.setString(saltPerso);
         request.setString(crypted_keyUser);
         request.setString(backUpKey);
+        request.setString(publicKey);
+        request.setString(privateKey_ciphered);
         String db_id = request.set().toString();
-        return new Keys(db_id, hashed_password, saltPerso, keyUser);
+        return new Keys(db_id, hashed_password, saltPerso, keyUser, publicKey, privateKey);
     }
 
     protected String db_id;
     protected String hashed_password;
     protected String saltPerso;
     protected String keyUser;
+    protected String publicKey;
+    protected String privateKey;
 
-    public Keys(String db_id, String hashed_password, String saltPerso, String keyUser) {
+    public Keys(String db_id, String hashed_password, String saltPerso, String keyUser, String publicKey, String privateKey) {
         this.db_id = db_id;
         this.hashed_password = hashed_password;
         this.saltPerso = saltPerso;
         this.keyUser = keyUser;
+        this.publicKey = publicKey;
+        this.privateKey = privateKey;
+    }
+
+    public Keys(String db_id, String hashed_password, String saltPerso, String keyUser, String publicKey) {
+        this.db_id = db_id;
+        this.hashed_password = hashed_password;
+        this.saltPerso = saltPerso;
+        this.keyUser = keyUser;
+        this.publicKey = publicKey;
     }
 
     public void removeFromDB(ServletManager sm) throws GeneralException {

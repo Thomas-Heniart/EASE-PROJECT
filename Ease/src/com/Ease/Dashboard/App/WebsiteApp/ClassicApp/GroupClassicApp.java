@@ -33,40 +33,22 @@ public class GroupClassicApp extends GroupWebsiteApp{
 	 * Loader And Creator
 	 * 
 	 */
-	
+
+	@Deprecated
 	public static GroupClassicApp loadGroupClassicApp(String db_id, GroupProfile groupProfile, Group group, AppPermissions perms, AppInformation info, boolean common, int single_id, Website site, String db_id2, DataBaseConnection db, ServletContext context) throws GeneralException {
 		DatabaseRequest request = db.prepareRequest("SELECT * FROM groupLogWithApps WHERE group_website_app_id= ?;");
 		request.setInt(db_id);
 		DatabaseResult rs = request.get();
 		if (rs.next()) {
 			String db_id3 = rs.getString(Data.ID.ordinal());
-			Account account = Account.loadAccount(rs.getString(Data.ACCOUNT_ID.ordinal()), db);
+			//Account account = Account.loadAccount(rs.getString(Data.ACCOUNT_ID.ordinal()), sm);
+			Account account = null;
 			GroupClassicApp groupClassicApp = new GroupClassicApp(db_id, groupProfile, group, perms, info, common, single_id, site, db_id2, account, db_id3);
 			GroupManager.getGroupManager(context).add(groupClassicApp);
 			return groupClassicApp;
 		} else {
 			throw new GeneralException(ServletManager.Code.InternError, "This GroupWebsiteApp dosen't exist.");
 		}
-	}
-	
-	public static GroupClassicApp createGroupClassicApp(GroupProfile groupProfile, Group group, int perms, String name, boolean common, Website site, String password, Map<String, String> accInfos, ServletManager sm) throws GeneralException {
-		Map<String, Object> elevator = new HashMap<String, Object>();
-		DataBaseConnection db = sm.getDB();
-		int transaction = db.startTransaction();
-		String websiteAppId = GroupWebsiteApp.createGroupWebsiteApp(groupProfile, group, perms, name, common, site, "groupClassicApp", elevator, sm);
-		AppPermissions permissions = (AppPermissions) elevator.get("perms");
-		AppInformation appInfos = (AppInformation) elevator.get("appInfos");
-		String appId = (String) elevator.get("appId");
-		Account account = Account.createGroupAccount(password, false, accInfos, group.getInfra(), sm);
-		DatabaseRequest request = db.prepareRequest("INSERT INTO groupClassicApps VALUES(NULL, ?, ?);");
-		request.setInt(websiteAppId);
-		request.setInt(account.getDBid());
-		String db_id = request.set().toString();
-		int single_id = ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId();
-		GroupClassicApp groupClassicApp = new GroupClassicApp(appId, groupProfile, group, permissions, appInfos, common, single_id, site, websiteAppId, account, db_id);
-		GroupManager.getGroupManager(sm).add(groupClassicApp);
-		db.commitTransaction(transaction);
-		return groupClassicApp;
 	}
 	
 	/*

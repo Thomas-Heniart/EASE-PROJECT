@@ -3,9 +3,12 @@ package com.Ease.Team;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Dashboard.App.SharedApp;
-import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.NewDashboard.User.User;
-import com.Ease.Utils.*;
+import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.ServletManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -216,6 +219,10 @@ public class TeamUser {
         return new TeamUser(firstName, lastName, email, username, team, permissions);
     }
 
+    public List<SharedApp> getSharedApps() {
+        return sharedApps;
+    }
+
     public JSONObject getJson() {
         JSONObject res = new JSONObject();
         res.put("id", this.db_id);
@@ -262,5 +269,30 @@ public class TeamUser {
 
     public void addShareableApp(ShareableApp app) {
         this.shareableApps.add(app);
+    }
+
+    public void validateRegistration() {
+        for (SharedApp sharedApp : this.getSharedApps()) {
+            if (!((App)sharedApp).isClassicApp())
+                continue;
+            ClassicApp sharedClassicApp = (ClassicApp)sharedApp;
+            //sharedClassicApp.getAccount()
+        }
+    }
+
+    public void check_sharedApps_ciphering(ServletManager sm) throws GeneralException {
+        for (SharedApp sharedApp : this.sharedApps) {
+            App app = (App)sharedApp;
+            if(app.isReceived())
+                continue;
+            if (!app.isClassicApp())
+                continue;
+            ClassicApp classicApp = (ClassicApp)app;
+            DataBaseConnection db = sm.getDB();
+            int transaction = db.startTransaction();
+            classicApp.getAccount().update_shared_app_ciphering(this.getDashboard_user(), sm);
+            classicApp.beReceived(sm.getDB());
+            db.commitTransaction(transaction);
+        }
     }
 }
