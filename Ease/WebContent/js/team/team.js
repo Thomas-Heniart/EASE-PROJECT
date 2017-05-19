@@ -64,9 +64,9 @@ var team_view = new function () {
         'link_add': $('#link_app_add_button', this.app_adders_area)
     };
     this.app_adder_uis = {
-        'simple_add': new simple_app_add_interface($('#simple_app_adder')),
-        'multiple_add': new multiple_app_add_interface($('#multiple_app_adder')),
-        'link_add': null
+        'simple_add': new simple_app_add_interface($('#simple_app_adder'), self),
+        'multiple_add': new multiple_app_add_interface($('#multiple_app_adder'), self),
+        'link_add': new link_app_add_interface($('#link_app_adder'), self)
     };
     self.app_adder_buttons['simple_add'].click(function(){
         self.open_add_ui('simple_add');
@@ -226,69 +226,83 @@ var team_view = new function () {
     };
 };
 
-function simple_app_add_interface(root){
+var team_app_search = new function () {
     var self = this;
-    this.root = root;
-
-    this.choosen_app = null;
-
-    this.logoImg = $('.logo_holder img', this.root);
-    this.app_name_input_holder = $('.app_name_input_handler', this.root);
-    this.app_name_input = $('input', this.app_name_input_holder);
-    this.app_name_modify_button = $('.modify_app_button', this.app_name_input_holder);
-
-    this.password_change_interval_input = $('.password_change_input', this.root);
-    this.comment_input = $('.comment_input', this.root);
-
-    this.credentials_div = $('.credentials', this.root);
-    this.adding_container = $('.user_adding_container', this.root);
-    this.tags_container_input = $('.true_input', this.adding_container);
-    this.user_selectors = $('.user_selectors', this.root);
-
-    this.close_button = $('.add_actions_holder .close_button', this.root);
-    this.send_button = $('.add_actions_holder .send_button', this.root);
-
-    this.close_button.click(function () {
-        team_view.close_active_add_ui();
-    });
-
-    $(self.tags_container_input).focus(function () {
-        if (self.adding_container.hasClass('list_visible'))
-            return;
-        self.adding_container.addClass('list_visible');
-        $(document).bind('click.simple_app_add',function (e) {
-            if ($(e.target).closest('.user_adding_container').length == 0) {
-                self.adding_container.removeClass('list_visible');
-                $(document).unbind('click.simple_app_add');
+    this.search = function (q, team_id, callback) {
+        postHandler.get(
+            '/api/v1/catalog/SearchWebsite',
+            {
+                'search': q,
+                'team_id': team_id
+            },
+            function () {},
+            function (data) {
+                if (callback)
+                    callback(JSON.parse(data));
+            },
+            function (data) {
+                console.log(data);
+                callback(null);
             }
-        });
-    });
+        );
+    };
+    this.get_app_info = function (app_id, callback) {
+        postHandler.get(
+            '/api/v1/catalog/GetWebsiteInformation',
+            {
+                'website_id': app_id
+            },
+            function () {},
+            function (data) {
+                callback(JSON.parse(data));
+            },
+            function (data) {
+                console.log(data);
+                callback(null);
+            }
+        );
+    }
+};
 
-    this.reset = function () {
-        self.choosen_app = null;
-        self.logoImg.attr('src', '/resources/icons/app_icon.svg');
-        for (var i = 0; i < self.users.length; i++){
-            self.users[i].selector.remove();
-            self.users[i].credentials && self.users[i].credentials.remove();
-        }
-    };
-    this.open = function () {
-        self.root.addClass('active');
-        self.setup_user_selectors();
-    };
-    this.close = function () {
-        self.reset();
-        self.root.removeClass('active');
-    };
-    this.create_user_selector = function(id, name, fname, lname){
+var team_div_creator = {
+    simple_app_credentials_line : function (icon, name, type, placeholder) {
+        var ret = $('<div class="credentials_line">'+
+            '<i class="fa ' + icon + ' icon_handler credentials_type_icon" aria-hidden="true"></i>'+
+            '<input placeholder="'+placeholder+'" readonly autocomplete="off" class="credentials_value_input value_input" type="'+type+'" name="'+name+'">'+
+            '</div>'
+        );
+        $('input', ret).one('focus', function () {
+            $(this).prop('readonly', false);
+            $(this).focus();
+        });
+        return ret;
+    },
+    multi_app_input : function (name, type, placeholder) {
+        var ret = $('<input readonly placeholder="'+placeholder+'" autocomplete="off" class="credentials_value_input value_input" type="'+type+'" name="'+name+'">');
+        ret.one('focus', function () {
+            $(this).prop('readonly', false);
+            $(this).focus();
+        });
+        return ret;
+    },
+    app_selector : function (logoSrc, name) {
+        return $('<div class="dropdown_row app_selector">'+
+            '<img class="logo" src="'+ logoSrc +'"/>'+
+            '<span class="app_name overflow-ellipsis">'+
+            name +
+            '</span>'+
+            '</div>'
+        );
+    },
+    user_selector : function (id, name, fname, lname){
         return $('<div class="user_selector" data-user-id="'+id+'">'+
             '<span class="username text_strong">'+ name +'</span>' +
             ' - ' +
             '<span class="fname">'+ fname +'</span>'+
             ' <span class="lname">'+ lname +'</span>'+
             '</div>');
-    };
-    this.create_user_tag = function (name) {
+    },
+    simple_user_tag : function (name) {
         return $('<div class="user_token">' +
             '<span class="name_hodler overflow-ellipsis">'+
             name +
@@ -297,44 +311,86 @@ function simple_app_add_interface(root){
             '<i class="fa fa-times" aria-hidden="true"></i>'+
             '</button>'+
             '</div>');
-    };
+    }
+};
 
-    this.users = [];
+function App_adder_search(root, adder) {
+    var self = this;
 
-    this.setup_user_selector = function (user) {
-        var tmp = {};
-        tmp.selector = self.create_user_selector(user.id, user.username, user.first_name, user.last_name);
-        tmp.isSelected = false;
-        tmp.credentials = null;
-        tmp.selector.click(function(e){
-            if (tmp.isSelected)
-                return;
-            tmp.isSelected = true;
-            tmp.selector.addClass('selected');
-            tmp.credentials = self.create_user_tag(user.username);
-            $('.button_delete', tmp.credentials).one('click', function (e) {
-                tmp.selector.removeClass('selected');
-                tmp.isSelected = false;
-                tmp.credentials.remove();
-                tmp.credentials = null;
-            });
-            tmp.credentials.insertBefore(self.tags_container_input);
+    this.adder = adder;
+
+    this.app_name_input_holder = root;
+    this.app_name_input = $('input', this.app_name_input_holder);
+    this.app_name_reset_button = $('.modify_app_button', this.app_name_input_holder);
+    this.app_selectors = $('.app_selectors', this.app_name_input_holder);
+    this.app_selectors_content = $('.dropdown_content', this.app_selectors);
+    this.app_selectors_is_open = false;
+
+    this.app_name_reset_button.click(function () {
+        adder.reset();
+        self.app_name_input.focus();
+    });
+
+    this.init_app_search_listeners = function () {
+        self.app_name_input.on('focus',function () {
+            if ($(this).val().length > 0){
+                self.process_search_for_apps($(this).val());
+            }
         });
-        self.user_selectors.append(tmp.selector);
-        self.users.push(tmp);
+        this.app_name_input.on('input',function () {
+            if ($(this).val().length)
+                self.process_search_for_apps($(this).val());
+        });
     };
-    this.setup_user_selectors = function(){
-        for (var i = 0; i < team_view.active_element.users.length; i++){
-            self.setup_user_selector(team_view.active_element.users[i]);
-        }
+    this.destroy_app_search_listeners = function () {
+        self.app_name_input.off();
+    };
+    this.show_app_search_results = function () {
+        self.app_selectors.addClass('show');
+        self.app_selectors_is_open = true;
+        $(document).bind('click.simple_app_add', function (e) {
+            if ($(e.target).closest('.app_name_input_wrapper').length == 0) {
+                self.app_selectors.removeClass('show');
+                self.app_selectors_is_open = false;
+                $(document).unbind('click.simple_app_add');
+            }
+        });
+    };
+    this.process_search_for_apps = function (query) {
+        if (!self.app_selectors_is_open)
+            self.show_app_search_results();
+        team_app_search.search(query,self.adder.team_view.team_id,
+            function (res) {
+                self.app_selectors_content.html('');
+                if (!res.length)
+                    self.app_selectors_content.append($('<div class="dropdown_row">No results...</div>'));
+                res.forEach(function (item) {
+                    var tmp = team_div_creator.app_selector(item.logo, item.name);
+                    tmp.click(function () {
+                        adder.choose_app(item);
+                    });
+                    self.app_selectors_content.append(tmp);
+                });
+            });
+    };
+    this.reset_app_search = function () {
+        self.app_selectors.removeClass('show');
+        self.app_selectors_content.html('');
+        self.app_selectors_is_open = false;
+        $(document).unbind('click.simple_app_add');
     };
 }
 
-function multiple_app_add_interface(root){
+function multiple_app_add_interface(root, team_view){
     var self = this;
     this.root = root;
 
+    this.team_view = team_view;
+    this.app_search = new App_adder_search($('.app_name_input_handler', this.root), self);
     this.choosen_app = null;
+
+    this.app_info_div = $('.info_holder', this.root);
+    this.app_comment_div = $('.comment_holder', this.root);
 
     this.logoImg = $('.logo_holder img', this.root);
     this.app_name_input_holder = $('.app_name_input_handler', this.root);
@@ -366,19 +422,25 @@ function multiple_app_add_interface(root){
     this.close_button.click(function () {
         team_view.close_active_add_ui();
     });
-    this.setup = function () {
 
+    this.choose_app = function (app) {
+        self.choosen_app = {};
+        self.choosen_app.info = app;
+        team_app_search.get_app_info(app.single_id,
+            function (data) {
+                self.app_name_input_holder.addClass('locked');
+                self.app_search.destroy_app_search_listeners();
+                self.choosen_app.inputs = data;
+                self.app_info_div.removeClass('hide');
+                self.app_comment_div.removeClass('hide');
+                self.app_name_input.val(app.name);
+                self.logoImg.attr('src', app.logo);
+                self.app_search.reset_app_search();
+            });
     };
-    this.create_user_selector = function(id, name, fname, lname){
-        return $('<div class="user_selector" data-user-id="'+id+'">'+
-            '<span class="username text_strong">'+ name +'</span>' +
-           ' - ' +
-            '<span class="fname">'+ fname +'</span>'+
-            ' <span class="lname">'+ lname +'</span>'+
-            '</div>');
-    };
+
     this.create_credential_line = function (name) {
-        return $(
+        var ret =$(
             '<div class="credentials_line">'+
             '<i class="fa fa-user icon_handler credentials_type_icon" aria-hidden="true"></i>'+
             '<div class="inputs_wrapper">'+
@@ -390,33 +452,47 @@ function multiple_app_add_interface(root){
             '<i class="fa fa-times" aria-hidden="true"></i>'+
             '</button>'+
             '</div>'+
-            '<input placeholder="Email" autocomplete="off" class="credentials_value_input value_input" type="email" name="email">'+
-            '<input placeholder="Password" autocomplete="off" class="credentials_value_input value_input" type="password" name="email">'+
             '</div>'+
             '</div>'
         );
+        var wrapper = $('.inputs_wrapper', ret);
+        self.choosen_app.inputs.forEach(function (item) {
+            var input = team_div_creator.multi_app_input(item.name, item.type, item.placeholder);
+            wrapper.append(input);
+        });
+        return ret;
     };
     this.users = [];
 
-    this.reset = function () {
-        self.choosen_app = null;
-        self.logoImg.attr('src', '/resources/icons/app_icon.svg');
+    this.reset_user_selectors = function () {
         for (var i = 0; i < self.users.length; i++){
             self.users[i].selector.remove();
             self.users[i].credentials && self.users[i].credentials.remove();
         }
     };
-    this.open = function () {
-        self.root.addClass('active');
+    this.reset = function () {
+        self.app_info_div.addClass('hide');
+        self.app_comment_div.addClass('hide');
+        self.app_name_input_holder.removeClass('locked');
+        self.app_search.init_app_search_listeners();
+        self.choosen_app = null;
+        self.logoImg.attr('src', '/resources/icons/app_icon.svg');
+        self.reset_user_selectors();
         self.setup_user_selectors();
     };
-    this.close = function () {
+    this.open = function () {
+        self.app_name_input.val('');
         self.reset();
+        self.root.addClass('active');
+    };
+    this.close = function () {
         self.root.removeClass('active');
+        self.app_search.destroy_app_search_listeners();
+        self.reset_user_selectors();
     };
     this.setup_user_selector = function (user) {
         var tmp = {};
-        tmp.selector = self.create_user_selector(user.id, user.username, user.first_name, user.last_name);
+        tmp.selector = team_div_creator.user_selector(user.id, user.username, user.first_name, user.last_name);
         tmp.isSelected = false;
         tmp.credentials = null;
         tmp.selector.click(function(e){
@@ -438,9 +514,199 @@ function multiple_app_add_interface(root){
     };
 
     this.setup_user_selectors = function(){
-        for (var i = 0; i < team_view.active_element.users.length; i++){
-            self.setup_user_selector(team_view.active_element.users[i]);
+        for (var i = 0; i < self.team_view.active_element.users.length; i++){
+            self.setup_user_selector(self.team_view.active_element.users[i]);
         }
+    };
+}
+
+function link_app_add_interface(root, team_view) {
+    var self = this;
+
+    this.root = root;
+    this.team_view = team_view;
+    this.user_selectors = new Simple_user_selectors($('.user_adding_container', this.root));
+
+    this.app_info_div = $('.info_holder', this.root);
+    this.app_comment_div = $('.comment_holder', this.root);
+
+    this.logoImg = $('.logo_holder img', this.root);
+    this.app_name_input_holder = $('.app_name_input_handler', this.root);
+    this.app_name_input = $('input', this.app_name_input_holder);
+
+    this.url_input = $('input[name=url]', this.root);
+
+    this.comment_input = $('.comment_input', this.root);
+
+    this.close_button = $('.add_actions_holder .close_button', this.root);
+    this.send_button = $('.add_actions_holder .send_button', this.root);
+
+    this.close_button.click(function () {
+        self.team_view.close_active_add_ui();
+    });
+
+    $(self.tags_container_input).focus(function () {
+        if (self.adding_container.hasClass('list_visible'))
+            return;
+        self.adding_container.addClass('list_visible');
+        $(document).bind('click.simple_app_add',function (e) {
+            if ($(e.target).closest('.user_adding_container').length == 0) {
+                self.adding_container.removeClass('list_visible');
+                $(document).unbind('click.simple_app_add');
+            }
+        });
+    });
+    this.reset = function () {
+        self.app_name_input.val('');
+        self.url_input.val('');
+        self.logoImg.attr('src', '/resources/icons/app_icon.svg');
+        self.user_selectors.reset_user_selectors();
+        self.user_selectors.setup_user_selectors(self.team_view.active_element.users);
+    };
+    this.open = function () {
+        self.reset();
+        self.root.addClass('active');
+    };
+    this.close = function () {
+        self.root.removeClass('active');
+        self.user_selectors.reset_user_selectors();
+    };
+}
+
+function Simple_user_selectors(root){
+    var self = this;
+
+    this.root = root;
+    this.adding_container = root;
+    this.tags_container_input = $('.true_input', this.adding_container);
+    this.user_selectors = $('.user_selectors', this.root);
+
+    this.users = [];
+
+    $(self.tags_container_input).focus(function () {
+        if (self.adding_container.hasClass('list_visible'))
+            return;
+        self.adding_container.addClass('list_visible');
+        $(document).bind('click.simple_app_add',function (e) {
+            if ($(e.target).closest('.user_adding_container').length == 0) {
+                self.adding_container.removeClass('list_visible');
+                $(document).unbind('click.simple_app_add');
+            }
+        });
+    });
+
+    this.reset_user_selectors = function () {
+        for (var i = 0; i < self.users.length; i++){
+            self.users[i].selector.remove();
+            self.users[i].credentials && self.users[i].credentials.remove();
+        }
+    };
+    this.setup_user_selector = function (user) {
+        var tmp = {};
+        tmp.selector = team_div_creator.user_selector(user.id, user.username, user.first_name, user.last_name);
+        tmp.isSelected = false;
+        tmp.credentials = null;
+        tmp.selector.click(function(e){
+            if (tmp.isSelected)
+                return;
+            tmp.isSelected = true;
+            tmp.selector.addClass('selected');
+            tmp.credentials = team_div_creator.simple_user_tag(user.username);
+            $('.button_delete', tmp.credentials).one('click', function (e) {
+                tmp.selector.removeClass('selected');
+                tmp.isSelected = false;
+                tmp.credentials.remove();
+                tmp.credentials = null;
+            });
+            tmp.credentials.insertBefore(self.tags_container_input);
+        });
+        self.user_selectors.append(tmp.selector);
+        self.users.push(tmp);
+    };
+    this.setup_user_selectors = function(users){
+        for (var i = 0; i < users.length; i++){
+            self.setup_user_selector(users[i]);
+        }
+    };
+}
+
+function simple_app_add_interface(root, team_view){
+    var self = this;
+    this.root = root;
+
+    this.team_view = team_view;
+    this.app_search = new App_adder_search($('.app_name_input_handler', this.root), self);
+    this.user_selectors = new Simple_user_selectors($('.user_adding_container', this.root));
+    this.choosen_app = null;
+    this.inputs = [];
+
+    this.app_info_div = $('.info_holder', this.root);
+    this.app_comment_div = $('.comment_holder', this.root);
+
+    this.logoImg = $('.logo_holder img', this.root);
+    this.app_name_input_holder = $('.app_name_input_handler', this.root);
+    this.app_name_input = $('input', this.app_name_input_holder);
+
+    this.password_change_interval_input = $('.password_change_input', this.root);
+    this.comment_input = $('.comment_input', this.root);
+
+    this.credentials_div = $('.credentials', this.root);
+
+    this.close_button = $('.add_actions_holder .close_button', this.root);
+    this.send_button = $('.add_actions_holder .send_button', this.root);
+
+    this.close_button.click(function () {
+        self.team_view.close_active_add_ui();
+    });
+
+    this.choose_app = function (app) {
+        self.choosen_app = {};
+        self.choosen_app.info = app;
+        team_app_search.get_app_info(app.single_id,
+            function (data) {
+                self.app_name_input_holder.addClass('locked');
+                self.app_search.destroy_app_search_listeners();
+                data.forEach(function (item) {
+                    var tmp = team_div_creator.simple_app_credentials_line(item.placeholderIcon, item.name, item.type, item.placeholder);
+                    self.inputs.push(tmp);
+                    self.credentials_div.append(tmp);
+                });
+                self.choosen_app.inputs = data;
+                self.app_info_div.removeClass('hide');
+                self.app_comment_div.removeClass('hide');
+                self.app_name_input.val(app.name);
+                self.logoImg.attr('src', app.logo);
+                self.app_search.reset_app_search();
+            });
+    };
+
+    this.reset_credential_inputs = function () {
+        self.inputs.forEach(function (item) {
+            item.remove();
+        });
+        self.inputs = [];
+    };
+    this.reset = function () {
+        self.app_info_div.addClass('hide');
+        self.app_comment_div.addClass('hide');
+        self.app_name_input_holder.removeClass('locked');
+        self.app_search.init_app_search_listeners();
+        self.reset_credential_inputs();
+        self.choosen_app = null;
+        self.logoImg.attr('src', '/resources/icons/app_icon.svg');
+        self.user_selectors.reset_user_selectors();
+        self.user_selectors.setup_user_selectors(self.team_view.active_element.users);
+    };
+    this.open = function () {
+        self.app_name_input.val('');
+        self.reset();
+        self.root.addClass('active');
+    };
+    this.close = function () {
+        self.root.removeClass('active');
+        self.app_search.destroy_app_search_listeners();
+        self.reset_credential_inputs();
+        self.user_selectors.reset_user_selectors();
     };
 }
 
@@ -449,7 +715,7 @@ function Flex_panel(root){
     this.root = root;
     this.isOpen = false;
     this.close_button = $('.button_close_flexpanel', this.root);
-    this.taNivetrget = null;
+    this.target = null;
     this.isSetup = false;
 
     this.close = function () {
@@ -636,6 +902,7 @@ function Team_user(id, name, fname, lname, email, role){
     this.role = role;
     this.apps = [];
     this.channels = [];
+    this.users = [self];
     this.arrivalDate = null;
     this.departureDate = null;
     this.id = id;
@@ -730,5 +997,4 @@ function Team_user_selector(id, username){
     this.setName(this.name);
 }
 
-var item_selector = new function () {
-};
+team_view.load(3);

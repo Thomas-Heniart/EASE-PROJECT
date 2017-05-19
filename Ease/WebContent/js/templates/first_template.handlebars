@@ -1,0 +1,9 @@
+<div class="entry">
+    <h2>{{fullName  author.fname author.lname class="lala" visible=true}}</h2>
+    <h1>{{title}}</h1>
+    <div class="body">
+        {{#bold}}{{{body}}}{{/bold}}
+        {{#bold}}{{fullName  author.fname author.lname class="lala" visible=true}}{{/bold}}
+    </div>
+    {{> person}}
+</div>
