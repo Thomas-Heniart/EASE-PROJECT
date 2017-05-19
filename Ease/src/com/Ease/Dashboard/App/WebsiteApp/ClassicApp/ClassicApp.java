@@ -251,6 +251,8 @@ public class ClassicApp extends WebsiteApp {
     @Override
     public void modifyShareable(ServletManager sm, JSONObject editJson, SharedApp sharedApp) throws GeneralException {
         this.getAccount().edit(editJson, sm);
+        for (SharedApp app : this.sharedApps)
+            ((ClassicApp)app).getAccount().edit(editJson, sm);
     }
 
     @Override

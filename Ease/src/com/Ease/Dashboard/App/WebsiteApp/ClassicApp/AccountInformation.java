@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.DatabaseRequest;
@@ -81,10 +80,10 @@ public class AccountInformation {
         return this.information_value;
     }
 
-    public void setInformation_value(String information_value, ServletManager sm) throws GeneralException {
+    public void setInformation_value(String information_value, String publicKey, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         DatabaseRequest request = db.prepareRequest("UPDATE accountsInformations SET information_value = ? WHERE id = ?;");
-        request.setString(information_value);
+        request.setString(RSA.Encrypt(information_value, publicKey));
         request.setInt(this.db_id);
         request.set();
         this.information_value = information_value;

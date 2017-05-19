@@ -9,15 +9,12 @@ import com.Ease.Utils.Crypto.RSA;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import com.Ease.Context.Group.Infrastructure;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.DatabaseRequest;
 import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
-
-import javax.servlet.Servlet;
 
 public class Account {
 
@@ -253,7 +250,7 @@ public class Account {
             throw new GeneralException(ServletManager.Code.ClientError, "This account does not have password field");
         for (AccountInformation info : this.infos) {
             if (info.getInformationName().equals("password"))
-                info.setInformation_value(cryptedPassword, sm);
+                info.setInformation_value(cryptedPassword, this.publicKey, sm);
         }
     }
 
@@ -304,7 +301,7 @@ public class Account {
                     request.set();
                     this.passwordMustBeUpdated = false;
                 }
-                info.setInformation_value(value, sm);
+                info.setInformation_value(value, this.publicKey, sm);
             }
         }
         db.commitTransaction(transaction);
@@ -315,7 +312,7 @@ public class Account {
             String new_info_value = (String) editJson.get(accountInformation.getInformationName());
             if (new_info_value == null)
                 continue;
-            accountInformation.setInformation_value(new_info_value, sm);
+            accountInformation.setInformation_value(new_info_value, this.publicKey, sm);
         }
     }
 
@@ -372,7 +369,7 @@ public class Account {
     public void update_shared_app_ciphering(User user, ServletManager sm) throws GeneralException {
         for (AccountInformation accountInformation : this.getAccountInformations()) {
             String info_value = RSA.Decrypt(accountInformation.getInformationValue(), user.getKeys().getPrivateKey());
-            accountInformation.setInformation_value(RSA.Encrypt(info_value, this.publicKey), sm);
+            accountInformation.setInformation_value(RSA.Encrypt(info_value, this.publicKey), this.publicKey, sm);
             accountInformation.decipher(this.privateKey);
         }
     }
