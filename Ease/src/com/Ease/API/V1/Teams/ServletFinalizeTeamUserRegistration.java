@@ -31,30 +31,28 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             String firstName = sm.getServletParam("firstName", true);
             String lastName = sm.getServletParam("lastName", true);
             String username = sm.getServletParam("username", true);
-            String team_id = sm.getServletParam("team_id", true);
-            String teamUser_id = sm.getServletParam("teamUser_id", true);
             String code = sm.getServletParam("code", true);
-            if (team_id == null || team_id.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientError, "Team is null.");
             if (username == null || username.equals(""))
                 throw new GeneralException(ServletManager.Code.ClientWarning, "username is needed.");
             if (firstName == null || firstName.equals(""))
                 throw new GeneralException(ServletManager.Code.ClientWarning, "firstName is needed.");
             if (lastName == null || lastName.equals(""))
                 throw new GeneralException(ServletManager.Code.ClientWarning, "lastName is needed.");
-            if (teamUser_id == null || teamUser_id.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "teamUser_id is needed.");
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
-            TeamUser teamUser = team.getTeamUserWithId(Integer.parseInt(teamUser_id));
+
             HibernateQuery query = new HibernateQuery();
-            query.querySQLString("SELECT id FROM pendingTeamInvitations WHERE teamUser_id = ? AND team_id = ? AND code = ?");
-            query.setParameter(1, teamUser_id);
-            query.setParameter(2, team_id);
-            query.setParameter(3, code);
-            Object id = query.getSingleResult();
-            if (id == null)
-                throw new GeneralException(ServletManager.Code.ClientWarning, "You cannot create an account for this team");
+
+            query.querySQLString("SELECT id, team_id, teamUser_id FROM pendingTeamInvitations WHERE code = ?");
+            query.setParameter(1, code);
+            Object idTeamAndTeamUserObj = query.getSingleResult();
+            if (idTeamAndTeamUserObj == null)
+                throw new GeneralException(ServletManager.Code.ClientWarning, "You cannot be part of this team");
+            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
+            Object[] idTeamAndTeamUser = (Object[]) idTeamAndTeamUserObj;
+            Integer id = (Integer) idTeamAndTeamUser[0];
+            Integer team_id = (Integer) idTeamAndTeamUser[1];
+            Integer teamUser_id = (Integer) idTeamAndTeamUser[2];
+            Team team = teamManager.getTeamWithId(team_id);
+            TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
             teamUser.setFirstName(firstName);
             teamUser.setLastName(lastName);
             teamUser.setUsername(username);

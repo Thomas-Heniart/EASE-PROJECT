@@ -35,7 +35,7 @@ public class ServletShareClassicApp extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
-            sm.needToBeTeamUser();
+            sm.needToBeConnected();
             sm.needToBeTeamUser();
             String website_id = sm.getServletParam("website_id", true);
             String team_id = sm.getServletParam("team_id", true);
@@ -71,7 +71,6 @@ public class ServletShareClassicApp extends HttpServlet {
                     JSONObject accountInformation = (JSONObject)accountInformationObj;
                     String info_name = (String)accountInformation.get("info_name");
                     String info_value = (String)accountInformation.get("info_value");
-                    /* If password encrypt with team public key */
                     accountInformationMap.put(info_name, info_value);
                 }
                 ClassicApp shareableApp = ClassicApp.createClassicApp(null, null, app_name, website, accountInformationMap, sm, null);
@@ -87,9 +86,11 @@ public class ServletShareClassicApp extends HttpServlet {
                 else
                     databaseRequest.setInt(channel.getDb_id());
                 databaseRequest.set();
+                JSONObject informationObj = new JSONObject();
+                informationObj.put("accountInformation", accountInformationArray);
                 for (Object teamUser_tenant_id : teamUser_tenant_ids) {
                     TeamUser teamUser_tenant = team.getTeamUserWithId(Integer.parseInt((String)teamUser_tenant_id));
-                    SharedApp sharedApp = shareableApp.share(teamUser_owner, teamUser_tenant, channel, team, new JSONObject(), sm);
+                    SharedApp sharedApp = shareableApp.share(teamUser_owner, teamUser_tenant, channel, team, informationObj, sm);
                     teamUser_tenant.addSharedApp(sharedApp);
                     if (channel != null)
                         channel.addSharedApp(sharedApp);

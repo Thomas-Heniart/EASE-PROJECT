@@ -30,7 +30,7 @@ public class Team {
         query.queryString("SELECT t FROM Team t");
         teams = query.list();
         for (Team team : teams) {
-            team.lazyInitialize();
+            team.lazyInitialize(db);
             team.setShareableApps(App.loadShareableAppsForTeam(team, context, db));
             for (ShareableApp shareableApp : team.getShareableApps()) {
                 shareableApp.setSharedApps(App.loadSharedAppsForShareableApp(shareableApp, context, db));
@@ -147,7 +147,7 @@ public class Team {
         this.shareableApps = shareableApps;
     }
 
-    public void lazyInitialize() {
+    public void lazyInitialize(DataBaseConnection db) throws GeneralException {
         for (Channel channel : this.getChannels())
             this.channelIdMap.put(channel.getDb_id(), channel);
         for (TeamUser teamUser : this.teamUsers) {
@@ -157,6 +157,11 @@ public class Team {
             System.out.println("Permissions admin: " + teamUser.getTeamUserPermissions().haveRole(TeamUserPermissions.Role.ADMINISTRATOR));
             if (!teamUser.isVerified())
                 this.teamUsersWaitingForVerification.add(teamUser);
+            DatabaseRequest request = db.prepareRequest("SELECT user_id FROM teamUsers WHERE id = ?;");
+            request.setInt(teamUser.getDb_id());
+            DatabaseResult rs = request.get();
+            rs.next();
+            teamUser.setUser_id(rs.getString(1));
         }
 
     }

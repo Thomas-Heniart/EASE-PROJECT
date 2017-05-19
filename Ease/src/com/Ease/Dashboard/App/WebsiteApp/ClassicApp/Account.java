@@ -45,11 +45,12 @@ public class Account {
         boolean shared = rs.getBoolean(Data.SHARED.ordinal());
         String publicKey = rs.getString("publicKey");
         String ciphered_privateKey = rs.getString("privateKey");
+        Boolean mustBeReciphered = rs.getBoolean("mustBeReciphered");
         List<AccountInformation> infos = AccountInformation.loadInformations(db_id, db);
         String reminderValue = rs.getString(Data.REMINDER_VALUE.ordinal());
         String reminderType = rs.getString(Data.REMINDER_TYPE.ordinal());
         if (reminderType == null || reminderType.equals(""))
-            return new Account(db_id, shared, publicKey, ciphered_privateKey, infos);
+            return new Account(db_id, shared, publicKey, ciphered_privateKey, infos, mustBeReciphered);
         request = db.prepareRequest("SELECT lastUpdateDate + INTERVAL ? " + reminderType + " FROM accounts WHERE id = ?;");
         request.setInt(reminderValue);
         request.setInt(db_id);
@@ -60,7 +61,7 @@ public class Account {
         try {
             Date deadLine = dateFormat.parse(rs.getString(1));
             Date now = new Date();
-            return new Account(db_id, shared, publicKey, ciphered_privateKey, infos, (now.compareTo(deadLine) >= 0));
+            return new Account(db_id, shared, publicKey, ciphered_privateKey, infos, (now.compareTo(deadLine) >= 0), mustBeReciphered);
         } catch (ParseException e) {
             throw new GeneralException(ServletManager.Code.InternError, "Parse error");
         }
@@ -74,7 +75,7 @@ public class Account {
         String publicKey = publicAndPrivateKey.getKey();
         String privateKey = publicAndPrivateKey.getValue();
         String ciphered_key = sm.getUser().encrypt(privateKey);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, ?, default, null, null, ?, ?);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, ?, default, null, null, ?, ?, 0);");
         request.setBoolean(shared);
         request.setString(publicKey);
         request.setString(ciphered_key);
@@ -82,6 +83,24 @@ public class Account {
         List<AccountInformation> infos = AccountInformation.createAccountInformations(db_id, informations, publicKey, sm);
         db.commitTransaction(transaction);
         Account account = new Account(db_id, shared, publicKey, ciphered_key, infos);
+        account.setPrivateKey(privateKey);
+        return account;
+    }
+
+    public static Account createSharedAccount(Map<String, String> information, String teamPublicKey, ServletManager sm) throws GeneralException {
+        DataBaseConnection db = sm.getDB();
+        int transaction = db.startTransaction();
+        Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
+        String publicKey = publicAndPrivateKey.getKey();
+        String privateKey = publicAndPrivateKey.getValue();
+        String ciphered_key = RSA.Encrypt(privateKey, teamPublicKey);
+        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, null, null, ?, ?, 1);");
+        request.setString(publicKey);
+        request.setString(ciphered_key);
+        String db_id = request.set().toString();
+        List<AccountInformation> infos = AccountInformation.createAccountInformations(db_id, information, publicKey, sm);
+        db.commitTransaction(transaction);
+        Account account = new Account(db_id, false, publicKey, ciphered_key, infos, true);
         account.setPrivateKey(privateKey);
         return account;
     }
@@ -137,6 +156,7 @@ public class Account {
     protected String publicKey;
     protected String ciphered_key;
     protected String privateKey;
+    protected Boolean mustBeReciphered;
 
     public Account(String db_id, boolean shared, String publicKey, String ciphered_key, List<AccountInformation> infos) {
         this.db_id = db_id;
@@ -144,17 +164,30 @@ public class Account {
         this.infos = infos;
         this.publicKey = publicKey;
         this.ciphered_key = ciphered_key;
+        this.mustBeReciphered = false;
         this.passwordMustBeUpdated = false;
         this.privateKey = null;
     }
 
-    public Account(String db_id, boolean shared, String publicKey, String ciphered_key, List<AccountInformation> infos, boolean b) {
+    public Account(String db_id, boolean shared, String publicKey, String ciphered_key, List<AccountInformation> infos, boolean mustBeReciphered) {
         this.db_id = db_id;
         this.shared = shared;
         this.infos = infos;
         this.publicKey = publicKey;
         this.ciphered_key = ciphered_key;
-        this.passwordMustBeUpdated = b;
+        this.mustBeReciphered = mustBeReciphered;
+        this.passwordMustBeUpdated = false;
+        this.privateKey = null;
+    }
+
+    public Account(String db_id, boolean shared, String publicKey, String ciphered_key, List<AccountInformation> infos, boolean passwordMustBeUpdated, boolean mustBeReciphered) {
+        this.db_id = db_id;
+        this.shared = shared;
+        this.infos = infos;
+        this.publicKey = publicKey;
+        this.ciphered_key = ciphered_key;
+        this.passwordMustBeUpdated = passwordMustBeUpdated;
+        this.mustBeReciphered = mustBeReciphered;
         this.privateKey = null;
     }
 
@@ -186,6 +219,10 @@ public class Account {
 
     public void setPrivateKey(String privateKey) {
         this.privateKey = privateKey;
+    }
+
+    public boolean mustBeReciphered() {
+        return this.mustBeReciphered;
     }
 
     public void decipher(User user) throws GeneralException {
@@ -308,8 +345,13 @@ public class Account {
     }
 
     public void update_ciphering_if_needed(ServletManager sm) throws GeneralException {
-        if (this.publicKey != null && this.ciphered_key != null)
-            return;
+        if (this.publicKey != null && this.ciphered_key != null) {
+            if (!this.mustBeReciphered())
+                return;
+            for (AccountInformation accountInformation : this.getAccountInformations()) {
+                //accountInformation.update_ciphering();
+            }
+        }
         Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
         this.publicKey = publicAndPrivateKey.getKey();
         this.privateKey = publicAndPrivateKey.getValue();

@@ -30,8 +30,13 @@ public class TeamUser {
     @JoinColumn(name = "user_id")
     protected User user;
 
+    /* To remove when we we migrate on hibernate */
     @Transient
     protected com.Ease.Dashboard.User.User dashboard_user;
+
+    /* To remove when we we migrate on hibernate */
+    @Transient
+    protected String user_id;
 
     @Column(name = "firstName")
     protected String firstName;
@@ -155,12 +160,21 @@ public class TeamUser {
         this.user = user;
     }
 
+    public String getUser_id() {
+        return this.user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+
     public com.Ease.Dashboard.User.User getDashboard_user() {
         return dashboard_user;
     }
 
     public void setDashboard_user(com.Ease.Dashboard.User.User dashboard_user) {
         this.dashboard_user = dashboard_user;
+        this.user_id = dashboard_user.getDBid();
     }
 
     public void setDashboard_user(com.Ease.Dashboard.User.User user, DataBaseConnection db) throws GeneralException {
@@ -168,7 +182,7 @@ public class TeamUser {
         request.setInt(user.getDBid());
         request.setInt(this.db_id);
         request.set();
-        this.dashboard_user = user;
+        this.setDashboard_user(user);
     }
 
     public String getFirstName() {
