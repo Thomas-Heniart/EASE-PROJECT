@@ -65,7 +65,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         throw new GeneralException(ServletManager.Code.InternError, "Website app not complete in db.");
     }
 
-    public static String createWebsiteApp(Profile profile, int position, String name, String type, Website site, Map<String, Object> elevator, ServletManager sm) throws GeneralException {
+    public static String createWebsiteApp(Profile profile, Integer position, String name, String type, Website site, Map<String, Object> elevator, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         String appDBid = App.createApp(profile, position, name, "websiteApp", elevator, sm);

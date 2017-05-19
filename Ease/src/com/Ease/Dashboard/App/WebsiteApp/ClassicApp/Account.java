@@ -87,18 +87,11 @@ public class Account {
     public static Account createSharedAccount(Map<String, String> information, String teamPublicKey, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
-        Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
-        String publicKey = publicAndPrivateKey.getKey();
-        String privateKey = publicAndPrivateKey.getValue();
-        String ciphered_key = RSA.Encrypt(privateKey, teamPublicKey);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, null, null, ?, ?, 1);");
-        request.setString(publicKey);
-        request.setString(ciphered_key);
+        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, null, null, null, null, 1);");
         String db_id = request.set().toString();
-        List<AccountInformation> infos = AccountInformation.createAccountInformations(db_id, information, publicKey, sm);
+        List<AccountInformation> infos = AccountInformation.createAccountInformations(db_id, information, teamPublicKey, sm);
         db.commitTransaction(transaction);
-        Account account = new Account(db_id, false, publicKey, ciphered_key, infos, true);
-        account.setPrivateKey(privateKey);
+        Account account = new Account(db_id, false, null, null, infos, true);
         return account;
     }
 

@@ -152,7 +152,7 @@ public class App implements ShareableApp, SharedApp {
         return sharedApps;
     }
 
-    public static String createApp(Profile profile, int position, String name, String type, Map<String, Object> elevator, ServletManager sm) throws GeneralException {
+    public static String createApp(Profile profile, Integer position, String name, String type, Map<String, Object> elevator, ServletManager sm) throws GeneralException {
         return createApp(profile, position, name, type, elevator, true, false, sm);
 
     }
@@ -264,7 +264,7 @@ public class App implements ShareableApp, SharedApp {
         this.shared = false;
     }
 
-    public App(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, boolean shared, boolean shareable) {
+    public App(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, boolean shared, boolean shareable) {
         this.db_id = db_id;
         this.profile = profile;
         this.position = position;
@@ -276,7 +276,7 @@ public class App implements ShareableApp, SharedApp {
         this.shareable = shareable;
     }
 
-    public App(String db_id, Profile profile, int position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, boolean shareable, boolean shared, ShareableApp holder) {
+    public App(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, boolean shareable, boolean shared, ShareableApp holder) {
         this.db_id = db_id;
         this.profile = profile;
         this.position = position;
