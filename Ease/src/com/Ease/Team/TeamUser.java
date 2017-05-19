@@ -74,7 +74,7 @@ public class TeamUser {
     protected Date departureDate;
 
     @ManyToMany
-    @JoinTable(name = "channelAndTeamUserMap", joinColumns = { @JoinColumn(name = "team_user_id") }, inverseJoinColumns = { @JoinColumn(name = "channel_id") })
+    @JoinTable(name = "channelAndTeamUserMap", joinColumns = {@JoinColumn(name = "team_user_id")}, inverseJoinColumns = {@JoinColumn(name = "channel_id")})
     protected List<Channel> channels = new LinkedList<>();
 
 
@@ -83,6 +83,9 @@ public class TeamUser {
      */
     @Transient
     protected List<SharedApp> sharedApps = new LinkedList<>();
+
+    @Transient
+    Map<Integer, SharedApp> sharedAppMap = new HashMap<>();
 
     @Transient
     private List<ShareableApp> shareableApps = new LinkedList<>();
@@ -321,6 +324,7 @@ public class TeamUser {
 
     public void addSharedApp(SharedApp app) {
         this.sharedApps.add(app);
+        this.sharedAppMap.put(((App)app).getSingleId(), app);
     }
 
     public void addShareableApp(ShareableApp app) {
@@ -332,12 +336,12 @@ public class TeamUser {
             throw new GeneralException(ServletManager.Code.ClientError, "TeamUser already registered");
         if (this.deciphered_teamPrivateKey == null)
             this.decipher_teamPrivateKey();
-        for (SharedApp sharedApp : this.getSharedApps()) {
+        /*for (SharedApp sharedApp : this.getSharedApps()) {
             if (!((App)sharedApp).isClassicApp())
                 continue;
             ClassicApp sharedClassicApp = (ClassicApp)sharedApp;
             sharedClassicApp.getAccount().decipherAndCipher(deciphered_teamPrivateKey, sm);
-        }
+        }*/
         DatabaseRequest request = sm.getDB().prepareRequest("UDPATE teamUsers SET verified = 1 WHERE id = ?;");
         request.setInt(this.db_id);
         request.set();
@@ -346,12 +350,12 @@ public class TeamUser {
 
     public void check_sharedApps_ciphering(ServletManager sm) throws GeneralException {
         for (SharedApp sharedApp : this.sharedApps) {
-            App app = (App)sharedApp;
-            if(app.isReceived())
+            App app = (App) sharedApp;
+            if (app.isReceived())
                 continue;
             if (!app.isClassicApp())
                 continue;
-            ClassicApp classicApp = (ClassicApp)app;
+            ClassicApp classicApp = (ClassicApp) app;
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
             classicApp.getAccount().update_shared_app_ciphering(this.getDashboard_user(), sm);
@@ -366,5 +370,12 @@ public class TeamUser {
 
     public boolean isVerified() {
         return this.verified;
+    }
+
+    public SharedApp getSharedAppWithId(Integer app_id) throws GeneralException {
+        SharedApp sharedApp = this.sharedAppMap.get(app_id);
+        if (sharedApp == null)
+            throw new GeneralException(ServletManager.Code.ClientError, "This app does not exist.");
+        return sharedApp;
     }
 }

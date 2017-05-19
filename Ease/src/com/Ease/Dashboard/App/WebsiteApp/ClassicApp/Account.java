@@ -384,7 +384,7 @@ public class Account {
         this.ciphered_key = sm.getUser().encrypt(this.privateKey);
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
-        DatabaseRequest request = db.prepareRequest("UPDATE accounts SET publicKey = ?, privateKey = ? WHERE id = ?;");
+        DatabaseRequest request = db.prepareRequest("UPDATE accounts SET publicKey = ?, privateKey = ?, mustBeReciphered = 0 WHERE id = ?;");
         request.setString(this.publicKey);
         request.setString(this.ciphered_key);
         request.setInt(this.db_id);
@@ -392,6 +392,7 @@ public class Account {
         for (AccountInformation accountInformation : this.getAccountInformations())
             accountInformation.decipherAndCipher(deciphered_teamPrivateKey, publicKey, sm);
         db.commitTransaction(transaction);
+        this.mustBeReciphered = false;
     }
 
 }

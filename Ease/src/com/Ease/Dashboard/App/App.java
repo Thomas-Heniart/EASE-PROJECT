@@ -23,7 +23,7 @@ import com.Ease.Utils.ServletManager;
 
 import javax.servlet.ServletContext;
 
-public class App implements ShareableApp, SharedApp{
+public class App implements ShareableApp, SharedApp {
 
     public enum Data {
         NOTHING,
@@ -120,7 +120,7 @@ public class App implements ShareableApp, SharedApp{
     public static List<SharedApp> loadSharedAppsForShareableApp(ShareableApp shareableApp, ServletContext context, DataBaseConnection db) throws GeneralException {
         List<SharedApp> sharedApps = new LinkedList<>();
         DatabaseRequest request = db.prepareRequest("SELECT * FROM apps JOIN sharedApps ON sharedApps.id = apps.id AND sharedApps.shareable_app_id = ?;");
-        request.setInt(((App)shareableApp).getDBid());
+        request.setInt(((App) shareableApp).getDBid());
         DatabaseResult rs = request.get();
         String db_id;
         String insertDate;
@@ -136,8 +136,8 @@ public class App implements ShareableApp, SharedApp{
                     break;
                 case "websiteApp":
                     sharedApp = WebsiteApp.loadWebsiteApp(db_id, null, null, insertDate, infos, null, context, db);
-                    if (((App)sharedApp).isClassicApp())
-                        ((App)sharedApp).setReceived(rs.getBoolean("received"));
+                    if (((App) sharedApp).isClassicApp())
+                        ((App) sharedApp).setReceived(rs.getBoolean("received"));
                     break;
                 default:
                     throw new GeneralException(ServletManager.Code.InternError, "This app type dosen't exist.");
@@ -224,7 +224,7 @@ public class App implements ShareableApp, SharedApp{
     }
 
 	/*
-	 * 
+     *
 	 * Constructor
 	 * 
 	 */
@@ -482,8 +482,8 @@ public class App implements ShareableApp, SharedApp{
         res.put("db_id", this.getDBid());
         res.put("single_id", this.getSingleId());
         res.put("teamUser_tenant_id", this.getTeamUser_tenant().getDb_id());
-        res.put("shareableApp_db_id", ((App)this.getHolder()).getDBid());
-        res.put("shareableApp_single_id", ((App)this.getHolder()).getSingleId());
+        res.put("shareableApp_db_id", ((App) this.getHolder()).getDBid());
+        res.put("shareableApp_single_id", ((App) this.getHolder()).getSingleId());
         return res;
     }
 
@@ -531,7 +531,7 @@ public class App implements ShareableApp, SharedApp{
     public void addSharedApp(SharedApp sharedApp) {
         if (!this.tenant_teamUsers.contains(sharedApp.getTeamUser_tenant()))
             this.tenant_teamUsers.add(sharedApp.getTeamUser_tenant());
-        this.sharedAppIdMap.put(((App)sharedApp).getSingleId(), sharedApp);
+        this.sharedAppIdMap.put(((App) sharedApp).getSingleId(), sharedApp);
         this.sharedApps.add(sharedApp);
     }
 
@@ -564,8 +564,8 @@ public class App implements ShareableApp, SharedApp{
         JSONArray sharedApps = new JSONArray();
         for (SharedApp sharedApp : this.getSharedApps()) {
             JSONObject tmp = new JSONObject();
-            tmp.put("db_id", ((App)sharedApp).getDBid());
-            tmp.put("single_id", ((App)sharedApp).getSingleId());
+            tmp.put("db_id", ((App) sharedApp).getDBid());
+            tmp.put("single_id", ((App) sharedApp).getSingleId());
             tmp.put("teamUser_tenant_id", sharedApp.getTeamUser_tenant().getDb_id());
             sharedApps.add(tmp);
         }
@@ -573,17 +573,16 @@ public class App implements ShareableApp, SharedApp{
         return res;
     }
 
-    public void pinToDashboard(DashboardManager dashboardManager, Profile profile, Integer position, ServletManager sm) throws GeneralException {
+    public void pinToDashboard(Profile profile, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
+        this.profile = profile;
+        this.position = profile.getApps().size();
         DatabaseRequest request = db.prepareRequest("INSERT INTO profileAndAppMap values (null, ?, ?, ?);");
         request.setInt(profile.getDBid());
         request.setInt(this.db_id);
         request.setInt(position);
         db.commitTransaction(transaction);
-        this.profile = profile;
-        this.position = position;
         profile.addApp(this);
-        profile.updateAppsIndex(sm);
     }
 }
