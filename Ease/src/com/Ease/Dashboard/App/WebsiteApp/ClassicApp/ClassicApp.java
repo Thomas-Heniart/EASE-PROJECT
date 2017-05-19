@@ -120,7 +120,7 @@ public class ClassicApp extends WebsiteApp {
 
 	
 	/*
-	 * 
+     *
 	 * Constructor
 	 * 
 	 */
@@ -235,10 +235,9 @@ public class ClassicApp extends WebsiteApp {
 
     @Override
     public void modifyShared(ServletManager sm, JSONObject editJson) throws GeneralException {
-        if (this.getAccount() == ((ClassicApp) this.getHolder()).getAccount())
-            this.holder.modifyShareable(sm, editJson, this);
-        else
-            this.getAccount().edit(editJson, sm);
+        if (!this.havePerm(AppPermissions.Perm.EDIT))
+            throw new GeneralException(ServletManager.Code.ClientError, "You cannot edit this app");
+        this.getHolder().modifyShareable(sm, editJson, this);
     }
 
     @Override
@@ -252,7 +251,7 @@ public class ClassicApp extends WebsiteApp {
     public void modifyShareable(ServletManager sm, JSONObject editJson, SharedApp sharedApp) throws GeneralException {
         this.getAccount().edit(editJson, sm);
         for (SharedApp app : this.sharedApps)
-            ((ClassicApp)app).getAccount().edit(editJson, sm);
+            ((ClassicApp) app).getAccount().edit(editJson, sm);
     }
 
     @Override
@@ -273,9 +272,9 @@ public class ClassicApp extends WebsiteApp {
             throw new GeneralException(ServletManager.Code.ClientError, "Account informations shouldn't be empty or null");
         Map<String, String> accountInformationMap = new HashMap<>();
         for (Object accountInformationObj : accountInformationArray) {
-            JSONObject accountInformation = (JSONObject)accountInformationObj;
-            String info_name = (String)accountInformation.get("info_name");
-            String info_value = (String)accountInformation.get("info_value");
+            JSONObject accountInformation = (JSONObject) accountInformationObj;
+            String info_name = (String) accountInformation.get("info_name");
+            String info_value = (String) accountInformation.get("info_value");
             accountInformationMap.put(info_name, info_value);
         }
         String teamPublicKey = team.getPublicKey();
