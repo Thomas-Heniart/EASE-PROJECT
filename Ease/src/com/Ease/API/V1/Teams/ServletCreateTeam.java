@@ -59,9 +59,8 @@ public class ServletCreateTeam extends HttpServlet {
             String deciphered_privateKey = publicAndPrivateKey.getValue();
             String privateKey = user.encrypt(deciphered_privateKey);
             TeamUser admin = TeamUser.createAdminUser(firstName, lastName, email, username, privateKey, team);
-            admin.setDeciphered_teamPrivateKey(deciphered_privateKey);
+            admin.setDeciphered_teamPrivateKey(privateKey);
             team.setDeciphered_privateKey(deciphered_privateKey);
-            team.addTeamUser(admin);
             Channel channel = new Channel(team, "General", "This is the general channel");
             team.addChannel(channel);
             channel.addTeamUser(admin);
@@ -70,6 +69,7 @@ public class ServletCreateTeam extends HttpServlet {
             query.setParameter(1, id);
             query.executeUpdate();
             query.commit();
+            team.addTeamUser(admin);
             admin.setDashboard_user(user, sm.getDB());
             user.addTeamUser(admin);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");

@@ -5,6 +5,7 @@ import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.NewDashboard.User.User;
+import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.DatabaseRequest;
 import com.Ease.Utils.GeneralException;
@@ -26,8 +27,9 @@ public class TeamUser {
     @Column(name = "id")
     protected Integer db_id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    /* @ManyToOne
+    @JoinColumn(name = "user_id") */
+    @Transient
     protected User user;
 
     /* To remove when we we migrate on hibernate */
@@ -35,7 +37,7 @@ public class TeamUser {
     protected com.Ease.Dashboard.User.User dashboard_user;
 
     /* To remove when we we migrate on hibernate */
-    @Transient
+    @Column(name = "user_id")
     protected String user_id;
 
     @Column(name = "firstName")
@@ -79,7 +81,7 @@ public class TeamUser {
 
 
     /**
-     * TODO Use hibernate for apps then update code avout sharedApps
+     * TODO Use hibernate for apps then update code about sharedApps
      */
     @Transient
     protected List<SharedApp> sharedApps = new LinkedList<>();
@@ -229,6 +231,8 @@ public class TeamUser {
     }
 
     public void setTeamPrivateKey(String teamPrivateKey) {
+        System.out.println("old teamPrivateKey: " + this.teamPrivateKey);
+        System.out.println("new teamPrivateKey: " + teamPrivateKey);
         this.teamPrivateKey = teamPrivateKey;
     }
 
@@ -272,7 +276,7 @@ public class TeamUser {
         this.channels = channels;
     }
 
-    public static TeamUser createAdminUser(String firstName, String lastName, String email, String username, String teamPrivateKey, Team team) {
+    public static TeamUser createAdminUser(String firstName, String lastName, String email, String username, String teamPrivateKey, Team team) throws GeneralException {
         TeamUserPermissions permissions = new TeamUserPermissions(TeamUserPermissions.Role.ADMINISTRATOR.getValue());
         return new TeamUser(firstName, lastName, email, username, teamPrivateKey, true, team, permissions);
     }
@@ -331,18 +335,11 @@ public class TeamUser {
         this.shareableApps.add(app);
     }
 
-    public void validateRegistration(ServletManager sm) throws GeneralException {
+    public void validateRegistration(String deciphered_privateKey, String userPublicKey, ServletManager sm) throws GeneralException {
         if (this.isVerified())
             throw new GeneralException(ServletManager.Code.ClientError, "TeamUser already registered");
-        if (this.deciphered_teamPrivateKey == null)
-            this.decipher_teamPrivateKey();
-        /*for (SharedApp sharedApp : this.getSharedApps()) {
-            if (!((App)sharedApp).isClassicApp())
-                continue;
-            ClassicApp sharedClassicApp = (ClassicApp)sharedApp;
-            sharedClassicApp.getAccount().decipherAndCipher(deciphered_teamPrivateKey, sm);
-        }*/
-        DatabaseRequest request = sm.getDB().prepareRequest("UDPATE teamUsers SET verified = 1 WHERE id = ?;");
+        DatabaseRequest request = sm.getDB().prepareRequest("UDPATE teamUsers SET teamPrivateKey = ? verified = 1 WHERE id = ?;");
+        request.setString(RSA.Encrypt(deciphered_privateKey, userPublicKey));
         request.setInt(this.db_id);
         request.set();
         this.verified = true;
@@ -365,7 +362,7 @@ public class TeamUser {
     }
 
     public void decipher_teamPrivateKey() throws GeneralException {
-        this.deciphered_teamPrivateKey = this.dashboard_user.decrypt(this.teamPrivateKey);
+        this.deciphered_teamPrivateKey = this.getDashboard_user().decrypt(this.teamPrivateKey);
     }
 
     public boolean isVerified() {

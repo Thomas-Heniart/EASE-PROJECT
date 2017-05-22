@@ -107,11 +107,13 @@ public class App implements ShareableApp, SharedApp {
             }
             TeamUser teamUser_owner = team.getTeamUserWithId(rs.getInt("teamUser_owner_id"));
             Integer channel_id = rs.getInt("channel_id");
+            System.out.println("Channel_id: " + channel_id);
             Channel channel = null;
-            if (channel_id != null)
+            if (channel_id != null && channel_id > 0) {
                 channel = team.getChannelWithId(channel_id);
+                shareableApp.setChannel(channel);
+            }
             shareableApp.setTeamUser_owner(teamUser_owner);
-            shareableApp.setChannel(channel);
             shareableApps.add(shareableApp);
         }
         return shareableApps;
