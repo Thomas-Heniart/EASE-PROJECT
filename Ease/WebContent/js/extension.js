@@ -162,15 +162,8 @@ $(document).ready(function () {
     $("#extension #download button[type='submit']").click(function () {
         $("#extension #step1 #download").removeClass('show');
         if (NavigatorName == "Chrome") {
-            $("#extension #step1 #chrome").addClass('show');
-            chrome.webstore.install(
-                'https://chrome.google.com/webstore/detail/hnacegpfmpknpdjmhdmpkmedplfcmdmp',
-                function () {
-                    //do nothing
-                },
-                function () {
-                    //do nothing
-                });
+            var win = window.open('https://chrome.google.com/webstore/detail/hnacegpfmpknpdjmhdmpkmedplfcmdmp', '_blank');
+            win.focus();
         } else if (NavigatorName == "Safari") {
             $("#extension #step1 #safari").addClass('show');
             window.location.replace(location.protocol + '//' + location.hostname + "/safariExtension/EaseExtension.safariextz");
