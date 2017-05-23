@@ -1,0 +1,24 @@
+{
+  "name":"iCloud",
+  "lastlogin":"",
+  "home":"https://www.icloud.com/",
+  "connect": {
+    "todo": [
+      {"action":"fill", "what":"login", "search":"#appleId"},
+      {"action":"fill", "what":"password", "search":"#pwd"},
+      {"action":"click", "search":"#sign-in"}
+    ]
+  },
+  "logout": {
+    "todo": [
+      {"action":"clickona", "search":"a[data-zcqa='signOut']"},
+      {"action":"waitload"},
+      {"action":"waitfor", "search":"a.signin"},
+      {"action":"goto", "url":"https://crm.zoho.com"}
+    ]
+  },
+  "checkAlreadyLogged": [
+    {"action":"waitfor", "search":"a[data-zcqa='signOut'], #signin"},
+    {"search":"a[data-zcqa='signOut']"}
+  ]
+}
