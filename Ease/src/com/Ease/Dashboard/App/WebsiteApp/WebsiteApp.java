@@ -274,4 +274,12 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         db.commitTransaction(transaction);
         return new WebsiteApp(appDBid, null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), this.getSite(), websiteAppDBid, false, true, this);
     }
+
+    @Override
+    public JSONObject getShareableJson() throws GeneralException {
+        JSONObject res = super.getShareableJson();
+        res.put("type", "multi");
+        res.put("website_information", this.website.getInformationJson());
+        return res;
+    }
 }

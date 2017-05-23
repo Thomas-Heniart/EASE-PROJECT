@@ -288,7 +288,7 @@ public class TeamUser {
         return sharedApps;
     }
 
-    public JSONObject getJson() {
+    public JSONObject getJson() throws GeneralException {
         JSONObject res = new JSONObject();
         res.put("id", this.db_id);
         res.put("firstName", this.firstName);

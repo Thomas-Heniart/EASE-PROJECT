@@ -191,7 +191,7 @@ public class Team {
             this.name = name;
     }
 
-    public JSONObject getJson() {
+    public JSONObject getJson() throws GeneralException {
         JSONObject res = new JSONObject();
         res.put("name", this.name);
         res.put("id", this.db_id);

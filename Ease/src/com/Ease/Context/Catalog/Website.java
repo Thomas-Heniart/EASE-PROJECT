@@ -657,10 +657,12 @@ public class Website {
         this.teamIds.add(team_id);
     }
 
-    public JSONArray getInformationJson() {
-        JSONArray res = new JSONArray();
+    public JSONObject getInformationJson() {
+        JSONObject res = this.getSimpleJson();
+        JSONArray information = new JSONArray();
         for (WebsiteInformation websiteInformation : this.website_informations)
-            res.add(websiteInformation.getJson());
+            information.add(websiteInformation.getJson());
+        res.put("websiteInformations", information);
         return res;
     }
 }

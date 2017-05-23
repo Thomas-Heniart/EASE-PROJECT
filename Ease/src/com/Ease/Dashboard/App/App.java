@@ -1,6 +1,7 @@
 package com.Ease.Dashboard.App;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -89,11 +90,13 @@ public class App implements ShareableApp, SharedApp {
         DatabaseResult rs = request.get();
         String db_id;
         String insertDate;
+        String description;
         AppInformation infos;
         ShareableApp shareableApp = null;
         while (rs.next()) {
             db_id = rs.getString("apps.id");
             insertDate = rs.getString("insert_date");
+            description = rs.getString("description");
             infos = AppInformation.loadAppInformation(rs.getString("app_info_id"), db);
             switch (rs.getString("type")) {
                 case "linkApp":
@@ -103,8 +106,9 @@ public class App implements ShareableApp, SharedApp {
                     shareableApp = WebsiteApp.loadWebsiteApp(db_id, null, null, insertDate, infos, null, context, db);
                     break;
                 default:
-                    throw new GeneralException(ServletManager.Code.InternError, "This app type dosen't exist.");
+                    throw new GeneralException(ServletManager.Code.InternError, "This app type doesn't exist.");
             }
+            shareableApp.setDescription(description);
             TeamUser teamUser_owner = team.getTeamUserWithId(rs.getInt("teamUser_owner_id"));
             Integer channel_id = rs.getInt("channel_id");
             System.out.println("Channel_id: " + channel_id);
@@ -248,6 +252,7 @@ public class App implements ShareableApp, SharedApp {
     protected TeamUser teamUser_owner;
     protected List<TeamUser> tenant_teamUsers = new LinkedList<>();
     protected Channel channel;
+    protected String description;
 
     /* Interface SharedApp */
     protected ShareableApp holder;
@@ -308,7 +313,7 @@ public class App implements ShareableApp, SharedApp {
             informations.removeFromDb(sm);
         db.commitTransaction(transaction);
     }
-	
+
 	/*
 	 * 
 	 * Getter And Setter
@@ -481,11 +486,7 @@ public class App implements ShareableApp, SharedApp {
     @Override
     public JSONObject getSharedJSON() {
         JSONObject res = new JSONObject();
-        res.put("db_id", this.getDBid());
-        res.put("single_id", this.getSingleId());
-        res.put("teamUser_tenant_id", this.getTeamUser_tenant().getDb_id());
-        res.put("shareableApp_db_id", ((App) this.getHolder()).getDBid());
-        res.put("shareableApp_single_id", ((App) this.getHolder()).getSingleId());
+        res.put("id", this.teamUser_tenant.getDb_id());
         return res;
     }
 
@@ -555,24 +556,41 @@ public class App implements ShareableApp, SharedApp {
     }
 
     @Override
-    public JSONObject getShareableJson() {
-        JSONObject res = new JSONObject();
-        res.put("db_id", this.getDBid());
-        res.put("single_id", this.getSingleId());
-        res.put("channel_id", "null");
-        if (this.getChannel() != null)
-            res.put("channel_id", this.getChannel().getDb_id());
-        res.put("teamUser_owner_id", this.getTeamUser_owner().getDb_id());
-        JSONArray sharedApps = new JSONArray();
-        for (SharedApp sharedApp : this.getSharedApps()) {
-            JSONObject tmp = new JSONObject();
-            tmp.put("db_id", ((App) sharedApp).getDBid());
-            tmp.put("single_id", ((App) sharedApp).getSingleId());
-            tmp.put("teamUser_tenant_id", sharedApp.getTeamUser_tenant().getDb_id());
-            sharedApps.add(tmp);
+    public JSONObject getShareableJson() throws GeneralException {
+        try {
+            JSONObject res = new JSONObject();
+            res.put("db_id", this.getDBid());
+            res.put("single_id", this.getSingleId());
+            res.put("channel_id", "null");
+            if (this.getChannel() != null)
+                res.put("channel_id", this.getChannel().getDb_id());
+            res.put("sender", this.getTeamUser_owner().getDb_id());
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date shared_date = dateFormat.parse(insertDate);
+            DateFormat dateFormat1 = new SimpleDateFormat("MMMM dd, HH:mm", Locale.US);
+            res.put("shared_date", dateFormat1.format(shared_date));
+            JSONArray receivers = new JSONArray();
+            for (SharedApp sharedApp : this.getSharedApps()) {
+                JSONObject tmp = new JSONObject();
+                tmp.put("information", sharedApp.getSharedJSON());
+                tmp.put("id", sharedApp.getTeamUser_tenant().getDb_id());
+                receivers.add(tmp);
+            }
+            res.put("sharedApps", sharedApps);
+            return res;
+        } catch (ParseException e) {
+            throw new GeneralException(ServletManager.Code.InternError, e);
         }
-        res.put("sharedApps", sharedApps);
-        return res;
+    }
+
+    @Override
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Override
+    public String getDescription() {
+        return this.description;
     }
 
     public void pinToDashboard(Profile profile, ServletManager sm) throws GeneralException {

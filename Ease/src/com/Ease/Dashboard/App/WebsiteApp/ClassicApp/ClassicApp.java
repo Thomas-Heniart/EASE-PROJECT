@@ -288,4 +288,19 @@ public class ClassicApp extends WebsiteApp {
         return sharedApp;
     }
 
+    @Override
+    public JSONObject getShareableJson() throws GeneralException {
+        JSONObject res = super.getShareableJson();
+        res.put("type", "simple");
+        return res;
+    }
+
+    @Override
+    public JSONObject getSharedJSON() {
+        JSONObject res = super.getSharedJSON();
+        JSONArray information = this.account.getInformationsJSON();
+        res.put("information", information);
+        return res;
+    }
+
 }
