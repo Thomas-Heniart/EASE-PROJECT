@@ -66,10 +66,10 @@ public class RSA {
 
     }
 
-    public static Map.Entry<String, String> generateKeys() throws GeneralException {
+    public static Map.Entry<String, String> generatePublicAndPrivateKey(int keySize) throws GeneralException {
         try {
             KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
-            kpg.initialize(1024);
+            kpg.initialize(keySize);
             KeyPair kp = kpg.genKeyPair();
             PublicKey publicKey = kp.getPublic();
             PrivateKey privateKey = kp.getPrivate();
@@ -79,6 +79,10 @@ public class RSA {
         } catch (NoSuchAlgorithmException e) {
             throw new GeneralException(ServletManager.Code.InternError, e);
         }
+    }
+
+    public static Map.Entry<String, String> generateKeys() throws GeneralException {
+        return generatePublicAndPrivateKey(1024);
     }
 
     public static String Decrypt(String cypher, int keyDate) throws GeneralException {

@@ -21,7 +21,7 @@
     <meta name="viewport" content="initial-scale=1, maximum-scale=1"/>
     <title>EASE.space</title>
     <link rel="chrome-webstore-item"
-          href="https://chrome.google.com/webstore/detail/echjdhmhmgildgidlcdlepfkaledeokm">
+          href="https://chrome.google.com/webstore/detail/hnacegpfmpknpdjmhdmpkmedplfcmdmp">
 
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
     <link rel="stylesheet" href="css/default_style.css"/>

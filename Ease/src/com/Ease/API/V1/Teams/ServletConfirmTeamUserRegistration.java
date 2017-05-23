@@ -33,8 +33,9 @@ public class ServletConfirmTeamUserRegistration extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
             sm.needToBeAdminOfTeam(team);
+            TeamUser admin = sm.getTeamUserForTeam(team);
             TeamUser teamUser = team.getTeamUserWithId(Integer.parseInt(teamUser_id));
-            team.validateTeamUserRegistration(teamUser, sm);
+            team.validateTeamUserRegistration(admin.getDeciphered_teamKey(), teamUser, sm);
         } catch (Exception e) {
             sm.setResponse(e);
         }

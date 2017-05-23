@@ -29,13 +29,13 @@ public class ServletAcceptSharedApp extends HttpServlet {
             if (team_id == null || team_id.equals(""))
                 throw new GeneralException(ServletManager.Code.ClientError, "Team is null");
             TeamUser teamUser = sm.getTeamUserForTeamId(Integer.parseInt(team_id));
-            if (teamUser.getDeciphered_teamPrivateKey() == null)
-                teamUser.decipher_teamPrivateKey();
+            //if (teamUser.getDeciphered_teamPrivateKey() == null)
+              //  teamUser.decipher_teamPrivateKey();
             App app = (App) teamUser.getSharedAppWithId(Integer.parseInt(app_id));
             if (!app.isClassicApp())
                 throw new GeneralException(ServletManager.Code.ClientError, "Impossible to accept this app");
-            if (app.isClassicApp())
-                ((ClassicApp)app).getAccount().decipherAndCipher(teamUser.getDeciphered_teamPrivateKey(), sm);
+            //if (app.isClassicApp())
+              //  ((ClassicApp)app).getAccount().decipherAndCipher(teamUser.getDeciphered_teamPrivateKey(), sm);
             sm.setResponse(ServletManager.Code.Success, "App accepted");
         } catch (Exception e) {
             sm.setResponse(e);

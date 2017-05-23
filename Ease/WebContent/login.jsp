@@ -92,7 +92,7 @@ pageEncoding="UTF-8"%>
 	<meta name="twitter:image" content="https://ease.space/resources/images/fbmeta-en.png" />
 	
 	<link rel="chrome-webstore-item"
-	href="https://chrome.google.com/webstore/detail/echjdhmhmgildgidlcdlepfkaledeokm" />
+	href="https://chrome.google.com/webstore/detail/hnacegpfmpknpdjmhdmpkmedplfcmdmp" />
 	<link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />

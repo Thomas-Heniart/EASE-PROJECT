@@ -277,8 +277,7 @@ public class ClassicApp extends WebsiteApp {
             String info_value = (String) accountInformation.get("info_value");
             accountInformationMap.put(info_name, info_value);
         }
-        String teamPublicKey = team.getPublicKey();
-        Account account = Account.createSharedAccount(accountInformationMap, teamPublicKey, sm);
+        Account account = Account.createSharedAccount(accountInformationMap, teamUser_owner.getDeciphered_teamKey(), sm);
         DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
         request.setInt(websiteAppId);
         request.setInt(account.getDBid());

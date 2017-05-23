@@ -84,12 +84,12 @@ public class Account {
         return account;
     }
 
-    public static Account createSharedAccount(Map<String, String> information, String teamPublicKey, ServletManager sm) throws GeneralException {
+    public static Account createSharedAccount(Map<String, String> information, String deciphered_teamKey, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, null, null, null, null, 1);");
         String db_id = request.set().toString();
-        List<AccountInformation> infos = AccountInformation.createAccountInformations(db_id, information, teamPublicKey, sm);
+        List<AccountInformation> infos = AccountInformation.createSharedAccountInformationList(db_id, information, deciphered_teamKey, sm);
         db.commitTransaction(transaction);
         Account account = new Account(db_id, false, null, null, infos, true);
         return account;

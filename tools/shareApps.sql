@@ -1,9 +1,8 @@
-DROP TABLE IF EXISTS pendingTeamUserVerifications, shareableApps, sharedApps, pendingJoinTeamRequests, pendingJoinChannelRequests, teamUserChannels, createTeamInvitations, pendingTeamInvitations, channelsAndTeamUsersMap, channelAndTeamUserMap, channels, teamUsers, teamUserPermissions, teamAndTeamUsersMap, teamAndTeamUserMap, teamAndWebsiteMap, teams;
+DROP TABLE IF EXISTS pendingTeamUserVerifications, shareableApps, sharedApps, pendingJoinTeamRequests, pendingJoinChannelRequests, teamUserChannels, createTeamInvitations, pendingTeamInvitations, channelsAndTeamUsersMap, channelAndTeamUserMap, channels, teamUserPermissions, teamAndTeamUsersMap, teamAndTeamUserMap, teamAndWebsiteMap, teamUsers, teams;
 
 CREATE TABLE teams (
   id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   name VARCHAR(100) NOT NULL,
-  publicKey TEXT NOT NULL,
   PRIMARY KEY(id),
   UNIQUE (name)
 );
@@ -25,7 +24,7 @@ CREATE TABLE teamUsers (
   permissions_id INT(10) UNSIGNED NOT NULL,
   departureDate DATETIME,
   arrivalDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  teamPrivateKey TEXT,
+  teamKey TEXT,
   verified TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY(id),
   FOREIGN KEY(user_id) REFERENCES users(id),
@@ -59,6 +58,7 @@ CREATE TABLE createTeamInvitations (
   code VARCHAR(255) NOT NULL,
   expiration_date DATETIME NOT NULL,
   PRIMARY KEY(id),
+  UNIQUE (code)
 );
 
 CREATE TABLE pendingTeamInvitations (
@@ -67,7 +67,7 @@ CREATE TABLE pendingTeamInvitations (
   code VARCHAR(255) NOT NULL,
   team_id INT(10) UNSIGNED NOT NULL,
   PRIMARY KEY(id),
-  FOREIGN KEY (teamUser_id) REFERENCES teams(id),
+  FOREIGN KEY (teamUser_id) REFERENCES teamUsers(id),
   FOREIGN KEY (team_id) REFERENCES teams(id),
   UNIQUE (code)
 );
@@ -188,9 +188,8 @@ ALTER TABLE accounts ADD COLUMN publicKey TEXT;
 ALTER TABLE accounts ADD COLUMN privateKey TEXT;
 ALTER TABLE accounts ADD COLUMN mustBeReciphered TINYINT(1) DEFAULT 0;
 
-/* team public key for shareableApp ciphering */
-ALTER TABLE teams ADD COLUMN publicKey TEXT;
-ALTER TABLE teamUsers ADD COLUMN teamPrivateKey TEXT;
+
+ALTER TABLE websiteAttributes ADD COLUMN noScrap TINYINT(1) DEFAULT 0;
 
 /*
 USE information_schema;

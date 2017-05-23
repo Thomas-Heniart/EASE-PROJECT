@@ -672,7 +672,7 @@ public class User {
             this.teamUsers.add(teamUser);
             teamUser.setDashboard_user(this);
             if (teamUser.isVerified())
-                teamUser.decipher_teamPrivateKey();
+                teamUser.decipher_teamKey();
         }
         System.out.println("teamUsers: " + this.teamUsers.size());
         query.commit();
