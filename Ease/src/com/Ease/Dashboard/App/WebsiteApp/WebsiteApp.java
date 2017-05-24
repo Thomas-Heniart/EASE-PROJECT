@@ -203,7 +203,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         this.groupWebsiteApp = (GroupWebsiteApp) groupApp;
     }
 
-    public WebsiteApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid, boolean shareable, boolean shared, ShareableApp holder) {
+    public WebsiteApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid, boolean shareable, boolean shared, ShareableApp holder, Integer reminderIntervalValue, String reminderIntervalType) {
         super(db_id, profile, position, infos, groupApp, insertDate, single_id, shareable, shared, holder);
         this.website = site;
         this.websiteAppDBid = websiteAppDBid;
@@ -305,12 +305,25 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<>();
         String appDBid = App.createSharedApp(null, null, this.getName(), "websiteApp", elevator, false, true, team.getDb_id(), (channel == null) ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), this, true, sm);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, 'websiteApp');");
+        Integer reminderIntervalValue = (Integer) params.get("reminderIntervalValue");
+        String reminderIntervalType = (String) params.get("reminderIntervalType");
+        if (reminderIntervalValue == 0) {
+            reminderIntervalType = null;
+            reminderIntervalValue = null;
+        }
+        DatabaseRequest request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, 'websiteApp', ?, ?);");
         request.setInt(this.getSite().getDb_id());
         request.setInt(appDBid);
+        if (reminderIntervalValue == null) {
+            request.setNull();
+            request.setNull();
+        } else {
+            request.setInt(reminderIntervalValue);
+            request.setString(reminderIntervalType);
+        }
         String websiteAppDBid = request.set().toString();
         db.commitTransaction(transaction);
-        return new WebsiteApp(appDBid, null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), this.getSite(), websiteAppDBid, false, true, this);
+        return new WebsiteApp(appDBid, null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), this.getSite(), websiteAppDBid, false, true, this, reminderIntervalValue, reminderIntervalType);
     }
 
     @Override

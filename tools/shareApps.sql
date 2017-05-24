@@ -128,6 +128,9 @@ ALTER TABLE accounts ADD COLUMN lastUpdateDate DATETIME NOT NULL DEFAULT CURRENT
 ALTER TABLE accounts ADD COLUMN reminderIntervalValue TINYINT;
 ALTER TABLE accounts ADD COLUMN reminderIntervalType VARCHAR(25);
 
+ALTER TABLE websiteApps ADD COLUMN reminderIntervalValue TINYINT;
+ALTER TABLE websiteApps ADD COLUMN reminderIntervalType VARCHAR(25);
+
 /* Apps sharing */
 DROP TABLE IF EXISTS sharedApps, shareableApps, appAndSharedAppMap, channelAndAppMap;
 
