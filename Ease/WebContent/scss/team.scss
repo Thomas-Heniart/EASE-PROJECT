@@ -349,11 +349,11 @@
       #client_header {
         @include flex-basis(60px);
         border-bottom:1px solid #E6E6E6;
+        height: 60px;
         .channel_header {
           @include display-flex();
           height: 100%;
-          padding-top: 8px;
-          padding-bottom: 8px;
+          padding: 8px 8px 8px 1.3rem;
           .tab_header {
             @include display-flex();
             @include flex(1);
@@ -364,7 +364,7 @@
                 .channel_name {
                   @include display-flex();
                   @include align-items(center);
-                  padding: 0 .1rem 0 1.3rem;
+                  padding: 0 .1rem 0 0;
                   font-weight: bold;
                   .icon_wrapper {
                     margin-right: 5px;
@@ -376,22 +376,15 @@
               }
               .channel_header_info {
                 @include display-flex();
-                padding-left: 1.3rem;
                 line-height: 1;
                 margin-top: 5px;
                 font-size: 0.7em;
                 color: #717274;
                 .channel_header_info_item {
-                  display: none;
-                  &.active {
-                    display: block;
-                  }
+                  display: block;
                   &:first-child {
                     border-left: none;
                     padding-left: 0;
-                  }
-                  &:hover {
-                    color: black;
                   }
                   border-left: 1px solid rgba(113,114,116,.5);
                   padding-left: .5em;
@@ -405,7 +398,6 @@
             .channel_title_info {
               @include display-flex();
               @include align-items(center);
-              margin: 0 8px 0 0;
               button {
                 width: 32px;
                 height: 32px;

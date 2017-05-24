@@ -1,0 +1,29 @@
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.languages {
+	display: flex;
+	justify-content: center;
+}
+
+.languages li{
+	margin:0;
+	margin-right: 10px;
+}
+
+li {
+	list-style-type: none;
+}
+
+.popular-list {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+}
+
+.popular-item {
+	margin: 20px;
+	text-align: center;
+}
