@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by thomas on 24/05/2017.
  */
-@WebServlet("/api/v1/dashboard/ServletSearchDashboardApps")
+@WebServlet("/api/v1/dashboard/SearchDashboardApps")
 public class ServletSearchDashboardApps extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
