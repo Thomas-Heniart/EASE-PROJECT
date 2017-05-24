@@ -66,14 +66,25 @@ public class Account {
     }
 
     public static Account createAccount(boolean shared, Map<String, String> informations, ServletManager sm) throws GeneralException {
+        return createAccount(shared, informations, null, null, sm);
+    }
+
+    public static Account createAccount(boolean shared, Map<String, String> informations, Integer reminderValue, String reminderType, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
         String publicKey = publicAndPrivateKey.getKey();
         String privateKey = publicAndPrivateKey.getValue();
         String ciphered_key = sm.getUser().encrypt(privateKey);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, ?, default, null, null, ?, ?, 0);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, ?, default, ?, ?, ?, ?, 0);");
         request.setBoolean(shared);
+        if (reminderValue != null && reminderType != null) {
+            request.setInt(reminderValue);
+            request.setString(reminderType);
+        } else {
+            request.setNull();
+            request.setNull();
+        }
         request.setString(publicKey);
         request.setString(ciphered_key);
         String db_id = request.set().toString();

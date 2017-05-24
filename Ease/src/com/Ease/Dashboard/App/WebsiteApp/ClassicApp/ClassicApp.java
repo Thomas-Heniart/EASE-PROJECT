@@ -102,7 +102,7 @@ public class ClassicApp extends WebsiteApp {
         DatabaseRequest request = db.prepareRequest("UPDATE websiteApps SET type='classicApp' WHERE id= ?;");
         request.setInt(websiteAppDBid);
         request.set();
-        Account account = Account.createAccount(false, infos, sm);
+        Account account = Account.createAccount(false, infos, websiteApp.getReminderIntervalValue(), websiteApp.getReminderIntervalType(), sm);
         request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
         request.setInt(websiteAppDBid);
         request.setInt(account.getDBid());
@@ -269,7 +269,7 @@ public class ClassicApp extends WebsiteApp {
         String websiteAppId = WebsiteApp.createSharedWebsiteApp(this, elevator, team.getDb_id(), channel == null ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), sm);
         JSONArray accountInformationArray = (JSONArray) params.get("accountInformation");
         if (accountInformationArray == null || accountInformationArray.isEmpty())
-            throw new GeneralException(ServletManager.Code.ClientError, "Account informations shouldn't be empty or null");
+            throw new GeneralException(ServletManager.Code.ClientError, "Account information shouldn't be empty or null");
         Map<String, String> accountInformationMap = new HashMap<>();
         for (Object accountInformationObj : accountInformationArray) {
             JSONObject accountInformation = (JSONObject) accountInformationObj;

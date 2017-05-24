@@ -295,7 +295,7 @@ public class TeamUser {
         res.put("lastName", this.lastName);
         res.put("email", this.email);
         res.put("username", this.username);
-        res.put("role", this.teamUserPermissions.getRole());
+        res.put("role", this.teamUserPermissions.getPermissions());
         res.put("arrivalDate", this.arrivalDate.toString());
         res.put("departureDate", "null");
         if (departureDate != null)
