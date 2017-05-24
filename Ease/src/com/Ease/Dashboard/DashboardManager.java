@@ -355,4 +355,13 @@ public class DashboardManager {
 			classicApp.getAccount().decipher(sm.getUser());
         }
     }
+
+    public List<ClassicApp> getClassicApps() {
+        List<ClassicApp> classicApps = new LinkedList<>();
+        for (App app : this.apps) {
+            if (app.isClassicApp())
+                classicApps.add((ClassicApp)app);
+        }
+        return classicApps;
+    }
 }

@@ -303,4 +303,20 @@ public class ClassicApp extends WebsiteApp {
         return res;
     }
 
+    public Object getSearchJson() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("website_name", this.website.getName());
+        jsonObject.put("id", this.single_id);
+        jsonObject.put("logo", this.website.getLogo());
+        jsonObject.put("profile_name", this.profile.getName());
+        jsonObject.put("login", this.getAccount().getInformationNamed("login"));
+        return jsonObject;
+    }
+
+    public JSONObject getJsonWithoutId() {
+        JSONObject jsonObject = super.getJsonWithoutId();
+        jsonObject.put("information", this.account.getInformationJson());
+        return jsonObject;
+    }
+
 }
