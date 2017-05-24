@@ -1,7 +1,6 @@
-package com.Ease.API.V1.Catalog;
+package com.Ease.API.V1.Dashboard;
 
-import com.Ease.Context.Catalog.Catalog;
-import com.Ease.Context.Catalog.Website;
+import com.Ease.Dashboard.App.App;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -14,21 +13,20 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by thomas on 15/05/2017.
+ * Created by thomas on 24/05/2017.
  */
-@WebServlet("/api/v1/catalog/GetWebsiteInformation")
-public class ServletGetWebsiteInformation extends HttpServlet {
+@WebServlet("/api/v1/dashboard/GetDashboardApp")
+public class ServletGetDashboardApp extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            String website_id = sm.getServletParam("id", true);
-            if (website_id == null || website_id.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientError, "Website is null");
-            Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            Website website = catalog.getWebsiteWithSingleId(Integer.parseInt(website_id));
-            sm.setResponse(ServletManager.Code.Success, website.getInformationJson().toString());
-            sm.setLogResponse("GetWebsiteInformation done.");
+            String app_id = sm.getServletParam("id", true);
+            if (app_id == null || app_id.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientError, "App is null");
+            App app = sm.getUser().getDashboardManager().getAppWithID(Integer.parseInt(app_id));
+            sm.setResponse(ServletManager.Code.Success, app.getJsonWithoutId().toString());
+            sm.setLogResponse("GetDashboardApp done");
         } catch (Exception e) {
             sm.setResponse(e);
         }
@@ -36,6 +34,7 @@ public class ServletGetWebsiteInformation extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        this.doPost(request, response);
+        RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+        rd.forward(request, response);
     }
 }

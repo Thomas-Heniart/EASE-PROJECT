@@ -328,4 +328,10 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         res.put("website_information", this.website.getInformationJson());
         return res;
     }
+
+    public JSONObject getJsonWithoutId() {
+        JSONObject jsonObject = super.getJsonWithoutId();
+        jsonObject.put("website_id", this.website.getSingleId());
+        return jsonObject;
+    }
 }

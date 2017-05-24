@@ -9,6 +9,7 @@ import com.Ease.Dashboard.DashboardManager;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
+import com.google.common.primitives.UnsignedInts;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -574,5 +575,11 @@ public class App implements ShareableApp, SharedApp {
         request.setInt(position);
         db.commitTransaction(transaction);
         profile.addApp(this);
+    }
+
+    public JSONObject getJsonWithoutId() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("name", this.informations.getName());
+        return jsonObject;
     }
 }

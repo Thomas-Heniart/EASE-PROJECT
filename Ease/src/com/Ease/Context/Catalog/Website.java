@@ -440,6 +440,10 @@ public class Website {
         return res;
     }
 
+    public String getLogo() {
+        return Variables.URL_PATH + this.getFolder() + "logo.png";
+    }
+
     public List<WebsiteInformation> getInformations() {
         return this.website_informations;
     }
@@ -471,7 +475,7 @@ public class Website {
             a.put("loginUrl", loginUrl);
             a.put("website_name", this.name);
             a.put("siteSrc", this.getFolder());
-            a.put("img", Variables.URL_PATH + this.getFolder() + "logo.png");
+            a.put("img", this.getLogo());
             return a;
         } catch (IOException | ParseException e) {
             throw new GeneralException(ServletManager.Code.InternError, e);
@@ -481,7 +485,7 @@ public class Website {
     public JSONObject getJSON() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("website_name", this.name);
-        jsonObject.put("img", Variables.URL_PATH + this.getFolder() + "logo.png");
+        jsonObject.put("img", this.getLogo());
         jsonObject.put("loginUrl", this.loginUrl);
         jsonObject.put("websiteUrl", this.website_homepage);
         JSONArray websiteInformation = new JSONArray();
@@ -519,7 +523,7 @@ public class Website {
         JSONObject res = new JSONObject();
         res.put("name", this.name);
         res.put("singleId", this.single_id);
-        res.put("logo", Variables.WEBSITES_PATH + this.folder + "/" + "logo.png");
+        res.put("logo", this.getLogo());
         JSONArray logWithWebsites = new JSONArray();
         for (Website logWithWebsite : this.loginWithWebsites)
             logWithWebsites.add(logWithWebsite.getSingleId());
@@ -645,11 +649,16 @@ public class Website {
         return this.groupIds;
     }
 
+    public JSONObject getSearchJson() {
+        JSONObject res = this.getSimpleJson();
+        res.put("id", this.single_id);
+        return  res;
+    }
+
     public JSONObject getSimpleJson() {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("name", this.name);
-        jsonObject.put("logo", Variables.WEBSITES_PATH + this.folder + "/" + "logo.png");
-        jsonObject.put("single_id", this.getSingleId());
+        jsonObject.put("website_name", this.name);
+        jsonObject.put("logo", this.getLogo());
         return jsonObject;
     }
 
@@ -662,7 +671,7 @@ public class Website {
         JSONArray information = new JSONArray();
         for (WebsiteInformation websiteInformation : this.website_informations)
             information.add(websiteInformation.getJson());
-        res.put("websiteInformations", information);
+        res.put("information", information);
         return res;
     }
 }

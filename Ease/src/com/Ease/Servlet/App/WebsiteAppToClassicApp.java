@@ -28,70 +28,69 @@ import com.Ease.Utils.ServletManager;
  */
 @WebServlet("/WebsiteAppToClassicApp")
 public class WebsiteAppToClassicApp extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public WebsiteAppToClassicApp() {
-		super();
-	}
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public WebsiteAppToClassicApp() {
+        super();
+    }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-		rd.forward(request, response);
-	}
+    /**
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+     * response)
+     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+        rd.forward(request, response);
+    }
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
-		User user = (User) (session.getAttribute("user"));
-		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
-		try {
-			sm.needToBeConnected();
-			String appIdsString = sm.getServletParam("appIds", true);
-			String name = sm.getServletParam("name", true);
-			String password = sm.getServletParam("password", false);
-			Map<String, String> infos = null;
-			if (name == null || name.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
-			if (appIdsString == null || appIdsString.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong app id.");
-			if (password == null || password.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong password");
-			
-			try {
-				JSONParser parser = new JSONParser();
-				JSONArray appIds = null;
-				appIds = (JSONArray)parser.parse(StringEscapeUtils.unescapeHtml4(appIdsString));
-				
-				DataBaseConnection db = sm.getDB();
-				int transaction = db.startTransaction();
-				for (Object appId : appIds) {
-					App app = user.getDashboardManager().getAppWithID(Integer.parseInt((String)appId));
-					if (!app.getType().equals("WebsiteApp"))
-						throw new GeneralException(ServletManager.Code.ClientError, "This is not an empty app.");
-					infos = ((WebsiteApp)app).getSite().getNeededInfos(sm);
-					ClassicApp.createFromWebsiteApp((WebsiteApp)app, name, infos, sm, user);
-				}
-				db.commitTransaction(transaction);
-				sm.setResponse(ServletManager.Code.Success, "Classic app created instead of website app.");
-			} catch (NumberFormatException e) {
-				sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");
-			}
-		} catch (GeneralException e) {
-			sm.setResponse(e);
-		} catch (Exception e) {
-			sm.setResponse(e);
-		}
-		sm.sendResponse();
-	}
+    /**
+     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+     * response)
+     */
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        User user = (User) (session.getAttribute("user"));
+        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        try {
+            sm.needToBeConnected();
+            String appIdsString = sm.getServletParam("appIds", true);
+            String name = sm.getServletParam("name", true);
+            String password = sm.getServletParam("password", false);
+            Map<String, String> infos = null;
+            if (name == null || name.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
+            if (appIdsString == null || appIdsString.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong app id.");
+            if (password == null || password.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong password");
+            try {
+                JSONParser parser = new JSONParser();
+                JSONArray appIds = null;
+                appIds = (JSONArray) parser.parse(StringEscapeUtils.unescapeHtml4(appIdsString));
+
+                DataBaseConnection db = sm.getDB();
+                int transaction = db.startTransaction();
+                for (Object appId : appIds) {
+                    App app = user.getDashboardManager().getAppWithID(Integer.parseInt((String) appId));
+                    if (!app.getType().equals("WebsiteApp"))
+                        throw new GeneralException(ServletManager.Code.ClientError, "This is not an empty app.");
+                    infos = ((WebsiteApp) app).getSite().getNeededInfos(sm);
+                    ClassicApp.createFromWebsiteApp((WebsiteApp) app, name, infos, sm, user);
+                }
+                db.commitTransaction(transaction);
+                sm.setResponse(ServletManager.Code.Success, "Classic app created instead of website app.");
+            } catch (NumberFormatException e) {
+                sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");
+            }
+        } catch (GeneralException e) {
+            sm.setResponse(e);
+        } catch (Exception e) {
+            sm.setResponse(e);
+        }
+        sm.sendResponse();
+    }
 }

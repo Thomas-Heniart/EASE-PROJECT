@@ -280,6 +280,17 @@ public class Account {
         return obj;
     }
 
+    public JSONArray getInformationJson() {
+        JSONArray jsonArray = new JSONArray();
+        for (AccountInformation info : this.infos) {
+            JSONObject tmp = new JSONObject();
+            tmp.put("info_name", info.getInformationName());
+            tmp.put("info_value", info.getInformationValue());
+            jsonArray.add(tmp);
+        }
+        return jsonArray;
+    }
+
     public JSONArray getJSON() {
         JSONArray res = new JSONArray();
         JSONObject tmp;
