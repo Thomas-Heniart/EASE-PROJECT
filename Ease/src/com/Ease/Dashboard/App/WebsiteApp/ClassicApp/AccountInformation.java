@@ -11,6 +11,7 @@ import com.Ease.Utils.DatabaseRequest;
 import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
+import org.json.simple.JSONObject;
 
 public class AccountInformation {
 
@@ -134,5 +135,12 @@ public class AccountInformation {
         request.setString(RSA.Encrypt(this.information_value, publicKey));
         request.setString(this.db_id);
         request.set();
+    }
+
+    public JSONObject getJson() {
+        JSONObject res = new JSONObject();
+        res.put("info_name", this.information_name);
+        res.put("info_value", this.information_value);
+        return res;
     }
 }

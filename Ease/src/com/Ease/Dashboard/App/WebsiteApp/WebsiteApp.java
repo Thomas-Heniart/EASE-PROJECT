@@ -26,6 +26,7 @@ import com.Ease.Utils.ServletManager;
 import javax.servlet.ServletContext;
 
 public class WebsiteApp extends App implements SharedApp, ShareableApp {
+
     public enum Data {
         NOTHING,
         ID,

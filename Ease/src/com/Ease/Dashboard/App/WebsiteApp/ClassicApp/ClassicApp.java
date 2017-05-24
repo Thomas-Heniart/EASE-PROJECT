@@ -229,8 +229,8 @@ public class ClassicApp extends WebsiteApp {
         return false;
     }
 
-    public JSONArray getAccountInformationsJson() {
-        return this.account.getInformationsJSON();
+    public JSONArray getInformationWithoutPasswordJson() {
+        return this.account.getInformationWithoutPasswordJson();
     }
 
     @Override
@@ -298,7 +298,7 @@ public class ClassicApp extends WebsiteApp {
     @Override
     public JSONObject getSharedJSON() {
         JSONObject res = super.getSharedJSON();
-        JSONArray information = this.account.getInformationsJSON();
+        JSONArray information = this.account.getInformationWithoutPasswordJson();
         res.put("information", information);
         return res;
     }

@@ -308,13 +308,26 @@ public class DashboardManager {
 
     public ClassicApp findClassicAppWithLoginAndWebsite(String login, Website website) {
         for (App app : this.apps) {
-            if (!app.getType().equals("ClassicApp"))
+            if (!app.isClassicApp())
                 continue;
             String appLogin = ((ClassicApp) app).getAccount().getInformationNamed("login");
             if (appLogin.equals(login) && ((WebsiteApp) app).getSite().getName().equals(website.getName()))
                 return (ClassicApp) app;
         }
         return null;
+    }
+
+    public List<ClassicApp> findClassicAppsWithWebsite(Website website) {
+        List<ClassicApp> classicApps = new LinkedList<>();
+        for (App app : this.apps) {
+            if (!app.isClassicApp())
+                continue;
+            ClassicApp classicApp = (ClassicApp) app;
+            if (classicApp.getSite() != website)
+                continue;
+            classicApps.add(classicApp);
+        }
+        return classicApps;
     }
 
     public JSONArray getJson() {

@@ -317,7 +317,7 @@ public class Account {
         return null;
     }
 
-    public JSONArray getInformationsJSON() {
+    public JSONArray getInformationWithoutPasswordJson() {
         JSONArray res = new JSONArray();
         for (AccountInformation info : this.infos) {
             if (!info.getInformationName().equals("password")) {
@@ -337,9 +337,6 @@ public class Account {
     public void update_ciphering_if_needed(ServletManager sm) throws GeneralException {
         if (this.publicKey != null && this.ciphered_key != null) {
             return;
-            /*for (AccountInformation accountInformation : this.getAccountInformations()) {
-                accountInformation.update_ciphering();
-            }*/
         }
         Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
         this.publicKey = publicAndPrivateKey.getKey();
@@ -357,31 +354,4 @@ public class Account {
         db.commitTransaction(transaction);
 
     }
-
-    public void update_shared_app_ciphering(User user, ServletManager sm) throws GeneralException {
-        for (AccountInformation accountInformation : this.getAccountInformations()) {
-            String info_value = RSA.Decrypt(accountInformation.getInformationValue(), user.getKeys().getPrivateKey());
-            accountInformation.setInformation_value(RSA.Encrypt(info_value, this.publicKey), this.publicKey, sm);
-            accountInformation.decipher(this.privateKey);
-        }
-    }
-
-    public void decipherAndCipher(String deciphered_teamPrivateKey, ServletManager sm) throws GeneralException {
-        Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
-        this.publicKey = publicAndPrivateKey.getKey();
-        this.privateKey = publicAndPrivateKey.getValue();
-        this.ciphered_key = sm.getUser().encrypt(this.privateKey);
-        DataBaseConnection db = sm.getDB();
-        int transaction = db.startTransaction();
-        DatabaseRequest request = db.prepareRequest("UPDATE accounts SET publicKey = ?, privateKey = ?, mustBeReciphered = 0 WHERE id = ?;");
-        request.setString(this.publicKey);
-        request.setString(this.ciphered_key);
-        request.setInt(this.db_id);
-        request.set();
-        for (AccountInformation accountInformation : this.getAccountInformations())
-            accountInformation.decipherAndCipher(deciphered_teamPrivateKey, publicKey, sm);
-        db.commitTransaction(transaction);
-        this.mustBeReciphered = false;
-    }
-
 }
