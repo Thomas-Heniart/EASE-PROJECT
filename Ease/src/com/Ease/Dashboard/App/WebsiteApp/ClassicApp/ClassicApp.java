@@ -134,8 +134,8 @@ public class ClassicApp extends WebsiteApp {
         this.classicDBid = classicDBid;
     }
 
-    public ClassicApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid, Account account, String classicDBid, boolean shareable, boolean shared, ShareableApp holder) {
-        super(db_id, profile, position, infos, groupApp, insertDate, single_id, site, websiteAppDBid, shareable, shared, holder);
+    public ClassicApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid, Account account, String classicDBid, ShareableApp holder) {
+        super(db_id, profile, position, infos, groupApp, insertDate, single_id, site, websiteAppDBid, holder, null, null);
         this.account = account;
         this.classicDBid = classicDBid;
     }
@@ -283,7 +283,7 @@ public class ClassicApp extends WebsiteApp {
         request.setInt(account.getDBid());
         String classicDBid = request.set().toString();
         db.commitTransaction(transaction);
-        App sharedApp = new ClassicApp((String) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), this.getSite(), websiteAppId, this.account, classicDBid, false, true, this);
+        App sharedApp = new ClassicApp((String) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), this.getSite(), websiteAppId, this.account, classicDBid, this);
         sharedApp.setReceived(false);
         return sharedApp;
     }
