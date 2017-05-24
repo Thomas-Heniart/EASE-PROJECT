@@ -2,11 +2,9 @@ package com.Ease.Team;
 
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.ShareableApp;
-import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.SendGridMail;
 import com.Ease.Utils.*;
-import com.google.common.primitives.UnsignedInts;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -52,12 +50,6 @@ public class Team {
     @Column(name = "name")
     protected String name;
 
-    @Column(name = "publicKey")
-    protected String publicKey;
-
-    @Transient
-    protected String deciphered_privateKey;
-
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     protected List<TeamUser> teamUsers = new LinkedList<>();
 
@@ -76,16 +68,14 @@ public class Team {
     @Transient
     protected List<ShareableApp> shareableApps = new LinkedList<>();
 
-    public Team(String name, String publicKey, List<TeamUser> teamUsers, List<Channel> channels) {
+    public Team(String name, List<TeamUser> teamUsers, List<Channel> channels) {
         this.name = name;
-        this.publicKey = publicKey;
         this.teamUsers = teamUsers;
         this.channels = channels;
     }
 
-    public Team(String name, String publicKey) {
+    public Team(String name) {
         this.name = name;
-        this.publicKey = publicKey;
     }
 
     public Team() {
@@ -105,22 +95,6 @@ public class Team {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getPublicKey() {
-        return publicKey;
-    }
-
-    public void setPublicKey(String publicKey) {
-        this.publicKey = publicKey;
-    }
-
-    public String getDeciphered_privateKey() {
-        return deciphered_privateKey;
-    }
-
-    public void setDeciphered_privateKey(String deciphered_privateKey) {
-        this.deciphered_privateKey = deciphered_privateKey;
     }
 
     public List<TeamUser> getTeamUsers() {
@@ -157,11 +131,6 @@ public class Team {
             System.out.println("Permissions admin: " + teamUser.getTeamUserPermissions().haveRole(TeamUserPermissions.Role.ADMINISTRATOR));
             if (!teamUser.isVerified())
                 this.teamUsersWaitingForVerification.add(teamUser);
-            DatabaseRequest request = db.prepareRequest("SELECT user_id FROM teamUsers WHERE id = ?;");
-            request.setInt(teamUser.getDb_id());
-            DatabaseResult rs = request.get();
-            rs.next();
-            teamUser.setUser_id(rs.getString(1));
         }
 
     }
@@ -174,8 +143,6 @@ public class Team {
     }
 
     public TeamUser getTeamUserWithId(Integer teamUser_id) throws GeneralException {
-        for (Integer i : this.teamUserIdMap.keySet())
-            System.out.println("Integer key: " + i);
         TeamUser teamUser = this.teamUserIdMap.get(teamUser_id);
         if (teamUser == null)
             throw new GeneralException(ServletManager.Code.ClientError, "This teamUser does not exist");
@@ -224,7 +191,7 @@ public class Team {
             this.name = name;
     }
 
-    public JSONObject getJson() {
+    public JSONObject getJson() throws GeneralException {
         JSONObject res = new JSONObject();
         res.put("name", this.name);
         res.put("id", this.db_id);
@@ -268,14 +235,16 @@ public class Team {
         }
     }
 
-    public void confirmTeamUserRegistration(TeamUser teamUser, ServletManager sm) throws GeneralException {
-        teamUser.validateRegistration(sm);
-    }
-
-    public void validateTeamUserRegistration(TeamUser teamUser, ServletManager sm) throws GeneralException {
+    public void validateTeamUserRegistration(String deciphered_teamKey, TeamUser teamUser, ServletManager sm) throws GeneralException {
         if (!this.teamUsersWaitingForVerification.contains(teamUser))
             throw new GeneralException(ServletManager.Code.ClientError, "teamUser already validated");
-        teamUser.validateRegistration(sm);
+        DataBaseConnection db = sm.getDB();
+        DatabaseRequest request = db.prepareRequest("SELECT userKeys.publicKey FROM (userKeys JOIN users ON userKeys.id = users.key_id) JOIN teamUsers ON users.id = teamUsers.user_id WHERE teamUsers.id = ?;");
+        request.setInt(teamUser.getDb_id());
+        DatabaseResult rs = request.get();
+        rs.next();
+        String userPublicKey = rs.getString(1);
+        teamUser.validateRegistration(deciphered_teamKey, userPublicKey, sm);
         this.teamUsersWaitingForVerification.remove(teamUser);
     }
 }

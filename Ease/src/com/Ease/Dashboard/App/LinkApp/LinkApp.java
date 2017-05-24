@@ -175,5 +175,13 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         db.commitTransaction(transaction);
         return new LinkApp(appDBid, null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), linkInfos, linkDBid, false, true, this);
     }
+
+    @Override
+    public JSONObject getShareableJson() throws GeneralException {
+        JSONObject res = super.getShareableJson();
+        res.put("type", "link");
+        res.put("logo", this.linkInfos.getImgUrl());
+        return res;
+    }
 }
 	

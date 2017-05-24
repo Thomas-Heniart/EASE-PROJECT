@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" contentType="text/html; charset=UTF-8" />
 <meta name="viewport" content="initial-scale=1, maximum-scale=1" />
 <link rel="chrome-webstore-item"
-	href="https://chrome.google.com/webstore/detail/echjdhmhmgildgidlcdlepfkaledeokm">
+	href="https://chrome.google.com/webstore/detail/hnacegpfmpknpdjmhdmpkmedplfcmdmp">
 <meta property="og:image"
 	content="https://ease.space/resources/other/fb_letsgo_icon.jpg" />
 <link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />

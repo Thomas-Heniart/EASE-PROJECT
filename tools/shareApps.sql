@@ -1,9 +1,10 @@
-DROP TABLE IF EXISTS shareableApps, sharedApps, pendingJoinTeamRequests, pendingJoinChannelRequests, teamUserChannels, createTeamInvitations, pendingTeamInvitations, channelAndTeamUserMap, channels, teamUsers, teamUserPermissions, teams;
+DROP TABLE IF EXISTS pendingTeamUserVerifications, shareableApps, sharedApps, pendingJoinTeamRequests, pendingJoinChannelRequests, teamUserChannels, createTeamInvitations, pendingTeamInvitations, channelsAndTeamUsersMap, channelAndTeamUserMap, channels, teamUserPermissions, teamAndTeamUsersMap, teamAndTeamUserMap, teamAndWebsiteMap, teamUsers, teams;
 
 CREATE TABLE teams (
   id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   name VARCHAR(100) NOT NULL,
-  PRIMARY KEY(id)
+  PRIMARY KEY(id),
+  UNIQUE (name)
 );
 
 CREATE TABLE teamUserPermissions (
@@ -16,17 +17,20 @@ CREATE TABLE teamUsers (
   id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   user_id INT(10) UNSIGNED,
   team_id INT(10) UNSIGNED NOT NULL,
-  firstName VARCHAR(100) NOT NULL,
-  lastName VARCHAR(100) NOT NULL,
+  firstName VARCHAR(100),
+  lastName VARCHAR(100),
   username VARCHAR(100) NOT NULL,
   email VARCHAR(100) NOT NULL,
   permissions_id INT(10) UNSIGNED NOT NULL,
   departureDate DATETIME,
   arrivalDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  teamKey TEXT,
+  verified TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY(id),
   FOREIGN KEY(user_id) REFERENCES users(id),
   FOREIGN KEY(team_id) REFERENCES teams(id),
-  FOREIGN KEY(permissions_id) REFERENCES teamUserPermissions(id)
+  FOREIGN KEY(permissions_id) REFERENCES teamUserPermissions(id),
+  UNIQUE (team_id, email, username)
 );
 
 CREATE TABLE channels (
@@ -35,7 +39,8 @@ CREATE TABLE channels (
   name VARCHAR(100),
   purpose VARCHAR(250),
   PRIMARY KEY(id),
-  FOREIGN KEY(team_id) REFERENCES teams(id)
+  FOREIGN KEY(team_id) REFERENCES teams(id),
+  UNIQUE (team_id, name)
 );
 
 CREATE TABLE channelAndTeamUserMap (
@@ -52,16 +57,28 @@ CREATE TABLE createTeamInvitations (
   email VARCHAR(100) BINARY NOT NULL,
   code VARCHAR(255) NOT NULL,
   expiration_date DATETIME NOT NULL,
-  PRIMARY KEY(id)
+  PRIMARY KEY(id),
+  UNIQUE (code)
 );
 
 CREATE TABLE pendingTeamInvitations (
   id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  email VARCHAR(100) BINARY NOT NULL,
+  teamUser_id INT(10) UNSIGNED NOT NULL,
   code VARCHAR(255) NOT NULL,
   team_id INT(10) UNSIGNED NOT NULL,
   PRIMARY KEY(id),
-  FOREIGN KEY (team_id) REFERENCES teams(id)
+  FOREIGN KEY (teamUser_id) REFERENCES teamUsers(id),
+  FOREIGN KEY (team_id) REFERENCES teams(id),
+  UNIQUE (code)
+);
+
+CREATE TABLE pendingTeamUserVerifications (
+  id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  teamUser_id INT(10) UNSIGNED NOT NULL,
+  code VARCHAR(255) NOT NULL,
+  PRIMARY KEY(id),
+  FOREIGN KEY (teamUser_id) REFERENCES teamUsers(id),
+  UNIQUE (code)
 );
 
 CREATE TABLE pendingJoinTeamRequests (
@@ -111,6 +128,9 @@ ALTER TABLE accounts ADD COLUMN lastUpdateDate DATETIME NOT NULL DEFAULT CURRENT
 ALTER TABLE accounts ADD COLUMN reminderIntervalValue TINYINT;
 ALTER TABLE accounts ADD COLUMN reminderIntervalType VARCHAR(25);
 
+ALTER TABLE websiteApps ADD COLUMN reminderIntervalValue TINYINT;
+ALTER TABLE websiteApps ADD COLUMN reminderIntervalType VARCHAR(25);
+
 /* Apps sharing */
 DROP TABLE IF EXISTS sharedApps, shareableApps, appAndSharedAppMap, channelAndAppMap;
 
@@ -125,6 +145,7 @@ CREATE TABLE shareableApps (
   team_id INT(10) UNSIGNED NOT NULL,
   teamUser_owner_id INT(10) UNSIGNED NOT NULL,
   channel_id INT(10) UNSIGNED,
+  description VARCHAR(255),
   PRIMARY KEY(id),
   FOREIGN KEY(team_id) REFERENCES teams(id),
   FOREIGN KEY(teamUser_owner_id) REFERENCES teamUsers(id),
@@ -166,9 +187,18 @@ ALTER TABLE userKeys ADD COLUMN privateKey TEXT;
 
 
 /* account keys */
-
-ALTER TABLE accounts DROP COLUMN publicKey;
-ALTER TABLE accounts DROP COLUMN privateKey;
-
 ALTER TABLE accounts ADD COLUMN publicKey TEXT;
 ALTER TABLE accounts ADD COLUMN privateKey TEXT;
+ALTER TABLE accounts ADD COLUMN mustBeReciphered TINYINT(1) DEFAULT 0;
+
+
+ALTER TABLE websiteAttributes ADD COLUMN noScrap TINYINT(1) DEFAULT 0;
+
+/*
+USE information_schema;
+SELECT *
+FROM
+  KEY_COLUMN_USAGE
+WHERE
+  REFERENCED_TABLE_NAME = 'teams'
+  AND REFERENCED_COLUMN_NAME = 'id';*/

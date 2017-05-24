@@ -56,11 +56,7 @@ public class ConnectionWithCookies extends HttpServlet {
                 SessionSave sessionSave = SessionSave.loadSessionSave(sessionId, token, sm);
                 user = User.loadUserFromCookies(sessionSave, sm);
                 sm.setUser(user);
-                for (App app : user.getDashboardManager().getApps()) {
-                    if (!app.isClassicApp())
-                        continue;
-                    ((ClassicApp) app).getAccount().update_ciphering_if_needed(sm);
-                }
+                user.getDashboardManager().decipherApps(sm);
                 //sm.addToSocket(WebsocketMessage.connectionMessage());
                 success = true;
                 sm.setResponse(ServletManager.Code.Success, "Connected with cookies.");

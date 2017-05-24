@@ -5,6 +5,7 @@ import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.NewDashboard.User.User;
+import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.DatabaseRequest;
 import com.Ease.Utils.GeneralException;
@@ -13,6 +14,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
+import javax.servlet.Servlet;
 import java.util.*;
 
 /**
@@ -26,8 +28,9 @@ public class TeamUser {
     @Column(name = "id")
     protected Integer db_id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    /* @ManyToOne
+    @JoinColumn(name = "user_id") */
+    @Transient
     protected User user;
 
     /* To remove when we we migrate on hibernate */
@@ -35,7 +38,7 @@ public class TeamUser {
     protected com.Ease.Dashboard.User.User dashboard_user;
 
     /* To remove when we we migrate on hibernate */
-    @Transient
+    @Column(name = "user_id")
     protected String user_id;
 
     @Column(name = "firstName")
@@ -47,14 +50,14 @@ public class TeamUser {
     @Column(name = "email")
     protected String email;
 
-    @Column(name = "teamPrivateKey")
-    private String teamPrivateKey;
+    @Column(name = "teamKey")
+    private String teamKey;
 
     @Column(name = "verified")
     protected boolean verified;
 
     @Transient
-    protected String deciphered_teamPrivateKey;
+    protected String deciphered_teamKey;
 
     @ManyToOne
     @JoinColumn(name = "team_id", nullable = false)
@@ -74,26 +77,29 @@ public class TeamUser {
     protected Date departureDate;
 
     @ManyToMany
-    @JoinTable(name = "channelAndTeamUserMap", joinColumns = { @JoinColumn(name = "team_user_id") }, inverseJoinColumns = { @JoinColumn(name = "channel_id") })
+    @JoinTable(name = "channelAndTeamUserMap", joinColumns = {@JoinColumn(name = "team_user_id")}, inverseJoinColumns = {@JoinColumn(name = "channel_id")})
     protected List<Channel> channels = new LinkedList<>();
 
 
     /**
-     * TODO Use hibernate for apps then update code avout sharedApps
+     * TODO Use hibernate for apps then update code about sharedApps
      */
     @Transient
     protected List<SharedApp> sharedApps = new LinkedList<>();
 
     @Transient
+    Map<Integer, SharedApp> sharedAppMap = new HashMap<>();
+
+    @Transient
     private List<ShareableApp> shareableApps = new LinkedList<>();
 
-    public TeamUser(User user, String firstName, String lastName, String email, String username, String teamPrivateKey, Boolean verified, Date departureDate, Team team, TeamUserPermissions teamUserPermissions, List<Channel> channels) {
+    public TeamUser(User user, String firstName, String lastName, String email, String username, String teamKey, Boolean verified, Date departureDate, Team team, TeamUserPermissions teamUserPermissions, List<Channel> channels) {
         this.user = user;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.username = username;
-        this.teamPrivateKey = teamPrivateKey;
+        this.teamKey = teamKey;
         this.verified = verified;
         this.departureDate = departureDate;
         this.team = team;
@@ -102,13 +108,13 @@ public class TeamUser {
         this.arrivalDate = new Date();
     }
 
-    public TeamUser(User user, String firstName, String lastName, String email, String username, String teamPrivateKey, Boolean verified, Team team, TeamUserPermissions teamUserPermissions, List<Channel> channels) {
+    public TeamUser(User user, String firstName, String lastName, String email, String username, String teamKey, Boolean verified, Team team, TeamUserPermissions teamUserPermissions, List<Channel> channels) {
         this.user = user;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.username = username;
-        this.teamPrivateKey = teamPrivateKey;
+        this.teamKey = teamKey;
         this.verified = verified;
         this.team = team;
         this.teamUserPermissions = teamUserPermissions;
@@ -116,25 +122,25 @@ public class TeamUser {
         this.arrivalDate = new Date();
     }
 
-    public TeamUser(User user, String firstName, String lastName, String email, String username, String teamPrivateKey, Boolean verified, Team team, TeamUserPermissions teamUserPermissions) {
+    public TeamUser(User user, String firstName, String lastName, String email, String username, String teamKey, Boolean verified, Team team, TeamUserPermissions teamUserPermissions) {
         this.user = user;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.username = username;
-        this.teamPrivateKey = teamPrivateKey;
+        this.teamKey = teamKey;
         this.verified = verified;
         this.team = team;
         this.teamUserPermissions = teamUserPermissions;
         this.arrivalDate = new Date();
     }
 
-    public TeamUser(String firstName, String lastName, String email, String username, String teamPrivateKey, Boolean verified, Team team, TeamUserPermissions teamUserPermissions) {
+    public TeamUser(String firstName, String lastName, String email, String username, String teamKey, Boolean verified, Team team, TeamUserPermissions teamUserPermissions) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.username = username;
-        this.teamPrivateKey = teamPrivateKey;
+        this.teamKey = teamKey;
         this.verified = verified;
         this.team = team;
         this.teamUserPermissions = teamUserPermissions;
@@ -217,17 +223,21 @@ public class TeamUser {
         this.username = username;
     }
 
-    public String getDeciphered_teamPrivateKey() {
-        return deciphered_teamPrivateKey;
+    public String getDeciphered_teamKey() throws GeneralException {
+        if (this.deciphered_teamKey == null)
+            this.decipher_teamKey();
+        return deciphered_teamKey;
     }
 
-    public void setDeciphered_teamPrivateKey(String deciphered_teamPrivateKey) {
-        this.deciphered_teamPrivateKey = deciphered_teamPrivateKey;
+    public void setDeciphered_teamKey(String deciphered_teamKey) {
+        this.deciphered_teamKey = deciphered_teamKey;
     }
 
-    public void setTeamPrivateKey(String teamPrivateKey) {
+    /*public void setTeamKey(String teamPrivateKey) {
+        System.out.println("old teamPrivateKey: " + this.teamPrivateKey);
+        System.out.println("new teamPrivateKey: " + teamPrivateKey);
         this.teamPrivateKey = teamPrivateKey;
-    }
+    }*/
 
     public Date getArrivalDate() {
         return arrivalDate;
@@ -269,23 +279,23 @@ public class TeamUser {
         this.channels = channels;
     }
 
-    public static TeamUser createAdminUser(String firstName, String lastName, String email, String username, String teamPrivateKey, Team team) {
+    public static TeamUser createAdminUser(String firstName, String lastName, String email, String username, String teamKey, Team team) throws GeneralException {
         TeamUserPermissions permissions = new TeamUserPermissions(TeamUserPermissions.Role.ADMINISTRATOR.getValue());
-        return new TeamUser(firstName, lastName, email, username, teamPrivateKey, true, team, permissions);
+        return new TeamUser(firstName, lastName, email, username, teamKey, true, team, permissions);
     }
 
     public List<SharedApp> getSharedApps() {
         return sharedApps;
     }
 
-    public JSONObject getJson() {
+    public JSONObject getJson() throws GeneralException {
         JSONObject res = new JSONObject();
         res.put("id", this.db_id);
         res.put("firstName", this.firstName);
         res.put("lastName", this.lastName);
         res.put("email", this.email);
         res.put("username", this.username);
-        res.put("role", this.teamUserPermissions.getRole());
+        res.put("role", this.teamUserPermissions.getPermissions());
         res.put("arrivalDate", this.arrivalDate.toString());
         res.put("departureDate", "null");
         if (departureDate != null)
@@ -321,50 +331,49 @@ public class TeamUser {
 
     public void addSharedApp(SharedApp app) {
         this.sharedApps.add(app);
+        this.sharedAppMap.put(((App)app).getSingleId(), app);
     }
 
     public void addShareableApp(ShareableApp app) {
         this.shareableApps.add(app);
     }
 
-    public void validateRegistration(ServletManager sm) throws GeneralException {
+    public void validateRegistration(String deciphered_teamKey, String userPublicKey, ServletManager sm) throws GeneralException {
         if (this.isVerified())
             throw new GeneralException(ServletManager.Code.ClientError, "TeamUser already registered");
-        if (this.deciphered_teamPrivateKey == null)
-            this.decipher_teamPrivateKey();
-        for (SharedApp sharedApp : this.getSharedApps()) {
-            if (!((App)sharedApp).isClassicApp())
-                continue;
-            ClassicApp sharedClassicApp = (ClassicApp)sharedApp;
-            sharedClassicApp.getAccount().decipherAndCipher(deciphered_teamPrivateKey, sm);
-        }
-        DatabaseRequest request = sm.getDB().prepareRequest("UDPATE teamUsers SET verified = 1 WHERE id = ?;");
+        DataBaseConnection db = sm.getDB();
+        DatabaseRequest request = db.prepareRequest("UDPATE teamUsers SET teamKey = ? WHERE id = ?;");
+        this.teamKey = RSA.Encrypt(deciphered_teamKey, userPublicKey);
+        request.setString(this.teamKey);
         request.setInt(this.db_id);
         request.set();
-        this.verified = true;
+        if (this.getDashboard_user() != null)
+            this.finalizeRegistration(sm);
     }
 
-    public void check_sharedApps_ciphering(ServletManager sm) throws GeneralException {
-        for (SharedApp sharedApp : this.sharedApps) {
-            App app = (App)sharedApp;
-            if(app.isReceived())
-                continue;
-            if (!app.isClassicApp())
-                continue;
-            ClassicApp classicApp = (ClassicApp)app;
-            DataBaseConnection db = sm.getDB();
-            int transaction = db.startTransaction();
-            classicApp.getAccount().update_shared_app_ciphering(this.getDashboard_user(), sm);
-            classicApp.beReceived(sm.getDB());
-            db.commitTransaction(transaction);
-        }
+    public void finalizeRegistration(ServletManager sm) throws GeneralException {
+        if (this.isVerified() && !this.isVerified())
+            throw new GeneralException(ServletManager.Code.ClientError, "You shouldn't be there");
+        this.deciphered_teamKey = RSA.Decrypt(this.teamKey, this.getDashboard_user().getKeys().getPrivateKey());
+        this.teamKey = this.getDashboard_user().encrypt(this.deciphered_teamKey);
+        DatabaseRequest request = sm.getDB().prepareRequest("UPDATE teamUsers SET teamKey = ?, verified = 1 WHERE id = ?;");
+        request.setString(this.teamKey);
+        request.setInt(this.db_id);
+        request.set();
     }
 
-    public void decipher_teamPrivateKey() throws GeneralException {
-        this.deciphered_teamPrivateKey = this.dashboard_user.decrypt(this.teamPrivateKey);
+    public void decipher_teamKey() throws GeneralException {
+        this.deciphered_teamKey = this.getDashboard_user().decrypt(this.teamKey);
     }
 
     public boolean isVerified() {
         return this.verified;
+    }
+
+    public SharedApp getSharedAppWithId(Integer app_id) throws GeneralException {
+        SharedApp sharedApp = this.sharedAppMap.get(app_id);
+        if (sharedApp == null)
+            throw new GeneralException(ServletManager.Code.ClientError, "This app does not exist.");
+        return sharedApp;
     }
 }

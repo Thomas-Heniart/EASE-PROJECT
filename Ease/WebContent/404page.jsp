@@ -6,7 +6,7 @@ pageEncoding="UTF-8"%>
 	<title>Oooops</title>
 	<meta http-equiv="Content-Type" contentType="text/html; charset=UTF-8"/>
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1"/>
-	<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/echjdhmhmgildgidlcdlepfkaledeokm">
+	<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/hnacegpfmpknpdjmhdmpkmedplfcmdmp">
 
 	<link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

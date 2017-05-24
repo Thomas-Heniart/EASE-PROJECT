@@ -42,6 +42,7 @@ public class ServletShareClassicApp extends HttpServlet {
             String channel_id = sm.getServletParam("channel_id", true);
             String accountAndTeamUserIds_string = sm.getServletParam("accountAndTeamUserIds", true);
             String app_name = sm.getServletParam("app_name", true);
+            String description = sm.getServletParam("description", false);
             if (app_name == null || app_name.equals(""))
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Empty app name");
             if (website_id == null || website_id.equals(""))
@@ -50,6 +51,8 @@ public class ServletShareClassicApp extends HttpServlet {
                 throw new GeneralException(ServletManager.Code.ClientError, "Team is null");
             if (accountAndTeamUserIds_string == null || accountAndTeamUserIds_string.equals(""))
                 throw new GeneralException(ServletManager.Code.ClientError, "accountAndTeamUserIds_string array is null");
+            if (description == null || description.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Description is null");
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website website = catalog.getWebsiteWithSingleId(Integer.parseInt(website_id));
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
@@ -76,15 +79,15 @@ public class ServletShareClassicApp extends HttpServlet {
                 ClassicApp shareableApp = ClassicApp.createClassicApp(null, null, app_name, website, accountInformationMap, sm, null);
                 teamUser_owner.addShareableApp(shareableApp);
                 team.addShareableApp(shareableApp);
-                DatabaseRequest databaseRequest = db.prepareRequest("INSERT INTO shareableApps values (?, ?, ?, ?);");
+                DatabaseRequest databaseRequest = db.prepareRequest("INSERT INTO shareableApps values (?, ?, ?, ?, ?);");
                 databaseRequest.setInt(shareableApp.getDBid());
                 databaseRequest.setInt(team.getDb_id());
                 databaseRequest.setInt(teamUser_owner.getDb_id());
-                databaseRequest.set();
                 if (channel == null)
                     databaseRequest.setNull();
                 else
-                    databaseRequest.setInt(channel.getDb_id());
+                    databaseRequest.setInt(channel_id);
+                databaseRequest.setString(description);
                 databaseRequest.set();
                 JSONObject informationObj = new JSONObject();
                 informationObj.put("accountInformation", accountInformationArray);
@@ -97,7 +100,7 @@ public class ServletShareClassicApp extends HttpServlet {
                 }
             }
             db.commitTransaction(transaction);
-            sm.setLogResponse("EmptyApp shared");
+            sm.setResponse(ServletManager.Code.Success, "ClassicApp shared");
         } catch (Exception e) {
             sm.setResponse(e);
         }

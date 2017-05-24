@@ -1,0 +1,23 @@
+{
+  "name":"Campaign Monitor",
+  "lastlogin":"",
+  "home":"https://www.campaignmonitor.com/",
+  "connect": {
+    "todo": [
+      {"action":"aclick", "search":"a#login"},
+      {"action":"fill", "what":"login", "search":"#user-email"},
+      {"action":"fill", "what":"password", "search":"#user-password"},
+      {"action":"click", "search":"button[type='submit']"}
+    ]
+  },
+  "logout": {
+    "todo": [
+      {"action":"aclick", "search":"a[href*='logout']"}
+    ]
+  },
+  "checkAlreadyLogged": [
+    {"action":"aclick", "search":"a#login"},
+    {"action":"waitfor", "search":"a[href*='logout'], #user-email"},
+    {"search":"a[href*='logout']"}
+  ]
+}

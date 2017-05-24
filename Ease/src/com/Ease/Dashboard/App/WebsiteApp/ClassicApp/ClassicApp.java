@@ -102,7 +102,7 @@ public class ClassicApp extends WebsiteApp {
         DatabaseRequest request = db.prepareRequest("UPDATE websiteApps SET type='classicApp' WHERE id= ?;");
         request.setInt(websiteAppDBid);
         request.set();
-        Account account = Account.createAccount(false, infos, sm);
+        Account account = Account.createAccount(false, infos, websiteApp.getReminderIntervalValue(), websiteApp.getReminderIntervalType(), sm);
         request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
         request.setInt(websiteAppDBid);
         request.setInt(account.getDBid());
@@ -120,7 +120,7 @@ public class ClassicApp extends WebsiteApp {
 
 	
 	/*
-	 * 
+     *
 	 * Constructor
 	 * 
 	 */
@@ -229,16 +229,15 @@ public class ClassicApp extends WebsiteApp {
         return false;
     }
 
-    public JSONArray getAccountInformationsJson() {
-        return this.account.getInformationsJSON();
+    public JSONArray getInformationWithoutPasswordJson() {
+        return this.account.getInformationWithoutPasswordJson();
     }
 
     @Override
     public void modifyShared(ServletManager sm, JSONObject editJson) throws GeneralException {
-        if (this.getAccount() == ((ClassicApp) this.getHolder()).getAccount())
-            this.holder.modifyShareable(sm, editJson, this);
-        else
-            this.getAccount().edit(editJson, sm);
+        if (!this.havePerm(AppPermissions.Perm.EDIT))
+            throw new GeneralException(ServletManager.Code.ClientError, "You cannot edit this app");
+        this.getHolder().modifyShareable(sm, editJson, this);
     }
 
     @Override
@@ -251,6 +250,8 @@ public class ClassicApp extends WebsiteApp {
     @Override
     public void modifyShareable(ServletManager sm, JSONObject editJson, SharedApp sharedApp) throws GeneralException {
         this.getAccount().edit(editJson, sm);
+        for (SharedApp app : this.sharedApps)
+            ((ClassicApp) app).getAccount().edit(editJson, sm);
     }
 
     @Override
@@ -268,16 +269,15 @@ public class ClassicApp extends WebsiteApp {
         String websiteAppId = WebsiteApp.createSharedWebsiteApp(this, elevator, team.getDb_id(), channel == null ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), sm);
         JSONArray accountInformationArray = (JSONArray) params.get("accountInformation");
         if (accountInformationArray == null || accountInformationArray.isEmpty())
-            throw new GeneralException(ServletManager.Code.ClientError, "Account informations shouldn't be empty or null");
+            throw new GeneralException(ServletManager.Code.ClientError, "Account information shouldn't be empty or null");
         Map<String, String> accountInformationMap = new HashMap<>();
         for (Object accountInformationObj : accountInformationArray) {
-            JSONObject accountInformation = (JSONObject)accountInformationObj;
-            String info_name = (String)accountInformation.get("info_name");
-            String info_value = (String)accountInformation.get("info_value");
+            JSONObject accountInformation = (JSONObject) accountInformationObj;
+            String info_name = (String) accountInformation.get("info_name");
+            String info_value = (String) accountInformation.get("info_value");
             accountInformationMap.put(info_name, info_value);
         }
-        String teamPublicKey = team.getPublicKey();
-        Account account = Account.createSharedAccount(accountInformationMap, teamPublicKey, sm);
+        Account account = Account.createSharedAccount(accountInformationMap, teamUser_owner.getDeciphered_teamKey(), sm);
         DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
         request.setInt(websiteAppId);
         request.setInt(account.getDBid());
@@ -286,6 +286,21 @@ public class ClassicApp extends WebsiteApp {
         App sharedApp = new ClassicApp((String) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), this.getSite(), websiteAppId, this.account, classicDBid, false, true, this);
         sharedApp.setReceived(false);
         return sharedApp;
+    }
+
+    @Override
+    public JSONObject getShareableJson() throws GeneralException {
+        JSONObject res = super.getShareableJson();
+        res.put("type", "simple");
+        return res;
+    }
+
+    @Override
+    public JSONObject getSharedJSON() {
+        JSONObject res = super.getSharedJSON();
+        JSONArray information = this.account.getInformationWithoutPasswordJson();
+        res.put("information", information);
+        return res;
     }
 
 }

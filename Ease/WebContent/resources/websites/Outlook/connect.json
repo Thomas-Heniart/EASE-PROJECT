@@ -20,6 +20,7 @@
 		]
 	},
 	"checkAlreadyLogged":[
-		{"action":"search", "search":"#O365_MainLink_Logo"}
+		{"action":"waitfor", "search":"#O365_MainLink_Logo, input[name='loginfmt']"},
+		{"search":"#O365_MainLink_Logo"}
 	]
 }

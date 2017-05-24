@@ -4,13 +4,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.Ease.Dashboard.User.User;
+import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.DatabaseRequest;
 import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
+import org.json.simple.JSONObject;
 
 public class AccountInformation {
 
@@ -30,6 +31,14 @@ public class AccountInformation {
         return informations;
     }
 
+    public static List<AccountInformation> createSharedAccountInformationList(String account_id, Map<String, String> informationMap, String deciphered_teamKey, ServletManager sm) throws GeneralException {
+        List<AccountInformation> informations = new LinkedList<AccountInformation>();
+        for (Map.Entry<String, String> entry : informationMap.entrySet()) {
+            informations.add(createSharedAccountInformation(account_id, entry.getKey(), entry.getValue(), deciphered_teamKey, sm));
+        }
+        return informations;
+    }
+
     public static List<AccountInformation> createAccountInformationFromAccountInformations(String account_id, List<AccountInformation> accountInformations, String publicKey, ServletManager sm) throws GeneralException {
         List<AccountInformation> informations = new LinkedList<AccountInformation>();
         for (AccountInformation info : accountInformations)
@@ -43,6 +52,16 @@ public class AccountInformation {
         request.setInt(account_id);
         request.setString(information_name);
         request.setString(RSA.Encrypt(information_value, publicKey));
+        int db_id = request.set();
+        return new AccountInformation(String.valueOf(db_id), account_id, information_name, information_value);
+    }
+
+    public static AccountInformation createSharedAccountInformation(String account_id, String information_name, String information_value, String deciphered_teamKey, ServletManager sm) throws GeneralException {
+        DataBaseConnection db = sm.getDB();
+        DatabaseRequest request = db.prepareRequest("INSERT INTO accountsInformations values (null, ?, ?, ?);");
+        request.setInt(account_id);
+        request.setString(information_name);
+        request.setString(AES.encrypt(information_value, deciphered_teamKey));
         int db_id = request.set();
         return new AccountInformation(String.valueOf(db_id), account_id, information_name, information_value);
     }
@@ -81,10 +100,10 @@ public class AccountInformation {
         return this.information_value;
     }
 
-    public void setInformation_value(String information_value, ServletManager sm) throws GeneralException {
+    public void setInformation_value(String information_value, String publicKey, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         DatabaseRequest request = db.prepareRequest("UPDATE accountsInformations SET information_value = ? WHERE id = ?;");
-        request.setString(information_value);
+        request.setString(RSA.Encrypt(information_value, publicKey));
         request.setInt(this.db_id);
         request.set();
         this.information_value = information_value;
@@ -116,5 +135,12 @@ public class AccountInformation {
         request.setString(RSA.Encrypt(this.information_value, publicKey));
         request.setString(this.db_id);
         request.set();
+    }
+
+    public JSONObject getJson() {
+        JSONObject res = new JSONObject();
+        res.put("info_name", this.information_name);
+        res.put("info_value", this.information_value);
+        return res;
     }
 }

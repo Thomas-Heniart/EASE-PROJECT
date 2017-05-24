@@ -27,26 +27,30 @@ import java.io.IOException;
 /**
  * Created by thomas on 08/05/2017.
  */
-@WebServlet("/api/v1/teams/ShareEmptyApp")
-public class ServletShareEmptyApp extends HttpServlet {
+@WebServlet("/api/v1/teams/ShareMultiApp")
+public class ServletShareMultiApp extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
-            sm.needToBeTeamUser();
+            sm.needToBeConnected();
             sm.needToBeTeamUser();
             String website_id = sm.getServletParam("website_id", true);
             String team_id = sm.getServletParam("team_id", true);
             String channel_id = sm.getServletParam("channel_id", true);
             String teamUser_ids_string = sm.getServletParam("teamUser_ids", true);
             String app_name = sm.getServletParam("app_name", true);
+            String reminder_value = sm.getServletParam("password_reminder_value", true);
+            if (team_id == null || team_id.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientError, "Team is null");
+            sm.needToBeTeamUserOfTeam(team_id);
             if (app_name == null || app_name.equals(""))
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Empty app name");
             if (website_id == null || website_id.equals(""))
                 throw new GeneralException(ServletManager.Code.ClientError, "Website is null");
-            if (team_id == null || team_id.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientError, "Team is null");
             if (teamUser_ids_string == null || teamUser_ids_string.equals(""))
                 throw new GeneralException(ServletManager.Code.ClientError, "TeamUser array is null");
+            if (reminder_value == null || reminder_value.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientError, "Password reminder is null");
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website website = catalog.getWebsiteWithSingleId(Integer.parseInt(website_id));
             WebsiteApp emptyApp = WebsiteApp.createEmptyApp(null, null, app_name, website, sm);
@@ -72,24 +76,25 @@ public class ServletShareEmptyApp extends HttpServlet {
             databaseRequest.set();
             JSONParser parser = new JSONParser();
             JSONArray teamUser_ids = (JSONArray) parser.parse(teamUser_ids_string);
-            if (teamUser_ids_string != null) {
-                for (Object teamUser_id : teamUser_ids) {
-                    TeamUser teamUser_tenant = team.getTeamUserWithId(Integer.parseInt((String) teamUser_id));
-                    SharedApp sharedApp = emptyApp.share(teamUser_owner, teamUser_tenant, channel, team, new JSONObject(), sm);
-                    teamUser_tenant.addSharedApp(sharedApp);
-                    if (channel != null)
-                        channel.addSharedApp(sharedApp);
-                }
+            JSONObject params = new JSONObject();
+            params.put("reminderIntervalValue", Integer.parseInt(reminder_value));
+            params.put("reminderIntervalType", "MONTH");
+            for (Object teamUser_id : teamUser_ids) {
+                TeamUser teamUser_tenant = team.getTeamUserWithId(Integer.parseInt((String) teamUser_id));
+                SharedApp sharedApp = emptyApp.share(teamUser_owner, teamUser_tenant, channel, team, params, sm);
+                teamUser_tenant.addSharedApp(sharedApp);
+                if (channel != null)
+                    channel.addSharedApp(sharedApp);
             }
-            if (channel_id != null && teamUser_ids.isEmpty()) {
-                for(TeamUser teamUser_tenant : team.getTeamUsers()) {
+            /* if (channel_id != null && teamUser_ids.isEmpty()) {
+                for (TeamUser teamUser_tenant : team.getTeamUsers()) {
                     if (teamUser_tenant == teamUser_owner)
                         continue;
                     SharedApp sharedApp = emptyApp.share(teamUser_owner, teamUser_tenant, channel, team, new JSONObject(), sm);
                     teamUser_tenant.addSharedApp(sharedApp);
                     channel.addSharedApp(sharedApp);
                 }
-            }
+            } */
             db.commitTransaction(transaction);
             sm.setLogResponse("EmptyApp shared");
         } catch (Exception e) {

@@ -11,26 +11,42 @@ $(document).ready(function () {
 });
 
 function showExtensionPopup() {
-    if (!($('#ease_extension').length)) {
+    var ease_extension = $("#ease_extension");
+    var new_ease_extension = $("#new_ease_extension");
+    if (ease_extension.length) {
+        console.log("waitForExtension: " + waitForExtension);
         if (!waitForExtension) {
-            $('#extension').addClass("myshow");
+            if (getUserNavigator() == "Safari") {
+                if (!$('#ease_extension').attr("safariversion") || $('#ease_extension').attr("safariversion") != "2.2.4") {
+                    $('#extension .title p').text("Update your extension");
+                    $('#extension #download #line1').text("A new version of the extension is now available.");
+                    $('#extension #download #line2').text("We added new features and made it faster !");
+                    $('#extension #download button').text("Update Ease Extension");
+                    $('#extension').addClass("myshow");
+                    return true;
+                }
+                return false;
+            } else {
+                $("#extension").addClass("myshow");
+                $("#extension #deleteExtension").addClass("show");
+            }
             return true;
         } else {
             setTimeout(function () {
                 return showExtensionPopup();
             }, 200);
         }
-    } else {
-        if (getUserNavigator() == "Safari") {
-            if (!$('#ease_extension').attr("safariversion") || $('#ease_extension').attr("safariversion") != "2.2.4") {
-                $('#extension .title p').text("Update your extension");
-                $('#extension #download #line1').text("A new version of the extension is now available.");
-                $('#extension #download #line2').text("We added new features and made it faster !");
-                $('#extension #download button').text("Update Ease Extension");
-                $('#extension').addClass("myshow");
-                return true;
-            }
+
+    } else if (!new_ease_extension.length) {
+        if (!waitForExtension) {
+            $("#extension").addClass("myshow");
+            $("#extension #download").addClass("show");
         }
+        else
+            setTimeout(function () {
+                return showExtensionPopup();
+            }, 200);
+    } else {
         return false;
     }
 }
@@ -146,15 +162,8 @@ $(document).ready(function () {
     $("#extension #download button[type='submit']").click(function () {
         $("#extension #step1 #download").removeClass('show');
         if (NavigatorName == "Chrome") {
-            $("#extension #step1 #chrome").addClass('show');
-            chrome.webstore.install(
-                'https://chrome.google.com/webstore/detail/echjdhmhmgildgidlcdlepfkaledeokm',
-                function () {
-                    //do nothing
-                },
-                function () {
-                    //do nothing
-                });
+            var win = window.open('https://chrome.google.com/webstore/detail/hnacegpfmpknpdjmhdmpkmedplfcmdmp', '_blank');
+            win.focus();
         } else if (NavigatorName == "Safari") {
             $("#extension #step1 #safari").addClass('show');
             window.location.replace(location.protocol + '//' + location.hostname + "/safariExtension/EaseExtension.safariextz");

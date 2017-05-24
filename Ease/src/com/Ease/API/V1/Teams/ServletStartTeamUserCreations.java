@@ -22,6 +22,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by thomas on 02/05/2017.
@@ -37,6 +39,7 @@ public class ServletStartTeamUserCreations extends HttpServlet {
             JSONObject res = new JSONObject();
             JSONArray validInvitations = new JSONArray();
             JSONArray failInvitations = new JSONArray();
+            List<TeamUser> teamUsersToAdd = new LinkedList<>();
             if (team_id == null || team_id.equals(""))
                 throw new GeneralException(ServletManager.Code.ClientError, "Team is null.");
             if (teamUsersString == null || teamUsersString.equals(""))
@@ -50,6 +53,7 @@ public class ServletStartTeamUserCreations extends HttpServlet {
             if (teamUsersToCreate.isEmpty())
                 throw new GeneralException(ServletManager.Code.ClientError, "Empty teamusers.");
             HibernateQuery query = new HibernateQuery();
+            System.out.println("teamUsersToCreate size: " + teamUsersToCreate.size());
             for (Object teamUserToCreateObj : teamUsersToCreate) {
                 JSONObject teamUserToCreate = (JSONObject) teamUserToCreateObj;
                 String email = (String) teamUserToCreate.get("email");
@@ -66,6 +70,7 @@ public class ServletStartTeamUserCreations extends HttpServlet {
                     tmp.put("email", email);
                     tmp.put("cause", "This person is already on your team.");
                     failInvitations.add(tmp);
+                    System.out.println("fail invitations 1");
                     continue;
                 }
                 query.querySQLString("SELECT id FROM teamUsers WHERE email = ? AND team_id = ? AND verified = 0;");
@@ -76,22 +81,28 @@ public class ServletStartTeamUserCreations extends HttpServlet {
                     tmp.put("email", email);
                     tmp.put("cause", "This person has already been invited to your team.");
                     failInvitations.add(tmp);
+                    System.out.println("fail invitations 2");
                     continue;
                 }
-                query.querySQLString("SELECT users.id FROM users LEFT JOIN teamUsers ON users.id = teamUsers.user_id WHERE users.email = ? OR teamUsers.email = ?;");
+                query.querySQLString("SELECT id FROM users WHERE email = ?;");
                 query.setParameter(1, email);
-                query.setParameter(2, email);
                 if (!query.list().isEmpty()) {
-                    JSONObject tmp = new JSONObject();
-                    tmp.put("email", email);
-                    tmp.put("cause", "This email has already been taken");
-                    failInvitations.add(tmp);
-                    continue;
+                    query.querySQLString("SELECT id FROM teamUsers WHERE email = ?");
+                    query.setParameter(1, email);
+                    if (!query.list().isEmpty()) {
+                        JSONObject tmp = new JSONObject();
+                        tmp.put("email", email);
+                        tmp.put("cause", "This email has already been taken");
+                        failInvitations.add(tmp);
+                        System.out.println("fail invitations 3");
+                        continue;
+                    }
                 }
+                System.out.println("teamUser creation");
                 TeamUser teamUser = new TeamUser(firstName, lastName, email, username, null, false, team, new TeamUserPermissions(TeamUserPermissions.Role.MEMBER.getValue()));
-                team.addTeamUser(teamUser);
                 team.getGeneralChannel().addTeamUser(teamUser);
                 query.saveOrUpdateObject(teamUser);
+                teamUsersToAdd.add(teamUser);
                 String code;
                 do {
                     code = CodeGenerator.generateNewCode();
@@ -105,6 +116,7 @@ public class ServletStartTeamUserCreations extends HttpServlet {
                 query.executeUpdate();
                 SendGridMail sendGridMail = new SendGridMail("Benjamin @EaseSpace", "benjamin@ease.space");
                 sendGridMail.sendInvitationToJoinTeamEmail(team.getName(), adminTeamUser.getFirstName(), email, code);
+                System.out.println("valid invitations");
                 JSONObject tmp = new JSONObject();
                 tmp.put("email", email);
                 tmp.put("username", username);
@@ -112,6 +124,8 @@ public class ServletStartTeamUserCreations extends HttpServlet {
             }
             query.saveOrUpdateObject(team);
             query.commit();
+            for (TeamUser teamUser : teamUsersToAdd)
+                team.addTeamUser(teamUser);
             res.put("validInvitations", validInvitations);
             res.put("failInvitations", failInvitations);
             sm.setResponse(ServletManager.Code.Success, res.toString());

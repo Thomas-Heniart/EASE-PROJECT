@@ -26,13 +26,16 @@ import com.Ease.Utils.ServletManager;
 import javax.servlet.ServletContext;
 
 public class WebsiteApp extends App implements SharedApp, ShareableApp {
+
     public enum Data {
         NOTHING,
         ID,
         WEBSITE_ID,
         APP_ID,
         GROUP_WEBSITE_ID,
-        TYPE
+        TYPE,
+        REMINDER_INTERVAL_VALUE,
+        REMINDER_INTERVAL_TYPE
     }
 
 	/*
@@ -65,11 +68,11 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         throw new GeneralException(ServletManager.Code.InternError, "Website app not complete in db.");
     }
 
-    public static String createWebsiteApp(Profile profile, int position, String name, String type, Website site, Map<String, Object> elevator, ServletManager sm) throws GeneralException {
+    public static String createWebsiteApp(Profile profile, Integer position, String name, String type, Website site, Map<String, Object> elevator, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         String appDBid = App.createApp(profile, position, name, "websiteApp", elevator, sm);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, ?);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, ?, null, null);");
         request.setInt(site.getDb_id());
         request.setInt(appDBid);
         request.setString(type);
@@ -89,7 +92,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<String, Object>();
         String appDBid = App.createApp(profile, position, name, "websiteApp", elevator, sm);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, 'websiteApp');");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, 'websiteApp', null, null);");
         request.setInt(site.getDb_id());
         request.setInt(appDBid);
         String websiteAppDBid = request.set().toString();
@@ -97,11 +100,26 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         return new WebsiteApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid);
     }
 
+    public static WebsiteApp createEmptyApp(Profile profile, Integer position, String name, Website site, Integer reminderIntervalValue, String reminderIntervalType, ServletManager sm) throws GeneralException {
+        DataBaseConnection db = sm.getDB();
+        int transaction = db.startTransaction();
+        Map<String, Object> elevator = new HashMap<String, Object>();
+        String appDBid = App.createApp(profile, position, name, "websiteApp", elevator, sm);
+        DatabaseRequest request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, 'websiteApp', ?, ?);");
+        request.setInt(site.getDb_id());
+        request.setInt(appDBid);
+        request.setInt(reminderIntervalValue);
+        request.setString(reminderIntervalType);
+        String websiteAppDBid = request.set().toString();
+        db.commitTransaction(transaction);
+        return new WebsiteApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), site, reminderIntervalValue, reminderIntervalType, websiteAppDBid);
+    }
+
     public static String createSharedWebsiteApp(WebsiteApp websiteApp, Map<String, Object> elevator, Integer team_id, Integer channel_id, Integer team_user_tenant_id, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         String appDBid = App.createSharedApp(null, null, websiteApp.getName(), "websiteApp", elevator, false, true, team_id, channel_id == null ? null : channel_id, team_user_tenant_id, websiteApp, false, sm);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, 'websiteApp');");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, 'websiteApp', null, null);");
         request.setInt(websiteApp.getSite().getDb_id());
         request.setInt(appDBid);
         String websiteAppDBid = request.set().toString();
@@ -158,6 +176,18 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
     protected Website website;
     protected String websiteAppDBid;
     protected GroupWebsiteApp groupWebsiteApp;
+    protected Integer reminderIntervalValue = null;
+    protected String reminderIntervalType = null;
+
+
+    public WebsiteApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, Integer reminderIntervalValue, String reminderIntervalType, String websiteAppDBid) {
+        super(db_id, profile, position, infos, groupApp, insertDate, single_id);
+        this.website = site;
+        this.reminderIntervalType = reminderIntervalType;
+        this.reminderIntervalValue = reminderIntervalValue;
+        this.websiteAppDBid = websiteAppDBid;
+        this.groupWebsiteApp = (GroupWebsiteApp) groupApp;
+    }
 
     public WebsiteApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid) {
         super(db_id, profile, position, infos, groupApp, insertDate, single_id);
@@ -173,7 +203,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         this.groupWebsiteApp = (GroupWebsiteApp) groupApp;
     }
 
-    public WebsiteApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid, boolean shareable, boolean shared, ShareableApp holder) {
+    public WebsiteApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid, boolean shareable, boolean shared, ShareableApp holder, Integer reminderIntervalValue, String reminderIntervalType) {
         super(db_id, profile, position, infos, groupApp, insertDate, single_id, shareable, shared, holder);
         this.website = site;
         this.websiteAppDBid = websiteAppDBid;
@@ -202,6 +232,14 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
 
     public String getWebsiteAppDBid() {
         return this.websiteAppDBid;
+    }
+
+    public Integer getReminderIntervalValue() {
+        return reminderIntervalValue;
+    }
+
+    public String getReminderIntervalType() {
+        return reminderIntervalType;
     }
 	
 	/*
@@ -267,11 +305,32 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<>();
         String appDBid = App.createSharedApp(null, null, this.getName(), "websiteApp", elevator, false, true, team.getDb_id(), (channel == null) ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), this, true, sm);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, 'websiteApp');");
+        Integer reminderIntervalValue = (Integer) params.get("reminderIntervalValue");
+        String reminderIntervalType = (String) params.get("reminderIntervalType");
+        if (reminderIntervalValue == 0) {
+            reminderIntervalType = null;
+            reminderIntervalValue = null;
+        }
+        DatabaseRequest request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, 'websiteApp', ?, ?);");
         request.setInt(this.getSite().getDb_id());
         request.setInt(appDBid);
+        if (reminderIntervalValue == null) {
+            request.setNull();
+            request.setNull();
+        } else {
+            request.setInt(reminderIntervalValue);
+            request.setString(reminderIntervalType);
+        }
         String websiteAppDBid = request.set().toString();
         db.commitTransaction(transaction);
-        return new WebsiteApp(appDBid, null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), this.getSite(), websiteAppDBid, false, true, this);
+        return new WebsiteApp(appDBid, null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), this.getSite(), websiteAppDBid, false, true, this, reminderIntervalValue, reminderIntervalType);
+    }
+
+    @Override
+    public JSONObject getShareableJson() throws GeneralException {
+        JSONObject res = super.getShareableJson();
+        res.put("type", "multi");
+        res.put("website_information", this.website.getInformationJson());
+        return res;
     }
 }

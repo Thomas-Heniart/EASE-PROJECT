@@ -1,0 +1,23 @@
+{
+  "name":"FrontApp",
+  "lastlogin":"",
+  "home":"https://app.frontapp.com/",
+  "connect": {
+    "todo": [
+      {"action":"fill", "what":"login", "search":"#email-login"},
+      {"action":"fill", "what":"password", "search":"#password-login"},
+      {"action":"click", "search":"button[ng-click='signin()']"}
+    ]
+  },
+  "logout": {
+    "todo": [
+      {"action":"click", "search":".user-avatar"},
+      {"action":"waitfor", "search":".popover.nav-profile div.profile-item:last-child"},
+      {"action":"click", "search":".popover.nav-profile div.profile-item:last-child"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged": [
+    {"search":"div.user-avatar"}
+  ]
+}

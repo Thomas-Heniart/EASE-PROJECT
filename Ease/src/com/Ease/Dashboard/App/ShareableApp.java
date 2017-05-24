@@ -24,5 +24,7 @@ public interface ShareableApp {
     public void setChannel(Channel channel);
     public void addSharedApp(SharedApp app);
     public void setSharedApps(List<SharedApp> sharedApps);
-    public JSONObject getShareableJson();
+    public JSONObject getShareableJson() throws GeneralException;
+    public void setDescription(String description);
+    public String getDescription();
 }

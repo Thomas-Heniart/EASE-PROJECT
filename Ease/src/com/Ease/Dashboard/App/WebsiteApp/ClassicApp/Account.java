@@ -9,15 +9,12 @@ import com.Ease.Utils.Crypto.RSA;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import com.Ease.Context.Group.Infrastructure;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.DatabaseRequest;
 import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
-
-import javax.servlet.Servlet;
 
 public class Account {
 
@@ -69,14 +66,25 @@ public class Account {
     }
 
     public static Account createAccount(boolean shared, Map<String, String> informations, ServletManager sm) throws GeneralException {
+        return createAccount(shared, informations, null, null, sm);
+    }
+
+    public static Account createAccount(boolean shared, Map<String, String> informations, Integer reminderValue, String reminderType, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
         String publicKey = publicAndPrivateKey.getKey();
         String privateKey = publicAndPrivateKey.getValue();
         String ciphered_key = sm.getUser().encrypt(privateKey);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, ?, default, null, null, ?, ?, 0);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, ?, default, ?, ?, ?, ?, 0);");
         request.setBoolean(shared);
+        if (reminderValue != null && reminderType != null) {
+            request.setInt(reminderValue);
+            request.setString(reminderType);
+        } else {
+            request.setNull();
+            request.setNull();
+        }
         request.setString(publicKey);
         request.setString(ciphered_key);
         String db_id = request.set().toString();
@@ -87,21 +95,14 @@ public class Account {
         return account;
     }
 
-    public static Account createSharedAccount(Map<String, String> information, String teamPublicKey, ServletManager sm) throws GeneralException {
+    public static Account createSharedAccount(Map<String, String> information, String deciphered_teamKey, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
-        Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
-        String publicKey = publicAndPrivateKey.getKey();
-        String privateKey = publicAndPrivateKey.getValue();
-        String ciphered_key = RSA.Encrypt(privateKey, teamPublicKey);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, null, null, ?, ?, 1);");
-        request.setString(publicKey);
-        request.setString(ciphered_key);
+        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, null, null, null, null, 1);");
         String db_id = request.set().toString();
-        List<AccountInformation> infos = AccountInformation.createAccountInformations(db_id, information, publicKey, sm);
+        List<AccountInformation> infos = AccountInformation.createSharedAccountInformationList(db_id, information, deciphered_teamKey, sm);
         db.commitTransaction(transaction);
-        Account account = new Account(db_id, false, publicKey, ciphered_key, infos, true);
-        account.setPrivateKey(privateKey);
+        Account account = new Account(db_id, false, null, null, infos, true);
         return account;
     }
 
@@ -144,7 +145,7 @@ public class Account {
     }
 
 	/*
-	 * 
+     *
 	 * Constuctor
 	 * 
 	 */
@@ -253,7 +254,7 @@ public class Account {
             throw new GeneralException(ServletManager.Code.ClientError, "This account does not have password field");
         for (AccountInformation info : this.infos) {
             if (info.getInformationName().equals("password"))
-                info.setInformation_value(cryptedPassword, sm);
+                info.setInformation_value(cryptedPassword, this.publicKey, sm);
         }
     }
 
@@ -304,7 +305,7 @@ public class Account {
                     request.set();
                     this.passwordMustBeUpdated = false;
                 }
-                info.setInformation_value(value, sm);
+                info.setInformation_value(value, this.publicKey, sm);
             }
         }
         db.commitTransaction(transaction);
@@ -315,7 +316,7 @@ public class Account {
             String new_info_value = (String) editJson.get(accountInformation.getInformationName());
             if (new_info_value == null)
                 continue;
-            accountInformation.setInformation_value(new_info_value, sm);
+            accountInformation.setInformation_value(new_info_value, this.publicKey, sm);
         }
     }
 
@@ -327,7 +328,7 @@ public class Account {
         return null;
     }
 
-    public JSONArray getInformationsJSON() {
+    public JSONArray getInformationWithoutPasswordJson() {
         JSONArray res = new JSONArray();
         for (AccountInformation info : this.infos) {
             if (!info.getInformationName().equals("password")) {
@@ -346,11 +347,7 @@ public class Account {
 
     public void update_ciphering_if_needed(ServletManager sm) throws GeneralException {
         if (this.publicKey != null && this.ciphered_key != null) {
-            if (!this.mustBeReciphered())
-                return;
-            for (AccountInformation accountInformation : this.getAccountInformations()) {
-                //accountInformation.update_ciphering();
-            }
+            return;
         }
         Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
         this.publicKey = publicAndPrivateKey.getKey();
@@ -368,30 +365,4 @@ public class Account {
         db.commitTransaction(transaction);
 
     }
-
-    public void update_shared_app_ciphering(User user, ServletManager sm) throws GeneralException {
-        for (AccountInformation accountInformation : this.getAccountInformations()) {
-            String info_value = RSA.Decrypt(accountInformation.getInformationValue(), user.getKeys().getPrivateKey());
-            accountInformation.setInformation_value(RSA.Encrypt(info_value, this.publicKey), sm);
-            accountInformation.decipher(this.privateKey);
-        }
-    }
-
-    public void decipherAndCipher(String deciphered_teamPrivateKey, ServletManager sm) throws GeneralException {
-        Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
-        this.publicKey = publicAndPrivateKey.getKey();
-        this.privateKey = publicAndPrivateKey.getValue();
-        this.ciphered_key = sm.getUser().encrypt(this.privateKey);
-        DataBaseConnection db = sm.getDB();
-        int transaction = db.startTransaction();
-        DatabaseRequest request = db.prepareRequest("UPDATE accounts SET publicKey = ?, privateKey = ? WHERE id = ?;");
-        request.setString(this.publicKey);
-        request.setString(this.ciphered_key);
-        request.setInt(this.db_id);
-        request.set();
-        for (AccountInformation accountInformation : this.getAccountInformations())
-            accountInformation.decipherAndCipher(deciphered_teamPrivateKey, publicKey, sm);
-        db.commitTransaction(transaction);
-    }
-
 }

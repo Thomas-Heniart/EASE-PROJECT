@@ -89,7 +89,7 @@ response.addCookie(email);
 	<meta name="twitter:image" content="https://ease.space/resources/images/fbmeta-en.png" />
 	
 	<link rel="chrome-webstore-item"
-	href="https://chrome.google.com/webstore/detail/echjdhmhmgildgidlcdlepfkaledeokm" />
+	href="https://chrome.google.com/webstore/detail/hnacegpfmpknpdjmhdmpkmedplfcmdmp" />
 	<link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 	<link rel="stylesheet" type="text/css" href="/cssMinified.v00009/lib/fonts/museo-font.css" />
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
@@ -136,7 +136,7 @@ response.addCookie(email);
 	<%@ include file="/templates/TutorialView.jsp"%>
 		<script type="text/javascript">
 			window.addEventListener('load',function() {
-				asyncLoading.loadScriptsOneByOne(["/jsMinified.v00011/tutorialSteps.js"]);
+				asyncLoading.loadScriptsOneByOne(["/jsMinified.v00013/tutorialSteps.js"]);
 			});
 		</script>
 	</c:if>
@@ -145,24 +145,24 @@ response.addCookie(email);
 <noscript id="deferred-styles">
 	<link rel="stylesheet" href="/cssMinified.v00009/lib/niftyPopupWindow/component.css">
 </noscript>
-<script src="/jsMinified.v00011/jquery1.12.4.js" ></script>
-<script src="/jsMinified.v00011/jquery-ui-1.12.0.js" defer></script>
-<script src="/jsMinified.v00011/Sortable.js" defer></script>
-<script src="/jsMinified.v00011/app.js" defer></script>
-<script src="/jsMinified.v00011/profiles.js" defer></script>
-<script src="/jsMinified.v00011/dashboard.js" defer></script>
-<script src="/jsMinified.v00011/websocket.js" async></script>
-<script src="/jsMinified.v00011/tracker.js" async></script>
-<script src="/jsMinified.v00011/asyncContentLoading.js" async></script>
-<script src="/jsMinified.v00011/postHandler.js" async></script>
-<script src="/jsMinified.v00011/basic-utils.js" async></script>
-<script src="/jsMinified.v00011/extension.js" async></script>
-<script src="/jsMinified.v00011/header.js" async></script>
-<script src="/jsMinified.v00011/selectFx.js" async></script>
-<script src="/jsMinified.v00011/isMobile.js" async></script>
-<script src="/jsMinified.v00011/shortcut.js" async></script>
-<script src="/jsMinified.v00011/logout.js" async></script>
-<script src="/jsMinified.v00011/checkConnection.js" async></script>
+<script src="/jsMinified.v00013/jquery1.12.4.js" ></script>
+<script src="/jsMinified.v00013/jquery-ui-1.12.0.js" defer></script>
+<script src="/jsMinified.v00013/Sortable.js" defer></script>
+<script src="/jsMinified.v00013/app.js" defer></script>
+<script src="/jsMinified.v00013/profiles.js" defer></script>
+<script src="/jsMinified.v00013/dashboard.js" defer></script>
+<script src="/jsMinified.v00013/websocket.js" async></script>
+<script src="/jsMinified.v00013/tracker.js" async></script>
+<script src="/jsMinified.v00013/asyncContentLoading.js" async></script>
+<script src="/jsMinified.v00013/postHandler.js" async></script>
+<script src="/jsMinified.v00013/basic-utils.js" async></script>
+<script src="/jsMinified.v00013/extension.js" async></script>
+<script src="/jsMinified.v00013/header.js" async></script>
+<script src="/jsMinified.v00013/selectFx.js" async></script>
+<script src="/jsMinified.v00013/isMobile.js" async></script>
+<script src="/jsMinified.v00013/shortcut.js" async></script>
+<script src="/jsMinified.v00013/logout.js" async></script>
+<script src="/jsMinified.v00013/checkConnection.js" async></script>
 <script>
 		var images = document.getElementsByClassName('logo');
 	Array.prototype.forEach.call(images, function(element){
@@ -205,12 +205,12 @@ response.addCookie(email);
 			callback: function(){
 				asyncLoading.loadScriptsOneByOne(
 					[
-					"/jsMinified.v00011/modifyAppPopup.js",
-					"/jsMinified.v00011/addAppPopup.js",
-					"/jsMinified.v00011/deleteAccountPopup.js",
-					"/jsMinified.v00011/deleteProfilePopup.js",
-					"/jsMinified.v00011/addBookmarkPopup.js",
-					"/jsMinified.v00011/popupHandler.js"
+					"/jsMinified.v00013/modifyAppPopup.js",
+					"/jsMinified.v00013/addAppPopup.js",
+					"/jsMinified.v00013/deleteAccountPopup.js",
+					"/jsMinified.v00013/deleteProfilePopup.js",
+					"/jsMinified.v00013/addBookmarkPopup.js",
+					"/jsMinified.v00013/popupHandler.js"
 					]
 				);
 			}
@@ -224,10 +224,10 @@ response.addCookie(email);
 			appendTo: '.col-left .CatalogViewTab',
 			callback: function(){
 				asyncLoading.loadScriptsOneByOne(
-					['/jsMinified.v00011/catalogApp.js',
-					'/jsMinified.v00011/catalog.js',
-					'/jsMinified.v00011/update.js',
-					'/jsMinified.v00011/updatesManager.js'
+					['/jsMinified.v00013/catalogApp.js',
+					'/jsMinified.v00013/catalog.js',
+					'/jsMinified.v00013/update.js',
+					'/jsMinified.v00013/updatesManager.js'
 					],
 					function(){
 						$('.MenuButtonSet.waiting-load').removeClass('waiting-load');
@@ -238,7 +238,7 @@ response.addCookie(email);
 			urls:['/templates/Footer.html'],
 			appendTo : '#onComputer',
 			callback : function(){
-				asyncLoading.loadSingleScript("/jsMinified.v00011/footer.js");
+				asyncLoading.loadSingleScript("/jsMinified.v00013/footer.js");
 			}
 		});
 	});
@@ -246,7 +246,7 @@ response.addCookie(email);
 <script type="text/javascript">
 	window.addEventListener('load',function(){
 		(function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script");r.type="text/javascript";
-			r.async=true;r.src="/jsMinified.v00011/amplitude-analytics.js";
+			r.async=true;r.src="/jsMinified.v00013/amplitude-analytics.js";
 			r.onload=function(){e.amplitude.runQueuedFunctions()};var i=t.getElementsByTagName("script")[0];
 			i.parentNode.insertBefore(r,i);function s(e,t){e.prototype[t]=function(){this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));
 				return this}}var o=function(){this._q=[];return this};var a=["add","append","clearAll","prepend","set","setOnce","unset"];
@@ -275,7 +275,7 @@ response.addCookie(email);
 		<!-- Amplitude script -->
 		<script type="text/javascript">
 			window.addEventListener('load',function(){
-				$crisp=[];CRISP_WEBSITE_ID="6e9fe14b-66f7-487c-8ac9-5912461be78a";(function(){d=document;s=d.createElement("script");s.src="/jsMinified.v00011/thirdParty/crisp.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+				$crisp=[];CRISP_WEBSITE_ID="6e9fe14b-66f7-487c-8ac9-5912461be78a";(function(){d=document;s=d.createElement("script");s.src="/jsMinified.v00013/thirdParty/crisp.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
 			});
 		</script>
 	</body>

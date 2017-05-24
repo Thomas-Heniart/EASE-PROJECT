@@ -1,0 +1,21 @@
+{
+  "name":"Mailjet",
+  "lastlogin":"",
+  "home":"https://app.mailjet.com/dashboard",
+  "connect": {
+    "todo": [
+      {"action":"fill", "what":"login", "search":"form[action*='signin'] #login"},
+      {"action":"fill", "what":"password", "search":"form[action*='signin'] #password"},
+      {"action":"click", "search":"form[action*='signin'] input[name='submit']"}
+    ]
+  },
+  "logout": {
+    "todo": [
+      {"action":"aclick", "search":"a[href*='signout']"},
+      {"action":"aclick", "search":"a[href*='signin']"}
+    ]
+  },
+  "checkAlreadyLogged": [
+    {"search":"a.lc-header-signout"}
+  ]
+}
