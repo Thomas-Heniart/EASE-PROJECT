@@ -441,7 +441,7 @@ public class Website {
     }
 
     public String getLogo() {
-        return Variables.URL_PATH + this.getFolder() + "logo.png";
+        return this.getFolder() + "logo.png";
     }
 
     public List<WebsiteInformation> getInformations() {
