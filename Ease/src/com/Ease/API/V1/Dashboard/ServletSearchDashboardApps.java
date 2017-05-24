@@ -20,7 +20,7 @@ import java.util.List;
  */
 @WebServlet("/api/v1/dashboard/SearchDashboardApps")
 public class ServletSearchDashboardApps extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
@@ -42,7 +42,7 @@ public class ServletSearchDashboardApps extends HttpServlet {
         sm.sendResponse();
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
         rd.forward(request, response);
     }

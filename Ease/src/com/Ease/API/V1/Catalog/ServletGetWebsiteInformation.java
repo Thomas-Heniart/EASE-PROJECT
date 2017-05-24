@@ -18,7 +18,7 @@ import java.io.IOException;
  */
 @WebServlet("/api/v1/catalog/GetWebsiteInformation")
 public class ServletGetWebsiteInformation extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
@@ -35,7 +35,7 @@ public class ServletGetWebsiteInformation extends HttpServlet {
         sm.sendResponse();
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         this.doPost(request, response);
     }
 }
