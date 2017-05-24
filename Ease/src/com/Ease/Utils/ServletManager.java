@@ -130,6 +130,15 @@ public class ServletManager {
         throw new GeneralException(Code.ClientWarning, "Access denied");
     }
 
+    public void needToBeAdminOfTeam(Integer team_id) throws GeneralException {
+        this.needToBeTeamUser();
+        for (TeamUser teamUser : this.getUser().getTeamUsers()) {
+            if (teamUser.getTeam().getDb_id() == team_id && teamUser.isTeamAdmin())
+                return;
+        }
+        throw new GeneralException(Code.ClientWarning, "Access denied");
+    }
+
     public HttpServletRequest getRequest() {
         return request;
     }
@@ -265,7 +274,7 @@ public class ServletManager {
 
         try {
             //System.out.println("wMessages loop start");
-			/*for (WebsocketMessage msg : this.messages) {
+            /*for (WebsocketMessage msg : this.messages) {
 				websockets.forEach((key, socket) -> {
 					System.out.println( (user == null ? "No user" : user.getFirstName()) + " client socketId : " + key + ", sm socketId : " + socketId);
 					if (msg.getWho() == WebsocketMessage.Who.ALLTABS ||
