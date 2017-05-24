@@ -198,7 +198,7 @@ public class App implements ShareableApp, SharedApp {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
         String registrationDate = dateFormat.format(date);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO apps VALUES (NULL, ?, ?, ?, NULL, ?, ?);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO apps VALUES (NULL, ?, ?, ?, NULL);");
         request.setString(registrationDate);
         request.setString(type);
         request.setInt(infos.getDb_id());
@@ -242,8 +242,6 @@ public class App implements ShareableApp, SharedApp {
     protected GroupApp groupApp;
     protected String insertDate;
     protected int single_id;
-    protected boolean shared;
-    protected boolean shareable;
     protected boolean received = true;
 
     /* Interface ShareableApp */
@@ -267,11 +265,9 @@ public class App implements ShareableApp, SharedApp {
         this.groupApp = groupApp;
         this.insertDate = insertDate;
         this.single_id = single_id;
-        this.shareable = true;
-        this.shared = false;
     }
 
-    public App(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, boolean shared, boolean shareable) {
+    public App(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, ShareableApp holder) {
         this.db_id = db_id;
         this.profile = profile;
         this.position = position;
@@ -279,22 +275,6 @@ public class App implements ShareableApp, SharedApp {
         this.groupApp = groupApp;
         this.insertDate = insertDate;
         this.single_id = single_id;
-        this.shared = shared;
-        this.shareable = shareable;
-    }
-
-    public App(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, boolean shareable, boolean shared, ShareableApp holder) {
-        this.db_id = db_id;
-        this.profile = profile;
-        this.position = position;
-        this.informations = infos;
-        this.groupApp = groupApp;
-        this.insertDate = insertDate;
-        this.single_id = single_id;
-        this.shareable = true;
-        this.shared = false;
-        this.shared = shared;
-        this.shareable = shareable;
         this.holder = holder;
     }
 
@@ -432,21 +412,11 @@ public class App implements ShareableApp, SharedApp {
         jsonObject.put("name", this.getAppInformation().getName());
         jsonObject.put("singleId", this.single_id);
         jsonObject.put("type", this.getType());
-        jsonObject.put("isShared", this.shared);
-        jsonObject.put("isShareable", this.shareable);
         return jsonObject;
     }
 
     public JSONArray getAccountInformationsJson() {
         return new JSONArray();
-    }
-
-    public boolean isShared() {
-        return this.shared;
-    }
-
-    public boolean isShareable() {
-        return this.shareable;
     }
 
     /* Interface SharedApp */

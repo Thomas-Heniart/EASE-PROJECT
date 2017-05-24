@@ -84,8 +84,8 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         this.linkAppDBid = linkAppDBid;
     }
 
-    public LinkApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, LinkAppInformation linkInfos, String linkAppDBid, boolean shareable, boolean shared, ShareableApp holder) {
-        super(db_id, profile, position, infos, groupApp, insertDate, single_id, shareable, shared, holder);
+    public LinkApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, LinkAppInformation linkInfos, String linkAppDBid, ShareableApp holder) {
+        super(db_id, profile, position, infos, groupApp, insertDate, single_id, holder);
         this.linkInfos = linkInfos;
         this.groupLinkApp = (GroupLinkApp) groupApp;
         this.linkAppDBid = linkAppDBid;
@@ -173,7 +173,7 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         request.setInt(this.linkInfos.getDb_id());
         String linkDBid = request.set().toString();
         db.commitTransaction(transaction);
-        return new LinkApp(appDBid, null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), linkInfos, linkDBid, false, true, this);
+        return new LinkApp(appDBid, null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), linkInfos, linkDBid, this);
     }
 
     @Override

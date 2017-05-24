@@ -196,18 +196,13 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         this.groupWebsiteApp = (GroupWebsiteApp) groupApp;
     }
 
-    public WebsiteApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid, boolean shareable, boolean shared) {
-        super(db_id, profile, position, infos, groupApp, insertDate, single_id, shareable, shared);
+    public WebsiteApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid, ShareableApp holder, Integer reminderIntervalValue, String reminderIntervalType) {
+        super(db_id, profile, position, infos, groupApp, insertDate, single_id, holder);
         this.website = site;
         this.websiteAppDBid = websiteAppDBid;
         this.groupWebsiteApp = (GroupWebsiteApp) groupApp;
-    }
-
-    public WebsiteApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid, boolean shareable, boolean shared, ShareableApp holder, Integer reminderIntervalValue, String reminderIntervalType) {
-        super(db_id, profile, position, infos, groupApp, insertDate, single_id, shareable, shared, holder);
-        this.website = site;
-        this.websiteAppDBid = websiteAppDBid;
-        this.groupWebsiteApp = (GroupWebsiteApp) groupApp;
+        this.reminderIntervalType = reminderIntervalType;
+        this.reminderIntervalValue = reminderIntervalValue;
     }
 
     public void removeFromDB(ServletManager sm) throws GeneralException {
@@ -323,7 +318,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         }
         String websiteAppDBid = request.set().toString();
         db.commitTransaction(transaction);
-        return new WebsiteApp(appDBid, null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), this.getSite(), websiteAppDBid, false, true, this, reminderIntervalValue, reminderIntervalType);
+        return new WebsiteApp(appDBid, null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), this.getSite(), websiteAppDBid, this, reminderIntervalValue, reminderIntervalType);
     }
 
     @Override
