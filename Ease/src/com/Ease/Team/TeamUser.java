@@ -360,23 +360,6 @@ public class TeamUser {
         request.setString(this.teamKey);
         request.setInt(this.db_id);
         request.set();
-        //for (SharedApp )
-    }
-
-    public void check_sharedApps_ciphering(ServletManager sm) throws GeneralException {
-        for (SharedApp sharedApp : this.sharedApps) {
-            App app = (App) sharedApp;
-            if (app.isReceived())
-                continue;
-            if (!app.isClassicApp())
-                continue;
-            ClassicApp classicApp = (ClassicApp) app;
-            DataBaseConnection db = sm.getDB();
-            int transaction = db.startTransaction();
-            classicApp.getAccount().update_shared_app_ciphering(this.getDashboard_user(), sm);
-            classicApp.beReceived(sm.getDB());
-            db.commitTransaction(transaction);
-        }
     }
 
     public void decipher_teamKey() throws GeneralException {

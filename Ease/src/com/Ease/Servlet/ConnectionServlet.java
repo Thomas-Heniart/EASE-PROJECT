@@ -75,11 +75,7 @@ public class ConnectionServlet extends HttpServlet {
                 else {
                     user = User.loadUser(email, password, sm);
                     sm.setUser(user);
-                    /* for (App app : user.getDashboardManager().getApps()) {
-                        if (!app.isClassicApp())
-                            continue;
-                        ((ClassicApp) app).getAccount().update_ciphering_if_needed(sm);
-                    } */
+                    user.getDashboardManager().decipherApps(sm);
                     removeIpFromDataBase(client_ip, db);
                     sm.setResponse(ServletManager.Code.Success, "Successfully connected.");
                     //sm.addWebsockets(sessionWebsockets);

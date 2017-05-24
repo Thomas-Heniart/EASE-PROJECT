@@ -134,7 +134,7 @@ public class Account {
     }
 
 	/*
-	 * 
+     *
 	 * Constuctor
 	 * 
 	 */
@@ -336,11 +336,10 @@ public class Account {
 
     public void update_ciphering_if_needed(ServletManager sm) throws GeneralException {
         if (this.publicKey != null && this.ciphered_key != null) {
-            if (!this.mustBeReciphered())
-                return;
-            for (AccountInformation accountInformation : this.getAccountInformations()) {
-                //accountInformation.update_ciphering();
-            }
+            return;
+            /*for (AccountInformation accountInformation : this.getAccountInformations()) {
+                accountInformation.update_ciphering();
+            }*/
         }
         Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
         this.publicKey = publicAndPrivateKey.getKey();
