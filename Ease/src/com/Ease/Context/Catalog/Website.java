@@ -645,11 +645,16 @@ public class Website {
         return this.groupIds;
     }
 
+    public JSONObject getSearchJson() {
+        JSONObject res = this.getSimpleJson();
+        res.put("id", this.single_id);
+        return  res;
+    }
+
     public JSONObject getSimpleJson() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("name", this.name);
         jsonObject.put("logo", Variables.WEBSITES_PATH + this.folder + "/" + "logo.png");
-        jsonObject.put("single_id", this.getSingleId());
         return jsonObject;
     }
 
@@ -662,7 +667,7 @@ public class Website {
         JSONArray information = new JSONArray();
         for (WebsiteInformation websiteInformation : this.website_informations)
             information.add(websiteInformation.getJson());
-        res.put("websiteInformations", information);
+        res.put("information", information);
         return res;
     }
 }

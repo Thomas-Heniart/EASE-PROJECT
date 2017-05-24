@@ -22,7 +22,7 @@ public class ServletGetWebsiteInformation extends HttpServlet {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            String website_id = sm.getServletParam("website_id", true);
+            String website_id = sm.getServletParam("id", true);
             if (website_id == null || website_id.equals(""))
                 throw new GeneralException(ServletManager.Code.ClientError, "Website is null");
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
