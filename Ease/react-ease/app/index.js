@@ -4,4 +4,4 @@ import {Router, Route, IndexRoute, hashHistory} from 'react-router';
 
 var TeamView = require('./components/TeamView.js');
 
-ReactDOM.render(<TeamView team_id="3"/>, document.getElementById('teamsHandler'));
+ReactDOM.render(<TeamView team_id="2"/>, document.getElementById('teamsHandler'));

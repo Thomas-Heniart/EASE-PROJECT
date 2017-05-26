@@ -8,6 +8,8 @@ var TeamHeader = require('./TeamHeader');
 var FlexPanels = require('./TeamFlexPanels');
 var TeamAppAdderButtons = require('./TeamAppAdderButtons');
 var TeamAppAddingUi = require('./TeamAppAddingUi');
+var TeamAddUserModal = require('./TeamAddUserModal');
+var TeamAddChannelModal = require('./TeamAddChannelModal');
 var api = require('../utils/api');
 
 class TeamView extends React.Component {
@@ -29,8 +31,12 @@ class TeamView extends React.Component {
         channel: 'fa-users'
       },
       flexActive : false,
+      addUserModalActive: false,
+      addChannelModalActive: false,
       loadingInfo : true
     };
+    this.toggleAddUserModal = this.toggleAddUserModal.bind(this);
+    this.toggleAddChannelModal = this.toggleAddChannelModal.bind(this);
     this.toggleFlexPanel = this.toggleFlexPanel.bind(this);
     this.selectItem = this.selectItem.bind(this);
     this.loadTeam = this.loadTeam.bind(this);
@@ -38,12 +44,12 @@ class TeamView extends React.Component {
     this.getUserById = this.getUserById.bind(this);
   }
   loadTeam(team_id){
-      this.setState(function () {
-        return {
-          loadingInfo: true
-        }
-      });
-      api.fetchTeam(team_id).then(function(data){
+    this.setState(function () {
+      return {
+        loadingInfo: true
+      }
+    });
+    api.fetchTeam(team_id).then(function(data){
       var ret = {};
       ret.team_id = data.id;
       ret.team_name = data.name;
@@ -56,8 +62,8 @@ class TeamView extends React.Component {
         }
       }
       ret.loadingInfo = false;
-        this.setState(ret);
-        this.selectItem({type: 'channel', id: ret.channels[0].id, item: null});
+      this.setState(ret);
+      this.selectItem({type: 'channel', id: ret.channels[0].id, item: null});
     }.bind(this))
   }
 
@@ -87,6 +93,12 @@ class TeamView extends React.Component {
         return this.state.channels[i];
     }
   }
+  toggleAddChannelModal(){
+    this.setState({addChannelModalActive: !this.state.addChannelModalActive});
+  }
+  toggleAddUserModal(){
+    this.setState({addUserModalActive: !this.state.addUserModalActive});
+  }
   toggleFlexPanel(){
     this.setState({
       flexActive: !this.state.flexActive
@@ -96,13 +108,13 @@ class TeamView extends React.Component {
     this.loadTeam(this.state.team_id);
   }
   componentWillMount(){
-/*    this.setState({
-        selectedItem : {
-          type : 'channel',
-          id : this.state.channels[0].id,
-          item: this.state.channels[0]
-        }
-      });*/
+    /*    this.setState({
+     selectedItem : {
+     type : 'channel',
+     id : this.state.channels[0].id,
+     item: this.state.channels[0]
+     }
+     });*/
   }
   render(){
     return (
@@ -112,8 +124,16 @@ class TeamView extends React.Component {
               me={this.state.me}>
             <div id="col_channels">
               <div id="col_channels_scroller">
-                <ChannelList selectedItem={this.state.selectedItem} items={this.state.channels} selectFunc={this.selectItem}/>
-                <UserList selectedItem={this.state.selectedItem} items={this.state.users} selectFunc={this.selectItem}/>
+                <ChannelList
+                    selectedItem={this.state.selectedItem}
+                    items={this.state.channels}
+                    selectFunc={this.selectItem}
+                    toggleAddChannelModal={this.toggleAddChannelModal}/>
+                <UserList
+                    selectedItem={this.state.selectedItem}
+                    items={this.state.users}
+                    selectFunc={this.selectItem}
+                    toggleAddUserModal={this.toggleAddUserModal}/>
               </div>
             </div>
           </TeamSideBar>}
@@ -126,17 +146,14 @@ class TeamView extends React.Component {
                 toggleFlexFunc={this.toggleFlexPanel}/>
             <div className="team_client_body">
               <div id="col_main">
-                <div className="add_actions_container active" id="app_add_actions">
-                  <TeamAppAdderButtons />
-                  <TeamAppAddingUi
-                      team_id={this.state.team_id}
-                      selectedItem={this.state.selectedItem}
-                      userSelectFunc={this.getUserById}/>
-                </div>
+                <TeamAppAddingUi
+                    team_id={this.state.team_id}
+                    selectedItem={this.state.selectedItem}
+                    userSelectFunc={this.getUserById}/>
                 <div className="apps_container">
                   <div className="apps_scroller_div" id="team_apps_container">
 
-                    </div>
+                  </div>
                 </div>
               </div>
               <div id="col_flex">
@@ -147,6 +164,15 @@ class TeamView extends React.Component {
               </div>
             </div>
           </div>}
+          {this.state.addUserModalActive &&
+          <TeamAddUserModal
+            toggleModalFunc={this.toggleAddUserModal}
+            channels={this.state.channels}/>}
+          {this.state.addChannelModalActive &&
+              <TeamAddChannelModal
+              toggleModalFunc={this.toggleAddChannelModal}
+              users={this.state.users}/>
+          }
         </div>
     )
   }

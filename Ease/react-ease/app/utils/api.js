@@ -36,20 +36,52 @@ module.exports = {
             return JSON.parse(response.data.substring(response.data.indexOf(" ")+1, response.data.length));
         });
     },
+    getDashboardApp : function(id){
+      return axios.get('/api/v1/dashboard/GetDashboardApp',{
+        params: {
+          'id': id
+        }
+      }).then(function(response){
+        return JSON.parse(response.data.substring(response.data.indexOf(" ")+1, response.data.length));
+      });
+    },
+    dashboardAppSearch: function(query){
+      return axios.get('/api/v1/dashboard/SearchDashboardApps', {
+        params: {
+          'q':query
+        }
+      }).then(function(response){
+        return JSON.parse(response.data.substring(response.data.indexOf(" ")+1, response.data.length));
+      });
+    },
     teamAppSearch : function (team_id, query) {
-        return axios.get('/api/v1/catalog/SearchWebsite',{
+        return axios.get('/api/v1/catalog/SearchTeamCatalogApps',{
             params :{
-                'search': query,
+                'q': query,
                 'team_id': team_id
             }
         }).then(function (response) {
             return JSON.parse(response.data.substring(response.data.indexOf(" ")+1, response.data.length));
         });
     },
+    dashboardAndTeamAppSearch: function(team_id, query){
+      return axios.all([this.dashboardAppSearch(query), this.teamAppSearch(team_id, query)])
+          .then(axios.spread(function(dashboard, teams){
+            var apps = dashboard.concat(teams);
+            apps.sort(function(a,b){
+              if (a.website_name < b.website_name)
+                return -1;
+              if (a.website_name > b.website_name)
+                return 1;
+              return 0;
+            });
+            return apps;
+          }));
+    },
     fetchWebsiteInfo: function (website_id) {
         return axios.get('/api/v1/catalog/GetWebsiteInformation',{
             params:{
-                'website_id': website_id
+                'id': website_id
             }
         }).then(function (response) {
             return JSON.parse(response.data.substring(response.data.indexOf(" ")+1, response.data.length));

@@ -20,7 +20,7 @@ function TeamSideBar(props){
 function ChannelList(props){
   return (
       <div className="section-holder" id="team_channels">
-        <button className="heading-button button-unstyle" id="new_channel_button">
+        <button className="heading-button button-unstyle" id="new_channel_button" onClick={props.toggleAddChannelModal}>
           <i className="fa fa-plus-square-o"/>
         </button>
         <div className="section-header">
@@ -50,8 +50,8 @@ function ChannelList(props){
 function UserList(props){
   return (
       <div className="section-holder" id="team_channels">
-        <button className="heading-button button-unstyle" id="new_member_button">
-          <i className="fa fa-plus-square-o"/>
+        <button className="heading-button button-unstyle" id="new_member_button" onClick={props.toggleAddUserModal}>
+          <i className="ease-icon fa fa-plus-square-o"/>
         </button>
         <div className="section-header">
                                     <span>
