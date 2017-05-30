@@ -160,23 +160,16 @@ public class App implements ShareableApp, SharedApp {
     }
 
     public static String createApp(Profile profile, Integer position, String name, String type, Map<String, Object> elevator, ServletManager sm) throws GeneralException {
-        return createApp(profile, position, name, type, elevator, true, false, sm);
-
-    }
-
-    public static String createApp(Profile profile, Integer position, String name, String type, Map<String, Object> elevator, boolean shareable, boolean shared, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         AppInformation infos = AppInformation.createAppInformation(name, sm);
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
         String registrationDate = dateFormat.format(date);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO apps VALUES (NULL, ?, ?, ?, NULL, ?, ?);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO apps VALUES (NULL, ?, ?, ?, NULL);");
         request.setString(registrationDate);
         request.setString(type);
         request.setInt(infos.getDb_id());
-        request.setBoolean(shareable);
-        request.setBoolean(shared);
         String appDBid = request.set().toString();
         if (profile != null && position != null) {
             request = db.prepareRequest("INSERT INTO profileAndAppMap values (NULL, ?, ?, ?)");
@@ -530,24 +523,16 @@ public class App implements ShareableApp, SharedApp {
     public JSONObject getShareableJson() throws GeneralException {
         try {
             JSONObject res = new JSONObject();
-            res.put("db_id", this.getDBid());
-            res.put("single_id", this.getSingleId());
-            res.put("channel_id", "null");
-            if (this.getChannel() != null)
-                res.put("channel_id", this.getChannel().getDb_id());
-            res.put("sender", this.getTeamUser_owner().getDb_id());
+            res.put("sender_id", this.getTeamUser_owner().getDb_id());
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date shared_date = dateFormat.parse(insertDate);
             DateFormat dateFormat1 = new SimpleDateFormat("MMMM dd, HH:mm", Locale.US);
             res.put("shared_date", dateFormat1.format(shared_date));
-            JSONArray receivers = new JSONArray();
-            for (SharedApp sharedApp : this.getSharedApps()) {
-                JSONObject tmp = new JSONObject();
-                tmp.put("information", sharedApp.getSharedJSON());
-                tmp.put("id", sharedApp.getTeamUser_tenant().getDb_id());
-                receivers.add(tmp);
-            }
-            res.put("sharedApps", sharedApps);
+            JSONArray receiver_ids = new JSONArray();
+            for (TeamUser teamUser : this.getTeamUser_tenants())
+                receiver_ids.add(teamUser.getDb_id());
+            res.put("receiver_ids", receiver_ids);
+            res.put("purpose", this.getDescription());
             return res;
         } catch (ParseException e) {
             throw new GeneralException(ServletManager.Code.InternError, e);

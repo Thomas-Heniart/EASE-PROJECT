@@ -15,6 +15,8 @@ import org.json.simple.JSONObject;
 
 import javax.persistence.*;
 import javax.servlet.Servlet;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -75,6 +77,9 @@ public class TeamUser {
 
     @Column(name = "departureDate")
     protected Date departureDate;
+
+    @Transient
+    protected DateFormat dateFormat = new SimpleDateFormat("MMMM dd, HH:mm", Locale.US);
 
     @ManyToMany
     @JoinTable(name = "channelAndTeamUserMap", joinColumns = {@JoinColumn(name = "team_user_id")}, inverseJoinColumns = {@JoinColumn(name = "channel_id")})
@@ -375,5 +380,19 @@ public class TeamUser {
         if (sharedApp == null)
             throw new GeneralException(ServletManager.Code.ClientError, "This app does not exist.");
         return sharedApp;
+    }
+
+    public JSONObject getSimpleJson() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", this.getDb_id());
+        jsonObject.put("username", this.getUsername());
+        jsonObject.put("first_name", this.getFirstName());
+        jsonObject.put("last_name", this.getLastName());
+        jsonObject.put("arrival_date", this.dateFormat.format(this.getArrivalDate()));
+        jsonObject.put("departure_date", "Undefined");
+        if (this.getDepartureDate() != null)
+            jsonObject.put("departure_date", this.dateFormat.format(this.getDepartureDate()));
+        jsonObject.put("role", this.getTeamUserPermissions().getPermissions());
+        return jsonObject;
     }
 }

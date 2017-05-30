@@ -137,4 +137,11 @@ public class Channel {
     public void addSharedApp(SharedApp sharedApp) {
         this.sharedApps.add(sharedApp);
     }
+
+    public JSONObject getSimpleJson() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", this.getDb_id());
+        jsonObject.put("name", this.getName());
+        return jsonObject;
+    }
 }

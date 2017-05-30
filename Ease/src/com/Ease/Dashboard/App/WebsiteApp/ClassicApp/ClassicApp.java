@@ -292,6 +292,16 @@ public class ClassicApp extends WebsiteApp {
     public JSONObject getShareableJson() throws GeneralException {
         JSONObject res = super.getShareableJson();
         res.put("type", "simple");
+        res.put("password_change_interval", this.getAccount().getPasswordChangeInterval());
+        res.put("last_modification", this.getAccount().getLastUpdatedDate());
+        JSONArray accountInformationArray = new JSONArray();
+        for (AccountInformation accountInformation : this.getAccount().getAccountInformations()) {
+            JSONObject tmp = new JSONObject();
+            tmp.put("info_name", accountInformation.getInformationName());
+            tmp.put("info_value", accountInformation.getInformationValue());
+            accountInformationArray.add(res);
+        }
+        res.put("account_information", accountInformationArray);
         return res;
     }
 

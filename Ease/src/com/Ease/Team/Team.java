@@ -68,6 +68,9 @@ public class Team {
     @Transient
     protected List<ShareableApp> shareableApps = new LinkedList<>();
 
+    @Transient
+    protected Map<Integer, ShareableApp> shareableAppMap = new HashMap<>();
+
     public Team(String name, List<TeamUser> teamUsers, List<Channel> channels) {
         this.name = name;
         this.teamUsers = teamUsers;
@@ -118,7 +121,8 @@ public class Team {
     }
 
     public void setShareableApps(List<ShareableApp> shareableApps) {
-        this.shareableApps = shareableApps;
+        for (ShareableApp shareableApp : shareableApps)
+            this.addShareableApp(shareableApp);
     }
 
     public void lazyInitialize(DataBaseConnection db) throws GeneralException {
@@ -161,8 +165,10 @@ public class Team {
         this.channelIdMap.put(channel.getDb_id(), channel);
     }
 
+    /* @TODO For the moment we use single_id but it will be replaced by db_id in the future */
     public void addShareableApp(ShareableApp shareableApp) {
         this.shareableApps.add(shareableApp);
+        this.shareableAppMap.put(((App) shareableApp).getSingleId(), shareableApp);
     }
 
     public Channel getGeneralChannel() throws GeneralException {
@@ -246,5 +252,13 @@ public class Team {
         String userPublicKey = rs.getString(1);
         teamUser.validateRegistration(deciphered_teamKey, userPublicKey, sm);
         this.teamUsersWaitingForVerification.remove(teamUser);
+    }
+
+    /* @TODO For the moment we use single_id but it will be replaced by db_id in the future */
+    public ShareableApp getShareableAppWithId(Integer single_id) throws GeneralException {
+        ShareableApp shareableApp = this.shareableAppMap.get(single_id);
+        if (shareableApp == null)
+            throw new GeneralException(ServletManager.Code.ClientError, "This app does not exist.");
+        return shareableApp;
     }
 }

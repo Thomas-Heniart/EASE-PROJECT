@@ -53,11 +53,13 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         throw new GeneralException(ServletManager.Code.InternError, "Link app not complete in db.");
     }
 
-    public static LinkApp createLinkApp(Profile profile, int position, String name, String url, String imgUrl, ServletManager sm) throws GeneralException {
+    public static LinkApp createLinkApp(Profile profile, Integer position, String name, String url, String imgUrl, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<String, Object>();
+        System.out.println("We are here 2");
         String appDBid = App.createApp(profile, position, name, "linkApp", elevator, sm);
+        System.out.println("We are here 2");
         LinkAppInformation infos = LinkAppInformation.createLinkAppInformation(url, imgUrl, sm);
         DatabaseRequest request = db.prepareRequest("INSERT INTO linkApps values(NULL, ?, ?, NULL);");
         request.setInt(appDBid);
@@ -82,6 +84,7 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         this.linkInfos = linkInfos;
         this.groupLinkApp = (GroupLinkApp) groupApp;
         this.linkAppDBid = linkAppDBid;
+        System.out.println("LinkApp single_id: " + single_id);
     }
 
     public LinkApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, LinkAppInformation linkInfos, String linkAppDBid, ShareableApp holder) {
@@ -89,6 +92,7 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         this.linkInfos = linkInfos;
         this.groupLinkApp = (GroupLinkApp) groupApp;
         this.linkAppDBid = linkAppDBid;
+        System.out.println("LinkApp single_id: " + single_id);
     }
 
     public void removeFromDB(ServletManager sm) throws GeneralException {
@@ -180,7 +184,8 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
     public JSONObject getShareableJson() throws GeneralException {
         JSONObject res = super.getShareableJson();
         res.put("type", "link");
-        res.put("logo", this.linkInfos.getImgUrl());
+        res.put("logo", this.getLinkAppInformations().getImgUrl());
+        res.put("link", this.getLinkAppInformations().getLink());
         return res;
     }
 }

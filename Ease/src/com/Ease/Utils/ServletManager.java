@@ -106,6 +106,7 @@ public class ServletManager {
     }
 
     public void needToBeTeamUser() throws GeneralException {
+        this.needToBeConnected();
         if (this.getUser().getTeamUsers().isEmpty()) {
             throw new GeneralException(Code.ClientWarning, "Access denied");
         }

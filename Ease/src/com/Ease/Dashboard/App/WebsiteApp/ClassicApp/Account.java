@@ -44,10 +44,16 @@ public class Account {
         String ciphered_privateKey = rs.getString("privateKey");
         Boolean mustBeReciphered = rs.getBoolean("mustBeReciphered");
         List<AccountInformation> infos = AccountInformation.loadInformations(db_id, db);
-        String reminderValue = rs.getString(Data.REMINDER_VALUE.ordinal());
+        Integer reminderValue = rs.getInt(Data.REMINDER_VALUE.ordinal());
         String reminderType = rs.getString(Data.REMINDER_TYPE.ordinal());
-        if (reminderType == null || reminderType.equals(""))
-            return new Account(db_id, shared, publicKey, ciphered_privateKey, infos, mustBeReciphered);
+        String lastUpdatedDate = rs.getString(Data.LAST_UPDATED_DATE.ordinal());
+        Account account = null;
+        if (reminderType == null || reminderType.equals("")) {
+            account = new Account(db_id, shared, publicKey, ciphered_privateKey, infos, mustBeReciphered);
+            account.setLastUpdatedDate(lastUpdatedDate);
+            return account;
+        }
+
         request = db.prepareRequest("SELECT lastUpdateDate + INTERVAL ? " + reminderType + " FROM accounts WHERE id = ?;");
         request.setInt(reminderValue);
         request.setInt(db_id);
@@ -58,7 +64,9 @@ public class Account {
         try {
             Date deadLine = dateFormat.parse(rs.getString(1));
             Date now = new Date();
-            return new Account(db_id, shared, publicKey, ciphered_privateKey, infos, (now.compareTo(deadLine) >= 0), mustBeReciphered);
+            account =  new Account(db_id, shared, publicKey, ciphered_privateKey, infos, (now.compareTo(deadLine) >= 0), mustBeReciphered, reminderValue);
+            account.setLastUpdatedDate(lastUpdatedDate);
+            return account;
         } catch (ParseException e) {
             throw new GeneralException(ServletManager.Code.InternError, "Parse error");
         }
@@ -90,8 +98,9 @@ public class Account {
         String db_id = request.set().toString();
         List<AccountInformation> infos = AccountInformation.createAccountInformations(db_id, informations, publicKey, sm);
         db.commitTransaction(transaction);
-        Account account = new Account(db_id, shared, publicKey, ciphered_key, infos);
+        Account account = new Account(db_id, shared, publicKey, ciphered_key, infos, (reminderValue == null ? 0 : reminderValue));
         account.setPrivateKey(privateKey);
+        account.setLastUpdatedDate(new Date());
         return account;
     }
 
@@ -103,6 +112,7 @@ public class Account {
         List<AccountInformation> infos = AccountInformation.createSharedAccountInformationList(db_id, information, deciphered_teamKey, sm);
         db.commitTransaction(transaction);
         Account account = new Account(db_id, false, null, null, infos, true);
+        account.setLastUpdatedDate(new Date());
         return account;
     }
 
@@ -139,7 +149,7 @@ public class Account {
         String db_id = request.set().toString();
         List<AccountInformation> infos = AccountInformation.createAccountInformationFromAccountInformations(db_id, sameAccount.getAccountInformations(), publicKey, sm);
         db.commitTransaction(transaction);
-        Account account = new Account(db_id, shared, publicKey, ciphered_key, infos);
+        Account account = new Account(db_id, shared, publicKey, ciphered_key, infos, sameAccount.getPasswordChangeInterval());
         account.setPrivateKey(privateKey);
         return account;
     }
@@ -158,8 +168,12 @@ public class Account {
     protected String ciphered_key;
     protected String privateKey;
     protected Boolean mustBeReciphered;
+    protected Integer passwordChangeInterval; /* In month */
+    protected String lastUpdatedDate;
+    protected DateFormat databaseLastUpdatedDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    protected DateFormat printLastUpdatedDateFormat = new SimpleDateFormat("MMMM dd, HH:mm", Locale.US);
 
-    public Account(String db_id, boolean shared, String publicKey, String ciphered_key, List<AccountInformation> infos) {
+    public Account(String db_id, boolean shared, String publicKey, String ciphered_key, List<AccountInformation> infos, Integer passwordChangeInterval) {
         this.db_id = db_id;
         this.shared = shared;
         this.infos = infos;
@@ -168,6 +182,7 @@ public class Account {
         this.mustBeReciphered = false;
         this.passwordMustBeUpdated = false;
         this.privateKey = null;
+        this.passwordChangeInterval = passwordChangeInterval;
     }
 
     public Account(String db_id, boolean shared, String publicKey, String ciphered_key, List<AccountInformation> infos, boolean mustBeReciphered) {
@@ -179,9 +194,10 @@ public class Account {
         this.mustBeReciphered = mustBeReciphered;
         this.passwordMustBeUpdated = false;
         this.privateKey = null;
+        this.passwordChangeInterval = 0;
     }
 
-    public Account(String db_id, boolean shared, String publicKey, String ciphered_key, List<AccountInformation> infos, boolean passwordMustBeUpdated, boolean mustBeReciphered) {
+    public Account(String db_id, boolean shared, String publicKey, String ciphered_key, List<AccountInformation> infos, boolean passwordMustBeUpdated, boolean mustBeReciphered, Integer passwordChangeInterval) {
         this.db_id = db_id;
         this.shared = shared;
         this.infos = infos;
@@ -190,6 +206,7 @@ public class Account {
         this.passwordMustBeUpdated = passwordMustBeUpdated;
         this.mustBeReciphered = mustBeReciphered;
         this.privateKey = null;
+        this.passwordChangeInterval = passwordChangeInterval;
     }
 
     public void removeFromDB(ServletManager sm) throws GeneralException {
@@ -263,6 +280,26 @@ public class Account {
         if (password == null)
             throw new GeneralException(ServletManager.Code.ClientError, "This account does not have password field");
         return password;
+    }
+
+    public Integer getPasswordChangeInterval() {
+        return this.getPasswordChangeInterval();
+    }
+
+    public void setLastUpdatedDate(String lastUpdatedDate) throws GeneralException {
+        try {
+            this.lastUpdatedDate = printLastUpdatedDateFormat.format(databaseLastUpdatedDateFormat.parse(lastUpdatedDate));
+        } catch (ParseException e) {
+            throw new GeneralException(ServletManager.Code.InternError, e);
+        }
+    }
+
+    public void setLastUpdatedDate(Date lastUpdatedDate) {
+        this.lastUpdatedDate = printLastUpdatedDateFormat.format(lastUpdatedDate);
+    }
+
+    public String getLastUpdatedDate() {
+        return this.lastUpdatedDate;
     }
 	
 	/*

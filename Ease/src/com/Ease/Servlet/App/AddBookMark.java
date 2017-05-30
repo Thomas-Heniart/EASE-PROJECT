@@ -1,4 +1,4 @@
- package com.Ease.Servlet.App;
+package com.Ease.Servlet.App;
 
 import java.io.IOException;
 
@@ -23,8 +23,8 @@ import com.Ease.Utils.ServletManager;
  */
 @WebServlet("/AddBookMark")
 public class AddBookMark extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
+    private static final long serialVersionUID = 1L;
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -32,52 +32,46 @@ public class AddBookMark extends HttpServlet {
         super();
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-		rd.forward(request, response);
-	}
+    /**
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+        rd.forward(request, response);
+    }
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
-		User user = (User) (session.getAttribute("user"));
-		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
-		try {
-			sm.needToBeConnected();
-			String name = sm.getServletParam("name", true);
-			String websiteId = sm.getServletParam("websiteId", true);
-			String profileId = sm.getServletParam("profileId", true);
-			String link = sm.getServletParam("link", true);
-			
-			Website site = null;
-			if (name == null || name.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
-			if (websiteId == null || websiteId.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty websiteId.");
-			if (profileId == null || profileId.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty profileId.");
-			if (link == null || link.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty link.");
-			try {
-				Profile profile = user.getDashboardManager().getProfile(Integer.parseInt(profileId));
-				site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(websiteId));
-				LinkApp linkApp = LinkApp.createLinkApp(profile, profile.getApps().size(), name, link, site.getFolder() + "logo.png", sm);
-				profile.addApp(linkApp);
-				sm.setResponse(ServletManager.Code.Success, String.valueOf(linkApp.getSingleId()));
-			} catch (NumberFormatException e) {
-				sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");
-			}
-		} catch (GeneralException e) {
-			sm.setResponse(e);
-		} catch (Exception e) {
-			sm.setResponse(e);
-		}
-		sm.sendResponse();
-	}
+    /**
+     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+     */
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        User user = (User) (session.getAttribute("user"));
+        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        try {
+            sm.needToBeConnected();
+            String name = sm.getServletParam("name", true);
+            String websiteId = sm.getServletParam("websiteId", true);
+            String profileId = sm.getServletParam("profileId", true);
+            String link = sm.getServletParam("link", true);
+
+            Website site = null;
+            if (name == null || name.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
+            if (websiteId == null || websiteId.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Empty websiteId.");
+            if (profileId == null || profileId.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Empty profileId.");
+            if (link == null || link.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Empty link.");
+            Profile profile = user.getDashboardManager().getProfile(Integer.parseInt(profileId));
+            site = ((Catalog) sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(websiteId));
+            LinkApp linkApp = LinkApp.createLinkApp(profile, profile.getApps().size(), name, link, site.getLogo(), sm);
+            profile.addApp(linkApp);
+            sm.setResponse(ServletManager.Code.Success, String.valueOf(linkApp.getSingleId()));
+        } catch (Exception e) {
+            sm.setResponse(e);
+        }
+        sm.sendResponse();
+    }
 
 }

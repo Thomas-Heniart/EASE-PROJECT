@@ -325,7 +325,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
     public JSONObject getShareableJson() throws GeneralException {
         JSONObject res = super.getShareableJson();
         res.put("type", "multi");
-        res.put("website_information", this.website.getInformationJson());
+        res.put("website_id", this.website.getSingleId());
         return res;
     }
 
