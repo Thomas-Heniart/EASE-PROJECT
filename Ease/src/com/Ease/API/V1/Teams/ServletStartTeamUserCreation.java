@@ -79,7 +79,8 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             if (res.get("success") == null) {
                 TeamUser teamUser = new TeamUser(first_name, last_name, email, username, null, false, team, new TeamUserPermissions(Integer.parseInt(role)));
                 team.getGeneralChannel().addTeamUser(teamUser);
-                query.saveOrUpdateObject(teamUser);
+                team.addTeamUser(teamUser);
+                query.saveOrUpdateObject(team);
                 String code;
                 do {
                     code = CodeGenerator.generateNewCode();
@@ -97,6 +98,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
                 res.put("teamUser_id", teamUser.getDb_id());
                 res.put("username", username);
             }
+            query.commit();
             sm.setResponse(ServletManager.Code.Success, res.toString());
         } catch (Exception e) {
             sm.setResponse(e);

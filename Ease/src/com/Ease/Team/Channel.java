@@ -34,7 +34,7 @@ public class Channel {
     protected String purpose;
 
     @ManyToMany
-    @JoinTable(name = "channelAndTeamUserMap", joinColumns = { @JoinColumn(name = "channel_id") }, inverseJoinColumns = { @JoinColumn(name = "team_user_id") })
+    @JoinTable(name = "channelAndTeamUserMap", joinColumns = {@JoinColumn(name = "channel_id")}, inverseJoinColumns = {@JoinColumn(name = "team_user_id")})
     protected List<TeamUser> teamUsers = new LinkedList<>();
 
     @Transient
@@ -86,6 +86,14 @@ public class Channel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPurpose() {
+        return purpose;
+    }
+
+    public void setPurpose(String purpose) {
+        this.purpose = purpose;
     }
 
     public List<TeamUser> getTeamUsers() {
@@ -142,6 +150,7 @@ public class Channel {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id", this.getDb_id());
         jsonObject.put("name", this.getName());
+        jsonObject.put("purpose", this.getPurpose());
         return jsonObject;
     }
 }
