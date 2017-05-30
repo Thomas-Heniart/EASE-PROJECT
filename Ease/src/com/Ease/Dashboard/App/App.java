@@ -196,8 +196,6 @@ public class App implements ShareableApp, SharedApp {
         request.setString(registrationDate);
         request.setString(type);
         request.setInt(infos.getDb_id());
-        request.setBoolean(shareable);
-        request.setBoolean(shared);
         String appDBid = request.set().toString();
         if (profile != null && position != null) {
             request = db.prepareRequest("INSERT INTO profileAndAppMap values (NULL, ?, ?, ?)");
@@ -566,5 +564,25 @@ public class App implements ShareableApp, SharedApp {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("name", this.informations.getName());
         return jsonObject;
+    }
+
+    public void becomeShareable(DataBaseConnection db, Team team, TeamUser teamUser_owner, Channel channel, String description) throws GeneralException {
+        if (this.teamUser_owner != null)
+            return;
+        DatabaseRequest databaseRequest = db.prepareRequest("INSERT INTO shareableApps values (?, ?, ?, ?, ?);");
+        databaseRequest.setInt(this.getDBid());
+        databaseRequest.setInt(team.getDb_id());
+        databaseRequest.setInt(teamUser_owner.getDb_id());
+        if (channel == null)
+            databaseRequest.setNull();
+        else
+            databaseRequest.setInt(channel.getDb_id());
+        databaseRequest.setString((description == null) ? "" : description);
+        databaseRequest.set();
+        this.teamUser_owner = teamUser_owner;
+        this.channel = channel;
+        this.description = description;
+        team.addShareableApp(this);
+        teamUser_owner.addShareableApp(this);
     }
 }

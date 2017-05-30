@@ -166,6 +166,14 @@ public class Team {
     }
 
     /* @TODO For the moment we use single_id but it will be replaced by db_id in the future */
+    public ShareableApp getShareableAppWithId(Integer single_id) throws GeneralException {
+        ShareableApp shareableApp = this.shareableAppMap.get(single_id);
+        if (shareableApp == null)
+            throw new GeneralException(ServletManager.Code.ClientError, "This shareable app does not exist.");
+        return shareableApp;
+    }
+
+    /* @TODO For the moment we use single_id but it will be replaced by db_id in the future */
     public void addShareableApp(ShareableApp shareableApp) {
         this.shareableApps.add(shareableApp);
         this.shareableAppMap.put(((App) shareableApp).getSingleId(), shareableApp);
@@ -252,13 +260,5 @@ public class Team {
         String userPublicKey = rs.getString(1);
         teamUser.validateRegistration(deciphered_teamKey, userPublicKey, sm);
         this.teamUsersWaitingForVerification.remove(teamUser);
-    }
-
-    /* @TODO For the moment we use single_id but it will be replaced by db_id in the future */
-    public ShareableApp getShareableAppWithId(Integer single_id) throws GeneralException {
-        ShareableApp shareableApp = this.shareableAppMap.get(single_id);
-        if (shareableApp == null)
-            throw new GeneralException(ServletManager.Code.ClientError, "This app does not exist.");
-        return shareableApp;
     }
 }

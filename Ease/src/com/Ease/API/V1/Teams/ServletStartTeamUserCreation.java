@@ -79,8 +79,8 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             if (res.get("success") == null) {
                 TeamUser teamUser = new TeamUser(first_name, last_name, email, username, null, false, team, new TeamUserPermissions(Integer.parseInt(role)));
                 team.getGeneralChannel().addTeamUser(teamUser);
-                team.addTeamUser(teamUser);
                 query.saveOrUpdateObject(team);
+                team.addTeamUser(teamUser);
                 String code;
                 do {
                     code = CodeGenerator.generateNewCode();

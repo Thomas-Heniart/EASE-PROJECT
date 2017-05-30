@@ -30,7 +30,8 @@ CREATE TABLE teamUsers (
   FOREIGN KEY(user_id) REFERENCES users(id),
   FOREIGN KEY(team_id) REFERENCES teams(id),
   FOREIGN KEY(permissions_id) REFERENCES teamUserPermissions(id),
-  UNIQUE (team_id, email, username)
+  UNIQUE (team_id, username),
+  UNIQUE (team_id, email)
 );
 
 CREATE TABLE channels (
@@ -133,12 +134,6 @@ ALTER TABLE websiteApps ADD COLUMN reminderIntervalType VARCHAR(25);
 
 /* Apps sharing */
 DROP TABLE IF EXISTS sharedApps, shareableApps, appAndSharedAppMap, channelAndAppMap;
-
-ALTER TABLE apps
-  ADD COLUMN shareable TINYINT(1) DEFAULT 1;
-
-ALTER TABLE apps
-  ADD COLUMN shared TINYINT(1) DEFAULT 0;
 
 CREATE TABLE shareableApps (
   id INT(10) UNSIGNED NOT NULL,
