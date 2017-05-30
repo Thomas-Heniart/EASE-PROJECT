@@ -75,27 +75,12 @@
                         </div>
                     </div>
                     <div class="channel_title_info">
-                        <!--                        <button class="button-unstyle">
-                                                    <i class="fa fa-cog" aria-hidden="true"></i>
-                                                </button>-->
                         <button class="button-unstyle ease_tipped" id="open_card_button">
                             <span class="ease_tip">Card</span>
                             <i class="fa fa-id-card-o" aria-hidden="true"></i>
                         </button>
                     </div>
                 </div>
-                <!--            <div class="flex_header">
-                                <div class="search_container">
-                                    <form role="search" method="get" action="/search" id="teams_header_search_form" class="search_form">
-                                        <div class="search_icon_wrapper">
-                                            <i class="fa fa-search" aria-hidden="true"></i>
-                                        </div>
-                                        <div class="search_input_wrapper">
-                                            <input type="text" name="q" id="searh_input" placeholder="Search"/>
-                                        </div>
-                                    </form>
-                                </div>
-                </div>-->
             </div>
         </header>
         <div class="team_client_body">
