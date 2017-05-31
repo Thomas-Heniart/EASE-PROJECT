@@ -31,7 +31,7 @@ public class ServletEditTeamUserLastName extends HttpServlet {
             if (lastName == null || lastName.equals(""))
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Empty lastName.");
             teamUser.editLastName(lastName);
-            sm.setResponse(ServletManager.Code.Success, "TeamUser lastName edited");
+            sm.setResponse(ServletManager.Code.Success, "TeamUser lastName edited, new lastName: " + teamUser.getLastName());
         } catch (Exception e) {
             sm.setResponse(e);
         }

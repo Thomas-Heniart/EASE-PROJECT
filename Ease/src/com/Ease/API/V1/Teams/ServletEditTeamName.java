@@ -1,7 +1,5 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.Hibernate.HibernateQuery;
-import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
@@ -19,8 +17,8 @@ import java.io.IOException;
 /**
  * Created by thomas on 31/05/2017.
  */
-@WebServlet("/api/v1/teams/EditChannelName")
-public class ServletEditChannelName extends HttpServlet {
+@WebServlet("/api/v1/teams/EditTeamName")
+public class ServletEditTeamName extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
@@ -28,13 +26,14 @@ public class ServletEditChannelName extends HttpServlet {
             sm.needToBeAdminOfTeam(Integer.parseInt(team_id));
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
-            String channel_id = sm.getServletParam("channel_id", true);
             String name = sm.getServletParam("name", true);
             if (name == null || name.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
-            Channel channel = team.getChannelWithId(Integer.parseInt(channel_id));
-            channel.editName(name);
-            sm.setResponse(ServletManager.Code.Success, "Channel name edited, new name: " + channel.getName());
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Empty team name.");
+            Team otherTeam = teamManager.getTeamWithName(name);
+            if (otherTeam != null && otherTeam != team)
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Team name already taken.");
+            team.editName(name);
+            sm.setResponse(ServletManager.Code.Success, "Team name edited, new name: " + team.getName());
         } catch (Exception e) {
             sm.setResponse(e);
         }

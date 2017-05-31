@@ -414,4 +414,13 @@ public class TeamUser {
         hibernateQuery.saveOrUpdateObject(this);
         hibernateQuery.commit();
     }
+
+    public void editUsername(String username) {
+        HibernateQuery hibernateQuery = new HibernateQuery();
+        if (firstName.equals(this.getUsername()))
+            return;
+        this.username = username;
+        hibernateQuery.saveOrUpdateObject(this);
+        hibernateQuery.commit();
+    }
 }

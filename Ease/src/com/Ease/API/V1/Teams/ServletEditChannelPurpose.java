@@ -33,7 +33,7 @@ public class ServletEditChannelPurpose extends HttpServlet {
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Empty purpose.");
             Channel channel = team.getChannelWithId(Integer.parseInt(channel_id));
             channel.editPurpose(purpose);
-            sm.setResponse(ServletManager.Code.Success, "Channel purpose edited");
+            sm.setResponse(ServletManager.Code.Success, "Channel purpose edited, new purpose: " + channel.getPurpose());
         } catch (Exception e) {
             sm.setResponse(e);
         }

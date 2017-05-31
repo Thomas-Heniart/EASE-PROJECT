@@ -32,7 +32,7 @@ public class ServletEditTeamUserFirstName extends HttpServlet {
             if (firstName == null || firstName.equals(""))
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Empty firstName.");
             teamUser.editFirstName(firstName);
-            sm.setResponse(ServletManager.Code.Success, "TeamUser firstName edited");
+            sm.setResponse(ServletManager.Code.Success, "TeamUser firstName edited, new firstName: " + teamUser.getFirstName());
         } catch (Exception e) {
             sm.setResponse(e);
         }
