@@ -120,6 +120,7 @@ public class App implements ShareableApp, SharedApp {
             }
             shareableApp.setTeamUser_owner(teamUser_owner);
             shareableApps.add(shareableApp);
+            teamUser_owner.addShareableApp(shareableApp);
         }
         return shareableApps;
     }
@@ -523,7 +524,7 @@ public class App implements ShareableApp, SharedApp {
             JSONObject res = new JSONObject();
             res.put("sender_id", this.getTeamUser_owner().getDb_id());
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date shared_date = dateFormat.parse(insertDate);
+            Date shared_date = dateFormat.parse(this.getInsertDate());
             DateFormat dateFormat1 = new SimpleDateFormat("MMMM dd, HH:mm", Locale.US);
             res.put("shared_date", dateFormat1.format(shared_date));
             JSONArray receiver_ids = new JSONArray();

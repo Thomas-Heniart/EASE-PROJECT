@@ -318,7 +318,9 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         }
         String websiteAppDBid = request.set().toString();
         db.commitTransaction(transaction);
-        return new WebsiteApp(appDBid, null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), this.getSite(), websiteAppDBid, this, reminderIntervalValue, reminderIntervalType);
+        SharedApp sharedApp = new WebsiteApp(appDBid, null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), this.getSite(), websiteAppDBid, this, reminderIntervalValue, reminderIntervalType);
+        sharedApp.setTeamUser_tenant(teamUser_tenant);
+        return sharedApp;
     }
 
     @Override

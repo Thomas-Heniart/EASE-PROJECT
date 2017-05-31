@@ -53,7 +53,7 @@
 	 ssoId="${app.getSite().getSsoId()}"
 	 move="true"
 	 logwith=""
-	 account='${app.getAccountInformationsJson()}'
+	 account='${app.getAccount().getJson()}'
 	 data-type="${app.getType()}">
 </c:if>
 <c:if test="${app.getType() eq 'LogwithApp'}">

@@ -181,7 +181,9 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         db.commitTransaction(transaction);
         this.tenant_teamUsers.add(teamUser_tenant);
         this.channel = channel;
-        return new LinkApp(appDBid, null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), linkInfos, linkDBid, this);
+        SharedApp sharedApp = new LinkApp(appDBid, null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), linkInfos, linkDBid, this);
+        sharedApp.setTeamUser_tenant(teamUser_tenant);
+        return sharedApp;
     }
 
     @Override

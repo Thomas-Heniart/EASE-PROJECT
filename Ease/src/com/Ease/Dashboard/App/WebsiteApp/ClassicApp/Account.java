@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.RSA;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -64,7 +65,7 @@ public class Account {
         try {
             Date deadLine = dateFormat.parse(rs.getString(1));
             Date now = new Date();
-            account =  new Account(db_id, shared, publicKey, ciphered_privateKey, infos, (now.compareTo(deadLine) >= 0), mustBeReciphered, reminderValue);
+            account = new Account(db_id, shared, publicKey, ciphered_privateKey, infos, (now.compareTo(deadLine) >= 0), mustBeReciphered, reminderValue);
             account.setLastUpdatedDate(lastUpdatedDate);
             return account;
         } catch (ParseException e) {
@@ -104,36 +105,50 @@ public class Account {
         return account;
     }
 
-    public static Account createSharedAccount(Map<String, String> information, String deciphered_teamKey, ServletManager sm) throws GeneralException {
+    public static Account createShareableAccount(Map<String, String> accountInformationMap, String deciphered_teamKey, Integer reminderValue, ServletManager sm) throws GeneralException {
+        Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
+        String publicKey = publicAndPrivateKey.getKey();
+        String privateKey = publicAndPrivateKey.getValue();
+        String ciphered_key = AES.encrypt(privateKey, deciphered_teamKey);
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
-        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, null, null, null, null, 1);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, ?, ?, ?, ?, 0);");
+        if (reminderValue != null) {
+            request.setInt(reminderValue);
+            request.setString("MONTH");
+        } else {
+            request.setNull();
+            request.setNull();
+        }
+        request.setString(publicKey);
+        request.setString(ciphered_key);
         String db_id = request.set().toString();
-        List<AccountInformation> infos = AccountInformation.createSharedAccountInformationList(db_id, information, deciphered_teamKey, sm);
+        List<AccountInformation> accountInformationList = AccountInformation.createAccountInformations(db_id, accountInformationMap, publicKey, sm);
         db.commitTransaction(transaction);
-        Account account = new Account(db_id, false, null, null, infos, true);
+        Account account = new Account(db_id, false, publicKey, ciphered_key, accountInformationList, (reminderValue == null ? 0 : reminderValue));
+        account.setPrivateKey(privateKey);
         account.setLastUpdatedDate(new Date());
         return account;
     }
 
-    /* public static Account createAccountFromJson(JSONArray account_information, ServletManager sm) throws GeneralException {
-        Map<String, String> accountInformation = new HashMap<>();
-        for (Object obj : account_information) {
-            JSONObject objJson = (JSONObject) obj;
-            String info_name = (String) objJson.get("info_name");
-            String info_value = (String) objJson.get("info_value");
-            Crypto for password
-            accountInformation.put(info_name, info_value);
-        }
+    public static Account createSharedAccount(List<AccountInformation> information, String deciphered_teamKey, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
+        Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
+        String publicKey = publicAndPrivateKey.getKey();
+        String privateKey = publicAndPrivateKey.getValue();
+        String ciphered_key = AES.encrypt(privateKey, deciphered_teamKey);
         int transaction = db.startTransaction();
-        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, ?, default, null, null);");
-        request.setBoolean(false);
+        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, null, null, ?, ?, 1);");
+        request.setString(publicKey);
+        request.setString(ciphered_key);
         String db_id = request.set().toString();
-        List<AccountInformation> infos = AccountInformation.createAccountInformations(db_id, accountInformation, null, sm);
+        List<AccountInformation> accountInformationList = AccountInformation.createSharedAccountInformationList(db_id, information, publicKey, sm);
         db.commitTransaction(transaction);
-        return new Account(db_id, false, infos);
-    } */
+        Account account = new Account(db_id, false, publicKey, ciphered_key, accountInformationList, true);
+        account.setPrivateKey(privateKey);
+        account.setLastUpdatedDate(new Date());
+        return account;
+    }
 
     public static Account createAccountSameAs(Account sameAccount, boolean shared, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
@@ -168,7 +183,7 @@ public class Account {
     protected String ciphered_key;
     protected String privateKey;
     protected Boolean mustBeReciphered;
-    protected Integer passwordChangeInterval; /* In month */
+    protected Integer passwordChangeInterval = 0; /* In month */
     protected String lastUpdatedDate;
     protected DateFormat databaseLastUpdatedDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     protected DateFormat printLastUpdatedDateFormat = new SimpleDateFormat("MMMM dd, HH:mm", Locale.US);
@@ -220,7 +235,7 @@ public class Account {
         request.set();
         db.commitTransaction(transaction);
     }
-	
+
 	/*
 	 * 
 	 * Getter And Setter
@@ -247,6 +262,14 @@ public class Account {
         if (this.privateKey != null)
             return;
         this.privateKey = user.decrypt(this.ciphered_key);
+        for (AccountInformation accountInformation : this.getAccountInformations())
+            accountInformation.decipher(this.privateKey);
+    }
+
+    public void decipherWithTeamKeyIfNeeded(String deciphered_teamKey) throws GeneralException {
+        if (this.privateKey != null)
+            return;
+        this.privateKey = AES.decrypt(this.ciphered_key, deciphered_teamKey);
         for (AccountInformation accountInformation : this.getAccountInformations())
             accountInformation.decipher(this.privateKey);
     }
@@ -283,7 +306,7 @@ public class Account {
     }
 
     public Integer getPasswordChangeInterval() {
-        return this.getPasswordChangeInterval();
+        return this.passwordChangeInterval;
     }
 
     public void setLastUpdatedDate(String lastUpdatedDate) throws GeneralException {
@@ -336,6 +359,20 @@ public class Account {
                 continue;
             tmp = new JSONObject();
             tmp.put(info.getInformationName(), info.getInformationValue());
+            res.add(tmp);
+        }
+        return res;
+    }
+
+    public JSONArray getJson() {
+        JSONArray res = new JSONArray();
+        JSONObject tmp;
+        for (AccountInformation info : this.infos) {
+            if (info.getInformationName().equals("password"))
+                continue;
+            tmp = new JSONObject();
+            tmp.put("name", info.getInformationName());
+            tmp.put("value", info.getInformationValue());
             res.add(tmp);
         }
         return res;

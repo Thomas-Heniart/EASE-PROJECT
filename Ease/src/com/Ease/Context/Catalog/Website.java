@@ -366,10 +366,8 @@ public class Website {
             if (info_name.equals("password")) {
                 //Mettre un param keyDate dans le post si besoin de decrypter en RSA. Correspond à la private key RSA,
                 String keyDate = sm.getServletParam("keyDate", true);
-                if (keyDate != null && !keyDate.equals("")) {
+                if (keyDate != null && !keyDate.equals(""))
                     value = RSA.Decrypt(value, Integer.parseInt(keyDate));
-                }
-                value = sm.getUser().encrypt(value);
             }
             infos.put(info_name, value);
         }
@@ -652,7 +650,7 @@ public class Website {
     public JSONObject getSearchJson() {
         JSONObject res = this.getSimpleJson();
         res.put("id", this.single_id);
-        return  res;
+        return res;
     }
 
     public JSONObject getSimpleJson() {

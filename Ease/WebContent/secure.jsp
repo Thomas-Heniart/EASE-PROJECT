@@ -18,10 +18,10 @@ src="https://www.facebook.com/tr?id=1771793116375287&ev=PageView&noscript=1"
 
 
 <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
-<script src="/jsMinified.v00013/tracker.js"></script>
+<script src="/jsMinified.v00014/tracker.js"></script>
 <script type="text/javascript">
   (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script");r.type="text/javascript";
-  r.async=true;r.src="/jsMinified.v00013/amplitude-analytics.js";
+  r.async=true;r.src="/jsMinified.v00014/amplitude-analytics.js";
   r.onload=function(){e.amplitude.runQueuedFunctions()};var i=t.getElementsByTagName("script")[0];
   i.parentNode.insertBefore(r,i);function s(e,t){e.prototype[t]=function(){this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));
   return this}}var o=function(){this._q=[];return this};var a=["add","append","clearAll","prepend","set","setOnce","unset"];

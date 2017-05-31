@@ -14,7 +14,6 @@ function showExtensionPopup() {
     var ease_extension = $("#ease_extension");
     var new_ease_extension = $("#new_ease_extension");
     if (ease_extension.length) {
-        console.log("waitForExtension: " + waitForExtension);
         if (!waitForExtension) {
             if (getUserNavigator() == "Safari") {
                 if (!$('#ease_extension').attr("safariversion") || $('#ease_extension').attr("safariversion") != "2.2.4") {

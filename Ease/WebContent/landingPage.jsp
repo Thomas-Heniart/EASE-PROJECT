@@ -379,15 +379,15 @@ pageEncoding="UTF-8"%>
 		</section>
 		<%@ include file="templates/landingPage/landingFooter.jsp" %>
 		<%@ include file="templates/landingPage/registrationPopup.jsp" %>	
-		<script src="/jsMinified.v00013/jquery1.12.4.js" ></script>
-		<script src="/jsMinified.v00013/jquery.complexify.js"></script>
-		<script src="/jsMinified.v00013/bootstrap.js" async></script>
-		<script src="/jsMinified.v00013/registrationPopup.js" async></script>
-		<script src="/jsMinified.v00013/landingPage.js" async></script>
-		<script src="/jsMinified.v00013/basic-utils.js" async></script>
-		<script src="/jsMinified.v00013/postHandler.js" async></script>
-		<script src="/jsMinified.v00013/languageChooser.js" async></script>
-		<script src="/jsMinified.v00013/tracker.js" async></script>
+		<script src="/jsMinified.v00014/jquery1.12.4.js" ></script>
+		<script src="/jsMinified.v00014/jquery.complexify.js"></script>
+		<script src="/jsMinified.v00014/bootstrap.js" async></script>
+		<script src="/jsMinified.v00014/registrationPopup.js" async></script>
+		<script src="/jsMinified.v00014/landingPage.js" async></script>
+		<script src="/jsMinified.v00014/basic-utils.js" async></script>
+		<script src="/jsMinified.v00014/postHandler.js" async></script>
+		<script src="/jsMinified.v00014/languageChooser.js" async></script>
+		<script src="/jsMinified.v00014/tracker.js" async></script>
 		<script type="text/javascript">
 			window.addEventListener('load',function(){
 				if ($('#2').find("input[name='email']").val().length){
@@ -401,13 +401,13 @@ pageEncoding="UTF-8"%>
 	</script>
 	<script type="text/javascript">
 		window.addEventListener('load',function(){
-			$crisp=[];CRISP_WEBSITE_ID="6e9fe14b-66f7-487c-8ac9-5912461be78a";(function(){d=document;s=d.createElement("script");s.src="/jsMinified.v00013/thirdParty/crisp.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+			$crisp=[];CRISP_WEBSITE_ID="6e9fe14b-66f7-487c-8ac9-5912461be78a";(function(){d=document;s=d.createElement("script");s.src="/jsMinified.v00014/thirdParty/crisp.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
 		});
 	</script>
 	<script type="text/javascript">
 		window.addEventListener('load',function(){
 			(function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script");r.type="text/javascript";
-				r.async=true;r.src="/jsMinified.v00013/amplitude-analytics.js";
+				r.async=true;r.src="/jsMinified.v00014/amplitude-analytics.js";
 				r.onload=function(){e.amplitude.runQueuedFunctions()};var i=t.getElementsByTagName("script")[0];
 				i.parentNode.insertBefore(r,i);function s(e,t){e.prototype[t]=function(){this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));
 					return this}}var o=function(){this._q=[];return this};var a=["add","append","clearAll","prepend","set","setOnce","unset"];

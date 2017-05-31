@@ -74,6 +74,20 @@ public class ClassicApp extends WebsiteApp {
         return new ClassicApp((String) elevator.get("appDBid"), profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, account, classicDBid);
     }
 
+    public static ClassicApp createShareableClassicApp(String name, Website website, Map<String, String> accountInformationMap, TeamUser teamUser_owner, Integer reminderValue, ServletManager sm) throws GeneralException {
+        DataBaseConnection db = sm.getDB();
+        int transaction = db.startTransaction();
+        Map<String, Object> elevator = new HashMap<String, Object>();
+        String websiteAppDBid = WebsiteApp.createWebsiteApp(null, null, name, "classicApp", website, elevator, sm);
+        Account account = Account.createShareableAccount(accountInformationMap, teamUser_owner.getDeciphered_teamKey(), reminderValue, sm);
+        DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
+        request.setInt(websiteAppDBid);
+        request.setInt(account.getDBid());
+        String classicDBid = request.set().toString();
+        db.commitTransaction(transaction);
+        return new ClassicApp((String) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), website, websiteAppDBid, account, classicDBid);
+    }
+
     public static App createClassicAppSameAs(Profile profile, int position, String name, Website site, ClassicApp sameApp, ServletManager sm, User user) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
@@ -267,24 +281,17 @@ public class ClassicApp extends WebsiteApp {
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<>();
         String websiteAppId = WebsiteApp.createSharedWebsiteApp(this, elevator, team.getDb_id(), channel == null ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), sm);
-        JSONArray accountInformationArray = (JSONArray) params.get("accountInformation");
-        if (accountInformationArray == null || accountInformationArray.isEmpty())
-            throw new GeneralException(ServletManager.Code.ClientError, "Account information shouldn't be empty or null");
-        Map<String, String> accountInformationMap = new HashMap<>();
-        for (Object accountInformationObj : accountInformationArray) {
-            JSONObject accountInformation = (JSONObject) accountInformationObj;
-            String info_name = (String) accountInformation.get("info_name");
-            String info_value = (String) accountInformation.get("info_value");
-            accountInformationMap.put(info_name, info_value);
-        }
-        Account account = Account.createSharedAccount(accountInformationMap, teamUser_owner.getDeciphered_teamKey(), sm);
+        String deciphered_teamKey = sm.getTeamUserForTeam(team).getDeciphered_teamKey();
+        this.getAccount().decipherWithTeamKeyIfNeeded(deciphered_teamKey);
+        Account sharedAccount = Account.createSharedAccount(this.getAccount().getAccountInformations(), deciphered_teamKey, sm);
         DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
         request.setInt(websiteAppId);
-        request.setInt(account.getDBid());
+        request.setInt(sharedAccount.getDBid());
         String classicDBid = request.set().toString();
         db.commitTransaction(transaction);
-        App sharedApp = new ClassicApp((String) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), this.getSite(), websiteAppId, this.account, classicDBid, this);
+        App sharedApp = new ClassicApp((String) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), this.getSite(), websiteAppId, sharedAccount, classicDBid, this);
         sharedApp.setReceived(false);
+        sharedApp.setTeamUser_tenant(teamUser_tenant);
         return sharedApp;
     }
 
@@ -299,7 +306,7 @@ public class ClassicApp extends WebsiteApp {
             JSONObject tmp = new JSONObject();
             tmp.put("info_name", accountInformation.getInformationName());
             tmp.put("info_value", accountInformation.getInformationValue());
-            accountInformationArray.add(res);
+            accountInformationArray.add(tmp);
         }
         res.put("account_information", accountInformationArray);
         return res;

@@ -132,7 +132,7 @@ public class Channel {
         for (SharedApp sharedApp : this.getSharedApps())
             apps.add(sharedApp.getSharedJSON());
         res.put("apps", apps);
-        res.put("desc", this.purpose);
+        res.put("purpose", this.purpose);
         return res;
     }
 
