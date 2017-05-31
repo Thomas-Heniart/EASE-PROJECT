@@ -43,6 +43,7 @@ public class ServletCreateShareableSingleApp extends HttpServlet {
             String channel_id = sm.getServletParam("channel_id", true);
             String app_name = sm.getServletParam("name", true);
             String description = sm.getServletParam("description", false);
+            String reminderInterval = sm.getServletParam("reminderInterval", true);
             if (app_name == null || app_name.equals(""))
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Empty app name");
             if (website_id == null || website_id.equals(""))
@@ -51,6 +52,8 @@ public class ServletCreateShareableSingleApp extends HttpServlet {
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Description is null");
             if (account_information_string == null || account_information_string.equals(""))
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Account information are null.");
+            if (reminderInterval == null || reminderInterval.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientError, "Reminder cannot be null");
             JSONParser parser = new JSONParser();
             JSONArray account_information = (JSONArray) parser.parse(StringEscapeUtils.unescapeHtml4(account_information_string));
             if (account_information.isEmpty())
@@ -69,7 +72,7 @@ public class ServletCreateShareableSingleApp extends HttpServlet {
             }
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
-            ClassicApp classicApp = ClassicApp.createShareableClassicApp(app_name, website, accountInformationMap, teamUser_owner, 0, sm);
+            ClassicApp classicApp = ClassicApp.createShareableClassicApp(app_name, website, accountInformationMap, teamUser_owner, Integer.parseInt(reminderInterval), sm);
             classicApp.becomeShareable(sm.getDB(), team, teamUser_owner, channel, description);
             db.commitTransaction(transaction);
             sm.setResponse(ServletManager.Code.Success, "ShareableSingleApp created and single_id is " + classicApp.getSingleId());
