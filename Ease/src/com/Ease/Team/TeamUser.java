@@ -387,6 +387,7 @@ public class TeamUser {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id", this.getDb_id());
         jsonObject.put("username", this.getUsername());
+        jsonObject.put("email", this.getEmail());
         jsonObject.put("first_name", this.getFirstName());
         jsonObject.put("last_name", this.getLastName());
         jsonObject.put("arrival_date", this.dateFormat.format(this.getArrivalDate()));
