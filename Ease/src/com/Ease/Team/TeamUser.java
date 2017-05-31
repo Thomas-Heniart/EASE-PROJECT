@@ -4,6 +4,7 @@ import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.User.User;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.DataBaseConnection;
@@ -336,7 +337,7 @@ public class TeamUser {
 
     public void addSharedApp(SharedApp app) {
         this.sharedApps.add(app);
-        this.sharedAppMap.put(((App)app).getSingleId(), app);
+        this.sharedAppMap.put(((App) app).getSingleId(), app);
     }
 
     public void addShareableApp(ShareableApp app) {
@@ -394,5 +395,23 @@ public class TeamUser {
             jsonObject.put("departure_date", this.dateFormat.format(this.getDepartureDate()));
         jsonObject.put("role", this.getTeamUserPermissions().getPermissions());
         return jsonObject;
+    }
+
+    public void editFirstName(String firstName) {
+        HibernateQuery hibernateQuery = new HibernateQuery();
+        if (firstName.equals(this.getFirstName()))
+            return;
+        this.firstName = firstName;
+        hibernateQuery.saveOrUpdateObject(this);
+        hibernateQuery.commit();
+    }
+
+    public void editLastName(String lastName) {
+        HibernateQuery hibernateQuery = new HibernateQuery();
+        if (firstName.equals(this.getLastName()))
+            return;
+        this.lastName = lastName;
+        hibernateQuery.saveOrUpdateObject(this);
+        hibernateQuery.commit();
     }
 }

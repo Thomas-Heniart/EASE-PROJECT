@@ -18,22 +18,21 @@ import java.io.IOException;
 /**
  * Created by thomas on 31/05/2017.
  */
-@WebServlet("/api/v1/teams/EditChannelPurpose")
-public class ServletEditChannelPurpose extends HttpServlet {
+@WebServlet("/api/v1/teams/EditTeamUserFirstName")
+public class ServletEditTeamUserFirstName extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
         try {
             String team_id = sm.getServletParam("team_id", true);
-            sm.needToBeAdminOfTeam(Integer.parseInt(team_id));
+            sm.needToBeTeamUserOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
-            String channel_id = sm.getServletParam("channel_id", true);
-            String purpose = sm.getServletParam("purpose", true);
-            if (purpose == null || purpose.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Empty purpose.");
-            Channel channel = team.getChannelWithId(Integer.parseInt(channel_id));
-            channel.editPurpose(purpose);
-            sm.setResponse(ServletManager.Code.Success, "Channel purpose edited");
+            TeamUser teamUser = sm.getTeamUserForTeam(team);
+            String firstName = sm.getServletParam("firstName", true);
+            if (firstName == null || firstName.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Empty firstName.");
+            teamUser.editFirstName(firstName);
+            sm.setResponse(ServletManager.Code.Success, "TeamUser firstName edited");
         } catch (Exception e) {
             sm.setResponse(e);
         }
