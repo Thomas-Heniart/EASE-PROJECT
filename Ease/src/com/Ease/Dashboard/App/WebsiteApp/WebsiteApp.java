@@ -97,7 +97,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         request.setInt(appDBid);
         String websiteAppDBid = request.set().toString();
         db.commitTransaction(transaction);
-        return new WebsiteApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid);
+        return new WebsiteApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid);
     }
 
     public static WebsiteApp createEmptyApp(Profile profile, Integer position, String name, Website site, Integer reminderIntervalValue, String reminderIntervalType, ServletManager sm) throws GeneralException {
@@ -112,7 +112,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         request.setString(reminderIntervalType);
         String websiteAppDBid = request.set().toString();
         db.commitTransaction(transaction);
-        return new WebsiteApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), site, reminderIntervalValue, reminderIntervalType, websiteAppDBid);
+        return new WebsiteApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), site, reminderIntervalValue, reminderIntervalType, websiteAppDBid);
     }
 
     public static String createSharedWebsiteApp(WebsiteApp websiteApp, Map<String, Object> elevator, Integer team_id, Integer channel_id, Integer team_user_tenant_id, ServletManager sm) throws GeneralException {
@@ -318,7 +318,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         }
         String websiteAppDBid = request.set().toString();
         db.commitTransaction(transaction);
-        SharedApp sharedApp = new WebsiteApp(appDBid, null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), this.getSite(), websiteAppDBid, this, reminderIntervalValue, reminderIntervalType);
+        SharedApp sharedApp = new WebsiteApp(appDBid, null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), this.getSite(), websiteAppDBid, this, reminderIntervalValue, reminderIntervalType);
         sharedApp.setTeamUser_tenant(teamUser_tenant);
         return sharedApp;
     }

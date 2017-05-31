@@ -1,8 +1,12 @@
 package com.Ease.Dashboard.App.LinkApp;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.Ease.Context.Catalog.Catalog;
+import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.*;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Team.Channel;
@@ -43,7 +47,7 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         DatabaseResult rs = request.get();
         if (rs.next()) {
             LinkAppInformation linkInfos = LinkAppInformation.loadLinkAppInformation(rs.getString(Data.LINK_APP_INFO_ID.ordinal()), db);
-			/*GroupLinkApp groupLinkApp = null;
+            /*GroupLinkApp groupLinkApp = null;
 			String groupLinkId = rs.getString(Data.GROUP_LINK_APP_ID.ordinal());
 			if (groupLinkId != null)
 				groupLinkApp  = (GroupLinkApp) GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupLinkId);*/
@@ -57,16 +61,26 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<String, Object>();
-        System.out.println("We are here 2");
         String appDBid = App.createApp(profile, position, name, "linkApp", elevator, sm);
-        System.out.println("We are here 2");
         LinkAppInformation infos = LinkAppInformation.createLinkAppInformation(url, imgUrl, sm);
         DatabaseRequest request = db.prepareRequest("INSERT INTO linkApps values(NULL, ?, ?, NULL);");
         request.setInt(appDBid);
         request.setInt(infos.getDb_id());
         String linkDBid = request.set().toString();
         db.commitTransaction(transaction);
-        return new LinkApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), infos, linkDBid);
+        return new LinkApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), infos, linkDBid);
+    }
+
+    public static LinkApp createShareableLinkApp(String name, String link, ServletManager sm) throws GeneralException {
+        Catalog catalog = (Catalog) sm.getContextAttr("catalog");
+        String linkHost = link.split("\\.")[1];
+        String imgUrl = "";
+        Website websiteForLogo = catalog.getWebsiteWithHost(linkHost);
+        if (websiteForLogo == null)
+            imgUrl = linkHost.substring(0, 2);
+        else
+            imgUrl = websiteForLogo.getLogo();
+        return createLinkApp(null, null, name, link, imgUrl, sm);
     }
 	
 	/*
@@ -181,7 +195,7 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         db.commitTransaction(transaction);
         this.tenant_teamUsers.add(teamUser_tenant);
         this.channel = channel;
-        SharedApp sharedApp = new LinkApp(appDBid, null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), linkInfos, linkDBid, this);
+        SharedApp sharedApp = new LinkApp(appDBid, null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), linkInfos, linkDBid, this);
         sharedApp.setTeamUser_tenant(teamUser_tenant);
         return sharedApp;
     }

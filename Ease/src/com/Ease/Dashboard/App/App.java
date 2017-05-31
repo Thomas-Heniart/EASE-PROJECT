@@ -166,9 +166,9 @@ public class App implements ShareableApp, SharedApp {
         AppInformation infos = AppInformation.createAppInformation(name, sm);
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
-        String registrationDate = dateFormat.format(date);
+        String insertDate = dateFormat.format(date);
         DatabaseRequest request = db.prepareRequest("INSERT INTO apps VALUES (NULL, ?, ?, ?, NULL);");
-        request.setString(registrationDate);
+        request.setString(insertDate);
         request.setString(type);
         request.setInt(infos.getDb_id());
         String appDBid = request.set().toString();
@@ -180,7 +180,7 @@ public class App implements ShareableApp, SharedApp {
             request.set();
         }
         elevator.put("appInfos", infos);
-        elevator.put("insertDate", registrationDate);
+        elevator.put("insertDate", insertDate);
         db.commitTransaction(transaction);
         return appDBid;
 
