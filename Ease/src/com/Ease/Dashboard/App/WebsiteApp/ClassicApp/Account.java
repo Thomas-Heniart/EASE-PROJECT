@@ -150,6 +150,32 @@ public class Account {
         return account;
     }
 
+    public static Account createSharedAccountFromJson(JSONArray account_information_array, String deciphered_teamKey, ServletManager sm) throws GeneralException {
+        Map<String, String> account_informationMap = new HashMap<>();
+        for(Object account_information_obj : account_information_array) {
+            JSONObject account_information = (JSONObject) account_information_obj;
+            String info_name = (String) account_information.get("info_name");
+            String info_value = (String) account_information.get("info_value");
+            account_informationMap.put(info_name, info_value);
+        }
+        DataBaseConnection db = sm.getDB();
+        Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
+        String publicKey = publicAndPrivateKey.getKey();
+        String privateKey = publicAndPrivateKey.getValue();
+        String ciphered_key = AES.encrypt(privateKey, deciphered_teamKey);
+        int transaction = db.startTransaction();
+        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, null, null, ?, ?, 1);");
+        request.setString(publicKey);
+        request.setString(ciphered_key);
+        String db_id = request.set().toString();
+        List<AccountInformation> accountInformationList = AccountInformation.createAccountInformations(db_id, account_informationMap, publicKey, sm);
+        Account account = new Account(db_id, false, publicKey, ciphered_key, accountInformationList, true);
+        account.setPrivateKey(privateKey);
+        account.setLastUpdatedDate(new Date());
+        db.commitTransaction(transaction);
+        return account;
+    }
+
     public static Account createAccountSameAs(Account sameAccount, boolean shared, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();

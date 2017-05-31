@@ -170,7 +170,7 @@ public class ClassicApp extends WebsiteApp {
     public Account getAccount() {
         return account;
     }
-	/*
+    /*
 	 * 
 	 * Getter And Setter
 	 *
@@ -310,6 +310,11 @@ public class ClassicApp extends WebsiteApp {
         }
         res.put("account_information", accountInformationArray);
         return res;
+    }
+
+    @Override
+    public JSONObject getNeededParams(ServletManager sm) throws GeneralException {
+        return new JSONObject();
     }
 
     @Override

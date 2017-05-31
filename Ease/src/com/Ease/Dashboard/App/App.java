@@ -539,6 +539,11 @@ public class App implements ShareableApp, SharedApp {
     }
 
     @Override
+    public JSONObject getNeededParams(ServletManager sm) throws GeneralException {
+        return new JSONObject();
+    }
+
+    @Override
     public void setDescription(String description) {
         this.description = description;
     }
