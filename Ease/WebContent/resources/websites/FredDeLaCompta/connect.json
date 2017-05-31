@@ -17,12 +17,7 @@
     ]
   },
   "checkAlreadyLogged":[
-    {"action":"waitload"},
-    {"action":"waitload"},
-    {"action":"waitload"},
-    {"action":"waitload"},
-    {"action":"waitload"},
-    {"action":"waitload"},
+    {"action":"search", "search":"input#username"},
     {"action":"waitfor", "search":"a[href*='dashboard-ae/profile'], input#username"},
     {"search": "a[href*='dashboard-ae/profile']"}
   ]

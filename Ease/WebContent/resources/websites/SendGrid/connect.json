@@ -12,7 +12,8 @@
     "logout": {
       "todo": [
         {"action":"clickona", "search":"li[data-logout='logout'] a"},
-        {"action":"waitload"}
+        {"action":"waitfor", "search":"a[href*='login']"},
+        {"action":"aclick", "search":"a[href*='login']"}
       ]
     },
     "checkAlreadyLogged": [
