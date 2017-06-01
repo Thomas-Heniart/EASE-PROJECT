@@ -1,11 +1,11 @@
 { 
     "name":"Flaticon",
     "lastLogin":"", 
-    "home":"http://www.flaticon.com/", 
+    "home":"https://profile.flaticon.com/login",
     "connect":{ 
-        "todo":[ 
-        	{"action":"goto", "url":"https://profile.flaticon.com/login"},
-            {"action":"fill", "what":"login", "search":"#gr_login_username"}, 
+        "todo":[
+            {"action": "goto", "url":"https://profile.flaticon.com/login"},
+            {"action":"fill", "what":"login", "search":"#gr_login_username"},
             {"action":"fill", "what":"password", "search":"#gr_login_password"}, 
             {"action":"click", "search":"#signin_button"} 
         ] 
