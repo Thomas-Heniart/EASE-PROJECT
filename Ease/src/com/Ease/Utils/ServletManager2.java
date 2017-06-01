@@ -137,13 +137,13 @@ public class ServletManager2 {
     }
 
     public void setError(Exception e) {
-        e.printStackTrace();
         try {
             HttpServletException httpServletException = (HttpServletException) e;
             System.out.println("Error code: " + httpServletException.getHttpStatus() + " and msg: " + httpServletException.getMsg());
             response.setStatus(httpServletException.getHttpStatus().getValue());
             this.errorMessage = httpServletException.getMsg();
         } catch (ClassCastException e1) {
+            e.printStackTrace();
             this.setInternError();
         }
     }
@@ -205,7 +205,7 @@ public class ServletManager2 {
 
     public Object getParam(String paramName, boolean saveInLogs) {
         Object param = params.get(paramName);
-        if (saveInLogs)
+        if (param != null && saveInLogs)
             args.put(paramName, param.toString());
         return param;
     }
@@ -295,23 +295,33 @@ public class ServletManager2 {
 				});
 			}*/
             //System.out.println("wMessages loop done");
-            if (this.redirectUrl != null) {
-                System.out.println("redirect to " + this.redirectUrl);
-                response.sendRedirect(this.redirectUrl);
+            if (this.response.getStatus() != HttpStatus.Success.getValue()) {
+                if (this.errorMessage != null)
+                    response.getWriter().print(this.errorMessage);
+                else
+                    response.sendError(response.getStatus());
             } else {
-                if (this.jsonArrayResponse == null && this.jsonObjectResponse == null) {
-                    this.setInternError();
-                    if (this.errorMessage != null)
-                        response.getWriter().print(this.errorMessage);
-                    else
-                        response.sendError(response.getStatus());
+                if (this.redirectUrl != null) {
+                    System.out.println("redirect to " + this.redirectUrl);
+                    response.sendRedirect(this.redirectUrl);
                 } else {
-                    if (this.jsonArrayResponse != null)
-                        response.getWriter().print(this.jsonArrayResponse.toString());
-                    else
-                        response.getWriter().print(this.jsonObjectResponse.toString());
-                    this.hibernateQuery.commit();
+                    if (this.jsonArrayResponse == null && this.jsonObjectResponse == null) {
+                        response.sendError(HttpStatus.InternError.getValue());
+                        try {
+                            this.db.rollbackTransaction();
+                        } catch (GeneralException e) {
+                            System.out.println("Rollback failed");
+                        }
+                        this.hibernateQuery.rollback();
+                    } else {
+                        if (this.jsonArrayResponse != null)
+                            response.getWriter().print(this.jsonArrayResponse.toString());
+                        else
+                            response.getWriter().print(this.jsonObjectResponse.toString());
+                        this.hibernateQuery.commit();
+                    }
                 }
+
             }
         } catch (IOException e) {
             System.err.println("Send response failed.");
