@@ -334,6 +334,9 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
             request.setInt(account.getDBid());
             String classicDBid = request.set().toString();
             sharedApp = new ClassicApp((String) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), single_id, this.getSite(), websiteAppId, account, classicDBid, this);
+            Boolean adminHasAccess = (Boolean) params.get("adminHasAccess");
+            if (adminHasAccess)
+                sharedApp.setAdminHasAccess(adminHasAccess, sm);
             sharedApp.setReceived(false);
         }
         db.commitTransaction(transaction);
@@ -353,6 +356,8 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         try {
             JSONObject jsonObject = new JSONObject();
             String account_information = sm.getServletParam("account_information", false);
+            String adminHasAccess = sm.getServletParam("adminHasAccess", true);
+            jsonObject.put("adminHasAccess", Boolean.parseBoolean(adminHasAccess));
             JSONParser parser = new JSONParser();
             JSONArray account_information_array = (JSONArray) parser.parse(account_information);
             jsonObject.put("account_information", account_information_array);

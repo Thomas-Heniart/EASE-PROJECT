@@ -152,7 +152,7 @@ public class Account {
 
     public static Account createSharedAccountFromJson(JSONArray account_information_array, String deciphered_teamKey, ServletManager sm) throws GeneralException {
         Map<String, String> account_informationMap = new HashMap<>();
-        for(Object account_information_obj : account_information_array) {
+        for (Object account_information_obj : account_information_array) {
             JSONObject account_information = (JSONObject) account_information_obj;
             String info_name = (String) account_information.get("info_name");
             String info_value = (String) account_information.get("info_value");
@@ -263,7 +263,7 @@ public class Account {
     }
 
 	/*
-	 * 
+     *
 	 * Getter And Setter
 	 * 
 	 */
@@ -410,25 +410,33 @@ public class Account {
         int transaction = db.startTransaction();
         for (AccountInformation info : this.infos) {
             if ((value = infos.get(info.getInformationName())) != null) {
-                if (info.getInformationName().equals("password")) {
-                    DatabaseRequest request = db.prepareRequest("UPDATE accounts SET lastUpdateDate = NOW() WHERE id = ?;");
-                    request.setInt(this.db_id);
-                    request.set();
-                    this.passwordMustBeUpdated = false;
-                }
                 info.setInformation_value(value, this.publicKey, sm);
+                if (info.getInformationName().equals("password"))
+                    updateLastUpateDate(db);
             }
         }
         db.commitTransaction(transaction);
     }
 
     public void edit(JSONObject editJson, ServletManager sm) throws GeneralException {
+        DataBaseConnection db = sm.getDB();
+        int transaction = db.startTransaction();
         for (AccountInformation accountInformation : this.getAccountInformations()) {
             String new_info_value = (String) editJson.get(accountInformation.getInformationName());
             if (new_info_value == null)
                 continue;
             accountInformation.setInformation_value(new_info_value, this.publicKey, sm);
+            if (accountInformation.getInformationName().equals("password"))
+                updateLastUpateDate(db);
         }
+        db.commitTransaction(transaction);
+    }
+
+    public void updateLastUpateDate(DataBaseConnection db) throws GeneralException {
+        DatabaseRequest request = db.prepareRequest("UPDATE accounts SET lastUpdateDate = NOW() WHERE id = ?;");
+        request.setInt(this.db_id);
+        request.set();
+        this.passwordMustBeUpdated = false;
     }
 
     public String getInformationNamed(String info_name) {

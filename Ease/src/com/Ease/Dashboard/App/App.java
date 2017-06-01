@@ -142,8 +142,11 @@ public class App implements ShareableApp, SharedApp {
                     break;
                 case "websiteApp":
                     sharedApp = WebsiteApp.loadWebsiteApp(db_id, null, null, insertDate, infos, null, context, db);
-                    if (((App) sharedApp).isClassicApp())
+                    if (((App) sharedApp).isClassicApp()) {
                         ((App) sharedApp).setReceived(rs.getBoolean("received"));
+                        sharedApp.setAdminHasAccess(rs.getBoolean("adminHasAccess"));
+                    }
+
                     break;
                 default:
                     throw new GeneralException(ServletManager.Code.InternError, "This app type dosen't exist.");
@@ -205,7 +208,7 @@ public class App implements ShareableApp, SharedApp {
             elevator.put("appInfos", infos);
             elevator.put("insertDate", registrationDate);
         }
-        request = db.prepareRequest("INSERT INTO sharedApps values (?, ?, ?, ?, ?, ?);");
+        request = db.prepareRequest("INSERT INTO sharedApps values (?, ?, ?, ?, ?, ?, 0);");
         request.setInt(appDBid);
         request.setInt(team_id);
         request.setInt(team_user_tenant_id);
@@ -451,6 +454,21 @@ public class App implements ShareableApp, SharedApp {
         return res;
     }
 
+    @Override
+    public void setAdminHasAccess(boolean b) {
+        return;
+    }
+
+    @Override
+    public void setAdminHasAccess(boolean b, ServletManager sm) throws GeneralException {
+        throw new GeneralException(ServletManager.Code.ClientError, "You cannot set admin access for this app.");
+    }
+
+    @Override
+    public boolean adminHasAccess() {
+        return true;
+    }
+
     /* Interface ShareableApp */
     @Override
     public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, ServletManager sm) throws GeneralException {
@@ -525,10 +543,14 @@ public class App implements ShareableApp, SharedApp {
             Date shared_date = dateFormat.parse(this.getInsertDate());
             DateFormat dateFormat1 = new SimpleDateFormat("MMMM dd, HH:mm", Locale.US);
             res.put("shared_date", dateFormat1.format(shared_date));
-            JSONArray receiver_ids = new JSONArray();
-            for (TeamUser teamUser : this.getTeamUser_tenants())
-                receiver_ids.add(teamUser.getDb_id());
-            res.put("receiver_ids", receiver_ids);
+            JSONArray receivers = new JSONArray();
+            for (SharedApp sharedApp : this.getSharedApps()) {
+                JSONObject tmp = new JSONObject();
+                tmp.put("teamUser_id", sharedApp.getTeamUser_tenant().getDb_id());
+                tmp.put("sharedApp_id", ((App)sharedApp).getSingleId());
+                receivers.add(tmp);
+            }
+            res.put("receivers", receivers);
             res.put("purpose", this.getDescription());
             return res;
         } catch (ParseException e) {

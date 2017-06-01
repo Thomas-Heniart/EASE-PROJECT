@@ -142,6 +142,9 @@ public class ClassicApp extends WebsiteApp {
     protected Account account;
     protected String classicDBid;
 
+    /* SharedApp Interface */
+    protected boolean adminHasAccess;
+
     public ClassicApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid, Account account, String classicDBid) {
         super(db_id, profile, position, infos, groupApp, insertDate, single_id, site, websiteAppDBid);
         this.account = account;
@@ -251,7 +254,10 @@ public class ClassicApp extends WebsiteApp {
     public void modifyShared(ServletManager sm, JSONObject editJson) throws GeneralException {
         if (!this.havePerm(AppPermissions.Perm.EDIT))
             throw new GeneralException(ServletManager.Code.ClientError, "You cannot edit this app");
-        this.getHolder().modifyShareable(sm, editJson, this);
+        if (((App)this.getHolder()).isClassicApp())
+            this.getHolder().modifyShareable(sm, editJson, this);
+        else
+            this.getAccount().edit(editJson, sm);
     }
 
     @Override
@@ -290,6 +296,7 @@ public class ClassicApp extends WebsiteApp {
         String classicDBid = request.set().toString();
         db.commitTransaction(transaction);
         App sharedApp = new ClassicApp((String) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), this.getSite(), websiteAppId, sharedAccount, classicDBid, this);
+        sharedApp.setAdminHasAccess(adminHasAccess, sm);
         sharedApp.setReceived(false);
         sharedApp.setTeamUser_tenant(teamUser_tenant);
         return sharedApp;
@@ -339,6 +346,26 @@ public class ClassicApp extends WebsiteApp {
         JSONObject jsonObject = super.getJsonWithoutId();
         jsonObject.put("information", this.account.getInformationJson());
         return jsonObject;
+    }
+
+    @Override
+    public boolean adminHasAccess() {
+        return this.adminHasAccess;
+    }
+
+    @Override
+    public void setAdminHasAccess(boolean b) {
+        this.adminHasAccess = b;
+    }
+
+    @Override
+    public void setAdminHasAccess(boolean b, ServletManager sm) throws GeneralException {
+        DataBaseConnection db = sm.getDB();
+        DatabaseRequest request = db.prepareRequest("UPDATE sharedApps SET adminHasAccess = ? WHERE id = ?");
+        request.setBoolean(b);
+        request.setInt(this.getDBid());
+        request.set();
+        this.setAdminHasAccess(b);
     }
 
 }
