@@ -63,7 +63,7 @@ public class ServletManager2 {
     protected JSONArray jsonArrayResponse;
     protected String errorMessage;
 
-    protected HibernateQuery hibernateQuery = new HibernateQuery();
+    protected HibernateQuery hibernateQuery;
 
     public Map<String, WebsocketSession> websockets = new HashMap<String, WebsocketSession>();
     public static boolean debug = true;
@@ -91,11 +91,6 @@ public class ServletManager2 {
         } catch (ParseException e) {
             e.printStackTrace();
             throw new IOException();
-        }
-        try {
-            this.db = new DataBaseConnection(DataBase.getConnection());
-        } catch (SQLException e) {
-            /* Do nothing */
         }
     }
 
@@ -210,12 +205,26 @@ public class ServletManager2 {
         return param;
     }
 
-    public DataBaseConnection getDB() {
+    public DataBaseConnection getDB() throws HttpServletException {
+        if (this.db == null) {
+            try {
+                this.db = new DataBaseConnection(DataBase.getConnection());
+            } catch (SQLException e) {
+                throw new HttpServletException(HttpStatus.InternError);
+            }
+        }
+
         return this.db;
     }
 
     public HibernateQuery getHibernateQuery() {
+        if (this.hibernateQuery == null)
+            this.hibernateQuery = new HibernateQuery();
         return this.hibernateQuery;
+    }
+
+    public void saveOrUpdate(Object hibernateObject) {
+        this.getHibernateQuery().saveOrUpdateObject(hibernateObject);
     }
 
     public void setRedirectUrl(String url) {
@@ -269,8 +278,10 @@ public class ServletManager2 {
 
         if (this.response.getStatus() != HttpStatus.Success.getValue()) {
             try {
-                this.db.rollbackTransaction();
-                this.hibernateQuery.rollback();
+                if (this.db != null)
+                    this.db.rollbackTransaction();
+                if (this.hibernateQuery != null)
+                    this.hibernateQuery.rollback();
             } catch (GeneralException e) {
                 System.err.println("Rollback transaction failed.");
             }
@@ -308,17 +319,20 @@ public class ServletManager2 {
                     if (this.jsonArrayResponse == null && this.jsonObjectResponse == null) {
                         response.sendError(HttpStatus.InternError.getValue());
                         try {
-                            this.db.rollbackTransaction();
+                            if (this.db != null)
+                                this.db.rollbackTransaction();
+                            if (this.hibernateQuery != null)
+                                this.hibernateQuery.rollback();
                         } catch (GeneralException e) {
                             System.out.println("Rollback failed");
                         }
-                        this.hibernateQuery.rollback();
                     } else {
                         if (this.jsonArrayResponse != null)
                             response.getWriter().print(this.jsonArrayResponse.toString());
                         else
                             response.getWriter().print(this.jsonObjectResponse.toString());
-                        this.hibernateQuery.commit();
+                        if (this.hibernateQuery != null)
+                            this.hibernateQuery.commit();
                     }
                 }
 
