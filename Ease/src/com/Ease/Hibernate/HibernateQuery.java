@@ -79,4 +79,12 @@ public class HibernateQuery {
     public int executeUpdate() {
         return this.query.executeUpdate();
     }
+
+    public void rollback() {
+        this.transaction.rollback();
+        if (this.session != null) {
+            this.session.close();
+        }
+    }
+
 }

@@ -6,7 +6,9 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.ServletManager2;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -22,27 +24,27 @@ import java.io.IOException;
 @WebServlet("/api/v1/teams/EditChannelName")
 public class ServletEditChannelName extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        ServletManager2 sm = new ServletManager2(this.getClass().getName(), request, response, true);
         try {
-            String team_id = sm.getServletParam("team_id", true);
-            sm.needToBeAdminOfTeam(Integer.parseInt(team_id));
+            Integer team_id = Math.toIntExact((Long) sm.getParam("team_id", true));
+            sm.needToBeAdminOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
-            String channel_id = sm.getServletParam("channel_id", true);
-            String name = sm.getServletParam("name", true);
+            Team team = teamManager.getTeamWithId(team_id);
+            Integer channel_id = Math.toIntExact((Long) sm.getParam("channel_id", true));
+            String name = (String) sm.getParam("name", true);
             if (name == null || name.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
-            Channel channel = team.getChannelWithId(Integer.parseInt(channel_id));
+                throw new HttpServletException(ServletManager2.HttpStatus.BadRequest, "Empty name.");
+            Channel channel = team.getChannelWithId(channel_id);
             for (Channel channel1 : team.getChannels()) {
                 if (channel1 == channel)
                     continue;
                 if (channel1.getName().equals(name))
-                    throw new GeneralException(ServletManager.Code.ClientWarning, "Channel name already taken.");
+                    throw new HttpServletException(ServletManager2.HttpStatus.BadRequest, "Channel name already taken.");
             }
             channel.editName(name);
-            sm.setResponse(ServletManager.Code.Success, "Channel name edited, new name: " + channel.getName());
+            sm.setSuccess("Channel name edited");
         } catch (Exception e) {
-            sm.setResponse(e);
+            sm.setError(e);
         }
         sm.sendResponse();
     }
