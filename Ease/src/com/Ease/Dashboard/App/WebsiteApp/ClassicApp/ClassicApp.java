@@ -327,7 +327,7 @@ public class ClassicApp extends WebsiteApp {
     @Override
     public JSONObject getSharedJSON() {
         JSONObject res = super.getSharedJSON();
-        JSONArray information = this.account.getInformationWithoutPasswordJson();
+        JSONArray information = this.account.getInformationJson();
         res.put("information", information);
         return res;
     }

@@ -150,7 +150,7 @@ public class Account {
         return account;
     }
 
-    public static Account createSharedAccountFromJson(JSONArray account_information_array, String deciphered_teamKey, ServletManager sm) throws GeneralException {
+    public static Account createSharedAccountFromJson(JSONArray account_information_array, String deciphered_teamKey, Boolean adminHasAccess, ServletManager sm) throws GeneralException {
         Map<String, String> account_informationMap = new HashMap<>();
         for (Object account_information_obj : account_information_array) {
             JSONObject account_information = (JSONObject) account_information_obj;
@@ -164,12 +164,13 @@ public class Account {
         String privateKey = publicAndPrivateKey.getValue();
         String ciphered_key = AES.encrypt(privateKey, deciphered_teamKey);
         int transaction = db.startTransaction();
-        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, null, null, ?, ?, 1);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, null, null, ?, ?, ?);");
         request.setString(publicKey);
         request.setString(ciphered_key);
+        request.setBoolean(!adminHasAccess);
         String db_id = request.set().toString();
         List<AccountInformation> accountInformationList = AccountInformation.createAccountInformations(db_id, account_informationMap, publicKey, sm);
-        Account account = new Account(db_id, false, publicKey, ciphered_key, accountInformationList, true);
+        Account account = new Account(db_id, false, publicKey, ciphered_key, accountInformationList, !adminHasAccess);
         account.setPrivateKey(privateKey);
         account.setLastUpdatedDate(new Date());
         db.commitTransaction(transaction);

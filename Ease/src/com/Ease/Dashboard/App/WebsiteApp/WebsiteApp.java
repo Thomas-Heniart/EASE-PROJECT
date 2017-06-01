@@ -54,10 +54,10 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         if (rs.next()) {
             String websiteAppDBid = rs.getString(Data.ID.ordinal());
             Website website = ((Catalog) context.getAttribute("catalog")).getWebsiteWithDBid(rs.getString(Data.WEBSITE_ID.ordinal()));
-            /*GroupWebsiteApp groupWebsiteApp = null;
+            /* GroupWebsiteApp groupWebsiteApp = null;
 			String groupWebsiteId = rs.getString(Data.GROUP_WEBSITE_ID.ordinal());
 			if (groupWebsiteId != null)
-				groupWebsiteApp = (GroupWebsiteApp) GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupWebsiteId);*/
+				groupWebsiteApp = (GroupWebsiteApp) GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupWebsiteId); */
             IdGenerator idGenerator = (IdGenerator) context.getAttribute("idGenerator");
             switch (rs.getString(Data.TYPE.ordinal())) {
                 case "websiteApp":
@@ -328,13 +328,13 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         } else {
             websiteAppId = WebsiteApp.createSharedWebsiteApp(this, elevator, team.getDb_id(), channel == null ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), sm);
             String deciphered_teamKey = sm.getTeamUserForTeam(team).getDeciphered_teamKey();
-            Account account = Account.createSharedAccountFromJson(account_information_array, deciphered_teamKey, sm);
+            Boolean adminHasAccess = (Boolean) params.get("adminHasAccess");
+            Account account = Account.createSharedAccountFromJson(account_information_array, deciphered_teamKey, adminHasAccess, sm);
             request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
             request.setInt(websiteAppId);
             request.setInt(account.getDBid());
             String classicDBid = request.set().toString();
             sharedApp = new ClassicApp((String) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), single_id, this.getSite(), websiteAppId, account, classicDBid, this);
-            Boolean adminHasAccess = (Boolean) params.get("adminHasAccess");
             if (adminHasAccess)
                 sharedApp.setAdminHasAccess(adminHasAccess, sm);
             sharedApp.setReceived(false);
