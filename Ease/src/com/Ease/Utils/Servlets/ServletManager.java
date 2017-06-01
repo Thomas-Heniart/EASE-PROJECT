@@ -10,56 +10,35 @@ import com.Ease.websocket.WebsocketMessage;
 import com.Ease.websocket.WebsocketSession;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.BufferedReader;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class PostServletManager {
-
-    public enum HttpStatus {
-        Success(200),
-        BadRequest(400),
-        AccessDenied(401),
-        PaymentRequired(402),
-        Forbidden(403),
-        InternError(500);
-
-        private final int status;
-
-        HttpStatus(int status) {
-            this.status = status;
-        }
-
-        public int getValue() {
-            return status;
-        }
-    }
+public abstract class ServletManager {
 
     protected HttpServletRequest request;
     protected HttpServletResponse response;
     protected String redirectUrl;
     protected String servletName;
-    protected Map<String, String> args;
+    protected Map<String, String> args = new HashMap<>();
     protected User user;
     protected TeamUser teamUser;
     protected DataBaseConnection db;
+    private DataBaseConnection logDb;
     protected boolean saveLogs;
     protected String logResponse;
     protected String socketId;
-    protected List<WebsocketMessage> messages;
-    protected JSONObject params;
+    protected List<WebsocketMessage> messages = new LinkedList<WebsocketMessage>();
     protected JSONObject jsonObjectResponse;
     protected JSONArray jsonArrayResponse;
     protected String errorMessage;
@@ -69,50 +48,34 @@ public class PostServletManager {
     public Map<String, WebsocketSession> websockets = new HashMap<String, WebsocketSession>();
     public static boolean debug = true;
 
-    public PostServletManager(String servletName, HttpServletRequest request, HttpServletResponse response, boolean saveLogs) throws IOException {
-        this.args = new HashMap<>();
+    public ServletManager(String servletName, HttpServletRequest request, HttpServletResponse response, boolean saveLogs) throws IOException {
         this.servletName = servletName;
         this.request = request;
         this.response = response;
         this.user = (User) request.getSession().getAttribute("user");
         this.teamUser = (TeamUser) request.getSession().getAttribute("teamUser");
-        this.logResponse = null;
-        this.redirectUrl = null;
         this.saveLogs = saveLogs;
-        this.messages = new LinkedList<WebsocketMessage>();
-        BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
-        String json = "";
-        String buffer;
-        while ((buffer = br.readLine()) != null)
-            json += buffer;
-        br.close();
-        JSONParser jsonParser = new JSONParser();
-        try {
-            params = (JSONObject) jsonParser.parse(json);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            throw new IOException();
-        }
+
     }
 
-    private void setSuccess() {
+    protected void setSuccess() {
         response.setStatus(HttpStatus.Success.getValue());
         response.setContentType("application/json");
     }
 
-    private void setInternError() {
+    protected void setInternError() {
         response.setStatus(HttpStatus.InternError.getValue());
     }
 
-    private void setForbidden() {
+    protected void setForbidden() {
         response.setStatus(HttpStatus.Forbidden.getValue());
     }
 
-    private void setAccessDenied() {
+    protected void setAccessDenied() {
         response.setStatus(HttpStatus.AccessDenied.getValue());
     }
 
-    private void setBadRequest() {
+    protected void setBadRequest() {
         response.setStatus(HttpStatus.BadRequest.getValue());
     }
 
@@ -171,7 +134,7 @@ public class PostServletManager {
     public void needToBeTeamUserOfTeam(Integer team_id) throws HttpServletException {
         this.needToBeTeamUser();
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
-            if (teamUser.getTeam().getDb_id() == team_id)
+            if (teamUser.getTeam().getDb_id().equals(team_id))
                 return;
         }
         throw new HttpServletException(HttpStatus.Forbidden);
@@ -189,7 +152,7 @@ public class PostServletManager {
     public void needToBeAdminOfTeam(Integer team_id) throws HttpServletException {
         this.needToBeTeamUser();
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
-            if (teamUser.getTeam().getDb_id() == team_id && teamUser.isTeamAdmin())
+            if (teamUser.getTeam().getDb_id().equals(team_id) && teamUser.isTeamAdmin())
                 return;
         }
         throw new HttpServletException(HttpStatus.Forbidden);
@@ -203,25 +166,6 @@ public class PostServletManager {
         return response;
     }
 
-    public Object getParam(String paramName, boolean saveInLogs) {
-        Object param = params.get(paramName);
-        if (param != null && saveInLogs)
-            args.put(paramName, param.toString());
-        return param;
-    }
-
-    public String getStringParam(String paramName, boolean saveInLogs) {
-        return (String) getParam(paramName, saveInLogs);
-    }
-
-    public Long getLongParam(String paramName, boolean saveInLogs) {
-        return (Long) getParam(paramName, saveInLogs);
-    }
-
-    public Integer getIntParam(String paramName, boolean saveInLogs) {
-        return Math.toIntExact(getLongParam(paramName, saveInLogs));
-    }
-
     public DataBaseConnection getDB() throws HttpServletException {
         if (this.db == null) {
             try {
@@ -232,6 +176,17 @@ public class PostServletManager {
         }
 
         return this.db;
+    }
+
+    private DataBaseConnection getLogsDb() throws HttpServletException {
+        if (this.logDb == null) {
+            try {
+                this.logDb = new DataBaseConnection(LogsDatabase.getConnection());
+            } catch (SQLException e) {
+                throw new HttpServletException(HttpStatus.InternError);
+            }
+        }
+        return this.logDb;
     }
 
     public HibernateQuery getHibernateQuery() {
@@ -252,12 +207,10 @@ public class PostServletManager {
         this.logResponse = msg;
     }
 
-    private void saveLogs() throws GeneralException {
+    private void saveLogs() throws GeneralException, HttpServletException {
         String argsString = "";
         Set<Entry<String, String>> setHm = args.entrySet();
-        Iterator<Entry<String, String>> it = setHm.iterator();
-        while (it.hasNext()) {
-            Entry<String, String> e = it.next();
+        for (Entry<String, String> e : setHm) {
             argsString += "<" + e.getKey() + ":" + e.getValue() + ">";
         }
         if (this.logResponse == null)
@@ -265,7 +218,7 @@ public class PostServletManager {
         try {
             this.logResponse = URLEncoder.encode(this.logResponse, "UTF-8");
             argsString = URLEncoder.encode(argsString, "UTF-8");
-            DatabaseRequest request = db.prepareRequest("INSERT INTO logs values(?, ?, ?, ?, ?, default);");
+            DatabaseRequest request = this.getLogsDb().prepareRequest("INSERT INTO logs values(NULL, ?, ?, ?, ?, ?, default);");
             request.setString(this.servletName);
             request.setInt(this.response.getStatus());
             if (this.user == null)
@@ -275,24 +228,24 @@ public class PostServletManager {
             request.setString(argsString);
             request.setString(this.logResponse);
             request.set();
+            this.getLogsDb().close();
         } catch (UnsupportedEncodingException e) {
             this.setInternError();
         }
-
     }
 
     public void sendResponse() {
         user = (request.getSession().getAttribute("user") == null) ? user : (User) request.getSession().getAttribute("user");
-
         if (this.saveLogs) {
             try {
                 saveLogs();
             } catch (GeneralException e) {
                 System.out.println(e.getMsg());
                 System.err.println("Logs not sended to database.");
+            } catch (HttpServletException e) {
+                e.printStackTrace();
             }
         }
-
         if (this.response.getStatus() != HttpStatus.Success.getValue()) {
             try {
                 if (this.db != null)
@@ -324,6 +277,7 @@ public class PostServletManager {
 			}*/
             //System.out.println("wMessages loop done");
             if (this.response.getStatus() != HttpStatus.Success.getValue()) {
+                System.out.println("Error code: " + response.getStatus());
                 if (this.errorMessage != null)
                     response.getWriter().print(this.errorMessage);
                 else
@@ -357,7 +311,8 @@ public class PostServletManager {
         } catch (IOException e) {
             System.err.println("Send response failed.");
         }
-        db.close();
+        if (this.db != null)
+            this.db.close();
     }
 
     public Object getContextAttr(String attr) {
@@ -449,8 +404,7 @@ public class PostServletManager {
     public TeamUser getTeamUserForTeamId(Integer team_id) throws HttpServletException {
         try {
             TeamManager teamManager = (TeamManager) this.getContextAttr("teamManager");
-            Team team = null;
-            team = teamManager.getTeamWithId(team_id);
+            Team team = teamManager.getTeamWithId(team_id);
             for (TeamUser teamUser : this.getTeamUsers()) {
                 if (teamUser.getTeam() == team)
                     return teamUser;
