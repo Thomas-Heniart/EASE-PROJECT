@@ -1,10 +1,7 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.API.Utils.ServletManager;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
-import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.*;
+import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -23,30 +20,30 @@ import java.util.Date;
 @WebServlet("/api/v1/teams/CheckTeamCreationCode")
 public class ServletCheckTeamCreationCode extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            String email = sm.getServletParam("email", true);
-            String digits = sm.getServletParam("digits", true);
+            String email = sm.getStringParam("email", true);
+            String digits = sm.getStringParam("digits", true);
             if (email == null || email.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientError, "Empty email");
+                throw new HttpServletException(HttpStatus.BadRequest, "Empty email");
             if (digits == null || digits.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientError, "Empty digits");
+                throw new HttpServletException(HttpStatus.BadRequest, "Empty digits");
             DataBaseConnection db = sm.getDB();
             DatabaseRequest databaseRequest = db.prepareRequest("SELECT expiration_date FROM createTeamInvitations WHERE email = ? AND code = ?;");
             databaseRequest.setString(email);
             databaseRequest.setString(digits);
             DatabaseResult rs = databaseRequest.get();
             if (!rs.next())
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Invalid code or email.");
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid code or email.");
             String dateString = rs.getString(1);
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date expiration_date = dateFormat.parse(dateString);
             Date now = new Date();
             if (now.compareTo(expiration_date) > 0)
-                    throw new GeneralException(ServletManager.Code.ClientWarning, "Your code has expired.");
-            sm.setResponse(ServletManager.Code.Success, "Code is valid");
+                throw new HttpServletException(HttpStatus.BadRequest, "Your code has expired.");
+            sm.setSuccess("Code is valid");
         } catch (Exception e) {
-            sm.setResponse(e);
+            sm.setError(e);
         }
         sm.sendResponse();
     }

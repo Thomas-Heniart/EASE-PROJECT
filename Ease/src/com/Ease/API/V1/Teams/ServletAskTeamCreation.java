@@ -4,6 +4,7 @@ import com.Ease.Dashboard.User.User;
 import com.Ease.Mail.SendGridMail;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.CodeGenerator;
+import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,7 +12,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -20,14 +20,14 @@ import java.io.IOException;
 @WebServlet("/api/v1/teams/AskTeamCreation")
 public class ServletAskTeamCreation extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
             User user = sm.getUser();
             /* Check if this user already payed */
-            String email = sm.getServletParam("email", true);
+            String email = sm.getStringParam("email", true);
             if (email == null || email.equals("") || !Regex.isEmail(email))
-                throw new GeneralException(com.Ease.Utils.ServletManager.Code.ClientWarning, "Invalid email.");
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid email.");
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
             DatabaseRequest databaseRequest = db.prepareRequest("SELECT * FROM users LEFT JOIN teamUsers ON users.id = teamUsers.user_id WHERE (users.email <> teamUsers.email) AND (users.email = ? OR teamUsers.email = ?);");
@@ -36,7 +36,7 @@ public class ServletAskTeamCreation extends HttpServlet {
             DatabaseResult rs = databaseRequest.get();
             if (rs.next()) {
                 if (user != null && !email.equals(user.getEmail()))
-                    throw new GeneralException(com.Ease.Utils.ServletManager.Code.ClientWarning, "Email already taken.");
+                    throw new HttpServletException(HttpStatus.BadRequest, "Email already taken.");
             }
             databaseRequest = db.prepareRequest("DELETE FROM createTeamInvitations WHERE email = ?;");
             databaseRequest.setString(email);
@@ -49,9 +49,9 @@ public class ServletAskTeamCreation extends HttpServlet {
             db.commitTransaction(transaction);
             SendGridMail sendGridMail = new SendGridMail("Agathe @Ease", "contact@ease.space");
             sendGridMail.sendCreateTeamEmail(email, digits);
-            sm.setResponse(ServletManager.Code.Success, "Email sent");
+            sm.setSuccess("Email sent");
         } catch (Exception e) {
-            sm.setResponse(e);
+            sm.setError(e);
         }
         sm.sendResponse();
     }

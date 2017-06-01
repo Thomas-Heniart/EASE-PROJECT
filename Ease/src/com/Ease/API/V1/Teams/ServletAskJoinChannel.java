@@ -7,8 +7,9 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Crypto.CodeGenerator;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
+import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -17,7 +18,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.StreamCorruptedException;
 
 /**
  * Created by thomas on 05/05/2017.
@@ -25,23 +25,19 @@ import java.io.StreamCorruptedException;
 @WebServlet("/api/v1/teams/AskJoinChannel")
 public class ServletAskJoinChannel extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            sm.needToBeConnected();
-            sm.needToBeTeamUser();
-            String team_id = sm.getServletParam("team_id", true);
-            String channel_id = sm.getServletParam("channel_id", true);
-            if (team_id == null || team_id.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientError, "Empty team_id");
-            if (channel_id == null || channel_id.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientError, "Empty channel_id");
+            Integer team_id = sm.getIntParam("team_id", true);
+            sm.needToBeTeamUserOfTeam(team_id);
+            Integer channel_id = sm.getIntParam("channel_id", true);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
+            Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = sm.getTeamUserForTeam(team);
-            Channel channel = team.getChannelWithId(Integer.parseInt(channel_id));
-            sm.getTeamUserForTeam(team);
+            Channel channel = team.getChannelWithId(channel_id);
+            if (channel.getTeamUsers().contains(teamUser))
+                throw new HttpServletException(HttpStatus.BadRequest, "You already are in this channel.");
             String code;
-            HibernateQuery query = new HibernateQuery();
+            HibernateQuery query = sm.getHibernateQuery();
             query.querySQLString("SELECT code FROM pendingJoinChannelRequests WHERE teamUser_id = ? AND channel_id = ?;");
             query.setParameter(1, channel.getDb_id());
             query.setParameter(2, teamUser.getDb_id());
@@ -55,12 +51,11 @@ public class ServletAskJoinChannel extends HttpServlet {
                 query.setParameter(2, channel.getDb_id());
                 query.executeUpdate();
             }
-            query.commit();
             SendGridMail mail = new SendGridMail("Agathe @Ease", "contact@ease.space");
             mail.sendJoinChannelEmail(team.getName(), channel.getName(), team.getAdministratorsUsernameAndEmail(), teamUser.getUsername(), teamUser.getEmail(), code);
-            sm.setResponse(ServletManager.Code.Success, "You request has been sent");
+            sm.setSuccess("You request has been sent");
         } catch (Exception e) {
-            sm.setResponse(e);
+            sm.setError(e);
         }
         sm.sendResponse();
     }

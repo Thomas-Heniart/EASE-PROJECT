@@ -355,17 +355,14 @@ public class TeamUser {
         this.shareableApps.add(app);
     }
 
-    public void validateRegistration(String deciphered_teamKey, String userPublicKey, ServletManager sm) throws GeneralException {
+    public void validateRegistration(String deciphered_teamKey, String userPublicKey, DataBaseConnection db) throws GeneralException {
         if (this.isVerified())
             throw new GeneralException(ServletManager.Code.ClientError, "TeamUser already registered");
-        DataBaseConnection db = sm.getDB();
         DatabaseRequest request = db.prepareRequest("UDPATE teamUsers SET teamKey = ? WHERE id = ?;");
         this.teamKey = RSA.Encrypt(deciphered_teamKey, userPublicKey);
         request.setString(this.teamKey);
         request.setInt(this.db_id);
         request.set();
-        if (this.getDashboard_user() != null)
-            this.finalizeRegistration(sm);
     }
 
     public void finalizeRegistration(ServletManager sm) throws GeneralException {

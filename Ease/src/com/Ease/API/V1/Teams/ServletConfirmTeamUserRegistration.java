@@ -5,6 +5,7 @@ import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -20,24 +21,18 @@ import java.io.IOException;
 @WebServlet("/api/v1/teams/ConfirmTeamUserRegistration")
 public class ServletConfirmTeamUserRegistration extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            sm.needToBeConnected();
-            sm.needToBeTeamUser();
-            String team_id = sm.getServletParam("team_id", true);
-            String teamUser_id = sm.getServletParam("teamUser_id", true);
-            if (team_id == null || team_id.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientError, "Team is null");
-            if (teamUser_id == null || teamUser_id.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientError, "TeamUser is null");
+            Integer team_id = sm.getIntParam("team_id", true);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
+            Team team = teamManager.getTeamWithId(team_id);
             sm.needToBeAdminOfTeam(team);
+            Integer teamUser_id = sm.getIntParam("teamUser_id", true);
             TeamUser admin = sm.getTeamUserForTeam(team);
-            TeamUser teamUser = team.getTeamUserWithId(Integer.parseInt(teamUser_id));
-            team.validateTeamUserRegistration(admin.getDeciphered_teamKey(), teamUser, sm);
+            TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
+            team.validateTeamUserRegistration(admin.getDeciphered_teamKey(), teamUser, sm.getDB());
         } catch (Exception e) {
-            sm.setResponse(e);
+            sm.setError(e);
         }
         sm.sendResponse();
     }
