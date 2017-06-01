@@ -7,6 +7,7 @@ import com.Ease.Dashboard.App.*;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
+import com.Ease.Utils.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -14,13 +15,6 @@ import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.IdGenerator;
-import com.Ease.Utils.Regex;
-import com.Ease.Utils.ServletManager;
 
 import javax.servlet.ServletContext;
 
@@ -282,21 +276,21 @@ public class ClassicApp extends WebsiteApp {
     }
 
     @Override
-    public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, ServletManager sm) throws GeneralException {
+    public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, ServletManager2 sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<>();
         String websiteAppId = WebsiteApp.createSharedWebsiteApp(this, elevator, team.getDb_id(), channel == null ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), sm);
         String deciphered_teamKey = sm.getTeamUserForTeam(team).getDeciphered_teamKey();
         this.getAccount().decipherWithTeamKeyIfNeeded(deciphered_teamKey);
-        Account sharedAccount = Account.createSharedAccount(this.getAccount().getAccountInformations(), deciphered_teamKey, sm);
+        Account sharedAccount = Account.createSharedAccount(this.getAccount().getAccountInformations(), deciphered_teamKey, sm.getDB());
         DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
         request.setInt(websiteAppId);
         request.setInt(sharedAccount.getDBid());
         String classicDBid = request.set().toString();
         db.commitTransaction(transaction);
         App sharedApp = new ClassicApp((String) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), this.getSite(), websiteAppId, sharedAccount, classicDBid, this);
-        sharedApp.setAdminHasAccess(adminHasAccess, sm);
+        sharedApp.setAdminHasAccess(adminHasAccess, sm.getDB());
         sharedApp.setReceived(false);
         sharedApp.setTeamUser_tenant(teamUser_tenant);
         return sharedApp;
@@ -359,8 +353,7 @@ public class ClassicApp extends WebsiteApp {
     }
 
     @Override
-    public void setAdminHasAccess(boolean b, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public void setAdminHasAccess(boolean b, DataBaseConnection db) throws GeneralException {
         DatabaseRequest request = db.prepareRequest("UPDATE sharedApps SET adminHasAccess = ? WHERE id = ?");
         request.setBoolean(b);
         request.setInt(this.getDBid());

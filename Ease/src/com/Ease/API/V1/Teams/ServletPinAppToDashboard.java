@@ -6,6 +6,7 @@ import com.Ease.Dashboard.User.User;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.ServletManager2;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -21,27 +22,20 @@ import java.io.IOException;
 @WebServlet("/ServletPinAppToDashboard")
 public class ServletPinAppToDashboard extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        ServletManager2 sm = new ServletManager2(this.getClass().getName(), request, response, true);
         try {
-            sm.needToBeConnected();
             sm.needToBeTeamUser();
-            String app_id = sm.getServletParam("app_id", true);
-            String profile_id = sm.getServletParam("profile_id", true);
-            String team_id = sm.getServletParam("team_id", true);
-            if (team_id == null || team_id.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientError, "Team is null");
-            if (app_id == null || app_id.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientError, "App is null");
-            if (profile_id == null || profile_id.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientError, "Profile is null");
-            TeamUser teamUser = sm.getTeamUserForTeamId(Integer.parseInt(team_id));
+            Integer app_id = sm.getIntParam("app_id", true);
+            Integer profile_id = sm.getIntParam("profile_id", true);
+            Integer team_id = sm.getIntParam("team_id", true);
+            TeamUser teamUser = sm.getTeamUserForTeamId(team_id);
             User user = sm.getUser();
-            Profile profile = user.getDashboardManager().getProfile(Integer.parseInt(profile_id));
-            App app = (App) teamUser.getSharedAppWithId(Integer.parseInt(app_id));
-            app.pinToDashboard(profile, sm);
-            sm.setResponse(ServletManager.Code.Success, "App pined to dashboard");
+            Profile profile = user.getDashboardManager().getProfile(profile_id);
+            App app = (App) teamUser.getSharedAppWithId(app_id);
+            app.pinToDashboard(profile, sm.getDB());
+            sm.setSuccess("App pined to dashboard");
         } catch (Exception e) {
-            sm.setResponse(e);
+            sm.setError(e);
         }
         sm.sendResponse();
     }

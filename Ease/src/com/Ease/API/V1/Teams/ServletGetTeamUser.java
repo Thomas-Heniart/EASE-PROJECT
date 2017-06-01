@@ -6,6 +6,7 @@ import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.ServletManager2;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -21,23 +22,17 @@ import java.io.IOException;
 @WebServlet("/api/v1/teams/GetTeamUser")
 public class ServletGetTeamUser extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        ServletManager2 sm = new ServletManager2(this.getClass().getName(), request, response, true);
         try {
-            sm.needToBeConnected();
             sm.needToBeTeamUser();
-            String team_id = sm.getServletParam("team_id", true);
-            String teamUser_id = sm.getServletParam("teamuser_id", true);
-            if (team_id == null || team_id.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientError, "Team is null");
-            if (teamUser_id == null || teamUser_id.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientError, "TeamUser is null");
+            Integer team_id = sm.getIntParam("team_id", true);
+            Integer teamUser_id = sm.getIntParam("teamUser_id", true);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
-            TeamUser teamUser = team.getTeamUserWithId(Integer.parseInt(teamUser_id));
-            sm.setResponse(ServletManager.Code.Success, teamUser.getJson().toString());
-            sm.setLogResponse("GetTeamUser done");
+            Team team = teamManager.getTeamWithId(team_id);
+            TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
+            sm.setSuccess(teamUser.getJson());
         } catch (Exception e) {
-            sm.setResponse(e);
+            sm.setError(e);
         }
         sm.sendResponse();
     }

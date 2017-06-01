@@ -8,6 +8,7 @@ import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.Account;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
+import com.Ease.Utils.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -17,12 +18,6 @@ import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Mail.SendGridMail;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.IdGenerator;
-import com.Ease.Utils.ServletManager;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -55,7 +50,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
             String websiteAppDBid = rs.getString(Data.ID.ordinal());
             Website website = ((Catalog) context.getAttribute("catalog")).getWebsiteWithDBid(rs.getString(Data.WEBSITE_ID.ordinal()));
             /* GroupWebsiteApp groupWebsiteApp = null;
-			String groupWebsiteId = rs.getString(Data.GROUP_WEBSITE_ID.ordinal());
+            String groupWebsiteId = rs.getString(Data.GROUP_WEBSITE_ID.ordinal());
 			if (groupWebsiteId != null)
 				groupWebsiteApp = (GroupWebsiteApp) GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupWebsiteId); */
             IdGenerator idGenerator = (IdGenerator) context.getAttribute("idGenerator");
@@ -122,7 +117,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         return new WebsiteApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), site, reminderIntervalValue, reminderIntervalType, websiteAppDBid);
     }
 
-    public static String createSharedWebsiteApp(WebsiteApp websiteApp, Map<String, Object> elevator, Integer team_id, Integer channel_id, Integer team_user_tenant_id, ServletManager sm) throws GeneralException {
+    public static String createSharedWebsiteApp(WebsiteApp websiteApp, Map<String, Object> elevator, Integer team_id, Integer channel_id, Integer team_user_tenant_id, ServletManager2 sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         String appDBid = App.createSharedApp(null, null, websiteApp.getName(), "websiteApp", elevator, false, true, team_id, channel_id == null ? null : channel_id, team_user_tenant_id, websiteApp, false, sm);
@@ -173,9 +168,9 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         request.set();
         db.commitTransaction(transaction);
     }
-	
+
 	/*
-	 * 
+     *
 	 * Constructor
 	 * 
 	 */
@@ -302,7 +297,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
     }
 
     @Override
-    public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, ServletManager sm) throws GeneralException {
+    public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, ServletManager2 sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<>();
@@ -329,14 +324,14 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
             websiteAppId = WebsiteApp.createSharedWebsiteApp(this, elevator, team.getDb_id(), channel == null ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), sm);
             String deciphered_teamKey = sm.getTeamUserForTeam(team).getDeciphered_teamKey();
             Boolean adminHasAccess = (Boolean) params.get("adminHasAccess");
-            Account account = Account.createSharedAccountFromJson(account_information_array, deciphered_teamKey, adminHasAccess, sm);
+            Account account = Account.createSharedAccountFromJson(account_information_array, deciphered_teamKey, adminHasAccess, sm.getDB());
             request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
             request.setInt(websiteAppId);
             request.setInt(account.getDBid());
             String classicDBid = request.set().toString();
             sharedApp = new ClassicApp((String) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), single_id, this.getSite(), websiteAppId, account, classicDBid, this);
             if (adminHasAccess)
-                sharedApp.setAdminHasAccess(adminHasAccess, sm);
+                sharedApp.setAdminHasAccess(adminHasAccess, sm.getDB());
             sharedApp.setReceived(false);
         }
         db.commitTransaction(transaction);

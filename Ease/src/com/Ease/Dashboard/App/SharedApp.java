@@ -1,6 +1,7 @@
 package com.Ease.Dashboard.App;
 
 import com.Ease.Team.TeamUser;
+import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 import org.json.simple.JSONObject;
@@ -27,7 +28,7 @@ public interface SharedApp {
 
     public void setAdminHasAccess(boolean b);
 
-    public void setAdminHasAccess(boolean b, ServletManager sm) throws GeneralException;
+    public void setAdminHasAccess(boolean b, DataBaseConnection db) throws GeneralException;
 
     public boolean adminHasAccess();
 }

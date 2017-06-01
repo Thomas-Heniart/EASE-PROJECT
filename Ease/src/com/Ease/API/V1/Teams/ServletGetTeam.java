@@ -6,6 +6,7 @@ import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.ServletManager2;
 import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
@@ -22,21 +23,16 @@ import java.io.IOException;
 @WebServlet("/api/v1/teams/GetTeam")
 public class ServletGetTeam extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        ServletManager2 sm = new ServletManager2(this.getClass().getName(), request, response, true);
         try {
-            sm.needToBeConnected();
-            sm.needToBeTeamUser();
-            String team_id = sm.getServletParam("team_id", true);
-            if (team_id == null || team_id.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "team_id is empty.");
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            TeamUser teamUser = sm.getTeamUserForTeam(teamManager.getTeamWithId(Integer.parseInt(team_id)));
+            Integer team_id = sm.getIntParam("team_id", true);
+            sm.needToBeTeamUserOfTeam(team_id);
+            TeamUser teamUser = sm.getTeamUserForTeamId(team_id);
             JSONObject res = teamUser.getTeam().getJson();
             res.put("myTeamUserId", teamUser.getDb_id());
-            sm.setResponse(ServletManager.Code.Success, res.toString());
-            sm.setLogResponse("GetTeam done");
+            sm.setSuccess(res);
         } catch (Exception e) {
-            sm.setResponse(e);
+            sm.setError(e);
         }
         sm.sendResponse();
     }

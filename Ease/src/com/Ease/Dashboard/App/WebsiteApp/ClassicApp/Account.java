@@ -5,17 +5,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.RSA;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
 
 public class Account {
 
@@ -97,7 +93,7 @@ public class Account {
         request.setString(publicKey);
         request.setString(ciphered_key);
         String db_id = request.set().toString();
-        List<AccountInformation> infos = AccountInformation.createAccountInformations(db_id, informations, publicKey, sm);
+        List<AccountInformation> infos = AccountInformation.createAccountInformations(db_id, informations, publicKey, sm.getDB());
         db.commitTransaction(transaction);
         Account account = new Account(db_id, shared, publicKey, ciphered_key, infos, (reminderValue == null ? 0 : reminderValue));
         account.setPrivateKey(privateKey);
@@ -123,7 +119,7 @@ public class Account {
         request.setString(publicKey);
         request.setString(ciphered_key);
         String db_id = request.set().toString();
-        List<AccountInformation> accountInformationList = AccountInformation.createAccountInformations(db_id, accountInformationMap, publicKey, sm);
+        List<AccountInformation> accountInformationList = AccountInformation.createAccountInformations(db_id, accountInformationMap, publicKey, sm.getDB());
         db.commitTransaction(transaction);
         Account account = new Account(db_id, false, publicKey, ciphered_key, accountInformationList, (reminderValue == null ? 0 : reminderValue));
         account.setPrivateKey(privateKey);
@@ -131,8 +127,7 @@ public class Account {
         return account;
     }
 
-    public static Account createSharedAccount(List<AccountInformation> information, String deciphered_teamKey, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public static Account createSharedAccount(List<AccountInformation> information, String deciphered_teamKey, DataBaseConnection db) throws GeneralException {
         Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
         String publicKey = publicAndPrivateKey.getKey();
         String privateKey = publicAndPrivateKey.getValue();
@@ -142,7 +137,7 @@ public class Account {
         request.setString(publicKey);
         request.setString(ciphered_key);
         String db_id = request.set().toString();
-        List<AccountInformation> accountInformationList = AccountInformation.createSharedAccountInformationList(db_id, information, publicKey, sm);
+        List<AccountInformation> accountInformationList = AccountInformation.createSharedAccountInformationList(db_id, information, publicKey, db);
         db.commitTransaction(transaction);
         Account account = new Account(db_id, false, publicKey, ciphered_key, accountInformationList, true);
         account.setPrivateKey(privateKey);
@@ -150,7 +145,7 @@ public class Account {
         return account;
     }
 
-    public static Account createSharedAccountFromJson(JSONArray account_information_array, String deciphered_teamKey, Boolean adminHasAccess, ServletManager sm) throws GeneralException {
+    public static Account createSharedAccountFromJson(JSONArray account_information_array, String deciphered_teamKey, Boolean adminHasAccess, DataBaseConnection db) throws GeneralException {
         Map<String, String> account_informationMap = new HashMap<>();
         for (Object account_information_obj : account_information_array) {
             JSONObject account_information = (JSONObject) account_information_obj;
@@ -158,7 +153,6 @@ public class Account {
             String info_value = (String) account_information.get("info_value");
             account_informationMap.put(info_name, info_value);
         }
-        DataBaseConnection db = sm.getDB();
         Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
         String publicKey = publicAndPrivateKey.getKey();
         String privateKey = publicAndPrivateKey.getValue();
@@ -169,7 +163,7 @@ public class Account {
         request.setString(ciphered_key);
         request.setBoolean(!adminHasAccess);
         String db_id = request.set().toString();
-        List<AccountInformation> accountInformationList = AccountInformation.createAccountInformations(db_id, account_informationMap, publicKey, sm);
+        List<AccountInformation> accountInformationList = AccountInformation.createAccountInformations(db_id, account_informationMap, publicKey, db);
         Account account = new Account(db_id, false, publicKey, ciphered_key, accountInformationList, !adminHasAccess);
         account.setPrivateKey(privateKey);
         account.setLastUpdatedDate(new Date());
@@ -351,9 +345,9 @@ public class Account {
     public String getLastUpdatedDate() {
         return this.lastUpdatedDate;
     }
-	
+
 	/*
-	 * 
+     *
 	 * Utils
 	 * 
 	 */

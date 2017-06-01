@@ -75,7 +75,7 @@ public class GroupApp {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		AppPermissions permissions = AppPermissions.CreateAppPermissions(perms, group.getDBid(), sm);
-		AppInformation infos = AppInformation.createAppInformation(name, sm);
+		AppInformation infos = AppInformation.createAppInformation(name, db);
 		DatabaseRequest request = db.prepareRequest("INSERT INTO groupApps VALUES(NULL, ?, ?, ?, ?, ?, ?);");
 		request.setInt(groupProfile.getDBid());
 		request.setInt(group.getDBid());

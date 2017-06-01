@@ -9,6 +9,7 @@ import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.ServletManager2;
 import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
@@ -25,17 +26,17 @@ import java.io.IOException;
 @WebServlet("/api/v1/teams/ShareApp")
 public class ServletShareApp extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        ServletManager2 sm = new ServletManager2(this.getClass().getName(), request, response, true);
         try {
-            String team_id = sm.getServletParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true);
             sm.needToBeTeamUserOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
-            TeamUser teamUser_owner = sm.getTeamUserForTeamId(Integer.parseInt(team_id));
-            String teamUser_tenant_id = sm.getServletParam("teamUser_tenant_id", true);
-            TeamUser teamUser_tenant = team.getTeamUserWithId(Integer.parseInt(teamUser_tenant_id));
-            String app_id = sm.getServletParam("app_id", true);
-            ShareableApp shareableApp = team.getShareableAppWithId(Integer.parseInt(app_id));
+            Team team = teamManager.getTeamWithId(team_id);
+            TeamUser teamUser_owner = sm.getTeamUserForTeamId(team_id);
+            Integer teamUser_tenant_id = sm.getIntParam("teamUser_tenant_id", true);
+            TeamUser teamUser_tenant = team.getTeamUserWithId(teamUser_tenant_id);
+            Integer app_id = sm.getIntParam("app_id", true);
+            ShareableApp shareableApp = team.getShareableAppWithId(app_id);
             if (!(shareableApp.getTeamUser_owner() == teamUser_owner) && !teamUser_owner.isTeamAdmin())
                 throw new GeneralException(ServletManager.Code.ClientError, "You cannot access this app");
             Channel channel = shareableApp.getChannel();
@@ -45,9 +46,9 @@ public class ServletShareApp extends HttpServlet {
             teamUser_tenant.addSharedApp(sharedApp);
             if (channel != null)
                 channel.addSharedApp(sharedApp);
-            sm.setResponse(ServletManager.Code.Success, "Shared app successfully and single_id is " + ((App)sharedApp).getSingleId());
+            sm.setSuccess("Shared app successfully and single_id is " + ((App) sharedApp).getSingleId());
         } catch (Exception e) {
-            sm.setResponse(e);
+            sm.setError(e);
         }
         sm.sendResponse();
     }

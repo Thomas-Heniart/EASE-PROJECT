@@ -8,6 +8,7 @@ import java.util.*;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
+import com.Ease.Utils.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -15,11 +16,6 @@ import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.LinkApp.LinkApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.Profile.Profile;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
 
 import javax.servlet.ServletContext;
 
@@ -164,7 +160,7 @@ public class App implements ShareableApp, SharedApp {
     public static String createApp(Profile profile, Integer position, String name, String type, Map<String, Object> elevator, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
-        AppInformation infos = AppInformation.createAppInformation(name, sm);
+        AppInformation infos = AppInformation.createAppInformation(name, db);
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
         String insertDate = dateFormat.format(date);
@@ -187,10 +183,10 @@ public class App implements ShareableApp, SharedApp {
 
     }
 
-    public static String createSharedApp(Profile profile, Integer position, String name, String type, Map<String, Object> elevator, boolean shareable, boolean shared, Integer team_id, Integer channel_id, Integer team_user_tenant_id, App holder, boolean received, ServletManager sm) throws GeneralException {
+    public static String createSharedApp(Profile profile, Integer position, String name, String type, Map<String, Object> elevator, boolean shareable, boolean shared, Integer team_id, Integer channel_id, Integer team_user_tenant_id, App holder, boolean received, ServletManager2 sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
-        AppInformation infos = AppInformation.createAppInformation(name, sm);
+        AppInformation infos = AppInformation.createAppInformation(name, db);
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
         String registrationDate = dateFormat.format(date);
@@ -289,7 +285,7 @@ public class App implements ShareableApp, SharedApp {
     }
 
 	/*
-	 * 
+     *
 	 * Getter And Setter
 	 * 
 	 */
@@ -460,7 +456,7 @@ public class App implements ShareableApp, SharedApp {
     }
 
     @Override
-    public void setAdminHasAccess(boolean b, ServletManager sm) throws GeneralException {
+    public void setAdminHasAccess(boolean b, DataBaseConnection db) throws GeneralException {
         throw new GeneralException(ServletManager.Code.ClientError, "You cannot set admin access for this app.");
     }
 
@@ -471,7 +467,7 @@ public class App implements ShareableApp, SharedApp {
 
     /* Interface ShareableApp */
     @Override
-    public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, ServletManager sm) throws GeneralException {
+    public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, ServletManager2 sm) throws GeneralException, HttpServletException {
         throw new GeneralException(ServletManager.Code.ClientError, "You shouldn't be there");
     }
 
@@ -547,7 +543,7 @@ public class App implements ShareableApp, SharedApp {
             for (SharedApp sharedApp : this.getSharedApps()) {
                 JSONObject tmp = new JSONObject();
                 tmp.put("teamUser_id", sharedApp.getTeamUser_tenant().getDb_id());
-                tmp.put("sharedApp_id", ((App)sharedApp).getSingleId());
+                tmp.put("sharedApp_id", ((App) sharedApp).getSingleId());
                 receivers.add(tmp);
             }
             res.put("receivers", receivers);
@@ -559,7 +555,7 @@ public class App implements ShareableApp, SharedApp {
     }
 
     @Override
-    public JSONObject getNeededParams(ServletManager sm) throws GeneralException {
+    public JSONObject getNeededParams(ServletManager2 sm) throws GeneralException {
         return new JSONObject();
     }
 
@@ -573,8 +569,7 @@ public class App implements ShareableApp, SharedApp {
         return this.description;
     }
 
-    public void pinToDashboard(Profile profile, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public void pinToDashboard(Profile profile, DataBaseConnection db) throws GeneralException {
         int transaction = db.startTransaction();
         this.profile = profile;
         this.position = profile.getApps().size();

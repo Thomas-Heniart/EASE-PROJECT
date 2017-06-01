@@ -3,7 +3,7 @@ package com.Ease.Context;
 public class Variables {
 	 
 	//Prod
-	/*
+    /*
 	public static final String ENVIRONNEMENT = "Prod";
 	public static final boolean LOCAL = false;
 	public static final String SERVER_LOGIN_PATH = "/usr/share/tomcat8/webapps/serverLogin";

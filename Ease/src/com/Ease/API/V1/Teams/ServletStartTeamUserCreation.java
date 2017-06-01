@@ -10,6 +10,7 @@ import com.Ease.Utils.Crypto.CodeGenerator;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.ServletManager2;
 import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
@@ -26,24 +27,21 @@ import java.io.IOException;
 @WebServlet("/api/v1/teams/StartTeamUserCreation")
 public class ServletStartTeamUserCreation extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
-        HibernateQuery query = new HibernateQuery();
+        ServletManager2 sm = new ServletManager2(this.getClass().getName(), request, response, true);
         try {
-            sm.needToBeConnected();
-            String team_id = sm.getServletParam("team_id", true);
-            if (team_id == null || team_id.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientError, "Team is null");
-            sm.needToBeAdminOfTeam(Integer.parseInt(team_id));
+            Integer team_id = sm.getIntParam("team_id", true);
+            sm.needToBeAdminOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
+            Team team = teamManager.getTeamWithId(team_id);
             TeamUser adminTeamUser = sm.getTeamUserForTeam(team);
-            String email = sm.getServletParam("email", true);
-            String username = sm.getServletParam("username", true);
-            String role = sm.getServletParam("role", true);
-            if (email == null || email.equals("") || !Regex.isEmail(email) || username == null || username.equals("") || role == null || role.equals(""))
+            String email = sm.getStringParam("email", true);
+            String username = sm.getStringParam("username", true);
+            Integer role = sm.getIntParam("role", true);
+            if (email == null || email.equals("") || !Regex.isEmail(email) || username == null || username.equals("") || role == null)
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Invalid inputs");
-            String first_name = sm.getServletParam("first_name", true);
-            String last_name = sm.getServletParam("last_name", true);
+            String first_name = sm.getStringParam("first_name", true);
+            String last_name = sm.getStringParam("last_name", true);
+            HibernateQuery query = new HibernateQuery();
             query.querySQLString("SELECT id FROM teamUsers WHERE (email = ? OR username = ?) AND team_id = ? AND verified = 1;");
             query.setParameter(1, email);
             query.setParameter(2, username);
@@ -77,7 +75,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
                 }
             }
             if (res.get("success") == null) {
-                TeamUser teamUser = new TeamUser(first_name, last_name, email, username, null, false, team, new TeamUserPermissions(Integer.parseInt(role)));
+                TeamUser teamUser = new TeamUser(first_name, last_name, email, username, null, false, team, new TeamUserPermissions(role));
                 team.getGeneralChannel().addTeamUser(teamUser);
                 query.saveOrUpdateObject(team);
                 team.addTeamUser(teamUser);
@@ -98,10 +96,9 @@ public class ServletStartTeamUserCreation extends HttpServlet {
                 res.put("teamUser_id", teamUser.getDb_id());
                 res.put("username", username);
             }
-            query.commit();
-            sm.setResponse(ServletManager.Code.Success, res.toString());
+            sm.setSuccess(res);
         } catch (Exception e) {
-            sm.setResponse(e);
+            sm.setError(e);
         }
         sm.sendResponse();
     }

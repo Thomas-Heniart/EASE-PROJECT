@@ -5,8 +5,8 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Crypto.CodeGenerator;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.ServletManager2;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -22,30 +22,30 @@ import java.io.IOException;
 @WebServlet("/finalizeRegistration")
 public class ServletFinalizeTeamUserRegistration extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        ServletManager2 sm = new ServletManager2(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            String firstName = sm.getServletParam("firstName", true);
-            String lastName = sm.getServletParam("lastName", true);
-            String username = sm.getServletParam("username", true);
-            String jobTitle = sm.getServletParam("jobTitle", true);
-            String code = sm.getServletParam("code", true);
+            String firstName = sm.getStringParam("firstName", true);
+            String lastName = sm.getStringParam("lastName", true);
+            String username = sm.getStringParam("username", true);
+            String jobTitle = sm.getStringParam("jobTitle", true);
+            String code = sm.getStringParam("code", true);
             if (username == null || username.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "username is needed.");
+                throw new HttpServletException(ServletManager2.HttpStatus.BadRequest, "username is needed.");
             if (firstName == null || firstName.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "firstName is needed.");
+                throw new HttpServletException(ServletManager2.HttpStatus.BadRequest, "firstName is needed.");
             if (lastName == null || lastName.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "lastName is needed.");
+                throw new HttpServletException(ServletManager2.HttpStatus.BadRequest, "lastName is needed.");
+            if (code == null || code.equals(""))
+                throw new HttpServletException(ServletManager2.HttpStatus.BadRequest, "code is needed.");
             if (jobTitle == null || jobTitle.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "jobTitle is needed.");
-
-            HibernateQuery query = new HibernateQuery();
-
+                throw new HttpServletException(ServletManager2.HttpStatus.BadRequest, "jobTitle is needed.");
+            HibernateQuery query = sm.getHibernateQuery();
             query.querySQLString("SELECT id, team_id, teamUser_id FROM pendingTeamInvitations WHERE code = ?");
             query.setParameter(1, code);
             Object idTeamAndTeamUserObj = query.getSingleResult();
             if (idTeamAndTeamUserObj == null)
-                throw new GeneralException(ServletManager.Code.ClientWarning, "You cannot be part of this team");
+                throw new HttpServletException(ServletManager2.HttpStatus.BadRequest, "You cannot be part of this team");
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Object[] idTeamAndTeamUser = (Object[]) idTeamAndTeamUserObj;
             Integer id = (Integer) idTeamAndTeamUser[0];
@@ -71,12 +71,11 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             query.setParameter(1, teamUser.getDb_id());
             query.setParameter(2, code);
             query.executeUpdate();
-            query.commit();
             teamUser.setDashboard_user(sm.getUser(), sm.getDB());
             team.askVerificationForTeamUser(teamUser, verificationCode);
-            sm.setResponse(ServletManager.Code.Success, "Wait for admin validation");
-        } catch(Exception e) {
-            sm.setResponse(e);
+            sm.setSuccess("Waiting for admin validation");
+        } catch (Exception e) {
+            sm.setError(e);
         }
         sm.sendResponse();
     }

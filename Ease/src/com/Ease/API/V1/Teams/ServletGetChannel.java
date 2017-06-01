@@ -3,8 +3,8 @@ package com.Ease.API.V1.Teams;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.ServletManager2;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -20,23 +20,21 @@ import java.io.IOException;
 @WebServlet("/api/v1/teams/GetChannel")
 public class ServletGetChannel extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        ServletManager2 sm = new ServletManager2(this.getClass().getName(), request, response, true);
         try {
-            sm.needToBeConnected();
             sm.needToBeTeamUser();
-            String team_id = sm.getServletParam("team_id", true);
-            String channel_id = sm.getServletParam("channel_id", true);
-            if (team_id == null || team_id.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientError, "Team is null");
-            if (channel_id == null || channel_id.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientError, "Channel is null");
+            Integer team_id = sm.getIntParam("team_id", true);
+            Integer channel_id = sm.getIntParam("channel_id", true);
+            if (team_id == null)
+                throw new HttpServletException(ServletManager2.HttpStatus.BadRequest, "Team is null");
+            if (channel_id == null)
+                throw new HttpServletException(ServletManager2.HttpStatus.BadRequest, "Channel is null");
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
-            Channel channel = team.getChannelWithId(Integer.parseInt(channel_id));
-            sm.setResponse(ServletManager.Code.Success, channel.getJson().toString());
-            sm.setLogResponse("GetChannel done");
+            Team team = teamManager.getTeamWithId(team_id);
+            Channel channel = team.getChannelWithId(channel_id);
+            sm.setSuccess(channel.getJson());
         } catch (Exception e) {
-            sm.setResponse(e);
+            sm.setError(e);
         }
         sm.sendResponse();
     }

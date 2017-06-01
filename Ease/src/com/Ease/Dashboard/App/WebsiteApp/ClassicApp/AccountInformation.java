@@ -4,13 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.RSA;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
 import org.json.simple.JSONObject;
 
 public class AccountInformation {
@@ -23,30 +19,29 @@ public class AccountInformation {
         INFORMATION_VALUE
     }
 
-    public static List<AccountInformation> createAccountInformations(String account_id, Map<String, String> account_informations, String publicKey, ServletManager sm) throws GeneralException {
+    public static List<AccountInformation> createAccountInformations(String account_id, Map<String, String> account_informations, String publicKey, DataBaseConnection db) throws GeneralException {
         List<AccountInformation> informations = new LinkedList<AccountInformation>();
         for (Map.Entry<String, String> entry : account_informations.entrySet()) {
-            informations.add(createAccountInformation(account_id, entry.getKey(), entry.getValue(), publicKey, sm));
+            informations.add(createAccountInformation(account_id, entry.getKey(), entry.getValue(), publicKey, db));
         }
         return informations;
     }
 
-    public static List<AccountInformation> createSharedAccountInformationList(String account_id, List<AccountInformation> informationList, String publicKey, ServletManager sm) throws GeneralException {
+    public static List<AccountInformation> createSharedAccountInformationList(String account_id, List<AccountInformation> informationList, String publicKey, DataBaseConnection db) throws GeneralException {
         List<AccountInformation> accountInformationList = new LinkedList<AccountInformation>();
         for (AccountInformation accountInformation : informationList)
-            accountInformationList.add(createAccountInformation(account_id, accountInformation.getInformationName(), accountInformation.getInformationValue(), publicKey, sm));
+            accountInformationList.add(createAccountInformation(account_id, accountInformation.getInformationName(), accountInformation.getInformationValue(), publicKey, db));
         return accountInformationList;
     }
 
     public static List<AccountInformation> createAccountInformationFromAccountInformations(String account_id, List<AccountInformation> accountInformations, String publicKey, ServletManager sm) throws GeneralException {
         List<AccountInformation> informations = new LinkedList<AccountInformation>();
         for (AccountInformation info : accountInformations)
-            informations.add(createAccountInformation(account_id, info.getInformationName(), info.getInformationValue(), publicKey, sm));
+            informations.add(createAccountInformation(account_id, info.getInformationName(), info.getInformationValue(), publicKey, sm.getDB()));
         return informations;
     }
 
-    public static AccountInformation createAccountInformation(String account_id, String information_name, String information_value, String publicKey, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public static AccountInformation createAccountInformation(String account_id, String information_name, String information_value, String publicKey, DataBaseConnection db) throws GeneralException {
         DatabaseRequest request = db.prepareRequest("INSERT INTO accountsInformations values (null, ?, ?, ?);");
         request.setInt(account_id);
         request.setString(information_name);

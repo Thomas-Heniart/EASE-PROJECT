@@ -2,6 +2,7 @@ package com.Ease.API.V1.Teams;
 
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.ServletManager2;
 import org.json.simple.JSONArray;
 
 import javax.servlet.RequestDispatcher;
@@ -24,18 +25,16 @@ public class ServletGetTeams extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        ServletManager2 sm = new ServletManager2(this.getClass().getName(), request, response, true);
         try {
-            sm.needToBeConnected();
             sm.needToBeTeamUser();
             List<TeamUser> teamUserList = sm.getTeamUsers();
             JSONArray res = new JSONArray();
             for (TeamUser teamUser : teamUserList)
                 res.add(teamUser.getTeam().getSimpleJson());
-            sm.setResponse(ServletManager.Code.Success, res.toString());
-            sm.setLogResponse("GetTeams done");
+            sm.setSuccess(res);
         } catch (Exception e) {
-            sm.setResponse(e);
+            sm.setError(e);
         }
         sm.sendResponse();
     }

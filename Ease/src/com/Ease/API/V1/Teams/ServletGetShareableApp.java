@@ -6,7 +6,7 @@ import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.ServletManager2;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -22,23 +22,22 @@ import java.io.IOException;
 @WebServlet("/api/v1/teams/GetShareableApp")
 public class ServletGetShareableApp extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        ServletManager2 sm = new ServletManager2(this.getClass().getName(), request, response, true);
         try {
-            String team_id = sm.getServletParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true);
             sm.needToBeTeamUserOfTeam(team_id);
             /* @TODO For the moment we use single_id but it will be replaced by db_id in the future */
-            String app_id = sm.getServletParam("app_id", true);
+            Integer app_id = sm.getIntParam("app_id", true);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
+            Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = sm.getTeamUserForTeam(team);
-            ShareableApp shareableApp = team.getShareableAppWithId(Integer.parseInt(app_id));
+            ShareableApp shareableApp = team.getShareableAppWithId(app_id);
             App app = (App) shareableApp;
             if (app.isClassicApp())
-                ((ClassicApp)app).getAccount().decipherWithTeamKeyIfNeeded(teamUser.getDeciphered_teamKey());
-            sm.setResponse(ServletManager.Code.Success, shareableApp.getShareableJson().toString());
-            sm.setLogResponse("GetSharedApp done");
+                ((ClassicApp) app).getAccount().decipherWithTeamKeyIfNeeded(teamUser.getDeciphered_teamKey());
+            sm.setSuccess(shareableApp.getShareableJson());
         } catch (Exception e) {
-            sm.setResponse(e);
+            sm.setError(e);
         }
         sm.sendResponse();
     }
