@@ -156,20 +156,14 @@ public class Channel {
     }
 
     public void editName(String name) {
-        HibernateQuery hibernateQuery = new HibernateQuery();
         if (name.equals(this.getName()))
             return;
         this.name = name;
-        hibernateQuery.saveOrUpdateObject(this);
-        hibernateQuery.commit();
     }
 
     public void editPurpose(String purpose) {
-        HibernateQuery hibernateQuery = new HibernateQuery();
         if (purpose.equals(this.getPurpose()))
             return;
         this.purpose = purpose;
-        hibernateQuery.saveOrUpdateObject(this);
-        hibernateQuery.commit();
     }
 }

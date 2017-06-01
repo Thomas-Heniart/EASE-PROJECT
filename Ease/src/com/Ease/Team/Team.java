@@ -263,11 +263,8 @@ public class Team {
     }
 
     public void editName(String name) {
-        HibernateQuery hibernateQuery = new HibernateQuery();
         if (name.equals(this.getName()))
             return;
         this.name = name;
-        hibernateQuery.saveOrUpdateObject(this);
-        hibernateQuery.commit();
     }
 }

@@ -4,7 +4,9 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.ServletManager2;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -20,20 +22,20 @@ import java.io.IOException;
 @WebServlet("/api/v1/teams/EditTeamUserLastName")
 public class ServletEditTeamUserLastName extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        ServletManager2 sm = new ServletManager2(this.getClass().getName(), request, response, true);
         try {
-            String team_id = sm.getServletParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true);
             sm.needToBeTeamUserOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
+            Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = sm.getTeamUserForTeam(team);
-            String lastName = sm.getServletParam("lastName", true);
+            String lastName = sm.getStringParam("lastName", true);
             if (lastName == null || lastName.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Empty lastName.");
+                throw new HttpServletException(ServletManager2.HttpStatus.BadRequest, "Empty lastName.");
             teamUser.editLastName(lastName);
-            sm.setResponse(ServletManager.Code.Success, "TeamUser lastName edited, new lastName: " + teamUser.getLastName());
+            sm.setSuccess("TeamUser lastName edited.");
         } catch (Exception e) {
-            sm.setResponse(e);
+            sm.setError(e);
         }
         sm.sendResponse();
     }

@@ -6,6 +6,7 @@ import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.ServletManager2;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -21,21 +22,22 @@ import java.io.IOException;
 @WebServlet("/api/v1/teams/EditChannelPurpose")
 public class ServletEditChannelPurpose extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        ServletManager2 sm = new ServletManager2(this.getClass().getName(), request, response, true);
         try {
-            String team_id = sm.getServletParam("team_id", true);
-            sm.needToBeAdminOfTeam(Integer.parseInt(team_id));
+            Integer team_id = sm.getIntParam("team_id", true);
+            sm.needToBeAdminOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
-            String channel_id = sm.getServletParam("channel_id", true);
-            String purpose = sm.getServletParam("purpose", true);
+            Team team = teamManager.getTeamWithId(team_id);
+            Integer channel_id = sm.getIntParam("channel_id", true);
+            String purpose = sm.getStringParam("purpose", true);
             if (purpose == null || purpose.equals(""))
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Empty purpose.");
-            Channel channel = team.getChannelWithId(Integer.parseInt(channel_id));
+            Channel channel = team.getChannelWithId(channel_id);
             channel.editPurpose(purpose);
-            sm.setResponse(ServletManager.Code.Success, "Channel purpose edited, new purpose: " + channel.getPurpose());
+            sm.saveOrUpdate(channel);
+            sm.setSuccess("Channel purpose edited.");
         } catch (Exception e) {
-            sm.setResponse(e);
+            sm.setError(e);
         }
         sm.sendResponse();
     }

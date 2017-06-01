@@ -164,9 +164,13 @@ public class ServletManager2 {
     }
 
     public void needToBeTeamUserOfTeam(String team_id) throws HttpServletException {
+        this.needToBeAdminOfTeam(Integer.parseInt(team_id));
+    }
+
+    public void needToBeTeamUserOfTeam(Integer team_id) throws HttpServletException {
         this.needToBeTeamUser();
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
-            if (teamUser.getTeam().getDb_id() == Integer.parseInt(team_id))
+            if (teamUser.getTeam().getDb_id() == team_id)
                 return;
         }
         throw new HttpServletException(HttpStatus.Forbidden);
@@ -203,6 +207,18 @@ public class ServletManager2 {
         if (param != null && saveInLogs)
             args.put(paramName, param.toString());
         return param;
+    }
+
+    public String getStringParam(String paramName, boolean saveInLogs) {
+        return (String) getParam(paramName, saveInLogs);
+    }
+
+    public Long getLongParam(String paramName, boolean saveInLogs) {
+        return (Long) getParam(paramName, saveInLogs);
+    }
+
+    public Integer getIntParam(String paramName, boolean saveInLogs) {
+        return Math.toIntExact(getLongParam(paramName, saveInLogs));
     }
 
     public DataBaseConnection getDB() throws HttpServletException {

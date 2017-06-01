@@ -1,11 +1,10 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.ServletManager2;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -21,20 +20,20 @@ import java.io.IOException;
 @WebServlet("/api/v1/teams/EditTeamUserFirstName")
 public class ServletEditTeamUserFirstName extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        ServletManager2 sm = new ServletManager2(this.getClass().getName(), request, response, true);
         try {
-            String team_id = sm.getServletParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true);
             sm.needToBeTeamUserOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
+            Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = sm.getTeamUserForTeam(team);
-            String firstName = sm.getServletParam("firstName", true);
+            String firstName = sm.getStringParam("firstName", true);
             if (firstName == null || firstName.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Empty firstName.");
+                throw new HttpServletException(ServletManager2.HttpStatus.BadRequest, "Empty firstName.");
             teamUser.editFirstName(firstName);
-            sm.setResponse(ServletManager.Code.Success, "TeamUser firstName edited, new firstName: " + teamUser.getFirstName());
+            sm.setSuccess("TeamUser firstName edited.");
         } catch (Exception e) {
-            sm.setResponse(e);
+            sm.setError(e);
         }
         sm.sendResponse();
     }

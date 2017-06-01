@@ -410,29 +410,20 @@ public class TeamUser {
     }
 
     public void editFirstName(String firstName) {
-        HibernateQuery hibernateQuery = new HibernateQuery();
         if (firstName.equals(this.getFirstName()))
             return;
         this.firstName = firstName;
-        hibernateQuery.saveOrUpdateObject(this);
-        hibernateQuery.commit();
     }
 
     public void editLastName(String lastName) {
-        HibernateQuery hibernateQuery = new HibernateQuery();
         if (firstName.equals(this.getLastName()))
             return;
         this.lastName = lastName;
-        hibernateQuery.saveOrUpdateObject(this);
-        hibernateQuery.commit();
     }
 
     public void editUsername(String username) {
-        HibernateQuery hibernateQuery = new HibernateQuery();
         if (firstName.equals(this.getUsername()))
             return;
         this.username = username;
-        hibernateQuery.saveOrUpdateObject(this);
-        hibernateQuery.commit();
     }
 }
