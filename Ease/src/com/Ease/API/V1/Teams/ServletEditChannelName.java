@@ -33,6 +33,12 @@ public class ServletEditChannelName extends HttpServlet {
             if (name == null || name.equals(""))
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
             Channel channel = team.getChannelWithId(Integer.parseInt(channel_id));
+            for (Channel channel1 : team.getChannels()) {
+                if (channel1 == channel)
+                    continue;
+                if (channel1.getName().equals(name))
+                    throw new GeneralException(ServletManager.Code.ClientWarning, "Channel name already taken.");
+            }
             channel.editName(name);
             sm.setResponse(ServletManager.Code.Success, "Channel name edited, new name: " + channel.getName());
         } catch (Exception e) {
