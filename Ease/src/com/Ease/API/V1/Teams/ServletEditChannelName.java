@@ -1,14 +1,11 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
-import com.Ease.Team.TeamUser;
-import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.HttpServletException;
-import com.Ease.Utils.ServletManager;
-import com.Ease.Utils.ServletManager2;
+import com.Ease.Utils.HttpStatus;
+import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -24,7 +21,7 @@ import java.io.IOException;
 @WebServlet("/api/v1/teams/EditChannelName")
 public class ServletEditChannelName extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager2 sm = new ServletManager2(this.getClass().getName(), request, response, true);
+        PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = Math.toIntExact((Long) sm.getParam("team_id", true));
             sm.needToBeAdminOfTeam(team_id);
@@ -33,13 +30,13 @@ public class ServletEditChannelName extends HttpServlet {
             Integer channel_id = Math.toIntExact((Long) sm.getParam("channel_id", true));
             String name = (String) sm.getParam("name", true);
             if (name == null || name.equals(""))
-                throw new HttpServletException(ServletManager2.HttpStatus.BadRequest, "Empty name.");
+                throw new HttpServletException(HttpStatus.BadRequest, "Empty name.");
             Channel channel = team.getChannelWithId(channel_id);
             for (Channel channel1 : team.getChannels()) {
                 if (channel1 == channel)
                     continue;
                 if (channel1.getName().equals(name))
-                    throw new HttpServletException(ServletManager2.HttpStatus.BadRequest, "Channel name already taken.");
+                    throw new HttpServletException(HttpStatus.BadRequest, "Channel name already taken.");
             }
             channel.editName(name);
             sm.setSuccess("Channel name edited");

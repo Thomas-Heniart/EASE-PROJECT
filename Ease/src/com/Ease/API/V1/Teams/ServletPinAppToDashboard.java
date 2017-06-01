@@ -4,9 +4,7 @@ import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
-import com.Ease.Utils.ServletManager2;
+import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -22,7 +20,7 @@ import java.io.IOException;
 @WebServlet("/ServletPinAppToDashboard")
 public class ServletPinAppToDashboard extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager2 sm = new ServletManager2(this.getClass().getName(), request, response, true);
+        PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeTeamUser();
             Integer app_id = sm.getIntParam("app_id", true);

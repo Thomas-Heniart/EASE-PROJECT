@@ -9,7 +9,7 @@ import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
-import com.Ease.Utils.ServletManager2;
+import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
@@ -26,7 +26,7 @@ import java.io.IOException;
 @WebServlet("/api/v1/teams/ShareApp")
 public class ServletShareApp extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager2 sm = new ServletManager2(this.getClass().getName(), request, response, true);
+        PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true);
             sm.needToBeTeamUserOfTeam(team_id);

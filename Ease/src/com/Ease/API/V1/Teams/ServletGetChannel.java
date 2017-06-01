@@ -4,7 +4,8 @@ import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.HttpServletException;
-import com.Ease.Utils.ServletManager2;
+import com.Ease.Utils.HttpStatus;
+import com.Ease.Utils.Servlets.GetServletManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -20,15 +21,15 @@ import java.io.IOException;
 @WebServlet("/api/v1/teams/GetChannel")
 public class ServletGetChannel extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager2 sm = new ServletManager2(this.getClass().getName(), request, response, true);
+        GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeTeamUser();
             Integer team_id = sm.getIntParam("team_id", true);
             Integer channel_id = sm.getIntParam("channel_id", true);
             if (team_id == null)
-                throw new HttpServletException(ServletManager2.HttpStatus.BadRequest, "Team is null");
+                throw new HttpServletException(HttpStatus.BadRequest, "Team is null");
             if (channel_id == null)
-                throw new HttpServletException(ServletManager2.HttpStatus.BadRequest, "Channel is null");
+                throw new HttpServletException(HttpStatus.BadRequest, "Channel is null");
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             Channel channel = team.getChannelWithId(channel_id);

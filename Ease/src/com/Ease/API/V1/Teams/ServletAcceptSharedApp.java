@@ -1,10 +1,10 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
+import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -20,25 +20,21 @@ import java.io.IOException;
 @WebServlet("/ServletAcceptSharedApp")
 public class ServletAcceptSharedApp extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            sm.needToBeConnected();
             sm.needToBeTeamUser();
-            String team_id = sm.getServletParam("team_id", true);
-            String app_id = sm.getServletParam("app_id", true);
-            if (team_id == null || team_id.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientError, "Team is null");
-            TeamUser teamUser = sm.getTeamUserForTeamId(Integer.parseInt(team_id));
-            //if (teamUser.getDeciphered_teamPrivateKey() == null)
-              //  teamUser.decipher_teamPrivateKey();
-            App app = (App) teamUser.getSharedAppWithId(Integer.parseInt(app_id));
+            Integer team_id = sm.getIntParam("team_id", true);
+            Integer app_id = sm.getIntParam("app_id", true);
+            TeamUser teamUser = sm.getTeamUserForTeamId(team_id);
+            App app = (App) teamUser.getSharedAppWithId(app_id);
             if (!app.isClassicApp())
-                throw new GeneralException(ServletManager.Code.ClientError, "Impossible to accept this app");
-            //if (app.isClassicApp())
-              //  ((ClassicApp)app).getAccount().decipherAndCipher(teamUser.getDeciphered_teamPrivateKey(), sm);
-            sm.setResponse(ServletManager.Code.Success, "App accepted");
+                throw new HttpServletException(HttpStatus.BadRequest, "Impossible to accept this app");
+            /* @TODO */
+            /* if (app.isClassicApp())
+              ((ClassicApp)app).getAccount().de.decipherAndCipher(teamUser.getDeciphered_teamPrivateKey(), sm); */
+            sm.setSuccess("App accepted");
         } catch (Exception e) {
-            sm.setResponse(e);
+            sm.setError(e);
         }
         sm.sendResponse();
     }

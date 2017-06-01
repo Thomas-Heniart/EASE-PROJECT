@@ -1,11 +1,11 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
+import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -21,26 +21,23 @@ import java.io.IOException;
 @WebServlet("/api/v1/teams/AddChannel")
 public class ServletAddChannel extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            HibernateQuery query = new HibernateQuery();
-            String team_id = sm.getServletParam("team_id", true);
-            String channel_name = sm.getServletParam("channel_name", true);
-            String purpose = sm.getServletParam("purpose", true);
-            if (channel_name == null || channel_name.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "channel_id is needed.");
-            if (team_id == null || team_id.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "team_id is needed.");
+            Integer team_id = sm.getIntParam("team_id", true);
+            String channel_name = sm.getStringParam("channel_name", true);
+            String purpose = sm.getStringParam("purpose", true);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
+            Team team = teamManager.getTeamWithId(team_id);
+            if (channel_name == null || channel_name.equals(""))
+                throw new HttpServletException(HttpStatus.BadRequest, "Channel name is needed.");
+            if (purpose == null || purpose.equals(""))
+                throw new HttpServletException(HttpStatus.BadRequest, "Channel purpose is needed.");
             Channel channel = new Channel(team, channel_name, purpose);
-            query.saveOrUpdateObject(channel);
+            sm.saveOrUpdate(channel);
             team.addChannel(channel);
-            query.commit();
-            sm.setResponse(ServletManager.Code.Success, channel.getJson().toString());
-            sm.setLogResponse("Channel created");
+            sm.setSuccess(channel.getJson());
         } catch (Exception e) {
-            sm.setResponse(e);
+            sm.setError(e);
         }
         sm.sendResponse();
     }

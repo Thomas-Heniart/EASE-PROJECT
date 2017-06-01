@@ -9,6 +9,7 @@ import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.*;
+import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -183,7 +184,7 @@ public class App implements ShareableApp, SharedApp {
 
     }
 
-    public static String createSharedApp(Profile profile, Integer position, String name, String type, Map<String, Object> elevator, boolean shareable, boolean shared, Integer team_id, Integer channel_id, Integer team_user_tenant_id, App holder, boolean received, ServletManager2 sm) throws GeneralException, HttpServletException {
+    public static String createSharedApp(Profile profile, Integer position, String name, String type, Map<String, Object> elevator, boolean shareable, boolean shared, Integer team_id, Integer channel_id, Integer team_user_tenant_id, App holder, boolean received, PostServletManager sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         AppInformation infos = AppInformation.createAppInformation(name, db);
@@ -467,7 +468,7 @@ public class App implements ShareableApp, SharedApp {
 
     /* Interface ShareableApp */
     @Override
-    public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, ServletManager2 sm) throws GeneralException, HttpServletException {
+    public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, PostServletManager sm) throws GeneralException, HttpServletException {
         throw new GeneralException(ServletManager.Code.ClientError, "You shouldn't be there");
     }
 
@@ -555,7 +556,7 @@ public class App implements ShareableApp, SharedApp {
     }
 
     @Override
-    public JSONObject getNeededParams(ServletManager2 sm) throws GeneralException {
+    public JSONObject getNeededParams(PostServletManager sm) throws GeneralException {
         return new JSONObject();
     }
 

@@ -25,7 +25,7 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class ServletManager2 {
+public class PostServletManager {
 
     public enum HttpStatus {
         Success(200),
@@ -68,7 +68,7 @@ public class ServletManager2 {
     public Map<String, WebsocketSession> websockets = new HashMap<String, WebsocketSession>();
     public static boolean debug = true;
 
-    public ServletManager2(String servletName, HttpServletRequest request, HttpServletResponse response, boolean saveLogs) throws IOException {
+    public PostServletManager(String servletName, HttpServletRequest request, HttpServletResponse response, boolean saveLogs) throws IOException {
         this.args = new HashMap<>();
         this.servletName = servletName;
         this.request = request;

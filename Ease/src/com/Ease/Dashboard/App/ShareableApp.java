@@ -6,7 +6,7 @@ import com.Ease.Team.TeamUser;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.ServletManager;
-import com.Ease.Utils.ServletManager2;
+import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.simple.JSONObject;
 
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
  * Created by thomas on 03/05/2017.
  */
 public interface ShareableApp {
-    public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, ServletManager2 sm) throws GeneralException, HttpServletException;
+    public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, PostServletManager sm) throws GeneralException, HttpServletException;
 
     public void modifyShareable(ServletManager sm, JSONObject editJson, SharedApp sharedApp) throws GeneralException;
 
@@ -39,7 +39,7 @@ public interface ShareableApp {
 
     public JSONObject getShareableJson() throws GeneralException;
 
-    public JSONObject getNeededParams(ServletManager2 sm) throws GeneralException;
+    public JSONObject getNeededParams(PostServletManager sm) throws GeneralException;
 
     public void setDescription(String description);
 

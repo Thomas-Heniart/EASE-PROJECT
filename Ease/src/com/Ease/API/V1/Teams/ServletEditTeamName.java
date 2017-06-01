@@ -2,11 +2,9 @@ package com.Ease.API.V1.Teams;
 
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
-import com.Ease.Team.TeamUser;
-import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.HttpServletException;
-import com.Ease.Utils.ServletManager;
-import com.Ease.Utils.ServletManager2;
+import com.Ease.Utils.HttpStatus;
+import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -22,7 +20,7 @@ import java.io.IOException;
 @WebServlet("/api/v1/teams/EditTeamName")
 public class ServletEditTeamName extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager2 sm = new ServletManager2(this.getClass().getName(), request, response, true);
+        PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = Math.toIntExact((Long) sm.getParam("team_id", true));
             sm.needToBeAdminOfTeam(team_id);
@@ -30,10 +28,10 @@ public class ServletEditTeamName extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             String name = (String) sm.getParam("name", true);
             if (name == null || name.equals(""))
-                throw new HttpServletException(ServletManager2.HttpStatus.BadRequest, "Empty name.");
+                throw new HttpServletException(HttpStatus.BadRequest, "Empty name.");
             Team otherTeam = teamManager.getTeamWithName(name);
             if (otherTeam != null && otherTeam != team)
-                throw new HttpServletException(ServletManager2.HttpStatus.BadRequest, "Team name already taken.");
+                throw new HttpServletException(HttpStatus.BadRequest, "Team name already taken.");
             team.editName(name);
             sm.saveOrUpdate(team);
             sm.setSuccess("Team name edited");

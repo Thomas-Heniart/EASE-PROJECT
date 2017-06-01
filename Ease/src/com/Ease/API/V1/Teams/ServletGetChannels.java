@@ -2,10 +2,8 @@ package com.Ease.API.V1.Teams;
 
 import com.Ease.Team.Channel;
 import com.Ease.Team.TeamManager;
-import com.Ease.Utils.ServletManager;
-import com.Ease.Utils.ServletManager2;
+import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -21,7 +19,7 @@ import java.io.IOException;
 @WebServlet("/api/v1/teams/GetChannels")
 public class ServletGetChannels extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager2 sm = new ServletManager2(this.getClass().getName(), request, response, true);
+        GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true);
             sm.needToBeTeamUserOfTeam(team_id);

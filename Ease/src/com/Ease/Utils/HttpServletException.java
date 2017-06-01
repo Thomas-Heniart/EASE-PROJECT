@@ -3,15 +3,15 @@ package com.Ease.Utils;
 public class HttpServletException extends Exception {
     private static final long serialVersionUID = 1L;
     protected String msg;
-    protected ServletManager2.HttpStatus httpStatus;
+    private HttpStatus httpStatus;
 
-    public HttpServletException(ServletManager2.HttpStatus httpStatus, String msg) {
+    public HttpServletException(HttpStatus httpStatus, String msg) {
         this.msg = msg;
         this.httpStatus = httpStatus;
         System.out.println(msg);
     }
 
-    public HttpServletException(ServletManager2.HttpStatus httpStatus, Exception e) {
+    public HttpServletException(HttpStatus httpStatus, Exception e) {
         this.msg = e.toString() + ".\nStackTrace :";
         for (int i = 0; i < e.getStackTrace().length; i++) {
             this.msg += "\n" + e.getStackTrace()[i];
@@ -20,7 +20,7 @@ public class HttpServletException extends Exception {
         this.httpStatus = httpStatus;
     }
 
-    public HttpServletException(ServletManager2.HttpStatus httpStatus) {
+    public HttpServletException(HttpStatus httpStatus) {
         this.httpStatus = httpStatus;
         this.msg = null;
     }
@@ -29,7 +29,7 @@ public class HttpServletException extends Exception {
         return msg;
     }
 
-    public ServletManager2.HttpStatus getHttpStatus() {
+    public HttpStatus getHttpStatus() {
         return this.httpStatus;
     }
 }

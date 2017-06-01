@@ -6,7 +6,8 @@ import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Crypto.CodeGenerator;
 import com.Ease.Utils.HttpServletException;
-import com.Ease.Utils.ServletManager2;
+import com.Ease.Utils.HttpStatus;
+import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -22,7 +23,7 @@ import java.io.IOException;
 @WebServlet("/finalizeRegistration")
 public class ServletFinalizeTeamUserRegistration extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager2 sm = new ServletManager2(this.getClass().getName(), request, response, true);
+        PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
             String firstName = sm.getStringParam("firstName", true);
@@ -31,21 +32,21 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             String jobTitle = sm.getStringParam("jobTitle", true);
             String code = sm.getStringParam("code", true);
             if (username == null || username.equals(""))
-                throw new HttpServletException(ServletManager2.HttpStatus.BadRequest, "username is needed.");
+                throw new HttpServletException(HttpStatus.BadRequest, "username is needed.");
             if (firstName == null || firstName.equals(""))
-                throw new HttpServletException(ServletManager2.HttpStatus.BadRequest, "firstName is needed.");
+                throw new HttpServletException(HttpStatus.BadRequest, "firstName is needed.");
             if (lastName == null || lastName.equals(""))
-                throw new HttpServletException(ServletManager2.HttpStatus.BadRequest, "lastName is needed.");
+                throw new HttpServletException(HttpStatus.BadRequest, "lastName is needed.");
             if (code == null || code.equals(""))
-                throw new HttpServletException(ServletManager2.HttpStatus.BadRequest, "code is needed.");
+                throw new HttpServletException(HttpStatus.BadRequest, "code is needed.");
             if (jobTitle == null || jobTitle.equals(""))
-                throw new HttpServletException(ServletManager2.HttpStatus.BadRequest, "jobTitle is needed.");
+                throw new HttpServletException(HttpStatus.BadRequest, "jobTitle is needed.");
             HibernateQuery query = sm.getHibernateQuery();
             query.querySQLString("SELECT id, team_id, teamUser_id FROM pendingTeamInvitations WHERE code = ?");
             query.setParameter(1, code);
             Object idTeamAndTeamUserObj = query.getSingleResult();
             if (idTeamAndTeamUserObj == null)
-                throw new HttpServletException(ServletManager2.HttpStatus.BadRequest, "You cannot be part of this team");
+                throw new HttpServletException(HttpStatus.BadRequest, "You cannot be part of this team");
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Object[] idTeamAndTeamUser = (Object[]) idTeamAndTeamUserObj;
             Integer id = (Integer) idTeamAndTeamUser[0];
