@@ -4,6 +4,7 @@
   "home":"https://home.freddelacompta.com/",
   "connect":{
     "todo":[
+      {"action":"goto", "url": "https://home.freddelacompta.com/"},
       {"action":"fill", "what":"login", "search":"input#username"},
       {"action":"fill", "what":"password", "search":"input#password"},
       {"action":"click", "search":".btn-submit"}
@@ -17,7 +18,6 @@
     ]
   },
   "checkAlreadyLogged":[
-    {"action":"search", "search":"input#username"},
     {"action":"waitfor", "search":"a[href*='dashboard-ae/profile'], input#username"},
     {"search": "a[href*='dashboard-ae/profile']"}
   ]
