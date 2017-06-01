@@ -2,6 +2,7 @@ package com.Ease.Team;
 
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.SharedApp;
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Utils.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -152,5 +153,23 @@ public class Channel {
         jsonObject.put("name", this.getName());
         jsonObject.put("purpose", this.getPurpose());
         return jsonObject;
+    }
+
+    public void editName(String name) {
+        HibernateQuery hibernateQuery = new HibernateQuery();
+        if (name.equals(this.getName()))
+            return;
+        this.name = name;
+        hibernateQuery.saveOrUpdateObject(this);
+        hibernateQuery.commit();
+    }
+
+    public void editPurpose(String purpose) {
+        HibernateQuery hibernateQuery = new HibernateQuery();
+        if (purpose.equals(this.getPurpose()))
+            return;
+        this.purpose = purpose;
+        hibernateQuery.saveOrUpdateObject(this);
+        hibernateQuery.commit();
     }
 }

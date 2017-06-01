@@ -248,7 +248,7 @@ public class Catalog {
 		return result;
 	}
 	
-	public Website getWebsiteWithHost(String host) throws GeneralException {
+	public Website getWebsiteWithHost(String host) {
 		for (Website site : websites) {
 			if (site.getHostname().equals(host))
 				return site;

@@ -25,6 +25,7 @@ public interface ShareableApp {
     public void addSharedApp(SharedApp app);
     public void setSharedApps(List<SharedApp> sharedApps);
     public JSONObject getShareableJson() throws GeneralException;
+    public JSONObject getNeededParams(ServletManager sm) throws GeneralException;
     public void setDescription(String description);
     public String getDescription();
 }

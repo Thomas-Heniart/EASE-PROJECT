@@ -5,11 +5,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import com.Ease.Dashboard.DashboardManager;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
-import com.google.common.primitives.UnsignedInts;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -166,9 +164,9 @@ public class App implements ShareableApp, SharedApp {
         AppInformation infos = AppInformation.createAppInformation(name, sm);
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
-        String registrationDate = dateFormat.format(date);
+        String insertDate = dateFormat.format(date);
         DatabaseRequest request = db.prepareRequest("INSERT INTO apps VALUES (NULL, ?, ?, ?, NULL);");
-        request.setString(registrationDate);
+        request.setString(insertDate);
         request.setString(type);
         request.setInt(infos.getDb_id());
         String appDBid = request.set().toString();
@@ -180,7 +178,7 @@ public class App implements ShareableApp, SharedApp {
             request.set();
         }
         elevator.put("appInfos", infos);
-        elevator.put("insertDate", registrationDate);
+        elevator.put("insertDate", insertDate);
         db.commitTransaction(transaction);
         return appDBid;
 
@@ -536,6 +534,11 @@ public class App implements ShareableApp, SharedApp {
         } catch (ParseException e) {
             throw new GeneralException(ServletManager.Code.InternError, e);
         }
+    }
+
+    @Override
+    public JSONObject getNeededParams(ServletManager sm) throws GeneralException {
+        return new JSONObject();
     }
 
     @Override

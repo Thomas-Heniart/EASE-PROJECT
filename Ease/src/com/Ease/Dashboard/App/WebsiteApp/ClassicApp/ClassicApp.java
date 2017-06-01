@@ -71,7 +71,7 @@ public class ClassicApp extends WebsiteApp {
             }
         }
         db.commitTransaction(transaction);
-        return new ClassicApp((String) elevator.get("appDBid"), profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, account, classicDBid);
+        return new ClassicApp((String) elevator.get("appDBid"), profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, account, classicDBid);
     }
 
     public static ClassicApp createShareableClassicApp(String name, Website website, Map<String, String> accountInformationMap, TeamUser teamUser_owner, Integer reminderValue, ServletManager sm) throws GeneralException {
@@ -85,7 +85,7 @@ public class ClassicApp extends WebsiteApp {
         request.setInt(account.getDBid());
         String classicDBid = request.set().toString();
         db.commitTransaction(transaction);
-        return new ClassicApp((String) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), website, websiteAppDBid, account, classicDBid);
+        return new ClassicApp((String) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), website, websiteAppDBid, account, classicDBid);
     }
 
     public static App createClassicAppSameAs(Profile profile, int position, String name, Website site, ClassicApp sameApp, ServletManager sm, User user) throws GeneralException {
@@ -106,7 +106,7 @@ public class ClassicApp extends WebsiteApp {
             }
         }
         db.commitTransaction(transaction);
-        return new ClassicApp((String) elevator.get("appDBid"), profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, account, classicDBid);
+        return new ClassicApp((String) elevator.get("appDBid"), profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, account, classicDBid);
     }
 
     public static ClassicApp createFromWebsiteApp(WebsiteApp websiteApp, String name, Map<String, String> infos, ServletManager sm, User user) throws GeneralException {
@@ -170,7 +170,7 @@ public class ClassicApp extends WebsiteApp {
     public Account getAccount() {
         return account;
     }
-	/*
+    /*
 	 * 
 	 * Getter And Setter
 	 *
@@ -289,7 +289,7 @@ public class ClassicApp extends WebsiteApp {
         request.setInt(sharedAccount.getDBid());
         String classicDBid = request.set().toString();
         db.commitTransaction(transaction);
-        App sharedApp = new ClassicApp((String) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), this.getSite(), websiteAppId, sharedAccount, classicDBid, this);
+        App sharedApp = new ClassicApp((String) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), this.getSite(), websiteAppId, sharedAccount, classicDBid, this);
         sharedApp.setReceived(false);
         sharedApp.setTeamUser_tenant(teamUser_tenant);
         return sharedApp;
@@ -310,6 +310,11 @@ public class ClassicApp extends WebsiteApp {
         }
         res.put("account_information", accountInformationArray);
         return res;
+    }
+
+    @Override
+    public JSONObject getNeededParams(ServletManager sm) throws GeneralException {
+        return new JSONObject();
     }
 
     @Override

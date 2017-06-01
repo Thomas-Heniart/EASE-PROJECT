@@ -60,7 +60,7 @@ public class LogwithApp extends WebsiteApp {
         request.setInt(logwith.getWebsiteAppDBid());
         String logwithDBid = request.set().toString();
         db.commitTransaction(transaction);
-        LogwithApp app = new LogwithApp((String) elevator.get("appDBid"), profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("registrationDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, logwith.getDBid(), logwithDBid);
+        LogwithApp app = new LogwithApp((String) elevator.get("appDBid"), profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, logwith.getDBid(), logwithDBid);
         app.rempLogwith(logwith);
         return app;
     }

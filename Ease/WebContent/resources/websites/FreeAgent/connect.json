@@ -1,7 +1,7 @@
 {
     "name":"FreeAgent",
     "lastLogin":"",
-    "home":"https://freeagent.com/",
+    "home":{"http":"https://", "subdomain":"subdomain", "domain":"freeagent.com"},
     "connect":{
         "todo":[
             {"action":"fill", "what":"login", "search":"#login_email"},

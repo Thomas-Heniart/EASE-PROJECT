@@ -607,7 +607,7 @@ public class Website {
     }
 
     public String getHostname() {
-        return this.website_homepage.split("/")[2];
+        return this.website_homepage.split("\\.")[1];
     }
 
     public void turnOff(ServletManager sm) throws GeneralException {
