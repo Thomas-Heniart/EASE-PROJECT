@@ -79,6 +79,9 @@ public class TeamUser {
     @Column(name = "departureDate")
     protected Date departureDate;
 
+    @Column(name = "jobTitle")
+    protected String jobTitle;
+
     @Transient
     protected DateFormat dateFormat = new SimpleDateFormat("MMMM dd, HH:mm", Locale.US);
 
@@ -259,6 +262,14 @@ public class TeamUser {
 
     public void setDepartureDate(Date departureDate) {
         this.departureDate = departureDate;
+    }
+
+    public String getJobTitle() {
+        return jobTitle;
+    }
+
+    public void setJobTitle(String jobTitle) {
+        this.jobTitle = jobTitle;
     }
 
     public Team getTeam() {

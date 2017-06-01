@@ -1,14 +1,11 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.Hibernate.HibernateQuery;
-import com.Ease.Mail.SendGridMail;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
-import com.Ease.Team.TeamUserPermissions;
 import com.Ease.Utils.Crypto.CodeGenerator;
 import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -31,6 +28,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             String firstName = sm.getServletParam("firstName", true);
             String lastName = sm.getServletParam("lastName", true);
             String username = sm.getServletParam("username", true);
+            String jobTitle = sm.getServletParam("jobTitle", true);
             String code = sm.getServletParam("code", true);
             if (username == null || username.equals(""))
                 throw new GeneralException(ServletManager.Code.ClientWarning, "username is needed.");
@@ -38,6 +36,8 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
                 throw new GeneralException(ServletManager.Code.ClientWarning, "firstName is needed.");
             if (lastName == null || lastName.equals(""))
                 throw new GeneralException(ServletManager.Code.ClientWarning, "lastName is needed.");
+            if (jobTitle == null || jobTitle.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "jobTitle is needed.");
 
             HibernateQuery query = new HibernateQuery();
 
@@ -56,6 +56,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             teamUser.setFirstName(firstName);
             teamUser.setLastName(lastName);
             teamUser.setUsername(username);
+            teamUser.setJobTitle(jobTitle);
             query.saveOrUpdateObject(teamUser);
             query.querySQLString("DELETE FROM pendingTeamInvitations WHERE id = ?");
             query.setParameter(1, id);
