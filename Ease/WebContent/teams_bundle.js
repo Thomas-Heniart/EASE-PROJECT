@@ -3088,7 +3088,7 @@ module.exports = {
     return axios.get('/api/v1/teams/GetTeamUser', {
       params: {
         'team_id': team_id,
-        'teamUser_id': team_user_id
+        'team_user_id': team_user_id
       }
     }).then(function (response) {
       return response.data;
@@ -17004,7 +17004,7 @@ var TeamUserFlexTab = function (_React$Component2) {
               React.createElement(
                 'u',
                 null,
-                'Desactivate account'
+                'Archive account'
               )
             )
           )
