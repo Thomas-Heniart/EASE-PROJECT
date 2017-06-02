@@ -414,13 +414,13 @@ public class TeamUser {
     }
 
     public void editLastName(String lastName) {
-        if (firstName.equals(this.getLastName()))
+        if (lastName.equals(this.getLastName()))
             return;
         this.lastName = lastName;
     }
 
     public void editUsername(String username) {
-        if (firstName.equals(this.getUsername()))
+        if (username.equals(this.getUsername()))
             return;
         this.username = username;
     }

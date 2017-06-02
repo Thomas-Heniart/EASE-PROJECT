@@ -19,7 +19,10 @@ public class HibernateQuery {
     protected Query query;
 
     public HibernateQuery() {
-        this.session = HibernateDatabase.getSessionFactory().openSession();
+        if (HibernateDatabase.getSessionFactory().isOpen())
+            this.session = HibernateDatabase.getSessionFactory().getCurrentSession();
+        else
+            this.session = HibernateDatabase.getSessionFactory().openSession();
         this.transaction = this.session.beginTransaction();
     }
 
