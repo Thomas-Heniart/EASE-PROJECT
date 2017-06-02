@@ -8,6 +8,7 @@ import java.util.*;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.RSA;
+import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -292,6 +293,15 @@ public class Account {
         this.privateKey = AES.decrypt(this.ciphered_key, deciphered_teamKey);
         for (AccountInformation accountInformation : this.getAccountInformations())
             accountInformation.decipher(this.privateKey);
+    }
+
+    public void cipherWithKeyUser(PostServletManager sm) throws GeneralException, HttpServletException {
+        this.ciphered_key = sm.getUser().encrypt(this.privateKey);
+        DatabaseRequest request = sm.getDB().prepareRequest("UPDATE accounts SET privateKey = ?, mustBeReciphered = ? WHERE id = ?;");
+        request.setString(this.ciphered_key);
+        request.setBoolean(false);
+        request.setInt(this.db_id);
+        request.set();
     }
 
     public List<AccountInformation> getAccountInformations() {
