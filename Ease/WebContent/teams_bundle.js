@@ -3044,7 +3044,7 @@ var axios = __webpack_require__(45);
 module.exports = {
   fetchTeams: function fetchTeams() {
     return axios.get('/api/v1/teams/GetTeams').then(function (response) {
-      return JSON.parse(response.data.substring(response.data.indexOf(" ") + 1, response.data.length));
+      return response.data;
     });
   },
   fetchTeam: function fetchTeam(team_id) {
@@ -3053,7 +3053,7 @@ module.exports = {
         'team_id': team_id
       }
     }).then(function (response) {
-      return JSON.parse(response.data.substring(response.data.indexOf(" ") + 1, response.data.length));
+      return response.data;
     });
   },
   fetchTeamChannels: function fetchTeamChannels(team_id) {
@@ -3062,7 +3062,7 @@ module.exports = {
         team_id: team_id
       }
     }).then(function (response) {
-      return JSON.parse(response.data.substring(response.data.indexOf(" ") + 1, response.data.length));
+      return response.data;
     });
   },
   fetchTeamUsers: function fetchTeamUsers(team_id) {
@@ -3071,7 +3071,7 @@ module.exports = {
         team_id: team_id
       }
     }).then(function (response) {
-      return JSON.parse(response.data.substring(response.data.indexOf(" ") + 1, response.data.length));
+      return response.data;
     });
   },
   fetchTeamChannel: function fetchTeamChannel(team_id, channel_id) {
@@ -3081,17 +3081,17 @@ module.exports = {
         'channel_id': channel_id
       }
     }).then(function (response) {
-      return JSON.parse(response.data.substring(response.data.indexOf(" ") + 1, response.data.length));
+      return response.data;
     });
   },
   fetchTeamUser: function fetchTeamUser(team_id, team_user_id) {
     return axios.get('/api/v1/teams/GetTeamUser', {
       params: {
         'team_id': team_id,
-        'teamuser_id': team_user_id
+        'teamUser_id': team_user_id
       }
     }).then(function (response) {
-      return JSON.parse(response.data.substring(response.data.indexOf(" ") + 1, response.data.length));
+      return response.data;
     });
   },
   getDashboardApp: function getDashboardApp(id) {
@@ -3100,7 +3100,7 @@ module.exports = {
         'id': id
       }
     }).then(function (response) {
-      return JSON.parse(response.data.substring(response.data.indexOf(" ") + 1, response.data.length));
+      return response.data;
     });
   },
   dashboardAppSearch: function dashboardAppSearch(query) {
@@ -3109,7 +3109,7 @@ module.exports = {
         'q': query
       }
     }).then(function (response) {
-      return JSON.parse(response.data.substring(response.data.indexOf(" ") + 1, response.data.length));
+      return response.data;
     });
   },
   teamAppSearch: function teamAppSearch(team_id, query) {
@@ -3119,7 +3119,7 @@ module.exports = {
         'team_id': team_id
       }
     }).then(function (response) {
-      return JSON.parse(response.data.substring(response.data.indexOf(" ") + 1, response.data.length));
+      return response.data;
     });
   },
   dashboardAndTeamAppSearch: function dashboardAndTeamAppSearch(team_id, query) {
@@ -3139,13 +3139,7 @@ module.exports = {
         'id': website_id
       }
     }).then(function (response) {
-      return JSON.parse(response.data.substring(response.data.indexOf(" ") + 1, response.data.length));
-    });
-  },
-  fetchPopularRepos: function fetchPopularRepos(language) {
-    var encodedURI = window.encodeURI('https://api.github.com/search/' + 'repositories?q=stars:>1+language:' + language + '' + '&sort=stars&order=desc&type=Repositories');
-    return axios.get(encodedURI).then(function (response) {
-      return response.data.items;
+      return response.data;
     });
   }
 };
@@ -4326,7 +4320,7 @@ function fetchChannels(team_id) {
 function editTeamChannelName(channel_id, name) {
   return function (dispatch, getState) {
     dispatch({ type: 'EDIT_TEAM_CHANNEL_NAME_PENDING' });
-    return post_api.editTeamChannelName(getState().team.id, channel_id, name).then(function (response) {
+    return post_api.teamChannel.editName(getState().team.id, channel_id, name).then(function (response) {
       dispatch({ type: 'EDIT_TEAM_CHANNEL_NAME_FULFILLED', payload: { id: channel_id, name: name } });
     }).catch(function (err) {
       dispatch({ type: "EDIT_TEAM_CHANNEL_NAME_REJECTED", payload: err });
@@ -4337,7 +4331,7 @@ function editTeamChannelName(channel_id, name) {
 function editTeamChannelPurpose(channel_id, purpose) {
   return function (dispatch, getState) {
     dispatch({ type: 'EDIT_TEAM_CHANNEL_PURPOSE_PENDING' });
-    return post_api.editTeamChannelName(getState().team.id, channel_id, purpose).then(function (response) {
+    return post_api.teamChannel.editPurpose(getState().team.id, channel_id, purpose).then(function (response) {
       dispatch({ type: 'EDIT_TEAM_CHANNEL_PURPOSE_FULFILLED', payload: { id: channel_id, purpose: purpose } });
     }).catch(function (err) {
       dispatch({ type: "EDIT_TEAM_CHANNEL_PURPOSE_REJECTED", payload: err });
@@ -5655,7 +5649,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.selectTeamUser = selectTeamUser;
 exports.fetchUsers = fetchUsers;
+exports.editTeamUserUsername = editTeamUserUsername;
+exports.editTeamUserFirstName = editTeamUserFirstName;
+exports.editTeamUserLastName = editTeamUserLastName;
+exports.editTeamUserRole = editTeamUserRole;
+exports.editTeamUserDepartureDate = editTeamUserDepartureDate;
 var api = __webpack_require__(24);
+var post_api = __webpack_require__(158);
 
 function selectTeamUser(id) {
   return function (dispatch, getState) {
@@ -5681,6 +5681,66 @@ function fetchUsers(team_id) {
       dispatch({ type: "FETCH_USERS_FULFILLED", payload: payload });
     }).catch(function (err) {
       dispatch({ type: "FETCH_USERS_REJECTED", payload: err });
+      throw err;
+    });
+  };
+}
+
+function editTeamUserUsername(user_id, username) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'EDIT_TEAM_USER_USERNAME_PENDING' });
+    return post_api.teamUser.editUsername(getState().team.id, user_id, username).then(function (response) {
+      dispatch({ type: 'EDIT_TEAM_USER_USERNAME_FULFILLED', payload: { id: user_id, username: username } });
+    }).catch(function (err) {
+      dispatch({ type: 'EDIT_TEAM_USER_USERNAME_REJECTED', payload: err });
+      throw err;
+    });
+  };
+}
+
+function editTeamUserFirstName(user_id, first_name) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'EDIT_TEAM_USER_FIRSTNAME_PENDING' });
+    return post_api.teamUser.editFirstName(getState().team.id, user_id, first_name).then(function (response) {
+      dispatch({ type: 'EDIT_TEAM_USER_FIRSTNAME_FULFILLED', payload: { id: user_id, first_name: first_name } });
+    }).catch(function (err) {
+      dispatch({ type: 'EDIT_TEAM_USER_FIRSTNAME_REJECTED', payload: err });
+      throw err;
+    });
+  };
+}
+
+function editTeamUserLastName(user_id, last_name) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'EDIT_TEAM_USER_LASTNAME_PENDING' });
+    return post_api.teamUser.editLastName(getState().team.id, user_id, last_name).then(function (response) {
+      dispatch({ type: 'EDIT_TEAM_USER_LASTNAME_FULFILLED', payload: { id: user_id, last_name: last_name } });
+    }).catch(function (err) {
+      dispatch({ type: 'EDIT_TEAM_USER_LASTNAME_REJECTED', payload: err });
+      throw err;
+    });
+  };
+}
+
+function editTeamUserRole(user_id, role) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'EDIT_TEAM_USER_ROLE_PENDING' });
+    return post_api.teamUser.editRole(getState().team.id, user_id, role).then(function (response) {
+      dispatch({ type: 'EDIT_TEAM_USER_ROLE_FULFILLED', payload: { id: user_id, role: role } });
+    }).catch(function (err) {
+      dispatch({ type: 'EDIT_TEAM_USER_ROLE_REJECTED', payload: err });
+      throw err;
+    });
+  };
+}
+
+function editTeamUserDepartureDate(user_id, departure_date) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'EDIT_TEAM_USER_DEPARTUREDATE_PENDING' });
+    return post_api.teamUser.editDepartureDate(getState().team.id, user_id, departure_date).then(function (response) {
+      dispatch({ type: 'EDIT_TEAM_USER_DEPARTUREDATE_FULFILLED', payload: { id: user_id, departure_date: departure_date } });
+    }).catch(function (err) {
+      dispatch({ type: 'EDIT_TEAM_USER_DEPARTUREDATE_REJECTED', payload: err });
       throw err;
     });
   };
@@ -13142,7 +13202,7 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
 
       this.props.dispatch(teamActions.fetchTeamAndUsersAndChannels(this.props.team_id)).then(function () {
         _this2.setState({ loadingInfo: false });
-        _this2.props.dispatch(channelActions.selectTeamChannel(_this2.props.channels[0].id));
+        _this2.props.dispatch(userActions.selectTeamUser(_this2.props.users[0].id));
       });
     }
   }, {
@@ -16196,9 +16256,15 @@ var _channelActions = __webpack_require__(36);
 
 var channelActions = _interopRequireWildcard(_channelActions);
 
+var _userActions = __webpack_require__(47);
+
+var userActions = _interopRequireWildcard(_userActions);
+
 var _reactRedux = __webpack_require__(19);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -16273,7 +16339,6 @@ var TeamChannelFlexTab = function (_React$Component) {
           purposeModifying: false
         });
       });
-      return;
     }
   }, {
     key: 'handlePurposeInput',
@@ -16499,10 +16564,139 @@ var TeamUserFlexTab = function (_React$Component2) {
   function TeamUserFlexTab(props) {
     _classCallCheck(this, TeamUserFlexTab);
 
-    return _possibleConstructorReturn(this, (TeamUserFlexTab.__proto__ || Object.getPrototypeOf(TeamUserFlexTab)).call(this, props));
+    var _this5 = _possibleConstructorReturn(this, (TeamUserFlexTab.__proto__ || Object.getPrototypeOf(TeamUserFlexTab)).call(this, props));
+
+    _this5.state = {
+      first_name: null,
+      last_name: null,
+      firstNameLastNameModifying: false,
+      username: null,
+      usernameModifying: false,
+      role: null,
+      roleModifying: false,
+      departureDate: '',
+      departureDateModifying: false
+    };
+    _this5.setFirstLastNameModifying = _this5.setFirstLastNameModifying.bind(_this5);
+    _this5.setUsernameModifying = _this5.setUsernameModifying.bind(_this5);
+    _this5.setRoleModifying = _this5.setRoleModifying.bind(_this5);
+    _this5.setDepartureDateModifying = _this5.setDepartureDateModifying.bind(_this5);
+    _this5.handleInput = _this5.handleInput.bind(_this5);
+    _this5.confirmUsernameChange = _this5.confirmUsernameChange.bind(_this5);
+    _this5.confirmUserLastFirstNameChange = _this5.confirmUserLastFirstNameChange.bind(_this5);
+    _this5.confirmUserRoleChange = _this5.confirmUserRoleChange.bind(_this5);
+    _this5.confirmUserDepartureDateChange = _this5.confirmUserDepartureDateChange.bind(_this5);
+    return _this5;
   }
 
   _createClass(TeamUserFlexTab, [{
+    key: 'handleInput',
+    value: function handleInput(e) {
+      this.setState(_defineProperty({}, e.target.name, e.target.value));
+    }
+  }, {
+    key: 'setDepartureDateModifying',
+    value: function setDepartureDateModifying(state) {
+      if (state) {
+        this.setState({
+          departureDateModifying: true,
+          role: this.props.item.departureDate
+        });
+      } else {
+        this.setState({
+          departureDateModifying: false
+        });
+      }
+    }
+  }, {
+    key: 'setRoleModifying',
+    value: function setRoleModifying(state) {
+      if (state) {
+        this.setState({
+          roleModifying: true,
+          role: this.props.item.role
+        });
+      } else {
+        this.setState({
+          roleModifying: false
+        });
+      }
+    }
+  }, {
+    key: 'setFirstLastNameModifying',
+    value: function setFirstLastNameModifying(state) {
+      if (state) {
+        this.setState({
+          firstNameLastNameModifying: true,
+          first_name: this.props.item.first_name,
+          last_name: this.props.item.last_name
+        });
+      } else {
+        this.setState({
+          firstNameLastNameModifying: false
+        });
+      }
+    }
+  }, {
+    key: 'setUsernameModifying',
+    value: function setUsernameModifying(state) {
+      if (state) {
+        this.setState({
+          usernameModifying: true,
+          username: this.props.item.username
+        });
+      } else {
+        this.setState({
+          usernameModifying: false
+        });
+      }
+    }
+  }, {
+    key: 'confirmUsernameChange',
+    value: function confirmUsernameChange() {
+      var _this6 = this;
+
+      if (this.state.username !== this.props.item.username) {
+        this.props.dispatch(userActions.editTeamUserUsername(this.props.item.id, this.state.username)).then(function (response) {
+          _this6.setState({ usernameModifying: false });
+        });
+      }
+    }
+  }, {
+    key: 'confirmUserLastFirstNameChange',
+    value: function confirmUserLastFirstNameChange() {
+      var _this7 = this;
+
+      this.props.dispatch(userActions.editTeamUserFirstName(this.props.item.id, this.state.first_name)).then(function (response) {
+        _this7.setState({ firstNameLastNameModifying: false });
+      });
+      this.props.dispatch(userActions.editTeamUserLastName(this.props.item.id, this.state.last_name)).then(function (response) {
+        _this7.setState({ firstNameLastNameModifying: false });
+      });
+    }
+  }, {
+    key: 'confirmUserRoleChange',
+    value: function confirmUserRoleChange() {
+      var _this8 = this;
+
+      if (this.state.role !== this.props.item.role) {
+        this.props.dispatch(userActions.editTeamUserRole(this.props.item.id, this.state.role)).then(function (response) {
+          _this8.setState({ roleModifying: false });
+        });
+      }
+    }
+  }, {
+    key: 'confirmUserDepartureDateChange',
+    value: function confirmUserDepartureDateChange() {
+      var _this9 = this;
+
+      if (this.state.departureDate != this.props.item.departureDate) {
+        this.props.dispatch(userActions.editTeamUserDepartureDate(this.props.item.id, this.state.departureDate)).then(function (response) {
+          _this9.setState({ departureDateModifying: false });
+        });
+      }
+    }
+  }, {
     key: 'render',
     value: function render() {
       return React.createElement(
@@ -16532,25 +16726,56 @@ var TeamUserFlexTab = function (_React$Component2) {
           React.createElement(
             'div',
             { className: 'tab_content_row' },
-            React.createElement(
+            !this.state.firstNameLastNameModifying ? React.createElement(
               'h2',
               { className: 'name_holder' },
               React.createElement(
                 'strong',
-                { className: 'firstname' },
-                this.props.item.firstName
+                { className: 'firstname mrgnRight5' },
+                this.props.item.first_name
               ),
               React.createElement(
                 'strong',
                 { className: 'lastname' },
-                this.props.item.lastName
+                this.props.item.last_name
+              ),
+              React.createElement(
+                'button',
+                { className: 'button-unstyle mrgnLeft5 action_button',
+                  onClick: this.setFirstLastNameModifying.bind(null, true) },
+                React.createElement('i', { className: 'fa fa-pencil' })
+              )
+            ) : React.createElement(
+              'div',
+              { className: 'overflow-hidden' },
+              React.createElement(
+                'div',
+                { className: 'display-flex mrgnBottom5' },
+                React.createElement('input', { className: 'modal_input width50 mrgnRight5', type: 'text', name: 'first_name',
+                  value: this.state.first_name,
+                  onChange: this.handleInput }),
+                React.createElement('input', { className: 'modal_input width50', type: 'text', name: 'last_name',
+                  value: this.state.last_name,
+                  onChange: this.handleInput })
+              ),
+              React.createElement(
+                'button',
+                { className: 'button-unstyle action_text_button positive_background floatRight',
+                  onClick: this.confirmUserLastFirstNameChange },
+                'Done'
+              ),
+              React.createElement(
+                'button',
+                { className: 'button-unstyle action_text_button neutral_background mrgnRight5 floatRight',
+                  onClick: this.setFirstLastNameModifying.bind(null, false) },
+                'Cancel'
               )
             )
           ),
           React.createElement(
             'div',
             { className: 'tab_content_row' },
-            React.createElement(
+            !this.state.usernameModifying ? React.createElement(
               'span',
               { className: 'username_holder' },
               '@',
@@ -16558,6 +16783,35 @@ var TeamUserFlexTab = function (_React$Component2) {
                 'span',
                 { className: 'username' },
                 this.props.item.username
+              ),
+              React.createElement(
+                'button',
+                { className: 'button-unstyle mrgnLeft5 action_button',
+                  onClick: this.setUsernameModifying.bind(null, true) },
+                React.createElement('i', { className: 'fa fa-pencil' })
+              )
+            ) : React.createElement(
+              'div',
+              { className: 'overflow-hidden' },
+              React.createElement(
+                'div',
+                { className: 'modal_input_wrapper mrgnBottom5' },
+                React.createElement('i', { className: 'fa fa-at ease_icon' }),
+                React.createElement('input', { className: 'input_unstyle', type: 'text', name: 'username',
+                  value: this.state.username,
+                  onChange: this.handleInput })
+              ),
+              React.createElement(
+                'button',
+                { className: 'button-unstyle action_text_button positive_background floatRight',
+                  onClick: this.confirmUsernameChange },
+                'Done'
+              ),
+              React.createElement(
+                'button',
+                { className: 'button-unstyle action_text_button neutral_background mrgnRight5 floatRight',
+                  onClick: this.setUsernameModifying.bind(null, false) },
+                'Cancel'
               )
             )
           ),
@@ -16590,10 +16844,45 @@ var TeamUserFlexTab = function (_React$Component2) {
                 null,
                 'Role: '
               ),
-              React.createElement(
+              !this.state.roleModifying ? React.createElement(
                 'span',
                 { className: 'role' },
-                this.props.item.role
+                this.props.roles[this.props.item.role],
+                React.createElement(
+                  'button',
+                  { className: 'button-unstyle mrgnLeft5 action_button',
+                    onClick: this.setRoleModifying.bind(null, true) },
+                  React.createElement('i', { className: 'fa fa-pencil' })
+                )
+              ) : React.createElement(
+                'div',
+                { className: 'display-inline-block' },
+                React.createElement(
+                  'select',
+                  { className: 'select_unstyle',
+                    value: this.state.role,
+                    onChange: this.handleInput,
+                    id: 'user_role_select', name: 'role' },
+                  Object.keys(this.props.roles).map(function (item) {
+                    return React.createElement(
+                      'option',
+                      { value: item, key: item },
+                      this.props.roles[item]
+                    );
+                  }, this)
+                ),
+                React.createElement(
+                  'button',
+                  { className: 'button-unstyle action_button mrgnRight5 mrgnLeft5',
+                    onClick: this.setRoleModifying.bind(null, false) },
+                  React.createElement('i', { className: 'fa fa-times' })
+                ),
+                React.createElement(
+                  'button',
+                  { className: 'button-unstyle action_button',
+                    onClick: this.confirmUserRoleChange },
+                  React.createElement('i', { className: 'fa fa-check' })
+                )
               )
             )
           ),
@@ -16626,10 +16915,36 @@ var TeamUserFlexTab = function (_React$Component2) {
                 null,
                 'Departure planned:'
               ),
-              React.createElement(
+              !this.state.departureDateModifying ? React.createElement(
                 'span',
                 { className: 'leave_date' },
-                this.props.item.departureDate
+                this.props.item.departureDate,
+                React.createElement(
+                  'button',
+                  { className: 'button-unstyle mrgnLeft5 action_button',
+                    onClick: this.setDepartureDateModifying.bind(null, true) },
+                  React.createElement('i', { className: 'fa fa-pencil' })
+                )
+              ) : React.createElement(
+                'div',
+                null,
+                React.createElement('input', { type: 'date', name: 'departureDate',
+                  id: 'departure_date',
+                  className: 'select_unstyle',
+                  value: this.state.departureDate,
+                  onChange: this.handleInput }),
+                React.createElement(
+                  'button',
+                  { className: 'button-unstyle action_button mrgnRight5 mrgnLeft5',
+                    onClick: this.setDepartureDateModifying.bind(null, false) },
+                  React.createElement('i', { className: 'fa fa-times' })
+                ),
+                React.createElement(
+                  'button',
+                  { className: 'button-unstyle action_button',
+                    onClick: this.confirmUserDepartureDateChange },
+                  React.createElement('i', { className: 'fa fa-check' })
+                )
               )
             )
           ),
@@ -16732,7 +17047,9 @@ var FlexPanels = (_dec = (0, _reactRedux.connect)(function (store) {
         this.props.flexActive && this.props.selectedItem.type === 'user' && React.createElement(TeamUserFlexTab, {
           item: this.props.selectedItem.item,
           flexActive: this.props.flexActive,
-          toggleFlexFunc: this.props.toggleFlexFunc })
+          toggleFlexFunc: this.props.toggleFlexFunc,
+          roles: this.props.userRoles,
+          dispatch: this.props.dispatch })
       );
     }
   }]);
@@ -17214,6 +17531,61 @@ function reducer() {
         }
         break;
       }
+    case "EDIT_TEAM_USER_USERNAME_FULFILLED":
+      {
+        if (state.type === 'user' && state.item.id === action.payload.id) {
+          return _extends({}, state, {
+            item: _extends({}, state.item, {
+              username: action.payload.username
+            })
+          });
+        }
+        break;
+      }
+    case "EDIT_TEAM_USER_FIRSTNAME_FULFILLED":
+      {
+        if (state.type === 'user' && state.item.id === action.payload.id) {
+          return _extends({}, state, {
+            item: _extends({}, state.item, {
+              firstName: action.payload.first_name
+            })
+          });
+        }
+        break;
+      }
+    case "EDIT_TEAM_USER_LASTNAME_FULFILLED":
+      {
+        if (state.type === 'user' && state.item.id === action.payload.id) {
+          return _extends({}, state, {
+            item: _extends({}, state.item, {
+              lastName: action.payload.last_name
+            })
+          });
+        }
+        break;
+      }
+    case "EDIT_TEAM_USER_ROLE_FULFILLED":
+      {
+        if (state.type === 'user' && state.item.id === action.payload.id) {
+          return _extends({}, state, {
+            item: _extends({}, state.item, {
+              role: action.payload.role
+            })
+          });
+        }
+        break;
+      }
+    case "EDIT_TEAM_USER_DEPARTUREDATE_FULFILLED":
+      {
+        if (state.type === 'user' && state.item.id === action.payload.id) {
+          return _extends({}, state, {
+            item: _extends({}, state.item, {
+              departureDate: action.payload.departure_date
+            })
+          });
+        }
+        break;
+      }
   }
   return state;
 }
@@ -17320,9 +17692,9 @@ function reducer() {
     users: [],
     me: null,
     roles: {
-      1: "member",
-      3: "admin",
-      7: "owner"
+      1: "Member",
+      2: "Admin",
+      3: "Owner"
     }
   };
   var action = arguments[1];
@@ -17344,9 +17716,22 @@ function reducer() {
           me: myUser
         });
       }
-    case "FETCH_USERS_REJECTED":
+    case "EDIT_TEAM_USER_USERNAME_FULFILLED":
       {
-        break;
+        var nMe = _extends({}, state.me);
+        var nUsers = state.users.map(function (item) {
+          if (item.id === action.payload.id) {
+            item.username = action.payload.username;
+          }
+          return item;
+        });
+        if (state.me && state.me.id === action.payload.id) {
+          nMe.username = action.payload.username;
+        }
+        return _extends({}, state, {
+          users: nUsers,
+          me: nMe
+        });
       }
   }
   return state;
@@ -17362,23 +17747,55 @@ function reducer() {
 var axios = __webpack_require__(45);
 
 module.exports = {
-  editTeamChannelName: function editTeamChannelName(team_id, channel_id, name) {
-    return axios.post('/api/v1/teams/EditChannelName', {
-      team_id: team_id,
-      channel_id: channel_id,
-      name: name
-    }).then(function (response) {
-      return response.data;
-    });
+  teamChannel: {
+    editName: function editName(team_id, channel_id, name) {
+      return axios.post('/api/v1/teams/EditChannelName', {
+        team_id: team_id,
+        channel_id: channel_id,
+        name: name
+      }).then(function (response) {
+        return response.data;
+      });
+    },
+    editPurpose: function editPurpose(team_id, channel_id, name) {
+      return axios.post('/api/v1/teams/EditChannelPurpose', {
+        team_id: team_id,
+        channel_id: channel_id,
+        name: name
+      }).then(function (response) {
+        return response.data;
+      });
+    }
   },
-  editTeamChannelPurpose: function editTeamChannelPurpose(team_id, channel_id, name) {
-    return axios.post('/api/v1/teams/EditChannelPurpose', {
-      team_id: team_id,
-      channel_id: channel_id,
-      name: name
-    }).then(function (response) {
-      return response.data;
-    });
+
+  teamUser: {
+    editFirstName: function editFirstName(team_id, user_id, first_name) {
+      return axios.post('/api/v1/teams/EditTeamUserFirstName', {
+        team_id: team_id,
+        user_id: user_id,
+        first_name: first_name
+      }).then(function (response) {
+        return response.data;
+      });
+    },
+    editLastName: function editLastName(team_id, user_id, last_name) {
+      return axios.post('/api/v1/teams/EditTeamUserLastName', {
+        team_id: team_id,
+        user_id: user_id,
+        last_name: last_name
+      }).then(function (response) {
+        return response.data;
+      });
+    },
+    editUsername: function editUsername(team_id, user_id, username) {
+      return axios.post('/api/v1/teams/EditTeamUserUsername', {
+        team_id: team_id,
+        user_id: user_id,
+        username: username
+      }).then(function (response) {
+        return response.data;
+      });
+    }
   }
 };
 
