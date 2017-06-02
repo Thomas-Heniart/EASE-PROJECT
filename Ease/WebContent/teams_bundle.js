@@ -16900,7 +16900,7 @@ var TeamUserFlexTab = function (_React$Component2) {
               React.createElement(
                 'span',
                 { className: 'join_date' },
-                this.props.item.arrivalDate
+                this.props.item.arrival_date
               )
             )
           ),
@@ -16918,7 +16918,7 @@ var TeamUserFlexTab = function (_React$Component2) {
               !this.state.departureDateModifying ? React.createElement(
                 'span',
                 { className: 'leave_date' },
-                this.props.item.departureDate,
+                this.props.item.departure_date,
                 React.createElement(
                   'button',
                   { className: 'button-unstyle mrgnLeft5 action_button',
@@ -17769,10 +17769,28 @@ module.exports = {
   },
 
   teamUser: {
+    editRole: function editRole(team_id, user_id, role) {
+      return axios.post('/api/v1/teams/EditTeamUserRole', {
+        team_id: team_id,
+        team_user_id: user_id,
+        role: role
+      }).then(function (response) {
+        return response.data;
+      });
+    },
+    editDepartureDate: function editDepartureDate(team_id, user_id, departure_date) {
+      return axios.post('/api/v1/teams/EditTeamUserDepartureDate', {
+        team_id: team_id,
+        team_user_id: user_id,
+        departure_date: departure_date
+      }).then(function (response) {
+        return response.data;
+      });
+    },
     editFirstName: function editFirstName(team_id, user_id, first_name) {
       return axios.post('/api/v1/teams/EditTeamUserFirstName', {
         team_id: team_id,
-        user_id: user_id,
+        team_user_id: user_id,
         first_name: first_name
       }).then(function (response) {
         return response.data;
@@ -17781,7 +17799,7 @@ module.exports = {
     editLastName: function editLastName(team_id, user_id, last_name) {
       return axios.post('/api/v1/teams/EditTeamUserLastName', {
         team_id: team_id,
-        user_id: user_id,
+        team_user_id: user_id,
         last_name: last_name
       }).then(function (response) {
         return response.data;
@@ -17790,7 +17808,7 @@ module.exports = {
     editUsername: function editUsername(team_id, user_id, username) {
       return axios.post('/api/v1/teams/EditTeamUserUsername', {
         team_id: team_id,
-        user_id: user_id,
+        team_user_id: user_id,
         username: username
       }).then(function (response) {
         return response.data;
