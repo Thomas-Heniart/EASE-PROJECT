@@ -3,6 +3,7 @@ package com.Ease.API.V1.Dashboard;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.Servlets.GetServletManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,17 +19,14 @@ import java.io.IOException;
 @WebServlet("/api/v1/dashboard/GetDashboardApp")
 public class ServletGetDashboardApp extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            String app_id = sm.getServletParam("id", true);
-            if (app_id == null || app_id.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientError, "App is null");
-            App app = sm.getUser().getDashboardManager().getAppWithID(Integer.parseInt(app_id));
-            sm.setResponse(ServletManager.Code.Success, app.getJsonWithoutId().toString());
-            sm.setLogResponse("GetDashboardApp done");
+            Integer app_id = sm.getIntParam("id", true);
+            App app = sm.getUser().getDashboardManager().getAppWithID(app_id);
+            sm.setSuccess(app.getJsonWithoutId());
         } catch (Exception e) {
-            sm.setResponse(e);
+            sm.setError(e);
         }
         sm.sendResponse();
     }

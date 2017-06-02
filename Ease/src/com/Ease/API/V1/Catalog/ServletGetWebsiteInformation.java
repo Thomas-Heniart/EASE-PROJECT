@@ -4,6 +4,7 @@ import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.Servlets.GetServletManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -19,18 +20,15 @@ import java.io.IOException;
 @WebServlet("/api/v1/catalog/GetWebsiteInformation")
 public class ServletGetWebsiteInformation extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            String website_id = sm.getServletParam("id", true);
-            if (website_id == null || website_id.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientError, "Website is null");
+            Integer website_id = sm.getIntParam("id", true);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            Website website = catalog.getWebsiteWithSingleId(Integer.parseInt(website_id));
-            sm.setResponse(ServletManager.Code.Success, website.getInformationJson().toString());
-            sm.setLogResponse("GetWebsiteInformation done.");
+            Website website = catalog.getWebsiteWithSingleId(website_id);
+            sm.setSuccess(website.getInformationJson());
         } catch (Exception e) {
-            sm.setResponse(e);
+            sm.setError(e);
         }
         sm.sendResponse();
     }

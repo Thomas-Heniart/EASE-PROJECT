@@ -7,6 +7,7 @@ import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -25,27 +26,23 @@ import java.util.List;
 @WebServlet("/api/v1/catalog/SearchTeamCatalogApps")
 public class ServletSearchTeamCatalogApps extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            User user = sm.getUser();
-            String team_id = sm.getServletParam("team_id", true);
-            String search = sm.getServletParam("q", true);
-            if (team_id == null || team_id.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientError, "Team is null.");
+            Integer team_id = sm.getIntParam("team_id", true);
+            String search = sm.getParam("q", true);
             sm.needToBeTeamUserOfTeam(team_id);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             JSONArray jsonArray = new JSONArray();
             if (search != null && !search.equals("")) {
                 for (Website website : catalog.getWebsites()) {
-                    if (website.isInCatalogForTeam(team_id) && website.getName().toLowerCase().startsWith(search.toLowerCase()) && website.work())
+                    if (website.isInCatalogForTeam(String.valueOf(team_id)) && website.getName().toLowerCase().startsWith(search.toLowerCase()) && website.work())
                         jsonArray.add(website.getSearchJson());
                 }
             }
-            sm.setResponse(ServletManager.Code.Success, jsonArray.toString());
-            sm.setLogResponse("SearchTeamCatalogApps done");
+            sm.setSuccess(jsonArray);
         } catch (Exception e) {
-            sm.setResponse(e);
+            sm.setError(e);
         }
         sm.sendResponse();
     }

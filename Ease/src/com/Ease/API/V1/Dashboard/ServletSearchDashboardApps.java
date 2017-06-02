@@ -4,6 +4,7 @@ import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.simple.JSONArray;
 
 import javax.servlet.RequestDispatcher;
@@ -21,10 +22,10 @@ import java.util.List;
 @WebServlet("/api/v1/dashboard/SearchDashboardApps")
 public class ServletSearchDashboardApps extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            String search = sm.getServletParam("q", true);
+            String search = sm.getParam("q", true);
             List<ClassicApp> classicAppList = sm.getUser().getDashboardManager().getClassicApps();
             JSONArray jsonArray = new JSONArray();
             if (search != null && !search.equals("")) {
@@ -34,10 +35,9 @@ public class ServletSearchDashboardApps extends HttpServlet {
                         jsonArray.add(classicApp.getSearchJson());
                 }
             }
-            sm.setResponse(ServletManager.Code.Success, jsonArray.toString());
-            sm.setLogResponse("SearchDashboardApps done");
+            sm.setSuccess(jsonArray);
         } catch (Exception e) {
-            sm.setResponse(e);
+            sm.setError(e);
         }
         sm.sendResponse();
     }
