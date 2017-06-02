@@ -308,24 +308,24 @@ public class TeamUser {
     public JSONObject getJson() throws GeneralException {
         JSONObject res = new JSONObject();
         res.put("id", this.db_id);
-        res.put("firstName", this.firstName);
-        res.put("lastName", this.lastName);
+        res.put("first_name", this.firstName);
+        res.put("last_name", this.lastName);
         res.put("email", this.email);
         res.put("username", this.username);
         res.put("role", this.teamUserRole.getRoleValue());
-        res.put("arrivalDate", this.arrivalDate.toString());
-        res.put("departureDate", "null");
+        res.put("arrival_date", this.arrivalDate.toString());
+        res.put("departure_date", "null");
         if (departureDate != null)
-            res.put("departureDate", this.departureDate);
+            res.put("departure_date", this.departureDate);
         JSONArray sharedApps = new JSONArray();
         for (SharedApp sharedApp : this.sharedApps) {
             sharedApps.add(sharedApp.getSharedJSON());
         }
-        res.put("sharedApps", sharedApps);
+        res.put("shared_apps", sharedApps);
         JSONArray shareableApps = new JSONArray();
         for (ShareableApp shareableApp : this.shareableApps)
             shareableApps.add(shareableApp.getShareableJson());
-        res.put("shareableApps", shareableApps);
+        res.put("shareable_apps", shareableApps);
         res.put("verified", this.verified);
         return res;
     }
