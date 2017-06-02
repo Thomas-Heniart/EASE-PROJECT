@@ -19,7 +19,7 @@ import java.io.IOException;
 /**
  * Created by thomas on 02/06/2017.
  */
-@WebServlet("/ServletEditTeamUserRole")
+@WebServlet("/api/v1/teams/EditTeamUserRole")
 public class ServletEditTeamUserRole extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
