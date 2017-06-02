@@ -1,6 +1,11 @@
 package com.Ease.Team;
 
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
+
 import javax.persistence.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by thomas on 10/04/2017.
@@ -8,6 +13,12 @@ import javax.persistence.*;
 @Entity
 @Table(name = "teamUserRoles")
 public class TeamUserRole {
+
+    private static final Map<Integer, Role> roleMap = new HashMap<Integer, Role>() {{
+        put(1, Role.MEMBER);
+        put(2, Role.ADMINISTRATOR);
+        put(3, Role.OWNER);
+    }};
 
     public enum Role {
         MEMBER(1),
@@ -62,13 +73,16 @@ public class TeamUserRole {
         return roleValue;
     }
 
-    public void setRoleValue(Integer roleValue) {
+    public void setRoleValue(Integer roleValue) throws HttpServletException {
+        Role role = roleMap.get(roleValue);
+        if (role == null)
+            throw new HttpServletException(HttpStatus.BadRequest, "This role does not exist.");
         System.out.println("Role value: " + roleValue);
         this.roleValue = roleValue;
     }
 
     public void setRole(Role role) {
-        this.setRoleValue(role.getValue());
+        this.roleValue = role.getValue();
     }
 
     public boolean haveRole(Role role) {

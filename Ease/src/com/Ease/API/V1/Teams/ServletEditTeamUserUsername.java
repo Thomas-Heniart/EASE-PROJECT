@@ -42,6 +42,7 @@ public class ServletEditTeamUserUsername extends HttpServlet {
                     throw new HttpServletException(HttpStatus.BadRequest, "Username already taken.");
             }
             teamUserToModify.editUsername(username);
+            sm.saveOrUpdate(teamUserToModify);
             sm.setSuccess("TeamUser username edited, new username.");
         } catch (Exception e) {
             sm.setError(e);

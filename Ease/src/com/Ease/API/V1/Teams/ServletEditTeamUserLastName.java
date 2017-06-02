@@ -32,10 +32,11 @@ public class ServletEditTeamUserLastName extends HttpServlet {
             TeamUser teamUserToModify = team.getTeamUserWithId(teamUser_id);
             if  (!(teamUser.isSuperior(teamUserToModify) || teamUser == teamUserToModify))
                 throw new HttpServletException(HttpStatus.Forbidden, "You don't have access.");
-            String lastName = sm.getStringParam("lastName", true);
+            String lastName = sm.getStringParam("last_name", true);
             if (lastName == null || lastName.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty lastName.");
             teamUserToModify.editLastName(lastName);
+            sm.saveOrUpdate(teamUserToModify);
             sm.setSuccess("TeamUser lastName edited.");
         } catch (Exception e) {
             sm.setError(e);
