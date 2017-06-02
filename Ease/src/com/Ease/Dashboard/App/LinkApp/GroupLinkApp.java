@@ -54,7 +54,7 @@ public class GroupLinkApp extends GroupApp {
 		String appDBid = GroupApp.createGroupApp(groupProfile, group, perms, name, common, "groupLinkApp", elevator, sm);
 		AppPermissions permissions = (AppPermissions) elevator.get("perms");
 		AppInformation appInfos = (AppInformation) elevator.get("appInfos");
-		LinkAppInformation infos = LinkAppInformation.createLinkAppInformation(url, img_url, sm);
+		LinkAppInformation infos = LinkAppInformation.createLinkAppInformation(url, img_url, db);
 		DatabaseRequest request = db.prepareRequest("INSERT INTO groupLinkApps VALUES(NULL, ?, ?);");
 		request.setInt(infos.getDb_id());
 		request.setInt(appDBid);

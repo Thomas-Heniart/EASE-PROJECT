@@ -64,6 +64,10 @@ public class PostServletManager extends ServletManager {
     }
 
     public Integer getIntParam(String paramName, boolean saveInLogs) {
-        return Math.toIntExact(getLongParam(paramName, saveInLogs));
+        Long param = getLongParam(paramName, saveInLogs);
+        if (param == null)
+            return null;
+        else
+            return Math.toIntExact(getLongParam(paramName, saveInLogs));
     }
 }

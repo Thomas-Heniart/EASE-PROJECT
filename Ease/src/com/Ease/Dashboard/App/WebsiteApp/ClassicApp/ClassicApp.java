@@ -52,7 +52,7 @@ public class ClassicApp extends WebsiteApp {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<String, Object>();
-        String websiteAppDBid = WebsiteApp.createWebsiteApp(profile, position, name, "classicApp", site, elevator, sm);
+        String websiteAppDBid = WebsiteApp.createWebsiteApp(profile, position, name, "classicApp", site, elevator, db);
         Account account = Account.createAccount(false, infos, sm);
         DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
         request.setInt(websiteAppDBid);
@@ -69,12 +69,12 @@ public class ClassicApp extends WebsiteApp {
         return new ClassicApp((String) elevator.get("appDBid"), profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, account, classicDBid);
     }
 
-    public static ClassicApp createShareableClassicApp(String name, Website website, Map<String, String> accountInformationMap, TeamUser teamUser_owner, Integer reminderValue, ServletManager sm) throws GeneralException {
+    public static ClassicApp createShareableClassicApp(String name, Website website, Map<String, String> accountInformationMap, TeamUser teamUser_owner, Integer reminderValue, PostServletManager sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<String, Object>();
-        String websiteAppDBid = WebsiteApp.createWebsiteApp(null, null, name, "classicApp", website, elevator, sm);
-        Account account = Account.createShareableAccount(accountInformationMap, teamUser_owner.getDeciphered_teamKey(), reminderValue, sm);
+        String websiteAppDBid = WebsiteApp.createWebsiteApp(null, null, name, "classicApp", website, elevator, db);
+        Account account = Account.createShareableAccount(accountInformationMap, teamUser_owner.getDeciphered_teamKey(), reminderValue, db);
         DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
         request.setInt(websiteAppDBid);
         request.setInt(account.getDBid());
@@ -87,7 +87,7 @@ public class ClassicApp extends WebsiteApp {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<String, Object>();
-        String websiteAppDBid = WebsiteApp.createWebsiteApp(profile, position, name, "classicApp", site, elevator, sm);
+        String websiteAppDBid = WebsiteApp.createWebsiteApp(profile, position, name, "classicApp", site, elevator, db);
         Account account = Account.createAccountSameAs(sameApp.getAccount(), false, sm);
         DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
         request.setInt(websiteAppDBid);
@@ -169,7 +169,7 @@ public class ClassicApp extends WebsiteApp {
         return account;
     }
     /*
-	 * 
+     *
 	 * Getter And Setter
 	 *
 	 */
@@ -249,7 +249,7 @@ public class ClassicApp extends WebsiteApp {
     public void modifyShared(ServletManager sm, JSONObject editJson) throws GeneralException {
         if (!this.havePerm(AppPermissions.Perm.EDIT))
             throw new GeneralException(ServletManager.Code.ClientError, "You cannot edit this app");
-        if (((App)this.getHolder()).isClassicApp())
+        if (((App) this.getHolder()).isClassicApp())
             this.getHolder().modifyShareable(sm, editJson, this);
         else
             this.getAccount().edit(editJson, sm);

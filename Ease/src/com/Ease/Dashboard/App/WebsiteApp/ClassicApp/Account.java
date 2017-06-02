@@ -101,12 +101,11 @@ public class Account {
         return account;
     }
 
-    public static Account createShareableAccount(Map<String, String> accountInformationMap, String deciphered_teamKey, Integer reminderValue, ServletManager sm) throws GeneralException {
+    public static Account createShareableAccount(Map<String, String> accountInformationMap, String deciphered_teamKey, Integer reminderValue, DataBaseConnection db) throws GeneralException {
         Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
         String publicKey = publicAndPrivateKey.getKey();
         String privateKey = publicAndPrivateKey.getValue();
         String ciphered_key = AES.encrypt(privateKey, deciphered_teamKey);
-        DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, ?, ?, ?, ?, 0);");
         if (reminderValue != null) {
@@ -119,7 +118,7 @@ public class Account {
         request.setString(publicKey);
         request.setString(ciphered_key);
         String db_id = request.set().toString();
-        List<AccountInformation> accountInformationList = AccountInformation.createAccountInformations(db_id, accountInformationMap, publicKey, sm.getDB());
+        List<AccountInformation> accountInformationList = AccountInformation.createAccountInformations(db_id, accountInformationMap, publicKey, db);
         db.commitTransaction(transaction);
         Account account = new Account(db_id, false, publicKey, ciphered_key, accountInformationList, (reminderValue == null ? 0 : reminderValue));
         account.setPrivateKey(privateKey);

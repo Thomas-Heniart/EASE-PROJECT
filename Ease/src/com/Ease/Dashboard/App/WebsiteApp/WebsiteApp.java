@@ -9,7 +9,8 @@ import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.*;
-import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.Servlets.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -67,10 +68,9 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         throw new GeneralException(ServletManager.Code.InternError, "Website app not complete in db.");
     }
 
-    public static String createWebsiteApp(Profile profile, Integer position, String name, String type, Website site, Map<String, Object> elevator, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public static String createWebsiteApp(Profile profile, Integer position, String name, String type, Website site, Map<String, Object> elevator, DataBaseConnection db) throws GeneralException {
         int transaction = db.startTransaction();
-        String appDBid = App.createApp(profile, position, name, "websiteApp", elevator, sm);
+        String appDBid = App.createApp(profile, position, name, "websiteApp", elevator, db);
         DatabaseRequest request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, ?, null, null);");
         request.setInt(site.getDb_id());
         request.setInt(appDBid);
@@ -79,7 +79,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         site.incrementRatio(db);
         if (site.getRatio() == 100) {
             SendGridMail mail = new SendGridMail("Agathe @Ease", "contact@ease.space");
-            mail.sendAwesomeUserEmail(site, sm);
+            mail.sendAwesomeUserEmail(site, db);
         }
         elevator.put("appDBid", appDBid);
         db.commitTransaction(transaction);
@@ -90,7 +90,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<String, Object>();
-        String appDBid = App.createApp(profile, position, name, "websiteApp", elevator, sm);
+        String appDBid = App.createApp(profile, position, name, "websiteApp", elevator, sm.getDB());
         DatabaseRequest request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, 'websiteApp', null, null);");
         request.setInt(site.getDb_id());
         request.setInt(appDBid);
@@ -99,7 +99,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         return new WebsiteApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid);
     }
 
-    public static WebsiteApp createShareableMultiApp(String name, Website website, Integer reminderValue, ServletManager sm) throws GeneralException {
+    public static WebsiteApp createShareableMultiApp(String name, Website website, Integer reminderValue, PostServletManager sm) throws GeneralException, HttpServletException {
         return createEmptyApp(null, null, name, website, reminderValue, "MONTH", sm);
     }
 
@@ -107,7 +107,22 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<String, Object>();
-        String appDBid = App.createApp(profile, position, name, "websiteApp", elevator, sm);
+        String appDBid = App.createApp(profile, position, name, "websiteApp", elevator, sm.getDB());
+        DatabaseRequest request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, 'websiteApp', ?, ?);");
+        request.setInt(site.getDb_id());
+        request.setInt(appDBid);
+        request.setInt(reminderIntervalValue);
+        request.setString(reminderIntervalType);
+        String websiteAppDBid = request.set().toString();
+        db.commitTransaction(transaction);
+        return new WebsiteApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), site, reminderIntervalValue, reminderIntervalType, websiteAppDBid);
+    }
+
+    public static WebsiteApp createEmptyApp(Profile profile, Integer position, String name, Website site, Integer reminderIntervalValue, String reminderIntervalType, PostServletManager sm) throws GeneralException, HttpServletException {
+        DataBaseConnection db = sm.getDB();
+        int transaction = db.startTransaction();
+        Map<String, Object> elevator = new HashMap<String, Object>();
+        String appDBid = App.createApp(profile, position, name, "websiteApp", elevator, sm.getDB());
         DatabaseRequest request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, 'websiteApp', ?, ?);");
         request.setInt(site.getDb_id());
         request.setInt(appDBid);
@@ -217,9 +232,9 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         super.removeFromDB(sm);
         db.commitTransaction(transaction);
     }
-	
+
 	/*
-	 * 
+     *
 	 * Getter And Setter
 	 * 
 	 */
@@ -239,7 +254,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
     public String getReminderIntervalType() {
         return reminderIntervalType;
     }
-	
+
 	/*
 	 * 
 	 * Utils

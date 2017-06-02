@@ -7,13 +7,10 @@ import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
-import org.apache.commons.lang3.StringEscapeUtils;
+import com.Ease.Utils.*;
+import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -31,53 +28,47 @@ import java.util.Map;
 @WebServlet("/api/v1/teams/CreateShareableSingleApp")
 public class ServletCreateShareableSingleApp extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            String team_id = sm.getServletParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true);
             sm.needToBeTeamUserOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
+            Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser_owner = sm.getTeamUserForTeam(team);
-            String website_id = sm.getServletParam("website_id", true);
-            String account_information_string = sm.getServletParam("account_information", false);
-            String channel_id = sm.getServletParam("channel_id", true);
-            String app_name = sm.getServletParam("name", true);
-            String description = sm.getServletParam("description", false);
-            String reminderInterval = sm.getServletParam("reminderInterval", true);
+            Integer website_id = sm.getIntParam("website_id", true);
+            JSONArray account_information = (JSONArray) sm.getParam("account_information", false);
+            Integer channel_id = sm.getIntParam("channel_id", true);
+            String app_name = sm.getStringParam("name", true);
+            String description = sm.getStringParam("description", true);
+            Integer reminderInterval = sm.getIntParam("reminderInterval", true);
             if (app_name == null || app_name.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Empty app name");
-            if (website_id == null || website_id.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientError, "Website is null");
+                throw new HttpServletException(HttpStatus.BadRequest, "Empty app name");
             if (description == null || description.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Description is null");
-            if (account_information_string == null || account_information_string.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Account information are null.");
+                throw new HttpServletException(HttpStatus.BadRequest, "Description is null");
+            if (account_information == null || account_information.isEmpty())
+                throw new HttpServletException(HttpStatus.BadRequest, "Account information are null.");
             if (reminderInterval == null || reminderInterval.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientError, "Reminder cannot be null");
-            JSONParser parser = new JSONParser();
-            JSONArray account_information = (JSONArray) parser.parse(StringEscapeUtils.unescapeHtml4(account_information_string));
-            if (account_information.isEmpty())
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Account information is empty.");
+                throw new HttpServletException(HttpStatus.BadRequest, "Reminder cannot be null");
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            Website website = catalog.getWebsiteWithSingleId(Integer.parseInt(website_id));
+            Website website = catalog.getWebsiteWithSingleId(website_id);
             Channel channel = null;
-            if (channel_id != null && !channel_id.equals(""))
-                channel = team.getChannelWithId(Integer.parseInt(channel_id));
+            if (channel_id != null)
+                channel = team.getChannelWithId(channel_id);
             Map<String, String> accountInformationMap = new HashMap<>();
             for (Object accountInformationObj : account_information) {
-                JSONObject accountInformation = (JSONObject)accountInformationObj;
-                String info_name = (String)accountInformation.get("info_name");
-                String info_value = (String)accountInformation.get("info_value");
+                JSONObject accountInformation = (JSONObject) accountInformationObj;
+                String info_name = (String) accountInformation.get("info_name");
+                String info_value = (String) accountInformation.get("info_value");
                 accountInformationMap.put(info_name, info_value);
             }
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
-            ClassicApp classicApp = ClassicApp.createShareableClassicApp(app_name, website, accountInformationMap, teamUser_owner, Integer.parseInt(reminderInterval), sm);
+            ClassicApp classicApp = ClassicApp.createShareableClassicApp(app_name, website, accountInformationMap, teamUser_owner, reminderInterval, sm);
             classicApp.becomeShareable(sm.getDB(), team, teamUser_owner, channel, description);
             db.commitTransaction(transaction);
-            sm.setResponse(ServletManager.Code.Success, "ShareableSingleApp created and single_id is " + classicApp.getSingleId());
+            sm.setSuccess("ShareableSingleApp created and single_id is " + classicApp.getSingleId());
         } catch (Exception e) {
-            sm.setResponse(e);
+            sm.setError(e);
         }
         sm.sendResponse();
     }

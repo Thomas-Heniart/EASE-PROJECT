@@ -7,9 +7,8 @@ import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.*;
+import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -25,39 +24,37 @@ import java.io.IOException;
 @WebServlet("/api/v1/teams/CreateShareableMultiApp")
 public class ServletCreateShareableMultiApp extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            String team_id = sm.getServletParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true);
             sm.needToBeTeamUserOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
+            Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser_owner = sm.getTeamUserForTeam(team);
-            String channel_id = sm.getServletParam("channel_id", true);
-            String app_name = sm.getServletParam("name", true);
-            String website_id = sm.getServletParam("website_id", true);
-            String reminderValue = sm.getServletParam("reminderInterval", true);
-            String description = sm.getServletParam("description", false);
+            Integer channel_id = sm.getIntParam("channel_id", true);
+            String app_name = sm.getStringParam("name", true);
+            Integer website_id = sm.getIntParam("website_id", true);
+            Integer reminderValue = sm.getIntParam("reminderInterval", true);
+            String description = sm.getStringParam("description", false);
             if (app_name == null || app_name.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Empty app name");
-            if (website_id == null || website_id.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Empty link.");
-            if (reminderValue == null || reminderValue.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientError, "Reminder interval is null.");
+                throw new HttpServletException(HttpStatus.BadRequest, "Empty app name");
+            if (reminderValue == null)
+                throw new HttpServletException(HttpStatus.BadRequest, "Reminder interval is null.");
             if (description == null || description.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Description is null");
+                throw new HttpServletException(HttpStatus.BadRequest, "Description is null");
             Channel channel = null;
-            if (channel_id != null && !channel_id.equals(""))
-                channel = team.getChannelWithId(Integer.parseInt(channel_id));
+            if (channel_id != null)
+                channel = team.getChannelWithId(channel_id);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            Website website = catalog.getWebsiteWithSingleId(Integer.parseInt(website_id));
+            Website website = catalog.getWebsiteWithSingleId(website_id);
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
-            WebsiteApp websiteApp = WebsiteApp.createShareableMultiApp(app_name, website, Integer.parseInt(reminderValue), sm);
+            WebsiteApp websiteApp = WebsiteApp.createShareableMultiApp(app_name, website, reminderValue, sm);
             websiteApp.becomeShareable(sm.getDB(), team, teamUser_owner, channel, description);
             db.commitTransaction(transaction);
-            sm.setResponse(ServletManager.Code.Success, "ShareableMultiApp created and single_id is " + websiteApp.getSingleId());
+            sm.setSuccess("ShareableMultiApp created and single_id is " + websiteApp.getSingleId());
         } catch (Exception e) {
-            sm.setResponse(e);
+            sm.setError(e);
         }
         sm.sendResponse();
     }

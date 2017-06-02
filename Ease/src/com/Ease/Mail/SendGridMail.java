@@ -210,9 +210,8 @@ public class SendGridMail {
         this.sendEmail();
     }
 
-    public void sendAwesomeUserEmail(Website site, ServletManager sm) throws GeneralException {
+    public void sendAwesomeUserEmail(Website site, DataBaseConnection db) throws GeneralException {
         mail.setTemplateId("2f8b2828-6e6f-42bd-a568-3da1b83ed835");
-        DataBaseConnection db = sm.getDB();
         DatabaseRequest request = db.prepareRequest("SELECT firstName, email FROM users WHERE id IN (SELECT user_id FROM integrateWebsitesAndUsersMap WHERE website_id = ?);");
         request.setInt(site.getDb_id());
         DatabaseResult rs = request.get();

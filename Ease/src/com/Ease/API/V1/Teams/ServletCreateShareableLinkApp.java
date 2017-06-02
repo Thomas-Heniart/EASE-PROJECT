@@ -8,10 +8,8 @@ import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Regex;
-import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.*;
+import com.Ease.Utils.Servlets.PostServletManager;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -33,34 +31,34 @@ import java.util.Map;
 @WebServlet("/api/v1/teams/CreateShareableLinkApp")
 public class ServletCreateShareableLinkApp extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            String team_id = sm.getServletParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true);
             sm.needToBeTeamUserOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(Integer.parseInt(team_id));
+            Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser_owner = sm.getTeamUserForTeam(team);
-            String channel_id = sm.getServletParam("channel_id", true);
-            String app_name = sm.getServletParam("name", true);
-            String link = sm.getServletParam("link", true);
-            String description = sm.getServletParam("description", false);
+            Integer channel_id = sm.getIntParam("channel_id", true);
+            String app_name = sm.getStringParam("name", true);
+            String link = sm.getStringParam("link", true);
+            String description = sm.getStringParam("description", false);
             if (app_name == null || app_name.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Empty app name");
+                throw new HttpServletException(HttpStatus.BadRequest, "Empty app name");
             if (link == null || link.equals("") || !Regex.isValidLink(link))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Empty link.");
+                throw new HttpServletException(HttpStatus.BadRequest, "Empty link.");
             if (description == null || description.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Description is null");
+                throw new HttpServletException(HttpStatus.BadRequest, "Description is null");
             Channel channel = null;
-            if (channel_id != null && !channel_id.equals(""))
-                channel = team.getChannelWithId(Integer.parseInt(channel_id));
+            if (channel_id != null)
+                channel = team.getChannelWithId(channel_id);
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
             LinkApp linkApp = LinkApp.createShareableLinkApp(app_name, link, sm);
             linkApp.becomeShareable(sm.getDB(), team, teamUser_owner, channel, description);
             db.commitTransaction(transaction);
-            sm.setResponse(ServletManager.Code.Success, "ShareableLinkApp created and single_id is " + linkApp.getSingleId());
+            sm.setSuccess("ShareableLinkApp created and single_id is " + linkApp.getSingleId());
         } catch (Exception e) {
-            sm.setResponse(e);
+            sm.setError(e);
         }
         sm.sendResponse();
     }

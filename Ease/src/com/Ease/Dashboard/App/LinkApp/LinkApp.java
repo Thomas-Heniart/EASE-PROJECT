@@ -10,7 +10,8 @@ import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.*;
-import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.Servlets.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -41,7 +42,7 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         if (rs.next()) {
             LinkAppInformation linkInfos = LinkAppInformation.loadLinkAppInformation(rs.getString(Data.LINK_APP_INFO_ID.ordinal()), db);
             /*GroupLinkApp groupLinkApp = null;
-			String groupLinkId = rs.getString(Data.GROUP_LINK_APP_ID.ordinal());
+            String groupLinkId = rs.getString(Data.GROUP_LINK_APP_ID.ordinal());
 			if (groupLinkId != null)
 				groupLinkApp  = (GroupLinkApp) GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupLinkId);*/
             IdGenerator idGenerator = (IdGenerator) context.getAttribute("idGenerator");
@@ -54,8 +55,8 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<String, Object>();
-        String appDBid = App.createApp(profile, position, name, "linkApp", elevator, sm);
-        LinkAppInformation infos = LinkAppInformation.createLinkAppInformation(url, imgUrl, sm);
+        String appDBid = App.createApp(profile, position, name, "linkApp", elevator, sm.getDB());
+        LinkAppInformation infos = LinkAppInformation.createLinkAppInformation(url, imgUrl, sm.getDB());
         DatabaseRequest request = db.prepareRequest("INSERT INTO linkApps values(NULL, ?, ?, NULL);");
         request.setInt(appDBid);
         request.setInt(infos.getDb_id());
@@ -64,7 +65,21 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         return new LinkApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), infos, linkDBid);
     }
 
-    public static LinkApp createShareableLinkApp(String name, String link, ServletManager sm) throws GeneralException {
+    public static LinkApp createLinkApp(Profile profile, Integer position, String name, String url, String imgUrl, com.Ease.Utils.Servlets.ServletManager sm) throws GeneralException, HttpServletException {
+        DataBaseConnection db = sm.getDB();
+        int transaction = db.startTransaction();
+        Map<String, Object> elevator = new HashMap<String, Object>();
+        String appDBid = App.createApp(profile, position, name, "linkApp", elevator, db);
+        LinkAppInformation infos = LinkAppInformation.createLinkAppInformation(url, imgUrl, db);
+        DatabaseRequest request = db.prepareRequest("INSERT INTO linkApps values(NULL, ?, ?, NULL);");
+        request.setInt(appDBid);
+        request.setInt(infos.getDb_id());
+        String linkDBid = request.set().toString();
+        db.commitTransaction(transaction);
+        return new LinkApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), infos, linkDBid);
+    }
+
+    public static LinkApp createShareableLinkApp(String name, String link, PostServletManager sm) throws GeneralException, HttpServletException {
         Catalog catalog = (Catalog) sm.getContextAttr("catalog");
         String linkHost = link.split("\\.")[1];
         String imgUrl = "";
@@ -75,7 +90,7 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
             imgUrl = websiteForLogo.getLogo();
         return createLinkApp(null, null, name, link, imgUrl, sm);
     }
-	
+
 	/*
 	 * 
 	 * Constructor

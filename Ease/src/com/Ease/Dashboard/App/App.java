@@ -158,8 +158,7 @@ public class App implements ShareableApp, SharedApp {
         return sharedApps;
     }
 
-    public static String createApp(Profile profile, Integer position, String name, String type, Map<String, Object> elevator, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public static String createApp(Profile profile, Integer position, String name, String type, Map<String, Object> elevator, DataBaseConnection db) throws GeneralException {
         int transaction = db.startTransaction();
         AppInformation infos = AppInformation.createAppInformation(name, db);
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

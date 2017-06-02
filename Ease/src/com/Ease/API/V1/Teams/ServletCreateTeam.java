@@ -7,9 +7,9 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Crypto.AES;
-import com.Ease.Utils.Crypto.RSA;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
+import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * Created by thomas on 12/04/2017.
@@ -26,35 +25,35 @@ import java.util.Map;
 @WebServlet("/api/v1/teams/CreateTeam")
 public class ServletCreateTeam extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
             User user = sm.getUser();
-            String digits = sm.getServletParam("digits", false);
-            String teamName = sm.getServletParam("teamName", true);
-            String firstName = sm.getServletParam("firstName", true);
-            String lastName = sm.getServletParam("lastName", true);
-            String email = sm.getServletParam("email", true);
-            String username = sm.getServletParam("username", true);
+            String digits = sm.getStringParam("digits", false);
+            String teamName = sm.getStringParam("teamName", true);
+            String firstName = sm.getStringParam("firstName", true);
+            String lastName = sm.getStringParam("lastName", true);
+            String email = sm.getStringParam("email", true);
+            String username = sm.getStringParam("username", true);
             if (teamName == null || teamName.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "teamName is needed.");
+                throw new HttpServletException(HttpStatus.BadRequest, "teamName is needed.");
             if (firstName == null || firstName.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "firstName is needed.");
+                throw new HttpServletException(HttpStatus.BadRequest, "firstName is needed.");
             if (lastName == null || lastName.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "lastName is needed.");
+                throw new HttpServletException(HttpStatus.BadRequest, "lastName is needed.");
             if (email == null || email.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "email is needed.");
+                throw new HttpServletException(HttpStatus.BadRequest, "email is needed.");
             if (username == null || username.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "username is needed.");
+                throw new HttpServletException(HttpStatus.BadRequest, "username is needed.");
             if (digits == null || digits.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "code not provided.");
-            HibernateQuery query = new HibernateQuery();
+                throw new HttpServletException(HttpStatus.BadRequest, "code not provided.");
+            HibernateQuery query = sm.getHibernateQuery();
             query.querySQLString("SELECT id FROM createTeamInvitations WHERE email = ? AND code = ?");
             query.setParameter(1, email);
             query.setParameter(2, digits);
             Object id = query.getSingleResult();
             if (id == null)
-                throw new GeneralException(ServletManager.Code.ClientWarning, "You cannot create a team.");
+                throw new HttpServletException(HttpStatus.BadRequest, "You cannot create a team.");
             String teamKey = AES.keyGenerator();
             Team team = new Team(teamName);
             String teamKey_ciphered = user.encrypt(teamKey);
@@ -63,22 +62,20 @@ public class ServletCreateTeam extends HttpServlet {
             Channel channel = new Channel(team, "General", "This is the general channel");
             team.addChannel(channel);
             channel.addTeamUser(admin);
-            query.saveOrUpdateObject(team);
-            query.saveOrUpdateObject(admin);
-            query.saveOrUpdateObject(channel);
+            sm.saveOrUpdate(team);
+            sm.saveOrUpdate(admin);
+            sm.saveOrUpdate(channel);
             query.querySQLString("DELETE FROM createTeamInvitations WHERE id = ?");
             query.setParameter(1, id);
             query.executeUpdate();
-            query.commit();
             team.addTeamUser(admin);
             admin.setDashboard_user(user, sm.getDB());
             user.addTeamUser(admin);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             teamManager.addTeam(team);
-            sm.setResponse(ServletManager.Code.Success, team.getJson().toString());
-            sm.setLogResponse("Team created");
+            sm.setSuccess(team.getJson());
         } catch (Exception e) {
-            sm.setResponse(e);
+            sm.setError(e);
         }
         sm.sendResponse();
     }

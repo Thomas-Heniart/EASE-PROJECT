@@ -17,13 +17,12 @@ public class LinkAppInformation {
     }
 
 	/*
-	 * 
+     *
 	 * Loader And Creator
 	 * 
 	 */
 
-    public static LinkAppInformation createLinkAppInformation(String link, String imgUrl, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public static LinkAppInformation createLinkAppInformation(String link, String imgUrl, DataBaseConnection db) throws GeneralException {
         DatabaseRequest request = db.prepareRequest("INSERT INTO linkAppInformations values (NULL, ?, ?);");
         request.setString(link);
         request.setString(imgUrl);

@@ -249,16 +249,15 @@ public class Team {
         }
     }
 
-    public void validateTeamUserRegistration(String deciphered_teamKey, TeamUser teamUser, ServletManager sm) throws GeneralException {
+    public void validateTeamUserRegistration(String deciphered_teamKey, TeamUser teamUser, DataBaseConnection db) throws GeneralException, HttpServletException {
         if (!this.teamUsersWaitingForVerification.contains(teamUser))
-            throw new GeneralException(ServletManager.Code.ClientError, "teamUser already validated");
-        DataBaseConnection db = sm.getDB();
+            throw new HttpServletException(HttpStatus.BadRequest, "teamUser already validated");
         DatabaseRequest request = db.prepareRequest("SELECT userKeys.publicKey FROM (userKeys JOIN users ON userKeys.id = users.key_id) JOIN teamUsers ON users.id = teamUsers.user_id WHERE teamUsers.id = ?;");
         request.setInt(teamUser.getDb_id());
         DatabaseResult rs = request.get();
         rs.next();
         String userPublicKey = rs.getString(1);
-        teamUser.validateRegistration(deciphered_teamKey, userPublicKey, sm);
+        teamUser.validateRegistration(deciphered_teamKey, userPublicKey, db);
         this.teamUsersWaitingForVerification.remove(teamUser);
     }
 
