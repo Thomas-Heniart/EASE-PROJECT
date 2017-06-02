@@ -6,11 +6,8 @@ import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.User.User;
+import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.RSA;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -346,6 +343,10 @@ public class TeamUser {
         return this.getTeamUserRole().isAdmin();
     }
 
+    public boolean isTeamOwner() {
+        return this.getTeamUserRole().isOwner();
+    }
+
     public void addSharedApp(SharedApp app) {
         this.sharedApps.add(app);
         this.sharedAppMap.put(((App) app).getSingleId(), app);
@@ -426,5 +427,10 @@ public class TeamUser {
 
     public boolean isSuperior(TeamUser teamUserToModify) {
         return this.getTeamUserRole().isSuperior(teamUserToModify.getTeamUserRole());
+    }
+
+    public void transferOwnershipTo(TeamUser new_teamUser_owner) throws HttpServletException {
+        new_teamUser_owner.getTeamUserRole().setRole(TeamUserRole.Role.OWNER);
+        this.getTeamUserRole().setRole(TeamUserRole.Role.ADMINISTRATOR);
     }
 }

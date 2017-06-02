@@ -158,6 +158,24 @@ public abstract class ServletManager {
         throw new HttpServletException(HttpStatus.Forbidden);
     }
 
+    public void needToBeOwnerOfTeam(Team team) throws HttpServletException {
+        this.needToBeTeamUser();
+        for (TeamUser teamUser : this.getUser().getTeamUsers()) {
+            if (teamUser.getTeam() == team && teamUser.isTeamOwner())
+                return;
+        }
+        throw new HttpServletException(HttpStatus.Forbidden);
+    }
+
+    public void needToBeOwnerOfTeam(Integer team_id) throws HttpServletException {
+        this.needToBeTeamUser();
+        for (TeamUser teamUser : this.getUser().getTeamUsers()) {
+            if (teamUser.getTeam().getDb_id().equals(team_id) && teamUser.isTeamOwner())
+                return;
+        }
+        throw new HttpServletException(HttpStatus.Forbidden);
+    }
+
     public HttpServletRequest getRequest() {
         return request;
     }
