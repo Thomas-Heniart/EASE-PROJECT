@@ -130,9 +130,6 @@ public class Team {
             this.channelIdMap.put(channel.getDb_id(), channel);
         for (TeamUser teamUser : this.teamUsers) {
             this.teamUserIdMap.put(teamUser.getDb_id(), teamUser);
-            System.out.println("Permissions member: " + teamUser.getTeamUserPermissions().haveRole(TeamUserPermissions.Role.MEMBER));
-            System.out.println("Permissions moderator: " + teamUser.getTeamUserPermissions().haveRole(TeamUserPermissions.Role.MODERATOR));
-            System.out.println("Permissions admin: " + teamUser.getTeamUserPermissions().haveRole(TeamUserPermissions.Role.ADMINISTRATOR));
             if (!teamUser.isVerified())
                 this.teamUsersWaitingForVerification.add(teamUser);
         }

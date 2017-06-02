@@ -67,8 +67,8 @@ public class TeamUser {
     protected Team team;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "permissions_id")
-    protected TeamUserPermissions teamUserPermissions;
+    @JoinColumn(name = "teamUserRole_id")
+    protected TeamUserRole teamUserRole;
 
     @Column(name = "username")
     protected String username;
@@ -102,7 +102,7 @@ public class TeamUser {
     @Transient
     private List<ShareableApp> shareableApps = new LinkedList<>();
 
-    public TeamUser(User user, String firstName, String lastName, String email, String username, String teamKey, Boolean verified, Date departureDate, Team team, TeamUserPermissions teamUserPermissions, List<Channel> channels) {
+    public TeamUser(User user, String firstName, String lastName, String email, String username, String teamKey, Boolean verified, Date departureDate, Team team, TeamUserRole teamUserRole, List<Channel> channels) {
         this.user = user;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -112,12 +112,12 @@ public class TeamUser {
         this.verified = verified;
         this.departureDate = departureDate;
         this.team = team;
-        this.teamUserPermissions = teamUserPermissions;
+        this.teamUserRole = teamUserRole;
         this.channels = channels;
         this.arrivalDate = new Date();
     }
 
-    public TeamUser(User user, String firstName, String lastName, String email, String username, String teamKey, Boolean verified, Team team, TeamUserPermissions teamUserPermissions, List<Channel> channels) {
+    public TeamUser(User user, String firstName, String lastName, String email, String username, String teamKey, Boolean verified, Team team, TeamUserRole teamUserRole, List<Channel> channels) {
         this.user = user;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -126,12 +126,12 @@ public class TeamUser {
         this.teamKey = teamKey;
         this.verified = verified;
         this.team = team;
-        this.teamUserPermissions = teamUserPermissions;
+        this.teamUserRole = teamUserRole;
         this.channels = channels;
         this.arrivalDate = new Date();
     }
 
-    public TeamUser(User user, String firstName, String lastName, String email, String username, String teamKey, Boolean verified, Team team, TeamUserPermissions teamUserPermissions) {
+    public TeamUser(User user, String firstName, String lastName, String email, String username, String teamKey, Boolean verified, Team team, TeamUserRole teamUserRole) {
         this.user = user;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -140,11 +140,11 @@ public class TeamUser {
         this.teamKey = teamKey;
         this.verified = verified;
         this.team = team;
-        this.teamUserPermissions = teamUserPermissions;
+        this.teamUserRole = teamUserRole;
         this.arrivalDate = new Date();
     }
 
-    public TeamUser(String firstName, String lastName, String email, String username, String teamKey, Boolean verified, Team team, TeamUserPermissions teamUserPermissions) {
+    public TeamUser(String firstName, String lastName, String email, String username, String teamKey, Boolean verified, Team team, TeamUserRole teamUserRole) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -152,7 +152,7 @@ public class TeamUser {
         this.teamKey = teamKey;
         this.verified = verified;
         this.team = team;
-        this.teamUserPermissions = teamUserPermissions;
+        this.teamUserRole = teamUserRole;
         this.arrivalDate = new Date();
     }
 
@@ -280,12 +280,12 @@ public class TeamUser {
         this.team = team;
     }
 
-    public TeamUserPermissions getTeamUserPermissions() {
-        return teamUserPermissions;
+    public TeamUserRole getTeamUserRole() {
+        return this.teamUserRole;
     }
 
-    public void setTeamUserPermissions(TeamUserPermissions teamUserPermissions) {
-        this.teamUserPermissions = teamUserPermissions;
+    public void setTeamUserRole(TeamUserRole teamUserRole) {
+        this.teamUserRole = teamUserRole;
     }
 
     public List<Channel> getChannels() {
@@ -297,8 +297,8 @@ public class TeamUser {
     }
 
     public static TeamUser createAdminUser(String firstName, String lastName, String email, String username, String teamKey, Team team) throws GeneralException {
-        TeamUserPermissions permissions = new TeamUserPermissions(TeamUserPermissions.Role.ADMINISTRATOR.getValue());
-        return new TeamUser(firstName, lastName, email, username, teamKey, true, team, permissions);
+        TeamUserRole teamUserRole = new TeamUserRole(TeamUserRole.Role.ADMINISTRATOR.getValue());
+        return new TeamUser(firstName, lastName, email, username, teamKey, true, team, teamUserRole);
     }
 
     public List<SharedApp> getSharedApps() {
@@ -312,7 +312,7 @@ public class TeamUser {
         res.put("lastName", this.lastName);
         res.put("email", this.email);
         res.put("username", this.username);
-        res.put("role", this.teamUserPermissions.getPermissions());
+        res.put("role", this.teamUserRole.getRoleValue());
         res.put("arrivalDate", this.arrivalDate.toString());
         res.put("departureDate", "null");
         if (departureDate != null)
@@ -343,7 +343,7 @@ public class TeamUser {
     }
 
     public boolean isTeamAdmin() {
-        return this.getTeamUserPermissions().hasAdminPermissions();
+        return this.getTeamUserRole().isAdmin();
     }
 
     public void addSharedApp(SharedApp app) {
@@ -402,7 +402,7 @@ public class TeamUser {
         jsonObject.put("departure_date", "Undefined");
         if (this.getDepartureDate() != null)
             jsonObject.put("departure_date", this.dateFormat.format(this.getDepartureDate()));
-        jsonObject.put("role", this.getTeamUserPermissions().getPermissions());
+        jsonObject.put("role", this.getTeamUserRole().getRoleValue());
         return jsonObject;
     }
 
@@ -422,5 +422,9 @@ public class TeamUser {
         if (firstName.equals(this.getUsername()))
             return;
         this.username = username;
+    }
+
+    public boolean isSuperior(TeamUser teamUserToModify) {
+        return this.getTeamUserRole().isSuperior(teamUserToModify.getTeamUserRole());
     }
 }

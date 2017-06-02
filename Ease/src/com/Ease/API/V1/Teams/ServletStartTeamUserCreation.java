@@ -2,10 +2,7 @@ package com.Ease.API.V1.Teams;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.SendGridMail;
-import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
-import com.Ease.Team.TeamUser;
-import com.Ease.Team.TeamUserPermissions;
+import com.Ease.Team.*;
 import com.Ease.Utils.Crypto.CodeGenerator;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Regex;
@@ -75,7 +72,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
                 }
             }
             if (res.get("success") == null) {
-                TeamUser teamUser = new TeamUser(first_name, last_name, email, username, null, false, team, new TeamUserPermissions(role));
+                TeamUser teamUser = new TeamUser(first_name, last_name, email, username, null, false, team, new TeamUserRole(role));
                 team.getGeneralChannel().addTeamUser(teamUser);
                 query.saveOrUpdateObject(team);
                 team.addTeamUser(teamUser);

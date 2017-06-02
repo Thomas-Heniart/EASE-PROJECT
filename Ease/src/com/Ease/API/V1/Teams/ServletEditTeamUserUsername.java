@@ -28,16 +28,20 @@ public class ServletEditTeamUserUsername extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = sm.getTeamUserForTeam(team);
+            Integer teamUser_id = sm.getIntParam("teamUser_id", true);
+            TeamUser teamUserToModify = team.getTeamUserWithId(teamUser_id);
+            if (!(teamUser.isSuperior(teamUserToModify) || teamUser == teamUserToModify))
+                throw new HttpServletException(HttpStatus.Forbidden, "You don't have access.");
             String username = sm.getStringParam("username", true);
             if (username == null || username.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty username.");
             for (TeamUser teamUser1 : team.getTeamUsers()) {
-                if (teamUser1 == teamUser)
+                if (teamUser1 == teamUserToModify)
                     continue;
                 if (teamUser1.getUsername().equals(username))
                     throw new HttpServletException(HttpStatus.BadRequest, "Username already taken.");
             }
-            teamUser.editUsername(username);
+            teamUserToModify.editUsername(username);
             sm.setSuccess("TeamUser username edited, new username.");
         } catch (Exception e) {
             sm.setError(e);

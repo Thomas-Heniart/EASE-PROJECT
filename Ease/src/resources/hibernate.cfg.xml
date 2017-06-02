@@ -18,7 +18,7 @@
         <mapping class="com.Ease.Team.Team"/>
         <mapping class="com.Ease.Team.Channel"/>
         <mapping class="com.Ease.Team.TeamUser"/>
-        <mapping class="com.Ease.Team.TeamUserPermissions"/>
+        <mapping class="com.Ease.Team.TeamUserRole"/>
         <mapping class="com.Ease.NewDashboard.App.App"/>
         <mapping class="com.Ease.NewDashboard.App.AppInformation"/>
         <mapping class="com.Ease.NewDashboard.Profile.ProfileApp"/>

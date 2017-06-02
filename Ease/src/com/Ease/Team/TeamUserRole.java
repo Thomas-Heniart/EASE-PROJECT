@@ -1,22 +1,18 @@
 package com.Ease.Team;
 
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
-
 import javax.persistence.*;
 
 /**
  * Created by thomas on 10/04/2017.
  */
 @Entity
-@Table(name = "teamUserPermissions")
-public class TeamUserPermissions {
+@Table(name = "teamUserRoles")
+public class TeamUserRole {
+
     public enum Role {
         MEMBER(1),
-        MODERATOR(3),
-        ADMINISTRATOR(7);
+        ADMINISTRATOR(2),
+        OWNER(3);
 
         private int value;
 
@@ -41,17 +37,17 @@ public class TeamUserPermissions {
     @Column(name = "id")
     protected Integer db_id;
 
-    @Column(name = "permissions")
-    protected Integer permissions;
+    @Column(name = "role")
+    protected Integer roleValue;
 
     @Transient
     protected Role role;
 
-    public TeamUserPermissions(Integer permissions) {
-        this.permissions = permissions;
+    public TeamUserRole(Integer roleValue) {
+        this.roleValue = roleValue;
     }
 
-    public TeamUserPermissions() {
+    public TeamUserRole() {
     }
 
     public Integer getDb_id() {
@@ -62,24 +58,32 @@ public class TeamUserPermissions {
         this.db_id = db_id;
     }
 
-    public Integer getPermissions() {
-        return permissions;
+    public Integer getRoleValue() {
+        return roleValue;
     }
 
-    public void setPermissions(Integer permissions) {
-        System.out.println("Permissions value: " + permissions);
-        this.permissions = permissions;
+    public void setRoleValue(Integer roleValue) {
+        System.out.println("Role value: " + roleValue);
+        this.roleValue = roleValue;
+    }
+
+    public void setRole(Role role) {
+        this.setRoleValue(role.getValue());
     }
 
     public boolean haveRole(Role role) {
-        return (this.permissions & role.getValue()) >= role.getValue();
+        return (this.roleValue & role.getValue()) >= role.getValue();
     }
 
-    public boolean hasAdminPermissions() {
+    public boolean isAdmin() {
         return this.haveRole(Role.ADMINISTRATOR);
     }
 
-    public String getRole() {
-        return Role.getRoleNameByValue(this.permissions);
+    public boolean isOwner() {
+        return this.haveRole(Role.OWNER);
+    }
+
+    public boolean isSuperior(TeamUserRole teamUserRole) {
+        return this.getRoleValue() > teamUserRole.getRoleValue();
     }
 }
