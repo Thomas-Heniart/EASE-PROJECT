@@ -29,7 +29,7 @@ public class ServletEditTeamUserRole extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = sm.getTeamUserForTeam(team);
-            Integer teamUser_id = sm.getIntParam("teamUser_id", true);
+            Integer teamUser_id = sm.getIntParam("team_user_id", true);
             TeamUser teamUserToModify = team.getTeamUserWithId(teamUser_id);
             if (!(teamUser.isSuperior(teamUserToModify) || teamUser == teamUserToModify))
                 throw new HttpServletException(HttpStatus.Forbidden, "You don't have access.");

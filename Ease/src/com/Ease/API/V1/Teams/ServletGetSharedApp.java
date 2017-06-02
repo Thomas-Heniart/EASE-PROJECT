@@ -28,7 +28,7 @@ public class ServletGetSharedApp extends HttpServlet {
             sm.needToBeTeamUserOfTeam(team_id);
             /* @TODO For the moment we use single_id but it will be replaced by db_id in the future */
             Integer app_id = sm.getIntParam("app_id", true);
-            Integer teamUser_id = sm.getIntParam("teamUser_id", true);
+            Integer teamUser_id = sm.getIntParam("team_user_id", true);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = sm.getTeamUserForTeam(team);

@@ -33,7 +33,7 @@ public class ServletTransferOwnership extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = sm.getTeamUserForTeam(team);
-            Integer teamUser_id = sm.getIntParam("teamUser_id", true);
+            Integer teamUser_id = sm.getIntParam("team_user_id", true);
             TeamUser new_teamUser_owner = team.getTeamUserWithId(teamUser_id);
             teamUser.transferOwnershipTo(new_teamUser_owner);
             sm.saveOrUpdate(new_teamUser_owner);

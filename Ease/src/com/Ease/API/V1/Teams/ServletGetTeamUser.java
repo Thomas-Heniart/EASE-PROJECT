@@ -23,7 +23,7 @@ public class ServletGetTeamUser extends HttpServlet {
         try {
             sm.needToBeTeamUser();
             Integer team_id = sm.getIntParam("team_id", true);
-            Integer teamUser_id = sm.getIntParam("teamUser_id", true);
+            Integer teamUser_id = sm.getIntParam("team_user_id", true);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);

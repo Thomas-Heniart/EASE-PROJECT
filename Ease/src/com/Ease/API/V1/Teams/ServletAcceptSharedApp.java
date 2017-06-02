@@ -1,6 +1,8 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.Account;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -29,9 +31,12 @@ public class ServletAcceptSharedApp extends HttpServlet {
             App app = (App) teamUser.getSharedAppWithId(app_id);
             if (!app.isClassicApp())
                 throw new HttpServletException(HttpStatus.BadRequest, "Impossible to accept this app");
-            /* @TODO */
-            /* if (app.isClassicApp())
-              ((ClassicApp)app).getAccount().de.decipherAndCipher(teamUser.getDeciphered_teamPrivateKey(), sm); */
+            if (((App) app.getHolder()).isClassicApp()) {
+                Account account = ((ClassicApp) app).getAccount();
+                account.decipherWithTeamKeyIfNeeded(teamUser.getDeciphered_teamKey());
+                account.cipherWithKeyUser(sm);
+            }
+            app.beReceived(sm.getDB());
             sm.setSuccess("App accepted");
         } catch (Exception e) {
             sm.setError(e);
