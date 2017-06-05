@@ -46,8 +46,8 @@ public class ServletCreateShareableLinkApp extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty app name");
             if (link == null || link.equals("") || !Regex.isValidLink(link))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty link.");
-            if (description == null || description.equals(""))
-                throw new HttpServletException(HttpStatus.BadRequest, "Description is null");
+            if (description == null)
+                description = "";
             Channel channel = null;
             if (channel_id != null)
                 channel = team.getChannelWithId(channel_id);

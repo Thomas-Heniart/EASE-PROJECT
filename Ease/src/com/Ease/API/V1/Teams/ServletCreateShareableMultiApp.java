@@ -34,14 +34,14 @@ public class ServletCreateShareableMultiApp extends HttpServlet {
             Integer channel_id = sm.getIntParam("channel_id", true);
             String app_name = sm.getStringParam("name", true);
             Integer website_id = sm.getIntParam("website_id", true);
-            Integer reminderValue = sm.getIntParam("reminder_interval", true);
+            Integer reminderValue = Integer.parseInt(sm.getStringParam("reminder_interval", true));
             String description = sm.getStringParam("description", false);
             if (app_name == null || app_name.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty app name");
             if (reminderValue == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "Reminder interval is null.");
-            if (description == null || description.equals(""))
-                throw new HttpServletException(HttpStatus.BadRequest, "Description is null");
+            if (description == null)
+                description = "";
             Channel channel = null;
             if (channel_id != null)
                 channel = team.getChannelWithId(channel_id);

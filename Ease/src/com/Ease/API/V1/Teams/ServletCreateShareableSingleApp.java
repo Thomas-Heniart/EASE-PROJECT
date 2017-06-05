@@ -40,14 +40,14 @@ public class ServletCreateShareableSingleApp extends HttpServlet {
             Integer channel_id = sm.getIntParam("channel_id", true);
             String app_name = sm.getStringParam("name", true);
             String description = sm.getStringParam("description", true);
-            Integer reminderInterval = sm.getIntParam("reminder_interval", true);
+            Integer reminderInterval = Integer.parseInt(sm.getStringParam("reminder_interval", true));
             if (app_name == null || app_name.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty app name");
-            if (description == null || description.equals(""))
-                throw new HttpServletException(HttpStatus.BadRequest, "Description is null");
+            if (description == null)
+                description = "";
             if (account_information == null || account_information.isEmpty())
                 throw new HttpServletException(HttpStatus.BadRequest, "Account information are null.");
-            if (reminderInterval == null || reminderInterval.equals(""))
+            if (reminderInterval == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "Reminder cannot be null");
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website website = catalog.getWebsiteWithSingleId(website_id);
