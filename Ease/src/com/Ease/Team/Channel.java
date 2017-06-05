@@ -129,10 +129,10 @@ public class Channel {
         for (TeamUser teamUser : this.getTeamUsers())
             teamUsers.add(teamUser.getDb_id());
         res.put("userIds", teamUsers);
-        JSONArray apps = new JSONArray();
-        for (SharedApp sharedApp : this.getSharedApps())
+        /* JSONArray apps = new JSONArray();
+         for (SharedApp sharedApp : this.getSharedApps())
             apps.add(sharedApp.getSharedJSON());
-        res.put("apps", apps);
+        res.put("apps", apps); */
         res.put("purpose", this.purpose);
         return res;
     }
