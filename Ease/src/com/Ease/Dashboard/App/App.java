@@ -510,6 +510,14 @@ public class App implements ShareableApp, SharedApp {
     }
 
     @Override
+    public SharedApp getSharedAppWithId(Integer sharedApp_id) throws HttpServletException {
+        SharedApp sharedApp = this.sharedAppIdMap.get(sharedApp_id);
+        if (sharedApp == null)
+            throw new HttpServletException(HttpStatus.BadRequest, "Wrong shared app id");
+        return sharedApp;
+    }
+
+    @Override
     public void setTeamUser_owner(TeamUser teamUser_owner) {
         teamUser_owner.addShareableApp(this);
         this.teamUser_owner = teamUser_owner;
