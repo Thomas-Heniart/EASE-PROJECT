@@ -263,4 +263,26 @@ public class Team {
             return;
         this.name = name;
     }
+
+    public JSONArray getShareableAppsForChannel(Integer channel_id) throws GeneralException {
+        Channel channel = this.getChannelWithId(channel_id);
+        JSONArray jsonArray = new JSONArray();
+        for (ShareableApp shareableApp : this.getShareableApps()) {
+            if (channel != shareableApp.getChannel())
+                continue;
+            jsonArray.add(shareableApp.getShareableJson());
+        }
+        return jsonArray;
+    }
+
+    public JSONArray getShareableAppsForTeamUser(Integer teamUser_id) throws GeneralException {
+        TeamUser teamUser = this.getTeamUserWithId(teamUser_id);
+        JSONArray jsonArray = new JSONArray();
+        for (ShareableApp shareableApp : this.getShareableApps()) {
+            if (!shareableApp.getTeamUser_tenants().contains(teamUser))
+                continue;
+            jsonArray.add(shareableApp.getShareableJson());
+        }
+        return jsonArray;
+    }
 }
