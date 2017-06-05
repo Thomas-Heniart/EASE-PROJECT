@@ -40,7 +40,7 @@ public class ServletCreateShareableSingleApp extends HttpServlet {
             Integer channel_id = sm.getIntParam("channel_id", true);
             String app_name = sm.getStringParam("name", true);
             String description = sm.getStringParam("description", true);
-            Integer reminderInterval = sm.getIntParam("reminderInterval", true);
+            Integer reminderInterval = sm.getIntParam("reminder_interval", true);
             if (app_name == null || app_name.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty app name");
             if (description == null || description.equals(""))

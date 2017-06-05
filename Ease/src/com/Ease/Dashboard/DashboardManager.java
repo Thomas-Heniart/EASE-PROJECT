@@ -40,7 +40,6 @@ public class DashboardManager {
         this.profileIDMap = new HashMap<Integer, Profile>();
         this.profiles = Profile.loadProfiles(user, sm);
         this.initializeProfilesAndApps();
-        System.out.println(this.apps.size());
     }
 
     private void initializeProfilesAndApps() {

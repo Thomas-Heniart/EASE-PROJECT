@@ -90,7 +90,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
                 SendGridMail sendGridMail = new SendGridMail("Benjamin @EaseSpace", "benjamin@ease.space");
                 sendGridMail.sendInvitationToJoinTeamEmail(team.getName(), adminTeamUser.getFirstName(), email, code);
                 res.put("success", true);
-                res.put("teamUser_id", teamUser.getDb_id());
+                res.put("team_user_id", teamUser.getDb_id());
                 res.put("username", username);
             }
             sm.setSuccess(res);

@@ -1,6 +1,5 @@
 package com.Ease.Hibernate;
 
-import com.Ease.Utils.ServletManager;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -19,10 +18,7 @@ public class HibernateQuery {
     protected Query query;
 
     public HibernateQuery() {
-        if (HibernateDatabase.getSessionFactory().isOpen())
-            this.session = HibernateDatabase.getSessionFactory().getCurrentSession();
-        else
-            this.session = HibernateDatabase.getSessionFactory().openSession();
+        this.session = HibernateDatabase.getSessionFactory().getCurrentSession();
         this.transaction = this.session.beginTransaction();
     }
 
@@ -48,15 +44,16 @@ public class HibernateQuery {
 
     public void commit() {
         try {
-            this.session.flush();
+            //this.session.flush();
             this.transaction.commit();
         } catch (RuntimeException e) {
             this.transaction.rollback();
-        } finally {
+        } /* finally {
             if (this.session != null) {
+                System.out.println("Hibernate close session.");
                 this.session.close();
             }
-        }
+        } */
     }
 
     public Object load(Class c, Serializable s) {
@@ -85,9 +82,9 @@ public class HibernateQuery {
 
     public void rollback() {
         this.transaction.rollback();
-        if (this.session != null) {
+        /* if (this.session != null) {
             this.session.close();
-        }
+        } */
     }
 
 }

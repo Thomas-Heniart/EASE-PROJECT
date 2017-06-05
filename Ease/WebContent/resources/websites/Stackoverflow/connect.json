@@ -1,0 +1,29 @@
+{
+  "name":"Stackoverflow",
+  "lastLogin":"",
+  "home":"https://stackoverflow.com/",
+  "connect":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='login']"},
+      {"action":"fill", "what":"login", "search":"#login-form #email", "grave":true},
+      {"action":"fill", "what":"password", "search":"#login-form #password"},
+      {"action":"click", "search":"#login-form #submit-button"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"goto","url":"https://stackoverflow.com/users/logout"},
+      {"action":"click", "search":"form[action*='logout'] input[type='submit']"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a.my-profile, a.login-link"},
+    {"search":"a.my-profile"}
+  ],
+  "Facebook":{
+    "todo":[
+      {"action":"aclick", "search":"a.login-link"},
+      {"action":"click", "search":"div.facebook-login"}
+    ]
+  }
+}

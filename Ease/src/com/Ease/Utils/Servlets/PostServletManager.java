@@ -23,6 +23,8 @@ public class PostServletManager extends ServletManager {
         while ((buffer = br.readLine()) != null)
             json += buffer;
         br.close();
+        if (!json.startsWith("{"))
+            return;
         JSONParser jsonParser = new JSONParser();
         try {
             params = (JSONObject) jsonParser.parse(json);

@@ -48,7 +48,6 @@ public class Keys {
         String keyUser;
         //-- Pour mettre à jour la crypto (nouveau hashage et nouveau salage.
         if (saltEase != null) {
-            System.out.println("reset keys");
             String hashedPass = Hashing.SHA(password, saltEase);
             if (hashedPass.equals(hashed_password) == false) {
                 throw new GeneralException(ServletManager.Code.UserMiss, "Wrong email or password.");
@@ -75,7 +74,6 @@ public class Keys {
             }
             keyUser = AES.decryptUserKey(crypted_keyUser, password, saltPerso);
         }
-        System.out.println("publicKey: " + publicKey == null ? "null" : publicKey);
         if (publicKey == null || publicKey.equals("") || publicKey.equals("NULL")) {
             Map<String, String> publicAndPrivateKeys = RSA.generateKeys(1);
             for (Map.Entry<String, String> publicAndPrivateKey : publicAndPrivateKeys.entrySet()) {
@@ -107,7 +105,6 @@ public class Keys {
         String hashed_password = rs.getString(Data.PASSWORD.ordinal());
         String saltPerso = rs.getString(Data.SALTPERSO.ordinal());
         String publicKey = rs.getString("publicKey");
-        System.out.println("publicKey: " + publicKey == null ? "null" : publicKey);
         String ciphered_privateKey = rs.getString("privateKey");
         String privateKey = null;
         if (publicKey == null || publicKey.equals("") || publicKey.equals("NULL")) {
@@ -158,7 +155,6 @@ public class Keys {
             privateKey = publicAndPrivateKey.getValue();
         }
         String privateKey_ciphered = AES.encrypt(privateKey, keyUser);
-        System.out.println("PrivateKey length: " + privateKey.length() + " & ciphered length: " + privateKey_ciphered.length());
         DatabaseRequest request = db.prepareRequest("INSERT INTO userKeys VALUES(NULL, ?, null, ?, ?, ?, ?, ?);");
         request.setString(hashed_password);
         request.setString(saltPerso);

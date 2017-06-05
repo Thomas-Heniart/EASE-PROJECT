@@ -106,7 +106,6 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         this.linkInfos = linkInfos;
         this.groupLinkApp = (GroupLinkApp) groupApp;
         this.linkAppDBid = linkAppDBid;
-        System.out.println("LinkApp single_id: " + single_id);
     }
 
     public LinkApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, LinkAppInformation linkInfos, String linkAppDBid, ShareableApp holder) {
@@ -114,7 +113,6 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         this.linkInfos = linkInfos;
         this.groupLinkApp = (GroupLinkApp) groupApp;
         this.linkAppDBid = linkAppDBid;
-        System.out.println("LinkApp single_id: " + single_id);
     }
 
     public void removeFromDB(ServletManager sm) throws GeneralException {

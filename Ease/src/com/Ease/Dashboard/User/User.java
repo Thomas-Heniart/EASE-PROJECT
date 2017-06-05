@@ -191,7 +191,6 @@ public class User {
         newUser.passStep("CGU", db);
         newUser.passStep("first_connection", db);
         newUser.initializeUpdateManager(sm);
-        System.out.println("Groups size" + groups.size());
         if (groups.isEmpty())
             newUser.sendVerificationEmail(email, true, sm);
         ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
@@ -663,9 +662,7 @@ public class User {
         List<Object[]> teamUsers = query.list();
         for (Object[] teamUserIdAndTeamId : teamUsers) {
             Integer teamUser_id = (Integer) teamUserIdAndTeamId[0];
-            System.out.println("TeamUserId: " + teamUser_id);
             Integer team_id = (Integer) teamUserIdAndTeamId[1];
-            System.out.println("TeamId: " + team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
@@ -674,7 +671,6 @@ public class User {
             if (teamUser.isVerified())
                 teamUser.decipher_teamKey();
         }
-        System.out.println("teamUsers: " + this.teamUsers.size());
         query.commit();
     }
 
