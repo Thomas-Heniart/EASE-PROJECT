@@ -316,12 +316,12 @@ public abstract class ServletManager {
                             System.out.println("Rollback failed");
                         }
                     } else {
+                        if (this.hibernateQuery != null)
+                            this.hibernateQuery.commit();
                         if (this.jsonArrayResponse != null)
                             response.getWriter().print(this.jsonArrayResponse.toString());
                         else
                             response.getWriter().print(this.jsonObjectResponse.toString());
-                        if (this.hibernateQuery != null)
-                            this.hibernateQuery.commit();
                     }
                 }
 
