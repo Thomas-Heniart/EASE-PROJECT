@@ -33,7 +33,7 @@ public class ServletShareApp extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser_owner = sm.getTeamUserForTeamId(team_id);
-            Integer teamUser_tenant_id = sm.getIntParam("teamUser_tenant_id", true);
+            Integer teamUser_tenant_id = sm.getIntParam("team_user_id", true);
             TeamUser teamUser_tenant = team.getTeamUserWithId(teamUser_tenant_id);
             Integer app_id = sm.getIntParam("app_id", true);
             ShareableApp shareableApp = team.getShareableAppWithId(app_id);
