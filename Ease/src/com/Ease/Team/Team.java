@@ -24,7 +24,7 @@ import java.util.Map;
 @Table(name = "teams")
 public class Team {
 
-    public static List<Team> loadTeams(ServletContext context, DataBaseConnection db) throws GeneralException {
+    public static List<Team> loadTeams(ServletContext context, DataBaseConnection db) throws HttpServletException {
         List<Team> teams = new LinkedList<>();
         HibernateQuery query = new HibernateQuery();
         query.queryString("SELECT t FROM Team t");
@@ -127,7 +127,7 @@ public class Team {
             this.addShareableApp(shareableApp);
     }
 
-    public void lazyInitialize(DataBaseConnection db) throws GeneralException {
+    public void lazyInitialize(DataBaseConnection db) {
         for (Channel channel : this.getChannels())
             this.channelIdMap.put(channel.getDb_id(), channel);
         for (TeamUser teamUser : this.teamUsers) {
@@ -138,17 +138,17 @@ public class Team {
 
     }
 
-    public Channel getChannelWithId(Integer channel_id) throws GeneralException {
+    public Channel getChannelWithId(Integer channel_id) throws HttpServletException {
         Channel channel = this.channelIdMap.get(channel_id);
         if (channel == null)
-            throw new GeneralException(ServletManager.Code.ClientError, "This channel does not exist");
+            throw new HttpServletException(HttpStatus.BadRequest, "This channel does not exist");
         return channel;
     }
 
-    public TeamUser getTeamUserWithId(Integer teamUser_id) throws GeneralException {
+    public TeamUser getTeamUserWithId(Integer teamUser_id) throws HttpServletException {
         TeamUser teamUser = this.teamUserIdMap.get(teamUser_id);
         if (teamUser == null)
-            throw new GeneralException(ServletManager.Code.ClientError, "This teamUser does not exist");
+            throw new HttpServletException(HttpStatus.BadRequest, "This teamUser does not exist");
         return teamUser;
     }
 
@@ -165,10 +165,10 @@ public class Team {
     }
 
     /* @TODO For the moment we use single_id but it will be replaced by db_id in the future */
-    public ShareableApp getShareableAppWithId(Integer single_id) throws GeneralException {
+    public ShareableApp getShareableAppWithId(Integer single_id) throws HttpServletException {
         ShareableApp shareableApp = this.shareableAppMap.get(single_id);
         if (shareableApp == null)
-            throw new GeneralException(ServletManager.Code.ClientError, "This shareable app does not exist.");
+            throw new HttpServletException(HttpStatus.BadRequest, "This shareable app does not exist.");
         return shareableApp;
     }
 
@@ -178,12 +178,12 @@ public class Team {
         this.shareableAppMap.put(((App) shareableApp).getSingleId(), shareableApp);
     }
 
-    public Channel getGeneralChannel() throws GeneralException {
+    public Channel getGeneralChannel() throws HttpServletException {
         for (Channel channel : this.getChannels()) {
             if (channel.getName().equals("General"))
                 return channel;
         }
-        throw new GeneralException(ServletManager.Code.ClientError, "No general channel");
+        throw new HttpServletException(HttpStatus.BadRequest, "No general channel");
     }
 
     public void removeTeamUser(TeamUser teamUser) {
@@ -204,7 +204,7 @@ public class Team {
             this.name = name;
     }
 
-    public JSONObject getJson() throws GeneralException, HttpServletException {
+    public JSONObject getJson() throws HttpServletException {
         JSONObject res = new JSONObject();
         res.put("name", this.name);
         res.put("id", this.db_id);
@@ -248,16 +248,21 @@ public class Team {
         }
     }
 
-    public void validateTeamUserRegistration(String deciphered_teamKey, TeamUser teamUser, DataBaseConnection db) throws GeneralException, HttpServletException {
+    public void validateTeamUserRegistration(String deciphered_teamKey, TeamUser teamUser, DataBaseConnection db) throws HttpServletException {
         if (!this.teamUsersWaitingForVerification.contains(teamUser))
             throw new HttpServletException(HttpStatus.BadRequest, "teamUser already validated");
-        DatabaseRequest request = db.prepareRequest("SELECT userKeys.publicKey FROM (userKeys JOIN users ON userKeys.id = users.key_id) JOIN teamUsers ON users.id = teamUsers.user_id WHERE teamUsers.id = ?;");
-        request.setInt(teamUser.getDb_id());
-        DatabaseResult rs = request.get();
-        rs.next();
-        String userPublicKey = rs.getString(1);
-        teamUser.validateRegistration(deciphered_teamKey, userPublicKey, db);
-        this.teamUsersWaitingForVerification.remove(teamUser);
+        try {
+            DatabaseRequest request = db.prepareRequest("SELECT userKeys.publicKey FROM (userKeys JOIN users ON userKeys.id = users.key_id) JOIN teamUsers ON users.id = teamUsers.user_id WHERE teamUsers.id = ?;");
+            request.setInt(teamUser.getDb_id());
+            DatabaseResult rs = request.get();
+            rs.next();
+            String userPublicKey = rs.getString(1);
+            teamUser.validateRegistration(deciphered_teamKey, userPublicKey, db);
+            this.teamUsersWaitingForVerification.remove(teamUser);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError);
+        }
+
     }
 
     public void editName(String name) {
@@ -266,7 +271,7 @@ public class Team {
         this.name = name;
     }
 
-    public JSONArray getShareableAppsForChannel(Integer channel_id) throws GeneralException, HttpServletException {
+    public JSONArray getShareableAppsForChannel(Integer channel_id) throws HttpServletException {
         Channel channel = this.getChannelWithId(channel_id);
         JSONArray jsonArray = new JSONArray();
         for (ShareableApp shareableApp : this.getShareableApps()) {
@@ -277,7 +282,7 @@ public class Team {
         return jsonArray;
     }
 
-    public JSONArray getShareableAppsForTeamUser(Integer teamUser_id) throws GeneralException, HttpServletException {
+    public JSONArray getShareableAppsForTeamUser(Integer teamUser_id) throws HttpServletException {
         TeamUser teamUser = this.getTeamUserWithId(teamUser_id);
         JSONArray jsonArray = new JSONArray();
         for (ShareableApp shareableApp : this.getShareableApps()) {
@@ -288,18 +293,24 @@ public class Team {
         return jsonArray;
     }
 
-    public void decipherApps(String deciphered_teamKey) throws GeneralException {
-        for (ShareableApp shareableApp : this.getShareableApps()) {
-            App app = (App) shareableApp;
-            if (app.isClassicApp())
-                ((ClassicApp) app).getAccount().decipherWithTeamKeyIfNeeded(deciphered_teamKey);
-            else if (app.isEmpty()) {
-                for (SharedApp sharedApp : shareableApp.getSharedApps()) {
-                    App app1 = (App) sharedApp;
-                    if (app1.isClassicApp())
-                        ((ClassicApp) app1).getAccount().decipherWithTeamKeyIfNeeded(deciphered_teamKey);
+    public void decipherApps(String deciphered_teamKey) throws HttpServletException {
+        try {
+            for (ShareableApp shareableApp : this.getShareableApps()) {
+                App app = (App) shareableApp;
+                if (app.isClassicApp())
+
+                    ((ClassicApp) app).getAccount().decipherWithTeamKeyIfNeeded(deciphered_teamKey);
+
+                else if (app.isEmpty()) {
+                    for (SharedApp sharedApp : shareableApp.getSharedApps()) {
+                        App app1 = (App) sharedApp;
+                        if (app1.isClassicApp())
+                            ((ClassicApp) app1).getAccount().decipherWithTeamKeyIfNeeded(deciphered_teamKey);
+                    }
                 }
             }
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError);
         }
     }
 }

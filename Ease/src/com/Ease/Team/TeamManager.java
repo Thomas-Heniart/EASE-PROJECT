@@ -1,8 +1,6 @@
 package com.Ease.Team;
 
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.*;
 
 import javax.servlet.ServletContext;
 import java.util.HashMap;
@@ -17,7 +15,7 @@ public class TeamManager {
     protected List<Team> teams;
     protected HashMap<Integer, Team> teamIdMap;
 
-    public TeamManager(ServletContext context, DataBaseConnection db) throws GeneralException {
+    public TeamManager(ServletContext context, DataBaseConnection db) throws HttpServletException {
         this.teams = Team.loadTeams(context, db);
         this.teamIdMap = new HashMap<>();
         for (Team team : this.teams)
@@ -29,10 +27,10 @@ public class TeamManager {
         return teams;
     }
 
-    public Team getTeamWithId(Integer team_id) throws GeneralException {
+    public Team getTeamWithId(Integer team_id) throws HttpServletException {
         Team team = this.teamIdMap.get(team_id);
         if (team == null)
-            throw new GeneralException(ServletManager.Code.ClientError, "No such team");
+            throw new HttpServletException(HttpStatus.BadRequest, "No such team");
         return team;
     }
 
@@ -46,7 +44,7 @@ public class TeamManager {
         this.teamIdMap.remove(team.getDb_id());
     }
 
-    public void removeTeamWithId(Integer team_id) throws GeneralException {
+    public void removeTeamWithId(Integer team_id) throws HttpServletException {
         Team team = this.getTeamWithId(team_id);
         this.removeTeam(team);
     }

@@ -207,7 +207,7 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
     }
 
     @Override
-    public JSONObject getShareableJson() throws GeneralException, HttpServletException {
+    public JSONObject getShareableJson() throws HttpServletException {
         JSONObject res = super.getShareableJson();
         res.put("type", "link");
         res.put("logo", this.getLinkAppInformations().getImgUrl());

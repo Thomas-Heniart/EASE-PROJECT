@@ -39,7 +39,7 @@ public interface ShareableApp {
 
     public SharedApp getSharedAppWithId(Integer sharedApp_id) throws HttpServletException;
 
-    public JSONObject getShareableJson() throws GeneralException, HttpServletException;
+    public JSONObject getShareableJson() throws HttpServletException;
 
     public JSONObject getNeededParams(PostServletManager sm) throws GeneralException;
 

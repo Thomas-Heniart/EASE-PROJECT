@@ -276,7 +276,7 @@ public class ServletManager {
         try {
             //System.out.println("wMessages loop start");
             /*for (WebsocketMessage msg : this.messages) {
-				websockets.forEach((key, socket) -> {
+                websockets.forEach((key, socket) -> {
 					System.out.println( (user == null ? "No user" : user.getFirstName()) + " client socketId : " + key + ", sm socketId : " + socketId);
 					if (msg.getWho() == WebsocketMessage.Who.ALLTABS ||
 							(msg.getWho() == WebsocketMessage.Who.OTHERTABS && (! key.equals(socketId))) ||
@@ -385,16 +385,6 @@ public class ServletManager {
     }
 
     public TeamUser getTeamUserForTeam(Team team) throws GeneralException {
-        for (TeamUser teamUser : this.getTeamUsers()) {
-            if (teamUser.getTeam() == team)
-                return teamUser;
-        }
-        throw new GeneralException(Code.ClientError, "Current user not in this team");
-    }
-
-    public TeamUser getTeamUserForTeamId(Integer team_id) throws GeneralException {
-        TeamManager teamManager = (TeamManager) this.getContextAttr("teamManager");
-        Team team = teamManager.getTeamWithId(team_id);
         for (TeamUser teamUser : this.getTeamUsers()) {
             if (teamUser.getTeam() == team)
                 return teamUser;
