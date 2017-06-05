@@ -298,7 +298,7 @@ public class ClassicApp extends WebsiteApp {
     }
 
     @Override
-    public JSONObject getShareableJson() throws GeneralException {
+    public JSONObject getShareableJson() throws GeneralException, HttpServletException {
         JSONObject res = super.getShareableJson();
         res.put("type", "simple");
         res.put("password_change_interval", this.getAccount().getPasswordChangeInterval());

@@ -204,7 +204,7 @@ public class Team {
             this.name = name;
     }
 
-    public JSONObject getJson() throws GeneralException {
+    public JSONObject getJson() throws GeneralException, HttpServletException {
         JSONObject res = new JSONObject();
         res.put("name", this.name);
         res.put("id", this.db_id);
@@ -266,7 +266,7 @@ public class Team {
         this.name = name;
     }
 
-    public JSONArray getShareableAppsForChannel(Integer channel_id) throws GeneralException {
+    public JSONArray getShareableAppsForChannel(Integer channel_id) throws GeneralException, HttpServletException {
         Channel channel = this.getChannelWithId(channel_id);
         JSONArray jsonArray = new JSONArray();
         for (ShareableApp shareableApp : this.getShareableApps()) {
@@ -277,7 +277,7 @@ public class Team {
         return jsonArray;
     }
 
-    public JSONArray getShareableAppsForTeamUser(Integer teamUser_id) throws GeneralException {
+    public JSONArray getShareableAppsForTeamUser(Integer teamUser_id) throws GeneralException, HttpServletException {
         TeamUser teamUser = this.getTeamUserWithId(teamUser_id);
         JSONArray jsonArray = new JSONArray();
         for (ShareableApp shareableApp : this.getShareableApps()) {
