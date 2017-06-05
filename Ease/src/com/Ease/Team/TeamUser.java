@@ -315,7 +315,7 @@ public class TeamUser {
         res.put("departure_date", "Undefined");
         if (departureDate != null)
             res.put("departure_date", this.dateFormat.format(this.departureDate));
-        JSONArray sharedApps = new JSONArray();
+        /* JSONArray sharedApps = new JSONArray();
         for (SharedApp sharedApp : this.sharedApps) {
             sharedApps.add(sharedApp.getSharedJSON());
         }
@@ -323,7 +323,7 @@ public class TeamUser {
         JSONArray shareableApps = new JSONArray();
         for (ShareableApp shareableApp : this.shareableApps)
             shareableApps.add(shareableApp.getShareableJson());
-        res.put("shareable_apps", shareableApps);
+        res.put("shareable_apps", shareableApps); */
         res.put("verified", this.verified);
         return res;
     }
