@@ -81,7 +81,7 @@ public class TeamUser {
     protected String jobTitle;
 
     @Transient
-    protected DateFormat dateFormat = new SimpleDateFormat("MMMM dd, HH:mm", Locale.US);
+    protected DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd", Locale.US);
 
     /* @ManyToMany
     @JoinTable(name = "channelAndTeamUserMap", joinColumns = {@JoinColumn(name = "team_user_id")}, inverseJoinColumns = {@JoinColumn(name = "channel_id")})
