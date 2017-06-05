@@ -34,7 +34,7 @@ public class ServletCreateShareableMultiApp extends HttpServlet {
             Integer channel_id = sm.getIntParam("channel_id", true);
             String app_name = sm.getStringParam("name", true);
             Integer website_id = sm.getIntParam("website_id", true);
-            Integer reminderValue = sm.getIntParam("reminderInterval", true);
+            Integer reminderValue = sm.getIntParam("reminder_interval", true);
             String description = sm.getStringParam("description", false);
             if (app_name == null || app_name.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty app name");

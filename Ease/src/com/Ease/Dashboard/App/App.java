@@ -107,7 +107,6 @@ public class App implements ShareableApp, SharedApp {
             shareableApp.setDescription(description);
             TeamUser teamUser_owner = team.getTeamUserWithId(rs.getInt("teamUser_owner_id"));
             Integer channel_id = rs.getInt("channel_id");
-            System.out.println("Channel_id: " + channel_id);
             Channel channel = null;
             if (channel_id != null && channel_id > 0) {
                 channel = team.getChannelWithId(channel_id);
@@ -149,8 +148,6 @@ public class App implements ShareableApp, SharedApp {
                     throw new GeneralException(ServletManager.Code.InternError, "This app type dosen't exist.");
             }
             Integer teamUser_tenant_id = rs.getInt("teamUser_tenant_id");
-            System.out.println("Owner: " + shareableApp.getTeamUser_owner().getFirstName());
-            System.out.println("Tenant: " + shareableApp.getTeamUser_owner().getTeam().getTeamUserWithId(teamUser_tenant_id).getFirstName());
             sharedApp.setTeamUser_tenant(shareableApp.getTeamUser_owner().getTeam().getTeamUserWithId(teamUser_tenant_id));
             sharedApp.setHolder(shareableApp);
             sharedApps.add(sharedApp);
@@ -500,7 +497,6 @@ public class App implements ShareableApp, SharedApp {
 
     @Override
     public void setSharedApps(List<SharedApp> sharedApps) {
-        System.out.println("Shared apps size: " + sharedApps.size());
         for (SharedApp sharedApp : sharedApps)
             this.addSharedApp(sharedApp);
     }
@@ -542,8 +538,8 @@ public class App implements ShareableApp, SharedApp {
             JSONArray receivers = new JSONArray();
             for (SharedApp sharedApp : this.getSharedApps()) {
                 JSONObject tmp = new JSONObject();
-                tmp.put("teamUser_id", sharedApp.getTeamUser_tenant().getDb_id());
-                tmp.put("sharedApp_id", ((App) sharedApp).getSingleId());
+                tmp.put("team_user_id", sharedApp.getTeamUser_tenant().getDb_id());
+                tmp.put("shared_app_id", ((App) sharedApp).getSingleId());
                 receivers.add(tmp);
             }
             res.put("receivers", receivers);

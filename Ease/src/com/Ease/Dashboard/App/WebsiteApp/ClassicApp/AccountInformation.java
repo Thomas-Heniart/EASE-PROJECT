@@ -86,7 +86,6 @@ public class AccountInformation {
 
     public void setInformation_value(String information_value, String publicKey, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
-        System.out.println("information_value: " + information_value);
         DatabaseRequest request = db.prepareRequest("UPDATE accountsInformations SET information_value = ? WHERE id = ?;");
         request.setString(RSA.Encrypt(information_value, publicKey));
         request.setInt(this.db_id);

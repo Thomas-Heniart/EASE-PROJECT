@@ -103,7 +103,6 @@ public class Website {
         request.setString(url);
         request.setString(name);
         request.setString(folder);
-        System.out.println(ssoId == null || ssoId.equals(""));
         if (ssoId == null || ssoId.equals(""))
             request.setNull();
         else
@@ -371,7 +370,6 @@ public class Website {
             }
             infos.put(info_name, value);
         }
-        System.out.println(infos.size());
         return infos;
     }
 

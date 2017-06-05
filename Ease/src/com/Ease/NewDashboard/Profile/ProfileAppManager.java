@@ -21,20 +21,18 @@ public class ProfileAppManager {
 
     public List<ProfileApp> populate(Profile profile) {
         HibernateQuery query = new HibernateQuery();
-        System.out.println("Profile id: " + profile.getDb_id());
         query.queryString("SELECT p FROM ProfileApp p WHERE p.profile.db_id = :id ORDER BY p.position ASC");
         query.setParameter("id", profile.getDb_id());
         profileApps = query.list();
 
         /* Put all profiles */
-        for(ProfileApp profileApp : profileApps) {
+        for (ProfileApp profileApp : profileApps) {
             profileApp.setProfile(profile);
             this.profileAppIdMap.put(profileApp.getDb_id(), profileApp);
         }
         query.commit();
-        System.out.println("ProfileAppManager apps size: " + profileApps.size());
         for (ProfileApp profileApp : this.profileApps) {
-            System.out.println(profileApp.toString());
+            /*@TODO*/
         }
         return this.profileApps;
     }
