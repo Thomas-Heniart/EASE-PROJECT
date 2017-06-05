@@ -9,6 +9,7 @@ import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Servlets.PostServletManager;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -52,7 +53,9 @@ public class ServletCreateShareableMultiApp extends HttpServlet {
             WebsiteApp websiteApp = WebsiteApp.createShareableMultiApp(app_name, website, reminderValue, sm);
             websiteApp.becomeShareable(sm.getDB(), team, teamUser_owner, channel, description);
             db.commitTransaction(transaction);
-            sm.setSuccess("ShareableMultiApp created and single_id is " + websiteApp.getSingleId());
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("app_id", websiteApp.getSingleId());
+            sm.setSuccess(jsonObject);
         } catch (Exception e) {
             sm.setError(e);
         }
