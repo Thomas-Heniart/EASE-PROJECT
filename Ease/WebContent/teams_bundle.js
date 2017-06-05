@@ -8719,7 +8719,7 @@ module.exports = {
     }
   },
   teamApps: {
-    shareSingleApp: function shareSingleApp(team_id, app) {
+    createSingleApp: function createSingleApp(team_id, app) {
       return axios.post('/api/v1/teams/CreateShareableSingleApp', {
         team_id: team_id,
         channel_id: app.channel_id,
@@ -8728,6 +8728,15 @@ module.exports = {
         description: app.description,
         reminder_interval: app.reminder_interval,
         account_information: app.account_information
+      }).then(function (response) {
+        return response.data;
+      });
+    },
+    shareApp: function shareApp(team_id, app_id, user_id) {
+      return axios.post('/api/v1/teams/ShareApp', {
+        team_id: team_id,
+        app_id: app_id,
+        team_user_id: user_id
       }).then(function (response) {
         return response.data;
       });
@@ -15874,6 +15883,8 @@ var SimpleTeamAppAdd = function (_React$Component4) {
   _createClass(SimpleTeamAppAdd, [{
     key: 'shareApp',
     value: function shareApp() {
+      var _this5 = this;
+
       var app = {
         website_id: this.state.choosenApp.info.id,
         name: this.state.appName,
@@ -15887,7 +15898,17 @@ var SimpleTeamAppAdd = function (_React$Component4) {
         app.account_information.push({ info_name: item, info_value: this.state.credentials[item] });
       }, this);
       console.log('sharing app');
-      this.props.dispatch(appActions.teamShareSingleApp(app));
+      this.props.dispatch(appActions.teamCreateSingleApp(app)).then(function (response) {
+        var id = response.app_id;
+        var sharing = [];
+        console.log('creating shareable ap finished');
+        _this5.state.selectedUsers.map(function (item) {
+          sharing.push(this.props.dispatch(appActions.teamShareApp(id, item.id)));
+        }, _this5);
+        Promise.all(sharing).then(function () {
+          console.log('sharing to users finished');
+        });
+      });
     }
   }, {
     key: 'componentWillReceiveProps',
@@ -16175,16 +16196,16 @@ var TeamAppAddingUi = (_dec = (0, _reactRedux.connect)(function (store) {
   function TeamAppAddingUi(props) {
     _classCallCheck(this, TeamAppAddingUi);
 
-    var _this5 = _possibleConstructorReturn(this, (TeamAppAddingUi.__proto__ || Object.getPrototypeOf(TeamAppAddingUi)).call(this, props));
+    var _this6 = _possibleConstructorReturn(this, (TeamAppAddingUi.__proto__ || Object.getPrototypeOf(TeamAppAddingUi)).call(this, props));
 
-    _this5.state = {
+    _this6.state = {
       buttonsActive: true,
       simpleAddActive: false,
       multiAddActive: false,
       linkAddActive: false
     };
-    _this5.activateElement = _this5.activateElement.bind(_this5);
-    return _this5;
+    _this6.activateElement = _this6.activateElement.bind(_this6);
+    return _this6;
   }
 
   _createClass(TeamAppAddingUi, [{
@@ -35733,17 +35754,31 @@ module.exports = function(module) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.teamShareSingleApp = teamShareSingleApp;
+exports.teamCreateSingleApp = teamCreateSingleApp;
+exports.teamShareApp = teamShareApp;
 var api = __webpack_require__(25);
 var post_api = __webpack_require__(80);
 
-function teamShareSingleApp(app) {
+function teamCreateSingleApp(app) {
   return function (dispatch, getState) {
-    dispatch({ type: 'TEAM_SHARE_SINGLE_APP_PENDING' });
-    return post_api.teamApps.shareSingleApp(getState().team.id, app).then(function (response) {
-      dispatch({ type: 'TEAM_SHARE_SINGLE_APP_FULFILLED', payload: app });
+    dispatch({ type: 'TEAM_CREATE_SINGLE_APP_PENDING' });
+    return post_api.teamApps.createSingleApp(getState().team.id, app).then(function (response) {
+      dispatch({ type: 'TEAM_CREATE_SINGLE_APP_FULFILLED', payload: app });
+      return response;
     }).catch(function (err) {
-      dispatch({ type: 'TEAM_SHARE_SINGLE_APP_REJECTED', payload: err });
+      dispatch({ type: 'TEAM_CREATE_SINGLE_APP_REJECTED', payload: err });
+      throw err;
+    });
+  };
+}
+
+function teamShareApp(app_id, user_id) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'TEAM_SHARE_APP_PENDING' });
+    return post_api.teamApps.shareApp(getState().team.id, app_id, user_id).then(function (response) {
+      dispatch({ type: 'TEAM_SHARE_APP_FULFILLED', payload: response });
+    }).catch(function (err) {
+      dispatch({ type: 'TEAM_SHARE_APP_REJECTED', payload: err });
       throw err;
     });
   };
