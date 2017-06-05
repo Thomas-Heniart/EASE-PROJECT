@@ -1,5 +1,8 @@
 var React = require('react');
 var classnames = require('classnames');
+import {connect} from "react-redux"
+
+import {showAddTeamUserModal} from "../actions/teamModalActions"
 
 class FirstStepAddUser extends React.Component{
   constructor(props){
@@ -40,9 +43,9 @@ class FirstStepAddUser extends React.Component{
               <select value={this.props.role}
                       onChange={(e) => {this.props.handleInputs(e.target.name, e.target.value)}}
                       id="user_role_select" name='role' className="full_width select_unstyle modal_input">
-                <option value="0">User</option>
-                <option value="1">Admin</option>
-                <option value="2">Super admin</option>
+                <option value="1">Member</option>
+                <option value="3">Moderator</option>
+                <option value="7">Admin</option>
               </select>
             </div>
             <div className="signed_input">
@@ -77,7 +80,7 @@ class FirstStepAddUser extends React.Component{
                           this.props.channels.map(function (item) {
                             return (
                                 <div onClick={this.props.selectChannelFunc.bind(null, item.id)} className={classnames("dropdown_row selectable", item.selected ? "selected": null)} key={item.id}>
-                                  <span className="main_value">{item.name}</span>{item.desc.length && <span className="text-muted">&nbsp;- {item.desc}</span>}
+                                  <span className="main_value">{item.name}</span>{item.purpose.length && <span className="text-muted">&nbsp;- {item.purpose}</span>}
                                 </div>
                             )
                           }, this)
@@ -101,6 +104,12 @@ class FirstStepAddUser extends React.Component{
     )
   }
 }
+
+@connect((store)=>{
+  return {
+    channels: store.channels.channels
+  };
+})
 class TeamAddUserModal extends React.Component {
   constructor(props){
     super(props);
@@ -108,17 +117,15 @@ class TeamAddUserModal extends React.Component {
       email: '',
       fname: '',
       lname: '',
-      role: '0',
+      role: '1',
       departure_date: '',
       selectedChannels: [],
       channels: []
     };
-    console.log(this.props.channels);
     this.state.channels = this.props.channels.map(function (item) {
       item.selected = false;
       return item;
     });
-    console.log(this.state.channels);
     this.handleInputs = this.handleInputs.bind(this);
     this.selectChannel = this.selectChannel.bind(this);
     this.deselectChannel = this.deselectChannel.bind(this);
@@ -154,7 +161,7 @@ class TeamAddUserModal extends React.Component {
     return (
         <div className="ease_modal" id="add_user_modal">
           <div className="modal-background"></div>
-          <a id="ease_modal_close_btn" className="ease_modal_btn" onClick={this.props.toggleModalFunc}>
+          <a id="ease_modal_close_btn" className="ease_modal_btn" onClick={e => {this.props.dispatch(showAddTeamUserModal(false))}}>
             <i className="ease_icon fa fa-times"/>
             <span className="key_label">close</span>
           </a>

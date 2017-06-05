@@ -3,6 +3,8 @@ var classnames = require('classnames');
 var api = require('../utils/api');
 var TeamAppAdderButtons = require('./TeamAppAdderButtons');
 var MultiTeamAppAdd = require('./MultiTeamAppAdd');
+import {connect} from "react-redux";
+import * as appActions from "../actions/appsActions";
 
 class DashboardAndTeamAppSearch extends React.Component{
   constructor(props){
@@ -103,8 +105,8 @@ class SimpleUserSelect extends React.Component {
                                     {item.username}
                                   </span>
                       -
-                      <span className="fname">{item.firstName}</span>
-                      <span className="lname">{item.lastName}</span>
+                      <span className="fname">{item.first_name}</span>
+                      <span className="lname">{item.last_name}</span>
                     </div>
                 )
               }, this)
@@ -304,7 +306,25 @@ class SimpleTeamAppAdd extends React.Component {
     this.handleUserSelect = this.handleUserSelect.bind(this);
     this.handleUserDeselect = this.handleUserDeselect.bind(this);
     this.chooseDashboardApp = this.chooseDashboardApp.bind(this);
+    this.shareApp = this.shareApp.bind(this);
   }
+  shareApp(){
+    var app = {
+      website_id: this.state.choosenApp.info.id,
+      name: this.state.appName,
+      description: this.state.comment,
+      reminder_interval: this.state.passwordRemind,
+      account_information: []
+    };
+    if (this.props.selectedItem.type === 'channel')
+      app.channel_id = this.props.selectedItem.item.id;
+
+    Object.keys(this.state.credentials).map(function(item){
+      app.account_information.push({info_name: item, info_value: this.state.credentials[item]});
+    }, this);
+    console.log('sharing app');
+    this.props.dispatch(appActions.teamShareSingleApp(app));
+  };
   componentWillReceiveProps(props){
     if (props != this.props){
       var users = [];
@@ -399,7 +419,7 @@ class SimpleTeamAppAdd extends React.Component {
     return (
         <div className="add_content_container full_flex team_app active" id="simple_app_adder">
           <div className="add_actions_holder">
-            <button className="button-unstyle send_button action_text_button positive_background">
+            <button className="button-unstyle send_button action_text_button positive_background" onClick={this.shareApp}>
               Send
             </button>
             <button className="button-unstyle action_text_button alert_background close_button" onClick={this.props.cancelAddFunc}>
@@ -497,6 +517,12 @@ class SimpleTeamAppAdd extends React.Component {
   }
 }
 
+@connect((store)=>{
+  return {
+    selectedItem: store.selection,
+    team_id: store.team.id
+  };
+})
 class TeamAppAddingUi extends React.Component {
   constructor(props){
     super(props);
@@ -528,19 +554,22 @@ class TeamAppAddingUi extends React.Component {
               team_id={this.props.team_id}
               selectedItem={this.props.selectedItem}
               userSelectFunc={this.props.userSelectFunc}
-              cancelAddFunc={this.activateElement.bind(null, 'buttons')}/>}
+              cancelAddFunc={this.activateElement.bind(null, 'buttons')}
+              dispatch={this.props.dispatch}/>}
           {this.state.linkAddActive &&
               <LinkTeamAppAdd
                   team_id={this.props.team_id}
                   selectedItem={this.props.selectedItem}
                   userSelectFunc={this.props.userSelectFunc}
-                  cancelAddFunc={this.activateElement.bind(null, 'buttons')}/>}
+                  cancelAddFunc={this.activateElement.bind(null, 'buttons')}
+                  dispatch={this.props.dispatch}/>}
           {this.state.multiAddActive &&
             <MultiTeamAppAdd
               team_id={this.props.team_id}
               selectedItem={this.props.selectedItem}
               userSelectFunc={this.props.userSelectFunc}
-              cancelAddFunc={this.activateElement.bind(null, 'buttons')}/>}
+              cancelAddFunc={this.activateElement.bind(null, 'buttons')}
+              dispatch={this.props.dispatch}/>}
         </div>
     )
   }

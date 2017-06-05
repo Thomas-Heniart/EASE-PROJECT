@@ -1,6 +1,13 @@
 var React = require('react');
 var classnames = require('classnames');
+import {connect} from "react-redux"
+import {showAddTeamChannelModal} from "../actions/teamModalActions"
 
+@connect((store)=>{
+  return {
+    users: store.users.users
+  };
+})
 class TeamAddChannelModal extends React.Component {
   constructor(props){
     super(props);
@@ -61,7 +68,7 @@ class TeamAddChannelModal extends React.Component {
   render(){
     return (
         <div className="ease_modal" id="add_channel_modal">
-          <a id="ease_modal_close_btn" className="ease_modal_btn" onClick={this.props.toggleModalFunc}>
+          <a id="ease_modal_close_btn" className="ease_modal_btn" onClick={e => {this.props.dispatch(showAddTeamChannelModal(false))}}>
             <i className="ease_icon fa fa-times"/>
             <span className="key_label">close</span>
           </a>
@@ -111,7 +118,7 @@ class TeamAddChannelModal extends React.Component {
                                    className={classnames("dropdown_row selectable", item.selected ? "selected": null)}
                                    key={item.id}>
                                 <span className="main_value">{item.username}</span>
-                                {item.firstName != null && <span className="text-muted">&nbsp;- {item.firstName}&nbsp;{item.lastName}</span>}
+                                {item.first_name != null && <span className="text-muted">&nbsp;- {item.first_name}&nbsp;{item.last_name}</span>}
                               </div>
                           )
                         }, this)
@@ -123,7 +130,7 @@ class TeamAddChannelModal extends React.Component {
               <div className="content_row buttons_row">
                 <div className="buttons_wrapper">
                   <button className="button-unstyle neutral_background action_text_button mrgnRight5"
-                          onClick={this.props.toggleModalFunc}>Cancel</button>
+                          onClick={e => {this.props.dispatch(showAddTeamChannelModal(false))}}>Cancel</button>
                   <button className="button-unstyle positive_background action_text_button">Next</button>
                 </div>
               </div>
