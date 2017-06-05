@@ -257,7 +257,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
     }
 
 	/*
-	 * 
+     *
 	 * Utils
 	 * 
 	 */
@@ -360,7 +360,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
     public JSONObject getShareableJson() throws GeneralException {
         JSONObject res = super.getShareableJson();
         res.put("type", "multi");
-        res.put("website_id", this.website.getSingleId());
+        res.put("website", this.website.getInformationJson());
         return res;
     }
 

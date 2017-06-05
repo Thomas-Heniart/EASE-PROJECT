@@ -544,7 +544,7 @@ public class App implements ShareableApp, SharedApp {
                 receivers.add(tmp);
             }
             res.put("receivers", receivers);
-            res.put("purpose", this.getDescription());
+            res.put("description", this.getDescription());
             res.put("name", this.getAppInformation().getName());
             return res;
         } catch (ParseException e) {
