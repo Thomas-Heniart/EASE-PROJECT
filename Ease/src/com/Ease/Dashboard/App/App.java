@@ -535,7 +535,7 @@ public class App implements ShareableApp, SharedApp {
     }
 
     @Override
-    public JSONObject getShareableJson() throws GeneralException {
+    public JSONObject getShareableJson() throws GeneralException, HttpServletException {
         try {
             JSONObject res = new JSONObject();
             res.put("id", this.getSingleId());

@@ -357,7 +357,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
     }
 
     @Override
-    public JSONObject getShareableJson() throws GeneralException {
+    public JSONObject getShareableJson() throws GeneralException, HttpServletException {
         JSONObject res = super.getShareableJson();
         res.put("type", "multi");
         res.put("website", this.website.getInformationJson());
