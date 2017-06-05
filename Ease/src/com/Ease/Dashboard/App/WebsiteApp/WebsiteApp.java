@@ -142,6 +142,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         request.setInt(appDBid);
         String websiteAppDBid = request.set().toString();
         db.commitTransaction(transaction);
+        elevator.put("appDBid", appDBid);
         return websiteAppDBid;
     }
 
