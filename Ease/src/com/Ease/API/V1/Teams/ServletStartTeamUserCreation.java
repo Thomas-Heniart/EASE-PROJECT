@@ -38,7 +38,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Invalid inputs");
             String first_name = sm.getStringParam("first_name", true);
             String last_name = sm.getStringParam("last_name", true);
-            HibernateQuery query = new HibernateQuery();
+            HibernateQuery query = sm.getHibernateQuery();
             query.querySQLString("SELECT id FROM teamUsers WHERE (email = ? OR username = ?) AND team_id = ? AND verified = 1;");
             query.setParameter(1, email);
             query.setParameter(2, username);

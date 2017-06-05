@@ -8,6 +8,7 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.User.User;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.RSA;
+import org.hibernate.annotations.Cascade;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -82,9 +83,9 @@ public class TeamUser {
     @Transient
     protected DateFormat dateFormat = new SimpleDateFormat("MMMM dd, HH:mm", Locale.US);
 
-    @ManyToMany
+    /* @ManyToMany
     @JoinTable(name = "channelAndTeamUserMap", joinColumns = {@JoinColumn(name = "team_user_id")}, inverseJoinColumns = {@JoinColumn(name = "channel_id")})
-    protected List<Channel> channels = new LinkedList<>();
+    protected List<Channel> channels = new LinkedList<>(); */
 
 
     /**
@@ -110,7 +111,7 @@ public class TeamUser {
         this.departureDate = departureDate;
         this.team = team;
         this.teamUserRole = teamUserRole;
-        this.channels = channels;
+        //this.channels = channels;
         this.arrivalDate = new Date();
     }
 
@@ -124,7 +125,7 @@ public class TeamUser {
         this.verified = verified;
         this.team = team;
         this.teamUserRole = teamUserRole;
-        this.channels = channels;
+        //this.channels = channels;
         this.arrivalDate = new Date();
     }
 
@@ -285,13 +286,13 @@ public class TeamUser {
         this.teamUserRole = teamUserRole;
     }
 
-    public List<Channel> getChannels() {
+    /* public List<Channel> getChannels() {
         return channels;
     }
 
     public void setChannels(List<Channel> channels) {
         this.channels = channels;
-    }
+    } */
 
     public static TeamUser createAdminUser(String firstName, String lastName, String email, String username, String teamKey, Team team) throws GeneralException {
         TeamUserRole teamUserRole = new TeamUserRole(TeamUserRole.Role.ADMINISTRATOR.getValue());
@@ -310,10 +311,10 @@ public class TeamUser {
         res.put("email", this.email);
         res.put("username", this.username);
         res.put("role", this.teamUserRole.getRoleValue());
-        res.put("arrival_date", this.arrivalDate.toString());
-        res.put("departure_date", "null");
+        res.put("arrival_date", this.dateFormat.format(arrivalDate));
+        res.put("departure_date", "Undefined");
         if (departureDate != null)
-            res.put("departure_date", this.departureDate);
+            res.put("departure_date", this.dateFormat.format(this.departureDate));
         JSONArray sharedApps = new JSONArray();
         for (SharedApp sharedApp : this.sharedApps) {
             sharedApps.add(sharedApp.getSharedJSON());
