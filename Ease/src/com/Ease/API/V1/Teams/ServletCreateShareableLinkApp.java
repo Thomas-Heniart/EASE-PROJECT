@@ -40,12 +40,12 @@ public class ServletCreateShareableLinkApp extends HttpServlet {
             TeamUser teamUser_owner = sm.getTeamUserForTeam(team);
             Integer channel_id = sm.getIntParam("channel_id", true);
             String app_name = sm.getStringParam("name", true);
-            String link = sm.getStringParam("link", true);
+            String url = sm.getStringParam("url", true);
             String description = sm.getStringParam("description", false);
             if (app_name == null || app_name.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty app name");
-            if (link == null || link.equals("") || !Regex.isValidLink(link))
-                throw new HttpServletException(HttpStatus.BadRequest, "Empty link.");
+            if (url == null || url.equals("") || !Regex.isValidLink(url))
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid url.");
             if (description == null)
                 description = "";
             Channel channel = null;
@@ -53,7 +53,7 @@ public class ServletCreateShareableLinkApp extends HttpServlet {
                 channel = team.getChannelWithId(channel_id);
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
-            LinkApp linkApp = LinkApp.createShareableLinkApp(app_name, link, sm);
+            LinkApp linkApp = LinkApp.createShareableLinkApp(app_name, url, sm);
             linkApp.becomeShareable(sm.getDB(), team, teamUser_owner, channel, description);
             db.commitTransaction(transaction);
             JSONObject jsonObject = new JSONObject();
