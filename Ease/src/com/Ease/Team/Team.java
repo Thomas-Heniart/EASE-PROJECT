@@ -2,6 +2,8 @@ package com.Ease.Team;
 
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.ShareableApp;
+import com.Ease.Dashboard.App.SharedApp;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.SendGridMail;
 import com.Ease.Utils.*;
@@ -284,5 +286,20 @@ public class Team {
             jsonArray.add(shareableApp.getShareableJson());
         }
         return jsonArray;
+    }
+
+    public void decipherApps(String deciphered_teamKey) throws GeneralException {
+        for (ShareableApp shareableApp : this.getShareableApps()) {
+            App app = (App) shareableApp;
+            if (app.isClassicApp())
+                ((ClassicApp) app).getAccount().decipherWithTeamKeyIfNeeded(deciphered_teamKey);
+            else if (app.isEmpty()) {
+                for (SharedApp sharedApp : shareableApp.getSharedApps()) {
+                    App app1 = (App) sharedApp;
+                    if (app1.isClassicApp())
+                        ((ClassicApp) app1).getAccount().decipherWithTeamKeyIfNeeded(deciphered_teamKey);
+                }
+            }
+        }
     }
 }

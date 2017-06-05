@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.simple.JSONObject;
@@ -23,6 +24,8 @@ public class ServletGetTeam extends HttpServlet {
             Integer team_id = sm.getIntParam("team_id", true);
             sm.needToBeTeamUserOfTeam(team_id);
             TeamUser teamUser = sm.getTeamUserForTeamId(team_id);
+            Team team = teamUser.getTeam();
+            team.decipherApps(teamUser.getDeciphered_teamKey());
             JSONObject res = teamUser.getTeam().getJson();
             res.put("myTeamUserId", teamUser.getDb_id());
             sm.setSuccess(res);

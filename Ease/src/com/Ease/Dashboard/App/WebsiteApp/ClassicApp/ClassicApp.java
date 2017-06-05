@@ -173,11 +173,11 @@ public class ClassicApp extends WebsiteApp {
 	 * Getter And Setter
 	 *
 	 */
-	
+
 	
 	
 	/*
-	 * 
+     *
 	 * Utils
 	 * 
 	 */
@@ -193,7 +193,7 @@ public class ClassicApp extends WebsiteApp {
         }
         if (this.groupApp == null || (!this.groupApp.isCommon() && this.groupApp.getPerms().havePermission(AppPermissions.Perm.EDIT.ordinal()))) {
             this.account.editInfos(infos, sm);
-			/*if (password != null && !password.equals(""))
+            /*if (password != null && !password.equals(""))
 				this.account.setPassword(password, this.getProfile().getUser(), sm);*/
         }
         for (String info : infos.values()) {
@@ -303,14 +303,7 @@ public class ClassicApp extends WebsiteApp {
         res.put("type", "simple");
         res.put("password_change_interval", this.getAccount().getPasswordChangeInterval());
         res.put("last_modification", this.getAccount().getLastUpdatedDate());
-        JSONArray accountInformationArray = new JSONArray();
-        for (AccountInformation accountInformation : this.getAccount().getAccountInformations()) {
-            JSONObject tmp = new JSONObject();
-            tmp.put("info_name", accountInformation.getInformationName());
-            tmp.put("info_value", accountInformation.getInformationValue());
-            accountInformationArray.add(tmp);
-        }
-        res.put("account_information", accountInformationArray);
+        res.put("account_information", this.getAccount().getInformationJsonWithoutPassword());
         return res;
     }
 
@@ -322,8 +315,7 @@ public class ClassicApp extends WebsiteApp {
     @Override
     public JSONObject getSharedJSON() {
         JSONObject res = super.getSharedJSON();
-        JSONArray information = this.account.getInformationJson();
-        res.put("information", information);
+        res.put("account_information", this.getAccount().getInformationJsonWithoutPassword());
         return res;
     }
 

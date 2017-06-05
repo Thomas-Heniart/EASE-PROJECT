@@ -381,6 +381,17 @@ public class Account {
         return jsonArray;
     }
 
+    public JSONArray getInformationJsonWithoutPassword() {
+        JSONArray jsonArray = new JSONArray();
+        for (AccountInformation info : this.getAccountInformationsWithoutPassword()) {
+            JSONObject tmp = new JSONObject();
+            tmp.put("info_name", info.getInformationName());
+            tmp.put("info_value", info.getInformationValue());
+            jsonArray.add(tmp);
+        }
+        return jsonArray;
+    }
+
     public JSONArray getJSON() {
         JSONArray res = new JSONArray();
         JSONObject tmp;
@@ -394,6 +405,7 @@ public class Account {
         return res;
     }
 
+    /* Only for JSP */
     public JSONArray getJson() {
         JSONArray res = new JSONArray();
         JSONObject tmp;
@@ -456,8 +468,8 @@ public class Account {
         for (AccountInformation info : this.infos) {
             if (!info.getInformationName().equals("password")) {
                 JSONObject tmp = new JSONObject();
-                tmp.put("name", info.getInformationName());
-                tmp.put("value", info.getInformationValue());
+                tmp.put("info_name", info.getInformationName());
+                tmp.put("info_value", info.getInformationValue());
                 res.add(tmp);
             }
         }
