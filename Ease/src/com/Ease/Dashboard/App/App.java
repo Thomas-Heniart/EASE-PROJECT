@@ -530,6 +530,7 @@ public class App implements ShareableApp, SharedApp {
     public JSONObject getShareableJson() throws GeneralException {
         try {
             JSONObject res = new JSONObject();
+            res.put("id", this.getSingleId());
             res.put("sender_id", this.getTeamUser_owner().getDb_id());
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date shared_date = dateFormat.parse(this.getInsertDate());
@@ -544,6 +545,7 @@ public class App implements ShareableApp, SharedApp {
             }
             res.put("receivers", receivers);
             res.put("purpose", this.getDescription());
+            res.put("name", this.getAppInformation().getName());
             return res;
         } catch (ParseException e) {
             throw new GeneralException(ServletManager.Code.InternError, e);
