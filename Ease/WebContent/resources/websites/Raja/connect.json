@@ -1,0 +1,23 @@
+{
+  "name":"Raja",
+  "lastLogin":"",
+  "home":"https://www.raja.fr/",
+  "connect":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='ShowLogin']"},
+      {"action":"fill", "what":"login", "search":"#ShopLoginForm_Login"},
+      {"action":"fill", "what":"password", "search":"#ShopLoginForm_Password"},
+      {"action":"click", "search":"button[name='signIn']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"clickona", "search":"a[href*='LogoutUser']"},
+      {"action": "waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='ShowLogin'], a[href*='LogoutUser']"},
+    {"search":"a[href*='LogoutUser']"}
+  ]
+}

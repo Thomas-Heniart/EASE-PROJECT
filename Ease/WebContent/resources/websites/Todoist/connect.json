@@ -1,0 +1,29 @@
+{
+  "name":"Todoist",
+  "lastLogin":"",
+  "home":"https://todoist.com/",
+  "connect":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='showLogin']"},
+      {"action":"fill", "what":"login", "search":"#login_form #email"},
+      {"action":"fill", "what":"password", "search":"#login_form #password"},
+      {"action":"clickona", "search":"#login_form a.sel_login"}
+    ]
+  },
+  "Facebook":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='showLogin']"},
+      {"action":"clickona", "search":"a.amibutton_facebook"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"click", "search":".cmp_setting_logout"},
+      {"action": "waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='showLogin'], .cmp_setting_logout"},
+    {"search":".cmp_setting_logout"}
+  ]
+}
