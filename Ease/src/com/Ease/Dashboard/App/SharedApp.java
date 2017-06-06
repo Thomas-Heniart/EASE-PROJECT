@@ -3,6 +3,7 @@ package com.Ease.Dashboard.App;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.ServletManager;
 import org.json.simple.JSONObject;
 
@@ -16,7 +17,7 @@ public interface SharedApp {
 
     public void setHolder(ShareableApp shareableApp);
 
-    public void deleteShared(ServletManager sm) throws GeneralException;
+    public void deleteShared(DataBaseConnection db) throws HttpServletException;
 
     public void setTeamUser_tenant(TeamUser teamUserWithId);
 

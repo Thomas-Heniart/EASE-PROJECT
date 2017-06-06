@@ -224,13 +224,12 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         this.reminderIntervalValue = reminderIntervalValue;
     }
 
-    public void removeFromDB(ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public void removeFromDB(DataBaseConnection db) throws GeneralException {
         int transaction = db.startTransaction();
         DatabaseRequest request = db.prepareRequest("DELETE FROM websiteApps WHERE id = ?;");
         request.setInt(websiteAppDBid);
         request.set();
-        super.removeFromDB(sm);
+        super.removeFromDB(db);
         db.commitTransaction(transaction);
     }
 
@@ -297,20 +296,8 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
     }
 
     @Override
-    public void deleteShared(ServletManager sm) throws GeneralException {
-        this.removeFromDB(sm);
-    }
-
-    @Override
     public void modifyShareable(ServletManager sm, JSONObject editJson, SharedApp sharedApp) throws GeneralException {
         throw new GeneralException(ServletManager.Code.ClientError, "Go fuck yourself");
-    }
-
-    @Override
-    public void deleteShareable(ServletManager sm, SharedApp sharedApp) throws GeneralException {
-        for (SharedApp sharedApp1 : this.sharedApps)
-            sharedApp1.deleteShared(sm);
-        this.removeFromDB(sm);
     }
 
     @Override
@@ -366,9 +353,9 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         for (Object object : jsonArray) {
             JSONObject sharedAppObject = (JSONObject) object;
             Integer shared_app_id = (Integer) sharedAppObject.get("shared_app_id");
-            App sharedApp = (App)this.getSharedAppWithId(shared_app_id);
+            App sharedApp = (App) this.getSharedAppWithId(shared_app_id);
             if (sharedApp.isClassicApp()) {
-                ClassicApp classicApp = (ClassicApp)sharedApp;
+                ClassicApp classicApp = (ClassicApp) sharedApp;
                 sharedAppObject.put("account_information", classicApp.getAccount().getInformationJsonWithoutPassword());
                 sharedAppObject.put("last_modification", classicApp.getAccount().getLastUpdatedDate());
             }

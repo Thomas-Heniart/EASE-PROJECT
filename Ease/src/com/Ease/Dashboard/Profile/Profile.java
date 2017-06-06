@@ -204,7 +204,7 @@ public class Profile {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		for (App app : apps) {
-			app.removeFromDB(sm);
+			app.removeFromDB(db);
 		}
 		DatabaseRequest request = db.prepareRequest("DELETE FROM profiles WHERE id = ?;");
 		request.setInt(db_id);
@@ -406,7 +406,7 @@ public class Profile {
 
 	public void removeApp(App app, ServletManager sm) throws GeneralException {
 		this.apps.remove(app);
-		app.removeFromDB(sm);
+		app.removeFromDB(sm.getDB());
 		this.updateAppsIndex(sm);
 	}
 

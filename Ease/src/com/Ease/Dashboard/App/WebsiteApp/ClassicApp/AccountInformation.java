@@ -93,8 +93,7 @@ public class AccountInformation {
         this.information_value = information_value;
     }
 
-    public void removeFromDb(ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public void removeFromDb(DataBaseConnection db) throws GeneralException {
         DatabaseRequest request = db.prepareRequest("DELETE FROM accountsInformations WHERE id = ?;");
         request.setInt(db_id);
         request.set();

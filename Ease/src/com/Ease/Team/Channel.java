@@ -106,6 +106,8 @@ public class Channel {
     }
 
     public void addTeamUser(TeamUser teamUser) {
+        if (this.teamUsers.contains(teamUser))
+            return;
         this.teamUsers.add(teamUser);
     }
 

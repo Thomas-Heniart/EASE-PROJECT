@@ -152,15 +152,14 @@ public class ClassicApp extends WebsiteApp {
         this.classicDBid = classicDBid;
     }
 
-    public void removeFromDB(ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public void removeFromDB(DataBaseConnection db) throws GeneralException {
         int transaction = db.startTransaction();
         DatabaseRequest request = db.prepareRequest("DELETE FROM classicApps WHERE id = ?;");
         request.setInt(classicDBid);
         request.set();
         if ((this.groupApp == null || this.groupApp.isCommon() == false) && (this.getHolder() == null || this.getAccount() != ((ClassicApp) this.getHolder()).getAccount()))
-            account.removeFromDB(sm);
-        super.removeFromDB(sm);
+            account.removeFromDB(db);
+        super.removeFromDB(db);
         this.website.decrementRatio(db);
         db.commitTransaction(transaction);
     }
@@ -256,24 +255,10 @@ public class ClassicApp extends WebsiteApp {
     }
 
     @Override
-    public void deleteShared(ServletManager sm) throws GeneralException {
-        if (((ClassicApp) this.getHolder()).getAccount() == this.getAccount())
-            throw new GeneralException(ServletManager.Code.ClientError, "You can't delete this app.");
-        this.removeFromDB(sm);
-    }
-
-    @Override
     public void modifyShareable(ServletManager sm, JSONObject editJson, SharedApp sharedApp) throws GeneralException {
         this.getAccount().edit(editJson, sm);
         for (SharedApp app : this.sharedApps)
             ((ClassicApp) app).getAccount().edit(editJson, sm);
-    }
-
-    @Override
-    public void deleteShareable(ServletManager sm, SharedApp sharedApp) throws GeneralException {
-        for (SharedApp sharedApp1 : this.sharedApps)
-            sharedApp1.deleteShared(sm);
-        this.removeFromDB(sm);
     }
 
     @Override

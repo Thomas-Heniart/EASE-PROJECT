@@ -3,6 +3,7 @@ package com.Ease.Dashboard.App;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
+import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.ServletManager;
@@ -19,7 +20,7 @@ public interface ShareableApp {
 
     public void modifyShareable(ServletManager sm, JSONObject editJson, SharedApp sharedApp) throws GeneralException;
 
-    public void deleteShareable(ServletManager sm, SharedApp sharedApp) throws GeneralException;
+    public void deleteShareable(DataBaseConnection db) throws HttpServletException;
 
     public TeamUser getTeamUser_owner();
 

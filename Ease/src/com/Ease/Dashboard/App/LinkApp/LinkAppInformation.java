@@ -63,8 +63,7 @@ public class LinkAppInformation {
         this.imgUrl = imgUrl;
     }
 
-    public void removeFromDb(ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public void removeFromDb(DataBaseConnection db) throws GeneralException {
         DatabaseRequest request = db.prepareRequest("DELETE FROM linkAppInformations WHERE id = ?;");
         request.setInt(db_id);
         request.set();

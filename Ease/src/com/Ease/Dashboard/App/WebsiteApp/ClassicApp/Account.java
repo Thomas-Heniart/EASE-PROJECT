@@ -245,11 +245,10 @@ public class Account {
         this.passwordChangeInterval = passwordChangeInterval;
     }
 
-    public void removeFromDB(ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public void removeFromDB(DataBaseConnection db) throws GeneralException {
         int transaction = db.startTransaction();
         for (AccountInformation info : infos) {
-            info.removeFromDb(sm);
+            info.removeFromDb(db);
         }
         DatabaseRequest request = db.prepareRequest("DELETE FROM accounts WHERE id = ?;");
         request.setInt(db_id);

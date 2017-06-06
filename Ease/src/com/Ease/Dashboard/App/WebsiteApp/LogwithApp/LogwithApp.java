@@ -95,13 +95,12 @@ public class LogwithApp extends WebsiteApp {
         this.logwithAppDBid = logwithDBid;
     }
 
-    public void removeFromDB(ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public void removeFromDB(DataBaseConnection db) throws GeneralException {
         int transaction = db.startTransaction();
         DatabaseRequest request = db.prepareRequest("DELETE FROM logWithApps WHERE id = ?;");
         request.setInt(logwithAppDBid);
         request.set();
-        super.removeFromDB(sm);
+        super.removeFromDB(db);
         this.website.decrementRatio(db);
         db.commitTransaction(transaction);
     }

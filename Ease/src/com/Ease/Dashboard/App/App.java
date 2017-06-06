@@ -9,7 +9,8 @@ import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.*;
-import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.Servlets.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -274,8 +275,7 @@ public class App implements ShareableApp, SharedApp {
         this.holder = holder;
     }
 
-    public void removeFromDB(ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public void removeFromDB(DataBaseConnection db) throws GeneralException {
         if (this.groupApp != null && (this.groupApp.isCommon() == true || !this.groupApp.getPerms().havePermission(AppPermissions.Perm.DELETE.ordinal())))
             throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permission to remove this app.");
         int transaction = db.startTransaction();
@@ -286,7 +286,7 @@ public class App implements ShareableApp, SharedApp {
         request.setInt(db_id);
         request.set();
         if (this.groupApp == null || this.groupApp.isCommon() == false)
-            informations.removeFromDb(sm);
+            informations.removeFromDb(db);
         db.commitTransaction(transaction);
     }
 
@@ -434,8 +434,17 @@ public class App implements ShareableApp, SharedApp {
     }
 
     @Override
-    public void deleteShared(ServletManager sm) throws GeneralException {
-        this.removeFromDB(sm);
+    public void deleteShared(DataBaseConnection db) throws HttpServletException {
+        try {
+            int transaction = db.startTransaction();
+            DatabaseRequest request = db.prepareRequest("DELETE FROM sharedApps WHERE id = ?;");
+            request.setInt(this.getDBid());
+            request.set();
+            this.removeFromDB(db);
+            db.commitTransaction(transaction);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError);
+        }
     }
 
     @Override
@@ -485,8 +494,19 @@ public class App implements ShareableApp, SharedApp {
     }
 
     @Override
-    public void deleteShareable(ServletManager sm, SharedApp sharedApp) throws GeneralException {
-        this.removeFromDB(sm);
+    public void deleteShareable(DataBaseConnection db) throws HttpServletException {
+        try {
+            int transaction = db.startTransaction();
+            for (SharedApp sharedApp : this.getSharedApps())
+                sharedApp.deleteShared(db);
+            DatabaseRequest request = db.prepareRequest("DELETE FROM shareableApps WHERE id = ?;");
+            request.setInt(this.getDBid());
+            request.set();
+            this.removeFromDB(db);
+            db.commitTransaction(transaction);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError);
+        }
     }
 
     @Override
