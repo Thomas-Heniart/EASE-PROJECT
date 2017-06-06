@@ -27,12 +27,7 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Update.UpdateManager;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Invitation;
-import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.*;
 import com.Ease.websocket.WebsocketSession;
 import com.Ease.websocketV1.WebSocketManager;
 import com.Ease.websocketV1.WebSocketSession;
@@ -44,7 +39,7 @@ public class User {
     }
 
     @SuppressWarnings("unchecked")
-    public static User loadUser(String email, String password, ServletManager sm) throws GeneralException {
+    public static User loadUser(String email, String password, ServletManager sm) throws GeneralException, HttpServletException {
         Map<String, User> usersMap = (Map<String, User>) sm.getContextAttr("users");
         User connectedUser = usersMap.get(email);
         if (connectedUser != null) {
@@ -76,7 +71,7 @@ public class User {
     }
 
     @SuppressWarnings("unchecked")
-    public static User loadUserFromCookies(SessionSave sessionSave, ServletManager sm) throws GeneralException {
+    public static User loadUserFromCookies(SessionSave sessionSave, ServletManager sm) throws GeneralException, HttpServletException {
         String db_id = sessionSave.getUserId();
         String keyUser = sessionSave.getKeyUser();
         sessionSave.eraseFromDB(sm);
@@ -101,7 +96,7 @@ public class User {
 
     }
 
-    private static User loadUserWithKeys(DatabaseResult rs, Keys keys, ServletManager sm) throws GeneralException {
+    private static User loadUserWithKeys(DatabaseResult rs, Keys keys, ServletManager sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         String db_id = rs.getString(Data.ID.ordinal());
         String email = rs.getString(Data.EMAIL.ordinal());
@@ -251,7 +246,7 @@ public class User {
     }
 
 	/*
-	 * 
+     *
 	 * Getter and Setter
 	 * 
 	 */
@@ -655,7 +650,7 @@ public class User {
             this.teamUsers.add(teamUser);
     }
 
-    public void loadTeamUsers(ServletManager sm) throws GeneralException {
+    public void loadTeamUsers(ServletManager sm) throws HttpServletException, GeneralException {
         HibernateQuery query = new HibernateQuery();
         query.querySQLString("SELECT id, team_id FROM teamUsers WHERE user_id = ?");
         query.setParameter(1, Integer.parseInt(this.db_id));

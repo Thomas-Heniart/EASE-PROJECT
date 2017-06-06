@@ -18,6 +18,7 @@ import com.Ease.Dashboard.App.LinkApp.LinkApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.Profile.Profile;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.ServletContext;
 
 public class App implements ShareableApp, SharedApp {
@@ -79,80 +80,88 @@ public class App implements ShareableApp, SharedApp {
         return apps;
     }
 
-    public static List<ShareableApp> loadShareableAppsForTeam(Team team, ServletContext context, DataBaseConnection db) throws GeneralException {
-        List<ShareableApp> shareableApps = new LinkedList<>();
-        DatabaseRequest request = db.prepareRequest("SELECT * FROM apps JOIN shareableApps ON apps.id = shareableApps.id WHERE team_id = ?;");
-        request.setInt(team.getDb_id());
-        DatabaseResult rs = request.get();
-        String db_id;
-        String insertDate;
-        String description;
-        AppInformation infos;
-        ShareableApp shareableApp = null;
-        while (rs.next()) {
-            db_id = rs.getString("apps.id");
-            insertDate = rs.getString("insert_date");
-            description = rs.getString("description");
-            infos = AppInformation.loadAppInformation(rs.getString("app_info_id"), db);
-            switch (rs.getString("type")) {
-                case "linkApp":
-                    shareableApp = LinkApp.loadLinkApp(db_id, null, null, insertDate, infos, null, context, db);
-                    break;
-                case "websiteApp":
-                    shareableApp = WebsiteApp.loadWebsiteApp(db_id, null, null, insertDate, infos, null, context, db);
-                    break;
-                default:
-                    throw new GeneralException(ServletManager.Code.InternError, "This app type doesn't exist.");
+    public static List<ShareableApp> loadShareableAppsForTeam(Team team, ServletContext context, DataBaseConnection db) throws HttpServletException {
+        try {
+            List<ShareableApp> shareableApps = new LinkedList<>();
+            DatabaseRequest request = db.prepareRequest("SELECT * FROM apps JOIN shareableApps ON apps.id = shareableApps.id WHERE team_id = ?;");
+            request.setInt(team.getDb_id());
+            DatabaseResult rs = request.get();
+            String db_id;
+            String insertDate;
+            String description;
+            AppInformation infos;
+            ShareableApp shareableApp = null;
+            while (rs.next()) {
+                db_id = rs.getString("apps.id");
+                insertDate = rs.getString("insert_date");
+                description = rs.getString("description");
+                infos = AppInformation.loadAppInformation(rs.getString("app_info_id"), db);
+                switch (rs.getString("type")) {
+                    case "linkApp":
+                        shareableApp = LinkApp.loadLinkApp(db_id, null, null, insertDate, infos, null, context, db);
+                        break;
+                    case "websiteApp":
+                        shareableApp = WebsiteApp.loadWebsiteApp(db_id, null, null, insertDate, infos, null, context, db);
+                        break;
+                    default:
+                        throw new GeneralException(ServletManager.Code.InternError, "This app type doesn't exist.");
+                }
+                shareableApp.setDescription(description);
+                TeamUser teamUser_owner = team.getTeamUserWithId(rs.getInt("teamUser_owner_id"));
+                Integer channel_id = rs.getInt("channel_id");
+                Channel channel = null;
+                if (channel_id != null && channel_id > 0) {
+                    channel = team.getChannelWithId(channel_id);
+                    shareableApp.setChannel(channel);
+                }
+                shareableApp.setTeamUser_owner(teamUser_owner);
+                shareableApps.add(shareableApp);
+                teamUser_owner.addShareableApp(shareableApp);
             }
-            shareableApp.setDescription(description);
-            TeamUser teamUser_owner = team.getTeamUserWithId(rs.getInt("teamUser_owner_id"));
-            Integer channel_id = rs.getInt("channel_id");
-            Channel channel = null;
-            if (channel_id != null && channel_id > 0) {
-                channel = team.getChannelWithId(channel_id);
-                shareableApp.setChannel(channel);
-            }
-            shareableApp.setTeamUser_owner(teamUser_owner);
-            shareableApps.add(shareableApp);
-            teamUser_owner.addShareableApp(shareableApp);
+            return shareableApps;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
         }
-        return shareableApps;
     }
 
-    public static List<SharedApp> loadSharedAppsForShareableApp(ShareableApp shareableApp, ServletContext context, DataBaseConnection db) throws GeneralException {
-        List<SharedApp> sharedApps = new LinkedList<>();
-        DatabaseRequest request = db.prepareRequest("SELECT * FROM apps JOIN sharedApps ON sharedApps.id = apps.id AND sharedApps.shareable_app_id = ?;");
-        request.setInt(((App) shareableApp).getDBid());
-        DatabaseResult rs = request.get();
-        String db_id;
-        String insertDate;
-        AppInformation infos;
-        SharedApp sharedApp = null;
-        while (rs.next()) {
-            db_id = rs.getString("apps.id");
-            insertDate = rs.getString("insert_date");
-            infos = AppInformation.loadAppInformation(rs.getString("app_info_id"), db);
-            switch (rs.getString("type")) {
-                case "linkApp":
-                    sharedApp = LinkApp.loadLinkApp(db_id, null, null, insertDate, infos, null, context, db);
-                    break;
-                case "websiteApp":
-                    sharedApp = WebsiteApp.loadWebsiteApp(db_id, null, null, insertDate, infos, null, context, db);
-                    if (((App) sharedApp).isClassicApp()) {
-                        ((App) sharedApp).setReceived(rs.getBoolean("received"));
-                        sharedApp.setAdminHasAccess(rs.getBoolean("adminHasAccess"));
-                    }
+    public static List<SharedApp> loadSharedAppsForShareableApp(ShareableApp shareableApp, ServletContext context, DataBaseConnection db) throws HttpServletException {
+        try {
+            List<SharedApp> sharedApps = new LinkedList<>();
+            DatabaseRequest request = db.prepareRequest("SELECT * FROM apps JOIN sharedApps ON sharedApps.id = apps.id AND sharedApps.shareable_app_id = ?;");
+            request.setInt(((App) shareableApp).getDBid());
+            DatabaseResult rs = request.get();
+            String db_id;
+            String insertDate;
+            AppInformation infos;
+            SharedApp sharedApp = null;
+            while (rs.next()) {
+                db_id = rs.getString("apps.id");
+                insertDate = rs.getString("insert_date");
+                infos = AppInformation.loadAppInformation(rs.getString("app_info_id"), db);
+                switch (rs.getString("type")) {
+                    case "linkApp":
+                        sharedApp = LinkApp.loadLinkApp(db_id, null, null, insertDate, infos, null, context, db);
+                        break;
+                    case "websiteApp":
+                        sharedApp = WebsiteApp.loadWebsiteApp(db_id, null, null, insertDate, infos, null, context, db);
+                        if (((App) sharedApp).isClassicApp()) {
+                            ((App) sharedApp).setReceived(rs.getBoolean("received"));
+                            sharedApp.setAdminHasAccess(rs.getBoolean("adminHasAccess"));
+                        }
 
-                    break;
-                default:
-                    throw new GeneralException(ServletManager.Code.InternError, "This app type dosen't exist.");
+                        break;
+                    default:
+                        throw new GeneralException(ServletManager.Code.InternError, "This app type dosen't exist.");
+                }
+                Integer teamUser_tenant_id = rs.getInt("teamUser_tenant_id");
+                sharedApp.setTeamUser_tenant(shareableApp.getTeamUser_owner().getTeam().getTeamUserWithId(teamUser_tenant_id));
+                sharedApp.setHolder(shareableApp);
+                sharedApps.add(sharedApp);
             }
-            Integer teamUser_tenant_id = rs.getInt("teamUser_tenant_id");
-            sharedApp.setTeamUser_tenant(shareableApp.getTeamUser_owner().getTeam().getTeamUserWithId(teamUser_tenant_id));
-            sharedApp.setHolder(shareableApp);
-            sharedApps.add(sharedApp);
+            return sharedApps;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
         }
-        return sharedApps;
     }
 
     public static String createApp(Profile profile, Integer position, String name, String type, Map<String, Object> elevator, DataBaseConnection db) throws GeneralException {
@@ -535,7 +544,7 @@ public class App implements ShareableApp, SharedApp {
     }
 
     @Override
-    public JSONObject getShareableJson() throws GeneralException, HttpServletException {
+    public JSONObject getShareableJson() throws HttpServletException {
         try {
             JSONObject res = new JSONObject();
             res.put("id", this.getSingleId());
@@ -556,7 +565,7 @@ public class App implements ShareableApp, SharedApp {
             res.put("name", this.getAppInformation().getName());
             return res;
         } catch (ParseException e) {
-            throw new GeneralException(ServletManager.Code.InternError, e);
+            throw new HttpServletException(HttpStatus.InternError, e);
         }
     }
 

@@ -4,6 +4,7 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Servlets.GetServletManager;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -27,7 +28,9 @@ public class ServletGetTeamUser extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
-            sm.setSuccess(teamUser.getJson());
+            JSONObject jsonObject = teamUser.getJson();
+            jsonObject.put("apps", team.getShareableAppsForTeamUser(teamUser_id));
+            sm.setSuccess(jsonObject);
         } catch (Exception e) {
             sm.setError(e);
         }

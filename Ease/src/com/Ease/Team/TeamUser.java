@@ -303,7 +303,7 @@ public class TeamUser {
         return sharedApps;
     }
 
-    public JSONObject getJson() throws GeneralException {
+    public JSONObject getJson() {
         JSONObject res = new JSONObject();
         res.put("id", this.db_id);
         res.put("first_name", this.firstName);
@@ -357,18 +357,23 @@ public class TeamUser {
         this.shareableApps.add(app);
     }
 
-    public void validateRegistration(String deciphered_teamKey, String userPublicKey, DataBaseConnection db) throws GeneralException {
-        if (this.isVerified())
-            throw new GeneralException(ServletManager.Code.ClientError, "TeamUser already registered");
-        DatabaseRequest request = db.prepareRequest("UDPATE teamUsers SET teamKey = ? WHERE id = ?;");
-        this.teamKey = RSA.Encrypt(deciphered_teamKey, userPublicKey);
-        request.setString(this.teamKey);
-        request.setInt(this.db_id);
-        request.set();
+    public void validateRegistration(String deciphered_teamKey, String userPublicKey, DataBaseConnection db) throws HttpServletException {
+        try {
+            if (this.isVerified())
+                throw new HttpServletException(HttpStatus.BadRequest, "TeamUser already registered");
+            DatabaseRequest request = db.prepareRequest("UDPATE teamUsers SET teamKey = ? WHERE id = ?;");
+            this.teamKey = RSA.Encrypt(deciphered_teamKey, userPublicKey);
+            request.setString(this.teamKey);
+            request.setInt(this.db_id);
+            request.set();
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+
     }
 
     public void finalizeRegistration(ServletManager sm) throws GeneralException {
-        if (this.isVerified() && !this.isVerified())
+        if (this.isVerified())
             throw new GeneralException(ServletManager.Code.ClientError, "You shouldn't be there");
         this.deciphered_teamKey = RSA.Decrypt(this.teamKey, this.getDashboard_user().getKeys().getPrivateKey());
         this.teamKey = this.getDashboard_user().encrypt(this.deciphered_teamKey);
@@ -386,10 +391,10 @@ public class TeamUser {
         return this.verified;
     }
 
-    public SharedApp getSharedAppWithId(Integer app_id) throws GeneralException {
+    public SharedApp getSharedAppWithId(Integer app_id) throws HttpServletException {
         SharedApp sharedApp = this.sharedAppMap.get(app_id);
         if (sharedApp == null)
-            throw new GeneralException(ServletManager.Code.ClientError, "This app does not exist.");
+            throw new HttpServletException(HttpStatus.BadRequest, "This app does not exist.");
         return sharedApp;
     }
 

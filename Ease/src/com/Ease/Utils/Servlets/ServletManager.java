@@ -420,15 +420,11 @@ public abstract class ServletManager {
     }
 
     public TeamUser getTeamUserForTeamId(Integer team_id) throws HttpServletException {
-        try {
-            TeamManager teamManager = (TeamManager) this.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
-            for (TeamUser teamUser : this.getTeamUsers()) {
-                if (teamUser.getTeam() == team)
-                    return teamUser;
-            }
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.BadRequest);
+        TeamManager teamManager = (TeamManager) this.getContextAttr("teamManager");
+        Team team = teamManager.getTeamWithId(team_id);
+        for (TeamUser teamUser : this.getTeamUsers()) {
+            if (teamUser.getTeam() == team)
+                return teamUser;
         }
         return null;
     }
