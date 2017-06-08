@@ -57,7 +57,7 @@ public class ServletCreateShareableLinkApp extends HttpServlet {
             linkApp.becomeShareable(sm.getDB(), team, teamUser_owner, channel, description);
             db.commitTransaction(transaction);
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("app_id", linkApp.getSingleId());
+            jsonObject.put("app_id", Integer.valueOf(linkApp.getDBid()));
             sm.setSuccess(jsonObject);
         } catch (Exception e) {
             sm.setError(e);
