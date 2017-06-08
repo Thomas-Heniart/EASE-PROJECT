@@ -5820,11 +5820,11 @@ module.exports = {
         return response.data;
       });
     },
-    editPurpose: function editPurpose(team_id, channel_id, name) {
+    editPurpose: function editPurpose(team_id, channel_id, purpose) {
       return axios.post('/api/v1/teams/EditChannelPurpose', {
         team_id: team_id,
         channel_id: channel_id,
-        name: name
+        purpose: purpose
       }).then(function (response) {
         return response.data;
       });
