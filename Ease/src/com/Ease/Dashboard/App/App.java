@@ -595,7 +595,7 @@ public class App implements ShareableApp, SharedApp {
     }
 
     @Override
-    public JSONObject getNeededParams(PostServletManager sm) throws GeneralException {
+    public JSONObject getNeededParams(PostServletManager sm) {
         return new JSONObject();
     }
 

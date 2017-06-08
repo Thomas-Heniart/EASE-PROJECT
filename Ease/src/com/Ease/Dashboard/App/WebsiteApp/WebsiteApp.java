@@ -137,7 +137,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         String appDBid = App.createSharedApp(null, null, websiteApp.getName(), "websiteApp", elevator, false, true, team_id, channel_id == null ? null : channel_id, team_user_tenant_id, websiteApp, false, sm);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, 'websiteApp', null, null);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, 'classicApp', null, null);");
         request.setInt(websiteApp.getSite().getDb_id());
         request.setInt(appDBid);
         String websiteAppDBid = request.set().toString();
@@ -353,31 +353,32 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         for (Object object : jsonArray) {
             JSONObject sharedAppObject = (JSONObject) object;
             Integer shared_app_id = (Integer) sharedAppObject.get("shared_app_id");
+            System.out.println("WebsiteApp.java ShareableApp id: " + this.getDBid() + " and SharedApp id: " + shared_app_id);
             App sharedApp = (App) this.getSharedAppWithId(shared_app_id);
             if (sharedApp.isClassicApp()) {
+                System.out.println("WebsiteApp.java Je passe ici.");
                 ClassicApp classicApp = (ClassicApp) sharedApp;
                 sharedAppObject.put("account_information", classicApp.getAccount().getInformationJsonWithoutPassword());
                 sharedAppObject.put("last_modification", classicApp.getAccount().getLastUpdatedDate());
             }
-
-
+            object = sharedAppObject;
         }
+        res.put("receivers", jsonArray);
         return res;
     }
 
-    public JSONObject getNeededParams(ServletManager sm) throws GeneralException {
-        try {
-            JSONObject jsonObject = new JSONObject();
-            String account_information = sm.getServletParam("account_information", false);
-            String adminHasAccess = sm.getServletParam("adminHasAccess", true);
-            jsonObject.put("adminHasAccess", Boolean.parseBoolean(adminHasAccess));
-            JSONParser parser = new JSONParser();
-            JSONArray account_information_array = (JSONArray) parser.parse(account_information);
-            jsonObject.put("account_information", account_information_array);
-            return jsonObject;
-        } catch (ParseException e) {
-            throw new GeneralException(ServletManager.Code.ClientError, e);
+    @Override
+    public JSONObject getNeededParams(PostServletManager sm) {
+        System.out.println("WebsiteApp.java getNeededParams");
+        JSONObject jsonObject = new JSONObject();
+        JSONArray account_information = (JSONArray) sm.getParam("account_information", false);
+        //Boolean adminHasAccess = (Boolean) sm.getParam("adminHasAccess", true);
+        //if (adminHasAccess != null)
+        if (account_information != null) {
+            jsonObject.put("account_information", account_information);
+            jsonObject.put("adminHasAccess", true);
         }
+        return jsonObject;
     }
 
     public JSONObject getJsonWithoutId() {

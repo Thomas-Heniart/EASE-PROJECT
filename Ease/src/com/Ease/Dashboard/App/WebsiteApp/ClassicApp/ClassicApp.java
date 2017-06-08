@@ -294,7 +294,7 @@ public class ClassicApp extends WebsiteApp {
     }
 
     @Override
-    public JSONObject getNeededParams(ServletManager sm) throws GeneralException {
+    public JSONObject getNeededParams(PostServletManager sm) {
         return new JSONObject();
     }
 
