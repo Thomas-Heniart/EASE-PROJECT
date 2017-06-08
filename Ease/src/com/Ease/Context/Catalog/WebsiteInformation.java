@@ -96,4 +96,12 @@ public class WebsiteInformation {
 		res.put("placeholderIcon", this.placeholder_icon);
 		return res;
 	}
+
+    public JSONObject getInformationJson() {
+		JSONObject res = new JSONObject();
+		res.put("type", this.information_type);
+		res.put("placeholder", this.placeholder);
+		res.put("placeholderIcon", this.placeholder_icon);
+		return res;
+    }
 }
