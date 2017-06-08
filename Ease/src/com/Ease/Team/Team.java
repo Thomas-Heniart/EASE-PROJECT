@@ -34,9 +34,9 @@ public class Team {
             team.setShareableApps(App.loadShareableAppsForTeam(team, context, db));
             for (ShareableApp shareableApp : team.getShareableApps()) {
                 shareableApp.setSharedApps(App.loadSharedAppsForShareableApp(shareableApp, context, db));
-                if (shareableApp.getChannel() != null) {
+                /* if (shareableApp.getChannel() != null) {
                     shareableApp.getChannel().setSharedApps(shareableApp.getSharedApps());
-                }
+                } */
             }
         }
 
@@ -164,9 +164,8 @@ public class Team {
         this.channelIdMap.put(channel.getDb_id(), channel);
     }
 
-    /* @TODO For the moment we use single_id but it will be replaced by db_id in the future */
-    public ShareableApp getShareableAppWithId(Integer single_id) throws HttpServletException {
-        ShareableApp shareableApp = this.shareableAppMap.get(single_id);
+    public ShareableApp getShareableAppWithId(Integer db_id) throws HttpServletException {
+        ShareableApp shareableApp = this.shareableAppMap.get(db_id);
         if (shareableApp == null)
             throw new HttpServletException(HttpStatus.BadRequest, "This shareable app does not exist.");
         return shareableApp;
@@ -175,7 +174,7 @@ public class Team {
     /* @TODO For the moment we use single_id but it will be replaced by db_id in the future */
     public void addShareableApp(ShareableApp shareableApp) {
         this.shareableApps.add(shareableApp);
-        this.shareableAppMap.put(((App) shareableApp).getSingleId(), shareableApp);
+        this.shareableAppMap.put(Integer.valueOf(((App) shareableApp).getDBid()), shareableApp);
     }
 
     public Channel getGeneralChannel() throws HttpServletException {

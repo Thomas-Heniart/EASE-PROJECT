@@ -4,6 +4,8 @@ import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.ServletManager;
 import com.Ease.Utils.Servlets.PostServletManager;
 
@@ -30,7 +32,7 @@ public class ServletEditChannelPurpose extends HttpServlet {
             Integer channel_id = sm.getIntParam("channel_id", true);
             String purpose = sm.getStringParam("purpose", true);
             if (purpose == null || purpose.equals(""))
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Empty purpose.");
+                throw new HttpServletException(HttpStatus.BadRequest, "Empty purpose.");
             Channel channel = team.getChannelWithId(channel_id);
             channel.editPurpose(purpose);
             sm.saveOrUpdate(channel);

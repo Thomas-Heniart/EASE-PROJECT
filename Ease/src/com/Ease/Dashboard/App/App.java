@@ -534,7 +534,7 @@ public class App implements ShareableApp, SharedApp {
     public void addSharedApp(SharedApp sharedApp) {
         if (!this.tenant_teamUsers.contains(sharedApp.getTeamUser_tenant()))
             this.tenant_teamUsers.add(sharedApp.getTeamUser_tenant());
-        this.sharedAppIdMap.put(((App) sharedApp).getSingleId(), sharedApp);
+        this.sharedAppIdMap.put(Integer.valueOf(((App) sharedApp).getDBid()), sharedApp);
         this.sharedApps.add(sharedApp);
     }
 
@@ -571,7 +571,7 @@ public class App implements ShareableApp, SharedApp {
     public JSONObject getShareableJson() throws HttpServletException {
         try {
             JSONObject res = new JSONObject();
-            res.put("id", this.getSingleId());
+            res.put("id", Integer.valueOf(this.getDBid()));
             res.put("sender_id", this.getTeamUser_owner().getDb_id());
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date shared_date = dateFormat.parse(this.getInsertDate());
@@ -581,7 +581,7 @@ public class App implements ShareableApp, SharedApp {
             for (SharedApp sharedApp : this.getSharedApps()) {
                 JSONObject tmp = new JSONObject();
                 tmp.put("team_user_id", sharedApp.getTeamUser_tenant().getDb_id());
-                tmp.put("shared_app_id", ((App) sharedApp).getSingleId());
+                tmp.put("shared_app_id", Integer.valueOf(((App) sharedApp).getDBid()));
                 tmp.put("accepted", ((App) sharedApp).isReceived());
                 receivers.add(tmp);
             }
