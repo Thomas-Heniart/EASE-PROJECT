@@ -5820,11 +5820,11 @@ module.exports = {
         return response.data;
       });
     },
-    editPurpose: function editPurpose(team_id, channel_id, name) {
+    editPurpose: function editPurpose(team_id, channel_id, purpose) {
       return axios.post('/api/v1/teams/EditChannelPurpose', {
         team_id: team_id,
         channel_id: channel_id,
-        name: name
+        purpose: purpose
       }).then(function (response) {
         return response.data;
       });
@@ -14700,8 +14700,8 @@ var MultiTeamAppAdd = function (_React$Component2) {
             users[i].selected = true;
             user = users[i];
             user.credentials = {};
-            this.state.choosenApp.inputs.map(function (item) {
-              user.credentials[item.name] = '';
+            Object.keys(this.state.choosenApp.inputs).map(function (item) {
+              user.credentials[item] = '';
             });
             selectedUsers.push(users[i]);
           }
@@ -14715,8 +14715,8 @@ var MultiTeamAppAdd = function (_React$Component2) {
     value: function chooseApp(app) {
       api.fetchWebsiteInfo(app.id).then(function (data) {
         var credentials = {};
-        data.information.map(function (item) {
-          credentials[item.name] = '';
+        Object.keys(data.information).map(function (item) {
+          credentials[item] = '';
         });
         this.setState({ choosenApp: { info: app, inputs: data.information }, appName: app.website_name, credentials: credentials });
       }.bind(this));
@@ -14822,21 +14822,20 @@ var MultiTeamAppAdd = function (_React$Component2) {
                             React.createElement('i', { className: 'fa fa-times' })
                           )
                         ),
-                        this.state.choosenApp.inputs.map(function (item) {
+                        Object.keys(this.state.credentials).map(function (item) {
                           var _this4 = this;
 
                           return React.createElement('input', {
-                            key: item.name,
-                            className: 'credentials_value_input value_input',
+                            key: item,
+                            placeholder: this.state.choosenApp.inputs[item].placeholder,
                             autoComplete: 'off',
-                            placeholder: item.placeholder,
-                            type: item.type,
-                            name: item.name,
+                            className: 'credentials_value_input value_input',
+                            type: this.state.choosenApp.inputs[item].type,
+                            name: item,
                             value: user.credentials[item.name],
                             onChange: function onChange(e) {
                               _this4.handleUserInput(user.id, e.target.name, e.target.value);
-                            }
-                          });
+                            } });
                         }, this)
                       )
                     );
