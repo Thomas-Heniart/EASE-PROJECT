@@ -668,7 +668,6 @@ public class Website {
         for (WebsiteInformation websiteInformation : this.website_informations) {
             //information.add(websiteInformation.getJson());
             information.put(websiteInformation.getInformationName(), websiteInformation.getInformationJson());
-            information.put(websiteInformation.getInformationName(), websiteInformation.getInformationType());
         }
         res.put("information", information);
         return res;
