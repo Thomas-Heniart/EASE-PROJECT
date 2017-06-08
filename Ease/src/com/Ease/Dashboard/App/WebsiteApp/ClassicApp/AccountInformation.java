@@ -30,7 +30,7 @@ public class AccountInformation {
     public static List<AccountInformation> createAccountInformations(String account_id, List<JSONObject> accountInformationObjList, String publicKey, DataBaseConnection db) throws GeneralException {
         List<AccountInformation> accountInformationList = new LinkedList<AccountInformation>();
         for (JSONObject accountInformation : accountInformationObjList)
-            accountInformationList.add(createAccountInformation(account_id, (String)accountInformation.get("info_name"), (String)accountInformation.get("info_value"), publicKey, db));
+            accountInformationList.add(createAccountInformation(account_id, (String) accountInformation.get("info_name"), (String) accountInformation.get("info_value"), publicKey, db));
         return accountInformationList;
     }
 
@@ -112,8 +112,7 @@ public class AccountInformation {
 
     public void update_ciphering(String keyUser, String publicKey, ServletManager sm) throws GeneralException {
         if (this.information_name.equals("password"))
-            this.information_value = sm.getUser().decrypt(this.information_value);
-        this.information_value = AES.decrypt(this.information_value, keyUser);
+            this.information_value = AES.decrypt(this.information_value, keyUser);
         DatabaseRequest request = sm.getDB().prepareRequest("UPDATE accountsInformations SET information_value = ? WHERE id = ?;");
         request.setString(RSA.Encrypt(this.information_value, publicKey));
         request.setString(this.db_id);
