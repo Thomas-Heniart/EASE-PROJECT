@@ -666,8 +666,10 @@ public class Website {
         JSONObject res = this.getSimpleJson();
         JSONArray information = new JSONArray();
         for (WebsiteInformation websiteInformation : this.website_informations) {
+            //information.add(websiteInformation.getJson());
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(websiteInformation.getInformationName(), websiteInformation.getInformationType());
+            information.add(jsonObject);
         }
         res.put("information", information);
         return res;
