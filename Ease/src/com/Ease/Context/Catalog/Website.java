@@ -665,10 +665,8 @@ public class Website {
     public JSONObject getInformationJson() {
         JSONObject res = this.getSimpleJson();
         JSONObject information = new JSONObject();
-        for (WebsiteInformation websiteInformation : this.website_informations) {
-            //information.add(websiteInformation.getJson());
+        for (WebsiteInformation websiteInformation : this.website_informations)
             information.put(websiteInformation.getInformationName(), websiteInformation.getInformationJson());
-        }
         res.put("information", information);
         return res;
     }

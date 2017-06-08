@@ -541,8 +541,12 @@ public class App implements ShareableApp, SharedApp {
     @Override
     public SharedApp getSharedAppWithId(Integer sharedApp_id) throws HttpServletException {
         SharedApp sharedApp = this.sharedAppIdMap.get(sharedApp_id);
-        if (sharedApp == null)
-            throw new HttpServletException(HttpStatus.BadRequest, "Wrong shared app id");
+        if (sharedApp == null) {
+            HttpServletException servletException = new HttpServletException(HttpStatus.BadRequest, "Wrong shared app id");
+            servletException.printStackTrace();
+            throw servletException;
+        }
+
         return sharedApp;
     }
 
@@ -578,6 +582,7 @@ public class App implements ShareableApp, SharedApp {
                 JSONObject tmp = new JSONObject();
                 tmp.put("team_user_id", sharedApp.getTeamUser_tenant().getDb_id());
                 tmp.put("shared_app_id", ((App) sharedApp).getSingleId());
+                tmp.put("accepted", ((App) sharedApp).isReceived());
                 receivers.add(tmp);
             }
             res.put("receivers", receivers);

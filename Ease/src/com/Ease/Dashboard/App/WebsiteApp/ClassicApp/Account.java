@@ -102,7 +102,7 @@ public class Account {
         return account;
     }
 
-    public static Account createShareableAccount(Map<String, String> accountInformationMap, String deciphered_teamKey, Integer reminderValue, DataBaseConnection db) throws GeneralException {
+    public static Account createShareableAccount(List<JSONObject> accountInformationObjList , String deciphered_teamKey, Integer reminderValue, DataBaseConnection db) throws GeneralException {
         Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
         String publicKey = publicAndPrivateKey.getKey();
         String privateKey = publicAndPrivateKey.getValue();
@@ -119,7 +119,7 @@ public class Account {
         request.setString(publicKey);
         request.setString(ciphered_key);
         String db_id = request.set().toString();
-        List<AccountInformation> accountInformationList = AccountInformation.createAccountInformations(db_id, accountInformationMap, publicKey, db);
+        List<AccountInformation> accountInformationList = AccountInformation.createAccountInformations(db_id, accountInformationObjList, publicKey, db);
         db.commitTransaction(transaction);
         Account account = new Account(db_id, false, publicKey, ciphered_key, accountInformationList, (reminderValue == null ? 0 : reminderValue));
         account.setPrivateKey(privateKey);

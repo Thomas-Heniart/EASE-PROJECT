@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -54,16 +56,18 @@ public class ServletCreateShareableSingleApp extends HttpServlet {
             Channel channel = null;
             if (channel_id != null)
                 channel = team.getChannelWithId(channel_id);
-            Map<String, String> accountInformationMap = new HashMap<>();
+            // Map<String, String> accountInformationMap = new HashMap<>();
+            List<JSONObject> accountInformationList = new LinkedList<>();
             for (Object accountInformationObj : account_information) {
                 JSONObject accountInformation = (JSONObject) accountInformationObj;
-                String info_name = (String) accountInformation.get("info_name");
+                /* String info_name = (String) accountInformation.get("info_name");
                 String info_value = (String) accountInformation.get("info_value");
-                accountInformationMap.put(info_name, info_value);
+                //accountInformationMap.put(info_name, info_value); */
+                accountInformationList.add(accountInformation);
             }
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
-            ClassicApp classicApp = ClassicApp.createShareableClassicApp(app_name, website, accountInformationMap, teamUser_owner, reminderInterval, sm);
+            ClassicApp classicApp = ClassicApp.createShareableClassicApp(app_name, website, accountInformationList, teamUser_owner, reminderInterval, sm);
             classicApp.becomeShareable(sm.getDB(), team, teamUser_owner, channel, description);
             db.commitTransaction(transaction);
             JSONObject jsonObject = new JSONObject();

@@ -27,6 +27,13 @@ public class AccountInformation {
         return informations;
     }
 
+    public static List<AccountInformation> createAccountInformations(String account_id, List<JSONObject> accountInformationObjList, String publicKey, DataBaseConnection db) throws GeneralException {
+        List<AccountInformation> accountInformationList = new LinkedList<AccountInformation>();
+        for (JSONObject accountInformation : accountInformationObjList)
+            accountInformationList.add(createAccountInformation(account_id, (String)accountInformation.get("info_name"), (String)accountInformation.get("info_value"), publicKey, db));
+        return accountInformationList;
+    }
+
     public static List<AccountInformation> createSharedAccountInformationList(String account_id, List<AccountInformation> informationList, String publicKey, DataBaseConnection db) throws GeneralException {
         List<AccountInformation> accountInformationList = new LinkedList<AccountInformation>();
         for (AccountInformation accountInformation : informationList)

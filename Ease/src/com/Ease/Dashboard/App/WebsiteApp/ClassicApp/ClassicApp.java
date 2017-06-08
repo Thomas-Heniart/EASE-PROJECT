@@ -1,6 +1,7 @@
 package com.Ease.Dashboard.App.WebsiteApp.ClassicApp;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.Ease.Dashboard.App.*;
@@ -69,12 +70,12 @@ public class ClassicApp extends WebsiteApp {
         return new ClassicApp((String) elevator.get("appDBid"), profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, account, classicDBid);
     }
 
-    public static ClassicApp createShareableClassicApp(String name, Website website, Map<String, String> accountInformationMap, TeamUser teamUser_owner, Integer reminderValue, PostServletManager sm) throws GeneralException, HttpServletException {
+    public static ClassicApp createShareableClassicApp(String name, Website website, List<JSONObject> accountInformationList, TeamUser teamUser_owner, Integer reminderValue, PostServletManager sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<String, Object>();
         String websiteAppDBid = WebsiteApp.createWebsiteApp(null, null, name, "classicApp", website, elevator, db);
-        Account account = Account.createShareableAccount(accountInformationMap, teamUser_owner.getDeciphered_teamKey(), reminderValue, db);
+        Account account = Account.createShareableAccount(accountInformationList, teamUser_owner.getDeciphered_teamKey(), reminderValue, db);
         DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
         request.setInt(websiteAppDBid);
         request.setInt(account.getDBid());
