@@ -495,8 +495,9 @@ public class Account {
         request.setString(this.ciphered_key);
         request.setInt(this.db_id);
         request.set();
+        String keyUser = (sm.getUser().getKeys().getKeyUser());
         for (AccountInformation accountInformation : this.getAccountInformations())
-            accountInformation.update_ciphering(this.publicKey, sm);
+            accountInformation.update_ciphering(keyUser, this.publicKey, sm);
         db.commitTransaction(transaction);
 
     }
