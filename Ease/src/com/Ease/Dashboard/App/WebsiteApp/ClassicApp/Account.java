@@ -382,10 +382,11 @@ public class Account {
 
     public JSONArray getInformationJsonWithoutPassword() {
         JSONArray jsonArray = new JSONArray();
-        for (AccountInformation info : this.getAccountInformationsWithoutPassword()) {
+        for (AccountInformation info : this.getAccountInformations()) {
+            String info_name = info.getInformationName();
             JSONObject tmp = new JSONObject();
-            tmp.put("info_name", info.getInformationName());
-            tmp.put("info_value", info.getInformationValue());
+            tmp.put("info_name", info_name);
+            tmp.put("info_value", (info_name.equals("password") ? "" : info.getInformationValue()));
             jsonArray.add(tmp);
         }
         return jsonArray;
