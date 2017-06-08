@@ -194,7 +194,7 @@ public class ClassicApp extends WebsiteApp {
         if (this.groupApp == null || (!this.groupApp.isCommon() && this.groupApp.getPerms().havePermission(AppPermissions.Perm.EDIT.ordinal()))) {
             this.account.editInfos(infos, sm);
             /*if (password != null && !password.equals(""))
-				this.account.setPassword(password, this.getProfile().getUser(), sm);*/
+                this.account.setPassword(password, this.getProfile().getUser(), sm);*/
         }
         for (String info : infos.values()) {
             if (Regex.isEmail(info) == true) {
@@ -301,7 +301,8 @@ public class ClassicApp extends WebsiteApp {
     @Override
     public JSONObject getSharedJSON() {
         JSONObject res = super.getSharedJSON();
-        res.put("account_information", this.getAccount().getInformationJsonWithoutPassword());
+        if (((App) this.getHolder()).isEmpty())
+            res.put("account_information", this.getAccount().getInformationJsonWithoutPassword());
         return res;
     }
 

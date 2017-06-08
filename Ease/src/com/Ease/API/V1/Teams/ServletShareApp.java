@@ -46,7 +46,7 @@ public class ServletShareApp extends HttpServlet {
             teamUser_tenant.addSharedApp(sharedApp);
             if (channel != null)
                 channel.addSharedApp(sharedApp);
-            sm.setSuccess("Shared app successfully and id is " + ((App) sharedApp).getDBid());
+            sm.setSuccess(sharedApp.getSharedJSON());
         } catch (Exception e) {
             sm.setError(e);
         }

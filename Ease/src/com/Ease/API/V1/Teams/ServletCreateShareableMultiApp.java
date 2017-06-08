@@ -53,9 +53,7 @@ public class ServletCreateShareableMultiApp extends HttpServlet {
             WebsiteApp websiteApp = WebsiteApp.createShareableMultiApp(app_name, website, reminderValue, sm);
             websiteApp.becomeShareable(sm.getDB(), team, teamUser_owner, channel, description);
             db.commitTransaction(transaction);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("app_id", Integer.valueOf(websiteApp.getDBid()));
-            sm.setSuccess(jsonObject);
+            sm.setSuccess(websiteApp.getShareableJson());
         } catch (Exception e) {
             sm.setError(e);
         }

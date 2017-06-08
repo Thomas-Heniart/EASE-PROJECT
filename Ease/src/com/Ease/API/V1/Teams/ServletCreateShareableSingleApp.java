@@ -70,9 +70,7 @@ public class ServletCreateShareableSingleApp extends HttpServlet {
             ClassicApp classicApp = ClassicApp.createShareableClassicApp(app_name, website, accountInformationList, teamUser_owner, reminderInterval, sm);
             classicApp.becomeShareable(sm.getDB(), team, teamUser_owner, channel, description);
             db.commitTransaction(transaction);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("app_id", Integer.valueOf(classicApp.getDBid()));
-            sm.setSuccess(jsonObject);
+            sm.setSuccess(classicApp.getShareableJson());
         } catch (Exception e) {
             sm.setError(e);
         }

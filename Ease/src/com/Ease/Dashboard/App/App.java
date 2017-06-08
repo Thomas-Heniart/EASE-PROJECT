@@ -461,7 +461,8 @@ public class App implements ShareableApp, SharedApp {
     @Override
     public JSONObject getSharedJSON() {
         JSONObject res = new JSONObject();
-        res.put("id", this.teamUser_tenant.getDb_id());
+        res.put("team_user_id", this.teamUser_tenant.getDb_id());
+        res.put("shared_app_id", Integer.valueOf(this.getDBid()));
         return res;
     }
 
