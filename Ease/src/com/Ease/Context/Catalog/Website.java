@@ -664,12 +664,10 @@ public class Website {
 
     public JSONObject getInformationJson() {
         JSONObject res = this.getSimpleJson();
-        JSONArray information = new JSONArray();
+        JSONObject information = new JSONObject();
         for (WebsiteInformation websiteInformation : this.website_informations) {
             //information.add(websiteInformation.getJson());
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put(websiteInformation.getInformationName(), websiteInformation.getInformationType());
-            information.add(jsonObject);
+            information.put(websiteInformation.getInformationName(), websiteInformation.getInformationType());
         }
         res.put("information", information);
         return res;
