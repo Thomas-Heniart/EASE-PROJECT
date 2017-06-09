@@ -14605,7 +14605,7 @@ var MultiTeamAppAdd = function (_React$Component2) {
       };
       if (this.props.selectedItem.type === 'channel') app.channel_id = this.props.selectedItem.item.id;
       this.props.dispatch((0, _appsActions.teamCreateMultiApp)(app)).then(function (response) {
-        var id = response.app_id;
+        var id = response.id;
         var sharing = [];
         _this3.state.selectedUsers.map(function (user) {
           var user_info = {
@@ -15879,6 +15879,7 @@ var LinkTeamAppAdd = function (_React$Component3) {
     _this3.handleUserSelect = _this3.handleUserSelect.bind(_this3);
     _this3.handleUserDeselect = _this3.handleUserDeselect.bind(_this3);
     _this3.shareApp = _this3.shareApp.bind(_this3);
+    _this3.handleComment = _this3.handleComment.bind(_this3);
     return _this3;
   }
 
@@ -15894,12 +15895,13 @@ var LinkTeamAppAdd = function (_React$Component3) {
       };
       if (this.props.selectedItem.type === 'channel') app.channel_id = this.props.selectedItem.item.id;
       this.props.dispatch(appActions.teamCreateLinkApp(app)).then(function (response) {
-        var id = response.app_id;
+        var id = response.id;
         var sharing = [];
         _this4.state.selectedUsers.map(function (item) {
           sharing.push(this.props.dispatch(appActions.teamShareApp(id, item.id)));
         }, _this4);
         Promise.all(sharing).then(function () {
+          _this4.props.cancelAddFunc();
           console.log('sharing to users finished');
         });
       });
@@ -16117,7 +16119,7 @@ var SimpleTeamAppAdd = function (_React$Component4) {
       }, this);
       console.log('sharing app');
       this.props.dispatch(appActions.teamCreateSingleApp(app)).then(function (response) {
-        var id = response.app_id;
+        var id = response.id;
         var sharing = [];
         console.log('creating shareable ap finished');
         _this6.state.selectedUsers.map(function (item) {
@@ -16193,6 +16195,7 @@ var SimpleTeamAppAdd = function (_React$Component4) {
     value: function chooseDashboardApp(app) {
       api.getDashboardApp(app.id).then(function (data) {
         var info = data.information;
+        app.id = data.website_id;
         api.fetchWebsiteInfo(data.website_id).then(function (data) {
           var credentials = {};
           info.map(function (item) {
@@ -16491,6 +16494,8 @@ var _helperFunctions = __webpack_require__(162);
 
 var _reactRedux = __webpack_require__(14);
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -16500,28 +16505,117 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var React = __webpack_require__(4);
 var classnames = __webpack_require__(15);
 
-var TeamSimpleApp = function (_React$Component) {
-  _inherits(TeamSimpleApp, _React$Component);
+var TeamAppUserSelectDropdown = function (_React$Component) {
+  _inherits(TeamAppUserSelectDropdown, _React$Component);
+
+  function TeamAppUserSelectDropdown(props) {
+    _classCallCheck(this, TeamAppUserSelectDropdown);
+
+    var _this = _possibleConstructorReturn(this, (TeamAppUserSelectDropdown.__proto__ || Object.getPrototypeOf(TeamAppUserSelectDropdown)).call(this, props));
+
+    _this.state = {
+      dropdown: false
+    };
+    _this.onMouseDown = _this.onMouseDown.bind(_this);
+    _this.onMouseUp = _this.onMouseUp.bind(_this);
+    _this.pageClick = _this.pageClick.bind(_this);
+    _this.setDropdown = _this.setDropdown.bind(_this);
+    return _this;
+  }
+
+  _createClass(TeamAppUserSelectDropdown, [{
+    key: 'setDropdown',
+    value: function setDropdown(state) {
+      this.setState({ dropdown: state });
+    }
+  }, {
+    key: 'onMouseDown',
+    value: function onMouseDown() {
+      this.mouseInDropDown = true;
+    }
+  }, {
+    key: 'onMouseUp',
+    value: function onMouseUp() {
+      this.mouseInDropDown = false;
+    }
+  }, {
+    key: 'pageClick',
+    value: function pageClick(e) {
+      if (this.mouseInDropDown) return;
+      this.setState({ dropdown: false });
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      window.addEventListener('mousedown', this.pageClick, false);
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      window.removeEventListener('mousedown', this.pageClick, false);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return React.createElement(
+        'div',
+        { className: 'modal_input_wrapper', onMouseDown: this.onMouseDown, onMouseUp: this.onMouseUp },
+        this.props.receivers.map(function (item) {
+          var user = (0, _helperFunctions.selectUserFromListById)(this.props.users, item.team_user_id);
+          return React.createElement(
+            'div',
+            { className: 'receiver', key: item.team_user_id },
+            React.createElement(
+              'span',
+              { className: 'receiver_name' },
+              user.username,
+              this.props.myId === user.id && "(you)"
+            ),
+            React.createElement('i', { className: 'fa fa-eye mrgnLeft5' }),
+            React.createElement(
+              'button',
+              { className: 'button-unstyle mrgnLeft5' },
+              React.createElement('i', { className: 'fa fa-times' })
+            )
+          );
+        }, this),
+        React.createElement('input', { onFocus: this.setDropdown.bind(null, true), className: 'input_unstyle', type: 'text', placeholder: 'Search for people...' }),
+        React.createElement(
+          'div',
+          _defineProperty({ className: 'floating_dropdown show' }, 'className', classnames("floating_dropdown", this.state.dropdown ? "show" : null)),
+          React.createElement('div', { className: 'dropdown_content' })
+        )
+      );
+    }
+  }]);
+
+  return TeamAppUserSelectDropdown;
+}(React.Component);
+
+var TeamSimpleApp = function (_React$Component2) {
+  _inherits(TeamSimpleApp, _React$Component2);
 
   function TeamSimpleApp(props) {
     _classCallCheck(this, TeamSimpleApp);
 
-    var _this = _possibleConstructorReturn(this, (TeamSimpleApp.__proto__ || Object.getPrototypeOf(TeamSimpleApp)).call(this, props));
+    var _this2 = _possibleConstructorReturn(this, (TeamSimpleApp.__proto__ || Object.getPrototypeOf(TeamSimpleApp)).call(this, props));
 
-    _this.state = {
+    _this2.state = {
       modifying: false,
+      modifiedAppName: '',
       modifiedPasswordChangeInterval: '',
       modifiedComment: '',
       modifiedCredentials: {}
     };
-    _this.props.app.account_information.map(function (item) {
+    _this2.props.app.account_information.map(function (item) {
       this.state.modifiedCredentials[item.info_name] = '';
-    }, _this);
-    _this.setupModifying = _this.setupModifying.bind(_this);
-    _this.handleCommentInput = _this.handleCommentInput.bind(_this);
-    _this.handlePasswordChangeIntervalInput = _this.handlePasswordChangeIntervalInput.bind(_this);
-    _this.handleCredentialsInput = _this.handleCredentialsInput.bind(_this);
-    return _this;
+    }, _this2);
+    _this2.setupModifying = _this2.setupModifying.bind(_this2);
+    _this2.handleCommentInput = _this2.handleCommentInput.bind(_this2);
+    _this2.handlePasswordChangeIntervalInput = _this2.handlePasswordChangeIntervalInput.bind(_this2);
+    _this2.handleAppNameInput = _this2.handleAppNameInput.bind(_this2);
+    _this2.handleCredentialsInput = _this2.handleCredentialsInput.bind(_this2);
+    return _this2;
   }
 
   _createClass(TeamSimpleApp, [{
@@ -16530,6 +16624,11 @@ var TeamSimpleApp = function (_React$Component) {
       var credentials = _extends({}, this.state.modifiedCredentials);
       credentials[e.target.name] = e.target.value;
       this.setState({ modifiedCredentials: credentials });
+    }
+  }, {
+    key: 'handleAppNameInput',
+    value: function handleAppNameInput(e) {
+      this.setState({ modifiedAppName: e.target.value });
     }
   }, {
     key: 'handleCommentInput',
@@ -16551,6 +16650,7 @@ var TeamSimpleApp = function (_React$Component) {
         });
         this.setState({
           modifying: state,
+          modifiedAppName: this.props.app.name,
           modifiedComment: this.props.app.description,
           modifiedPasswordChangeInterval: this.props.app.password_change_interval,
           modifiedCredentials: modifiedCredentials
@@ -16562,7 +16662,7 @@ var TeamSimpleApp = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _this2 = this;
+      var _this3 = this;
 
       var app = this.props.app;
       var senderUser = (0, _helperFunctions.selectUserFromListById)(this.props.users, app.sender_id);
@@ -16583,7 +16683,7 @@ var TeamSimpleApp = function (_React$Component) {
           React.createElement(
             'button',
             { className: 'button-unstyle team_app_edit', onClick: function onClick(e) {
-                _this2.setupModifying(!_this2.state.modifying);
+                _this3.setupModifying(!_this3.state.modifying);
               } },
             React.createElement('i', { className: 'fa fa-pencil' })
           ),
@@ -16616,7 +16716,9 @@ var TeamSimpleApp = function (_React$Component) {
           React.createElement(
             'div',
             { className: 'name_holder' },
-            app.name
+            !this.state.modifying ? app.name : React.createElement('input', { className: 'name_input', type: 'text', name: 'app_name',
+              value: this.state.modifiedAppName,
+              onChange: this.handleAppNameInput })
           ),
           React.createElement(
             'div',
@@ -16690,11 +16792,11 @@ var TeamSimpleApp = function (_React$Component) {
             ),
             React.createElement(
               'div',
-              { className: 'sharing_info' },
+              { className: 'sharing_info full_flex' },
               React.createElement(
                 'div',
                 { className: 'receivers_wrapper full_flex' },
-                app.receivers.map(function (item) {
+                !this.state.modifying ? app.receivers.map(function (item) {
                   var user = (0, _helperFunctions.selectUserFromListById)(this.props.users, item.team_user_id);
                   return React.createElement(
                     'div',
@@ -16707,7 +16809,11 @@ var TeamSimpleApp = function (_React$Component) {
                     ),
                     React.createElement('i', { className: 'fa fa-eye mrgnLeft5' })
                   );
-                }, this)
+                }, this) : React.createElement(TeamAppUserSelectDropdown, {
+                  receivers: app.receivers,
+                  users: this.props.users,
+                  myId: me.id
+                })
               )
             )
           ),
@@ -16738,18 +16844,61 @@ var TeamSimpleApp = function (_React$Component) {
   return TeamSimpleApp;
 }(React.Component);
 
-var TeamLinkApp = function (_React$Component2) {
-  _inherits(TeamLinkApp, _React$Component2);
+var TeamLinkApp = function (_React$Component3) {
+  _inherits(TeamLinkApp, _React$Component3);
 
   function TeamLinkApp(props) {
     _classCallCheck(this, TeamLinkApp);
 
-    return _possibleConstructorReturn(this, (TeamLinkApp.__proto__ || Object.getPrototypeOf(TeamLinkApp)).call(this, props));
+    var _this4 = _possibleConstructorReturn(this, (TeamLinkApp.__proto__ || Object.getPrototypeOf(TeamLinkApp)).call(this, props));
+
+    _this4.state = {
+      modifying: false,
+      modifiedAppName: '',
+      modifiedUrl: '',
+      modifiedComment: ''
+    };
+    _this4.setupModifying = _this4.setupModifying.bind(_this4);
+    _this4.handleAppNameInput = _this4.handleAppNameInput.bind(_this4);
+    _this4.handleCommentInput = _this4.handleCommentInput.bind(_this4);
+    _this4.handleUrlInput = _this4.handleUrlInput.bind(_this4);
+    return _this4;
   }
 
   _createClass(TeamLinkApp, [{
+    key: 'setupModifying',
+    value: function setupModifying(state) {
+      if (state) {
+        this.setState({
+          modifying: state,
+          modifiedAppName: this.props.app.name,
+          modifiedUrl: this.props.app.url,
+          modifiedComment: this.props.app.description
+        });
+      } else {
+        this.setState({ modifying: false });
+      }
+    }
+  }, {
+    key: 'handleUrlInput',
+    value: function handleUrlInput(e) {
+      this.setState({ modifiedUrl: e.target.value });
+    }
+  }, {
+    key: 'handleAppNameInput',
+    value: function handleAppNameInput(e) {
+      this.setState({ modifiedAppName: e.target.value });
+    }
+  }, {
+    key: 'handleCommentInput',
+    value: function handleCommentInput(e) {
+      this.setState({ modifiedComment: e.target.value });
+    }
+  }, {
     key: 'render',
     value: function render() {
+      var _this5 = this;
+
       var app = this.props.app;
       var senderUser = (0, _helperFunctions.selectUserFromListById)(this.props.users, app.sender_id);
       var me = this.props.me;
@@ -16766,7 +16915,9 @@ var TeamLinkApp = function (_React$Component2) {
           ),
           React.createElement(
             'button',
-            { className: 'button-unstyle team_app_edit' },
+            { className: 'button-unstyle team_app_edit', onClick: function onClick(e) {
+                _this5.setupModifying(!_this5.state.modifying);
+              } },
             React.createElement('i', { className: 'fa fa-pencil' })
           ),
           React.createElement(
@@ -16798,7 +16949,9 @@ var TeamLinkApp = function (_React$Component2) {
           React.createElement(
             'div',
             { className: 'name_holder' },
-            app.name
+            !this.state.modifying ? app.name : React.createElement('input', { className: 'name_input', type: 'text', name: 'app_name',
+              value: this.state.modifiedAppName,
+              onChange: this.handleAppNameInput })
           ),
           React.createElement(
             'div',
@@ -16828,11 +16981,17 @@ var TeamLinkApp = function (_React$Component2) {
                     React.createElement(
                       'div',
                       { className: 'credentials_value_holder' },
-                      React.createElement(
+                      !this.state.modifying ? React.createElement(
                         'span',
                         { className: 'credentials_value' },
                         app.url
-                      )
+                      ) : React.createElement('input', { autoComplete: 'off',
+                        className: 'credentials_value_input value_input',
+                        value: this.state.modifiedUrl,
+                        onChange: this.handleUrlInput,
+                        placeholder: 'Your url',
+                        type: 'url',
+                        name: 'url' })
                     )
                   )
                 )
@@ -16840,11 +16999,11 @@ var TeamLinkApp = function (_React$Component2) {
             ),
             React.createElement(
               'div',
-              { className: 'sharing_info' },
+              { className: 'sharing_info full_flex' },
               React.createElement(
                 'div',
                 { className: 'receivers_wrapper full_flex' },
-                app.receivers.map(function (item) {
+                !this.state.modifying ? app.receivers.map(function (item) {
                   var user = (0, _helperFunctions.selectUserFromListById)(this.props.users, item.team_user_id);
                   return React.createElement(
                     'div',
@@ -16857,7 +17016,11 @@ var TeamLinkApp = function (_React$Component2) {
                     ),
                     React.createElement('i', { className: 'fa fa-eye mrgnLeft5' })
                   );
-                }, this)
+                }, this) : React.createElement(TeamAppUserSelectDropdown, {
+                  receivers: app.receivers,
+                  users: this.props.users,
+                  myId: me.id
+                })
               )
             )
           ),
@@ -16872,11 +17035,12 @@ var TeamLinkApp = function (_React$Component2) {
             React.createElement(
               'div',
               { className: 'comment' },
-              React.createElement(
+              !this.state.modifying ? React.createElement(
                 'span',
                 { className: 'comment_value value' },
                 app.description.length > 0 ? app.description : "There is no comment for this app yet..."
-              )
+              ) : React.createElement('textarea', { className: 'comment_input', placeholder: 'Your comment...',
+                value: this.state.modifiedComment, onChange: this.handleCommentInput })
             )
           )
         )
@@ -16894,8 +17058,8 @@ function findMeInReceivers(receivers, myId) {
   return null;
 }
 
-var TeamMultiApp = function (_React$Component3) {
-  _inherits(TeamMultiApp, _React$Component3);
+var TeamMultiApp = function (_React$Component4) {
+  _inherits(TeamMultiApp, _React$Component4);
 
   function TeamMultiApp(props) {
     _classCallCheck(this, TeamMultiApp);
@@ -16910,6 +17074,7 @@ var TeamMultiApp = function (_React$Component3) {
       var senderUser = (0, _helperFunctions.selectUserFromListById)(this.props.users, app.sender_id);
       var me = this.props.me;
       var meReceiver = findMeInReceivers(app.receivers, me.id);
+      var webInfo = app.website.information;
 
       return React.createElement(
         'div',
@@ -16952,7 +17117,7 @@ var TeamMultiApp = function (_React$Component3) {
         ),
         React.createElement(
           'div',
-          { className: 'team_app' },
+          { className: 'team_app multiple_accounts_app' },
           React.createElement(
             'div',
             { className: 'name_holder' },
@@ -16975,14 +17140,14 @@ var TeamMultiApp = function (_React$Component3) {
                 React.createElement(
                   'div',
                   { className: 'credentials' },
-                  meReceiver !== null ? app.website.information.map(function (item) {
+                  meReceiver !== null ? meReceiver.account_information.map(function (item) {
                     return React.createElement(
                       'div',
-                      { className: 'credentials_line', key: item.name },
+                      { className: 'credentials_line', key: item.info_name },
                       React.createElement(
                         'div',
                         { className: 'credentials_type_icon' },
-                        React.createElement('i', { className: classnames('fa', item.placeholderIcon) })
+                        React.createElement('i', { className: classnames('fa', webInfo[item.info_name].placeholderIcon) })
                       ),
                       React.createElement(
                         'div',
@@ -16990,7 +17155,7 @@ var TeamMultiApp = function (_React$Component3) {
                         React.createElement(
                           'span',
                           { className: 'credentials_value' },
-                          (0, _helperFunctions.getInfoValueByName)(meReceiver.account_information, item.name)
+                          item.info_value
                         )
                       )
                     );
@@ -17022,7 +17187,7 @@ var TeamMultiApp = function (_React$Component3) {
             ),
             React.createElement(
               'div',
-              { className: 'sharing_info' },
+              { className: 'sharing_info display_flex full_flex flex_direction_column' },
               React.createElement(
                 'div',
                 { className: 'receivers_wrapper full_flex' },
@@ -17045,15 +17210,15 @@ var TeamMultiApp = function (_React$Component3) {
                     React.createElement(
                       'div',
                       { className: 'credentials' },
-                      app.website.information.map(function (info) {
+                      item.account_information.map(function (info) {
                         return React.createElement(
                           'div',
-                          { className: 'credential_container' },
-                          React.createElement('i', { className: classnames('fa', 'mrgnRight5', info.placeholderIcon) }),
+                          { className: 'credential_container', key: info.info_name },
+                          React.createElement('i', { className: classnames('fa', 'mrgnRight5', webInfo[info.info_name].placeholderIcon) }),
                           React.createElement(
                             'span',
                             { className: 'value' },
-                            (0, _helperFunctions.getInfoValueByName)(item.account_information, info.name)
+                            info.info_value
                           )
                         );
                       })
@@ -17095,8 +17260,8 @@ var TeamAppsContainer = (_dec = (0, _reactRedux.connect)(function (store) {
     users: store.users.users,
     me: store.users.me
   };
-}), _dec(_class = function (_React$Component4) {
-  _inherits(TeamAppsContainer, _React$Component4);
+}), _dec(_class = function (_React$Component5) {
+  _inherits(TeamAppsContainer, _React$Component5);
 
   function TeamAppsContainer(props) {
     _classCallCheck(this, TeamAppsContainer);
@@ -17124,14 +17289,11 @@ var TeamAppsContainer = (_dec = (0, _reactRedux.connect)(function (store) {
               users: this.props.users,
               me: this.props.me,
               key: item.id });
-            /*                if (item.type === 'multi')
-             return (
-             <TeamMultiApp
-             app={item}
-             users={this.props.users}
-             me={this.props.me}
-             key={item.id}/>
-             );*/
+            if (item.type === 'multi') return React.createElement(TeamMultiApp, {
+              app: item,
+              users: this.props.users,
+              me: this.props.me,
+              key: item.id });
           }, this)
         )
       );
