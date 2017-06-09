@@ -14619,6 +14619,7 @@ var MultiTeamAppAdd = function (_React$Component2) {
           sharing.push(this.props.dispatch((0, _appsActions.teamShareMultiApp)(id, user_info)));
         }, _this3);
         Promise.all(sharing).then(function () {
+          _this3.props.cancelAddFunc();
           console.log('sharing to users finished');
         });
       });
