@@ -633,8 +633,8 @@ public class App implements ShareableApp, SharedApp {
 
     @Override
     public void setOrigin(String origin_type, Integer origin_id) {
-        this.origin.put("origin_type", origin_type);
-        this.origin.put("origin_id", origin_id);
+        this.origin.put("type", origin_type);
+        this.origin.put("id", origin_id);
     }
 
     @Override

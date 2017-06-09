@@ -248,7 +248,7 @@ public class ClassicApp extends WebsiteApp {
     public void modifyShared(DataBaseConnection db, JSONObject editJson) throws HttpServletException {
         try {
             super.modifyShared(db, editJson);
-            this.getAccount().edit(editJson, db);
+            this.getAccount().edit((JSONObject) editJson.get("account_information"), db);
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
