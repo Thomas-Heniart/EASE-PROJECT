@@ -57,8 +57,7 @@ public class AppInformation {
 		return this.name;
 	}
 	
-	public void setName(String name, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
+	public void setName(String name, DataBaseConnection db) throws GeneralException {
 		DatabaseRequest request = db.prepareRequest("UPDATE appsInformations SET name = ? WHERE id = ?;");
 		request.setString(name);
 		request.setInt(db_id);

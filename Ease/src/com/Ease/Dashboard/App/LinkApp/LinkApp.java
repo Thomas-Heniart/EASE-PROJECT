@@ -166,13 +166,17 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
     }
 
     @Override
-    public void modifyShared(ServletManager sm, JSONObject editJson) throws GeneralException {
-        this.getHolder().modifyShareable(sm, editJson, this);
+    public void modifyShared(DataBaseConnection db, JSONObject editJson) throws HttpServletException {
+        this.getHolder().modifyShareable(db, editJson, this);
     }
 
     @Override
-    public void modifyShareable(ServletManager sm, JSONObject editJson, SharedApp sharedApp) throws GeneralException {
-        this.getLinkAppInformations().edit(editJson, sm);
+    public void modifyShareable(DataBaseConnection db, JSONObject editJson, SharedApp sharedApp) throws HttpServletException {
+        try {
+            this.getLinkAppInformations().edit(editJson, db);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 
     @Override

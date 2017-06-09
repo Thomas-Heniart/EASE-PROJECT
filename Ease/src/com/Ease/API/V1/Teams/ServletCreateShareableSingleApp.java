@@ -19,10 +19,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by thomas on 08/05/2017.
@@ -40,6 +38,9 @@ public class ServletCreateShareableSingleApp extends HttpServlet {
             Integer website_id = sm.getIntParam("website_id", true);
             JSONArray account_information = (JSONArray) sm.getParam("account_information", false);
             Integer channel_id = sm.getIntParam("channel_id", true);
+            Integer team_user_id = sm.getIntParam("team_user_id", true);
+            if (channel_id == null && team_user_id == null)
+                throw new HttpServletException(HttpStatus.BadRequest, "You cannot create this app here");
             String app_name = sm.getStringParam("name", true);
             String description = sm.getStringParam("description", true);
             Integer reminderInterval = Integer.parseInt(sm.getStringParam("reminder_interval", true));
@@ -68,7 +69,7 @@ public class ServletCreateShareableSingleApp extends HttpServlet {
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
             ClassicApp classicApp = ClassicApp.createShareableClassicApp(app_name, website, accountInformationList, teamUser_owner, reminderInterval, sm);
-            classicApp.becomeShareable(sm.getDB(), team, teamUser_owner, channel, description);
+            classicApp.becomeShareable(sm.getDB(), team, teamUser_owner, team_user_id, channel, description);
             db.commitTransaction(transaction);
             sm.setSuccess(classicApp.getShareableJson());
         } catch (Exception e) {

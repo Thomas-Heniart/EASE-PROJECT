@@ -11,7 +11,7 @@ import org.json.simple.JSONObject;
  * Created by thomas on 03/05/2017.
  */
 public interface SharedApp {
-    public void modifyShared(ServletManager sm, JSONObject editJson) throws GeneralException;
+    public void modifyShared(DataBaseConnection db, JSONObject editJson) throws HttpServletException;
 
     public ShareableApp getHolder();
 

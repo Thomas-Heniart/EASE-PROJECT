@@ -312,4 +312,9 @@ public class Team {
             throw new HttpServletException(HttpStatus.InternError);
         }
     }
+
+    public void removeShareableApp(ShareableApp shareableApp) {
+        this.shareableApps.remove(shareableApp);
+        this.shareableAppMap.remove(Integer.valueOf(((App) shareableApp).getDBid()));
+    }
 }

@@ -48,7 +48,7 @@ public class LinkAppInformation {
     }
 
 	/*
-	 * 
+     *
 	 * Constructor
 	 * 
 	 */
@@ -83,8 +83,7 @@ public class LinkAppInformation {
         return this.link;
     }
 
-    public void setLink(String link, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public void setLink(String link, DataBaseConnection db) throws GeneralException {
         DatabaseRequest request = db.prepareRequest("UPDATE linkAppInformations SET url = ? WHERE id = ?;");
         request.setString(link);
         request.setInt(db_id);
@@ -96,8 +95,7 @@ public class LinkAppInformation {
         return this.imgUrl;
     }
 
-    public void setImgUrl(String imgUrl, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public void setImgUrl(String imgUrl, DataBaseConnection db) throws GeneralException {
         DatabaseRequest request = db.prepareRequest("UPDATE linkAppInformations SET img_url = ? WHERE id = ?;");
         request.setString(imgUrl);
         request.setInt(db_id);
@@ -105,12 +103,14 @@ public class LinkAppInformation {
         this.imgUrl = imgUrl;
     }
 
-    public void edit(JSONObject editJson, ServletManager sm) throws GeneralException {
+    public void edit(JSONObject editJson, DataBaseConnection db) throws GeneralException {
         String imgUrl = (String) editJson.get("imgUrl");
         String url = (String) editJson.get("url");
+        int transaction = db.startTransaction();
         if (url != null && !url.equals(""))
-            this.setLink(url, sm);
+            this.setLink(url, db);
         if (imgUrl != null && !imgUrl.equals(""))
-            this.setImgUrl(imgUrl, sm);
+            this.setImgUrl(imgUrl, db);
+        db.commitTransaction(transaction);
     }
 }

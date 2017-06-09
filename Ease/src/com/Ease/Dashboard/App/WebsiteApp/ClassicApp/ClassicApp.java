@@ -158,8 +158,7 @@ public class ClassicApp extends WebsiteApp {
         DatabaseRequest request = db.prepareRequest("DELETE FROM classicApps WHERE id = ?;");
         request.setInt(classicDBid);
         request.set();
-        if ((this.groupApp == null || this.groupApp.isCommon() == false) && (this.getHolder() == null || this.getAccount() != ((ClassicApp) this.getHolder()).getAccount()))
-            account.removeFromDB(db);
+        account.removeFromDB(db);
         super.removeFromDB(db);
         this.website.decrementRatio(db);
         db.commitTransaction(transaction);
@@ -246,20 +245,25 @@ public class ClassicApp extends WebsiteApp {
     }
 
     @Override
-    public void modifyShared(ServletManager sm, JSONObject editJson) throws GeneralException {
-        if (!this.havePerm(AppPermissions.Perm.EDIT))
-            throw new GeneralException(ServletManager.Code.ClientError, "You cannot edit this app");
-        if (((App) this.getHolder()).isClassicApp())
-            this.getHolder().modifyShareable(sm, editJson, this);
-        else
-            this.getAccount().edit(editJson, sm);
+    public void modifyShared(DataBaseConnection db, JSONObject editJson) throws HttpServletException {
+        try {
+            super.modifyShared(db, editJson);
+            this.getAccount().edit(editJson, db);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 
     @Override
-    public void modifyShareable(ServletManager sm, JSONObject editJson, SharedApp sharedApp) throws GeneralException {
-        this.getAccount().edit(editJson, sm);
-        for (SharedApp app : this.sharedApps)
-            ((ClassicApp) app).getAccount().edit(editJson, sm);
+    public void modifyShareable(DataBaseConnection db, JSONObject editJson, SharedApp sharedApp) throws HttpServletException {
+        try {
+            this.getAccount().edit(editJson, db);
+            for (SharedApp app : this.sharedApps)
+                ((ClassicApp) app).getAccount().edit(editJson, db);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+
     }
 
     @Override

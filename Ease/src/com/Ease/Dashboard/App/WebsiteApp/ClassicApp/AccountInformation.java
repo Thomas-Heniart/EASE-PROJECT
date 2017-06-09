@@ -91,8 +91,7 @@ public class AccountInformation {
         return this.information_value;
     }
 
-    public void setInformation_value(String information_value, String publicKey, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public void setInformation_value(String information_value, String publicKey, DataBaseConnection db) throws GeneralException {
         DatabaseRequest request = db.prepareRequest("UPDATE accountsInformations SET information_value = ? WHERE id = ?;");
         request.setString(RSA.Encrypt(information_value, publicKey));
         request.setInt(this.db_id);

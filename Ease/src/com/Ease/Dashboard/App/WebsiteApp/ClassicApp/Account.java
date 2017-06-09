@@ -102,7 +102,7 @@ public class Account {
         return account;
     }
 
-    public static Account createShareableAccount(List<JSONObject> accountInformationObjList , String deciphered_teamKey, Integer reminderValue, DataBaseConnection db) throws GeneralException {
+    public static Account createShareableAccount(List<JSONObject> accountInformationObjList, String deciphered_teamKey, Integer reminderValue, DataBaseConnection db) throws GeneralException {
         Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
         String publicKey = publicAndPrivateKey.getKey();
         String privateKey = publicAndPrivateKey.getValue();
@@ -323,7 +323,7 @@ public class Account {
             throw new GeneralException(ServletManager.Code.ClientError, "This account does not have password field");
         for (AccountInformation info : this.infos) {
             if (info.getInformationName().equals("password"))
-                info.setInformation_value(cryptedPassword, this.publicKey, sm);
+                info.setInformation_value(cryptedPassword, this.publicKey, sm.getDB());
         }
     }
 
@@ -426,7 +426,7 @@ public class Account {
         int transaction = db.startTransaction();
         for (AccountInformation info : this.infos) {
             if ((value = infos.get(info.getInformationName())) != null) {
-                info.setInformation_value(value, this.publicKey, sm);
+                info.setInformation_value(value, this.publicKey, db);
                 if (info.getInformationName().equals("password"))
                     updateLastUpateDate(db);
             }
@@ -434,14 +434,13 @@ public class Account {
         db.commitTransaction(transaction);
     }
 
-    public void edit(JSONObject editJson, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public void edit(JSONObject editJson, DataBaseConnection db) throws GeneralException {
         int transaction = db.startTransaction();
         for (AccountInformation accountInformation : this.getAccountInformations()) {
             String new_info_value = (String) editJson.get(accountInformation.getInformationName());
             if (new_info_value == null)
                 continue;
-            accountInformation.setInformation_value(new_info_value, this.publicKey, sm);
+            accountInformation.setInformation_value(new_info_value, this.publicKey, db);
             if (accountInformation.getInformationName().equals("password"))
                 updateLastUpateDate(db);
         }

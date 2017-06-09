@@ -33,6 +33,9 @@ public class ServletCreateShareableMultiApp extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser_owner = sm.getTeamUserForTeam(team);
             Integer channel_id = sm.getIntParam("channel_id", true);
+            Integer team_user_id = sm.getIntParam("team_user_id", true);
+            if (channel_id == null && team_user_id == null)
+                throw new HttpServletException(HttpStatus.BadRequest, "You cannot create this app here");
             String app_name = sm.getStringParam("name", true);
             Integer website_id = sm.getIntParam("website_id", true);
             Integer reminderValue = Integer.parseInt(sm.getStringParam("reminder_interval", true));
@@ -51,7 +54,7 @@ public class ServletCreateShareableMultiApp extends HttpServlet {
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
             WebsiteApp websiteApp = WebsiteApp.createShareableMultiApp(app_name, website, reminderValue, sm);
-            websiteApp.becomeShareable(sm.getDB(), team, teamUser_owner, channel, description);
+            websiteApp.becomeShareable(sm.getDB(), team, teamUser_owner, team_user_id, channel, description);
             db.commitTransaction(transaction);
             sm.setSuccess(websiteApp.getShareableJson());
         } catch (Exception e) {

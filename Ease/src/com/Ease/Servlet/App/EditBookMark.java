@@ -25,8 +25,8 @@ import com.Ease.Utils.ServletManager;
  */
 @WebServlet("/EditBookMark")
 public class EditBookMark extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
+    private static final long serialVersionUID = 1L;
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -34,54 +34,54 @@ public class EditBookMark extends HttpServlet {
         super();
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-		rd.forward(request, response);
-	}
+    /**
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+        rd.forward(request, response);
+    }
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
-		User user = (User) (session.getAttribute("user"));
-		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
-		try {
-			sm.needToBeConnected();
-			String name = sm.getServletParam("name", true);
-			String link = sm.getServletParam("link", true);
-			String appIdsString = sm.getServletParam("appIds", true);
-			
-			if (name == null || name.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
-			if (link == null || link.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Empty link.");
-			
-			JSONParser parser = new JSONParser();
-			JSONArray appIds = null;
-			appIds = (JSONArray)parser.parse(StringEscapeUtils.unescapeHtml4(appIdsString));
-			try {
-				DataBaseConnection db = sm.getDB();
-				int transaction = db.startTransaction();
-				for (Object appId : appIds) {	
-					LinkApp app = (LinkApp) user.getDashboardManager().getAppWithID(Integer.parseInt((String)appId));
-					app.setName(name, sm);
-					app.getLinkAppInformations().setLink(link, sm);
-				}
-				db.commitTransaction(transaction);
-				sm.setResponse(ServletManager.Code.Success, "Links edited.");
-			} catch (NumberFormatException e) {
-				sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");
-			}
-		} catch (GeneralException e) {
-			sm.setResponse(e);
-		} catch (Exception e) {
-			sm.setResponse(e);
-		}
-		sm.sendResponse();
-	}
+    /**
+     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+     */
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        User user = (User) (session.getAttribute("user"));
+        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+        try {
+            sm.needToBeConnected();
+            String name = sm.getServletParam("name", true);
+            String link = sm.getServletParam("link", true);
+            String appIdsString = sm.getServletParam("appIds", true);
+
+            if (name == null || name.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Empty name.");
+            if (link == null || link.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Empty link.");
+
+            JSONParser parser = new JSONParser();
+            JSONArray appIds = null;
+            appIds = (JSONArray) parser.parse(StringEscapeUtils.unescapeHtml4(appIdsString));
+            try {
+                DataBaseConnection db = sm.getDB();
+                int transaction = db.startTransaction();
+                for (Object appId : appIds) {
+                    LinkApp app = (LinkApp) user.getDashboardManager().getAppWithID(Integer.parseInt((String) appId));
+                    app.setName(name, sm);
+                    app.getLinkAppInformations().setLink(link, db);
+                }
+                db.commitTransaction(transaction);
+                sm.setResponse(ServletManager.Code.Success, "Links edited.");
+            } catch (NumberFormatException e) {
+                sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");
+            }
+        } catch (GeneralException e) {
+            sm.setResponse(e);
+        } catch (Exception e) {
+            sm.setResponse(e);
+        }
+        sm.sendResponse();
+    }
 
 }

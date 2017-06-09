@@ -18,7 +18,7 @@ import java.util.List;
 public interface ShareableApp {
     public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, PostServletManager sm) throws GeneralException, HttpServletException;
 
-    public void modifyShareable(ServletManager sm, JSONObject editJson, SharedApp sharedApp) throws GeneralException;
+    public void modifyShareable(DataBaseConnection db, JSONObject editJson, SharedApp sharedApp) throws HttpServletException;
 
     public void deleteShareable(DataBaseConnection db) throws HttpServletException;
 
@@ -47,4 +47,8 @@ public interface ShareableApp {
     public void setDescription(String description);
 
     public String getDescription();
+
+    public void setOrigin(String origin_type, Integer origin_id);
+
+    public JSONObject getOrigin();
 }

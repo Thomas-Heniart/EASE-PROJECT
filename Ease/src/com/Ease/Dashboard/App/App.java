@@ -108,6 +108,7 @@ public class App implements ShareableApp, SharedApp {
                         throw new GeneralException(ServletManager.Code.InternError, "This app type doesn't exist.");
                 }
                 shareableApp.setDescription(description);
+                shareableApp.setOrigin(rs.getString("origin_type"), rs.getInt("origin_id"));
                 TeamUser teamUser_owner = team.getTeamUserWithId(rs.getInt("teamUser_owner_id"));
                 Integer channel_id = rs.getInt("channel_id");
                 Channel channel = null;
@@ -117,7 +118,6 @@ public class App implements ShareableApp, SharedApp {
                 }
                 shareableApp.setTeamUser_owner(teamUser_owner);
                 shareableApps.add(shareableApp);
-                teamUser_owner.addShareableApp(shareableApp);
             }
             return shareableApps;
         } catch (GeneralException e) {
@@ -248,6 +248,7 @@ public class App implements ShareableApp, SharedApp {
     protected List<TeamUser> tenant_teamUsers = new LinkedList<>();
     protected Channel channel;
     protected String description;
+    protected JSONObject origin = new JSONObject();
 
     /* Interface SharedApp */
     protected ShareableApp holder;
@@ -310,7 +311,7 @@ public class App implements ShareableApp, SharedApp {
 
     public void setName(String name, ServletManager sm) throws GeneralException {
         if (this.groupApp == null || (!this.groupApp.isCommon() && this.groupApp.getPerms().havePermission(AppPermissions.Perm.RENAME.ordinal()))) {
-            this.informations.setName(name, sm);
+            this.informations.setName(name, sm.getDB());
         } else {
             throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permission to change this app's name.");
         }
@@ -417,10 +418,15 @@ public class App implements ShareableApp, SharedApp {
 
     /* Interface SharedApp */
     @Override
-    public void modifyShared(ServletManager sm, JSONObject editJson) throws GeneralException {
-        String name = (String) editJson.get("name");
-        if (name != null && !name.equals(""))
-            this.getAppInformation().setName(name, sm);
+    public void modifyShared(DataBaseConnection db, JSONObject editJson) throws HttpServletException {
+        try {
+            String name = (String) editJson.get("name");
+            if (name != null && !name.equals(""))
+                this.getAppInformation().setName(name, db);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+
     }
 
     @Override
@@ -442,6 +448,7 @@ public class App implements ShareableApp, SharedApp {
             request.set();
             this.removeFromDB(db);
             db.commitTransaction(transaction);
+            this.getTeamUser_tenant().removeSharedApp(this);
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError);
         }
@@ -488,10 +495,8 @@ public class App implements ShareableApp, SharedApp {
     }
 
     @Override
-    public void modifyShareable(ServletManager sm, JSONObject editJson, SharedApp sharedApp) throws GeneralException {
-        String name = (String) editJson.get("name");
-        if (name != null && !name.equals(""))
-            this.getAppInformation().setName(name, sm);
+    public void modifyShareable(DataBaseConnection db, JSONObject editJson, SharedApp sharedApp) throws HttpServletException {
+        return;
     }
 
     @Override
@@ -553,7 +558,6 @@ public class App implements ShareableApp, SharedApp {
 
     @Override
     public void setTeamUser_owner(TeamUser teamUser_owner) {
-        teamUser_owner.addShareableApp(this);
         this.teamUser_owner = teamUser_owner;
     }
 
@@ -587,6 +591,7 @@ public class App implements ShareableApp, SharedApp {
                 receivers.add(tmp);
             }
             res.put("receivers", receivers);
+            res.put("origin", this.getOrigin());
             res.put("description", this.getDescription());
             res.put("name", this.getAppInformation().getName());
             return res;
@@ -610,6 +615,17 @@ public class App implements ShareableApp, SharedApp {
         return this.description;
     }
 
+    @Override
+    public void setOrigin(String origin_type, Integer origin_id) {
+        this.origin.put("origin_type", origin_type);
+        this.origin.put("origin_id", origin_id);
+    }
+
+    @Override
+    public JSONObject getOrigin() {
+        return this.origin;
+    }
+
     public void pinToDashboard(Profile profile, DataBaseConnection db) throws GeneralException {
         int transaction = db.startTransaction();
         this.profile = profile;
@@ -628,10 +644,12 @@ public class App implements ShareableApp, SharedApp {
         return jsonObject;
     }
 
-    public void becomeShareable(DataBaseConnection db, Team team, TeamUser teamUser_owner, Channel channel, String description) throws GeneralException {
+    public void becomeShareable(DataBaseConnection db, Team team, TeamUser teamUser_owner, Integer team_user_id, Channel channel, String description) throws GeneralException {
         if (this.teamUser_owner != null)
             return;
-        DatabaseRequest databaseRequest = db.prepareRequest("INSERT INTO shareableApps values (?, ?, ?, ?, ?);");
+        String origin_type = (channel == null) ? "user" : "channel";
+        Integer origin_id = (channel == null) ? team_user_id : channel.getDb_id();
+        DatabaseRequest databaseRequest = db.prepareRequest("INSERT INTO shareableApps values (?, ?, ?, ?, ?, ?, ?);");
         databaseRequest.setInt(this.getDBid());
         databaseRequest.setInt(team.getDb_id());
         databaseRequest.setInt(teamUser_owner.getDb_id());
@@ -640,11 +658,13 @@ public class App implements ShareableApp, SharedApp {
         else
             databaseRequest.setInt(channel.getDb_id());
         databaseRequest.setString((description == null) ? "" : description);
+        databaseRequest.setString(origin_type);
+        databaseRequest.setInt(origin_id);
         databaseRequest.set();
         this.teamUser_owner = teamUser_owner;
         this.channel = channel;
         this.description = description;
+        this.setOrigin(origin_type, origin_id);
         team.addShareableApp(this);
-        teamUser_owner.addShareableApp(this);
     }
 }

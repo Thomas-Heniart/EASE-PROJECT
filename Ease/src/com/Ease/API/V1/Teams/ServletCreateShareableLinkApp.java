@@ -39,6 +39,9 @@ public class ServletCreateShareableLinkApp extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser_owner = sm.getTeamUserForTeam(team);
             Integer channel_id = sm.getIntParam("channel_id", true);
+            Integer team_user_id = sm.getIntParam("team_user_id", true);
+            if (channel_id == null && team_user_id == null)
+                throw new HttpServletException(HttpStatus.BadRequest, "You cannot create this app here");
             String app_name = sm.getStringParam("name", true);
             String url = sm.getStringParam("url", true);
             String description = sm.getStringParam("description", false);
@@ -54,7 +57,7 @@ public class ServletCreateShareableLinkApp extends HttpServlet {
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
             LinkApp linkApp = LinkApp.createShareableLinkApp(app_name, url, sm);
-            linkApp.becomeShareable(sm.getDB(), team, teamUser_owner, channel, description);
+            linkApp.becomeShareable(sm.getDB(), team, teamUser_owner, team_user_id, channel, description);
             db.commitTransaction(transaction);
             sm.setSuccess(linkApp.getShareableJson());
         } catch (Exception e) {

@@ -291,16 +291,6 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
     }
 
     @Override
-    public void modifyShared(ServletManager sm, JSONObject editJson) throws GeneralException {
-        throw new GeneralException(ServletManager.Code.ClientError, "Go fuck yourself");
-    }
-
-    @Override
-    public void modifyShareable(ServletManager sm, JSONObject editJson, SharedApp sharedApp) throws GeneralException {
-        throw new GeneralException(ServletManager.Code.ClientError, "Go fuck yourself");
-    }
-
-    @Override
     public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, PostServletManager sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();

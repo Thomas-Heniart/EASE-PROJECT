@@ -83,11 +83,6 @@ public class TeamUser {
     @Transient
     protected DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd", Locale.US);
 
-    /* @ManyToMany
-    @JoinTable(name = "channelAndTeamUserMap", joinColumns = {@JoinColumn(name = "team_user_id")}, inverseJoinColumns = {@JoinColumn(name = "channel_id")})
-    protected List<Channel> channels = new LinkedList<>(); */
-
-
     /**
      * TODO Use hibernate for apps then update code about sharedApps
      */
@@ -96,9 +91,6 @@ public class TeamUser {
 
     @Transient
     Map<Integer, SharedApp> sharedAppMap = new HashMap<>();
-
-    @Transient
-    private List<ShareableApp> shareableApps = new LinkedList<>();
 
     public TeamUser(User user, String firstName, String lastName, String email, String username, String teamKey, Boolean verified, Date departureDate, Team team, TeamUserRole teamUserRole, List<Channel> channels) {
         this.user = user;
@@ -240,12 +232,6 @@ public class TeamUser {
         this.deciphered_teamKey = deciphered_teamKey;
     }
 
-    /*public void setTeamKey(String teamPrivateKey) {
-        System.out.println("old teamPrivateKey: " + this.teamPrivateKey);
-        System.out.println("new teamPrivateKey: " + teamPrivateKey);
-        this.teamPrivateKey = teamPrivateKey;
-    }*/
-
     public Date getArrivalDate() {
         return arrivalDate;
     }
@@ -315,15 +301,6 @@ public class TeamUser {
         res.put("departure_date", "Undefined");
         if (departureDate != null)
             res.put("departure_date", this.dateFormat.format(this.departureDate));
-        /* JSONArray sharedApps = new JSONArray();
-        for (SharedApp sharedApp : this.sharedApps) {
-            sharedApps.add(sharedApp.getSharedJSON());
-        }
-        res.put("shared_apps", sharedApps);
-        JSONArray shareableApps = new JSONArray();
-        for (ShareableApp shareableApp : this.shareableApps)
-            shareableApps.add(shareableApp.getShareableJson());
-        res.put("shareable_apps", shareableApps); */
         res.put("verified", this.verified);
         return res;
     }
@@ -350,11 +327,7 @@ public class TeamUser {
 
     public void addSharedApp(SharedApp app) {
         this.sharedApps.add(app);
-        this.sharedAppMap.put(((App) app).getSingleId(), app);
-    }
-
-    public void addShareableApp(ShareableApp app) {
-        this.shareableApps.add(app);
+        this.sharedAppMap.put(Integer.valueOf(((App) app).getDBid()), app);
     }
 
     public void validateRegistration(String deciphered_teamKey, String userPublicKey, DataBaseConnection db) throws HttpServletException {
@@ -438,5 +411,10 @@ public class TeamUser {
     public void transferOwnershipTo(TeamUser new_teamUser_owner) throws HttpServletException {
         new_teamUser_owner.getTeamUserRole().setRole(TeamUserRole.Role.OWNER);
         this.getTeamUserRole().setRole(TeamUserRole.Role.ADMINISTRATOR);
+    }
+
+    public void removeSharedApp(SharedApp sharedApp) {
+        this.sharedApps.remove(sharedApp);
+        this.sharedAppMap.remove(Integer.valueOf(((App) sharedApp).getDBid()));
     }
 }
