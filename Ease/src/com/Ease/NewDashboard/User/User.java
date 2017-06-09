@@ -2,6 +2,7 @@ package com.Ease.NewDashboard.User;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.ServletManagerHibernate;
 import com.Ease.Website.Tag;
 
@@ -182,7 +183,7 @@ public class User {
         this.userEmails = userEmails;
     }
 
-    public SessionSave getCurrentSessionSave() {
+    public SessionSave getCurrentSessionSave() throws HttpServletException {
         if (this.currentSessionSave != null)
             return this.currentSessionSave;
         HibernateQuery query = new HibernateQuery();
@@ -196,12 +197,12 @@ public class User {
         this.currentSessionSave = currentSessionSave;
     }
 
-    public void populateProfileManager() {
+    public void populateProfileManager() throws HttpServletException {
         this.profileManager = new ProfileManager();
         this.profileManager.populate(this.db_id);
     }
 
-    public void createFirstProfiles() {
+    public void createFirstProfiles() throws HttpServletException {
         this.profileManager = new ProfileManager();
         this.profileManager.createFirstProfilesForUser(this);
     }
@@ -256,7 +257,7 @@ public class User {
         return true;
     }
 
-    public void lazyLoadUserEmails() {
+    public void lazyLoadUserEmails() throws HttpServletException {
         HibernateQuery query = new HibernateQuery();
         this.getUserEmails();
         query.commit();

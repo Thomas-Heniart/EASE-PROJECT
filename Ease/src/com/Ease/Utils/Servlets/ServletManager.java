@@ -217,6 +217,10 @@ public abstract class ServletManager {
         this.getHibernateQuery().saveOrUpdateObject(hibernateObject);
     }
 
+    public void deleteObject(Object hibernateObject) {
+        this.getHibernateQuery().deleteObject(hibernateObject);
+    }
+
     public void setRedirectUrl(String url) {
         this.redirectUrl = url;
     }
@@ -317,7 +321,15 @@ public abstract class ServletManager {
                         }
                     } else {
                         if (this.hibernateQuery != null)
-                            this.hibernateQuery.commit();
+                            try {
+                                this.hibernateQuery.commit();
+                            } catch (HttpServletException e) {
+                                response.setStatus(e.getHttpStatus().getValue());
+                                response.getWriter().print(e.getMsg());
+                                if (this.db != null)
+                                    this.db.close();
+                                return;
+                            }
                         if (this.jsonArrayResponse != null)
                             response.getWriter().print(this.jsonArrayResponse.toString());
                         else

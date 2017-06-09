@@ -2,6 +2,7 @@ package com.Ease.Website;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.ServletManager;
 import com.Ease.Website.Sso;
 import com.Ease.Website.Website;
@@ -37,7 +38,7 @@ public class Catalog {
         this.ssoWebsiteMap = new HashMap<Sso, List<Website>>();
     }
 
-    public void populate() throws GeneralException {
+    public void populate() throws GeneralException, HttpServletException {
         HibernateQuery query = new HibernateQuery();
         query.queryString("SELECT w FROM Website w INNER JOIN w.websiteAttributes wa ORDER BY wa.isNew, w.ratio");
         this.websites = query.list();

@@ -6,6 +6,7 @@ import com.Ease.NewDashboard.Profile.ProfileApp;
 import com.Ease.NewDashboard.Profile.ProfileInformation;
 import com.Ease.NewDashboard.UserProfile;
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.ServletManager;
 
 import java.util.*;
@@ -33,7 +34,7 @@ public class ProfileManager {
         }
     }
 
-    public void createFirstProfilesForUser(User user) {
+    public void createFirstProfilesForUser(User user) throws HttpServletException {
         HibernateQuery query = new HibernateQuery();
         ProfileInformation profileInformation1 = new ProfileInformation("Side", "#000000");
         Profile profile1 = new Profile(0, 0, profileInformation1);
@@ -54,7 +55,7 @@ public class ProfileManager {
         this.addProfile(profile2);
     }
 
-    public void populate(Integer user_id) {
+    public void populate(Integer user_id) throws HttpServletException {
         HibernateQuery query = new HibernateQuery();
         query.queryString("SELECT p.profile FROM UserProfile p WHERE p.user.db_id = :id");
         query.setParameter("id", user_id);

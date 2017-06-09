@@ -3,6 +3,7 @@ package com.Ease.NewDashboard.Profile;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.App.App;
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.ServletManager;
 
 import java.util.*;
@@ -19,7 +20,7 @@ public class ProfileAppManager {
         this.profileAppIdMap = new HashMap<Integer, ProfileApp>();
     }
 
-    public List<ProfileApp> populate(Profile profile) {
+    public List<ProfileApp> populate(Profile profile) throws HttpServletException {
         HibernateQuery query = new HibernateQuery();
         query.queryString("SELECT p FROM ProfileApp p WHERE p.profile.db_id = :id ORDER BY p.position ASC");
         query.setParameter("id", profile.getDb_id());

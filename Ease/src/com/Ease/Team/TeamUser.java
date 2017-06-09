@@ -8,6 +8,7 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.User.User;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.RSA;
+import com.Ease.Utils.Servlets.PostServletManager;
 import org.hibernate.annotations.Cascade;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -416,5 +417,31 @@ public class TeamUser {
     public void removeSharedApp(SharedApp sharedApp) {
         this.sharedApps.remove(sharedApp);
         this.sharedAppMap.remove(Integer.valueOf(((App) sharedApp).getDBid()));
+    }
+
+    public void delete(DataBaseConnection db) throws HttpServletException {
+        try {
+            int transaction = db.startTransaction();
+            for (SharedApp sharedApp : this.getSharedApps())
+                sharedApp.deleteShared(db);
+            Team team = this.getTeam();
+            List<ShareableApp> shareableAppsToRemove = new LinkedList<>();
+            for (ShareableApp shareableApp : team.getShareableApps()) {
+                if (shareableApp.getTeamUser_owner() != this)
+                    continue;
+                shareableApp.deleteShareable(db);
+                shareableAppsToRemove.add(shareableApp);
+            }
+            for (ShareableApp shareableApp : shareableAppsToRemove)
+                team.removeShareableApp(shareableApp);
+            for (Channel channel : this.getTeam().getChannels())
+                channel.removeTeamUser(this, db);
+            DatabaseRequest request = db.prepareRequest("DELETE FROM pendingTeamInvitations WHERE teamUser_id = ?;");
+            request.setInt(this.getDb_id());
+            request.set();
+            db.commitTransaction(transaction);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 }

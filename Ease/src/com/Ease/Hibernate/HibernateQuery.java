@@ -1,5 +1,7 @@
 package com.Ease.Hibernate;
 
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -20,6 +22,7 @@ public class HibernateQuery {
     public HibernateQuery() {
         this.session = HibernateDatabase.getSessionFactory().getCurrentSession();
         this.transaction = this.session.beginTransaction();
+        System.out.println("Hibernate transaction begin");
     }
 
     public void queryString(String query) {
@@ -42,12 +45,15 @@ public class HibernateQuery {
         return this.query.list();
     }
 
-    public void commit() {
+    public void commit() throws HttpServletException {
         try {
             //this.session.flush();
             this.transaction.commit();
+            System.out.println("Hibernate transaction commit");
         } catch (RuntimeException e) {
+            System.out.println("Hibernate transaction rollback");
             this.transaction.rollback();
+            throw new HttpServletException(HttpStatus.InternError, e);
         } /* finally {
             if (this.session != null) {
                 System.out.println("Hibernate close session.");

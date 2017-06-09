@@ -38,12 +38,6 @@ public class Channel {
     @JoinTable(name = "channelAndTeamUserMap", joinColumns = {@JoinColumn(name = "channel_id")}, inverseJoinColumns = {@JoinColumn(name = "team_user_id")})
     protected List<TeamUser> teamUsers = new LinkedList<>();
 
-    @Transient
-    protected List<SharedApp> sharedApps = new LinkedList<>();
-
-    @Transient
-    protected Map<String, SharedApp> sharedAppIdMap = new HashMap<>();
-
     public Channel(Team team, String name, String purpose, List<TeamUser> teamUsers) {
         this.team = team;
         this.name = name;
@@ -111,16 +105,17 @@ public class Channel {
         this.teamUsers.add(teamUser);
     }
 
-    public void removeTeamUser(TeamUser teamUser) {
-        this.teamUsers.remove(teamUser);
-    }
+    public void removeTeamUser(TeamUser teamUser, DataBaseConnection db) throws HttpServletException {
+        try {
+            DatabaseRequest request = db.prepareRequest("DELETE FROM channelAndTeamUserMap WHERE team_user_id = ? AND channel_id = ?;");
+            request.setInt(teamUser.getDb_id());
+            request.setInt(this.getDb_id());
+            request.set();
+            this.teamUsers.remove(teamUser);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
 
-    public List<SharedApp> getSharedApps() {
-        return sharedApps;
-    }
-
-    public void setSharedApps(List<SharedApp> sharedApps) {
-        this.sharedApps = sharedApps;
     }
 
     public JSONObject getJson() {
@@ -143,10 +138,6 @@ public class Channel {
         String name = (String) editJson.get("name");
         if (name != null)
             this.name = name;
-    }
-
-    public void addSharedApp(SharedApp sharedApp) {
-        this.sharedApps.add(sharedApp);
     }
 
     public JSONObject getSimpleJson() {

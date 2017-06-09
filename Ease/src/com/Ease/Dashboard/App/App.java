@@ -572,7 +572,6 @@ public class App implements ShareableApp, SharedApp {
 
     @Override
     public void setChannel(Channel channel) {
-        channel.addSharedApp(this);
         this.channel = channel;
     }
 

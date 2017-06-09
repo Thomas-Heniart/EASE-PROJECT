@@ -25,10 +25,9 @@ import java.util.Map;
 public class Team {
 
     public static List<Team> loadTeams(ServletContext context, DataBaseConnection db) throws HttpServletException {
-        List<Team> teams = new LinkedList<>();
         HibernateQuery query = new HibernateQuery();
         query.queryString("SELECT t FROM Team t");
-        teams = query.list();
+        List<Team> teams = query.list();
         for (Team team : teams) {
             team.lazyInitialize(db);
             team.setShareableApps(App.loadShareableAppsForTeam(team, context, db));
@@ -186,8 +185,6 @@ public class Team {
     }
 
     public void removeTeamUser(TeamUser teamUser) {
-        for (Channel channel : this.getChannels())
-            channel.removeTeamUser(teamUser);
         this.teamUserIdMap.remove(teamUser.getDb_id());
         this.teamUsers.remove(teamUser);
     }

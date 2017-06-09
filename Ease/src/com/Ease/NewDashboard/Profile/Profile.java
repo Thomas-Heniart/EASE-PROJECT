@@ -3,6 +3,7 @@ package com.Ease.NewDashboard.Profile;
 import com.Ease.NewDashboard.App.App;
 import com.Ease.NewDashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.HttpServletException;
 
 import javax.persistence.*;
 import java.util.List;
@@ -77,7 +78,7 @@ public class Profile {
         this.profileAppManager = new ProfileAppManager();
     }
 
-    public List<ProfileApp> populateProfileAppManager() {
+    public List<ProfileApp> populateProfileAppManager() throws HttpServletException {
         this.profileAppManager = new ProfileAppManager();
         return this.profileAppManager.populate(this);
     }
