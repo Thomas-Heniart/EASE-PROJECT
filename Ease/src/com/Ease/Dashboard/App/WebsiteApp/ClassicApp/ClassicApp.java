@@ -257,9 +257,10 @@ public class ClassicApp extends WebsiteApp {
     @Override
     public void modifyShareable(DataBaseConnection db, JSONObject editJson, SharedApp sharedApp) throws HttpServletException {
         try {
-            this.getAccount().edit(editJson, db);
+            JSONObject account_information = (JSONObject) editJson.get("account_information");
+            this.getAccount().edit(account_information, db);
             for (SharedApp app : this.sharedApps)
-                ((ClassicApp) app).getAccount().edit(editJson, db);
+                ((ClassicApp) app).getAccount().edit(account_information, db);
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }

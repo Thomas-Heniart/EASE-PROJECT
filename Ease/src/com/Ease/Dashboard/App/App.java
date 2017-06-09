@@ -496,7 +496,11 @@ public class App implements ShareableApp, SharedApp {
 
     @Override
     public void modifyShareable(DataBaseConnection db, JSONObject editJson, SharedApp sharedApp) throws HttpServletException {
-        return;
+        String description = (String) editJson.get("description");
+        if (description == null)
+            this.setDescription("", db);
+        else
+            this.setDescription(description, db);
     }
 
     @Override
@@ -608,6 +612,18 @@ public class App implements ShareableApp, SharedApp {
     @Override
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public void setDescription(String description, DataBaseConnection db) throws HttpServletException {
+        try {
+            DatabaseRequest request = db.prepareRequest("UPDATE shareableApps SET description = ? WHERE id = ?;");
+            request.setString(description);
+            request.setInt(this.getDBid());
+            request.set();
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 
     @Override

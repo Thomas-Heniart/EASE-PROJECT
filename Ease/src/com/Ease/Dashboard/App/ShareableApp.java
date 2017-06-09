@@ -46,6 +46,8 @@ public interface ShareableApp {
 
     public void setDescription(String description);
 
+    public void setDescription(String description, DataBaseConnection db) throws HttpServletException;
+
     public String getDescription();
 
     public void setOrigin(String origin_type, Integer origin_id);
