@@ -119,18 +119,7 @@ public class Channel {
     }
 
     public JSONObject getJson() {
-        JSONObject res = new JSONObject();
-        res.put("id", this.db_id);
-        res.put("name", this.name);
-        JSONArray teamUsers = new JSONArray();
-        for (TeamUser teamUser : this.getTeamUsers())
-            teamUsers.add(teamUser.getDb_id());
-        res.put("userIds", teamUsers);
-        /* JSONArray apps = new JSONArray();
-         for (SharedApp sharedApp : this.getSharedApps())
-            apps.add(sharedApp.getSharedJSON());
-        res.put("apps", apps); */
-        res.put("purpose", this.purpose);
+        JSONObject res = this.getSimpleJson();
         return res;
     }
 
@@ -148,7 +137,7 @@ public class Channel {
         JSONArray jsonArray = new JSONArray();
         for (TeamUser teamUser : this.getTeamUsers())
             jsonArray.add(teamUser.getDb_id());
-        jsonObject.put("user_ids", jsonArray);
+        jsonObject.put("userIds", jsonArray);
         return jsonObject;
     }
 
