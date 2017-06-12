@@ -5934,6 +5934,19 @@ module.exports = {
       }).then(function (response) {
         return response.data;
       });
+    },
+    modifyApp: function modifyApp(team_id, app_id, app_info) {
+      return axios.post('/api/v1/teams/EditShareableApp', {
+        team_id: team_id,
+        app_id: app_id,
+        name: app_info.name,
+        description: app_info.description,
+        password_change_interval: app_info.password_change_interval,
+        url: app_info.url,
+        account_information: app_info.account_information
+      }).then(function (response) {
+        return response.data;
+      });
     }
   }
 };
@@ -8778,6 +8791,7 @@ exports.teamShareMultiApp = teamShareMultiApp;
 exports.teamCreateSingleApp = teamCreateSingleApp;
 exports.teamCreateLinkApp = teamCreateLinkApp;
 exports.teamShareApp = teamShareApp;
+exports.teamModifyAppInformation = teamModifyAppInformation;
 var api = __webpack_require__(20);
 var post_api = __webpack_require__(48);
 
@@ -8838,6 +8852,18 @@ function teamShareApp(app_id, user_id) {
       dispatch({ type: 'TEAM_SHARE_APP_FULFILLED', payload: { user_info: response, app_id: app_id } });
     }).catch(function (err) {
       dispatch({ type: 'TEAM_SHARE_APP_REJECTED', payload: err });
+      throw err;
+    });
+  };
+}
+
+function teamModifyAppInformation(app_id, app_info) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'TEAM_MODIFY_APP_INFORMATION_PENDING' });
+    return post_api.teamApps.modifyApp(getState().team.id, app_id, app_info).then(function (response) {
+      dispatch({ type: 'TEAM_MODIFY_APP_INFORMATION_FULFILLED', payload: { app_id: app_id, app: response } });
+    }).catch(function (err) {
+      dispatch({ type: 'TEAM_MODIFY_APP_INFORMATION_REJECTED', payload: err });
       throw err;
     });
   };
@@ -8917,6 +8943,7 @@ exports.getInfoValueByName = getInfoValueByName;
 exports.selectUserFromListById = selectUserFromListById;
 exports.selectChannelFromListById = selectChannelFromListById;
 exports.getChannelUsers = getChannelUsers;
+exports.findMeInReceivers = findMeInReceivers;
 function getInfoValueByName(infoList, infoName) {
   for (var i = 0; i < infoList.length; i++) {
     if (infoList[i].info_name === infoName) return infoList[i].info_value;
@@ -8946,6 +8973,13 @@ function getChannelUsers(channels, channelId, users) {
     ret.push(selectUserFromListById(users, item));
   });
   return ret;
+}
+
+function findMeInReceivers(receivers, myId) {
+  for (var i = 0; i < receivers.length; i++) {
+    if (receivers[i].team_user_id === myId) return receivers[i];
+  }
+  return null;
 }
 
 var passwordChangeValues = exports.passwordChangeValues = {
@@ -16559,17 +16593,11 @@ module.exports = TeamAppAddingUi;
 "use strict";
 
 
-var _dec, _class;
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _helperFunctions = __webpack_require__(82);
+var _dec, _class;
 
 var _reactRedux = __webpack_require__(14);
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -16579,1200 +16607,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var React = __webpack_require__(4);
 var classnames = __webpack_require__(15);
-
-var TeamAppUserSelectDropdown = function (_React$Component) {
-  _inherits(TeamAppUserSelectDropdown, _React$Component);
-
-  function TeamAppUserSelectDropdown(props) {
-    _classCallCheck(this, TeamAppUserSelectDropdown);
-
-    var _this = _possibleConstructorReturn(this, (TeamAppUserSelectDropdown.__proto__ || Object.getPrototypeOf(TeamAppUserSelectDropdown)).call(this, props));
-
-    _this.state = {
-      dropdown: false
-    };
-    _this.onMouseDown = _this.onMouseDown.bind(_this);
-    _this.onMouseUp = _this.onMouseUp.bind(_this);
-    _this.pageClick = _this.pageClick.bind(_this);
-    _this.setDropdown = _this.setDropdown.bind(_this);
-    return _this;
-  }
-
-  _createClass(TeamAppUserSelectDropdown, [{
-    key: 'setDropdown',
-    value: function setDropdown(state) {
-      this.setState({ dropdown: state });
-    }
-  }, {
-    key: 'onMouseDown',
-    value: function onMouseDown() {
-      this.mouseInDropDown = true;
-    }
-  }, {
-    key: 'onMouseUp',
-    value: function onMouseUp() {
-      this.mouseInDropDown = false;
-    }
-  }, {
-    key: 'pageClick',
-    value: function pageClick(e) {
-      if (this.mouseInDropDown) return;
-      this.setState({ dropdown: false });
-    }
-  }, {
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      window.addEventListener('mousedown', this.pageClick, false);
-    }
-  }, {
-    key: 'componentWillUnmount',
-    value: function componentWillUnmount() {
-      window.removeEventListener('mousedown', this.pageClick, false);
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      return React.createElement(
-        'div',
-        { className: 'modal_input_wrapper', onMouseDown: this.onMouseDown, onMouseUp: this.onMouseUp },
-        this.props.selectedReceivers.map(function (item) {
-          return React.createElement(
-            'div',
-            { className: 'receiver', key: item.id },
-            React.createElement(
-              'span',
-              { className: 'receiver_name' },
-              item.username,
-              this.props.myId === item.id && "(you)"
-            ),
-            React.createElement('i', { className: 'fa fa-eye mrgnLeft5' }),
-            React.createElement(
-              'button',
-              { className: 'button-unstyle mrgnLeft5', onClick: this.props.deselectFunc.bind(null, item.id) },
-              React.createElement('i', { className: 'fa fa-times' })
-            )
-          );
-        }, this),
-        React.createElement('input', { onFocus: this.setDropdown.bind(null, true), className: 'input_unstyle', type: 'text', placeholder: 'Search for people...' }),
-        React.createElement(
-          'div',
-          _defineProperty({ className: 'floating_dropdown show' }, 'className', classnames("floating_dropdown", this.state.dropdown ? "show" : null)),
-          React.createElement(
-            'div',
-            { className: 'dropdown_content' },
-            this.props.receivers.map(function (item) {
-              return React.createElement(
-                'div',
-                { className: classnames("dropdown_row selectable", item.selected ? "selected" : null),
-                  key: item.id,
-                  onClick: this.props.selectFunc.bind(null, item.id) },
-                React.createElement(
-                  'span',
-                  { className: 'main_value' },
-                  item.username
-                ),
-                item.first_name != null && React.createElement(
-                  'span',
-                  { className: 'text-muted' },
-                  '\xA0- ',
-                  item.first_name,
-                  '\xA0',
-                  item.last_name
-                )
-              );
-            }, this)
-          )
-        )
-      );
-    }
-  }]);
-
-  return TeamAppUserSelectDropdown;
-}(React.Component);
-
-var TeamSimpleApp = function (_React$Component2) {
-  _inherits(TeamSimpleApp, _React$Component2);
-
-  function TeamSimpleApp(props) {
-    _classCallCheck(this, TeamSimpleApp);
-
-    var _this2 = _possibleConstructorReturn(this, (TeamSimpleApp.__proto__ || Object.getPrototypeOf(TeamSimpleApp)).call(this, props));
-
-    _this2.state = {
-      modifying: false,
-      modifiedAppName: '',
-      modifiedPasswordChangeInterval: '',
-      modifiedComment: '',
-      modifiedCredentials: {},
-      selectedReceivers: [],
-      receivers: []
-    };
-    _this2.props.app.account_information.map(function (item) {
-      this.state.modifiedCredentials[item.info_name] = '';
-    }, _this2);
-
-    _this2.setupModifying = _this2.setupModifying.bind(_this2);
-    _this2.handleCommentInput = _this2.handleCommentInput.bind(_this2);
-    _this2.handlePasswordChangeIntervalInput = _this2.handlePasswordChangeIntervalInput.bind(_this2);
-    _this2.handleAppNameInput = _this2.handleAppNameInput.bind(_this2);
-    _this2.handleCredentialsInput = _this2.handleCredentialsInput.bind(_this2);
-    _this2.selectReceiver = _this2.selectReceiver.bind(_this2);
-    _this2.deselectReceiver = _this2.deselectReceiver.bind(_this2);
-    return _this2;
-  }
-
-  _createClass(TeamSimpleApp, [{
-    key: 'selectReceiver',
-    value: function selectReceiver(id) {
-      var selectedReceivers = this.state.selectedReceivers;
-      var receivers = this.state.receivers;
-
-      for (var i = 0; i < receivers.length; i++) {
-        if (receivers[i].id === id) {
-          if (receivers[i].selected) return;
-          receivers[i].selected = true;
-          selectedReceivers.push(receivers[i]);
-          this.setState({
-            receivers: receivers,
-            selectedReceivers: selectedReceivers
-          });
-          return;
-        }
-      }
-    }
-  }, {
-    key: 'deselectReceiver',
-    value: function deselectReceiver(id) {
-      var selectedReceivers = this.state.selectedReceivers;
-      var receivers = this.state.receivers;
-
-      for (var i = 0; i < receivers.length; i++) {
-        if (receivers[i].id === id) {
-          if (!receivers[i].selected) return;
-          receivers[i].selected = false;
-          selectedReceivers.splice(selectedReceivers.indexOf(receivers[i]), 1);
-          this.setState({
-            receivers: receivers,
-            selectedReceivers: selectedReceivers
-          });
-          return;
-        }
-      }
-    }
-  }, {
-    key: 'handleCredentialsInput',
-    value: function handleCredentialsInput(e) {
-      var credentials = _extends({}, this.state.modifiedCredentials);
-      credentials[e.target.name] = e.target.value;
-      this.setState({ modifiedCredentials: credentials });
-    }
-  }, {
-    key: 'handleAppNameInput',
-    value: function handleAppNameInput(e) {
-      this.setState({ modifiedAppName: e.target.value });
-    }
-  }, {
-    key: 'handleCommentInput',
-    value: function handleCommentInput(e) {
-      this.setState({ modifiedComment: e.target.value });
-    }
-  }, {
-    key: 'handlePasswordChangeIntervalInput',
-    value: function handlePasswordChangeIntervalInput(e) {
-      this.setState({ modifiedPasswordChangeInterval: e.target.value });
-    }
-  }, {
-    key: 'setupModifying',
-    value: function setupModifying(state) {
-      if (state) {
-        var modifiedCredentials = _extends({}, this.state.modifiedCredentials);
-        this.props.app.account_information.map(function (item) {
-          modifiedCredentials[item.info_name] = item.info_value;
-        });
-        var receivers = [];
-        var selectedReceivers = [];
-        if (this.props.app.origin.type === 'channel') {
-          receivers = (0, _helperFunctions.getChannelUsers)(this.props.channels, this.props.app.origin.id, this.props.users).map(function (item) {
-            return _extends({}, item);
-          });
-        } else {
-          receivers = [_extends({}, (0, _helperFunctions.selectUserFromListById)(this.props.users, this.props.app.origin.id))];
-        }
-
-        this.props.app.receivers.map(function (item) {
-          var user = (0, _helperFunctions.selectUserFromListById)(receivers, item.team_user_id);
-          user.selected = true;
-          user.accepted = item.accepted;
-          selectedReceivers.push(user);
-        }, this);
-
-        this.setState({
-          modifying: state,
-          modifiedAppName: this.props.app.name,
-          modifiedComment: this.props.app.description,
-          modifiedPasswordChangeInterval: this.props.app.password_change_interval,
-          modifiedCredentials: modifiedCredentials,
-          receivers: receivers,
-          selectedReceivers: selectedReceivers
-        });
-      } else {
-        this.setState({ modifying: false });
-      }
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var _this3 = this;
-
-      var app = this.props.app;
-      var senderUser = (0, _helperFunctions.selectUserFromListById)(this.props.users, app.sender_id);
-      var me = this.props.me;
-      var webInfo = app.website.information;
-
-      return React.createElement(
-        'div',
-        { className: 'team_app_holder' },
-        React.createElement(
-          'div',
-          { className: 'team_app_actions_holder' },
-          React.createElement(
-            'button',
-            { className: 'button-unstyle team_app_pin' },
-            React.createElement('i', { className: 'fa fa-thumb-tack' })
-          ),
-          React.createElement(
-            'button',
-            { className: 'button-unstyle team_app_edit', onClick: function onClick(e) {
-                _this3.setupModifying(!_this3.state.modifying);
-              } },
-            React.createElement('i', { className: 'fa fa-pencil' })
-          ),
-          React.createElement(
-            'button',
-            { className: 'button-unstyle team_app_delete' },
-            React.createElement('i', { className: 'fa fa-trash' })
-          )
-        ),
-        React.createElement(
-          'div',
-          { className: 'team_app_sender_info' },
-          React.createElement(
-            'span',
-            { className: 'team_app_sender_name' },
-            React.createElement('i', { className: 'fa fa-user mrgnRight5' }),
-            senderUser.username,
-            me.id === senderUser.id && "(you)"
-          ),
-          React.createElement(
-            'span',
-            null,
-            '\xA0shared on\xA0',
-            app.shared_date
-          )
-        ),
-        React.createElement(
-          'div',
-          { className: 'team_app' },
-          React.createElement(
-            'div',
-            { className: 'name_holder' },
-            !this.state.modifying ? app.name : React.createElement('input', { className: 'name_input', type: 'text', name: 'app_name',
-              value: this.state.modifiedAppName,
-              onChange: this.handleAppNameInput })
-          ),
-          React.createElement(
-            'div',
-            { className: 'info_holder' },
-            React.createElement(
-              'div',
-              { className: 'info' },
-              React.createElement(
-                'div',
-                { className: 'logo_holder' },
-                React.createElement('img', { src: app.website.logo, alt: 'logo' })
-              ),
-              React.createElement(
-                'div',
-                { className: 'credentials_holder' },
-                React.createElement(
-                  'div',
-                  { className: 'credentials' },
-                  app.account_information.map(function (item) {
-                    return React.createElement(
-                      'div',
-                      { className: 'credentials_line', key: item.info_name },
-                      React.createElement(
-                        'div',
-                        { className: 'credentials_type_icon' },
-                        React.createElement('i', { className: classnames('fa', webInfo[item.info_name].placeholderIcon) })
-                      ),
-                      React.createElement(
-                        'div',
-                        { className: 'credentials_value_holder' },
-                        !this.state.modifying ? React.createElement(
-                          'span',
-                          { className: 'credentials_value' },
-                          item.info_value
-                        ) : React.createElement('input', { autoComplete: 'off',
-                          className: 'credentials_value_input value_input',
-                          value: this.state.modifiedCredentials[item.info_name],
-                          onChange: this.handleCredentialsInput,
-                          placeholder: webInfo[item.info_name].placeholder,
-                          type: webInfo[item.info_name].type,
-                          name: item.info_name })
-                      )
-                    );
-                  }, this)
-                ),
-                React.createElement(
-                  'div',
-                  { className: 'password_change_remind' },
-                  React.createElement(
-                    'div',
-                    { className: 'password_change_icon' },
-                    React.createElement('i', { className: 'fa fa-clock-o' })
-                  ),
-                  !this.state.modifying ? React.createElement(
-                    'div',
-                    { className: 'password_change_info' },
-                    _helperFunctions.passwordChangeValues[app.password_change_interval]
-                  ) : React.createElement(
-                    'select',
-                    { className: 'select_unstyle', value: this.state.modifiedPasswordChangeInterval, onChange: this.handlePasswordChangeIntervalInput },
-                    Object.keys(_helperFunctions.passwordChangeValues).map(function (item) {
-                      return React.createElement(
-                        'option',
-                        { value: item, key: item },
-                        _helperFunctions.passwordChangeValues[item]
-                      );
-                    })
-                  )
-                )
-              )
-            ),
-            React.createElement(
-              'div',
-              { className: 'sharing_info full_flex' },
-              React.createElement(
-                'div',
-                { className: 'receivers_wrapper full_flex' },
-                !this.state.modifying ? app.receivers.map(function (item) {
-                  var user = (0, _helperFunctions.selectUserFromListById)(this.props.users, item.team_user_id);
-                  return React.createElement(
-                    'div',
-                    { className: 'receiver', key: item.team_user_id },
-                    React.createElement(
-                      'span',
-                      { className: 'receiver_name' },
-                      user.username,
-                      me.id === user.id && "(you)"
-                    ),
-                    React.createElement('i', { className: 'fa fa-eye mrgnLeft5' })
-                  );
-                }, this) : React.createElement(TeamAppUserSelectDropdown, {
-                  receivers: this.state.receivers,
-                  selectedReceivers: this.state.selectedReceivers,
-                  myId: me.id,
-                  selectFunc: this.selectReceiver,
-                  deselectFunc: this.deselectReceiver
-                })
-              )
-            )
-          ),
-          React.createElement(
-            'div',
-            { className: 'comment_holder' },
-            React.createElement(
-              'div',
-              { className: 'comment_icon' },
-              React.createElement('i', { className: 'fa fa-sticky-note-o' })
-            ),
-            React.createElement(
-              'div',
-              { className: 'comment' },
-              !this.state.modifying ? React.createElement(
-                'span',
-                { className: 'comment_value value' },
-                app.description.length > 0 ? app.description : "There is no comment for this app yet..."
-              ) : React.createElement('textarea', { className: 'comment_input', placeholder: 'Your comment...',
-                value: this.state.modifiedComment, onChange: this.handleCommentInput })
-            )
-          )
-        )
-      );
-    }
-  }]);
-
-  return TeamSimpleApp;
-}(React.Component);
-
-var TeamLinkApp = function (_React$Component3) {
-  _inherits(TeamLinkApp, _React$Component3);
-
-  function TeamLinkApp(props) {
-    _classCallCheck(this, TeamLinkApp);
-
-    var _this4 = _possibleConstructorReturn(this, (TeamLinkApp.__proto__ || Object.getPrototypeOf(TeamLinkApp)).call(this, props));
-
-    _this4.state = {
-      modifying: false,
-      modifiedAppName: '',
-      modifiedUrl: '',
-      modifiedComment: '',
-      selectedReceivers: [],
-      receivers: []
-    };
-    _this4.setupModifying = _this4.setupModifying.bind(_this4);
-    _this4.handleAppNameInput = _this4.handleAppNameInput.bind(_this4);
-    _this4.handleCommentInput = _this4.handleCommentInput.bind(_this4);
-    _this4.handleUrlInput = _this4.handleUrlInput.bind(_this4);
-    _this4.selectReceiver = _this4.selectReceiver.bind(_this4);
-    _this4.deselectReceiver = _this4.deselectReceiver.bind(_this4);
-    return _this4;
-  }
-
-  _createClass(TeamLinkApp, [{
-    key: 'selectReceiver',
-    value: function selectReceiver(id) {
-      var selectedReceivers = this.state.selectedReceivers;
-      var receivers = this.state.receivers;
-
-      for (var i = 0; i < receivers.length; i++) {
-        if (receivers[i].id === id) {
-          if (receivers[i].selected) return;
-          receivers[i].selected = true;
-          selectedReceivers.push(receivers[i]);
-          this.setState({
-            receivers: receivers,
-            selectedReceivers: selectedReceivers
-          });
-          return;
-        }
-      }
-    }
-  }, {
-    key: 'deselectReceiver',
-    value: function deselectReceiver(id) {
-      var selectedReceivers = this.state.selectedReceivers;
-      var receivers = this.state.receivers;
-
-      for (var i = 0; i < receivers.length; i++) {
-        if (receivers[i].id === id) {
-          if (!receivers[i].selected) return;
-          receivers[i].selected = false;
-          selectedReceivers.splice(selectedReceivers.indexOf(receivers[i]), 1);
-          this.setState({
-            receivers: receivers,
-            selectedReceivers: selectedReceivers
-          });
-          return;
-        }
-      }
-    }
-  }, {
-    key: 'setupModifying',
-    value: function setupModifying(state) {
-      if (state) {
-        var receivers = [];
-        var selectedReceivers = [];
-        if (this.props.app.origin.type === 'channel') {
-          receivers = (0, _helperFunctions.getChannelUsers)(this.props.channels, this.props.app.origin.id, this.props.users).map(function (item) {
-            return _extends({}, item);
-          });
-        } else {
-          receivers = [_extends({}, (0, _helperFunctions.selectUserFromListById)(this.props.users, this.props.app.origin.id))];
-        }
-
-        this.props.app.receivers.map(function (item) {
-          var user = (0, _helperFunctions.selectUserFromListById)(receivers, item.team_user_id);
-          user.selected = true;
-          user.accepted = item.accepted;
-          selectedReceivers.push(user);
-        }, this);
-
-        this.setState({
-          modifying: state,
-          modifiedAppName: this.props.app.name,
-          modifiedUrl: this.props.app.url,
-          modifiedComment: this.props.app.description,
-          receivers: receivers,
-          selectedReceivers: selectedReceivers
-        });
-      } else {
-        this.setState({ modifying: false });
-      }
-    }
-  }, {
-    key: 'handleUrlInput',
-    value: function handleUrlInput(e) {
-      this.setState({ modifiedUrl: e.target.value });
-    }
-  }, {
-    key: 'handleAppNameInput',
-    value: function handleAppNameInput(e) {
-      this.setState({ modifiedAppName: e.target.value });
-    }
-  }, {
-    key: 'handleCommentInput',
-    value: function handleCommentInput(e) {
-      this.setState({ modifiedComment: e.target.value });
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var _this5 = this;
-
-      var app = this.props.app;
-      var senderUser = (0, _helperFunctions.selectUserFromListById)(this.props.users, app.sender_id);
-      var me = this.props.me;
-      return React.createElement(
-        'div',
-        { className: 'team_app_holder' },
-        React.createElement(
-          'div',
-          { className: 'team_app_actions_holder' },
-          React.createElement(
-            'button',
-            { className: 'button-unstyle team_app_pin' },
-            React.createElement('i', { className: 'fa fa-thumb-tack' })
-          ),
-          React.createElement(
-            'button',
-            { className: 'button-unstyle team_app_edit', onClick: function onClick(e) {
-                _this5.setupModifying(!_this5.state.modifying);
-              } },
-            React.createElement('i', { className: 'fa fa-pencil' })
-          ),
-          React.createElement(
-            'button',
-            { className: 'button-unstyle team_app_delete' },
-            React.createElement('i', { className: 'fa fa-trash' })
-          )
-        ),
-        React.createElement(
-          'div',
-          { className: 'team_app_sender_info' },
-          React.createElement(
-            'span',
-            { className: 'team_app_sender_name' },
-            React.createElement('i', { className: 'fa fa-user mrgnRight5' }),
-            senderUser.username,
-            me.id === senderUser.id && "(you)"
-          ),
-          React.createElement(
-            'span',
-            null,
-            '\xA0shared on\xA0',
-            app.shared_date
-          )
-        ),
-        React.createElement(
-          'div',
-          { className: 'team_app' },
-          React.createElement(
-            'div',
-            { className: 'name_holder' },
-            !this.state.modifying ? app.name : React.createElement('input', { className: 'name_input', type: 'text', name: 'app_name',
-              value: this.state.modifiedAppName,
-              onChange: this.handleAppNameInput })
-          ),
-          React.createElement(
-            'div',
-            { className: 'info_holder' },
-            React.createElement(
-              'div',
-              { className: 'info' },
-              React.createElement(
-                'div',
-                { className: 'logo_holder' },
-                React.createElement('img', { src: '/resources/icons/app_icon.svg', alt: 'logo' })
-              ),
-              React.createElement(
-                'div',
-                { className: 'credentials_holder' },
-                React.createElement(
-                  'div',
-                  { className: 'credentials' },
-                  React.createElement(
-                    'div',
-                    { className: 'credentials_line' },
-                    React.createElement(
-                      'div',
-                      { className: 'credentials_type_icon' },
-                      React.createElement('i', { className: 'fa fa-home' })
-                    ),
-                    React.createElement(
-                      'div',
-                      { className: 'credentials_value_holder' },
-                      !this.state.modifying ? React.createElement(
-                        'span',
-                        { className: 'credentials_value' },
-                        app.url
-                      ) : React.createElement('input', { autoComplete: 'off',
-                        className: 'credentials_value_input value_input',
-                        value: this.state.modifiedUrl,
-                        onChange: this.handleUrlInput,
-                        placeholder: 'Your url',
-                        type: 'url',
-                        name: 'url' })
-                    )
-                  )
-                )
-              )
-            ),
-            React.createElement(
-              'div',
-              { className: 'sharing_info full_flex' },
-              React.createElement(
-                'div',
-                { className: 'receivers_wrapper full_flex' },
-                !this.state.modifying ? app.receivers.map(function (item) {
-                  var user = (0, _helperFunctions.selectUserFromListById)(this.props.users, item.team_user_id);
-                  return React.createElement(
-                    'div',
-                    { className: 'receiver', key: item.team_user_id },
-                    React.createElement(
-                      'span',
-                      { className: 'receiver_name' },
-                      user.username,
-                      me.id === user.id && "(you)"
-                    ),
-                    React.createElement('i', { className: 'fa fa-eye mrgnLeft5' })
-                  );
-                }, this) : React.createElement(TeamAppUserSelectDropdown, {
-                  receivers: this.state.receivers,
-                  selectedReceivers: this.state.selectedReceivers,
-                  myId: me.id,
-                  selectFunc: this.selectReceiver,
-                  deselectFunc: this.deselectReceiver
-                })
-              )
-            )
-          ),
-          React.createElement(
-            'div',
-            { className: 'comment_holder' },
-            React.createElement(
-              'div',
-              { className: 'comment_icon' },
-              React.createElement('i', { className: 'fa fa-sticky-note-o' })
-            ),
-            React.createElement(
-              'div',
-              { className: 'comment' },
-              !this.state.modifying ? React.createElement(
-                'span',
-                { className: 'comment_value value' },
-                app.description.length > 0 ? app.description : "There is no comment for this app yet..."
-              ) : React.createElement('textarea', { className: 'comment_input', placeholder: 'Your comment...',
-                value: this.state.modifiedComment, onChange: this.handleCommentInput })
-            )
-          )
-        )
-      );
-    }
-  }]);
-
-  return TeamLinkApp;
-}(React.Component);
-
-function findMeInReceivers(receivers, myId) {
-  for (var i = 0; i < receivers.length; i++) {
-    if (receivers[i].team_user_id === myId) return receivers[i];
-  }
-  return null;
-}
-
-var TeamMultiAppUserSelect = function (_React$Component4) {
-  _inherits(TeamMultiAppUserSelect, _React$Component4);
-
-  function TeamMultiAppUserSelect(props) {
-    _classCallCheck(this, TeamMultiAppUserSelect);
-
-    var _this6 = _possibleConstructorReturn(this, (TeamMultiAppUserSelect.__proto__ || Object.getPrototypeOf(TeamMultiAppUserSelect)).call(this, props));
-
-    _this6.state = {
-      dropdown: false
-    };
-    _this6.onMouseDown = _this6.onMouseDown.bind(_this6);
-    _this6.onMouseUp = _this6.onMouseUp.bind(_this6);
-    _this6.pageClick = _this6.pageClick.bind(_this6);
-    _this6.setDropdown = _this6.setDropdown.bind(_this6);
-    return _this6;
-  }
-
-  _createClass(TeamMultiAppUserSelect, [{
-    key: 'setDropdown',
-    value: function setDropdown(state) {
-      this.setState({ dropdown: state });
-    }
-  }, {
-    key: 'onMouseDown',
-    value: function onMouseDown() {
-      this.mouseInDropDown = true;
-    }
-  }, {
-    key: 'onMouseUp',
-    value: function onMouseUp() {
-      this.mouseInDropDown = false;
-    }
-  }, {
-    key: 'pageClick',
-    value: function pageClick(e) {
-      if (this.mouseInDropDown) return;
-      this.setState({ dropdown: false });
-    }
-  }, {
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      window.addEventListener('mousedown', this.pageClick, false);
-    }
-  }, {
-    key: 'componentWillUnmount',
-    value: function componentWillUnmount() {
-      window.removeEventListener('mousedown', this.pageClick, false);
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var webInfo = this.props.website_information;
-      var receivers = this.props.receivers;
-      var myId = this.props.myId;
-      var selectedReceivers = this.props.selectedReceivers.map(function (receiver) {
-        return React.createElement(
-          'div',
-          { className: 'receiver_wrapper', key: receiver.id },
-          React.createElement(
-            'div',
-            { className: 'receiver' },
-            React.createElement(
-              'span',
-              { className: 'receiver_name' },
-              receiver.username,
-              receiver.id === myId ? '(you)' : null
-            ),
-            React.createElement('i', { className: 'fa fa-unlock-alt mrgnLeft5' }),
-            React.createElement(
-              'button',
-              { className: 'button-unstyle mrgnLeft5', onClick: this.props.deselectUserFunc.bind(null, receiver.id) },
-              React.createElement('i', { className: 'fa fa-times' })
-            )
-          ),
-          React.createElement(
-            'div',
-            { className: 'credentials' },
-            Object.keys(webInfo).map(function (item) {
-              var _this7 = this;
-
-              return React.createElement(
-                'div',
-                { className: 'credential_container', key: item },
-                React.createElement('i', { className: classnames("fa", "mrgnRight5", webInfo[item].placeholderIcon) }),
-                React.createElement('input', { className: 'value_input input_unstyle',
-                  placeholder: webInfo[item].placeholder,
-                  type: webInfo[item].type,
-                  name: item,
-                  value: receiver.credentials[item],
-                  onChange: function onChange(e) {
-                    _this7.props.handleUserCredentialInputFunc(receiver.id, item, e.target.value);
-                  } })
-              );
-            }, this)
-          )
-        );
-      }, this);
-
-      return React.createElement(
-        'div',
-        null,
-        selectedReceivers,
-        React.createElement(
-          'div',
-          { className: 'modal_input_wrapper', onMouseDown: this.onMouseDown, onMouseUp: this.onMouseUp },
-          React.createElement('input', { onFocus: this.setDropdown.bind(null, true), className: 'input_unstyle', type: 'text', placeholder: 'Search for people...' }),
-          React.createElement(
-            'div',
-            _defineProperty({ className: 'floating_dropdown show' }, 'className', classnames("floating_dropdown", this.state.dropdown ? "show" : null)),
-            React.createElement(
-              'div',
-              { className: 'dropdown_content' },
-              this.props.receivers.map(function (item) {
-                return React.createElement(
-                  'div',
-                  { className: classnames("dropdown_row selectable", item.selected ? "selected" : null),
-                    key: item.id,
-                    onClick: this.props.selectUserFunc.bind(null, item.id) },
-                  React.createElement(
-                    'span',
-                    { className: 'main_value' },
-                    item.username,
-                    item.id === myId ? '(you)' : null
-                  ),
-                  item.first_name != null && React.createElement(
-                    'span',
-                    { className: 'text-muted' },
-                    '\xA0- ',
-                    item.first_name,
-                    '\xA0',
-                    item.last_name
-                  )
-                );
-              }, this)
-            )
-          )
-        )
-      );
-    }
-  }]);
-
-  return TeamMultiAppUserSelect;
-}(React.Component);
-
-var TeamMultiApp = function (_React$Component5) {
-  _inherits(TeamMultiApp, _React$Component5);
-
-  function TeamMultiApp(props) {
-    _classCallCheck(this, TeamMultiApp);
-
-    var _this8 = _possibleConstructorReturn(this, (TeamMultiApp.__proto__ || Object.getPrototypeOf(TeamMultiApp)).call(this, props));
-
-    _this8.state = {
-      modifying: false,
-      modifiedAppName: '',
-      modifiedPasswordChangeInterval: '',
-      modifiedComment: '',
-      selectedReceivers: [],
-      receivers: []
-    };
-    _this8.setupModifying = _this8.setupModifying.bind(_this8);
-    _this8.handleAppNameInput = _this8.handleAppNameInput.bind(_this8);
-    _this8.handleCommentInput = _this8.handleCommentInput.bind(_this8);
-    _this8.handlePasswordChangeIntervalInput = _this8.handlePasswordChangeIntervalInput.bind(_this8);
-    _this8.handleUserCredentialInput = _this8.handleUserCredentialInput.bind(_this8);
-    _this8.selectReceiver = _this8.selectReceiver.bind(_this8);
-    _this8.deselectReceiver = _this8.deselectReceiver.bind(_this8);
-    return _this8;
-  }
-
-  _createClass(TeamMultiApp, [{
-    key: 'selectReceiver',
-    value: function selectReceiver(id) {
-      var selectedReceivers = this.state.selectedReceivers;
-      var receivers = this.state.receivers;
-
-      for (var i = 0; i < receivers.length; i++) {
-        if (receivers[i].id === id) {
-          if (receivers[i].selected) return;
-          receivers[i].selected = true;
-          selectedReceivers.push(receivers[i]);
-          this.setState({
-            receivers: receivers,
-            selectedReceivers: selectedReceivers
-          });
-          return;
-        }
-      }
-    }
-  }, {
-    key: 'deselectReceiver',
-    value: function deselectReceiver(id) {
-      var selectedReceivers = this.state.selectedReceivers;
-      var receivers = this.state.receivers;
-
-      for (var i = 0; i < receivers.length; i++) {
-        if (receivers[i].id === id) {
-          if (!receivers[i].selected) return;
-          receivers[i].selected = false;
-          selectedReceivers.splice(selectedReceivers.indexOf(receivers[i]), 1);
-          this.setState({
-            receivers: receivers,
-            selectedReceivers: selectedReceivers
-          });
-          return;
-        }
-      }
-    }
-  }, {
-    key: 'setupModifying',
-    value: function setupModifying(state) {
-      if (state) {
-        var receivers = [];
-        var selectedReceivers = [];
-        if (this.props.app.origin.type === 'channel') {
-          receivers = (0, _helperFunctions.getChannelUsers)(this.props.channels, this.props.app.origin.id, this.props.users).map(function (item) {
-            return _extends({}, item);
-          });
-        } else {
-          receivers = [_extends({}, (0, _helperFunctions.selectUserFromListById)(this.props.users, this.props.app.origin.id))];
-        }
-        receivers = receivers.map(function (receiver) {
-          receiver.credentials = {};
-          Object.keys(this.props.app.website.information).map(function (item) {
-            receiver.credentials[item] = '';
-          });
-          return receiver;
-        }, this);
-        this.props.app.receivers.map(function (item) {
-          var user = (0, _helperFunctions.selectUserFromListById)(receivers, item.team_user_id);
-          user.selected = true;
-          user.accepted = item.accepted;
-          item.account_information.map(function (item) {
-            user.credentials[item.info_name] = item.info_value;
-          });
-          selectedReceivers.push(user);
-        }, this);
-
-        this.setState({
-          modifying: state,
-          modifiedAppName: this.props.app.name,
-          modifiedComment: this.props.app.description,
-          modifiedPasswordChangeInterval: this.props.app.password_change_interval,
-          receivers: receivers,
-          selectedReceivers: selectedReceivers
-        });
-      } else {
-        this.setState({ modifying: false });
-      }
-    }
-  }, {
-    key: 'handleUserCredentialInput',
-    value: function handleUserCredentialInput(user_id, credentialName, value) {
-      var selectedReceivers = this.state.selectedReceivers;
-
-      for (var i = 0; i < selectedReceivers.length; i++) {
-        if (selectedReceivers[i].id === user_id) {
-          selectedReceivers[i].credentials[credentialName] = value;
-          this.setState({ selectedReceivers: selectedReceivers });
-        }
-      }
-    }
-  }, {
-    key: 'handleAppNameInput',
-    value: function handleAppNameInput(e) {
-      this.setState({ modifiedAppName: e.target.value });
-    }
-  }, {
-    key: 'handleCommentInput',
-    value: function handleCommentInput(e) {
-      this.setState({ modifiedComment: e.target.value });
-    }
-  }, {
-    key: 'handlePasswordChangeIntervalInput',
-    value: function handlePasswordChangeIntervalInput(e) {
-      this.setState({ modifiedPasswordChangeInterval: e.target.value });
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var _this9 = this;
-
-      var app = this.props.app;
-      var senderUser = (0, _helperFunctions.selectUserFromListById)(this.props.users, app.sender_id);
-      var me = this.props.me;
-      var meReceiver = findMeInReceivers(app.receivers, me.id);
-      var webInfo = app.website.information;
-
-      return React.createElement(
-        'div',
-        { className: 'team_app_holder' },
-        React.createElement(
-          'div',
-          { className: 'team_app_actions_holder' },
-          React.createElement(
-            'button',
-            { className: 'button-unstyle team_app_pin' },
-            React.createElement('i', { className: 'fa fa-thumb-tack' })
-          ),
-          React.createElement(
-            'button',
-            { className: 'button-unstyle team_app_edit', onClick: function onClick(e) {
-                _this9.setupModifying(!_this9.state.modifying);
-              } },
-            React.createElement('i', { className: 'fa fa-pencil' })
-          ),
-          React.createElement(
-            'button',
-            { className: 'button-unstyle team_app_delete' },
-            React.createElement('i', { className: 'fa fa-trash' })
-          )
-        ),
-        React.createElement(
-          'div',
-          { className: 'team_app_sender_info' },
-          React.createElement(
-            'span',
-            { className: 'team_app_sender_name' },
-            React.createElement('i', { className: 'fa fa-user mrgnRight5' }),
-            senderUser.username,
-            me.id === senderUser.id && "(you)"
-          ),
-          React.createElement(
-            'span',
-            null,
-            '\xA0shared on\xA0',
-            app.shared_date
-          )
-        ),
-        React.createElement(
-          'div',
-          { className: 'team_app multiple_accounts_app' },
-          React.createElement(
-            'div',
-            { className: 'name_holder' },
-            !this.state.modifying ? app.name : React.createElement('input', { className: 'name_input', type: 'text', name: 'app_name',
-              value: this.state.modifiedAppName,
-              onChange: this.handleAppNameInput })
-          ),
-          React.createElement(
-            'div',
-            { className: 'info_holder' },
-            React.createElement(
-              'div',
-              { className: 'info' },
-              React.createElement(
-                'div',
-                { className: 'logo_holder' },
-                React.createElement('img', { src: app.website.logo, alt: 'logo' })
-              ),
-              React.createElement(
-                'div',
-                { className: 'credentials_holder' },
-                React.createElement(
-                  'div',
-                  { className: 'credentials' },
-                  meReceiver !== null ? meReceiver.account_information.map(function (item) {
-                    return React.createElement(
-                      'div',
-                      { className: 'credentials_line', key: item.info_name },
-                      React.createElement(
-                        'div',
-                        { className: 'credentials_type_icon' },
-                        React.createElement('i', { className: classnames('fa', webInfo[item.info_name].placeholderIcon) })
-                      ),
-                      React.createElement(
-                        'div',
-                        { className: 'credentials_value_holder' },
-                        React.createElement(
-                          'span',
-                          { className: 'credentials_value' },
-                          item.info_value
-                        )
-                      )
-                    );
-                  }, this) : React.createElement(
-                    'div',
-                    { className: 'credentials_line' },
-                    React.createElement(
-                      'button',
-                      { className: 'button-unstyle' },
-                      'This app does not concern you'
-                    )
-                  )
-                ),
-                React.createElement(
-                  'div',
-                  { className: 'password_change_remind' },
-                  React.createElement(
-                    'div',
-                    { className: 'password_change_icon' },
-                    React.createElement('i', { className: 'fa fa-clock-o' })
-                  ),
-                  !this.state.modifying ? React.createElement(
-                    'div',
-                    { className: 'password_change_info' },
-                    _helperFunctions.passwordChangeValues[app.password_change_interval]
-                  ) : React.createElement(
-                    'select',
-                    { className: 'select_unstyle', value: this.state.modifiedPasswordChangeInterval, onChange: this.handlePasswordChangeIntervalInput },
-                    Object.keys(_helperFunctions.passwordChangeValues).map(function (item) {
-                      return React.createElement(
-                        'option',
-                        { value: item, key: item },
-                        _helperFunctions.passwordChangeValues[item]
-                      );
-                    })
-                  )
-                )
-              )
-            ),
-            React.createElement(
-              'div',
-              { className: 'sharing_info display_flex full_flex flex_direction_column' },
-              React.createElement(
-                'div',
-                { className: 'receivers_wrapper full_flex' },
-                !this.state.modifying ? app.receivers.map(function (item) {
-                  var user = (0, _helperFunctions.selectUserFromListById)(this.props.users, item.team_user_id);
-                  return React.createElement(
-                    'div',
-                    { className: 'receiver_wrapper', key: item.team_user_id },
-                    React.createElement(
-                      'div',
-                      { className: 'receiver' },
-                      React.createElement(
-                        'span',
-                        { className: 'receiver_name' },
-                        user.username,
-                        me.id === user.id && "(you)"
-                      ),
-                      React.createElement('i', { className: 'fa fa-unlock-alt mrgnLeft5' })
-                    ),
-                    React.createElement(
-                      'div',
-                      { className: 'credentials' },
-                      item.account_information.map(function (info) {
-                        return React.createElement(
-                          'div',
-                          { className: 'credential_container', key: info.info_name },
-                          React.createElement('i', { className: classnames('fa', 'mrgnRight5', webInfo[info.info_name].placeholderIcon) }),
-                          React.createElement(
-                            'span',
-                            { className: 'value' },
-                            info.info_value
-                          )
-                        );
-                      })
-                    )
-                  );
-                }, this) : React.createElement(TeamMultiAppUserSelect, {
-                  receivers: this.state.receivers,
-                  selectedReceivers: this.state.selectedReceivers,
-                  website_information: this.props.app.website.information,
-                  selectUserFunc: this.selectReceiver,
-                  deselectUserFunc: this.deselectReceiver,
-                  handleUserCredentialInputFunc: this.handleUserCredentialInput,
-                  myId: me.id
-                })
-              )
-            )
-          ),
-          React.createElement(
-            'div',
-            { className: 'comment_holder' },
-            React.createElement(
-              'div',
-              { className: 'comment_icon' },
-              React.createElement('i', { className: 'fa fa-sticky-note-o' })
-            ),
-            React.createElement(
-              'div',
-              { className: 'comment' },
-              !this.state.modifying ? React.createElement(
-                'span',
-                { className: 'comment_value value' },
-                app.description.length > 0 ? app.description : "There is no comment for this app yet..."
-              ) : React.createElement('textarea', { className: 'comment_input', placeholder: 'Your comment...',
-                value: this.state.modifiedComment, onChange: this.handleCommentInput })
-            )
-          )
-        )
-      );
-    }
-  }]);
-
-  return TeamMultiApp;
-}(React.Component);
-
+var TeamSimpleApp = __webpack_require__(322);
+var TeamLinkApp = __webpack_require__(320);
+var TeamMultiApp = __webpack_require__(321);
 var TeamAppsContainer = (_dec = (0, _reactRedux.connect)(function (store) {
   return {
     selectedItem: store.selection,
@@ -17780,8 +16617,8 @@ var TeamAppsContainer = (_dec = (0, _reactRedux.connect)(function (store) {
     channels: store.channels.channels,
     me: store.users.me
   };
-}), _dec(_class = function (_React$Component6) {
-  _inherits(TeamAppsContainer, _React$Component6);
+}), _dec(_class = function (_React$Component) {
+  _inherits(TeamAppsContainer, _React$Component);
 
   function TeamAppsContainer(props) {
     _classCallCheck(this, TeamAppsContainer);
@@ -17804,19 +16641,22 @@ var TeamAppsContainer = (_dec = (0, _reactRedux.connect)(function (store) {
               users: this.props.users,
               channels: this.props.channels,
               me: this.props.me,
-              key: item.id });
+              key: item.id,
+              dispatch: this.props.dispatch });
             if (item.type === 'link') return React.createElement(TeamLinkApp, {
               app: item,
               users: this.props.users,
               channels: this.props.channels,
               me: this.props.me,
-              key: item.id });
+              key: item.id,
+              dispatch: this.props.dispatch });
             if (item.type === 'multi') return React.createElement(TeamMultiApp, {
               app: item,
               users: this.props.users,
               channels: this.props.channels,
               me: this.props.me,
-              key: item.id });
+              key: item.id,
+              dispatch: this.props.dispatch });
           }, this)
         )
       );
@@ -18073,7 +16913,7 @@ var TeamDeleteUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
                 username,
                 ' shared X accounts to ',
                 teamName,
-                '. Please select(tic) the ones you want to keep. The other ones will be archived.'
+                '. Please select(tic) the ones you want to keep. The other ones will be deleted.'
               )
             ),
             React.createElement(
@@ -18082,7 +16922,7 @@ var TeamDeleteUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
               React.createElement(
                 'span',
                 null,
-                'By archiving an app, every person related to it, will lose the access.'
+                'By deleting an app, every person related to it, will lose the access.'
               )
             )
           )
@@ -19481,6 +18321,17 @@ function reducer() {
         for (var i = 0; i < nState.item.apps.length; i++) {
           if (nState.item.apps[i].id === action.payload.app_id) {
             nState.item.apps[i].receivers.push(action.payload.user_info);
+            return nState;
+          }
+        }
+        break;
+      }
+    case 'TEAM_MODIFY_APP_INFORMATION_FULFILLED':
+      {
+        var nState = _extends({}, state);
+        for (var i = 0; i < nState.item.apps.length; i++) {
+          if (nState.item.apps[i].id === action.payload.app_id) {
+            nState.item.apps[i] = action.payload.app;
             return nState;
           }
         }
@@ -37353,6 +36204,1413 @@ module.exports = function(module) {
 	return module;
 };
 
+
+/***/ }),
+/* 320 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _appsActions = __webpack_require__(80);
+
+var appActions = _interopRequireWildcard(_appsActions);
+
+var _helperFunctions = __webpack_require__(82);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var React = __webpack_require__(4);
+var classnames = __webpack_require__(15);
+var TeamAppUserSelectDropdown = __webpack_require__(323);
+
+var TeamLinkApp = function (_React$Component) {
+  _inherits(TeamLinkApp, _React$Component);
+
+  function TeamLinkApp(props) {
+    _classCallCheck(this, TeamLinkApp);
+
+    var _this = _possibleConstructorReturn(this, (TeamLinkApp.__proto__ || Object.getPrototypeOf(TeamLinkApp)).call(this, props));
+
+    _this.state = {
+      modifying: false,
+      modifiedAppName: '',
+      modifiedUrl: '',
+      modifiedComment: '',
+      selectedReceivers: [],
+      receivers: []
+    };
+    _this.setupModifying = _this.setupModifying.bind(_this);
+    _this.validateModifying = _this.validateModifying.bind(_this);
+    _this.handleAppNameInput = _this.handleAppNameInput.bind(_this);
+    _this.handleCommentInput = _this.handleCommentInput.bind(_this);
+    _this.handleUrlInput = _this.handleUrlInput.bind(_this);
+    _this.selectReceiver = _this.selectReceiver.bind(_this);
+    _this.deselectReceiver = _this.deselectReceiver.bind(_this);
+    return _this;
+  }
+
+  _createClass(TeamLinkApp, [{
+    key: 'selectReceiver',
+    value: function selectReceiver(id) {
+      var selectedReceivers = this.state.selectedReceivers;
+      var receivers = this.state.receivers;
+
+      for (var i = 0; i < receivers.length; i++) {
+        if (receivers[i].id === id) {
+          if (receivers[i].selected) return;
+          receivers[i].selected = true;
+          selectedReceivers.push(receivers[i]);
+          this.setState({
+            receivers: receivers,
+            selectedReceivers: selectedReceivers
+          });
+          return;
+        }
+      }
+    }
+  }, {
+    key: 'deselectReceiver',
+    value: function deselectReceiver(id) {
+      var selectedReceivers = this.state.selectedReceivers;
+      var receivers = this.state.receivers;
+
+      for (var i = 0; i < receivers.length; i++) {
+        if (receivers[i].id === id) {
+          if (!receivers[i].selected) return;
+          receivers[i].selected = false;
+          selectedReceivers.splice(selectedReceivers.indexOf(receivers[i]), 1);
+          this.setState({
+            receivers: receivers,
+            selectedReceivers: selectedReceivers
+          });
+          return;
+        }
+      }
+    }
+  }, {
+    key: 'setupModifying',
+    value: function setupModifying(state) {
+      if (state) {
+        var receivers = [];
+        var selectedReceivers = [];
+        if (this.props.app.origin.type === 'channel') {
+          receivers = (0, _helperFunctions.getChannelUsers)(this.props.channels, this.props.app.origin.id, this.props.users).map(function (item) {
+            return _extends({}, item);
+          });
+        } else {
+          receivers = [_extends({}, (0, _helperFunctions.selectUserFromListById)(this.props.users, this.props.app.origin.id))];
+        }
+
+        this.props.app.receivers.map(function (item) {
+          var user = (0, _helperFunctions.selectUserFromListById)(receivers, item.team_user_id);
+          user.selected = true;
+          user.accepted = item.accepted;
+          selectedReceivers.push(user);
+        }, this);
+
+        this.setState({
+          modifying: state,
+          modifiedAppName: this.props.app.name,
+          modifiedUrl: this.props.app.url,
+          modifiedComment: this.props.app.description,
+          receivers: receivers,
+          selectedReceivers: selectedReceivers
+        });
+      } else {
+        this.setState({ modifying: false });
+      }
+    }
+  }, {
+    key: 'validateModifying',
+    value: function validateModifying() {
+      var _this2 = this;
+
+      console.log("validate modifying");
+      var app_info = {
+        name: this.state.modifiedAppName,
+        description: this.state.modifiedComment,
+        url: this.state.modifiedUrl
+      };
+      this.props.dispatch(appActions.teamModifyAppInformation(this.props.app.id, app_info)).then(function (response) {
+        _this2.setupModifying(false);
+      });
+    }
+  }, {
+    key: 'handleUrlInput',
+    value: function handleUrlInput(e) {
+      this.setState({ modifiedUrl: e.target.value });
+    }
+  }, {
+    key: 'handleAppNameInput',
+    value: function handleAppNameInput(e) {
+      this.setState({ modifiedAppName: e.target.value });
+    }
+  }, {
+    key: 'handleCommentInput',
+    value: function handleCommentInput(e) {
+      this.setState({ modifiedComment: e.target.value });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var app = this.props.app;
+      var senderUser = (0, _helperFunctions.selectUserFromListById)(this.props.users, app.sender_id);
+      var me = this.props.me;
+      return React.createElement(
+        'div',
+        { className: 'team_app_holder' },
+        !this.state.modifying && React.createElement(
+          'div',
+          { className: 'team_app_actions_holder' },
+          React.createElement(
+            'button',
+            { className: 'button-unstyle team_app_pin' },
+            React.createElement('i', { className: 'fa fa-thumb-tack' })
+          ),
+          React.createElement(
+            'button',
+            { className: 'button-unstyle team_app_edit', onClick: this.setupModifying.bind(null, true) },
+            React.createElement('i', { className: 'fa fa-pencil' })
+          ),
+          React.createElement(
+            'button',
+            { className: 'button-unstyle team_app_delete' },
+            React.createElement('i', { className: 'fa fa-trash' })
+          )
+        ),
+        React.createElement(
+          'div',
+          { className: 'team_app_sender_info' },
+          React.createElement(
+            'span',
+            { className: 'team_app_sender_name' },
+            React.createElement('i', { className: 'fa fa-user mrgnRight5' }),
+            senderUser.username,
+            me.id === senderUser.id && "(you)"
+          ),
+          React.createElement(
+            'span',
+            null,
+            '\xA0shared on\xA0',
+            app.shared_date
+          )
+        ),
+        React.createElement(
+          'div',
+          { className: 'team_app' },
+          React.createElement(
+            'div',
+            { className: 'name_holder' },
+            !this.state.modifying ? app.name : React.createElement('input', { className: 'name_input', type: 'text', name: 'app_name',
+              value: this.state.modifiedAppName,
+              onChange: this.handleAppNameInput })
+          ),
+          React.createElement(
+            'div',
+            { className: 'info_holder' },
+            React.createElement(
+              'div',
+              { className: 'info' },
+              React.createElement(
+                'div',
+                { className: 'logo_holder' },
+                React.createElement('img', { src: '/resources/icons/app_icon.svg', alt: 'logo' })
+              ),
+              React.createElement(
+                'div',
+                { className: 'credentials_holder' },
+                React.createElement(
+                  'div',
+                  { className: 'credentials' },
+                  React.createElement(
+                    'div',
+                    { className: 'credentials_line' },
+                    React.createElement(
+                      'div',
+                      { className: 'credentials_type_icon' },
+                      React.createElement('i', { className: 'fa fa-home' })
+                    ),
+                    React.createElement(
+                      'div',
+                      { className: 'credentials_value_holder' },
+                      !this.state.modifying ? React.createElement(
+                        'span',
+                        { className: 'credentials_value' },
+                        app.url
+                      ) : React.createElement('input', { autoComplete: 'off',
+                        className: 'credentials_value_input value_input',
+                        value: this.state.modifiedUrl,
+                        onChange: this.handleUrlInput,
+                        placeholder: 'Your url',
+                        type: 'url',
+                        name: 'url' })
+                    )
+                  )
+                )
+              )
+            ),
+            React.createElement(
+              'div',
+              { className: 'sharing_info full_flex' },
+              React.createElement(
+                'div',
+                { className: 'receivers_wrapper full_flex' },
+                !this.state.modifying ? app.receivers.map(function (item) {
+                  var user = (0, _helperFunctions.selectUserFromListById)(this.props.users, item.team_user_id);
+                  return React.createElement(
+                    'div',
+                    { className: 'receiver', key: item.team_user_id },
+                    React.createElement(
+                      'span',
+                      { className: 'receiver_name' },
+                      user.username,
+                      me.id === user.id && "(you)"
+                    ),
+                    React.createElement('i', { className: 'fa fa-eye mrgnLeft5' })
+                  );
+                }, this) : React.createElement(TeamAppUserSelectDropdown, {
+                  receivers: this.state.receivers,
+                  selectedReceivers: this.state.selectedReceivers,
+                  myId: me.id,
+                  selectFunc: this.selectReceiver,
+                  deselectFunc: this.deselectReceiver
+                })
+              )
+            )
+          ),
+          React.createElement(
+            'div',
+            { className: 'comment_holder' },
+            React.createElement(
+              'div',
+              { className: 'comment_icon' },
+              React.createElement('i', { className: 'fa fa-sticky-note-o' })
+            ),
+            React.createElement(
+              'div',
+              { className: 'comment' },
+              !this.state.modifying ? React.createElement(
+                'span',
+                { className: 'comment_value value' },
+                app.description.length > 0 ? app.description : "There is no comment for this app yet..."
+              ) : React.createElement('textarea', { className: 'comment_input', placeholder: 'Your comment...',
+                value: this.state.modifiedComment, onChange: this.handleCommentInput })
+            )
+          ),
+          this.state.modifying && React.createElement(
+            'div',
+            { className: 'mrgnTop5' },
+            React.createElement(
+              'button',
+              { className: 'button-unstyle neutral_background action_text_button mrgnRight5',
+                onClick: this.setupModifying.bind(null, false) },
+              'Cancel'
+            ),
+            React.createElement(
+              'button',
+              { className: 'button-unstyle positive_background action_text_button',
+                onClick: this.validateModifying },
+              'Save changes'
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return TeamLinkApp;
+}(React.Component);
+
+module.exports = TeamLinkApp;
+
+/***/ }),
+/* 321 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _appsActions = __webpack_require__(80);
+
+var appActions = _interopRequireWildcard(_appsActions);
+
+var _helperFunctions = __webpack_require__(82);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var React = __webpack_require__(4);
+var classnames = __webpack_require__(15);
+var TeamMultiAppUserSelect = __webpack_require__(324);
+
+var TeamMultiApp = function (_React$Component) {
+  _inherits(TeamMultiApp, _React$Component);
+
+  function TeamMultiApp(props) {
+    _classCallCheck(this, TeamMultiApp);
+
+    var _this = _possibleConstructorReturn(this, (TeamMultiApp.__proto__ || Object.getPrototypeOf(TeamMultiApp)).call(this, props));
+
+    _this.state = {
+      modifying: false,
+      modifiedAppName: '',
+      modifiedPasswordChangeInterval: '',
+      modifiedComment: '',
+      selectedReceivers: [],
+      receivers: []
+    };
+    _this.setupModifying = _this.setupModifying.bind(_this);
+    _this.validateModifying = _this.validateModifying.bind(_this);
+    _this.handleAppNameInput = _this.handleAppNameInput.bind(_this);
+    _this.handleCommentInput = _this.handleCommentInput.bind(_this);
+    _this.handlePasswordChangeIntervalInput = _this.handlePasswordChangeIntervalInput.bind(_this);
+    _this.handleUserCredentialInput = _this.handleUserCredentialInput.bind(_this);
+    _this.selectReceiver = _this.selectReceiver.bind(_this);
+    _this.deselectReceiver = _this.deselectReceiver.bind(_this);
+    return _this;
+  }
+
+  _createClass(TeamMultiApp, [{
+    key: 'selectReceiver',
+    value: function selectReceiver(id) {
+      var selectedReceivers = this.state.selectedReceivers;
+      var receivers = this.state.receivers;
+
+      for (var i = 0; i < receivers.length; i++) {
+        if (receivers[i].id === id) {
+          if (receivers[i].selected) return;
+          receivers[i].selected = true;
+          selectedReceivers.push(receivers[i]);
+          this.setState({
+            receivers: receivers,
+            selectedReceivers: selectedReceivers
+          });
+          return;
+        }
+      }
+    }
+  }, {
+    key: 'deselectReceiver',
+    value: function deselectReceiver(id) {
+      var selectedReceivers = this.state.selectedReceivers;
+      var receivers = this.state.receivers;
+
+      for (var i = 0; i < receivers.length; i++) {
+        if (receivers[i].id === id) {
+          if (!receivers[i].selected) return;
+          receivers[i].selected = false;
+          selectedReceivers.splice(selectedReceivers.indexOf(receivers[i]), 1);
+          this.setState({
+            receivers: receivers,
+            selectedReceivers: selectedReceivers
+          });
+          return;
+        }
+      }
+    }
+  }, {
+    key: 'setupModifying',
+    value: function setupModifying(state) {
+      if (state) {
+        var receivers = [];
+        var selectedReceivers = [];
+        if (this.props.app.origin.type === 'channel') {
+          receivers = (0, _helperFunctions.getChannelUsers)(this.props.channels, this.props.app.origin.id, this.props.users).map(function (item) {
+            return _extends({}, item);
+          });
+        } else {
+          receivers = [_extends({}, (0, _helperFunctions.selectUserFromListById)(this.props.users, this.props.app.origin.id))];
+        }
+        receivers = receivers.map(function (receiver) {
+          receiver.credentials = {};
+          Object.keys(this.props.app.website.information).map(function (item) {
+            receiver.credentials[item] = '';
+          });
+          return receiver;
+        }, this);
+        this.props.app.receivers.map(function (item) {
+          var user = (0, _helperFunctions.selectUserFromListById)(receivers, item.team_user_id);
+          user.selected = true;
+          user.accepted = item.accepted;
+          item.account_information.map(function (item) {
+            user.credentials[item.info_name] = item.info_value;
+          });
+          selectedReceivers.push(user);
+        }, this);
+
+        this.setState({
+          modifying: state,
+          modifiedAppName: this.props.app.name,
+          modifiedComment: this.props.app.description,
+          modifiedPasswordChangeInterval: this.props.app.password_change_interval.toString(),
+          receivers: receivers,
+          selectedReceivers: selectedReceivers
+        });
+      } else {
+        this.setState({ modifying: false });
+      }
+    }
+  }, {
+    key: 'validateModifying',
+    value: function validateModifying() {
+      var _this2 = this;
+
+      console.log("validate modifying");
+      var app_info = {
+        name: this.state.modifiedAppName,
+        description: this.state.modifiedComment
+      };
+      this.props.dispatch(appActions.teamModifyAppInformation(this.props.app.id, app_info)).then(function (response) {
+        _this2.setupModifying(false);
+      });
+    }
+  }, {
+    key: 'handleUserCredentialInput',
+    value: function handleUserCredentialInput(user_id, credentialName, value) {
+      var selectedReceivers = this.state.selectedReceivers;
+
+      for (var i = 0; i < selectedReceivers.length; i++) {
+        if (selectedReceivers[i].id === user_id) {
+          selectedReceivers[i].credentials[credentialName] = value;
+          this.setState({ selectedReceivers: selectedReceivers });
+        }
+      }
+    }
+  }, {
+    key: 'handleAppNameInput',
+    value: function handleAppNameInput(e) {
+      this.setState({ modifiedAppName: e.target.value });
+    }
+  }, {
+    key: 'handleCommentInput',
+    value: function handleCommentInput(e) {
+      this.setState({ modifiedComment: e.target.value });
+    }
+  }, {
+    key: 'handlePasswordChangeIntervalInput',
+    value: function handlePasswordChangeIntervalInput(e) {
+      this.setState({ modifiedPasswordChangeInterval: e.target.value });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var app = this.props.app;
+      var senderUser = (0, _helperFunctions.selectUserFromListById)(this.props.users, app.sender_id);
+      var me = this.props.me;
+      var meReceiver = (0, _helperFunctions.findMeInReceivers)(app.receivers, me.id);
+      var webInfo = app.website.information;
+
+      return React.createElement(
+        'div',
+        { className: 'team_app_holder' },
+        !this.state.modifying && React.createElement(
+          'div',
+          { className: 'team_app_actions_holder' },
+          React.createElement(
+            'button',
+            { className: 'button-unstyle team_app_pin' },
+            React.createElement('i', { className: 'fa fa-thumb-tack' })
+          ),
+          React.createElement(
+            'button',
+            { className: 'button-unstyle team_app_edit', onClick: this.setupModifying.bind(null, true) },
+            React.createElement('i', { className: 'fa fa-pencil' })
+          ),
+          React.createElement(
+            'button',
+            { className: 'button-unstyle team_app_delete' },
+            React.createElement('i', { className: 'fa fa-trash' })
+          )
+        ),
+        React.createElement(
+          'div',
+          { className: 'team_app_sender_info' },
+          React.createElement(
+            'span',
+            { className: 'team_app_sender_name' },
+            React.createElement('i', { className: 'fa fa-user mrgnRight5' }),
+            senderUser.username,
+            me.id === senderUser.id && "(you)"
+          ),
+          React.createElement(
+            'span',
+            null,
+            '\xA0shared on\xA0',
+            app.shared_date
+          )
+        ),
+        React.createElement(
+          'div',
+          { className: 'team_app multiple_accounts_app' },
+          React.createElement(
+            'div',
+            { className: 'name_holder' },
+            !this.state.modifying ? app.name : React.createElement('input', { className: 'name_input', type: 'text', name: 'app_name',
+              value: this.state.modifiedAppName,
+              onChange: this.handleAppNameInput })
+          ),
+          React.createElement(
+            'div',
+            { className: 'info_holder' },
+            React.createElement(
+              'div',
+              { className: 'info' },
+              React.createElement(
+                'div',
+                { className: 'logo_holder' },
+                React.createElement('img', { src: app.website.logo, alt: 'logo' })
+              ),
+              React.createElement(
+                'div',
+                { className: 'credentials_holder' },
+                React.createElement(
+                  'div',
+                  { className: 'credentials' },
+                  meReceiver !== null ? meReceiver.account_information.map(function (item) {
+                    return React.createElement(
+                      'div',
+                      { className: 'credentials_line', key: item.info_name },
+                      React.createElement(
+                        'div',
+                        { className: 'credentials_type_icon' },
+                        React.createElement('i', { className: classnames('fa', webInfo[item.info_name].placeholderIcon) })
+                      ),
+                      React.createElement(
+                        'div',
+                        { className: 'credentials_value_holder' },
+                        React.createElement(
+                          'span',
+                          { className: 'credentials_value' },
+                          item.info_value
+                        )
+                      )
+                    );
+                  }, this) : React.createElement(
+                    'div',
+                    { className: 'credentials_line' },
+                    React.createElement(
+                      'button',
+                      { className: 'button-unstyle' },
+                      'This app does not concern you'
+                    )
+                  )
+                ),
+                React.createElement(
+                  'div',
+                  { className: 'password_change_remind' },
+                  React.createElement(
+                    'div',
+                    { className: 'password_change_icon' },
+                    React.createElement('i', { className: 'fa fa-clock-o' })
+                  ),
+                  !this.state.modifying ? React.createElement(
+                    'div',
+                    { className: 'password_change_info' },
+                    _helperFunctions.passwordChangeValues[app.password_change_interval]
+                  ) : React.createElement(
+                    'select',
+                    { className: 'select_unstyle', value: this.state.modifiedPasswordChangeInterval, onChange: this.handlePasswordChangeIntervalInput },
+                    Object.keys(_helperFunctions.passwordChangeValues).map(function (item) {
+                      return React.createElement(
+                        'option',
+                        { value: item, key: item },
+                        _helperFunctions.passwordChangeValues[item]
+                      );
+                    })
+                  )
+                )
+              )
+            ),
+            React.createElement(
+              'div',
+              { className: 'sharing_info display_flex full_flex flex_direction_column' },
+              React.createElement(
+                'div',
+                { className: 'receivers_wrapper full_flex' },
+                !this.state.modifying ? app.receivers.map(function (item) {
+                  var user = (0, _helperFunctions.selectUserFromListById)(this.props.users, item.team_user_id);
+                  return React.createElement(
+                    'div',
+                    { className: 'receiver_wrapper', key: item.team_user_id },
+                    React.createElement(
+                      'div',
+                      { className: 'receiver' },
+                      React.createElement(
+                        'span',
+                        { className: 'receiver_name' },
+                        user.username,
+                        me.id === user.id && "(you)"
+                      ),
+                      React.createElement('i', { className: 'fa fa-unlock-alt mrgnLeft5' })
+                    ),
+                    React.createElement(
+                      'div',
+                      { className: 'credentials' },
+                      item.account_information.map(function (info) {
+                        return React.createElement(
+                          'div',
+                          { className: 'credential_container', key: info.info_name },
+                          React.createElement('i', { className: classnames('fa', 'mrgnRight5', webInfo[info.info_name].placeholderIcon) }),
+                          React.createElement(
+                            'span',
+                            { className: 'value' },
+                            info.info_value
+                          )
+                        );
+                      })
+                    )
+                  );
+                }, this) : React.createElement(TeamMultiAppUserSelect, {
+                  receivers: this.state.receivers,
+                  selectedReceivers: this.state.selectedReceivers,
+                  website_information: this.props.app.website.information,
+                  selectUserFunc: this.selectReceiver,
+                  deselectUserFunc: this.deselectReceiver,
+                  handleUserCredentialInputFunc: this.handleUserCredentialInput,
+                  myId: me.id
+                })
+              )
+            )
+          ),
+          React.createElement(
+            'div',
+            { className: 'comment_holder' },
+            React.createElement(
+              'div',
+              { className: 'comment_icon' },
+              React.createElement('i', { className: 'fa fa-sticky-note-o' })
+            ),
+            React.createElement(
+              'div',
+              { className: 'comment' },
+              !this.state.modifying ? React.createElement(
+                'span',
+                { className: 'comment_value value' },
+                app.description.length > 0 ? app.description : "There is no comment for this app yet..."
+              ) : React.createElement('textarea', { className: 'comment_input', placeholder: 'Your comment...',
+                value: this.state.modifiedComment, onChange: this.handleCommentInput })
+            )
+          ),
+          this.state.modifying && React.createElement(
+            'div',
+            { className: 'mrgnTop5' },
+            React.createElement(
+              'button',
+              { className: 'button-unstyle neutral_background action_text_button mrgnRight5',
+                onClick: this.setupModifying.bind(null, false) },
+              'Cancel'
+            ),
+            React.createElement(
+              'button',
+              { className: 'button-unstyle positive_background action_text_button',
+                onClick: this.validateModifying },
+              'Save changes'
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return TeamMultiApp;
+}(React.Component);
+
+module.exports = TeamMultiApp;
+
+/***/ }),
+/* 322 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _appsActions = __webpack_require__(80);
+
+var appActions = _interopRequireWildcard(_appsActions);
+
+var _helperFunctions = __webpack_require__(82);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var React = __webpack_require__(4);
+var classnames = __webpack_require__(15);
+var TeamAppUserSelectDropdown = __webpack_require__(323);
+
+var TeamSimpleApp = function (_React$Component) {
+  _inherits(TeamSimpleApp, _React$Component);
+
+  function TeamSimpleApp(props) {
+    _classCallCheck(this, TeamSimpleApp);
+
+    var _this = _possibleConstructorReturn(this, (TeamSimpleApp.__proto__ || Object.getPrototypeOf(TeamSimpleApp)).call(this, props));
+
+    _this.state = {
+      modifying: false,
+      modifiedAppName: '',
+      modifiedPasswordChangeInterval: '',
+      modifiedComment: '',
+      modifiedCredentials: {},
+      selectedReceivers: [],
+      receivers: []
+    };
+    _this.props.app.account_information.map(function (item) {
+      this.state.modifiedCredentials[item.info_name] = '';
+    }, _this);
+
+    _this.setupModifying = _this.setupModifying.bind(_this);
+    _this.validateModifying = _this.validateModifying.bind(_this);
+    _this.handleCommentInput = _this.handleCommentInput.bind(_this);
+    _this.handlePasswordChangeIntervalInput = _this.handlePasswordChangeIntervalInput.bind(_this);
+    _this.handleAppNameInput = _this.handleAppNameInput.bind(_this);
+    _this.handleCredentialsInput = _this.handleCredentialsInput.bind(_this);
+    _this.selectReceiver = _this.selectReceiver.bind(_this);
+    _this.deselectReceiver = _this.deselectReceiver.bind(_this);
+    return _this;
+  }
+
+  _createClass(TeamSimpleApp, [{
+    key: 'selectReceiver',
+    value: function selectReceiver(id) {
+      var selectedReceivers = this.state.selectedReceivers;
+      var receivers = this.state.receivers;
+
+      for (var i = 0; i < receivers.length; i++) {
+        if (receivers[i].id === id) {
+          if (receivers[i].selected) return;
+          receivers[i].selected = true;
+          selectedReceivers.push(receivers[i]);
+          this.setState({
+            receivers: receivers,
+            selectedReceivers: selectedReceivers
+          });
+          return;
+        }
+      }
+    }
+  }, {
+    key: 'deselectReceiver',
+    value: function deselectReceiver(id) {
+      var selectedReceivers = this.state.selectedReceivers;
+      var receivers = this.state.receivers;
+
+      for (var i = 0; i < receivers.length; i++) {
+        if (receivers[i].id === id) {
+          if (!receivers[i].selected) return;
+          receivers[i].selected = false;
+          selectedReceivers.splice(selectedReceivers.indexOf(receivers[i]), 1);
+          this.setState({
+            receivers: receivers,
+            selectedReceivers: selectedReceivers
+          });
+          return;
+        }
+      }
+    }
+  }, {
+    key: 'handleCredentialsInput',
+    value: function handleCredentialsInput(e) {
+      var credentials = _extends({}, this.state.modifiedCredentials);
+      credentials[e.target.name] = e.target.value;
+      this.setState({ modifiedCredentials: credentials });
+    }
+  }, {
+    key: 'handleAppNameInput',
+    value: function handleAppNameInput(e) {
+      this.setState({ modifiedAppName: e.target.value });
+    }
+  }, {
+    key: 'handleCommentInput',
+    value: function handleCommentInput(e) {
+      this.setState({ modifiedComment: e.target.value });
+    }
+  }, {
+    key: 'handlePasswordChangeIntervalInput',
+    value: function handlePasswordChangeIntervalInput(e) {
+      this.setState({ modifiedPasswordChangeInterval: e.target.value });
+    }
+  }, {
+    key: 'validateModifying',
+    value: function validateModifying() {
+      var _this2 = this;
+
+      console.log("validate modifying");
+      var app_info = {
+        name: this.state.modifiedAppName,
+        description: this.state.modifiedComment,
+        password_change_interval: this.state.modifiedPasswordChangeInterval,
+        account_information: _extends({}, this.state.modifiedCredentials)
+      };
+      this.props.dispatch(appActions.teamModifyAppInformation(this.props.app.id, app_info)).then(function (response) {
+        _this2.setupModifying(false);
+      });
+    }
+  }, {
+    key: 'setupModifying',
+    value: function setupModifying(state) {
+      if (state) {
+        var modifiedCredentials = _extends({}, this.state.modifiedCredentials);
+        this.props.app.account_information.map(function (item) {
+          modifiedCredentials[item.info_name] = item.info_value;
+        });
+        var receivers = [];
+        var selectedReceivers = [];
+        if (this.props.app.origin.type === 'channel') {
+          receivers = (0, _helperFunctions.getChannelUsers)(this.props.channels, this.props.app.origin.id, this.props.users).map(function (item) {
+            return _extends({}, item);
+          });
+        } else {
+          receivers = [_extends({}, (0, _helperFunctions.selectUserFromListById)(this.props.users, this.props.app.origin.id))];
+        }
+
+        this.props.app.receivers.map(function (item) {
+          var user = (0, _helperFunctions.selectUserFromListById)(receivers, item.team_user_id);
+          user.selected = true;
+          user.accepted = item.accepted;
+          selectedReceivers.push(user);
+        }, this);
+
+        this.setState({
+          modifying: state,
+          modifiedAppName: this.props.app.name,
+          modifiedComment: this.props.app.description,
+          modifiedPasswordChangeInterval: this.props.app.password_change_interval.toString(),
+          modifiedCredentials: modifiedCredentials,
+          receivers: receivers,
+          selectedReceivers: selectedReceivers
+        });
+      } else {
+        this.setState({ modifying: false });
+      }
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var app = this.props.app;
+      var senderUser = (0, _helperFunctions.selectUserFromListById)(this.props.users, app.sender_id);
+      var me = this.props.me;
+      var webInfo = app.website.information;
+
+      return React.createElement(
+        'div',
+        { className: classnames('team_app_holder', this.state.modifying ? "active" : null) },
+        !this.state.modifying && React.createElement(
+          'div',
+          { className: 'team_app_actions_holder' },
+          React.createElement(
+            'button',
+            { className: 'button-unstyle team_app_pin' },
+            React.createElement('i', { className: 'fa fa-thumb-tack' })
+          ),
+          React.createElement(
+            'button',
+            { className: 'button-unstyle team_app_edit', onClick: this.setupModifying.bind(null, true) },
+            React.createElement('i', { className: 'fa fa-pencil' })
+          ),
+          React.createElement(
+            'button',
+            { className: 'button-unstyle team_app_delete' },
+            React.createElement('i', { className: 'fa fa-trash' })
+          )
+        ),
+        React.createElement(
+          'div',
+          { className: 'team_app_sender_info' },
+          React.createElement(
+            'span',
+            { className: 'team_app_sender_name' },
+            React.createElement('i', { className: 'fa fa-user mrgnRight5' }),
+            senderUser.username,
+            me.id === senderUser.id && "(you)"
+          ),
+          React.createElement(
+            'span',
+            null,
+            '\xA0shared on\xA0',
+            app.shared_date
+          )
+        ),
+        React.createElement(
+          'div',
+          { className: 'team_app' },
+          React.createElement(
+            'div',
+            { className: 'name_holder' },
+            !this.state.modifying ? app.name : React.createElement('input', { className: 'name_input', type: 'text', name: 'app_name',
+              value: this.state.modifiedAppName,
+              onChange: this.handleAppNameInput })
+          ),
+          React.createElement(
+            'div',
+            { className: 'info_holder' },
+            React.createElement(
+              'div',
+              { className: 'info' },
+              React.createElement(
+                'div',
+                { className: 'logo_holder' },
+                React.createElement('img', { src: app.website.logo, alt: 'logo' })
+              ),
+              React.createElement(
+                'div',
+                { className: 'credentials_holder' },
+                React.createElement(
+                  'div',
+                  { className: 'credentials' },
+                  app.account_information.map(function (item) {
+                    return React.createElement(
+                      'div',
+                      { className: 'credentials_line', key: item.info_name },
+                      React.createElement(
+                        'div',
+                        { className: 'credentials_type_icon' },
+                        React.createElement('i', { className: classnames('fa', webInfo[item.info_name].placeholderIcon) })
+                      ),
+                      React.createElement(
+                        'div',
+                        { className: 'credentials_value_holder' },
+                        !this.state.modifying ? React.createElement(
+                          'span',
+                          { className: 'credentials_value' },
+                          item.info_value
+                        ) : React.createElement('input', { autoComplete: 'off',
+                          className: 'credentials_value_input value_input',
+                          value: this.state.modifiedCredentials[item.info_name],
+                          onChange: this.handleCredentialsInput,
+                          placeholder: webInfo[item.info_name].placeholder,
+                          type: webInfo[item.info_name].type,
+                          name: item.info_name })
+                      )
+                    );
+                  }, this)
+                ),
+                React.createElement(
+                  'div',
+                  { className: 'password_change_remind' },
+                  React.createElement(
+                    'div',
+                    { className: 'password_change_icon' },
+                    React.createElement('i', { className: 'fa fa-clock-o' })
+                  ),
+                  !this.state.modifying ? React.createElement(
+                    'div',
+                    { className: 'password_change_info' },
+                    _helperFunctions.passwordChangeValues[app.password_change_interval]
+                  ) : React.createElement(
+                    'select',
+                    { className: 'select_unstyle', value: this.state.modifiedPasswordChangeInterval, onChange: this.handlePasswordChangeIntervalInput },
+                    Object.keys(_helperFunctions.passwordChangeValues).map(function (item) {
+                      return React.createElement(
+                        'option',
+                        { value: item, key: item },
+                        _helperFunctions.passwordChangeValues[item]
+                      );
+                    })
+                  )
+                )
+              )
+            ),
+            React.createElement(
+              'div',
+              { className: 'sharing_info full_flex' },
+              React.createElement(
+                'div',
+                { className: 'receivers_wrapper full_flex' },
+                !this.state.modifying ? app.receivers.map(function (item) {
+                  var user = (0, _helperFunctions.selectUserFromListById)(this.props.users, item.team_user_id);
+                  return React.createElement(
+                    'div',
+                    { className: 'receiver', key: item.team_user_id },
+                    React.createElement(
+                      'span',
+                      { className: 'receiver_name' },
+                      user.username,
+                      me.id === user.id && "(you)"
+                    ),
+                    React.createElement('i', { className: 'fa fa-eye mrgnLeft5' })
+                  );
+                }, this) : React.createElement(TeamAppUserSelectDropdown, {
+                  receivers: this.state.receivers,
+                  selectedReceivers: this.state.selectedReceivers,
+                  myId: me.id,
+                  selectFunc: this.selectReceiver,
+                  deselectFunc: this.deselectReceiver
+                })
+              )
+            )
+          ),
+          React.createElement(
+            'div',
+            { className: 'comment_holder' },
+            React.createElement(
+              'div',
+              { className: 'comment_icon' },
+              React.createElement('i', { className: 'fa fa-sticky-note-o' })
+            ),
+            React.createElement(
+              'div',
+              { className: 'comment' },
+              !this.state.modifying ? React.createElement(
+                'span',
+                { className: 'comment_value value' },
+                app.description.length > 0 ? app.description : "There is no comment for this app yet..."
+              ) : React.createElement('textarea', { className: 'comment_input', placeholder: 'Your comment...',
+                value: this.state.modifiedComment, onChange: this.handleCommentInput })
+            )
+          ),
+          this.state.modifying && React.createElement(
+            'div',
+            { className: 'mrgnTop5' },
+            React.createElement(
+              'button',
+              { className: 'button-unstyle neutral_background action_text_button mrgnRight5',
+                onClick: this.setupModifying.bind(null, false) },
+              'Cancel'
+            ),
+            React.createElement(
+              'button',
+              { className: 'button-unstyle positive_background action_text_button',
+                onClick: this.validateModifying },
+              'Save changes'
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return TeamSimpleApp;
+}(React.Component);
+
+module.exports = TeamSimpleApp;
+
+/***/ }),
+/* 323 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var React = __webpack_require__(4);
+var classnames = __webpack_require__(15);
+
+var TeamAppUserSelectDropdown = function (_React$Component) {
+  _inherits(TeamAppUserSelectDropdown, _React$Component);
+
+  function TeamAppUserSelectDropdown(props) {
+    _classCallCheck(this, TeamAppUserSelectDropdown);
+
+    var _this = _possibleConstructorReturn(this, (TeamAppUserSelectDropdown.__proto__ || Object.getPrototypeOf(TeamAppUserSelectDropdown)).call(this, props));
+
+    _this.state = {
+      dropdown: false
+    };
+    _this.onMouseDown = _this.onMouseDown.bind(_this);
+    _this.onMouseUp = _this.onMouseUp.bind(_this);
+    _this.pageClick = _this.pageClick.bind(_this);
+    _this.setDropdown = _this.setDropdown.bind(_this);
+    return _this;
+  }
+
+  _createClass(TeamAppUserSelectDropdown, [{
+    key: 'setDropdown',
+    value: function setDropdown(state) {
+      this.setState({ dropdown: state });
+    }
+  }, {
+    key: 'onMouseDown',
+    value: function onMouseDown() {
+      this.mouseInDropDown = true;
+    }
+  }, {
+    key: 'onMouseUp',
+    value: function onMouseUp() {
+      this.mouseInDropDown = false;
+    }
+  }, {
+    key: 'pageClick',
+    value: function pageClick(e) {
+      if (this.mouseInDropDown) return;
+      this.setState({ dropdown: false });
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      window.addEventListener('mousedown', this.pageClick, false);
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      window.removeEventListener('mousedown', this.pageClick, false);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return React.createElement(
+        'div',
+        { className: 'modal_input_wrapper', onMouseDown: this.onMouseDown, onMouseUp: this.onMouseUp },
+        this.props.selectedReceivers.map(function (item) {
+          return React.createElement(
+            'div',
+            { className: 'receiver', key: item.id },
+            React.createElement(
+              'span',
+              { className: 'receiver_name' },
+              item.username,
+              this.props.myId === item.id && "(you)"
+            ),
+            React.createElement('i', { className: 'fa fa-eye mrgnLeft5' }),
+            React.createElement(
+              'button',
+              { className: 'button-unstyle mrgnLeft5', onClick: this.props.deselectFunc.bind(null, item.id) },
+              React.createElement('i', { className: 'fa fa-times' })
+            )
+          );
+        }, this),
+        React.createElement('input', { onFocus: this.setDropdown.bind(null, true), className: 'input_unstyle', type: 'text', placeholder: 'Search for people...' }),
+        React.createElement(
+          'div',
+          _defineProperty({ className: 'floating_dropdown show' }, 'className', classnames("floating_dropdown", this.state.dropdown ? "show" : null)),
+          React.createElement(
+            'div',
+            { className: 'dropdown_content' },
+            this.props.receivers.map(function (item) {
+              return React.createElement(
+                'div',
+                { className: classnames("dropdown_row selectable", item.selected ? "selected" : null),
+                  key: item.id,
+                  onClick: this.props.selectFunc.bind(null, item.id) },
+                React.createElement(
+                  'span',
+                  { className: 'main_value' },
+                  item.username
+                ),
+                item.first_name != null && React.createElement(
+                  'span',
+                  { className: 'text-muted' },
+                  '\xA0- ',
+                  item.first_name,
+                  '\xA0',
+                  item.last_name
+                )
+              );
+            }, this)
+          )
+        )
+      );
+    }
+  }]);
+
+  return TeamAppUserSelectDropdown;
+}(React.Component);
+
+module.exports = TeamAppUserSelectDropdown;
+
+/***/ }),
+/* 324 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var React = __webpack_require__(4);
+var classnames = __webpack_require__(15);
+
+var TeamMultiAppUserSelect = function (_React$Component) {
+  _inherits(TeamMultiAppUserSelect, _React$Component);
+
+  function TeamMultiAppUserSelect(props) {
+    _classCallCheck(this, TeamMultiAppUserSelect);
+
+    var _this = _possibleConstructorReturn(this, (TeamMultiAppUserSelect.__proto__ || Object.getPrototypeOf(TeamMultiAppUserSelect)).call(this, props));
+
+    _this.state = {
+      dropdown: false
+    };
+    _this.onMouseDown = _this.onMouseDown.bind(_this);
+    _this.onMouseUp = _this.onMouseUp.bind(_this);
+    _this.pageClick = _this.pageClick.bind(_this);
+    _this.setDropdown = _this.setDropdown.bind(_this);
+    return _this;
+  }
+
+  _createClass(TeamMultiAppUserSelect, [{
+    key: 'setDropdown',
+    value: function setDropdown(state) {
+      this.setState({ dropdown: state });
+    }
+  }, {
+    key: 'onMouseDown',
+    value: function onMouseDown() {
+      this.mouseInDropDown = true;
+    }
+  }, {
+    key: 'onMouseUp',
+    value: function onMouseUp() {
+      this.mouseInDropDown = false;
+    }
+  }, {
+    key: 'pageClick',
+    value: function pageClick(e) {
+      if (this.mouseInDropDown) return;
+      this.setState({ dropdown: false });
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      window.addEventListener('mousedown', this.pageClick, false);
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      window.removeEventListener('mousedown', this.pageClick, false);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var webInfo = this.props.website_information;
+      var receivers = this.props.receivers;
+      var myId = this.props.myId;
+      var selectedReceivers = this.props.selectedReceivers.map(function (receiver) {
+        return React.createElement(
+          'div',
+          { className: 'receiver_wrapper', key: receiver.id },
+          React.createElement(
+            'div',
+            { className: 'receiver' },
+            React.createElement(
+              'span',
+              { className: 'receiver_name' },
+              receiver.username,
+              receiver.id === myId ? '(you)' : null
+            ),
+            React.createElement('i', { className: 'fa fa-unlock-alt mrgnLeft5' }),
+            React.createElement(
+              'button',
+              { className: 'button-unstyle mrgnLeft5', onClick: this.props.deselectUserFunc.bind(null, receiver.id) },
+              React.createElement('i', { className: 'fa fa-times' })
+            )
+          ),
+          React.createElement(
+            'div',
+            { className: 'credentials' },
+            Object.keys(webInfo).map(function (item) {
+              var _this2 = this;
+
+              return React.createElement(
+                'div',
+                { className: 'credential_container', key: item },
+                React.createElement('i', { className: classnames("fa", "mrgnRight5", webInfo[item].placeholderIcon) }),
+                React.createElement('input', { className: 'value_input input_unstyle',
+                  placeholder: webInfo[item].placeholder,
+                  type: webInfo[item].type,
+                  name: item,
+                  value: receiver.credentials[item],
+                  onChange: function onChange(e) {
+                    _this2.props.handleUserCredentialInputFunc(receiver.id, item, e.target.value);
+                  } })
+              );
+            }, this)
+          )
+        );
+      }, this);
+
+      return React.createElement(
+        'div',
+        null,
+        selectedReceivers,
+        React.createElement(
+          'div',
+          { className: 'modal_input_wrapper', onMouseDown: this.onMouseDown, onMouseUp: this.onMouseUp },
+          React.createElement('input', { onFocus: this.setDropdown.bind(null, true), className: 'input_unstyle', type: 'text', placeholder: 'Search for people...' }),
+          React.createElement(
+            'div',
+            _defineProperty({ className: 'floating_dropdown show' }, 'className', classnames("floating_dropdown", this.state.dropdown ? "show" : null)),
+            React.createElement(
+              'div',
+              { className: 'dropdown_content' },
+              this.props.receivers.map(function (item) {
+                return React.createElement(
+                  'div',
+                  { className: classnames("dropdown_row selectable", item.selected ? "selected" : null),
+                    key: item.id,
+                    onClick: this.props.selectUserFunc.bind(null, item.id) },
+                  React.createElement(
+                    'span',
+                    { className: 'main_value' },
+                    item.username,
+                    item.id === myId ? '(you)' : null
+                  ),
+                  item.first_name != null && React.createElement(
+                    'span',
+                    { className: 'text-muted' },
+                    '\xA0- ',
+                    item.first_name,
+                    '\xA0',
+                    item.last_name
+                  )
+                );
+              }, this)
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return TeamMultiAppUserSelect;
+}(React.Component);
+
+module.exports = TeamMultiAppUserSelect;
 
 /***/ })
 /******/ ]);
