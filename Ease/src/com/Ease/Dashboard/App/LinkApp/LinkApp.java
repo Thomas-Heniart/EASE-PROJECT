@@ -125,7 +125,7 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         super.removeFromDB(db);
         db.commitTransaction(transaction);
     }
-	
+
 	/*
 	 * 
 	 * Getter And Setter
@@ -202,7 +202,7 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         LinkApp sharedApp = new LinkApp(appDBid, null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), linkInfos, linkDBid, this);
         sharedApp.setAdminHasAccess((Boolean) params.get("adminHasAccess"), sm.getDB());
         sharedApp.setTeamUser_tenant(teamUser_tenant);
-        sharedApp.setReceived(false);
+        sharedApp.setReceived(true);
         sharedApp.setCanSeeInformation(canSeeInformation);
         return sharedApp;
     }
