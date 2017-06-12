@@ -520,6 +520,19 @@ public class App implements ShareableApp, SharedApp {
         }
     }
 
+    @Override
+    public void setCanSeeInformation(Boolean canSeeInformation, DataBaseConnection db) throws HttpServletException {
+        try {
+            DatabaseRequest request = db.prepareRequest("UPDATE sharedApps SET canSeeInformation = ? WHERE id = ?;");
+            request.setBoolean(canSeeInformation);
+            request.setInt(this.getDBid());
+            request.set();
+            this.setCanSeeInformation(canSeeInformation);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
     /* Interface ShareableApp */
     @Override
     public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, PostServletManager sm) throws GeneralException, HttpServletException {

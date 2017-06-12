@@ -40,4 +40,6 @@ public interface SharedApp {
     public void setReceived(Boolean b);
 
     public void accept(DataBaseConnection db) throws HttpServletException;
+
+    public void setCanSeeInformation(Boolean canSeeInformation, DataBaseConnection db) throws HttpServletException;
 }

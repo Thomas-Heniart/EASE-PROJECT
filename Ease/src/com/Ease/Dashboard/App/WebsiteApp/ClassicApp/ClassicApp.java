@@ -247,8 +247,13 @@ public class ClassicApp extends WebsiteApp {
     @Override
     public void modifyShared(DataBaseConnection db, JSONObject editJson) throws HttpServletException {
         try {
+            int transaction = db.startTransaction();
             super.modifyShared(db, editJson);
             this.getAccount().edit((JSONObject) editJson.get("account_information"), db);
+            Boolean canSeeInformation = (Boolean) editJson.get("can_see_information");
+            if (canSeeInformation != null)
+                this.setCanSeeInformation(canSeeInformation, db);
+            db.commitTransaction(transaction);
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
