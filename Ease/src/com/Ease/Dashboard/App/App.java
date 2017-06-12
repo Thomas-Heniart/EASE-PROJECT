@@ -157,6 +157,7 @@ public class App implements ShareableApp, SharedApp {
                 Integer teamUser_tenant_id = rs.getInt("teamUser_tenant_id");
                 sharedApp.setTeamUser_tenant(shareableApp.getTeamUser_owner().getTeam().getTeamUserWithId(teamUser_tenant_id));
                 sharedApp.setHolder(shareableApp);
+                sharedApp.setCanSeeInformation(false/* rs.getBoolean("can_see_information") */);
                 sharedApps.add(sharedApp);
             }
             return sharedApps;
@@ -190,7 +191,7 @@ public class App implements ShareableApp, SharedApp {
 
     }
 
-    public static String createSharedApp(Profile profile, Integer position, String name, String type, Map<String, Object> elevator, boolean shareable, boolean shared, Integer team_id, Integer channel_id, Integer team_user_tenant_id, App holder, boolean received, PostServletManager sm) throws GeneralException, HttpServletException {
+    public static String createSharedApp(Profile profile, Integer position, String name, String type, Map<String, Object> elevator, Integer team_id, Integer channel_id, Integer team_user_tenant_id, App holder, boolean received, PostServletManager sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         AppInformation infos = AppInformation.createAppInformation(name, db);
@@ -211,7 +212,7 @@ public class App implements ShareableApp, SharedApp {
             elevator.put("appInfos", infos);
             elevator.put("insertDate", registrationDate);
         }
-        request = db.prepareRequest("INSERT INTO sharedApps values (?, ?, ?, ?, ?, ?, 0);");
+        request = db.prepareRequest("INSERT INTO sharedApps values (?, ?, ?, ?, ?, ?, 0, ?);");
         request.setInt(appDBid);
         request.setInt(team_id);
         request.setInt(team_user_tenant_id);
@@ -221,6 +222,7 @@ public class App implements ShareableApp, SharedApp {
         else
             request.setInt(channel_id);
         request.setBoolean(received);
+        request.setBoolean((Boolean) elevator.get("canSeeInformation"));
         request.set();
         db.commitTransaction(transaction);
         return appDBid;
@@ -253,6 +255,7 @@ public class App implements ShareableApp, SharedApp {
     /* Interface SharedApp */
     protected ShareableApp holder;
     protected TeamUser teamUser_tenant;
+    protected Boolean canSeeInformation;
 
 
     public App(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id) {
@@ -488,6 +491,16 @@ public class App implements ShareableApp, SharedApp {
         return true;
     }
 
+    @Override
+    public void setCanSeeInformation(Boolean b) {
+        this.canSeeInformation = b;
+    }
+
+    @Override
+    public boolean canSeeInformation() {
+        return this.canSeeInformation;
+    }
+
     /* Interface ShareableApp */
     @Override
     public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, PostServletManager sm) throws GeneralException, HttpServletException {
@@ -591,10 +604,12 @@ public class App implements ShareableApp, SharedApp {
                 tmp.put("team_user_id", sharedApp.getTeamUser_tenant().getDb_id());
                 tmp.put("shared_app_id", Integer.valueOf(((App) sharedApp).getDBid()));
                 tmp.put("accepted", ((App) sharedApp).isReceived());
+                tmp.put("can_see_information", sharedApp.canSeeInformation());
                 receivers.add(tmp);
             }
             res.put("receivers", receivers);
             res.put("origin", this.getOrigin());
+            res.put("can_see_information", this.canSeeInformation);
             res.put("description", this.getDescription());
             res.put("name", this.getAppInformation().getName());
             return res;

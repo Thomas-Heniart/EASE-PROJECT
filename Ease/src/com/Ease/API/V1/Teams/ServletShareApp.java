@@ -41,6 +41,7 @@ public class ServletShareApp extends HttpServlet {
                 throw new GeneralException(ServletManager.Code.ClientError, "You cannot access this app");
             Channel channel = shareableApp.getChannel();
             JSONObject params = shareableApp.getNeededParams(sm);
+            params.put("canSeeInformation", (Boolean) sm.getParam("can_see_information", true));
             SharedApp sharedApp = shareableApp.share(teamUser_owner, teamUser_tenant, channel, team, params, sm);
             shareableApp.addSharedApp(sharedApp);
             teamUser_tenant.addSharedApp(sharedApp);

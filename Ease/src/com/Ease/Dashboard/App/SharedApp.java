@@ -32,4 +32,8 @@ public interface SharedApp {
     public void setAdminHasAccess(boolean b, DataBaseConnection db) throws GeneralException;
 
     public boolean adminHasAccess();
+
+    public void setCanSeeInformation(Boolean b);
+
+    public boolean canSeeInformation();
 }

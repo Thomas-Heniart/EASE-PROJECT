@@ -136,7 +136,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
     public static String createSharedWebsiteApp(WebsiteApp websiteApp, Map<String, Object> elevator, Integer team_id, Integer channel_id, Integer team_user_tenant_id, PostServletManager sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
-        String appDBid = App.createSharedApp(null, null, websiteApp.getName(), "websiteApp", elevator, false, true, team_id, channel_id == null ? null : channel_id, team_user_tenant_id, websiteApp, false, sm);
+        String appDBid = App.createSharedApp(null, null, websiteApp.getName(), "websiteApp", elevator, team_id, channel_id == null ? null : channel_id, team_user_tenant_id, websiteApp, false, sm);
         DatabaseRequest request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, 'classicApp', null, null);");
         request.setInt(websiteApp.getSite().getDb_id());
         request.setInt(appDBid);
@@ -295,13 +295,14 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<>();
+        elevator.put("canSeeInformation", params.get("canSeeInformation"));
         JSONArray account_information_array = (JSONArray) params.get("account_information");
         App sharedApp = null;
         DatabaseRequest request = null;
         Integer single_id = ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId();
         String websiteAppId = null;
         if (account_information_array == null || account_information_array.isEmpty()) {
-            String appDBid = App.createSharedApp(null, null, this.getName(), "websiteApp", elevator, false, true, team.getDb_id(), (channel == null) ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), this, true, sm);
+            String appDBid = App.createSharedApp(null, null, this.getName(), "websiteApp", elevator, team.getDb_id(), (channel == null) ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), this, true, sm);
             request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, 'websiteApp', ?, ?);");
             request.setInt(this.getSite().getDb_id());
             request.setInt(appDBid);
