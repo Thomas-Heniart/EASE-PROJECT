@@ -3708,10 +3708,10 @@ function teamModifyAppInformation(app_id, app_info) {
   };
 }
 
-function teamAppEditReceiver(app_id, receiver_info) {
+function teamAppEditReceiver(app_id, user_app_id, receiver_info) {
   return function (dispatch, getState) {
     dispatch({ type: 'TEAM_APP_EDIT_RECEIVER_PENDING' });
-    return post_api.teamApps.editReceiver(getState().team.id, app_id, receiver_info).then(function (response) {
+    return post_api.teamApps.editReceiver(getState().team.id, user_app_id, receiver_info).then(function (response) {
       dispatch({ type: 'TEAM_APP_EDIT_RECEIVER_FULFILLED', payload: { app_id: app_id, receiver_info: response } });
     }).catch(function (err) {
       dispatch({ type: 'TEAM_APP_EDIT_RECEIVER_REJECTED', payload: err });
@@ -3719,10 +3719,10 @@ function teamAppEditReceiver(app_id, receiver_info) {
   };
 }
 
-function teamAppDeleteReceiver(app_id, team_user_id) {
+function teamAppDeleteReceiver(app_id, user_app_id, team_user_id) {
   return function (dispatch, getState) {
     dispatch({ type: 'TEAM_APP_DELETE_RECEIVER_PENDING' });
-    return post_api.teamApps.deleteReceiver(getState().team.id, app_id, team_user_id).then(function (response) {
+    return post_api.teamApps.deleteReceiver(getState().team.id, user_app_id, team_user_id).then(function (response) {
       dispatch({ type: 'TEAM_APP_DELETE_RECEIVER_FULFILLED', payload: { app_id: app_id, team_user_id: team_user_id } });
     }).catch(function (err) {
       dispatch({ type: 'TEAM_APP_DELETE_RECEIVER_REJECTED', payload: err });
@@ -19296,20 +19296,20 @@ var TeamSimpleApp = function (_React$Component) {
 
       for (var i = 0; i < this.state.selectedReceivers.length; i++) {
         var receiver = getReceiverInList(this.props.app.receivers, this.state.selectedReceivers[i].id);
-        if (!receiver) addReceiverList.push(this.state.selectedReceivers[i]);else if (receiver.can_see_information != this.state.selectedReceivers[i].can_see_information) modifyReceiverList.push(this.state.selectedReceivers[i]);
+        if (!receiver) addReceiverList.push(this.state.selectedReceivers[i]);else if (receiver.can_see_information != this.state.selectedReceivers[i].can_see_information) modifyReceiverList.push(_extends({}, this.state.selectedReceivers[i], { shared_app_id: receiver.shared_app_id }));
       }
       for (var i = 0; i < this.props.app.receivers.length; i++) {
         if (!isUserInList(this.state.selectedReceivers, this.props.app.receivers[i].team_user_id)) deleteReceiverList.push(this.props.app.receivers[i]);
       }
       this.props.dispatch(appActions.teamModifyAppInformation(this.props.app.id, app_info)).then(function (response) {
         var deleteUsers = deleteReceiverList.map(function (item) {
-          return this.props.dispatch(appActions.teamAppDeleteReceiver(this.props.app.id, item.team_user_id));
+          return this.props.dispatch(appActions.teamAppDeleteReceiver(this.props.app.id, item.shared_app_id, item.team_user_id));
         }, _this2);
         var addUsers = addReceiverList.map(function (item) {
           return this.props.dispatch(appActions.teamShareApp(this.props.app.id, item.id));
         }, _this2);
         var editUsers = modifyReceiverList.map(function (item) {
-          return this.props.dispatch(appActions.teamModifyAppInformation(this.props.app.id, { can_see_information: item.can_see_information, team_user_id: item.id }));
+          return this.props.dispatch(appActions.teamAppEditReceiver(this.props.app.id, item.shared_app_id, { can_see_information: item.can_see_information, team_user_id: item.id }));
         }, _this2);
         var concatCalls = deleteUsers.concat(addUsers, editUsers);
         Promise.all(concatCalls).then(function () {
