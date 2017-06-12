@@ -39,7 +39,7 @@ public class ServletEditShareableApp extends HttpServlet {
             params.put("description", sm.getStringParam("description", true));
             params.put("account_information", sm.getParam("account_information", false));
             params.put("url", sm.getStringParam("url", true));
-            params.put("reminderInterval", Integer.parseInt(sm.getStringParam("reminder_interval", true)));
+            params.put("reminderInterval", Integer.parseInt(sm.getStringParam("password_change_interval", true)));
             shareableApp.modifyShareable(sm.getDB(), params, null);
             sm.setSuccess(shareableApp.getShareableJson());
         } catch (Exception e) {
