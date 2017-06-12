@@ -509,4 +509,16 @@ public class Account {
         db.commitTransaction(transaction);
 
     }
+
+    public void setReminderInterval(Integer reminderInterval, DataBaseConnection db) throws HttpServletException {
+        try {
+            DatabaseRequest request = db.prepareRequest("UPDATE accounts SET reminderIntervalValue = ? WHERE id = ?;");
+            request.setInt(reminderInterval);
+            request.setInt(this.getDBid());
+            request.set();
+            this.passwordChangeInterval = reminderInterval;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
 }
