@@ -328,27 +328,8 @@ public class ClassicApp extends WebsiteApp {
     }
 
     @Override
-    public boolean adminHasAccess() {
-        return this.adminHasAccess;
-    }
-
-    @Override
-    public void setAdminHasAccess(boolean b) {
-        this.adminHasAccess = b;
-    }
-
-    @Override
-    public void setAdminHasAccess(boolean b, DataBaseConnection db) throws GeneralException {
-        DatabaseRequest request = db.prepareRequest("UPDATE sharedApps SET adminHasAccess = ? WHERE id = ?");
-        request.setBoolean(b);
-        request.setInt(this.getDBid());
-        request.set();
-        this.setAdminHasAccess(b);
-    }
-
-    @Override
     public void accept(DataBaseConnection db) throws HttpServletException {
-
+        super.accept(db);
     }
 
 }

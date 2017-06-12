@@ -57,13 +57,9 @@ public class ServletCreateShareableSingleApp extends HttpServlet {
             Channel channel = null;
             if (channel_id != null)
                 channel = team.getChannelWithId(channel_id);
-            // Map<String, String> accountInformationMap = new HashMap<>();
             List<JSONObject> accountInformationList = new LinkedList<>();
             for (Object accountInformationObj : account_information) {
                 JSONObject accountInformation = (JSONObject) accountInformationObj;
-                /* String info_name = (String) accountInformation.get("info_name");
-                String info_value = (String) accountInformation.get("info_value");
-                //accountInformationMap.put(info_name, info_value); */
                 accountInformationList.add(accountInformation);
             }
             DataBaseConnection db = sm.getDB();

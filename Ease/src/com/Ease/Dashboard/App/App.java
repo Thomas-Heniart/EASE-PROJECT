@@ -259,6 +259,7 @@ public class App implements ShareableApp, SharedApp {
     protected ShareableApp holder;
     protected TeamUser teamUser_tenant;
     protected Boolean canSeeInformation;
+    protected boolean adminHasAccess;
 
 
     public App(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id) {
@@ -478,17 +479,25 @@ public class App implements ShareableApp, SharedApp {
 
     @Override
     public void setAdminHasAccess(boolean b) {
-        return;
+        this.adminHasAccess = b;
     }
 
     @Override
-    public void setAdminHasAccess(boolean b, DataBaseConnection db) throws GeneralException {
-        throw new GeneralException(ServletManager.Code.ClientError, "You cannot set admin access for this app.");
+    public void setAdminHasAccess(boolean b, DataBaseConnection db) throws HttpServletException {
+        try {
+            DatabaseRequest request = db.prepareRequest("UPDATE sharedApps SET adminHasAccess = ? WHERE id = ?;");
+            request.setBoolean(b);
+            request.setInt(this.getDBid());
+            request.set();
+            this.setAdminHasAccess(b);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 
     @Override
     public boolean adminHasAccess() {
-        return true;
+        return false;
     }
 
     @Override

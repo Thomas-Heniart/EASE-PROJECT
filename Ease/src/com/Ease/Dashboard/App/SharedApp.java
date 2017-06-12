@@ -29,7 +29,7 @@ public interface SharedApp {
 
     public void setAdminHasAccess(boolean b);
 
-    public void setAdminHasAccess(boolean b, DataBaseConnection db) throws GeneralException;
+    public void setAdminHasAccess(boolean b, DataBaseConnection db) throws HttpServletException;
 
     public boolean adminHasAccess();
 
