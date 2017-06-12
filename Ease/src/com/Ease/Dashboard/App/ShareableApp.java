@@ -53,4 +53,6 @@ public interface ShareableApp {
     public void setOrigin(String origin_type, Integer origin_id);
 
     public JSONObject getOrigin();
+
+    public void transferOwnership(TeamUser teamUser_new_owner, DataBaseConnection db) throws HttpServletException;
 }

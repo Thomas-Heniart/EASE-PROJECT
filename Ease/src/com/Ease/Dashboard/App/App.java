@@ -656,6 +656,18 @@ public class App implements ShareableApp, SharedApp {
         return this.origin;
     }
 
+    @Override
+    public void transferOwnership(TeamUser teamUser_new_owner, DataBaseConnection db) throws HttpServletException {
+        try {
+            DatabaseRequest request = db.prepareRequest("UPDATE shareableApps SET teamUser_owner_id = ?;");
+            request.setInt(teamUser_new_owner.getDb_id());
+            request.set();
+            this.setTeamUser_owner(teamUser_new_owner);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
     public void pinToDashboard(Profile profile, DataBaseConnection db) throws GeneralException {
         int transaction = db.startTransaction();
         this.profile = profile;
