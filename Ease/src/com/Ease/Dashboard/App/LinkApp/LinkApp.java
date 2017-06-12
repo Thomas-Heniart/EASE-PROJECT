@@ -92,7 +92,7 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
     }
 
 	/*
-	 * 
+     *
 	 * Constructor
 	 * 
 	 */
@@ -189,7 +189,8 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<>();
-        elevator.put("canSeeInformation", params.get("canSeeInformation"));
+        Boolean canSeeInformation = (Boolean) params.get("canSeeInformation");
+        elevator.put("canSeeInformation", canSeeInformation);
         String appDBid = App.createSharedApp(null, null, this.getName(), "linkApp", elevator, team.getDb_id(), (channel == null) ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), this, true, sm);
         DatabaseRequest request = db.prepareRequest("INSERT INTO linkApps values(NULL, ?, ?, NULL);");
         request.setInt(appDBid);
@@ -198,8 +199,11 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         db.commitTransaction(transaction);
         this.tenant_teamUsers.add(teamUser_tenant);
         this.channel = channel;
-        SharedApp sharedApp = new LinkApp(appDBid, null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), linkInfos, linkDBid, this);
+        LinkApp sharedApp = new LinkApp(appDBid, null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), linkInfos, linkDBid, this);
+        sharedApp.setAdminHasAccess((Boolean) params.get("adminHasAccess"), sm.getDB());
         sharedApp.setTeamUser_tenant(teamUser_tenant);
+        sharedApp.setReceived(false);
+        sharedApp.setCanSeeInformation(canSeeInformation);
         return sharedApp;
     }
 

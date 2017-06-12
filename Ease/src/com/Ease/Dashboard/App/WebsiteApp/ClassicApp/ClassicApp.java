@@ -274,7 +274,8 @@ public class ClassicApp extends WebsiteApp {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<>();
-        elevator.put("canSeeInformation", params.get("canSeeInformation"));
+        Boolean canSeeInformation = (Boolean) params.get("canSeeInformation");
+        elevator.put("canSeeInformation", canSeeInformation);
         String websiteAppId = WebsiteApp.createSharedWebsiteApp(this, elevator, team.getDb_id(), channel == null ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), sm);
         String deciphered_teamKey = sm.getTeamUserForTeam(team).getDeciphered_teamKey();
         this.getAccount().decipherWithTeamKeyIfNeeded(deciphered_teamKey);
@@ -283,11 +284,12 @@ public class ClassicApp extends WebsiteApp {
         request.setInt(websiteAppId);
         request.setInt(sharedAccount.getDBid());
         String classicDBid = request.set().toString();
-        db.commitTransaction(transaction);
         App sharedApp = new ClassicApp((String) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), this.getSite(), websiteAppId, sharedAccount, classicDBid, this);
-        sharedApp.setAdminHasAccess(adminHasAccess, sm.getDB());
+        sharedApp.setAdminHasAccess((Boolean) params.get("adminHasAccess"), sm.getDB());
+        db.commitTransaction(transaction);
         sharedApp.setReceived(false);
         sharedApp.setTeamUser_tenant(teamUser_tenant);
+        sharedApp.setCanSeeInformation(canSeeInformation);
         return sharedApp;
     }
 
@@ -299,11 +301,6 @@ public class ClassicApp extends WebsiteApp {
         res.put("last_modification", this.getAccount().getLastUpdatedDate());
         res.put("account_information", this.getAccount().getInformationJsonWithoutPassword());
         return res;
-    }
-
-    @Override
-    public JSONObject getNeededParams(PostServletManager sm) {
-        return new JSONObject();
     }
 
     @Override
@@ -347,6 +344,11 @@ public class ClassicApp extends WebsiteApp {
         request.setInt(this.getDBid());
         request.set();
         this.setAdminHasAccess(b);
+    }
+
+    @Override
+    public void accept(DataBaseConnection db) throws HttpServletException {
+
     }
 
 }

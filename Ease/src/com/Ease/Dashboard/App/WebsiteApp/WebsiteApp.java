@@ -297,7 +297,8 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<>();
-        elevator.put("canSeeInformation", params.get("canSeeInformation"));
+        Boolean canSeeInformation = (Boolean) params.get("canSeeInformation");
+        elevator.put("canSeeInformation", canSeeInformation);
         JSONArray account_information_array = (JSONArray) params.get("account_information");
         App sharedApp = null;
         DatabaseRequest request = null;
@@ -327,12 +328,12 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
             request.setInt(account.getDBid());
             String classicDBid = request.set().toString();
             sharedApp = new ClassicApp((String) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), single_id, this.getSite(), websiteAppId, account, classicDBid, this);
-            if (adminHasAccess)
-                sharedApp.setAdminHasAccess(adminHasAccess, sm.getDB());
-            sharedApp.setReceived(false);
         }
-        db.commitTransaction(transaction);
+        sharedApp.setAdminHasAccess((Boolean) params.get("adminHasAccess"), sm.getDB());
         sharedApp.setTeamUser_tenant(teamUser_tenant);
+        sharedApp.setReceived(false);
+        sharedApp.setCanSeeInformation(canSeeInformation);
+        db.commitTransaction(transaction);
         return sharedApp;
     }
 
@@ -361,14 +362,11 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
 
     @Override
     public JSONObject getNeededParams(PostServletManager sm) {
-        System.out.println("WebsiteApp.java getNeededParams");
-        JSONObject jsonObject = new JSONObject();
-        JSONArray account_information = (JSONArray) sm.getParam("account_information", false);
-        //Boolean adminHasAccess = (Boolean) sm.getParam("adminHasAccess", true);
-        //if (adminHasAccess != null)
-        if (account_information != null) {
-            jsonObject.put("account_information", account_information);
-            jsonObject.put("adminHasAccess", true);
+        JSONObject jsonObject = super.getNeededParams(sm);
+        if (this.isEmpty()) {
+            JSONArray account_information = (JSONArray) sm.getParam("account_information", false);
+            if (account_information != null)
+                jsonObject.put("account_information", account_information);
         }
         return jsonObject;
     }

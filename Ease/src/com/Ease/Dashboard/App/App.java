@@ -222,7 +222,10 @@ public class App implements ShareableApp, SharedApp {
         else
             request.setInt(channel_id);
         request.setBoolean(received);
-        request.setBoolean((Boolean) elevator.get("canSeeInformation"));
+        Boolean canSeeInformation = (Boolean) elevator.get("canSeeInformation");
+        if (canSeeInformation == null)
+            canSeeInformation = false;
+        request.setBoolean(canSeeInformation);
         request.set();
         db.commitTransaction(transaction);
         return appDBid;
@@ -364,10 +367,6 @@ public class App implements ShareableApp, SharedApp {
         return this.received;
     }
 
-    public void setReceived(boolean received) {
-        this.received = received;
-    }
-
     public void beReceived(DataBaseConnection db) throws GeneralException {
         this.received = true;
         DatabaseRequest request = db.prepareRequest("UPDATE sharedApps SET received = 1 WHERE id = ?;");
@@ -473,6 +472,7 @@ public class App implements ShareableApp, SharedApp {
         JSONObject res = new JSONObject();
         res.put("team_user_id", this.teamUser_tenant.getDb_id());
         res.put("shared_app_id", Integer.valueOf(this.getDBid()));
+        res.put("accepted", this.isReceived());
         return res;
     }
 
@@ -499,6 +499,23 @@ public class App implements ShareableApp, SharedApp {
     @Override
     public boolean canSeeInformation() {
         return this.canSeeInformation;
+    }
+
+    @Override
+    public void setReceived(Boolean b) {
+        this.received = b;
+    }
+
+    @Override
+    public void accept(DataBaseConnection db) throws HttpServletException {
+        try {
+            DatabaseRequest request = db.prepareRequest("UPDATE sharedApps SET received = ? WHERE id = ?;");
+            request.setBoolean(true);
+            request.set();
+            this.setReceived(true);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 
     /* Interface ShareableApp */
@@ -629,7 +646,13 @@ public class App implements ShareableApp, SharedApp {
 
     @Override
     public JSONObject getNeededParams(PostServletManager sm) {
-        return new JSONObject();
+        JSONObject jsonObject = new JSONObject();
+        Boolean canSeeInformation = (Boolean) sm.getParam("can_see_information", true);
+        if (canSeeInformation == null)
+            canSeeInformation = false;
+        jsonObject.put("canSeeInformation", canSeeInformation);
+        jsonObject.put("adminHasAccess", true);
+        return jsonObject;
     }
 
     @Override
@@ -644,6 +667,7 @@ public class App implements ShareableApp, SharedApp {
             request.setString(description);
             request.setInt(this.getDBid());
             request.set();
+            this.setDescription(description);
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
