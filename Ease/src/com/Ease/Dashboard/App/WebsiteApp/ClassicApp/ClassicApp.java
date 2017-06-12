@@ -184,7 +184,7 @@ public class ClassicApp extends WebsiteApp {
     public void edit(String name, Map<String, String> infos, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
-        this.setName(name, sm);
+        this.setName(name, sm.getDB());
         for (AccountInformation info : this.account.getAccountInformations()) {
             if (Regex.isEmail(info.getInformationValue()) == true) {
                 this.getProfile().getUser().removeEmailIfNeeded(info.getInformationValue(), sm);

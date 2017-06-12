@@ -312,9 +312,9 @@ public class App implements ShareableApp, SharedApp {
         return this.informations.getName();
     }
 
-    public void setName(String name, ServletManager sm) throws GeneralException {
+    public void setName(String name, DataBaseConnection db) throws GeneralException {
         if (this.groupApp == null || (!this.groupApp.isCommon() && this.groupApp.getPerms().havePermission(AppPermissions.Perm.RENAME.ordinal()))) {
-            this.informations.setName(name, sm.getDB());
+            this.informations.setName(name, db);
         } else {
             throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permission to change this app's name.");
         }
@@ -504,16 +504,25 @@ public class App implements ShareableApp, SharedApp {
     /* Interface ShareableApp */
     @Override
     public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, PostServletManager sm) throws GeneralException, HttpServletException {
-        throw new GeneralException(ServletManager.Code.ClientError, "You shouldn't be there");
+        throw new HttpServletException(HttpStatus.BadRequest, "App cannot be instantiate");
     }
 
     @Override
     public void modifyShareable(DataBaseConnection db, JSONObject editJson, SharedApp sharedApp) throws HttpServletException {
-        String description = (String) editJson.get("description");
-        if (description == null)
-            this.setDescription("", db);
-        else
-            this.setDescription(description, db);
+        try {
+            int transaction = db.startTransaction();
+            String description = (String) editJson.get("description");
+            if (description == null)
+                this.setDescription("", db);
+            else
+                this.setDescription(description, db);
+            String name = (String) editJson.get("name");
+            if (name != null)
+                this.setName(name, db);
+            db.commitTransaction(transaction);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 
     @Override

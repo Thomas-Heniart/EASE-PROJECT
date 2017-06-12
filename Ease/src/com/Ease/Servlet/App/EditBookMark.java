@@ -68,7 +68,7 @@ public class EditBookMark extends HttpServlet {
                 int transaction = db.startTransaction();
                 for (Object appId : appIds) {
                     LinkApp app = (LinkApp) user.getDashboardManager().getAppWithID(Integer.parseInt((String) appId));
-                    app.setName(name, sm);
+                    app.setName(name, sm.getDB());
                     app.getLinkAppInformations().setLink(link, db);
                 }
                 db.commitTransaction(transaction);

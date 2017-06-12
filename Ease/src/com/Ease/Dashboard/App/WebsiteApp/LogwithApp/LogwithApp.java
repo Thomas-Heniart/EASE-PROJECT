@@ -160,7 +160,7 @@ public class LogwithApp extends WebsiteApp {
     public void edit(String name, App logwith, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
-        this.setName(name, sm);
+        this.setName(name, sm.getDB());
         if (this.groupApp == null || (!this.groupApp.isCommon() && this.groupApp.getPerms().havePermission(AppPermissions.Perm.EDIT.ordinal()))) {
             if (logwith.getType().equals("ClassicApp") || logwith.getType().equals("LogwithApp")) {
                 this.setLogwith((WebsiteApp) logwith, sm);

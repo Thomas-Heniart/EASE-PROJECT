@@ -173,7 +173,10 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
     @Override
     public void modifyShareable(DataBaseConnection db, JSONObject editJson, SharedApp sharedApp) throws HttpServletException {
         try {
+            int transaction = db.startTransaction();
+            super.modifyShareable(db, editJson, sharedApp);
             this.getLinkAppInformations().edit(editJson, db);
+            db.commitTransaction(transaction);
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
