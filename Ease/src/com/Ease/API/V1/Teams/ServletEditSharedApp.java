@@ -46,7 +46,7 @@ public class ServletEditSharedApp extends HttpServlet {
                 sharedApp.getHolder().modifyShareable(sm.getDB(), params, null);
             else
                 sharedApp.modifyShared(sm.getDB(), params);
-            sm.setSuccess(sharedApp.getHolder().getShareableJson());
+            sm.setSuccess(sharedApp.getSharedJSON());
         } catch (Exception e) {
             sm.setError(e);
         }
