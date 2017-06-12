@@ -8798,7 +8798,7 @@ function teamShareMultiApp(app_id, user_info) {
   return function (dispatch, getState) {
     dispatch({ type: 'TEAM_SHARE_APP_PENDING' });
     return post_api.teamApps.shareMultiApp(getState().team.id, app_id, user_info).then(function (response) {
-      dispatch({ type: 'TEAM_SHARE_APP_FULFILLED', payload: response });
+      dispatch({ type: 'TEAM_SHARE_APP_FULFILLED', payload: { user_info: response, app_id: app_id } });
     }).catch(function (err) {
       dispatch({ type: 'TEAM_SHARE_APP_REJECTED', payload: err });
       throw err;
@@ -14657,10 +14657,11 @@ var MultiTeamAppAdd = function (_React$Component2) {
         reminder_interval: this.state.passwordRemind
       };
       if (this.props.selectedItem.type === 'channel') app.channel_id = this.props.selectedItem.item.id;
+      var selectedUsers = this.state.selectedUsers;
       this.props.dispatch((0, _appsActions.teamCreateMultiApp)(app)).then(function (response) {
         var id = response.id;
         var sharing = [];
-        _this3.state.selectedUsers.map(function (user) {
+        selectedUsers.map(function (user) {
           var user_info = {
             user_id: user.id,
             account_information: [],
