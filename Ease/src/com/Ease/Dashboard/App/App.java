@@ -635,7 +635,6 @@ public class App implements ShareableApp, SharedApp {
             }
             res.put("receivers", receivers);
             res.put("origin", this.getOrigin());
-            res.put("can_see_information", this.canSeeInformation);
             res.put("description", this.getDescription());
             res.put("name", this.getAppInformation().getName());
             return res;
