@@ -50,6 +50,8 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         DatabaseResult rs = request.get();
         if (rs.next()) {
             String websiteAppDBid = rs.getString(Data.ID.ordinal());
+            Integer reminderInterval = rs.getInt("reminderIntervalValue");
+            String reminderType = rs.getString("reminderIntervalType");
             Website website = ((Catalog) context.getAttribute("catalog")).getWebsiteWithDBid(rs.getString(Data.WEBSITE_ID.ordinal()));
             /* GroupWebsiteApp groupWebsiteApp = null;
             String groupWebsiteId = rs.getString(Data.GROUP_WEBSITE_ID.ordinal());
@@ -58,7 +60,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
             IdGenerator idGenerator = (IdGenerator) context.getAttribute("idGenerator");
             switch (rs.getString(Data.TYPE.ordinal())) {
                 case "websiteApp":
-                    return new WebsiteApp(appDBid, profile, position, appInfos, groupApp, insertDate, idGenerator.getNextId(), website, websiteAppDBid);
+                    return new WebsiteApp(appDBid, profile, position, appInfos, groupApp, insertDate, idGenerator.getNextId(), website, reminderInterval, reminderType, websiteAppDBid);
                 case "logwithApp":
                     return LogwithApp.loadLogwithApp(appDBid, profile, position, appInfos, groupApp, insertDate, website, websiteAppDBid, context, db);
                 case "classicApp":
@@ -369,6 +371,12 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
             jsonObject.put("adminHasAccess", true);
         }
         return jsonObject;
+    }
+
+    @Override
+    public void modifyShareable(DataBaseConnection db, JSONObject editJson, SharedApp sharedApp) throws HttpServletException {
+        super.modifyShareable(db, editJson, sharedApp);
+
     }
 
     public JSONObject getJsonWithoutId() {
