@@ -36369,7 +36369,7 @@ var TeamLinkApp = function (_React$Component) {
       var me = this.props.me;
       return React.createElement(
         'div',
-        { className: 'team_app_holder' },
+        { className: classnames('team_app_holder', this.state.modifying ? "active" : null) },
         !this.state.modifying && React.createElement(
           'div',
           { className: 'team_app_actions_holder' },
@@ -36722,7 +36722,7 @@ var TeamMultiApp = function (_React$Component) {
 
       return React.createElement(
         'div',
-        { className: 'team_app_holder' },
+        { className: classnames('team_app_holder', this.state.modifying ? "active" : null) },
         !this.state.modifying && React.createElement(
           'div',
           { className: 'team_app_actions_holder' },
