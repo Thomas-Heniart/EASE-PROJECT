@@ -18366,8 +18366,27 @@ var TeamLinkApp = function (_React$Component) {
         description: this.state.modifiedComment,
         url: this.state.modifiedUrl
       };
+      var addReceiverList = [];
+      var deleteReceiverList = [];
+
+      for (var i = 0; i < this.state.selectedReceivers.length; i++) {
+        var receiver = getReceiverInList(this.props.app.receivers, this.state.selectedReceivers[i].id);
+        if (!receiver) addReceiverList.push(this.state.selectedReceivers[i]);
+      }
+      for (var i = 0; i < this.props.app.receivers.length; i++) {
+        if (!isUserInList(this.state.selectedReceivers, this.props.app.receivers[i].team_user_id)) deleteReceiverList.push(this.props.app.receivers[i]);
+      }
       this.props.dispatch(appActions.teamModifyAppInformation(this.props.app.id, app_info)).then(function (response) {
-        _this2.setupModifying(false);
+        var deleteUsers = deleteReceiverList.map(function (item) {
+          return this.props.dispatch(appActions.teamAppDeleteReceiver(this.props.app.id, item.shared_app_id, item.team_user_id));
+        }, _this2);
+        var addUsers = addReceiverList.map(function (item) {
+          return this.props.dispatch(appActions.teamShareApp(this.props.app.id, item.id));
+        }, _this2);
+        var concatCalls = deleteUsers.concat(addUsers);
+        Promise.all(concatCalls).then(function () {
+          _this2.setupModifying(false);
+        });
       });
     }
   }, {
