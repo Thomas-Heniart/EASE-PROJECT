@@ -368,13 +368,6 @@ public class App implements ShareableApp, SharedApp {
         return this.received;
     }
 
-    public void beReceived(DataBaseConnection db) throws GeneralException {
-        this.received = true;
-        DatabaseRequest request = db.prepareRequest("UPDATE sharedApps SET received = 1 WHERE id = ?;");
-        request.setInt(this.db_id);
-        request.set();
-    }
-
     public boolean havePerm(AppPermissions.Perm perm) {
         if (this.groupApp != null && (this.groupApp.isCommon() == true || !this.groupApp.getPerms().havePermission(perm.ordinal())))
             return false;

@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.Account;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Team.TeamUser;
@@ -19,7 +20,7 @@ import java.io.IOException;
 /**
  * Created by thomas on 19/05/2017.
  */
-@WebServlet("/ServletAcceptSharedApp")
+@WebServlet("/api/v1/teams/AcceptSharedApp")
 public class ServletAcceptSharedApp extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
@@ -28,15 +29,14 @@ public class ServletAcceptSharedApp extends HttpServlet {
             Integer team_id = sm.getIntParam("team_id", true);
             Integer app_id = sm.getIntParam("app_id", true);
             TeamUser teamUser = sm.getTeamUserForTeamId(team_id);
-            App app = (App) teamUser.getSharedAppWithId(app_id);
-            if (!app.isClassicApp())
-                throw new HttpServletException(HttpStatus.BadRequest, "Impossible to accept this app");
-            if (((App) app.getHolder()).isClassicApp()) {
-                Account account = ((ClassicApp) app).getAccount();
-                account.decipherWithTeamKeyIfNeeded(teamUser.getDeciphered_teamKey());
-                account.cipherWithKeyUser(sm);
+            SharedApp sharedApp = teamUser.getSharedAppWithId(app_id);
+            App app = (App) sharedApp;
+            app.accept(sm.getDB());
+            if (app.isClassicApp() && ((App) sharedApp.getHolder()).isClassicApp()) {
+                ClassicApp classicApp = (ClassicApp) app;
+                classicApp.getAccount().decipherWithTeamKeyIfNeeded(teamUser.getDeciphered_teamKey());
+                classicApp.getAccount().cipherWithKeyUser(sm.getUser().getKeys().getKeyUser(), sm.getDB());
             }
-            app.beReceived(sm.getDB());
             sm.setSuccess("App accepted");
         } catch (Exception e) {
             sm.setError(e);

@@ -296,13 +296,18 @@ public class Account {
             accountInformation.decipher(this.privateKey);
     }
 
-    public void cipherWithKeyUser(PostServletManager sm) throws GeneralException, HttpServletException {
-        this.ciphered_key = sm.getUser().encrypt(this.privateKey);
-        DatabaseRequest request = sm.getDB().prepareRequest("UPDATE accounts SET privateKey = ?, mustBeReciphered = ? WHERE id = ?;");
-        request.setString(this.ciphered_key);
-        request.setBoolean(false);
-        request.setInt(this.db_id);
-        request.set();
+    public void cipherWithKeyUser(String keyUser, DataBaseConnection db) throws HttpServletException {
+        try {
+            this.ciphered_key = AES.encrypt(this.privateKey, keyUser);
+            DatabaseRequest request = db.prepareRequest("UPDATE accounts SET privateKey = ?, mustBeReciphered = ? WHERE id = ?;");
+            request.setString(this.ciphered_key);
+            request.setBoolean(false);
+            request.setInt(this.db_id);
+            request.set();
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+
     }
 
     public List<AccountInformation> getAccountInformations() {
