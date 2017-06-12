@@ -28,13 +28,11 @@ public class ServletTransferShareableAppOwner extends HttpServlet {
             sm.needToBeAdminOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
-            Integer team_user_id = sm.getIntParam("team_user_id", true);
-            TeamUser teamUser_owner = team.getTeamUserWithId(team_user_id);
-            TeamUser teamUser_new_owner = sm.getTeamUserForTeam(team);
-            if (!teamUser_new_owner.isSuperior(teamUser_owner))
-                throw new HttpServletException(HttpStatus.Forbidden, "You cannot do this dude.");
             Integer shareableApp_id = sm.getIntParam("app_id", true);
             ShareableApp shareableApp = team.getShareableAppWithId(shareableApp_id);
+            TeamUser teamUser_new_owner = sm.getTeamUserForTeam(team);
+            if (!teamUser_new_owner.isSuperior(shareableApp.getTeamUser_owner()))
+                throw new HttpServletException(HttpStatus.Forbidden, "You cannot do this dude.");
             shareableApp.transferOwnership(teamUser_new_owner, sm.getDB());
             sm.setSuccess("Ownership transferred");
         } catch (Exception e) {
