@@ -16,6 +16,8 @@ import com.Ease.Dashboard.User.User;
 
 public class Account {
 
+    private final static Long MillisecondsInMonth = new Long("2629746000");
+
     public enum Data {
         NOTHING,
         ID,
@@ -205,7 +207,7 @@ public class Account {
     protected String privateKey;
     protected Boolean mustBeReciphered;
     protected Integer passwordChangeInterval = 0; /* In month */
-    protected String lastUpdatedDate;
+    protected Date lastUpdatedDate;
     protected DateFormat databaseLastUpdatedDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     protected DateFormat printLastUpdatedDateFormat = new SimpleDateFormat("MMMM dd, HH:mm", Locale.US);
 
@@ -340,18 +342,22 @@ public class Account {
 
     public void setLastUpdatedDate(String lastUpdatedDate) throws GeneralException {
         try {
-            this.lastUpdatedDate = printLastUpdatedDateFormat.format(databaseLastUpdatedDateFormat.parse(lastUpdatedDate));
+            this.lastUpdatedDate = databaseLastUpdatedDateFormat.parse(lastUpdatedDate);
         } catch (ParseException e) {
             throw new GeneralException(ServletManager.Code.InternError, e);
         }
     }
 
     public void setLastUpdatedDate(Date lastUpdatedDate) {
-        this.lastUpdatedDate = printLastUpdatedDateFormat.format(lastUpdatedDate);
+        this.lastUpdatedDate = lastUpdatedDate;
     }
 
-    public String getLastUpdatedDate() {
+    public Date getLastUpdatedDate() {
         return this.lastUpdatedDate;
+    }
+
+    public String printLastUpdatedDate() {
+        return printLastUpdatedDateFormat.format(this.lastUpdatedDate);
     }
 
 	/*
@@ -485,7 +491,11 @@ public class Account {
     }
 
     public boolean mustUpdatePassword() {
-        return this.passwordMustBeUpdated;
+        if (this.passwordChangeInterval == null || this.passwordChangeInterval == 0)
+            return false;
+        long now = new Date().getTime();
+        long updateDate = this.lastUpdatedDate.getTime() + this.passwordChangeInterval * MillisecondsInMonth;
+        return now >= updateDate;
     }
 
     public void update_ciphering_if_needed(ServletManager sm) throws GeneralException {

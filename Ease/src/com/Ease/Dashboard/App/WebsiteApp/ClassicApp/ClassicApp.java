@@ -298,7 +298,8 @@ public class ClassicApp extends WebsiteApp {
         JSONObject res = super.getShareableJson();
         res.put("type", "simple");
         res.put("password_change_interval", this.getAccount().getPasswordChangeInterval());
-        res.put("last_modification", this.getAccount().getLastUpdatedDate());
+        res.put("last_modification", this.getAccount().printLastUpdatedDate());
+        res.put("password_must_be_updated", this.getAccount().mustUpdatePassword());
         res.put("account_information", this.getAccount().getInformationJsonWithoutPassword());
         return res;
     }

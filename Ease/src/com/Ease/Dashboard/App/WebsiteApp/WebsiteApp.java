@@ -347,14 +347,14 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         for (Object object : jsonArray) {
             JSONObject sharedAppObject = (JSONObject) object;
             Integer shared_app_id = (Integer) sharedAppObject.get("shared_app_id");
-            System.out.println("WebsiteApp.java ShareableApp id: " + this.getDBid() + " and SharedApp id: " + shared_app_id);
             App sharedApp = (App) this.getSharedAppWithId(shared_app_id);
             if (sharedApp.isClassicApp() && this.isEmpty()) {
                 ClassicApp classicApp = (ClassicApp) sharedApp;
                 sharedAppObject.put("account_information", classicApp.getAccount().getInformationJsonWithoutPassword());
-                sharedAppObject.put("last_modification", classicApp.getAccount().getLastUpdatedDate());
+                sharedAppObject.put("last_modification", classicApp.getAccount().printLastUpdatedDate());
+                sharedAppObject.put("password_must_be_updated", classicApp.getAccount().mustUpdatePassword());
             }
-            object = sharedAppObject;
+            //object = sharedAppObject;
         }
         res.put("receivers", jsonArray);
         return res;
