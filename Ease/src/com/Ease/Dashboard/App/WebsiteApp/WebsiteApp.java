@@ -375,8 +375,23 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
 
     @Override
     public void modifyShareable(DataBaseConnection db, JSONObject editJson, SharedApp sharedApp) throws HttpServletException {
-        super.modifyShareable(db, editJson, sharedApp);
-
+        try {
+            int transaction = db.startTransaction();
+            super.modifyShareable(db, editJson, sharedApp);
+            if (this.isEmpty()) {
+                Integer reminderInterval = (Integer) editJson.get("reminderInterval");
+                if (reminderInterval != null) {
+                    DatabaseRequest request = db.prepareRequest("UPDATE websiteApps SET reminderIntervalValue = ? WHERE id = ?;");
+                    request.setInt(reminderInterval);
+                    request.setInt(this.websiteAppDBid);
+                    request.set();
+                    this.reminderIntervalValue = reminderInterval;
+                }
+            }
+            db.commitTransaction(transaction);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 
     public JSONObject getJsonWithoutId() {

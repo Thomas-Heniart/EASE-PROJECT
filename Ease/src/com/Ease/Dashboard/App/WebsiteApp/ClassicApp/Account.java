@@ -436,13 +436,22 @@ public class Account {
 
     public void edit(JSONObject editJson, DataBaseConnection db) throws GeneralException {
         int transaction = db.startTransaction();
+        JSONObject accountInformationJson = (JSONObject) editJson.get("account_information");
+        Integer reminderInterval = (Integer) editJson.get("reminderInterval");
         for (AccountInformation accountInformation : this.getAccountInformations()) {
-            String new_info_value = (String) editJson.get(accountInformation.getInformationName());
+            String new_info_value = (String) accountInformationJson.get(accountInformation.getInformationName());
             if (new_info_value == null)
                 continue;
             accountInformation.setInformation_value(new_info_value, this.publicKey, db);
             if (accountInformation.getInformationName().equals("password"))
                 updateLastUpateDate(db);
+        }
+        if (reminderInterval != null) {
+            DatabaseRequest request = db.prepareRequest("UPDATE accounts SET reminderIntervalValue = ? WHERE id = ?;");
+            request.setInt(reminderInterval);
+            request.setInt(this.getDBid());
+            request.set();
+            this.passwordChangeInterval = reminderInterval;
         }
         db.commitTransaction(transaction);
     }
