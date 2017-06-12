@@ -645,7 +645,6 @@ public class App implements ShareableApp, SharedApp {
                 tmp.put("team_user_id", sharedApp.getTeamUser_tenant().getDb_id());
                 tmp.put("shared_app_id", Integer.valueOf(((App) sharedApp).getDBid()));
                 tmp.put("accepted", ((App) sharedApp).isReceived());
-                tmp.put("can_see_information", sharedApp.canSeeInformation());
                 receivers.add(tmp);
             }
             res.put("receivers", receivers);

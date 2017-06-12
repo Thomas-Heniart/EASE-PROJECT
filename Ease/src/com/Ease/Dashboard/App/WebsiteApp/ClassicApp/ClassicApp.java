@@ -306,6 +306,14 @@ public class ClassicApp extends WebsiteApp {
         res.put("last_modification", this.getAccount().printLastUpdatedDate());
         res.put("password_must_be_updated", this.getAccount().mustUpdatePassword());
         res.put("account_information", this.getAccount().getInformationJsonWithoutPassword());
+        JSONArray jsonArray = (JSONArray) res.get("receivers");
+        for (Object object : jsonArray) {
+            JSONObject sharedAppObject = (JSONObject) object;
+            Integer shared_app_id = (Integer) sharedAppObject.get("shared_app_id");
+            App sharedApp = (App) this.getSharedAppWithId(shared_app_id);
+            sharedAppObject.put("can_see_information", sharedApp.canSeeInformation());
+        }
+        res.put("receivers", jsonArray);
         return res;
     }
 
