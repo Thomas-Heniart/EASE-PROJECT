@@ -17,7 +17,7 @@ import java.io.IOException;
 /**
  * Created by thomas on 19/05/2017.
  */
-@WebServlet("/ServletPinAppToDashboard")
+@WebServlet("/api/v1/teams/PinAppToDashboard")
 public class ServletPinAppToDashboard extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
