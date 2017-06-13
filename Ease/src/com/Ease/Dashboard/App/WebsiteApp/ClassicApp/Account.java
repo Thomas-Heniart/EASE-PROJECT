@@ -16,7 +16,7 @@ import com.Ease.Dashboard.User.User;
 
 public class Account {
 
-    private final static Long MillisecondsInMonth = new Long("1");
+    private final static Long MillisecondsInMonth = new Long("2629746000");
 
     public enum Data {
         NOTHING,
