@@ -14891,17 +14891,13 @@ var MultiTeamAppAdd = function (_React$Component2) {
       var selectedUsers = this.state.selectedUsers;
       this.props.dispatch((0, _appsActions.teamCreateMultiApp)(app)).then(function (response) {
         var id = response.id;
-        var sharing = [];
-        selectedUsers.map(function (user) {
+        var sharing = selectedUsers.map(function (user) {
           var user_info = {
-            user_id: user.id,
-            account_information: [],
+            team_user_id: user.id,
+            account_information: user.credentials,
             adminHasAccess: false
           };
-          Object.keys(user.credentials).map(function (item) {
-            user_info.account_information.push({ info_name: item, info_value: user.credentials[item] });
-          });
-          sharing.push(this.props.dispatch((0, _appsActions.teamShareMultiApp)(id, user_info)));
+          return this.props.dispatch((0, _appsActions.teamShareApp)(id, user_info));
         }, _this3);
         Promise.all(sharing).then(function () {
           _this3.props.cancelAddFunc();
@@ -16183,9 +16179,8 @@ var LinkTeamAppAdd = function (_React$Component3) {
       var selectedUsers = this.state.selectedUsers;
       this.props.dispatch(appActions.teamCreateLinkApp(app)).then(function (response) {
         var id = response.id;
-        var sharing = [];
-        selectedUsers.map(function (item) {
-          sharing.push(this.props.dispatch(appActions.teamShareApp(id, item.id)));
+        var sharing = selectedUsers.map(function (item) {
+          return this.props.dispatch(appActions.teamShareApp(id, { team_user_id: item.id }));
         }, _this4);
         Promise.all(sharing).then(function () {
           _this4.props.cancelAddFunc();
@@ -16428,9 +16423,8 @@ var SimpleTeamAppAdd = function (_React$Component4) {
       var selectedUsers = this.state.selectedUsers;
       this.props.dispatch(appActions.teamCreateSingleApp(app)).then(function (response) {
         var id = response.id;
-        var sharing = [];
-        selectedUsers.map(function (item) {
-          sharing.push(this.props.dispatch(appActions.teamShareApp(id, item.id)));
+        var sharing = selectedUsers.map(function (item) {
+          return this.props.dispatch(appActions.teamShareApp(id, { team_user_id: item.id }));
         }, _this6);
         Promise.all(sharing).then(function () {
           _this6.props.cancelAddFunc();
@@ -18711,9 +18705,7 @@ var TeamMultiApp = function (_React$Component) {
           var user = (0, _helperFunctions.selectUserFromListById)(receivers, item.team_user_id);
           user.selected = true;
           user.accepted = item.accepted;
-          item.account_information.map(function (item) {
-            user.credentials[item.info_name] = item.info_value;
-          });
+          user.credentials = _extends({}, item.account_information);
           selectedReceivers.push(user);
         }, this);
 
@@ -18746,8 +18738,9 @@ var TeamMultiApp = function (_React$Component) {
       for (var i = 0; i < this.state.selectedReceivers.length; i++) {
         var receiver = (0, _helperFunctions.getReceiverInList)(this.props.app.receivers, this.state.selectedReceivers[i].id);
         if (!receiver) addReceiverList.push(this.state.selectedReceivers[i]);else {
-          for (var j = 0; j < receiver.account_information.length; j++) {
-            if (receiver.account_information[j].info_value != this.state.selectedReceivers[i].credentials[receiver.account_information[j].info_name]) {
+          var keys = Object.keys(receiver.account_information);
+          for (var j = 0; j < keys.length; j++) {
+            if (receiver.account_information[keys[j]] != this.state.selectedReceivers[i].credentials[keys[j]]) {
               modifyReceiverList.push(_extends({}, this.state.selectedReceivers[i], { shared_app_id: receiver.shared_app_id }));
               break;
             }
@@ -18873,14 +18866,14 @@ var TeamMultiApp = function (_React$Component) {
                 React.createElement(
                   'div',
                   { className: 'credentials' },
-                  meReceiver !== null ? meReceiver.account_information.map(function (item) {
+                  meReceiver !== null ? Object.keys(meReceiver.account_information).map(function (item) {
                     return React.createElement(
                       'div',
-                      { className: 'credentials_line', key: item.info_name },
+                      { className: 'credentials_line', key: item },
                       React.createElement(
                         'div',
                         { className: 'credentials_type_icon' },
-                        React.createElement('i', { className: classnames('fa', webInfo[item.info_name].placeholderIcon) })
+                        React.createElement('i', { className: classnames('fa', webInfo[item].placeholderIcon) })
                       ),
                       React.createElement(
                         'div',
@@ -18888,7 +18881,7 @@ var TeamMultiApp = function (_React$Component) {
                         React.createElement(
                           'span',
                           { className: 'credentials_value' },
-                          item.info_value
+                          meReceiver.account_information[item]
                         )
                       )
                     );
@@ -18953,15 +18946,15 @@ var TeamMultiApp = function (_React$Component) {
                     React.createElement(
                       'div',
                       { className: 'credentials' },
-                      item.account_information.map(function (info) {
+                      Object.keys(item.account_information).map(function (info) {
                         return React.createElement(
                           'div',
-                          { className: 'credential_container', key: info.info_name },
-                          React.createElement('i', { className: classnames('fa', 'mrgnRight5', webInfo[info.info_name].placeholderIcon) }),
+                          { className: 'credential_container', key: info },
+                          React.createElement('i', { className: classnames('fa', 'mrgnRight5', webInfo[info].placeholderIcon) }),
                           React.createElement(
                             'span',
                             { className: 'value' },
-                            info.info_value
+                            item.account_information[info]
                           )
                         );
                       })
@@ -19237,9 +19230,6 @@ var TeamSimpleApp = function (_React$Component) {
       selectedReceivers: [],
       receivers: []
     };
-    _this.props.app.account_information.map(function (item) {
-      this.state.modifiedCredentials[item.info_name] = '';
-    }, _this);
 
     _this.setupModifying = _this.setupModifying.bind(_this);
     _this.validateModifying = _this.validateModifying.bind(_this);
@@ -19372,10 +19362,7 @@ var TeamSimpleApp = function (_React$Component) {
     key: 'setupModifying',
     value: function setupModifying(state) {
       if (state) {
-        var modifiedCredentials = _extends({}, this.state.modifiedCredentials);
-        this.props.app.account_information.map(function (item) {
-          modifiedCredentials[item.info_name] = item.info_value;
-        });
+        var modifiedCredentials = _extends({}, this.props.app.account_information);
         var receivers = [];
         var selectedReceivers = [];
         if (this.props.app.origin.type === 'channel') {
@@ -19481,14 +19468,14 @@ var TeamSimpleApp = function (_React$Component) {
                 React.createElement(
                   'div',
                   { className: 'credentials' },
-                  app.account_information.map(function (item) {
+                  Object.keys(app.account_information).map(function (item) {
                     return React.createElement(
                       'div',
-                      { className: 'credentials_line', key: item.info_name },
+                      { className: 'credentials_line', key: item },
                       React.createElement(
                         'div',
                         { className: 'credentials_type_icon' },
-                        React.createElement('i', { className: classnames('fa', webInfo[item.info_name].placeholderIcon) })
+                        React.createElement('i', { className: classnames('fa', webInfo[item].placeholderIcon) })
                       ),
                       React.createElement(
                         'div',
@@ -19496,14 +19483,14 @@ var TeamSimpleApp = function (_React$Component) {
                         !this.state.modifying ? React.createElement(
                           'span',
                           { className: 'credentials_value' },
-                          item.info_value
+                          app.account_information[item]
                         ) : React.createElement('input', { autoComplete: 'off',
                           className: 'credentials_value_input value_input',
-                          value: this.state.modifiedCredentials[item.info_name],
+                          value: this.state.modifiedCredentials[item],
                           onChange: this.handleCredentialsInput,
-                          placeholder: webInfo[item.info_name].placeholder,
-                          type: webInfo[item.info_name].type,
-                          name: item.info_name })
+                          placeholder: webInfo[item].placeholder,
+                          type: webInfo[item].type,
+                          name: item })
                       )
                     );
                   }, this)
