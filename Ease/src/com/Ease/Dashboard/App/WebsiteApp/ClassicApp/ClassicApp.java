@@ -320,6 +320,16 @@ public class ClassicApp extends WebsiteApp {
     }
 
     @Override
+    public JSONObject getNeededParams(PostServletManager sm) {
+        JSONObject res = super.getNeededParams(sm);
+        Boolean canSeeInformation = (Boolean) sm.getParam("can_see_information", true);
+        if (canSeeInformation == null)
+            canSeeInformation = false;
+        res.put("canSeeInformation", canSeeInformation);
+        return res;
+    }
+
+    @Override
     public JSONObject getSharedJSON() {
         JSONObject res = super.getSharedJSON();
         App app_holder = (App) this.getHolder();

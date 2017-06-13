@@ -16,7 +16,7 @@ import com.Ease.Dashboard.User.User;
 
 public class Account {
 
-    private final static Long MillisecondsInMonth = new Long("2629746000");
+    private final static Long MillisecondsInMonth = new Long("1");
 
     public enum Data {
         NOTHING,
@@ -147,20 +147,26 @@ public class Account {
         return account;
     }
 
-    public static Account createSharedAccountFromJson(JSONArray account_information_array, String deciphered_teamKey, Boolean adminHasAccess, DataBaseConnection db) throws GeneralException {
+    public static Account createSharedAccountFromJson(JSONObject account_information_json, String deciphered_teamKey, Boolean adminHasAccess, Integer reminderIntervalValue, DataBaseConnection db) throws GeneralException {
         Map<String, String> account_informationMap = new HashMap<>();
-        for (Object account_information_obj : account_information_array) {
+        for (Object account_information_entry : account_information_json.entrySet()) {
+            Map.Entry<String, String> entry = (Map.Entry<String, String>) account_information_entry;
+            account_informationMap.put(entry.getKey(), entry.getValue());
+        }
+        /* for (Object account_information_obj : account_information_array) {
             JSONObject account_information = (JSONObject) account_information_obj;
             String info_name = (String) account_information.get("info_name");
             String info_value = (String) account_information.get("info_value");
             account_informationMap.put(info_name, info_value);
-        }
+        } */
         Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
         String publicKey = publicAndPrivateKey.getKey();
         String privateKey = publicAndPrivateKey.getValue();
         String ciphered_key = AES.encrypt(privateKey, deciphered_teamKey);
         int transaction = db.startTransaction();
-        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, null, null, ?, ?, ?);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, ?, ?, ?, ?, ?);");
+        request.setInt((reminderIntervalValue == null) ? 0 : reminderIntervalValue);
+        request.setString("MONTH");
         request.setString(publicKey);
         request.setString(ciphered_key);
         request.setBoolean(!adminHasAccess);
@@ -201,7 +207,6 @@ public class Account {
     protected String db_id;
     protected boolean shared;
     protected List<AccountInformation> infos;
-    protected boolean passwordMustBeUpdated;
     protected String publicKey;
     protected String ciphered_key;
     protected String privateKey;
@@ -218,7 +223,6 @@ public class Account {
         this.publicKey = publicKey;
         this.ciphered_key = ciphered_key;
         this.mustBeReciphered = false;
-        this.passwordMustBeUpdated = false;
         this.privateKey = null;
         this.passwordChangeInterval = passwordChangeInterval;
     }
@@ -230,7 +234,6 @@ public class Account {
         this.publicKey = publicKey;
         this.ciphered_key = ciphered_key;
         this.mustBeReciphered = mustBeReciphered;
-        this.passwordMustBeUpdated = false;
         this.privateKey = null;
         this.passwordChangeInterval = 0;
     }
@@ -241,7 +244,6 @@ public class Account {
         this.infos = infos;
         this.publicKey = publicKey;
         this.ciphered_key = ciphered_key;
-        this.passwordMustBeUpdated = passwordMustBeUpdated;
         this.mustBeReciphered = mustBeReciphered;
         this.privateKey = null;
         this.passwordChangeInterval = passwordChangeInterval;
@@ -468,10 +470,10 @@ public class Account {
     }
 
     public void updateLastUpateDate(DataBaseConnection db) throws GeneralException {
+        /* @TODO To change */
         DatabaseRequest request = db.prepareRequest("UPDATE accounts SET lastUpdateDate = NOW() WHERE id = ?;");
         request.setInt(this.db_id);
         request.set();
-        this.passwordMustBeUpdated = false;
     }
 
     public String getInformationNamed(String info_name) {
@@ -500,6 +502,9 @@ public class Account {
             return false;
         long now = new Date().getTime();
         long updateDate = this.lastUpdatedDate.getTime() + this.passwordChangeInterval * MillisecondsInMonth;
+        System.out.println("Now: " + now);
+        System.out.println("Last update: " + this.lastUpdatedDate.getTime());
+        System.out.println("Update date: " + updateDate);
         return now >= updateDate;
     }
 

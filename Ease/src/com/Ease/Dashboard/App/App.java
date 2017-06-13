@@ -662,10 +662,7 @@ public class App implements ShareableApp, SharedApp {
     @Override
     public JSONObject getNeededParams(PostServletManager sm) {
         JSONObject jsonObject = new JSONObject();
-        Boolean canSeeInformation = (Boolean) sm.getParam("can_see_information", true);
-        if (canSeeInformation == null)
-            canSeeInformation = false;
-        jsonObject.put("canSeeInformation", canSeeInformation);
+        jsonObject.put("canSeeInformation", true);
         jsonObject.put("adminHasAccess", true);
         return jsonObject;
     }

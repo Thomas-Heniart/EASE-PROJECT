@@ -3,6 +3,7 @@ package com.Ease.Dashboard.App.WebsiteApp;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.Ease.Context.Catalog.WebsiteInformation;
 import com.Ease.Dashboard.App.*;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.Account;
 import com.Ease.Team.Channel;
@@ -299,12 +300,12 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         Map<String, Object> elevator = new HashMap<>();
         Boolean canSeeInformation = (Boolean) params.get("canSeeInformation");
         elevator.put("canSeeInformation", canSeeInformation);
-        JSONArray account_information_array = (JSONArray) params.get("account_information");
+        JSONObject account_information = (JSONObject) params.get("account_information");
         App sharedApp = null;
         DatabaseRequest request = null;
         Integer single_id = ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId();
         String websiteAppId = null;
-        if (account_information_array == null || account_information_array.isEmpty()) {
+        if (account_information != null) {
             String appDBid = App.createSharedApp(null, null, this.getName(), "websiteApp", elevator, team.getDb_id(), (channel == null) ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), this, true, sm);
             request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, 'websiteApp', ?, ?);");
             request.setInt(this.getSite().getDb_id());
@@ -322,7 +323,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
             websiteAppId = WebsiteApp.createSharedWebsiteApp(this, elevator, team.getDb_id(), channel == null ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), sm);
             String deciphered_teamKey = sm.getTeamUserForTeam(team).getDeciphered_teamKey();
             Boolean adminHasAccess = (Boolean) params.get("adminHasAccess");
-            Account account = Account.createSharedAccountFromJson(account_information_array, deciphered_teamKey, adminHasAccess, sm.getDB());
+            Account account = Account.createSharedAccountFromJson(account_information, deciphered_teamKey, adminHasAccess, this.getReminderIntervalValue(),sm.getDB());
             request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
             request.setInt(websiteAppId);
             request.setInt(account.getDBid());
@@ -364,7 +365,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
     public JSONObject getNeededParams(PostServletManager sm) {
         JSONObject jsonObject = super.getNeededParams(sm);
         if (this.isEmpty()) {
-            JSONArray account_information = (JSONArray) sm.getParam("account_information", false);
+            JSONObject account_information = (JSONObject) sm.getParam("account_information", false);
             if (account_information != null)
                 jsonObject.put("account_information", account_information);
         }
