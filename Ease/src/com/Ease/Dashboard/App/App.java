@@ -581,7 +581,10 @@ public class App implements ShareableApp, SharedApp {
 
     @Override
     public List<TeamUser> getTeamUser_tenants() {
-        return this.tenant_teamUsers;
+        List<TeamUser> teamUsers = new LinkedList<>();
+        for (SharedApp sharedApp : this.getSharedApps())
+            teamUsers.add(sharedApp.getTeamUser_tenant());
+        return teamUsers;
     }
 
     @Override
@@ -597,8 +600,6 @@ public class App implements ShareableApp, SharedApp {
 
     @Override
     public void addSharedApp(SharedApp sharedApp) {
-        if (!this.tenant_teamUsers.contains(sharedApp.getTeamUser_tenant()))
-            this.tenant_teamUsers.add(sharedApp.getTeamUser_tenant());
         this.sharedAppIdMap.put(Integer.valueOf(((App) sharedApp).getDBid()), sharedApp);
         this.sharedApps.add(sharedApp);
     }
