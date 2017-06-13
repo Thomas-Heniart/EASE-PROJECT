@@ -322,8 +322,13 @@ public class ClassicApp extends WebsiteApp {
     @Override
     public JSONObject getSharedJSON() {
         JSONObject res = super.getSharedJSON();
-        if (((App) this.getHolder()).isEmpty())
+        App app_holder = (App) this.getHolder();
+        /* MultiApp */
+        if (app_holder.isEmpty())
             res.put("account_information", this.getAccount().getInformationJsonWithoutPassword());
+        /* SimpleApp */
+        if (app_holder.isClassicApp())
+            res.put("can_see_information", this.canSeeInformation());
         return res;
     }
 
