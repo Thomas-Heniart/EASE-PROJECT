@@ -4634,6 +4634,8 @@ exports.selectUserFromListById = selectUserFromListById;
 exports.selectChannelFromListById = selectChannelFromListById;
 exports.getChannelUsers = getChannelUsers;
 exports.findMeInReceivers = findMeInReceivers;
+exports.getReceiverInList = getReceiverInList;
+exports.isUserInList = isUserInList;
 function getInfoValueByName(infoList, infoName) {
   for (var i = 0; i < infoList.length; i++) {
     if (infoList[i].info_name === infoName) return infoList[i].info_value;
@@ -4670,6 +4672,19 @@ function findMeInReceivers(receivers, myId) {
     if (receivers[i].team_user_id === myId) return receivers[i];
   }
   return null;
+}
+
+function getReceiverInList(receivers, id) {
+  for (var i = 0; i < receivers.length; i++) {
+    if (receivers[i].team_user_id === id) return receivers[i];
+  }
+  return null;
+}
+function isUserInList(users, id) {
+  for (var i = 0; i < users.length; i++) {
+    if (users[i].id === id) return true;
+  }
+  return false;
 }
 
 var passwordChangeValues = exports.passwordChangeValues = {
@@ -18370,11 +18385,11 @@ var TeamLinkApp = function (_React$Component) {
       var deleteReceiverList = [];
 
       for (var i = 0; i < this.state.selectedReceivers.length; i++) {
-        var receiver = getReceiverInList(this.props.app.receivers, this.state.selectedReceivers[i].id);
+        var receiver = (0, _helperFunctions.getReceiverInList)(this.props.app.receivers, this.state.selectedReceivers[i].id);
         if (!receiver) addReceiverList.push(this.state.selectedReceivers[i]);
       }
       for (var i = 0; i < this.props.app.receivers.length; i++) {
-        if (!isUserInList(this.state.selectedReceivers, this.props.app.receivers[i].team_user_id)) deleteReceiverList.push(this.props.app.receivers[i]);
+        if (!(0, _helperFunctions.isUserInList)(this.state.selectedReceivers, this.props.app.receivers[i].team_user_id)) deleteReceiverList.push(this.props.app.receivers[i]);
       }
       this.props.dispatch(appActions.teamModifyAppInformation(this.props.app.id, app_info)).then(function (response) {
         var deleteUsers = deleteReceiverList.map(function (item) {
@@ -19175,20 +19190,6 @@ var React = __webpack_require__(3);
 var classnames = __webpack_require__(8);
 var TeamAppUserSelectDropdown = __webpack_require__(83);
 
-
-function getReceiverInList(receivers, id) {
-  for (var i = 0; i < receivers.length; i++) {
-    if (receivers[i].team_user_id === id) return receivers[i];
-  }
-  return null;
-}
-function isUserInList(users, id) {
-  for (var i = 0; i < users.length; i++) {
-    if (users[i].id === id) return true;
-  }
-  return false;
-}
-
 var TeamSimpleApp = function (_React$Component) {
   _inherits(TeamSimpleApp, _React$Component);
 
@@ -19314,11 +19315,11 @@ var TeamSimpleApp = function (_React$Component) {
       var modifyReceiverList = [];
 
       for (var i = 0; i < this.state.selectedReceivers.length; i++) {
-        var receiver = getReceiverInList(this.props.app.receivers, this.state.selectedReceivers[i].id);
+        var receiver = (0, _helperFunctions.getReceiverInList)(this.props.app.receivers, this.state.selectedReceivers[i].id);
         if (!receiver) addReceiverList.push(this.state.selectedReceivers[i]);else if (receiver.can_see_information != this.state.selectedReceivers[i].can_see_information) modifyReceiverList.push(_extends({}, this.state.selectedReceivers[i], { shared_app_id: receiver.shared_app_id }));
       }
       for (var i = 0; i < this.props.app.receivers.length; i++) {
-        if (!isUserInList(this.state.selectedReceivers, this.props.app.receivers[i].team_user_id)) deleteReceiverList.push(this.props.app.receivers[i]);
+        if (!(0, _helperFunctions.isUserInList)(this.state.selectedReceivers, this.props.app.receivers[i].team_user_id)) deleteReceiverList.push(this.props.app.receivers[i]);
       }
       this.props.dispatch(appActions.teamModifyAppInformation(this.props.app.id, app_info)).then(function (response) {
         var deleteUsers = deleteReceiverList.map(function (item) {
