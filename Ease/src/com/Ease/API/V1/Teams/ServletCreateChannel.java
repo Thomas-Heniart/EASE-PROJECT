@@ -16,10 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by thomas on 31/05/2017.
+ * Created by thomas on 13/06/2017.
  */
-@WebServlet("/api/v1/teams/EditChannelName")
-public class ServletEditChannelName extends HttpServlet {
+@WebServlet("/api/v1/teams/CreateChannel")
+public class ServletCreateChannel extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
@@ -27,20 +27,16 @@ public class ServletEditChannelName extends HttpServlet {
             sm.needToBeAdminOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
-            Integer channel_id = sm.getIntParam("channel_id", true);
             String name = sm.getStringParam("name", true);
-            if (name == null || name.equals(""))
-                throw new HttpServletException(HttpStatus.BadRequest, "Empty name.");
-            Channel channel = team.getChannelWithId(channel_id);
-            for (Channel channel1 : team.getChannels()) {
-                if (channel1 == channel)
-                    continue;
-                if (channel1.getName().equals(name))
-                    throw new HttpServletException(HttpStatus.BadRequest, "Channel name already taken.");
-            }
-            channel.editName(name);
+            String purpose = sm.getStringParam("purpose", true);
+            if (team.getChannelNamed(name) != null)
+                throw new HttpServletException(HttpStatus.BadRequest, "Name already taken.");
+            if (purpose == null)
+                purpose = "";
+            Channel channel = new Channel(team, name, purpose);
+            team.addChannel(channel);
             sm.saveOrUpdate(channel);
-            sm.setSuccess("Channel name edited");
+            sm.setSuccess(channel.getJson());
         } catch (Exception e) {
             sm.setError(e);
         }

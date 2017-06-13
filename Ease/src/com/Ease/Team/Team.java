@@ -296,4 +296,12 @@ public class Team {
             throw new HttpServletException(HttpStatus.InternError);
         }
     }
+
+    public Channel getChannelNamed(String name) {
+        for (Channel channel : this.getChannels()) {
+            if (channel.getName().equals(name))
+                return channel;
+        }
+        return null;
+    }
 }
