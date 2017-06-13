@@ -184,8 +184,6 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
 
     @Override
     public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, PostServletManager sm) throws GeneralException, HttpServletException {
-        if (this.tenant_teamUsers.contains(teamUser_tenant))
-            throw new GeneralException(ServletManager.Code.ClientWarning, "App already shared with this teamUser");
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<>();
@@ -197,7 +195,6 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         request.setInt(this.linkInfos.getDb_id());
         String linkDBid = request.set().toString();
         db.commitTransaction(transaction);
-        this.tenant_teamUsers.add(teamUser_tenant);
         this.channel = channel;
         LinkApp sharedApp = new LinkApp(appDBid, null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), linkInfos, linkDBid, this);
         sharedApp.setAdminHasAccess((Boolean) params.get("adminHasAccess"), sm.getDB());
