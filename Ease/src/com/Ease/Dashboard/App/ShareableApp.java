@@ -55,4 +55,6 @@ public interface ShareableApp {
     public JSONObject getOrigin();
 
     public void transferOwnership(TeamUser teamUser_new_owner, DataBaseConnection db) throws HttpServletException;
+
+    public void removeSharedApp(SharedApp sharedApp);
 }

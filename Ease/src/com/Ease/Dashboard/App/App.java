@@ -293,7 +293,7 @@ public class App implements ShareableApp, SharedApp {
         request = db.prepareRequest("DELETE FROM apps WHERE id = ?;");
         request.setInt(db_id);
         request.set();
-        if (this.groupApp == null || this.groupApp.isCommon() == false)
+        if ((this.groupApp == null || this.groupApp.isCommon() == false) && (this.informations != null))
             informations.removeFromDb(db);
         db.commitTransaction(transaction);
     }
@@ -445,6 +445,7 @@ public class App implements ShareableApp, SharedApp {
             this.removeFromDB(db);
             db.commitTransaction(transaction);
             this.getTeamUser_tenant().removeSharedApp(this);
+            this.getHolder().removeSharedApp(this);
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError);
         }
@@ -712,6 +713,12 @@ public class App implements ShareableApp, SharedApp {
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
+    }
+
+    @Override
+    public void removeSharedApp(SharedApp sharedApp) {
+        this.sharedAppIdMap.remove(((App) sharedApp).getDBid());
+        this.getSharedApps().remove(sharedApp);
     }
 
     public void pinToDashboard(Profile profile, DataBaseConnection db) throws GeneralException {

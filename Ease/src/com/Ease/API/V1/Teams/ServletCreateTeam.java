@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * Created by thomas on 12/04/2017.
@@ -57,7 +58,8 @@ public class ServletCreateTeam extends HttpServlet {
             String teamKey = AES.keyGenerator();
             Team team = new Team(teamName);
             String teamKey_ciphered = user.encrypt(teamKey);
-            TeamUser admin = TeamUser.createAdminUser(firstName, lastName, email, username, teamKey_ciphered, team);
+            Date arrivalDate = new Date(sm.getLongParam("arrival_date", true));
+            TeamUser admin = TeamUser.createAdminUser(firstName, lastName, email, username, arrivalDate, teamKey_ciphered, team);
             admin.setDeciphered_teamKey(teamKey);
             Channel channel = new Channel(team, "General", "This is the general channel");
             team.addChannel(channel);

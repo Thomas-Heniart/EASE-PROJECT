@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
@@ -35,8 +36,9 @@ public class ServletDeleteSharedApp extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "You are not allowed to do this.");
             Integer sharedApp_id = sm.getIntParam("app_id", true);
             SharedApp sharedApp = teamUser.getSharedAppWithId(sharedApp_id);
+            ShareableApp shareableApp = sharedApp.getHolder();
             sharedApp.deleteShared(sm.getDB());
-            sm.setSuccess("SharedApp deleted");
+            sm.setSuccess(shareableApp.getShareableJson());
         } catch (Exception e) {
             sm.setError(e);
         }

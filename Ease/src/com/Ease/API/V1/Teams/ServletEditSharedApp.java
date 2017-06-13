@@ -42,10 +42,7 @@ public class ServletEditSharedApp extends HttpServlet {
             params.put("account_information", sm.getParam("account_information", false));
             params.put("can_see_information", (Boolean) sm.getParam("can_see_information", true));
             params.put("url", sm.getStringParam("url", true));
-            if (teamUser_connected.isTeamAdmin() && ((App)sharedApp.getHolder()).isClassicApp())
-                sharedApp.getHolder().modifyShareable(sm.getDB(), params, null);
-            else
-                sharedApp.modifyShared(sm.getDB(), params);
+            sharedApp.modifyShared(sm.getDB(), params);
             sm.setSuccess(sharedApp.getSharedJSON());
         } catch (Exception e) {
             sm.setError(e);

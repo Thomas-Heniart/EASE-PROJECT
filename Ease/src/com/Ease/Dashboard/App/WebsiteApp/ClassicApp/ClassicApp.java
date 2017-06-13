@@ -249,7 +249,9 @@ public class ClassicApp extends WebsiteApp {
         try {
             int transaction = db.startTransaction();
             super.modifyShared(db, editJson);
-            this.getAccount().edit((JSONObject) editJson.get("account_information"), db);
+            JSONObject account_information = (JSONObject) editJson.get("account_information");
+            if (account_information != null)
+                this.getAccount().edit(account_information, db);
             Boolean canSeeInformation = (Boolean) editJson.get("can_see_information");
             if (canSeeInformation != null)
                 this.setCanSeeInformation(canSeeInformation, db);

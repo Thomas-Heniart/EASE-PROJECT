@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * Created by thomas on 24/05/2017.
@@ -72,7 +73,8 @@ public class ServletStartTeamUserCreation extends HttpServlet {
                 }
             }
             if (res.get("success") == null) {
-                TeamUser teamUser = new TeamUser(first_name, last_name, email, username, null, false, team, new TeamUserRole(role));
+                Date arrival_date = new Date(sm.getLongParam("arrival_date", true));
+                TeamUser teamUser = new TeamUser(first_name, last_name, email, username, arrival_date, null, false, team, new TeamUserRole(role));
                 team.getGeneralChannel().addTeamUser(teamUser);
                 query.saveOrUpdateObject(team);
                 team.addTeamUser(teamUser);
