@@ -26,12 +26,11 @@ public class ServletGetShareableApp extends HttpServlet {
         try {
             Integer team_id = sm.getIntParam("team_id", true);
             sm.needToBeTeamUserOfTeam(team_id);
-            /* @TODO For the moment we use single_id but it will be replaced by db_id in the future */
             Integer app_id = sm.getIntParam("app_id", true);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = sm.getTeamUserForTeam(team);
-            ShareableApp shareableApp = team.getShareableAppWithId(app_id);
+            ShareableApp shareableApp = team.getAppManager().getShareableAppWithId(app_id);
             App app = (App) shareableApp;
             if (app.isClassicApp())
                 ((ClassicApp) app).getAccount().decipherWithTeamKeyIfNeeded(teamUser.getDeciphered_teamKey());

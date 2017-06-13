@@ -31,7 +31,7 @@ public class ServletPinAppToDashboard extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             Integer app_id = sm.getIntParam("app_id", true);
-            SharedApp sharedApp = team.getSharedApp(app_id);
+            SharedApp sharedApp = team.getAppManager().getSharedApp(app_id);
             App app = (App) sharedApp;
             TeamUser teamUser = sm.getTeamUserForTeam(team);
             if (teamUser != sharedApp.getTeamUser_tenant())

@@ -756,6 +756,6 @@ public class App implements ShareableApp, SharedApp {
         this.channel = channel;
         this.description = description;
         this.setOrigin(origin_type, origin_id);
-        team.addShareableApp(this);
+        team.getAppManager().addShareableApp(this);
     }
 }

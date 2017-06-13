@@ -355,12 +355,12 @@ public class TeamUser {
         try {
             int transaction = db.startTransaction();
             Team team = this.getTeam();
-            team.removeSharedAppsForTeamUser(this, db);
+            team.getAppManager().removeSharedAppsForTeamUser(this, db);
             List<ShareableApp> shareableAppsToRemove = new LinkedList<>();
-            for (ShareableApp shareableApp : team.getShareableApps()) {
+            for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
                 if (shareableApp.getTeamUser_owner() != this)
                     continue;
-                team.removeShareableApp(shareableApp, db);
+                team.getAppManager().removeShareableApp(shareableApp, db);
             }
             for (Channel channel : this.getTeam().getChannels())
                 channel.removeTeamUser(this, db);

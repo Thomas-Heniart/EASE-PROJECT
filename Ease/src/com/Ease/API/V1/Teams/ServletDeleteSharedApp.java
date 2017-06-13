@@ -31,11 +31,11 @@ public class ServletDeleteSharedApp extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
             Integer sharedApp_id = sm.getIntParam("app_id", true);
-            SharedApp sharedApp = team.getSharedApp(sharedApp_id);
+            SharedApp sharedApp = team.getAppManager().getSharedApp(sharedApp_id);
             if (teamUser_connected != sharedApp.getTeamUser_tenant() && !teamUser_connected.isSuperior(sharedApp.getTeamUser_tenant()))
                 throw new HttpServletException(HttpStatus.Forbidden, "You are not allowed to do this.");
             ShareableApp shareableApp = sharedApp.getHolder();
-            team.removeSharedApp(sharedApp);
+            team.getAppManager().removeSharedApp(sharedApp);
             sharedApp.deleteShared(sm.getDB());
             sm.setSuccess(shareableApp.getShareableJson());
         } catch (Exception e) {

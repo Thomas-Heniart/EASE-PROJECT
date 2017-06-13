@@ -32,7 +32,7 @@ public class ServletEditShareableApp extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
             Integer shareableApp_id = sm.getIntParam("app_id", true);
-            ShareableApp shareableApp = team.getShareableAppWithId(shareableApp_id);
+            ShareableApp shareableApp = team.getAppManager().getShareableAppWithId(shareableApp_id);
             if ((shareableApp.getTeamUser_owner() != teamUser_connected) && !teamUser_connected.isTeamAdmin())
                 throw new HttpServletException(HttpStatus.Forbidden, "You are not allowed to do this.");
             JSONObject params = new JSONObject();

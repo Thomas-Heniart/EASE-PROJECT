@@ -32,10 +32,10 @@ public class ServletDeleteChannel extends HttpServlet {
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
             channel.delete(sm.getDB());
-            for (ShareableApp shareableApp : team.getShareableApps()) {
+            for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
                 if (shareableApp.getChannel() != channel)
                     continue;
-                team.removeShareableApp(shareableApp, db);
+                team.getAppManager().removeShareableApp(shareableApp, db);
             }
             team.removeChannel(channel);
             sm.deleteObject(channel);

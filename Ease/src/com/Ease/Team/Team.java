@@ -29,14 +29,11 @@ public class Team {
         List<Team> teams = query.list();
         for (Team team : teams) {
             team.lazyInitialize(db);
-            team.setShareableApps(App.loadShareableAppsForTeam(team, context, db));
-            for (ShareableApp shareableApp : team.getShareableApps()) {
+            team.getAppManager().setShareableApps(App.loadShareableAppsForTeam(team, context, db));
+            for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
                 List<SharedApp> sharedApps = App.loadSharedAppsForShareableApp(shareableApp, context, db);
                 shareableApp.setSharedApps(sharedApps);
-                team.setSharedApps(sharedApps);
-                /* if (shareableApp.getChannel() != null) {
-                    shareableApp.getChannel().setSharedApps(shareableApp.getSharedApps());
-                } */
+                team.getAppManager().setSharedApps(sharedApps);
             }
         }
 
@@ -71,19 +68,7 @@ public class Team {
     protected List<TeamUser> teamUsersWaitingForVerification = new LinkedList<>();
 
     @Transient
-    protected List<ShareableApp> shareableApps = new LinkedList<>();
-
-    @Transient
-    protected Map<Integer, ShareableApp> shareableAppMap = new HashMap<>();
-
-    @Transient
-    protected List<SharedApp> sharedApps = new LinkedList<>();
-
-    @Transient
-    protected Map<Integer, SharedApp> sharedAppMap = new HashMap<>();
-
-    @Transient
-    protected Map<TeamUser, List<SharedApp>> teamUserAndSharedAppMap = new HashMap<>();
+    protected AppManager appManager = new AppManager();
 
     public Team(String name, List<TeamUser> teamUsers, List<Channel> channels) {
         this.name = name;
@@ -138,13 +123,8 @@ public class Team {
         this.teamNotifications = teamNotifications;
     }
 
-    public List<ShareableApp> getShareableApps() {
-        return shareableApps;
-    }
-
-    public void setShareableApps(List<ShareableApp> shareableApps) {
-        for (ShareableApp shareableApp : shareableApps)
-            this.addShareableApp(shareableApp);
+    public AppManager getAppManager() {
+        return appManager;
     }
 
     public void lazyInitialize(DataBaseConnection db) {
@@ -181,19 +161,6 @@ public class Team {
     public void addChannel(Channel channel) {
         this.channels.add(channel);
         this.channelIdMap.put(channel.getDb_id(), channel);
-    }
-
-    public ShareableApp getShareableAppWithId(Integer db_id) throws HttpServletException {
-        ShareableApp shareableApp = this.shareableAppMap.get(db_id);
-        if (shareableApp == null)
-            throw new HttpServletException(HttpStatus.BadRequest, "This shareable app does not exist.");
-        return shareableApp;
-    }
-
-    /* @TODO For the moment we use single_id but it will be replaced by db_id in the future */
-    public void addShareableApp(ShareableApp shareableApp) {
-        this.shareableApps.add(shareableApp);
-        this.shareableAppMap.put(Integer.valueOf(((App) shareableApp).getDBid()), shareableApp);
     }
 
     public Channel getGeneralChannel() throws HttpServletException {
@@ -233,7 +200,7 @@ public class Team {
             teamUsers.add(teamUser.getJson());
         res.put("teamUsers", teamUsers);
         JSONArray shareableApps = new JSONArray();
-        for (ShareableApp shareableApp : this.shareableApps)
+        for (ShareableApp shareableApp : this.getAppManager().getShareableApps())
             shareableApps.add(shareableApp.getShareableJson());
         res.put("shareableApps", shareableApps);
         return res;
@@ -290,7 +257,7 @@ public class Team {
     public JSONArray getShareableAppsForChannel(Integer channel_id) throws HttpServletException {
         Channel channel = this.getChannelWithId(channel_id);
         JSONArray jsonArray = new JSONArray();
-        for (ShareableApp shareableApp : this.getShareableApps()) {
+        for (ShareableApp shareableApp : this.getAppManager().getShareableApps()) {
             if (channel != shareableApp.getChannel())
                 continue;
             jsonArray.add(shareableApp.getShareableJson());
@@ -301,7 +268,7 @@ public class Team {
     public JSONArray getShareableAppsForTeamUser(Integer teamUser_id) throws HttpServletException {
         TeamUser teamUser = this.getTeamUserWithId(teamUser_id);
         JSONArray jsonArray = new JSONArray();
-        for (ShareableApp shareableApp : this.getShareableApps()) {
+        for (ShareableApp shareableApp : this.getAppManager().getShareableApps()) {
             if (!shareableApp.getTeamUser_tenants().contains(teamUser))
                 continue;
             jsonArray.add(shareableApp.getShareableJson());
@@ -311,7 +278,7 @@ public class Team {
 
     public void decipherApps(String deciphered_teamKey) throws HttpServletException {
         try {
-            for (ShareableApp shareableApp : this.getShareableApps()) {
+            for (ShareableApp shareableApp : this.getAppManager().getShareableApps()) {
                 App app = (App) shareableApp;
                 if (app.isClassicApp())
 
@@ -327,85 +294,6 @@ public class Team {
             }
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError);
-        }
-    }
-
-    public void addSharedApp(SharedApp sharedApp) {
-        this.sharedApps.add(sharedApp);
-        this.sharedAppMap.put(Integer.valueOf(((App) sharedApp).getDBid()), sharedApp);
-        TeamUser teamUser_tenant = sharedApp.getTeamUser_tenant();
-        List<SharedApp> sharedAppList = this.teamUserAndSharedAppMap.get(teamUser_tenant);
-        if (sharedAppList == null)
-            sharedAppList = new LinkedList<>();
-        sharedAppList.add(sharedApp);
-        this.teamUserAndSharedAppMap.put(teamUser_tenant, sharedAppList);
-    }
-
-    public SharedApp getSharedApp(Integer sharedApp_id) throws HttpServletException {
-        SharedApp sharedApp = this.sharedAppMap.get(sharedApp_id);
-        if (sharedApp == null)
-            throw new HttpServletException(HttpStatus.BadRequest, "No shared app with this id.");
-        return sharedApp;
-    }
-
-    public void removeSharedApp(SharedApp sharedApp) {
-        this.sharedApps.remove(sharedApp);
-        this.sharedAppMap.remove(Integer.valueOf(((App) sharedApp).getDBid()));
-        this.teamUserAndSharedAppMap.get(sharedApp.getTeamUser_tenant()).remove(sharedApp);
-    }
-
-    public void removeSharedAppsForTeamUser(TeamUser teamUser, DataBaseConnection db) throws HttpServletException {
-        List<SharedApp> sharedApps = this.getSharedAppsForTeamUser(teamUser);
-        this.removeSharedApps(sharedApps, db);
-    }
-
-    public void removeSharedApps(List<SharedApp> sharedApps, DataBaseConnection db) throws HttpServletException {
-        try {
-            int transaction = db.startTransaction();
-            for (SharedApp sharedApp : sharedApps) {
-                this.removeSharedApp(sharedApp);
-                sharedApp.deleteShared(db);
-            }
-            db.commitTransaction(transaction);
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
-        }
-    }
-
-    public List<SharedApp> getSharedAppsForTeamUser(TeamUser teamUser) {
-        return this.teamUserAndSharedAppMap.get(teamUser);
-    }
-
-    public void setSharedApps(List<SharedApp> sharedApps) {
-        for (SharedApp sharedApp : sharedApps)
-            this.addSharedApp(sharedApp);
-    }
-
-    public void removeShareableApp(ShareableApp shareableApp) {
-        this.shareableApps.remove(shareableApp);
-        this.shareableAppMap.remove(Integer.valueOf(((App) shareableApp).getDBid()));
-    }
-
-    public void removeShareableApp(ShareableApp shareableApp, DataBaseConnection db) throws HttpServletException {
-        try {
-            int transaction = db.startTransaction();
-            this.removeSharedApps(shareableApp.getSharedApps(), db);
-            this.removeShareableApp(shareableApp);
-            shareableApp.deleteShareable(db);
-            db.commitTransaction(transaction);
-        } catch (GeneralException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void removeShareableApps(List<ShareableApp> shareableApps, DataBaseConnection db) throws HttpServletException {
-        try {
-            int transaction = db.startTransaction();
-            for (ShareableApp shareableApp : shareableApps)
-                this.removeShareableApp(shareableApp, db);
-            db.commitTransaction(transaction);
-        } catch (GeneralException e) {
-            e.printStackTrace();
         }
     }
 }

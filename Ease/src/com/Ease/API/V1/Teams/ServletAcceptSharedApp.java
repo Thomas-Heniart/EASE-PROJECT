@@ -33,7 +33,7 @@ public class ServletAcceptSharedApp extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             Integer app_id = sm.getIntParam("app_id", true);
             TeamUser teamUser = sm.getTeamUserForTeam(team);
-            SharedApp sharedApp = team.getSharedApp(app_id);
+            SharedApp sharedApp = team.getAppManager().getSharedApp(app_id);
             if (teamUser != sharedApp.getTeamUser_tenant())
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot accept this app.");
             App app = (App) sharedApp;

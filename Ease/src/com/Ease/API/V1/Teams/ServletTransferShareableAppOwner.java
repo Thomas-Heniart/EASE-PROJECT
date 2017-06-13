@@ -30,7 +30,7 @@ public class ServletTransferShareableAppOwner extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             Integer shareableApp_id = sm.getIntParam("app_id", true);
             Integer team_user_id = sm.getIntParam("team_user_id", true);
-            ShareableApp shareableApp = team.getShareableAppWithId(shareableApp_id);
+            ShareableApp shareableApp = team.getAppManager().getShareableAppWithId(shareableApp_id);
             TeamUser teamUser_new_owner = team.getTeamUserWithId(team_user_id);
             /* if (!teamUser_new_owner.isSuperior(shareableApp.getTeamUser_owner()))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot do this dude."); */

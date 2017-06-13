@@ -36,14 +36,14 @@ public class ServletShareApp extends HttpServlet {
             Integer teamUser_tenant_id = sm.getIntParam("team_user_id", true);
             TeamUser teamUser_tenant = team.getTeamUserWithId(teamUser_tenant_id);
             Integer app_id = sm.getIntParam("app_id", true);
-            ShareableApp shareableApp = team.getShareableAppWithId(app_id);
+            ShareableApp shareableApp = team.getAppManager().getShareableAppWithId(app_id);
             if (!(shareableApp.getTeamUser_owner() == teamUser_owner) && !teamUser_owner.isTeamAdmin())
                 throw new GeneralException(ServletManager.Code.ClientError, "You cannot access this app");
             Channel channel = shareableApp.getChannel();
             JSONObject params = shareableApp.getNeededParams(sm);
             SharedApp sharedApp = shareableApp.share(teamUser_owner, teamUser_tenant, channel, team, params, sm);
             shareableApp.addSharedApp(sharedApp);
-            team.addSharedApp(sharedApp);
+            team.getAppManager().addSharedApp(sharedApp);
             sm.setSuccess(sharedApp.getSharedJSON());
         } catch (Exception e) {
             sm.setError(e);

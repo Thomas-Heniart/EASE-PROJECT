@@ -33,7 +33,7 @@ public class ServletEditSharedApp extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
             Integer sharedApp_id = sm.getIntParam("app_id", true);
-            SharedApp sharedApp = team.getSharedApp(sharedApp_id);
+            SharedApp sharedApp = team.getAppManager().getSharedApp(sharedApp_id);
             //Integer team_user_id = sm.getIntParam("team_user_id", true);
             if (!teamUser_connected.isTeamAdmin() && !(sm.getTeamUserForTeam(team) == sharedApp.getTeamUser_tenant()))
                 throw new HttpServletException(HttpStatus.Forbidden, "You are not allowed to do this.");
