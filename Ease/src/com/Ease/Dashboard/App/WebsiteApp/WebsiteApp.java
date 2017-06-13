@@ -369,7 +369,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
                     request.set();
                     this.reminderIntervalValue = reminderInterval;
                     for (SharedApp sharedApp1 : this.getSharedApps()) {
-                        ((ClassicApp) sharedApp).getAccount().setReminderInterval(reminderInterval, db);
+                        ((ClassicApp) sharedApp1).getAccount().setReminderInterval(reminderInterval, db);
                     }
                 }
             }
