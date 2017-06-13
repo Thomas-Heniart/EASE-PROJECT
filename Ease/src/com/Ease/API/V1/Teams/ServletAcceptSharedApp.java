@@ -4,6 +4,8 @@ import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.Account;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
+import com.Ease.Team.Team;
+import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -27,9 +29,13 @@ public class ServletAcceptSharedApp extends HttpServlet {
         try {
             sm.needToBeTeamUser();
             Integer team_id = sm.getIntParam("team_id", true);
+            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
+            Team team = teamManager.getTeamWithId(team_id);
             Integer app_id = sm.getIntParam("app_id", true);
-            TeamUser teamUser = sm.getTeamUserForTeamId(team_id);
-            SharedApp sharedApp = teamUser.getSharedAppWithId(app_id);
+            TeamUser teamUser = sm.getTeamUserForTeam(team);
+            SharedApp sharedApp = team.getSharedApp(app_id);
+            if (teamUser != sharedApp.getTeamUser_tenant())
+                throw new HttpServletException(HttpStatus.Forbidden, "You cannot accept this app.");
             App app = (App) sharedApp;
             app.accept(sm.getDB());
             if (app.isClassicApp() && ((App) sharedApp.getHolder()).isClassicApp()) {

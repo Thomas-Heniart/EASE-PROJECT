@@ -32,12 +32,12 @@ public class ContextListener implements ServletContextListener {
 
         try {
             System.out.print("Loading extension files...");
-            ExtensionFolderManager extensionFolderManager = new ExtensionFolderManager("/home/debruy_p/projects/EASE-PROJECT/extension/extension/ease");
+            ExtensionFolderManager extensionFolderManager = new ExtensionFolderManager("/Users/thomas/EASE-PROJECT/extension/extension/ease");
             context.setAttribute("extensionFolderManager", extensionFolderManager);
             System.out.println("Success");
 
             System.out.print("Loading websites...");
-            WebsiteManager websiteManager = new WebsiteManager("/home/debruy_p/projects/EASE-PROJECT/extension/websites", "/home/debruy_p/projects/EASE-PROJECT/extension/oldWebsites");
+            WebsiteManager websiteManager = new WebsiteManager("/Users/thomas/EASE-PROJECT/extension/websites", "/Users/thomas/EASE-PROJECT/extension/oldWebsites");
             context.setAttribute("websiteManager", websiteManager);
             System.out.println("Success");
 

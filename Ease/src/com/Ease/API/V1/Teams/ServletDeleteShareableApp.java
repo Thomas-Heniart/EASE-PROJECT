@@ -5,6 +5,7 @@ import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
+import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -36,8 +37,7 @@ public class ServletDeleteShareableApp extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "You are not allowed to do this.");
             Integer shareableApp_id = sm.getIntParam("app_id", true);
             ShareableApp shareableApp = team.getShareableAppWithId(shareableApp_id);
-            shareableApp.deleteShareable(sm.getDB());
-            team.removeShareableApp(shareableApp);
+            team.removeShareableApp(shareableApp, sm.getDB());
             sm.setSuccess("ShareableApp deleted");
         } catch (Exception e) {
             sm.setError(e);

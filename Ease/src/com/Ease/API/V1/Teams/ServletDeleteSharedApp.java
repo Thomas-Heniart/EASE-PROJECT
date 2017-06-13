@@ -30,13 +30,12 @@ public class ServletDeleteSharedApp extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
-            Integer teamUser_id = sm.getIntParam("team_user_id", true);
-            TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
-            if ((teamUser != teamUser_connected) && !teamUser_connected.isTeamAdmin())
-                throw new HttpServletException(HttpStatus.Forbidden, "You are not allowed to do this.");
             Integer sharedApp_id = sm.getIntParam("app_id", true);
-            SharedApp sharedApp = teamUser.getSharedAppWithId(sharedApp_id);
+            SharedApp sharedApp = team.getSharedApp(sharedApp_id);
+            if (teamUser_connected != sharedApp.getTeamUser_tenant() && !teamUser_connected.isSuperior(sharedApp.getTeamUser_tenant()))
+                throw new HttpServletException(HttpStatus.Forbidden, "You are not allowed to do this.");
             ShareableApp shareableApp = sharedApp.getHolder();
+            team.removeSharedApp(sharedApp);
             sharedApp.deleteShared(sm.getDB());
             sm.setSuccess(shareableApp.getShareableJson());
         } catch (Exception e) {

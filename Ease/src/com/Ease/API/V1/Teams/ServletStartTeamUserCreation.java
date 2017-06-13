@@ -3,10 +3,8 @@ package com.Ease.API.V1.Teams;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.SendGridMail;
 import com.Ease.Team.*;
+import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.CodeGenerator;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Regex;
-import com.Ease.Utils.ServletManager;
 import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.simple.JSONObject;
 
@@ -33,10 +31,11 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser adminTeamUser = sm.getTeamUserForTeam(team);
             String email = sm.getStringParam("email", true);
-            String username = sm.getStringParam("username", true);
+            //String username = sm.getStringParam("username", true);
             Integer role = sm.getIntParam("role", true);
-            if (email == null || email.equals("") || !Regex.isEmail(email) || username == null || username.equals("") || role == null)
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Invalid inputs");
+            if (email == null || email.equals("") || !Regex.isEmail(email) || role == null)
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid inputs");
+            String username = email.substring(0, email.indexOf("@"));
             String first_name = sm.getStringParam("first_name", true);
             String last_name = sm.getStringParam("last_name", true);
             HibernateQuery query = sm.getHibernateQuery();

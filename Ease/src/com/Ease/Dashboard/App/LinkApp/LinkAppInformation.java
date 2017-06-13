@@ -1,10 +1,6 @@
 package com.Ease.Dashboard.App.LinkApp;
 
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.*;
 import org.json.simple.JSONObject;
 
 public class LinkAppInformation {
@@ -68,9 +64,9 @@ public class LinkAppInformation {
         request.setInt(db_id);
         request.set();
     }
-	
+
 	/*
-	 * 
+     *
 	 * Getter And Setter
 	 * 
 	 */
@@ -103,14 +99,21 @@ public class LinkAppInformation {
         this.imgUrl = imgUrl;
     }
 
-    public void edit(JSONObject editJson, DataBaseConnection db) throws GeneralException {
-        String imgUrl = (String) editJson.get("imgUrl");
-        String url = (String) editJson.get("url");
-        int transaction = db.startTransaction();
-        if (url != null && !url.equals(""))
-            this.setLink(url, db);
-        if (imgUrl != null && !imgUrl.equals(""))
-            this.setImgUrl(imgUrl, db);
-        db.commitTransaction(transaction);
+    public void edit(JSONObject editJson, DataBaseConnection db) throws HttpServletException {
+        try {
+            String imgUrl = (String) editJson.get("imgUrl");
+            String url = (String) editJson.get("url");
+            int transaction = db.startTransaction();
+            if (url != null && !url.equals("")) {
+                if (!Regex.isValidLink(url))
+                    throw new HttpServletException(HttpStatus.BadRequest, "Bad url.");
+                this.setLink(url, db);
+            }
+            if (imgUrl != null && !imgUrl.equals(""))
+                this.setImgUrl(imgUrl, db);
+            db.commitTransaction(transaction);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 }

@@ -43,7 +43,7 @@ public class ServletShareApp extends HttpServlet {
             JSONObject params = shareableApp.getNeededParams(sm);
             SharedApp sharedApp = shareableApp.share(teamUser_owner, teamUser_tenant, channel, team, params, sm);
             shareableApp.addSharedApp(sharedApp);
-            teamUser_tenant.addSharedApp(sharedApp);
+            team.addSharedApp(sharedApp);
             sm.setSuccess(sharedApp.getSharedJSON());
         } catch (Exception e) {
             sm.setError(e);

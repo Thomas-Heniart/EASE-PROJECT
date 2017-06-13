@@ -444,7 +444,6 @@ public class App implements ShareableApp, SharedApp {
             request.set();
             this.removeFromDB(db);
             db.commitTransaction(transaction);
-            this.getTeamUser_tenant().removeSharedApp(this);
             this.getHolder().removeSharedApp(this);
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError);
@@ -453,7 +452,6 @@ public class App implements ShareableApp, SharedApp {
 
     @Override
     public void setTeamUser_tenant(TeamUser teamUser) {
-        teamUser.addSharedApp(this);
         this.teamUser_tenant = teamUser;
     }
 

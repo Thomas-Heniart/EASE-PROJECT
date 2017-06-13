@@ -101,7 +101,6 @@ function sendEvent(obj) {
                 }, function (retMsg) {
                     json.detail = JSON.parse(retMsg);
                     var message = "NewConnection";
-                    //easeTracker.trackEvent("ClickOnApp");
                     if (json.detail[0] && json.detail[0].url) {
                         json.detail = json.detail[0];
                         message = "NewLinkToOpen";

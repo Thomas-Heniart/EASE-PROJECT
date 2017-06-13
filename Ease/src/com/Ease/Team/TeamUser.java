@@ -89,15 +89,6 @@ public class TeamUser {
     @Transient
     protected DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd", Locale.US);
 
-    /**
-     * TODO Use hibernate for apps then update code about sharedApps
-     */
-    @Transient
-    protected List<SharedApp> sharedApps = new LinkedList<>();
-
-    @Transient
-    Map<Integer, SharedApp> sharedAppMap = new HashMap<>();
-
     public TeamUser(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Boolean verified, Team team, TeamUserRole teamUserRole) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -244,21 +235,9 @@ public class TeamUser {
         this.teamUserNotifications = teamUserNotifications;
     }
 
-    /* public List<Channel> getChannels() {
-        return channels;
-    }
-
-    public void setChannels(List<Channel> channels) {
-        this.channels = channels;
-    } */
-
     public static TeamUser createAdminUser(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Team team) throws GeneralException {
         TeamUserRole teamUserRole = new TeamUserRole(TeamUserRole.Role.ADMINISTRATOR.getValue());
         return new TeamUser(firstName, lastName, email, username, arrivalDate, teamKey, true, team, teamUserRole);
-    }
-
-    public List<SharedApp> getSharedApps() {
-        return sharedApps;
     }
 
     public JSONObject getJson() {
@@ -297,11 +276,6 @@ public class TeamUser {
         return this.getTeamUserRole().isOwner();
     }
 
-    public void addSharedApp(SharedApp app) {
-        this.sharedApps.add(app);
-        this.sharedAppMap.put(Integer.valueOf(((App) app).getDBid()), app);
-    }
-
     public void validateRegistration(String deciphered_teamKey, String userPublicKey, DataBaseConnection db) throws HttpServletException {
         try {
             if (this.isVerified())
@@ -314,7 +288,6 @@ public class TeamUser {
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
-
     }
 
     public void finalizeRegistration(ServletManager sm) throws GeneralException {
@@ -334,13 +307,6 @@ public class TeamUser {
 
     public boolean isVerified() {
         return this.verified;
-    }
-
-    public SharedApp getSharedAppWithId(Integer app_id) throws HttpServletException {
-        SharedApp sharedApp = this.sharedAppMap.get(app_id);
-        if (sharedApp == null)
-            throw new HttpServletException(HttpStatus.BadRequest, "This app does not exist.");
-        return sharedApp;
     }
 
     public JSONObject getSimpleJson() {
@@ -385,26 +351,17 @@ public class TeamUser {
         this.getTeamUserRole().setRole(TeamUserRole.Role.ADMINISTRATOR);
     }
 
-    public void removeSharedApp(SharedApp sharedApp) {
-        this.sharedApps.remove(sharedApp);
-        this.sharedAppMap.remove(Integer.valueOf(((App) sharedApp).getDBid()));
-    }
-
     public void delete(DataBaseConnection db) throws HttpServletException {
         try {
             int transaction = db.startTransaction();
-            for (SharedApp sharedApp : this.getSharedApps())
-                sharedApp.deleteShared(db);
             Team team = this.getTeam();
+            team.removeSharedAppsForTeamUser(this, db);
             List<ShareableApp> shareableAppsToRemove = new LinkedList<>();
             for (ShareableApp shareableApp : team.getShareableApps()) {
                 if (shareableApp.getTeamUser_owner() != this)
                     continue;
-                shareableApp.deleteShareable(db);
-                shareableAppsToRemove.add(shareableApp);
+                team.removeShareableApp(shareableApp, db);
             }
-            for (ShareableApp shareableApp : shareableAppsToRemove)
-                team.removeShareableApp(shareableApp);
             for (Channel channel : this.getTeam().getChannels())
                 channel.removeTeamUser(this, db);
             DatabaseRequest request = db.prepareRequest("DELETE FROM pendingTeamInvitations WHERE teamUser_id = ?;");
