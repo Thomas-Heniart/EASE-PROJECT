@@ -3,7 +3,6 @@ package com.Ease.Dashboard.App.WebsiteApp;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.Ease.Context.Catalog.WebsiteInformation;
 import com.Ease.Dashboard.App.*;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.Account;
 import com.Ease.Team.Channel;
@@ -21,8 +20,6 @@ import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Mail.SendGridMail;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import javax.servlet.ServletContext;
 
@@ -305,31 +302,17 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         DatabaseRequest request = null;
         Integer single_id = ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId();
         String websiteAppId = null;
-        if (account_information != null) {
-            String appDBid = App.createSharedApp(null, null, this.getName(), "websiteApp", elevator, team.getDb_id(), (channel == null) ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), this, true, sm);
-            request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, 'websiteApp', ?, ?);");
-            request.setInt(this.getSite().getDb_id());
-            request.setInt(appDBid);
-            if (reminderIntervalValue == null) {
-                request.setNull();
-                request.setNull();
-            } else {
-                request.setInt(reminderIntervalValue);
-                request.setString(reminderIntervalType);
-            }
-            websiteAppId = request.set().toString();
-            sharedApp = new WebsiteApp(appDBid, null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), single_id, this.getSite(), websiteAppId, this, reminderIntervalValue, reminderIntervalType);
-        } else {
-            websiteAppId = WebsiteApp.createSharedWebsiteApp(this, elevator, team.getDb_id(), channel == null ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), sm);
-            String deciphered_teamKey = sm.getTeamUserForTeam(team).getDeciphered_teamKey();
-            Boolean adminHasAccess = (Boolean) params.get("adminHasAccess");
-            Account account = Account.createSharedAccountFromJson(account_information, deciphered_teamKey, adminHasAccess, this.getReminderIntervalValue(),sm.getDB());
-            request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
-            request.setInt(websiteAppId);
-            request.setInt(account.getDBid());
-            String classicDBid = request.set().toString();
-            sharedApp = new ClassicApp((String) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), single_id, this.getSite(), websiteAppId, account, classicDBid, this);
-        }
+        if (account_information == null)
+            throw new HttpServletException(HttpStatus.BadRequest);
+        websiteAppId = WebsiteApp.createSharedWebsiteApp(this, elevator, team.getDb_id(), channel == null ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), sm);
+        String deciphered_teamKey = sm.getTeamUserForTeam(team).getDeciphered_teamKey();
+        Boolean adminHasAccess = (Boolean) params.get("adminHasAccess");
+        Account account = Account.createSharedAccountFromJson(account_information, deciphered_teamKey, adminHasAccess, this.getReminderIntervalValue(), sm.getDB());
+        request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
+        request.setInt(websiteAppId);
+        request.setInt(account.getDBid());
+        String classicDBid = request.set().toString();
+        sharedApp = new ClassicApp((String) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), single_id, this.getSite(), websiteAppId, account, classicDBid, this);
         sharedApp.setAdminHasAccess((Boolean) params.get("adminHasAccess"), sm.getDB());
         sharedApp.setTeamUser_tenant(teamUser_tenant);
         sharedApp.setReceived(false);
@@ -355,7 +338,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
                 sharedAppObject.put("last_modification", classicApp.getAccount().printLastUpdatedDate());
                 sharedAppObject.put("password_must_be_updated", classicApp.getAccount().mustUpdatePassword());
             }
-            //object = sharedAppObject;
+            object = sharedAppObject;
         }
         res.put("receivers", jsonArray);
         return res;
