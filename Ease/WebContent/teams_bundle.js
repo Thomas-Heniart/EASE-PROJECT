@@ -3684,10 +3684,10 @@ function teamCreateLinkApp(app) {
   };
 }
 
-function teamShareApp(app_id, user_id) {
+function teamShareApp(app_id, user_info) {
   return function (dispatch, getState) {
     dispatch({ type: 'TEAM_SHARE_APP_PENDING' });
-    return post_api.teamApps.shareApp(getState().team.id, app_id, user_id).then(function (response) {
+    return post_api.teamApps.shareApp(getState().team.id, app_id, user_info).then(function (response) {
       dispatch({ type: 'TEAM_SHARE_APP_FULFILLED', payload: { user_info: response, app_id: app_id } });
     }).catch(function (err) {
       dispatch({ type: 'TEAM_SHARE_APP_REJECTED', payload: err });
@@ -6119,11 +6119,13 @@ module.exports = {
         return response.data;
       });
     },
-    shareApp: function shareApp(team_id, app_id, user_id) {
+    shareApp: function shareApp(team_id, app_id, user_info) {
       return axios.post('/api/v1/teams/ShareApp', {
         team_id: team_id,
         app_id: app_id,
-        team_user_id: user_id
+        team_user_id: user_info.team_user_id,
+        can_see_information: user_info.can_see_information,
+        account_information: user_info.account_information
       }).then(function (response) {
         return response.data;
       });
@@ -18396,7 +18398,7 @@ var TeamLinkApp = function (_React$Component) {
           return this.props.dispatch(appActions.teamAppDeleteReceiver(this.props.app.id, item.shared_app_id, item.team_user_id));
         }, _this2);
         var addUsers = addReceiverList.map(function (item) {
-          return this.props.dispatch(appActions.teamShareApp(this.props.app.id, item.id));
+          return this.props.dispatch(appActions.teamShareApp(this.props.app.id, { team_user_id: item.id }));
         }, _this2);
         var concatCalls = deleteUsers.concat(addUsers);
         Promise.all(concatCalls).then(function () {
@@ -18737,7 +18739,35 @@ var TeamMultiApp = function (_React$Component) {
         name: this.state.modifiedAppName,
         description: this.state.modifiedComment
       };
+      var addReceiverList = [];
+      var deleteReceiverList = [];
+      var modifyReceiverList = [];
+
+      for (var i = 0; i < this.state.selectedReceivers.length; i++) {
+        var receiver = (0, _helperFunctions.getReceiverInList)(this.props.app.receivers, this.state.selectedReceivers[i].id);
+        if (!receiver) addReceiverList.push(this.state.selectedReceivers[i]);else {
+          for (var j = 0; j < receiver.account_information.length; j++) {
+            if (receiver.account_information[j].info_value != this.state.selectedReceivers[i].credentials[receiver.account_information[j].info_name]) {
+              modifyReceiverList.push(_extends({}, this.state.selectedReceivers[i], { shared_app_id: receiver.shared_app_id }));
+              break;
+            }
+          }
+        }
+      }
+      for (var i = 0; i < this.props.app.receivers.length; i++) {
+        if (!(0, _helperFunctions.isUserInList)(this.state.selectedReceivers, this.props.app.receivers[i].team_user_id)) deleteReceiverList.push(this.props.app.receivers[i]);
+      }
       this.props.dispatch(appActions.teamModifyAppInformation(this.props.app.id, app_info)).then(function (response) {
+        var deleteUsers = deleteReceiverList.map(function (item) {
+          return this.props.dispatch(appActions.teamAppDeleteReceiver(this.props.app.id, item.shared_app_id, item.team_user_id));
+        }, _this2);
+        var addUsers = addReceiverList.map(function (item) {
+          return this.props.dispatch(appActions.teamShareApp(this.props.app.id, { account_information: item.credentials, team_user_id: item.id }));
+        }, _this2);
+        var editUsers = modifyReceiverList.map(function (item) {
+          return this.props.dispatch(appActions.teamAppEditReceiver(this.props.app.id, item.shared_app_id, { account_information: item.credentials, team_user_id: item.id }));
+        }, _this2);
+        var concatCalls = deleteUsers.concat(addUsers, editUsers);
         _this2.setupModifying(false);
       });
     }
@@ -19248,6 +19278,7 @@ var TeamSimpleApp = function (_React$Component) {
         if (receivers[i].id === id) {
           if (receivers[i].selected) return;
           receivers[i].selected = true;
+          if (receivers[i].can_see_information === undefined) receivers[i].can_see_information = false;
           selectedReceivers.push(receivers[i]);
           this.setState({
             receivers: receivers,
@@ -19326,7 +19357,7 @@ var TeamSimpleApp = function (_React$Component) {
           return this.props.dispatch(appActions.teamAppDeleteReceiver(this.props.app.id, item.shared_app_id, item.team_user_id));
         }, _this2);
         var addUsers = addReceiverList.map(function (item) {
-          return this.props.dispatch(appActions.teamShareApp(this.props.app.id, item.id));
+          return this.props.dispatch(appActions.teamShareApp(this.props.app.id, { team_user_id: item.id, can_see_information: item.can_see_information }));
         }, _this2);
         var editUsers = modifyReceiverList.map(function (item) {
           return this.props.dispatch(appActions.teamAppEditReceiver(this.props.app.id, item.shared_app_id, { can_see_information: item.can_see_information, team_user_id: item.id }));
@@ -19361,7 +19392,7 @@ var TeamSimpleApp = function (_React$Component) {
           user.accepted = item.accepted;
           user.can_see_information = item.can_see_information;
           selectedReceivers.push(user);
-        }, this);
+        });
 
         this.setState({
           modifying: state,
