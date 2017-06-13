@@ -52,25 +52,11 @@ public class Account {
             account = new Account(db_id, shared, publicKey, ciphered_privateKey, infos, mustBeReciphered);
             account.setLastUpdatedDate(lastUpdatedDate);
             return account;
-        }
-
-        request = db.prepareRequest("SELECT lastUpdateDate + INTERVAL ? " + reminderType + " FROM accounts WHERE id = ?;");
-        request.setInt(reminderValue);
-        request.setInt(db_id);
-        rs = request.get();
-        if (!rs.next())
-            throw new GeneralException(ServletManager.Code.ClientError, "I don't know what to say");
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        try {
-            Date deadLine = dateFormat.parse(rs.getString(1));
-            Date now = new Date();
-            account = new Account(db_id, shared, publicKey, ciphered_privateKey, infos, (now.compareTo(deadLine) >= 0), mustBeReciphered, reminderValue);
+        } else {
+            account = new Account(db_id, shared, publicKey, ciphered_privateKey, infos, mustBeReciphered, reminderValue);
             account.setLastUpdatedDate(lastUpdatedDate);
             return account;
-        } catch (ParseException e) {
-            throw new GeneralException(ServletManager.Code.InternError, "Parse error");
         }
-
     }
 
     public static Account createAccount(boolean shared, Map<String, String> informations, ServletManager sm) throws GeneralException {
@@ -238,7 +224,7 @@ public class Account {
         this.passwordChangeInterval = 0;
     }
 
-    public Account(String db_id, boolean shared, String publicKey, String ciphered_key, List<AccountInformation> infos, boolean passwordMustBeUpdated, boolean mustBeReciphered, Integer passwordChangeInterval) {
+    public Account(String db_id, boolean shared, String publicKey, String ciphered_key, List<AccountInformation> infos, boolean mustBeReciphered, Integer passwordChangeInterval) {
         this.db_id = db_id;
         this.shared = shared;
         this.infos = infos;
