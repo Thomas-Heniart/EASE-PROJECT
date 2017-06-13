@@ -19874,7 +19874,7 @@ function reducer() {
           if (nState.item.apps[i].id === action.payload.app_id) {
             app = nState.item.apps[i];
             for (var j = 0; j < app.receivers.length; j++) {
-              if (app.receivers[j].team_user_id === action.payload.receiver_info.team_user_info) {
+              if (app.receivers[j].team_user_id === action.payload.receiver_info.team_user_id) {
                 app.receivers[j] = action.payload.receiver_info;
                 return nState;
               }
