@@ -6,6 +6,8 @@ import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.User.User;
+import com.Ease.Notification.TeamNotification;
+import com.Ease.Notification.TeamUserNotification;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -81,6 +83,9 @@ public class TeamUser {
     @Column(name = "jobTitle")
     protected String jobTitle;
 
+    @OneToMany(mappedBy = "teamUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    protected Set<TeamUserNotification> teamUserNotifications = new HashSet<>();
+
     @Transient
     protected DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd", Locale.US);
 
@@ -93,23 +98,7 @@ public class TeamUser {
     @Transient
     Map<Integer, SharedApp> sharedAppMap = new HashMap<>();
 
-    public TeamUser(User user, String firstName, String lastName, String email, String username, String teamKey, Boolean verified, Date departureDate, Team team, TeamUserRole teamUserRole, List<Channel> channels) {
-        this.user = user;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.username = username;
-        this.teamKey = teamKey;
-        this.verified = verified;
-        this.departureDate = departureDate;
-        this.team = team;
-        this.teamUserRole = teamUserRole;
-        //this.channels = channels;
-        this.arrivalDate = new Date();
-    }
-
-    public TeamUser(User user, String firstName, String lastName, String email, String username, String teamKey, Boolean verified, Team team, TeamUserRole teamUserRole, List<Channel> channels) {
-        this.user = user;
+    public TeamUser(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Boolean verified, Team team, TeamUserRole teamUserRole) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -118,33 +107,7 @@ public class TeamUser {
         this.verified = verified;
         this.team = team;
         this.teamUserRole = teamUserRole;
-        //this.channels = channels;
-        this.arrivalDate = new Date();
-    }
-
-    public TeamUser(User user, String firstName, String lastName, String email, String username, String teamKey, Boolean verified, Team team, TeamUserRole teamUserRole) {
-        this.user = user;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.username = username;
-        this.teamKey = teamKey;
-        this.verified = verified;
-        this.team = team;
-        this.teamUserRole = teamUserRole;
-        this.arrivalDate = new Date();
-    }
-
-    public TeamUser(String firstName, String lastName, String email, String username, String teamKey, Boolean verified, Team team, TeamUserRole teamUserRole) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.username = username;
-        this.teamKey = teamKey;
-        this.verified = verified;
-        this.team = team;
-        this.teamUserRole = teamUserRole;
-        this.arrivalDate = new Date();
+        this.arrivalDate = arrivalDate;
     }
 
     public TeamUser() {
@@ -273,6 +236,14 @@ public class TeamUser {
         this.teamUserRole = teamUserRole;
     }
 
+    public Set<TeamUserNotification> getTeamUserNotifications() {
+        return teamUserNotifications;
+    }
+
+    public void setTeamUserNotifications(Set<TeamUserNotification> teamUserNotifications) {
+        this.teamUserNotifications = teamUserNotifications;
+    }
+
     /* public List<Channel> getChannels() {
         return channels;
     }
@@ -281,9 +252,9 @@ public class TeamUser {
         this.channels = channels;
     } */
 
-    public static TeamUser createAdminUser(String firstName, String lastName, String email, String username, String teamKey, Team team) throws GeneralException {
+    public static TeamUser createAdminUser(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Team team) throws GeneralException {
         TeamUserRole teamUserRole = new TeamUserRole(TeamUserRole.Role.ADMINISTRATOR.getValue());
-        return new TeamUser(firstName, lastName, email, username, teamKey, true, team, teamUserRole);
+        return new TeamUser(firstName, lastName, email, username, arrivalDate, teamKey, true, team, teamUserRole);
     }
 
     public List<SharedApp> getSharedApps() {

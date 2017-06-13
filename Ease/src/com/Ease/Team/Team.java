@@ -6,16 +6,15 @@ import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.SendGridMail;
+import com.Ease.Notification.Notification;
+import com.Ease.Notification.TeamNotification;
 import com.Ease.Utils.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
 import javax.servlet.ServletContext;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by thomas on 10/04/2017.
@@ -56,6 +55,9 @@ public class Team {
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     protected List<Channel> channels = new LinkedList<>();
+
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    protected Set<TeamNotification> teamNotifications = new HashSet<>();
 
     @Transient
     protected Map<Integer, Channel> channelIdMap = new HashMap<>();
@@ -117,6 +119,14 @@ public class Team {
         this.channels = channels;
     }
 
+    public Set<TeamNotification> getTeamNotifications() {
+        return teamNotifications;
+    }
+
+    public void setTeamNotifications(Set<TeamNotification> teamNotifications) {
+        this.teamNotifications = teamNotifications;
+    }
+
     public List<ShareableApp> getShareableApps() {
         return shareableApps;
     }
@@ -134,7 +144,6 @@ public class Team {
             if (!teamUser.isVerified())
                 this.teamUsersWaitingForVerification.add(teamUser);
         }
-
     }
 
     public Channel getChannelWithId(Integer channel_id) throws HttpServletException {

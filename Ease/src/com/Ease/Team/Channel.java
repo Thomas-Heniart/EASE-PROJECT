@@ -1,17 +1,12 @@
 package com.Ease.Team;
 
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.SharedApp;
-import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Notification.ChannelNotification;
 import com.Ease.Utils.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by thomas on 10/04/2017.
@@ -37,6 +32,9 @@ public class Channel {
     @ManyToMany
     @JoinTable(name = "channelAndTeamUserMap", joinColumns = {@JoinColumn(name = "channel_id")}, inverseJoinColumns = {@JoinColumn(name = "team_user_id")})
     protected List<TeamUser> teamUsers = new LinkedList<>();
+
+    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    protected Set<ChannelNotification> channelNotifications = new HashSet<>();
 
     public Channel(Team team, String name, String purpose, List<TeamUser> teamUsers) {
         this.team = team;
@@ -97,6 +95,14 @@ public class Channel {
 
     public void setTeamUsers(List<TeamUser> teamUsers) {
         this.teamUsers = teamUsers;
+    }
+
+    public Set<ChannelNotification> getChannelNotifications() {
+        return channelNotifications;
+    }
+
+    public void setChannelNotifications(Set<ChannelNotification> channelNotifications) {
+        this.channelNotifications = channelNotifications;
     }
 
     public void addTeamUser(TeamUser teamUser) {
