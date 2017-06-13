@@ -19873,7 +19873,7 @@ function reducer() {
         for (var i = 0; i < nState.item.apps.length; i++) {
           if (nState.item.apps[i].id === action.payload.app_id) {
             app = nState.item.apps[i];
-            for (var j = 0; j < app.receivers.length; i++) {
+            for (var j = 0; j < app.receivers.length; j++) {
               if (app.receivers[j].team_user_id === action.payload.receiver_info.team_user_info) {
                 app.receivers[j] = action.payload.receiver_info;
                 return nState;
