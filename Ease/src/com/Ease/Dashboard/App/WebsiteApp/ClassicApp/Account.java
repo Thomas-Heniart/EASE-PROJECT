@@ -139,12 +139,6 @@ public class Account {
             Map.Entry<String, String> entry = (Map.Entry<String, String>) account_information_entry;
             account_informationMap.put(entry.getKey(), entry.getValue());
         }
-        /* for (Object account_information_obj : account_information_array) {
-            JSONObject account_information = (JSONObject) account_information_obj;
-            String info_name = (String) account_information.get("info_name");
-            String info_value = (String) account_information.get("info_value");
-            account_informationMap.put(info_name, info_value);
-        } */
         Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
         String publicKey = publicAndPrivateKey.getKey();
         String privateKey = publicAndPrivateKey.getValue();
@@ -433,15 +427,17 @@ public class Account {
     public void edit(JSONObject editJson, DataBaseConnection db) throws GeneralException {
         int transaction = db.startTransaction();
         JSONObject accountInformationJson = (JSONObject) editJson.get("account_information");
-        Integer reminderInterval = (Integer) editJson.get("reminderInterval");
-        for (AccountInformation accountInformation : this.getAccountInformations()) {
-            String new_info_value = (String) accountInformationJson.get(accountInformation.getInformationName());
-            if (new_info_value == null)
-                continue;
-            accountInformation.setInformation_value(new_info_value, this.publicKey, db);
-            if (accountInformation.getInformationName().equals("password"))
-                updateLastUpateDate(db);
+        if (accountInformationJson != null) {
+            for (AccountInformation accountInformation : this.getAccountInformations()) {
+                String new_info_value = (String) accountInformationJson.get(accountInformation.getInformationName());
+                if (new_info_value == null)
+                    continue;
+                accountInformation.setInformation_value(new_info_value, this.publicKey, db);
+                if (accountInformation.getInformationName().equals("password"))
+                    updateLastUpateDate(db);
+            }
         }
+        Integer reminderInterval = (Integer) editJson.get("reminderInterval");
         if (reminderInterval != null) {
             DatabaseRequest request = db.prepareRequest("UPDATE accounts SET reminderIntervalValue = ? WHERE id = ?;");
             request.setInt(reminderInterval);
