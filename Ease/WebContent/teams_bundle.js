@@ -18729,7 +18729,8 @@ var TeamMultiApp = function (_React$Component) {
       console.log("validate modifying");
       var app_info = {
         name: this.state.modifiedAppName,
-        description: this.state.modifiedComment
+        description: this.state.modifiedComment,
+        password_change_interval: this.state.modifiedPasswordChangeInterval
       };
       var addReceiverList = [];
       var deleteReceiverList = [];
