@@ -4434,6 +4434,9 @@ Object.defineProperty(exports, "__esModule", {
 exports.selectTeamChannel = selectTeamChannel;
 exports.fetchTeamChannelApps = fetchTeamChannelApps;
 exports.fetchChannels = fetchChannels;
+exports.createTeamChannel = createTeamChannel;
+exports.deleteTeamChannel = deleteTeamChannel;
+exports.addTeamUserToChannel = addTeamUserToChannel;
 exports.editTeamChannelName = editTeamChannelName;
 exports.editTeamChannelPurpose = editTeamChannelPurpose;
 
@@ -4483,6 +4486,43 @@ function fetchChannels(team_id) {
   };
 }
 
+function createTeamChannel(name, purpose) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'CREATE_TEAM_CHANNEL_PENDING' });
+    return post_api.teamChannel.createChannel(getState().team.id, name, purpose).then(function (response) {
+      dispatch({ type: 'CREATE_TEAM_CHANNEL_FULFILLED', payload: response });
+      return response;
+    }).catch(function (err) {
+      dispatch({ type: 'CREATE_TEAM_CHANNEL_REJECRED', payload: err });
+      throw err;
+    });
+  };
+}
+
+function deleteTeamChannel(channel_id) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'DELETE_TEAM_CHANNEL_PENDING' });
+    return post_api.teamChannel.deleteChannel(getState().team.id, channel_id).then(function (response) {
+      dispatch({ type: 'DELETE_TEAM_CHANNEL_FULFILLED', payload: { channel_id: channel_id } });
+    }).catch(function (err) {
+      dispatch({ type: 'DELETE_TEAM_CHANNEL_REJECTED', payload: err });
+      throw err;
+    });
+  };
+}
+
+function addTeamUserToChannel(channel_id, team_user_id) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'ADD_TEAM_USER_TO_CHANNEL_PENDING' });
+    return post_api.teamChannel.addTeamUserToChannel(getState().team.id, channel_id, team_user_id).then(function (response) {
+      dispatch({ type: 'ADD_TEAM_USER_TO_CHANNEL_FULFILLED', payload: { channel_id: channel_id, team_user_id: team_user_id } });
+    }).catch(function (err) {
+      dispatch({ type: 'ADD_TEAM_USER_TO_CHANNEL_REJECTED', payload: err });
+      throw err;
+    });
+  };
+}
+
 function editTeamChannelName(channel_id, name) {
   return function (dispatch, getState) {
     dispatch({ type: 'EDIT_TEAM_CHANNEL_NAME_PENDING' });
@@ -4517,6 +4557,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.selectTeamUser = selectTeamUser;
 exports.fetchUsers = fetchUsers;
+exports.createTeamUser = createTeamUser;
 exports.editTeamUserUsername = editTeamUserUsername;
 exports.editTeamUserFirstName = editTeamUserFirstName;
 exports.editTeamUserLastName = editTeamUserLastName;
@@ -4554,6 +4595,18 @@ function fetchUsers(team_id) {
       dispatch({ type: "FETCH_USERS_FULFILLED", payload: payload });
     }).catch(function (err) {
       dispatch({ type: "FETCH_USERS_REJECTED", payload: err });
+      throw err;
+    });
+  };
+}
+
+function createTeamUser(team_id, first_name, last_name, email, username, departure_date, role) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'CREATE_TEAM_USER' });
+    return post_api.createTeamUser(team_id, first_name, last_name, email, username, departure_date, role).then(function (response) {
+      dispatch({ type: 'CREATE_TEAM_USER_FULFILLED', payload: response });
+    }).catch(function (err) {
+      dispatch({ type: 'CREATE_TEAM_USER_REJECTED' });
       throw err;
     });
   };
@@ -6021,10 +6074,47 @@ module.exports = {
       }).then(function (response) {
         return response.data;
       });
+    },
+    addTeamUserToChannel: function addTeamUserToChannel(team_id, channel_id, team_user_id) {
+      return axios.post('/api/v1/teams/AddTeamUserToChannel', {
+        team_id: team_id,
+        channel_id: channel_id,
+        team_user_id: team_user_id
+      }).then(function (response) {
+        return response.data;
+      });
+    },
+    createChannel: function createChannel(team_id, name, purpose) {
+      return axios.post('/api/v1/teams/CreateChannel', {
+        team_id: team_id,
+        name: name,
+        purpose: purpose
+      }).then(function (response) {
+        return response.data;
+      });
+    },
+    deleteChannel: function deleteChannel(team_id, channel_id) {
+      return axios.post('/api/v1/teams/DeleteChannel', {}).then(function (response) {
+        return response.data;
+      });
     }
   },
 
   teamUser: {
+    createTeamUser: function createTeamUser(team_id, first_name, last_name, email, username, departure_date, role) {
+      return axios.post('/api/v1/teams/StartTeamUserCreation', {
+        team_id: team_id,
+        first_name: first_name,
+        last_name: last_name,
+        email: email,
+        username: username,
+        departure_date: departure_date,
+        role: role,
+        arrival_date: new Date().getTime()
+      }).then(function (response) {
+        return response.data;
+      });
+    },
     editRole: function editRole(team_id, user_id, role) {
       return axios.post('/api/v1/teams/EditTeamUserRole', {
         team_id: team_id,
@@ -15249,6 +15339,12 @@ var _reactRedux = __webpack_require__(15);
 
 var _teamModalActions = __webpack_require__(25);
 
+var _channelActions = __webpack_require__(37);
+
+var channelActions = _interopRequireWildcard(_channelActions);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -15290,6 +15386,7 @@ var TeamAddChannelModal = (_dec = (0, _reactRedux.connect)(function (store) {
     _this.onMouseDown = _this.onMouseDown.bind(_this);
     _this.onMouseUp = _this.onMouseUp.bind(_this);
     _this.pageClick = _this.pageClick.bind(_this);
+    _this.validateChannelCreation = _this.validateChannelCreation.bind(_this);
     return _this;
   }
 
@@ -15308,6 +15405,25 @@ var TeamAddChannelModal = (_dec = (0, _reactRedux.connect)(function (store) {
     value: function handleInput(name, value) {
       this.setState(function () {
         return _defineProperty({}, name, value);
+      });
+    }
+  }, {
+    key: 'validateChannelCreation',
+    value: function validateChannelCreation() {
+      var _this2 = this;
+
+      var name = this.state.name;
+      var purpose = this.state.purpose;
+      var selectedUsers = this.state.selectedUsers;
+
+      this.props.dispatch(channelActions.createTeamChannel(name, purpose)).then(function (response) {
+        var channel_id = response.id;
+        var addUserActions = selectedUsers.map(function (item) {
+          return this.props.dispatch(channelActions.addTeamUserToChannel(channel_id, item.id));
+        }, _this2);
+        Promise.all(addUserActions).then(function () {
+          _this2.props.dispatch((0, _teamModalActions.showAddTeamChannelModal)(false));
+        });
       });
     }
   }, {
@@ -15366,7 +15482,7 @@ var TeamAddChannelModal = (_dec = (0, _reactRedux.connect)(function (store) {
   }, {
     key: 'render',
     value: function render() {
-      var _this2 = this;
+      var _this3 = this;
 
       return React.createElement(
         'div',
@@ -15374,7 +15490,7 @@ var TeamAddChannelModal = (_dec = (0, _reactRedux.connect)(function (store) {
         React.createElement(
           'a',
           { id: 'ease_modal_close_btn', className: 'ease_modal_btn', onClick: function onClick(e) {
-              _this2.props.dispatch((0, _teamModalActions.showAddTeamChannelModal)(false));
+              _this3.props.dispatch((0, _teamModalActions.showAddTeamChannelModal)(false));
             } },
           React.createElement('i', { className: 'ease_icon fa fa-times' }),
           React.createElement(
@@ -15416,7 +15532,7 @@ var TeamAddChannelModal = (_dec = (0, _reactRedux.connect)(function (store) {
                 { className: 'modal_input_wrapper' },
                 React.createElement('i', { className: 'fa fa-hashtag ease_icon' }),
                 React.createElement('input', { onChange: function onChange(e) {
-                    _this2.handleInput(e.target.name, e.target.value);
+                    _this3.handleInput(e.target.name, e.target.value);
                   },
                   value: this.state.name,
                   className: 'input_unstyle', id: 'name_input', type: 'text', placeholder: 'Name', name: 'name' })
@@ -15431,7 +15547,7 @@ var TeamAddChannelModal = (_dec = (0, _reactRedux.connect)(function (store) {
                 'Purpose'
               ),
               React.createElement('input', { onChange: function onChange(e) {
-                  _this2.handleInput(e.target.name, e.target.value);
+                  _this3.handleInput(e.target.name, e.target.value);
                 },
                 value: this.state.purpose,
                 className: 'modal_input', id: 'purpose_input', type: 'text', placeholder: 'Optional', name: 'purpose' })
@@ -15511,13 +15627,14 @@ var TeamAddChannelModal = (_dec = (0, _reactRedux.connect)(function (store) {
                   'button',
                   { className: 'button-unstyle neutral_background action_text_button mrgnRight5',
                     onClick: function onClick(e) {
-                      _this2.props.dispatch((0, _teamModalActions.showAddTeamChannelModal)(false));
+                      _this3.props.dispatch((0, _teamModalActions.showAddTeamChannelModal)(false));
                     } },
                   'Cancel'
                 ),
                 React.createElement(
                   'button',
-                  { className: 'button-unstyle positive_background action_text_button' },
+                  { className: 'button-unstyle positive_background action_text_button',
+                    onClick: this.validateChannelCreation },
                   'Next'
                 )
               )
@@ -15674,6 +15791,20 @@ var FirstStepAddUser = function (_React$Component) {
             { className: 'signed_input' },
             React.createElement(
               'label',
+              { htmlFor: 'username_input' },
+              'Username'
+            ),
+            React.createElement('input', { value: this.props.username,
+              onChange: function onChange(e) {
+                _this2.props.handleInputs(e.target.name, e.target.value);
+              },
+              id: 'username_input', name: 'username', type: 'text', className: 'full_width modal_input', placeholder: 'Username' })
+          ),
+          React.createElement(
+            'div',
+            { className: 'signed_input' },
+            React.createElement(
+              'label',
               { htmlFor: 'user_role_select' },
               'User role'
             ),
@@ -15825,6 +15956,7 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
       fname: '',
       lname: '',
       role: '1',
+      username: '',
       departure_date: '',
       selectedChannels: [],
       channels: []
@@ -15900,6 +16032,7 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
             fname: this.state.fname,
             lname: this.state.lname,
             role: this.state.role,
+            username: this.state.username,
             departure_date: this.state.departure_date,
             handleInputs: this.handleInputs,
             channels: this.state.channels,
@@ -19676,6 +19809,15 @@ function reducer() {
           }
           return item;
         });
+        return _extends({}, state, {
+          channels: nChannels
+        });
+      }
+    case 'CREATE_TEAM_CHANNEL_FULFILLED':
+      {
+        var nChannels = state.channels;
+
+        nChannels.push(action.payload);
         return _extends({}, state, {
           channels: nChannels
         });
