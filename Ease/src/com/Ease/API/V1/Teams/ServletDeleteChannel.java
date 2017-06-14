@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by thomas on 09/06/2017.
@@ -31,16 +33,16 @@ public class ServletDeleteChannel extends HttpServlet {
             Channel channel = team.getChannelWithId(channel_id);
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
-            channel.delete(sm.getDB());
+            List<ShareableApp> shareableAppsToRemove = new LinkedList<>();
             for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
-                if (shareableApp.getChannel() != channel)
-                    continue;
-                team.getAppManager().removeShareableApp(shareableApp, db);
+                if (shareableApp.getChannel() == channel)
+                    shareableAppsToRemove.add(shareableApp);
             }
+            team.getAppManager().removeShareableApps(shareableAppsToRemove, db);
+            db.commitTransaction(transaction);
             team.removeChannel(channel);
             sm.deleteObject(channel);
-            sm.saveOrUpdate(team);
-            db.commitTransaction(transaction);
+            sm.setSuccess("Channel delete");
         } catch (Exception e) {
             sm.setError(e);
         }
