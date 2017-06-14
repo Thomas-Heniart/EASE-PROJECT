@@ -158,16 +158,4 @@ public class Channel {
             return;
         this.purpose = purpose;
     }
-
-    public void delete(DataBaseConnection db) {
-        try {
-            int transaction = db.startTransaction();
-            DatabaseRequest request = db.prepareRequest("DELETE FROM channelAndTeamUserMap WHERE channel_id = ?");
-            request.setInt(this.getDb_id());
-            request.set();
-            db.commitTransaction(transaction);
-        } catch (GeneralException e) {
-            e.printStackTrace();
-        }
-    }
 }
