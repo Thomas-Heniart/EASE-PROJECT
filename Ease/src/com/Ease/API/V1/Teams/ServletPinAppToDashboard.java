@@ -2,11 +2,14 @@ package com.Ease.API.V1.Teams;
 
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.SharedApp;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
+import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -32,14 +35,15 @@ public class ServletPinAppToDashboard extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             Integer app_id = sm.getIntParam("app_id", true);
             SharedApp sharedApp = team.getAppManager().getSharedApp(app_id);
-            App app = (App) sharedApp;
             TeamUser teamUser = sm.getTeamUserForTeam(team);
             if (teamUser != sharedApp.getTeamUser_tenant())
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot pin this app to your dashboard.");
             User user = sm.getUser();
             Integer profile_id = sm.getIntParam("profile_id", true);
             Profile profile = user.getDashboardManager().getProfile(profile_id);
-            app.pinToDashboard(profile, sm.getDB());
+            App pinned_app = sharedApp.createPinned_app(profile, user.getKeys().getKeyUser(), sm.getDB());
+            pinned_app.setSingleId(sm.getNextSingle_id());
+            profile.addApp(pinned_app);
             sm.setSuccess("App pined to dashboard");
         } catch (Exception e) {
             sm.setError(e);

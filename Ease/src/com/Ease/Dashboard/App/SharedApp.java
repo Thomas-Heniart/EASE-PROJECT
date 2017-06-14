@@ -1,5 +1,6 @@
 package com.Ease.Dashboard.App;
 
+import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
@@ -42,4 +43,10 @@ public interface SharedApp {
     public void accept(DataBaseConnection db) throws HttpServletException;
 
     public void setCanSeeInformation(Boolean canSeeInformation, DataBaseConnection db) throws HttpServletException;
+
+    public App createPinned_app(Profile profile, String keyUser, DataBaseConnection db) throws HttpServletException;
+
+    public void setPinned_app(App app);
+
+    public void unpin(DataBaseConnection db) throws HttpServletException;
 }

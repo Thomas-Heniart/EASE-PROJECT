@@ -17,6 +17,7 @@ import com.Ease.Context.Catalog.Website;
 import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Context.Group.Infrastructure;
+import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.DashboardManager;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
@@ -33,6 +34,12 @@ import com.Ease.websocketV1.WebSocketManager;
 import com.Ease.websocketV1.WebSocketSession;
 
 public class User {
+
+    public void decipherApps(ServletManager sm) {
+        /* for (TeamUser teamUser : this.getTeamUsers()) {
+            teamUser.getP
+        } */
+    }
 
     enum Data {
         NOTHING, ID, FIRSTNAME, LASTNAME, EMAIL, KEYSID, OPTIONSID, REGISTRATIONDATE, STATUSID
@@ -117,10 +124,10 @@ public class User {
         SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, sm);
         User newUser = new User(db_id, firstName, lastName, email, keys, options, isAdmin, sawGroupProfile,
                 sessionSave, status);
+        newUser.loadTeamUsers(sm);
         newUser.initializeDashboardManager(sm);
         newUser.loadExtensionKeys(sm);
         newUser.loadEmails(sm);
-        newUser.loadTeamUsers(sm);
         for (App app : newUser.getDashboardManager().getApps()) {
             if (app.getType().equals("LogwithApp")) {
                 LogwithApp logwithApp = (LogwithApp) app;
@@ -147,7 +154,7 @@ public class User {
 
     @SuppressWarnings("unchecked")
     public static User createUser(String email, String firstName, String lastName, String password, String code,
-                                  ServletManager sm) throws GeneralException {
+                                  ServletManager sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         List<Group> groups = Invitation.verifyInvitation(email, code, sm);
@@ -241,7 +248,7 @@ public class User {
         this.updateManager = new UpdateManager(sm, this);
     }
 
-    public void initializeDashboardManager(ServletManager sm) throws GeneralException {
+    public void initializeDashboardManager(ServletManager sm) throws GeneralException, HttpServletException {
         this.dashboardManager = new DashboardManager(this, sm);
     }
 
@@ -407,7 +414,7 @@ public class User {
     }
 
     public void removeEmailIfNeeded(String email, ServletManager sm) throws GeneralException {
-        if (this.emails.get(email) != null && this.emails.get(email).removeIfNotUsed(sm))
+        if (this.emails.get(email) != null && this.emails.get(email).removeIfNotUsed(sm.getDB()))
             this.emails.remove(email);
     }
 
@@ -575,7 +582,7 @@ public class User {
         return !this.groups.isEmpty();
     }
 
-    public void deleteFromDb(ServletManager sm) throws GeneralException {
+    public void deleteFromDb(ServletManager sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         this.dashboardManager.removeFromDB(sm);
@@ -663,8 +670,11 @@ public class User {
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
             this.teamUsers.add(teamUser);
             teamUser.setDashboard_user(this);
-            if (teamUser.isVerified())
+            if (teamUser.isVerified()) {
                 teamUser.decipher_teamKey();
+                team.decipherApps(teamUser.getDeciphered_teamKey());
+            }
+
         }
         query.commit();
     }

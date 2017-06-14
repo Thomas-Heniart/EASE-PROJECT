@@ -70,6 +70,24 @@ public class ClassicApp extends WebsiteApp {
         return new ClassicApp((String) elevator.get("appDBid"), profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, account, classicDBid);
     }
 
+    public static App createClassicApp(ClassicApp app, Profile profile, String keyUser, DataBaseConnection db) throws HttpServletException {
+        try {
+            int transaction = db.startTransaction();
+            Map<String, Object> elevator = new HashMap<String, Object>();
+            Integer position = profile.getApps().size();
+            String websiteAppDBid = WebsiteApp.createWebsiteApp(profile, position, app.getName(), "classicApp", app.getSite(), elevator, db);
+            Account account = Account.createAccountFromTeamAccount(app.getAccount(), keyUser, db);
+            DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
+            request.setInt(websiteAppDBid);
+            request.setInt(account.getDBid());
+            String classicDBid = request.set().toString();
+            db.commitTransaction(transaction);
+            return new ClassicApp((String) elevator.get("appDBid"), profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), 0, app.getSite(), websiteAppDBid, account, classicDBid);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
     public static ClassicApp createShareableClassicApp(String name, Website website, List<JSONObject> accountInformationList, TeamUser teamUser_owner, Integer reminderValue, PostServletManager sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
@@ -153,7 +171,7 @@ public class ClassicApp extends WebsiteApp {
         this.classicDBid = classicDBid;
     }
 
-    public void removeFromDB(DataBaseConnection db) throws GeneralException {
+    public void removeFromDB(DataBaseConnection db) throws GeneralException, HttpServletException {
         int transaction = db.startTransaction();
         DatabaseRequest request = db.prepareRequest("DELETE FROM classicApps WHERE id = ?;");
         request.setInt(classicDBid);

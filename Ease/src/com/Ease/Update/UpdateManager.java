@@ -81,8 +81,6 @@ public class UpdateManager {
 			password = RSA.Decrypt(password, Integer.parseInt(keyDate));
 			password = user.encrypt(password);
 			if (existingApp != null) {
-				System.out.println(password);
-				System.out.println(existingApp.getAccount().getCryptedPassword());
 				if (existingApp.getAccount().getCryptedPassword().equals(password))
 					return true;
 				if (this.checkRemovedUpdates(existingApp, password, sm))
@@ -402,17 +400,17 @@ public class UpdateManager {
 		return newAppSingleId;
 	}
 
-	public void removeAllUpdateWithThisApp(App app, ServletManager sm) throws GeneralException {
+	public void removeAllUpdateWithThisApp(App app, DataBaseConnection db) throws GeneralException {
 		for (Update update : updates) {
 			if (update.getType().equals("UpdateNewPassword")) {
 				UpdateNewPassword uNp = (UpdateNewPassword)update;
 				if (uNp.getApp().getSingleId() == app.getSingleId()) {
-					this.removeUpdateWithSingleId(uNp.getSingledId(), sm.getDB());
+					this.removeUpdateWithSingleId(uNp.getSingledId(), db);
 				}
 			} else if (update.getType().equals("UpdateNewLogWithApp")) {
 				UpdateNewLogWithApp uNlw = (UpdateNewLogWithApp)update;
 				if (uNlw.getLogWithApp().getSingleId() == app.getSingleId()) {
-					this.removeUpdateWithSingleId(uNlw.getSingledId(), sm.getDB());
+					this.removeUpdateWithSingleId(uNlw.getSingledId(), db);
 				}
 			}
 		}

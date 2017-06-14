@@ -95,7 +95,7 @@ public class LogwithApp extends WebsiteApp {
         this.logwithAppDBid = logwithDBid;
     }
 
-    public void removeFromDB(DataBaseConnection db) throws GeneralException {
+    public void removeFromDB(DataBaseConnection db) throws GeneralException, HttpServletException {
         int transaction = db.startTransaction();
         DatabaseRequest request = db.prepareRequest("DELETE FROM logWithApps WHERE id = ?;");
         request.setInt(logwithAppDBid);

@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.Ease.Utils.*;
 import org.json.simple.JSONArray;
 
 import com.Ease.Context.Catalog.Website;
@@ -15,10 +16,6 @@ import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.Profile.ProfilePermissions;
 import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Regex;
-import com.Ease.Utils.ServletManager;
 
 public class DashboardManager {
     protected User user;
@@ -30,7 +27,7 @@ public class DashboardManager {
     protected Map<Integer, Profile> profileIDMap;
     private HashMap<String, WebsiteApp> websiteAppsDBMap;
 
-    public DashboardManager(User user, ServletManager sm) throws GeneralException {
+    public DashboardManager(User user, ServletManager sm) throws GeneralException, HttpServletException {
         this.user = user;
         this.apps = new LinkedList<App>();
         this.appsDBMap = new HashMap<String, App>();
@@ -75,23 +72,23 @@ public class DashboardManager {
         }
     }
 
-    private void removeApp(App app, ServletManager sm) throws GeneralException {
-        user.getUpdateManager().removeAllUpdateWithThisApp(app, sm);
+    private void removeApp(App app, DataBaseConnection db) throws GeneralException, HttpServletException {
+        user.getUpdateManager().removeAllUpdateWithThisApp(app, db);
         Profile profile = app.getProfile();
         this.apps.remove(app);
         this.appsDBMap.remove(app.getDBid());
         this.appsIDMap.remove(app.getSingleId());
-        profile.removeApp(app, sm);
+        profile.removeApp(app, db);
     }
 
-    public void removeAppWithSingleId(int single_id, ServletManager sm) throws GeneralException {
+    public void removeAppWithSingleId(int single_id, DataBaseConnection db) throws GeneralException, HttpServletException {
         App app = this.appsIDMap.get(single_id);
-        this.removeApp(app, sm);
+        this.removeApp(app, db);
         if (app.getType().equals("ClassicApp")) {
             for (AccountInformation info : ((ClassicApp) app).getAccount().getAccountInformations()) {
                 if (Regex.isEmail(info.getInformationValue()) == true) {
                     String email = info.getInformationValue();
-                    if (this.user.getEmails().get(email) != null && this.user.getEmails().get(email).removeIfNotUsed(sm))
+                    if (this.user.getEmails().get(email) != null && this.user.getEmails().get(email).removeIfNotUsed(db))
                         this.user.getEmails().remove(email);
                 }
             }
@@ -100,7 +97,7 @@ public class DashboardManager {
     }
 
 	/*
-	 * Profiles getters and setters
+     * Profiles getters and setters
 	 */
 
     public List<List<Profile>> getProfiles() {
@@ -155,7 +152,7 @@ public class DashboardManager {
         }
         return col;
     }
-	
+
 	/*
 	 * Apps getter and setters
 	 */
@@ -205,7 +202,7 @@ public class DashboardManager {
         app.getProfile().getApps().set(app.getPosition(), app);
     }
 
-    public void removeProfileWithPassword(int single_id, String password, ServletManager sm) throws GeneralException {
+    public void removeProfileWithPassword(int single_id, String password, ServletManager sm) throws GeneralException, HttpServletException {
         Profile profile = profileIDMap.get(single_id);
         if (profile == null)
             throw new GeneralException(ServletManager.Code.InternError, "This profile dosen't exist.");
@@ -229,19 +226,19 @@ public class DashboardManager {
         throw new GeneralException(ServletManager.Code.ClientError, "This profile does not exist");
     }
 
-    public void removeFromDB(ServletManager sm) throws GeneralException {
+    public void removeFromDB(ServletManager sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         List<App> apps = new LinkedList<App>();
         for (App app : this.getApps()) {
             if (app.getType().equals("LogwithApp")) {
-                app.getProfile().removeApp(app, sm);
+                app.getProfile().removeApp(app, db);
             } else {
                 apps.add(app);
             }
         }
         for (App app : apps) {
-            app.getProfile().removeApp(app, sm);
+            app.getProfile().removeApp(app, db);
         }
         for (List<Profile> column : this.profiles) {
             for (Profile profile : column) {
@@ -278,7 +275,7 @@ public class DashboardManager {
         if (profileDest == app.getProfile()) {
             profileDest.getApps().remove(app);
             profileDest.getApps().add(positionDest, app);
-            profileDest.updateAppsIndex(sm);
+            profileDest.updateAppsIndex(db);
         } else {
             if (profileDest.getGroupProfile() != null
                     && (profileDest.getGroupProfile().isCommon() == true || !profileDest.getGroupProfile().getPerms()
@@ -291,9 +288,9 @@ public class DashboardManager {
                 throw new GeneralException(ServletManager.Code.ClientWarning,
                         "You don't have the permission to move app out of this profile.");
             profileSrc.getApps().remove(app);
-            profileSrc.updateAppsIndex(sm);
+            profileSrc.updateAppsIndex(db);
             profileDest.getApps().add(positionDest, app);
-            profileDest.updateAppsIndex(sm);
+            profileDest.updateAppsIndex(db);
         }
         db.commitTransaction(transaction);
     }
@@ -347,11 +344,11 @@ public class DashboardManager {
 
     public void decipherApps(ServletManager sm) throws GeneralException {
         for (App app : this.apps) {
-			if (!app.isClassicApp())
-			    continue;
-			ClassicApp classicApp = (ClassicApp) app;
-			classicApp.getAccount().update_ciphering_if_needed(sm);
-			classicApp.getAccount().decipher(sm.getUser());
+            if (!app.isClassicApp())
+                continue;
+            ClassicApp classicApp = (ClassicApp) app;
+            classicApp.getAccount().update_ciphering_if_needed(sm);
+            classicApp.getAccount().decipher(sm.getUser());
         }
     }
 
@@ -359,7 +356,7 @@ public class DashboardManager {
         List<ClassicApp> classicApps = new LinkedList<>();
         for (App app : this.apps) {
             if (app.isClassicApp())
-                classicApps.add((ClassicApp)app);
+                classicApps.add((ClassicApp) app);
         }
         return classicApps;
     }

@@ -5,15 +5,9 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
+import com.Ease.Utils.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.IdGenerator;
-import com.Ease.Utils.ServletManager;
 
 public class Infrastructure {
 	
@@ -104,7 +98,7 @@ public class Infrastructure {
 		this.adminIds = adminIds;
 	}
 	
-	public void removeFromDB(ServletManager sm) throws GeneralException {
+	public void removeFromDB(ServletManager sm) throws GeneralException, HttpServletException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		for (Group group : groups) {

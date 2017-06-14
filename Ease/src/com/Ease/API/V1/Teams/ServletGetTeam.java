@@ -25,7 +25,7 @@ public class ServletGetTeam extends HttpServlet {
             sm.needToBeTeamUserOfTeam(team_id);
             TeamUser teamUser = sm.getTeamUserForTeamId(team_id);
             Team team = teamUser.getTeam();
-            team.decipherApps(teamUser.getDeciphered_teamKey());
+            //team.decipherApps(teamUser.getDeciphered_teamKey());
             JSONObject res = team.getJson();
             res.put("myTeamUserId", teamUser.getDb_id());
             sm.setSuccess(res);

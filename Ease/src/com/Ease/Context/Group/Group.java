@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import com.Ease.Utils.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -14,13 +15,6 @@ import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.GroupApp;
 import com.Ease.Dashboard.Profile.GroupProfile;
 import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.IdGenerator;
-import com.Ease.Utils.Invitation;
-import com.Ease.Utils.ServletManager;
 
 public class Group {
 	enum Data {
@@ -206,7 +200,7 @@ public class Group {
 	 * 
 	 */
 	
-	public void removeFromDb(ServletManager sm) throws GeneralException {
+	public void removeFromDb(ServletManager sm) throws GeneralException, HttpServletException {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		for (Group group : children) {
@@ -272,7 +266,7 @@ public class Group {
 			groupApp.loadContentForUnconnectedUser(db_id, sm);
 		}
 	}
-	private void removeContentForConnectedUser(User user, ServletManager sm) throws GeneralException {
+	private void removeContentForConnectedUser(User user, ServletManager sm) throws GeneralException, HttpServletException {
 		for (GroupProfile groupProfile: this.groupProfiles) {
 			groupProfile.removeContentForConnectedUser(user, sm);
 		}

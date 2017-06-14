@@ -97,21 +97,18 @@ public class UserEmail {
     public boolean isVerified() {
         return verified;
     }
-	
+
 	/*
-	 * 
+     *
 	 * Utils
 	 * 
 	 */
 
-    public boolean removeIfNotUsed(ServletManager sm) throws GeneralException {
-        if (this.verified) {
+    public boolean removeIfNotUsed(DataBaseConnection db) throws GeneralException {
+        if (this.verified)
             return false;
-        }
-        if (user.getEmail().equals(this.email)) {
+        if (user.getEmail().equals(this.email))
             return false;
-        }
-        DataBaseConnection db = sm.getDB();
         for (App app : this.user.getDashboardManager().getApps()) {
             if (app.isClassicApp()) {
                 List<AccountInformation> appInformations = ((ClassicApp) app).getAccount().getAccountInformations();
@@ -121,9 +118,7 @@ public class UserEmail {
                             return false;
                     }
                 }
-                ;
             }
-
         }
         DatabaseRequest request = db.prepareRequest("DELETE FROM usersEmails WHERE id = ?;");
         request.setInt(db_id);

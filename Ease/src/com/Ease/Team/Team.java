@@ -281,15 +281,11 @@ public class Team {
             for (ShareableApp shareableApp : this.getAppManager().getShareableApps()) {
                 App app = (App) shareableApp;
                 if (app.isClassicApp())
-
                     ((ClassicApp) app).getAccount().decipherWithTeamKeyIfNeeded(deciphered_teamKey);
-
-                else if (app.isEmpty()) {
-                    for (SharedApp sharedApp : shareableApp.getSharedApps()) {
-                        App app1 = (App) sharedApp;
-                        if (app1.isClassicApp())
-                            ((ClassicApp) app1).getAccount().decipherWithTeamKeyIfNeeded(deciphered_teamKey);
-                    }
+                for (SharedApp sharedApp : shareableApp.getSharedApps()) {
+                    App app1 = (App) sharedApp;
+                    if (app1.isClassicApp())
+                        ((ClassicApp) app1).getAccount().decipherWithTeamKeyIfNeeded(deciphered_teamKey);
                 }
             }
         } catch (GeneralException e) {

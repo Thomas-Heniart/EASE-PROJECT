@@ -7,17 +7,12 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import com.Ease.Utils.*;
 import org.json.simple.JSONObject;
 
 import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.IdGenerator;
-import com.Ease.Utils.ServletManager;
 
 public class GroupProfile {
 	public static enum Data {
@@ -164,7 +159,7 @@ public class GroupProfile {
 	 * 
 	 */
 
-	public void removeFromDb(ServletManager sm) throws GeneralException {
+	public void removeFromDb(ServletManager sm) throws GeneralException, HttpServletException {
 		DataBaseConnection db = sm.getDB();
 		@SuppressWarnings("unchecked")
 		Map<String, User> users = (Map<String, User>)sm.getContextAttr("users");
@@ -199,7 +194,7 @@ public class GroupProfile {
 
 	}
 	
-	public void removeContentForConnectedUser(User user, ServletManager sm) throws GeneralException {
+	public void removeContentForConnectedUser(User user, ServletManager sm) throws GeneralException, HttpServletException {
 		Iterator<List<Profile>> it = user.getDashboardManager().getProfiles().iterator();
 		while (it.hasNext()) {
 			Iterator<Profile> it2 = it.next().iterator();

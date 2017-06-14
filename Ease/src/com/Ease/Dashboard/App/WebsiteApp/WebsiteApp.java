@@ -224,7 +224,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         this.reminderIntervalValue = reminderIntervalValue;
     }
 
-    public void removeFromDB(DataBaseConnection db) throws GeneralException {
+    public void removeFromDB(DataBaseConnection db) throws GeneralException, HttpServletException {
         int transaction = db.startTransaction();
         DatabaseRequest request = db.prepareRequest("DELETE FROM websiteApps WHERE id = ?;");
         request.setInt(websiteAppDBid);

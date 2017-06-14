@@ -249,7 +249,7 @@ public class TeamUser {
         res.put("username", this.username);
         res.put("role", this.teamUserRole.getRoleValue());
         res.put("arrival_date", this.dateFormat.format(arrivalDate));
-        res.put("departure_date", "Undefined");
+        res.put("departure_date", "");
         if (departureDate != null)
             res.put("departure_date", this.dateFormat.format(this.departureDate));
         res.put("verified", this.verified);
@@ -317,7 +317,7 @@ public class TeamUser {
         jsonObject.put("first_name", this.getFirstName());
         jsonObject.put("last_name", this.getLastName());
         jsonObject.put("arrival_date", this.dateFormat.format(this.getArrivalDate()));
-        jsonObject.put("departure_date", "Undefined");
+        jsonObject.put("departure_date", "");
         if (this.getDepartureDate() != null)
             jsonObject.put("departure_date", this.dateFormat.format(this.getDepartureDate()));
         jsonObject.put("role", this.getTeamUserRole().getRoleValue());
@@ -358,10 +358,10 @@ public class TeamUser {
             team.getAppManager().removeSharedAppsForTeamUser(this, db);
             List<ShareableApp> shareableAppsToRemove = new LinkedList<>();
             for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
-                if (shareableApp.getTeamUser_owner() != this)
-                    continue;
-                team.getAppManager().removeShareableApp(shareableApp, db);
+                if (shareableApp.getTeamUser_owner() == this)
+                    shareableAppsToRemove.add(shareableApp);
             }
+            team.getAppManager().removeShareableApps(shareableAppsToRemove, db);
             for (Channel channel : this.getTeam().getChannels())
                 channel.removeTeamUser(this, db);
             DatabaseRequest request = db.prepareRequest("DELETE FROM pendingTeamInvitations WHERE teamUser_id = ?;");

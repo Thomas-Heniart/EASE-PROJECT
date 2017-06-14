@@ -65,6 +65,25 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         return new LinkApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), infos, linkDBid);
     }
 
+    public static App createLinkApp(LinkApp app, Profile profile, DataBaseConnection db) throws HttpServletException {
+        int transaction = 0;
+        try {
+            transaction = db.startTransaction();
+            Map<String, Object> elevator = new HashMap<String, Object>();
+            Integer position = profile.getSize();
+            String appDBid = App.createApp(profile, position, app.getName(), "linkApp", elevator, db);
+            LinkAppInformation infos = LinkAppInformation.createLinkAppInformation(app.getLinkAppInformations().getLink(), app.getLinkAppInformations().getImgUrl(), db);
+            DatabaseRequest request = db.prepareRequest("INSERT INTO linkApps values(NULL, ?, ?, NULL);");
+            request.setInt(appDBid);
+            request.setInt(infos.getDb_id());
+            String linkDBid = request.set().toString();
+            db.commitTransaction(transaction);
+            return new LinkApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), 0, infos, linkDBid);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
     public static LinkApp createLinkApp(Profile profile, Integer position, String name, String url, String imgUrl, com.Ease.Utils.Servlets.ServletManager sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
@@ -115,7 +134,7 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         this.linkAppDBid = linkAppDBid;
     }
 
-    public void removeFromDB(DataBaseConnection db) throws GeneralException {
+    public void removeFromDB(DataBaseConnection db) throws GeneralException, HttpServletException {
         int transaction = db.startTransaction();
         DatabaseRequest request = db.prepareRequest("DELETE FROM linkApps WHERE id= ?;");
         request.setInt(linkAppDBid);

@@ -90,6 +90,33 @@ public class Account {
         return account;
     }
 
+    public static Account createAccountFromTeamAccount(Account account, String keyUser, DataBaseConnection db) throws HttpServletException {
+        try {
+            int transaction = db.startTransaction();
+            Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
+            String publicKey = publicAndPrivateKey.getKey();
+            String privateKey = publicAndPrivateKey.getValue();
+            String ciphered_key = AES.encrypt(privateKey, keyUser);
+            DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, ?, 'MONTH', ?, ?, 0);");
+            Integer reminderInterval = account.getPasswordChangeInterval();
+            if (reminderInterval == null)
+                reminderInterval = 0;
+            request.setInt(reminderInterval);
+            request.setString(publicKey);
+            request.setString(ciphered_key);
+            String db_id = request.set().toString();
+            List<AccountInformation> accountInformationList = AccountInformation.createSharedAccountInformationList(db_id, account.getAccountInformations(), publicKey, db);
+            db.commitTransaction(transaction);
+            Account new_account = new Account(db_id, false, publicKey, ciphered_key, accountInformationList, reminderInterval);
+            new_account.setPrivateKey(privateKey);
+            System.out.println("Account id: " + new_account.getDBid() + " and privateKey is null: " + (privateKey == null));
+            new_account.setLastUpdatedDate(new Date());
+            return new_account;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
     public static Account createShareableAccount(List<JSONObject> accountInformationObjList, String deciphered_teamKey, Integer reminderValue, DataBaseConnection db) throws GeneralException {
         Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
         String publicKey = publicAndPrivateKey.getKey();
@@ -258,11 +285,8 @@ public class Account {
         this.privateKey = privateKey;
     }
 
-    public boolean mustBeReciphered() {
-        return this.mustBeReciphered;
-    }
-
     public void decipher(User user) throws GeneralException {
+        System.out.println("Account id: " + this.getDBid() + " and privateKey is null: " + (privateKey == null));
         if (this.privateKey != null)
             return;
         this.privateKey = user.decrypt(this.ciphered_key);
@@ -481,9 +505,6 @@ public class Account {
             return false;
         long now = new Date().getTime();
         long updateDate = this.lastUpdatedDate.getTime() + this.passwordChangeInterval * MillisecondsInMonth;
-        System.out.println("Now: " + now);
-        System.out.println("Last update: " + this.lastUpdatedDate.getTime());
-        System.out.println("Update date: " + updateDate);
         return now >= updateDate;
     }
 

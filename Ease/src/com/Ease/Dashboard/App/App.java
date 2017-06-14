@@ -5,8 +5,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.Account;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
+import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.*;
 import com.Ease.Utils.ServletManager;
@@ -40,10 +43,10 @@ public class App implements ShareableApp, SharedApp {
 	 * 
 	 */
 
-    public static List<App> loadApps(Profile profile, ServletManager sm) throws GeneralException {
+    public static List<App> loadApps(Profile profile, ServletManager sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         List<App> apps = new LinkedList<App>();
-        DatabaseRequest request = db.prepareRequest("SELECT apps.*, position FROM apps JOIN profileAndAppMap ON apps.id = profileAndAppMap.app_id AND profileAndAppMap.profile_id = ? ORDER BY position;");
+        DatabaseRequest request = db.prepareRequest("SELECT apps.*, position, sharedApps.id AS shared_app_id, team_id FROM apps JOIN profileAndAppMap ON apps.id = profileAndAppMap.app_id AND profileAndAppMap.profile_id = ? LEFT JOIN sharedApps ON apps.id = sharedApps.pinned_app_id ORDER BY position;");
         request.setInt(profile.getDBid());
         DatabaseResult rs = request.get();
         String db_id;
@@ -73,7 +76,17 @@ public class App implements ShareableApp, SharedApp {
                     throw new GeneralException(ServletManager.Code.InternError, "This app type dosen't exist.");
             }
             if (app.getPosition() != apps.size()) {
-                app.setPosition(apps.size(), sm);
+                app.setPosition(apps.size(), db);
+            }
+
+            Integer shared_app_id = rs.getInt("shared_app_id");
+            if (shared_app_id > 0) {
+                Integer team_id = rs.getInt("team_id");
+                TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
+                Team team = teamManager.getTeamWithId(team_id);
+                SharedApp sharedApp = team.getAppManager().getSharedApp(shared_app_id);
+                sharedApp.setPinned_app(app);
+                app.setSharedApp_pinned(sharedApp);
             }
             apps.add(app);
             groupApp = null;
@@ -209,10 +222,8 @@ public class App implements ShareableApp, SharedApp {
             request.setInt(appDBid);
             request.setInt(position);
             request.set();
-            elevator.put("appInfos", infos);
-            elevator.put("insertDate", registrationDate);
         }
-        request = db.prepareRequest("INSERT INTO sharedApps values (?, ?, ?, ?, ?, ?, 0, ?);");
+        request = db.prepareRequest("INSERT INTO sharedApps values (?, ?, ?, ?, ?, ?, 0, ?, NULL);");
         request.setInt(appDBid);
         request.setInt(team_id);
         request.setInt(team_user_tenant_id);
@@ -228,6 +239,8 @@ public class App implements ShareableApp, SharedApp {
         request.setBoolean(canSeeInformation);
         request.set();
         db.commitTransaction(transaction);
+        elevator.put("appInfos", infos);
+        elevator.put("insertDate", registrationDate);
         return appDBid;
     }
 
@@ -245,6 +258,7 @@ public class App implements ShareableApp, SharedApp {
     protected String insertDate;
     protected int single_id;
     protected boolean received = true;
+    protected SharedApp sharedApp_pinned;
 
     /* Interface ShareableApp */
     protected List<SharedApp> sharedApps = new LinkedList<>();
@@ -260,6 +274,7 @@ public class App implements ShareableApp, SharedApp {
     protected TeamUser teamUser_tenant;
     protected Boolean canSeeInformation;
     protected boolean adminHasAccess;
+    protected App pinned_app;
 
 
     public App(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id) {
@@ -283,13 +298,15 @@ public class App implements ShareableApp, SharedApp {
         this.holder = holder;
     }
 
-    public void removeFromDB(DataBaseConnection db) throws GeneralException {
+    public void removeFromDB(DataBaseConnection db) throws GeneralException, HttpServletException {
         if (this.groupApp != null && (this.groupApp.isCommon() == true || !this.groupApp.getPerms().havePermission(AppPermissions.Perm.DELETE.ordinal())))
             throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permission to remove this app.");
         int transaction = db.startTransaction();
         DatabaseRequest request = db.prepareRequest("DELETE FROM profileAndAppMap WHERE app_id = ?;");
         request.setInt(db_id);
         request.set();
+        if (this.sharedApp_pinned != null)
+            this.sharedApp_pinned.unpin(db);
         request = db.prepareRequest("DELETE FROM apps WHERE id = ?;");
         request.setInt(db_id);
         request.set();
@@ -310,6 +327,10 @@ public class App implements ShareableApp, SharedApp {
 
     public int getSingleId() {
         return single_id;
+    }
+
+    public void setSingleId(int singleId) {
+        this.single_id = singleId;
     }
 
     public String getName() {
@@ -340,14 +361,17 @@ public class App implements ShareableApp, SharedApp {
         return informations;
     }
 
+    public void setSharedApp_pinned(SharedApp sharedApp) {
+        this.sharedApp_pinned = sharedApp;
+    }
+
     public String getType() {
         String name;
         name = this.getClass().getName().substring(this.getClass().getName().lastIndexOf(".") + 1);
         return name;
     }
 
-    public void setPosition(int pos, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public void setPosition(int pos, DataBaseConnection db) throws GeneralException {
         DatabaseRequest request = db.prepareRequest("UPDATE profileAndAppMap SET position = ? WHERE app_id = ?;");
         request.setInt(pos);
         request.setInt(db_id);
@@ -355,8 +379,7 @@ public class App implements ShareableApp, SharedApp {
         this.position = pos;
     }
 
-    public void setProfile(Profile profile, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public void setProfile(Profile profile, DataBaseConnection db) throws GeneralException {
         DatabaseRequest request = db.prepareRequest("UPDATE profileAndAppMap SET profile_id = ? WHERE app_id = ?;");
         request.setInt(profile.getDBid());
         request.setInt(db_id);
@@ -439,6 +462,11 @@ public class App implements ShareableApp, SharedApp {
     public void deleteShared(DataBaseConnection db) throws HttpServletException {
         try {
             int transaction = db.startTransaction();
+            if (this.pinned_app != null) {
+                Profile profile = this.pinned_app.getProfile();
+                profile.getUser().getDashboardManager().removeAppWithSingleId(this.pinned_app.getSingleId(), db);
+                //this.pinned_app.removeFromDB(db);
+            }
             DatabaseRequest request = db.prepareRequest("DELETE FROM sharedApps WHERE id = ?;");
             request.setInt(this.getDBid());
             request.set();
@@ -527,6 +555,31 @@ public class App implements ShareableApp, SharedApp {
             request.setInt(this.getDBid());
             request.set();
             this.setCanSeeInformation(canSeeInformation);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
+    @Override
+    public App createPinned_app(Profile profile, String keyUser, DataBaseConnection db) throws HttpServletException {
+        App app = null;
+        if (this.pinned_app != null)
+            throw new HttpServletException(HttpStatus.BadRequest, "App already pinned.");
+        if (this.isEmpty())
+            throw new HttpServletException(HttpStatus.InternError, "There are no empty shared app.");
+        try {
+            int transaction = db.startTransaction();
+            if (this.isClassicApp())
+                app = ClassicApp.createClassicApp((ClassicApp) this, profile, keyUser, db);
+            else
+                app = LinkApp.createLinkApp((LinkApp) this, profile, db);
+            DatabaseRequest request = db.prepareRequest("UPDATE sharedApps SET pinned_app_id = ?;");
+            request.setInt(app.getDBid());
+            request.set();
+            db.commitTransaction(transaction);
+            this.setPinned_app(app);
+            pinned_app.setSharedApp_pinned(this);
+            return app;
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
@@ -717,16 +770,21 @@ public class App implements ShareableApp, SharedApp {
         this.getSharedApps().remove(sharedApp);
     }
 
-    public void pinToDashboard(Profile profile, DataBaseConnection db) throws GeneralException {
-        int transaction = db.startTransaction();
-        this.profile = profile;
-        this.position = profile.getApps().size();
-        DatabaseRequest request = db.prepareRequest("INSERT INTO profileAndAppMap values (null, ?, ?, ?);");
-        request.setInt(profile.getDBid());
-        request.setInt(this.db_id);
-        request.setInt(position);
-        db.commitTransaction(transaction);
-        profile.addApp(this);
+    @Override
+    public void setPinned_app(App pinned_app) {
+        this.pinned_app = pinned_app;
+    }
+
+    @Override
+    public void unpin(DataBaseConnection db) throws HttpServletException {
+        try {
+            DatabaseRequest request = db.prepareRequest("UPDATE sharedApps SET pinned_app_id = NULL WHERE id = ?;");
+            request.setInt(this.getDBid());
+            request.set();
+            this.pinned_app = null;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 
     public JSONObject getJsonWithoutId() {
