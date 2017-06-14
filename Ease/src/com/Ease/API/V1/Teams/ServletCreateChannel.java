@@ -34,8 +34,8 @@ public class ServletCreateChannel extends HttpServlet {
             if (purpose == null)
                 purpose = "";
             Channel channel = new Channel(team, name, purpose);
-            team.addChannel(channel);
             sm.saveOrUpdate(channel);
+            team.addChannel(channel);
             sm.setSuccess(channel.getJson());
         } catch (Exception e) {
             sm.setError(e);
