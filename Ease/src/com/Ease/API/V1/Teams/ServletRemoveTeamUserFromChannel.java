@@ -48,7 +48,7 @@ public class ServletRemoveTeamUserFromChannel extends HttpServlet {
                 if (sharedApp.getHolder().getChannel() == channel)
                     team.getAppManager().removeSharedApp(sharedApp);
             }
-            channel.removeTeamUser(teamUser_to_remove, db);
+            channel.removeTeamUser(teamUser_to_remove, sm.getDB());
             db.commitTransaction(transaction);
             sm.setSuccess(channel.getJson());
         } catch (Exception e) {

@@ -30,8 +30,7 @@ public class ServletAddTeamUserToChannel extends HttpServlet {
             Channel channel = team.getChannelWithId(channel_id);
             Integer teamUser_id = sm.getIntParam("team_user_id", true);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
-            channel.addTeamUser(teamUser);
-            sm.saveOrUpdate(channel);
+            channel.addTeamUser(teamUser, sm.getDB());
             sm.setSuccess("TeamUser added to channel");
         } catch (Exception e) {
             sm.setError(e);

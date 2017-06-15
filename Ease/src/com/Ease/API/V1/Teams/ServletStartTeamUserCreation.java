@@ -65,7 +65,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             TeamUser teamUser = new TeamUser(first_name, last_name, email, username, arrival_date, null, false, team, new TeamUserRole(role));
             if (!departure_date_string.equals(""))
                 teamUser.setDepartureDate(departure_format.parse(departure_date_string));
-            query.saveOrUpdateObject(team);
+            query.saveOrUpdateObject(teamUser);
             team.addTeamUser(teamUser);
             String code;
             do {

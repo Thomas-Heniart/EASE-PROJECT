@@ -34,25 +34,10 @@ public class ServletAskJoinChannel extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = sm.getTeamUserForTeam(team);
             Channel channel = team.getChannelWithId(channel_id);
-            if (channel.getTeamUsers().contains(teamUser))
-                throw new HttpServletException(HttpStatus.BadRequest, "You already are in this channel.");
-            String code;
-            HibernateQuery query = sm.getHibernateQuery();
-            query.querySQLString("SELECT code FROM pendingJoinChannelRequests WHERE teamUser_id = ? AND channel_id = ?;");
-            query.setParameter(1, channel.getDb_id());
-            query.setParameter(2, teamUser.getDb_id());
-            Object rs_id = query.getSingleResult();
-            if (rs_id != null)
-                code = (String) rs_id;
-            else {
-                code = CodeGenerator.generateNewCode();
-                query.querySQLString("INSERT INTO pendingJoinChannelRequests values (null, ?, ?);");
-                query.setParameter(1, teamUser.getDb_id());
-                query.setParameter(2, channel.getDb_id());
-                query.executeUpdate();
-            }
+            channel.addPendingTeamUser(teamUser);
+            sm.saveOrUpdate(channel);
             SendGridMail mail = new SendGridMail("Agathe @Ease", "contact@ease.space");
-            mail.sendJoinChannelEmail(team.getName(), channel.getName(), team.getAdministratorsUsernameAndEmail(), teamUser.getUsername(), teamUser.getEmail(), code);
+            mail.sendJoinChannelEmail(team.getName(), channel.getName(), team.getAdministratorsUsernameAndEmail(), teamUser.getUsername(), teamUser.getEmail());
             sm.setSuccess("You request has been sent");
         } catch (Exception e) {
             sm.setError(e);
