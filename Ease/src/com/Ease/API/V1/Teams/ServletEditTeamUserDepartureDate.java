@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -28,7 +29,7 @@ public class ServletEditTeamUserDepartureDate extends HttpServlet {
         try {
 
             Integer team_id = sm.getIntParam("team_id", true);
-            sm.needToBeTeamUserOfTeam(team_id);
+            sm.needToBeAdminOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = sm.getTeamUserForTeam(team);
@@ -37,11 +38,17 @@ public class ServletEditTeamUserDepartureDate extends HttpServlet {
             if (!(teamUser.isSuperior(teamUser_to_modify) || teamUser == teamUser_to_modify))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot do this dude.");
             String departureDateString = sm.getStringParam("departure_date", true);
+            System.out.println(departureDateString);
             if (departureDateString == null || departureDateString.equals(""))
                 teamUser_to_modify.setDepartureDate(null);
             else {
-                DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
-                teamUser_to_modify.setDepartureDate(dateFormat.parse(departureDateString));
+                try {
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+                    teamUser_to_modify.setDepartureDate(dateFormat.parse(departureDateString));
+                } catch (ParseException e) {
+                    throw new HttpServletException(HttpStatus.InternError, "Wrong date format.");
+                }
+
             }
             sm.saveOrUpdate(teamUser_to_modify);
             sm.setSuccess("Departure date edited.");

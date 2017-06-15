@@ -111,6 +111,10 @@ public class Channel {
         this.teamUsers.add(teamUser);
     }
 
+    public void removeTeamUser(TeamUser teamUser) {
+        this.teamUsers.remove(teamUser);
+    }
+
     public void removeTeamUser(TeamUser teamUser, DataBaseConnection db) throws HttpServletException {
         try {
             DatabaseRequest request = db.prepareRequest("DELETE FROM channelAndTeamUserMap WHERE team_user_id = ? AND channel_id = ?;");

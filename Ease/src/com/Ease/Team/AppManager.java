@@ -78,7 +78,10 @@ public class AppManager {
     }
 
     public List<SharedApp> getSharedAppsForTeamUser(TeamUser teamUser) {
-        return this.teamUserAndSharedAppMap.get(teamUser);
+        List<SharedApp> sharedApps = this.teamUserAndSharedAppMap.get(teamUser);
+        if (sharedApps == null)
+            sharedApps = new LinkedList<>();
+        return sharedApps;
     }
 
     public void setSharedApps(List<SharedApp> sharedApps) {
@@ -109,6 +112,15 @@ public class AppManager {
         if (shareableApp == null)
             throw new HttpServletException(HttpStatus.BadRequest, "This shareable app does not exist.");
         return shareableApp;
+    }
+
+    public List<ShareableApp> getShareableAppsForTeamUser(TeamUser teamUser) {
+        List<ShareableApp> shareableApps = new LinkedList<>();
+        for (ShareableApp shareableApp : this.getShareableApps()) {
+            if (shareableApp.getTeamUser_owner() == teamUser)
+                shareableApps.add(shareableApp);
+        }
+        return shareableApps;
     }
 
     public void removeShareableApp(ShareableApp shareableApp) {

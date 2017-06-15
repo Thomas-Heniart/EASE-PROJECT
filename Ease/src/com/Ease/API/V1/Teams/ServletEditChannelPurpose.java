@@ -31,8 +31,8 @@ public class ServletEditChannelPurpose extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             Integer channel_id = sm.getIntParam("channel_id", true);
             String purpose = sm.getStringParam("purpose", true);
-            if (purpose == null || purpose.equals(""))
-                throw new HttpServletException(HttpStatus.BadRequest, "Empty purpose.");
+            if (purpose == null)
+                purpose = "";
             Channel channel = team.getChannelWithId(channel_id);
             channel.editPurpose(purpose);
             sm.saveOrUpdate(channel);

@@ -1,7 +1,7 @@
 {
     "name":"LeMonde",
     "lastlogin":"",
-    "home":"https://lemonde.fr/",
+    "home":"http://lemonde.fr/",
     "connect": {
     	"todo": [
     		{"action":"goto", "url":"https://secure.lemonde.fr/sfuser/connexion"},
