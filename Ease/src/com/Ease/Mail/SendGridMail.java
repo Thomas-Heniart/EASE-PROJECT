@@ -264,12 +264,13 @@ public class SendGridMail {
         this.sendEmail();
     }
 
-    public void sendInvitationToJoinTeamEmail(String teamName, String adminName, String email, String code) throws GeneralException {
+    public void sendInvitationToJoinTeamEmail(String teamName, String adminName, String adminEmail, String email, String code) throws GeneralException {
         mail.setTemplateId("04a2b7b7-87db-4b12-8a2c-792359585c1b");
         Personalization personalization = this.createNewPersonalization();
         this.addTo(personalization, email, email);
         personalization.addSubstitution("#link", Variables.URL_PATH + "/finalizeRegistration?code=" + code);
         personalization.addSubstitution("#adminName", adminName);
+        personalization.addSubstitution("#emailAdress", adminEmail);
         personalization.addSubstitution("#teamName", teamName);
         this.sendEmail();
     }

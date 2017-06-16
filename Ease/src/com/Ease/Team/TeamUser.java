@@ -11,6 +11,8 @@ import com.Ease.Notification.TeamUserNotification;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.Servlets.PostServletManager;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cascade;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -371,5 +373,24 @@ public class TeamUser {
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
+    }
+
+    @Override
+    public int hashCode() {
+        HashCodeBuilder hcb = new HashCodeBuilder();
+        hcb.append(this.db_id);
+        return hcb.toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!(obj instanceof TeamUser))
+            return false;
+        TeamUser teamUser = (TeamUser) obj;
+        EqualsBuilder eb = new EqualsBuilder();
+        eb.append(this.db_id, teamUser.db_id);
+        return eb.isEquals();
     }
 }

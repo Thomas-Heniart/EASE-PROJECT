@@ -2,6 +2,8 @@ package com.Ease.Team;
 
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import java.util.HashMap;
@@ -99,5 +101,24 @@ public class TeamUserRole {
 
     public boolean isSuperior(TeamUserRole teamUserRole) {
         return this.getRoleValue() > teamUserRole.getRoleValue();
+    }
+
+    @Override
+    public int hashCode() {
+        HashCodeBuilder hcb = new HashCodeBuilder();
+        hcb.append(this.db_id);
+        return hcb.toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!(obj instanceof TeamUser))
+            return false;
+        TeamUser teamUser = (TeamUser) obj;
+        EqualsBuilder eb = new EqualsBuilder();
+        eb.append(this.db_id, teamUser.db_id);
+        return eb.isEquals();
     }
 }
