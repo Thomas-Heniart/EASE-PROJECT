@@ -22,7 +22,7 @@ import java.util.Date;
  */
 @WebServlet("/api/v1/teams/StartTeamUserCreation")
 public class ServletStartTeamUserCreation extends HttpServlet {
-    private static final SimpleDateFormat departure_format = new SimpleDateFormat("yyyy-mm-dd");
+    private static final SimpleDateFormat departure_format = new SimpleDateFormat("yyyy-MM-dd");
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
@@ -34,7 +34,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             TeamUser adminTeamUser = sm.getTeamUserForTeam(team);
             String email = sm.getStringParam("email", true);
             String username = sm.getStringParam("username", true);
-            Integer role = sm.getIntParam("role", true);
+            Integer role = Integer.valueOf(sm.getStringParam("role", true));
             if (email == null || email.equals("") || !Regex.isEmail(email) || role == null || !TeamUserRole.isInferiorToOwner(role) || !TeamUserRole.isValidValue(role))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid inputs");
             String first_name = sm.getStringParam("first_name", true);

@@ -89,7 +89,7 @@ public class TeamUser {
     protected Set<TeamUserNotification> teamUserNotifications = new HashSet<>();
 
     @Transient
-    protected DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd", Locale.US);
+    protected DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
     public TeamUser(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Boolean verified, Team team, TeamUserRole teamUserRole) {
         this.firstName = firstName;

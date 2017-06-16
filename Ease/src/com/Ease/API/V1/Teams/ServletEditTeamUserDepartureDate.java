@@ -38,12 +38,11 @@ public class ServletEditTeamUserDepartureDate extends HttpServlet {
             if (!(teamUser.isSuperior(teamUser_to_modify) || teamUser == teamUser_to_modify))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot do this dude.");
             String departureDateString = sm.getStringParam("departure_date", true);
-            System.out.println(departureDateString);
             if (departureDateString == null || departureDateString.equals(""))
                 teamUser_to_modify.setDepartureDate(null);
             else {
                 try {
-                    DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     teamUser_to_modify.setDepartureDate(dateFormat.parse(departureDateString));
                 } catch (ParseException e) {
                     throw new HttpServletException(HttpStatus.InternError, "Wrong date format.");
