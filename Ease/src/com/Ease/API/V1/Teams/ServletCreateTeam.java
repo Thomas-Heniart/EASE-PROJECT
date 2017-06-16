@@ -63,7 +63,7 @@ public class ServletCreateTeam extends HttpServlet {
             admin.setDeciphered_teamKey(teamKey);
             Channel channel = new Channel(team, "General", "This is the general channel");
             team.addChannel(channel);
-            channel.addTeamUser(admin);
+            //channel.addTeamUser(admin);
             sm.saveOrUpdate(team);
             sm.saveOrUpdate(admin);
             sm.saveOrUpdate(channel);

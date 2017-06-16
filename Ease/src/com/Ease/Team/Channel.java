@@ -33,6 +33,10 @@ public class Channel {
     @JoinTable(name = "channelAndTeamUserMap", joinColumns = {@JoinColumn(name = "channel_id")}, inverseJoinColumns = {@JoinColumn(name = "team_user_id")})
     protected List<TeamUser> teamUsers = new LinkedList<>();
 
+    @ManyToMany
+    @JoinTable(name = "pendingJoinChannelRequests", joinColumns = {@JoinColumn(name = "channel_id")}, inverseJoinColumns = {@JoinColumn(name = "teamUser_id")})
+    protected List<TeamUser> pending_teamUsers = new LinkedList<>();
+
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     protected Set<ChannelNotification> channelNotifications = new HashSet<>();
 
@@ -97,6 +101,14 @@ public class Channel {
         this.teamUsers = teamUsers;
     }
 
+    public List<TeamUser> getPending_teamUsers() {
+        return pending_teamUsers;
+    }
+
+    public void setPending_teamUsers(List<TeamUser> pending_teamUsers) {
+        this.pending_teamUsers = pending_teamUsers;
+    }
+
     public Set<ChannelNotification> getChannelNotifications() {
         return channelNotifications;
     }
@@ -105,13 +117,29 @@ public class Channel {
         this.channelNotifications = channelNotifications;
     }
 
-    public void addTeamUser(TeamUser teamUser) {
-        if (this.teamUsers.contains(teamUser))
-            return;
+    private void addTeamUser(TeamUser teamUser) {
         this.teamUsers.add(teamUser);
     }
 
-    public void removeTeamUser(TeamUser teamUser) {
+    public void addTeamUser(TeamUser teamUser, DataBaseConnection db) throws HttpServletException {
+        try {
+            int transaction = db.startTransaction();
+            if (this.getTeamUsers().contains(teamUser))
+                throw new HttpServletException(HttpStatus.BadRequest, "This channel already contains this user");
+            if (this.getPending_teamUsers().contains(teamUser))
+                this.removePendingTeamUser(teamUser, db);
+            DatabaseRequest request = db.prepareRequest("INSERT INTO channelAndTeamUserMap values (null, ?, ?);");
+            request.setInt(this.getDb_id());
+            request.setInt(teamUser.getDb_id());
+            request.set();
+            db.commitTransaction(transaction);
+            this.addTeamUser(teamUser);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
+    private void removeTeamUser(TeamUser teamUser) {
         this.teamUsers.remove(teamUser);
     }
 
@@ -121,11 +149,47 @@ public class Channel {
             request.setInt(teamUser.getDb_id());
             request.setInt(this.getDb_id());
             request.set();
-            this.teamUsers.remove(teamUser);
+            this.removeTeamUser(teamUser);
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
 
+    }
+
+    private void addPendingTeamUser(TeamUser teamUser) {
+        this.pending_teamUsers.add(teamUser);
+    }
+
+    public void addPendingTeamUser(TeamUser teamUser, DataBaseConnection db) throws HttpServletException {
+        try {
+            if (this.getTeamUsers().contains(teamUser))
+                throw new HttpServletException(HttpStatus.BadRequest, "This user is already in this channel");
+            if (this.getPending_teamUsers().contains(teamUser))
+                throw new HttpServletException(HttpStatus.BadRequest, "This user is already pending for this channel");
+            DatabaseRequest request = db.prepareRequest("INSERT INTO pendingJoinChannelRequests VALUE (null, ?, ?);");
+            request.setInt(this.getDb_id());
+            request.setInt(teamUser.getDb_id());
+            request.set();
+            this.addPendingTeamUser(teamUser);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
+    private void removePendingTeamUser(TeamUser teamUser) {
+        this.pending_teamUsers.remove(teamUser);
+    }
+
+    public void removePendingTeamUser(TeamUser teamUser, DataBaseConnection db) throws HttpServletException {
+        try {
+            DatabaseRequest request = db.prepareRequest("DELETE FROM pendingJoinChannelRequests WHERE channel_id = ? AND teamUser_id = ?");
+            request.setInt(this.getDb_id());
+            request.setInt(teamUser.getDb_id());
+            request.set();
+            this.removePendingTeamUser(teamUser);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 
     public JSONObject getJson() {

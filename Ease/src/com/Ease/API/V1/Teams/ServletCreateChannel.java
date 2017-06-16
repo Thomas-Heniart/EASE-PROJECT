@@ -29,8 +29,8 @@ public class ServletCreateChannel extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             String name = sm.getStringParam("name", true);
             String purpose = sm.getStringParam("purpose", true);
-            if (team.getChannelNamed(name) != null)
-                throw new HttpServletException(HttpStatus.BadRequest, "Name already taken.");
+            if (name == null || name.equals(""))
+                throw new HttpServletException(HttpStatus.BadRequest, "Empty channel name.");
             if (purpose == null)
                 purpose = "";
             Channel channel = new Channel(team, name, purpose);

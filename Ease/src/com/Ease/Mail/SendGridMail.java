@@ -274,12 +274,12 @@ public class SendGridMail {
         this.sendEmail();
     }
 
-    public void sendJoinChannelEmail(String teamName, String channelName, Map<String, String> administratorsUsernameAndEmail, String username, String email, String code) throws GeneralException {
+    public void sendJoinChannelEmail(String teamName, String channelName, Map<String, String> administratorsUsernameAndEmail, String username, String email) throws GeneralException {
         mail.setTemplateId("6edb3495-0d9e-4e35-a3d6-a8c3d2c1c222");
         for (Map.Entry<String, String> entry : administratorsUsernameAndEmail.entrySet()) {
             Personalization personalization = this.createNewPersonalization();
             this.addTo(personalization, entry.getKey(), entry.getValue());
-            personalization.addSubstitution("#link", Variables.URL_PATH + "ConfirmJoinChannel?email=" + email + "&code=" + code);
+            personalization.addSubstitution("#link", Variables.URL_PATH + "ConfirmJoinChannel?email=" + email);
             personalization.addSubstitution("#adminName", entry.getKey());
             personalization.addSubstitution("#teamName", teamName);
             personalization.addSubstitution("#channelName", channelName);

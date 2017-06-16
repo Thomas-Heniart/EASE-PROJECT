@@ -34,7 +34,7 @@ public class ServletAskJoinChannel extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = sm.getTeamUserForTeam(team);
             Channel channel = team.getChannelWithId(channel_id);
-            channel.addPendingTeamUser(teamUser);
+            channel.addPendingTeamUser(teamUser, sm.getDB());
             sm.saveOrUpdate(channel);
             SendGridMail mail = new SendGridMail("Agathe @Ease", "contact@ease.space");
             mail.sendJoinChannelEmail(team.getName(), channel.getName(), team.getAdministratorsUsernameAndEmail(), teamUser.getUsername(), teamUser.getEmail());
