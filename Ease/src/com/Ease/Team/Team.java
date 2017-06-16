@@ -16,6 +16,7 @@ import org.json.simple.JSONObject;
 
 import javax.persistence.*;
 import javax.servlet.ServletContext;
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -27,9 +28,13 @@ public class Team {
 
     public static List<Team> loadTeams(ServletContext context, DataBaseConnection db) throws HttpServletException {
         HibernateQuery query = new HibernateQuery();
+        //query.querySQLString("SELECT id FROM teams");
         query.queryString("SELECT t FROM Team t");
-        List<Team> teams = query.list();
-        for (Team team : teams) {
+        List<Team> teams = new LinkedList<>();
+        teams = query.list();
+        /* for (Object team_id : query.list()) {
+            Integer id = (Integer) team_id;
+            Team team = (Team) query.get(Team.class, new Integer(id));
             team.lazyInitialize(db);
             team.getAppManager().setShareableApps(App.loadShareableAppsForTeam(team, context, db));
             for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
@@ -37,8 +42,23 @@ public class Team {
                 shareableApp.setSharedApps(sharedApps);
                 team.getAppManager().setSharedApps(sharedApps);
             }
+            teams.add(team);
+        } */
+        for (Team team : teams) {
+            team.lazyInitialize();
+            team.getAppManager().setShareableApps(App.loadShareableAppsForTeam(team, context, db));
+            for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
+                List<SharedApp> sharedApps = App.loadSharedAppsForShareableApp(shareableApp, context, db);
+                shareableApp.setSharedApps(sharedApps);
+                team.getAppManager().setSharedApps(sharedApps);
+            }
+            for (Channel channel : team.getChannels()) {
+                if (!channel.getTeamUsers().isEmpty()) {
+                    
+                }
+                    //System.out.println("Is that broken ? " + (!team.getTeamUsers().contains(channel.getTeamUsers().get(0))));
+            }
         }
-
         query.commit();
         return teams;
     }
@@ -51,7 +71,7 @@ public class Team {
     @Column(name = "name")
     protected String name;
 
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     protected List<TeamUser> teamUsers = new LinkedList<>();
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
@@ -129,14 +149,14 @@ public class Team {
         return appManager;
     }
 
-    public void lazyInitialize(DataBaseConnection db) {
-        for (Channel channel : this.getChannels())
-            this.channelIdMap.put(channel.getDb_id(), channel);
-        for (TeamUser teamUser : this.teamUsers) {
+    public void lazyInitialize() {
+        for (TeamUser teamUser : this.getTeamUsers()) {
             this.teamUserIdMap.put(teamUser.getDb_id(), teamUser);
             if (!teamUser.isVerified())
                 this.teamUsersWaitingForVerification.add(teamUser);
         }
+        for (Channel channel : this.getChannels())
+            this.channelIdMap.put(channel.getDb_id(), channel);
     }
 
     public Channel getChannelWithId(Integer channel_id) throws HttpServletException {
@@ -144,6 +164,15 @@ public class Team {
         if (channel == null)
             throw new HttpServletException(HttpStatus.BadRequest, "This channel does not exist");
         return channel;
+    }
+
+    public List<Channel> getChannelsForTeamUser(TeamUser teamUser) {
+        List<Channel> channels = new LinkedList<>();
+        for (Channel channel : this.getChannels()) {
+            if (channel.getTeamUsers().contains(teamUser))
+                channels.add(channel);
+        }
+        return channels;
     }
 
     public TeamUser getTeamUserWithId(Integer teamUser_id) throws HttpServletException {
