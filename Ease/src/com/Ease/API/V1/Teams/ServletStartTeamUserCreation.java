@@ -35,7 +35,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             String email = sm.getStringParam("email", true);
             String username = sm.getStringParam("username", true);
             Integer role = sm.getIntParam("role", true);
-            if (email == null || email.equals("") || !Regex.isEmail(email) || role == null)
+            if (email == null || email.equals("") || !Regex.isEmail(email) || role == null || !TeamUserRole.isInferiorToOwner(role) || !TeamUserRole.isValidValue(role))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid inputs");
             String first_name = sm.getStringParam("first_name", true);
             String last_name = sm.getStringParam("last_name", true);

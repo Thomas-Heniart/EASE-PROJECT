@@ -17,10 +17,18 @@ import java.util.Map;
 public class TeamUserRole {
 
     private static final Map<Integer, Role> roleMap = new HashMap<Integer, Role>() {{
-        put(1, Role.MEMBER);
-        put(2, Role.ADMINISTRATOR);
-        put(3, Role.OWNER);
+        put(Role.MEMBER.getValue(), Role.MEMBER);
+        put(Role.ADMINISTRATOR.getValue(), Role.ADMINISTRATOR);
+        put(Role.OWNER.getValue(), Role.OWNER);
     }};
+
+    public static boolean isInferiorToOwner(Integer roleValue) {
+        return roleValue < Role.OWNER.getValue();
+    }
+
+    public static boolean isValidValue(Integer role) {
+        return roleMap.get(role) != null;
+    }
 
     public enum Role {
         MEMBER(1),
@@ -101,6 +109,13 @@ public class TeamUserRole {
 
     public boolean isSuperior(TeamUserRole teamUserRole) {
         return this.getRoleValue() > teamUserRole.getRoleValue();
+    }
+
+    public boolean isSuperiorOrEquals(Integer roleValue) throws HttpServletException {
+        Role role = roleMap.get(roleValue);
+        if (role == null)
+            throw new HttpServletException(HttpStatus.BadRequest, "This role does not exist.");
+        return this.getRoleValue() >= role.getValue();
     }
 
     @Override

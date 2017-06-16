@@ -109,7 +109,6 @@ public class Account {
             db.commitTransaction(transaction);
             Account new_account = new Account(db_id, false, publicKey, ciphered_key, accountInformationList, reminderInterval);
             new_account.setPrivateKey(privateKey);
-            System.out.println("Account id: " + new_account.getDBid() + " and privateKey is null: " + (privateKey == null));
             new_account.setLastUpdatedDate(new Date());
             return new_account;
         } catch (GeneralException e) {
@@ -286,7 +285,6 @@ public class Account {
     }
 
     public void decipher(User user) throws GeneralException {
-        System.out.println("Account id: " + this.getDBid() + " and privateKey is null: " + (privateKey == null));
         if (this.privateKey != null)
             return;
         this.privateKey = user.decrypt(this.ciphered_key);

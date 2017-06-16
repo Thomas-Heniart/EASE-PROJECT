@@ -1,9 +1,11 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Servlets.GetServletManager;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
@@ -29,6 +31,9 @@ public class ServletGetTeamUser extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
             JSONObject jsonObject = teamUser.getJson();
+            JSONArray channels = new JSONArray();
+            for (Channel channel : team.getChannelsForTeamUser(teamUser))
+                channels.add(channel.getDb_id());
             jsonObject.put("apps", team.getShareableAppsForTeamUser(teamUser_id));
             sm.setSuccess(jsonObject);
         } catch (Exception e) {

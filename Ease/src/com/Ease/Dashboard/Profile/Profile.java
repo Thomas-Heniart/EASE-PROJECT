@@ -70,7 +70,6 @@ public class Profile {
             infos = ProfileInformation.loadProfileInformation(rs.getString(Data.PROFILE_INFO_ID.ordinal()), db);
             IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
             single_id = idGenerator.getNextId();
-            System.out.println("Profile_id: " + single_id + " and db_id: " + db_id);
             Profile profile = new Profile(db_id, user, columnIdx, posIdx, groupProfile, infos, single_id);
             apps = App.loadApps(profile, sm);
             profile.setApps(apps);
