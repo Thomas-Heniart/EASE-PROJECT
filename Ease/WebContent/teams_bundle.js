@@ -398,7 +398,7 @@ module.exports = warning;
 "use strict";
 
 
-module.exports = __webpack_require__(30);
+module.exports = __webpack_require__(31);
 
 
 /***/ }),
@@ -937,7 +937,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-var _prodInvariant = __webpack_require__(25);
+var _prodInvariant = __webpack_require__(26);
 
 var ReactCurrentOwner = __webpack_require__(17);
 
@@ -1693,9 +1693,9 @@ var _prodInvariant = __webpack_require__(4),
     _assign = __webpack_require__(5);
 
 var CallbackQueue = __webpack_require__(93);
-var PooledClass = __webpack_require__(23);
+var PooledClass = __webpack_require__(24);
 var ReactFeatureFlags = __webpack_require__(98);
-var ReactReconciler = __webpack_require__(29);
+var ReactReconciler = __webpack_require__(30);
 var Transaction = __webpack_require__(43);
 
 var invariant = __webpack_require__(1);
@@ -2060,7 +2060,7 @@ var passwordChangeValues = exports.passwordChangeValues = {
 
 var _assign = __webpack_require__(5);
 
-var PooledClass = __webpack_require__(23);
+var PooledClass = __webpack_require__(24);
 
 var emptyFunction = __webpack_require__(13);
 var warning = __webpack_require__(2);
@@ -2683,6 +2683,158 @@ module.exports = DOMProperty;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.selectTeamChannel = selectTeamChannel;
+exports.fetchTeamChannelApps = fetchTeamChannelApps;
+exports.fetchChannels = fetchChannels;
+exports.createTeamChannel = createTeamChannel;
+exports.deleteTeamChannel = deleteTeamChannel;
+exports.addTeamUserToChannel = addTeamUserToChannel;
+exports.removeTeamUserFromChannel = removeTeamUserFromChannel;
+exports.editTeamChannelName = editTeamChannelName;
+exports.editTeamChannelPurpose = editTeamChannelPurpose;
+
+var _helperFunctions = __webpack_require__(18);
+
+var api = __webpack_require__(20);
+var post_api = __webpack_require__(50);
+function selectTeamChannel(id) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'SELECT_TEAM_CHANNEL_PENDING' });
+    var teamChannel = (0, _helperFunctions.selectChannelFromListById)(getState().channels.channels, id);
+    return api.fetchTeamChannelApps(getState().team.id, id).then(function (response) {
+      teamChannel.apps = response;
+      dispatch({ type: 'SELECT_TEAM_CHANNEL_FULFILLED', payload: teamChannel });
+    }).catch(function (err) {
+      dispatch({ type: 'SELECT_TEAM_CHANNEL_REJECTED', payload: err });
+      throw err;
+    });
+  };
+}
+
+function fetchTeamChannelApps(id) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'FETCH_TEAM_CHANNEL_APPS_PENDING' });
+    return api.fetchTeamChannelApps(getState().team.id, id).then(function (response) {
+      var payload = {
+        channel_id: id,
+        apps: response
+      };
+      dispatch({ type: 'FETCH_TEAM_CHANNELS_APPS_FULFILLED', payload: payload });
+    }).catch(function (err) {
+      dispatch({ type: 'FETCH_TEAM_CHANNEL_APPS_REJECTED', payload: err });
+      throw err;
+    });
+  };
+}
+
+function fetchChannels(team_id) {
+  return function (dispatch) {
+    dispatch({ type: "FETCH_TEAM_CHANNELS_PENDING" });
+    return api.fetchTeamChannels(team_id).then(function (response) {
+      dispatch({ type: "FETCH_TEAM_CHANNELS_FULFILLED", payload: response });
+    }).catch(function (err) {
+      dispatch({ type: "FETCH_TEAM_CHANNELS_REJECTED", payload: err });
+      throw err;
+    });
+  };
+}
+
+function createTeamChannel(name, purpose) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'CREATE_TEAM_CHANNEL_PENDING' });
+    return post_api.teamChannel.createChannel(getState().team.id, name, purpose).then(function (response) {
+      dispatch({ type: 'CREATE_TEAM_CHANNEL_FULFILLED', payload: response });
+      return response;
+    }).catch(function (err) {
+      dispatch({ type: 'CREATE_TEAM_CHANNEL_REJECRED', payload: err });
+      throw err;
+    });
+  };
+}
+
+function deleteTeamChannel(channel_id) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'DELETE_TEAM_CHANNEL_PENDING' });
+    return post_api.teamChannel.deleteChannel(getState().team.id, channel_id).then(function (response) {
+      //need to reselect existing channel
+      var selection = getState().selection;
+      var channels = getState().channels.channels;
+      var channelToSelect = null;
+
+      for (var i = 0; i < channels.length; i++) {
+        if (channels[i].id != channel_id) {
+          channelToSelect = channels[i];
+          break;
+        }
+      }
+      if (channelToSelect && selection.type === 'channel' && selection.item.id === channel_id) {
+        return dispatch(selectTeamChannel(channelToSelect.id)).then(function () {
+          return dispatch({ type: 'DELETE_TEAM_CHANNEL_FULFILLED', payload: { channel_id: channel_id } });
+        });
+      } else return dispatch({ type: 'DELETE_TEAM_CHANNEL_FULFILLED', payload: { channel_id: channel_id } });
+    }).catch(function (err) {
+      dispatch({ type: 'DELETE_TEAM_CHANNEL_REJECTED', payload: err });
+      throw err;
+    });
+  };
+}
+
+function addTeamUserToChannel(channel_id, team_user_id) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'ADD_TEAM_USER_TO_CHANNEL_PENDING' });
+    return post_api.teamChannel.addTeamUserToChannel(getState().team.id, channel_id, team_user_id).then(function (response) {
+      dispatch({ type: 'ADD_TEAM_USER_TO_CHANNEL_FULFILLED', payload: { channel_id: channel_id, team_user_id: team_user_id } });
+    }).catch(function (err) {
+      dispatch({ type: 'ADD_TEAM_USER_TO_CHANNEL_REJECTED', payload: err });
+      throw err;
+    });
+  };
+}
+
+function removeTeamUserFromChannel(channel_id, team_user_id) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'REMOVE_TEAM_USER_FROM_CHANNEL_PENDING' });
+    return post_api.teamChannel.removeTeamUserFromChannel(getState().team.id, channel_id, team_user_id).then(function (response) {
+      dispatch({ type: 'REMOVE_TEAM_USER_FROM_CHANNEL_FULFILLED', payload: { channel_id: channel_id, team_user_id: team_user_id } });
+    }).catch(function (err) {
+      dispatch({ type: 'REMOVE_TEAM_USER_FROM_CHANNEL_REJECTED', payload: err });
+      throw err;
+    });
+  };
+}
+
+function editTeamChannelName(channel_id, name) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'EDIT_TEAM_CHANNEL_NAME_PENDING' });
+    return post_api.teamChannel.editName(getState().team.id, channel_id, name).then(function (response) {
+      dispatch({ type: 'EDIT_TEAM_CHANNEL_NAME_FULFILLED', payload: { id: channel_id, name: name } });
+    }).catch(function (err) {
+      dispatch({ type: "EDIT_TEAM_CHANNEL_NAME_REJECTED", payload: err });
+    });
+  };
+}
+
+function editTeamChannelPurpose(channel_id, purpose) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'EDIT_TEAM_CHANNEL_PURPOSE_PENDING' });
+    return post_api.teamChannel.editPurpose(getState().team.id, channel_id, purpose).then(function (response) {
+      dispatch({ type: 'EDIT_TEAM_CHANNEL_PURPOSE_FULFILLED', payload: { id: channel_id, purpose: purpose } });
+    }).catch(function (err) {
+      dispatch({ type: "EDIT_TEAM_CHANNEL_PURPOSE_REJECTED", payload: err });
+    });
+  };
+}
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 exports.showAddTeamUserModal = showAddTeamUserModal;
 exports.showAddTeamChannelModal = showAddTeamChannelModal;
 exports.showTeamChannelAddUserModal = showTeamChannelAddUserModal;
@@ -2709,10 +2861,13 @@ function showTeamChannelAddUserModal(state) {
   };
 }
 
-function showTeamDeleteUserModal(state) {
+function showTeamDeleteUserModal(state, team_user_id) {
   return {
     type: 'SHOW_TEAM_DELETE_USER_MODAL',
-    payload: state
+    payload: {
+      active: state,
+      team_user_id: team_user_id
+    }
   };
 }
 
@@ -2727,7 +2882,7 @@ function showTeamDeleteChannelModal(state, channel_id) {
 }
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2845,7 +3000,7 @@ module.exports = PooledClass;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3192,7 +3347,7 @@ module.exports = ReactElement;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3236,7 +3391,7 @@ function reactProdInvariant(code) {
 module.exports = reactProdInvariant;
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3304,7 +3459,7 @@ module.exports = warning;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3313,150 +3468,128 @@ module.exports = warning;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.selectTeamChannel = selectTeamChannel;
-exports.fetchTeamChannelApps = fetchTeamChannelApps;
-exports.fetchChannels = fetchChannels;
-exports.createTeamChannel = createTeamChannel;
-exports.deleteTeamChannel = deleteTeamChannel;
-exports.addTeamUserToChannel = addTeamUserToChannel;
-exports.removeTeamUserFromChannel = removeTeamUserFromChannel;
-exports.editTeamChannelName = editTeamChannelName;
-exports.editTeamChannelPurpose = editTeamChannelPurpose;
-
-var _helperFunctions = __webpack_require__(18);
-
+exports.teamCreateMultiApp = teamCreateMultiApp;
+exports.teamShareMultiApp = teamShareMultiApp;
+exports.teamCreateSingleApp = teamCreateSingleApp;
+exports.teamCreateLinkApp = teamCreateLinkApp;
+exports.teamShareApp = teamShareApp;
+exports.teamModifyAppInformation = teamModifyAppInformation;
+exports.teamAppEditReceiver = teamAppEditReceiver;
+exports.teamAppDeleteReceiver = teamAppDeleteReceiver;
+exports.teamAppTransferOwnership = teamAppTransferOwnership;
 var api = __webpack_require__(20);
 var post_api = __webpack_require__(50);
-function selectTeamChannel(id) {
-  return function (dispatch, getState) {
-    dispatch({ type: 'SELECT_TEAM_CHANNEL_PENDING' });
-    var teamChannel = (0, _helperFunctions.selectChannelFromListById)(getState().channels.channels, id);
-    return api.fetchTeamChannelApps(getState().team.id, id).then(function (response) {
-      teamChannel.apps = response;
-      dispatch({ type: 'SELECT_TEAM_CHANNEL_FULFILLED', payload: teamChannel });
-    }).catch(function (err) {
-      dispatch({ type: 'SELECT_TEAM_CHANNEL_REJECTED', payload: err });
-      throw err;
-    });
-  };
-}
 
-function fetchTeamChannelApps(id) {
+function teamCreateMultiApp(app) {
   return function (dispatch, getState) {
-    dispatch({ type: 'FETCH_TEAM_CHANNEL_APPS_PENDING' });
-    return api.fetchTeamChannelApps(getState().team.id, id).then(function (response) {
-      var payload = {
-        channel_id: id,
-        apps: response
-      };
-      dispatch({ type: 'FETCH_TEAM_CHANNELS_APPS_FULFILLED', payload: payload });
-    }).catch(function (err) {
-      dispatch({ type: 'FETCH_TEAM_CHANNEL_APPS_REJECTED', payload: err });
-      throw err;
-    });
-  };
-}
-
-function fetchChannels(team_id) {
-  return function (dispatch) {
-    dispatch({ type: "FETCH_TEAM_CHANNELS_PENDING" });
-    return api.fetchTeamChannels(team_id).then(function (response) {
-      dispatch({ type: "FETCH_TEAM_CHANNELS_FULFILLED", payload: response });
-    }).catch(function (err) {
-      dispatch({ type: "FETCH_TEAM_CHANNELS_REJECTED", payload: err });
-      throw err;
-    });
-  };
-}
-
-function createTeamChannel(name, purpose) {
-  return function (dispatch, getState) {
-    dispatch({ type: 'CREATE_TEAM_CHANNEL_PENDING' });
-    return post_api.teamChannel.createChannel(getState().team.id, name, purpose).then(function (response) {
-      dispatch({ type: 'CREATE_TEAM_CHANNEL_FULFILLED', payload: response });
+    dispatch({ type: 'TEAM_CREATE_MULTI_APP_PENDING' });
+    return post_api.teamApps.createMultiApp(getState().team.id, app).then(function (response) {
+      dispatch({ type: 'TEAM_CREATE_MULTI_APP_FULFILLED', payload: response });
       return response;
     }).catch(function (err) {
-      dispatch({ type: 'CREATE_TEAM_CHANNEL_REJECRED', payload: err });
+      dispatch({ type: 'TEAM_CREATE_MULTI_APP_REJECTED', payload: err });
       throw err;
     });
   };
 }
 
-function deleteTeamChannel(channel_id) {
+function teamShareMultiApp(app_id, user_info) {
   return function (dispatch, getState) {
-    dispatch({ type: 'DELETE_TEAM_CHANNEL_PENDING' });
-    return post_api.teamChannel.deleteChannel(getState().team.id, channel_id).then(function (response) {
-      //need to reselect existing channel
-      var selection = getState().selection;
-      var channels = getState().channels.channels;
-      var channelToSelect = null;
-
-      for (var i = 0; i < channels.length; i++) {
-        if (channels[i].id != channel_id) {
-          channelToSelect = channels[i];
-          break;
-        }
-      }
-      if (channelToSelect && selection.type === 'channel' && selection.item.id === channel_id) {
-        return dispatch(selectTeamChannel(channelToSelect.id)).then(function () {
-          return dispatch({ type: 'DELETE_TEAM_CHANNEL_FULFILLED', payload: { channel_id: channel_id } });
-        });
-      } else return dispatch({ type: 'DELETE_TEAM_CHANNEL_FULFILLED', payload: { channel_id: channel_id } });
+    dispatch({ type: 'TEAM_SHARE_APP_PENDING' });
+    return post_api.teamApps.shareMultiApp(getState().team.id, app_id, user_info).then(function (response) {
+      dispatch({ type: 'TEAM_SHARE_APP_FULFILLED', payload: { user_info: response, app_id: app_id } });
     }).catch(function (err) {
-      dispatch({ type: 'DELETE_TEAM_CHANNEL_REJECTED', payload: err });
+      dispatch({ type: 'TEAM_SHARE_APP_REJECTED', payload: err });
+      throw err;
+    });
+  };
+}
+function teamCreateSingleApp(app) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'TEAM_CREATE_SINGLE_APP_PENDING' });
+    return post_api.teamApps.createSingleApp(getState().team.id, app).then(function (response) {
+      dispatch({ type: 'TEAM_CREATE_SINGLE_APP_FULFILLED', payload: response });
+      return response;
+    }).catch(function (err) {
+      dispatch({ type: 'TEAM_CREATE_SINGLE_APP_REJECTED', payload: err });
       throw err;
     });
   };
 }
 
-function addTeamUserToChannel(channel_id, team_user_id) {
+function teamCreateLinkApp(app) {
   return function (dispatch, getState) {
-    dispatch({ type: 'ADD_TEAM_USER_TO_CHANNEL_PENDING' });
-    return post_api.teamChannel.addTeamUserToChannel(getState().team.id, channel_id, team_user_id).then(function (response) {
-      dispatch({ type: 'ADD_TEAM_USER_TO_CHANNEL_FULFILLED', payload: { channel_id: channel_id, team_user_id: team_user_id } });
+    dispatch({ type: 'TEAM_CREATE_LINK_APP_PENDING' });
+    return post_api.teamApps.createLinkApp(getState().team.id, app).then(function (response) {
+      dispatch({ type: 'TEAM_CREATE_LINK_APP_FULFILLED', payload: response });
+      return response;
     }).catch(function (err) {
-      dispatch({ type: 'ADD_TEAM_USER_TO_CHANNEL_REJECTED', payload: err });
+      dispatch({ type: 'TEAM_CREATE_LINK_APP_REJECTED', payload: err });
       throw err;
     });
   };
 }
 
-function removeTeamUserFromChannel(channel_id, team_user_id) {
+function teamShareApp(app_id, user_info) {
   return function (dispatch, getState) {
-    dispatch({ type: 'REMOVE_TEAM_USER_FROM_CHANNEL_PENDING' });
-    return post_api.teamChannel.removeTeamUserFromChannel(getState().team.id, channel_id, team_user_id).then(function (response) {
-      dispatch({ type: 'REMOVE_TEAM_USER_FROM_CHANNEL_FULFILLED', payload: { channel_id: channel_id, team_user_id: team_user_id } });
+    dispatch({ type: 'TEAM_SHARE_APP_PENDING' });
+    return post_api.teamApps.shareApp(getState().team.id, app_id, user_info).then(function (response) {
+      dispatch({ type: 'TEAM_SHARE_APP_FULFILLED', payload: { user_info: response, app_id: app_id } });
     }).catch(function (err) {
-      dispatch({ type: 'REMOVE_TEAM_USER_FROM_CHANNEL_REJECTED', payload: err });
+      dispatch({ type: 'TEAM_SHARE_APP_REJECTED', payload: err });
       throw err;
     });
   };
 }
 
-function editTeamChannelName(channel_id, name) {
+function teamModifyAppInformation(app_id, app_info) {
   return function (dispatch, getState) {
-    dispatch({ type: 'EDIT_TEAM_CHANNEL_NAME_PENDING' });
-    return post_api.teamChannel.editName(getState().team.id, channel_id, name).then(function (response) {
-      dispatch({ type: 'EDIT_TEAM_CHANNEL_NAME_FULFILLED', payload: { id: channel_id, name: name } });
+    dispatch({ type: 'TEAM_MODIFY_APP_INFORMATION_PENDING' });
+    return post_api.teamApps.modifyApp(getState().team.id, app_id, app_info).then(function (response) {
+      dispatch({ type: 'TEAM_MODIFY_APP_INFORMATION_FULFILLED', payload: { app_id: app_id, app: response } });
     }).catch(function (err) {
-      dispatch({ type: "EDIT_TEAM_CHANNEL_NAME_REJECTED", payload: err });
+      dispatch({ type: 'TEAM_MODIFY_APP_INFORMATION_REJECTED', payload: err });
+      throw err;
     });
   };
 }
 
-function editTeamChannelPurpose(channel_id, purpose) {
+function teamAppEditReceiver(app_id, user_app_id, receiver_info) {
   return function (dispatch, getState) {
-    dispatch({ type: 'EDIT_TEAM_CHANNEL_PURPOSE_PENDING' });
-    return post_api.teamChannel.editPurpose(getState().team.id, channel_id, purpose).then(function (response) {
-      dispatch({ type: 'EDIT_TEAM_CHANNEL_PURPOSE_FULFILLED', payload: { id: channel_id, purpose: purpose } });
+    dispatch({ type: 'TEAM_APP_EDIT_RECEIVER_PENDING' });
+    return post_api.teamApps.editReceiver(getState().team.id, user_app_id, receiver_info).then(function (response) {
+      dispatch({ type: 'TEAM_APP_EDIT_RECEIVER_FULFILLED', payload: { app_id: app_id, receiver_info: response } });
     }).catch(function (err) {
-      dispatch({ type: "EDIT_TEAM_CHANNEL_PURPOSE_REJECTED", payload: err });
+      dispatch({ type: 'TEAM_APP_EDIT_RECEIVER_REJECTED', payload: err });
+    });
+  };
+}
+
+function teamAppDeleteReceiver(app_id, user_app_id, team_user_id) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'TEAM_APP_DELETE_RECEIVER_PENDING' });
+    return post_api.teamApps.deleteReceiver(getState().team.id, user_app_id, team_user_id).then(function (response) {
+      dispatch({ type: 'TEAM_APP_DELETE_RECEIVER_FULFILLED', payload: { app_id: app_id, team_user_id: team_user_id } });
+    }).catch(function (err) {
+      dispatch({ type: 'TEAM_APP_DELETE_RECEIVER_REJECTED', payload: err });
+    });
+  };
+}
+
+function teamAppTransferOwnership(app_id, team_user_id) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'TEAM_APP_TRANSFER_OWNERSHIP_PENDING' });
+    return post_api.teamApps.transferOwnership(getState().team.id, app_id, team_user_id).then(function (response) {
+      dispatch({ type: 'TEAM_APP_TRANSFER_OWNERSHIP_FULFILLED', payload: { app_id: app_id, team_user_id: team_user_id } });
+    }).catch(function (err) {
+      dispatch({ type: 'TEAM_APP_TRANSFER_OWNERSHIP_REJECTED', payload: err });
+      throw err;
     });
   };
 }
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3579,7 +3712,7 @@ DOMLazyTree.queueText = queueText;
 module.exports = DOMLazyTree;
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3753,7 +3886,7 @@ module.exports = ReactReconciler;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3776,7 +3909,7 @@ var ReactComponent = __webpack_require__(74);
 var ReactPureComponent = __webpack_require__(310);
 var ReactClass = __webpack_require__(306);
 var ReactDOMFactories = __webpack_require__(307);
-var ReactElement = __webpack_require__(24);
+var ReactElement = __webpack_require__(25);
 var ReactPropTypes = __webpack_require__(308);
 var ReactVersion = __webpack_require__(311);
 
@@ -3863,7 +3996,7 @@ module.exports = React;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3872,128 +4005,167 @@ module.exports = React;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.teamCreateMultiApp = teamCreateMultiApp;
-exports.teamShareMultiApp = teamShareMultiApp;
-exports.teamCreateSingleApp = teamCreateSingleApp;
-exports.teamCreateLinkApp = teamCreateLinkApp;
-exports.teamShareApp = teamShareApp;
-exports.teamModifyAppInformation = teamModifyAppInformation;
-exports.teamAppEditReceiver = teamAppEditReceiver;
-exports.teamAppDeleteReceiver = teamAppDeleteReceiver;
-exports.teamAppTransferOwnership = teamAppTransferOwnership;
+exports.selectTeamUser = selectTeamUser;
+exports.fetchUsers = fetchUsers;
+exports.getTeamUserShareableApps = getTeamUserShareableApps;
+exports.createTeamUser = createTeamUser;
+exports.deleteTeamUser = deleteTeamUser;
+exports.editTeamUserUsername = editTeamUserUsername;
+exports.editTeamUserFirstName = editTeamUserFirstName;
+exports.editTeamUserLastName = editTeamUserLastName;
+exports.editTeamUserRole = editTeamUserRole;
+exports.editTeamUserDepartureDate = editTeamUserDepartureDate;
 var api = __webpack_require__(20);
 var post_api = __webpack_require__(50);
 
-function teamCreateMultiApp(app) {
+function selectTeamUser(id) {
   return function (dispatch, getState) {
-    dispatch({ type: 'TEAM_CREATE_MULTI_APP_PENDING' });
-    return post_api.teamApps.createMultiApp(getState().team.id, app).then(function (response) {
-      dispatch({ type: 'TEAM_CREATE_MULTI_APP_FULFILLED', payload: response });
+    dispatch({ type: 'SELECT_USER_PENDING' });
+    return api.fetchTeamUser(getState().team.id, id).then(function (response) {
+      var teamUser = response;
+      api.fetchTeamUserApps(getState().team.id, id).then(function (response) {
+        teamUser.apps = response;
+        dispatch({ type: 'SELECT_USER_FULFILLED', payload: teamUser });
+      });
+    }).catch(function (err) {
+      dispatch({ type: 'SELECT_USER_REJECTED', payload: err });
+      throw err;
+    });
+  };
+}
+
+function fetchUsers(team_id) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'FETCH_USERS_PENDING' });
+    return api.fetchTeamUsers(team_id).then(function (response) {
+      var myTeamUserId = getState().team.myTeamUserId;
+      var payload = {
+        users: response,
+        myTeamUserId: myTeamUserId
+      };
+      dispatch({ type: "FETCH_USERS_FULFILLED", payload: payload });
+    }).catch(function (err) {
+      dispatch({ type: "FETCH_USERS_REJECTED", payload: err });
+      throw err;
+    });
+  };
+}
+
+function getTeamUserShareableApps(team_user_id) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'GET_TEAM_USER_SHAREABLE_APPS_PENDING' });
+    return api.fetchTeamUserShareableApps(getState().team.id, team_user_id).then(function (response) {
+      dispatch({ type: 'GET_TEAM_USER_SHAREABLE_APPS_FULFILLED', payload: { team_user_id: team_user_id, apps: response } });
       return response;
     }).catch(function (err) {
-      dispatch({ type: 'TEAM_CREATE_MULTI_APP_REJECTED', payload: err });
+      dispatch({ type: 'GET_TEAM_USER_SHAREABLE_APPS_REJECTED' });
       throw err;
     });
   };
 }
 
-function teamShareMultiApp(app_id, user_info) {
+function createTeamUser(first_name, last_name, email, username, departure_date, role) {
   return function (dispatch, getState) {
-    dispatch({ type: 'TEAM_SHARE_APP_PENDING' });
-    return post_api.teamApps.shareMultiApp(getState().team.id, app_id, user_info).then(function (response) {
-      dispatch({ type: 'TEAM_SHARE_APP_FULFILLED', payload: { user_info: response, app_id: app_id } });
-    }).catch(function (err) {
-      dispatch({ type: 'TEAM_SHARE_APP_REJECTED', payload: err });
-      throw err;
-    });
-  };
-}
-function teamCreateSingleApp(app) {
-  return function (dispatch, getState) {
-    dispatch({ type: 'TEAM_CREATE_SINGLE_APP_PENDING' });
-    return post_api.teamApps.createSingleApp(getState().team.id, app).then(function (response) {
-      dispatch({ type: 'TEAM_CREATE_SINGLE_APP_FULFILLED', payload: response });
+    dispatch({ type: 'CREATE_TEAM_USER_PENDING' });
+    return post_api.teamUser.createTeamUser(getState().team.id, first_name, last_name, email, username, departure_date, role).then(function (response) {
+      dispatch({ type: 'CREATE_TEAM_USER_FULFILLED', payload: response });
       return response;
     }).catch(function (err) {
-      dispatch({ type: 'TEAM_CREATE_SINGLE_APP_REJECTED', payload: err });
+      dispatch({ type: 'CREATE_TEAM_USER_REJECTED' });
       throw err;
     });
   };
 }
 
-function teamCreateLinkApp(app) {
+function deleteTeamUser(team_user_id) {
   return function (dispatch, getState) {
-    dispatch({ type: 'TEAM_CREATE_LINK_APP_PENDING' });
-    return post_api.teamApps.createLinkApp(getState().team.id, app).then(function (response) {
-      dispatch({ type: 'TEAM_CREATE_LINK_APP_FULFILLED', payload: response });
-      return response;
+    dispatch({ type: 'DELETE_TEAM_USER_PENDING' });
+    return post_api.teamUser.deleteTeamUser(getState().team.id, team_user_id).then(function (response) {
+      //need to reselect existing user
+      var selection = getState().selection;
+      var users = getState().users.users;
+      var userToSelect = null;
+
+      for (var i = 0; i < users.length; i++) {
+        if (users[i].id != team_user_id) {
+          userToSelect = users[i];
+          break;
+        }
+      }
+      if (userToSelect && selection.type === 'user' && selection.item.id === team_user_id) {
+        return dispatch(selectTeamUser(userToSelect.id)).then(function () {
+          return dispatch({ type: 'DELETE_TEAM_USER_FULFILLED', payload: { team_user_id: team_user_id } });
+        });
+      } else return dispatch({ type: 'DELETE_TEAM_USER_FULFILLED', payload: { team_user_id: team_user_id } });
     }).catch(function (err) {
-      dispatch({ type: 'TEAM_CREATE_LINK_APP_REJECTED', payload: err });
+      dispatch({ type: 'DELETE_TEAM_USER_REJECTED', payload: err });
       throw err;
     });
   };
 }
 
-function teamShareApp(app_id, user_info) {
+function editTeamUserUsername(user_id, username) {
   return function (dispatch, getState) {
-    dispatch({ type: 'TEAM_SHARE_APP_PENDING' });
-    return post_api.teamApps.shareApp(getState().team.id, app_id, user_info).then(function (response) {
-      dispatch({ type: 'TEAM_SHARE_APP_FULFILLED', payload: { user_info: response, app_id: app_id } });
+    dispatch({ type: 'EDIT_TEAM_USER_USERNAME_PENDING' });
+    return post_api.teamUser.editUsername(getState().team.id, user_id, username).then(function (response) {
+      dispatch({ type: 'EDIT_TEAM_USER_USERNAME_FULFILLED', payload: { id: user_id, username: username } });
     }).catch(function (err) {
-      dispatch({ type: 'TEAM_SHARE_APP_REJECTED', payload: err });
+      dispatch({ type: 'EDIT_TEAM_USER_USERNAME_REJECTED', payload: err });
       throw err;
     });
   };
 }
 
-function teamModifyAppInformation(app_id, app_info) {
+function editTeamUserFirstName(user_id, first_name) {
   return function (dispatch, getState) {
-    dispatch({ type: 'TEAM_MODIFY_APP_INFORMATION_PENDING' });
-    return post_api.teamApps.modifyApp(getState().team.id, app_id, app_info).then(function (response) {
-      dispatch({ type: 'TEAM_MODIFY_APP_INFORMATION_FULFILLED', payload: { app_id: app_id, app: response } });
+    dispatch({ type: 'EDIT_TEAM_USER_FIRSTNAME_PENDING' });
+    return post_api.teamUser.editFirstName(getState().team.id, user_id, first_name).then(function (response) {
+      dispatch({ type: 'EDIT_TEAM_USER_FIRSTNAME_FULFILLED', payload: { id: user_id, first_name: first_name } });
     }).catch(function (err) {
-      dispatch({ type: 'TEAM_MODIFY_APP_INFORMATION_REJECTED', payload: err });
+      dispatch({ type: 'EDIT_TEAM_USER_FIRSTNAME_REJECTED', payload: err });
       throw err;
     });
   };
 }
 
-function teamAppEditReceiver(app_id, user_app_id, receiver_info) {
+function editTeamUserLastName(user_id, last_name) {
   return function (dispatch, getState) {
-    dispatch({ type: 'TEAM_APP_EDIT_RECEIVER_PENDING' });
-    return post_api.teamApps.editReceiver(getState().team.id, user_app_id, receiver_info).then(function (response) {
-      dispatch({ type: 'TEAM_APP_EDIT_RECEIVER_FULFILLED', payload: { app_id: app_id, receiver_info: response } });
+    dispatch({ type: 'EDIT_TEAM_USER_LASTNAME_PENDING' });
+    return post_api.teamUser.editLastName(getState().team.id, user_id, last_name).then(function (response) {
+      dispatch({ type: 'EDIT_TEAM_USER_LASTNAME_FULFILLED', payload: { id: user_id, last_name: last_name } });
     }).catch(function (err) {
-      dispatch({ type: 'TEAM_APP_EDIT_RECEIVER_REJECTED', payload: err });
+      dispatch({ type: 'EDIT_TEAM_USER_LASTNAME_REJECTED', payload: err });
+      throw err;
     });
   };
 }
 
-function teamAppDeleteReceiver(app_id, user_app_id, team_user_id) {
+function editTeamUserRole(user_id, role) {
   return function (dispatch, getState) {
-    dispatch({ type: 'TEAM_APP_DELETE_RECEIVER_PENDING' });
-    return post_api.teamApps.deleteReceiver(getState().team.id, user_app_id, team_user_id).then(function (response) {
-      dispatch({ type: 'TEAM_APP_DELETE_RECEIVER_FULFILLED', payload: { app_id: app_id, team_user_id: team_user_id } });
+    dispatch({ type: 'EDIT_TEAM_USER_ROLE_PENDING' });
+    return post_api.teamUser.editRole(getState().team.id, user_id, role).then(function (response) {
+      dispatch({ type: 'EDIT_TEAM_USER_ROLE_FULFILLED', payload: { id: user_id, role: role } });
     }).catch(function (err) {
-      dispatch({ type: 'TEAM_APP_DELETE_RECEIVER_REJECTED', payload: err });
+      dispatch({ type: 'EDIT_TEAM_USER_ROLE_REJECTED', payload: err });
+      throw err;
     });
   };
 }
 
-function teamAppTransferOwnership(app_id, team_user_id) {
+function editTeamUserDepartureDate(user_id, departure_date) {
   return function (dispatch, getState) {
-    dispatch({ type: 'TEAM_APP_TRANSFER_OWNERSHIP_PENDING' });
-    return post_api.teamApps.transferOwnership(getState().team.id, app_id, team_user_id).then(function (response) {
-      dispatch({ type: 'TEAM_APP_TRANSFER_OWNERSHIP_FULFILLED', payload: { app_id: app_id, team_user_id: team_user_id } });
+    dispatch({ type: 'EDIT_TEAM_USER_DEPARTUREDATE_PENDING' });
+    return post_api.teamUser.editDepartureDate(getState().team.id, user_id, departure_date).then(function (response) {
+      dispatch({ type: 'EDIT_TEAM_USER_DEPARTUREDATE_FULFILLED', payload: { id: user_id, departure_date: departure_date } });
     }).catch(function (err) {
-      dispatch({ type: 'TEAM_APP_TRANSFER_OWNERSHIP_REJECTED', payload: err });
+      dispatch({ type: 'EDIT_TEAM_USER_DEPARTUREDATE_REJECTED', payload: err });
       throw err;
     });
   };
 }
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4019,7 +4191,7 @@ module.exports = emptyObject;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4084,7 +4256,7 @@ var createPath = exports.createPath = function createPath(location) {
 };
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4143,7 +4315,7 @@ module.exports = invariant;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4427,7 +4599,7 @@ module.exports = EventPluginHub;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4443,7 +4615,7 @@ module.exports = EventPluginHub;
 
 
 
-var EventPluginHub = __webpack_require__(35);
+var EventPluginHub = __webpack_require__(36);
 var EventPluginUtils = __webpack_require__(58);
 
 var accumulateInto = __webpack_require__(105);
@@ -4567,7 +4739,7 @@ module.exports = EventPropagators;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4620,7 +4792,7 @@ var ReactInstanceMap = {
 module.exports = ReactInstanceMap;
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4682,134 +4854,6 @@ function SyntheticUIEvent(dispatchConfig, dispatchMarker, nativeEvent, nativeEve
 SyntheticEvent.augmentClass(SyntheticUIEvent, UIEventInterface);
 
 module.exports = SyntheticUIEvent;
-
-/***/ }),
-/* 39 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.selectTeamUser = selectTeamUser;
-exports.fetchUsers = fetchUsers;
-exports.createTeamUser = createTeamUser;
-exports.editTeamUserUsername = editTeamUserUsername;
-exports.editTeamUserFirstName = editTeamUserFirstName;
-exports.editTeamUserLastName = editTeamUserLastName;
-exports.editTeamUserRole = editTeamUserRole;
-exports.editTeamUserDepartureDate = editTeamUserDepartureDate;
-var api = __webpack_require__(20);
-var post_api = __webpack_require__(50);
-
-function selectTeamUser(id) {
-  return function (dispatch, getState) {
-    dispatch({ type: 'SELECT_USER_PENDING' });
-    return api.fetchTeamUser(getState().team.id, id).then(function (response) {
-      var teamUser = response;
-      api.fetchTeamUserApps(getState().team.id, id).then(function (response) {
-        teamUser.apps = response;
-        dispatch({ type: 'SELECT_USER_FULFILLED', payload: teamUser });
-      });
-    }).catch(function (err) {
-      dispatch({ type: 'SELECT_USER_REJECTED', payload: err });
-      throw err;
-    });
-  };
-}
-
-function fetchUsers(team_id) {
-  return function (dispatch, getState) {
-    dispatch({ type: 'FETCH_USERS_PENDING' });
-    return api.fetchTeamUsers(team_id).then(function (response) {
-      var myTeamUserId = getState().team.myTeamUserId;
-      console.log(getState().team.myTeamUserId);
-      var payload = {
-        users: response,
-        myTeamUserId: myTeamUserId
-      };
-      dispatch({ type: "FETCH_USERS_FULFILLED", payload: payload });
-    }).catch(function (err) {
-      dispatch({ type: "FETCH_USERS_REJECTED", payload: err });
-      throw err;
-    });
-  };
-}
-
-function createTeamUser(first_name, last_name, email, username, departure_date, role) {
-  return function (dispatch, getState) {
-    dispatch({ type: 'CREATE_TEAM_USER_PENDING' });
-    return post_api.teamUser.createTeamUser(getState().team.id, first_name, last_name, email, username, departure_date, role).then(function (response) {
-      dispatch({ type: 'CREATE_TEAM_USER_FULFILLED', payload: response });
-      return response;
-    }).catch(function (err) {
-      dispatch({ type: 'CREATE_TEAM_USER_REJECTED' });
-      throw err;
-    });
-  };
-}
-
-function editTeamUserUsername(user_id, username) {
-  return function (dispatch, getState) {
-    dispatch({ type: 'EDIT_TEAM_USER_USERNAME_PENDING' });
-    return post_api.teamUser.editUsername(getState().team.id, user_id, username).then(function (response) {
-      dispatch({ type: 'EDIT_TEAM_USER_USERNAME_FULFILLED', payload: { id: user_id, username: username } });
-    }).catch(function (err) {
-      dispatch({ type: 'EDIT_TEAM_USER_USERNAME_REJECTED', payload: err });
-      throw err;
-    });
-  };
-}
-
-function editTeamUserFirstName(user_id, first_name) {
-  return function (dispatch, getState) {
-    dispatch({ type: 'EDIT_TEAM_USER_FIRSTNAME_PENDING' });
-    return post_api.teamUser.editFirstName(getState().team.id, user_id, first_name).then(function (response) {
-      dispatch({ type: 'EDIT_TEAM_USER_FIRSTNAME_FULFILLED', payload: { id: user_id, first_name: first_name } });
-    }).catch(function (err) {
-      dispatch({ type: 'EDIT_TEAM_USER_FIRSTNAME_REJECTED', payload: err });
-      throw err;
-    });
-  };
-}
-
-function editTeamUserLastName(user_id, last_name) {
-  return function (dispatch, getState) {
-    dispatch({ type: 'EDIT_TEAM_USER_LASTNAME_PENDING' });
-    return post_api.teamUser.editLastName(getState().team.id, user_id, last_name).then(function (response) {
-      dispatch({ type: 'EDIT_TEAM_USER_LASTNAME_FULFILLED', payload: { id: user_id, last_name: last_name } });
-    }).catch(function (err) {
-      dispatch({ type: 'EDIT_TEAM_USER_LASTNAME_REJECTED', payload: err });
-      throw err;
-    });
-  };
-}
-
-function editTeamUserRole(user_id, role) {
-  return function (dispatch, getState) {
-    dispatch({ type: 'EDIT_TEAM_USER_ROLE_PENDING' });
-    return post_api.teamUser.editRole(getState().team.id, user_id, role).then(function (response) {
-      dispatch({ type: 'EDIT_TEAM_USER_ROLE_FULFILLED', payload: { id: user_id, role: role } });
-    }).catch(function (err) {
-      dispatch({ type: 'EDIT_TEAM_USER_ROLE_REJECTED', payload: err });
-      throw err;
-    });
-  };
-}
-
-function editTeamUserDepartureDate(user_id, departure_date) {
-  return function (dispatch, getState) {
-    dispatch({ type: 'EDIT_TEAM_USER_DEPARTUREDATE_PENDING' });
-    return post_api.teamUser.editDepartureDate(getState().team.id, user_id, departure_date).then(function (response) {
-      dispatch({ type: 'EDIT_TEAM_USER_DEPARTUREDATE_FULFILLED', payload: { id: user_id, departure_date: departure_date } });
-    }).catch(function (err) {
-      dispatch({ type: 'EDIT_TEAM_USER_DEPARTUREDATE_REJECTED', payload: err });
-      throw err;
-    });
-  };
-}
 
 /***/ }),
 /* 40 */
@@ -5422,7 +5466,7 @@ module.exports = ReactBrowserEventEmitter;
 
 
 
-var SyntheticUIEvent = __webpack_require__(38);
+var SyntheticUIEvent = __webpack_require__(39);
 var ViewportMetrics = __webpack_require__(104);
 
 var getEventModifierState = __webpack_require__(66);
@@ -6444,7 +6488,7 @@ var _valueEqual = __webpack_require__(327);
 
 var _valueEqual2 = _interopRequireDefault(_valueEqual);
 
-var _PathUtils = __webpack_require__(33);
+var _PathUtils = __webpack_require__(34);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6502,7 +6546,7 @@ var locationsAreEqual = exports.locationsAreEqual = function locationsAreEqual(a
 
 exports.__esModule = true;
 
-var _warning = __webpack_require__(26);
+var _warning = __webpack_require__(27);
 
 var _warning2 = _interopRequireDefault(_warning);
 
@@ -6694,7 +6738,7 @@ module.exports = ReactPropTypesSecret;
 
 
 
-var DOMLazyTree = __webpack_require__(28);
+var DOMLazyTree = __webpack_require__(29);
 var Danger = __webpack_require__(209);
 var ReactDOMComponentTree = __webpack_require__(6);
 var ReactInstrumentation = __webpack_require__(14);
@@ -7251,7 +7295,7 @@ var _prodInvariant = __webpack_require__(4);
 var ReactPropTypesSecret = __webpack_require__(103);
 var propTypesFactory = __webpack_require__(90);
 
-var React = __webpack_require__(30);
+var React = __webpack_require__(31);
 var PropTypes = propTypesFactory(React.isValidElement);
 
 var invariant = __webpack_require__(1);
@@ -7527,7 +7571,7 @@ module.exports = ReactErrorUtils;
 var _prodInvariant = __webpack_require__(4);
 
 var ReactCurrentOwner = __webpack_require__(17);
-var ReactInstanceMap = __webpack_require__(37);
+var ReactInstanceMap = __webpack_require__(38);
 var ReactInstrumentation = __webpack_require__(14);
 var ReactUpdates = __webpack_require__(16);
 
@@ -8457,9 +8501,9 @@ function warning(message) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_warning__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_warning__ = __webpack_require__(27);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_warning___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_warning__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_invariant__ = __webpack_require__(34);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_invariant__ = __webpack_require__(35);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_invariant___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_invariant__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_react__);
@@ -8663,12 +8707,12 @@ var matchPath = function matchPath(pathname) {
 
 
 
-var _prodInvariant = __webpack_require__(25);
+var _prodInvariant = __webpack_require__(26);
 
 var ReactNoopUpdateQueue = __webpack_require__(75);
 
 var canDefineProperty = __webpack_require__(46);
-var emptyObject = __webpack_require__(32);
+var emptyObject = __webpack_require__(33);
 var invariant = __webpack_require__(1);
 var warning = __webpack_require__(2);
 
@@ -10393,7 +10437,7 @@ var _prodInvariant = __webpack_require__(4);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var PooledClass = __webpack_require__(23);
+var PooledClass = __webpack_require__(24);
 
 var invariant = __webpack_require__(1);
 
@@ -11252,23 +11296,23 @@ module.exports = ReactInputSelection;
 
 var _prodInvariant = __webpack_require__(4);
 
-var DOMLazyTree = __webpack_require__(28);
+var DOMLazyTree = __webpack_require__(29);
 var DOMProperty = __webpack_require__(21);
-var React = __webpack_require__(30);
+var React = __webpack_require__(31);
 var ReactBrowserEventEmitter = __webpack_require__(41);
 var ReactCurrentOwner = __webpack_require__(17);
 var ReactDOMComponentTree = __webpack_require__(6);
 var ReactDOMContainerInfo = __webpack_require__(219);
 var ReactDOMFeatureFlags = __webpack_require__(221);
 var ReactFeatureFlags = __webpack_require__(98);
-var ReactInstanceMap = __webpack_require__(37);
+var ReactInstanceMap = __webpack_require__(38);
 var ReactInstrumentation = __webpack_require__(14);
 var ReactMarkupChecksum = __webpack_require__(241);
-var ReactReconciler = __webpack_require__(29);
+var ReactReconciler = __webpack_require__(30);
 var ReactUpdateQueue = __webpack_require__(63);
 var ReactUpdates = __webpack_require__(16);
 
-var emptyObject = __webpack_require__(32);
+var emptyObject = __webpack_require__(33);
 var instantiateReactComponent = __webpack_require__(109);
 var invariant = __webpack_require__(1);
 var setInnerHTML = __webpack_require__(45);
@@ -11797,7 +11841,7 @@ module.exports = ReactMount;
 
 var _prodInvariant = __webpack_require__(4);
 
-var React = __webpack_require__(30);
+var React = __webpack_require__(31);
 
 var invariant = __webpack_require__(1);
 
@@ -12488,7 +12532,7 @@ module.exports = traverseAllChildren;
 /* WEBPACK VAR INJECTION */(function(process) {/* harmony export (immutable) */ __webpack_exports__["a"] = connectAdvanced;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_hoist_non_react_statics__ = __webpack_require__(88);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_hoist_non_react_statics___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_hoist_non_react_statics__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_invariant__ = __webpack_require__(34);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_invariant__ = __webpack_require__(35);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_invariant___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_invariant__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_react__);
@@ -12995,7 +13039,7 @@ Link.contextTypes = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_warning__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_warning__ = __webpack_require__(27);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_warning___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_warning__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react__);
@@ -13185,7 +13229,7 @@ module.exports = REACT_ELEMENT_TYPE;
 
 var ReactCurrentOwner = __webpack_require__(17);
 var ReactComponentTreeHook = __webpack_require__(11);
-var ReactElement = __webpack_require__(24);
+var ReactElement = __webpack_require__(25);
 
 var checkReactTypeSpec = __webpack_require__(312);
 
@@ -13838,11 +13882,11 @@ var _teamActions = __webpack_require__(146);
 
 var teamActions = _interopRequireWildcard(_teamActions);
 
-var _channelActions = __webpack_require__(27);
+var _channelActions = __webpack_require__(22);
 
 var channelActions = _interopRequireWildcard(_channelActions);
 
-var _userActions = __webpack_require__(39);
+var _userActions = __webpack_require__(32);
 
 var userActions = _interopRequireWildcard(_userActions);
 
@@ -13885,7 +13929,7 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
     addUserModalActive: store.teamModals.addUserModalActive,
     addChannelModalActive: store.teamModals.addChannelModalActive,
     teamChannelAddUserModalActive: store.teamModals.teamChannelAddUserModalActive,
-    teamDeleteUserModalActive: store.teamModals.teamDeleteUserModalActive,
+    teamDeleteUserModal: store.teamModals.teamDeleteUserModal,
     teamDeleteChannelModal: store.teamModals.teamDeleteChannelModal
   };
 }), _dec(_class = function (_React$Component) {
@@ -13990,7 +14034,7 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
         this.props.addUserModalActive && React.createElement(TeamAddUserModal, null),
         this.props.addChannelModalActive && React.createElement(TeamAddChannelModal, null),
         this.props.teamChannelAddUserModalActive && React.createElement(TeamChannelAddUserModal, null),
-        this.props.teamDeleteUserModalActive && React.createElement(TeamDeleteUserModal, null),
+        this.props.teamDeleteUserModal.active && React.createElement(TeamDeleteUserModal, null),
         this.props.teamDeleteChannelModal.active && React.createElement(TeamDeleteChannelModal, null)
       );
     }
@@ -14899,11 +14943,11 @@ var _axios = __webpack_require__(48);
 
 var _axios2 = _interopRequireDefault(_axios);
 
-var _userActions = __webpack_require__(39);
+var _userActions = __webpack_require__(32);
 
 var UserActions = _interopRequireWildcard(_userActions);
 
-var _channelActions = __webpack_require__(27);
+var _channelActions = __webpack_require__(22);
 
 var ChannelActions = _interopRequireWildcard(_channelActions);
 
@@ -14943,7 +14987,7 @@ function fetchTeamAndUsersAndChannels(team_id) {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _appsActions = __webpack_require__(31);
+var _appsActions = __webpack_require__(28);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -15436,9 +15480,9 @@ var _dec, _class;
 
 var _reactRedux = __webpack_require__(15);
 
-var _teamModalActions = __webpack_require__(22);
+var _teamModalActions = __webpack_require__(23);
 
-var _channelActions = __webpack_require__(27);
+var _channelActions = __webpack_require__(22);
 
 var channelActions = _interopRequireWildcard(_channelActions);
 
@@ -15763,15 +15807,19 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _reactRedux = __webpack_require__(15);
 
-var _userActions = __webpack_require__(39);
+var _userActions = __webpack_require__(32);
 
 var userActions = _interopRequireWildcard(_userActions);
 
-var _appsActions = __webpack_require__(31);
+var _appsActions = __webpack_require__(28);
 
 var appActions = _interopRequireWildcard(_appsActions);
 
-var _teamModalActions = __webpack_require__(22);
+var _channelActions = __webpack_require__(22);
+
+var channelActions = _interopRequireWildcard(_channelActions);
+
+var _teamModalActions = __webpack_require__(23);
 
 var _helperFunctions = __webpack_require__(18);
 
@@ -16208,6 +16256,7 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
     var _this4 = _possibleConstructorReturn(this, (TeamAddUserModal.__proto__ || Object.getPrototypeOf(TeamAddUserModal)).call(this, props));
 
     _this4.state = {
+      user_id: null,
       email: '',
       fname: '',
       lname: '',
@@ -16234,7 +16283,7 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
     _this4.handleCredentialsInput = _this4.handleCredentialsInput.bind(_this4);
     _this4.incrementStepAndRejectChannel = _this4.incrementStepAndRejectChannel.bind(_this4);
     _this4.incrementStepAndValidateChannel = _this4.incrementStepAndValidateChannel.bind(_this4);
-    _this4.processUserCreation = _this4.processUserCreation.bind(_this4);
+    _this4.validateSecondStep = _this4.validateSecondStep.bind(_this4);
     return _this4;
   }
 
@@ -16253,16 +16302,6 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
         return item;
       });
       this.setState({ selectedChannels: channels });
-    }
-  }, {
-    key: 'processUserCreation',
-    value: function processUserCreation() {
-      var _this5 = this;
-
-      this.props.dispatch(userActions.createTeamUser(this.state.fname, this.state.lname, this.state.email, this.state.username, this.state.departure_date, this.state.role)).then(function (response) {
-        var user_id = response.id;
-        _this5.props.dispatch((0, _teamModalActions.showAddTeamUserModal)(false));
-      });
     }
   }, {
     key: 'checkChannelApp',
@@ -16284,6 +16323,10 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
     key: 'incrementStep',
     value: function incrementStep() {
       var channelStep = this.state.channelStep + 1;
+      if (channelStep === this.state.maxChannelStep) {
+        this.validateSecondStep();
+        return;
+      }
       if (this.state.step > 0) {
         if (channelStep === this.state.maxChannelStep) {
           this.props.dispatch((0, _teamModalActions.showAddTeamUserModal)(false));
@@ -16329,34 +16372,68 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
       }
     }
   }, {
+    key: 'validateSecondStep',
+    value: function validateSecondStep() {
+      var _this5 = this;
+
+      var joinChannels = [];
+      var shareApps = [];
+      var app;
+      console.log('validate second step');
+      var channels = this.state.selectedChannels.filter(function (item) {
+        return item.confirmed;
+      });
+      joinChannels = channels.map(function (item) {
+        return this.props.dispatch(channelActions.addTeamUserToChannel(item.id, this.state.user_id));
+      }, this);
+      Promise.all(joinChannels).then(function () {
+        for (var i = 0; i < channels.length; i++) {
+          for (var j = 0; j < channels[i].apps.length; j++) {
+            app = channels[i].apps[j];
+            if (app.selected) {
+              shareApps.push(_this5.props.dispatch(appActions.teamShareApp(app.id, { team_user_id: _this5.state.user_id, account_information: app.credentials })));
+            }
+          }
+        }
+        Promise.all(shareApps).then(function () {
+          _this5.props.dispatch((0, _teamModalActions.showAddTeamUserModal)(false));
+        });
+      });
+    }
+  }, {
     key: 'validateFirstStep',
     value: function validateFirstStep() {
       var _this6 = this;
 
       if (!this.state.selectedChannels.length) {
-        this.processUserCreation();
+        this.props.dispatch(userActions.createTeamUser(this.state.fname, this.state.lname, this.state.email, this.state.username, this.state.departure_date, this.state.role)).then(function (response) {
+          _this6.props.dispatch((0, _teamModalActions.showAddTeamUserModal)(false));
+        });
         return;
       }
       var calls = this.state.selectedChannels.map(function (item) {
         return api.fetchTeamChannelApps(this.props.team_id, item.id);
       }, this);
       var selectedChannels = [];
-      Promise.all(calls).then(function (values) {
-        selectedChannels = _this6.state.selectedChannels.map(function (item, idx) {
-          item.apps = values[idx].map(function (item) {
-            item.selected = false;
-            if (item.type === 'multi') {
-              item.credentials = {};
-              Object.keys(item.website.information).map(function (info) {
-                item.credentials[info] = '';
-              });
-            }
+      this.props.dispatch(userActions.createTeamUser(this.state.fname, this.state.lname, this.state.email, this.state.username, this.state.departure_date, this.state.role)).then(function (response) {
+        var user_id = response.id;
+        Promise.all(calls).then(function (values) {
+          selectedChannels = _this6.state.selectedChannels.map(function (item, idx) {
+            item.apps = values[idx].map(function (item) {
+              item.selected = false;
+              if (item.type === 'multi') {
+                item.credentials = {};
+                Object.keys(item.website.information).map(function (info) {
+                  item.credentials[info] = '';
+                });
+              }
+              return item;
+            });
+            item.confirmed = false;
             return item;
           });
-          item.confirmed = false;
-          return item;
+          _this6.setState({ step: 1, selectedChannels: selectedChannels, maxChannelStep: selectedChannels.length, user_id: user_id });
         });
-        _this6.setState({ step: 1, selectedChannels: selectedChannels, maxChannelStep: selectedChannels.length });
       });
     }
   }, {
@@ -16400,7 +16477,7 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
         'div',
         { className: 'ease_modal', id: 'add_user_modal' },
         React.createElement('div', { className: 'modal-background' }),
-        this.state.step > 0 && React.createElement(
+        this.state.channelStep > 0 && React.createElement(
           'a',
           { id: 'ease_modal_back_btn', className: 'ease_modal_btn',
             onClick: this.decrementStep },
@@ -16476,7 +16553,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _reactRedux = __webpack_require__(15);
 
-var _appsActions = __webpack_require__(31);
+var _appsActions = __webpack_require__(28);
 
 var appActions = _interopRequireWildcard(_appsActions);
 
@@ -17416,7 +17493,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _dec, _class;
 
-var _teamModalActions = __webpack_require__(22);
+var _teamModalActions = __webpack_require__(23);
 
 var _reactRedux = __webpack_require__(15);
 
@@ -17562,11 +17639,11 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _dec, _class;
 
-var _teamModalActions = __webpack_require__(22);
+var _teamModalActions = __webpack_require__(23);
 
 var _helperFunctions = __webpack_require__(18);
 
-var _channelActions = __webpack_require__(27);
+var _channelActions = __webpack_require__(22);
 
 var _reactRedux = __webpack_require__(15);
 
@@ -17757,13 +17834,25 @@ module.exports = TeamDeleteChannelModal;
 "use strict";
 
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _dec, _class;
 
-var _teamModalActions = __webpack_require__(22);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _teamModalActions = __webpack_require__(23);
+
+var _userActions = __webpack_require__(32);
+
+var userActions = _interopRequireWildcard(_userActions);
+
+var _appsActions = __webpack_require__(28);
+
+var _helperFunctions = __webpack_require__(18);
 
 var _reactRedux = __webpack_require__(15);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -17773,27 +17862,172 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var React = __webpack_require__(3);
 var classnames = __webpack_require__(7);
+var SimpleAppSharingPreview = __webpack_require__(164);
+var LinkAppSharingPreview = __webpack_require__(162);
+var MultiAppCheckablePreview = __webpack_require__(329);
+
+var TeamUserShareableAppsList = function (_React$Component) {
+  _inherits(TeamUserShareableAppsList, _React$Component);
+
+  function TeamUserShareableAppsList(props) {
+    _classCallCheck(this, TeamUserShareableAppsList);
+
+    return _possibleConstructorReturn(this, (TeamUserShareableAppsList.__proto__ || Object.getPrototypeOf(TeamUserShareableAppsList)).call(this, props));
+  }
+
+  _createClass(TeamUserShareableAppsList, [{
+    key: 'render',
+    value: function render() {
+      var channelApps = this.props.apps['channel'];
+      var userApps = this.props.apps['user'];
+      var users = this.props.users;
+      var channels = this.props.channels;
+
+      return React.createElement(
+        'div',
+        null,
+        Object.keys(channelApps).map(function (id) {
+          var channel = (0, _helperFunctions.selectChannelFromListById)(channels, Number(id));
+          return React.createElement(
+            'div',
+            { key: id },
+            React.createElement(
+              'div',
+              { className: 'channel_title' },
+              '#',
+              channel.name
+            ),
+            channelApps[id].map(function (item) {
+              if (item.type === 'simple') return React.createElement(SimpleAppSharingPreview, {
+                key: item.id,
+                app: item,
+                users: users,
+                checkAppFunc: this.props.checkApp.bind(null, 'channel', id)
+              });else if (item.type === 'link') return React.createElement(LinkAppSharingPreview, {
+                key: item.id,
+                app: item,
+                users: users,
+                checkAppFunc: this.props.checkApp.bind(null, 'channel', id)
+              });else if (item.type === 'multi') return React.createElement(MultiAppCheckablePreview, {
+                key: item.id,
+                app: item,
+                users: users,
+                checkAppFunc: this.props.checkApp.bind(null, 'channel', id)
+              });
+            }, this)
+          );
+        }, this)
+      );
+    }
+  }]);
+
+  return TeamUserShareableAppsList;
+}(React.Component);
+
 var TeamDeleteUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
   return {
-    selectedUser: store.selection.item,
-    team_name: store.team.name
+    users: store.users.users,
+    channels: store.channels.channels,
+    team_name: store.team.name,
+    modal: store.teamModals.teamDeleteUserModal,
+    me: store.users.me
   };
-}), _dec(_class = function (_React$Component) {
-  _inherits(TeamDeleteUserModal, _React$Component);
+}), _dec(_class = function (_React$Component2) {
+  _inherits(TeamDeleteUserModal, _React$Component2);
 
   function TeamDeleteUserModal(props) {
     _classCallCheck(this, TeamDeleteUserModal);
 
-    return _possibleConstructorReturn(this, (TeamDeleteUserModal.__proto__ || Object.getPrototypeOf(TeamDeleteUserModal)).call(this, props));
+    var _this2 = _possibleConstructorReturn(this, (TeamDeleteUserModal.__proto__ || Object.getPrototypeOf(TeamDeleteUserModal)).call(this, props));
+
+    _this2.state = {
+      apps: {
+        channel: {},
+        user: {}
+      },
+      appsNumber: 0,
+      team_user: (0, _helperFunctions.selectUserFromListById)(_this2.props.users, _this2.props.modal.team_user_id),
+      loadingApps: true
+    };
+    _this2.loadApps = _this2.loadApps.bind(_this2);
+    _this2.checkApp = _this2.checkApp.bind(_this2);
+    _this2.confirmModal = _this2.confirmModal.bind(_this2);
+    return _this2;
   }
 
   _createClass(TeamDeleteUserModal, [{
+    key: 'checkApp',
+    value: function checkApp(type, id, app_id) {
+      var apps = _extends({}, this.state.apps);
+      apps[type][id] = apps[type][id].map(function (item) {
+        if (item.id === app_id) item.selected = !item.selected;
+        return item;
+      });
+      this.setState({ apps: apps });
+    }
+  }, {
+    key: 'confirmModal',
+    value: function confirmModal() {
+      var _this3 = this;
+
+      var appsToDelete = [];
+      var apps = this.state.apps;
+      var channelApps = apps['channel'];
+      var userApps = apps['user'];
+
+      Object.keys(channelApps).map(function (item) {
+        for (var i = 0; i < channelApps[item].length; i++) {
+          var app = channelApps[item][i];
+          if (app.selected) {
+            appsToDelete.push(this.props.dispatch((0, _appsActions.teamAppTransferOwnership)(app.id, this.props.me.id)));
+          }
+        }
+      }, this);
+      Object.keys(userApps).map(function (item) {
+        for (var i = 0; i < userApps[item].length; i++) {
+          var app = userApps[item][i];
+          if (app.selected) {
+            appsToDelete.push(this.props.dispatch((0, _appsActions.teamAppTransferOwnership)(app.id, this.props.me.id)));
+          }
+        }
+      }, this);
+      Promise.all(appsToDelete).then(function () {
+        _this3.props.dispatch(userActions.deleteTeamUser(_this3.props.modal.team_user_id)).then(function () {
+          _this3.props.dispatch((0, _teamModalActions.showTeamDeleteUserModal)(false));
+        });
+      });
+    }
+  }, {
+    key: 'loadApps',
+    value: function loadApps() {
+      var _this4 = this;
+
+      this.props.dispatch(userActions.getTeamUserShareableApps(this.state.team_user.id)).then(function (response) {
+        var apps = {
+          channel: {},
+          user: {}
+        };
+        response.map(function (item) {
+          item.selected = false;
+          if (apps[item.origin.type][item.origin.id] === undefined) apps[item.origin.type][item.origin.id] = [];
+          apps[item.origin.type][item.origin.id].push(item);
+        });
+        _this4.setState({ apps: apps, loadingApps: false, appsNumber: response.length });
+      });
+    }
+  }, {
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      this.loadApps();
+    }
+  }, {
     key: 'render',
     value: function render() {
-      var _this2 = this;
+      var _this5 = this;
 
       var teamName = this.props.team_name;
-      var username = this.props.selectedUser.username;
+      var username = this.state.team_user.username;
+      var appsNumber = this.state.appsNumber;
 
       return React.createElement(
         'div',
@@ -17802,7 +18036,7 @@ var TeamDeleteUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
         React.createElement(
           'a',
           { id: 'ease_modal_close_btn', className: 'ease_modal_btn', onClick: function onClick(e) {
-              _this2.props.dispatch((0, _teamModalActions.showTeamDeleteUserModal)(false));
+              _this5.props.dispatch((0, _teamModalActions.showTeamDeleteUserModal)(false));
             } },
           React.createElement('i', { className: 'ease_icon fa fa-times' }),
           React.createElement(
@@ -17823,7 +18057,7 @@ var TeamDeleteUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
               React.createElement(
                 'h1',
                 null,
-                'You are about to desactivate ',
+                'You are about to delete ',
                 username,
                 '\'s membership'
               )
@@ -17838,26 +18072,82 @@ var TeamDeleteUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
                 ' will lose access to all accounts. But be carefull : we don\'t delete accounts on the websites themselves... Yet ;) Don\'t forget to go delete them by yourself.'
               )
             ),
-            React.createElement(
+            !this.state.loadingApps && React.createElement(
               'div',
-              { className: 'content_row' },
-              React.createElement(
-                'span',
-                { className: 'first_word_capitalize' },
-                'While working here, ',
-                username,
-                ' shared X accounts to ',
-                teamName,
-                '. Please select(tic) the ones you want to keep. The other ones will be deleted.'
-              )
-            ),
-            React.createElement(
-              'div',
-              { className: 'content_row' },
-              React.createElement(
-                'span',
+              null,
+              this.state.appsNumber > 0 ? React.createElement(
+                'div',
                 null,
-                'By deleting an app, every person related to it, will lose the access.'
+                React.createElement(
+                  'div',
+                  { className: 'content_row' },
+                  React.createElement(
+                    'span',
+                    null,
+                    'While working here, ',
+                    username,
+                    ' shared ',
+                    appsNumber,
+                    ' accounts to ',
+                    teamName,
+                    '. Please select(tic) the ones you want to keep. You will become admin for these Apps, instead of ',
+                    username,
+                    '. The other ones will be deleted.'
+                  )
+                ),
+                React.createElement(
+                  'div',
+                  { className: 'content_row' },
+                  React.createElement(
+                    'span',
+                    null,
+                    'By deleting an app, every person related to it, will lose the access. This action is irreversible.'
+                  )
+                ),
+                React.createElement(
+                  'div',
+                  { className: 'content_row flex_direction_column' },
+                  React.createElement(TeamUserShareableAppsList, {
+                    apps: this.state.apps,
+                    users: this.props.users,
+                    channels: this.props.channels,
+                    checkApp: this.checkApp })
+                )
+              ) : React.createElement(
+                'div',
+                null,
+                React.createElement(
+                  'div',
+                  { className: 'content_row' },
+                  React.createElement(
+                    'span',
+                    { className: 'first_word_capitalize' },
+                    username,
+                    ' doesn\'t have shared Apps in this team.'
+                  )
+                )
+              ),
+              React.createElement(
+                'div',
+                { className: 'content_row buttons_row' },
+                React.createElement(
+                  'div',
+                  { className: 'buttons_wrapper' },
+                  React.createElement(
+                    'button',
+                    { className: 'button-unstyle neutral_background action_text_button mrgnRight5',
+                      onClick: function onClick(e) {
+                        _this5.props.dispatch((0, _teamModalActions.showTeamDeleteUserModal)(false));
+                      } },
+                    'Cancel'
+                  ),
+                  React.createElement(
+                    'button',
+                    { className: 'button-unstyle positive_background action_text_button next_button',
+                      onClick: this.confirmModal },
+                    'Yes, Remove this member'
+                  )
+                )
               )
             )
           )
@@ -17883,15 +18173,15 @@ var _dec, _class;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _teamModalActions = __webpack_require__(22);
+var _teamModalActions = __webpack_require__(23);
 
 var teamModalActions = _interopRequireWildcard(_teamModalActions);
 
-var _channelActions = __webpack_require__(27);
+var _channelActions = __webpack_require__(22);
 
 var channelActions = _interopRequireWildcard(_channelActions);
 
-var _userActions = __webpack_require__(39);
+var _userActions = __webpack_require__(32);
 
 var userActions = _interopRequireWildcard(_userActions);
 
@@ -18648,7 +18938,7 @@ var TeamUserFlexTab = function (_React$Component2) {
               'button',
               { className: 'button-unstyle team_user_delete_button',
                 onClick: function onClick(e) {
-                  _this10.props.dispatch((0, _teamModalActions.showTeamDeleteUserModal)(true));
+                  _this10.props.dispatch((0, _teamModalActions.showTeamDeleteUserModal)(true, _this10.props.item.id));
                 } },
               React.createElement(
                 'u',
@@ -18801,15 +19091,15 @@ var _dec, _class;
 
 var _reactRedux = __webpack_require__(15);
 
-var _channelActions = __webpack_require__(27);
+var _channelActions = __webpack_require__(22);
 
 var channelActions = _interopRequireWildcard(_channelActions);
 
-var _userActions = __webpack_require__(39);
+var _userActions = __webpack_require__(32);
 
 var userActions = _interopRequireWildcard(_userActions);
 
-var _teamModalActions = __webpack_require__(22);
+var _teamModalActions = __webpack_require__(23);
 
 var teamModalsActions = _interopRequireWildcard(_teamModalActions);
 
@@ -19003,7 +19293,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _appsActions = __webpack_require__(31);
+var _appsActions = __webpack_require__(28);
 
 var appActions = _interopRequireWildcard(_appsActions);
 
@@ -19351,7 +19641,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _appsActions = __webpack_require__(31);
+var _appsActions = __webpack_require__(28);
 
 var appActions = _interopRequireWildcard(_appsActions);
 
@@ -19949,7 +20239,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _appsActions = __webpack_require__(31);
+var _appsActions = __webpack_require__(28);
 
 var appActions = _interopRequireWildcard(_appsActions);
 
@@ -21289,6 +21579,30 @@ function reducer() {
         }
         break;
       }
+    case 'DELETE_TEAM_USER_FULFILLED':
+      {
+        if (state.item.id === action.payload.team_user_id && state.type === 'user') {
+          return _extends({}, state, {
+            type: null,
+            item: null
+          });
+        }
+        break;
+      }
+    case 'TEAM_APP_TRANSFER_OWNERSHIP_FULFILLED':
+      {
+        var item = _extends({}, state.item);
+        var apps = item.apps;
+
+        for (var i = 0; i < apps.length; i++) {
+          if (apps[i].id === action.payload.app_id) {
+            apps[i].sender_id = action.payload.team_user_id;
+          }
+        }
+        return _extends({}, state, {
+          item: item
+        });
+      }
   }
   return state;
 }
@@ -21311,7 +21625,10 @@ var initialState = {
   addUserModalActive: false,
   addChannelModalActive: false,
   teamChannelAddUserModalActive: false,
-  teamDeleteUserModalActive: false,
+  teamDeleteUserModal: {
+    active: false,
+    team_user_id: -1
+  },
   teamDeleteChannelModal: {
     active: false,
     channel_id: -1
@@ -21343,7 +21660,7 @@ function reducer() {
     case 'SHOW_TEAM_DELETE_USER_MODAL':
       {
         return _extends({}, initialState, {
-          teamDeleteUserModalActive: action.payload
+          teamDeleteUserModal: action.payload
         });
       }
     case 'SHOW_TEAM_DELETE_CHANNEL_MODAL':
@@ -21460,6 +21777,21 @@ function reducer() {
           return item;
         });
         users.push(action.payload);
+        return _extends({}, state, {
+          users: users
+        });
+      }
+    case 'DELETE_TEAM_USER_FULFILLED':
+      {
+        var users = state.users.map(function (item) {
+          return item;
+        });
+        for (var i = 0; i < users.length; i++) {
+          if (users[i].id === action.payload.team_user_id) {
+            users.splice(i, 1);
+            break;
+          }
+        }
         return _extends({}, state, {
           users: users
         });
@@ -24149,17 +24481,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _warning = __webpack_require__(26);
+var _warning = __webpack_require__(27);
 
 var _warning2 = _interopRequireDefault(_warning);
 
-var _invariant = __webpack_require__(34);
+var _invariant = __webpack_require__(35);
 
 var _invariant2 = _interopRequireDefault(_invariant);
 
 var _LocationUtils = __webpack_require__(52);
 
-var _PathUtils = __webpack_require__(33);
+var _PathUtils = __webpack_require__(34);
 
 var _createTransitionManager = __webpack_require__(53);
 
@@ -24461,17 +24793,17 @@ exports.__esModule = true;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _warning = __webpack_require__(26);
+var _warning = __webpack_require__(27);
 
 var _warning2 = _interopRequireDefault(_warning);
 
-var _invariant = __webpack_require__(34);
+var _invariant = __webpack_require__(35);
 
 var _invariant2 = _interopRequireDefault(_invariant);
 
 var _LocationUtils = __webpack_require__(52);
 
-var _PathUtils = __webpack_require__(33);
+var _PathUtils = __webpack_require__(34);
 
 var _createTransitionManager = __webpack_require__(53);
 
@@ -24791,11 +25123,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _warning = __webpack_require__(26);
+var _warning = __webpack_require__(27);
 
 var _warning2 = _interopRequireDefault(_warning);
 
-var _PathUtils = __webpack_require__(33);
+var _PathUtils = __webpack_require__(34);
 
 var _LocationUtils = __webpack_require__(52);
 
@@ -25535,7 +25867,7 @@ module.exports = AutoFocusUtils;
 
 
 
-var EventPropagators = __webpack_require__(36);
+var EventPropagators = __webpack_require__(37);
 var ExecutionEnvironment = __webpack_require__(8);
 var FallbackCompositionState = __webpack_require__(212);
 var SyntheticCompositionEvent = __webpack_require__(255);
@@ -26140,8 +26472,8 @@ module.exports = CSSPropertyOperations;
 
 
 
-var EventPluginHub = __webpack_require__(35);
-var EventPropagators = __webpack_require__(36);
+var EventPluginHub = __webpack_require__(36);
+var EventPropagators = __webpack_require__(37);
 var ExecutionEnvironment = __webpack_require__(8);
 var ReactDOMComponentTree = __webpack_require__(6);
 var ReactUpdates = __webpack_require__(16);
@@ -26493,7 +26825,7 @@ module.exports = ChangeEventPlugin;
 
 var _prodInvariant = __webpack_require__(4);
 
-var DOMLazyTree = __webpack_require__(28);
+var DOMLazyTree = __webpack_require__(29);
 var ExecutionEnvironment = __webpack_require__(8);
 
 var createNodesFromMarkup = __webpack_require__(179);
@@ -26576,7 +26908,7 @@ module.exports = DefaultEventPluginOrder;
 
 
 
-var EventPropagators = __webpack_require__(36);
+var EventPropagators = __webpack_require__(37);
 var ReactDOMComponentTree = __webpack_require__(6);
 var SyntheticMouseEvent = __webpack_require__(42);
 
@@ -26683,7 +27015,7 @@ module.exports = EnterLeaveEventPlugin;
 
 var _assign = __webpack_require__(5);
 
-var PooledClass = __webpack_require__(23);
+var PooledClass = __webpack_require__(24);
 
 var getTextContentAccessor = __webpack_require__(108);
 
@@ -27022,7 +27354,7 @@ module.exports = HTMLDOMPropertyConfig;
 
 
 
-var ReactReconciler = __webpack_require__(29);
+var ReactReconciler = __webpack_require__(30);
 
 var instantiateReactComponent = __webpack_require__(109);
 var KeyEscapeUtils = __webpack_require__(59);
@@ -27220,20 +27552,20 @@ module.exports = ReactComponentBrowserEnvironment;
 var _prodInvariant = __webpack_require__(4),
     _assign = __webpack_require__(5);
 
-var React = __webpack_require__(30);
+var React = __webpack_require__(31);
 var ReactComponentEnvironment = __webpack_require__(61);
 var ReactCurrentOwner = __webpack_require__(17);
 var ReactErrorUtils = __webpack_require__(62);
-var ReactInstanceMap = __webpack_require__(37);
+var ReactInstanceMap = __webpack_require__(38);
 var ReactInstrumentation = __webpack_require__(14);
 var ReactNodeTypes = __webpack_require__(102);
-var ReactReconciler = __webpack_require__(29);
+var ReactReconciler = __webpack_require__(30);
 
 if (process.env.NODE_ENV !== 'production') {
   var checkReactTypeSpec = __webpack_require__(264);
 }
 
-var emptyObject = __webpack_require__(32);
+var emptyObject = __webpack_require__(33);
 var invariant = __webpack_require__(1);
 var shallowEqual = __webpack_require__(51);
 var shouldUpdateReactComponent = __webpack_require__(69);
@@ -28130,7 +28462,7 @@ module.exports = ReactCompositeComponent;
 var ReactDOMComponentTree = __webpack_require__(6);
 var ReactDefaultInjection = __webpack_require__(234);
 var ReactMount = __webpack_require__(101);
-var ReactReconciler = __webpack_require__(29);
+var ReactReconciler = __webpack_require__(30);
 var ReactUpdates = __webpack_require__(16);
 var ReactVersion = __webpack_require__(249);
 
@@ -28249,11 +28581,11 @@ var _prodInvariant = __webpack_require__(4),
 
 var AutoFocusUtils = __webpack_require__(205);
 var CSSPropertyOperations = __webpack_require__(207);
-var DOMLazyTree = __webpack_require__(28);
+var DOMLazyTree = __webpack_require__(29);
 var DOMNamespaces = __webpack_require__(57);
 var DOMProperty = __webpack_require__(21);
 var DOMPropertyOperations = __webpack_require__(94);
-var EventPluginHub = __webpack_require__(35);
+var EventPluginHub = __webpack_require__(36);
 var EventPluginRegistry = __webpack_require__(40);
 var ReactBrowserEventEmitter = __webpack_require__(41);
 var ReactDOMComponentFlags = __webpack_require__(95);
@@ -29290,7 +29622,7 @@ module.exports = ReactDOMContainerInfo;
 
 var _assign = __webpack_require__(5);
 
-var DOMLazyTree = __webpack_require__(28);
+var DOMLazyTree = __webpack_require__(29);
 var ReactDOMComponentTree = __webpack_require__(6);
 
 var ReactDOMEmptyComponent = function (instantiate) {
@@ -29857,7 +30189,7 @@ module.exports = ReactDOMNullInputValuePropHook;
 
 var _assign = __webpack_require__(5);
 
-var React = __webpack_require__(30);
+var React = __webpack_require__(31);
 var ReactDOMComponentTree = __webpack_require__(6);
 var ReactDOMSelect = __webpack_require__(96);
 
@@ -30205,7 +30537,7 @@ var _prodInvariant = __webpack_require__(4),
     _assign = __webpack_require__(5);
 
 var DOMChildrenOperations = __webpack_require__(56);
-var DOMLazyTree = __webpack_require__(28);
+var DOMLazyTree = __webpack_require__(29);
 var ReactDOMComponentTree = __webpack_require__(6);
 
 var escapeTextContentForBrowser = __webpack_require__(44);
@@ -31351,7 +31683,7 @@ module.exports = REACT_ELEMENT_TYPE;
 
 
 
-var EventPluginHub = __webpack_require__(35);
+var EventPluginHub = __webpack_require__(36);
 
 function runEventQueueInBatch(events) {
   EventPluginHub.enqueueEvents(events);
@@ -31393,7 +31725,7 @@ var _assign = __webpack_require__(5);
 
 var EventListener = __webpack_require__(84);
 var ExecutionEnvironment = __webpack_require__(8);
-var PooledClass = __webpack_require__(23);
+var PooledClass = __webpack_require__(24);
 var ReactDOMComponentTree = __webpack_require__(6);
 var ReactUpdates = __webpack_require__(16);
 
@@ -31589,7 +31921,7 @@ module.exports = ReactHostOperationHistoryHook;
 
 
 var DOMProperty = __webpack_require__(21);
-var EventPluginHub = __webpack_require__(35);
+var EventPluginHub = __webpack_require__(36);
 var EventPluginUtils = __webpack_require__(58);
 var ReactComponentEnvironment = __webpack_require__(61);
 var ReactEmptyComponent = __webpack_require__(97);
@@ -31728,11 +32060,11 @@ module.exports = ReactMarkupChecksum;
 var _prodInvariant = __webpack_require__(4);
 
 var ReactComponentEnvironment = __webpack_require__(61);
-var ReactInstanceMap = __webpack_require__(37);
+var ReactInstanceMap = __webpack_require__(38);
 var ReactInstrumentation = __webpack_require__(14);
 
 var ReactCurrentOwner = __webpack_require__(17);
-var ReactReconciler = __webpack_require__(29);
+var ReactReconciler = __webpack_require__(30);
 var ReactChildReconciler = __webpack_require__(214);
 
 var emptyFunction = __webpack_require__(13);
@@ -32315,7 +32647,7 @@ module.exports = ReactPropTypeLocationNames;
 var _assign = __webpack_require__(5);
 
 var CallbackQueue = __webpack_require__(93);
-var PooledClass = __webpack_require__(23);
+var PooledClass = __webpack_require__(24);
 var ReactBrowserEventEmitter = __webpack_require__(41);
 var ReactInputSelection = __webpack_require__(100);
 var ReactInstrumentation = __webpack_require__(14);
@@ -32592,7 +32924,7 @@ module.exports = ReactRef;
 
 var _assign = __webpack_require__(5);
 
-var PooledClass = __webpack_require__(23);
+var PooledClass = __webpack_require__(24);
 var Transaction = __webpack_require__(43);
 var ReactInstrumentation = __webpack_require__(14);
 var ReactServerUpdateQueue = __webpack_require__(248);
@@ -33157,7 +33489,7 @@ module.exports = SVGDOMPropertyConfig;
 
 
 
-var EventPropagators = __webpack_require__(36);
+var EventPropagators = __webpack_require__(37);
 var ExecutionEnvironment = __webpack_require__(8);
 var ReactDOMComponentTree = __webpack_require__(6);
 var ReactInputSelection = __webpack_require__(100);
@@ -33357,7 +33689,7 @@ module.exports = SelectEventPlugin;
 var _prodInvariant = __webpack_require__(4);
 
 var EventListener = __webpack_require__(84);
-var EventPropagators = __webpack_require__(36);
+var EventPropagators = __webpack_require__(37);
 var ReactDOMComponentTree = __webpack_require__(6);
 var SyntheticAnimationEvent = __webpack_require__(253);
 var SyntheticClipboardEvent = __webpack_require__(254);
@@ -33368,7 +33700,7 @@ var SyntheticMouseEvent = __webpack_require__(42);
 var SyntheticDragEvent = __webpack_require__(256);
 var SyntheticTouchEvent = __webpack_require__(260);
 var SyntheticTransitionEvent = __webpack_require__(261);
-var SyntheticUIEvent = __webpack_require__(38);
+var SyntheticUIEvent = __webpack_require__(39);
 var SyntheticWheelEvent = __webpack_require__(262);
 
 var emptyFunction = __webpack_require__(13);
@@ -33756,7 +34088,7 @@ module.exports = SyntheticDragEvent;
 
 
 
-var SyntheticUIEvent = __webpack_require__(38);
+var SyntheticUIEvent = __webpack_require__(39);
 
 /**
  * @interface FocusEvent
@@ -33839,7 +34171,7 @@ module.exports = SyntheticInputEvent;
 
 
 
-var SyntheticUIEvent = __webpack_require__(38);
+var SyntheticUIEvent = __webpack_require__(39);
 
 var getEventCharCode = __webpack_require__(65);
 var getEventKey = __webpack_require__(268);
@@ -33928,7 +34260,7 @@ module.exports = SyntheticKeyboardEvent;
 
 
 
-var SyntheticUIEvent = __webpack_require__(38);
+var SyntheticUIEvent = __webpack_require__(39);
 
 var getEventModifierState = __webpack_require__(66);
 
@@ -34312,7 +34644,7 @@ var _prodInvariant = __webpack_require__(4);
 
 var ReactCurrentOwner = __webpack_require__(17);
 var ReactDOMComponentTree = __webpack_require__(6);
-var ReactInstanceMap = __webpack_require__(37);
+var ReactInstanceMap = __webpack_require__(38);
 
 var getHostComponentFromComposite = __webpack_require__(107);
 var invariant = __webpack_require__(1);
@@ -35986,13 +36318,13 @@ Redirect.contextTypes = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_invariant__ = __webpack_require__(34);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_invariant__ = __webpack_require__(35);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_invariant___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_invariant__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_prop_types__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_prop_types__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_history_PathUtils__ = __webpack_require__(33);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_history_PathUtils__ = __webpack_require__(34);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_history_PathUtils___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_history_PathUtils__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Router__ = __webpack_require__(72);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -36166,7 +36498,7 @@ StaticRouter.childContextTypes = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_warning__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_warning__ = __webpack_require__(27);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_warning___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_warning__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__matchPath__ = __webpack_require__(73);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -36802,7 +37134,7 @@ module.exports = KeyEscapeUtils;
 
 
 
-var _prodInvariant = __webpack_require__(25);
+var _prodInvariant = __webpack_require__(26);
 
 var invariant = __webpack_require__(1);
 
@@ -36920,7 +37252,7 @@ module.exports = PooledClass;
 
 
 var PooledClass = __webpack_require__(304);
-var ReactElement = __webpack_require__(24);
+var ReactElement = __webpack_require__(25);
 
 var emptyFunction = __webpack_require__(13);
 var traverseAllChildren = __webpack_require__(315);
@@ -37115,15 +37447,15 @@ module.exports = ReactChildren;
 
 
 
-var _prodInvariant = __webpack_require__(25),
+var _prodInvariant = __webpack_require__(26),
     _assign = __webpack_require__(5);
 
 var ReactComponent = __webpack_require__(74);
-var ReactElement = __webpack_require__(24);
+var ReactElement = __webpack_require__(25);
 var ReactPropTypeLocationNames = __webpack_require__(121);
 var ReactNoopUpdateQueue = __webpack_require__(75);
 
-var emptyObject = __webpack_require__(32);
+var emptyObject = __webpack_require__(33);
 var invariant = __webpack_require__(1);
 var warning = __webpack_require__(2);
 
@@ -37844,7 +38176,7 @@ module.exports = ReactClass;
 
 
 
-var ReactElement = __webpack_require__(24);
+var ReactElement = __webpack_require__(25);
 
 /**
  * Create a factory that creates HTML tag elements.
@@ -38020,7 +38352,7 @@ module.exports = ReactDOMFactories;
 
 
 
-var _require = __webpack_require__(24),
+var _require = __webpack_require__(25),
     isValidElement = _require.isValidElement;
 
 var factory = __webpack_require__(90);
@@ -38071,7 +38403,7 @@ var _assign = __webpack_require__(5);
 var ReactComponent = __webpack_require__(74);
 var ReactNoopUpdateQueue = __webpack_require__(75);
 
-var emptyObject = __webpack_require__(32);
+var emptyObject = __webpack_require__(33);
 
 /**
  * Base class helpers for the updating state of a component.
@@ -38132,7 +38464,7 @@ module.exports = '15.5.4';
 
 
 
-var _prodInvariant = __webpack_require__(25);
+var _prodInvariant = __webpack_require__(26);
 
 var ReactPropTypeLocationNames = __webpack_require__(121);
 var ReactPropTypesSecret = __webpack_require__(309);
@@ -38250,9 +38582,9 @@ module.exports = getNextDebugID;
  */
 
 
-var _prodInvariant = __webpack_require__(25);
+var _prodInvariant = __webpack_require__(26);
 
-var ReactElement = __webpack_require__(24);
+var ReactElement = __webpack_require__(25);
 
 var invariant = __webpack_require__(1);
 
@@ -38295,7 +38627,7 @@ module.exports = onlyChild;
 
 
 
-var _prodInvariant = __webpack_require__(25);
+var _prodInvariant = __webpack_require__(26);
 
 var ReactCurrentOwner = __webpack_require__(17);
 var REACT_ELEMENT_TYPE = __webpack_require__(119);
@@ -39176,6 +39508,204 @@ module.exports = function(module) {
 	return module;
 };
 
+
+/***/ }),
+/* 329 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _helperFunctions = __webpack_require__(18);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var React = __webpack_require__(3);
+var classnames = __webpack_require__(7);
+
+var MultiAppCheckablePreview = function (_React$Component) {
+  _inherits(MultiAppCheckablePreview, _React$Component);
+
+  function MultiAppCheckablePreview(props) {
+    _classCallCheck(this, MultiAppCheckablePreview);
+
+    return _possibleConstructorReturn(this, (MultiAppCheckablePreview.__proto__ || Object.getPrototypeOf(MultiAppCheckablePreview)).call(this, props));
+  }
+
+  _createClass(MultiAppCheckablePreview, [{
+    key: 'render',
+    value: function render() {
+      var app = this.props.app;
+      var senderUser = (0, _helperFunctions.selectUserFromListById)(this.props.users, app.sender_id);
+      var webInfo = app.website.information;
+      var credentials = app.credentials;
+      var username = this.props.username;
+
+      return React.createElement(
+        'div',
+        { className: 'team_app_holder display-flex align_items_center' },
+        React.createElement(
+          'div',
+          { style: { width: "75px", textAlign: 'center' } },
+          React.createElement('input', { type: 'checkbox',
+            checked: app.selected,
+            onChange: this.props.checkAppFunc.bind(null, app.id) })
+        ),
+        React.createElement(
+          'div',
+          { className: 'full_flex' },
+          React.createElement(
+            'div',
+            { className: 'team_app_sender_info' },
+            React.createElement(
+              'span',
+              { className: 'team_app_sender_name' },
+              React.createElement('i', { className: 'fa fa-user mrgnRight5' }),
+              senderUser.username
+            ),
+            React.createElement(
+              'span',
+              null,
+              '\xA0shared on\xA0',
+              app.shared_date
+            )
+          ),
+          React.createElement(
+            'div',
+            { className: 'team_app multiple_accounts_app' },
+            React.createElement(
+              'div',
+              { className: 'name_holder' },
+              app.name
+            ),
+            React.createElement(
+              'div',
+              { className: 'info_holder' },
+              React.createElement(
+                'div',
+                { className: 'info' },
+                React.createElement(
+                  'div',
+                  { className: 'logo_holder' },
+                  React.createElement('img', { src: app.website.logo, alt: 'logo' })
+                ),
+                React.createElement(
+                  'div',
+                  { className: 'credentials_holder' },
+                  React.createElement(
+                    'div',
+                    { className: 'credentials' },
+                    React.createElement(
+                      'div',
+                      { className: 'credentials_line' },
+                      React.createElement(
+                        'div',
+                        { className: 'credentials_type_icon' },
+                        React.createElement('i', { className: 'fa fa-user' })
+                      ),
+                      React.createElement(
+                        'div',
+                        { className: 'credentials_value_holder' },
+                        React.createElement(
+                          'span',
+                          { className: 'credentials_value' },
+                          'Please fill user information'
+                        )
+                      )
+                    )
+                  ),
+                  React.createElement(
+                    'div',
+                    { className: 'password_change_remind' },
+                    React.createElement(
+                      'div',
+                      { className: 'password_change_icon' },
+                      React.createElement('i', { className: 'fa fa-clock-o' })
+                    ),
+                    React.createElement(
+                      'div',
+                      { className: 'password_change_info' },
+                      _helperFunctions.passwordChangeValues[app.password_change_interval]
+                    )
+                  )
+                )
+              ),
+              React.createElement(
+                'div',
+                { className: 'sharing_info display_flex full_flex flex_direction_column' },
+                React.createElement(
+                  'div',
+                  { className: 'receivers_wrapper full_flex' },
+                  app.receivers.map(function (item) {
+                    var user = (0, _helperFunctions.selectUserFromListById)(this.props.users, item.team_user_id);
+                    return React.createElement(
+                      'div',
+                      { className: 'receiver_wrapper', key: item.team_user_id },
+                      React.createElement(
+                        'div',
+                        { className: 'receiver' },
+                        React.createElement(
+                          'span',
+                          { className: 'receiver_name' },
+                          user.username
+                        ),
+                        React.createElement('i', { className: 'fa fa-unlock-alt mrgnLeft5' })
+                      ),
+                      React.createElement(
+                        'div',
+                        { className: 'credentials' },
+                        Object.keys(item.account_information).map(function (info) {
+                          return React.createElement(
+                            'div',
+                            { className: 'credential_container', key: info },
+                            React.createElement('i', { className: classnames('fa', 'mrgnRight5', webInfo[info].placeholderIcon) }),
+                            React.createElement(
+                              'span',
+                              { className: 'value' },
+                              item.account_information[info]
+                            )
+                          );
+                        })
+                      )
+                    );
+                  }, this)
+                )
+              )
+            ),
+            React.createElement(
+              'div',
+              { className: 'comment_holder' },
+              React.createElement(
+                'div',
+                { className: 'comment_icon' },
+                React.createElement('i', { className: 'fa fa-sticky-note-o' })
+              ),
+              React.createElement(
+                'div',
+                { className: 'comment' },
+                React.createElement(
+                  'span',
+                  { className: 'comment_value value' },
+                  app.description.length > 0 ? app.description : "There is no comment for this app yet..."
+                )
+              )
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return MultiAppCheckablePreview;
+}(React.Component);
+
+module.exports = MultiAppCheckablePreview;
 
 /***/ })
 /******/ ]);
