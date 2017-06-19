@@ -1,0 +1,22 @@
+{
+  "name":"Craft",
+  "lastLogin":"",
+  "home":"https://app.craft.io/",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"form input[type='email']"},
+      {"action":"fill", "what":"password", "search":"form input[type='password']"},
+      {"action":"click", "search":"form #login-submit"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"click", "search":"button[id='routes.read.logout']"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"button[id='routes.read.logout'], form #login-submit"},
+    {"search": "button[id='routes.read.logout']"}
+  ]
+}
