@@ -124,7 +124,6 @@ class LinkTeamAppAdd extends React.Component {
       appName: '',
       url: '',
       logoSrc: '/resources/icons/app_icon.svg',
-      passwordRemind : '0',
       comment: '',
       selectedUsers: [],
       users: []
@@ -143,16 +142,35 @@ class LinkTeamAppAdd extends React.Component {
     }
     this.handleAppNameChange = this.handleAppNameChange.bind(this);
     this.handleUrlInput= this.handleUrlInput.bind(this);
-    this.handlePasswordRemind = this.handlePasswordRemind.bind(this);
-    this.handlePasswordRemind = this.handlePasswordRemind.bind(this);
     this.handleUserSelect = this.handleUserSelect.bind(this);
     this.handleUserDeselect = this.handleUserDeselect.bind(this);
+    this.shareApp = this.shareApp.bind(this);
+    this.handleComment = this.handleComment.bind(this);
+  }
+  shareApp(){
+    var app = {
+      name: this.state.appName,
+      url: this.state.url,
+      description: this.state.comment
+    };
+    if (this.props.selectedItem.type === 'channel')
+      app.channel_id = this.props.selectedItem.item.id;
+    else
+      app.team_user_id = this.props.selectedItem.item.id;
+    var selectedUsers = this.state.selectedUsers;
+    this.props.dispatch(appActions.teamCreateLinkApp(app)).then(response => {
+      var id = response.id;
+      var sharing = selectedUsers.map(function (item) {
+        return this.props.dispatch(appActions.teamShareApp(id, {team_user_id: item.id}));
+      }, this);
+      Promise.all(sharing).then(() => {
+        this.props.cancelAddFunc();
+        console.log('sharing to users finished');
+      });
+    });
   }
   handleComment(event){
     this.setState({comment: event.target.value});
-  }
-  handlePasswordRemind(event){
-    this.setState({passwordRemind: event.target.value});
   }
   handleAppNameChange(event){
     this.setState({appName: event.target.value});
@@ -188,11 +206,31 @@ class LinkTeamAppAdd extends React.Component {
     }
     this.setState({users: users, selectedUsers: selectedUsers});
   }
+  componentWillReceiveProps(props){
+    if (props != this.props){
+      var users = [];
+      if (props.selectedItem.type === 'channel'){
+        props.selectedItem.item.userIds.map(function(item){
+          var user = props.userSelectFunc(item);
+          user.selected = false;
+          users.push(user);
+        }, this);
+      } else {
+        var item = props.selectedItem.item;
+        item.selected = false;
+        users.push(item);
+      }
+      this.setState({
+        selectedUsers: [],
+        users: users
+      });
+    }
+  }
   render(){
     return (
         <div className="add_content_container full_flex team_app active" id="simple_app_adder">
           <div className="add_actions_holder">
-            <button className="button-unstyle send_button action_text_button positive_background">
+            <button className="button-unstyle send_button action_text_button positive_background" onClick={this.shareApp}>
               Send
             </button>
             <button className="button-unstyle action_text_button alert_background close_button" onClick={this.props.cancelAddFunc}>
@@ -229,24 +267,6 @@ class LinkTeamAppAdd extends React.Component {
                         onChange={this.handleUrlInput}
                       />
                       </div>
-                  </div>
-                  <div className="password_change_remind">
-                    <div className="password_change_icon">
-                      <i className="fa fa-refresh"/>
-                    </div>
-                    <span className="text_helper">Password change reminder:</span>
-                    <div className="password_change_info">
-                      <select name="password_change_interval"
-                              className="password_change_input value_input"
-                              value={this.state.passwordRemind}
-                              onChange={this.handlePasswordRemind}>
-                        <option value="0">never</option>
-                        <option value="1">1 months</option>
-                        <option value="3">3 months</option>
-                        <option value="6">6 months</option>
-                        <option value="12">12 months</option>
-                      </select>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -318,12 +338,21 @@ class SimpleTeamAppAdd extends React.Component {
     };
     if (this.props.selectedItem.type === 'channel')
       app.channel_id = this.props.selectedItem.item.id;
-
+    else
+      app.team_user_id = this.props.selectedItem.item.id;
     Object.keys(this.state.credentials).map(function(item){
       app.account_information.push({info_name: item, info_value: this.state.credentials[item]});
     }, this);
-    console.log('sharing app');
-    this.props.dispatch(appActions.teamShareSingleApp(app));
+    var selectedUsers = this.state.selectedUsers;
+    this.props.dispatch(appActions.teamCreateSingleApp(app)).then(response => {
+      var id = response.id;
+      var sharing = selectedUsers.map(function (item) {
+        return this.props.dispatch(appActions.teamShareApp(id, {team_user_id: item.id}));
+      }, this);
+      Promise.all(sharing).then(() => {
+        this.props.cancelAddFunc();
+      });
+    });
   };
   componentWillReceiveProps(props){
     if (props != this.props){
@@ -379,6 +408,7 @@ class SimpleTeamAppAdd extends React.Component {
   chooseDashboardApp(app){
     api.getDashboardApp(app.id).then(function(data){
       var info = data.information;
+      app.id = data.website_id;
       api.fetchWebsiteInfo(data.website_id).then(function(data){
         var credentials = {};
         info.map(function(item){
@@ -395,8 +425,8 @@ class SimpleTeamAppAdd extends React.Component {
   chooseApp(app){
     api.fetchWebsiteInfo(app.id).then(function(data){
       var credentials = {};
-      data.information.map(function (item) {
-        credentials[item.name] = '';
+      Object.keys(data.information).map(function (item) {
+        credentials[item] = '';
       });
       this.setState({choosenApp: {info : app, inputs: data.information}, appName : app.website_name, credentials: credentials});
     }.bind(this));
@@ -458,16 +488,16 @@ class SimpleTeamAppAdd extends React.Component {
                 <div className="credentials_holder">
                   <div className="credentials">
                     {
-                      this.state.choosenApp.inputs.map(function(item){
+                      Object.keys(this.state.credentials).map(function(item){
                         return (
-                            <div className="credentials_line" key={item.name}>
-                              <i className={classnames("fa icon_handler credentials_type_icon", item.placeholderIcon)}/>
-                              <input placeholder={item.placeholder}
+                            <div className="credentials_line" key={item}>
+                              <i className={classnames("fa icon_handler credentials_type_icon", this.state.choosenApp.inputs[item].placeholderIcon)}/>
+                              <input placeholder={this.state.choosenApp.inputs[item].placeholder}
                                      autoComplete="off"
                                      className="credentials_value_input value_input"
-                                     type={item.type}
-                                     name={item.name}
-                                     value={this.state.credentials[item.name]}
+                                     type={this.state.choosenApp.inputs[item].type}
+                                     name={item}
+                                     value={this.state.credentials[item]}
                                      onChange={this.handleCredentialInput}/>
                             </div>
                         )

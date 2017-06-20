@@ -1,11 +1,6 @@
 export default function reducer(state={
   users: [],
-  me: null,
-  roles: {
-    1: "Member",
-    2: "Admin",
-    3: "Owner"
-  }
+  me: null
 },action){
   switch (action.type){
     case "FETCH_USERS_FULFILLED": {
@@ -18,6 +13,7 @@ export default function reducer(state={
           break;
         }
       }
+
       return {
         ...state,
         users: users,
@@ -41,6 +37,31 @@ export default function reducer(state={
           ...state,
         users: nUsers,
         me: nMe
+      }
+    }
+    case 'CREATE_TEAM_USER_FULFILLED': {
+      var users = state.users.map(function (item) {
+        return item;
+      });
+      users.push(action.payload);
+      return {
+          ...state,
+          users: users
+      }
+    }
+    case 'DELETE_TEAM_USER_FULFILLED': {
+      var users = state.users.map(function (item) {
+        return item;
+      });
+      for (var i = 0; i < users.length; i++){
+        if (users[i].id === action.payload.team_user_id){
+          users.splice(i, 1);
+          break;
+        }
+      }
+      return {
+          ...state,
+        users: users
       }
     }
   }

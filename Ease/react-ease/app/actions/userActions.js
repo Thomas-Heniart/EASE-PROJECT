@@ -5,7 +5,11 @@ export function selectTeamUser(id){
   return function(dispatch, getState){
     dispatch({type: 'SELECT_USER_PENDING'});
     return api.fetchTeamUser(getState().team.id, id).then(response => {
-      dispatch({type: 'SELECT_USER_FULFILLED', payload: response});
+      var teamUser = response;
+      api.fetchTeamUserApps(getState().team.id, id).then(response => {
+        teamUser.apps = response;
+        dispatch({type: 'SELECT_USER_FULFILLED', payload: teamUser});
+      });
     }).catch(err => {
       dispatch({type:'SELECT_USER_REJECTED', payload:err});
       throw err;
@@ -18,7 +22,6 @@ export function fetchUsers(team_id){
     dispatch({type: 'FETCH_USERS_PENDING'});
     return api.fetchTeamUsers(team_id).then((response) => {
       var myTeamUserId = getState().team.myTeamUserId;
-      console.log(getState().team.myTeamUserId);
       var payload = {
         users : response,
         myTeamUserId : myTeamUserId
@@ -26,6 +29,60 @@ export function fetchUsers(team_id){
       dispatch({type: "FETCH_USERS_FULFILLED", payload: payload});
     }).catch((err) => {
       dispatch({type:"FETCH_USERS_REJECTED", payload: err});
+      throw err;
+    })
+  }
+}
+
+export function getTeamUserShareableApps(team_user_id){
+  return function(dispatch, getState){
+    dispatch({type: 'GET_TEAM_USER_SHAREABLE_APPS_PENDING'});
+    return api.fetchTeamUserShareableApps(getState().team.id, team_user_id).then(response => {
+      dispatch({type: 'GET_TEAM_USER_SHAREABLE_APPS_FULFILLED', payload:{team_user_id:team_user_id, apps:response}});
+      return response;
+    }).catch(err => {
+      dispatch({type: 'GET_TEAM_USER_SHAREABLE_APPS_REJECTED'});
+      throw err;
+    });
+  }
+}
+
+export function createTeamUser(first_name, last_name, email, username, departure_date, role){
+  return function(dispatch, getState){
+    dispatch({type:'CREATE_TEAM_USER_PENDING'});
+    return post_api.teamUser.createTeamUser(getState().team.id, first_name, last_name, email, username, departure_date, role).then(response => {
+      dispatch({type: 'CREATE_TEAM_USER_FULFILLED', payload: response});
+      return response;
+    }).catch(err => {
+      dispatch({type: 'CREATE_TEAM_USER_REJECTED'});
+      throw err;
+    });
+  }
+}
+
+export function deleteTeamUser(team_user_id){
+  return function(dispatch, getState){
+    dispatch({type: 'DELETE_TEAM_USER_PENDING'});
+    return post_api.teamUser.deleteTeamUser(getState().team.id, team_user_id).then(response => {
+      //need to reselect existing user
+      const selection = getState().selection;
+      const users = getState().users.users;
+      var userToSelect = null;
+
+      for (var i = 0; i < users.length; i++){
+        if (users[i].id != team_user_id){
+          userToSelect = users[i];
+          break;
+        }
+      }
+      if (userToSelect && selection.type === 'user' && selection.item.id === team_user_id){
+        return dispatch(selectTeamUser(userToSelect.id)).then(() => {
+          return dispatch({type: 'DELETE_TEAM_USER_FULFILLED', payload:{team_user_id: team_user_id}});
+        });
+      }else
+        return dispatch({type: 'DELETE_TEAM_USER_FULFILLED', payload:{team_user_id: team_user_id}});
+    }).catch(err => {
+      dispatch({type: 'DELETE_TEAM_USER_REJECTED', payload: err});
       throw err;
     })
   }

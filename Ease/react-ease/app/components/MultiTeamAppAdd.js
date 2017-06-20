@@ -2,6 +2,8 @@ var React = require('react');
 var api = require('../utils/api');
 var classnames = require('classnames');
 
+import {teamCreateMultiApp, teamShareApp} from "../actions/appsActions"
+
 class TeamAppSearch extends React.Component{
   constructor(props){
     super(props);
@@ -79,6 +81,35 @@ class MultiTeamAppAdd extends React.Component {
     this.handleUserInput = this.handleUserInput.bind(this);
     this.showDropdown = this.showDropdown.bind(this);
     this.hideDropdown = this.hideDropdown.bind(this);
+    this.shareApp = this.shareApp.bind(this);
+  }
+  shareApp(){
+    var app = {
+      website_id: this.state.choosenApp.info.id,
+      name: this.state.appName,
+      description: this.state.comment,
+      reminder_interval: this.state.passwordRemind
+    };
+    if (this.props.selectedItem.type === 'channel')
+      app.channel_id = this.props.selectedItem.item.id;
+    else
+      app.team_user_id = this.props.selectedItem.item.id;
+    var selectedUsers = this.state.selectedUsers;
+    this.props.dispatch(teamCreateMultiApp(app)).then(response => {
+      var id = response.id;
+      var sharing = selectedUsers.map(function(user){
+        var user_info = {
+          team_user_id: user.id,
+          account_information: user.credentials,
+          adminHasAccess: false
+        };
+        return this.props.dispatch(teamShareApp(id, user_info));
+      }, this);
+      Promise.all(sharing).then(() => {
+        this.props.cancelAddFunc();
+        console.log('sharing to users finished');
+      });
+    });
   }
   hideDropdown(){
     if (this.state.dropdown)
@@ -145,8 +176,8 @@ class MultiTeamAppAdd extends React.Component {
           users[i].selected = true;
           user = users[i];
           user.credentials = {};
-          this.state.choosenApp.inputs.map(function(item){
-            user.credentials[item.name] = '';
+          Object.keys(this.state.choosenApp.inputs).map(function(item){
+            user.credentials[item] = '';
           });
           selectedUsers.push(users[i]);
         }
@@ -158,8 +189,8 @@ class MultiTeamAppAdd extends React.Component {
   chooseApp(app){
     api.fetchWebsiteInfo(app.id).then(function(data){
       var credentials = {};
-      data.information.map(function (item) {
-        credentials[item.name] = '';
+      Object.keys(data.information).map(function (item) {
+        credentials[item] = '';
       });
       this.setState({choosenApp: {info : app, inputs: data.information}, appName : app.website_name, credentials: credentials});
     }.bind(this));
@@ -177,7 +208,7 @@ class MultiTeamAppAdd extends React.Component {
     return (
         <div className="add_content_container full_flex team_app active" id="multiple_app_adder">
           <div className="add_actions_holder">
-            <button className="button-unstyle send_button action_text_button positive_background">
+            <button className="button-unstyle send_button action_text_button positive_background" onClick={this.shareApp}>
               Send
             </button>
             <button className="button-unstyle action_text_button alert_background close_button" onClick={this.props.cancelAddFunc}>
@@ -214,60 +245,61 @@ class MultiTeamAppAdd extends React.Component {
                 <div className="credentials_holder">
                   <div className="credentials">
                     {
-                        this.state.selectedUsers.map(function (user) {
-                          return (
-                              <div className="credentials_line" key={user.id}>
-                                <i className="fa fa-user icon_handler credentials_type_icon"/>
-                                <div className="inputs_wrapper">
-                                  <div className="choosen_user">
+                      this.state.selectedUsers.map(function (user) {
+                        return (
+                            <div className="credentials_line" key={user.id}>
+                              <i className="fa fa-user icon_handler credentials_type_icon"/>
+                              <div className="inputs_wrapper">
+                                <div className="choosen_user">
                                     <span className="value overflow-ellipsis">
                                       {user.username}
                                     </span>
-                                    <button className="button-unstyle button_delete" onClick={this.handleUserDeselect.bind(null, user.id)}>
-                                      <i className="fa fa-times"/>
-                                    </button>
-                                    </div>
-                                  {this.state.choosenApp.inputs.map(function (item) {
+                                  <button className="button-unstyle button_delete" onClick={this.handleUserDeselect.bind(null, user.id)}>
+                                    <i className="fa fa-times"/>
+                                  </button>
+                                </div>
+                                {
+                                  Object.keys(this.state.credentials).map(function(item){
                                     return (
-                                        <input
-                                            key={item.name}
-                                        className="credentials_value_input value_input"
-                                        autoComplete="off"
-                                        placeholder={item.placeholder}
-                                        type={item.type}
-                                        name={item.name}
-                                        value={user.credentials[item.name]}
-                                            onChange={(e) => {this.handleUserInput(user.id, e.target.name, e.target.value)}}
-                                        />
+                                          <input
+                                                 key={item}
+                                                 placeholder={this.state.choosenApp.inputs[item].placeholder}
+                                                 autoComplete="off"
+                                                 className="credentials_value_input value_input"
+                                                 type={this.state.choosenApp.inputs[item].type}
+                                                 name={item}
+                                                 value={user.credentials[item.name]}
+                                                 onChange={(e) => {this.handleUserInput(user.id, e.target.name, e.target.value)}}/>
                                     )
-                                  }, this)}
-                                  </div>
+                                  }, this)
+                                }
                               </div>
-                          )
-                        }, this)
+                            </div>
+                        )
+                      }, this)
                     }
                   </div>
                   <div className={classnames("user_choose", this.state.dropdown ? "list_visible": null)}>
                     {this.state.dropdown && <div className="popover_mask" onClick={this.hideDropdown}></div>}
                     <input type="text" className="input_unstyle" placeholder="Search for people..."
-                            onFocus={this.showDropdown}/>
+                           onFocus={this.showDropdown}/>
                     <div className="floating_dropdown user_selectors">
                       {
-                          this.state.users.map(function (item) {
-                            return (
-                                <div className={classnames('user_selector', item.selected ? 'selected':null)} key={item.id} onClick={this.handleUserSelect.bind(null, item.id)}>
+                        this.state.users.map(function (item) {
+                          return (
+                              <div className={classnames('user_selector', item.selected ? 'selected':null)} key={item.id} onClick={this.handleUserSelect.bind(null, item.id)}>
                                   <span className="username text_strong">
                                     {item.username}
                                   </span>
-                                  -
-                                  <span className="fname">{item.firstName}</span>
-                                  <span className="lname">{item.lastName}</span>
-                                </div>
-                            )
-                          }, this)
+                                &nbsp;-&nbsp;
+                                <span className="fname">{item.first_name}</span>&nbsp;
+                                <span className="lname">{item.last_name}</span>
+                              </div>
+                          )
+                        }, this)
                       }
                     </div>
-                    </div>
+                  </div>
                   <div className="password_change_remind">
                     <div className="password_change_icon">
                       <i className="fa fa-refresh"/>

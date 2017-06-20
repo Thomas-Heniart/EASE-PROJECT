@@ -101,6 +101,129 @@ export default function reducer(state={
       }
       break;
     }
+    case "TEAM_CREATE_SINGLE_APP_FULFILLED": {
+      if(state.type === action.payload.origin.type && state.item.id === action.payload.origin.id){
+        var state = {
+            ...state
+        };
+        state.item.apps.push(action.payload);
+        return state;
+      }
+    }
+    case "TEAM_CREATE_LINK_APP_FULFILLED": {
+      if(state.type === action.payload.origin.type && state.item.id === action.payload.origin.id){
+        var state = {
+          ...state
+        };
+        state.item.apps.push(action.payload);
+        return state;
+      }
+    }
+    case "TEAM_CREATE_MULTI_APP_FULFILLED": {
+      if(state.type === action.payload.origin.type && state.item.id === action.payload.origin.id){
+        var state = {
+          ...state
+        };
+        state.item.apps.push(action.payload);
+        return state;
+      }
+    }
+    case "TEAM_SHARE_APP_FULFILLED": {
+      var nState = {
+          ...state
+      };
+      for (var i = 0; i < nState.item.apps.length;i++){
+        if (nState.item.apps[i].id === action.payload.app_id){
+          nState.item.apps[i].receivers.push(action.payload.user_info);
+          return nState;
+        }
+      }
+      break;
+    }
+    case 'TEAM_MODIFY_APP_INFORMATION_FULFILLED': {
+      var nState = {
+          ...state
+      };
+      for (var i = 0; i < nState.item.apps.length;i++){
+        if (nState.item.apps[i].id === action.payload.app_id){
+          nState.item.apps[i] = action.payload.app;
+          return nState;
+        }
+      }
+      break;
+    }
+    case 'TEAM_APP_EDIT_RECEIVER_FULFILLED' : {
+      var nState = {
+          ...state
+      };
+      var app;
+      for (var i = 0; i < nState.item.apps.length;i++){
+        if (nState.item.apps[i].id === action.payload.app_id){
+          app = nState.item.apps[i];
+          for (var j = 0; j < app.receivers.length; j++){
+            if (app.receivers[j].team_user_id === action.payload.receiver_info.team_user_id){
+              app.receivers[j] = action.payload.receiver_info;
+              return nState;
+            }
+          }
+        }
+      }
+      break;
+    }
+    case 'TEAM_APP_DELETE_RECEIVER_FULFILLED' : {
+      var nState = {
+        ...state
+      };
+      var app;
+      for (var i = 0; i < nState.item.apps.length;i++){
+        if (nState.item.apps[i].id === action.payload.app_id){
+          app = nState.item.apps[i];
+          for (var j = 0; j < app.receivers.length; j++){
+            if (app.receivers[j].team_user_id === action.payload.team_user_id){
+              app.receivers.splice(j, 1);
+              return nState;
+            }
+          }
+        }
+      }
+      break;
+    }
+    case 'DELETE_TEAM_CHANNEL_FULFILLED': {
+      if (state.item.id === action.payload.channel_id && state.type === 'channel'){
+        return {
+            ...state,
+          type:null,
+          item:null
+        }
+      }
+      break;
+    }
+    case 'DELETE_TEAM_USER_FULFILLED': {
+      if (state.item.id === action.payload.team_user_id && state.type === 'user'){
+        return {
+          ...state,
+          type:null,
+          item:null
+        }
+      }
+      break;
+    }
+    case 'TEAM_APP_TRANSFER_OWNERSHIP_FULFILLED': {
+      var item = {
+          ...state.item
+      };
+      var apps = item.apps;
+
+      for (var i = 0; i < apps.length; i++){
+        if (apps[i].id === action.payload.app_id){
+          apps[i].sender_id = action.payload.team_user_id;
+        }
+      }
+      return {
+          ...state,
+        item: item
+      }
+    }
   }
   return state;
 }

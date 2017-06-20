@@ -1,9 +1,24 @@
 const initialState = {
   addUserModalActive: false,
   addChannelModalActive: false,
-  teamChannelAddUserModalActive: false,
-  teamDeleteUserModalActive: false
-}
+  teamChannelAddUserModal: {
+    active: false,
+    channel_id: -1
+  },
+  teamDeleteUserModal: {
+    active: false,
+    team_user_id: -1
+  },
+  teamDeleteChannelModal: {
+    active: false,
+    channel_id: -1
+  },
+  teamDeleteUserFromChannelModal: {
+    active: false,
+    channel_id: -1,
+    team_user_id: -1
+  }
+};
 export default function reducer(state=initialState, action){
   switch (action.type){
     case 'SHOW_ADD_TEAM_USER_MODAL': {
@@ -21,13 +36,25 @@ export default function reducer(state=initialState, action){
     case 'SHOW_TEAM_CHANNEL_ADD_USER_MODAL': {
       return {
           ...initialState,
-        teamChannelAddUserModalActive:action.payload
+        teamChannelAddUserModal:action.payload
       }
     }
     case 'SHOW_TEAM_DELETE_USER_MODAL': {
       return {
           ...initialState,
-          teamDeleteUserModalActive: action.payload
+          teamDeleteUserModal: action.payload
+      }
+    }
+    case 'SHOW_TEAM_DELETE_CHANNEL_MODAL': {
+      return {
+          ...state,
+          teamDeleteChannelModal: action.payload
+      }
+    }
+    case 'SHOW_TEAM_DELETE_USER_FROM_CHANNEL_MODAL': {
+      return {
+        ...state,
+        teamDeleteUserFromChannelModal: action.payload
       }
     }
   }

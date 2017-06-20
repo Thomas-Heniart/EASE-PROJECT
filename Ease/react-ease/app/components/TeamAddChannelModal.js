@@ -2,6 +2,7 @@ var React = require('react');
 var classnames = require('classnames');
 import {connect} from "react-redux"
 import {showAddTeamChannelModal} from "../actions/teamModalActions"
+import * as channelActions from "../actions/channelActions"
 
 @connect((store)=>{
   return {
@@ -27,6 +28,10 @@ class TeamAddChannelModal extends React.Component {
     this.handleInput = this.handleInput.bind(this);
     this.hideDropdown = this.hideDropdown.bind(this);
     this.showDropdown = this.showDropdown.bind(this);
+    this.onMouseDown = this.onMouseDown.bind(this);
+    this.onMouseUp = this.onMouseUp.bind(this);
+    this.pageClick = this.pageClick.bind(this);
+    this.validateChannelCreation = this.validateChannelCreation.bind(this);
   }
   hideDropdown(){
     this.setState({dropdown: false});
@@ -40,6 +45,21 @@ class TeamAddChannelModal extends React.Component {
         [name]: value
       }
     });
+  }
+  validateChannelCreation(){
+    const name = this.state.name;
+    const purpose = this.state.purpose;
+    const selectedUsers = this.state.selectedUsers;
+
+    this.props.dispatch(channelActions.createTeamChannel(name, purpose)).then(response => {
+      const channel_id = response.id;
+      var addUserActions = selectedUsers.map(function(item){
+        return this.props.dispatch(channelActions.addTeamUserToChannel(channel_id, item.id));
+      }, this);
+      Promise.all(addUserActions).then(() => {
+        this.props.dispatch(showAddTeamChannelModal(false));
+      });
+    })
   }
   deselectUser(id){
     var selectedUsers = this.state.selectedUsers;
@@ -64,6 +84,23 @@ class TeamAddChannelModal extends React.Component {
       return item;
     });
     this.setState({users: users, selectedUsers: selectedUsers});
+  }
+  onMouseDown(){
+    this.mouseInDropDown = true;
+  }
+  onMouseUp(){
+    this.mouseInDropDown = false;
+  }
+  pageClick(e){
+    if (this.mouseInDropDown)
+      return;
+    this.hideDropdown();
+  }
+  componentDidMount(){
+    window.addEventListener('mousedown', this.pageClick, false);
+  }
+  componentWillUnmount(){
+    window.removeEventListener('mousedown', this.pageClick, false);
   }
   render(){
     return (
@@ -95,7 +132,8 @@ class TeamAddChannelModal extends React.Component {
               </div>
               <div className="content_row flex_direction_column">
                 <label style={{fontWeight:'normal'}}><strong>Members :</strong> people who will have access to this group</label>
-                <div className="modal_input_wrapper item_list">
+                <div className="modal_input_wrapper item_list"
+                    onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp}>
                   {
                     this.state.selectedUsers.map(function(item){
                       return (
@@ -131,7 +169,8 @@ class TeamAddChannelModal extends React.Component {
                 <div className="buttons_wrapper">
                   <button className="button-unstyle neutral_background action_text_button mrgnRight5"
                           onClick={e => {this.props.dispatch(showAddTeamChannelModal(false))}}>Cancel</button>
-                  <button className="button-unstyle positive_background action_text_button">Next</button>
+                  <button className="button-unstyle positive_background action_text_button"
+                          onClick={this.validateChannelCreation}>Next</button>
                 </div>
               </div>
             </div>
