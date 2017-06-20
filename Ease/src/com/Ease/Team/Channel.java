@@ -147,11 +147,16 @@ public class Channel {
 
     public void removeTeamUser(TeamUser teamUser, DataBaseConnection db) throws HttpServletException {
         try {
-            DatabaseRequest request = db.prepareRequest("DELETE FROM channelAndTeamUserMap WHERE team_user_id = ? AND channel_id = ?;");
-            request.setInt(teamUser.getDb_id());
-            request.setInt(this.getDb_id());
-            request.set();
-            this.removeTeamUser(teamUser);
+            if (this.getPending_teamUsers().contains(teamUser))
+                this.removePendingTeamUser(teamUser, db);
+            else {
+                DatabaseRequest request = db.prepareRequest("DELETE FROM channelAndTeamUserMap WHERE team_user_id = ? AND channel_id = ?;");
+                request.setInt(teamUser.getDb_id());
+                request.setInt(this.getDb_id());
+                request.set();
+                System.out.println("Remove contains teamUser: " + this.getTeamUsers().contains(teamUser));
+                this.removeTeamUser(teamUser);
+            }
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }

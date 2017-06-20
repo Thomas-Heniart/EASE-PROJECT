@@ -35,10 +35,15 @@ public class ServletDeleteChannel extends HttpServlet {
             int transaction = db.startTransaction();
             List<ShareableApp> shareableAppsToRemove = new LinkedList<>();
             for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
-                if (shareableApp.getChannel() == channel)
+                if (shareableApp.getChannel() == channel) {
                     shareableAppsToRemove.add(shareableApp);
+                    System.out.println("Good channel");
+                }
+
             }
-            team.getAppManager().removeShareableApps(shareableAppsToRemove, db);
+            for (ShareableApp shareableApp : shareableAppsToRemove)
+                team.getAppManager().removeShareableApp(shareableApp, sm.getDB());
+            //team.getAppManager().removeShareableApps(shareableAppsToRemove, db);
             db.commitTransaction(transaction);
             team.removeChannel(channel);
             sm.deleteObject(channel);

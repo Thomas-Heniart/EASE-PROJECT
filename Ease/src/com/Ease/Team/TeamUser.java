@@ -368,13 +368,13 @@ public class TeamUser {
         try {
             int transaction = db.startTransaction();
             Team team = this.getTeam();
-            team.getAppManager().removeSharedAppsForTeamUser(this, db);
             List<ShareableApp> shareableAppsToRemove = new LinkedList<>();
             for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
                 if (shareableApp.getTeamUser_owner() == this)
                     shareableAppsToRemove.add(shareableApp);
             }
             team.getAppManager().removeShareableApps(shareableAppsToRemove, db);
+            team.getAppManager().removeSharedAppsForTeamUser(this, db);
             for (Channel channel : this.getTeam().getChannels())
                 channel.removeTeamUser(this, db);
             DatabaseRequest request = db.prepareRequest("DELETE FROM pendingTeamInvitations WHERE teamUser_id = ?;");

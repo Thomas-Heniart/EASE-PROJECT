@@ -54,6 +54,7 @@ public class AppManager {
     }
 
     public void removeSharedApp(SharedApp sharedApp) {
+        System.out.println("On m'appelle");
         this.sharedApps.remove(sharedApp);
         this.sharedAppMap.remove(Integer.valueOf(((App) sharedApp).getDBid()));
         this.teamUserAndSharedAppMap.get(sharedApp.getTeamUser_tenant()).remove(sharedApp);
@@ -62,14 +63,19 @@ public class AppManager {
     public void removeSharedAppsForTeamUser(TeamUser teamUser, DataBaseConnection db) throws HttpServletException {
         List<SharedApp> sharedApps = this.getSharedAppsForTeamUser(teamUser);
         this.removeSharedApps(sharedApps, db);
+        /* for (SharedApp sharedApp : sharedApps) {
+            this.removeSharedApp(sharedApp);
+        } */
+        this.teamUserAndSharedAppMap.remove(teamUser);
     }
 
     public void removeSharedApps(List<SharedApp> sharedApps, DataBaseConnection db) throws HttpServletException {
         try {
             int transaction = db.startTransaction();
             for (SharedApp sharedApp : sharedApps) {
-                this.removeSharedApp(sharedApp);
                 sharedApp.deleteShared(db);
+                ShareableApp shareableApp = sharedApp.getHolder();
+                shareableApp.removeSharedApp(sharedApp);
             }
             db.commitTransaction(transaction);
         } catch (GeneralException e) {
@@ -131,7 +137,7 @@ public class AppManager {
     public void removeShareableApp(ShareableApp shareableApp, DataBaseConnection db) throws HttpServletException {
         try {
             int transaction = db.startTransaction();
-            this.removeSharedApps(shareableApp.getSharedApps(), db);
+            //this.removeSharedApps(shareableApp.getSharedApps(), db);
             this.removeShareableApp(shareableApp);
             shareableApp.deleteShareable(db);
             db.commitTransaction(transaction);

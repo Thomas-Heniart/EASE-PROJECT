@@ -24,6 +24,7 @@ import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
@@ -307,7 +308,7 @@ public class User {
     public DashboardManager getDashboardManager() {
         return this.dashboardManager;
     }
-	
+
 	/*
 	 * public Status getStatus() { return status; }
 	 */
@@ -662,21 +663,24 @@ public class User {
         query.querySQLString("SELECT id, team_id FROM teamUsers WHERE user_id = ?");
         query.setParameter(1, Integer.parseInt(this.db_id));
         List<Object[]> teamUsers = query.list();
+        query.commit();
         for (Object[] teamUserIdAndTeamId : teamUsers) {
             Integer teamUser_id = (Integer) teamUserIdAndTeamId[0];
             Integer team_id = (Integer) teamUserIdAndTeamId[1];
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
+            for (Channel channel : team.getChannels()) {
+                if (!channel.getTeamUsers().isEmpty())
+                    System.out.println("Is that broken ? " + (!team.getTeamUsers().contains(channel.getTeamUsers().get(0))));
+            }
             this.teamUsers.add(teamUser);
             teamUser.setDashboard_user(this);
             if (teamUser.isVerified()) {
                 teamUser.decipher_teamKey();
                 team.decipherApps(teamUser.getDeciphered_teamKey());
             }
-
         }
-        query.commit();
     }
 
     public TeamUser getTeamUserForTeam(Team team) throws GeneralException {

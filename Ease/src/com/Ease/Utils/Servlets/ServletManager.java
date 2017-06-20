@@ -176,6 +176,12 @@ public abstract class ServletManager {
         throw new HttpServletException(HttpStatus.Forbidden);
     }
 
+    public void needToBeEaseAdmin() throws HttpServletException {
+        this.needToBeConnected();
+        if (!this.getUser().isAdmin())
+            throw new HttpServletException(HttpStatus.Forbidden);
+    }
+
     public HttpServletRequest getRequest() {
         return request;
     }

@@ -37,6 +37,7 @@ public class ServletDeleteSharedApp extends HttpServlet {
             ShareableApp shareableApp = sharedApp.getHolder();
             team.getAppManager().removeSharedApp(sharedApp);
             sharedApp.deleteShared(sm.getDB());
+            shareableApp.removeSharedApp(sharedApp);
             sm.setSuccess(shareableApp.getShareableJson());
         } catch (Exception e) {
             sm.setError(e);

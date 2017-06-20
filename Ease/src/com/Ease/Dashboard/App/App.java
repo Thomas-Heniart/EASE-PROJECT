@@ -472,7 +472,7 @@ public class App implements ShareableApp, SharedApp {
             request.set();
             this.removeFromDB(db);
             db.commitTransaction(transaction);
-            this.getHolder().removeSharedApp(this);
+            //this.getHolder().removeSharedApp(this);
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError);
         }
@@ -613,8 +613,14 @@ public class App implements ShareableApp, SharedApp {
     public void deleteShareable(DataBaseConnection db) throws HttpServletException {
         try {
             int transaction = db.startTransaction();
-            for (SharedApp sharedApp : this.getSharedApps())
+            System.out.println("SharedApps size: " + this.getSharedApps().size());
+            List<SharedApp> sharedAppsToDelete = new LinkedList<>();
+            for (SharedApp sharedApp : this.getSharedApps()) {
                 sharedApp.deleteShared(db);
+                sharedAppsToDelete.add(sharedApp);
+            }
+            for (SharedApp sharedApp : sharedAppsToDelete)
+                this.removeSharedApp(sharedApp);
             DatabaseRequest request = db.prepareRequest("DELETE FROM shareableApps WHERE id = ?;");
             request.setInt(this.getDBid());
             request.set();
@@ -693,6 +699,7 @@ public class App implements ShareableApp, SharedApp {
             DateFormat dateFormat1 = new SimpleDateFormat("MMMM dd, HH:mm", Locale.US);
             res.put("shared_date", dateFormat1.format(shared_date));
             JSONArray receivers = new JSONArray();
+            System.out.println("Shared apps size: " + this.getSharedApps().size());
             for (SharedApp sharedApp : this.getSharedApps()) {
                 JSONObject tmp = new JSONObject();
                 tmp.put("team_user_id", sharedApp.getTeamUser_tenant().getDb_id());
