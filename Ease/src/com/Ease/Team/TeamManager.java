@@ -31,6 +31,11 @@ public class TeamManager {
         Team team = this.teamIdMap.get(team_id);
         if (team == null)
             throw new HttpServletException(HttpStatus.BadRequest, "No such team");
+        for (Channel channel : team.getChannels()) {
+            if (!channel.getTeamUsers().isEmpty()) {
+
+            }
+        }
         return team;
     }
 
