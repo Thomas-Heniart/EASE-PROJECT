@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/api/v1/teams/RemoveTeamUserFromChannel")
+@WebServlet("/api/v1/teams/RemoveUserFromChannel")
 public class ServletRemoveTeamUserFromChannel extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
