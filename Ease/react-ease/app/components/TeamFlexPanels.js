@@ -3,7 +3,11 @@ var classnames = require('classnames');
 import * as teamModalActions from "../actions/teamModalActions"
 import * as channelActions from "../actions/channelActions"
 import * as userActions from "../actions/userActions"
-import {showTeamDeleteUserModal} from "../actions/teamModalActions"
+import {showTeamDeleteUserModal,
+    showTeamDeleteChannelModal,
+    showTeamDeleteUserFromChannelModal}
+    from "../actions/teamModalActions"
+import {teamUserRoles} from "../utils/helperFunctions"
 
 import {connect} from "react-redux"
 
@@ -29,7 +33,6 @@ class TeamChannelFlexTab extends React.Component{
         nameModifying: false
       });
     });
-    return;
   }
   handleNameInput(event){
     this.setState({modifiedName: event.target.value})
@@ -149,24 +152,28 @@ class TeamChannelFlexTab extends React.Component{
                 <strong className="heading">Members:</strong>
                 <div className="members_list">
                   {this.props.item.userIds.map(function (item) {
+                    const user = this.props.userGetter(item);
                     return (
-                        <span className="member_name_holder" key={item}>
-                        <span className="icon_wrapper">
-                          <i className="fa fa-user"/>
-                        </span>
-                       <span className="member_name">{this.props.userGetter(item).username}</span>
+                      <span className="member_name_holder" key={item}>
+                        <i className="fa fa-user mrgnRight5"/>
+                       <span className="member_name">{user.username}</span>
+                        <button class="button-unstyle remove_button mrgnLeft5"
+                                onClick={e => {this.props.dispatch(showTeamDeleteUserFromChannelModal(true, this.props.item.id, user.id))}}>
+                          <u>remove</u>
+                        </button>
                       </span>
                     )
                   }, this)}
                 </div>
-                <button class="button-unstyle underlineOnHover" onClick={e => {this.props.dispatch(teamModalActions.showTeamChannelAddUserModal(true))}}>
+                <button class="button-unstyle underlineOnHover" onClick={e => {this.props.dispatch(teamModalActions.showTeamChannelAddUserModal(true, this.props.item.id))}}>
                   <strong>+ invite member</strong>
                 </button>
               </div>
             </div>
             <div className="tab_content_row">
-              <button className="button-unstyle team_delete_button">
-                <u>Archive group</u>
+              <button className="button-unstyle team_delete_button"
+                      onClick={e => {this.props.dispatch(showTeamDeleteChannelModal(true, this.props.item.id))}}>
+                <u>Delete group</u>
               </button>
             </div>
           </div>
@@ -370,7 +377,7 @@ class TeamUserFlexTab extends React.Component{
             <span className="role_holder">
               <strong>Role: </strong>
               {!this.state.roleModifying ?
-                  <span className="role">{this.props.roles[this.props.item.role]}
+                  <span className="role">{teamUserRoles[this.props.item.role]}
                     <button class="button-unstyle mrgnLeft5 action_button"
                             onClick={this.setRoleModifying.bind(null, true)}>
                       <i class="fa fa-pencil"/>
@@ -383,9 +390,9 @@ class TeamUserFlexTab extends React.Component{
                             onChange={this.handleInput}
                             id="user_role_select" name='role'>
                       {
-                        Object.keys(this.props.roles).map(function (item) {
+                        Object.keys(teamUserRoles).map(function (item) {
                           return (
-                              <option value={item} key={item}>{this.props.roles[item]}</option>
+                              <option value={item} key={item}>{teamUserRoles[item]}</option>
                           )
                         }, this)
                       }
@@ -469,8 +476,8 @@ class TeamUserFlexTab extends React.Component{
             </div>
             <div className="tab_content_row">
               <button className="button-unstyle team_user_delete_button"
-                      onClick={e => {this.props.dispatch(showTeamDeleteUserModal(true))}}>
-                <u>Archive account</u>
+                      onClick={e => {this.props.dispatch(showTeamDeleteUserModal(true, this.props.item.id))}}>
+                <u>Delete user</u>
               </button>
             </div>
           </div>
@@ -482,8 +489,7 @@ class TeamUserFlexTab extends React.Component{
 @connect((store)=>{
   return {
     me: store.users.me,
-    selectedItem: store.selection,
-    userRoles: store.users.roles
+    selectedItem: store.selection
   };
 })
 class FlexPanels extends React.Component {
@@ -499,14 +505,12 @@ class FlexPanels extends React.Component {
               flexActive={this.props.flexActive}
               toggleFlexFunc={this.props.toggleFlexFunc}
               userGetter={this.props.userGetter}
-              roles={this.props.userRoles}
               dispatch={this.props.dispatch}/>}
           {this.props.flexActive && this.props.selectedItem.type === 'user' &&
           <TeamUserFlexTab
               item={this.props.selectedItem.item}
               flexActive={this.props.flexActive}
               toggleFlexFunc={this.props.toggleFlexFunc}
-              roles={this.props.userRoles}
               dispatch={this.props.dispatch}/>}
         </div>
     )

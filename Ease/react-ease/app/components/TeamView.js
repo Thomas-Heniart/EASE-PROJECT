@@ -10,7 +10,9 @@ var TeamAddUserModal = require('./TeamAddUserModal');
 var TeamAddChannelModal = require('./TeamAddChannelModal');
 var TeamChannelAddUserModal = require('./TeamChannelAddUserModal');
 var TeamDeleteUserModal = require('./TeamDeleteUserModal');
-
+var TeamDeleteChannelModal = require('./TeamDeleteChannelModal');
+var TeamDeleteUserFromChannelModal = require('./TeamDeleteUserFromChannelModal');
+var TeamAppsContainer = require('./TeamAppsContainer');
 import * as teamActions from "../actions/teamActions"
 import * as channelActions from "../actions/channelActions"
 import * as userActions from "../actions/userActions"
@@ -28,8 +30,10 @@ import {connect} from "react-redux"
     selectedItem: store.selection,
     addUserModalActive: store.teamModals.addUserModalActive,
     addChannelModalActive: store.teamModals.addChannelModalActive,
-    teamChannelAddUserModalActive: store.teamModals.teamChannelAddUserModalActive,
-    teamDeleteUserModalActive: store.teamModals.teamDeleteUserModalActive
+    teamChannelAddUserModal: store.teamModals.teamChannelAddUserModal,
+    teamDeleteUserModal: store.teamModals.teamDeleteUserModal,
+    teamDeleteChannelModal: store.teamModals.teamDeleteChannelModal,
+    teamDeleteUserFromChannelModal: store.teamModals.teamDeleteUserFromChannelModal
   };
 })
 class TeamView extends React.Component {
@@ -76,7 +80,7 @@ class TeamView extends React.Component {
   componentWillMount(){
     this.props.dispatch(teamActions.fetchTeamAndUsersAndChannels(this.props.team_id)).then(()=>{
       this.setState({loadingInfo: false});
-      this.props.dispatch(userActions.selectTeamUser(this.props.users[0].id));
+      this.props.dispatch(channelActions.selectTeamChannel(this.props.channels[0].id));
     });
   }
   render(){
@@ -94,11 +98,7 @@ class TeamView extends React.Component {
               <div id="col_main">
                 <TeamAppAddingUi
                     userSelectFunc={this.getUserById}/>
-                <div className="apps_container">
-                  <div className="apps_scroller_div" id="team_apps_container">
-
-                  </div>
-                </div>
+                <TeamAppsContainer />
               </div>
               <div id="col_flex">
                 <FlexPanels flexActive={this.state.flexActive}
@@ -111,10 +111,14 @@ class TeamView extends React.Component {
           <TeamAddUserModal/>}
           {this.props.addChannelModalActive &&
               <TeamAddChannelModal/>}
-          {this.props.teamChannelAddUserModalActive &&
+          {this.props.teamChannelAddUserModal.active &&
               <TeamChannelAddUserModal/>}
-          {this.props.teamDeleteUserModalActive &&
+          {this.props.teamDeleteUserModal.active &&
           <TeamDeleteUserModal/>}
+          {this.props.teamDeleteChannelModal.active &&
+          <TeamDeleteChannelModal/>}
+          {this.props.teamDeleteUserFromChannelModal.active &&
+          <TeamDeleteUserFromChannelModal/>}
         </div>
     )
   }

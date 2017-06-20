@@ -35,6 +35,55 @@ export default function reducer(state={
         channels: nChannels
       }
     }
+    case 'CREATE_TEAM_CHANNEL_FULFILLED': {
+      var nChannels = state.channels.map(function(item){
+        return item;
+      });
+
+      nChannels.push(action.payload);
+      return {
+          ...state,
+        channels: nChannels
+      }
+    }
+    case 'ADD_TEAM_USER_TO_CHANNEL_FULFILLED': {
+      var nChannels = state.channels.map(function(item){
+        if (item.id === action.payload.channel_id)
+          item.userIds.push(action.payload.team_user_id);
+        return item;
+      });
+      return {
+        ...state,
+        channels: nChannels
+      }
+    }
+    case 'DELETE_TEAM_CHANNEL_FULFILLED': {
+      var nChannels = state.channels.map(function(item){
+          return item;
+      });
+      for (var i = 0; i < nChannels.length; i++){
+        if (nChannels[i].id === action.payload.channel_id){
+          nChannels.splice(i,1);
+          break;
+        }
+      }
+      return {
+        ...state,
+        channels: nChannels
+      }
+    }
+    case 'DELETE_TEAM_USER_FULFILLED': {
+      var nChannels = state.channels.map(function(item){
+        return item;
+      });
+      for (var i = 0; i < nChannels.length; i++){
+          nChannels[i].userIds.splice(nChannels[i].userIds.indexOf(action.payload.team_user_id), 1);
+      }
+      return {
+          ...state,
+        channels: nChannels
+      }
+    }
   }
   return {
       ...state

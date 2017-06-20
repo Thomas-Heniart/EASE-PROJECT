@@ -44,8 +44,49 @@ module.exports = {
       return response.data;
     });
   },
+  fetchTeamChannelApps : function(team_id, channel_id){
+    return axios.get('/api/v1/teams/GetChannelApps', {
+      params :{
+        'team_id': team_id,
+        'channel_id': channel_id
+      }
+    }).then(response => {
+      return response.data;
+    })
+  },
   fetchTeamUser : function (team_id, team_user_id) {
     return axios.get('/api/v1/teams/GetTeamUser',{
+      params :{
+        'team_id': team_id,
+        'team_user_id': team_user_id
+      }
+    }).then(function (response) {
+      return response.data;
+    });
+  },
+  fetchTeamUserShareableAppsInChannel: function (team_id, channel_id, team_user_id) {
+    return axios.get('/api/v1/teams/GetUserShareableAppsInChannel', {
+      params:{
+        team_id: team_id,
+        channel_id: channel_id,
+        team_user_id: team_user_id
+      }
+    }).then(response => {
+      return response.data;
+    })
+  },
+  fetchTeamUserShareableApps: function(team_id, team_user_id){
+    return axios.get('/api/v1/teams/GetUserShareableApps', {
+      params: {
+        team_id: team_id,
+        team_user_id: team_user_id
+      }
+    }).then(response => {
+      return response.data;
+    })
+  },
+  fetchTeamUserApps: function (team_id, team_user_id) {
+    return axios.get('/api/v1/teams/GetTeamUserApps',{
       params :{
         'team_id': team_id,
         'team_user_id': team_user_id
