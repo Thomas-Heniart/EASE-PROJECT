@@ -85,8 +85,11 @@ public class TeamUser {
     @Column(name = "jobTitle")
     protected String jobTitle;
 
-    @OneToMany(mappedBy = "teamUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    /* @OneToMany(mappedBy = "teamUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     protected Set<TeamUserNotification> teamUserNotifications = new HashSet<>();
+
+    @OneToMany(mappedBy = "teamUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    protected Set<TeamUserTip> teamUserTips = new HashSet<>(); */
 
     @Transient
     protected DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
@@ -229,13 +232,13 @@ public class TeamUser {
         this.teamUserRole = teamUserRole;
     }
 
-    public Set<TeamUserNotification> getTeamUserNotifications() {
+    /* public Set<TeamUserNotification> getTeamUserNotifications() {
         return teamUserNotifications;
     }
 
     public void setTeamUserNotifications(Set<TeamUserNotification> teamUserNotifications) {
         this.teamUserNotifications = teamUserNotifications;
-    }
+    } */
 
     public static TeamUser createAdminUser(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Team team) throws GeneralException {
         TeamUserRole teamUserRole = new TeamUserRole(TeamUserRole.Role.ADMINISTRATOR.getValue());
@@ -255,6 +258,10 @@ public class TeamUser {
         if (departureDate != null)
             res.put("departure_date", this.dateFormat.format(this.departureDate));
         res.put("verified", this.verified);
+        JSONArray channel_ids = new JSONArray();
+        for (Channel channel : this.getTeam().getChannelsForTeamUser(this))
+            channel_ids.add(channel.getDb_id());
+        res.put("channel_ids", channel_ids);
         return res;
     }
 
@@ -323,6 +330,10 @@ public class TeamUser {
         if (this.getDepartureDate() != null)
             jsonObject.put("departure_date", this.dateFormat.format(this.getDepartureDate()));
         jsonObject.put("role", this.getTeamUserRole().getRoleValue());
+        JSONArray channel_ids = new JSONArray();
+        for (Channel channel : this.getTeam().getChannelsForTeamUser(this))
+            channel_ids.add(channel.getDb_id());
+        jsonObject.put("channel_ids", channel_ids);
         return jsonObject;
     }
 
