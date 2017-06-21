@@ -713,14 +713,8 @@ public class App implements ShareableApp, SharedApp {
             res.put("shared_date", dateFormat1.format(shared_date));
             JSONArray receivers = new JSONArray();
             System.out.println("Shared apps size: " + this.getSharedApps().size());
-            for (SharedApp sharedApp : this.getSharedApps()) {
-                JSONObject tmp = new JSONObject();
-                tmp.put("team_user_id", sharedApp.getTeamUser_tenant().getDb_id());
-                tmp.put("shared_app_id", Integer.valueOf(((App) sharedApp).getDBid()));
-                tmp.put("accepted", ((App) sharedApp).isReceived());
-                tmp.put("pinned_app_id", (sharedApp.getPinned_app() == null) ? -1 : sharedApp.getPinned_app().getSingleId());
-                receivers.add(tmp);
-            }
+            for (SharedApp sharedApp : this.getSharedApps())
+                receivers.add(sharedApp.getSharedJSON());
             res.put("receivers", receivers);
             res.put("origin", this.getOrigin());
             res.put("description", this.getDescription());
