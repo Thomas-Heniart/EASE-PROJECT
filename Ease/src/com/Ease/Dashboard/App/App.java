@@ -439,7 +439,7 @@ public class App implements ShareableApp, SharedApp {
     public JSONObject getJson() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("name", this.getAppInformation().getName());
-        jsonObject.put("id", this.getDBid());
+        jsonObject.put("id", this.getSingleId());
         return jsonObject;
     }
 

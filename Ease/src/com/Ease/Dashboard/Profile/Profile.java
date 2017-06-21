@@ -328,7 +328,7 @@ public class Profile {
 
     public JSONObject getJson() {
         JSONObject res = new JSONObject();
-        res.put("id", this.getDBid());
+        res.put("id", this.getSingleId());
         res.put("name", this.infos.getName());
         JSONArray apps = new JSONArray();
         for (App app : this.getApps())
