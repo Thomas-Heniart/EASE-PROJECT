@@ -75,12 +75,12 @@ public class App implements ShareableApp, SharedApp {
                 default:
                     throw new GeneralException(ServletManager.Code.InternError, "This app type dosen't exist.");
             }
-            if (app.getPosition() != apps.size()) {
+            if (app.getPosition() != apps.size())
                 app.setPosition(apps.size(), db);
-            }
 
             Integer shared_app_id = rs.getInt("shared_app_id");
             if (shared_app_id > 0) {
+                System.out.println("App pinned");
                 Integer team_id = rs.getInt("team_id");
                 TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
                 Team team = teamManager.getTeamWithId(team_id);
@@ -305,6 +305,8 @@ public class App implements ShareableApp, SharedApp {
         DatabaseRequest request = db.prepareRequest("DELETE FROM profileAndAppMap WHERE app_id = ?;");
         request.setInt(db_id);
         request.set();
+        System.out.println("App pined: " + this.sharedApp_pinned == null);
+        System.out.println("My id: " + this.getSingleId());
         if (this.sharedApp_pinned != null)
             this.sharedApp_pinned.unpin(db);
         request = db.prepareRequest("DELETE FROM apps WHERE id = ?;");
@@ -362,6 +364,8 @@ public class App implements ShareableApp, SharedApp {
     }
 
     public void setSharedApp_pinned(SharedApp sharedApp) {
+        System.out.println("App pinned id " + this.getSingleId());
+        System.out.println("SharedApp is null: " + (sharedApp == null));
         this.sharedApp_pinned = sharedApp;
     }
 
@@ -573,8 +577,9 @@ public class App implements ShareableApp, SharedApp {
                 app = ClassicApp.createClassicApp((ClassicApp) this, profile, keyUser, db);
             else
                 app = LinkApp.createLinkApp((LinkApp) this, profile, db);
-            DatabaseRequest request = db.prepareRequest("UPDATE sharedApps SET pinned_app_id = ?;");
+            DatabaseRequest request = db.prepareRequest("UPDATE sharedApps SET pinned_app_id = ? WHERE id = ?;");
             request.setInt(app.getDBid());
+            request.setInt(this.getDBid());
             request.set();
             db.commitTransaction(transaction);
             this.setPinned_app(app);
@@ -613,7 +618,6 @@ public class App implements ShareableApp, SharedApp {
     public void deleteShareable(DataBaseConnection db) throws HttpServletException {
         try {
             int transaction = db.startTransaction();
-            System.out.println("SharedApps size: " + this.getSharedApps().size());
             List<SharedApp> sharedAppsToDelete = new LinkedList<>();
             for (SharedApp sharedApp : this.getSharedApps()) {
                 sharedApp.deleteShared(db);
