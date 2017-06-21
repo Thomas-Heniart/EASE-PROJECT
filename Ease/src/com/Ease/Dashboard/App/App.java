@@ -506,6 +506,7 @@ public class App implements ShareableApp, SharedApp {
         res.put("team_user_id", this.teamUser_tenant.getDb_id());
         res.put("shared_app_id", Integer.valueOf(this.getDBid()));
         res.put("accepted", this.isReceived());
+        res.put("pinned_app_id", (this.getPinned_app() == null) ? -1 : this.getPinned_app().getSingleId());
         return res;
     }
 
@@ -717,6 +718,7 @@ public class App implements ShareableApp, SharedApp {
                 tmp.put("team_user_id", sharedApp.getTeamUser_tenant().getDb_id());
                 tmp.put("shared_app_id", Integer.valueOf(((App) sharedApp).getDBid()));
                 tmp.put("accepted", ((App) sharedApp).isReceived());
+                tmp.put("pinned_app_id", (sharedApp.getPinned_app() == null) ? -1 : sharedApp.getPinned_app().getSingleId());
                 receivers.add(tmp);
             }
             res.put("receivers", receivers);
