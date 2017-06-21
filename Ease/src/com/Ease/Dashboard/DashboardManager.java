@@ -123,6 +123,13 @@ public class DashboardManager {
         return profile;
     }
 
+    public Profile getProfileWithId(Integer db_id) throws HttpServletException {
+        Profile profile = this.profileDBMap.get(Integer.valueOf(db_id));
+        if (profile == null)
+            throw new HttpServletException(HttpStatus.BadRequest, "This profile does not exist.");
+        return profile;
+    }
+
     public Profile getProfileFromApp(int single_id) throws GeneralException {
         for (List<Profile> column : this.profiles) {
             for (Profile profile : column) {
@@ -154,7 +161,7 @@ public class DashboardManager {
     }
 
 	/*
-	 * Apps getter and setters
+     * Apps getter and setters
 	 */
 
     /* For sancho le robot */
@@ -265,8 +272,7 @@ public class DashboardManager {
         db.commitTransaction(transaction);
     }
 
-    public void moveApp(int appId, int profileIdDest, int positionDest, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public void moveApp(int appId, int profileIdDest, int positionDest, DataBaseConnection db) throws GeneralException {
         int transaction = db.startTransaction();
         App app = this.appsIDMap.get(appId);
         Profile profileDest = this.getProfile(profileIdDest);
@@ -359,5 +365,12 @@ public class DashboardManager {
                 classicApps.add((ClassicApp) app);
         }
         return classicApps;
+    }
+
+    public JSONArray getProfilesJson() {
+        JSONArray res = new JSONArray();
+        for (Profile profile : this.getProfilesList())
+            res.add(profile.getJson());
+        return res;
     }
 }

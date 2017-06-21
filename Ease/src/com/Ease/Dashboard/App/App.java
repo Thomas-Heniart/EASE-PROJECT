@@ -425,13 +425,21 @@ public class App implements ShareableApp, SharedApp {
         }
     }
 
+    /* Old version */
     public JSONObject getJSON() {
         JSONObject jsonObject = new JSONObject();
         if (position != null)
             jsonObject.put("position", position);
         jsonObject.put("name", this.getAppInformation().getName());
         jsonObject.put("singleId", this.single_id);
-        jsonObject.put("type", this.getType());
+        return jsonObject;
+    }
+
+    /* New version */
+    public JSONObject getJson() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("name", this.getAppInformation().getName());
+        jsonObject.put("id", this.getDBid());
         return jsonObject;
     }
 
@@ -779,6 +787,11 @@ public class App implements ShareableApp, SharedApp {
     public void removeSharedApp(SharedApp sharedApp) {
         this.sharedAppIdMap.remove(((App) sharedApp).getDBid());
         this.getSharedApps().remove(sharedApp);
+    }
+
+    @Override
+    public App getPinned_app() {
+        return this.pinned_app;
     }
 
     @Override

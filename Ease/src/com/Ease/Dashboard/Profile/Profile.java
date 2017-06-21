@@ -18,6 +18,7 @@ import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.User.User;
 
 public class Profile {
+
     public enum Data {
         NOTHING,
         ID,
@@ -70,6 +71,7 @@ public class Profile {
             infos = ProfileInformation.loadProfileInformation(rs.getString(Data.PROFILE_INFO_ID.ordinal()), db);
             IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
             single_id = idGenerator.getNextId();
+            System.out.println("Profile id: " + single_id);
             Profile profile = new Profile(db_id, user, columnIdx, posIdx, groupProfile, infos, single_id);
             apps = App.loadApps(profile, sm);
             profile.setApps(apps);
@@ -321,6 +323,17 @@ public class Profile {
             array.add(jsonApp);
         }
         res.put("apps", array);
+        return res;
+    }
+
+    public JSONObject getJson() {
+        JSONObject res = new JSONObject();
+        res.put("id", this.getDBid());
+        res.put("name", this.infos.getName());
+        JSONArray apps = new JSONArray();
+        for (App app : this.getApps())
+            apps.add(app.getJson());
+        res.put("apps", apps);
         return res;
     }
 

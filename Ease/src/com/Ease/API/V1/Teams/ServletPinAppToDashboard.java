@@ -31,20 +31,33 @@ public class ServletPinAppToDashboard extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true);
+            sm.needToBeTeamUserOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
-            Integer app_id = sm.getIntParam("app_id", true);
+            Integer app_id = sm.getIntParam("shared_app_id", true);
             SharedApp sharedApp = team.getAppManager().getSharedApp(app_id);
             TeamUser teamUser = sm.getTeamUserForTeam(team);
             if (teamUser != sharedApp.getTeamUser_tenant())
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot pin this app to your dashboard.");
             User user = sm.getUser();
             Integer profile_id = sm.getIntParam("profile_id", true);
-            Profile profile = user.getDashboardManager().getProfile(profile_id);
-            App pinned_app = sharedApp.createPinned_app(profile, user.getKeys().getKeyUser(), sm.getDB());
-            pinned_app.setSingleId(sm.getNextSingle_id());
-            profile.addApp(pinned_app);
-            sm.setSuccess("App pined to dashboard");
+            if (profile_id == -1) {
+                if (sharedApp.getPinned_app() == null)
+                    throw new HttpServletException(HttpStatus.BadRequest, "Cannot unpin.");
+                user.getDashboardManager().removeAppWithSingleId(sharedApp.getPinned_app().getSingleId(), sm.getDB());
+            } else {
+                Profile profile = user.getDashboardManager().getProfile(profile_id);
+                App pinned_app = sharedApp.getPinned_app();
+                if (pinned_app == null) {
+                    pinned_app = sharedApp.createPinned_app(profile, user.getKeys().getKeyUser(), sm.getDB());
+                    pinned_app.setSingleId(sm.getNextSingle_id());
+                    profile.addApp(pinned_app);
+                } else {
+                    user.getDashboardManager().moveApp(pinned_app.getSingleId(), profile_id, profile.getApps().size(), sm.getDB());
+                    pinned_app.setProfile(profile, sm.getDB());
+                }
+            }
+            sm.setSuccess(sharedApp.getSharedJSON());
         } catch (Exception e) {
             sm.setError(e);
         }

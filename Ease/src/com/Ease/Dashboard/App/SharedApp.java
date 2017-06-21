@@ -46,6 +46,8 @@ public interface SharedApp {
 
     public App createPinned_app(Profile profile, String keyUser, DataBaseConnection db) throws HttpServletException;
 
+    public App getPinned_app();
+
     public void setPinned_app(App app);
 
     public void unpin(DataBaseConnection db) throws HttpServletException;

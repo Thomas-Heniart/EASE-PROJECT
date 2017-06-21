@@ -37,9 +37,7 @@ public class ServletDeleteChannel extends HttpServlet {
             for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
                 if (shareableApp.getChannel() == channel) {
                     shareableAppsToRemove.add(shareableApp);
-                    System.out.println("Good channel");
                 }
-
             }
             for (ShareableApp shareableApp : shareableAppsToRemove)
                 team.getAppManager().removeShareableApp(shareableApp, sm.getDB());
