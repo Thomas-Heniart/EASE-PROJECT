@@ -712,7 +712,6 @@ public class App implements ShareableApp, SharedApp {
             DateFormat dateFormat1 = new SimpleDateFormat("MMMM dd, HH:mm", Locale.US);
             res.put("shared_date", dateFormat1.format(shared_date));
             JSONArray receivers = new JSONArray();
-            System.out.println("Shared apps size: " + this.getSharedApps().size());
             for (SharedApp sharedApp : this.getSharedApps())
                 receivers.add(sharedApp.getSharedJSON());
             res.put("receivers", receivers);

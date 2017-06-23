@@ -146,6 +146,7 @@ public class Channel {
     }
 
     public void removeTeamUser(TeamUser teamUser, DataBaseConnection db) throws HttpServletException {
+        System.out.println("Remove contains teamUser: " + this.getTeamUsers().contains(teamUser));
         try {
             if (this.getPending_teamUsers().contains(teamUser))
                 this.removePendingTeamUser(teamUser, db);
@@ -251,5 +252,22 @@ public class Channel {
         EqualsBuilder eb = new EqualsBuilder();
         eb.append(this.db_id, teamUser.db_id);
         return eb.isEquals();
+    }
+
+    public void delete(DataBaseConnection db) throws HttpServletException {
+        try {
+            int transaction = db.startTransaction();
+            List<TeamUser> teamUsersToRemove = new LinkedList<>();
+            teamUsersToRemove.addAll(this.getTeamUsers());
+            teamUsersToRemove.addAll(this.getPending_teamUsers());
+            System.out.println("TeamUsers size: " + teamUsersToRemove.size());
+            for (TeamUser teamUser : teamUsersToRemove) {
+                this.removeTeamUser(teamUser, db);
+            }
+
+            db.commitTransaction(transaction);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 }

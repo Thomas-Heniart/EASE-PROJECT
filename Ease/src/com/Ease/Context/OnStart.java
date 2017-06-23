@@ -4,11 +4,7 @@ import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -22,6 +18,9 @@ import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateDatabase;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.*;
+import com.stripe.Stripe;
+import com.stripe.exception.*;
+import com.stripe.model.Customer;
 
 public class OnStart implements ServletContextListener {
 
@@ -51,7 +50,15 @@ public class OnStart implements ServletContextListener {
                 context.setAttribute("catalog", new Catalog(db, context));
                 context.setAttribute("groupManager", new GroupManager());
                 context.setAttribute("websitesVisitedManager", new WebsitesVisitedManager(db, context));
-                context.setAttribute("teamManager", new TeamManager(context, db));
+                TeamManager teamManager = new TeamManager(context, db);
+                context.setAttribute("teamManager", teamManager);
+                Stripe.apiKey = "sk_test_4Qqw6xcv7VQDmXBS5CZ9rz5T";
+                //context.setAttribute("tipManager", new TipManager());
+
+                /* Stripe timer */
+                Timer time = new Timer(); // Instantiate Timer Object
+                StripeScheduledTask st = new StripeScheduledTask(teamManager); // Instantiate SheduledTask class
+                time.schedule(st, 0, /* 24 * 60  * */ 60 * 1000); // Create Repetitively task for every day
 
                 List<String> colors = new ArrayList<String>();
                 colors.add("#373B60");

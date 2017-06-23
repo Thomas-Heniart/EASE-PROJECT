@@ -62,6 +62,9 @@ public class TeamUser {
     @Column(name = "verified")
     protected boolean verified;
 
+    @Column(name = "active")
+    protected boolean active;
+
     @Transient
     protected String deciphered_teamKey;
 
@@ -230,6 +233,14 @@ public class TeamUser {
 
     public void setTeamUserRole(TeamUserRole teamUserRole) {
         this.teamUserRole = teamUserRole;
+    }
+
+    public Boolean isActive() {
+        return this.active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
     /* public Set<TeamUserNotification> getTeamUserNotifications() {

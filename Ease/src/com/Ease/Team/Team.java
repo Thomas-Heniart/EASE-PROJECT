@@ -9,6 +9,11 @@ import com.Ease.Mail.SendGridMail;
 import com.Ease.Notification.Notification;
 import com.Ease.Notification.TeamNotification;
 import com.Ease.Utils.*;
+import com.stripe.exception.*;
+import com.stripe.model.Coupon;
+import com.stripe.model.Customer;
+import com.stripe.model.Discount;
+import com.stripe.model.Subscription;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.json.simple.JSONArray;
@@ -54,9 +59,8 @@ public class Team {
             }
             for (Channel channel : team.getChannels()) {
                 if (!channel.getTeamUsers().isEmpty()) {
-                    
+
                 }
-                    //System.out.println("Is that broken ? " + (!team.getTeamUsers().contains(channel.getTeamUsers().get(0))));
             }
         }
         query.commit();
@@ -71,13 +75,25 @@ public class Team {
     @Column(name = "name")
     protected String name;
 
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @Column(name = "customer_id")
+    protected String customer_id;
+
+    @Column(name = "subscription_id")
+    protected String subscription_id;
+
+    @Column(name = "first_payment_date")
+    protected Date first_payment_date;
+
+    @Column(name = "next_payment_date")
+    protected Date next_payment_date;
+
+    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, orphanRemoval = true)
     protected List<TeamUser> teamUsers = new LinkedList<>();
 
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY, orphanRemoval = true)
     protected List<Channel> channels = new LinkedList<>();
 
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY, orphanRemoval = true)
     protected Set<TeamNotification> teamNotifications = new HashSet<>();
 
     @Transient
@@ -92,11 +108,8 @@ public class Team {
     @Transient
     protected AppManager appManager = new AppManager();
 
-    public Team(String name, List<TeamUser> teamUsers, List<Channel> channels) {
-        this.name = name;
-        this.teamUsers = teamUsers;
-        this.channels = channels;
-    }
+    @Transient
+    private int activeSubscriptions;
 
     public Team(String name) {
         this.name = name;
@@ -119,6 +132,38 @@ public class Team {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCustomer_id() {
+        return customer_id;
+    }
+
+    public void setCustomer_id(String customer_id) {
+        this.customer_id = customer_id;
+    }
+
+    public String getSubscription_id() {
+        return subscription_id;
+    }
+
+    public void setSubscription_id(String subscription_id) {
+        this.subscription_id = subscription_id;
+    }
+
+    public Date getFirst_payment_date() {
+        return first_payment_date;
+    }
+
+    public void setFirst_payment_date(Date first_payment_date) {
+        this.first_payment_date = first_payment_date;
+    }
+
+    public Date getNext_payment_date() {
+        return next_payment_date;
+    }
+
+    public void setNext_payment_date(Date next_payment_date) {
+        this.next_payment_date = next_payment_date;
     }
 
     public List<TeamUser> getTeamUsers() {
@@ -349,5 +394,79 @@ public class Team {
         EqualsBuilder eb = new EqualsBuilder();
         eb.append(this.db_id, teamUser.db_id);
         return eb.isEquals();
+    }
+
+    public Integer getActiveTeamUserNumber() {
+        int res = 0;
+        for (TeamUser teamUser : this.getTeamUsers()) {
+            if (teamUser.isActive())
+                res++;
+        }
+        return res;
+    }
+
+    public void updateSubscription(Date now) {
+        if (this.subscription_id == null || this.subscription_id.equals(""))
+            return;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(this.next_payment_date);
+        if (this.next_payment_date.compareTo(now) < 0) {
+            //calendar.add(Calendar.MONTH, 1);
+            calendar.add(Calendar.MINUTE, 1);
+            this.next_payment_date = calendar.getTime();
+        }
+        this.activeSubscriptions = 0;
+        this.getTeamUsers().forEach(teamUser -> {
+            if (!(this.getAppManager().getShareableAppsForTeamUser(teamUser).isEmpty() && this.getAppManager().getSharedAppsForTeamUser(teamUser).isEmpty()))
+                teamUser.setActive(true);
+            else
+                teamUser.setActive(false);
+            if (teamUser.isActive())
+                activeSubscriptions++;
+        });
+        try {
+            Subscription subscription = Subscription.retrieve(this.subscription_id);
+            if (subscription.getQuantity() != activeSubscriptions) {
+                Map<String, Object> updateParams = new HashMap<>();
+                updateParams.put("quantity", activeSubscriptions);
+                subscription.update(updateParams);
+            }
+        } catch (AuthenticationException e) {
+            e.printStackTrace();
+        } catch (InvalidRequestException e) {
+            e.printStackTrace();
+        } catch (APIConnectionException e) {
+            e.printStackTrace();
+        } catch (CardException e) {
+            e.printStackTrace();
+        } catch (APIException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean isBlocked() {
+        return this.subscription_id == null;
+    }
+
+    public void increaseAccountBalance(Integer amount) {
+        if (this.getCustomer_id() == null)
+            return;
+        try {
+            Customer customer = Customer.retrieve(this.getCustomer_id());
+            Map<String, Object> customerParams = new HashMap<>();
+            customerParams.put("account_balance", customer.getAccountBalance() - amount);
+            customer.update(customerParams);
+        } catch (AuthenticationException e) {
+            e.printStackTrace();
+        } catch (InvalidRequestException e) {
+            e.printStackTrace();
+        } catch (APIConnectionException e) {
+            e.printStackTrace();
+        } catch (CardException e) {
+            e.printStackTrace();
+        } catch (APIException e) {
+            e.printStackTrace();
+        }
+
     }
 }

@@ -1,0 +1,2 @@
+echo "api_key: 4aSxkrODR62lsFrxfWqVYjQkgDDhG3y2" > ~/.ultrahook
+gem install ultrahook

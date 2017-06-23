@@ -1,8 +1,10 @@
 package com.Ease.Team;
 
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Utils.*;
 
 import javax.servlet.ServletContext;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -60,5 +62,19 @@ public class TeamManager {
                 return team;
         }
         return null;
+    }
+
+    public void updateTeamsSubscriptions() {
+        Date now = new Date();
+        HibernateQuery hibernateQuery = new HibernateQuery();
+        for (Team team : this.getTeams()) {
+            team.updateSubscription(now);
+            hibernateQuery.saveOrUpdateObject(team);
+        }
+        try {
+            hibernateQuery.commit();
+        } catch (HttpServletException e) {
+            e.printStackTrace();
+        }
     }
 }
