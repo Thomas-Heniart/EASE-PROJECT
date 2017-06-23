@@ -49,7 +49,10 @@ public class ServletPinAppToDashboard extends HttpServlet {
                 Profile profile = user.getDashboardManager().getProfile(profile_id);
                 App pinned_app = sharedApp.getPinned_app();
                 if (pinned_app == null) {
-                    pinned_app = sharedApp.createPinned_app(profile, user.getKeys().getKeyUser(), sm.getDB());
+                    String name = sm.getStringParam("app_name", true);
+                    if (name == null || name.equals(""))
+                        throw new HttpServletException(HttpStatus.BadRequest, "App name cannot be null");
+                    pinned_app = sharedApp.createPinned_app(name, profile, user.getKeys().getKeyUser(), sm.getDB());
                     pinned_app.setSingleId(sm.getNextSingle_id());
                     profile.addApp(pinned_app);
                 } else {

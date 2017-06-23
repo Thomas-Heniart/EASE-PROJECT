@@ -44,7 +44,7 @@ public interface SharedApp {
 
     public void setCanSeeInformation(Boolean canSeeInformation, DataBaseConnection db) throws HttpServletException;
 
-    public App createPinned_app(Profile profile, String keyUser, DataBaseConnection db) throws HttpServletException;
+    public App createPinned_app(String name, Profile profile, String keyUser, DataBaseConnection db) throws HttpServletException;
 
     public App getPinned_app();
 
