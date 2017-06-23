@@ -1,14 +1,12 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
-import com.stripe.exception.InvalidRequestException;
-import com.stripe.model.Coupon;
 import com.stripe.model.Customer;
-import com.stripe.model.Plan;
 import com.stripe.model.Subscription;
 
 import javax.servlet.RequestDispatcher;
@@ -18,7 +16,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,23 +31,29 @@ public class ServletSubscribeToMonthPlan extends HttpServlet {
             if (team.getSubscription_id() != null)
                 throw new HttpServletException(HttpStatus.BadRequest, "You already subscribed to Ease Space");
             if (team.getCustomer_id() == null) {
+                String email = sm.getTeamUserForTeam(team).getEmail();
                 Map<String, Object> customerParams = new HashMap<>();
-                customerParams.put("email", sm.getTeamUserForTeam(team).getEmail());
+                customerParams.put("email", email);
                 customerParams.put("source", sm.getStringParam("token", true));
+                /* HibernateQuery hibernateQuery = sm.getHibernateQuery();
+                hibernateQuery.querySQLString("SELECT credit FROM waitingCredits WHERE email = ?");
+                hibernateQuery.setParameter(1, email);
+                Integer amount = (Integer) hibernateQuery.getSingleResult();
+                if (amount != null) {
+                    customerParams.put("account_balance", -amount);
+                    hibernateQuery.querySQLString("DELETE FROM waitingCredits WHERE email = ?");
+                    hibernateQuery.setParameter(1, email);
+                    hibernateQuery.executeUpdate();
+                } */
                 Customer customer = Customer.create(customerParams);
                 team.setCustomer_id(customer.getId());
             }
             Map<String, Object> subscriptionParams = new HashMap<>();
             subscriptionParams.put("plan", "EasePremium");
             subscriptionParams.put("quantity", 1);
-            team.increaseAccountBalance(10000);
             subscriptionParams.put("customer", team.getCustomer_id());
             Subscription subscription = Subscription.create(subscriptionParams);
             team.setSubscription_id(subscription.getId());
-            Calendar calendar = Calendar.getInstance();
-            team.setFirst_payment_date(calendar.getTime());
-            calendar.add(Calendar.MONTH, 1);
-            team.setNext_payment_date(calendar.getTime());
             sm.saveOrUpdate(team);
             sm.setSuccess("Subscription done");
         } catch (Exception e) {
