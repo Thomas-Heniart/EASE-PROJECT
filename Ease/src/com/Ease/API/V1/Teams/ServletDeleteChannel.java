@@ -45,6 +45,7 @@ public class ServletDeleteChannel extends HttpServlet {
             channel.delete(sm.getDB());
             db.commitTransaction(transaction);
             sm.deleteObject(channel);
+            sm.saveOrUpdate(team);
             sm.setSuccess("Channel delete");
         } catch (Exception e) {
             sm.setError(e);
