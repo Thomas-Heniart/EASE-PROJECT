@@ -408,13 +408,6 @@ public class Team {
     public void updateSubscription(Date now) {
         if (this.subscription_id == null || this.subscription_id.equals(""))
             return;
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(this.next_payment_date);
-        if (this.next_payment_date.compareTo(now) < 0) {
-            //calendar.add(Calendar.MONTH, 1);
-            calendar.add(Calendar.MINUTE, 1);
-            this.next_payment_date = calendar.getTime();
-        }
         this.activeSubscriptions = 0;
         this.getTeamUsers().forEach(teamUser -> {
             if (!(this.getAppManager().getShareableAppsForTeamUser(teamUser).isEmpty() && this.getAppManager().getSharedAppsForTeamUser(teamUser).isEmpty()))

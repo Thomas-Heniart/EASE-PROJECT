@@ -58,7 +58,7 @@ public class OnStart implements ServletContextListener {
                 /* Stripe timer */
                 Timer time = new Timer(); // Instantiate Timer Object
                 StripeScheduledTask st = new StripeScheduledTask(teamManager); // Instantiate SheduledTask class
-                time.schedule(st, 0, /* 24 * 60  * */ 60 * 1000); // Create Repetitively task for every day
+                time.schedule(st, 0, 12 * 60 * 60 * 1000); // Create Repetitively task for every 12 hours
 
                 List<String> colors = new ArrayList<String>();
                 colors.add("#373B60");
