@@ -31,7 +31,7 @@ public class ServletAcceptSharedApp extends HttpServlet {
             Integer team_id = sm.getIntParam("team_id", true);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
-            Integer app_id = sm.getIntParam("app_id", true);
+            Integer app_id = sm.getIntParam("shared_app_id", true);
             TeamUser teamUser = sm.getTeamUserForTeam(team);
             SharedApp sharedApp = team.getAppManager().getSharedApp(app_id);
             if (teamUser != sharedApp.getTeamUser_tenant())
