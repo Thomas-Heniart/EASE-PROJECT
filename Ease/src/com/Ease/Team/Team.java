@@ -81,12 +81,6 @@ public class Team {
     @Column(name = "subscription_id")
     protected String subscription_id;
 
-    @Column(name = "first_payment_date")
-    protected Date first_payment_date;
-
-    @Column(name = "next_payment_date")
-    protected Date next_payment_date;
-
     @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, orphanRemoval = true)
     protected List<TeamUser> teamUsers = new LinkedList<>();
 
@@ -148,22 +142,6 @@ public class Team {
 
     public void setSubscription_id(String subscription_id) {
         this.subscription_id = subscription_id;
-    }
-
-    public Date getFirst_payment_date() {
-        return first_payment_date;
-    }
-
-    public void setFirst_payment_date(Date first_payment_date) {
-        this.first_payment_date = first_payment_date;
-    }
-
-    public Date getNext_payment_date() {
-        return next_payment_date;
-    }
-
-    public void setNext_payment_date(Date next_payment_date) {
-        this.next_payment_date = next_payment_date;
     }
 
     public List<TeamUser> getTeamUsers() {
@@ -447,7 +425,8 @@ public class Team {
         try {
             Customer customer = Customer.retrieve(this.getCustomer_id());
             Map<String, Object> customerParams = new HashMap<>();
-            customerParams.put("account_balance", customer.getAccountBalance() - amount);
+            Integer account_balance = Math.toIntExact((customer.getAccountBalance() == null) ? 0 : customer.getAccountBalance());
+            customerParams.put("account_balance", account_balance - amount);
             customer.update(customerParams);
         } catch (AuthenticationException e) {
             e.printStackTrace();
