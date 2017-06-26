@@ -553,6 +553,7 @@ public class App implements ShareableApp, SharedApp {
         try {
             DatabaseRequest request = db.prepareRequest("UPDATE sharedApps SET received = ? WHERE id = ?;");
             request.setBoolean(true);
+            request.setInt(this.getDBid());
             request.set();
             this.setReceived(true);
         } catch (GeneralException e) {
