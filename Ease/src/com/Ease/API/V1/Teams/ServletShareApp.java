@@ -8,6 +8,8 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.ServletManager;
 import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.simple.JSONObject;
@@ -39,6 +41,8 @@ public class ServletShareApp extends HttpServlet {
             ShareableApp shareableApp = team.getAppManager().getShareableAppWithId(app_id);
             if (!(shareableApp.getTeamUser_owner() == teamUser_owner) && !teamUser_owner.isTeamAdmin())
                 throw new GeneralException(ServletManager.Code.ClientError, "You cannot access this app");
+            if (shareableApp.getTeamUser_tenants().contains(teamUser_tenant))
+                throw new HttpServletException(HttpStatus.BadRequest, "You already shared this app to this user");
             Channel channel = shareableApp.getChannel();
             JSONObject params = shareableApp.getNeededParams(sm);
             SharedApp sharedApp = shareableApp.share(teamUser_owner, teamUser_tenant, channel, team, params, sm);
