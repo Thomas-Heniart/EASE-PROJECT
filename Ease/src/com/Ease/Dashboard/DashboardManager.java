@@ -49,9 +49,9 @@ public class DashboardManager {
         }
     }
 
-    public Profile addProfile(String name, String color, ServletManager sm) throws GeneralException {
+    public Profile addProfile(String name, String color, int single_id, DataBaseConnection db) throws GeneralException {
         int column = this.getMostEmptyProfileColumn();
-        Profile newProfile = Profile.createPersonnalProfile(this.user, column, this.profiles.get(column).size(), name, color, sm);
+        Profile newProfile = Profile.createPersonnalProfile(this.user, column, this.profiles.get(column).size(), name, color, single_id, db);
         this.profiles.get(column).add(newProfile);
         this.addProfileToMaps(newProfile);
 

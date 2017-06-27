@@ -41,8 +41,8 @@ public class Profile {
         for (int i = 0; i < MAX_COLUMN; ++i) {
             profilesColumn.add(new LinkedList<Profile>());
         }
-        profilesColumn.get(0).add(Profile.createPersonnalProfile(user, 0, 0, "Side", "#000000", sm));
-        profilesColumn.get(1).add(Profile.createPersonnalProfile(user, 1, 0, "Me", "#373B60", sm));
+        profilesColumn.get(0).add(Profile.createPersonnalProfile(user, 0, 0, "Side", "#000000", sm.getNextSingle_id(), sm.getDB()));
+        profilesColumn.get(1).add(Profile.createPersonnalProfile(user, 1, 0, "Me", "#373B60", sm.getNextSingle_id(), sm.getDB()));
         return profilesColumn;
     }
 
@@ -108,7 +108,7 @@ public class Profile {
         if (groupProfile.isCommon()) {
             info = groupProfile.getInfo();
         } else {
-            info = ProfileInformation.createProfileInformation(groupProfile.getName(), groupProfile.getColor(), sm);
+            info = ProfileInformation.createProfileInformation(groupProfile.getName(), groupProfile.getColor(), db);
         }
         String db_id = createProfileInDb(db, user.getDBid(), columnIdx, posIdx, groupProfile.getDBid(), info.getDBid());
         IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
@@ -132,13 +132,10 @@ public class Profile {
         return id;
     }
 
-    public static Profile createPersonnalProfile(User user, int columnIdx, int posIdx, String name, String color, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public static Profile createPersonnalProfile(User user, int columnIdx, int posIdx, String name, String color, int single_id, DataBaseConnection db) throws GeneralException {
         int transaction = db.startTransaction();
-        ProfileInformation info = ProfileInformation.createProfileInformation(name, color, sm);
+        ProfileInformation info = ProfileInformation.createProfileInformation(name, color, db);
         String db_id = createProfileInDb(db, user.getDBid(), columnIdx, posIdx, null, info.getDBid());
-        IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
-        int single_id = idGenerator.getNextId();
         Profile profile = new Profile(db_id, user, columnIdx, posIdx, null, info, single_id);
         db.commitTransaction(transaction);
         return profile;

@@ -59,7 +59,7 @@ public class GroupProfile {
 		DataBaseConnection db = sm.getDB();
 		int transaction = db.startTransaction();
 		ProfilePermissions perms = ProfilePermissions.CreateProfilePermissions(permissions, group.getDBid(), sm);
-		ProfileInformation infos = ProfileInformation.createProfileInformation(name, color, sm);
+		ProfileInformation infos = ProfileInformation.createProfileInformation(name, color, sm.getDB());
 		DatabaseRequest request = db.prepareRequest("INSERT INTO groupProfiles VALUES(NULL, ?, ?, ?, ?);");
 		request.setInt(group.getDBid());
 		request.setInt(perms.getDBid());

@@ -22,8 +22,7 @@ public class ProfileInformation {
 	 * 
 	 */
 	
-	public static ProfileInformation createProfileInformation(String name, String color, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
+	public static ProfileInformation createProfileInformation(String name, String color, DataBaseConnection db) throws GeneralException {
 		DatabaseRequest request = db.prepareRequest("INSERT INTO profileInfo values (null, ?, ?);");
 		request.setString(name);
 		request.setString(color);
