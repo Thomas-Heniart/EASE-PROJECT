@@ -1,0 +1,25 @@
+{
+  "name":"Close.io",
+  "lastLogin":"",
+  "home":"https://app.moqups.com/",
+  "connect":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='login']"},
+      {"action":"fill", "what":"login", "search":"form[action*='blank'] input[name='username']"},
+      {"action":"fill", "what":"password", "search":"form[action*='blank'] input[name='password']"},
+      {"action":"click", "search":"form[action*='blank'] button[type='submit']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"clickona", "search":"#account-menu a.current-context"},
+      {"action":"waitfor", "search":"a[href*='logou']"},
+      {"action":"clickona", "search":"a[href*='logout']"},
+      {"action":"waitfor", "search":"a[href*='login']"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"#account-menu a.current-context .current-context-label, a[href*='login']"},
+    {"search":"#account-menu a.current-context .current-context-label"}
+  ]
+}

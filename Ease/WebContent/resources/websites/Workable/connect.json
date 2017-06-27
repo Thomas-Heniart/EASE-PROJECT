@@ -1,0 +1,28 @@
+{
+  "name":"Workable",
+  "lastlogin":"",
+  "home":"https://www.workable.com/signin",
+  "connect": {
+    "todo": [
+      {"action":"aclick", "search":"a[href*='signin']"},
+      {"action":"fill", "what":"login", "search":"#sign-in #email"},
+      {"action":"fill", "what":"password", "search":"#sign-in #password"},
+      {"action":"click", "search":"#sign-in input[type='submit']"}
+    ]
+  },
+  "LinkedIn": {
+    "todo": [
+      {"action":"aclick", "search":"a[href*='signin']"},
+      {"action":"aclick", "search":"a[href*='/auth/linkedin']"}
+    ]
+  },
+  "logout": {
+    "todo": [
+      {"action":"aclick", "search":"a[href*='signout']"}
+    ]
+  },
+  "checkAlreadyLogged": [
+    {"action":"waitfor", "search":"a[href*='signout'], #sign-in"},
+    {"search":"a[href*='signout']"}
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "name":"Close.io",
+  "lastLogin":"",
+  "home":"https://app.close.io/",
+  "connect":{
+    "todo":[
+      {"action":"clickona", "search":"a[href*='app.close.io/login']"},
+      {"action":"waitfor", "search":".login-box #email"},
+      {"action":"fill", "what":"login", "search":".login-box #email"},
+      {"action":"fill", "what":"password", "search":".login-box #password"},
+      {"action":"click", "search":".login-box input[type='submit']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='logout']"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='logout'], a[href*='app.close.io/login'], .login-box #email"},
+    {"search":"a[href*='logout']"}
+  ]
+}
