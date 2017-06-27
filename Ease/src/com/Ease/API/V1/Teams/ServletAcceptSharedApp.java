@@ -38,11 +38,8 @@ public class ServletAcceptSharedApp extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot accept this app.");
             App app = (App) sharedApp;
             app.accept(sm.getDB());
-            if (app.isClassicApp() && ((App) sharedApp.getHolder()).isClassicApp()) {
-                ClassicApp classicApp = (ClassicApp) app;
-                classicApp.getAccount().decipherWithTeamKeyIfNeeded(teamUser.getDeciphered_teamKey());
-                classicApp.getAccount().cipherWithKeyUser(sm.getUser().getKeys().getKeyUser(), sm.getDB());
-            }
+            if (!((App) sharedApp).isReceived())
+                sharedApp.accept(sm.getDB());
             sm.setSuccess("App accepted");
         } catch (Exception e) {
             sm.setError(e);
