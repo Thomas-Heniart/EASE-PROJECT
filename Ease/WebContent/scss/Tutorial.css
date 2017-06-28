@@ -51,6 +51,13 @@
 .onoffswitch-label-readonly {
   background-color: #C0C0C0; }
 
+.onoffswitch-label-readonly-disable {
+  background-color: #C0C0C0; }
+
+.onoffswitch-label-readonly-disable:before {
+  transition: none;
+  right: 1.3vw; }
+
 #tutorial #accountCredentials button[type='submit'],
 #tutorial #scrapingInfo button[type='submit'],
 #tutorial #selectScraping button[type='submit'],
@@ -119,6 +126,11 @@
       border-radius: 3px; }
   #tutorial #importation .popupBody .handler .row .account:last-child {
     margin-bottom: 0; }
+#tutorial #importation .popupBody .handler .row .account-unavailable .logo img {
+  filter: grayscale(75%);
+  -webkit-filter: grayscale(75%); }
+#tutorial #importation .popupBody .handler .row .account-unavailable p.name {
+  color: grey; }
 #tutorial #importation .popupBody .handler .row span.input {
   margin: 0;
   max-width: 100%; }
@@ -138,7 +150,7 @@
   #tutorial #importation #accountCredentials .errorText.show {
     display: block; }
   #tutorial #importation #accountCredentials .errorText p {
-    color: #ec555b;
+    color: #E84855;
     font-size: 1vw; }
 #tutorial #importation #accountCredentials .imageHandler {
   width: 5vw;
@@ -306,7 +318,7 @@
         padding: 0.25vw;
         font-size: 0.8vw;
         background-color: white;
-        font-family: "Raleway", "Source Sans Pro", sans-serif; }
+        font-family: "Museo", "Raleway", "Source Sans Pro", sans-serif; }
       #tutorial #simpleImportation .popupBody .handler .row .appsContainer .showMoreHelper:hover {
         cursor: pointer; }
         #tutorial #simpleImportation .popupBody .handler .row .appsContainer .showMoreHelper:hover .showMoreButton {

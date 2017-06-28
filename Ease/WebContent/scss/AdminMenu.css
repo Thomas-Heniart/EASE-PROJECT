@@ -51,7 +51,7 @@
     position: fixed;
     top: 1%;
     right: 1%;
-    background-color: #ec555b;
+    background-color: #E84855;
     color: white;
     border: none;
     border-radius: 5px;
@@ -70,7 +70,7 @@
 
 .addUsersView {
   width: 100%;
-  font-family: "Raleway", "Source Sans Pro", sans-serif; }
+  font-family: "Museo", "Raleway", "Source Sans Pro", sans-serif; }
   .addUsersView .addUsersProgress.hidden {
     display: none; }
   .addUsersView .addUsersProgress {
@@ -186,7 +186,7 @@
 
 .requestedWebsitesView {
   width: 100%;
-  font-family: "Raleway", "Source Sans Pro", sans-serif;
+  font-family: "Museo", "Raleway", "Source Sans Pro", sans-serif;
   line-height: 100%; }
   .requestedWebsitesView .requests {
     max-height: 75vh;
@@ -229,14 +229,14 @@
         .requestedWebsitesView .requests .requestedWebsite a.done:hover {
           color: #45C997; }
       .requestedWebsitesView .requests .requestedWebsite a.fail {
-        background-color: #ec555b;
-        border-color: #ec555b; }
+        background-color: #E84855;
+        border-color: #E84855; }
         .requestedWebsitesView .requests .requestedWebsite a.fail:hover {
-          color: #ec555b; }
+          color: #E84855; }
       .requestedWebsitesView .requests .requestedWebsite p {
         margin: 0; }
       .requestedWebsitesView .requests .requestedWebsite .quit {
-        background-color: #ec555b;
+        background-color: #E84855;
         color: white;
         border-radius: 100%;
         padding: 1px 5px;
@@ -468,7 +468,7 @@
       position: absolute;
       right: 0;
       width: 25%;
-      background-color: #ec555b;
+      background-color: #E84855;
       height: 25%;
       border-radius: 100%;
       box-shadow: 0 0 0 3px #656565; }

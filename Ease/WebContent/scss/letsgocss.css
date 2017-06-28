@@ -28,7 +28,7 @@
     position: relative;
     color: #F9F7F7;
     font-weight: normal;
-    font-family: "Raleway", "Source Sans Pro", sans-serif;
+    font-family: "Museo", "Raleway", "Source Sans Pro", sans-serif;
     width: 80%;
     margin: auto;
     margin-top: 13%;
@@ -218,7 +218,7 @@
 #invitationBody .successHelper {
   color: white; }
 #invitationBody .errorHelper {
-  color: #ec555b; }
+  color: #E84855; }
 #invitationBody .successHelper.success, #invitationBody .errorHelper.error {
   pointer-events: none;
   transition: opacity .3s;
@@ -375,8 +375,8 @@
       border-color: green;
       color: green; }
     #invitationBody #RegisterPopup .md-content .errorHelper {
-      border-color: #ec555b;
-      color: #ec555b; }
+      border-color: #E84855;
+      color: #E84855; }
     #invitationBody #RegisterPopup .md-content .loadHelper.loading {
       transition: opacity .3s;
       opacity: 1;

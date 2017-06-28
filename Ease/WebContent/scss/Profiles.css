@@ -15,7 +15,7 @@
       font-weight: 600;
       letter-spacing: 1px;
       display: inline-block;
-      font-family: "Raleway", "Source Sans Pro", sans-serif;
+      font-family: "Museo", "Raleway", "Source Sans Pro", sans-serif;
       color: white;
       font-family: #373b60;
       font-size: 1vw;
@@ -60,7 +60,7 @@
         transition: max-height .3s;
         width: 100%;
         max-height: 0;
-        font-family: "Raleway", "Source Sans Pro", sans-serif;
+        font-family: "Museo", "Raleway", "Source Sans Pro", sans-serif;
         overflow: hidden;
         white-space: nowrap;
         border-radius: 5px 5px 0 0; }
@@ -155,7 +155,7 @@
               text-overflow: ellipsis;
               overflow: hidden;
               line-height: 1.5;
-              font-family: "Raleway", "Source Sans Pro", sans-serif;
+              font-family: "Museo", "Raleway", "Source Sans Pro", sans-serif;
               letter-spacing: 0.5px; }
           .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox .linkImage.settingsShow:before {
             box-shadow: inset 0px 0px 0px 5px #373b60; }
@@ -240,7 +240,7 @@
       width: 60%;
       margin: auto;
       margin-top: 15px;
-      font-family: "Raleway", "Source Sans Pro", sans-serif;
+      font-family: "Museo", "Raleway", "Source Sans Pro", sans-serif;
       position: relative; }
       .ProfilesView .ProfilesHandler #profileAdder .opener {
         transition: opacity .3s;
@@ -294,7 +294,7 @@
               transform: translate3d(-50%, -50%, 0) rotateZ(45deg);
               cursor: pointer; }
               .ProfilesView .ProfilesHandler #profileAdder .adder .inputRow .input .closer i:nth-child(2) {
-                color: #ec555b; }
+                color: #E84855; }
             .ProfilesView .ProfilesHandler #profileAdder .adder .inputRow .input input {
               font-size: 1vw;
               font-weight: bold;

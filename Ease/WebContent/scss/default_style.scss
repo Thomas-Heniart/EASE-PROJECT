@@ -86,6 +86,16 @@ html {
   }
 }
 
+.custom-overlay{
+  position: absolute;
+  top:0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,.2);
+  z-index: 10;
+}
+
 /* crisp chat button color */
 body .crisp-client .crisp-1 .crisp-11 {
   background-color: $themeColor !important;
@@ -115,19 +125,123 @@ button.button-unstyle {
   margin-right:5px;
 }
 
+.squared_image_handler {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  border-radius: 5px;
+  overflow: hidden;
+  img {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+}
+.modal_input_wrapper {
+  @include display-flex();
+  @include align-items(center);
+  border: 1px solid $themeGreyDarkColor;
+  position: relative;
+  border-radius: 5px;
+  &:hover {
+    border:1px solid $themeBlue2Color;
+    .ease_icon {
+      color: $themeBlue2Color;
+    }
+  }
+  .ease_icon {
+    margin-left:10px;
+    color: $themeGreyDarkColor;
+  }
+  input {
+    @include flex(1);
+    padding: 10px;
+    color: $themeBlue2Color;
+    &::placeholder {
+      color: $themeGreyDarkColor;
+    }
+  }
+}
+.modal_input {
+  border-radius: 5px;
+  padding: 10px;
+  color: $themeBlue2Color;
+  border: 1px solid $themeGreyDarkColor;
+  &:hover {
+    border:1px solid $themeBlue2Color;
+  }
+  &:focus {
+    border:1px solid $themeBlue2Color;
+  }
+  &::placeholder {
+    color: $themeGreyDarkColor;
+  }
+}
+
+.underlineOnHover{
+  &:hover {
+    text-decoration: underline;
+  }
+}
+.overflow-hidden {
+  overflow: hidden;
+}
+.mrgnBottom5 {
+  margin-bottom: 5px;
+}
+.mrgnTop5 {
+  margin-top: 5px;
+}
+.mrgnLeft5 {
+  margin-left: 5px;
+}
+.mrgnRight5 {
+  margin-right: 5px;
+}
+
+.text-muted {
+  color: $themeGreyDarkColor !important;
+}
+.width50{
+  width: 50%;
+}
+.width100 {
+  width: 100%;
+}
+.popover_mask{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
 .input_unstyle {
   outline: none;
   background: none;
   border: none;
   padding: 0;
 }
+
+input.checkbox_unstyle[type=checkbox] {
+  margin: 0 0 0 0;
+}
+
 .select_unstyle {
   background: none;
   outline: none;
+  border-radius:5px;
 }
 
+.first_word_capitalize {
+  &:first-letter {
+    text-transform: capitalize;
+  }
+}
 .block {
   display: block !important;
+}
+.display-inline-block {
+  display: inline-block;
 }
 .full_width {
   width: 100%;

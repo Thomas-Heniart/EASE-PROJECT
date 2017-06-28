@@ -950,3 +950,162 @@
 		}
 	}
 }
+
+.popupHandler {
+	.popover_mask {
+		z-index:1;
+	}
+	.ease_popup {
+		z-index: 2;
+	}
+}
+.ease_popup {
+	@include display-flex();
+	@include flex-direction(column);
+	box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
+	border-radius: 5px;
+	min-width: 200px;
+	background-color: white;
+	margin: auto;
+	position: relative;
+	.close_button {
+		position: absolute;
+		font-size: 1.3rem;
+		background: none;
+		right: 1rem;
+		top: 19px;
+	}
+	.squared_image_handler {
+		width: 80px;
+		height: 80px;
+		margin-right:20px;
+		box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+	}
+	.row {
+		margin: 0 0 0 0;
+		padding: 5px 30px;
+		border-left: 1px solid $themeGreyDarkColor;
+		border-right: 1px solid $themeGreyDarkColor;
+	}
+	.title-row {
+		padding: 15px 30px;
+		background-color: #e8e8e8;
+		height: 65px;
+		font-size: 1.3rem;
+		border-top-left-radius: 5px;
+		border-top-right-radius: 5px;
+		border-top: 1px solid $themeGreyDarkColor;
+		border-bottom: 1px solid $themeGreyDarkColor;
+	}
+	.positive_button {
+		color: white;
+		border: 1px solid $DarkGreen;
+		background-color: $LightGreen;
+		&:hover {
+			background-color: $DarkGreen;
+		}
+	}
+	.negative_button {
+		color: white;
+		border: 1px solid $themeRedDarkColor;
+		background-color: $themeRedLightColor;
+		&:hover {
+			background-color: $themeRedDarkColor;
+		}
+	}
+	.big_validate_button {
+		font-size: .9rem;
+		height: 65px;
+		padding: 15px 20px;
+		border-bottom-right-radius: 5px;
+		border-bottom-left-radius: 5px;
+		transition: background-color .3s;
+		&:disabled {
+			border: 1px solid $themeGreyDarkColor !important;
+			background-color: #979797 !important;
+			&:hover {
+				background-color: #979797 !important;
+			}
+		}
+	}
+}
+
+#modal_pin_to_dashboard {
+	.name_input {
+		@include flex-grow(1);
+		padding: 5px;
+		font-size: 1.3rem;
+		border: 1px solid $themeGreyDarkColor;
+		&:hover {
+			border:1px solid $themeBlue2Color;
+		}
+		&:focus {
+			border:1px solid $themeBlue2Color;
+		}
+	}
+	.profile_input {
+		padding: 5px 0;
+		position: relative;
+		font-size: .8rem;
+		input {
+			width: 83%;
+			@include custom-placeholder($themeLightBlueColor, '', italic);
+		}
+		button {
+			position: absolute;
+			right: 0;
+			color: $LightGreen;
+		}
+	}
+	.profiles {
+		padding: 10px 20px;
+		border: 1px solid $themeGreyDarkColor;
+		border-radius: 5px;
+		color: $themeBlue2Color;
+	}
+	.profile {
+		padding: 5px 0;
+		cursor: pointer;
+		.name {
+			@include flex-shrink(0);
+			font-size: .8rem;
+		}
+		em {
+			font-size: .7rem;
+		}
+		&.active {
+			color: $DarkGreen;
+			&:hover {
+				color: $DarkGreen;
+			}
+		}
+		&:hover {
+			color: $LightGreen;
+		}
+	}
+}
+
+#accept_multi_app_modal {
+	label {
+		font-weight: normal;
+		font-size: .9rem;
+	}
+	.input_handler {
+		margin-bottom: 15px;
+		&:last-child {
+			margin-bottom: 0px;
+		}
+	}
+	input {
+		@include flex-grow(1);
+		padding: 16px;
+		font-size: .8rem;
+		border: 1px solid $themeGreyDarkColor;
+		&:hover {
+			border:1px solid $themeBlue2Color;
+		}
+		&:focus {
+			border:1px solid $themeBlue2Color;
+		}
+	}
+}
