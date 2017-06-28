@@ -78,8 +78,8 @@ Backtrace:
 /usr/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/exec/base.rb:52:in `parse'
 /usr/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/exec/base.rb:19:in `parse!'
 /usr/lib/ruby/gems/2.3.0/gems/sass-3.4.22/bin/sass:13:in `<top (required)>'
-/home/nicetwice/koala/bin/sass:18:in `load'
-/home/nicetwice/koala/bin/sass:18:in `<main>'
+/home/nicetwice/Koala/share/koala/bin/sass:18:in `load'
+/home/nicetwice/Koala/share/koala/bin/sass:18:in `<main>'
 */
 body:before {
   white-space: pre;

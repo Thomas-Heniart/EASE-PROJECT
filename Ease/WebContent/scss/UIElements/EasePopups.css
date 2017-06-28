@@ -73,7 +73,7 @@
         #easePopupsHandler #modifyAppPopup .bodysHandler .popupBody .handler .fragmentsRow .tabChooser li a {
           outline: none;
           text-align: center;
-          font-family: "Raleway", "Source Sans Pro", sans-serif;
+          font-family: "Museo", "Raleway", "Source Sans Pro", sans-serif;
           font-size: 1vw;
           line-height: 2vw;
           display: block;
@@ -196,7 +196,7 @@
         text-align: center;
         font-size: 0.9vw;
         font-weight: bold;
-        color: #ec555b; }
+        color: #E84855; }
         #easePopupsHandler #modifyAppPopup .bodysHandler .popupBody .handler .row .accountSelectArea .SignInErrorHandler.show {
           display: block; }
       #easePopupsHandler #modifyAppPopup .bodysHandler .popupBody .handler .row .selectionArea .afterRowTitle {
@@ -548,7 +548,7 @@
         text-align: center;
         font-size: 0.9vw;
         font-weight: bold;
-        color: #ec555b; }
+        color: #E84855; }
         #easePopupsHandler #addAppPopup .bodysHandler .popupBody .handler .row .accountSelectArea .SignInErrorHandler.show {
           display: block; }
       #easePopupsHandler #addAppPopup .bodysHandler .popupBody .handler .row .selectionArea .afterRowTitle {

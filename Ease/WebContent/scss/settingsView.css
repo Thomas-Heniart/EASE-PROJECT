@@ -37,13 +37,13 @@
         height: 1em;
         line-height: 1em; }
         .SettingsView .settingsWindow .quit .fa-stack .fa:first-child {
-          color: #ec555b; }
+          color: #E84855; }
         .SettingsView .settingsWindow .quit .fa-stack .fa:nth-child(2) {
           color: white;
           font-size: 1.1vw; }
     .SettingsView .settingsWindow .title {
       color: #373b60;
-      font-family: "Raleway", "Source Sans Pro", sans-serif;
+      font-family: "Museo", "Raleway", "Source Sans Pro", sans-serif;
       font-weight: 600;
       font-size: 18px;
       text-align: center;
@@ -86,7 +86,7 @@
         width: fit-content;
         padding: 5px;
         border-radius: 25px;
-        background-color: #f7f7f7;
+        background-color: #f8f8f8;
         margin: auto;
         color: green;
         font-size: 25px; }
@@ -101,7 +101,7 @@
         margin-left: 10px;
         margin-top: 5px;
         display: none;
-        color: #ec555b; }
+        color: #E84855; }
       .SettingsView .settingsWindow #settingsTab #ModifyNameForm p.errorMessage.show {
         display: block; }
       .SettingsView .settingsWindow #settingsTab #ModifyPasswordForm p.response {
@@ -111,7 +111,7 @@
         color: green; }
       .SettingsView .settingsWindow #settingsTab #ModifyPasswordForm p.error {
         display: block;
-        color: #ec555b; }
+        color: #E84855; }
       .SettingsView .settingsWindow #settingsTab #DeleteEmailPopup h2 {
         text-align: center;
         font-size: 20px; }
@@ -124,10 +124,10 @@
         display: inline-block;
         margin-top: 0; }
       .SettingsView .settingsWindow #settingsTab #DeleteEmailPopup button[type='submit'] {
-        background-color: #ec555b;
+        background-color: #E84855;
         margin-left: 20%; }
         .SettingsView .settingsWindow #settingsTab #DeleteEmailPopup button[type='submit']:hover {
-          background-color: #ea474e; }
+          background-color: #e63a48; }
       .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount {
         width: 40%; }
         .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount .delete-advertising {
@@ -147,21 +147,21 @@
             font-size: 1em; }
           .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount .delete-advertising.show button#confirmDeleteAccount {
             color: white;
-            background-color: #ec555b; }
+            background-color: #E84855; }
             .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount .delete-advertising.show button#confirmDeleteAccount:hover {
-              background-color: #ea474e; }
+              background-color: #e63a48; }
           .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount .delete-advertising.show button[oClass="CloseButton"] {
             color: black;
-            background-color: #f7f7f7; }
+            background-color: #f8f8f8; }
             .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount .delete-advertising.show button[oClass="CloseButton"]:hover {
-              background-color: #efefef; }
+              background-color: #f0f0f0; }
         .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount #DeleteAccountForm {
           display: none; }
           .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount #DeleteAccountForm p {
             text-align: center;
             padding: 20px; }
           .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount #DeleteAccountForm .errorMessage {
-            color: #ec555b;
+            color: #E84855;
             display: none;
             padding: 0; }
           .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount #DeleteAccountForm .errorMessage.show {
@@ -185,7 +185,7 @@
               vertical-align: middle;
               margin: 2%; }
             .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount #DeleteAccountForm div button[type='submit'] {
-              background-color: #ec555b;
+              background-color: #E84855;
               color: white;
               opacity: 0.6; }
             .SettingsView .settingsWindow #settingsTab .setting #PopupDeleteAccount #DeleteAccountForm div button[type='submit'].Active {
@@ -339,7 +339,7 @@
             border-radius: 5px;
             transition: opacity 0.3s;
             transform: scale(0.2);
-            font-family: "Raleway", "Source Sans Pro", sans-serif;
+            font-family: "Museo", "Raleway", "Source Sans Pro", sans-serif;
             background-color: white;
             color: #373b60;
             padding: 5px;

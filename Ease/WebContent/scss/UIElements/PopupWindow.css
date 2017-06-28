@@ -104,11 +104,11 @@
   min-width: 200px;
   max-width: 100%;
   width: 400px;
-  font-family: "Raleway", "Source Sans Pro", sans-serif; }
+  font-family: "Museo", "Raleway", "Source Sans Pro", sans-serif; }
   #AddUpdatePopup .md-content {
     border-radius: 15px;
     padding-top: 20px;
-    font-family: "Raleway", "Source Sans Pro", sans-serif; }
+    font-family: "Museo", "Raleway", "Source Sans Pro", sans-serif; }
     #AddUpdatePopup .md-content p.title {
       text-align: center;
       font-size: 20px; }
@@ -159,7 +159,7 @@
   #PopupDeleteApp .md-content {
     border-radius: 15px;
     padding-top: 20px;
-    font-family: "Raleway", "Source Sans Pro", sans-serif; }
+    font-family: "Museo", "Raleway", "Source Sans Pro", sans-serif; }
     #PopupDeleteApp .md-content p {
       text-align: center; }
     #PopupDeleteApp .md-content .title {
@@ -181,7 +181,7 @@
   #PopupAddApp .md-content {
     border-radius: 15px;
     padding-top: 20px;
-    font-family: "Raleway", "Source Sans Pro", sans-serif; }
+    font-family: "Museo", "Raleway", "Source Sans Pro", sans-serif; }
     #PopupAddApp .md-content .popupHeader {
       overflow: hidden;
       padding: 0px;
@@ -322,7 +322,7 @@
   #PopupDeleteProfile .md-content {
     border-radius: 15px;
     padding-top: 20px;
-    font-family: "Raleway", "Source Sans Pro", sans-serif;
+    font-family: "Museo", "Raleway", "Source Sans Pro", sans-serif;
     text-align: center; }
     #PopupDeleteProfile .md-content .popupForm {
       width: 80%;
@@ -354,7 +354,7 @@
   #PopupModifyApp .md-content {
     border-radius: 15px;
     padding-top: 20px;
-    font-family: "Raleway", "Source Sans Pro", sans-serif; }
+    font-family: "Museo", "Raleway", "Source Sans Pro", sans-serif; }
     #PopupModifyApp .md-content .popupHeader {
       overflow: hidden;
       padding: 0px;
@@ -492,7 +492,7 @@
   #PopupSendEmailWebsite .md-content {
     border-radius: 15px;
     padding-top: 20px;
-    font-family: "Raleway", "Source Sans Pro", sans-serif; }
+    font-family: "Museo", "Raleway", "Source Sans Pro", sans-serif; }
     #PopupSendEmailWebsite .md-content p {
       text-align: center; }
     #PopupSendEmailWebsite .md-content .title {
@@ -583,7 +583,7 @@
       cursor: pointer; }
 
 .popupHandler {
-  font-family: "Raleway", "Source Sans Pro", sans-serif;
+  font-family: "Museo", "Raleway", "Source Sans Pro", sans-serif;
   display: -webkit-box;
   display: -webkit-flex;
   display: -moz-box;
@@ -739,7 +739,7 @@
           .easePopup .bodysHandler .popupBody .handler .errorText.show {
             display: block; }
           .easePopup .bodysHandler .popupBody .handler .errorText p {
-            color: #ec555b;
+            color: #E84855;
             font-size: 1vw; }
         .easePopup .bodysHandler .popupBody .handler .row {
           position: relative;
@@ -763,7 +763,7 @@
             color: #808080;
             font-weight: bold; }
           .easePopup .bodysHandler .popupBody .handler .row .simpleText {
-            font-family: "Raleway", "Source Sans Pro", sans-serif;
+            font-family: "Museo", "Raleway", "Source Sans Pro", sans-serif;
             font-size: 1vw; }
             .easePopup .bodysHandler .popupBody .handler .row .simpleText span {
               font-weight: bold; }

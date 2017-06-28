@@ -1,3 +1,115 @@
+#main_header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding-right: 5px;
+  height: 43px;
+  z-index: 1; }
+  #main_header nav {
+    position: relative;
+    float: right;
+    margin-top: 4.5px;
+    border: 1px solid #E1E1E1;
+    border-radius: 5px; }
+    #main_header nav button {
+      border-right: 1px solid #E1E1E1;
+      position: relative; }
+      #main_header nav button:first-child {
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px; }
+      #main_header nav button:last-child {
+        border-right: none;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px; }
+      #main_header nav button:hover {
+        background-color: #f8f8f8; }
+      #main_header nav button.active {
+        background-color: #f8f8f8; }
+        #main_header nav button.active .menu {
+          display: block; }
+      #main_header nav button .menu {
+        display: none;
+        width: 170px;
+        min-width: 170px;
+        overflow: inherit;
+        background-color: white;
+        top: 100%;
+        font-size: .7rem;
+        font-weight: bold;
+        right: 0;
+        margin-top: 10px;
+        box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
+        border: none; }
+        #main_header nav button .menu .menu_row {
+          padding: 5px 10px;
+          border-bottom: 1px solid #E1E1E1; }
+          #main_header nav button .menu .menu_row:last-child {
+            border-bottom: none; }
+    #main_header nav #catalog_button {
+      background-color: #4FCB6C; }
+      #main_header nav #catalog_button:hover {
+        background-color: #3FA056; }
+    #main_header nav #settings_button {
+      padding: 0 10px; }
+
+#main_header .logoImg {
+  height: 100%;
+  margin: 0; }
+
+#team_button .icon {
+  margin-right: 5px; }
+#team_button .menu_row.teams_container {
+  padding: 0 !important; }
+#team_button .team_select {
+  border-bottom: none; }
+#team_button .team_select {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -moz-align-items: center;
+  align-items: center; }
+#team_button .team_select:hover, #team_button #team_adder:hover {
+  background-color: #f8f8f8; }
+
+#logout_button .menu_arrow:before, #notification_button .menu_arrow:before, #team_button .menu_arrow:before {
+  right: 12px; }
+#logout_button:focus, #notification_button:focus, #team_button:focus {
+  background-color: #f8f8f8; }
+  #logout_button:focus .menu, #notification_button:focus .menu, #team_button:focus .menu {
+    display: block; }
+
+.menu_arrow:before {
+  content: "";
+  position: absolute;
+  top: -9px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid white; }
+
+#logout_button .menu_row {
+  text-align: right;
+  color: #DF5454; }
+  #logout_button .menu_row:hover {
+    cursor: pointer;
+    background-color: #f8f8f8; }
+
+#notification_button.notify:before {
+  content: "\f111";
+  font-family: FontAwesome;
+  position: absolute;
+  color: #DF5454;
+  font-size: 11px;
+  top: 12px;
+  left: 15px; }
+
 .header:before {
   content: "";
   position: absolute;
@@ -52,7 +164,7 @@
 .header .userSettingsContainer {
   width: 190px;
   overflow: visible;
-  font-family: "Raleway", "Source Sans Pro", sans-serif; }
+  font-family: "Museo", "Raleway", "Source Sans Pro", sans-serif; }
   .header .userSettingsContainer #userSettingsButton {
     padding: 5px;
     text-align: center;
@@ -64,7 +176,7 @@
     text-decoration: none;
     border-radius: 4px;
     cursor: pointer;
-    font-family: "Raleway", "Source Sans Pro", sans-serif;
+    font-family: "Museo", "Raleway", "Source Sans Pro", sans-serif;
     font-weight: bold;
     letter-spacing: 1px; }
     .header .userSettingsContainer #userSettingsButton span {

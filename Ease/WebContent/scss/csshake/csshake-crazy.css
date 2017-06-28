@@ -21,32 +21,32 @@
 
 @keyframes shake-crazy {
   10% {
-    transform: translate(-10px, 11px) rotate(-9deg);
-    opacity: 0.51; }
+    transform: translate(13px, -1px) rotate(-6deg);
+    opacity: 0.45; }
   20% {
-    transform: translate(-17px, -2px) rotate(-6deg);
-    opacity: 0.14; }
+    transform: translate(1px, -17px) rotate(-6deg);
+    opacity: 0.65; }
   30% {
-    transform: translate(-7px, 19px) rotate(-5deg);
-    opacity: 0.84; }
+    transform: translate(0px, -3px) rotate(5deg);
+    opacity: 0.42; }
   40% {
-    transform: translate(10px, -5px) rotate(-3deg);
-    opacity: 0.57; }
+    transform: translate(14px, 2px) rotate(-3deg);
+    opacity: 0.77; }
   50% {
-    transform: translate(0px, 7px) rotate(7deg);
-    opacity: 0.13; }
+    transform: translate(20px, -2px) rotate(7deg);
+    opacity: 0.45; }
   60% {
-    transform: translate(-11px, -16px) rotate(1deg);
-    opacity: 0.66; }
+    transform: translate(16px, 18px) rotate(6deg);
+    opacity: 0.39; }
   70% {
-    transform: translate(16px, 11px) rotate(-4deg);
-    opacity: 0.83; }
+    transform: translate(-10px, 14px) rotate(-8deg);
+    opacity: 0.02; }
   80% {
-    transform: translate(-6px, 5px) rotate(-4deg);
-    opacity: 0.96; }
+    transform: translate(5px, -16px) rotate(-1deg);
+    opacity: 0.72; }
   90% {
-    transform: translate(-12px, 9px) rotate(9deg);
-    opacity: 0.82; }
+    transform: translate(-3px, 7px) rotate(4deg);
+    opacity: 0.7; }
   0%, 100% {
     transform: translate(0, 0) rotate(0); } }
 .shake-crazy:hover, .shake-trigger:hover .shake-crazy, .shake-crazy.shake-freeze, .shake-crazy.shake-constant {
