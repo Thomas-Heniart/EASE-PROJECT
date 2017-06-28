@@ -5,7 +5,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.Account;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
@@ -22,7 +21,6 @@ import com.Ease.Dashboard.App.LinkApp.LinkApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.Profile.Profile;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.ServletContext;
 
 public class App implements ShareableApp, SharedApp {
@@ -131,6 +129,11 @@ public class App implements ShareableApp, SharedApp {
                 }
                 shareableApp.setTeamUser_owner(teamUser_owner);
                 shareableApps.add(shareableApp);
+                DatabaseRequest request1 = db.prepareRequest("SELECT team_user_id FROM pendingJoinAppRequests WHERE shareable_app_id = ?;");
+                request1.setInt(((App) shareableApp).getDBid());
+                DatabaseResult rs2 = request1.get();
+                while (rs2.next())
+                    shareableApp.addPendingTeamUser(team.getTeamUserWithId(rs2.getInt(1)));
             }
             return shareableApps;
         } catch (GeneralException e) {
@@ -268,6 +271,7 @@ public class App implements ShareableApp, SharedApp {
     protected Channel channel;
     protected String description;
     protected JSONObject origin = new JSONObject();
+    protected List<TeamUser> pending_teamUsers = new LinkedList<>();
 
     /* Interface SharedApp */
     protected ShareableApp holder;
@@ -305,8 +309,6 @@ public class App implements ShareableApp, SharedApp {
         DatabaseRequest request = db.prepareRequest("DELETE FROM profileAndAppMap WHERE app_id = ?;");
         request.setInt(db_id);
         request.set();
-        System.out.println("App pined: " + this.sharedApp_pinned == null);
-        System.out.println("My id: " + this.getSingleId());
         if (this.sharedApp_pinned != null)
             this.sharedApp_pinned.unpin(db);
         request = db.prepareRequest("DELETE FROM apps WHERE id = ?;");
@@ -364,8 +366,6 @@ public class App implements ShareableApp, SharedApp {
     }
 
     public void setSharedApp_pinned(SharedApp sharedApp) {
-        System.out.println("App pinned id " + this.getSingleId());
-        System.out.println("SharedApp is null: " + (sharedApp == null));
         this.sharedApp_pinned = sharedApp;
     }
 
@@ -716,6 +716,10 @@ public class App implements ShareableApp, SharedApp {
             for (SharedApp sharedApp : this.getSharedApps())
                 receivers.add(sharedApp.getSharedJSON());
             res.put("receivers", receivers);
+            JSONArray waitingTeamUsers = new JSONArray();
+            for (TeamUser teamUser : this.getPendingTeamUsers())
+                waitingTeamUsers.add(teamUser.getDb_id());
+            res.put("team_users_requestings", waitingTeamUsers);
             res.put("origin", this.getOrigin());
             res.put("description", this.getDescription());
             res.put("name", this.getAppInformation().getName());
@@ -783,6 +787,46 @@ public class App implements ShareableApp, SharedApp {
     public void removeSharedApp(SharedApp sharedApp) {
         this.sharedAppIdMap.remove(((App) sharedApp).getDBid());
         this.getSharedApps().remove(sharedApp);
+    }
+
+    @Override
+    public void addPendingTeamUser(TeamUser teamUser) {
+        this.pending_teamUsers.add(teamUser);
+    }
+
+    @Override
+    public void addPendingTeamUser(TeamUser teamUser, DataBaseConnection db) throws HttpServletException {
+        if (this.pending_teamUsers.contains(teamUser) || this.getTeamUser_tenants().contains(teamUser))
+            return;
+        try {
+            DatabaseRequest request = db.prepareRequest("INSERT INTO pendingJoinAppRequests values (null, ?, ?);");
+            request.setInt(this.getDBid());
+            request.setInt(teamUser.getDb_id());
+            request.set();
+            this.addPendingTeamUser(teamUser);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
+    @Override
+    public List<TeamUser> getPendingTeamUsers() {
+        return this.pending_teamUsers;
+    }
+
+    @Override
+    public void removePendingTeamUser(TeamUser teamUser, DataBaseConnection db) throws HttpServletException {
+        if (!this.getPendingTeamUsers().contains(teamUser))
+            return;
+        try {
+            DatabaseRequest request = db.prepareRequest("DELETE FROM pendingJoinAppRequests WHERE shareable_app_id = ? AND team_user_id = ?;");
+            request.setInt(this.getDBid());
+            request.setInt(teamUser.getDb_id());
+            request.set();
+            this.pending_teamUsers.remove(teamUser);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 
     @Override

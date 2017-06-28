@@ -6,7 +6,6 @@ import com.Ease.Team.TeamUser;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.HttpServletException;
-import com.Ease.Utils.ServletManager;
 import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.simple.JSONObject;
 
@@ -57,4 +56,12 @@ public interface ShareableApp {
     public void transferOwnership(TeamUser teamUser_new_owner, DataBaseConnection db) throws HttpServletException;
 
     public void removeSharedApp(SharedApp sharedApp);
+
+    public void addPendingTeamUser(TeamUser teamUser);
+
+    public void addPendingTeamUser(TeamUser teamUser, DataBaseConnection db) throws HttpServletException;
+
+    public List<TeamUser> getPendingTeamUsers();
+
+    public void removePendingTeamUser(TeamUser teamUser, DataBaseConnection db) throws HttpServletException;
 }

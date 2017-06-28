@@ -6,13 +6,10 @@ import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.SendGridMail;
-import com.Ease.Notification.Notification;
 import com.Ease.Notification.TeamNotification;
 import com.Ease.Utils.*;
 import com.stripe.exception.*;
-import com.stripe.model.Coupon;
 import com.stripe.model.Customer;
-import com.stripe.model.Discount;
 import com.stripe.model.Subscription;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -21,7 +18,6 @@ import org.json.simple.JSONObject;
 
 import javax.persistence.*;
 import javax.servlet.ServletContext;
-import java.io.Serializable;
 import java.util.*;
 
 /**

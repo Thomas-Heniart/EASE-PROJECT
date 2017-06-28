@@ -22,6 +22,7 @@ function showExtensionPopup() {
                     $('#extension #download #line2').text("We added new features and made it faster !");
                     $('#extension #download button').text("Update Ease Extension");
                     $('#extension').addClass("myshow");
+                    $('#extension #download').addClass("show");
                     return true;
                 }
                 return false;

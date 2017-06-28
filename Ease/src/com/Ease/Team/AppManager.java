@@ -54,7 +54,6 @@ public class AppManager {
     }
 
     public void removeSharedApp(SharedApp sharedApp) {
-        System.out.println("On m'appelle");
         this.sharedApps.remove(sharedApp);
         this.sharedAppMap.remove(Integer.valueOf(((App) sharedApp).getDBid()));
         this.teamUserAndSharedAppMap.get(sharedApp.getTeamUser_tenant()).remove(sharedApp);
