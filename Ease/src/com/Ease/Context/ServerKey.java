@@ -7,11 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.Hashing;
 
@@ -29,7 +25,7 @@ public class ServerKey {
 	private String	salt;
 	private String	keyServer;
 
-	private static ServerKey loadServerKey(String login, String password, DataBaseConnection db) throws GeneralException {
+	private static ServerKey loadServerKey(String login, String password, DataBaseConnection db) throws GeneralException, HttpServletException {
 		DatabaseRequest request = db.prepareRequest("SELECT * FROM serverKeys WHERE login= ?;");
 		request.setString(login);
 		DatabaseResult rs = request.get();
@@ -48,7 +44,7 @@ public class ServerKey {
 		}
 	}
 
-	public static ServerKey loadServerKey(DataBaseConnection db) throws GeneralException, SQLException {
+	public static ServerKey loadServerKey(DataBaseConnection db) throws GeneralException, SQLException, HttpServletException {
 		DatabaseResult rs = db.prepareRequest("SELECT login FROM serverKeys;").get();
 		if(!rs.next()){ //S'il  n'y a pas encore de serverKey dans la BDD, on crée la première, qui a pour login/passwd : root/root
 			System.out.println("Initializing the server key.");
@@ -81,7 +77,7 @@ public class ServerKey {
 		return new ServerKey(login, hashed_password, salt, keyServer);
 	}
 
-	public static ServerKey createServerKey(String newLogin, String newPassword, String login, String password, DataBaseConnection db) throws GeneralException{
+	public static ServerKey createServerKey(String newLogin, String newPassword, String login, String password, DataBaseConnection db) throws GeneralException, HttpServletException {
 		ServerKey sK = loadServerKey(login, password, db);
 		String serverKey = sK.getKeyServer();
 		String salt = AES.generateSalt();

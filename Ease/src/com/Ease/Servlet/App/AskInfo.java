@@ -20,51 +20,53 @@ import com.Ease.Utils.ServletManager;
  */
 @WebServlet("/AskInfo")
 public class AskInfo extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public AskInfo() {
-		super();
-	}
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public AskInfo() {
+        super();
+    }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-		rd.forward(request, response);
-	}
+    /**
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+     * response)
+     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+        rd.forward(request, response);
+    }
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    /**
+     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+     * response)
+     */
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		HttpSession session = request.getSession();
-		User user = (User) (session.getAttribute("user"));
-		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
-		
-		try {
-			sm.needToBeConnected();
-			String appId = sm.getServletParam("appId", true);
-			if (appId == null || appId.isEmpty())
-				throw new GeneralException(ServletManager.Code.ClientError, "Wrong appId.");
-			App app = user.getDashboardManager().getAppWithID(Integer.parseInt(appId));
-			String result = app.getJSON(sm).toString();
-			sm.setLogResponse("Info sended for app "+app.getDBid());
-			sm.setResponse(ServletManager.Code.Success, result);
-		} catch (GeneralException e) {
-			sm.setResponse(e);
-		} catch (NumberFormatException e) {
-			sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");
-		} catch (Exception e) {
-			sm.setResponse(e);
-		}
-		sm.sendResponse();
-	}
+        HttpSession session = request.getSession();
+        User user = (User) (session.getAttribute("user"));
+        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+
+        try {
+            sm.needToBeConnected();
+            String appId = sm.getServletParam("appId", true);
+            if (appId == null || appId.isEmpty())
+                throw new GeneralException(ServletManager.Code.ClientError, "Wrong appId.");
+            App app = user.getDashboardManager().getAppWithID(Integer.parseInt(appId));
+            if (app.isDisabled())
+                throw new GeneralException(ServletManager.Code.ClientError, "App is disabled");
+            String result = app.getJSON(sm).toString();
+            sm.setLogResponse("Info sended for app " + app.getDBid());
+            sm.setResponse(ServletManager.Code.Success, result);
+        } catch (GeneralException e) {
+            sm.setResponse(e);
+        } catch (NumberFormatException e) {
+            sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");
+        } catch (Exception e) {
+            sm.setResponse(e);
+        }
+        sm.sendResponse();
+    }
 }

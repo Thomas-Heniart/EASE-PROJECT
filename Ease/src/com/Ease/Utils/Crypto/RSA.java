@@ -41,9 +41,6 @@ public class RSA {
         KeyPair kp = kpg.genKeyPair();
         PublicKey publicKey = kp.getPublic();
         PrivateKey privateKey = kp.getPrivate();
-        System.out.println(new Base64().encodeToString(publicKey.getEncoded()));
-        System.out.println(new Base64().encodeToString(privateKey.getEncoded()));
-
     }
 
     public static Map<String, String> generateKeys(int length) throws GeneralException {
@@ -55,8 +52,6 @@ public class RSA {
                 KeyPair kp = kpg.genKeyPair();
                 PublicKey publicKey = kp.getPublic();
                 PrivateKey privateKey = kp.getPrivate();
-                System.out.println(new Base64().encodeToString(publicKey.getEncoded()));
-                System.out.println(new Base64().encodeToString(privateKey.getEncoded()));
                 publicAndPrivateKeys.put(new Base64().encodeToString(publicKey.getEncoded()), new Base64().encodeToString(privateKey.getEncoded()));
             }
             return publicAndPrivateKeys;
@@ -73,8 +68,6 @@ public class RSA {
             KeyPair kp = kpg.genKeyPair();
             PublicKey publicKey = kp.getPublic();
             PrivateKey privateKey = kp.getPrivate();
-            System.out.println(new Base64().encodeToString(publicKey.getEncoded()));
-            System.out.println(new Base64().encodeToString(privateKey.getEncoded()));
             return new AbstractMap.SimpleEntry<>(new Base64().encodeToString(publicKey.getEncoded()), new Base64().encodeToString(privateKey.getEncoded()));
         } catch (NoSuchAlgorithmException e) {
             throw new GeneralException(ServletManager.Code.InternError, e);

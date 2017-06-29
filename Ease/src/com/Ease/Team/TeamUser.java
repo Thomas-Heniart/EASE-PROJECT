@@ -97,6 +97,9 @@ public class TeamUser {
     @Transient
     protected DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
+    @Column(name = "disabled")
+    private boolean disabled;
+
     public TeamUser(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Boolean verified, Team team, TeamUserRole teamUserRole) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -107,6 +110,7 @@ public class TeamUser {
         this.team = team;
         this.teamUserRole = teamUserRole;
         this.arrivalDate = arrivalDate;
+        this.disabled = false;
     }
 
     public TeamUser() {
@@ -142,7 +146,8 @@ public class TeamUser {
 
     public void setDashboard_user(com.Ease.Dashboard.User.User dashboard_user) {
         this.dashboard_user = dashboard_user;
-        this.user_id = dashboard_user.getDBid();
+        if (dashboard_user != null)
+            this.user_id = dashboard_user.getDBid();
     }
 
     public void setDashboard_user(com.Ease.Dashboard.User.User user, DataBaseConnection db) throws GeneralException {
@@ -195,6 +200,14 @@ public class TeamUser {
         this.deciphered_teamKey = deciphered_teamKey;
     }
 
+    public String getTeamKey() {
+        return this.teamKey;
+    }
+
+    public void setTeamKey(String teamKey) {
+        this.teamKey = teamKey;
+    }
+
     public Date getArrivalDate() {
         return arrivalDate;
     }
@@ -243,6 +256,14 @@ public class TeamUser {
         this.active = active;
     }
 
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
     /* public Set<TeamUserNotification> getTeamUserNotifications() {
         return teamUserNotifications;
     }
@@ -263,6 +284,7 @@ public class TeamUser {
         res.put("last_name", this.lastName);
         res.put("email", this.email);
         res.put("username", this.username);
+        res.put("disabled", this.disabled);
         res.put("role", this.teamUserRole.getRoleValue());
         res.put("arrival_date", this.dateFormat.format(arrivalDate));
         res.put("departure_date", "");
@@ -310,15 +332,14 @@ public class TeamUser {
         }
     }
 
-    public void finalizeRegistration(ServletManager sm) throws GeneralException {
-        if (this.isVerified())
-            throw new GeneralException(ServletManager.Code.ClientError, "You shouldn't be there");
-        this.deciphered_teamKey = RSA.Decrypt(this.teamKey, this.getDashboard_user().getKeys().getPrivateKey());
-        this.teamKey = this.getDashboard_user().encrypt(this.deciphered_teamKey);
-        DatabaseRequest request = sm.getDB().prepareRequest("UPDATE teamUsers SET teamKey = ?, verified = 1 WHERE id = ?;");
-        request.setString(this.teamKey);
-        request.setInt(this.db_id);
-        request.set();
+    public void finalizeRegistration() throws HttpServletException {
+        try {
+            this.deciphered_teamKey = RSA.Decrypt(this.teamKey, this.getDashboard_user().getKeys().getPrivateKey());
+            this.teamKey = this.getDashboard_user().encrypt(this.deciphered_teamKey);
+            this.verified = true;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 
     public void decipher_teamKey() throws GeneralException {
@@ -329,23 +350,8 @@ public class TeamUser {
         return this.verified;
     }
 
-    public JSONObject getSimpleJson() {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", this.getDb_id());
-        jsonObject.put("username", this.getUsername());
-        jsonObject.put("email", this.getEmail());
-        jsonObject.put("first_name", this.getFirstName());
-        jsonObject.put("last_name", this.getLastName());
-        jsonObject.put("arrival_date", this.dateFormat.format(this.getArrivalDate()));
-        jsonObject.put("departure_date", "");
-        if (this.getDepartureDate() != null)
-            jsonObject.put("departure_date", this.dateFormat.format(this.getDepartureDate()));
-        jsonObject.put("role", this.getTeamUserRole().getRoleValue());
-        JSONArray channel_ids = new JSONArray();
-        for (Channel channel : this.getTeam().getChannelsForTeamUser(this))
-            channel_ids.add(channel.getDb_id());
-        jsonObject.put("channel_ids", channel_ids);
-        return jsonObject;
+    public void setVerified(boolean verified) {
+        this.verified = verified;
     }
 
     public void editFirstName(String firstName) {
@@ -414,5 +420,14 @@ public class TeamUser {
         EqualsBuilder eb = new EqualsBuilder();
         eb.append(this.db_id, teamUser.db_id);
         return eb.isEquals();
+    }
+
+    public List<SharedApp> getSharedApps() {
+        return this.getTeam().getAppManager().getSharedAppsForTeamUser(this);
+    }
+
+    public void deconnect() {
+        this.dashboard_user = null;
+        this.deciphered_teamKey = null;
     }
 }

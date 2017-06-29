@@ -75,7 +75,7 @@ public class App implements ShareableApp, SharedApp {
             }
             if (app.getPosition() != apps.size())
                 app.setPosition(apps.size(), db);
-
+            app.setDisabled(rs.getBoolean("disabled"));
             Integer shared_app_id = rs.getInt("shared_app_id");
             if (shared_app_id > 0) {
                 System.out.println("App pinned");
@@ -262,6 +262,7 @@ public class App implements ShareableApp, SharedApp {
     protected int single_id;
     protected boolean received = true;
     protected SharedApp sharedApp_pinned;
+    protected boolean disabled;
 
     /* Interface ShareableApp */
     protected List<SharedApp> sharedApps = new LinkedList<>();
@@ -393,6 +394,28 @@ public class App implements ShareableApp, SharedApp {
 
     public boolean isReceived() {
         return this.received;
+    }
+
+    public boolean isDisabled() {
+        return this.disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    public void setDisabled(boolean disabled, DataBaseConnection db) throws HttpServletException {
+        if (this.disabled = disabled)
+            return;
+        try {
+            DatabaseRequest request = db.prepareRequest("UPDATE apps SET disabled = ? WHERE id = ?;");
+            request.setBoolean(disabled);
+            request.setInt(this.getDBid());
+            request.set();
+            this.setDisabled(disabled);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 
     public boolean havePerm(AppPermissions.Perm perm) {
@@ -846,6 +869,21 @@ public class App implements ShareableApp, SharedApp {
             request.setInt(this.getDBid());
             request.set();
             this.pinned_app = null;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
+    @Override
+    public void setDisableShared(boolean disabled, DataBaseConnection db) throws HttpServletException {
+        if (this.disabled == disabled)
+            return;
+        try {
+            int transaction = db.startTransaction();
+            this.setDisabled(disabled, db);
+            if (this.getPinned_app() != null)
+                this.getPinned_app().setDisabled(disabled, db);
+            db.commitTransaction(transaction);
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }

@@ -3,6 +3,7 @@ package com.Ease.NewDashboard.User;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.Hashing;
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.ServletManager;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.hibernate.Session;
@@ -120,12 +121,11 @@ public class SessionSave {
         return decipheredKeyUser;
     }
 
-    public void decryptKeyUser(String sessionToken) throws GeneralException {
+    public void decryptKeyUser(String sessionToken) throws GeneralException, HttpServletException {
         if (!Hashing.compare(sessionToken, this.sessionToken)) {
             throw new GeneralException(ServletManager.Code.ClientError, "Wrong token.");
-        } else if((this.decipheredKeyUser = AES.decryptUserKey(this.keyUser, sessionToken, this.saltUser)) == null){
-            throw new GeneralException(ServletManager.Code.InternError, "Can't decrypt key user.");
         }
+        this.decipheredKeyUser = AES.decryptUserKey(this.keyUser, sessionToken, this.saltUser);
     }
 
     public String randomBytes() {

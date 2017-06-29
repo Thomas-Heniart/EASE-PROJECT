@@ -146,7 +146,7 @@ public class Keys {
         this.decipheredKeyUser = decipheredKeyUser;
     }
 
-    public void decryptUserKey(String password) throws GeneralException {
+    public void decryptUserKey(String password) throws GeneralException, HttpServletException {
         this.decipheredKeyUser = AES.decryptUserKey(this.keyUser, password, this.saltPerso);
     }
 

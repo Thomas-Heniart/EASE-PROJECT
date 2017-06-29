@@ -5,12 +5,8 @@ import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Mail.SendGridMail;
+import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.RSA;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.CodeGenerator;
 import com.Ease.Utils.Crypto.Hashing;
@@ -29,14 +25,13 @@ public class Keys {
         BACKUPKEY
     }
 
-    public static Keys loadKeys(String id, String password, ServletManager sm) throws GeneralException {
+    public static Keys loadKeys(String id, String password, ServletManager sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         DatabaseRequest request = db.prepareRequest("SELECT * FROM userKeys WHERE id= ?;");
         request.setInt(id);
         DatabaseResult rs = request.get();
         if (!rs.next())
             throw new GeneralException(ServletManager.Code.ClientError, "This key does not exist");
-        ;
         String db_id = rs.getString(Data.ID.ordinal());
         String hashed_password = rs.getString(Data.PASSWORD.ordinal());
         String saltEase = rs.getString(Data.SALTEASE.ordinal());
@@ -44,6 +39,7 @@ public class Keys {
         String crypted_keyUser = rs.getString(Data.KEYUSER.ordinal());
         String publicKey = rs.getString("publicKey");
         String ciphered_privateKey = rs.getString("privateKey");
+        System.out.println("Ciphered private key: " + ((ciphered_privateKey == null) ? "null" : ciphered_privateKey));
         String privateKey = null;
         String keyUser;
         //-- Pour mettre à jour la crypto (nouveau hashage et nouveau salage.
@@ -56,7 +52,6 @@ public class Keys {
             String newSalt = AES.generateSalt();
             crypted_keyUser = AES.encryptUserKey(keyUser, password, newSalt);
             hashed_password = Hashing.hash(password);
-            saltEase = null;
             saltPerso = newSalt;
             ServerKey serverKey = (ServerKey) sm.getContextAttr("serverKey");
             String backUpKey = AES.encrypt(keyUser, serverKey.getKeyServer());
@@ -75,11 +70,9 @@ public class Keys {
             keyUser = AES.decryptUserKey(crypted_keyUser, password, saltPerso);
         }
         if (publicKey == null || publicKey.equals("") || publicKey.equals("NULL")) {
-            Map<String, String> publicAndPrivateKeys = RSA.generateKeys(1);
-            for (Map.Entry<String, String> publicAndPrivateKey : publicAndPrivateKeys.entrySet()) {
-                publicKey = publicAndPrivateKey.getKey();
-                privateKey = publicAndPrivateKey.getValue();
-            }
+            Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
+            publicKey = publicAndPrivateKey.getKey();
+            privateKey = publicAndPrivateKey.getValue();
             ciphered_privateKey = AES.encrypt(privateKey, keyUser);
             request = db.prepareRequest("UPDATE userKeys SET publicKey = ?, privateKey = ? WHERE id = ?;");
             request.setString(publicKey);
@@ -92,6 +85,7 @@ public class Keys {
             }
             privateKey = AES.decrypt(ciphered_privateKey, keyUser);
         }
+        System.out.println("Private key is: " + ((privateKey == null) ? "null" : privateKey));
         return new Keys(db_id, hashed_password, saltPerso, keyUser, publicKey, privateKey);
     }
 
@@ -216,7 +210,7 @@ public class Keys {
     }
 
 	/*
-	 * 
+     *
 	 * Utils
 	 * 
 	 */
@@ -292,7 +286,7 @@ public class Keys {
             request.setInt(userId);
             rs = request.get();
             while (rs.next()) {
-                request2 = db.prepareRequest("SELECT apps.* FROM apps JOIN profileAndAppMap ON apps.id = profileAndAppMap.app_id WHERE profile_id= ?;");
+                request2 = db.prepareRequest("SELECT apps.* FROM apps JOIN profileAndAppMap ON apps.id = profileAndAppMap.app_id WHERE profile_id= ? AND apps.id NOT IN (SELECT pinned_app_id FROM sharedApps);");
                 request2.setInt(rs.getString(Profile.Data.ID.ordinal()));
                 rs2 = request2.get();
                 while (rs2.next()) {

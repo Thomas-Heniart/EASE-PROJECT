@@ -12,6 +12,8 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.ServletManager;
 import org.apache.tomcat.util.codec.binary.Base64;
 
@@ -122,7 +124,7 @@ public class AES {
         }
     }
 
-    public static String decryptUserKey(String encryptedKey, String easePass, String salt) {
+    public static String decryptUserKey(String encryptedKey, String easePass, String salt) throws HttpServletException {
         try {
             byte[] saltBytes = pepperedSalt(salt.getBytes(), easePass);
 
@@ -132,9 +134,8 @@ public class AES {
 
             return decrypt(encryptedKey, new Base64().encodeToString(secretKey.getEncoded()));
         } catch (Exception e) {
-            System.out.println("Error while decrypting key : " + e.toString());
+            throw new HttpServletException(HttpStatus.InternError, e);
         }
-        return null;
     }
 
     public static String oldEncryptUserKey(String plainKey, String easePass, String salt) {

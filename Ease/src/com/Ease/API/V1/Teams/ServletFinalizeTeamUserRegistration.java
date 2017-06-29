@@ -20,16 +20,16 @@ import java.io.IOException;
 /**
  * Created by thomas on 02/05/2017.
  */
-@WebServlet("/finalizeRegistration")
+@WebServlet("/api/v1/teams/FinalizeRegistration")
 public class ServletFinalizeTeamUserRegistration extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            String firstName = sm.getStringParam("firstName", true);
-            String lastName = sm.getStringParam("lastName", true);
+            String firstName = sm.getStringParam("first_name", true);
+            String lastName = sm.getStringParam("last_name", true);
             String username = sm.getStringParam("username", true);
-            String jobTitle = sm.getStringParam("jobTitle", true);
+            String jobTitle = sm.getStringParam("job_title", true);
             String code = sm.getStringParam("code", true);
             if (username == null || username.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "username is needed.");
@@ -51,6 +51,8 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             Object[] idTeamAndTeamUser = (Object[]) idTeamAndTeamUserObj;
             Integer id = (Integer) idTeamAndTeamUser[0];
             Integer team_id = (Integer) idTeamAndTeamUser[1];
+            if (sm.getTeamUserForTeamId(team_id) != null)
+                throw new HttpServletException(HttpStatus.BadRequest, "You cannot have two accounts in a team.");
             Integer teamUser_id = (Integer) idTeamAndTeamUser[2];
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
@@ -72,9 +74,10 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             query.setParameter(1, teamUser.getDb_id());
             query.setParameter(2, code);
             query.executeUpdate();
-            teamUser.setDashboard_user(sm.getUser(), sm.getDB());
+            teamUser.setDashboard_user(sm.getUser());
+            sm.saveOrUpdate(teamUser);
             team.askVerificationForTeamUser(teamUser, verificationCode);
-            sm.setSuccess("Waiting for admin validation");
+            sm.setSuccess(teamUser.getJson());
         } catch (Exception e) {
             sm.setError(e);
         }
@@ -82,7 +85,8 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        /* Redirect to the write page */
+        /* Redirect to the right page */
+        /* Get the code, teamUser corresponding with info, already have an account or not ? */
         RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
         rd.forward(request, response);
     }

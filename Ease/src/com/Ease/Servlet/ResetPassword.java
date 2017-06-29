@@ -9,8 +9,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.User.Keys;
 import com.Ease.Dashboard.User.User;
+import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Team.TeamUser;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.ServletManager;
@@ -20,82 +23,76 @@ import com.Ease.Utils.ServletManager;
  */
 @WebServlet("/resetPassword")
 public class ResetPassword extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public ResetPassword() {
-        super();
-        // TODO Auto-generated constructor stub
+    private static final long serialVersionUID = 1L;
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        User user = (User) (session.getAttribute("user"));
+        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+
+        String email = sm.getServletParam("email", true);
+        String code = sm.getServletParam("code", true);
+        try {
+            if (user != null) {
+                Logout.logoutUser(user, sm);
+            }
+            if (email == null || email.equals("")) {
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email or password.");
+            } else if (code == null || code.equals("")) {
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong informations.");
+            }
+            String userId = User.findDBid(email, sm);
+            if (Keys.checkCodeValidity(userId, code, sm))
+                sm.setRedirectUrl("newPassword.jsp?email=" + email + "&linkCode=" + code + "");
+            else
+                sm.setRedirectUrl("passwordLost?codeExpiration=true");
+        } catch (GeneralException e) {
+            sm.setResponse(e);
+        } catch (Exception e) {
+            sm.setResponse(e);
+        }
+        sm.sendResponse();
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
-		User user = (User) (session.getAttribute("user"));
-		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        User user = (User) (session.getAttribute("user"));
+        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 
-		String email = sm.getServletParam("email", true);
-		String code = sm.getServletParam("code", true);
-		try {
-			if (user != null) {
-				Logout.logoutUser(user, sm);
-			}
-			if (email == null || email.equals("")) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email or password.");
-			} else if (code == null || code.equals("")) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong informations.");
-			}
-			String userId = User.findDBid(email, sm);
-			if (Keys.checkCodeValidity(userId, code, sm))
-				sm.setRedirectUrl("newPassword.jsp?email=" + email + "&linkCode=" + code + "");
-			else
-				sm.setRedirectUrl("passwordLost?codeExpiration=true");
-		} catch (GeneralException e) {
-			sm.setResponse(e);
-		} catch (Exception e) {
-			sm.setResponse(e);
-		}
-		sm.sendResponse();
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
-		User user = (User) (session.getAttribute("user"));
-		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
-
-		String email = sm.getServletParam("email", true);
-		String code = sm.getServletParam("linkCode", true);
-		String password = sm.getServletParam("password", false);
-		String confirmPassword = sm.getServletParam("confirmPassword", false);
-		try {
-			if (user != null) {
-				Logout.logoutUser(user, sm); //throw new GeneralException(ServletManager.Code.ClientWarning, "You are logged on Ease.");
-			}
-			if (email == null || email.equals("")) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email or password.");
-			} else if (code == null || code.equals("")) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong informations.");
-			} else if (password == null || !Regex.isPassword(password)) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email or password.");
-			} else if (confirmPassword == null || !confirmPassword.equals(password)) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Passwords doesn't match.");
-			}
-			String userId = User.findDBid(email, sm);
-			Keys.resetPassword(userId, password, sm);
-			sm.setResponse(ServletManager.Code.Success, "Account trunced and password set.");
-		} catch (GeneralException e) {
-			sm.setResponse(e);
-		} catch (Exception e) {
-			sm.setResponse(e);
-		}
-		sm.sendResponse();
-	}
+        String email = sm.getServletParam("email", true);
+        String code = sm.getServletParam("linkCode", true);
+        String password = sm.getServletParam("password", false);
+        String confirmPassword = sm.getServletParam("confirmPassword", false);
+        try {
+            if (user != null) {
+                Logout.logoutUser(user, sm); //throw new GeneralException(ServletManager.Code.ClientWarning, "You are logged on Ease.");
+            }
+            if (email == null || email.equals("")) {
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email or password.");
+            } else if (code == null || code.equals("")) {
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong informations.");
+            } else if (password == null || !Regex.isPassword(password)) {
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email or password.");
+            } else if (confirmPassword == null || !confirmPassword.equals(password)) {
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Passwords doesn't match.");
+            }
+            String userId = User.findDBid(email, sm);
+            Keys.resetPassword(userId, password, sm);
+            HibernateQuery hibernateQuery = new HibernateQuery();
+            for (TeamUser teamUser : sm.getUser().getTeamUsers()) {
+                teamUser.setDisabled(true);
+                hibernateQuery.saveOrUpdateObject(teamUser);
+                for (SharedApp sharedApp : teamUser.getSharedApps())
+                    sharedApp.setDisableShared(true, sm.getDB());
+            }
+            hibernateQuery.commit();
+            sm.setResponse(ServletManager.Code.Success, "Account trunced and password set.");
+        } catch (GeneralException e) {
+            sm.setResponse(e);
+        } catch (Exception e) {
+            sm.setResponse(e);
+        }
+        sm.sendResponse();
+    }
 
 }

@@ -35,7 +35,7 @@ public class ServletSubscribeToMonthPlan extends HttpServlet {
                 Map<String, Object> customerParams = new HashMap<>();
                 customerParams.put("email", email);
                 customerParams.put("source", sm.getStringParam("token", true));
-                /* HibernateQuery hibernateQuery = sm.getHibernateQuery();
+                HibernateQuery hibernateQuery = sm.getHibernateQuery();
                 hibernateQuery.querySQLString("SELECT credit FROM waitingCredits WHERE email = ?");
                 hibernateQuery.setParameter(1, email);
                 Integer amount = (Integer) hibernateQuery.getSingleResult();
@@ -44,7 +44,7 @@ public class ServletSubscribeToMonthPlan extends HttpServlet {
                     hibernateQuery.querySQLString("DELETE FROM waitingCredits WHERE email = ?");
                     hibernateQuery.setParameter(1, email);
                     hibernateQuery.executeUpdate();
-                } */
+                }
                 Customer customer = Customer.create(customerParams);
                 team.setCustomer_id(customer.getId());
             }

@@ -17,13 +17,9 @@ import javax.servlet.http.HttpSession;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.User.User;
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Regex;
-import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.*;
 import com.Ease.websocket.WebsocketSession;
 
 /**
@@ -63,9 +59,10 @@ public class ConnectionServlet extends HttpServlet {
         Map<String, WebsocketSession> sessionWebsockets = (Map<String, WebsocketSession>) session.getAttribute("sessionWebsockets");
         String client_ip = getIpAddr(request);
         User user = null;
-        TeamUser teamUser = null;
         // Put current ip in db
         try {
+            if (sm.getUser() != null)
+                throw new HttpServletException(HttpStatus.BadRequest, "You are already logged");
             addIpInDataBase(client_ip, db);
             if (canConnect(client_ip, db)) {
                 if (email == null || Regex.isEmail(email) == false)
@@ -76,6 +73,14 @@ public class ConnectionServlet extends HttpServlet {
                     user = User.loadUser(email, password, sm);
                     sm.setUser(user);
                     user.getDashboardManager().decipherApps(sm);
+                    HibernateQuery hibernateQuery = new HibernateQuery();
+                    for (TeamUser teamUser : user.getTeamUsers()) {
+                        if (!teamUser.isVerified() && teamUser.getTeamKey() != null) {
+                            teamUser.finalizeRegistration();
+                            hibernateQuery.saveOrUpdateObject(teamUser);
+                        }
+                    }
+                    hibernateQuery.commit();
                     removeIpFromDataBase(client_ip, db);
                     sm.setResponse(ServletManager.Code.Success, "Successfully connected.");
                     //sm.addWebsockets(sessionWebsockets);
