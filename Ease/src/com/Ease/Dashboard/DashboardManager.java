@@ -182,7 +182,7 @@ public class DashboardManager {
             throw new GeneralException(ServletManager.Code.ClientError, "No such single_id for apps");
         return app;
     }
-	
+
 	
 	/* Utils */
 
@@ -353,8 +353,12 @@ public class DashboardManager {
             if (!app.isClassicApp() || app.isDisabled())
                 continue;
             ClassicApp classicApp = (ClassicApp) app;
-            classicApp.getAccount().update_ciphering_if_needed(sm);
-            classicApp.getAccount().decipher(sm.getUser());
+            if (app.getSharedApp_pinned() != null)
+                classicApp.getAccount().decipherWithTeamKeyIfNeeded(app.getSharedApp_pinned().getTeamUser_tenant().getDeciphered_teamKey());
+            else {
+                classicApp.getAccount().update_ciphering_if_needed(sm);
+                classicApp.getAccount().decipher(sm.getUser());
+            }
         }
     }
 

@@ -600,7 +600,7 @@ public class App implements ShareableApp, SharedApp {
     }
 
     @Override
-    public App createPinned_app(String name, Profile profile, String keyUser, DataBaseConnection db) throws HttpServletException {
+    public App createPinned_app(String name, Profile profile, String teamKey, DataBaseConnection db) throws HttpServletException {
         App app = null;
         if (this.pinned_app != null)
             throw new HttpServletException(HttpStatus.BadRequest, "App already pinned.");
@@ -609,7 +609,7 @@ public class App implements ShareableApp, SharedApp {
         try {
             int transaction = db.startTransaction();
             if (this.isClassicApp())
-                app = ClassicApp.createClassicApp((ClassicApp) this, name, profile, keyUser, db);
+                app = ClassicApp.createClassicApp((ClassicApp) this, name, profile, teamKey, db);
             else
                 app = LinkApp.createLinkApp((LinkApp) this, name, profile, db);
             DatabaseRequest request = db.prepareRequest("UPDATE sharedApps SET pinned_app_id = ? WHERE id = ?;");
