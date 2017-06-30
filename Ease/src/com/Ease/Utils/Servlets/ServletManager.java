@@ -134,7 +134,7 @@ public abstract class ServletManager {
     public void needToBeTeamUserOfTeam(Integer team_id) throws HttpServletException {
         this.needToBeTeamUser();
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
-            if (teamUser.getTeam().getDb_id().equals(team_id))
+            if (teamUser.getTeam().getDb_id().equals(team_id) && !teamUser.isDisabled())
                 return;
         }
         throw new HttpServletException(HttpStatus.Forbidden);
@@ -143,7 +143,7 @@ public abstract class ServletManager {
     public void needToBeAdminOfTeam(Team team) throws HttpServletException {
         this.needToBeTeamUser();
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
-            if (teamUser.getTeam() == team && teamUser.isTeamAdmin())
+            if (teamUser.getTeam() == team && teamUser.isTeamAdmin() && !teamUser.isDisabled())
                 return;
         }
         throw new HttpServletException(HttpStatus.Forbidden);
@@ -152,7 +152,7 @@ public abstract class ServletManager {
     public void needToBeAdminOfTeam(Integer team_id) throws HttpServletException {
         this.needToBeTeamUser();
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
-            if (teamUser.getTeam().getDb_id().equals(team_id) && teamUser.isTeamAdmin())
+            if (teamUser.getTeam().getDb_id().equals(team_id) && teamUser.isTeamAdmin() && !teamUser.isDisabled())
                 return;
         }
         throw new HttpServletException(HttpStatus.Forbidden);
@@ -161,7 +161,7 @@ public abstract class ServletManager {
     public void needToBeOwnerOfTeam(Team team) throws HttpServletException {
         this.needToBeTeamUser();
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
-            if (teamUser.getTeam() == team && teamUser.isTeamOwner())
+            if (teamUser.getTeam() == team && teamUser.isTeamOwner() && !teamUser.isDisabled())
                 return;
         }
         throw new HttpServletException(HttpStatus.Forbidden);
@@ -170,7 +170,7 @@ public abstract class ServletManager {
     public void needToBeOwnerOfTeam(Integer team_id) throws HttpServletException {
         this.needToBeTeamUser();
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
-            if (teamUser.getTeam().getDb_id().equals(team_id) && teamUser.isTeamOwner())
+            if (teamUser.getTeam().getDb_id().equals(team_id) && teamUser.isTeamOwner() && !teamUser.isDisabled())
                 return;
         }
         throw new HttpServletException(HttpStatus.Forbidden);
@@ -431,7 +431,7 @@ public abstract class ServletManager {
 
     public TeamUser getTeamUserForTeam(Team team) throws HttpServletException {
         for (TeamUser teamUser : this.getTeamUsers()) {
-            if (teamUser.getTeam() == team)
+            if (teamUser.getTeam() == team && !teamUser.isDisabled())
                 return teamUser;
         }
         throw new HttpServletException(HttpStatus.BadRequest);
@@ -441,7 +441,7 @@ public abstract class ServletManager {
         TeamManager teamManager = (TeamManager) this.getContextAttr("teamManager");
         Team team = teamManager.getTeamWithId(team_id);
         for (TeamUser teamUser : this.getTeamUsers()) {
-            if (teamUser.getTeam() == team)
+            if (teamUser.getTeam() == team && !teamUser.isDisabled())
                 return teamUser;
         }
         return null;
