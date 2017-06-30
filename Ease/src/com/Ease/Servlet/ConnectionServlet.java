@@ -15,11 +15,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.*;
+import com.Ease.Utils.Crypto.RSA;
 import com.Ease.websocket.WebsocketSession;
 
 /**
@@ -72,15 +74,25 @@ public class ConnectionServlet extends HttpServlet {
                 else {
                     user = User.loadUser(email, password, sm);
                     sm.setUser(user);
-                    user.getDashboardManager().decipherApps(sm);
                     HibernateQuery hibernateQuery = new HibernateQuery();
                     for (TeamUser teamUser : user.getTeamUsers()) {
                         if (!teamUser.isVerified() && teamUser.getTeamKey() != null) {
                             teamUser.finalizeRegistration();
                             hibernateQuery.saveOrUpdateObject(teamUser);
                         }
+                        if (teamUser.isVerified() && teamUser.getTeamKey() != null && teamUser.isDisabled()) {
+                            String deciphered_teamKey = RSA.Decrypt(teamUser.getTeamKey(), user.getKeys().getPrivateKey());
+                            teamUser.setTeamKey(user.encrypt(deciphered_teamKey));
+                            teamUser.setDeciphered_teamKey(deciphered_teamKey);
+                            teamUser.setDisabled(false);
+                            hibernateQuery.saveOrUpdateObject(teamUser);
+                            for (SharedApp sharedApp : teamUser.getSharedApps()) {
+                                sharedApp.setDisableShared(false, sm.getDB());
+                            }
+                        }
                     }
                     hibernateQuery.commit();
+                    user.getDashboardManager().decipherApps(sm);
                     removeIpFromDataBase(client_ip, db);
                     sm.setResponse(ServletManager.Code.Success, "Successfully connected.");
                     //sm.addWebsockets(sessionWebsockets);

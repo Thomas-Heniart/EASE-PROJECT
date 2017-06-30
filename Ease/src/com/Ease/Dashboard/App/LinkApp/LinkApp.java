@@ -146,7 +146,7 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
     }
 
 	/*
-	 * 
+     *
 	 * Getter And Setter
 	 * 
 	 */
@@ -178,11 +178,6 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         json.put("url", this.linkInfos.getLink());
         json.put("imgSrc", this.linkInfos.getImgUrl());
         json.put("type", "linkApp");
-    }
-
-    /* For sancho le robot */
-    public boolean isEmpty() {
-        return true;
     }
 
     public LinkAppInformation getLinkAppInformations() {

@@ -45,6 +45,8 @@ public class ServletShareApp extends HttpServlet {
             int transaction = db.startTransaction();
             shareableApp.removePendingTeamUser(teamUser_tenant, db);
             SharedApp sharedApp = shareableApp.share(teamUser_owner, teamUser_tenant, channel, team, params, sm);
+            if (teamUser_tenant == sm.getTeamUserForTeam(team))
+                sharedApp.accept(db);
             db.commitTransaction(transaction);
             shareableApp.addSharedApp(sharedApp);
             team.getAppManager().addSharedApp(sharedApp);
