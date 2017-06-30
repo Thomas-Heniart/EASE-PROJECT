@@ -742,7 +742,7 @@ public class App implements ShareableApp, SharedApp {
             JSONArray waitingTeamUsers = new JSONArray();
             for (TeamUser teamUser : this.getPendingTeamUsers())
                 waitingTeamUsers.add(teamUser.getDb_id());
-            res.put("team_users_requestings", waitingTeamUsers);
+            res.put("sharing_requests", waitingTeamUsers);
             res.put("origin", this.getOrigin());
             res.put("description", this.getDescription());
             res.put("name", this.getAppInformation().getName());
