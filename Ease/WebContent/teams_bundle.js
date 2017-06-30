@@ -1240,11 +1240,11 @@ function teamAppTransferOwnership(app_id, team_user_id) {
   };
 }
 
-function teamAppPinToDashboard(shared_app_id, profile_id, app_name) {
+function teamAppPinToDashboard(shared_app_id, profile_id, app_name, app_id) {
   return function (dispatch, getState) {
     dispatch({ type: 'TEAM_APP_PIN_TO_DASHBOARD_PENDING' });
     return post_api.teamApps.pinToDashboard(getState().team.id, shared_app_id, profile_id, app_name).then(function (response) {
-      dispatch({ type: 'TEAM_APP_PIN_TO_DASHBOARD_FULFILLED', payload: { shared_app_id: shared_app_id, profile_id: profile_id, app_name: app_name } });
+      dispatch({ type: 'TEAM_APP_PIN_TO_DASHBOARD_FULFILLED', payload: { shared_app_id: shared_app_id, profile_id: profile_id, app_id: app_id } });
       return response;
     }).catch(function (err) {
       dispatch({ type: 'TEAM_APP_PIN_TO_DASHBOARD_REJECTED', payload: err });
@@ -21431,7 +21431,11 @@ var TeamLinkApp = function (_React$Component) {
         React.createElement(
           'div',
           { className: 'display-flex team_app_indicators' },
-          meReceiver !== null && meReceiver.profile_id !== -1 && React.createElement('i', { className: 'fa fa-thumb-tack' })
+          !this.state.modifying && meReceiver !== null && meReceiver.profile_id !== -1 && React.createElement(
+            'span',
+            null,
+            React.createElement('i', { className: 'fa fa-thumb-tack' })
+          )
         ),
         React.createElement(
           'div',
@@ -21878,6 +21882,15 @@ var TeamMultiApp = function (_React$Component) {
           me: me,
           setupModifying: this.setupModifying,
           dispatch: this.props.dispatch }),
+        React.createElement(
+          'div',
+          { className: 'display-flex team_app_indicators' },
+          !this.state.modifying && meReceiver !== null && meReceiver.profile_id !== -1 && React.createElement(
+            'span',
+            null,
+            React.createElement('i', { className: 'fa fa-thumb-tack' })
+          )
+        ),
         React.createElement(
           'div',
           { className: 'team_app_sender_info' },
@@ -22555,7 +22568,11 @@ var TeamSimpleApp = function (_React$Component) {
         React.createElement(
           'div',
           { className: 'display-flex team_app_indicators' },
-          meReceiver !== null && meReceiver.profile_id !== -1 && React.createElement('i', { className: 'fa fa-thumb-tack' })
+          !this.state.modifying && meReceiver !== null && meReceiver.profile_id !== -1 && React.createElement(
+            'span',
+            null,
+            React.createElement('i', { className: 'fa fa-thumb-tack' })
+          )
         ),
         React.createElement(
           'div',
@@ -22821,7 +22838,7 @@ var PinTeamAppToDashboardModal = (_dec = (0, _reactRedux.connect)(function (stor
         this.props.dispatch((0, _teamModalActions.showPinTeamAppToDashboardModal)(false));
         return;
       }
-      this.props.dispatch((0, _appsActions.teamAppPinToDashboard)(meReceiver.shared_app_id, this.state.selectedProfile, this.state.name)).then(function (response) {
+      this.props.dispatch((0, _appsActions.teamAppPinToDashboard)(meReceiver.shared_app_id, this.state.selectedProfile, this.state.name, this.props.modal.app.id)).then(function (response) {
         _this2.props.dispatch((0, _teamModalActions.showPinTeamAppToDashboardModal)(false));
       });
     }
@@ -24206,6 +24223,25 @@ function reducer() {
             for (var j = 0; j < _apps[i].receivers.length; j++) {
               if (_apps[i].receivers[j].shared_app_id === action.payload.shared_app_id) {
                 _apps[i].receivers[j].accepted = true;
+                break;
+              }
+            }
+            break;
+          }
+        }
+        return _extends({}, state, {
+          item: item
+        });
+      }
+    case 'TEAM_APP_PIN_TO_DASHBOARD_FULFILLED':
+      {
+        var item = _extends({}, state.item);
+        var _apps2 = item.apps;
+        for (var i = 0; i < _apps2.length; i++) {
+          if (_apps2[i].id === action.payload.app_id) {
+            for (var j = 0; j < _apps2[i].receivers.length; j++) {
+              if (_apps2[i].receivers[j].shared_app_id === action.payload.shared_app_id) {
+                _apps2[i].receivers[j].profile_id = action.payload.profile_id;
                 break;
               }
             }
