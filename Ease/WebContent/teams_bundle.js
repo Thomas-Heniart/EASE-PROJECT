@@ -21430,6 +21430,11 @@ var TeamLinkApp = function (_React$Component) {
           dispatch: this.props.dispatch }),
         React.createElement(
           'div',
+          { className: 'display-flex team_app_indicators' },
+          meReceiver.profile_id !== -1 && React.createElement('i', { className: 'fa fa-thumb-tack' })
+        ),
+        React.createElement(
+          'div',
           { className: 'team_app_sender_info' },
           React.createElement(
             'span',
@@ -22549,6 +22554,11 @@ var TeamSimpleApp = function (_React$Component) {
           dispatch: this.props.dispatch }),
         React.createElement(
           'div',
+          { className: 'display-flex team_app_indicators' },
+          meReceiver.profile_id !== -1 && React.createElement('i', { className: 'fa fa-thumb-tack' })
+        ),
+        React.createElement(
+          'div',
           { className: 'team_app_sender_info' },
           React.createElement(
             'span',
@@ -22807,6 +22817,10 @@ var PinTeamAppToDashboardModal = (_dec = (0, _reactRedux.connect)(function (stor
       var _this2 = this;
 
       var meReceiver = (0, _helperFunctions.findMeInReceivers)(this.props.modal.app.receivers, this.props.me.id);
+      if (meReceiver.profile_id === -1 && this.state.selectedProfile === -1) {
+        this.props.dispatch((0, _teamModalActions.showPinTeamAppToDashboardModal)(false));
+        return;
+      }
       this.props.dispatch((0, _appsActions.teamAppPinToDashboard)(meReceiver.shared_app_id, this.state.selectedProfile, this.state.name)).then(function (response) {
         _this2.props.dispatch((0, _teamModalActions.showPinTeamAppToDashboardModal)(false));
       });
@@ -22891,7 +22905,7 @@ var PinTeamAppToDashboardModal = (_dec = (0, _reactRedux.connect)(function (stor
             React.createElement(
               'div',
               { className: 'squared_image_handler' },
-              React.createElement('img', { src: app.website.logo, alt: 'Website logo' })
+              React.createElement('img', { src: app.website !== undefined ? app.website.logo : '/resources/icons/app_icon.svg', alt: 'Website logo' })
             ),
             !this.state.nameModifying ? React.createElement(
               'div',
