@@ -5,6 +5,7 @@ var TeamAppAdderButtons = require('./TeamAppAdderButtons');
 var MultiTeamAppAdd = require('./MultiTeamAppAdd');
 import {connect} from "react-redux";
 import * as appActions from "../actions/appsActions";
+import {closeAppAddUI} from "../actions/teamAppsAddUIActions"
 
 class DashboardAndTeamAppSearch extends React.Component{
   constructor(props){
@@ -87,6 +88,10 @@ class SimpleUserSelect extends React.Component {
                 return (
                     <div className="user_token" key={item.id}>
                       <span className="name_hodler overflow-ellipsis">{item.username}</span>
+                      {item.can_see_information != undefined &&
+                        <button class="action_button button-unstyle mrgnLeft5" onClick={this.props.switchCanSeeInformationFunc.bind(null, item.id)}>
+                        <i class={classnames('fa', item.can_see_information ? 'fa-eye' : 'fa-eye-slash')}/>
+                      </button>}
                       <button className="button_delete action_button button-unstyle" onClick={this.props.deselectFunc.bind(null, item.id)}>
                         <i className="fa fa-times"/>
                       </button>
@@ -164,8 +169,7 @@ class LinkTeamAppAdd extends React.Component {
         return this.props.dispatch(appActions.teamShareApp(id, {team_user_id: item.id}));
       }, this);
       Promise.all(sharing).then(() => {
-        this.props.cancelAddFunc();
-        console.log('sharing to users finished');
+        this.props.dispatch(closeAppAddUI());
       });
     });
   }
@@ -233,7 +237,7 @@ class LinkTeamAppAdd extends React.Component {
             <button className="button-unstyle send_button action_text_button positive_background" onClick={this.shareApp}>
               Send
             </button>
-            <button className="button-unstyle action_text_button alert_background close_button" onClick={this.props.cancelAddFunc}>
+            <button className="button-unstyle action_text_button alert_background close_button" onClick={e => {this.props.dispatch(closeAppAddUI())}}>
               Cancel
             </button>
           </div>
@@ -307,13 +311,15 @@ class SimpleTeamAppAdd extends React.Component {
     this.state.users = [];
     if (this.props.selectedItem.type === 'channel'){
       this.props.selectedItem.item.userIds.map(function(item){
-        var user = this.props.userSelectFunc(item);
+        var user = {...this.props.userSelectFunc(item)};
         user.selected = false;
+        user.can_see_information = false;
         this.state.users.push(user);
       }, this);
     } else {
-      var item = this.props.selectedItem.item;
+      var item = {...this.props.selectedItem.item};
       item.selected = false;
+      item.can_see_information = true;
       this.state.users.push(item);
     }
 
@@ -326,6 +332,7 @@ class SimpleTeamAppAdd extends React.Component {
     this.handleUserSelect = this.handleUserSelect.bind(this);
     this.handleUserDeselect = this.handleUserDeselect.bind(this);
     this.chooseDashboardApp = this.chooseDashboardApp.bind(this);
+    this.switchUserCanSeeInformation = this.switchUserCanSeeInformation.bind(this);
     this.shareApp = this.shareApp.bind(this);
   }
   shareApp(){
@@ -347,25 +354,36 @@ class SimpleTeamAppAdd extends React.Component {
     this.props.dispatch(appActions.teamCreateSingleApp(app)).then(response => {
       var id = response.id;
       var sharing = selectedUsers.map(function (item) {
-        return this.props.dispatch(appActions.teamShareApp(id, {team_user_id: item.id}));
+        return this.props.dispatch(appActions.teamShareApp(id, {team_user_id: item.id, can_see_information: item.can_see_information}));
       }, this);
       Promise.all(sharing).then(() => {
-        this.props.cancelAddFunc();
+        this.props.dispatch(closeAppAddUI());
       });
     });
   };
+  switchUserCanSeeInformation(user_id){
+    var users = this.state.users;
+    for (var i = 0; i < users.length; i++){
+      if (users[i].id === user_id){
+        users[i].can_see_information = !users[i].can_see_information;
+        this.setState({users: users});
+        return;
+      }
+    }
+  }
   componentWillReceiveProps(props){
     if (props != this.props){
       var users = [];
       if (props.selectedItem.type === 'channel'){
         props.selectedItem.item.userIds.map(function(item){
-          var user = props.userSelectFunc(item);
+          var user = {...props.userSelectFunc(item)};
           user.selected = false;
           users.push(user);
         }, this);
       } else {
-        var item = props.selectedItem.item;
+        var item = {...props.selectedItem.item};
         item.selected = false;
+        item.can_see_information = true;
         users.push(item);
       }
       this.setState({
@@ -452,7 +470,7 @@ class SimpleTeamAppAdd extends React.Component {
             <button className="button-unstyle send_button action_text_button positive_background" onClick={this.shareApp}>
               Send
             </button>
-            <button className="button-unstyle action_text_button alert_background close_button" onClick={this.props.cancelAddFunc}>
+            <button className="button-unstyle action_text_button alert_background close_button" onClick={e => {this.props.dispatch(closeAppAddUI())}}>
               Cancel
             </button>
           </div>
@@ -528,6 +546,7 @@ class SimpleTeamAppAdd extends React.Component {
                 <SimpleUserSelect
                     users={this.state.users}
                     selectedUsers={this.state.selectedUsers}
+                    switchCanSeeInformationFunc={this.switchUserCanSeeInformation}
                     selectFunc={this.handleUserSelect}
                     deselectFunc={this.handleUserDeselect}
                 />
@@ -550,55 +569,34 @@ class SimpleTeamAppAdd extends React.Component {
 @connect((store)=>{
   return {
     selectedItem: store.selection,
-    team_id: store.team.id
+    team_id: store.team.id,
+    addAppUI: store.teamAppsAddUI
   };
 })
 class TeamAppAddingUi extends React.Component {
   constructor(props){
     super(props);
-    this.state = {
-      buttonsActive: true,
-      simpleAddActive: false,
-      multiAddActive: false,
-      linkAddActive: false
-    };
-    this.activateElement = this.activateElement.bind(this);
-  }
-  activateElement(name){
-    var elem = {
-      buttonsActive: false,
-      simpleAddActive: false,
-      multiAddActive: false,
-      linkAddActive: false
-    };
-    elem[name+'Active'] = true;
-    this.setState(elem)
   }
   render(){
     return (
         <div className="add_actions_container" id="app_add_actions">
-          {this.state.buttonsActive &&
-          <TeamAppAdderButtons activateElemFunc={this.activateElement}/>}
-          {this.state.simpleAddActive &&
+          {this.props.addAppUI.TeamSimpleAppAddActive &&
           <SimpleTeamAppAdd
               team_id={this.props.team_id}
               selectedItem={this.props.selectedItem}
               userSelectFunc={this.props.userSelectFunc}
-              cancelAddFunc={this.activateElement.bind(null, 'buttons')}
               dispatch={this.props.dispatch}/>}
-          {this.state.linkAddActive &&
+          {this.props.addAppUI.TeamLinkAppAddActive &&
               <LinkTeamAppAdd
                   team_id={this.props.team_id}
                   selectedItem={this.props.selectedItem}
                   userSelectFunc={this.props.userSelectFunc}
-                  cancelAddFunc={this.activateElement.bind(null, 'buttons')}
                   dispatch={this.props.dispatch}/>}
-          {this.state.multiAddActive &&
+          {this.props.addAppUI.TeamMultiAppAddActive &&
             <MultiTeamAppAdd
               team_id={this.props.team_id}
               selectedItem={this.props.selectedItem}
               userSelectFunc={this.props.userSelectFunc}
-              cancelAddFunc={this.activateElement.bind(null, 'buttons')}
               dispatch={this.props.dispatch}/>}
         </div>
     )

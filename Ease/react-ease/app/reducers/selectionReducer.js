@@ -106,7 +106,7 @@ export default function reducer(state={
         var state = {
             ...state
         };
-        state.item.apps.push(action.payload);
+        state.item.apps.unshift(action.payload);
         return state;
       }
     }
@@ -115,7 +115,7 @@ export default function reducer(state={
         var state = {
           ...state
         };
-        state.item.apps.push(action.payload);
+        state.item.apps.unshift(action.payload);
         return state;
       }
     }
@@ -124,7 +124,7 @@ export default function reducer(state={
         var state = {
           ...state
         };
-        state.item.apps.push(action.payload);
+        state.item.apps.unshift(action.payload);
         return state;
       }
     }
@@ -221,6 +221,40 @@ export default function reducer(state={
       }
       return {
           ...state,
+        item: item
+      }
+    }
+    case 'TEAM_DELETE_APP_FULFILLED': {
+      var item = {...state.item};
+
+      for (var i = 0; i < item.apps.length; i++){
+        if (item.apps[i].id === action.payload.app_id){
+          item.apps.splice(i, 1);
+          break;
+        }
+      }
+      return {
+          ...state,
+        item: item
+      }
+    }
+    case 'TEAM_ACCEPT_SHARED_APP_FULFILLED': {
+      var item = {...state.item};
+      const apps = item.apps;
+
+      for (var i = 0; i < apps.length; i++){
+        if (apps[i].id === action.payload.app_id){
+          for (var j = 0; j < apps[i].receivers.length; j++){
+            if (apps[i].receivers[j].shared_app_id === action.payload.shared_app_id){
+              apps[i].receivers[j].accepted = true;
+              break;
+            }
+          }
+          break;
+        }
+      }
+      return {
+        ...state,
         item: item
       }
     }

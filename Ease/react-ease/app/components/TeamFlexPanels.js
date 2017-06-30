@@ -7,7 +7,7 @@ import {showTeamDeleteUserModal,
     showTeamDeleteChannelModal,
     showTeamDeleteUserFromChannelModal}
     from "../actions/teamModalActions"
-import {teamUserRoles} from "../utils/helperFunctions"
+import {teamUserRoles, selectChannelFromListById} from "../utils/helperFunctions"
 
 import {connect} from "react-redux"
 
@@ -154,7 +154,7 @@ class TeamChannelFlexTab extends React.Component{
                   {this.props.item.userIds.map(function (item) {
                     const user = this.props.userGetter(item);
                     return (
-                      <span className="member_name_holder" key={item}>
+                        <span className="member_name_holder" key={item}>
                         <i className="fa fa-user mrgnRight5"/>
                        <span className="member_name">{user.username}</span>
                         <button class="button-unstyle remove_button mrgnLeft5"
@@ -449,16 +449,21 @@ class TeamUserFlexTab extends React.Component{
             </div>
             <div className="tab_content_row">
               <div className="teams_holder">
-                <strong className="heading">Teams:</strong>
-                <div className="teams_list">
+                <strong className="heading">Groups:</strong>
+                <div className="channels_list">
                   {
-                    this.props.item.teams && this.props.item.teams.map(function (item) {
+                    this.props.item.channel_ids.map(function (item) {
+                      const channel = selectChannelFromListById(this.props.channels, item);
                       return (
-                          <span className="team_name_holder" key={item.id}>
-                          #
-                            <span className="team_name">
-                              {item.name}
+                          <span className="channel_name_holder" key={item}>
+                            <i className="fa fa-hashtag mrgnRight5"/>
+                            <span>
+                              {channel.name}
                             </span>
+                          <button class="button-unstyle remove_button mrgnLeft5"
+                                  onClick={e => {this.props.dispatch(showTeamDeleteUserFromChannelModal(true, channel.id, this.props.item.id))}}>
+                            <u>remove</u>
+                          </button>
                         </span>
                       )
                     }, this)
@@ -489,7 +494,8 @@ class TeamUserFlexTab extends React.Component{
 @connect((store)=>{
   return {
     me: store.users.me,
-    selectedItem: store.selection
+    selectedItem: store.selection,
+    channels: store.channels.channels
   };
 })
 class FlexPanels extends React.Component {
@@ -511,6 +517,7 @@ class FlexPanels extends React.Component {
               item={this.props.selectedItem.item}
               flexActive={this.props.flexActive}
               toggleFlexFunc={this.props.toggleFlexFunc}
+              channels={this.props.channels}
               dispatch={this.props.dispatch}/>}
         </div>
     )

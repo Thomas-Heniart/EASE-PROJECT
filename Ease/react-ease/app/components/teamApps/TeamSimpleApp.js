@@ -1,7 +1,9 @@
 var React = require('react');
 var classnames = require('classnames');
 var TeamAppUserSelectDropdown = require('./TeamAppUserSelectDropdown');
+var RequestAppButton = require('./RequestAppButton');
 import * as appActions from "../../actions/appsActions";
+import * as modalActions from "../../actions/teamModalActions"
 import {
     selectUserFromListById,
     getChannelUsers,
@@ -10,6 +12,37 @@ import {
     isUserInList,
     passwordChangeValues
 } from "../../utils/helperFunctions"
+
+function TeamSimpleAppButtonSet(props) {
+  const app = props.app;
+  const me = props.me;
+  const meReceiver = findMeInReceivers(app.receivers, me.id);
+  const meSender = app.sender_id === me.id;
+
+  return (
+      <div class="team_app_actions_holder">
+        <button class="button-unstyle team_app_requests" onClick={e => {props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}>
+          <i class="fa fa-user"/>
+        </button>
+        {meReceiver != null && meReceiver.accepted &&
+        <button class="button-unstyle team_app_leave" onClick={e => {props.dispatch(modalActions.showTeamLeaveAppModal(true, app, me.id))}}>
+          <i class="fa fa-sign-out"/>
+        </button>}
+        {meReceiver != null && meReceiver.accepted &&
+        <button class="button-unstyle team_app_pin" onClick={e => {props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}>
+          <i class="fa fa-thumb-tack"/>
+        </button>}
+        {(meSender || me.role > 1) &&
+        <button class="button-unstyle team_app_edit" onClick={props.setupModifying.bind(null, true)}>
+          <i class="fa fa-pencil"/>
+        </button>}
+        {(meSender || me.role > 1) &&
+        <button class="button-unstyle team_app_delete" onClick={e => {props.dispatch(modalActions.showTeamDeleteAppModal(true, app))}}>
+          <i class="fa fa-trash"/>
+        </button>}
+      </div>
+  )
+}
 
 class TeamSimpleApp extends React.Component {
   constructor(props){
@@ -33,6 +66,8 @@ class TeamSimpleApp extends React.Component {
     this.selectReceiver = this.selectReceiver.bind(this);
     this.deselectReceiver = this.deselectReceiver.bind(this);
     this.handleReceiverCanSeePassword = this.handleReceiverCanSeePassword.bind(this);
+    this.acceptRequest = this.acceptRequest.bind(this);
+    this.selfJoinApp = this.selfJoinApp.bind(this);
   }
   handleReceiverCanSeePassword(id){
     var receivers = this.state.receivers;
@@ -46,6 +81,11 @@ class TeamSimpleApp extends React.Component {
         return;
       }
     }
+  }
+  selfJoinApp(){
+    this.props.dispatch(appActions.teamShareApp(this.props.app.id, {team_user_id:this.props.me.id, can_see_information: true})).then(response => {
+      this.props.dispatch(appActions.teamAcceptSharedApp(this.props.app.id, response.shared_app_id));
+    });
   }
   selectReceiver(id){
     var selectedReceivers = this.state.selectedReceivers;
@@ -99,6 +139,15 @@ class TeamSimpleApp extends React.Component {
   handlePasswordChangeIntervalInput(e){
     this.setState({modifiedPasswordChangeInterval: e.target.value});
   }
+  acceptRequest(state){
+    const app = this.props.app;
+    const me = this.props.me;
+    const meReceiver = findMeInReceivers(app.receivers, me.id);
+    if (state)
+      this.props.dispatch(appActions.teamAcceptSharedApp(app.id, meReceiver.shared_app_id));
+    else
+      this.props.dispatch(appActions.teamAppDeleteReceiver(app.id,meReceiver.shared_app_id,meReceiver.team_user_id));
+  }
   validateModifying(){
     console.log("validate modifying");
     var app_info = {
@@ -106,7 +155,7 @@ class TeamSimpleApp extends React.Component {
       description: this.state.modifiedComment,
       password_change_interval: this.state.modifiedPasswordChangeInterval,
       account_information: {
-          ...this.state.modifiedCredentials
+        ...this.state.modifiedCredentials
       }
     };
     var addReceiverList = [];
@@ -179,22 +228,16 @@ class TeamSimpleApp extends React.Component {
     const senderUser = selectUserFromListById(this.props.users, app.sender_id);
     const me = this.props.me;
     const webInfo = app.website.information;
+    const meReceiver = findMeInReceivers(app.receivers, me.id);
 
     return(
         <div class={classnames('team_app_holder', this.state.modifying ? "active":null)}>
-          {!this.state.modifying &&
-          <div class="team_app_actions_holder">
-            <button class="button-unstyle team_app_pin">
-              <i class="fa fa-thumb-tack"/>
-            </button>
-            <button class="button-unstyle team_app_edit" onClick={this.setupModifying.bind(null, true)}>
-              <i class="fa fa-pencil"/>
-            </button>
-            <button class="button-unstyle team_app_delete">
-              <i class="fa fa-trash"/>
-            </button>
-          </div>
-          }
+          {(!this.state.modifying && (meReceiver === null || meReceiver.accepted)) &&
+          <TeamSimpleAppButtonSet
+              app={app}
+              me={me}
+              setupModifying={this.setupModifying}
+              dispatch={this.props.dispatch}/>}
           <div class="team_app_sender_info">
             <span class="team_app_sender_name">
               <i class="fa fa-user mrgnRight5"/>
@@ -205,6 +248,8 @@ class TeamSimpleApp extends React.Component {
             </span>
           </div>
           <div class="team_app">
+            {meReceiver != null && !meReceiver.accepted &&
+            <div class="custom-overlay"></div>}
             <div class="name_holder">
               {!this.state.modifying ?
                   app.name :
@@ -220,33 +265,40 @@ class TeamSimpleApp extends React.Component {
                 </div>
                 <div class="credentials_holder">
                   <div class="credentials">
-                    {
+                    {(meReceiver != null || this.state.modifying) &&
                       Object.keys(app.account_information).map(function(item){
-                        return (
-                            <div class="credentials_line" key={item}>
-                              <div class="credentials_type_icon">
-                                <i class={classnames('fa', webInfo[item].placeholderIcon)}/>
-                              </div>
-                              <div class="credentials_value_holder">
-                                {!this.state.modifying ?
-                                    <span class="credentials_value">
+                          return (
+                              <div class="credentials_line" key={item}>
+                                <div class="credentials_type_icon">
+                                  <i class={classnames('fa', webInfo[item].placeholderIcon)}/>
+                                </div>
+                                <div class="credentials_value_holder">
+                                  {!this.state.modifying ?
+                                      <span class="credentials_value">
                                       {app.account_information[item]}
                                   </span>
-                                    :
-                                    <input autoComplete="off"
-                                           class="credentials_value_input value_input"
-                                           value={this.state.modifiedCredentials[item]}
-                                           onChange={this.handleCredentialsInput}
-                                           placeholder={webInfo[item].placeholder}
-                                           type={webInfo[item].type}
-                                           name={item}/>
-                                }
+                                      :
+                                      <input autoComplete="off"
+                                             class="credentials_value_input value_input"
+                                             value={this.state.modifiedCredentials[item]}
+                                             onChange={this.handleCredentialsInput}
+                                             placeholder={webInfo[item].placeholder}
+                                             type={webInfo[item].type}
+                                             name={item}/>
+                                  }
+                                </div>
                               </div>
-                            </div>
-                        )
-                      }, this)
-                    }
+                          )
+                        }, this)}
+                    {!this.state.modifying && meReceiver === null && me.id !== app.sender_id && me.role === 1 &&
+                      <RequestAppButton/>}
+                    {!this.state.modifying && meReceiver === null && (me.role > 1 || me.id === app.sender_id) &&
+                        <button class="button-unstyle joinAppBtn"
+                                onClick={this.selfJoinApp}>
+                          Join app
+                        </button>}
                   </div>
+                  {meReceiver != null && meReceiver.accepted &&
                   <div class="password_change_remind">
                     <div class="password_change_icon"><i class="fa fa-clock-o"/></div>
                     {!this.state.modifying ?
@@ -264,7 +316,18 @@ class TeamSimpleApp extends React.Component {
                           }
                         </select>
                     }
-                  </div>
+                  </div>}
+                  {meReceiver != null && !meReceiver.accepted &&
+                  <div>
+                    <button class="accept_request_btn button-unstyle action_text_button positive_background mrgnRight5"
+                            onClick={this.acceptRequest.bind(null, true)}>
+                      Accept
+                    </button>
+                    <button class="accept_request_btn button-unstyle action_text_button neutral_background"
+                            onClick={this.acceptRequest.bind(null, false)}>
+                      Refuse
+                    </button>
+                  </div>}
                 </div>
               </div>
               <div class="sharing_info full_flex">
@@ -289,8 +352,7 @@ class TeamSimpleApp extends React.Component {
                           myId={me.id}
                           selectFunc={this.selectReceiver}
                           deselectFunc={this.deselectReceiver}
-                          changeReceiverSeePasswordPermFunc={this.handleReceiverCanSeePassword}
-                      />
+                          changeReceiverSeePasswordPermFunc={this.handleReceiverCanSeePassword}/>
                   }
                 </div>
               </div>

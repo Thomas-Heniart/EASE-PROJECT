@@ -1,7 +1,7 @@
 var React = require('react');
 var api = require('../utils/api');
 var classnames = require('classnames');
-
+import {closeAppAddUI} from "../actions/teamAppsAddUIActions"
 import {teamCreateMultiApp, teamShareApp} from "../actions/appsActions"
 
 class TeamAppSearch extends React.Component{
@@ -106,8 +106,7 @@ class MultiTeamAppAdd extends React.Component {
         return this.props.dispatch(teamShareApp(id, user_info));
       }, this);
       Promise.all(sharing).then(() => {
-        this.props.cancelAddFunc();
-        console.log('sharing to users finished');
+        this.props.dispatch(closeAppAddUI());
       });
     });
   }
@@ -211,7 +210,7 @@ class MultiTeamAppAdd extends React.Component {
             <button className="button-unstyle send_button action_text_button positive_background" onClick={this.shareApp}>
               Send
             </button>
-            <button className="button-unstyle action_text_button alert_background close_button" onClick={this.props.cancelAddFunc}>
+            <button className="button-unstyle action_text_button alert_background close_button" onClick={e => {this.props.dispatch(closeAppAddUI())}}>
               Cancel
             </button>
           </div>

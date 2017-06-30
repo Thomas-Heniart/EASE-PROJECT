@@ -1,5 +1,6 @@
 var React = require('react');
 import {connect} from "react-redux"
+import {showTeamMenu} from "../actions/teamActions"
 import * as channelActions from "../actions/channelActions"
 import * as userActions from "../actions/userActions"
 import * as teamModalsActions from "../actions/teamModalActions"
@@ -12,7 +13,7 @@ function ChannelList(props){
         </button>
         <div className="section-header">
                                     <span>
-                                        Teams
+                                        Channels
                                     </span>
           <span className="header-count"> ({props.items.length})</span>
         </div>
@@ -80,7 +81,7 @@ class TeamSideBar extends React.Component{
   render() {
     return (
         <div className="client_channels_container">
-          <div id="team_menu">
+          <div id="team_menu" onClick={e => {this.props.dispatch(showTeamMenu(true))}}>
             <div className="team_name_container">
               {this.props.team_name}
             </div>

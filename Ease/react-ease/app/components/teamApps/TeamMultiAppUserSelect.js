@@ -39,7 +39,7 @@ class TeamMultiAppUserSelect extends React.Component {
     const selectedReceivers = this.props.selectedReceivers.map(function (receiver) {
       return (
           <div class="receiver_wrapper" key={receiver.id}>
-            <div class="receiver">
+            <div class={classnames("receiver", receiver.accepted ? "accepted": null)}>
               <span class="receiver_name">{receiver.username}{receiver.id === myId ? '(you)': null}</span>
               <i class="fa fa-unlock-alt mrgnLeft5"/>
               <button class="button-unstyle mrgnLeft5" onClick={this.props.deselectUserFunc.bind(null, receiver.id)}>

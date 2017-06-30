@@ -145,5 +145,12 @@ module.exports = {
     }).then(function (response) {
       return response.data;
     });
+  },
+  dashboard: {
+    fetchProfiles: function(){
+      return axios.get('/api/v1/dashboard/GetProfiles').then(response => {
+        return response.data;
+      });
+    }
   }
 };

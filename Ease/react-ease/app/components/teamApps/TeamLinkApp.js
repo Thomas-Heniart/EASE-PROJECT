@@ -1,8 +1,9 @@
 var React = require('react');
 var classnames = require('classnames');
 var TeamAppUserSelectDropdown = require('./TeamAppUserSelectDropdown');
+var RequestAppButton = require('./RequestAppButton');
 import * as appActions from "../../actions/appsActions";
-
+import * as modalActions from "../../actions/teamModalActions"
 import {
     selectUserFromListById,
     getChannelUsers,
@@ -10,6 +11,37 @@ import {
     getReceiverInList,
     isUserInList
 } from "../../utils/helperFunctions"
+
+function TeamLinkAppButtonSet(props) {
+  const app = props.app;
+  const me = props.me;
+  const meReceiver = findMeInReceivers(app.receivers, me.id);
+  const meSender = app.sender_id === me.id;
+
+  return (
+      <div class="team_app_actions_holder">
+        <button class="button-unstyle team_app_requests" onClick={e => {props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}>
+          <i class="fa fa-user"/>
+        </button>
+        {meReceiver != null &&
+        <button class="button-unstyle team_app_leave" onClick={e => {props.dispatch(modalActions.showTeamLeaveAppModal(true, app, me.id))}}>
+          <i class="fa fa-sign-out"/>
+        </button>}
+        {meReceiver != null &&
+        <button class="button-unstyle team_app_pin" onClick={e => {props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}>
+          <i class="fa fa-thumb-tack"/>
+        </button>}
+        {(meSender || me.role > 1) &&
+        <button class="button-unstyle team_app_edit" onClick={props.setupModifying.bind(null, true)}>
+          <i class="fa fa-pencil"/>
+        </button>}
+        {(meSender || me.role > 1) &&
+        <button class="button-unstyle team_app_delete" onClick={e => {props.dispatch(modalActions.showTeamDeleteAppModal(true, app))}}>
+          <i class="fa fa-trash"/>
+        </button>}
+      </div>
+  )
+}
 
 class TeamLinkApp extends React.Component {
   constructor(props){
@@ -29,6 +61,7 @@ class TeamLinkApp extends React.Component {
     this.handleUrlInput = this.handleUrlInput.bind(this);
     this.selectReceiver = this.selectReceiver.bind(this);
     this.deselectReceiver = this.deselectReceiver.bind(this);
+    this.selfJoinApp = this.selfJoinApp.bind(this);
   }
   selectReceiver(id){
     var selectedReceivers = this.state.selectedReceivers;
@@ -65,6 +98,9 @@ class TeamLinkApp extends React.Component {
         return;
       }
     }
+  }
+  selfJoinApp(){
+    this.props.dispatch(appActions.teamShareApp(this.props.app.id, {team_user_id:this.props.me.id}));
   }
   setupModifying(state){
     if (state) {
@@ -143,20 +179,16 @@ class TeamLinkApp extends React.Component {
     const app = this.props.app;
     const senderUser = selectUserFromListById(this.props.users, app.sender_id);
     const me = this.props.me;
+    const meReceiver = findMeInReceivers(app.receivers, me.id);
+
     return(
         <div class={classnames('team_app_holder', this.state.modifying ? "active":null)}>
           {!this.state.modifying &&
-          <div class="team_app_actions_holder">
-            <button class="button-unstyle team_app_pin">
-              <i class="fa fa-thumb-tack"/>
-            </button>
-            <button class="button-unstyle team_app_edit" onClick={this.setupModifying.bind(null, true)}>
-              <i class="fa fa-pencil"/>
-            </button>
-            <button class="button-unstyle team_app_delete">
-              <i class="fa fa-trash"/>
-            </button>
-          </div>
+          <TeamLinkAppButtonSet
+              app={app}
+              me={me}
+              setupModifying={this.setupModifying}
+              dispatch={this.props.dispatch}/>
           }
           <div class="team_app_sender_info">
             <span class="team_app_sender_name">
@@ -183,26 +215,35 @@ class TeamLinkApp extends React.Component {
                 </div>
                 <div class="credentials_holder">
                   <div class="credentials">
+                    {!this.state.modifying && meReceiver === null && me.id !== app.sender_id && me.role === 1 &&
+                    <RequestAppButton/>}
+                    {!this.state.modifying && meReceiver === null && (me.role > 1 || me.id === app.sender_id) &&
+                    <button class="button-unstyle joinAppBtn"
+                            onClick={this.selfJoinApp}>
+                      Join app
+                    </button>}
+                    {!this.state.modifying && meReceiver != null && meReceiver.accepted &&
                     <div class="credentials_line">
-                      <div class="credentials_type_icon">
-                        <i class="fa fa-home"/>
-                      </div>
+                      <i class="fa fa-home mrgnRight5"/>
                       <div class="credentials_value_holder">
-                        {!this.state.modifying ?
-                            <span class="credentials_value">
+                        <span class="credentials_value">
                               {app.url}
                             </span>
-                            :
-                            <input autoComplete="off"
-                                   class="credentials_value_input value_input"
-                                   value={this.state.modifiedUrl}
-                                   onChange={this.handleUrlInput}
-                                   placeholder="Your url"
-                                   type="url"
-                                   name="url"/>
-                        }
                       </div>
-                    </div>
+                    </div>}
+                    {this.state.modifying &&
+                    <div class="credentials_line">
+                      <i class="fa fa-home mrgnRight5"/>
+                      <div class="credentials_value_holder">
+                        <input autoComplete="off"
+                               class="credentials_value_input value_input"
+                               value={this.state.modifiedUrl}
+                               onChange={this.handleUrlInput}
+                               placeholder="Your url"
+                               type="url"
+                               name="url"/>
+                      </div>
+                    </div>}
                   </div>
                 </div>
               </div>

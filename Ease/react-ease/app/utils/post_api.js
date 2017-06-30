@@ -166,6 +166,14 @@ module.exports = {
         return response.data;
       });
     },
+    deleteApp: function (team_id, app_id) {
+      return axios.post('/api/v1/teams/DeleteShareableApp', {
+        team_id: team_id,
+        app_id: app_id
+      }).then(response => {
+        return response.data;
+      })
+    },
     shareMultiApp: function(team_id, app_id, user_info){
       return axios.post('/api/v1/teams/ShareApp', {
         team_id: team_id,
@@ -221,11 +229,29 @@ module.exports = {
         return response.data;
       });
     },
+    acceptSharedApp: function(team_id, shared_app_id){
+      return axios.post('/api/v1/teams/AcceptSharedApp', {
+        team_id: team_id,
+        shared_app_id: shared_app_id
+      }).then(response => {
+        return response.data;
+      });
+    },
     transferOwnership: function (team_id, app_id, team_user_id) {
       return axios.post('/api/v1/teams/TransferShareableAppOwner', {
         team_id: team_id,
         app_id: app_id,
         team_user_id: team_user_id
+      }).then(response => {
+        return response.data;
+      })
+    },
+    pinToDashboard: function(team_id, shared_app_id, profile_id, app_name){
+      return axios.post('/api/v1/teams/PinAppToDashboard', {
+        team_id: team_id,
+        shared_app_id: shared_app_id,
+        profile_id: profile_id,
+        app_name: app_name
       }).then(response => {
         return response.data;
       })

@@ -43,9 +43,9 @@ class TeamAppUserSelectDropdown extends React.Component {
                                   {this.props.myId === item.id && "(you)"}
                                 </span>
                   {item.can_see_information != undefined && this.props.changeReceiverSeePasswordPermFunc != undefined &&
-                      <button class="button-unstyle mrgnLeft5" onClick={this.props.changeReceiverSeePasswordPermFunc.bind(null, item.id)}>
-                        <i class={classnames("fa", item.can_see_information ? "fa-eye" : "fa-eye-slash")}/>
-                      </button>
+                  <button class="button-unstyle mrgnLeft5" onClick={this.props.changeReceiverSeePasswordPermFunc.bind(null, item.id)}>
+                    <i class={classnames("fa", item.can_see_information ? "fa-eye" : "fa-eye-slash")}/>
+                  </button>
                   }
                   <button class="button-unstyle mrgnLeft5" onClick={this.props.deselectFunc.bind(null, item.id)}>
                     <i class="fa fa-times"/>

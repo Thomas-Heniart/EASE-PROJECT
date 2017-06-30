@@ -1,6 +1,7 @@
 var React = require('react');
 var classnames = require('classnames');
 var ReactRouter = require('react-router-dom');
+var TeamMenu = require('./TeamMenu');
 var TeamSideBar = require('./TeamSideBar');
 var TeamHeader = require('./TeamHeader');
 var FlexPanels = require('./TeamFlexPanels');
@@ -12,7 +13,13 @@ var TeamChannelAddUserModal = require('./TeamChannelAddUserModal');
 var TeamDeleteUserModal = require('./TeamDeleteUserModal');
 var TeamDeleteChannelModal = require('./TeamDeleteChannelModal');
 var TeamDeleteUserFromChannelModal = require('./TeamDeleteUserFromChannelModal');
+var PinTeamAppToDashboardModal = require('./teamModals/PinTeamAppToDashboardModal');
 var TeamAppsContainer = require('./TeamAppsContainer');
+var TeamDeleteAppModal = require('./teamModals/TeamDeleteAppModal');
+var TeamLeaveAppModal = require('./teamModals/TeamLeaveAppModal');
+var TeamManageAppRequestModal = require('./teamModals/TeamManageAppRequestModal');
+var TeamAcceptMultiAppModal = require('./teamModals/TeamAcceptMultiAppModal');
+var TeamJoinMultiAppModal = require('./teamModals/TeamJoinMultiAppModal');
 import * as teamActions from "../actions/teamActions"
 import * as channelActions from "../actions/channelActions"
 import * as userActions from "../actions/userActions"
@@ -23,7 +30,7 @@ import {connect} from "react-redux"
 
 @connect((store)=>{
   return {
-    team_name: store.team.name,
+    team: store.team,
     users: store.users.users,
     me: store.users.me,
     channels: store.channels.channels,
@@ -33,7 +40,13 @@ import {connect} from "react-redux"
     teamChannelAddUserModal: store.teamModals.teamChannelAddUserModal,
     teamDeleteUserModal: store.teamModals.teamDeleteUserModal,
     teamDeleteChannelModal: store.teamModals.teamDeleteChannelModal,
-    teamDeleteUserFromChannelModal: store.teamModals.teamDeleteUserFromChannelModal
+    teamDeleteUserFromChannelModal: store.teamModals.teamDeleteUserFromChannelModal,
+    teamDeleteAppModal: store.teamModals.teamDeleteAppModal,
+    pinTeamAppToDashboardModal: store.teamModals.pinTeamAppToDashboardModal,
+    teamLeaveAppModal: store.teamModals.teamLeaveAppModal,
+    teamManageAppRequestModal: store.teamModals.teamManageAppRequestModal,
+    teamAcceptMultiAppModal: store.teamModals.teamAcceptMultiAppModal,
+    teamJoinMultiAppModal: store.teamModals.teamJoinMultiAppModal
   };
 })
 class TeamView extends React.Component {
@@ -87,6 +100,11 @@ class TeamView extends React.Component {
     return (
         <div className="team_view" id="team_view">
           {!this.state.loadingInfo && <TeamSideBar/>}
+          {this.props.team.teamMenuActive &&
+              <TeamMenu
+                me={this.props.me}
+                team={this.props.team}
+                dispatch={this.props.dispatch}/>}
           {this.props.selectedItem.item &&
           <div className="client_main_container">
             <TeamHeader
@@ -110,15 +128,27 @@ class TeamView extends React.Component {
           {this.props.addUserModalActive &&
           <TeamAddUserModal/>}
           {this.props.addChannelModalActive &&
-              <TeamAddChannelModal/>}
+          <TeamAddChannelModal/>}
           {this.props.teamChannelAddUserModal.active &&
-              <TeamChannelAddUserModal/>}
+          <TeamChannelAddUserModal/>}
           {this.props.teamDeleteUserModal.active &&
           <TeamDeleteUserModal/>}
           {this.props.teamDeleteChannelModal.active &&
           <TeamDeleteChannelModal/>}
           {this.props.teamDeleteUserFromChannelModal.active &&
           <TeamDeleteUserFromChannelModal/>}
+          {this.props.teamDeleteAppModal.active &&
+          <TeamDeleteAppModal/>}
+          {this.props.pinTeamAppToDashboardModal.active &&
+          <PinTeamAppToDashboardModal/>}
+          {this.props.teamLeaveAppModal.active &&
+          <TeamLeaveAppModal/>}
+          {this.props.teamManageAppRequestModal.active &&
+          <TeamManageAppRequestModal/>}
+          {this.props.teamAcceptMultiAppModal.active &&
+          <TeamAcceptMultiAppModal/>}
+          {this.props.teamJoinMultiAppModal.active &&
+          <TeamJoinMultiAppModal/>}
         </div>
     )
   }

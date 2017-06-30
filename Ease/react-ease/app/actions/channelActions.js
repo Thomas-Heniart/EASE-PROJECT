@@ -7,7 +7,7 @@ export function selectTeamChannel(id){
     dispatch({type: 'SELECT_TEAM_CHANNEL_PENDING'});
       var teamChannel = selectChannelFromListById(getState().channels.channels, id);
       return api.fetchTeamChannelApps(getState().team.id, id).then(response => {
-        teamChannel.apps = response;
+        teamChannel.apps = response.reverse();
         dispatch({type: 'SELECT_TEAM_CHANNEL_FULFILLED', payload: teamChannel});
       }).catch(err => {
       dispatch({type:'SELECT_TEAM_CHANNEL_REJECTED', payload:err});

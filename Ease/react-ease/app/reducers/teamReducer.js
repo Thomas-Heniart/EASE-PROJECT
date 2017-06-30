@@ -1,7 +1,8 @@
 export default function reducer(state={
   id: null,
   name: null,
-  myTeamUserId: null
+  myTeamUserId: null,
+  teamMenuActive: false
 }, action){
   switch (action.type){
     case "FETCH_TEAM_FULFILLED": {
@@ -12,8 +13,11 @@ export default function reducer(state={
         myTeamUserId:action.payload.myTeamUserId
       }
     }
-    case "FETCH_TEAM_REJECTED": {
-
+    case 'SHOW_TEAM_MENU': {
+      return {
+          ...state,
+        teamMenuActive: action.payload
+      }
     }
   }
   return state;

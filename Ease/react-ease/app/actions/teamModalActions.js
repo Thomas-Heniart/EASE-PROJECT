@@ -52,3 +52,66 @@ export function showTeamDeleteUserFromChannelModal(state, channel_id, team_user_
     }
   }
 }
+
+export function showTeamDeleteAppModal(state, teamApp){
+  return {
+    type: 'SHOW_TEAM_DELETE_APP_MODAL',
+    payload: {
+      active: state,
+      app: teamApp
+    }
+  }
+}
+
+export function showPinTeamAppToDashboardModal(state, teamApp){
+  return {
+    type: 'SHOW_PIN_TEAM_APP_TO_DASHBOARD_MODAL',
+    payload: {
+      active: state,
+      app: teamApp
+    }
+  }
+}
+
+export function showTeamLeaveAppModal(state, app, team_user_id){
+  return {
+    type: 'SHOW_TEAM_LEAVE_APP_MODAL',
+    payload: {
+      active: state,
+      app: app,
+      team_user_id: team_user_id
+    }
+  }
+}
+
+export function showTeamManageAppRequestModal(state, app){
+  return {
+    type: 'SHOW_TEAM_MANAGE_APP_REQUEST_MODAL',
+    payload: {
+      active: state,
+      app:app
+    }
+  }
+}
+
+export function showTeamAcceptMultiAppModal(state, user, app){
+  return {
+    type: 'SHOW_TEAM_ACCEPT_MULTI_APP_MODAL',
+    payload: {
+      active: state,
+      user: user,
+      app: app
+    }
+  }
+}
+
+export function showTeamJoinMultiAppModal(state, user, app){
+  return {
+    type: 'SHOW_TEAM_JOIN_MULTI_APP_MODAL',
+    payload: {
+      active: state,
+      user: user,
+      app:app
+    }
+  }
+}

@@ -24,3 +24,10 @@ export function fetchTeamAndUsersAndChannels(team_id){
     })
   }
 }
+
+export function showTeamMenu(state){
+  return {
+    type: 'SHOW_TEAM_MENU',
+    payload: state
+  }
+}

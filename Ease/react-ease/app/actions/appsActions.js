@@ -51,11 +51,25 @@ export function teamCreateLinkApp(app){
   }
 }
 
+export function teamDeleteApp(app_id){
+  return function (dispatch, getState){
+    dispatch({type: 'TEAM_DELETE_APP_PENDING'});
+    return post_api.teamApps.deleteApp(getState().team.id, app_id).then(response => {
+      dispatch({type: 'TEAM_DELETE_APP_FULFILLED', payload:{app_id: app_id}});
+      return response;
+    }).catch(err => {
+      dispatch({type: 'TEAM_DELETE_APP_REJECTED', payload: err});
+      throw err;
+    });
+  }
+}
+
 export function teamShareApp(app_id, user_info){
   return function (dispatch, getState){
     dispatch({type: 'TEAM_SHARE_APP_PENDING'});
     return post_api.teamApps.shareApp(getState().team.id, app_id, user_info).then(response => {
       dispatch({type: 'TEAM_SHARE_APP_FULFILLED', payload:{user_info:response, app_id:app_id}});
+      return response;
     }).catch(err => {
       dispatch({type: 'TEAM_SHARE_APP_REJECTED', payload:err});
       throw err;
@@ -97,6 +111,19 @@ export function teamAppDeleteReceiver(app_id,user_app_id, team_user_id){
   }
 }
 
+export function teamAcceptSharedApp(app_id, shared_app_id){
+  return function(dispatch, getState){
+    dispatch({type: 'TEAM_ACCEPT_SHARED_APP_PENDING'});
+    return post_api.teamApps.acceptSharedApp(getState().team.id, shared_app_id).then(response => {
+      dispatch({type: 'TEAM_ACCEPT_SHARED_APP_FULFILLED', payload: {app_id: app_id, shared_app_id: shared_app_id}});
+      return response;
+    }).catch(err => {
+      dispatch({type: 'TEAM_ACCEPT_SHARED_APP_REJECTED'});
+      throw err;
+    });
+  }
+}
+
 export function teamAppTransferOwnership(app_id, team_user_id){
   return function(dispatch, getState){
     dispatch({type: 'TEAM_APP_TRANSFER_OWNERSHIP_PENDING'});
@@ -106,5 +133,18 @@ export function teamAppTransferOwnership(app_id, team_user_id){
       dispatch({type:'TEAM_APP_TRANSFER_OWNERSHIP_REJECTED', payload: err});
       throw err;
     });
+  }
+}
+
+export function teamAppPinToDashboard(shared_app_id, profile_id, app_name){
+  return function (dispatch, getState) {
+    dispatch({type: 'TEAM_APP_PIN_TO_DASHBOARD_PENDING'});
+    return post_api.teamApps.pinToDashboard(getState().team.id, shared_app_id, profile_id, app_name).then(response => {
+      dispatch({type: 'TEAM_APP_PIN_TO_DASHBOARD_FULFILLED', payload: {shared_app_id: shared_app_id, profile_id: profile_id, app_name:app_name}});
+      return response;
+    }).catch(err => {
+      dispatch({type: 'TEAM_APP_PIN_TO_DASHBOARD_REJECTED', payload: err});
+      throw err;
+    })
   }
 }

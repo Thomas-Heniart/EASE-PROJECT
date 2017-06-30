@@ -17,6 +17,22 @@
   }
 }
 
+#teamsHandler {
+  #team_menu_options {
+    .floating_dropdown {
+      top: 55px;
+      margin-top: 0;
+      left: 10px;
+      width: 240px;
+      display: block;
+      max-height: calc(100vh - 99px);
+      .dropdown_content {
+        z-index: 1;
+      }
+    }
+  }
+}
+
 .team_app {
   .joinAppBtn {
     width: 180px;
@@ -412,10 +428,26 @@
   }
 }
 
-#add_team_apps_button {
-  font-size: 47px;
-  color: $themeGreenColor;
-  margin-right: 14px;
+#teamsHandler {
+  #add_team_apps_button {
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+    background-color: $themeColor;
+    position: relative;
+    font-size: 1rem;
+    color: white;
+    margin-right: 14px;
+    .floating_dropdown {
+      width: 200px;
+      font-size: .8rem;
+      max-height: initial;
+      color: $themeDarkGrayTextColor;
+      i {
+        margin-right: 5px;
+      }
+    }
+  }
 }
 
 #teamsHandler {
@@ -436,7 +468,6 @@
     }
   }
   .team_view {
-    border: 1px solid #E6E6E6;
     font-size: 18px;
     @include display-flex();
     @include flex-grow(1);
@@ -461,8 +492,8 @@
       @include flex-direction(column);
       @include flex-basis(220px);
       @include flex-shrink(0);
-      background-color: $themeGreenColor;
-      color: #2F4F4F;
+      background-color: $themeColor;
+      color: #E8E8E8;
       #team_menu {
         position: relative;
         @include flex-basis(60px);
@@ -470,7 +501,6 @@
         padding: 0 1em;
         &:hover {
           cursor: pointer;
-          color: black;
           background-color: rgba(255, 255, 255, 0.2);
         }
         .team_name_container {
@@ -479,7 +509,7 @@
           font-weight:700;
           margin-top: .5625em;
           line-height: 1.075em;
-          color: black;
+          color: white;
         }
         .team_client_user{
           position: relative;
@@ -526,7 +556,6 @@
               font-size: .8em;
               line-height: 1.7em;
               padding-left: 1em;
-              font-weight: bold;
               span {
                 text-transform: uppercase;
               }
@@ -537,7 +566,7 @@
             .section-list {
               .section-list-item {
                 list-style-type: none;
-                font-size: .8em;
+                font-size: .9em;
                 line-height: 1.5em;
                 &.active {
                   .primary_action {
@@ -602,6 +631,7 @@
           .tab_header {
             @include display-flex();
             @include flex(1);
+            @include align-items(center);
             .channel_title {
               @include flex(1);
               .channel_name_container {
@@ -774,7 +804,7 @@
                   position: absolute;
                   top:.6rem;
                   right: .6rem;
-                  color: #2C2D30;
+                  color: #555459;
                   font-size: .7rem;
                   transition: all 50ms ease-in;
                   &:hover {
@@ -799,7 +829,7 @@
                   }
                 }
                 .team_app_sender_info {
-                  font-size:0.8rem;
+                  font-size:.9rem;
                   color: #717274;
                   display: inline-block;
                   padding: 2px 5px;
@@ -815,7 +845,6 @@
             @include display-flex();
             @include flex-shrink(0);
             @include flex-direction(column);
-            border-bottom: 1px solid #E6E6E6;
             .add_buttons_wrapper {
               @include display-flex();
               @include flex(1);
@@ -985,7 +1014,7 @@
           }
         }
         .credentials_holder {
-          font-size: .8rem;
+          font-size: .9rem;
           padding-left: .6rem;
           min-width:200px;
           .credentials {
@@ -1043,9 +1072,9 @@
             margin: 2px 4px 2px 0;
             padding: 2px 8px;
             border-radius: 5px;
-            background-color: #979797;
+            background-color: $themeBlue2Color;
             color: white;
-            font-size: .7rem;
+            font-size: .9rem;
             &.accepted {
               background-color: $themeGreenColor;
             }
@@ -1068,7 +1097,7 @@
       @include align-items(center);
       .comment {
         @include flex-grow(1);
-        font-size: .7rem;
+        font-size: .9rem;
         line-height: 1.1;
         padding-left: .6rem;
         font-style: italic;
@@ -1294,6 +1323,9 @@
   }
   .add_content_container {
     position: relative;
+    border-bottom:1px solid #E6E6E6;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
     ::-webkit-scrollbar {
       width: 13px;
     }

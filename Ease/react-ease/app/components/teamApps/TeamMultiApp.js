@@ -1,8 +1,9 @@
 var React = require('react');
 var classnames = require('classnames');
 var TeamMultiAppUserSelect = require('./TeamMultiAppUserSelect');
+var RequestAppButton = require('./RequestAppButton');
 import * as appActions from "../../actions/appsActions";
-
+import * as modalActions from "../../actions/teamModalActions";
 import {
     selectUserFromListById,
     getChannelUsers,
@@ -11,6 +12,37 @@ import {
     isUserInList,
     passwordChangeValues
 } from "../../utils/helperFunctions"
+
+function TeamMultiAppButtonSet(props) {
+  const app = props.app;
+  const me = props.me;
+  const meReceiver = findMeInReceivers(app.receivers, me.id);
+  const meSender = app.sender_id === me.id;
+
+  return (
+      <div class="team_app_actions_holder">
+        <button class="button-unstyle team_app_requests" onClick={e => {props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}>
+          <i class="fa fa-user"/>
+        </button>
+        {meReceiver != null &&
+        <button class="button-unstyle team_app_leave" onClick={e => {props.dispatch(modalActions.showTeamLeaveAppModal(true, app, me.id))}}>
+          <i class="fa fa-sign-out"/>
+        </button>}
+        {meReceiver != null &&
+        <button class="button-unstyle team_app_pin" onClick={e => {props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}>
+          <i class="fa fa-thumb-tack"/>
+        </button>}
+        {(meSender || me.role > 1) &&
+        <button class="button-unstyle team_app_edit" onClick={props.setupModifying.bind(null, true)}>
+          <i class="fa fa-pencil"/>
+        </button>}
+        {(meSender || me.role > 1) &&
+        <button class="button-unstyle team_app_delete" onClick={e => {props.dispatch(modalActions.showTeamDeleteAppModal(true, app))}}>
+          <i class="fa fa-trash"/>
+        </button>}
+      </div>
+  )
+}
 
 class TeamMultiApp extends React.Component {
   constructor(props){
@@ -31,6 +63,8 @@ class TeamMultiApp extends React.Component {
     this.handleUserCredentialInput = this.handleUserCredentialInput.bind(this);
     this.selectReceiver = this.selectReceiver.bind(this);
     this.deselectReceiver = this.deselectReceiver.bind(this);
+    this.acceptRequest = this.acceptRequest.bind(this);
+    this.selfJoinApp = this.selfJoinApp.bind(this);
   }
   selectReceiver(id){
     var selectedReceivers = this.state.selectedReceivers;
@@ -106,6 +140,15 @@ class TeamMultiApp extends React.Component {
       this.setState({modifying: false});
     }
   }
+  acceptRequest(state){
+    const app = this.props.app;
+    const me = this.props.me;
+    const meReceiver = findMeInReceivers(app.receivers, me.id);
+    if (state)
+      this.props.dispatch(modalActions.showTeamAcceptMultiAppModal(true, me, app));
+    else
+      this.props.dispatch(appActions.teamAppDeleteReceiver(app.id,meReceiver.shared_app_id,meReceiver.team_user_id));
+  }
   validateModifying(){
     console.log("validate modifying");
     var app_info = {
@@ -149,6 +192,9 @@ class TeamMultiApp extends React.Component {
       this.setupModifying(false);
     });
   }
+  selfJoinApp(){
+    this.props.dispatch(modalActions.showTeamJoinMultiAppModal(true,this.props.me, this.props.app));
+  }
   handleUserCredentialInput(user_id, credentialName, value){
     var selectedReceivers = this.state.selectedReceivers;
 
@@ -178,17 +224,11 @@ class TeamMultiApp extends React.Component {
     return(
         <div class={classnames('team_app_holder', this.state.modifying ? "active":null)}>
           {!this.state.modifying &&
-          <div class="team_app_actions_holder">
-            <button class="button-unstyle team_app_pin">
-              <i class="fa fa-thumb-tack"/>
-            </button>
-            <button class="button-unstyle team_app_edit" onClick={this.setupModifying.bind(null, true)}>
-              <i class="fa fa-pencil"/>
-            </button>
-            <button class="button-unstyle team_app_delete">
-              <i class="fa fa-trash"/>
-            </button>
-          </div>
+          <TeamMultiAppButtonSet
+              app={app}
+              me={me}
+              setupModifying={this.setupModifying}
+              dispatch={this.props.dispatch}/>
           }
           <div class="team_app_sender_info">
             <span class="team_app_sender_name">
@@ -215,29 +255,41 @@ class TeamMultiApp extends React.Component {
                 </div>
                 <div class="credentials_holder">
                   <div class="credentials">
-                    {meReceiver !== null ?
-                        Object.keys(meReceiver.account_information).map(function(item){
-                          return (
-                              <div class="credentials_line" key={item}>
-                                <div class="credentials_type_icon">
-                                  <i class={classnames('fa', webInfo[item].placeholderIcon)}/>
-                                </div>
-                                <div class="credentials_value_holder">
+                    {meReceiver !== null &&
+                    Object.keys(meReceiver.account_information).map(function(item){
+                      return (
+                          <div class="credentials_line" key={item}>
+                            <div class="credentials_type_icon">
+                              <i class={classnames('fa', webInfo[item].placeholderIcon)}/>
+                            </div>
+                            <div class="credentials_value_holder">
                                   <span class="credentials_value">
                                     {meReceiver.account_information[item]}
                                   </span>
-                                </div>
-                              </div>
-                          )
-                        }, this)
-                        :
-                        <div class="credentials_line">
-                          <button class="button-unstyle">
-                            This app does not concern you
-                          </button>
-                        </div>
-                    }
+                            </div>
+                          </div>
+                      )
+                    }, this)}
+                    {!this.state.modifying && meReceiver === null && me.id !== app.sender_id && me.role === 1 &&
+                    <RequestAppButton/>}
+                    {!this.state.modifying && meReceiver === null && (me.role > 1 || me.id === app.sender_id) &&
+                    <button class="button-unstyle joinAppBtn"
+                            onClick={this.selfJoinApp}>
+                      Join app
+                    </button>}
+                    {meReceiver != null && !meReceiver.accepted &&
+                    <div>
+                      <button class="accept_request_btn button-unstyle action_text_button positive_background mrgnRight5"
+                              onClick={this.acceptRequest.bind(null, true)}>
+                        Accept
+                      </button>
+                      <button class="accept_request_btn button-unstyle action_text_button neutral_background"
+                              onClick={this.acceptRequest.bind(null, false)}>
+                        Refuse
+                      </button>
+                    </div>}
                   </div>
+                  {meReceiver !== null && meReceiver.accepted &&
                   <div class="password_change_remind">
                     <div class="password_change_icon"><i class="fa fa-clock-o"/></div>
                     {!this.state.modifying ?
@@ -255,7 +307,7 @@ class TeamMultiApp extends React.Component {
                           }
                         </select>
                     }
-                  </div>
+                  </div>}
                 </div>
               </div>
               <div class="sharing_info display_flex full_flex flex_direction_column">
@@ -265,7 +317,7 @@ class TeamMultiApp extends React.Component {
                         const user = selectUserFromListById(this.props.users, item.team_user_id);
                         return (
                             <div class="receiver_wrapper" key={item.team_user_id}>
-                              <div class="receiver">
+                              <div class={classnames("receiver", item.accepted ? "accepted": null)}>
                               <span class="receiver_name">
                               {user.username}
                                 {me.id === user.id && "(you)"}
