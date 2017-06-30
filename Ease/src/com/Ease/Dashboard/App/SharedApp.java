@@ -52,5 +52,5 @@ public interface SharedApp {
 
     public void unpin(DataBaseConnection db) throws HttpServletException;
 
-    public void setDisableShared(boolean b, DataBaseConnection db) throws HttpServletException;
+    public void setDisableShared(boolean disbaled, DataBaseConnection db) throws HttpServletException;
 }

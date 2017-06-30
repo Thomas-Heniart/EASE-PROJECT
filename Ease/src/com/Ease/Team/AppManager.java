@@ -35,6 +35,10 @@ public class AppManager {
     /* ======= Part about shared apps ======== */
     /* ======================================= */
 
+    public List<SharedApp> getSharedApps() {
+        return sharedApps;
+    }
+
     public void addSharedApp(SharedApp sharedApp) {
         this.sharedApps.add(sharedApp);
         this.sharedAppMap.put(Integer.valueOf(((App) sharedApp).getDBid()), sharedApp);

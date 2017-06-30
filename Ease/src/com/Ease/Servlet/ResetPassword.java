@@ -1,6 +1,8 @@
 package com.Ease.Servlet;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,10 +15,10 @@ import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.User.Keys;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Team.Team;
+import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Regex;
-import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.*;
 
 /**
  * Servlet implementation class ResetPassword
@@ -63,6 +65,7 @@ public class ResetPassword extends HttpServlet {
         String code = sm.getServletParam("linkCode", true);
         String password = sm.getServletParam("password", false);
         String confirmPassword = sm.getServletParam("confirmPassword", false);
+        HibernateQuery hibernateQuery = new HibernateQuery();
         try {
             if (user != null) {
                 Logout.logoutUser(user, sm); //throw new GeneralException(ServletManager.Code.ClientWarning, "You are logged on Ease.");
@@ -76,20 +79,34 @@ public class ResetPassword extends HttpServlet {
             } else if (confirmPassword == null || !confirmPassword.equals(password)) {
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Passwords doesn't match.");
             }
+            DataBaseConnection db = sm.getDB();
+            int transaction = db.startTransaction();
             String userId = User.findDBid(email, sm);
             Keys.resetPassword(userId, password, sm);
-            HibernateQuery hibernateQuery = new HibernateQuery();
-            for (TeamUser teamUser : sm.getUser().getTeamUsers()) {
+            hibernateQuery.querySQLString("SELECT id, team_id FROM teamUsers WHERE user_id = ?");
+            hibernateQuery.setParameter(1, userId);
+            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
+            for (Object teamUserIdAndTeamIdObj : hibernateQuery.list()) {
+                Object[] teamUserIdAndTeamId = (Object[]) teamUserIdAndTeamIdObj;
+                Team team = teamManager.getTeamWithId((Integer) teamUserIdAndTeamId[1]);
+                TeamUser teamUser = team.getTeamUserWithId((Integer) teamUserIdAndTeamId[0]);
                 teamUser.setDisabled(true);
+                teamUser.setTeamKey(null);
                 hibernateQuery.saveOrUpdateObject(teamUser);
                 for (SharedApp sharedApp : teamUser.getSharedApps())
                     sharedApp.setDisableShared(true, sm.getDB());
             }
             hibernateQuery.commit();
+            DatabaseRequest databaseRequest = db.prepareRequest("DELETE FROM passwordLost WHERE user_id = ?;");
+            databaseRequest.setInt(userId);
+            databaseRequest.set();
+            db.commitTransaction(transaction);
             sm.setResponse(ServletManager.Code.Success, "Account trunced and password set.");
         } catch (GeneralException e) {
+            hibernateQuery.rollback();
             sm.setResponse(e);
         } catch (Exception e) {
+            hibernateQuery.rollback();
             sm.setResponse(e);
         }
         sm.sendResponse();

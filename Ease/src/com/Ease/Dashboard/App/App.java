@@ -188,7 +188,7 @@ public class App implements ShareableApp, SharedApp {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
         String insertDate = dateFormat.format(date);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO apps VALUES (NULL, ?, ?, ?, NULL);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO apps VALUES (NULL, ?, ?, ?, NULL, default);");
         request.setString(insertDate);
         request.setString(type);
         request.setInt(infos.getDb_id());
@@ -214,7 +214,7 @@ public class App implements ShareableApp, SharedApp {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
         String registrationDate = dateFormat.format(date);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO apps VALUES (NULL, ?, ?, ?, NULL);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO apps VALUES (NULL, ?, ?, ?, NULL, default);");
         request.setString(registrationDate);
         request.setString(type);
         request.setInt(infos.getDb_id());
@@ -880,9 +880,17 @@ public class App implements ShareableApp, SharedApp {
             return;
         try {
             int transaction = db.startTransaction();
+            System.out.println("Disable app");
             this.setDisabled(disabled, db);
-            if (this.getPinned_app() != null)
+            if (this.getPinned_app() != null) {
                 this.getPinned_app().setDisabled(disabled, db);
+                System.out.println("Disable app");
+            } else {
+                DatabaseRequest request = db.prepareRequest("UPDATE apps a JOIN sharedApps sa ON sa.pinned_app_id = a.id SET a.disabled = ? WHERE sa.id = ?");
+                request.setBoolean(true);
+                request.setInt(this.getDBid());
+                request.set();
+            }
             db.commitTransaction(transaction);
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);

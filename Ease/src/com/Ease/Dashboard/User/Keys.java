@@ -302,14 +302,16 @@ public class Keys {
             String keyUser = AES.keyGenerator();
             String crypted_keyUser = AES.encryptUserKey(keyUser, newPassword, saltPerso);
             String hashed_password = Hashing.hash(newPassword);
-            DatabaseRequest request3 = db.prepareRequest("UPDATE userKeys SET password = ?, saltEase=null, saltPerso = ?, keyUser = ? WHERE id = ?;");
+            Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
+            String publicKey = publicAndPrivateKey.getKey();
+            String privateKey = AES.encrypt(publicAndPrivateKey.getValue(), keyUser);
+            DatabaseRequest request3 = db.prepareRequest("UPDATE userKeys SET password = ?, saltEase=null, saltPerso = ?, keyUser = ?, publicKey = ?, privateKey = ? WHERE id = ?;");
             request3.setString(hashed_password);
             request3.setString(saltPerso);
             request3.setString(crypted_keyUser);
+            request3.setString(publicKey);
+            request3.setString(privateKey);
             request3.setInt(rs.getString(1));
-            request3.set();
-            request3 = db.prepareRequest("DELETE FROM passwordLost WHERE user_id = ?;");
-            request3.setInt(userId);
             request3.set();
         } else {
             throw new GeneralException(ServletManager.Code.ClientWarning, "You did not ask for password resetting.");

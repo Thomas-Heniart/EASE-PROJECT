@@ -310,7 +310,7 @@ public class User {
     }
 
 	/*
-	 * public Status getStatus() { return status; }
+     * public Status getStatus() { return status; }
 	 */
 
     public Map<String, UserEmail> getUserEmails() {
@@ -676,7 +676,7 @@ public class User {
             }
             this.teamUsers.add(teamUser);
             teamUser.setDashboard_user(this);
-            if (teamUser.isVerified()) {
+            if (teamUser.isVerified() && !teamUser.isDisabled()) {
                 teamUser.decipher_teamKey();
                 team.decipherApps(teamUser.getDeciphered_teamKey());
             }

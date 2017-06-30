@@ -350,7 +350,7 @@ public class DashboardManager {
 
     public void decipherApps(ServletManager sm) throws GeneralException {
         for (App app : this.apps) {
-            if (!app.isClassicApp())
+            if (!app.isClassicApp() || app.isDisabled())
                 continue;
             ClassicApp classicApp = (ClassicApp) app;
             classicApp.getAccount().update_ciphering_if_needed(sm);
