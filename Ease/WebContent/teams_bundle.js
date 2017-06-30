@@ -21431,7 +21431,7 @@ var TeamLinkApp = function (_React$Component) {
         React.createElement(
           'div',
           { className: 'display-flex team_app_indicators' },
-          meReceiver.profile_id !== -1 && React.createElement('i', { className: 'fa fa-thumb-tack' })
+          meReceiver !== null && meReceiver.profile_id !== -1 && React.createElement('i', { className: 'fa fa-thumb-tack' })
         ),
         React.createElement(
           'div',
@@ -22555,7 +22555,7 @@ var TeamSimpleApp = function (_React$Component) {
         React.createElement(
           'div',
           { className: 'display-flex team_app_indicators' },
-          meReceiver.profile_id !== -1 && React.createElement('i', { className: 'fa fa-thumb-tack' })
+          meReceiver !== null && meReceiver.profile_id !== -1 && React.createElement('i', { className: 'fa fa-thumb-tack' })
         ),
         React.createElement(
           'div',
