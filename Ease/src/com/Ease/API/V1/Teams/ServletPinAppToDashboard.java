@@ -42,9 +42,8 @@ public class ServletPinAppToDashboard extends HttpServlet {
             User user = sm.getUser();
             Integer profile_id = sm.getIntParam("profile_id", true);
             if (profile_id == -1) {
-                if (sharedApp.getPinned_app() == null)
-                    throw new HttpServletException(HttpStatus.BadRequest, "Cannot unpin.");
-                user.getDashboardManager().removeAppWithSingleId(sharedApp.getPinned_app().getSingleId(), sm.getDB());
+                if (sharedApp.getPinned_app() != null)
+                    user.getDashboardManager().removeAppWithSingleId(sharedApp.getPinned_app().getSingleId(), sm.getDB());
             } else {
                 Profile profile = user.getDashboardManager().getProfile(profile_id);
                 App pinned_app = sharedApp.getPinned_app();
@@ -55,7 +54,7 @@ public class ServletPinAppToDashboard extends HttpServlet {
                     pinned_app = sharedApp.createPinned_app(name, profile, teamUser.getDeciphered_teamKey(), sm.getDB());
                     pinned_app.setSingleId(sm.getNextSingle_id());
                     profile.addApp(pinned_app);
-                } else {
+                } else if (profile_id != pinned_app.getProfile().getSingleId()) {
                     user.getDashboardManager().moveApp(pinned_app.getSingleId(), profile_id, profile.getApps().size(), sm.getDB());
                     pinned_app.setProfile(profile, sm.getDB());
                 }
