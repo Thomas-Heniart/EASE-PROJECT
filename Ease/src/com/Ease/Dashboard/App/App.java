@@ -366,6 +366,10 @@ public class App implements ShareableApp, SharedApp {
         return informations;
     }
 
+    public SharedApp getSharedApp_pinned() {
+        return this.sharedApp_pinned;
+    }
+
     public void setSharedApp_pinned(SharedApp sharedApp) {
         this.sharedApp_pinned = sharedApp;
     }
@@ -405,8 +409,6 @@ public class App implements ShareableApp, SharedApp {
     }
 
     public void setDisabled(boolean disabled, DataBaseConnection db) throws HttpServletException {
-        if (this.disabled = disabled)
-            return;
         try {
             DatabaseRequest request = db.prepareRequest("UPDATE apps SET disabled = ? WHERE id = ?;");
             request.setBoolean(disabled);
@@ -876,20 +878,19 @@ public class App implements ShareableApp, SharedApp {
 
     @Override
     public void setDisableShared(boolean disabled, DataBaseConnection db) throws HttpServletException {
-        if (this.disabled == disabled)
-            return;
         try {
             int transaction = db.startTransaction();
             System.out.println("Disable app");
             this.setDisabled(disabled, db);
             if (this.getPinned_app() != null) {
                 this.getPinned_app().setDisabled(disabled, db);
-                System.out.println("Disable app");
+                System.out.println("Pin app not null");
             } else {
                 DatabaseRequest request = db.prepareRequest("UPDATE apps a JOIN sharedApps sa ON sa.pinned_app_id = a.id SET a.disabled = ? WHERE sa.id = ?");
                 request.setBoolean(true);
                 request.setInt(this.getDBid());
                 request.set();
+                System.out.println("Pin app null");
             }
             db.commitTransaction(transaction);
         } catch (GeneralException e) {
