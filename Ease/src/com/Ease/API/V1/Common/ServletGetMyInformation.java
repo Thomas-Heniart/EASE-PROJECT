@@ -1,7 +1,9 @@
 package com.Ease.API.V1.Common;
 
 import com.Ease.Dashboard.User.User;
+import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Servlets.GetServletManager;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet("/api/v1/common/GetMyInformation")
 public class ServletGetMyInformation extends HttpServlet {
@@ -21,6 +24,11 @@ public class ServletGetMyInformation extends HttpServlet {
             User user = sm.getUser();
             JSONObject res = new JSONObject();
             res.put("first_name", user.getFirstName());
+            List<TeamUser> teamUserList = sm.getTeamUsers();
+            JSONArray teams = new JSONArray();
+            for (TeamUser teamUser : teamUserList)
+                teams.add(teamUser.getTeam().getSimpleJson());
+            res.put("teams", teams);
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);
