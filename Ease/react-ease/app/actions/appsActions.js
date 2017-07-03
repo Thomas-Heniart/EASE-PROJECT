@@ -136,11 +136,11 @@ export function teamAppTransferOwnership(app_id, team_user_id){
   }
 }
 
-export function teamAppPinToDashboard(shared_app_id, profile_id, app_name){
+export function teamAppPinToDashboard(shared_app_id, profile_id, app_name, app_id){
   return function (dispatch, getState) {
     dispatch({type: 'TEAM_APP_PIN_TO_DASHBOARD_PENDING'});
     return post_api.teamApps.pinToDashboard(getState().team.id, shared_app_id, profile_id, app_name).then(response => {
-      dispatch({type: 'TEAM_APP_PIN_TO_DASHBOARD_FULFILLED', payload: {shared_app_id: shared_app_id, profile_id: profile_id, app_name:app_name}});
+      dispatch({type: 'TEAM_APP_PIN_TO_DASHBOARD_FULFILLED', payload: {shared_app_id: shared_app_id, profile_id: profile_id, app_id: app_id}});
       return response;
     }).catch(err => {
       dispatch({type: 'TEAM_APP_PIN_TO_DASHBOARD_REJECTED', payload: err});

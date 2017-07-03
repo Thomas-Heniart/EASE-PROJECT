@@ -430,7 +430,7 @@ function multiple_app_add_interface(root, team_view){
             function (data) {
                 self.app_name_input_holder.addClass('locked');
                 self.app_search.destroy_app_search_listeners();
-                self.choosen_app.inputs = data;
+                self.choosen_app.inputs = data.information;
                 self.app_info_div.removeClass('hide');
                 self.app_comment_div.removeClass('hide');
                 self.app_name_input.val(app.name);
@@ -997,4 +997,4 @@ function Team_user_selector(id, username){
     this.setName(this.name);
 }
 
-team_view.load(3);
+team_view.load(2);

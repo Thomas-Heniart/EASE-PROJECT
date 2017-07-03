@@ -238,6 +238,13 @@ class TeamSimpleApp extends React.Component {
               me={me}
               setupModifying={this.setupModifying}
               dispatch={this.props.dispatch}/>}
+          <div class="display-flex team_app_indicators">
+            {!this.state.modifying && meReceiver !== null && meReceiver.profile_id !== -1 &&
+                <span>
+                    <i class="fa fa-thumb-tack"/>
+                  </span>
+            }
+          </div>
           <div class="team_app_sender_info">
             <span class="team_app_sender_name">
               <i class="fa fa-user mrgnRight5"/>
