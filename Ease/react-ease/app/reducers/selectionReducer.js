@@ -258,6 +258,25 @@ export default function reducer(state={
         item: item
       }
     }
+    case 'TEAM_APP_PIN_TO_DASHBOARD_FULFILLED': {
+      var item = {...state.item};
+      const apps = item.apps;
+      for (var i = 0; i < apps.length; i++){
+        if (apps[i].id === action.payload.app_id){
+          for (var j = 0; j < apps[i].receivers.length; j++){
+            if (apps[i].receivers[j].shared_app_id === action.payload.shared_app_id){
+              apps[i].receivers[j].profile_id = action.payload.profile_id;
+              break;
+            }
+          }
+          break;
+        }
+      }
+      return {
+        ...state,
+        item: item
+      }
+    }
   }
   return state;
 }

@@ -32,7 +32,11 @@ class PinTeamAppToDashboardModal extends React.Component {
   }
   confirmModal(){
     const meReceiver = findMeInReceivers(this.props.modal.app.receivers, this.props.me.id);
-    this.props.dispatch(teamAppPinToDashboard(meReceiver.shared_app_id, this.state.selectedProfile, this.state.name)).then(response => {
+    if (meReceiver.profile_id === -1 && this.state.selectedProfile === -1){
+      this.props.dispatch(showPinTeamAppToDashboardModal(false));
+      return;
+    }
+    this.props.dispatch(teamAppPinToDashboard(meReceiver.shared_app_id, this.state.selectedProfile, this.state.name, this.props.modal.app.id)).then(response => {
       this.props.dispatch(showPinTeamAppToDashboardModal(false));
     });
   }
@@ -82,7 +86,7 @@ class PinTeamAppToDashboardModal extends React.Component {
             </div>
             <div class="row display-flex align_items_center" style={{paddingTop: '20px'}}>
               <div class="squared_image_handler">
-                <img src={app.website.logo} alt="Website logo"/>
+                  <img src={app.website !== undefined ? app.website.logo : '/resources/icons/app_icon.svg'} alt="Website logo"/>
               </div>
               {!this.state.nameModifying ?
                 <div>
