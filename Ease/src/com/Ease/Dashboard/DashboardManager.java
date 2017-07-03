@@ -81,6 +81,14 @@ public class DashboardManager {
         profile.removeApp(app, db);
     }
 
+    public void removeAppFromCollections(App app) {
+        Profile profile = app.getProfile();
+        this.apps.remove(app);
+        this.appsDBMap.remove(app.getDBid());
+        this.appsIDMap.remove(app.getSingleId());
+        profile.removeApp(app);
+    }
+
     public void removeAppWithSingleId(int single_id, DataBaseConnection db) throws GeneralException, HttpServletException {
         App app = this.appsIDMap.get(single_id);
         this.removeApp(app, db);
@@ -353,8 +361,8 @@ public class DashboardManager {
             if (!app.isClassicApp() || app.isDisabled())
                 continue;
             ClassicApp classicApp = (ClassicApp) app;
-            if (app.getSharedApp_pinned() != null)
-                classicApp.getAccount().decipherWithTeamKeyIfNeeded(app.getSharedApp_pinned().getTeamUser_tenant().getDeciphered_teamKey());
+            if (app.isPinned())
+                classicApp.getAccount().decipherWithTeamKeyIfNeeded(app.getTeamUser_tenant().getDeciphered_teamKey());
             else {
                 classicApp.getAccount().update_ciphering_if_needed(sm);
                 classicApp.getAccount().decipher(sm.getUser());

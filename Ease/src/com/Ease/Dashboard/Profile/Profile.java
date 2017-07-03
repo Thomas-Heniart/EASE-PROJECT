@@ -31,7 +31,7 @@ public class Profile {
 
     public static int MAX_COLUMN = 5;
     /*
-	 * 
+     *
 	 * Loader and Creator
 	 * 
 	 */
@@ -163,7 +163,7 @@ public class Profile {
         }
         db.commitTransaction(transaction);
     }
-	
+
 	
 	/*
 	 * 
@@ -415,6 +415,10 @@ public class Profile {
         }
         this.removeFromDB(sm);
         db.commitTransaction(transaction);
+    }
+
+    public void removeApp(App app) {
+        this.apps.remove(app);
     }
 
     public void removeApp(App app, DataBaseConnection db) throws GeneralException, HttpServletException {
