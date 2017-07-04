@@ -10,7 +10,7 @@
 	webId="${app.getSite().getSingleId()}"
 	name="${app.getName()}"
 	move="true"	
-	id="${app.getSingleId()}"
+	id="${app.getDBid()}"
 	ssoId="${app.getSite().getSsoId()}"
 	logwith=""
 	data-type="${app.getType()}">
@@ -27,7 +27,7 @@
 <c:when test="${app.getType() eq 'LinkApp'}">
 	<div class="siteLinkBox"
 	 name="${app.getName()}"
-	 id="${app.getSingleId()}"
+	 id="${app.getDBid()}"
 	 url="${app.getLinkAppInformations().getLink()}"
 	 move="true"
 	 logwith=""
@@ -49,7 +49,7 @@
 	</c:forEach>
 	 webId="${app.getSite().getSingleId()}"
 	 name="${app.getName()}"
-	 id="${app.getSingleId()}"
+	 id="${app.getDBid()}"
 	 ssoId="${app.getSite().getSsoId()}"
 	 move="true"
 	 logwith=""
@@ -60,10 +60,10 @@
 <div class="siteLinkBox"
 	 webId="${app.getSite().getSingleId()}"
 	 name="${app.getName()}"
-	 id="${app.getSingleId()}"
+	 id="${app.getDBid()}"
 	 ssoId="${app.getSite().getSsoId()}"
 	 move="true"
-	 logwith="${app.getLogwith().getSingleId()}"
+	 logwith="${app.getLogwith().getDBid()}"
 	 data-type="${app.getType()}"
 	 logwithname="${app.getLogwith().getSite().getName()}">
 </c:if>

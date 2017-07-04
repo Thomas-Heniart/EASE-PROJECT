@@ -13,7 +13,6 @@ import javax.servlet.http.HttpSession;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
-import com.Ease.websocket.WebsocketMessage;
 
 /**
  * Servlet implementation class MoveProfile

@@ -21,20 +21,15 @@ import javax.servlet.ServletContext;
 
 public class DashboardManager {
     protected User user;
-    protected List<App> apps;
+    protected List<App> apps = new LinkedList<>();
     protected List<List<Profile>> profiles;
-    protected Map<String, App> appsDBMap;
-    protected Map<Integer, App> appsIDMap;
+    protected Map<Integer, App> appIdMap = new HashMap<>();
     protected Map<String, Profile> profileDBMap;
     protected Map<Integer, Profile> profileIDMap;
-    private HashMap<String, WebsiteApp> websiteAppsDBMap;
+    private HashMap<Integer, WebsiteApp> websiteAppsDBMap = new HashMap<>();
 
     public DashboardManager(User user, ServletContext context, DataBaseConnection db) throws GeneralException, HttpServletException {
         this.user = user;
-        this.apps = new LinkedList<App>();
-        this.appsDBMap = new HashMap<String, App>();
-        this.appsIDMap = new HashMap<Integer, App>();
-        this.websiteAppsDBMap = new HashMap<String, WebsiteApp>();
         this.profileDBMap = new HashMap<String, Profile>();
         this.profileIDMap = new HashMap<Integer, Profile>();
         this.profiles = Profile.loadProfiles(user, context, db);
@@ -67,8 +62,7 @@ public class DashboardManager {
 
     public void addApp(App app) {
         this.apps.add(app);
-        this.appsDBMap.put(app.getDBid(), app);
-        this.appsIDMap.put(app.getSingleId(), app);
+        this.appIdMap.put(app.getDBid(), app);
         if (app.getType().equals("ClassicApp") || app.getType().equals("LogwithApp")) {
             this.websiteAppsDBMap.put(((WebsiteApp) app).getWebsiteAppDBid(), (WebsiteApp) app);
         }
@@ -78,21 +72,19 @@ public class DashboardManager {
         user.getUpdateManager().removeAllUpdateWithThisApp(app, db);
         Profile profile = app.getProfile();
         this.apps.remove(app);
-        this.appsDBMap.remove(app.getDBid());
-        this.appsIDMap.remove(app.getSingleId());
+        this.appIdMap.remove(app.getDBid());
         profile.removeApp(app, db);
     }
 
     public void removeAppFromCollections(App app) {
         Profile profile = app.getProfile();
         this.apps.remove(app);
-        this.appsDBMap.remove(app.getDBid());
-        this.appsIDMap.remove(app.getSingleId());
+        this.appIdMap.remove(app.getDBid());
         profile.removeApp(app);
     }
 
-    public void removeAppWithSingleId(int single_id, DataBaseConnection db) throws GeneralException, HttpServletException {
-        App app = this.appsIDMap.get(single_id);
+    public void removeAppWithId(Integer db_id, DataBaseConnection db) throws GeneralException, HttpServletException {
+        App app = this.appIdMap.get(db_id);
         this.removeApp(app, db);
         if (app.getType().equals("ClassicApp")) {
             for (AccountInformation info : ((ClassicApp) app).getAccount().getAccountInformations()) {
@@ -140,11 +132,11 @@ public class DashboardManager {
         return profile;
     }
 
-    public Profile getProfileFromApp(int single_id) throws GeneralException {
+    public Profile getProfileFromApp(Integer db_id) throws GeneralException {
         for (List<Profile> column : this.profiles) {
             for (Profile profile : column) {
                 for (App app : profile.getApps()) {
-                    if (app.getSingleId() == single_id)
+                    if (app.getDBid() == (db_id))
                         return profile;
                 }
             }
@@ -179,15 +171,8 @@ public class DashboardManager {
         return this.apps;
     }
 
-    public App getAppWithDBid(String db_id) throws GeneralException {
-        App app = this.appsDBMap.get(db_id);
-        if (app == null)
-            throw new GeneralException(ServletManager.Code.ClientError, "No such db_id for apps");
-        return app;
-    }
-
-    public App getAppWithID(Integer single_id) throws GeneralException {
-        App app = this.appsIDMap.get(single_id);
+    public App getAppWithId(Integer db_id) throws GeneralException {
+        App app = this.appIdMap.get(db_id);
         if (app == null)
             throw new GeneralException(ServletManager.Code.ClientError, "No such single_id for apps");
         return app;
@@ -214,8 +199,7 @@ public class DashboardManager {
 
     public void replaceApp(App app) throws GeneralException {
         this.apps.set(app.getPosition(), app);
-        this.appsDBMap.put(app.getDBid(), app);
-        this.appsIDMap.put(app.getSingleId(), app);
+        this.appIdMap.put(app.getDBid(), app);
         app.getProfile().getApps().set(app.getPosition(), app);
     }
 
@@ -282,9 +266,9 @@ public class DashboardManager {
         db.commitTransaction(transaction);
     }
 
-    public void moveApp(int appId, int profileIdDest, int positionDest, DataBaseConnection db) throws GeneralException {
+    public void moveApp(Integer appId, int profileIdDest, int positionDest, DataBaseConnection db) throws GeneralException {
         int transaction = db.startTransaction();
-        App app = this.appsIDMap.get(appId);
+        App app = this.appIdMap.get(appId);
         Profile profileDest = this.getProfile(profileIdDest);
         if (positionDest < 0 || positionDest > profileDest.getApps().size())
             throw new GeneralException(ServletManager.Code.ClientError, "PositionDest fucked.");
@@ -311,7 +295,7 @@ public class DashboardManager {
         db.commitTransaction(transaction);
     }
 
-    public App getWebsiteAppWithDBid(String logwithDBid) throws GeneralException {
+    public App getWebsiteAppWithId(Integer logwithDBid) throws GeneralException {
         App app = this.websiteAppsDBMap.get(logwithDBid);
         if (app == null)
             throw new GeneralException(ServletManager.Code.ClientError, "No such website_app");

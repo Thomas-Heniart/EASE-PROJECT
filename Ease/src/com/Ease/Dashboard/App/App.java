@@ -46,14 +46,14 @@ public class App implements ShareableApp, SharedApp {
         DatabaseRequest request = db.prepareRequest("SELECT apps.*, position, sharedApps.id AS shared_app_id, team_id FROM apps JOIN profileAndAppMap ON apps.id = profileAndAppMap.app_id AND profileAndAppMap.profile_id = ? LEFT JOIN sharedApps ON apps.id = sharedApps.id ORDER BY position;");
         request.setInt(profile.getDBid());
         DatabaseResult rs = request.get();
-        String db_id;
+        Integer db_id;
         int position;
         String insertDate;
         AppInformation infos;
         GroupApp groupApp = null;
         App app = null;
         while (rs.next()) {
-            db_id = rs.getString(Data.ID.ordinal());
+            db_id = rs.getInt(Data.ID.ordinal());
             position = rs.getInt(Data.POSITION.ordinal());
             insertDate = rs.getString(Data.INSERT_DATE.ordinal());
             infos = AppInformation.loadAppInformation(rs.getString(Data.APP_INFO_ID.ordinal()), db);
@@ -71,8 +71,6 @@ public class App implements ShareableApp, SharedApp {
                 app = (App) sharedApp;
                 app.setProfile(profile);
                 app.setPosition(position);
-                IdGenerator idGenerator = (IdGenerator) context.getAttribute("idGenererator");
-                app.setSingleId(idGenerator.getNextId());
             } else {
                 switch (rs.getString(Data.TYPE.ordinal())) {
                     case "linkApp":
@@ -108,13 +106,13 @@ public class App implements ShareableApp, SharedApp {
             DatabaseRequest request = db.prepareRequest("SELECT * FROM apps JOIN shareableApps ON apps.id = shareableApps.id WHERE team_id = ?;");
             request.setInt(team.getDb_id());
             DatabaseResult rs = request.get();
-            String db_id;
+            Integer db_id;
             String insertDate;
             String description;
             AppInformation infos;
             ShareableApp shareableApp = null;
             while (rs.next()) {
-                db_id = rs.getString("apps.id");
+                db_id = rs.getInt("apps.id");
                 insertDate = rs.getString("insert_date");
                 description = rs.getString("description");
                 infos = AppInformation.loadAppInformation(rs.getString("app_info_id"), db);
@@ -157,12 +155,12 @@ public class App implements ShareableApp, SharedApp {
             DatabaseRequest request = db.prepareRequest("SELECT * FROM apps JOIN sharedApps ON sharedApps.id = apps.id AND sharedApps.shareable_app_id = ?;");
             request.setInt(((App) shareableApp).getDBid());
             DatabaseResult rs = request.get();
-            String db_id;
+            Integer db_id;
             String insertDate;
             AppInformation infos;
             SharedApp sharedApp = null;
             while (rs.next()) {
-                db_id = rs.getString("apps.id");
+                db_id = rs.getInt("apps.id");
                 insertDate = rs.getString("insert_date");
                 infos = AppInformation.loadAppInformation(rs.getString("app_info_id"), db);
                 switch (rs.getString("type")) {
@@ -193,7 +191,7 @@ public class App implements ShareableApp, SharedApp {
         }
     }
 
-    public static String createApp(Profile profile, Integer position, String name, String type, Map<String, Object> elevator, DataBaseConnection db) throws GeneralException {
+    public static Integer createApp(Profile profile, Integer position, String name, String type, Map<String, Object> elevator, DataBaseConnection db) throws GeneralException {
         int transaction = db.startTransaction();
         AppInformation infos = AppInformation.createAppInformation(name, db);
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -203,7 +201,7 @@ public class App implements ShareableApp, SharedApp {
         request.setString(insertDate);
         request.setString(type);
         request.setInt(infos.getDb_id());
-        String appDBid = request.set().toString();
+        Integer appDBid = request.set();
         if (profile != null && position != null) {
             request = db.prepareRequest("INSERT INTO profileAndAppMap values (NULL, ?, ?, ?)");
             request.setInt(profile.getDBid());
@@ -218,7 +216,7 @@ public class App implements ShareableApp, SharedApp {
 
     }
 
-    public static String createSharedApp(Profile profile, Integer position, String name, String type, Map<String, Object> elevator, Integer team_id, Integer channel_id, Integer team_user_tenant_id, App holder, boolean received, PostServletManager sm) throws GeneralException, HttpServletException {
+    public static Integer createSharedApp(Profile profile, Integer position, String name, String type, Map<String, Object> elevator, Integer team_id, Integer channel_id, Integer team_user_tenant_id, App holder, boolean received, PostServletManager sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         AppInformation infos = AppInformation.createAppInformation(name, db);
@@ -229,7 +227,7 @@ public class App implements ShareableApp, SharedApp {
         request.setString(registrationDate);
         request.setString(type);
         request.setInt(infos.getDb_id());
-        String appDBid = request.set().toString();
+        Integer appDBid = request.set();
         if (profile != null && position != null) {
             request = db.prepareRequest("INSERT INTO profileAndAppMap values (NULL, ?, ?, ?)");
             request.setInt(profile.getDBid());
@@ -264,13 +262,12 @@ public class App implements ShareableApp, SharedApp {
 	 * 
 	 */
 
-    protected String db_id;
+    protected Integer db_id;
     protected Profile profile;
     protected Integer position;
     protected AppInformation informations;
     protected GroupApp groupApp;
     protected String insertDate;
-    protected int single_id;
     protected boolean received = true;
     protected boolean disabled;
 
@@ -291,24 +288,22 @@ public class App implements ShareableApp, SharedApp {
     protected boolean pinned = false;
 
 
-    public App(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id) {
+    public App(Integer db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate) {
         this.db_id = db_id;
         this.profile = profile;
         this.position = position;
         this.informations = infos;
         this.groupApp = groupApp;
         this.insertDate = insertDate;
-        this.single_id = single_id;
     }
 
-    public App(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, ShareableApp holder) {
+    public App(Integer db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, ShareableApp holder) {
         this.db_id = db_id;
         this.profile = profile;
         this.position = position;
         this.informations = infos;
         this.groupApp = groupApp;
         this.insertDate = insertDate;
-        this.single_id = single_id;
         this.holder = holder;
     }
 
@@ -333,16 +328,8 @@ public class App implements ShareableApp, SharedApp {
 	 * 
 	 */
 
-    public String getDBid() {
+    public Integer getDBid() {
         return db_id;
-    }
-
-    public int getSingleId() {
-        return single_id;
-    }
-
-    public void setSingleId(int singleId) {
-        this.single_id = singleId;
     }
 
     public String getName() {
@@ -441,7 +428,7 @@ public class App implements ShareableApp, SharedApp {
     public void fillJson(JSONObject json) {
         json.put("position", this.position);
         json.put("name", this.informations.getName());
-        json.put("singleId", this.single_id);
+        json.put("id", this.getDBid());
         if (this.groupApp != null) {
             JSONObject groupJson = new JSONObject();
             this.groupApp.fillJson(groupJson);
@@ -455,7 +442,7 @@ public class App implements ShareableApp, SharedApp {
         if (position != null)
             jsonObject.put("position", position);
         jsonObject.put("name", this.getAppInformation().getName());
-        jsonObject.put("singleId", this.single_id);
+        jsonObject.put("id", this.getDBid());
         return jsonObject;
     }
 
@@ -463,7 +450,7 @@ public class App implements ShareableApp, SharedApp {
     public JSONObject getJson() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("name", this.getAppInformation().getName());
-        jsonObject.put("id", this.getSingleId());
+        jsonObject.put("id", this.getDBid());
         return jsonObject;
     }
 

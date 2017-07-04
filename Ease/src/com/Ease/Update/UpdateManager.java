@@ -333,8 +333,8 @@ public class UpdateManager {
 		return array;
 	}
 	
-	public String acceptUpdate(int single_id, int profileId, String password, ServletManager sm) throws GeneralException {
-		String newAppSingleId;
+	public Integer acceptUpdate(int single_id, int profileId, String password, ServletManager sm) throws GeneralException {
+		Integer newAppId;
 		Update update = this.getUpdateWithSingleId(single_id);
 		DataBaseConnection db = sm.getDB();
 		if (update == null) {
@@ -363,7 +363,7 @@ public class UpdateManager {
 			infos.put("password", password);
 			App newApp = ClassicApp.createClassicApp(profile, profile.getApps().size(), updateClassicApp.getSite().getName(), updateClassicApp.getSite(), infos, sm, user);
 			profile.addApp(newApp);
-			newAppSingleId = Integer.toString(newApp.getSingleId());
+			newAppId = newApp.getDBid();
 			this.removeUpdateFromDb(update, db);
 		} else if (update.getType().equals("UpdateNewLogWithApp")) {
 			if ((profile = user.getDashboardManager().getProfile(profileId)) == null)
@@ -374,7 +374,7 @@ public class UpdateManager {
 			UpdateNewLogWithApp updateLogWithApp = (UpdateNewLogWithApp) update;
 			App newApp = LogwithApp.createLogwithApp(profile, profile.getApps().size(), updateLogWithApp.getSite().getName(), updateLogWithApp.getSite(), updateLogWithApp.getLogWithApp(), sm);
 			profile.addApp(newApp);
-			newAppSingleId = Integer.toString(newApp.getSingleId());
+			newAppId = newApp.getDBid();
 			
 			this.removeUpdateFromDb(update, db);
 		} else if (update.getType().equals("UpdateNewPassword")) {
@@ -391,25 +391,25 @@ public class UpdateManager {
 			}
 			updatePassword.getApp().setPassword(password, sm);
 			
-			newAppSingleId = Integer.toString(updatePassword.getApp().getSingleId());
+			newAppId = updatePassword.getApp().getDBid();
 			
 			this.removeUpdateFromDb(update, db);
 		} else {
 			throw new GeneralException(ServletManager.Code.InternError, "Update type wtf...");
 		}
-		return newAppSingleId;
+		return newAppId;
 	}
 
 	public void removeAllUpdateWithThisApp(App app, DataBaseConnection db) throws GeneralException {
 		for (Update update : updates) {
 			if (update.getType().equals("UpdateNewPassword")) {
 				UpdateNewPassword uNp = (UpdateNewPassword)update;
-				if (uNp.getApp().getSingleId() == app.getSingleId()) {
+				if (uNp.getApp().getDBid() == app.getDBid()) {
 					this.removeUpdateWithSingleId(uNp.getSingledId(), db);
 				}
 			} else if (update.getType().equals("UpdateNewLogWithApp")) {
 				UpdateNewLogWithApp uNlw = (UpdateNewLogWithApp)update;
-				if (uNlw.getLogWithApp().getSingleId() == app.getSingleId()) {
+				if (uNlw.getLogWithApp().getDBid() == app.getDBid()) {
 					this.removeUpdateWithSingleId(uNlw.getSingledId(), db);
 				}
 			}

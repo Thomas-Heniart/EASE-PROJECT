@@ -6,8 +6,6 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.*;
-import com.Ease.websocket.WebsocketMessage;
-import com.Ease.websocket.WebsocketSession;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -38,14 +36,12 @@ public abstract class ServletManager {
     protected boolean saveLogs;
     protected String logResponse;
     protected String socketId;
-    protected List<WebsocketMessage> messages = new LinkedList<WebsocketMessage>();
     protected JSONObject jsonObjectResponse;
     protected JSONArray jsonArrayResponse;
     protected String errorMessage;
 
     protected HibernateQuery hibernateQuery;
 
-    public Map<String, WebsocketSession> websockets = new HashMap<String, WebsocketSession>();
     public static boolean debug = true;
 
     public ServletManager(String servletName, HttpServletRequest request, HttpServletResponse response, boolean saveLogs) throws IOException {
@@ -370,46 +366,6 @@ public abstract class ServletManager {
 
     public TeamUser getTeamUser() {
         return teamUser;
-    }
-
-    public void setSocketId(String socketId) {
-        if (debug && socketId == null)
-            return;
-        if (socketId == null)
-            return;
-        this.socketId = socketId;
-    }
-
-    public void addWebsockets(Map<String, WebsocketSession> websocketsMap) {
-        if (debug && websocketsMap == null)
-            return;
-        if (websocketsMap == null)
-            return;
-        websockets.putAll(websocketsMap);
-    }
-
-    public void addWebsocket(String tabId, WebsocketSession websocket) throws GeneralException {
-        if (debug && (websocket == null || tabId == null))
-            return;
-        if (websocket == null || tabId == null)
-            return;
-        websockets.put(tabId, websocket);
-    }
-
-    public void removeWebsocket(String tabId) {
-        if (debug && tabId == null)
-            return;
-        if (tabId == null)
-            return;
-        websockets.remove(tabId);
-    }
-
-    public void addToSocket(WebsocketMessage msg) {
-        if (debug && msg == null)
-            return;
-        if (msg == null)
-            return;
-        messages.add(msg);
     }
 
     public HttpSession getSession() {

@@ -94,7 +94,7 @@ public class AddClassicApp extends HttpServlet {
 					Map<String, String> infos = site.getNeededInfos(sm);
 					App newApp = ClassicApp.createClassicApp(profile, profile.getApps().size(), (res.size() == 0) ? name : site.getName(), site, infos, sm, user);
 					profile.addApp(newApp);
-					res.add(newApp.getSingleId());
+					res.add(newApp.getDBid());
 				}
 				
 				sm.setResponse(ServletManager.Code.Success, res.toString());

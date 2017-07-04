@@ -13,12 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.Ease.Dashboard.User.User;
-import com.Ease.Team.TeamUser;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.ServletManager;
-import com.Ease.websocket.WebsocketMessage;
-import com.Ease.websocket.WebsocketSession;
 
 /**
  * Servlet implementation class ServletLogout

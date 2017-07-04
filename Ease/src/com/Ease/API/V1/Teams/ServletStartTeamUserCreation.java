@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Mail.SendGridMail;
 import com.Ease.Team.*;
 import com.Ease.Utils.*;
@@ -78,8 +79,16 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             query.setParameter(2, code);
             query.setParameter(3, team.getDb_id());
             query.executeUpdate();
-            SendGridMail sendGridMail = new SendGridMail("Benjamin @EaseSpace", "benjamin@ease.space");
-            sendGridMail.sendInvitationToJoinTeamEmail(team.getName(), adminTeamUser.getFirstName(), adminTeamUser.getEmail(), email, code);
+            MailJetBuilder mailJetBuilder = new MailJetBuilder();
+            mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
+            mailJetBuilder.setTemplateId(0);
+            mailJetBuilder.addTo(email);
+            mailJetBuilder.addVariable("team_name", team.getName());
+            mailJetBuilder.addVariable("admin_name", adminTeamUser.getFirstName());
+            mailJetBuilder.addVariable("admin_email", adminTeamUser.getEmail());
+            mailJetBuilder.sendEmail();
+            /* SendGridMail sendGridMail = new SendGridMail("Benjamin @EaseSpace", "benjamin@ease.space");
+            sendGridMail.sendInvitationToJoinTeamEmail(team.getName(), adminTeamUser.getFirstName(), adminTeamUser.getEmail(), email, code); */
             sm.setSuccess(teamUser.getJson());
         } catch (Exception e) {
             sm.setError(e);

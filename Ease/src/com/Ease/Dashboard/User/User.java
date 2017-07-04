@@ -11,14 +11,12 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletContext;
-import javax.websocket.Session;
 
 import com.Ease.Context.Catalog.Tag;
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Context.Group.Infrastructure;
-import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.DashboardManager;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
@@ -31,7 +29,6 @@ import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Update.UpdateManager;
 import com.Ease.Utils.*;
-import com.Ease.websocket.WebsocketSession;
 import com.Ease.websocketV1.WebSocketManager;
 import com.Ease.websocketV1.WebSocketSession;
 import org.json.simple.JSONArray;
@@ -126,7 +123,7 @@ public class User {
         for (App app : newUser.getDashboardManager().getApps()) {
             if (app.getType().equals("LogwithApp")) {
                 LogwithApp logwithApp = (LogwithApp) app;
-                App websiteApp = newUser.getDashboardManager().getWebsiteAppWithDBid(logwithApp.getLogwithDBid());
+                App websiteApp = newUser.getDashboardManager().getWebsiteAppWithId(logwithApp.getLogwithDBid());
                 logwithApp.rempLogwith((WebsiteApp) websiteApp);
             }
         }

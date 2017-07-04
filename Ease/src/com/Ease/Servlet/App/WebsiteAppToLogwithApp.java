@@ -66,14 +66,14 @@ public class WebsiteAppToLogwithApp extends HttpServlet {
 				JSONParser parser = new JSONParser();
 				JSONArray appIds = null;
 				appIds = (JSONArray)parser.parse(StringEscapeUtils.unescapeHtml4(appIdsString));
-				App logwith = user.getDashboardManager().getAppWithID(Integer.parseInt((String)logwithId));
+				App logwith = user.getDashboardManager().getAppWithId(Integer.parseInt((String)logwithId));
 				if (!(logwith).getType().equals("ClassicApp"))
 					throw new GeneralException(ServletManager.Code.ClientError, "This is not a classic app.");
 				
 				DataBaseConnection db = sm.getDB();
 				int transaction = db.startTransaction();
 				for (Object appId : appIds) {					
-					App app = user.getDashboardManager().getAppWithID(Integer.parseInt((String)appId));
+					App app = user.getDashboardManager().getAppWithId(Integer.parseInt((String)appId));
 					if (!(app).getType().equals("WebsiteApp"))
 						throw new GeneralException(ServletManager.Code.ClientError, "This is not an empty app.");
 					LogwithApp.createFromWebsiteApp((WebsiteApp)app, name, (WebsiteApp)logwith, sm, user);

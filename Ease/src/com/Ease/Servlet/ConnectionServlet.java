@@ -14,15 +14,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.SharedApp;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.RSA;
-import com.Ease.websocket.WebsocketSession;
 
 /**
  * Servlet implementation class ConnectionServlet
@@ -58,7 +55,6 @@ public class ConnectionServlet extends HttpServlet {
         String email = sm.getServletParam("email", true);
         String password = sm.getServletParam("password", false);
         // --
-        Map<String, WebsocketSession> sessionWebsockets = (Map<String, WebsocketSession>) session.getAttribute("sessionWebsockets");
         String client_ip = IpUtils.getIpAddr(request);
         User user = null;
         // Put current ip in db

@@ -49,7 +49,7 @@ public class GetAccountInformations extends HttpServlet {
 			String appId = sm.getServletParam("appId", true);
 			if (appId == null || appId.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientError, "This app does not exist");
-			App app = user.getDashboardManager().getAppWithID(Integer.parseInt(appId));
+			App app = user.getDashboardManager().getAppWithId(Integer.parseInt(appId));
 			sm.setResponse(ServletManager.Code.Success, app.getAccountInformationsJson().toString());
 		} catch(GeneralException e) {
 			sm.setResponse(e);

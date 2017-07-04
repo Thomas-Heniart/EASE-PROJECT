@@ -64,10 +64,10 @@ public class EditLogwithApp extends HttpServlet {
 				JSONArray appIds = null;
 				appIds = (JSONArray)parser.parse(StringEscapeUtils.unescapeHtml4(appIdsString));
 				for (Object appId : appIds) {
-					App app = user.getDashboardManager().getAppWithID(Integer.parseInt((String)appId));
+					App app = user.getDashboardManager().getAppWithId(Integer.parseInt((String)appId));
 					if (!app.getType().equals("LogwithApp"))
 						throw new GeneralException(ServletManager.Code.ClientError, "This is not a empty app.");
-					App logwith = user.getDashboardManager().getAppWithID(Integer.parseInt(logwithId));
+					App logwith = user.getDashboardManager().getAppWithId(Integer.parseInt(logwithId));
 					if (appIds.indexOf(appId) == 0)
 						((LogwithApp)app).edit(name, logwith, sm);
 					else {

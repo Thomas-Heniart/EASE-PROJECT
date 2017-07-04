@@ -69,12 +69,12 @@ public class AddLogwithApp extends HttpServlet {
 			try {
 				JSONArray res = new JSONArray();
 				Profile profile = user.getDashboardManager().getProfile(Integer.parseInt(profileId));
-				WebsiteApp logwith = (WebsiteApp) user.getDashboardManager().getAppWithID(Integer.parseInt(logwithId));
+				WebsiteApp logwith = (WebsiteApp) user.getDashboardManager().getAppWithId(Integer.parseInt(logwithId));
 				for(Object websiteId : websiteIds) {
 					site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt((String)websiteId));
 					App newApp = LogwithApp.createLogwithApp(profile, profile.getApps().size(), (res.size() == 0) ? name : site.getName(), site, logwith, sm);
 					profile.addApp(newApp);
-					res.add(newApp.getSingleId());
+					res.add(newApp.getDBid());
 				}
 				sm.setResponse(ServletManager.Code.Success, res.toString());
 			} catch (NumberFormatException e) {

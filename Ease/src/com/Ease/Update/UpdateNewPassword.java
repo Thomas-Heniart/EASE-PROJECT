@@ -30,7 +30,7 @@ public class UpdateNewPassword extends Update {
 		request.setInt(update_id);
 		DatabaseResult rs = request.get();
 		rs.next();
-		ClassicApp classicApp = (ClassicApp) user.getDashboardManager().getAppWithDBid(rs.getString(Data.CLASSIC_APP_ID.ordinal()));
+		ClassicApp classicApp = (ClassicApp) user.getDashboardManager().getAppWithId(rs.getInt(Data.CLASSIC_APP_ID.ordinal()));
 		String newPassword = rs.getString(Data.NEW_PASSWORD.ordinal());
 		UserEmail email = user.getEmails().get(classicApp.getAccount().getInformationNamed("login"));
 		return new UpdateNewPassword(update_id, classicApp, newPassword, idGenerator.getNextId(), email, user);
@@ -75,7 +75,7 @@ public class UpdateNewPassword extends Update {
 		JSONObject json = new JSONObject();
 		json.put("type", "newPassword");
 		json.put("email", ((email != null) ? ((email.isVerified()) ? "verified" : "unverified") : "no"));
-		json.put("appId", classicApp.getSingleId());
+		json.put("appId", classicApp.getDBid());
 		json.put("singleId", this.single_id);
 		json.put("login", classicApp.getAccount().getInformationNamed("login"));
 		json.put("passwordLength", 16);

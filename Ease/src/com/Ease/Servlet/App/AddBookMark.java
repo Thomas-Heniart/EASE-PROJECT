@@ -67,7 +67,7 @@ public class AddBookMark extends HttpServlet {
             site = ((Catalog) sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(websiteId));
             LinkApp linkApp = LinkApp.createLinkApp(profile, profile.getApps().size(), name, link, site.getLogo(), sm);
             profile.addApp(linkApp);
-            sm.setResponse(ServletManager.Code.Success, String.valueOf(linkApp.getSingleId()));
+            sm.setResponse(ServletManager.Code.Success, String.valueOf(linkApp.getDBid()));
         } catch (Exception e) {
             sm.setResponse(e);
         }

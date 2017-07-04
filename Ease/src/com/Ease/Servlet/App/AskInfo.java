@@ -54,7 +54,7 @@ public class AskInfo extends HttpServlet {
             String appId = sm.getServletParam("appId", true);
             if (appId == null || appId.isEmpty())
                 throw new GeneralException(ServletManager.Code.ClientError, "Wrong appId.");
-            App app = user.getDashboardManager().getAppWithID(Integer.parseInt(appId));
+            App app = user.getDashboardManager().getAppWithId(Integer.parseInt(appId));
             if (app.isDisabled())
                 throw new GeneralException(ServletManager.Code.ClientError, "App is disabled");
             String result = app.getJSON(sm).toString();

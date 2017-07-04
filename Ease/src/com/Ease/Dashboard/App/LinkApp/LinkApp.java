@@ -35,18 +35,13 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
 	 * 
 	 */
 
-    public static LinkApp loadLinkApp(String appDBid, Profile profile, Integer position, String insertDate, AppInformation appInfos, GroupApp groupApp, ServletContext context, DataBaseConnection db) throws GeneralException {
+    public static LinkApp loadLinkApp(Integer appDBid, Profile profile, Integer position, String insertDate, AppInformation appInfos, GroupApp groupApp, ServletContext context, DataBaseConnection db) throws GeneralException {
         DatabaseRequest request = db.prepareRequest("SELECT * from linkApps WHERE app_id= ?;");
         request.setInt(appDBid);
         DatabaseResult rs = request.get();
         if (rs.next()) {
             LinkAppInformation linkInfos = LinkAppInformation.loadLinkAppInformation(rs.getString(Data.LINK_APP_INFO_ID.ordinal()), db);
-            /*GroupLinkApp groupLinkApp = null;
-            String groupLinkId = rs.getString(Data.GROUP_LINK_APP_ID.ordinal());
-			if (groupLinkId != null)
-				groupLinkApp  = (GroupLinkApp) GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupLinkId);*/
-            IdGenerator idGenerator = (IdGenerator) context.getAttribute("idGenerator");
-            return new LinkApp(appDBid, profile, position, appInfos, groupApp, insertDate, idGenerator.getNextId(), linkInfos, rs.getString(Data.ID.ordinal()));
+            return new LinkApp(appDBid, profile, position, appInfos, groupApp, insertDate, linkInfos, rs.getInt(Data.ID.ordinal()));
         }
         throw new GeneralException(ServletManager.Code.InternError, "Link app not complete in db.");
     }
@@ -55,14 +50,14 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<String, Object>();
-        String appDBid = App.createApp(profile, position, name, "linkApp", elevator, sm.getDB());
+        Integer appDBid = App.createApp(profile, position, name, "linkApp", elevator, sm.getDB());
         LinkAppInformation infos = LinkAppInformation.createLinkAppInformation(url, imgUrl, sm.getDB());
         DatabaseRequest request = db.prepareRequest("INSERT INTO linkApps values(NULL, ?, ?, NULL);");
         request.setInt(appDBid);
         request.setInt(infos.getDb_id());
-        String linkDBid = request.set().toString();
+        Integer linkDBid = request.set();
         db.commitTransaction(transaction);
-        return new LinkApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), infos, linkDBid);
+        return new LinkApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), infos, linkDBid);
     }
 
     public static App createLinkApp(LinkApp app, String name, Profile profile, DataBaseConnection db) throws HttpServletException {
@@ -71,14 +66,14 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
             transaction = db.startTransaction();
             Map<String, Object> elevator = new HashMap<String, Object>();
             Integer position = profile.getSize();
-            String appDBid = App.createApp(profile, position, name, "linkApp", elevator, db);
+            Integer appDBid = App.createApp(profile, position, name, "linkApp", elevator, db);
             LinkAppInformation infos = LinkAppInformation.createLinkAppInformation(app.getLinkAppInformations().getLink(), app.getLinkAppInformations().getImgUrl(), db);
             DatabaseRequest request = db.prepareRequest("INSERT INTO linkApps values(NULL, ?, ?, NULL);");
             request.setInt(appDBid);
             request.setInt(infos.getDb_id());
-            String linkDBid = request.set().toString();
+            Integer linkDBid = request.set();
             db.commitTransaction(transaction);
-            return new LinkApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), 0, infos, linkDBid);
+            return new LinkApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), infos, linkDBid);
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
@@ -88,14 +83,14 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<String, Object>();
-        String appDBid = App.createApp(profile, position, name, "linkApp", elevator, db);
+        Integer appDBid = App.createApp(profile, position, name, "linkApp", elevator, db);
         LinkAppInformation infos = LinkAppInformation.createLinkAppInformation(url, imgUrl, db);
         DatabaseRequest request = db.prepareRequest("INSERT INTO linkApps values(NULL, ?, ?, NULL);");
         request.setInt(appDBid);
         request.setInt(infos.getDb_id());
-        String linkDBid = request.set().toString();
+        Integer linkDBid = request.set();
         db.commitTransaction(transaction);
-        return new LinkApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), infos, linkDBid);
+        return new LinkApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), infos, linkDBid);
     }
 
     public static LinkApp createShareableLinkApp(String name, String link, PostServletManager sm) throws GeneralException, HttpServletException {
@@ -118,17 +113,17 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
 
     protected LinkAppInformation linkInfos;
     protected GroupLinkApp groupLinkApp;
-    protected String linkAppDBid;
+    protected Integer linkAppDBid;
 
-    public LinkApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, LinkAppInformation linkInfos, String linkAppDBid) {
-        super(db_id, profile, position, infos, groupApp, insertDate, single_id);
+    public LinkApp(Integer db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, LinkAppInformation linkInfos, Integer linkAppDBid) {
+        super(db_id, profile, position, infos, groupApp, insertDate);
         this.linkInfos = linkInfos;
         this.groupLinkApp = (GroupLinkApp) groupApp;
         this.linkAppDBid = linkAppDBid;
     }
 
-    public LinkApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, LinkAppInformation linkInfos, String linkAppDBid, ShareableApp holder) {
-        super(db_id, profile, position, infos, groupApp, insertDate, single_id, holder);
+    public LinkApp(Integer db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, LinkAppInformation linkInfos, Integer linkAppDBid, ShareableApp holder) {
+        super(db_id, profile, position, infos, groupApp, insertDate, holder);
         this.linkInfos = linkInfos;
         this.groupLinkApp = (GroupLinkApp) groupApp;
         this.linkAppDBid = linkAppDBid;
@@ -208,14 +203,14 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         Map<String, Object> elevator = new HashMap<>();
         Boolean canSeeInformation = (Boolean) params.get("canSeeInformation");
         elevator.put("canSeeInformation", canSeeInformation);
-        String appDBid = App.createSharedApp(null, null, this.getName(), "linkApp", elevator, team.getDb_id(), (channel == null) ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), this, true, sm);
+        Integer appDBid = App.createSharedApp(null, null, this.getName(), "linkApp", elevator, team.getDb_id(), (channel == null) ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), this, true, sm);
         DatabaseRequest request = db.prepareRequest("INSERT INTO linkApps values(NULL, ?, ?, NULL);");
         request.setInt(appDBid);
         request.setInt(this.linkInfos.getDb_id());
-        String linkDBid = request.set().toString();
+        Integer linkDBid = request.set();
         db.commitTransaction(transaction);
         this.channel = channel;
-        LinkApp sharedApp = new LinkApp(appDBid, null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), linkInfos, linkDBid, this);
+        LinkApp sharedApp = new LinkApp(appDBid, null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), linkInfos, linkDBid, this);
         sharedApp.setAdminHasAccess((Boolean) params.get("adminHasAccess"), sm.getDB());
         sharedApp.setTeamUser_tenant(teamUser_tenant);
         sharedApp.setReceived(true);
@@ -232,4 +227,3 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         return res;
     }
 }
-	

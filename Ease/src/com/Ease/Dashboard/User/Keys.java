@@ -1,9 +1,11 @@
 package com.Ease.Dashboard.User;
 
 import com.Ease.Context.ServerKey;
+import com.Ease.Context.Variables;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.Profile.Profile;
+import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Mail.SendGridMail;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.RSA;
@@ -258,9 +260,15 @@ public class Keys {
             fName = rs.getString(1);
         else
             throw new GeneralException(ServletManager.Code.ClientWarning, "This user does not exist");
-        SendGridMail passwordLostEmail = new SendGridMail("Agathe @Ease", "contact@ease.space");
-        passwordLostEmail.sendPasswordLostEmail(email, fName, code);
+        /*SendGridMail passwordLostEmail = new SendGridMail("Agathe @Ease", "contact@ease.space");
+        passwordLostEmail.sendPasswordLostEmail(email, fName, code);*/
         db.commitTransaction(transaction);
+        MailJetBuilder mailJetBuilder = new MailJetBuilder();
+        mailJetBuilder.setTemplateId(178530);
+        mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
+        mailJetBuilder.addTo(email);
+        mailJetBuilder.addVariable("link", Variables.URL_PATH + "resetPassword?email=" + email + "&code=" + code);
+        mailJetBuilder.sendEmail();
     }
 
     public static void resetPassword(String userId, String newPassword, ServletManager sm) throws GeneralException {

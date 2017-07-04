@@ -75,7 +75,7 @@ public class WebsiteAppToClassicApp extends HttpServlet {
                 DataBaseConnection db = sm.getDB();
                 int transaction = db.startTransaction();
                 for (Object appId : appIds) {
-                    App app = user.getDashboardManager().getAppWithID(Integer.parseInt((String) appId));
+                    App app = user.getDashboardManager().getAppWithId(Integer.parseInt((String) appId));
                     if (!app.getType().equals("WebsiteApp"))
                         throw new GeneralException(ServletManager.Code.ClientError, "This is not an empty app.");
                     infos = ((WebsiteApp) app).getSite().getNeededInfos(sm);

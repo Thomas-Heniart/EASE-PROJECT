@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.Dashboard.User.User;
+import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Mail.SendGridMail;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.CodeGenerator;
@@ -24,7 +25,6 @@ public class ServletAskTeamCreation extends HttpServlet {
         try {
             sm.needToBeConnected();
             User user = sm.getUser();
-            /* Check if this user already payed */
             String email = sm.getStringParam("email", true);
             if (email == null || email.equals("") || !Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid email.");
@@ -47,8 +47,15 @@ public class ServletAskTeamCreation extends HttpServlet {
             databaseRequest.setString(digits);
             databaseRequest.set();
             db.commitTransaction(transaction);
-            SendGridMail sendGridMail = new SendGridMail("Agathe @Ease", "contact@ease.space");
-            sendGridMail.sendCreateTeamEmail(email, digits);
+            MailJetBuilder mailJetBuilder = new MailJetBuilder();
+            mailJetBuilder.setTemplateId(178497);
+            mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
+            mailJetBuilder.addVariable("first_digits", digits.substring(0, 3));
+            mailJetBuilder.addVariable("last_digits", digits.substring(3));
+            mailJetBuilder.addTo(email);
+            mailJetBuilder.sendEmail();
+            /*SendGridMail sendGridMail = new SendGridMail("Agathe @Ease", "contact@ease.space");
+            sendGridMail.sendCreateTeamEmail(email, digits);*/
             sm.setSuccess("Email sent");
         } catch (Exception e) {
             sm.setError(e);

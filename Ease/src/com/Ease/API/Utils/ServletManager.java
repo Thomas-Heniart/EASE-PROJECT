@@ -2,11 +2,8 @@ package com.Ease.API.Utils;
 
 import com.Ease.Dashboard.User.User;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.*;
-import com.Ease.websocket.WebsocketMessage;
-import com.Ease.websocket.WebsocketSession;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -57,9 +54,7 @@ public class ServletManager {
     protected String logResponse;
     protected String date;
     protected String socketId;
-    protected List<WebsocketMessage> messages;
 
-    public Map<String, WebsocketSession> websockets = new HashMap<String, WebsocketSession>();
     public static boolean debug = true;
 
     public ServletManager(String servletName, HttpServletRequest request, HttpServletResponse response, boolean saveLogs) {
@@ -77,7 +72,6 @@ public class ServletManager {
         Date mydate = new Date();
         this.saveLogs = saveLogs;
         this.date = dateFormat.format(mydate);
-        this.messages = new LinkedList<WebsocketMessage>();
         try {
             this.db = new DataBaseConnection(DataBase.getConnection());
         } catch (SQLException e) {
@@ -90,7 +84,7 @@ public class ServletManager {
             throw new GeneralException(Code.ClientWarning, "You need to be connected to do that.");
         } else {
             /*socketId = request.getParameter("socketId");
-			if (!debug && socketId == null) {
+            if (!debug && socketId == null) {
 				throw new GeneralException(Code.ClientError, "No socketId.");
 			} else if (user.getWebsockets().containsKey(socketId) == false) {
 				System.out.println(user.getWebsockets().size());
@@ -275,46 +269,6 @@ public class ServletManager {
 
     public TeamUser getTeamUser() {
         return teamUser;
-    }
-
-    public void setSocketId(String socketId) throws GeneralException {
-        if (debug && socketId == null)
-            return;
-        else if (socketId == null)
-            throw new GeneralException(Code.ClientError, "Socket id is null");
-        this.socketId = socketId;
-    }
-
-    public void addWebsockets(Map<String, WebsocketSession> websocketsMap) throws GeneralException {
-        if (debug && websocketsMap == null)
-            return;
-        else if (websocketsMap == null)
-            throw new GeneralException(Code.ClientError, "WebsocketsMap is null");
-        websockets.putAll(websocketsMap);
-    }
-
-    public void addWebsocket(String tabId, WebsocketSession websocket) throws GeneralException {
-        if (debug && (websocket == null || tabId == null))
-            return;
-        else if (websocket == null || tabId == null)
-            throw new GeneralException(Code.ClientError, "Websocket or tabId is null");
-        websockets.put(tabId, websocket);
-    }
-
-    public void removeWebsocket(String tabId) throws GeneralException {
-        if (debug && tabId == null)
-            return;
-        else if (tabId == null)
-            throw new GeneralException(Code.ClientError, "tabId is null");
-        websockets.remove(tabId);
-    }
-
-    public void addToSocket(WebsocketMessage msg) throws GeneralException {
-        if (debug && msg == null)
-            return;
-        else if (msg == null)
-            throw new GeneralException(Code.ClientError, "msg is null");
-        messages.add(msg);
     }
 
     public HttpSession getSession() {

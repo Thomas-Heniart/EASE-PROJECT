@@ -32,8 +32,8 @@ public class UpdateNewLogWithApp extends UpdateNewAccount {
 		request.setInt(update_new_account_id);
 		DatabaseResult rs = request.get();
 		rs.next();
-		String logWithApp_id = rs.getString(Data.LOGWITH_APP_ID.ordinal());
-		WebsiteApp logWithApp = (WebsiteApp) user.getDashboardManager().getAppWithDBid(logWithApp_id);
+		Integer logWithApp_id = rs.getInt(Data.LOGWITH_APP_ID.ordinal());
+		WebsiteApp logWithApp = (WebsiteApp) user.getDashboardManager().getAppWithId(logWithApp_id);
 		return new UpdateNewLogWithApp(update_id, update_new_account_id, website, logWithApp, idGenerator.getNextId(), user);
 	}
 	
@@ -77,7 +77,7 @@ public class UpdateNewLogWithApp extends UpdateNewAccount {
 		json.put("websiteImg", this.website.getFolder() + "logo.png");
 		json.put("logWithImg", logWithApp.getSite().getFolder() + "logo.png");
 		json.put("logWithName", logWithApp.getName());
-		json.put("logWithId", logWithApp.getSingleId());
+		json.put("logWithId", logWithApp.getDBid());
 		json.put("websiteId", this.website.getSingleId());
 		json.put("websiteName", this.website.getName());
 		return json;

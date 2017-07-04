@@ -28,20 +28,19 @@ public class LogwithApp extends WebsiteApp {
     }
 
 	/*
-	 * 
+     *
 	 * Loader And Creator
 	 * 
 	 */
 
-    public static LogwithApp loadLogwithApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, String websiteAppDBid, ServletContext context, DataBaseConnection db) throws GeneralException {
+    public static LogwithApp loadLogwithApp(Integer db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, Integer websiteAppDBid, ServletContext context, DataBaseConnection db) throws GeneralException {
         DatabaseRequest request = db.prepareRequest("SELECT * from logWithApps WHERE website_app_id= ?;");
         request.setInt(websiteAppDBid);
         DatabaseResult rs = request.get();
         if (rs.next()) {
-            String logwith = rs.getString(Data.LOGWITH_APP_ID.ordinal());
-            String logwithDBid = rs.getString(Data.ID.ordinal());
-            IdGenerator idGenerator = (IdGenerator) context.getAttribute("idGenerator");
-            return new LogwithApp(db_id, profile, position, infos, groupApp, insertDate, idGenerator.getNextId(), site, websiteAppDBid, logwith, logwithDBid);
+            Integer logwith = rs.getInt(Data.LOGWITH_APP_ID.ordinal());
+            Integer logwithDBid = rs.getInt(Data.ID.ordinal());
+            return new LogwithApp(db_id, profile, position, infos, groupApp, insertDate, site, websiteAppDBid, logwith, logwithDBid);
         }
         throw new GeneralException(ServletManager.Code.InternError, "Logwith app not complete in db.");
     }
@@ -50,13 +49,13 @@ public class LogwithApp extends WebsiteApp {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<String, Object>();
-        String websiteAppDBid = WebsiteApp.createWebsiteApp(profile, position, name, "logwithApp", site, elevator, db);
+        Integer websiteAppDBid = WebsiteApp.createWebsiteApp(profile, position, name, "logwithApp", site, elevator, db);
         DatabaseRequest request = db.prepareRequest("INSERT INTO logWithApps VALUES(NULL, ?, ?, NULL);");
         request.setInt(websiteAppDBid);
         request.setInt(logwith.getWebsiteAppDBid());
-        String logwithDBid = request.set().toString();
+        Integer logwithDBid = request.set();
         db.commitTransaction(transaction);
-        LogwithApp app = new LogwithApp((String) elevator.get("appDBid"), profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId(), site, websiteAppDBid, logwith.getDBid(), logwithDBid);
+        LogwithApp app = new LogwithApp((Integer) elevator.get("appDBid"), profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), site, websiteAppDBid, logwith.getDBid(), logwithDBid);
         app.rempLogwith(logwith);
         return app;
     }
@@ -64,15 +63,15 @@ public class LogwithApp extends WebsiteApp {
     public static LogwithApp createFromWebsiteApp(WebsiteApp websiteApp, String name, WebsiteApp logwith, ServletManager sm, User user) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
-        String websiteAppDBid = websiteApp.getWebsiteAppDBid();
+        Integer websiteAppDBid = websiteApp.getWebsiteAppDBid();
         DatabaseRequest request = db.prepareRequest("UPDATE websiteApps SET type='logwithApp' WHERE id = ?;");
         request.setInt(websiteAppDBid);
         request.set();
         request = db.prepareRequest("INSERT INTO logWithApps VALUES(NULL, ?, ?, NULL);");
         request.setInt(websiteAppDBid);
         request.setInt(logwith.getWebsiteAppDBid());
-        String logwithDBid = request.set().toString();
-        LogwithApp newLogwithApp = new LogwithApp(websiteApp.getDBid(), user.getDashboardManager().getProfileFromApp(websiteApp.getSingleId()), websiteApp.getPosition(), websiteApp.getAppInformation(), null, websiteApp.getInsertDate(), websiteApp.getSingleId(), websiteApp.getSite(), websiteAppDBid, logwith.getDBid(), logwithDBid);
+        Integer logwithDBid = request.set();
+        LogwithApp newLogwithApp = new LogwithApp(websiteApp.getDBid(), user.getDashboardManager().getProfileFromApp(websiteApp.getDBid()), websiteApp.getPosition(), websiteApp.getAppInformation(), null, websiteApp.getInsertDate(), websiteApp.getSite(), websiteAppDBid, logwith.getDBid(), logwithDBid);
         newLogwithApp.rempLogwith(logwith);
         user.getDashboardManager().replaceApp(newLogwithApp);
         db.commitTransaction(transaction);
@@ -85,12 +84,12 @@ public class LogwithApp extends WebsiteApp {
 	 * 
 	 */
 
-    protected String logwithAppDBid;
-    protected String logwithDBid;
+    protected Integer logwithAppDBid;
+    protected Integer logwithDBid;
     protected WebsiteApp logwith;
 
-    public LogwithApp(String db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, int single_id, Website site, String websiteAppDBid, String logwith, String logwithDBid) {
-        super(db_id, profile, position, infos, groupApp, insertDate, single_id, site, websiteAppDBid);
+    public LogwithApp(Integer db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, Integer websiteAppDBid, Integer logwith, Integer logwithDBid) {
+        super(db_id, profile, position, infos, groupApp, insertDate, site, websiteAppDBid);
         this.logwithDBid = logwith;
         this.logwithAppDBid = logwithDBid;
     }
@@ -115,7 +114,7 @@ public class LogwithApp extends WebsiteApp {
         return logwith;
     }
 
-    public String getLogwithDBid() {
+    public Integer getLogwithDBid() {
         return logwithDBid;
     }
 
@@ -135,7 +134,7 @@ public class LogwithApp extends WebsiteApp {
 
     public void fillJson(JSONObject json) {
         super.fillJson(json);
-        json.put("logWithAppId", this.logwith.getSingleId());
+        json.put("logWithAppId", this.logwith.getDBid());
         json.put("type", "logWithApp");
         json.put("website_name", this.website.getName());
     }
@@ -153,7 +152,7 @@ public class LogwithApp extends WebsiteApp {
 
     public JSONObject getJSON() {
         JSONObject res = super.getJSON();
-        res.put("logWithAppId", this.logwith.getSingleId());
+        res.put("logWithAppId", this.logwith.getDBid());
         return res;
     }
 

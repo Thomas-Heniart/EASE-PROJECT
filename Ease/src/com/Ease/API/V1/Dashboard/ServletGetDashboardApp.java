@@ -1,8 +1,6 @@
 package com.Ease.API.V1.Dashboard;
 
 import com.Ease.Dashboard.App.App;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
 import com.Ease.Utils.Servlets.GetServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -23,7 +21,7 @@ public class ServletGetDashboardApp extends HttpServlet {
         try {
             sm.needToBeConnected();
             Integer app_id = sm.getIntParam("id", true);
-            App app = sm.getUser().getDashboardManager().getAppWithID(app_id);
+            App app = sm.getUser().getDashboardManager().getAppWithId(app_id);
             sm.setSuccess(app.getJsonWithoutId());
         } catch (Exception e) {
             sm.setError(e);

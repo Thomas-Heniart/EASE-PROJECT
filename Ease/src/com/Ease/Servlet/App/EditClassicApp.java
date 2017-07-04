@@ -66,7 +66,7 @@ public class EditClassicApp extends HttpServlet {
 				JSONArray appIds = null;
 				appIds = (JSONArray)parser.parse(StringEscapeUtils.unescapeHtml4(appIdsString));
 				for (Object appId : appIds) {
-					App app = user.getDashboardManager().getAppWithID(Integer.parseInt((String)appId));
+					App app = user.getDashboardManager().getAppWithId(Integer.parseInt((String)appId));
 					if (!app.getType().equals("ClassicApp"))
 						throw new GeneralException(ServletManager.Code.ClientError, "This is not a classic app.");
 					infos = ((ClassicApp)app).getSite().getNeededInfosForEdition(sm);

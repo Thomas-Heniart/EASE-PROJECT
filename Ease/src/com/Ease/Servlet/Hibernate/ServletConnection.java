@@ -4,7 +4,6 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.User.User;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.*;
-import com.Ease.websocket.WebsocketSession;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -37,7 +36,6 @@ public class ServletConnection extends HttpServlet {
         String email = sm.getServletParam("email", true);
         String password = sm.getServletParam("password", false);
         // --
-        Map<String, WebsocketSession> sessionWebsockets = (Map<String, WebsocketSession>) session.getAttribute("sessionWebsockets");
         String client_ip = IpUtils.getIpAddr(request);
         User user = null;
         TeamUser teamUser = null;
