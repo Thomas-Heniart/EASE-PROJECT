@@ -15,12 +15,13 @@ import javax.servlet.http.HttpSession;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.ServletManager;
 import com.Ease.websocket.WebsocketMessage;
 import com.Ease.websocket.WebsocketSession;
 
 /**
- * Servlet implementation class Logout
+ * Servlet implementation class ServletLogout
  */
 @WebServlet("/Logout")
 public class Logout extends HttpServlet {
@@ -60,9 +61,9 @@ public class Logout extends HttpServlet {
         sm.sendResponse();
     }
 
-    public static void logoutUser(User user, ServletManager sm) throws GeneralException {
+    public static void logoutUser(User user, ServletManager sm) throws GeneralException, HttpServletException {
         sm.needToBeConnected();
-        user.getSessionSave().eraseFromDB(sm.getDB());
+        user.logoutFromSession(sm.getSession().getId(), sm.getServletContext(), sm.getDB());
         Cookie cookie = null;
         Cookie cookies[] = sm.getRequest().getCookies();
         if (cookies != null) {
@@ -79,18 +80,6 @@ public class Logout extends HttpServlet {
                 }
             }
         }
-        for (TeamUser teamUser : user.getTeamUsers())
-            teamUser.deconnect();
-        user.deconnect(sm);
-        Map<String, User> sessionIdUserMap = (Map<String, User>) sm.getContextAttr("sessionIdUserMap");
-        sessionIdUserMap.remove(sm.getSession().getId());
-        for (Map.Entry<String, User> entry : sessionIdUserMap.entrySet()) {
-            if (entry.getValue() == user) {
-                return;
-            }
-        }
-        Map<String, User> users = (Map<String, User>) sm.getContextAttr("users");
-        users.remove(user.getEmail());
     }
 
 }

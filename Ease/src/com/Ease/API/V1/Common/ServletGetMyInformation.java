@@ -22,14 +22,7 @@ public class ServletGetMyInformation extends HttpServlet {
         try {
             sm.needToBeConnected();
             User user = sm.getUser();
-            JSONObject res = new JSONObject();
-            res.put("first_name", user.getFirstName());
-            List<TeamUser> teamUserList = sm.getTeamUsers();
-            JSONArray teams = new JSONArray();
-            for (TeamUser teamUser : teamUserList)
-                teams.add(teamUser.getTeam().getSimpleJson());
-            res.put("teams", teams);
-            sm.setSuccess(res);
+            sm.setSuccess(user.getJson());
         } catch (Exception e) {
             sm.setError(e);
         }

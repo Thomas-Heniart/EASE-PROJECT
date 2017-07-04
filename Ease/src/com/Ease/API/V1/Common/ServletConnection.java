@@ -70,9 +70,7 @@ public class ServletConnection extends HttpServlet {
                     sm.setUser(user);
                     user.getDashboardManager().decipherApps(sm);
                     removeIpFromDataBase(client_ip, db);
-                    JSONObject res = new JSONObject();
-                    res.put("authenticated", true);
-                    sm.setSuccess(res);
+                    sm.setSuccess(user.getJson());
                 }
             } else {
                 throw new HttpServletException(HttpStatus.Forbidden, "Too much attempts to connect. Please retry in 5 minutes.");

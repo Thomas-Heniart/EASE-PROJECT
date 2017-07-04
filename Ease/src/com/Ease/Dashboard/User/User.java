@@ -34,14 +34,10 @@ import com.Ease.Utils.*;
 import com.Ease.websocket.WebsocketSession;
 import com.Ease.websocketV1.WebSocketManager;
 import com.Ease.websocketV1.WebSocketSession;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 public class User {
-
-    public void decipherApps(ServletManager sm) {
-        /* for (TeamUser teamUser : this.getTeamUsers()) {
-            teamUser.getP
-        } */
-    }
 
     enum Data {
         NOTHING, ID, FIRSTNAME, LASTNAME, EMAIL, KEYSID, OPTIONSID, REGISTRATIONDATE, STATUSID
@@ -356,6 +352,23 @@ public class User {
         Map<String, User> users = (Map<String, User>) sm.getContextAttr("users");
 //		if (this.websockets.isEmpty())
         users.remove(this.email);
+    }
+
+    public void logoutFromSession(String session_id, ServletContext context, DataBaseConnection db) throws HttpServletException {
+        try {
+            Map<String, User> sessionIdUserMap = (Map<String, User>) context.getAttribute("sessionIdUserMap");
+            sessionIdUserMap.remove(session_id);
+            this.getSessionSave().eraseFromDB(db);
+            Map<String, User> users = (Map<String, User>) context.getAttribute("users");
+            if (sessionIdUserMap.containsValue(this))
+                return;
+            for (TeamUser teamUser : this.getTeamUsers())
+                teamUser.deconnect();
+            System.out.println("Users remove user");
+            users.remove(this.getEmail());
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 
     public boolean isAdmin() {
@@ -682,5 +695,15 @@ public class User {
                 return teamUser;
         }
         throw new GeneralException(ServletManager.Code.ClientError, "Internal problem");
+    }
+
+    public JSONObject getJson() {
+        JSONObject res = new JSONObject();
+        res.put("first_name", this.getFirstName());
+        JSONArray teams = new JSONArray();
+        for (TeamUser teamUser : this.getTeamUsers())
+            teams.add(teamUser.getTeam().getSimpleJson());
+        res.put("teams", teams);
+        return res;
     }
 }
