@@ -128,6 +128,8 @@ public abstract class ServletManager {
     }
 
     public void needToBeTeamUserOfTeam(Integer team_id) throws HttpServletException {
+        if (team_id == null)
+            throw new HttpServletException(HttpStatus.BadRequest, "Missing team id parameter");
         this.needToBeTeamUser();
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
             if (teamUser.getTeam().getDb_id().equals(team_id) && !teamUser.isDisabled() && teamUser.isVerified())
@@ -147,6 +149,8 @@ public abstract class ServletManager {
 
     public void needToBeAdminOfTeam(Integer team_id) throws HttpServletException {
         this.needToBeTeamUser();
+        if (team_id == null)
+            throw new HttpServletException(HttpStatus.BadRequest, "Missing team id parameter");
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
             if (teamUser.getTeam().getDb_id().equals(team_id) && teamUser.isTeamAdmin() && !teamUser.isDisabled() && teamUser.isVerified())
                 return;
@@ -165,6 +169,8 @@ public abstract class ServletManager {
 
     public void needToBeOwnerOfTeam(Integer team_id) throws HttpServletException {
         this.needToBeTeamUser();
+        if (team_id == null)
+            throw new HttpServletException(HttpStatus.BadRequest, "Missing team id parameter");
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
             if (teamUser.getTeam().getDb_id().equals(team_id) && teamUser.isTeamOwner() && !teamUser.isDisabled() && teamUser.isVerified())
                 return;
@@ -394,6 +400,8 @@ public abstract class ServletManager {
     }
 
     public TeamUser getTeamUserForTeamId(Integer team_id) throws HttpServletException {
+        if (team_id == null)
+            throw new HttpServletException(HttpStatus.BadRequest, "Missing team id parameter");
         TeamManager teamManager = (TeamManager) this.getContextAttr("teamManager");
         Team team = teamManager.getTeamWithId(team_id);
         for (TeamUser teamUser : this.getTeamUsers()) {
