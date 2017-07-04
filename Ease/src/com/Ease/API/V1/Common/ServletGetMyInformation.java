@@ -19,10 +19,11 @@ import java.util.List;
 public class ServletGetMyInformation extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
-        try {
-            sm.needToBeConnected();
+        try {   
             User user = sm.getUser();
-            sm.setSuccess(user.getJson());
+            JSONObject res = new JSONObject();
+            res.put("user", (user == null) ? user : user.getJson());
+            sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);
         }
