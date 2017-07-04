@@ -44,13 +44,15 @@ public interface SharedApp {
 
     public void setCanSeeInformation(Boolean canSeeInformation, DataBaseConnection db) throws HttpServletException;
 
-    public App createPinned_app(String name, Profile profile, String keyUser, DataBaseConnection db) throws HttpServletException;
-
-    public App getPinned_app();
-
-    public void setPinned_app(App app);
-
     public void unpin(DataBaseConnection db) throws HttpServletException;
 
+    public void pinToDashboard(Profile profile, DataBaseConnection db) throws HttpServletException;
+
     public void setDisableShared(boolean disbaled, DataBaseConnection db) throws HttpServletException;
+
+    public boolean isPinned();
+
+    public void setPinned(boolean pinned, DataBaseConnection db) throws HttpServletException;
+
+    public void setPinned(boolean pinned);
 }
