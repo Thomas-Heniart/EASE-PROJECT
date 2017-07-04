@@ -4,7 +4,7 @@
 
 <%@ attribute name="profile" type="com.Ease.Dashboard.Profile.Profile" required="true"%>
 
-<div class="item" id='${profile.getSingleId()}'>
+<div class="item" id='${profile.getDBid()}'>
 	<div class="ProfileBox" 
 	color="${profile.getColor()}" custom="${profile.isGroupProfile()}">
 	<div class="ProfileName"
@@ -46,7 +46,7 @@
 				</div>
 			</div>
 		</div>
-		<div  class="SitesContainer" id='${profile.getSingleId()}'>
+		<div  class="SitesContainer" id='${profile.getDBid()}'>
 			<c:forEach items='${profile.getApps()}' var="app">
 				<c:if test="${app.getType() eq 'ClassicAccount'}">
 					<dashboard:app app='${app}' informations="${app.getVisibleInformations()}"/>	

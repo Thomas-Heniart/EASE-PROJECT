@@ -98,7 +98,7 @@ public class TutoAddApps extends HttpServlet {
 				}
 				site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(obj.get("websiteId").toString()));
 				if (i % 10 == 0 && i != 0) {
-					profile = user.getDashboardManager().addProfile("Choose name", "#ff9d34", sm.getNextSingle_id(), sm.getDB());
+					profile = user.getDashboardManager().addProfile("Choose name", "#ff9d34", sm.getDB());
 				}
 				if (!obj.containsKey("password")) {
 					profile.addLogwithApp(obj.get("name").toString(), site, logwith, sm);

@@ -51,7 +51,7 @@ public class FilterScrap extends HttpServlet {
 		HttpSession session = request.getSession();
 		User user = (User) (session.getAttribute("user"));
 		Catalog catalog = (Catalog) (session.getAttribute("catalog"));
-		int firstProfileId = user.getDashboardManager().getProfilesList().get(0).getSingleId();
+		int firstProfileId = user.getDashboardManager().getProfilesList().get(0).getDBid();
 		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
 		try {
 			sm.needToBeConnected();

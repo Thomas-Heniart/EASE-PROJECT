@@ -24,7 +24,7 @@ public class ServletCreateProfile extends HttpServlet {
             String name = sm.getStringParam("name", true);
             if (name == null || name.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty name");
-            Profile profile = user.getDashboardManager().addProfile(name, "#373B60", sm.getNextSingle_id(), sm.getDB());
+            Profile profile = user.getDashboardManager().addProfile(name, "#373B60", sm.getDB());
             sm.setSuccess(profile.getJson());
         } catch (Exception e) {
             sm.setError(e);

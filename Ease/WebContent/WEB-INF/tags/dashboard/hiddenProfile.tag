@@ -5,7 +5,7 @@
 <%@ attribute name="profile" type="com.Ease.Dashboard.Profile.Profile" required="true"%>
 
 <div class="hiddenProfile" style="display:none;">
-<div class="hiddenProfileContainer" id='${profile.getSingleId()}'>
+<div class="hiddenProfileContainer" id='${profile.getDBid()}'>
 	<c:forEach items='${profile.getApps()}' var="app">
 		<dashboard:app app='${app}'/>
 	</c:forEach>

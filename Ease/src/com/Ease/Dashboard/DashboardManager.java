@@ -24,14 +24,11 @@ public class DashboardManager {
     protected List<App> apps = new LinkedList<>();
     protected List<List<Profile>> profiles;
     protected Map<Integer, App> appIdMap = new HashMap<>();
-    protected Map<String, Profile> profileDBMap;
-    protected Map<Integer, Profile> profileIDMap;
+    protected Map<Integer, Profile> profileIDMap = new HashMap<>();
     private HashMap<Integer, WebsiteApp> websiteAppsDBMap = new HashMap<>();
 
     public DashboardManager(User user, ServletContext context, DataBaseConnection db) throws GeneralException, HttpServletException {
         this.user = user;
-        this.profileDBMap = new HashMap<String, Profile>();
-        this.profileIDMap = new HashMap<Integer, Profile>();
         this.profiles = Profile.loadProfiles(user, context, db);
         this.initializeProfilesAndApps();
     }
@@ -46,9 +43,9 @@ public class DashboardManager {
         }
     }
 
-    public Profile addProfile(String name, String color, int single_id, DataBaseConnection db) throws GeneralException {
+    public Profile addProfile(String name, String color, DataBaseConnection db) throws GeneralException {
         int column = this.getMostEmptyProfileColumn();
-        Profile newProfile = Profile.createPersonnalProfile(this.user, column, this.profiles.get(column).size(), name, color, single_id, db);
+        Profile newProfile = Profile.createPersonnalProfile(this.user, column, this.profiles.get(column).size(), name, color, db);
         this.profiles.get(column).add(newProfile);
         this.addProfileToMaps(newProfile);
 
@@ -56,8 +53,7 @@ public class DashboardManager {
     }
 
     public void addProfileToMaps(Profile profile) {
-        this.profileDBMap.put(profile.getDBid(), profile);
-        this.profileIDMap.put(profile.getSingleId(), profile);
+        this.profileIDMap.put(profile.getDBid(), profile);
     }
 
     public void addApp(App app) {
@@ -126,7 +122,7 @@ public class DashboardManager {
     }
 
     public Profile getProfileWithId(Integer db_id) throws HttpServletException {
-        Profile profile = this.profileDBMap.get(Integer.valueOf(db_id));
+        Profile profile = this.profileIDMap.get(db_id);
         if (profile == null)
             throw new HttpServletException(HttpStatus.BadRequest, "This profile does not exist.");
         return profile;
@@ -217,8 +213,7 @@ public class DashboardManager {
             for (Profile tmpProfile : profileColumn) {
                 if (tmpProfile == profile) {
                     profileColumn.remove(tmpProfile);
-                    this.profileDBMap.remove(tmpProfile.getDBid());
-                    this.profileIDMap.remove(tmpProfile.getSingleId());
+                    this.profileIDMap.remove(tmpProfile.getDBid());
                     return;
                 }
 

@@ -179,7 +179,7 @@ public class GroupProfile {
 		request.set();
 	}
 	
-	public String loadContentForUnconnectedUser(String db_id, ServletManager sm) throws GeneralException {
+	public Integer loadContentForUnconnectedUser(String db_id, ServletManager sm) throws GeneralException {
 		int columnIdx = User.getMostEmptyProfileColumnForUnconnected(db_id, sm);
 		int posIdx = User.getColumnNextPositionForUnconnected(db_id, columnIdx, sm);
 		return Profile.createProfileWithGroupForUnconnected(db_id, columnIdx, posIdx, this, sm);
@@ -216,7 +216,7 @@ public class GroupProfile {
 		request.setInt(user_id);
 		DatabaseResult rs = request.get();
 		while (rs.next())
-			Profile.removeProfileForUnconnected(rs.getString(1), rs.getString(2), sm);
+			Profile.removeProfileForUnconnected(rs.getInt(1), rs.getString(2), sm);
 	}
 
 	public JSONObject getJson() {

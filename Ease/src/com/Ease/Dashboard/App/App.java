@@ -513,7 +513,7 @@ public class App implements ShareableApp, SharedApp {
         res.put("team_user_id", this.teamUser_tenant.getDb_id());
         res.put("shared_app_id", Integer.valueOf(this.getDBid()));
         res.put("accepted", this.isReceived());
-        res.put("profile_id", (this.getProfile() == null) ? -1 : this.getProfile().getSingleId());
+        res.put("profile_id", (this.getProfile() == null) ? -1 : this.getProfile().getDBid());
         return res;
     }
 

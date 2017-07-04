@@ -43,8 +43,8 @@ public class Profile {
         for (int i = 0; i < MAX_COLUMN; ++i) {
             profilesColumn.add(new LinkedList<Profile>());
         }
-        profilesColumn.get(0).add(Profile.createPersonnalProfile(user, 0, 0, "Side", "#000000", sm.getNextSingle_id(), sm.getDB()));
-        profilesColumn.get(1).add(Profile.createPersonnalProfile(user, 1, 0, "Me", "#373B60", sm.getNextSingle_id(), sm.getDB()));
+        profilesColumn.get(0).add(Profile.createPersonnalProfile(user, 0, 0, "Side", "#000000", sm.getDB()));
+        profilesColumn.get(1).add(Profile.createPersonnalProfile(user, 1, 0, "Me", "#373B60", sm.getDB()));
         return profilesColumn;
     }
 
@@ -56,24 +56,20 @@ public class Profile {
         DatabaseRequest request = db.prepareRequest("SELECT * FROM profiles WHERE user_id= ?;");
         request.setInt(user.getDBid());
         DatabaseResult rs = request.get();
-        String db_id;
+        Integer db_id;
         int columnIdx;
         int posIdx;
         GroupProfile groupProfile;
         ProfileInformation infos;
-        int single_id;
         List<App> apps;
         while (rs.next()) {
-            db_id = rs.getString(Data.ID.ordinal());
+            db_id = rs.getInt(Data.ID.ordinal());
             columnIdx = rs.getInt(Data.COLUMN_IDX.ordinal());
             posIdx = rs.getInt(Data.POSITION_IDX.ordinal());
             String groupProfileId = rs.getString(Data.GROUP_PROFILE_ID.ordinal());
             groupProfile = (groupProfileId == null) ? null : GroupManager.getGroupManager(context).getGroupProfileFromDBid(groupProfileId);
             infos = ProfileInformation.loadProfileInformation(rs.getString(Data.PROFILE_INFO_ID.ordinal()), db);
-            IdGenerator idGenerator = (IdGenerator) context.getAttribute("idGenerator");
-            single_id = idGenerator.getNextId();
-            System.out.println("Profile id: " + single_id);
-            Profile profile = new Profile(db_id, user, columnIdx, posIdx, groupProfile, infos, single_id);
+            Profile profile = new Profile(db_id, user, columnIdx, posIdx, groupProfile, infos);
             apps = App.loadApps(profile, context, db);
             profile.setApps(apps);
             profilesColumn.get(columnIdx).add(profile);
@@ -89,7 +85,7 @@ public class Profile {
         return profilesColumn;
     }
 
-    private static String createProfileInDb(DataBaseConnection db, String userId, int columnIdx, int posIdx, String groupProfileId, String infoId) throws GeneralException {
+    private static Integer createProfileInDb(DataBaseConnection db, String userId, int columnIdx, int posIdx, String groupProfileId, String infoId) throws GeneralException {
         DatabaseRequest request = db.prepareRequest("INSERT INTO profiles VALUES(NULL, ?, ?, ?, ?, ?);");
         request.setInt(userId);
         request.setInt(columnIdx);
@@ -99,7 +95,7 @@ public class Profile {
         else
             request.setInt(groupProfileId);
         request.setInt(infoId);
-        return request.set().toString();
+        return request.set();
     }
 
     public static Profile createProfileWithGroup(User user, int columnIdx, int posIdx, GroupProfile groupProfile, ServletManager sm) throws GeneralException {
@@ -111,15 +107,13 @@ public class Profile {
         } else {
             info = ProfileInformation.createProfileInformation(groupProfile.getName(), groupProfile.getColor(), db);
         }
-        String db_id = createProfileInDb(db, user.getDBid(), columnIdx, posIdx, groupProfile.getDBid(), info.getDBid());
-        IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
-        int single_id = idGenerator.getNextId();
-        Profile profile = new Profile(db_id, user, columnIdx, posIdx, groupProfile, info, single_id);
+        Integer db_id = createProfileInDb(db, user.getDBid(), columnIdx, posIdx, groupProfile.getDBid(), info.getDBid());
+        Profile profile = new Profile(db_id, user, columnIdx, posIdx, groupProfile, info);
         db.commitTransaction(transaction);
         return profile;
     }
 
-    public static String createProfileWithGroupForUnconnected(String db_id, int columnIdx, int posIdx, GroupProfile groupProfile, ServletManager sm) throws GeneralException {
+    public static Integer createProfileWithGroupForUnconnected(String db_id, int columnIdx, int posIdx, GroupProfile groupProfile, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         String info_id;
@@ -128,30 +122,21 @@ public class Profile {
         } else {
             info_id = ProfileInformation.createProfileInformationForUnconnected(groupProfile.getName(), groupProfile.getColor(), sm);
         }
-        String id = createProfileInDb(db, db_id, columnIdx, posIdx, groupProfile.getDBid(), info_id);
+        Integer id = createProfileInDb(db, db_id, columnIdx, posIdx, groupProfile.getDBid(), info_id);
         db.commitTransaction(transaction);
         return id;
     }
 
-    public static Profile createPersonnalProfile(User user, int columnIdx, int posIdx, String name, String color, int single_id, DataBaseConnection db) throws GeneralException {
+    public static Profile createPersonnalProfile(User user, int columnIdx, int posIdx, String name, String color, DataBaseConnection db) throws GeneralException {
         int transaction = db.startTransaction();
         ProfileInformation info = ProfileInformation.createProfileInformation(name, color, db);
-        String db_id = createProfileInDb(db, user.getDBid(), columnIdx, posIdx, null, info.getDBid());
-        Profile profile = new Profile(db_id, user, columnIdx, posIdx, null, info, single_id);
+        Integer db_id = createProfileInDb(db, user.getDBid(), columnIdx, posIdx, null, info.getDBid());
+        Profile profile = new Profile(db_id, user, columnIdx, posIdx, null, info);
         db.commitTransaction(transaction);
         return profile;
     }
 
-    public static String createPersonnalProfileForUnconnected(String db_id, int columnIdx, int posIdx, String name, String color, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
-        int transaction = db.startTransaction();
-        String info_id = ProfileInformation.createProfileInformationForUnconnected(name, color, sm);
-        String id = createProfileInDb(db, db_id, columnIdx, posIdx, null, info_id);
-        db.commitTransaction(transaction);
-        return id;
-    }
-
-    public static void removeProfileForUnconnected(String db_id, String info_id, ServletManager sm) throws GeneralException {
+    public static void removeProfileForUnconnected(Integer db_id, String info_id, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         DatabaseRequest request = db.prepareRequest("DELETE FROM profiles WHERE id = ?;");
@@ -167,28 +152,26 @@ public class Profile {
 
 	
 	/*
-	 * 
+     *
 	 * Constructor
 	 * 
 	 */
 
-    protected String db_id;
+    protected Integer db_id;
     protected User user;
     protected int columnIdx;
     protected int posIdx;
     protected GroupProfile groupProfile;
     protected ProfileInformation infos;
-    protected int single_id;
     protected List<App> apps;
 
-    public Profile(String db_id, User user, int columnIdx, int posIdx, GroupProfile groupProfile, ProfileInformation infos, int single_id) {
+    public Profile(Integer db_id, User user, int columnIdx, int posIdx, GroupProfile groupProfile, ProfileInformation infos) {
         this.db_id = db_id;
         this.user = user;
         this.columnIdx = columnIdx;
         this.posIdx = posIdx;
         this.groupProfile = groupProfile;
         this.infos = infos;
-        this.single_id = single_id;
         this.apps = new LinkedList<App>();
     }
 
@@ -208,14 +191,14 @@ public class Profile {
             this.infos.removeFromDB(sm);
         db.commitTransaction(transaction);
     }
-	
+
 	/*
 	 * 
 	 * Getter and Setter
 	 * 
 	 */
 
-    public String getDBid() {
+    public Integer getDBid() {
         return this.db_id;
     }
 
@@ -275,10 +258,6 @@ public class Profile {
             throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permissions to change the profile's color.");
     }
 
-    public int getSingleId() {
-        return single_id;
-    }
-
     public List<App> getApps() {
         return apps;
     }
@@ -306,7 +285,7 @@ public class Profile {
     @SuppressWarnings("unchecked")
     public JSONObject getJSON() {
         JSONObject res = new JSONObject();
-        res.put("singleId", this.single_id);
+        res.put("id", this.getDBid());
         res.put("color", this.infos.getColor());
         res.put("name", this.infos.getName());
         res.put("column", this.columnIdx);
@@ -326,7 +305,7 @@ public class Profile {
 
     public JSONObject getJson() {
         JSONObject res = new JSONObject();
-        res.put("id", this.getSingleId());
+        res.put("id", this.getDBid());
         res.put("name", this.infos.getName());
         JSONArray apps = new JSONArray();
         for (App app : this.getApps())
