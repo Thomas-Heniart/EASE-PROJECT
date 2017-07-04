@@ -17,6 +17,8 @@ import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.User.User;
 
+import javax.servlet.ServletContext;
+
 public class Profile {
 
     public enum Data {
@@ -46,12 +48,11 @@ public class Profile {
         return profilesColumn;
     }
 
-    public static List<List<Profile>> loadProfiles(User user, ServletManager sm) throws GeneralException, HttpServletException {
+    public static List<List<Profile>> loadProfiles(User user, ServletContext context, DataBaseConnection db) throws GeneralException, HttpServletException {
         List<List<Profile>> profilesColumn = new LinkedList<List<Profile>>();
         for (int i = 0; i < MAX_COLUMN; ++i) {
             profilesColumn.add(new LinkedList<Profile>());
         }
-        DataBaseConnection db = sm.getDB();
         DatabaseRequest request = db.prepareRequest("SELECT * FROM profiles WHERE user_id= ?;");
         request.setInt(user.getDBid());
         DatabaseResult rs = request.get();
@@ -67,13 +68,13 @@ public class Profile {
             columnIdx = rs.getInt(Data.COLUMN_IDX.ordinal());
             posIdx = rs.getInt(Data.POSITION_IDX.ordinal());
             String groupProfileId = rs.getString(Data.GROUP_PROFILE_ID.ordinal());
-            groupProfile = (groupProfileId == null) ? null : GroupManager.getGroupManager(sm).getGroupProfileFromDBid(groupProfileId);
+            groupProfile = (groupProfileId == null) ? null : GroupManager.getGroupManager(context).getGroupProfileFromDBid(groupProfileId);
             infos = ProfileInformation.loadProfileInformation(rs.getString(Data.PROFILE_INFO_ID.ordinal()), db);
-            IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
+            IdGenerator idGenerator = (IdGenerator) context.getAttribute("idGenerator");
             single_id = idGenerator.getNextId();
             System.out.println("Profile id: " + single_id);
             Profile profile = new Profile(db_id, user, columnIdx, posIdx, groupProfile, infos, single_id);
-            apps = App.loadApps(profile, sm);
+            apps = App.loadApps(profile, context, db);
             profile.setApps(apps);
             profilesColumn.get(columnIdx).add(profile);
         }

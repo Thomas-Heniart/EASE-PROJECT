@@ -62,7 +62,7 @@ public class Logout extends HttpServlet {
 
     public static void logoutUser(User user, ServletManager sm) throws GeneralException {
         sm.needToBeConnected();
-        user.getSessionSave().eraseFromDB(sm);
+        user.getSessionSave().eraseFromDB(sm.getDB());
         Cookie cookie = null;
         Cookie cookies[] = sm.getRequest().getCookies();
         if (cookies != null) {

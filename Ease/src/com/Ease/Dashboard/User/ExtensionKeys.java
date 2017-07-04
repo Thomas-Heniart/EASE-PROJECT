@@ -12,9 +12,8 @@ import com.Ease.Utils.ServletManager;
 public class ExtensionKeys {
 	
 	
-	public static ExtensionKeys loadExtensionKeys(User user, ServletManager sm) throws GeneralException {
+	public static ExtensionKeys loadExtensionKeys(User user, DataBaseConnection db) throws GeneralException {
 		List<String> keys = new LinkedList<String>();
-		DataBaseConnection db = sm.getDB();
 		DatabaseRequest request = db.prepareRequest("SELECT * FROM usersPrivateExtensions where user_id= ?;");
 		request.setInt(user.getDBid());
 		DatabaseResult rs = request.get();

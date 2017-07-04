@@ -21,8 +21,7 @@ public class Option {
 		return new Option(String.valueOf(db_id), false, false);
 	}
 
-	public static Option loadOption(String db_id, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
+	public static Option loadOption(String db_id, DataBaseConnection db) throws GeneralException {
 		DatabaseRequest request = db.prepareRequest("SELECT * FROM options WHERE id= ?;");
 		request.setInt(db_id);
 		DatabaseResult rs = request.get();

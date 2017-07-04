@@ -59,7 +59,7 @@ public class ConnectionServlet extends HttpServlet {
         String password = sm.getServletParam("password", false);
         // --
         Map<String, WebsocketSession> sessionWebsockets = (Map<String, WebsocketSession>) session.getAttribute("sessionWebsockets");
-        String client_ip = getIpAddr(request);
+        String client_ip = IpUtils.getIpAddr(request);
         User user = null;
         // Put current ip in db
         try {
@@ -72,7 +72,7 @@ public class ConnectionServlet extends HttpServlet {
                 else if (password == null || password.isEmpty())
                     sm.setResponse(ServletManager.Code.ClientWarning, "Wrong email or password.");
                 else {
-                    user = User.loadUser(email, password, sm);
+                    user = User.loadUser(email, password, sm.getServletContext(), db);
                     sm.setUser(user);
                     HibernateQuery hibernateQuery = new HibernateQuery();
                     for (TeamUser teamUser : user.getTeamUsers()) {
@@ -92,6 +92,10 @@ public class ConnectionServlet extends HttpServlet {
                         }
                     }
                     hibernateQuery.commit();
+                    ((Map<String, User>) sm.getContextAttr("users")).put(email, user);
+                    ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), user);
+                    ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(user.getSessionSave().getSessionId(), user);
+                    user.initializeUpdateManager(sm);
                     user.getDashboardManager().decipherApps(sm);
                     removeIpFromDataBase(client_ip, db);
                     sm.setResponse(ServletManager.Code.Success, "Successfully connected.");
@@ -106,27 +110,7 @@ public class ConnectionServlet extends HttpServlet {
         } catch (Exception e) {
             sm.setResponse(e);
         }
-        System.out.println("Send connection response");
         sm.sendResponse();
-        System.out.println("Connection done");
-    }
-
-    public String getIpAddr(HttpServletRequest request) {
-        String ip = request.getHeader("X-Real-IP");
-        if (null != ip && !"".equals(ip.trim()) && !"unknown".equalsIgnoreCase(ip)) {
-            return ip;
-        }
-        ip = request.getHeader("X-Forwarded-For");
-        if (null != ip && !"".equals(ip.trim()) && !"unknown".equalsIgnoreCase(ip)) {
-            // get first ip from proxy ip
-            int index = ip.indexOf(',');
-            if (index != -1) {
-                return ip.substring(0, index);
-            } else {
-                return ip;
-            }
-        }
-        return request.getRemoteAddr();
     }
 
     public void addIpInDataBase(String client_ip, DataBaseConnection db) throws GeneralException {

@@ -109,10 +109,10 @@ public class AccountInformation {
         this.information_value = RSA.Decrypt(this.information_value, privateKey);
     }
 
-    public void update_ciphering(String keyUser, String publicKey, ServletManager sm) throws GeneralException {
+    public void update_ciphering(String keyUser, String publicKey, DataBaseConnection db) throws GeneralException {
         if (this.information_name.equals("password"))
             this.information_value = AES.decrypt(this.information_value, keyUser);
-        DatabaseRequest request = sm.getDB().prepareRequest("UPDATE accountsInformations SET information_value = ? WHERE id = ?;");
+        DatabaseRequest request = db.prepareRequest("UPDATE accountsInformations SET information_value = ? WHERE id = ?;");
         request.setString(RSA.Encrypt(this.information_value, publicKey));
         request.setString(this.db_id);
         request.set();

@@ -42,8 +42,7 @@ public class SessionSave {
         }
     }
 
-    public static SessionSave createSessionSave(String keyUser, String userId, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public static SessionSave createSessionSave(String keyUser, String userId, DataBaseConnection db) throws GeneralException {
         String cryptedKeyUser;
         String hashedToken;
         String token = tokenGenerator();
@@ -98,8 +97,7 @@ public class SessionSave {
         return sessionId;
     }
 
-    public void eraseFromDB(ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public void eraseFromDB(DataBaseConnection db) throws GeneralException {
         DatabaseRequest request = db.prepareRequest("DELETE FROM savedSessions WHERE sessionId = ?;");
         request.setString(sessionId);
         request.set();

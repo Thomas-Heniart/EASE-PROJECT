@@ -25,8 +25,7 @@ public class Keys {
         BACKUPKEY
     }
 
-    public static Keys loadKeys(String id, String password, ServletManager sm) throws GeneralException, HttpServletException {
-        DataBaseConnection db = sm.getDB();
+    public static Keys loadKeys(String id, String password, DataBaseConnection db) throws GeneralException, HttpServletException {
         DatabaseRequest request = db.prepareRequest("SELECT * FROM userKeys WHERE id= ?;");
         request.setInt(id);
         DatabaseResult rs = request.get();
@@ -39,7 +38,6 @@ public class Keys {
         String crypted_keyUser = rs.getString(Data.KEYUSER.ordinal());
         String publicKey = rs.getString("publicKey");
         String ciphered_privateKey = rs.getString("privateKey");
-        System.out.println("Ciphered private key: " + ((ciphered_privateKey == null) ? "null" : ciphered_privateKey));
         String privateKey = null;
         String keyUser;
         //-- Pour mettre à jour la crypto (nouveau hashage et nouveau salage.
@@ -53,13 +51,10 @@ public class Keys {
             crypted_keyUser = AES.encryptUserKey(keyUser, password, newSalt);
             hashed_password = Hashing.hash(password);
             saltPerso = newSalt;
-            ServerKey serverKey = (ServerKey) sm.getContextAttr("serverKey");
-            String backUpKey = AES.encrypt(keyUser, serverKey.getKeyServer());
-            request = db.prepareRequest("UPDATE userKeys SET password = ?, saltEase = null, saltPerso = ?, keyUser = ?, backUpKey = ? WHERE id = ?;");
+            request = db.prepareRequest("UPDATE userKeys SET password = ?, saltEase = null, saltPerso = ?, keyUser = ? WHERE id = ?;");
             request.setString(hashed_password);
             request.setString(newSalt);
             request.setString(crypted_keyUser);
-            request.setString(backUpKey);
             request.setInt(id);
             request.set();
         } else {
@@ -89,8 +84,7 @@ public class Keys {
         return new Keys(db_id, hashed_password, saltPerso, keyUser, publicKey, privateKey);
     }
 
-    public static Keys loadKeysWithoutPassword(String id, String keyUser, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public static Keys loadKeysWithoutPassword(String id, String keyUser, DataBaseConnection db) throws GeneralException {
         DatabaseRequest request = db.prepareRequest("SELECT * FROM userKeys WHERE id= ?;");
         request.setInt(id);
         DatabaseResult rs = request.get();
@@ -133,14 +127,11 @@ public class Keys {
         return rs.getString(1);
     }
 
-    public static Keys createKeys(String password, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public static Keys createKeys(String password, DataBaseConnection db) throws GeneralException {
         String saltPerso = AES.generateSalt();
         String keyUser = AES.keyGenerator();
         String crypted_keyUser = AES.encryptUserKey(keyUser, password, saltPerso);
         String hashed_password = Hashing.hash(password);
-        ServerKey serverKey = (ServerKey) sm.getContextAttr("serverKey");
-        String backUpKey = AES.encrypt(keyUser, serverKey.getKeyServer());
         Map<String, String> publicAndPrivateKeys = RSA.generateKeys(1);
         String publicKey = null;
         String privateKey = null;
@@ -149,11 +140,10 @@ public class Keys {
             privateKey = publicAndPrivateKey.getValue();
         }
         String privateKey_ciphered = AES.encrypt(privateKey, keyUser);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO userKeys VALUES(NULL, ?, null, ?, ?, ?, ?, ?);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO userKeys VALUES(NULL, ?, null, ?, ?, ?, ?);");
         request.setString(hashed_password);
         request.setString(saltPerso);
         request.setString(crypted_keyUser);
-        request.setString(backUpKey);
         request.setString(publicKey);
         request.setString(privateKey_ciphered);
         String db_id = request.set().toString();

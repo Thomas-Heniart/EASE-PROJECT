@@ -1,6 +1,7 @@
 package com.Ease.Servlet;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -54,10 +55,12 @@ public class ConnectionWithCookies extends HttpServlet {
                 sm.setResponse(ServletManager.Code.ClientWarning, "Wrong user informations.");
             } else {
                 SessionSave sessionSave = SessionSave.loadSessionSave(sessionId, token, sm);
-                user = User.loadUserFromCookies(sessionSave, sm);
+                user = User.loadUserFromCookies(sessionSave, sm.getServletContext(), sm.getDB());
                 sm.setUser(user);
+                ((Map<String, User>) sm.getContextAttr("users")).put(user.getEmail(), user);
+                ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), user);
+                ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(user.getSessionSave().getSessionId(), user);
                 user.getDashboardManager().decipherApps(sm);
-                //sm.addToSocket(WebsocketMessage.connectionMessage());
                 success = true;
                 sm.setResponse(ServletManager.Code.Success, "Connected with cookies.");
             }

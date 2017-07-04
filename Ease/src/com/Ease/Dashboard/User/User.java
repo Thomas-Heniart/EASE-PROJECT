@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.ServletContext;
 import javax.websocket.Session;
 
 import com.Ease.Context.Catalog.Tag;
@@ -47,8 +48,8 @@ public class User {
     }
 
     @SuppressWarnings("unchecked")
-    public static User loadUser(String email, String password, ServletManager sm) throws GeneralException, HttpServletException {
-        Map<String, User> usersMap = (Map<String, User>) sm.getContextAttr("users");
+    public static User loadUser(String email, String password, ServletContext context, DataBaseConnection db) throws GeneralException, HttpServletException {
+        Map<String, User> usersMap = (Map<String, User>) context.getAttribute("users");
         User connectedUser = usersMap.get(email);
         if (connectedUser != null) {
             try {
@@ -58,15 +59,14 @@ public class User {
             }
             return connectedUser;
         }
-        DataBaseConnection db = sm.getDB();
         DatabaseRequest request = db.prepareRequest("SELECT users.* FROM users LEFT JOIN teamUsers ON users.id = teamUsers.user_id WHERE users.email = ? OR teamUsers.email = ?");
         request.setString(email);
         request.setString(email);
         DatabaseResult rs = request.get();
         int transaction = db.startTransaction();
         if (rs.next()) {
-            Keys keys = Keys.loadKeys(rs.getString("key_id"), password, sm);
-            User newUser = loadUserWithKeys(rs, keys, sm);
+            Keys keys = Keys.loadKeys(rs.getString("key_id"), password, db);
+            User newUser = loadUserWithKeys(rs, keys, context, db);
             db.commitTransaction(transaction);
             return newUser;
         } else {
@@ -74,28 +74,27 @@ public class User {
         }
     }
 
-    private void loadEmails(ServletManager sm) throws GeneralException {
-        this.emails = UserEmail.loadEmails(db_id, this, sm);
+    private void loadEmails(DataBaseConnection db) throws GeneralException {
+        this.emails = UserEmail.loadEmails(db_id, this, db);
     }
 
     @SuppressWarnings("unchecked")
-    public static User loadUserFromCookies(SessionSave sessionSave, ServletManager sm) throws GeneralException, HttpServletException {
+    public static User loadUserFromCookies(SessionSave sessionSave, ServletContext context, DataBaseConnection db) throws GeneralException, HttpServletException {
         String db_id = sessionSave.getUserId();
         String keyUser = sessionSave.getKeyUser();
-        sessionSave.eraseFromDB(sm);
-        DataBaseConnection db = sm.getDB();
+        sessionSave.eraseFromDB(db);
         DatabaseRequest request = db.prepareRequest("SELECT * FROM users WHERE id = ?");
         request.setInt(db_id);
         DatabaseResult rs = request.get();
         int transaction = db.startTransaction();
         if (rs.next()) {
             String email = rs.getString(Data.EMAIL.ordinal());
-            Map<String, User> usersMap = (Map<String, User>) sm.getContextAttr("users");
+            Map<String, User> usersMap = (Map<String, User>) context.getAttribute("users");
             User connectedUser = usersMap.get(email);
             if (connectedUser != null)
                 return connectedUser;
-            Keys keys = Keys.loadKeysWithoutPassword(rs.getString(Data.KEYSID.ordinal()), keyUser, sm);
-            User newUser = loadUserWithKeys(rs, keys, sm);
+            Keys keys = Keys.loadKeysWithoutPassword(rs.getString(Data.KEYSID.ordinal()), keyUser, db);
+            User newUser = loadUserWithKeys(rs, keys, context, db);
             db.commitTransaction(transaction);
             return newUser;
         } else {
@@ -104,13 +103,12 @@ public class User {
 
     }
 
-    private static User loadUserWithKeys(DatabaseResult rs, Keys keys, ServletManager sm) throws GeneralException, HttpServletException {
-        DataBaseConnection db = sm.getDB();
+    private static User loadUserWithKeys(DatabaseResult rs, Keys keys, ServletContext context, DataBaseConnection db) throws GeneralException, HttpServletException {
         String db_id = rs.getString(Data.ID.ordinal());
         String email = rs.getString(Data.EMAIL.ordinal());
         String firstName = rs.getString(Data.FIRSTNAME.ordinal());
         String lastName = rs.getString(Data.LASTNAME.ordinal());
-        Option options = Option.loadOption(rs.getString(Data.OPTIONSID.ordinal()), sm);
+        Option options = Option.loadOption(rs.getString(Data.OPTIONSID.ordinal()), db);
         Status status = Status.loadStatus(rs.getString(Data.STATUSID.ordinal()), db);
         DatabaseRequest request = db.prepareRequest("SELECT user_id FROM admins WHERE user_id = ?;");
         request.setInt(db_id);
@@ -122,13 +120,13 @@ public class User {
         boolean sawGroupProfile = false;
         if (rs2.next())
             sawGroupProfile = rs2.getBoolean(1);
-        SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, sm);
+        SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, db);
         User newUser = new User(db_id, firstName, lastName, email, keys, options, isAdmin, sawGroupProfile,
                 sessionSave, status);
-        newUser.loadTeamUsers(sm);
-        newUser.initializeDashboardManager(sm);
-        newUser.loadExtensionKeys(sm);
-        newUser.loadEmails(sm);
+        newUser.loadTeamUsers(context);
+        newUser.initializeDashboardManager(context, db);
+        newUser.loadExtensionKeys(db);
+        newUser.loadEmails(db);
         for (App app : newUser.getDashboardManager().getApps()) {
             if (app.getType().equals("LogwithApp")) {
                 LogwithApp logwithApp = (LogwithApp) app;
@@ -141,15 +139,10 @@ public class User {
         rs2 = request.get();
         Group userGroup;
         while (rs2.next()) {
-            userGroup = GroupManager.getGroupManager(sm).getGroupFromDBid(rs2.getString(1));
+            userGroup = GroupManager.getGroupManager(context).getGroupFromDBid(rs2.getString(1));
             if (userGroup != null)
                 newUser.getGroups().add(userGroup);
         }
-        ((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
-        ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
-        ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);
-        System.out.println("New session with connection: " + sm.getSession().getId());
-        newUser.initializeUpdateManager(sm);
         return newUser;
     }
 
@@ -160,7 +153,7 @@ public class User {
         int transaction = db.startTransaction();
         List<Group> groups = Invitation.verifyInvitation(email, code, sm);
         Option opt = Option.createOption(sm);
-        Keys keys = Keys.createKeys(password, sm);
+        Keys keys = Keys.createKeys(password, db);
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
         String registrationDate = dateFormat.format(date);
@@ -180,10 +173,10 @@ public class User {
         request.setString(registrationDate);
         request.setInt(status.getDbId());
         String db_id = request.set().toString();
-        SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, sm);
+        SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, db);
         User newUser = new User(db_id, firstName, lastName, email, keys, opt, false, false, sessionSave, status);
         Profile.createPersonnalProfiles(newUser, sm);
-        newUser.initializeDashboardManager(sm);
+        newUser.initializeDashboardManager(sm.getServletContext(), db);
         ((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
         for (Group group : groups) {
             group.addUser(email, firstName, false, sm);
@@ -249,8 +242,8 @@ public class User {
         this.updateManager = new UpdateManager(sm, this);
     }
 
-    public void initializeDashboardManager(ServletManager sm) throws GeneralException, HttpServletException {
-        this.dashboardManager = new DashboardManager(this, sm);
+    public void initializeDashboardManager(ServletContext context, DataBaseConnection db) throws GeneralException, HttpServletException {
+        this.dashboardManager = new DashboardManager(this, context, db);
     }
 
 	/*
@@ -334,7 +327,7 @@ public class User {
     }
 
 	/*
-	 * 
+     *
 	 * Utils
 	 * 
 	 */
@@ -462,7 +455,7 @@ public class User {
     }
 
 /*	public void putAllSockets(Map<String, WebsocketSession> sessionWebsockets) throws GeneralException {
-		if (ServletManager.debug && sessionWebsockets == null)
+        if (ServletManager.debug && sessionWebsockets == null)
 			return;
 		else if (sessionWebsockets == null)
 			throw new GeneralException(ServletManager.Code.ClientError, "Unconnected session is null");
@@ -559,8 +552,8 @@ public class User {
 
     }
 
-    public void loadExtensionKeys(ServletManager sm) throws GeneralException {
-        extensionKeys = ExtensionKeys.loadExtensionKeys(this, sm);
+    public void loadExtensionKeys(DataBaseConnection db) throws GeneralException {
+        extensionKeys = ExtensionKeys.loadExtensionKeys(this, db);
     }
 
     public ExtensionKeys getExtensionKeys() {
@@ -589,7 +582,7 @@ public class User {
         this.dashboardManager.removeFromDB(sm);
         for (UserEmail email : this.emails.values())
             email.removeFromDB(sm);
-        this.sessionSave.eraseFromDB(sm);
+        this.sessionSave.eraseFromDB(sm.getDB());
         DatabaseRequest request = db.prepareRequest("DELETE FROM admins WHERE user_id = ?;");
         request.setInt(db_id);
         request.set();
@@ -658,7 +651,7 @@ public class User {
             this.teamUsers.add(teamUser);
     }
 
-    public void loadTeamUsers(ServletManager sm) throws HttpServletException, GeneralException {
+    public void loadTeamUsers(ServletContext context) throws HttpServletException, GeneralException {
         HibernateQuery query = new HibernateQuery();
         query.querySQLString("SELECT id, team_id FROM teamUsers WHERE user_id = ?");
         query.setParameter(1, Integer.parseInt(this.db_id));
@@ -667,7 +660,7 @@ public class User {
         for (Object[] teamUserIdAndTeamId : teamUsers) {
             Integer teamUser_id = (Integer) teamUserIdAndTeamId[0];
             Integer team_id = (Integer) teamUserIdAndTeamId[1];
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
+            TeamManager teamManager = (TeamManager) context.getAttribute("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
             for (Channel channel : team.getChannels()) {

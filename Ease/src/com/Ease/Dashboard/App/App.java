@@ -41,8 +41,7 @@ public class App implements ShareableApp, SharedApp {
 	 * 
 	 */
 
-    public static List<App> loadApps(Profile profile, ServletManager sm) throws GeneralException, HttpServletException {
-        DataBaseConnection db = sm.getDB();
+    public static List<App> loadApps(Profile profile, ServletContext context, DataBaseConnection db) throws GeneralException, HttpServletException {
         List<App> apps = new LinkedList<App>();
         DatabaseRequest request = db.prepareRequest("SELECT apps.*, position, sharedApps.id AS shared_app_id, team_id FROM apps JOIN profileAndAppMap ON apps.id = profileAndAppMap.app_id AND profileAndAppMap.profile_id = ? LEFT JOIN sharedApps ON apps.id = sharedApps.id ORDER BY position;");
         request.setInt(profile.getDBid());
@@ -60,26 +59,27 @@ public class App implements ShareableApp, SharedApp {
             infos = AppInformation.loadAppInformation(rs.getString(Data.APP_INFO_ID.ordinal()), db);
             String groupAppId = rs.getString(Data.GROUP_APP_ID.ordinal());
             if (groupAppId != null) {
-                groupApp = GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupAppId);
+                groupApp = GroupManager.getGroupManager(context).getGroupAppFromDBid(groupAppId);
             }
             Integer shared_app_id = rs.getInt("shared_app_id");
             if (shared_app_id > 0) {
                 System.out.println("App pinned");
                 Integer team_id = rs.getInt("team_id");
-                TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
+                TeamManager teamManager = (TeamManager) context.getAttribute("teamManager");
                 Team team = teamManager.getTeamWithId(team_id);
                 SharedApp sharedApp = team.getAppManager().getSharedApp(shared_app_id);
                 app = (App) sharedApp;
                 app.setProfile(profile);
                 app.setPosition(position);
-                app.setSingleId(sm.getNextSingle_id());
+                IdGenerator idGenerator = (IdGenerator) context.getAttribute("idGenererator");
+                app.setSingleId(idGenerator.getNextId());
             } else {
                 switch (rs.getString(Data.TYPE.ordinal())) {
                     case "linkApp":
-                        app = LinkApp.loadLinkApp(db_id, profile, position, insertDate, infos, groupApp, sm.getServletContext(), db);
+                        app = LinkApp.loadLinkApp(db_id, profile, position, insertDate, infos, groupApp, context, db);
                         break;
                     case "websiteApp":
-                        app = WebsiteApp.loadWebsiteApp(db_id, profile, position, insertDate, infos, groupApp, sm.getServletContext(), db);
+                        app = WebsiteApp.loadWebsiteApp(db_id, profile, position, insertDate, infos, groupApp, context, db);
                         break;
                     default:
                         throw new GeneralException(ServletManager.Code.InternError, "This app type doesn't exist.");

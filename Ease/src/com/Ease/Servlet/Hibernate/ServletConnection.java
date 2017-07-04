@@ -38,7 +38,7 @@ public class ServletConnection extends HttpServlet {
         String password = sm.getServletParam("password", false);
         // --
         Map<String, WebsocketSession> sessionWebsockets = (Map<String, WebsocketSession>) session.getAttribute("sessionWebsockets");
-        String client_ip = getIpAddr(request);
+        String client_ip = IpUtils.getIpAddr(request);
         User user = null;
         TeamUser teamUser = null;
         // Put current ip in db
@@ -97,24 +97,6 @@ public class ServletConnection extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
         rd.forward(request, response);
-    }
-
-    public String getIpAddr(HttpServletRequest request) {
-        String ip = request.getHeader("X-Real-IP");
-        if (null != ip && !"".equals(ip.trim()) && !"unknown".equalsIgnoreCase(ip)) {
-            return ip;
-        }
-        ip = request.getHeader("X-Forwarded-For");
-        if (null != ip && !"".equals(ip.trim()) && !"unknown".equalsIgnoreCase(ip)) {
-            // get first ip from proxy ip
-            int index = ip.indexOf(',');
-            if (index != -1) {
-                return ip.substring(0, index);
-            } else {
-                return ip;
-            }
-        }
-        return request.getRemoteAddr();
     }
 
     public void addIpInDataBase(String client_ip, DataBaseConnection db) throws GeneralException {

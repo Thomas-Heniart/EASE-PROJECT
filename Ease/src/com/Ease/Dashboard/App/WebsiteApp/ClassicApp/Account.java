@@ -523,8 +523,36 @@ public class Account {
         request.set();
         String keyUser = (sm.getUser().getKeys().getKeyUser());
         for (AccountInformation accountInformation : this.getAccountInformations())
-            accountInformation.update_ciphering(keyUser, this.publicKey, sm);
+            accountInformation.update_ciphering(keyUser, this.publicKey, db);
         db.commitTransaction(transaction);
+
+    }
+
+    public void update_ciphering_if_needed(com.Ease.Utils.Servlets.ServletManager sm) throws HttpServletException {
+        try {
+            if (this.publicKey != null && this.ciphered_key != null) {
+                return;
+            }
+            Map.Entry<String, String> publicAndPrivateKey = null;
+            publicAndPrivateKey = RSA.generateKeys();
+
+            this.publicKey = publicAndPrivateKey.getKey();
+            this.privateKey = publicAndPrivateKey.getValue();
+            this.ciphered_key = sm.getUser().encrypt(this.privateKey);
+            DataBaseConnection db = sm.getDB();
+            int transaction = db.startTransaction();
+            DatabaseRequest request = db.prepareRequest("UPDATE accounts SET publicKey = ?, privateKey = ? WHERE id = ?;");
+            request.setString(this.publicKey);
+            request.setString(this.ciphered_key);
+            request.setInt(this.db_id);
+            request.set();
+            String keyUser = (sm.getUser().getKeys().getKeyUser());
+            for (AccountInformation accountInformation : this.getAccountInformations())
+                accountInformation.update_ciphering(keyUser, this.publicKey, db);
+            db.commitTransaction(transaction);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
 
     }
 

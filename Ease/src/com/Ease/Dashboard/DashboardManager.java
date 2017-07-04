@@ -17,6 +17,8 @@ import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.Profile.ProfilePermissions;
 import com.Ease.Dashboard.User.User;
 
+import javax.servlet.ServletContext;
+
 public class DashboardManager {
     protected User user;
     protected List<App> apps;
@@ -27,7 +29,7 @@ public class DashboardManager {
     protected Map<Integer, Profile> profileIDMap;
     private HashMap<String, WebsiteApp> websiteAppsDBMap;
 
-    public DashboardManager(User user, ServletManager sm) throws GeneralException, HttpServletException {
+    public DashboardManager(User user, ServletContext context, DataBaseConnection db) throws GeneralException, HttpServletException {
         this.user = user;
         this.apps = new LinkedList<App>();
         this.appsDBMap = new HashMap<String, App>();
@@ -35,7 +37,7 @@ public class DashboardManager {
         this.websiteAppsDBMap = new HashMap<String, WebsiteApp>();
         this.profileDBMap = new HashMap<String, Profile>();
         this.profileIDMap = new HashMap<Integer, Profile>();
-        this.profiles = Profile.loadProfiles(user, sm);
+        this.profiles = Profile.loadProfiles(user, context, db);
         this.initializeProfilesAndApps();
     }
 
@@ -365,9 +367,28 @@ public class DashboardManager {
                 classicApp.getAccount().decipherWithTeamKeyIfNeeded(app.getTeamUser_tenant().getDeciphered_teamKey());
             else {
                 classicApp.getAccount().update_ciphering_if_needed(sm);
-                classicApp.getAccount().decipher(sm.getUser());
+                classicApp.getAccount().decipher(this.user);
             }
         }
+    }
+
+    public void decipherApps(com.Ease.Utils.Servlets.ServletManager sm) throws HttpServletException {
+        try {
+            for (App app : this.apps) {
+                if (!app.isClassicApp() || app.isDisabled())
+                    continue;
+                ClassicApp classicApp = (ClassicApp) app;
+                if (app.isPinned())
+                    classicApp.getAccount().decipherWithTeamKeyIfNeeded(app.getTeamUser_tenant().getDeciphered_teamKey());
+                else {
+                    classicApp.getAccount().update_ciphering_if_needed(sm);
+                    classicApp.getAccount().decipher(this.user);
+                }
+            }
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+
     }
 
     public List<ClassicApp> getClassicApps() {

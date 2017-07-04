@@ -29,8 +29,7 @@ public class UserEmail {
         VERIFIED
     }
 
-    public static Map<String, UserEmail> loadEmails(String user_id, User user, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public static Map<String, UserEmail> loadEmails(String user_id, User user, DataBaseConnection db) throws GeneralException {
         Map<String, UserEmail> emails = new HashMap<String, UserEmail>();
         DatabaseRequest request = db.prepareRequest("SELECT * FROM usersEmails WHERE user_id= ?;");
         request.setInt(user_id);
