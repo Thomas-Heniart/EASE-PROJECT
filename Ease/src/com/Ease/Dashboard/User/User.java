@@ -37,7 +37,7 @@ import org.json.simple.JSONObject;
 public class User {
 
     enum Data {
-        NOTHING, ID, FIRSTNAME, LASTNAME, EMAIL, KEYSID, OPTIONSID, REGISTRATIONDATE, STATUSID
+        NOTHING, ID, FIRSTNAME, EMAIL, KEYSID, OPTIONSID, REGISTRATIONDATE, STATUSID
     }
 
     @SuppressWarnings("unchecked")
@@ -100,7 +100,6 @@ public class User {
         String db_id = rs.getString(Data.ID.ordinal());
         String email = rs.getString(Data.EMAIL.ordinal());
         String firstName = rs.getString(Data.FIRSTNAME.ordinal());
-        String lastName = rs.getString(Data.LASTNAME.ordinal());
         Option options = Option.loadOption(rs.getString(Data.OPTIONSID.ordinal()), db);
         Status status = Status.loadStatus(rs.getString(Data.STATUSID.ordinal()), db);
         DatabaseRequest request = db.prepareRequest("SELECT user_id FROM admins WHERE user_id = ?;");
@@ -114,7 +113,7 @@ public class User {
         if (rs2.next())
             sawGroupProfile = rs2.getBoolean(1);
         SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, db);
-        User newUser = new User(db_id, firstName, lastName, email, keys, options, isAdmin, sawGroupProfile,
+        User newUser = new User(db_id, firstName, email, keys, options, isAdmin, sawGroupProfile,
                 sessionSave, status);
         newUser.loadTeamUsers(context);
         newUser.initializeDashboardManager(context, db);
@@ -140,12 +139,9 @@ public class User {
     }
 
     @SuppressWarnings("unchecked")
-    public static User createUser(String email, String firstName, String lastName, String password, String code,
-                                  ServletManager sm) throws GeneralException, HttpServletException {
-        DataBaseConnection db = sm.getDB();
+    public static User createUser(String email, String firstName, String password, ServletContext context, DataBaseConnection db) throws GeneralException, HttpServletException {
         int transaction = db.startTransaction();
-        List<Group> groups = Invitation.verifyInvitation(email, code, sm);
-        Option opt = Option.createOption(sm);
+        Option opt = Option.createOption(db);
         Keys keys = Keys.createKeys(password, db);
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
@@ -155,11 +151,10 @@ public class User {
         request.setString(email);
         request.setString(email);
         if (request.get().next())
-            throw new GeneralException(ServletManager.Code.ClientWarning, "Email already taken.");
-        request = db.prepareRequest("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            throw new HttpServletException(HttpStatus.BadRequest, "Email already taken.");
+        request = db.prepareRequest("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?)");
         request.setNull();
         request.setString(firstName);
-        request.setString(lastName);
         request.setString(email);
         request.setInt(keys.getDBid());
         request.setInt(opt.getDb_id());
@@ -167,23 +162,15 @@ public class User {
         request.setInt(status.getDbId());
         String db_id = request.set().toString();
         SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, db);
-        User newUser = new User(db_id, firstName, lastName, email, keys, opt, false, false, sessionSave, status);
-        Profile.createPersonnalProfiles(newUser, sm);
-        newUser.initializeDashboardManager(sm.getServletContext(), db);
-        ((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
-        for (Group group : groups) {
-            group.addUser(email, firstName, false, sm);
-            newUser.getGroups().add(group);
-        }
-        UserEmail userEmail = UserEmail.createUserEmail(email, newUser, !groups.isEmpty(), sm);
+        User newUser = new User(db_id, firstName, email, keys, opt, false, false, sessionSave, status);
+        Profile.createPersonnalProfiles(newUser, db);
+        newUser.initializeDashboardManager(context, db);
+        UserEmail userEmail = UserEmail.createUserEmail(email, newUser, false, db);
         newUser.getUserEmails().put(email, userEmail);
         newUser.passStep("CGU", db);
         newUser.passStep("first_connection", db);
-        newUser.initializeUpdateManager(sm);
-        if (groups.isEmpty())
-            newUser.sendVerificationEmail(email, true, sm);
-        ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
-        ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);
+        newUser.initializeUpdateManager(context, db);
+        newUser.sendVerificationEmail(email, true, db);
         request = db.prepareRequest("DELETE FROM pendingRegistrations WHERE email = ?;");
         request.setString(email);
         request.set();
@@ -193,7 +180,6 @@ public class User {
 
     protected String db_id;
     protected String first_name;
-    protected String last_name;
     protected String email;
     protected Keys keys;
     protected Option opt;
@@ -212,17 +198,14 @@ public class User {
     protected DashboardManager dashboardManager;
     protected List<TeamUser> teamUsers = new LinkedList<>();
 
-    public User(String db_id, String first_name, String last_name, String email, Keys keys, Option opt, boolean isAdmin,
+    public User(String db_id, String first_name, String email, Keys keys, Option opt, boolean isAdmin,
                 boolean sawGroupProfile, SessionSave sessionSave, Status status) {
         this.db_id = db_id;
         this.first_name = first_name;
-        this.last_name = last_name;
         this.email = email;
         this.keys = keys;
         this.opt = opt;
         this.emails = new HashMap<String, UserEmail>();
-        this.emails = new HashMap<String, UserEmail>();
-//		this.websockets = new HashMap<String, WebsocketSession>();
         this.webSocketManager = new WebSocketManager();
         this.groups = new LinkedList<Group>();
         this.isAdmin = isAdmin;
@@ -231,8 +214,8 @@ public class User {
         this.sawGroupProfile = sawGroupProfile;
     }
 
-    public void initializeUpdateManager(ServletManager sm) throws GeneralException {
-        this.updateManager = new UpdateManager(sm, this);
+    public void initializeUpdateManager(ServletContext context, DataBaseConnection db) throws GeneralException {
+        this.updateManager = new UpdateManager(context, db, this);
     }
 
     public void initializeDashboardManager(ServletContext context, DataBaseConnection db) throws GeneralException, HttpServletException {
@@ -260,19 +243,6 @@ public class User {
         request.setInt(db_id);
         request.set();
         this.first_name = first_name;
-    }
-
-    public String getLastName() {
-        return last_name;
-    }
-
-    public void setLastName(String last_name, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
-        DatabaseRequest request = db.prepareRequest("UPDATE users set lastName = ? WHERE id = ?;");
-        request.setString(last_name);
-        request.setInt(db_id);
-        request.set();
-        this.last_name = last_name;
     }
 
     public String getEmail() {
@@ -361,7 +331,6 @@ public class User {
                 return;
             for (TeamUser teamUser : this.getTeamUsers())
                 teamUser.deconnect();
-            System.out.println("Users remove user");
             users.remove(this.getEmail());
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
@@ -482,9 +451,9 @@ public class User {
 			this.websockets.remove(entry.getKey());
 	}*/
 
-    public void sendVerificationEmail(String email, boolean newUser, ServletManager sm) throws GeneralException {
+    public void sendVerificationEmail(String email, boolean newUser, DataBaseConnection db) throws GeneralException {
         if (this.emails.get(email) != null) {
-            this.emails.get(email).askForVerification(this, newUser, sm);
+            this.emails.get(email).askForVerification(this, newUser, db);
         } else {
             throw new GeneralException(ServletManager.Code.ClientError, "This email dosen't exist.");
         }
@@ -546,7 +515,7 @@ public class User {
         UserEmail userEmail = this.emails.get(email);
         if (userEmail != null)
             return;
-        userEmail = UserEmail.createUserEmail(email, this, false, sm);
+        userEmail = UserEmail.createUserEmail(email, this, false, sm.getDB());
         this.emails.put(email, userEmail);
     }
 

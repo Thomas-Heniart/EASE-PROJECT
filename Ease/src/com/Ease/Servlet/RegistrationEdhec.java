@@ -73,7 +73,7 @@ public class RegistrationEdhec extends HttpServlet {
 			else if (confirmPassword == null || password.equals(confirmPassword) == false)
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Passwords are not the same.");
 			else {
-				User newUser = User.createUser(email, fname, "", confirmPassword, invitationCode, sm);
+				User newUser = User.createUser(email, fname, confirmPassword, sm.getServletContext(), sm.getDB());
 				GroupManager groupManager = (GroupManager)sm.getContextAttr("groupManager");
 				Group edhecGroup = groupManager.getGroupFromDBid("22");
 				edhecGroup.addUser(newUser.getEmail(), newUser.getFirstName(), false, sm);

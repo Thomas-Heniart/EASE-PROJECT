@@ -25,21 +25,17 @@ public class UpdateNewLogWithApp extends UpdateNewAccount {
 		LOGWITH_APP_ID
 	}
 	
-	public static Update loadUpdateNewLogWithApp(String update_id, String update_new_account_id, User user, Website website, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
+	public static Update loadUpdateNewLogWithApp(String update_id, String update_new_account_id, User user, Website website, DataBaseConnection db) throws GeneralException {
 		DatabaseRequest request = db.prepareRequest("SELECT * FROM updateNewLogWithApp WHERE update_new_account_id = ?;");
 		request.setInt(update_new_account_id);
 		DatabaseResult rs = request.get();
 		rs.next();
 		Integer logWithApp_id = rs.getInt(Data.LOGWITH_APP_ID.ordinal());
 		WebsiteApp logWithApp = (WebsiteApp) user.getDashboardManager().getAppWithId(logWithApp_id);
-		return new UpdateNewLogWithApp(update_id, update_new_account_id, website, logWithApp, idGenerator.getNextId(), user);
+		return new UpdateNewLogWithApp(update_id, update_new_account_id, website, logWithApp, 0, user);
 	}
 	
-	public static UpdateNewLogWithApp createUpdateNewLogWithApp(User user, Website website, WebsiteApp logWithApp, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
+	public static UpdateNewLogWithApp createUpdateNewLogWithApp(User user, Website website, WebsiteApp logWithApp, DataBaseConnection db) throws GeneralException {
 		Map<String, Object> elevator = new HashMap<String, Object>();
 		int transaction = db.startTransaction();
 		String updateNewAccount_id = UpdateNewAccount.createUpdateNewAccount(user, website, "updateNewLogWithApp", elevator, db);
@@ -49,7 +45,7 @@ public class UpdateNewLogWithApp extends UpdateNewAccount {
 		request.set();
 		db.commitTransaction(transaction);
 		String update_id = (String) elevator.get("update_id");
-		return new UpdateNewLogWithApp(update_id, updateNewAccount_id, website, logWithApp, idGenerator.getNextId(), user);
+		return new UpdateNewLogWithApp(update_id, updateNewAccount_id, website, logWithApp, 0, user);
 	}
 	
 	protected WebsiteApp logWithApp;

@@ -24,9 +24,7 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 		PASSWORD
 	}
 	
-	public static Update loadUpdateNewClassicApp(String update_id, String update_new_account_id, User user, Website website, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
+	public static Update loadUpdateNewClassicApp(String update_id, String update_new_account_id, User user, Website website, DataBaseConnection db) throws GeneralException {
 		DatabaseRequest request = db.prepareRequest("SELECT * FROM updateNewClassicApp WHERE update_new_account_id = ?;");
 		request.setInt(update_new_account_id);
 		DatabaseResult rs = request.get();
@@ -35,7 +33,7 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 		String password = rs.getString(Data.PASSWORD.ordinal());
 		Map<String, String> updateInformations = ClassicUpdateInformation.loadClassicUpdateInformations(db_id, db);
 		UserEmail email = user.getEmails().get(updateInformations.get("login"));
-		return new UpdateNewClassicApp(update_id, update_new_account_id, website, password, updateInformations, email,idGenerator.getNextId(), user);
+		return new UpdateNewClassicApp(update_id, update_new_account_id, website, password, updateInformations, email, 0, user);
 	}
 	
 	public static UpdateNewClassicApp createUpdateNewClassicApp(User user, Website website, Map<String, String> updateInformations, String password, UserEmail email, ServletManager sm) throws GeneralException {

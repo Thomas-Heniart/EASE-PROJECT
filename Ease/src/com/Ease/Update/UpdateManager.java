@@ -25,6 +25,8 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 import com.Ease.Utils.Crypto.RSA;
 
+import javax.servlet.ServletContext;
+
 public class UpdateManager {
 	
 	protected List<Update> updates;
@@ -32,8 +34,8 @@ public class UpdateManager {
 	protected Map<Integer, Update> updatesIDMap;
 	protected User user;
 
-	public UpdateManager(ServletManager sm, User user) throws GeneralException {
-		updates = Update.loadUpdates(user, sm);
+	public UpdateManager(ServletContext context, DataBaseConnection db, User user) throws GeneralException {
+		updates = Update.loadUpdates(user, context, db);
 		updatesDBMap = new HashMap<String, Update>();
 		updatesIDMap = new HashMap<Integer, Update>();
 		this.user = user;
@@ -106,7 +108,7 @@ public class UpdateManager {
 				throw new GeneralException(ServletManager.Code.ClientError, "This app does not exist");
 			if (this.checkRemovedUpdates(website, logwithApp, login, sm))
 				return true;
-			this.addUpdate(UpdateNewLogWithApp.createUpdateNewLogWithApp(user, website, logwithApp, sm));
+			this.addUpdate(UpdateNewLogWithApp.createUpdateNewLogWithApp(user, website, logwithApp, sm.getDB()));
 			return true;
 			
 		} else {
@@ -174,7 +176,7 @@ public class UpdateManager {
 				throw new GeneralException(ServletManager.Code.ClientError, "This app does not exist");
 			if (this.checkRemovedUpdates(website, logwithApp, login, sm))
 				return true;
-			this.addUpdate(UpdateNewLogWithApp.createUpdateNewLogWithApp(user, website, logwithApp, sm));
+			this.addUpdate(UpdateNewLogWithApp.createUpdateNewLogWithApp(user, website, logwithApp, sm.getDB()));
 			return true;
 			
 		} else {
