@@ -959,6 +959,11 @@
 		z-index: 2;
 	}
 }
+
+.ease_team_popup {
+	width: 430px;
+}
+
 .ease_popup {
 	@include display-flex();
 	@include flex-direction(column);
@@ -976,6 +981,7 @@
 		top: 19px;
 	}
 	.squared_image_handler {
+		@include flex-shrink(0);
 		width: 80px;
 		height: 80px;
 		margin-right:20px;

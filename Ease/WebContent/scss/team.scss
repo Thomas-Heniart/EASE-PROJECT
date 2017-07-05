@@ -33,6 +33,28 @@
   }
 }
 
+.team_app_holder {
+  &:hover {
+    .team_app_indicators {
+      display: none;
+    }
+  }
+  .team_app_indicators {
+    top: 2.6rem;
+    right: 0.8rem;
+    position: absolute;
+    z-index: 1;
+    span {
+      @include display-flex();
+      width: 32px;
+      height: 25px;
+      i {
+        margin:auto;
+      }
+    }
+  }
+}
+
 .team_app {
   .joinAppBtn {
     width: 180px;
@@ -460,6 +482,7 @@
   transform: translateY(0);
   @include display-flex();
   @include flex(1);
+  @include flex-direction(column);
   overflow: hidden;
   input,textarea {
     @include simple-box-shadow(none);
@@ -626,6 +649,7 @@
         height: 60px;
         .channel_header {
           @include display-flex();
+          @include align-items(center);
           height: 100%;
           padding: 8px 14px 8px 14px;
           .tab_header {
@@ -802,7 +826,7 @@
                   overflow: hidden;
                   border-radius: 5px;
                   position: absolute;
-                  top:.6rem;
+                  top:2.3rem;
                   right: .6rem;
                   color: #555459;
                   font-size: .7rem;

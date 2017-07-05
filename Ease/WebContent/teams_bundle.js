@@ -1637,7 +1637,7 @@ module.exports = ReactComponentTreeHook;
 "use strict";
 /* WEBPACK VAR INJECTION */(function(Buffer) {
 
-var bind = __webpack_require__(88);
+var bind = __webpack_require__(87);
 
 /*global toString:true*/
 
@@ -6893,7 +6893,7 @@ module.exports = g;
 /* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(143);
+module.exports = __webpack_require__(144);
 
 /***/ }),
 /* 53 */
@@ -6903,7 +6903,7 @@ module.exports = __webpack_require__(143);
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(15);
-var normalizeHeaderName = __webpack_require__(157);
+var normalizeHeaderName = __webpack_require__(158);
 
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -6919,10 +6919,10 @@ function getDefaultAdapter() {
   var adapter;
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
-    adapter = __webpack_require__(84);
+    adapter = __webpack_require__(83);
   } else if (typeof process !== 'undefined') {
     // For node use HTTP adapter
-    adapter = __webpack_require__(84);
+    adapter = __webpack_require__(83);
   }
   return adapter;
 }
@@ -9676,100 +9676,15 @@ if (process.env.NODE_ENV !== 'production' && typeof isCrushed.name === 'string' 
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.routerMiddleware = exports.routerActions = exports.goForward = exports.goBack = exports.go = exports.replace = exports.push = exports.CALL_HISTORY_METHOD = exports.routerReducer = exports.LOCATION_CHANGE = exports.syncHistoryWithStore = undefined;
-
-var _reducer = __webpack_require__(129);
-
-Object.defineProperty(exports, 'LOCATION_CHANGE', {
-  enumerable: true,
-  get: function get() {
-    return _reducer.LOCATION_CHANGE;
-  }
-});
-Object.defineProperty(exports, 'routerReducer', {
-  enumerable: true,
-  get: function get() {
-    return _reducer.routerReducer;
-  }
-});
-
-var _actions = __webpack_require__(128);
-
-Object.defineProperty(exports, 'CALL_HISTORY_METHOD', {
-  enumerable: true,
-  get: function get() {
-    return _actions.CALL_HISTORY_METHOD;
-  }
-});
-Object.defineProperty(exports, 'push', {
-  enumerable: true,
-  get: function get() {
-    return _actions.push;
-  }
-});
-Object.defineProperty(exports, 'replace', {
-  enumerable: true,
-  get: function get() {
-    return _actions.replace;
-  }
-});
-Object.defineProperty(exports, 'go', {
-  enumerable: true,
-  get: function get() {
-    return _actions.go;
-  }
-});
-Object.defineProperty(exports, 'goBack', {
-  enumerable: true,
-  get: function get() {
-    return _actions.goBack;
-  }
-});
-Object.defineProperty(exports, 'goForward', {
-  enumerable: true,
-  get: function get() {
-    return _actions.goForward;
-  }
-});
-Object.defineProperty(exports, 'routerActions', {
-  enumerable: true,
-  get: function get() {
-    return _actions.routerActions;
-  }
-});
-
-var _sync = __webpack_require__(319);
-
-var _sync2 = _interopRequireDefault(_sync);
-
-var _middleware = __webpack_require__(318);
-
-var _middleware2 = _interopRequireDefault(_middleware);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-exports.syncHistoryWithStore = _sync2['default'];
-exports.routerMiddleware = _middleware2['default'];
-
-/***/ }),
-/* 84 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(15);
-var settle = __webpack_require__(149);
-var buildURL = __webpack_require__(152);
-var parseHeaders = __webpack_require__(158);
-var isURLSameOrigin = __webpack_require__(156);
-var createError = __webpack_require__(87);
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(151);
+var settle = __webpack_require__(150);
+var buildURL = __webpack_require__(153);
+var parseHeaders = __webpack_require__(159);
+var isURLSameOrigin = __webpack_require__(157);
+var createError = __webpack_require__(86);
+var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(152);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -9865,7 +9780,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(154);
+      var cookies = __webpack_require__(155);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -9944,7 +9859,7 @@ module.exports = function xhrAdapter(config) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 85 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9970,7 +9885,7 @@ module.exports = Cancel;
 
 
 /***/ }),
-/* 86 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9982,13 +9897,13 @@ module.exports = function isCancel(value) {
 
 
 /***/ }),
-/* 87 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var enhanceError = __webpack_require__(148);
+var enhanceError = __webpack_require__(149);
 
 /**
  * Create an Error with the specified message, config, error code, and response.
@@ -10006,7 +9921,7 @@ module.exports = function createError(message, config, code, response) {
 
 
 /***/ }),
-/* 88 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10024,7 +9939,7 @@ module.exports = function bind(fn, thisArg) {
 
 
 /***/ }),
-/* 89 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10093,7 +10008,7 @@ function checkAuthentication() {
 }
 
 /***/ }),
-/* 90 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10151,6 +10066,32 @@ function TeamAppAdderButtons(props) {
 }
 
 module.exports = TeamAppAdderButtons;
+
+/***/ }),
+/* 90 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var React = __webpack_require__(1);
+
+function LoadingScreen(props) {
+  return React.createElement(
+    "div",
+    { className: "sk-folding-loading" },
+    React.createElement(
+      "div",
+      { className: "sk-folding-cube" },
+      React.createElement("div", { className: "sk-cube1 sk-cube" }),
+      React.createElement("div", { className: "sk-cube2 sk-cube" }),
+      React.createElement("div", { className: "sk-cube4 sk-cube" }),
+      React.createElement("div", { className: "sk-cube3 sk-cube" })
+    )
+  );
+}
+
+module.exports = LoadingScreen;
 
 /***/ }),
 /* 91 */
@@ -15292,25 +15233,28 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var React = __webpack_require__(1);
 var classnames = __webpack_require__(4);
 var ReactRouter = __webpack_require__(41);
-var TeamMenu = __webpack_require__(172);
-var TeamSideBar = __webpack_require__(173);
-var TeamHeader = __webpack_require__(171);
-var FlexPanels = __webpack_require__(170);
-var TeamAppAdderButtons = __webpack_require__(90);
-var TeamAppAddingUi = __webpack_require__(164);
-var TeamAddUserModal = __webpack_require__(163);
-var TeamAddChannelModal = __webpack_require__(162);
-var TeamChannelAddUserModal = __webpack_require__(166);
-var TeamDeleteUserModal = __webpack_require__(169);
-var TeamDeleteChannelModal = __webpack_require__(167);
-var TeamDeleteUserFromChannelModal = __webpack_require__(168);
+var LoadingScreen = __webpack_require__(90);
+var TeamMenu = __webpack_require__(173);
+var TeamSideBar = __webpack_require__(174);
+var TeamHeader = __webpack_require__(172);
+var FlexPanels = __webpack_require__(171);
+var TeamAppAdderButtons = __webpack_require__(89);
+var TeamAppAddingUi = __webpack_require__(165);
+var TeamAddUserModal = __webpack_require__(164);
+var TeamAddChannelModal = __webpack_require__(163);
+var TeamChannelAddUserModal = __webpack_require__(167);
+var TeamDeleteUserModal = __webpack_require__(170);
+var TeamDeleteChannelModal = __webpack_require__(168);
+var TeamDeleteUserFromChannelModal = __webpack_require__(169);
 var PinTeamAppToDashboardModal = __webpack_require__(180);
-var TeamAppsContainer = __webpack_require__(165);
+var TeamAppsContainer = __webpack_require__(166);
 var TeamDeleteAppModal = __webpack_require__(182);
 var TeamLeaveAppModal = __webpack_require__(184);
 var TeamManageAppRequestModal = __webpack_require__(185);
 var TeamAcceptMultiAppModal = __webpack_require__(181);
 var TeamJoinMultiAppModal = __webpack_require__(183);
+var EaseHeader = __webpack_require__(353);
+
 
 var api = __webpack_require__(16);
 
@@ -15401,7 +15345,7 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
         //      this.props.history.push('/login');
         return;
       }
-      this.props.dispatch(teamActions.fetchTeamAndUsersAndChannels(this.state.team_id)).then(function () {
+      this.props.dispatch(teamActions.fetchTeamAndUsersAndChannels(this.props.match.params.teamId)).then(function () {
         _this2.setState({ loadingInfo: false });
         _this2.props.dispatch(channelActions.selectTeamChannel(_this2.props.channels[0].id));
       });
@@ -15412,15 +15356,17 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
       return React.createElement(
         'div',
         { id: 'teamsHandler' },
+        React.createElement(EaseHeader, null),
         React.createElement(
           'div',
           { className: 'team_view', id: 'team_view' },
+          this.state.loadingInfo && React.createElement(LoadingScreen, null),
           !this.state.loadingInfo && React.createElement(TeamSideBar, null),
           this.props.team.teamMenuActive && React.createElement(TeamMenu, {
             me: this.props.me,
             team: this.props.team,
             dispatch: this.props.dispatch }),
-          this.props.selectedItem.item && React.createElement(
+          !this.state.loadingInfo && this.props.selectedItem.item && React.createElement(
             'div',
             { className: 'client_main_container' },
             React.createElement(TeamHeader, {
@@ -15485,7 +15431,7 @@ var _reactRedux = __webpack_require__(7);
 
 var _reactRouterDom = __webpack_require__(41);
 
-var _commonActions = __webpack_require__(89);
+var _commonActions = __webpack_require__(88);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -15494,7 +15440,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var React = __webpack_require__(1);
-var LoadingScreen = __webpack_require__(175);
+var LoadingScreen = __webpack_require__(90);
 var Base = (_dec = (0, _reactRedux.connect)(function (store) {
   return {
     common: store.common
@@ -15529,7 +15475,7 @@ var Base = (_dec = (0, _reactRedux.connect)(function (store) {
     value: function render() {
       if (this.state.fetching) return React.createElement(LoadingScreen, null);else return React.createElement(
         'div',
-        null,
+        { id: 'app-root' },
         this.props.children
       );
     }
@@ -15634,9 +15580,94 @@ module.exports = __webpack_require__(240);
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.routerMiddleware = exports.routerActions = exports.goForward = exports.goBack = exports.go = exports.replace = exports.push = exports.CALL_HISTORY_METHOD = exports.routerReducer = exports.LOCATION_CHANGE = exports.syncHistoryWithStore = undefined;
+
+var _reducer = __webpack_require__(129);
+
+Object.defineProperty(exports, 'LOCATION_CHANGE', {
+  enumerable: true,
+  get: function get() {
+    return _reducer.LOCATION_CHANGE;
+  }
+});
+Object.defineProperty(exports, 'routerReducer', {
+  enumerable: true,
+  get: function get() {
+    return _reducer.routerReducer;
+  }
+});
+
+var _actions = __webpack_require__(128);
+
+Object.defineProperty(exports, 'CALL_HISTORY_METHOD', {
+  enumerable: true,
+  get: function get() {
+    return _actions.CALL_HISTORY_METHOD;
+  }
+});
+Object.defineProperty(exports, 'push', {
+  enumerable: true,
+  get: function get() {
+    return _actions.push;
+  }
+});
+Object.defineProperty(exports, 'replace', {
+  enumerable: true,
+  get: function get() {
+    return _actions.replace;
+  }
+});
+Object.defineProperty(exports, 'go', {
+  enumerable: true,
+  get: function get() {
+    return _actions.go;
+  }
+});
+Object.defineProperty(exports, 'goBack', {
+  enumerable: true,
+  get: function get() {
+    return _actions.goBack;
+  }
+});
+Object.defineProperty(exports, 'goForward', {
+  enumerable: true,
+  get: function get() {
+    return _actions.goForward;
+  }
+});
+Object.defineProperty(exports, 'routerActions', {
+  enumerable: true,
+  get: function get() {
+    return _actions.routerActions;
+  }
+});
+
+var _sync = __webpack_require__(319);
+
+var _sync2 = _interopRequireDefault(_sync);
+
+var _middleware = __webpack_require__(318);
+
+var _middleware2 = _interopRequireDefault(_middleware);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+exports.syncHistoryWithStore = _sync2['default'];
+exports.routerMiddleware = _middleware2['default'];
+
+/***/ }),
+/* 144 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 var utils = __webpack_require__(15);
-var bind = __webpack_require__(88);
-var Axios = __webpack_require__(145);
+var bind = __webpack_require__(87);
+var Axios = __webpack_require__(146);
 var defaults = __webpack_require__(53);
 
 /**
@@ -15670,15 +15701,15 @@ axios.create = function create(instanceConfig) {
 };
 
 // Expose Cancel & CancelToken
-axios.Cancel = __webpack_require__(85);
-axios.CancelToken = __webpack_require__(144);
-axios.isCancel = __webpack_require__(86);
+axios.Cancel = __webpack_require__(84);
+axios.CancelToken = __webpack_require__(145);
+axios.isCancel = __webpack_require__(85);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(159);
+axios.spread = __webpack_require__(160);
 
 module.exports = axios;
 
@@ -15687,13 +15718,13 @@ module.exports.default = axios;
 
 
 /***/ }),
-/* 144 */
+/* 145 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Cancel = __webpack_require__(85);
+var Cancel = __webpack_require__(84);
 
 /**
  * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -15751,7 +15782,7 @@ module.exports = CancelToken;
 
 
 /***/ }),
-/* 145 */
+/* 146 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15759,10 +15790,10 @@ module.exports = CancelToken;
 
 var defaults = __webpack_require__(53);
 var utils = __webpack_require__(15);
-var InterceptorManager = __webpack_require__(146);
-var dispatchRequest = __webpack_require__(147);
-var isAbsoluteURL = __webpack_require__(155);
-var combineURLs = __webpack_require__(153);
+var InterceptorManager = __webpack_require__(147);
+var dispatchRequest = __webpack_require__(148);
+var isAbsoluteURL = __webpack_require__(156);
+var combineURLs = __webpack_require__(154);
 
 /**
  * Create a new instance of Axios
@@ -15843,7 +15874,7 @@ module.exports = Axios;
 
 
 /***/ }),
-/* 146 */
+/* 147 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15902,15 +15933,15 @@ module.exports = InterceptorManager;
 
 
 /***/ }),
-/* 147 */
+/* 148 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(15);
-var transformData = __webpack_require__(150);
-var isCancel = __webpack_require__(86);
+var transformData = __webpack_require__(151);
+var isCancel = __webpack_require__(85);
 var defaults = __webpack_require__(53);
 
 /**
@@ -15988,7 +16019,7 @@ module.exports = function dispatchRequest(config) {
 
 
 /***/ }),
-/* 148 */
+/* 149 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16014,13 +16045,13 @@ module.exports = function enhanceError(error, config, code, response) {
 
 
 /***/ }),
-/* 149 */
+/* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var createError = __webpack_require__(87);
+var createError = __webpack_require__(86);
 
 /**
  * Resolve or reject a Promise based on response status.
@@ -16046,7 +16077,7 @@ module.exports = function settle(resolve, reject, response) {
 
 
 /***/ }),
-/* 150 */
+/* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16073,7 +16104,7 @@ module.exports = function transformData(data, headers, fns) {
 
 
 /***/ }),
-/* 151 */
+/* 152 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16116,7 +16147,7 @@ module.exports = btoa;
 
 
 /***/ }),
-/* 152 */
+/* 153 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16191,7 +16222,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ }),
-/* 153 */
+/* 154 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16212,7 +16243,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 
 /***/ }),
-/* 154 */
+/* 155 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16272,7 +16303,7 @@ module.exports = (
 
 
 /***/ }),
-/* 155 */
+/* 156 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16293,7 +16324,7 @@ module.exports = function isAbsoluteURL(url) {
 
 
 /***/ }),
-/* 156 */
+/* 157 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16368,7 +16399,7 @@ module.exports = (
 
 
 /***/ }),
-/* 157 */
+/* 158 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16387,7 +16418,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 
 /***/ }),
-/* 158 */
+/* 159 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16431,7 +16462,7 @@ module.exports = function parseHeaders(headers) {
 
 
 /***/ }),
-/* 159 */
+/* 160 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16465,7 +16496,7 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 160 */
+/* 161 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16959,7 +16990,7 @@ var MultiTeamAppAdd = function (_React$Component2) {
 module.exports = MultiTeamAppAdd;
 
 /***/ }),
-/* 161 */
+/* 162 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17097,7 +17128,7 @@ var TeamAddAppsButton = (_dec = (0, _reactRedux.connect)(), _dec(_class = functi
 module.exports = TeamAddAppsButton;
 
 /***/ }),
-/* 162 */
+/* 163 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17424,7 +17455,7 @@ var TeamAddChannelModal = (_dec = (0, _reactRedux.connect)(function (store) {
 module.exports = TeamAddChannelModal;
 
 /***/ }),
-/* 163 */
+/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18165,7 +18196,7 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
 module.exports = TeamAddUserModal;
 
 /***/ }),
-/* 164 */
+/* 165 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18196,8 +18227,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var React = __webpack_require__(1);
 var classnames = __webpack_require__(4);
 var api = __webpack_require__(16);
-var TeamAppAdderButtons = __webpack_require__(90);
-var MultiTeamAppAdd = __webpack_require__(160);
+var TeamAppAdderButtons = __webpack_require__(89);
+var MultiTeamAppAdd = __webpack_require__(161);
 
 var DashboardAndTeamAppSearch = function (_React$Component) {
   _inherits(DashboardAndTeamAppSearch, _React$Component);
@@ -19033,7 +19064,7 @@ var TeamAppAddingUi = (_dec = (0, _reactRedux.connect)(function (store) {
 module.exports = TeamAppAddingUi;
 
 /***/ }),
-/* 165 */
+/* 166 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19116,7 +19147,7 @@ var TeamAppsContainer = (_dec = (0, _reactRedux.connect)(function (store) {
 module.exports = TeamAppsContainer;
 
 /***/ }),
-/* 166 */
+/* 167 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19522,7 +19553,7 @@ var TeamChannelAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) 
 module.exports = TeamChannelAddUserModal;
 
 /***/ }),
-/* 167 */
+/* 168 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19721,7 +19752,7 @@ var TeamDeleteChannelModal = (_dec = (0, _reactRedux.connect)(function (store) {
 module.exports = TeamDeleteChannelModal;
 
 /***/ }),
-/* 168 */
+/* 169 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20033,7 +20064,7 @@ var TeamDeleteUserFromChannelModal = (_dec = (0, _reactRedux.connect)(function (
 module.exports = TeamDeleteUserFromChannelModal;
 
 /***/ }),
-/* 169 */
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20368,7 +20399,7 @@ var TeamDeleteUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
 module.exports = TeamDeleteUserModal;
 
 /***/ }),
-/* 170 */
+/* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21225,7 +21256,7 @@ var FlexPanels = (_dec = (0, _reactRedux.connect)(function (store) {
 module.exports = FlexPanels;
 
 /***/ }),
-/* 171 */
+/* 172 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21233,8 +21264,8 @@ module.exports = FlexPanels;
 
 var React = __webpack_require__(1);
 var classnames = __webpack_require__(4);
-var TeamAddAppsButton = __webpack_require__(161);
-var EaseMainNavbar = __webpack_require__(174);
+var TeamAddAppsButton = __webpack_require__(162);
+var EaseMainNavbar = __webpack_require__(175);
 function TeamHeader(props) {
   return React.createElement(
     'header',
@@ -21312,7 +21343,7 @@ function TeamHeader(props) {
 module.exports = TeamHeader;
 
 /***/ }),
-/* 172 */
+/* 173 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21421,7 +21452,7 @@ var TeamMenu = function (_React$Component) {
 module.exports = TeamMenu;
 
 /***/ }),
-/* 173 */
+/* 174 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21631,7 +21662,7 @@ var TeamSideBar = (_dec = (0, _reactRedux.connect)(function (store) {
 module.exports = TeamSideBar;
 
 /***/ }),
-/* 174 */
+/* 175 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21643,7 +21674,7 @@ var _dec, _class;
 
 var _reactRouterDom = __webpack_require__(41);
 
-var _commonActions = __webpack_require__(89);
+var _commonActions = __webpack_require__(88);
 
 var _reactRedux = __webpack_require__(7);
 
@@ -21685,7 +21716,7 @@ var EaseMainNavbar = (_dec = (0, _reactRedux.connect)(function (store) {
       var user = this.props.user;
       return React.createElement(
         'nav',
-        { className: 'nav display_flex', id: 'ease_main_header' },
+        { className: 'nav display_flex', id: 'ease_main_navbar' },
         React.createElement(
           'button',
           { className: 'button-unstyle', id: 'settings_button' },
@@ -21754,32 +21785,6 @@ var EaseMainNavbar = (_dec = (0, _reactRedux.connect)(function (store) {
 
 
 module.exports = (0, _reactRouterDom.withRouter)(EaseMainNavbar);
-
-/***/ }),
-/* 175 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var React = __webpack_require__(1);
-
-function LoadingScreen(props) {
-  return React.createElement(
-    "div",
-    { className: "sk-folding-loading" },
-    React.createElement(
-      "div",
-      { className: "sk-folding-cube" },
-      React.createElement("div", { className: "sk-cube1 sk-cube" }),
-      React.createElement("div", { className: "sk-cube2 sk-cube" }),
-      React.createElement("div", { className: "sk-cube4 sk-cube" }),
-      React.createElement("div", { className: "sk-cube3 sk-cube" })
-    )
-  );
-}
-
-module.exports = LoadingScreen;
 
 /***/ }),
 /* 176 */
@@ -24402,7 +24407,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _reactRouterDom = __webpack_require__(41);
 
-var _reactRouterRedux = __webpack_require__(83);
+var _reactRouterRedux = __webpack_require__(143);
 
 var _reactRedux = __webpack_require__(7);
 
@@ -24451,7 +24456,9 @@ var App = function (_React$Component) {
         React.createElement(
           Base,
           null,
-          React.createElement(_reactRouterDom.Route, { exact: true, path: "/", component: TeamView })
+          React.createElement(_reactRouterDom.Route, { exact: true, path: "/", component: TeamView }),
+          React.createElement(_reactRouterDom.Route, { path: '/home', component: Home }),
+          React.createElement(_reactRouterDom.Route, { path: '/teams/:teamId', component: TeamView })
         )
       );
     }
@@ -43114,6 +43121,56 @@ module.exports = function(module) {
 	return module;
 };
 
+
+/***/ }),
+/* 353 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var React = __webpack_require__(1);
+var classnames = __webpack_require__(4);
+var EaseMainNavbar = __webpack_require__(175);
+
+var EaseHeader = function (_React$Component) {
+  _inherits(EaseHeader, _React$Component);
+
+  function EaseHeader(props) {
+    _classCallCheck(this, EaseHeader);
+
+    return _possibleConstructorReturn(this, (EaseHeader.__proto__ || Object.getPrototypeOf(EaseHeader)).call(this, props));
+  }
+
+  _createClass(EaseHeader, [{
+    key: 'render',
+    value: function render() {
+      return React.createElement(
+        'header',
+        { id: 'ease_header' },
+        React.createElement(
+          'a',
+          { className: 'logo_container', href: '/home' },
+          React.createElement('img', { src: '/resources/images/logo.svg', alt: 'logo' })
+        ),
+        React.createElement('div', { className: 'full_flex' }),
+        React.createElement(EaseMainNavbar, null)
+      );
+    }
+  }]);
+
+  return EaseHeader;
+}(React.Component);
+
+module.exports = EaseHeader;
 
 /***/ })
 /******/ ]);
