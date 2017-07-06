@@ -169,7 +169,7 @@ public class User {
         newUser.getUserEmails().put(email, userEmail);
         newUser.passStep("CGU", db);
         newUser.passStep("first_connection", db);
-        newUser.initializeUpdateManager(context, db);
+        //newUser.initializeUpdateManager(context, db);
         newUser.sendVerificationEmail(email, true, db);
         request = db.prepareRequest("DELETE FROM pendingRegistrations WHERE email = ?;");
         request.setString(email);
@@ -330,7 +330,7 @@ public class User {
             if (sessionIdUserMap.containsValue(this))
                 return;
             for (TeamUser teamUser : this.getTeamUsers())
-                teamUser.deconnect();
+                teamUser.disconnect();
             users.remove(this.getEmail());
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);

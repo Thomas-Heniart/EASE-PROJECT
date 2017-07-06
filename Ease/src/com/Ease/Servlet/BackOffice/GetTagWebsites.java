@@ -58,7 +58,7 @@ public class GetTagWebsites extends HttpServlet {
 				Catalog catalog = (Catalog) sm.getContextAttr("catalog");
 				catalog.getTagWithSingleId(id).getWebsites().forEach((website) -> {
 					JSONObject tmp = new JSONObject();
-					tmp.put("single_id", website.getSingleId());
+					tmp.put("single_id", website.getDb_id());
 					tmp.put("imgSrc", Variables.URL_PATH + website.getFolder() + "logo.png");
 					tmp.put("name", website.getName());
 					res.add(tmp);

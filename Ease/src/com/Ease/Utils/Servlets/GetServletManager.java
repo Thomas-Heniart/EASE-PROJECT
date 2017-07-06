@@ -20,6 +20,9 @@ public class GetServletManager extends ServletManager {
     }
 
     public Integer getIntParam(String paramName, boolean saveInLogs) {
-        return Integer.valueOf(this.getParam(paramName, saveInLogs));
+        String param = this.getParam(paramName, saveInLogs);
+        if (param == null)
+            return null;
+        return Integer.valueOf(param);
     }
 }

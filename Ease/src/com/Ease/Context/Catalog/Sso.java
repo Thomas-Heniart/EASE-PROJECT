@@ -38,8 +38,7 @@ public class Sso {
     }
 
     protected List<Website> websites;
-    protected Map<String, Website> websitesDBmap;
-    protected Map<Integer, Website> websitesIDmap;
+    protected Map<Integer, Website> websitesIdMap = new HashMap<>();
     protected String name;
     protected int single_id;
     protected String db_id;
@@ -48,8 +47,6 @@ public class Sso {
     public Sso(String db_id, String name, String img_path, int single_id) {
         this.name = name;
         this.websites = new LinkedList<Website>();
-        this.websitesDBmap = new HashMap<String, Website>();
-        this.websitesIDmap = new HashMap<Integer, Website>();
         this.single_id = single_id;
         this.db_id = db_id;
         this.img_path = img_path;
@@ -57,8 +54,7 @@ public class Sso {
 
     public void addWebsite(Website site) {
         this.websites.add(site);
-        this.websitesDBmap.put(site.getDb_id(), site);
-        this.websitesIDmap.put(site.getSingleId(), site);
+        this.websitesIdMap.put(site.getDb_id(), site);
     }
 
     public int getSingleId() {

@@ -113,7 +113,7 @@ public class UpdateNewClassicApp extends UpdateNewAccount {
 		json.put("login", this.updateInformations.get("login"));
 		json.put("passwordLength", 16);
 		json.put("websiteImg", this.website.getFolder() + "logo.png");
-		json.put("websiteId", this.website.getSingleId());
+		json.put("websiteId", this.website.getDb_id());
 		json.put("email", ((email != null) ? ((email.isVerified()) ? "verified" : "unverified") : "no"));
 		json.put("websiteName", this.website.getName());
 		

@@ -46,7 +46,7 @@
 						</div>
 						<p class="name">LinkedIn</p>
 						<div class="onoffswitch">
-							<input type="checkbox" name="LinkedIn" class="onoffswitch-checkbox" id="LinkedIn" websiteId="${catalog.getWebsiteWithName("LinkedIn").getSingleId()}">
+							<input type="checkbox" name="LinkedIn" class="onoffswitch-checkbox" id="LinkedIn" websiteId="${catalog.getWebsiteWithName("LinkedIn").getDb_id()}">
 							<label class="onoffswitch-label" for="LinkedIn"></label>
 						</div>
 					</div>
@@ -56,7 +56,7 @@
 						</div>
 						<p class="name">Facebook</p>
 						<div class="onoffswitch">
-							<input type="checkbox" name="Facebook" class="onoffswitch-checkbox" id="Facebook" checked websiteId="${catalog.getWebsiteWithName("Facebook").getSingleId()}">
+							<input type="checkbox" name="Facebook" class="onoffswitch-checkbox" id="Facebook" checked websiteId="${catalog.getWebsiteWithName("Facebook").getDb_id()}">
 							<label class="onoffswitch-label" for="Facebook"></label>
 						</div>
 					</div>
@@ -182,7 +182,7 @@
 				<div class="row">
 					<div class="appsContainer">
 						<div class="appHandler">
-							<div class="app" id="${catalog.getWebsiteWithName('Facebook').getSingleId()}">
+							<div class="app" id="${catalog.getWebsiteWithName('Facebook').getDb_id()}">
 								<div class="logo">
 									<img src="resources/websites/Facebook/logo.png">
 								</div>
@@ -190,7 +190,7 @@
 							</div>
 						</div>
 						<div class="appHandler">
-							<div class="app" id="${catalog.getWebsiteWithName('LinkedIn').getSingleId()}">
+							<div class="app" id="${catalog.getWebsiteWithName('LinkedIn').getDb_id()}">
 								<div class="logo">
 									<img src="resources/websites/LinkedIn/logo.png">
 								</div>
@@ -198,7 +198,7 @@
 							</div>
 						</div>
 						<div class="appHandler">
-							<div class="app"  id="${catalog.getWebsiteWithName('Gmail').getSingleId()}">
+							<div class="app"  id="${catalog.getWebsiteWithName('Gmail').getDb_id()}">
 								<div class="logo">
 									<img src="resources/websites/Gmail/logo.png">
 								</div>
@@ -206,7 +206,7 @@
 							</div>
 						</div>
 						<div class="appHandler">
-							<div class="app" id="${catalog.getWebsiteWithName('Youtube').getSingleId()}">
+							<div class="app" id="${catalog.getWebsiteWithName('Youtube').getDb_id()}">
 								<div class="logo">
 									<img src="resources/websites/Youtube/logo.png">
 								</div>
@@ -214,7 +214,7 @@
 							</div>
 						</div>
 						<div class="appHandler">
-							<div class="app"  id="${catalog.getWebsiteWithName('Google Drive').getSingleId()}">
+							<div class="app"  id="${catalog.getWebsiteWithName('Google Drive').getDb_id()}">
 								<div class="logo">
 									<img src="resources/websites/GoogleDrive/logo.png">
 								</div>
@@ -222,7 +222,7 @@
 							</div>
 						</div>
 						<div class="appHandler">
-							<div class="app"  id="${catalog.getWebsiteWithName('Twitter').getSingleId()}">
+							<div class="app"  id="${catalog.getWebsiteWithName('Twitter').getDb_id()}">
 								<div class="logo">
 									<img src="resources/websites/Twitter/logo.png">
 								</div>
@@ -230,7 +230,7 @@
 							</div>
 						</div>
 						<div class="appHandler">
-							<div class="app" id="${catalog.getWebsiteWithName('Instagram').getSingleId()}">
+							<div class="app" id="${catalog.getWebsiteWithName('Instagram').getDb_id()}">
 								<div class="logo">
 									<img src="resources/websites/Instagram/logo.png">
 								</div>
@@ -238,7 +238,7 @@
 							</div>
 						</div>
 						<div class="appHandler">
-							<div class="app" id="${catalog.getWebsiteWithName('Airbnb').getSingleId()}">
+							<div class="app" id="${catalog.getWebsiteWithName('Airbnb').getDb_id()}">
 								<div class="logo">
 									<img src="resources/websites/Airbnb/logo.png">
 								</div>
@@ -246,7 +246,7 @@
 							</div>
 						</div>
 						<div class="appHandler">
-							<div class="app" id="${catalog.getWebsiteWithName('BlaBlaCar').getSingleId()}">
+							<div class="app" id="${catalog.getWebsiteWithName('BlaBlaCar').getDb_id()}">
 								<div class="logo">
 									<img src="resources/websites/BlaBlaCar/logo.png">
 								</div>
@@ -254,7 +254,7 @@
 							</div>
 						</div>
 						<div class="appHandler">
-							<div class="app" id="${catalog.getWebsiteWithName('Messenger').getSingleId()}">
+							<div class="app" id="${catalog.getWebsiteWithName('Messenger').getDb_id()}">
 								<div class="logo">
 									<img src="resources/websites/Messenger/logo.png">
 								</div>
@@ -262,7 +262,7 @@
 							</div>
 						</div>
 						<div class="appHandler">
-							<div class="app"  id="${catalog.getWebsiteWithName('Suite Office').getSingleId()}">
+							<div class="app"  id="${catalog.getWebsiteWithName('Suite Office').getDb_id()}">
 								<div class="logo">
 									<img src="resources/websites/Office365/logo.png">
 								</div>
@@ -270,7 +270,7 @@
 							</div>
 						</div>
 						<div class="appHandler">
-							<div class="app" id="${catalog.getWebsiteWithName('Skype').getSingleId()}">
+							<div class="app" id="${catalog.getWebsiteWithName('Skype').getDb_id()}">
 								<div class="logo">
 									<img src="resources/websites/Skype/logo.png">
 								</div>
@@ -283,7 +283,7 @@
 							</p>
 						</div>
 						<div class="appHandler hidden">
-							<div class="app" id="${catalog.getWebsiteWithName('Vente-privée').getSingleId()}">
+							<div class="app" id="${catalog.getWebsiteWithName('Vente-privée').getDb_id()}">
 								<div class="logo">
 									<img src="resources/websites/VentePrivee/logo.png">
 								</div>
@@ -291,7 +291,7 @@
 							</div>
 						</div>
 						<div class="appHandler hidden">
-							<div class="app" id="${catalog.getWebsiteWithName('Amazon').getSingleId()}">
+							<div class="app" id="${catalog.getWebsiteWithName('Amazon').getDb_id()}">
 								<div class="logo">
 									<img src="resources/websites/Amazon/logo.png">
 								</div>
@@ -299,7 +299,7 @@
 							</div>
 						</div>
 						<div class="appHandler hidden">
-							<div class="app" id="${catalog.getWebsiteWithName('Dropbox').getSingleId()}">
+							<div class="app" id="${catalog.getWebsiteWithName('Dropbox').getDb_id()}">
 								<div class="logo">
 									<img src="resources/websites/Dropbox/logo.png">
 								</div>
@@ -307,7 +307,7 @@
 							</div>
 						</div>
 						<div class="appHandler hidden">
-							<div class="app" id="${catalog.getWebsiteWithName('Deliveroo').getSingleId()}">
+							<div class="app" id="${catalog.getWebsiteWithName('Deliveroo').getDb_id()}">
 								<div class="logo">
 									<img src="resources/websites/Deliveroo/logo.png">
 								</div>
@@ -315,7 +315,7 @@
 							</div>
 						</div>
 						<div class="appHandler hidden">
-							<div class="app" id="${catalog.getWebsiteWithName('Leboncoin').getSingleId()}">
+							<div class="app" id="${catalog.getWebsiteWithName('Leboncoin').getDb_id()}">
 								<div class="logo">
 									<img src="resources/websites/LeBonCoin/logo.png">
 								</div>
@@ -323,7 +323,7 @@
 							</div>
 						</div>
 						<div class="appHandler hidden">
-							<div class="app" id="${catalog.getWebsiteWithName('Voyages SNCF').getSingleId()}">
+							<div class="app" id="${catalog.getWebsiteWithName('Voyages SNCF').getDb_id()}">
 								<div class="logo">
 									<img src="resources/websites/VoyageSNCF/logo.png">
 								</div>
@@ -331,7 +331,7 @@
 							</div>
 						</div>
 						<div class="appHandler hidden">
-							<div class="app" id="${catalog.getWebsiteWithName('Yahoo Mail').getSingleId()}">
+							<div class="app" id="${catalog.getWebsiteWithName('Yahoo Mail').getDb_id()}">
 								<div class="logo">
 									<img src="resources/websites/YahooMail/logo.png">
 								</div>
@@ -339,7 +339,7 @@
 							</div>
 						</div>
 						<div class="appHandler hidden">
-							<div class="app" id="${catalog.getWebsiteWithName('PayPal').getSingleId()}">
+							<div class="app" id="${catalog.getWebsiteWithName('PayPal').getDb_id()}">
 								<div class="logo">
 									<img src="resources/websites/Paypal/logo.png">
 								</div>

@@ -64,7 +64,8 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             Date arrival_date = new Date(sm.getLongParam("arrival_date", true));
             String departure_date_string = sm.getStringParam("departure_date", true);
             TeamUser teamUser = new TeamUser(first_name, last_name, email, username, arrival_date, null, false, team, new TeamUserRole(role));
-            if (!departure_date_string.equals(""))
+            teamUser.setAdmin_email(adminTeamUser.getEmail());
+            if (departure_date_string != null && !departure_date_string.equals(""))
                 teamUser.setDepartureDate(departure_format.parse(departure_date_string));
             query.saveOrUpdateObject(teamUser);
             team.addTeamUser(teamUser);
@@ -81,7 +82,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             query.executeUpdate();
             MailJetBuilder mailJetBuilder = new MailJetBuilder();
             mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
-            mailJetBuilder.setTemplateId(0);
+            mailJetBuilder.setTemplateId(179023);
             mailJetBuilder.addTo(email);
             mailJetBuilder.addVariable("team_name", team.getName());
             mailJetBuilder.addVariable("first_name", adminTeamUser.getFirstName());

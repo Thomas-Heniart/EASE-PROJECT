@@ -60,7 +60,7 @@ public class AddEmptyApp extends HttpServlet {
 			//--------
 			try {
 				Profile profile = user.getDashboardManager().getProfile(Integer.parseInt(profileId));
-				site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(websiteId));
+				site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithId(Integer.parseInt(websiteId));
 				App app = WebsiteApp.createEmptyApp(profile, profile.getApps().size(), name, site, sm);
 				profile.addApp(app);
 				sm.setResponse(ServletManager.Code.Success, String.valueOf(app.getDBid()));

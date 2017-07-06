@@ -83,8 +83,8 @@ public class Team {
     @OneToMany(mappedBy = "team", fetch = FetchType.LAZY, orphanRemoval = true)
     protected List<Channel> channels = new LinkedList<>();
 
-    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY, orphanRemoval = true)
-    protected Set<TeamNotification> teamNotifications = new HashSet<>();
+    /*@OneToMany(mappedBy = "team", fetch = FetchType.LAZY, orphanRemoval = true)
+    protected Set<TeamNotification> teamNotifications = new HashSet<>();*/
 
     @Transient
     protected Map<Integer, Channel> channelIdMap = new HashMap<>();
@@ -156,13 +156,13 @@ public class Team {
         this.channels = channels;
     }
 
-    public Set<TeamNotification> getTeamNotifications() {
+    /*public Set<TeamNotification> getTeamNotifications() {
         return teamNotifications;
     }
 
     public void setTeamNotifications(Set<TeamNotification> teamNotifications) {
         this.teamNotifications = teamNotifications;
-    }
+    }*/
 
     public AppManager getAppManager() {
         return appManager;

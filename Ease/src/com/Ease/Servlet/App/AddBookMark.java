@@ -64,7 +64,7 @@ public class AddBookMark extends HttpServlet {
             if (link == null || link.equals(""))
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Empty link.");
             Profile profile = user.getDashboardManager().getProfile(Integer.parseInt(profileId));
-            site = ((Catalog) sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(websiteId));
+            site = ((Catalog) sm.getContextAttr("catalog")).getWebsiteWithId(Integer.parseInt(websiteId));
             LinkApp linkApp = LinkApp.createLinkApp(profile, profile.getApps().size(), name, link, site.getLogo(), sm);
             profile.addApp(linkApp);
             sm.setResponse(ServletManager.Code.Success, String.valueOf(linkApp.getDBid()));

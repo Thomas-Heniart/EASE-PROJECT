@@ -48,9 +48,6 @@
         <mapping class="com.Ease.Website.WebsiteInformation"/>
         <mapping class="com.Ease.Website.Sso"/>
         <mapping class="com.Ease.Website.Tag"/>
-        <mapping class="com.Ease.Notification.Notification"/>
-        <mapping class="com.Ease.Notification.TeamNotification"/>
-        <mapping class="com.Ease.Notification.TeamUserNotification"/>
-        <mapping class="com.Ease.Notification.ChannelNotification"/>
+        <mapping class="com.Ease.Team.TeamUserStatus"/>
     </session-factory>
 </hibernate-configuration>

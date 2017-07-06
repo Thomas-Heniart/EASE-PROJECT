@@ -50,7 +50,7 @@ public class ServletCreateShareableMultiApp extends HttpServlet {
             if (channel_id != null)
                 channel = team.getChannelWithId(channel_id);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            Website website = catalog.getWebsiteWithSingleId(website_id);
+            Website website = catalog.getWebsiteWithId(website_id);
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
             WebsiteApp websiteApp = WebsiteApp.createShareableMultiApp(app_name, website, reminderValue, sm);

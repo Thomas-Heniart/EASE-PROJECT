@@ -71,7 +71,7 @@ public class AddLogwithApp extends HttpServlet {
 				Profile profile = user.getDashboardManager().getProfile(Integer.parseInt(profileId));
 				WebsiteApp logwith = (WebsiteApp) user.getDashboardManager().getAppWithId(Integer.parseInt(logwithId));
 				for(Object websiteId : websiteIds) {
-					site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt((String)websiteId));
+					site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithId(Integer.parseInt((String)websiteId));
 					App newApp = LogwithApp.createLogwithApp(profile, profile.getApps().size(), (res.size() == 0) ? name : site.getName(), site, logwith, sm);
 					profile.addApp(newApp);
 					res.add(newApp.getDBid());

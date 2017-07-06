@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.Dashboard.User.User;
+import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
@@ -35,9 +36,19 @@ public class ServletTransferOwnership extends HttpServlet {
             TeamUser teamUser = sm.getTeamUserForTeam(team);
             Integer teamUser_id = sm.getIntParam("team_user_id", true);
             TeamUser new_teamUser_owner = team.getTeamUserWithId(teamUser_id);
+            if (!new_teamUser_owner.isVerified() || new_teamUser_owner.isDisabled())
+                throw new HttpServletException(HttpStatus.Forbidden, "You cannot transfer your ownership to this user.");
             teamUser.transferOwnershipTo(new_teamUser_owner);
             sm.saveOrUpdate(new_teamUser_owner);
             sm.saveOrUpdate(teamUser);
+            MailJetBuilder mailJetBuilder = new MailJetBuilder();
+            mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
+            mailJetBuilder.addTo(new_teamUser_owner.getEmail());
+            mailJetBuilder.setTemplateId(180252);
+            mailJetBuilder.addVariable("team_name", team.getName());
+            mailJetBuilder.addVariable("first_name", teamUser.getFirstName());
+            mailJetBuilder.addVariable("last_name", teamUser.getLastName());
+            mailJetBuilder.sendEmail();
             sm.setSuccess("Ownership transferred");
         } catch (Exception e) {
             sm.setError(e);

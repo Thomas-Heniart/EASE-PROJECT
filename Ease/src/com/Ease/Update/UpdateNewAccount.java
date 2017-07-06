@@ -32,7 +32,7 @@ public class UpdateNewAccount extends Update {
 		Catalog catalog = (Catalog) context.getAttribute("catalog");
 		rs.next();
 		String db_id = rs.getString(Data.ID.ordinal());
-		Website website = catalog.getWebsiteWithDBid(rs.getString(Data.WEBSITE_ID.ordinal()));
+		Website website = catalog.getWebsiteWithId(rs.getInt(Data.WEBSITE_ID.ordinal()));
 		String type = rs.getString(Data.TYPE.ordinal());
 		switch(type) {
 		case "updateNewLogWithApp":

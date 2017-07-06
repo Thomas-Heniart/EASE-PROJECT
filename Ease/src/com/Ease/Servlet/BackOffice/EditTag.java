@@ -78,7 +78,7 @@ public class EditTag extends HttpServlet {
 				List<Website> newWebsites = new LinkedList<Website>();
 				for (Object websiteId : websiteIds) {
 					int website_id = Integer.parseInt((String) websiteId);
-					newWebsites.add(catalog.getWebsiteWithSingleId(website_id));
+					newWebsites.add(catalog.getWebsiteWithId(website_id));
 				}
 				tag.edit(name, color_id, newWebsites, sm);
 				sm.setResponse(ServletManager.Code.Success, "Tag edited");

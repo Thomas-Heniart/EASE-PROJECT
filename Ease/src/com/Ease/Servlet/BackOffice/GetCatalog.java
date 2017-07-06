@@ -64,7 +64,7 @@ public class GetCatalog extends HttpServlet {
 			JSONArray res = new JSONArray();
 			for(Website website : catalog.getWebsitesAlphabetically()) {
 				JSONObject tmp = new JSONObject();
-				tmp.put("single_id", website.getSingleId());
+				tmp.put("single_id", website.getDb_id());
 				tmp.put("imgSrc", Variables.URL_PATH + website.getFolder() + "logo.png");
 				String name = website.getName();
 				List<String> infraNames = new LinkedList<String>();

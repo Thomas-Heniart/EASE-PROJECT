@@ -72,7 +72,7 @@ public class FilterScrap extends HttpServlet {
 						JSONObject newApp = new JSONObject();
 						newApp.put("websiteId", websiteSingleId);
 						int singleId = Integer.parseInt((String)websiteSingleId);
-						Website website = catalog.getWebsiteWithSingleId(singleId);
+						Website website = catalog.getWebsiteWithId(singleId);
 						newApp.put("name",website.getName());
 						newApp.put("profileId",firstProfileId);
 						newApp.put("img",website.getFolder()+"logo.png");
@@ -93,7 +93,7 @@ public class FilterScrap extends HttpServlet {
 						JSONObject newApp = new JSONObject();
 						newApp.put("websiteId", websiteSingleId);
 						int singleId = Integer.parseInt((String)websiteSingleId);
-						Website website = catalog.getWebsiteWithSingleId(singleId);
+						Website website = catalog.getWebsiteWithId(singleId);
 						newApp.put("name",website.getName());
 						newApp.put("profileId",firstProfileId);
 						newApp.put("img",website.getFolder()+"logo.png");
@@ -115,7 +115,7 @@ public class FilterScrap extends HttpServlet {
 						for(Object websiteId : websiteSingleIds){
 							JSONObject newApp = new JSONObject();
 							int singleId = Integer.parseInt((String)websiteId);
-							Website website = catalog.getWebsiteWithSingleId(singleId);
+							Website website = catalog.getWebsiteWithId(singleId);
 							newApp.put("name",website.getName());
 							newApp.put("profileId",firstProfileId);
 							newApp.put("login",app.get("login"));

@@ -13,7 +13,7 @@ import com.Ease.Utils.ServletManager;
 
 public class WebsiteInformation {
 
-    public static WebsiteInformation createInformation(String website_id, String name, String type, String priority, String placeholder, String placeholder_icon, DataBaseConnection db) throws GeneralException {
+    public static WebsiteInformation createInformation(Integer website_id, String name, String type, String priority, String placeholder, String placeholder_icon, DataBaseConnection db) throws GeneralException {
         DatabaseRequest request = db.prepareRequest("INSERT INTO websitesInformations VALUES (null, ?, ?, ?, ?, ?, ?);");
         request.setInt(website_id);
         request.setString(name);
@@ -25,7 +25,7 @@ public class WebsiteInformation {
         return new WebsiteInformation(db_id, name, type, placeholder, placeholder_icon, Integer.parseInt(priority));
     }
 
-    public static List<WebsiteInformation> loadInformations(String website_id, DataBaseConnection db) throws GeneralException {
+    public static List<WebsiteInformation> loadInformations(Integer website_id, DataBaseConnection db) throws GeneralException {
         List<WebsiteInformation> website_informations = new LinkedList<WebsiteInformation>();
         DatabaseRequest request = db.prepareRequest("SELECT * FROM websitesInformations WHERE website_id= ? ORDER BY priority;");
         request.setInt(website_id);

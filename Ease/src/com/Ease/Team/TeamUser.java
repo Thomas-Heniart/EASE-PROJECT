@@ -100,6 +100,13 @@ public class TeamUser {
     @Column(name = "disabled")
     private boolean disabled;
 
+    @Column(name = "admin_email")
+    protected String admin_email;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "status_id")
+    protected TeamUserStatus teamUserStatus;
+
     public TeamUser(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Boolean verified, Team team, TeamUserRole teamUserRole) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -111,6 +118,7 @@ public class TeamUser {
         this.teamUserRole = teamUserRole;
         this.arrivalDate = arrivalDate;
         this.disabled = false;
+        this.teamUserStatus = new TeamUserStatus();
     }
 
     public TeamUser() {
@@ -264,6 +272,22 @@ public class TeamUser {
         this.disabled = disabled;
     }
 
+    public String getAdmin_email() {
+        return admin_email;
+    }
+
+    public void setAdmin_email(String admin_email) {
+        this.admin_email = admin_email;
+    }
+
+    public TeamUserStatus getTeamUserStatus() {
+        return teamUserStatus;
+    }
+
+    public void setTeamUserStatus(TeamUserStatus teamUserStatus) {
+        this.teamUserStatus = teamUserStatus;
+    }
+
     /* public Set<TeamUserNotification> getTeamUserNotifications() {
         return teamUserNotifications;
     }
@@ -372,6 +396,10 @@ public class TeamUser {
         this.username = username;
     }
 
+    public boolean isRegistered() {
+        return (this.getUser_id() != null && !this.getUser_id().equals(""));
+    }
+
     public boolean isSuperior(TeamUser teamUserToModify) {
         return this.getTeamUserRole().isSuperior(teamUserToModify.getTeamUserRole());
     }
@@ -395,6 +423,15 @@ public class TeamUser {
             for (Channel channel : this.getTeam().getChannels())
                 channel.removeTeamUser(this, db);
             DatabaseRequest request = db.prepareRequest("DELETE FROM pendingTeamInvitations WHERE teamUser_id = ?;");
+            request.setInt(this.getDb_id());
+            request.set();
+            request = db.prepareRequest("DELETE FROM pendingTeamUserVerifications WHERE teamUser_id = ?;");
+            request.setInt(this.getDb_id());
+            request.set();
+            request = db.prepareRequest("DELETE FROM pendingJoinChannelRequests WHERE teamUser_id = ?;");
+            request.setInt(this.getDb_id());
+            request.set();
+            request = db.prepareRequest("DELETE FROM pendingJoinAppRequests WHERE team_user_id = ?;");
             request.setInt(this.getDb_id());
             request.set();
             db.commitTransaction(transaction);
@@ -426,7 +463,7 @@ public class TeamUser {
         return this.getTeam().getAppManager().getSharedAppsForTeamUser(this);
     }
 
-    public void deconnect() {
+    public void disconnect() {
         this.dashboard_user = null;
         this.deciphered_teamKey = null;
     }

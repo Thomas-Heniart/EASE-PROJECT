@@ -96,8 +96,8 @@ public class WebsiteVisited {
 	 * @param ServletManager sm
 	 * @throws GeneralException when delete statement fail
 	 */
-	public void removeFromDb(ServletManager sm) throws GeneralException {
-		DatabaseRequest request = sm.getDB().prepareRequest("DELETE FROM websitesVisited WHERE id = ?;");
+	public void removeFromDb(DataBaseConnection db) throws GeneralException {
+		DatabaseRequest request = db.prepareRequest("DELETE FROM websitesVisited WHERE id = ?;");
 		request.setInt(db_id);
 		request.set();
 	}

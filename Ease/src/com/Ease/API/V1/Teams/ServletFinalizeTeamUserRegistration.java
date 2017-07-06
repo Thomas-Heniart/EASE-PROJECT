@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
@@ -77,6 +78,16 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             teamUser.setDashboard_user(sm.getUser());
             sm.saveOrUpdate(teamUser);
             team.askVerificationForTeamUser(teamUser, verificationCode);
+            MailJetBuilder mailJetBuilder = new MailJetBuilder();
+            mailJetBuilder.setTemplateId(180141);
+            mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
+            mailJetBuilder.addTo(teamUser.getAdmin_email());
+            mailJetBuilder.addVariable("first_name", teamUser.getFirstName());
+            mailJetBuilder.addVariable("last_name", teamUser.getLastName());
+            mailJetBuilder.addVariable("team_name", team.getName());
+            mailJetBuilder.addVariable("user_pseudo", teamUser.getUsername());
+            mailJetBuilder.addVariable("user_email", teamUser.getEmail());
+            mailJetBuilder.sendEmail();
             sm.setSuccess(teamUser.getJson());
         } catch (Exception e) {
             sm.setError(e);

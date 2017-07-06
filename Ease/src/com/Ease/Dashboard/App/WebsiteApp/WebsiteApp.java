@@ -50,7 +50,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
             Integer websiteAppDBid = rs.getInt(Data.ID.ordinal());
             Integer reminderInterval = rs.getInt("reminderIntervalValue");
             String reminderType = rs.getString("reminderIntervalType");
-            Website website = ((Catalog) context.getAttribute("catalog")).getWebsiteWithDBid(rs.getString(Data.WEBSITE_ID.ordinal()));
+            Website website = ((Catalog) context.getAttribute("catalog")).getWebsiteWithId(rs.getInt(Data.WEBSITE_ID.ordinal()));
             /* GroupWebsiteApp groupWebsiteApp = null;
             String groupWebsiteId = rs.getString(Data.GROUP_WEBSITE_ID.ordinal());
 			if (groupWebsiteId != null)
@@ -263,7 +263,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
 
     public void fillJson(JSONObject json) {
         super.fillJson(json);
-        json.put("websiteId", website.getSingleId());
+        json.put("websiteId", website.getDb_id());
         json.put("ssoId", (website.getSso() == null) ? -1 : website.getSso().getSingleId());
         json.put("imgSrc", this.website.getFolder() + "logo.png");
         json.put("type", "emptyApp");
@@ -279,7 +279,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
 
     public JSONObject getJSON() {
         JSONObject jsonObject = super.getJSON();
-        jsonObject.put("website_id", this.website.getSingleId());
+        jsonObject.put("website_id", this.website.getDb_id());
         jsonObject.put("type", this.getType());
         jsonObject.put("isEmpty", this.isEmpty());
         return jsonObject;
@@ -387,7 +387,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
 
     public JSONObject getJsonWithoutId() {
         JSONObject jsonObject = super.getJsonWithoutId();
-        jsonObject.put("website_id", this.website.getSingleId());
+        jsonObject.put("website_id", this.website.getDb_id());
         return jsonObject;
     }
 }

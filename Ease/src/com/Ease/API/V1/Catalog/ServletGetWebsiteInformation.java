@@ -25,7 +25,7 @@ public class ServletGetWebsiteInformation extends HttpServlet {
             sm.needToBeConnected();
             Integer website_id = sm.getIntParam("id", true);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            Website website = catalog.getWebsiteWithSingleId(website_id);
+            Website website = catalog.getWebsiteWithId(website_id);
             sm.setSuccess(website.getInformationJson());
         } catch (Exception e) {
             sm.setError(e);
