@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Common;
 
 import com.Ease.Dashboard.User.User;
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -27,7 +28,7 @@ public class ServletRegistration extends HttpServlet {
             String username = sm.getStringParam("username", true);
             String email = sm.getStringParam("email", true);
             String password = sm.getStringParam("password", false);
-            String confirmPassword = sm.getStringParam("confirm_password", false);
+            String digits = sm.getStringParam("digits", false);
             Long registration_date = sm.getLongParam("registration_date", true);
             if (username == null || username.length() < 2 || username.length() > 30)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid username");
@@ -35,11 +36,19 @@ public class ServletRegistration extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid email");
             if (password == null || !Regex.isPassword(password))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid password");
-            if (confirmPassword == null || !confirmPassword.equals(password))
-                throw new HttpServletException(HttpStatus.BadRequest, "Passwords are not equals");
             if (registration_date == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid registration date");
-            User newUser = User.createUser(email, username, confirmPassword, registration_date, sm.getServletContext(), sm.getDB());
+            if (digits == null || digits.length() != 6)
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits");
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            hibernateQuery.querySQLString("SELECT digits FROM userPendingRegistrations WHERE email = ?");
+            hibernateQuery.setParameter(1, email);
+            String db_digits = (String) hibernateQuery.getSingleResult();
+            if (db_digits == null || db_digits.equals(""))
+                throw new HttpServletException(HttpStatus.BadRequest, "You didn't ask for an account.");
+            if (!db_digits.equals(digits))
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits.");
+            User newUser = User.createUser(email, username, password, registration_date, sm.getServletContext(), sm.getDB());
             ((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
             ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
             ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);

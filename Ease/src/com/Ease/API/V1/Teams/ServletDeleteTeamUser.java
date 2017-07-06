@@ -2,6 +2,7 @@ package com.Ease.API.V1.Teams;
 
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.SharedApp;
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
@@ -50,12 +51,18 @@ public class ServletDeleteTeamUser extends HttpServlet {
                 MailJetBuilder mailJetBuilder = new MailJetBuilder();
                 mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
                 mailJetBuilder.setTemplateId(180165);
-                mailJetBuilder.addTo(teamUser_to_delete.getAdmin_email());
+                mailJetBuilder.addTo(teamUser_connected.getEmail());
                 mailJetBuilder.addVariable("first_name", teamUser_to_delete.getFirstName());
                 mailJetBuilder.addVariable("last_name", teamUser_to_delete.getLastName());
                 mailJetBuilder.addVariable("team_name", team.getName());
                 mailJetBuilder.addVariable("apps", forEmail);
                 mailJetBuilder.sendEmail();
+            }
+            for (TeamUser teamUser : team.getTeamUsers()) {
+                if (teamUser.getAdmin_email().equals(teamUser_to_delete.getEmail())) {
+                    teamUser.setAdmin_email(teamUser_connected.getEmail());
+                    sm.saveOrUpdate(teamUser);
+                }
             }
             teamUser_to_delete.delete(sm.getDB());
             team.removeTeamUser(teamUser_to_delete);
