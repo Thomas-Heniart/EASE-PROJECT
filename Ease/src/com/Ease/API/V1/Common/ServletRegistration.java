@@ -52,6 +52,7 @@ public class ServletRegistration extends HttpServlet {
             if (!db_digits.equals(digits))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits.");
             User newUser = User.createUser(email, username, password, registration_date, send_news, sm.getServletContext(), sm.getDB());
+            sm.setUser(newUser);
             ((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
             ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
             ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);
