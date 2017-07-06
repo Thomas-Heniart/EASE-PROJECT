@@ -27,7 +27,8 @@ public class ServletRegistration extends HttpServlet {
             String username = sm.getStringParam("username", true);
             String email = sm.getStringParam("email", true);
             String password = sm.getStringParam("password", false);
-            String confirmPassword = sm.getStringParam("confirmPassword", false);
+            String confirmPassword = sm.getStringParam("confirm_password", false);
+            Long registration_date = sm.getLongParam("registration_date", true);
             if (username == null || username.length() < 2 || username.length() > 30)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid username");
             if (email == null || !Regex.isEmail(email))
@@ -36,7 +37,9 @@ public class ServletRegistration extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid password");
             if (confirmPassword == null || !confirmPassword.equals(password))
                 throw new HttpServletException(HttpStatus.BadRequest, "Passwords are not equals");
-            User newUser = User.createUser(email, username, confirmPassword, sm.getServletContext(), sm.getDB());
+            if (registration_date == null)
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid registration date");
+            User newUser = User.createUser(email, username, confirmPassword, registration_date, sm.getServletContext(), sm.getDB());
             ((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
             ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
             ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);

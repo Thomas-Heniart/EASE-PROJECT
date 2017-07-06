@@ -139,13 +139,12 @@ public class User {
     }
 
     @SuppressWarnings("unchecked")
-    public static User createUser(String email, String firstName, String password, ServletContext context, DataBaseConnection db) throws GeneralException, HttpServletException {
+    public static User createUser(String email, String firstName, String password, Long registration_date, ServletContext context, DataBaseConnection db) throws GeneralException, HttpServletException {
         int transaction = db.startTransaction();
         Option opt = Option.createOption(db);
         Keys keys = Keys.createKeys(password, db);
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date = new Date();
-        String registrationDate = dateFormat.format(date);
+        String registrationDate = dateFormat.format(new Date(registration_date));
         Status status = Status.createStatus(db);
         DatabaseRequest request = db.prepareRequest("SELECT * FROM users LEFT JOIN teamUsers ON users.id = teamUsers.user_id WHERE users.email = ? OR teamUsers.email = ?;");
         request.setString(email);

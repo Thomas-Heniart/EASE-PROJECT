@@ -1,6 +1,7 @@
 package com.Ease.Servlet;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
@@ -72,7 +73,6 @@ public class Registration extends HttpServlet {
             String email = sm.getServletParam("email", true);
             String password = sm.getServletParam("password", false);
             String confirmPassword = sm.getServletParam("confirmPassword", false);
-
             if (user != null)
                 Logout.logoutUser(user, sm); //throw new GeneralException(ServletManager.Code.ClientWarning, "You are logged on Ease.");
             if (fname == null || fname.length() < 2)
@@ -84,7 +84,7 @@ public class Registration extends HttpServlet {
             else if (confirmPassword == null || password.equals(confirmPassword) == false)
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Passwords are not the same.");
             else {
-                User newUser = User.createUser(email, fname, confirmPassword, sm.getServletContext(), sm.getDB());
+                User newUser = User.createUser(email, fname, confirmPassword, new Date().getTime(), sm.getServletContext(), sm.getDB());
                 session.setAttribute("user", newUser);
                 ((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
                 ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);

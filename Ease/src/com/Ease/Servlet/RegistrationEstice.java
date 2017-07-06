@@ -1,6 +1,7 @@
 package com.Ease.Servlet;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -73,7 +74,7 @@ public class RegistrationEstice extends HttpServlet {
             else if (confirmPassword == null || password.equals(confirmPassword) == false)
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Passwords are not the same.");
             else {
-                User newUser = User.createUser(email, fname, confirmPassword, sm.getServletContext(), sm.getDB());
+                User newUser = User.createUser(email, fname, confirmPassword, new Date().getTime(), sm.getServletContext(), sm.getDB());
                 GroupManager groupManager = (GroupManager) sm.getContextAttr("groupManager");
                 Group esticeGroup = groupManager.getGroupFromDBid("12");
                 esticeGroup.addUser(newUser.getEmail(), newUser.getFirstName(), false, sm);
