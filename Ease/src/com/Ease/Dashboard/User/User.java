@@ -173,6 +173,9 @@ public class User {
         request = db.prepareRequest("DELETE FROM pendingRegistrations WHERE email = ?;");
         request.setString(email);
         request.set();
+        request = db.prepareRequest("DELETE FROM userPendingRegistrations WHERE email = ?;");
+        request.setString(email);
+        request.set();
         db.commitTransaction(transaction);
         return newUser;
     }

@@ -37,7 +37,7 @@ public class ServletAskRegistration extends HttpServlet {
             hibernateQuery.querySQLString("DELETE FROM userPendingRegistrations WHERE email = ?");
             hibernateQuery.setParameter(1, email);
             hibernateQuery.executeUpdate();
-            hibernateQuery.querySQLString("INSERT INTO userPendingRegistrations VALUES (null, ?, ?)");
+            hibernateQuery.querySQLString("INSERT INTO userPendingRegistrations VALUES (null, ?, ?, default)");
             hibernateQuery.setParameter(1, email);
             hibernateQuery.setParameter(2, digits);
             hibernateQuery.executeUpdate();
