@@ -30,6 +30,7 @@ public class ServletRegistration extends HttpServlet {
             String password = sm.getStringParam("password", false);
             String digits = sm.getStringParam("digits", false);
             Long registration_date = sm.getLongParam("registration_date", true);
+            Boolean send_news = sm.getBooleanParam("newsletter", true);
             if (username == null || username.length() < 2 || username.length() > 30)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid username");
             if (email == null || !Regex.isEmail(email))
@@ -40,6 +41,8 @@ public class ServletRegistration extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid registration date");
             if (digits == null || digits.length() != 6)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits");
+            if (send_news == null)
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid newsletter param");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             hibernateQuery.querySQLString("SELECT digits FROM userPendingRegistrations WHERE email = ?");
             hibernateQuery.setParameter(1, email);
@@ -48,7 +51,7 @@ public class ServletRegistration extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "You didn't ask for an account.");
             if (!db_digits.equals(digits))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits.");
-            User newUser = User.createUser(email, username, password, registration_date, sm.getServletContext(), sm.getDB());
+            User newUser = User.createUser(email, username, password, registration_date, send_news, sm.getServletContext(), sm.getDB());
             ((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
             ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
             ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);

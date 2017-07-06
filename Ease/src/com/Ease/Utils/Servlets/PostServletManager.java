@@ -72,4 +72,8 @@ public class PostServletManager extends ServletManager {
         else
             return Math.toIntExact(getLongParam(paramName, saveInLogs));
     }
+
+    public Boolean getBooleanParam(String paramName, boolean saveInLogs) {
+        return (Boolean) this.getParam(paramName, saveInLogs);
+    }
 }

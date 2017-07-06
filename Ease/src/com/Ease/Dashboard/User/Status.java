@@ -24,9 +24,14 @@ public class Status {
         HOMEPAGE_EMAIL_SENT
     }
 
-    public static Status createStatus(DataBaseConnection db) throws GeneralException {
-        String db_id = db.prepareRequest("INSERT INTO status values (null, 0, 0, 0, 0, 0, 0, 0, 0, 0, default, 0, 0);").set().toString();
-        return new Status(db_id, false, false, false, false, false, false, false, false, false, false);
+    public static Status createStatus(Boolean send_news, DataBaseConnection db) throws GeneralException {
+        DatabaseRequest request = db.prepareRequest("INSERT INTO status values (null, 0, 0, 0, 0, 0, 0, 0, 0, 0, default, 0, 0, ?, 0);");
+        request.setBoolean(send_news);
+        String db_id = request.set().toString();
+        Status status = new Status(db_id, false, false, false, false, false, false, false, false, false, false);
+        status.setSend_news(send_news);
+        status.setTerms_reviewed(false);
+        return status;
     }
 
     public static Status loadStatus(String db_id, DataBaseConnection db) throws GeneralException {
@@ -46,6 +51,8 @@ public class Status {
         boolean invite_sended = rs.getBoolean(Data.INVITE_SENDED.ordinal());
         Status loadedStatus = new Status(db_id, first_connection, CGU, chrome_scrapping, apps_manually_added, click_on_app,
                 move_apps, open_catalog, add_an_app, tuto_done, invite_sended);
+        loadedStatus.setSend_news(rs.getBoolean("send_news"));
+        loadedStatus.setTerms_reviewed(rs.getBoolean("terms_reviewed"));
         loadedStatus.updateLastConnection(db);
         return loadedStatus;
     }
@@ -61,6 +68,8 @@ public class Status {
     protected boolean tuto_done;
     private boolean add_an_app;
     private boolean invite_sended;
+    private boolean send_news;
+    private boolean terms_reviewed;
 
     public Status(String db_id, boolean first_connection, boolean CGU, boolean chrome_scrapping,
                   boolean apps_manually_added, boolean click_on_app, boolean move_apps, boolean open_catalog,
@@ -172,6 +181,46 @@ public class Status {
 
     public boolean invite_sended() {
         return this.invite_sended;
+    }
+
+    public boolean send_news() {
+        return this.send_news;
+    }
+
+    public void setSend_news(boolean send_news) {
+        this.send_news = send_news;
+    }
+
+    public void setSend_news(boolean send_news, DataBaseConnection db) throws HttpServletException {
+        try {
+            DatabaseRequest request = db.prepareRequest("UPDATE status SET send_news = ? WHERE id = ?;");
+            request.setBoolean(send_news);
+            request.setInt(this.getDbId());
+            request.set();
+            this.setSend_news(send_news);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
+    public boolean terms_reviewed() {
+        return this.terms_reviewed;
+    }
+
+    public void setTerms_reviewed(boolean terms_reviewed) {
+        this.terms_reviewed = terms_reviewed;
+    }
+
+    public void setTerms_reviewed(boolean terms_reviewed, DataBaseConnection db) throws HttpServletException {
+        try {
+            DatabaseRequest request = db.prepareRequest("UDPATE status SET terms_reviewed = ? WHERE id = ?;");
+            request.setBoolean(terms_reviewed);
+            request.setInt(this.getDbId());
+            request.set();
+            this.setTerms_reviewed(terms_reviewed);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.BadRequest, e);
+        }
     }
 
     public void updateLastConnection(DataBaseConnection db) throws GeneralException {
