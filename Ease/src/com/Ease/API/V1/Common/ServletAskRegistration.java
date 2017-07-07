@@ -42,7 +42,7 @@ public class ServletAskRegistration extends HttpServlet {
             hibernateQuery.setParameter(2, digits);
             hibernateQuery.executeUpdate();
             MailJetBuilder mailJetBuilder = new MailJetBuilder();
-            mailJetBuilder.setTemplateId(178497);
+            mailJetBuilder.setTemplateId(180976);
             mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
             mailJetBuilder.addVariable("first_digits", digits.substring(0, 3));
             mailJetBuilder.addVariable("last_digits", digits.substring(3));
