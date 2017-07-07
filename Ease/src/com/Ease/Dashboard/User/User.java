@@ -164,12 +164,11 @@ public class User {
         User newUser = new User(db_id, firstName, email, keys, opt, false, false, sessionSave, status);
         Profile.createPersonnalProfiles(newUser, db);
         newUser.initializeDashboardManager(context, db);
-        UserEmail userEmail = UserEmail.createUserEmail(email, newUser, false, db);
+        UserEmail userEmail = UserEmail.createUserEmail(email, newUser, true, db);
         newUser.getUserEmails().put(email, userEmail);
         newUser.passStep("CGU", db);
         newUser.passStep("first_connection", db);
         //newUser.initializeUpdateManager(context, db);
-        newUser.sendVerificationEmail(email, true, db);
         request = db.prepareRequest("DELETE FROM pendingRegistrations WHERE email = ?;");
         request.setString(email);
         request.set();

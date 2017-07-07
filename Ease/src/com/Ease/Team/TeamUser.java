@@ -119,6 +119,7 @@ public class TeamUser {
         this.arrivalDate = arrivalDate;
         this.disabled = false;
         this.teamUserStatus = new TeamUserStatus();
+        this.teamUserStatus.setReminder_three_days_sended(false);
     }
 
     public TeamUser() {
@@ -154,8 +155,6 @@ public class TeamUser {
 
     public void setDashboard_user(com.Ease.Dashboard.User.User dashboard_user) {
         this.dashboard_user = dashboard_user;
-        if (dashboard_user != null)
-            this.user_id = dashboard_user.getDBid();
     }
 
     public void setDashboard_user(com.Ease.Dashboard.User.User user, DataBaseConnection db) throws GeneralException {
