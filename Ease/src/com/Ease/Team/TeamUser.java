@@ -107,6 +107,9 @@ public class TeamUser {
     @JoinColumn(name = "status_id")
     protected TeamUserStatus teamUserStatus;
 
+    @Column(name = "phone_number")
+    protected String phone_number;
+
     public TeamUser(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Boolean verified, Team team, TeamUserRole teamUserRole) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -287,6 +290,14 @@ public class TeamUser {
         this.teamUserStatus = teamUserStatus;
     }
 
+    public String getPhone_number() {
+        return phone_number;
+    }
+
+    public void setPhone_number(String phone_number) {
+        this.phone_number = phone_number;
+    }
+
     /* public Set<TeamUserNotification> getTeamUserNotifications() {
         return teamUserNotifications;
     }
@@ -314,6 +325,7 @@ public class TeamUser {
         if (departureDate != null)
             res.put("departure_date", this.dateFormat.format(this.departureDate));
         res.put("verified", this.verified);
+        res.put("phone_number", this.getPhone_number());
         JSONArray channel_ids = new JSONArray();
         for (Channel channel : this.getTeam().getChannelsForTeamUser(this))
             channel_ids.add(channel.getDb_id());
