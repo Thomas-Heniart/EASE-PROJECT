@@ -33,7 +33,9 @@ public class ServletEditTeamUserRole extends HttpServlet {
             TeamUser teamUserToModify = team.getTeamUserWithId(teamUser_id);
             if (!(teamUser.isSuperior(teamUserToModify) || teamUser == teamUserToModify))
                 throw new HttpServletException(HttpStatus.Forbidden, "You don't have access.");
-            Integer roleValue = sm.getIntParam("role", true);
+            if (teamUserToModify.isTeamOwner())
+                throw new HttpServletException(HttpStatus.Forbidden, "You are the owner, you can only transfer your ownership to someone else.");
+            Integer roleValue = Integer.valueOf(sm.getStringParam("role", true));
             if (roleValue == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty role.");
             teamUserToModify.getTeamUserRole().setRoleValue(roleValue);

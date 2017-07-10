@@ -53,7 +53,7 @@ public class ServletCreateShareableSingleApp extends HttpServlet {
             if (reminderInterval == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "Reminder cannot be null");
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            Website website = catalog.getWebsiteWithSingleId(website_id);
+            Website website = catalog.getWebsiteWithId(website_id);
             Channel channel = null;
             if (channel_id != null)
                 channel = team.getChannelWithId(channel_id);

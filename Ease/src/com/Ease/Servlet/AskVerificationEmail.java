@@ -49,7 +49,7 @@ public class AskVerificationEmail extends HttpServlet {
 			String email = sm.getServletParam("email", true);
 			if (email == null || email.equals(""))
 				throw new GeneralException(ServletManager.Code.ClientError, "Wrong email.");
-			user.sendVerificationEmail(email, false, sm);
+			user.sendVerificationEmail(email, false, sm.getDB());
 			sm.setResponse(ServletManager.Code.Success, "Verification email sended.");
 		} catch (GeneralException e) {
 			sm.setResponse(e);

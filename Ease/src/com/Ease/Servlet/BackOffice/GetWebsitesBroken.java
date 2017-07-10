@@ -57,7 +57,7 @@ public class GetWebsitesBroken extends HttpServlet {
 			for (Website websiteBroken : websitesBroken) {
 				JSONObject tmp = new JSONObject();
 				tmp.put("url", websiteBroken.getHostname());
-				tmp.put("single_id", websiteBroken.getSingleId());
+				tmp.put("id", websiteBroken.getDb_id());
 				tmp.put("count", websiteBroken.getVisits());
 				tmp.put("isBlacklisted", websiteBroken.isBlacklisted());
 				res.add(tmp);

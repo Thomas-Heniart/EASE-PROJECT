@@ -15,8 +15,7 @@ public class Option {
 		HOMEPAGE_STATE
 	}
 	
-	public static Option createOption(ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
+	public static Option createOption(DataBaseConnection db) throws GeneralException {
 		int db_id = db.prepareRequest("INSERT INTO options values (null, 0, 0, 0);").set();
 		return new Option(String.valueOf(db_id), false, false);
 	}

@@ -42,8 +42,11 @@ public class ServletEditTeamUserDepartureDate extends HttpServlet {
                 teamUser_to_modify.setDepartureDate(null);
             else {
                 try {
-                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    teamUser_to_modify.setDepartureDate(dateFormat.parse(departureDateString));
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Date departure_date = dateFormat.parse(departureDateString);
+                    if (departure_date.getTime() <= sm.getTimestamp().getTime())
+                        throw new HttpServletException(HttpStatus.BadRequest, "Please, provide a valid departure date.");
+                    teamUser_to_modify.setDepartureDate(departure_date);
                 } catch (ParseException e) {
                     throw new HttpServletException(HttpStatus.InternError, "Wrong date format.");
                 }

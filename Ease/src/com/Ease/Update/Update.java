@@ -3,14 +3,12 @@ package com.Ease.Update;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.Ease.Utils.*;
 import org.json.simple.JSONObject;
 
 import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
+
+import javax.servlet.ServletContext;
 
 public class Update {
 	
@@ -21,8 +19,7 @@ public class Update {
 		TYPE
 	}
 	
-	public static List<Update> loadUpdates(User user, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
+	public static List<Update> loadUpdates(User user, ServletContext context, DataBaseConnection db) throws GeneralException {
 		List<Update> updates = new LinkedList<Update>();
 		try {
 			DatabaseRequest request = db.prepareRequest("SELECT * FROM updates WHERE user_id = ? AND id NOT IN (SELECT update_id FROM updatesRemoved);");
@@ -36,11 +33,11 @@ public class Update {
 				type = rs.getString(Data.TYPE.ordinal());
 				switch (type) {
 				case "updateNewPassword":
-					update = UpdateNewPassword.loadUpdateNewPassword(db_id, user, sm);
+					update = UpdateNewPassword.loadUpdateNewPassword(db_id, user, db);
 					break;
 
 				case "updateNewAccount":
-					update = UpdateNewAccount.loadUpdateNewAccount(db_id, user, sm);
+					update = UpdateNewAccount.loadUpdateNewAccount(db_id, user, context, db);
 					break;
 
 				default:

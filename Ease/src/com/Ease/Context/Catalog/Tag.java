@@ -121,12 +121,12 @@ public class Tag {
 		return colors[this.color_id];
 	}
 	
-	public void setSites(Map<String, Website> sitesDBmap, DataBaseConnection db) throws GeneralException {
+	public void setSites(Map<Integer, Website> websiteIdMap, DataBaseConnection db) throws GeneralException {
 		DatabaseRequest request = db.prepareRequest("SELECT website_id FROM tagsAndSitesMap WHERE tag_id= ?;");
 		request.setInt(this.db_id);
 		DatabaseResult rs = request.get();
 		while (rs.next())
-			this.sites.add(sitesDBmap.get(rs.getString(1)));
+			this.sites.add(websiteIdMap.get(rs.getInt(1)));
 	}
 	
 	private void editWebsites(List<Website> newWebsites, DataBaseConnection db) throws GeneralException {
@@ -158,7 +158,7 @@ public class Tag {
 	public JSONArray search(JSONArray result, String search) {
 		for (Website site : this.sites) {
 			if (site.getName().toUpperCase().startsWith(search.toUpperCase()) && site.work()) {
-				result.add(String.valueOf(site.getSingleId()));
+				result.add(String.valueOf(site.getDb_id()));
 			}
 		}
 		return result;

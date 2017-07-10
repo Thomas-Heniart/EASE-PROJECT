@@ -39,8 +39,8 @@ public class Channel {
     @JoinTable(name = "pendingJoinChannelRequests", joinColumns = {@JoinColumn(name = "channel_id")}, inverseJoinColumns = {@JoinColumn(name = "teamUser_id")})
     protected List<TeamUser> pending_teamUsers = new LinkedList<>();
 
-    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    protected Set<ChannelNotification> channelNotifications = new HashSet<>();
+    /* @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    protected Set<ChannelNotification> channelNotifications = new HashSet<>(); */
 
     public Channel(Team team, String name, String purpose, List<TeamUser> teamUsers) {
         this.team = team;
@@ -111,13 +111,13 @@ public class Channel {
         this.pending_teamUsers = pending_teamUsers;
     }
 
-    public Set<ChannelNotification> getChannelNotifications() {
+    /* public Set<ChannelNotification> getChannelNotifications() {
         return channelNotifications;
     }
 
     public void setChannelNotifications(Set<ChannelNotification> channelNotifications) {
         this.channelNotifications = channelNotifications;
-    }
+    } */
 
     private void addTeamUser(TeamUser teamUser) {
         this.teamUsers.add(teamUser);

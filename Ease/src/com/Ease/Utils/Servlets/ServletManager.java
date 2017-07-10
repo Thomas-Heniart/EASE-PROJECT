@@ -39,6 +39,7 @@ public abstract class ServletManager {
     protected JSONObject jsonObjectResponse;
     protected JSONArray jsonArrayResponse;
     protected String errorMessage;
+    protected Date timestamp;
 
     protected HibernateQuery hibernateQuery;
 
@@ -51,7 +52,6 @@ public abstract class ServletManager {
         this.user = (User) request.getSession().getAttribute("user");
         this.teamUser = (TeamUser) request.getSession().getAttribute("teamUser");
         this.saveLogs = saveLogs;
-
     }
 
     protected void setSuccess() {
@@ -117,8 +117,11 @@ public abstract class ServletManager {
         }
     }
 
+    protected abstract Date getCurrentTime() throws HttpServletException;
+
     public void needToBeTeamUser() throws HttpServletException {
         this.needToBeConnected();
+        this.timestamp = this.getCurrentTime();
         if (this.getUser().getTeamUsers().isEmpty())
             throw new HttpServletException(HttpStatus.Forbidden);
     }
@@ -132,7 +135,7 @@ public abstract class ServletManager {
             throw new HttpServletException(HttpStatus.BadRequest, "Missing team id parameter");
         this.needToBeTeamUser();
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
-            if (teamUser.getTeam().getDb_id().equals(team_id) && !teamUser.isDisabled() && teamUser.isVerified())
+            if (teamUser.getTeam().getDb_id().equals(team_id) && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() != null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
                 return;
         }
         throw new HttpServletException(HttpStatus.Forbidden);
@@ -409,5 +412,9 @@ public abstract class ServletManager {
                 return teamUser;
         }
         return null;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
     }
 }

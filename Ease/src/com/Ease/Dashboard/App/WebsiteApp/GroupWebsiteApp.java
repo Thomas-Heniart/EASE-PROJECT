@@ -45,7 +45,7 @@ public enum Data {
 		request.setInt(db_id);
 		DatabaseResult rs = request.get();
 		if (rs.next()) {
-			Website website = ((Catalog)context.getAttribute("catalog")).getWebsiteWithDBid(rs.getString(Data.WEBSITE_ID.ordinal()));
+			Website website = ((Catalog)context.getAttribute("catalog")).getWebsiteWithId(rs.getInt(Data.WEBSITE_ID.ordinal()));
 			String db_id2 = rs.getString(Data.ID.ordinal());
 			switch (rs.getString(Data.TYPE.ordinal())) {
 				case "groupEmptyApp":

@@ -149,7 +149,7 @@ public class WebsitesVisitedManager {
 	 * @throws GeneralException when delete statement fail
 	 */
 	public void removeWebsiteVisited(WebsiteVisited websiteVisited, ServletManager sm) throws GeneralException {
-		websiteVisited.removeFromDb(sm);
+		websiteVisited.removeFromDb(sm.getDB());
 		this.websitesVisited.remove(websiteVisited);
 		this.websitesVisitedDbMap.remove(websiteVisited.getDb_id());
 		this.websitesVisitedIdMap.remove(websiteVisited.getSingle_id());
@@ -422,11 +422,11 @@ public class WebsitesVisitedManager {
 	 * @return int, the number of visits
 	 * @throws GeneralException when delete statement fail
 	 */
-	public int websiteDone(String url, ServletManager sm) throws GeneralException {
+	public int websiteDone(String url, DataBaseConnection db) throws GeneralException {
 		WebsiteVisited websiteVisited = this.findWebsiteVisitedWithUrl(url);
 		if (websiteVisited == null)
 			return 0;
-		websiteVisited.removeFromDb(sm);
+		websiteVisited.removeFromDb(db);
 		return websiteVisited.getCount();
 	}
 }

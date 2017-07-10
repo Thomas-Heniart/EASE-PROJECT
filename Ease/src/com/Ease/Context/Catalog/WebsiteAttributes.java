@@ -66,8 +66,8 @@ public class WebsiteAttributes {
 		this.visits += count;
 	}
 	
-	public void setVisits(int visits, ServletManager sm) throws GeneralException {
-		DatabaseRequest request = sm.getDB().prepareRequest("UPDATE websiteAttributes SET visits = ? WHERE id = ?;");
+	public void setVisits(int visits, DataBaseConnection db) throws GeneralException {
+		DatabaseRequest request = db.prepareRequest("UPDATE websiteAttributes SET visits = ? WHERE id = ?;");
 		request.setInt(visits);
 		request.setInt(db_id);
 		request.set();

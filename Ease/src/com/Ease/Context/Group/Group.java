@@ -109,7 +109,7 @@ public class Group {
 		DatabaseResult rs = request.get();
 		while (rs.next()) {
 			System.out.println("Catalog websites size : " + catalog.getWebsites().size());
-			this.groupWebsites.add(catalog.getWebsiteWithDBid(rs.getString(1)));
+			this.groupWebsites.add(catalog.getWebsiteWithId(rs.getInt(1)));
 		}
 	}
 

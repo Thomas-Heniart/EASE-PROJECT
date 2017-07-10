@@ -1,11 +1,17 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.App.SharedApp;
+import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -32,9 +38,36 @@ public class ServletDeleteTeamUser extends HttpServlet {
             TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
             if (!teamUser_connected.isSuperior(teamUser_to_delete))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot do this");
+            JSONArray forEmail = new JSONArray();
+            for (SharedApp sharedApp : team.getAppManager().getSharedAppsForTeamUser(teamUser_to_delete)) {
+                App holder = (App) sharedApp.getHolder();
+                if (holder.isEmpty() || (holder.isClassicApp() && sharedApp.getHolder().getTeamUser_tenants().size() == 1)) {
+                    JSONObject app = new JSONObject();
+                    app.put("name", holder.getName());
+                    forEmail.put(app);
+                }
+            }
+            if (forEmail.length() != 0 && teamUser_to_delete.getAdmin_email() != null) {
+                MailJetBuilder mailJetBuilder = new MailJetBuilder();
+                mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
+                mailJetBuilder.setTemplateId(180165);
+                mailJetBuilder.addTo(teamUser_connected.getEmail());
+                mailJetBuilder.addVariable("first_name", teamUser_to_delete.getFirstName());
+                mailJetBuilder.addVariable("last_name", teamUser_to_delete.getLastName());
+                mailJetBuilder.addVariable("team_name", team.getName());
+                mailJetBuilder.addVariable("apps", forEmail);
+                mailJetBuilder.sendEmail();
+            }
+            for (TeamUser teamUser : team.getTeamUsers()) {
+                if (teamUser.getAdmin_email().equals(teamUser_to_delete.getEmail())) {
+                    teamUser.setAdmin_email(teamUser_connected.getEmail());
+                    sm.saveOrUpdate(teamUser);
+                }
+            }
             teamUser_to_delete.delete(sm.getDB());
             team.removeTeamUser(teamUser_to_delete);
             sm.deleteObject(teamUser_to_delete);
+
             sm.setSuccess("TeamUser deleted");
         } catch (Exception e) {
             sm.setError(e);

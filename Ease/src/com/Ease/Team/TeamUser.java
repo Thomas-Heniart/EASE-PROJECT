@@ -100,6 +100,16 @@ public class TeamUser {
     @Column(name = "disabled")
     private boolean disabled;
 
+    @Column(name = "admin_email")
+    protected String admin_email;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "status_id")
+    protected TeamUserStatus teamUserStatus;
+
+    @Column(name = "phone_number")
+    protected String phone_number;
+
     public TeamUser(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Boolean verified, Team team, TeamUserRole teamUserRole) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -111,6 +121,8 @@ public class TeamUser {
         this.teamUserRole = teamUserRole;
         this.arrivalDate = arrivalDate;
         this.disabled = false;
+        this.teamUserStatus = new TeamUserStatus();
+        this.teamUserStatus.setReminder_three_days_sended(false);
     }
 
     public TeamUser() {
@@ -146,8 +158,6 @@ public class TeamUser {
 
     public void setDashboard_user(com.Ease.Dashboard.User.User dashboard_user) {
         this.dashboard_user = dashboard_user;
-        if (dashboard_user != null)
-            this.user_id = dashboard_user.getDBid();
     }
 
     public void setDashboard_user(com.Ease.Dashboard.User.User user, DataBaseConnection db) throws GeneralException {
@@ -264,6 +274,30 @@ public class TeamUser {
         this.disabled = disabled;
     }
 
+    public String getAdmin_email() {
+        return admin_email;
+    }
+
+    public void setAdmin_email(String admin_email) {
+        this.admin_email = admin_email;
+    }
+
+    public TeamUserStatus getTeamUserStatus() {
+        return teamUserStatus;
+    }
+
+    public void setTeamUserStatus(TeamUserStatus teamUserStatus) {
+        this.teamUserStatus = teamUserStatus;
+    }
+
+    public String getPhone_number() {
+        return phone_number;
+    }
+
+    public void setPhone_number(String phone_number) {
+        this.phone_number = phone_number;
+    }
+
     /* public Set<TeamUserNotification> getTeamUserNotifications() {
         return teamUserNotifications;
     }
@@ -291,6 +325,7 @@ public class TeamUser {
         if (departureDate != null)
             res.put("departure_date", this.dateFormat.format(this.departureDate));
         res.put("verified", this.verified);
+        res.put("phone_number", this.getPhone_number());
         JSONArray channel_ids = new JSONArray();
         for (Channel channel : this.getTeam().getChannelsForTeamUser(this))
             channel_ids.add(channel.getDb_id());
@@ -372,6 +407,10 @@ public class TeamUser {
         this.username = username;
     }
 
+    public boolean isRegistered() {
+        return (this.getUser_id() != null && !this.getUser_id().equals(""));
+    }
+
     public boolean isSuperior(TeamUser teamUserToModify) {
         return this.getTeamUserRole().isSuperior(teamUserToModify.getTeamUserRole());
     }
@@ -395,6 +434,15 @@ public class TeamUser {
             for (Channel channel : this.getTeam().getChannels())
                 channel.removeTeamUser(this, db);
             DatabaseRequest request = db.prepareRequest("DELETE FROM pendingTeamInvitations WHERE teamUser_id = ?;");
+            request.setInt(this.getDb_id());
+            request.set();
+            request = db.prepareRequest("DELETE FROM pendingTeamUserVerifications WHERE teamUser_id = ?;");
+            request.setInt(this.getDb_id());
+            request.set();
+            request = db.prepareRequest("DELETE FROM pendingJoinChannelRequests WHERE teamUser_id = ?;");
+            request.setInt(this.getDb_id());
+            request.set();
+            request = db.prepareRequest("DELETE FROM pendingJoinAppRequests WHERE team_user_id = ?;");
             request.setInt(this.getDb_id());
             request.set();
             db.commitTransaction(transaction);
@@ -426,7 +474,7 @@ public class TeamUser {
         return this.getTeam().getAppManager().getSharedAppsForTeamUser(this);
     }
 
-    public void deconnect() {
+    public void disconnect() {
         this.dashboard_user = null;
         this.deciphered_teamKey = null;
     }

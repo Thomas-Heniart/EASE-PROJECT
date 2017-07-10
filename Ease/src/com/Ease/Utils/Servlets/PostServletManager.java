@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Date;
 
 public class PostServletManager extends ServletManager {
 
@@ -32,6 +33,7 @@ public class PostServletManager extends ServletManager {
             e.printStackTrace();
             throw new IOException();
         }
+        Long now = this.getLongParam("now", false);
     }
 
     protected void setInternError() {
@@ -48,6 +50,14 @@ public class PostServletManager extends ServletManager {
 
     protected void setBadRequest() {
         response.setStatus(HttpStatus.BadRequest.getValue());
+    }
+
+    @Override
+    protected Date getCurrentTime() throws HttpServletException {
+        Long timestamp = this.getLongParam("timestamp", false);
+        if (timestamp == null)
+            throw new HttpServletException(HttpStatus.BadRequest, "Missing current time.");
+        return new Date(timestamp);
     }
 
     public Object getParam(String paramName, boolean saveInLogs) {
@@ -71,5 +81,9 @@ public class PostServletManager extends ServletManager {
             return null;
         else
             return Math.toIntExact(getLongParam(paramName, saveInLogs));
+    }
+
+    public Boolean getBooleanParam(String paramName, boolean saveInLogs) {
+        return (Boolean) this.getParam(paramName, saveInLogs);
     }
 }

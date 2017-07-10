@@ -88,7 +88,7 @@ public class AddClassicApp extends HttpServlet {
 				JSONArray res = new JSONArray();
 				Profile profile = user.getDashboardManager().getProfile(Integer.parseInt(profileId));
 				for(Object websiteId : websiteIds) {
-					Website site = catalog.getWebsiteWithSingleId(Integer.parseInt((String)websiteId));
+					Website site = catalog.getWebsiteWithId(Integer.parseInt((String)websiteId));
 					if (site == null)
 						throw new GeneralException(ServletManager.Code.ClientError, "This website does not exist");
 					Map<String, String> infos = site.getNeededInfos(sm);

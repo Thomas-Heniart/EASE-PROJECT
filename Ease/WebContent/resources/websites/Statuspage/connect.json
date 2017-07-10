@@ -1,0 +1,30 @@
+{
+    "name":"StatusPage",
+    "lastLogin":"",
+    "home":"https://manage.statuspage.io/login",
+    "connect":{
+        "todo":[
+            {"action":"fill", "what":"login", "search":"#email"},
+            {"action":"fill", "what":"password", "search":"#password"},
+            {"action":"click", "search":"form[id*='login'] button[name*='button']"}
+            ]
+    },
+    "logout":{
+        "todo":[
+            {"action":"clickona", "search":"a[title*='logout']"},
+        ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a[title*='logout']"}
+    ],
+    "Facebook":{
+        "todo":[
+            {"action":"clickona", "search":"a.social-button__facebook"}
+        ]
+    },
+    "LinkedIn": {
+        "todo": [
+            {"action":"clickona", "search":"a.social-button__linkedin"}
+        ]
+    }
+}

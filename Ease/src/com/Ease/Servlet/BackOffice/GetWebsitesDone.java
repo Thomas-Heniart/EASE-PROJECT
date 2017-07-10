@@ -57,7 +57,7 @@ public class GetWebsitesDone extends HttpServlet {
 			for (Website websiteDone : websitesDone) {
 				JSONObject tmp = new JSONObject();
 				tmp.put("url", websiteDone.getHostname());
-				tmp.put("single_id", websiteDone.getSingleId());
+				tmp.put("id", websiteDone.getDb_id());
 				tmp.put("count", websiteDone.getVisits());
 				res.add(tmp);
 			}

@@ -36,7 +36,7 @@ public class ServletConnection extends HttpServlet {
             String password = sm.getStringParam("password", false);
             String client_ip = IpUtils.getIpAddr(request);
             User user = sm.getUser();
-            if (sm.getUser() != null)
+            if (user != null)
                 throw new HttpServletException(HttpStatus.BadRequest, "You are already logged in");
             DataBaseConnection db = sm.getDB();
             addIpInDataBase(client_ip, db);

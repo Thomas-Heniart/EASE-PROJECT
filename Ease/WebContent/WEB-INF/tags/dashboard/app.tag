@@ -7,7 +7,7 @@
 	<c:when test="${app.getType() eq 'WebsiteApp'}">
 	<div class="siteLinkBox emptyApp"
 	login=""
-	webId="${app.getSite().getSingleId()}"
+	webId="${app.getSite().getDb_id()}"
 	name="${app.getName()}"
 	move="true"	
 	id="${app.getDBid()}"
@@ -47,7 +47,7 @@
 	<c:forEach items="${app.getAccount().getAccountInformationsWithoutPassword()}" var="entry">
 		${entry.getInformationName()}="${entry.getInformationValue()}"
 	</c:forEach>
-	 webId="${app.getSite().getSingleId()}"
+	 webId="${app.getSite().getDb_id()}"
 	 name="${app.getName()}"
 	 id="${app.getDBid()}"
 	 ssoId="${app.getSite().getSsoId()}"
@@ -58,7 +58,7 @@
 </c:if>
 <c:if test="${app.getType() eq 'LogwithApp'}">
 <div class="siteLinkBox"
-	 webId="${app.getSite().getSingleId()}"
+	 webId="${app.getSite().getDb_id()}"
 	 name="${app.getName()}"
 	 id="${app.getDBid()}"
 	 ssoId="${app.getSite().getSsoId()}"

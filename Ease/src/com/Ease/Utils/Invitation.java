@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.mail.MessagingException;
+import javax.servlet.ServletContext;
 
 import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupManager;
@@ -13,10 +14,9 @@ import com.Ease.Utils.Crypto.CodeGenerator;
 
 public class Invitation {
 
-	public static List<Group> verifyInvitation(String email, String invitationCode, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
+	public static List<Group> verifyInvitation(String email, String invitationCode, ServletContext context, DataBaseConnection db) throws GeneralException {
 		List<Group> groups = new LinkedList<Group>();
-		GroupManager groupManager = (GroupManager) sm.getContextAttr("groupManager");
+		GroupManager groupManager = (GroupManager) context.getAttribute("groupManager");
 		DatabaseRequest request = db.prepareRequest("SELECT id FROM invitations WHERE email= ? AND linkCode= ?;");
 		request.setString(email);
 		request.setString(invitationCode);

@@ -96,7 +96,7 @@ public class TutoAddApps extends HttpServlet {
 						profile = user.getDashboardManager().getProfile(Integer.parseInt(obj.get("profileId").toString()));
 					}
 				}
-				site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithSingleId(Integer.parseInt(obj.get("websiteId").toString()));
+				site = ((Catalog)sm.getContextAttr("catalog")).getWebsiteWithId(Integer.parseInt(obj.get("websiteId").toString()));
 				if (i % 10 == 0 && i != 0) {
 					profile = user.getDashboardManager().addProfile("Choose name", "#ff9d34", sm.getDB());
 				}

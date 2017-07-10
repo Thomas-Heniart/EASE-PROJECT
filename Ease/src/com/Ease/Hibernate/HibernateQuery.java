@@ -48,6 +48,8 @@ public class HibernateQuery {
     public void commit() throws HttpServletException {
         try {
             //this.session.flush();
+            if (!this.transaction.isActive())
+                return;
             this.transaction.commit();
             System.out.println("Hibernate transaction commit");
         } catch (RuntimeException e) {

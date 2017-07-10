@@ -26,35 +26,15 @@ public class Catalog {
 	protected Map<String, Sso> ssoDBmap;
 	protected Map<Integer, Sso> ssoIDmap;
 	protected List<Sso> ssos;
-	protected Map<String, Website> websiteDBmap;
-	protected Map<Integer, Website> websiteIDmap;
+	protected Map<Integer, Website> websiteIdMap = new HashMap<>();
 	protected List<Website> websites;
 	protected Map<String, Tag> tagDBmap;
 	protected Map<Integer, Tag> tagIDmap;
 	protected List<Tag> tags;
 	
-	public static Catalog updateCatalog(DataBaseConnection db, ServletContext context, Catalog oldCatalog) throws GeneralException {
+	public static Catalog updateCatalog(DataBaseConnection db, ServletContext context) throws GeneralException {
 		Catalog newCatalog = new Catalog(db, context);
-		newCatalog.updateSingleIdsWith(oldCatalog);
 		return newCatalog;
-	}
-	
-	private void updateSingleIdsWith(Catalog oldCatalog) {
-		for (Website oldWebsite : oldCatalog.getWebsites()) {
-			Website newWebsite = this.websiteDBmap.get(oldWebsite.getDb_id());
-			if (newWebsite != null)
-				newWebsite.setSingleId(oldWebsite.getSingleId());
-		}
-		for (Tag oldTag : oldCatalog.getTags()) {
-			Tag newTag = this.tagDBmap.get(oldTag.getDbId());
-			if (newTag != null)
-				newTag.setSingleId(oldTag.getSingleId());
-		}
-		for (Sso oldSso : oldCatalog.getSsos()) {
-			Sso newSso = this.ssoDBmap.get(oldSso.getDbid());
-			if (newSso != null)
-				newSso.setSingleId(oldSso.getSingleId());
-		}
 	}
 
 	public Catalog(DataBaseConnection db, ServletContext context) throws GeneralException {
@@ -67,11 +47,8 @@ public class Catalog {
 			ssoIDmap.put(sso.getSingleId(), sso);
 		}
 		websites = Website.loadWebsites(db, ssoDBmap, context);
-		websiteDBmap = new HashMap<String, Website>();
-		websiteIDmap = new HashMap<Integer, Website>();
 		for (Website site : websites) {
-			websiteDBmap.put(site.getDb_id(), site);
-			websiteIDmap.put(site.getSingleId(), site);
+			websiteIdMap.put(site.getDb_id(), site);
 		}
 		for (Website site : websites)
 			site.loadLoginWithWebsites(db, this);
@@ -81,15 +58,14 @@ public class Catalog {
 		for (Tag tag : tags) {
 			tagDBmap.put(tag.getDbId(), tag);
 			tagIDmap.put(tag.getSingleId(), tag);
-			tag.setSites(websiteDBmap, db);
+			tag.setSites(websiteIdMap, db);
 		}
 	}
 	
 	public Website addWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, boolean noLogin, boolean noScrap, String[] haveLoginWith, String[] infoNames, String[] infoTypes, String[] placeholders, String[] placeholderIcons, String ssoId, String team_id, ServletManager sm) throws GeneralException {
-		Website site = Website.createWebsite(url, name, homePage, folder, haveLoginButton, noLogin, noScrap, haveLoginWith, infoNames, infoTypes, placeholders, placeholderIcons, this, ssoId, team_id, sm);
+		Website site = Website.createWebsite(url, name, homePage, folder, haveLoginButton, noLogin, noScrap, haveLoginWith, infoNames, infoTypes, placeholders, placeholderIcons, this, ssoId, team_id, sm.getServletContext(), sm.getDB());
 		websites.add(site);
-		websiteDBmap.put(site.getDb_id(), site);
-		websiteIDmap.put(site.getSingleId(), site);
+		websiteIdMap.put(site.getDb_id(), site);
 		return site;
 	}
 	
@@ -99,20 +75,12 @@ public class Catalog {
 	 * 
 	 */
 	
-	public Website getWebsiteWithDBid(String db_id) throws GeneralException {
+	public Website getWebsiteWithId(Integer db_id) throws GeneralException {
 		Website ret = null;
-		ret = websiteDBmap.get(db_id);
+		ret = this.websiteIdMap.get(db_id);
 		if (ret != null)
 			return ret;
-		throw new GeneralException(ServletManager.Code.InternError, "This website dosen't exist.");
-	}
-	
-	public Website getWebsiteWithSingleId(Integer single_id) throws GeneralException {
-		Website ret = null;
-		ret = websiteIDmap.get(single_id);
-		if (ret != null)
-			return ret;
-		throw new GeneralException(ServletManager.Code.InternError, "This website dosen't exist.");
+		throw new GeneralException(ServletManager.Code.InternError, "This website doesn't exist.");
 	}
 	
 	public List<Website> getWebsites() {
@@ -231,7 +199,7 @@ public class Catalog {
 		if (tags.size() <= 0) {
 			for (Website site : this.websites) {
 				if (site.getName().toUpperCase().startsWith(search.toUpperCase()) && site.work()) {
-					result.add(String.valueOf(site.getSingleId()));
+					result.add(String.valueOf(site.getDb_id()));
 				}
 			}
 		} else {
@@ -322,7 +290,7 @@ public class Catalog {
 	}
 
 	public List<Tag> getTagsForWebsiteId(int websiteId) throws GeneralException {
-		Website website = this.getWebsiteWithSingleId(websiteId);
+		Website website = this.getWebsiteWithId(websiteId);
 		List<Tag> res = new LinkedList<Tag>();
 		for (Tag tag : this.tags) {
 			if (tag.getWebsites().contains(website))
@@ -332,7 +300,7 @@ public class Catalog {
 	}
 	
 	public boolean isWebsiteTaggedWithSingleId(int websiteId) throws GeneralException {
-		Website website = this.getWebsiteWithSingleId(websiteId);
+		Website website = this.getWebsiteWithId(websiteId);
 		return this.isWebsiteTagged(website);
 	}
 
@@ -345,7 +313,7 @@ public class Catalog {
 	}
 
 	public void addWebsiteTag(int websiteId, int tagId, ServletManager sm) throws GeneralException {
-		Website website = this.websiteIDmap.get(websiteId);
+		Website website = this.websiteIdMap.get(websiteId);
 		Tag tag = this.tagIDmap.get(tagId);
 		if (website == null)
 			throw new GeneralException(ServletManager.Code.ClientError, "This website does not exist");
@@ -356,7 +324,7 @@ public class Catalog {
 	}
 	
 	public void removeWebsiteTag(int websiteId, int tagId, ServletManager sm) throws GeneralException {
-		Website website = this.websiteIDmap.get(websiteId);
+		Website website = this.websiteIdMap.get(websiteId);
 		Tag tag = this.tagIDmap.get(tagId);
 		if (website == null)
 			throw new GeneralException(ServletManager.Code.ClientError, "This website does not exist");
@@ -379,11 +347,10 @@ public class Catalog {
 			tag.refresh(sm);
 		for (Sso sso : this.ssos)
 			sso.refresh(sm);
-		List<Website> newWebsites = Website.loadNewWebsites(ssoDBmap, sm);
+		List<Website> newWebsites = Website.loadNewWebsites(ssoDBmap, sm.getDB());
 		for (Website website : newWebsites) {
 			this.websites.add(website);
-			this.websiteIDmap.put(website.getSingleId(), website);
-			this.websiteDBmap.put(website.getDb_id(), website);
+			this.websiteIdMap.put(website.getDb_id(), website);
 		}
 		List<Website> allNewWebsites = this.getNewWebsites();
 		List<Website> oldWebsites = new LinkedList<Website>();
@@ -407,11 +374,11 @@ public class Catalog {
 	}
 
 	public void turnOffWebsite(int single_id, ServletManager sm) throws GeneralException {
-		this.getWebsiteWithSingleId(single_id).turnOff(sm);
+		this.getWebsiteWithId(single_id).turnOff(sm);
 	}
 	
 	public void turnOnWebsite(int single_id, ServletManager sm) throws GeneralException {
-		this.getWebsiteWithSingleId(single_id).turnOn(sm);
+		this.getWebsiteWithId(single_id).turnOn(sm);
 	}
 
 	public List<Website> getWorkingWebsites() {
@@ -466,7 +433,7 @@ public class Catalog {
 	}
 	
 	public void blacklistWebsiteWithSingleId(int single_id, ServletManager sm) throws GeneralException {
-		Website website = this.getWebsiteWithSingleId(single_id);
+		Website website = this.getWebsiteWithId(single_id);
 		this.blacklistWebsite(website, sm);
 	}
 
@@ -475,7 +442,7 @@ public class Catalog {
 	}
 	
 	public void whitelistWebsiteWithSingleId(int single_id, ServletManager sm) throws GeneralException {
-		Website website = this.getWebsiteWithSingleId(single_id);
+		Website website = this.getWebsiteWithId(single_id);
 		this.whitelistWebsite(website, sm);
 	}
 

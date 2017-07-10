@@ -66,6 +66,13 @@ public class MailJetBuilder {
         this.cc += (name + "<" + email + ">");
     }
 
+    public void addRecipient(String email, JSONObject vars) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("Email", email);
+        jsonObject.put("Vars", vars);
+        this.recipients.put(jsonObject);
+    }
+
     public void addVariable(String key, Object value) {
         if (this.vars == null)
             this.vars = new JSONObject();
@@ -73,14 +80,16 @@ public class MailJetBuilder {
     }
 
     public void sendEmail() {
-        System.out.println(this.to.length());
-        request.property(Email.TO, this.to);
+        if (this.recipients.length() != 0) {
+            request.property(Email.RECIPIENTS, this.recipients);
+        } else {
+            request.property(Email.TO, this.to);
+            request.property(Email.CC, this.cc);
+        }
         if (this.vars != null) {
             request.property(Email.MJTEMPLATELANGUAGE, true);
             request.property(Email.VARS, this.vars);
         }
-
-        request.property(Email.CC, this.cc);
         try {
             response = client.post(request);
             System.out.println("MailJet status: " + response.getStatus());

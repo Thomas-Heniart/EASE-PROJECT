@@ -65,7 +65,7 @@ public class DashboardManager {
     }
 
     private void removeApp(App app, DataBaseConnection db) throws GeneralException, HttpServletException {
-        user.getUpdateManager().removeAllUpdateWithThisApp(app, db);
+        //user.getUpdateManager().removeAllUpdateWithThisApp(app, db);
         Profile profile = app.getProfile();
         this.apps.remove(app);
         this.appIdMap.remove(app.getDBid());

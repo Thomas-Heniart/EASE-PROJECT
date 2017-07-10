@@ -2,10 +2,10 @@ package com.Ease.API.V1.Teams;
 
 import com.Ease.Dashboard.User.User;
 import com.Ease.Mail.MailJetBuilder;
-import com.Ease.Mail.SendGridMail;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.CodeGenerator;
 import com.Ease.Utils.Servlets.PostServletManager;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -38,25 +38,32 @@ public class ServletAskTeamCreation extends HttpServlet {
                 if (user != null && !email.equals(user.getEmail()))
                     throw new HttpServletException(HttpStatus.BadRequest, "Email already taken.");
             }
-            databaseRequest = db.prepareRequest("DELETE FROM createTeamInvitations WHERE email = ?;");
-            databaseRequest.setString(email);
-            databaseRequest.set();
-            String digits = CodeGenerator.generateDigits(6);
-            databaseRequest = db.prepareRequest("INSERT INTO createTeamInvitations values(NULL, ?, ?, DATE_ADD(NOW(), INTERVAL 3 DAY))");
-            databaseRequest.setString(email);
-            databaseRequest.setString(digits);
-            databaseRequest.set();
-            db.commitTransaction(transaction);
-            MailJetBuilder mailJetBuilder = new MailJetBuilder();
-            mailJetBuilder.setTemplateId(178497);
-            mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
-            mailJetBuilder.addVariable("first_digits", digits.substring(0, 3));
-            mailJetBuilder.addVariable("last_digits", digits.substring(3));
-            mailJetBuilder.addTo(email);
-            mailJetBuilder.sendEmail();
+            JSONObject res = new JSONObject();
+            if (user.getVerifiedEmails().contains(email))
+                res.put("need_digits", false);
+            else {
+                databaseRequest = db.prepareRequest("DELETE FROM pendingTeamCreations WHERE email = ?;");
+                databaseRequest.setString(email);
+                databaseRequest.set();
+                String digits = CodeGenerator.generateDigits(6);
+                databaseRequest = db.prepareRequest("INSERT INTO pendingTeamCreations values(NULL, ?, ?, default)");
+                databaseRequest.setString(email);
+                databaseRequest.setString(digits);
+                databaseRequest.set();
+                db.commitTransaction(transaction);
+                MailJetBuilder mailJetBuilder = new MailJetBuilder();
+                mailJetBuilder.setTemplateId(178497);
+                mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
+                mailJetBuilder.addVariable("first_digits", digits.substring(0, 3));
+                mailJetBuilder.addVariable("last_digits", digits.substring(3));
+                mailJetBuilder.addTo(email);
+                mailJetBuilder.sendEmail();
+                res.put("need_digits", true);
             /*SendGridMail sendGridMail = new SendGridMail("Agathe @Ease", "contact@ease.space");
             sendGridMail.sendCreateTeamEmail(email, digits);*/
-            sm.setSuccess("Email sent");
+            }
+            sm.setSuccess(res);
+
         } catch (Exception e) {
             sm.setError(e);
         }

@@ -2,6 +2,8 @@ package com.Ease.API.V1.Teams;
 
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.simple.JSONObject;
 
@@ -22,6 +24,8 @@ public class ServletGetTeam extends HttpServlet {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true);
+            if (team_id == null)
+                throw new HttpServletException(HttpStatus.BadRequest, "No team id");
             sm.needToBeTeamUserOfTeam(team_id);
             TeamUser teamUser = sm.getTeamUserForTeamId(team_id);
             Team team = teamUser.getTeam();

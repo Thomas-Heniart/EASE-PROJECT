@@ -40,15 +40,11 @@ response.addCookie(sessionToken);
 <%
 Cookie fname = new Cookie("fname",
 	Base64.getEncoder().encodeToString(user.getFirstName().getBytes(StandardCharsets.UTF_8)));
-Cookie lname = new Cookie("lname",
-	Base64.getEncoder().encodeToString(user.getLastName().getBytes(StandardCharsets.UTF_8)));
 Cookie email = new Cookie("email", user.getEmail());
 
 fname.setMaxAge(60 * 60 * 24 * 31);
-lname.setMaxAge(60 * 60 * 24 * 31);
 email.setMaxAge(60 * 60 * 24 * 31);
 response.addCookie(fname);
-response.addCookie(lname);
 response.addCookie(email);
 %>
 <c:set var="session"		scope="session" value="${pageContext.getSession()}"/>

@@ -38,13 +38,13 @@ public class Profile {
 	 * 
 	 */
 
-    public static List<List<Profile>> createPersonnalProfiles(User user, ServletManager sm) throws GeneralException {
+    public static List<List<Profile>> createPersonnalProfiles(User user, DataBaseConnection db) throws GeneralException {
         List<List<Profile>> profilesColumn = new LinkedList<List<Profile>>();
         for (int i = 0; i < MAX_COLUMN; ++i) {
             profilesColumn.add(new LinkedList<Profile>());
         }
-        profilesColumn.get(0).add(Profile.createPersonnalProfile(user, 0, 0, "Side", "#000000", sm.getDB()));
-        profilesColumn.get(1).add(Profile.createPersonnalProfile(user, 1, 0, "Me", "#373B60", sm.getDB()));
+        profilesColumn.get(0).add(Profile.createPersonnalProfile(user, 0, 0, "Side", "#000000", db));
+        profilesColumn.get(1).add(Profile.createPersonnalProfile(user, 1, 0, "Me", "#373B60", db));
         return profilesColumn;
     }
 

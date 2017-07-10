@@ -1,16 +1,11 @@
 package com.Ease.Update;
 
+import com.Ease.Utils.*;
 import org.json.simple.JSONObject;
 
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Dashboard.User.UserEmail;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.IdGenerator;
-import com.Ease.Utils.ServletManager;
 import com.Ease.Utils.Crypto.RSA;
 
 public class UpdateNewPassword extends Update {
@@ -23,9 +18,7 @@ public class UpdateNewPassword extends Update {
 		NEW_PASSWORD
 	}
 
-	public static Update loadUpdateNewPassword(String update_id, User user, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		IdGenerator idGenerator = (IdGenerator) sm.getContextAttr("idGenerator");
+	public static Update loadUpdateNewPassword(String update_id, User user, DataBaseConnection db) throws GeneralException {
 		DatabaseRequest request = db.prepareRequest("SELECT * FROM updateNewPassword WHERE update_id = ?;");
 		request.setInt(update_id);
 		DatabaseResult rs = request.get();
@@ -33,7 +26,7 @@ public class UpdateNewPassword extends Update {
 		ClassicApp classicApp = (ClassicApp) user.getDashboardManager().getAppWithId(rs.getInt(Data.CLASSIC_APP_ID.ordinal()));
 		String newPassword = rs.getString(Data.NEW_PASSWORD.ordinal());
 		UserEmail email = user.getEmails().get(classicApp.getAccount().getInformationNamed("login"));
-		return new UpdateNewPassword(update_id, classicApp, newPassword, idGenerator.getNextId(), email, user);
+		return new UpdateNewPassword(update_id, classicApp, newPassword, 0, email, user);
 	}
 	
 	public static UpdateNewPassword createUpdateNewPassword(User user, ClassicApp classicApp, String newPassword, UserEmail email, ServletManager sm) throws GeneralException {
@@ -80,7 +73,7 @@ public class UpdateNewPassword extends Update {
 		json.put("login", classicApp.getAccount().getInformationNamed("login"));
 		json.put("passwordLength", 16);
 		json.put("websiteImg", classicApp.getSite().getFolder() + "logo.png");
-		json.put("websiteId", classicApp.getSite().getSingleId());	
+		json.put("websiteId", classicApp.getSite().getDb_id());
 		json.put("websiteName", classicApp.getSite().getName());
 		return json;
 	}

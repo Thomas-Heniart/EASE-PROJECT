@@ -13,6 +13,8 @@ import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
+import javax.servlet.ServletContext;
+
 public class UpdateNewAccount extends Update {
 
 	public enum Data {
@@ -23,22 +25,21 @@ public class UpdateNewAccount extends Update {
 		TYPE
 	}
 	
-	public static Update loadUpdateNewAccount(String update_id, User user, ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
+	public static Update loadUpdateNewAccount(String update_id, User user, ServletContext context, DataBaseConnection db) throws GeneralException {
 		DatabaseRequest request = db.prepareRequest("SELECT * FROM updateNewAccount WHERE update_id = ?;");
 		request.setInt(update_id);
 		DatabaseResult rs = request.get();
-		Catalog catalog = (Catalog) sm.getContextAttr("catalog");
+		Catalog catalog = (Catalog) context.getAttribute("catalog");
 		rs.next();
 		String db_id = rs.getString(Data.ID.ordinal());
-		Website website = catalog.getWebsiteWithDBid(rs.getString(Data.WEBSITE_ID.ordinal()));
+		Website website = catalog.getWebsiteWithId(rs.getInt(Data.WEBSITE_ID.ordinal()));
 		String type = rs.getString(Data.TYPE.ordinal());
 		switch(type) {
 		case "updateNewLogWithApp":
-			return UpdateNewLogWithApp.loadUpdateNewLogWithApp(update_id, db_id, user, website, sm);
+			return UpdateNewLogWithApp.loadUpdateNewLogWithApp(update_id, db_id, user, website, db);
 
 		case "updateNewClassicApp":
-			return UpdateNewClassicApp.loadUpdateNewClassicApp(update_id, db_id, user, website, sm);
+			return UpdateNewClassicApp.loadUpdateNewClassicApp(update_id, db_id, user, website, db);
 
 		default:
 			throw new GeneralException(ServletManager.Code.InternError, "No such type possible");

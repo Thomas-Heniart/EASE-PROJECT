@@ -11,12 +11,7 @@ import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.AccountInformation;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Mail.SendGridMail;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Mail;
-import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.CodeGenerator;
 
 public class UserEmail {
@@ -43,8 +38,7 @@ public class UserEmail {
         return emails;
     }
 
-    public static UserEmail createUserEmail(String email, User user, boolean verified, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public static UserEmail createUserEmail(String email, User user, boolean verified, DataBaseConnection db) throws GeneralException {
         DatabaseRequest request = db.prepareRequest("INSERT INTO usersEmails VALUES(NULL, ?, ?, ?);");
         request.setInt(user.getDBid());
         request.setString(email);
@@ -125,10 +119,9 @@ public class UserEmail {
         return true;
     }
 
-    public void askForVerification(User user, boolean newUser, ServletManager sm) throws GeneralException {
+    public void askForVerification(User user, boolean newUser, DataBaseConnection db) throws GeneralException {
         SendGridMail sendGridMail = new SendGridMail("Benjamin @Ease", "benjamin@ease.space");
         String code = CodeGenerator.generateNewCode();
-        DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         DatabaseRequest request = db.prepareRequest("SELECT * FROM usersEmailsPending WHERE userEmail_id = ?;");
         request.setInt(this.db_id);

@@ -31,11 +31,12 @@ public class ServletCreateTeam extends HttpServlet {
             sm.needToBeConnected();
             User user = sm.getUser();
             String digits = sm.getStringParam("digits", false);
-            String teamName = sm.getStringParam("teamName", true);
-            String firstName = sm.getStringParam("firstName", true);
-            String lastName = sm.getStringParam("lastName", true);
+            String teamName = sm.getStringParam("team_name", true);
+            String firstName = sm.getStringParam("first_name", true);
+            String lastName = sm.getStringParam("last_name", true);
             String email = sm.getStringParam("email", true);
             String username = sm.getStringParam("username", true);
+            String jobTitle = sm.getStringParam("job_title", true);
             if (teamName == null || teamName.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "teamName is needed.");
             if (firstName == null || firstName.equals(""))
@@ -46,33 +47,41 @@ public class ServletCreateTeam extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "email is needed.");
             if (username == null || username.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "username is needed.");
-            if (digits == null || digits.equals(""))
-                throw new HttpServletException(HttpStatus.BadRequest, "code not provided.");
-            HibernateQuery query = sm.getHibernateQuery();
-            query.querySQLString("SELECT id FROM createTeamInvitations WHERE email = ? AND code = ?");
-            query.setParameter(1, email);
-            query.setParameter(2, digits);
-            Object id = query.getSingleResult();
-            if (id == null)
-                throw new HttpServletException(HttpStatus.BadRequest, "You cannot create a team.");
+            if (jobTitle == null || jobTitle.equals(""))
+                throw new HttpServletException(HttpStatus.BadRequest, "job title is needed.");
+            if (!user.getVerifiedEmails().contains(email) && (digits == null || digits.equals("") || digits.length() != 6))
+                throw new HttpServletException(HttpStatus.Forbidden, "You cannot create a team.");
+            if (user.getUnverifiedEmails().contains(email)) {
+                HibernateQuery query = sm.getHibernateQuery();
+                query.querySQLString("SELECT id FROM pendingTeamCreations WHERE email = ? AND digits = ?");
+                query.setParameter(1, email);
+                query.setParameter(2, digits);
+                Object id = query.getSingleResult();
+                if (id == null)
+                    throw new HttpServletException(HttpStatus.Forbidden, "You cannot create a team.");
+                query.querySQLString("DELETE FROM pendingTeamCreations WHERE id = ?");
+                query.setParameter(1, id);
+                query.executeUpdate();
+            }
             String teamKey = AES.keyGenerator();
             Team team = new Team(teamName);
             String teamKey_ciphered = user.encrypt(teamKey);
             Date arrivalDate = new Date(sm.getLongParam("arrival_date", true));
             TeamUser admin = TeamUser.createAdminUser(firstName, lastName, email, username, arrivalDate, teamKey_ciphered, team);
+            admin.setJobTitle(jobTitle);
             admin.setDeciphered_teamKey(teamKey);
-            Channel channel = new Channel(team, "General", "This is the general channel");
-            team.addChannel(channel);
-            //channel.addTeamUser(admin);
+            admin.setUser_id(user.getDBid());
             sm.saveOrUpdate(team);
-            sm.saveOrUpdate(admin);
+            Channel channel = new Channel(team, "General", "This is the general channel");
             sm.saveOrUpdate(channel);
-            query.querySQLString("DELETE FROM createTeamInvitations WHERE id = ?");
-            query.setParameter(1, id);
-            query.executeUpdate();
+            sm.saveOrUpdate(admin);
+            admin.setDashboard_user(user);
+            team.addChannel(channel);
             team.addTeamUser(admin);
-            admin.setDashboard_user(user, sm.getDB());
+            sm.saveOrUpdate(team);
+            sm.getHibernateQuery().commit();
             user.addTeamUser(admin);
+            channel.addTeamUser(admin, sm.getDB());
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             teamManager.addTeam(team);
             sm.setSuccess(team.getJson());

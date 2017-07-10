@@ -5,7 +5,7 @@
 <%@ attribute name="site" type="com.Ease.Context.Catalog.Website" required="true"%>
 <%@ attribute name="newApp" type="java.lang.Boolean" required="false" %>
 
-<div class="catalogApp" idx="${site.getSingleId()}"
+<div class="catalogApp" idx="${site.getDb_id()}"
 	connect="${site.getFolder()}connect.json"
 	data-login="${site.getLoginWith()}" data-sso="${site.getSso()}"
 	data-nologin="${site.noLogin()}" name="${site.getName()}"

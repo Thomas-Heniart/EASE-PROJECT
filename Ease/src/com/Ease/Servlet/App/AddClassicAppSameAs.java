@@ -79,7 +79,7 @@ public class AddClassicAppSameAs extends HttpServlet {
 				Profile profile = user.getDashboardManager().getProfile(Integer.parseInt(profileId));
 				ClassicApp sameApp = (ClassicApp) user.getDashboardManager().getAppWithId(Integer.parseInt(appId));
 				for(Object websiteId : websiteIds) {
-					Website site = catalog.getWebsiteWithSingleId(Integer.parseInt((String)websiteId));
+					Website site = catalog.getWebsiteWithId(Integer.parseInt((String)websiteId));
 					if (site == null)
 						throw new GeneralException(ServletManager.Code.ClientError, "This website does not exist");
 					App newApp = ClassicApp.createClassicAppSameAs(profile, profile.getApps().size(), (res.size() == 0) ? name : site.getName(), site, sameApp, sm, user);

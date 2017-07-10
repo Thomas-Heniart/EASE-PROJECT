@@ -56,9 +56,9 @@ public class AddUserEmail extends HttpServlet {
 			}
 			if (user.getEmails().get(email) != null)
 				throw new GeneralException(ServletManager.Code.ClientError, "You already have this email.");
-			UserEmail newEmail =  UserEmail.createUserEmail(email, user, false, sm);
+			UserEmail newEmail =  UserEmail.createUserEmail(email, user, false, sm.getDB());
 			user.getEmails().put(email, newEmail);
-			newEmail.askForVerification(user, false, sm);
+			newEmail.askForVerification(user, false, sm.getDB());
 			sm.setResponse(ServletManager.Code.Success, "Email added");
 		} catch (GeneralException e) {
 			sm.setResponse(e);
