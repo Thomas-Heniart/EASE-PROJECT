@@ -134,8 +134,9 @@ public abstract class ServletManager {
         if (team_id == null)
             throw new HttpServletException(HttpStatus.BadRequest, "Missing team id parameter");
         this.needToBeTeamUser();
+        this.timestamp = this.getCurrentTime();
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
-            if (teamUser.getTeam().getDb_id().equals(team_id) && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() != null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
+            if (teamUser.getTeam().getDb_id().equals(team_id) && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
                 return;
         }
         throw new HttpServletException(HttpStatus.Forbidden);
@@ -143,8 +144,9 @@ public abstract class ServletManager {
 
     public void needToBeAdminOfTeam(Team team) throws HttpServletException {
         this.needToBeTeamUser();
+        this.timestamp = this.getCurrentTime();
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
-            if (teamUser.getTeam() == team && teamUser.isTeamAdmin() && !teamUser.isDisabled() && teamUser.isVerified())
+            if (teamUser.getTeam() == team && teamUser.isTeamAdmin() && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
                 return;
         }
         throw new HttpServletException(HttpStatus.Forbidden);
@@ -154,8 +156,9 @@ public abstract class ServletManager {
         this.needToBeTeamUser();
         if (team_id == null)
             throw new HttpServletException(HttpStatus.BadRequest, "Missing team id parameter");
+        this.timestamp = this.getCurrentTime();
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
-            if (teamUser.getTeam().getDb_id().equals(team_id) && teamUser.isTeamAdmin() && !teamUser.isDisabled() && teamUser.isVerified())
+            if (teamUser.getTeam().getDb_id().equals(team_id) && teamUser.isTeamAdmin() && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
                 return;
         }
         throw new HttpServletException(HttpStatus.Forbidden);
@@ -164,7 +167,8 @@ public abstract class ServletManager {
     public void needToBeOwnerOfTeam(Team team) throws HttpServletException {
         this.needToBeTeamUser();
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
-            if (teamUser.getTeam() == team && teamUser.isTeamOwner() && !teamUser.isDisabled() && teamUser.isVerified())
+            this.timestamp = this.getCurrentTime();
+            if (teamUser.getTeam() == team && teamUser.isTeamOwner() && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
                 return;
         }
         throw new HttpServletException(HttpStatus.Forbidden);
@@ -174,8 +178,9 @@ public abstract class ServletManager {
         this.needToBeTeamUser();
         if (team_id == null)
             throw new HttpServletException(HttpStatus.BadRequest, "Missing team id parameter");
+        this.timestamp = this.getCurrentTime();
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
-            if (teamUser.getTeam().getDb_id().equals(team_id) && teamUser.isTeamOwner() && !teamUser.isDisabled() && teamUser.isVerified())
+            if (teamUser.getTeam().getDb_id().equals(team_id) && teamUser.isTeamOwner() && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
                 return;
         }
         throw new HttpServletException(HttpStatus.Forbidden);
