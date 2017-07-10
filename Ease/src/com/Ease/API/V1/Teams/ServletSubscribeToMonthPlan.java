@@ -76,10 +76,6 @@ public class ServletSubscribeToMonthPlan extends HttpServlet {
             subscriptionParams.put("quantity", 1);
             subscriptionParams.put("customer", team.getCustomer_id());
             subscriptionParams.put("tax_percent", 20.0);
-            JSONObject subscription_metadata = new JSONObject();
-            /* subscription_metadata.put("notes", "Victor donne mois ça");
-            subscription_metadata.put("product_type", "eserverice");
-            subscriptionParams.put("metadata", subscription_metadata); */
             Subscription subscription = Subscription.create(subscriptionParams);
             team.setSubscription_id(subscription.getId());
             sm.saveOrUpdate(team);
