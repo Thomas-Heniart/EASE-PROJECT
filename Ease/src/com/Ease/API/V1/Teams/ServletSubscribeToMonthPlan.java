@@ -6,8 +6,8 @@ import com.Ease.Team.TeamManager;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
-import com.stripe.model.Customer;
-import com.stripe.model.Subscription;
+import com.stripe.model.*;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -34,7 +34,17 @@ public class ServletSubscribeToMonthPlan extends HttpServlet {
                 String email = sm.getTeamUserForTeam(team).getEmail();
                 Map<String, Object> customerParams = new HashMap<>();
                 customerParams.put("email", email);
-                customerParams.put("source", sm.getStringParam("token", true));
+                String token = sm.getStringParam("token", false);
+                if (token == null || token.equals(""))
+                    throw new HttpServletException(HttpStatus.BadRequest, "Invalid token.");
+                String vat_id = sm.getStringParam("vat_id", true);
+                JSONObject customer_metadata = new JSONObject();
+                customer_metadata.put("business_type", "B2C");
+                if (vat_id != null) {
+                    customer_metadata.put("business_type", "B2B");
+                    customer_metadata.put("business_vat_id", vat_id);
+                }
+                customerParams.put("metadata", customer_metadata);
                 HibernateQuery hibernateQuery = sm.getHibernateQuery();
                 hibernateQuery.querySQLString("SELECT credit FROM waitingCredits WHERE email = ?");
                 hibernateQuery.setParameter(1, email);
@@ -46,12 +56,30 @@ public class ServletSubscribeToMonthPlan extends HttpServlet {
                     hibernateQuery.executeUpdate();
                 }
                 Customer customer = Customer.create(customerParams);
+                Map<String, Object> source = new JSONObject();
+                source.put("source", token);
+                Card customer_card = (Card) customer.getSources().create(source);
+                Map<String, Object> card_information = new JSONObject();
+                card_information.put("name", sm.getStringParam("name", true));
+                card_information.put("address_line1", sm.getStringParam("address_line1", false));
+                card_information.put("address_line2", sm.getStringParam("address_line2", false));
+                card_information.put("address_zip", sm.getStringParam("address_zip", false));
+                card_information.put("address_state", sm.getStringParam("address_state", false));
+                card_information.put("address_country", sm.getStringParam("address_country", false));
+                card_information.put("address_city", sm.getStringParam("address_city", false));
+                validateCardInformation(card_information);
+                customer_card.update(card_information);
                 team.setCustomer_id(customer.getId());
             }
             Map<String, Object> subscriptionParams = new HashMap<>();
             subscriptionParams.put("plan", "EasePremium");
             subscriptionParams.put("quantity", 1);
             subscriptionParams.put("customer", team.getCustomer_id());
+            subscriptionParams.put("tax_percent", 20.0);
+            JSONObject subscription_metadata = new JSONObject();
+            /* subscription_metadata.put("notes", "Victor donne mois ça");
+            subscription_metadata.put("product_type", "eserverice");
+            subscriptionParams.put("metadata", subscription_metadata); */
             Subscription subscription = Subscription.create(subscriptionParams);
             team.setSubscription_id(subscription.getId());
             sm.saveOrUpdate(team);
@@ -60,6 +88,21 @@ public class ServletSubscribeToMonthPlan extends HttpServlet {
             sm.setError(e);
         }
         sm.sendResponse();
+    }
+
+    private void validateCardInformation(Map<String, Object> customerParams) throws HttpServletException {
+        if (customerParams.get("name") == null || customerParams.get("name").equals(""))
+            throw new HttpServletException(HttpStatus.BadRequest, "You must provide a name");
+        if (customerParams.get("address_line1") == null || customerParams.get("address_line1").equals(""))
+            throw new HttpServletException(HttpStatus.BadRequest, "You must provide a valid address");
+        if (customerParams.get("address_line2") == null || customerParams.get("address_line2").equals(""))
+            customerParams.put("address_line2", null);
+        if (customerParams.get("address_zip") == null || customerParams.get("address_zip").equals(""))
+            throw new HttpServletException(HttpStatus.BadRequest, "You must provide a valid address");
+        if (customerParams.get("address_state") == null || customerParams.get("address_state").equals(""))
+            customerParams.put("address_state", null);
+        if (customerParams.get("address_country") == null || customerParams.get("address_country").equals(""))
+            throw new HttpServletException(HttpStatus.BadRequest, "You must provide a valid address");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
