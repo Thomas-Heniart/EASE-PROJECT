@@ -61,7 +61,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
                 if (!query.list().isEmpty())
                     throw new HttpServletException(HttpStatus.BadRequest, "This email has already been taken");
             }
-            Date arrival_date = new Date(sm.getLongParam("arrival_date", true));
+            Date arrival_date = sm.getTimestamp();
             String departure_date_string = sm.getStringParam("departure_date", true);
             TeamUser teamUser = new TeamUser(first_name, last_name, email, username, arrival_date, null, false, team, new TeamUserRole(role));
             teamUser.setAdmin_email(adminTeamUser.getEmail());
