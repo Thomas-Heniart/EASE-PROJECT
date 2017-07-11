@@ -30,8 +30,7 @@ public class Sso {
         DatabaseResult rs = db.prepareRequest("SELECT * FROM sso").get();
         Sso sso;
         while (rs.next()) {
-            int single_id = ((IdGenerator) context.getAttribute("idGenerator")).getNextId();
-            sso = new Sso(rs.getString(Data.ID.ordinal()), rs.getString(Data.NAME.ordinal()), rs.getString(Data.IMG.ordinal()), single_id);
+            sso = new Sso(rs.getInt(Data.ID.ordinal()), rs.getString(Data.NAME.ordinal()), rs.getString(Data.IMG.ordinal()));
             ssos.add(sso);
         }
         return ssos;
@@ -40,14 +39,12 @@ public class Sso {
     protected List<Website> websites;
     protected Map<Integer, Website> websitesIdMap = new HashMap<>();
     protected String name;
-    protected int single_id;
-    protected String db_id;
+    protected Integer db_id;
     protected String img_path;
 
-    public Sso(String db_id, String name, String img_path, int single_id) {
+    public Sso(Integer db_id, String name, String img_path) {
         this.name = name;
         this.websites = new LinkedList<Website>();
-        this.single_id = single_id;
         this.db_id = db_id;
         this.img_path = img_path;
     }
@@ -57,15 +54,7 @@ public class Sso {
         this.websitesIdMap.put(site.getDb_id(), site);
     }
 
-    public int getSingleId() {
-        return single_id;
-    }
-
-    public void setSingleId(int singleId) {
-        this.single_id = singleId;
-    }
-
-    public String getDbid() {
+    public Integer getDbid() {
         return this.db_id;
     }
 
@@ -81,7 +70,7 @@ public class Sso {
         JSONObject json = new JSONObject();
         json.put("name", this.name);
         json.put("imgSrc", this.getImgPath());
-        json.put("singleId", this.single_id);
+        json.put("singleId", this.db_id);
         return json;
     }
 

@@ -61,7 +61,10 @@ public class AddWebsite extends HttpServlet {
 		String haveLoginButtonString = sm.getServletParam("haveLoginButton", false);
 		String noLoginString = sm.getServletParam("noLogin", false);
 		String noScrapString = sm.getServletParam("noScrap", false);
-		String ssoId = sm.getServletParam("sso", true);
+		String ssoIdString = sm.getServletParam("sso", true);
+		Integer ssoId = null;
+		if (ssoIdString != null && !ssoIdString.equals(""))
+			ssoId = Integer.parseInt(ssoIdString);
 		String team_id = sm.getServletParam("team_id", true);
 		boolean noLogin = true;
 		boolean haveLoginButton = true;

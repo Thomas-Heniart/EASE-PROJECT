@@ -43,7 +43,7 @@ public class Website {
 
     private static Integer last_db_id = 0;
 
-    public static List<Website> loadNewWebsites(Map<String, Sso> ssoDbIdMap, DataBaseConnection db) throws GeneralException {
+    public static List<Website> loadNewWebsites(Map<Integer, Sso> ssoIdMap, DataBaseConnection db) throws GeneralException {
         List<Website> newWebsites = new LinkedList<Website>();
         DatabaseRequest request = db.prepareRequest("SELECT * FROM websites WHERE id > ?;");
         request.setInt(last_db_id);
@@ -56,7 +56,7 @@ public class Website {
             String loginUrl = rs.getString(WebsiteData.LOGIN_URL.ordinal());
             String name = rs.getString(WebsiteData.NAME.ordinal());
             String folder = rs.getString(WebsiteData.FOLDER.ordinal());
-            Sso sso = ssoDbIdMap.get(rs.getString(WebsiteData.SSO.ordinal()));
+            Sso sso = ssoIdMap.get(rs.getInt(WebsiteData.SSO.ordinal()));
             boolean noLogin = rs.getBoolean(WebsiteData.NO_LOGIN.ordinal());
             String website_homepage = rs.getString(WebsiteData.WEBSITE_HOMEPAGE.ordinal());
             int ratio = rs.getInt(WebsiteData.RATIO.ordinal());
@@ -75,7 +75,7 @@ public class Website {
         return newWebsites;
     }
 
-    public static Website createWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, boolean noLogin, boolean noScrap, String[] haveLoginWith, String[] infoNames, String[] infoTypes, String[] placeholders, String[] placeholderIcons, Catalog catalog, String ssoId, String team_id, ServletContext context, DataBaseConnection db) throws GeneralException {
+    public static Website createWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, boolean noLogin, boolean noScrap, String[] haveLoginWith, String[] infoNames, String[] infoTypes, String[] placeholders, String[] placeholderIcons, Catalog catalog, Integer ssoId, String team_id, ServletContext context, DataBaseConnection db) throws GeneralException {
         DatabaseRequest request = db.prepareRequest("SELECT * FROM websites WHERE folder = ? AND website_name = ?;");
         request.setString(folder);
         request.setString(name);
@@ -145,7 +145,7 @@ public class Website {
         return newWebsite;
     }
 
-    public static List<Website> loadWebsites(DataBaseConnection db, Map<String, Sso> ssoDbIdMap, ServletContext context) throws GeneralException {
+    public static List<Website> loadWebsites(DataBaseConnection db, Map<Integer, Sso> ssoIdMap, ServletContext context) throws GeneralException {
         List<Website> websites = new LinkedList<Website>();
         DatabaseResult rs = db.prepareRequest("SELECT websites.* FROM websites LEFT JOIN websiteAttributes ON (website_attributes_id = websiteAttributes.id) ORDER BY new, ratio").get();
         while (rs.next()) {
@@ -156,7 +156,7 @@ public class Website {
             String loginUrl = rs.getString(WebsiteData.LOGIN_URL.ordinal());
             String name = rs.getString(WebsiteData.NAME.ordinal());
             String folder = rs.getString(WebsiteData.FOLDER.ordinal());
-            Sso sso = ssoDbIdMap.get(rs.getString(WebsiteData.SSO.ordinal()));
+            Sso sso = ssoIdMap.get(rs.getInt(WebsiteData.SSO.ordinal()));
             boolean noLogin = rs.getBoolean(WebsiteData.NO_LOGIN.ordinal());
             String website_homepage = rs.getString(WebsiteData.WEBSITE_HOMEPAGE.ordinal());
             int ratio = rs.getInt(WebsiteData.RATIO.ordinal());
@@ -374,7 +374,7 @@ public class Website {
         if (this.sso == null)
             return -1;
         else
-            return this.sso.getSingleId();
+            return this.sso.getDbid();
     }
 
     public String getName() {
@@ -485,7 +485,7 @@ public class Website {
             logWithWebsites.add(logWithWebsite.getDb_id());
         res.put("loginWith", logWithWebsites);
         if (this.sso != null)
-            res.put("ssoId", this.sso.getSingleId());
+            res.put("ssoId", this.sso.getDbid());
         else
             res.put("ssoId", -1);
         JSONArray team_ids = new JSONArray();

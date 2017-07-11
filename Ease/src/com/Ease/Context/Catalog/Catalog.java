@@ -23,8 +23,7 @@ public class Catalog {
 	 * Constructor
 	 * 
 	 */
-	protected Map<String, Sso> ssoDBmap;
-	protected Map<Integer, Sso> ssoIDmap;
+	protected Map<Integer, Sso> ssoIdMap = new HashMap<>();
 	protected List<Sso> ssos;
 	protected Map<Integer, Website> websiteIdMap = new HashMap<>();
 	protected List<Website> websites;
@@ -40,13 +39,9 @@ public class Catalog {
 	public Catalog(DataBaseConnection db, ServletContext context) throws GeneralException {
 		
 		ssos = Sso.loadSsos(db, context);
-		ssoDBmap = new HashMap<String, Sso>();
-		ssoIDmap = new HashMap<Integer, Sso>();
-		for (Sso sso : ssos) {
-			ssoDBmap.put(sso.getDbid(), sso);
-			ssoIDmap.put(sso.getSingleId(), sso);
-		}
-		websites = Website.loadWebsites(db, ssoDBmap, context);
+		for (Sso sso : ssos)
+			ssoIdMap.put(sso.getDbid(), sso);
+		websites = Website.loadWebsites(db, ssoIdMap, context);
 		for (Website site : websites) {
 			websiteIdMap.put(site.getDb_id(), site);
 		}
@@ -62,7 +57,7 @@ public class Catalog {
 		}
 	}
 	
-	public Website addWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, boolean noLogin, boolean noScrap, String[] haveLoginWith, String[] infoNames, String[] infoTypes, String[] placeholders, String[] placeholderIcons, String ssoId, String team_id, ServletManager sm) throws GeneralException {
+	public Website addWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, boolean noLogin, boolean noScrap, String[] haveLoginWith, String[] infoNames, String[] infoTypes, String[] placeholders, String[] placeholderIcons, Integer ssoId, String team_id, ServletManager sm) throws GeneralException {
 		Website site = Website.createWebsite(url, name, homePage, folder, haveLoginButton, noLogin, noScrap, haveLoginWith, infoNames, infoTypes, placeholders, placeholderIcons, this, ssoId, team_id, sm.getServletContext(), sm.getDB());
 		websites.add(site);
 		websiteIdMap.put(site.getDb_id(), site);
@@ -282,7 +277,7 @@ public class Catalog {
 	
 	public JSONArray getSsoJson() {
 		JSONArray res = new JSONArray();
-		for (Map.Entry<Integer, Sso> entry : this.ssoIDmap.entrySet())
+		for (Map.Entry<Integer, Sso> entry : this.ssoIdMap.entrySet())
 		{
 			res.add(entry.getValue().getJson());
 		}
@@ -347,7 +342,7 @@ public class Catalog {
 			tag.refresh(sm);
 		for (Sso sso : this.ssos)
 			sso.refresh(sm);
-		List<Website> newWebsites = Website.loadNewWebsites(ssoDBmap, sm.getDB());
+		List<Website> newWebsites = Website.loadNewWebsites(ssoIdMap, sm.getDB());
 		for (Website website : newWebsites) {
 			this.websites.add(website);
 			this.websiteIdMap.put(website.getDb_id(), website);
@@ -446,8 +441,8 @@ public class Catalog {
 		this.whitelistWebsite(website, sm);
 	}
 
-	public Sso getSsoWithDbId(String ssoId) throws GeneralException {
-		Sso sso = this.ssoDBmap.get(ssoId);
+	public Sso getSsoWithDbId(Integer ssoId) throws GeneralException {
+		Sso sso = this.ssoIdMap.get(ssoId);
 		if (sso == null)
 			throw new GeneralException(ServletManager.Code.ClientError, "Sso is null");
 		return sso;
