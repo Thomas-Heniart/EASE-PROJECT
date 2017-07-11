@@ -50,6 +50,10 @@
   transform: scale(1.1);
 }
 
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
 .shake-ease {
   @include do-shake('shake-ease', 2px, 1px, 3, 1700ms, .05, $opacity: false);
 }
@@ -72,6 +76,8 @@ html {
 #app-root {
   @include display-flex();
   @include flex-direction(column);
+  font-family: $defaultFont;
+  font-size:1rem;
 }
 
 .waiting-load {
@@ -167,7 +173,7 @@ button.button-unstyle {
     }
   }
 }
-.modal_input {
+input.modal_input, select.modal_input {
   border-radius: 5px;
   padding: 10px;
   color: $themeBlue2Color;
@@ -263,6 +269,9 @@ input.checkbox_unstyle[type=checkbox] {
   @include display-flex();
 }
 
+.justify_content_center {
+  @include justify-content(center);
+}
 .flex_column {
   @include flex-direction(column);
 }
@@ -1308,3 +1317,42 @@ p {
       }
 }
 //spinner loading end
+
+//form inputs generic
+.input_field {
+  @include display-flex();
+  @include flex-direction(column);
+  input {
+    width:100%;
+  }
+  .outcome {
+    font-size: inherit;
+    color: $themeRedLightColor;
+    font-style: italic;
+  }
+}
+//form inputs generic end
+
+//Stripe csss
+.StripeElement {
+  background-color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  box-shadow: 0 1px 3px 0 #e6ebf1;
+  -webkit-transition: box-shadow 150ms ease;
+  transition: box-shadow 150ms ease;
+}
+
+.StripeElement--focus {
+  box-shadow: 0 1px 3px 0 #cfd7df;
+}
+
+.StripeElement--invalid {
+  border-color: #fa755a;
+}
+
+.StripeElement--webkit-autofill {
+  background-color: #fefde5 !important;
+}
+//Stripe csss end

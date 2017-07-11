@@ -113,10 +113,10 @@
   display: block;
   z-index: 10;
   position: fixed;
-  top:0;
-  left:0;
-  right:0;
-  bottom:0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background-color: white;
   font-size: 1rem;
   color: $themeDarkGrayTextColor;
@@ -146,6 +146,27 @@
       color: #555459;
       background: #E8E8E8;
     }
+  }
+  .modal_contents_container {
+    @include display-flex();
+    @include align-items(flex-start);
+    @include justify-content(center);
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    padding: 10vh 2rem 2rem;
+    .contents {
+      display: block;
+      width: 640px;
+      max-width: 100%;
+    }
+  }
+}
+.ease_modal {
     .ease_icon {
       position: absolute;
       top: 0.7rem;
@@ -161,7 +182,6 @@
       width: 100%;
       display: block;
     }
-  }
   .input_tag {
     span {
       color: white;
@@ -213,25 +233,8 @@
       }
     }
   }
-  .modal_contents_container {
-    @include display-flex();
-    @include align-items(flex-start);
-    @include justify-content(center);
-    overflow-y: auto;
-    overflow-x: hidden;
-    position: absolute;
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
-    padding: 10vh 2rem 2rem;
-    .contents {
-      display: block;
-      width: 640px;
-      max-width: 100%;
-    }
-  }
 }
+
 #add_channel_modal {
   h1 {
     text-align: left;
@@ -1609,4 +1612,88 @@
       }
     }
   }
+}
+
+.full_screen_centered_view {
+  @include display-flex();
+  @include align-items(flex-start);
+  @include justify-content(center);
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10vh 2rem 2rem;
+  color: $themeDarkGrayTextColor;
+  .carousel {
+    position: relative;
+    width: 600px;
+  }
+  .contents {
+    display: block;
+    width: 600px;
+    max-width: 100%;
+    position: absolute;
+    left: 0;
+    top:0;
+    .content_row {
+      @include display-flex();
+      padding: 5px 0;
+    }
+    h1 {
+      margin: 0 0 20px 0;
+    }
+  }
+}
+
+button.big-button {
+  padding: 10px 10px 10px 10px;
+  transition: background-color .3s;
+  border-radius: 5px;
+  font-weight: 700;
+  min-width: 130px;
+  color: white;
+  background-color: $LightGreen;
+  &:hover {
+    background-color: $DarkGreen;
+  }
+  &:disabled {
+    transition: background-color .3s;
+    background-color: #717274;
+    &:hover {
+      background-color: #717274;
+    }
+  }
+}
+
+.slideLeft-enter {
+  transition: all 200ms ease-in;
+  transform: translateX(-100%);
+}
+
+.slideLeft-enter.slideLeft-enter-active {
+  transition: all 200ms ease-in;
+  transform: translateX(0);
+}
+
+.slideLeft-appear {
+  transition: all 200ms ease-in;
+  transform: translateX(-100%);
+}
+
+.slideLeft-appear.slideLeft-appear-active {
+  transition: all 200ms ease-in;
+  transform: translateX(0);
+}
+
+.slideLeft-leave {
+  transition: all 200ms ease-in;
+  transform: translateX(0);
+}
+
+.slideLeft-leave.slideLeft-leave-active {
+  transition: all 200ms ease-in;
+  transform: translateX(100%);
 }
