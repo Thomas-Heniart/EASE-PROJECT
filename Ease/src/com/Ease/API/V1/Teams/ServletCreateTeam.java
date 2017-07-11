@@ -66,7 +66,7 @@ public class ServletCreateTeam extends HttpServlet {
             String teamKey = AES.keyGenerator();
             Team team = new Team(teamName);
             String teamKey_ciphered = user.encrypt(teamKey);
-            Date arrivalDate = new Date(sm.getLongParam("arrival_date", true));
+            Date arrivalDate = new Date(sm.getLongParam("timestamp", true));
             TeamUser admin = TeamUser.createAdminUser(firstName, lastName, email, username, arrivalDate, teamKey_ciphered, team);
             admin.setJobTitle(jobTitle);
             admin.setDeciphered_teamKey(teamKey);
