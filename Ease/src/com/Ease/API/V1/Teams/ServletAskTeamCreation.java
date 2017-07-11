@@ -30,8 +30,7 @@ public class ServletAskTeamCreation extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid email.");
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
-            DatabaseRequest databaseRequest = db.prepareRequest("SELECT * FROM users LEFT JOIN teamUsers ON users.id = teamUsers.user_id WHERE (users.email <> teamUsers.email) AND (users.email = ? OR teamUsers.email = ?);");
-            databaseRequest.setString(email);
+            DatabaseRequest databaseRequest = db.prepareRequest("SELECT * FROM users WHERE email = ?);");
             databaseRequest.setString(email);
             DatabaseResult rs = databaseRequest.get();
             if (rs.next()) {
