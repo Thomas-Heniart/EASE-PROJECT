@@ -18,7 +18,7 @@ import java.io.IOException;
 
 @WebServlet("/api/v1/common/CheckRegistrationDigits")
 public class ServletCheckRegistrationDigits extends HttpServlet {
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
             String email = sm.getParam("email", true);
@@ -44,7 +44,7 @@ public class ServletCheckRegistrationDigits extends HttpServlet {
         sm.sendResponse();
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
         rd.forward(request, response);
     }
