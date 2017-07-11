@@ -32,13 +32,12 @@ public class Tag {
 		if (tagColor >= colors.length || tagColor < 0)
 			throw new GeneralException(ServletManager.Code.ClientError, "This color does not exist");
 		DataBaseConnection db = sm.getDB();
-		int single_id = ((IdGenerator)sm.getContextAttr("idGenerator")).getNextId();
 		int transaction = db.startTransaction();
 		DatabaseRequest request = db.prepareRequest("INSERT INTO tags VALUES (null, ?, ?, 2);");
 		request.setString(tagName);
 		request.setInt(tagColor);
-		String db_id = request.set().toString();
-		Tag newTag = new Tag(db_id, single_id, tagName, tagColor);
+		Integer db_id = request.set();
+		Tag newTag = new Tag(db_id, tagName, tagColor);
 		newTag.setSites(tagSites, db);
 		db.commitTransaction(transaction);
 		return newTag;
@@ -48,11 +47,10 @@ public class Tag {
 		List<Tag> tags = new LinkedList<Tag>();
 		DatabaseResult rs = db.prepareRequest("SELECT * FROM tags ORDER BY priority").get();
 		while (rs.next()) {
-			String db_id = rs.getString(Data.ID.ordinal());
+			Integer db_id = rs.getInt(Data.ID.ordinal());
 			String name = rs.getString(Data.TAG_NAME.ordinal());
 			int color_id = rs.getInt(Data.COLOR.ordinal());
-			int single_id = ((IdGenerator)context.getAttribute("idGenerator")).getNextId();
-			Tag newTag = new Tag(db_id, single_id, name, color_id); 
+			Tag newTag = new Tag(db_id, name, color_id);
 			newTag.loadGroupIds(db);
 			tags.add(newTag);
 		}
@@ -81,16 +79,14 @@ public class Tag {
 		}
 	}
 	
-	protected String db_id;
-	protected int single_id;
+	protected Integer db_id;
 	protected String name;
 	protected int color_id;
 	protected List<Website> sites;
 	protected List<String> groupIds;
 	
-	public Tag(String db_id, int single_id, String tagName, int color_id) {
+	public Tag(Integer db_id, String tagName, int color_id) {
 		this.db_id = db_id;
-		this.single_id = single_id;
 		this.name = tagName;
 		this.color_id = color_id;
 		this.sites = new LinkedList<Website> ();
@@ -101,15 +97,7 @@ public class Tag {
 		return this.name;
 	}
 	
-	public int getSingleId() {
-		return this.single_id;
-	}
-	
-	public void setSingleId(int singleId) {
-		this.single_id = singleId;		
-	}
-	
-	public String getDbId() {
+	public Integer getDbId() {
 		return this.db_id;
 	}
 	
@@ -234,7 +222,7 @@ public class Tag {
 		res.put("name", this.name);
 		res.put("color", this.getHexaColor());
 		res.put("colorId", this.color_id);
-		res.put("single_id", this.single_id);
+		res.put("single_id", this.getDbId());
 		return res;
 	}
 
