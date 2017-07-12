@@ -16858,6 +16858,7 @@ var TeamCreationView = function (_React$Component8) {
         handleInput: this.handleInput,
         key: '3' }));
       steps.push(React.createElement(Step4, { onStepValidated: this.submitStep4,
+        email: this.state.email,
         password: this.state.password,
         newsletter: this.state.newsletter,
         digits: this.props.digits,
