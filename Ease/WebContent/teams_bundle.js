@@ -15802,6 +15802,7 @@ var React = __webpack_require__(1);
 var classnames = __webpack_require__(4);
 var post_api = __webpack_require__(27);
 var api = __webpack_require__(14);
+var axios = __webpack_require__(52);
 var StripeCardForm = __webpack_require__(179);
 var CompanyInformationForm = __webpack_require__(176);
 
@@ -16412,7 +16413,7 @@ var Step7 = function (_React$Component6) {
         }
       }, this);
       axios.all(calls).then(function () {
-        _this11.onStepValidated();
+        _this11.props.onStepValidated();
       });
     }
   }, {
