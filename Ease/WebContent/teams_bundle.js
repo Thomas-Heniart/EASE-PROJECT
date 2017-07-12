@@ -16326,6 +16326,8 @@ var Step6 = function (_React$Component5) {
 
       e.preventDefault();
       post_api.teams.createTeam(this.props.teamName, this.props.email, this.props.first_name, this.props.last_name, this.props.username, '').then(function (response) {
+        var teamId = response.id;
+        _this9.props.handleInput({ target: { name: "teamId", value: teamId } });
         _this9.props.onStepValidated();
       }).catch(function (err) {});
     }
