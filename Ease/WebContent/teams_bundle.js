@@ -16861,7 +16861,7 @@ var TeamCreationView = function (_React$Component8) {
         email: this.state.email,
         password: this.state.password,
         newsletter: this.state.newsletter,
-        digits: this.props.digits,
+        digits: this.state.digits,
         lname: this.state.lname,
         fname: this.state.fname,
         username: this.state.username,
