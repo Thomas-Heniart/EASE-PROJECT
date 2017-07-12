@@ -23222,7 +23222,7 @@ var StripeCardForm = function (_React$Component) {
 
     _this.onSubmit = _this.onSubmit.bind(_this);
     _this.setOutcome = _this.setOutcome.bind(_this);
-    _this.stripe = Stripe('pk_test_6pRNASCoBOKtIshFeQd4XMUh');
+    _this.stripe = Stripe('pk_test_95DsYIUHWlEgZa5YWglIJHXd');
     _this.elements = _this.stripe.elements();
     _this.card = _this.elements.create('card', {
       style: {
