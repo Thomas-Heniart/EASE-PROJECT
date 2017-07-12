@@ -34,6 +34,8 @@ public class ServletInvitePeople extends HttpServlet {
             String email3 = sm.getStringParam("email3", true);
             if (email1 == null || email2 == null || email3 == null || email1.equals("") || email2.equals("") || email3.equals("") || !Regex.isEmail(email1) || !Regex.isEmail(email2) || !Regex.isEmail(email3))
                 throw new HttpServletException(HttpStatus.BadRequest, "One or more emails are invalid");
+            if (email1.equals(email2) || email1.equals(email3) || email2.equals(email3))
+                throw new HttpServletException(HttpStatus.BadRequest, "One or more emails are invalid");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             hibernateQuery.querySQLString("SELECT COUNT(*) FROM userAndEmailInvitationsMap WHERE user_id = ?");
             hibernateQuery.setParameter(1, sm.getUser().getDBid());
