@@ -53,14 +53,6 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             query.setParameter(3, team_id);
             if (!query.list().isEmpty())
                 throw new HttpServletException(HttpStatus.BadRequest, "This person has already been invited to your team.");
-            query.querySQLString("SELECT id FROM users WHERE email = ?;");
-            query.setParameter(1, email);
-            if (!query.list().isEmpty()) {
-                query.querySQLString("SELECT id FROM teamUsers WHERE email = ?");
-                query.setParameter(1, email);
-                if (!query.list().isEmpty())
-                    throw new HttpServletException(HttpStatus.BadRequest, "This email has already been taken");
-            }
             Date arrival_date = sm.getTimestamp();
             String departure_date_string = sm.getStringParam("departure_date", true);
             TeamUser teamUser = new TeamUser(first_name, last_name, email, username, arrival_date, null, false, team, new TeamUserRole(role));

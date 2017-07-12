@@ -37,7 +37,7 @@ public class ServletSendLoveMoney extends HttpServlet {
             if (team_id != null)
                 team = teamManager.getTeamWithId(team_id);
             if (team != null && team.getCustomer_id() != null)
-                team.increaseAccountBalance(credit);
+                team.increaseAccountBalance(credit, sm.getHibernateQuery());
             else {
                 hiberateQuery.querySQLString("SELECT id FROM waitingCredits WHERE email = ?;");
                 hiberateQuery.setParameter(1, email);

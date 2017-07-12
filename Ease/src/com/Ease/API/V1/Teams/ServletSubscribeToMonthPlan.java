@@ -40,19 +40,19 @@ public class ServletSubscribeToMonthPlan extends HttpServlet {
                 String vat_id = sm.getStringParam("vat_id", true);
                 JSONObject customer_metadata = new JSONObject();
                 customer_metadata.put("business_type", "B2C");
-                if (vat_id != null) {
+                if (vat_id != null && !vat_id.equals("")) {
                     customer_metadata.put("business_type", "B2B");
                     customer_metadata.put("business_vat_id", vat_id);
                 }
                 customerParams.put("metadata", customer_metadata);
                 HibernateQuery hibernateQuery = sm.getHibernateQuery();
-                hibernateQuery.querySQLString("SELECT credit FROM waitingCredits WHERE email = ?");
-                hibernateQuery.setParameter(1, email);
+                hibernateQuery.querySQLString("SELECT credit FROM teamCredit WHERE team_id = ?");
+                hibernateQuery.setParameter(1, team_id);
                 Integer amount = (Integer) hibernateQuery.getSingleResult();
                 if (amount != null) {
                     customerParams.put("account_balance", -amount);
-                    hibernateQuery.querySQLString("DELETE FROM waitingCredits WHERE email = ?");
-                    hibernateQuery.setParameter(1, email);
+                    hibernateQuery.querySQLString("DELETE FROM teamCredit WHERE team_id = ?");
+                    hibernateQuery.setParameter(1, team_id);
                     hibernateQuery.executeUpdate();
                 }
                 Customer customer = Customer.create(customerParams);

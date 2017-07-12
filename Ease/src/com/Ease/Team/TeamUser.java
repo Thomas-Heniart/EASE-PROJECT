@@ -291,8 +291,8 @@ public class TeamUser {
         this.teamUserNotifications = teamUserNotifications;
     } */
 
-    public static TeamUser createAdminUser(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Team team) throws GeneralException {
-        TeamUserRole teamUserRole = new TeamUserRole(TeamUserRole.Role.ADMINISTRATOR.getValue());
+    public static TeamUser createOwner(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Team team) throws GeneralException {
+        TeamUserRole teamUserRole = new TeamUserRole(TeamUserRole.Role.OWNER.getValue());
         return new TeamUser(firstName, lastName, email, username, arrivalDate, teamKey, true, team, teamUserRole);
     }
 

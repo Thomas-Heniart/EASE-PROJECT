@@ -403,26 +403,44 @@ public class Team {
         return this.subscription_id == null;
     }
 
-    public void increaseAccountBalance(Integer amount) {
-        if (this.getCustomer_id() == null)
-            return;
-        try {
-            Customer customer = Customer.retrieve(this.getCustomer_id());
-            Map<String, Object> customerParams = new HashMap<>();
-            Integer account_balance = Math.toIntExact((customer.getAccountBalance() == null) ? 0 : customer.getAccountBalance());
-            customerParams.put("account_balance", account_balance - amount);
-            customer.update(customerParams);
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-        } catch (InvalidRequestException e) {
-            e.printStackTrace();
-        } catch (APIConnectionException e) {
-            e.printStackTrace();
-        } catch (CardException e) {
-            e.printStackTrace();
-        } catch (APIException e) {
-            e.printStackTrace();
+    public void increaseAccountBalance(Integer amount, HibernateQuery hibernateQuery) {
+        hibernateQuery.querySQLString("SELECT credit FROM teamCredit WHERE team_id = ?");
+        hibernateQuery.setParameter(1, this.getDb_id());
+        Integer credit = (Integer) hibernateQuery.getSingleResult();
+        if (this.getCustomer_id() == null) {
+            if (credit != null) {
+                hibernateQuery.querySQLString("UPDATE teamCredit SET credit = ? WHERE team_id = ?;");
+                hibernateQuery.setParameter(1, credit + amount);
+            } else {
+                hibernateQuery.querySQLString("INSERT INTO teamCredit VALUES (NULL, ?, ?);");
+                hibernateQuery.setParameter(1, amount);
+            }
+            hibernateQuery.setParameter(2, this.getDb_id());
+            hibernateQuery.executeUpdate();
+        } else {
+            try {
+                if (credit != null) {
+                    hibernateQuery.querySQLString("DELETE FROM teamCredit WHERE team_id = ?;");
+                    hibernateQuery.setParameter(1, this.getDb_id());
+                    hibernateQuery.executeUpdate();
+                } else
+                    credit = 0;
+                Customer customer = Customer.retrieve(this.getCustomer_id());
+                Map<String, Object> customerParams = new HashMap<>();
+                Integer account_balance = Math.toIntExact((customer.getAccountBalance() == null) ? 0 : customer.getAccountBalance());
+                customerParams.put("account_balance", account_balance - amount - credit);
+                customer.update(customerParams);
+            } catch (AuthenticationException e) {
+                e.printStackTrace();
+            } catch (InvalidRequestException e) {
+                e.printStackTrace();
+            } catch (APIConnectionException e) {
+                e.printStackTrace();
+            } catch (CardException e) {
+                e.printStackTrace();
+            } catch (APIException e) {
+                e.printStackTrace();
+            }
         }
-
     }
 }
