@@ -23071,7 +23071,7 @@ function CompanyInformationForm(props) {
               React.createElement(
                      "label",
                      { htmlFor: "postal_code" },
-                     "Postal Code"
+                     "Postal Code*"
               ),
               React.createElement("input", { placeholder: "Postal Code",
                      value: props.companyInfo.zip,
@@ -23079,7 +23079,8 @@ function CompanyInformationForm(props) {
                      id: "zip",
                      name: "zip",
                      type: "text",
-                     className: "input_unstyle modal_input" }),
+                     className: "input_unstyle modal_input",
+                     required: true }),
               React.createElement(
                      "label",
                      { htmlFor: "vat_id" },
