@@ -16413,6 +16413,7 @@ var Step7 = function (_React$Component6) {
         }
       }, this);
       axios.all(calls).then(function () {
+        _this11.props.handleInput({ target: { name: "invitedPeople", value: calls.length } });
         _this11.props.onStepValidated();
       });
     }
@@ -16541,7 +16542,7 @@ var Step8 = function (_React$Component7) {
       var f = this.props.friends;
 
       post_api.teams.inviteFriends(this.props.teamId, f[0].email, f[1].email, f[2].email).then(function (response) {
-        _this14.handleInput({ target: { value: 15, name: 'credits' } });
+        _this14.props.handleInput({ target: { value: 15, name: 'credits' } });
         _this14.setState({ friendsInvited: true });
       }).catch(function (err) {});
     }
@@ -16620,6 +16621,59 @@ var Step8 = function (_React$Component7) {
               { className: 'button-unstyle big-button', type: 'submit' },
               'Update the bill !'
             )
+          )
+        ),
+        React.createElement(
+          'div',
+          { className: 'content_row flex_direction_column' },
+          React.createElement(
+            'h1',
+            null,
+            'Billing summary'
+          ),
+          React.createElement(
+            'span',
+            null,
+            'You are buying the ',
+            React.createElement(
+              'strong',
+              null,
+              'Starter plan'
+            )
+          ),
+          React.createElement(
+            'span',
+            null,
+            'You are paying ',
+            React.createElement(
+              'strong',
+              null,
+              'Mensually'
+            )
+          ),
+          React.createElement(
+            'span',
+            null,
+            'Your price per seat is 3,99e (before 20% VAT)'
+          ),
+          React.createElement(
+            'span',
+            null,
+            'You will pay 3,99e now (after credit)'
+          ),
+          React.createElement(
+            'span',
+            null,
+            'With our Fair Billing Policy, we believe you only pay for active users. Right now you will pay for 1 user only (you), and we will update your billing when your members arrive or leave your team.'
+          ),
+          React.createElement(
+            'span',
+            null,
+            'Estimations: you invited ',
+            this.props.invitedPeople,
+            ' people in your team, when everybody has arrived, you will pay ',
+            (this.props.invitedPeople + 1) * 3.99,
+            'e/month (before 20% VAT).'
           )
         ),
         React.createElement(
@@ -16715,6 +16769,7 @@ var TeamCreationView = function (_React$Component8) {
       teamId: -1,
       credits: 0,
       invitations: [{ email: '', username: '' }, { email: '', username: '' }, { email: '', username: '' }],
+      invitedPeople: 0,
       friends: [{ email: '' }, { email: '' }, { email: '' }],
       companyInformation: {
         country: 'France',
@@ -16736,12 +16791,6 @@ var TeamCreationView = function (_React$Component8) {
     _this18.editInvitationUsername = _this18.editInvitationUsername.bind(_this18);
     _this18.editFriendsEmail = _this18.editFriendsEmail.bind(_this18);
     _this18.handleCompanyInfoInput = _this18.handleCompanyInfoInput.bind(_this18);
-    _this18.submitStep1 = _this18.submitStep1.bind(_this18);
-    _this18.submitStep2 = _this18.submitStep2.bind(_this18);
-    _this18.submitStep3 = _this18.submitStep3.bind(_this18);
-    _this18.submitStep4 = _this18.submitStep4.bind(_this18);
-    _this18.submitStep6 = _this18.submitStep6.bind(_this18);
-    _this18.submitStep7 = _this18.submitStep7.bind(_this18);
     _this18.submitStep8 = _this18.submitStep8.bind(_this18);
     return _this18;
   }
@@ -16794,36 +16843,6 @@ var TeamCreationView = function (_React$Component8) {
       this.setState({ newsletter: !this.state.newsletter });
     }
   }, {
-    key: 'submitStep1',
-    value: function submitStep1() {
-      this.incrementStep();
-    }
-  }, {
-    key: 'submitStep2',
-    value: function submitStep2() {
-      this.incrementStep();
-    }
-  }, {
-    key: 'submitStep3',
-    value: function submitStep3() {
-      this.incrementStep();
-    }
-  }, {
-    key: 'submitStep4',
-    value: function submitStep4() {
-      this.incrementStep();
-    }
-  }, {
-    key: 'submitStep6',
-    value: function submitStep6() {
-      this.incrementStep();
-    }
-  }, {
-    key: 'submitStep7',
-    value: function submitStep7() {
-      this.incrementStep();
-    }
-  }, {
     key: 'submitStep8',
     value: function submitStep8() {
       console.log('All done fine');
@@ -16842,23 +16861,23 @@ var TeamCreationView = function (_React$Component8) {
     key: 'render',
     value: function render() {
       var steps = [];
-      steps.push(React.createElement(Step1, { onStepValidated: this.submitStep1,
+      steps.push(React.createElement(Step1, { onStepValidated: this.incrementStep,
         handleInput: this.handleInput,
         email: this.state.email,
         switchNewsletter: this.switchNewsletter,
         newsletter: this.state.newsletter,
         key: '1' }));
-      steps.push(React.createElement(Step2, { onStepValidated: this.submitStep2,
+      steps.push(React.createElement(Step2, { onStepValidated: this.incrementStep,
         digits: this.state.digits,
         email: this.state.email,
         handleInput: this.handleInput,
         key: '2' }));
-      steps.push(React.createElement(Step3, { onStepValidated: this.submitStep3,
+      steps.push(React.createElement(Step3, { onStepValidated: this.incrementStep,
         password: this.state.password,
         confirmPassword: this.state.confirmPassword,
         handleInput: this.handleInput,
         key: '3' }));
-      steps.push(React.createElement(Step4, { onStepValidated: this.submitStep4,
+      steps.push(React.createElement(Step4, { onStepValidated: this.incrementStep,
         email: this.state.email,
         password: this.state.password,
         newsletter: this.state.newsletter,
@@ -16869,7 +16888,7 @@ var TeamCreationView = function (_React$Component8) {
         handleInput: this.handleInput,
         key: '4' }));
       steps.push(React.createElement(Step5, { incStep: this.incrementStep, key: '5' }));
-      steps.push(React.createElement(Step6, { onStepValidated: this.submitStep6,
+      steps.push(React.createElement(Step6, { onStepValidated: this.incrementStep,
         username: this.state.username,
         first_name: this.state.fname,
         last_name: this.state.lname,
@@ -16877,9 +16896,10 @@ var TeamCreationView = function (_React$Component8) {
         teamName: this.state.teamName,
         handleInput: this.handleInput,
         key: '6' }));
-      steps.push(React.createElement(Step7, { onStepValidated: this.submitStep7,
+      steps.push(React.createElement(Step7, { onStepValidated: this.incrementStep,
         incStep: this.incrementStep,
         teamId: this.state.teamId,
+        handleInput: this.handleInput,
         invitations: this.state.invitations,
         editInvitationEmail: this.editInvitationEmail,
         editInvitationUsername: this.editInvitationUsername,
@@ -16889,6 +16909,7 @@ var TeamCreationView = function (_React$Component8) {
         onStepValidated: this.submitStep8,
         friends: this.state.friends,
         editFriendsEmail: this.editFriendsEmail,
+        invitedPeople: this.state.invitedPeople,
         credits: this.state.credits,
         teamId: this.state.teamId,
         companyInfo: this.state.companyInformation,
