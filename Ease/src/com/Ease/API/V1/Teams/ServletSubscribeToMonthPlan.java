@@ -99,6 +99,8 @@ public class ServletSubscribeToMonthPlan extends HttpServlet {
             customerParams.put("address_state", null);
         if (customerParams.get("address_country") == null || customerParams.get("address_country").equals(""))
             throw new HttpServletException(HttpStatus.BadRequest, "You must provide a valid address");
+        if (customerParams.get("address_city") == null || customerParams.get("address_city").equals(""))
+            throw new HttpServletException(HttpStatus.BadRequest, "You must provide a valid address");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
