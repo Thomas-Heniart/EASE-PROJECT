@@ -47,8 +47,8 @@ public class ServletCreateTeam extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "email is needed.");
             if (username == null || username.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "username is needed.");
-            if (jobTitle == null || jobTitle.equals(""))
-                throw new HttpServletException(HttpStatus.BadRequest, "job title is needed.");
+            if (jobTitle == null)
+                jobTitle = "";
             if (!user.getVerifiedEmails().contains(email) && (digits == null || digits.equals("") || digits.length() != 6))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot create a team.");
             if (user.getUnverifiedEmails().contains(email)) {
