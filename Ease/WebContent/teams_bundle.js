@@ -16408,7 +16408,7 @@ var Step7 = function (_React$Component6) {
       var calls = [];
       this.props.invitations.map(function (item) {
         if (item.email.match(_utils.emailRegexp) !== null && item.username.length > 0) {
-          calls.push(post_api.teamUser.createTeamUser(this.props.teamId, '', '', item.email, item.username, null, 1));
+          calls.push(post_api.teamUser.createTeamUser(this.props.teamId, '', '', item.email, item.username, null, '1'));
         }
       }, this);
       axios.all(calls).then(function () {
