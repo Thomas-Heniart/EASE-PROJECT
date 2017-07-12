@@ -6,7 +6,6 @@ import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.SendGridMail;
-import com.Ease.Notification.TeamNotification;
 import com.Ease.Utils.*;
 import com.stripe.exception.*;
 import com.stripe.model.Customer;
@@ -83,9 +82,6 @@ public class Team {
     @OneToMany(mappedBy = "team", fetch = FetchType.LAZY, orphanRemoval = true)
     protected List<Channel> channels = new LinkedList<>();
 
-    /*@OneToMany(mappedBy = "team", fetch = FetchType.LAZY, orphanRemoval = true)
-    protected Set<TeamNotification> teamNotifications = new HashSet<>();*/
-
     @Transient
     protected Map<Integer, Channel> channelIdMap = new HashMap<>();
 
@@ -155,14 +151,6 @@ public class Team {
     public void setChannels(List<Channel> channels) {
         this.channels = channels;
     }
-
-    /*public Set<TeamNotification> getTeamNotifications() {
-        return teamNotifications;
-    }
-
-    public void setTeamNotifications(Set<TeamNotification> teamNotifications) {
-        this.teamNotifications = teamNotifications;
-    }*/
 
     public AppManager getAppManager() {
         return appManager;

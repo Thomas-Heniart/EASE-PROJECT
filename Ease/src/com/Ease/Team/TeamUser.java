@@ -1,24 +1,17 @@
 package com.Ease.Team;
 
-import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Dashboard.App.SharedApp;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
-import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.User.User;
-import com.Ease.Notification.TeamNotification;
 import com.Ease.Notification.TeamUserNotification;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.RSA;
-import com.Ease.Utils.Servlets.PostServletManager;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.annotations.Cascade;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
-import javax.servlet.Servlet;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -88,10 +81,10 @@ public class TeamUser {
     @Column(name = "jobTitle")
     protected String jobTitle;
 
-    /* @OneToMany(mappedBy = "teamUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    protected Set<TeamUserNotification> teamUserNotifications = new HashSet<>();
+    @OneToMany(mappedBy = "teamUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    protected List<TeamUserNotification> teamUserNotifications = new LinkedList<>();
 
-    @OneToMany(mappedBy = "teamUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    /* @OneToMany(mappedBy = "teamUser", cascade = CascadeType.ALL, orphanRemoval = true)
     protected Set<TeamUserTip> teamUserTips = new HashSet<>(); */
 
     @Transient
@@ -158,14 +151,6 @@ public class TeamUser {
 
     public void setDashboard_user(com.Ease.Dashboard.User.User dashboard_user) {
         this.dashboard_user = dashboard_user;
-    }
-
-    public void setDashboard_user(com.Ease.Dashboard.User.User user, DataBaseConnection db) throws GeneralException {
-        DatabaseRequest request = db.prepareRequest("UPDATE teamUsers SET user_id = ? WHERE id = ?");
-        request.setInt(user.getDBid());
-        request.setInt(this.db_id);
-        request.set();
-        this.setDashboard_user(user);
     }
 
     public String getFirstName() {
@@ -298,11 +283,11 @@ public class TeamUser {
         this.phone_number = phone_number;
     }
 
-    /* public Set<TeamUserNotification> getTeamUserNotifications() {
+    public List<TeamUserNotification> getTeamUserNotifications() {
         return teamUserNotifications;
     }
 
-    public void setTeamUserNotifications(Set<TeamUserNotification> teamUserNotifications) {
+    /* public void setTeamUserNotifications(Set<TeamUserNotification> teamUserNotifications) {
         this.teamUserNotifications = teamUserNotifications;
     } */
 

@@ -38,7 +38,7 @@ pageEncoding="UTF-8"%>
 			<span class="tags">
 				<c:forEach items='${catalog.getTags()}' var="item">
 				<c:if test="${user.canSeeTag(item)}">
-				<a href="#" tagId="${item.getSingleId()}" class="tag btn btn-default ease-button hvr-grow" name="${item.getName()}"
+				<a href="#" tagId="${item.getDbId()}" class="tag btn btn-default ease-button hvr-grow" name="${item.getName()}"
 				style="background-color: ${item.getHexaColor()};">
 				${item.getName()}</a>					
 			</c:if>

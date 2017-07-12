@@ -11,7 +11,7 @@ import java.util.Date;
 @Entity
 @Table(name = "teamUserNotifications")
 @PrimaryKeyJoinColumn(name = "id")
-public class TeamUserNotification extends TeamNotification {
+public class TeamUserNotification extends Notification {
 
     @ManyToOne
     @JoinColumn(name = "team_user_id")
@@ -19,7 +19,7 @@ public class TeamUserNotification extends TeamNotification {
 
 
     public TeamUserNotification(String title, String content, String logo_path, Boolean seen, Date creation_date, String url, TeamUser teamUser) {
-        super(title, content, logo_path, seen, creation_date, url, teamUser.getTeam());
+        super(title, content, logo_path, seen, creation_date, url);
         this.teamUser = teamUser;
     }
 
