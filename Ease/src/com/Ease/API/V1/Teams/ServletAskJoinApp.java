@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
@@ -30,6 +31,7 @@ public class ServletAskJoinApp extends HttpServlet {
             ShareableApp shareableApp = team.getAppManager().getShareableAppWithId(app_id);
             TeamUser teamUser = sm.getTeamUserForTeam(team);
             shareableApp.addPendingTeamUser(teamUser, sm.getDB());
+            shareableApp.getTeamUser_owner().addNotification(shareableApp.getTeamUser_owner().getUsername() + " would like to have access to " + ((App) shareableApp).getName(), sm.getTimestamp());
             sm.setSuccess(shareableApp.getShareableJson());
         } catch (Exception e) {
             sm.setError(e);
