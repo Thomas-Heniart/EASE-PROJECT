@@ -1,5 +1,7 @@
 package com.Ease.Notification;
 
+import org.json.simple.JSONObject;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -15,9 +17,6 @@ public abstract class Notification {
     @GeneratedValue
     @Column(name = "id")
     protected Integer id;
-
-    @Column(name = "title")
-    protected String title;
 
     @Column(name = "content")
     protected String content;
@@ -37,8 +36,7 @@ public abstract class Notification {
     @Column(name = "url")
     protected String url;
 
-    public Notification(String title, String content, String logo_path, Boolean seen, Date creation_date, String url) {
-        this.title = title;
+    public Notification(String content, String logo_path, Boolean seen, Date creation_date, String url) {
         this.content = content;
         this.logo_path = logo_path;
         this.seen = seen;
@@ -55,14 +53,6 @@ public abstract class Notification {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getContent() {
@@ -111,5 +101,15 @@ public abstract class Notification {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public JSONObject getJson() {
+        JSONObject res = new JSONObject();
+        res.put("id", this.getId());
+        res.put("content", this.getContent());
+        res.put("logo_path", this.getLogo_path());
+        res.put("url", this.getUrl());
+        res.put("seen", this.isSeen());
+        return res;
     }
 }

@@ -32,7 +32,7 @@ public class ServletAddChannel extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Channel name is needed.");
             if (purpose == null || purpose.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Channel purpose is needed.");
-            Channel channel = new Channel(team, channel_name, purpose);
+            Channel channel = new Channel(team, channel_name, purpose, sm.getTeamUserForTeamId(team_id).getDb_id());
             sm.saveOrUpdate(channel);
             team.addChannel(channel);
             sm.setSuccess(channel.getJson());

@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Team.Channel;
@@ -43,7 +44,10 @@ public class ServletShareApp extends HttpServlet {
             JSONObject params = shareableApp.getNeededParams(sm);
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
-            shareableApp.removePendingTeamUser(teamUser_tenant, db);
+            if (shareableApp.getPendingTeamUsers().contains(teamUser_tenant)) {
+                shareableApp.removePendingTeamUser(teamUser_tenant, db);
+                teamUser_tenant.addNotification(teamUser_owner.getUsername() + " approved your access to " + ((App)shareableApp).getName() + ((channel == null) ? "" : " in " + channel.getName()), sm.getTimestamp());
+            }
             SharedApp sharedApp = shareableApp.share(teamUser_owner, teamUser_tenant, channel, team, params, sm);
             if (teamUser_tenant == sm.getTeamUserForTeam(team))
                 sharedApp.accept(db);

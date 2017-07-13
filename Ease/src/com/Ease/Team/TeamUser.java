@@ -315,6 +315,9 @@ public class TeamUser {
         for (Channel channel : this.getTeam().getChannelsForTeamUser(this))
             channel_ids.add(channel.getDb_id());
         res.put("channel_ids", channel_ids);
+        JSONArray notifications = new JSONArray();
+        for (TeamUserNotification notification : this.getTeamUserNotifications())
+            notifications.add(notification.getJson());
         return res;
     }
 
@@ -462,5 +465,10 @@ public class TeamUser {
     public void disconnect() {
         this.dashboard_user = null;
         this.deciphered_teamKey = null;
+    }
+
+    public void addNotification(String content, Date timestamp) {
+        TeamUserNotification notification = new TeamUserNotification(content, "", false, timestamp, "", this);
+        this.teamUserNotifications.add(notification);
     }
 }

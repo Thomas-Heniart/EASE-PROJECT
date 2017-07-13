@@ -1,6 +1,7 @@
 package com.Ease.Notification;
 
 import com.Ease.Team.TeamUser;
+import org.json.simple.JSONObject;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -18,8 +19,8 @@ public class TeamUserNotification extends Notification {
     protected TeamUser teamUser;
 
 
-    public TeamUserNotification(String title, String content, String logo_path, Boolean seen, Date creation_date, String url, TeamUser teamUser) {
-        super(title, content, logo_path, seen, creation_date, url);
+    public TeamUserNotification(String content, String logo_path, Boolean seen, Date creation_date, String url, TeamUser teamUser) {
+        super(content, logo_path, seen, creation_date, url);
         this.teamUser = teamUser;
     }
 
@@ -32,5 +33,11 @@ public class TeamUserNotification extends Notification {
 
     public void setTeamUser(TeamUser teamUser) {
         this.teamUser = teamUser;
+    }
+
+    public JSONObject getJson() {
+        JSONObject res = super.getJson();
+        res.put("team_user_id", this.getTeamUser().getDb_id());
+        return res;
     }
 }

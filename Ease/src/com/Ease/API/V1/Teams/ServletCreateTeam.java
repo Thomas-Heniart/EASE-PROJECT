@@ -72,10 +72,11 @@ public class ServletCreateTeam extends HttpServlet {
             owner.setDeciphered_teamKey(teamKey);
             owner.setUser_id(user.getDBid());
             sm.saveOrUpdate(team);
-            Channel channel = new Channel(team, "General", "This is the general channel");
-            sm.saveOrUpdate(channel);
             sm.saveOrUpdate(owner);
+            Channel channel = new Channel(team, "General", "This is the general channel", owner.getDb_id());
+            sm.saveOrUpdate(channel);
             owner.setDashboard_user(user);
+            user.addTeamUser(owner);
             team.addChannel(channel);
             team.addTeamUser(owner);
             sm.saveOrUpdate(team);

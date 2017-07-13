@@ -77,12 +77,10 @@ public class Keys {
             request.setInt(id);
             request.set();
         } else {
-            if (!Hashing.compare(password, hashed_password)) {
+            if (!Hashing.compare(password, hashed_password))
                 throw new GeneralException(ServletManager.Code.UserMiss, "Wrong email or password.");
-            }
             privateKey = AES.decrypt(ciphered_privateKey, keyUser);
         }
-        System.out.println("Private key is: " + ((privateKey == null) ? "null" : privateKey));
         return new Keys(db_id, hashed_password, saltPerso, keyUser, publicKey, privateKey);
     }
 

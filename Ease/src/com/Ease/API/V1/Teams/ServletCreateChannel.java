@@ -33,7 +33,7 @@ public class ServletCreateChannel extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty channel name.");
             if (purpose == null)
                 purpose = "";
-            Channel channel = new Channel(team, name, purpose);
+            Channel channel = new Channel(team, name, purpose, sm.getTeamUserForTeamId(team_id).getDb_id());
             sm.saveOrUpdate(channel);
             team.addChannel(channel);
             sm.setSuccess(channel.getJson());

@@ -30,6 +30,9 @@ public class Channel {
     @Column(name = "purpose")
     protected String purpose;
 
+    @Column(name = "creator_id")
+    protected Integer creator_id;
+
     @ManyToMany
     @JoinTable(name = "channelAndTeamUserMap", joinColumns = {@JoinColumn(name = "channel_id")}, inverseJoinColumns = {@JoinColumn(name = "team_user_id")})
     protected List<TeamUser> teamUsers = new LinkedList<>();
@@ -38,22 +41,11 @@ public class Channel {
     @JoinTable(name = "pendingJoinChannelRequests", joinColumns = {@JoinColumn(name = "channel_id")}, inverseJoinColumns = {@JoinColumn(name = "teamUser_id")})
     protected List<TeamUser> pending_teamUsers = new LinkedList<>();
 
-    public Channel(Team team, String name, String purpose, List<TeamUser> teamUsers) {
-        this.team = team;
-        this.name = name;
-        this.teamUsers = teamUsers;
-        this.purpose = purpose;
-    }
-
-    public Channel(Team team, String name, String purpose) {
+    public Channel(Team team, String name, String purpose, Integer creator_id) {
         this.team = team;
         this.name = name;
         this.purpose = purpose;
-    }
-
-    public Channel(String name, String purpose) {
-        this.name = name;
-        this.purpose = purpose;
+        this.creator_id = creator_id;
     }
 
     public Channel() {
@@ -89,6 +81,14 @@ public class Channel {
 
     public void setPurpose(String purpose) {
         this.purpose = purpose;
+    }
+
+    public Integer getCreator_id() {
+        return creator_id;
+    }
+
+    public void setCreator_id(Integer creator_id) {
+        this.creator_id = creator_id;
     }
 
     public List<TeamUser> getTeamUsers() {
