@@ -24,6 +24,26 @@ import java.io.IOException;
  */
 @WebServlet("/api/v1/teams/FinalizeRegistration")
 public class ServletFinalizeTeamUserRegistration extends HttpServlet {
+
+    private static final String[] jobRoles = {
+            "Adminisrative/Facilities",
+            "Accounting/Finance",
+            "Business Development",
+            "Business Owner",
+            "Customer Support",
+            "Data/Analytics/Business Intelligence",
+            "Design",
+            "Engineering (Software)",
+            "Marketing",
+            "Media/Communications",
+            "Operations",
+            "Product Management",
+            "Program/Project Management",
+            "Research",
+            "Sales",
+            "Other"
+    };
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
@@ -31,7 +51,8 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             String firstName = sm.getStringParam("first_name", true);
             String lastName = sm.getStringParam("last_name", true);
             String username = sm.getStringParam("username", true);
-            String jobTitle = sm.getStringParam("job_title", true);
+            //String jobTitle = sm.getStringParam("job_title", true);
+            Integer job_index = sm.getIntParam("job_index", true);
             String code = sm.getStringParam("code", true);
             if (username == null || username.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "username is needed.");
@@ -41,8 +62,10 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "lastName is needed.");
             if (code == null || code.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "code is needed.");
-            if (jobTitle == null || jobTitle.equals(""))
-                throw new HttpServletException(HttpStatus.BadRequest, "jobTitle is needed.");
+            /*if (jobTitle == null || jobTitle.equals(""))
+                throw new HttpServletException(HttpStatus.BadRequest, "jobTitle is needed.");*/
+            if (job_index == null || job_index < 0 || job_index >= jobRoles.length)
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid job index.");
             HibernateQuery query = sm.getHibernateQuery();
             query.querySQLString("SELECT id, team_id, teamUser_id FROM pendingTeamInvitations WHERE code = ?");
             query.setParameter(1, code);
@@ -61,7 +84,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             teamUser.setFirstName(firstName);
             teamUser.setLastName(lastName);
             teamUser.setUsername(username);
-            teamUser.setJobTitle(jobTitle);
+            teamUser.setJobTitle(jobRoles[job_index]);
             query.saveOrUpdateObject(teamUser);
             query.querySQLString("DELETE FROM pendingTeamInvitations WHERE id = ?");
             query.setParameter(1, id);
