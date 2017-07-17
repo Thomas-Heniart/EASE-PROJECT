@@ -53,7 +53,7 @@ public class ServletRegistration extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "You didn't ask for an account.");
             if (!db_digits.equals(digits))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits.");
-            User newUser = User.createUser(email, username, password, registration_date, send_news, sm.getServletContext(), sm.getDB());
+            User newUser = User.createUser(email, username, password, registration_date, sm.getServletContext(), sm.getDB());
             if (send_news) {
                 MailJetBuilder mailJetBuilder = new MailJetBuilder(ContactslistManageContact.resource, 13300);
                 mailJetBuilder.property(ContactslistManageContact.EMAIL, newUser.getEmail());
