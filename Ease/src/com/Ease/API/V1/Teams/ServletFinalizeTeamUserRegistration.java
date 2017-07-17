@@ -10,6 +10,7 @@ import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.GetServletManager;
 import com.Ease.Utils.Servlets.PostServletManager;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -132,16 +133,18 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             hibernateQuery.querySQLString("SELECT team_id, teamUser_id FROM pendingTeamInvitations WHERE code = ?");
             hibernateQuery.setParameter(1, code);
-            Integer[] teamAndTeamUserId = (Integer[]) hibernateQuery.getSingleResult();
-            hibernateQuery.commit();
+            Object[] teamAndTeamUserId = (Object[]) hibernateQuery.getSingleResult();
             if (teamAndTeamUserId == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "Your code is invalid.");
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(teamAndTeamUserId[0]);
-            TeamUser teamUser = team.getTeamUserWithId(teamAndTeamUserId[1]);
-            sm.setSuccess(teamUser.getJson());
+            Team team = teamManager.getTeamWithId((Integer) teamAndTeamUserId[0]);
+            TeamUser teamUser = team.getTeamUserWithId((Integer) teamAndTeamUserId[1]);
+            JSONObject res = teamUser.getJson();
+            res.put("team_id", team.getDb_id());
+            sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);
         }
+        sm.sendResponse();
     }
 }
