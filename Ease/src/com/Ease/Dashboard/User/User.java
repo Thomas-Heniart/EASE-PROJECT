@@ -106,14 +106,15 @@ public class User {
         request.setInt(db_id);
         DatabaseResult rs2 = request.get();
         boolean isAdmin = rs2.next();
-        request = db.prepareRequest("SELECT saw_group FROM groupsAndUsersMap WHERE user_id = ? LIMIT 1;");
+        /* request = db.prepareRequest("SELECT saw_group FROM groupsAndUsersMap WHERE user_id = ? LIMIT 1;");
         request.setInt(db_id);
         rs2 = request.get();
         boolean sawGroupProfile = false;
         if (rs2.next())
             sawGroupProfile = rs2.getBoolean(1);
+        */
         SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, db);
-        User newUser = new User(db_id, firstName, email, keys, options, isAdmin, sawGroupProfile,
+        User newUser = new User(db_id, firstName, email, keys, options, isAdmin, false,
                 sessionSave, status);
         newUser.loadTeamUsers(context);
         newUser.initializeDashboardManager(context, db);
@@ -126,7 +127,7 @@ public class User {
                 logwithApp.rempLogwith((WebsiteApp) websiteApp);
             }
         }
-        request = db.prepareRequest("SELECT group_id FROM groupsAndUsersMap WHERE user_id= ?;");
+        /* request = db.prepareRequest("SELECT group_id FROM groupsAndUsersMap WHERE user_id= ?;");
         request.setInt(newUser.getDBid());
         rs2 = request.get();
         Group userGroup;
@@ -134,7 +135,7 @@ public class User {
             userGroup = GroupManager.getGroupManager(context).getGroupFromDBid(rs2.getString(1));
             if (userGroup != null)
                 newUser.getGroups().add(userGroup);
-        }
+        } */
         return newUser;
     }
 
