@@ -94,8 +94,8 @@ public class TeamUser {
     @Column(name = "disabled")
     private boolean disabled;
 
-    @Column(name = "admin_email")
-    protected String admin_email;
+    @Column(name = "admin_id")
+    protected Integer admin_id;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "status_id")
@@ -103,6 +103,9 @@ public class TeamUser {
 
     @Column(name = "phone_number")
     protected String phone_number;
+
+    @Column(name = "disabled_date")
+    private Date disabledDate;
 
     public TeamUser(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Boolean verified, Team team, TeamUserRole teamUserRole) {
         this.firstName = firstName;
@@ -260,12 +263,20 @@ public class TeamUser {
         this.disabled = disabled;
     }
 
-    public String getAdmin_email() {
-        return admin_email;
+    public Integer getAdmin_id() {
+        return admin_id;
     }
 
-    public void setAdmin_email(String admin_email) {
-        this.admin_email = admin_email;
+    public void setAdmin_id(Integer admin_id) {
+        this.admin_id = admin_id;
+    }
+
+    public Date getDisabledDate() {
+        return disabledDate;
+    }
+
+    public void setDisabledDate(Date disabledDate) {
+        this.disabledDate = disabledDate;
     }
 
     public TeamUserStatus getTeamUserStatus() {

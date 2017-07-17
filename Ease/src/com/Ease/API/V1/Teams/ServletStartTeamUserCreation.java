@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.Context.Variables;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Mail.SendGridMail;
@@ -56,7 +57,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             Date arrival_date = sm.getTimestamp();
             String departure_date_string = sm.getStringParam("departure_date", true);
             TeamUser teamUser = new TeamUser(first_name, last_name, email, username, arrival_date, null, false, team, new TeamUserRole(role));
-            teamUser.setAdmin_email(adminTeamUser.getEmail());
+            teamUser.setAdmin_id(adminTeamUser.getDb_id());
             if (departure_date_string != null && !departure_date_string.equals(""))
                 teamUser.setDepartureDate(departure_format.parse(departure_date_string));
             query.saveOrUpdateObject(teamUser);
@@ -80,6 +81,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             mailJetBuilder.addVariable("first_name", adminTeamUser.getFirstName());
             mailJetBuilder.addVariable("last_name", adminTeamUser.getLastName());
             mailJetBuilder.addVariable("email", adminTeamUser.getEmail());
+            mailJetBuilder.addVariable("link", Variables.URL_PATH + "#/teamInvitation/" + code);
             mailJetBuilder.sendEmail();
             /* SendGridMail sendGridMail = new SendGridMail("Benjamin @EaseSpace", "benjamin@ease.space");
             sendGridMail.sendInvitationToJoinTeamEmail(team.getName(), adminTeamUser.getFirstName(), adminTeamUser.getEmail(), email, code); */

@@ -8,6 +8,7 @@ import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Crypto.CodeGenerator;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
+import com.Ease.Utils.Servlets.GetServletManager;
 import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -78,10 +79,14 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             teamUser.setDashboard_user(sm.getUser());
             sm.saveOrUpdate(teamUser);
             team.askVerificationForTeamUser(teamUser, verificationCode);
+            if (teamUser.getAdmin_id() == null || teamUser.getAdmin_id() == 0)
+                throw new HttpServletException(HttpStatus.BadRequest, "The user must be invited by an admin");
+            TeamUser teamUser_admin = team.getTeamUserWithId(teamUser.getAdmin_id());
+            sm.saveOrUpdate(teamUser_admin.addNotification(teamUser.getUsername() + " is ready to join your team. Give your final approval to give the access.", sm.getTimestamp()));
             MailJetBuilder mailJetBuilder = new MailJetBuilder();
             mailJetBuilder.setTemplateId(180141);
             mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
-            mailJetBuilder.addTo(teamUser.getAdmin_email());
+            mailJetBuilder.addTo(teamUser_admin.getEmail());
             mailJetBuilder.addVariable("first_name", teamUser.getFirstName());
             mailJetBuilder.addVariable("last_name", teamUser.getLastName());
             mailJetBuilder.addVariable("team_name", team.getName());
@@ -96,9 +101,24 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        /* Redirect to the right page */
-        /* Get the code, teamUser corresponding with info, already have an account or not ? */
-        RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-        rd.forward(request, response);
+        GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
+        try {
+            String code = sm.getParam("code", false);
+            if (code == null || code.equals(""))
+                throw new HttpServletException(HttpStatus.BadRequest, "No code provided.");
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            hibernateQuery.querySQLString("SELECT team_id, teamUser_id FROM pendingTeamInvitations WHERE code = ?");
+            hibernateQuery.setParameter(1, code);
+            Integer[] teamAndTeamUserId = (Integer[]) hibernateQuery.getSingleResult();
+            hibernateQuery.commit();
+            if (teamAndTeamUserId == null)
+                throw new HttpServletException(HttpStatus.BadRequest, "Your code is invalid.");
+            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
+            Team team = teamManager.getTeamWithId(teamAndTeamUserId[0]);
+            TeamUser teamUser = team.getTeamUserWithId(teamAndTeamUserId[1]);
+            sm.setSuccess(teamUser.getJson());
+        } catch (Exception e) {
+            sm.setError(e);
+        }
     }
 }

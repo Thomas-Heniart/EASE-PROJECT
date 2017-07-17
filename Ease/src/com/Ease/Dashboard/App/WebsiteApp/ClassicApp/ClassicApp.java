@@ -319,9 +319,9 @@ public class ClassicApp extends WebsiteApp {
     public JSONObject getShareableJson() throws HttpServletException {
         JSONObject res = super.getShareableJson();
         res.put("type", "simple");
-        res.put("password_change_interval", this.getAccount().getPasswordChangeInterval());
+        /* res.put("password_change_interval", this.getAccount().getPasswordChangeInterval());
         res.put("last_modification", this.getAccount().printLastUpdatedDate());
-        res.put("password_must_be_updated", this.getAccount().mustUpdatePassword());
+        res.put("password_must_be_updated", this.getAccount().mustUpdatePassword()); */
         res.put("account_information", this.getAccount().getInformationJsonWithoutPassword());
         JSONArray jsonArray = (JSONArray) res.get("receivers");
         for (Object object : jsonArray) {

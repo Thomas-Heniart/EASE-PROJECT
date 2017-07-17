@@ -1,6 +1,7 @@
 package com.Ease.Servlet;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -91,10 +92,16 @@ public class ResetPassword extends HttpServlet {
                 Team team = teamManager.getTeamWithId((Integer) teamUserIdAndTeamId[1]);
                 TeamUser teamUser = team.getTeamUserWithId((Integer) teamUserIdAndTeamId[0]);
                 teamUser.setDisabled(true);
+                teamUser.setDisabledDate(new Date());
                 teamUser.setTeamKey(null);
                 hibernateQuery.saveOrUpdateObject(teamUser);
                 for (SharedApp sharedApp : teamUser.getSharedApps())
                     sharedApp.setDisableShared(true, sm.getDB());
+                if (teamUser.getAdmin_id() != null) {
+                    hibernateQuery.saveOrUpdateObject(team.getTeamUserWithId(teamUser.getAdmin_id()).addNotification(teamUser.getUsername() + " lost the password to access your team " + team.getName() + " on Ease.space. Please give again the access to this person.", new Date()));
+                } else {
+                    /* @TODO */
+                }
             }
             hibernateQuery.commit();
             DatabaseRequest databaseRequest = db.prepareRequest("DELETE FROM passwordLost WHERE user_id = ?;");

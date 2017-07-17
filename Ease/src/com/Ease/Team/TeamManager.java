@@ -154,4 +154,25 @@ public class TeamManager {
         hibernateQuery.commit();
         System.out.println("Password reminder end...");
     }
+
+    public void passwordLostReminder() throws HttpServletException {
+        System.out.println("Password lost reminder start...");
+        HibernateQuery hibernateQuery = new HibernateQuery();
+        for (Team team : this.getTeams()) {
+            for (TeamUser teamUser : team.getTeamUsers()) {
+                if (teamUser.isDisabled()) {
+                    hibernateQuery.querySQLString("SELECT DATE_ADD(DATE(?), INTERVAL 7 DAY) = CURDATE();");
+                    hibernateQuery.setParameter(1, teamUser.getDisabledDate());
+                    if ((Boolean) hibernateQuery.getSingleResult()) {
+                        if (teamUser.getAdmin_id() == null)
+                            continue;
+                        hibernateQuery.saveOrUpdateObject(team.getTeamUserWithId(teamUser.getAdmin_id()).addNotification("Since last week " + teamUser.getUsername() + " lost the password to access your team " + team.getName() + " on Ease.space. Please give again the access to this person.", new Date()));
+                    }
+                }
+
+            }
+        }
+        hibernateQuery.commit();
+        System.out.println("Password lost reminder end...");
+    }
 }
