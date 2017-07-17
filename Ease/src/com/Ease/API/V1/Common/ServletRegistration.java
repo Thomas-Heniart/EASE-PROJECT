@@ -2,11 +2,13 @@ package com.Ease.API.V1.Common;
 
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.mailjet.client.resource.ContactslistManageContact;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -52,6 +54,13 @@ public class ServletRegistration extends HttpServlet {
             if (!db_digits.equals(digits))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits.");
             User newUser = User.createUser(email, username, password, registration_date, send_news, sm.getServletContext(), sm.getDB());
+            if (send_news) {
+                MailJetBuilder mailJetBuilder = new MailJetBuilder(ContactslistManageContact.resource, 13300);
+                mailJetBuilder.property(ContactslistManageContact.EMAIL, newUser.getEmail());
+                mailJetBuilder.property(ContactslistManageContact.NAME, newUser.getFirstName());
+                mailJetBuilder.property(ContactslistManageContact.ACTION, "addnoforce");
+                mailJetBuilder.post();
+            }
             sm.setUser(newUser);
             ((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
             ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);

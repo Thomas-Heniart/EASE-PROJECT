@@ -19,8 +19,8 @@ import com.Ease.Utils.ServletManager;
  */
 @WebServlet("/DeleteAccount")
 public class DeleteAccount extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
+    private static final long serialVersionUID = 1L;
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -28,38 +28,38 @@ public class DeleteAccount extends HttpServlet {
         super();
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-		rd.forward(request, response);
-	}
+    /**
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+        rd.forward(request, response);
+    }
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
-		User user = (User) (session.getAttribute("user"));
-		ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
-		
-		try {
-			sm.needToBeConnected();
-			String password = sm.getServletParam("password", false);
-			if (password == null || password.equals(""))
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Password does not match");
-			user.getKeys().isGoodPassword(password);
-			user.deleteFromDb(sm);
-			user.deconnect(sm);
-			sm.setResponse(ServletManager.Code.Success, "Account deleted");
-		} catch(GeneralException e) {
-			sm.setResponse(e);
-		} catch(Exception e) {
-			sm.setResponse(e);
-		}
-		sm.sendResponse();
-		session.invalidate();
-	}
+    /**
+     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+     */
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        User user = (User) (session.getAttribute("user"));
+        ServletManager sm = new ServletManager(this.getClass().getName(), request, response, true);
+
+        try {
+            sm.needToBeConnected();
+            String password = sm.getServletParam("password", false);
+            if (password == null || password.equals(""))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Password does not match");
+            user.getKeys().isGoodPassword(password);
+            user.deleteFromDb(sm);
+            user.deconnect(sm);
+            sm.setResponse(ServletManager.Code.Success, "Account deleted");
+        } catch (GeneralException e) {
+            sm.setResponse(e);
+        } catch (Exception e) {
+            sm.setResponse(e);
+        }
+        sm.sendResponse();
+        session.invalidate();
+    }
 
 }

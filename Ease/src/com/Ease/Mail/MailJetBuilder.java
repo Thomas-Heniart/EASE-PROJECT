@@ -1,11 +1,14 @@
 package com.Ease.Mail;
 
 import com.Ease.Context.Variables;
+import com.Ease.Utils.Mail;
 import com.mailjet.client.MailjetClient;
 import com.mailjet.client.MailjetRequest;
 import com.mailjet.client.MailjetResponse;
+import com.mailjet.client.Resource;
 import com.mailjet.client.errors.MailjetException;
 import com.mailjet.client.errors.MailjetSocketTimeoutException;
+import com.mailjet.client.resource.ContactslistManageContact;
 import com.mailjet.client.resource.Email;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,6 +30,24 @@ public class MailJetBuilder {
         try {
             client = new MailjetClient(Variables.MJ_APIKEY_PUBLIC, Variables.MJ_APIKEY_PRIVATE);
             request = new MailjetRequest(Email.resource);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public MailJetBuilder(Resource resource) {
+        try {
+            client = new MailjetClient(Variables.MJ_APIKEY_PUBLIC, Variables.MJ_APIKEY_PRIVATE);
+            request = new MailjetRequest(resource);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public MailJetBuilder(Resource resource, Integer id) {
+        try {
+            client = new MailjetClient(Variables.MJ_APIKEY_PUBLIC, Variables.MJ_APIKEY_PRIVATE);
+            request = new MailjetRequest(resource, id);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -101,6 +122,18 @@ public class MailJetBuilder {
         }
     }
 
+    public void post() {
+        try {
+            response = client.post(request);
+            System.out.println("MailJet status: " + response.getStatus());
+            System.out.println(response.getData());
+        } catch (MailjetException e) {
+            e.printStackTrace();
+        } catch (MailjetSocketTimeoutException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void setSubject(String subject) {
         request.property(Email.SUBJECT, subject);
     }
@@ -111,5 +144,9 @@ public class MailJetBuilder {
 
     public void setHtmlPart(String htmlPart) {
         request.property(Email.HTMLPART, htmlPart);
+    }
+
+    public void property(String key, Object value) {
+        request.property(key, value);
     }
 }

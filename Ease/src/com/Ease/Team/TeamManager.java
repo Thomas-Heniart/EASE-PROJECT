@@ -1,5 +1,9 @@
 package com.Ease.Team;
 
+import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.App.SharedApp;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.Account;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Utils.*;
@@ -113,5 +117,41 @@ public class TeamManager {
         mailJetBuilder.sendEmail();
         hibernateQuery.commit();
         System.out.println("Three days reminder end...");
+    }
+
+    public void passwordReminder() throws HttpServletException {
+        System.out.println("Password reminder start...");
+        Date timestamp = new Date();
+        HibernateQuery hibernateQuery = new HibernateQuery();
+        for (Team team : this.getTeams()) {
+            for (SharedApp sharedApp : team.getAppManager().getSharedApps()) {
+                App holder = (App) sharedApp.getHolder();
+                if (!holder.isEmpty())
+                    continue;
+                ClassicApp app = (ClassicApp) sharedApp;
+                Account account = app.getAccount();
+                if (account.mustUpdatePassword()) {
+                    System.out.println("Account: " + account.getDBid() + " must update password.");
+                    if (!account.passwordMustBeUpdated()) {
+                        hibernateQuery.querySQLString("UPDATE accounts SET passwordMustBeUpdated = 1 WHERE id = ?;");
+                        hibernateQuery.setParameter(1, account.getDBid());
+                        hibernateQuery.executeUpdate();
+                        account.setPasswordMustBeUpdated(true);
+                        hibernateQuery.saveOrUpdateObject(sharedApp.getTeamUser_tenant().addNotification("Your password for " + app.getName() + " needs to be updated as soon as possible", timestamp));
+                    } else {
+                        if (!account.adminNotified() && DateComparator.isOutdated(account.getLastUpdatedDate(), account.getPasswordChangeInterval(), 7)) {
+                            System.out.println("Admin must be notified");
+                            hibernateQuery.querySQLString("UPDATE accounts SET adminNotified = 1 WHERE id = ?;");
+                            hibernateQuery.setParameter(1, account.getDBid());
+                            hibernateQuery.executeUpdate();
+                            account.setAdminNotified(true);
+                            hibernateQuery.saveOrUpdateObject(sharedApp.getHolder().getTeamUser_owner().addNotification("The password of " + sharedApp.getTeamUser_tenant().getUsername() + " for " + app.getName() + " is not up to date for the last 7 days.", timestamp));
+                        }
+                    }
+                }
+            }
+        }
+        hibernateQuery.commit();
+        System.out.println("Password reminder end...");
     }
 }

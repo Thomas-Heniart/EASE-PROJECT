@@ -3,6 +3,7 @@ package com.Ease.Team;
 import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.NewDashboard.User.User;
+import com.Ease.Notification.Notification;
 import com.Ease.Notification.TeamUserNotification;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.RSA;
@@ -467,8 +468,9 @@ public class TeamUser {
         this.deciphered_teamKey = null;
     }
 
-    public void addNotification(String content, Date timestamp) {
+    public Notification addNotification(String content, Date timestamp) {
         TeamUserNotification notification = new TeamUserNotification(content, "", false, timestamp, "", this);
         this.teamUserNotifications.add(notification);
+        return notification;
     }
 }

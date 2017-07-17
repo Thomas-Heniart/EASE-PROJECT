@@ -50,7 +50,7 @@ public class ServletAskRegistration extends HttpServlet {
             mailJetBuilder.sendEmail();
             JSONObject res = new JSONObject();
             res.put("email", email);
-            res.put("digist", digits);
+            res.put("digits", digits);
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);

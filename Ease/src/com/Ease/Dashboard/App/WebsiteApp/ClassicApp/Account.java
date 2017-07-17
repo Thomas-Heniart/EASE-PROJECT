@@ -50,10 +50,14 @@ public class Account {
         Account account = null;
         if (reminderType == null || reminderType.equals("")) {
             account = new Account(db_id, shared, publicKey, ciphered_privateKey, infos, mustBeReciphered);
+            account.setPasswordMustBeUpdated(rs.getBoolean("passwordMustBeUpdated"));
+            account.setAdminNotified(rs.getBoolean("adminNotified"));
             account.setLastUpdatedDate(lastUpdatedDate);
             return account;
         } else {
             account = new Account(db_id, shared, publicKey, ciphered_privateKey, infos, mustBeReciphered, reminderValue);
+            account.setPasswordMustBeUpdated(rs.getBoolean("passwordMustBeUpdated"));
+            account.setAdminNotified(rs.getBoolean("adminNotified"));
             account.setLastUpdatedDate(lastUpdatedDate);
             return account;
         }
@@ -70,7 +74,7 @@ public class Account {
         String publicKey = publicAndPrivateKey.getKey();
         String privateKey = publicAndPrivateKey.getValue();
         String ciphered_key = sm.getUser().encrypt(privateKey);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, ?, default, ?, ?, ?, ?, 0);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, ?, default, ?, ?, ?, ?, 0, 0, 0);");
         request.setBoolean(shared);
         if (reminderValue != null && reminderType != null) {
             request.setInt(reminderValue);
@@ -97,7 +101,7 @@ public class Account {
             String publicKey = publicAndPrivateKey.getKey();
             String privateKey = publicAndPrivateKey.getValue();
             String ciphered_key = AES.encrypt(privateKey, keyUser);
-            DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, ?, 'MONTH', ?, ?, 0);");
+            DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, ?, 'MONTH', ?, ?, 0, 0, 0);");
             Integer reminderInterval = account.getPasswordChangeInterval();
             if (reminderInterval == null)
                 reminderInterval = 0;
@@ -122,7 +126,7 @@ public class Account {
         String privateKey = publicAndPrivateKey.getValue();
         String ciphered_key = AES.encrypt(privateKey, deciphered_teamKey);
         int transaction = db.startTransaction();
-        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, ?, ?, ?, ?, 0);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, ?, ?, ?, ?, 0, 0, 0);");
         if (reminderValue != null) {
             request.setInt(reminderValue);
             request.setString("MONTH");
@@ -147,7 +151,7 @@ public class Account {
         String privateKey = publicAndPrivateKey.getValue();
         String ciphered_key = AES.encrypt(privateKey, deciphered_teamKey);
         int transaction = db.startTransaction();
-        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, null, null, ?, ?, 1);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, null, null, ?, ?, 0, 0, 0);");
         request.setString(publicKey);
         request.setString(ciphered_key);
         String db_id = request.set().toString();
@@ -170,12 +174,11 @@ public class Account {
         String privateKey = publicAndPrivateKey.getValue();
         String ciphered_key = AES.encrypt(privateKey, deciphered_teamKey);
         int transaction = db.startTransaction();
-        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, ?, ?, ?, ?, ?);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, ?, ?, ?, ?, 0, 0, 0);");
         request.setInt((reminderIntervalValue == null) ? 0 : reminderIntervalValue);
         request.setString("MONTH");
         request.setString(publicKey);
         request.setString(ciphered_key);
-        request.setBoolean(!adminHasAccess);
         String db_id = request.set().toString();
         List<AccountInformation> accountInformationList = AccountInformation.createAccountInformations(db_id, account_informationMap, publicKey, db);
         Account account = new Account(db_id, false, publicKey, ciphered_key, accountInformationList, !adminHasAccess);
@@ -192,7 +195,7 @@ public class Account {
         String publicKey = publicAndPrivateKey.getKey();
         String privateKey = publicAndPrivateKey.getValue();
         String ciphered_key = sm.getUser().encrypt(privateKey);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, ?, default, null, null, ?, ?, 0);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, ?, default, null, null, ?, ?, 0, 0, 0);");
         request.setBoolean(shared);
         request.setString(publicKey);
         request.setString(ciphered_key);
@@ -217,6 +220,8 @@ public class Account {
     protected String ciphered_key;
     protected String privateKey;
     protected Boolean mustBeReciphered;
+    protected Boolean passwordMustBeUpdated = false;
+    protected Boolean adminNotified = false;
     protected Integer passwordChangeInterval = 0; /* In month */
     protected Date lastUpdatedDate;
     protected DateFormat databaseLastUpdatedDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -312,6 +317,22 @@ public class Account {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
 
+    }
+
+    public Boolean passwordMustBeUpdated() {
+        return passwordMustBeUpdated;
+    }
+
+    public void setPasswordMustBeUpdated(Boolean passwordMustBeUpdated) {
+        this.passwordMustBeUpdated = passwordMustBeUpdated;
+    }
+
+    public Boolean adminNotified() {
+        return adminNotified;
+    }
+
+    public void setAdminNotified(Boolean adminNotified) {
+        this.adminNotified = adminNotified;
     }
 
     public List<AccountInformation> getAccountInformations() {
@@ -472,9 +493,11 @@ public class Account {
 
     public void updateLastUpateDate(DataBaseConnection db) throws GeneralException {
         /* @TODO To change */
-        DatabaseRequest request = db.prepareRequest("UPDATE accounts SET lastUpdateDate = NOW() WHERE id = ?;");
+        DatabaseRequest request = db.prepareRequest("UPDATE accounts SET lastUpdateDate = NOW(), passwordMustBeUpdated = 0; WHERE id = ?;");
         request.setInt(this.db_id);
         request.set();
+        this.setPasswordMustBeUpdated(false);
+        this.lastUpdatedDate = new Date();
     }
 
     public String getInformationNamed(String info_name) {

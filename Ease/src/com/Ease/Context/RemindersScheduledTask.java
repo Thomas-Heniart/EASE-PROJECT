@@ -23,6 +23,7 @@ public class RemindersScheduledTask extends TimerTask {
     public void run() {
         try {
             teamManager.reminderThreeDays();
+            teamManager.passwordReminder();
         } catch (HttpServletException e) {
             e.printStackTrace();
         }
