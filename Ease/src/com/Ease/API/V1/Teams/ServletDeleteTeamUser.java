@@ -59,7 +59,9 @@ public class ServletDeleteTeamUser extends HttpServlet {
                 mailJetBuilder.sendEmail();
             }
             for (TeamUser teamUser : team.getTeamUsers()) {
-                if (teamUser.getAdmin_id().equals(teamUser_to_delete.getAdmin_id())) {
+                if (teamUser.getAdmin_id() == null)
+                    continue;
+                if (teamUser.getAdmin_id().equals(teamUser_to_delete.getDb_id())) {
                     teamUser.setAdmin_id(teamUser_connected.getDb_id());
                     sm.saveOrUpdate(teamUser);
                 }
