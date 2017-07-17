@@ -671,6 +671,7 @@ public class User {
         for (TeamUser teamUser : this.getTeamUsers())
             teams.add(teamUser.getTeam().getSimpleJson());
         res.put("teams", teams);
+        res.put("status", this.getStatus().getJson());
         return res;
     }
 }

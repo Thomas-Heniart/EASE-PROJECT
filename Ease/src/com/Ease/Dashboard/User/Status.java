@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import com.Ease.Utils.*;
+import org.json.simple.JSONObject;
 
 public class Status {
 
@@ -203,5 +204,28 @@ public class Status {
         DatabaseRequest request = db.prepareRequest("UPDATE status SET last_connection = CURDATE() WHERE id = ?;");
         request.setInt(db_id);
         request.set();
+    }
+
+    public Boolean isTuto_done() {
+        return this.tuto_done;
+    }
+
+    public void setTuto_done(Boolean tuto_done) {
+        this.tuto_done = tuto_done;
+    }
+
+    public void setTuto_done(Boolean tuto_done, DataBaseConnection db) throws GeneralException {
+        DatabaseRequest request = db.prepareRequest("UPDATE status SET tuto_done = ? WHERE id = ?;");
+        request.setBoolean(tuto_done);
+        request.setInt(this.getDbId());
+        request.set();
+        this.setTuto_done(tuto_done);
+    }
+
+    public JSONObject getJson() {
+        JSONObject res = new JSONObject();
+        res.put("tuto_done", this.isTuto_done());
+        res.put("terms_reviewed", this.terms_reviewed());
+        return res;
     }
 }
