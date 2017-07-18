@@ -665,6 +665,7 @@ public class User {
 
     public JSONObject getJson() {
         JSONObject res = new JSONObject();
+        res.put("email", this.getEmail());
         res.put("first_name", this.getFirstName());
         JSONArray teams = new JSONArray();
         for (TeamUser teamUser : this.getTeamUsers())
