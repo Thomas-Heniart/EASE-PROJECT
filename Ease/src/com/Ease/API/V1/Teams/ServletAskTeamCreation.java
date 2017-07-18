@@ -30,18 +30,11 @@ public class ServletAskTeamCreation extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid email.");
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
-            DatabaseRequest databaseRequest = db.prepareRequest("SELECT * FROM users WHERE email = ?);");
-            databaseRequest.setString(email);
-            DatabaseResult rs = databaseRequest.get();
-            if (rs.next()) {
-                if (user != null && !email.equals(user.getEmail()))
-                    throw new HttpServletException(HttpStatus.BadRequest, "Email already taken.");
-            }
             JSONObject res = new JSONObject();
             if (user.getVerifiedEmails().contains(email))
                 res.put("need_digits", false);
             else {
-                databaseRequest = db.prepareRequest("DELETE FROM pendingTeamCreations WHERE email = ?;");
+                DatabaseRequest databaseRequest = db.prepareRequest("DELETE FROM pendingTeamCreations WHERE email = ?;");
                 databaseRequest.setString(email);
                 databaseRequest.set();
                 String digits = CodeGenerator.generateDigits(6);
