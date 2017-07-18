@@ -29,18 +29,18 @@ public class ServletCheckTeamCreationDigits extends HttpServlet {
             if (digits == null || digits.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty digits");
             DataBaseConnection db = sm.getDB();
-            DatabaseRequest databaseRequest = db.prepareRequest("SELECT expiration_date FROM createTeamInvitations WHERE email = ? AND code = ?;");
+            DatabaseRequest databaseRequest = db.prepareRequest("SELECT date FROM pendingTeamCreations WHERE email = ? AND digits = ?;");
             databaseRequest.setString(email);
             databaseRequest.setString(digits);
             DatabaseResult rs = databaseRequest.get();
             if (!rs.next())
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid code or email.");
-            String dateString = rs.getString(1);
+            /* String dateString = rs.getString(1);
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date expiration_date = dateFormat.parse(dateString);
             Date now = new Date();
             if (now.compareTo(expiration_date) > 0)
-                throw new HttpServletException(HttpStatus.BadRequest, "Your code has expired.");
+                throw new HttpServletException(HttpStatus.BadRequest, "Your code has expired."); */
             sm.setSuccess("Code is valid");
         } catch (Exception e) {
             sm.setError(e);
