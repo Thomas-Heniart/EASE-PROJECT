@@ -6,6 +6,9 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.*;
+import com.stripe.exception.APIConnectionException;
+import com.stripe.exception.CardException;
+import com.stripe.exception.StripeException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -101,6 +104,12 @@ public abstract class ServletManager {
             e.printStackTrace();
             this.setInternError();
         }
+    }
+
+    public void setError(StripeException e) {
+        System.out.println("Error code: " + e.getStatusCode() + " and msg: " + e.getMessage());
+        response.setStatus(e.getStatusCode());
+        this.errorMessage = e.getMessage();
     }
 
     public void needToBeConnected() throws HttpServletException {

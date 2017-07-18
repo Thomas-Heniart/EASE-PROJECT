@@ -19,8 +19,6 @@ import com.Ease.Hibernate.HibernateDatabase;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.*;
 import com.stripe.Stripe;
-import com.stripe.exception.*;
-import com.stripe.model.Customer;
 
 public class OnStart implements ServletContextListener {
 

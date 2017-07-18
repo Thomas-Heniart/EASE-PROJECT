@@ -6,6 +6,7 @@ import com.Ease.Team.TeamManager;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.stripe.exception.StripeException;
 import com.stripe.model.*;
 import org.json.simple.JSONObject;
 
@@ -80,6 +81,8 @@ public class ServletSubscribeToMonthPlan extends HttpServlet {
             team.setSubscription_id(subscription.getId());
             sm.saveOrUpdate(team);
             sm.setSuccess("Subscription done");
+        } catch (StripeException e) {
+            sm.setError(e);
         } catch (Exception e) {
             sm.setError(e);
         }

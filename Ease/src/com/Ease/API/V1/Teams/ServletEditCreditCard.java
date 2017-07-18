@@ -5,6 +5,7 @@ import com.Ease.Team.TeamManager;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 
 import javax.servlet.RequestDispatcher;
@@ -36,6 +37,8 @@ public class ServletEditCreditCard extends HttpServlet {
             updateParams.put("source", token);
             customer.update(updateParams);
             sm.setSuccess("Credit card updated");
+        } catch (StripeException e) {
+            sm.setError(e);
         } catch (Exception e) {
             sm.setError(e);
         }
