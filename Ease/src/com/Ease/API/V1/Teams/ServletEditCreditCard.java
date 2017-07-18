@@ -33,7 +33,7 @@ public class ServletEditCreditCard extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid token.");
             Customer customer = Customer.retrieve(team.getCustomer_id());
             Map<String, Object> updateParams = new HashMap<>();
-            updateParams.put("default_source", token);
+            updateParams.put("source", token);
             customer.update(updateParams);
             sm.setSuccess("Credit card updated");
         } catch (Exception e) {

@@ -47,7 +47,6 @@ public class ServletRegistration extends HttpServlet {
             if (send_news == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid newsletter param");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
-
             if (code != null && !code.equals("")) {
                 hibernateQuery.querySQLString("SELECT code FROM pendingTeamInvitations JOIN teamUsers ON pendingTeamInvitations.teamUser_id = teamUsers.id WHERE teamUsers.email = ?");
                 hibernateQuery.setParameter(1, email);
