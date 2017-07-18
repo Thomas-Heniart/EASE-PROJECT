@@ -52,8 +52,7 @@ public class User {
             }
             return connectedUser;
         }
-        DatabaseRequest request = db.prepareRequest("SELECT users.* FROM users LEFT JOIN teamUsers ON users.id = teamUsers.user_id WHERE users.email = ? OR teamUsers.email = ?");
-        request.setString(email);
+        DatabaseRequest request = db.prepareRequest("SELECT * FROM users WHERE email = ?");
         request.setString(email);
         DatabaseResult rs = request.get();
         int transaction = db.startTransaction();
