@@ -18,7 +18,7 @@ import java.util.Date;
  * Created by thomas on 09/05/2017.
  */
 @WebServlet("/api/v1/teams/CheckTeamCreationDigits")
-public class ServletCheckTeamCreationCode extends HttpServlet {
+public class ServletCheckTeamCreationDigits extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
