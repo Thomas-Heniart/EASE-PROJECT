@@ -31,6 +31,7 @@ public class ServletRegistration extends HttpServlet {
             String email = sm.getStringParam("email", true);
             String password = sm.getStringParam("password", false);
             String digits = sm.getStringParam("digits", false);
+            String code = sm.getStringParam("code", false);
             Long registration_date = sm.getLongParam("registration_date", true);
             Boolean send_news = sm.getBooleanParam("newsletter", true);
             if (username == null || username.length() < 2 || username.length() > 30)
@@ -41,18 +42,29 @@ public class ServletRegistration extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid password");
             if (registration_date == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid registration date");
-            if (digits == null || digits.length() != 6)
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits");
+            if ((digits == null || digits.length() != 6) && (code == null || code.equals("")))
+                throw new HttpServletException(HttpStatus.BadRequest, "Missing parameter digits or code");
             if (send_news == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid newsletter param");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
-            hibernateQuery.querySQLString("SELECT digits FROM userPendingRegistrations WHERE email = ?");
-            hibernateQuery.setParameter(1, email);
-            String db_digits = (String) hibernateQuery.getSingleResult();
-            if (db_digits == null || db_digits.equals(""))
-                throw new HttpServletException(HttpStatus.BadRequest, "You didn't ask for an account.");
-            if (!db_digits.equals(digits))
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits.");
+
+            if (code != null && !code.equals("")) {
+                hibernateQuery.querySQLString("SELECT code FROM pendingTeamInvitations JOIN teamUsers ON pendingTeamInvitations.teamUser_id = teamUsers.id WHERE teamUsers.email = ?");
+                hibernateQuery.setParameter(1, email);
+                String valid_code = (String) hibernateQuery.getSingleResult();
+                if (valid_code == null)
+                    throw new HttpServletException(HttpStatus.BadRequest, "No invitation for this email.");
+                if (!valid_code.equals(code))
+                    throw new HttpServletException(HttpStatus.BadRequest, "Invalid code.");
+            } else {
+                hibernateQuery.querySQLString("SELECT digits FROM userPendingRegistrations WHERE email = ?");
+                hibernateQuery.setParameter(1, email);
+                String db_digits = (String) hibernateQuery.getSingleResult();
+                if (db_digits == null || db_digits.equals(""))
+                    throw new HttpServletException(HttpStatus.BadRequest, "You didn't ask for an account.");
+                if (!db_digits.equals(digits))
+                    throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits.");
+            }
             User newUser = User.createUser(email, username, password, registration_date, sm.getServletContext(), sm.getDB());
             if (send_news) {
                 MailJetBuilder mailJetBuilder = new MailJetBuilder(ContactslistManageContact.resource, 13300);
