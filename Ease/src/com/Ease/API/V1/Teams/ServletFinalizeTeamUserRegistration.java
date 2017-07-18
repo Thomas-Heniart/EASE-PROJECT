@@ -52,7 +52,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             String firstName = sm.getStringParam("first_name", true);
             String lastName = sm.getStringParam("last_name", true);
             String username = sm.getStringParam("username", true);
-            //String jobTitle = sm.getStringParam("job_title", true);
+            String job_details = sm.getStringParam("job_details", true);
             Integer job_index = sm.getIntParam("job_index", true);
             String code = sm.getStringParam("code", true);
             if (username == null || username.equals(""))
@@ -63,10 +63,10 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "lastName is needed.");
             if (code == null || code.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "code is needed.");
-            /*if (jobTitle == null || jobTitle.equals(""))
-                throw new HttpServletException(HttpStatus.BadRequest, "jobTitle is needed.");*/
             if (job_index == null || job_index < 0 || job_index >= jobRoles.length)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid job index.");
+            if (job_index == (jobRoles.length - 1) && (job_details == null || job_details.equals("")))
+                throw new HttpServletException(HttpStatus.BadRequest, "You must provide your job description.");
             HibernateQuery query = sm.getHibernateQuery();
             query.querySQLString("SELECT id, team_id, teamUser_id FROM pendingTeamInvitations WHERE code = ?");
             query.setParameter(1, code);
