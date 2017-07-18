@@ -1,14 +1,22 @@
 package com.Ease.Utils;
 
+import org.json.simple.JSONObject;
+
 public class HttpServletException extends Exception {
     private static final long serialVersionUID = 1L;
     protected String msg;
+    protected JSONObject jsonObject;
     private HttpStatus httpStatus;
 
     public HttpServletException(HttpStatus httpStatus, String msg) {
         this.msg = msg;
         this.httpStatus = httpStatus;
         System.out.println(msg);
+    }
+
+    public HttpServletException(HttpStatus httpStatus, JSONObject jsonObject) {
+        this.jsonObject = jsonObject;
+        this.httpStatus = httpStatus;
     }
 
     public HttpServletException(HttpStatus httpStatus, Exception e) {
@@ -31,5 +39,9 @@ public class HttpServletException extends Exception {
 
     public HttpStatus getHttpStatus() {
         return this.httpStatus;
+    }
+
+    public JSONObject getJsonObject() {
+        return jsonObject;
     }
 }

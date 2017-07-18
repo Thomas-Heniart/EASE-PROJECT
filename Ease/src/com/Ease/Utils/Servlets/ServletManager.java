@@ -48,6 +48,7 @@ public abstract class ServletManager {
 
     public static boolean debug = true;
 
+
     public ServletManager(String servletName, HttpServletRequest request, HttpServletResponse response, boolean saveLogs) throws IOException {
         this.servletName = servletName;
         this.request = request;
@@ -97,9 +98,14 @@ public abstract class ServletManager {
     public void setError(Exception e) {
         try {
             HttpServletException httpServletException = (HttpServletException) e;
-            System.out.println("Error code: " + httpServletException.getHttpStatus() + " and msg: " + httpServletException.getMsg());
+            System.out.println("Error code: " + httpServletException.getHttpStatus());
+            if (httpServletException.getMsg() == null && httpServletException.getJsonObject() != null) {
+                response.setContentType("application/json");
+                this.errorMessage =  httpServletException.getJsonObject().toString();
+            } else
+                this.errorMessage = httpServletException.getMsg();
+            System.out.println(this.errorMessage);
             response.setStatus(httpServletException.getHttpStatus().getValue());
-            this.errorMessage = httpServletException.getMsg();
         } catch (ClassCastException e1) {
             e.printStackTrace();
             this.setInternError();
