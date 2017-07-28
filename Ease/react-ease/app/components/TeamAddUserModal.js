@@ -1,7 +1,8 @@
 var React = require('react');
 var classnames = require('classnames');
 var api = require('../utils/api');
-import {connect} from "react-redux"
+import {connect} from "react-redux";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 var SimpleAppSharingPreview = require('./teamAppsPreview/SimpleAppSharingPreview');
 var LinkAppSharingPreview = require('./teamAppsPreview/LinkAppSharingPreview');
 var MultiAppSharingPreview = require('./teamAppsPreview/MultiAppSharingPreview');
@@ -39,102 +40,102 @@ class FirstStepAddUser extends React.Component{
   }
   render() {
     return (
-        <div class="contents" id="first_step">
-          <div class="content_row">
-            <h1 class="full_width">Invite a team member</h1>
-          </div>
-          <div class="content_row">
-            <div class="signed_input">
-              <label htmlFor="email_input">Email address</label>
-              <input value={this.props.email}
-                     onChange={(e) => {this.props.handleInputs(e.target.name, e.target.value)}}
-                     id="email_input" name="email" type="email" placeholder="name@company.com" class="full_width modal_input"/>
+          <div class="contents" id="first_step">
+            <div class="content_row">
+              <h1 class="full_width">Invite a team member</h1>
             </div>
-            <div class="signed_input">
-              <label htmlFor="fname_input">First name</label>
-              <input value={this.props.fname}
-                     onChange={(e) => {this.props.handleInputs(e.target.name, e.target.value)}}
-                     id="fname_input" name="fname" type="text" placeholder="Optional" class="full_width modal_input"/>
+            <div class="content_row">
+              <div class="signed_input">
+                <label htmlFor="email_input">Email address</label>
+                <input value={this.props.email}
+                       onChange={(e) => {this.props.handleInputs(e.target.name, e.target.value)}}
+                       id="email_input" name="email" type="email" placeholder="name@company.com" class="full_width modal_input"/>
+              </div>
+              <div class="signed_input">
+                <label htmlFor="fname_input">First name</label>
+                <input value={this.props.fname}
+                       onChange={(e) => {this.props.handleInputs(e.target.name, e.target.value)}}
+                       id="fname_input" name="fname" type="text" placeholder="Optional" class="full_width modal_input"/>
+              </div>
+              <div class="signed_input">
+                <label htmlFor="lname_input">Last name</label>
+                <input value={this.props.lname}
+                       onChange={(e) => {this.props.handleInputs(e.target.name, e.target.value)}}
+                       id="lname_input" name="lname" type="text" placeholder="Optional" class="full_width modal_input"/>
+              </div>
             </div>
-            <div class="signed_input">
-              <label htmlFor="lname_input">Last name</label>
-              <input value={this.props.lname}
-                     onChange={(e) => {this.props.handleInputs(e.target.name, e.target.value)}}
-                     id="lname_input" name="lname" type="text" placeholder="Optional" class="full_width modal_input"/>
+            <div class="content_row">
+              <div class="signed_input">
+                <label htmlFor="username_input">Username</label>
+                <input value={this.props.username}
+                       onChange={(e) => {this.props.handleInputs(e.target.name, e.target.value)}}
+                       id="username_input" name="username" type="text" class="full_width modal_input" placeholder="Username"/>
+              </div>
+              <div class="signed_input">
+                <label htmlFor="user_role_select">User role</label>
+                <select value={this.props.role}
+                        onChange={(e) => {this.props.handleInputs(e.target.name, e.target.value)}}
+                        id="user_role_select" name='role' class="full_width select_unstyle modal_input">
+                  <option value="1">Member</option>
+                  <option value="2">Admin</option>
+                </select>
+              </div>
+              <div class="signed_input">
+                <label htmlFor="departure_date_input">Departure date</label>
+                <input value={this.props.departure_date}
+                       onChange={(e) => {this.props.handleInputs(e.target.name, e.target.value)}}
+                       id="departure_date_input" name="departure_date" type="date" class="full_width modal_input" placeholder="Optional"/>
+              </div>
             </div>
-          </div>
-          <div class="content_row">
-            <div class="signed_input">
-              <label htmlFor="username_input">Username</label>
-              <input value={this.props.username}
-                     onChange={(e) => {this.props.handleInputs(e.target.name, e.target.value)}}
-                     id="username_input" name="username" type="text" class="full_width modal_input" placeholder="Username"/>
-            </div>
-            <div class="signed_input">
-              <label htmlFor="user_role_select">User role</label>
-              <select value={this.props.role}
-                      onChange={(e) => {this.props.handleInputs(e.target.name, e.target.value)}}
-                      id="user_role_select" name='role' class="full_width select_unstyle modal_input">
-                <option value="1">Member</option>
-                <option value="2">Admin</option>
-              </select>
-            </div>
-            <div class="signed_input">
-              <label htmlFor="departure_date_input">Departure date</label>
-              <input value={this.props.departure_date}
-                     onChange={(e) => {this.props.handleInputs(e.target.name, e.target.value)}}
-                     id="departure_date_input" name="departure_date" type="date" class="full_width modal_input" placeholder="Optional"/>
-            </div>
-          </div>
-          <div class="content_row">
-            <div class="tagged_input_container full_width">
-              <label htmlFor="teams_input">Team(s)</label>
-              <div class="modal_input_wrapper full_width item_list"
-                   onMouseDown={this.onMouseDown}
-                   onMouseUp={this.onMouseUp}>
-                {
-                  this.props.selectedChannels.map(function(item){
-                    return (
-                        <div class="input_tag" key={item.id}>
-                          <span>{item.name}</span>
-                          <button class="button-unstyle" onClick={this.props.deselectChannelFunc.bind(null, item.id)}>
-                            <i class="fa fa-times"/>
-                          </button>
-                        </div>
-                    )
-                  }, this)
-                }
-                <input id="teams_input" class="full_width input_unstyle" name="teams" type="text" placeholder="Search by name"
-                       onFocus={(e) => {this.setState({dropdown: true})}}/>
-                <div class={classnames("floating_dropdown", this.state.dropdown ? "show" : null)}>
-                  <div class="dropdown_content">
-                    {
-                      this.props.channels.map(function (item) {
-                        return (
-                            <div onClick={this.props.selectChannelFunc.bind(null, item.id)} class={classnames("dropdown_row selectable", item.selected ? "selected": null)} key={item.id}>
-                              <span class="main_value">{item.name}</span>{item.purpose.length && <span class="text-muted">&nbsp;- {item.purpose}</span>}
-                            </div>
-                        )
-                      }, this)
-                    }
+            <div class="content_row">
+              <div class="tagged_input_container full_width">
+                <label htmlFor="teams_input">Team(s)</label>
+                <div class="modal_input_wrapper full_width item_list"
+                     onMouseDown={this.onMouseDown}
+                     onMouseUp={this.onMouseUp}>
+                  {
+                    this.props.selectedChannels.map(function(item){
+                      return (
+                          <div class="input_tag" key={item.id}>
+                            <span>{item.name}</span>
+                            <button class="button-unstyle" onClick={this.props.deselectChannelFunc.bind(null, item.id)}>
+                              <i class="fa fa-times"/>
+                            </button>
+                          </div>
+                      )
+                    }, this)
+                  }
+                  <input id="teams_input" class="full_width input_unstyle" name="teams" type="text" placeholder="Search by name"
+                         onFocus={(e) => {this.setState({dropdown: true})}}/>
+                  <div class={classnames("floating_dropdown", this.state.dropdown ? "show" : null)}>
+                    <div class="dropdown_content">
+                      {
+                        this.props.channels.map(function (item) {
+                          return (
+                              <div onClick={this.props.selectChannelFunc.bind(null, item.id)} class={classnames("dropdown_row selectable", item.selected ? "selected": null)} key={item.id}>
+                                <span class="main_value">{item.name}</span>{item.purpose.length && <span class="text-muted">&nbsp;- {item.purpose}</span>}
+                              </div>
+                          )
+                        }, this)
+                      }
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="content_row buttons_row">
-            <div class="buttons_wrapper">
-              <button class="button-unstyle neutral_background action_text_button cancel_button"
-                      onClick={e => {this.props.dispatch(showAddTeamUserModal(false))}}>
-                Cancel
-              </button>
-              <button class="button-unstyle positive_background action_text_button next_button"
-                      onClick={this.props.validateStep}>
-                Next
-              </button>
+            <div class="content_row buttons_row">
+              <div class="buttons_wrapper">
+                <button class="button-unstyle neutral_background action_text_button cancel_button"
+                        onClick={e => {this.props.dispatch(showAddTeamUserModal(false))}}>
+                  Cancel
+                </button>
+                <button class="button-unstyle positive_background action_text_button next_button"
+                        onClick={this.props.validateStep}>
+                  Next
+                </button>
+              </div>
             </div>
           </div>
-        </div>
     )
   }
 }
@@ -182,37 +183,37 @@ class SecondStep extends React.Component {
           </div>
           <div class="content_row flex_direction_column">
             {
-                channel.apps.map(function(item){
-                  if (item.type === 'simple')
-                    return (
+              channel.apps.map(function(item){
+                if (item.type === 'simple')
+                  return (
                       <SimpleAppSharingPreview
-                        key={item.id}
-                        app={item}
-                        users={this.props.users}
-                        checkAppFunc={this.props.checkAppFunc.bind(null, channel.id)}
+                          key={item.id}
+                          app={item}
+                          users={this.props.users}
+                          checkAppFunc={this.props.checkAppFunc.bind(null, channel.id)}
                       />
-                    );
-                  else if (item.type === 'link')
-                    return (
-                        <LinkAppSharingPreview
-                            key={item.id}
-                            app={item}
-                            users={this.props.users}
-                            checkAppFunc={this.props.checkAppFunc.bind(null, channel.id)}
-                        />
-                    );
-                  else if (item.type === 'multi')
-                    return (
-                        <MultiAppSharingPreview
-                            key={item.id}
-                            app={item}
-                            username={username}
-                            users={this.props.users}
-                            checkAppFunc={this.props.checkAppFunc.bind(null, channel.id)}
-                            handleCredentialsInput={this.props.handleCredentialsInput.bind(null, channel.id)}
-                        />
-                    );
-                }, this)
+                  );
+                else if (item.type === 'link')
+                  return (
+                      <LinkAppSharingPreview
+                          key={item.id}
+                          app={item}
+                          users={this.props.users}
+                          checkAppFunc={this.props.checkAppFunc.bind(null, channel.id)}
+                      />
+                  );
+                else if (item.type === 'multi')
+                  return (
+                      <MultiAppSharingPreview
+                          key={item.id}
+                          app={item}
+                          username={username}
+                          users={this.props.users}
+                          checkAppFunc={this.props.checkAppFunc.bind(null, channel.id)}
+                          handleCredentialsInput={this.props.handleCredentialsInput.bind(null, channel.id)}
+                      />
+                  );
+              }, this)
             }
           </div>
           <div class="content_row buttons_row">
@@ -434,19 +435,25 @@ class TeamAddUserModal extends React.Component {
         <div class="ease_modal" id="add_user_modal">
           <div class="modal-background"></div>
           {this.state.channelStep > 0 &&
-            <a id="ease_modal_back_btn" class="ease_modal_btn"
-               onClick={this.decrementStep}>
-              <i class="ease_icon fa fa-step-backward"/>
-              <span class="key_label">back</span>
-            </a>
+          <a id="ease_modal_back_btn" class="ease_modal_btn"
+             onClick={this.decrementStep}>
+            <i class="ease_icon fa fa-step-backward"/>
+            <span class="key_label">back</span>
+          </a>
           }
           <a id="ease_modal_close_btn" class="ease_modal_btn" onClick={e => {this.props.dispatch(showAddTeamUserModal(false))}}>
             <i class="ease_icon fa fa-times"/>
             <span class="key_label">close</span>
           </a>
           <div class="modal_contents_container">
+            <ReactCSSTransitionGroup
+                transitionName="slideLeft"
+                transitionAppear={true}
+                transitionAppearTimeout={200}
+                transitionEnterTimeout={200}
+                transitionLeaveTimeout={200}>
             {this.state.step === 0 &&
-            <FirstStepAddUser
+            <FirstStepAddUser key="1"
                 me={this.props.me}
                 email={this.state.email}
                 fname={this.state.fname}
@@ -462,21 +469,20 @@ class TeamAddUserModal extends React.Component {
                 validateStep={this.validateFirstStep}
                 dispatch={this.props.dispatch}/>
             }
-            {
-              this.state.step === 1 &&
-              <SecondStep
-                  step={this.state.channelStep}
-                  maxStep={this.state.maxChannelStep}
-                  username={this.state.username}
-                  incrementAndValidate={this.incrementStepAndValidateChannel}
-                  incrementAndReject={this.incrementStepAndRejectChannel}
-                  selectedChannels={this.state.selectedChannels}
-                  checkAppFunc={this.checkChannelApp}
-                  handleCredentialsInput={this.handleCredentialsInput}
-                  users={this.props.users}
-                  dispatch={this.props.dispatch}
-              />
+            {this.state.step === 1 &&
+            <SecondStep key="2"
+                step={this.state.channelStep}
+                maxStep={this.state.maxChannelStep}
+                username={this.state.username}
+                incrementAndValidate={this.incrementStepAndValidateChannel}
+                incrementAndReject={this.incrementStepAndRejectChannel}
+                selectedChannels={this.state.selectedChannels}
+                checkAppFunc={this.checkChannelApp}
+                handleCredentialsInput={this.handleCredentialsInput}
+                users={this.props.users}
+                dispatch={this.props.dispatch}/>
             }
+          </ReactCSSTransitionGroup>
           </div>
         </div>
     )

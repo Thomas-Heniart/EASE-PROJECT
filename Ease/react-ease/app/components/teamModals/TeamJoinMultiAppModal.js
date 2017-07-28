@@ -60,7 +60,7 @@ class TeamJoinMultiAppModal extends React.Component {
     return (
         <div class="popupHandler myshow">
           <div class="popover_mask" onClick={e => {this.props.dispatch(showTeamJoinMultiAppModal(false))}}></div>
-          <div class="ease_popup" id="accept_multi_app_modal" style={{width: '430px'}}>
+          <div class="ease_popup ease_team_popup" id="accept_multi_app_modal">
             <button class="button-unstyle action_button close_button" onClick={e => {this.props.dispatch(showTeamJoinMultiAppModal(false))}}>
               <i class="fa fa-times"/>
             </button>
@@ -82,6 +82,7 @@ class TeamJoinMultiAppModal extends React.Component {
                         <input type={webInfo[item].type}
                                name={item}
                                placeholder={webInfo[item].placeholder}
+                               value={credentials[item]}
                                onChange={this.handleInput}
                                id={item}
                                class="modal_input input_unstyle"

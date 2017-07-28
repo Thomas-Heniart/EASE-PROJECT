@@ -1,10 +1,16 @@
 var React = require('react');
 var classnames = require('classnames');
-import {showTeamMenu} from "../actions/teamActions"
+import {showTeamMenu} from "../actions/teamActions";
+import {setTeamsTutorial} from "../actions/commonActions";
+import {showAddTeamUserModal} from "../actions/teamModalActions";
 
 class TeamMenu extends React.Component {
   constructor(props){
     super(props);
+    this.hideIt = this.hideIt.bind(this);
+  }
+  hideIt(){
+    this.props.dispatch(showTeamMenu(false));
   }
   render(){
     const me = this.props.me;
@@ -12,7 +18,7 @@ class TeamMenu extends React.Component {
 
     return (
         <div id="team_menu_options">
-          <div class="popover_mask" onClick={e => {this.props.dispatch(showTeamMenu(false))}}></div>
+          <div class="popover_mask" onClick={this.hideIt}></div>
           <div class="floating_dropdown">
             <div class="dropdown_content">
               <div class="dropdown_row">
@@ -24,13 +30,13 @@ class TeamMenu extends React.Component {
               <div class="dropdown_row selectable">
                 Profile information
               </div>
-              <div class="dropdown_row selectable">
+              <div class="dropdown_row selectable" onClick={e => {this.props.dispatch(setTeamsTutorial(true)); this.hideIt();}}>
                 Re-start tutorial
               </div>
               <div class="dropdown_row">
                 <strong>{team.name}</strong>
               </div>
-              <div class="dropdown_row selectable">
+              <div class="dropdown_row selectable" onClick={e => {this.props.dispatch(showAddTeamUserModal(true)); this.hideIt();}}>
                 Invite people
               </div>
               <div class="dropdown_row selectable">

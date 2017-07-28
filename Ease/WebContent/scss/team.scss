@@ -1,19 +1,171 @@
 @import 'variables';
 @import 'mixins';
 
-.only-text-button {
+button.only-text-button {
   color: $themeDarkGrayTextColor;
   &:hover {
     color: black;
   }
 }
 
-.action_text_button {
+button.action_text_button {
   border-radius: 5px;
   padding: 0 5px;
   color: #f9f9f9;
   &:hover {
     opacity: .7;
+  }
+}
+
+#pro_team_plan {
+  .price, .title {
+    color: $DarkGreen;
+  }
+}
+
+#enterprise_team_plan {
+  padding-bottom: 40px;
+  .styleImage {
+    z-index: 0;
+  }
+  .info {
+    margin: 32px 0 19px 0;
+    font-size: 0.9rem;
+    color: $DarkGreen;
+    text-transform: uppercase;
+  }
+  .plan_header {
+    background-color: $LightGreen;
+    padding-top: 12px;
+    margin: -12px -30px 0;
+    color: white;
+  }
+}
+
+#teams_tutorial {
+  position: absolute;
+  padding: 20vh 2rem 2rem;
+  left:0;
+  right: 0;
+  top:0;
+  bottom: 0;
+  background-color: white;
+  overflow: auto;
+  z-index: 1;
+  .carousel {
+    position: relative;
+    width: 650px;
+  }
+}
+
+
+.teamsTutorialTip.first {
+  h2 {
+    color: inherit;
+  }
+}
+.teamsTutorialTip {
+  position: relative;
+
+  width: 650px;
+  max-width: 100%;
+  h2{
+    margin: 0 0 20px 0;
+    padding-right: 10%;
+    font-weight: bold;
+    color: #F0AD4E;
+  }
+  .validate_button {
+    width: 220px;
+    height: 60px;
+    font-size: 30px;
+    border-radius: 8px;
+  }
+  .body {
+    padding-right: 10%;
+    font-size: 24px;
+    margin-bottom: 41px;
+  }
+  .stepCounter {
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 24px;
+  }
+}
+
+.team_plan {
+  @include display-flex();
+  @include flex-direction(column);
+  @include flex-basis(430px);
+  @include flex-shrink(0);
+  overflow: hidden;
+  height: 920px;
+  position: relative;
+  width: 430px;
+  padding: 12px 30px;
+  border: 1px solid $themeGreyDarkColor;
+  border-radius: 5px;
+  .styleImage {
+    position: absolute;
+    left:0;
+    top: 0;
+    z-index: -1;
+    width: 150px;
+  }
+  .tip {
+    font-size: 0.8rem;
+    color: $themeBlue2Color;
+    text-align: center;
+  }
+  .price {
+    font-size: 36px;
+    .symbol {
+      font-size: 0.8rem;
+    }
+  }
+  .button {
+    width: 370px;
+    height:60px;
+    font-weight: normal;
+    text-transform: uppercase;
+  }
+  .feature {
+    @include display-flex();
+    margin-bottom: 20px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+    .tic {
+      padding-top: 2px;
+      margin-right: 10px;
+    }
+    i {
+      color: $LightGreen;
+    }
+    span {
+      color: $themeBlue2Color;
+      line-height: 1.2;
+    }
+  }
+}
+
+#teamsPreview {
+  overflow: auto;
+  @include flex-grow(1);
+  padding: 25px 0 90px 0;
+  .content {
+    width:900px;
+  }
+  .plan {
+    flex-basis: 430px;
+    flex-shrink: 0;
+  }
+  .step2 {
+    .sub-title {
+      color: $themeBlue2Color;
+      text-align: center;
+    }
   }
 }
 
@@ -31,6 +183,69 @@
       }
     }
   }
+}
+
+#team_browse_channels_modal {
+  .channel_card {
+    color: $themeMediumDarkGreyColor;
+    line-height: 1.2;
+    padding: 10px;
+    border-top:1px solid $themeGreyDarkColor;
+    .action {
+      padding: 5px;
+      opacity: 0;
+      pointer-events: none;
+    }
+    &:hover {
+      .action {
+        transition: all .3s;
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
+    .name {
+      color: $themeDarkGrayTextColor;
+    }
+  }
+}
+
+.inline-notification {
+  color: white;
+  background-color: #f8505f;
+  position: absolute;
+  top: 3px;
+  right: 4px;
+  border-radius: 9px;
+  padding: 2px 0;
+  font-size: .8rem;
+  line-height: 14px;
+  font-weight: 700;
+  vertical-align: baseline;
+  white-space: nowrap;
+  width: 25px;
+  text-align: center;
+}
+
+.app_receiver_desc {
+  font-size: 0.8rem;
+  .title {
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-align: center;
+  }
+  i {
+    width: 15px;
+  }
+  .accept_icon {
+    color: $themeBlue2Color;
+    &.accepted {
+      color: $themeGreenColor;
+    }
+  }
+}
+
+.pwd_change.toChange {
+  color: $themeRedColor;
 }
 
 .team_app_holder {
@@ -453,6 +668,19 @@
   }
 }
 
+.info_icon {
+  color: $themeMediumDarkGreyColor;
+  &:hover {
+    color:$themeDarkGrayTextColor;
+  }
+}
+
+.accept_app_btn {
+  text-decoration: underline;
+  color: $themeBlueColor;
+  font-weight: bold;
+}
+
 #teamsHandler {
   #add_team_apps_button {
     width: 40px;
@@ -463,6 +691,9 @@
     font-size: 1rem;
     color: white;
     margin-right: 14px;
+    .info_icon {
+      width: 10px;
+    }
     .floating_dropdown {
       width: 200px;
       font-size: .8rem;
@@ -470,6 +701,12 @@
       color: $themeDarkGrayTextColor;
       i {
         margin-right: 5px;
+      }
+      .dropdown_row {
+        span {
+          @include flex-grow(1);
+          text-align: left;
+        }
       }
     }
   }
@@ -574,14 +811,21 @@
               left: 180px;
               top: 0;
               padding: 3px;
+              color: $themeSilverColor;
               &:hover {
-                color: black;
+                color:white;
               }
             }
             .section-header {
               font-size: .8em;
               line-height: 1.7em;
               padding-left: 1em;
+              font-weight: bold;
+              color: $themeSilverColor;
+              &:hover {
+                cursor: pointer;
+                color: white;
+              }
               span {
                 text-transform: uppercase;
               }
@@ -607,8 +851,13 @@
                   @include display-flex();
                   @include align-items(center);
                   padding: 0 2px 0 1.4em;
+                  position: relative;
                   border-bottom-right-radius: .25em;
                   border-top-right-radius: .25em;
+                  &.new {
+                    font-weight: bold;
+                    color: white;
+                  }
                   &:hover {
                     cursor: pointer;
                     background-color: rgba(255,255,255, 0.2);
@@ -767,6 +1016,7 @@
       .team_client_body {
         @include display-flex();
         @include flex(1);
+        position: relative;
         #col_main {
           position: relative;
           @include display-flex();
@@ -1017,7 +1267,6 @@
     padding: .6rem;
     position: relative;
     background-color: #f9f9f9;
-    overflow: hidden;
     .name_holder {
       margin-bottom: .4rem;
       font-size: .9rem;
@@ -1092,6 +1341,12 @@
         padding-left: .6rem;
         border-left: 1px solid #717274;
         .receivers_wrapper {
+          .receiver_wrapper {
+            position: relative;
+            &:hover {
+              z-index: 1;
+            }
+          }
           .receiver {
             @include display-inline-flex();
             @include align-items(center);
@@ -1420,61 +1675,10 @@
     }
   }
 
-  .alert_background {
-    background-color: $themeRedColor;
-    transition: background-color .3s;
-    &:disabled {
-      transition: background-color .3s;
-      background-color: #717274;
-    }
-  }
-  .positive_background {
-    background-color: $themeGreenColor;
-    &:disabled {
-      background-color: #717274;
-    }
-  }
-  .neutral_background {
-    background-color: #717274;
-  }
   .action_button {
     color: #717274;
     &:hover {
       color: black;
-    }
-  }
-  .menu {
-    min-width: 240px;
-    position: absolute;
-    border: 1px solid rgba(#000, .15);
-    border-radius: 5px;
-    overflow: hidden;
-    @include simple-box-shadow(0 5px 10px rgba(0,0,0,.12));
-    ::-webkit-scrollbar {
-      width: 13px;
-    }
-    ::-webkit-scrollbar-track, ::-webkit-scrollbar-thumb {
-      background-clip: padding-box!important;
-      border-radius: 5px;
-      border-right: 3px solid #fff;
-      border-left: 3px solid #fff;
-      box-shadow: inset 0 -3px 0 #fff, inset 0 3px 0 #fff;
-    }
-    ::-webkit-scrollbar-track {
-      background: #f3f3f3;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(#E6E6E6, 0.7);
-    }
-    ::-webkit-scrollbar-thumb:window-inactive {
-      background: rgba(#E6E6E6, 0.7);
-    }
-    .menu_content {
-      background-color: white;
-      .menu_items_scroller {
-        max-width: 300px;
-        overflow-y: auto;
-      }
     }
   }
   .profile_chooser_wrapper{
@@ -1614,6 +1818,68 @@
   }
 }
 
+.menu {
+  min-width: 240px;
+  position: absolute;
+  border: 1px solid rgba(#000, .15);
+  border-radius: 5px;
+  overflow: hidden;
+  @include simple-box-shadow(0 5px 10px rgba(0,0,0,.12));
+  ::-webkit-scrollbar {
+    width: 13px;
+  }
+  ::-webkit-scrollbar-track, ::-webkit-scrollbar-thumb {
+    background-clip: padding-box!important;
+    border-radius: 5px;
+    border-right: 3px solid #fff;
+    border-left: 3px solid #fff;
+    box-shadow: inset 0 -3px 0 #fff, inset 0 3px 0 #fff;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f3f3f3;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(#E6E6E6, 0.7);
+  }
+  ::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(#E6E6E6, 0.7);
+  }
+  .menu_content {
+    background-color: white;
+    .menu_items_scroller {
+      max-width: 300px;
+      overflow-y: auto;
+    }
+  }
+}
+
+#team_creation_view {
+  padding: 10vh 2rem 2rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  color: $themeDarkGrayTextColor;
+  .carousel {
+    position: relative;
+    width: 600px;
+  }
+  .contents {
+    display: block;
+    width: 600px;
+    max-width: 100%;
+    position: absolute;
+    left: 0;
+    top:0;
+    margin-bottom: 50px;
+    .content_row {
+      @include display-flex();
+      padding: 5px 0;
+    }
+    h1 {
+      margin: 0 0 20px 0;
+    }
+  }
+}
+
 .full_screen_centered_view {
   @include display-flex();
   @include align-items(flex-start);
@@ -1648,6 +1914,62 @@
   }
 }
 
+button.alert_background {
+  background-color: $themeRedColor;
+  transition: background-color .3s;
+  &:disabled {
+    transition: background-color .3s;
+    background-color: #717274;
+  }
+}
+button.positive_background {
+  background-color: $themeGreenColor;
+  &:disabled {
+    background-color: #717274;
+  }
+}
+button.neutral_background {
+  background-color: #717274;
+}
+
+button.choice-button {
+  padding: 10px 10px 10px 10px;
+  border-radius: 5px;
+  font-weight: 700;
+  color: $themeDarkGrayTextColor;
+  transition: all .3s;
+  border: 2px solid $themeDarkGrayTextColor;
+  max-width: 225px;
+  &:hover {
+    border: 2px solid black;
+  }
+  &.selected {
+    border: 2px solid $themeBlueColor;
+    &:hover {
+      border: 2px solid $themeBlueColor;
+    }
+  }
+}
+
+button.big-blue-button {
+  padding: 10px 10px 10px 10px;
+  transition: background-color .3s;
+  border-radius: 5px;
+  min-width: 130px;
+  color: white;
+  background-color: $themeBlueColor;
+  &:hover {
+    background-color: darken($themeBlueColor, 20%);
+  }
+  &:disabled {
+    transition: background-color .3s;
+    background-color: #717274;
+    &:hover {
+      background-color: #717274;
+    }
+  }
+}
+
 button.big-button {
   padding: 10px 10px 10px 10px;
   transition: background-color .3s;
@@ -1655,9 +1977,9 @@ button.big-button {
   font-weight: 700;
   min-width: 130px;
   color: white;
-  background-color: $LightGreen;
+  background-color: $themeGreenColor;
   &:hover {
-    background-color: $DarkGreen;
+    background-color: darken($themeGreenColor, 10%);
   }
   &:disabled {
     transition: background-color .3s;
@@ -1696,4 +2018,34 @@ button.big-button {
 .slideLeft-leave.slideLeft-leave-active {
   transition: all 200ms ease-in;
   transform: translateX(100%);
+}
+
+.opacityAnim-enter {
+  transition: all 200ms ease-in;
+  opacity: 0;
+}
+
+.opacityAnim-enter.opacityAnim-enter-active {
+  transition: all 200ms ease-in;
+  opacity: 1;
+}
+
+.opacityAnim-appear {
+  transition: all 200ms ease-in;
+  opacity: 0;
+}
+
+.opacityAnim-appear.opacityAnim-appear-active {
+  transition: all 200ms ease-in;
+  opacity: 1;
+}
+
+.opacityAnim-leave {
+  transition: all 200ms ease-in;
+  opacity: 1;
+}
+
+.opacityAnim-leave.opacityAnim-leave-active {
+  transition: all 200ms ease-in;
+  opacity: 0;
 }

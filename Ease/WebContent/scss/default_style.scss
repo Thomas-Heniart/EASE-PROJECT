@@ -54,6 +54,11 @@ input[type=number]::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
 
+#app {
+  @include display-flex();
+  width: 100%;
+  height:100%;
+}
 .shake-ease {
   @include do-shake('shake-ease', 2px, 1px, 3, 1700ms, .05, $opacity: false);
 }
@@ -73,9 +78,42 @@ html {
   font-size: 18px !important;
 }
 
+#single_ease_logo_handler {
+  position: absolute;
+  top:0;
+  left: 0;
+  height: 43px;
+}
+
+.inline-tooltipped {
+  display: inline-block;
+  position: relative;
+}
+
+.tooltipped {
+  position: relative;
+}
+
+.marginAuto {
+  margin: auto;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-left {
+  text-align: left;
+}
+
 #app-root {
   @include display-flex();
   @include flex-direction(column);
+  @include flex-grow(1);
   font-family: $defaultFont;
   font-size:1rem;
 }
@@ -95,6 +133,21 @@ html {
     border-right-color: transparent;
     @include animation(spin-centered 650ms infinite cubic-bezier(.17,.67,.83,.67));
   }
+}
+
+.teams_tutorial_tooltip {
+  font-size: 20px !important;
+  z-index: 11 !important;
+  opacity: 1 !important;
+  border-radius: 5px !important;
+  font-weight: bold !important;
+}
+
+.ease_tooltip {
+  z-index: 10 !important;
+  opacity: 1 !important;
+  border-radius: 5px !important;
+  font-weight: bold !important;
 }
 
 .custom-overlay{
@@ -125,8 +178,18 @@ body .crisp-client .crisp-1 .crisp-11 {
   font-weight: bold;
 }
 
+a.link-unstyle {
+  text-decoration: none;
+  color: inherit;
+  &:hover, &:focus {
+    text-decoration: none;
+    color: inherit;
+  }
+}
+
 button.button-unstyle {
   background: inherit;
+  text-decoration: none;
   border: none;
   outline: none;
   padding: 0;
@@ -156,11 +219,12 @@ button.button-unstyle {
   border-radius: 5px;
   &:hover {
     border:1px solid $themeBlue2Color;
-    .ease_icon {
+    .input_icon {
       color: $themeBlue2Color;
     }
   }
-  .ease_icon {
+  .input_icon {
+    position: relative;
     margin-left:10px;
     color: $themeGreyDarkColor;
   }
@@ -503,6 +567,11 @@ body {
   @include flex(1);
 }
 
+.min_flex {
+  @include flex-shrink(0);
+  @include flex-grow(0);
+}
+
 .flex_direction_column {
   @include flex-direction(column);
 }
@@ -517,31 +586,31 @@ body {
     height: 100%;
     position:absolute;
   }
-
-  #loginBody {
-    position: absolute;
-    padding-bottom: 50px;
-    width: 100%;
-    height: 100%;
-    font-family: $defaultFont;
-    .controls.show {
-      display: block;
-    }
-    .ease-logo {
-      width: 12vw;
-      img {
-        width: 100%;
-      }
+}
+#loginBody {
+  position: absolute;
+  padding-bottom: 50px;
+  width: 100%;
+  height: 100%;
+  font-family: $defaultFont;
+  .controls.show {
+    display: block;
+  }
+  .ease-logo {
+    width: 12vw;
+    img {
+      width: 100%;
     }
   }
-  #loggedBody {
-   height: 100%;
-   top: 43px;
-   position: fixed;
-   width: 100%;
-   transform: translateX(0);
-   .col-left {
-   	position: absolute;
+}
+#loggedBody {
+  height: 100%;
+  top: 43px;
+  position: fixed;
+  width: 100%;
+  transform: translateX(0);
+  .col-left {
+    position: absolute;
     overflow-y: overlay;
     overflow-x: hidden;
     height: 100%;
@@ -554,7 +623,6 @@ body {
   .col-left.show {
     display: block;
   }
-}
 }
 
 @-webkit-keyframes fadeIn {

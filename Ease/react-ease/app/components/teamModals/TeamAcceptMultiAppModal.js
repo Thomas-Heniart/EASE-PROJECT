@@ -46,7 +46,7 @@ class TeamAcceptMultiAppModal extends React.Component {
       this.props.dispatch(appActions.teamAcceptSharedApp(app.id, receiver.shared_app_id)).then(response => {
         this.props.dispatch(showTeamAcceptMultiAppModal(false));
       })
-    });
+    })
   }
   render(){
     const app = this.state.app;
@@ -56,7 +56,7 @@ class TeamAcceptMultiAppModal extends React.Component {
     return (
         <div class="popupHandler myshow">
           <div class="popover_mask" onClick={e => {this.props.dispatch(showTeamAcceptMultiAppModal(false))}}></div>
-          <div class="ease_popup" id="accept_multi_app_modal" style={{width: '430px'}}>
+          <div class="ease_popup ease_team_popup" id="accept_multi_app_modal">
             <button class="button-unstyle action_button close_button" onClick={e => {this.props.dispatch(showTeamAcceptMultiAppModal(false))}}>
               <i class="fa fa-times"/>
             </button>
@@ -71,20 +71,21 @@ class TeamAcceptMultiAppModal extends React.Component {
             </div>
             <div class="row display-flex flex_direction_column" style={{padding: "20px 30px 30px 30px"}}>
               {
-                  Object.keys(receiver.account_information).map(function (item) {
-                    return (
-                        <div key={item} class="display-flex flex_direction_column input_handler">
-                          <label htmlFor={item}>{webInfo[item].placeholder}</label>
-                          <input type={webInfo[item].type}
-                                  name={item}
-                                  placeholder={webInfo[item].placeholder}
-                                 onChange={this.handleInput}
-                                 id={item}
-                                 class="modal_input input_unstyle"
-                          />
-                        </div>
-                    )
-                  }, this)
+                Object.keys(receiver.account_information).map(function (item) {
+                  return (
+                      <div key={item} class="display-flex flex_direction_column input_handler">
+                        <label htmlFor={item}>{webInfo[item].placeholder}</label>
+                        <input type={webInfo[item].type}
+                               name={item}
+                               placeholder={webInfo[item].placeholder}
+                               value={receiver.account_information[item]}
+                               onChange={this.handleInput}
+                               id={item}
+                               class="modal_input input_unstyle"
+                        />
+                      </div>
+                  )
+                }, this)
               }
             </div>
             <button class="row button-unstyle positive_button big_validate_button"

@@ -6,6 +6,7 @@ import channels from "./channelsReducer"
 import selection from "./selectionReducer"
 import teamModals from "./teamModalsReducer"
 import teamAppsAddUI from "./teamAppsAddUIReducer"
+import common from "./commonReducer"
 
 export default combineReducers({
   team,
@@ -13,5 +14,6 @@ export default combineReducers({
   users,
   selection,
   teamModals,
-  teamAppsAddUI
+  teamAppsAddUI,
+  common
 })

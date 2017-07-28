@@ -115,3 +115,12 @@ export function showTeamJoinMultiAppModal(state, user, app){
     }
   }
 }
+
+export function showTeamBrowseChannelsModal(state){
+  return {
+    type: 'SHOW_TEAM_BROWSE_CHANNELS_MODAL',
+    payload: {
+      active: state
+    }
+  }
+}

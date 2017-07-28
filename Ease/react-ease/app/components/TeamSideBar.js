@@ -1,21 +1,28 @@
 var React = require('react');
-import {connect} from "react-redux"
-import {showTeamMenu} from "../actions/teamActions"
-import * as channelActions from "../actions/channelActions"
-import * as userActions from "../actions/userActions"
-import * as teamModalsActions from "../actions/teamModalActions"
+import {connect} from "react-redux";
+import {showTeamMenu} from "../actions/teamActions";
+import * as channelActions from "../actions/channelActions";
+import * as userActions from "../actions/userActions";
+import * as teamModalsActions from "../actions/teamModalActions";
+import ReactTooltip from 'react-tooltip';
+import {findDOMNode} from 'react-dom';
 
 function ChannelList(props){
   return (
       <div className="section-holder" id="team_channels">
-        <button className="heading-button button-unstyle" id="new_channel_button" onClick={e => {props.dispatch(teamModalsActions.showAddTeamChannelModal(true))}}>
+        <button className="heading-button button-unstyle"
+                ref={(ref) => {window.refs.roomAdd = ref}}
+                data-tip="Create Room"
+                data-place="top"
+                id="new_channel_button"
+                onClick={e => {props.dispatch(teamModalsActions.showAddTeamChannelModal(true))}}>
           <i className="fa fa-plus-square-o"/>
         </button>
-        <div className="section-header">
-                                    <span>
-                                        Channels
-                                    </span>
-          <span className="header-count"> ({props.items.length})</span>
+        <div className="section-header" onClick={e => {props.dispatch(teamModalsActions.showTeamBrowseChannelsModal(true))}}>
+          <span class="inline-tooltipped" data-tip="Browse all Rooms" data-place="right">
+            Rooms&nbsp;
+          </span>
+          <span className="inline-tooltipped header-count" data-tip="Browse all Rooms"  data-place="right" ref={(ref) => {window.refs.rooms = ref}}> ({props.items.length})</span>
         </div>
         <div className="section-list">
           {
@@ -24,7 +31,8 @@ function ChannelList(props){
                   <li onClick={(e) => {props.dispatch(channelActions.selectTeamChannel(channel.id))}} className={props.selectedItem.type === 'channel' && props.selectedItem.item.id === channel.id ? "section-list-item channel active" : "section-list-item channel"} key={channel.id}>
                     <div className="primary_action channel_name">
                       <i className="fa fa-users prefix"/>
-                      <span className="overflow-ellipsis">{channel.name}</span>
+                      <span className="overflow-ellipsis full_flex">{channel.name}</span>
+                      <span class="inline-notification">3</span>
                     </div>
                   </li>
               )
@@ -38,13 +46,17 @@ function ChannelList(props){
 function UserList(props){
   return (
       <div className="section-holder" id="team_channels">
-        <button className="heading-button button-unstyle" id="new_member_button" onClick={e => {props.dispatch(teamModalsActions.showAddTeamUserModal(true))}}>
+        <button className="heading-button button-unstyle"
+                data-tip="Invite new user"
+                data-place="top"
+                id="new_member_button"
+                onClick={e => {props.dispatch(teamModalsActions.showAddTeamUserModal(true))}}>
           <i className="ease-icon fa fa-plus-square-o"/>
         </button>
         <div className="section-header">
-                                    <span>
-                                        Members
-                                    </span>
+          <span class="inline-tooltipped" data-tip="Open a Personal Space" data-place="right">
+            People
+          </span>
           <span className="header-count"> ({props.items.length})</span>
         </div>
         <div className="section-list">
@@ -77,6 +89,9 @@ function UserList(props){
 class TeamSideBar extends React.Component{
   constructor(props){
     super(props);
+  }
+  componentDidMount(){
+    ReactTooltip.rebuild();
   }
   render() {
     return (

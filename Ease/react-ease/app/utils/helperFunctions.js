@@ -32,6 +32,14 @@ export function getChannelUsers(channels, channelId, users){
   return ret;
 }
 
+export function isUserInChannel(channel, user){
+  for (var i = 0; i < channel.userIds.length; i++){
+    if (channel.userIds[i] === user.id)
+      return true;
+  }
+  return false;
+}
+
 export function findMeInReceivers(receivers, myId){
   for (var i = 0; i < receivers.length; i++){
     if (receivers[i].team_user_id === myId)
@@ -47,6 +55,7 @@ export function getReceiverInList(receivers, id){
   }
   return null;
 }
+
 export function isUserInList(users, id){
   for (var i = 0; i < users.length; i++){
     if (users[i].id === id)

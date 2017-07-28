@@ -118,7 +118,7 @@ class TeamAddChannelModal extends React.Component {
               <div className="content_row flex_direction_column">
                 <label htmlFor="name_input">Name</label>
                 <div className="modal_input_wrapper">
-                  <i className="fa fa-hashtag ease_icon"/>
+                  <i className="fa fa-hashtag input_icon"/>
                   <input onChange={(e)=>{this.handleInput(e.target.name, e.target.value)}}
                          value={this.state.name}
                          className="input_unstyle" id="name_input" type="text" placeholder="Name" name="name"/>

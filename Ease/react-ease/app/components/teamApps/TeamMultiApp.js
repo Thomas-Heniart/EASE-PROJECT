@@ -2,6 +2,7 @@ var React = require('react');
 var classnames = require('classnames');
 var TeamMultiAppUserSelect = require('./TeamMultiAppUserSelect');
 var RequestAppButton = require('./RequestAppButton');
+import AppReceiverTooltip from "../teams/AppReceiverTooltip";
 import * as appActions from "../../actions/appsActions";
 import * as modalActions from "../../actions/teamModalActions";
 import {
@@ -21,28 +22,74 @@ function TeamMultiAppButtonSet(props) {
 
   return (
       <div class="team_app_actions_holder">
-        <button class="button-unstyle team_app_requests" onClick={e => {props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}>
+        <button class="button-unstyle team_app_requests"
+                data-tip="User(s) would like to access this app"
+                onClick={e => {props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}>
           <i class="fa fa-user"/>
         </button>
         {meReceiver != null &&
-        <button class="button-unstyle team_app_leave" onClick={e => {props.dispatch(modalActions.showTeamLeaveAppModal(true, app, me.id))}}>
-          <i class="fa fa-sign-out"/>
-        </button>}
-        {meReceiver != null &&
-        <button class="button-unstyle team_app_pin" onClick={e => {props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}>
+        <button class="button-unstyle team_app_pin"
+                data-tip="Pin App in your Personal space"
+                onClick={e => {props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}>
           <i class="fa fa-thumb-tack"/>
         </button>}
+        {meReceiver != null &&
+        <button class="button-unstyle team_app_leave"
+                data-tip="Leave App"
+                onClick={e => {props.dispatch(modalActions.showTeamLeaveAppModal(true, app, me.id))}}>
+          <i class="fa fa-sign-out"/>
+        </button>}
         {(meSender || me.role > 1) &&
-        <button class="button-unstyle team_app_edit" onClick={props.setupModifying.bind(null, true)}>
+        <button class="button-unstyle team_app_edit"
+                data-tip="Edit App"
+                onClick={props.setupModifying.bind(null, true)}>
           <i class="fa fa-pencil"/>
         </button>}
         {(meSender || me.role > 1) &&
-        <button class="button-unstyle team_app_delete" onClick={e => {props.dispatch(modalActions.showTeamDeleteAppModal(true, app))}}>
+        <button class="button-unstyle team_app_delete"
+                data-tip="Delete App"
+                onClick={e => {props.dispatch(modalActions.showTeamDeleteAppModal(true, app))}}>
           <i class="fa fa-trash"/>
         </button>}
       </div>
   )
 }
+
+function MultiAppReceiverTagDesc(props){
+  const rcvr = props.receiver;
+  return (
+      <div class="app_receiver_desc display-flex flex_direction_column">
+        <span class="title">User information</span>
+        <div class="display-flex align_items_center">
+          <i class={classnames('fa fa-clock-o mrgnRight5 pwd_change', rcvr.password_must_be_updated ? 'toChange' : null)}/>
+          <span>Password <u>is{rcvr.password_must_be_updated ? ' not': null}</u> up to date</span>
+        </div>
+        <div class="display-flex align_items_center">
+          <i class={classnames('fa fa-circle mrgnRight5 accept_icon', rcvr.accepted ? 'accepted': null)}/>
+          <span>
+            {rcvr.accepted ?
+                "User accepted the app"
+                :
+                "User didn't accept the app"}
+          </span>
+        </div>
+      </div>
+  )
+}
+
+function MultiAppReceiverTag(props){
+  const rcvr = props.receiver;
+  return (
+      <div class={classnames("receiver", rcvr.accepted ? "accepted": null)}>
+                              <span class="receiver_name">
+                              {props.user.username}
+                                {props.myId === rcvr.id && "(you)"}
+                              </span>
+        <i class={classnames('fa fa-clock-o pwd_change mrgnLeft5', rcvr.password_must_be_updated ? 'toChange': null)}/>
+      </div>
+  )
+}
+
 
 class TeamMultiApp extends React.Component {
   constructor(props){
@@ -243,10 +290,24 @@ class TeamMultiApp extends React.Component {
               {senderUser.username}
               {me.id === senderUser.id && "(you)"}
             </span>
-            <span>&nbsp;shared on&nbsp;{app.shared_date}
+            {meReceiver != null && !meReceiver.accepted ?
+                <span>
+              &nbsp;tagged you in an Enterprise App,&nbsp;
+                  <button class="button-unstyle accept_app_btn" onClick={this.acceptRequest.bind(null, true)}>
+                Accept
+              </button>
+                  &nbsp;or&nbsp;
+                  <button class="button-unstyle accept_app_btn" onClick={this.acceptRequest.bind(null, false)}>
+                Refuse
+              </button>
+                  &nbsp;it ?
             </span>
+                :
+                <span>&nbsp;sent an Enterprise App</span>}
           </div>
           <div class="team_app multiple_accounts_app">
+            {meReceiver != null && !meReceiver.accepted &&
+            <div class="custom-overlay"></div>}
             <div class="name_holder">
               {!this.state.modifying ?
                   app.name :
@@ -267,11 +328,14 @@ class TeamMultiApp extends React.Component {
                       return (
                           <div class="credentials_line" key={item}>
                             <div class="credentials_type_icon">
-                              <i class={classnames('fa', webInfo[item].placeholderIcon)}/>
+                              <i class={classnames('fa', webInfo[item].placeholderIcon)} data-tip={"App " + item}/>
                             </div>
                             <div class="credentials_value_holder">
                                   <span class="credentials_value">
-                                    {meReceiver.account_information[item]}
+                                    {item != 'password' ?
+                                        meReceiver.account_information[item]
+                                        :
+                                        '********'}
                                   </span>
                             </div>
                           </div>
@@ -284,21 +348,12 @@ class TeamMultiApp extends React.Component {
                             onClick={this.selfJoinApp}>
                       Join app
                     </button>}
-                    {meReceiver != null && !meReceiver.accepted &&
-                    <div>
-                      <button class="accept_request_btn button-unstyle action_text_button positive_background mrgnRight5"
-                              onClick={this.acceptRequest.bind(null, true)}>
-                        Accept
-                      </button>
-                      <button class="accept_request_btn button-unstyle action_text_button neutral_background"
-                              onClick={this.acceptRequest.bind(null, false)}>
-                        Refuse
-                      </button>
-                    </div>}
                   </div>
                   {meReceiver !== null && meReceiver.accepted &&
                   <div class="password_change_remind">
-                    <div class="password_change_icon"><i class="fa fa-clock-o"/></div>
+                    <div class="password_change_icon">
+                      <i class="fa fa-clock-o" data-tip="Password update frequency"/>
+                    </div>
                     {!this.state.modifying ?
                         <div class="password_change_info">
                           {passwordChangeValues[app.password_change_interval]}
@@ -324,13 +379,9 @@ class TeamMultiApp extends React.Component {
                         const user = selectUserFromListById(this.props.users, item.team_user_id);
                         return (
                             <div class="receiver_wrapper" key={item.team_user_id}>
-                              <div class={classnames("receiver", item.accepted ? "accepted": null)}>
-                              <span class="receiver_name">
-                              {user.username}
-                                {me.id === user.id && "(you)"}
-                              </span>
-                                <i class="fa fa-unlock-alt mrgnLeft5"/>
-                              </div>
+                              <AppReceiverTooltip content={[<MultiAppReceiverTagDesc receiver={item} key="1"/>]} key={item.team_user_id}>
+                                <MultiAppReceiverTag receiver={item} user={user} myId={me.id} />
+                              </AppReceiverTooltip>
                               <div class="credentials">
                                 {
                                   Object.keys(item.account_information).map(function(info){
@@ -338,7 +389,11 @@ class TeamMultiApp extends React.Component {
                                         <div class="credential_container" key={info}>
                                           <i class={classnames('fa', 'mrgnRight5', webInfo[info].placeholderIcon)}/>
                                           <span class="value">
-                                            {item.account_information[info]}
+                                            {info != 'password' ?
+                                                item.account_information[info]
+                                                :
+                                                '********'
+                                            }
                                           </span>
                                         </div>
                                     )

@@ -96,6 +96,7 @@ export function teamAppEditReceiver(app_id,user_app_id, receiver_info){
       dispatch({type: 'TEAM_APP_EDIT_RECEIVER_FULFILLED', payload: {app_id: app_id, receiver_info: response}});
     }).catch(err => {
       dispatch({type: 'TEAM_APP_EDIT_RECEIVER_REJECTED', payload: err});
+      throw err;
     })
   }
 }
@@ -107,6 +108,7 @@ export function teamAppDeleteReceiver(app_id,user_app_id, team_user_id){
       dispatch({type: 'TEAM_APP_DELETE_RECEIVER_FULFILLED', payload: {app_id: app_id, team_user_id: team_user_id}});
     }).catch(err => {
       dispatch({type: 'TEAM_APP_DELETE_RECEIVER_REJECTED', payload: err});
+      throw err;
     });
   }
 }

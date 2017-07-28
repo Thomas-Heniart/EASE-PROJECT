@@ -77,7 +77,7 @@ class PinTeamAppToDashboardModal extends React.Component {
     return (
         <div class="popupHandler myshow">
           <div class="popover_mask" onClick={e => {this.props.dispatch(showPinTeamAppToDashboardModal(false))}}></div>
-          <div class="ease_popup" id="modal_pin_to_dashboard" style={{width: '430px'}}>
+          <div class="ease_popup ease_team_popup" id="modal_pin_to_dashboard">
             <button class="button-unstyle action_button close_button" onClick={e => {this.props.dispatch(showPinTeamAppToDashboardModal(false))}}>
               <i class="fa fa-times"/>
             </button>

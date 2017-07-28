@@ -20,23 +20,33 @@ function TeamLinkAppButtonSet(props) {
 
   return (
       <div class="team_app_actions_holder">
-        <button class="button-unstyle team_app_requests" onClick={e => {props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}>
+        <button class="button-unstyle team_app_requests"
+                data-tip="User(s) would like to access this app"
+                onClick={e => {props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}>
           <i class="fa fa-user"/>
         </button>
         {meReceiver != null &&
-        <button class="button-unstyle team_app_leave" onClick={e => {props.dispatch(modalActions.showTeamLeaveAppModal(true, app, me.id))}}>
-          <i class="fa fa-sign-out"/>
-        </button>}
-        {meReceiver != null &&
-        <button class="button-unstyle team_app_pin" onClick={e => {props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}>
+        <button class="button-unstyle team_app_pin"
+                data-tip="Pin App in your Personal space"
+                onClick={e => {props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}>
           <i class="fa fa-thumb-tack"/>
         </button>}
+        {meReceiver != null &&
+        <button class="button-unstyle team_app_leave"
+                data-tip="Leave App"
+                onClick={e => {props.dispatch(modalActions.showTeamLeaveAppModal(true, app, me.id))}}>
+          <i class="fa fa-sign-out"/>
+        </button>}
         {(meSender || me.role > 1) &&
-        <button class="button-unstyle team_app_edit" onClick={props.setupModifying.bind(null, true)}>
+        <button class="button-unstyle team_app_edit"
+                data-tip="Edit App"
+                onClick={props.setupModifying.bind(null, true)}>
           <i class="fa fa-pencil"/>
         </button>}
         {(meSender || me.role > 1) &&
-        <button class="button-unstyle team_app_delete" onClick={e => {props.dispatch(modalActions.showTeamDeleteAppModal(true, app))}}>
+        <button class="button-unstyle team_app_delete"
+                data-tip="Delete App"
+                onClick={e => {props.dispatch(modalActions.showTeamDeleteAppModal(true, app))}}>
           <i class="fa fa-trash"/>
         </button>}
       </div>
@@ -203,8 +213,7 @@ class TeamLinkApp extends React.Component {
               {senderUser.username}
               {me.id === senderUser.id && "(you)"}
             </span>
-            <span>&nbsp;shared on&nbsp;{app.shared_date}
-            </span>
+            <span>&nbsp;sent a Link App</span>
           </div>
           <div class="team_app">
             <div class="name_holder">
@@ -240,7 +249,7 @@ class TeamLinkApp extends React.Component {
                     </div>}
                     {this.state.modifying &&
                     <div class="credentials_line">
-                      <i class="fa fa-home mrgnRight5"/>
+                      <i class="fa fa-home mrgnRight5" data-tip="Link url"/>
                       <div class="credentials_value_holder">
                         <input autoComplete="off"
                                class="credentials_value_input value_input"

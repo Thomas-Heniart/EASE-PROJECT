@@ -6,7 +6,7 @@ import { CookiesProvider, withCookies, Cookies } from 'react-cookie';
 import store from "./store"
 var TeamView = require('./components/TeamView.js');
 var TeamCreationView = require('./components/teams/TeamCreationView');
-var SimpleTeamCreationView = require('./components/teams/SimpleTeamCreationView');
+var MainView = require('./components/common/MainView');
 var TeamJoinView = require('./components/teams/TeamJoinView');
 var Login = require('./components/common/Login');
 var Base = require('./components/common/Base.js');
@@ -19,7 +19,7 @@ class App extends React.Component {
           <Base>
             <Route exact path={"/"} component={TeamView}/>
             <Route path="/teamCreation" component={TeamCreationView}/>
-            <Route path="/simpleTeamCreation" component={SimpleTeamCreationView}/>
+            <Route path="/main" component={MainView}/>
             <Route path="/teamJoin/:code" component={TeamJoinView}/>
             <Route path="/teams/:teamId" component={TeamView}/>
             <Route path="/login" component={Login}/>

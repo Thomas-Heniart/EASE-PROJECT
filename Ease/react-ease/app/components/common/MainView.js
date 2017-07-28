@@ -1,0 +1,19 @@
+import React from 'react';
+import EaseHeader from './EaseHeader';
+import TeamsPreview from '../teams/TeamsPreview';
+import { Switch, Route } from 'react-router-dom';
+var SimpleTeamCreationView = require('../teams/SimpleTeamCreationView');
+
+function MainView(props){
+  return (
+      <div class="display-flex flex_direction_column full_flex">
+        <EaseHeader/>
+        <Switch>
+          <Route path='/main/teamsPreview' component={TeamsPreview}/>
+          <Route path='/main/simpleTeamCreation' component={SimpleTeamCreationView}/>
+        </Switch>
+      </div>
+  )
+}
+
+module.exports = MainView;

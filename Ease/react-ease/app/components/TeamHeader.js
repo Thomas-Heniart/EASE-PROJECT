@@ -1,7 +1,7 @@
 var React = require('react');
 var classnames = require('classnames');
 var TeamAddAppsButton = require('./TeamAddAppsButton');
-
+var EaseMainNavbar = require('./common/EaseMainNavbar');
 function TeamHeader(props){
   return (
       <header id="client_header">
@@ -14,8 +14,10 @@ function TeamHeader(props){
                               <i className={classnames("fa fa-user icon_wrapper", props.icons[props.selectedItem.type])}/>
                               {props.selectedItem.item.name ? props.selectedItem.item.name : props.selectedItem.item.username}
                             </span>
-                <button className={classnames("button-unstyle ease_tipped mrgnLeft5", props.flexActive ? 'active' : '')} id="open_card_button" onClick={props.toggleFlexFunc}>
-                  <span className="ease_tip">Card</span>
+                <button className={classnames("button-unstyle mrgnLeft5", props.flexActive ? 'active' : '')}
+                        data-tip="Room Settings"
+                        id="open_card_button"
+                        onClick={props.toggleFlexFunc}>
                   <i className="fa fa-cog"/>
                 </button>
               </div>
@@ -37,6 +39,7 @@ function TeamHeader(props){
               </div>
             </div>
           </div>
+          <EaseMainNavbar/>
         </div>
       </header>
   )

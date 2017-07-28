@@ -40,7 +40,7 @@ class TeamLeaveAppModal extends React.Component {
     return (
         <div class="popupHandler myshow">
           <div class="popover_mask" onClick={e => {this.props.dispatch(showTeamLeaveAppModal(false))}}></div>
-          <div class="ease_popup" id="modal_team_leave_app" style={{width: '430px'}}>
+          <div class="ease_popup ease_team_popup" id="modal_team_leave_app">
             <button class="button-unstyle action_button close_button" onClick={e => {this.props.dispatch(showTeamLeaveAppModal(false))}}>
               <i class="fa fa-times"/>
             </button>

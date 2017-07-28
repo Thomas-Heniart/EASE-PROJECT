@@ -11,13 +11,73 @@
 	z-index: 1;
 }
 
+#ease_main_navbar {
+	#notification_button {
+		.menu {
+			padding: 1px;
+			width: 370px;
+			max-height: 346px;
+			right: -59px;
+			overflow: auto;
+			border: 2px solid transparent;
+			&:before {
+				right: 66px;
+			}
+			.menu_row {
+				overflow: hidden;
+				border-bottom: 1px solid white;
+				padding: 0 0 0 0;
+				&:last-child {
+					border: none;
+				}
+			}
+		}
+	}
+}
+
+.notification-card {
+	text-align: left;
+	font-weight: normal;
+	padding: 10px 20px;
+	position: relative;
+	&:hover {
+		background-color: $themeGreyDarkColor;
+	}
+	&.new {
+		background-color: $themeGreyLightColor;
+		&:hover {
+			background-color: $themeGreyDarkColor;
+		}
+		&:before {
+			content: "\f111";
+			left: 6px;
+			font-size: 8px;
+			color:$themeRedColor;
+			top: 35%;
+			position: absolute;
+			font-family: FontAwesome;
+		}
+	}
+	.date {
+		color: $themeMediumDarkGreyColor;
+	}
+	.icon {
+		width: 40px;
+		height: 40px;
+		margin-right: 10px;
+		@include flex-shrink(0);
+	}
+}
+
 #ease_header {
 	@include display-flex();
 	@include align-items(center);
 	@include flex-basis(60px);
+	@include flex-shrink(0);
 	position: relative;
 	padding-right: 14px;
 	height: 60px;
+    border-bottom: 1px solid $themeGreyDarkColor;
 	.logo_container {
 		height: 100%;
 		img {
@@ -31,7 +91,7 @@
 	float: right;
 	border: 1px solid $themeGreyDarkColor;
 	border-radius: 5px;
-	z-index: 1;
+	z-index: 2;
 	height: 36px;
 	button {
 		border-right: 1px solid $themeGreyDarkColor;
@@ -98,16 +158,36 @@
 	}
 }
 
+#ease_main_navbar {
+	.team_select {
+		a {
+			text-align: left;
+			width: 100%;
+			text-decoration: none;
+			color: $themeDarkGrayTextColor;
+			&.active {
+				color: $themeBlueColor;
+			}
+		}
+	}
+}
+
+#team_adder {
+	a {
+		text-decoration: none;
+		color: $themeDarkGrayTextColor;
+		&.active {
+			color: $themeBlueColor;
+		}
+	}
+}
 #teams_button {
 	.icon {
 		margin-right: 5px;
 	}
 	.team_select {
 		border-bottom: none;
-	}
-	.team_select {
 		@include display-flex();
-		@include align-items(center);
 	}
 	.team_select, #team_adder {
 		&:hover {
@@ -158,6 +238,7 @@
 			font-size: 11px;
 			top:12px;
 			left:15px;
+			pointer-events: none;
 		}
 	}
 }

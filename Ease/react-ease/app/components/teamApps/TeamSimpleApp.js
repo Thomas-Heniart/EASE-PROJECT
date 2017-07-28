@@ -2,6 +2,7 @@ var React = require('react');
 var classnames = require('classnames');
 var TeamAppUserSelectDropdown = require('./TeamAppUserSelectDropdown');
 var RequestAppButton = require('./RequestAppButton');
+import AppReceiverTooltip from "../teams/AppReceiverTooltip";
 import * as appActions from "../../actions/appsActions";
 import * as modalActions from "../../actions/teamModalActions"
 import {
@@ -21,25 +22,69 @@ function TeamSimpleAppButtonSet(props) {
 
   return (
       <div class="team_app_actions_holder">
-        <button class="button-unstyle team_app_requests" onClick={e => {props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}>
+        <button class="button-unstyle team_app_requests"
+                data-tip="User(s) would like to access this app"
+                onClick={e => {props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}>
           <i class="fa fa-user"/>
         </button>
         {meReceiver != null && meReceiver.accepted &&
-        <button class="button-unstyle team_app_leave" onClick={e => {props.dispatch(modalActions.showTeamLeaveAppModal(true, app, me.id))}}>
-          <i class="fa fa-sign-out"/>
-        </button>}
-        {meReceiver != null && meReceiver.accepted &&
-        <button class="button-unstyle team_app_pin" onClick={e => {props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}>
+        <button class="button-unstyle team_app_pin"
+                data-tip="Pin App in your Personal space"
+                onClick={e => {props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}>
           <i class="fa fa-thumb-tack"/>
         </button>}
+        {meReceiver != null && meReceiver.accepted &&
+        <button class="button-unstyle team_app_leave"
+                data-tip="Leave App"
+                onClick={e => {props.dispatch(modalActions.showTeamLeaveAppModal(true, app, me.id))}}>
+          <i class="fa fa-sign-out"/>
+        </button>}
         {(meSender || me.role > 1) &&
-        <button class="button-unstyle team_app_edit" onClick={props.setupModifying.bind(null, true)}>
+        <button class="button-unstyle team_app_edit"
+                data-tip="Edit App"
+                onClick={props.setupModifying.bind(null, true)}>
           <i class="fa fa-pencil"/>
         </button>}
         {(meSender || me.role > 1) &&
-        <button class="button-unstyle team_app_delete" onClick={e => {props.dispatch(modalActions.showTeamDeleteAppModal(true, app))}}>
+        <button class="button-unstyle team_app_delete"
+                data-tip="Delete App"
+                onClick={e => {props.dispatch(modalActions.showTeamDeleteAppModal(true, app))}}>
           <i class="fa fa-trash"/>
         </button>}
+      </div>
+  )
+}
+
+function SimpleAppReceiverTag(props){
+  return (
+      <div class={classnames("receiver", props.item.accepted ? "accepted": null)}>
+                              <span class="receiver_name">
+                              {props.user.username}
+                                {props.myId === props.user.id && "(you)"}
+                              </span>
+        <i class={classnames("fa", "mrgnLeft5", props.item.can_see_information ? "fa-eye": "fa-eye-slash")}/>
+      </div>
+  )
+}
+
+function SimpleAppReceiverTagDesc(props){
+  const rcvr = props.receiver;
+  return (
+      <div class="app_receiver_desc display-flex flex_direction_column">
+        <span class="title">User information</span>
+        <div class="display-flex align_items_center">
+          <i class={classnames('fa mrgnRight5 see_password_icon', rcvr.can_see_information ? 'fa-eye' : 'fa-eye-slash')}/>
+          <span>User can{rcvr.can_see_information ? null: 'not'} see the password</span>
+        </div>
+        <div class="display-flex align_items_center">
+          <i class={classnames('fa fa-circle mrgnRight5 accept_icon', rcvr.accepted ? 'accepted': null)}/>
+          <span>
+            {rcvr.accepted ?
+                "User accepted the app"
+                :
+                "User didn't accept the app"}
+          </span>
+        </div>
       </div>
   )
 }
@@ -240,7 +285,7 @@ class TeamSimpleApp extends React.Component {
               dispatch={this.props.dispatch}/>}
           <div class="display-flex team_app_indicators">
             {!this.state.modifying && meReceiver !== null && meReceiver.profile_id !== -1 &&
-                <span>
+            <span>
                     <i class="fa fa-thumb-tack"/>
                   </span>
             }
@@ -251,8 +296,20 @@ class TeamSimpleApp extends React.Component {
               {senderUser.username}
               {me.id === senderUser.id && "(you)"}
             </span>
-            <span>&nbsp;shared on&nbsp;{app.shared_date}
+            {meReceiver != null && !meReceiver.accepted ?
+                <span>
+              &nbsp;tagged you in a Single App,&nbsp;
+                  <button class="button-unstyle accept_app_btn" onClick={this.acceptRequest.bind(null, true)}>
+                Accept
+              </button>
+                  &nbsp;or&nbsp;
+                  <button class="button-unstyle accept_app_btn" onClick={this.acceptRequest.bind(null, false)}>
+                Refuse
+              </button>
+                  &nbsp;it ?
             </span>
+                :
+                <span>&nbsp;sent a Single App</span>}
           </div>
           <div class="team_app">
             {meReceiver != null && !meReceiver.accepted &&
@@ -273,41 +330,46 @@ class TeamSimpleApp extends React.Component {
                 <div class="credentials_holder">
                   <div class="credentials">
                     {(meReceiver != null || this.state.modifying) &&
-                      Object.keys(app.account_information).map(function(item){
-                          return (
-                              <div class="credentials_line" key={item}>
-                                <div class="credentials_type_icon">
-                                  <i class={classnames('fa', webInfo[item].placeholderIcon)}/>
-                                </div>
-                                <div class="credentials_value_holder">
-                                  {!this.state.modifying ?
-                                      <span class="credentials_value">
-                                      {app.account_information[item]}
+                    Object.keys(app.account_information).map(function(item){
+                      return (
+                          <div class="credentials_line" key={item}>
+                            <div class="credentials_type_icon">
+                              <i class={classnames('fa', webInfo[item].placeholderIcon)} data-tip={"App " + item}/>
+                            </div>
+                            <div class="credentials_value_holder">
+                              {!this.state.modifying ?
+                                  <span class="credentials_value">
+                                      {item != 'password' ?
+                                          app.account_information[item]
+                                          :
+                                          '********'}
                                   </span>
-                                      :
-                                      <input autoComplete="off"
-                                             class="credentials_value_input value_input"
-                                             value={this.state.modifiedCredentials[item]}
-                                             onChange={this.handleCredentialsInput}
-                                             placeholder={webInfo[item].placeholder}
-                                             type={webInfo[item].type}
-                                             name={item}/>
-                                  }
-                                </div>
-                              </div>
-                          )
-                        }, this)}
+                                  :
+                                  <input autoComplete="off"
+                                         class="credentials_value_input value_input"
+                                         value={this.state.modifiedCredentials[item]}
+                                         onChange={this.handleCredentialsInput}
+                                         placeholder={webInfo[item].placeholder}
+                                         type={webInfo[item].type}
+                                         name={item}/>
+                              }
+                            </div>
+                          </div>
+                      )
+                    }, this)}
                     {!this.state.modifying && meReceiver === null && me.id !== app.sender_id && me.role === 1 &&
-                      <RequestAppButton/>}
+                    <RequestAppButton/>}
                     {!this.state.modifying && meReceiver === null && (me.role > 1 || me.id === app.sender_id) &&
-                        <button class="button-unstyle joinAppBtn"
-                                onClick={this.selfJoinApp}>
-                          Join app
-                        </button>}
+                    <button class="button-unstyle joinAppBtn"
+                            onClick={this.selfJoinApp}>
+                      Join app
+                    </button>}
                   </div>
                   {meReceiver != null && meReceiver.accepted &&
                   <div class="password_change_remind">
-                    <div class="password_change_icon"><i class="fa fa-clock-o"/></div>
+                    <div class="password_change_icon">
+                      <i class="fa fa-clock-o" data-tip="Password update frequency"/>
+                    </div>
                     {!this.state.modifying ?
                         <div class="password_change_info">
                           {passwordChangeValues[app.password_change_interval]}
@@ -324,17 +386,6 @@ class TeamSimpleApp extends React.Component {
                         </select>
                     }
                   </div>}
-                  {meReceiver != null && !meReceiver.accepted &&
-                  <div>
-                    <button class="accept_request_btn button-unstyle action_text_button positive_background mrgnRight5"
-                            onClick={this.acceptRequest.bind(null, true)}>
-                      Accept
-                    </button>
-                    <button class="accept_request_btn button-unstyle action_text_button neutral_background"
-                            onClick={this.acceptRequest.bind(null, false)}>
-                      Refuse
-                    </button>
-                  </div>}
                 </div>
               </div>
               <div class="sharing_info full_flex">
@@ -343,13 +394,9 @@ class TeamSimpleApp extends React.Component {
                       app.receivers.map(function (item) {
                         const user = selectUserFromListById(this.props.users, item.team_user_id);
                         return (
-                            <div class={classnames("receiver", item.accepted ? "accepted": null)} key={item.team_user_id}>
-                              <span class="receiver_name">
-                              {user.username}
-                                {me.id === user.id && "(you)"}
-                              </span>
-                              <i class={classnames("fa", "mrgnLeft5", item.can_see_information ? "fa-eye": "fa-eye-slash")}/>
-                            </div>
+                            <AppReceiverTooltip content={[<SimpleAppReceiverTagDesc receiver={item} key="1"/>]} key={item.team_user_id}>
+                              <SimpleAppReceiverTag  item={item} user={user} myId={me.id} />
+                            </AppReceiverTooltip>
                         )
                       }, this)
                       :

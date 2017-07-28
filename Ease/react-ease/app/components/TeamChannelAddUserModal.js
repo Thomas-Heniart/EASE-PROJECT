@@ -24,7 +24,7 @@ class FirstStep extends React.Component {
           {users.length > 0 ?
               <div class="content_row flex_direction_column">
                 <div class="modal_input_wrapper">
-                  <i class="fa fa-search ease_icon"/>
+                  <i class="fa fa-search input_icon"/>
                   <input type="text" value="" class="input_unstyle" id="name_input"
                          placeholder="Search user name or email" name="name"/>
                 </div>

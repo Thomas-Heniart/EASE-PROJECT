@@ -6,7 +6,8 @@ module.exports = {
       return axios.post('/api/v1/teams/EditChannelName', {
         team_id: team_id,
         channel_id: channel_id,
-        name: name
+        name: name,
+        timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
       });
@@ -15,7 +16,8 @@ module.exports = {
       return axios.post('/api/v1/teams/EditChannelPurpose',{
         team_id: team_id,
         channel_id: channel_id,
-        purpose: purpose
+        purpose: purpose,
+        timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
       });
@@ -24,7 +26,8 @@ module.exports = {
       return axios.post('/api/v1/teams/AddTeamUserToChannel', {
         team_id: team_id,
         channel_id: channel_id,
-        team_user_id: team_user_id
+        team_user_id: team_user_id,
+        timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
       });
@@ -33,7 +36,8 @@ module.exports = {
       return axios.post('/api/v1/teams/RemoveUserFromChannel', {
         team_id: team_id,
         channel_id: channel_id,
-        team_user_id: team_user_id
+        team_user_id: team_user_id,
+        timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
       });
@@ -42,7 +46,8 @@ module.exports = {
       return axios.post('/api/v1/teams/CreateChannel', {
         team_id: team_id,
         name: name,
-        purpose: purpose
+        purpose: purpose,
+        timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
       });
@@ -50,7 +55,8 @@ module.exports = {
     deleteChannel: function (team_id, channel_id){
       return axios.post('/api/v1/teams/DeleteChannel', {
         team_id: team_id,
-        channel_id: channel_id
+        channel_id: channel_id,
+        timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
       });
@@ -67,7 +73,7 @@ module.exports = {
         username: username,
         departure_date: departure_date,
         role: role,
-        arrival_date: new Date().getTime()
+        timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
       });
@@ -75,7 +81,8 @@ module.exports = {
     deleteTeamUser: function(team_id, team_user_id){
       return axios.post('/api/v1/teams/DeleteTeamUser', {
         team_id: team_id,
-        team_user_id: team_user_id
+        team_user_id: team_user_id,
+        timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
       });
@@ -84,7 +91,8 @@ module.exports = {
       return axios.post('/api/v1/teams/EditTeamUserRole', {
         team_id: team_id,
         team_user_id: user_id,
-        role: role
+        role: role,
+        timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
       });
@@ -93,7 +101,8 @@ module.exports = {
       return axios.post('/api/v1/teams/EditTeamUserDepartureDate', {
         team_id: team_id,
         team_user_id: user_id,
-        departure_date: departure_date
+        departure_date: departure_date,
+        timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
       });
@@ -102,7 +111,8 @@ module.exports = {
       return axios.post('/api/v1/teams/EditTeamUserFirstName', {
         team_id: team_id,
         team_user_id: user_id,
-        first_name: first_name
+        first_name: first_name,
+        timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
       });
@@ -111,7 +121,8 @@ module.exports = {
       return axios.post('/api/v1/teams/EditTeamUserLastName', {
         team_id: team_id,
         team_user_id: user_id,
-        last_name: last_name
+        last_name: last_name,
+        timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
       });
@@ -120,7 +131,8 @@ module.exports = {
       return axios.post('/api/v1/teams/EditTeamUserUsername', {
         team_id: team_id,
         team_user_id: user_id,
-        username: username
+        username: username,
+        timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
       });
@@ -136,7 +148,8 @@ module.exports = {
         name: app.name,
         description: app.description,
         reminder_interval: app.reminder_interval,
-        account_information: app.account_information
+        account_information: app.account_information,
+        timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
       });
@@ -149,7 +162,8 @@ module.exports = {
         name: app.name,
         website_id: app.website_id,
         reminder_interval: app.reminder_interval,
-        description: app.description
+        description: app.description,
+        timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
       });
@@ -161,7 +175,8 @@ module.exports = {
         team_user_id: app.team_user_id,
         name: app.name,
         url: app.url,
-        description:app.description
+        description:app.description,
+        timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
       });
@@ -169,7 +184,8 @@ module.exports = {
     deleteApp: function (team_id, app_id) {
       return axios.post('/api/v1/teams/DeleteShareableApp', {
         team_id: team_id,
-        app_id: app_id
+        app_id: app_id,
+        timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
       })
@@ -180,7 +196,8 @@ module.exports = {
         app_id: app_id,
         team_user_id: user_info.user_id,
         account_information: user_info.account_information,
-        adminHasAccess: user_info.adminHasAccess
+        adminHasAccess: user_info.adminHasAccess,
+        timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
       });
@@ -191,7 +208,8 @@ module.exports = {
         app_id: app_id,
         team_user_id: user_info.team_user_id,
         can_see_information: user_info.can_see_information,
-        account_information: user_info.account_information
+        account_information: user_info.account_information,
+        timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
       });
@@ -204,7 +222,8 @@ module.exports = {
         description: app_info.description,
         password_change_interval: app_info.password_change_interval,
         url: app_info.url,
-        account_information: app_info.account_information
+        account_information: app_info.account_information,
+        timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
       });
@@ -213,7 +232,8 @@ module.exports = {
       return axios.post('/api/v1/teams/DeleteSharedApp', {
         team_id: team_id,
         app_id: app_id,
-        team_user_id: team_user_id
+        team_user_id: team_user_id,
+        timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
       });
@@ -224,7 +244,8 @@ module.exports = {
         app_id: app_id,
         can_see_information: receiver_info.can_see_information,
         team_user_id: receiver_info.team_user_id,
-        account_information: receiver_info.account_information
+        account_information: receiver_info.account_information,
+        timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
       });
@@ -232,7 +253,8 @@ module.exports = {
     acceptSharedApp: function(team_id, shared_app_id){
       return axios.post('/api/v1/teams/AcceptSharedApp', {
         team_id: team_id,
-        shared_app_id: shared_app_id
+        shared_app_id: shared_app_id,
+        timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
       });
@@ -241,7 +263,8 @@ module.exports = {
       return axios.post('/api/v1/teams/TransferShareableAppOwner', {
         team_id: team_id,
         app_id: app_id,
-        team_user_id: team_user_id
+        team_user_id: team_user_id,
+        timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
       })
@@ -251,9 +274,140 @@ module.exports = {
         team_id: team_id,
         shared_app_id: shared_app_id,
         profile_id: profile_id,
-        app_name: app_name
+        app_name: app_name,
+        timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
+      })
+    }
+  },
+  teams: {
+    createTeam: function(name, email, first_name, last_name, username, jobRole, jobDetails, digits){
+      return axios.post('/api/v1/teams/CreateTeam', {
+        team_name: name,
+        email: email,
+        first_name: first_name,
+        last_name: last_name,
+        username: username,
+        jobIndex: jobRole,
+        jobDetails: jobDetails,
+        digits: digits,
+        timestamp: new Date().getTime()
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      })
+    },
+    finalizeRegistration: function(fname, lname, username, jobRole, jobDetails, code){
+      return axios.post('/api/v1/teams/FinalizeRegistration', {
+        first_name: fname,
+        last_name: lname,
+        username: username,
+        job_index: jobRole,
+        job_details: jobDetails,
+        code: code
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      });
+    },
+    askTeamCreation: function(email){
+      return axios.post('/api/v1/teams/AskTeamCreation', {
+        email: email,
+        timestamp: new Date().getTime()
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      })
+    },
+    checkTeamCreationDigits(email, digits){
+      return axios.post('/api/v1/teams/CheckTeamCreationDigits', {
+        email: email,
+        digits: digits
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      })
+    },
+    inviteFriends: function (team_id, email1, email2,email3) {
+      return axios.post('/api/v1/teams/InvitePeople', {
+        team_id:team_id,
+        email1: email1,
+        email2: email2,
+        email3: email3,
+        timestamp: new Date().getTime()
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      })
+    },
+    subscribeToPlan: function(teamId, stripeToken, vat_id, name, address_line1, address_line2, address_zip, address_state, address_country, address_city){
+      return axios.post('/api/v1/teams/SubscribeToMonthPlan', {
+        team_id: teamId,
+        token: stripeToken,
+        vat_id: vat_id,
+        name: name,
+        address_line1: address_line1,
+        address_line2:address_line2,
+        address_zip:address_zip,
+        address_state:address_state,
+        address_country:address_country,
+        address_city: address_city,
+        timestamp: new Date().getTime()
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err;
+      })
+    }
+  },
+  common : {
+    connect : function(email, password){
+      return axios.post('/api/v1/common/Connection', {
+        email: email,
+        password: password
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      })
+    },
+    askRegistration: function(email){
+      return axios.post('/api/v1/common/AskRegistration', {
+        email: email
+      }).then (response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      })
+    },
+    checkRegistrationDigits: function(email, digits){
+      return axios.post('/api/v1/common/CheckRegistrationDigits', {
+        email: email,
+        digits: digits
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      })
+    },
+    registration: function(email, username, password, digits, newsletter){
+      return axios.post('/api/v1/common/Registration', {
+        email: email,
+        username: username,
+        password: password,
+        digits: digits,
+        newsletter: newsletter,
+        registration_date: new Date().getTime()
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
       })
     }
   }

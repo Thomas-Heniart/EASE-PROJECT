@@ -1,6 +1,7 @@
 const initialState = {
   addUserModalActive: false,
   addChannelModalActive: false,
+  teamBrowseChannelsModalActive: false,
   teamChannelAddUserModal: {
     active: false,
     channel_id: -1
@@ -118,6 +119,12 @@ export default function reducer(state=initialState, action){
       return {
         ...state,
         teamJoinMultiAppModal: action.payload
+      }
+    }
+    case 'SHOW_TEAM_BROWSE_CHANNELS_MODAL': {
+      return {
+          ...state,
+        teamBrowseChannelsModalActive: action.payload.active
       }
     }
   }

@@ -10,6 +10,13 @@ export default function reducer(state={
         item:action.payload
       }
     }
+    case "FETCH_TEAM_FULFILLED": {
+      return {
+          ...state,
+        type: null,
+        item: null
+      }
+    }
     case 'SELECT_TEAM_CHANNEL_FULFILLED': {
       return {
           ...state,
@@ -163,6 +170,8 @@ export default function reducer(state={
           for (var j = 0; j < app.receivers.length; j++){
             if (app.receivers[j].team_user_id === action.payload.receiver_info.team_user_id){
               app.receivers[j] = action.payload.receiver_info;
+/*              if (app.receivers[j].account_information && app.receivers[j].account_information['password'])
+                app.receivers[j].account_information['password'] = '';*/
               return nState;
             }
           }
