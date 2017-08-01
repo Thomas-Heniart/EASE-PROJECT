@@ -93,12 +93,12 @@ class NotificationList extends React.Component {
   }
   render(){
     return (
-        <button class="button-unstyle notify" id="notification_button"
+        <button class="button-unstyle bordered_scrollbar notify" id="notification_button"
                 onClick={e => {this.setState({dropdown: true})}}
                 onMouseDown={this.onMouseDown}
                 onMouseUp={this.onMouseUp}>
           <img src="/resources/icons/notification.svg" data-tip="Notifications"/>
-          <div class={classnames('menu menu_arrow display_flex flex_direction_column', this.state.dropdown ? 'show': null)}>
+          <div class={classnames('menu menu_arrow display_flex flex_direction_column ', this.state.dropdown ? 'show': null)}>
             {this.props.notifications.map(function (item) {
               return (
                   <div class="menu_row display_flex align_items_center" key={item.id}>
