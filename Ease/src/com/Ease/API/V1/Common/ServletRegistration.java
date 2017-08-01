@@ -9,6 +9,7 @@ import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.mailjet.client.resource.ContactslistManageContact;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -30,22 +31,24 @@ public class ServletRegistration extends HttpServlet {
             String username = sm.getStringParam("username", true);
             String email = sm.getStringParam("email", true);
             String password = sm.getStringParam("password", false);
+            String confirm_password = sm.getStringParam("confirm_password", false);
             String digits = sm.getStringParam("digits", false);
             String code = sm.getStringParam("code", false);
             Long registration_date = sm.getLongParam("registration_date", true);
             Boolean send_news = sm.getBooleanParam("newsletter", true);
+            JSONObject errors = new JSONObject();
             if (username == null || username.length() < 2 || username.length() > 30)
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid username");
+                errors.put("username", "Invalid username");
             if (email == null || !Regex.isEmail(email))
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid email");
+                errors.put("email", "Invalid email");
             if (password == null || !Regex.isPassword(password))
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid password");
+                errors.put("password", "Invalid password");
             if (registration_date == null)
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid registration date");
+                errors.put("registration_date", "Invalid registration date");
             if ((digits == null || digits.length() != 6) && (code == null || code.equals("")))
                 throw new HttpServletException(HttpStatus.BadRequest, "Missing parameter digits or code");
             if (send_news == null)
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid newsletter param");
+                errors.put("newsletter", "Newsletter cannot be null");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             if (code != null && !code.equals("")) {
                 hibernateQuery.querySQLString("SELECT code FROM pendingTeamInvitations JOIN teamUsers ON pendingTeamInvitations.teamUser_id = teamUsers.id WHERE teamUsers.email = ?");
@@ -64,6 +67,8 @@ public class ServletRegistration extends HttpServlet {
                 if (!db_digits.equals(digits))
                     throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits.");
             }
+            if (!password.equals(confirm_password))
+                errors.put("confirm_password", "Password confirmation doesn't match!");
             User newUser = User.createUser(email, username, password, registration_date, sm.getServletContext(), sm.getDB());
             if (send_news) {
                 MailJetBuilder mailJetBuilder = new MailJetBuilder(ContactslistManageContact.resource, 13300);
@@ -76,7 +81,10 @@ public class ServletRegistration extends HttpServlet {
             ((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
             ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
             ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);
-            sm.setSuccess(newUser.getJson());
+            if (errors.isEmpty())
+                sm.setSuccess(newUser.getJson());
+            else
+                throw new HttpServletException(HttpStatus.BadRequest, errors);
         } catch (GeneralException e) {
             sm.setError(new HttpServletException(HttpStatus.BadRequest, e.getMsg()));
         } catch (Exception e) {

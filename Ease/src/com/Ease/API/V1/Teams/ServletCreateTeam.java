@@ -9,6 +9,7 @@ import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
+import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -45,8 +46,7 @@ public class ServletCreateTeam extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "lastName is needed.");
             if (email == null || email.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "email is needed.");
-            if (username == null || username.equals(""))
-                throw new HttpServletException(HttpStatus.BadRequest, "username is needed.");
+            checkUsernameIntegrity(username);
             if (jobTitle == null)
                 jobTitle = "";
             if (!user.getVerifiedEmails().contains(email) && (digits == null || digits.equals("") || digits.length() != 6))
@@ -90,6 +90,17 @@ public class ServletCreateTeam extends HttpServlet {
             sm.setError(e);
         }
         sm.sendResponse();
+    }
+
+    private void checkUsernameIntegrity(String username) throws HttpServletException {
+        if (username == null || username.equals(""))
+            throw new HttpServletException(HttpStatus.BadRequest, "Usernames can't be empty!");
+        if (username.length() >= 22)
+            throw new HttpServletException(HttpStatus.BadRequest, "Sorry, that's a bit too long! Usernames must be fewer than 22 characters.");
+        if (!username.equals(username.toLowerCase()))
+            throw new HttpServletException(HttpStatus.BadRequest, "Sorry, usernames must be lowercase!");
+        if (!Regex.isValidUsername(username))
+            throw new HttpServletException(HttpStatus.BadRequest, "Usernames can't contain special characters. Sorry about that!");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

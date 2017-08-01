@@ -5,6 +5,7 @@ import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
+import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -33,13 +34,12 @@ public class ServletEditTeamUserUsername extends HttpServlet {
             if (!(teamUser.isSuperior(teamUserToModify) || teamUser == teamUserToModify))
                 throw new HttpServletException(HttpStatus.Forbidden, "You don't have access.");
             String username = sm.getStringParam("username", true);
-            if (username == null || username.equals(""))
-                throw new HttpServletException(HttpStatus.BadRequest, "Empty username.");
+            checkUsernameIntegrity(username);
             for (TeamUser teamUser1 : team.getTeamUsers()) {
                 if (teamUser1 == teamUserToModify)
                     continue;
                 if (teamUser1.getUsername().equals(username))
-                    throw new HttpServletException(HttpStatus.BadRequest, "Username already taken.");
+                    throw new HttpServletException(HttpStatus.BadRequest, "Username is already taken.");
             }
             teamUserToModify.editUsername(username);
             sm.saveOrUpdate(teamUserToModify);
@@ -48,6 +48,18 @@ public class ServletEditTeamUserUsername extends HttpServlet {
             sm.setError(e);
         }
         sm.sendResponse();
+    }
+
+    private String checkUsernameIntegrity(String username) throws HttpServletException {
+        if (username == null || username.equals(""))
+            throw new HttpServletException(HttpStatus.BadRequest, "Usernames can't be empty!");
+        if (username.length() >= 22)
+            throw new HttpServletException(HttpStatus.BadRequest, "Sorry, that's a bit too long! Usernames must be fewer than 22 characters.");
+        if (!username.equals(username.toLowerCase()))
+            throw new HttpServletException(HttpStatus.BadRequest, "Sorry, usernames must be lowercase!");
+        if (!Regex.isValidUsername(username))
+            throw new HttpServletException(HttpStatus.BadRequest, "Usernames can't contain special characters. Sorry about that!");
+        return null;
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

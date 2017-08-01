@@ -25,14 +25,17 @@ public class ServletAskRegistration extends HttpServlet {
         try {
             String email = sm.getStringParam("email", true);
             if (email == null || email.equals("") || !Regex.isEmail(email))
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid email.");
+                throw new HttpServletException(HttpStatus.BadRequest, "That doesn't look like a valid email address!");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             hibernateQuery.querySQLString("SELECT COUNT(*) FROM users LEFT JOIN teamUsers ON users.id = teamUsers.user_id WHERE users.email = ? OR teamUsers.email = ?;");
             hibernateQuery.setParameter(1, email);
             hibernateQuery.setParameter(2, email);
             int count = ((BigInteger) hibernateQuery.getSingleResult()).intValue();
-            if (count > 0)
-                throw new HttpServletException(HttpStatus.BadRequest, "Email already taken.");
+            if (count > 0) {
+                JSONObject error = new JSONObject();
+                error.put("email", "This email is already assigned to an account.");
+                throw new HttpServletException(HttpStatus.BadRequest, error);
+            }
             String digits = CodeGenerator.generateDigits(6);
             hibernateQuery.querySQLString("DELETE FROM userPendingRegistrations WHERE email = ?");
             hibernateQuery.setParameter(1, email);
