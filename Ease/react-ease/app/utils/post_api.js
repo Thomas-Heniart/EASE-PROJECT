@@ -282,6 +282,17 @@ module.exports = {
     }
   },
   teams: {
+    editTeamName : function(team_id, name){
+      return axios.post('/api/v1/teams/EditTeamName', {
+        team_id: team_id,
+        name: name,
+        timestamp: new Date().getTime()
+      }).then(r => {
+        return (r.data);
+      }).catch(err => {
+        throw err.response.data;
+      })
+    },
     createTeam: function(name, email, first_name, last_name, username, jobRole, jobDetails, digits){
       return axios.post('/api/v1/teams/CreateTeam', {
         team_name: name,

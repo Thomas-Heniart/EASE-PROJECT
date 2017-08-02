@@ -2,7 +2,7 @@ var React = require('react');
 var classnames = require('classnames');
 import {showTeamMenu} from "../actions/teamActions";
 import {setTeamsTutorial} from "../actions/commonActions";
-import {showAddTeamUserModal} from "../actions/teamModalActions";
+import {showAddTeamUserModal, showTeamSettingsModal} from "../actions/teamModalActions";
 
 class TeamMenu extends React.Component {
   constructor(props){
@@ -17,30 +17,29 @@ class TeamMenu extends React.Component {
     const team = this.props.team;
 
     return (
-        <div id="team_menu_options">
+        <div id="team_menu_options" class="bordered_scrollbar">
           <div class="popover_mask" onClick={this.hideIt}></div>
           <div class="floating_dropdown">
             <div class="dropdown_content">
-              <div class="dropdown_row">
-                <strong>{me.first_name} {me.last_name}</strong>
+              <div class="dropdown_row flex_direction_column">
+                <strong class="name">{me.first_name} {me.last_name}</strong>
+                <span class="username">@{me.username}</span>
               </div>
-              <div class="dropdown_row">
-                <strong>{me.username}</strong>
+              <div class="border"></div>
+              <div class="dropdown_row flex_direction_column section user">
+                <span class="selectable">Profile information</span>
+                <span class="selectable" onClick={e => {this.props.dispatch(setTeamsTutorial(true)); this.hideIt();}}>
+                  Re-start tutorial
+                </span>
               </div>
-              <div class="dropdown_row selectable">
-                Profile information
-              </div>
-              <div class="dropdown_row selectable" onClick={e => {this.props.dispatch(setTeamsTutorial(true)); this.hideIt();}}>
-                Re-start tutorial
-              </div>
-              <div class="dropdown_row">
-                <strong>{team.name}</strong>
-              </div>
-              <div class="dropdown_row selectable" onClick={e => {this.props.dispatch(showAddTeamUserModal(true)); this.hideIt();}}>
-                Invite people
-              </div>
-              <div class="dropdown_row selectable">
-                Team settings
+              <div class="dropdown_row flex_direction_column section team">
+                <strong class="teamName">{team.name}</strong>
+                <span class="selectable" onClick={e => {this.props.dispatch(showAddTeamUserModal(true)); this.hideIt();}}>
+                  Invite new members
+                </span>
+                <span class="selectable" onClick={e => {this.props.dispatch(showTeamSettingsModal(true)); this.hideIt();}}>
+                  Team settings
+                </span>
               </div>
             </div>
           </div>

@@ -17,6 +17,41 @@ button.action_text_button {
   }
 }
 
+#team_settings_modal {
+  font-size: 22px;
+  .sub {
+    margin-left: 10px;
+  }
+  .modal_input {
+    padding: 5px 10px;
+  }
+  #teamName {
+    font-weight: bold;
+  }
+  .button-set {
+    margin-top: 5px;
+    @include justify-content(flex-end);
+    button {
+      font-weight: bold;
+      min-width: 120px;
+    }
+    button:last-child {
+      margin-left: 15px;
+    }
+  }
+  .edit-btn {
+    color: $themeBlueColor;
+  }
+  h1, h3 {
+    font-weight: bold;
+  }
+  h3 {
+    font-size: 26px;
+    margin-top: 40px;
+    margin-bottom: 20px;
+  }
+}
+
 #pro_team_plan {
   .price, .title {
     color: $DarkGreen;
@@ -175,9 +210,55 @@ button.action_text_button {
       top: 55px;
       margin-top: 0;
       left: 10px;
-      width: 240px;
+      color: $themeDarkGrayTextColor;
+      padding: 20px 0;
+      width: 260px;
       display: block;
+      font-size: .9rem;
+      line-height: 1.2;
       max-height: calc(100vh - 99px);
+      .dropdown_row.section {
+        padding: 20px 15px;
+      }
+      .section.user {
+        padding-top: 15px;
+      }
+      .section.team {
+        border-top: solid 1px #d8d8d8;
+        padding-bottom: 0;
+      }
+      .username {
+        padding-bottom: 20px;
+        padding-top: 10px;
+      }
+      .teamName {
+        padding-bottom:10px;
+      }
+      .name, .username, .teamName {
+        margin-left: 10px;
+      }
+      .border {
+        border-top: 1px solid #d8d8d8;
+        height: 0px;
+        width: 105px;
+        margin-left: 25px;
+      }
+      .dropdown_row {
+        @include align-items(left);
+        border-radius: 0px;
+        padding: 0 15px;
+      }
+      .selectable {
+        padding: 5px 10px;
+        width: 100%;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: all .2s;
+        &:hover {
+          color: white;
+          background-color: $themeBlueColor;
+        }
+      }
       .dropdown_content {
         z-index: 1;
       }

@@ -22,6 +22,7 @@ var TeamLeaveAppModal = require('./teamModals/TeamLeaveAppModal');
 var TeamManageAppRequestModal = require('./teamModals/TeamManageAppRequestModal');
 var TeamAcceptMultiAppModal = require('./teamModals/TeamAcceptMultiAppModal');
 var TeamJoinMultiAppModal = require('./teamModals/TeamJoinMultiAppModal');
+var TeamSettingsModal = require('./teamModals/TeamSettingsModal');
 var EaseHeader = require('./common/EaseHeader');
 import * as teamActions from "../actions/teamActions"
 import * as channelActions from "../actions/channelActions"
@@ -56,7 +57,8 @@ import {connect} from "react-redux"
     teamManageAppRequestModal: store.teamModals.teamManageAppRequestModal,
     teamAcceptMultiAppModal: store.teamModals.teamAcceptMultiAppModal,
     teamJoinMultiAppModal: store.teamModals.teamJoinMultiAppModal,
-    teamBrowseChannelsModalActive: store.teamModals.teamBrowseChannelsModalActive
+    teamBrowseChannelsModalActive: store.teamModals.teamBrowseChannelsModalActive,
+    teamSettingsModalActive: store.teamModals.teamSettingsModalActive
   };
 })
 class TeamView extends React.Component {
@@ -159,31 +161,33 @@ class TeamView extends React.Component {
             <LeftRightTransition appear={true}>
               {this.props.addUserModalActive &&
               <TeamAddUserModal key="1"/>}
+              {this.props.addChannelModalActive &&
+              <TeamAddChannelModal/>}
+              {this.props.teamChannelAddUserModal.active &&
+              <TeamChannelAddUserModal/>}
+              {this.props.teamDeleteUserModal.active &&
+              <TeamDeleteUserModal/>}
+              {this.props.teamDeleteChannelModal.active &&
+              <TeamDeleteChannelModal/>}
+              {this.props.teamDeleteUserFromChannelModal.active &&
+              <TeamDeleteUserFromChannelModal/>}
+              {this.props.teamDeleteAppModal.active &&
+              <TeamDeleteAppModal/>}
+              {this.props.pinTeamAppToDashboardModal.active &&
+              <PinTeamAppToDashboardModal/>}
+              {this.props.teamLeaveAppModal.active &&
+              <TeamLeaveAppModal/>}
+              {this.props.teamManageAppRequestModal.active &&
+              <TeamManageAppRequestModal/>}
+              {this.props.teamAcceptMultiAppModal.active &&
+              <TeamAcceptMultiAppModal/>}
+              {this.props.teamJoinMultiAppModal.active &&
+              <TeamJoinMultiAppModal/>}
+              {this.props.teamBrowseChannelsModalActive &&
+              <TeamBrowseChannelsModal/>}
+              {this.props.teamSettingsModalActive &&
+              <TeamSettingsModal/>}
             </LeftRightTransition>
-            {this.props.addChannelModalActive &&
-            <TeamAddChannelModal/>}
-            {this.props.teamChannelAddUserModal.active &&
-            <TeamChannelAddUserModal/>}
-            {this.props.teamDeleteUserModal.active &&
-            <TeamDeleteUserModal/>}
-            {this.props.teamDeleteChannelModal.active &&
-            <TeamDeleteChannelModal/>}
-            {this.props.teamDeleteUserFromChannelModal.active &&
-            <TeamDeleteUserFromChannelModal/>}
-            {this.props.teamDeleteAppModal.active &&
-            <TeamDeleteAppModal/>}
-            {this.props.pinTeamAppToDashboardModal.active &&
-            <PinTeamAppToDashboardModal/>}
-            {this.props.teamLeaveAppModal.active &&
-            <TeamLeaveAppModal/>}
-            {this.props.teamManageAppRequestModal.active &&
-            <TeamManageAppRequestModal/>}
-            {this.props.teamAcceptMultiAppModal.active &&
-            <TeamAcceptMultiAppModal/>}
-            {this.props.teamJoinMultiAppModal.active &&
-            <TeamJoinMultiAppModal/>}
-            {this.props.teamBrowseChannelsModalActive &&
-            <TeamBrowseChannelsModal/>}
           </div>
         </div>
     )

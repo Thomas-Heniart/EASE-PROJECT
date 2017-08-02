@@ -124,3 +124,12 @@ export function showTeamBrowseChannelsModal(state){
     }
   }
 }
+
+export function showTeamSettingsModal(state){
+  return {
+    type: 'SHOW_TEAM_SETTINGS_MODAL',
+    payload: {
+      active: state
+    }
+  }
+}

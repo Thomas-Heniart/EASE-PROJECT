@@ -2,6 +2,7 @@ const initialState = {
   addUserModalActive: false,
   addChannelModalActive: false,
   teamBrowseChannelsModalActive: false,
+  teamSettingsModalActive: false,
   teamChannelAddUserModal: {
     active: false,
     channel_id: -1
@@ -125,6 +126,12 @@ export default function reducer(state=initialState, action){
       return {
           ...state,
         teamBrowseChannelsModalActive: action.payload.active
+      }
+    }
+    case 'SHOW_TEAM_SETTINGS_MODAL': {
+      return {
+          ...state,
+        teamSettingsModalActive: action.payload.active
       }
     }
   }

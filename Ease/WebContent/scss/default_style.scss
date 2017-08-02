@@ -397,6 +397,10 @@ input.checkbox_unstyle[type=checkbox] {
   @include flex-direction(column);
 }
 
+.min_flex_shrink {
+  @include flex-shrink(0);
+}
+
 .align_items_center {
   @include align-items(center);
 }

@@ -7,7 +7,7 @@ export default function reducer(state={
   switch (action.type){
     case "FETCH_TEAM_FULFILLED": {
       return {
-          ...state,
+        ...state,
         name: action.payload.name,
         id: action.payload.id,
         myTeamUserId:action.payload.myTeamUserId
@@ -15,8 +15,14 @@ export default function reducer(state={
     }
     case 'SHOW_TEAM_MENU': {
       return {
-          ...state,
+        ...state,
         teamMenuActive: action.payload
+      }
+    }
+    case 'EDIT_TEAM_NAME_FULFILLED': {
+      return {
+        ...state,
+        name: action.payload.name
       }
     }
   }

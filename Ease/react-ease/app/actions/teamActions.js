@@ -1,5 +1,6 @@
 import axios from "axios"
 var api = require('../utils/api');
+var post_api = require('../utils/post_api');
 import * as UserActions from "./userActions"
 import * as ChannelActions from "./channelActions"
 
@@ -29,5 +30,18 @@ export function showTeamMenu(state){
   return {
     type: 'SHOW_TEAM_MENU',
     payload: state
+  }
+}
+
+export function editTeamName(name){
+  return function(dispatch, getState){
+    dispatch ({type: 'EDIT_TEAM_NAME_PENDING'});
+    return post_api.teams.editTeamName(getState().team.id, name).then(r => {
+      dispatch({type: 'EDIT_TEAM_NAME_FULFILLED', payload: {name:name}});
+      return name;
+    }).catch(err => {
+      dispath({type: 'EDIT_TEAM_NAME_REJECTED', payload: err});
+      throw err;
+    });
   }
 }
