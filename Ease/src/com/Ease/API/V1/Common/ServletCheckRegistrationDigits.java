@@ -26,7 +26,7 @@ public class ServletCheckRegistrationDigits extends HttpServlet {
             if (email == null || !Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid email.");
             if (digits == null || digits.length() != 6)
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits.");
+                throw new HttpServletException(HttpStatus.BadRequest, "That code wasn't valid. Give it another go!");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             hibernateQuery.querySQLString("SELECT digits FROM userPendingRegistrations WHERE email = ?");
             hibernateQuery.setParameter(1, email);
@@ -34,7 +34,7 @@ public class ServletCheckRegistrationDigits extends HttpServlet {
             if (db_digits == null || db_digits.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "You didn't ask for an account.");
             if (!db_digits.equals(digits))
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits.");
+                throw new HttpServletException(HttpStatus.BadRequest, "That code wasn't valid. Give it another go!");
             JSONObject res = new JSONObject();
             res.put("valid_digits", true);
             sm.setSuccess(res);

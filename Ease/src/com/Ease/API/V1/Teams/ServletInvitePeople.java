@@ -8,6 +8,7 @@ import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -32,10 +33,27 @@ public class ServletInvitePeople extends HttpServlet {
             String email1 = sm.getStringParam("email1", true);
             String email2 = sm.getStringParam("email2", true);
             String email3 = sm.getStringParam("email3", true);
-            if (email1 == null || email2 == null || email3 == null || email1.equals("") || email2.equals("") || email3.equals("") || !Regex.isEmail(email1) || !Regex.isEmail(email2) || !Regex.isEmail(email3))
-                throw new HttpServletException(HttpStatus.BadRequest, "One or more emails are invalid");
-            if (email1.equals(email2) || email1.equals(email3) || email2.equals(email3))
-                throw new HttpServletException(HttpStatus.BadRequest, "One or more emails are invalid");
+            JSONObject errors = new JSONObject();
+            if (email1 == null || email2 == null || email3 == null || email1.equals("") || email2.equals("") || email3.equals(""))
+                throw new HttpServletException(HttpStatus.BadRequest, "One or more emails are empty");
+            if (!Regex.isEmail(email1))
+                errors.put("email1", "That doesn't look like a valid email address!");
+            if (!Regex.isEmail(email2))
+                errors.put("email2", "That doesn't look like a valid email address!");
+            if (!Regex.isEmail(email3))
+                errors.put("email3", "That doesn't look like a valid email address!");
+            if (email1.equals(email2)) {
+                errors.put("email1", "Sorry, some emails seem to be identical");
+                errors.put("email2", "Sorry, some emails seem to be identical");
+            }
+            if (email1.equals(email3)) {
+                errors.put("email1", "Sorry, some emails seem to be identical");
+                errors.put("email3", "Sorry, some emails seem to be identical");
+            }
+            if (email2.equals(email3)) {
+                errors.put("email2", "Sorry, some emails seem to be identical");
+                errors.put("email3", "Sorry, some emails seem to be identical");
+            }
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             hibernateQuery.querySQLString("SELECT COUNT(*) FROM userAndEmailInvitationsMap WHERE user_id = ?");
             hibernateQuery.setParameter(1, sm.getUser().getDBid());
@@ -46,17 +64,17 @@ public class ServletInvitePeople extends HttpServlet {
             hibernateQuery.setParameter("email", email1);
             count = (BigInteger) hibernateQuery.getSingleResult();
             if (count != null && count.intValue() > 0)
-                throw new HttpServletException(HttpStatus.BadRequest, email1 + " already invited");
+                errors.put("email1", "This person already received an invitation");
             hibernateQuery.querySQLString("SELECT COUNT(*) FROM userAndEmailInvitationsMap WHERE email_1 = :email OR email_2 = :email OR email_3 = :email");
             hibernateQuery.setParameter("email", email2);
             count = (BigInteger) hibernateQuery.getSingleResult();
             if (count != null && count.intValue() > 0)
-                throw new HttpServletException(HttpStatus.BadRequest, email2 + " already invited");
+                errors.put("email2", "This person already received an invitation");
             hibernateQuery.querySQLString("SELECT COUNT(*) FROM userAndEmailInvitationsMap WHERE email_1 = :email OR email_2 = :email OR email_3 = :email");
             hibernateQuery.setParameter("email", email3);
             count = (BigInteger) hibernateQuery.getSingleResult();
             if (count != null && count.intValue() > 0)
-                throw new HttpServletException(HttpStatus.BadRequest, email3 + " already invited");
+                errors.put("email1", "This person already received an invitation");
             hibernateQuery.querySQLString("SELECT COUNT(*) FROM users LEFT JOIN teamUsers ON users.id = teamUsers.user_id WHERE users.email = :email OR teamUsers.email = :email");
             hibernateQuery.setParameter("email", email1);
             count = (BigInteger) hibernateQuery.getSingleResult();
@@ -66,12 +84,12 @@ public class ServletInvitePeople extends HttpServlet {
             hibernateQuery.setParameter("email", email2);
             count = (BigInteger) hibernateQuery.getSingleResult();
             if (count != null && count.intValue() > 0)
-                throw new HttpServletException(HttpStatus.BadRequest, email2 + " already has an account");
+                errors.put("email2", "This person already received an invitation");
             hibernateQuery.querySQLString("SELECT COUNT(*) FROM users LEFT JOIN teamUsers ON users.id = teamUsers.user_id WHERE users.email = :email OR teamUsers.email = :email");
             hibernateQuery.setParameter("email", email3);
             count = (BigInteger) hibernateQuery.getSingleResult();
             if (count != null && count.intValue() > 0)
-                throw new HttpServletException(HttpStatus.BadRequest, email3 + " already has an account");
+                errors.put("email3", "This person already received an invitation");
             hibernateQuery.querySQLString("INSERT INTO userAndEmailInvitationsMap values (null, ?, ?, ?, ?);");
             hibernateQuery.setParameter(1, sm.getUser().getDBid());
             hibernateQuery.setParameter(2, email1);
@@ -93,7 +111,10 @@ public class ServletInvitePeople extends HttpServlet {
                 mailJetBuilder.addVariable("last_name", teamUser.getLastName());
                 mailJetBuilder.sendEmail();
             }
-            sm.setSuccess("Emails sent");
+            if (errors.isEmpty())
+                sm.setSuccess("Emails sent");
+            else
+                throw new HttpServletException(HttpStatus.BadRequest, errors);
         } catch (Exception e) {
             e.printStackTrace();
             sm.setError(e);

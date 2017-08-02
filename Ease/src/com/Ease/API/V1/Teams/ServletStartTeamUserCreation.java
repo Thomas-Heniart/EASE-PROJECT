@@ -3,11 +3,14 @@ package com.Ease.API.V1.Teams;
 import com.Ease.Context.Variables;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
-import com.Ease.Mail.SendGridMail;
-import com.Ease.Team.*;
-import com.Ease.Utils.*;
+import com.Ease.Team.Team;
+import com.Ease.Team.TeamManager;
+import com.Ease.Team.TeamUser;
+import com.Ease.Team.TeamUserRole;
 import com.Ease.Utils.Crypto.CodeGenerator;
+import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -37,23 +40,27 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             String email = sm.getStringParam("email", true);
             String username = sm.getStringParam("username", true);
             Integer role = Integer.valueOf(sm.getStringParam("role", true));
-            if (email == null || email.equals("") || !Regex.isEmail(email) || role == null || !TeamUserRole.isInferiorToOwner(role) || !TeamUserRole.isValidValue(role))
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid inputs");
+            JSONObject errors = new JSONObject();
+            if (email == null || email.equals("") || !Regex.isEmail(email))
+                errors.put("email", "That doesn't look like a valid email address!");
+            String username_error = checkUsernameIntegrity(username);
+            if (username_error != null)
+                errors.put("username", username_error);
+            if (role == null || !TeamUserRole.isInferiorToOwner(role) || !TeamUserRole.isValidValue(role))
+                errors.put("role", "Invalid inputs");
             String first_name = sm.getStringParam("first_name", true);
             String last_name = sm.getStringParam("last_name", true);
             HibernateQuery query = sm.getHibernateQuery();
-            query.querySQLString("SELECT id FROM teamUsers WHERE (email = ? OR username = ?) AND team_id = ? AND verified = 1;");
+            query.querySQLString("SELECT id FROM teamUsers WHERE email = ? AND team_id = ?;");
             query.setParameter(1, email);
-            query.setParameter(2, username);
-            query.setParameter(3, team_id);
+            query.setParameter(2, team_id);
             if (!query.list().isEmpty())
-                throw new HttpServletException(HttpStatus.BadRequest, "This person is already on your team.");
-            query.querySQLString("SELECT id FROM teamUsers WHERE (email = ? OR username = ?) AND team_id = ? AND verified = 0;");
-            query.setParameter(1, email);
-            query.setParameter(2, username);
-            query.setParameter(3, team_id);
+                errors.put("email", "This person is already on your team.");
+            query.querySQLString("SELECT id FROM teamUsers WHERE username = ? AND team_id = ?;");
+            query.setParameter(1, username);
+            query.setParameter(2, team_id);
             if (!query.list().isEmpty())
-                throw new HttpServletException(HttpStatus.BadRequest, "This person has already been invited to your team.");
+                errors.put("username", "Username is already taken");
             Date arrival_date = sm.getTimestamp();
             String departure_date_string = sm.getStringParam("departure_date", true);
             TeamUser teamUser = new TeamUser(first_name, last_name, email, username, arrival_date, null, false, team, new TeamUserRole(role));
@@ -90,6 +97,18 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             sm.setError(e);
         }
         sm.sendResponse();
+    }
+
+    private String checkUsernameIntegrity(String username) {
+        if (username == null || username.equals(""))
+            return "Usernames can't be empty!";
+        if (username.length() >= 22)
+            return "Sorry, that's a bit too long! Usernames must be fewer than 22 characters.";
+        if (!username.equals(username.toLowerCase()))
+            return "Sorry, usernames must be lowercase!";
+        if (!Regex.isValidUsername(username))
+            return "Usernames can't contain special characters. Sorry about that!";
+        return null;
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

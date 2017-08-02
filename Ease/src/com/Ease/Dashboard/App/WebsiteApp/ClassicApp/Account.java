@@ -8,7 +8,6 @@ import java.util.*;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.RSA;
-import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -461,7 +460,7 @@ public class Account {
             if ((value = infos.get(info.getInformationName())) != null) {
                 info.setInformation_value(value, this.publicKey, db);
                 if (info.getInformationName().equals("password"))
-                    updateLastUpateDate(db);
+                    updateLastUpdateDate(db);
             }
         }
         db.commitTransaction(transaction);
@@ -477,7 +476,7 @@ public class Account {
                     continue;
                 accountInformation.setInformation_value(new_info_value, this.publicKey, db);
                 if (accountInformation.getInformationName().equals("password"))
-                    updateLastUpateDate(db);
+                    updateLastUpdateDate(db);
             }
         }
         Integer reminderInterval = (Integer) editJson.get("reminderInterval");
@@ -491,9 +490,9 @@ public class Account {
         db.commitTransaction(transaction);
     }
 
-    public void updateLastUpateDate(DataBaseConnection db) throws GeneralException {
+    public void updateLastUpdateDate(DataBaseConnection db) throws GeneralException {
         /* @TODO To change */
-        DatabaseRequest request = db.prepareRequest("UPDATE accounts SET lastUpdateDate = NOW(), passwordMustBeUpdated = 0; WHERE id = ?;");
+        DatabaseRequest request = db.prepareRequest("UPDATE accounts SET lastUpdateDate = NOW(), passwordMustBeUpdated = 0 WHERE id = ?;");
         request.setInt(this.db_id);
         request.set();
         this.setPasswordMustBeUpdated(false);

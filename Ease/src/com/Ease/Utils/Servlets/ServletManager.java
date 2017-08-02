@@ -101,7 +101,7 @@ public abstract class ServletManager {
             System.out.println("Error code: " + httpServletException.getHttpStatus());
             if (httpServletException.getMsg() == null && httpServletException.getJsonObject() != null) {
                 response.setContentType("application/json");
-                this.errorMessage =  httpServletException.getJsonObject().toString();
+                this.errorMessage = httpServletException.getJsonObject().toString();
             } else
                 this.errorMessage = httpServletException.getMsg();
             System.out.println(this.errorMessage);
@@ -434,7 +434,9 @@ public abstract class ServletManager {
         return null;
     }
 
-    public Date getTimestamp() {
+    public Date getTimestamp() throws HttpServletException {
+        if (this.timestamp == null)
+            this.timestamp = this.getCurrentTime();
         return timestamp;
     }
 }

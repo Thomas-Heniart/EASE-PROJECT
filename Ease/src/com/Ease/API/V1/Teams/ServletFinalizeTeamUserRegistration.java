@@ -66,7 +66,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             if (job_index == null || job_index < 0 || job_index >= jobRoles.length)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid job index.");
             if (job_index == (jobRoles.length - 1) && (job_details == null || job_details.equals("")))
-                throw new HttpServletException(HttpStatus.BadRequest, "You must provide your job description.");
+                throw new HttpServletException(HttpStatus.BadRequest, "It would be awesome to know more about your work!");
             HibernateQuery query = sm.getHibernateQuery();
             query.querySQLString("SELECT id, team_id, teamUser_id FROM pendingTeamInvitations WHERE code = ?");
             query.setParameter(1, code);
@@ -100,6 +100,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             query.setParameter(1, teamUser.getDb_id());
             query.setParameter(2, code);
             query.executeUpdate();
+            teamUser.setUser_id(sm.getUser().getDBid());
             teamUser.setDashboard_user(sm.getUser());
             sm.saveOrUpdate(teamUser);
             team.askVerificationForTeamUser(teamUser, verificationCode);

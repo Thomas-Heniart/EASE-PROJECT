@@ -5,6 +5,7 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
+import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -36,8 +37,10 @@ public class ServletEditChannelName extends HttpServlet {
                 if (channel1 == channel)
                     continue;
                 if (channel1.getName().equals(name))
-                    throw new HttpServletException(HttpStatus.BadRequest, "Channel name already taken.");
+                    throw new HttpServletException(HttpStatus.BadRequest, "<<" + name + ">> is already used for another group");
             }
+            if (!Regex.isValidSimpleString(name))
+                throw new HttpServletException(HttpStatus.BadRequest, "Group names can't contain spaces, periods or most punctuation. Try again?");
             channel.editName(name);
             sm.saveOrUpdate(channel);
             sm.setSuccess("Channel name edited");

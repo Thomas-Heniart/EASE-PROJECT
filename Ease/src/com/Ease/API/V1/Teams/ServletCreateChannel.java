@@ -5,6 +5,7 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
+import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -29,10 +30,12 @@ public class ServletCreateChannel extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             String name = sm.getStringParam("name", true);
             String purpose = sm.getStringParam("purpose", true);
-            if (name == null || name.equals(""))
-                throw new HttpServletException(HttpStatus.BadRequest, "Empty channel name.");
+            if (name == null || name.equals("") || !Regex.isValidSimpleString(name))
+                throw new HttpServletException(HttpStatus.BadRequest, "Group names can't contain spaces, periods or most punctuation. Try again?");
             if (purpose == null)
                 purpose = "";
+            if (team.getChannelNamed(name) != null)
+                throw new HttpServletException(HttpStatus.BadRequest, "<<" + name + ">> is already used for another group");
             Channel channel = new Channel(team, name, purpose, sm.getTeamUserForTeamId(team_id).getDb_id());
             sm.saveOrUpdate(channel);
             team.addChannel(channel);
