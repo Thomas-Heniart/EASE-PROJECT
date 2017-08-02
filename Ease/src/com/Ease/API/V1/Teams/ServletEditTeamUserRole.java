@@ -25,7 +25,7 @@ public class ServletEditTeamUserRole extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true);
-            sm.needToBeTeamUserOfTeam(team_id);
+            sm.needToBeAdminOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = sm.getTeamUserForTeam(team);
@@ -38,7 +38,10 @@ public class ServletEditTeamUserRole extends HttpServlet {
             Integer roleValue = Integer.valueOf(sm.getStringParam("role", true));
             if (roleValue == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty role.");
+            if (!TeamUserRole.isInferiorToOwner(roleValue))
+                throw new HttpServletException(HttpStatus.Forbidden, "You cannot transfer your ownership from here.");
             teamUserToModify.getTeamUserRole().setRoleValue(roleValue);
+            sm.saveOrUpdate(teamUserToModify.getTeamUserRole());
             sm.setSuccess("TeamUser role edited.");
         } catch (Exception e) {
             sm.setError(e);

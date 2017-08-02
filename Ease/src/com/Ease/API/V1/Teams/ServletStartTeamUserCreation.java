@@ -3,10 +3,12 @@ package com.Ease.API.V1.Teams;
 import com.Ease.Context.Variables;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
-import com.Ease.Mail.SendGridMail;
-import com.Ease.Team.*;
-import com.Ease.Utils.*;
+import com.Ease.Team.Team;
+import com.Ease.Team.TeamManager;
+import com.Ease.Team.TeamUser;
+import com.Ease.Team.TeamUserRole;
 import com.Ease.Utils.Crypto.CodeGenerator;
+import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.simple.JSONObject;
 
@@ -51,12 +53,12 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             HibernateQuery query = sm.getHibernateQuery();
             query.querySQLString("SELECT id FROM teamUsers WHERE email = ? AND team_id = ?;");
             query.setParameter(1, email);
-            query.setParameter(3, team_id);
+            query.setParameter(2, team_id);
             if (!query.list().isEmpty())
                 errors.put("email", "This person is already on your team.");
             query.querySQLString("SELECT id FROM teamUsers WHERE username = ? AND team_id = ?;");
             query.setParameter(1, username);
-            query.setParameter(3, team_id);
+            query.setParameter(2, team_id);
             if (!query.list().isEmpty())
                 errors.put("username", "Username is already taken");
             Date arrival_date = sm.getTimestamp();

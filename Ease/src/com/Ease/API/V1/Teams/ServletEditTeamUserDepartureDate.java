@@ -35,7 +35,7 @@ public class ServletEditTeamUserDepartureDate extends HttpServlet {
             TeamUser teamUser = sm.getTeamUserForTeam(team);
             Integer teamUser_id = sm.getIntParam("team_user_id", true);
             TeamUser teamUser_to_modify = team.getTeamUserWithId(teamUser_id);
-            if (!(teamUser.isSuperior(teamUser_to_modify) || teamUser == teamUser_to_modify))
+            if (!teamUser.isSuperior(teamUser_to_modify))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot do this dude.");
             String departureDateString = sm.getStringParam("departure_date", true);
             if (departureDateString == null || departureDateString.equals(""))
