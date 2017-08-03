@@ -1,10 +1,10 @@
 package com.Ease.Dashboard.App.WebsiteApp.ClassicApp;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.*;
+import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
+import com.Ease.Dashboard.Profile.Profile;
+import com.Ease.Dashboard.User.User;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
@@ -13,12 +13,10 @@ import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import com.Ease.Context.Catalog.Website;
-import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
-import com.Ease.Dashboard.Profile.Profile;
-import com.Ease.Dashboard.User.User;
-
 import javax.servlet.ServletContext;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ClassicApp extends WebsiteApp {
 
@@ -67,24 +65,6 @@ public class ClassicApp extends WebsiteApp {
         }
         db.commitTransaction(transaction);
         return new ClassicApp((Integer) elevator.get("appDBid"), profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), site, websiteAppDBid, account, classicDBid);
-    }
-
-    public static App createClassicApp(ClassicApp app, String name, Profile profile, String keyUser, DataBaseConnection db) throws HttpServletException {
-        try {
-            int transaction = db.startTransaction();
-            Map<String, Object> elevator = new HashMap<String, Object>();
-            Integer position = profile.getApps().size();
-            Integer websiteAppDBid = WebsiteApp.createWebsiteApp(profile, position, name, "classicApp", app.getSite(), elevator, db);
-            Account account = Account.createAccountFromTeamAccount(app.getAccount(), keyUser, db);
-            DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
-            request.setInt(websiteAppDBid);
-            request.setInt(account.getDBid());
-            Integer classicDBid = request.set();
-            db.commitTransaction(transaction);
-            return new ClassicApp((Integer) elevator.get("appDBid"), profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), app.getSite(), websiteAppDBid, account, classicDBid);
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
-        }
     }
 
     public static ClassicApp createShareableClassicApp(String name, Website website, List<JSONObject> accountInformationList, TeamUser teamUser_owner, Integer reminderValue, PostServletManager sm) throws GeneralException, HttpServletException {
@@ -297,11 +277,13 @@ public class ClassicApp extends WebsiteApp {
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<>();
         Boolean canSeeInformation = (Boolean) params.get("canSeeInformation");
-        elevator.put("canSeeInformation", canSeeInformation);
+        if (canSeeInformation == null)
+            canSeeInformation = false;
+        //elevator.put("canSeeInformation", canSeeInformation);
         Integer websiteAppId = WebsiteApp.createSharedWebsiteApp(this, elevator, team.getDb_id(), channel == null ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), sm);
         String deciphered_teamKey = sm.getTeamUserForTeam(team).getDeciphered_teamKey();
         this.getAccount().decipherWithTeamKeyIfNeeded(deciphered_teamKey);
-        Account sharedAccount = Account.createSharedAccount(this.getAccount().getAccountInformations(), deciphered_teamKey, sm.getDB());
+        Account sharedAccount = Account.createSharedAccount(this.getAccount().getAccountInformations(), deciphered_teamKey, canSeeInformation, sm.getDB());
         DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
         request.setInt(websiteAppId);
         request.setInt(sharedAccount.getDBid());
@@ -337,7 +319,7 @@ public class ClassicApp extends WebsiteApp {
     @Override
     public JSONObject getNeededParams(PostServletManager sm) {
         JSONObject res = super.getNeededParams(sm);
-        Boolean canSeeInformation = (Boolean) sm.getParam("can_see_information", true);
+        Boolean canSeeInformation = sm.getBooleanParam("can_see_information", true);
         if (canSeeInformation == null)
             canSeeInformation = false;
         res.put("canSeeInformation", canSeeInformation);
