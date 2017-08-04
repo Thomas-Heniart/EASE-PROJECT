@@ -1,27 +1,24 @@
 package com.Ease.Dashboard.App.WebsiteApp;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.Ease.Dashboard.App.*;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.Account;
-import com.Ease.Team.Channel;
-import com.Ease.Team.Team;
-import com.Ease.Team.TeamUser;
-import com.Ease.Utils.*;
-import com.Ease.Utils.ServletManager;
-import com.Ease.Utils.Servlets.*;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
+import com.Ease.Dashboard.App.*;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.Account;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Mail.SendGridMail;
+import com.Ease.Team.Channel;
+import com.Ease.Team.Team;
+import com.Ease.Team.TeamUser;
+import com.Ease.Utils.*;
+import com.Ease.Utils.Servlets.PostServletManager;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import javax.servlet.ServletContext;
+import java.util.HashMap;
+import java.util.Map;
 
 public class WebsiteApp extends App implements SharedApp, ShareableApp {
 
@@ -86,11 +83,10 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         return websiteAppDBid;
     }
 
-    public static WebsiteApp createEmptyApp(Profile profile, Integer position, String name, Website site, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public static WebsiteApp createEmptyApp(Profile profile, Integer position, String name, Website site, DataBaseConnection db) throws GeneralException {
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<String, Object>();
-        Integer appDBid = App.createApp(profile, position, name, "websiteApp", elevator, sm.getDB());
+        Integer appDBid = App.createApp(profile, position, name, "websiteApp", elevator, db);
         DatabaseRequest request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, 'websiteApp', null, null);");
         request.setInt(site.getDb_id());
         request.setInt(appDBid);

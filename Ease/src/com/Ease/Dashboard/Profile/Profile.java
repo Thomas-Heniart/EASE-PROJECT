@@ -1,23 +1,21 @@
 package com.Ease.Dashboard.Profile;
 
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
+import com.Ease.Context.Catalog.Website;
+import com.Ease.Context.Group.GroupManager;
+import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
+import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
+import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
+import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import com.Ease.Context.Catalog.Website;
-import com.Ease.Context.Group.GroupManager;
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
-import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
-import com.Ease.Dashboard.User.User;
-
 import javax.servlet.ServletContext;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class Profile {
 
@@ -374,11 +372,10 @@ public class Profile {
         throw new GeneralException(ServletManager.Code.ClientError, "This app is not a Classic or Logwith app.");
     }
 
-    public WebsiteApp addEmptyApp(String name, Website site, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public WebsiteApp addEmptyApp(String name, Website site, DataBaseConnection db) throws GeneralException {
         int transaction = db.startTransaction();
         int position = this.apps.size();
-        WebsiteApp app = WebsiteApp.createEmptyApp(this, position, name, site, sm);
+        WebsiteApp app = WebsiteApp.createEmptyApp(this, position, name, site, db);
         this.apps.add(app);
         this.user.getDashboardManager().addApp(app);
         db.commitTransaction(transaction);

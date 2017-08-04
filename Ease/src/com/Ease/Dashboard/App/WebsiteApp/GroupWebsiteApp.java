@@ -1,10 +1,5 @@
 package com.Ease.Dashboard.App.WebsiteApp;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.ServletContext;
-
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Context.Group.Group;
@@ -18,12 +13,11 @@ import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.GroupLogwithApp;
 import com.Ease.Dashboard.Profile.GroupProfile;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.IdGenerator;
-import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.*;
+
+import javax.servlet.ServletContext;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GroupWebsiteApp extends GroupApp {
 public enum Data {
@@ -135,7 +129,7 @@ public enum Data {
 		GroupProfile groupProfile = this.getGroupProfile();
 		for (Profile profile : user.getDashboardManager().getProfilesList()) {
 			if (profile.getGroupProfile() == groupProfile) {
-				App newApp = WebsiteApp.createEmptyApp(profile, profile.getApps().size(), this.getAppInfo().getName(), site, sm);
+				App newApp = WebsiteApp.createEmptyApp(profile, profile.getApps().size(), this.getAppInfo().getName(), site, sm.getDB());
 				profile.addApp(newApp);
 				return ;
 			}

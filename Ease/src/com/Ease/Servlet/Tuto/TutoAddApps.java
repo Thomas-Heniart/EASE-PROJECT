@@ -1,31 +1,29 @@
  package com.Ease.Servlet.Tuto;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+ import com.Ease.Context.Catalog.Catalog;
+ import com.Ease.Context.Catalog.Website;
+ import com.Ease.Dashboard.App.App;
+ import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
+ import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
+ import com.Ease.Dashboard.Profile.Profile;
+ import com.Ease.Dashboard.User.User;
+ import com.Ease.Utils.Crypto.RSA;
+ import com.Ease.Utils.GeneralException;
+ import com.Ease.Utils.ServletManager;
+ import org.apache.commons.lang3.StringEscapeUtils;
+ import org.json.simple.JSONArray;
+ import org.json.simple.JSONObject;
+ import org.json.simple.parser.JSONParser;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
-import com.Ease.Context.Catalog.Catalog;
-import com.Ease.Context.Catalog.Website;
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
-import com.Ease.Dashboard.Profile.Profile;
-import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
-import com.Ease.Utils.Crypto.RSA;
+ import javax.servlet.ServletException;
+ import javax.servlet.annotation.WebServlet;
+ import javax.servlet.http.HttpServlet;
+ import javax.servlet.http.HttpServletRequest;
+ import javax.servlet.http.HttpServletResponse;
+ import javax.servlet.http.HttpSession;
+ import java.io.IOException;
+ import java.util.HashMap;
+ import java.util.Map;
 
 /**
  * Servlet implementation class TutoAddApps
@@ -123,7 +121,7 @@ public class TutoAddApps extends HttpServlet {
 					}
 					if (ret == false) {
 						if (obj.get("password").toString().equals("")) {
-							profile.addEmptyApp(obj.get("name").toString(), site, sm);
+							profile.addEmptyApp(obj.get("name").toString(), site, sm.getDB());
 						} else {
 							logwith = profile.addClassicApp(obj.get("name").toString(), site, infos, sm);
 						}
