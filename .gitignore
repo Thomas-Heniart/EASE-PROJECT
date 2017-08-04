@@ -8,3 +8,18 @@ Ease/WebContent/resources/images/IÉSEG Network.png
 Ease/WebContent/resources/images/IÉSEG Oline.png
 
 Ease/WebContent/resources/images/Calendar IÉSEG.png
+
+out/*
+
+.idea/*
+
+extension/.idea/artifacts/Ease_war_exploded.xml
+
+tools/.idea/*
+
+Ease/.idea/*
+*.iml
+
+Ease/WebContent/safariExtension/\.DS_Store
+
+extension/*
