@@ -11,7 +11,7 @@ pageEncoding="UTF-8"%>
 <% User user = (User) (session.getAttribute("user"));%>
 
 <% if (user != null){%>
-<c:redirect url="/" />
+<c:redirect url="/home" />
 <%}%>
 <!-- Amplitude script -->
 <%

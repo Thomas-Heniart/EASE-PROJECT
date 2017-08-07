@@ -2763,7 +2763,7 @@ var CallbackQueue = __webpack_require__(117);
 var PooledClass = __webpack_require__(30);
 var ReactFeatureFlags = __webpack_require__(122);
 var ReactReconciler = __webpack_require__(36);
-var Transaction = __webpack_require__(53);
+var Transaction = __webpack_require__(54);
 
 var invariant = __webpack_require__(2);
 
@@ -4120,7 +4120,7 @@ var _assign = __webpack_require__(8);
 var ReactCurrentOwner = __webpack_require__(22);
 
 var warning = __webpack_require__(3);
-var canDefineProperty = __webpack_require__(56);
+var canDefineProperty = __webpack_require__(57);
 var hasOwnProperty = Object.prototype.hasOwnProperty;
 
 var REACT_ELEMENT_TYPE = __webpack_require__(146);
@@ -4613,7 +4613,7 @@ module.exports = __webpack_require__(378);
 
 
 var DOMNamespaces = __webpack_require__(70);
-var setInnerHTML = __webpack_require__(55);
+var setInnerHTML = __webpack_require__(56);
 
 var createMicrosoftUnsafeLocalFunction = __webpack_require__(77);
 var setTextContent = __webpack_require__(135);
@@ -4928,7 +4928,7 @@ var createFactory = ReactElement.createFactory;
 var cloneElement = ReactElement.cloneElement;
 
 if (process.env.NODE_ENV !== 'production') {
-  var canDefineProperty = __webpack_require__(56);
+  var canDefineProperty = __webpack_require__(57);
   var ReactElementValidator = __webpack_require__(147);
   var didWarnPropTypesDeprecated = false;
   createElement = ReactElementValidator.createElement;
@@ -5204,7 +5204,7 @@ module.exports = invariant;
 
 var _prodInvariant = __webpack_require__(5);
 
-var EventPluginRegistry = __webpack_require__(50);
+var EventPluginRegistry = __webpack_require__(51);
 var EventPluginUtils = __webpack_require__(71);
 var ReactErrorUtils = __webpack_require__(75);
 
@@ -6335,6 +6335,81 @@ module.exports = ReactTooltip;
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.fetchTeam = fetchTeam;
+exports.fetchTeamAndUsersAndChannels = fetchTeamAndUsersAndChannels;
+exports.showTeamMenu = showTeamMenu;
+exports.editTeamName = editTeamName;
+
+var _axios = __webpack_require__(39);
+
+var _axios2 = _interopRequireDefault(_axios);
+
+var _userActions = __webpack_require__(29);
+
+var UserActions = _interopRequireWildcard(_userActions);
+
+var _channelActions = __webpack_require__(23);
+
+var ChannelActions = _interopRequireWildcard(_channelActions);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var api = __webpack_require__(13);
+var post_api = __webpack_require__(20);
+function fetchTeam(id) {
+  return function (dispatch) {
+    dispatch({ type: 'FETCH_TEAM_PENDING', payload: id });
+    return api.fetchTeam(id).then(function (response) {
+      dispatch({ type: "FETCH_TEAM_FULFILLED", payload: response });
+    }).catch(function (err) {
+      dispatch({ type: "FETCH_TEAM_REJECTED", payload: err });
+      throw err;
+    });
+  };
+}
+
+function fetchTeamAndUsersAndChannels(team_id) {
+  return function (dispatch) {
+    return dispatch(fetchTeam(team_id)).then(function () {
+      return dispatch(UserActions.fetchUsers(team_id)).then(function () {
+        return dispatch(ChannelActions.fetchChannels(team_id));
+      });
+    });
+  };
+}
+
+function showTeamMenu(state) {
+  return {
+    type: 'SHOW_TEAM_MENU',
+    payload: state
+  };
+}
+
+function editTeamName(name) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'EDIT_TEAM_NAME_PENDING' });
+    return post_api.teams.editTeamName(getState().team.id, name).then(function (r) {
+      dispatch({ type: 'EDIT_TEAM_NAME_FULFILLED', payload: { name: name } });
+      return name;
+    }).catch(function (err) {
+      dispath({ type: 'EDIT_TEAM_NAME_REJECTED', payload: err });
+      throw err;
+    });
+  };
+}
+
+/***/ }),
+/* 49 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _helperFunctions = __webpack_require__(10);
@@ -6489,7 +6564,7 @@ var LinkAppSharingPreview = function (_React$Component) {
 module.exports = LinkAppSharingPreview;
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6667,7 +6742,7 @@ var SimpleAppSharingPreview = function (_React$Component) {
 module.exports = SimpleAppSharingPreview;
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6928,7 +7003,7 @@ module.exports = EventPluginRegistry;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6946,7 +7021,7 @@ module.exports = EventPluginRegistry;
 
 var _assign = __webpack_require__(8);
 
-var EventPluginRegistry = __webpack_require__(50);
+var EventPluginRegistry = __webpack_require__(51);
 var ReactEventEmitterMixin = __webpack_require__(294);
 var ViewportMetrics = __webpack_require__(128);
 
@@ -7261,7 +7336,7 @@ var ReactBrowserEventEmitter = _assign({}, ReactEventEmitterMixin, {
 module.exports = ReactBrowserEventEmitter;
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7338,7 +7413,7 @@ SyntheticUIEvent.augmentClass(SyntheticMouseEvent, MouseEventInterface);
 module.exports = SyntheticMouseEvent;
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7569,7 +7644,7 @@ module.exports = TransactionImpl;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7697,7 +7772,7 @@ function escapeTextContentForBrowser(text) {
 module.exports = escapeTextContentForBrowser;
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7800,7 +7875,7 @@ if (ExecutionEnvironment.canUseDOM) {
 module.exports = setInnerHTML;
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7832,7 +7907,7 @@ module.exports = canDefineProperty;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7930,81 +8005,6 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 module.exports = defaults;
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 58 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.fetchTeam = fetchTeam;
-exports.fetchTeamAndUsersAndChannels = fetchTeamAndUsersAndChannels;
-exports.showTeamMenu = showTeamMenu;
-exports.editTeamName = editTeamName;
-
-var _axios = __webpack_require__(39);
-
-var _axios2 = _interopRequireDefault(_axios);
-
-var _userActions = __webpack_require__(29);
-
-var UserActions = _interopRequireWildcard(_userActions);
-
-var _channelActions = __webpack_require__(23);
-
-var ChannelActions = _interopRequireWildcard(_channelActions);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var api = __webpack_require__(13);
-var post_api = __webpack_require__(20);
-function fetchTeam(id) {
-  return function (dispatch) {
-    dispatch({ type: 'FETCH_TEAM_PENDING', payload: id });
-    return api.fetchTeam(id).then(function (response) {
-      dispatch({ type: "FETCH_TEAM_FULFILLED", payload: response });
-    }).catch(function (err) {
-      dispatch({ type: "FETCH_TEAM_REJECTED", payload: err });
-      throw err;
-    });
-  };
-}
-
-function fetchTeamAndUsersAndChannels(team_id) {
-  return function (dispatch) {
-    return dispatch(fetchTeam(team_id)).then(function () {
-      return dispatch(UserActions.fetchUsers(team_id)).then(function () {
-        return dispatch(ChannelActions.fetchChannels(team_id));
-      });
-    });
-  };
-}
-
-function showTeamMenu(state) {
-  return {
-    type: 'SHOW_TEAM_MENU',
-    payload: state
-  };
-}
-
-function editTeamName(name) {
-  return function (dispatch, getState) {
-    dispatch({ type: 'EDIT_TEAM_NAME_PENDING' });
-    return post_api.teams.editTeamName(getState().team.id, name).then(function (r) {
-      dispatch({ type: 'EDIT_TEAM_NAME_FULFILLED', payload: { name: name } });
-      return name;
-    }).catch(function (err) {
-      dispath({ type: 'EDIT_TEAM_NAME_REJECTED', payload: err });
-      throw err;
-    });
-  };
-}
 
 /***/ }),
 /* 59 */
@@ -8525,7 +8525,7 @@ var ReactDOMComponentTree = __webpack_require__(11);
 var ReactInstrumentation = __webpack_require__(18);
 
 var createMicrosoftUnsafeLocalFunction = __webpack_require__(77);
-var setInnerHTML = __webpack_require__(55);
+var setInnerHTML = __webpack_require__(56);
 var setTextContent = __webpack_require__(135);
 
 function getNodeAfter(parentNode, node) {
@@ -10492,7 +10492,7 @@ var _prodInvariant = __webpack_require__(32);
 
 var ReactNoopUpdateQueue = __webpack_require__(88);
 
-var canDefineProperty = __webpack_require__(56);
+var canDefineProperty = __webpack_require__(57);
 var emptyObject = __webpack_require__(40);
 var invariant = __webpack_require__(2);
 var warning = __webpack_require__(3);
@@ -11546,7 +11546,7 @@ var EaseMainNavbar = (_dec = (0, _reactRedux.connect)(function (store) {
     key: 'processLogout',
     value: function processLogout() {
       this.props.dispatch((0, _commonActions.processLogout)()).then(function (response) {
-        window.location.href = "/login";
+        window.location.href = "/#/login";
         //      this.props.history.push('/login');
       });
     }
@@ -14260,7 +14260,7 @@ var _prodInvariant = __webpack_require__(5);
 var DOMLazyTree = __webpack_require__(35);
 var DOMProperty = __webpack_require__(25);
 var React = __webpack_require__(37);
-var ReactBrowserEventEmitter = __webpack_require__(51);
+var ReactBrowserEventEmitter = __webpack_require__(52);
 var ReactCurrentOwner = __webpack_require__(22);
 var ReactDOMComponentTree = __webpack_require__(11);
 var ReactDOMContainerInfo = __webpack_require__(277);
@@ -14276,7 +14276,7 @@ var ReactUpdates = __webpack_require__(21);
 var emptyObject = __webpack_require__(40);
 var instantiateReactComponent = __webpack_require__(133);
 var invariant = __webpack_require__(2);
-var setInnerHTML = __webpack_require__(55);
+var setInnerHTML = __webpack_require__(56);
 var shouldUpdateReactComponent = __webpack_require__(82);
 var warning = __webpack_require__(3);
 
@@ -15264,8 +15264,8 @@ module.exports = isTextInputElement;
 
 
 var ExecutionEnvironment = __webpack_require__(12);
-var escapeTextContentForBrowser = __webpack_require__(54);
-var setInnerHTML = __webpack_require__(55);
+var escapeTextContentForBrowser = __webpack_require__(55);
+var setInnerHTML = __webpack_require__(56);
 
 /**
  * Set the textContent property of a node, ensuring that whitespace is preserved
@@ -16312,7 +16312,7 @@ var ReactElement = __webpack_require__(31);
 
 var checkReactTypeSpec = __webpack_require__(391);
 
-var canDefineProperty = __webpack_require__(56);
+var canDefineProperty = __webpack_require__(57);
 var getIteratorFn = __webpack_require__(149);
 var warning = __webpack_require__(3);
 
@@ -17012,7 +17012,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _dec, _class;
 
-var _teamActions = __webpack_require__(58);
+var _teamActions = __webpack_require__(48);
 
 var teamActions = _interopRequireWildcard(_teamActions);
 
@@ -17234,24 +17234,20 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
               )
             )
           ),
-          React.createElement(
-            _transitions.LeftRightTransition,
-            { appear: true },
-            this.props.addUserModalActive && React.createElement(TeamAddUserModal, { key: '1' }),
-            this.props.addChannelModalActive && React.createElement(TeamAddChannelModal, null),
-            this.props.teamChannelAddUserModal.active && React.createElement(TeamChannelAddUserModal, null),
-            this.props.teamDeleteUserModal.active && React.createElement(TeamDeleteUserModal, null),
-            this.props.teamDeleteChannelModal.active && React.createElement(TeamDeleteChannelModal, null),
-            this.props.teamDeleteUserFromChannelModal.active && React.createElement(TeamDeleteUserFromChannelModal, null),
-            this.props.teamDeleteAppModal.active && React.createElement(TeamDeleteAppModal, null),
-            this.props.pinTeamAppToDashboardModal.active && React.createElement(PinTeamAppToDashboardModal, null),
-            this.props.teamLeaveAppModal.active && React.createElement(TeamLeaveAppModal, null),
-            this.props.teamManageAppRequestModal.active && React.createElement(TeamManageAppRequestModal, null),
-            this.props.teamAcceptMultiAppModal.active && React.createElement(TeamAcceptMultiAppModal, null),
-            this.props.teamJoinMultiAppModal.active && React.createElement(TeamJoinMultiAppModal, null),
-            this.props.teamBrowseChannelsModalActive && React.createElement(TeamBrowseChannelsModal, null),
-            this.props.teamSettingsModalActive && React.createElement(TeamSettingsModal, null)
-          )
+          this.props.addUserModalActive && React.createElement(TeamAddUserModal, { key: '1' }),
+          this.props.addChannelModalActive && React.createElement(TeamAddChannelModal, null),
+          this.props.teamChannelAddUserModal.active && React.createElement(TeamChannelAddUserModal, null),
+          this.props.teamDeleteUserModal.active && React.createElement(TeamDeleteUserModal, null),
+          this.props.teamDeleteChannelModal.active && React.createElement(TeamDeleteChannelModal, null),
+          this.props.teamDeleteUserFromChannelModal.active && React.createElement(TeamDeleteUserFromChannelModal, null),
+          this.props.teamDeleteAppModal.active && React.createElement(TeamDeleteAppModal, null),
+          this.props.pinTeamAppToDashboardModal.active && React.createElement(PinTeamAppToDashboardModal, null),
+          this.props.teamLeaveAppModal.active && React.createElement(TeamLeaveAppModal, null),
+          this.props.teamManageAppRequestModal.active && React.createElement(TeamManageAppRequestModal, null),
+          this.props.teamAcceptMultiAppModal.active && React.createElement(TeamAcceptMultiAppModal, null),
+          this.props.teamJoinMultiAppModal.active && React.createElement(TeamJoinMultiAppModal, null),
+          this.props.teamBrowseChannelsModalActive && React.createElement(TeamBrowseChannelsModal, null),
+          this.props.teamSettingsModalActive && React.createElement(TeamSettingsModal, null)
         )
       );
     }
@@ -17427,7 +17423,6 @@ var UnknownUserForm = function (_React$Component) {
         _this2.props.finishLogin();
       }).catch(function (err) {
         _this2.setState({ errorMessage: err, error: true, password: '' });
-      }).then(function () {
         _this2.props.setView('unknown');
       });
     }
@@ -17563,7 +17558,6 @@ var KnownUserForm = function (_React$Component2) {
         _this4.props.finishLogin();
       }).catch(function (err) {
         _this4.setState({ errorMessage: err, error: true, password: '' });
-      }).then(function () {
         _this4.props.setView('known');
       });
     }
@@ -17805,6 +17799,7 @@ function Loader(props) {
 
 var Login = (_dec = (0, _reactRedux.connect)(function (store) {
   return {
+    authenticated: store.common.authenticated,
     redirect: store.common.loginRedirectUrl
   };
 }), _dec(_class = function (_React$Component4) {
@@ -17822,6 +17817,7 @@ var Login = (_dec = (0, _reactRedux.connect)(function (store) {
       knownEmail: _this6.props.cookies.get('email'),
       knownUser: false
     };
+    if (_this6.props.authenticated) window.location.href = "/home";
     _this6.state.knownUser = _this6.state.knownFname !== undefined && _this6.state.knownEmail !== undefined;
     if (_this6.state.knownUser) {
       _this6.state.knownFname = base64.decode(_this6.state.knownFname);
@@ -17857,6 +17853,7 @@ var Login = (_dec = (0, _reactRedux.connect)(function (store) {
   }, {
     key: 'render',
     value: function render() {
+      if (this.props.authenticated) return null;
       return React.createElement(
         'div',
         { id: 'loginBody' },
@@ -19720,7 +19717,7 @@ exports.default = (0, _redux.createStore)(_reducers2.default, middleware);
 var utils = __webpack_require__(16);
 var bind = __webpack_require__(96);
 var Axios = __webpack_require__(164);
-var defaults = __webpack_require__(57);
+var defaults = __webpack_require__(58);
 
 /**
  * Create an instance of Axios
@@ -19840,7 +19837,7 @@ module.exports = CancelToken;
 "use strict";
 
 
-var defaults = __webpack_require__(57);
+var defaults = __webpack_require__(58);
 var utils = __webpack_require__(16);
 var InterceptorManager = __webpack_require__(165);
 var dispatchRequest = __webpack_require__(166);
@@ -19994,7 +19991,7 @@ module.exports = InterceptorManager;
 var utils = __webpack_require__(16);
 var transformData = __webpack_require__(169);
 var isCancel = __webpack_require__(94);
-var defaults = __webpack_require__(57);
+var defaults = __webpack_require__(58);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -21563,8 +21560,8 @@ var React = __webpack_require__(1);
 var classnames = __webpack_require__(4);
 var api = __webpack_require__(13);
 
-var SimpleAppSharingPreview = __webpack_require__(49);
-var LinkAppSharingPreview = __webpack_require__(48);
+var SimpleAppSharingPreview = __webpack_require__(50);
+var LinkAppSharingPreview = __webpack_require__(49);
 var MultiAppSharingPreview = __webpack_require__(106);
 
 var FirstStepAddUser = function (_React$Component) {
@@ -21723,7 +21720,7 @@ var FirstStepAddUser = function (_React$Component) {
             React.createElement(
               'label',
               { htmlFor: 'departure_date_input' },
-              'Departure date'
+              'Departure date (optional)'
             ),
             React.createElement('input', { value: this.props.departure_date,
               onChange: function onChange(e) {
@@ -23255,8 +23252,8 @@ var React = __webpack_require__(1);
 var classnames = __webpack_require__(4);
 var api = __webpack_require__(13);
 
-var SimpleAppSharingPreview = __webpack_require__(49);
-var LinkAppSharingPreview = __webpack_require__(48);
+var SimpleAppSharingPreview = __webpack_require__(50);
+var LinkAppSharingPreview = __webpack_require__(49);
 var MultiAppSharingPreview = __webpack_require__(106);
 
 var FirstStep = function (_React$Component) {
@@ -23863,8 +23860,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var React = __webpack_require__(1);
 var classnames = __webpack_require__(4);
 var api = __webpack_require__(13);
-var SimpleAppSharingPreview = __webpack_require__(49);
-var LinkAppSharingPreview = __webpack_require__(48);
+var SimpleAppSharingPreview = __webpack_require__(50);
+var LinkAppSharingPreview = __webpack_require__(49);
 var MultiAppCheckablePreview = __webpack_require__(105);
 
 
@@ -24174,8 +24171,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var React = __webpack_require__(1);
 var classnames = __webpack_require__(4);
-var SimpleAppSharingPreview = __webpack_require__(49);
-var LinkAppSharingPreview = __webpack_require__(48);
+var SimpleAppSharingPreview = __webpack_require__(50);
+var LinkAppSharingPreview = __webpack_require__(49);
 var MultiAppCheckablePreview = __webpack_require__(105);
 
 var TeamUserShareableAppsList = function (_React$Component) {
@@ -25425,7 +25422,7 @@ module.exports = TeamHeader;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _teamActions = __webpack_require__(58);
+var _teamActions = __webpack_require__(48);
 
 var _commonActions = __webpack_require__(33);
 
@@ -25556,7 +25553,7 @@ var _dec, _class;
 
 var _reactRedux = __webpack_require__(6);
 
-var _teamActions = __webpack_require__(58);
+var _teamActions = __webpack_require__(48);
 
 var _channelActions = __webpack_require__(23);
 
@@ -25944,7 +25941,11 @@ var TeamLinkApp = function (_React$Component) {
   }, {
     key: 'selfJoinApp',
     value: function selfJoinApp() {
-      this.props.dispatch(appActions.teamShareApp(this.props.app.id, { team_user_id: this.props.me.id }));
+      var _this2 = this;
+
+      this.props.dispatch(appActions.teamShareApp(this.props.app.id, { team_user_id: this.props.me.id })).then(function () {
+        _this2.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, _this2.props.app));
+      });
     }
   }, {
     key: 'setupModifying',
@@ -25983,7 +25984,7 @@ var TeamLinkApp = function (_React$Component) {
   }, {
     key: 'validateModifying',
     value: function validateModifying() {
-      var _this2 = this;
+      var _this3 = this;
 
       console.log("validate modifying");
       var app_info = {
@@ -26004,13 +26005,13 @@ var TeamLinkApp = function (_React$Component) {
       this.props.dispatch(appActions.teamModifyAppInformation(this.props.app.id, app_info)).then(function (response) {
         var deleteUsers = deleteReceiverList.map(function (item) {
           return this.props.dispatch(appActions.teamAppDeleteReceiver(this.props.app.id, item.shared_app_id, item.team_user_id));
-        }, _this2);
+        }, _this3);
         var addUsers = addReceiverList.map(function (item) {
           return this.props.dispatch(appActions.teamShareApp(this.props.app.id, { team_user_id: item.id }));
-        }, _this2);
+        }, _this3);
         var concatCalls = deleteUsers.concat(addUsers);
         Promise.all(concatCalls).then(function () {
-          _this2.setupModifying(false);
+          _this3.setupModifying(false);
         });
       });
     }
@@ -27147,7 +27148,9 @@ var TeamSimpleApp = function (_React$Component) {
       var _this2 = this;
 
       this.props.dispatch(appActions.teamShareApp(this.props.app.id, { team_user_id: this.props.me.id, can_see_information: true })).then(function (response) {
-        _this2.props.dispatch(appActions.teamAcceptSharedApp(_this2.props.app.id, response.shared_app_id));
+        _this2.props.dispatch(appActions.teamAcceptSharedApp(_this2.props.app.id, response.shared_app_id)).then(function () {
+          _this2.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, _this2.props.app));
+        });
       });
     }
   }, {
@@ -27214,15 +27217,21 @@ var TeamSimpleApp = function (_React$Component) {
   }, {
     key: 'acceptRequest',
     value: function acceptRequest(state) {
+      var _this3 = this;
+
       var app = this.props.app;
       var me = this.props.me;
       var meReceiver = (0, _helperFunctions.findMeInReceivers)(app.receivers, me.id);
-      if (state) this.props.dispatch(appActions.teamAcceptSharedApp(app.id, meReceiver.shared_app_id));else this.props.dispatch(appActions.teamAppDeleteReceiver(app.id, meReceiver.shared_app_id, meReceiver.team_user_id));
+      if (state) {
+        this.props.dispatch(appActions.teamAcceptSharedApp(app.id, meReceiver.shared_app_id)).then(function () {
+          _this3.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app));
+        });
+      } else this.props.dispatch(appActions.teamAppDeleteReceiver(app.id, meReceiver.shared_app_id, meReceiver.team_user_id));
     }
   }, {
     key: 'validateModifying',
     value: function validateModifying() {
-      var _this3 = this;
+      var _this4 = this;
 
       console.log("validate modifying");
       var app_info = {
@@ -27245,16 +27254,16 @@ var TeamSimpleApp = function (_React$Component) {
       this.props.dispatch(appActions.teamModifyAppInformation(this.props.app.id, app_info)).then(function (response) {
         var deleteUsers = deleteReceiverList.map(function (item) {
           return this.props.dispatch(appActions.teamAppDeleteReceiver(this.props.app.id, item.shared_app_id, item.team_user_id));
-        }, _this3);
+        }, _this4);
         var addUsers = addReceiverList.map(function (item) {
           return this.props.dispatch(appActions.teamShareApp(this.props.app.id, { team_user_id: item.id, can_see_information: item.can_see_information }));
-        }, _this3);
+        }, _this4);
         var editUsers = modifyReceiverList.map(function (item) {
           return this.props.dispatch(appActions.teamAppEditReceiver(this.props.app.id, item.shared_app_id, { can_see_information: item.can_see_information, team_user_id: item.id }));
-        }, _this3);
+        }, _this4);
         var concatCalls = deleteUsers.concat(addUsers, editUsers);
         Promise.all(concatCalls).then(function () {
-          _this3.setupModifying(false);
+          _this4.setupModifying(false);
         });
       });
     }
@@ -27822,6 +27831,7 @@ var TeamAcceptMultiAppModal = (_dec = (0, _reactRedux.connect)(function (store) 
       this.props.dispatch(appActions.teamAppEditReceiver(app.id, receiver.shared_app_id, { account_information: receiver.account_information, team_user_id: receiver.team_user_id })).then(function (response) {
         _this2.props.dispatch(appActions.teamAcceptSharedApp(app.id, receiver.shared_app_id)).then(function (response) {
           _this2.props.dispatch((0, _teamModalActions.showTeamAcceptMultiAppModal)(false));
+          _this2.props.dispatch((0, _teamModalActions.showPinTeamAppToDashboardModal)(true, _extends({}, app)));
         });
       });
     }
@@ -28327,6 +28337,7 @@ var TeamJoinMultiAppModal = (_dec = (0, _reactRedux.connect)(function (store) {
       this.props.dispatch(appActions.teamShareApp(app.id, { account_information: credentials, team_user_id: user.id })).then(function (response) {
         _this2.props.dispatch(appActions.teamAcceptSharedApp(app.id, response.shared_app_id)).then(function (response) {
           _this2.props.dispatch((0, _teamModalActions.showTeamJoinMultiAppModal)(false));
+          _this2.props.dispatch((0, _teamModalActions.showPinTeamAppToDashboardModal)(true, _extends({}, app)));
         });
       });
     }
@@ -28707,7 +28718,7 @@ var _classnames2 = _interopRequireDefault(_classnames);
 
 var _teamModalActions = __webpack_require__(9);
 
-var _teamActions = __webpack_require__(58);
+var _teamActions = __webpack_require__(48);
 
 var _reactRedux = __webpack_require__(6);
 
@@ -30782,6 +30793,10 @@ var _store = __webpack_require__(161);
 
 var _store2 = _interopRequireDefault(_store);
 
+var _HomeTemporaryHeader = __webpack_require__(409);
+
+var _HomeTemporaryHeader2 = _interopRequireDefault(_HomeTemporaryHeader);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -30818,7 +30833,7 @@ var App = function (_React$Component) {
         React.createElement(
           Base,
           null,
-          React.createElement(_reactRouterDom.Route, { exact: true, path: "/", component: TeamView }),
+          React.createElement(_reactRouterDom.Route, { exact: true, path: "/", component: _HomeTemporaryHeader2.default }),
           React.createElement(_reactRouterDom.Route, { path: '/teamCreation', component: TeamCreationView }),
           React.createElement(_reactRouterDom.Route, { path: '/main', component: MainView }),
           React.createElement(_reactRouterDom.Route, { path: '/teamJoin/:code', component: TeamJoinView }),
@@ -37875,7 +37890,7 @@ module.exports = DefaultEventPluginOrder;
 
 var EventPropagators = __webpack_require__(44);
 var ReactDOMComponentTree = __webpack_require__(11);
-var SyntheticMouseEvent = __webpack_require__(52);
+var SyntheticMouseEvent = __webpack_require__(53);
 
 var eventTypes = {
   mouseEnter: {
@@ -39551,8 +39566,8 @@ var DOMNamespaces = __webpack_require__(70);
 var DOMProperty = __webpack_require__(25);
 var DOMPropertyOperations = __webpack_require__(118);
 var EventPluginHub = __webpack_require__(43);
-var EventPluginRegistry = __webpack_require__(50);
-var ReactBrowserEventEmitter = __webpack_require__(51);
+var EventPluginRegistry = __webpack_require__(51);
+var ReactBrowserEventEmitter = __webpack_require__(52);
 var ReactDOMComponentFlags = __webpack_require__(119);
 var ReactDOMComponentTree = __webpack_require__(11);
 var ReactDOMInput = __webpack_require__(281);
@@ -39564,7 +39579,7 @@ var ReactMultiChild = __webpack_require__(300);
 var ReactServerRenderingTransaction = __webpack_require__(305);
 
 var emptyFunction = __webpack_require__(17);
-var escapeTextContentForBrowser = __webpack_require__(54);
+var escapeTextContentForBrowser = __webpack_require__(55);
 var invariant = __webpack_require__(2);
 var isEventSupported = __webpack_require__(81);
 var shallowEqual = __webpack_require__(63);
@@ -41505,7 +41520,7 @@ var DOMChildrenOperations = __webpack_require__(69);
 var DOMLazyTree = __webpack_require__(35);
 var ReactDOMComponentTree = __webpack_require__(11);
 
-var escapeTextContentForBrowser = __webpack_require__(54);
+var escapeTextContentForBrowser = __webpack_require__(55);
 var invariant = __webpack_require__(2);
 var validateDOMNesting = __webpack_require__(83);
 
@@ -41977,7 +41992,7 @@ module.exports = {
 
 
 var DOMProperty = __webpack_require__(25);
-var EventPluginRegistry = __webpack_require__(50);
+var EventPluginRegistry = __webpack_require__(51);
 var ReactComponentTreeHook = __webpack_require__(15);
 
 var warning = __webpack_require__(3);
@@ -42462,7 +42477,7 @@ module.exports = ReactDebugTool;
 var _assign = __webpack_require__(8);
 
 var ReactUpdates = __webpack_require__(21);
-var Transaction = __webpack_require__(53);
+var Transaction = __webpack_require__(54);
 
 var emptyFunction = __webpack_require__(17);
 
@@ -42890,7 +42905,7 @@ var EventPluginHub = __webpack_require__(43);
 var EventPluginUtils = __webpack_require__(71);
 var ReactComponentEnvironment = __webpack_require__(74);
 var ReactEmptyComponent = __webpack_require__(121);
-var ReactBrowserEventEmitter = __webpack_require__(51);
+var ReactBrowserEventEmitter = __webpack_require__(52);
 var ReactHostComponent = __webpack_require__(123);
 var ReactUpdates = __webpack_require__(21);
 
@@ -43613,10 +43628,10 @@ var _assign = __webpack_require__(8);
 
 var CallbackQueue = __webpack_require__(117);
 var PooledClass = __webpack_require__(30);
-var ReactBrowserEventEmitter = __webpack_require__(51);
+var ReactBrowserEventEmitter = __webpack_require__(52);
 var ReactInputSelection = __webpack_require__(124);
 var ReactInstrumentation = __webpack_require__(18);
-var Transaction = __webpack_require__(53);
+var Transaction = __webpack_require__(54);
 var ReactUpdateQueue = __webpack_require__(76);
 
 /**
@@ -43890,7 +43905,7 @@ module.exports = ReactRef;
 var _assign = __webpack_require__(8);
 
 var PooledClass = __webpack_require__(30);
-var Transaction = __webpack_require__(53);
+var Transaction = __webpack_require__(54);
 var ReactInstrumentation = __webpack_require__(18);
 var ReactServerUpdateQueue = __webpack_require__(306);
 
@@ -44661,7 +44676,7 @@ var SyntheticClipboardEvent = __webpack_require__(312);
 var SyntheticEvent = __webpack_require__(24);
 var SyntheticFocusEvent = __webpack_require__(315);
 var SyntheticKeyboardEvent = __webpack_require__(317);
-var SyntheticMouseEvent = __webpack_require__(52);
+var SyntheticMouseEvent = __webpack_require__(53);
 var SyntheticDragEvent = __webpack_require__(314);
 var SyntheticTouchEvent = __webpack_require__(318);
 var SyntheticTransitionEvent = __webpack_require__(319);
@@ -45012,7 +45027,7 @@ module.exports = SyntheticCompositionEvent;
 
 
 
-var SyntheticMouseEvent = __webpack_require__(52);
+var SyntheticMouseEvent = __webpack_require__(53);
 
 /**
  * @interface DragEvent
@@ -45319,7 +45334,7 @@ module.exports = SyntheticTransitionEvent;
 
 
 
-var SyntheticMouseEvent = __webpack_require__(52);
+var SyntheticMouseEvent = __webpack_require__(53);
 
 /**
  * @interface WheelEvent
@@ -46091,7 +46106,7 @@ module.exports = getVendorPrefixedEventName;
 
 
 
-var escapeTextContentForBrowser = __webpack_require__(54);
+var escapeTextContentForBrowser = __webpack_require__(55);
 
 /**
  * Escapes attribute value to prevent scripting attacks.
@@ -52709,6 +52724,367 @@ var valueEqual = function valueEqual(a, b) {
 };
 
 exports.default = valueEqual;
+
+/***/ }),
+/* 409 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var React = __webpack_require__(1);
+var classnames = __webpack_require__(4);
+var HomeTemporaryNavbar = __webpack_require__(410);
+
+var HomeTemporaryHeader = function (_React$Component) {
+  _inherits(HomeTemporaryHeader, _React$Component);
+
+  function HomeTemporaryHeader(props) {
+    _classCallCheck(this, HomeTemporaryHeader);
+
+    return _possibleConstructorReturn(this, (HomeTemporaryHeader.__proto__ || Object.getPrototypeOf(HomeTemporaryHeader)).call(this, props));
+  }
+
+  _createClass(HomeTemporaryHeader, [{
+    key: 'render',
+    value: function render() {
+      return React.createElement(
+        'header',
+        { id: 'ease_header' },
+        React.createElement(
+          'a',
+          { className: 'logo_container', href: '/home' },
+          React.createElement('img', { src: '/resources/images/logo.svg', alt: 'logo' })
+        ),
+        React.createElement('div', { className: 'full_flex' }),
+        React.createElement(HomeTemporaryNavbar, null)
+      );
+    }
+  }]);
+
+  return HomeTemporaryHeader;
+}(React.Component);
+
+module.exports = HomeTemporaryHeader;
+
+/***/ }),
+/* 410 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _dec, _class;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _reactTooltip = __webpack_require__(47);
+
+var _reactTooltip2 = _interopRequireDefault(_reactTooltip);
+
+var _reactRouterDom = __webpack_require__(28);
+
+var _commonActions = __webpack_require__(33);
+
+var _reactRedux = __webpack_require__(6);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var React = __webpack_require__(1);
+var classnames = __webpack_require__(4);
+
+var TeamsList = function (_React$Component) {
+  _inherits(TeamsList, _React$Component);
+
+  function TeamsList(props) {
+    _classCallCheck(this, TeamsList);
+
+    var _this = _possibleConstructorReturn(this, (TeamsList.__proto__ || Object.getPrototypeOf(TeamsList)).call(this, props));
+
+    _this.state = {
+      dropdown: false
+    };
+    _this.onMouseDown = _this.onMouseDown.bind(_this);
+    _this.onMouseUp = _this.onMouseUp.bind(_this);
+    _this.pageClick = _this.pageClick.bind(_this);
+    return _this;
+  }
+
+  _createClass(TeamsList, [{
+    key: 'onMouseDown',
+    value: function onMouseDown() {
+      this.mouseInDropDown = true;
+    }
+  }, {
+    key: 'onMouseUp',
+    value: function onMouseUp() {
+      this.mouseInDropDown = false;
+    }
+  }, {
+    key: 'pageClick',
+    value: function pageClick(e) {
+      if (this.mouseInDropDown) return;
+      this.setState({ dropdown: false });
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      window.addEventListener('mousedown', this.pageClick, false);
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      window.removeEventListener('mousedown', this.pageClick, false);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this2 = this;
+
+      return React.createElement(
+        'button',
+        { className: 'button-unstyle', id: 'teams_button',
+          onClick: function onClick(e) {
+            _this2.setState({ dropdown: true });
+          },
+          onMouseDown: this.onMouseDown,
+          onMouseUp: this.onMouseUp },
+        React.createElement('img', { src: '/resources/icons/users.svg', 'data-tip': 'Team Space' }),
+        React.createElement(
+          'div',
+          { className: classnames('menu menu_arrow display_flex flex_direction_column', this.state.dropdown ? 'show' : null) },
+          this.props.user != null && this.props.user.teams.map(function (item) {
+            return React.createElement(
+              'div',
+              { className: 'menu_row team_select', key: item.id },
+              React.createElement(
+                'a',
+                { href: '/teams#/teams/' + item.id, activeClassName: 'active' },
+                React.createElement('i', { className: 'fa fa-users icon' }),
+                item.name
+              )
+            );
+          }),
+          React.createElement(
+            'div',
+            { className: 'menu_row display_flex align_items_center', id: 'team_adder' },
+            React.createElement(
+              'a',
+              { href: 'teams#/main/teamsPreview' },
+              React.createElement('i', { className: 'fa fa-plus-square icon' }),
+              'Create a new team...'
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return TeamsList;
+}(React.Component);
+
+var NotificationList = function (_React$Component2) {
+  _inherits(NotificationList, _React$Component2);
+
+  function NotificationList(props) {
+    _classCallCheck(this, NotificationList);
+
+    var _this3 = _possibleConstructorReturn(this, (NotificationList.__proto__ || Object.getPrototypeOf(NotificationList)).call(this, props));
+
+    _this3.state = {
+      dropdown: false
+    };
+    _this3.onMouseDown = _this3.onMouseDown.bind(_this3);
+    _this3.onMouseUp = _this3.onMouseUp.bind(_this3);
+    _this3.pageClick = _this3.pageClick.bind(_this3);
+    return _this3;
+  }
+
+  _createClass(NotificationList, [{
+    key: 'onMouseDown',
+    value: function onMouseDown() {
+      this.mouseInDropDown = true;
+    }
+  }, {
+    key: 'onMouseUp',
+    value: function onMouseUp() {
+      this.mouseInDropDown = false;
+    }
+  }, {
+    key: 'pageClick',
+    value: function pageClick(e) {
+      if (this.mouseInDropDown) return;
+      this.setState({ dropdown: false });
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      window.addEventListener('mousedown', this.pageClick, false);
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      window.removeEventListener('mousedown', this.pageClick, false);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this4 = this;
+
+      return React.createElement(
+        'button',
+        { className: 'button-unstyle bordered_scrollbar notify', id: 'notification_button',
+          onClick: function onClick(e) {
+            _this4.setState({ dropdown: true });
+          },
+          onMouseDown: this.onMouseDown,
+          onMouseUp: this.onMouseUp },
+        React.createElement('img', { src: '/resources/icons/notification.svg', 'data-tip': 'Notifications' }),
+        React.createElement(
+          'div',
+          { className: classnames('menu menu_arrow display_flex flex_direction_column ', this.state.dropdown ? 'show' : null) },
+          this.props.notifications.map(function (item) {
+            return React.createElement(
+              'div',
+              { className: 'menu_row display_flex align_items_center', key: item.id },
+              React.createElement(
+                'div',
+                { className: classnames("notification-card display-flex", item.isNew ? 'new' : null) },
+                React.createElement(
+                  'div',
+                  { className: 'squared_image_handler icon' },
+                  React.createElement('img', { src: item.icon, alt: 'icon' })
+                ),
+                React.createElement(
+                  'div',
+                  { className: 'display-flex flex_direction_column' },
+                  React.createElement(
+                    'span',
+                    null,
+                    item.content
+                  ),
+                  React.createElement(
+                    'span',
+                    { className: 'date' },
+                    'il y a ',
+                    item.date,
+                    ' heures'
+                  )
+                )
+              )
+            );
+          }, this)
+        )
+      );
+    }
+  }]);
+
+  return NotificationList;
+}(React.Component);
+
+var HomeTemporaryNavbar = (_dec = (0, _reactRedux.connect)(function (store) {
+  return {
+    user: store.common.user,
+    notifications: store.common.notifications
+  };
+}), _dec(_class = function (_React$Component3) {
+  _inherits(HomeTemporaryNavbar, _React$Component3);
+
+  function HomeTemporaryNavbar(props) {
+    _classCallCheck(this, HomeTemporaryNavbar);
+
+    var _this5 = _possibleConstructorReturn(this, (HomeTemporaryNavbar.__proto__ || Object.getPrototypeOf(HomeTemporaryNavbar)).call(this, props));
+
+    _this5.processLogout = _this5.processLogout.bind(_this5);
+    _this5.goHome = _this5.goHome.bind(_this5);
+    return _this5;
+  }
+
+  _createClass(HomeTemporaryNavbar, [{
+    key: 'processLogout',
+    value: function processLogout() {
+      this.props.dispatch((0, _commonActions.processLogout)()).then(function (response) {
+        window.location.href = "/#/login";
+        //      this.props.history.push('/login');
+      });
+    }
+  }, {
+    key: 'goHome',
+    value: function goHome() {
+      window.location.href = "/home";
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      _reactTooltip2.default.rebuild();
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var user = this.props.user;
+      return React.createElement(
+        'nav',
+        { className: 'nav display_flex', id: 'ease_main_navbar' },
+        React.createElement(
+          'button',
+          { className: 'button-unstyle', id: 'settings_button', onClick: this.goHome, 'data-tip': 'Apps Dashboard' },
+          React.createElement(
+            'span',
+            null,
+            user !== null ? user.first_name : '...'
+          )
+        ),
+        React.createElement(
+          'button',
+          { className: 'button-unstyle', id: 'logout_button' },
+          React.createElement('img', { src: '/resources/icons/logout.svg', 'data-tip': 'Logout Menu' }),
+          React.createElement(
+            'div',
+            { className: 'menu menu_arrow display_flex flex_direction_column' },
+            React.createElement(
+              'div',
+              { className: 'menu_row', id: 'simple_logout', onClick: this.processLogout },
+              'Logout from Ease'
+            ),
+            React.createElement(
+              'div',
+              { className: 'menu_row', id: 'general_logout' },
+              'Logout from all apps'
+            )
+          )
+        ),
+        React.createElement(NotificationList, { notifications: this.props.notifications }),
+        React.createElement(TeamsList, { user: this.props.user }),
+        React.createElement(
+          'button',
+          { className: 'button-unstyle action_button', id: 'catalog_button', onClick: function onClick(e) {
+              enterEditMode();
+            } },
+          React.createElement('img', { src: '/resources/icons/plus.svg', 'data-tip': 'Apps Catalogue' })
+        )
+      );
+    }
+  }]);
+
+  return HomeTemporaryNavbar;
+}(React.Component)) || _class);
+
+
+module.exports = (0, _reactRouterDom.withRouter)(HomeTemporaryNavbar);
 
 /***/ })
 /******/ ]);

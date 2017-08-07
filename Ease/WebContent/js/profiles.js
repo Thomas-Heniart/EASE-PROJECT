@@ -8,7 +8,7 @@ var easeRoot = function(rootEl){
 	if (!(this.mainContent))
 		return;
 	this.onResize = function(){
-		self.mainContent.css('height', $(window).height() - 43 + 'px');
+		self.mainContent.css('height', $(window).height() - 60 + 'px');
 	}
 	this.onResize();
 	$(window).resize(function(){
