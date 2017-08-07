@@ -133,13 +133,18 @@
         <servlet-name>home.jsp</servlet-name>
         <url-pattern>/home/*</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>team.html</servlet-name>
+        <jsp-file>/team.html</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>team.html</servlet-name>
+        <url-pattern>/teams/*</url-pattern>
+    </servlet-mapping>
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>Viewpoint Secure URLs</web-resource-name>
             <url-pattern>/*</url-pattern>
         </web-resource-collection>
-        <user-data-constraint>
-            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-        </user-data-constraint>
     </security-constraint>
 </web-app>

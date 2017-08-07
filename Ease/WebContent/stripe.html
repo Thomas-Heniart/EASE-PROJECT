@@ -203,9 +203,9 @@
             var stripeToken = result.token.id;
             successElement.querySelector('.token').textContent = stripeToken;
             successElement.classList.add('visible');
-            $.post("/ServletStripeTest", {
-                "stripeToken": stripeToken
-            });
+            /* $.post("/ServletStripeTest", {
+             "stripeToken": stripeToken
+             }); */
         } else if (result.error) {
             errorElement.textContent = result.error.message;
             errorElement.classList.add('visible');

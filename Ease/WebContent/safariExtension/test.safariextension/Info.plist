@@ -5,7 +5,7 @@
 	<key>Author</key>
 	<string>Ease</string>
 	<key>Builder Version</key>
-	<string>12603.1.30.0.34</string>
+	<string>12603.2.4</string>
 	<key>CFBundleDisplayName</key>
 	<string>EaseExtension</string>
 	<key>CFBundleIdentifier</key>
@@ -13,9 +13,9 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.2.4</string>
+	<string>2.2.3</string>
 	<key>CFBundleVersion</key>
-	<string>224</string>
+	<string>223</string>
 	<key>Chrome</key>
 	<dict>
 		<key>Global Page</key>
