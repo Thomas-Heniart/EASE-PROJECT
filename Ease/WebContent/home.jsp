@@ -106,7 +106,7 @@ response.addCookie(email);
 
 	<div id="onComputer">
 		<div class="header" id="app">
-			<%@ include file="/templates/Header.jsp"%>
+			<%--@ include file="/templates/Header.jsp"--%>
 		</div>
 		<script src="/teams_bundle.js"></script>
 		<div id="loggedBody">

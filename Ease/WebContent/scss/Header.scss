@@ -93,6 +93,7 @@
 	border-radius: 5px;
 	z-index: 3;
 	height: 36px;
+	background-color: white;
 	button {
 		border-right: 1px solid $themeGreyDarkColor;
 		position: relative;
@@ -266,6 +267,9 @@
 
 .header#app {
 	height: auto;
+	#ease-header {
+		border-bottom: none;
+	}
 }
 
 .header{

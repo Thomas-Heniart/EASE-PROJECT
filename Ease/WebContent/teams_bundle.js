@@ -52873,7 +52873,7 @@ var TeamsList = function (_React$Component) {
               { className: 'menu_row team_select', key: item.id },
               React.createElement(
                 'a',
-                { href: '/teams#/teams/' + item.id, activeClassName: 'active' },
+                { href: '/teams#/teams/' + item.id },
                 React.createElement('i', { className: 'fa fa-users icon' }),
                 item.name
               )
