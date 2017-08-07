@@ -91,9 +91,9 @@ response.addCookie(email);
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
 
 	<link rel="stylesheet" href="/cssMinified.v00009/default_style.css" />
+	<link rel="stylesheet" href="/cssMinified.v00009/team.css" />
 	<link rel="stylesheet" href="/cssMinified.v00009/bootstrap.css" />
 	<link rel="stylesheet" href="/cssMinified.v00009/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
-
 	<link rel="manifest" href="manifest.json">
 
 </head>
@@ -105,9 +105,10 @@ response.addCookie(email);
 	</div>
 
 	<div id="onComputer">
-		<div class="header">
+		<div class="header" id="app">
 			<%@ include file="/templates/Header.jsp"%>
 		</div>
+		<script src="/teams_bundle.js"></script>
 		<div id="loggedBody">
 			<div class="col-left <c:if test='${settingsOpen eq null}'>show</c:if>" style="width: 100%; float:left">
 				<%@ include file="/templates/ProfileView.jsp"%>
@@ -178,7 +179,7 @@ response.addCookie(email);
 		var addStylesNode = document.getElementById("deferred-styles");
 		var replacement = document.createElement("div");
 		replacement.innerHTML = addStylesNode.textContent;
-		document.body.appendChild(replacement)
+		document.body.appendChild(replacement);
 		addStylesNode.parentElement.removeChild(addStylesNode);
 	};
 	window.addEventListener('load', loadDeferredStyles);

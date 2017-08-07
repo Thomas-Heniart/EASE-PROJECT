@@ -52883,8 +52883,8 @@ var TeamsList = function (_React$Component) {
             'div',
             { className: 'menu_row display_flex align_items_center', id: 'team_adder' },
             React.createElement(
-              _reactRouterDom.NavLink,
-              { to: '/main/teamsPreview' },
+              'a',
+              { href: 'teams#/main/teamsPreview' },
               React.createElement('i', { className: 'fa fa-plus-square icon' }),
               'Create a new team...'
             )
