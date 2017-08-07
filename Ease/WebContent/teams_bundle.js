@@ -17799,6 +17799,7 @@ function Loader(props) {
 
 var Login = (_dec = (0, _reactRedux.connect)(function (store) {
   return {
+    authenticated: store.common.authenticated,
     redirect: store.common.loginRedirectUrl
   };
 }), _dec(_class = function (_React$Component4) {
@@ -17816,6 +17817,7 @@ var Login = (_dec = (0, _reactRedux.connect)(function (store) {
       knownEmail: _this6.props.cookies.get('email'),
       knownUser: false
     };
+    if (_this6.props.authenticated) window.location.href = "/home";
     _this6.state.knownUser = _this6.state.knownFname !== undefined && _this6.state.knownEmail !== undefined;
     if (_this6.state.knownUser) {
       _this6.state.knownFname = base64.decode(_this6.state.knownFname);
@@ -17851,6 +17853,7 @@ var Login = (_dec = (0, _reactRedux.connect)(function (store) {
   }, {
     key: 'render',
     value: function render() {
+      if (this.props.authenticated) return null;
       return React.createElement(
         'div',
         { id: 'loginBody' },
@@ -52869,8 +52872,8 @@ var TeamsList = function (_React$Component) {
               'div',
               { className: 'menu_row team_select', key: item.id },
               React.createElement(
-                _reactRouterDom.NavLink,
-                { to: '/teams/' + item.id, activeClassName: 'active' },
+                'a',
+                { href: '/teams#/teams/' + item.id, activeClassName: 'active' },
                 React.createElement('i', { className: 'fa fa-users icon' }),
                 item.name
               )
