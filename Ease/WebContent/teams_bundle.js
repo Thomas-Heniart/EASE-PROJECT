@@ -11546,7 +11546,7 @@ var EaseMainNavbar = (_dec = (0, _reactRedux.connect)(function (store) {
     key: 'processLogout',
     value: function processLogout() {
       this.props.dispatch((0, _commonActions.processLogout)()).then(function (response) {
-        window.location.href = "/login";
+        window.location.href = "/#/login";
         //      this.props.history.push('/login');
       });
     }
@@ -17423,7 +17423,6 @@ var UnknownUserForm = function (_React$Component) {
         _this2.props.finishLogin();
       }).catch(function (err) {
         _this2.setState({ errorMessage: err, error: true, password: '' });
-      }).then(function () {
         _this2.props.setView('unknown');
       });
     }
@@ -17559,7 +17558,6 @@ var KnownUserForm = function (_React$Component2) {
         _this4.props.finishLogin();
       }).catch(function (err) {
         _this4.setState({ errorMessage: err, error: true, password: '' });
-      }).then(function () {
         _this4.props.setView('known');
       });
     }
@@ -30792,6 +30790,10 @@ var _store = __webpack_require__(161);
 
 var _store2 = _interopRequireDefault(_store);
 
+var _HomeTemporaryHeader = __webpack_require__(409);
+
+var _HomeTemporaryHeader2 = _interopRequireDefault(_HomeTemporaryHeader);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -30828,7 +30830,7 @@ var App = function (_React$Component) {
         React.createElement(
           Base,
           null,
-          React.createElement(_reactRouterDom.Route, { exact: true, path: "/", component: TeamView }),
+          React.createElement(_reactRouterDom.Route, { exact: true, path: "/", component: _HomeTemporaryHeader2.default }),
           React.createElement(_reactRouterDom.Route, { path: '/teamCreation', component: TeamCreationView }),
           React.createElement(_reactRouterDom.Route, { path: '/main', component: MainView }),
           React.createElement(_reactRouterDom.Route, { path: '/teamJoin/:code', component: TeamJoinView }),
@@ -52719,6 +52721,367 @@ var valueEqual = function valueEqual(a, b) {
 };
 
 exports.default = valueEqual;
+
+/***/ }),
+/* 409 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var React = __webpack_require__(1);
+var classnames = __webpack_require__(4);
+var HomeTemporaryNavbar = __webpack_require__(410);
+
+var HomeTemporaryHeader = function (_React$Component) {
+  _inherits(HomeTemporaryHeader, _React$Component);
+
+  function HomeTemporaryHeader(props) {
+    _classCallCheck(this, HomeTemporaryHeader);
+
+    return _possibleConstructorReturn(this, (HomeTemporaryHeader.__proto__ || Object.getPrototypeOf(HomeTemporaryHeader)).call(this, props));
+  }
+
+  _createClass(HomeTemporaryHeader, [{
+    key: 'render',
+    value: function render() {
+      return React.createElement(
+        'header',
+        { id: 'ease_header' },
+        React.createElement(
+          'a',
+          { className: 'logo_container', href: '/home' },
+          React.createElement('img', { src: '/resources/images/logo.svg', alt: 'logo' })
+        ),
+        React.createElement('div', { className: 'full_flex' }),
+        React.createElement(HomeTemporaryNavbar, null)
+      );
+    }
+  }]);
+
+  return HomeTemporaryHeader;
+}(React.Component);
+
+module.exports = HomeTemporaryHeader;
+
+/***/ }),
+/* 410 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _dec, _class;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _reactTooltip = __webpack_require__(47);
+
+var _reactTooltip2 = _interopRequireDefault(_reactTooltip);
+
+var _reactRouterDom = __webpack_require__(28);
+
+var _commonActions = __webpack_require__(33);
+
+var _reactRedux = __webpack_require__(6);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var React = __webpack_require__(1);
+var classnames = __webpack_require__(4);
+
+var TeamsList = function (_React$Component) {
+  _inherits(TeamsList, _React$Component);
+
+  function TeamsList(props) {
+    _classCallCheck(this, TeamsList);
+
+    var _this = _possibleConstructorReturn(this, (TeamsList.__proto__ || Object.getPrototypeOf(TeamsList)).call(this, props));
+
+    _this.state = {
+      dropdown: false
+    };
+    _this.onMouseDown = _this.onMouseDown.bind(_this);
+    _this.onMouseUp = _this.onMouseUp.bind(_this);
+    _this.pageClick = _this.pageClick.bind(_this);
+    return _this;
+  }
+
+  _createClass(TeamsList, [{
+    key: 'onMouseDown',
+    value: function onMouseDown() {
+      this.mouseInDropDown = true;
+    }
+  }, {
+    key: 'onMouseUp',
+    value: function onMouseUp() {
+      this.mouseInDropDown = false;
+    }
+  }, {
+    key: 'pageClick',
+    value: function pageClick(e) {
+      if (this.mouseInDropDown) return;
+      this.setState({ dropdown: false });
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      window.addEventListener('mousedown', this.pageClick, false);
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      window.removeEventListener('mousedown', this.pageClick, false);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this2 = this;
+
+      return React.createElement(
+        'button',
+        { className: 'button-unstyle', id: 'teams_button',
+          onClick: function onClick(e) {
+            _this2.setState({ dropdown: true });
+          },
+          onMouseDown: this.onMouseDown,
+          onMouseUp: this.onMouseUp },
+        React.createElement('img', { src: '/resources/icons/users.svg', 'data-tip': 'Team Space' }),
+        React.createElement(
+          'div',
+          { className: classnames('menu menu_arrow display_flex flex_direction_column', this.state.dropdown ? 'show' : null) },
+          this.props.user != null && this.props.user.teams.map(function (item) {
+            return React.createElement(
+              'div',
+              { className: 'menu_row team_select', key: item.id },
+              React.createElement(
+                _reactRouterDom.NavLink,
+                { to: '/teams/' + item.id, activeClassName: 'active' },
+                React.createElement('i', { className: 'fa fa-users icon' }),
+                item.name
+              )
+            );
+          }),
+          React.createElement(
+            'div',
+            { className: 'menu_row display_flex align_items_center', id: 'team_adder' },
+            React.createElement(
+              _reactRouterDom.NavLink,
+              { to: '/main/teamsPreview' },
+              React.createElement('i', { className: 'fa fa-plus-square icon' }),
+              'Create a new team...'
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return TeamsList;
+}(React.Component);
+
+var NotificationList = function (_React$Component2) {
+  _inherits(NotificationList, _React$Component2);
+
+  function NotificationList(props) {
+    _classCallCheck(this, NotificationList);
+
+    var _this3 = _possibleConstructorReturn(this, (NotificationList.__proto__ || Object.getPrototypeOf(NotificationList)).call(this, props));
+
+    _this3.state = {
+      dropdown: false
+    };
+    _this3.onMouseDown = _this3.onMouseDown.bind(_this3);
+    _this3.onMouseUp = _this3.onMouseUp.bind(_this3);
+    _this3.pageClick = _this3.pageClick.bind(_this3);
+    return _this3;
+  }
+
+  _createClass(NotificationList, [{
+    key: 'onMouseDown',
+    value: function onMouseDown() {
+      this.mouseInDropDown = true;
+    }
+  }, {
+    key: 'onMouseUp',
+    value: function onMouseUp() {
+      this.mouseInDropDown = false;
+    }
+  }, {
+    key: 'pageClick',
+    value: function pageClick(e) {
+      if (this.mouseInDropDown) return;
+      this.setState({ dropdown: false });
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      window.addEventListener('mousedown', this.pageClick, false);
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      window.removeEventListener('mousedown', this.pageClick, false);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this4 = this;
+
+      return React.createElement(
+        'button',
+        { className: 'button-unstyle bordered_scrollbar notify', id: 'notification_button',
+          onClick: function onClick(e) {
+            _this4.setState({ dropdown: true });
+          },
+          onMouseDown: this.onMouseDown,
+          onMouseUp: this.onMouseUp },
+        React.createElement('img', { src: '/resources/icons/notification.svg', 'data-tip': 'Notifications' }),
+        React.createElement(
+          'div',
+          { className: classnames('menu menu_arrow display_flex flex_direction_column ', this.state.dropdown ? 'show' : null) },
+          this.props.notifications.map(function (item) {
+            return React.createElement(
+              'div',
+              { className: 'menu_row display_flex align_items_center', key: item.id },
+              React.createElement(
+                'div',
+                { className: classnames("notification-card display-flex", item.isNew ? 'new' : null) },
+                React.createElement(
+                  'div',
+                  { className: 'squared_image_handler icon' },
+                  React.createElement('img', { src: item.icon, alt: 'icon' })
+                ),
+                React.createElement(
+                  'div',
+                  { className: 'display-flex flex_direction_column' },
+                  React.createElement(
+                    'span',
+                    null,
+                    item.content
+                  ),
+                  React.createElement(
+                    'span',
+                    { className: 'date' },
+                    'il y a ',
+                    item.date,
+                    ' heures'
+                  )
+                )
+              )
+            );
+          }, this)
+        )
+      );
+    }
+  }]);
+
+  return NotificationList;
+}(React.Component);
+
+var HomeTemporaryNavbar = (_dec = (0, _reactRedux.connect)(function (store) {
+  return {
+    user: store.common.user,
+    notifications: store.common.notifications
+  };
+}), _dec(_class = function (_React$Component3) {
+  _inherits(HomeTemporaryNavbar, _React$Component3);
+
+  function HomeTemporaryNavbar(props) {
+    _classCallCheck(this, HomeTemporaryNavbar);
+
+    var _this5 = _possibleConstructorReturn(this, (HomeTemporaryNavbar.__proto__ || Object.getPrototypeOf(HomeTemporaryNavbar)).call(this, props));
+
+    _this5.processLogout = _this5.processLogout.bind(_this5);
+    _this5.goHome = _this5.goHome.bind(_this5);
+    return _this5;
+  }
+
+  _createClass(HomeTemporaryNavbar, [{
+    key: 'processLogout',
+    value: function processLogout() {
+      this.props.dispatch((0, _commonActions.processLogout)()).then(function (response) {
+        window.location.href = "/#/login";
+        //      this.props.history.push('/login');
+      });
+    }
+  }, {
+    key: 'goHome',
+    value: function goHome() {
+      window.location.href = "/home";
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      _reactTooltip2.default.rebuild();
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var user = this.props.user;
+      return React.createElement(
+        'nav',
+        { className: 'nav display_flex', id: 'ease_main_navbar' },
+        React.createElement(
+          'button',
+          { className: 'button-unstyle', id: 'settings_button', onClick: this.goHome, 'data-tip': 'Apps Dashboard' },
+          React.createElement(
+            'span',
+            null,
+            user !== null ? user.first_name : '...'
+          )
+        ),
+        React.createElement(
+          'button',
+          { className: 'button-unstyle', id: 'logout_button' },
+          React.createElement('img', { src: '/resources/icons/logout.svg', 'data-tip': 'Logout Menu' }),
+          React.createElement(
+            'div',
+            { className: 'menu menu_arrow display_flex flex_direction_column' },
+            React.createElement(
+              'div',
+              { className: 'menu_row', id: 'simple_logout', onClick: this.processLogout },
+              'Logout from Ease'
+            ),
+            React.createElement(
+              'div',
+              { className: 'menu_row', id: 'general_logout' },
+              'Logout from all apps'
+            )
+          )
+        ),
+        React.createElement(NotificationList, { notifications: this.props.notifications }),
+        React.createElement(TeamsList, { user: this.props.user }),
+        React.createElement(
+          'button',
+          { className: 'button-unstyle action_button', id: 'catalog_button', onClick: function onClick(e) {
+              enterEditMode();
+            } },
+          React.createElement('img', { src: '/resources/icons/plus.svg', 'data-tip': 'Apps Catalogue' })
+        )
+      );
+    }
+  }]);
+
+  return HomeTemporaryNavbar;
+}(React.Component)) || _class);
+
+
+module.exports = (0, _reactRouterDom.withRouter)(HomeTemporaryNavbar);
 
 /***/ })
 /******/ ]);

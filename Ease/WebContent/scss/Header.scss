@@ -7,7 +7,7 @@
 	left: 0;
 	right: 0;
 	padding-right: 5px;
-	height: 43px;
+	height: 60px;
 	z-index: 1;
 }
 
@@ -264,8 +264,12 @@
 	}
 }
 
+.header#app {
+	height: auto;
+}
+
 .header{
-	height: 43px;
+	height: 60px;
 	position: fixed;
 	width: 100%;
 	z-index: 2;
