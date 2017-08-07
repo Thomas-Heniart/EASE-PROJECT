@@ -1,140 +1,148 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
-  <display-name>HelloWorld</display-name>
-  <listener>
-    <listener-class>com.Ease.Context.OnStart</listener-class>
-  </listener>
-  <listener>
-    <listener-class>com.Ease.Context.SessionListener</listener-class>
-  </listener>
-  <filter>
-    <filter-name>IFrameBusterFilter</filter-name>
-    <filter-class>com.Ease.Utils.IFrameBusterFilter</filter-class>
-    <init-param>
-      <param-name>test-param</param-name>
-      <param-value>Initialization Paramter</param-value>
-    </init-param>
-  </filter>
-  <filter-mapping>
-    <filter-name>IFrameBusterFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         id="WebApp_ID" version="3.0">
+    <display-name>HelloWorld</display-name>
+    <listener>
+        <listener-class>com.Ease.Context.OnStart</listener-class>
+    </listener>
+    <listener>
+        <listener-class>com.Ease.Context.SessionListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>com.Ease.Context.ServletRequestListenerImpl</listener-class>
+    </listener>
+    <filter>
+        <filter-name>IFrameBusterFilter</filter-name>
+        <filter-class>com.Ease.Utils.IFrameBusterFilter</filter-class>
+        <init-param>
+            <param-name>test-param</param-name>
+            <param-value>Initialization Paramter</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>IFrameBusterFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
-  <!-- filter for cache control -->
-  <filter>
-    <filter-name>ExpiresFilter</filter-name>
-    <filter-class>org.apache.catalina.filters.ExpiresFilter</filter-class>
-    <init-param>
-      <param-name>ExpiresByType image</param-name>
-      <param-value>access plus 31 days</param-value>
-    </init-param>
-    <init-param>
-      <param-name>ExpiresByType text/css</param-name>
-      <param-value>access plus 10 days</param-value>
-    </init-param>
-    <init-param>
-      <param-name>ExpiresByType application/javascript</param-name>
-      <param-value>access plus 10 days</param-value>
-    </init-param>
-    <!-- Let everything else expire immediately -->
-    <init-param>
-      <param-name>ExpiresDefault</param-name>
-      <param-value>access plus 0 seconds</param-value>
-    </init-param>
-  </filter>
-  <filter-mapping>
-    <filter-name>ExpiresFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-    <dispatcher>REQUEST</dispatcher>
-  </filter-mapping>
+    <!-- filter for cache control -->
+    <filter>
+        <filter-name>ExpiresFilter</filter-name>
+        <filter-class>org.apache.catalina.filters.ExpiresFilter</filter-class>
+        <init-param>
+            <param-name>ExpiresByType image</param-name>
+            <param-value>access plus 31 days</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ExpiresByType text/css</param-name>
+            <param-value>access plus 10 days</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ExpiresByType application/javascript</param-name>
+            <param-value>access plus 10 days</param-value>
+        </init-param>
+        <!-- Let everything else expire immediately -->
+        <init-param>
+            <param-name>ExpiresDefault</param-name>
+            <param-value>access plus 0 seconds</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>ExpiresFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
 
-  <session-config>
-    <session-timeout>240</session-timeout>
-  </session-config>
-  <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
-    <welcome-file>index.htm</welcome-file>
-    <welcome-file>index.jsp</welcome-file>
-    <welcome-file>default.html</welcome-file>
-    <welcome-file>default.htm</welcome-file>
-    <welcome-file>default.jsp</welcome-file>
-  </welcome-file-list>
-  <error-page>
-    <error-code>404</error-code>
-    <location>/404page.jsp</location>
-  </error-page>
-  <error-page>
-    <error-code>500</error-code>
-    <location>/500page.jsp</location>
-  </error-page>
-  <servlet>
-    <servlet-name>security.jsp</servlet-name>
-    <jsp-file>/security.jsp</jsp-file>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>security.jsp</servlet-name>
-    <url-pattern>/security/*</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>contact.jsp</servlet-name>
-    <jsp-file>/contact.jsp</jsp-file>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>contact.jsp</servlet-name>
-    <url-pattern>/contact/*</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>equipe.jsp</servlet-name>
-    <jsp-file>/equipe.jsp</jsp-file>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>equipe.jsp</servlet-name>
-    <url-pattern>/equipe/*</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>privacy.jsp</servlet-name>
-    <jsp-file>/privacy.jsp</jsp-file>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>privacy.jsp</servlet-name>
-    <url-pattern>/privacy/*</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>pricing.jsp</servlet-name>
-    <jsp-file>/pricing.jsp</jsp-file>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>pricing.jsp</servlet-name>
-    <url-pattern>/pricing/*</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>enterpriseContact.jsp</servlet-name>
-    <jsp-file>/enterpriseContact.jsp</jsp-file>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>enterpriseContact.jsp</servlet-name>
-    <url-pattern>/companyContact/*</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>login.jsp</servlet-name>
-    <jsp-file>/login.jsp</jsp-file>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>login.jsp</servlet-name>
-    <url-pattern>/login/*</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>home.jsp</servlet-name>
-    <jsp-file>/home.jsp</jsp-file>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>home.jsp</servlet-name>
-    <url-pattern>/home/*</url-pattern>
-  </servlet-mapping>
-<security-constraint>
-    <web-resource-collection> 
-       <web-resource-name>Viewpoint Secure URLs</web-resource-name> 
-       <url-pattern>/*</url-pattern> 
-    </web-resource-collection>
-  </security-constraint>
+    <session-config>
+        <session-timeout>240</session-timeout>
+    </session-config>
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+        <welcome-file>index.htm</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>default.html</welcome-file>
+        <welcome-file>default.htm</welcome-file>
+        <welcome-file>default.jsp</welcome-file>
+    </welcome-file-list>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/404page.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/500page.jsp</location>
+    </error-page>
+    <servlet>
+        <servlet-name>security.jsp</servlet-name>
+        <jsp-file>/security.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>security.jsp</servlet-name>
+        <url-pattern>/security/*</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>contact.jsp</servlet-name>
+        <jsp-file>/contact.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>contact.jsp</servlet-name>
+        <url-pattern>/contact/*</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>equipe.jsp</servlet-name>
+        <jsp-file>/equipe.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>equipe.jsp</servlet-name>
+        <url-pattern>/equipe/*</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>privacy.jsp</servlet-name>
+        <jsp-file>/privacy.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>privacy.jsp</servlet-name>
+        <url-pattern>/privacy/*</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>pricing.jsp</servlet-name>
+        <jsp-file>/pricing.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>pricing.jsp</servlet-name>
+        <url-pattern>/pricing/*</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>enterpriseContact.jsp</servlet-name>
+        <jsp-file>/enterpriseContact.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>enterpriseContact.jsp</servlet-name>
+        <url-pattern>/companyContact/*</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>login.jsp</servlet-name>
+        <jsp-file>/login.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>login.jsp</servlet-name>
+        <url-pattern>/login/*</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>home.jsp</servlet-name>
+        <jsp-file>/home.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>home.jsp</servlet-name>
+        <url-pattern>/home/*</url-pattern>
+    </servlet-mapping>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Viewpoint Secure URLs</web-resource-name>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
 </web-app>
