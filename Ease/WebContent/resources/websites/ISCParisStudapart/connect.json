@@ -1,0 +1,73 @@
+{
+  "name": "Housing center ",
+  "lastlogin": "",
+  "home": "https://iscparis.studapart.com/",
+  "connect": {
+    "todo": [
+      {
+        "action": "clickona",
+        "search": "a[href$='login']"
+      },
+      {
+        "action": "waitload"
+      },
+      {
+        "action": "click",
+        "search": "#mail-connect-button"
+      },
+      {
+        "action": "waitfor",
+        "search": "form #username"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "form #username"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "form #password"
+      },
+      {
+        "action": "click",
+        "search": "#mail-connect-button"
+      }
+    ]
+  },
+  "Facebook": {
+    "todo": [
+      {
+        "action": "clickona",
+        "search": "a[href$='login']"
+      },
+      {
+        "action": "waitload"
+      },
+      {
+        "action": "aclick",
+        "search": "a[href*='connect/facebook']"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "a[href$='login'], a[href*='logout']"
+    },
+    {
+      "search": "a[href*='logout']"
+    }
+  ],
+  "logout": {
+    "todo": [
+      {
+        "action": "clickona",
+        "search": "a[href*='logout']"
+      },
+      {
+        "action": "waitload"
+      }
+    ]
+  }
+}
