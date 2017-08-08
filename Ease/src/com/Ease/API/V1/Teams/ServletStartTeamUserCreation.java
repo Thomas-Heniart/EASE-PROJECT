@@ -63,7 +63,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
                 errors.put("username", "Username is already taken");
             Date arrival_date = sm.getTimestamp();
             String departure_date_string = sm.getStringParam("departure_date", true);
-            TeamUser teamUser = new TeamUser(first_name, last_name, email, username, arrival_date, null, false, team, new TeamUserRole(role));
+            TeamUser teamUser = new TeamUser(first_name, last_name, email, username, arrival_date, null, team, new TeamUserRole(role));
             teamUser.setAdmin_id(adminTeamUser.getDb_id());
             if (departure_date_string != null && !departure_date_string.equals(""))
                 teamUser.setDepartureDate(departure_format.parse(departure_date_string));

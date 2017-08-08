@@ -5,8 +5,8 @@ import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.NewDashboard.User.User;
 import com.Ease.Notification.Notification;
 import com.Ease.Notification.TeamUserNotification;
-import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.RSA;
+import com.Ease.Utils.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.json.simple.JSONArray;
@@ -15,7 +15,10 @@ import org.json.simple.JSONObject;
 import javax.persistence.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by thomas on 10/04/2017.
@@ -53,8 +56,8 @@ public class TeamUser {
     @Column(name = "teamKey")
     private String teamKey;
 
-    @Column(name = "verified")
-    protected boolean verified;
+    @Column(name = "state")
+    protected Integer state = 0;
 
     @Column(name = "active")
     protected boolean active;
@@ -107,13 +110,12 @@ public class TeamUser {
     @Column(name = "disabled_date")
     private Date disabledDate;
 
-    public TeamUser(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Boolean verified, Team team, TeamUserRole teamUserRole) {
+    public TeamUser(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Team team, TeamUserRole teamUserRole) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.username = username;
         this.teamKey = teamKey;
-        this.verified = verified;
         this.team = team;
         this.teamUserRole = teamUserRole;
         this.arrivalDate = arrivalDate;
@@ -305,7 +307,9 @@ public class TeamUser {
 
     public static TeamUser createOwner(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Team team) throws GeneralException {
         TeamUserRole teamUserRole = new TeamUserRole(TeamUserRole.Role.OWNER.getValue());
-        return new TeamUser(firstName, lastName, email, username, arrivalDate, teamKey, true, team, teamUserRole);
+        TeamUser owner = new TeamUser(firstName, lastName, email, username, arrivalDate, teamKey, team, teamUserRole);
+        owner.setState(2);
+        return owner;
     }
 
     public JSONObject getJson() {
@@ -321,7 +325,7 @@ public class TeamUser {
         res.put("departure_date", "");
         if (departureDate != null)
             res.put("departure_date", this.dateFormat.format(this.departureDate));
-        res.put("verified", this.verified);
+        res.put("state", this.state);
         res.put("phone_number", this.getPhone_number());
         JSONArray channel_ids = new JSONArray();
         for (Channel channel : this.getTeam().getChannelsForTeamUser(this))
@@ -371,7 +375,7 @@ public class TeamUser {
         try {
             this.deciphered_teamKey = RSA.Decrypt(this.teamKey, this.getDashboard_user().getKeys().getPrivateKey());
             this.teamKey = this.getDashboard_user().encrypt(this.deciphered_teamKey);
-            this.verified = true;
+            this.state = 2;
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
@@ -382,11 +386,15 @@ public class TeamUser {
     }
 
     public boolean isVerified() {
-        return this.verified;
+        return this.state == 2;
     }
 
-    public void setVerified(boolean verified) {
-        this.verified = verified;
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
     }
 
     public void editFirstName(String firstName) {

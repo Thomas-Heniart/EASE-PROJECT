@@ -12,7 +12,6 @@ import com.Ease.Utils.Servlets.GetServletManager;
 import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.simple.JSONObject;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -53,7 +52,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             String lastName = sm.getStringParam("last_name", true);
             String username = sm.getStringParam("username", true);
             String job_details = sm.getStringParam("job_details", true);
-            Integer job_index = sm.getIntParam("job_index", true);
+            Integer job_index = Integer.parseInt(sm.getStringParam("job_index", true));
             String code = sm.getStringParam("code", false);
             if (username == null || username.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "username is needed.");
@@ -102,6 +101,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             query.executeUpdate();
             teamUser.setUser_id(sm.getUser().getDBid());
             teamUser.setDashboard_user(sm.getUser());
+            teamUser.setState(1);
             sm.saveOrUpdate(teamUser);
             team.askVerificationForTeamUser(teamUser, verificationCode);
             if (teamUser.getAdmin_id() == null || teamUser.getAdmin_id() == 0)
@@ -118,6 +118,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             mailJetBuilder.addVariable("user_pseudo", teamUser.getUsername());
             mailJetBuilder.addVariable("user_email", teamUser.getEmail());
             mailJetBuilder.sendEmail();
+            sm.getUser().addTeamUser(teamUser);
             sm.setSuccess(teamUser.getJson());
         } catch (Exception e) {
             sm.setError(e);
