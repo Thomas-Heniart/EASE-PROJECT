@@ -1,0 +1,49 @@
+{
+  "name": "MyISC",
+  "lastlogin": "",
+  "home": "https://myisc.iscparis.com/",
+  "connect": {
+    "todo": [
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#username-inputEl"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#password-inputEl",
+        "grave": "true"
+      },
+      {
+        "action": "click",
+        "search": "#vdojujfd-btnInnerEl"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "span#button-1015-btnIconEl, #username-inputEl"
+    },
+    {
+      "search": "span#button-1015-btnIconEl"
+    }
+  ],
+  "logout": {
+    "todo": [
+      {
+        "action": "click",
+        "search": "span#button-1015-btnIconEl"
+      },
+      {
+        "action": "waitfor",
+        "search": "#menuitem-1018-textEl"
+      },
+      {
+        "action": "click",
+        "search": "#menuitem-1018-textEl"
+      }
+    ]
+  }
+}

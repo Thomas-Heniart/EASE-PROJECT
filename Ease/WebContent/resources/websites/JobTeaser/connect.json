@@ -1,0 +1,51 @@
+{
+  "name": "JobTeaser",
+  "lastlogin": "",
+  "home": "https://www.jobteaser.com/",
+  "connect": {
+    "todo": [
+      {
+        "action": "click",
+        "search": ".btn.signin"
+      },
+      {
+        "action": "waitfor",
+        "search": ".sign-in__user-mail #user_email"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": ".sign-in__user-mail #user_email"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": ".sign-in__user-password #user_password"
+      },
+      {
+        "action": "click",
+        "search": "form[action*='/users/sign_in'] input[name='commit']"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": ".btn.signin, a[href*='sign_out']"
+    },
+    {
+      "search": "a[href*='sign_out']"
+    }
+  ],
+  "logout": {
+    "todo": [
+      {
+        "action": "clickona",
+        "search": "a[href*='sign_out']"
+      },
+      {
+        "action": "waitload"
+      }
+    ]
+  }
+}

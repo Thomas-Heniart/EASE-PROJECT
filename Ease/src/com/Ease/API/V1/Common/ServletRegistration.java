@@ -3,10 +3,7 @@ package com.Ease.API.V1.Common;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.HttpServletException;
-import com.Ease.Utils.HttpStatus;
-import com.Ease.Utils.Regex;
+import com.Ease.Utils.*;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.mailjet.client.resource.ContactslistManageContact;
 import org.json.simple.JSONObject;
@@ -31,7 +28,6 @@ public class ServletRegistration extends HttpServlet {
             String username = sm.getStringParam("username", true);
             String email = sm.getStringParam("email", true);
             String password = sm.getStringParam("password", false);
-            String confirm_password = sm.getStringParam("confirm_password", false);
             String digits = sm.getStringParam("digits", false);
             String code = sm.getStringParam("code", false);
             Long registration_date = sm.getLongParam("registration_date", true);
@@ -67,9 +63,11 @@ public class ServletRegistration extends HttpServlet {
                 if (!db_digits.equals(digits))
                     throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits.");
             }
-            if (!password.equals(confirm_password))
-                errors.put("confirm_password", "Password confirmation doesn't match!");
-            User newUser = User.createUser(email, username, password, registration_date, sm.getServletContext(), sm.getDB());
+            if (!errors.isEmpty())
+                throw new HttpServletException(HttpStatus.BadRequest, errors);
+            DataBaseConnection db = sm.getDB();
+            int transaction = db.startTransaction();
+            User newUser = User.createUser(email, username, password, registration_date, sm.getServletContext(), db);
             if (send_news) {
                 MailJetBuilder mailJetBuilder = new MailJetBuilder(ContactslistManageContact.resource, 13300);
                 mailJetBuilder.property(ContactslistManageContact.EMAIL, newUser.getEmail());
@@ -81,10 +79,9 @@ public class ServletRegistration extends HttpServlet {
             ((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
             ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
             ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);
-            if (errors.isEmpty())
-                sm.setSuccess(newUser.getJson());
-            else
-                throw new HttpServletException(HttpStatus.BadRequest, errors);
+            db.commitTransaction(transaction);
+            sm.setSuccess(newUser.getJson());
+
         } catch (GeneralException e) {
             sm.setError(new HttpServletException(HttpStatus.BadRequest, e.getMsg()));
         } catch (Exception e) {
