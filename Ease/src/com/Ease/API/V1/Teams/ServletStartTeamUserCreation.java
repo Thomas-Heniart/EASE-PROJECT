@@ -88,7 +88,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             mailJetBuilder.addVariable("first_name", adminTeamUser.getFirstName());
             mailJetBuilder.addVariable("last_name", adminTeamUser.getLastName());
             mailJetBuilder.addVariable("email", adminTeamUser.getEmail());
-            mailJetBuilder.addVariable("link", Variables.URL_PATH + "teams/#/teamJoin/" + code);
+            mailJetBuilder.addVariable("link", Variables.URL_PATH + "teams#/teamJoin/" + code);
             mailJetBuilder.sendEmail();
             /* SendGridMail sendGridMail = new SendGridMail("Benjamin @EaseSpace", "benjamin@ease.space");
             sendGridMail.sendInvitationToJoinTeamEmail(team.getName(), adminTeamUser.getFirstName(), adminTeamUser.getEmail(), email, code); */
