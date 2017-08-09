@@ -1,27 +1,23 @@
 package com.Ease.Dashboard.App;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
+import com.Ease.Context.Group.GroupManager;
+import com.Ease.Dashboard.App.LinkApp.LinkApp;
+import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
+import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.*;
-import com.Ease.Utils.ServletManager;
-import com.Ease.Utils.Servlets.*;
+import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import com.Ease.Context.Group.GroupManager;
-import com.Ease.Dashboard.App.LinkApp.LinkApp;
-import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
-import com.Ease.Dashboard.Profile.Profile;
-
 import javax.servlet.ServletContext;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class App implements ShareableApp, SharedApp {
 
@@ -173,10 +169,9 @@ public class App implements ShareableApp, SharedApp {
                             sharedApp.setReceived(rs.getBoolean("received"));
                             sharedApp.setAdminHasAccess(rs.getBoolean("adminHasAccess"));
                         }
-
                         break;
                     default:
-                        throw new GeneralException(ServletManager.Code.InternError, "This app type dosen't exist.");
+                        throw new GeneralException(ServletManager.Code.InternError, "This app type doesn't exist.");
                 }
                 sharedApp.setPinned(rs.getBoolean("pinned"));
                 Integer teamUser_tenant_id = rs.getInt("teamUser_tenant_id");
@@ -695,7 +690,10 @@ public class App implements ShareableApp, SharedApp {
             }
             for (SharedApp sharedApp : sharedAppsToDelete)
                 this.removeSharedApp(sharedApp);
-            DatabaseRequest request = db.prepareRequest("DELETE FROM shareableApps WHERE id = ?;");
+            DatabaseRequest request = db.prepareRequest("DELETE FROM pendingJoinAppRequests WHERE shareable_app_id = ?");
+            request.setInt(this.getDBid());
+            request.set();
+            request = db.prepareRequest("DELETE FROM shareableApps WHERE id = ?;");
             request.setInt(this.getDBid());
             request.set();
             this.removeFromDB(db);
@@ -720,6 +718,8 @@ public class App implements ShareableApp, SharedApp {
 
     @Override
     public List<SharedApp> getSharedApps() {
+        if (this.sharedApps == null)
+            this.sharedApps = new LinkedList<>();
         return this.sharedApps;
     }
 

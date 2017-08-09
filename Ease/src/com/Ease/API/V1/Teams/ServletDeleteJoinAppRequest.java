@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/api/v1/teams/ServletDeleteJoinAppRequest")
+@WebServlet("/api/v1/teams/DeleteJoinAppRequest")
 public class ServletDeleteJoinAppRequest extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
@@ -29,7 +29,7 @@ public class ServletDeleteJoinAppRequest extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             ShareableApp shareableApp = team.getAppManager().getShareableAppWithId(app_id);
             TeamUser teamUser = sm.getTeamUserForTeamId(team_id);
-            if (!teamUser.isTeamAdmin() || shareableApp.getTeamUser_owner() == teamUser)
+            if (!teamUser.isTeamAdmin() && shareableApp.getTeamUser_owner() != teamUser)
                 throw new HttpServletException(HttpStatus.Forbidden, "Not allowed");
             shareableApp.removePendingTeamUser(team.getTeamUserWithId(pending_teamUser_id), sm.getDB());
             sm.setSuccess(shareableApp.getShareableJson());
