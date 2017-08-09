@@ -7,7 +7,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by thomas on 10/04/2017.
@@ -208,6 +209,10 @@ public class Channel {
         for (TeamUser teamUser : this.getTeamUsers())
             jsonArray.add(teamUser.getDb_id());
         jsonObject.put("userIds", jsonArray);
+        JSONArray joinRequests = new JSONArray();
+        for (TeamUser teamUser : this.getPending_teamUsers())
+            joinRequests.add(teamUser.getDb_id());
+        jsonObject.put("join_requests", joinRequests);
         return jsonObject;
     }
 

@@ -52,7 +52,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             String lastName = sm.getStringParam("last_name", true);
             String username = sm.getStringParam("username", true);
             String job_details = sm.getStringParam("job_details", true);
-            Integer job_index = Integer.parseInt(sm.getStringParam("job_index", true));
+            Integer job_index = sm.getIntParam("job_index", true);
             String code = sm.getStringParam("code", false);
             if (username == null || username.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "username is needed.");
