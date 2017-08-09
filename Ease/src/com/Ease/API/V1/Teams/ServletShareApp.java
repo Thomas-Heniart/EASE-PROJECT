@@ -44,13 +44,14 @@ public class ServletShareApp extends HttpServlet {
             JSONObject params = shareableApp.getNeededParams(sm);
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
-            if (shareableApp.getPendingTeamUsers().contains(teamUser_tenant)) {
-                shareableApp.removePendingTeamUser(teamUser_tenant, db);
-                teamUser_tenant.addNotification(teamUser_owner.getUsername() + " approved your access to " + ((App) shareableApp).getName() + ((channel == null) ? "" : " in " + channel.getName()), sm.getTimestamp());
-            }
             SharedApp sharedApp = shareableApp.share(teamUser_owner, teamUser_tenant, channel, team, params, sm);
             if (teamUser_tenant == sm.getTeamUserForTeam(team))
                 sharedApp.accept(db);
+            if (shareableApp.getPendingTeamUsers().contains(teamUser_tenant)) {
+                shareableApp.removePendingTeamUser(teamUser_tenant, db);
+                teamUser_tenant.addNotification(teamUser_owner.getUsername() + " approved your access to " + ((App) shareableApp).getName() + ((channel == null) ? "" : " in " + channel.getName()), sm.getTimestamp());
+                sharedApp.accept(db);
+            }
             db.commitTransaction(transaction);
             shareableApp.addSharedApp(sharedApp);
             team.getAppManager().addSharedApp(sharedApp);
