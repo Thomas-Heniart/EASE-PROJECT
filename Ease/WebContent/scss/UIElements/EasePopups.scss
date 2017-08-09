@@ -993,6 +993,10 @@
 		border-left: 1px solid $themeGreyDarkColor;
 		border-right: 1px solid $themeGreyDarkColor;
 	}
+	.row.single-row {
+		padding-top: 20px;
+		padding-bottom: 20px;
+	}
 	.title-row {
 		padding: 15px 30px;
 		background-color: #e8e8e8;
@@ -1032,6 +1036,31 @@
 			&:hover {
 				background-color: #979797 !important;
 			}
+		}
+	}
+}
+
+#modal_verify_team_user {
+	.single-row {
+		span {
+			&:last-child {
+				margin-bottom: 0;
+			}
+			margin-bottom: 20px;
+		}
+	}
+}
+
+#modal_app_requests {
+	.buttons {
+		button.accept {
+			margin-right: 10px;
+		}
+		.accept {
+			color: $themeGreenColor;
+		}
+		.refuse {
+			color: $themeRedColor;
 		}
 	}
 }
