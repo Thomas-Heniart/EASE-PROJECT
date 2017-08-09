@@ -4,8 +4,6 @@ import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.HttpServletException;
-import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -35,7 +33,7 @@ public class ServletTransferShareableAppOwner extends HttpServlet {
             /* if (!teamUser_new_owner.isSuperior(shareableApp.getTeamUser_owner()))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot do this dude."); */
             shareableApp.transferOwnership(teamUser_new_owner, sm.getDB());
-            sm.setSuccess("Ownership transferred");
+            sm.setSuccess(shareableApp.getShareableJson());
         } catch (Exception e) {
             sm.setError(e);
         }
