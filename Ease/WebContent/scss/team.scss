@@ -185,6 +185,10 @@ button.action_text_button {
   }
 }
 
+.member_name_holder.join_request {
+  color: $themeDarkGreyColor;
+}
+
 #teamsPreview {
   overflow: auto;
   @include flex-grow(1);

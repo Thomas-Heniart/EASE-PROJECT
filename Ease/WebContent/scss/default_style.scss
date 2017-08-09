@@ -340,6 +340,14 @@ input.modal_input, select.modal_input {
 .width100 {
   width: 100%;
 }
+
+.blue_text_button {
+  color: $themeBlueColor;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .popover_mask{
   position: fixed;
   top: 0;

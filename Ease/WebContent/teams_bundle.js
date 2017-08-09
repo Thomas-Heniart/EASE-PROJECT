@@ -1176,7 +1176,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.teamCreateMultiApp = teamCreateMultiApp;
-exports.teamShareMultiApp = teamShareMultiApp;
 exports.teamCreateSingleApp = teamCreateSingleApp;
 exports.teamCreateLinkApp = teamCreateLinkApp;
 exports.teamDeleteApp = teamDeleteApp;
@@ -1188,6 +1187,8 @@ exports.teamAcceptSharedApp = teamAcceptSharedApp;
 exports.teamAppTransferOwnership = teamAppTransferOwnership;
 exports.teamAppPinToDashboard = teamAppPinToDashboard;
 exports.askJoinTeamApp = askJoinTeamApp;
+exports.deleteJoinAppRequest = deleteJoinAppRequest;
+exports.teamAppChanged = teamAppChanged;
 var api = __webpack_require__(14);
 var post_api = __webpack_require__(20);
 
@@ -1204,17 +1205,6 @@ function teamCreateMultiApp(app) {
   };
 }
 
-function teamShareMultiApp(app_id, user_info) {
-  return function (dispatch, getState) {
-    dispatch({ type: 'TEAM_SHARE_APP_PENDING' });
-    return post_api.teamApps.shareMultiApp(getState().team.id, app_id, user_info).then(function (response) {
-      dispatch({ type: 'TEAM_SHARE_APP_FULFILLED', payload: { user_info: response, app_id: app_id } });
-    }).catch(function (err) {
-      dispatch({ type: 'TEAM_SHARE_APP_REJECTED', payload: err });
-      throw err;
-    });
-  };
-}
 function teamCreateSingleApp(app) {
   return function (dispatch, getState) {
     dispatch({ type: 'TEAM_CREATE_SINGLE_APP_PENDING' });
@@ -1345,12 +1335,35 @@ function askJoinTeamApp(app_id) {
   return function (dispatch, getState) {
     dispatch({ type: 'TEAM_APP_ASK_JOIN_PENDING' });
     return post_api.teamApps.askJoinApp(getState().team.id, app_id).then(function (response) {
-      dispatch({ type: 'TEAM_APP_ASK_JOIN_FULFILLED', payload: { app_id: app_id, user_id: getState().team.myTeamUserId } });
+      dispatch({ type: 'TEAM_APP_ASK_JOIN_FULFILLED', payload: { app_id: app_id, team_user_id: getState().team.myTeamUserId } });
       return response;
     }).catch(function (err) {
       dispatch({ type: 'TEAM_APP_ASK_JOIN_REJECTED', payload: err });
       throw err;
     });
+  };
+}
+
+function deleteJoinAppRequest(app_id, team_user_id) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'DELETE_JOIN_APP_REQUEST_PENDING' });
+    return post_api.teamApps.deleteJoinAppRequest(getState().team.id, app_id, team_user_id).then(function (r) {
+      dispatch({ type: 'DELETE_JOIN_APP_REQUEST_FULFILLED', payload: { app_id: app_id, team_user_id: team_user_id } });
+      return r;
+    }).catch(function (err) {
+      dispatch({ type: 'DELETE_JOIN_APP_REQUEST_REJECTED', payload: err });
+      throw err;
+    });
+  };
+}
+
+function teamAppChanged(app_id, app) {
+  return {
+    type: 'TEAM_APP_CHANGED',
+    payload: {
+      app_id: app_id,
+      app: app
+    }
   };
 }
 
@@ -2416,6 +2429,18 @@ module.exports = {
       }).then(function (response) {
         return response.data;
       });
+    },
+    deleteJoinChannelRequest: function deleteJoinChannelRequest(team_id, channel_id, team_user_id) {
+      return axios.post('/api/v1/teams/DeleteJoinChannelRequest', {
+        team_id: team_id,
+        channel_id: channel_id,
+        team_user_id: team_user_id,
+        timestamp: new Date().getTime()
+      }).then(function (r) {
+        return r.data;
+      }).catch(function (err) {
+        throw err.response.data;
+      });
     }
   },
 
@@ -2654,6 +2679,18 @@ module.exports = {
         timestamp: new Date().getTime()
       }).then(function (response) {
         return response.data;
+      }).catch(function (err) {
+        throw err.response.data;
+      });
+    },
+    deleteJoinAppRequest: function deleteJoinAppRequest(team_id, app_id, team_user_id) {
+      return axios.post('/api/v1/teams/DeleteJoinAppRequest', {
+        team_id: team_id,
+        app_id: app_id,
+        team_user_id: team_user_id,
+        timestamp: new Date().getTime()
+      }).then(function (r) {
+        return r.data;
       }).catch(function (err) {
         throw err.response.data;
       });
@@ -3118,6 +3155,7 @@ exports.addTeamUserToChannel = addTeamUserToChannel;
 exports.removeTeamUserFromChannel = removeTeamUserFromChannel;
 exports.editTeamChannelName = editTeamChannelName;
 exports.editTeamChannelPurpose = editTeamChannelPurpose;
+exports.deleteJoinChannelRequest = deleteJoinChannelRequest;
 
 var _helperFunctions = __webpack_require__(10);
 
@@ -3259,6 +3297,18 @@ function editTeamChannelPurpose(channel_id, purpose) {
       dispatch({ type: 'EDIT_TEAM_CHANNEL_PURPOSE_FULFILLED', payload: { id: channel_id, purpose: purpose } });
     }).catch(function (err) {
       dispatch({ type: "EDIT_TEAM_CHANNEL_PURPOSE_REJECTED", payload: err });
+    });
+  };
+}
+
+function deleteJoinChannelRequest(channel_id, team_user_id) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'DELETE_JOIN_CHANNEL_REQUEST_PENDING' });
+    return post_api.teamChannel.deleteJoinChannelRequest(getState().team.id, channel_id, team_user_id).then(function (response) {
+      dispatch({ type: 'DELETE_JOIN_CHANNEL_REQUEST_FULFILLED', payload: { channel_id: channel_id, team_user_id: team_user_id } });
+      return response;
+    }).catch(function (err) {
+      dispatch({ type: 'DELETE_JOIN_CHANNEL_REQUEST_REJECTED', payload: err });
     });
   };
 }
@@ -3622,18 +3672,18 @@ var _teamModalActions = __webpack_require__(9);
 
 var _utils = __webpack_require__(41);
 
+var _helperFunctions = __webpack_require__(10);
+
 var api = __webpack_require__(14);
 var post_api = __webpack_require__(20);
 function selectTeamUser(id) {
   return function (dispatch, getState) {
     dispatch({ type: 'SELECT_USER_PENDING' });
-    return api.fetchTeamUser(getState().team.id, id).then(function (response) {
-      var teamUser = response;
-      api.fetchTeamUserApps(getState().team.id, id).then(function (response) {
-        teamUser.apps = response;
-        dispatch({ type: 'SELECT_USER_FULFILLED', payload: teamUser });
-        if (teamUser.state === _utils.teamUserState.registered) dispatch((0, _teamModalActions.showVerifyTeamUserModal)(true, teamUser));
-      });
+    var teamUser = (0, _helperFunctions.selectUserFromListById)(getState().users.users, id);
+    api.fetchTeamUserApps(getState().team.id, id).then(function (response) {
+      teamUser.apps = response;
+      dispatch({ type: 'SELECT_USER_FULFILLED', payload: teamUser });
+      if (teamUser.state === _utils.teamUserState.registered) dispatch((0, _teamModalActions.showVerifyTeamUserModal)(true, teamUser));
     }).catch(function (err) {
       dispatch({ type: 'SELECT_USER_REJECTED', payload: err });
       throw err;
@@ -24684,6 +24734,53 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var React = __webpack_require__(1);
 var classnames = __webpack_require__(2);
 
+
+function ChannelJoinRequestList(props) {
+  var users = props.users;
+  var requests = props.requests;
+
+  return React.createElement(
+    'div',
+    { className: 'members_list' },
+    requests.map(function (item) {
+      var user = (0, _helperFunctions.selectUserFromListById)(users, item);
+      return React.createElement(
+        'span',
+        { className: 'member_name_holder join_request', key: item },
+        React.createElement('i', { className: 'fa fa-user mrgnRight5' }),
+        React.createElement(
+          'span',
+          { className: 'member_name' },
+          user.username,
+          ' would like to access this group'
+        ),
+        React.createElement(
+          'span',
+          null,
+          React.createElement(
+            'button',
+            { className: 'button-unstyle blue_text_button',
+              onClick: function onClick(e) {
+                props.dispatch(channelActions.addTeamUserToChannel(props.channel_id, item));
+              } },
+            'Accept'
+          ),
+          '\xA0 or \xA0',
+          React.createElement(
+            'button',
+            { className: 'button-unstyle blue_text_button',
+              onClick: function onClick(e) {
+                props.dispatch(channelActions.deleteJoinChannelRequest(props.channel_id, item));
+              } },
+            'Refuse'
+          ),
+          '\xA0?'
+        )
+      );
+    })
+  );
+}
+
 var TeamChannelFlexTab = function (_React$Component) {
   _inherits(TeamChannelFlexTab, _React$Component);
 
@@ -24918,7 +25015,7 @@ var TeamChannelFlexTab = function (_React$Component) {
                 this.props.item.userIds.map(function (item) {
                   var _this4 = this;
 
-                  var user = this.props.userGetter(item);
+                  var user = (0, _helperFunctions.selectUserFromListById)(this.props.users, item);
                   return React.createElement(
                     'span',
                     { className: 'member_name_holder', key: item },
@@ -24943,6 +25040,11 @@ var TeamChannelFlexTab = function (_React$Component) {
                   );
                 }, this)
               ),
+              React.createElement(ChannelJoinRequestList, {
+                channel_id: this.props.item.id,
+                users: this.props.users,
+                requests: this.props.item.join_requests,
+                dispatch: this.props.dispatch }),
               React.createElement(
                 'button',
                 { className: 'button-unstyle underlineOnHover', onClick: function onClick(e) {
@@ -25462,7 +25564,8 @@ var FlexPanels = (_dec = (0, _reactRedux.connect)(function (store) {
   return {
     me: store.users.me,
     selectedItem: store.selection,
-    channels: store.channels.channels
+    channels: store.channels.channels,
+    users: store.users.users
   };
 }), _dec(_class = function (_React$Component3) {
   _inherits(FlexPanels, _React$Component3);
@@ -25483,7 +25586,7 @@ var FlexPanels = (_dec = (0, _reactRedux.connect)(function (store) {
           item: this.props.selectedItem.item,
           flexActive: this.props.flexActive,
           toggleFlexFunc: this.props.toggleFlexFunc,
-          userGetter: this.props.userGetter,
+          users: this.props.users,
           dispatch: this.props.dispatch }),
         this.props.flexActive && this.props.selectedItem.type === 'user' && React.createElement(TeamUserFlexTab, {
           item: this.props.selectedItem.item,
@@ -28459,6 +28562,8 @@ var _teamModalActions = __webpack_require__(9);
 
 var _helperFunctions = __webpack_require__(10);
 
+var _channelActions = __webpack_require__(23);
+
 var _reactRedux = __webpack_require__(6);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -28533,7 +28638,11 @@ var TeamBrowseChannelsModal = (_dec = (0, _reactRedux.connect)(function (store) 
                 'div',
                 { className: 'mrgnTop5' },
                 this.props.channels.map(function (item) {
+                  var _this3 = this;
+
                   var inChannel = (0, _helperFunctions.isUserInChannel)(item, this.props.me);
+                  var isAsked = item.join_requests.indexOf(this.props.me.id) !== -1;
+
                   return _react2.default.createElement(
                     'div',
                     { className: 'channel_card display-flex', key: item.id },
@@ -28569,10 +28678,26 @@ var TeamBrowseChannelsModal = (_dec = (0, _reactRedux.connect)(function (store) 
                       _react2.default.createElement(
                         'div',
                         null,
-                        !inChannel && _react2.default.createElement(
+                        !inChannel && this.props.me.role > 1 && _react2.default.createElement(
                           'button',
-                          { className: 'button-unstyle big-button action' },
+                          { className: 'button-unstyle big-button action',
+                            onClick: function onClick(e) {
+                              _this3.props.dispatch((0, _channelActions.addTeamUserToChannel)(item.id, _this3.props.me.id));
+                            } },
+                          'Join this channel'
+                        ),
+                        !inChannel && !isAsked && this.props.me.role === 1 && _react2.default.createElement(
+                          'button',
+                          { className: 'button-unstyle big-button action',
+                            onClick: function onClick(e) {
+                              _this3.props.dispatch((0, _channelActions.askJoinChannel)(item.id));
+                            } },
                           'Ask to join'
+                        ),
+                        !inChannel && isAsked && this.props.me.role === 1 && _react2.default.createElement(
+                          'span',
+                          null,
+                          'Join request sent'
                         )
                       )
                     )
@@ -29182,11 +29307,15 @@ var TeamManageAppRequestModal = (_dec = (0, _reactRedux.connect)(function (store
   }, {
     key: 'refuseUser',
     value: function refuseUser(id) {
-      var users = this.state.users.map(function (item) {
-        if (item.user.id === id) item.checked = true;
-        return item;
+      var _this3 = this;
+
+      this.props.dispatch((0, _appsActions.deleteJoinAppRequest)(this.props.modal.app.id, id)).then(function () {
+        var users = _this3.state.users.map(function (item) {
+          if (item.user.id === id) item.checked = true;
+          return item;
+        });
+        _this3.setState({ users: users });
       });
-      this.setState({ users: users });
     }
   }, {
     key: 'confirmModal',
@@ -29196,14 +29325,14 @@ var TeamManageAppRequestModal = (_dec = (0, _reactRedux.connect)(function (store
   }, {
     key: 'render',
     value: function render() {
-      var _this3 = this;
+      var _this4 = this;
 
       var app = this.props.modal.app;
       return React.createElement(
         'div',
         { className: 'popupHandler myshow' },
         React.createElement('div', { className: 'popover_mask', onClick: function onClick(e) {
-            _this3.props.dispatch((0, _teamModalActions.showTeamManageAppRequestModal)(false));
+            _this4.props.dispatch((0, _teamModalActions.showTeamManageAppRequestModal)(false));
           } }),
         React.createElement(
           'div',
@@ -29211,7 +29340,7 @@ var TeamManageAppRequestModal = (_dec = (0, _reactRedux.connect)(function (store
           React.createElement(
             'button',
             { className: 'button-unstyle action_button close_button', onClick: function onClick(e) {
-                _this3.props.dispatch((0, _teamModalActions.showTeamManageAppRequestModal)(false));
+                _this4.props.dispatch((0, _teamModalActions.showTeamManageAppRequestModal)(false));
               } },
             React.createElement('i', { className: 'fa fa-times' })
           ),
@@ -29256,12 +29385,12 @@ var TeamManageAppRequestModal = (_dec = (0, _reactRedux.connect)(function (store
                     React.createElement(
                       'button',
                       { className: 'button-unstyle only-text-button underlineOnHover accept',
-                        onClick: _this3.acceptUser.bind(null, item.user.id) },
+                        onClick: _this4.acceptUser.bind(null, item.user.id) },
                       'Accept'
                     ),
                     React.createElement(
                       'button',
-                      { className: 'button-unstyle only-text-button underlineOnHover refuse', onClick: _this3.refuseUser.bind(null, item.user.id) },
+                      { className: 'button-unstyle only-text-button underlineOnHover refuse', onClick: _this4.refuseUser.bind(null, item.user.id) },
                       'Refuse'
                     )
                   ) : React.createElement(
@@ -31619,10 +31748,6 @@ function reducer() {
           channels: action.payload
         });
       }
-    case 'FETCH_TEAM_CHANNELS_REJECTED':
-      {
-        break;
-      }
     case 'EDIT_TEAM_CHANNEL_NAME_FULFILLED':
       {
         var nChannels = state.channels.map(function (item) {
@@ -31661,7 +31786,22 @@ function reducer() {
     case 'ADD_TEAM_USER_TO_CHANNEL_FULFILLED':
       {
         var nChannels = state.channels.map(function (item) {
-          if (item.id === action.payload.channel_id) item.userIds.push(action.payload.team_user_id);
+          if (item.id === action.payload.channel_id) {
+            item.userIds.push(action.payload.team_user_id);
+            if (item.join_requests.indexOf(action.payload.team_user_id) !== -1) item.join_requests.splice(item.join_requests.indexOf(action.payload.team_user_id), 1);
+          }
+          return item;
+        });
+        return _extends({}, state, {
+          channels: nChannels
+        });
+      }
+    case 'REMOVE_TEAM_USER_FROM_CHANNEL_FULFILLED':
+      {
+        var nChannels = state.channels.map(function (item) {
+          if (item.id === action.payload.channel_id) {
+            item.userIds.splice(item.userIds.indexOf(action.payload.team_user_id), 1);
+          }
           return item;
         });
         return _extends({}, state, {
@@ -31700,6 +31840,18 @@ function reducer() {
         var nChannels = state.channels.map(function (item) {
           if (item.id === action.payload.channel_id && item.join_requests.indexOf(action.payload.team_user_id) === -1) {
             item.join_requests.push(action.payload.team_user_id);
+          }
+          return item;
+        });
+        return _extends({}, state, {
+          channels: nChannels
+        });
+      }
+    case 'DELETE_JOIN_CHANNEL_REQUEST_FULFILLED':
+      {
+        var nChannels = state.channels.map(function (item) {
+          if (item.id === action.payload.channel_id && item.join_requests.indexOf(action.payload.team_user_id) !== -1) {
+            item.join_requests.splice(item.join_requests.indexOf(action.payload.team_user_id), 1);
           }
           return item;
         });
@@ -31907,83 +32059,6 @@ function reducer() {
           item: action.payload
         });
       }
-    case 'EDIT_TEAM_CHANNEL_NAME_FULFILLED':
-      {
-        if (state.type === 'channel' && state.item.id === action.payload.id) {
-          return _extends({}, state, {
-            item: _extends({}, state.item, {
-              name: action.payload.name
-            })
-          });
-        }
-        break;
-      }
-    case 'EDIT_TEAM_CHANNEL_PURPOSE_FULFILLED':
-      {
-        if (state.type === 'channel' && state.item.id === action.payload.id) {
-          return _extends({}, state, {
-            item: _extends({}, state.item, {
-              purpose: action.payload.purpose
-            })
-          });
-        }
-        break;
-      }
-    case "EDIT_TEAM_USER_USERNAME_FULFILLED":
-      {
-        if (state.type === 'user' && state.item.id === action.payload.id) {
-          return _extends({}, state, {
-            item: _extends({}, state.item, {
-              username: action.payload.username
-            })
-          });
-        }
-        break;
-      }
-    case "EDIT_TEAM_USER_FIRSTNAME_FULFILLED":
-      {
-        if (state.type === 'user' && state.item.id === action.payload.id) {
-          return _extends({}, state, {
-            item: _extends({}, state.item, {
-              firstName: action.payload.first_name
-            })
-          });
-        }
-        break;
-      }
-    case "EDIT_TEAM_USER_LASTNAME_FULFILLED":
-      {
-        if (state.type === 'user' && state.item.id === action.payload.id) {
-          return _extends({}, state, {
-            item: _extends({}, state.item, {
-              lastName: action.payload.last_name
-            })
-          });
-        }
-        break;
-      }
-    case "EDIT_TEAM_USER_ROLE_FULFILLED":
-      {
-        if (state.type === 'user' && state.item.id === action.payload.id) {
-          return _extends({}, state, {
-            item: _extends({}, state.item, {
-              role: action.payload.role
-            })
-          });
-        }
-        break;
-      }
-    case "EDIT_TEAM_USER_DEPARTUREDATE_FULFILLED":
-      {
-        if (state.type === 'user' && state.item.id === action.payload.id) {
-          return _extends({}, state, {
-            item: _extends({}, state.item, {
-              departureDate: action.payload.departure_date
-            })
-          });
-        }
-        break;
-      }
     case "TEAM_CREATE_SINGLE_APP_FULFILLED":
       {
         if (state.type === action.payload.origin.type && state.item.id === action.payload.origin.id) {
@@ -32014,6 +32089,7 @@ function reducer() {
         for (var i = 0; i < nState.item.apps.length; i++) {
           if (nState.item.apps[i].id === action.payload.app_id) {
             nState.item.apps[i].receivers.push(action.payload.user_info);
+            if (nState.item.apps[i].sharing_requests.indexOf(action.payload.user_info.team_user_id) !== -1) nState.item.apps[i].sharing_requests.splice(nState.item.apps[i].sharing_requests.indexOf(action.payload.user_info.team_user_id), 1);
             return nState;
           }
         }
@@ -32158,8 +32234,20 @@ function reducer() {
         var item = _extends({}, state.item);
         var app = (0, _helperFunctions.selectAppFromListById)(item.apps, action.payload.app_id);
 
-        if (app !== null && app.sharing_requests.indexOf(action.payload.user_id) === -1) {
-          app.sharing_requests.push(action.payload.user_id);
+        if (app !== null && app.sharing_requests.indexOf(action.payload.team_user_id) === -1) {
+          app.sharing_requests.push(action.payload.team_user_id);
+          return _extends({}, state, {
+            item: item
+          });
+        }
+      }
+    case 'DELETE_JOIN_APP_REQUEST_FULFILLED':
+      {
+        var item = _extends({}, state.item);
+        var app = (0, _helperFunctions.selectAppFromListById)(item.apps, action.payload.app_id);
+
+        if (app !== null && app.sharing_requests.indexOf(action.payload.team_user_id) !== -1) {
+          app.sharing_requests.splice(app.sharing_requests.indexOf(action.payload.team_user_id), 1);
           return _extends({}, state, {
             item: item
           });
@@ -32502,6 +32590,28 @@ function reducer() {
             break;
           }
         }
+        return _extends({}, state, {
+          users: users
+        });
+      }
+    case 'ADD_TEAM_USER_TO_CHANNEL_FULFILLED':
+      {
+        var users = state.users.map(function (item) {
+          if (item.id === action.payload.team_user_id) item.channel_ids.push(action.payload.channel_id);
+          return item;
+        });
+        return _extends({}, state, {
+          users: users
+        });
+      }
+    case 'REMOVE_TEAM_USER_FROM_CHANNEL_FULFILLED':
+      {
+        var users = state.users.map(function (item) {
+          if (item.id === action.payload.team_user_id) {
+            item.channel_ids.splice(item.channel_ids.indexOf(action.payload.channel_id), 1);
+          }
+          return item;
+        });
         return _extends({}, state, {
           users: users
         });
