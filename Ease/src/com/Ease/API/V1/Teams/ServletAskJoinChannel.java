@@ -1,14 +1,10 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.SendGridMail;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.Crypto.CodeGenerator;
-import com.Ease.Utils.HttpServletException;
-import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -38,7 +34,7 @@ public class ServletAskJoinChannel extends HttpServlet {
             team.getTeamUserWithId(channel.getCreator_id()).addNotification(teamUser.getUsername() + " would like to join " + channel.getName(), sm.getTimestamp());
             SendGridMail mail = new SendGridMail("Agathe @Ease", "contact@ease.space");
             mail.sendJoinChannelEmail(team.getName(), channel.getName(), team.getAdministratorsUsernameAndEmail(), teamUser.getUsername(), teamUser.getEmail());
-            sm.setSuccess("You request has been sent");
+            sm.setSuccess(channel.getJson());
         } catch (Exception e) {
             sm.setError(e);
         }
