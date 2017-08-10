@@ -1,10 +1,12 @@
 package com.Ease.websocketV1;
 
 import com.Ease.Dashboard.User.User;
-import java.io.*;
+import com.Ease.Team.TeamUser;
+
 import javax.servlet.http.HttpSession;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
+import java.io.IOException;
 
 @ServerEndpoint(value = "/webSocketServer",
                 configurator = GetHttpSessionConfigurator.class,
@@ -33,6 +35,9 @@ public class WebSocketServer {
         }
         if (user != null){
             user.getWebSocketManager().addWebSocketSession(new WebSocketSession(session));
+            for (TeamUser teamUser : user.getTeamUsers()) {
+                teamUser.getTeam().getWebSocketManager().addWebSocketSession(new WebSocketSession(session));
+            }
             System.out.println("webSocketSession registered for user : " + user.getEmail());
         }
     }

@@ -7,8 +7,11 @@ import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.*;
+import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.TeamWebSocketMessage;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -67,6 +70,7 @@ public class ServletCreateShareableSingleApp extends HttpServlet {
             ClassicApp classicApp = ClassicApp.createShareableClassicApp(app_name, website, accountInformationList, teamUser_owner, reminderInterval, sm);
             classicApp.becomeShareable(sm.getDB(), team, teamUser_owner, team_user_id, channel, description);
             db.commitTransaction(transaction);
+            sm.setWebSocketMessage(new TeamWebSocketMessage("app", "create", classicApp.getShareableJson(), new JSONObject()));
             sm.setSuccess(classicApp.getShareableJson());
         } catch (Exception e) {
             sm.setError(e);

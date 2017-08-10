@@ -4,15 +4,13 @@ import org.json.simple.JSONObject;
 
 public class WebSocketMessage {
     private String type;
-    private String data;
-
+    private JSONObject data = new JSONObject();
 
     public WebSocketMessage(String type){
         this.type = type;
-        this.data = null;
     }
 
-    public WebSocketMessage(String type, String data){
+    public WebSocketMessage(String type, JSONObject data) {
         this.type = type;
         this.data = data;
     }
@@ -20,7 +18,8 @@ public class WebSocketMessage {
     public String getType(){
         return this.type;
     }
-    public String getData(){
+
+    public JSONObject getData() {
         return this.data;
     }
 

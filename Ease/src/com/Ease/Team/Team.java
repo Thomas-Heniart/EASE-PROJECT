@@ -7,6 +7,7 @@ import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.SendGridMail;
 import com.Ease.Utils.*;
+import com.Ease.websocketV1.WebSocketManager;
 import com.stripe.exception.*;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
@@ -96,6 +97,9 @@ public class Team {
 
     @Transient
     private int activeSubscriptions;
+
+    @Transient
+    private WebSocketManager webSocketManager = new WebSocketManager();
 
     public Team(String name) {
         this.name = name;
@@ -442,5 +446,9 @@ public class Team {
                 e.printStackTrace();
             }
         }
+    }
+
+    public WebSocketManager getWebSocketManager() {
+        return webSocketManager;
     }
 }

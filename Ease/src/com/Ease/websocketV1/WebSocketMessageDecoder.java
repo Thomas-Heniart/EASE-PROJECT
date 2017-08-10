@@ -8,14 +8,14 @@ import javax.websocket.DecodeException;
 import javax.websocket.Decoder;
 import javax.websocket.EndpointConfig;
 
-public class WebSocketMessageDecoder implements Decoder.Text<WebSocketMessage>{
+public class WebSocketMessageDecoder implements Decoder.Text<WebSocketMessage> {
     @Override
     public WebSocketMessage decode(String s) throws DecodeException {
         JSONParser parser = new JSONParser();
         JSONObject res;
         try {
             res = (JSONObject) parser.parse(StringEscapeUtils.unescapeHtml4(s));
-            return new WebSocketMessage((String)res.get("type"), (String)res.get("data"));
+            return new WebSocketMessage((String) res.get("type"), (JSONObject) res.get("data"));
         } catch (Exception e) {
             e.printStackTrace();
         }
