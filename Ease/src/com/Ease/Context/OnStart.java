@@ -1,15 +1,5 @@
 package com.Ease.Context;
 
-import java.net.URLEncoder;
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.WebsitesVisitedManager;
 import com.Ease.Context.Group.GroupManager;
@@ -17,8 +7,18 @@ import com.Ease.Context.Group.Infrastructure;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateDatabase;
 import com.Ease.Team.TeamManager;
+import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
 import com.stripe.Stripe;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import java.net.URLEncoder;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class OnStart implements ServletContextListener {
 
@@ -51,6 +51,9 @@ public class OnStart implements ServletContextListener {
                 TeamManager teamManager = new TeamManager(context, db);
                 context.setAttribute("teamManager", teamManager);
                 Stripe.apiKey = "sk_test_4Qqw6xcv7VQDmXBS5CZ9rz5T";
+                Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
+                context.setAttribute("publicKey", publicAndPrivateKey.getKey());
+                context.setAttribute("privateKey", publicAndPrivateKey.getValue());
                 //context.setAttribute("tipManager", new TipManager());
 
                 /* Stripe timer */

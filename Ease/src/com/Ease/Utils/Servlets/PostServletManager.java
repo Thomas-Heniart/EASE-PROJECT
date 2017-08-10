@@ -2,6 +2,7 @@ package com.Ease.Utils.Servlets;
 
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
+import com.Ease.websocketV1.WebSocketMessage;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -16,6 +17,7 @@ import java.util.Date;
 public class PostServletManager extends ServletManager {
 
     protected JSONObject params;
+    protected WebSocketMessage webSocketMessage;
 
     public PostServletManager(String servletName, HttpServletRequest request, HttpServletResponse response, boolean saveLogs) throws IOException {
         super(servletName, request, response, saveLogs);
@@ -86,5 +88,25 @@ public class PostServletManager extends ServletManager {
 
     public Boolean getBooleanParam(String paramName, boolean saveInLogs) {
         return (Boolean) this.getParam(paramName, saveInLogs);
+    }
+
+    public void setWebSocketMessage(WebSocketMessage webSocketMessage) {
+        this.webSocketMessage = webSocketMessage;
+    }
+
+    @Override
+    public void sendResponse() {
+        super.sendResponse();
+        if (this.response.getStatus() != HttpStatus.Success.getValue())
+            return;
+        if (this.webSocketMessage == null)
+            return;
+        Integer team_id = this.getIntParam("team_id", false);
+        try {
+            if (team_id != null)
+                this.getTeamUserForTeamId(team_id).getTeam().getWebSocketManager().sendObject(this.webSocketMessage);
+        } catch (HttpServletException e) {
+            e.printStackTrace();
+        }
     }
 }

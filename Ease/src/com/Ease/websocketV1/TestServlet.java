@@ -1,6 +1,7 @@
 package com.Ease.websocketV1;
 
 import com.Ease.Dashboard.User.User;
+import org.json.simple.JSONObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,7 +21,7 @@ public class TestServlet extends HttpServlet {
         HttpSession session = request.getSession();
         User user = (User)session.getAttribute("user");
 
-        user.getWebSocketManager().sendObject(new WebSocketMessage("HelloWorld", "hello from test servlet"));
+        user.getWebSocketManager().sendObject(new WebSocketMessage("HelloWorld", new JSONObject()));
         user.getWebSocketManager().invalidateAllSessions();
     }
 }
