@@ -7,6 +7,9 @@ import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -43,6 +46,7 @@ public class ServletEditChannelName extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Group names can't contain spaces, periods or most punctuation. Try again?");
             channel.editName(name);
             sm.saveOrUpdate(channel);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));
             sm.setSuccess("Channel name edited");
         } catch (Exception e) {
             sm.setError(e);

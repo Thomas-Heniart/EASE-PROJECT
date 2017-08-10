@@ -13,11 +13,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 public class PostServletManager extends ServletManager {
 
     protected JSONObject params;
-    protected WebSocketMessage webSocketMessage;
+    protected List<WebSocketMessage> webSocketMessages = new LinkedList<>();
 
     public PostServletManager(String servletName, HttpServletRequest request, HttpServletResponse response, boolean saveLogs) throws IOException {
         super(servletName, request, response, saveLogs);
@@ -90,8 +92,8 @@ public class PostServletManager extends ServletManager {
         return (Boolean) this.getParam(paramName, saveInLogs);
     }
 
-    public void setWebSocketMessage(WebSocketMessage webSocketMessage) {
-        this.webSocketMessage = webSocketMessage;
+    public void addWebSocketMessage(WebSocketMessage webSocketMessage) {
+        this.webSocketMessages.add(webSocketMessage);
     }
 
     @Override
@@ -99,12 +101,12 @@ public class PostServletManager extends ServletManager {
         super.sendResponse();
         if (this.response.getStatus() != HttpStatus.Success.getValue())
             return;
-        if (this.webSocketMessage == null)
+        if (this.webSocketMessages.isEmpty())
             return;
         Integer team_id = this.getIntParam("team_id", false);
         try {
             if (team_id != null)
-                this.getTeamUserForTeamId(team_id).getTeam().getWebSocketManager().sendObject(this.webSocketMessage);
+                this.getTeamUserForTeamId(team_id).getTeam().getWebSocketManager().sendObjects(this.webSocketMessages);
         } catch (HttpServletException e) {
             e.printStackTrace();
         }

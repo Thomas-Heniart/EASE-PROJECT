@@ -3,28 +3,22 @@ package com.Ease.websocketV1;
 import org.json.simple.JSONObject;
 
 public class TeamWebSocketMessage extends WebSocketMessage {
-    protected String action;
-    protected JSONObject target;
 
-    public TeamWebSocketMessage(String type, String action, JSONObject data, JSONObject target) {
-        super(type, data);
-        this.action = action;
-        this.target = target;
+    public TeamWebSocketMessage(String data_type, String action, JSONObject data, JSONObject target) {
+        super("UPDATE_CLIENT");
+        this.getData().put("data", data);
+        this.getData().put("type", data_type);
+        this.getData().put("action", action);
+        this.getData().put("target", target);
     }
 
-    public String getAction() {
-        return action;
-    }
-
-    public JSONObject getTarget() {
-        return target;
-    }
-
-    @Override
-    public JSONObject toJSONObject() {
-        JSONObject res = super.toJSONObject();
-        res.put("action", this.action);
-        res.put("target", this.target);
-        return res;
+    public TeamWebSocketMessage(String data_type, String action, Integer id, JSONObject target) {
+        super("UPDATE_CLIENT");
+        JSONObject data = new JSONObject();
+        data.put("id", id);
+        this.getData().put("data", data);
+        this.getData().put("type", data_type);
+        this.getData().put("action", action);
+        this.getData().put("target", target);
     }
 }

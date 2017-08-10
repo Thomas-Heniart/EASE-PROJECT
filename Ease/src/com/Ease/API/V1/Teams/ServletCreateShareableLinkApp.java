@@ -1,19 +1,19 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.Context.Catalog.Catalog;
-import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.LinkApp.LinkApp;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.*;
+import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
+import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.json.simple.JSONArray;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -22,8 +22,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by thomas on 08/05/2017.
@@ -59,6 +57,9 @@ public class ServletCreateShareableLinkApp extends HttpServlet {
             LinkApp linkApp = LinkApp.createShareableLinkApp(app_name, url, sm);
             linkApp.becomeShareable(sm.getDB(), team, teamUser_owner, team_user_id, channel, description);
             db.commitTransaction(transaction);
+            JSONObject target = linkApp.getOrigin();
+            target.put("team_id", team_id);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.ADDED, linkApp.getShareableJson(), target));
             sm.setSuccess(linkApp.getShareableJson());
         } catch (Exception e) {
             sm.setError(e);

@@ -492,4 +492,10 @@ public class TeamUser {
         this.teamUserNotifications.add(notification);
         return notification;
     }
+
+    public JSONObject getOrigin() {
+        JSONObject res = new JSONObject();
+        res.put("team_id", this.getTeam().getDb_id());
+        return res;
+    }
 }

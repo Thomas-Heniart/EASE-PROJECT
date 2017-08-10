@@ -10,6 +10,9 @@ import com.Ease.Team.TeamUserRole;
 import com.Ease.Utils.Crypto.CodeGenerator;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
@@ -92,6 +95,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             mailJetBuilder.sendEmail();
             /* SendGridMail sendGridMail = new SendGridMail("Benjamin @EaseSpace", "benjamin@ease.space");
             sendGridMail.sendInvitationToJoinTeamEmail(team.getName(), adminTeamUser.getFirstName(), adminTeamUser.getEmail(), email, code); */
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.ADDED, teamUser.getJson(), teamUser.getOrigin()));
             sm.setSuccess(teamUser.getJson());
         } catch (Exception e) {
             sm.setError(e);

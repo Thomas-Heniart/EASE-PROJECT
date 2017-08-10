@@ -11,6 +11,9 @@ import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
@@ -58,6 +61,9 @@ public class ServletShareApp extends HttpServlet {
             shareableApp.addSharedApp(sharedApp);
             team.getAppManager().addSharedApp(sharedApp);
             teamUser_tenant.addNotification(teamUser_owner.getUsername() + " sent you " + ((App) shareableApp).getName() + " in " + (shareableApp.getChannel() == null ? "your Personal Space" : shareableApp.getChannel().getName()), sm.getTimestamp());
+            JSONObject target = shareableApp.getOrigin();
+            target.put("team_id", team_id);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, shareableApp.getShareableJson(), target));
             sm.setSuccess(sharedApp.getSharedJSON());
         } catch (Exception e) {
             sm.setError(e);

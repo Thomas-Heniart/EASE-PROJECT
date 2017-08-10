@@ -7,6 +7,9 @@ import com.Ease.Team.TeamUserRole;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -42,6 +45,7 @@ public class ServletEditTeamUserRole extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot transfer your ownership from here.");
             teamUserToModify.getTeamUserRole().setRoleValue(roleValue);
             sm.saveOrUpdate(teamUserToModify.getTeamUserRole());
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson(), teamUser.getOrigin()));
             sm.setSuccess("TeamUser role edited.");
         } catch (Exception e) {
             sm.setError(e);

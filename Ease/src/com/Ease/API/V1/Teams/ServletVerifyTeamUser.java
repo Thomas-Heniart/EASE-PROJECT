@@ -6,6 +6,9 @@ import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -35,6 +38,7 @@ public class ServletVerifyTeamUser extends HttpServlet {
             if (teamUser.getDashboard_user() != null)
                 teamUser.finalizeRegistration();
             sm.saveOrUpdate(teamUser);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson(), teamUser.getOrigin()));
             sm.setSuccess(teamUser.getJson());
         } catch (Exception e) {
             sm.setError(e);

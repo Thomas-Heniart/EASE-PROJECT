@@ -1,14 +1,16 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.Dashboard.App.ShareableApp;
-import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -36,6 +38,9 @@ public class ServletDeleteShareableApp extends HttpServlet {
             if ((teamUser_connected != shareableApp.getTeamUser_owner()) && !teamUser_connected.isTeamAdmin())
                 throw new HttpServletException(HttpStatus.Forbidden, "You are not allowed to do this.");
             team.getAppManager().removeShareableApp(shareableApp, sm.getDB());
+            JSONObject target = shareableApp.getOrigin();
+            target.put("team_id", team_id);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.REMOVED, shareableApp_id, target));
             sm.setSuccess("ShareableApp deleted");
         } catch (Exception e) {
             sm.setError(e);

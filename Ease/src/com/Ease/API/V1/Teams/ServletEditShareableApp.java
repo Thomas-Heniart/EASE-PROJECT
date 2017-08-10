@@ -7,7 +7,9 @@ import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
-import org.json.simple.JSONArray;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
@@ -46,6 +48,9 @@ public class ServletEditShareableApp extends HttpServlet {
                 reminderInterval = Integer.parseInt(reminderIntervalParam);
             params.put("reminderInterval", reminderInterval);
             shareableApp.modifyShareable(sm.getDB(), params, null);
+            JSONObject target = shareableApp.getOrigin();
+            target.put("team_id", team_id);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, shareableApp.getShareableJson(), target));
             sm.setSuccess(shareableApp.getShareableJson());
         } catch (Exception e) {
             sm.setError(e);

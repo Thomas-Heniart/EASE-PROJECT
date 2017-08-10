@@ -9,6 +9,9 @@ import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -47,6 +50,7 @@ public class ServletReactivateTeamUser extends HttpServlet {
                 teamUser.setTeamKey(RSA.Encrypt(team_key, publicKey));
             }
             sm.saveOrUpdate(teamUser);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson(), teamUser.getOrigin()));
             sm.setSuccess("User reactivated");
         } catch (Exception e) {
             sm.setError(e);

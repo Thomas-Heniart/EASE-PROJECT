@@ -6,6 +6,9 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -34,6 +37,7 @@ public class ServletAskJoinChannel extends HttpServlet {
             team.getTeamUserWithId(channel.getCreator_id()).addNotification(teamUser.getUsername() + " would like to join " + channel.getName(), sm.getTimestamp());
             SendGridMail mail = new SendGridMail("Agathe @Ease", "contact@ease.space");
             mail.sendJoinChannelEmail(team.getName(), channel.getName(), team.getAdministratorsUsernameAndEmail(), teamUser.getUsername(), teamUser.getEmail());
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));
             sm.setSuccess(channel.getJson());
         } catch (Exception e) {
             sm.setError(e);

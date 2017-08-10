@@ -8,6 +8,9 @@ import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -36,6 +39,7 @@ public class ServletAcceptSharedApp extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot accept this app.");
             App app = (App) sharedApp;
             app.accept(sm.getDB());
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, sharedApp.getHolder().getShareableJson(), sharedApp.getHolder().getOrigin()));
             sm.setSuccess(sharedApp.getSharedJSON());
         } catch (Exception e) {
             sm.setError(e);

@@ -6,6 +6,9 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -32,6 +35,7 @@ public class ServletAskJoinApp extends HttpServlet {
             TeamUser teamUser = sm.getTeamUserForTeam(team);
             shareableApp.addPendingTeamUser(teamUser, sm.getDB());
             shareableApp.getTeamUser_owner().addNotification(shareableApp.getTeamUser_owner().getUsername() + " would like to have access to " + ((App) shareableApp).getName(), sm.getTimestamp());
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, shareableApp.getShareableJson(), shareableApp.getOrigin()));
             sm.setSuccess(shareableApp.getShareableJson());
         } catch (Exception e) {
             sm.setError(e);

@@ -5,6 +5,10 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -33,6 +37,9 @@ public class ServletTransferShareableAppOwner extends HttpServlet {
             /* if (!teamUser_new_owner.isSuperior(shareableApp.getTeamUser_owner()))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot do this dude."); */
             shareableApp.transferOwnership(teamUser_new_owner, sm.getDB());
+            JSONObject target = shareableApp.getOrigin();
+            target.put("team_id", team_id);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, shareableApp.getShareableJson(), target));
             sm.setSuccess(shareableApp.getShareableJson());
         } catch (Exception e) {
             sm.setError(e);

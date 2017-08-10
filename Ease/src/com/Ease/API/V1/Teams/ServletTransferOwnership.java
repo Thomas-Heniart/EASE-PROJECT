@@ -8,6 +8,9 @@ import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -50,6 +53,8 @@ public class ServletTransferOwnership extends HttpServlet {
             mailJetBuilder.addVariable("first_name", teamUser.getFirstName());
             mailJetBuilder.addVariable("last_name", teamUser.getLastName());
             mailJetBuilder.sendEmail();
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson(), teamUser.getOrigin()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, new_teamUser_owner.getJson(), new_teamUser_owner.getOrigin()));
             sm.setSuccess("Ownership transferred");
         } catch (Exception e) {
             sm.setError(e);

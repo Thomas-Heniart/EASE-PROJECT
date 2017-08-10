@@ -10,6 +10,9 @@ import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.GetServletManager;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 import org.json.simple.JSONObject;
 
 import javax.servlet.ServletException;
@@ -119,6 +122,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             mailJetBuilder.addVariable("user_email", teamUser.getEmail());
             mailJetBuilder.sendEmail();
             sm.getUser().addTeamUser(teamUser);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson(), teamUser.getOrigin()));
             sm.setSuccess(teamUser.getJson());
         } catch (Exception e) {
             sm.setError(e);

@@ -3,11 +3,10 @@ package com.Ease.API.V1.Teams;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.HttpServletException;
-import com.Ease.Utils.HttpStatus;
-import com.Ease.Utils.ServletManager;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -36,6 +35,7 @@ public class ServletEditChannelPurpose extends HttpServlet {
             Channel channel = team.getChannelWithId(channel_id);
             channel.editPurpose(purpose);
             sm.saveOrUpdate(channel);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));
             sm.setSuccess("Channel purpose edited.");
         } catch (Exception e) {
             sm.setError(e);

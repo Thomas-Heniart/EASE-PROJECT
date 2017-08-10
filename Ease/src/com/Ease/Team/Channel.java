@@ -263,4 +263,10 @@ public class Channel {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
     }
+
+    public JSONObject getOrigin() {
+        JSONObject origin = new JSONObject();
+        origin.put("team_id", this.getTeam().getDb_id());
+        return origin;
+    }
 }

@@ -10,6 +10,9 @@ import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -50,6 +53,8 @@ public class ServletRemoveTeamUserFromChannel extends HttpServlet {
             }
             channel.removeTeamUser(teamUser_to_remove, sm.getDB());
             db.commitTransaction(transaction);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser_to_remove.getJson(), teamUser_to_remove.getOrigin()));
             sm.setSuccess(channel.getJson());
         } catch (Exception e) {
             sm.setError(e);

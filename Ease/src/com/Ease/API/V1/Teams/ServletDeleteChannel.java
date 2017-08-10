@@ -6,6 +6,9 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -46,6 +49,7 @@ public class ServletDeleteChannel extends HttpServlet {
             db.commitTransaction(transaction);
             sm.deleteObject(channel);
             sm.saveOrUpdate(team);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.REMOVED, channel_id, channel.getOrigin()));
             sm.setSuccess("Channel delete");
         } catch (Exception e) {
             sm.setError(e);

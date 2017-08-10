@@ -7,7 +7,7 @@ import java.util.List;
 public class WebSocketManager {
     private List<WebSocketSession> webSocketSessions;
 
-    public WebSocketManager(){
+    public WebSocketManager() {
         this.webSocketSessions = new LinkedList<>();
     }
 
@@ -25,17 +25,25 @@ public class WebSocketManager {
         }
     }
 
+    public void sendObjects(List<WebSocketMessage> objects) {
+        removeClosedSesions();
+        for (WebSocketSession ws : webSocketSessions) {
+            for (Object object : objects)
+                ws.sendObject(object);
+        }
+    }
+
     public List<WebSocketSession> getWebSocketSessions() {
         return this.webSocketSessions;
     }
 
-    public void addWebSocketSession(WebSocketSession wss){
+    public void addWebSocketSession(WebSocketSession wss) {
         removeClosedSesions();//to delete after start using sendMessage()
         this.webSocketSessions.add(wss);
     }
 
-    public void invalidateAllSessions(){
-        for (WebSocketSession ws : this.webSocketSessions){
+    public void invalidateAllSessions() {
+        for (WebSocketSession ws : this.webSocketSessions) {
             try {
                 ws.getSession().close();
             } catch (IOException e) {
@@ -48,8 +56,8 @@ public class WebSocketManager {
         this.webSocketSessions.remove(wss);
     }
 
-    private void removeClosedSesions(){
-        for (WebSocketSession ws : this.webSocketSessions){
+    private void removeClosedSesions() {
+        for (WebSocketSession ws : this.webSocketSessions) {
             if (!ws.getSession().isOpen())
                 this.webSocketSessions.remove(ws);
         }
