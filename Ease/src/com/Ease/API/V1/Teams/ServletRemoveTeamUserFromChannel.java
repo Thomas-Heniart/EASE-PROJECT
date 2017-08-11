@@ -1,7 +1,6 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.Dashboard.App.ShareableApp;
-import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
@@ -46,11 +45,7 @@ public class ServletRemoveTeamUserFromChannel extends HttpServlet {
                 if (shareableApp.getChannel() == channel)
                     team.getAppManager().removeShareableApp(shareableApp, db);
             }
-            List<SharedApp> sharedApps = team.getAppManager().getSharedAppsForTeamUser(teamUser_to_remove);
-            for (SharedApp sharedApp : sharedApps) {
-                if (sharedApp.getHolder().getChannel() == channel)
-                    team.getAppManager().removeSharedApp(sharedApp);
-            }
+            team.getAppManager().removeSharedAppsForTeamUserInChannel(teamUser_to_remove, channel, db);
             channel.removeTeamUser(teamUser_to_remove, sm.getDB());
             db.commitTransaction(transaction);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));

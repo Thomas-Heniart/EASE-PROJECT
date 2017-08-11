@@ -159,4 +159,19 @@ public class AppManager {
             e.printStackTrace();
         }
     }
+
+    public void removeSharedAppsForTeamUserInChannel(TeamUser teamUser_to_remove, Channel channel, DataBaseConnection db) throws HttpServletException {
+        List<SharedApp> sharedApps = this.getSharedAppsForTeamUser(teamUser_to_remove);
+        List<SharedApp> sharedAppsToRemove = new LinkedList<>();
+        for (SharedApp sharedApp : sharedApps) {
+            if (sharedApp.getHolder().getChannel() == channel)
+                sharedAppsToRemove.add(sharedApp);
+        }
+        for (SharedApp sharedApp : sharedAppsToRemove) {
+            ShareableApp holder = sharedApp.getHolder();
+            this.removeSharedApp(sharedApp);
+            holder.removeSharedApp(sharedApp);
+            sharedApp.deleteShared(db);
+        }
+    }
 }
