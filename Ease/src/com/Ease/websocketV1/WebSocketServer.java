@@ -45,7 +45,7 @@ public class WebSocketServer {
                     channel.getWebSocketManager().addWebSocketSession(webSocketSession);
             }
             System.out.println("webSocketSession registered for user : " + user.getEmail());
-            webSocketSession.sendObject(new WebSocketMessage("CONNECTION_ID", session.getId()).toJSONObject());
+            session.getBasicRemote().sendText(new WebSocketMessage("CONNECTION_ID", session.getId()).toJSONObject().toString());
         }
     }
 
