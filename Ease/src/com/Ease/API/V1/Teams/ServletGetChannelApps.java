@@ -1,7 +1,11 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
+import com.Ease.Team.TeamUser;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.GetServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -25,6 +29,10 @@ public class ServletGetChannelApps extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             sm.needToBeTeamUserOfTeam(team_id);
             Integer channel_id = sm.getIntParam("channel_id", true);
+            TeamUser teamUser = sm.getTeamUserForTeam(team);
+            Channel channel = team.getChannelWithId(channel_id);
+            if (!channel.getTeamUsers().contains(teamUser))
+                throw new HttpServletException(HttpStatus.Forbidden, "You don't have access to this channel.");
             sm.setSuccess(team.getShareableAppsForChannel(channel_id));
         } catch (Exception e) {
             sm.setError(e);
