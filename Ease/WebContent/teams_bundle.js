@@ -39173,6 +39173,8 @@ var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _commonActions = __webpack_require__(30);
+
 var _reactWebsocket = __webpack_require__(526);
 
 var _reactWebsocket2 = _interopRequireDefault(_reactWebsocket);
@@ -39236,7 +39238,9 @@ var WebsocketClient = (_dec = (0, _reactRedux.connect)(), _dec(_class = function
       console.log(mess);
       if (type === 'UPDATE_CLIENT') {
         this.props.dispatch(this.listeners[data.type](data.action, data.data, data.target));
-      } else if (type === 'CONNECTION_ID') {}
+      } else if (type === 'CONNECTION_ID') {
+        this.props.dispatch((0, _commonActions.setWSId)(data));
+      }
     }
   }, {
     key: 'render',
