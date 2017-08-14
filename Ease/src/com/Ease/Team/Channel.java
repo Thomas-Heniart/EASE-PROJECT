@@ -1,6 +1,7 @@
 package com.Ease.Team;
 
 import com.Ease.Utils.*;
+import com.Ease.websocketV1.WebSocketManager;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.json.simple.JSONArray;
@@ -32,7 +33,7 @@ public class Channel {
     protected String purpose;
 
     @Column(name = "creator_id")
-    protected Integer creator_id;
+    private Integer creator_id;
 
     @ManyToMany
     @JoinTable(name = "channelAndTeamUserMap", joinColumns = {@JoinColumn(name = "channel_id")}, inverseJoinColumns = {@JoinColumn(name = "team_user_id")})
@@ -40,7 +41,10 @@ public class Channel {
 
     @ManyToMany
     @JoinTable(name = "pendingJoinChannelRequests", joinColumns = {@JoinColumn(name = "channel_id")}, inverseJoinColumns = {@JoinColumn(name = "teamUser_id")})
-    protected List<TeamUser> pending_teamUsers = new LinkedList<>();
+    private List<TeamUser> pending_teamUsers = new LinkedList<>();
+
+    @Transient
+    private WebSocketManager webSocketManager = new WebSocketManager();
 
     public Channel(Team team, String name, String purpose, Integer creator_id) {
         this.team = team;
@@ -268,5 +272,13 @@ public class Channel {
         JSONObject origin = new JSONObject();
         origin.put("team_id", this.getTeam().getDb_id());
         return origin;
+    }
+
+    public WebSocketManager getWebSocketManager() {
+        return webSocketManager;
+    }
+
+    public void setWebSocketManager(WebSocketManager webSocketManager) {
+        this.webSocketManager = webSocketManager;
     }
 }

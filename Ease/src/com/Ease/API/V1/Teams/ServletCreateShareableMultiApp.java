@@ -52,8 +52,11 @@ public class ServletCreateShareableMultiApp extends HttpServlet {
             if (description == null)
                 description = "";
             Channel channel = null;
-            if (channel_id != null)
+            if (channel_id != null) {
                 channel = team.getChannelWithId(channel_id);
+                if (!channel.getTeamUsers().contains(teamUser_owner) && !teamUser_owner.isTeamAdmin())
+                    throw new HttpServletException(HttpStatus.Forbidden, "You don't have access to this channel.");
+            }
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website website = catalog.getWebsiteWithId(website_id);
             DataBaseConnection db = sm.getDB();

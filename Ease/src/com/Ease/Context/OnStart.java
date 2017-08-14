@@ -54,6 +54,7 @@ public class OnStart implements ServletContextListener {
                 Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
                 context.setAttribute("publicKey", publicAndPrivateKey.getKey());
                 context.setAttribute("privateKey", publicAndPrivateKey.getValue());
+                context.setAttribute("userManager", new UserManager());
                 //context.setAttribute("tipManager", new TipManager());
 
                 /* Stripe timer */
@@ -61,7 +62,7 @@ public class OnStart implements ServletContextListener {
                 StripeScheduledTask st = new StripeScheduledTask(teamManager); // Instantiate SheduledTask class
                 RemindersScheduledTask reminders = new RemindersScheduledTask(teamManager);
                 time.schedule(st, 0, 12 * 60 * 60 * 1000); // Create Repetitively task for every 12 hours
-                time.schedule(reminders, 0, 12  * 60  * 60 * 1000);
+                time.schedule(reminders, 0, 12 * 60 * 60 * 1000);
                 List<String> colors = new ArrayList<String>();
                 colors.add("#373B60");
                 colors.add("#9B59B6");

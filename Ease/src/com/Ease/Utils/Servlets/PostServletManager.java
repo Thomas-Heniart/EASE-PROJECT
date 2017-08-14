@@ -1,5 +1,6 @@
 package com.Ease.Utils.Servlets;
 
+import com.Ease.Team.Team;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.websocketV1.WebSocketMessage;
@@ -105,8 +106,14 @@ public class PostServletManager extends ServletManager {
             return;
         Integer team_id = this.getIntParam("team_id", false);
         try {
-            if (team_id != null)
-                this.getTeamUserForTeamId(team_id).getTeam().getWebSocketManager().sendObjects(this.webSocketMessages);
+            if (team_id != null) {
+                Integer channel_id = this.getIntParam("channel_id", false);
+                Team team = this.getTeamUserForTeamId(team_id).getTeam();
+                if (channel_id == null)
+                    team.getWebSocketManager().sendObjects(this.webSocketMessages);
+                else
+                    team.getChannelWithId(channel_id).getWebSocketManager().sendObjects(this.webSocketMessages);
+            }
         } catch (HttpServletException e) {
             e.printStackTrace();
         }

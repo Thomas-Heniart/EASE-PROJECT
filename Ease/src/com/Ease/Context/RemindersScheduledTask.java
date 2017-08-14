@@ -3,7 +3,6 @@ package com.Ease.Context;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.HttpServletException;
 
-import java.util.Date;
 import java.util.TimerTask;
 
 /**
@@ -11,10 +10,9 @@ import java.util.TimerTask;
  */
 public class RemindersScheduledTask extends TimerTask {
 
-    Date now;
-    TeamManager teamManager;
+    private TeamManager teamManager;
 
-    public RemindersScheduledTask(TeamManager teamManager) {
+    RemindersScheduledTask(TeamManager teamManager) {
         super();
         this.teamManager = teamManager;
     }
@@ -24,6 +22,7 @@ public class RemindersScheduledTask extends TimerTask {
         try {
             teamManager.reminderThreeDays();
             teamManager.passwordReminder();
+            /*  */
         } catch (HttpServletException e) {
             e.printStackTrace();
         }

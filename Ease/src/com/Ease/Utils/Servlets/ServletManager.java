@@ -307,24 +307,6 @@ public abstract class ServletManager {
         }
 
         try {
-            //System.out.println("wMessages loop start");
-            /*for (WebsocketMessage msg : this.messages) {
-                websockets.forEach((key, socket) -> {
-					System.out.println( (user == null ? "No user" : user.getFirstName()) + " client socketId : " + key + ", sm socketId : " + socketId);
-					if (msg.getWho() == WebsocketMessage.Who.ALLTABS ||
-							(msg.getWho() == WebsocketMessage.Who.OTHERTABS && (! key.equals(socketId))) ||
-							(msg.getWho() == WebsocketMessage.Who.THISTAB && key.equals(socketId))) {
-							try {
-								System.out.println("Send message to " + key);
-								socket.sendMessage(msg);
-								System.out.println("Message sent to " + key);
-							} catch (IOException e) {
-								websockets.remove(key, socket);
-							}
-						}
-				});
-			}*/
-            //System.out.println("wMessages loop done");
             if (this.response.getStatus() != HttpStatus.Success.getValue()) {
                 System.out.println("Error code: " + response.getStatus());
                 if (this.errorMessage != null)
@@ -395,15 +377,6 @@ public abstract class ServletManager {
 
     public HttpSession getSession() {
         return request.getSession();
-    }
-
-    /**
-     * Return the next unique single_id for a context object
-     *
-     * @return int
-     */
-    public int getNextSingle_id() {
-        return ((IdGenerator) this.getContextAttr("idGenerator")).getNextId();
     }
 
     public List<TeamUser> getTeamUsers() {
