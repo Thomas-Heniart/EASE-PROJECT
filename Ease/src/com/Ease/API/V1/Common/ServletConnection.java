@@ -4,8 +4,8 @@ import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.RSA;
+import com.Ease.Utils.*;
 import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.simple.JSONObject;
 
@@ -41,9 +41,10 @@ public class ServletConnection extends HttpServlet {
             DataBaseConnection db = sm.getDB();
             addIpInDataBase(client_ip, db);
             if (canConnect(client_ip, db)) {
-                if (email == null || Regex.isEmail(email) == false || password == null || password.isEmpty())
+                if (email == null || !Regex.isEmail(email) || password == null || password.isEmpty())
                     throw new HttpServletException(HttpStatus.BadRequest, "Wrong email or password.");
                 else {
+                    /* password = RSA.Decrypt(password, (String) sm.getContextAttr("privateKey")); */
                     user = User.loadUser(email, password, sm.getServletContext(), db);
                     sm.setUser(user);
                     HibernateQuery hibernateQuery = new HibernateQuery();
