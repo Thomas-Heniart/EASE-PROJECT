@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.SQLException;
@@ -339,10 +340,13 @@ public abstract class ServletManager {
                                     this.db.close();
                                 return;
                             }
+                        PrintWriter out = response.getWriter();
                         if (this.jsonArrayResponse != null)
-                            response.getWriter().print(this.jsonArrayResponse.toString());
+                            out.print(this.jsonArrayResponse.toString());
                         else
-                            response.getWriter().print(this.jsonObjectResponse.toString());
+                            out.print(this.jsonObjectResponse.toString());
+                        out.close();
+                        out.flush();
                     }
                 }
 

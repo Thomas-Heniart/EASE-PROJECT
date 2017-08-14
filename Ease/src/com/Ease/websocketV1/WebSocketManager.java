@@ -33,6 +33,16 @@ public class WebSocketManager {
         }
     }
 
+    public void sendObjects(List<WebSocketMessage> objects, String ws_id) {
+        removeClosedSesions();
+        for (WebSocketSession ws : webSocketSessions) {
+            if (ws.getSession().getId().equals(ws_id))
+                continue;
+            for (Object object : objects)
+                ws.sendObject(object);
+        }
+    }
+
     public List<WebSocketSession> getWebSocketSessions() {
         return this.webSocketSessions;
     }

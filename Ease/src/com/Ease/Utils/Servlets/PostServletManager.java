@@ -104,15 +104,18 @@ public class PostServletManager extends ServletManager {
             return;
         if (this.webSocketMessages.isEmpty())
             return;
+        String ws_id = this.getStringParam("ws_id", false);
+        if (ws_id == null)
+            return;
         Integer team_id = this.getIntParam("team_id", false);
         try {
             if (team_id != null) {
                 Integer channel_id = this.getIntParam("channel_id", false);
                 Team team = this.getTeamUserForTeamId(team_id).getTeam();
                 if (channel_id == null)
-                    team.getWebSocketManager().sendObjects(this.webSocketMessages);
+                    team.getWebSocketManager().sendObjects(this.webSocketMessages, ws_id);
                 else
-                    team.getChannelWithId(channel_id).getWebSocketManager().sendObjects(this.webSocketMessages);
+                    team.getChannelWithId(channel_id).getWebSocketManager().sendObjects(this.webSocketMessages, ws_id);
             }
         } catch (HttpServletException e) {
             e.printStackTrace();
