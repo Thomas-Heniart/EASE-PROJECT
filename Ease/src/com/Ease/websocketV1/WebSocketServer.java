@@ -36,10 +36,10 @@ public class WebSocketServer {
             return;
         }
         if (user != null) {
-            user.getWebSocketManager().addWebSocketSession(new WebSocketSession(session));
+            WebSocketSession webSocketSession = new WebSocketSession(session);
+            user.getWebSocketManager().addWebSocketSession(webSocketSession);
             for (TeamUser teamUser : user.getTeamUsers()) {
                 Team team = teamUser.getTeam();
-                WebSocketSession webSocketSession = new WebSocketSession(session);
                 team.getWebSocketManager().addWebSocketSession(webSocketSession);
                 for (Channel channel : team.getChannelsForTeamUser(teamUser))
                     channel.getWebSocketManager().addWebSocketSession(webSocketSession);
