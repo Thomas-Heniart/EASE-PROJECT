@@ -46,6 +46,8 @@ public class ServletShareApp extends HttpServlet {
             if (shareableApp.getTeamUser_tenants().contains(teamUser_tenant))
                 throw new HttpServletException(HttpStatus.BadRequest, "You already shared this app to this user");
             Channel channel = shareableApp.getChannel();
+            if (channel != null && !(channel.getTeamUsers().contains(teamUser_tenant)))
+                throw new HttpServletException(HttpStatus.Forbidden, "This user doesn't have access to this channel.");
             JSONObject params = shareableApp.getNeededParams(sm);
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();

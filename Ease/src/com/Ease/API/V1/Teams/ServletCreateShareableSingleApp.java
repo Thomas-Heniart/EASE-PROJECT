@@ -60,8 +60,11 @@ public class ServletCreateShareableSingleApp extends HttpServlet {
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website website = catalog.getWebsiteWithId(website_id);
             Channel channel = null;
-            if (channel_id != null)
+            if (channel_id != null) {
                 channel = team.getChannelWithId(channel_id);
+                if (!channel.getTeamUsers().contains(teamUser_owner) || !teamUser_owner.isTeamAdmin())
+                    throw new HttpServletException(HttpStatus.Forbidden, "You don't have access to this channel.");
+            }
             List<JSONObject> accountInformationList = new LinkedList<>();
             for (Object accountInformationObj : account_information) {
                 JSONObject accountInformation = (JSONObject) accountInformationObj;

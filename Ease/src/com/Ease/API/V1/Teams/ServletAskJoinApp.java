@@ -2,9 +2,12 @@ package com.Ease.API.V1.Teams;
 
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.ShareableApp;
+import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
@@ -33,6 +36,9 @@ public class ServletAskJoinApp extends HttpServlet {
             Integer app_id = sm.getIntParam("app_id", true);
             ShareableApp shareableApp = team.getAppManager().getShareableAppWithId(app_id);
             TeamUser teamUser = sm.getTeamUserForTeam(team);
+            Channel channel = shareableApp.getChannel();
+            if (channel != null && !(channel.getTeamUsers().contains(teamUser)))
+                throw new HttpServletException(HttpStatus.Forbidden, "You don't have access to this channel");
             shareableApp.addPendingTeamUser(teamUser, sm.getDB());
             shareableApp.getTeamUser_owner().addNotification(shareableApp.getTeamUser_owner().getUsername() + " would like to have access to " + ((App) shareableApp).getName(), sm.getTimestamp());
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, shareableApp.getShareableJson(), shareableApp.getOrigin()));
