@@ -26547,7 +26547,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function teamAppDispatcher(action, app, target) {
   return function (dispatch, getState) {
     var state = getState();
-    if (state.selection.type === target.type && state.selection.item != null && state.selection.item.id === target.id) dispatch({ type: 'TEAM_APP_' + action, payload: { app: app, target: target } });
+    if (state.selection.type === target.type && state.selection.id === target.id) dispatch({ type: 'TEAM_APP_' + action, payload: { app: app, target: target } });
   };
 }
 
