@@ -13,7 +13,7 @@ public class ReminderEmailManager {
         System.out.println("reminderSixDays start...");
         HibernateQuery hibernateQuery = new HibernateQuery();
         try {
-            hibernateQuery.querySQLString("SELECT firstName, email FROM (SELECT firstName, email, count(apps.id) AS appCount FROM users JOIN status ON (users.status_id = status.id) JOIN profiles ON (profiles.user_id = users.id)  JOIN profileAndAppMap ON (profiles.id = profileAndAppMap.profile_id) JOIN apps ON (apps.id = profileAndAppMap.app_id) JOIN websiteApps ON (apps.id = websiteApps.app_id) WHERE DATE(last_connection) = DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND websiteApps.type <> 'websiteApp' GROUP BY firstName, email) AS t WHERE appCount > 3;");
+            hibernateQuery.querySQLString("SELECT firstName, email FROM (SELECT firstName, email, count(apps.id) AS appCount FROM users JOIN status ON (users.status_id = status.id) JOIN profiles ON (profiles.user_id = users.id) LEFT JOIN profileAndAppMap ON (profiles.id = profileAndAppMap.profile_id) LEFT JOIN apps ON (apps.id = profileAndAppMap.app_id) JOIN websiteApps ON (apps.id = websiteApps.app_id) WHERE DATE(last_connection) = DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND websiteApps.type <> 'websiteApp' GROUP BY firstName, email) AS t WHERE appCount > 3;");
             List<Object> rs = hibernateQuery.list();
             System.out.println("reminderSixDays to " + rs.size() + " people");
             for (Object object : rs) {
@@ -36,7 +36,7 @@ public class ReminderEmailManager {
         System.out.println("reminderSixDaysLessThanFourApps start...");
         HibernateQuery hibernateQuery = new HibernateQuery();
         try {
-            hibernateQuery.querySQLString("SELECT firstName, email FROM (SELECT firstName, email, count(websiteApps.id) AS appCount FROM users JOIN profiles ON (profiles.user_id = users.id) JOIN profileAndAppMap ON (profiles.id = profileAndAppMap.profile_id) JOIN apps ON (apps.id = profileAndAppMap.app_id) LEFT JOIN websiteApps ON (apps.id = websiteApps.app_id AND websiteApps.type <> 'websiteApp') WHERE DATE(registration_date) = DATE_SUB(CURDATE(), INTERVAL 6 DAY) GROUP BY firstName, email) AS t WHERE appCount <= 3;");
+            hibernateQuery.querySQLString("SELECT firstName, email FROM (SELECT firstName, email, count(websiteApps.id) AS appCount FROM users JOIN profiles ON (profiles.user_id = users.id) LEFT JOIN profileAndAppMap ON (profiles.id = profileAndAppMap.profile_id) LEFT JOIN apps ON (apps.id = profileAndAppMap.app_id) LEFT JOIN websiteApps ON (apps.id = websiteApps.app_id AND websiteApps.type <> 'websiteApp') WHERE DATE(registration_date) = DATE_SUB(CURDATE(), INTERVAL 6 DAY) GROUP BY firstName, email) AS t WHERE appCount <= 3;");
             List<Object> rs = hibernateQuery.list();
             System.out.println("reminderSixDaysLessThanFourApps to " + rs.size() + " people");
             for (Object object : rs) {
@@ -84,7 +84,7 @@ public class ReminderEmailManager {
         System.out.println("reminderThirtyDays start...");
         HibernateQuery hibernateQuery = new HibernateQuery();
         try {
-            hibernateQuery.querySQLString("SELECT firstName, email FROM (SELECT firstName, email, count(apps.id) AS appCount FROM users JOIN status ON (users.status_id = status.id) JOIN profiles ON (profiles.user_id = users.id) JOIN profileAndAppMap ON (profiles.id = profileAndAppMap.profile_id) JOIN apps ON (apps.id = profileAndAppMap.app_id) JOIN websiteApps ON (apps.id = websiteApps.app_id) WHERE DATE(last_connection) = DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND websiteApps.type <> 'websiteApp' GROUP BY firstName, email) AS t WHERE appCount > 3;");
+            hibernateQuery.querySQLString("SELECT firstName, email FROM (SELECT firstName, email, count(apps.id) AS appCount FROM users JOIN status ON (users.status_id = status.id) JOIN profiles ON (profiles.user_id = users.id) LEFT JOIN profileAndAppMap ON (profiles.id = profileAndAppMap.profile_id) LEFT JOIN apps ON (apps.id = profileAndAppMap.app_id) JOIN websiteApps ON (apps.id = websiteApps.app_id) WHERE DATE(last_connection) = DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND websiteApps.type <> 'websiteApp' GROUP BY firstName, email) AS t WHERE appCount > 3;");
             List<Object> rs = hibernateQuery.list();
             System.out.println("reminderThirtyDays to " + rs.size() + " people");
             for (Object object : rs) {
@@ -108,7 +108,7 @@ public class ReminderEmailManager {
         System.out.println("reminderThirtyDaysLessThanFourApps start...");
         HibernateQuery hibernateQuery = new HibernateQuery();
         try {
-            hibernateQuery.querySQLString("SELECT firstName, email FROM (SELECT firstName, email, count(websiteApps.id) AS appCount FROM users JOIN profiles ON (profiles.user_id = users.id) JOIN profileAndAppMap ON (profiles.id = profileAndAppMap.profile_id) JOIN apps ON (apps.id = profileAndAppMap.app_id) LEFT JOIN websiteApps ON (apps.id = websiteApps.app_id AND websiteApps.type <> 'websiteApp') WHERE DATE(registration_date) = DATE_SUB(CURDATE(), INTERVAL 30 DAY) GROUP BY firstName, email) AS t WHERE appCount <= 3;");
+            hibernateQuery.querySQLString("SELECT firstName, email FROM (SELECT firstName, email, count(websiteApps.id) AS appCount FROM users JOIN profiles ON (profiles.user_id = users.id) LEFT JOIN profileAndAppMap ON (profiles.id = profileAndAppMap.profile_id) LEFT JOIN apps ON (apps.id = profileAndAppMap.app_id) LEFT JOIN websiteApps ON (apps.id = websiteApps.app_id AND websiteApps.type <> 'websiteApp') WHERE DATE(registration_date) = DATE_SUB(CURDATE(), INTERVAL 30 DAY) GROUP BY firstName, email) AS t WHERE appCount <= 3;");
             List<Object> rs = hibernateQuery.list();
             System.out.println("reminderThirtyDaysLessThanFourApps to " + rs.size() + " people");
             for (Object object : rs) {
@@ -132,7 +132,7 @@ public class ReminderEmailManager {
         System.out.println("reminderEmailThreeDaysLessThanFourApps start...");
         HibernateQuery hibernateQuery = new HibernateQuery();
         try {
-            hibernateQuery.querySQLString("SELECT firstName, email FROM (SELECT firstName, email, count(websiteApps.id) AS appCount FROM users JOIN profiles ON (profiles.user_id = users.id) JOIN profileAndAppMap ON (profiles.id = profileAndAppMap.profile_id) JOIN apps ON (apps.id = profileAndAppMap.app_id) LEFT JOIN websiteApps ON (apps.id = websiteApps.app_id AND websiteApps.type <> 'websiteApp') WHERE DATE(registration_date) = DATE_SUB(CURDATE(), INTERVAL 30 DAY) GROUP BY firstName, email) AS t WHERE appCount <= 3;");
+            hibernateQuery.querySQLString("SELECT firstName, email FROM (SELECT firstName, email, count(websiteApps.id) AS appCount FROM users JOIN profiles ON (profiles.user_id = users.id) LEFT JOIN profileAndAppMap ON (profiles.id = profileAndAppMap.profile_id) LEFT JOIN apps ON (apps.id = profileAndAppMap.app_id) LEFT JOIN websiteApps ON (apps.id = websiteApps.app_id AND websiteApps.type <> 'websiteApp') WHERE DATE(registration_date) = DATE_SUB(CURDATE(), INTERVAL 30 DAY) GROUP BY firstName, email) AS t WHERE appCount <= 3;");
             List<Object> rs = hibernateQuery.list();
             System.out.println("reminderEmailThreeDaysLessThanFourApps to " + rs.size() + " people");
             for (Object object : rs) {
@@ -156,7 +156,7 @@ public class ReminderEmailManager {
         System.out.println("reminderEmailTwentyDays start...");
         HibernateQuery hibernateQuery = new HibernateQuery();
         try {
-            hibernateQuery.querySQLString("SELECT firstName, email FROM (SELECT firstName, email, count(apps.id) AS appCount FROM users JOIN status ON (users.status_id = status.id) JOIN profiles ON (profiles.user_id = users.id) JOIN profileAndAppMap ON (profiles.id = profileAndAppMap.profile_id) JOIN apps ON (apps.id = profileAndAppMap.app_id) JOIN websiteApps ON (apps.id = websiteApps.app_id) WHERE DATE(last_connection) = DATE_SUB(CURDATE(), INTERVAL 20 DAY) AND websiteApps.type <> 'websiteApp' GROUP BY firstName, email) AS t WHERE appCount > 3;");
+            hibernateQuery.querySQLString("SELECT firstName, email FROM (SELECT firstName, email, count(apps.id) AS appCount FROM users JOIN status ON (users.status_id = status.id) JOIN profiles ON (profiles.user_id = users.id) LEFT JOIN profileAndAppMap ON (profiles.id = profileAndAppMap.profile_id) LEFT JOIN apps ON (apps.id = profileAndAppMap.app_id) JOIN websiteApps ON (apps.id = websiteApps.app_id) WHERE DATE(last_connection) = DATE_SUB(CURDATE(), INTERVAL 20 DAY) AND websiteApps.type <> 'websiteApp' GROUP BY firstName, email) AS t WHERE appCount > 3;");
             List<Object> rs = hibernateQuery.list();
             System.out.println("reminderEmailTwentyDays to " + rs.size() + " people");
             for (Object object : rs) {
@@ -180,7 +180,7 @@ public class ReminderEmailManager {
         System.out.println("reminderEmailTwentyDaysLessThanFourApps start...");
         HibernateQuery hibernateQuery = new HibernateQuery();
         try {
-            hibernateQuery.querySQLString("SELECT firstName, email FROM (SELECT firstName, email, count(websiteApps.id) AS appCount FROM users JOIN profiles ON (profiles.user_id = users.id) JOIN profileAndAppMap ON (profiles.id = profileAndAppMap.profile_id) JOIN apps ON (apps.id = profileAndAppMap.app_id) LEFT JOIN websiteApps ON (apps.id = websiteApps.app_id AND websiteApps.type <> 'websiteApp') WHERE DATE(registration_date) = DATE_SUB(CURDATE(), INTERVAL 20 DAY) GROUP BY firstName, email) AS t WHERE appCount <= 3;");
+            hibernateQuery.querySQLString("SELECT firstName, email FROM (SELECT firstName, email, count(websiteApps.id) AS appCount FROM users JOIN profiles ON (profiles.user_id = users.id) LEFT JOIN profileAndAppMap ON (profiles.id = profileAndAppMap.profile_id) LEFT JOIN apps ON (apps.id = profileAndAppMap.app_id) LEFT JOIN websiteApps ON (apps.id = websiteApps.app_id AND websiteApps.type <> 'websiteApp') WHERE DATE(registration_date) = DATE_SUB(CURDATE(), INTERVAL 20 DAY) GROUP BY firstName, email) AS t WHERE appCount <= 3;");
             List<Object> rs = hibernateQuery.list();
             System.out.println("reminderEmailTwentyDaysLessThanFourApps to " + rs.size() + " people");
             for (Object object : rs) {
@@ -204,7 +204,7 @@ public class ReminderEmailManager {
         System.out.println("reminderEmailTwoDaysLessThanFourApps start...");
         HibernateQuery hibernateQuery = new HibernateQuery();
         try {
-            hibernateQuery.querySQLString("SELECT firstName, email FROM (SELECT firstName, email, count(websiteApps.id) AS appCount FROM users JOIN profiles ON (profiles.user_id = users.id) JOIN profileAndAppMap ON (profiles.id = profileAndAppMap.profile_id) JOIN apps ON (apps.id = profileAndAppMap.app_id) LEFT JOIN websiteApps ON (apps.id = websiteApps.app_id AND websiteApps.type <> 'websiteApp') WHERE DATE(registration_date) = DATE_SUB(CURDATE(), INTERVAL 2 DAY) GROUP BY firstName, email) AS t WHERE appCount <= 3;");
+            hibernateQuery.querySQLString("SELECT firstName, email FROM (SELECT firstName, email, count(websiteApps.id) AS appCount FROM users JOIN profiles ON (profiles.user_id = users.id) LEFT JOIN profileAndAppMap ON (profiles.id = profileAndAppMap.profile_id) LEFT JOIN apps ON (apps.id = profileAndAppMap.app_id) LEFT JOIN websiteApps ON (apps.id = websiteApps.app_id AND websiteApps.type <> 'websiteApp') WHERE DATE(registration_date) = DATE_SUB(CURDATE(), INTERVAL 2 DAY) GROUP BY firstName, email) AS t WHERE appCount <= 3;");
             List<Object> rs = hibernateQuery.list();
             System.out.println("reminderEmailTwoDaysLessThanFourApps to " + rs.size() + " people");
             for (Object object : rs) {
