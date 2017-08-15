@@ -43,7 +43,6 @@ public class OnStart implements ServletContextListener {
             DatabaseRequest request;
             try {
                 System.out.println("ServletContextListener starting on \"" + Variables.ENVIRONNEMENT + "\" ...");
-                context.setAttribute("serverKey", ServerKey.loadServerKey(db));
                 context.setAttribute("idGenerator", new IdGenerator());
                 context.setAttribute("catalog", new Catalog(db, context));
                 context.setAttribute("groupManager", new GroupManager());
