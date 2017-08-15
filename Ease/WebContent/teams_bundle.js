@@ -3049,7 +3049,16 @@ module.exports = {
       }).then(function (response) {
         return response.data;
       }).catch(function (err) {
-        throw err;
+        throw err.response.data;
+      });
+    },
+    validateTutorial: function validateTutorial() {
+      return axios.post('/api/v1/teams/TutoDone', {
+        timestamp: new Date().getTime()
+      }).then(function (response) {
+        return response.data;
+      }).catch(function (err) {
+        throw err.response.data;
       });
     }
   },
@@ -3710,6 +3719,11 @@ function setLoginRedirectUrl(url) {
 }
 
 function setTeamsTutorial(state) {
+  if (!state) return function (dispatch) {
+    return post_api.teams.validateTutorial().then(function (r) {
+      dispatch({ type: 'SET_TEAMS_TUTORIAL', payload: state });
+    });
+  };
   return {
     type: 'SET_TEAMS_TUTORIAL',
     payload: state
@@ -30036,7 +30050,7 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
               React.createElement(
                 _transitions.OpacityTransition,
                 { appear: true },
-                this.props.common.teamsTutorial && React.createElement(_TeamsTutorial2.default, null)
+                !this.props.common.user.status.team_tuto_done && React.createElement(_TeamsTutorial2.default, null)
               ),
               React.createElement(
                 'div',
@@ -40818,6 +40832,7 @@ var TeamSimpleApp = function (_React$Component) {
       var webInfo = app.website.information;
       var meReceiver = (0, _helperFunctions.findMeInReceivers)(app.receivers, me.id);
       var asked = app.sharing_requests.indexOf(me.id) !== -1;
+
       return React.createElement(
         'div',
         { className: classnames('team_app_holder', this.state.modifying ? "active" : null) },
@@ -45187,8 +45202,10 @@ function reducer() {
       }
     case 'SET_TEAMS_TUTORIAL':
       {
+        var user = state.user;
+        user.status.team_tuto_done = action.payload;
         return _extends({}, state, {
-          teamsTutorial: action.payload
+          user: user
         });
       }
     case 'SET_WS_ID':
