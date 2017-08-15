@@ -1,36 +1,14 @@
 package com.Ease.Dashboard.User;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import com.Ease.Utils.*;
 import org.json.simple.JSONObject;
 
 public class Status {
 
-    public enum Data {
-        NOTHING,
-        ID,
-        FIRST_CONNECTION,
-        CGU,
-        CHROME_SCRAPPING,
-        APPS_MANUALLY_ADDED,
-        CLICK_ON_APP,
-        MOVE_APPS,
-        OPEN_CATALOG,
-        ADD_AN_APP,
-        TUTO_DONE,
-        INVITE_SENDED,
-        LAST_CONNECTION,
-        HOMEPAGE_EMAIL_SENT
-    }
-
     public static Status createStatus(DataBaseConnection db) throws GeneralException {
-        DatabaseRequest request = db.prepareRequest("INSERT INTO status values (null, 0, 0, 0, 0, 0, 0, 0, 0, 0, default, 0, 0, 0);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO status values (null, 1, 0, 0, 0, default, 0, 0, 0);");
         String db_id = request.set().toString();
-        Status status = new Status(db_id, false, false, false, false, false, false, false, false, false, false);
-        status.setTerms_reviewed(false);
-        return status;
+        return new Status(db_id, true, false, false, false, false, false);
     }
 
     public static Status loadStatus(String db_id, DataBaseConnection db) throws GeneralException {
@@ -38,18 +16,13 @@ public class Status {
         request.setInt(db_id);
         DatabaseResult rs = request.get();
         rs.next();
-        boolean first_connection = rs.getBoolean(Data.FIRST_CONNECTION.ordinal());
-        boolean CGU = rs.getBoolean(Data.CGU.ordinal());
-        boolean chrome_scrapping = rs.getBoolean(Data.CHROME_SCRAPPING.ordinal());
-        boolean apps_manually_added = rs.getBoolean(Data.APPS_MANUALLY_ADDED.ordinal());
-        boolean click_on_app = rs.getBoolean(Data.CLICK_ON_APP.ordinal());
-        boolean move_apps = rs.getBoolean(Data.MOVE_APPS.ordinal());
-        boolean open_catalog = rs.getBoolean(Data.OPEN_CATALOG.ordinal());
-        boolean add_an_app = rs.getBoolean(Data.ADD_AN_APP.ordinal());
-        boolean tuto_done = rs.getBoolean(Data.TUTO_DONE.ordinal());
-        boolean invite_sended = rs.getBoolean(Data.INVITE_SENDED.ordinal());
-        Status loadedStatus = new Status(db_id, first_connection, CGU, chrome_scrapping, apps_manually_added, click_on_app,
-                move_apps, open_catalog, add_an_app, tuto_done, invite_sended);
+        boolean first_connection = rs.getBoolean("first_connection");
+        boolean chrome_scrapping = rs.getBoolean("chrome_scrapping");
+        boolean apps_manually_added = rs.getBoolean("apps_manually_added");
+        boolean tuto_done = rs.getBoolean("tuto_done");
+        boolean team_tuto_done = rs.getBoolean("team_tuto_done");
+        boolean terms_reviewed = rs.getBoolean("terms_reviewed");
+        Status loadedStatus = new Status(db_id, first_connection, chrome_scrapping, apps_manually_added, tuto_done, team_tuto_done, terms_reviewed);
         loadedStatus.setTerms_reviewed(rs.getBoolean("terms_reviewed"));
         loadedStatus.updateLastConnection(db);
         return loadedStatus;
@@ -57,57 +30,28 @@ public class Status {
 
     protected String db_id;
     protected boolean first_connection;
-    protected boolean CGU;
     protected boolean chrome_scrapping;
     protected boolean apps_manually_added;
-    protected boolean click_on_app;
-    protected boolean move_apps;
-    protected boolean open_catalog;
     protected boolean tuto_done;
-    private boolean add_an_app;
-    private boolean invite_sended;
-    private boolean terms_reviewed;
+    protected boolean team_tuto_done;
+    protected boolean terms_reviewed;
 
-    public Status(String db_id, boolean first_connection, boolean CGU, boolean chrome_scrapping,
-                  boolean apps_manually_added, boolean click_on_app, boolean move_apps, boolean open_catalog,
-                  boolean add_an_app, boolean tuto_done, boolean invite_sended) {
+    public Status(String db_id, boolean first_connection, boolean chrome_scrapping, boolean apps_manually_added, boolean tuto_done, boolean team_tuto_done, boolean terms_reviewed) {
         this.db_id = db_id;
         this.first_connection = first_connection;
-        this.CGU = CGU;
         this.chrome_scrapping = chrome_scrapping;
         this.apps_manually_added = apps_manually_added;
-        this.click_on_app = click_on_app;
-        this.move_apps = move_apps;
-        this.open_catalog = open_catalog;
-        this.add_an_app = add_an_app;
         this.tuto_done = tuto_done;
-        this.invite_sended = invite_sended;
+        this.team_tuto_done = team_tuto_done;
+        this.terms_reviewed = terms_reviewed;
     }
 
     public String getDbId() {
         return this.db_id;
     }
 
-    public void passStep(String tutoStep, DataBaseConnection db) throws GeneralException {
-        try {
-            Method method = this.getClass().getMethod("set_" + tutoStep, Boolean.class);
-            method.invoke(this, true);
-            DatabaseRequest request = db.prepareRequest("UPDATE status SET " + tutoStep + " = 1 WHERE id = ?;");
-            request.setInt(db_id);
-            request.set();
-            validateTuto(db);
-        } catch (SecurityException | IllegalArgumentException | NoSuchMethodException | IllegalAccessException
-                | InvocationTargetException e) {
-            throw new GeneralException(ServletManager.Code.ClientError, e);
-        }
-    }
-
     public void set_first_connection(Boolean first_connection) {
         this.first_connection = first_connection;
-    }
-
-    public void set_CGU(Boolean cGU) {
-        CGU = cGU;
     }
 
     public void set_chrome_scrapping(Boolean chrome_scrapping) {
@@ -118,73 +62,35 @@ public class Status {
         this.apps_manually_added = apps_manually_added;
     }
 
-    public void set_click_on_app(Boolean click_on_app) {
-        this.click_on_app = click_on_app;
-    }
-
-    public void set_move_apps(Boolean move_apps) {
-        this.move_apps = move_apps;
-    }
-
-    public void set_open_catalog(Boolean open_catalog) {
-        this.open_catalog = open_catalog;
-    }
-
     public void set_tuto_done(Boolean tuto_done) {
         this.tuto_done = tuto_done;
-    }
-
-    public void set_add_an_app(Boolean add_an_app) {
-        this.add_an_app = add_an_app;
     }
 
     public boolean tutoIsDone() {
         return this.tuto_done;
     }
 
-    public void validateTuto(DataBaseConnection db) throws GeneralException {
-        if ((!this.tuto_done) && this.CGU && this.first_connection
-                && this.allTipsDone() && this.appsImported())
-            this.passStep("tuto_done", db);
-    }
-
     public boolean appsImported() {
         return this.chrome_scrapping || this.apps_manually_added;
     }
 
-    public boolean allTipsDone() {
-        return this.click_on_app && this.open_catalog && this.move_apps && this.add_an_app;
+    public boolean isTeam_tuto_done() {
+        return this.team_tuto_done;
     }
 
-    public boolean clickOnAppDone() {
-        return this.click_on_app;
-    }
-
-    public boolean moveAppDone() {
-        return this.move_apps;
-    }
-
-    public boolean openCatalogDone() {
-        return this.open_catalog;
-    }
-
-    public boolean addAnAppDone() {
-        return this.add_an_app;
-    }
-
-    public void set_invite_sended(Boolean invite_sended) {
-        this.invite_sended = invite_sended;
-    }
-
-    public boolean invite_sended() {
-        return this.invite_sended;
+    public void setTeam_tuto_done(Boolean team_tuto_done, DataBaseConnection db) throws GeneralException {
+        DatabaseRequest request = db.prepareRequest("UPDATE status SET team_tuto_done = ? WHERE id = ?;");
+        request.setBoolean(team_tuto_done);
+        request.setInt(this.db_id);
+        request.set();
+        this.team_tuto_done = team_tuto_done;
     }
 
     public boolean terms_reviewed() {
         return this.terms_reviewed;
     }
 
-    public void setTerms_reviewed(boolean terms_reviewed) {
+    private void setTerms_reviewed(boolean terms_reviewed) {
         this.terms_reviewed = terms_reviewed;
     }
 

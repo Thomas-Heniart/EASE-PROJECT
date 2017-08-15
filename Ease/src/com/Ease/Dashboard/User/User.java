@@ -1,26 +1,14 @@
 package com.Ease.Dashboard.User;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.ServletContext;
-
 import com.Ease.Context.Catalog.Tag;
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Context.Group.Infrastructure;
-import com.Ease.Dashboard.DashboardManager;
 import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
+import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
+import com.Ease.Dashboard.DashboardManager;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Channel;
@@ -30,9 +18,13 @@ import com.Ease.Team.TeamUser;
 import com.Ease.Update.UpdateManager;
 import com.Ease.Utils.*;
 import com.Ease.websocketV1.WebSocketManager;
-import com.Ease.websocketV1.WebSocketSession;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
+import javax.servlet.ServletContext;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class User {
 
@@ -165,8 +157,6 @@ public class User {
         newUser.initializeDashboardManager(context, db);
         UserEmail userEmail = UserEmail.createUserEmail(email, newUser, true, db);
         newUser.getUserEmails().put(email, userEmail);
-        newUser.passStep("CGU", db);
-        newUser.passStep("first_connection", db);
         //newUser.initializeUpdateManager(context, db);
         request = db.prepareRequest("DELETE FROM pendingRegistrations WHERE email = ?;");
         request.setString(email);
@@ -184,8 +174,6 @@ public class User {
     protected Keys keys;
     protected Option opt;
     protected Map<String, UserEmail> emails;
-    //	protected Map<String, WebsocketSession> websockets;
-    protected List<WebSocketSession> webSocketSessions;
     protected WebSocketManager webSocketManager;
     protected List<Group> groups;
     protected boolean isAdmin;
@@ -467,15 +455,6 @@ public class User {
         }
     }
 
-    public void passStep(String tutoStep, DataBaseConnection db) throws GeneralException {
-        if (tutoStep.equals("saw_group")) {
-            for (Group group : this.groups)
-                group.tutoStepDone(this.db_id, db);
-            this.sawGroupProfile = true;
-        } else
-            this.status.passStep(tutoStep, db);
-    }
-
     public boolean tutoDone() {
         return this.status.tutoIsDone();
     }
@@ -484,31 +463,8 @@ public class User {
         return this.status.appsImported();
     }
 
-    public boolean allTipsDone() {
-        return this.status.allTipsDone();
-    }
-
-    public boolean clickOnAppDone() {
-        return this.status.clickOnAppDone();
-    }
-
-    public boolean moveAppDone() {
-        return this.status.moveAppDone();
-    }
-
-    public boolean openCatalogDone() {
-        return this.status.openCatalogDone();
-    }
-
-    public boolean addAnAppDone() {
-        return this.status.addAnAppDone();
-    }
-
     public boolean sawGroupProfile() {
-        if (this.groups.isEmpty())
-            return true;
-        else
-            return this.sawGroupProfile;
+        return this.groups.isEmpty() || this.sawGroupProfile;
     }
 
     public void addEmailIfNeeded(String email, ServletManager sm) throws GeneralException {

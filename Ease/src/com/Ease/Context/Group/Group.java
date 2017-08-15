@@ -1,20 +1,18 @@
 package com.Ease.Context.Group;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletContext;
-
-import com.Ease.Utils.*;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.GroupApp;
 import com.Ease.Dashboard.Profile.GroupProfile;
 import com.Ease.Dashboard.User.User;
+import com.Ease.Utils.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+import javax.servlet.ServletContext;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class Group {
 	enum Data {
@@ -323,8 +321,8 @@ public class Group {
 		DatabaseRequest request = db.prepareRequest("INSERT INTO groupsAndUsersMap VALUES(NULL, ?, ?, ?);");
 		request.setInt(db_id);
 		request.setInt(userDBid);
-		request.setBoolean(user.tutoDone());
-		request.set();
+        request.setBoolean(true);
+        request.set();
 		db.commitTransaction(transaction);
 	}
 

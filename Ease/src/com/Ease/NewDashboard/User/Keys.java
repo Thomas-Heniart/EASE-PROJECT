@@ -1,12 +1,10 @@
 package com.Ease.NewDashboard.User;
 
-import com.Ease.Context.ServerKey;
-import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.Hashing;
+import com.Ease.Utils.*;
 
 import javax.persistence.*;
-import javax.servlet.Servlet;
 
 /**
  * Created by thomas on 21/04/2017.
@@ -34,15 +32,11 @@ public class Keys {
     @Transient
     protected String decipheredKeyUser;
 
-    @Column(name = "backUpKey")
-    protected String backUpKey;
-
-    public Keys(String password, String saltEase, String saltPerso, String keyUser, String backUpKey) {
+    public Keys(String password, String saltEase, String saltPerso, String keyUser) {
         this.password = password;
         this.saltEase = saltEase;
         this.saltPerso = saltPerso;
         this.keyUser = keyUser;
-        this.backUpKey = backUpKey;
     }
 
     public Keys() {
@@ -101,13 +95,11 @@ public class Keys {
             this.password = Hashing.hash(password);
             this.saltEase = null;
             this.saltPerso = newSalt;
-            ServerKey serverKey = (ServerKey) sm.getContextAttr("serverKey");
-            String backUpKey = AES.encrypt(this.decipheredKeyUser, serverKey.getKeyServer());
             DatabaseRequest request = sm.getDB().prepareRequest("UPDATE userKeys SET password = ?, saltEase = null, saltPerso = ?, keyUser = ?, backUpKey = ? WHERE id = ?;");
             request.setString(this.password);
             request.setString(newSalt);
             request.setString(this.keyUser);
-            request.setString(backUpKey);
+            request.setString("");
             request.setInt(this.db_id);
             request.set();
         }
@@ -137,9 +129,7 @@ public class Keys {
         String keyUser = AES.keyGenerator();
         String crypted_keyUser = AES.encryptUserKey(keyUser, password, saltPerso);
         String hashed_password = Hashing.hash(password);
-        ServerKey serverKey = (ServerKey) sm.getContextAttr("serverKey");
-        String backUpKey = AES.encrypt(keyUser, serverKey.getKeyServer());
-        return new Keys(hashed_password, null, saltPerso, crypted_keyUser, backUpKey);
+        return new Keys(hashed_password, null, saltPerso, crypted_keyUser);
     }
 
     public void setDecipheredKeyUser(String decipheredKeyUser) {

@@ -1,8 +1,5 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.Team.TeamUser;
-import com.Ease.Utils.HttpServletException;
-import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -18,14 +15,9 @@ public class ServletTutoDone extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true);
-            sm.needToBeTeamUserOfTeam(team_id);
-            TeamUser teamUser = sm.getTeamUserForTeamId(team_id);
-            if (teamUser.getTeamUserStatus().tuto_done())
-                throw new HttpServletException(HttpStatus.BadRequest, "Tuto already done.");
-            teamUser.getTeamUserStatus().setTuto_done(true);
-            sm.saveOrUpdate(teamUser.getTeamUserStatus());
-            sm.setSuccess("Tuto done");
+            sm.needToBeTeamUser();
+            sm.getUser().getStatus().setTeam_tuto_done(true, sm.getDB());
+            sm.setSuccess("Team tuto done");
         } catch (Exception e) {
             sm.setError(e);
         }
