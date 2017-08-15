@@ -133,7 +133,8 @@ public class Status {
 
     public JSONObject getJson() {
         JSONObject res = new JSONObject();
-        res.put("tuto_done", this.isTuto_done());
+        res.put("tuto_done", this.tutoIsDone());
+        res.put("team_tuto_done", this.isTeam_tuto_done());
         res.put("terms_reviewed", this.terms_reviewed());
         return res;
     }
