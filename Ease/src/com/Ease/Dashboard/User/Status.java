@@ -3,6 +3,9 @@ package com.Ease.Dashboard.User;
 import com.Ease.Utils.*;
 import org.json.simple.JSONObject;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 public class Status {
 
     public static Status createStatus(DataBaseConnection db) throws GeneralException {
@@ -133,5 +136,17 @@ public class Status {
         res.put("tuto_done", this.isTuto_done());
         res.put("terms_reviewed", this.terms_reviewed());
         return res;
+    }
+
+    public void passStep(String tutoStep, DataBaseConnection db) throws GeneralException {
+        try {
+            Method method = this.getClass().getMethod("set_" + tutoStep, Boolean.class);
+            method.invoke(this, true);
+            DatabaseRequest request = db.prepareRequest("UPDATE status SET " + tutoStep + " = 1 WHERE id = ?;");
+            request.setInt(db_id);
+            request.set();
+        } catch (SecurityException | IllegalArgumentException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            throw new GeneralException(ServletManager.Code.ClientError, e);
+        }
     }
 }

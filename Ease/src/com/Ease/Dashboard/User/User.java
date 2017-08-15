@@ -630,4 +630,8 @@ public class User {
         res.put("status", this.getStatus().getJson());
         return res;
     }
+
+    public void passStep(String tutoStep, DataBaseConnection db) throws GeneralException {
+        this.status.passStep(tutoStep, db);
+    }
 }
