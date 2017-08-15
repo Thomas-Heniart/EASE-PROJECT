@@ -120,7 +120,7 @@ response.addCookie(email);
 				</div>
 				<div class="CatalogViewTab <c:if test="${param.catalogOpen}">show</c:if>">
 				</div>
-				<c:if test='${user.appsImported() && (user.allTipsDone() eq false)}'>
+				<c:if test='${user.appsImported() && (user.getStatus().tutoIsDone() eq false)}'>
 				<%@ include file="/templates/Tips.jsp" %>
 			</c:if>
 		</div>
