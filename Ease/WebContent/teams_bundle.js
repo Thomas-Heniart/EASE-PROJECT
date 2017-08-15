@@ -3719,7 +3719,7 @@ function setLoginRedirectUrl(url) {
 }
 
 function setTeamsTutorial(state) {
-  if (!state) return function (dispatch) {
+  if (state) return function (dispatch) {
     return post_api.teams.validateTutorial().then(function (r) {
       dispatch({ type: 'SET_TEAMS_TUTORIAL', payload: state });
     });
@@ -31837,7 +31837,7 @@ var TeamCreationView = function (_React$Component8) {
       fname: '',
       lname: '',
       username: '',
-      jobRole: 0,
+      jobRole: '0',
       jobDetails: '',
       teamName: '',
       teamId: -1,
@@ -32452,7 +32452,7 @@ var TeamJoinView = (_dec = (0, _reactRedux.connect)(function (store) {
       newsletter: '',
       password: '',
       confirmPassword: '',
-      jobRole: 0,
+      jobRole: '0',
       jobDetails: '',
       currentStep: 0,
       code: '',
@@ -38592,7 +38592,7 @@ var TeamMenu = function (_React$Component) {
               React.createElement(
                 'span',
                 { className: 'selectable', onClick: function onClick(e) {
-                    _this2.props.dispatch((0, _commonActions.setTeamsTutorial)(true));_this2.hideIt();
+                    _this2.props.dispatch((0, _commonActions.setTeamsTutorial)(false));_this2.hideIt();
                   } },
                 'Re-start tutorial'
               )
@@ -44053,7 +44053,7 @@ var SimpleTeamCreationView = function (_React$Component8) {
       fname: '',
       lname: '',
       username: '',
-      jobRole: 0,
+      jobRole: '0',
       jobDetails: '',
       teamName: '',
       teamId: -1,
@@ -44787,7 +44787,7 @@ var TeamsTutorial = (_dec = (0, _reactRedux.connect)(function (store) {
     key: 'skipTutorial',
     value: function skipTutorial() {
       if (this.state.enabledTooltip != null) _reactTooltip2.default.hide(this.getRef(this.state.step));
-      this.props.dispatch((0, _commonActions.setTeamsTutorial)(false));
+      this.props.dispatch((0, _commonActions.setTeamsTutorial)(true));
     }
   }, {
     key: 'incrementStep',
