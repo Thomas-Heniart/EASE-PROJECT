@@ -2773,6 +2773,19 @@ module.exports = {
       }).then(function (r) {
         return r.data;
       });
+    },
+    editPhoneNumber: function editPhoneNumber(ws_id, team_id, team_user_id, phone) {
+      return axios.post('/api/v1/teams/EditTeamUserPhoneNumber', {
+        ws_id: ws_id,
+        team_id: team_id,
+        team_user_id: team_user_id,
+        phone_number: phone,
+        timestamp: new Date().getTime()
+      }).then(function (r) {
+        return r.data;
+      }).catch(function (err) {
+        throw err.response.data;
+      });
     }
   },
   teamApps: {
@@ -3142,6 +3155,7 @@ exports.editTeamUserRole = editTeamUserRole;
 exports.editTeamUserDepartureDate = editTeamUserDepartureDate;
 exports.verifyTeamUserArrive = verifyTeamUserArrive;
 exports.transferTeamOwnership = transferTeamOwnership;
+exports.editTeamUserPhone = editTeamUserPhone;
 
 var _teamModalActions = __webpack_require__(9);
 
@@ -3315,6 +3329,18 @@ function transferTeamOwnership(password, team_user_id) {
       dispatch({ type: 'TEAM_TRANSFER_OWNERSHIP_FULFILLED', payload: { ownerId: getState().team.myTeamUserId, team_user_id: team_user_id } });
     }).catch(function (err) {
       dispatch({ type: 'TEAM_TRANSFER_OWNERSHIP_REJECTED', payload: err });
+      throw err;
+    });
+  };
+}
+
+function editTeamUserPhone(team_user_id, phone_number) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'EDIT_TEAM_USER_PHONE_PENDING' });
+    return post_api.teamUser.editPhoneNumber(getState().common.ws_id, getState().team.id, team_user_id, phone_number).then(function (r) {
+      dispatch({ type: 'EDIT_TEAM_USER_PHONE_FULFILLED', payload: { team_user_id: team_user_id, phone: phone_number } });
+    }).catch(function (err) {
+      dispatch({ type: 'EDIT_TEAM_USER_PHONE_REJECTED', payload: err });
       throw err;
     });
   };
@@ -8055,7 +8081,7 @@ var SimpleAppSharingPreview = function (_React$Component) {
                   React.createElement(
                     'div',
                     { className: 'credentials' },
-                    Object.keys(app.account_information).map(function (item) {
+                    Object.keys(app.account_information).reverse().map(function (item) {
                       return React.createElement(
                         'div',
                         { className: 'credentials_line', key: item },
@@ -14281,7 +14307,7 @@ var MultiAppCheckablePreview = function (_React$Component) {
                       React.createElement(
                         'div',
                         { className: 'credentials' },
-                        Object.keys(item.account_information).map(function (info) {
+                        Object.keys(item.account_information).reverse().map(function (info) {
                           return React.createElement(
                             'div',
                             { className: 'credential_container', key: info },
@@ -14476,7 +14502,7 @@ var MultiAppSharingPreview = function (_React$Component) {
                     React.createElement(
                       'div',
                       { className: 'credentials' },
-                      Object.keys(credentials).map(function (item) {
+                      Object.keys(credentials).reverse().map(function (item) {
                         var _this2 = this;
 
                         return React.createElement(
@@ -29825,6 +29851,10 @@ var _userActions = __webpack_require__(24);
 
 var userActions = _interopRequireWildcard(_userActions);
 
+var _teamModalActions = __webpack_require__(9);
+
+var modalActions = _interopRequireWildcard(_teamModalActions);
+
 var _transitions = __webpack_require__(294);
 
 var _helperFunctions = __webpack_require__(8);
@@ -29999,6 +30029,10 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
       }
       this.props.dispatch(teamActions.fetchTeamAndUsersAndChannels(this.props.match.params.teamId)).then(function () {
         _this3.setState({ loadingInfo: false });
+        var me = (0, _helperFunctions.selectUserFromListById)(_this3.props.users, _this3.props.team.myTeamUserId);
+        if (me.phone_number === null && me.role === 3) {
+          _this3.props.dispatch(modalActions.showTeamPhoneNumberModal(true));
+        }
         _this3.props.dispatch(channelActions.selectTeamChannel(_this3.props.channels[0].id));
       });
     }
@@ -30022,6 +30056,7 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
     key: 'render',
     value: function render() {
       var selectedItem = this.getSelectedItem();
+      var me = (0, _helperFunctions.selectUserFromListById)(this.props.users, this.props.team.myTeamUserId);
       return React.createElement(
         'div',
         { id: 'teamsHandler' },
@@ -33924,7 +33959,7 @@ var MultiTeamAppAdd = function (_React$Component2) {
                             React.createElement('i', { className: 'fa fa-times' })
                           )
                         ),
-                        Object.keys(this.state.credentials).map(function (item) {
+                        Object.keys(this.state.credentials).reverse().map(function (item) {
                           var _this5 = this;
 
                           return React.createElement('input', {
@@ -36005,7 +36040,7 @@ var SimpleTeamAppAdd = function (_React$Component4) {
                 React.createElement(
                   'div',
                   { className: 'credentials' },
-                  Object.keys(this.state.credentials).map(function (item) {
+                  Object.keys(this.state.credentials).reverse().map(function (item) {
                     return React.createElement(
                       'div',
                       { className: 'credentials_line', key: item },
@@ -38463,7 +38498,7 @@ function TeamHeader(props) {
           React.createElement(
             'div',
             { className: 'channel_header_info' },
-            props.appsLength && React.createElement(
+            React.createElement(
               'div',
               { className: 'channel_header_info_item', id: 'apps_number' },
               React.createElement('i', { className: 'icon_left fa fa-share-alt-square' }),
@@ -40155,7 +40190,7 @@ var TeamMultiApp = function (_React$Component) {
                 React.createElement(
                   'div',
                   { className: 'credentials' },
-                  meReceiver !== null && Object.keys(meReceiver.account_information).map(function (item) {
+                  meReceiver !== null && Object.keys(meReceiver.account_information).reverse().map(function (item) {
                     return React.createElement(
                       'div',
                       { className: 'credentials_line', key: item },
@@ -40228,7 +40263,7 @@ var TeamMultiApp = function (_React$Component) {
                     React.createElement(
                       'div',
                       { className: 'credentials' },
-                      Object.keys(item.account_information).map(function (info) {
+                      Object.keys(item.account_information).reverse().map(function (info) {
                         return React.createElement(
                           'div',
                           { className: 'credential_container', key: info },
@@ -40397,7 +40432,7 @@ var TeamMultiAppUserSelect = function (_React$Component) {
           React.createElement(
             'div',
             { className: 'credentials' },
-            Object.keys(webInfo).map(function (item) {
+            Object.keys(webInfo).reverse().map(function (item) {
               var _this2 = this;
 
               return React.createElement(
@@ -40915,7 +40950,7 @@ var TeamSimpleApp = function (_React$Component) {
                 React.createElement(
                   'div',
                   { className: 'credentials' },
-                  (meReceiver != null || this.state.modifying) && Object.keys(app.account_information).map(function (item) {
+                  (meReceiver != null || this.state.modifying) && Object.keys(app.account_information).reverse().map(function (item) {
                     return React.createElement(
                       'div',
                       { className: 'credentials_line', key: item },
@@ -42371,6 +42406,8 @@ var _teamModalActions = __webpack_require__(9);
 
 var _helperFunctions = __webpack_require__(8);
 
+var _userActions = __webpack_require__(24);
+
 var _rrui = __webpack_require__(551);
 
 var _rrui2 = _interopRequireDefault(_rrui);
@@ -42418,19 +42455,25 @@ var TeamPhoneNumberModal = (_dec = (0, _reactRedux.connect)(function (store) {
   _createClass(TeamPhoneNumberModal, [{
     key: 'confirmModal',
     value: function confirmModal() {
-      this.props.dispatch((0, _teamModalActions.showTeamPhoneNumberModal)(false));
+      var _this2 = this;
+
+      var me = (0, _helperFunctions.selectUserFromListById)(this.props.users, this.props.team.myTeamUserId);
+
+      this.props.dispatch((0, _userActions.editTeamUserPhone)(me.id, this.state.phone)).then(function (r) {
+        _this2.props.dispatch((0, _teamModalActions.showTeamPhoneNumberModal)(false));
+      });
     }
   }, {
     key: 'render',
     value: function render() {
-      var _this2 = this;
+      var _this3 = this;
 
       var me = (0, _helperFunctions.selectUserFromListById)(this.props.users, this.props.team.myTeamUserId);
       return React.createElement(
         'div',
         { className: 'popupHandler myshow' },
         React.createElement('div', { className: 'popover_mask', onClick: function onClick(e) {
-            _this2.props.dispatch((0, _teamModalActions.showTeamPhoneNumberModal)(false));
+            _this3.props.dispatch((0, _teamModalActions.showTeamPhoneNumberModal)(false));
           } }),
         React.createElement(
           'div',
@@ -42438,7 +42481,7 @@ var TeamPhoneNumberModal = (_dec = (0, _reactRedux.connect)(function (store) {
           React.createElement(
             'button',
             { className: 'button-unstyle action_button close_button', onClick: function onClick(e) {
-                _this2.props.dispatch((0, _teamModalActions.showTeamPhoneNumberModal)(false));
+                _this3.props.dispatch((0, _teamModalActions.showTeamPhoneNumberModal)(false));
               } },
             React.createElement('i', { className: 'fa fa-times' })
           ),
@@ -42464,7 +42507,7 @@ var TeamPhoneNumberModal = (_dec = (0, _reactRedux.connect)(function (store) {
               placeholder: 'Enter phone number',
               value: this.state.phone,
               onChange: function onChange(phone) {
-                _this2.setState({ phone: phone });
+                _this3.setState({ phone: phone });
               } })
           ),
           React.createElement(
@@ -45943,6 +45986,16 @@ function reducer() {
       {
         var users = state.users.map(function (item) {
           if (item.id === action.payload.ownerId) item.role = '2';else if (item.id === action.payload.team_user_id) item.role = '3';
+          return item;
+        });
+        return _extends({}, state, {
+          users: users
+        });
+      }
+    case 'EDIT_TEAM_USER_PHONE_FULFILLED':
+      {
+        var users = state.users.map(function (item) {
+          if (item.id === action.payload.team_user_id) item.phone_number = action.payload.phone;
           return item;
         });
         return _extends({}, state, {
