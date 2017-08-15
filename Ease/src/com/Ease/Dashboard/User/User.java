@@ -18,7 +18,6 @@ import com.Ease.Team.TeamUser;
 import com.Ease.Update.UpdateManager;
 import com.Ease.Utils.*;
 import com.Ease.websocketV1.WebSocketManager;
-import com.Ease.websocketV1.WebSocketSession;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -175,8 +174,6 @@ public class User {
     protected Keys keys;
     protected Option opt;
     protected Map<String, UserEmail> emails;
-    //	protected Map<String, WebsocketSession> websockets;
-    protected List<WebSocketSession> webSocketSessions;
     protected WebSocketManager webSocketManager;
     protected List<Group> groups;
     protected boolean isAdmin;

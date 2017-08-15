@@ -6,7 +6,7 @@ import org.json.simple.JSONObject;
 public class Status {
 
     public static Status createStatus(DataBaseConnection db) throws GeneralException {
-        DatabaseRequest request = db.prepareRequest("INSERT INTO status values (null, 1, 0, 0, 0, default, 0, 0);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO status values (null, 1, 0, 0, 0, default, 0, 0, 0);");
         String db_id = request.set().toString();
         return new Status(db_id, true, false, false, false, false, false);
     }
