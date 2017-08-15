@@ -836,13 +836,14 @@ body {
 .floatRight {
   float:right;
 }
+
 .floatLeft {
   float: left;
 }
 
 #loginBody {
   .popupHandler{
-    background-color: transparent;
+    background-color: white;
     .landingPopup {
       border-radius: 20px;
       border: hidden;
