@@ -362,7 +362,7 @@
 <div class="easePopup" id="addAppTutorial">
 	<div class="title">
 		<p>Type your password for<br>the last time, ever.</p>
-	</div>		
+	</div>
 	<div class="bodysHandler">
 		<div class="popupBody show">
 			<div class="handler">
