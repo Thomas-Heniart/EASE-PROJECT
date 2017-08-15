@@ -1,5 +1,7 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.Team.Team;
+import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -23,11 +25,17 @@ public class ServletEditTeamUserPhoneNumber extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true);
-            sm.needToBeTeamUserOfTeam(team_id);
+            sm.needToBeAdminOfTeam(team_id);
+            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
+            Team team = teamManager.getTeamWithId(team_id);
+            Integer teamUser_id = sm.getIntParam("team_user_id", true);
+            TeamUser teamUser_connected = sm.getTeamUserForTeamId(team_id);
+            TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
+            if (!teamUser_connected.isSuperior(teamUser) && teamUser != teamUser_connected)
+                throw new HttpServletException(HttpStatus.Forbidden, "You cannot edit this user.");
             String phone_number = sm.getStringParam("phone_number", true);
             if (phone_number == null || phone_number.equals("") || !Regex.isPhoneNumber(phone_number))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid phone number.");
-            TeamUser teamUser = sm.getTeamUserForTeamId(team_id);
             teamUser.setPhone_number(phone_number);
             sm.saveOrUpdate(teamUser);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson(), teamUser.getOrigin()));
