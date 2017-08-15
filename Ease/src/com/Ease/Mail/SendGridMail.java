@@ -1,37 +1,15 @@
 package com.Ease.Mail;
 
+import com.Ease.Context.Catalog.Website;
+import com.Ease.Context.Variables;
+import com.Ease.Utils.*;
+import com.sendgrid.*;
+import com.sendgrid.Mail;
+
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import com.Ease.Context.Variables;
-import com.Ease.Context.Catalog.Website;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
-import com.sendgrid.ASM;
-import com.sendgrid.Attachments;
-import com.sendgrid.BccSettings;
-import com.sendgrid.ClickTrackingSetting;
-import com.sendgrid.Content;
-import com.sendgrid.Email;
-import com.sendgrid.FooterSetting;
-import com.sendgrid.GoogleAnalyticsSetting;
-import com.sendgrid.Mail;
-import com.sendgrid.MailSettings;
-import com.sendgrid.Method;
-import com.sendgrid.OpenTrackingSetting;
-import com.sendgrid.Personalization;
-import com.sendgrid.Request;
-import com.sendgrid.Response;
-import com.sendgrid.SendGrid;
-import com.sendgrid.Setting;
-import com.sendgrid.SpamCheckSetting;
-import com.sendgrid.SubscriptionTrackingSetting;
-import com.sendgrid.TrackingSettings;
 
 public class SendGridMail {
 
@@ -86,56 +64,7 @@ public class SendGridMail {
         personalization.addBcc(recipient);
     }
 
-    public void enableMailSettings() {
-        mail.setIpPoolId("23");
-        MailSettings mailSettings = new MailSettings();
-        Setting sandBoxMode = new Setting();
-        sandBoxMode.setEnable(true);
-        mailSettings.setSandboxMode(sandBoxMode);
-        Setting bypassListManagement = new Setting();
-        bypassListManagement.setEnable(true);
-        mailSettings.setBypassListManagement(bypassListManagement);
-        SpamCheckSetting spamCheckSetting = new SpamCheckSetting();
-        spamCheckSetting.setEnable(true);
-        spamCheckSetting.setSpamThreshold(1);
-        spamCheckSetting.setPostToUrl("https://spamcatcher.sendgrid.com");
-        mailSettings.setSpamCheckSetting(spamCheckSetting);
-        mail.setMailSettings(mailSettings);
-    }
-
-    public void enableMailTracking() {
-        TrackingSettings trackingSettings = new TrackingSettings();
-        ClickTrackingSetting clickTrackingSetting = new ClickTrackingSetting();
-        clickTrackingSetting.setEnable(true);
-        clickTrackingSetting.setEnableText(true);
-        trackingSettings.setClickTrackingSetting(clickTrackingSetting);
-        OpenTrackingSetting openTrackingSetting = new OpenTrackingSetting();
-        openTrackingSetting.setEnable(true);
-        openTrackingSetting
-                .setSubstitutionTag("Optional tag to replace with the open image in the body of the message");
-        trackingSettings.setOpenTrackingSetting(openTrackingSetting);
-        SubscriptionTrackingSetting subscriptionTrackingSetting = new SubscriptionTrackingSetting();
-        subscriptionTrackingSetting.setEnable(true);
-        subscriptionTrackingSetting.setText("text to insert into the text/plain portion of the message");
-        subscriptionTrackingSetting
-                .setHtml("<html><body>html to insert into the text/html portion of the message</body></html>");
-        subscriptionTrackingSetting
-                .setSubstitutionTag("Optional tag to replace with the open image in the body of the message");
-        trackingSettings.setSubscriptionTrackingSetting(subscriptionTrackingSetting);
-        GoogleAnalyticsSetting googleAnalyticsSetting = new GoogleAnalyticsSetting();
-        googleAnalyticsSetting.setEnable(true);
-        googleAnalyticsSetting.setCampaignSource("some source");
-        googleAnalyticsSetting.setCampaignTerm("some term");
-        googleAnalyticsSetting.setCampaignContent("some content");
-        googleAnalyticsSetting.setCampaignName("some name");
-        googleAnalyticsSetting.setCampaignMedium("some medium");
-        trackingSettings.setGoogleAnalyticsSetting(googleAnalyticsSetting);
-        mail.setTrackingSettings(trackingSettings);
-    }
-
     public void sendEmail() throws GeneralException {
-        //enableMailSettings();
-        //enableMailTracking();
         if (request.body == null && mail.getTemplateId() == null)
             throw new GeneralException(ServletManager.Code.InternError, "Empty email");
         try {
@@ -304,5 +233,83 @@ public class SendGridMail {
 
     public void sendTeamUserVerificationEmail(String adminUsername, String adminEmail, String username, String code) {
         //@Todo
+    }
+
+    void sendReminderSixDaysEmail(String firstName, String email) throws GeneralException {
+        mail.setTemplateId("2c03ac41-648f-49c4-95dc-7057a09de38b");
+        Personalization personalization = this.createNewPersonalization();
+        this.addTo(personalization, firstName, email);
+        personalization.addSubstitution("#username", firstName);
+        this.sendEmail();
+    }
+
+    void sendReminderSixDaysLessThanFourAppsEmail(String firstName, String email) throws GeneralException {
+        mail.setTemplateId("c3653947-71f3-447f-9674-469022880e85");
+        Personalization personalization = this.createNewPersonalization();
+        this.addTo(personalization, firstName, email);
+        personalization.addSubstitution("#username", firstName);
+        personalization.addSubstitution("#linkUrl", Variables.URL_PATH + "home?importAccounts=true");
+        this.sendEmail();
+    }
+
+    void sendReminderOneWeekRegistration(String firstName, String email) throws GeneralException {
+        mail.setTemplateId("435078ae-41d8-4cb1-8dbf-63302f070545");
+        Personalization personalization = this.createNewPersonalization();
+        this.addTo(personalization, firstName, email);
+        personalization.addSubstitution("#username", firstName);
+        this.sendEmail();
+    }
+
+    void sendReminderThirtyDays(String firstName, String email) throws GeneralException {
+        mail.setTemplateId("8a3569be-b33d-4255-b4b3-a04844e2bc6f");
+        Personalization personalization = this.createNewPersonalization();
+        this.addTo(personalization, firstName, email);
+        personalization.addSubstitution("#username", firstName);
+        this.sendEmail();
+    }
+
+    void sendReminderThirtyDaysLessThanFourApps(String firstName, String email) throws GeneralException {
+        mail.setTemplateId("30d07b2e-36e7-4570-9bb7-bef38cb1378b");
+        Personalization personalization = this.createNewPersonalization();
+        this.addTo(personalization, firstName, email);
+        personalization.addSubstitution("#username", firstName);
+        personalization.addSubstitution("#linkUrl", Variables.URL_PATH + "home?importAccounts=true");
+        this.sendEmail();
+    }
+
+    void sendReminderThreeDaysLessThanFourApps(String firstName, String email) throws GeneralException {
+        mail.setTemplateId("a0c968a0-9e78-43e5-8287-6e5359c67cac");
+        Personalization personalization = this.createNewPersonalization();
+        this.addTo(personalization, firstName, email);
+        personalization.addSubstitution("#username", firstName);
+        personalization.addSubstitution("#linkUrl", Variables.URL_PATH + "home?importAccounts=true");
+        this.sendEmail();
+    }
+
+    void sendReminderTwentyDays(String firstName, String email) throws GeneralException {
+        mail.setTemplateId("74a00bd1-7cc0-4f40-9566-91342bdac7c2");
+        Personalization personalization = this.createNewPersonalization();
+        this.addTo(personalization, firstName, email);
+        personalization.addSubstitution("#username", firstName);
+        this.sendEmail();
+    }
+
+    void sendReminderTwentyDaysLessThanFourApps(String firstName, String email) throws GeneralException {
+        mail.setTemplateId("60c9fb19-7403-402a-b275-031f646be86e");
+        Personalization personalization = this.createNewPersonalization();
+        this.addTo(personalization, firstName, email);
+        personalization.addSubstitution("#username", firstName);
+        personalization.addSubstitution("#linkUrl", Variables.URL_PATH + "home?importAccounts=true");
+        this.sendEmail();
+    }
+
+
+    public void sendReminderTwoDaysLessThanFourApps(String firstName, String email) throws GeneralException {
+        mail.setTemplateId("b85f9bea-c111-452e-926f-6e279449fb0c");
+        Personalization personalization = this.createNewPersonalization();
+        this.addTo(personalization, firstName, email);
+        personalization.addSubstitution("#username", firstName);
+        personalization.addSubstitution("#linkUrl", Variables.URL_PATH + "home?importAccounts=true");
+        this.sendEmail();
     }
 }
