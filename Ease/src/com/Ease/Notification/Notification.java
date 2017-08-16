@@ -22,7 +22,7 @@ public class Notification {
             request.setString(icon);
             request.setInt(user_id);
             Integer id = request.set();
-            return new Notification(id, content, date, url, icon, false);
+            return new Notification(id, content, date, url, icon, true);
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
