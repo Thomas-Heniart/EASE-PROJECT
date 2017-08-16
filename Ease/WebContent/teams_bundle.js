@@ -20040,7 +20040,7 @@ var NotificationList = function (_React$Component2) {
               { className: 'menu_row display_flex align_items_center', key: item.id },
               React.createElement(
                 'div',
-                { className: classnames("notification-card display-flex", item.isNew ? 'new' : null) },
+                { className: classnames("notification-card display-flex  full_flex", item.isNew ? 'new' : null) },
                 React.createElement(
                   'div',
                   { className: 'squared_image_handler icon' },
@@ -56149,7 +56149,7 @@ var NotificationList = function (_React$Component2) {
               { className: 'menu_row display_flex align_items_center', key: item.id },
               React.createElement(
                 'div',
-                { className: classnames("notification-card display-flex", item.isNew ? 'new' : null) },
+                { className: classnames("notification-card display-flex full_flex", item.isNew ? 'new' : null) },
                 React.createElement(
                   'div',
                   { className: 'squared_image_handler icon' },
@@ -62351,7 +62351,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 exports.default = reducer;
 function reducer() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
-    notifications: []
+    notifications: [{}]
   };
   var action = arguments[1];
 
