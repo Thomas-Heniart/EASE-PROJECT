@@ -19990,7 +19990,7 @@ var NotificationList = function (_React$Component2) {
     key: 'hideDropdown',
     value: function hideDropdown() {
       this.setState({ dropdown: false });
-      this.props.dispatch((0, _notificationsActions.validateNotification)());
+      if ((0, _helperFunctions.checkForNewNotifications)(this.props.notifications)) this.props.dispatch((0, _notificationsActions.validateNotification)());
     }
   }, {
     key: 'componentDidMount',
@@ -56331,6 +56331,7 @@ var WebsocketClient = (_dec = (0, _reactRedux.connect)(), _dec(_class = function
           break;
         case 'NEW_NOTIFICATION':
           this.props.dispatch((0, _notificationsActions.newNotification)(data));
+          break;
       }
     }
   }, {
@@ -62320,43 +62321,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 exports.default = reducer;
 function reducer() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
-    notifications: [{
-      icon: '/resources/websites/Facebook/logo.png',
-      content: 'This is my notification. And this is the second phrase of my notification.',
-      id: 1,
-      date: 5,
-      isNew: true
-    }, {
-      icon: '/resources/websites/Facebook/logo.png',
-      content: 'This is my notification. And this is the second phrase of my notification.',
-      id: 2,
-      date: 5,
-      isNew: false
-    }, {
-      icon: '/resources/websites/Facebook/logo.png',
-      content: 'This is my notification. And this is the second phrase of my notification.',
-      id: 3,
-      date: 5,
-      isNew: true
-    }, {
-      icon: '/resources/websites/Facebook/logo.png',
-      content: 'This is my notification. And this is the second phrase of my notification.',
-      id: 4,
-      date: 5,
-      isNew: true
-    }, {
-      icon: '/resources/websites/Facebook/logo.png',
-      content: 'This is my notification. And this is the second phrase of my notification.',
-      id: 5,
-      date: 5,
-      isNew: true
-    }, {
-      icon: '/resources/websites/Facebook/logo.png',
-      content: 'This is my notification. And this is the second phrase of my notification.',
-      id: 6,
-      date: 5,
-      isNew: true
-    }]
+    notifications: []
   };
   var action = arguments[1];
 
