@@ -22,7 +22,7 @@ public class ServletGetNotifications extends HttpServlet {
             NotificationManager notificationManager = sm.getUser().getNotificationManager();
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
-            int limit = offset + 5;
+            int limit = offset + 10;
             notificationManager.loadNextNotifications(limit, db);
             db.commitTransaction(transaction);
             sm.setSuccess(notificationManager.getJson(offset, limit));
