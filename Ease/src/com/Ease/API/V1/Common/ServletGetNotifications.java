@@ -18,13 +18,14 @@ public class ServletGetNotifications extends HttpServlet {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            Integer offset = sm.getIntParam("offset", true) + 5;
+            Integer offset = sm.getIntParam("offset", true);
             NotificationManager notificationManager = sm.getUser().getNotificationManager();
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
-            notificationManager.loadNextNotifications(offset, db);
+            int limit = offset + 5;
+            notificationManager.loadNextNotifications(limit, db);
             db.commitTransaction(transaction);
-            sm.setSuccess(notificationManager.getJson(offset));
+            sm.setSuccess(notificationManager.getJson(offset, limit));
         } catch (Exception e) {
             sm.setError(e);
         }

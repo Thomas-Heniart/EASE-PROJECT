@@ -48,10 +48,8 @@ public class NotificationManager {
         return notifications;
     }
 
-    public List<Notification> getNotifications(Integer offset) {
-        if (offset >= this.notifications.size())
-            return this.notifications;
-        return this.notifications.subList(0, offset);
+    public List<Notification> getNotifications(Integer start, Integer end) {
+        return this.notifications.subList(start, end);
     }
 
     public Notification getNotificationById(Integer id) throws HttpServletException {
@@ -89,9 +87,16 @@ public class NotificationManager {
         return notifications;
     }
 
-    public JSONArray getJson(Integer offset) {
+    public JSONArray getJson(Integer start, Integer end) {
         JSONArray notifications = new JSONArray();
-        for (Notification notification : this.getNotifications(offset))
+        if (start < 0 || start > end)
+            return notifications;
+        List<Notification> notificationList;
+        if (end >= this.notifications.size())
+            notificationList = this.getNotifications(start, this.notifications.size());
+        else
+            notificationList = this.getNotifications(start, end);
+        for (Notification notification : notificationList)
             notifications.add(notification.getJson());
         return notifications;
     }
