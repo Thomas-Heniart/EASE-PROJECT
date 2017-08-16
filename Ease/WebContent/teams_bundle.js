@@ -3996,10 +3996,10 @@ module.exports = {
       });
     },
     validateNotifications: function validateNotifications() {
-      return axios.post('/api/v1/common/ValidateNotifications').then(function (r) {
-        return response.data;
+      return axios.post('/api/v1/common/ValidateNotifications', {}).then(function (r) {
+        return r.data;
       }).catch(function (err) {
-        throw err.response.data;
+        throw err;
       });
     }
   }
@@ -19989,8 +19989,9 @@ var NotificationList = function (_React$Component2) {
   }, {
     key: 'hideDropdown',
     value: function hideDropdown() {
-      this.setState({ dropdown: false });
+      if (!this.state.dropdown) return;
       if ((0, _helperFunctions.checkForNewNotifications)(this.props.notifications)) this.props.dispatch((0, _notificationsActions.validateNotification)());
+      this.setState({ dropdown: false });
     }
   }, {
     key: 'componentDidMount',
@@ -56098,6 +56099,7 @@ var NotificationList = function (_React$Component2) {
   }, {
     key: 'hideDropdown',
     value: function hideDropdown() {
+      if (!this.state.dropdown) return;
       this.setState({ dropdown: false });
       if ((0, _helperFunctions.checkForNewNotifications)(this.props.notifications)) this.props.dispatch((0, _notificationsActions.validateNotification)());
     }
@@ -62351,7 +62353,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 exports.default = reducer;
 function reducer() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
-    notifications: [{}]
+    notifications: []
   };
   var action = arguments[1];
 
@@ -62369,6 +62371,7 @@ function reducer() {
           if (item.is_new) item.is_new = false;
           return item;
         });
+        console.log('notifications validated');
         return _extends({}, state, {
           notifications: n
         });
