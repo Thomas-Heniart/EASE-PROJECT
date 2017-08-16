@@ -18,7 +18,7 @@ public class ServletGetNotifications extends HttpServlet {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            Integer offset = sm.getIntParam("offset", true);
+            Integer offset = sm.getIntParam("offset", true) + 5;
             NotificationManager notificationManager = sm.getUser().getNotificationManager();
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
