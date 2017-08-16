@@ -914,7 +914,7 @@ function isUserInList(users, id) {
 
 function checkForNewNotifications(n) {
   for (var i = 0; i < n.length; i++) {
-    if (n[i].isNew) return true;
+    if (n[i].is_new) return true;
   }
   return false;
 }
@@ -20040,7 +20040,7 @@ var NotificationList = function (_React$Component2) {
               { className: 'menu_row display_flex align_items_center', key: item.id },
               React.createElement(
                 'div',
-                { className: classnames("notification-card display-flex  full_flex", item.isNew ? 'new' : null) },
+                { className: classnames("notification-card display-flex  full_flex", item.is_new ? 'new' : null) },
                 React.createElement(
                   'div',
                   { className: 'squared_image_handler icon' },
@@ -56149,7 +56149,7 @@ var NotificationList = function (_React$Component2) {
               { className: 'menu_row display_flex align_items_center', key: item.id },
               React.createElement(
                 'div',
-                { className: classnames("notification-card display-flex full_flex", item.isNew ? 'new' : null) },
+                { className: classnames("notification-card display-flex full_flex", item.is_new ? 'new' : null) },
                 React.createElement(
                   'div',
                   { className: 'squared_image_handler icon' },
@@ -62366,7 +62366,7 @@ function reducer() {
     case 'VALIDATE_NOTIFICATIONS_FULFILLED':
       {
         var n = state.notifications.map(function (item) {
-          if (item.isNew) item.isNew = false;
+          if (item.is_new) item.is_new = false;
           return item;
         });
         return _extends({}, state, {
