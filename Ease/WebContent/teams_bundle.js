@@ -62378,7 +62378,8 @@ function reducer() {
       }
     case 'NEW_NOTIFICATION':
       {
-        var n = state.notifications.unshift(action.payload.notification);
+        var n = state.notifications;
+        n.unshift(action.payload.notification);
         return _extends({}, state, {
           notifications: n
         });
