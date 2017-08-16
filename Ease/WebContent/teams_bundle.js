@@ -46885,10 +46885,6 @@ var _TeamsTutorial2 = _interopRequireDefault(_TeamsTutorial);
 
 var _reactDom = __webpack_require__(40);
 
-var _reactTooltip = __webpack_require__(96);
-
-var _reactTooltip2 = _interopRequireDefault(_reactTooltip);
-
 var _reactRedux = __webpack_require__(12);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -46931,7 +46927,7 @@ var TeamPhoneNumberModal = __webpack_require__(577);
 
 var EaseHeader = __webpack_require__(288);
 
-
+var TmpModal = __webpack_require__(1136);
 var api = __webpack_require__(28);
 
 var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
@@ -55946,6 +55942,10 @@ var _reactTooltip = __webpack_require__(96);
 
 var _reactTooltip2 = _interopRequireDefault(_reactTooltip);
 
+var _notificationsActions = __webpack_require__(1134);
+
+var _helperFunctions = __webpack_require__(15);
+
 var _reactRouterDom = __webpack_require__(58);
 
 var _commonActions = __webpack_require__(50);
@@ -56062,11 +56062,15 @@ var NotificationList = function (_React$Component2) {
     var _this3 = _possibleConstructorReturn(this, (NotificationList.__proto__ || Object.getPrototypeOf(NotificationList)).call(this, props));
 
     _this3.state = {
-      dropdown: false
+      dropdown: false,
+      fetching: true
     };
     _this3.onMouseDown = _this3.onMouseDown.bind(_this3);
     _this3.onMouseUp = _this3.onMouseUp.bind(_this3);
     _this3.pageClick = _this3.pageClick.bind(_this3);
+    _this3.showDropdown = _this3.showDropdown.bind(_this3);
+    _this3.hideDropdown = _this3.hideDropdown.bind(_this3);
+    _this3.onScroll = _this3.onScroll.bind(_this3);
     return _this3;
   }
 
@@ -56084,12 +56088,29 @@ var NotificationList = function (_React$Component2) {
     key: 'pageClick',
     value: function pageClick(e) {
       if (this.mouseInDropDown) return;
+      this.hideDropdown();
+    }
+  }, {
+    key: 'showDropdown',
+    value: function showDropdown() {
+      this.setState({ dropdown: true });
+    }
+  }, {
+    key: 'hideDropdown',
+    value: function hideDropdown() {
       this.setState({ dropdown: false });
+      if ((0, _helperFunctions.checkForNewNotifications)(this.props.notifications)) this.props.dispatch((0, _notificationsActions.validateNotification)());
     }
   }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
+      var _this4 = this;
+
       window.addEventListener('mousedown', this.pageClick, false);
+
+      this.props.dispatch((0, _notificationsActions.fetchNotifications)(0)).then(function (r) {
+        _this4.setState({ fetching: false });
+      });
     }
   }, {
     key: 'componentWillUnmount',
@@ -56097,22 +56118,31 @@ var NotificationList = function (_React$Component2) {
       window.removeEventListener('mousedown', this.pageClick, false);
     }
   }, {
+    key: 'onScroll',
+    value: function onScroll(e) {
+      var _this5 = this;
+
+      if (!this.state.fetching && e.target.scrollTop > e.target.scrollHeight - e.target.offsetHeight) {
+        this.setState({ fetching: true });
+        this.props.dispatch((0, _notificationsActions.fetchNotifications)(this.props.notifications.length)).then(function (r) {
+          _this5.setState({ fetching: false });
+        });
+      }
+    }
+  }, {
     key: 'render',
     value: function render() {
-      var _this4 = this;
-
+      var newNotifs = (0, _helperFunctions.checkForNewNotifications)(this.props.notifications);
       return React.createElement(
         'button',
-        { className: 'button-unstyle bordered_scrollbar notify', id: 'notification_button',
-          onClick: function onClick(e) {
-            _this4.setState({ dropdown: true });
-          },
+        { className: classnames('button-unstyle bordered_scrollbar', newNotifs ? 'notify' : null), id: 'notification_button',
+          onClick: this.showDropdown,
           onMouseDown: this.onMouseDown,
           onMouseUp: this.onMouseUp },
         React.createElement('img', { src: '/resources/icons/notification.svg', 'data-tip': 'Notifications' }),
         React.createElement(
           'div',
-          { className: classnames('menu menu_arrow display_flex flex_direction_column ', this.state.dropdown ? 'show' : null) },
+          { onScroll: this.onScroll, className: classnames('menu menu_arrow display_flex flex_direction_column ', this.state.dropdown ? 'show' : null) },
           this.props.notifications.map(function (item) {
             return React.createElement(
               'div',
@@ -56155,7 +56185,7 @@ var NotificationList = function (_React$Component2) {
 var HomeTemporaryNavbar = (_dec = (0, _reactRedux.connect)(function (store) {
   return {
     user: store.common.user,
-    notifications: store.common.notifications
+    notifications: store.notifications.notifications
   };
 }), _dec(_class = function (_React$Component3) {
   _inherits(HomeTemporaryNavbar, _React$Component3);
@@ -56163,11 +56193,11 @@ var HomeTemporaryNavbar = (_dec = (0, _reactRedux.connect)(function (store) {
   function HomeTemporaryNavbar(props) {
     _classCallCheck(this, HomeTemporaryNavbar);
 
-    var _this5 = _possibleConstructorReturn(this, (HomeTemporaryNavbar.__proto__ || Object.getPrototypeOf(HomeTemporaryNavbar)).call(this, props));
+    var _this6 = _possibleConstructorReturn(this, (HomeTemporaryNavbar.__proto__ || Object.getPrototypeOf(HomeTemporaryNavbar)).call(this, props));
 
-    _this5.processLogout = _this5.processLogout.bind(_this5);
-    _this5.goHome = _this5.goHome.bind(_this5);
-    return _this5;
+    _this6.processLogout = _this6.processLogout.bind(_this6);
+    _this6.goHome = _this6.goHome.bind(_this6);
+    return _this6;
   }
 
   _createClass(HomeTemporaryNavbar, [{
@@ -56223,7 +56253,7 @@ var HomeTemporaryNavbar = (_dec = (0, _reactRedux.connect)(function (store) {
             )
           )
         ),
-        React.createElement(NotificationList, { notifications: this.props.notifications }),
+        React.createElement(NotificationList, { notifications: this.props.notifications, dispatch: this.props.dispatch }),
         React.createElement(TeamsList, { user: this.props.user }),
         React.createElement(
           'button',
@@ -110536,6 +110566,334 @@ function newNotification(notification) {
     }
   };
 }
+
+/***/ }),
+/* 1135 */,
+/* 1136 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _dec, _class;
+
+var _reactRedux = __webpack_require__(12);
+
+var _teamModalActions = __webpack_require__(16);
+
+var _channelActions = __webpack_require__(41);
+
+var channelActions = _interopRequireWildcard(_channelActions);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var React = __webpack_require__(1);
+var classnames = __webpack_require__(2);
+var TmpModal = (_dec = (0, _reactRedux.connect)(function (store) {
+  return {
+    users: store.users.users
+  };
+}), _dec(_class = function (_React$Component) {
+  _inherits(TmpModal, _React$Component);
+
+  function TmpModal(props) {
+    _classCallCheck(this, TmpModal);
+
+    var _this = _possibleConstructorReturn(this, (TmpModal.__proto__ || Object.getPrototypeOf(TmpModal)).call(this, props));
+
+    _this.state = {
+      users: [],
+      selectedUsers: [],
+      name: '',
+      purpose: '',
+      dropdown: false
+    };
+    _this.state.users = _this.props.users.map(function (item) {
+      item.selected = false;
+      return item;
+    });
+    _this.selectUser = _this.selectUser.bind(_this);
+    _this.deselectUser = _this.deselectUser.bind(_this);
+    _this.handleInput = _this.handleInput.bind(_this);
+    _this.hideDropdown = _this.hideDropdown.bind(_this);
+    _this.showDropdown = _this.showDropdown.bind(_this);
+    _this.onMouseDown = _this.onMouseDown.bind(_this);
+    _this.onMouseUp = _this.onMouseUp.bind(_this);
+    _this.pageClick = _this.pageClick.bind(_this);
+    _this.validateChannelCreation = _this.validateChannelCreation.bind(_this);
+    return _this;
+  }
+
+  _createClass(TmpModal, [{
+    key: 'hideDropdown',
+    value: function hideDropdown() {
+      this.setState({ dropdown: false });
+    }
+  }, {
+    key: 'showDropdown',
+    value: function showDropdown() {
+      this.setState({ dropdown: true });
+    }
+  }, {
+    key: 'handleInput',
+    value: function handleInput(name, value) {
+      this.setState(function () {
+        return _defineProperty({}, name, value);
+      });
+    }
+  }, {
+    key: 'validateChannelCreation',
+    value: function validateChannelCreation() {
+      var _this2 = this;
+
+      var name = this.state.name;
+      var purpose = this.state.purpose;
+      var selectedUsers = this.state.selectedUsers;
+
+      this.props.dispatch(channelActions.createTeamChannel(name, purpose)).then(function (response) {
+        var channel_id = response.id;
+        var addUserActions = selectedUsers.map(function (item) {
+          return this.props.dispatch(channelActions.addTeamUserToChannel(channel_id, item.id));
+        }, _this2);
+        Promise.all(addUserActions).then(function () {
+          _this2.props.dispatch((0, _teamModalActions.showAddTeamChannelModal)(false));
+        });
+      });
+    }
+  }, {
+    key: 'deselectUser',
+    value: function deselectUser(id) {
+      var selectedUsers = this.state.selectedUsers;
+      var users = this.state.users.map(function (item) {
+        if (item.id === id) {
+          selectedUsers.splice(selectedUsers.indexOf(item), 1);
+          item.selected = false;
+        }
+        return item;
+      });
+      this.setState({ users: users, selectedUsers: selectedUsers });
+    }
+  }, {
+    key: 'selectUser',
+    value: function selectUser(id) {
+      var selectedUsers = this.state.selectedUsers;
+      var users = this.state.users.map(function (item) {
+        if (item.id === id) {
+          if (item.selected) return item;
+          item.selected = true;
+          selectedUsers.push(item);
+        }
+        return item;
+      });
+      this.setState({ users: users, selectedUsers: selectedUsers });
+    }
+  }, {
+    key: 'onMouseDown',
+    value: function onMouseDown() {
+      this.mouseInDropDown = true;
+    }
+  }, {
+    key: 'onMouseUp',
+    value: function onMouseUp() {
+      this.mouseInDropDown = false;
+    }
+  }, {
+    key: 'pageClick',
+    value: function pageClick(e) {
+      if (this.mouseInDropDown) return;
+      this.hideDropdown();
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      window.addEventListener('mousedown', this.pageClick, false);
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      window.removeEventListener('mousedown', this.pageClick, false);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this3 = this;
+
+      return React.createElement(
+        'div',
+        { className: 'ease_modal', id: 'add_channel_modal' },
+        React.createElement(
+          'a',
+          { id: 'ease_modal_close_btn', className: 'ease_modal_btn', onClick: function onClick(e) {
+              _this3.props.dispatch((0, _teamModalActions.showAddTeamChannelModal)(false));
+            } },
+          React.createElement('i', { className: 'ease_icon fa fa-times' }),
+          React.createElement(
+            'span',
+            { className: 'key_label' },
+            'close'
+          )
+        ),
+        React.createElement(
+          'div',
+          { className: 'modal_contents_container' },
+          React.createElement(
+            'div',
+            { className: 'contents' },
+            React.createElement(
+              'div',
+              { className: 'content_row flex_direction_column' },
+              React.createElement(
+                'h1',
+                { className: 'width100' },
+                'Create a group'
+              ),
+              React.createElement(
+                'span',
+                null,
+                'Groups are where your team members securely exchange tools and credentials. They can be organized by topic, working group, or specific project.'
+              )
+            ),
+            React.createElement(
+              'div',
+              { className: 'content_row flex_direction_column' },
+              React.createElement(
+                'label',
+                { htmlFor: 'name_input' },
+                'Name'
+              ),
+              React.createElement(
+                'div',
+                { className: 'modal_input_wrapper' },
+                React.createElement('i', { className: 'fa fa-hashtag input_icon' }),
+                React.createElement('input', { onChange: function onChange(e) {
+                    _this3.handleInput(e.target.name, e.target.value);
+                  },
+                  value: this.state.name,
+                  className: 'input_unstyle', id: 'name_input', type: 'text', placeholder: 'Name', name: 'name' })
+              )
+            ),
+            React.createElement(
+              'div',
+              { className: 'content_row flex_direction_column' },
+              React.createElement(
+                'label',
+                null,
+                'Purpose'
+              ),
+              React.createElement('input', { onChange: function onChange(e) {
+                  _this3.handleInput(e.target.name, e.target.value);
+                },
+                value: this.state.purpose,
+                className: 'modal_input', id: 'purpose_input', type: 'text', placeholder: 'Optional', name: 'purpose' })
+            ),
+            React.createElement(
+              'div',
+              { className: 'content_row flex_direction_column' },
+              React.createElement(
+                'label',
+                { style: { fontWeight: 'normal' } },
+                React.createElement(
+                  'strong',
+                  null,
+                  'Members :'
+                ),
+                ' people who will have access to this group'
+              ),
+              React.createElement(
+                'div',
+                { className: 'modal_input_wrapper item_list',
+                  onMouseDown: this.onMouseDown, onMouseUp: this.onMouseUp },
+                this.state.selectedUsers.map(function (item) {
+                  return React.createElement(
+                    'div',
+                    { className: 'input_tag', key: item.id },
+                    React.createElement(
+                      'span',
+                      null,
+                      item.username
+                    ),
+                    React.createElement(
+                      'button',
+                      { className: 'button-unstyle', onClick: this.deselectUser.bind(null, item.id) },
+                      React.createElement('i', { className: 'fa fa-times' })
+                    )
+                  );
+                }, this),
+                React.createElement('input', { onFocus: this.showDropdown, className: 'input_unstyle', id: 'members_input', type: 'text', placeholder: 'Search by name', name: 'members' }),
+                React.createElement(
+                  'div',
+                  { className: classnames("floating_dropdown", this.state.dropdown ? "show" : null) },
+                  React.createElement(
+                    'div',
+                    { className: 'dropdown_content' },
+                    this.state.users.map(function (item) {
+                      return React.createElement(
+                        'div',
+                        { onClick: this.selectUser.bind(null, item.id),
+                          className: classnames("dropdown_row selectable", item.selected ? "selected" : null),
+                          key: item.id },
+                        React.createElement(
+                          'span',
+                          { className: 'main_value' },
+                          item.username
+                        ),
+                        item.first_name != null && React.createElement(
+                          'span',
+                          { className: 'text-muted' },
+                          '\xA0- ',
+                          item.first_name,
+                          '\xA0',
+                          item.last_name
+                        )
+                      );
+                    }, this)
+                  )
+                )
+              )
+            ),
+            React.createElement(
+              'div',
+              { className: 'content_row buttons_row' },
+              React.createElement(
+                'div',
+                { className: 'buttons_wrapper' },
+                React.createElement(
+                  'button',
+                  { className: 'button-unstyle neutral_background action_text_button mrgnRight5',
+                    onClick: function onClick(e) {
+                      _this3.props.dispatch((0, _teamModalActions.showAddTeamChannelModal)(false));
+                    } },
+                  'Cancel'
+                ),
+                React.createElement(
+                  'button',
+                  { className: 'button-unstyle positive_background action_text_button',
+                    onClick: this.validateChannelCreation },
+                  'Next'
+                )
+              )
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return TmpModal;
+}(React.Component)) || _class);
+
+
+module.exports = TmpModal;
 
 /***/ })
 /******/ ]);
