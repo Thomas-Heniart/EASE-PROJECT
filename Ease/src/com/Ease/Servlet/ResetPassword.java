@@ -1,17 +1,5 @@
 package com.Ease.Servlet;
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.User.Keys;
 import com.Ease.Dashboard.User.User;
@@ -20,6 +8,15 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.*;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.Date;
 
 /**
  * Servlet implementation class ResetPassword
@@ -97,9 +94,9 @@ public class ResetPassword extends HttpServlet {
                 hibernateQuery.saveOrUpdateObject(teamUser);
                 for (SharedApp sharedApp : teamUser.getSharedApps())
                     sharedApp.setDisableShared(true, sm.getDB());
-                if (teamUser.getAdmin_id() != null) {
-                    hibernateQuery.saveOrUpdateObject(team.getTeamUserWithId(teamUser.getAdmin_id()).addNotification(teamUser.getUsername() + " lost the password to access your team " + team.getName() + " on Ease.space. Please give again the access to this person.", new Date()));
-                } else {
+                if (teamUser.getAdmin_id() != null)
+                    team.getTeamUserWithId(teamUser.getAdmin_id()).addNotification(teamUser.getUsername() + " lost the password to access your team " + team.getName() + " on Ease.space. Please give again the access to this person.", "", "", new Date(), sm.getDB());
+                else {
                     /* @TODO */
                 }
             }

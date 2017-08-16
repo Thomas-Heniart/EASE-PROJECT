@@ -1,5 +1,6 @@
 package com.Ease.websocketV1;
 
+import com.Ease.Notification.Notification;
 import org.json.simple.JSONObject;
 
 public class WebSocketMessageFactory {
@@ -9,5 +10,9 @@ public class WebSocketMessageFactory {
 
     public static WebSocketMessage createWebSocketMessage(WebSocketMessageType dataType, WebSocketMessageAction actionType, Integer id, JSONObject target) {
         return new TeamWebSocketMessage(dataType.name(), actionType.name(), id, target);
+    }
+
+    public static WebSocketMessage createNotificationMessage(Notification notification) {
+        return new NotificationWebSocketMessage(notification);
     }
 }

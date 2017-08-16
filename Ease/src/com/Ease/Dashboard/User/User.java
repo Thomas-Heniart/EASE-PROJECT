@@ -11,6 +11,7 @@ import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.DashboardManager;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Notification.NotificationManager;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
@@ -108,6 +109,7 @@ public class User {
                 sessionSave, status);
         newUser.loadTeamUsers(context);
         newUser.initializeDashboardManager(context, db);
+        newUser.initializeNotificationManager();
         newUser.loadExtensionKeys(db);
         newUser.loadEmails(db);
         for (App app : newUser.getDashboardManager().getApps()) {
@@ -186,6 +188,8 @@ public class User {
     protected DashboardManager dashboardManager;
     protected List<TeamUser> teamUsers = new LinkedList<>();
 
+    protected NotificationManager notificationManager;
+
     public User(String db_id, String first_name, String email, Keys keys, Option opt, boolean isAdmin,
                 boolean sawGroupProfile, SessionSave sessionSave, Status status) {
         this.db_id = db_id;
@@ -206,8 +210,12 @@ public class User {
         this.updateManager = new UpdateManager(context, db, this);
     }
 
-    public void initializeDashboardManager(ServletContext context, DataBaseConnection db) throws GeneralException, HttpServletException {
+    private void initializeDashboardManager(ServletContext context, DataBaseConnection db) throws GeneralException, HttpServletException {
         this.dashboardManager = new DashboardManager(this, context, db);
+    }
+
+    private void initializeNotificationManager() {
+        this.notificationManager = new NotificationManager(this.db_id);
     }
 
 	/*
@@ -253,7 +261,11 @@ public class User {
         return this.dashboardManager;
     }
 
-	/*
+    public NotificationManager getNotificationManager() {
+        return notificationManager;
+    }
+
+    /*
      * public Status getStatus() { return status; }
 	 */
 

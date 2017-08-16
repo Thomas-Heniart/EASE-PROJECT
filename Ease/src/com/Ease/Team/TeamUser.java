@@ -4,9 +4,9 @@ import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.NewDashboard.User.User;
 import com.Ease.Notification.Notification;
-import com.Ease.Notification.TeamUserNotification;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
+import com.Ease.websocketV1.WebSocketMessageFactory;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.json.simple.JSONArray;
@@ -84,12 +84,6 @@ public class TeamUser {
 
     @Column(name = "jobTitle")
     protected String jobTitle;
-
-    @OneToMany(mappedBy = "teamUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    protected List<TeamUserNotification> teamUserNotifications = new LinkedList<>();
-
-    /* @OneToMany(mappedBy = "teamUser", cascade = CascadeType.ALL, orphanRemoval = true)
-    protected Set<TeamUserTip> teamUserTips = new HashSet<>(); */
 
     @Transient
     protected DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
@@ -297,14 +291,6 @@ public class TeamUser {
         this.phone_number = phone_number;
     }
 
-    public List<TeamUserNotification> getTeamUserNotifications() {
-        return teamUserNotifications;
-    }
-
-    /* public void setTeamUserNotifications(Set<TeamUserNotification> teamUserNotifications) {
-        this.teamUserNotifications = teamUserNotifications;
-    } */
-
     public static TeamUser createOwner(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Team team) throws GeneralException {
         TeamUserRole teamUserRole = new TeamUserRole(TeamUserRole.Role.OWNER.getValue());
         TeamUser owner = new TeamUser(firstName, lastName, email, username, arrivalDate, teamKey, team, teamUserRole);
@@ -331,9 +317,6 @@ public class TeamUser {
         for (Channel channel : this.getTeam().getChannelsForTeamUser(this))
             channel_ids.add(channel.getDb_id());
         res.put("channel_ids", channel_ids);
-        JSONArray notifications = new JSONArray();
-        for (TeamUserNotification notification : this.getTeamUserNotifications())
-            notifications.add(notification.getJson());
         return res;
     }
 
@@ -487,15 +470,19 @@ public class TeamUser {
         this.deciphered_teamKey = null;
     }
 
-    public Notification addNotification(String content, Date timestamp) {
-        TeamUserNotification notification = new TeamUserNotification(content, "", false, timestamp, "", this);
-        this.teamUserNotifications.add(notification);
-        return notification;
-    }
-
     public JSONObject getOrigin() {
         JSONObject res = new JSONObject();
         res.put("team_id", this.getTeam().getDb_id());
         return res;
+    }
+
+    public void addNotification(String content, String url, String icon, Date timestamp, DataBaseConnection db) throws HttpServletException {
+        if (this.dashboard_user == null)
+            Notification.createNotification(content, url, icon, this.getUser_id(), timestamp, db);
+        else {
+            Notification notification = this.dashboard_user.getNotificationManager().addNotification(content, url, icon, timestamp, db);
+            this.dashboard_user.getWebSocketManager().sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+        }
+
     }
 }

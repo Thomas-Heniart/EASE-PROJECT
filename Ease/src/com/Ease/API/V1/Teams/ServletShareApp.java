@@ -56,13 +56,13 @@ public class ServletShareApp extends HttpServlet {
                 sharedApp.accept(db);
             if (shareableApp.getPendingTeamUsers().contains(teamUser_tenant)) {
                 shareableApp.removePendingTeamUser(teamUser_tenant, db);
-                teamUser_tenant.addNotification(teamUser_owner.getUsername() + " approved your access to " + ((App) shareableApp).getName() + ((channel == null) ? "" : " in " + channel.getName()), sm.getTimestamp());
+                teamUser_tenant.addNotification(teamUser_owner.getUsername() + " approved your access to " + ((App) shareableApp).getName() + ((channel == null) ? "" : " in " + channel.getName()), "", "", sm.getTimestamp(), sm.getDB());
                 sharedApp.accept(db);
-            }
+            } else
+                teamUser_tenant.addNotification(teamUser_owner.getUsername() + " sent you " + ((App) shareableApp).getName() + " in " + (shareableApp.getChannel() == null ? "your Personal Space" : shareableApp.getChannel().getName()), "", "", sm.getTimestamp(), sm.getDB());
             db.commitTransaction(transaction);
             shareableApp.addSharedApp(sharedApp);
             team.getAppManager().addSharedApp(sharedApp);
-            teamUser_tenant.addNotification(teamUser_owner.getUsername() + " sent you " + ((App) shareableApp).getName() + " in " + (shareableApp.getChannel() == null ? "your Personal Space" : shareableApp.getChannel().getName()), sm.getTimestamp());
             JSONObject target = shareableApp.getOrigin();
             target.put("team_id", team_id);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, shareableApp.getShareableJson(), target));

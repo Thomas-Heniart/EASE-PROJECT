@@ -10,6 +10,7 @@ import com.Ease.Utils.*;
 import org.json.JSONObject;
 
 import javax.servlet.ServletContext;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -120,59 +121,88 @@ public class TeamManager {
     }
 
     public void passwordReminder() throws HttpServletException {
+
         System.out.println("Password reminder start...");
         Date timestamp = new Date();
         HibernateQuery hibernateQuery = new HibernateQuery();
-        for (Team team : this.getTeams()) {
-            for (SharedApp sharedApp : team.getAppManager().getSharedApps()) {
-                App holder = (App) sharedApp.getHolder();
-                if (!holder.isEmpty())
-                    continue;
-                ClassicApp app = (ClassicApp) sharedApp;
-                Account account = app.getAccount();
-                if (account.mustUpdatePassword()) {
-                    System.out.println("Account: " + account.getDBid() + " must update password.");
-                    if (!account.passwordMustBeUpdated()) {
-                        hibernateQuery.querySQLString("UPDATE accounts SET passwordMustBeUpdated = 1 WHERE id = ?;");
-                        hibernateQuery.setParameter(1, account.getDBid());
-                        hibernateQuery.executeUpdate();
-                        account.setPasswordMustBeUpdated(true);
-                        hibernateQuery.saveOrUpdateObject(sharedApp.getTeamUser_tenant().addNotification("Your password for " + app.getName() + " needs to be updated as soon as possible", timestamp));
-                    } else {
-                        if (!account.adminNotified() && DateComparator.isOutdated(account.getLastUpdatedDate(), account.getPasswordChangeInterval(), 7)) {
-                            System.out.println("Admin must be notified");
-                            hibernateQuery.querySQLString("UPDATE accounts SET adminNotified = 1 WHERE id = ?;");
+        DataBaseConnection db = null;
+        try {
+            db = new DataBaseConnection(DataBase.getConnection());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return;
+        }
+        try {
+            int transaction = db.startTransaction();
+            for (Team team : this.getTeams()) {
+                for (SharedApp sharedApp : team.getAppManager().getSharedApps()) {
+                    App holder = (App) sharedApp.getHolder();
+                    if (!holder.isEmpty())
+                        continue;
+                    ClassicApp app = (ClassicApp) sharedApp;
+                    Account account = app.getAccount();
+                    if (account.mustUpdatePassword()) {
+                        System.out.println("Account: " + account.getDBid() + " must update password.");
+                        if (!account.passwordMustBeUpdated()) {
+                            hibernateQuery.querySQLString("UPDATE accounts SET passwordMustBeUpdated = 1 WHERE id = ?;");
                             hibernateQuery.setParameter(1, account.getDBid());
                             hibernateQuery.executeUpdate();
-                            account.setAdminNotified(true);
-                            hibernateQuery.saveOrUpdateObject(sharedApp.getHolder().getTeamUser_owner().addNotification("The password of " + sharedApp.getTeamUser_tenant().getUsername() + " for " + app.getName() + " is not up to date for the last 7 days.", timestamp));
+                            account.setPasswordMustBeUpdated(true);
+                            sharedApp.getTeamUser_tenant().addNotification("Your password for " + app.getName() + " needs to be updated as soon as possible", "", "", timestamp, db);
+                        } else {
+                            if (!account.adminNotified() && DateComparator.isOutdated(account.getLastUpdatedDate(), account.getPasswordChangeInterval(), 7)) {
+                                System.out.println("Admin must be notified");
+                                hibernateQuery.querySQLString("UPDATE accounts SET adminNotified = 1 WHERE id = ?;");
+                                hibernateQuery.setParameter(1, account.getDBid());
+                                hibernateQuery.executeUpdate();
+                                account.setAdminNotified(true);
+                                sharedApp.getHolder().getTeamUser_owner().addNotification("The password of " + sharedApp.getTeamUser_tenant().getUsername() + " for " + app.getName() + " is not up to date for the last 7 days.", "", "", timestamp, db);
+                            }
                         }
                     }
                 }
             }
+            hibernateQuery.commit();
+            db.commitTransaction(transaction);
+        } catch (GeneralException e) {
+            e.printStackTrace();
         }
-        hibernateQuery.commit();
+        db.close();
         System.out.println("Password reminder end...");
     }
 
     public void passwordLostReminder() throws HttpServletException {
         System.out.println("Password lost reminder start...");
         HibernateQuery hibernateQuery = new HibernateQuery();
-        for (Team team : this.getTeams()) {
-            for (TeamUser teamUser : team.getTeamUsers()) {
-                if (teamUser.isDisabled()) {
-                    hibernateQuery.querySQLString("SELECT DATE_ADD(DATE(?), INTERVAL 7 DAY) = CURDATE();");
-                    hibernateQuery.setParameter(1, teamUser.getDisabledDate());
-                    if ((Boolean) hibernateQuery.getSingleResult()) {
-                        if (teamUser.getAdmin_id() == null)
-                            continue;
-                        hibernateQuery.saveOrUpdateObject(team.getTeamUserWithId(teamUser.getAdmin_id()).addNotification("Since last week " + teamUser.getUsername() + " lost the password to access your team " + team.getName() + " on Ease.space. Please give again the access to this person.", new Date()));
-                    }
-                }
-
-            }
+        DataBaseConnection db = null;
+        try {
+            db = new DataBaseConnection(DataBase.getConnection());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return;
         }
-        hibernateQuery.commit();
+        try {
+            int transaction = db.startTransaction();
+            for (Team team : this.getTeams()) {
+                for (TeamUser teamUser : team.getTeamUsers()) {
+                    if (teamUser.isDisabled()) {
+                        hibernateQuery.querySQLString("SELECT DATE_ADD(DATE(?), INTERVAL 7 DAY) = CURDATE();");
+                        hibernateQuery.setParameter(1, teamUser.getDisabledDate());
+                        if ((Boolean) hibernateQuery.getSingleResult()) {
+                            if (teamUser.getAdmin_id() == null)
+                                continue;
+                            team.getTeamUserWithId(teamUser.getAdmin_id()).addNotification("Since last week " + teamUser.getUsername() + " lost the password to access your team " + team.getName() + " on Ease.space. Please give again the access to this person.", "", "", new Date(), db);
+                        }
+                    }
+
+                }
+            }
+            db.commitTransaction(transaction);
+            hibernateQuery.commit();
+        } catch (GeneralException e) {
+            e.printStackTrace();
+        }
+        db.close();
         System.out.println("Password lost reminder end...");
     }
 }
