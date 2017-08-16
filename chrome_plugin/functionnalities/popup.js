@@ -1,1 +1,1 @@
-window.open('http://www.ease.space');
+window.open('https://ease.space');
