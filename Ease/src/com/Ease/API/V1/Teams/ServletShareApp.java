@@ -58,7 +58,7 @@ public class ServletShareApp extends HttpServlet {
                 shareableApp.removePendingTeamUser(teamUser_tenant, db);
                 teamUser_tenant.addNotification(teamUser_owner.getUsername() + " approved your access to " + ((App) shareableApp).getName() + ((channel == null) ? "" : " in " + channel.getName()), "", "", sm.getTimestamp(), sm.getDB());
                 sharedApp.accept(db);
-            } else
+            } else if (teamUser_owner != teamUser_tenant)
                 teamUser_tenant.addNotification(teamUser_owner.getUsername() + " sent you " + ((App) shareableApp).getName() + " in " + (shareableApp.getChannel() == null ? "your Personal Space" : shareableApp.getChannel().getName()), "", "", sm.getTimestamp(), sm.getDB());
             db.commitTransaction(transaction);
             shareableApp.addSharedApp(sharedApp);
