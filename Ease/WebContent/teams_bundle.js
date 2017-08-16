@@ -62358,7 +62358,7 @@ function reducer() {
   switch (action.type) {
     case 'FETCH_NOTIFICATIONS_FULFILLED':
       {
-        var n = action.payload.notifications.concat(state.notifications);
+        var n = state.notifications.concat(action.payload.notifications);
         return _extends({}, state, {
           notifications: n
         });
