@@ -40,7 +40,7 @@ public class ServletEditTeamUserLastName extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty lastName.");
             teamUserToModify.editLastName(lastName);
             sm.saveOrUpdate(teamUserToModify);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson(), teamUser.getOrigin()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUserToModify.getJson(), teamUserToModify.getOrigin()));
             sm.setSuccess("TeamUser lastName edited.");
         } catch (Exception e) {
             sm.setError(e);
