@@ -105,7 +105,7 @@ response.addCookie(email);
 	</div>
 
 	<div id="onComputer">
-		<div class="header" id="app">
+		<div class="ease-header" id="app">
 			<%--@ include file="/templates/Header.jsp"--%>
 		</div>
 		<script src="/teams_bundle.js"></script>
@@ -143,6 +143,7 @@ response.addCookie(email);
 	<link rel="stylesheet" href="/cssMinified.v00009/lib/niftyPopupWindow/component.css">
 </noscript>
 <script src="/jsMinified.v00014/jquery1.12.4.js" ></script>
+	<script src="/jsMinified.v00014/moment.js" ></script>
 <script src="/jsMinified.v00014/jquery-ui-1.12.0.js" defer></script>
 <script src="/jsMinified.v00014/Sortable.js" defer></script>
 <script src="/jsMinified.v00014/app.js" defer></script>
