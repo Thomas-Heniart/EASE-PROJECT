@@ -16,8 +16,8 @@
         "grave": "true"
       },
       {
-        "action": "click",
-        "search": "#vdojujfd-btnInnerEl"
+        "action": "trueClick",
+        "search": "#form-1035 a[role='button']"
       }
     ]
   },
@@ -27,7 +27,8 @@
       "search": "span#button-1015-btnIconEl, #username-inputEl"
     },
     {
-      "search": "span#button-1015-btnIconEl"
+      "search": "#username-inputEl",
+      "type": "absent"
     }
   ],
   "logout": {

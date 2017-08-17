@@ -1,29 +1,23 @@
 package com.Ease.Context.Catalog;
 
+import com.Ease.Context.Group.Group;
+import com.Ease.Context.Variables;
+import com.Ease.Dashboard.User.User;
+import com.Ease.Team.TeamUser;
+import com.Ease.Utils.Crypto.RSA;
+import com.Ease.Utils.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import javax.servlet.ServletContext;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.ServletContext;
-
-import com.Ease.Team.TeamUser;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
-import com.Ease.Context.Variables;
-import com.Ease.Context.Group.Group;
-import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
-import com.Ease.Utils.Crypto.RSA;
 
 public class Website {
 
@@ -423,6 +417,12 @@ public class Website {
         if (this.websiteAttributes == null)
             return false;
         return this.websiteAttributes.isNew();
+    }
+
+    public void setNew(boolean b, DataBaseConnection db) throws GeneralException {
+        if (this.websiteAttributes == null)
+            return;
+        this.websiteAttributes.setNew(b, db);
     }
 
     public JSONObject getJSON(ServletManager sm) throws GeneralException {

@@ -45,7 +45,7 @@ public class ServletEditTeamUserRole extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot transfer your ownership from here.");
             teamUserToModify.getTeamUserRole().setRoleValue(roleValue);
             sm.saveOrUpdate(teamUserToModify.getTeamUserRole());
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson(), teamUser.getOrigin()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUserToModify.getJson(), teamUserToModify.getOrigin()));
             sm.setSuccess("TeamUser role edited.");
         } catch (Exception e) {
             sm.setError(e);

@@ -1,7 +1,6 @@
 $('body').prepend('<div id="new_ease_extension" safariversion="2.2.4" style="display:none;">');
 $("input[type='password']").attr("data-password-autocomplete", "off");
 $("input[type='password']").each(function() {
-    console.log("Lolilol");
     $(this).prop('type', 'text');
     $('<input type="password"/>').hide().insertBefore(this);
     $(this).focus(function() {

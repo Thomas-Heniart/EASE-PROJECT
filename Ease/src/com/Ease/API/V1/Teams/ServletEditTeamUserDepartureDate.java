@@ -56,7 +56,7 @@ public class ServletEditTeamUserDepartureDate extends HttpServlet {
 
             }
             sm.saveOrUpdate(teamUser_to_modify);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson(), teamUser.getOrigin()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser_to_modify.getJson(), teamUser_to_modify.getOrigin()));
             sm.setSuccess("Departure date edited.");
         } catch (Exception e) {
             sm.setError(e);
