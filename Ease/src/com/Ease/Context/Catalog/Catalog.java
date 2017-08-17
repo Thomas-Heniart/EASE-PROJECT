@@ -1,21 +1,14 @@
 package com.Ease.Context.Catalog;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletContext;
-
-import org.json.simple.JSONArray;
-
 import com.Ease.Context.Group.Group;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
+import org.json.simple.JSONArray;
+
+import javax.servlet.ServletContext;
+import java.util.*;
 
 public class Catalog {
     /*
@@ -61,7 +54,7 @@ public class Catalog {
     }
 
 	/*
-	 * 
+     *
 	 * Getter And Setter
 	 * 
 	 */
@@ -174,7 +167,7 @@ public class Catalog {
     public List<Tag> getTags() {
         return this.tags;
     }
-	
+
 	/*public List<Tag> getTagsAlphabetically() {
 		List<Tag> res = this.tags;
 		Collections.sort(res, new Comparator<Tag>() {
@@ -439,5 +432,32 @@ public class Catalog {
         if (sso == null)
             throw new GeneralException(ServletManager.Code.ClientError, "Sso is null");
         return sso;
+    }
+
+    public void updateWebsitePostions() {
+        List<Website> newWebsites = new LinkedList<>();
+        List<Website> oldWebsites = new LinkedList<>();
+        for (Website website : this.websites) {
+            if (website.isNew())
+                newWebsites.add(website);
+            else
+                oldWebsites.add(website);
+        }
+        oldWebsites.sort((w1, w2) -> {
+            if (w1.ratio > w2.ratio)
+                return 1;
+            else if (w1.ratio == w2.ratio)
+                return 0;
+            return -1;
+        });
+        newWebsites.sort((w1, w2) -> {
+            if (w1.ratio > w2.ratio)
+                return 1;
+            else if (w1.ratio == w2.ratio)
+                return 0;
+            return -1;
+        });
+        newWebsites.addAll(oldWebsites);
+        this.websites = newWebsites;
     }
 }

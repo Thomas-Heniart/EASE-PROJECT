@@ -44,7 +44,8 @@ public class OnStart implements ServletContextListener {
             try {
                 System.out.println("ServletContextListener starting on \"" + Variables.ENVIRONNEMENT + "\" ...");
                 context.setAttribute("idGenerator", new IdGenerator());
-                context.setAttribute("catalog", new Catalog(db, context));
+                Catalog catalog = new Catalog(db, context);
+                context.setAttribute("catalog", catalog);
                 context.setAttribute("groupManager", new GroupManager());
                 context.setAttribute("websitesVisitedManager", new WebsitesVisitedManager(db, context));
                 TeamManager teamManager = new TeamManager(context, db);
@@ -59,8 +60,10 @@ public class OnStart implements ServletContextListener {
                 /* Stripe timer */
                 Timer time = new Timer(); // Instantiate Timer Object
                 StripeScheduledTask st = new StripeScheduledTask(teamManager); // Instantiate SheduledTask class
+                WebsiteScheduledTask websiteScheduledTask = new WebsiteScheduledTask(catalog);
                 RemindersScheduledTask reminders = new RemindersScheduledTask(teamManager);
                 time.schedule(st, 0, 12 * 60 * 60 * 1000); // Create Repetitively task for every 12 hours
+                time.schedule(websiteScheduledTask, 0, 24 * 60 * 60 * 1000);
                 time.schedule(reminders, 0, 24 * 60 * 60 * 1000);
                 List<String> colors = new ArrayList<String>();
                 colors.add("#373B60");
