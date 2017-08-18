@@ -90,13 +90,15 @@ public class ServletInvitePeople extends HttpServlet {
             count = (BigInteger) hibernateQuery.getSingleResult();
             if (count != null && count.intValue() > 0)
                 errors.put("email3", "This person already received an invitation");
+            if (errors.isEmpty())
+                throw new HttpServletException(HttpStatus.BadRequest, errors);
             hibernateQuery.querySQLString("INSERT INTO userAndEmailInvitationsMap values (null, ?, ?, ?, ?);");
             hibernateQuery.setParameter(1, sm.getUser().getDBid());
             hibernateQuery.setParameter(2, email1);
             hibernateQuery.setParameter(3, email2);
             hibernateQuery.setParameter(4, email3);
             hibernateQuery.executeUpdate();
-            teamManager.getTeamWithId(team_id).increaseAccountBalance(jackpot, hibernateQuery);
+            Integer money = teamManager.getTeamWithId(team_id).increaseAccountBalance(jackpot, hibernateQuery);
             String emails[] = new String[]{email1, email2, email3};
             /* Use mailjet api */
             TeamUser teamUser = sm.getTeamUserForTeamId(team_id);
@@ -111,10 +113,9 @@ public class ServletInvitePeople extends HttpServlet {
                 mailJetBuilder.addVariable("last_name", teamUser.getLastName());
                 mailJetBuilder.sendEmail();
             }
-            if (errors.isEmpty())
-                sm.setSuccess("Emails sent");
-            else
-                throw new HttpServletException(HttpStatus.BadRequest, errors);
+            JSONObject res = new JSONObject();
+            res.put("money", (float) money % 100);
+            sm.setSuccess(res);
         } catch (Exception e) {
             e.printStackTrace();
             sm.setError(e);
