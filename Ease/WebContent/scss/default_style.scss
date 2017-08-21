@@ -167,6 +167,15 @@ html {
   text-align: left;
 }
 
+button, input, optgroup, select, textarea {
+  font-family: $defaultFont;
+}
+
+.label {
+  white-space: inherit;
+  text-align: inherit;
+}
+
 #app-root {
   @include display-flex();
   @include flex-direction(column);
@@ -242,6 +251,19 @@ a.link-unstyle {
     text-decoration: none;
     color: inherit;
   }
+}
+
+.divider.hidden {
+  display: inherit !important;
+}
+
+.row {
+  margin-right: inherit;
+  margin-left: inherit;
+}
+
+.ui.header .ui.label {
+  margin-left: 0;
 }
 
 button.button-unstyle {

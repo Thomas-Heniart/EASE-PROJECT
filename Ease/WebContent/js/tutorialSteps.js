@@ -77,7 +77,7 @@ $("div#addAppTutorial #skipButton").click(function () {
         //always
     }, function (retMsg) {
         //success
-        var newWebsite = $(".catlogApp[idx='" + websiteId + "']").attr("newApp") != null;
+        var newWebsite = $(".catalogApp[idx='" + websiteId + "']").attr("newApp") != null;
         easeTracker.trackEvent("AddApp", {"appType": "EmptyApp", "appName": appName, "AppNewYN": newWebsite});
         appsSelectedSkiped++;
     }, function (retMsg) {
