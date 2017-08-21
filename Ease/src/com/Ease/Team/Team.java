@@ -407,20 +407,22 @@ public class Team {
         return this.subscription_id == null;
     }
 
-    public void increaseAccountBalance(Integer amount, HibernateQuery hibernateQuery) {
+    public Integer increaseAccountBalance(Integer amount, HibernateQuery hibernateQuery) {
         hibernateQuery.querySQLString("SELECT credit FROM teamCredit WHERE team_id = ?");
         hibernateQuery.setParameter(1, this.getDb_id());
         Integer credit = (Integer) hibernateQuery.getSingleResult();
         if (this.getCustomer_id() == null) {
             if (credit != null) {
                 hibernateQuery.querySQLString("UPDATE teamCredit SET credit = ? WHERE team_id = ?;");
-                hibernateQuery.setParameter(1, credit + amount);
+                amount += credit;
+                hibernateQuery.setParameter(1, amount);
             } else {
                 hibernateQuery.querySQLString("INSERT INTO teamCredit VALUES (NULL, ?, ?);");
                 hibernateQuery.setParameter(1, amount);
             }
             hibernateQuery.setParameter(2, this.getDb_id());
             hibernateQuery.executeUpdate();
+            return amount;
         } else {
             try {
                 if (credit != null) {
@@ -432,8 +434,10 @@ public class Team {
                 Customer customer = Customer.retrieve(this.getCustomer_id());
                 Map<String, Object> customerParams = new HashMap<>();
                 Integer account_balance = Math.toIntExact((customer.getAccountBalance() == null) ? 0 : customer.getAccountBalance());
-                customerParams.put("account_balance", account_balance - amount - credit);
+                Integer team_account_balance = account_balance - amount - credit;
+                customerParams.put("account_balance", team_account_balance);
                 customer.update(customerParams);
+                return team_account_balance;
             } catch (AuthenticationException e) {
                 e.printStackTrace();
             } catch (InvalidRequestException e) {
@@ -446,6 +450,7 @@ public class Team {
                 e.printStackTrace();
             }
         }
+        return null;
     }
 
     public WebSocketManager getWebSocketManager() {
