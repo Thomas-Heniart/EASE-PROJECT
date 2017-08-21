@@ -58,6 +58,8 @@ public class ServletIscParisRegistration extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits.");
             if (!password.equals(confirm_password))
                 errors.put("confirm_password", "Password confirmation doesn't match!");
+            if (!errors.isEmpty())
+                throw new HttpServletException(HttpStatus.BadRequest, errors);
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
             User newUser = User.createUser(email, username, password, registration_date, sm.getServletContext(), db);
@@ -78,10 +80,22 @@ public class ServletIscParisRegistration extends HttpServlet {
 
             /* Isc Paris apps in profile */
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            Website website_test = catalog.getWebsiteWithName("Facebook");
-            iscProfile.addEmptyApp(website_test.getName(), website_test, db);
-            if (!errors.isEmpty())
-                throw new HttpServletException(HttpStatus.BadRequest, errors);
+            Website myIsc = catalog.getWebsiteWithName("My ISC");
+            iscProfile.addEmptyApp(myIsc.getName(), myIsc, db);
+            Website moodle = catalog.getWebsiteWithName("Moodle");
+            iscProfile.addEmptyApp(moodle.getName(), moodle, db);
+            Website jobTeaser = catalog.getWebsiteWithName("JobTeaser ISC");
+            iscProfile.addEmptyApp("JobTeaser", jobTeaser, db);
+            Website iagora = catalog.getWebsiteWithName("Iagora");
+            iscProfile.addEmptyApp(iagora.getName(), iagora, db);
+            Website talentoday = catalog.getWebsiteWithName("Talentoday");
+            iscProfile.addEmptyApp(talentoday.getName(), talentoday, db);
+            Website scholarvox = catalog.getWebsiteWithName("Scholarvox");
+            iscProfile.addEmptyApp(scholarvox.getName(), scholarvox, db);
+            Website housing_center = catalog.getWebsiteWithName("Housing Center");
+            iscProfile.addEmptyApp(housing_center.getName(), housing_center, db);
+            Website centralTest = catalog.getWebsiteWithName("CentralTest");
+            iscProfile.addEmptyApp(centralTest.getName(), centralTest, db);
             db.commitTransaction(transaction);
             sm.setSuccess(newUser.getJson());
 
