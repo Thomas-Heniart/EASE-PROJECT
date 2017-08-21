@@ -96,6 +96,9 @@ public class ServletIscParisRegistration extends HttpServlet {
             iscProfile.addEmptyApp(housing_center.getName(), housing_center, db);
             Website centralTest = catalog.getWebsiteWithName("CentralTest");
             iscProfile.addEmptyApp(centralTest.getName(), centralTest, db);
+
+            /* @TODO registration page iscp: check if email ends with @iscparis.com */
+
             db.commitTransaction(transaction);
             sm.setSuccess(newUser.getJson());
 

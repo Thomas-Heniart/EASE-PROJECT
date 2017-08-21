@@ -8,6 +8,7 @@ import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateDatabase;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.Crypto.RSA;
+import com.Ease.Utils.Crypto.ServerAES;
 import com.Ease.Utils.*;
 import com.stripe.Stripe;
 
@@ -51,9 +52,13 @@ public class OnStart implements ServletContextListener {
                 TeamManager teamManager = new TeamManager(context, db);
                 context.setAttribute("teamManager", teamManager);
                 Stripe.apiKey = "sk_test_4Qqw6xcv7VQDmXBS5CZ9rz5T";
+
                 Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
                 context.setAttribute("publicKey", publicAndPrivateKey.getKey());
                 context.setAttribute("privateKey", publicAndPrivateKey.getValue());
+                ServerAES serverAES = new ServerAES();
+                context.setAttribute("serverAES", serverAES);
+
                 context.setAttribute("userManager", new UserManager());
                 //context.setAttribute("tipManager", new TipManager());
 
