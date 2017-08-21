@@ -1,6 +1,6 @@
 var AesUtil = function (salt, passphrase) {
     this.keySize = 128 / 32;
-    this.iterationCount = 65536;
+    this.iterationCount = 10000;
     this.salt = salt;
     this.passphrase = passphrase;
     this.key = this.generateKey(this.salt, this.passphrase);
@@ -19,7 +19,7 @@ AesUtil.prototype.encrypt = function (plainText, iv) {
         this.key,
         {iv: CryptoJS.enc.Hex.parse(iv)});
     return encrypted.ciphertext.toString(CryptoJS.enc.Base64);
-}
+};
 
 AesUtil.prototype.decrypt = function (iv, cipherText) {
     var key = this.generateKey(this.salt, this.passphrase);
@@ -47,8 +47,8 @@ $(document).ready(function () {
         public_key: RSAEncryption.getPublicKeyB64()
     }, function (data) {
         aesUtils = new AesUtil(RSAEncryption.decrypt(data.salt), RSAEncryption.decrypt(data.passphrase));
-        var iv = aesUtils.generateIv();
-        alert(iv);
+        alert("Done");
+        /* var iv = aesUtils.generateIv();
         var cipheredText = aesUtils.encrypt("bite", iv);
         $.ajax({
             type: "POST",
@@ -60,8 +60,8 @@ $(document).ready(function () {
             contentType: "application/JSON; charset=utf-8",
             dataType: "json",
             success: function (data) {
-                alert(aesUtils.decrypt(data.iv, data.msg));
+                var deipheredText = aesUtils.decrypt(data.iv, data.msg);
             },
-        });
+        }); */
     });
 });

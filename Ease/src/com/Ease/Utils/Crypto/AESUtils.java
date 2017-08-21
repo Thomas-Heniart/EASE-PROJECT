@@ -17,7 +17,7 @@ import java.security.spec.KeySpec;
 
 public class AESUtils {
     private static final int KEY_SIZE = 128;
-    private static final int ITERATIONS = 65536;
+    private static final int ITERATIONS = 10000;
 
     private Cipher cipher;
 
