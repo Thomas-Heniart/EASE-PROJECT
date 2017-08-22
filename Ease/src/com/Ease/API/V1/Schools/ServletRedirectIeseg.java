@@ -1,4 +1,4 @@
-package com.Ease.Servlet;
+package com.Ease.API.V1.Schools;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,16 +9,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Servlet implementation class RedirEdhecUniv
+ * Servlet implementation class ServletRedirectIeseg
  */
-@WebServlet("/edhec")
-public class RedirEdhecUniv extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+@WebServlet("/ieseg")
+public class ServletRedirectIeseg extends HttpServlet {
+    private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public RedirEdhecUniv() {
+    public ServletRedirectIeseg() {
         super();
     }
 
@@ -26,7 +26,7 @@ public class RedirEdhecUniv extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher rd = request.getRequestDispatcher("schoolLandingTemplate.jsp?schoolImageSrcs=/resources/landing/school/edhec.png&schoolName=EDHEC&formAction=EdhecRegistration&commentFile=edhecComments.jsp&emailPlaceholder=edhec.com&video=edhec.mp4");
+        RequestDispatcher rd = request.getRequestDispatcher("schoolLandingTemplate.jsp?schoolImageSrcs=/resources/landing/school/ieseg.png&schoolName=IÉSEG&commentFile=iesegComments.jsp&emailPlaceholder=ieseg.fr&video=ieseg.mp4");
         rd.forward(request, response);
 	}
 

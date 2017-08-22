@@ -1,4 +1,4 @@
-package com.Ease.Servlet;
+package com.Ease.API.V1.Schools;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,16 +9,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Servlet implementation class RedirLandingUniv
+ * Servlet implementation class ServletRedirectEstice
  */
 @WebServlet({"/espas-estice-icm"})
-public class RedirLandingUniv extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+public class ServletRedirectEstice extends HttpServlet {
+    private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public RedirLandingUniv() {
+    public ServletRedirectEstice() {
         super();
     }
 
@@ -26,7 +26,7 @@ public class RedirLandingUniv extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher rd = request.getRequestDispatcher("schoolLandingTemplate.jsp?schoolImageSrcs=/resources/landing/school/Espas.png,/resources/landing/school/Estice.png,/resources/landing/school/ICM.jpg&schoolName=ESPAS,%20ESTICE%20et%20ICM&formAction=EsticeRegistration&commentFile=esticeComments.jsp&emailPlaceholder=something&video=estice.mp4");
+        RequestDispatcher rd = request.getRequestDispatcher("schoolLandingTemplate.jsp?schoolImageSrcs=/resources/landing/school/Espas.png,/resources/landing/school/Estice.png,/resources/landing/school/ICM.jpg&schoolName=ESPAS,%20ESTICE%20et%20ICM&school=Estice&commentFile=esticeComments.jsp&emailPlaceholder=something&video=estice.mp4");
         rd.forward(request, response);
 	}
 
