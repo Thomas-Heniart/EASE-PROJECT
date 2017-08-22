@@ -1,13 +1,12 @@
 package com.Ease.Servlet;
 
-import java.io.IOException;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * Servlet implementation class RedirLandingUniv
@@ -27,8 +26,8 @@ public class RedirLandingUniv extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher rd = request.getRequestDispatcher("schoolLandingTemplate.jsp?schoolImageSrcs=/resources/landing/school/Espas.png,/resources/landing/school/Estice.png,/resources/landing/school/ICM.jpg&schoolName=ESPAS,%20ESTICE%20et%20ICM&formAction=RegistrationEstice&commentFile=esticeComments.jsp&emailPlaceholder=something&video=estice.mp4");
-		rd.forward(request, response);
+        RequestDispatcher rd = request.getRequestDispatcher("schoolLandingTemplate.jsp?schoolImageSrcs=/resources/landing/school/Espas.png,/resources/landing/school/Estice.png,/resources/landing/school/ICM.jpg&schoolName=ESPAS,%20ESTICE%20et%20ICM&formAction=EsticeRegistration&commentFile=esticeComments.jsp&emailPlaceholder=something&video=estice.mp4");
+        rd.forward(request, response);
 	}
 
 	/**
