@@ -11,6 +11,66 @@
 	z-index: 1;
 }
 
+.ui.menu .item > i.icon {
+	margin:0;
+}
+#main_navbar {
+	font-size: .7rem;
+	margin: auto;
+	.menu {
+		left: auto;
+		right: 0;
+	}
+	#catalog_button {
+		background-color: $themeGreenColor;
+		color: white;
+		border-top-right-radius: .28571429rem;
+		border-bottom-right-radius: .28571429rem;
+		&:hover {
+			cursor: pointer;
+			background-color: darken($themeGreenColor, 10%);
+		}
+	}
+	#logout_button {
+		.menu>.item {
+			font-weight: bold !important;
+			color: $themeRedColor !important;
+		}
+	}
+	#teams_list {
+		.menu>.item {
+			font-weight: bold !important;
+			&.active {
+				color: $themeBlueColor !important;
+			}
+		}
+	}
+	#notifications_menu {
+		.menu {
+			& > * {
+				white-space: normal;
+			}
+			width: 320px !important;
+			max-width: 320px;
+			.notification-card {
+				display: flex;
+				&.new {
+					background-color: $themeGreyLightColor !important;
+					&:before {
+						content: "\f111";
+						left: 6px;
+						font-size: 8px;
+						color:$themeRedColor;
+						top: 35%;
+						position: absolute;
+						font-family: FontAwesome;
+					}
+				}
+			}
+		}
+	}
+}
+
 #ease_main_navbar {
 	#notification_button {
 		.menu {
@@ -36,30 +96,9 @@
 }
 
 .notification-card {
-	text-align: left;
-	font-weight: normal;
-	padding: 10px 20px;
-	position: relative;
-	&:hover {
-		background-color: $themeGreyDarkColor;
-	}
-	&.new {
-		background-color: $themeGreyLightColor;
-		&:hover {
-			background-color: $themeGreyDarkColor;
-		}
-		&:before {
-			content: "\f111";
-			left: 6px;
-			font-size: 8px;
-			color:$themeRedColor;
-			top: 35%;
-			position: absolute;
-			font-family: FontAwesome;
-		}
-	}
 	.date {
 		color: $themeMediumDarkGreyColor;
+		margin-top: 10px;
 	}
 	.icon {
 		width: 40px;

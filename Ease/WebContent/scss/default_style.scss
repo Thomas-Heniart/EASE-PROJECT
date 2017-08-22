@@ -142,6 +142,12 @@ html {
   height: 43px;
 }
 
+#main_navbar {
+  min-width: inherit;
+  position: inherit;
+  overflow: inherit;
+}
+
 .inline-tooltipped {
   display: inline-block;
   position: relative;
@@ -174,6 +180,14 @@ button, input, optgroup, select, textarea {
 .label {
   white-space: inherit;
   text-align: inherit;
+}
+
+.ui.celled.grid > .row{
+  box-shadow: none;
+  border-top:1px solid #e8e8e8;
+  &:first-child {
+    border-top: none;
+  }
 }
 
 #app-root {
