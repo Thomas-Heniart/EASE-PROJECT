@@ -9,8 +9,26 @@
             </p>
         </div>
         <div class="bodysHandler">
+            <div class="popupBody" id="3">
+                <form class="handler" action="/api/v1/common/CheckRegistrationDigits">
+                    <div class="row">
+                        <p class="row-heading">Enter digits</p>
+                    </div>
+                    <div class="row">
+                        <input name="digits"/>
+                    </div>
+                    <div class="row text-center">
+                        <img class="loading" src="resources/other/facebook-loading.svg"/>
+                        <button class="btn submitButton" type="submit">
+                            <fmt:message key="landing.signup-popup.page-2.button"/>
+                        </button>
+                        <p class="alert-message"></p>
+                    </div>
+                </form>
+            </div>
             <div class="popupBody" id="2">
-                <form class="handler" action='${param.formAction == null ? '/register' : param.formAction}'>
+                <form class="handler"
+                      action='/api/v1/common/Registration${param.school == null ? '' : param.school}'>
                     <div class="row">
                         <p class="row-heading">
                             <fmt:message key="landing.signup-popup.page-2.password-title"/>
@@ -22,12 +40,6 @@
                         </div>
                     </div>
                     <div class="row">
-                        <input type="email">
-                    </div>
-                    <div class="row">
-                        <input type="hidden" name="fname" value='${param.name}'/>
-                        <input type="hidden" name="email" value='${param.email}'/>
-                        <input type="hidden" name="invitationCode" value='${param.invitationCode}'/>
                         <span class="input">
 							<input type="password" name="password" placeholder=
                                     <fmt:message key="landing.signup-popup.page-2.password-placeholder"/>/>
@@ -49,7 +61,7 @@
                     <div class="row">
 						<span class="input">
 							<input type="password" name="confirmPassword" placeholder=
-                            <fmt:message key="landing.signup-popup.page-2.password-confirm-placeholder"/>/>
+                                    <fmt:message key="landing.signup-popup.page-2.password-confirm-placeholder"/>/>
 							<div class="showPassDiv">
 								<i class="fa fa-eye centeredItem" aria-hidden="true"></i>
 								<i class="fa fa-eye-slash centeredItem" aria-hidden="true"></i>
@@ -70,7 +82,8 @@
                 </form>
             </div>
             <div class="popupBody show" id="1">
-                <form class="handler" action="/checkInvitation">
+                <form class="handler"
+                      action='/api/v1/common/AskRegistration${param.school == null ? '' : param.school}'>
                     <div class="row">
                         <p class="row-heading">
                             <fmt:message key="landing.signup-popup.page-2.name-title"/>
