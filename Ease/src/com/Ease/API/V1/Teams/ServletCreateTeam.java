@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.Dashboard.User.User;
+import com.Ease.Dashboard.User.UserEmail;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
@@ -85,6 +86,9 @@ public class ServletCreateTeam extends HttpServlet {
             channel.addTeamUser(owner, sm.getDB());
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             teamManager.addTeam(team);
+            UserEmail userEmail = user.getUserEmails().get(email);
+            if (userEmail != null && !userEmail.isVerified())
+                userEmail.beVerified(sm.getDB());
             sm.setSuccess(team.getJson());
         } catch (Exception e) {
             sm.setError(e);
