@@ -1,4 +1,4 @@
-package com.Ease.API.V1.Common;
+package com.Ease.API.V1.Schools;
 
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
@@ -31,7 +31,6 @@ public class ServletIscParisRegistration extends HttpServlet {
             String username = sm.getStringParam("username", true);
             String email = sm.getStringParam("email", true);
             String password = sm.getStringParam("password", false);
-            String confirm_password = sm.getStringParam("confirm_password", false);
             String digits = sm.getStringParam("digits", false);
             Long registration_date = sm.getLongParam("registration_date", true);
             Boolean send_news = sm.getBooleanParam("newsletter", true);
@@ -56,8 +55,6 @@ public class ServletIscParisRegistration extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "You didn't ask for an account.");
             if (!db_digits.equals(digits))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits.");
-            if (!password.equals(confirm_password))
-                errors.put("confirm_password", "Password confirmation doesn't match!");
             if (!errors.isEmpty())
                 throw new HttpServletException(HttpStatus.BadRequest, errors);
             DataBaseConnection db = sm.getDB();

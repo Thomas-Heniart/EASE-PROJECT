@@ -477,10 +477,11 @@ public class TeamUser {
     }
 
     public void addNotification(String content, String url, String icon, Date timestamp, DataBaseConnection db) throws HttpServletException {
+        String team_url = "/teams/" + this.getTeam().getDb_id() + "/" + url;
         if (this.dashboard_user == null)
-            Notification.createNotification(content, url, icon, this.getUser_id(), timestamp, db);
+            Notification.createNotification(content, team_url, icon, this.getUser_id(), timestamp, db);
         else {
-            Notification notification = this.dashboard_user.getNotificationManager().addNotification(content, url, icon, timestamp, db);
+            Notification notification = this.dashboard_user.getNotificationManager().addNotification(content, team_url, icon, timestamp, db);
             this.dashboard_user.getWebSocketManager().sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
         }
 

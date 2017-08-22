@@ -40,7 +40,8 @@ public class ServletAskJoinApp extends HttpServlet {
             if (channel != null && !(channel.getTeamUsers().contains(teamUser)))
                 throw new HttpServletException(HttpStatus.Forbidden, "You don't have access to this channel");
             shareableApp.addPendingTeamUser(teamUser, sm.getDB());
-            shareableApp.getTeamUser_owner().addNotification(shareableApp.getTeamUser_owner().getUsername() + " would like to have access to " + ((App) shareableApp).getName(), "", "", sm.getTimestamp(), sm.getDB());
+            String url = (channel == null) ? ("@" + shareableApp.getTeamUser_owner().getDb_id()) : channel.getDb_id().toString();
+            shareableApp.getTeamUser_owner().addNotification(shareableApp.getTeamUser_owner().getUsername() + " would like to have access to " + ((App) shareableApp).getName(), url, ((App) shareableApp).getLogo(), sm.getTimestamp(), sm.getDB());
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, shareableApp.getShareableJson(), shareableApp.getOrigin()));
             sm.setSuccess(shareableApp.getShareableJson());
         } catch (Exception e) {

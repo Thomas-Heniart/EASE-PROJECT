@@ -148,7 +148,9 @@ public class TeamManager {
                             hibernateQuery.setParameter(1, account.getDBid());
                             hibernateQuery.executeUpdate();
                             account.setPasswordMustBeUpdated(true);
-                            sharedApp.getTeamUser_tenant().addNotification("Your password for " + app.getName() + " needs to be updated as soon as possible", "", "", timestamp, db);
+                            Channel channel = sharedApp.getHolder().getChannel();
+                            String url = (channel == null) ? ("@" + sharedApp.getHolder().getTeamUser_owner().getDb_id()) : channel.getDb_id().toString();
+                            sharedApp.getTeamUser_tenant().addNotification("Your password for " + app.getName() + " needs to be updated as soon as possible", url, app.getLogo(), timestamp, db);
                         } else {
                             if (!account.adminNotified() && DateComparator.isOutdated(account.getLastUpdatedDate(), account.getPasswordChangeInterval(), 7)) {
                                 System.out.println("Admin must be notified");
@@ -156,7 +158,9 @@ public class TeamManager {
                                 hibernateQuery.setParameter(1, account.getDBid());
                                 hibernateQuery.executeUpdate();
                                 account.setAdminNotified(true);
-                                sharedApp.getHolder().getTeamUser_owner().addNotification("The password of " + sharedApp.getTeamUser_tenant().getUsername() + " for " + app.getName() + " is not up to date for the last 7 days.", "", "", timestamp, db);
+                                Channel channel = sharedApp.getHolder().getChannel();
+                                String url = (channel == null) ? ("@" + sharedApp.getHolder().getTeamUser_owner().getDb_id()) : channel.getDb_id().toString();
+                                sharedApp.getHolder().getTeamUser_owner().addNotification("The password of " + sharedApp.getTeamUser_tenant().getUsername() + " for " + app.getName() + " is not up to date for the last 7 days.", url, app.getLogo(), timestamp, db);
                             }
                         }
                     }
@@ -191,7 +195,7 @@ public class TeamManager {
                         if ((Boolean) hibernateQuery.getSingleResult()) {
                             if (teamUser.getAdmin_id() == null)
                                 continue;
-                            team.getTeamUserWithId(teamUser.getAdmin_id()).addNotification("Since last week " + teamUser.getUsername() + " lost the password to access your team " + team.getName() + " on Ease.space. Please give again the access to this person.", "", "", new Date(), db);
+                            team.getTeamUserWithId(teamUser.getAdmin_id()).addNotification("Since last week " + teamUser.getUsername() + " lost the password to access your team " + team.getName() + " on Ease.space. Please give again the access to this person.", "@" + teamUser.getDb_id(), "", new Date(), db);
                         }
                     }
 
