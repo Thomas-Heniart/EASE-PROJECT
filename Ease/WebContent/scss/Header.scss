@@ -137,7 +137,7 @@
 			}
 		}
 	}
-	#catalog_button, #notification_button, #logout_button, #teams_button {
+	#catalog_button, #notification_button, #logout_button, #teams_button, #settings_button {
 		width: 36px;
 	}
 	#catalog_button {
@@ -147,7 +147,7 @@
 			background-color: $DarkGreen;
 		}
 	}
-	#settings_button {
+	#dashboard_button {
 		padding: 0 10px;
 	}
 }
@@ -243,7 +243,7 @@
 		}
 	}
 }
-.header {
+.ease-header {
 	&:before {
 		content: "";
 		position:absolute;
@@ -257,7 +257,7 @@
 	}
 }
 
-.header.scrolling {
+.ease-header.scrolling {
 	&:before {
 		content: "";
 		top: 0;
@@ -265,14 +265,14 @@
 	}
 }
 
-.header#app {
+.ease-header#app {
 	height: auto;
 	#ease_header {
 		border-bottom: none;
 	}
 }
 
-.header{
+.ease-header{
 	height: 60px;
 	position: fixed;
 	width: 100%;
@@ -297,13 +297,13 @@
 	}
 }
 
-.header {
+.ease-header {
 	.searchInput {
 		display: none;
 	}
 }
 
-.header {
+.ease-header {
 	.userSettingsContainer, .logoutContainer {
 		position: relative;
 		overflow: hidden;
@@ -554,7 +554,7 @@
 }
 
 
-.header.scrolling {
+.ease-header.scrolling {
 	#searchBar {
 		background-color: $themeLightGreyColor;
 	}

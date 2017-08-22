@@ -8,6 +8,12 @@ $(document).ready(function(){
 	easeHeader = new Header($('.header'));
 });
 
+function goToSettings(){
+	$('.SettingsView').addClass('show');
+	$('.col-left').removeClass('show');
+	$('.MenuButtonSet').removeClass('show');
+}
+
 $(document).ready(function() {
 	$("#userSettingsButton").click(function() {
 		$(".userSettings").toggleClass("show");
@@ -19,9 +25,7 @@ $(document).ready(function() {
 	});
 	$('#ModifyUserButton').click(function() {
 		easeTracker.trackEvent("ClickSettingsFromDashboard");
-		$('.SettingsView').addClass('show');
-		$('.col-left').removeClass('show');
-		$('.MenuButtonSet').removeClass('show');
+		goToSettings();
 	});
 	if($("body").hasClass("picBckgrnd")){
 		$('#backgroundSwitch').prop("checked", true);
