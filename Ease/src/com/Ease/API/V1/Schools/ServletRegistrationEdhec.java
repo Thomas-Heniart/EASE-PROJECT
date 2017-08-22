@@ -20,8 +20,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
-@WebServlet("/api/v1/common/EdhecRegistration")
-public class ServletEdhecRegistration extends HttpServlet {
+@WebServlet("/api/v1/common/RegistrationEdhec")
+public class ServletRegistrationEdhec extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {

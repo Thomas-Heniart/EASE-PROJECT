@@ -20,8 +20,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
-@WebServlet("/api/v1/common/IscParisRegistration")
-public class ServletIscParisRegistration extends HttpServlet {
+@WebServlet("/api/v1/common/RegistrationEstice")
+public class ServletRegistrationEstice extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
@@ -72,29 +72,18 @@ public class ServletIscParisRegistration extends HttpServlet {
             ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
             ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);
 
-            /* Isc Paris profile */
-            Profile iscProfile = newUser.getDashboardManager().addProfile("ISC Paris", "#373B60", db);
+            Profile esticeProfile = newUser.getDashboardManager().addProfile("ISC Paris", "#373B60", db);
 
-            /* Isc Paris apps in profile */
+            /* Estice apps in profile */
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            Website myIsc = catalog.getWebsiteWithName("My ISC");
-            iscProfile.addEmptyApp(myIsc.getName(), myIsc, db);
-            Website moodle = catalog.getWebsiteWithName("Moodle");
-            iscProfile.addEmptyApp(moodle.getName(), moodle, db);
-            Website jobTeaser = catalog.getWebsiteWithName("JobTeaser ISC");
-            iscProfile.addEmptyApp("JobTeaser", jobTeaser, db);
-            Website iagora = catalog.getWebsiteWithName("Iagora");
-            iscProfile.addEmptyApp(iagora.getName(), iagora, db);
-            Website talentoday = catalog.getWebsiteWithName("Talentoday");
-            iscProfile.addEmptyApp(talentoday.getName(), talentoday, db);
-            Website scholarvox = catalog.getWebsiteWithName("Scholarvox");
-            iscProfile.addEmptyApp(scholarvox.getName(), scholarvox, db);
-            Website housing_center = catalog.getWebsiteWithName("Housing Center");
-            iscProfile.addEmptyApp(housing_center.getName(), housing_center, db);
-            Website centralTest = catalog.getWebsiteWithName("CentralTest");
-            iscProfile.addEmptyApp(centralTest.getName(), centralTest, db);
-
-            /* @TODO registration page iscp: check if email ends with @iscparis.com */
+            Website chamilo = catalog.getWebsiteWithName("Chamilo");
+            esticeProfile.addEmptyApp(chamilo.getName(), chamilo, db);
+            Website kwartz = catalog.getWebsiteWithName("Kwartz");
+            esticeProfile.addEmptyApp(kwartz.getName(), kwartz, db);
+            Website jobTeaser = catalog.getWebsiteWithName("JobTeaser Estice");
+            esticeProfile.addEmptyApp("JobTeaser", jobTeaser, db);
+            Website buVauban = catalog.getWebsiteWithName("BU Vauban");
+            esticeProfile.addEmptyApp(buVauban.getName(), buVauban, db);
 
             db.commitTransaction(transaction);
             sm.setSuccess(newUser.getJson());

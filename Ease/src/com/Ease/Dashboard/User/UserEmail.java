@@ -1,18 +1,16 @@
 package com.Ease.Dashboard.User;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import javax.mail.MessagingException;
-
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.AccountInformation;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Mail.SendGridMail;
-import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.CodeGenerator;
+import com.Ease.Utils.*;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class UserEmail {
 
@@ -171,6 +169,13 @@ public class UserEmail {
 
     public void beVerified(ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
+        DatabaseRequest request = db.prepareRequest("UPDATE usersEmails SET verified = 1 WHERE id = ?;");
+        request.setString(db_id);
+        request.set();
+        this.verified = true;
+    }
+
+    public void beVerified(DataBaseConnection db) throws GeneralException {
         DatabaseRequest request = db.prepareRequest("UPDATE usersEmails SET verified = 1 WHERE id = ?;");
         request.setString(db_id);
         request.set();
