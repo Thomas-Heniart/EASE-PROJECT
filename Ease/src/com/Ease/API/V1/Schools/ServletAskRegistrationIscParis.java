@@ -27,7 +27,7 @@ public class ServletAskRegistrationIscParis extends HttpServlet {
             if (email == null || email.equals("") || !Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "That doesn't look like a valid email address!");
             if (!email.endsWith("@iscparis.com"))
-                throw new HttpServletException(HttpStatus.BadRequest, "You must use your edhec email to continue.");
+                throw new HttpServletException(HttpStatus.BadRequest, "You must use your school email to continue.");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             hibernateQuery.querySQLString("SELECT COUNT(*) FROM users LEFT JOIN teamUsers ON users.id = teamUsers.user_id WHERE users.email = ? OR teamUsers.email = ?;");
             hibernateQuery.setParameter(1, email);

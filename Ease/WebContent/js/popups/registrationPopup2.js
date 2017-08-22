@@ -97,6 +97,9 @@ var signUpPopup = function (elem) {
             }, function () {
                 self.openRegistration();
             }, function (msg) {
+                console.log(msg);
+                alert(msg);
+                loading.removeClass("show");
                 alertMessage.text(msg);
                 alertMessage.css('color', '#ec555b')
                 alertMessage.addClass('show');

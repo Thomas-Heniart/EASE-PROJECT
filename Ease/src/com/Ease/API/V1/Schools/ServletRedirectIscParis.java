@@ -15,7 +15,7 @@ public class ServletRedirectIscParis extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher rd = request.getRequestDispatcher("schoolLandingTemplate.jsp?schoolImageSrcs=/resources/landing/school/iscparis.png&schoolName=ISC%20Paris&school=IscParis&commentFile=edhecComments.jsp&emailPlaceholder=iscparis.com&video=edhec.mp4");
+        RequestDispatcher rd = request.getRequestDispatcher("schoolLandingTemplate.jsp?schoolImageSrcs=/resources/landing/school/iscparis.png&schoolName=ISC%20Paris&school=IscParis&commentFile=esticeComments.jsp&emailPlaceholder=iscparis.com&video=estice.mp4");
         rd.forward(request, response);
     }
 }

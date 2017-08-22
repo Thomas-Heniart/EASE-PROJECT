@@ -7,7 +7,11 @@ var ajaxHandler = {
             dataType: "json",
             complete: completeCallback,
             success: successCallback,
-            error: errorCallback
+            statusCode: {
+                400: function (error) {
+                    errorCallback(error.responseText);
+                }
+            }
         });
     },
     post: function (name, parameters, completeCallback, successCallback, errorCallback) {
@@ -17,9 +21,13 @@ var ajaxHandler = {
             data: JSON.stringify(parameters),
             contentType: "application/JSON; charset=utf-8",
             dataType: "json",
-            compelte: completeCallback,
+            complete: completeCallback,
             success: successCallback,
-            error: errorCallback
+            statusCode: {
+                400: function (error) {
+                    errorCallback(error.responseText);
+                }
+            }
         });
     }
 };

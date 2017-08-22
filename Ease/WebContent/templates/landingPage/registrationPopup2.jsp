@@ -12,7 +12,12 @@
             <div class="popupBody" id="3">
                 <form class="handler" action="/api/v1/common/CheckRegistrationDigits">
                     <div class="row">
-                        <p class="row-heading">Enter digits</p>
+                        <p class="row-heading">
+                            <fmt:message key="landing.signup-popup.page-3.digits-title"/>
+                        </p>
+                        <p class="row-heading">
+                            <fmt:message key="landing.signup-popup.page-3.digits-subtitle"/>
+                        </p>
                     </div>
                     <div class="row">
                         <input name="digits"/>
@@ -20,7 +25,7 @@
                     <div class="row text-center">
                         <img class="loading" src="resources/other/facebook-loading.svg"/>
                         <button class="btn submitButton" type="submit">
-                            <fmt:message key="landing.signup-popup.page-2.button"/>
+                            <fmt:message key="landing.signup-popup.page-3.button"/>
                         </button>
                         <p class="alert-message"></p>
                     </div>
