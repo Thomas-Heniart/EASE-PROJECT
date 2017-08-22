@@ -1,23 +1,20 @@
 package com.Ease.Dashboard.App.LinkApp;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.*;
+import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.*;
-import com.Ease.Utils.ServletManager;
-import com.Ease.Utils.Servlets.*;
+import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import com.Ease.Dashboard.Profile.Profile;
-
 import javax.servlet.ServletContext;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LinkApp extends App implements SharedApp, ShareableApp {
 
@@ -177,6 +174,11 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
 
     public LinkAppInformation getLinkAppInformations() {
         return this.linkInfos;
+    }
+
+    @Override
+    public String getLogo() {
+        return this.linkInfos.getImgUrl();
     }
 
     @Override

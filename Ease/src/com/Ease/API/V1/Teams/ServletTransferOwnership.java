@@ -42,7 +42,7 @@ public class ServletTransferOwnership extends HttpServlet {
             if (!new_teamUser_owner.isVerified() || new_teamUser_owner.isDisabled())
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot transfer your ownership to this user.");
             teamUser.transferOwnershipTo(new_teamUser_owner);
-            new_teamUser_owner.addNotification(teamUser.getUsername() + " changed your role to Owner", "", "", sm.getTimestamp(), sm.getDB());
+            new_teamUser_owner.addNotification(teamUser.getUsername() + " changed your role to Owner", "@" + new_teamUser_owner.getDb_id(), "", sm.getTimestamp(), sm.getDB());
             sm.saveOrUpdate(new_teamUser_owner);
             sm.saveOrUpdate(teamUser);
             MailJetBuilder mailJetBuilder = new MailJetBuilder();

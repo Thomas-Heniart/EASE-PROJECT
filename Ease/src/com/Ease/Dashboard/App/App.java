@@ -415,6 +415,10 @@ public class App implements ShareableApp, SharedApp {
         return new JSONArray();
     }
 
+    public String getLogo() {
+        throw new IllegalStateException("Shouldn't be there");
+    }
+
     /* For sancho le robot */
     public boolean isEmpty() {
         return false;

@@ -293,6 +293,11 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
     }
 
     @Override
+    public String getLogo() {
+        return this.website.getFolder() + "logo.png";
+    }
+
+    @Override
     public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, PostServletManager sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
