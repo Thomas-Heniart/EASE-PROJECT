@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/api/v1/teams/GetAccountInformation")
-public class ServletGetAccountInformation extends HttpServlet {
+@WebServlet("/api/v1/teams/GetPassword")
+public class ServletGetPassword extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, false);
         try {
@@ -26,7 +26,7 @@ public class ServletGetAccountInformation extends HttpServlet {
             Integer app_id = sm.getIntParam("shared_app_id", true);
             TeamUser teamUser = sm.getTeamUserForTeamId(team_id);
             SharedApp sharedApp = teamUser.getTeam().getAppManager().getSharedApp(app_id);
-            if (sharedApp.getTeamUser_tenant() != teamUser)
+            if (sharedApp.getTeamUser_tenant() != teamUser || !teamUser.isTeamAdmin())
                 throw new HttpServletException(HttpStatus.BadRequest, "You cannot retrieve account information for this app.");
             App app = (App) sharedApp;
             if (!app.isClassicApp())

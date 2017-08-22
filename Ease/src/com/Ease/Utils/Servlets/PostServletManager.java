@@ -39,7 +39,6 @@ public class PostServletManager extends ServletManager {
             e.printStackTrace();
             throw new IOException();
         }
-        Long now = this.getLongParam("now", false);
     }
 
     protected void setInternError() {
