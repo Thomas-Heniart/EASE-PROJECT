@@ -108,10 +108,8 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             return "Usernames can't be empty!";
         if (username.length() >= 22)
             return "Sorry, that's a bit too long! Usernames must be fewer than 22 characters.";
-        if (!username.equals(username.toLowerCase()))
-            return "Sorry, usernames must be lowercase!";
-        if (!Regex.isValidUsername(username))
-            return "Usernames can't contain special characters. Sorry about that!";
+        if (!username.equals(username.toLowerCase()) || !Regex.isValidUsername(username))
+            return "Sorry, usernames must contain only lowercase characters.";
         return null;
     }
 
