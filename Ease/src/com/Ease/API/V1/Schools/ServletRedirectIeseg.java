@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * Servlet implementation class ServletRedirectIeseg
  */
-@WebServlet("/ieseg")
+@WebServlet("/ieseg-school")
 public class ServletRedirectIeseg extends HttpServlet {
     private static final long serialVersionUID = 1L;
        
