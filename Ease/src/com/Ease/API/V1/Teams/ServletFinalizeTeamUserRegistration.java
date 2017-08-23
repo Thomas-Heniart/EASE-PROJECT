@@ -110,7 +110,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             if (teamUser.getAdmin_id() == null || teamUser.getAdmin_id() == 0)
                 throw new HttpServletException(HttpStatus.BadRequest, "The user must be invited by an admin");
             TeamUser teamUser_admin = team.getTeamUserWithId(teamUser.getAdmin_id());
-            teamUser_admin.addNotification(teamUser.getUsername() + " is ready to join your team. Give your final approval to give the access.", teamUser.getDb_id().toString(), "", sm.getTimestamp(), sm.getDB());
+            teamUser_admin.addNotification(teamUser.getUsername() + " is ready to join your team. Give your final approval to give the access.", "@" + teamUser.getDb_id().toString(), "", sm.getTimestamp(), sm.getDB());
             MailJetBuilder mailJetBuilder = new MailJetBuilder();
             mailJetBuilder.setTemplateId(180141);
             mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
