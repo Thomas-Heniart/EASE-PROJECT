@@ -352,7 +352,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
     }
 
     @Override
-    public JSONObject getNeededParams(PostServletManager sm) {
+    public JSONObject getNeededParams(PostServletManager sm) throws HttpServletException {
         JSONObject jsonObject = super.getNeededParams(sm);
         if (this.isEmpty()) {
             JSONObject account_information = (JSONObject) sm.getParam("account_information", false);
