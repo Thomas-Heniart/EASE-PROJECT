@@ -55,13 +55,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             String lastName = sm.getStringParam("last_name", true);
             String username = sm.getStringParam("username", true);
             String job_details = sm.getStringParam("job_details", true);
-            String job_index_str = sm.getStringParam("job_index", true);
-            Integer job_index;
-            try {
-                job_index = Integer.valueOf(job_index_str);
-            } catch (Exception e) {
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid job index.");
-            }
+            Integer job_index = sm.getIntParam("job_index", true);
             String code = sm.getStringParam("code", false);
             if (username == null || username.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "username is needed.");
