@@ -477,7 +477,7 @@ public class TeamUser {
     }
 
     public void addNotification(String content, String url, String icon, Date timestamp, DataBaseConnection db) throws HttpServletException {
-        if (this.dashboard_user == null || this.getUser_id() == null)
+        if (this.dashboard_user == null && this.getUser_id() == null)
             return;
         String team_url = "/teams/" + this.getTeam().getDb_id() + "/" + url;
         if (this.dashboard_user == null)

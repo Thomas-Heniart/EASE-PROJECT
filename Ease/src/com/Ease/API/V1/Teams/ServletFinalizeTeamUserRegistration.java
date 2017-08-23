@@ -55,13 +55,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             String lastName = sm.getStringParam("last_name", true);
             String username = sm.getStringParam("username", true);
             String job_details = sm.getStringParam("job_details", true);
-            String job_index_str = sm.getStringParam("job_index", true);
-            Integer job_index;
-            try {
-                job_index = Integer.valueOf(job_index_str);
-            } catch (Exception e) {
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid job index.");
-            }
+            Integer job_index = sm.getIntParam("job_index", true);
             String code = sm.getStringParam("code", false);
             if (username == null || username.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "username is needed.");
@@ -116,7 +110,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             if (teamUser.getAdmin_id() == null || teamUser.getAdmin_id() == 0)
                 throw new HttpServletException(HttpStatus.BadRequest, "The user must be invited by an admin");
             TeamUser teamUser_admin = team.getTeamUserWithId(teamUser.getAdmin_id());
-            teamUser_admin.addNotification(teamUser.getUsername() + " is ready to join your team. Give your final approval to give the access.", teamUser.getDb_id().toString(), "", sm.getTimestamp(), sm.getDB());
+            teamUser_admin.addNotification(teamUser.getUsername() + " is ready to join your team. Give your final approval to give the access.", "@" + teamUser.getDb_id().toString(), "", sm.getTimestamp(), sm.getDB());
             MailJetBuilder mailJetBuilder = new MailJetBuilder();
             mailJetBuilder.setTemplateId(180141);
             mailJetBuilder.setFrom("contact@ease.space", "Ease.space");

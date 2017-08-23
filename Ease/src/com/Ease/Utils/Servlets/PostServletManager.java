@@ -72,15 +72,24 @@ public class PostServletManager extends ServletManager {
         return param;
     }
 
-    public String getStringParam(String paramName, boolean saveInLogs) {
-        return (String) getParam(paramName, saveInLogs);
+    public String getStringParam(String paramName, boolean saveInLogs) throws HttpServletException {
+        try {
+            return (String) getParam(paramName, saveInLogs);
+        } catch (ClassCastException e) {
+            throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter " + paramName + " type (Expected String).");
+        }
+
     }
 
-    public Long getLongParam(String paramName, boolean saveInLogs) {
-        return (Long) getParam(paramName, saveInLogs);
+    public Long getLongParam(String paramName, boolean saveInLogs) throws HttpServletException {
+        try {
+            return (Long) getParam(paramName, saveInLogs);
+        } catch (ClassCastException e) {
+            throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter " + paramName + " type (Expected Long).");
+        }
     }
 
-    public Integer getIntParam(String paramName, boolean saveInLogs) {
+    public Integer getIntParam(String paramName, boolean saveInLogs) throws HttpServletException {
         Long param = getLongParam(paramName, saveInLogs);
         if (param == null)
             return null;
@@ -88,8 +97,12 @@ public class PostServletManager extends ServletManager {
             return Math.toIntExact(getLongParam(paramName, saveInLogs));
     }
 
-    public Boolean getBooleanParam(String paramName, boolean saveInLogs) {
-        return (Boolean) this.getParam(paramName, saveInLogs);
+    public Boolean getBooleanParam(String paramName, boolean saveInLogs) throws HttpServletException {
+        try {
+            return (Boolean) this.getParam(paramName, saveInLogs);
+        } catch (ClassCastException e) {
+            throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter " + paramName + " type (Expected Boolean).");
+        }
     }
 
     public void addWebSocketMessage(WebSocketMessage webSocketMessage) {
@@ -103,11 +116,11 @@ public class PostServletManager extends ServletManager {
             return;
         if (this.webSocketMessages.isEmpty())
             return;
-        String ws_id = this.getStringParam("ws_id", false);
-        if (ws_id == null)
-            return;
-        Integer team_id = this.getIntParam("team_id", false);
         try {
+            String ws_id = this.getStringParam("ws_id", false);
+            if (ws_id == null)
+                return;
+            Integer team_id = this.getIntParam("team_id", false);
             if (team_id != null) {
                 Integer channel_id = this.getIntParam("channel_id", false);
                 Team team = this.getTeamUserForTeamId(team_id).getTeam();

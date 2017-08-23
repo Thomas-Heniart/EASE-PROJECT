@@ -317,7 +317,7 @@ public class ClassicApp extends WebsiteApp {
     }
 
     @Override
-    public JSONObject getNeededParams(PostServletManager sm) {
+    public JSONObject getNeededParams(PostServletManager sm) throws HttpServletException {
         JSONObject res = super.getNeededParams(sm);
         Boolean canSeeInformation = sm.getBooleanParam("can_see_information", true);
         if (canSeeInformation == null)

@@ -41,7 +41,7 @@ public interface ShareableApp {
 
     public JSONObject getShareableJson() throws HttpServletException;
 
-    public JSONObject getNeededParams(PostServletManager sm);
+    public JSONObject getNeededParams(PostServletManager sm) throws HttpServletException;
 
     public void setDescription(String description);
 

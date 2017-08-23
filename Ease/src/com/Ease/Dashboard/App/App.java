@@ -794,7 +794,7 @@ public class App implements ShareableApp, SharedApp {
     }
 
     @Override
-    public JSONObject getNeededParams(PostServletManager sm) {
+    public JSONObject getNeededParams(PostServletManager sm) throws HttpServletException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("canSeeInformation", true);
         jsonObject.put("adminHasAccess", true);
