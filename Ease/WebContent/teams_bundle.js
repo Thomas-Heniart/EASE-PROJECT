@@ -20430,6 +20430,7 @@ var NotificationList = function (_React$Component2) {
 
     var _this2 = _possibleConstructorReturn(this, (NotificationList.__proto__ || Object.getPrototypeOf(NotificationList)).call(this, props));
 
+    _this2.executeNotification = _this2.executeNotification.bind(_this2);
     _this2.onClose = _this2.onClose.bind(_this2);
     _this2.onScroll = _this2.onScroll.bind(_this2);
     _this2.lastScrollTop = 0;
@@ -20450,6 +20451,13 @@ var NotificationList = function (_React$Component2) {
       this.lastScrollTop = e.target.scrollTop;
     }
   }, {
+    key: 'executeNotification',
+    value: function executeNotification(notification) {
+      if (notification.url.length > 0) {
+        this.props.history.push(notification.url);
+      }
+    }
+  }, {
     key: 'render',
     value: function render() {
       var newNotifs = (0, _helperFunctions.checkForNewNotifications)(this.props.notifications.notifications);
@@ -20462,7 +20470,7 @@ var NotificationList = function (_React$Component2) {
           this.props.notifications.notifications.map(function (item) {
             return React.createElement(
               _semanticUiReact.Dropdown.Item,
-              { key: item.id, active: item.is_new, className: 'notification-card' },
+              { key: item.id, active: item.is_new, className: 'notification-card', onClick: this.executeNotification.bind(null, item) },
               React.createElement(
                 'div',
                 { className: 'squared_image_handler icon' },
@@ -20479,9 +20487,7 @@ var NotificationList = function (_React$Component2) {
                 React.createElement(
                   'span',
                   { className: 'date' },
-                  'il y a ',
-                  item.date,
-                  ' heures'
+                  moment(item.date).fromNow()
                 )
               )
             );
@@ -20552,7 +20558,7 @@ var EaseMainNavbar = (_dec = (0, _reactRedux.connect)(function (store) {
             React.createElement(_semanticUiReact.Dropdown.Item, { text: 'Logout from all apps' })
           )
         ),
-        React.createElement(NotificationList, { notifications: this.props.notifications, dispatch: this.props.dispatch }),
+        React.createElement(NotificationList, { notifications: this.props.notifications, history: this.props.history, dispatch: this.props.dispatch }),
         React.createElement(TeamsList, { user: this.props.user }),
         React.createElement(
           _semanticUiReact.Menu.Item,
@@ -56485,6 +56491,7 @@ var NotificationList = function (_React$Component2) {
 
     _this2.onClose = _this2.onClose.bind(_this2);
     _this2.onScroll = _this2.onScroll.bind(_this2);
+    _this2.executeNotification = _this2.executeNotification.bind(_this2);
     return _this2;
   }
 
@@ -56501,6 +56508,13 @@ var NotificationList = function (_React$Component2) {
       }
     }
   }, {
+    key: 'executeNotification',
+    value: function executeNotification(notification) {
+      if (notification.url.length > 0) {
+        window.location.href = '/teams#' + notification.url;
+      }
+    }
+  }, {
     key: 'render',
     value: function render() {
       var newNotifs = (0, _helperFunctions.checkForNewNotifications)(this.props.notifications.notifications);
@@ -56513,7 +56527,7 @@ var NotificationList = function (_React$Component2) {
           this.props.notifications.notifications.map(function (item) {
             return React.createElement(
               _semanticUiReact.Dropdown.Item,
-              { key: item.id, active: item.is_new, className: 'notification-card' },
+              { key: item.id, active: item.is_new, className: 'notification-card', onClick: this.executeNotification.bind(null, item) },
               React.createElement(
                 'div',
                 { className: 'squared_image_handler icon' },
@@ -56603,7 +56617,7 @@ var HomeTemporaryNavbar = (_dec = (0, _reactRedux.connect)(function (store) {
             React.createElement(_semanticUiReact.Dropdown.Item, { text: 'Logout from all apps' })
           )
         ),
-        React.createElement(NotificationList, { notifications: this.props.notifications, dispatch: this.props.dispatch }),
+        React.createElement(NotificationList, { notifications: this.props.notifications, history: this.props.history, dispatch: this.props.dispatch }),
         React.createElement(TeamsList, { user: this.props.user }),
         React.createElement(
           _semanticUiReact.Menu.Item,
