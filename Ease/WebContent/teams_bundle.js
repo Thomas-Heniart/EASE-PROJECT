@@ -3743,7 +3743,7 @@ function fetchChannels(team_id) {
 function createTeamChannel(name, purpose) {
   return function (dispatch, getState) {
     dispatch({ type: 'CREATE_TEAM_CHANNEL_PENDING' });
-    return post_api.teamChannel.createChannel(getState().common.sw_id, getState().team.id, name, purpose).then(function (response) {
+    return post_api.teamChannel.createChannel(getState().common.ws_id, getState().team.id, name, purpose).then(function (response) {
       dispatch({ type: 'CREATE_TEAM_CHANNEL_FULFILLED', payload: response });
       return response;
     }).catch(function (err) {
@@ -3756,7 +3756,7 @@ function createTeamChannel(name, purpose) {
 function deleteTeamChannel(channel_id) {
   return function (dispatch, getState) {
     dispatch({ type: 'DELETE_TEAM_CHANNEL_PENDING' });
-    return post_api.teamChannel.deleteChannel(getState().common.sw_id, getState().team.id, channel_id).then(function (response) {
+    return post_api.teamChannel.deleteChannel(getState().common.ws_id, getState().team.id, channel_id).then(function (response) {
       //need to reselect existing channel
       return dispatch({ type: 'DELETE_TEAM_CHANNEL_FULFILLED', payload: { channel_id: channel_id } });
     }).catch(function (err) {
@@ -3769,7 +3769,7 @@ function deleteTeamChannel(channel_id) {
 function askJoinChannel(channel_id) {
   return function (dispatch, getState) {
     dispatch({ type: 'ASK_JOIN_CHANNEL_PENDING' });
-    return post_api.teamChannel.askJoinChannel(getState().common.sw_id, getState().team.id, channel_id).then(function (r) {
+    return post_api.teamChannel.askJoinChannel(getState().common.ws_id, getState().team.id, channel_id).then(function (r) {
       dispatch({ type: 'ASK_JOIN_CHANNEL_FULFILLED', payload: { channel_id: channel_id, team_user_id: getState().team.myTeamUserId } });
     }).catch(function (err) {
       dispatch({ type: 'ASK_JOIN_CHANNEL_REJECTED', payload: err });
@@ -3781,7 +3781,7 @@ function askJoinChannel(channel_id) {
 function addTeamUserToChannel(channel_id, team_user_id) {
   return function (dispatch, getState) {
     dispatch({ type: 'ADD_TEAM_USER_TO_CHANNEL_PENDING' });
-    return post_api.teamChannel.addTeamUserToChannel(getState().common.sw_id, getState().team.id, channel_id, team_user_id).then(function (response) {
+    return post_api.teamChannel.addTeamUserToChannel(getState().common.ws_id, getState().team.id, channel_id, team_user_id).then(function (response) {
       dispatch({ type: 'ADD_TEAM_USER_TO_CHANNEL_FULFILLED', payload: { channel_id: channel_id, team_user_id: team_user_id } });
     }).catch(function (err) {
       dispatch({ type: 'ADD_TEAM_USER_TO_CHANNEL_REJECTED', payload: err });
@@ -3793,7 +3793,7 @@ function addTeamUserToChannel(channel_id, team_user_id) {
 function removeTeamUserFromChannel(channel_id, team_user_id) {
   return function (dispatch, getState) {
     dispatch({ type: 'REMOVE_TEAM_USER_FROM_CHANNEL_PENDING' });
-    return post_api.teamChannel.removeTeamUserFromChannel(getState().common.sw_id, getState().team.id, channel_id, team_user_id).then(function (response) {
+    return post_api.teamChannel.removeTeamUserFromChannel(getState().common.ws_id, getState().team.id, channel_id, team_user_id).then(function (response) {
       dispatch({ type: 'REMOVE_TEAM_USER_FROM_CHANNEL_FULFILLED', payload: { channel_id: channel_id, team_user_id: team_user_id } });
       if (getState().selection.type === 'channel' && getState().selection.id === channel_id) dispatch((0, _commonActions.autoSelectTeamItem)());
     }).catch(function (err) {
@@ -3806,7 +3806,7 @@ function removeTeamUserFromChannel(channel_id, team_user_id) {
 function editTeamChannelName(channel_id, name) {
   return function (dispatch, getState) {
     dispatch({ type: 'EDIT_TEAM_CHANNEL_NAME_PENDING' });
-    return post_api.teamChannel.editName(getState().common.sw_id, getState().team.id, channel_id, name).then(function (response) {
+    return post_api.teamChannel.editName(getState().common.ws_id, getState().team.id, channel_id, name).then(function (response) {
       dispatch({ type: 'EDIT_TEAM_CHANNEL_NAME_FULFILLED', payload: { id: channel_id, name: name } });
     }).catch(function (err) {
       dispatch({ type: "EDIT_TEAM_CHANNEL_NAME_REJECTED", payload: err });
@@ -3817,7 +3817,7 @@ function editTeamChannelName(channel_id, name) {
 function editTeamChannelPurpose(channel_id, purpose) {
   return function (dispatch, getState) {
     dispatch({ type: 'EDIT_TEAM_CHANNEL_PURPOSE_PENDING' });
-    return post_api.teamChannel.editPurpose(getState().common.sw_id, getState().team.id, channel_id, purpose).then(function (response) {
+    return post_api.teamChannel.editPurpose(getState().common.ws_id, getState().team.id, channel_id, purpose).then(function (response) {
       dispatch({ type: 'EDIT_TEAM_CHANNEL_PURPOSE_FULFILLED', payload: { id: channel_id, purpose: purpose } });
     }).catch(function (err) {
       dispatch({ type: "EDIT_TEAM_CHANNEL_PURPOSE_REJECTED", payload: err });
@@ -3828,7 +3828,7 @@ function editTeamChannelPurpose(channel_id, purpose) {
 function deleteJoinChannelRequest(channel_id, team_user_id) {
   return function (dispatch, getState) {
     dispatch({ type: 'DELETE_JOIN_CHANNEL_REQUEST_PENDING' });
-    return post_api.teamChannel.deleteJoinChannelRequest(getState().common.sw_id, getState().team.id, channel_id, team_user_id).then(function (response) {
+    return post_api.teamChannel.deleteJoinChannelRequest(getState().common.ws_id, getState().team.id, channel_id, team_user_id).then(function (response) {
       dispatch({ type: 'DELETE_JOIN_CHANNEL_REQUEST_FULFILLED', payload: { channel_id: channel_id, team_user_id: team_user_id } });
       return response;
     }).catch(function (err) {
