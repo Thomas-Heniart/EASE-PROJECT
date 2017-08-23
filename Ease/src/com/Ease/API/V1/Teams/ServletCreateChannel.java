@@ -34,11 +34,11 @@ public class ServletCreateChannel extends HttpServlet {
             String name = sm.getStringParam("name", true);
             String purpose = sm.getStringParam("purpose", true);
             if (name == null || name.equals("") || !Regex.isValidSimpleString(name))
-                throw new HttpServletException(HttpStatus.BadRequest, "Group names can't contain spaces, periods or most punctuation. Try again?");
+                throw new HttpServletException(HttpStatus.BadRequest, "Room names can't contain spaces, periods or most punctuation. Try again?");
             if (purpose == null)
                 purpose = "";
             if (team.getChannelNamed(name) != null)
-                throw new HttpServletException(HttpStatus.BadRequest, "<<" + name + ">> is already used for another group");
+                throw new HttpServletException(HttpStatus.BadRequest, "<<" + name + ">> is already used for another room");
             Channel channel = new Channel(team, name, purpose, sm.getTeamUserForTeamId(team_id).getDb_id());
             sm.saveOrUpdate(channel);
             team.addChannel(channel);
