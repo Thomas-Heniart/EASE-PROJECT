@@ -71,7 +71,7 @@
     </error-page>
     <servlet>
         <servlet-name>security.jsp</servlet-name>
-        <jsp-file>/security.jsp</jsp-file>
+        <jsp-file>/new_security.jsp</jsp-file>
     </servlet>
     <servlet-mapping>
         <servlet-name>security.jsp</servlet-name>
@@ -103,7 +103,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>pricing.jsp</servlet-name>
-        <jsp-file>/pricing.jsp</jsp-file>
+        <jsp-file>/new_pricing.jsp</jsp-file>
     </servlet>
     <servlet-mapping>
         <servlet-name>pricing.jsp</servlet-name>
