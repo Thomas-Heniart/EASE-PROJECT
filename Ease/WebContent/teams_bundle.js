@@ -3887,8 +3887,12 @@ function selectTeamUser(id) {
 function fetchTeamUserApps(id) {
   return function (dispatch, getState) {
     dispatch({ type: 'FETCH_TEAM_USER_APPS_PENDING' });
+    var teamUser = (0, _helperFunctions.selectUserFromListById)(getState().users.users, id);
+    var me = (0, _helperFunctions.selectUserFromListById)(getState().users.users, getState().team.myTeamUserId);
+
     return api.fetchTeamUserApps(getState().team.id, id).then(function (response) {
       dispatch({ type: 'FETCH_TEAM_USER_APPS_FULFILLED', payload: { apps: response, type: 'user', id: id } });
+      if (teamUser.state === _utils.teamUserState.registered && (0, _helperFunctions.isAdmin)(me.role)) dispatch((0, _teamModalActions.showVerifyTeamUserModal)(true, teamUser));
       return response;
     }).catch(function (err) {
       dispatch({ type: 'FETCH_TEAM_USER_APPS_REJECTED', payload: err });
