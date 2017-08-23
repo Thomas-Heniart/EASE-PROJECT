@@ -7,6 +7,78 @@ body {
 		font-weight: bold;
 	}
 }
+
+.team_plan {
+	flex-basis: 370px;
+	.styleImage {
+		z-index: 1;
+	}
+	.button {
+		width: 100%;
+	}
+}
+
+#starter_plan {
+	padding-bottom: 40px;
+	.price {
+		font-size: 26px;
+		font-weight: bold !important;
+	}
+	.tip {
+		font-size: 20px;
+		text-align: left;
+	}
+	.button {
+		background-color: transparent;
+		color: white;
+		color: #414141;
+		border: solid 1px #414141;
+
+	}
+}
+
+#teamsPreview {
+	padding-top: 85px;
+	.sub-title {
+		font-size: 22px;
+	}
+}
+
+#pro_team_plan {
+	.info {
+		margin: 19px 0 19px 0;
+		font-size: 0.9rem;
+		color: #3fa056;
+		text-transform: uppercase;
+	}
+}
+
+#pricing {
+	.content {
+		width: 100%;
+		.team_plan {
+			padding-left: 22px;
+			padding-right: 22px;
+			h1 {
+				font-size: 34px;
+				margin: calc(2rem - .14285714em) 0 1rem;
+			}
+		}
+		h1 {
+			font-size: 54px;
+			font-weight: normal;
+		}
+		span {
+			font-weight: normal;
+		}
+		#enterprise_team_plan {
+			h1 {
+				color: white;
+			}
+		}
+	}
+}
+
 section#pricing {
 	padding-bottom: 0;
 	h1 {

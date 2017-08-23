@@ -3892,7 +3892,7 @@ function fetchTeamUserApps(id) {
 
     return api.fetchTeamUserApps(getState().team.id, id).then(function (response) {
       dispatch({ type: 'FETCH_TEAM_USER_APPS_FULFILLED', payload: { apps: response, type: 'user', id: id } });
-      if (teamUser.state === _utils.teamUserState.registered && (0, _helperFunctions.isAdmin)(me.role)) dispatch((0, _teamModalActions.showVerifyTeamUserModal)(true, teamUser));
+      if (teamUser.state === _utils.teamUserState.registered && (0, _helperFunctions.isAdmin)(me.role) && teamUser.id !== me.id) dispatch((0, _teamModalActions.showVerifyTeamUserModal)(true, teamUser));
       return response;
     }).catch(function (err) {
       dispatch({ type: 'FETCH_TEAM_USER_APPS_REJECTED', payload: err });
@@ -49478,7 +49478,8 @@ function test(props) {
 
 var TeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
   return {
-    ws_id: store.common.ws_id
+    ws_id: store.common.ws_id,
+    authenticated: store.common.authenticated
   };
 }), _dec(_class = function (_React$Component8) {
   _inherits(TeamCreationView, _React$Component8);
@@ -49606,6 +49607,13 @@ var TeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
       this.setState({ currentStep: this.state.currentStep + 1 });
     }
   }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      if (this.props.authenticated) {
+        this.props.history.push('/main/simpleTeamCreation');
+      }
+    }
+  }, {
     key: 'render',
     value: function render() {
       var steps = [];
@@ -49699,7 +49707,7 @@ var TeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
 }(React.Component)) || _class);
 
 
-module.exports = TeamCreationView;
+module.exports = (0, _reactRouterDom.withRouter)(TeamCreationView);
 
 /***/ }),
 /* 534 */
@@ -56237,7 +56245,7 @@ function ChannelList(props) {
             ),
             React.createElement(
               "span",
-              { className: "inline-notification" },
+              { className: "inline-notification", style: { display: 'none' } },
               "3"
             )
           )

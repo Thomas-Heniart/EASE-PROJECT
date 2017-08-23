@@ -90,7 +90,7 @@ button.action_text_button {
   bottom: 0;
   background-color: white;
   overflow: auto;
-  z-index: 1;
+  z-index: 11;
   .carousel {
     position: relative;
     width: 650px;
@@ -168,6 +168,7 @@ button.action_text_button {
     height:60px;
     font-weight: normal;
     text-transform: uppercase;
+    background-color: #4FCB6C;
   }
   .feature {
     @include display-flex();
@@ -415,7 +416,7 @@ button.action_text_button {
 
 .ease_modal {
   display: block;
-  z-index: 10;
+  z-index: 12;
   position: fixed;
   top: 0;
   left: 0;
