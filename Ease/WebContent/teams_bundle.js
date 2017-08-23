@@ -3389,8 +3389,9 @@ module.exports = {
         throw err.response.data;
       });
     },
-    finalizeRegistration: function finalizeRegistration(fname, lname, username, jobRole, jobDetails, code) {
+    finalizeRegistration: function finalizeRegistration(ws_id, fname, lname, username, jobRole, jobDetails, code) {
       return axios.post('/api/v1/teams/FinalizeRegistration', {
+        ws_id: ws_id,
         first_name: fname,
         last_name: lname,
         username: username,
@@ -50097,13 +50098,13 @@ var TeamJoinView = (_dec = (0, _reactRedux.connect)(function (store) {
       var _this5 = this;
 
       if (this.canSkip()) {
-        post_api.teams.finalizeRegistration(this.state.fname, this.state.lname, this.state.username, this.state.jobRole, this.state.jobDetails, this.state.code).then(function (response) {
+        post_api.teams.finalizeRegistration(this.props.common.ws_id, this.state.fname, this.state.lname, this.state.username, this.state.jobRole, this.state.jobDetails, this.state.code).then(function (response) {
           window.location.href = '/teams#/teams/' + _this5.state.teamUser.team_id;
           //        this.props.history.push('/teams/' + this.state.teamUser.team_id);
         });
       } else {
         post_api.common.registration(this.state.teamUser.email, this.state.username, this.state.password, null, this.state.code, false).then(function (r) {
-          post_api.teams.finalizeRegistration(_this5.state.fname, _this5.state.lname, _this5.state.username, _this5.state.jobRole, _this5.state.jobDetails, _this5.state.code).then(function (response) {
+          post_api.teams.finalizeRegistration(_this5.props.common.ws_id, _this5.state.fname, _this5.state.lname, _this5.state.username, _this5.state.jobRole, _this5.state.jobDetails, _this5.state.code).then(function (response) {
             window.location.href = '/teams#/teams/' + _this5.state.teamUser.team_id;
             //          this.props.history.push('/teams/' + this.state.teamUser.team_id);
           });
