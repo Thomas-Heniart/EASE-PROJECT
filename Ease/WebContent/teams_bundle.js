@@ -52072,6 +52072,12 @@ var channelActions = _interopRequireWildcard(_channelActions);
 
 var _teamModalActions = __webpack_require__(16);
 
+var _helperFunctions = __webpack_require__(13);
+
+var _renderHelpers = __webpack_require__(599);
+
+var _semanticUiReact = __webpack_require__(59);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -52350,8 +52356,112 @@ var FirstStepAddUser = function (_React$Component) {
   return FirstStepAddUser;
 }(React.Component);
 
-var SecondStep = function (_React$Component2) {
-  _inherits(SecondStep, _React$Component2);
+var FirstStepAddUser2 = function (_React$Component2) {
+  _inherits(FirstStepAddUser2, _React$Component2);
+
+  function FirstStepAddUser2(props) {
+    _classCallCheck(this, FirstStepAddUser2);
+
+    return _possibleConstructorReturn(this, (FirstStepAddUser2.__proto__ || Object.getPrototypeOf(FirstStepAddUser2)).call(this, props));
+  }
+
+  _createClass(FirstStepAddUser2, [{
+    key: 'render',
+    value: function render() {
+      var _this4 = this;
+
+      return React.createElement(
+        'div',
+        { className: 'contents', id: 'first_step' },
+        React.createElement(
+          _semanticUiReact.Container,
+          null,
+          React.createElement(
+            _semanticUiReact.Header,
+            { as: 'h1' },
+            'Invite a team member'
+          ),
+          React.createElement(
+            _semanticUiReact.Form,
+            { onSubmit: this.props.validateStep },
+            React.createElement(
+              _semanticUiReact.Form.Group,
+              null,
+              React.createElement(_semanticUiReact.Form.Input, { label: 'Email address', type: 'email', name: 'email',
+                onChange: this.props.handleReactInput,
+                placeholder: 'name@company.com',
+                required: true,
+                width: 6 }),
+              React.createElement(_semanticUiReact.Form.Input, { label: 'First name', type: 'text', name: 'fname',
+                onChange: this.props.handleReactInput,
+                placeholder: 'Optional',
+                width: 5 }),
+              React.createElement(_semanticUiReact.Form.Input, { label: 'Last name', type: 'text', name: 'lname',
+                onChange: this.props.handleReactInput,
+                placeholder: 'Optional', width: 5 })
+            ),
+            React.createElement(
+              _semanticUiReact.Form.Group,
+              null,
+              React.createElement(_semanticUiReact.Form.Input, { label: 'Username', type: 'text', name: 'username',
+                onChange: this.props.handleReactInput,
+                required: true,
+                placeholder: 'Username', width: 6 }),
+              React.createElement(_semanticUiReact.Form.Select, {
+                style: { minWidth: '0px' },
+                name: 'role',
+                defaultValue: 1,
+                onChange: this.props.handleReactInput,
+                label: 'User role',
+                width: 4,
+                options: [{ key: 1, value: 1, text: 'Member' }, { key: 2, value: 2, text: 'Admin' }]
+              }),
+              React.createElement(_semanticUiReact.Form.Input, { label: 'Departure date (optional)', type: 'date',
+                onChange: this.props.handleReactInput,
+                name: 'departure_date',
+                placeholder: 'Optional', width: 6 })
+            ),
+            React.createElement(_semanticUiReact.Form.Dropdown, {
+              search: true,
+              fluid: true,
+              selection: true,
+              multiple: true,
+              options: this.props.options,
+              value: this.props.value,
+              onChange: this.props.dropdownChange,
+              renderLabel: _renderHelpers.renderRoomLabel,
+              placeholder: 'Tag users here...',
+              label: 'Team(s)' }),
+            React.createElement(
+              _semanticUiReact.Form.Field,
+              null,
+              React.createElement(
+                _semanticUiReact.Button,
+                {
+                  positive: true,
+                  floated: 'right',
+                  type: 'submit' },
+                'Next'
+              ),
+              React.createElement(
+                _semanticUiReact.Button,
+                { floated: 'right', onClick: function onClick(e) {
+                    _this4.props.dispatch((0, _teamModalActions.showAddTeamUserModal)(false));
+                  } },
+                'Cancel'
+              )
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return FirstStepAddUser2;
+}(React.Component);
+
+var SecondStep = function (_React$Component3) {
+  _inherits(SecondStep, _React$Component3);
 
   function SecondStep(props) {
     _classCallCheck(this, SecondStep);
@@ -52494,15 +52604,15 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
     team_id: store.team.id,
     me: store.users.me
   };
-}), _dec(_class = function (_React$Component3) {
-  _inherits(TeamAddUserModal, _React$Component3);
+}), _dec(_class = function (_React$Component4) {
+  _inherits(TeamAddUserModal, _React$Component4);
 
   function TeamAddUserModal(props) {
     _classCallCheck(this, TeamAddUserModal);
 
-    var _this4 = _possibleConstructorReturn(this, (TeamAddUserModal.__proto__ || Object.getPrototypeOf(TeamAddUserModal)).call(this, props));
+    var _this6 = _possibleConstructorReturn(this, (TeamAddUserModal.__proto__ || Object.getPrototypeOf(TeamAddUserModal)).call(this, props));
 
-    _this4.state = {
+    _this6.state = {
       user_id: null,
       email: '',
       fname: '',
@@ -52512,29 +52622,97 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
       departure_date: '',
       selectedChannels: [],
       channels: [],
+      options: [],
+      value: [],
       step: 0,
       channelStep: 0,
       maxChannelStep: 0
     };
-    _this4.state.channels = _this4.props.channels.map(function (item) {
+    _this6.state.channels = _this6.props.channels.map(function (item) {
       item.selected = false;
       return item;
     });
-    _this4.handleInputs = _this4.handleInputs.bind(_this4);
-    _this4.selectChannel = _this4.selectChannel.bind(_this4);
-    _this4.deselectChannel = _this4.deselectChannel.bind(_this4);
-    _this4.validateFirstStep = _this4.validateFirstStep.bind(_this4);
-    _this4.incrementStep = _this4.incrementStep.bind(_this4);
-    _this4.decrementStep = _this4.decrementStep.bind(_this4);
-    _this4.checkChannelApp = _this4.checkChannelApp.bind(_this4);
-    _this4.handleCredentialsInput = _this4.handleCredentialsInput.bind(_this4);
-    _this4.incrementStepAndRejectChannel = _this4.incrementStepAndRejectChannel.bind(_this4);
-    _this4.incrementStepAndValidateChannel = _this4.incrementStepAndValidateChannel.bind(_this4);
-    _this4.validateSecondStep = _this4.validateSecondStep.bind(_this4);
-    return _this4;
+    _this6.state.options = _this6.props.channels.map(function (item) {
+      return {
+        key: item.id,
+        text: item.purpose.length > 0 ? item.name + ' - ' + item.purpose : item.name,
+        value: item.id,
+        name: item.name
+      };
+    });
+    _this6.handleInputs = _this6.handleInputs.bind(_this6);
+    _this6.handleReactInput = _this6.handleReactInput.bind(_this6);
+    _this6.selectChannel = _this6.selectChannel.bind(_this6);
+    _this6.deselectChannel = _this6.deselectChannel.bind(_this6);
+    _this6.validateFirstStep = _this6.validateFirstStep.bind(_this6);
+    _this6.incrementStep = _this6.incrementStep.bind(_this6);
+    _this6.decrementStep = _this6.decrementStep.bind(_this6);
+    _this6.checkChannelApp = _this6.checkChannelApp.bind(_this6);
+    _this6.handleCredentialsInput = _this6.handleCredentialsInput.bind(_this6);
+    _this6.incrementStepAndRejectChannel = _this6.incrementStepAndRejectChannel.bind(_this6);
+    _this6.incrementStepAndValidateChannel = _this6.incrementStepAndValidateChannel.bind(_this6);
+    _this6.validateSecondStep = _this6.validateSecondStep.bind(_this6);
+    _this6.dropdownChange = _this6.dropdownChange.bind(_this6);
+    return _this6;
   }
 
   _createClass(TeamAddUserModal, [{
+    key: 'handleReactInput',
+    value: function handleReactInput(e, _ref) {
+      var name = _ref.name,
+          value = _ref.value;
+
+      this.setState(_defineProperty({}, name, value));
+    }
+  }, {
+    key: 'dropdownChange',
+    value: function dropdownChange(e, _ref2) {
+      var value = _ref2.value;
+
+      this.setState({ value: value });
+    }
+  }, {
+    key: 'validateFirstStep',
+    value: function validateFirstStep(e) {
+      var _this7 = this;
+
+      e.preventDefault();
+      console.log('lala');
+      var channels = this.state.value.map(function (item) {
+        return (0, _helperFunctions.selectChannelFromListById)(_this7.state.channels, item);
+      });
+      if (!channels.length) {
+        this.props.dispatch(userActions.createTeamUser(this.state.fname, this.state.lname, this.state.email, this.state.username, this.state.departure_date, this.state.role)).then(function (response) {
+          _this7.props.dispatch((0, _teamModalActions.showAddTeamUserModal)(false));
+        });
+        return;
+      }
+      var calls = channels.map(function (item) {
+        return api.fetchTeamChannelApps(this.props.team_id, item.id);
+      }, this);
+      var selectedChannels = [];
+      this.props.dispatch(userActions.createTeamUser(this.state.fname, this.state.lname, this.state.email, this.state.username, this.state.departure_date, this.state.role)).then(function (response) {
+        var user_id = response.id;
+        Promise.all(calls).then(function (values) {
+          selectedChannels = channels.map(function (item, idx) {
+            item.apps = values[idx].map(function (item) {
+              item.selected = false;
+              if (item.type === 'multi') {
+                item.credentials = {};
+                Object.keys(item.website.information).map(function (info) {
+                  item.credentials[info] = '';
+                });
+              }
+              return item;
+            });
+            item.confirmed = false;
+            return item;
+          });
+          _this7.setState({ step: 1, selectedChannels: selectedChannels, maxChannelStep: selectedChannels.length, user_id: user_id });
+        });
+      });
+    }
+  }, {
     key: 'handleCredentialsInput',
     value: function handleCredentialsInput(channel_id, app_id, credentialName, credentialValue) {
       var channels = this.state.selectedChannels.map(function (item) {
@@ -52621,7 +52799,7 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
   }, {
     key: 'validateSecondStep',
     value: function validateSecondStep() {
-      var _this5 = this;
+      var _this8 = this;
 
       var joinChannels = [];
       var shareApps = [];
@@ -52638,48 +52816,12 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
           for (var j = 0; j < channels[i].apps.length; j++) {
             app = channels[i].apps[j];
             if (app.selected) {
-              shareApps.push(_this5.props.dispatch(appActions.teamShareApp(app.id, { team_user_id: _this5.state.user_id, account_information: app.credentials })));
+              shareApps.push(_this8.props.dispatch(appActions.teamShareApp(app.id, { team_user_id: _this8.state.user_id, account_information: app.credentials })));
             }
           }
         }
         Promise.all(shareApps).then(function () {
-          _this5.props.dispatch((0, _teamModalActions.showAddTeamUserModal)(false));
-        });
-      });
-    }
-  }, {
-    key: 'validateFirstStep',
-    value: function validateFirstStep() {
-      var _this6 = this;
-
-      if (!this.state.selectedChannels.length) {
-        this.props.dispatch(userActions.createTeamUser(this.state.fname, this.state.lname, this.state.email, this.state.username, this.state.departure_date, this.state.role)).then(function (response) {
-          _this6.props.dispatch((0, _teamModalActions.showAddTeamUserModal)(false));
-        });
-        return;
-      }
-      var calls = this.state.selectedChannels.map(function (item) {
-        return api.fetchTeamChannelApps(this.props.team_id, item.id);
-      }, this);
-      var selectedChannels = [];
-      this.props.dispatch(userActions.createTeamUser(this.state.fname, this.state.lname, this.state.email, this.state.username, this.state.departure_date, this.state.role)).then(function (response) {
-        var user_id = response.id;
-        Promise.all(calls).then(function (values) {
-          selectedChannels = _this6.state.selectedChannels.map(function (item, idx) {
-            item.apps = values[idx].map(function (item) {
-              item.selected = false;
-              if (item.type === 'multi') {
-                item.credentials = {};
-                Object.keys(item.website.information).map(function (info) {
-                  item.credentials[info] = '';
-                });
-              }
-              return item;
-            });
-            item.confirmed = false;
-            return item;
-          });
-          _this6.setState({ step: 1, selectedChannels: selectedChannels, maxChannelStep: selectedChannels.length, user_id: user_id });
+          _this8.props.dispatch((0, _teamModalActions.showAddTeamUserModal)(false));
         });
       });
     }
@@ -52718,7 +52860,7 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
   }, {
     key: 'render',
     value: function render() {
-      var _this7 = this;
+      var _this9 = this;
 
       return React.createElement(
         'div',
@@ -52738,7 +52880,7 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
         React.createElement(
           'a',
           { id: 'ease_modal_close_btn', className: 'ease_modal_btn', onClick: function onClick(e) {
-              _this7.props.dispatch((0, _teamModalActions.showAddTeamUserModal)(false));
+              _this9.props.dispatch((0, _teamModalActions.showAddTeamUserModal)(false));
             } },
           React.createElement('i', { className: 'ease_icon fa fa-times' }),
           React.createElement(
@@ -52758,13 +52900,14 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
               transitionAppearTimeout: 200,
               transitionEnterTimeout: 200,
               transitionLeaveTimeout: 200 },
-            this.state.step === 0 && React.createElement(FirstStepAddUser, { key: '1',
+            this.state.step === 0 && React.createElement(FirstStepAddUser2, { key: '1',
               me: this.props.me,
               email: this.state.email,
               fname: this.state.fname,
               lname: this.state.lname,
               role: this.state.role,
               username: this.state.username,
+              handleReactInput: this.handleReactInput,
               departure_date: this.state.departure_date,
               handleInputs: this.handleInputs,
               channels: this.state.channels,
@@ -52772,6 +52915,9 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
               selectChannelFunc: this.selectChannel,
               deselectChannelFunc: this.deselectChannel,
               validateStep: this.validateFirstStep,
+              options: this.state.options,
+              value: this.state.value,
+              dropdownChange: this.dropdownChange,
               dispatch: this.props.dispatch }),
             this.state.step === 1 && React.createElement(SecondStep, { key: '2',
               step: this.state.channelStep,
@@ -63416,6 +63562,14 @@ var renderUserLabel = exports.renderUserLabel = function renderUserLabel(label, 
     color: 'blue',
     content: label.username,
     icon: 'user'
+  };
+};
+
+var renderRoomLabel = exports.renderRoomLabel = function renderRoomLabel(label, index, props) {
+  return {
+    color: 'blue',
+    content: label.name,
+    icon: 'users'
   };
 };
 
