@@ -149,6 +149,8 @@ public class Team {
     }
 
     public List<Channel> getChannels() {
+        if (channels == null)
+            channels = new LinkedList<>();
         return channels;
     }
 
