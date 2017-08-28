@@ -647,4 +647,8 @@ public class User {
     public void passStep(String tutoStep, DataBaseConnection db) throws GeneralException {
         this.status.passStep(tutoStep, db);
     }
+
+    public boolean isSchoolUser() {
+        return this.email.endsWith("@iscparis.com") || this.email.endsWith("@edhec.com") || this.email.endsWith("ieseg.fr");
+    }
 }
