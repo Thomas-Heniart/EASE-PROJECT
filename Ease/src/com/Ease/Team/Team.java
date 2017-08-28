@@ -141,6 +141,8 @@ public class Team {
     }
 
     public List<TeamUser> getTeamUsers() {
+        if (this.teamUsers == null)
+            this.teamUsers = new LinkedList<>();
         return teamUsers;
     }
 
@@ -196,14 +198,14 @@ public class Team {
     }
 
     public void addTeamUser(TeamUser teamUser) {
-        this.teamUsers.add(teamUser);
+        this.getTeamUsers().add(teamUser);
         this.teamUserIdMap.put(teamUser.getDb_id(), teamUser);
         if (!teamUser.isVerified())
             this.teamUsersWaitingForVerification.add(teamUser);
     }
 
     public void addChannel(Channel channel) {
-        this.channels.add(channel);
+        this.getChannels().add(channel);
         this.channelIdMap.put(channel.getDb_id(), channel);
     }
 
@@ -217,12 +219,12 @@ public class Team {
 
     public void removeTeamUser(TeamUser teamUser) {
         this.teamUserIdMap.remove(teamUser.getDb_id());
-        this.teamUsers.remove(teamUser);
+        this.getTeamUsers().remove(teamUser);
     }
 
     public void removeChannel(Channel channel) {
         this.channelIdMap.remove(channel.getDb_id());
-        this.channels.remove(channel);
+        this.getChannels().remove(channel);
     }
 
     public void edit(JSONObject editJson) {

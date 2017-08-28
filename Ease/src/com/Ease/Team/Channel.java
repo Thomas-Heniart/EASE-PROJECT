@@ -97,6 +97,8 @@ public class Channel {
     }
 
     public List<TeamUser> getTeamUsers() {
+        if (this.teamUsers == null)
+            this.teamUsers = new LinkedList<>();
         return teamUsers;
     }
 
@@ -105,6 +107,8 @@ public class Channel {
     }
 
     public List<TeamUser> getPending_teamUsers() {
+        if (this.pending_teamUsers == null)
+            this.pending_teamUsers = new LinkedList<>();
         return pending_teamUsers;
     }
 
@@ -158,7 +162,7 @@ public class Channel {
     }
 
     private void addPendingTeamUser(TeamUser teamUser) {
-        this.pending_teamUsers.add(teamUser);
+        this.getPending_teamUsers().add(teamUser);
     }
 
     public void addPendingTeamUser(TeamUser teamUser, DataBaseConnection db) throws HttpServletException {
@@ -178,7 +182,7 @@ public class Channel {
     }
 
     private void removePendingTeamUser(TeamUser teamUser) {
-        this.pending_teamUsers.remove(teamUser);
+        this.getPending_teamUsers().remove(teamUser);
     }
 
     public void removePendingTeamUser(TeamUser teamUser, DataBaseConnection db) throws HttpServletException {
