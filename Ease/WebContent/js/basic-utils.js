@@ -36,6 +36,7 @@ function getCookie(cname) {
 }
 
 var NavigatorName = getUserNavigator();
+
 function getUserNavigator() {
     var ua = navigator.userAgent;
     var x = ua.indexOf("MSIE");
@@ -103,13 +104,13 @@ function changeColor(color, ratio, darker) {
 
         // Convert hex to decimal
         decimal = !!rgb ? [rgb[1], rgb[2], rgb[3]] : color.replace(
-                /^#?([a-f0-9][a-f0-9])([a-f0-9][a-f0-9])([a-f0-9][a-f0-9])/i,
-                function () {
-                    return parseInt(arguments[1], 16) + ',' +
-                        parseInt(arguments[2], 16) + ',' +
-                        parseInt(arguments[3], 16);
-                }
-            ).split(/,/),
+            /^#?([a-f0-9][a-f0-9])([a-f0-9][a-f0-9])([a-f0-9][a-f0-9])/i,
+            function () {
+                return parseInt(arguments[1], 16) + ',' +
+                    parseInt(arguments[2], 16) + ',' +
+                    parseInt(arguments[3], 16);
+            }
+        ).split(/,/),
         returnValue;
 
     // Return RGB(A)
@@ -149,6 +150,7 @@ function lighterColor(color, ratio) {
 function darkerColor(color, ratio) {
     return changeColor(color, ratio, true);
 }
+
 window.addEventListener('load', function () {
     $(document).on('mouseover', '.showAppActionsButton', function (evt) {
         var subPopup = $(this).find('.appActionsPopup');
@@ -210,7 +212,7 @@ var Animations = function () {
             function (e) {
                 $(elem).removeClass(animationClass);
             });
-    }
+    };
     this.shake_anim = function (elem) {
         $(elem).addClass('shake-anim');
 
@@ -219,7 +221,7 @@ var Animations = function () {
                 $(elem).removeClass('shake-anim');
             });
     }
-}
+};
 var easeAnimations = new Animations();
 
 /*if ('serviceWorker' in navigator) {
