@@ -90,7 +90,7 @@ pageEncoding="UTF-8"%>
 					<fmt:message key="landing.title" />
 				</div>
 				<div class="intro-lead-in">
-					<fmt:message key="landing.sub-title" />					
+					<fmt:message key="landing.sub-title" />
 				</div>
 				<a href="#services" class="btn btn-xl signUpButton" trackEvent="HomepageSignUpButton1">
 					<fmt:message key="landing.signup-button.text" />
@@ -378,7 +378,7 @@ pageEncoding="UTF-8"%>
 			</div>
 		</section>
 		<%@ include file="templates/landingPage/landingFooter.jsp" %>
-		<%@ include file="templates/landingPage/registrationPopup.jsp" %>	
+		<%@ include file="templates/landingPage/registrationPopup.jsp" %>
 		<script src="/jsMinified.v00014/jquery1.12.4.js" ></script>
 		<script src="/jsMinified.v00014/jquery.complexify.js"></script>
 		<script src="/jsMinified.v00014/bootstrap.js" async></script>
