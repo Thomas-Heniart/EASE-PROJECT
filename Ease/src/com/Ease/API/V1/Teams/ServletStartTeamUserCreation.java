@@ -8,12 +8,13 @@ import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Team.TeamUserRole;
 import com.Ease.Utils.Crypto.CodeGenerator;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
-import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -43,14 +44,11 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             String email = sm.getStringParam("email", true);
             String username = sm.getStringParam("username", true);
             Integer role = sm.getIntParam("role", true);
-            JSONObject errors = new JSONObject();
             if (email == null || email.equals("") || !Regex.isEmail(email))
-                errors.put("email", "That doesn't look like a valid email address!");
-            String username_error = checkUsernameIntegrity(username);
-            if (username_error != null)
-                errors.put("username", username_error);
+                throw new HttpServletException(HttpStatus.BadRequest, "That doesn't look like a valid email address!");
+            checkUsernameIntegrity(username);
             if (role == null || !TeamUserRole.isInferiorToOwner(role) || !TeamUserRole.isValidValue(role))
-                errors.put("role", "Invalid inputs");
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid inputs");
             String first_name = sm.getStringParam("first_name", true);
             String last_name = sm.getStringParam("last_name", true);
             HibernateQuery query = sm.getHibernateQuery();
@@ -58,12 +56,12 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             query.setParameter(1, email);
             query.setParameter(2, team_id);
             if (!query.list().isEmpty())
-                errors.put("email", "This person is already on your team.");
+                throw new HttpServletException(HttpStatus.BadRequest, "This person is already on your team.");
             query.querySQLString("SELECT id FROM teamUsers WHERE username = ? AND team_id = ?;");
             query.setParameter(1, username);
             query.setParameter(2, team_id);
             if (!query.list().isEmpty())
-                errors.put("username", "Username is already taken");
+                throw new HttpServletException(HttpStatus.BadRequest, "Username is already taken");
             Date arrival_date = sm.getTimestamp();
             String departure_date_string = sm.getStringParam("departure_date", true);
             TeamUser teamUser = new TeamUser(first_name, last_name, email, username, arrival_date, null, team, new TeamUserRole(role));
@@ -103,14 +101,13 @@ public class ServletStartTeamUserCreation extends HttpServlet {
         sm.sendResponse();
     }
 
-    private String checkUsernameIntegrity(String username) {
+    private void checkUsernameIntegrity(String username) throws HttpServletException {
         if (username == null || username.equals(""))
-            return "Usernames can't be empty!";
-        if (username.length() >= 22)
-            return "Sorry, that's a bit too long! Usernames must be fewer than 22 characters.";
+            throw new HttpServletException(HttpStatus.BadRequest, "Usernames can't be empty!");
+        if (username.length() >= 22 || username.length() < 4)
+            throw new HttpServletException(HttpStatus.BadRequest, "Sorry, usernames must be between 4 and 21 characters.");
         if (!username.equals(username.toLowerCase()) || !Regex.isValidUsername(username))
-            return "Sorry, usernames must contain only lowercase characters.";
-        return null;
+            throw new HttpServletException(HttpStatus.BadRequest, "Sorry, usernames must contain only lowercase characters.");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

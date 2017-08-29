@@ -94,7 +94,7 @@ public class PostServletManager extends ServletManager {
         if (param == null)
             return null;
         else
-            return Math.toIntExact(getLongParam(paramName, saveInLogs));
+            return Math.toIntExact(param);
     }
 
     public Boolean getBooleanParam(String paramName, boolean saveInLogs) throws HttpServletException {
@@ -135,5 +135,10 @@ public class PostServletManager extends ServletManager {
         } catch (HttpServletException e) {
             e.printStackTrace();
         }
+    }
+
+    /* Horrible glitch */
+    public void setParam(String key, Object value) {
+        this.params.put(key, value);
     }
 }

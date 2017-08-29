@@ -2,6 +2,7 @@ package com.Ease.Utils.Servlets;
 
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
@@ -102,9 +103,16 @@ public abstract class ServletManager {
             } else
                 this.errorMessage = httpServletException.getMsg();
             System.out.println(this.errorMessage);
+            this.logResponse = this.errorMessage;
+            if (httpServletException.getHttpStatus() == HttpStatus.InternError) {
+                MailJetBuilder mailJetBuilder = new MailJetBuilder();
+            }
             response.setStatus(httpServletException.getHttpStatus().getValue());
         } catch (ClassCastException e1) {
             e.printStackTrace();
+            this.logResponse = e.toString() + ".\nStackTrace:";
+            for (int i = 0; i < e.getStackTrace().length; i++)
+                this.logResponse += ("\n" + e.getStackTrace()[i]);
             this.setInternError();
         }
     }
@@ -389,7 +397,7 @@ public abstract class ServletManager {
 
     public TeamUser getTeamUserForTeam(Team team) throws HttpServletException {
         for (TeamUser teamUser : this.getTeamUsers()) {
-            if (teamUser.getTeam() == team && !teamUser.isDisabled() && teamUser.isVerified())
+            if (teamUser.getTeam() == team && !teamUser.isDisabled())
                 return teamUser;
         }
         throw new HttpServletException(HttpStatus.BadRequest);
@@ -401,7 +409,7 @@ public abstract class ServletManager {
         TeamManager teamManager = (TeamManager) this.getContextAttr("teamManager");
         Team team = teamManager.getTeamWithId(team_id);
         for (TeamUser teamUser : this.getTeamUsers()) {
-            if (teamUser.getTeam() == team && !teamUser.isDisabled() && teamUser.isVerified())
+            if (teamUser.getTeam() == team && !teamUser.isDisabled())
                 return teamUser;
         }
         return null;
