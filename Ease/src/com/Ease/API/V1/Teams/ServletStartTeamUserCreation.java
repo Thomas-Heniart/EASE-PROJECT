@@ -64,10 +64,13 @@ public class ServletStartTeamUserCreation extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Username is already taken");
             Date arrival_date = sm.getTimestamp();
             String departure_date_string = sm.getStringParam("departure_date", true);
+            Date departure_date = departure_format.parse(departure_date_string);
+            if (departure_date.getTime() < sm.getTimestamp().getTime())
+                throw new HttpServletException(HttpStatus.BadRequest, "Departure date cannot be past.");
             TeamUser teamUser = new TeamUser(first_name, last_name, email, username, arrival_date, null, team, new TeamUserRole(role));
             teamUser.setAdmin_id(adminTeamUser.getDb_id());
             if (departure_date_string != null && !departure_date_string.equals(""))
-                teamUser.setDepartureDate(departure_format.parse(departure_date_string));
+                teamUser.setDepartureDate(departure_date);
             query.saveOrUpdateObject(teamUser);
             team.addTeamUser(teamUser);
             String code;
