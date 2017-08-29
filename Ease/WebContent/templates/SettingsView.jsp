@@ -1,18 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
-<%@page import="com.Ease.Dashboard.User.*"%>
+<%@page import="com.Ease.Dashboard.User.User" %>
 <% User user = (User) (session.getAttribute("user"));%>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <c:set var="session"		scope="session" value="${pageContext.getSession()}"/>
 <c:set var="user"			scope="session" value='${session.getAttribute("user")}'/>
 
-<script src="/jsMinified.v00014/SettingsView.js"></script>
-<script src="/jsMinified.v00014/errorMsg.js"></script>
-<script src="/jsMinified.v00014/input.js"></script>
-<script src="/jsMinified.v00014/form.js"></script>
-<script src="/jsMinified.v00014/popup.js"></script>
-<script src="/jsMinified.v00014/emailSuggestions.js"></script>
+<script src="/jsMinified.v00015/SettingsView.js"></script>
+<script src="/jsMinified.v00015/errorMsg.js"></script>
+<script src="/jsMinified.v00015/input.js"></script>
+<script src="/jsMinified.v00015/form.js"></script>
+<script src="/jsMinified.v00015/popup.js"></script>
+<script src="/jsMinified.v00015/emailSuggestions.js"></script>
 
 <div class="settingsWindow">
 	<div class="quit">

@@ -2,23 +2,15 @@ package com.Ease.API.V1.Catalog;
 
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.AccountInformation;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
-import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
 import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by thomas on 15/05/2017.
@@ -36,7 +28,7 @@ public class ServletSearchTeamCatalogApps extends HttpServlet {
             JSONArray jsonArray = new JSONArray();
             if (search != null && !search.equals("")) {
                 for (Website website : catalog.getWebsites()) {
-                    if (website.isInCatalogForTeam(String.valueOf(team_id)) && website.getName().toLowerCase().startsWith(search.toLowerCase()) && website.work())
+                    if (website.isInCatalogForTeam(String.valueOf(team_id)) && website.getName().toLowerCase().startsWith(search.toLowerCase()) && website.isIntegrated())
                         jsonArray.add(website.getSearchJson());
                 }
             }

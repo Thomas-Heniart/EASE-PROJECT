@@ -128,6 +128,9 @@ public class PostServletManager extends ServletManager {
                     team.getWebSocketManager().sendObjects(this.webSocketMessages, ws_id);
                 else
                     team.getChannelWithId(channel_id).getWebSocketManager().sendObjects(this.webSocketMessages, ws_id);
+            } else {
+                if (this.user != null)
+                    this.user.getWebSocketManager().sendObjects(this.webSocketMessages, ws_id);
             }
         } catch (HttpServletException e) {
             e.printStackTrace();

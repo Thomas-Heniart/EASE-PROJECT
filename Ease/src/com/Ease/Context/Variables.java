@@ -21,9 +21,8 @@ public class Variables {
 	public static final String PROJECT_PATH = "/opt/tomcat/webapps/ROOT";
 	public static final String KEYS_PATH = "/opt/tomcat/webapps/ROOT/WEB-INF/classes/com/Ease/Utils/Crypto/privateKeys.txt";
 	public static final String WEBSITES_PATH = "/resources/websites/";
-	public static final String URL_PATH = "http://51.254.207.91/";
-	*/
-
+	public static final String URL_PATH = "http://turfu.ease.space:8443/";
+    */
     //Fifi
     public static final String ENVIRONNEMENT = "PC de Fifi";
     public static final String PROJECT_PATH = "/home/nicetwice/EASE-PROJECT/Ease/WebContent/";

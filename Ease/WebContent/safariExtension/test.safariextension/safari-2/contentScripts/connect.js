@@ -1,25 +1,41 @@
 function checkIsConnected(msg, connected, unconnected, i) {
-    if (i >= $(msg.detail[msg.bigStep].website.checkAlreadyLogged).length) {
+    var length = $(msg.detail[msg.bigStep].website.checkAlreadyLogged).length;
+    if (i >= length) {
         connected();
     } else {
-        if (msg.detail[msg.bigStep].website.checkAlreadyLogged[i].action == undefined) {
+        if (msg.detail[msg.bigStep].website.checkAlreadyLogged[i].action === undefined) {
             var object = $(msg.detail[msg.bigStep].website.checkAlreadyLogged[i].search);
             var type = msg.detail[msg.bigStep].website.checkAlreadyLogged[i].type;
-            if (type == "absent" && object.length > 0){
-                unconnected();
+            if (type === "absent") {
+                if (object.length > 0)
+                    unconnected();
+                else {
+                    if (i === length - 1)
+                        connected();
+                }
             } else if (type != "absent" && object.length <= 0) {
                 unconnected();
             } else {
                 checkIsConnected(msg, connected, unconnected, i + 1);
             }
-        } else if (msg.detail[msg.bigStep].website.checkAlreadyLogged[i].action == "waitfor") {
+        } else if (msg.detail[msg.bigStep].website.checkAlreadyLogged[i].action === "waitfor") {
             var time = msg.detail[msg.bigStep].website.checkAlreadyLogged[i].time;
             if (!time) {
                 time = 100;
             }
             var iteration = 0;
-
-            function waitfor() {
+            var waitfor = setInterval(function () {
+                var obj = $(msg.detail[msg.bigStep].website.checkAlreadyLogged[i].search);
+                if (obj.length) {
+                    checkIsConnected(msg, connected, unconnected, i + 1);
+                    clearInterval(waitfor);
+                } else {
+                    if (iteration > 100)
+                        unconnected();
+                }
+                iteration++;
+            }, 100);
+            /* function waitfor() {
                 var obj = $(msg.detail[msg.bigStep].website.checkAlreadyLogged[i].search);
                 if (obj.length > 0) {
                     checkIsConnected(msg, connected, unconnected, i + 1);
@@ -34,8 +50,8 @@ function checkIsConnected(msg, connected, unconnected, i) {
                     }, time);
                 }
             }
-            waitfor();
-        } else if (msg.detail[msg.bigStep].website.checkAlreadyLogged[i].action == "search") {
+            waitfor(); */
+        } else if (msg.detail[msg.bigStep].website.checkAlreadyLogged[i].action === "search") {
             var actionStep = msg.detail[msg.bigStep].website.checkAlreadyLogged[i];
             var obj = $(actionStep.search);
             alert("Found: " + obj.length + " search: " + actionStep.search);

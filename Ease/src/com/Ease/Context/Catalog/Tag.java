@@ -1,20 +1,13 @@
 package com.Ease.Context.Catalog;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletContext;
-
+import com.Ease.Utils.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.IdGenerator;
-import com.Ease.Utils.ServletManager;
+import javax.servlet.ServletContext;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class Tag {
 	
@@ -145,8 +138,8 @@ public class Tag {
 	
 	public JSONArray search(JSONArray result, String search) {
 		for (Website site : this.sites) {
-			if (site.getName().toUpperCase().startsWith(search.toUpperCase()) && site.work()) {
-				result.add(String.valueOf(site.getDb_id()));
+            if (site.getName().toUpperCase().startsWith(search.toUpperCase()) && site.isPublic() && site.isIntegrated()) {
+                result.add(String.valueOf(site.getDb_id()));
 			}
 		}
 		return result;
@@ -181,17 +174,6 @@ public class Tag {
 		request.setInt(website.getDb_id());
 		request.set();
 		this.sites.remove(website);
-	}
-
-	public void refresh(ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		DatabaseRequest request = db.prepareRequest("SELECT * FROM tags WHERE id = ?;");
-		request.setInt(this.db_id);
-		DatabaseResult rs = request.get();
-		if (!rs.next())
-			throw new GeneralException(ServletManager.Code.InternError, "This tag does not exist");
-		this.name = rs.getString(Data.TAG_NAME.ordinal());
-		this.color_id = rs.getInt(Data.COLOR.ordinal());
 	}
 
 	public void edit(String name, int color_id, List<Website> newWebsites,ServletManager sm) throws GeneralException {

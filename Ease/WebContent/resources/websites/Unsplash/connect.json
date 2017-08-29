@@ -8,7 +8,10 @@
 			{"action":"goto", "url":"https://unsplash.com/login"},
 			{"action":"fill", "what":"login", "search":"#user_email", "grave":true},
 			{"action":"fill", "what":"password", "search":"#user_password", "grave":true},
-			{"action":"click", "search":"input[name='commit']"}
+			{
+				"action": "click",
+				"search": "button[data-test='login-button']"
+			}
 			]
 	},
 	"Facebook":{

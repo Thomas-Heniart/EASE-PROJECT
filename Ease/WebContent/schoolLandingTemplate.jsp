@@ -227,18 +227,17 @@
 </section>
 <jsp:include page="templates/landingPage/${param.commentFile}" flush="true"/>
 <%@ include file="templates/landingPage/schoolLandingFooter.jsp" %>
-<%@ include file="templates/landingPage/registrationPopup2.jsp" %>
+<%@ include file="templates/landingPage/registrationPopup.jsp" %>
 </body>
-<script src="/jsMinified.v00014/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00014/jquery.complexify.js"></script>
-<script src="/jsMinified.v00014/bootstrap.js" async></script>
-<script src="/js/ajaxHandler.js" async></script>
-<script src="/js/popups/registrationPopup2.js" async></script>
-<script src="/jsMinified.v00014/landingPage.js" async></script>
-<script src="/jsMinified.v00014/basic-utils.js" async></script>
-<!-- <script src="/jsMinified.v00014/postHandler.js" async></script> -->
-<script src="/jsMinified.v00014/languageChooser.js" async></script>
-<script src="/jsMinified.v00014/tracker.js" async></script>
+<script src="/jsMinified.v00015/jquery1.12.4.js"></script>
+<script src="/jsMinified.v00015/jquery.complexify.js"></script>
+<script src="/jsMinified.v00015/bootstrap.js" async></script>
+<script src="/jsMinified.v00015/ajaxHandler.js" async></script>
+<script src="/jsMinified.v00015/registrationPopup.js" async></script>
+<script src="/jsMinified.v00015/landingPage.js" async></script>
+<script src="/jsMinified.v00015/basic-utils.js" async></script>
+<script src="/jsMinified.v00015/languageChooser.js" async></script>
+<script src="/jsMinified.v00015/tracker.js" async></script>
 <script type="text/javascript">
     window.addEventListener('load', function () {
         $crisp = [];
@@ -246,7 +245,7 @@
         (function () {
             d = document;
             s = d.createElement("script");
-            s.src = "/jsMinified.v00014/thirdParty/crisp.js";
+            s.src = "/jsMinified.v00015/thirdParty/crisp.js";
             s.async = 1;
             d.getElementsByTagName("head")[0].appendChild(s);
         })();
@@ -259,7 +258,7 @@
             var r = t.createElement("script");
             r.type = "text/javascript";
             r.async = true;
-            r.src = "/jsMinified.v00014/amplitude-analytics.js";
+            r.src = "/jsMinified.v00015/amplitude-analytics.js";
             r.onload = function () {
                 e.amplitude.runQueuedFunctions()
             };
