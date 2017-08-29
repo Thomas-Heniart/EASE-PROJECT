@@ -32,10 +32,12 @@ public class ServletEditChannelName extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             Integer channel_id = sm.getIntParam("channel_id", true);
+            Channel channel = team.getChannelWithId(channel_id);
+            if (channel.getName().equals("openspace"))
+                throw new HttpServletException(HttpStatus.Forbidden, "You cannot modify this channel.");
             String name = sm.getStringParam("name", true);
             if (name == null || name.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty name.");
-            Channel channel = team.getChannelWithId(channel_id);
             for (Channel channel1 : team.getChannels()) {
                 if (channel1 == channel)
                     continue;

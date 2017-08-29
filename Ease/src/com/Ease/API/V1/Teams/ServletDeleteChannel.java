@@ -5,6 +5,8 @@ import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
@@ -34,6 +36,8 @@ public class ServletDeleteChannel extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             Channel channel = team.getChannelWithId(channel_id);
+            if (channel.getName().equals("openspace"))
+                throw new HttpServletException(HttpStatus.Forbidden, "You cannot modify this channel.");
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
             List<ShareableApp> shareableAppsToRemove = new LinkedList<>();
