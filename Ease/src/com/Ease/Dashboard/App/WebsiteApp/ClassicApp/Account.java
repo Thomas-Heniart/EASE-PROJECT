@@ -4,6 +4,7 @@ import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -384,7 +385,7 @@ public class Account {
         this.decipher(sm.getUser());
         JSONObject obj = new JSONObject();
         for (AccountInformation info : this.infos)
-            obj.put(info.getInformationName(), info.getInformationValue());
+            obj.put(info.getInformationName(), StringEscapeUtils.unescapeHtml4(info.getInformationValue()));
         return obj;
     }
 
@@ -393,7 +394,7 @@ public class Account {
         for (AccountInformation info : this.infos) {
             JSONObject tmp = new JSONObject();
             tmp.put("info_name", info.getInformationName());
-            tmp.put("info_value", info.getInformationValue());
+            tmp.put("info_value", StringEscapeUtils.unescapeHtml4(info.getInformationValue()));
             jsonArray.add(tmp);
         }
         return jsonArray;
