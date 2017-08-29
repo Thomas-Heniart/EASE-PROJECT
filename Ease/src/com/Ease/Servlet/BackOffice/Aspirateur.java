@@ -1,6 +1,10 @@
 package com.Ease.Servlet.BackOffice;
 
-import java.io.IOException;
+import com.Ease.Context.Catalog.Catalog;
+import com.Ease.Dashboard.User.User;
+import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.ServletManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,12 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import com.Ease.Context.Catalog.Catalog;
-import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
+import java.io.IOException;
 
 
 /**
@@ -59,8 +58,8 @@ public class Aspirateur extends HttpServlet {
 				sm.setResponse(ServletManager.Code.ClientWarning, "You are not admin.");
 			} else {
 				db.prepareRequest("DELETE FROM savedSessions WHERE datetime < SUBTIME(CURRENT_TIMESTAMP, '2 0:0:0.0');").set();
-				catalog.refresh(sm);
-				sm.setResponse(ServletManager.Code.Success,"SavedSessions cleaned and Catalog refreshed.");
+                //catalog.refresh(sm);
+                sm.setResponse(ServletManager.Code.Success,"SavedSessions cleaned and Catalog refreshed.");
 			}
 		} catch (GeneralException e) {
 			sm.setResponse(e);

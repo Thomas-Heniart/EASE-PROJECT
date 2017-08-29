@@ -46,11 +46,16 @@ public class Catalog {
         }
     }
 
-    public Website addWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, boolean noLogin, boolean noScrap, String[] haveLoginWith, String[] infoNames, String[] infoTypes, String[] placeholders, String[] placeholderIcons, Integer ssoId, String team_id, ServletManager sm) throws GeneralException {
-        Website site = Website.createWebsite(url, name, homePage, folder, haveLoginButton, noLogin, noScrap, haveLoginWith, infoNames, infoTypes, placeholders, placeholderIcons, this, ssoId, team_id, sm.getServletContext(), sm.getDB());
+    public Website addWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, boolean noLogin, boolean is_public, String[] haveLoginWith, String[] infoNames, String[] infoTypes, String[] placeholders, String[] placeholderIcons, Integer ssoId, String team_id, ServletManager sm) throws GeneralException {
+        Website site = Website.createWebsite(url, name, homePage, folder, haveLoginButton, noLogin, is_public, haveLoginWith, infoNames, infoTypes, placeholders, placeholderIcons, this, ssoId, team_id, sm.getServletContext(), sm.getDB());
         websites.add(site);
         websiteIdMap.put(site.getDb_id(), site);
         return site;
+    }
+
+    public void addWebsite(Website website) {
+        this.websites.add(website);
+        this.websiteIdMap.put(website.getDb_id(), website);
     }
 
 	/*
@@ -169,7 +174,7 @@ public class Catalog {
     }
 
 	/*public List<Tag> getTagsAlphabetically() {
-		List<Tag> res = this.tags;
+        List<Tag> res = this.tags;
 		Collections.sort(res, new Comparator<Tag>() {
 			public int compare(Tag t1, Tag t2) {
 				return t1.getName().compareToIgnoreCase(t2.getName());
@@ -182,7 +187,7 @@ public class Catalog {
         JSONArray result = new JSONArray();
         if (tags.size() <= 0) {
             for (Website site : this.websites) {
-                if (site.getName().toUpperCase().startsWith(search.toUpperCase()) && site.work()) {
+                if (site.getName().toUpperCase().startsWith(search.toUpperCase()) && site.isPublic() && site.isIntegrated()) {
                     result.add(String.valueOf(site.getDb_id()));
                 }
             }
@@ -322,39 +327,6 @@ public class Catalog {
         this.tagIdMap.put(tag.getDbId(), tag);
     }
 
-    public void refresh(ServletManager sm) throws GeneralException {
-        for (Website website : this.websites)
-            website.refresh(sm);
-        for (Tag tag : this.tags)
-            tag.refresh(sm);
-        for (Sso sso : this.ssos)
-            sso.refresh(sm);
-        List<Website> newWebsites = Website.loadNewWebsites(ssoIdMap, sm.getDB());
-        for (Website website : newWebsites) {
-            this.websites.add(website);
-            this.websiteIdMap.put(website.getDb_id(), website);
-        }
-        List<Website> allNewWebsites = this.getNewWebsites();
-        List<Website> oldWebsites = new LinkedList<Website>();
-        this.websites.forEach((Website website) -> {
-            if (!website.isNew())
-                oldWebsites.add(website);
-        });
-        Collections.sort(oldWebsites, new Comparator<Website>() {
-            @Override
-            public int compare(Website o1, Website o2) {
-                if (o1.ratio > o2.ratio)
-                    return 1;
-                else if (o1.ratio == o2.ratio)
-                    return 0;
-                else
-                    return -1;
-            }
-        });
-        oldWebsites.addAll(allNewWebsites);
-        this.websites = oldWebsites;
-    }
-
     public void turnOffWebsite(int single_id, ServletManager sm) throws GeneralException {
         this.getWebsiteWithId(single_id).turnOff(sm);
     }
@@ -366,7 +338,7 @@ public class Catalog {
     public List<Website> getWorkingWebsites() {
         List<Website> res = new LinkedList<Website>();
         this.websites.forEach((website) -> {
-            if (website.work())
+            if (website.isPublic())
                 res.add(website);
         });
         Collections.sort(res, new Comparator<Website>() {
@@ -380,7 +352,7 @@ public class Catalog {
     public List<Website> getBrokenWebsites() {
         List<Website> res = new LinkedList<Website>();
         this.websites.forEach((website) -> {
-            if (!website.work())
+            if (!website.isPublic())
                 res.add(website);
         });
         Collections.sort(res, new Comparator<Website>() {

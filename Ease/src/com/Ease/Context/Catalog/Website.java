@@ -35,41 +35,7 @@ public class Website {
         WEBSITE_ATTRIBUTES_ID
     }
 
-    private static Integer last_db_id = 0;
-
-    public static List<Website> loadNewWebsites(Map<Integer, Sso> ssoIdMap, DataBaseConnection db) throws GeneralException {
-        List<Website> newWebsites = new LinkedList<Website>();
-        DatabaseRequest request = db.prepareRequest("SELECT * FROM websites WHERE id > ?;");
-        request.setInt(last_db_id);
-        DatabaseResult rs = request.get();
-        while (rs.next()) {
-            Integer db_id = rs.getInt(WebsiteData.ID.ordinal());
-            if (db_id > last_db_id)
-                last_db_id = db_id;
-            List<WebsiteInformation> website_informations = WebsiteInformation.loadInformations(db_id, db);
-            String loginUrl = rs.getString(WebsiteData.LOGIN_URL.ordinal());
-            String name = rs.getString(WebsiteData.NAME.ordinal());
-            String folder = rs.getString(WebsiteData.FOLDER.ordinal());
-            Sso sso = ssoIdMap.get(rs.getInt(WebsiteData.SSO.ordinal()));
-            boolean noLogin = rs.getBoolean(WebsiteData.NO_LOGIN.ordinal());
-            String website_homepage = rs.getString(WebsiteData.WEBSITE_HOMEPAGE.ordinal());
-            int ratio = rs.getInt(WebsiteData.RATIO.ordinal());
-            int position = rs.getInt(WebsiteData.POSITION.ordinal());
-            String websiteAttributesId = rs.getString(WebsiteData.WEBSITE_ATTRIBUTES_ID.ordinal());
-            WebsiteAttributes websiteAttributes = null;
-            if (websiteAttributesId != null)
-                websiteAttributes = WebsiteAttributes.loadWebsiteAttributes(websiteAttributesId, db);
-            Website site = new Website(db_id, name, loginUrl, folder, sso, noLogin, website_homepage, ratio, position, website_informations, websiteAttributes);
-            newWebsites.add(site);
-            if (sso != null)
-                sso.addWebsite(site);
-            site.loadGroupIds(db);
-            site.loadTeamIds(db);
-        }
-        return newWebsites;
-    }
-
-    public static Website createWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, boolean noLogin, boolean noScrap, String[] haveLoginWith, String[] infoNames, String[] infoTypes, String[] placeholders, String[] placeholderIcons, Catalog catalog, Integer ssoId, String team_id, ServletContext context, DataBaseConnection db) throws GeneralException {
+    public static Website createWebsite(String url, String name, String homePage, String folder, boolean haveLoginButton, boolean noLogin, boolean is_public, String[] haveLoginWith, String[] infoNames, String[] infoTypes, String[] placeholders, String[] placeholderIcons, Catalog catalog, Integer ssoId, String team_id, ServletContext context, DataBaseConnection db) throws GeneralException {
         DatabaseRequest request = db.prepareRequest("SELECT * FROM websites WHERE folder = ? AND website_name = ?;");
         request.setString(folder);
         request.setString(name);
@@ -77,7 +43,7 @@ public class Website {
         if (rs.next())
             throw new GeneralException(ServletManager.Code.UserMiss, "This website already exists");
         int transaction = db.startTransaction();
-        WebsiteAttributes attributes = WebsiteAttributes.createWebsiteAttributes(noScrap, db);
+        WebsiteAttributes attributes = WebsiteAttributes.createWebsiteAttributes(is_public, db);
         request = db.prepareRequest("INSERT INTO websites VALUES (null, ?, ?, ?, ?, ?, ?, 0, 1, ?);");
         request.setString(url);
         request.setString(name);
@@ -90,9 +56,8 @@ public class Website {
         request.setString(homePage);
         request.setInt(attributes.getDbId());
         Integer db_id = request.set();
-        last_db_id = db_id;
 
-        List<WebsiteInformation> infos = new LinkedList<WebsiteInformation>();
+        List<WebsiteInformation> infos = new LinkedList<>();
         if (!noLogin) {
             for (int i = 0; i < infoNames.length; i++) {
                 infos.add(WebsiteInformation.createInformation(db_id, infoNames[i], infoTypes[i], String.valueOf(i), placeholders[i], placeholderIcons[i], db));
@@ -139,13 +104,39 @@ public class Website {
         return newWebsite;
     }
 
+    public static Website createWebsite(String url, WebsiteAttributes websiteAttributes, ServletContext context, DataBaseConnection db) throws HttpServletException {
+        String website_name = url.split("\\.")[1];
+        try {
+            int transaction = db.startTransaction();
+            DatabaseRequest request = db.prepareRequest("INSERT INTO websites VALUES (null, ?, ?, ?, ?, ?, ?, 0, 1, ?);");
+            request.setString(url);
+            request.setString(website_name);
+            request.setString("undefined");
+            request.setNull();
+            request.setBoolean(false);
+            request.setString(url);
+            request.setInt(websiteAttributes.getDbId());
+            Integer db_id = request.set();
+
+            List<WebsiteInformation> infos = new LinkedList<>();
+            infos.add(WebsiteInformation.createInformation(db_id, "login", "text", "0", "Login", "fa-user-o", db));
+            infos.add(WebsiteInformation.createInformation(db_id, "password", "password", "1", "Password", "fa-lock", db));
+            db.commitTransaction(transaction);
+            Website newWebsite = new Website(db_id, website_name, url, "undefined", null, false, url, 0, 1, infos, websiteAttributes, null);
+            WebsitesVisitedManager websitesVisitedManager = (WebsitesVisitedManager) context.getAttribute("websitesVisitedManager");
+            int visits = websitesVisitedManager.websiteDone(newWebsite.getHostname(), db);
+            websiteAttributes.setVisits(visits, db);
+            return newWebsite;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
     public static List<Website> loadWebsites(DataBaseConnection db, Map<Integer, Sso> ssoIdMap, ServletContext context) throws GeneralException {
         List<Website> websites = new LinkedList<Website>();
         DatabaseResult rs = db.prepareRequest("SELECT websites.* FROM websites LEFT JOIN websiteAttributes ON (website_attributes_id = websiteAttributes.id) ORDER BY new, ratio").get();
         while (rs.next()) {
             Integer db_id = rs.getInt(WebsiteData.ID.ordinal());
-            if (db_id > last_db_id)
-                last_db_id = db_id;
             List<WebsiteInformation> website_informations = WebsiteInformation.loadInformations(db_id, db);
             String loginUrl = rs.getString(WebsiteData.LOGIN_URL.ordinal());
             String name = rs.getString(WebsiteData.NAME.ordinal());
@@ -407,10 +398,14 @@ public class Website {
         return this.noLogin;
     }
 
-    public boolean work() {
+    public boolean isPublic() {
         if (this.websiteAttributes == null)
             return true;
-        return this.websiteAttributes.isWorking();
+        return this.websiteAttributes.isPublic();
+    }
+
+    public boolean isIntegrated() {
+        return this.websiteAttributes.isIntegrated();
     }
 
     public boolean isNew() {
@@ -526,24 +521,6 @@ public class Website {
 
     public int getVisits() {
         return this.websiteAttributes.getVisits();
-    }
-
-    public void refresh(ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
-        DatabaseRequest request = db.prepareRequest("SELECT * FROM websites WHERE id = ?;");
-        request.setInt(this.db_id);
-        DatabaseResult rs = request.get();
-        rs.next();
-        this.loginUrl = rs.getString(WebsiteData.LOGIN_URL.ordinal());
-        this.name = rs.getString(WebsiteData.NAME.ordinal());
-        this.folder = rs.getString(WebsiteData.FOLDER.ordinal());
-        this.noLogin = rs.getBoolean(WebsiteData.NO_LOGIN.ordinal());
-        this.website_homepage = rs.getString(WebsiteData.WEBSITE_HOMEPAGE.ordinal());
-        this.ratio = rs.getInt(WebsiteData.RATIO.ordinal());
-        this.position = rs.getInt(WebsiteData.POSITION.ordinal());
-        for (WebsiteInformation info : this.website_informations)
-            info.refresh(sm);
-        this.websiteAttributes.refresh(sm);
     }
 
     public boolean isInPublicCatalogForUser(User user) {
