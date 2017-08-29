@@ -1,52 +1,9 @@
 const initialState = {
   user : null,
+  ws_id: -1,
   authenticated : false,
   loginRedirectUrl: '',
-  teamsTutorial: false,
-  notifications: [
-    {
-      icon: '/resources/websites/Facebook/logo.png',
-      content: 'This is my notification. And this is the second phrase of my notification.',
-      id: 1,
-      date: 5,
-      isNew: true
-    },
-    {
-      icon: '/resources/websites/Facebook/logo.png',
-      content: 'This is my notification. And this is the second phrase of my notification.',
-      id: 2,
-      date: 5,
-      isNew: false
-    },
-    {
-      icon: '/resources/websites/Facebook/logo.png',
-      content: 'This is my notification. And this is the second phrase of my notification.',
-      id: 3,
-      date: 5,
-      isNew: true
-    },
-    {
-      icon: '/resources/websites/Facebook/logo.png',
-      content: 'This is my notification. And this is the second phrase of my notification.',
-      id: 4,
-      date: 5,
-      isNew: true
-    },
-    {
-      icon: '/resources/websites/Facebook/logo.png',
-      content: 'This is my notification. And this is the second phrase of my notification.',
-      id: 5,
-      date: 5,
-      isNew: true
-    },
-    {
-      icon: '/resources/websites/Facebook/logo.png',
-      content: 'This is my notification. And this is the second phrase of my notification.',
-      id: 6,
-      date: 5,
-      isNew: true
-    }
-  ]
+  teamsTutorial: false
 };
 
 export default function reducer(state=initialState, action) {
@@ -77,9 +34,17 @@ export default function reducer(state=initialState, action) {
       }
     }
     case 'SET_TEAMS_TUTORIAL': {
+      var user = state.user;
+      user.status.team_tuto_done = action.payload;
       return {
           ...state,
-        teamsTutorial: action.payload
+        user: user
+      }
+    }
+    case 'SET_WS_ID': {
+      return {
+          ...state,
+        ws_id: action.payload.ws_id
       }
     }
   }

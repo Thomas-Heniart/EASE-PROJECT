@@ -23,6 +23,7 @@ config = {
 	    { test: /\.css$/, loader: "style-loader!css-loader" }
         ],
     },
+    plugins: [],
     devServer: {
         historyApiFallback: true
     }

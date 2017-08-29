@@ -5,11 +5,45 @@ import * as channelActions from "../actions/channelActions"
 import * as userActions from "../actions/userActions"
 import {showTeamDeleteUserModal,
     showTeamDeleteChannelModal,
-    showTeamDeleteUserFromChannelModal}
-    from "../actions/teamModalActions"
-import {teamUserRoles, selectChannelFromListById} from "../utils/helperFunctions"
+    showTeamDeleteUserFromChannelModal,
+    showTeamTransferOwnershipModal}
+    from "../actions/teamModalActions";
+import {teamUserRoles,
+    selectChannelFromListById,
+    selectUserFromListById,
+    isAdmin,
+    isAdminOrMe,
+    isSuperior} from "../utils/helperFunctions";
+import {teamUserRoleValues} from "../utils/utils";
+import { Header, Container, Menu, Segment, Popup, Checkbox, Form, Input,Divider, Icon, List, Select, TextArea, Dropdown, Button, Grid, Message, Label,Transition } from 'semantic-ui-react';
+import {withRouter, Switch, Route} from "react-router-dom";
+import {connect} from "react-redux";
 
-import {connect} from "react-redux"
+function ChannelJoinRequestList(props){
+  const users =  props.users;
+  const requests = props.requests;
+
+  return (
+      <List>
+        {requests.map(item => {
+          const user = selectUserFromListById(users, item);
+          return (
+              <List.Item key={item}>
+                <Label basic size="mini">
+                  <Icon name="user"/>
+                  {user.username} would like to access this group.&nbsp;
+                  <a onClick={e => {props.dispatch(channelActions.addTeamUserToChannel(props.channel_id, item))}}>
+                    accept</a>
+                  &nbsp;or&nbsp;
+                  <a onClick={e => {props.dispatch(channelActions.deleteJoinChannelRequest(props.channel_id, item))}}>
+                    refuse</a> ?
+                </Label>
+              </List.Item>
+          )
+        })}
+      </List>
+  )
+}
 
 class TeamChannelFlexTab extends React.Component{
   constructor(props){
@@ -72,6 +106,7 @@ class TeamChannelFlexTab extends React.Component{
     }
   }
   render() {
+    const me = this.props.me;
     return (
         <div className="flex_contents_panel active" id="team_tab">
           <div className="tab_heading">
@@ -85,97 +120,110 @@ class TeamChannelFlexTab extends React.Component{
             </div>
           </div>
           <div className="tab_content_body">
-            <div className="tab_content_row">
-              <h2 className="name_holder">
-                {!this.state.nameModifying ?
-                    <span>
-                  <strong className="name">{this.props.item.name}</strong>
-                  <button class="button-unstyle mrgnLeft5 action_button"
-                          onClick={this.setNameModifying.bind(null, true)}>
-                    <i class="fa fa-pencil"/>
-                  </button>
-                </span>
-                    :
-                    <div class="overflow-hidden">
-                      <input class="modal_input width100 mrgnBottom5" type="text" name="name"
-                             value={this.state.modifiedName}
-                             onChange={this.handleNameInput}/>
-                      <button class="button-unstyle action_text_button positive_background floatRight"
-                              onClick={this.confirmNameChange}>
-                        Done
-                      </button>
-                      <button class="button-unstyle action_text_button neutral_background mrgnRight5 floatRight"
-                              onClick={this.setNameModifying.bind(null, false)}>
-                        Cancel
-                      </button>
-                    </div>
-                }
-              </h2>
-            </div>
-            <div className="tab_content_row">
-            <span className="purpose_holder">
-              <strong>Purpose: </strong>
-              {!this.state.purposeModifying ?
-                  <span>
-                    <span className="purpose">{this.props.item.purpose}</span>
-                    <button class="button-unstyle mrgnLeft5 action_button" onClick={this.setPurposeModifying.bind(null,true)}>
-                      <i class="fa fa-pencil"/>
-                    </button>
+            <Grid container celled="internally" columns={1} padded>
+              <Grid.Row>
+                <Grid.Column>
+                  {!this.state.nameModifying ?
+                      <h4>{this.props.item.name}
+                        {isAdmin(me.role) &&
+                        <button class="button-unstyle mrgnLeft5 action_button"
+                                onClick={this.setNameModifying.bind(null, true)}>
+                          <i class="fa fa-pencil"/>
+                        </button>}
+                      </h4>
+                      :
+                      <Form as="div">
+                        <Form.Field>
+                          <Input  label="Name"
+                                  size="mini"
+                                  type="text" name="name"
+                                  fluid
+                                  value={this.state.modifiedName}
+                                  onChange={this.handleNameInput}/>
+                        </Form.Field>
+                        <Form.Field>
+                          <Button basic size="mini" onClick={this.setNameModifying.bind(null, false)}>Cancel</Button>
+                          <Button primary size="mini" onClick={this.confirmNameChange}>Edit</Button>
+                        </Form.Field>
+                      </Form>
+                  }
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column>
+                  <h5>Purpose</h5>
+                  {!this.state.purposeModifying ?
+                      <span>{this.props.item.purpose}
+                        {isAdmin(me.role) &&
+                        <button class="button-unstyle mrgnLeft5 action_button"
+                                onClick={this.setPurposeModifying.bind(null, true)}>
+                          <i class="fa fa-pencil"/>
+                        </button>}
                   </span>
-                  :
-                  <div class="overflow-hidden">
-                    <textarea
-                        class="width100 modal_input mrgnBottom5"
-                        value={this.state.modifiedPurpose}
-                        onChange={this.handlePurposeInput}>
-                    </textarea>
-                    <button class="button-unstyle action_text_button positive_background floatRight"
-                            onClick={this.confirmPurposeChange}>
-                      Done
-                    </button>
-                    <button class="button-unstyle action_text_button neutral_background mrgnRight5 floatRight"
-                            onClick={this.setPurposeModifying.bind(null, false)}>
-                      Cancel
-                    </button>
-                  </div>
-              }
-            </span>
-            </div>
-            <div className="tab_content_row">
-            <span className="number_apps_holder">
-              <strong>Shared apps: </strong>
-              <span className="number_apps">{this.props.item.apps.length}</span>
-            </span>
-            </div>
-            <div className="tab_content_row">
-              <div className="members_holder">
-                <strong className="heading">Members:</strong>
-                <div className="members_list">
-                  {this.props.item.userIds.map(function (item) {
-                    const user = this.props.userGetter(item);
-                    return (
-                        <span className="member_name_holder" key={item}>
-                        <i className="fa fa-user mrgnRight5"/>
-                       <span className="member_name">{user.username}</span>
-                        <button class="button-unstyle remove_button mrgnLeft5"
-                                onClick={e => {this.props.dispatch(showTeamDeleteUserFromChannelModal(true, this.props.item.id, user.id))}}>
-                          <u>remove</u>
-                        </button>
-                      </span>
-                    )
-                  }, this)}
-                </div>
-                <button class="button-unstyle underlineOnHover" onClick={e => {this.props.dispatch(teamModalActions.showTeamChannelAddUserModal(true, this.props.item.id))}}>
-                  <strong>+ invite member</strong>
-                </button>
-              </div>
-            </div>
-            <div className="tab_content_row">
-              <button className="button-unstyle team_delete_button"
-                      onClick={e => {this.props.dispatch(showTeamDeleteChannelModal(true, this.props.item.id))}}>
-                <u>Delete group</u>
-              </button>
-            </div>
+                      :
+                      <Form as="div">
+                        <Form.Field>
+                          <TextArea style={{fontSize: '.8em'}}
+                                    size="mini"
+                                    type="text" name="name"
+                                    value={this.state.modifiedPurpose}
+                                    onChange={this.handlePurposeInput}/>
+                        </Form.Field>
+                        <Form.Field>
+                          <Button basic size="mini" onClick={this.setPurposeModifying.bind(null, false)}>Cancel</Button>
+                          <Button primary size="mini" onClick={this.confirmPurposeChange}>Edit</Button>
+                        </Form.Field>
+                      </Form>
+                  }
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column>
+                  <Header as="h5">
+                    {isAdmin(me.role) && this.props.item.join_requests.length > 0 ?
+                        <Label circular color="red" size="mini">{this.props.item.join_requests.length}</Label>: null}
+                    Members :
+                  </Header>
+                  <List>
+                    {this.props.item.userIds.map(function (item) {
+                      const user = selectUserFromListById(this.props.users, item);
+                      return (
+                          <List.Item key={item}>
+                            <Label size="mini">
+                              <Icon name="user"/>
+                              {user.username}
+                              {(isSuperior(user, me) || user.id === me.id) &&
+                              <Icon name="delete" link
+                                    onClick={e => {
+                                      this.props.dispatch(showTeamDeleteUserFromChannelModal(true, this.props.item.id, user.id))
+                                    }}/>}
+                            </Label>
+                          </List.Item>)}, this)}
+                  </List>
+                  {isAdmin(me.role) &&
+                  <ChannelJoinRequestList
+                      channel_id={this.props.item.id}
+                      users={this.props.users}
+                      requests={this.props.item.join_requests}
+                      dispatch={this.props.dispatch}/>}
+                  {isAdmin(me.role) &&
+                  <Button primary size="mini"
+                          onClick={e => {this.props.dispatch(teamModalActions.showTeamChannelAddUserModal(true, this.props.item.id))}}>
+                    <Icon name="add user"/>
+                    Add member
+                  </Button>}
+                </Grid.Column>
+              </Grid.Row>
+              {isAdmin(me.role) &&
+              <Grid.Row>
+                <Grid.Column>
+                  <Button basic color="red" size="mini"
+                          onClick={e => {this.props.dispatch(showTeamDeleteChannelModal(true, this.props.item.id))}}>
+                    Delete this group
+                  </Button>
+                </Grid.Column>
+              </Grid.Row>}
+            </Grid>
           </div>
         </div>
     )
@@ -207,10 +255,8 @@ class TeamUserFlexTab extends React.Component{
     this.confirmUserRoleChange = this.confirmUserRoleChange.bind(this);
     this.confirmUserDepartureDateChange = this.confirmUserDepartureDateChange.bind(this);
   }
-  handleInput(e){
-    this.setState({
-      [e.target.name] : e.target.value
-    });
+  handleInput(e, {name, value}){
+    this.setState({[name]: value});
   }
   setDepartureDateModifying(state){
     if (state){
@@ -277,11 +323,17 @@ class TeamUserFlexTab extends React.Component{
     });
   }
   confirmUserRoleChange(){
+    if (this.state.role == 3){
+      this.props.dispatch(showTeamTransferOwnershipModal(true, this.props.item));
+      this.setState({roleModifying: false});
+      return;
+    }
     if (this.state.role !== this.props.item.role){
       this.props.dispatch(userActions.editTeamUserRole(this.props.item.id, this.state.role)).then(response => {
         this.setState({roleModifying: false});
       });
-    }
+    }else
+      this.setState({roleModifying: false});
   }
   confirmUserDepartureDateChange(){
     if (this.state.departureDate != this.props.item.departureDate){
@@ -291,6 +343,11 @@ class TeamUserFlexTab extends React.Component{
     }
   }
   render() {
+    const user = this.props.item;
+    const me = this.props.me;
+    const userRoles = teamUserRoleValues.filter(item => {
+      return item.value <= me.role;
+    });
     return (
         <div className="flex_contents_panel active" id="team_user_tab">
           <div className="tab_heading">
@@ -304,187 +361,135 @@ class TeamUserFlexTab extends React.Component{
             </div>
           </div>
           <div className="tab_content_body">
-            <div className="tab_content_row">
-              {!this.state.firstNameLastNameModifying ?
-                  <h2 className="name_holder">
-                    <strong className="firstname mrgnRight5">{this.props.item.first_name}</strong>
-                    <strong className="lastname">{this.props.item.last_name}</strong>
-                    <button class="button-unstyle mrgnLeft5 action_button"
-                            onClick={this.setFirstLastNameModifying.bind(null, true)}>
-                      <i class="fa fa-pencil"/>
-                    </button>
-                  </h2>
-                  :
-                  <div class="overflow-hidden">
-                    <div class="display-flex mrgnBottom5">
-                      <input class="modal_input width50 mrgnRight5" type="text" name="first_name"
-                             value={this.state.first_name}
-                             onChange={this.handleInput}/>
-                      <input class="modal_input width50" type="text" name="last_name"
-                             value={this.state.last_name}
-                             onChange={this.handleInput}/>
-                    </div>
-                    <button class="button-unstyle action_text_button positive_background floatRight"
-                            onClick={this.confirmUserLastFirstNameChange}>
-                      Done
-                    </button>
-                    <button class="button-unstyle action_text_button neutral_background mrgnRight5 floatRight"
-                            onClick={this.setFirstLastNameModifying.bind(null, false)}>
-                      Cancel
-                    </button>
-                  </div>
-              }
-            </div>
-            <div className="tab_content_row">
-              {!this.state.usernameModifying ?
-                  <span className="username_holder">
-              @<span className="username">
-              {this.props.item.username}
-            </span>
-             <button class="button-unstyle mrgnLeft5 action_button"
-                     onClick={this.setUsernameModifying.bind(null, true)}>
-                      <i class="fa fa-pencil"/>
-                    </button>
-            </span>
-                  :
-                  <div class="overflow-hidden">
-                    <div class="modal_input_wrapper mrgnBottom5">
-                      <i class="fa fa-at ease_icon"/>
-                      <input class="input_unstyle" type="text" name="username"
-                             value={this.state.username}
-                             onChange={this.handleInput}/>
-                    </div>
-                    <button class="button-unstyle action_text_button positive_background floatRight"
-                            onClick={this.confirmUsernameChange}>
-                      Done
-                    </button>
-                    <button class="button-unstyle action_text_button neutral_background mrgnRight5 floatRight"
-                            onClick={this.setUsernameModifying.bind(null, false)}>
-                      Cancel
-                    </button>
-                  </div>
-              }
-            </div>
-            <div className="tab_content_row">
-                  <span className="email_holder">
-              <strong>Email: </strong>
-              <span className="email">
-                {this.props.item.email}
-              </span>
-            </span>
-            </div>
-            <div className="tab_content_row">
-            <span className="role_holder">
-              <strong>Role: </strong>
-              {!this.state.roleModifying ?
-                  <span className="role">{teamUserRoles[this.props.item.role]}
-                    <button class="button-unstyle mrgnLeft5 action_button"
-                            onClick={this.setRoleModifying.bind(null, true)}>
-                      <i class="fa fa-pencil"/>
-                    </button>
-              </span>
-                  :
-                  <div class="display-inline-block">
-                    <select class="select_unstyle"
-                            value={this.state.role}
-                            onChange={this.handleInput}
-                            id="user_role_select" name='role'>
-                      {
-                        Object.keys(teamUserRoles).map(function (item) {
-                          return (
-                              <option value={item} key={item}>{teamUserRoles[item]}</option>
-                          )
-                        }, this)
-                      }
-                    </select>
-                    <button class="button-unstyle action_button mrgnRight5 mrgnLeft5"
-                            onClick={this.setRoleModifying.bind(null, false)}>
-                      <i class="fa fa-times"/>
-                    </button>
-                    <button class="button-unstyle action_button"
-                            onClick={this.confirmUserRoleChange}>
-                      <i class="fa fa-check"/>
-                    </button>
-                  </div>
-              }
-            </span>
-            </div>
-            <div className="tab_content_row">
-            <span className="join_date_holder">
-              <strong>First connection:</strong>
-              <span className="join_date">
-                {this.props.item.arrival_date}
-              </span>
-            </span>
-            </div>
-            <div className="tab_content_row">
-            <span className="leave_date_holder">
-              <strong>Departure planned:</strong>
-              {!this.state.departureDateModifying ?
-                  <span className="leave_date">
-                {this.props.item.departure_date}
-                    <button class="button-unstyle mrgnLeft5 action_button"
-                            onClick={this.setDepartureDateModifying.bind(null, true)}>
-                      <i class="fa fa-pencil"/>
-                    </button>
-              </span>
-                  :
-                  <div>
-                    <input type="date" name="departureDate"
-                           id="departure_date"
-                           class="select_unstyle"
-                           value={this.state.departureDate}
-                           onChange={this.handleInput}/>
-                    <button class="button-unstyle action_button mrgnRight5 mrgnLeft5"
-                            onClick={this.setDepartureDateModifying.bind(null, false)}>
-                      <i class="fa fa-times"/>
-                    </button>
-                    <button class="button-unstyle action_button"
-                            onClick={this.confirmUserDepartureDateChange}>
-                      <i class="fa fa-check"/>
-                    </button>
-                  </div>
-              }
-            </span>
-            </div>
-            <div className="tab_content_row">
-              <div className="teams_holder">
-                <strong className="heading">Groups:</strong>
-                <div className="channels_list">
-                  {
-                    this.props.item.channel_ids.map(function (item) {
+            <Grid container celled="internally" columns={1} padded>
+              <Grid.Row>
+                <Grid.Column>
+                  {!this.state.firstNameLastNameModifying ?
+                      <h4>
+                        {user.first_name} {user.last_name}
+                        {isAdminOrMe(user, me) &&
+                        <Icon link name="pencil" onClick={this.setFirstLastNameModifying.bind(null, true)}/>}
+                      </h4> :
+                      <Form as="div">
+                        <Form.Input
+                            size="mini"
+                            placeholder="First name"
+                            type="text" name="first_name" fluid
+                            value={this.state.first_name}
+                            onChange={this.handleInput}/>
+                        <Form.Input
+                            size="mini"
+                            placeholder="Last name"
+                            type="text" name="last_name" fluid
+                            value={this.state.last_name}
+                            onChange={this.handleInput}/>
+                        <Form.Field>
+                          <Button basic size="mini" onClick={this.setFirstLastNameModifying.bind(null, false)}>Cancel</Button>
+                          <Button primary size="mini" onClick={this.confirmUserLastFirstNameChange}>Edit</Button>
+                        </Form.Field>
+                      </Form>}
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column>
+                  {!this.state.usernameModifying ?
+                      <div>
+                        @{user.username}
+                        {isAdminOrMe(user, me) &&
+                        <Icon link name="pencil" onClick={this.setUsernameModifying.bind(null, true)}/>}
+                      </div> :
+                      <Form as="div">
+                        <Form.Input
+                            size="mini"
+                            placeholder="Username"
+                            type="text" name="username" fluid
+                            value={this.state.username}
+                            onChange={this.handleInput}/>
+                        <Form.Field>
+                          <Button basic size="mini" onClick={this.setUsernameModifying.bind(null, false)}>Cancel</Button>
+                          <Button primary size="mini" onClick={this.confirmUsernameChange}>Edit</Button>
+                        </Form.Field>
+                      </Form>}
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column>
+                  <strong>Email: </strong>
+                  {user.email}
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column>
+                  <strong>Role: </strong>
+                  {!this.state.roleModifying ?
+                      <span>
+                        {teamUserRoles[user.role]}
+                        {isSuperior(user, me) && user.id != me.id &&
+                        <Icon link name="pencil" onClick={this.setRoleModifying.bind(null, true)}/>}
+                   </span> :
+                      <span>
+                      <Dropdown floating inline name="role" options={userRoles} defaultValue={user.role} onChange={this.handleInput}/>
+                       <Icon link name="delete" onClick={this.setRoleModifying.bind(null, false)}/>
+                       <Icon link name="checkmark" onClick={this.confirmUserRoleChange}/>
+                        </span>}
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column>
+                  <strong>First connection: </strong>
+                  {user.arrival_date}
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column>
+                  <strong>Departure date: </strong>
+                  {!this.state.departureDateModifying ?
+                      <span>
+                      {user.departure_date.length > 0 ? user.departure_date : 'not planned'}
+                        {isSuperior(user, me) && me.id !== user.id &&
+                        <Icon link name="pencil" onClick={this.setDepartureDateModifying.bind(null, true)}/>}
+                        </span> :
+                      <Input type="date" size="mini"
+                             fluid action name="departureDate"
+                             value={this.state.departureDate}
+                             onChange={this.handleInput}>
+                        <input/>
+                        <Button icon="delete" basic size="mini" onClick={this.setDepartureDateModifying.bind(null, false)}/>
+                        <Button icon="checkmark" primary size="mini" onClick={this.confirmUserDepartureDateChange}/>
+                      </Input>}
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column>
+                  <Header as="h5">Rooms:</Header>
+                  <List>
+                    {user.channel_ids.map(item => {
                       const channel = selectChannelFromListById(this.props.channels, item);
                       return (
-                          <span className="channel_name_holder" key={item}>
-                            <i className="fa fa-hashtag mrgnRight5"/>
-                            <span>
+                          <List.Item key={item}>
+                            <Label size="mini">
+                              <Icon name="users"/>
                               {channel.name}
-                            </span>
-                          <button class="button-unstyle remove_button mrgnLeft5"
-                                  onClick={e => {this.props.dispatch(showTeamDeleteUserFromChannelModal(true, channel.id, this.props.item.id))}}>
-                            <u>remove</u>
-                          </button>
-                        </span>
+                              {isAdmin(me.role) &&
+                              <Icon name="delete" link
+                                    onClick={e => {this.props.dispatch(showTeamDeleteUserFromChannelModal(true, channel.id, this.props.item.id))}}/>}
+                            </Label>
+                          </List.Item>
                       )
-                    }, this)
-                  }
-                </div>
-              </div>
-            </div>
-            <div className="tab_content_row">
-            <span className="using_apps_holder">
-              <strong>Apps used:</strong>
-              <span className="using_apps">
-                {this.props.item.apps && this.props.item.apps.length}
-              </span>
-            </span>
-            </div>
-            <div className="tab_content_row">
-              <button className="button-unstyle team_user_delete_button"
-                      onClick={e => {this.props.dispatch(showTeamDeleteUserModal(true, this.props.item.id))}}>
-                <u>Delete user</u>
-              </button>
-            </div>
+                    }, this)}
+                  </List>
+                </Grid.Column>
+              </Grid.Row>
+              {isSuperior(user,me) &&
+              <Grid.Row>
+                <Grid.Column>
+                  <Button basic color="red" size="mini"
+                          onClick={e => {this.props.dispatch(showTeamDeleteUserModal(true, this.props.item.id))}}>
+                    Delete this user
+                  </Button>
+                </Grid.Column>
+              </Grid.Row>}
+            </Grid>
           </div>
         </div>
     )
@@ -493,30 +498,42 @@ class TeamUserFlexTab extends React.Component{
 
 @connect((store)=>{
   return {
-    me: store.users.me,
-    selectedItem: store.selection,
-    channels: store.channels.channels
+    channels: store.channels.channels,
+    users: store.users.users,
+    selectionProps: store.selection
   };
 })
 class FlexPanels extends React.Component {
   constructor(props){
     super(props);
+    this.closePanel = this.closePanel.bind(this);
+  }
+  closePanel(){
+    this.props.history.replace(this.props.backLink);
   }
   render(){
+    const item = this.props.item;
+    const selectionProps = this.props.selectionProps;
+    const me = this.props.me;
+
     return (
         <div id="flex_contents">
-          {this.props.flexActive && this.props.selectedItem.type === 'channel' &&
+          {item.purpose != undefined &&
           <TeamChannelFlexTab
-              item={this.props.selectedItem.item}
+              me={me}
+              item={item}
+              apps={selectionProps.apps}
               flexActive={this.props.flexActive}
-              toggleFlexFunc={this.props.toggleFlexFunc}
-              userGetter={this.props.userGetter}
+              toggleFlexFunc={this.closePanel}
+              users={this.props.users}
               dispatch={this.props.dispatch}/>}
-          {this.props.flexActive && this.props.selectedItem.type === 'user' &&
+          {item.username != undefined &&
           <TeamUserFlexTab
-              item={this.props.selectedItem.item}
+              me={me}
+              item={item}
+              apps={selectionProps.apps}
               flexActive={this.props.flexActive}
-              toggleFlexFunc={this.props.toggleFlexFunc}
+              toggleFlexFunc={this.closePanel}
               channels={this.props.channels}
               dispatch={this.props.dispatch}/>}
         </div>
@@ -524,4 +541,4 @@ class FlexPanels extends React.Component {
   }
 }
 
-module.exports = FlexPanels;
+module.exports = withRouter(FlexPanels);

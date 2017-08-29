@@ -43,43 +43,7 @@
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
-<nav id="mainNav" class="navbar navbar-default navbar-custom navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header page-scroll">
-            <a class="navbar-brand page-scroll" href="/"><img src="resources/landing/ease-white-logo.svg" /></a>
-        </div>
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
-                <li class="hidden">
-                    <a href="#page-top"></a>
-                </li>
-                <li>
-                    <a href="/security">
-                        <fmt:message key="landing.header.security-link" />
-                    </a>
-                </li>
-                <li>
-                    <a href="/pricing">
-                        <fmt:message key="landing.header.price-link" />
-                    </a>
-                </li>
-                <li>
-                    <a href="/contact">
-                        <fmt:message key="landing.header.contact-link" />
-                    </a>
-                </li>
-                <li>
-                    <a href="/?skipLanding=true" id="connexionButton">
-                        <fmt:message key="landing.header.connexion-link" />
-                    </a>
-                </li>
-                <li>
-                    <%@ include file="templates/LanguageChooser.jsp" %>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+<%@ include file="templates/landingPage/landingHeader.jsp"%>
 <section id="pricing" style="background-color: white">
     <div class="container" id="teamsPreview">
         <div class="content display-flex flex_direction_column step2">

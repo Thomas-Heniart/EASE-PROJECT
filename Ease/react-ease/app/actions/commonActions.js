@@ -1,5 +1,28 @@
 var api = require('../utils/api');
 var post_api = require('../utils/post_api');
+import {selectTeamChannel} from "./channelActions";
+import {selectTeamUser} from "./userActions";
+import {push} from "react-router-redux";
+function getMyChannel(channels, myId){
+  for (var i = 0; i < channels.length; i++){
+    if (channels[i].userIds.indexOf(myId) !== -1)
+      return channels[i].id;
+  }
+  return -1;
+}
+
+export function autoSelectTeamItem(){
+  return function (dispatch, getState){
+    const state = getState();
+    const myId = state.team.myTeamUserId;
+    const channels = state.channels.channels;
+    const channelToSelect = getMyChannel(channels, myId);
+    if (channelToSelect !== -1)
+      dispatch(selectTeamChannel(channelToSelect));
+    else
+      dispatch(selectTeamUser(myId));
+  }
+}
 
 export function fetchMyInformation(){
   return function(dispatch){
@@ -63,8 +86,23 @@ export function setLoginRedirectUrl(url){
 }
 
 export function setTeamsTutorial(state) {
+  if (state)
+    return (dispatch) => {
+      return post_api.teams.validateTutorial().then(r => {
+        dispatch({type: 'SET_TEAMS_TUTORIAL', payload: state});
+      });
+    };
   return {
     type: 'SET_TEAMS_TUTORIAL',
     payload: state
+  }
+}
+
+export function setWSId(id){
+  return {
+    type: 'SET_WS_ID',
+    payload: {
+      ws_id: id
+    }
   }
 }

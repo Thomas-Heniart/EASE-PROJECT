@@ -14,6 +14,14 @@ export function selectUserFromListById(user_list, user_id){
   return null;
 }
 
+export function selectAppFromListById(app_list, app_id){
+  for (var i = 0; i < app_list.length; i++){
+    if (app_list[i].id === app_id)
+      return app_list[i];
+  }
+  return null;
+}
+
 export function selectChannelFromListById(channels, channelId){
   for (var i = 0; i < channels.length; i++){
     if (channels[i].id === channelId)
@@ -64,11 +72,36 @@ export function isUserInList(users, id){
   return false;
 }
 
+export function checkForNewNotifications(n){
+  for (var i = 0; i < n.length; i++){
+    if (n[i].is_new)
+      return true;
+  }
+  return false;
+}
+
 export const teamUserRoles = {
-  '1': 'Member',
-  '2': 'Admin',
-  '3': 'Owner'
+  1: 'Member',
+  2: 'Admin',
+  3: 'Owner'
 };
+
+export function isAdminOrMe(user, me){
+  const admin = isAdmin(me.role);
+  return admin || !admin && user.id === me.id;
+}
+
+export function isSuperior(user, me){
+  return me.role > user.role;
+}
+
+export function isAdmin(userRole){
+  return userRole > 1;
+}
+
+export function isOwner(userRole){
+  return userRole > 2;
+}
 
 export const passwordChangeValues = {
   "0": 'never',

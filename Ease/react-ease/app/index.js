@@ -10,18 +10,19 @@ var MainView = require('./components/common/MainView');
 var TeamJoinView = require('./components/teams/TeamJoinView');
 var Login = require('./components/common/Login');
 var Base = require('./components/common/Base.js');
-
+import HomeTemporaryHeader from './components/common/HomeTemporaryHeader';
 
 class App extends React.Component {
   render(){
     return (
         <HashRouter>
           <Base>
-            <Route exact path={"/"} component={TeamView}/>
+            <Route exact path={"/"} component={HomeTemporaryHeader}/>
             <Route path="/teamCreation" component={TeamCreationView}/>
             <Route path="/main" component={MainView}/>
             <Route path="/teamJoin/:code" component={TeamJoinView}/>
-            <Route path="/teams/:teamId" component={TeamView}/>
+            <Route exact path="/teams/:teamId" component={TeamView}/>
+            <Route path="/teams/:teamId/:itemId" component={TeamView}/>
             <Route path="/login" component={Login}/>
           </Base>
         </HashRouter>

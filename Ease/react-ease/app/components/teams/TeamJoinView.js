@@ -4,8 +4,9 @@ import {FormInput} from '../common/FormComponents';
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import {passwordRegexp, emailRegexp, jobRoles} from "../../utils/utils";
 import queryString from "query-string";
-import {processLogout} from "../../actions/commonActions"
-import {connect} from "react-redux"
+import {processLogout, setLoginRedirectUrl} from "../../actions/commonActions";
+import {connect} from "react-redux";
+import { Header, Container, Segment, Checkbox, Form, Input,Divider, Icon, List, Select, Dropdown, Button, Grid, Message, Label,Transition } from 'semantic-ui-react';
 var api = require('../../utils/api');
 var post_api = require('../../utils/post_api');
 
@@ -15,44 +16,32 @@ class Step1 extends React.Component {
     this.state = {
       choice: -1
     };
-    this.chooseMode = this.chooseMode.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+    this.createAccount = this.createAccount.bind(this);
+    this.login = this.login.bind(this);
   }
-  onSubmit(){
-      if (this.state.choice === 0){
-        this.props.onStepValidated();
-      }
-      if (this.state.choice === 1){
-        //redirect to login page
-      }
+  createAccount(){
+    this.props.onStepValidated();
   }
-  chooseMode(mode){
-    this.setState({choice: mode});
+  login(){
+    this.props.dispatch(setLoginRedirectUrl(this.props.match.url + '?skip'));
+    this.props.history.push('/login');
   }
   render(){
     return (
         <div class="contents" id="step1">
-          <div class="cotent_row text-center">
-            <h1>Do we know each other?</h1>
-          </div>
-          <div class="content_row justify_content_center">
-            <button class={classnames('button-unstyle choice-button', this.state.choice === 0 ? 'selected':null)}
-                    onClick={this.chooseMode.bind(null, 0)}
-                    style={{marginRight: '20px'}}>
+          <Segment>
+            <Header as="h1">
+              Do we know each other?
+                </Header>
+            <Divider hidden fitted/>
+            <Button primary onClick={this.createAccount} fluid>
               Not yet! I am new on Ease.space
-            </button>
-            <button class={classnames('button-unstyle choice-button', this.state.choice === 1 ? 'selected':null)}
-                    onClick={this.chooseMode.bind(null, 1)}>
+            </Button>
+            <Divider/>
+            <Button positive onClick={this.login} fluid>
               Yes! I already have an Ease.space account
-            </button>
-          </div>
-          <div class="content_row justify_content_center">
-            <button class="button-unstyle big-button" type="submit"
-                    disabled={this.state.choice === -1}
-                    onClick={this.onSubmit}>
-              Next
-            </button>
-          </div>
+            </Button>
+          </Segment>
         </div>
     )
   }
@@ -69,48 +58,34 @@ class Step2 extends React.Component{
   }
   render() {
     return (
-        <div class="contents" id="step1">
-          <div class="content_row flex_direction_column">
-            <h1>What's your name</h1>
-            <span>Your name will be displayed for your team members in Ease.space</span>
-          </div>
-          <form onSubmit={this.onSubmit}>
-            <div class="content_row flex_direction_column">
-              <span>Your name</span>
-              <div class="display-flex">
-                <input type="text"
-                       value={this.props.fname}
+        <div class="contents" id="step4">
+          <Segment>
+            <Header as="h1">
+              What's your name
+              <Header.Subheader>
+                Your name will be displayed for your team members in Ease.space
+              </Header.Subheader>
+            </Header>
+            <Divider hidden clearing/>
+            <Form onSubmit={this.onSubmit}>
+              <Form.Group widths="equal">
+                <Form.Input required label='First name' placeholder='First name' onChange={this.props.handleInput} name="fname" type="text"/>
+                <Form.Input required label='Last name' placeholder='Last name' onChange={this.props.handleInput} name="lname" type="text"/>
+              </Form.Group>
+              <Form.Field required>
+                <label>Username</label>
+                <Input type="text"
                        onChange={this.props.handleInput}
-                       name="fname"
-                       class="input_unstyle modal_input full_flex mrgnRight5"
-                       placeholder="First name"
+                       name="username"
+                       placeholder="Username"
                        required/>
-                <input type="text"
-                       value={this.props.lname}
-                       onChange={this.props.handleInput}
-                       name="lname"
-                       class="input_unstyle modal_input full_flex"
-                       placeholder="Last name"
-                       required/>
-              </div>
-            </div>
-            <div class="content_row flex_direction_column">
-              <span>Username</span>
-              <input type="text"
-                     value={this.props.username}
-                     onChange={this.props.handleInput}
-                     name="username"
-                     class="modal_input input_unstyle"
-                     placeholder="Username"
-                     required/>
-              <span>Please choose a username that is all lowercase, containing only letters, numbers, periods, hyphens and underscores. Maximum 22 characters.</span>
-            </div>
-            <div class="content_row justify_content_center">
-              <button class="button-unstyle big-button" type="submit">
-                Next
-              </button>
-            </div>
-          </form>
+                <Label pointing>Please choose a username that is all lowercase, containing only letters, numbers, periods, hyphens and underscores. Maximum 22 characters.</Label>
+              </Form.Field>
+              <Form.Field>
+                <Button positive fluid type="submit">Next</Button>
+              </Form.Field>
+            </Form>
+          </Segment>
         </div>
     )
   }
@@ -120,9 +95,8 @@ class Step3 extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      passwordChecked: false,
-      passwordMessage: 'Password must be at least 8 character long and contain 1 uppercase, 1 lowercase, 1 number',
-      confirmPasswordChecked: false,
+      errorMessage: '',
+      passwordError: false,
       confirmPasswordMessage: "Passwords doesn't match"
     };
     this.onSubmit = this.onSubmit.bind(this);
@@ -130,92 +104,91 @@ class Step3 extends React.Component{
   onSubmit(e){
     e.preventDefault();
 
+    this.setState({errorMessage: '', passwordError: false});
     if (this.props.password.match(passwordRegexp) === null){
-      this.setState({passwordChecked: true});
+      this.setState({passwordError: true});
       return;
-    } else {
-      this.setState({passwordChecked: false})
     }
     if (this.props.password != this.props.confirmPassword){
-      this.setState({confirmPasswordChecked: true});
+      this.setState({errorMessage: this.state.confirmPasswordMessage});
       return;
-    } else {
-      this.setState({confirmPasswordChecked: false});
     }
+    this.setState({errorMessage: '', passwordError: false});
     this.props.onStepValidated();
   }
   render() {
     return (
-        <div class="contents" id="step2">
-          <div class="content_row  flex_direction_column">
-            <h1>Set your password</h1>
-            <span>Choose a strong password for sign in to Ease.space</span>
-          </div>
-          <form onSubmit={this.onSubmit}>
-            <div class="content_row flex_direction_column">
-              <span>Password</span>
-              <FormInput value={this.props.password}
-                         onChange={this.props.handleInput}
-                         checked={this.state.passwordChecked}
-                         validation_message={this.state.passwordMessage}
-                         type="password"
-                         name="password"
-                         classes="input_unstyle modal_input"
-                         placeholder="Password"
-                         required={true}/>
-            </div>
-            <div class="content_row flex_direction_column">
-              <span>Confirm password</span>
-              <FormInput value={this.props.confirmPassword}
-                         onChange={this.props.handleInput}
-                         checked={this.state.confirmPasswordChecked}
-                         validation_message={this.state.confirmPasswordMessage}
-                         type="password"
-                         name="confirmPassword"
-                         classes="input_unstyle modal_input"
-                         placeholder="Confirmation"
-                         required={true}/>
-            </div>
-            <div class="content_row justify_content_center">
-              <button type="submit" class="button-unstyle big-button">
-                Continue to Team info
-              </button>
-            </div>
-          </form>
+        <div class="contents" id="step3">
+          <Segment>
+            <Header as="h1">
+              Set your password
+              <Header.Subheader>
+                Choose a strong password for sign in to Ease.space
+              </Header.Subheader>
+            </Header>
+            <Divider hidden clearing/>
+            <Form onSubmit={this.onSubmit} error={this.state.errorMessage > 0}>
+              <Form.Field required error={this.state.passwordError}>
+                <label>Password</label>
+                <Input
+                    onChange={this.props.handleInput}
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    required/>
+                <Label pointing color={this.state.passwordError ? 'red': null} basic={this.state.passwordError}>Your password must contain at least 8 characters, 1 uppercase, 1 lowercase and 1 number</Label>
+              </Form.Field>
+              <Form.Input
+                  label="Confirm password"
+                  onChange={this.props.handleInput}
+                  type="password"
+                  name="confirmPassword"
+                  placeholder="Confirmation"
+                  required/>
+              <Message error content={this.state.errorMessage}/>
+              <Form.Button positive fluid type="submit">Continue to Team info</Form.Button>
+            </Form>
+          </Segment>
         </div>
     )
   }
 }
 
 function Step4(props){
+  const roles = jobRoles.map((item, idx) => {
+    return {
+      key: idx,
+      value: idx,
+      text: item
+    }
+  });
+  const jobRole = props.jobRole;
+  const jobDetails = props.jobDetails;
   return (
-      <div class="contents" id="step3">
-        <div class="content_row">
-          <h1>Tell us about your role</h1>
-        </div>
-        <div class="content_row flex_direction_column">
-          <span>What type of work do you do?</span>
-          <select name='jobRole' class="full_width select_unstyle modal_input"
-                  value={props.jobRole} onChange={props.handleInput}>
-            {jobRoles.map(function (item, idx) {
-              return (
-                  <option value={idx} key={idx}>{item}</option>
-              )})}
-          </select>
-        </div>
-        {props.jobRole == '15' &&
-                <div class="content_row flex_direction_column">
-                  <span>Could you please elaborate? (More info will help us improve Slack!)</span>
-                  <input type="text" name="jobDetails" class="input_unstyle modal_input"
-                          value={props.jobDetail} onChange={props.handleInput}/>
-                </div>
-        }
-        <div class="content_row justify_content_center">
-          <button class="button-unstyle big-button" onClick={props.onStepValidated}
-                  disabled={props.jobRoles == '15' && props.jobDetails.length === 0}>
-            Next
-          </button>
-        </div>
+      <div class="contents" id="step5">
+        <Segment>
+          <Header as="h1">
+            Tell us about your role
+          </Header>
+          <Divider hidden clearing/>
+          <Form onSubmit={props.onStepValidated}>
+            <Form.Field>
+              <label>What type of work do you do?</label>
+              <Select placeholder="Select your role" name="jobRole" options={roles} onChange={props.handleInput}/>
+            </Form.Field>
+            {props.jobRole === 15 &&
+            <Form.Input
+                label="Could you please elaborate? (More info will help us improve Ease.space!)"
+                placeholder="Details..."
+                type="text"
+                name="jobDetails"
+                required
+                onChange={props.handleInput}/>}
+            <Form.Field>
+              <Button positive fluid type="submit" disabled={jobRole === null || (jobRole == 15 && jobDetails.length == 0)}>Next</Button>
+            </Form.Field>
+          </Form>
+        </Segment>
       </div>
   )
 }
@@ -236,7 +209,7 @@ class TeamJoinView extends React.Component {
       newsletter:'',
       password: '',
       confirmPassword: '',
-      jobRole:0,
+      jobRole:null,
       jobDetails: '',
       currentStep: 0,
       code: '',
@@ -260,19 +233,21 @@ class TeamJoinView extends React.Component {
   }
   finalizeModal(){
     if (this.canSkip()){
-      post_api.teams.finalizeRegistration(this.state.fname, this.state.lname, this.state.username, this.state.jobRole, this.state.jobDetails, this.state.code).then(response => {
-        this.props.history.push('/teams/' + this.state.teamUser.team_id);
+      post_api.teams.finalizeRegistration(this.props.common.ws_id, this.state.fname, this.state.lname, this.state.username, this.state.jobRole, this.state.jobDetails, this.state.code).then(response => {
+        window.location.href = '/';
+//        this.props.history.push('/teams/' + this.state.teamUser.team_id);
       });
     }else {
-      post_api.common.registration(this.props.common.user.email, this.state.username, this.state.password,this.state.code, false).then(r => {
-        post_api.teams.finalizeRegistration(this.state.fname, this.state.lname, this.state.username, this.state.jobRole, this.state.jobDetails, this.state.code).then(response => {
-          this.props.history.push('/teams/' + this.state.teamUser.team_id);
+      post_api.common.registration(this.state.teamUser.email, this.state.username, this.state.password, null, this.state.code, false).then(r => {
+        post_api.teams.finalizeRegistration(this.props.common.ws_id, this.state.fname, this.state.lname, this.state.username, this.state.jobRole, this.state.jobDetails, this.state.code).then(response => {
+          window.location.href = '/';
+//          this.props.history.push('/teams/' + this.state.teamUser.team_id);
         });
       })
     }
   }
-  handleInput(e){
-    this.setState({[e.target.name]: e.target.value});
+  handleInput(e, {value , name}){
+    this.setState({[name]: value});
   }
   incrementStep(){
     if (this.state.currentStep === 1 && this.canSkip())
@@ -300,6 +275,9 @@ class TeamJoinView extends React.Component {
   render(){
     var steps = [];
     steps.push(<Step1 onStepValidated={this.incrementStep}
+                      dispatch={this.props.dispatch}
+                      match={this.props.match}
+                      history={this.props.history}
                       key="1"/>);
     steps.push(<Step2 onStepValidated={this.incrementStep}
                       handleInput={this.handleInput}

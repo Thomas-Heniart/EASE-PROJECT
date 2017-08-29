@@ -1,7 +1,7 @@
 var React = require('react');
 var classnames = require('classnames');
 var post_api = require('../../utils/post_api');
-import {showTeamAcceptMultiAppModal} from "../../actions/teamModalActions"
+import {showTeamAcceptMultiAppModal, showPinTeamAppToDashboardModal} from "../../actions/teamModalActions"
 import * as appActions from "../../actions/appsActions"
 import {findMeInReceivers} from "../../utils/helperFunctions"
 import {connect} from "react-redux"
@@ -45,6 +45,7 @@ class TeamAcceptMultiAppModal extends React.Component {
     this.props.dispatch(appActions.teamAppEditReceiver(app.id, receiver.shared_app_id, {account_information: receiver.account_information, team_user_id: receiver.team_user_id})).then(response => {
       this.props.dispatch(appActions.teamAcceptSharedApp(app.id, receiver.shared_app_id)).then(response => {
         this.props.dispatch(showTeamAcceptMultiAppModal(false));
+        this.props.dispatch(showPinTeamAppToDashboardModal(true, {...app}));
       })
     })
   }

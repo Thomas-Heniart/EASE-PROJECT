@@ -13,6 +13,7 @@ import {
     isUserInList,
     passwordChangeValues
 } from "../../utils/helperFunctions"
+import { Button, Icon } from 'semantic-ui-react';
 
 function TeamSimpleAppButtonSet(props) {
   const app = props.app;
@@ -22,11 +23,14 @@ function TeamSimpleAppButtonSet(props) {
 
   return (
       <div class="team_app_actions_holder">
+        {app.sharing_requests.length > 0 &&
         <button class="button-unstyle team_app_requests"
                 data-tip="User(s) would like to access this app"
-                onClick={e => {props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}>
+                onClick={e => {
+                  props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))
+                }}>
           <i class="fa fa-user"/>
-        </button>
+        </button>}
         {meReceiver != null && meReceiver.accepted &&
         <button class="button-unstyle team_app_pin"
                 data-tip="Pin App in your Personal space"
@@ -129,7 +133,9 @@ class TeamSimpleApp extends React.Component {
   }
   selfJoinApp(){
     this.props.dispatch(appActions.teamShareApp(this.props.app.id, {team_user_id:this.props.me.id, can_see_information: true})).then(response => {
-      this.props.dispatch(appActions.teamAcceptSharedApp(this.props.app.id, response.shared_app_id));
+      this.props.dispatch(appActions.teamAcceptSharedApp(this.props.app.id, response.shared_app_id)).then(() => {
+        this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, this.props.app));
+      });
     });
   }
   selectReceiver(id){
@@ -188,8 +194,11 @@ class TeamSimpleApp extends React.Component {
     const app = this.props.app;
     const me = this.props.me;
     const meReceiver = findMeInReceivers(app.receivers, me.id);
-    if (state)
-      this.props.dispatch(appActions.teamAcceptSharedApp(app.id, meReceiver.shared_app_id));
+    if (state) {
+      this.props.dispatch(appActions.teamAcceptSharedApp(app.id, meReceiver.shared_app_id)).then(() => {
+        this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app));
+      });
+    }
     else
       this.props.dispatch(appActions.teamAppDeleteReceiver(app.id,meReceiver.shared_app_id,meReceiver.team_user_id));
   }
@@ -274,6 +283,8 @@ class TeamSimpleApp extends React.Component {
     const me = this.props.me;
     const webInfo = app.website.information;
     const meReceiver = findMeInReceivers(app.receivers, me.id);
+    const asked = app.sharing_requests.indexOf(me.id) !== -1;
+
 
     return(
         <div class={classnames('team_app_holder', this.state.modifying ? "active":null)}>
@@ -287,8 +298,11 @@ class TeamSimpleApp extends React.Component {
             {!this.state.modifying && meReceiver !== null && meReceiver.profile_id !== -1 &&
             <span>
                     <i class="fa fa-thumb-tack"/>
-                  </span>
-            }
+                  </span>}
+            {!this.state.modifying && app.sharing_requests.length > 0 && (me.id === app.sender_id || isAdmin(me.role)) &&
+            <span>
+              <i class="fa fa-user"/>
+            </span>}
           </div>
           <div class="team_app_sender_info">
             <span class="team_app_sender_name">
@@ -330,7 +344,7 @@ class TeamSimpleApp extends React.Component {
                 <div class="credentials_holder">
                   <div class="credentials">
                     {(meReceiver != null || this.state.modifying) &&
-                    Object.keys(app.account_information).map(function(item){
+                    Object.keys(app.account_information).reverse().map(function(item){
                       return (
                           <div class="credentials_line" key={item}>
                             <div class="credentials_type_icon">
@@ -357,8 +371,17 @@ class TeamSimpleApp extends React.Component {
                           </div>
                       )
                     }, this)}
-                    {!this.state.modifying && meReceiver === null && me.id !== app.sender_id && me.role === 1 &&
-                    <RequestAppButton/>}
+                    {!this.state.modifying && meReceiver === null && me.id !== app.sender_id && me.role === 1 && asked &&
+                    <button class="button-unstyle requestAppButton">
+                      <span class="onHover">Request sent</span>
+                      <span class="default">Request sent</span>
+                    </button>}
+                    {!this.state.modifying && meReceiver === null && me.id !== app.sender_id && me.role === 1 && !asked &&
+                    <button class="button-unstyle requestAppButton"
+                            onClick={e => {this.props.dispatch(appActions.askJoinTeamApp(app.id))}}>
+                      <span class="onHover">Ask to access</span>
+                      <span class="default">This app does not concern you</span>
+                    </button>}
                     {!this.state.modifying && meReceiver === null && (me.role > 1 || me.id === app.sender_id) &&
                     <button class="button-unstyle joinAppBtn"
                             onClick={this.selfJoinApp}>

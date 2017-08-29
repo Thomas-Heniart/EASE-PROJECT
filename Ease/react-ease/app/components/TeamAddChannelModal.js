@@ -1,106 +1,76 @@
 var React = require('react');
 var classnames = require('classnames');
-import {connect} from "react-redux"
-import {showAddTeamChannelModal} from "../actions/teamModalActions"
-import * as channelActions from "../actions/channelActions"
+import {connect} from "react-redux";
+import {showAddTeamChannelModal} from "../actions/teamModalActions";
+import * as channelActions from "../actions/channelActions";
+import {renderUserLabel} from "../utils/renderHelpers";
+import { Header, Container, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
 
 @connect((store)=>{
   return {
     users: store.users.users
   };
 })
-class TeamAddChannelModal extends React.Component {
+class TmpModal extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      users: [],
-      selectedUsers: [],
+      loading: false,
       name: '',
       purpose: '',
-      dropdown: false
+      options: [],
+      value: [],
+      error: false,
+      errorMessage: ''
     };
-    this.state.users = this.props.users.map(function (item) {
-      item.selected = false;
-      return (item);
-    });
-    this.selectUser = this.selectUser.bind(this);
-    this.deselectUser = this.deselectUser.bind(this);
-    this.handleInput = this.handleInput.bind(this);
-    this.hideDropdown = this.hideDropdown.bind(this);
-    this.showDropdown = this.showDropdown.bind(this);
-    this.onMouseDown = this.onMouseDown.bind(this);
-    this.onMouseUp = this.onMouseUp.bind(this);
-    this.pageClick = this.pageClick.bind(this);
-    this.validateChannelCreation = this.validateChannelCreation.bind(this);
-  }
-  hideDropdown(){
-    this.setState({dropdown: false});
-  }
-  showDropdown(){
-    this.setState({dropdown: true});
-  }
-  handleInput(name, value){
-    this.setState(function () {
+    this.state.options = this.props.users.map(item => {
       return {
-        [name]: value
+        key: item.id,
+        text: item.username + ' - ' + item.first_name + ' ' + item.last_name,
+        username: item.username,
+        value: item.id
       }
     });
+    this.validateChannelCreation = this.validateChannelCreation.bind(this);
+    this.dropdownChange = this.dropdownChange.bind(this);
+    this.inputChange = this.inputChange.bind(this);
+  }
+  componentWillReceiveProps(nextProps){
+    if (this.props.users !== nextProps.users){
+      var options = nextProps.users.map(item => {
+        return {
+          key: item.id,
+          text: item.username + ' - ' + item.first_name + ' ' + item.last_name,
+          username: item.username,
+          value: item.id
+        }
+      });
+      this.setState({options: options});
+    }
   }
   validateChannelCreation(){
     const name = this.state.name;
     const purpose = this.state.purpose;
-    const selectedUsers = this.state.selectedUsers;
+    const selectedUsers = this.state.value;
 
+    this.setState({loading: true, error: false});
     this.props.dispatch(channelActions.createTeamChannel(name, purpose)).then(response => {
       const channel_id = response.id;
       var addUserActions = selectedUsers.map(function(item){
-        return this.props.dispatch(channelActions.addTeamUserToChannel(channel_id, item.id));
+        return this.props.dispatch(channelActions.addTeamUserToChannel(channel_id, item));
       }, this);
       Promise.all(addUserActions).then(() => {
         this.props.dispatch(showAddTeamChannelModal(false));
       });
+    }).catch(err => {
+      this.setState({loading: false, error: true, errorMessage: err})
     })
   }
-  deselectUser(id){
-    var selectedUsers = this.state.selectedUsers;
-    var users = this.state.users.map(function (item) {
-      if (item.id === id){
-        selectedUsers.splice(selectedUsers.indexOf(item), 1);
-        item.selected = false;
-      }
-      return item;
-    });
-    this.setState({users: users, selectedUsers: selectedUsers});
+  inputChange(e, {value}){
+    this.setState({[e.target.name] : value});
   }
-  selectUser(id){
-    var selectedUsers = this.state.selectedUsers;
-    var users = this.state.users.map(function(item){
-      if (item.id === id) {
-        if (item.selected)
-          return item;
-        item.selected = true;
-        selectedUsers.push(item);
-      }
-      return item;
-    });
-    this.setState({users: users, selectedUsers: selectedUsers});
-  }
-  onMouseDown(){
-    this.mouseInDropDown = true;
-  }
-  onMouseUp(){
-    this.mouseInDropDown = false;
-  }
-  pageClick(e){
-    if (this.mouseInDropDown)
-      return;
-    this.hideDropdown();
-  }
-  componentDidMount(){
-    window.addEventListener('mousedown', this.pageClick, false);
-  }
-  componentWillUnmount(){
-    window.removeEventListener('mousedown', this.pageClick, false);
+  dropdownChange(e, {value}){
+    this.setState({value: value});
   }
   render(){
     return (
@@ -111,68 +81,43 @@ class TeamAddChannelModal extends React.Component {
           </a>
           <div className="modal_contents_container">
             <div className="contents">
-              <div className="content_row flex_direction_column">
-                <h1 className="width100">Create a group</h1>
-                <span>Groups are where your team members securely exchange tools and credentials. They can be organized by topic, working group, or specific project.</span>
-              </div>
-              <div className="content_row flex_direction_column">
-                <label htmlFor="name_input">Name</label>
-                <div className="modal_input_wrapper">
-                  <i className="fa fa-hashtag input_icon"/>
-                  <input onChange={(e)=>{this.handleInput(e.target.name, e.target.value)}}
-                         value={this.state.name}
-                         className="input_unstyle" id="name_input" type="text" placeholder="Name" name="name"/>
-                </div>
-              </div>
-              <div className="content_row flex_direction_column">
-                <label>Purpose</label>
-                <input onChange={(e)=>{this.handleInput(e.target.name, e.target.value)}}
-                       value={this.state.purpose}
-                       className="modal_input" id="purpose_input" type="text" placeholder="Optional" name="purpose"/>
-              </div>
-              <div className="content_row flex_direction_column">
-                <label style={{fontWeight:'normal'}}><strong>Members :</strong> people who will have access to this group</label>
-                <div className="modal_input_wrapper item_list"
-                    onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp}>
-                  {
-                    this.state.selectedUsers.map(function(item){
-                      return (
-                          <div className="input_tag" key={item.id}>
-                            <span>{item.username}</span>
-                            <button className="button-unstyle" onClick={this.deselectUser.bind(null,item.id)}>
-                              <i className="fa fa-times"/>
-                            </button>
-                          </div>
-                      )
-                    }, this)
-                  }
-                  <input onFocus={this.showDropdown} className="input_unstyle" id="members_input" type="text" placeholder="Search by name" name="members"/>
-                  <div className={classnames("floating_dropdown", this.state.dropdown ? "show" : null)}>
-                    <div className="dropdown_content">
-                      {
-                        this.state.users.map(function (item) {
-                          return (
-                              <div onClick={this.selectUser.bind(null, item.id)}
-                                   className={classnames("dropdown_row selectable", item.selected ? "selected": null)}
-                                   key={item.id}>
-                                <span className="main_value">{item.username}</span>
-                                {item.first_name != null && <span className="text-muted">&nbsp;- {item.first_name}&nbsp;{item.last_name}</span>}
-                              </div>
-                          )
-                        }, this)
-                        }
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="content_row buttons_row">
-                <div className="buttons_wrapper">
-                  <button className="button-unstyle neutral_background action_text_button mrgnRight5"
-                          onClick={e => {this.props.dispatch(showAddTeamChannelModal(false))}}>Cancel</button>
-                  <button className="button-unstyle positive_background action_text_button"
-                          onClick={this.validateChannelCreation}>Next</button>
-                </div>
-              </div>
+              <Container>
+                <Header as="h1">
+                  Create a group
+                  <Header.Subheader>
+                    Groups are where your team members securely exchange tools and credentials. They can be organized by topic, working group, or specific project.
+                  </Header.Subheader>
+                </Header>
+                <Form error={this.state.error}>
+                  <Form.Input label="Name" onChange={this.inputChange} icon="hashtag" iconPosition="left" placeholder="Name" type="text" name="name"/>
+                  <Form.Input label="Purpose" onChange={this.inputChange} placeholder="Purpose" type="text" name="purpose"/>
+                  <Form.Dropdown
+                      search={true}
+                      options={this.state.options}
+                      value={this.state.value}
+                      onChange={this.dropdownChange}
+                      fluid
+                      selection={true}
+                      multiple
+                      renderLabel={renderUserLabel}
+                      placeholder="Tag users here..."
+                      label="Members : people who will have access to this group"/>
+                  <Message
+                      error
+                      content={this.state.errorMessage}/>
+                  <Form.Field>
+                    <Button
+                        positive
+                        floated='right'
+                        loading={this.state.loading}
+                        disabled={this.state.name.length === 0}
+                        onClick={this.validateChannelCreation}>
+                      Next
+                    </Button>
+                    <Button floated='right' onClick={e => {this.props.dispatch(showAddTeamChannelModal(false))}}>Cancel</Button>
+                  </Form.Field>
+                </Form>
+              </Container>
             </div>
           </div>
         </div>
@@ -180,4 +125,4 @@ class TeamAddChannelModal extends React.Component {
   }
 }
 
-module.exports = TeamAddChannelModal;
+module.exports = TmpModal;

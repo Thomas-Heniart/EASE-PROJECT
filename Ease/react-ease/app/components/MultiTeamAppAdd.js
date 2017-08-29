@@ -61,13 +61,13 @@ class MultiTeamAppAdd extends React.Component {
     };
     this.state.users = [];
     if (this.props.selectedItem.type === 'channel'){
-      this.props.selectedItem.item.userIds.map(function(item){
+      this.props.item.userIds.map(function(item){
         var user = this.props.userSelectFunc(item);
         user.selected = false;
         this.state.users.push(user);
       }, this);
     } else {
-      var item = this.props.selectedItem.item;
+      var item = this.props.item;
       item.selected = false;
       this.state.users.push(item);
     }
@@ -91,9 +91,9 @@ class MultiTeamAppAdd extends React.Component {
       reminder_interval: this.state.passwordRemind
     };
     if (this.props.selectedItem.type === 'channel')
-      app.channel_id = this.props.selectedItem.item.id;
+      app.channel_id = this.props.item.id;
     else
-      app.team_user_id = this.props.selectedItem.item.id;
+      app.team_user_id = this.props.item.id;
     var selectedUsers = this.state.selectedUsers;
     this.props.dispatch(teamCreateMultiApp(app)).then(response => {
       var id = response.id;
@@ -122,13 +122,13 @@ class MultiTeamAppAdd extends React.Component {
     if (props != this.props){
       var users = [];
       if (props.selectedItem.type === 'channel'){
-        props.selectedItem.item.userIds.map(function(item){
+        props.item.userIds.map(function(item){
           var user = props.userSelectFunc(item);
           user.selected = false;
           users.push(user);
         }, this);
       } else {
-        var item = props.selectedItem.item;
+        var item = props.item;
         item.selected = false;
         users.push(item);
       }
@@ -258,7 +258,7 @@ class MultiTeamAppAdd extends React.Component {
                                   </button>
                                 </div>
                                 {
-                                  Object.keys(this.state.credentials).map(function(item){
+                                  Object.keys(this.state.credentials).reverse().map(function(item){
                                     return (
                                           <input
                                                  key={item}

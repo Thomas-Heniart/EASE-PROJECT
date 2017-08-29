@@ -1,147 +1,87 @@
+import {selectAppFromListById} from '../utils/helperFunctions';
+
 export default function reducer(state={
   type:null,
-  item:null
+  id:null,
+  apps: []
 }, action){
   switch (action.type) {
     case 'SELECT_USER_FULFILLED': {
       return {
-          ...state,
+        ...state,
         type: 'user',
-        item:action.payload
+        id:action.payload.user.id,
+        apps:action.payload.apps
       }
     }
     case "FETCH_TEAM_FULFILLED": {
       return {
-          ...state,
+        ...state,
         type: null,
-        item: null
+        id: null,
+        apps: []
+      }
+    }
+    case 'FETCH_TEAM_USER_APPS_FULFILLED' : {
+      return {
+        ...state,
+        apps: action.payload.apps,
+        type: action.payload.type,
+        id: action.payload.id
+      }
+    }
+    case 'FETCH_TEAM_CHANNELS_APPS_FULFILLED' : {
+      return {
+        ...state,
+        apps: action.payload.apps,
+        type: action.payload.type,
+        id: action.payload.id
       }
     }
     case 'SELECT_TEAM_CHANNEL_FULFILLED': {
       return {
-          ...state,
+        ...state,
         type:'channel',
-        item: action.payload
+        id: action.payload.channel.id,
+        apps: action.payload.apps
       }
-    }
-    case 'EDIT_TEAM_CHANNEL_NAME_FULFILLED': {
-      if (state.type === 'channel' && state.item.id === action.payload.id){
-        return {
-            ...state,
-            item: {
-                ...state.item,
-                name: action.payload.name
-            }
-        }
-      }
-      break;
-    }
-    case 'EDIT_TEAM_CHANNEL_PURPOSE_FULFILLED': {
-      if (state.type === 'channel' && state.item.id === action.payload.id){
-        return {
-          ...state,
-          item: {
-            ...state.item,
-            purpose: action.payload.purpose
-          }
-        }
-      }
-      break;
-    }
-    case "EDIT_TEAM_USER_USERNAME_FULFILLED": {
-      if (state.type === 'user' && state.item.id === action.payload.id){
-        return {
-            ...state,
-          item: {
-              ...state.item,
-              username: action.payload.username
-          }
-        }
-      }
-      break;
-    }
-    case "EDIT_TEAM_USER_FIRSTNAME_FULFILLED": {
-      if (state.type === 'user' && state.item.id === action.payload.id){
-        return {
-          ...state,
-          item: {
-            ...state.item,
-            firstName: action.payload.first_name
-          }
-        }
-      }
-      break;
-    }
-    case "EDIT_TEAM_USER_LASTNAME_FULFILLED": {
-      if (state.type === 'user' && state.item.id === action.payload.id){
-        return {
-          ...state,
-          item: {
-            ...state.item,
-            lastName: action.payload.last_name
-          }
-        }
-      }
-      break;
-    }
-    case "EDIT_TEAM_USER_ROLE_FULFILLED": {
-      if (state.type === 'user' && state.item.id === action.payload.id){
-        return {
-          ...state,
-          item: {
-            ...state.item,
-            role: action.payload.role
-          }
-        }
-      }
-      break;
-    }
-    case "EDIT_TEAM_USER_DEPARTUREDATE_FULFILLED": {
-      if (state.type === 'user' && state.item.id === action.payload.id){
-        return {
-          ...state,
-          item: {
-            ...state.item,
-            departureDate: action.payload.departure_date
-          }
-        }
-      }
-      break;
     }
     case "TEAM_CREATE_SINGLE_APP_FULFILLED": {
-      if(state.type === action.payload.origin.type && state.item.id === action.payload.origin.id){
+      if(state.type === action.payload.origin.type && state.id === action.payload.origin.id){
         var state = {
-            ...state
+          ...state
         };
-        state.item.apps.unshift(action.payload);
+        state.apps.unshift(action.payload);
         return state;
       }
     }
     case "TEAM_CREATE_LINK_APP_FULFILLED": {
-      if(state.type === action.payload.origin.type && state.item.id === action.payload.origin.id){
+      if(state.type === action.payload.origin.type && state.id === action.payload.origin.id){
         var state = {
           ...state
         };
-        state.item.apps.unshift(action.payload);
+        state.apps.unshift(action.payload);
         return state;
       }
     }
     case "TEAM_CREATE_MULTI_APP_FULFILLED": {
-      if(state.type === action.payload.origin.type && state.item.id === action.payload.origin.id){
+      if(state.type === action.payload.origin.type && state.id === action.payload.origin.id){
         var state = {
           ...state
         };
-        state.item.apps.unshift(action.payload);
+        state.apps.unshift(action.payload);
         return state;
       }
     }
     case "TEAM_SHARE_APP_FULFILLED": {
       var nState = {
-          ...state
+        ...state
       };
-      for (var i = 0; i < nState.item.apps.length;i++){
-        if (nState.item.apps[i].id === action.payload.app_id){
-          nState.item.apps[i].receivers.push(action.payload.user_info);
+      for (var i = 0; i < nState.apps.length;i++){
+        if (nState.apps[i].id === action.payload.app_id){
+          nState.apps[i].receivers.push(action.payload.user_info);
+          if (nState.apps[i].sharing_requests.indexOf(action.payload.user_info.team_user_id) !== -1)
+            nState.apps[i].sharing_requests.splice(nState.apps[i].sharing_requests.indexOf(action.payload.user_info.team_user_id), 1);
           return nState;
         }
       }
@@ -149,11 +89,11 @@ export default function reducer(state={
     }
     case 'TEAM_MODIFY_APP_INFORMATION_FULFILLED': {
       var nState = {
-          ...state
+        ...state
       };
-      for (var i = 0; i < nState.item.apps.length;i++){
-        if (nState.item.apps[i].id === action.payload.app_id){
-          nState.item.apps[i] = action.payload.app;
+      for (var i = 0; i < nState.apps.length;i++){
+        if (nState.apps[i].id === action.payload.app_id){
+          nState.apps[i] = action.payload.app;
           return nState;
         }
       }
@@ -161,17 +101,15 @@ export default function reducer(state={
     }
     case 'TEAM_APP_EDIT_RECEIVER_FULFILLED' : {
       var nState = {
-          ...state
+        ...state
       };
       var app;
-      for (var i = 0; i < nState.item.apps.length;i++){
-        if (nState.item.apps[i].id === action.payload.app_id){
-          app = nState.item.apps[i];
+      for (var i = 0; i < nState.apps.length;i++){
+        if (nState.apps[i].id === action.payload.app_id){
+          app = nState.apps[i];
           for (var j = 0; j < app.receivers.length; j++){
             if (app.receivers[j].team_user_id === action.payload.receiver_info.team_user_id){
               app.receivers[j] = action.payload.receiver_info;
-/*              if (app.receivers[j].account_information && app.receivers[j].account_information['password'])
-                app.receivers[j].account_information['password'] = '';*/
               return nState;
             }
           }
@@ -184,9 +122,9 @@ export default function reducer(state={
         ...state
       };
       var app;
-      for (var i = 0; i < nState.item.apps.length;i++){
-        if (nState.item.apps[i].id === action.payload.app_id){
-          app = nState.item.apps[i];
+      for (var i = 0; i < nState.apps.length;i++){
+        if (nState.apps[i].id === action.payload.app_id){
+          app = nState.apps[i];
           for (var j = 0; j < app.receivers.length; j++){
             if (app.receivers[j].team_user_id === action.payload.team_user_id){
               app.receivers.splice(j, 1);
@@ -198,9 +136,9 @@ export default function reducer(state={
       break;
     }
     case 'DELETE_TEAM_CHANNEL_FULFILLED': {
-      if (state.item.id === action.payload.channel_id && state.type === 'channel'){
+      if (state.id === action.payload.channel_id && state.type === 'channel'){
         return {
-            ...state,
+          ...state,
           type:null,
           item:null
         }
@@ -208,20 +146,17 @@ export default function reducer(state={
       break;
     }
     case 'DELETE_TEAM_USER_FULFILLED': {
-      if (state.item.id === action.payload.team_user_id && state.type === 'user'){
+      if (state.id === action.payload.team_user_id && state.type === 'user'){
         return {
           ...state,
           type:null,
-          item:null
+          id:null
         }
       }
       break;
     }
     case 'TEAM_APP_TRANSFER_OWNERSHIP_FULFILLED': {
-      var item = {
-          ...state.item
-      };
-      var apps = item.apps;
+      var apps = state.apps;
 
       for (var i = 0; i < apps.length; i++){
         if (apps[i].id === action.payload.app_id){
@@ -229,27 +164,26 @@ export default function reducer(state={
         }
       }
       return {
-          ...state,
-        item: item
+        ...state,
+        apps: apps
       }
     }
     case 'TEAM_DELETE_APP_FULFILLED': {
-      var item = {...state.item};
+      var apps = state.apps;
 
-      for (var i = 0; i < item.apps.length; i++){
-        if (item.apps[i].id === action.payload.app_id){
-          item.apps.splice(i, 1);
+      for (var i = 0; i < apps.length; i++){
+        if (apps[i].id === action.payload.app_id){
+          apps.splice(i, 1);
           break;
         }
       }
       return {
-          ...state,
-        item: item
+        ...state,
+        apps: apps
       }
     }
     case 'TEAM_ACCEPT_SHARED_APP_FULFILLED': {
-      var item = {...state.item};
-      const apps = item.apps;
+      var apps = state.apps;
 
       for (var i = 0; i < apps.length; i++){
         if (apps[i].id === action.payload.app_id){
@@ -264,12 +198,11 @@ export default function reducer(state={
       }
       return {
         ...state,
-        item: item
+        apps: apps
       }
     }
     case 'TEAM_APP_PIN_TO_DASHBOARD_FULFILLED': {
-      var item = {...state.item};
-      const apps = item.apps;
+      var apps = state.apps;
       for (var i = 0; i < apps.length; i++){
         if (apps[i].id === action.payload.app_id){
           for (var j = 0; j < apps[i].receivers.length; j++){
@@ -283,7 +216,65 @@ export default function reducer(state={
       }
       return {
         ...state,
-        item: item
+        apps: apps
+      }
+    }
+    case 'TEAM_APP_ASK_JOIN_FULFILLED': {
+      var apps = state.apps;
+      var app = selectAppFromListById(apps, action.payload.app_id);
+
+      if (app !== null && app.sharing_requests.indexOf(action.payload.team_user_id) === -1){
+        app.sharing_requests.push(action.payload.team_user_id);
+        return {
+          ...state,
+          apps: apps
+        }
+      }
+    }
+    case 'DELETE_JOIN_APP_REQUEST_FULFILLED': {
+      var apps = state.apps;
+      var app = selectAppFromListById(apps, action.payload.app_id);
+
+      if (app !== null && app.sharing_requests.indexOf(action.payload.team_user_id) !== -1){
+        app.sharing_requests.splice(app.sharing_requests.indexOf(action.payload.team_user_id), 1);
+        return {
+          ...state,
+          apps: apps
+        }
+      }
+    }
+    case 'TEAM_APP_CHANGED' : {
+      var apps = state.apps;
+
+      for (var i = 0; i < apps.length; i++){
+        if (apps[i].id === action.payload.app.id){
+          apps[i] = action.payload.app;
+          return {
+            ...state,
+            apps: apps
+          }
+        }
+      }
+    }
+    case 'TEAM_APP_ADDED' : {
+      var apps = state.apps;
+      apps.unshift(action.payload.app);
+      return {
+        ...state,
+        apps:apps
+      }
+    }
+    case 'TEAM_APP_REMOVED' : {
+      var apps = state.apps;
+
+      for (var i = 0; i < apps.length; i++){
+        if (apps[i].id === action.payload.app.id){
+          apps.splice(i, 1);
+          return {
+            ...state,
+            apps: apps
+          }
+        }
       }
     }
   }

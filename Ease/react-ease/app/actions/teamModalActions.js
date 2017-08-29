@@ -133,3 +133,32 @@ export function showTeamSettingsModal(state){
     }
   }
 }
+
+export function showVerifyTeamUserModal(state, user){
+  return {
+    type: 'SHOW_VERIFY_TEAM_USER_MODAL',
+    payload: {
+      active: state,
+      user: user
+    }
+  }
+}
+
+export function showTeamTransferOwnershipModal(state, user){
+  return {
+    type: 'SHOW_TEAM_TRANSFER_OWNERSHIP_MODAL',
+    payload: {
+      active: state,
+      user: user
+    }
+  }
+}
+
+export function showTeamPhoneNumberModal(state) {
+  return {
+    type: 'SHOW_TEAM_PHONE_NUMBER_MODAL',
+    payload: {
+      active: state
+    }
+  }
+}

@@ -4,7 +4,7 @@ import {withCookies, Cookies } from 'react-cookie';
 var base64 = require('base-64');
 import post_api from '../../utils/post_api';
 import {connect} from "react-redux";
-import {setLoginRedirectUrl} from "../../actions/commonActions"
+import {setLoginRedirectUrl, fetchMyInformation} from "../../actions/commonActions"
 
 class UnknownUserForm extends React.Component{
   constructor(props){
@@ -29,7 +29,6 @@ class UnknownUserForm extends React.Component{
       this.props.finishLogin();
     }).catch(err => {
       this.setState({errorMessage:err, error: true, password: ''});
-    }).then(() => {
       this.props.setView('unknown');
     })
   }
@@ -101,7 +100,6 @@ class KnownUserForm extends React.Component{
       this.props.finishLogin();
     }).catch(err => {
       this.setState({errorMessage:err, error: true, password: ''});
-    }).then(() => {
       this.props.setView('known');
     })
   }
@@ -226,6 +224,7 @@ function Loader(props){
 
 @connect((store)=>{
   return {
+    authenticated: store.common.authenticated,
     redirect: store.common.loginRedirectUrl
   };
 })
@@ -239,6 +238,8 @@ class Login extends React.Component {
       knownEmail: this.props.cookies.get('email'),
       knownUser: false
     };
+    if (this.props.authenticated)
+      window.location.href = "/home";
     this.state.knownUser = this.state.knownFname !== undefined && this.state.knownEmail !== undefined;
     if (this.state.knownUser) {
       this.state.knownFname = base64.decode(this.state.knownFname);
@@ -251,8 +252,10 @@ class Login extends React.Component {
   finishLoggingIn(){
     if (this.props.redirect.length > 0){
       const redirectUrl = this.props.redirect;
-      this.props.dispatch(setLoginRedirectUrl(''));
-      this.props.history.push(redirectUrl);
+      this.props.dispatch(fetchMyInformation()).then(response => {
+        this.props.dispatch(setLoginRedirectUrl(''));
+        this.props.history.push(redirectUrl);
+      });
     }else {
       window.location.href = "/home";
     }
@@ -264,6 +267,8 @@ class Login extends React.Component {
     this.setState({lastActive: this.state.activeView, activeView:this.state.lastActive});
   }
   render(){
+    if (this.props.authenticated)
+      return null;
     return (
         <div id="loginBody">
           <div class="ease-logo">

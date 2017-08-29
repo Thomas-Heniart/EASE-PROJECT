@@ -26,6 +26,15 @@ export function fetchTeamAndUsersAndChannels(team_id){
   }
 }
 
+export function fetchTeamItemApps(itemId){
+  return function (dispatch, getState){
+    if (itemId[0] !== '@')
+      return dispatch(ChannelActions.fetchTeamChannelApps(Number(itemId)));
+    else
+      return dispatch(UserActions.fetchTeamUserApps(Number(itemId.slice(1, itemId.length))));
+  }
+}
+
 export function showTeamMenu(state){
   return {
     type: 'SHOW_TEAM_MENU',
