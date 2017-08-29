@@ -1,5 +1,8 @@
 package com.Ease.API.V1.Common;
 
+import com.Ease.Context.Catalog.Catalog;
+import com.Ease.Context.Catalog.Website;
+import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
@@ -79,6 +82,44 @@ public class ServletRegistration extends HttpServlet {
             ((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
             ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
             ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);
+            Profile school_profile = null;
+            Catalog catalog = (Catalog) sm.getContextAttr("catalog");
+            if (email.endsWith("@iscparis.com")) {
+                school_profile = newUser.getDashboardManager().addProfile("ISC Paris", "#7D0056", db);
+                Website myIsc = catalog.getWebsiteWithName("My ISC");
+                school_profile.addEmptyApp(myIsc.getName(), myIsc, db);
+                Website moodle = catalog.getWebsiteWithName("Moodle");
+                school_profile.addEmptyApp(moodle.getName(), moodle, db);
+                Website jobTeaser = catalog.getWebsiteWithName("JobTeaser ISC");
+                school_profile.addEmptyApp("JobTeaser", jobTeaser, db);
+                Website iagora = catalog.getWebsiteWithName("Iagora");
+                school_profile.addEmptyApp(iagora.getName(), iagora, db);
+                Website talentoday = catalog.getWebsiteWithName("Talentoday");
+                school_profile.addEmptyApp(talentoday.getName(), talentoday, db);
+                Website scholarvox = catalog.getWebsiteWithName("Scholarvox");
+                school_profile.addEmptyApp(scholarvox.getName(), scholarvox, db);
+                Website housing_center = catalog.getWebsiteWithName("Housing Center");
+                school_profile.addEmptyApp(housing_center.getName(), housing_center, db);
+                Website centralTest = catalog.getWebsiteWithName("CentralTest");
+                school_profile.addEmptyApp(centralTest.getName(), centralTest, db);
+            } else if (email.endsWith("@ieseg.fr")) {
+
+            } else if (email.endsWith("@edhec.com")) {
+                school_profile = newUser.getDashboardManager().addProfile("EDHEC", "#A51B35", db);
+                Website aurion = catalog.getWebsiteWithName("Aurion");
+                school_profile.addEmptyApp(aurion.getName(), aurion, db);
+                Website blackboard = catalog.getWebsiteWithName("Blackboard");
+                school_profile.addEmptyApp(blackboard.getName(), blackboard, db);
+                Website jobTeaser = catalog.getWebsiteWithName("JobTeaser Edhec");
+                school_profile.addEmptyApp("JobTeaser", jobTeaser, db);
+                Website officeMail = catalog.getWebsiteWithName("Office365 Mails");
+                school_profile.addEmptyApp(officeMail.getName(), officeMail, db);
+                Website print = catalog.getWebsiteWithName("Everyon Print");
+                school_profile.addEmptyApp("Everyone Print", print, db);
+                Website workplace = catalog.getWebsiteWithName("Workplace");
+                school_profile.addEmptyApp(workplace.getName(), workplace, db);
+            }
+
             db.commitTransaction(transaction);
             sm.setSuccess(newUser.getJson());
 

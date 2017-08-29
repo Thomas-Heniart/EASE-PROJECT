@@ -42,7 +42,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             TeamUser adminTeamUser = sm.getTeamUserForTeam(team);
             String email = sm.getStringParam("email", true);
             String username = sm.getStringParam("username", true);
-            Integer role = Integer.valueOf(sm.getStringParam("role", true));
+            Integer role = sm.getIntParam("role", true);
             JSONObject errors = new JSONObject();
             if (email == null || email.equals("") || !Regex.isEmail(email))
                 errors.put("email", "That doesn't look like a valid email address!");

@@ -72,7 +72,7 @@ public class ServletRegistrationEdhec extends HttpServlet {
             ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
             ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);
 
-            Profile edhecProfile = newUser.getDashboardManager().addProfile("ISC Paris", "#373B60", db);
+            Profile edhecProfile = newUser.getDashboardManager().addProfile("EDHEC", "#A51B35", db);
 
             /* Edhec apps in profile */
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");

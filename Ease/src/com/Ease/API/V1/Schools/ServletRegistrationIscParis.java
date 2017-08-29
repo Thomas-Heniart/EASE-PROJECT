@@ -73,7 +73,7 @@ public class ServletRegistrationIscParis extends HttpServlet {
             ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);
 
             /* Isc Paris profile */
-            Profile iscProfile = newUser.getDashboardManager().addProfile("ISC Paris", "#373B60", db);
+            Profile iscProfile = newUser.getDashboardManager().addProfile("ISC Paris", "#7D0056", db);
 
             /* Isc Paris apps in profile */
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
