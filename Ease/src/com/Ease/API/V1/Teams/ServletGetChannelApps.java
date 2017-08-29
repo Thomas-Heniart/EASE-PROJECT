@@ -31,7 +31,7 @@ public class ServletGetChannelApps extends HttpServlet {
             Integer channel_id = sm.getIntParam("channel_id", true);
             TeamUser teamUser = sm.getTeamUserForTeam(team);
             Channel channel = team.getChannelWithId(channel_id);
-            if (!channel.getTeamUsers().contains(teamUser))
+            if (!channel.getTeamUsers().contains(teamUser) && !teamUser.isTeamAdmin())
                 throw new HttpServletException(HttpStatus.Forbidden, "You don't have access to this channel.");
             sm.setSuccess(team.getShareableAppsForChannel(channel_id));
         } catch (Exception e) {
